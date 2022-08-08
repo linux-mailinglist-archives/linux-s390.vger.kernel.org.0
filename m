@@ -2,125 +2,79 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CD9E58C914
-	for <lists+linux-s390@lfdr.de>; Mon,  8 Aug 2022 15:09:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC38658CB2F
+	for <lists+linux-s390@lfdr.de>; Mon,  8 Aug 2022 17:19:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243210AbiHHNJw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 8 Aug 2022 09:09:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52812 "EHLO
+        id S243586AbiHHPTo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 8 Aug 2022 11:19:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229690AbiHHNJq (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 8 Aug 2022 09:09:46 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79179AE47;
-        Mon,  8 Aug 2022 06:09:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1659964159;
-        bh=0M5qpS13eLgzHYee8MKVxWGYrt0iQg2yqGtZwU3aGdU=;
-        h=X-UI-Sender-Class:From:To:Subject:Date:In-Reply-To:References;
-        b=MAJJpLOmv5dP4WWUjz3+3k/mV957rgW3/oPnz3WDvdF55JVzYl9+4da4nUIyEQde5
-         fp4ZpNL1yylkjW4WMjOYsxEI1SbQVi0Y0V6evCsQBgpPvCz4S3PP29D3vBuNI8w955
-         FdyD3hHW46JGuDTJWIudpTSlqEiAzvjdMRSuiaUg=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from p100.fritz.box ([92.116.169.184]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M5wLZ-1oJ7ci0mt9-007QkE; Mon, 08
- Aug 2022 15:09:19 +0200
-From:   Helge Deller <deller@gmx.de>
-To:     linux-s390@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>,
-        x86@kernel.org, linux-snps-arc@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 4/4] arc: Use generic dump_stack_print_cmdline() implementation
-Date:   Mon,  8 Aug 2022 15:09:17 +0200
-Message-Id: <20220808130917.30760-5-deller@gmx.de>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20220808130917.30760-1-deller@gmx.de>
-References: <20220808130917.30760-1-deller@gmx.de>
+        with ESMTP id S235289AbiHHPTi (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 8 Aug 2022 11:19:38 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5962313F04
+        for <linux-s390@vger.kernel.org>; Mon,  8 Aug 2022 08:19:36 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id u1so13173026lfq.4
+        for <linux-s390@vger.kernel.org>; Mon, 08 Aug 2022 08:19:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc;
+        bh=eAOn/H9c6ytA0ds1rzRpNtSuyO0IZdB7WZrbrNNXRk8=;
+        b=LUkj7cfFN/n43Ho6Da9o4OJ3paeYQZVlftPUzkSNfw++RymO5QKQ9H7cJC/Ox+6f4J
+         YnxzN+twLN5RZLqot/w7YyqjCdXFEawUtrrJMQ3ol2sUEe7H86RLciT/QDHuAF6vCUSb
+         rr+0g3Ll9k9f3ZhW5o6VwSegeav0mCEm6BMMHViKUekEKEXunmfrHPsKLW5h7/uj7LHh
+         k6UJJbiKhXXtw37YEdd3H/QKq39yIsYHFesLVEvfqOuQp5QPqLmW6nQa6ew27Fn1rmrd
+         kYmT3ypJfWXTHFX7pWKw6JJ7CJGChHaEzh2FjU92gnLM/GvaCi/G/RxlIUdq679Qxd35
+         RW1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=eAOn/H9c6ytA0ds1rzRpNtSuyO0IZdB7WZrbrNNXRk8=;
+        b=r6CmOUlSmq6HIcZdSTdedGry0sNr3h7hkHqlAxwRSw0lRX7OTMKdbL79qFPvMqI+p2
+         5zgr7a3iw6vVoQgkziMQiXXcQ4wdhhFaS7oWitdsQ70GHs9i2QMessTf2YrzoUyRzIVY
+         +UKfIzkjWWE5n2JlzrM1MiUErWdq+JlRrtP+Vp8M04Hk9WtXTzr3s4ceVhpJnyHqiTOU
+         wD2ijB5yAd/dqIJsqUt55/+C4zy0fHSp4pLEEwswi4WS+GYzJC6Ra7aH7SUAoHARaMt4
+         d8PPB0ucZB7UjtnS3iGK/u5m0C/l4DRG1SsVdyTP+apiVOG5MwqaNSe9pslceIydvE7d
+         TALQ==
+X-Gm-Message-State: ACgBeo1jUirH7y4K0uUq6NiH9zbPnlYgr03Piei7PHnyp3EprtKTtoHP
+        iZ3sVU0XBdffKBmxpGSkYBEk6Be/rBIZnXsNP5c=
+X-Google-Smtp-Source: AA6agR7wdUz2DEZqRCRgHBZaT3altU8WKHnGxTzY3TnoIZj7tZtoaD0Ioj5Sh3t4fBj3nCGqkwPc3HMY0/rnXTMcRMo=
+X-Received: by 2002:a05:6512:15a0:b0:48b:38e:bd8b with SMTP id
+ bp32-20020a05651215a000b0048b038ebd8bmr6018365lfb.102.1659971974462; Mon, 08
+ Aug 2022 08:19:34 -0700 (PDT)
 MIME-Version: 1.0
+Received: by 2002:a19:ad06:0:0:0:0:0 with HTTP; Mon, 8 Aug 2022 08:19:34 -0700 (PDT)
+Reply-To: olsonfinancial.de@gmail.com
+From:   OLSON FINANCIAL GROUP <kcpools16@gmail.com>
+Date:   Mon, 8 Aug 2022 08:19:34 -0700
+Message-ID: <CAM8gsMf_e6YN2xDE8B+sOubnw6LwBEoH+TZE9i1Yh64rxvhofw@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:qbhdCVDdOCub1ozqXacRBFmeXEK1oHZl6SIb4aOtZAfxd9npLiz
- JIPE+2fdpNF9wfsoTc1Fq05gbMQbVssIrx529rpnx38ZZwh/bdchIpZuTlXNOU8kORBr51N
- OUttWVrlobZJh72zp3/GOjg13qfmgf2jAdXfTwFqcswpTzOPz3Zb1y+E+QxB5Dq5yNsGa2L
- /AiGHtqfm1EdEzr6qa2PA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UBgKY5ubY/o=:y4mAM+/YC+hjlH357pzhLS
- S1Oo26dgQQi0G3GNPLIWloPIzSYdEv9y+fkRy5kKq6Tapjmbzqd1PMccmB4swJ7gkoS1VPHsv
- B+/aK5aoO9wR1huwRixwjHFzFW9X8bXaaCBe3tfJgOzHfGM/x6I4UzK8y7/gSjSKV3bNioc4d
- a23nO7jfFxECak1p9CgZc913l8erOrMSXdvRqbOyPa+NScOFlMnCIXJiN2JQP9vOuFyBpbUCd
- eNwWTHyTDWQ+TPta9DeTql3pDf9MrSx/ekuzbLuXnxvcnlV6/QKPt8G745S8Ig7pcKDIZA3Hb
- keRlQimwz0qP23/7C7kNx3ttYi+EEpKwTPp+mW64ic366tf8+14YNjE/4l7hghbSJIG3fsF/m
- 4F6w1QQfKgT8rPxu8Xm+UKVQb/kN+jnPmpWZQc8QB/QTk6TGeNu9usIZGvpqTsA6B4EjFfcVy
- c+xgsWyLN0iVsIte/kRAKjFiLBWTxJPMu/FOAxAEViXUxdYB8blZUMkaG2PeBtnTyFbqf6PtT
- m/ppniqaQYyVUvgk1Xvv29qBG+gGuTEOqnL314HzgwFp4woejXDpeTePfROdyGY9+Lru4yJKY
- CEYAH7dJAlK2Xs4Snrq3hpQIcEwLUqH1g7VahcqtkZV0Q69KnpmxUaEDgyBLfu5qCRv+JIDNj
- HvlJXR9n8yTIf6Fey5BpfmI7EGOzQ/mssNzrWX8MzX0cDupVg+Cbk1hlgPkl+cwaCXTOWlOz5
- m+OPAHfwa77r5nTBke2ofYJ51SkCtHh0ukFqur0Lzvt2Cg6BRQvQpHT9asgfRbd7tVlOmTJwf
- 8kl4XJDBAq0Qf/BxMmbHkYrEDZm1I04+HUjy7j58P5LiUZuLMWceAiFVHUTPOHg4Zj7hfLugL
- VLIgvAOwrOqjINCRrmkB6V/lN8vbnrRcaTfxGAYfFmdm0zPIOFJLFbRadQE//zskDBdh4+vCD
- SV8OZMvI+eCduWQJUXhMjp2yp7kTN9+hRq/abYJqStonqK9U1M54jkuhk3A+PXjDPkfM5SN8W
- 7Hf8quu804dluN9yRLhnD3XHGCEErG9sCGDZ9CfjBhkqy0qrOm6zTa5bJd/swDqzUCx9Bp/Hm
- LWtAFNsvYuYAvaE6CcXszUWJFsPIxTycLTSZDmdOHyy1A9d0bv5bV1Xfg==
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-Spam-Status: No, score=4.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The process program name and command line is now shown in generic code
-in dump_stack_print_info(), so drop the arc-specific implementation.
-
-Signed-off-by: Helge Deller <deller@gmx.de>
-=2D--
- arch/arc/kernel/troubleshoot.c | 24 ------------------------
- 1 file changed, 24 deletions(-)
-
-diff --git a/arch/arc/kernel/troubleshoot.c b/arch/arc/kernel/troubleshoot=
-.c
-index 7654c2e42dc0..9807e590ee55 100644
-=2D-- a/arch/arc/kernel/troubleshoot.c
-+++ b/arch/arc/kernel/troubleshoot.c
-@@ -51,29 +51,6 @@ static void print_regs_callee(struct callee_regs *regs)
- 		regs->r24, regs->r25);
- }
-
--static void print_task_path_n_nm(struct task_struct *tsk)
--{
--	char *path_nm =3D NULL;
--	struct mm_struct *mm;
--	struct file *exe_file;
--	char buf[ARC_PATH_MAX];
--
--	mm =3D get_task_mm(tsk);
--	if (!mm)
--		goto done;
--
--	exe_file =3D get_mm_exe_file(mm);
--	mmput(mm);
--
--	if (exe_file) {
--		path_nm =3D file_path(exe_file, buf, ARC_PATH_MAX-1);
--		fput(exe_file);
--	}
--
--done:
--	pr_info("Path: %s\n", !IS_ERR(path_nm) ? path_nm : "?");
--}
--
- static void show_faulting_vma(unsigned long address)
- {
- 	struct vm_area_struct *vma;
-@@ -176,7 +153,6 @@ void show_regs(struct pt_regs *regs)
- 	 */
- 	preempt_enable();
-
--	print_task_path_n_nm(tsk);
- 	show_regs_print_info(KERN_INFO);
-
- 	show_ecr_verbose(regs);
-=2D-
-2.37.1
-
+--=20
+H, guten Tag,
+Ben=C3=B6tigen Sie dringend einen Kredit f=C3=BCr den Hauskauf? oder ben=C3=
+=B6tigen
+Sie ein Gesch=C3=A4fts- oder Privatdarlehen, um zu investieren? ein neues
+Gesch=C3=A4ft er=C3=B6ffnen, Rechnungen bezahlen? Und zahlen Sie uns die
+Installationen zur=C3=BCck? Wir sind ein zertifiziertes Finanzunternehmen.
+Wir bieten Privatpersonen und Unternehmen Kredite an. Wir bieten
+zuverl=C3=A4ssige Kreditarten zu einem sehr niedrigen Zinssatz von 2 %. F=
+=C3=BCr
+mehr Informationen
+mailen Sie uns an: olsonfinancial.de@gmail.com......
