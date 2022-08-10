@@ -2,126 +2,149 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D0A5458EC71
-	for <lists+linux-s390@lfdr.de>; Wed, 10 Aug 2022 14:57:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0509458F1BD
+	for <lists+linux-s390@lfdr.de>; Wed, 10 Aug 2022 19:47:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232335AbiHJM4u (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 10 Aug 2022 08:56:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51482 "EHLO
+        id S230282AbiHJRrr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 10 Aug 2022 13:47:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232348AbiHJM4j (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 10 Aug 2022 08:56:39 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DB965C349;
-        Wed, 10 Aug 2022 05:56:38 -0700 (PDT)
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 27ACoQWp012677;
-        Wed, 10 Aug 2022 12:56:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=8+oT9Nis5SKah9qTR3TP8xCyoTW/s4DlrF3m5iveus0=;
- b=aookoxmhPpcIx/2uPVoefBQqhfRaBKurFGSfLopJrnOJiIWEIoxL4S7+79PRqkURK4Nm
- QVtqdGX63UotogcdRWPPgTzKOZMUk9m48eBZKQGwFxcHkHkxaAPE0LhHq3f/511yKaIG
- oaLmaqU5ucPPKLCZreqr1Z9W2SYSY7FmSpp3XtrpiJrKUFxUvPxP9+arzgeSoyOQPJ18
- /YLX5L6ggPtdVfaHqs1YCLhUylip6G2xtTQHdPvrRcIb6kkTP3ZJVaPH8nPfG3TpKJT3
- Pb8Xr5QAvs0VhoP25v7QAu9beIDR/Y5eunDE+FzaobQ8j5rQsa0B2/4Kma//GWR01ab1 SA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3hv6dcw2g1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 10 Aug 2022 12:56:37 +0000
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 27ACpaRR019554;
-        Wed, 10 Aug 2022 12:56:37 GMT
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3hv6dcw2en-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 10 Aug 2022 12:56:37 +0000
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 27ACpU2k021444;
-        Wed, 10 Aug 2022 12:56:34 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma05fra.de.ibm.com with ESMTP id 3huwvjgmr9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 10 Aug 2022 12:56:34 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 27ACuVbV18874850
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Aug 2022 12:56:31 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2EC584C044;
-        Wed, 10 Aug 2022 12:56:31 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7DFA54C040;
-        Wed, 10 Aug 2022 12:56:30 +0000 (GMT)
-Received: from p-imbrenda.bredband2.com (unknown [9.145.0.105])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 10 Aug 2022 12:56:30 +0000 (GMT)
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     borntraeger@de.ibm.com, frankja@linux.ibm.com, thuth@redhat.com,
-        pasic@linux.ibm.com, david@redhat.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, scgl@linux.ibm.com,
-        seiden@linux.ibm.com, nrb@linux.ibm.com
-Subject: [PATCH v13 6/6] KVM: s390: pv: module parameter to fence asynchronous destroy
-Date:   Wed, 10 Aug 2022 14:56:25 +0200
-Message-Id: <20220810125625.45295-7-imbrenda@linux.ibm.com>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20220810125625.45295-1-imbrenda@linux.ibm.com>
-References: <20220810125625.45295-1-imbrenda@linux.ibm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: eFnpAkKohgDH_k706ceUmYZbBM5b18gU
-X-Proofpoint-GUID: MOTEmYVFB1IHnFsteb1kTmxixtJp15uB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-08-10_07,2022-08-10_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- priorityscore=1501 clxscore=1015 lowpriorityscore=0 malwarescore=0
- adultscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2207270000 definitions=main-2208100037
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S230095AbiHJRrr (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 10 Aug 2022 13:47:47 -0400
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFD2D83F32;
+        Wed, 10 Aug 2022 10:47:44 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=alibuda@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0VLvmsHB_1660153661;
+Received: from localhost(mailfrom:alibuda@linux.alibaba.com fp:SMTPD_---0VLvmsHB_1660153661)
+          by smtp.aliyun-inc.com;
+          Thu, 11 Aug 2022 01:47:42 +0800
+From:   "D. Wythe" <alibuda@linux.alibaba.com>
+To:     kgraul@linux.ibm.com, wenjia@linux.ibm.com
+Cc:     kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: [PATCH net-next 00/10] net/smc: optimize the parallelism of SMC-R connections
+Date:   Thu, 11 Aug 2022 01:47:31 +0800
+Message-Id: <cover.1660152975.git.alibuda@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Add the module parameter "async_destroy", to allow the asynchronous
-destroy mechanism to be switched off. This might be useful for
-debugging purposes.
+From: "D. Wythe" <alibuda@linux.alibaba.com>
 
-The parameter is enabled by default since the feature is opt-in anyway.
+This patch set attempts to optimize the parallelism of SMC-R connections,
+mainly to reduce unnecessary blocking on locks, and to fix exceptions that
+occur after thoses optimization.
 
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
----
- arch/s390/kvm/kvm-s390.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+According to Off-CPU graph, SMC worker's off-CPU as that: 
 
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 4a20a6be6601..8c7af96c4546 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -209,7 +209,13 @@ unsigned int diag9c_forwarding_hz;
- module_param(diag9c_forwarding_hz, uint, 0644);
- MODULE_PARM_DESC(diag9c_forwarding_hz, "Maximum diag9c forwarding per second, 0 to turn off");
- 
--static int async_destroy;
-+/*
-+ * allow asynchronous deinit for protected guests; enable by default since
-+ * the feature is opt-in anyway
-+ */
-+static int async_destroy = 1;
-+module_param(async_destroy, int, 0444);
-+MODULE_PARM_DESC(async_destroy, "Asynchronous destroy for protected guests");
- 
- /*
-  * For now we handle at most 16 double words as this is what the s390 base
+smc_close_passive_work			(1.09%)
+	smcr_buf_unuse			(1.08%)
+		smc_llc_flow_initiate	(1.02%)
+	
+smc_listen_work 			(48.17%)
+	__mutex_lock.isra.11 		(47.96%)
+
+
+An ideal SMC-R connection process should only block on the IO events
+of the network, but it's quite clear that the SMC-R connection now is
+queued on the lock most of the time.
+
+The goal of this patchset is to achieve our ideal situation where
+network IO events are blocked for the majority of the connection lifetime.
+
+There are three big locks here:
+
+1. smc_client_lgr_pending & smc_server_lgr_pending
+
+2. llc_conf_mutex
+
+3. rmbs_lock & sndbufs_lock
+
+And an implementation issue:
+
+1. confirm/delete rkey msg can't be sent concurrently while
+protocol allows indeed.
+
+Unfortunately,The above problems together affect the parallelism of
+SMC-R connection. If any of them are not solved. our goal cannot
+be achieved.
+
+After this patch set, we can get a quite ideal off-CPU graph as
+following:
+
+smc_close_passive_work					(41.58%)
+	smcr_buf_unuse					(41.57%)
+		smc_llc_do_delete_rkey			(41.57%)
+
+smc_listen_work						(39.10%)
+	smc_clc_wait_msg				(13.18%)
+		tcp_recvmsg_locked			(13.18)
+	smc_listen_find_device				(25.87%)
+		smcr_lgr_reg_rmbs			(25.87%)
+			smc_llc_do_confirm_rkey		(25.87%)
+
+We can see that most of the waiting times are waiting for network IO
+events. This also has a certain performance improvement on our
+short-lived conenction wrk/nginx benchmark test:
+
++--------------+------+------+-------+--------+------+--------+
+|conns/qps     |c4    | c8   |  c16  |  c32   | c64  |  c200  |
++--------------+------+------+-------+--------+------+--------+
+|SMC-R before  |9.7k  | 10k  |  10k  |  9.9k  | 9.1k |  8.9k  | 
++--------------+------+------+-------+--------+------+--------+
+|SMC-R now     |13k   | 19k  |  18k  |  16k   | 15k  |  12k   |
++--------------+------+------+-------+--------+------+--------+
+|TCP	       |15k   | 35k  |  51k  |  80k   | 100k |  162k  |
++--------------+------+------+-------+--------+------+--------+
+
+The reason why the benefit is not obvious after the number of connections has
+increased dues to workqueue. If we try to change workqueue to WQ_UNBOUND, we can
+obtain at least 4-5 times performance improvement, can reach up to half of TCP.
+However, this is not an elegant solution, the optimization of it will be much
+more complicated. But in any case, we will submit relevant optimization
+patches as soon as possible.
+
+Please note that the premise here is that the lock related problem
+must be solved first, otherwise, no matter how we optimize the workqueue,
+there won't be much improvement. 
+
+Because there are a lot of related changes to the code, if you have any questions
+or suggestions, please let me know.
+
+Thanks
+D. Wythe
+
+D. Wythe (10):
+  net/smc: remove locks smc_client_lgr_pending and
+    smc_server_lgr_pending
+  net/smc: fix SMC_CLC_DECL_ERR_REGRMB without smc_server_lgr_pending
+  net/smc: allow confirm/delete rkey response deliver multiplex
+  net/smc: make SMC_LLC_FLOW_RKEY run concurrently
+  net/smc: llc_conf_mutex refactor, replace it with rw_semaphore
+  net/smc: use read semaphores to reduce unnecessary blocking in
+    smc_buf_create() & smcr_buf_unuse()
+  net/smc: reduce unnecessary blocking in smcr_lgr_reg_rmbs()
+  net/smc: replace mutex rmbs_lock and sndbufs_lock with rw_semaphore
+  net/smc: fix potential panic dues to unprotected
+    smc_llc_srv_add_link()
+  net/smc: fix application data exception
+
+ net/smc/af_smc.c   |  40 +++--
+ net/smc/smc_core.c | 447 +++++++++++++++++++++++++++++++++++++++++++++++------
+ net/smc/smc_core.h |  76 ++++++++-
+ net/smc/smc_llc.c  | 286 +++++++++++++++++++++++++---------
+ net/smc/smc_llc.h  |   6 +
+ net/smc/smc_wr.c   |  10 --
+ net/smc/smc_wr.h   |  10 ++
+ 7 files changed, 728 insertions(+), 147 deletions(-)
+
 -- 
-2.37.1
+1.8.3.1
 
