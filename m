@@ -2,98 +2,70 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EA6558F1D8
-	for <lists+linux-s390@lfdr.de>; Wed, 10 Aug 2022 19:48:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4827D58F661
+	for <lists+linux-s390@lfdr.de>; Thu, 11 Aug 2022 05:28:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232500AbiHJRsP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 10 Aug 2022 13:48:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53014 "EHLO
+        id S231667AbiHKD2t (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 10 Aug 2022 23:28:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232695AbiHJRsC (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 10 Aug 2022 13:48:02 -0400
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 038168C02E;
-        Wed, 10 Aug 2022 10:47:53 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R331e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=alibuda@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0VLvtrne_1660153670;
-Received: from localhost(mailfrom:alibuda@linux.alibaba.com fp:SMTPD_---0VLvtrne_1660153670)
-          by smtp.aliyun-inc.com;
-          Thu, 11 Aug 2022 01:47:51 +0800
-From:   "D. Wythe" <alibuda@linux.alibaba.com>
-To:     kgraul@linux.ibm.com, wenjia@linux.ibm.com
-Cc:     kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: [PATCH net-next 10/10] net/smc: fix application data exception
-Date:   Thu, 11 Aug 2022 01:47:41 +0800
-Message-Id: <2c6e99846828f7c409ec641ce047e810b89c7130.1660152975.git.alibuda@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        with ESMTP id S229924AbiHKD2s (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 10 Aug 2022 23:28:48 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E69577E00E;
+        Wed, 10 Aug 2022 20:28:47 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7CC576129E;
+        Thu, 11 Aug 2022 03:28:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F4DAC433C1;
+        Thu, 11 Aug 2022 03:28:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660188526;
+        bh=7ZcyDT71ThpRzB15Rd8LOtp9CKDfo8Oui9lkQfmlBI0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Kj3wr/QdzKj0RBGcXnYTGDk3zjpVLMsxn9RfqUE2HLfJgm+olo77mBws0hZG1Ku6f
+         Cf6ND48Q52UAiSs9qjNpfZidnyr1nCAGNiQtO0FURL510++Rfb1OK/894VofgLggkr
+         V/lADFMmPGoauUgQiOWJ0UeKZgBDNlQLJMAQEQ/eZQuNRy92qNONpQaBMYYpWMyX7t
+         ViS3Jo5NK6aOsXwUKuDexbXI0WZwphq8kKph9A1fPzYWV36T7sOTIuU1AVvkbl1NJV
+         6v36bQg6SkV78e94jZpQzXyLISQhxCyOuvvmTVFFXg5c42RzFcxWIY72YzEQmz0WbQ
+         MqjU/vHLXHb6w==
+Date:   Wed, 10 Aug 2022 20:28:45 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     "D. Wythe" <alibuda@linux.alibaba.com>
+Cc:     kgraul@linux.ibm.com, wenjia@linux.ibm.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: Re: [PATCH net-next 00/10] net/smc: optimize the parallelism of
+ SMC-R connections
+Message-ID: <20220810202845.164eb470@kernel.org>
 In-Reply-To: <cover.1660152975.git.alibuda@linux.alibaba.com>
 References: <cover.1660152975.git.alibuda@linux.alibaba.com>
-X-Spam-Status: No, score=-8.7 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
-        version=3.4.6
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: "D. Wythe" <alibuda@linux.alibaba.com>
+On Thu, 11 Aug 2022 01:47:31 +0800 D. Wythe wrote:
+> From: "D. Wythe" <alibuda@linux.alibaba.com>
+> 
+> This patch set attempts to optimize the parallelism of SMC-R connections,
+> mainly to reduce unnecessary blocking on locks, and to fix exceptions that
+> occur after thoses optimization.
 
-After we optimize the parallel capability of SMC-R connection
-establishment, There is a certain probability that following
-exceptions will occur in the wrk benchmark test:
+net-next is closed until Monday, please see the FAQ.
 
-Running 10s test @ http://11.213.45.6:80
-  8 threads and 64 connections
-  Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.72ms   13.94ms 245.33ms   94.17%
-    Req/Sec     1.96k   713.67     5.41k    75.16%
-  155262 requests in 10.10s, 23.10MB read
-Non-2xx or 3xx responses: 3
+Also Al Viro complained about the SMC ULP:
 
-We will find that the error is HTTP 400 error, which is a serious
-exception in our test, which means the application data was
-corrupted.
+https://lore.kernel.org/all/YutBc9aCQOvPPlWN@ZenIV/
 
-Consider the following scenarios:
-
-CPU0                            CPU1
-
-buf_desc->used = 0;
-                                cmpxchg(buf_desc->used, 0, 1)
-                                deal_with(buf_desc)
-
-memset(buf_desc->cpu_addr,0);
-
-This will cause the data received by a victim connection to be cleared,
-thus triggering an HTTP 400 error in the server.
-
-This patch exchange the order between clear used and memset, add
-barrier to ensure memory consistency.
-
-Signed-off-by: D. Wythe <alibuda@linux.alibaba.com>
----
- net/smc/smc_core.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
-index b90970a..7d42125 100644
---- a/net/smc/smc_core.c
-+++ b/net/smc/smc_core.c
-@@ -1406,8 +1406,9 @@ static void smcr_buf_unuse(struct smc_buf_desc *buf_desc, bool is_rmb,
- 
- 		smc_buf_free(lgr, is_rmb, buf_desc);
- 	} else {
--		buf_desc->used = 0;
--		memset(buf_desc->cpu_addr, 0, buf_desc->len);
-+		/* memzero_explicit provides potential memory barrier semantics */
-+		memzero_explicit(buf_desc->cpu_addr, buf_desc->len);
-+		WRITE_ONCE(buf_desc->used, 0);
- 	}
- }
- 
--- 
-1.8.3.1
-
+I didn't see any responses, what the situation there?
