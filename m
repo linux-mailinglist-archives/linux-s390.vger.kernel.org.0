@@ -2,116 +2,203 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E07375954E0
-	for <lists+linux-s390@lfdr.de>; Tue, 16 Aug 2022 10:21:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71AF4595606
+	for <lists+linux-s390@lfdr.de>; Tue, 16 Aug 2022 11:19:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232354AbiHPIVV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 16 Aug 2022 04:21:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47212 "EHLO
+        id S232834AbiHPJTu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 16 Aug 2022 05:19:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232793AbiHPIUh (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 16 Aug 2022 04:20:37 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E65A64A107;
-        Mon, 15 Aug 2022 23:04:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-        bh=SVRLcL3c7t4xux2inMx+BQpiWgYVYAAoRoR2FuDT7Po=; b=FPLQsd26E6o6WLCt+bSUPdpcHx
-        H9fzOawMmwXCUd6JIc6pq2/MNU1uf5NZ2Os9nxttup0lT0c4jxRMTQKFbNWofQ0IN0EnSWcJaszbl
-        A8a7kl5zECeBVavX2dn/B1mow7kwwxRrg42YLrY7VF9sS2PP7tK1kUwLnzcWtzURl7WrQuAv79IFO
-        H1EnwIKP7LTF6YGEZaOKj0g1ueoX8KZsKmaodtWIJuFzNkjkyg6tXxMmnVPk7UcMdVcJdsF4SgHJc
-        RZD/IEmYkCXZPZTBt1e9BPJ2ArqPF1daq3tYalwzMuWQno/XcatUU/YXa1LwAlYi5ZnOkmFcuDGGe
-        l0ygrUzQ==;
-Received: from [2601:1c0:6280:3f0::a6b3]
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oNpgs-00D70J-NI; Tue, 16 Aug 2022 06:04:38 +0000
-Message-ID: <5530ed1f-90ec-ce84-2348-80e484fa48cb@infradead.org>
-Date:   Mon, 15 Aug 2022 23:04:35 -0700
+        with ESMTP id S231434AbiHPJTM (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 16 Aug 2022 05:19:12 -0400
+Received: from out199-2.us.a.mail.aliyun.com (out199-2.us.a.mail.aliyun.com [47.90.199.2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77E3F39B93;
+        Tue, 16 Aug 2022 00:34:56 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=tonylu@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0VMP0xz3_1660635290;
+Received: from localhost(mailfrom:tonylu@linux.alibaba.com fp:SMTPD_---0VMP0xz3_1660635290)
+          by smtp.aliyun-inc.com;
+          Tue, 16 Aug 2022 15:34:51 +0800
+Date:   Tue, 16 Aug 2022 15:34:50 +0800
+From:   Tony Lu <tonylu@linux.alibaba.com>
+To:     Matthew Rosato <mjrosato@linux.ibm.com>
+Cc:     kgraul@linux.ibm.com, wenjia@linux.ibm.com, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+        netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        zmlcc@linux.alibaba.com, hans@linux.alibaba.com,
+        zhiyuan2048@linux.alibaba.com, herongguang@linux.alibaba.com
+Subject: Re: [RFC net-next 1/1] net/smc: SMC for inter-VM communication
+Message-ID: <YvtImtk0cqfhmZH+@TonyMac-Alibaba>
+Reply-To: Tony Lu <tonylu@linux.alibaba.com>
+References: <20220720170048.20806-1-tonylu@linux.alibaba.com>
+ <0ccf9cc6-4916-7815-9ce2-990dc7884849@linux.ibm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] vfio-pci/zdev: require KVM to be built-in
-Content-Language: en-US
-To:     Pierre Morel <pmorel@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc:     kernel test robot <lkp@intel.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <20220814215154.32112-1-rdunlap@infradead.org>
- <663c7595-1c18-043e-5f12-b0ce880b84bf@linux.ibm.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <663c7595-1c18-043e-5f12-b0ce880b84bf@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=gb2312
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <0ccf9cc6-4916-7815-9ce2-990dc7884849@linux.ibm.com>
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi--
-
-On 8/15/22 02:43, Pierre Morel wrote:
-> Thank you Randy for this good catch.
-> However forcing KVM to be include statically in the kernel when using VFIO_PCI extensions is not a good solution for us I think.
+On Wed, Aug 03, 2022 at 04:27:54PM -0400, Matthew Rosato wrote:
+> On 7/20/22 1:00 PM, Tony Lu wrote:
+> > Hi all,
+> > 
+> > # Background
+> > 
+> > We (Alibaba Cloud) have already used SMC in cloud environment to
+> > transparently accelerate TCP applications with ERDMA [1]. Nowadays,
+> > there is a common scenario that deploy containers (which runtime is
+> > based on lightweight virtual machine) on ECS (Elastic Compute Service),
+> > and the containers may want to be scheduled on the same host in order to
+> > get higher performance of network, such as AI, big data or other
+> > scenarios that are sensitive with bandwidth and latency. Currently, the
+> > performance of inter-VM is poor and CPU resource is wasted (see
+> > #Benchmark virtio). This scenario has been discussed many times, but a
+> > solution for a common scenario for applications is missing [2] [3] [4].
+> > 
+> > # Design
+> > 
+> > In inter-VM scenario, we use ivshmem (Inter-VM shared memory device)
+> > which is modeled by QEMU [5]. With it, multiple VMs can access one
+> > shared memory. This shared memory device is statically created by host
+> > and shared to desired guests. The device exposes as a PCI BAR, and can
+> > interrupt its peers (ivshmem-doorbell).
+> > 
+> > In order to use ivshmem in SMC, we write a draft device driver as a
+> > bridge between SMC and ivshmem PCI device. To make it easier, this
+> > driver acts like a SMC-D device in order to fit in SMC without modifying
+> > the code, which is named ivpci (see patch #1).
+> > 
+> >    ©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´
+> >    ©¦  ©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´ ©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´  ©¦
+> >    ©¦  ©¦      VM1      ©¦ ©¦      VM2      ©¦  ©¦
+> >    ©¦  ©¦©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´©¦ ©¦©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´©¦  ©¦
+> >    ©¦  ©¦©¦ Application ©¦©¦ ©¦©¦ Application ©¦©¦  ©¦
+> >    ©¦  ©¦©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È©¦ ©¦©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È©¦  ©¦
+> >    ©¦  ©¦©¦     SMC     ©¦©¦ ©¦©¦     SMC     ©¦©¦  ©¦
+> >    ©¦  ©¦©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È©¦ ©¦©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È©¦  ©¦
+> >    ©¦  ©¦©¦    ivpci    ©¦©¦ ©¦©¦    ivpci    ©¦©¦  ©¦
+> >    ©¦  ©¸©¸©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼©¼ ©¸©¸©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼©¼  ©¦
+> >    ©¦        x  *               x  *        ©¦
+> >    ©¦        x  ****************x* *        ©¦
+> >    ©¦        x  xxxxxxxxxxxxxxxxx* *        ©¦
+> >    ©¦        x  x                * *        ©¦
+> >    ©¦  ©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´ ©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´  ©¦
+> >    ©¦  ©¦shared memories©¦ ©¦ivshmem-server ©¦  ©¦
+> >    ©¦  ©¸©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼ ©¸©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼  ©¦
+> >    ©¦                HOST A                 ©¦
+> >    ©¸©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
+> >     *********** Control flow (interrupt)
+> >     xxxxxxxxxxx Data flow (memory access)
+> > 
+> > Inside ivpci driver, it implements almost all the operations of SMC-D
+> > device. It can be divided into two parts:
+> > 
+> > - control flow, most of it is same with SMC-D, use ivshmem trigger
+> >    interruptions in ivpci and process CDC flow.
+> > 
+> > - data flow, the shared memory of each connection is one large region
+> >    and divided into two part for local and remote RMB. Every writer
+> >    syscall copies data to sndbuf and calls ISM's move_data() to move data
+> >    to remote RMB in ivshmem and interrupt remote. And reader then
+> >    receives interruption and check CDC message, consume data if cursor is
+> >    updated.
+> > 
+> > # Benchmark
+> > 
+> > Current POC of ivpci is unstable and only works for single SMC
+> > connection. Here is the brief data:
+> > 
+> > Items         Latency (pingpong)    Throughput (64KB)
+> > TCP (virtio)   19.3 us                3794.185 MBps
+> > TCP (SR-IOV)   13.2 us                3948.792 MBps
+> > SMC (ivshmem)   6.3 us               11900.269 MBps
+> > 
+> > Test environments:
+> > 
+> > - CPU Intel Xeon Platinum 8 core, mem 32 GiB
+> > - NIC Mellanox CX4 with 2 VFs in two different guests
+> > - using virsh to setup virtio-net + vhost
+> > - using sockperf and single connection
+> > - SMC + ivshmem throughput uses one-copy (userspace -> kernel copy)
+> >    with intrusive modification of SMC (see patch #1), latency (pingpong)
+> >    use two-copy (user -> kernel and move_data() copy, patch version).
+> > 
+> > With the comparison, SMC with ivshmem gets 3-4x bandwidth and a half
+> > latency.
+> > 
+> > TCP + virtio is the most usage solution for guest, it gains lower
+> > performance. Moreover, it consumes extra thread with full CPU core
+> > occupied in host to transfer data, wastes more CPU resource. If the host
+> > is very busy, the performance will be worse.
+> > 
 > 
-> I suggest we better do something like:
+> Hi Tony,
 > 
-> ----
+> Quite interesting!  FWIW for s390x we are also looking at passthrough of
+> host ISM devices to enable SMC-D in QEMU guests:
+> https://lore.kernel.org/kvm/20220606203325.110625-1-mjrosato@linux.ibm.com/
+> https://lore.kernel.org/kvm/20220606203614.110928-1-mjrosato@linux.ibm.com/
 > 
-> diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
-> index 6287a843e8bc..1733339cc4eb 100644
-> --- a/arch/s390/include/asm/kvm_host.h
-> +++ b/arch/s390/include/asm/kvm_host.h
-> @@ -1038,7 +1038,7 @@ static inline void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu) {}
-> Â #define __KVM_HAVE_ARCH_VM_FREE
-> Â void kvm_arch_free_vm(struct kvm *kvm);
+> But seems to me an 'emulated ISM' of sorts could still be interesting even
+> on s390x e.g. for scenarios where host device passthrough is not
+> possible/desired.
 > 
-> -#ifdef CONFIG_VFIO_PCI_ZDEV_KVM
-> +#if defined(CONFIG_VFIO_PCI_ZDEV_KVM) || defined(CONFIG_VFIO_PCI_ZDEV_KVM_MODULE)
-
-This all looks good except for the line above.
-It should be:
-
-#if IS_ENABLED(CONFIG_VFIO_PCI_ZDEV_KVM)
-
-Thanks.
-
-
-> Â int kvm_s390_pci_register_kvm(struct zpci_dev *zdev, struct kvm *kvm);
-> Â void kvm_s390_pci_unregister_kvm(struct zpci_dev *zdev);
-> Â #else
-> diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
-> index f9d0c908e738..bbc375b028ef 100644
-> --- a/drivers/vfio/pci/Kconfig
-> +++ b/drivers/vfio/pci/Kconfig
-> @@ -45,9 +45,9 @@ config VFIO_PCI_IGD
-> Â endif
+> Out of curiosity I tried this ivpci module on s390x but the device won't
+> probe -- This is possibly an issue with the s390x PCI emulation layer in
+> QEMU, I'll have to look into that.
 > 
-> Â config VFIO_PCI_ZDEV_KVM
-> -Â Â Â Â Â Â  bool "VFIO PCI extensions for s390x KVM passthrough"
-> +Â Â Â Â Â Â  def_tristate y
-> +Â Â Â Â Â Â  prompt "VFIO PCI extensions for s390x KVM passthrough"
-> Â Â Â Â Â Â Â  depends on S390 && KVM
-> -Â Â Â Â Â Â  default y
-> Â Â Â Â Â Â Â  help
-> Â Â Â Â Â Â Â Â Â  Support s390x-specific extensions to enable support for enhancements
-> Â Â Â Â Â Â Â Â Â  to KVM passthrough capabilities, such as interpretive execution of
+> > # Discussion
+> > 
+> > This RFC and solution is still in early stage, so we want to come it up
+> > as soon as possible and fully discuss with IBM and community. We have
+> > some topics putting on the table:
+> > 
+> > 1. SMC officially supports this scenario.
+> > 
+> > SMC + ivshmem shows huge improvement when communicating inter VMs. SMC-D
+> > and mocking ISM device might not be the official solution, maybe another
+> > extension for SMC besides SMC-R and SMC-D. So we are wondering if SMC
+> > would accept this idea to fix this scenario? Are there any other
+> > possibilities?
 > 
-> ----
+> I am curious about ivshmem and its current state though -- e.g. looking
+> around I see mention of v2 which you also referenced but don't see any
+> activity on it for a few years?  And as far as v1 ivshmem -- server "not for
+> production use", etc.
 > 
-> What do you think? It seems to me it solves the problem, what do you think?
+> Thanks,
+> Matt
 > 
-> Regards,
-> Pierre
 
+Hi Matt,
 
--- 
-~Randy
+Glad to hear that. And sorry for my late reply.
+
+Current POC version of ivpci for 'emulated ISM' is unstable and buggy,
+and depends on ivshmem [1] and a hypervisor process [2], maybe there are
+some issues blocks that. Please point them out, and I will fix them.
+
+The current state of ivshmem, yes, v1 is still unstable and v2 isn't
+active for a long time. This patch uses ivshmem to act as backend of
+emulated ISM device for prototype. And ivshmem doesn't suit for this
+scenario as a product-level solution, such as interruption, shared
+memory memory allocation and live migration etc.
+
+So we are planning to come up with a new device and the corresponding
+driver. We are trying to extend virtio for shared memory, so that it can
+use shared memory in s390 or others scenarios. We are working on the
+details and send out the proposal later. And what about your opinions?
+
+[1] https://www.qemu.org/docs/master/system/devices/ivshmem.html
+[2] https://github.com/qemu/qemu/tree/master/contrib/ivshmem-server
+
+Cheers,
+Tony Lu
