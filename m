@@ -2,134 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EAF715A0E95
-	for <lists+linux-s390@lfdr.de>; Thu, 25 Aug 2022 12:57:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A8B25A0EB5
+	for <lists+linux-s390@lfdr.de>; Thu, 25 Aug 2022 13:08:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238574AbiHYK5n (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 25 Aug 2022 06:57:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60806 "EHLO
+        id S240494AbiHYLIj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 25 Aug 2022 07:08:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240128AbiHYK5m (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 25 Aug 2022 06:57:42 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46BCAAB05B
-        for <linux-s390@vger.kernel.org>; Thu, 25 Aug 2022 03:57:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661425060;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FgkUPi66b10fN5eQZBnFXaFmcWUym3wJVA23CZaFxu4=;
-        b=cqyCu5O4X3ijb7c01ZM0M0RpDpbkHPAcdnGPjPz0MruE5oN1ODt8wdgyoK6tHWkaOc/GdB
-        0S+SYGkqUtHUCvb6c44XyhL9tirycoon3Zyd6mStwo3EE/9cC0kLw27s/IUmFmhN+m3fy5
-        1SQFvmUmNy/Dn4cAxJfBJ4kn4FM/L44=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-338-2m-e4uAjMuykP0cOEa8jTw-1; Thu, 25 Aug 2022 06:57:39 -0400
-X-MC-Unique: 2m-e4uAjMuykP0cOEa8jTw-1
-Received: by mail-wm1-f69.google.com with SMTP id n7-20020a1c2707000000b003a638356355so8586093wmn.2
-        for <linux-s390@vger.kernel.org>; Thu, 25 Aug 2022 03:57:39 -0700 (PDT)
+        with ESMTP id S240965AbiHYLIi (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 25 Aug 2022 07:08:38 -0400
+Received: from mail-oa1-x30.google.com (mail-oa1-x30.google.com [IPv6:2001:4860:4864:20::30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4932AE9D4
+        for <linux-s390@vger.kernel.org>; Thu, 25 Aug 2022 04:08:33 -0700 (PDT)
+Received: by mail-oa1-x30.google.com with SMTP id 586e51a60fabf-11c5505dba2so24400928fac.13
+        for <linux-s390@vger.kernel.org>; Thu, 25 Aug 2022 04:08:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc;
+        bh=NcQgfGWmNtGVcmYOkqhvmNWuEth66CXwSKmPdJfqqgM=;
+        b=QLEwT3mDYOVfQC+EWP0pgwxHJ5L5DBc6WDYdWESjhpLfI6/elYNa1pOQwdFucLwvpZ
+         7AX6lj6vJ9IuoE4nE/SLtrqkWKzijt/YZbHb4wXbTeoShJnxkOsDaBUkgAwU4CGlXeMq
+         XunJpgBUe/byqMt/IpWVQF9zZks0n1scp3wuhcXIJY0RvzJjmpROE73KqfVg/tizJaUw
+         2RJ9jq4fKKmZOs/XQR3vZ2Yexc+f0o0rhDDasrg27o9htR/4LwOEIaBfceUSh6quYNAQ
+         rswY9t8jMdCJ88eeB8PlSTNKRnVjIkXOwFQRw772qRRL9RSNHY2p89QDCWbaXKVvTNJJ
+         4bfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id
+        h=to:subject:message-id:date:from:reply-to:mime-version
          :x-gm-message-state:from:to:cc;
-        bh=FgkUPi66b10fN5eQZBnFXaFmcWUym3wJVA23CZaFxu4=;
-        b=ShL13zWUesdPvFbs18x+t+ga5BXxzdugcQcQhOKW1IAlGowXxQmpiIK3LuS/JUJlwu
-         5YTCeYuZ5zQDqfr+dAx2I6cX0vrSAjRv6GZaw0bS1Ur7w0wbtOOzNMm8aAd80lp7NuO4
-         Ltv6qwcyMekMvpRf5g8gK5awXPE+HnjwYdPeBAiftUC6qseSuQfAWE2wWiCiXA4mm/mp
-         QFCNxhOoYSEUeyP/VcPUctF7xIQjyJh7eGoyOmIx0mMrZHjcIrKFGaBW3+NGROu6dPk1
-         haJ8vWmDwVc+XMLlJUVAZWDBMeU08xciPKFyByeFbbpK66ep0rRlPQtysNz32fEy3a5r
-         2ggg==
-X-Gm-Message-State: ACgBeo2UmUXVXZc74DtQOzVQ63xeuyMd/hQhI4LczcObeyw1cDWJqsbr
-        mDWoY33+Lr6GbvcTqwfuQ6PEBIGUFFLeX1aygI30WfUwtHPuASIMrI93Um+IzB/SmIlncc4S+Ie
-        3WqLan7Sp7jXmTbTnOjXO/A==
-X-Received: by 2002:a05:6000:2ce:b0:225:2c5f:3ba8 with SMTP id o14-20020a05600002ce00b002252c5f3ba8mr1973299wry.138.1661425058020;
-        Thu, 25 Aug 2022 03:57:38 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR4MPhxbX3iYKcYN/4G9jyTlonkLAJjSJnnY4kJ7uM8Qb+IgchW5/oA+oejFBrsj734XrIpU0A==
-X-Received: by 2002:a05:6000:2ce:b0:225:2c5f:3ba8 with SMTP id o14-20020a05600002ce00b002252c5f3ba8mr1973288wry.138.1661425057757;
-        Thu, 25 Aug 2022 03:57:37 -0700 (PDT)
-Received: from [192.168.0.5] (ip-109-43-177-177.web.vodafone.de. [109.43.177.177])
-        by smtp.gmail.com with ESMTPSA id j18-20020a05600c191200b003a5c2abc412sm5691360wmq.44.2022.08.25.03.57.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Aug 2022 03:57:37 -0700 (PDT)
-Message-ID: <f7d86779-f67e-19eb-5ba1-da586ab6c6ef@redhat.com>
-Date:   Thu, 25 Aug 2022 12:57:35 +0200
+        bh=NcQgfGWmNtGVcmYOkqhvmNWuEth66CXwSKmPdJfqqgM=;
+        b=0nKAC3PMJgcD8uc7BCYYp9qh+JJb8FgQiH1qOYsZ85Is7hO3oWbD3YNGHO6xQUUCCM
+         LlsRyGtIBa60fMmBU8phGlOdVHSPNhrzY7tS92udZ9ZDNbjXLU+X4+rTubqW2sR8Nw4B
+         1ZCOOk6RIr0SYysmzZtwjpc5Waox7cvwGQ+I2RJP0wfmJvh2V8RWPazU5t4e6ibSzyU0
+         FTCl59l/nnJEowzNpeQwiPk+yf5yqs1VcuS4JW4YZGO0hUZ8vmDJxwPJ5Ew6g1YJBXpX
+         RYpZoD/BCH6dxqCH6bJXSynezYPGmpDdRbr1R4r5pwyH8Sp6rdARWbPCJjhT/mSORy/r
+         HN4Q==
+X-Gm-Message-State: ACgBeo3G8jKoV/say3GQPSx2cnKmKAw8LCkMaDA7vncdi8sDOJQP3ifO
+        alOeXb49T/ss2fhoSiwWm8xQ4sfs5i8vareLatZl1x5c
+X-Google-Smtp-Source: AA6agR6vxFu+T5Vi0JlBETP13HQZT8Q6LFfji/WvMjiIsdWgeDbghANJ0lVZsi9+DDNbMSXCgZ5mRKrBDtWrJnmB950=
+X-Received: by 2002:a05:6870:b51f:b0:11e:39c8:cc10 with SMTP id
+ v31-20020a056870b51f00b0011e39c8cc10mr360537oap.184.1661425712647; Thu, 25
+ Aug 2022 04:08:32 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Content-Language: en-US
-To:     Janosch Frank <frankja@linux.ibm.com>,
-        Janis Schoetterl-Glausch <scgl@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc:     David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-References: <20220705111707.3772070-1-scgl@linux.ibm.com>
- <d5b7dea2-3a43-a018-1474-1bb47ca9a6ff@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Subject: Re: [kvm-unit-tests PATCH v3] s390x: Add strict mode to specification
- exception interpretation test
-In-Reply-To: <d5b7dea2-3a43-a018-1474-1bb47ca9a6ff@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Received: by 2002:ac9:5ec3:0:0:0:0:0 with HTTP; Thu, 25 Aug 2022 04:08:32
+ -0700 (PDT)
+Reply-To: sgtkaylla202@gmail.com
+From:   kayla manthey <tadjokes@gmail.com>
+Date:   Thu, 25 Aug 2022 11:08:32 +0000
+Message-ID: <CAHi6=KYt_bAm4D5od95kP0tPF2g49oCa+O9rxeaPXVw96Pk-8A@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2001:4860:4864:20:0:0:0:30 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4991]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [tadjokes[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [sgtkaylla202[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.2 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 25/08/2022 09.37, Janosch Frank wrote:
-> On 7/5/22 13:17, Janis Schoetterl-Glausch wrote:
->> While specification exception interpretation is not required to occur,
->> it can be useful for automatic regression testing to fail the test if it
->> does not occur.
->> Add a `--strict` argument to enable this.
->> `--strict` takes a list of machine types (as reported by STIDP)
->> for which to enable strict mode, for example
->> `--strict 3931,8562,8561,3907,3906,2965,2964`
->> will enable it for models z16 - z13.
->> Alternatively, strict mode can be enabled for all but the listed machine
->> types by prefixing the list with a `!`, for example
->> `--strict 
->> !1090,1091,2064,2066,2084,2086,2094,2096,2097,2098,2817,2818,2827,2828`
->> will enable it for z/Architecture models except those older than z13.
->> `--strict !` will enable it always.
->>
->> Signed-off-by: Janis Schoetterl-Glausch <scgl@linux.ibm.com>
-> 
-> GCC 11.2.0 isn't happy
-> 
-> s390x/spec_ex-sie.c: In function ‘test_spec_ex_sie’:
-> s390x/spec_ex-sie.c:70:17: error: format not a string literal and no format 
-> arguments [-Werror=format-security]
->     70 |                 report(vm.sblk->gpsw.addr == 0xdeadbeee, msg);
->        |                 ^~~~~~
-> s390x/spec_ex-sie.c:72:17: error: format not a string literal and no format 
-> arguments [-Werror=format-security]
->     72 |                 report_info(msg);
->        |                 ^~~~~~~~~~~
-> cc1: all warnings being treated as errors
-> make: *** [<builtin>: s390x/spec_ex-sie.o] Error 1
-
-Too bad that GCC isn't smart enough to see that it is a constant string... I 
-guess we have to add an artifical "%s" format string here now?
-
-> I have to page in the discussion again to know how this fits into the 
-> picture. Either that or Thomas tells me it's exactly what he wants and I'll 
-> add it to my queue once the compile problem has been fixed one way or another.
-
-The point was that we wanted to use this k-u-t to automatically test a 
-backport of the related kernel commit. Without the strict mode that is not 
-possible since the test does not fail if the kernel backport is missing.
-
-I just also noticed that I never replied to this v3 ... so FWIW, code looks 
-fine to me (with the "%s" fixup on top of it), thus:
-
-Reviewed-by: Thomas Huth <thuth@redhat.com>
-
+Bok draga, mogu li razgovarati s tobom, molim te?
