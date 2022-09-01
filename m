@@ -2,257 +2,206 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA3DE5A9154
-	for <lists+linux-s390@lfdr.de>; Thu,  1 Sep 2022 09:56:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C79E5A8F9A
+	for <lists+linux-s390@lfdr.de>; Thu,  1 Sep 2022 09:17:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232007AbiIAH4m (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 1 Sep 2022 03:56:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39800 "EHLO
+        id S232950AbiIAHRg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 1 Sep 2022 03:17:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233301AbiIAH4i (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 1 Sep 2022 03:56:38 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03AC8C9E8D;
-        Thu,  1 Sep 2022 00:56:33 -0700 (PDT)
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2817q8UV009562;
-        Thu, 1 Sep 2022 07:56:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=VWJ0iF7Jqd3Q1V4eJazCtQU9rpjJz6u+8TnZDmEJ39s=;
- b=jgV94N6NED0GjOVcnrETcQrYaRq21r0e3WGYNzW0H0grghtGskaxOOgVywjHrGsL86UV
- HGnd5fIUOONfVq+OFeSyyLI+YYLLg4miSwvNE512HYVuAezFCyprI/IEWJf+9SZ6OJBE
- RRCUlpG3OAO3wnZDMPam79EIf5g/Z0/gKzdG9AcI1etrY/vo+cL4eMMOyEXth0eoUMvM
- cZTHzIgUdiRgPjGlWHFLnrI5K+55ZpNpFSEwKzJHFpA7eU2w1T9Xi9OYndvKkrzHQ4tA
- 1Hnp7QTS7fR8+/Q+9vcBE4gRu34TweWZta49fjMQMAAwI3MQuzuLED3svvIu24DRRUyp RQ== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3jarqrg240-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Sep 2022 07:56:15 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2817tuW8029348;
-        Thu, 1 Sep 2022 07:56:14 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06ams.nl.ibm.com with ESMTP id 3j7ahj6dq4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Sep 2022 07:56:14 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2817uArh37552432
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 1 Sep 2022 07:56:10 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CDCD9A4054;
-        Thu,  1 Sep 2022 07:56:10 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2054EA405F;
-        Thu,  1 Sep 2022 07:56:10 +0000 (GMT)
-Received: from [9.171.52.69] (unknown [9.171.52.69])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  1 Sep 2022 07:56:10 +0000 (GMT)
-Message-ID: <9887e2f4-3f3d-137d-dad7-59dab5f98aab@linux.ibm.com>
-Date:   Thu, 1 Sep 2022 09:56:09 +0200
+        with ESMTP id S232562AbiIAHRf (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 1 Sep 2022 03:17:35 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63A65124847;
+        Thu,  1 Sep 2022 00:17:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662016654; x=1693552654;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/oWozjlSYSNeOLAebOKD/bZQo3WvQOnbYJ2YF9ryPU4=;
+  b=BDtUxsYB3+SUBZFugfUuAzh1tm4VThi66OehwHL/D7EyxOYUgVi/n68N
+   4vyrQGNoKCAYhYV6mX8TngeMyyN/blfHVtRS9P7B5xMGtrut9s5XV82Y3
+   t8F1IaxXxcDP4VyJbrYTUNXahzJ+EB1M1xWUAbb0hkw6xok6/rm481T+c
+   xHAltlJhdVpOjUjtnqZfRSc9XjZxC8ND/FPWYqvKQKItgyfBHNwWj1W1i
+   Am/9+Fo8Nc7BgN+49qrV1GKYjayvSX9MQ4FcL3lRqqf3kBCqM6/CYuG0O
+   kgDn2gDDInxaA9p1SXcje3Z2z8lA+4FObXvuvm22C+RIP9SfmH5Lt1zKc
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10456"; a="294378000"
+X-IronPort-AV: E=Sophos;i="5.93,280,1654585200"; 
+   d="scan'208";a="294378000"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2022 00:17:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,280,1654585200"; 
+   d="scan'208";a="673719782"
+Received: from sqa-gate.sh.intel.com (HELO michael.clx.dev.tsp.org) ([10.239.48.212])
+  by fmsmga008.fm.intel.com with ESMTP; 01 Sep 2022 00:17:25 -0700
+From:   Kevin Tian <kevin.tian@intel.com>
+To:     Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Eric Farman <farman@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Longfang Liu <liulongfang@huawei.com>,
+        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Abhishek Sahu <abhsahu@nvidia.com>,
+        intel-gvt-dev@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     Yi Liu <yi.l.liu@intel.com>
+Subject: [PATCH v2 00/15] Tidy up vfio_device life cycle
+Date:   Thu,  1 Sep 2022 22:37:32 +0800
+Message-Id: <20220901143747.32858-1-kevin.tian@intel.com>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [PATCH v4 1/2] iommu/s390: Fix race with release_device ops
-Content-Language: en-US
-To:     Matthew Rosato <mjrosato@linux.ibm.com>, iommu@lists.linux.dev
-Cc:     linux-s390@vger.kernel.org, schnelle@linux.ibm.com,
-        borntraeger@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        gerald.schaefer@linux.ibm.com, agordeev@linux.ibm.com,
-        svens@linux.ibm.com, joro@8bytes.org, will@kernel.org,
-        robin.murphy@arm.com, jgg@nvidia.com, linux-kernel@vger.kernel.org
-References: <20220831201236.77595-1-mjrosato@linux.ibm.com>
- <20220831201236.77595-2-mjrosato@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-In-Reply-To: <20220831201236.77595-2-mjrosato@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 1tmo4lT0ADQ0FCDWTdxaB8P2OmHyGC7e
-X-Proofpoint-ORIG-GUID: 1tmo4lT0ADQ0FCDWTdxaB8P2OmHyGC7e
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-09-01_04,2022-08-31_03,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- priorityscore=1501 spamscore=0 mlxlogscore=999 suspectscore=0
- malwarescore=0 clxscore=1015 adultscore=0 lowpriorityscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2207270000 definitions=main-2209010033
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+The idea is to let vfio core manage the vfio_device life cycle instead
+of duplicating the logic cross drivers. Besides cleaner code in driver
+side this also allows adding struct device to vfio_device as the first
+step toward adding cdev uAPI in the future. Another benefit is that
+user can now look at sysfs to decide whether a device is bound to
+vfio [1], e.g.:
+
+	/sys/devices/pci0000\:6f/0000\:6f\:01.0/vfio-dev/vfio0
+
+Though most drivers can fit the new model naturally:
+
+ - vfio_alloc_device() to allocate and initialize vfio_device
+ - vfio_put_device() to release vfio_device
+ - dev_ops->init() for driver private initialization
+ - dev_ops->release() for driver private cleanup
+
+vfio-ccw is the only exception due to a life cycle mess that its private
+structure mixes both parent and mdev info hence must be alloc/freed
+outside of the life cycle of vfio device.
+
+Per prior discussions this won't be fixed in short term by IBM folks [2].
+
+Instead of waiting this series introduces a few tricks to move forward:
+
+ - vfio_init_device() to initialize a pre-allocated device structure;
+
+ - require *EVERY* driver to implement @release and free vfio_device
+   inside. Then vfio-ccw can use a completion mechanism to delay the
+   free to css driver;
+
+The second trick is not a real burden to other drivers because they
+all require a @release for private cleanup anyay. Later once the ccw
+mess is fixed a simple cleanup can be done by moving free from @release
+to vfio core.
+
+v2:
+ - rebase to 6.0-rc3
+ - fix build warnings (lkp)
+ - patch1: remove unnecessary forward reference (Jason)
+ - patch10: leave device_set released by vfio core (Jason)
+ - patch13: add Suggested-by
+ - patch15: add ABI file sysfs-devices-vfio-dev (Alex)
+ - patch15: rename 'vfio' to 'vfio_group' in procfs (Jason)
+v1: https://lore.kernel.org/lkml/20220827171037.30297-1-kevin.tian@intel.com/
+
+--
+@Alex, before knowing your merging preference this is only rebased to
+6.0-rc3.
+
+There is no conflict with:
+
+ - Remove private items from linux/vfio_pci_core.h
+ - Break up ioctl dispatch functions to one function per ioctl
+
+But conflict exists with Jason's two series:
+
+ - Allow MMIO regions to be exported through dma-buf
+ - vfio: Split the container code into a clean layer and dedicated file
+
+Thanks
+Kevin
+
+[1] https://listman.redhat.com/archives/libvir-list/2022-August/233482.html
+[2] https://lore.kernel.org/all/0ee29bd6583f17f0ee4ec0769fa50e8ea6703623.camel@linux.ibm.com/
+
+Kevin Tian (6):
+  vfio: Add helpers for unifying vfio_device life cycle
+  drm/i915/gvt: Use the new device life cycle helpers
+  vfio/platform: Use the new device life cycle helpers
+  vfio/amba: Use the new device life cycle helpers
+  vfio/ccw: Use the new device life cycle helpers
+  vfio: Rename vfio_device_put() and vfio_device_try_get()
+
+Yi Liu (9):
+  vfio/pci: Use the new device life cycle helpers
+  vfio/mlx5: Use the new device life cycle helpers
+  vfio/hisi_acc: Use the new device life cycle helpers
+  vfio/mdpy: Use the new device life cycle helpers
+  vfio/mtty: Use the new device life cycle helpers
+  vfio/mbochs: Use the new device life cycle helpers
+  vfio/ap: Use the new device life cycle helpers
+  vfio/fsl-mc: Use the new device life cycle helpers
+  vfio: Add struct device to vfio_device
+
+ .../ABI/testing/sysfs-devices-vfio-dev        |   8 +
+ drivers/gpu/drm/i915/gvt/gvt.h                |   5 +-
+ drivers/gpu/drm/i915/gvt/kvmgt.c              |  52 ++++--
+ drivers/gpu/drm/i915/gvt/vgpu.c               |  33 ++--
+ drivers/s390/cio/vfio_ccw_ops.c               |  52 +++++-
+ drivers/s390/cio/vfio_ccw_private.h           |   3 +
+ drivers/s390/crypto/vfio_ap_ops.c             |  50 +++---
+ drivers/vfio/fsl-mc/vfio_fsl_mc.c             |  85 +++++----
+ .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    |  80 ++++-----
+ drivers/vfio/pci/mlx5/main.c                  |  49 +++--
+ drivers/vfio/pci/vfio_pci.c                   |  20 +--
+ drivers/vfio/pci/vfio_pci_core.c              |  23 ++-
+ drivers/vfio/platform/vfio_amba.c             |  72 ++++++--
+ drivers/vfio/platform/vfio_platform.c         |  66 +++++--
+ drivers/vfio/platform/vfio_platform_common.c  |  71 +++-----
+ drivers/vfio/platform/vfio_platform_private.h |  18 +-
+ drivers/vfio/vfio_main.c                      | 167 +++++++++++++++---
+ include/linux/vfio.h                          |  28 ++-
+ include/linux/vfio_pci_core.h                 |   6 +-
+ samples/vfio-mdev/mbochs.c                    |  73 +++++---
+ samples/vfio-mdev/mdpy.c                      |  81 +++++----
+ samples/vfio-mdev/mtty.c                      |  67 ++++---
+ 22 files changed, 729 insertions(+), 380 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-devices-vfio-dev
 
 
-On 8/31/22 22:12, Matthew Rosato wrote:
-> With commit fa7e9ecc5e1c ("iommu/s390: Tolerate repeat attach_dev
-> calls") s390-iommu is supposed to handle dynamic switching between IOMMU
-> domains and the DMA API handling.  However, this commit does not
-> sufficiently handle the case where the device is released via a call
-> to the release_device op as it may occur at the same time as an opposing
-> attach_dev or detach_dev since the group mutex is not held over
-> release_device.  This was observed if the device is deconfigured during a
-> small window during vfio-pci initialization and can result in WARNs and
-> potential kernel panics.
-> 
-> Handle this by tracking when the device is probed/released via
-> dev_iommu_priv_set/get().  Ensure that once the device is released only
-> release_device handles the re-init of the device DMA.
-> 
-> Fixes: fa7e9ecc5e1c ("iommu/s390: Tolerate repeat attach_dev calls")
-> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
-> ---
->   arch/s390/include/asm/pci.h |  1 +
->   arch/s390/pci/pci.c         |  1 +
->   drivers/iommu/s390-iommu.c  | 39 ++++++++++++++++++++++++++++++++++---
->   3 files changed, 38 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
-> index 7b4cdadbc023..080251e7b275 100644
-> --- a/arch/s390/include/asm/pci.h
-> +++ b/arch/s390/include/asm/pci.h
-> @@ -157,6 +157,7 @@ struct zpci_dev {
->   	/* DMA stuff */
->   	unsigned long	*dma_table;
->   	spinlock_t	dma_table_lock;
-> +	struct mutex	dma_domain_lock; /* protects s390_domain value */
->   	int		tlb_refresh;
->   
->   	spinlock_t	iommu_bitmap_lock;
-> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
-> index 73cdc5539384..973edd32ecc9 100644
-> --- a/arch/s390/pci/pci.c
-> +++ b/arch/s390/pci/pci.c
-> @@ -832,6 +832,7 @@ struct zpci_dev *zpci_create_device(u32 fid, u32 fh, enum zpci_state state)
->   	kref_init(&zdev->kref);
->   	mutex_init(&zdev->lock);
->   	mutex_init(&zdev->kzdev_lock);
-> +	mutex_init(&zdev->dma_domain_lock);
->   
->   	rc = zpci_init_iommu(zdev);
->   	if (rc)
-> diff --git a/drivers/iommu/s390-iommu.c b/drivers/iommu/s390-iommu.c
-> index c898bcbbce11..1137d669e849 100644
-> --- a/drivers/iommu/s390-iommu.c
-> +++ b/drivers/iommu/s390-iommu.c
-> @@ -99,6 +99,14 @@ static int s390_iommu_attach_device(struct iommu_domain *domain,
->   	if (!domain_device)
->   		return -ENOMEM;
->   
-> +	/* Leave now if the device has already been released */
-> +	mutex_lock(&zdev->dma_domain_lock);
-> +	if (!dev_iommu_priv_get(dev)) {
-> +		mutex_unlock(&zdev->dma_domain_lock);
-> +		kfree(domain_device);
-> +		return 0;
-> +	}
-> +
->   	if (zdev->dma_table && !zdev->s390_domain) {
->   		cc = zpci_dma_exit_device(zdev);
->   		if (cc) {
-> @@ -132,9 +140,10 @@ static int s390_iommu_attach_device(struct iommu_domain *domain,
->   		goto out_restore;
->   	}
->   	domain_device->zdev = zdev;
-> -	zdev->s390_domain = s390_domain;
->   	list_add(&domain_device->list, &s390_domain->devices);
->   	spin_unlock_irqrestore(&s390_domain->list_lock, flags);
-> +	zdev->s390_domain = s390_domain;
-> +	mutex_unlock(&zdev->dma_domain_lock);
->   
->   	return 0;
->   
-> @@ -147,6 +156,7 @@ static int s390_iommu_attach_device(struct iommu_domain *domain,
->   				   virt_to_phys(zdev->dma_table));
->   	}
->   out_free:
-> +	mutex_unlock(&zdev->dma_domain_lock);
->   	kfree(domain_device);
->   
->   	return rc;
-> @@ -176,17 +186,22 @@ static void s390_iommu_detach_device(struct iommu_domain *domain,
->   	}
->   	spin_unlock_irqrestore(&s390_domain->list_lock, flags);
->   
-> -	if (found && (zdev->s390_domain == s390_domain)) {
-> +	mutex_lock(&zdev->dma_domain_lock);
-> +	if (found && (zdev->s390_domain == s390_domain) &&
-> +	    dev_iommu_priv_get(dev)) {
->   		zdev->s390_domain = NULL;
->   		zpci_unregister_ioat(zdev, 0);
->   		zpci_dma_init_device(zdev);
->   	}
-> +	mutex_unlock(&zdev->dma_domain_lock);
->   }
->   
->   static struct iommu_device *s390_iommu_probe_device(struct device *dev)
->   {
->   	struct zpci_dev *zdev = to_zpci_dev(dev);
->   
-> +	dev_iommu_priv_set(dev, zdev);
-> +
->   	return &zdev->iommu_dev;
->   }
->   
-> @@ -206,10 +221,28 @@ static void s390_iommu_release_device(struct device *dev)
->   	 *
->   	 * So let's call detach_dev from here if it hasn't been called before.
->   	 */
-> -	if (zdev && zdev->s390_domain) {
-> +	if (zdev) {
-> +		/*
-> +		 * Clear priv to block further attaches for this device,
-> +		 * ensure detaches don't init DMA.  Hold the domain lock
-> +		 * to ensure that attach/detach get a consistent view of
-> +		 * whether or not the device is released.
-> +		 */
-> +		mutex_lock(&zdev->dma_domain_lock);
-> +		dev_iommu_priv_set(dev, NULL);
-> +		mutex_unlock(&zdev->dma_domain_lock);
-
-We release the lock here to later call s390_iommu_detach_device safely 
-right?
-Couldn't we keep the lock and put the common code from 
-s390_iommu_release_device and s390_iommu_detach_device inside a common 
-function?
-
-> +		/* Make sure this device is removed from the domain list */
->   		domain = iommu_get_domain_for_dev(dev);
->   		if (domain)
->   			s390_iommu_detach_device(domain, dev);
-
-
-> +		/* Now ensure DMA is initialized from here */
-> +		mutex_lock(&zdev->dma_domain_lock);
-> +		if (zdev->s390_domain) {
-> +			zdev->s390_domain = NULL;
-> +			zpci_unregister_ioat(zdev, 0);
-> +			zpci_dma_init_device(zdev);
-
-Sorry if it is a stupid question, but two things looks strange to me:
-
-- having DMA initialized just after having unregistered the IOAT
-Is that really all we need to unregister before calling dma_init_device?
-
-- having DMA initialized inside the release_device callback:
-Why isn't it done in the device_probe ?
-
-
-> +		}
-> +		mutex_unlock(&zdev->dma_domain_lock);
->   	}
->   }
->   
-> 
-
+base-commit: b90cb1053190353cc30f0fef0ef1f378ccc063c5
 -- 
-Pierre Morel
-IBM Lab Boeblingen
+2.21.3
