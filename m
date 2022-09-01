@@ -2,99 +2,195 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A859B5A8EBF
-	for <lists+linux-s390@lfdr.de>; Thu,  1 Sep 2022 08:52:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93B115A9072
+	for <lists+linux-s390@lfdr.de>; Thu,  1 Sep 2022 09:37:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232891AbiIAGwH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 1 Sep 2022 02:52:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36148 "EHLO
+        id S233913AbiIAHhS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 1 Sep 2022 03:37:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232685AbiIAGwH (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 1 Sep 2022 02:52:07 -0400
-Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 902A71157C0;
-        Wed, 31 Aug 2022 23:52:05 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=tonylu@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0VNxiw1q_1662015119;
-Received: from localhost(mailfrom:tonylu@linux.alibaba.com fp:SMTPD_---0VNxiw1q_1662015119)
-          by smtp.aliyun-inc.com;
-          Thu, 01 Sep 2022 14:52:00 +0800
-Date:   Thu, 1 Sep 2022 14:51:59 +0800
-From:   Tony Lu <tonylu@linux.alibaba.com>
-To:     liuyacan@corp.netease.com
-Cc:     davem@davemloft.net, edumazet@google.com, kgraul@linux.ibm.com,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        ubraun@linux.vnet.ibm.com, pabeni@redhat.com, wenjia@linux.ibm.com,
-        wintera@linux.ibm.com
-Subject: Re: [PATCH net v4] net/smc: Fix possible access to freed memory in
- link clear
-Message-ID: <YxBWj9HdG7SIStjW@TonyMac-Alibaba>
-Reply-To: Tony Lu <tonylu@linux.alibaba.com>
-References: <Yw4bgV6c0LQ6reMc@TonyMac-Alibaba>
- <20220831155303.1758868-1-liuyacan@corp.netease.com>
+        with ESMTP id S233057AbiIAHhK (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 1 Sep 2022 03:37:10 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30EC1109081;
+        Thu,  1 Sep 2022 00:37:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662017830; x=1693553830;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=E0tjURMAVeo957WRs0WKwNwl2PPLitzga8gvJwF55UY=;
+  b=fk/4JKuV+KGp1ilBGEL7TIpJeACQWPxNljbNpPP6VTUGKDH6lzfpCWJI
+   V0C15kbgqkAoS5azcSZbelknvqVQsGDNfqa9ZoN0yiZg8SkjvwVE9B19y
+   ho6vufehOyeibZZ6gkZ/TezhnGFw67HV1LyZOxpN9Pa6PRuMuNEwqh7YN
+   wWxdlpPd1CBxPjqBI2O4vbtIZzcnUWY3cKoSHT5tQcVR5xzHP+pJ2Y8Z5
+   16FfZq+sPHmzl3j8fOegJMgEstmnfz+dxk4fvGBU2qGsaKHUogHE0hzAw
+   grRZBkuoa8Iv6kUDjOQXSqP7cA6NufML3R/hyxZ0ES2DSjOlst/NpRoQ9
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10456"; a="278660945"
+X-IronPort-AV: E=Sophos;i="5.93,280,1654585200"; 
+   d="scan'208";a="278660945"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2022 00:37:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,280,1654585200"; 
+   d="scan'208";a="857736439"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmsmga006.fm.intel.com with ESMTP; 01 Sep 2022 00:37:08 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 1 Sep 2022 00:37:08 -0700
+Received: from orsmsx607.amr.corp.intel.com (10.22.229.20) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 1 Sep 2022 00:37:07 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx607.amr.corp.intel.com (10.22.229.20) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31 via Frontend Transport; Thu, 1 Sep 2022 00:37:07 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.101)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2375.31; Thu, 1 Sep 2022 00:37:07 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G5j+gGloIt26NQDRyZfrDNP6h5aGNqeiVeOU1I2qfOOE0w/L+QjpOtrebARe3BIWPSMUgcHyzw1L1xd0tRiQaN96h1hAaKEmLuZ7y+P0H9O1NnTBzSxz9qxtor4xOzElkEJLygZps1HOh9/kvkVd/e+M4emkpyPVqCdXeMbsYZC8rpJMt1ldTnGRO2EA1nPKd/wMVMhcZy1S9uyWr4h19pI9rEVaOYH6syJPhfeP95M39v34tcIrgb3RB/SOqBz7c3pGUAQdcpPrKQYmff02MmecRYfll7yEQH41TYtsI6Ppfmkyx93sA9ZUML3+Ln42kqEYFd29FPohbJBlqY1i9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=E0tjURMAVeo957WRs0WKwNwl2PPLitzga8gvJwF55UY=;
+ b=k74RRWt4Blal0gwr2e0betc4agQw6Xao9BHk0rNQbj9VGoN3EECBSuaQMVS5Mfg1gi0+YW/2RnJ35Ts7yTw2jWglT+u7ceUyAekC2JjFK5e/S9OvpTJQU+GykO0Az3N9CvwAORL7xE2F5NVA01AefF3RpJKW1HQLBndKHK2Xayn/rdwAoEsveM7Vln/X10cvntEFkOlQfMOOpyqtPgnbNxZTYdXEW+DBxm+s9cmM9RwfIH9YEq2Ah0fYkDS8U3zilRTDqQSVKP7ra/F8t5SnzAxrzvHPQzq+GsNt+0ZmaVXAAt89o0tFMArPsO7C0olOl6WRXcTW2ZqE9E+a3uJ8zQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
+ by BN6PR11MB1428.namprd11.prod.outlook.com (2603:10b6:405:a::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.10; Thu, 1 Sep
+ 2022 07:37:06 +0000
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::a435:3eff:aa83:73d7]) by BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::a435:3eff:aa83:73d7%5]) with mapi id 15.20.5588.010; Thu, 1 Sep 2022
+ 07:37:06 +0000
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Zhenyu Wang <zhenyuw@linux.intel.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        "Joonas Lahtinen" <joonas.lahtinen@linux.intel.com>,
+        "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Eric Farman <farman@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        "Peter Oberparleiter" <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        "Alex Williamson" <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Longfang Liu <liulongfang@huawei.com>,
+        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        "Kirti Wankhede" <kwankhede@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "Abhishek Sahu" <abhsahu@nvidia.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+CC:     "Liu, Yi L" <yi.l.liu@intel.com>
+Subject: RE: [PATCH v2 12/15] vfio/amba: Use the new device life cycle helpers
+Thread-Topic: [PATCH v2 12/15] vfio/amba: Use the new device life cycle
+ helpers
+Thread-Index: AQHYvdM1bc3iXCaPfUypseokfXt+uq3KL2kA
+Date:   Thu, 1 Sep 2022 07:37:05 +0000
+Message-ID: <BN9PR11MB52760EBD9E07701E1C5D651D8C7B9@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20220901143747.32858-1-kevin.tian@intel.com>
+ <20220901143747.32858-13-kevin.tian@intel.com>
+In-Reply-To: <20220901143747.32858-13-kevin.tian@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 63b2371a-9553-4af5-ffd5-08da8becc4e9
+x-ms-traffictypediagnostic: BN6PR11MB1428:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ymBu+g1eutbSWViypK9xrL0zxsPdlOKgvQW7l7bwPJRHUFjhc6dRbXaTCVLXRqJxCpRKOvdEPauVnHXthJMD+Jk8aPol8Xxt2g6HPbti05VKlt3j7TiH25diFQuZa1sLlFObSGMNMCOXCtSMkZJjGgbiuPEckbes4JrUUup4adUqVYg8aE2ibDhBriwHMPI1n5wMi2WiVO15ndylabMogdUGUtViFM87YaJZOty0E0/UT8KpgbrdivIdgLP/XhLct4JWu55sohatJk56CPf+aWKX+IHfTx2VktHYo7g16vODS4l0CAJP8FE9qYfV5tTDyqHNleOQxANFbqZr1S0+ul8B6n4f00ph0MgvlXz8UCeHK1B0fXpJXRg7GTw2F7mSS8urf0UqQtn71KS0nCzjvq/NZnbrqSrt3FUic2n3oV+98AL1xqJaQXu28FN3KqXRD39NwCEizdozA71bcUkr7XhKlxsR9kralDMpjiyeVPqX+xqc5uUbrPvUR0Rp0DFNPOHb+2xZcxokeGgsRINZ/0zQbofXhKZp9cypmieAT9C0IeZxzIQr/iRrFv/P55qktHzKR2JDcMk5fpULkNFurLsxNwlyOJdtdeosDGN/d3eT378lOH9K8H6HfFSkO022g0TfUB+NnxWDQq+NxhKwq4aqGtJpWy2CBaDWXnyuyIK02k87TuIvTM3RDU0zNmaDhPIuRipXYX8aZDet/SwMhK9zuxxu5dGPS9vMoQZbQZCoHR75wNOpoVAjmXVJPea3Oht1bZ4rmiAFN5G+O5ORnIhc1MoXQlhnOZjeICHN2gg=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(376002)(39860400002)(396003)(136003)(346002)(366004)(558084003)(6506007)(7696005)(55016003)(110136005)(316002)(4326008)(8676002)(64756008)(66476007)(76116006)(66946007)(66556008)(38070700005)(52536014)(8936002)(66446008)(33656002)(921005)(478600001)(38100700002)(71200400001)(7416002)(7406005)(122000001)(82960400001)(86362001)(9686003)(2906002)(5660300002)(41300700001)(26005)(186003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Be7RFIdTO0SP6shqnlo47Wxy96SjStKV4AM/jcbVDgAecTT37m8ySty9G5OE?=
+ =?us-ascii?Q?zXOb0FvMlSc33ozlHYnz5UTN7ifi+skE7dONerYlydfrCVaTuzlNgQ3HS/lB?=
+ =?us-ascii?Q?cw+lF3NBuQn1bCx8x4yO2eAP1YUWhu55zaN/yo9GXUs4dKLWN1I70VBmAVi1?=
+ =?us-ascii?Q?idrRZkQNyO+tLbLlYkgSK1Gi3YN6WudE9EwdV+trR2Tyh/hpEPhhhPxQlHPT?=
+ =?us-ascii?Q?/+e4ABEtU/JmWDildjwiH4ar4C/dx8aWyka7vkZBBQzw0Bxj+jycCnmAxOYh?=
+ =?us-ascii?Q?wCQ5+H9CZ7qZXSBxdC539gmdsy4v6sE86njJOeB6YLn4t0Xk3Q+Kvw69tdf2?=
+ =?us-ascii?Q?J8Q8z2VMzEa5rWWneC/Em2VNXZ0FwkzP3xuQ0cclBmAceGdSgpMMLSO6MVeZ?=
+ =?us-ascii?Q?vi/HiuGZhMk5Wuc2aYbvI1Sw8Ucdlg+AM186scUUlm/G7e7H5akWPdD3Osz1?=
+ =?us-ascii?Q?Ktew3eGvlegH0LNW+dD95egECi0aS3/uInkn/D4gpCABVOJ0zsOqAe27Py49?=
+ =?us-ascii?Q?vomEbXQZ0XBtJLZovr+T/qUDZr4gxyGRgmELudFtKbPGalblWwBTuGhw2efL?=
+ =?us-ascii?Q?HL2ar3GYw8BIi8KWXVOpSzkRKBzFSFBiG0svBsJEC1ckmO88ZaDvxD5r56uc?=
+ =?us-ascii?Q?v0ajmas2492m1Twdmq+DQ1y7Z8QjmPHlQdkfO3Q3XzQrxnk6O/A+UdvRPPKJ?=
+ =?us-ascii?Q?y5krKg/UJquBCuQF5m2obONqERZPvJPoiSRBnVegsQ0cfdX37LRhE/+1Vyg+?=
+ =?us-ascii?Q?Bf6Kimn5Esw/O3snVuNEzWH7GnU8u44TAM3RZkEIPtqTtTEUWlE0/xOpPABC?=
+ =?us-ascii?Q?UyYCluVWP31QlBUUC5CIuDXp224DbtDb71MTSQmV+kB+VPvQ5mEYF96uFvF/?=
+ =?us-ascii?Q?GcFnxR63ct1u/8tCii+bCcLUdeGvKe2IZ1cdDpMnD+jTgLwUrqnDv0dkKXMa?=
+ =?us-ascii?Q?G1qyA8cDH/a/Sob10OsFuTLJJwRb29vM9rj30Wi9xKcaFobi4QnDeUXNQfxd?=
+ =?us-ascii?Q?3gdQpxJRxE4yz3X7C20Lzty6bn0qfHGshzW8M3MzPpQr35qTtaTFRN9lPSO1?=
+ =?us-ascii?Q?jFEn423CmXKtWj9JkI0Ru1NwSFVSfcG1kgEEBLhUaj82jfxsNS3qPt5AaOKO?=
+ =?us-ascii?Q?q5Wd0xzwpwK/TLyTPwkkrd2b3oik2tU3EsXJDDvwjDgt3P642CZFuBH6+Qyc?=
+ =?us-ascii?Q?++nUFjMZPLzlofUs+CCuiz49IPX+slHTUArlhj+HLps8uMTk3eZqoQiLMcGl?=
+ =?us-ascii?Q?j415ERtq3kFKgIIbszyZePzhft+LTId5PqVVqHZudeEBs3rg0WhT3ELfO2Lq?=
+ =?us-ascii?Q?/LcM/EeR5HMo1t5oyGFe9NhRIms+p0ksvJxy8hqxt5ENq1G3UyyvP3sNMb8n?=
+ =?us-ascii?Q?8iwma1smFMRBG4aFSLQL6aHZeNLIyFRFD/G7PiV1ZwUtviDUupOCT+8Yy7Bn?=
+ =?us-ascii?Q?pvD6195eZZ+4TufgDYOkijESEZPrYgFZCO9hnj7NYDa2tJRCq69LH5ZhLLci?=
+ =?us-ascii?Q?Dw3IhMFYWtNB7AfvAs0iYFC7ZtHwuXP5klYwdvF6sthIQZUGj3uPmaKYXS94?=
+ =?us-ascii?Q?jVtH4KDBrsOQGZuSFNk98l68skTvFBKuChyo8GyX?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220831155303.1758868-1-liuyacan@corp.netease.com>
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 63b2371a-9553-4af5-ffd5-08da8becc4e9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Sep 2022 07:37:05.8245
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zDo1E8A3rFj8efaTFcC55Lw1jW2142olW9b6nrhfFwD6eFdBT07SkHu3H4ksKXnTQ9Q8tqFe63Rn3+pP1DcWyQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1428
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Aug 31, 2022 at 11:53:03PM +0800, liuyacan@corp.netease.com wrote:
-> From: Yacan Liu <liuyacan@corp.netease.com>
-> 
-> After modifying the QP to the Error state, all RX WR would be completed
-> with WC in IB_WC_WR_FLUSH_ERR status. Current implementation does not
-> wait for it is done, but destroy the QP and free the link group directly.
-> So there is a risk that accessing the freed memory in tasklet context.
-> 
-> Here is a crash example:
-> 
->  BUG: unable to handle page fault for address: ffffffff8f220860
->  #PF: supervisor write access in kernel mode
->  #PF: error_code(0x0002) - not-present page
->  PGD f7300e067 P4D f7300e067 PUD f7300f063 PMD 8c4e45063 PTE 800ffff08c9df060
->  Oops: 0002 [#1] SMP PTI
->  CPU: 1 PID: 0 Comm: swapper/1 Kdump: loaded Tainted: G S         OE     5.10.0-0607+ #23
->  Hardware name: Inspur NF5280M4/YZMB-00689-101, BIOS 4.1.20 07/09/2018
->  RIP: 0010:native_queued_spin_lock_slowpath+0x176/0x1b0
->  Code: f3 90 48 8b 32 48 85 f6 74 f6 eb d5 c1 ee 12 83 e0 03 83 ee 01 48 c1 e0 05 48 63 f6 48 05 00 c8 02 00 48 03 04 f5 00 09 98 8e <48> 89 10 8b 42 08 85 c0 75 09 f3 90 8b 42 08 85 c0 74 f7 48 8b 32
->  RSP: 0018:ffffb3b6c001ebd8 EFLAGS: 00010086
->  RAX: ffffffff8f220860 RBX: 0000000000000246 RCX: 0000000000080000
->  RDX: ffff91db1f86c800 RSI: 000000000000173c RDI: ffff91db62bace00
->  RBP: ffff91db62bacc00 R08: 0000000000000000 R09: c00000010000028b
->  R10: 0000000000055198 R11: ffffb3b6c001ea58 R12: ffff91db80e05010
->  R13: 000000000000000a R14: 0000000000000006 R15: 0000000000000040
->  FS:  0000000000000000(0000) GS:ffff91db1f840000(0000) knlGS:0000000000000000
->  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->  CR2: ffffffff8f220860 CR3: 00000001f9580004 CR4: 00000000003706e0
->  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->  Call Trace:
->   <IRQ>
->   _raw_spin_lock_irqsave+0x30/0x40
->   mlx5_ib_poll_cq+0x4c/0xc50 [mlx5_ib]
->   smc_wr_rx_tasklet_fn+0x56/0xa0 [smc]
->   tasklet_action_common.isra.21+0x66/0x100
->   __do_softirq+0xd5/0x29c
->   asm_call_irq_on_stack+0x12/0x20
->   </IRQ>
->   do_softirq_own_stack+0x37/0x40
->   irq_exit_rcu+0x9d/0xa0
->   sysvec_call_function_single+0x34/0x80
->   asm_sysvec_call_function_single+0x12/0x20
-> 
-> Fixes: bd4ad57718cc ("smc: initialize IB transport incl. PD, MR, QP, CQ, event, WR")
-> Signed-off-by: Yacan Liu <liuyacan@corp.netease.com>
-> 
+> From: Tian, Kevin <kevin.tian@intel.com>
+> Sent: Thursday, September 1, 2022 10:38 PM
+>=20
+> +static const struct vfio_device_ops vfio_amba_ops=3D {
 
-Thanks for this fixes. I will test it in our environment.
-
-Cheers,
-Tony Lu
+Above missed a space after vfio_amba_ops.
