@@ -2,155 +2,207 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39C8A5BA3D3
-	for <lists+linux-s390@lfdr.de>; Fri, 16 Sep 2022 03:17:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C8005BA63C
+	for <lists+linux-s390@lfdr.de>; Fri, 16 Sep 2022 07:08:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229452AbiIPBRi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 15 Sep 2022 21:17:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34702 "EHLO
+        id S229847AbiIPFII (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 16 Sep 2022 01:08:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229538AbiIPBRf (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 15 Sep 2022 21:17:35 -0400
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01hn2219.outbound.protection.outlook.com [52.100.164.219])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06B8A7757A;
-        Thu, 15 Sep 2022 18:17:34 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d4o83MdUwBzT/yGYHHri9JxKgvKAr1myKifExpoOG6RW/DJ6Hwx/HFWbCRTAcnalNMWZtiCfWWiv5BNRgudbeIRIrFA1aUpAMqgiR637yuSms6do4DF6jNeC1yKumQYHlgZ/a6HhOxwZtpo9C6zkL+bsu0JAtMId5JULDOXnfzA74uvlRxyoZiVHHEh/Uxv1/xdTJ3SjFGvN5cw/tu1nDH1AdI9DEHKG6moY6aDp85uW3+wP2ZL69Kx/X22OyF20hg7Jn3VKP6Yu1kJZQ6g9LvjUj7xhFxAzUAtOtHKQA12ks/Rp4h2PyduF+HYYaHU47spmmHU6GI+HZ8sqNniaWA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Bs10Md+15nMnyayKLyd22Uv+/ZH79IcFcpzuzGLq1Fg=;
- b=Z+6l5XN4eD0pGu0kvU1O/11m+Uv6YQ0Qd0vITH042WwFlhw/RN66l78Gi6CIsx+jk0c6wO03fHHPsVd/vmE9a2h7Z4mu0Dxy/sHonKIToUsqzJPoL2MGFIkZTWulAgfRVhIwUoOa/5+ajfIWHSwxqXysIlktUz9o4p9llcGX2U9ba9l6TAPweWQd0I4uGlHEqoSQkOQAgEuyGJNmlSaLKkSZCV26SzSt+/M0gqI/nHTMnYzNs7Yz1f4/JyocTsAQNUbeUxCBz1zX5m7n0+ACY8fap+nzx488tj/tt2Dh5SJ4O/v7mKBm6RA0+J5XwKp/44GqHMPEdBA/zmASs0FHZw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 45.14.71.5) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=t4.cims.jp;
- dmarc=bestguesspass action=none header.from=t4.cims.jp; dkim=none (message
- not signed); arc=none (0)
-Received: from SG2PR02CA0090.apcprd02.prod.outlook.com (2603:1096:4:90::30) by
- PSAPR04MB4296.apcprd04.prod.outlook.com (2603:1096:301:3e::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5632.16; Fri, 16 Sep 2022 01:17:31 +0000
-Received: from SG2APC01FT0020.eop-APC01.prod.protection.outlook.com
- (2603:1096:4:90:cafe::f3) by SG2PR02CA0090.outlook.office365.com
- (2603:1096:4:90::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5632.16 via Frontend
- Transport; Fri, 16 Sep 2022 01:17:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 45.14.71.5)
- smtp.mailfrom=t4.cims.jp; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=t4.cims.jp;
-Received-SPF: Pass (protection.outlook.com: domain of t4.cims.jp designates
- 45.14.71.5 as permitted sender) receiver=protection.outlook.com;
- client-ip=45.14.71.5; helo=User; pr=M
-Received: from mail.prasarana.com.my (58.26.8.159) by
- SG2APC01FT0020.mail.protection.outlook.com (10.13.36.117) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5632.12 via Frontend Transport; Fri, 16 Sep 2022 01:17:31 +0000
-Received: from MRL-EXH-02.prasarana.com.my (10.128.66.101) by
- MRL-EXH-02.prasarana.com.my (10.128.66.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.14; Fri, 16 Sep 2022 09:17:00 +0800
-Received: from User (45.14.71.5) by MRL-EXH-02.prasarana.com.my
- (10.128.66.101) with Microsoft SMTP Server id 15.1.2176.14 via Frontend
- Transport; Fri, 16 Sep 2022 09:16:31 +0800
-Reply-To: <rhashimi202222@kakao.com>
-From:   Consultant Swift Capital Loans Ltd <info@t4.cims.jp>
-Subject: I hope you are doing well, and business is great!
-Date:   Fri, 16 Sep 2022 09:17:11 +0800
+        with ESMTP id S229696AbiIPFIH (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 16 Sep 2022 01:08:07 -0400
+Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D1434E607
+        for <linux-s390@vger.kernel.org>; Thu, 15 Sep 2022 22:08:06 -0700 (PDT)
+Received: by mail-il1-x12c.google.com with SMTP id k13so9129530ilc.11
+        for <linux-s390@vger.kernel.org>; Thu, 15 Sep 2022 22:08:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=yP5XHXLcK+UX9e2N5YzbTl9a4h8ihKkfwEUan36DPrg=;
+        b=yAWumhzewMa3eEP3CnaMNUvAKmgC8eanQ3L4jWiwdGCcIzPkhFrQzQw0wwV9+O9C/s
+         pWA8px3RR32jSQRkZ724RUliMw1N1pJV7uypHBZtXw/s45KvAkUFFBkjDay0fezO6Q1H
+         n/OjWEaMaEvHTgl1WjFIQhvNgjxtHZeYZXfVlqejl77Y0na9OV31a8qO4TRydLDh9b1J
+         NF1Fubd/swhKTWFgEXpw3HK96R4pCPPNOYmiQOe7Bp9RLaM6/LZ/umsF8xY1IvG5Kb40
+         CBEv7FTQftTVcumiWuAZRwOn7ym/68hjz6J2lRqkwYLZ2FbLbPgjYRH/Tm0ZHhOzbqfn
+         INxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=yP5XHXLcK+UX9e2N5YzbTl9a4h8ihKkfwEUan36DPrg=;
+        b=I2SXjyFI8LPzPdeSiB28TyhfnOs6hQ+U3rru5iRRCT1v8tGsr4m3Yj1U2XvrZ9ghQ0
+         57oy1eGAUP64zTySIfZWWTfLXxiQSKlrsD7MU5xP/g8C1BjpPHYG/Mun5/ApBm3MVB/H
+         Am1sN01X9hWYRBvo0BDAgRlDAKpcfcgje+AG494tGzlngLaYNjYczAo3orzTyEIC5DBm
+         1nUFozR3Fb+iKDC5pYSEfw3d0z+D1+stZzcDgqu0zQ4y5Bnv7RQS7E51nv9WkeTx6Gl5
+         TBYxYp52y7Jd5y+P2qBSMIsoDiclvMS2f00UR05sw/fCPpDqac+m9M85b9w489AOmIYF
+         1LOg==
+X-Gm-Message-State: ACrzQf3OoZxTplt80oKdTFfgRQJdM+gyIQKHrwjLj3a1AlyByxNJu7dA
+        RZ5sLPbCTn9UsasN49FKgoUNqgIZmqV/jJnildCB5Q==
+X-Google-Smtp-Source: AMsMyM5GqgO04FmX/wur2Jt+8ypcoEU8eotcYd1jKm89jw9hQAj1ZhLfSUj5pD6zTUMTtw3xNbjyMSejcFd/JFYW8jo=
+X-Received: by 2002:a05:6e02:164d:b0:2f1:869c:c45b with SMTP id
+ v13-20020a056e02164d00b002f1869cc45bmr1488365ilu.212.1663304885797; Thu, 15
+ Sep 2022 22:08:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-Message-ID: <b88f6004-1774-41cd-b8dd-c9210b0ec8a2@MRL-EXH-02.prasarana.com.my>
-To:     Undisclosed recipients:;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-SkipListedInternetSender: ip=[45.14.71.5];domain=User
-X-MS-Exchange-ExternalOriginalInternetSender: ip=[45.14.71.5];domain=User
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG2APC01FT0020:EE_|PSAPR04MB4296:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7aa05c1d-b4b1-4479-90f5-08da97813a4d
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 0
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: =?windows-1251?Q?Wlj+8wRk159ZZGYOMMQMsVGFU8Q2vffl1gPIM54q/xLej1O0onCPvKJ1?=
- =?windows-1251?Q?db5cTfD+QYb/55NAe1/ezWpdAr4waGSS1/b8XaoOyRaH0SzrivWB8Hxs?=
- =?windows-1251?Q?my4otFyzs/vJHRl1NZ7QJIqBm+gVlmVROAVTiLvr+caZFt0HGaxvP5Qk?=
- =?windows-1251?Q?1+N2FcNB59nGWHDJNH8vMVawO4HRkqa77ryRIzrgxqiJVsmLVueKrjrC?=
- =?windows-1251?Q?kLATBANyE8bLxCCH/E8wLUxkoGthHaJDt9B34muAt1G3Z98SO0B1zsvu?=
- =?windows-1251?Q?99EMUJQIT0aJz5CrgddRkJBq6fRW+LwEF+PhCXPJCeo8Ngk6qO+Z6ey8?=
- =?windows-1251?Q?+HMFsIzLNg3YyfuK5TnIU0jRjcPnLimz9yMBqSxeDovAeuhZujVGaAVh?=
- =?windows-1251?Q?Qsa/el9xd9CwS2KEq+zJ7uoiVgg0zWvb7yzX6EcjY+xiAIWHrlacSlWO?=
- =?windows-1251?Q?KSzRh+qugc79k82JfQQqpuHe/x0i9Xia2UIQFi4xnCZBhH9vJS+w5IGH?=
- =?windows-1251?Q?I99iehXePIc/0eVgvh70AoTRdAP7Nsd/oqNeEeCl4mKQSd/oA8afkXf9?=
- =?windows-1251?Q?TlfNjuN1S+FCG7eDpcKp1UIAxotWqyskoiybPvSrxIh4cYuVnrFAE+V5?=
- =?windows-1251?Q?A5GY2O27nhABEwSTxzPzRhma8CALg00FgAFxtD17cPJuenlM5iPsEdGG?=
- =?windows-1251?Q?QOYXyXHvEmDEEuLssmeeNT4mF3LUYJpgbqlpJ/cP3WrbE+0oobEFy8sV?=
- =?windows-1251?Q?yLx37JE5Fd20f6vu1/egAjVCDR+LHhumsfZeCw8oIe6m8fxkVlIayxdZ?=
- =?windows-1251?Q?RtB23v9WeVdYAFF19SM0RbHcwpOWBOAxxI5Dq1WYFEnOgVCl0/ufRHYZ?=
- =?windows-1251?Q?X/AYDGvljLES7XEfe33NXnph16ztDgch9vkMzdZD04cw4ykMrgFwWh+j?=
- =?windows-1251?Q?/Vl05CV2c0s4lzp+u2CkCbNj4+Ahz3AvOhaF/DFz+vW5od/4Fr4owDM6?=
- =?windows-1251?Q?KV4sat4mdN0skjLoagoe0JiwybH3bjCx0hZFynxLPaB0lTsWGyLYrJ6a?=
- =?windows-1251?Q?ANKe4FMW9yKi//rdG9vlbZYbRtf9jM96z3pDKMzBqSiI0EzwVZvE5jF5?=
- =?windows-1251?Q?6BJhJrWVnVOiKFqGA8ZCU386n82z0lOmgtv9DMEA6zo/rOpXhbIMtd5w?=
- =?windows-1251?Q?fL1OVUtDjLv0it/PB1uYZbTYDbWxF/+H+Sg0GPiVI47CeEJ73lmDGlAu?=
- =?windows-1251?Q?3UQmL+UUzm5SGkBxt+fvyUDkCT5YsFyT0RqMqGEYDLZUwtmX9NGdd6WI?=
- =?windows-1251?Q?sUYC1+yw4eArmU3uoLmLCdtgYwp9Iv1Iwr/q1bUQDSuVW4r1?=
-X-Forefront-Antispam-Report: CIP:58.26.8.159;CTRY:JP;LANG:en;SCL:5;SRV:;IPV:NLI;SFV:SPM;H:User;PTR:45.14.71.5.static.xtom.com;CAT:OSPM;SFS:(13230022)(4636009)(396003)(346002)(136003)(39860400002)(376002)(451199015)(40470700004)(46966006)(82740400003)(66899012)(2906002)(156005)(32850700003)(31686004)(70586007)(4744005)(9686003)(26005)(70206006)(31696002)(40460700003)(47076005)(81166007)(5660300002)(7416002)(40480700001)(7366002)(86362001)(498600001)(109986005)(6666004)(956004)(7406005)(41300700001)(8936002)(316002)(36906005)(35950700001)(8676002)(82310400005)(336012)(2700400008);DIR:OUT;SFP:1501;
-X-OriginatorOrg: myprasarana.onmicrosoft.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2022 01:17:31.0458
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7aa05c1d-b4b1-4479-90f5-08da97813a4d
-X-MS-Exchange-CrossTenant-Id: 3cbb2ff2-27fb-4993-aecf-bf16995e64c0
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3cbb2ff2-27fb-4993-aecf-bf16995e64c0;Ip=[58.26.8.159];Helo=[mail.prasarana.com.my]
-X-MS-Exchange-CrossTenant-AuthSource: SG2APC01FT0020.eop-APC01.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PSAPR04MB4296
-X-Spam-Status: Yes, score=7.5 required=5.0 tests=AXB_XMAILER_MIMEOLE_OL_024C2,
-        AXB_X_FF_SEZ_S,BAYES_50,FORGED_MUA_OUTLOOK,FSL_CTYPE_WIN1251,
-        FSL_NEW_HELO_USER,HEADER_FROM_DIFFERENT_DOMAINS,NSL_RCVD_FROM_USER,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,RCVD_IN_VALIDITY_RPBL,
-        SPF_HELO_PASS,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [52.100.164.219 listed in list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5105]
-        *  0.0 NSL_RCVD_FROM_USER Received from User
-        *  0.0 FSL_CTYPE_WIN1251 Content-Type only seen in 419 spam
-        *  3.2 AXB_X_FF_SEZ_S Forefront sez this is spam
-        *  1.3 RCVD_IN_VALIDITY_RPBL RBL: Relay in Validity RPBL,
-        *      https://senderscore.org/blocklistlookup/
-        *      [52.100.164.219 listed in bl.score.senderscore.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.0 SPF_HELO_PASS SPF: HELO matches SPF record
-        *  0.2 HEADER_FROM_DIFFERENT_DOMAINS From and EnvelopeFrom 2nd level
-        *      mail domains are different
-        * -0.0 RCVD_IN_MSPIKE_H2 RBL: Average reputation (+2)
-        *      [52.100.164.219 listed in wl.mailspike.net]
-        *  0.0 AXB_XMAILER_MIMEOLE_OL_024C2 Yet another X header trait
-        *  0.0 FSL_NEW_HELO_USER Spam's using Helo and User
-        *  1.9 FORGED_MUA_OUTLOOK Forged mail pretending to be from MS Outlook
-X-Spam-Level: *******
+References: <20220504074807.3616813-1-aik@ozlabs.ru>
+In-Reply-To: <20220504074807.3616813-1-aik@ozlabs.ru>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Fri, 16 Sep 2022 10:37:53 +0530
+Message-ID: <CAAhSdy0hxHjQkVj8TLPh4j=vBrX1QoZcJXNeRBPtf5ozdjQaTQ@mail.gmail.com>
+Subject: Re: [PATCH kernel] KVM: PPC: Make KVM_CAP_IRQFD_RESAMPLE platform dependent
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc:     kvm-ppc@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        kvm-riscv@lists.infradead.org,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Fabiano Rosas <farosas@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello,
+On Wed, May 4, 2022 at 1:18 PM Alexey Kardashevskiy <aik@ozlabs.ru> wrote:
+>
+> When introduced, IRQFD resampling worked on POWER8 with XICS. However
+> KVM on POWER9 has never implemented it - the compatibility mode code
+> ("XICS-on-XIVE") misses the kvm_notify_acked_irq() call and the native
+> XIVE mode does not handle INTx in KVM at all.
+>
+> This moved the capability support advertising to platforms and stops
+> advertising it on XIVE, i.e. POWER9 and later.
+>
+> Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+> ---
+>
+>
+> Or I could move this one together with KVM_CAP_IRQFD. Thoughts?
 
-I hope you are doing well, and business is great!
-However, if you need working capital to further grow and expand your business, we may be a perfect fit for you. I am Ms. Kaori Ichikawa Swift Capital Loans Ltd Consultant, Our loans are NOT based on your personal credit, and NO collateral is required.
+For KVM RISC-V:
+Acked-by: Anup Patel <anup@brainfault.org>
 
-We are a Direct Lender who can approve your loan today, and fund as Early as Tomorrow.
+Thanks,
+Anup
 
-Once your reply I will send you the official website to complete your application
-
-Waiting for your reply.
-
-Regards
-Ms. Kaori Ichikawa
-Consultant Swift Capital Loans Ltd
+>
+> ---
+>  arch/arm64/kvm/arm.c       | 3 +++
+>  arch/mips/kvm/mips.c       | 3 +++
+>  arch/powerpc/kvm/powerpc.c | 6 ++++++
+>  arch/riscv/kvm/vm.c        | 3 +++
+>  arch/s390/kvm/kvm-s390.c   | 3 +++
+>  arch/x86/kvm/x86.c         | 3 +++
+>  virt/kvm/kvm_main.c        | 1 -
+>  7 files changed, 21 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+> index 523bc934fe2f..092f0614bae3 100644
+> --- a/arch/arm64/kvm/arm.c
+> +++ b/arch/arm64/kvm/arm.c
+> @@ -210,6 +210,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>         case KVM_CAP_SET_GUEST_DEBUG:
+>         case KVM_CAP_VCPU_ATTRIBUTES:
+>         case KVM_CAP_PTP_KVM:
+> +#ifdef CONFIG_HAVE_KVM_IRQFD
+> +       case KVM_CAP_IRQFD_RESAMPLE:
+> +#endif
+>                 r = 1;
+>                 break;
+>         case KVM_CAP_SET_GUEST_DEBUG2:
+> diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
+> index a25e0b73ee70..0f3de470a73e 100644
+> --- a/arch/mips/kvm/mips.c
+> +++ b/arch/mips/kvm/mips.c
+> @@ -1071,6 +1071,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>         case KVM_CAP_READONLY_MEM:
+>         case KVM_CAP_SYNC_MMU:
+>         case KVM_CAP_IMMEDIATE_EXIT:
+> +#ifdef CONFIG_HAVE_KVM_IRQFD
+> +       case KVM_CAP_IRQFD_RESAMPLE:
+> +#endif
+>                 r = 1;
+>                 break;
+>         case KVM_CAP_NR_VCPUS:
+> diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
+> index 875c30c12db0..87698ffef3be 100644
+> --- a/arch/powerpc/kvm/powerpc.c
+> +++ b/arch/powerpc/kvm/powerpc.c
+> @@ -591,6 +591,12 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>                 break;
+>  #endif
+>
+> +#ifdef CONFIG_HAVE_KVM_IRQFD
+> +       case KVM_CAP_IRQFD_RESAMPLE:
+> +               r = !xive_enabled();
+> +               break;
+> +#endif
+> +
+>         case KVM_CAP_PPC_ALLOC_HTAB:
+>                 r = hv_enabled;
+>                 break;
+> diff --git a/arch/riscv/kvm/vm.c b/arch/riscv/kvm/vm.c
+> index c768f75279ef..b58579b386bb 100644
+> --- a/arch/riscv/kvm/vm.c
+> +++ b/arch/riscv/kvm/vm.c
+> @@ -63,6 +63,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>         case KVM_CAP_READONLY_MEM:
+>         case KVM_CAP_MP_STATE:
+>         case KVM_CAP_IMMEDIATE_EXIT:
+> +#ifdef CONFIG_HAVE_KVM_IRQFD
+> +       case KVM_CAP_IRQFD_RESAMPLE:
+> +#endif
+>                 r = 1;
+>                 break;
+>         case KVM_CAP_NR_VCPUS:
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index 156d1c25a3c1..85e093fc8d13 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -564,6 +564,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>         case KVM_CAP_SET_GUEST_DEBUG:
+>         case KVM_CAP_S390_DIAG318:
+>         case KVM_CAP_S390_MEM_OP_EXTENSION:
+> +#ifdef CONFIG_HAVE_KVM_IRQFD
+> +       case KVM_CAP_IRQFD_RESAMPLE:
+> +#endif
+>                 r = 1;
+>                 break;
+>         case KVM_CAP_SET_GUEST_DEBUG2:
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 0c0ca599a353..a0a7b769483d 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -4273,6 +4273,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>         case KVM_CAP_SYS_ATTRIBUTES:
+>         case KVM_CAP_VAPIC:
+>         case KVM_CAP_ENABLE_CAP:
+> +#ifdef CONFIG_HAVE_KVM_IRQFD
+> +       case KVM_CAP_IRQFD_RESAMPLE:
+> +#endif
+>                 r = 1;
+>                 break;
+>         case KVM_CAP_EXIT_HYPERCALL:
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 70e05af5ebea..885e72e668a5 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -4293,7 +4293,6 @@ static long kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
+>  #endif
+>  #ifdef CONFIG_HAVE_KVM_IRQFD
+>         case KVM_CAP_IRQFD:
+> -       case KVM_CAP_IRQFD_RESAMPLE:
+>  #endif
+>         case KVM_CAP_IOEVENTFD_ANY_LENGTH:
+>         case KVM_CAP_CHECK_EXTENSION_VM:
+> --
+> 2.30.2
+>
