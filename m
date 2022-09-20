@@ -2,168 +2,140 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 963A75BEDC8
-	for <lists+linux-s390@lfdr.de>; Tue, 20 Sep 2022 21:30:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9937A5BEE87
+	for <lists+linux-s390@lfdr.de>; Tue, 20 Sep 2022 22:26:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230400AbiITTad (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 20 Sep 2022 15:30:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52236 "EHLO
+        id S230179AbiITU0y (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 20 Sep 2022 16:26:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230220AbiITTac (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 20 Sep 2022 15:30:32 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEF17419A3;
-        Tue, 20 Sep 2022 12:30:31 -0700 (PDT)
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28KJQwe3031857;
-        Tue, 20 Sep 2022 19:30:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=yJs8gEoJfAHlEeAkD9cNauZ8f84x1nCZ2qm0z8D/NkI=;
- b=KoISAPMhlQrSRHhS89wFg3XPadsCy3jWPqfQusBR6bWhTT9VBJwBYcE8IznmbwIYX8xL
- gZvau8MZwB/TgX5g2+jFloEuhVHgJBXqLMUFq5R4sORvQtx17cck6rRcJq93vuyBq+nJ
- CCM5rzCZEafgpZcJfk1fuBVWWQyg9wtsbbvYRg+R4ZYYNgYauZHsZmNl0Hj+VeWf5vqR
- NuFmG/KpVi/Zz2+ls9Zeu/pm7eo9EHtb592/zyhJJxlfqNDtC8VhqSN5A/xYDvEuH/4F
- b5XwukGxG0U59wjc8dqXF8ToZuK7p/4lLK5jdOAECxTqp6L4Uldd/ocXEKDNKkaOetht 9g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jqkfa0mfh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Sep 2022 19:30:31 +0000
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 28KJCFMQ039502;
-        Tue, 20 Sep 2022 19:30:30 GMT
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jqkfa0mf8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Sep 2022 19:30:30 +0000
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 28KJL6at018138;
-        Tue, 20 Sep 2022 19:30:29 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma03dal.us.ibm.com with ESMTP id 3jn5v9k2k6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Sep 2022 19:30:29 +0000
-Received: from smtpav06.wdc07v.mail.ibm.com ([9.208.128.115])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 28KJUSgK40370432
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 20 Sep 2022 19:30:28 GMT
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F08465806A;
-        Tue, 20 Sep 2022 19:30:27 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0189E58071;
-        Tue, 20 Sep 2022 19:30:26 +0000 (GMT)
-Received: from li-2311da4c-2e09-11b2-a85c-c003041e9174.ibm.com.com (unknown [9.65.230.56])
-        by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-        Tue, 20 Sep 2022 19:30:25 +0000 (GMT)
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-To:     linux-s390@vger.kernel.org
-Cc:     farman@linux.ibm.com, schnelle@linux.ibm.com, pmorel@linux.ibm.com,
-        borntraeger@linux.ibm.com, frankja@linux.ibm.com,
-        imbrenda@linux.ibm.com, david@redhat.com, hca@linux.ibm.com,
-        gor@linux.ibm.com, agordeev@linux.ibm.com, svens@linux.ibm.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: s390: pci: register pci hooks without interpretation
-Date:   Tue, 20 Sep 2022 15:30:25 -0400
-Message-Id: <20220920193025.135655-1-mjrosato@linux.ibm.com>
-X-Mailer: git-send-email 2.37.3
+        with ESMTP id S229529AbiITU0v (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 20 Sep 2022 16:26:51 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2B9B4620F
+        for <linux-s390@vger.kernel.org>; Tue, 20 Sep 2022 13:26:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1663705609;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kTuYdzoZrrSVtqbKAPsta2mJ6sY3BJrx+736wsbe0TI=;
+        b=FsIsF19HwOVa94Z0n5CqSMmI/cnJtmJcxZYWytDCLFf15PJlnjJdygMPsZvCKIMDbClkJT
+        KzbimLL7dQepZhfA0//07SCEt6T0DLuoU7OKVgJDodjOHQV8phHJ+cyd3hBPg0cj6z+rta
+        f/RwCL6/+T+GNCVGmq8rDVCbea7UGqc=
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
+ [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-553-gc1FXgeyNnyjSyRbGX3iAQ-1; Tue, 20 Sep 2022 16:26:43 -0400
+X-MC-Unique: gc1FXgeyNnyjSyRbGX3iAQ-1
+Received: by mail-io1-f70.google.com with SMTP id e4-20020a5d85c4000000b0068bb3c11e72so2038407ios.5
+        for <linux-s390@vger.kernel.org>; Tue, 20 Sep 2022 13:26:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date;
+        bh=kTuYdzoZrrSVtqbKAPsta2mJ6sY3BJrx+736wsbe0TI=;
+        b=usz4ZGOjTd+pYswd0eQf7QCSj/2XPbuYtwv2uIz+BQ/pBXk2jzsN+wEaJanAVp44PT
+         hscXVuhu2i4ZnEfXndrtSL+6dt66gKAQL7j4Ln3c9i++Ocfd/IUTIzeuidPdN/NtMDIT
+         TQQ0ZsGgHhCMfGnFA+r86HPp8Arcc/KTNt6aIpeqebAOjVxKMd+Oz6+nIz6rrPXcp/vR
+         dwj/GIcofMA+mXgMR8lcideGi3i8HMVg77smLO4QXzhzWWYFI9HNP/l/914A5LBinThz
+         fpCjRO7l8g38RDPYHyHUm7HKQgV7Y92XwwafdfkFWzM3UdtrddCkFsL5Xpeuq1hSj4BQ
+         Dtag==
+X-Gm-Message-State: ACrzQf2xzvspguBcx1+rU48n7OLnsfbOaLAW84os/jZaKgEsn3airfPD
+        BaG2LRZU03GYp+NGXckCGwK2mDfJaEIcFgFOZmfjsev1vvU2agb2fqkwsLSTxd9YiuyoPC2SutU
+        WBg0pQHXCB0tRVEqi+H4OxA==
+X-Received: by 2002:a05:6638:379e:b0:35a:6503:453c with SMTP id w30-20020a056638379e00b0035a6503453cmr11604716jal.118.1663705602740;
+        Tue, 20 Sep 2022 13:26:42 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM7Wn3n/ipGU1Lsd59DpS6zB424nUgnSwe6A3PA6dfJBFxnu4Ya4+9pvipnOK8j87C89TfNNcQ==
+X-Received: by 2002:a05:6638:379e:b0:35a:6503:453c with SMTP id w30-20020a056638379e00b0035a6503453cmr11604691jal.118.1663705602488;
+        Tue, 20 Sep 2022 13:26:42 -0700 (PDT)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id z18-20020a05663822b200b00359fbe10489sm269899jas.103.2022.09.20.13.26.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Sep 2022 13:26:42 -0700 (PDT)
+Date:   Tue, 20 Sep 2022 14:26:39 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Kevin Tian <kevin.tian@intel.com>
+Cc:     Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Eric Farman <farman@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Longfang Liu <liulongfang@huawei.com>,
+        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Abhishek Sahu <abhsahu@nvidia.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        intel-gvt-dev@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, Yi Liu <yi.l.liu@intel.com>
+Subject: Re: [PATCH v3 15/15] vfio: Add struct device to vfio_device
+Message-ID: <20220920142639.29b1bdc2.alex.williamson@redhat.com>
+In-Reply-To: <20220909102247.67324-16-kevin.tian@intel.com>
+References: <20220909102247.67324-1-kevin.tian@intel.com>
+        <20220909102247.67324-16-kevin.tian@intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: RXSrdCmhULqULPaBKfhyzSPImvrIqLhg
-X-Proofpoint-GUID: 3oKdLWS0d4IOIW2Yv87Lb2fIPIp4wpEJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-09-20_09,2022-09-20_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- priorityscore=1501 adultscore=0 mlxlogscore=970 malwarescore=0 spamscore=0
- mlxscore=0 lowpriorityscore=0 impostorscore=0 suspectscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2209130000
- definitions=main-2209200114
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The kvm registration hooks must be registered even if the facilities
-necessary for zPCI interpretation are unavailable, as vfio-pci-zdev will
-expect to use the hooks regardless.
-This fixes an issue where vfio-pci-zdev will fail its open function
-because of a missing kvm_register when running on hardware that does not
-support zPCI interpretation.
+On Fri,  9 Sep 2022 18:22:47 +0800
+Kevin Tian <kevin.tian@intel.com> wrote:
 
-Fixes: ca922fecda6c ("KVM: s390: pci: Hook to access KVM lowlevel from VFIO")
-Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
----
- arch/s390/kvm/kvm-s390.c |  4 ++--
- arch/s390/kvm/pci.c      | 14 +++++++++++---
- 2 files changed, 13 insertions(+), 5 deletions(-)
+> From: Yi Liu <yi.l.liu@intel.com>
+> 
+> and replace kref. With it a 'vfio-dev/vfioX' node is created under the
+> sysfs path of the parent, indicating the device is bound to a vfio
+> driver, e.g.:
+> 
+> /sys/devices/pci0000\:6f/0000\:6f\:01.0/vfio-dev/vfio0
+> 
+> It is also a preparatory step toward adding cdev for supporting future
+> device-oriented uAPI.
+> 
+> Add Documentation/ABI/testing/sysfs-devices-vfio-dev.
+> 
+> Also take this chance to rename chardev 'vfio' to 'vfio-group' in
+> /proc/devices.
 
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index e20e126944aa..5c7f5f97ea09 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -510,7 +510,7 @@ int kvm_arch_init(void *opaque)
- 		goto out;
- 	}
- 
--	if (kvm_s390_pci_interp_allowed()) {
-+	if (IS_ENABLED(CONFIG_VFIO_PCI_ZDEV_KVM)) {
- 		rc = kvm_s390_pci_init();
- 		if (rc) {
- 			pr_err("Unable to allocate AIFT for PCI\n");
-@@ -532,7 +532,7 @@ int kvm_arch_init(void *opaque)
- void kvm_arch_exit(void)
- {
- 	kvm_s390_gib_destroy();
--	if (kvm_s390_pci_interp_allowed())
-+	if (IS_ENABLED(CONFIG_VFIO_PCI_ZDEV_KVM))
- 		kvm_s390_pci_exit();
- 	debug_unregister(kvm_s390_dbf);
- 	debug_unregister(kvm_s390_dbf_uv);
-diff --git a/arch/s390/kvm/pci.c b/arch/s390/kvm/pci.c
-index 90aaba80696a..c50c1645c0ae 100644
---- a/arch/s390/kvm/pci.c
-+++ b/arch/s390/kvm/pci.c
-@@ -672,23 +672,31 @@ int kvm_s390_pci_zpci_op(struct kvm *kvm, struct kvm_s390_zpci_op *args)
- 
- int kvm_s390_pci_init(void)
- {
-+	zpci_kvm_hook.kvm_register = kvm_s390_pci_register_kvm;
-+	zpci_kvm_hook.kvm_unregister = kvm_s390_pci_unregister_kvm;
-+
-+	if (!kvm_s390_pci_interp_allowed())
-+		return 0;
-+
- 	aift = kzalloc(sizeof(struct zpci_aift), GFP_KERNEL);
- 	if (!aift)
- 		return -ENOMEM;
- 
- 	spin_lock_init(&aift->gait_lock);
- 	mutex_init(&aift->aift_lock);
--	zpci_kvm_hook.kvm_register = kvm_s390_pci_register_kvm;
--	zpci_kvm_hook.kvm_unregister = kvm_s390_pci_unregister_kvm;
- 
- 	return 0;
- }
- 
- void kvm_s390_pci_exit(void)
- {
--	mutex_destroy(&aift->aift_lock);
- 	zpci_kvm_hook.kvm_register = NULL;
- 	zpci_kvm_hook.kvm_unregister = NULL;
- 
-+	if (!kvm_s390_pci_interp_allowed())
-+		return;
-+
-+	mutex_destroy(&aift->aift_lock);
-+
- 	kfree(aift);
- }
--- 
-2.37.3
+What's the risk/reward here, is this just more aesthetically pleasing
+symmetry vs 'vfio-dev'?  The char major number to name association in
+/proc/devices seems pretty obscure, but what due diligence have we done
+to make sure this doesn't break anyone?  Thanks,
+
+Alex
 
