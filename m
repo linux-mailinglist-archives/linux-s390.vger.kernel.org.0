@@ -2,173 +2,110 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 331DA5BDE5F
-	for <lists+linux-s390@lfdr.de>; Tue, 20 Sep 2022 09:37:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D99405BDFF0
+	for <lists+linux-s390@lfdr.de>; Tue, 20 Sep 2022 10:25:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230209AbiITHhV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 20 Sep 2022 03:37:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44960 "EHLO
+        id S231189AbiITIZU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 20 Sep 2022 04:25:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbiITHhU (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 20 Sep 2022 03:37:20 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28CDA606B4;
-        Tue, 20 Sep 2022 00:37:18 -0700 (PDT)
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28K7JhFH003403;
-        Tue, 20 Sep 2022 07:37:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : content-transfer-encoding
- : mime-version; s=pp1; bh=cD+v84j6lTvUofwhz5cILra8bqEbQk/dHqf+ffSrRZs=;
- b=WuJbhctw2vZ7L12jcxgQ0T+g5Kojbe2luyGsKpBzvI+G6CLR0aTFgbgPasr+eEJc/zeV
- 12dbkv1X+qC37swbh5oY6kA12KD693zyfQb9PuXPExCknCvurJzHaLPdPU/ITkKGEZHg
- 6tbNZqW4geVVBRahkEUUbpnruSmjBog0iFMOtu8FWjqeLoDaWUXssq3oAtiaVQNzaOzE
- 9kp40vcU/8baR9a1cid7mbkIEln4VBv4pLGq3TB1uyepxvqShSLEkozQN6TueqQ+YdVv
- ONLUj5Fcrp/XF+YIVv2qpXG9uzc40VkpCB7rp4sHgqjV+lYY+Qfz20EyL+vrXsf286jV iw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jq91j8eqy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Sep 2022 07:37:17 +0000
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 28K7LUxF008920;
-        Tue, 20 Sep 2022 07:37:17 GMT
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jq91j8epb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Sep 2022 07:37:17 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 28K7LoLf026014;
-        Tue, 20 Sep 2022 07:32:15 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma06fra.de.ibm.com with ESMTP id 3jn5ghjk08-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Sep 2022 07:32:14 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 28K7WBtJ48562556
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 20 Sep 2022 07:32:12 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DCEC711C050;
-        Tue, 20 Sep 2022 07:32:11 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E156511C04A;
-        Tue, 20 Sep 2022 07:32:10 +0000 (GMT)
-Received: from linux6.. (unknown [9.114.12.104])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 20 Sep 2022 07:32:10 +0000 (GMT)
-From:   Janosch Frank <frankja@linux.ibm.com>
-To:     pbonzini@redhat.com
-Cc:     kvm@vger.kernel.org, frankja@linux.ibm.com, david@redhat.com,
-        borntraeger@de.ibm.com, cohuck@redhat.com,
-        linux-s390@vger.kernel.org, imbrenda@linux.ibm.com,
-        thuth@redhat.com, Nico Boehr <nrb@linux.ibm.com>
-Subject: [kvm-unit-tests GIT PULL 11/11] s390x: create persistent comm-key
-Date:   Tue, 20 Sep 2022 07:30:35 +0000
-Message-Id: <20220920073035.29201-12-frankja@linux.ibm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220920073035.29201-1-frankja@linux.ibm.com>
-References: <20220920073035.29201-1-frankja@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: qpVH3qM3mSUC9N5mePuU9xNyUC3kT6E1
-X-Proofpoint-ORIG-GUID: IwYVTwR21lqrkOoQ845O73F4THGX4kw2
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        with ESMTP id S231372AbiITIYl (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 20 Sep 2022 04:24:41 -0400
+Received: from out30-44.freemail.mail.aliyun.com (out30-44.freemail.mail.aliyun.com [115.124.30.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A8CE6AA27;
+        Tue, 20 Sep 2022 01:22:15 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R911e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=dust.li@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0VQIU5xu_1663662113;
+Received: from localhost(mailfrom:dust.li@linux.alibaba.com fp:SMTPD_---0VQIU5xu_1663662113)
+          by smtp.aliyun-inc.com;
+          Tue, 20 Sep 2022 16:21:54 +0800
+Date:   Tue, 20 Sep 2022 16:21:53 +0800
+From:   "dust.li" <dust.li@linux.alibaba.com>
+To:     Wen Gu <guwen@linux.alibaba.com>, kgraul@linux.ibm.com,
+        wenjia@linux.ibm.com, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com
+Cc:     linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 1/2] net/smc: Introduce a specific sysctl for
+ TEST_LINK time
+Message-ID: <20220920082153.GD108825@linux.alibaba.com>
+Reply-To: dust.li@linux.alibaba.com
+References: <1663641907-15852-1-git-send-email-guwen@linux.alibaba.com>
+ <1663642434-30035-1-git-send-email-guwen@linux.alibaba.com>
+ <20220920045520.GC108825@linux.alibaba.com>
+ <1ad45b33-d88a-54b7-fbfa-831f58fca9d2@linux.alibaba.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-09-20_02,2022-09-16_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- lowpriorityscore=0 impostorscore=0 clxscore=1015 malwarescore=0
- suspectscore=0 adultscore=0 bulkscore=0 priorityscore=1501 spamscore=0
- mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2209130000 definitions=main-2209200045
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1ad45b33-d88a-54b7-fbfa-831f58fca9d2@linux.alibaba.com>
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Nico Boehr <nrb@linux.ibm.com>
+On Tue, Sep 20, 2022 at 02:23:09PM +0800, Wen Gu wrote:
+>
+>
+>On 2022/9/20 12:55, dust.li wrote:
+>
+>> On Tue, Sep 20, 2022 at 10:53:54AM +0800, Wen Gu wrote:
+>> > SMC-R tests the viability of link by sending out TEST_LINK LLC
+>> > messages over RoCE fabric when connections on link have been
+>> > idle for a time longer than keepalive interval (testlink time).
+>> > 
+>> > But using tcp_keepalive_time as testlink time maybe not quite
+>> > suitable because it is default no less than two hours[1], which
+>> > is too long for single link to find peer dead. The active host
+>> > will still use peer-dead link (QP) sending messages, and can't
+>> > find out until get IB_WC_RETRY_EXC_ERR error CQEs, which takes
+>> > more time than TEST_LINK timeout (SMC_LLC_WAIT_TIME) normally.
+>> > 
+>> > So this patch introduces a independent sysctl for SMC-R to set
+>> > link keepalive time, in order to detect link down in time. The
+>> > default value is 30 seconds.
+>> > 
+>> > [1] https://www.rfc-editor.org/rfc/rfc1122#page-101
+>> > 
+>> > Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
+>> > ---
+>
+>> > /* called after lgr was removed from lgr_list */
+>> > diff --git a/net/smc/smc_llc.h b/net/smc/smc_llc.h
+>> > index 4404e52..1de9a29 100644
+>> > --- a/net/smc/smc_llc.h
+>> > +++ b/net/smc/smc_llc.h
+>> > @@ -19,6 +19,7 @@
+>> > 
+>> > #define SMC_LLC_WAIT_FIRST_TIME		(5 * HZ)
+>> > #define SMC_LLC_WAIT_TIME		(2 * HZ)
+>> > +#define SMC_LLC_TESTLINK_DEFAULT_TIME	30
+>> 
+>> I'm wondering why we don't follow the upper to macros using (30 * HZ) ?
+>> 
+>Thanks for the reivew.
+>
+>Because the value of sysctl_smcr_testlink_time is in seconds, and the value
+>of llc_testlink_time is jiffies.
+>
+>I have thought about
+>1) using proc_dointvec_jiffies as sysctl's proc_handler just like TCP does.
+>   But proc_dointvec_jiffies has no minimum limit, value 0 makes no sense for SMC testlink.
 
-To decrypt the dump of a PV guest, the comm-key (CCK) is required. Until
-now, no comm-key was provided to genprotimg, therefore decrypting the
-dump of a kvm-unit-test under PV was not possible.
+Maybe 0 means disable the LLC TEST LINK ?
 
-This patch makes sure that we create a random CCK if there's no
-$(TEST_DIR)/comm.key file.
 
-Also allow dumping of PV tests by passing the appropriate PCF to
-genprotimg (bit 34). --x-pcf is used to be compatible with older
-genprotimg versions, which don't support --enable-dump. 0xe0 is the
-default PCF value and only bit 34 is added.
+>2) using proc_dointvec_ms_jiffies_minmax as proc_handler. But millisecond interval
+>   seems expensive for SMC test link.
+>
+>So, I choose to use proc_dointvec_minmax, make sysctl_smcr_testlink_time in
+>seconds, and convert to jiffies when assigning to llc_testlink_time.
 
-Unfortunately, recent versions of genprotimg removed the --x-comm-key
-argument which was used by older versions to specify the CCK. To support
-these versions, we need to parse the genprotimg help output and decide
-which argument to use.
+If proc_dointvec_jiffies_minmax is really the problem, maybe you can
+write your own proc handler.
 
-Signed-off-by: Nico Boehr <nrb@linux.ibm.com>
-Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
-Link: https://lore.kernel.org/r/20220909121453.202548-3-nrb@linux.ibm.com
-Message-Id: <20220909121453.202548-3-nrb@linux.ibm.com>
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
----
- s390x/Makefile | 26 ++++++++++++++++++++++----
- 1 file changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/s390x/Makefile b/s390x/Makefile
-index a3647689..649486f2 100644
---- a/s390x/Makefile
-+++ b/s390x/Makefile
-@@ -164,15 +164,33 @@ $(SNIPPET_DIR)/c/%.hdr: $(SNIPPET_DIR)/c/%.gbin $(HOST_KEY_DOCUMENT)
- 	$(RM) $(@:.elf=.aux.o)
- 	@chmod a-x $@
- 
-+# Secure Execution Customer Communication Key file
-+# 32 bytes of key material, uses existing one if available
-+comm-key = $(TEST_DIR)/comm.key
-+$(comm-key):
-+	dd if=/dev/urandom of=$@ bs=32 count=1 status=none
-+
- %.bin: %.elf
- 	$(OBJCOPY) -O binary  $< $@
- 
--genprotimg_args = --host-key-document $(HOST_KEY_DOCUMENT) --no-verify
-+# The genprotimg arguments for the cck changed over time so we need to
-+# figure out which argument to use in order to set the cck
-+GENPROTIMG_HAS_COMM_KEY = $(shell $(GENPROTIMG) --help | grep -q -- --comm-key && echo yes)
-+ifeq ($(GENPROTIMG_HAS_COMM_KEY),yes)
-+	GENPROTIMG_COMM_KEY = --comm-key $(comm-key)
-+else
-+	GENPROTIMG_COMM_KEY = --x-comm-key $(comm-key)
-+endif
- 
--%selftest.pv.bin: %selftest.bin $(HOST_KEY_DOCUMENT) $(patsubst %.pv.bin,%.parmfile,$@)
-+# use x-pcf to be compatible with old genprotimg versions
-+# allow dumping + PCKMO
-+genprotimg_pcf = 0x200000e0
-+genprotimg_args = --host-key-document $(HOST_KEY_DOCUMENT) --no-verify $(GENPROTIMG_COMM_KEY) --x-pcf $(genprotimg_pcf)
-+
-+%selftest.pv.bin: %selftest.bin $(HOST_KEY_DOCUMENT) $(patsubst %.pv.bin,%.parmfile,$@) $(comm-key)
- 	$(GENPROTIMG) $(genprotimg_args) --parmfile $(patsubst %.pv.bin,%.parmfile,$@) --image $< -o $@
- 
--%.pv.bin: %.bin $(HOST_KEY_DOCUMENT)
-+%.pv.bin: %.bin $(HOST_KEY_DOCUMENT) $(comm-key)
- 	$(GENPROTIMG) $(genprotimg_args) --image $< -o $@
- 
- $(snippet_asmlib): $$(patsubst %.o,%.S,$$@) $(asm-offsets)
-@@ -180,7 +198,7 @@ $(snippet_asmlib): $$(patsubst %.o,%.S,$$@) $(asm-offsets)
- 
- 
- arch_clean: asm_offsets_clean
--	$(RM) $(TEST_DIR)/*.{o,elf,bin} $(SNIPPET_DIR)/*/*.{o,elf,*bin,*obj,hdr} $(SNIPPET_DIR)/asm/.*.d $(TEST_DIR)/.*.d lib/s390x/.*.d
-+	$(RM) $(TEST_DIR)/*.{o,elf,bin} $(SNIPPET_DIR)/*/*.{o,elf,*bin,*obj,hdr} $(SNIPPET_DIR)/asm/.*.d $(TEST_DIR)/.*.d lib/s390x/.*.d $(comm-key)
- 
- generated-files = $(asm-offsets)
- $(tests:.elf=.o) $(asmlib) $(cflatobjs): $(generated-files)
--- 
-2.34.1
-
+Thanks
