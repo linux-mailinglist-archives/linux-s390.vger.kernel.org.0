@@ -2,91 +2,79 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9383B5EEF9C
-	for <lists+linux-s390@lfdr.de>; Thu, 29 Sep 2022 09:48:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F08D5EF924
+	for <lists+linux-s390@lfdr.de>; Thu, 29 Sep 2022 17:37:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235045AbiI2HsC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 29 Sep 2022 03:48:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41884 "EHLO
+        id S234798AbiI2PfY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 29 Sep 2022 11:35:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234909AbiI2HsB (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 29 Sep 2022 03:48:01 -0400
+        with ESMTP id S235382AbiI2Pdv (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 29 Sep 2022 11:33:51 -0400
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDF10139420;
-        Thu, 29 Sep 2022 00:48:00 -0700 (PDT)
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28T6SCCX032006;
-        Thu, 29 Sep 2022 07:47:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=btqDUm0A3nwkG7m7OTMktqDeDAQjJKjm/ptN0wh19KA=;
- b=WyR18t/HRWbcJwXKmcVUHBWS6FEz1jHgxx5Kp8Oa+oJeeu1put7Qpbq6G3U6kWLFeac8
- 3cvw/ZRBppUnWpTxbqfSy2WXtzzL52Z3vA21ibWdgz/kT4xN88LeGfk0ffp72RyRQQ9i
- vrNO3ypYDqLcFk39exi/U3069El4RB3VmYeV9fQanhM46Zb0R4tLTi/npqDZmqP7IBC8
- KO6pkMrDpeEb2Wv6qOyfd3/Pff590fa4m9GJq9dLft2XK1jsaLwqig9FS+TDiubE8KD7
- VShQtPB91eMFoEzS38RWI0Xil+qeTZj3MAV9N1ZbqmBrEp+6N2P6a12Bcizy4JSx/O4X cw== 
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1737FB300;
+        Thu, 29 Sep 2022 08:33:28 -0700 (PDT)
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28TFT930001030;
+        Thu, 29 Sep 2022 15:33:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=ea/B67kM5cKu/ilXsIFirbfCsRfFvbE8pGJg2IsNiyA=;
+ b=Psm7QDSKvCTOTlWEMW3uyo79CKNUH2JPCWn9lxxGavDgtuecaSkAno2D1vE28XqO43fU
+ 6J3S2mHpGdMj6BWRGNY4z+OBznbgsnc3TvLlMbopjhRExmeu7vSmgDmJNDDt/JZsdqWq
+ JivGISpRufQNhNUti0TIto3cbROaf2VgHNwCMkDSU7rA9+s77baQ2KjPzTngKRjnQNy1
+ 1hFxEuz/bY7+XCMNY5c733Cw7ns4z6P8Pli/ewRGHIld2YZ03wRtaUSSElexUHSRdkw9
+ N8y1xFLjezhpg5HZR8WUiJ1paPdlncB8bS4eybAwvTQT6rN8aBGYNEKh/TLty5Rnrdh7 CA== 
 Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jw64bj4u2-1
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jwe1yg39v-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Sep 2022 07:47:42 +0000
+        Thu, 29 Sep 2022 15:33:08 +0000
 Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 28T7ZNj6017898;
-        Thu, 29 Sep 2022 07:47:39 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma01fra.de.ibm.com with ESMTP id 3jssh8vqwb-1
+        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 28TFM7SV014223;
+        Thu, 29 Sep 2022 15:33:06 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma01fra.de.ibm.com with ESMTP id 3jssh8w5rk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Sep 2022 07:47:39 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 28T7lahD27722490
+        Thu, 29 Sep 2022 15:33:06 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 28TFX2MU3736162
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Sep 2022 07:47:36 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 18EA2A405C;
-        Thu, 29 Sep 2022 07:47:36 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 99AC3A4054;
-        Thu, 29 Sep 2022 07:47:35 +0000 (GMT)
-Received: from oc-nschnelle.boeblingen.de.ibm.com (unknown [9.155.199.46])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 29 Sep 2022 07:47:35 +0000 (GMT)
-Message-ID: <a10424adbe01a0fd40372cbd0736d11e517951a1.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 1/3] iommu/s390: Fix duplicate domain attachments
+        Thu, 29 Sep 2022 15:33:02 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ACF67AE057;
+        Thu, 29 Sep 2022 15:33:02 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3FEA1AE045;
+        Thu, 29 Sep 2022 15:33:02 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 29 Sep 2022 15:33:02 +0000 (GMT)
 From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Matthew Rosato <mjrosato@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>, iommu@lists.linux.dev,
-        linux-s390@vger.kernel.org, borntraeger@linux.ibm.com,
+To:     Matthew Rosato <mjrosato@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>, iommu@lists.linux.dev
+Cc:     linux-s390@vger.kernel.org, borntraeger@linux.ibm.com,
         hca@linux.ibm.com, gor@linux.ibm.com,
         gerald.schaefer@linux.ibm.com, agordeev@linux.ibm.com,
         svens@linux.ibm.com, joro@8bytes.org, will@kernel.org,
-        robin.murphy@arm.com, linux-kernel@vger.kernel.org
-Date:   Thu, 29 Sep 2022 09:47:35 +0200
-In-Reply-To: <YzRM5HG0t36KUAVC@nvidia.com>
-References: <20220922095239.2115309-1-schnelle@linux.ibm.com>
-         <20220922095239.2115309-2-schnelle@linux.ibm.com>
-         <YyxyMtKXyvgHt3Kp@nvidia.com>
-         <81463119aeadd55465cfac1f5bc6a8b79f0c9738.camel@linux.ibm.com>
-         <YzGtQY+uw4ZzZoSH@nvidia.com>
-         <1a10b5baedafb56335231ccbd585412bbb3a108c.camel@linux.ibm.com>
-         <YzMrSIGMPSgJ94sG@nvidia.com>
-         <a4005a4ae804f852656ff2a6f2f994958b0b02e3.camel@linux.ibm.com>
-         <YzRM5HG0t36KUAVC@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        robin.murphy@arm.com, jgg@nvidia.com, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/5] iommu/s390: Fixes related to attach and aperture handling
+Date:   Thu, 29 Sep 2022 17:32:57 +0200
+Message-Id: <20220929153302.3195115-1-schnelle@linux.ibm.com>
+X-Mailer: git-send-email 2.34.1
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: qLBEJvrW6Rj8AkdAI2LT-Ja8D_Km9d5s
-X-Proofpoint-GUID: qLBEJvrW6Rj8AkdAI2LT-Ja8D_Km9d5s
+X-Proofpoint-GUID: RiDOH9cvB6X0Xrd0M6Y7dI_yFVukcfIZ
+X-Proofpoint-ORIG-GUID: RiDOH9cvB6X0Xrd0M6Y7dI_yFVukcfIZ
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-09-29_04,2022-09-29_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 spamscore=0 clxscore=1015 mlxscore=0 malwarescore=0
- phishscore=0 mlxlogscore=723 lowpriorityscore=0 impostorscore=0
- adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2209130000 definitions=main-2209290044
+ definitions=2022-09-29_08,2022-09-29_03,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ suspectscore=0 spamscore=0 clxscore=1015 mlxscore=0 lowpriorityscore=0
+ adultscore=0 impostorscore=0 phishscore=0 bulkscore=0 priorityscore=1501
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2209130000 definitions=main-2209290097
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
@@ -96,80 +84,74 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 2022-09-28 at 10:32 -0300, Jason Gunthorpe wrote:
-> On Wed, Sep 28, 2022 at 10:58:22AM +0200, Niklas Schnelle wrote:
-> > On Tue, 2022-09-27 at 13:56 -0300, Jason Gunthorpe wrote:
-> > > On Tue, Sep 27, 2022 at 06:33:48PM +0200, Niklas Schnelle wrote:
-> > >  
-> > > > Not sure what the non-MSI reservation is for? It does seem like x86_64
-> > > > also uses this for quite large ranges.
-> > > 
-> > > There are lots of things that are unsuitable for DMA on x86 platforms,
-> > > unfortunately.. But yeah, I'm not sure either.
-> > > 
-> > > > This is because I'm getting a map request for an IOVA in the reserved
-> > > > region.
-> > > 
-> > > How come? iova_reserve_iommu_regions() reads the reserved regions and
-> > > loads them as reserved into the iovad which should cause
-> > > iommu_dma_alloc_iova() and alloc_iova_fast() to not return values in
-> > > those ranges.
-> > > 
-> > > It all looks like it is supposed to work
-> > > 
-> > > Did something go wrong in the initialization order perhaps?
-> > > 
-> > > Jason
-> > 
-> > It was of course a classic off-by-one, the table size is a number of
-> > entries but geometry.aperture_end seems to be the largest allowed IOVA.
-> > So we need:
-> 
-> Right, I dislike this naming usually 'end' means "start + length" and
-> 'last' means "start + length - 1"
-> 
-> > Otherwise the first IOVA allocated is ZPCI_TABLE_SIZE_RT itself.
-> > Similarly we need the second reserved region if (zdev->end_dma <
-> > ZPCI_TABLE_SIZE_RT - 1). In your patch I think you had the
-> > MAX_DMA_TABLE_ADDR name right but would have also calculated the number
-> > of entries.
-> 
-> Make sense..
-> 
-> > On the other hand with the dma-iommu.c conversion it no longer makes
-> > sense to lower zdev->end_dma artificially, so at least on current
-> > machine LPARs we would end up with just a lower reserved region
-> > 0x0000000000000000 to 0x00000000ffffffff and can use IOVAs up to
-> > aperture_end.
-> 
-> So zdev->end_dma == MAX_DMA_TABLE_ADDR?
-> 
-> (and is zdev->end_dma and 'end' or 'last' ?)
+Hi All,
 
-Basically yes though at least on LPARs the firmware interface that
-gives us the initial zdev->end returns an even higher value but we
-clamp it down to the aperture. It is "start + length - 1".
+This is v3 of a follow up to Matt's recent series[0] where he tackled a race
+that turned out to be outside of the s390 IOMMU driver itself as well as
+duplicate device attachments. After an internal discussion we came up with what
+I believe is a cleaner fix. Instead of actively checking for duplicates we
+instead detach from any previous domain on attach. From my cursory reading of
+the code this seems to be what the Intel IOMMU driver is doing as well.
 
-> 
-> Can you include this patch once you are happy with it, it nicely
-> tidies this series?
-> 
-> Thanks,
-> Jason 
+Moreover we drop the attempt to re-attach the device to its previous IOMMU
+domain on failure. This was fragile, unlikely to help and unexpected for
+calling code. Thanks Jason for the suggestion.
 
-Yes will do. In the meantime I'm now close to sending an RFC version of
-the conversion to dma-iommu. So my plan is to send out 3 series of
-patches.
+During development of this fix we realized that we can get rid of struct
+s390_domain_device entirely if we instead thread the list through the attached
+struct zpci_devs. This saves us from having to allocate during attach and gets
+rid of one level of indirection during IOMMU operations.
 
-1. v3 of this series of IOMMU fixes including your suggestion to use
-reserved ranges, the previously mentioned off-by-one fix and another
-IOMMU issue I found (pgsize_bitmap is wrong).
+Additionally 3 more fixes have been added that weren't in v2 of this series.
+One is for a potential situation where the aperture of a domain could shrink
+and leave invalid translations. The next one fixes an off by one in checking
+validity of an IOVA and the last one fixes a wrong value for pgsize_bitmap.
 
-2. A series of improvements to the s390 IOMMU code including
-implementing map_pages() and lock-free page table updates
+*Note*:
+This series is against the s390 features branch[1] which already contains
+the bus_next field removal that was part of v2.
 
-3. A series converting s390 to use dma-iommu plus changes against dma-
-iommu.c common code to implement an alternative flushing scheme that
-brings z/VM and KVM guest PCI performance back to the level of our
-existing DMA API implementation.
+Best regards,
+Niklas
+
+Changes since v2:
+- The patch removing the unused bus_next field has been spun out and
+  already made it into the s390 feature branch on git.kernel.org
+- Make __s390_iommu_detach_device() return void (Jason)
+- Remove the re-attach on failure dance as it is unlikely to help
+  and complicates debug and recovery (Jason)
+- Ignore attempts to detach from domain that is not the active one
+- Add patch to fix potential shrinking of the aperture and use
+  reserved ranges per device instead of the aperture to respect
+  IOVA range restrictions (Jason)
+- Add a fix for an off by one error on checking an IOVA against
+  the aperture
+- Add a fix for wrong pgsize_bitmap
+
+Changes since v1:
+- After patch 3 we don't have to search in the devices list on detach as
+  we alreadz have hold of the zpci_dev (Jason)
+- Add a WARN_ON() if somehow ended up detaching a device from a domain that
+  isn't the device's current domain.
+- Removed the iteration and list delete from s390_domain_free() instead
+  just WARN_ON() when we're freeing without having detached
+- The last two points should help catching sequencing errors much more
+  quickly in the future.
+
+[0] https://lore.kernel.org/linux-iommu/20220831201236.77595-1-mjrosato@linux.ibm.com/
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/
+
+Niklas Schnelle (5):
+  iommu/s390: Fix duplicate domain attachments
+  iommu/s390: Get rid of s390_domain_device
+  iommu/s390: Fix potential s390_domain aperture shrinking
+  iommu/s390: Fix incorrect aperture check
+  iommu/s390: Fix incorrect pgsize_bitmap
+
+ arch/s390/include/asm/pci.h |   1 +
+ drivers/iommu/s390-iommu.c  | 147 ++++++++++++++++--------------------
+ 2 files changed, 64 insertions(+), 84 deletions(-)
+
+-- 
+2.34.1
 
