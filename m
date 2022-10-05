@@ -2,148 +2,165 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E142A5F5406
-	for <lists+linux-s390@lfdr.de>; Wed,  5 Oct 2022 13:51:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06DBB5F544F
+	for <lists+linux-s390@lfdr.de>; Wed,  5 Oct 2022 14:21:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229904AbiJELvR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 5 Oct 2022 07:51:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56608 "EHLO
+        id S229821AbiJEMU7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 5 Oct 2022 08:20:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229823AbiJELvC (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 5 Oct 2022 07:51:02 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2065.outbound.protection.outlook.com [40.107.93.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9820179EEB;
-        Wed,  5 Oct 2022 04:48:48 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JbIPVYqQTz95F0H8RQSGVW9vioenvM9NndoTL3ePbjosnfpIRlRCdpRThC3QUdGvGTrmDA1pg7m77ua187OsKOpOIXstU7NPAdYtscSFymxi31D1+EIiROQ+JV4IUjztcKskrsQ+6x8+T3wnhW30nzb6v/I7qfrdTGyksSvEzgseoIYGFQUeVRHD/XNilrTQoY49ZWP7USg9xMP3k1f4XvD01N5hJULQGmGzdGCUKVXV+DGrwGbzuhQi8lj2MT9aJhikrLesgU9hEccTc7uHnXVHuoY2uaide7BbwJ0eEdkKrV/kquSDLwcWhI2SkDVxOlvfc6OQp1Pu2fLTAniS7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oOkGdWvPcCbFNxGVIbIDE1x0EHvcA752N/Z3558MfCA=;
- b=fl2BuLd3m2ta0cJ8e+LoaXDpUVHWkxWQJp/vmkn02Pa36inqTLvh4/GJOBDP8Am6RTFK1FkCSqF91nHsAuh6wqMfUkJ/L84CnyEVtdNuUks0ITAjnFHWiHEfaiq5hIbFBo/OkD+42eMZfkSIZIFsEOeu6RgzOsKQb46FefGgdEd7f3afzrvf+MUda/h3HzqKsUO74xdy3jkSk7i4S7jD7YvGA6bSb00tl88O3sAmmnsFS5DJKUDm65JfG9ZYBzrYcHILNWwMJV3Rl2Azo8cbFBJpupDnGRGKk/BsIw9iKB0ZvV3EzrFbXNqom1ipw/lrJJUrFyFvjlZWw7//aceLTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oOkGdWvPcCbFNxGVIbIDE1x0EHvcA752N/Z3558MfCA=;
- b=Hc4XyoWSzNCEeFOaXgIKx0je06uPB2Bw8FQG4rdzJ0nIvAtZwk3opE+Rtu3zUffuEwGvDgIGBmvkLeT6Ht9Yq5npZ31G/bKNzfugUn3lWX7NvSCOH8uaV3uNj4oIIYEUQyG9kufNXugpuc4NRKORQ8Rf1NdnTgIcmXd1o0EhIXRdHS+Bik3Vg2Vy2Eco35NQABFk5V8YeH+BP5gDVNnGTKh9M8qq3+Y0gnbCa/Px/T/YHsNobImZH9GeKfTt///SMvpAZSHJF2s0mdrg73Ta0dRiwj/qnjB+MGSjHpEWzJxYM3lvefha2yBiwePkos7Fb+TG6eTklCGfLmNupX0zNQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
- by DS0PR12MB6534.namprd12.prod.outlook.com (2603:10b6:8:c1::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.31; Wed, 5 Oct
- 2022 11:48:45 +0000
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::7a81:a4e4:bb9c:d1de]) by LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::7a81:a4e4:bb9c:d1de%5]) with mapi id 15.20.5676.032; Wed, 5 Oct 2022
- 11:48:45 +0000
-Date:   Wed, 5 Oct 2022 08:48:39 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Niklas Schnelle <schnelle@linux.ibm.com>
-Cc:     Matthew Rosato <mjrosato@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>, iommu@lists.linux.dev,
-        linux-s390@vger.kernel.org, borntraeger@linux.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com,
-        gerald.schaefer@linux.ibm.com, agordeev@linux.ibm.com,
-        svens@linux.ibm.com, joro@8bytes.org, will@kernel.org,
-        robin.murphy@arm.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] iommu/s390: Fix duplicate domain attachments
-Message-ID: <Yz1vF7B0FLvLVvE0@nvidia.com>
-References: <20221004120706.2957492-1-schnelle@linux.ibm.com>
- <20221004120706.2957492-2-schnelle@linux.ibm.com>
- <2a56d7bc-3beb-51fe-fc65-f2f3bd192e34@linux.ibm.com>
- <dd92817a13601a4a449096b7ae94caa66a113853.camel@linux.ibm.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dd92817a13601a4a449096b7ae94caa66a113853.camel@linux.ibm.com>
-X-ClientProxiedBy: MN2PR16CA0005.namprd16.prod.outlook.com
- (2603:10b6:208:134::18) To LV2PR12MB5869.namprd12.prod.outlook.com
- (2603:10b6:408:176::16)
+        with ESMTP id S229631AbiJEMU6 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 5 Oct 2022 08:20:58 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32D6750052;
+        Wed,  5 Oct 2022 05:20:57 -0700 (PDT)
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 295B6pPO024237;
+        Wed, 5 Oct 2022 12:20:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=clKTTodDgibmvg6FNHQgjqGVUxVc/RnMc9ur4VRDnOk=;
+ b=BXjXggM6KqRQgi0ax20J11wIWYwcUsQW8YXiaBe3OmnpcJ1macs6yvqTwKNkCaqvYfVA
+ sWMuYO7UiJcmB1mM2QrOVkc0nSteiGevA8qMuLfWahxfQrNjX3gJlGdTa+28+MxYzHll
+ 2Imn2+4C4oLq3gEnnWoSGcSMO0x9JYX6M/46Y+FHi+zXcHCOMf/Rspjr0Cem6JC3Nd4N
+ rz68O/zIq7ekpwJkalLXRR4ur1mB09+cTS11jC60f0elJvkgN5C1XVI7hNQG1msoM/c4
+ UkkW/yug9NIxOWbRFhuuVf0Qw8TSTTDXVUijKLxOq9maXM/As/wKLoZLDTlAquJ3lsI/ vA== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3k0fsnuxhu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Oct 2022 12:20:56 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 295C6DDK021143;
+        Wed, 5 Oct 2022 12:20:54 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 3jxd695hgd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Oct 2022 12:20:54 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 295CKpgK6750752
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 5 Oct 2022 12:20:51 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5310EAE04D;
+        Wed,  5 Oct 2022 12:20:51 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1783FAE045;
+        Wed,  5 Oct 2022 12:20:51 +0000 (GMT)
+Received: from t35lp63.lnxne.boe (unknown [9.152.108.100])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  5 Oct 2022 12:20:51 +0000 (GMT)
+From:   Nico Boehr <nrb@linux.ibm.com>
+To:     borntraeger@linux.ibm.com, frankja@linux.ibm.com,
+        imbrenda@linux.ibm.com
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [v2] KVM: s390: pv: fix external interruption loop not always detected
+Date:   Wed,  5 Oct 2022 14:20:50 +0200
+Message-Id: <20221005122050.60625-1-nrb@linux.ibm.com>
+X-Mailer: git-send-email 2.35.3
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 3nfA9cFBNz_TGBq_IBuMMaw1EuA76EyK
+X-Proofpoint-GUID: 3nfA9cFBNz_TGBq_IBuMMaw1EuA76EyK
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|DS0PR12MB6534:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0144ae23-416c-48af-999b-08daa6c78ef9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4FCEVhfBgYTQCwm1wCDED+ns343TVEmzUFoXrYcT/yBE1taVmsh6vFzw1FUk44H8kF4wwMgQM/svBlAiywTyr+tYW7FFpUSM1NAVllg3MzRfk2gpLCvufICbDvwQGFQEz96asKjKMcgc4iC6/IpgKSk/udjdlWlGIdNMIiIDd7Od/vSCu68MCY776mPkRpzRJg8fpCkRDoYlmdVf/Ff3jHKDJMpRNIHuORVb88CwCrEcH+vDN7Na/2fudbAmiBFyH0KblqFXeQ0j5YNwyhYIEkp0beMaVlGAfBeCPnGdbfYefjQIYfXBC/bg7XXN8uK1hWDF95+w4J0HxfWGG+qH2YsLf5ejLt0e/2aXslCIGkK3M09w0/9hxOjB18fuCqWV4iurL9mNM0ILaUO9BXH+KUYUIvG9R5Pt1ypTJso2WsxBsVTD/V5xgasX1rYZGt+umiWTgGSPgOI9trjqtMdXSyqZQrPYiwV7v/fSSz90CkLmSdXOBbErA1j9rAwOfEYfDz5UeQ3f+tMes/mzPf9jRY7Zzr/qQVJki9azptivuowm4gykL8ITDfJGoYFAELqwEEWF79vGwQ0gKiv8OHtMvoggFd4Rd9zeA33XzFKOE/uUqXnnEvcaDVc6QvBbyfIUI9FFOJprA/IZako8dmbYul+J89gf6XNRaDkdED/pGkiNqkpwoKVIfBTaEDVM4i3JaEo8bGZiwaHe3wiAMJSjLg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(366004)(346002)(39860400002)(396003)(376002)(136003)(451199015)(2906002)(66899015)(8936002)(7416002)(5660300002)(6512007)(6506007)(26005)(6666004)(316002)(478600001)(6486002)(6916009)(4326008)(8676002)(41300700001)(66556008)(54906003)(2616005)(38100700002)(186003)(66946007)(66476007)(86362001)(83380400001)(36756003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Dy6n0A34T+SJS+Qu5BX6+jJ/VewlLoRVyHXSZNKQLMqep6cff5udAmu3JaTE?=
- =?us-ascii?Q?VRo8ipsqW9NwvngOhlJuK9SDmFXtc8Hsa6rbOwJoU9mHKcsNb5BwL9TmFiyK?=
- =?us-ascii?Q?193t/Jw2wKsXVCdn74zhsoMpdJ4DSNLnSGeVvA/V898FbgKdm6LY9LmWHZxK?=
- =?us-ascii?Q?2+7TMP1prWvC7usbtIGLpw25mByVGozC+bQMwqDhlKrwzN3Tz/lKuwAnX5Qp?=
- =?us-ascii?Q?WbjMvy4lwjv7jCOfqwL1TwGcclIIdNzdNn4bf++YNnxuPrvZsO6WPRYB2ekc?=
- =?us-ascii?Q?XdcZxD6Gemnt+AIpGx3ctUF4yDETUOWM25cKFPwiWA2PSFvfnhzXeOybvlnc?=
- =?us-ascii?Q?5Cf0EYUiqkGhKPlgg+8zyg0+QlI5mnD5/+m/jkwOZCbuT41+zb5R4H56+dsh?=
- =?us-ascii?Q?qwFKuIL7JwLXmxCZlccD/Tl17hoght2/amn4nbjBgtjg122ElG986/pnKjAc?=
- =?us-ascii?Q?x1DtlAnDa7WUaghbXXbdsDA6s8hniG3bml6NNh5REeLjw6cD/XS8HB8qfY9O?=
- =?us-ascii?Q?rTTv5/b6qC5LOx+3mcaZ8C0zfLi6VYiN65DM8a1fs5t6krEdyOymgsVw28+N?=
- =?us-ascii?Q?yNwA+WTYeOiXjn7DAew9pAnWn+9kXudWkF/2wduJtrKg+7srhBDOMRNBYxZC?=
- =?us-ascii?Q?ofF5QspKY6ymBr38/EhZei0Ld/kZw3H0jZvLYm6yDUastZ+T6+LV2VsXfuN7?=
- =?us-ascii?Q?tjw9PUETmI5db4v3RAIS3yrn1pgu6/UbgCZihv4vX4lbxDdS9xZBX0dw//DG?=
- =?us-ascii?Q?NTjbSsg7fFIHiNIOU9emZziSLJQKeRhrRGNHDhRxfMUmEPtprRG2NcMJFcxW?=
- =?us-ascii?Q?eCDhTyK2koPpZhMGs+cbwuxeidiVLQKQIoldG1zZwKWicRe733U6HpTo7Ejn?=
- =?us-ascii?Q?+dE0YvkZLXwyrP+RumYS2OYsKcn5GR7NdpLurLRuuV00D+BkpHgG0+tH8Bu+?=
- =?us-ascii?Q?zWy0c9zYbEhJd6dnoXIfxBvYsHGiw4fTni9/HzIvWCC7CBArYtLQDQHh67Rf?=
- =?us-ascii?Q?nFio49sQ+3URwN6KaTadUyaQzAs/7Sj1Lsu8uZ92lN1msYACjvKI8v+/iBN+?=
- =?us-ascii?Q?wQ8s40rmAntvdWQbF2lNjnSp2e5qc7xuZtPQmVIeLx/5eMLybwlfHlxz7v80?=
- =?us-ascii?Q?XOXRoX58unzFUyDL2FPP+CRlEN4mj2h1m5ZHyh/AmHy3IBL296yNlEnPtV/0?=
- =?us-ascii?Q?8+N2bDCLS+wPjSDj29UzDdY8W7jEJYejSq300Sa6Vx8fNLu22iDFwo0RrZCX?=
- =?us-ascii?Q?bGHMJ3496NkBBrpHQktZuVnkmJg0UXjz6+52lafxBrWPacqUwTKbAUGVBFMB?=
- =?us-ascii?Q?TL2BQHYjpituuVhuXQGr1I7uH1ZsmxbFN+V3QJWIPMuYjueli/r2k48dDvqu?=
- =?us-ascii?Q?twHVEvme9E7QmzVpICLsu8w38IvAD2xwzIcAwUxmHcuauu78vVDzAiR0ONhN?=
- =?us-ascii?Q?L5yuEXZkBnd8mpCjR/SsvlSCa6U+Hn0xXvaubtq/sSkvQKzEz7QDcIgtniN5?=
- =?us-ascii?Q?iqGWxEuBfjmsMivF3Mw0u6W21pKDGpSCUd0UHosOBfgonEuxIrUuEEacG+Iu?=
- =?us-ascii?Q?o0M6BuapyNbW0twpStA=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0144ae23-416c-48af-999b-08daa6c78ef9
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Oct 2022 11:48:45.5177
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CuZ/oY6nN5et42CI06PNMZIohXSR1j52fi7L3n/QyM8+t7l1SCc7vTxRDgoY29SA
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6534
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-10-05_01,2022-10-05_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 clxscore=1011 suspectscore=0 phishscore=0 spamscore=0
+ priorityscore=1501 malwarescore=0 mlxlogscore=884 impostorscore=0
+ mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2209130000 definitions=main-2210050076
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Oct 05, 2022 at 09:58:58AM +0200, Niklas Schnelle wrote:
+To determine whether the guest has caused an external interruption loop
+upon code 20 (external interrupt) intercepts, the ext_new_psw needs to
+be inspected to see whether external interrupts are enabled.
 
-> A failed aperture test leaving the IOAT registered would indeed be bad.
-> I guess I focused too much on the failure scenarios at the state after
-> these patches where this can't happen. I think this would leave us in a
-> bad state because zpci_register_ioat() succeeded with the domain's DMA
-> table but we won't have attached leading to the wrong decisions in
-> recovery paths (see below).
+Under non-PV, ext_new_psw can simply be taken from guest lowcore. Under
+PV, KVM can only access the encrypted guest lowcore and hence the
+ext_new_psw must not be taken from guest lowcore.
 
-Domain attach should either completely move to the new domain and
-succeed, or it should leave everything as is and fail.
+handle_external_interrupt() incorrectly did that and hence was not able
+to reliably tell whether an external interruption loop is happening or
+not. False negatives cause spurious failures of my kvm-unit-test
+for extint loops[1] under PV.
 
-So it looks OK to me.
+Since code 20 is only caused under PV if and only if the guest's
+ext_new_psw is enabled for external interrupts, false positive detection
+of a external interruption loop can not happen.
 
-> Recovery (via zpci_hot_reset_device()) should then be able to deal with
-> these situations as long as zdev->dma_table matches the IOAT
-> registration state.
+Fix this issue by instead looking at the guest PSW in the state
+description. Since the PSW swap for external interrupt is done by the
+ultravisor before the intercept is caused, this reliably tells whether
+the guest is enabled for external interrupts in the ext_new_psw.
 
-If you are doing reset the s390 driver should keep track of what
-domain is supposed to be attached and fix it when the reset is
-completed. In this case it should not fail attach here for the
-mandatory success domain types.
+Also update the comments to explain better what is happening.
 
-The core code does not reasonably handle failures from this routine,
-it must be avoided if you want it to be robust.
+[1] https://lore.kernel.org/kvm/20220812062151.1980937-4-nrb@linux.ibm.com/
 
-Jason
+Signed-off-by: Nico Boehr <nrb@linux.ibm.com>
+---
+ arch/s390/kvm/intercept.c | 32 ++++++++++++++++++++++++--------
+ 1 file changed, 24 insertions(+), 8 deletions(-)
+
+diff --git a/arch/s390/kvm/intercept.c b/arch/s390/kvm/intercept.c
+index 88112065d941..ea43463b102e 100644
+--- a/arch/s390/kvm/intercept.c
++++ b/arch/s390/kvm/intercept.c
+@@ -271,10 +271,18 @@ static int handle_prog(struct kvm_vcpu *vcpu)
+  * handle_external_interrupt - used for external interruption interceptions
+  * @vcpu: virtual cpu
+  *
+- * This interception only occurs if the CPUSTAT_EXT_INT bit was set, or if
+- * the new PSW does not have external interrupts disabled. In the first case,
+- * we've got to deliver the interrupt manually, and in the second case, we
+- * drop to userspace to handle the situation there.
++ * This interception occurs if:
++ * - the CPUSTAT_EXT_INT bit was already set when the external interrupt
++ *   occured. In this case, the interrupt needs to be injected manually to
++ *   preserve interrupt priority.
++ * - the external new PSW has external interrupts enabled, which will cause an
++ *   interruption loop. We drop to userspace in this case.
++ *
++ * The latter case can be detected by inspecting the external mask bit in the
++ * external new psw.
++ *
++ * Under PV, only the latter case can occur, since interrupt priorities are
++ * handled in the ultravisor.
+  */
+ static int handle_external_interrupt(struct kvm_vcpu *vcpu)
+ {
+@@ -285,10 +293,18 @@ static int handle_external_interrupt(struct kvm_vcpu *vcpu)
+ 
+ 	vcpu->stat.exit_external_interrupt++;
+ 
+-	rc = read_guest_lc(vcpu, __LC_EXT_NEW_PSW, &newpsw, sizeof(psw_t));
+-	if (rc)
+-		return rc;
+-	/* We can not handle clock comparator or timer interrupt with bad PSW */
++	if (kvm_s390_pv_cpu_is_protected(vcpu))
++		newpsw = vcpu->arch.sie_block->gpsw;
++	else {
++		rc = read_guest_lc(vcpu, __LC_EXT_NEW_PSW, &newpsw, sizeof(psw_t));
++		if (rc)
++			return rc;
++	}
++
++	/*
++	 * Clock comparator or timer interrupt with external interrupt enabled
++	 * will cause interrupt loop. Drop to userspace.
++	 */
+ 	if ((eic == EXT_IRQ_CLK_COMP || eic == EXT_IRQ_CPU_TIMER) &&
+ 	    (newpsw.mask & PSW_MASK_EXT))
+ 		return -EOPNOTSUPP;
+-- 
+2.35.3
+
