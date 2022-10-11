@@ -2,111 +2,129 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E631D5FB40E
-	for <lists+linux-s390@lfdr.de>; Tue, 11 Oct 2022 16:03:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A64095FB783
+	for <lists+linux-s390@lfdr.de>; Tue, 11 Oct 2022 17:42:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229446AbiJKODg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 11 Oct 2022 10:03:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53618 "EHLO
+        id S230055AbiJKPmS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 11 Oct 2022 11:42:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbiJKODc (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 11 Oct 2022 10:03:32 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62B946FA14;
-        Tue, 11 Oct 2022 07:03:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=D73BjQfIrSTnj6EqtQCxORHOxjQyNOc/wJqBUfiO9Q8=; b=SABjHiClB4JQLpcyV5/NJW5d3o
-        7qiqIFwxs3yuoRYvHYEUmakkgOL5QJruLYYiLrB8KNBxvc9M0m1MoPYCe3IOz0IAw0eNWihsAXV/P
-        5Y+f4dExVkJIGRYxLQbJ5kAOwfVu5T6Pm67GO++RvcH0pmN82akGPlefH2VZrln++lzM7rjbIHmLX
-        OGbnU3htHC2Rq9KOnboXIhUwg0DEfnfpXfP1N++I2+o6Ukub7Ckdu6lBrxmW1FB4Cb9KB7FurUxMk
-        eNByW8y5b+lmZE8M/V8PaAIkYFv7qB7CIAzpDcxJNW9ZAkwV7KHd56f56h5fcbaZVr9iX5gjnz055
-        cLqo9vfg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oiFqT-002aUL-ES; Tue, 11 Oct 2022 14:02:57 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 557723000E3;
-        Tue, 11 Oct 2022 16:02:56 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 449D529AC89DB; Tue, 11 Oct 2022 16:02:56 +0200 (CEST)
-Date:   Tue, 11 Oct 2022 16:02:56 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, songliubraving@fb.com,
-        eranian@google.com, ak@linux.intel.com, mark.rutland@arm.com,
-        frederic@kernel.org, maddy@linux.ibm.com, irogers@google.com,
-        will@kernel.org, robh@kernel.org, mingo@redhat.com,
-        catalin.marinas@arm.com, ndesaulniers@google.com,
-        srw@sladewatkins.net, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com, kim.phillips@amd.com,
-        santosh.shukla@amd.com
-Subject: Re: [PATCH v2] perf: Rewrite core context handling
-Message-ID: <Y0V3kOWInrvCvVtk@hirez.programming.kicks-ass.net>
-References: <20221008062424.313-1-ravi.bangoria@amd.com>
- <Y0VTn0qLWd925etP@hirez.programming.kicks-ass.net>
- <ba47d079-6d97-0412-69a0-fa15999b5024@amd.com>
+        with ESMTP id S230118AbiJKPln (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 11 Oct 2022 11:41:43 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C532CAE23E
+        for <linux-s390@vger.kernel.org>; Tue, 11 Oct 2022 08:31:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1665502223;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ti1NCFCTzr5YPwBHvg45c+mfaiUwrR60uA7ep6lLZuA=;
+        b=K4pQ0OYXfZw9gmWtmovRyU3rUQgPs/dL75NT5aYQ6JUTF7ozC+8fHfO0n5JddibNCSRNHK
+        lhri+iNtKV9v1Po8DbWbGKsgRySL3CvP0yNX9fua58cGZQEl2DfTgDD96TOpf3H1u61cxU
+        bwJGz/GxWdn3Ma1PPzLwUtK/jJ+/WSs=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-483-bjA7JYIzPguGssT6tX4ZSQ-1; Tue, 11 Oct 2022 11:02:10 -0400
+X-MC-Unique: bjA7JYIzPguGssT6tX4ZSQ-1
+Received: by mail-wm1-f71.google.com with SMTP id 2-20020a05600c268200b003c4290989e1so2313459wmt.2
+        for <linux-s390@vger.kernel.org>; Tue, 11 Oct 2022 08:02:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ti1NCFCTzr5YPwBHvg45c+mfaiUwrR60uA7ep6lLZuA=;
+        b=jK5uKCESVDu37JALdUpdTTk7mGHeuHfIYBmXTXH5zODUWapVbHKxxeeVlOQX7N3oDI
+         xUADL391U12Y87d9YpAtzrLWHAduSH33FiENfA7q2Ma4JC6x1TDbmQ7NaBIJr+Hj/pQl
+         erZQV8JXEQ52kHfEsPB/kdA5X50u//gZdXJyJtqvREbW2gm/ji7FPnMOFrb+kxotIw0y
+         ZAex69PmB9Gc4fGUb9sK84bjxXE4DxP3W9dNdHSMygOgPzM2+4eTbSKGy+k1sWGNZmJf
+         me89pYNGk/DUXql99kDqIXL+OFdbhsk1KXVOQ8V/Kh92KVzto9EuUO2hcA9NzvXOenS8
+         Nl3A==
+X-Gm-Message-State: ACrzQf2OWFfVgZtbcKj5z3fUbSxJeeOEao7kJPY9/9AneHp+zbmU2RTh
+        bnpWvXpY8AwRHXmKfie6WEjDxc32WMpAfWroRuD+plq+jX2HZdT7xuZEfzcBTpN1pENCOtlzHst
+        o1WTzyMl9Mmg7kC0cGJEHjw==
+X-Received: by 2002:a5d:59a3:0:b0:22e:4b62:7ceb with SMTP id p3-20020a5d59a3000000b0022e4b627cebmr15699198wrr.90.1665500528711;
+        Tue, 11 Oct 2022 08:02:08 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM7srUgXRaEVg4Pb59BUs0ShAt8e40s56KQw2lU0G4VdN3sOMR/0VHio2//G+OqnLs1Wx3l7Vw==
+X-Received: by 2002:a5d:59a3:0:b0:22e:4b62:7ceb with SMTP id p3-20020a5d59a3000000b0022e4b627cebmr15699160wrr.90.1665500528495;
+        Tue, 11 Oct 2022 08:02:08 -0700 (PDT)
+Received: from vschneid.remote.csb ([104.132.153.106])
+        by smtp.gmail.com with ESMTPSA id bh11-20020a05600c3d0b00b003b49ab8ff53sm13552403wmb.8.2022.10.11.08.02.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Oct 2022 08:02:07 -0700 (PDT)
+From:   Valentin Schneider <vschneid@redhat.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Guo Ren <guoren@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [RFC PATCH 4/5] irq_work: Trace calls to arch_irq_work_raise()
+In-Reply-To: <20221008153442.159b2f2d@rorschach.local.home>
+References: <20221007154145.1877054-1-vschneid@redhat.com>
+ <20221007154533.1878285-4-vschneid@redhat.com>
+ <20221008153442.159b2f2d@rorschach.local.home>
+Date:   Tue, 11 Oct 2022 16:02:06 +0100
+Message-ID: <xhsmhlepmflox.mognet@vschneid.remote.csb>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ba47d079-6d97-0412-69a0-fa15999b5024@amd.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Oct 11, 2022 at 06:49:55PM +0530, Ravi Bangoria wrote:
-> On 11-Oct-22 4:59 PM, Peter Zijlstra wrote:
-> > On Sat, Oct 08, 2022 at 11:54:24AM +0530, Ravi Bangoria wrote:
-> > 
-> >> +static void perf_event_swap_task_ctx_data(struct perf_event_context *prev_ctx,
-> >> +					  struct perf_event_context *next_ctx)
-> >> +{
-> >> +	struct perf_event_pmu_context *prev_epc, *next_epc;
-> >> +
-> >> +	if (!prev_ctx->nr_task_data)
-> >> +		return;
-> >> +
-> >> +	prev_epc = list_first_entry(&prev_ctx->pmu_ctx_list,
-> >> +				    struct perf_event_pmu_context,
-> >> +				    pmu_ctx_entry);
-> >> +	next_epc = list_first_entry(&next_ctx->pmu_ctx_list,
-> >> +				    struct perf_event_pmu_context,
-> >> +				    pmu_ctx_entry);
-> >> +
-> >> +	while (&prev_epc->pmu_ctx_entry != &prev_ctx->pmu_ctx_list &&
-> >> +	       &next_epc->pmu_ctx_entry != &next_ctx->pmu_ctx_list) {
-> >> +
-> >> +		WARN_ON_ONCE(prev_epc->pmu != next_epc->pmu);
-> >> +
-> >> +		/*
-> >> +		 * PMU specific parts of task perf context can require
-> >> +		 * additional synchronization. As an example of such
-> >> +		 * synchronization see implementation details of Intel
-> >> +		 * LBR call stack data profiling;
-> >> +		 */
-> >> +		if (prev_epc->pmu->swap_task_ctx)
-> >> +			prev_epc->pmu->swap_task_ctx(prev_epc, next_epc);
-> >> +		else
-> >> +			swap(prev_epc->task_ctx_data, next_epc->task_ctx_data);
-> > 
-> > Did I forget to advance the iterators here?
-> 
-> Yeah. Seems so. I overlooked it too.
+On 08/10/22 15:34, Steven Rostedt wrote:
+> On Fri,  7 Oct 2022 16:45:32 +0100
+> Valentin Schneider <vschneid@redhat.com> wrote:
+>>  }
+>>  
+>> +static inline void irq_work_raise(void)
+>> +{
+>> +	if (arch_irq_work_has_interrupt())
+>> +		trace_ipi_send_cpu(_RET_IP_, smp_processor_id());
+>
+> To save on the branch, let's make the above:
+>
+> 	if (trace_ipi_send_cpu_enabled() && arch_irq_work_has_interrupt())
+>
+> As the "trace_*_enabled()" is a static branch that will make it a nop
+> when the tracepoint is not enabled.
+>
 
-OK; so I'm not slowly going crazy staring at this code ;-) Let me go add
-it now then. :-)
+Makes sense, thanks for the suggestion.
 
-But first I gotta taxi the kids around for a bit, bbl.
+> -- Steve
+>
+>
+>> +
+>> +	arch_irq_work_raise();
+>> +}
+>> +
+>>  /* Enqueue on current CPU, work must already be claimed and preempt disabled */
+
