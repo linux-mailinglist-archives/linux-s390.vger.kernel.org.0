@@ -2,288 +2,229 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E5B4B5FB711
-	for <lists+linux-s390@lfdr.de>; Tue, 11 Oct 2022 17:28:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65F0E5FB81E
+	for <lists+linux-s390@lfdr.de>; Tue, 11 Oct 2022 18:17:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229973AbiJKP2L (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 11 Oct 2022 11:28:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49804 "EHLO
+        id S229838AbiJKQRQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 11 Oct 2022 12:17:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231612AbiJKP1s (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 11 Oct 2022 11:27:48 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 312CAAC386;
-        Tue, 11 Oct 2022 08:18:31 -0700 (PDT)
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29BF7Kbb024309;
-        Tue, 11 Oct 2022 15:17:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=aX4BDwGXtmjSFLoZblRZbyxfJQsKH9xJCvc0H0bEub0=;
- b=MHmO7yDiT5ElVYY2nc3w3My0jxZiHWk8QnObkUx+I/Sjnw2Sy0N1v3WFsLgUSNVZ70+v
- jqObBpKCSmf61KfBDB0J38BZ0Xh02dl3Gvs9YShxCTe6C5ssVtMEas2dTYQW6i85y4MG
- 2bTmkttfWp7MJ+8J14zhCEv8ywzk/G82SmMPreK/LHtipe0xWU2lsYdrwShNzaiQ+Edv
- cR2EiaqfBOeouQa+X+truvMW1taOIQrVnXRaYvza/wKehEOfbLG5HpRSPX0/mCSAWyJC
- 87/GkUT1XGQGPGkvkLu9uiIcSyCge3u7/nnhwDi8AlBBnB1i6a2INpnvCEET3eSxvN8Y 8Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3k58t1n6d9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 Oct 2022 15:17:01 +0000
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 29BF7qtn027496;
-        Tue, 11 Oct 2022 15:17:01 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3k58t1n6c3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 Oct 2022 15:17:01 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 29BF6QRj015220;
-        Tue, 11 Oct 2022 15:16:58 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06ams.nl.ibm.com with ESMTP id 3k30fjcnx1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 Oct 2022 15:16:58 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 29BFGt1Z32768272
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Oct 2022 15:16:55 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 899DFA405C;
-        Tue, 11 Oct 2022 15:16:55 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0CBACA405B;
-        Tue, 11 Oct 2022 15:16:55 +0000 (GMT)
-Received: from oc-nschnelle.boeblingen.de.ibm.com (unknown [9.155.199.46])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 11 Oct 2022 15:16:54 +0000 (GMT)
-Message-ID: <b6ac5c44917390b9a5cc7ebb87a089568279c459.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 09/11] s390: mm: Convert to GENERIC_IOREMAP
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, hch@infradead.org,
-        agordeev@linux.ibm.com, wangkefeng.wang@huawei.com,
-        christophe.leroy@csgroup.eu, David.Laight@ACULAB.COM,
-        shorne@gmail.com, Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org
-Date:   Tue, 11 Oct 2022 17:16:54 +0200
-In-Reply-To: <20221009103114.149036-10-bhe@redhat.com>
-References: <20221009103114.149036-1-bhe@redhat.com>
-         <20221009103114.149036-10-bhe@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: YJnXTHy0uGOqENjmA5h8EJhYAqEww7ZR
-X-Proofpoint-GUID: 4GiiOhBtnJ99UoJEwGzWIrV6d3svBqhI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-10-11_08,2022-10-11_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- clxscore=1015 lowpriorityscore=0 malwarescore=0 suspectscore=0
- priorityscore=1501 impostorscore=0 spamscore=0 mlxlogscore=999
- adultscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2209130000 definitions=main-2210110086
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229487AbiJKQRP (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 11 Oct 2022 12:17:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DE8C80E96
+        for <linux-s390@vger.kernel.org>; Tue, 11 Oct 2022 09:17:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1665505030;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=pm4VeB8ssmcYRaiZFIcIhGhr8ty4z8Z6FbdtNOJecy0=;
+        b=JGxXlUjqwf4SSRcK3A5Rg/5toenBcv9t6uXkSHuxOIJc6G4p/0aFTdB5uGG2mHmzDWjxsI
+        InhweNmddwGaw/0g7RoWCvkpF9aRAzCIAco+AuzA21Dq1m6M/0SBneIaD3UIB5iRWUCrNT
+        AW8TWlEbmbb6tQ+xQA6/aWEuSS51B1g=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-164-qzZeIg5qPoGvyQqRk8jadA-1; Tue, 11 Oct 2022 12:17:08 -0400
+X-MC-Unique: qzZeIg5qPoGvyQqRk8jadA-1
+Received: by mail-wm1-f71.google.com with SMTP id o18-20020a05600c339200b003bf24961658so8672513wmp.6
+        for <linux-s390@vger.kernel.org>; Tue, 11 Oct 2022 09:17:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pm4VeB8ssmcYRaiZFIcIhGhr8ty4z8Z6FbdtNOJecy0=;
+        b=D69nzVlknRjFdv4IMlIy+wSHIPhpSDYwoixn11G+kHkGEv33phZtsNWFRk3aqHsMdM
+         2iIHyT6o4SRc/33dhRkadNZmtqSoQYSN3mD9KasNuH5awBifJAKRy6j+1fpJlgNNs528
+         TQn8NleN8ayb85ZN1OMEMHKR7HYYip3dw1qI3E8dZ32yY2lkJflFAZY+iCLtxhH9Muto
+         eqaOP2WZe4OZNK0+YsHFJe7pBUu/Zp46jMkJ5aP4WGKrypZG8bz+yMBqArtt3y/WJLlR
+         vKSlxFh2wBIw/zCA2R6RBGQS4ySTW/i7jb1ES6nQCb1KrMS1qK256xr07ll/UJufImmK
+         JvAQ==
+X-Gm-Message-State: ACrzQf0Ax/JRIzPL4u1aKFLV8DDg+qvQIqfMl0y/ceda7GiK/s95RANp
+        Q1JUfo1LOtgyzUS+4u/+r5+K8AHU0WLUJhfrc7Dky4C4TM3NyfAQj+dx5ZetvvOPGWN3VeYF9a7
+        GFFBl6pmyWGY4E0fehkvvzg==
+X-Received: by 2002:a7b:cd96:0:b0:3b4:856a:28f7 with SMTP id y22-20020a7bcd96000000b003b4856a28f7mr17405274wmj.117.1665505027281;
+        Tue, 11 Oct 2022 09:17:07 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM6+yXZheRjtpI2Mraq3mO0aiY2aGzgLzN/bP6F6DHEepFtgXyphrd7vxKSt0bqtKCZRjEunTA==
+X-Received: by 2002:a7b:cd96:0:b0:3b4:856a:28f7 with SMTP id y22-20020a7bcd96000000b003b4856a28f7mr17405207wmj.117.1665505026699;
+        Tue, 11 Oct 2022 09:17:06 -0700 (PDT)
+Received: from vschneid.remote.csb ([104.132.153.106])
+        by smtp.gmail.com with ESMTPSA id b21-20020a05600c151500b003c6b9749505sm4667967wmg.30.2022.10.11.09.17.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Oct 2022 09:17:05 -0700 (PDT)
+From:   Valentin Schneider <vschneid@redhat.com>
+To:     Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Guo Ren <guoren@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Douglas RAILLARD <douglas.raillard@arm.com>
+Subject: Re: [RFC PATCH 0/5] Generic IPI sending tracepoint
+In-Reply-To: <Y0CFnWDpMNGajIRD@fuller.cnet>
+References: <20221007154145.1877054-1-vschneid@redhat.com>
+ <Y0CFnWDpMNGajIRD@fuller.cnet>
+Date:   Tue, 11 Oct 2022 17:17:04 +0100
+Message-ID: <xhsmhilkqfi7z.mognet@vschneid.remote.csb>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sun, 2022-10-09 at 18:31 +0800, Baoquan He wrote:
-> By taking GENERIC_IOREMAP method, the generic ioremap_prot() and
-> iounmap() are visible and available to arch. Arch only needs to
-> provide implementation of arch_ioremap() or arch_iounmap() if there's
-> arch specific handling needed in its ioremap() or iounmap(). This
-> change will simplify implementation by removing duplicated codes with
-> generic ioremap() and iounmap(), and has the equivalent functioality
-> as before.
-> 
-> For s390, add hooks arch_ioremap() and arch_iounmap() for s390's special
-> operation when ioremap() and iounmap(), then ioremap_[wc|wt]() are
-> converted to use ioremap_prot() from GENERIC_IOREMAP.
-> 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> Cc: Niklas Schnelle <schnelle@linux.ibm.com>
-> Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-> Cc: Sven Schnelle <svens@linux.ibm.com>
-> Cc: linux-s390@vger.kernel.org
-> ---
-> v2->v3:
-> - Add code comment inside arch_ioremap() to help uderstand the
->   obsucre code. Christoph suggested this, Niklas provided the
->   paragraph of text.
-> 
->  arch/s390/Kconfig          |  1 +
->  arch/s390/include/asm/io.h | 25 +++++++++------
->  arch/s390/pci/pci.c        | 65 ++++++++------------------------------
->  3 files changed, 30 insertions(+), 61 deletions(-)
-> 
-> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-> index 318fce77601d..c59e1b25f59d 100644
-> --- a/arch/s390/Kconfig
-> +++ b/arch/s390/Kconfig
-> @@ -135,6 +135,7 @@ config S390
->  	select GENERIC_SMP_IDLE_THREAD
->  	select GENERIC_TIME_VSYSCALL
->  	select GENERIC_VDSO_TIME_NS
-> +	select GENERIC_IOREMAP
++Cc Douglas
 
-I think you should add the "if PCI" from the diff in your last mail to
-this patch.
+On 07/10/22 17:01, Marcelo Tosatti wrote:
+> Hi Valentin,
+>
+> On Fri, Oct 07, 2022 at 04:41:40PM +0100, Valentin Schneider wrote:
+>> Background
+>> ==========
+>> 
+>> As for the targeted CPUs, the existing tracepoint does export them, albeit in
+>> cpumask form, which is quite inconvenient from a tooling perspective. For
+>> instance, as far as I'm aware, it's not possible to do event filtering on a
+>> cpumask via trace-cmd.
+>
+> https://man7.org/linux/man-pages/man1/trace-cmd-set.1.html
+>
+>        -f filter
+>            Specify a filter for the previous event. This must come after
+>            a -e. This will filter what events get recorded based on the
+>            content of the event. Filtering is passed to the kernel
+>            directly so what filtering is allowed may depend on what
+>            version of the kernel you have. Basically, it will let you
+>            use C notation to check if an event should be processed or
+>            not.
+>
+>                ==, >=, <=, >, <, &, |, && and ||
+>
+>            The above are usually safe to use to compare fields.
+>
+> This looks overkill to me (consider large number of bits set in mask).
+>
+> +#define trace_ipi_send_cpumask(callsite, mask) do {            \
+> +	if (static_key_false(&__tracepoint_ipi_send_cpu.key)) { \
+> +               int cpu;                                        \
+> +               for_each_cpu(cpu, mask)                         \
+> +                       trace_ipi_send_cpu(callsite, cpu);	\
+> +	}                                                       \
+> +} while (0)
+>
 
->  	select HAVE_ALIGNED_STRUCT_PAGE if SLUB
->  	select HAVE_ARCH_AUDITSYSCALL
->  	select HAVE_ARCH_JUMP_LABEL
-> diff --git a/arch/s390/include/asm/io.h b/arch/s390/include/asm/io.h
-> index e3882b012bfa..db201563baa6 100644
-> --- a/arch/s390/include/asm/io.h
-> +++ b/arch/s390/include/asm/io.h
-> @@ -22,11 +22,22 @@ void unxlate_dev_mem_ptr(phys_addr_t phys, void *addr);
->  
->  #define IO_SPACE_LIMIT 0
->  
-> -void __iomem *ioremap_prot(phys_addr_t addr, size_t size, unsigned long prot);
-> -void __iomem *ioremap(phys_addr_t addr, size_t size);
-> -void __iomem *ioremap_wc(phys_addr_t addr, size_t size);
-> -void __iomem *ioremap_wt(phys_addr_t addr, size_t size);
-> -void iounmap(volatile void __iomem *addr);
-> +/*
-> + * I/O memory mapping functions.
-> + */
-> +void __iomem *
-> +arch_ioremap(phys_addr_t *paddr, size_t size, unsigned long *prot_val);
-> +#define arch_ioremap arch_ioremap
-> +
-> +bool arch_iounmap(void __iomem *addr);
-> +#define arch_iounmap arch_iounmap
-> +
-> +#define _PAGE_IOREMAP pgprot_val(PAGE_KERNEL)
-> +
-> +#define ioremap_wc(addr, size)  \
-> +	ioremap_prot((addr), (size), pgprot_val(pgprot_writecombine(PAGE_KERNEL)))
-> +#define ioremap_wt(addr, size)  \
-> +	ioremap_prot((addr), (size), pgprot_val(pgprot_writethrough(PAGE_KERNEL)))
->  
->  static inline void __iomem *ioport_map(unsigned long port, unsigned int nr)
->  {
-> @@ -51,10 +62,6 @@ static inline void ioport_unmap(void __iomem *p)
->  #define pci_iomap_wc pci_iomap_wc
->  #define pci_iomap_wc_range pci_iomap_wc_range
->  
-> -#define ioremap ioremap
-> -#define ioremap_wt ioremap_wt
-> -#define ioremap_wc ioremap_wc
-> -
->  #define memcpy_fromio(dst, src, count)	zpci_memcpy_fromio(dst, src, count)
->  #define memcpy_toio(dst, src, count)	zpci_memcpy_toio(dst, src, count)
->  #define memset_io(dst, val, count)	zpci_memset_io(dst, val, count)
-> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
-> index 73cdc5539384..3c00dc7d79bc 100644
-> --- a/arch/s390/pci/pci.c
-> +++ b/arch/s390/pci/pci.c
-> @@ -244,64 +244,25 @@ void __iowrite64_copy(void __iomem *to, const void *from, size_t count)
->         zpci_memcpy_toio(to, from, count);
->  }
->  
-> -static void __iomem *__ioremap(phys_addr_t addr, size_t size, pgprot_t prot)
-> +void __iomem *
-> +arch_ioremap(phys_addr_t *paddr, size_t size, unsigned long *prot_val)
->  {
-> -	unsigned long offset, vaddr;
-> -	struct vm_struct *area;
-> -	phys_addr_t last_addr;
-> -
-> -	last_addr = addr + size - 1;
-> -	if (!size || last_addr < addr)
-> -		return NULL;
-> -
-> +	/*
-> +	 * When PCI MIO instructions are unavailable the "physical" address
-> +	 * encodes a hint for accessing the PCI memory space it represents.
-> +	 * Just pass it unchanged such that ioread/iowrite can decode it.
-> +	 */
->  	if (!static_branch_unlikely(&have_mio))
-> -		return (void __iomem *) addr;
-> -
-> -	offset = addr & ~PAGE_MASK;
-> -	addr &= PAGE_MASK;
-> -	size = PAGE_ALIGN(size + offset);
-> -	area = get_vm_area(size, VM_IOREMAP);
-> -	if (!area)
-> -		return NULL;
-> -
-> -	vaddr = (unsigned long) area->addr;
-> -	if (ioremap_page_range(vaddr, vaddr + size, addr, prot)) {
-> -		free_vm_area(area);
-> -		return NULL;
-> -	}
-> -	return (void __iomem *) ((unsigned long) area->addr + offset);
-> +		return (void __iomem *) *paddr;
+Indeed, I expected pushback on this :-)
 
-nit: no space after the cast
+I went for this due to how much simpler an int is to process/use compared
+to a cpumask. There is the trigger example I listed above, but the
+consumption of the trace event itself as well.
 
-> +	return NULL;
->  }
->  
-> -void __iomem *ioremap_prot(phys_addr_t addr, size_t size, unsigned long prot)
-> +bool arch_iounmap(void __iomem *addr)
->  {
-> -	return __ioremap(addr, size, __pgprot(prot));
-> -}
-> -EXPORT_SYMBOL(ioremap_prot);
-> -
-> -void __iomem *ioremap(phys_addr_t addr, size_t size)
-> -{
-> -	return __ioremap(addr, size, PAGE_KERNEL);
-> -}
-> -EXPORT_SYMBOL(ioremap);
-> -
-> -void __iomem *ioremap_wc(phys_addr_t addr, size_t size)
-> -{
-> -	return __ioremap(addr, size, pgprot_writecombine(PAGE_KERNEL));
-> -}
-> -EXPORT_SYMBOL(ioremap_wc);
-> -
-> -void __iomem *ioremap_wt(phys_addr_t addr, size_t size)
-> -{
-> -	return __ioremap(addr, size, pgprot_writethrough(PAGE_KERNEL));
-> -}
-> -EXPORT_SYMBOL(ioremap_wt);
-> -
-> -void iounmap(volatile void __iomem *addr)
-> -{
-> -	if (static_branch_likely(&have_mio))
-> -		vunmap((__force void *) ((unsigned long) addr & PAGE_MASK));
-> +	if (!static_branch_likely(&have_mio))
-> +		return false;
-> +	return true;
->  }
-> -EXPORT_SYMBOL(iounmap);
->  
->  /* Create a virtual mapping cookie for a PCI BAR */
->  static void __iomem *pci_iomap_range_fh(struct pci_dev *pdev, int bar,
+Consider this event collected on an arm64 QEMU instance (output from trace-cmd)
 
-Gave this a round of testing on s390 with both the MIO and non-MIO
-cases. I also see you addressed my previous comments and it looks good
-to me. As you showed in the other mail the compile error is a pre
-existing problem so shouldn't influence this change. So assuming you
-add the "if PCI" and the nit above you can add my:
+    <...>-234   [001]    37.251567: ipi_raise:            target_mask=00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000004 (Function call interrupts)
 
-Tested-by: Niklas
-Schnelle <schnelle@linux.ibm.com>
-Reviewed-by: Niklas Schnelle
-<schnelle@linux.ibm.com>
+That sort of formatting has been an issue downstream for things like LISA
+[1] where events are aggregated into Pandas tables, and we need to play
+silly games for performance reason because bitmasks aren't a native Python
+type.
 
+I had a look at libtraceevent to see how this data is exposed and if the
+answer would be better tooling:
+
+tep_get_field_val() just yields an unsigned long long of value 0x200018,
+which AFAICT is just the [length, offset] thing associated with dynamic
+arrays. Not really usable, and I don't see anything exported in the lib to
+extract and use those values.
+
+tep_get_field_raw() is better, it handles the dynamic array for us and
+yields a pointer to the cpumask array at the tail of the record. With that
+it's easy to get an output such as: cpumask[size=32]=[4,0,0,0,]. Still,
+this isn't a native type for many programming languages.
+
+In contrast, this is immediately readable and consumable by userspace tools
+
+<...>-234   [001]    37.250882: ipi_send_cpu:         callsite=__smp_call_single_queue+0x5c target_cpu=2
+
+Thinking out loud, it makes way more sense to record a cpumask in the
+tracepoint, but perhaps we could have a postprocessing step to transform
+those into N events each targeting a single CPU?
+
+[1]: https://github.com/ARM-software/lisa/blob/37b51243a94b27ea031ff62bb4ce818a59a7f6ef/lisa/trace.py#L4756
+
+>
+>> 
+>> Because of the above points, this is introducing a new tracepoint.
+>> 
+>> Patches
+>> =======
+>> 
+>> This results in having trace events for:
+>> 
+>> o smp_call_function*()
+>> o smp_send_reschedule()
+>> o irq_work_queue*()
+>> 
+>> This is incomplete, just looking at arm64 there's more IPI types that aren't covered:
+>> 
+>>   IPI_CPU_STOP,
+>>   IPI_CPU_CRASH_STOP,
+>>   IPI_TIMER,
+>>   IPI_WAKEUP,
+>> 
+>> ... But it feels like a good starting point.
+>
+> Can't you have a single tracepoint (or variant with cpumask) that would
+> cover such cases as well?
+>
+> Maybe (as parameters for tracepoint):
+>
+> 	* type (reschedule, smp_call_function, timer, wakeup, ...).
+>
+> 	* function address: valid for smp_call_function, irq_work_queue
+> 	  types.
+>
+
+That's a good point, I wasn't sure about having a parameter serving as
+discriminant for another, but the function address would be either valid or
+NULL which is fine. So perhaps:
+o callsite (i.e. _RET_IP_), serves as type
+o address of callback tied to IPI, if any
+o target CPUs
+
+>> Another thing worth mentioning is that depending on the callsite, the _RET_IP_
+>> fed to the tracepoint is not always useful - generic_exec_single() doesn't tell
+>> you much about the actual callback being sent via IPI, so there might be value
+>> in exploding the single tracepoint into at least one variant for smp_calls.
+>
+> Not sure i grasp what you mean by "exploding the single tracepoint...",
+> but yes knowing the function or irq work function is very useful.
+>
+
+Sorry; I meant having several "specialized" tracepoints instead of a single one.
 
