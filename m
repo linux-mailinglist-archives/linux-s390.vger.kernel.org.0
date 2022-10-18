@@ -2,216 +2,142 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E8D6600F71
-	for <lists+linux-s390@lfdr.de>; Mon, 17 Oct 2022 14:46:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 664E26025EF
+	for <lists+linux-s390@lfdr.de>; Tue, 18 Oct 2022 09:38:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230447AbiJQMqk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 17 Oct 2022 08:46:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48516 "EHLO
+        id S230347AbiJRHie (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 18 Oct 2022 03:38:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230313AbiJQMqY (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 17 Oct 2022 08:46:24 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C521754C96;
-        Mon, 17 Oct 2022 05:46:22 -0700 (PDT)
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29HBvuLp030938;
-        Mon, 17 Oct 2022 12:46:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=1AodIQs5ECY1Bb78ho7XRkJc2DJzcyVFag1dTLCovlg=;
- b=lE+joaHxh8gS7IydGn6dewlyvS42ihBCjCF8L5No8Hyxdf1QXVSNf2+6/BTt0xmbnwOG
- GtM96uVlxj38e3ZZGKHdtw2kyKlx3RDX7n+3FcLyBILvDhzBM6hQ/XUU99JCm9Ub+XYO
- NCd0v8GNRKRMh5Z/Ib9BQ0IJv4CVZKSMq/Bxf5iuh/76Vkh1dEZaY2dFGOBUTb6TCR1U
- MWVkDqqogy3PGwx3C3nzikLQwwbouOf6gJ5RHnTIBzXaX7g4KRh3Fjfos5RK717DAon5
- v1Sk0SV+1HzxGfMdW9IADlR6tObBZh7521kL1Wm4UO4cvOXUhaUxHp4viouyOz47Mj+3 Zw== 
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3k865w1d8u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 17 Oct 2022 12:46:08 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 29HCZq8L026959;
-        Mon, 17 Oct 2022 12:46:05 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06fra.de.ibm.com with ESMTP id 3k7m4jaad6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 17 Oct 2022 12:46:05 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 29HCk2Ud4260548
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Oct 2022 12:46:02 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 81EC711C04A;
-        Mon, 17 Oct 2022 12:46:02 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1057111C04C;
-        Mon, 17 Oct 2022 12:46:02 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 17 Oct 2022 12:46:02 +0000 (GMT)
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     iommu@lists.linux.dev, Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Matthew Rosato <mjrosato@linux.ibm.com>,
-        Gerd Bayer <gbayer@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        linux-s390@vger.kernel.org, borntraeger@linux.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com,
-        gerald.schaefer@linux.ibm.com, agordeev@linux.ibm.com,
-        svens@linux.ibm.com, linux-kernel@vger.kernel.org
-Subject: [PATCH v7 6/6] iommu/s390: Implement map_pages()/unmap_pages() instead of map()/unmap()
-Date:   Mon, 17 Oct 2022 14:45:58 +0200
-Message-Id: <20221017124558.1386337-7-schnelle@linux.ibm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221017124558.1386337-1-schnelle@linux.ibm.com>
-References: <20221017124558.1386337-1-schnelle@linux.ibm.com>
+        with ESMTP id S229788AbiJRHi3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 18 Oct 2022 03:38:29 -0400
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B20C013E14;
+        Tue, 18 Oct 2022 00:38:26 -0700 (PDT)
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-1322fa1cf6fso15921380fac.6;
+        Tue, 18 Oct 2022 00:38:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Mwq8mRE5qiqVJEFTV8PMaTxlxiFl0HRvXCI1ESDIAgA=;
+        b=uP1CncYWtzYR0ygZYHBqCusvQI3qLcARvKVbzdEo2TAs5CmdLuBBDSnvJC3CnEFymc
+         maOukJKMOanGciB5JKE+T7waF5I+BUrDHfHLjWFH3Mb4iO2Y9l4k5b4Q8zfXsmy7r6gY
+         FZ0M4pDzN7VVTrbIBwKD/hhhW0hX2swM2tihpju5CyITx3ey6gEwzsQ04iQCsN3BYFBZ
+         Mf/+G4stxLCBiFpIMxX6+FVVEEP3yvW+/SG49U9spnuwOZ4yujCiARpmS7lHoVb9COwy
+         juvLB7ddY+Q5RCRjySpjacgpYTr6+AqlCT4BusL/EyruYzuWYcFhOm5MmUvznr2r91RY
+         uH9g==
+X-Gm-Message-State: ACrzQf1/N7RbVTPNFnCefcE7yJPZk/vQj7w4sbummdliIV+DhK/c8kWo
+        E3d1oqf3tYmu0uyiT4X0rawbBxEnkAZQy6Ln
+X-Google-Smtp-Source: AMsMyM5csXdwREba7gw4KDgdxJUyoCgiqL87E6aLqBvQuxbl5zbkJBBFIZNp0ZmIdatu48jChwFRVg==
+X-Received: by 2002:a05:6870:fb90:b0:131:db1f:7785 with SMTP id kv16-20020a056870fb9000b00131db1f7785mr855895oab.189.1666078705512;
+        Tue, 18 Oct 2022 00:38:25 -0700 (PDT)
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com. [209.85.161.45])
+        by smtp.gmail.com with ESMTPSA id t9-20020a9d7489000000b006618bbede10sm5569962otk.53.2022.10.18.00.38.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Oct 2022 00:38:25 -0700 (PDT)
+Received: by mail-oo1-f45.google.com with SMTP id k11-20020a4ab28b000000b0047659ccfc28so2964440ooo.8;
+        Tue, 18 Oct 2022 00:38:25 -0700 (PDT)
+X-Received: by 2002:a81:848c:0:b0:356:e173:2c7a with SMTP id
+ u134-20020a81848c000000b00356e1732c7amr1276352ywf.502.1666078253767; Tue, 18
+ Oct 2022 00:30:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Inrw7REhI73EcOI5lRzP6CGQQ6p7RgJ2
-X-Proofpoint-ORIG-GUID: Inrw7REhI73EcOI5lRzP6CGQQ6p7RgJ2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-10-17_09,2022-10-17_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=913
- malwarescore=0 spamscore=0 suspectscore=0 clxscore=1015 impostorscore=0
- mlxscore=0 priorityscore=1501 bulkscore=0 adultscore=0 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2209130000 definitions=main-2210170072
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20221018074014.185687-1-wangkefeng.wang@huawei.com>
+In-Reply-To: <20221018074014.185687-1-wangkefeng.wang@huawei.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 18 Oct 2022 09:30:42 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWwAgPkifAkah7MoBKBoyB4tb+HM5cgvenwNFaAfbg+UQ@mail.gmail.com>
+Message-ID: <CAMuHMdWwAgPkifAkah7MoBKBoyB4tb+HM5cgvenwNFaAfbg+UQ@mail.gmail.com>
+Subject: Re: [PATCH] mm: remove kern_addr_valid() completely
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+        linux-fsdevel@vger.kernel.org,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Vineet Gupta <vgupta@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        WANG Xuerui <kernel@xen0n.name>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-While s390-iommu currently implements the map_page()/unmap_page()
-operations which only map/unmap a single page at a time the internal
-s390_iommu_update_trans() API already supports mapping/unmapping a range
-of pages at once. Take advantage of this by implementing the
-map_pages()/unmap_pages() operations instead thus allowing users of the
-IOMMU drivers to map multiple pages in a single call followed by
-a single I/O TLB flush if needed.
+On Tue, Oct 18, 2022 at 9:25 AM Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
+> Most architectures(except arm64/x86/sparc) simply return 1 for
+> kern_addr_valid(), which is only used in read_kcore(), and it
+> calls copy_from_kernel_nofault() which could check whether the
+> address is a valid kernel address, so no need kern_addr_valid(),
+> let's remove unneeded kern_addr_valid() completely.
+>
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-Reviewed-by: Matthew Rosato <mjrosato@linux.ibm.com>
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
----
- drivers/iommu/s390-iommu.c | 48 +++++++++++++++++++++++++-------------
- 1 file changed, 32 insertions(+), 16 deletions(-)
+>  arch/m68k/include/asm/pgtable_mm.h        |  2 -
+>  arch/m68k/include/asm/pgtable_no.h        |  1 -
 
-diff --git a/drivers/iommu/s390-iommu.c b/drivers/iommu/s390-iommu.c
-index 748e2e1b188a..6c407b61b25a 100644
---- a/drivers/iommu/s390-iommu.c
-+++ b/drivers/iommu/s390-iommu.c
-@@ -196,20 +196,15 @@ static void s390_iommu_release_device(struct device *dev)
- 
- static int s390_iommu_update_trans(struct s390_domain *s390_domain,
- 				   phys_addr_t pa, dma_addr_t dma_addr,
--				   size_t size, int flags)
-+				   unsigned long nr_pages, int flags)
- {
- 	phys_addr_t page_addr = pa & PAGE_MASK;
- 	dma_addr_t start_dma_addr = dma_addr;
--	unsigned long irq_flags, nr_pages, i;
-+	unsigned long irq_flags, i;
- 	struct zpci_dev *zdev;
- 	unsigned long *entry;
- 	int rc = 0;
- 
--	if (dma_addr < s390_domain->domain.geometry.aperture_start ||
--	    (dma_addr + size - 1) > s390_domain->domain.geometry.aperture_end)
--		return -EINVAL;
--
--	nr_pages = PAGE_ALIGN(size) >> PAGE_SHIFT;
- 	if (!nr_pages)
- 		return 0;
- 
-@@ -252,11 +247,24 @@ static int s390_iommu_update_trans(struct s390_domain *s390_domain,
- 	return rc;
- }
- 
--static int s390_iommu_map(struct iommu_domain *domain, unsigned long iova,
--			  phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
-+static int s390_iommu_map_pages(struct iommu_domain *domain,
-+				unsigned long iova, phys_addr_t paddr,
-+				size_t pgsize, size_t pgcount,
-+				int prot, gfp_t gfp, size_t *mapped)
- {
- 	struct s390_domain *s390_domain = to_s390_domain(domain);
- 	int flags = ZPCI_PTE_VALID, rc = 0;
-+	size_t size = pgcount << __ffs(pgsize);
-+
-+	if (pgsize != SZ_4K)
-+		return -EINVAL;
-+
-+	if (iova < s390_domain->domain.geometry.aperture_start ||
-+	    (iova + size - 1) > s390_domain->domain.geometry.aperture_end)
-+		return -EINVAL;
-+
-+	if (!IS_ALIGNED(iova | paddr, pgsize))
-+		return -EINVAL;
- 
- 	if (!(prot & IOMMU_READ))
- 		return -EINVAL;
-@@ -265,7 +273,9 @@ static int s390_iommu_map(struct iommu_domain *domain, unsigned long iova,
- 		flags |= ZPCI_TABLE_PROTECTED;
- 
- 	rc = s390_iommu_update_trans(s390_domain, paddr, iova,
--				     size, flags);
-+				     pgcount, flags);
-+	if (!rc)
-+		*mapped = size;
- 
- 	return rc;
- }
-@@ -301,21 +311,27 @@ static phys_addr_t s390_iommu_iova_to_phys(struct iommu_domain *domain,
- 	return phys;
- }
- 
--static size_t s390_iommu_unmap(struct iommu_domain *domain,
--			       unsigned long iova, size_t size,
--			       struct iommu_iotlb_gather *gather)
-+static size_t s390_iommu_unmap_pages(struct iommu_domain *domain,
-+				     unsigned long iova,
-+				     size_t pgsize, size_t pgcount,
-+				     struct iommu_iotlb_gather *gather)
- {
- 	struct s390_domain *s390_domain = to_s390_domain(domain);
-+	size_t size = pgcount << __ffs(pgsize);
- 	int flags = ZPCI_PTE_INVALID;
- 	phys_addr_t paddr;
- 	int rc;
- 
-+	if (WARN_ON(iova < s390_domain->domain.geometry.aperture_start ||
-+	    (iova + size - 1) > s390_domain->domain.geometry.aperture_end))
-+		return 0;
-+
- 	paddr = s390_iommu_iova_to_phys(domain, iova);
- 	if (!paddr)
- 		return 0;
- 
- 	rc = s390_iommu_update_trans(s390_domain, paddr, iova,
--				     size, flags);
-+				     pgcount, flags);
- 	if (rc)
- 		return 0;
- 
-@@ -361,8 +377,8 @@ static const struct iommu_ops s390_iommu_ops = {
- 	.default_domain_ops = &(const struct iommu_domain_ops) {
- 		.attach_dev	= s390_iommu_attach_device,
- 		.detach_dev	= s390_iommu_detach_device,
--		.map		= s390_iommu_map,
--		.unmap		= s390_iommu_unmap,
-+		.map_pages	= s390_iommu_map_pages,
-+		.unmap_pages	= s390_iommu_unmap_pages,
- 		.iova_to_phys	= s390_iommu_iova_to_phys,
- 		.free		= s390_domain_free,
- 	}
--- 
-2.34.1
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> [m68k]
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
