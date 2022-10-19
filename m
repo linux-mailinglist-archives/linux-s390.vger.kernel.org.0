@@ -2,147 +2,168 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 821506044DA
-	for <lists+linux-s390@lfdr.de>; Wed, 19 Oct 2022 14:17:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93DE6604501
+	for <lists+linux-s390@lfdr.de>; Wed, 19 Oct 2022 14:20:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232918AbiJSMRA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 19 Oct 2022 08:17:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38356 "EHLO
+        id S232569AbiJSMUK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 19 Oct 2022 08:20:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232879AbiJSMQ3 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 19 Oct 2022 08:16:29 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6BC5170DE3
-        for <linux-s390@vger.kernel.org>; Wed, 19 Oct 2022 04:52:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1666180248;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=U0Ito9oBTwecyhoOGkvM7eQkEImsAA6dypnkM5tOFSU=;
-        b=K5NFgm4Ai7lDgasI13MrWWqMMEFe3nyexCGdp7dPscz3q6CKFC8T2wUOIhl0NDalo2ww4l
-        G4HJLdTaPxOqIrBI7FkyPb288By8BAVXnDsQJRsFyI8SUi0N/XmiUOM9kfC2arQHV9B/rv
-        J5kcp5JeGejtW6Os9aF4TBtcy1quE/k=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-653-oPCwFHEiNOa73Z8xMSltPw-1; Wed, 19 Oct 2022 07:50:47 -0400
-X-MC-Unique: oPCwFHEiNOa73Z8xMSltPw-1
-Received: by mail-wr1-f71.google.com with SMTP id t12-20020adfa2cc000000b0022adcbb248bso5476067wra.1
-        for <linux-s390@vger.kernel.org>; Wed, 19 Oct 2022 04:50:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U0Ito9oBTwecyhoOGkvM7eQkEImsAA6dypnkM5tOFSU=;
-        b=6AXrXLo0GzfvOXhGuL0NTmkNEqCWpUgbm7aYUs7oDuShyJ30kqdeW75jQNu2E6MzSA
-         ORjAKfDSqrDTjZ5uZW95/KK38dUS1eINyn/CpdAqFW8S/Bb7rkWliAMJVkqpWqFbLWm9
-         nfnyGcX77rHcpvplFk1vZLQgZnTUqreBaxUS62P6dCPeIOyAljy6ILozLIMjoxxGBipT
-         /IJ6ZC0fO8zplqJV6HhJEKnvGY+gOC4bhP203zf88/NyxdE6YFmqSjJMJGxW3VWbVs9R
-         Lf8kiNyg7WSR/MnHgxUXVCjYKnfdHHrmOQ8o1bOAglbmY14mLhktU3olHnZTE8mcHsfr
-         71cg==
-X-Gm-Message-State: ACrzQf2LLbQSafLgUFA3EUO2zHTTUq4GKsfcbw3/jp5unveQKRN/6T3q
-        Hkt7fFzBFwF4Myf5dDt6Q1T/1ChqNnF+0c50g0OK2HkybIBoZWXmmSOioUyX1nqmslzJ2YwGif3
-        yGdloqAZV6u7dm8chnSykmw==
-X-Received: by 2002:adf:f40e:0:b0:22e:2ce4:e6a2 with SMTP id g14-20020adff40e000000b0022e2ce4e6a2mr5230958wro.30.1666180246162;
-        Wed, 19 Oct 2022 04:50:46 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM46+3jUTqcGiLRotFZdSsYsXxrsUcvAJFYWAwhfGL5+lnqYoZHaA3KZlDHoCCIDDoqAzIcPIw==
-X-Received: by 2002:adf:f40e:0:b0:22e:2ce4:e6a2 with SMTP id g14-20020adff40e000000b0022e2ce4e6a2mr5230933wro.30.1666180245888;
-        Wed, 19 Oct 2022 04:50:45 -0700 (PDT)
-Received: from redhat.com ([2.54.191.184])
-        by smtp.gmail.com with ESMTPSA id d20-20020a05600c34d400b003b4de550e34sm16769319wmq.40.2022.10.19.04.50.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Oct 2022 04:50:45 -0700 (PDT)
-Date:   Wed, 19 Oct 2022 07:50:42 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Christian Borntraeger <borntraeger@linux.ibm.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        kvm list <kvm@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Yury Norov <yury.norov@gmail.com>, netdev@vger.kernel.org
-Subject: Re: 6.1-rc1 regression: virtio-net cpumask and during reboot
-Message-ID: <20221019074308-mutt-send-email-mst@kernel.org>
-References: <ac72ff9d-4246-3631-6e31-8c3033a70bf0@linux.ibm.com>
-MIME-Version: 1.0
+        with ESMTP id S233001AbiJSMTW (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 19 Oct 2022 08:19:22 -0400
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2080.outbound.protection.outlook.com [40.107.237.80])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79BFF2D758;
+        Wed, 19 Oct 2022 04:54:54 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WoT6ZMYXf3ZRgE/dc4i5oQ+tZUE7v5EU0XcrPPRhUD2CihthYDnBSRfwdHKeYQTDG/9IuIU7scKqgIR+s7Jz7slyLP39M02+zbxgQYCx8Wg8FFZCXHRfoOruQcIfZHIJ6/71aLwXmw8EPSMJY6MZGJF9cabjMtTYlDm5UYg5PLleTc05xgJmdKba5F396sBTy9I8SQ7s4XZ5Q3IzWAp1o2e48C4MoQzbnzR8XVo0z/IEnMD0G6H3wzFM/Fe3S/OGJXaOBToOqgR9dHGjrpdqmrp3Sg6oMI4G4zT63B8f2YAWT4M/o8yzaLOXGy35ryl+wzlVFr17Am1h6SS7Zvbncg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SAIkjoKxC3pIOdcBlF9pfDE6MXcc9DZZ7LqpjGGjYnE=;
+ b=FIwOdfUGTmdzvz6Y43C71vPBM96tN5aeeUCfyV+Kng4W+y3KY3SRIoEURDk3gBYDT8Z0fF3nH2sRj6kvHwrHHw2dMzqV/pG2kfQb6rTJuHPKJ96i2pJwbmZVcuQCwd10HPZ9d8HxRf652DCG1DcJm4RgcgUgMB/4EJmjvtMBunkjCOSNRAU7S2s3Ryw2vV4/YSTEKfCLv1wyc2udHD3zG0nrXoRk9LYq00iPEg4SHrdxqSjfD1h4P22+mMzVc1iSp5j085x3AZ1Y7SVU1h+LxOphL0LZEdapdER7jCmjYTK6fucvZBQiUcOXk6nByjnPtQEQqEQ1mb5m2ZsX1I5QrA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SAIkjoKxC3pIOdcBlF9pfDE6MXcc9DZZ7LqpjGGjYnE=;
+ b=P8CWsR5jIRgwpKAduJWiA7bxZhnQfAbxDH0rhC7kXnRnvZG1ELImYPnhyT248aTdb2rlr5nGOnteYPD9ax0gKUhtWci+B3m0/9AMs3KDiK3uYZjRUdV30DUvgGt3aGuB8YsahCO6JeM7kfDWKEKa74wTKQZrTgkTO89o0NXHBxtVsiyTC+bDYvMFOSq/JZU0vb8O179nKAM7sz1fsvkYc7Zcgbunh6V3HeizT2C+9QPstR3aw5m1558xhBEeEb3Xgywskbxqow2Y1N4TyAulyjlQze9YF6K9TT1koguf6nlZtOgWQ4l3zJg34K27j//XotcDq2F0e/AZLN8TSOPi5A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
+ by PH7PR12MB7307.namprd12.prod.outlook.com (2603:10b6:510:20b::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.29; Wed, 19 Oct
+ 2022 11:53:22 +0000
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::7a81:a4e4:bb9c:d1de]) by LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::7a81:a4e4:bb9c:d1de%6]) with mapi id 15.20.5723.033; Wed, 19 Oct 2022
+ 11:53:22 +0000
+Date:   Wed, 19 Oct 2022 08:53:20 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     Matthew Rosato <mjrosato@linux.ibm.com>, iommu@lists.linux.dev,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Gerd Bayer <gbayer@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        linux-s390@vger.kernel.org, borntraeger@linux.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com,
+        gerald.schaefer@linux.ibm.com, agordeev@linux.ibm.com,
+        svens@linux.ibm.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] iommu/s390: Use RCU to allow concurrent domain_list
+ iteration
+Message-ID: <Y0/lMCQ8oeXJ2HTg@nvidia.com>
+References: <20221018145132.998866-1-schnelle@linux.ibm.com>
+ <20221018145132.998866-4-schnelle@linux.ibm.com>
+ <Y07Dz/NROAMI0Hku@nvidia.com>
+ <8e268ab5e0dadf86be5fd7ffaa9debb76cea67f3.camel@linux.ibm.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ac72ff9d-4246-3631-6e31-8c3033a70bf0@linux.ibm.com>
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <8e268ab5e0dadf86be5fd7ffaa9debb76cea67f3.camel@linux.ibm.com>
+X-ClientProxiedBy: BL1PR13CA0433.namprd13.prod.outlook.com
+ (2603:10b6:208:2c3::18) To LV2PR12MB5869.namprd12.prod.outlook.com
+ (2603:10b6:408:176::16)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|PH7PR12MB7307:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4077c7ec-a773-41d1-cacd-08dab1c8857e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6k5EotypyWymwBB42MEVvltT87grqPDUCU9ohgIOou8iEt33qGFb86+hE9Xe7Ua7P8x5bRlh5NgVW5c604jRtHux34N6aGVP2mISk++H9mJPhiPIy579b2yocrPdf3xX8gnbQzE/C2EcupNxfQ0YfIojyOn/Sh7oVEJlS++TrW0x1xMQiDOjdkgWGW9RBxEqczsSCtK9gdLhrICyV1AnjhOlkVk1NU4amCa8PtoEaA4hshjUrNTD9geb7jtLYIKXaQJxvtOlTKALnJwzmVoldz0JkGzMKk98UihVPxkACpshs6KD36ZqZ6ShLl9T69FnDNd2qM19QMvhQke3thcx64YScVQqlddAqYvWrCGNOVq1nNt69ImAgG8fTlalbwYKnMX3P4jL5laMtwuU/JfAk2y9QW6/WDn+/eH8W0gb4K6Fy/V/yZnCPVWzThfZAfD5KuS5QPHbpFPFjYWaRt/PGUWhuCVww2Y4JVRSaCRyZTFi11TeiSeKeHbl7tmY6ssx0A731UTof5TtEbileGfGUuW4SAlxyUz+r/Rf2dOkubIOnS0UbFhOce83ia9M92M7p2Diw8ZN3H3lHyNiVSxNIjMUoFhD3POSQ4Fvow/D820qmjil+EquIgmtcA12nUZ6sMaqM8GUqRfYrnFtxWjUBtb57PA4TVtfi5qInvOSn7zOIRTvFVOovTNNW8frSC6CCgx7vkJEFK7ICv1eGaYzug==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(366004)(39860400002)(346002)(396003)(136003)(376002)(451199015)(38100700002)(86362001)(41300700001)(6506007)(316002)(6512007)(6916009)(26005)(54906003)(5660300002)(8936002)(4326008)(6486002)(478600001)(7416002)(36756003)(66946007)(66476007)(8676002)(83380400001)(66556008)(4001150100001)(186003)(2906002)(2616005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ZgqiUD5hM+Axckl6sQ2yBizFLCEzXXNEVcMjgaTyYCn7zICWNsBppoxg3G1Z?=
+ =?us-ascii?Q?XYdc8Rh/wGSi9HFKPq1tagGmtRNPHWfQ0i0krKu2ok5UHRPpwJKuEyo/WBUa?=
+ =?us-ascii?Q?wh4xdPX/Th64gMjP1CTvx3pIbhsufZLiaSv4a4nxRLkyPqdnd7w3GLo6unG0?=
+ =?us-ascii?Q?WYyHzHDYQU+5liKHY4nIhFk2aTmCPz3/ngikRg2fd/OBZtCqIQNlc6Le86gd?=
+ =?us-ascii?Q?jGXvIwS2Np27acFFitxC6TSXY1mU24zk7IN4E5JCcfYwsQq3cHVmRodqtqrR?=
+ =?us-ascii?Q?/y5A9HmmILrXoZgiwqRQWZUslv0+G2i5EDElOW/BJwgNCmVtiHWnz5+hzJXD?=
+ =?us-ascii?Q?MUoPzLbtzo74+F1G0J3S2bxMQ/4ik7HyS3zWXcIYFYpZ1fjp3g9k490FJOhA?=
+ =?us-ascii?Q?izediWHx1MBZGpskZ7sCiBu1hHPaTaIMSexp8Z9NS1Q0WNuqjXqjmq1OQFe5?=
+ =?us-ascii?Q?FbuQiqFo1NwLuXYt4eM3UrhL/8Hxi87eHG24sPlmv3yDFf4TGDrWblTASKXV?=
+ =?us-ascii?Q?dKLwwCtuTCICn8UaDjSKT3qESwYTq09VUSK/b7xRTJIh5e2WmT4ae6pGpcvZ?=
+ =?us-ascii?Q?ZDhS3cuhZVK3n7DLvwwr9MEM/PluxkxN0UcW4xbAN3f5atWg/P2tAjRE6EAr?=
+ =?us-ascii?Q?VM3jjAVzCqMKIEYlfCK4qXPt0Cae+6osQOFcpd1mM0AiXXiIYXUSudixp79s?=
+ =?us-ascii?Q?9LcbaZaI31Bzr+xXjjqLOK8DQ9JXSPXYjjXD3kcjgaF5A7IPOg6zG6uFUMni?=
+ =?us-ascii?Q?TgFi7rjAEFN37Oc8n7gga5E0WA96GTw90nZ+GPNZgixw+dq446nlqKV0YIQQ?=
+ =?us-ascii?Q?yV8gnjpSdGPvNsq0KfvuHr5U9CvX5qUnvlzDUBwzCsEqlFhnhNypAB80xe/g?=
+ =?us-ascii?Q?MWT3QefZ3n17EHb7ucmHA3P2epiAI87BhpVIXOG/o2muDhP+s53sQMOJTzhS?=
+ =?us-ascii?Q?+kXV884DmGRaybJI2E9SYTwVPHqnDhSuG+8lzQVS8xzoLtzPlEyiEWkYqhVZ?=
+ =?us-ascii?Q?8XAwcMTNyYJlZWmDbyq+2CHrHBKGE+FogblqGZXVYCEXo04RR/U/1lWIeKXk?=
+ =?us-ascii?Q?kbVCkS0fl4Pg1TKTl1r7iYosE6nkMLeE1Y8SOxo809uwdC8uEo0MMKIjBV/G?=
+ =?us-ascii?Q?Kl0UvYeW8lqfyqFC2XJa609iP6g7j+o0lunfoRhUPwLS0yD2Aj54d28Vhagh?=
+ =?us-ascii?Q?MGENjfkIDPCvozGMUQbj4wVTFcohFrGkXMXa7CenQQ91LXMyGrtUWiqN59Eu?=
+ =?us-ascii?Q?Ib8AXTyer+w3aoWz8o5faovnuoctkpQT8wvFAcikNf6tJpqrshixy7uL52aM?=
+ =?us-ascii?Q?xBjeWaRFbNFk1Iyzguacmw+BgzQYaqyrV6pTPEBiEBn8LvBZujzopN7waBtu?=
+ =?us-ascii?Q?k35ysnqbQxK8MZXnar87sv4CK3aCW6EGMpJ5Na16Z5jUFVxKJVOEKOIupmZC?=
+ =?us-ascii?Q?Ax47xcwEB196WbFvsmlRT6V2Jm6AHZXyXimQ7ULsJNwOhAnVK8pfzJDrpuaI?=
+ =?us-ascii?Q?jmnFlEiysDIelc6PZnlqF0OoOzWLUeCgP4xZgTdpTarDzQJGvnN52cD3OFZB?=
+ =?us-ascii?Q?VbnmVOmWyc6PbNLmM1U=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4077c7ec-a773-41d1-cacd-08dab1c8857e
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Oct 2022 11:53:21.9632
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6lPcJ1aETTxaQo4UnF+9Kjbv+JEE2/LWmml/+gy3x9QKMD++6brib8kK0ymsFnEP
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7307
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Oct 19, 2022 at 12:59:58PM +0200, Christian Borntraeger wrote:
-> Michael,
+On Wed, Oct 19, 2022 at 10:31:21AM +0200, Niklas Schnelle wrote:
+> On Tue, 2022-10-18 at 12:18 -0300, Jason Gunthorpe wrote:
+> > On Tue, Oct 18, 2022 at 04:51:30PM +0200, Niklas Schnelle wrote:
+> > 
+> > > @@ -84,7 +88,7 @@ static void __s390_iommu_detach_device(struct zpci_dev *zdev)
+> > >  		return;
+> > >  
+> > >  	spin_lock_irqsave(&s390_domain->list_lock, flags);
+> > > -	list_del_init(&zdev->iommu_list);
+> > > +	list_del_rcu(&zdev->iommu_list);
+> > >  	spin_unlock_irqrestore(&s390_domain->list_lock, flags);
+> > 
+> > This doesn't seem obviously OK, the next steps remove the translation
+> > while we can still have concurrent RCU protected flushes going on.
+> > 
+> > Is it OK to call the flushes when after the zpci_dma_exit_device()/etc?
+> > 
+> > Jason
 > 
-> as a heads-up.
-> I have not looked into any details yet but we do get the following during reboot of a system on s390.
-> It seems to be new with 6.1-rc1 (over 6.0)
-> 
->   [    8.532461] ------------[ cut here ]------------
->   [    8.532497] WARNING: CPU: 8 PID: 377 at include/linux/cpumask.h:110 __netif_set_xps_queue+0x3d8/0xca8
->   [    8.532507] Modules linked in: sha1_s390(+) sha_common virtio_net(+) net_failover failover pkey zcrypt rng_core autofs4
->   [    8.532528] CPU: 8 PID: 377 Comm: systemd-udevd Not tainted 6.1.0-20221018.rc1.git15.0fd5f2557625.300.fc36.s390x+debug #1
->   [    8.532533] Hardware name: IBM 8561 T01 701 (KVM/Linux)
->   [    8.532537] Krnl PSW : 0704e00180000000 00000000b05ec33c (__netif_set_xps_queue+0x3dc/0xca8)
->   [    8.532546]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI:0 EA:3
->   [    8.532552] Krnl GPRS: 00000000e7fb8b3f 0000000080000001 00000000b1870700 00000000b0ca1d3c
->   [    8.532557]            0000000000000100 0000000000000300 000000008b362500 00000000b133ba48
->   [    8.532561]            000000000000000c 0000038000000100 000000000000000c 0000000000000070
->   [    8.532566]            0000000084cd3200 0000000000000000 00000000b05ec0c2 00000380010b77c8
->   [    8.532575] Krnl Code: 00000000b05ec32e: c0e500187331      brasl   %r14,00000000b08fa990
->                             00000000b05ec334: a7f4ff0c          brc     15,00000000b05ec14c
->                            #00000000b05ec338: af000000          mc      0,0
->                            >00000000b05ec33c: ec76fed8007c      cgij    %r7,0,6,00000000b05ec0ec
->                             00000000b05ec342: e310f0b00004      lg      %r1,176(%r15)
->                             00000000b05ec348: ec16ffac007c      cgij    %r1,0,6,00000000b05ec2a0
->                             00000000b05ec34e: ec680388007c      cgij    %r6,0,8,00000000b05eca5e
->                             00000000b05ec354: e310f0b80004      lg      %r1,184(%r15)
->   [    8.532600] Call Trace:
->   [    8.532604]  [<00000000b05ec33c>] __netif_set_xps_queue+0x3dc/0xca8
->   [    8.532609] ([<00000000b05ec0c2>] __netif_set_xps_queue+0x162/0xca8)
->   [    8.532614]  [<000003ff7fbb81ce>] virtnet_set_affinity+0x1de/0x2a0 [virtio_net]
->   [    8.532622]  [<000003ff7fbbb674>] virtnet_probe+0x4d4/0xc08 [virtio_net]
->   [    8.532630]  [<00000000b04ec4e8>] virtio_dev_probe+0x1e8/0x418
->   [    8.532638]  [<00000000b05350ea>] really_probe+0xd2/0x480
->   [    8.532644]  [<00000000b0535648>] driver_probe_device+0x40/0xf0
->   [    8.532649]  [<00000000b0535fac>] __driver_attach+0x10c/0x208
->   [    8.532655]  [<00000000b0532542>] bus_for_each_dev+0x82/0xb8
->   [    8.532662]  [<00000000b053422e>] bus_add_driver+0x1d6/0x260
->   [    8.532667]  [<00000000b0536a70>] driver_register+0xa8/0x170
->   [    8.532672]  [<000003ff7fbc8088>] virtio_net_driver_init+0x88/0x1000 [virtio_net]
->   [    8.532680]  [<00000000afb50ab0>] do_one_initcall+0x78/0x388
->   [    8.532685]  [<00000000afc7b5b8>] do_init_module+0x60/0x248
->   [    8.532692]  [<00000000afc7ce96>] __do_sys_init_module+0xbe/0xd8
->   [    8.532698]  [<00000000b09123b2>] __do_syscall+0x1da/0x208
->   [    8.532704]  [<00000000b0925b12>] system_call+0x82/0xb0
->   [    8.532710] 3 locks held by systemd-udevd/377:
->   [    8.532715]  #0: 0000000089af5188 (&dev->mutex){....}-{3:3}, at: __driver_attach+0xfe/0x208
->   [    8.532728]  #1: 00000000b14668f0 (cpu_hotplug_lock){++++}-{0:0}, at: virtnet_probe+0x4ca/0xc08 [virtio_net]
->   [    8.532744]  #2: 00000000b1509d40 (xps_map_mutex){+.+.}-{3:3}, at: __netif_set_xps_queue+0x88/0xca8
->   [    8.532757] Last Breaking-Event-Address:
->   [    8.532760]  [<00000000b05ec0e0>] __netif_set_xps_queue+0x180/0xca8
+> Interesting point. So for the flushes themselves this should be fine,
+> once the zpci_unregister_ioat() is executed all subsequent and ongoing
+> IOTLB flushes should return an error code without further adverse
+> effects. Though I think we do still have an issue in the IOTLB ops for
+> this case as that error would skip the IOTLB flushes of other attached
+> devices.
+
+That sounds bad
 
 
-Does this fix it for you?
+> The bigger question and that seems independent from RCU is how/if
+> detach is supposed to work if there are still DMAs ongoing. Once we do
+> the zpci_unregister_ioat() any DMA request coming from the PCI device
+> will be blocked and will lead to the PCI device being isolated (put
+> into an error state) for attempting an invalid DMA. So I had expected
+> that calls of detach/attach would happen without expected ongoing DMAs
+> and thus IOTLB flushes? 
 
-https://lore.kernel.org/r/20221017030947.1295426-1-yury.norov%40gmail.com
+"ongoing DMA" from this device shouuld be stopped, it doesn't mean
+that the other devices attached to the same domain are not also still
+operating and also still having flushes. So now that it is RCU a flush
+triggered by a different device will continue to see this now disabled
+device and try to flush it until the grace period.
 
-
-
-
-
-
-
-
--- 
-MST
-
+Jason
