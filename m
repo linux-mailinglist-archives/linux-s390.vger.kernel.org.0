@@ -2,71 +2,175 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3010460848F
-	for <lists+linux-s390@lfdr.de>; Sat, 22 Oct 2022 07:32:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 417BB6092D9
+	for <lists+linux-s390@lfdr.de>; Sun, 23 Oct 2022 14:44:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229491AbiJVFcl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 22 Oct 2022 01:32:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43462 "EHLO
+        id S230226AbiJWMoS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 23 Oct 2022 08:44:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbiJVFck (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 22 Oct 2022 01:32:40 -0400
-Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.155.67.158])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B156F2ADD33;
-        Fri, 21 Oct 2022 22:32:38 -0700 (PDT)
-X-QQ-mid: bizesmtp71t1666416749ts4sifcz
-Received: from localhost.localdomain ( [182.148.15.254])
-        by bizesmtp.qq.com (ESMTP) with 
-        id ; Sat, 22 Oct 2022 13:32:28 +0800 (CST)
-X-QQ-SSF: 01000000000000C0E000000A0000000
-X-QQ-FEAT: 5CNn+SP0K2ttXzeu91R1nu2YCiQn3ChaWyDwgxWfIMzjeCTZpSI5CWj7bGIca
-        75fb/Db6Hl0nupyT+u8tl9b6M7C7tK7YUSpb/OHtskIxx3+bhcT6mXJ8+CCXl7yhKncHh/9
-        Dwma3i1zW5VOGk5VkkWolAfI7olCRdoqOOTyKjGs5oX5R2/5SN2fIsksvMtxyMcQyPP8l3l
-        I9MSKk8015ADLO40KX2p3G99bfzqF0AbhL+qXFZ9BVudbfldwfoztoGxq3tVBrWSLouzlbf
-        JRuAK3iSIiWxNPbcXnLtJoHboeDVPyiaY8dd5I4OKenjt3b/28+xmpqYw0J41hqndGzUBeY
-        /d0rxSWvcZ8+ZkvN84yPokggTqIdt8W5mkj5qXlvaFe8Qo55Ww=
-X-QQ-GoodBg: 0
-From:   wangjianli <wangjianli@cdjrlc.com>
-To:     hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        wangjianli <wangjianli@cdjrlc.com>
-Subject: [PATCH] s390/kernel: fix repeated words in comments
-Date:   Sat, 22 Oct 2022 13:32:22 +0800
-Message-Id: <20221022053222.20614-1-wangjianli@cdjrlc.com>
-X-Mailer: git-send-email 2.36.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:cdjrlc.com:qybglogicsvr:qybglogicsvr7
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S230085AbiJWMoQ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 23 Oct 2022 08:44:16 -0400
+Received: from out30-42.freemail.mail.aliyun.com (out30-42.freemail.mail.aliyun.com [115.124.30.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D23B06CF4B;
+        Sun, 23 Oct 2022 05:44:14 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R371e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=alibuda@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VSpfJs5_1666529042;
+Received: from j66a10360.sqa.eu95.tbsite.net(mailfrom:alibuda@linux.alibaba.com fp:SMTPD_---0VSpfJs5_1666529042)
+          by smtp.aliyun-inc.com;
+          Sun, 23 Oct 2022 20:44:11 +0800
+From:   "D.Wythe" <alibuda@linux.alibaba.com>
+To:     kgraul@linux.ibm.com, wenjia@linux.ibm.com, jaka@linux.ibm.com
+Cc:     kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: [PATCH net-next v4 00/10] optimize the parallelism of SMC-R connections
+Date:   Sun, 23 Oct 2022 20:43:52 +0800
+Message-Id: <1666529042-40828-1-git-send-email-alibuda@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Delete the redundant word 'the'.
+From: "D.Wythe" <alibuda@linux.alibaba.com>
 
-Signed-off-by: wangjianli <wangjianli@cdjrlc.com>
----
- arch/s390/kernel/sthyi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch set attempts to optimize the parallelism of SMC-R connections,
+mainly to reduce unnecessary blocking on locks, and to fix exceptions that
+occur after thoses optimization.
 
-diff --git a/arch/s390/kernel/sthyi.c b/arch/s390/kernel/sthyi.c
-index 4d141e2c132e..dfc350fab384 100644
---- a/arch/s390/kernel/sthyi.c
-+++ b/arch/s390/kernel/sthyi.c
-@@ -250,7 +250,7 @@ static void fill_diag_mac(struct sthyi_sctns *sctns,
- 	sctns->mac.infmval1 |= MAC_CNT_VLD;
- }
- 
--/* Returns a pointer to the the next partition block. */
-+/* Returns a pointer to the next partition block. */
- static struct diag204_x_part_block *lpar_cpu_inf(struct lpar_cpu_inf *part_inf,
- 						 bool this_lpar,
- 						 void *diag224_buf,
+According to Off-CPU graph, SMC worker's off-CPU as that:
+
+smc_close_passive_work                  (1.09%)
+        smcr_buf_unuse                  (1.08%)
+                smc_llc_flow_initiate   (1.02%)
+
+smc_listen_work                         (48.17%)
+        __mutex_lock.isra.11            (47.96%)
+
+
+An ideal SMC-R connection process should only block on the IO events
+of the network, but it's quite clear that the SMC-R connection now is
+queued on the lock most of the time.
+
+The goal of this patchset is to achieve our ideal situation where
+network IO events are blocked for the majority of the connection lifetime.
+
+There are three big locks here:
+
+1. smc_client_lgr_pending & smc_server_lgr_pending
+
+2. llc_conf_mutex
+
+3. rmbs_lock & sndbufs_lock
+
+And an implementation issue:
+
+1. confirm/delete rkey msg can't be sent concurrently while
+protocol allows indeed.
+
+Unfortunately,The above problems together affect the parallelism of
+SMC-R connection. If any of them are not solved. our goal cannot
+be achieved.
+
+After this patch set, we can get a quite ideal off-CPU graph as
+following:
+
+smc_close_passive_work                                  (41.58%)
+        smcr_buf_unuse                                  (41.57%)
+                smc_llc_do_delete_rkey                  (41.57%)
+
+smc_listen_work                                         (39.10%)
+        smc_clc_wait_msg                                (13.18%)
+                tcp_recvmsg_locked                      (13.18)
+        smc_listen_find_device                          (25.87%)
+                smcr_lgr_reg_rmbs                       (25.87%)
+                        smc_llc_do_confirm_rkey         (25.87%)
+
+We can see that most of the waiting times are waiting for network IO
+events. This also has a certain performance improvement on our
+short-lived conenction wrk/nginx benchmark test:
+
++--------------+------+------+-------+--------+------+--------+
+|conns/qps     |c4    | c8   |  c16  |  c32   | c64  |  c200  |
++--------------+------+------+-------+--------+------+--------+
+|SMC-R before  |9.7k  | 10k  |  10k  |  9.9k  | 9.1k |  8.9k  |
++--------------+------+------+-------+--------+------+--------+
+|SMC-R now     |13k   | 19k  |  18k  |  16k   | 15k  |  12k   |
++--------------+------+------+-------+--------+------+--------+
+|TCP           |15k   | 35k  |  51k  |  80k   | 100k |  162k  |
++--------------+------+------+-------+--------+------+--------+
+
+The reason why the benefit is not obvious after the number of connections
+has increased dues to workqueue. If we try to change workqueue to UNBOUND,
+we can obtain at least 4-5 times performance improvement, reach up to half
+of TCP. However, this is not an elegant solution, the optimization of it
+will be much more complicated. But in any case, we will submit relevant
+optimization patches as soon as possible.
+
+Please note that the premise here is that the lock related problem
+must be solved first, otherwise, no matter how we optimize the workqueue,
+there won't be much improvement.
+
+Because there are a lot of related changes to the code, if you have
+any questions or suggestions, please let me know.
+
+Thanks
+D. Wythe
+
+v1 -> v2:
+
+1. Fix panic in SMC-D scenario
+2. Fix lnkc related hashfn calculation exception, caused by operator
+priority
+3. Only wake up one connection if the lnk is not active
+4. Delete obsolete unlock logic in smc_listen_work()
+5. PATCH format, do Reverse Christmas tree
+6. PATCH format, change all xxx_lnk_xxx function to xxx_link_xxx 
+7. PATCH format, add correct fix tag for the patches for fixes.
+8. PATCH format, fix some spelling error
+9. PATCH format, rename slow to do_slow
+
+v2 -> v3:
+
+1. add SMC-D support, remove the concept of link cluster since SMC-D has
+no link at all. Replace it by lgr decision maker, who provides suggestions
+to SMC-D and SMC-R on whether to create new link group.
+
+2. Fix the corruption problem described by PATCH 'fix application
+data exception' on SMC-D.
+
+v3 -> v4:
+
+1. Fix panic caused by uninitialization map.
+
+D. Wythe (10):
+  net/smc: remove locks smc_client_lgr_pending and
+    smc_server_lgr_pending
+  net/smc: fix SMC_CLC_DECL_ERR_REGRMB without smc_server_lgr_pending
+  net/smc: allow confirm/delete rkey response deliver multiplex
+  net/smc: make SMC_LLC_FLOW_RKEY run concurrently
+  net/smc: llc_conf_mutex refactor, replace it with rw_semaphore
+  net/smc: use read semaphores to reduce unnecessary blocking in
+    smc_buf_create() & smcr_buf_unuse()
+  net/smc: reduce unnecessary blocking in smcr_lgr_reg_rmbs()
+  net/smc: replace mutex rmbs_lock and sndbufs_lock with rw_semaphore
+  net/smc: Fix potential panic dues to unprotected
+    smc_llc_srv_add_link()
+  net/smc: fix application data exception
+
+ net/smc/af_smc.c   |  70 ++++----
+ net/smc/smc_core.c | 478 +++++++++++++++++++++++++++++++++++++++++++++++------
+ net/smc/smc_core.h |  36 +++-
+ net/smc/smc_llc.c  | 277 ++++++++++++++++++++++---------
+ net/smc/smc_llc.h  |   6 +
+ net/smc/smc_wr.c   |  10 --
+ net/smc/smc_wr.h   |  10 ++
+ 7 files changed, 712 insertions(+), 175 deletions(-)
+
 -- 
-2.36.1
+1.8.3.1
 
