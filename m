@@ -2,139 +2,280 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05D3560B55D
-	for <lists+linux-s390@lfdr.de>; Mon, 24 Oct 2022 20:22:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB86660C3A9
+	for <lists+linux-s390@lfdr.de>; Tue, 25 Oct 2022 08:13:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229786AbiJXSWQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 24 Oct 2022 14:22:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34756 "EHLO
+        id S231127AbiJYGNj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 25 Oct 2022 02:13:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231422AbiJXSVu (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 24 Oct 2022 14:21:50 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on20626.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e89::626])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3699298207;
-        Mon, 24 Oct 2022 10:02:47 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TKiilMIUvweIFmx1LHpdkCBHE5DOoVrgGD0w8WgR+zmvvuYYrY+X17TI46vT/dDDA0VFx5+s7ujXjBZec/FVcmiDCY2ygBqUpi5am6Cl57I1lfpiWOl5WptwL69YvqhZy8oPR7JhRs+44J0OWgCwLpEFWwvpg6CYj/xm32ke51UDMvxORW2w+pOfS8rhrs81EHKWAGYuB0I1da+WBMzY+rTIwYmyDBUnqhqxwfvJuXTlSlQh2WVsiSoHF6vAuX2UAW7gtnoqLsmJDd977zHb0gAUrb4hsePr26wC6q9/TNjFHb+X37lNewYnGTRn0UfiWOm5HWefH5rojbLtJkyPEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jGzsgQVpqFtbzIrhAUgcVDQ4VrVjFyukKfnCITCXZRY=;
- b=iaWQKE8HI8P+jjIB1CcYihQ59Kzk92taawPwTxHk8gZTuEwI0iOE6C5s+fiohpDseiC4/8VojGFaIhk4wCTO608P69WAEnvWE3LglV1x+nYgUm1s9Uq+oWoB7ZtNNlXiY/RDpuy2beDPAEfpiNi8UA2v9/5b3oNUPMZWsM7KAaovtev8DGEWaZhdb1kKvopLCLPYcpbzfXVdnOG1k8iPbVTuEMsBatFkspP7pRrwPLyaEkEYOWKC579HO8gZp+3MQtrZD+4MIaquDIRvkc/+4ub/Udo/nN9FVDsfvDGT6BGLfRi0OWqpsBFOMmgofMM6+y43yMYW70YrnOL0s64MKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jGzsgQVpqFtbzIrhAUgcVDQ4VrVjFyukKfnCITCXZRY=;
- b=ql8OqaSqlB7J0/D1BtdHRIFO7wNhV+A4aLbTSEEJgbOTRVU6xsijti5xeRdnknT2CO03UPzqhGhKFysXCUK0FNtiEgsHwcb/pHCxKU1XUMEXHt5bMmFUYEXWzMa4TiXHoRIF+geYaoD18EWxNMSgbyguxCG63YUcf8x8gbLsX8gBAr7YwXJTqMBHa2IcoAWt5BS2s+zcDyJ2yjLhznw6LMwJd99rts3CVy9sAR/LrHObhiU07U66UrzeL7NFsAB6UETgD9atQ+kFQ5DvIIak/own/AvvAJQgItIOJGv66gGbxbkPm0RDxx7Sr10aViDZgTCemfKrIs1C1x6TF1kRjw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
- by DS7PR12MB5814.namprd12.prod.outlook.com (2603:10b6:8:76::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5723.26; Mon, 24 Oct 2022 16:59:25 +0000
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::7a81:a4e4:bb9c:d1de]) by LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::7a81:a4e4:bb9c:d1de%6]) with mapi id 15.20.5746.021; Mon, 24 Oct 2022
- 16:59:24 +0000
-Date:   Mon, 24 Oct 2022 13:59:23 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Niklas Schnelle <schnelle@linux.ibm.com>
-Cc:     iommu@lists.linux.dev, Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Gerd Bayer <gbayer@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        linux-s390@vger.kernel.org, borntraeger@linux.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com,
-        gerald.schaefer@linux.ibm.com, agordeev@linux.ibm.com,
-        svens@linux.ibm.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 6/6] iommu/s390: Implement map_pages()/unmap_pages()
- instead of map()/unmap()
-Message-ID: <Y1bEaytSOAoVjtLq@nvidia.com>
-References: <20221017124558.1386337-1-schnelle@linux.ibm.com>
- <20221017124558.1386337-7-schnelle@linux.ibm.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221017124558.1386337-7-schnelle@linux.ibm.com>
-X-ClientProxiedBy: MN2PR22CA0008.namprd22.prod.outlook.com
- (2603:10b6:208:238::13) To LV2PR12MB5869.namprd12.prod.outlook.com
- (2603:10b6:408:176::16)
+        with ESMTP id S231154AbiJYGNi (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 25 Oct 2022 02:13:38 -0400
+Received: from out30-56.freemail.mail.aliyun.com (out30-56.freemail.mail.aliyun.com [115.124.30.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DEC510693B;
+        Mon, 24 Oct 2022 23:13:36 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R291e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=tonylu@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0VT1jQdO_1666678413;
+Received: from localhost(mailfrom:tonylu@linux.alibaba.com fp:SMTPD_---0VT1jQdO_1666678413)
+          by smtp.aliyun-inc.com;
+          Tue, 25 Oct 2022 14:13:34 +0800
+Date:   Tue, 25 Oct 2022 14:13:32 +0800
+From:   Tony Lu <tonylu@linux.alibaba.com>
+To:     Jan Karcher <jaka@linux.ibm.com>
+Cc:     "D. Wythe" <alibuda@linux.alibaba.com>, kuba@kernel.org,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH net-next v3 00/10] optimize the parallelism of SMC-R
+ connections
+Message-ID: <Y1d+jDQiyn4LSKlu@TonyMac-Alibaba>
+Reply-To: Tony Lu <tonylu@linux.alibaba.com>
+References: <1666248232-63751-1-git-send-email-alibuda@linux.alibaba.com>
+ <62001adc-129a-d477-c916-7a4cf2000553@linux.alibaba.com>
+ <79e3bccb-55c2-3b92-b14a-7378ef02dd78@linux.ibm.com>
+ <4127d84d-e3b4-ca44-2531-8aed12fdee3f@linux.alibaba.com>
+ <f8ea7943-4267-8b8d-f8b4-831fea7f3963@linux.ibm.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|DS7PR12MB5814:EE_
-X-MS-Office365-Filtering-Correlation-Id: c8ccec39-f554-4746-ebb9-08dab5e11a93
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 89RKvxfGbp+lVPKuj0av9sKjTpaiQv2+wUyS5zIFsqt3tTf+kh1dOl+hz62BWq0ItThkC4ZG0uDfbP0XIeRxdFmPduKtV9XqeyuAw0rPwyoZ/PBuLrrzi5Bo+yBD/CffypgoLI8u+dHXPzor24YESn/Ila9UkbYlw1J0A9GdWIixYKPXAMemaMQICVrg1q6NqObiCxRonkdEKBY7+g5/l5yXVnYSu5AHzSB4r57d0DkcyqhXCYvNNK7g3O1zWeb2rvkHu4AgdbDB9CKHWT/pUqBqZ5Z+DalHYMsy7WZ0b99q3jEUurE0QfBkAcluu7Gafxkk5BxkQ7Zw6z09wj0znAdlDGkIdu25c+1zfjl+VxtPqi3FqPa6Mo+gPt4sU23uRwBPWKZUMHtqpl32LIrHmxsWpTeBMR7b7HJRATv/qM+ZSWiROx7GvXzT1BIWmkHZbXW/JfcvRBAOmUjJU73onwllkCy0KhJaSROQ6pAsWQ4mz06pMdUrURLtn8Skz4TdLq2Y1g8vlS23J2B2vznGIo8GuGIwwBq2pI/4LTkdnRL2miHh5FXrzLbC+lls9jrz8OFy228GlzNqS3IVLHhYiUoLSCK7taXG+woY91mGVMIDfPJPmiWDsqoB3VvAtMzWNpaV3a+yCa4OlDz/PXMWFuxkLcN9WuLvIjx4yZQ0gU1ToqtE8RzJWsyh3uOiSsDqkU9NB+C9MT3se0661yTclQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(346002)(136003)(396003)(366004)(39860400002)(376002)(451199015)(5660300002)(7416002)(4744005)(66556008)(316002)(6916009)(54906003)(66946007)(4326008)(26005)(186003)(478600001)(41300700001)(8936002)(8676002)(6512007)(2906002)(66476007)(2616005)(6506007)(6486002)(36756003)(38100700002)(83380400001)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?khhI9LYdb19QjX32/Bwkd4zOlYU3wI37MDL5/PNnB7tQJowPhnMde5DD+6Cq?=
- =?us-ascii?Q?frY42LwoGPva0jkZDMNWmkgB8cCZfwUpH49O+a1eYwKbb7kNbpL3jjK3vYkM?=
- =?us-ascii?Q?XrPIlEX5QSrTT4SB5wUgCWfReSiAg6eSiiuyjrLapwtiOB0gihxJSm+seBIi?=
- =?us-ascii?Q?vYwM3BI2SrGsqWz+rDPM0A4Eg5zoGQIg7uRiavAdJGaXyg/bK4Lgr6ol0C0Y?=
- =?us-ascii?Q?j2T0VqVYvlbVEHfb887eMR++QBUM6l7bQRnXTfdMvDUSw6JzNKSGh+Aqjcwa?=
- =?us-ascii?Q?nV1y5r0qfOE/W/m0sHebFI7wSI13qgkLs9LgZyYsIruO3TopBEHzO2AM0/aO?=
- =?us-ascii?Q?56h8LF41AFH/LJhykdX0rBzvyMz/7FPqpM2C3ArPzqfCiapxH7074o2WzQ8o?=
- =?us-ascii?Q?6wtPz2R3iwkDURMPpFKgTcAXbWcYIA2QZkUE0HgLWpTnEkIiWTjmkg/6gS5X?=
- =?us-ascii?Q?NWmjeGPwViZKhgLorCkg//U8btPhQBFj8xDwZfuC7+6NsfiH4dAoOZrRH/fd?=
- =?us-ascii?Q?ViMR9k3O44UmC56rjgvq3v3/PZ22PeL1FqNXbCJpoO9GXD+t6Y3dBmhu86DG?=
- =?us-ascii?Q?BQijYsStCf7b56BT62wWz2tg/I3p82YNtJUT7m/5+aURdkm4zulTVIu2GoXY?=
- =?us-ascii?Q?VssM+PgMMWXfZunmqJxfUl7LamM6/y294HIn0R11FUXr2a7thpUH8+EWA2ui?=
- =?us-ascii?Q?phxE/EfRSP59VvfJbJwp1tS7Cc4V0PsZNKkYzXSKCtmdXwi/bI2meRehOe5V?=
- =?us-ascii?Q?CTOixKFJNIIMdcPqZLspT+f3/pXePn2N142iSW+DjVwEESCP52KBdHMalklZ?=
- =?us-ascii?Q?zpLyfKk4YgX4k2trcrKDXzSE2wHQpMeQ7rpl8uD8NQ74RQcoYk+GzE0InV9g?=
- =?us-ascii?Q?gZpCtvZeOqGv0FhCLpx7eZlyfiB2meWCzIHoxh0wZZ6K9Fh+RqyWZLHearku?=
- =?us-ascii?Q?JCur0MX71MmTXwvJgyY7hD/Yb5IkFms2BtUSIMVibLItuISZPQ3Ukf2jePtd?=
- =?us-ascii?Q?8VvYFEw0TT38eZmqMer6v/CND7fwD0x9SQYttpVb71ub11YNT1ZvOYY882VX?=
- =?us-ascii?Q?zl47enq0djYgfxVRp6aOcQFw3a2vKyNLn9Zv7jhZ1OW59T9HHl2LVbm6rYPE?=
- =?us-ascii?Q?wUuZDjlCPcHhTJbG6hQ6FlqOW1n3ZJb3/Iz9SeLg5Je/K0siryP9KJQL9ZcE?=
- =?us-ascii?Q?vrB8lSOt1e8Ctr/I/dU9Cd36MC+HJltqdEqijApRGnncXVt5iJHSt6lPvLVC?=
- =?us-ascii?Q?tvEOSylszJ5h3FyYfkT9JxcpvdvIKnU2VI5V/R2NfSN6YhvlHN6tb7xPn78t?=
- =?us-ascii?Q?hxfWcmm0vmnxGPfJ92/UCtY/Gn76J3GVCCB9teF28c14Ba5Lxvq1DzTf3bxK?=
- =?us-ascii?Q?7jBkp2qnYiTl2xuhcaH77xhktd+VxjAdw1LCqhvS6zLACaBRnRXfJ5ewB3Uw?=
- =?us-ascii?Q?CSPnumEkJz59K7JRmG19csDvpcT9bKKTyP9Vk6X/sGqVysfVjVy7admsclu2?=
- =?us-ascii?Q?cNJwpPbHou0z6wm8w9ZyAckq+28cFI4JWs0SH4xH7B6YUihRaqD+hdXw89+X?=
- =?us-ascii?Q?/fMsqFYf2JGDK35s8eE=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8ccec39-f554-4746-ebb9-08dab5e11a93
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2022 16:59:24.6079
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dS9N6qaQTzHsXnvm/aztOyEmL5sNbJRDa4MO+tXwaLmN+tuXuGQoKsu2ISM4TPSu
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5814
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        SPF_HELO_PASS,SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f8ea7943-4267-8b8d-f8b4-831fea7f3963@linux.ibm.com>
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Oct 17, 2022 at 02:45:58PM +0200, Niklas Schnelle wrote:
-> While s390-iommu currently implements the map_page()/unmap_page()
-> operations which only map/unmap a single page at a time the internal
-> s390_iommu_update_trans() API already supports mapping/unmapping a range
-> of pages at once. Take advantage of this by implementing the
-> map_pages()/unmap_pages() operations instead thus allowing users of the
-> IOMMU drivers to map multiple pages in a single call followed by
-> a single I/O TLB flush if needed.
+On Mon, Oct 24, 2022 at 03:10:54PM +0200, Jan Karcher wrote:
+> Hi D. Wythe,
 > 
-> Reviewed-by: Matthew Rosato <mjrosato@linux.ibm.com>
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> ---
->  drivers/iommu/s390-iommu.c | 48 +++++++++++++++++++++++++-------------
->  1 file changed, 32 insertions(+), 16 deletions(-)
+> I reply with the feedback on your fix to your v4 fix.
+> 
+> Regarding your questions:
+> We are aware of this situation and we are currently evaluating how we want
+> to deal with SMC-D in the future because as of right now i can understand
+> your frustration regarding the SMC-D testing.
+> Please give me some time to hit up the right people and collect some
+> information to answer your question. I'll let you know as soon as i have an
+> answer.
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Hi Jan,
 
-Jason
+We sent a RFC [1] to mock SMC-D device for inter-VM communication. The
+original purpose is not to test, but for now it could be useful for the
+people who are going to test without physical devices in the community.
+
+This driver basically works but I would improve it for testing. Before
+that, what do you think about it?
+
+And where to put this driver? In kernel with SMC code or merge into 
+separate SMC test cases. I haven't made up my mind yet.
+
+[1] https://lore.kernel.org/netdev/20220720170048.20806-1-tonylu@linux.alibaba.com/
+
+Cheers,
+Tony Lu
+> 
+> Thanks
+> - Jan
+> 
+> On 21/10/2022 17:57, D. Wythe wrote:
+> > Hi Jan,
+> > 
+> > Sorry for this bug. It's my bad to do not enough code checking, here is
+> > the problems:
+> > 
+> > int __init smc_core_init(void)
+> > {
+> >          int i;
+> > 
+> >          /* init smc lgr decision maker builder */
+> >          for (i = 0; i < SMC_TYPE_D; i++)
+> > 
+> > 
+> > i < SMC_TYPE_D should change to i <= SMC_TYPE_D, otherwise the SMC-D
+> > related
+> > map has not init yet. i thinks the two bugs was all caused by it.
+> > 
+> > 
+> > I has reproduced the first problem and verified that it can be fixed.
+> > Please help me to see if the SMC-D problem can be fixed too after this
+> > change, thx.
+> > 
+> > By the way, Is there any way to simulate SMC-D dev for testing? All of
+> > our problems are caused by poor consideration on SMC-D.
+> > In fact, we have some SMC-D related work plans in the future. It seems
+> > not a perfect way to bother you every time.
+> > 
+> > 
+> > Best Wishes.
+> > D. Wythe
+> > 
+> > On 10/21/22 7:57 PM, Jan Karcher wrote:
+> > > 
+> > > 
+> > > On 20/10/2022 09:00, D. Wythe wrote:
+> > > > 
+> > > > Hi Jan,
+> > > > 
+> > > > Sorry for the long delay, The main purpose of v3 is to put
+> > > > optimizes also works on SMC-D, dues to the environment,
+> > > > I can only tests it in SMC-R, so please help us to verify the
+> > > > stability and functional in SMC-D,
+> > > > Thanks a lot.
+> > > > 
+> > > > If you have any problems, please let us know.
+> > > > 
+> > > > Besides, PATCH bug fixes need to be reordered. After the code
+> > > > review passes and the SMC-D test goes stable, I will adjust it
+> > > > in next serial.
+> > > > 
+> > > > 
+> > > 
+> > > Hi D. Wythe,
+> > > 
+> > > thank you again for your submission. I ran the first tests and here
+> > > are my findings:
+> > > 
+> > > For SMC-R we are facing problems during unloading of the smc module:
+> > > 
+> > > vvvvvvvvvv
+> > > 
+> > > [root@testsys10 ~]# dmesg -C
+> > > [root@testsys10 ~]# dmesg
+> > > [root@testsys10 ~]# rmmod ism
+> > > [root@testsys10 ~]# rmmod smc_diag
+> > > [root@testsys10 ~]# dmesg
+> > > [   51.671365] smc: removing smcd device 1522:00:00.0
+> > > [root@testsys10 ~]# rmmod smc
+> > > [root@testsys10 ~]# dmesg
+> > > [   51.671365] smc: removing smcd device 1522:00:00.0
+> > > [   65.378445] NET: Unregistered PF_SMC protocol family
+> > > [   65.378463] ------------[ cut here ]------------
+> > > [   65.378465] WARNING: CPU: 0 PID: 1155 at kernel/workqueue.c:3066
+> > > __flush_work.isra.0+0x28a/0x298
+> > > [   65.378476] Modules linked in: nft_fib_inet nft_fib_ipv4
+> > > nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6
+> > > nft_reject nft_ct nft_chain_nat nf_nat mlx5_ib nf_conntrack
+> > > ib_uverbs nf_defrag_ipv6 nf_defrag_ipv4 ip_set nf_tables nfnetlink
+> > > mlx5_core smc(-) ib_core vfio_ccw s390_trng mdev vfio_iommu_type1
+> > > vfio sch_fq_codel configfs ghash_s390 prng chacha_s390 libchacha
+> > > aes_s390 des_s390 libdes sha3_512_s390 sha3_256_s390 sha512_s390
+> > > sha256_s390 sha1_s390 sha_common pkey zcrypt rng_core autofs4 [last
+> > > unloaded: smc_diag]
+> > > [   65.378509] CPU: 0 PID: 1155 Comm: rmmod Not tainted
+> > > 6.1.0-rc1-00035-g9980a965416f #4
+> > > [   65.378514] Hardware name: IBM 8561 T01 701 (z/VM 7.2.0)
+> > > [   65.378517] Krnl PSW : 0704c00180000000 00000000f9d5f17e
+> > > (__flush_work.isra.0+0x28e/0x298)
+> > > [   65.378523]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3
+> > > CC:0 PM:0 RI:0 EA:3
+> > > [   65.380675] Krnl GPRS: 8000000000000001 0000000000000000
+> > > 000003ff7fd40270 0000000000000000
+> > > [   65.380683]            0000038000c73d70 000e002100000000
+> > > 0000000000000000 0000000000000001
+> > > [   65.380686]            0000038000c73d70 0000000000000000
+> > > 000003ff7fd40270 000003ff7fd40270
+> > > [   65.380688]            000000009b8d2100 000003ffe38f98f8
+> > > 0000038000c73cd0 0000038000c73c30
+> > > [   65.380697] Krnl Code: 00000000f9d5f172: a7780000            lhi %r7,0
+> > >                            00000000f9d5f176: a7f4ff7b            brc
+> > > 15,00000000f9d5f06c
+> > >                           #00000000f9d5f17a: af000000
+> > > mc      0,0
+> > >                           >00000000f9d5f17e: a7780000            lhi
+> > > %r7,0
+> > >                            00000000f9d5f182: a7f4ff75            brc
+> > > 15,00000000f9d5f06c
+> > >                            00000000f9d5f186: 0707                bcr
+> > > 0,%r7
+> > >                            00000000f9d5f188: c004005daa34       
+> > > brcl 0,00000000fa9145f0
+> > >                            00000000f9d5f18e: ebaff0680024       
+> > > stmg %r10,%r15,104(%r15)
+> > > [   65.380773] Call Trace:
+> > > [   65.380774]  [<00000000f9d5f17e>] __flush_work.isra.0+0x28e/0x298
+> > > [   65.380779]  [<00000000f9d61228>] __cancel_work_timer+0x130/0x1c0
+> > > [   65.380782]  [<00000000fa46b1b4>]
+> > > rhashtable_free_and_destroy+0x2c/0x170
+> > > [   65.380787]  [<000003ff7fd3a08e>] smc_exit+0x3e/0x1b8 [smc]
+> > > [   65.380804]  [<00000000f9de946a>] __do_sys_delete_module+0x1a2/0x298
+> > > [   65.380809]  [<00000000fa8f85ac>] __do_syscall+0x1d4/0x200
+> > > [   65.380814]  [<00000000fa907722>] system_call+0x82/0xb0
+> > > [   65.380817] Last Breaking-Event-Address:
+> > > [   65.380818]  [<00000000f9d5ef24>] __flush_work.isra.0+0x34/0x298
+> > > [   65.380820] ---[ end trace 0000000000000000 ]---
+> > > [   65.380828] smc: removing ib device mlx5_0
+> > > [   65.380833] smc: removing ib device mlx5_1
+> > > 
+> > > ^^^^^^^^^^
+> > > 
+> > > For SMC-D it seems like your decisionmaker is causing some troubles
+> > > (crash). I did not have the time yet to look into it, i still dump
+> > > you the console log - maybe you're seeing the problem faster then
+> > > me:
+> > > 
+> > > 
+> > > vvvvvvvvvv
+> > > 
+> > > [  135.528259] smc-tests: test_cs_security started
+> > > [  136.397056] illegal operation: 0001 ilc:1 [#1] SMP
+> > > [  136.397064] Modules linked in: tcp_diag inet_diag ism mlx5_ib
+> > > ib_uverbs mlx5_core smc_diag smc ib_core vmur nft_fib_inet nft_fib_
+> > > ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4
+> > > nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack
+> > > nf_defra
+> > > g_ipv6 nf_defrag_ipv4 ip_set nf_tab
+> > > [  136.397093] CPU: 0 PID: 9 Comm: kworker/0:1 Not tainted
+> > > 6.1.0-rc1-00035-g1c11cab281ca #4
+> > > [  136.397098] Hardware name: IBM 8561 T01 701 (z/VM 7.2.0)
+> > > [  136.397100] Workqueue: smc_hs_wq smc_listen_work [smc]
+> > > [  136.397123] Krnl PSW : 0704e00180000000 0000000000000002 (0x2)
+> > > [  136.397128]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3
+> > > CC:2 PM:0 RI:0 EA:3
+> > > [  136.397133] Krnl GPRS: 0000000000000001 0000000000000000
+> > > 00000000a5670600 0000000000000000
+> > > 
+> > > [  136.398410]            0000000000000000 000003ff7feee620
+> > > 00000000000000c8 0000000000000000
+> > > [  136.398417]            000003ff7feed2b8 00000000a5670600
+> > > 000003ff7feed168 000003ff7fed1628
+> > > [  136.398420]            0000000080334200 0000000000000001
+> > > 000003ff7fed3ab0 0000037fffb5fa30
+> > > [  136.398425] Krnl Code:#0000000000000000: 0000                illegal
+> > > [  136.398425]           >0000000000000002: 0000                illegal
+> > > [  136.398425]            0000000000000004: 0000                illegal
+> > > [  136.398425]            0000000000000006: 0000                illegal
+> > > [  136.398425]            0000000000000008: 0000                illegal
+> > > [  136.398425]            000000000000000a: 0000                illegal
+> > > [  136.398425]            000000000000000c: 0000                illegal
+> > > [  136.398425]            000000000000000e: 0000                illegal
+> > > [  136.398465] Call Trace:
+> > > [  136.398469]  [<0000000000000002>] 0x2
+> > > [  136.398472] ([<00000001790fdbde>] release_sock+0x6e/0xd8)
+> > > [  136.398482]  [<000003ff7fed746a>] smc_conn_create+0xc2/0x9d8 [smc]
+> > > 01: HCPGSP2629I The virtual machine is placed in CP mode due to a
+> > > SIGP stop from CPU 01.
+> > > 01: HCPGSP2629I The virtual machine is placed in CP mode due to a
+> > > SIGP stop from CPU 00.
+> > > 
+> > > [  136.408436]  [<000003ff7fec8206>]
+> > > smc_find_ism_v2_device_serv+0x186/0x288 [smc]
+> > > [  136.408444]  [<000003ff7fec8336>]
+> > > smc_listen_find_device+0x2e/0x370 [smc]
+> > > [  136.408452]  [<000003ff7fecaa8a>] smc_listen_work+0x2ca/0x580 [smc]
+> > > [  136.408459]  [<00000001788481e8>] process_one_work+0x200/0x458
+> > > [  136.408466]  [<000000017884896e>] worker_thread+0x66/0x480
+> > > [  136.408470]  [<0000000178851888>] kthread+0x108/0x110
+> > > [  136.408474]  [<00000001787d72cc>] __ret_from_fork+0x3c/0x58
+> > > [  136.408478]  [<00000001793ef75a>] ret_from_fork+0xa/0x40
+> > > [  136.408484] Last Breaking-Event-Address:
+> > > [  136.408486]  [<000003ff7fed3aae>]
+> > > smc_get_or_create_lgr_decision_maker.constprop.0+0xe6/0x398 [smc]
+> > > [  136.408495] Kernel panic - not syncing: Fatal exception in interrupt
+> > > 
+> > > ^^^^^^^^^^
+> > > 
+> > > - Jan
