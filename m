@@ -2,58 +2,58 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 845BF617248
-	for <lists+linux-s390@lfdr.de>; Thu,  3 Nov 2022 00:24:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A0A4617220
+	for <lists+linux-s390@lfdr.de>; Thu,  3 Nov 2022 00:22:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231266AbiKBXYM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 2 Nov 2022 19:24:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33682 "EHLO
+        id S231320AbiKBXWL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 2 Nov 2022 19:22:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231190AbiKBXW5 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 2 Nov 2022 19:22:57 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9CF1B7FD
-        for <linux-s390@vger.kernel.org>; Wed,  2 Nov 2022 16:20:12 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-368e6c449f2so1012627b3.5
-        for <linux-s390@vger.kernel.org>; Wed, 02 Nov 2022 16:20:12 -0700 (PDT)
+        with ESMTP id S231349AbiKBXUh (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 2 Nov 2022 19:20:37 -0400
+Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DACE864FC
+        for <linux-s390@vger.kernel.org>; Wed,  2 Nov 2022 16:19:53 -0700 (PDT)
+Received: by mail-pl1-x64a.google.com with SMTP id u8-20020a17090341c800b0018731b83fe4so210748ple.16
+        for <linux-s390@vger.kernel.org>; Wed, 02 Nov 2022 16:19:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=/lqn4M/Too7/hLjEdNjj07wzHVUwU9le6KZacsTk8SY=;
-        b=jpZ4+tq6rgM4hZWXweQJqfxuirRlrRpN+o4JwlpzpCNTf2A1sJCTA6DFTlQxCFhgbt
-         sLPS4JguQacCAQKGId9cUa8Po003/wEsvkFZ2dOMw9iNk7lA7jWRoh5OFZzRfWNs6e3X
-         DneEijHQrn4rLICnTKWJFk513kvZJ3K123XsKZ8FoBZdWOMtOvWDKENXD0/AJPQsCKjG
-         rrWvKtMA58cnJHMchHTeytkk5Oc3RF3YtWKf69zqcXqxFh7WlsD0FI+Jf5mEVKngU/vv
-         wyh2CqSaqQR9rkwiquK7nfr1sE2Ot7UFYqlBaM19WPnwV+Bbr0Tz+aWWsDk+unGGDNDW
-         oUvg==
+        bh=QZsBYUGDC2IkAwbx22iS+bX782/JjRlyYtWOGf9fm5w=;
+        b=gOl3cNoBRYj8Qpc32NlIEZiSXsQpB/DCyQ/znrDYIZGa+s4IthUOkEHZQZ1ojKZDv7
+         pTCluXhDLSbuLtIDsd06JUGzyqeVDBKsjduC6joRT5sGTNYRsVo9p/G6Hqiv2ugKa8LH
+         rdr0QZPkDK278uG4dV/k1t11BIQxvRWGgZaRWsIg0DoysUSAp2Ijq63EEZdxc0KL4gix
+         0HGUBH8kF/zweMHI/2v4mLjob8+u7zdHCmj600jDg7rYDwZddIyY/q/ZMJIgho4CGwiq
+         Rf68OjR0Rg0ygAgFFNEea3lYykknrXRPiTB8JjAsW5m8iBtmAm27VPmRKJbUJVbPKnmY
+         wuxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=/lqn4M/Too7/hLjEdNjj07wzHVUwU9le6KZacsTk8SY=;
-        b=VBCdNPdMwpIHCa7K3uJzOg/EFmlUopfzfjG+I7VYcKdSfMAGdDLLpVVKJIrMt0ekco
-         3WXbbUvyuMPJeZU1m1Yn3vg1Fc1mZ/FuuWnBIgZUcIHjQoAAfsaRue6GkCRl3J+JJTA0
-         n9cpb25hgUTwLquRJnRbevETt2DK+/NGcjo3FGOeCHOvXpQ1DG49VDt/amQxaQLECKLF
-         G6Go49tkkuO6qI0bJ7L/iEzqf4I9I3tKYQ7AIqQOI/m4Gk2PG+RSwf4Gby5BIs1Mo1hQ
-         R6vMEIauCAXDxXGIT4vWW0VZ2t0puKlH8ShE+UBgOBvlYoAnsg0dv6JItXzFf6mYJiTo
-         FIrQ==
-X-Gm-Message-State: ACrzQf0i0jOIufJLVdmgkWHXZMytVA/QJFa6k1KUpnJMsimBFdMjmAoL
-        +OrZ3cm7CqT1MUFz3kQmv8B5SXcu+vw=
-X-Google-Smtp-Source: AMsMyM7jpwGuIU1urFbOZ+g44WVeQ15lWGU4IrnR1FfXK34lSVgumwGfDAw7vRfyWzKVx0s/7WxU/xcerg8=
+        bh=QZsBYUGDC2IkAwbx22iS+bX782/JjRlyYtWOGf9fm5w=;
+        b=3k7+xYps2F7pI0PwN0ydyjQR75ttYkQVK1et74mnokL2wb5No6XpDHa/UEd23+Zwn7
+         jC9btKEUWdr+IFN0fU9TGOfhIofI56xJjmrwGnaIj0ySO+1saWMSiRojieshh85osehV
+         BjcBIWoUkv8Ez2nDCRsXEJPUnuz6AFwVRmpa1QrR9HWXB9AvrFOKmXfPYbQE4dGbbR4G
+         pEDkL3CXB9doByuRmC8bJ1vL7zGK8O8TNl5FWBL8irxQqawCBn5i2QGdqyJ79bCgtb70
+         rhEGnltjiTxeWyRFgqakc+tMrDZSmh54EnMPFI8Ip6WDNYVy9pEwU7t5Bt44QvgxMU7F
+         /rUQ==
+X-Gm-Message-State: ACrzQf1G/88xw3+csnf5qJ3d+k3U/0VLa9chEkJl800PGP0de15PZEWy
+        pLYGrplITQevzu06ZtIBdKbZD2Cr1V4=
+X-Google-Smtp-Source: AMsMyM4F5G3DDnuJC2f+gpo6muVhVlP37u9Rx2CD7FgkZCjySGE+h3yA4RelKa6dFXDwgnEtjORGLCa20Ec=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a25:e694:0:b0:6ca:2610:76fd with SMTP id
- d142-20020a25e694000000b006ca261076fdmr171916ybh.607.1667431191239; Wed, 02
- Nov 2022 16:19:51 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a17:90b:384a:b0:213:2907:a528 with SMTP id
+ nl10-20020a17090b384a00b002132907a528mr27758885pjb.183.1667431193502; Wed, 02
+ Nov 2022 16:19:53 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Wed,  2 Nov 2022 23:18:49 +0000
+Date:   Wed,  2 Nov 2022 23:18:50 +0000
 In-Reply-To: <20221102231911.3107438-1-seanjc@google.com>
 Mime-Version: 1.0
 References: <20221102231911.3107438-1-seanjc@google.com>
 X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
-Message-ID: <20221102231911.3107438-23-seanjc@google.com>
-Subject: [PATCH 22/44] KVM: RISC-V: Do arch init directly in riscv_kvm_init()
+Message-ID: <20221102231911.3107438-24-seanjc@google.com>
+Subject: [PATCH 23/44] KVM: RISC-V: Tag init functions and data with __init, __ro_after_init
 From:   Sean Christopherson <seanjc@google.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>,
         Huacai Chen <chenhuacai@kernel.org>,
@@ -97,59 +97,91 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Fold the guts of kvm_arch_init() into riscv_kvm_init() instead of
-bouncing through kvm_init()=>kvm_arch_init().  Functionally, this is a
-glorified nop as invoking kvm_arch_init() is the very first action
-performed by kvm_init().
-
-Moving setup to riscv_kvm_init(), which is tagged __init, will allow
-tagging more functions and data with __init and __ro_after_init.  And
-emptying kvm_arch_init() will allow dropping the hook entirely once all
-architecture implementations are nops.
-
-No functional change intended.
+Now that KVM setup is handled directly in riscv_kvm_init(), tag functions
+and data that are used/set only during init with __init/__ro_after_init.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/riscv/kvm/main.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ arch/riscv/include/asm/kvm_host.h |  6 +++---
+ arch/riscv/kvm/mmu.c              | 12 ++++++------
+ arch/riscv/kvm/vmid.c             |  4 ++--
+ 3 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/arch/riscv/kvm/main.c b/arch/riscv/kvm/main.c
-index a146fa0ce4d2..cb063b8a9a0f 100644
---- a/arch/riscv/kvm/main.c
-+++ b/arch/riscv/kvm/main.c
-@@ -66,6 +66,15 @@ void kvm_arch_hardware_disable(void)
+diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
+index 8c771fc4f5d2..778ff0f282b7 100644
+--- a/arch/riscv/include/asm/kvm_host.h
++++ b/arch/riscv/include/asm/kvm_host.h
+@@ -295,11 +295,11 @@ int kvm_riscv_gstage_map(struct kvm_vcpu *vcpu,
+ int kvm_riscv_gstage_alloc_pgd(struct kvm *kvm);
+ void kvm_riscv_gstage_free_pgd(struct kvm *kvm);
+ void kvm_riscv_gstage_update_hgatp(struct kvm_vcpu *vcpu);
+-void kvm_riscv_gstage_mode_detect(void);
+-unsigned long kvm_riscv_gstage_mode(void);
++void __init kvm_riscv_gstage_mode_detect(void);
++unsigned long __init kvm_riscv_gstage_mode(void);
+ int kvm_riscv_gstage_gpa_bits(void);
+ 
+-void kvm_riscv_gstage_vmid_detect(void);
++void __init kvm_riscv_gstage_vmid_detect(void);
+ unsigned long kvm_riscv_gstage_vmid_bits(void);
+ int kvm_riscv_gstage_vmid_init(struct kvm *kvm);
+ bool kvm_riscv_gstage_vmid_ver_changed(struct kvm_vmid *vmid);
+diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
+index 3620ecac2fa1..f42a34c7879a 100644
+--- a/arch/riscv/kvm/mmu.c
++++ b/arch/riscv/kvm/mmu.c
+@@ -20,12 +20,12 @@
+ #include <asm/pgtable.h>
+ 
+ #ifdef CONFIG_64BIT
+-static unsigned long gstage_mode = (HGATP_MODE_SV39X4 << HGATP_MODE_SHIFT);
+-static unsigned long gstage_pgd_levels = 3;
++static unsigned long gstage_mode __ro_after_init = (HGATP_MODE_SV39X4 << HGATP_MODE_SHIFT);
++static unsigned long gstage_pgd_levels __ro_after_init = 3;
+ #define gstage_index_bits	9
+ #else
+-static unsigned long gstage_mode = (HGATP_MODE_SV32X4 << HGATP_MODE_SHIFT);
+-static unsigned long gstage_pgd_levels = 2;
++static unsigned long gstage_mode __ro_after_init = (HGATP_MODE_SV32X4 << HGATP_MODE_SHIFT);
++static unsigned long gstage_pgd_levels __ro_after_init = 2;
+ #define gstage_index_bits	10
+ #endif
+ 
+@@ -760,7 +760,7 @@ void kvm_riscv_gstage_update_hgatp(struct kvm_vcpu *vcpu)
+ 		kvm_riscv_local_hfence_gvma_all();
  }
  
- int kvm_arch_init(void *opaque)
-+{
-+	return 0;
-+}
-+
-+void kvm_arch_exit(void)
-+{
-+}
-+
-+static int __init riscv_kvm_init(void)
+-void kvm_riscv_gstage_mode_detect(void)
++void __init kvm_riscv_gstage_mode_detect(void)
  {
- 	const char *str;
- 
-@@ -110,15 +119,6 @@ int kvm_arch_init(void *opaque)
- 
- 	kvm_info("VMID %ld bits available\n", kvm_riscv_gstage_vmid_bits());
- 
--	return 0;
--}
--
--void kvm_arch_exit(void)
--{
--}
--
--static int __init riscv_kvm_init(void)
--{
- 	return kvm_init(NULL, sizeof(struct kvm_vcpu), 0, THIS_MODULE);
+ #ifdef CONFIG_64BIT
+ 	/* Try Sv57x4 G-stage mode */
+@@ -784,7 +784,7 @@ void kvm_riscv_gstage_mode_detect(void)
+ #endif
  }
- module_init(riscv_kvm_init);
+ 
+-unsigned long kvm_riscv_gstage_mode(void)
++unsigned long __init kvm_riscv_gstage_mode(void)
+ {
+ 	return gstage_mode >> HGATP_MODE_SHIFT;
+ }
+diff --git a/arch/riscv/kvm/vmid.c b/arch/riscv/kvm/vmid.c
+index 6cd93995fb65..5246da1c9167 100644
+--- a/arch/riscv/kvm/vmid.c
++++ b/arch/riscv/kvm/vmid.c
+@@ -17,10 +17,10 @@
+ 
+ static unsigned long vmid_version = 1;
+ static unsigned long vmid_next;
+-static unsigned long vmid_bits;
++static unsigned long vmid_bits __ro_after_init;
+ static DEFINE_SPINLOCK(vmid_lock);
+ 
+-void kvm_riscv_gstage_vmid_detect(void)
++void __init kvm_riscv_gstage_vmid_detect(void)
+ {
+ 	unsigned long old;
+ 
 -- 
 2.38.1.431.g37b22c650d-goog
 
