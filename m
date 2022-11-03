@@ -2,114 +2,134 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 235B0617EDE
-	for <lists+linux-s390@lfdr.de>; Thu,  3 Nov 2022 15:05:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F799617F66
+	for <lists+linux-s390@lfdr.de>; Thu,  3 Nov 2022 15:25:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230106AbiKCOFe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 3 Nov 2022 10:05:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57948 "EHLO
+        id S229667AbiKCOZJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 3 Nov 2022 10:25:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229759AbiKCOFc (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 3 Nov 2022 10:05:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 820B7E02F
-        for <linux-s390@vger.kernel.org>; Thu,  3 Nov 2022 07:04:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1667484272;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=2ld7KbWWPpVg/DGXuI3WKVRs5TJPSNq4PfcjQdMphjo=;
-        b=TIg+51sv9tDEUSq6IOaVuwny39JovqWxdcTcunN2U06XhDs27otMQcwAlIhhoIiThO5krW
-        Mi9JKJ1W9P9bj2J6B5WpMZKkmnp/f9zAS9JmL8c9mFISt6pN0lzlgh1A6iUiF98SU8OAYa
-        wCloePE90BqllGa9+kbCjCASd1bx72c=
-Received: from mail-vs1-f72.google.com (mail-vs1-f72.google.com
- [209.85.217.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-639-qQtqGie5PX2W7WS0_dazvQ-1; Thu, 03 Nov 2022 10:04:30 -0400
-X-MC-Unique: qQtqGie5PX2W7WS0_dazvQ-1
-Received: by mail-vs1-f72.google.com with SMTP id a6-20020a671a06000000b003986a4e277dso1064872vsa.12
-        for <linux-s390@vger.kernel.org>; Thu, 03 Nov 2022 07:04:30 -0700 (PDT)
+        with ESMTP id S231309AbiKCOZI (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 3 Nov 2022 10:25:08 -0400
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F00AAE7A
+        for <linux-s390@vger.kernel.org>; Thu,  3 Nov 2022 07:25:07 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id j15so3047992wrq.3
+        for <linux-s390@vger.kernel.org>; Thu, 03 Nov 2022 07:25:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yyXCEm+SN4JTuAX2T0R90Ie6jT6YR0PIuexybyKvkXE=;
+        b=WTZ/fhxMJ71jLlitDHXKYaXGnn95ODQizEyx4pjZLu/FU2YdbKeNAo0B/NktNH9Hif
+         0ihHLDxTp8U29NT+XMIjwbpXih+rDpGbzPso+IRrM4OQEis6MRNHdhg2+L+2iQ5ZiErf
+         H2C2UNKqEdpYeg1ou6yBgu5uGp5t6In0MkSQENq2IWAYTPdvvddzhf9M2SUHCjdkNqlP
+         pTfB+d1W2bpoY+NqsMD0CmY3+w2XyTZf6ZrvG8psupb3sY6BjQWTaeaT9RFdOarIdWjn
+         Jj663Dqz2gYFZNCYKSrBaU2MDDJrY91RmxP0f4HXzCqrYeVlqsItUMv2dSlq4XkDrWmi
+         x2Hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=2ld7KbWWPpVg/DGXuI3WKVRs5TJPSNq4PfcjQdMphjo=;
-        b=jjMmxxinqkEE/d9+LG0TDoMeaoXOc1W6CyLahXzWl/CIuDD4r+LqsEZQqgnYrrZOgY
-         scZMlZbfkaQ+rBmgIUWoZM2POS5s2SFjVcEuMB+fp9kqtJ8roC3d5owXCf9+kqrZOgo2
-         EUH2LJXu+/s8hRweL2nqhTjzykiA8ew/wfLViL2dq51BrUz0P1mkYudta6yY2U4d7dsu
-         p6F01n7CvmePJI7UctRPLGwP03nO8Ud9FMN3ZFnX9eO4NJkD3ma20VauiqlGg9NMlp7C
-         Fn8h5B28XogG7YnNJOHxCJi7bZLHr1Nm2MIAnx9F+FavbWPiykYnHAYPpmFrqstPxCNY
-         e5mA==
-X-Gm-Message-State: ACrzQf3ibK9Zi0Mos8XwE2GtoOdRDb6n+cmPSGBmwWZImXgJKNTNpewE
-        A5qpHJN+Z7b1e7nw8heE+9ltqOczq0OxmTF1/G0tGp3+038lZpoCSgFo7Qcj0Ti5YuRr7mS8SJb
-        Txv1QK4/M/zbQ6vCR59Sfg264iJTePKj9RSB7PQ==
-X-Received: by 2002:a67:c997:0:b0:3aa:1d0c:6bc7 with SMTP id y23-20020a67c997000000b003aa1d0c6bc7mr18114544vsk.16.1667484269587;
-        Thu, 03 Nov 2022 07:04:29 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM57ejOKzdNWqeTyWHPkPRmEBqAcfUgljrJu10jVJC1iEGC5QqKTnJr+aHwKv6/RTPPoYaQADtoBOTHZ/wIpPrc=
-X-Received: by 2002:a67:c997:0:b0:3aa:1d0c:6bc7 with SMTP id
- y23-20020a67c997000000b003aa1d0c6bc7mr18114480vsk.16.1667484269311; Thu, 03
- Nov 2022 07:04:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20221102231911.3107438-1-seanjc@google.com> <20221102231911.3107438-11-seanjc@google.com>
- <d641088f-87d9-da77-7e98-92d1a9de6493@redhat.com>
-In-Reply-To: <d641088f-87d9-da77-7e98-92d1a9de6493@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Date:   Thu, 3 Nov 2022 15:04:17 +0100
-Message-ID: <CABgObfZDngVgmPetJEQGFW-MZGqYvW9tTa5jzcKheO5EO703Vw@mail.gmail.com>
-Subject: Re: [PATCH 10/44] KVM: VMX: Clean up eVMCS enabling if KVM
- initialization fails
-To:     Sean Christopherson <seanjc@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
-        Anup Patel <anup@brainfault.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
+        bh=yyXCEm+SN4JTuAX2T0R90Ie6jT6YR0PIuexybyKvkXE=;
+        b=bjAwKPl9/Oyc8R/cmQ5RdUWjYgS383TW5FPQS4oom95bjj9pukC7ShJUnO08TcPM7T
+         SwnaMLAnJxotcq0Ek0JQa8xKR/ppR7Ls6LBum+DY4dN0snPBZUV4A3N6LmjGbqxXRjgD
+         fkQQJcRSvZ2g8AXwILnXsM01bHA4p9+zPyWw/zq8HjTUkJPoY8I7z9xT9bvc1JMn9bix
+         1wCh6hG8JDaQ3Y8V9NqTLfSGHkzQldZs2anFmK3bOTZOsysyL4O3mFURtrScRMPlRxZW
+         0JOxt2AKe4Mhp87ptj8MoM5Mwm2uiaVR+xmjm1dmf3T8xSUapm8MyAowQHqMDb53YfTA
+         FjIg==
+X-Gm-Message-State: ACrzQf0xDvl9Qz/rQfocelwaAatrimHNC80nSK3xXsKPZy7v6DAHqio9
+        vW8CjqDVHfiXItysTu03Qbfjag==
+X-Google-Smtp-Source: AMsMyM5hdXBUu8yo8VO7zyELnZCeDW54TPy5bvl1rmzeZB7u0GPP01rGpP4zIsPcikd5aOtl3C5pdw==
+X-Received: by 2002:a5d:654d:0:b0:235:197d:72d1 with SMTP id z13-20020a5d654d000000b00235197d72d1mr18800468wrv.680.1667485505908;
+        Thu, 03 Nov 2022 07:25:05 -0700 (PDT)
+Received: from localhost (2001-1ae9-1c2-4c00-748-2a9a-a2a6-1362.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:748:2a9a:a2a6:1362])
+        by smtp.gmail.com with ESMTPSA id z7-20020a5d6547000000b0023662245d3csm992994wrv.95.2022.11.03.07.25.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Nov 2022 07:25:05 -0700 (PDT)
+From:   Andrew Jones <ajones@ventanamicro.com>
+To:     x86@kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Yury Norov <yury.norov@gmail.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
         Albert Ou <aou@eecs.berkeley.edu>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     James Morse <james.morse@arm.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Atish Patra <atishp@atishpatra.org>,
-        David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Isaku Yamahata <isaku.yamahata@intel.com>,
-        Fabiano Rosas <farosas@linux.ibm.com>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        openrisc@lists.librecores.org,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Chao Gao <chao.gao@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yuan Yao <yuan.yao@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        linuxppc-dev@lists.ozlabs.org, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: [PATCH v4 0/1] Fix /proc/cpuinfo cpumask warning
+Date:   Thu,  3 Nov 2022 15:25:03 +0100
+Message-Id: <20221103142504.278543-1-ajones@ventanamicro.com>
+X-Mailer: git-send-email 2.37.3
+MIME-Version: 1.0
+Content-type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Nov 3, 2022 at 3:01 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 11/3/22 00:18, Sean Christopherson wrote:
-> > +static void hv_cleanup_evmcs(void)
->
-> This needs to be __init.
+Commit 78e5a3399421 ("cpumask: fix checking valid cpu range") started
+issuing warnings[1] when cpu indices equal to nr_cpu_ids - 1 were passed
+to cpumask_next* functions. The commit has since been reverted with
+commit 80493877d7d0 ("Revert "cpumask: fix checking valid cpu range"."),
+which raises the question as to how much this proposed patch is needed.
+Additionally, there's some discussion as to whether or not cpumask_next()
+should even be validating its inputs[2]. So, with that in mind, I'm fine
+with the patch being dropped. However, it may still be reasonable to add
+the checking to /proc/cpuinfo until cpumask_next has made changes and
+better documented its API.
 
-Error: brain temporarily disconnected.
+[1] Warnings will only appear with DEBUG_PER_CPU_MAPS enabled.
+[2] https://lore.kernel.org/all/CAHk-=wihz-GXx66MmEyaADgS1fQE_LDcB9wrHAmkvXkd8nx9tA@mail.gmail.com/
 
-Paolo
+This series addresses the issue for x86. riscv has already merged an
+equivalent patch (v3 of this series). Also, from a quick grep of cpuinfo
+seq operations, I think at least openrisc, powerpc, and s390 could get an
+equivalent patch. While the test is simple (see next paragraph) I'm not
+equipped to test on each architecture.
+
+To test, just build a kernel with DEBUG_PER_CPU_MAPS enabled, boot to
+a shell, do 'cat /proc/cpuinfo', and look for a kernel warning.
+
+v4:
+  - The riscv patch has already been merged.
+  - Mostly rewrote the cover letter as the situation has changed since
+    78e5a3399421 was reverted.
+  - Rewrote the commit message in order to try an better clarify things
+    and also to add the reference to the revert commit, which results in
+    the commit no longer claiming its a 'fix' in its summary. [Boris]
+
+v3:
+  - Change condition from >= to == in order to still get a warning
+    for > as that's unexpected. [Yury]
+  - Picked up tags on the riscv patch
+
+v2:
+  - Added all the information I should have in the first place
+    to the commit message [Boris]
+  - Changed style of fix [Boris]
+
+Andrew Jones (1):
+  x86: cpuinfo: Ensure inputs to cpumask_next are valid
+
+ arch/x86/kernel/cpu/proc.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+-- 
+2.37.3
 
