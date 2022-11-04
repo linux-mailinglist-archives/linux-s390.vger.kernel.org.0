@@ -2,116 +2,74 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03D0261997C
-	for <lists+linux-s390@lfdr.de>; Fri,  4 Nov 2022 15:21:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 59B30619A2C
+	for <lists+linux-s390@lfdr.de>; Fri,  4 Nov 2022 15:37:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230145AbiKDOVP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 4 Nov 2022 10:21:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34790 "EHLO
+        id S230127AbiKDOh1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 4 Nov 2022 10:37:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232038AbiKDOUo (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 4 Nov 2022 10:20:44 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89405303F0;
-        Fri,  4 Nov 2022 07:20:26 -0700 (PDT)
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2A4DFSsD017750;
-        Fri, 4 Nov 2022 14:20:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=LmRGz096UNPo3ISrGsnM0TuSjjXtkDWPbDTkyho83jQ=;
- b=T168rIqvm8uwsXM6IBiOCwqRuOx07mVUYwTWYjEnKlooVWUNQnfjq/ZBp9UwCLlRWBij
- vMQIv5Wuckdvmvi1Ur4gmdezp03G519sK+ItTjsCPHN7kRxZLkGjxu4WX38WsW+Cr5nf
- xrdpFKNsIHPetLphdzeeaH739gLaz4XvF1QFMuK6VFxuow/AJkH4de69/VPqNZ4yiSrC
- Sxn7fTZSx6PoSOVc9xtQq9UVFq1FUPH/9iNXVBpMqG1BHtx/s2cSeX06akRqKD211fyP
- i+NVedHonrqgBZdS8wJnjo5EOsPw0esve27WrIkZjGUVtEiC/xxW3fUn0UColEXNqRYH JA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3kmpt18mg2-1
+        with ESMTP id S232288AbiKDOhB (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 4 Nov 2022 10:37:01 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B63F432B9D;
+        Fri,  4 Nov 2022 07:34:12 -0700 (PDT)
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2A4DAlnn023752;
+        Fri, 4 Nov 2022 14:34:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=aBeC4NCXkA3s6DXqP+TwBnJxjDQUnPTlKhNwpr0fMwE=;
+ b=WrOIRGnvGnVJpRf97ZntvrVRe/fD3xZs7lGeLy92h3xv/V9dhhrnY9RZsCsZQyqH0Kd8
+ fIobPUYfxZTv1NqI37ATxjDLonLAdaQw4dv7bioooUHLMdby/HKXdzKHJBYYS9FM9/yz
+ BpLhW1m10AzhyghsWnwCj5ZMC7Tc9vKTd46tb1woIczWJyOFVW3g+SZ4vJYsS4JJc0nk
+ 4ABw/JGNvw0LJmKtAGwvGSycGD3EKWxIWRTJIHHOYMQ9wx8nLrtycpiS3qG1tLTrfHJ0
+ hP9oqh35zk53rqJrZkDcNQBJpVfJx+6DSSFmgIwYghCPGR8yQHkCHGMyNUK1poVR2CdA Wg== 
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3kmpjfhbdg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Nov 2022 14:20:16 +0000
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2A4CffBp024673;
-        Fri, 4 Nov 2022 14:20:15 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3kmpt18men-1
+        Fri, 04 Nov 2022 14:34:11 +0000
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2A4EL19N016468;
+        Fri, 4 Nov 2022 14:34:09 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma02fra.de.ibm.com with ESMTP id 3kme349879-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Nov 2022 14:20:15 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2A4EKDmH001450;
-        Fri, 4 Nov 2022 14:20:13 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma03ams.nl.ibm.com with ESMTP id 3kgut92h70-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Nov 2022 14:20:12 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2A4EK95N26935554
+        Fri, 04 Nov 2022 14:34:09 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2A4EY7Oe5112508
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 4 Nov 2022 14:20:09 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 958774C04E;
-        Fri,  4 Nov 2022 14:20:09 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6EE164C044;
-        Fri,  4 Nov 2022 14:20:09 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri,  4 Nov 2022 14:20:09 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
-        id DCD6EE2125; Fri,  4 Nov 2022 15:20:08 +0100 (CET)
-From:   Eric Farman <farman@linux.ibm.com>
-To:     Matthew Rosato <mjrosato@linux.ibm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Kevin Tian <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>
-Cc:     Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Zhi Wang <zhi.a.wang@intel.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        Jason Herne <jjherne@linux.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Abhishek Sahu <abhsahu@nvidia.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        intel-gvt-dev@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, Eric Farman <farman@linux.ibm.com>
-Subject: [PATCH v3 7/7] vfio: Remove vfio_free_device
-Date:   Fri,  4 Nov 2022 15:20:07 +0100
-Message-Id: <20221104142007.1314999-8-farman@linux.ibm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221104142007.1314999-1-farman@linux.ibm.com>
-References: <20221104142007.1314999-1-farman@linux.ibm.com>
+        Fri, 4 Nov 2022 14:34:07 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 78EE75204E;
+        Fri,  4 Nov 2022 14:34:07 +0000 (GMT)
+Received: from osiris (unknown [9.145.59.57])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 479E25204F;
+        Fri,  4 Nov 2022 14:34:07 +0000 (GMT)
+Date:   Fri, 4 Nov 2022 15:34:05 +0100
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] random: do not include <asm/archrandom.h> from
+ random.h
+Message-ID: <Y2Ui3fr7pwKGJzM3@osiris>
+References: <20221029010857.161574-1-Jason@zx2c4.com>
+ <20221103121740.6684-1-Jason@zx2c4.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221103121740.6684-1-Jason@zx2c4.com>
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: EHxGCwOIDx9yJninbfDdiZLMNtCclDWY
-X-Proofpoint-ORIG-GUID: BdBbPUrQpS6mLJO108ADP0zsTMxyl-hP
+X-Proofpoint-GUID: AwH_zitacjeviaQQd7lDRyCgpevLYE-H
+X-Proofpoint-ORIG-GUID: AwH_zitacjeviaQQd7lDRyCgpevLYE-H
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
  definitions=2022-11-04_09,2022-11-03_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
- mlxscore=0 suspectscore=0 priorityscore=1501 spamscore=0
- lowpriorityscore=0 clxscore=1015 bulkscore=0 mlxlogscore=999
- malwarescore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2210170000 definitions=main-2211040093
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 mlxscore=0 suspectscore=0 adultscore=0 bulkscore=0
+ mlxlogscore=666 phishscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2210170000 definitions=main-2211040095
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
@@ -121,218 +79,21 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-With the "mess" sorted out, we should be able to inline the
-vfio_free_device call introduced by commit cb9ff3f3b84c
-("vfio: Add helpers for unifying vfio_device life cycle")
-and remove them from driver release callbacks.
+On Thu, Nov 03, 2022 at 01:17:40PM +0100, Jason A. Donenfeld wrote:
+> The <asm/archrandom.h> header is a random.c private detail, not
+> something to be called by other code. As such, don't make it
+> automatically available by way of random.h.
+> 
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Heiko Carstens <hca@linux.ibm.com>
+> Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> ---
+>  arch/powerpc/kernel/setup-common.c | 1 +
+>  arch/s390/kernel/setup.c           | 1 +
+>  drivers/char/hw_random/s390-trng.c | 1 +
+>  drivers/char/random.c              | 1 +
+>  include/linux/random.h             | 2 --
+>  5 files changed, 4 insertions(+), 2 deletions(-)
 
-Signed-off-by: Eric Farman <farman@linux.ibm.com>
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Reviewed-by: Tony Krowiak <akrowiak@linux.ibm.com>	# vfio-ap part
-Acked-by: Alex Williamson <alex.williamson@redhat.com>
-Reviewed-by: Matthew Rosato <mjrosato@linux.ibm.com>
----
- drivers/gpu/drm/i915/gvt/kvmgt.c      |  1 -
- drivers/s390/cio/vfio_ccw_ops.c       |  2 --
- drivers/s390/crypto/vfio_ap_ops.c     |  6 ------
- drivers/vfio/fsl-mc/vfio_fsl_mc.c     |  1 -
- drivers/vfio/pci/vfio_pci_core.c      |  1 -
- drivers/vfio/platform/vfio_amba.c     |  1 -
- drivers/vfio/platform/vfio_platform.c |  1 -
- drivers/vfio/vfio_main.c              | 22 ++++------------------
- include/linux/vfio.h                  |  1 -
- samples/vfio-mdev/mbochs.c            |  1 -
- samples/vfio-mdev/mdpy.c              |  1 -
- samples/vfio-mdev/mtty.c              |  1 -
- 12 files changed, 4 insertions(+), 35 deletions(-)
-
-diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kvmgt.c
-index 7a45e5360caf..eee6805e67de 100644
---- a/drivers/gpu/drm/i915/gvt/kvmgt.c
-+++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
-@@ -1461,7 +1461,6 @@ static void intel_vgpu_release_dev(struct vfio_device *vfio_dev)
- 	struct intel_vgpu *vgpu = vfio_dev_to_vgpu(vfio_dev);
- 
- 	intel_gvt_destroy_vgpu(vgpu);
--	vfio_free_device(vfio_dev);
- }
- 
- static const struct vfio_device_ops intel_vgpu_dev_ops = {
-diff --git a/drivers/s390/cio/vfio_ccw_ops.c b/drivers/s390/cio/vfio_ccw_ops.c
-index 1155f8bcedd9..598a3814d428 100644
---- a/drivers/s390/cio/vfio_ccw_ops.c
-+++ b/drivers/s390/cio/vfio_ccw_ops.c
-@@ -143,8 +143,6 @@ static void vfio_ccw_mdev_release_dev(struct vfio_device *vdev)
- 	kmem_cache_free(vfio_ccw_io_region, private->io_region);
- 	kfree(private->cp.guest_cp);
- 	mutex_destroy(&private->io_mutex);
--
--	vfio_free_device(vdev);
- }
- 
- static void vfio_ccw_mdev_remove(struct mdev_device *mdev)
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 0b4cc8c597ae..f108c0f14712 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -765,11 +765,6 @@ static void vfio_ap_mdev_unlink_fr_queues(struct ap_matrix_mdev *matrix_mdev)
- 	}
- }
- 
--static void vfio_ap_mdev_release_dev(struct vfio_device *vdev)
--{
--	vfio_free_device(vdev);
--}
--
- static void vfio_ap_mdev_remove(struct mdev_device *mdev)
- {
- 	struct ap_matrix_mdev *matrix_mdev = dev_get_drvdata(&mdev->dev);
-@@ -1784,7 +1779,6 @@ static const struct attribute_group vfio_queue_attr_group = {
- 
- static const struct vfio_device_ops vfio_ap_matrix_dev_ops = {
- 	.init = vfio_ap_mdev_init_dev,
--	.release = vfio_ap_mdev_release_dev,
- 	.open_device = vfio_ap_mdev_open_device,
- 	.close_device = vfio_ap_mdev_close_device,
- 	.ioctl = vfio_ap_mdev_ioctl,
-diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-index b16874e913e4..7b8889f55007 100644
---- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-+++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-@@ -568,7 +568,6 @@ static void vfio_fsl_mc_release_dev(struct vfio_device *core_vdev)
- 
- 	vfio_fsl_uninit_device(vdev);
- 	mutex_destroy(&vdev->igate);
--	vfio_free_device(core_vdev);
- }
- 
- static int vfio_fsl_mc_remove(struct fsl_mc_device *mc_dev)
-diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index badc9d828cac..9be2d5be5d95 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -2109,7 +2109,6 @@ void vfio_pci_core_release_dev(struct vfio_device *core_vdev)
- 	mutex_destroy(&vdev->vma_lock);
- 	kfree(vdev->region);
- 	kfree(vdev->pm_save);
--	vfio_free_device(core_vdev);
- }
- EXPORT_SYMBOL_GPL(vfio_pci_core_release_dev);
- 
-diff --git a/drivers/vfio/platform/vfio_amba.c b/drivers/vfio/platform/vfio_amba.c
-index eaea63e5294c..18faf2678b99 100644
---- a/drivers/vfio/platform/vfio_amba.c
-+++ b/drivers/vfio/platform/vfio_amba.c
-@@ -95,7 +95,6 @@ static void vfio_amba_release_dev(struct vfio_device *core_vdev)
- 
- 	vfio_platform_release_common(vdev);
- 	kfree(vdev->name);
--	vfio_free_device(core_vdev);
- }
- 
- static void vfio_amba_remove(struct amba_device *adev)
-diff --git a/drivers/vfio/platform/vfio_platform.c b/drivers/vfio/platform/vfio_platform.c
-index 82cedcebfd90..9910451dc341 100644
---- a/drivers/vfio/platform/vfio_platform.c
-+++ b/drivers/vfio/platform/vfio_platform.c
-@@ -83,7 +83,6 @@ static void vfio_platform_release_dev(struct vfio_device *core_vdev)
- 		container_of(core_vdev, struct vfio_platform_device, vdev);
- 
- 	vfio_platform_release_common(vdev);
--	vfio_free_device(core_vdev);
- }
- 
- static int vfio_platform_remove(struct platform_device *pdev)
-diff --git a/drivers/vfio/vfio_main.c b/drivers/vfio/vfio_main.c
-index 2901b8ad5be9..9835757e2bee 100644
---- a/drivers/vfio/vfio_main.c
-+++ b/drivers/vfio/vfio_main.c
-@@ -339,13 +339,10 @@ static void vfio_device_release(struct device *dev)
- 	vfio_release_device_set(device);
- 	ida_free(&vfio.device_ida, device->index);
- 
--	/*
--	 * kvfree() cannot be done here due to a life cycle mess in
--	 * vfio-ccw. Before the ccw part is fixed all drivers are
--	 * required to support @release and call vfio_free_device()
--	 * from there.
--	 */
--	device->ops->release(device);
-+	if (device->ops->release)
-+		device->ops->release(device);
-+
-+	kvfree(device);
- }
- 
- static int vfio_init_device(struct vfio_device *device, struct device *dev,
-@@ -424,17 +421,6 @@ static int vfio_init_device(struct vfio_device *device, struct device *dev,
- 	return ret;
- }
- 
--/*
-- * The helper called by driver @release callback to free the device
-- * structure. Drivers which don't have private data to clean can
-- * simply use this helper as its @release.
-- */
--void vfio_free_device(struct vfio_device *device)
--{
--	kvfree(device);
--}
--EXPORT_SYMBOL_GPL(vfio_free_device);
--
- static struct vfio_group *vfio_noiommu_group_alloc(struct device *dev,
- 		enum vfio_group_type type)
- {
-diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-index ba809268a48e..e7480154825e 100644
---- a/include/linux/vfio.h
-+++ b/include/linux/vfio.h
-@@ -176,7 +176,6 @@ struct vfio_device *_vfio_alloc_device(size_t size, struct device *dev,
- 					dev, ops),				\
- 		     struct dev_struct, member)
- 
--void vfio_free_device(struct vfio_device *device);
- static inline void vfio_put_device(struct vfio_device *device)
- {
- 	put_device(&device->device);
-diff --git a/samples/vfio-mdev/mbochs.c b/samples/vfio-mdev/mbochs.c
-index 117a8d799f71..8b5a3a778a25 100644
---- a/samples/vfio-mdev/mbochs.c
-+++ b/samples/vfio-mdev/mbochs.c
-@@ -594,7 +594,6 @@ static void mbochs_release_dev(struct vfio_device *vdev)
- 	atomic_add(mdev_state->type->mbytes, &mbochs_avail_mbytes);
- 	kfree(mdev_state->pages);
- 	kfree(mdev_state->vconfig);
--	vfio_free_device(vdev);
- }
- 
- static void mbochs_remove(struct mdev_device *mdev)
-diff --git a/samples/vfio-mdev/mdpy.c b/samples/vfio-mdev/mdpy.c
-index 946e8cfde6fd..721fb06c6413 100644
---- a/samples/vfio-mdev/mdpy.c
-+++ b/samples/vfio-mdev/mdpy.c
-@@ -283,7 +283,6 @@ static void mdpy_release_dev(struct vfio_device *vdev)
- 
- 	vfree(mdev_state->memblk);
- 	kfree(mdev_state->vconfig);
--	vfio_free_device(vdev);
- }
- 
- static void mdpy_remove(struct mdev_device *mdev)
-diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
-index e72085fc1376..3c2a421b9b69 100644
---- a/samples/vfio-mdev/mtty.c
-+++ b/samples/vfio-mdev/mtty.c
-@@ -784,7 +784,6 @@ static void mtty_release_dev(struct vfio_device *vdev)
- 
- 	atomic_add(mdev_state->nr_ports, &mdev_avail_ports);
- 	kfree(mdev_state->vconfig);
--	vfio_free_device(vdev);
- }
- 
- static void mtty_remove(struct mdev_device *mdev)
--- 
-2.34.1
-
+Acked-by: Heiko Carstens <hca@linux.ibm.com>
