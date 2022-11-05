@@ -2,100 +2,73 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 311F461D7C6
-	for <lists+linux-s390@lfdr.de>; Sat,  5 Nov 2022 07:03:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 091C461DA48
+	for <lists+linux-s390@lfdr.de>; Sat,  5 Nov 2022 13:40:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229715AbiKEGBl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 5 Nov 2022 02:01:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60188 "EHLO
+        id S229937AbiKEMkB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 5 Nov 2022 08:40:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229662AbiKEGBf (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 5 Nov 2022 02:01:35 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 299F531232;
-        Fri,  4 Nov 2022 23:01:33 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0B29A609D0;
-        Sat,  5 Nov 2022 06:01:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAD4EC433D6;
-        Sat,  5 Nov 2022 06:01:32 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.96)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1orCFl-007OxS-0D;
-        Sat, 05 Nov 2022 02:02:01 -0400
-Message-ID: <20221105060200.899233347@goodmis.org>
-User-Agent: quilt/0.66
-Date:   Sat, 05 Nov 2022 02:00:57 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org
-Subject: [PATCH v4a 33/38] timers: s390/cmm: Use timer_shutdown_sync() before a module is
- released
-References: <20221105060024.598488967@goodmis.org>
+        with ESMTP id S229887AbiKEMju (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 5 Nov 2022 08:39:50 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 372091B1F9
+        for <linux-s390@vger.kernel.org>; Sat,  5 Nov 2022 05:39:48 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id m6-20020a17090a5a4600b00212f8dffec9so6709218pji.0
+        for <linux-s390@vger.kernel.org>; Sat, 05 Nov 2022 05:39:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=c8XA1N0uaxkLO/wKHErNWHaSuu64k5Pjb5u9dmcZrOc=;
+        b=mu8m7znM9duu/MEuox3wxE9uI+enJzfHDrHCiCJ0dxXEnbtqlugP30RV4pUA4LaD8D
+         DTqzL6R3iJdygnN0tebcl2jKMC1xnk2qmH9yHj5ZpYJsig0zgAkFbQEJMtQOsyMS9E9+
+         9mZsd+BXbCYizoNZILloIeJgVKBYQDDlfcxWmhtehgP0gShVz6QbysTuA73O0zNW89oN
+         M95vp9qd39mlLDduLYXTQkqHXtcuCB6sr4c0ysKpoCTw5s/vT8zmw06SHC/DLusZ9o66
+         sNkDbmLIhAcJBtA+VmbRSjB+l+4rXBDt3pKOG75zF9L+vjSBjo5n2zZjo+rRsufLH5jZ
+         6xmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c8XA1N0uaxkLO/wKHErNWHaSuu64k5Pjb5u9dmcZrOc=;
+        b=yKqwE/0AV9HkOpZOiDWSOQo5tlYGxcwTQaVWpZ0lc+jFZlWRQQ0uhp6+SJlN3AVxZ0
+         GpRwhZVQdq2QaV+W1zXJpQCp3AydMEyzTEhyDJM3y3Gkpl0vqXOhbp+MMqojUdtJJhLL
+         VMr3YUYL+KlqVhj9CPd7RQT++TjweKFGnTL/MFWOnZwNkITo0GsH2a0BPRgba2bhVC4R
+         dMzDGFTjsPEjYb9c3sk0KueLQ8yHlAMzboyHJXacTl7AKV9hPr3QTekfa2mTKwtXRRFC
+         JwgtfOzrO07pbyKDfuUwLfWLpsJlq50GV7bLGoA2+N2+gnf/sR916UF2Khu2pi8h9luy
+         TxSA==
+X-Gm-Message-State: ACrzQf1pJX2aVmRxr7/hEY4ogIaLoqudLuMJ4w407vLzgkRsv56aCa3+
+        nBYuXDrYyZYeV6k8TXpe35OTlONF2j+T7BZcY+Y=
+X-Google-Smtp-Source: AMsMyM5GFe2gsiMaHXHXvp99K7JeNN2UuK6dELDyLpsoJjIUkQcn4q3aD74FbKEapmwctM2YF8x1D4LMLHeg4fM3LVk=
+X-Received: by 2002:a17:90b:4ac3:b0:213:3918:f276 with SMTP id
+ mh3-20020a17090b4ac300b002133918f276mr57022678pjb.19.1667651987563; Sat, 05
+ Nov 2022 05:39:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:7301:2e91:b0:83:922d:c616 with HTTP; Sat, 5 Nov 2022
+ 05:39:47 -0700 (PDT)
+Reply-To: stefanopessia755@hotmail.com
+From:   Stefano Pessina <wamathaibenard@gmail.com>
+Date:   Sat, 5 Nov 2022 15:39:47 +0300
+Message-ID: <CAN7bvZKO8GxFn7CG_EtS_Of+AZ+KsuqTkq40Mq-yJDNrEHyakg@mail.gmail.com>
+Subject: Geldspende
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=4.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-
-Before a module is released, timer_shutdown_sync() must be called on its
-timers.
-
-Also call it in the failure path of the module init function.
-
-Link: https://lore.kernel.org/all/20221104054053.431922658@goodmis.org/
-
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-Cc: Sven Schnelle <svens@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- arch/s390/mm/cmm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/s390/mm/cmm.c b/arch/s390/mm/cmm.c
-index 9141ed4c52e9..1a0a8aa43ac6 100644
---- a/arch/s390/mm/cmm.c
-+++ b/arch/s390/mm/cmm.c
-@@ -419,7 +419,7 @@ static int __init cmm_init(void)
- #endif
- 	unregister_sysctl_table(cmm_sysctl_header);
- out_sysctl:
--	del_timer_sync(&cmm_timer);
-+	timer_shutdown_sync(&cmm_timer);
- 	return rc;
- }
- module_init(cmm_init);
-@@ -432,7 +432,7 @@ static void __exit cmm_exit(void)
- #endif
- 	unregister_oom_notifier(&cmm_oom_nb);
- 	kthread_stop(cmm_thread_ptr);
--	del_timer_sync(&cmm_timer);
-+	timer_shutdown_sync(&cmm_timer);
- 	cmm_free_pages(cmm_pages, &cmm_pages, &cmm_page_list);
- 	cmm_free_pages(cmm_timed_pages, &cmm_timed_pages, &cmm_timed_page_list);
- }
--- 
-2.35.1
+--=20
+Die Summe von 500.000,00 =E2=82=AC wurde Ihnen von STEFANO PESSINA gespende=
+t.
+Bitte kontaktieren Sie uns f=C3=BCr weitere Informationen =C3=BCber
+stefanopessia755@hotmail.com
