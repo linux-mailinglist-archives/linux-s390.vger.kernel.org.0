@@ -2,87 +2,76 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D270762600A
-	for <lists+linux-s390@lfdr.de>; Fri, 11 Nov 2022 18:07:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDB63626248
+	for <lists+linux-s390@lfdr.de>; Fri, 11 Nov 2022 20:45:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233906AbiKKRHA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 11 Nov 2022 12:07:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46604 "EHLO
+        id S231911AbiKKTp1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 11 Nov 2022 14:45:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233768AbiKKRGt (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 11 Nov 2022 12:06:49 -0500
+        with ESMTP id S233908AbiKKTp0 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 11 Nov 2022 14:45:26 -0500
 Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9BA773422;
-        Fri, 11 Nov 2022 09:06:48 -0800 (PST)
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2ABGrWjC027496;
-        Fri, 11 Nov 2022 17:06:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=+1JT3i0OUmdtvKwwNNS5GNLVUJmNSC/hwxshkEqDE8E=;
- b=eAr+Aa6a7LQTNh242QtIec7PSWYzRPlvIxpriSVgtvH4bC+4f2zZbpkaek2yRpeGslZH
- WiRlEVbM5i+GIB+j/XmOssLe4SETfhoLHDiP4K8QsHODcDQOXzp67XsKur25HepxRrpK
- LE7/kDioUMM2N/2gat4Lvet8t9TEcj2SWVQKXVzr+JQ5/iUdF8htaLLmBZnSWtZgW2iq
- CQk4XhynqK5nAOeyBWulCIhm9Kzlwws3qP7WOg6pv1scijJaCWtBrIoiS+cT6V2CkKcn
- WiRbsP4p058s78EM9Ozll8Z4hGqaKBanWEwNfo53SW4SDz3uvENQnhdqIH2v9Bw3ufWu 1Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3kstag8bbm-1
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A31F7F57D;
+        Fri, 11 Nov 2022 11:45:25 -0800 (PST)
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2ABJFU1W026611;
+        Fri, 11 Nov 2022 19:45:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : content-type : mime-version; s=pp1;
+ bh=zF029rsPI1IAz/q0/sXxOn73sfbKFwU3fPO/WNda7XE=;
+ b=XEolMzGCHpnd7INIlvtP7jxTD9eNtTVRXwLI1fgONFVP7l5yv+RgtAZhAa38IRq75Tem
+ mg4+NwKiw2DGxFOxk9KPTZVatXlUPOqwLsY1iIpP2Naz6/rTJiPNRDqbMFXSWo8tNdtG
+ 96GLt4TJDuiHtH+UNmhTuQE/nuW7Qmjs5/B/RvO4p4gZ5jczvY7rP4fh9IUK53WnG5s2
+ 2R4H0wRffOecp4g5EIDyO5Tuz5K0dTRvBEt4JFwsNelUBGUThjfmtFGL68vbH5hfgew6
+ Bry0A3sRN/K2cyHsYpZAXJyJeYutkT49nN+QbO4WRhSA4LdFOp0cbkrxSs8LwLNTajPN hQ== 
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3ksvd2rpdd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Nov 2022 17:06:47 +0000
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2ABH0K6l021444;
-        Fri, 11 Nov 2022 17:06:47 GMT
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3kstag8b9r-1
+        Fri, 11 Nov 2022 19:45:24 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2ABJa9Rc022586;
+        Fri, 11 Nov 2022 19:45:22 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma06ams.nl.ibm.com with ESMTP id 3kngnch52y-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Nov 2022 17:06:47 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2ABH5oLi018876;
-        Fri, 11 Nov 2022 17:06:45 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06fra.de.ibm.com with ESMTP id 3kngq8pnnh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Nov 2022 17:06:45 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2ABH6glu1639018
+        Fri, 11 Nov 2022 19:45:22 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2ABJjJQL393820
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Nov 2022 17:06:42 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EE1FF4C044;
-        Fri, 11 Nov 2022 17:06:41 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 689D64C040;
-        Fri, 11 Nov 2022 17:06:41 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.171.65.74])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 11 Nov 2022 17:06:41 +0000 (GMT)
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     borntraeger@de.ibm.com, frankja@linux.ibm.com, thuth@redhat.com,
-        david@redhat.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, scgl@linux.ibm.com,
-        seiden@linux.ibm.com, nrb@linux.ibm.com
-Subject: [PATCH v16 6/6] KVM: s390: pv: module parameter to fence asynchronous destroy
-Date:   Fri, 11 Nov 2022 18:06:32 +0100
-Message-Id: <20221111170632.77622-7-imbrenda@linux.ibm.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20221111170632.77622-1-imbrenda@linux.ibm.com>
-References: <20221111170632.77622-1-imbrenda@linux.ibm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 11 Nov 2022 19:45:19 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 030DF42041;
+        Fri, 11 Nov 2022 19:45:19 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C2EDC4203F;
+        Fri, 11 Nov 2022 19:45:18 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri, 11 Nov 2022 19:45:18 +0000 (GMT)
+Date:   Fri, 11 Nov 2022 20:45:17 +0100
+From:   Alexander Gordeev <agordeev@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [GIT PULL] s390 updates for 6.1-rc5
+Message-ID: <Y26mTTsPtdaNJ4lP@tuxmaker.boeblingen.de.ibm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: UzYzXfZSFM6tpGlhzEjOUBizsTtWA5lC
-X-Proofpoint-ORIG-GUID: MKWqEm0Kf4MV9XEyonoyo52U1yjlp6fg
+X-Proofpoint-ORIG-GUID: CMxuZk_rDvYvcWtnywGsdtmYT4WNeFYq
+X-Proofpoint-GUID: CMxuZk_rDvYvcWtnywGsdtmYT4WNeFYq
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-11-11_08,2022-11-11_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 mlxscore=0 bulkscore=0 lowpriorityscore=0
- malwarescore=0 impostorscore=0 mlxlogscore=999 clxscore=1015
- suspectscore=0 adultscore=0 phishscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2210170000
- definitions=main-2211110115
+ definitions=2022-11-11_10,2022-11-11_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=602
+ priorityscore=1501 lowpriorityscore=0 bulkscore=0 adultscore=0 mlxscore=0
+ malwarescore=0 phishscore=0 clxscore=1015 suspectscore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2210170000 definitions=main-2211110133
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
@@ -92,39 +81,69 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Add the module parameter "async_destroy", to allow the asynchronous
-destroy mechanism to be switched off. This might be useful for
-debugging purposes.
+Hello Linus,
 
-The parameter is enabled by default since the feature is opt-in anyway.
+please pull s390 changes for 6.1-rc5.
 
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
-Reviewed-by: Steffen Eiden <seiden@linux.ibm.com>
-Reviewed-by: Nico Boehr <nrb@linux.ibm.com>
----
- arch/s390/kvm/kvm-s390.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Thank you,
+Alexander
 
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index b6cc7d2935c0..8a0c884bf737 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -209,7 +209,13 @@ unsigned int diag9c_forwarding_hz;
- module_param(diag9c_forwarding_hz, uint, 0644);
- MODULE_PARM_DESC(diag9c_forwarding_hz, "Maximum diag9c forwarding per second, 0 to turn off");
- 
--static int async_destroy;
-+/*
-+ * allow asynchronous deinit for protected guests; enable by default since
-+ * the feature is opt-in anyway
-+ */
-+static int async_destroy = 1;
-+module_param(async_destroy, int, 0444);
-+MODULE_PARM_DESC(async_destroy, "Asynchronous destroy for protected guests");
- 
- /*
-  * For now we handle at most 16 double words as this is what the s390 base
--- 
-2.38.1
+The following changes since commit e38de4804421b064a9c73c5a9b7f3df96b863e4b:
 
+  s390/vfio-ap: Fix memory allocation for mdev_types array (2022-10-21 10:50:02 -0400)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-6.1-4
+
+for you to fetch changes up to 30d17fac6aaedb40d111bb159f4b35525637ea78:
+
+  scripts/min-tool-version.sh: raise minimum clang version to 15.0.0 for s390 (2022-10-31 13:34:56 +0100)
+
+----------------------------------------------------------------
+s390 updates for 6.1-rc5
+
+- fix memcpy warning about field-spanning write in zcrypt driver.
+
+- minor updates to defconfigs.
+
+- Remove CONFIG_DEBUG_INFO_BTF from all defconfigs and add btf.config
+  addon config file. It significantly decreases compile time and allows
+  quickly enabling that option into the current kernel config.
+
+- Add kasan.config addon config file which allows to easily enable
+  KASAN into the current kernel config.
+
+- binutils commit 906f69cf65da ("IBM zSystems: Issue error for *DBL
+  relocs on misaligned symbols") caused several link errors.
+  Always build relocatable kernel to avoid this problem.
+
+- Raise the minimum clang version to 15.0.0 to avoid silent generation
+  of a corrupted code.
+
+----------------------------------------------------------------
+Harald Freudenberger (1):
+  s390/zcrypt: fix warning about field-spanning write
+
+Heiko Carstens (5):
+  s390: update defconfigs
+  s390/configs: move CONFIG_DEBUG_INFO_BTF into btf.config addon config
+  s390/configs: add kasan.config addon config file
+  s390: always build relocatable kernel
+  scripts/min-tool-version.sh: raise minimum clang version to 15.0.0 for
+    s390
+
+ arch/s390/Kconfig                     |  6 +--
+ arch/s390/Makefile                    |  2 -
+ arch/s390/boot/Makefile               |  3 +-
+ arch/s390/boot/startup.c              |  3 +-
+ arch/s390/configs/btf.config          |  1 +
+ arch/s390/configs/debug_defconfig     | 65 +++++++++++++-------------
+ arch/s390/configs/defconfig           | 67 +++++++++++++--------------
+ arch/s390/configs/kasan.config        |  3 ++
+ arch/s390/configs/zfcpdump_defconfig  |  1 -
+ drivers/s390/crypto/zcrypt_msgtype6.c | 21 ++++++---
+ scripts/min-tool-version.sh           |  2 +-
+ 11 files changed, 90 insertions(+), 84 deletions(-)
+ create mode 100644 arch/s390/configs/btf.config
+ create mode 100644 arch/s390/configs/kasan.config
