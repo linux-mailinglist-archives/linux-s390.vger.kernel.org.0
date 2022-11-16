@@ -2,214 +2,188 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E0F5762C603
-	for <lists+linux-s390@lfdr.de>; Wed, 16 Nov 2022 18:11:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C80A362C619
+	for <lists+linux-s390@lfdr.de>; Wed, 16 Nov 2022 18:17:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231224AbiKPRL2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 16 Nov 2022 12:11:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58476 "EHLO
+        id S230377AbiKPRRV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 16 Nov 2022 12:17:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233987AbiKPRLZ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 16 Nov 2022 12:11:25 -0500
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E39359FEA
-        for <linux-s390@vger.kernel.org>; Wed, 16 Nov 2022 09:11:22 -0800 (PST)
-Received: by mail-pl1-x636.google.com with SMTP id j12so17009054plj.5
-        for <linux-s390@vger.kernel.org>; Wed, 16 Nov 2022 09:11:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qU5KpuuvMvabmlf4l/Mi3tQhh2fL8Dh2/iugoH77F0k=;
-        b=TdgWtef6UhHbqKe4QS/3Ayu3VNZZ3i9eoJmtCy7dLqrysJ7wB0UBIiB1NHl2XD8yEJ
-         9A9e40vVPz0LeaGnBm+xWkbLjcxsdpGQjMtsawyPcUDXFiJtlqbZJWuF4NPJNhW8gWhc
-         yklS7sdK1V06+Vo7Vtm2MrCNKTPLN0kZs4hpWbYlAx+pUoMaBEUe2EJ/R8vPCcvbrDoh
-         3WsWgepDpESG+KKK928nilFdVglC19Gmb2mv5/mmmkx20fEfIehPjExF++q08zwUw6nJ
-         A1VBgI5fVGcYhdLGJAFBS9e+51HNi1lhj80m/YmoiHsls5U6I/EdT06kMnKY5Lu6o+oq
-         Zk/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qU5KpuuvMvabmlf4l/Mi3tQhh2fL8Dh2/iugoH77F0k=;
-        b=yjJmYHlu1NCsob3hspW5ZK/rdmCClqbNfQDNsn00cmgm+c+PGWjWdM7Jf/1xs3edXA
-         WpiGG8ErTsgAZ77VXkLRV+eQj0sO4jWZUW0HK+cxbFruyoSz715AYHs3TpTCdyzG1Vok
-         ggyvnDI87J953thW0Q2VWl58wnQFCk65iPe11s6gQ8IcicEurG0isU1DtoZa5t928U+l
-         kKamWegvDdHhfkrUK/YLFuwBD0ayUlnrnDH/2iWI61i5mLRVNv4WvV3Ba/qgFOCTG8mN
-         AXvYn4GRAsARjMSz9mFxCtnWTQzsYqs1RRq/pnVxrq3oHk6BYInAi7KQwRVhL75wC5M6
-         EirA==
-X-Gm-Message-State: ANoB5pk/wB/DnadIVg3aEkBEBO242WWMk9FOadT1JiOL/t67xh05QJHv
-        ZbnrbOSHuJUQeHrwdHCFq+sBNg==
-X-Google-Smtp-Source: AA0mqf6YIHZPZijJW3drWLmCC0J1i77v6BfIk1GaXTBydT1hr0zvtFJFuTOMD/RjlZsQvYbm7cfMpQ==
-X-Received: by 2002:a17:902:ed41:b0:175:105a:3087 with SMTP id y1-20020a170902ed4100b00175105a3087mr10067985plb.65.1668618681834;
-        Wed, 16 Nov 2022 09:11:21 -0800 (PST)
-Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id j6-20020a17090276c600b001788ccecbf5sm12424413plt.31.2022.11.16.09.11.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Nov 2022 09:11:21 -0800 (PST)
-Date:   Wed, 16 Nov 2022 17:11:18 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     "Huang, Kai" <kai.huang@intel.com>
-Cc:     "borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>,
-        "kvm-riscv@lists.infradead.org" <kvm-riscv@lists.infradead.org>,
-        "Yao, Yuan" <yuan.yao@intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Yamahata, Isaku" <isaku.yamahata@intel.com>,
-        "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "david@redhat.com" <david@redhat.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mjrosato@linux.ibm.com" <mjrosato@linux.ibm.com>,
-        "oliver.upton@linux.dev" <oliver.upton@linux.dev>,
-        "farosas@linux.ibm.com" <farosas@linux.ibm.com>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "palmer@dabbelt.com" <palmer@dabbelt.com>,
-        "chenhuacai@kernel.org" <chenhuacai@kernel.org>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "alexandru.elisei@arm.com" <alexandru.elisei@arm.com>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "anup@brainfault.org" <anup@brainfault.org>,
-        "frankja@linux.ibm.com" <frankja@linux.ibm.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "farman@linux.ibm.com" <farman@linux.ibm.com>,
-        "aleksandar.qemu.devel@gmail.com" <aleksandar.qemu.devel@gmail.com>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "atishp@atishpatra.org" <atishp@atishpatra.org>,
-        "imbrenda@linux.ibm.com" <imbrenda@linux.ibm.com>,
-        "Gao, Chao" <chao.gao@intel.com>
-Subject: Re: [PATCH 38/44] KVM: Disable CPU hotplug during hardware enabling
-Message-ID: <Y3UZtoIidMyE8qVz@google.com>
-References: <20221102231911.3107438-1-seanjc@google.com>
- <20221102231911.3107438-39-seanjc@google.com>
- <88e920944de70e7d69a98f74005b49c59b5aaa3b.camel@intel.com>
- <b198fe971cecd301f0c7c66028cfd71dd7ba7e62.camel@intel.com>
- <Y3PzhANShVlTXVg1@google.com>
- <95ca433349eca601bdd2b16d70f59ba8e56d8e3f.camel@intel.com>
+        with ESMTP id S233641AbiKPRRU (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 16 Nov 2022 12:17:20 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B72CE4731C;
+        Wed, 16 Nov 2022 09:17:19 -0800 (PST)
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2AGGoEwZ025234;
+        Wed, 16 Nov 2022 17:17:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=7kggJbK6dh+VbgGxGhXLVWM4SxZazD7YTlWI9e6Kt6A=;
+ b=JF9VfDiMKnGw1snlWF2LUeaiU5u2PuTpbwvPQVl5kjrYn5EO1XP9Rrd2/l+c/nA7ALWe
+ 2SNaK/+csfeithtfwhmlR/jWiSXqK0S2XAxHvfmBpPn8rO0tvvd7mIu+S84tVwuezZ2u
+ 3GfmUwoB/vxrrWXGX0R1qqv41dGDmj1Gnu9ItlnhyqHUl4gSmfR6tAI4WlbJmYutEGaT
+ YfaUzULj1Rl+1VyV5/xSN1JaqqGezqlEZdIltHEmrNl77ohtwmqa4wGyL1sFfseydXtn
+ tkFQn7JTEEZpgy1X33QqbCl2lL0t67RrR/T/xysoVPX5Wx6FfvTwnlrEuqzbIBaF7K/r xA== 
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3kw3qt0qce-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 16 Nov 2022 17:17:02 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2AGH6U3U032483;
+        Wed, 16 Nov 2022 17:17:00 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma06ams.nl.ibm.com with ESMTP id 3kt2rjead2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 16 Nov 2022 17:17:00 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2AGHHao739518620
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Nov 2022 17:17:36 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 077A35204E;
+        Wed, 16 Nov 2022 17:16:57 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 78F7052051;
+        Wed, 16 Nov 2022 17:16:56 +0000 (GMT)
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Matthew Rosato <mjrosato@linux.ibm.com>,
+        Gerd Bayer <gbayer@linux.ibm.com>, iommu@lists.linux.dev,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Wenjia Zhang <wenjia@linux.ibm.com>
+Cc:     Pierre Morel <pmorel@linux.ibm.com>, linux-s390@vger.kernel.org,
+        borntraeger@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        gerald.schaefer@linux.ibm.com, agordeev@linux.ibm.com,
+        svens@linux.ibm.com, linux-kernel@vger.kernel.org,
+        Julian Ruess <julianr@linux.ibm.com>
+Subject: [PATCH v2 0/7] iommu/dma: s390 DMA API conversion and optimized IOTLB flushing
+Date:   Wed, 16 Nov 2022 18:16:49 +0100
+Message-Id: <20221116171656.4128212-1-schnelle@linux.ibm.com>
+X-Mailer: git-send-email 2.34.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: xMxqVXAIffo6scUi5z85KmgP1Wl3R0A2
+X-Proofpoint-GUID: xMxqVXAIffo6scUi5z85KmgP1Wl3R0A2
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <95ca433349eca601bdd2b16d70f59ba8e56d8e3f.camel@intel.com>
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-11-16_03,2022-11-16_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ suspectscore=0 priorityscore=1501 mlxscore=0 clxscore=1015
+ lowpriorityscore=0 phishscore=0 impostorscore=0 bulkscore=0 malwarescore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2210170000 definitions=main-2211160119
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Nov 16, 2022, Huang, Kai wrote:
-> On Tue, 2022-11-15 at 20:16 +0000, Sean Christopherson wrote:
-> > On Thu, Nov 10, 2022, Huang, Kai wrote:
-> > > On Thu, 2022-11-10 at 01:33 +0000, Huang, Kai wrote:
-> > > Hmm.. I wasn't thinking thoroughly.  I forgot CPU compatibility check also
-> > > happens on all online cpus when loading KVM.  For this case, IRQ is disabled and
-> > > cpu_active() is true.  For the hotplug case, IRQ is enabled but  cpu_active() is
-> > > false.
-> > 
-> > Actually, you're right (and wrong).  You're right in that the WARN is flawed.  And
-> > the reason for that is because you're wrong about the hotplug case.  In this version
-> > of things, the compatibility checks are routed through hardware enabling, i.e. this
-> > flow is used only when loading KVM.  This helper should only be called via SMP function
-> > call, which means that IRQs should always be disabled.
-> 
-> Did you mean below code change in later patch "[PATCH 39/44] KVM: Drop
-> kvm_count_lock and instead protect kvm_usage_count with kvm_lock"?
-> 
->  	/*
->  	 * Abort the CPU online process if hardware virtualization cannot
->  	 * be enabled. Otherwise running VMs would encounter unrecoverable
-> @@ -5039,13 +5039,16 @@ static int kvm_online_cpu(unsigned int cpu)
->  	if (kvm_usage_count) {
->  		WARN_ON_ONCE(atomic_read(&hardware_enable_failed));
->  
-> +		local_irq_save(flags);
->  		hardware_enable_nolock(NULL);
-> +		local_irq_restore(flags);
+Hi All,
 
-Sort of.  What I was saying is that in this v1, the compatibility checks that are
-done during harware enabling are initiated from vendor code, i.e. VMX and SVM call
-{svm,vmx}_check_processor_compat() directly.  As a result, the compat checks that
-are handled in common code:
+This patch series converts s390's PCI support from its platform specific DMA
+API implementation in arch/s390/pci/pci_dma.c to the common DMA IOMMU layer.
+The conversion itself is done in patch 3 and after applying my the s390 IOMMU
+improvements series[0]. It only touches the s390 IOMMU driver and arch code
+moving over remaining functions from the s390 DMA API implementation. No
+changes to common code are necessary. Though patch 4 does propose an additional
+common code change to let the iommu.strict kernel parameter override
+ops->def_domain_type.
 
-	if (__cr4_reserved_bits(cpu_has, c) !=
-	    __cr4_reserved_bits(cpu_has, &boot_cpu_data))
-		return -EIO;
+After patch 3 the basic conversion is done and on our partitioning machine
+hypervisor LPAR performance matches or exceeds the existing code. When running
+under z/VM or KVM however, performance plummets to about half of the existing
+code due to a much higher rate of IOTLB flushes for unmapped pages and we still
+need to handle out-of-resource indications (patch 7). Due to the hypervisors
+use of IOTLB flushes to synchronize their shadow tables these are very
+expensive and minimizing them is key for regaining the performance loss.
 
-are skipped.  And if that's fixed, then the above hardware_enable_nolock() call
-will bounce through kvm_x86_check_processor_compatibility() with IRQs enabled
-once the KVM hotplug hook is moved to the ONLINE section.
+To this end patches 5-7 propose a new, single queue, IOTLB flushing scheme as
+an alternative to the existing per-CPU flush queues. Introducing an alternative
+scheme was also suggested by Robin Murphy[1]. In the previous RFC of this
+conversion Robin suggested reusing more of the existing queuing logic which
+I incorporated into this version. The single queue mode is introduced in patch
+5. It allows batching a much larger number of lazily freed IOVAs and was also
+chosen as hypervisors tend to serialize IOTLB flushes removing some of the
+gains of multiple queues. Except for going from one per-CPU to a global queue
+the queue logic remains untouched.
 
-As above, the simple "fix" would be to disable IRQs, but that's not actually
-necessary.  The only requirement is that preemption is disabled so that the checks
-are done on the current CPU.  The "IRQs disabled" check was a deliberately
-agressive WARN that was added to guard against doing compatibility checks from
-the "wrong" location.
+Then patch 6 enables variable queue sizes using power of 2 queue sizes and
+shift/mask to keep performance as close to the existing code as possible.
+Finally patch 7 allows triggering a queue flush from the IOMMU driver in order
+to handle s390's use of an IOTLB flush out-of-resource indication.
 
-E.g. this is what I ended up with for a changelog to drop the irqs_disabled()
-check and for the end code (though it's not tested yet...)
+As it is implemented in common code the single queue IOTLB flushing scheme can
+of course be used by other platforms with expensive IOTLB flushes. Particularly
+virtio-iommu might be a candidate. With this series however only s390 systems
+that require IOTLB flushes on map default to it while LPAR uses the per-CPU
+queues.
 
-    Drop kvm_x86_check_processor_compatibility()'s WARN that IRQs are
-    disabled, as the ONLINE section runs with IRQs disabled.  The WARN wasn't
-    intended to be a requirement, e.g. disabling preemption is sufficient,
-    the IRQ thing was purely an aggressive sanity check since the helper was
-    only ever invoked via SMP function call.
+I did verify that the new scheme does work on my x86_64 Ryzen workstation by
+locally modifying drivers/iommu/iommu.c:iommu_subsys_init() to default to the
+single queue mode and verifying its use via "/sys/.../iommu_group/type". I did
+not find problems with an AMD GPU, Intel NIC (with SR-IOV), NVMes or any on
+board peripherals though the only performance test was a round of CS:Go :-)
 
+As with previous series this is available via my git.kernel.org tree[3] in the
+dma_iommu_v2 branch with s390_dma_iommu_v2 tag.
 
-static int kvm_x86_check_processor_compatibility(void)
-{
-        int cpu = smp_processor_id();
-        struct cpuinfo_x86 *c = &cpu_data(cpu);
+NOTE: Due to the large drop in performance and the issue of out-of-resource
+handling we can't merge the DMA API conversion (patches 1-3) until we have
+a more suited IOVA flushing scheme with similar improvements as the proposed
+changes of patches 5-7.
 
-        /*
-         * Compatibility checks are done when loading KVM and when enabling
-         * hardware, e.g. during CPU hotplug, to ensure all online CPUs are
-         * compatible, i.e. KVM should never perform a compatibility check on
-         * an offline CPU.
-         */
-        WARN_ON(!cpu_online(cpu));
+Best regards,
+Niklas
 
-        if (__cr4_reserved_bits(cpu_has, c) !=
-            __cr4_reserved_bits(cpu_has, &boot_cpu_data))
-                return -EIO;
+[0] https://lore.kernel.org/linux-iommu/20221109142903.4080275-1-schnelle@linux.ibm.com/
+[1] https://lore.kernel.org/linux-iommu/3e402947-61f9-b7e8-1414-fde006257b6f@arm.com/
+[2] https://lore.kernel.org/linux-iommu/a8e778da-7b41-a6ba-83c3-c366a426c3da@arm.com/
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/niks/linux.git/
 
-        return static_call(kvm_x86_check_processor_compatibility)();
-}
+Changes since RFC v1:
+- Patch 1 uses dma_set_mask_and_coherent() (Christoph)
+- Patch 3 now documents and allows the use of iommu.strict=0|1 on s390 and
+  deprecates s390_iommu=strict while making it an alias.
+- Patches 5-7 completely reworked to reuse existing queue logic (Robin)
+- Added patch 4 to allow using iommu.strict=0|1 to override
+  ops->def_domain_type.
 
+Niklas Schnelle (7):
+  s390/ism: Set DMA coherent mask
+  s390/pci: prepare is_passed_through() for dma-iommu
+  s390/pci: Use dma-iommu layer
+  iommu: Let iommu.strict override ops->def_domain_type
+  iommu/dma: Allow a single FQ in addition to per-CPU FQs
+  iommu/dma: Enable variable queue size and use larger single queue
+  iommu/s390: flush queued IOVAs on RPCIT out of resource indication
 
-int kvm_arch_hardware_enable(void)
-{
-        struct kvm *kvm;
-        struct kvm_vcpu *vcpu;
-        unsigned long i;
-        int ret;
-        u64 local_tsc;
-        u64 max_tsc = 0;
-        bool stable, backwards_tsc = false;
+ .../admin-guide/kernel-parameters.txt         |   9 +-
+ arch/s390/include/asm/pci.h                   |   7 -
+ arch/s390/include/asm/pci_dma.h               | 120 +--
+ arch/s390/pci/Makefile                        |   2 +-
+ arch/s390/pci/pci.c                           |  22 +-
+ arch/s390/pci/pci_bus.c                       |   5 -
+ arch/s390/pci/pci_debug.c                     |  13 +-
+ arch/s390/pci/pci_dma.c                       | 732 ------------------
+ arch/s390/pci/pci_event.c                     |  17 +-
+ arch/s390/pci/pci_sysfs.c                     |  19 +-
+ drivers/iommu/Kconfig                         |   3 +-
+ drivers/iommu/dma-iommu.c                     | 188 ++++-
+ drivers/iommu/dma-iommu.h                     |   1 +
+ drivers/iommu/iommu.c                         |  18 +-
+ drivers/iommu/s390-iommu.c                    | 409 +++++++++-
+ drivers/s390/net/ism_drv.c                    |   2 +-
+ include/linux/iommu.h                         |   7 +
+ 17 files changed, 603 insertions(+), 971 deletions(-)
+ delete mode 100644 arch/s390/pci/pci_dma.c
 
-        kvm_user_return_msr_cpu_online();
+-- 
+2.34.1
 
-        ret = kvm_x86_check_processor_compatibility();
-        if (ret)
-                return ret;
-
-        ret = static_call(kvm_x86_hardware_enable)();
-        if (ret != 0)
-                return ret;
-
-
-	....
-}
