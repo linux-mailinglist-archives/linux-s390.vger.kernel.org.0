@@ -2,95 +2,153 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 67FBF633299
-	for <lists+linux-s390@lfdr.de>; Tue, 22 Nov 2022 03:04:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D000633637
+	for <lists+linux-s390@lfdr.de>; Tue, 22 Nov 2022 08:48:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232258AbiKVCEC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 21 Nov 2022 21:04:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33258 "EHLO
+        id S232530AbiKVHsd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 22 Nov 2022 02:48:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232429AbiKVCD6 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 21 Nov 2022 21:03:58 -0500
-Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0682BDEAC8;
-        Mon, 21 Nov 2022 18:03:57 -0800 (PST)
-Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-3938dc90ab0so112022607b3.4;
-        Mon, 21 Nov 2022 18:03:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+ptI+nYITeW1gKXUBABTe9iXK3+s6B6YR5hHe/uuAEk=;
-        b=aMtTD3FN91QuunzdQeJlDFtrgk7U61gYOsbhNxGjRp6qOvuSQkBew+G4nOb+I9lvjF
-         Gvs0dtTw0XcjDq6vXXhmaX9VsIHd8e463rPOH0Bxk4Sy1KIy/nR86RLTDqLLbgDLiX5M
-         1pT48i0anCd7RZ9HovhykDcZM0SUo2HaZUolkcviIdE4jWp2J2ei7J4oEwWyAwscRAXa
-         c9n8fcZoX4lvlZTtKRqv0PdoMhIrwHqCj0a8OByHjz8muMqyBbx/19CCSAPsRWSUkt86
-         JtyywhmXW6PofLaTX0Bq3IZxMJ8SNpQwsI2rz1fS+ygF4ST18Skr2SvqYXLiYZwIzIA8
-         xO7A==
+        with ESMTP id S232355AbiKVHsa (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 22 Nov 2022 02:48:30 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4A923206F
+        for <linux-s390@vger.kernel.org>; Mon, 21 Nov 2022 23:47:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1669103242;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EOlyqNEjSyWRhu789TgVJBojhnd7QCjs246Hat/OGCs=;
+        b=Oeb3eSXDahcKQEomPyxeQD8Q0LnB/5EPm7idAHLvxhft8gxmU3e9uKGU9MRP37NHfG9NJ2
+        y5hhPSDwjWteQrpBWpEFNJFRbfNlrs2LkLFWAZBjQBw9Xif70hHDqfqPy5zWKOp/gLNLKt
+        YZXXhKKJ05NI/Ot+DduaWn1wNCxEu8Q=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-224-xyGKoqYzOIqAqkY1RlRolA-1; Tue, 22 Nov 2022 02:47:21 -0500
+X-MC-Unique: xyGKoqYzOIqAqkY1RlRolA-1
+Received: by mail-wr1-f69.google.com with SMTP id w11-20020adfbacb000000b002418a90da01so3941981wrg.16
+        for <linux-s390@vger.kernel.org>; Mon, 21 Nov 2022 23:47:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+ptI+nYITeW1gKXUBABTe9iXK3+s6B6YR5hHe/uuAEk=;
-        b=B7uz6hV7HoonPjutfh+7FRl/+3a7EOI+PmZ2Gz5bjDDtNpYyFntXNWfKQnc9rgpIQF
-         r0GJbXDaBaNTeK+n+kKclyf3ssevdL9sLKAnY6HhwzhWJ3DuSajrstyl3K2Kmh1yjSK7
-         t+yobEKa1pfLm+tZwxxi+e9IVwSsUIv6uG+2iuV2OiofOtA0kcJ4DMmuOIGQ7hpdmRLX
-         YVJAlgVf9/S17MP+9nY2M1hqMr/MNwr8OKw20/2XRulqSsvTbfr3IuVSBLccbB8Qwrw4
-         nFSbGfxIbGOvJTJzB8cu59EEa0U1U9bFf1pi3IQOgTycfXEaDq6UVp1x2PhEIefxK3pl
-         rpxw==
-X-Gm-Message-State: ANoB5pm6qRT6tWp00zsNKXuassLG8V5FdWh8Ey2rbDF//mElEi5rea7e
-        5Wpww4WwjgKIek9IkCt1waJZ3RJ0jrWG+NtKUGtsJWQaW1TeW2+R
-X-Google-Smtp-Source: AA0mqf4J/yGvWf07lle42oLrKocwEUTgOWE6vyJjrwDumrKphjCqlctEtjZfGzrbCQNvzw7Tn4wd9zgCPP+0RJOZyRU=
-X-Received: by 2002:a81:574f:0:b0:39b:4c23:9cf0 with SMTP id
- l76-20020a81574f000000b0039b4c239cf0mr1397275ywb.185.1669082636235; Mon, 21
- Nov 2022 18:03:56 -0800 (PST)
+        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
+         :content-language:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EOlyqNEjSyWRhu789TgVJBojhnd7QCjs246Hat/OGCs=;
+        b=Pm6R8mW6ncQv7CuzcKw3L7LAY8gziRuCncCBnaqRx0WZncx30P5/IZoVkPdLi9a8W2
+         lrYO9YiahCsp1oBFBXWVRMfCWFYCOO/XYUA6oJljtOEipn1I/inAIRBoczLLrFeZKgos
+         oqa5I/0/w+zb8RI0LWX4TNkd43V1ZvFrKMxORyeJn+mxHPQ+rGJbnrVjUFSZGW6amvDA
+         WlncVqQNOSkaac6m2+roOdSFjJ1saVWgeTtelegqEqW+TVan41moDabRbyd0tuTDj6JW
+         jMPkTCgzWmc42Ld3mYo8fXL16pFerNmaBmx6AFWucA/pA00udr78bwqWB+tiTACCRVY7
+         NuAw==
+X-Gm-Message-State: ANoB5pkbasV+NtOXJhGwajUgTSg4nMJdhG+G6Pood1bTbVsitKV/kZcX
+        UdZEvjzoJKj+Acy1keVopwjIN+0+m2qKlM8mxqnOC2ZMlFERsmPRN4/Rxc+vABe30QXbxgBnoaf
+        7klFf8uWJ0nyGpIztm6TS/Q==
+X-Received: by 2002:a05:600c:3492:b0:3cf:ad59:1465 with SMTP id a18-20020a05600c349200b003cfad591465mr7757613wmq.12.1669103240155;
+        Mon, 21 Nov 2022 23:47:20 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf5qTCZJA4RPHbgTxYLrcLE6vAWROLjIVZidpN6a8sJSfb4cCoT7Ya0f5MC2dVrj3W0Qw/zP0A==
+X-Received: by 2002:a05:600c:3492:b0:3cf:ad59:1465 with SMTP id a18-20020a05600c349200b003cfad591465mr7757600wmq.12.1669103239912;
+        Mon, 21 Nov 2022 23:47:19 -0800 (PST)
+Received: from [192.168.0.5] (ip-109-43-176-72.web.vodafone.de. [109.43.176.72])
+        by smtp.gmail.com with ESMTPSA id 23-20020a05600c229700b003cf75213bb9sm20150358wmf.8.2022.11.21.23.47.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Nov 2022 23:47:19 -0800 (PST)
+Message-ID: <f96b50e2-24ac-4016-d3f1-ffc375516e7c@redhat.com>
+Date:   Tue, 22 Nov 2022 08:47:17 +0100
 MIME-Version: 1.0
-Received: by 2002:a25:9f88:0:0:0:0:0 with HTTP; Mon, 21 Nov 2022 18:03:55
- -0800 (PST)
-From:   Felipe Bedetti <felipebedetticosta@gmail.com>
-Date:   Mon, 21 Nov 2022 23:03:55 -0300
-Message-ID: <CAFO8uswgpf01EKXfi6ULE_481mMCLr737E1sRuq29jQf1yQ=4Q@mail.gmail.com>
-Subject: Norah Colly
-To:     linux rdma <linux-rdma@vger.kernel.org>,
-        linux s390 <linux-s390@vger.kernel.org>,
-        linux samsung soc <linux-samsung-soc@vger.kernel.org>,
-        linux scsi <linux-scsi@vger.kernel.org>,
-        linux sctp <linux-sctp@vger.kernel.org>,
-        linux security module <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.5 required=5.0 tests=BAYES_50,BODY_SINGLE_URI,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SHORT_SHORTNER,SPF_HELO_NONE,SPF_PASS,
-        SUSPICIOUS_RECIPS,TVD_SPACE_RATIO autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:112c listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  2.5 SUSPICIOUS_RECIPS Similar addresses in recipient list
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [felipebedetticosta[at]gmail.com]
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.0 TVD_SPACE_RATIO No description available.
-        *  1.6 SHORT_SHORTNER Short body with little more than a link to a
-        *      shortener
-        *  0.7 BODY_SINGLE_URI Message body is only a URI
-X-Spam-Level: *****
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Content-Language: en-US
+To:     Janis Schoetterl-Glausch <scgl@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-s390@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Sven Schnelle <svens@linux.ibm.com>
+References: <20221117221758.66326-1-scgl@linux.ibm.com>
+ <20221117221758.66326-3-scgl@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Subject: Re: [PATCH v3 2/9] Documentation: KVM: s390: Describe
+ KVM_S390_MEMOP_F_CMPXCHG
+In-Reply-To: <20221117221758.66326-3-scgl@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-https://bit.ly/3gk1Aho
+On 17/11/2022 23.17, Janis Schoetterl-Glausch wrote:
+> Describe the semantics of the new KVM_S390_MEMOP_F_CMPXCHG flag for
+> absolute vm write memops which allows user space to perform (storage key
+> checked) cmpxchg operations on guest memory.
+> 
+> Signed-off-by: Janis Schoetterl-Glausch <scgl@linux.ibm.com>
+> ---
+...
+>   Supported flags:
+>     * ``KVM_S390_MEMOP_F_CHECK_ONLY``
+>     * ``KVM_S390_MEMOP_F_SKEY_PROTECTION``
+> +  * ``KVM_S390_MEMOP_F_CMPXCHG``
+> +
+> +The semantics of the flags common with logical acesses are as for logical
+> +accesses.
+> +
+> +For write accesses, the KVM_S390_MEMOP_F_CMPXCHG might be supported.
+
+I'd maybe merge this with the last sentence:
+
+For write accesses, the KVM_S390_MEMOP_F_CMPXCHG flag is supported if 
+KVM_CAP_S390_MEM_OP_EXTENSION has bit 1 (i.e. bit with value 2) set.
+
+... and speaking of that, I wonder whether it's maybe a good idea to 
+introduce some #defines for bit 1 / value 2, to avoid the confusion ?
+
+> +In this case, instead of doing an unconditional write, the access occurs only
+> +if the target location contains the "size" byte long value pointed to by
+> +"old_p". This is performed as an atomic cmpxchg.
+
+I had to read the first sentence twice to understand it ... maybe it's 
+easier to understand if you move the "size" part to the second sentence:
+
+In this case, instead of doing an unconditional write, the access occurs 
+only if the target location contains value pointed to by "old_p". This is 
+performed as an atomic cmpxchg with the length specified by the "size" 
+parameter.
+
+?
+
+> "size" must be a power of two
+> +up to and including 16.
+> +The value at the target location is written to the location "old_p" points to.
+
+IMHO something like this would be better:
+
+The value at the target location is replaced with the value from the 
+location that "old_p" points to.
+
+> +If the exchange did not take place because the target value doesn't match the
+> +old value KVM_S390_MEMOP_R_NO_XCHG is returned.
+> +The KVM_S390_MEMOP_F_CMPXCHG flag is supported if KVM_CAP_S390_MEM_OP_EXTENSION
+> +has bit 1 (i.e. bit with value 2) set.
+
+  Thomas
+
+PS: Please take my suggestions with a grain of salt ... I'm not a native 
+speaker either.
+
