@@ -2,74 +2,122 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1157E6390D0
-	for <lists+linux-s390@lfdr.de>; Fri, 25 Nov 2022 21:48:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 002D06392E8
+	for <lists+linux-s390@lfdr.de>; Sat, 26 Nov 2022 01:57:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229973AbiKYUsi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 25 Nov 2022 15:48:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40792 "EHLO
+        id S229570AbiKZA5B (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 25 Nov 2022 19:57:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229940AbiKYUsh (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 25 Nov 2022 15:48:37 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C1B727147;
-        Fri, 25 Nov 2022 12:48:35 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1AA0360E9C;
-        Fri, 25 Nov 2022 20:48:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 79C78C433D6;
-        Fri, 25 Nov 2022 20:48:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669409314;
-        bh=TATGHwB7xBd9ArAnJsTaMk1P+5Zzj5vCxD/NRTaBBL4=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=XrcQf7nWMEAJ1N88RUjCqAJxBXPPrA2+P8wpUXoaibfxxeT+D87xI5QWcrB4n6g0o
-         VwDyUL3vEnjtADBQ9FB9V9gdfuB6z3yTvgVqRC02I1qoYoo1mVVJpFaEDZqt//hXjN
-         kCM3w6++k/fndbocPozJanGEdVxPqTLffhHwcGvOAIthqNKRXfEu3tl4WlHcAsCnWW
-         jLon8YXRb/neZbIV1MitlA9RfHGYl9Sl524I6Ej1xpavCEpcvwY6yArPRgDRCYFsiI
-         kRIVzav9UoVlS1Kqka2Kr0PKpNY8u/X3lvQlZqytSKz9Fk6UIfMb55sFVz6Gcp9Psu
-         +5XNCSRZrubAQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 64B20E270C7;
-        Fri, 25 Nov 2022 20:48:34 +0000 (UTC)
-Subject: Re: [GIT PULL] s390 updates for 6.1-rc7
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <Y4DqhTPzzIz+GiyO@li-4a3a4a4c-28e5-11b2-a85c-a8d192c6f089.ibm.com>
-References: <Y4DqhTPzzIz+GiyO@li-4a3a4a4c-28e5-11b2-a85c-a8d192c6f089.ibm.com>
-X-PR-Tracked-List-Id: <linux-s390.vger.kernel.org>
-X-PR-Tracked-Message-Id: <Y4DqhTPzzIz+GiyO@li-4a3a4a4c-28e5-11b2-a85c-a8d192c6f089.ibm.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-6.1-6
-X-PR-Tracked-Commit-Id: adba1a9b81d5020a9bf8332fee9ff0171fe7623d
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e3ebac80b6e9efe47b0ac3bf4b2d800b0b1958ff
-Message-Id: <166940931440.23524.16829188065171648049.pr-tracker-bot@kernel.org>
-Date:   Fri, 25 Nov 2022 20:48:34 +0000
-To:     Alexander Gordeev <agordeev@linux.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S230011AbiKZA45 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 25 Nov 2022 19:56:57 -0500
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97B2A59879
+        for <linux-s390@vger.kernel.org>; Fri, 25 Nov 2022 16:56:55 -0800 (PST)
+Received: by mail-wm1-x341.google.com with SMTP id 5so4586672wmo.1
+        for <linux-s390@vger.kernel.org>; Fri, 25 Nov 2022 16:56:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=KLS2zcruSlKyOQ1OBKYSyr+7+6zj0YKBqr4fpDhq6DI=;
+        b=lfYmbOP9ucL9DjkZA6V55PYtDgnIjUPje4WoT9nlkr4//Y5sCsGEK9xucBRIo9oyzT
+         eRob59yUSChBjuakz70kAaVYTBvIfrq5blHwNq8IFEvgrVWKTaJ1Vs+Oen3YGhOnQQVm
+         u91HNWxEhp0+hCfCit7L1J/O3Z0nAEYDgkeRl1idn7ggUnSKGCdgvgGSLfMdI2rW8Qbi
+         bIS6YHZes89+U/7FU3DlG45cgTMOE/HMIaBnq6iol4O9YN25RkTc2aeBy9gXhoSmhf0j
+         54L6VcfskWHLZawwz69uIS0oqzJ1GzLmX2sYniqueDppMjIR0BN4bMI1YpNgKa+u77aK
+         dF8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KLS2zcruSlKyOQ1OBKYSyr+7+6zj0YKBqr4fpDhq6DI=;
+        b=Mpb0JnQbRLrNVp0hFUG9k1KdexgKePWNILxLgTJMYDwWHbR4BaGqO+Q2xWByGZbA3X
+         mAgwphpQuEeHbe3gkhmdtoNaOQGXjIqKQlDQRl30HCo7Z9+5oj4dt5jVVnx3TqylxuKT
+         5YbnIX2TD5rK4D1kwzyVDXAvdNuUWI9BEyBMbNK5H3Fbo2VERTmTCrXo3LheT81J5REi
+         12yO+dxZiWG8Hmc61ObCAeJbo94wh6xM+BVQLkB3Wh7iGhZA1QC5U/Tx7GwjUOYd7C/6
+         rbojypSDZitGtlLJhu35YbQMHJqVNjWkHR60DGmawb2CYqDXv7E7qZpjn+DCaD6h/uKJ
+         V0Ew==
+X-Gm-Message-State: ANoB5pkc/5LkDIfy0DmXehAaVh1WdOpkxjhfygcldPSJRNbvKJJXiYpf
+        3V+BznNAh2pUs6mIo+6qOR7J/w+P9Y1zNSwkSyc=
+X-Google-Smtp-Source: AA0mqf4ejnDcyhITVh1fSw1EB2a8aPAKWM2gvK5+cnZtosMW/URRO/3XqGgnw9Udbeho1nBisGjyAT/ie6GvUfWGTaA=
+X-Received: by 2002:a05:600c:4d09:b0:3cf:6e8e:7e8d with SMTP id
+ u9-20020a05600c4d0900b003cf6e8e7e8dmr28361164wmp.58.1669424214079; Fri, 25
+ Nov 2022 16:56:54 -0800 (PST)
+MIME-Version: 1.0
+Received: by 2002:adf:d1cf:0:0:0:0:0 with HTTP; Fri, 25 Nov 2022 16:56:53
+ -0800 (PST)
+Reply-To: samsonvichisunday@gmail.com
+From:   Aminu Bello <aminuadamuvitaform@gmail.com>
+Date:   Sat, 26 Nov 2022 01:56:53 +0100
+Message-ID: <CADwEiSuOWmvHnVVeCLJzu-rnAGqocdNYSQmCm5GbqWAPJJ6y8w@mail.gmail.com>
+Subject: INVITATION TO THE GREAT ILLUMINATI SOCIETY.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=7.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FILL_THIS_FORM,
+        FILL_THIS_FORM_LONG,FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS,T_FILL_THIS_FORM_LOAN,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2a00:1450:4864:20:0:0:0:341 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5006]
+        *  0.5 SUBJ_ALL_CAPS Subject is all capitals
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [aminuadamuvitaform[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  2.9 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+        *  0.0 FILL_THIS_FORM Fill in a form with personal information
+        *  2.0 FILL_THIS_FORM_LONG Fill in a form with personal information
+        *  0.0 T_FILL_THIS_FORM_LOAN Answer loan question(s)
+X-Spam-Level: *******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The pull request you sent on Fri, 25 Nov 2022 17:17:09 +0100:
-
-> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-6.1-6
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e3ebac80b6e9efe47b0ac3bf4b2d800b0b1958ff
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+--=20
+INVITATION TO THE GREAT ILLUMINATI SOCIETY
+CONGRATULATIONS TO YOU....
+You have been chosen among the people given the opportunity this
+November to become rich and popular by joining the Great ILLUMINATI.
+This is an open invitation for you to become part of the world's
+biggest conglomerate and reach the peak of your career. a worthy goal
+and motivation to reach those upper layers of the pyramid to become
+one among the most Successful, Richest, Famous, Celebrated, Powerful
+and most decorated Personalities in the World???
+If you are interested, please respond to this message now with =E2=80=9CI
+ACCEPT" and fill the below details to get the step to join the
+Illuminati.
+KINDLY FILL BELOW DETAILS AND RETURN NOW.....
+Full names: ....................
+Your Country: .................
+State/ City: .............
+Age: ....................
+Marital status: ....................
+Occupation: ....................
+Monthly income: ....................
+WhatsApp Number: ......
+Postal Code: .....
+Home / House Address: .....
+NOTE: That you are not forced to join us, it is on your decision to
+become part of the world's biggest conglomerate and reach the peak of
+your career.
+Distance is not a barrier.
