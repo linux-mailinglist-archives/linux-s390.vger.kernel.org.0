@@ -2,122 +2,121 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 002D06392E8
-	for <lists+linux-s390@lfdr.de>; Sat, 26 Nov 2022 01:57:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA4606394A2
+	for <lists+linux-s390@lfdr.de>; Sat, 26 Nov 2022 09:23:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229570AbiKZA5B (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 25 Nov 2022 19:57:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59812 "EHLO
+        id S229495AbiKZIWz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 26 Nov 2022 03:22:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230011AbiKZA45 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 25 Nov 2022 19:56:57 -0500
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97B2A59879
-        for <linux-s390@vger.kernel.org>; Fri, 25 Nov 2022 16:56:55 -0800 (PST)
-Received: by mail-wm1-x341.google.com with SMTP id 5so4586672wmo.1
-        for <linux-s390@vger.kernel.org>; Fri, 25 Nov 2022 16:56:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=KLS2zcruSlKyOQ1OBKYSyr+7+6zj0YKBqr4fpDhq6DI=;
-        b=lfYmbOP9ucL9DjkZA6V55PYtDgnIjUPje4WoT9nlkr4//Y5sCsGEK9xucBRIo9oyzT
-         eRob59yUSChBjuakz70kAaVYTBvIfrq5blHwNq8IFEvgrVWKTaJ1Vs+Oen3YGhOnQQVm
-         u91HNWxEhp0+hCfCit7L1J/O3Z0nAEYDgkeRl1idn7ggUnSKGCdgvgGSLfMdI2rW8Qbi
-         bIS6YHZes89+U/7FU3DlG45cgTMOE/HMIaBnq6iol4O9YN25RkTc2aeBy9gXhoSmhf0j
-         54L6VcfskWHLZawwz69uIS0oqzJ1GzLmX2sYniqueDppMjIR0BN4bMI1YpNgKa+u77aK
-         dF8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KLS2zcruSlKyOQ1OBKYSyr+7+6zj0YKBqr4fpDhq6DI=;
-        b=Mpb0JnQbRLrNVp0hFUG9k1KdexgKePWNILxLgTJMYDwWHbR4BaGqO+Q2xWByGZbA3X
-         mAgwphpQuEeHbe3gkhmdtoNaOQGXjIqKQlDQRl30HCo7Z9+5oj4dt5jVVnx3TqylxuKT
-         5YbnIX2TD5rK4D1kwzyVDXAvdNuUWI9BEyBMbNK5H3Fbo2VERTmTCrXo3LheT81J5REi
-         12yO+dxZiWG8Hmc61ObCAeJbo94wh6xM+BVQLkB3Wh7iGhZA1QC5U/Tx7GwjUOYd7C/6
-         rbojypSDZitGtlLJhu35YbQMHJqVNjWkHR60DGmawb2CYqDXv7E7qZpjn+DCaD6h/uKJ
-         V0Ew==
-X-Gm-Message-State: ANoB5pkc/5LkDIfy0DmXehAaVh1WdOpkxjhfygcldPSJRNbvKJJXiYpf
-        3V+BznNAh2pUs6mIo+6qOR7J/w+P9Y1zNSwkSyc=
-X-Google-Smtp-Source: AA0mqf4ejnDcyhITVh1fSw1EB2a8aPAKWM2gvK5+cnZtosMW/URRO/3XqGgnw9Udbeho1nBisGjyAT/ie6GvUfWGTaA=
-X-Received: by 2002:a05:600c:4d09:b0:3cf:6e8e:7e8d with SMTP id
- u9-20020a05600c4d0900b003cf6e8e7e8dmr28361164wmp.58.1669424214079; Fri, 25
- Nov 2022 16:56:54 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:adf:d1cf:0:0:0:0:0 with HTTP; Fri, 25 Nov 2022 16:56:53
- -0800 (PST)
-Reply-To: samsonvichisunday@gmail.com
-From:   Aminu Bello <aminuadamuvitaform@gmail.com>
-Date:   Sat, 26 Nov 2022 01:56:53 +0100
-Message-ID: <CADwEiSuOWmvHnVVeCLJzu-rnAGqocdNYSQmCm5GbqWAPJJ6y8w@mail.gmail.com>
-Subject: INVITATION TO THE GREAT ILLUMINATI SOCIETY.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=7.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FILL_THIS_FORM,
-        FILL_THIS_FORM_LONG,FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS,T_FILL_THIS_FORM_LOAN,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2a00:1450:4864:20:0:0:0:341 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5006]
-        *  0.5 SUBJ_ALL_CAPS Subject is all capitals
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [aminuadamuvitaform[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  2.9 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-        *  0.0 FILL_THIS_FORM Fill in a form with personal information
-        *  2.0 FILL_THIS_FORM_LONG Fill in a form with personal information
-        *  0.0 T_FILL_THIS_FORM_LOAN Answer loan question(s)
-X-Spam-Level: *******
+        with ESMTP id S229498AbiKZIWy (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 26 Nov 2022 03:22:54 -0500
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA13F1274A;
+        Sat, 26 Nov 2022 00:22:46 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=alibuda@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VViBYM1_1669450951;
+Received: from j66a10360.sqa.eu95.tbsite.net(mailfrom:alibuda@linux.alibaba.com fp:SMTPD_---0VViBYM1_1669450951)
+          by smtp.aliyun-inc.com;
+          Sat, 26 Nov 2022 16:22:44 +0800
+From:   "D.Wythe" <alibuda@linux.alibaba.com>
+To:     kgraul@linux.ibm.com, wenjia@linux.ibm.com, jaka@linux.ibm.com
+Cc:     kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: [PATCH net] net/smc: fix application data exception
+Date:   Sat, 26 Nov 2022 16:22:30 +0800
+Message-Id: <1669450950-27681-1-git-send-email-alibuda@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-8.7 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
---=20
-INVITATION TO THE GREAT ILLUMINATI SOCIETY
-CONGRATULATIONS TO YOU....
-You have been chosen among the people given the opportunity this
-November to become rich and popular by joining the Great ILLUMINATI.
-This is an open invitation for you to become part of the world's
-biggest conglomerate and reach the peak of your career. a worthy goal
-and motivation to reach those upper layers of the pyramid to become
-one among the most Successful, Richest, Famous, Celebrated, Powerful
-and most decorated Personalities in the World???
-If you are interested, please respond to this message now with =E2=80=9CI
-ACCEPT" and fill the below details to get the step to join the
-Illuminati.
-KINDLY FILL BELOW DETAILS AND RETURN NOW.....
-Full names: ....................
-Your Country: .................
-State/ City: .............
-Age: ....................
-Marital status: ....................
-Occupation: ....................
-Monthly income: ....................
-WhatsApp Number: ......
-Postal Code: .....
-Home / House Address: .....
-NOTE: That you are not forced to join us, it is on your decision to
-become part of the world's biggest conglomerate and reach the peak of
-your career.
-Distance is not a barrier.
+From: "D. Wythe" <alibuda@linux.alibaba.com>
+
+There is a certain probability that following
+exceptions will occur in the wrk benchmark test:
+
+Running 10s test @ http://11.213.45.6:80
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.72ms   13.94ms 245.33ms   94.17%
+    Req/Sec     1.96k   713.67     5.41k    75.16%
+  155262 requests in 10.10s, 23.10MB read
+Non-2xx or 3xx responses: 3
+
+We will find that the error is HTTP 400 error, which is a serious
+exception in our test, which means the application data was
+corrupted.
+
+Consider the following scenarios:
+
+CPU0                            CPU1
+
+buf_desc->used = 0;
+                                cmpxchg(buf_desc->used, 0, 1)
+                                deal_with(buf_desc)
+
+memset(buf_desc->cpu_addr,0);
+
+This will cause the data received by a victim connection to be cleared,
+thus triggering an HTTP 400 error in the server.
+
+This patch exchange the order between clear used and memset, add
+barrier to ensure memory consistency.
+
+Fixes: 1c5526968e27 ("net/smc: Clear memory when release and reuse buffer")
+Signed-off-by: D. Wythe <alibuda@linux.alibaba.com>
+---
+ net/smc/smc_core.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
+
+diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
+index c305d8d..c19d4b7 100644
+--- a/net/smc/smc_core.c
++++ b/net/smc/smc_core.c
+@@ -1120,8 +1120,9 @@ static void smcr_buf_unuse(struct smc_buf_desc *buf_desc, bool is_rmb,
+ 
+ 		smc_buf_free(lgr, is_rmb, buf_desc);
+ 	} else {
+-		buf_desc->used = 0;
+-		memset(buf_desc->cpu_addr, 0, buf_desc->len);
++		/* memzero_explicit provides potential memory barrier semantics */
++		memzero_explicit(buf_desc->cpu_addr, buf_desc->len);
++		WRITE_ONCE(buf_desc->used, 0);
+ 	}
+ }
+ 
+@@ -1132,19 +1133,17 @@ static void smc_buf_unuse(struct smc_connection *conn,
+ 		if (!lgr->is_smcd && conn->sndbuf_desc->is_vm) {
+ 			smcr_buf_unuse(conn->sndbuf_desc, false, lgr);
+ 		} else {
+-			conn->sndbuf_desc->used = 0;
+-			memset(conn->sndbuf_desc->cpu_addr, 0,
+-			       conn->sndbuf_desc->len);
++			memzero_explicit(conn->sndbuf_desc->cpu_addr, conn->sndbuf_desc->len);
++			WRITE_ONCE(conn->sndbuf_desc->used, 0);
+ 		}
+ 	}
+ 	if (conn->rmb_desc) {
+ 		if (!lgr->is_smcd) {
+ 			smcr_buf_unuse(conn->rmb_desc, true, lgr);
+ 		} else {
+-			conn->rmb_desc->used = 0;
+-			memset(conn->rmb_desc->cpu_addr, 0,
+-			       conn->rmb_desc->len +
+-			       sizeof(struct smcd_cdc_msg));
++			memzero_explicit(conn->rmb_desc->cpu_addr,
++					 conn->rmb_desc->len + sizeof(struct smcd_cdc_msg));
++			WRITE_ONCE(conn->rmb_desc->used, 0);
+ 		}
+ 	}
+ }
+-- 
+1.8.3.1
+
