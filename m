@@ -2,273 +2,420 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B13FA63F55E
-	for <lists+linux-s390@lfdr.de>; Thu,  1 Dec 2022 17:38:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 25BD163F68F
+	for <lists+linux-s390@lfdr.de>; Thu,  1 Dec 2022 18:46:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232257AbiLAQi2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 1 Dec 2022 11:38:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56150 "EHLO
+        id S230307AbiLARqR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 1 Dec 2022 12:46:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231995AbiLAQi0 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 1 Dec 2022 11:38:26 -0500
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E291B5BD42
-        for <linux-s390@vger.kernel.org>; Thu,  1 Dec 2022 08:38:23 -0800 (PST)
-Received: by mail-pf1-x434.google.com with SMTP id 124so2422544pfy.0
-        for <linux-s390@vger.kernel.org>; Thu, 01 Dec 2022 08:38:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=wz5UjU3Ma0W7cBTZ/63jSNwcUzSf/RN7ETO0YflOK9Q=;
-        b=L5oONEpJeyYInhCN8kEGfJ8WS2VPlfmSQI0EIRyACnSb62Ho4uiLAZ+22FZ0LpKSBY
-         OanLGdeorUn/O6YHVn5BHqcWoMtKOfzbPKcz+4fsn48JXXYOuwBU81HsoXu4yIA+KxBs
-         oNf69ULLkYXBFawHATlUKtmTRlCCGuue7O3x4Uj20kNa312jwW6CLd6dDy2pzPGk3DaL
-         y4jm5SpqWS/wMH/C2TjT2ihvVuFcoRw2TnuuxPCYPfzDwkDLPEA8hE11/Idhqhxr7xt0
-         rj/FXhrQIb1ypgd2I2CBp8L/oyRKWO3NUq8Jq7LgrgnoUKAu1/kU3hKmcHIeaOcvmDNO
-         M6Aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wz5UjU3Ma0W7cBTZ/63jSNwcUzSf/RN7ETO0YflOK9Q=;
-        b=3gHPdFQ/uRqgjY+ba0tL9C3qKtn7AtgtiHarLTglEqdNB6v2xg6JgmamJmdK92DFwH
-         5OuJ7XjIF2iukLqCLhVGulJnkbZOnjZUTg64fpXwrdhD4lNGPsOCLa1xFGDytCERTyzW
-         wTYoQCTgewg8wKGEL3pERwikyGbe3sncBMMmUQmgM7T0kW4gJNDRdhYia8XEX5NPYp2w
-         TrgS+en2ZI+9/Xeu9Cp13bl7a5ZtTrStfXjdrF9cv3secZ1Jfpzg1cuoyAIdTw+LRKrW
-         DdY4Q8J/HRa4S7F0TyNhOoh2IHTn80PnGxCGMG5p5n2N3CtfL+lhAdB1mMhzZl788Pl2
-         8sxg==
-X-Gm-Message-State: ANoB5pnElXnnwnfaMHURaneMZSNYUgG0NzzG/33CdlNOvve1xFzNRuuz
-        KI6R258AO5I3ZZNASqoCpfnV2w==
-X-Google-Smtp-Source: AA0mqf7E8VTs9g+yA9GqMgTdFbO4YLYoa36a9KLdCj074cztIQB7gniXVzh1et27ldGMC17rtCxmqQ==
-X-Received: by 2002:aa7:8512:0:b0:575:65ff:8831 with SMTP id v18-20020aa78512000000b0057565ff8831mr16235817pfn.80.1669912703144;
-        Thu, 01 Dec 2022 08:38:23 -0800 (PST)
-Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id l4-20020a17090a384400b00212c27abcaesm5118172pjf.17.2022.12.01.08.38.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Dec 2022 08:38:22 -0800 (PST)
-Date:   Thu, 1 Dec 2022 16:38:16 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
-        Anup Patel <anup@brainfault.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        with ESMTP id S230317AbiLARph (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 1 Dec 2022 12:45:37 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E50F4CA140;
+        Thu,  1 Dec 2022 09:45:09 -0800 (PST)
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2B1HKB6c008580;
+        Thu, 1 Dec 2022 17:45:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=OG36+xT9nLIJKPEpM3Xslx8Q4g2HUqjP98adH/1U+CE=;
+ b=tb7kqahUewi0uSWNnIc508AZSfZJi8Z4vhE9a8+GYWgaBxG0KE4hpretnbBovEY6AqKr
+ 5hnjWfPnvfo7FyXQn76PwUD6sTE6Z3F1b8mjPYaCbDgwkbFSSoDofCo8zN1RCrz9/GUn
+ XDAyqpNqDZTsrZGVgYqdBIyrv+aIdChdOpOVUdy6MGDM9wZEr17DOaO8irCc+QZphLp2
+ CCUUXTAPvuMeWZTqVHnbpOJZ0rijHGDxmUusJ88etpcknkuKlz9n0l7ZHwu+QSYcEKs7
+ rFCMMHi2aDuckJMo/phywBjhRUb9JiRooUhXr2LKsTtSoDfCC/UCDRMzFlkjsHFFgHqD Xg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3m70jt0n0u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Dec 2022 17:45:03 +0000
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2B1HKPWm008879;
+        Thu, 1 Dec 2022 17:45:02 GMT
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3m70jt0n00-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Dec 2022 17:45:02 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2B1HZl0R005775;
+        Thu, 1 Dec 2022 17:45:00 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04ams.nl.ibm.com with ESMTP id 3m3ae9fqnt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Dec 2022 17:45:00 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2B1Hive17012908
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 1 Dec 2022 17:44:57 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 588D052050;
+        Thu,  1 Dec 2022 17:44:57 +0000 (GMT)
+Received: from li-7e0de7cc-2d9d-11b2-a85c-de26c016e5ad.ibm.com (unknown [9.179.10.216])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 9F26A5204E;
+        Thu,  1 Dec 2022 17:44:56 +0000 (GMT)
+Message-ID: <dc192fa099eb1b7d49d19b52c416d21589e22d87.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 1/9] KVM: s390: Extend MEM_OP ioctl by storage key
+ checked cmpxchg
+From:   Janis Schoetterl-Glausch <scgl@linux.ibm.com>
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc:     Christian Borntraeger <borntraeger@linux.ibm.com>,
         Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Paul Durrant <paul@xen.org>, James Morse <james.morse@arm.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Atish Patra <atishp@atishpatra.org>,
-        David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yuan Yao <yuan.yao@intel.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Isaku Yamahata <isaku.yamahata@intel.com>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
-        Fabiano Rosas <farosas@linux.ibm.com>,
-        Kai Huang <kai.huang@intel.com>, Chao Gao <chao.gao@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2 26/50] KVM: PPC: Move processor compatibility check to
- module init
-Message-ID: <Y4jXuh4P9Oibki6W@google.com>
-References: <20221130230934.1014142-1-seanjc@google.com>
- <20221130230934.1014142-27-seanjc@google.com>
- <87cz93snqc.fsf@mpe.ellerman.id.au>
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-s390@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Sven Schnelle <svens@linux.ibm.com>
+Date:   Thu, 01 Dec 2022 18:44:56 +0100
+In-Reply-To: <20221201171528.13f17ec4@p-imbrenda>
+References: <20221117221758.66326-1-scgl@linux.ibm.com>
+         <20221117221758.66326-2-scgl@linux.ibm.com>
+         <20221201171528.13f17ec4@p-imbrenda>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.1 (3.46.1-1.fc37) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87cz93snqc.fsf@mpe.ellerman.id.au>
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: fFdC9_T-X3ThT5g64L2ouot6FHYuvxtf
+X-Proofpoint-GUID: W4FH8Ht5rNc4T5kQS4JEBTLs_0ji5DFQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-12-01_12,2022-12-01_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
+ mlxscore=0 priorityscore=1501 impostorscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 adultscore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2210170000
+ definitions=main-2212010132
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Dec 01, 2022, Michael Ellerman wrote:
-> Sean Christopherson <seanjc@google.com> writes:
-> > Move KVM PPC's compatibility checks to their respective module_init()
-> > hooks, there's no need to wait until KVM's common compat check, nor is
-> > there a need to perform the check on every CPU (provided by common KVM's
-> > hook), as the compatibility checks operate on global data.
-> >
-> >   arch/powerpc/include/asm/cputable.h: extern struct cpu_spec *cur_cpu_spec;
-> >   arch/powerpc/kvm/book3s.c: return 0
-> >   arch/powerpc/kvm/e500.c: strcmp(cur_cpu_spec->cpu_name, "e500v2")
-> >   arch/powerpc/kvm/e500mc.c: strcmp(cur_cpu_spec->cpu_name, "e500mc")
-> >                              strcmp(cur_cpu_spec->cpu_name, "e5500")
-> >                              strcmp(cur_cpu_spec->cpu_name, "e6500")
-> 
-> I'm not sure that output is really useful in the change log unless you
-> explain more about what it is.
+On Thu, 2022-12-01 at 17:15 +0100, Claudio Imbrenda wrote:
+> On Thu, 17 Nov 2022 23:17:50 +0100
+> Janis Schoetterl-Glausch <scgl@linux.ibm.com> wrote:
+>=20
+> > User space can use the MEM_OP ioctl to make storage key checked reads
+> > and writes to the guest, however, it has no way of performing atomic,
+> > key checked, accesses to the guest.
+> > Extend the MEM_OP ioctl in order to allow for this, by adding a cmpxchg
+> > mode. For now, support this mode for absolute accesses only.
+> >=20
+> > This mode can be use, for example, to set the device-state-change
+> > indicator and the adapter-local-summary indicator atomically.
+> >=20
+> > Signed-off-by: Janis Schoetterl-Glausch <scgl@linux.ibm.com>
+> > ---
+> >  include/uapi/linux/kvm.h |   5 ++
+> >  arch/s390/kvm/gaccess.h  |   3 ++
+> >  arch/s390/kvm/gaccess.c  | 101 +++++++++++++++++++++++++++++++++++++++
+> >  arch/s390/kvm/kvm-s390.c |  35 +++++++++++++-
+> >  4 files changed, 142 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> > index 0d5d4419139a..1f36be5493e6 100644
+> > --- a/include/uapi/linux/kvm.h
+> > +++ b/include/uapi/linux/kvm.h
+> > @@ -588,6 +588,8 @@ struct kvm_s390_mem_op {
+> >  		struct {
+> >  			__u8 ar;	/* the access register number */
+> >  			__u8 key;	/* access key, ignored if flag unset */
+> > +			__u8 pad1[6];	/* ignored */
+> > +			__u64 old_p;	/* ignored if flag unset */
+> >  		};
+> >  		__u32 sida_offset; /* offset into the sida */
+> >  		__u8 reserved[32]; /* ignored */
+> > @@ -604,6 +606,9 @@ struct kvm_s390_mem_op {
+> >  #define KVM_S390_MEMOP_F_CHECK_ONLY		(1ULL << 0)
+> >  #define KVM_S390_MEMOP_F_INJECT_EXCEPTION	(1ULL << 1)
+> >  #define KVM_S390_MEMOP_F_SKEY_PROTECTION	(1ULL << 2)
+> > +#define KVM_S390_MEMOP_F_CMPXCHG		(1ULL << 3)
+> > +/* Non program exception return codes (pgm codes are 16 bit) */
+> > +#define KVM_S390_MEMOP_R_NO_XCHG		((1 << 16) + 0)
+>=20
+> are you planning to have further *_R_* macros in the near future?
+> if not, remove the + 0
 
-Agreed, I got lazy.  I'll write a proper description.
- 
-> > diff --git a/arch/powerpc/kvm/e500mc.c b/arch/powerpc/kvm/e500mc.c
-> > index 57e0ad6a2ca3..795667f7ebf0 100644
-> > --- a/arch/powerpc/kvm/e500mc.c
-> > +++ b/arch/powerpc/kvm/e500mc.c
-> > @@ -388,6 +388,10 @@ static int __init kvmppc_e500mc_init(void)
+No, we can indeed just add it back if there ever are additional ones.
+
+> if yes, move the (1 << 16) to a macro, so it becomes something like
+> (KVM_S390_MEMOP_R_BASE + 0)
+>=20
+> (maybe you can find a better/shorter name)
+>=20
+> > =20
+> >  /* for KVM_INTERRUPT */
+> >  struct kvm_interrupt {
+> > diff --git a/arch/s390/kvm/gaccess.h b/arch/s390/kvm/gaccess.h
+> > index 9408d6cc8e2c..92a3b9fb31ec 100644
+> > --- a/arch/s390/kvm/gaccess.h
+> > +++ b/arch/s390/kvm/gaccess.h
+> > @@ -206,6 +206,9 @@ int access_guest_with_key(struct kvm_vcpu *vcpu, un=
+signed long ga, u8 ar,
+> >  int access_guest_real(struct kvm_vcpu *vcpu, unsigned long gra,
+> >  		      void *data, unsigned long len, enum gacc_mode mode);
+> > =20
+> > +int cmpxchg_guest_abs_with_key(struct kvm *kvm, gpa_t gpa, int len,
+> > +			       __uint128_t *old, __uint128_t new, u8 access_key);
+> > +
+> >  /**
+> >   * write_guest_with_key - copy data from kernel space to guest space
+> >   * @vcpu: virtual cpu
+> > diff --git a/arch/s390/kvm/gaccess.c b/arch/s390/kvm/gaccess.c
+> > index 0243b6e38d36..be042865d8a1 100644
+> > --- a/arch/s390/kvm/gaccess.c
+> > +++ b/arch/s390/kvm/gaccess.c
+> > @@ -1161,6 +1161,107 @@ int access_guest_real(struct kvm_vcpu *vcpu, un=
+signed long gra,
+> >  	return rc;
+> >  }
+> > =20
+> > +/**
+> > + * cmpxchg_guest_abs_with_key() - Perform cmpxchg on guest absolute ad=
+dress.
+> > + * @kvm: Virtual machine instance.
+> > + * @gpa: Absolute guest address of the location to be changed.
+> > + * @len: Operand length of the cmpxchg, required: 1 <=3D len <=3D 16. =
+Providing a
+> > + *       non power of two will result in failure.
+> > + * @old_p: Pointer to old value. If the location at @gpa contains this=
+ value, the
+> > + *         exchange will succeed. After calling cmpxchg_guest_abs_with=
+_key() *@old
+> > + *         contains the value at @gpa before the attempt to exchange t=
+he value.
+> > + * @new: The value to place at @gpa.
+> > + * @access_key: The access key to use for the guest access.
+> > + *
+> > + * Atomically exchange the value at @gpa by @new, if it contains *@old=
+.
+> > + * Honors storage keys.
+> > + *
+> > + * Return: * 0: successful exchange
+> > + *         * 1: exchange unsuccessful
+> > + *         * a program interruption code indicating the reason cmpxchg=
+ could
+> > + *           not be attempted
+> > + *         * -EINVAL: address misaligned or len not power of two
+> > + *         * -EAGAIN: transient failure (len 1 or 2)
+>=20
+> please also document -EOPNOTSUPP
+
+I'd add "* -EOPNOTSUPP: should never occur", then, that ok with you?
+>=20
+> > + */
+> > +int cmpxchg_guest_abs_with_key(struct kvm *kvm, gpa_t gpa, int len,
+> > +			       __uint128_t *old_p, __uint128_t new,
+> > +			       u8 access_key)
+> > +{
+> > +	gfn_t gfn =3D gpa >> PAGE_SHIFT;
+> > +	struct kvm_memory_slot *slot =3D gfn_to_memslot(kvm, gfn);
+>=20
+> exchange the above two lines (reverse christmas tree)
+
+Is this a hard requirement? Since there is a dependency.
+If I do the initialization further down, the order wouldn't actually change=
+.
+>=20
+> > +	bool writable;
+> > +	hva_t hva;
+> > +	int ret;
+> > +
+> > +	if (!IS_ALIGNED(gpa, len))
+> > +		return -EINVAL;
+> > +
+> > +	hva =3D gfn_to_hva_memslot_prot(slot, gfn, &writable);
+> > +	if (kvm_is_error_hva(hva))
+> > +		return PGM_ADDRESSING;
+> > +	/*
+> > +	 * Check if it's a read-only memslot, even though that cannot occur
+> > +	 * since those are unsupported.
+> > +	 * Don't try to actually handle that case.
+> > +	 */
+> > +	if (!writable)
+> > +		return -EOPNOTSUPP;
+>=20
+> either you document this, or you return something else (like -EINVAL)
+>=20
+> > +
+> > +	hva +=3D offset_in_page(gpa);
+> > +	switch (len) {
+> > +	case 1: {
+> > +		u8 old;
+> > +
+> > +		ret =3D cmpxchg_user_key((u8 *)hva, &old, *old_p, new, access_key);
+> > +		ret =3D ret < 0 ? ret : old !=3D *old_p;
+> > +		*old_p =3D old;
+> > +		break;
+> > +	}
+> > +	case 2: {
+> > +		u16 old;
+> > +
+> > +		ret =3D cmpxchg_user_key((u16 *)hva, &old, *old_p, new, access_key);
+> > +		ret =3D ret < 0 ? ret : old !=3D *old_p;
+> > +		*old_p =3D old;
+> > +		break;
+> > +	}
+> > +	case 4: {
+> > +		u32 old;
+> > +
+> > +		ret =3D cmpxchg_user_key((u32 *)hva, &old, *old_p, new, access_key);
+> > +		ret =3D ret < 0 ? ret : old !=3D *old_p;
+> > +		*old_p =3D old;
+> > +		break;
+> > +	}
+> > +	case 8: {
+> > +		u64 old;
+> > +
+> > +		ret =3D cmpxchg_user_key((u64 *)hva, &old, *old_p, new, access_key);
+> > +		ret =3D ret < 0 ? ret : old !=3D *old_p;
+> > +		*old_p =3D old;
+> > +		break;
+> > +	}
+> > +	case 16: {
+> > +		__uint128_t old;
+> > +
+> > +		ret =3D cmpxchg_user_key((__uint128_t *)hva, &old, *old_p, new, acce=
+ss_key);
+> > +		ret =3D ret < 0 ? ret : old !=3D *old_p;
+> > +		*old_p =3D old;
+> > +		break;
+>=20
+> I really dislike repeating the same code 5 times, but I guess there was
+> no other way?
+
+I could use the function called by cmpxchg_user_key directly, but Heiko won=
+'t agree to that.
+A macro would work too, of course, not sure if I prefer that tho.
+>=20
+> > +	}
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> > +	mark_page_dirty_in_slot(kvm, slot, gfn);
+> > +	/*
+> > +	 * Assume that the fault is caused by protection, either key protecti=
+on
+> > +	 * or user page write protection.
+> > +	 */
+> > +	if (ret =3D=3D -EFAULT)
+> > +		ret =3D PGM_PROTECTION;
+> > +	return ret;
+> > +}
+> > +
+> >  /**
+> >   * guest_translate_address_with_key - translate guest logical into gue=
+st absolute address
+> >   * @vcpu: virtual cpu
+> > diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> > index 45d4b8182b07..2410b4044283 100644
+> > --- a/arch/s390/kvm/kvm-s390.c
+> > +++ b/arch/s390/kvm/kvm-s390.c
+> > @@ -576,7 +576,6 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, l=
+ong ext)
+> >  	case KVM_CAP_S390_VCPU_RESETS:
+> >  	case KVM_CAP_SET_GUEST_DEBUG:
+> >  	case KVM_CAP_S390_DIAG318:
+> > -	case KVM_CAP_S390_MEM_OP_EXTENSION:
+> >  		r =3D 1;
+> >  		break;
+> >  	case KVM_CAP_SET_GUEST_DEBUG2:
+> > @@ -590,6 +589,14 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, =
+long ext)
+> >  	case KVM_CAP_S390_MEM_OP:
+> >  		r =3D MEM_OP_MAX_SIZE;
+> >  		break;
+> > +	case KVM_CAP_S390_MEM_OP_EXTENSION:
+> > +		/*
+> > +		 * Flag bits indicating which extensions are supported.
+> > +		 * The first extension doesn't use a flag, but pretend it does,
+> > +		 * this way that can be changed in the future.
+> > +		 */
+> > +		r =3D 0x3;
+> > +		break;
+> >  	case KVM_CAP_NR_VCPUS:
+> >  	case KVM_CAP_MAX_VCPUS:
+> >  	case KVM_CAP_MAX_VCPU_ID:
+> > @@ -2714,12 +2721,19 @@ static bool access_key_invalid(u8 access_key)
+> >  static int kvm_s390_vm_mem_op(struct kvm *kvm, struct kvm_s390_mem_op =
+*mop)
 > >  {
-> >  	int r;
-> >  
-> > +	r = kvmppc_e500mc_check_processor_compat();
-> > +	if (r)
-> > +		return kvmppc_e500mc;
->  
-> This doesn't build:
-> 
-> linux/arch/powerpc/kvm/e500mc.c: In function ‘kvmppc_e500mc_init’:
-> linux/arch/powerpc/kvm/e500mc.c:391:13: error: implicit declaration of function ‘kvmppc_e500mc_check_processor_compat’; did you mean ‘kvmppc_core_check_processor_compat’? [-Werror=implicit-function-declaration]
->   391 |         r = kvmppc_e500mc_check_processor_compat();
->       |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->       |             kvmppc_core_check_processor_compat
-> linux/arch/powerpc/kvm/e500mc.c:393:24: error: ‘kvmppc_e500mc’ undeclared (first use in this function); did you mean ‘kvm_ops_e500mc’?
->   393 |                 return kvmppc_e500mc;
->       |                        ^~~~~~~~~~~~~
->       |                        kvm_ops_e500mc
-> linux/arch/powerpc/kvm/e500mc.c:393:24: note: each undeclared identifier is reported only once for each function it appears in
+> >  	void __user *uaddr =3D (void __user *)mop->buf;
+> > +	void __user *old_p =3D (void __user *)mop->old_p;
+> > +	union {
+> > +		__uint128_t quad;
+> > +		char raw[sizeof(__uint128_t)];
+> > +	} old =3D { .quad =3D 0}, new =3D { .quad =3D 0 };
+> > +	unsigned int off_in_quad =3D sizeof(__uint128_t) - mop->size;
+> >  	u64 supported_flags;
+> >  	void *tmpbuf =3D NULL;
+> >  	int r, srcu_idx;
+> > =20
+> >  	supported_flags =3D KVM_S390_MEMOP_F_SKEY_PROTECTION
+> > -			  | KVM_S390_MEMOP_F_CHECK_ONLY;
+> > +			  | KVM_S390_MEMOP_F_CHECK_ONLY
+> > +			  | KVM_S390_MEMOP_F_CMPXCHG;
+> >  	if (mop->flags & ~supported_flags || !mop->size)
+> >  		return -EINVAL;
+> >  	if (mop->size > MEM_OP_MAX_SIZE)
+> > @@ -2741,6 +2755,15 @@ static int kvm_s390_vm_mem_op(struct kvm *kvm, s=
+truct kvm_s390_mem_op *mop)
+> >  	} else {
+> >  		mop->key =3D 0;
+> >  	}
+> > +	if (mop->flags & KVM_S390_MEMOP_F_CMPXCHG) {
+>=20
+> add a quick comment here to explain that this check validates
+> off_in_quad, and that it does not do a full validation of mop->size,
+> which will happen in cmpxchg_guest_abs_with_key.
 
-Huh, CONFIG_PPC_E500MC got unselected in the config I use to compile test this
-flavor.  I suspect I botched an oldconfig at some point.
- 
-Anyways, fixed that and the bugs.
+Will do.
+>=20
+> > +		if (mop->size > sizeof(new))
+> > +			return -EINVAL;
+> > +		/* off_in_quad has been validated */
+> > +		if (copy_from_user(&new.raw[off_in_quad], uaddr, mop->size))
+> > +			return -EFAULT;
+> > +		if (copy_from_user(&old.raw[off_in_quad], old_p, mop->size))
+> > +			return -EFAULT;
+> > +	}
+> >  	if (!(mop->flags & KVM_S390_MEMOP_F_CHECK_ONLY)) {
+> >  		tmpbuf =3D vmalloc(mop->size);
+> >  		if (!tmpbuf)
+> > @@ -2771,6 +2794,14 @@ static int kvm_s390_vm_mem_op(struct kvm *kvm, s=
+truct kvm_s390_mem_op *mop)
+> >  	case KVM_S390_MEMOP_ABSOLUTE_WRITE: {
+> >  		if (mop->flags & KVM_S390_MEMOP_F_CHECK_ONLY) {
+> >  			r =3D check_gpa_range(kvm, mop->gaddr, mop->size, GACC_STORE, mop->=
+key);
+> > +		} else if (mop->flags & KVM_S390_MEMOP_F_CMPXCHG) {
+> > +			r =3D cmpxchg_guest_abs_with_key(kvm, mop->gaddr, mop->size,
+> > +						       &old.quad, new.quad, mop->key);
+> > +			if (r =3D=3D 1) {
+> > +				r =3D KVM_S390_MEMOP_R_NO_XCHG;
+>=20
+> I wonder if you could not simplify things by returning directly
+> KVM_S390_MEMOP_R_NO_XCHG instead of 1
 
-Thanks much!
-
---
-Subject: [PATCH] KVM: PPC: Move processor compatibility check to module init
-
-Move KVM PPC's compatibility checks to their respective module_init()
-hooks, there's no need to wait until KVM's common compat check, nor is
-there a need to perform the check on every CPU (provided by common KVM's
-hook).  The compatibility checks are either a nop (Book3S), or simply
-check the CPU name stored in the global CPU spec (e500 and e500mc).
-
-Cc: Fabiano Rosas <farosas@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/powerpc/include/asm/kvm_ppc.h |  1 -
- arch/powerpc/kvm/book3s.c          | 10 ----------
- arch/powerpc/kvm/e500.c            |  4 ++--
- arch/powerpc/kvm/e500mc.c          |  6 +++++-
- arch/powerpc/kvm/powerpc.c         |  2 +-
- 5 files changed, 8 insertions(+), 15 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/kvm_ppc.h b/arch/powerpc/include/asm/kvm_ppc.h
-index bfacf12784dd..51a1824b0a16 100644
---- a/arch/powerpc/include/asm/kvm_ppc.h
-+++ b/arch/powerpc/include/asm/kvm_ppc.h
-@@ -118,7 +118,6 @@ extern int kvmppc_xlate(struct kvm_vcpu *vcpu, ulong eaddr,
- extern int kvmppc_core_vcpu_create(struct kvm_vcpu *vcpu);
- extern void kvmppc_core_vcpu_free(struct kvm_vcpu *vcpu);
- extern int kvmppc_core_vcpu_setup(struct kvm_vcpu *vcpu);
--extern int kvmppc_core_check_processor_compat(void);
- extern int kvmppc_core_vcpu_translate(struct kvm_vcpu *vcpu,
-                                       struct kvm_translation *tr);
- 
-diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
-index 6d525285dbe8..87283a0e33d8 100644
---- a/arch/powerpc/kvm/book3s.c
-+++ b/arch/powerpc/kvm/book3s.c
-@@ -999,16 +999,6 @@ int kvmppc_h_logical_ci_store(struct kvm_vcpu *vcpu)
- }
- EXPORT_SYMBOL_GPL(kvmppc_h_logical_ci_store);
- 
--int kvmppc_core_check_processor_compat(void)
--{
--	/*
--	 * We always return 0 for book3s. We check
--	 * for compatibility while loading the HV
--	 * or PR module
--	 */
--	return 0;
--}
--
- int kvmppc_book3s_hcall_implemented(struct kvm *kvm, unsigned long hcall)
- {
- 	return kvm->arch.kvm_ops->hcall_implemented(hcall);
-diff --git a/arch/powerpc/kvm/e500.c b/arch/powerpc/kvm/e500.c
-index c8b2b4478545..0ea61190ec04 100644
---- a/arch/powerpc/kvm/e500.c
-+++ b/arch/powerpc/kvm/e500.c
-@@ -314,7 +314,7 @@ static void kvmppc_core_vcpu_put_e500(struct kvm_vcpu *vcpu)
- 	kvmppc_booke_vcpu_put(vcpu);
- }
- 
--int kvmppc_core_check_processor_compat(void)
-+static int kvmppc_e500_check_processor_compat(void)
- {
- 	int r;
- 
-@@ -507,7 +507,7 @@ static int __init kvmppc_e500_init(void)
- 	unsigned long handler_len;
- 	unsigned long max_ivor = 0;
- 
--	r = kvmppc_core_check_processor_compat();
-+	r = kvmppc_e500_check_processor_compat();
- 	if (r)
- 		goto err_out;
- 
-diff --git a/arch/powerpc/kvm/e500mc.c b/arch/powerpc/kvm/e500mc.c
-index 57e0ad6a2ca3..4564aa27edcf 100644
---- a/arch/powerpc/kvm/e500mc.c
-+++ b/arch/powerpc/kvm/e500mc.c
-@@ -168,7 +168,7 @@ static void kvmppc_core_vcpu_put_e500mc(struct kvm_vcpu *vcpu)
- 	kvmppc_booke_vcpu_put(vcpu);
- }
- 
--int kvmppc_core_check_processor_compat(void)
-+int kvmppc_e500mc_check_processor_compat(void)
- {
- 	int r;
- 
-@@ -388,6 +388,10 @@ static int __init kvmppc_e500mc_init(void)
- {
- 	int r;
- 
-+	r = kvmppc_e500mc_check_processor_compat();
-+	if (r)
-+		goto err_out;
-+
- 	r = kvmppc_booke_init();
- 	if (r)
- 		goto err_out;
-diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
-index 5faf69421f13..d44b85ba8cef 100644
---- a/arch/powerpc/kvm/powerpc.c
-+++ b/arch/powerpc/kvm/powerpc.c
-@@ -442,7 +442,7 @@ int kvm_arch_hardware_enable(void)
- 
- int kvm_arch_check_processor_compat(void *opaque)
- {
--	return kvmppc_core_check_processor_compat();
-+	return 0;
- }
- 
- int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
-
-base-commit: 00e4493db7c6163d48d5b45034d1a77e16a1c8dc
--- 
+To me it feels like KVM_S390_MEMOP_R_NO_XCHG is api surface and should be r=
+eferenced here.
+cmpxchg_guest_abs_with_key isn't mem op specific
+(of course that's the only thing it is currently used for).
+>=20
+> > +				if (copy_to_user(old_p, &old.raw[off_in_quad], mop->size))
+> > +					r =3D -EFAULT;
+> > +			}
+> >  		} else {
+> >  			if (copy_from_user(tmpbuf, uaddr, mop->size)) {
+> >  				r =3D -EFAULT;
+>=20
 
