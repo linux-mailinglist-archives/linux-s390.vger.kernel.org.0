@@ -2,259 +2,450 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 853BE64B96C
-	for <lists+linux-s390@lfdr.de>; Tue, 13 Dec 2022 17:18:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E587D64BA42
+	for <lists+linux-s390@lfdr.de>; Tue, 13 Dec 2022 17:54:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235932AbiLMQSS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 13 Dec 2022 11:18:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33426 "EHLO
+        id S235807AbiLMQy1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 13 Dec 2022 11:54:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235505AbiLMQSR (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 13 Dec 2022 11:18:17 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 468D21F2F0
-        for <linux-s390@vger.kernel.org>; Tue, 13 Dec 2022 08:18:15 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id gt4so3929915pjb.1
-        for <linux-s390@vger.kernel.org>; Tue, 13 Dec 2022 08:18:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wj/NGKhLAYwhK6Lvw/Db918GBFSie4zjOTu3uFrT1gA=;
-        b=NkSnMp/V8AsX4vC30wzvTBDvSWE+M7qqraskr+aX6eDcBuYgYQHiZpd5PHFEtwmlex
-         b9sLXADwP2UKefS8URj7BbPzAGmqFf6Sql8Lry6ArNmBxIQqSRNMuMWf8z5+Hg1gJY0V
-         G/j7FdqVWjtps7jKHZujuEhFxXfcZ0TNsoRlDztocQW2ESX1R86PBEikNrfuO5gPc7mJ
-         6/Qoufhc+OUK8D5gU0LfvQQ/f14L5j2fbz4FLayl4GcS/rdSdchyCT6nat7Pvthexifo
-         5a34Jkw09BPh2fSzhpIrcgjFsOBxfZOpzDvRra+RnQyxHfSXNAOYkh3mU13qpd7fHBn3
-         z4dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wj/NGKhLAYwhK6Lvw/Db918GBFSie4zjOTu3uFrT1gA=;
-        b=7rBvArT4jrfBbAj24mhHBRG425dJMz2pJaCbWG3csZSPz1Vijc2Qq1PuBvHZ2Y6JZn
-         c/xrulKHKpzBo/Oxnm83IliL5NKi66MkgN60ccYHOPpS1j6wU9rIhzX1BAgV0O7uY63h
-         aG6UscTq3IP+zcEhvg9o5B++XO26M6b64BPp09ZTl1f5PWgjBW8M4EU66JForo8DREgF
-         53qZu90PvJVUYbpLSFpT9aoiaEHDOg/hHSqZlMzGJmOZdClbtW30JZAuJbgp3bd2cM9m
-         RCaFVWDYVE0mzPzWW7jnwRhJaAMDD10YkW54UjSY3aQfeXqV0KTMMax4aIb3mqQLm4ku
-         WZ9g==
-X-Gm-Message-State: ANoB5pmKQ14++rCU6IifNaIEuIZp5839kA5f14Mv7fQI+5SFZhWMbtpl
-        I6lLrdPWgmqnQJneBK19yblEnA==
-X-Google-Smtp-Source: AA0mqf6JTPFlbgzI8iGusijASEg0Bt+tpHInO5Z4ANoXa2VKfVyLMA6BDQNt3aTd/y7ttlWwr47bgg==
-X-Received: by 2002:a17:902:ccc8:b0:188:640f:f41e with SMTP id z8-20020a170902ccc800b00188640ff41emr24115756ple.4.1670948294373;
-        Tue, 13 Dec 2022 08:18:14 -0800 (PST)
-Received: from localhost ([135.180.226.51])
-        by smtp.gmail.com with ESMTPSA id 13-20020a170902c24d00b001898ca438fcsm39047plg.282.2022.12.13.08.18.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Dec 2022 08:18:13 -0800 (PST)
-Date:   Tue, 13 Dec 2022 08:18:13 -0800 (PST)
-X-Google-Original-Date: Tue, 13 Dec 2022 08:18:09 PST (-0800)
-Subject:     Re: [PATCH v3 0/8] Generic IPI sending tracepoint
-In-Reply-To: <20221202155817.2102944-1-vschneid@redhat.com>
-CC:     linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        x86@kernel.org, paulmck@kernel.org, rostedt@goodmis.org,
-        peterz@infradead.org, tglx@linutronix.de, bigeasy@linutronix.de,
-        juri.lelli@redhat.com, bristot@redhat.com, mtosatti@redhat.com,
-        frederic@kernel.org, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com,
-        Marc Zyngier <maz@kernel.org>, mark.rutland@arm.com,
-        linux@armlinux.org.uk, npiggin@gmail.com, guoren@kernel.org,
-        davem@davemloft.net
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     vschneid@redhat.com
-Message-ID: <mhng-ed30efdc-5b5b-40fa-8661-f99d4e2991ed@palmer-ri-x1c9>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+        with ESMTP id S235523AbiLMQyZ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 13 Dec 2022 11:54:25 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45A9222506;
+        Tue, 13 Dec 2022 08:54:24 -0800 (PST)
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2BDG8Cx6001488;
+        Tue, 13 Dec 2022 16:54:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=uYbNnacH5lmc5jaRX4SiQlNoA8kgRcdSx5AnqrVSjjk=;
+ b=ZGi7zyGG5UuGsIwxNNA/dRZeN20hPj7oBDWqGvGGB483wKeNuvhKz7hQXXUc5D6KGnHS
+ Gh/azjT8i707T27rjS3lDETDGerqF6xin1juPT0AEwosCOTOJ7os0fh/JC3PPKTiL8/I
+ 9r04PwHcKBDBdfMQyVejggZYX1zAXL/SE33Si2UC9wGYqa77T/VYUjJH7tlD1ZjcQv9P
+ jDwwo8kyfbVXrwtU07KFDGR8762wljWUhFrSOiO6Z9tPODudBVVqNYiKmMqsb8shR6zD
+ jpd/sP4xxfVnvGj6Di9w5oH8kqWb4c0Mro4IR5CLlRMcFjD2q9fSlkND+dUp5Hi37EL/ 6g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3mevn6hcsx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 13 Dec 2022 16:54:20 +0000
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2BDG8C8L001461;
+        Tue, 13 Dec 2022 16:54:19 GMT
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3mevn6hcs6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 13 Dec 2022 16:54:19 +0000
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 2BDCaWug017931;
+        Tue, 13 Dec 2022 16:54:16 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+        by ppma01fra.de.ibm.com (PPS) with ESMTPS id 3mchr638c1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 13 Dec 2022 16:54:16 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2BDGsCtX45613560
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Dec 2022 16:54:13 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DB92C20043;
+        Tue, 13 Dec 2022 16:54:12 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 903A320049;
+        Tue, 13 Dec 2022 16:54:12 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Tue, 13 Dec 2022 16:54:12 +0000 (GMT)
+From:   Janis Schoetterl-Glausch <scgl@linux.ibm.com>
+To:     Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>
+Cc:     Janis Schoetterl-Glausch <scgl@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-s390@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Sven Schnelle <svens@linux.ibm.com>
+Subject: [PATCH v4 0/9] KVM: s390: Extend MEM_OP ioctl by storage key checked cmpxchg
+Date:   Tue, 13 Dec 2022 17:53:56 +0100
+Message-Id: <20221213165405.2953539-1-scgl@linux.ibm.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: hsUjVFZSVZDJIb1SW908IcauYR211q6v
+X-Proofpoint-ORIG-GUID: kVzESV7UgpwCaj3zPRtpLeawmUty_gNz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-12-13_03,2022-12-13_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ malwarescore=0 bulkscore=0 mlxlogscore=999 lowpriorityscore=0 mlxscore=0
+ priorityscore=1501 clxscore=1015 phishscore=0 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2210170000
+ definitions=main-2212130147
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 02 Dec 2022 07:58:09 PST (-0800), vschneid@redhat.com wrote:
-> Background
-> ==========
->
-> Detecting IPI *reception* is relatively easy, e.g. using
-> trace_irq_handler_{entry,exit} or even just function-trace
-> flush_smp_call_function_queue() for SMP calls.
->
-> Figuring out their *origin*, is trickier as there is no generic tracepoint tied
-> to e.g. smp_call_function():
->
-> o AFAIA x86 has no tracepoint tied to sending IPIs, only receiving them
->   (cf. trace_call_function{_single}_entry()).
-> o arm/arm64 do have trace_ipi_raise(), which gives us the target cpus but also a
->   mostly useless string (smp_calls will all be "Function call interrupts").
-> o Other architectures don't seem to have any IPI-sending related tracepoint.
->
-> I believe one reason those tracepoints used by arm/arm64 ended up as they were
-> is because these archs used to handle IPIs differently from regular interrupts
-> (the IRQ driver would directly invoke an IPI-handling routine), which meant they
-> never showed up in trace_irq_handler_{entry, exit}. The trace_ipi_{entry,exit}
-> tracepoints gave a way to trace IPI reception but those have become redundant as
-> of:
->
->       56afcd3dbd19 ("ARM: Allow IPIs to be handled as normal interrupts")
->       d3afc7f12987 ("arm64: Allow IPIs to be handled as normal interrupts")
->
-> which gave IPIs a "proper" handler function used through
-> generic_handle_domain_irq(), which makes them show up via
-> trace_irq_handler_{entry, exit}.
->
-> Changing stuff up
-> =================
->
-> Per the above, it would make sense to reshuffle trace_ipi_raise() and move it
-> into generic code. This also came up during Daniel's talk on Osnoise at the CPU
-> isolation MC of LPC 2022 [1].
->
-> Now, to be useful, such a tracepoint needs to export:
-> o targeted CPU(s)
-> o calling context
->
-> The only way to get the calling context with trace_ipi_raise() is to trigger a
-> stack dump, e.g. $(trace-cmd -e ipi* -T echo 42).
->
-> This is instead introducing a new tracepoint which exports the relevant context
-> (callsite, and requested callback for when the callsite isn't helpful), and is
-> usable by all architectures as it sits in generic code.
->
-> Another thing worth mentioning is that depending on the callsite, the _RET_IP_
-> fed to the tracepoint is not always useful - generic_exec_single() doesn't tell
-> you much about the actual callback being sent via IPI, which is why the new
-> tracepoint also has a @callback argument.
->
-> Patches
-> =======
->
-> o Patch 1 is included for convenience and will be merged independently. FYI I
->   have libtraceevent patches [2] to improve the
->   pretty-printing of cpumasks using the new type, which look like:
->   <...>-3322  [021]   560.402583: ipi_send_cpumask:     cpumask=14,17,21 callsite=on_each_cpu_cond_mask+0x40 callback=flush_tlb_func+0x0
->   <...>-187   [010]   562.590584: ipi_send_cpumask:     cpumask=0-23 callsite=on_each_cpu_cond_mask+0x40 callback=do_sync_core+0x0
->
-> o Patches 2-6 spread out the tracepoint across relevant sites.
->   Patch 6 ends up sprinkling lots of #include <trace/events/ipi.h> which I'm not
->   the biggest fan of, but is the least horrible solution I've been able to come
->   up with so far.
->
-> o Patch 8 is trying to be smart about tracing the callback associated with the
->   IPI.
->
-> This results in having IPI trace events for:
->
-> o smp_call_function*()
-> o smp_send_reschedule()
-> o irq_work_queue*()
-> o standalone uses of __smp_call_single_queue()
->
-> This is incomplete, just looking at arm64 there's more IPI types that aren't
-> covered:
->
->   IPI_CPU_STOP,
->   IPI_CPU_CRASH_STOP,
->   IPI_TIMER,
->   IPI_WAKEUP,
->
-> ... But it feels like a good starting point.
->
-> Links
-> =====
->
-> [1]: https://youtu.be/5gT57y4OzBM?t=14234
-> [2]: https://lore.kernel.org/all/20221116144154.3662923-1-vschneid@redhat.com/
->
-> Revisions
-> =========
->
-> v2 -> v3
-> ++++++++
->
-> o Dropped the generic export of smp_send_reschedule(), turned it into a macro
->   and a bunch of imports
-> o Dropped the send_call_function_single_ipi() macro madness, split it into sched
->   and smp bits using some of Peter's suggestions
->
-> v1 -> v2
-> ++++++++
->
-> o Ditched single-CPU tracepoint
-> o Changed tracepoint signature to include callback
-> o Changed tracepoint callsite field to void *; the parameter is still UL to save
->   up on casts due to using _RET_IP_.
-> o Fixed linking failures due to not exporting smp_send_reschedule()
->
-> Steven Rostedt (Google) (1):
->   tracing: Add __cpumask to denote a trace event field that is a
->     cpumask_t
->
-> Valentin Schneider (7):
->   trace: Add trace_ipi_send_cpumask()
->   sched, smp: Trace IPIs sent via send_call_function_single_ipi()
->   smp: Trace IPIs sent via arch_send_call_function_ipi_mask()
->   irq_work: Trace self-IPIs sent via arch_irq_work_raise()
->   treewide: Trace IPIs sent via smp_send_reschedule()
->   smp: reword smp call IPI comment
->   sched, smp: Trace smp callback causing an IPI
->
->  arch/alpha/kernel/smp.c                      |  2 +-
->  arch/arc/kernel/smp.c                        |  2 +-
->  arch/arm/kernel/smp.c                        |  5 +-
->  arch/arm/mach-actions/platsmp.c              |  2 +
->  arch/arm64/kernel/smp.c                      |  3 +-
->  arch/csky/kernel/smp.c                       |  2 +-
->  arch/hexagon/kernel/smp.c                    |  2 +-
->  arch/ia64/kernel/smp.c                       |  4 +-
->  arch/loongarch/include/asm/smp.h             |  2 +-
->  arch/mips/include/asm/smp.h                  |  2 +-
->  arch/mips/kernel/rtlx-cmp.c                  |  2 +
->  arch/openrisc/kernel/smp.c                   |  2 +-
->  arch/parisc/kernel/smp.c                     |  4 +-
->  arch/powerpc/kernel/smp.c                    |  6 +-
->  arch/powerpc/kvm/book3s_hv.c                 |  3 +
->  arch/powerpc/platforms/powernv/subcore.c     |  2 +
->  arch/riscv/kernel/smp.c                      |  4 +-
->  arch/s390/kernel/smp.c                       |  2 +-
->  arch/sh/kernel/smp.c                         |  2 +-
->  arch/sparc/kernel/smp_32.c                   |  2 +-
->  arch/sparc/kernel/smp_64.c                   |  2 +-
->  arch/x86/include/asm/smp.h                   |  2 +-
->  arch/x86/kvm/svm/svm.c                       |  4 +
->  arch/x86/kvm/x86.c                           |  2 +
->  arch/xtensa/kernel/smp.c                     |  2 +-
->  include/linux/smp.h                          |  8 +-
->  include/trace/bpf_probe.h                    |  6 ++
->  include/trace/events/ipi.h                   | 22 ++++++
->  include/trace/perf.h                         |  6 ++
->  include/trace/stages/stage1_struct_define.h  |  6 ++
->  include/trace/stages/stage2_data_offsets.h   |  6 ++
->  include/trace/stages/stage3_trace_output.h   |  6 ++
->  include/trace/stages/stage4_event_fields.h   |  6 ++
->  include/trace/stages/stage5_get_offsets.h    |  6 ++
->  include/trace/stages/stage6_event_callback.h | 20 +++++
->  include/trace/stages/stage7_class_define.h   |  2 +
->  kernel/irq_work.c                            | 14 +++-
->  kernel/sched/core.c                          | 19 +++--
->  kernel/sched/smp.h                           |  2 +-
->  kernel/smp.c                                 | 78 ++++++++++++++++----
->  samples/trace_events/trace-events-sample.c   |  2 +-
->  samples/trace_events/trace-events-sample.h   | 34 +++++++--
->  virt/kvm/kvm_main.c                          |  1 +
->  43 files changed, 250 insertions(+), 61 deletions(-)
+User space can use the MEM_OP ioctl to make storage key checked reads
+and writes to the guest, however, it has no way of performing atomic,
+key checked, accesses to the guest.
+Extend the MEM_OP ioctl in order to allow for this, by adding a cmpxchg
+mode. For now, support this mode for absolute accesses only.
 
-Acked-by: Palmer Dabbelt <palmer@rivosinc.com> # riscv
+This mode can be use, for example, to set the device-state-change
+indicator and the adapter-local-summary indicator atomically.
+
+Also contains some fixes/changes for the memop selftest independent of
+the cmpxchg changes.
+
+v3 -> v4
+ * no functional change intended
+ * rework documentation a bit
+ * name extension cap cmpxchg bit
+ * picked up R-b (thanks Thomas)
+ * various changes (rename variable, comments, ...) see range-diff below
+
+v2 -> v3
+ * rebase onto the wip/cmpxchg_user_key branch in the s390 kernel repo
+ * use __uint128_t instead of unsigned __int128
+ * put moving of testlist into main into separate patch
+ * pick up R-b's (thanks Nico)
+
+v1 -> v2
+ * get rid of xrk instruction for cmpxchg byte and short implementation
+ * pass old parameter via pointer instead of in mem_op struct
+ * indicate failure of cmpxchg due to wrong old value by special return
+   code
+ * picked up R-b's (thanks Thomas)
+
+Janis Schoetterl-Glausch (9):
+  KVM: s390: Extend MEM_OP ioctl by storage key checked cmpxchg
+  Documentation: KVM: s390: Describe KVM_S390_MEMOP_F_CMPXCHG
+  KVM: s390: selftest: memop: Pass mop_desc via pointer
+  KVM: s390: selftest: memop: Replace macros by functions
+  KVM: s390: selftest: memop: Move testlist into main
+  KVM: s390: selftest: memop: Add cmpxchg tests
+  KVM: s390: selftest: memop: Add bad address test
+  KVM: s390: selftest: memop: Fix typo
+  KVM: s390: selftest: memop: Fix wrong address being used in test
+
+ Documentation/virt/kvm/api.rst            |  20 +-
+ include/uapi/linux/kvm.h                  |   7 +
+ arch/s390/kvm/gaccess.h                   |   3 +
+ arch/s390/kvm/gaccess.c                   | 102 ++++
+ arch/s390/kvm/kvm-s390.c                  |  39 +-
+ tools/testing/selftests/kvm/s390x/memop.c | 670 +++++++++++++++++-----
+ 6 files changed, 689 insertions(+), 152 deletions(-)
+
+Range-diff against v3:
+ 1:  ebb86a0c90a2 !  1:  75a20d2e27f2 KVM: s390: Extend MEM_OP ioctl by storage key checked cmpxchg
+    @@ include/uapi/linux/kvm.h: struct kvm_s390_mem_op {
+      			__u8 ar;	/* the access register number */
+      			__u8 key;	/* access key, ignored if flag unset */
+     +			__u8 pad1[6];	/* ignored */
+    -+			__u64 old_p;	/* ignored if flag unset */
+    ++			__u64 old_addr;	/* ignored if flag unset */
+      		};
+      		__u32 sida_offset; /* offset into the sida */
+      		__u8 reserved[32]; /* ignored */
+    @@ include/uapi/linux/kvm.h: struct kvm_s390_mem_op {
+      #define KVM_S390_MEMOP_F_INJECT_EXCEPTION	(1ULL << 1)
+      #define KVM_S390_MEMOP_F_SKEY_PROTECTION	(1ULL << 2)
+     +#define KVM_S390_MEMOP_F_CMPXCHG		(1ULL << 3)
+    ++/* flags specifying extension support */
+    ++#define KVM_S390_MEMOP_EXTENSION_CAP_CMPXCHG 0x2
+     +/* Non program exception return codes (pgm codes are 16 bit) */
+    -+#define KVM_S390_MEMOP_R_NO_XCHG		((1 << 16) + 0)
+    ++#define KVM_S390_MEMOP_R_NO_XCHG		(1 << 16)
+      
+      /* for KVM_INTERRUPT */
+      struct kvm_interrupt {
+    @@ arch/s390/kvm/gaccess.c: int access_guest_real(struct kvm_vcpu *vcpu, unsigned l
+     + * @gpa: Absolute guest address of the location to be changed.
+     + * @len: Operand length of the cmpxchg, required: 1 <= len <= 16. Providing a
+     + *       non power of two will result in failure.
+    -+ * @old_p: Pointer to old value. If the location at @gpa contains this value, the
+    ++ * @old_addr: Pointer to old value. If the location at @gpa contains this value, the
+     + *         exchange will succeed. After calling cmpxchg_guest_abs_with_key() *@old
+     + *         contains the value at @gpa before the attempt to exchange the value.
+     + * @new: The value to place at @gpa.
+    @@ arch/s390/kvm/gaccess.c: int access_guest_real(struct kvm_vcpu *vcpu, unsigned l
+     + *           not be attempted
+     + *         * -EINVAL: address misaligned or len not power of two
+     + *         * -EAGAIN: transient failure (len 1 or 2)
+    ++ *         * -EOPNOTSUPP: read-only memslot (should never occur)
+     + */
+     +int cmpxchg_guest_abs_with_key(struct kvm *kvm, gpa_t gpa, int len,
+    -+			       __uint128_t *old_p, __uint128_t new,
+    ++			       __uint128_t *old_addr, __uint128_t new,
+     +			       u8 access_key)
+     +{
+     +	gfn_t gfn = gpa >> PAGE_SHIFT;
+    @@ arch/s390/kvm/gaccess.c: int access_guest_real(struct kvm_vcpu *vcpu, unsigned l
+     +	case 1: {
+     +		u8 old;
+     +
+    -+		ret = cmpxchg_user_key((u8 *)hva, &old, *old_p, new, access_key);
+    -+		ret = ret < 0 ? ret : old != *old_p;
+    -+		*old_p = old;
+    ++		ret = cmpxchg_user_key((u8 *)hva, &old, *old_addr, new, access_key);
+    ++		ret = ret < 0 ? ret : old != *old_addr;
+    ++		*old_addr = old;
+     +		break;
+     +	}
+     +	case 2: {
+     +		u16 old;
+     +
+    -+		ret = cmpxchg_user_key((u16 *)hva, &old, *old_p, new, access_key);
+    -+		ret = ret < 0 ? ret : old != *old_p;
+    -+		*old_p = old;
+    ++		ret = cmpxchg_user_key((u16 *)hva, &old, *old_addr, new, access_key);
+    ++		ret = ret < 0 ? ret : old != *old_addr;
+    ++		*old_addr = old;
+     +		break;
+     +	}
+     +	case 4: {
+     +		u32 old;
+     +
+    -+		ret = cmpxchg_user_key((u32 *)hva, &old, *old_p, new, access_key);
+    -+		ret = ret < 0 ? ret : old != *old_p;
+    -+		*old_p = old;
+    ++		ret = cmpxchg_user_key((u32 *)hva, &old, *old_addr, new, access_key);
+    ++		ret = ret < 0 ? ret : old != *old_addr;
+    ++		*old_addr = old;
+     +		break;
+     +	}
+     +	case 8: {
+     +		u64 old;
+     +
+    -+		ret = cmpxchg_user_key((u64 *)hva, &old, *old_p, new, access_key);
+    -+		ret = ret < 0 ? ret : old != *old_p;
+    -+		*old_p = old;
+    ++		ret = cmpxchg_user_key((u64 *)hva, &old, *old_addr, new, access_key);
+    ++		ret = ret < 0 ? ret : old != *old_addr;
+    ++		*old_addr = old;
+     +		break;
+     +	}
+     +	case 16: {
+     +		__uint128_t old;
+     +
+    -+		ret = cmpxchg_user_key((__uint128_t *)hva, &old, *old_p, new, access_key);
+    -+		ret = ret < 0 ? ret : old != *old_p;
+    -+		*old_p = old;
+    ++		ret = cmpxchg_user_key((__uint128_t *)hva, &old, *old_addr, new, access_key);
+    ++		ret = ret < 0 ? ret : old != *old_addr;
+    ++		*old_addr = old;
+     +		break;
+     +	}
+     +	default:
+    @@ arch/s390/kvm/kvm-s390.c: int kvm_vm_ioctl_check_extension(struct kvm *kvm, long
+     +		 * The first extension doesn't use a flag, but pretend it does,
+     +		 * this way that can be changed in the future.
+     +		 */
+    -+		r = 0x3;
+    ++		r = KVM_S390_MEMOP_EXTENSION_CAP_CMPXCHG | 1;
+     +		break;
+      	case KVM_CAP_NR_VCPUS:
+      	case KVM_CAP_MAX_VCPUS:
+    @@ arch/s390/kvm/kvm-s390.c: static bool access_key_invalid(u8 access_key)
+      static int kvm_s390_vm_mem_op(struct kvm *kvm, struct kvm_s390_mem_op *mop)
+      {
+      	void __user *uaddr = (void __user *)mop->buf;
+    -+	void __user *old_p = (void __user *)mop->old_p;
+    ++	void __user *old_addr = (void __user *)mop->old_addr;
+     +	union {
+     +		__uint128_t quad;
+     +		char raw[sizeof(__uint128_t)];
+     +	} old = { .quad = 0}, new = { .quad = 0 };
+    -+	unsigned int off_in_quad = sizeof(__uint128_t) - mop->size;
+    ++	unsigned int off_in_quad = sizeof(new) - mop->size;
+      	u64 supported_flags;
+      	void *tmpbuf = NULL;
+      	int r, srcu_idx;
+    @@ arch/s390/kvm/kvm-s390.c: static int kvm_s390_vm_mem_op(struct kvm *kvm, struct
+      		mop->key = 0;
+      	}
+     +	if (mop->flags & KVM_S390_MEMOP_F_CMPXCHG) {
+    ++		/*
+    ++		 * This validates off_in_quad. Checking that size is a power
+    ++		 * of two is not necessary, as cmpxchg_guest_abs_with_key
+    ++		 * takes care of that
+    ++		 */
+     +		if (mop->size > sizeof(new))
+     +			return -EINVAL;
+    -+		/* off_in_quad has been validated */
+     +		if (copy_from_user(&new.raw[off_in_quad], uaddr, mop->size))
+     +			return -EFAULT;
+    -+		if (copy_from_user(&old.raw[off_in_quad], old_p, mop->size))
+    ++		if (copy_from_user(&old.raw[off_in_quad], old_addr, mop->size))
+     +			return -EFAULT;
+     +	}
+      	if (!(mop->flags & KVM_S390_MEMOP_F_CHECK_ONLY)) {
+    @@ arch/s390/kvm/kvm-s390.c: static int kvm_s390_vm_mem_op(struct kvm *kvm, struct
+     +						       &old.quad, new.quad, mop->key);
+     +			if (r == 1) {
+     +				r = KVM_S390_MEMOP_R_NO_XCHG;
+    -+				if (copy_to_user(old_p, &old.raw[off_in_quad], mop->size))
+    ++				if (copy_to_user(old_addr, &old.raw[off_in_quad], mop->size))
+     +					r = -EFAULT;
+     +			}
+      		} else {
+ 2:  0cb750e8d182 !  2:  5c5ad96a4c81 Documentation: KVM: s390: Describe KVM_S390_MEMOP_F_CMPXCHG
+    @@ Documentation/virt/kvm/api.rst: The fields in each entry are defined as follows:
+                < 0 on generic error (e.g. -EFAULT or -ENOMEM),
+     -          > 0 if an exception occurred while walking the page tables
+     +          16 bit program exception code if the access causes such an exception
+    -+          other code > maximum 16 bit value with special meaning
+    ++          other code > 0xffff with special meaning
+      
+      Read or write data from/to the VM's memory.
+      The KVM_CAP_S390_MEM_OP_EXTENSION capability specifies what functionality is
+    @@ Documentation/virt/kvm/api.rst: Parameters are specified via the following struc
+      			__u8 ar;	/* the access register number */
+      			__u8 key;	/* access key, ignored if flag unset */
+     +			__u8 pad1[6];	/* ignored */
+    -+			__u64 old_p;	/* ignored if flag unset */
+    ++			__u64 old_addr;	/* ignored if flag unset */
+      		};
+      		__u32 sida_offset; /* offset into the sida */
+      		__u8 reserved[32]; /* ignored */
+    @@ Documentation/virt/kvm/api.rst: Absolute accesses are permitted for non-protecte
+        * ``KVM_S390_MEMOP_F_SKEY_PROTECTION``
+     +  * ``KVM_S390_MEMOP_F_CMPXCHG``
+     +
+    -+The semantics of the flags common with logical acesses are as for logical
+    ++The semantics of the flags common with logical accesses are as for logical
+     +accesses.
+     +
+    -+For write accesses, the KVM_S390_MEMOP_F_CMPXCHG might be supported.
+    -+In this case, instead of doing an unconditional write, the access occurs only
+    -+if the target location contains the "size" byte long value pointed to by
+    -+"old_p". This is performed as an atomic cmpxchg. "size" must be a power of two
+    -+up to and including 16.
+    -+The value at the target location is written to the location "old_p" points to.
+    ++For write accesses, the KVM_S390_MEMOP_F_CMPXCHG flag is supported if
+    ++KVM_CAP_S390_MEM_OP_EXTENSION has flag KVM_S390_MEMOP_EXTENSION_CAP_CMPXCHG set.
+    ++In this case, instead of doing an unconditional write, the access occurs
+    ++only if the target location contains the value pointed to by "old_addr".
+    ++This is performed as an atomic cmpxchg with the length specified by the "size"
+    ++parameter. "size" must be a power of two up to and including 16.
+     +If the exchange did not take place because the target value doesn't match the
+    -+old value KVM_S390_MEMOP_R_NO_XCHG is returned.
+    -+The KVM_S390_MEMOP_F_CMPXCHG flag is supported if KVM_CAP_S390_MEM_OP_EXTENSION
+    -+has bit 1 (i.e. bit with value 2) set.
+    ++old value, KVM_S390_MEMOP_R_NO_XCHG is returned.
+    ++In this case the value "old_addr" points to is replaced by the target value.
+      
+     -The semantics of the flags are as for logical accesses.
+      
+ 3:  ecd3f9d6bc9f =  3:  9cbcb313d91d KVM: s390: selftest: memop: Pass mop_desc via pointer
+ 4:  3b7124d69a90 =  4:  21d98b9deaae KVM: s390: selftest: memop: Replace macros by functions
+ 5:  c380623abd0d !  5:  866fcd7fbc97 KVM: s390: selftest: memop: Move testlist into main
+    @@ Commit message
+         certain bits are set in the memop extension capability.
+     
+         Signed-off-by: Janis Schoetterl-Glausch <scgl@linux.ibm.com>
+    +    Reviewed-by: Thomas Huth <thuth@redhat.com>
+     
+      ## tools/testing/selftests/kvm/s390x/memop.c ##
+     @@ tools/testing/selftests/kvm/s390x/memop.c: static void test_errors(void)
+ 6:  f4491194821a !  6:  c3e473677786 KVM: s390: selftest: memop: Add cmpxchg tests
+    @@ tools/testing/selftests/kvm/s390x/memop.c: static struct kvm_s390_mem_op ksmo_fr
+      	}
+     +	if (desc->old) {
+     +		ksmo.flags |= KVM_S390_MEMOP_F_CMPXCHG;
+    -+		ksmo.old_p = (uint64_t)desc->old;
+    ++		ksmo.old_addr = (uint64_t)desc->old;
+     +	}
+      	if (desc->_ar)
+      		ksmo.ar = desc->ar;
+    @@ tools/testing/selftests/kvm/s390x/memop.c: static void print_memop(struct kvm_vc
+      	}
+     -	printf("gaddr=%llu, size=%u, buf=%llu, ar=%u, key=%u",
+     -	       ksmo->gaddr, ksmo->size, ksmo->buf, ksmo->ar, ksmo->key);
+    -+	printf("gaddr=%llu, size=%u, buf=%llu, ar=%u, key=%u, old_p=%llx",
+    ++	printf("gaddr=%llu, size=%u, buf=%llu, ar=%u, key=%u, old_addr=%llx",
+     +	       ksmo->gaddr, ksmo->size, ksmo->buf, ksmo->ar, ksmo->key,
+    -+	       ksmo->old_p);
+    ++	       ksmo->old_addr);
+      	if (ksmo->flags & KVM_S390_MEMOP_F_CHECK_ONLY)
+      		printf(", CHECK_ONLY");
+      	if (ksmo->flags & KVM_S390_MEMOP_F_INJECT_EXCEPTION)
+    @@ tools/testing/selftests/kvm/s390x/memop.c: static void test_copy_key(void)
+     +	}
+     +}
+     +
+    -+static bool _cmpxchg(int size, void *target, __uint128_t *old_p, __uint128_t new)
+    ++static bool _cmpxchg(int size, void *target, __uint128_t *old_addr, __uint128_t new)
+     +{
+     +	bool ret;
+     +
+     +	switch (size) {
+     +	case 4: {
+    -+			uint32_t old = *old_p;
+    ++			uint32_t old = *old_addr;
+     +
+     +			asm volatile ("cs %[old],%[new],%[address]"
+     +			    : [old] "+d" (old),
+    @@ tools/testing/selftests/kvm/s390x/memop.c: static void test_copy_key(void)
+     +			    : [new] "d" ((uint32_t)new)
+     +			    : "cc"
+     +			);
+    -+			ret = old == (uint32_t)*old_p;
+    -+			*old_p = old;
+    ++			ret = old == (uint32_t)*old_addr;
+    ++			*old_addr = old;
+     +			return ret;
+     +		}
+     +	case 8: {
+    -+			uint64_t old = *old_p;
+    ++			uint64_t old = *old_addr;
+     +
+     +			asm volatile ("csg %[old],%[new],%[address]"
+     +			    : [old] "+d" (old),
+    @@ tools/testing/selftests/kvm/s390x/memop.c: static void test_copy_key(void)
+     +			    : [new] "d" ((uint64_t)new)
+     +			    : "cc"
+     +			);
+    -+			ret = old == (uint64_t)*old_p;
+    -+			*old_p = old;
+    ++			ret = old == (uint64_t)*old_addr;
+    ++			*old_addr = old;
+     +			return ret;
+     +		}
+     +	case 16: {
+    -+			__uint128_t old = *old_p;
+    ++			__uint128_t old = *old_addr;
+     +
+     +			asm volatile ("cdsg %[old],%[new],%[address]"
+     +			    : [old] "+d" (old),
+    @@ tools/testing/selftests/kvm/s390x/memop.c: static void test_copy_key(void)
+     +			    : [new] "d" (new)
+     +			    : "cc"
+     +			);
+    -+			ret = old == *old_p;
+    -+			*old_p = old;
+    ++			ret = old == *old_addr;
+    ++			*old_addr = old;
+     +			return ret;
+     +		}
+     +	}
+ 7:  8009dd0fb795 =  7:  90288760656e KVM: s390: selftest: memop: Add bad address test
+ 8:  cd1c47941014 =  8:  e3d4b9b2ba61 KVM: s390: selftest: memop: Fix typo
+ 9:  41b08e886566 =  9:  13fedd6e3d9e KVM: s390: selftest: memop: Fix wrong address being used in test
+
+base-commit: 739ad2e4e15b585a0eaf98b7bdee62b2dd9588c9
+-- 
+2.34.1
+
