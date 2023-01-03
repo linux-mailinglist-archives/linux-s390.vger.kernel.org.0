@@ -2,119 +2,137 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7790465BB22
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Jan 2023 08:21:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D5CEB65BBC4
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Jan 2023 09:15:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236763AbjACHUn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 3 Jan 2023 02:20:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46718 "EHLO
+        id S237008AbjACIPm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 3 Jan 2023 03:15:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231415AbjACHUj (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 3 Jan 2023 02:20:39 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A6C4B1E8;
-        Mon,  2 Jan 2023 23:20:38 -0800 (PST)
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3036CGGr032696;
-        Tue, 3 Jan 2023 07:20:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=BIIiIarhrMjfZ53epwzctaykif7mltHYkilT75A5OPY=;
- b=KizFdBnlOLpd9/LevRENWKUnt6tz9UI+RVlkfAKECJXG0+AJq8JVCUyMH3uBpfNSIv1N
- aHPgTEyQFLw48Hjwhdou0fBoykM09eCapOFk74wYAudadsh2Rd5CsTDCQ4iHvbqGixar
- OaaGDSc7EaFZvf8cJzJ81EpqtIXO74uM/Fxa1JC5/MgJncksz6wdSZfikkUsB+6IKO0L
- JmFRJ+krjc79KggR4xga/2HFqiQnTqL5Z9UiJo6Wx2LQpjuFi4rD7lApX861HEWqTK9F
- asg3grv4H4SZxcV4NEOWZL9T+D0qFhAN0hHmqtJPeLawp0auAtPwKSVUFoT88jXqCtR+ iQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3mvevns0su-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 03 Jan 2023 07:20:08 +0000
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 30378iA1040828;
-        Tue, 3 Jan 2023 07:20:07 GMT
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3mvevns0s7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 03 Jan 2023 07:20:07 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 302BoFlL008404;
-        Tue, 3 Jan 2023 07:20:05 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3mtcbfjh0h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 03 Jan 2023 07:20:05 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3037K2sw46137732
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Jan 2023 07:20:02 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B27BA20040;
-        Tue,  3 Jan 2023 07:20:02 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A1F5A2004E;
-        Tue,  3 Jan 2023 07:20:02 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Tue,  3 Jan 2023 07:20:02 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55390)
-        id 3B9AEE095C; Tue,  3 Jan 2023 08:20:02 +0100 (CET)
-From:   Sven Schnelle <svens@linux.ibm.com>
-To:     Willy Tarreau <w@1wt.eu>, "Paul E . McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [PATCH v3 5/5] rcutorture: build initrd for rcutorture with nolibc
-Date:   Tue,  3 Jan 2023 08:19:57 +0100
-Message-Id: <20230103071957.222360-6-svens@linux.ibm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230103071957.222360-1-svens@linux.ibm.com>
-References: <20230103071957.222360-1-svens@linux.ibm.com>
+        with ESMTP id S236990AbjACIPg (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 3 Jan 2023 03:15:36 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E86C8DF47;
+        Tue,  3 Jan 2023 00:15:33 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 88BB7611F0;
+        Tue,  3 Jan 2023 08:15:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F5A7C433EF;
+        Tue,  3 Jan 2023 08:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1672733733;
+        bh=a/FcX1DrHi4fYlfYvL75m1mDjOg30lklyzaTQTcHWe8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bruXIDIVE0Xl/omtX1abJolrerYTaRsMyjB/TvXqH4sy/Cn3OY57+dB2a/ZSmue5H
+         y53DJXLtHL4842sVmBEHyYKjx/7MRHiYdTn46MhMhK62KWu/+Zb294t6ogQdMxvuJk
+         np+Ozfd5di8OvtkXNnSzE+bHlrBYCd5Eq/yKRwGg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     stable@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        patches@lists.linux.dev, linux-s390@vger.kernel.org,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.10 25/63] s390: add support for TIF_NOTIFY_SIGNAL
+Date:   Tue,  3 Jan 2023 09:13:55 +0100
+Message-Id: <20230103081310.082733700@linuxfoundation.org>
+X-Mailer: git-send-email 2.39.0
+In-Reply-To: <20230103081308.548338576@linuxfoundation.org>
+References: <20230103081308.548338576@linuxfoundation.org>
+User-Agent: quilt/0.67
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: dVNGR_Aw9M95AwyOFs1Lc5kuM-qS7uPg
-X-Proofpoint-GUID: ZB1-E_5NVP3HV5W2wiWC1YX4QVzIqMq_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2023-01-02_14,2022-12-30_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=999
- suspectscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
- bulkscore=0 adultscore=0 spamscore=0 phishscore=0 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2301030062
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This reduces the size of init from ~600KB to ~1KB.
+From: Jens Axboe <axboe@kernel.dk>
 
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+[ Upstream commit 75309018a24ddfb930c51bad8f4070b9bc2c923b ]
+
+Wire up TIF_NOTIFY_SIGNAL handling for s390.
+
+Cc: linux-s390@vger.kernel.org
 Acked-by: Heiko Carstens <hca@linux.ibm.com>
+Acked-by: Sven Schnelle <svens@linux.ibm.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/rcutorture/bin/mkinitrd.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/include/asm/thread_info.h |    2 ++
+ arch/s390/kernel/entry.S            |   11 ++++++-----
+ arch/s390/kernel/signal.c           |    2 +-
+ 3 files changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/tools/testing/selftests/rcutorture/bin/mkinitrd.sh b/tools/testing/selftests/rcutorture/bin/mkinitrd.sh
-index 70d62fd0d31d..71f0dfbb2a6d 100755
---- a/tools/testing/selftests/rcutorture/bin/mkinitrd.sh
-+++ b/tools/testing/selftests/rcutorture/bin/mkinitrd.sh
-@@ -64,7 +64,7 @@ ___EOF___
- # build using nolibc on supported archs (smaller executable) and fall
- # back to regular glibc on other ones.
- if echo -e "#if __x86_64__||__i386__||__i486__||__i586__||__i686__" \
--           "||__ARM_EABI__||__aarch64__\nyes\n#endif" \
-+           "||__ARM_EABI__||__aarch64__||__s390x__\nyes\n#endif" \
-    | ${CROSS_COMPILE}gcc -E -nostdlib -xc - \
-    | grep -q '^yes'; then
- 	# architecture supported by nolibc
--- 
-2.34.1
+--- a/arch/s390/include/asm/thread_info.h
++++ b/arch/s390/include/asm/thread_info.h
+@@ -65,6 +65,7 @@ void arch_setup_new_exec(void);
+ #define TIF_GUARDED_STORAGE	4	/* load guarded storage control block */
+ #define TIF_PATCH_PENDING	5	/* pending live patching update */
+ #define TIF_PGSTE		6	/* New mm's will use 4K page tables */
++#define TIF_NOTIFY_SIGNAL	7	/* signal notifications exist */
+ #define TIF_ISOLATE_BP		8	/* Run process with isolated BP */
+ #define TIF_ISOLATE_BP_GUEST	9	/* Run KVM guests with isolated BP */
+ 
+@@ -82,6 +83,7 @@ void arch_setup_new_exec(void);
+ #define TIF_SYSCALL_TRACEPOINT	27	/* syscall tracepoint instrumentation */
+ 
+ #define _TIF_NOTIFY_RESUME	BIT(TIF_NOTIFY_RESUME)
++#define _TIF_NOTIFY_SIGNAL	BIT(TIF_NOTIFY_SIGNAL)
+ #define _TIF_SIGPENDING		BIT(TIF_SIGPENDING)
+ #define _TIF_NEED_RESCHED	BIT(TIF_NEED_RESCHED)
+ #define _TIF_UPROBE		BIT(TIF_UPROBE)
+--- a/arch/s390/kernel/entry.S
++++ b/arch/s390/kernel/entry.S
+@@ -52,7 +52,8 @@ STACK_SIZE  = 1 << STACK_SHIFT
+ STACK_INIT = STACK_SIZE - STACK_FRAME_OVERHEAD - __PT_SIZE
+ 
+ _TIF_WORK	= (_TIF_SIGPENDING | _TIF_NOTIFY_RESUME | _TIF_NEED_RESCHED | \
+-		   _TIF_UPROBE | _TIF_GUARDED_STORAGE | _TIF_PATCH_PENDING)
++		   _TIF_UPROBE | _TIF_GUARDED_STORAGE | _TIF_PATCH_PENDING | \
++		   _TIF_NOTIFY_SIGNAL)
+ _TIF_TRACE	= (_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT | _TIF_SECCOMP | \
+ 		   _TIF_SYSCALL_TRACEPOINT)
+ _CIF_WORK	= (_CIF_ASCE_PRIMARY | _CIF_ASCE_SECONDARY | _CIF_FPU)
+@@ -481,8 +482,8 @@ ENTRY(system_call)
+ #endif
+ 	TSTMSK	__PT_FLAGS(%r11),_PIF_SYSCALL_RESTART
+ 	jo	.Lsysc_syscall_restart
+-	TSTMSK	__TI_flags(%r12),_TIF_SIGPENDING
+-	jo	.Lsysc_sigpending
++	TSTMSK	__TI_flags(%r12),(_TIF_SIGPENDING|_TIF_NOTIFY_SIGNAL)
++	jnz	.Lsysc_sigpending
+ 	TSTMSK	__TI_flags(%r12),_TIF_NOTIFY_RESUME
+ 	jo	.Lsysc_notify_resume
+ 	TSTMSK	__LC_CPU_FLAGS,(_CIF_ASCE_PRIMARY|_CIF_ASCE_SECONDARY)
+@@ -863,8 +864,8 @@ ENTRY(io_int_handler)
+ 	TSTMSK	__TI_flags(%r12),_TIF_PATCH_PENDING
+ 	jo	.Lio_patch_pending
+ #endif
+-	TSTMSK	__TI_flags(%r12),_TIF_SIGPENDING
+-	jo	.Lio_sigpending
++	TSTMSK	__TI_flags(%r12),(_TIF_SIGPENDING|_TIF_NOTIFY_SIGNAL)
++	jnz	.Lio_sigpending
+ 	TSTMSK	__TI_flags(%r12),_TIF_NOTIFY_RESUME
+ 	jo	.Lio_notify_resume
+ 	TSTMSK	__TI_flags(%r12),_TIF_GUARDED_STORAGE
+--- a/arch/s390/kernel/signal.c
++++ b/arch/s390/kernel/signal.c
+@@ -472,7 +472,7 @@ void do_signal(struct pt_regs *regs)
+ 	current->thread.system_call =
+ 		test_pt_regs_flag(regs, PIF_SYSCALL) ? regs->int_code : 0;
+ 
+-	if (get_signal(&ksig)) {
++	if (test_thread_flag(TIF_SIGPENDING) && get_signal(&ksig)) {
+ 		/* Whee!  Actually deliver the signal.  */
+ 		if (current->thread.system_call) {
+ 			regs->int_code = current->thread.system_call;
+
 
