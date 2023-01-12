@@ -2,321 +2,106 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B1341667289
-	for <lists+linux-s390@lfdr.de>; Thu, 12 Jan 2023 13:49:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D224366788D
+	for <lists+linux-s390@lfdr.de>; Thu, 12 Jan 2023 16:06:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230430AbjALMtN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 12 Jan 2023 07:49:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37972 "EHLO
+        id S240136AbjALPGH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 12 Jan 2023 10:06:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231379AbjALMs3 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 12 Jan 2023 07:48:29 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3920D4A958;
-        Thu, 12 Jan 2023 04:48:28 -0800 (PST)
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30CCVSN9032396;
-        Thu, 12 Jan 2023 12:48:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=x/yd7iWJ6qTiANjCFcEAOKc6MU3jjvLtKOzoy6Qz3o0=;
- b=fWJUU8kcdEcjL9Q2APfi7Mt9xDRlNFQc77iQW0azKE9e36j3/5+puLIc6Tz4jJXLkV8b
- qvJsutNv70Rk2NFQ5AS44UkbNVF6Hyq5wzrfKTHRsBci0Gx/BBwcdAj3DYa/UkAFQzo9
- qBPa2Kz6CIp3tMnrQWPn6PnrBuzowMgGCadFBSZpNoVtJ4lY0Sc3OwdX40h+x4NaAFgB
- Ftf8MkBXFOBJJHsYVxT/aurHWof2WNnjhF5Ncx+RFspxrbHoYsjkGukos0Q/pk9MXaNM
- HszMZTaApqU9Qos29Qzbr9pVoM/D/PY6SDVVH1CgQToaPTsPQL9y2FGe5OG4mFb9knWm Tg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3n2j9q0b4f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Jan 2023 12:48:24 +0000
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 30CCWO0X007593;
-        Thu, 12 Jan 2023 12:48:23 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3n2j9q0b3t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Jan 2023 12:48:23 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30C3RLAk004503;
-        Thu, 12 Jan 2023 12:48:21 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3n1kkytfam-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Jan 2023 12:48:20 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30CCmHYc22675792
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Jan 2023 12:48:17 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6323F2004D;
-        Thu, 12 Jan 2023 12:48:17 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0F2BF2004B;
-        Thu, 12 Jan 2023 12:48:17 +0000 (GMT)
-Received: from li-7e0de7cc-2d9d-11b2-a85c-de26c016e5ad.ibm.com (unknown [9.171.152.120])
-        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Thu, 12 Jan 2023 12:48:17 +0000 (GMT)
-Message-ID: <0d890ba62e5117756445323def2096e5e39b2351.camel@linux.ibm.com>
-Subject: Re: [PATCH v5 01/10] KVM: s390: Extend MEM_OP ioctl by storage key
- checked cmpxchg
-From:   Janis Schoetterl-Glausch <scgl@linux.ibm.com>
-To:     Janosch Frank <frankja@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-s390@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Sven Schnelle <svens@linux.ibm.com>
-Date:   Thu, 12 Jan 2023 13:48:16 +0100
-In-Reply-To: <4c5a7fd1-9996-a191-dd93-087554e93923@linux.ibm.com>
-References: <20230110202632.2533978-1-scgl@linux.ibm.com>
-         <20230110202632.2533978-2-scgl@linux.ibm.com>
-         <02b34aa1-d71a-99cc-77db-3613f881b1a8@linux.ibm.com>
-         <bcc971f8acc670bb05e44451f027458dcea1f095.camel@linux.ibm.com>
-         <4c5a7fd1-9996-a191-dd93-087554e93923@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.2 (3.46.2-1.fc37) 
+        with ESMTP id S240323AbjALPFc (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 12 Jan 2023 10:05:32 -0500
+Received: from mail-oi1-x22f.google.com (mail-oi1-x22f.google.com [IPv6:2607:f8b0:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E93916146A
+        for <linux-s390@vger.kernel.org>; Thu, 12 Jan 2023 06:54:16 -0800 (PST)
+Received: by mail-oi1-x22f.google.com with SMTP id o66so15455432oia.6
+        for <linux-s390@vger.kernel.org>; Thu, 12 Jan 2023 06:54:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:references:in-reply-to:reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=A+TwVa7Ei5W+PzH9Ca+c53+yEh5/vjHTxV/toCcLXbQ=;
+        b=LpSSTyPmyxpTpA02YcsfpNdvT2NUbvsA/EhfJ2dyq5OUfE8oKutjU7lHYvvEdj88AP
+         Y4H6igI0C20vsmU8I4yVdbEbJvGrc+v8E0s0vBbYz5hJgqkrzHpZfgKTbs3yoISsvuFN
+         P9GL3HlkFoey5OBqXkGz29GuqfYNHGdz/3fbloHi/9TSo0wKsKYqCcEG6zV01Zmz9Yz6
+         YL93m1jTN0Io0OPMISZ2dyFwl14P1TVLepKqoQtmVRAOiu5F7lrfPNi7FxGBvpzqoSQw
+         EFMOgaKYwlZY+6DZCsUlx4Lsn2dkOgqihorCPrH4cxpKJ0E03o7sNS9IhnyHbavZthDK
+         fqbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:references:in-reply-to:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=A+TwVa7Ei5W+PzH9Ca+c53+yEh5/vjHTxV/toCcLXbQ=;
+        b=WCBApjzGNDSiTtPY71AdrM8nrKXGTebLG8LdnTfsm9rSWgxi7plA6w7jZ7odhQhDMM
+         vUJkHh6PNhp3L3HdNHfm6egEDln93v1dM4L90Vr2Zdn4NBVPrd+zjM/iZNB+iChQnji5
+         FghordXOQlzz92Tek7XnIk/lusjX/HPU/CbNGqb8RkUDLQlRtSlN5/IuSsIS8dKbOPn4
+         VU0N7xjYDXVg6eS0GJEunj+DGG9/7FBNYVvvK/b9Zn6bLFe0LWt1wyc/rEZKsqvDkkfn
+         V2i9Gb8KARJR/20193HFjuzQO8NGhtJzQwsbfuc7gE+EzTBRB7DZGgVw3OPVWv4Ykn/5
+         0pDQ==
+X-Gm-Message-State: AFqh2kqrQhvsMnhiVqHIVWcCe5h8hXlJVc7hW2a2/ndxkvVdSTAQbI7e
+        BQ+kvzsNvbR+Mmy1YwguM5XrGGcEIqLlBnAa0A==
+X-Google-Smtp-Source: AMrXdXuPKM+OWb6u/VnI7yc3JuyZ62LisIpcvSenJemWAXopzaZPmakqsjc0ybUqpGzgHye1a6khtWdD9dBddEU4s0Y=
+X-Received: by 2002:a05:6808:179a:b0:364:6544:b4a9 with SMTP id
+ bg26-20020a056808179a00b003646544b4a9mr481942oib.172.1673535255941; Thu, 12
+ Jan 2023 06:54:15 -0800 (PST)
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: hVWLBcPSQo0LCgx_RgCf_160ScAaEkiv
-X-Proofpoint-ORIG-GUID: Zs2Md71SUDY57Nxr4qyuGrahlanRfpFA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2023-01-12_07,2023-01-12_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0 mlxlogscore=999
- adultscore=0 phishscore=0 malwarescore=0 clxscore=1015 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2301120089
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a8a:392:0:0:0:0:0 with HTTP; Thu, 12 Jan 2023 06:54:15 -0800 (PST)
+Reply-To: lisaarobet@gmail.com
+In-Reply-To: <63c01ee5.050a0220.6bcee.3385.GMR@mx.google.com>
+References: <CAFKPBsFVUxspHREZp-rpZyi9GmwbC64KC0Q9AFLJAyZnUiP=7A@mail.gmail.com>
+ <60953a7e.1c69fb81.c987e.4928.GMR@mx.google.com> <CAFKPBsGh9Zv3qC5Zp=DsLyz=w=T_Zi3c=uP58-X0DVZdvyGb7g@mail.gmail.com>
+ <60953ea4.1c69fb81.442b7.3742.GMR@mx.google.com> <CAFKPBsE7VLh8GSOQo-VmopxR+sDSOuAJUmFON7SS=zaZ9TkM7Q@mail.gmail.com>
+ <db89e535-41c6-4fd1-bfe7-72f671f5de83@DB8PR04MB5916.eurprd04.prod.outlook.com>
+ <CAFKPBsEjDfLGGvGWGy_nd9047nyPAYKNbqhXbSWGEE35ntebcA@mail.gmail.com>
+ <6217a3a4.1c69fb81.cd2f0.593a.GMR@mx.google.com> <CAFKPBsHBfewnvpaUxe_Z_LB4iFbNqNAsqTjbf7UsB4KET+9eEQ@mail.gmail.com>
+ <621a7f1f.1c69fb81.afb34.c577.GMR@mx.google.com> <CAFKPBsHuUudYYxVUtc5r1V3_Trsv5v234-Essso0n8gNQdxh1A@mail.gmail.com>
+ <6234ebda.1c69fb81.47e83.d383.GMR@mx.google.com> <CAFKPBsGx7P8ehrd65W9RhOo0DreO7sDSfi1Xp-R7S6n8Kb9f7g@mail.gmail.com>
+ <63b9a692.050a0220.4ed49.8721.GMR@mx.google.com> <CAFKPBsEERpxfwEJeOZ6h2_km4SmpF6WiQ4HmgqUn3Yqe==sd4g@mail.gmail.com>
+ <63bdd949.170a0220.fa5d3.b9aa.GMR@mx.google.com> <CAFKPBsHrzfKEw5w1d-uyWVD92XUh6ARrbx-i4Knq7akRimjMdw@mail.gmail.com>
+ <CAFKPBsHrzfKEw5w1d-uyWVD92XUh6ARrbx-i4Knq7akRimjMdw@mail.gmail.com> <63c01ee5.050a0220.6bcee.3385.GMR@mx.google.com>
+From:   Lisa <ecowasmonitoringfundoffice@gmail.com>
+Date:   Thu, 12 Jan 2023 14:54:15 +0000
+Message-ID: <CAFKPBsEceHrf8N7W4yxSj0ajo-2ZBuv-1Eh=2NGs9_-NPG7vLA@mail.gmail.com>
+Subject: Re: Delivery Status Notification (Failure)
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=6.9 required=5.0 tests=BAYES_50,DEAR_FRIEND,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:22f listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [ecowasmonitoringfundoffice[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  2.6 DEAR_FRIEND BODY: Dear Friend? That's not very dear!
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  2.7 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 2023-01-11 at 18:26 +0100, Janosch Frank wrote:
-> On 1/11/23 16:19, Janis Schoetterl-Glausch wrote:
-> > On Wed, 2023-01-11 at 10:35 +0100, Janosch Frank wrote:
-> > > On 1/10/23 21:26, Janis Schoetterl-Glausch wrote:
-> > > > User space can use the MEM_OP ioctl to make storage key checked rea=
-ds
-> > > > and writes to the guest, however, it has no way of performing atomi=
-c,
-> > > > key checked, accesses to the guest.
-> > > > Extend the MEM_OP ioctl in order to allow for this, by adding a cmp=
-xchg
-> > > > mode. For now, support this mode for absolute accesses only.
-> > > >=20
-> > > > This mode can be use, for example, to set the device-state-change
-> > > > indicator and the adapter-local-summary indicator atomically.
-> > > >=20
-> > > > Signed-off-by: Janis Schoetterl-Glausch <scgl@linux.ibm.com>
-> > > > ---
-> > > >    include/uapi/linux/kvm.h |   7 +++
-> > > >    arch/s390/kvm/gaccess.h  |   3 ++
-> > > >    arch/s390/kvm/gaccess.c  | 102 +++++++++++++++++++++++++++++++++=
-++++++
-> > > >    arch/s390/kvm/kvm-s390.c |  41 +++++++++++++++-
-> > > >    4 files changed, 151 insertions(+), 2 deletions(-)
-> > > >=20
-> > > > diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> > > > index 55155e262646..452f43c1cc34 100644
-> > > > --- a/include/uapi/linux/kvm.h
-> > > > +++ b/include/uapi/linux/kvm.h
-> > > > @@ -583,6 +583,8 @@ struct kvm_s390_mem_op {
-> > > >    		struct {
-> > > >    			__u8 ar;	/* the access register number */
-> > > >    			__u8 key;	/* access key, ignored if flag unset */
-> > > > +			__u8 pad1[6];	/* ignored */
-> > > > +			__u64 old_addr;	/* ignored if flag unset */
->=20
-> Which flag?
-> Maybe that would be clearer with a cmpxchg_ prefix.
+Dear Friend
 
-Yes.
->=20
-> > > >    		};
-> > > >    		__u32 sida_offset; /* offset into the sida */
-> > > >    		__u8 reserved[32]; /* ignored */
-> > > > @@ -599,6 +601,11 @@ struct kvm_s390_mem_op {
-> > > >    #define KVM_S390_MEMOP_F_CHECK_ONLY		(1ULL << 0)
-> > > >    #define KVM_S390_MEMOP_F_INJECT_EXCEPTION	(1ULL << 1)
-> > > >    #define KVM_S390_MEMOP_F_SKEY_PROTECTION	(1ULL << 2)
-> > > > +#define KVM_S390_MEMOP_F_CMPXCHG		(1ULL << 3)
-> > > > +/* flags specifying extension support */
->=20
-> via KVM_CAP_S390_MEM_OP_EXTENSION
->=20
-> This is part of the CAP api but is nestled between the memop api.
-> I'm not entirely happy about that.
+Compliment of the day, there is something i will like us to discuss,
+do you receive my Request?
 
-Yes, I wasn't sure where to put it.
->=20
-> > >=20
-> > > Would that fit behind the bit shifts without getting into the "line t=
-oo
-> > > long" territory?
-> >=20
-> > Bit shifts or the next line?
->=20
-> Seems like I didn't see that this is grouped to the next line so forget=
-=20
-> about my comment.
->=20
-> > >=20
-> > > \n please
-> >=20
-> > Not sure about all that, this is the way it looks right now:
-> >=20
-> > /* types for kvm_s390_mem_op->op */
-> > #define KVM_S390_MEMOP_LOGICAL_READ     0
-> > #define KVM_S390_MEMOP_LOGICAL_WRITE    1
-> > #define KVM_S390_MEMOP_SIDA_READ        2
-> > #define KVM_S390_MEMOP_SIDA_WRITE       3
-> > #define KVM_S390_MEMOP_ABSOLUTE_READ    4
-> > #define KVM_S390_MEMOP_ABSOLUTE_WRITE   5
->=20
-> > /* flags for kvm_s390_mem_op->flags */
-> > #define KVM_S390_MEMOP_F_CHECK_ONLY             (1ULL << 0)
-> > #define KVM_S390_MEMOP_F_INJECT_EXCEPTION       (1ULL << 1)
-> > #define KVM_S390_MEMOP_F_SKEY_PROTECTION        (1ULL << 2)
-> > #define KVM_S390_MEMOP_F_CMPXCHG                (1ULL << 3)
->=20
-> > /* flags specifying extension support */
->=20
-> > #define KVM_S390_MEMOP_EXTENSION_CAP_CMPXCHG 0x2
->=20
-> #define KVM_S390_MEMOP_EXTENSION_CAP_ABSOLUTE 1 << 0
-
-Unfortunately, I designed this badly for the first memop extension,
-the absolute memop is supported if extension_cap > 0.
-But we can always also set bit 0 in that case.
-
-> #define KVM_S390_MEMOP_EXTENSION_CAP_CMPXCHG 1 << 1
->=20
-> Or maybe BASE instead of ABSOLUTE
->=20
->=20
-> > /* Non program exception return codes (pgm codes are 16 bit) */
-> > #define KVM_S390_MEMOP_R_NO_XCHG                (1 << 16)
-> >=20
-> > Seems consistent to me.
->=20
-> Consistent and hardly readable once you add two more "categories" of valu=
-es.
-
-I'll add newlines then.
->=20
-> > >=20
-> > > > +/* Non program exception return codes (pgm codes are 16 bit) */
-> > > > +#define KVM_S390_MEMOP_R_NO_XCHG		(1 << 16)
-> > > >   =20
-> > > >    /* for KVM_INTERRUPT */
-> > > >    struct kvm_interrupt {
-> > > > diff --git a/arch/s390/kvm/gaccess.h b/arch/s390/kvm/gaccess.h
-> > > > index 9408d6cc8e2c..92a3b9fb31ec 100644
-> > > > --- a/arch/s390/kvm/gaccess.h
-> > > > +++ b/arch/s390/kvm/gaccess.h
-> > > > @@ -206,6 +206,9 @@ int access_guest_with_key(struct kvm_vcpu *vcpu=
-, unsigned long ga, u8 ar,
-> > > >    int access_guest_real(struct kvm_vcpu *vcpu, unsigned long gra,
-> > > >    		      void *data, unsigned long len, enum gacc_mode mode);
-> > > >   =20
-> > > > +int cmpxchg_guest_abs_with_key(struct kvm *kvm, gpa_t gpa, int len=
-,
-> > > > +			       __uint128_t *old, __uint128_t new, u8 access_key);
-> > > > +
-> > > >    /**
-> > > >     * write_guest_with_key - copy data from kernel space to guest s=
-pace
-> > > >     * @vcpu: virtual cpu
-> > > > diff --git a/arch/s390/kvm/gaccess.c b/arch/s390/kvm/gaccess.c
-> > > > index 0243b6e38d36..6165e761a637 100644
-> > > > --- a/arch/s390/kvm/gaccess.c
-> > > > +++ b/arch/s390/kvm/gaccess.c
-> > > > @@ -1161,6 +1161,108 @@ int access_guest_real(struct kvm_vcpu *vcpu=
-, unsigned long gra,
-> > > >    	return rc;
-> > > >    }
-> > > >   =20
-> > > > +/**
-> > > > + * cmpxchg_guest_abs_with_key() - Perform cmpxchg on guest absolut=
-e address.
-> > > > + * @kvm: Virtual machine instance.
-> > > > + * @gpa: Absolute guest address of the location to be changed.
-> > > > + * @len: Operand length of the cmpxchg, required: 1 <=3D len <=3D =
-16. Providing a
-> > > > + *       non power of two will result in failure.
-> > > > + * @old_addr: Pointer to old value. If the location at @gpa contai=
-ns this value, the
-> > > > + *         exchange will succeed. After calling cmpxchg_guest_abs_=
-with_key() *@old
-> > > > + *         contains the value at @gpa before the attempt to exchan=
-ge the value.
-> > > > + * @new: The value to place at @gpa.
-> > > > + * @access_key: The access key to use for the guest access.
-> > > > + *
-> > > > + * Atomically exchange the value at @gpa by @new, if it contains *=
-@old.
-> > > > + * Honors storage keys.
-> > > > + *
-> > > > + * Return: * 0: successful exchange
-> > > > + *         * 1: exchange unsuccessful
-> > > > + *         * a program interruption code indicating the reason cmp=
-xchg could
-> > > > + *           not be attempted
-> > >=20
-> > >   > 1 Access related program interruption code indicating the reason
-> > > cmpxchg could not be attempted
-> > >=20
-> > > < 1 Kernel / input data error codes
-> >=20
-> > I think I'll do it like I said in the email to Thomas, that way it's ma=
-ximally
-> > explicit about the return values one might get.
->=20
-> This shows me that we're overloading the return value way too much.
-> Not just of this function but also of the memop with=20
-> KVM_S390_MEMOP_R_NO_XCHG.
->=20
-> A return of < 0, 0, 1 and a passed int reference for the PGM codes=20
-> that's updated if the rc is 1 would make this clearer.
-
-The return code is complicated, using effectively two return codes does cle=
-anly
-separate the possible error types, but also means one has to check two retu=
-rn codes.
-I'm fine with that, but in that case it shouldn't be the PGM code that gets=
- separated,
-but the success of the xchg. So <0 kernel error, >0 PGM code, like everywhe=
-re else
-and =3D=3D0 -> check *success.
->=20
-> Btw. could a user specify check + cmpxchange as the flags?
-> Are we checking that and I've missed to see such a check?
-
-Yes, what that does is basically to check if the cmpxchg args are valid.
-Then it checks if the target address is writable.
-Not much code necessary for that other than not doing the cmpxchg if check_=
-only
-is set.
->=20
->=20
-> I don't like that we throw in yet another feature as a flag thereby=20
-> blowing up kvm_s390_vm_mem_op() and adding new branches to it. I'll need=
-=20
-> to think about that some more.
->=20
-[...]
-
+Thanks
