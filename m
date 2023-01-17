@@ -2,50 +2,48 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 43F7866E752
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Jan 2023 20:59:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BEA5E670C14
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Jan 2023 23:49:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229957AbjAQT7Y (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 17 Jan 2023 14:59:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41056 "EHLO
+        id S230091AbjAQWtd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 17 Jan 2023 17:49:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232377AbjAQT5m (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 17 Jan 2023 14:57:42 -0500
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C81394DCC3;
-        Tue, 17 Jan 2023 10:50:41 -0800 (PST)
-Received: by mail-pj1-f41.google.com with SMTP id d8so2165922pjc.3;
-        Tue, 17 Jan 2023 10:50:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/HQGg/8vq5SlsczjXKDNJxmMvwo3J64W2HmBDEDQXxI=;
-        b=y/PlpQs+LAbuxydTDMVvH5V2DVF0/8wtqV1onh7XlWvom6KBsXZ1HzthhKsi2TinN3
-         Hau772Bi2EnP41ptiPWduAXqW+MUrGKC1t4656NvMpIcujsDpT7wtITNWFm7ke4Fnr+5
-         OixaruQ5/zIMf+Ucu5cd2KaHASdA96SVdjQr3wWcWXNrQTRikcnuBHXTEtTtK9b3zo+w
-         41stWHI4t6RPLhifrNU07Ne1Cb5UjDGnTRTrL/wPEtpeXNmlr6mjqN1duf/SHf9ElU6f
-         riIJuKfLcEAq1b+XPZYYK6tWjogr+I+vzgy1cSm8BGBZQecszMIfck3acw7GArWpCvYf
-         u+fA==
-X-Gm-Message-State: AFqh2kqVKLWgSDUPpq51iEWmxIrXJpwS53aKWxEW2TYxs1gBcWQMyr8D
-        JyZhccNU8RSefaHlKkKld0Q=
-X-Google-Smtp-Source: AMrXdXtC63QxLhrrBGZ5gaUkg1Tui5HCgbg5MDGgGgT/75UxeGbHBmIoukfx00Xrj5uTEYxKD9nduA==
-X-Received: by 2002:a17:902:6904:b0:193:3354:1c22 with SMTP id j4-20020a170902690400b0019333541c22mr3354629plk.39.1673981441139;
-        Tue, 17 Jan 2023 10:50:41 -0800 (PST)
-Received: from ?IPV6:2620:15c:211:201:f632:d9f5:6cbb:17d0? ([2620:15c:211:201:f632:d9f5:6cbb:17d0])
-        by smtp.gmail.com with ESMTPSA id c1-20020a170903234100b0017f48a9e2d6sm21427456plh.292.2023.01.17.10.50.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jan 2023 10:50:40 -0800 (PST)
-Message-ID: <c23a6bf4-0b6e-0bbb-b74d-af69756bcf9a@acm.org>
-Date:   Tue, 17 Jan 2023 10:50:37 -0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
+        with ESMTP id S229848AbjAQWrr (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 17 Jan 2023 17:47:47 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D55AAB4E07;
+        Tue, 17 Jan 2023 13:48:45 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id E5704349D3;
+        Tue, 17 Jan 2023 21:48:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1673992123; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ABmnaFOhAxeaDmI6GsVJDrQ8mjhYez5N9zWsCMIgoGA=;
+        b=U4yhLR7qkErvYgdEnY05Z0ysZVo6hjuYMI2j6onrulZ0WmZmqaYjywGqX6E5GQLbV+d12v
+        slZYTPS9ZRQojoaf5QD9gdduoexm7wKxN2Opp4l5MUmJX/f9ZY/cWvSLVifQlaTt0jRZPr
+        Eo2Q/Db5g0Dz/JORYP9yVXYjHn5q3kk=
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 979791390C;
+        Tue, 17 Jan 2023 21:48:43 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id TTJcI7sXx2OWAwAAMHmgww
+        (envelope-from <mwilck@suse.com>); Tue, 17 Jan 2023 21:48:43 +0000
+Message-ID: <ab7d61dd7f7c0289114e36fef6e9f282ad5c976b.camel@suse.com>
 Subject: Re: kernel BUG scsi_dh_alua sleeping from invalid context && kernel
  WARNING do not call blocking ops when !TASK_RUNNING
-Content-Language: en-US
-To:     Martin Wilck <mwilck@suse.com>,
+From:   Martin Wilck <mwilck@suse.com>
+To:     Bart Van Assche <bvanassche@acm.org>,
         Steffen Maier <maier@linux.ibm.com>,
         linux-scsi <linux-scsi@vger.kernel.org>
 Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
@@ -54,61 +52,72 @@ Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
         Hannes Reinecke <hare@suse.de>,
         Benjamin Block <bblock@linux.ibm.com>,
         linux-s390 <linux-s390@vger.kernel.org>
+Date:   Tue, 17 Jan 2023 22:48:42 +0100
+In-Reply-To: <c23a6bf4-0b6e-0bbb-b74d-af69756bcf9a@acm.org>
 References: <b49e37d5-edfb-4c56-3eeb-62c7d5855c00@linux.ibm.com>
- <017b6c73f56505e63519e4b79fe69d66abddf810.camel@suse.com>
- <a9da2b27-882f-bc8e-3400-cb53440e2159@acm.org>
- <125f247806396f19fd27dcfa71f530b5b4a529a6.camel@suse.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <125f247806396f19fd27dcfa71f530b5b4a529a6.camel@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+         <017b6c73f56505e63519e4b79fe69d66abddf810.camel@suse.com>
+         <a9da2b27-882f-bc8e-3400-cb53440e2159@acm.org>
+         <125f247806396f19fd27dcfa71f530b5b4a529a6.camel@suse.com>
+         <c23a6bf4-0b6e-0bbb-b74d-af69756bcf9a@acm.org>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.3 
+MIME-Version: 1.0
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 1/17/23 01:28, Martin Wilck wrote:
-> On Mon, 2023-01-16 at 09:48 -0800, Bart Van Assche wrote:
->> On 1/16/23 08:57, Martin Wilck wrote:
->>> Can we simply defer the scsi_device_put() to a workqueue?
->>
->> I'm concerned that would reintroduce a race condition when LLD kernel
->> modules are removed.
-> 
-> I don't follow. Normally, alua_rtpg_queue() queues rtpg_work, and
-> alua_rtpg_work() will be called from the work queue and will eventually
-> call scsi_device_put() when the RTPG is finished.
-> 
-> alua_rtpg_queue() only calls scsi_device_put() if queueing rtpg_work
-> fails[*]. If we deferred this scsi_device_put() call to a work queue,
-> what would be the difference (wrt a module_put() race condition)
-> compared to the case where queue_delayed_work() succeeds?
-> In both cases, scsi_device_put() would be called from a work queue.
-> 
-> Given that alua_rtpg_queue() must take a reference to the scsi device
-> for the case that queueing succeeds, and that alua_rtpg_queue() is
-> sometimes called in atomic context, I think deferring the
-> scsi_device_put() call is the only option we have.
+On Tue, 2023-01-17 at 10:50 -0800, Bart Van Assche wrote:
+> On 1/17/23 01:28, Martin Wilck wrote:
+> > On Mon, 2023-01-16 at 09:48 -0800, Bart Van Assche wrote:
+> > > On 1/16/23 08:57, Martin Wilck wrote:
+> > > > Can we simply defer the scsi_device_put() to a workqueue?
+> > >=20
+> > > I'm concerned that would reintroduce a race condition when LLD
+> > > kernel
+> > > modules are removed.
+> >=20
+> > I don't follow. Normally, alua_rtpg_queue() queues rtpg_work, and
+> > alua_rtpg_work() will be called from the work queue and will
+> > eventually
+> > call scsi_device_put() when the RTPG is finished.
+> >=20
+> > alua_rtpg_queue() only calls scsi_device_put() if queueing
+> > rtpg_work
+> > fails[*]. If we deferred this scsi_device_put() call to a work
+> > queue,
+> > what would be the difference (wrt a module_put() race condition)
+> > compared to the case where queue_delayed_work() succeeds?
+> > In both cases, scsi_device_put() would be called from a work queue.
+> >=20
+> > Given that alua_rtpg_queue() must take a reference to the scsi
+> > device
+> > for the case that queueing succeeds, and that alua_rtpg_queue() is
+> > sometimes called in atomic context, I think deferring the
+> > scsi_device_put() call is the only option we have.
+>=20
+> Hi Martin,
+>=20
+> Before commit f93ed747e2c7 ("scsi: core: Release SCSI devices=20
+> synchronously") the SCSI device release code could continue running=20
+> asynchronously after the last module_put() call of the LLD associated
+> with the SCSI device.
+>=20
+> Since commit f93ed747e2c7 it is guaranteed that freeing device memory
+> (scsi_device_dev_release()) has finished before the last LLD=20
+> module_put() call happens.
+>=20
+> Do you perhaps plan to defer the scsi_device_put() calls in the ALUA=20
+> device handler to a workqueue?
 
-Hi Martin,
+Yes, that was my suggestion. Just defer the scsi_device_put() call in
+alua_rtpg_queue() in the case where the actual RTPG handler is not
+queued. I won't have time for that before next week though.
 
-Before commit f93ed747e2c7 ("scsi: core: Release SCSI devices 
-synchronously") the SCSI device release code could continue running 
-asynchronously after the last module_put() call of the LLD associated 
-with the SCSI device.
+Martin
 
-Since commit f93ed747e2c7 it is guaranteed that freeing device memory 
-(scsi_device_dev_release()) has finished before the last LLD 
-module_put() call happens.
-
-Do you perhaps plan to defer the scsi_device_put() calls in the ALUA 
-device handler to a workqueue?
-
-Thanks,
-
-Bart.
