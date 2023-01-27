@@ -2,101 +2,123 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E9DB67DDB8
-	for <lists+linux-s390@lfdr.de>; Fri, 27 Jan 2023 07:41:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C38567DFB2
+	for <lists+linux-s390@lfdr.de>; Fri, 27 Jan 2023 10:09:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231969AbjA0GkZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 27 Jan 2023 01:40:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39112 "EHLO
+        id S231486AbjA0JJW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 27 Jan 2023 04:09:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231879AbjA0GkW (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 27 Jan 2023 01:40:22 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43E276C560;
-        Thu, 26 Jan 2023 22:40:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=b2J5kw4jMwk0ZaQSGFy4S3ExSbNurermdu9lg81Gm60=; b=rVW8qyHzwVYLzXNdRGeTC48+Dr
-        nek4ODSZH7dkzESkZ/I40Lzg8Uae+SEsoDMz1FetKsWplszM4bo0+cEQWPAdVtbZWLs5dFIvsAYuN
-        QbsVE9nMiy7i/itidTgXJYMS18EHjF1UGgKRzC/31rXTIasO8wu3z7MNjwiOiZUvL+GsOAS6x6vlk
-        j3VSAti7SgnvLXxOYh/8zkLTqHfPk1a/VvDPcRChoBOeqTqaX+Px0mVqov3AleWbKIYoz0LzX2jGh
-        9u0JeMlQRfHes5o1gW2gKmOi2lLwzpFTvpLouL/cKmzgjo7zCDu/XXnL4Wba/MZbx4HfpprNrLzVC
-        qBf16zCw==;
-Received: from [2601:1c2:d80:3110::9307] (helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pLIPM-00DM0u-Nx; Fri, 27 Jan 2023 06:40:20 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-doc@vger.kernel.org
-Subject: [PATCH 23/35] Documentation: s390: correct spelling
-Date:   Thu, 26 Jan 2023 22:39:53 -0800
-Message-Id: <20230127064005.1558-24-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230127064005.1558-1-rdunlap@infradead.org>
-References: <20230127064005.1558-1-rdunlap@infradead.org>
+        with ESMTP id S229508AbjA0JJW (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 27 Jan 2023 04:09:22 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C0AF4C10;
+        Fri, 27 Jan 2023 01:09:21 -0800 (PST)
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30R8kucJ018948;
+        Fri, 27 Jan 2023 09:09:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=4SZ7Es78iT9Bl1L8QXSmRpFohHTfZAPVu/ApukTo7Z0=;
+ b=YYkwhCm6UX5DAfcGZbpf9cxes+8jobXlLBqG4S1Ag4hSDqQV5cwI10mkqQmddgVH1Zam
+ Qm0EbqO7MVO0LvTOKnvd47FrvAMFqKUwnE4iuU5FbjtTQ2GnWWEWglhKb+RP+0Q5iwSj
+ 1z+k3DCi+PCzyTaGgQr8EY35f3SP3HJW7J/dSEyX5SGT6IiNiQydad1xFYkaxyxuE8w7
+ Y8L1IosVUIQVVYS1QFr78DNjBPzAeVR7lX2LJI9pDb8lX3eGVXCl5tcC6+hTFuhn6jxX
+ o+rebkduEU7ZnshKtPzCOyqURz5iRo+jhWpidaMpaoeBZlB2AWmJZHshIBc10FlZKtdp 4Q== 
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nc8gxm80g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Jan 2023 09:09:20 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30R54RpW014840;
+        Fri, 27 Jan 2023 09:09:18 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3n87affb05-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Jan 2023 09:09:18 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30R99ENW39715088
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Jan 2023 09:09:15 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D55302004B;
+        Fri, 27 Jan 2023 09:09:14 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8BD452004D;
+        Fri, 27 Jan 2023 09:09:14 +0000 (GMT)
+Received: from [9.171.2.114] (unknown [9.171.2.114])
+        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Fri, 27 Jan 2023 09:09:14 +0000 (GMT)
+Message-ID: <c883a240-b5ad-9b21-006d-1074fc122f7b@linux.ibm.com>
+Date:   Fri, 27 Jan 2023 10:09:14 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v3 1/1] KVM: s390: disable migration mode when dirty
+ tracking is disabled
+To:     Nico Boehr <nrb@linux.ibm.com>, borntraeger@linux.ibm.com,
+        imbrenda@linux.ibm.com
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org
+References: <20230126174027.133667-1-nrb@linux.ibm.com>
+ <20230126174027.133667-2-nrb@linux.ibm.com>
+Content-Language: en-US
+From:   Janosch Frank <frankja@linux.ibm.com>
+In-Reply-To: <20230126174027.133667-2-nrb@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: knMs9129_GZc04o7tlRVGvXn9NaAGZrf
+X-Proofpoint-GUID: knMs9129_GZc04o7tlRVGvXn9NaAGZrf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-27_04,2023-01-27_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ mlxlogscore=791 spamscore=0 mlxscore=0 phishscore=0 priorityscore=1501
+ lowpriorityscore=0 suspectscore=0 malwarescore=0 clxscore=1015
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2301270084
+X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Correct spelling problems for Documentation/s390/ as reported
-by codespell.
+On 1/26/23 18:40, Nico Boehr wrote:
+> Migration mode is a VM attribute which enables tracking of changes in
+> storage attributes (PGSTE). It assumes dirty tracking is enabled on all
+> memslots to keep a dirty bitmap of pages with changed storage attributes.
+> 
+> When enabling migration mode, we currently check that dirty tracking is
+> enabled for all memslots. However, userspace can disable dirty tracking
+> without disabling migration mode.
+> 
+> Since migration mode is pointless with dirty tracking disabled, disable
+> migration mode whenever userspace disables dirty tracking on any slot.
+> 
+> Also update the documentation to clarify that dirty tracking must be
+> enabled when enabling migration mode, which is already enforced by the
+> code in kvm_s390_vm_start_migration().
+> 
+> Also highlight in the documentation for KVM_S390_GET_CMMA_BITS that it
+> can now fail with -EINVAL when dirty tracking is disabled while
+> migration mode is on. Move all the error codes to a table to this stays
+> readable.
+> 
+> To disable migration mode, slots_lock should be held, which is taken
+> in kvm_set_memory_region() and thus held in
+> kvm_arch_prepare_memory_region().
+> 
+> Restructure the prepare code a bit so all the sanity checking is done
+> before disabling migration mode. This ensures migration mode isn't
+> disabled when some sanity check fails.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 190df4a212a7 ("KVM: s390: CMMA tracking, ESSA emulation, migration mode")
+> Signed-off-by: Nico Boehr <nrb@linux.ibm.com>
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org
----
- Documentation/s390/pci.rst      |    4 ++--
- Documentation/s390/vfio-ccw.rst |    2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
 
-diff -- a/Documentation/s390/pci.rst b/Documentation/s390/pci.rst
---- a/Documentation/s390/pci.rst
-+++ b/Documentation/s390/pci.rst
-@@ -51,7 +51,7 @@ Entries specific to zPCI functions and e
- 
-   The slot entries are set up using the function identifier (FID) of the
-   PCI function. The format depicted as XXXXXXXX above is 8 hexadecimal digits
--  with 0 padding and lower case hexadecimal digitis.
-+  with 0 padding and lower case hexadecimal digits.
- 
-   - /sys/bus/pci/slots/XXXXXXXX/power
- 
-@@ -66,7 +66,7 @@ Entries specific to zPCI functions and e
- 
-   - function_handle
-     Low-level identifier used for a configured PCI function.
--    It might be useful for debuging.
-+    It might be useful for debugging.
- 
-   - pchid
-     Model-dependent location of the I/O adapter.
-diff -- a/Documentation/s390/vfio-ccw.rst b/Documentation/s390/vfio-ccw.rst
---- a/Documentation/s390/vfio-ccw.rst
-+++ b/Documentation/s390/vfio-ccw.rst
-@@ -176,7 +176,7 @@ The process of how these work together.
-    Use the 'mdev_create' sysfs file, we need to manually create one (and
-    only one for our case) mediated device.
- 3. vfio_mdev.ko drives the mediated ccw device.
--   vfio_mdev is also the vfio device drvier. It will probe the mdev and
-+   vfio_mdev is also the vfio device driver. It will probe the mdev and
-    add it to an iommu_group and a vfio_group. Then we could pass through
-    the mdev to a guest.
- 
