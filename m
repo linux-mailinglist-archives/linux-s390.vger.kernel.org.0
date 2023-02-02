@@ -2,160 +2,129 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 92C0A687F45
-	for <lists+linux-s390@lfdr.de>; Thu,  2 Feb 2023 14:53:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A577B688276
+	for <lists+linux-s390@lfdr.de>; Thu,  2 Feb 2023 16:31:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229441AbjBBNxx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 2 Feb 2023 08:53:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48044 "EHLO
+        id S233216AbjBBPbl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 2 Feb 2023 10:31:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229881AbjBBNxx (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 2 Feb 2023 08:53:53 -0500
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 711D46D055;
-        Thu,  2 Feb 2023 05:53:49 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0ValHekG_1675346025;
-Received: from 30.221.129.148(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0ValHekG_1675346025)
-          by smtp.aliyun-inc.com;
-          Thu, 02 Feb 2023 21:53:46 +0800
-Message-ID: <39206f64-3f88-235e-7017-2479ac58844d@linux.alibaba.com>
-Date:   Thu, 2 Feb 2023 21:53:43 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.6.1
-Subject: Re: [net-next v2 0/8] drivers/s390/net/ism: Add generalized interface
-To:     Jan Karcher <jaka@linux.ibm.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Alexandra Winter <wintera@linux.ibm.com>,
-        Wenjia Zhang <wenjia@linux.ibm.com>,
-        Thorsten Winkler <twinkler@linux.ibm.com>,
-        Stefan Raspl <raspl@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Nils Hoppmann <niho@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Tony Lu <tonylu@linux.alibaba.com>
-References: <20230123181752.1068-1-jaka@linux.ibm.com>
-From:   Wen Gu <guwen@linux.alibaba.com>
-In-Reply-To: <20230123181752.1068-1-jaka@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-10.0 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-        UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S233045AbjBBPbY (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 2 Feb 2023 10:31:24 -0500
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A420A6EDE8;
+        Thu,  2 Feb 2023 07:30:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=Subject:Cc:To:From:Date:Message-ID:
+        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=W8jT5092DDtlCmrawW/Uxx2BFUdyhIJzihgo65ygdd4=; b=O3BwLZ6BbrBpkX4dSlLTVJddoL
+        d+skGCA3LaLD1DjXUjhAZ+YXjWood4lIaETj8WAJCJtuCia+5JPoMriULzyTj05sSSbGGfFURgFzz
+        uD8QxDHvTkyu9oqOWL1RbeWVgcL6nddQFkQjJ4QnQ5/nmWe4o+lp5X+xxotmAOSlzmYilLO3E3Xk0
+        ANMykPFl0gECdwfo83f9ou7ADvruw1TbUxoxZJvaKSQvsVQMerp6elTDLX0a3tYlZXS6u2n04NOdI
+        Zs8Ix4DJGOUZPVkTu/0aNeptCV8+384RejNjk7s8CGcHbikNTJKexF74/3bjQT3gCLRoTujYu6QEQ
+        af1EG2rQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1pNbVT-005CFd-1o;
+        Thu, 02 Feb 2023 15:28:11 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F29F53001E5;
+        Thu,  2 Feb 2023 16:28:40 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id 7F28623F31FA6; Thu,  2 Feb 2023 16:28:40 +0100 (CET)
+Message-ID: <20230202145030.223740842@infradead.org>
+User-Agent: quilt/0.66
+Date:   Thu, 02 Feb 2023 15:50:30 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     torvalds@linux-foundation.org
+Cc:     corbet@lwn.net, will@kernel.org, peterz@infradead.org,
+        boqun.feng@gmail.com, mark.rutland@arm.com,
+        catalin.marinas@arm.com, dennis@kernel.org, tj@kernel.org,
+        cl@linux.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, joro@8bytes.org, suravee.suthikulpanit@amd.com,
+        robin.murphy@arm.com, dwmw2@infradead.org,
+        baolu.lu@linux.intel.com, Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
+        penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
+        Andrew Morton <akpm@linux-foundation.org>, vbabka@suse.cz,
+        roman.gushchin@linux.dev, 42.hyeyoo@gmail.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-s390@vger.kernel.org,
+        iommu@lists.linux.dev, linux-arch@vger.kernel.org,
+        linux-crypto@vger.kernel.org
+Subject: [PATCH v2 00/10] Introduce cmpxchg128() -- aka. the demise of cmpxchg_double()
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Hi!
+
+Since Linus hated on cmpxchg_double(), a few patches to get rid of it, as
+proposed here:
+
+  https://lkml.kernel.org/r/Y2U3WdU61FvYlpUh@hirez.programming.kicks-ass.net
 
 
-On 2023/1/24 02:17, Jan Karcher wrote:
+These patches are based on 6.2.0-rc6 + cryptodev-2.6, but also apply to next/master.
 
-> Previously, there was no clean separation between SMC-D code and the ISM
-> device driver.This patch series addresses the situation to make ISM available
-> for uses outside of SMC-D.
-> In detail: SMC-D offers an interface via struct smcd_ops, which only the
-> ISM module implements so far. However, there is no real separation between
-> the smcd and ism modules, which starts right with the ISM device
-> initialization, which calls directly into the SMC-D code.
-> This patch series introduces a new API in the ISM module, which allows
-> registration of arbitrary clients via include/linux/ism.h: struct ism_client.
-> Furthermore, it introduces a "pure" struct ism_dev (i.e. getting rid of
-> dependencies on SMC-D in the device structure), and adds a number of API
-> calls for data transfers via ISM (see ism_register_dmb() & friends).
-> Still, the ISM module implements the SMC-D API, and therefore has a number
-> of internal helper functions for that matter.
-> Note that the ISM API is consciously kept thin for now (as compared to the
-> SMC-D API calls), as a number of API calls are only used with SMC-D and
-> hardly have any meaningful usage beyond SMC-D, e.g. the VLAN-related calls.
-> 
+Available here:
 
-Hi,
+  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git core/wip-u128
 
-Thanks for the great work!
+New since v1:
 
-We are tring to adapt loopback and virtio-ism device into SMC-D based on the new
-interface and want to confirm something. (cc: Alexandra Winter, Jan Karcher, Wenjia Zhang)
+ - rebaed on Eric's ghash cleanups (hence the cryptodev-2.6 dependency)
+ - rebased on Heiko's s390/cpum_sf CDSG patch
+ - fixed up a bunch of arch code
+ - fixed up the inline asm to use 'u128 *' mem argument so the compiler knows
+   how wide the modification is.
+ - reworked the percpu thing to use union based type-punning instead of
+   _Generic() based casts.
 
- From my understanding, this patch set is from the perspective of ISM device driver
-and aims to make ISM device not only used by SMC-D, which is great!
+---
+ Documentation/core-api/this_cpu_ops.rst     |   2 -
+ arch/arm64/include/asm/atomic_ll_sc.h       |  56 ++++++-----
+ arch/arm64/include/asm/atomic_lse.h         |  39 ++++----
+ arch/arm64/include/asm/cmpxchg.h            |  48 +++-------
+ arch/arm64/include/asm/percpu.h             |  31 ++++--
+ arch/s390/include/asm/cmpxchg.h             |  32 ++-----
+ arch/s390/include/asm/cpu_mf.h              |   2 +-
+ arch/s390/include/asm/percpu.h              |  35 ++++---
+ arch/s390/kernel/perf_cpum_sf.c             |  22 ++---
+ arch/x86/include/asm/cmpxchg.h              |  25 -----
+ arch/x86/include/asm/cmpxchg_32.h           |   2 +-
+ arch/x86/include/asm/cmpxchg_64.h           |  54 ++++++++++-
+ arch/x86/include/asm/percpu.h               |  97 +++++++++++--------
+ drivers/iommu/amd/amd_iommu_types.h         |   9 +-
+ drivers/iommu/amd/iommu.c                   |  10 +-
+ drivers/iommu/intel/irq_remapping.c         |   8 +-
+ include/asm-generic/percpu.h                |  62 ++----------
+ include/crypto/b128ops.h                    |  14 +--
+ include/linux/atomic/atomic-arch-fallback.h |  95 ++++++++++++++++++-
+ include/linux/atomic/atomic-instrumented.h  |  88 ++++++++++++++---
+ include/linux/dmar.h                        | 125 ++++++++++++------------
+ include/linux/percpu-defs.h                 |  46 +++------
+ include/linux/slub_def.h                    |  12 ++-
+ include/linux/types.h                       |   5 +
+ include/uapi/linux/types.h                  |   4 +
+ lib/crypto/curve25519-hacl64.c              |   2 -
+ lib/crypto/poly1305-donna64.c               |   2 -
+ mm/slab.h                                   |  45 ++++++++-
+ mm/slub.c                                   | 142 +++++++++++++++++-----------
+ scripts/atomic/gen-atomic-fallback.sh       |   4 +-
+ scripts/atomic/gen-atomic-instrumented.sh   |  21 ++--
+ 31 files changed, 645 insertions(+), 494 deletions(-)
 
-But from the perspective of SMC, SMC-D protocol now binds with the helper in
-smc_ism.c (smc_ism_* helper) and some part of smc_ism.c and smcd_ops seems to be
-dedicated to only serve ISM device.
 
-For example,
-
-- The input param of smcd_register_dev() and smcd_unregister_dev() is ism_dev,
-   instead of abstract smcd_dev like before.
-
-- the smcd->ops->register_dmb has param of ism_client, exposing specific underlay.
-
-So I want to confirm that, which of the following is our future direction of the
-SMC-D device expansion?
-
-(1) All extended devices (eg. virtio-ism and loopback) are ISM devices and SMC-D
-     only supports ISM type device.
-
-     SMC-D protocol -> smc_ism_* helper in smc_ism.c -> only ISM device.
-
-     Future extended device must under the definition of ism_dev, in order to share
-     the ism-specific helper in smc_ism.c (such as smcd_register_dev(), smcd_ops->register_dmbs..).
-
-     With this design intention, futher extended SMC-D used device may be like:
-
-                     +---------------------+
-                     |    SMC-D protocol   |
-                     +---------------------+
-                       | current helper in|
-                       |    smc_ism.c     |
-          +--------------------------------------------+
-          |              Broad ISM device              |
-          |             defined as ism_dev             |
-          |  +----------+ +------------+ +----------+  |
-          |  | s390 ISM | | virtio-ism | | loopback |  |
-          |  +----------+ +------------+ +----------+  |
-          +--------------------------------------------+
-
-(2) All extended devices (eg. virtio-ism and loopback) are abstracted as smcd_dev and
-     SMC-D protocol use the abstracted capabilities.
-
-     SMC-D does not care about the type of the underlying device, and only focus on the
-     capabilities provided by smcd_dev.
-
-     SMC-D protocol use a kind of general helpers, which only invoking smcd_dev->ops,
-     without underlay device exposed. Just like most of helpers now in smc_ism.c, such as
-     smc_ism_cantalk()/smc_ism_get_chid()/smc_ism_set_conn()..
-
-     With this design intention, futher extended SMC-D used device should be like:
-
-                      +----------------------+
-                      |     SMC-D protocol   |
-                      +----------------------+
-                       |   general helper   |
-                       |invoke smcd_dev->ops|
-                       | hiding underlay dev|
-            +-----------+  +------------+  +----------+
-            | smc_ism.c |  | smc_vism.c |  | smc_lo.c |
-            |           |  |            |  |          |
-            | s390 ISM  |  | virtio-ism |  | loopback |
-            |  device   |  |   device   |  |  device  |
-            +-----------+  +------------+  +----------+
-
-IMHO, (2) is more clean and beneficial to the flexible expansion of SMC-D devices, with no
-underlay devices exposed.
-
-So (2) should be our target. Do you agree? :)
-
-If so, maybe we should make some part of helpers or ops of SMC-D device (such as smcd_register/unregister_dev
-and smcd->ops->register_dmb) more generic？
-
-Thanks,
-Wen Gu
