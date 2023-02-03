@@ -2,107 +2,118 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 852A168A0D3
-	for <lists+linux-s390@lfdr.de>; Fri,  3 Feb 2023 18:51:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 488F268A03B
+	for <lists+linux-s390@lfdr.de>; Fri,  3 Feb 2023 18:29:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233325AbjBCRvf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 3 Feb 2023 12:51:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57228 "EHLO
+        id S232637AbjBCR3S (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 3 Feb 2023 12:29:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233002AbjBCRve (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 3 Feb 2023 12:51:34 -0500
-Received: from new2-smtp.messagingengine.com (new2-smtp.messagingengine.com [66.111.4.224])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36A3783F8;
-        Fri,  3 Feb 2023 09:51:21 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailnew.nyi.internal (Postfix) with ESMTP id C60BE582007;
-        Fri,  3 Feb 2023 12:25:35 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Fri, 03 Feb 2023 12:25:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm3; t=1675445135; x=1675452335; bh=WOj1XJ/2nW
-        hhYICuUWvW/halINqVJ3cfLXpbNnnM1BY=; b=b16DgUjGr10ahekmo+ZIsgBmwH
-        NI+4WKiYPn0WRip7ki2No6/JcXSEn5Lbchwr0PX4NJN4lZDK/RDjs5Y94yJM0ggC
-        5JAdFObkE0yrMYUboTNDTueCCZ/jMUgQdLERu0cCkQyqwP2mQ/nbcj9IlEgvkNDu
-        kYscEQW5aPKbRIpuSz9VJ1Gjku5hfKhRLWalPFD8O4wjXGCtju1rGzPBqPmfh0+F
-        C+v8aQzPfNrMRqHt6Y4zRdZsvFi2gaFgnMrO4eHfnIjNvBwmaMzspYjxyu/FTHU8
-        Kect+k+Hs3CGy3Ro6Nsd8+xuC98eXMBBmkaA5enHge8egtEYjQ899wWzQXjA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; t=1675445135; x=1675452335; bh=WOj1XJ/2nWhhYICuUWvW/halINqV
-        J3cfLXpbNnnM1BY=; b=ndNbp+CxgZoarRRJg0oDB1vu4ErnnZgQS9OnLuWKTxJ3
-        rZsTad8uHfRNwCp3NH9sjW3eSUBjBT90p6HLG+cI4sDwH5CdapVchP2gGhkYXqDl
-        7GiE90ULhcZqBEwWeTskCI3DL48asLTwbW65TIZwFlNRm+TtDxecNFlIkuy0I6W3
-        x5tof5n4OYnE5HG4V4JoORLn7VxtHBxUXzWp3dTqBWZjAzZF8qMHeowxswghIZi6
-        IBFFhovJvoh7fNI40KDbP/tFtIJLeFomNfM3wl/+Xz+Pim6Zs6EGiSC/Yha+XLPe
-        2+XVk1aLuV0zQOzcvp3wMLMAoyn8vMzYzYYr5a9KWw==
-X-ME-Sender: <xms:jUPdYw7P6JnOYeN8iVeMNrpkTwrTbP8jzfhe_AeB0wWU4AGZJ0ydzQ>
-    <xme:jUPdYx7ZBP_oam7Utuhlz8bYRrfCtkYTOiUD_Zwf4E-ytw7QNteB5TeHvFvXmASTj
-    1UsZEEUzcT1qMIF4WE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudegtddgleejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepvefhffeltdegheeffffhtdegvdehjedtgfekueevgfduffettedtkeekueef
-    hedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:jUPdY_e9KRM9ZbeTMsHtXXWE5CukEx6HAbnENBBhMVXHkp_an_WOjA>
-    <xmx:jUPdY1I4CUAZY-Bp5g6StetrxCGSeaG2raErr07Q6bwJAGAL3BNzjg>
-    <xmx:jUPdY0JrYtCQXVjTuwyWdhYJ8TY4Hg1WUFzvGpzaxx2LW0ah7BzuRA>
-    <xmx:j0PdYyakU9xoWDa5ryktR4FHchVeWoQd1ZNOvmSn4fM710A1pe4JuA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 78555B6044F; Fri,  3 Feb 2023 12:25:33 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-107-g82c3c54364-fm-20230131.002-g82c3c543
-Mime-Version: 1.0
-Message-Id: <24007667-1ff3-4c86-9c17-a361c3f9f072@app.fastmail.com>
-In-Reply-To: <20230202152655.494373332@infradead.org>
-References: <20230202145030.223740842@infradead.org>
- <20230202152655.494373332@infradead.org>
-Date:   Fri, 03 Feb 2023 18:25:04 +0100
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Peter Zijlstra" <peterz@infradead.org>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>
-Cc:     "Jonathan Corbet" <corbet@lwn.net>,
-        "Will Deacon" <will@kernel.org>,
-        "Boqun Feng" <boqun.feng@gmail.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Catalin Marinas" <catalin.marinas@arm.com>, dennis@kernel.org,
-        "Tejun Heo" <tj@kernel.org>, "Christoph Lameter" <cl@linux.com>,
-        "Heiko Carstens" <hca@linux.ibm.com>, gor@linux.ibm.com,
-        "Alexander Gordeev" <agordeev@linux.ibm.com>,
-        borntraeger@linux.ibm.com, "Sven Schnelle" <svens@linux.ibm.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
-        "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, "Joerg Roedel" <joro@8bytes.org>,
-        suravee.suthikulpanit@amd.com,
-        "Robin Murphy" <robin.murphy@arm.com>, dwmw2@infradead.org,
-        "Baolu Lu" <baolu.lu@linux.intel.com>,
-        "Herbert Xu" <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        "Pekka Enberg" <penberg@kernel.org>,
-        "David Rientjes" <rientjes@google.com>,
-        "Joonsoo Kim" <iamjoonsoo.kim@lge.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        "Vlastimil Babka" <vbabka@suse.cz>,
-        "Roman Gushchin" <roman.gushchin@linux.dev>,
-        "Hyeonggon Yoo" <42.hyeyoo@gmail.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, iommu@lists.linux.dev,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-crypto@vger.kernel.org
-Subject: Re: [PATCH v2 05/10] percpu: Wire up cmpxchg128
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        with ESMTP id S231614AbjBCR3R (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 3 Feb 2023 12:29:17 -0500
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD54099D5E;
+        Fri,  3 Feb 2023 09:29:15 -0800 (PST)
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 313HJZNh023488;
+        Fri, 3 Feb 2023 17:29:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=yIKKSqHwaeTCDX9tWi3/IuUokzYTuzsU62UymCUlxww=;
+ b=irlxFJsRWSC9epA+bw9h2KPZI33mn2FvtTE08gkELKIwdmJPjCGAV+MjHYq7i7d1Ks+h
+ kV8u7zOtjKIKoyRrZbRC2qp2TJ0rDo8hfSJ3olSFqqmyKlUfwALmNyH+FDPAmvCsroSw
+ 7P+22HSkcdG6qq1kLbvGqD1CxpnFw/csJRlEgomgFggIjzxBaniM4g2hegNcXt1WMilg
+ qu95NFguEX1t3l7k1aF/XixQC1sqxLeJybklXdVoi7jPbM+hziuY+Hi9p/UINGl7Xr6r
+ Rc66LQcf9x5ydlKccZ5srnqIXhaFMJsgpehcGVWJTBwZwLFU6dacMy0Ls60UcdW+dnfE 0A== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nh6jrg74g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Feb 2023 17:29:07 +0000
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 313HLPtb027841;
+        Fri, 3 Feb 2023 17:29:06 GMT
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nh6jrg749-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Feb 2023 17:29:06 +0000
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 313H83Lw019216;
+        Fri, 3 Feb 2023 17:29:06 GMT
+Received: from smtprelay04.dal12v.mail.ibm.com ([9.208.130.102])
+        by ppma02dal.us.ibm.com (PPS) with ESMTPS id 3ncvura8vs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Feb 2023 17:29:05 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+        by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 313HT4mP12452420
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 Feb 2023 17:29:04 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4983C58053;
+        Fri,  3 Feb 2023 17:29:04 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D1E9A58043;
+        Fri,  3 Feb 2023 17:29:01 +0000 (GMT)
+Received: from [9.65.253.123] (unknown [9.65.253.123])
+        by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+        Fri,  3 Feb 2023 17:29:01 +0000 (GMT)
+Message-ID: <ed030aa5-b3af-638e-6e26-4e3a20b98ef4@linux.ibm.com>
+Date:   Fri, 3 Feb 2023 12:29:01 -0500
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v3] vfio: fix deadlock between group lock and kvm lock
+Content-Language: en-US
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "jgg@nvidia.com" <jgg@nvidia.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "farman@linux.ibm.com" <farman@linux.ibm.com>,
+        "pmorel@linux.ibm.com" <pmorel@linux.ibm.com>,
+        "borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>,
+        "frankja@linux.ibm.com" <frankja@linux.ibm.com>,
+        "imbrenda@linux.ibm.com" <imbrenda@linux.ibm.com>,
+        "david@redhat.com" <david@redhat.com>,
+        "akrowiak@linux.ibm.com" <akrowiak@linux.ibm.com>,
+        "jjherne@linux.ibm.com" <jjherne@linux.ibm.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "Christopherson, , Sean" <seanjc@google.com>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20230202162442.78216-1-mjrosato@linux.ibm.com>
+ <20230202124210.476adaf8.alex.williamson@redhat.com>
+ <BN9PR11MB527618E281BEB8E479ABB0418CD69@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <20230202161307.0c6aa23e.alex.williamson@redhat.com>
+ <BN9PR11MB5276017F9CEBB4BAE58C40E88CD79@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <DS0PR11MB7529050661FCE4A5AC4B17C3C3D79@DS0PR11MB7529.namprd11.prod.outlook.com>
+ <20230203064940.435e4d65.alex.williamson@redhat.com>
+ <DS0PR11MB75297154376388A3698C5CCAC3D79@DS0PR11MB7529.namprd11.prod.outlook.com>
+ <20230203081942.64fbf9f1.alex.williamson@redhat.com>
+From:   Matthew Rosato <mjrosato@linux.ibm.com>
+In-Reply-To: <20230203081942.64fbf9f1.alex.williamson@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: A8_BRNmMTA3ESxaqwk6JDcLm01g2G3ik
+X-Proofpoint-ORIG-GUID: ulmhCn99Bg2VRlDranrSCrmqTed_gNsH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-02-03_16,2023-02-03_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 clxscore=1015 impostorscore=0 mlxscore=0 suspectscore=0
+ phishscore=0 spamscore=0 mlxlogscore=999 bulkscore=0 priorityscore=1501
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2302030152
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -110,34 +121,245 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Feb 2, 2023, at 15:50, Peter Zijlstra wrote:
-> In order to replace cmpxchg_double() with the newly minted
-> cmpxchg128() family of functions, wire it up in this_cpu_cmpxchg().
->
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+On 2/3/23 10:19 AM, Alex Williamson wrote:
+> On Fri, 3 Feb 2023 14:54:44 +0000
+> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> 
+>>> From: Alex Williamson <alex.williamson@redhat.com>
+>>> Sent: Friday, February 3, 2023 9:50 PM
+>>>
+>>> On Fri, 3 Feb 2023 13:32:09 +0000
+>>> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+>>>   
+>>>>> From: Tian, Kevin <kevin.tian@intel.com>
+>>>>> Sent: Friday, February 3, 2023 10:00 AM
+>>>>>  
+>>>>>> From: Alex Williamson <alex.williamson@redhat.com>
+>>>>>> Sent: Friday, February 3, 2023 7:13 AM
+>>>>>>
+>>>>>> On Thu, 2 Feb 2023 23:04:10 +0000
+>>>>>> "Tian, Kevin" <kevin.tian@intel.com> wrote:
+>>>>>>  
+>>>>>>>> From: Alex Williamson <alex.williamson@redhat.com>
+>>>>>>>> Sent: Friday, February 3, 2023 3:42 AM
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> LGTM.  I'm not sure moving the functions to vfio_main really buys  
+>>> us  
+>>>>>>>> anything since we're making so much use of group fields.  The cdev
+>>>>>>>> approach will necessarily be different, so the bulk of the get code  
+>>> will  
+>>>>>>>> likely need to move back to group.c anyway.
+>>>>>>>>  
+>>>>>>>
+>>>>>>> well my last comment was based on Matthew's v2 where the get  
+>>> code  
+>>>>>>> gets a kvm passed in instead of implicitly retrieving group ref_lock
+>>>>>>> internally. In that case the get/put helpers only contain device logic
+>>>>>>> thus fit in vfio_main.c.
+>>>>>>>
+>>>>>>> with v3 then they have to be in group.c since we don't want to use
+>>>>>>> group fields in vfio_main.c.
+>>>>>>>
+>>>>>>> but I still think v2 of the helpers is slightly better. The only difference
+>>>>>>> between cdev and group when handling this race is using different
+>>>>>>> ref_lock. the symbol get/put part is exactly same. So even if we
+>>>>>>> merge v3 like this, very likely Yi has to change it back to v2 style
+>>>>>>> to share the get/put helpers while just leaving the ref_lock part
+>>>>>>> handled differently between the two path.  
+>>>>>>
+>>>>>> I'm not really a fan of the asymmetry of the v2 version where the get
+>>>>>> helper needs to be called under the new kvm_ref_lock, but the put
+>>>>>> helper does not.  Having the get helper handle that makes the caller
+>>>>>> much cleaner.  Thanks,
+>>>>>>  
+>>>>>
+>>>>> What about passing the lock pointer into the helper? it's still slightly
+>>>>> asymmetry as the put helper doesn't carry the lock pointer but it
+>>>>> could also be interpreted as if the pointer has been saved in the get
+>>>>> then if it needs to be referenced by the put there is no need to pass
+>>>>> it in again.  
+>>>>
+>>>> For cdev, I may modify vfio_device_get_kvm_safe() to accept
+>>>> struct kvm and let its caller hold a kvm_ref_lock (field within
+>>>> struct vfio_device_file). Meanwhile, the group path holds
+>>>> the group->kvm_ref_lock before invoking vfio_device_get_kvm_safe().
+>>>> vfio_device_get_kvm_safe() just includes the symbol get/put and
+>>>> the device->kvm and put_kvm set.  
+>>>
+>>> Sounds a lot like v2 :-\   
+>>
+>> Yes, like v2. 😊
+>>
+>>> I'd look more towards group and cdev specific
+>>> helpers that handle the locking so that the callers aren't exposed to
+>>> the asymmetry of get vs put, and reduce a new
+>>> _vfio_device_get_kvm_safe() in common code that only does the symbol
+>>> work.  Thanks,  
+>>
+>> If so, looks like Matthew needs a v4. I'm waiting for the final version
+>> of this patch and sending a new cdev series based on it. wish to see
+>> it soon ^_^.
+> 
+> cdev support is a future feature, why does it become a requirement for
+> a fix to the current base?  The refactoring could also happen in the
+> cdev series.  Thanks,
+> 
+> Alex
+> 
 
-I commented on this in the previous version but never got any
-reply from you:
+FWIW, that would bloat the fix by a bit and it's already a decent-sized fix...  I took a quick stab and such a v4 would end up with a total of 120 insertions(+), 15 deletions(-).  See below for a diff of what I tried on top of v3. The idea would be to move the serialization and setting/clearing of device->kvm into group/cdev and use device->kvm as the value within vfio_device_get_kvm_safe for getting the kvm ref.  Wrappers in group/cdev would then be responsible for backing that device->kvm setting out on ref failure.
+Each side (group/cdev) can wrap their own serialization / load device->kvm from the appropriate location / handle the failed get / clear device->kvm when done (since get doesn't set it, put shouldn't clear it).
 
-https://lore.kernel.org/all/1d88ba9f-5541-4b67-9cc8-a361eef36547@app.fastmail.com/
+If Alex wants, I can wrap something like this into a v4 -- Or, if we don't want to include this kind of infrastructure in the fix, then Yi please feel free to use it as a starting point for what you need in cdev.
 
-Unless I have misunderstood what you are doing, my concerns are
-still the same:
+Thanks,
+Matt
 
->  #define this_cpu_cmpxchg(pcp, oval, nval) \
-> -	__pcpu_size_call_return2(this_cpu_cmpxchg_, pcp, oval, nval)
-> +	__pcpu_size16_call_return2(this_cpu_cmpxchg_, pcp, oval, nval)
->  #define this_cpu_cmpxchg_double(pcp1, pcp2, oval1, oval2, nval1, 
-> nval2) \
->  	__pcpu_double_call_return_bool(this_cpu_cmpxchg_double_, pcp1, pcp2, 
-> oval1, oval2, nval1, nval2)
+diff --git a/drivers/vfio/group.c b/drivers/vfio/group.c
+index 7fed4233ca23..261af23975ae 100644
+--- a/drivers/vfio/group.c
++++ b/drivers/vfio/group.c
+@@ -154,6 +154,31 @@ static int vfio_group_ioctl_set_container(struct vfio_group *group,
+ 	return ret;
+ }
+ 
++static void vfio_device_group_get_kvm(struct vfio_device *device)
++{
++	lockdep_assert_held(&device->dev_set->lock);
++
++	spin_lock(&device->group->kvm_ref_lock);
++
++	if (!device->group->kvm)
++		goto unlock;
++
++	device->kvm = device->group->kvm;
++	if (!vfio_device_get_kvm_safe(device))
++		device->kvm = NULL;
++
++unlock:
++	spin_unlock(&device->group->kvm_ref_lock);
++}
++
++static void vfio_device_group_put_kvm(struct vfio_device *device)
++{
++	lockdep_assert_held(&device->dev_set->lock);
++
++	vfio_device_put_kvm(device);
++	device->kvm = NULL;
++}
++
+ static int vfio_device_group_open(struct vfio_device *device)
+ {
+ 	int ret;
+@@ -173,12 +198,12 @@ static int vfio_device_group_open(struct vfio_device *device)
+ 	 * the pointer in the device for use by drivers.
+ 	 */
+ 	if (device->open_count == 0)
+-		vfio_device_get_kvm_safe(device);
++		vfio_device_group_get_kvm(device);
+ 
+ 	ret = vfio_device_open(device, device->group->iommufd, device->kvm);
+ 
+ 	if (device->open_count == 0)
+-		vfio_device_put_kvm(device);
++		vfio_device_group_put_kvm(device);
+ 
+ 	mutex_unlock(&device->dev_set->lock);
+ 
+@@ -195,7 +220,7 @@ void vfio_device_group_close(struct vfio_device *device)
+ 	vfio_device_close(device, device->group->iommufd);
+ 
+ 	if (device->open_count == 0)
+-		vfio_device_put_kvm(device);
++		vfio_device_group_put_kvm(device);
+ 
+ 	mutex_unlock(&device->dev_set->lock);
+ 	mutex_unlock(&device->group->group_lock);
+diff --git a/drivers/vfio/vfio.h b/drivers/vfio/vfio.h
+index 20d715b0a3a8..57b24931c742 100644
+--- a/drivers/vfio/vfio.h
++++ b/drivers/vfio/vfio.h
+@@ -253,11 +253,12 @@ enum { vfio_noiommu = false };
+ #endif
+ 
+ #ifdef CONFIG_HAVE_KVM
+-void vfio_device_get_kvm_safe(struct vfio_device *device);
++bool vfio_device_get_kvm_safe(struct vfio_device *device);
+ void vfio_device_put_kvm(struct vfio_device *device);
+ #else
+-static inline void vfio_device_get_kvm_safe(struct vfio_device *device)
++static inline bool vfio_device_get_kvm_safe(struct vfio_device *device)
+ {
++	return false;
+ }
+ 
+ static inline void vfio_device_put_kvm(struct vfio_device *device)
+diff --git a/drivers/vfio/vfio_main.c b/drivers/vfio/vfio_main.c
+index 4762550e9f42..0b8fd296ae7e 100644
+--- a/drivers/vfio/vfio_main.c
++++ b/drivers/vfio/vfio_main.c
+@@ -342,7 +342,7 @@ void vfio_unregister_group_dev(struct vfio_device *device)
+ EXPORT_SYMBOL_GPL(vfio_unregister_group_dev);
+ 
+ #ifdef CONFIG_HAVE_KVM
+-void vfio_device_get_kvm_safe(struct vfio_device *device)
++bool vfio_device_get_kvm_safe(struct vfio_device *device)
+ {
+ 	void (*pfn)(struct kvm *kvm);
+ 	bool (*fn)(struct kvm *kvm);
+@@ -350,32 +350,26 @@ void vfio_device_get_kvm_safe(struct vfio_device *device)
+ 
+ 	lockdep_assert_held(&device->dev_set->lock);
+ 
+-	spin_lock(&device->group->kvm_ref_lock);
+-	if (!device->group->kvm)
+-		goto unlock;
+-
+ 	pfn = symbol_get(kvm_put_kvm);
+ 	if (WARN_ON(!pfn))
+-		goto unlock;
++		return false;
+ 
+ 	fn = symbol_get(kvm_get_kvm_safe);
+ 	if (WARN_ON(!fn)) {
+ 		symbol_put(kvm_put_kvm);
+-		goto unlock;
++		return false;
+ 	}
+ 
+-	ret = fn(device->group->kvm);
++	ret = fn(device->kvm);
+ 	symbol_put(kvm_get_kvm_safe);
+ 	if (!ret) {
+ 		symbol_put(kvm_put_kvm);
+-		goto unlock;
++		return false;
+ 	}
+ 
+ 	device->put_kvm = pfn;
+-	device->kvm = device->group->kvm;
+ 
+-unlock:
+-	spin_unlock(&device->group->kvm_ref_lock);
++	return true;
+ }
+ 
+ void vfio_device_put_kvm(struct vfio_device *device)
+@@ -386,14 +380,11 @@ void vfio_device_put_kvm(struct vfio_device *device)
+ 		return;
+ 
+ 	if (WARN_ON(!device->put_kvm))
+-		goto clear;
++		return;
+ 
+ 	device->put_kvm(device->kvm);
+ 	device->put_kvm = NULL;
+ 	symbol_put(kvm_put_kvm);
+-
+-clear:
+-	device->kvm = NULL;
+ }
+ #endif
+ 
 
-Having a variable-length this_cpu_cmpxchg() that turns into cmpxchg128()
-and cmpxchg64() even on CPUs where this traps (!X86_FEATURE_CX16) seems
-like a bad design to me.
-
-I would much prefer fixed-length this_cpu_cmpxchg64()/this_cpu_cmpxchg128()
-calls that never trap but fall back to the generic version on CPUs that
-are lacking the atomics.
-
-     Arnd
