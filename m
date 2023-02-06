@@ -2,96 +2,78 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0451468C425
-	for <lists+linux-s390@lfdr.de>; Mon,  6 Feb 2023 18:03:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E22A768C4B6
+	for <lists+linux-s390@lfdr.de>; Mon,  6 Feb 2023 18:28:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229732AbjBFRDn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 6 Feb 2023 12:03:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40458 "EHLO
+        id S230286AbjBFR2i (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 6 Feb 2023 12:28:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229537AbjBFRDm (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 Feb 2023 12:03:42 -0500
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 631EA21A22;
-        Mon,  6 Feb 2023 09:03:41 -0800 (PST)
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 316GvKsd011257;
-        Mon, 6 Feb 2023 17:03:37 GMT
+        with ESMTP id S230262AbjBFR21 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 Feb 2023 12:28:27 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD53C28203;
+        Mon,  6 Feb 2023 09:28:14 -0800 (PST)
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 316Gvii7032623;
+        Mon, 6 Feb 2023 17:28:09 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=hrA9fZeyTW2k/jOn1JdCQauZ1lZT/lKkQLUaX2O5Ls8=;
- b=hO7zo56/d/yUtd9fiTiTK5rqJzsvYAOFETG3MRmtpg7vVRXJft2nKgH8SKPWxCfgqGFC
- 5dwp7/9TJQ81GWQ5F4qYkmgG+bsUzuyHwhZy9trvCMOK7uM/3F6JuyCVMRSm1s22EJfE
- p9bVnXYhojk4qyJwUCdZjiqJNF/hPOUZ6IlXIsz/seE046pAjORkcaGZ/3Jy8mEySlq0
- oaX23/lCfhoP5yAXcn14OHOVRUWHOE2dwek9ug4Xcmlv47jnGQBpztVeUZCL8DzJL9O8
- s4JB6n2I/a5ki1JD5fhE5ik1AjC2TPOjFhptMqY2vhbFe2gGq00dv/xCbR759meXnN65 Ug== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nk3rmc1pe-1
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=NtFT1K9BSIvq8w5U0bXM81O/5Nk9ADBkcGNcB1EdzEE=;
+ b=RHzx2+tklupQQQMVPGMowGSbBy925MuBcSzrjjblyAjo5S9g5GJqa7x1gNIY4BZwWrNh
+ ENWz/HudOdsXiSXaWXHsZwKkwm4bkUW5vE7jL3+oE6VtNx4f7bk2lFbJQYClzWsGLO/o
+ +0lX8j93oWxf4k3OIXZ0PRP79O4xk+D09kK4ncR+OU0xL3XurqK7uzUtainBdCN5kF1h
+ xPet+b9u/zMb+/UCC2mq0VnBQ9GWcDZj2qUY8z/gpAa5eS3ORShvzKV7ew4VmZ0ZLtFZ
+ P6uaq/E2ZowmHzurkPQBX0EaFZPqhfodKKWmWbxtfEVnOmWyPx6ZLLJK5oBefi2vwYcy Uw== 
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3nk4x5t5w2-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Feb 2023 17:03:36 +0000
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 316Gvscb013793;
-        Mon, 6 Feb 2023 17:03:36 GMT
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nk3rmc1nj-1
+        Mon, 06 Feb 2023 17:28:09 +0000
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 316DwUYe026483;
+        Mon, 6 Feb 2023 17:28:07 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+        by ppma02fra.de.ibm.com (PPS) with ESMTPS id 3nhf06sw1m-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Feb 2023 17:03:35 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 316Bn9B2000395;
-        Mon, 6 Feb 2023 16:46:10 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-        by ppma03fra.de.ibm.com (PPS) with ESMTPS id 3nhf06hv13-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Feb 2023 16:46:10 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 316Gk7Fx46399834
+        Mon, 06 Feb 2023 17:28:07 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 316HS4jX52560148
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 Feb 2023 16:46:07 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EF3762004D;
-        Mon,  6 Feb 2023 16:46:06 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6F5942004B;
-        Mon,  6 Feb 2023 16:46:06 +0000 (GMT)
+        Mon, 6 Feb 2023 17:28:04 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 03FC52004E;
+        Mon,  6 Feb 2023 17:28:04 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E70D720049;
+        Mon,  6 Feb 2023 17:28:03 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Mon,  6 Feb 2023 16:46:06 +0000 (GMT)
-From:   Janis Schoetterl-Glausch <scgl@linux.ibm.com>
-To:     Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Mon,  6 Feb 2023 17:28:03 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55271)
+        id 9D040E0397; Mon,  6 Feb 2023 18:28:03 +0100 (CET)
+From:   Alexandra Winter <wintera@linux.ibm.com>
+To:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
         Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>
-Cc:     Janis Schoetterl-Glausch <scgl@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-s390@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Thomas Huth <thuth@redhat.com>, Nico Boehr <nrb@linux.ibm.com>
-Subject: [PATCH v7 05/14] KVM: s390: selftest: memop: Fix typo
-Date:   Mon,  6 Feb 2023 17:45:53 +0100
-Message-Id: <20230206164602.138068-6-scgl@linux.ibm.com>
+        Alexandra Winter <wintera@linux.ibm.com>
+Subject: [PATCH net-next 0/4] s390/net: updates 2023-02-06
+Date:   Mon,  6 Feb 2023 18:27:50 +0100
+Message-Id: <20230206172754.980062-1-wintera@linux.ibm.com>
 X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20230206164602.138068-1-scgl@linux.ibm.com>
-References: <20230206164602.138068-1-scgl@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: RmqJyTy2jHcXQE9anOBHBLJ-o7BtCpER
-X-Proofpoint-ORIG-GUID: JhL9eJs5euI3-QEcrZh31rRcU5RAONCc
+X-Proofpoint-ORIG-GUID: rkZ3cKLw1pUSm-GpLIEBuAUTgoFFapO5
+X-Proofpoint-GUID: rkZ3cKLw1pUSm-GpLIEBuAUTgoFFapO5
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
  definitions=2023-02-06_07,2023-02-06_03,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=990
- priorityscore=1501 spamscore=0 malwarescore=0 clxscore=1015 bulkscore=0
- adultscore=0 mlxscore=0 impostorscore=0 phishscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302060149
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 impostorscore=0 malwarescore=0 mlxlogscore=676
+ spamscore=0 bulkscore=0 mlxscore=0 suspectscore=0 phishscore=0
+ lowpriorityscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2212070000 definitions=main-2302060149
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
@@ -101,28 +83,36 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-"acceeded" isn't a word, should be "exceeded".
+Hi Dave & Jakub,
 
-Signed-off-by: Janis Schoetterl-Glausch <scgl@linux.ibm.com>
-Reviewed-by: Thomas Huth <thuth@redhat.com>
-Reviewed-by: Nico Boehr <nrb@linux.ibm.com>
----
- tools/testing/selftests/kvm/s390x/memop.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+please apply the following patch series for qeth to netdev's net-next
+tree.
 
-diff --git a/tools/testing/selftests/kvm/s390x/memop.c b/tools/testing/selftests/kvm/s390x/memop.c
-index 00737cceacda..033a8603a096 100644
---- a/tools/testing/selftests/kvm/s390x/memop.c
-+++ b/tools/testing/selftests/kvm/s390x/memop.c
-@@ -602,7 +602,7 @@ static void test_errors_key_fetch_prot_override_enabled(void)
- 
- 	/*
- 	 * vcpu, mismatching keys on fetch,
--	 * fetch protection override does not apply because memory range acceeded
-+	 * fetch protection override does not apply because memory range exceeded
- 	 */
- 	CHECK_N_DO(ERR_PROT_MOP, t.vcpu, LOGICAL, READ, mem2, 2048 + 1, GADDR_V(0), KEY(2));
- 	CHECK_N_DO(ERR_PROT_MOP, t.vcpu, LOGICAL, READ, mem2, PAGE_SIZE + 2048 + 1,
+Just maintenance patches, no functional changes.
+
+Thanks,
+Alexandra
+
+Alexandra Winter (1):
+  s390/ctcm: cleanup indenting
+
+Thorsten Winkler (3):
+  s390/qeth: Use constant for IP address buffers
+  s390/qeth: Convert sysfs sprintf to sysfs_emit
+  s390/qeth: Convert sprintf/snprintf to scnprintf
+
+ drivers/s390/net/ctcm_fsms.c      | 32 +++++++--------
+ drivers/s390/net/ctcm_main.c      | 16 ++++----
+ drivers/s390/net/ctcm_mpc.c       | 15 +++----
+ drivers/s390/net/qeth_core_main.c | 14 ++++---
+ drivers/s390/net/qeth_core_sys.c  | 66 ++++++++++++++++---------------
+ drivers/s390/net/qeth_ethtool.c   |  6 +--
+ drivers/s390/net/qeth_l2_main.c   | 53 +++++++++++++------------
+ drivers/s390/net/qeth_l2_sys.c    | 28 ++++++-------
+ drivers/s390/net/qeth_l3_main.c   |  7 ++--
+ drivers/s390/net/qeth_l3_sys.c    | 51 +++++++++++-------------
+ 10 files changed, 146 insertions(+), 142 deletions(-)
+
 -- 
 2.37.2
 
