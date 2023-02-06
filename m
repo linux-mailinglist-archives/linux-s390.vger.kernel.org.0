@@ -2,78 +2,108 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D730368B43C
-	for <lists+linux-s390@lfdr.de>; Mon,  6 Feb 2023 03:51:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A016168B46C
+	for <lists+linux-s390@lfdr.de>; Mon,  6 Feb 2023 04:19:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229564AbjBFCv1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 5 Feb 2023 21:51:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56790 "EHLO
+        id S229503AbjBFDTY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 5 Feb 2023 22:19:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbjBFCv1 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 5 Feb 2023 21:51:27 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CBB119F01;
-        Sun,  5 Feb 2023 18:51:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=a68BFUw2BpHHhbBBpKoKjQxP6DmREgGnYtbae7m3l1Q=; b=aYT+QrxDV/CJmRjX3L9wcJRC5m
-        CZlCqoXCfhO/WEJsGuKY1Z9qXzdXkMZ3Xua+ucsm1J14JHSdLYjToJbnmkCK4mONdNLiLdxXLm0ci
-        qqPox4IGi7FK7DKbSb2j2GLLwxpoh5M+Hc99CNpXotONm6MCOj/RziZRIcXaDWf8qr77OD2zm0diF
-        0y/g3Guz8DA09pVrGCQ61UsKYxNWJ+zPNggySjJz/vWgmOVwUQTpL57PWzMLwNrtE4lhOBIU9NGs+
-        TBXzcoW3ezmVKVlFqEqfWqj5yiOqTOQk4nxLG6Zm0cr4qA0cFi0k9AUhoqmvMo9OMsE/Pj2iOSF2C
-        1egmrvew==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pOrbC-00GPQT-HK; Mon, 06 Feb 2023 02:51:18 +0000
-Date:   Mon, 6 Feb 2023 02:51:18 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Peter Xu <peterx@redhat.com>
+        with ESMTP id S229452AbjBFDTX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 5 Feb 2023 22:19:23 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2434112042
+        for <linux-s390@vger.kernel.org>; Sun,  5 Feb 2023 19:18:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1675653514;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=HUnXR7sTsl7YLdib1oIsNCKOxnTEFsrq4tcNXVLT5m4=;
+        b=fsVeQD5HhgDtw0OANPTWFjLM19HiDP6eXKL4vunRkM50YKlk4Se603vfacpQQ/TmPolqDf
+        7liXh6ZDSiv6H/oDyY4s0xCTT6PrstSHqG/qN6xdbz7b0lQkFSyVI5h84jEuEVwf3Nqj5n
+        jI9eDDsJmexHI+CzZbbQxwCCqDW6UjQ=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-15-CUCrdAWpNDWrGxMK-mx9xA-1; Sun, 05 Feb 2023 22:18:33 -0500
+X-MC-Unique: CUCrdAWpNDWrGxMK-mx9xA-1
+Received: by mail-qt1-f199.google.com with SMTP id c16-20020ac85190000000b003b841d1118aso5783032qtn.17
+        for <linux-s390@vger.kernel.org>; Sun, 05 Feb 2023 19:18:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HUnXR7sTsl7YLdib1oIsNCKOxnTEFsrq4tcNXVLT5m4=;
+        b=U87HhQclAFP8QVCE98PZbYatW66x3y+52z2H0DrIbmtVNle8HOzc2xUAZ+3ld7Z1h7
+         12Z1tHa38AOiHx0EEuCwOatT4x8iz+s0sKNX6aOYkg9Ypg3m++uhz16dx7rb9/p4KBqa
+         MnislRG25tlCFVEmkz0R7uFvBo4ksKihjIF1vz2rXYHUvfao3QRKTZcsCXTM2VfkyjNV
+         i92Ix65JWQ8uDACTN50ckSh+jrJe9viZimw9l/73h3yHPZVOlTZ4koPphvxs10KjNsw0
+         MdBMz9IbdQiyVRhH9zSX+b4Wv7PSWn8tsxN8Z+5uucZ7aID8bfH1Ldf3tf1TyaqfRzL6
+         UQ+A==
+X-Gm-Message-State: AO0yUKXWmYBWGKdfFXfMgVILX5yFwh/4VMogELl1AiCbZKSbff8QP+qi
+        HKvy9p84c/yMPCEjix5XemdF3CDHgTZ8+FdLQZp/XPtCpTuib5oqt5QLPlXirXLYUqgo5ghCTSp
+        +r5o/lo6l88Q5LTKHlgSV6w==
+X-Received: by 2002:a05:622a:17c4:b0:3b8:5199:f841 with SMTP id u4-20020a05622a17c400b003b85199f841mr33929530qtk.0.1675653512190;
+        Sun, 05 Feb 2023 19:18:32 -0800 (PST)
+X-Google-Smtp-Source: AK7set/cpAGW2ESxNhYZ0jEVuvvuRs8ZuhdHof+3DnmWont85g1bLMGsUjVwGkO9KhDgbxDFzB1GTQ==
+X-Received: by 2002:a05:622a:17c4:b0:3b8:5199:f841 with SMTP id u4-20020a05622a17c400b003b85199f841mr33929514qtk.0.1675653511960;
+        Sun, 05 Feb 2023 19:18:31 -0800 (PST)
+Received: from xz-m1.local (bras-base-aurron9127w-grc-56-70-30-145-63.dsl.bell.ca. [70.30.145.63])
+        by smtp.gmail.com with ESMTPSA id b6-20020a379906000000b007186c9e167esm6574425qke.52.2023.02.05.19.18.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Feb 2023 19:18:31 -0800 (PST)
+Date:   Sun, 5 Feb 2023 22:18:30 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Matthew Wilcox <willy@infradead.org>
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
         linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org
 Subject: Re: [PATCH 0/3] mm/arch: Fix a few collide definition on private use
  of VM_FAULT_*
-Message-ID: <Y+BrJhxeJbAp49QE@casper.infradead.org>
+Message-ID: <Y+BxhuGUx1K+3XHb@xz-m1.local>
 References: <20230205231704.909536-1-peterx@redhat.com>
  <Y+BFjQDBIFq5ih+t@casper.infradead.org>
  <Y+BPy3jFcHqOnWL0@x1n>
+ <Y+BrJhxeJbAp49QE@casper.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Y+BPy3jFcHqOnWL0@x1n>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <Y+BrJhxeJbAp49QE@casper.infradead.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sun, Feb 05, 2023 at 07:54:35PM -0500, Peter Xu wrote:
-> On Mon, Feb 06, 2023 at 12:10:53AM +0000, Matthew Wilcox wrote:
-> > On Sun, Feb 05, 2023 at 06:17:01PM -0500, Peter Xu wrote:
-> > > I noticed a few collision usage on VM_FAULT_* definition in the page fault
-> > > path on arm/arm64/s390 where the VM_FAULT_* can overlap with the generic
-> > > definition of vm_fault_reason.
-> > > 
-> > > The major overlapped part being VM_FAULT_HINDEX_MASK which is used only by
-> > > the hugetlb hwpoisoning.
-> > > 
-> > > I'm not sure whether any of them can have a real impact, but that does not
-> > > look like to be expected.  I didn't copy stable, if anyone thinks it should
-> > > please shoot.  Nor did I test them in any form - I just changed the
-> > > allocations from top bits and added a comment for each of them.
-> > 
-> > This seems like a bad way to do it.  Why not just put these VM_FAULT_*
-> > definitions in linux/mm_types.h?  Then we'll see them when adding new
-> > VM_FAULT codes.  Sure, they won't be used by every architecture, but
-> > so what?
-> 
-> My initial version actually contains a few VM_FAULT_PRIVATE_N there, but I
+On Mon, Feb 06, 2023 at 02:51:18AM +0000, Matthew Wilcox wrote:
+> That wasn't what I meant.  I meant putting VM_FAULT_BADMAP and
+> VM_FAULT_SIGSEGV in mm_types.h.  Not having "Here is a range of reserved
+> arch private ones".
 
-That wasn't what I meant.  I meant putting VM_FAULT_BADMAP and
-VM_FAULT_SIGSEGV in mm_types.h.  Not having "Here is a range of reserved
-arch private ones".
+VM_FAULT_SIGSEGV is there already; I assume you meant adding them all
+directly into vm_fault_reason.
+
+Then I don't think it's a good idea..
+
+Currently vm_fault_reason is a clear interface for handle_mm_fault() for
+not only arch pffault handlers but also soft faults like GUP.
+
+If handle_mm_fault() doesn't return VM_FAULT_BADMAP at all, I don't think
+we should have it as public API at all.  When arch1 people reading the
+VM_FAULT_ documents, it shouldn't care about some fault reason that only
+happens with arch2.  Gup shouldn't care about it either.
+
+Logically a new page fault handler should handle all the retval of
+vm_fault_reason afaiu.  That shouldn't include e.g. VM_FAULT_BADMAP either.
+
+Thanks,
+
+-- 
+Peter Xu
 
