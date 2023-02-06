@@ -2,299 +2,420 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D5B0D68C4BB
-	for <lists+linux-s390@lfdr.de>; Mon,  6 Feb 2023 18:28:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CDA768C933
+	for <lists+linux-s390@lfdr.de>; Mon,  6 Feb 2023 23:14:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230403AbjBFR2t (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 6 Feb 2023 12:28:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35516 "EHLO
+        id S229663AbjBFWOz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 6 Feb 2023 17:14:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230355AbjBFR2a (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 Feb 2023 12:28:30 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C21422A9A2;
-        Mon,  6 Feb 2023 09:28:16 -0800 (PST)
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 316HEF5q003364;
-        Mon, 6 Feb 2023 17:28:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=8TQaHW4PuYjFsiu2CZlW5Dx7UPeSS7+VMz3QmS1QTsY=;
- b=YiZjH/DgDZxAfbbFs8eSTV0cuOAWYA23cLquzVK2R9QQkykh0VIhNm5hHAWc5aUvu+25
- fGxVlIlkohr9Yns4qj61S3/u0mMbYWf1+MevFTpY9enE647uIKRIlqdGyr3fdtLz6/Ws
- oIZd3p+zBl9Ym3hv6TMLvSMheXXBdrZLWwWSCgYq5iXPnYDng9l+uvKZbkV4WcZEzUig
- eh525Cw87oecT+WtWx6RyyubrZhK/fDQSR6jN/Le+CtT3Dde5dctS+fCg4MMAPSlDKVD
- OpLlxhXWjbdD8EPNrPsDvUzRtnMshttkLZRqSZqHXq4gxry+nSg4owZO1MZKm/Nr1xXC gg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3nk5s1rcb4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Feb 2023 17:28:10 +0000
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 316HQf0Y029224;
-        Mon, 6 Feb 2023 17:28:09 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3nk5s1rca8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Feb 2023 17:28:09 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 316H32Tj021077;
-        Mon, 6 Feb 2023 17:28:07 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3nhemfjntj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Feb 2023 17:28:07 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 316HS4op49742170
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 Feb 2023 17:28:04 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0E2CC2004F;
-        Mon,  6 Feb 2023 17:28:04 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E034020043;
-        Mon,  6 Feb 2023 17:28:03 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Mon,  6 Feb 2023 17:28:03 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55271)
-        id A975FE0806; Mon,  6 Feb 2023 18:28:03 +0100 (CET)
-From:   Alexandra Winter <wintera@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        with ESMTP id S229654AbjBFWOy (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 Feb 2023 17:14:54 -0500
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60C15265B1
+        for <linux-s390@vger.kernel.org>; Mon,  6 Feb 2023 14:14:52 -0800 (PST)
+Received: by mail-ej1-x632.google.com with SMTP id ml19so38623014ejb.0
+        for <linux-s390@vger.kernel.org>; Mon, 06 Feb 2023 14:14:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=layalina-io.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fhiw+jubOvq1uJrkxqi7dpXCXQ7Pp14PB3qH+9iBvvk=;
+        b=XGaKPmbL+LPNdhbIZ8gNyg5YsQ/9NfkANkq1Me2iOAgz6kMhGtq9KP5uTuMro2fsKV
+         97wXmiwNztvKIsr1w/ZNLTY5Gxg9oylT/9WKs2eqsl0zM4DsMM/35gAcHEhazexIXZUH
+         q+FmIXOW0ikTvR28HeB44B2X3kIRUiiMExS+6DuZddUMzM+b9pl8aVFA8kg5Z5mAPHuJ
+         YMz3p9zhVUF2cfceZu5ZHiPpL1+PIriVHBvo6xZGr+WDk4CoPD8yCCr5snlJ4xcbN6W1
+         HRrAJXhuQPMssea8gyc/xy8fY2rMbGRa+gRmRJOhSlD413QLVPC5z5mxDYDQMKX6CIBs
+         Tmug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Fhiw+jubOvq1uJrkxqi7dpXCXQ7Pp14PB3qH+9iBvvk=;
+        b=sBy1Qebr8Q/CQ+8/8bEoUA4Cx6CpHJvCobu11GrBGp7uZRIS7g8t41Lis/zOsMyOzf
+         Scvq3wl7sSIZQ034c8TYj4bsuZh8R7YCNX8nQ3dZnZtYONOv1mWvUoUyB4FcsO37VWtd
+         zSXuaQqtDzEz9pE3lKRNCuhTjlOSKjGW11wMWhpp7DOTHD4B0svw77cgQviRlAYIKjCR
+         Z1jULkW3KGxPJwlCK1gi/FlxwhRXmJZklAYKC7UhHN53XwHZe6EkS8691Ni9Y4LW849a
+         /pbeTTnft4t3tcbcP959UGDlojDtpxM/Z6fkm1ANlbjitoDkYGTQWH0WSKUUBZO2/9NG
+         lgIw==
+X-Gm-Message-State: AO0yUKV6PgJSkmj0iaKpmMMPk9rewKjbHQeO/ndNiai5AaIiZNn9+YDt
+        NlzYjckIsWPtou3fT6nHjFwwJA==
+X-Google-Smtp-Source: AK7set8nKifNoixIO1OR95D5ZT8RG9QYxkX7/QXPPznwnhZLt79MFEjgvQVv8RVJTucYIQ9//VQNzg==
+X-Received: by 2002:a17:906:5013:b0:883:5b33:e019 with SMTP id s19-20020a170906501300b008835b33e019mr845210ejj.61.1675721690843;
+        Mon, 06 Feb 2023 14:14:50 -0800 (PST)
+Received: from localhost.localdomain (host86-163-35-10.range86-163.btcentralplus.com. [86.163.35.10])
+        by smtp.gmail.com with ESMTPSA id g4-20020a170906348400b007add62dafbasm5974260ejb.157.2023.02.06.14.14.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Feb 2023 14:14:50 -0800 (PST)
+From:   Qais Yousef <qyousef@layalina.io>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Waiman Long <longman@redhat.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, tj@kernel.org,
+        linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
+        claudio@evidence.eu.com, tommaso.cucinotta@santannapisa.it,
+        bristot@redhat.com, mathieu.poirier@linaro.org,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        cgroups@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Wei Wang <wvw@google.com>, Rick Yiu <rickyiu@google.com>,
+        Quentin Perret <qperret@google.com>,
         Heiko Carstens <hca@linux.ibm.com>,
-        Thorsten Winkler <twinkler@linux.ibm.com>,
-        Jules Irenge <jbi.octave@gmail.com>,
-        Alexandra Winkler <wintera@linux.ibm.com>
-Subject: [PATCH net-next 4/4] s390/qeth: Convert sprintf/snprintf to scnprintf
-Date:   Mon,  6 Feb 2023 18:27:54 +0100
-Message-Id: <20230206172754.980062-5-wintera@linux.ibm.com>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20230206172754.980062-1-wintera@linux.ibm.com>
-References: <20230206172754.980062-1-wintera@linux.ibm.com>
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Zefan Li <lizefan.x@bytedance.com>, linux-s390@vger.kernel.org,
+        x86@kernel.org, Qais Yousef <qyousef@layalina.io>
+Subject: [PATCH v3] sched: cpuset: Don't rebuild root domains on suspend-resume
+Date:   Mon,  6 Feb 2023 22:14:28 +0000
+Message-Id: <20230206221428.2125324-1-qyousef@layalina.io>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: SD2pcKlaU_tzppNfVGj0K0hJeAVSsqjM
-X-Proofpoint-GUID: e7AFBGJkLcHxwpg7YyzGS1_QRRjKXZOQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-02-06_07,2023-02-06_03,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 mlxlogscore=999 malwarescore=0 bulkscore=0 mlxscore=0
- spamscore=0 impostorscore=0 priorityscore=1501 adultscore=0 clxscore=1015
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302060149
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Thorsten Winkler <twinkler@linux.ibm.com>
+Commit f9a25f776d78 ("cpusets: Rebuild root domain deadline accounting information")
+enabled rebuilding root domain on cpuset and hotplug operations to
+correct deadline accounting.
 
-This LWN article explains the rationale for this change
-https: //lwn.net/Articles/69419/
-Ie. snprintf() returns what *would* be the resulting length,
-while scnprintf() returns the actual length.
+Rebuilding root domain is a slow operation and we see 10+ of ms delays
+on suspend-resume because of that (worst case captures 20ms which
+happens often).
 
-Reported-by: Jules Irenge <jbi.octave@gmail.com>
-Reviewed-by: Alexandra Winkler <wintera@linux.ibm.com>
-Signed-off-by: Thorsten Winkler <twinkler@linux.ibm.com>
-Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
+Since nothing is expected to change on suspend-resume operation; skip
+rebuilding the root domains to regain the some of the time lost.
+
+Achieve this by refactoring the code to pass whether dl accoutning needs
+an update to rebuild_sched_domains(). And while at it, rename
+rebuild_root_domains() to update_dl_rd_accounting() which I believe is
+a more representative name since we are not really rebuilding the root
+domains, but rather updating dl accounting at the root domain.
+
+Some users of rebuild_sched_domains() will skip dl accounting update
+now:
+
+	* Update sched domains when relaxing the domain level in cpuset
+	  which only impacts searching level in load balance
+	* update sched domains when cpufreq governor changes and we need
+	  to create the perf domains
+
+Users in arch/x86 and arch/s390 are left with the old behavior.
+
+Debugged-by: Rick Yiu <rickyiu@google.com>
+Signed-off-by: Qais Yousef (Google) <qyousef@layalina.io>
 ---
- drivers/s390/net/qeth_core_main.c | 14 ++++----
- drivers/s390/net/qeth_ethtool.c   |  6 ++--
- drivers/s390/net/qeth_l2_main.c   | 53 ++++++++++++++++---------------
- drivers/s390/net/qeth_l3_main.c   |  4 +--
- drivers/s390/net/qeth_l3_sys.c    |  4 +--
- 5 files changed, 42 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 8bd9fd51208c..1d5b207c2b9e 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -2801,9 +2801,11 @@ static void qeth_print_status_message(struct qeth_card *card)
- 		 * of the level OSA sets the first character to zero
- 		 * */
- 		if (!card->info.mcl_level[0]) {
--			sprintf(card->info.mcl_level, "%02x%02x",
--				card->info.mcl_level[2],
--				card->info.mcl_level[3]);
-+			scnprintf(card->info.mcl_level,
-+				  sizeof(card->info.mcl_level),
-+				  "%02x%02x",
-+				  card->info.mcl_level[2],
-+				  card->info.mcl_level[3]);
- 			break;
- 		}
- 		fallthrough;
-@@ -6090,7 +6092,7 @@ void qeth_dbf_longtext(debug_info_t *id, int level, char *fmt, ...)
- 	if (!debug_level_enabled(id, level))
- 		return;
- 	va_start(args, fmt);
--	vsnprintf(dbf_txt_buf, sizeof(dbf_txt_buf), fmt, args);
-+	vscnprintf(dbf_txt_buf, sizeof(dbf_txt_buf), fmt, args);
- 	va_end(args);
- 	debug_text_event(id, level, dbf_txt_buf);
- }
-@@ -6330,8 +6332,8 @@ static int qeth_core_probe_device(struct ccwgroup_device *gdev)
- 		goto err_dev;
- 	}
+Changes in v3:
+
+	* Change the logic to avoid using cpuhp_tasks_frozen which can be racy
+	  and have dependency on context
+	* Refactor the code to pass whether dl accounting needs to be updated
+	  down the call chain
+	* Teach cpuset_force_rebuild() to take a reason argument and convert
+	  the variable into int
+	* Rename rebuild_root_domains() into update_dl_rd_accounting() as
+	  that's what I believe it's only doing
+
+v2 discussion: https://lore.kernel.org/lkml/20230120194822.962958-1-qyousef@layalina.io/
+v1 discussion: https://lore.kernel.org/lkml/20221216233501.gh6m75e7s66dmjgo@airbuntu/
+
+ arch/s390/kernel/topology.c  |  2 +-
+ arch/x86/kernel/itmt.c       |  6 ++---
+ drivers/base/arch_topology.c |  2 +-
+ include/linux/cpuset.h       | 12 ++++++----
+ kernel/cgroup/cpuset.c       | 43 ++++++++++++++++++++----------------
+ kernel/sched/core.c          |  2 +-
+ kernel/sched/topology.c      |  2 +-
+ 7 files changed, 39 insertions(+), 30 deletions(-)
+
+diff --git a/arch/s390/kernel/topology.c b/arch/s390/kernel/topology.c
+index c6eecd4a5302..29d57154a3f1 100644
+--- a/arch/s390/kernel/topology.c
++++ b/arch/s390/kernel/topology.c
+@@ -333,7 +333,7 @@ int arch_update_cpu_topology(void)
  
--	snprintf(dbf_name, sizeof(dbf_name), "qeth_card_%s",
--		dev_name(&gdev->dev));
-+	scnprintf(dbf_name, sizeof(dbf_name), "qeth_card_%s",
-+		  dev_name(&gdev->dev));
- 	card->debug = qeth_get_dbf_entry(dbf_name);
- 	if (!card->debug) {
- 		rc = qeth_add_dbf_entry(card, dbf_name);
-diff --git a/drivers/s390/net/qeth_ethtool.c b/drivers/s390/net/qeth_ethtool.c
-index e250f49535fa..c1caf7734c3e 100644
---- a/drivers/s390/net/qeth_ethtool.c
-+++ b/drivers/s390/net/qeth_ethtool.c
-@@ -172,7 +172,7 @@ static void qeth_get_strings(struct net_device *dev, u32 stringset, u8 *data)
- 		qeth_add_stat_strings(&data, prefix, card_stats,
- 				      CARD_STATS_LEN);
- 		for (i = 0; i < card->qdio.no_out_queues; i++) {
--			snprintf(prefix, ETH_GSTRING_LEN, "tx%u ", i);
-+			scnprintf(prefix, ETH_GSTRING_LEN, "tx%u ", i);
- 			qeth_add_stat_strings(&data, prefix, txq_stats,
- 					      TXQ_STATS_LEN);
- 		}
-@@ -192,8 +192,8 @@ static void qeth_get_drvinfo(struct net_device *dev,
- 		sizeof(info->driver));
- 	strscpy(info->fw_version, card->info.mcl_level,
- 		sizeof(info->fw_version));
--	snprintf(info->bus_info, sizeof(info->bus_info), "%s/%s/%s",
--		 CARD_RDEV_ID(card), CARD_WDEV_ID(card), CARD_DDEV_ID(card));
-+	scnprintf(info->bus_info, sizeof(info->bus_info), "%s/%s/%s",
-+		  CARD_RDEV_ID(card), CARD_WDEV_ID(card), CARD_DDEV_ID(card));
- }
- 
- static void qeth_get_channels(struct net_device *dev,
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index c6ded3fdd715..9f13ed170a43 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -1255,37 +1255,38 @@ static void qeth_bridge_emit_host_event(struct qeth_card *card,
- 
- 	switch (evtype) {
- 	case anev_reg_unreg:
--		snprintf(str[i], sizeof(str[i]), "BRIDGEDHOST=%s",
--				(code & IPA_ADDR_CHANGE_CODE_REMOVAL)
--				? "deregister" : "register");
-+		scnprintf(str[i], sizeof(str[i]), "BRIDGEDHOST=%s",
-+			  (code & IPA_ADDR_CHANGE_CODE_REMOVAL)
-+			  ? "deregister" : "register");
- 		env[i] = str[i]; i++;
- 		if (code & IPA_ADDR_CHANGE_CODE_VLANID) {
--			snprintf(str[i], sizeof(str[i]), "VLAN=%d",
--				addr_lnid->lnid);
-+			scnprintf(str[i], sizeof(str[i]), "VLAN=%d",
-+				  addr_lnid->lnid);
- 			env[i] = str[i]; i++;
- 		}
- 		if (code & IPA_ADDR_CHANGE_CODE_MACADDR) {
--			snprintf(str[i], sizeof(str[i]), "MAC=%pM",
--				addr_lnid->mac);
-+			scnprintf(str[i], sizeof(str[i]), "MAC=%pM",
-+				  addr_lnid->mac);
- 			env[i] = str[i]; i++;
- 		}
--		snprintf(str[i], sizeof(str[i]), "NTOK_BUSID=%x.%x.%04x",
--			token->cssid, token->ssid, token->devnum);
-+		scnprintf(str[i], sizeof(str[i]), "NTOK_BUSID=%x.%x.%04x",
-+			  token->cssid, token->ssid, token->devnum);
- 		env[i] = str[i]; i++;
--		snprintf(str[i], sizeof(str[i]), "NTOK_IID=%02x", token->iid);
-+		scnprintf(str[i], sizeof(str[i]), "NTOK_IID=%02x", token->iid);
- 		env[i] = str[i]; i++;
--		snprintf(str[i], sizeof(str[i]), "NTOK_CHPID=%02x",
--				token->chpid);
-+		scnprintf(str[i], sizeof(str[i]), "NTOK_CHPID=%02x",
-+			  token->chpid);
- 		env[i] = str[i]; i++;
--		snprintf(str[i], sizeof(str[i]), "NTOK_CHID=%04x", token->chid);
-+		scnprintf(str[i], sizeof(str[i]), "NTOK_CHID=%04x",
-+			  token->chid);
- 		env[i] = str[i]; i++;
- 		break;
- 	case anev_abort:
--		snprintf(str[i], sizeof(str[i]), "BRIDGEDHOST=abort");
-+		scnprintf(str[i], sizeof(str[i]), "BRIDGEDHOST=abort");
- 		env[i] = str[i]; i++;
- 		break;
- 	case anev_reset:
--		snprintf(str[i], sizeof(str[i]), "BRIDGEDHOST=reset");
-+		scnprintf(str[i], sizeof(str[i]), "BRIDGEDHOST=reset");
- 		env[i] = str[i]; i++;
- 		break;
- 	}
-@@ -1314,17 +1315,17 @@ static void qeth_bridge_state_change_worker(struct work_struct *work)
- 		NULL
- 	};
- 
--	snprintf(env_locrem, sizeof(env_locrem), "BRIDGEPORT=statechange");
--	snprintf(env_role, sizeof(env_role), "ROLE=%s",
--		(data->role == QETH_SBP_ROLE_NONE) ? "none" :
--		(data->role == QETH_SBP_ROLE_PRIMARY) ? "primary" :
--		(data->role == QETH_SBP_ROLE_SECONDARY) ? "secondary" :
--		"<INVALID>");
--	snprintf(env_state, sizeof(env_state), "STATE=%s",
--		(data->state == QETH_SBP_STATE_INACTIVE) ? "inactive" :
--		(data->state == QETH_SBP_STATE_STANDBY) ? "standby" :
--		(data->state == QETH_SBP_STATE_ACTIVE) ? "active" :
--		"<INVALID>");
-+	scnprintf(env_locrem, sizeof(env_locrem), "BRIDGEPORT=statechange");
-+	scnprintf(env_role, sizeof(env_role), "ROLE=%s",
-+		  (data->role == QETH_SBP_ROLE_NONE) ? "none" :
-+		  (data->role == QETH_SBP_ROLE_PRIMARY) ? "primary" :
-+		  (data->role == QETH_SBP_ROLE_SECONDARY) ? "secondary" :
-+		  "<INVALID>");
-+	scnprintf(env_state, sizeof(env_state), "STATE=%s",
-+		  (data->state == QETH_SBP_STATE_INACTIVE) ? "inactive" :
-+		  (data->state == QETH_SBP_STATE_STANDBY) ? "standby" :
-+		  (data->state == QETH_SBP_STATE_ACTIVE) ? "active" :
-+		  "<INVALID>");
- 	kobject_uevent_env(&data->card->gdev->dev.kobj,
- 				KOBJ_CHANGE, env);
- 	kfree(data);
-diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
-index 1cf4e354693f..af4e60d2917e 100644
---- a/drivers/s390/net/qeth_l3_main.c
-+++ b/drivers/s390/net/qeth_l3_main.c
-@@ -47,9 +47,9 @@ int qeth_l3_ipaddr_to_string(enum qeth_prot_versions proto, const u8 *addr,
- 			     char *buf)
+ static void topology_work_fn(struct work_struct *work)
  {
- 	if (proto == QETH_PROT_IPV4)
--		return sprintf(buf, "%pI4", addr);
-+		return scnprintf(buf, INET_ADDRSTRLEN, "%pI4", addr);
- 	else
--		return sprintf(buf, "%pI6", addr);
-+		return scnprintf(buf, INET6_ADDRSTRLEN, "%pI6", addr);
+-	rebuild_sched_domains();
++	rebuild_sched_domains(true);
  }
  
- static struct qeth_ipaddr *qeth_l3_find_addr_by_ip(struct qeth_card *card,
-diff --git a/drivers/s390/net/qeth_l3_sys.c b/drivers/s390/net/qeth_l3_sys.c
-index f0f8adaa2f05..cce6e621cd88 100644
---- a/drivers/s390/net/qeth_l3_sys.c
-+++ b/drivers/s390/net/qeth_l3_sys.c
-@@ -252,8 +252,8 @@ static ssize_t qeth_l3_dev_hsuid_store(struct device *dev,
- 		goto out;
+ void topology_schedule_update(void)
+diff --git a/arch/x86/kernel/itmt.c b/arch/x86/kernel/itmt.c
+index 9ff480e94511..6f1446223697 100644
+--- a/arch/x86/kernel/itmt.c
++++ b/arch/x86/kernel/itmt.c
+@@ -56,7 +56,7 @@ static int sched_itmt_update_handler(struct ctl_table *table, int write,
+ 
+ 	if (!ret && write && old_sysctl != sysctl_sched_itmt_enabled) {
+ 		x86_topology_update = true;
+-		rebuild_sched_domains();
++		rebuild_sched_domains(true);
  	}
  
--	snprintf(card->options.hsuid, sizeof(card->options.hsuid),
--		 "%-8s", tmp);
-+	scnprintf(card->options.hsuid, sizeof(card->options.hsuid),
-+		  "%-8s", tmp);
- 	ASCEBC(card->options.hsuid, 8);
- 	memcpy(card->dev->perm_addr, card->options.hsuid, 9);
+ 	mutex_unlock(&itmt_update_mutex);
+@@ -125,7 +125,7 @@ int sched_set_itmt_support(void)
+ 	sysctl_sched_itmt_enabled = 1;
  
+ 	x86_topology_update = true;
+-	rebuild_sched_domains();
++	rebuild_sched_domains(true);
+ 
+ 	mutex_unlock(&itmt_update_mutex);
+ 
+@@ -161,7 +161,7 @@ void sched_clear_itmt_support(void)
+ 		/* disable sched_itmt if we are no longer ITMT capable */
+ 		sysctl_sched_itmt_enabled = 0;
+ 		x86_topology_update = true;
+-		rebuild_sched_domains();
++		rebuild_sched_domains(true);
+ 	}
+ 
+ 	mutex_unlock(&itmt_update_mutex);
+diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+index e7d6e6657ffa..90d8a42335e6 100644
+--- a/drivers/base/arch_topology.c
++++ b/drivers/base/arch_topology.c
+@@ -253,7 +253,7 @@ int topology_update_cpu_topology(void)
+ static void update_topology_flags_workfn(struct work_struct *work)
+ {
+ 	update_topology = 1;
+-	rebuild_sched_domains();
++	rebuild_sched_domains(true);
+ 	pr_debug("sched_domain hierarchy rebuilt, flags updated\n");
+ 	update_topology = 0;
+ }
+diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
+index d58e0476ee8e..e30d4cd35ef7 100644
+--- a/include/linux/cpuset.h
++++ b/include/linux/cpuset.h
+@@ -18,6 +18,10 @@
+ #include <linux/mmu_context.h>
+ #include <linux/jump_label.h>
+ 
++#define CPUSET_FORCE_REBUILD_RESET		0
++#define CPUSET_FORCE_REBUILD_SUSPEND_RESUME	1
++#define CPUSET_FORCE_REBUILD_PRS_ERROR		2
++
+ #ifdef CONFIG_CPUSETS
+ 
+ /*
+@@ -68,7 +72,7 @@ static inline bool cpusets_insane_config(void)
+ 
+ extern int cpuset_init(void);
+ extern void cpuset_init_smp(void);
+-extern void cpuset_force_rebuild(void);
++extern void cpuset_force_rebuild(int reason);
+ extern void cpuset_update_active_cpus(void);
+ extern void cpuset_wait_for_hotplug(void);
+ extern void cpuset_read_lock(void);
+@@ -132,7 +136,7 @@ static inline int cpuset_do_slab_mem_spread(void)
+ 
+ extern bool current_cpuset_is_being_rebound(void);
+ 
+-extern void rebuild_sched_domains(void);
++extern void rebuild_sched_domains(bool update_dl_accounting);
+ 
+ extern void cpuset_print_current_mems_allowed(void);
+ 
+@@ -187,7 +191,7 @@ static inline bool cpusets_insane_config(void) { return false; }
+ static inline int cpuset_init(void) { return 0; }
+ static inline void cpuset_init_smp(void) {}
+ 
+-static inline void cpuset_force_rebuild(void) { }
++static inline void cpuset_force_rebuild(int reason) { }
+ 
+ static inline void cpuset_update_active_cpus(void)
+ {
+@@ -276,7 +280,7 @@ static inline bool current_cpuset_is_being_rebound(void)
+ 	return false;
+ }
+ 
+-static inline void rebuild_sched_domains(void)
++static inline void rebuild_sched_domains(bool update_dl_accounting)
+ {
+ 	partition_sched_domains(1, NULL, NULL);
+ }
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index a29c0b13706b..e5ddc8e11e5d 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -1079,7 +1079,7 @@ static void update_tasks_root_domain(struct cpuset *cs)
+ 	css_task_iter_end(&it);
+ }
+ 
+-static void rebuild_root_domains(void)
++static void update_dl_rd_accounting(void)
+ {
+ 	struct cpuset *cs = NULL;
+ 	struct cgroup_subsys_state *pos_css;
+@@ -1117,11 +1117,13 @@ static void rebuild_root_domains(void)
+ 
+ static void
+ partition_and_rebuild_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
+-				    struct sched_domain_attr *dattr_new)
++				    struct sched_domain_attr *dattr_new,
++				    bool update_dl_accounting)
+ {
+ 	mutex_lock(&sched_domains_mutex);
+ 	partition_sched_domains_locked(ndoms_new, doms_new, dattr_new);
+-	rebuild_root_domains();
++	if (update_dl_accounting)
++		update_dl_rd_accounting();
+ 	mutex_unlock(&sched_domains_mutex);
+ }
+ 
+@@ -1136,7 +1138,7 @@ partition_and_rebuild_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
+  *
+  * Call with cpuset_rwsem held.  Takes cpus_read_lock().
+  */
+-static void rebuild_sched_domains_locked(void)
++static void rebuild_sched_domains_locked(bool update_dl_accounting)
+ {
+ 	struct cgroup_subsys_state *pos_css;
+ 	struct sched_domain_attr *attr;
+@@ -1185,19 +1187,19 @@ static void rebuild_sched_domains_locked(void)
+ 	ndoms = generate_sched_domains(&doms, &attr);
+ 
+ 	/* Have scheduler rebuild the domains */
+-	partition_and_rebuild_sched_domains(ndoms, doms, attr);
++	partition_and_rebuild_sched_domains(ndoms, doms, attr, update_dl_accounting);
+ }
+ #else /* !CONFIG_SMP */
+-static void rebuild_sched_domains_locked(void)
++static void rebuild_sched_domains_locked(bool update_dl_accounting)
+ {
+ }
+ #endif /* CONFIG_SMP */
+ 
+-void rebuild_sched_domains(void)
++void rebuild_sched_domains(bool update_dl_accounting)
+ {
+ 	cpus_read_lock();
+ 	percpu_down_write(&cpuset_rwsem);
+-	rebuild_sched_domains_locked();
++	rebuild_sched_domains_locked(update_dl_accounting);
+ 	percpu_up_write(&cpuset_rwsem);
+ 	cpus_read_unlock();
+ }
+@@ -1681,7 +1683,7 @@ static void update_cpumasks_hier(struct cpuset *cs, struct tmpmasks *tmp,
+ 	rcu_read_unlock();
+ 
+ 	if (need_rebuild_sched_domains)
+-		rebuild_sched_domains_locked();
++		rebuild_sched_domains_locked(true);
+ }
+ 
+ /**
+@@ -2136,7 +2138,7 @@ static int update_relax_domain_level(struct cpuset *cs, s64 val)
+ 		cs->relax_domain_level = val;
+ 		if (!cpumask_empty(cs->cpus_allowed) &&
+ 		    is_sched_load_balance(cs))
+-			rebuild_sched_domains_locked();
++			rebuild_sched_domains_locked(false);
+ 	}
+ 
+ 	return 0;
+@@ -2202,7 +2204,7 @@ static int update_flag(cpuset_flagbits_t bit, struct cpuset *cs,
+ 	spin_unlock_irq(&callback_lock);
+ 
+ 	if (!cpumask_empty(trialcs->cpus_allowed) && balance_flag_changed)
+-		rebuild_sched_domains_locked();
++		rebuild_sched_domains_locked(true);
+ 
+ 	if (spread_flag_changed)
+ 		update_tasks_flags(cs);
+@@ -2315,7 +2317,7 @@ static int update_prstate(struct cpuset *cs, int new_prs)
+ 		update_sibling_cpumasks(parent, cs, &tmpmask);
+ 
+ 	if (!sched_domain_rebuilt)
+-		rebuild_sched_domains_locked();
++		rebuild_sched_domains_locked(true);
+ out:
+ 	/*
+ 	 * Make partition invalid if an error happen
+@@ -3389,11 +3391,11 @@ hotplug_update_tasks(struct cpuset *cs,
+ 		update_tasks_nodemask(cs);
+ }
+ 
+-static bool force_rebuild;
++static int force_rebuild;
+ 
+-void cpuset_force_rebuild(void)
++void cpuset_force_rebuild(int reason)
+ {
+-	force_rebuild = true;
++	force_rebuild = reason;
+ }
+ 
+ /**
+@@ -3489,7 +3491,7 @@ static void cpuset_hotplug_update_tasks(struct cpuset *cs, struct tmpmasks *tmp)
+ 				WRITE_ONCE(cs->prs_err, PERR_HOTPLUG);
+ 			notify_partition_change(cs, old_prs);
+ 		}
+-		cpuset_force_rebuild();
++		cpuset_force_rebuild(CPUSET_FORCE_REBUILD_PRS_ERROR);
+ 	}
+ 
+ 	/*
+@@ -3499,7 +3501,7 @@ static void cpuset_hotplug_update_tasks(struct cpuset *cs, struct tmpmasks *tmp)
+ 	else if (is_partition_valid(parent) && is_partition_invalid(cs)) {
+ 		update_parent_subparts_cpumask(cs, partcmd_update, NULL, tmp);
+ 		if (is_partition_valid(cs))
+-			cpuset_force_rebuild();
++			cpuset_force_rebuild(CPUSET_FORCE_REBUILD_PRS_ERROR);
+ 	}
+ 
+ update_tasks:
+@@ -3626,8 +3628,11 @@ static void cpuset_hotplug_workfn(struct work_struct *work)
+ 
+ 	/* rebuild sched domains if cpus_allowed has changed */
+ 	if (cpus_updated || force_rebuild) {
+-		force_rebuild = false;
+-		rebuild_sched_domains();
++		bool update_dl_accounting = cpus_updated ||
++				force_rebuild == CPUSET_FORCE_REBUILD_PRS_ERROR;
++
++		force_rebuild = CPUSET_FORCE_REBUILD_RESET;
++		rebuild_sched_domains(update_dl_accounting);
+ 	}
+ 
+ 	free_cpumasks(NULL, ptmp);
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 4580fe3e1d0c..d68eac04c851 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -9485,7 +9485,7 @@ static void cpuset_cpu_active(void)
+ 		 * restore the original sched domains by considering the
+ 		 * cpuset configurations.
+ 		 */
+-		cpuset_force_rebuild();
++		cpuset_force_rebuild(CPUSET_FORCE_REBUILD_SUSPEND_RESUME);
+ 	}
+ 	cpuset_update_active_cpus();
+ }
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index d93c3379e901..bf33b84c511a 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -214,7 +214,7 @@ void rebuild_sched_domains_energy(void)
+ {
+ 	mutex_lock(&sched_energy_mutex);
+ 	sched_energy_update = true;
+-	rebuild_sched_domains();
++	rebuild_sched_domains(false);
+ 	sched_energy_update = false;
+ 	mutex_unlock(&sched_energy_mutex);
+ }
 -- 
-2.37.2
+2.25.1
 
