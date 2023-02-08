@@ -2,140 +2,97 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA96A68F0FE
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Feb 2023 15:40:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA06868F122
+	for <lists+linux-s390@lfdr.de>; Wed,  8 Feb 2023 15:48:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231419AbjBHOkq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 8 Feb 2023 09:40:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50602 "EHLO
+        id S231558AbjBHOsn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 8 Feb 2023 09:48:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231407AbjBHOkp (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 Feb 2023 09:40:45 -0500
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2136.outbound.protection.outlook.com [40.107.220.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7AFE227AC;
-        Wed,  8 Feb 2023 06:40:43 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dFDyUEexqVv8dmfrspwjj1qkty0Eg2MQVrKOds8VkkLbi0j+A4IP7RHo/HemiYFxsz1XiKc47eM89RbqnorKN+R38TAg6CQZFOJUoTtIG45T111lni4XIX9KKE1kAVGZOR5JqA9iJ2S4CWyeiK3DaLp7+Vp98HixcapKeUexqTMjYuP18fgph6PUl9xHxwptFxNdt37i+upDw51BdhyoRkNpYToaxDrXDgMqdV/KMfR9Dd4qJGWAL4jZpv1FO3xcp3uImsRUdFP5B7nCdxd3xM4RdXmchd6JNSeGR6LTaXlKoqk1J09LPyoW5MIjAzy2J2+zDg+p2BGpEa/0rJYzqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IDWVxNZJWH3PC+CXhPEcFw0iFBr10KeAL9230JlT35o=;
- b=gznC6U+CHk5HNUjbVi4sFTKJwyykWluiAE/s+HFscviGOy6yQSbfRhX4vQQhZBKLjCX8vot6GzjclOP26jho5TREtWMKEaJDVSMtzJ7/ftprAH9pTXyXOkV75fcSdNJAJA6//TRVy9lR1tJjpe5k3K2utrdDbGLZLxUKQpn+TdsYRFmoOkPP4hESe5TLj46TEuelOjGFyOd03X+eTLrtqR7VqiUS6/qTRUVj43qDbCt1QhmuJyUjJQQMi3m1eU56ysQnXN5x5DfF6PJPl8z5WxCLnM0DD5DecF3TFr555lvjksMR354UCxlmAYfqiDqKRcH/ZOc2A4/03g6InvplLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=corigine.com; dmarc=pass action=none header.from=corigine.com;
- dkim=pass header.d=corigine.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=corigine.onmicrosoft.com; s=selector2-corigine-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IDWVxNZJWH3PC+CXhPEcFw0iFBr10KeAL9230JlT35o=;
- b=ZoMTPeN8GyeOXmK6jGOpjKnLkrRl4OWmg+2RLdGIMtIlSTI9v0wlu5A3doeyEJfYQ57ZYl6Pm+1sBZbeFbfIGF/CDVYFo76AVjt5gcbRJuypAe09azoVgkWivWhPUdmGo97VfVcLdHhSKmwx3hVwGtEM/r0912/eqX2IVteud2s=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=corigine.com;
-Received: from PH0PR13MB4842.namprd13.prod.outlook.com (2603:10b6:510:78::6)
- by BL0PR13MB4545.namprd13.prod.outlook.com (2603:10b6:208:17d::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.17; Wed, 8 Feb
- 2023 14:40:39 +0000
-Received: from PH0PR13MB4842.namprd13.prod.outlook.com
- ([fe80::eb5c:910f:3730:fd65]) by PH0PR13MB4842.namprd13.prod.outlook.com
- ([fe80::eb5c:910f:3730:fd65%7]) with mapi id 15.20.6086.017; Wed, 8 Feb 2023
- 14:40:39 +0000
-Date:   Wed, 8 Feb 2023 15:40:32 +0100
-From:   Simon Horman <simon.horman@corigine.com>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     Alexandra Winter <wintera@linux.ibm.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Thorsten Winkler <twinkler@linux.ibm.com>,
-        Jules Irenge <jbi.octave@gmail.com>
-Subject: Re: [PATCH net-next 4/4] s390/qeth: Convert sprintf/snprintf to
- scnprintf
-Message-ID: <Y+O0YAcr1CXr025c@corigine.com>
-References: <20230206172754.980062-1-wintera@linux.ibm.com>
- <20230206172754.980062-5-wintera@linux.ibm.com>
- <Y+JxcPOJiRl0qMo1@corigine.com>
- <63c6825fc2c94ad19ac7de93a6f151f6@AcuMS.aculab.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <63c6825fc2c94ad19ac7de93a6f151f6@AcuMS.aculab.com>
-X-ClientProxiedBy: AM0PR10CA0069.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:15::22) To PH0PR13MB4842.namprd13.prod.outlook.com
- (2603:10b6:510:78::6)
+        with ESMTP id S231324AbjBHOsj (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 Feb 2023 09:48:39 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2F7D5267;
+        Wed,  8 Feb 2023 06:48:38 -0800 (PST)
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 318E9wOx027415;
+        Wed, 8 Feb 2023 14:48:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=0Dpp0uD7MgEFHwPxlovGLIyepydLua0J6/J5k8CtH6s=;
+ b=LcoLiUkOUXFgzhY9C3OQXMOCiGT0YbRSl6HOLoaQwOarb7wcdyw3DGVZeDiWpsjkZRxQ
+ KQIGJzYfeWVD9ocGdzxgwDp2BfNYZgDAkrA2h8oCuB0v44AZa4m5Q/2HL5T5EnQHa/Em
+ V6feloi+Ep1mj6BxxO8UDN4nhDeUvMXa1s2UcOKV91Rc9JrC0fEPTDilzZM0eyOdsGEJ
+ DwlCjCWKuHRFzzRj3voF17Ew3lJPr/XlW2G7uDKEEmsFSq28Og2oo5t0V7YqMikyoSzK
+ wdjAtIHQHfOS+/hbnk3XzkK3CiOLE1ej1IZbbPDPIELP0XxAOFFsIpLYpoRJKlwOHzaf Rg== 
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nmcy5sgj9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Feb 2023 14:48:36 +0000
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 317KbFEr024491;
+        Wed, 8 Feb 2023 14:48:34 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3nhemfkkjt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Feb 2023 14:48:34 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 318EmS4124052452
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 Feb 2023 14:48:28 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7CBBB2004F;
+        Wed,  8 Feb 2023 14:48:28 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2ABA720040;
+        Wed,  8 Feb 2023 14:48:28 +0000 (GMT)
+Received: from t35lp63.lnxne.boe (unknown [9.152.108.100])
+        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Wed,  8 Feb 2023 14:48:28 +0000 (GMT)
+From:   Nico Boehr <nrb@linux.ibm.com>
+To:     borntraeger@linux.ibm.com, frankja@linux.ibm.com,
+        imbrenda@linux.ibm.com, shuah@kernel.org
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH v1 0/2] KVM: s390: CMMA migration selftest and small bugfix
+Date:   Wed,  8 Feb 2023 15:48:25 +0100
+Message-Id: <20230208144827.131300-1-nrb@linux.ibm.com>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR13MB4842:EE_|BL0PR13MB4545:EE_
-X-MS-Office365-Filtering-Correlation-Id: fbac0270-d2ea-420d-1ef3-08db09e2727b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: kpNqPUjw1WarhxlEo/aBWPCoTY/hboGWRiXZtmsfoebCou2Isp7j4pKycPxn1oJhPb4i2waDJ2p8zRwBaLiN675zxH+BdNKH86mWd6XM03vhhfh5YloETKk6U0zXhEH4GXK39IAOdDbrTWAVjXNEZ59NZQeXPfPopWbdnkDyPPGypwfpI+snhM0D9cS+dV7FoabWlQqivWyk8EOjbeKylW2xaFtaAxjz86QNvnJdqUPcUTfZv0q3hacoIM8ozVB4AUhMSuYI0pXJbUtsDl0dtQW1iJvHzzz2esUHzBRYkk9rD3pae83T36k5PH6m8qxAPAFl2ORw39y+FluFuu42ZsD6yeUetYbWo6j1x8hc9PPPgWUYHEYe+74oXsvIPfsBL7jhPV44cZBbOXvlKPATSribXFV1ZRL/wOnArgig3oRQ4P64yN8vJFqGjNcxOHj8CIEApB9sNs4g1tcVS5Yb5P+7w8Dja2xUYXT9YFIrEBNveM3TNzvtdtVvkVacqC5Dm1ZOzCcq0ge1JBzt8sdw19wIzoJXpYxfpxQ7zMugGK8eqIcvKrSTG+3p6TUBBYXiVyGTOrQUmdMg4fhgGQRseITIwjAB7IVKw8IWtuHE0Z/w9OEZnBLUS9lkcfrV9deludRGBITqZq5wWY/rvu9F2B/OXP4KWceR3UBIB9QQ5OVoEPqQtSD4deibCzQtS1eRGt1wMV5oipQnqaJ5Vlkq/7oY8On4BqA4iwMu83M5ujq1oJdLsyNr0jg1whh357a4
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR13MB4842.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(366004)(346002)(376002)(136003)(39830400003)(396003)(451199018)(4744005)(44832011)(5660300002)(86362001)(2906002)(8936002)(41300700001)(66946007)(8676002)(66476007)(66556008)(4326008)(6916009)(36756003)(6666004)(6506007)(186003)(6512007)(478600001)(6486002)(38100700002)(966005)(2616005)(54906003)(316002)(67856001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?DhnFGhz37HTHEDXjapBUk8YmCHsFeiRKFmv84wa70u2gE6AcwDohHgJd1jMM?=
- =?us-ascii?Q?9zS47uesCz+08EAWw0bhCFx16PWCOIGv0KpZQXQH+c8pvyS8RzT6G+TypG8C?=
- =?us-ascii?Q?Kr1zm0XTEOobeltDWyPA/icDaib7pe9jogvIzcQEtjfwow4JakMYz3vXMwsw?=
- =?us-ascii?Q?HYVbOS+30yFWHAALhq/RD6xopg/5ZDC3s72VyaWzANFCRpKu5BMdUEOACFm9?=
- =?us-ascii?Q?9JApkWEdGGKnkUAckrlmXjXJRn8kjbflDoJOGa7a9NuvBre0gCrj8+DG8MRI?=
- =?us-ascii?Q?nNAV468bAurot98BOQlbYFpqCwsS4mbDdfKH3vUPgguqnhRiESDnz/I4J3Cf?=
- =?us-ascii?Q?l57yaSTTJwsuec5Qi8a/xIZ9hyaweRKRV4AZ5VBF3hzEjD7NpohaZ0HzMh9s?=
- =?us-ascii?Q?bAH/A+n17B5LKQrNX35kgfDoo5XTOJ16uUiDSqvl4yHGY1A4EbYcvwbwNyoH?=
- =?us-ascii?Q?46RpoFbpMpgTYPQrrnE35k7DlpyzBM2d5IFe1gmDHDA/jxeu6mu/5SLZdirt?=
- =?us-ascii?Q?MVuLGpX11s7ez0pwy/i9u6EOLYioSWUa2NK9YFuG3yEQE8f+cCF+bHpEIy/+?=
- =?us-ascii?Q?edTEeXR2AGWA00m9cfGaSJ4d+Hk/+6eFW8EudJSUwylHLFAdG3ksIacFKOWQ?=
- =?us-ascii?Q?FK0WdUHfBe8yhK8yQ4m6UNxxqjLzun3an08ST/sFlRIEebpr5izTPahH1gLD?=
- =?us-ascii?Q?459F6tpwNXJ42WNLdMi+c8quar8p3HAutLTaehrK9nyrQzKW3rorwk0JmAnY?=
- =?us-ascii?Q?zKhh94HySu9N1Xg/RgPrkuv1qOHKvg3kHoH1zdVWgPDhM7oBIyT+SPQYiFlH?=
- =?us-ascii?Q?Ph8gP0C2WqqOYxvDKR7t8F0ikh9zPNjXKaw5/e0XBpRHdsf6taB/Jdd29SbL?=
- =?us-ascii?Q?vEPhid9vafAA9WOo70biKfkU0PyM115T+oDZjI93KYgX3/sAuQ1P+DSP7y7c?=
- =?us-ascii?Q?dpdzGb5W7wJxfAPYBojTBqbqBSPbrSztR009/i6Cejuos307U0bTGg6IQnYK?=
- =?us-ascii?Q?RllD1P1Y1W4C4ldRVY11NCtWaoiTcpuGuXMomv0BzHj4e31ymf2R4FPedMHL?=
- =?us-ascii?Q?iASTeD/vKtSTEAIqteNVDeqfwZEi6Uyo8JM5pxyetAX3r3rAiBz2pHMAQFGl?=
- =?us-ascii?Q?wOt9gxGDk4hikhODZ+ojXSx9FKrZ1o4BCDwKRBX5cs74uun4MbwiD/MzqHme?=
- =?us-ascii?Q?t38PQkdEVpgRRYiXgG6EGsKpx5lxy6dKTjbMqR0UvpNN3hWJSp5x2IJZtems?=
- =?us-ascii?Q?YKMDW6fp4CFmqTZn8ysR4Uod0buV/Rkzb6K+FNYZVB1zf8VPbt/bTHYi5Tzm?=
- =?us-ascii?Q?CA1dG7OELh3kTQQfwtSUeHghvdJAZ5TBnELFnpuvqiEHDFCTi3NCClJ2y+D1?=
- =?us-ascii?Q?dBNpxkaaBEGPHM4EfuVURF3gyZZID4t2HIQ2FtMiS0mNas1mCDb1MAcWgSa6?=
- =?us-ascii?Q?OJcB6yuaWrx1q4o4uE1tNmfKnhiaDjyBeL61oOzVtbM5dQS6Hpyx5rqnmsei?=
- =?us-ascii?Q?OehhgW7QAaqe9/Ycr4ivERytVuXlqeMWwM4HFeomDmqyLX4VWnhzeAAH9IwP?=
- =?us-ascii?Q?cE90AZQkh7fi/0nKuV89JJNaES0OSRwG4A7q5P+LEj0/rpWHrelQZ8NsDP/0?=
- =?us-ascii?Q?nObEOKMXRQ+WD6XsGX6AxAhcDBak9KMddBb19c3jcEwR/sSqb8BxJqrwDYGO?=
- =?us-ascii?Q?Wt2msA=3D=3D?=
-X-OriginatorOrg: corigine.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fbac0270-d2ea-420d-1ef3-08db09e2727b
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR13MB4842.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2023 14:40:39.2705
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fe128f2c-073b-4c20-818e-7246a585940c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GkQV8S53uIby82y0xqQL0oaQV56r8yQhpxu5OiWAY7RmLQSdC3NoFykJQzNHiUdCoISs9llwhH9yEseaIwqo7z7wPXOzzfzYPZZ62kXQjQQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR13MB4545
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: OGRA7vpgN13EkQkbDm2LCcLJq8dwqWBA
+X-Proofpoint-ORIG-GUID: OGRA7vpgN13EkQkbDm2LCcLJq8dwqWBA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-02-08_06,2023-02-08_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 phishscore=0 bulkscore=0 clxscore=1015 mlxlogscore=780
+ spamscore=0 lowpriorityscore=0 mlxscore=0 adultscore=0 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2302080128
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Feb 08, 2023 at 02:37:32PM +0000, David Laight wrote:
-> [You don't often get email from david.laight@aculab.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
-> 
-> From: Simon Horman
-> > Sent: 07 February 2023 15:43
-> ...
-> > However, amongst other usages of the return value,
-> > those callers also check for a return < 0 from this function.
-> > Can that occur, in the sprintf or scnprintf case?
-> 
-> That rather depends on what happens with calls like:
->         snprintf(NULL, 0, "*%s%*s", MAX_INT, "", MAX_INT, "");
-> 
-> That is a whole bag of worms you don't want to put your hand into.
+Add a new selftest for CMMA migration. Also fix a small issue found during
+development of the test.
 
-Ok :)
+Nico Boehr (2):
+  KVM: s390: selftests: add selftest for CMMA migration
+  KVM: s390: fix KVM_S390_GET_CMMA_BITS for GFNs in memslot holes
+
+ arch/s390/kvm/kvm-s390.c                      |   4 +
+ tools/testing/selftests/kvm/Makefile          |   1 +
+ tools/testing/selftests/kvm/s390x/cmma_test.c | 679 ++++++++++++++++++
+ 3 files changed, 684 insertions(+)
+ create mode 100644 tools/testing/selftests/kvm/s390x/cmma_test.c
+
+-- 
+2.39.1
+
