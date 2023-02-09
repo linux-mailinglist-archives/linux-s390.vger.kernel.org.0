@@ -2,161 +2,201 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE6B569026B
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Feb 2023 09:47:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A12136903F6
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Feb 2023 10:39:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229733AbjBIIrd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 Feb 2023 03:47:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57602 "EHLO
+        id S229476AbjBIJjb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 Feb 2023 04:39:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbjBIIrc (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Feb 2023 03:47:32 -0500
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AD5B47436;
-        Thu,  9 Feb 2023 00:47:31 -0800 (PST)
-Received: by mail-wm1-x332.google.com with SMTP id bg26so944075wmb.0;
-        Thu, 09 Feb 2023 00:47:31 -0800 (PST)
+        with ESMTP id S229515AbjBIJja (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Feb 2023 04:39:30 -0500
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2100.outbound.protection.outlook.com [40.107.236.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C61A5EFBD;
+        Thu,  9 Feb 2023 01:39:28 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ci5aQWPa0OQfF6U+xaScDtAEGVIe6lQKSXPCK6ISbn6U7WkiPRnGQsoUxqk6zGW/ry/RN/4kcfKRxVnxt3guxI02Zb1z2221rZ2EfkJRUKaWITYalcYEhYZK1cg/14GFzOLvdEC+tl7pc/X2sjXSW6XDd6qLUmVMCPmtin5eyXulTp5j8hCx73PEK/s7uH1EXeGIj/bQ5QtkJ7Vl3qzsEs2Q2gKq5zjhgY+LtDrVECDXnwMT+vVxngkaMXE4qn0Mw0uEzv5+3icmOp5v4mSdIOw8s4DMPIL9zTqg9LIAWqCmpt5LhxgQ7gRBgd8iR+ud+3FaNdEro6jkUuMZ+kg55Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NKzkfH2J9RMkHz0SHtBSh1X6CAAsGpKP5rNxsiTLQl0=;
+ b=YbJej0siHQyyMqzw06ZJFEYipTeeLC2UAwxASzer/wZuS2X5HWst4hrXXSaRIU1Bi+hh0JMYRfH4fZ9LJG1klUuiG/Vjy/pTG6fzmz2IKK97l0DF/q5UYkHyisZ7d7chdkv4xcS4gGeS3ZWrLp5z6erbYVifGLPpvD1Q4V+okIog1MEedoTN8G5oYipDJbOcayTCmJHwlF3h2c3lv/C/zFP1iCvo3BtLknM7n6LaJ7yPfwcTwK4acI17101inqGOPn2jPxLgQmcQy3XdqClsdsTrcUAJ9b9k0jQK+4lGZzVjW0ZZstLffQHnmrD1XhJZgQKXJJYq2X0ZnFSf/npMkQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=corigine.com; dmarc=pass action=none header.from=corigine.com;
+ dkim=pass header.d=corigine.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Qn9EbvBNyrGjHsqKyNRcUqE0ZgoknqNHgR4grZIq1og=;
-        b=XfFUsep4SvJkXInM+wMQWooY2XG5P56NSZKsbG9bTZjJh/XycVsl5MHTqOG1/Q6kg8
-         TCuBMXzctVzdOKE9YfqpPpryW9k0hqdHgnxzzZPKkc0x7l73i6eEYJXeyl4644DWcpBF
-         rVVaZTg/dDEidbqgG3V9CxsMM6kH7/LPFIH3M7hhbLTLE+hB7wMJ7CQms0VQzYO67dZx
-         eipkf3/WJpokTyumXupM+3VKHdFeDI28ZOMr5Tie7POKePMrARdqqIeOPr2aD8v3Wp5R
-         dqHXtz+wnjSEfPsO1mQzCSx6RzhnkWXtFeXAED+Q2+sTf5lMuAqQn02PWegmhJ1pKdmR
-         YKyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qn9EbvBNyrGjHsqKyNRcUqE0ZgoknqNHgR4grZIq1og=;
-        b=YxOlY2u6cW9hGknhsr+9fJ/n+zLawTM1OsbUNW5nHSSkkWGT+eylHe0kSoCVHO+SlF
-         eSw8s9CqtGodx3tziGL4M+5Qe386b9yJRCPsGvozuzl2c3eECgMG1t2nmJ8UP4u5wBRe
-         izvXKelQsv2tlOdug/RZZC+XA2KkM+rIjuza7XRm9L6cpk7KVY2JwBga5OSbNQ4hvuHA
-         hV2RDTWR5NDHHsNnsg7R0VWlN3QVvxibpxmvjR16bsl3WmLzouSp4AqYbUc+XMEncmKr
-         FM+sYDHas10620Tg/jHANTUNbwksU2aiFzgTreSNLr4NS9y8J6Zz2tAUFR6FoLxt0yZx
-         qFUQ==
-X-Gm-Message-State: AO0yUKX6aEcPSREnhLdbSPqa9qATqA+l9/5K27j6EHmsawP3a1RBUeDf
-        cHxChUAExc+mjO1JfDGAVyo=
-X-Google-Smtp-Source: AK7set8tGQUv8NGP+X5kMV2lo4VNAQhkFxeU482r3QGLbDSRvywgf7u7ZkrTRcwOQqUt8oTTY7rbQA==
-X-Received: by 2002:a05:600c:996:b0:3df:f85a:4724 with SMTP id w22-20020a05600c099600b003dff85a4724mr9278610wmp.39.1675932449884;
-        Thu, 09 Feb 2023 00:47:29 -0800 (PST)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id r14-20020a05600c35ce00b003dc4ecfc4d7sm1225329wmq.29.2023.02.09.00.47.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Feb 2023 00:47:29 -0800 (PST)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Thu, 9 Feb 2023 09:47:27 +0100
-To:     Ilya Leoshkevich <iii@linux.ibm.com>
-Cc:     Jiri Olsa <olsajiri@gmail.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, David Vernet <void@manifault.com>,
-        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-        Artem Savkov <asavkov@redhat.com>, linux-s390@vger.kernel.org
-Subject: Re: [PATCHv3 bpf-next 0/9] bpf: Move kernel test kfuncs into
- bpf_testmod
-Message-ID: <Y+SzH/9usvp7a0DA@krava>
-References: <20230203162336.608323-1-jolsa@kernel.org>
- <CAADnVQKBYgN5nWG26s0s-U0=PMAWEc17aGWx76GLUc_PM22ZAw@mail.gmail.com>
- <Y9/yrKZkBK6yzXp+@krava>
- <96db3bf7d0a26b161a9846d8fe492c9bd0cb4c49.camel@linux.ibm.com>
- <Y+DFOWZB21MWhYEO@krava>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+ d=corigine.onmicrosoft.com; s=selector2-corigine-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NKzkfH2J9RMkHz0SHtBSh1X6CAAsGpKP5rNxsiTLQl0=;
+ b=m+NcGMap5rquBamf7KMpnO+MgrhhnaAUDaPINuj0QiexlwXdKw0KB7pihWom2dl1CRdvhCZQZkWAX6u9SwHF7wcfyxwmbLTd5yYMIKzwAtcrWs+2cZ23UOZ8LITCstDj5RSpNqF0xkPE6PIYVRE5jKZfYqfSIa94wncTCisORdc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=corigine.com;
+Received: from PH0PR13MB4842.namprd13.prod.outlook.com (2603:10b6:510:78::6)
+ by MW4PR13MB5578.namprd13.prod.outlook.com (2603:10b6:303:182::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.17; Thu, 9 Feb
+ 2023 09:38:22 +0000
+Received: from PH0PR13MB4842.namprd13.prod.outlook.com
+ ([fe80::eb5c:910f:3730:fd65]) by PH0PR13MB4842.namprd13.prod.outlook.com
+ ([fe80::eb5c:910f:3730:fd65%7]) with mapi id 15.20.6086.017; Thu, 9 Feb 2023
+ 09:38:21 +0000
+Date:   Thu, 9 Feb 2023 10:38:15 +0100
+From:   Simon Horman <simon.horman@corigine.com>
+To:     Alexandra Winter <wintera@linux.ibm.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Thorsten Winkler <twinkler@linux.ibm.com>,
+        Jules Irenge <jbi.octave@gmail.com>
+Subject: Re: [PATCH net-next 4/4] s390/qeth: Convert sprintf/snprintf to
+ scnprintf
+Message-ID: <Y+S/B3Q/En1UzrWW@corigine.com>
+References: <20230206172754.980062-1-wintera@linux.ibm.com>
+ <20230206172754.980062-5-wintera@linux.ibm.com>
+ <Y+JxcPOJiRl0qMo1@corigine.com>
+ <045d16d2-fca2-4dbe-e999-05d5365da1ad@linux.ibm.com>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y+DFOWZB21MWhYEO@krava>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <045d16d2-fca2-4dbe-e999-05d5365da1ad@linux.ibm.com>
+X-ClientProxiedBy: AM0PR08CA0034.eurprd08.prod.outlook.com
+ (2603:10a6:208:d2::47) To PH0PR13MB4842.namprd13.prod.outlook.com
+ (2603:10b6:510:78::6)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR13MB4842:EE_|MW4PR13MB5578:EE_
+X-MS-Office365-Filtering-Correlation-Id: ebd36be3-8aa6-4df8-3ff6-08db0a816224
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: qmhNd9xdP+evmf3VCO0hI0a7G7ygtHriYtmLV9k7aK87yD3aqbyxAaQf9uDtawy2HNivlvjpvgPIT0I1eCK8yVx6u++7EOv3HRv1e0ZfQN1mkQ4COfCNHGci663AV0QPGZ3U3cFhJ97RwKld1QAKbBAsXlx8fSL7OluNa0UoWlQ7VJt09fvZ4Ds2ihL8OLdXy6mK14B519L4XzoZdA1NsdE5O73KRR1/0AbNzghx1I+1k887LxsDR2kimSdzL0DWwILcFzMIjN6KmiOMphHkPK6Ya13dtnAcDsdTUKfoEeYYQkdy6Pmwz/u5PLMftPzWmpLTl9aa2+8dEewvfskefOZtc6SEm34pc/MOxWwJGSX20bSDyH8rUHl9C8hYxojckxLF4jH4liVwPx77ZN+BJIqzymPzXuFyqDvAGjKo1/gKaTXKIkVMVDQe0rCSiJMV/YXQSjEu+a7yVFrQaUavTgIG7iXC6EEs+oeMNM+ocw31GYjPMz/oifYOmQCXOCmiSIcOjGT33sP5NupIB06LeNJ/Skl8N7r7q0pUhVHr33rWKbVkBuQkQ3c4G6Q/ylFmebVm7dnb7LLYfu3kXPNFtIm7dFa9xQXyl4qydSSCTDAP46G+awFfoxlI6I/YetEyXOy7elJ/zJGS7zUCXgEh2V1rsJeu/orC+BKLNktNrEv4Y2c79OMajb0gaq1hharWfbTuwKQo3HBE/hfgwYvaaOqoLw02Z1hCuz53XEF9x10=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR13MB4842.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(366004)(376002)(396003)(136003)(39840400004)(346002)(451199018)(83380400001)(2616005)(478600001)(54906003)(2906002)(316002)(6486002)(38100700002)(36756003)(966005)(66946007)(4326008)(66556008)(44832011)(41300700001)(6506007)(6916009)(8676002)(5660300002)(8936002)(86362001)(6512007)(186003)(53546011)(6666004)(66476007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?UjnHkfmYlvhZg2qfsYDmQgOKhqOuSEqX9wLKKeBqUKHPiWCditqUwsJpVtUT?=
+ =?us-ascii?Q?L+vaRs1wWJL1bo/8y+v7TMhC6/lSP7Di7G7WSKu2LknQ26OSnAVVlbhnaSZk?=
+ =?us-ascii?Q?G8ZFFM35dqn/xwEKMWTa6j9Bu5jltIOETvcqY1HGSUgBfOodgjlDNDiJjwIZ?=
+ =?us-ascii?Q?EoI6A8QldKiYaBZJ7ProidEs8Hgq+wCgn77tALcUxlD4Nzw0kTUWjXACSTjN?=
+ =?us-ascii?Q?kJmsTdvUekiTyTmGRwiSNew8NWYIxPKAQb+5ZxHPl4uCokP2G4x1PcRQKmEY?=
+ =?us-ascii?Q?xEL7n6LrukkOC+p9CWjykhks96bIIYHMsq1ESJKXTwYYXEQPpIoz7bxW2UGZ?=
+ =?us-ascii?Q?4ujnZm4LwAuCRHqNPBmGhdk4cdvTRXIVQFh1PjJWlkqu/oIdHXv+BnXyUSc5?=
+ =?us-ascii?Q?7otGDrGvbwcr5JxSGkb6KbUwbAo3yvXx+OXm+Hs0Jpf+hHo61si881UndhHe?=
+ =?us-ascii?Q?ydoTSGWk0iZEiBUpVW62kJXOxQ4vYZPzgK0G65oK1YdrBgrZ406O3NyVm4sY?=
+ =?us-ascii?Q?WdRsIiDCqBXQem6T3TokcT+3ifXewl7YPsFj3pbjWvTrlZ0TlU2SbWJaNxrm?=
+ =?us-ascii?Q?UGYENcTxpcLKfBpuq6tK1DR9PNMXdj/ix/TpI6/zVCw+C05Hb5ClB4T3fd39?=
+ =?us-ascii?Q?VWwM0ILeBy5JRKk2V+ylgVG2TFc/RamY2+XPc37Y3hPmOQV5o+1vg/w5GS8I?=
+ =?us-ascii?Q?e+zyhVYEB5OLGzE03nAuGi00bdowwDyynDlZiayrA/Pu1b3IcgtfDs1lL3Pj?=
+ =?us-ascii?Q?zEKcY0+q4JRFl/9HtWNH41xGJq5cmMPMFDAnQ6ncb973gPwotZTbjrb/zdRH?=
+ =?us-ascii?Q?sBR1ER2W6XjUA5T3V16MPSFLXXAHhYTyt7XJZS2C4DYHrenrsbNev33ow5+F?=
+ =?us-ascii?Q?yWCJls+dh8hJhzlC/uIpLCn6pOfxglsARwYqcCpDnZ1/rO7gxexJk3d/7c1P?=
+ =?us-ascii?Q?q4j7xV5MUWgB7IBTtZVDJHPhduxq8nC1f48Y1hpxsWbb9buMtmkHbLKUig0o?=
+ =?us-ascii?Q?hb27yGDMROQvKc3c1UbsWJkCEMDjfXw3MtJSr19sDzTfw0FSJcaLeMBNT3V0?=
+ =?us-ascii?Q?dcj3raKJ9NRzD+8v3NVu2tVlBYRsQWPU3/070RXKN1R0ESSovbjoqoeQOnl5?=
+ =?us-ascii?Q?T0N6HsxhmAeqyDb9cbSE4dwEJXFz9aisDmApvnDIqaNE648pKPCF/X0IAria?=
+ =?us-ascii?Q?9uZ+DiRWOvjhdli7+HcdRqGkBG0xzaK5X4uq97tpiBQa2u8XacGmhosbjPWi?=
+ =?us-ascii?Q?kJx3998iRGBO+ImGCNjCPdCLyig6yreFpssRQzXhpUrtNtmjYOyGddXUGYwy?=
+ =?us-ascii?Q?chZsH1/EOrT0cTfUoOpMDM7cuqsPFg8etkem3mQwgFQi2HrKk7hZxLE8nRkE?=
+ =?us-ascii?Q?SqpaRCLiPu4DiptxEl2POqRW30bd1mGV+MH0HMj0tjtoy/rtf78slkxqi3xv?=
+ =?us-ascii?Q?JhmorSZ2yflGZUpOxmxRlCvy0v/f56VnXCrP+eBBNqmoncGsrBej23wdr13o?=
+ =?us-ascii?Q?r4o6J7x1z6NMgLlTK3ubyGSmEl4G3aKz56ptVtX8tIs9HzPxBRA0jkiTb+S3?=
+ =?us-ascii?Q?mlCzpDjyA/2rqj/fkxHGyKozRn6E+hU8jLe6aztp+WigzqAXB9z4+mT/ocLd?=
+ =?us-ascii?Q?zaZwppzrp/2XhlhCC0Yk98gAbZ3Io4+TbufkwY3Wj0Kg42AnZ26uzG8KDoE9?=
+ =?us-ascii?Q?V+98BQ=3D=3D?=
+X-OriginatorOrg: corigine.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ebd36be3-8aa6-4df8-3ff6-08db0a816224
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR13MB4842.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2023 09:38:21.8689
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fe128f2c-073b-4c20-818e-7246a585940c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: j4vGL+dD7QWvvfxi9KlX6+NeCiL6GTAHJg8IhcI41Sw4T52zrumoLQY9TGCleBdRAZBWEJASROlLquFZrH62SHl/rMWQI11jP3hmS61btLA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR13MB5578
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Feb 06, 2023 at 10:15:37AM +0100, Jiri Olsa wrote:
-> On Sun, Feb 05, 2023 at 07:36:14PM +0100, Ilya Leoshkevich wrote:
-> > On Sun, 2023-02-05 at 19:17 +0100, Jiri Olsa wrote:
-> > > On Sat, Feb 04, 2023 at 01:21:13AM -0800, Alexei Starovoitov wrote:
-> > > > On Fri, Feb 3, 2023 at 8:23 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> > > > > 
-> > > > > hi,
-> > > > > I noticed several times in discussions that we should move test
-> > > > > kfuncs
-> > > > > into kernel module, now perhaps even more pressing with all the
-> > > > > kfunc
-> > > > > effort. This patchset moves all the test kfuncs into bpf_testmod.
-> > > > > 
-> > > > > I added bpf_testmod/bpf_testmod_kfunc.h header that is shared
-> > > > > between
-> > > > > bpf_testmod kernel module and BPF programs, which brings some
-> > > > > difficulties
-> > > > > with __ksym define. But I'm not sure having separate headers for
-> > > > > BPF
-> > > > > programs and for kernel module would be better.
-> > > > > 
-> > > > > This patchset also needs:
-> > > > >   74bc3a5acc82 bpf: Add missing btf_put to
-> > > > > register_btf_id_dtor_kfuncs
-> > > > > which is only in bpf/master now.
-> > > > 
-> > > > I thought you've added this patch to CI,
-> > > > but cb_refs is still failing on s390...
-> > > 
-> > > the CI now fails for s390 with messages like:
-> > >    2023-02-04T07:04:32.5185267Z    RES: address of kernel function
-> > > bpf_kfunc_call_test_fail1 is out of range
-> > > 
-> > > so now that we have test kfuncs in the module, the 's32 imm' value of
-> > > the bpf call instructions can overflow when the offset between module
-> > > and kernel is greater than 2GB ... as explained in the commit that
-> > > added the verifier check:
-> > > 
-> > >   8cbf062a250e bpf: Reject kfunc calls that overflow insn->imm
-> > > 
-> > > not sure we can do anything about that on bpf side.. cc-ing s390 list
-> > > and Ilya for ideas/thoughts
-> > > 
-> > > maybe we could make bpf_testmod in-tree module and compile it as
-> > > module
-> > > just for some archs
-> > > 
-> > > thoughts?
-> > 
-> > Hi,
-> > 
-> > I'd rather have this fixed - I guess the problem can affect the users.
-> > The ksyms_module test is already denylisted because of that.
-> > Unfortunately getting the kernel and the modules close together on
-> > s390x is unlikely to happen in the foreseeable future.
-> > 
-> > What do you think about keeping the BTF ID inside the insn->imm field
-> > and putting the 64-bit delta into bpf_insn_aux_data, replacing the
-> > call_imm field that we already have there?
+On Wed, Feb 08, 2023 at 07:19:29PM +0100, Alexandra Winter wrote:
 > 
-> seems tricky wrt other archs.. how about saving address of the kfunc
-> in bpf_insn_aux_data and use that in s390 jit code instead of the
-> '__bpf_call_base + imm' calculation
+> 
+> On 07.02.23 16:42, Simon Horman wrote:
+> > On Mon, Feb 06, 2023 at 06:27:54PM +0100, Alexandra Winter wrote:
+> >> From: Thorsten Winkler <twinkler@linux.ibm.com>
+> >>
+> >> This LWN article explains the rationale for this change
+> >> https: //lwn.net/Articles/69419/
+> > 
+> > https://lwn.net/Articles/69419/
+> > 
+> >> Ie. snprintf() returns what *would* be the resulting length,
+> >> while scnprintf() returns the actual length.
+> > 
+> > Ok, but in most cases in this patch the return value is not checked.
+> > Is there any value in this change in those cases?
+> > 
+> 
+> Jules Irenge reported a coccinnelle warning to use scnprintf in 
+> show() functions [1]. (Thorsten Winkler changed these instances to
+> sysfs_emit in patch 3 of this series.)
+> We read the article as a call to implement the plan to upgrade the kernel
+> to the newer *scnprintf functions. Is that not intended?
+>
+> I totally agree, that in these cases no real problem was fixed, it is
+> more of a style improvement.
 
-any other ideas/thoughts on this?
+My feeling is that it isn't an improvement and therefore probably
+best not done. But that is just my opinion.
 
-I don't have s390 server available, so can't really fix/test that..
-any chance you work on that?
+> [1] https://lore.kernel.org/netdev/YzHyniCyf+G%2F2xI8@fedora/T/
+> 
+> >> Reported-by: Jules Irenge <jbi.octave@gmail.com>
+> >> Reviewed-by: Alexandra Winkler <wintera@linux.ibm.com>
+> > 
+> > s/Winkler/Winter/ ?
+> 
+> Of course. Wow, you have good eyes!
 
-thanks,
-jirka
+Only on my good days.
+
+> >> Signed-off-by: Thorsten Winkler <twinkler@linux.ibm.com>
+> >> Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
+> > 
+> > ...
+> > 
+> >> diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
+> >> index 1cf4e354693f..af4e60d2917e 100644
+> >> --- a/drivers/s390/net/qeth_l3_main.c
+> >> +++ b/drivers/s390/net/qeth_l3_main.c
+> >> @@ -47,9 +47,9 @@ int qeth_l3_ipaddr_to_string(enum qeth_prot_versions proto, const u8 *addr,
+> >>  			     char *buf)
+> >>  {
+> >>  	if (proto == QETH_PROT_IPV4)
+> >> -		return sprintf(buf, "%pI4", addr);
+> >> +		return scnprintf(buf, INET_ADDRSTRLEN, "%pI4", addr);
+> >>  	else
+> >> -		return sprintf(buf, "%pI6", addr);
+> >> +		return scnprintf(buf, INET6_ADDRSTRLEN, "%pI6", addr);
+> >>  }
+> > 
+> > 
+> > This seems to be the once case where the return value is not ignored.
+> > 
+> > Of the 4 callers of qeth_l3_ipaddr_to_string, two don't ignore the return
+> > value. And I agree in those cases this change seems correct.
+> > 
+> > However, amongst other usages of the return value,
+> > those callers also check for a return < 0 from this function.
+> > Can that occur, in the sprintf or scnprintf case?
+> 
+> I was under the impression this was a safeguard against a bad address format,
+> but I tried it out and it never resulted in a negative return.
+> Thanks a lot for pointing this out, we can further simplify patch 3 with that.
+
+The advice elsewhere in this thread is that perhaps leaving this as-is may
+be best after all.
+
+* https://lore.kernel.org/netdev/63c6825fc2c94ad19ac7de93a6f151f6@AcuMS.aculab.com/
