@@ -2,70 +2,95 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 671796964BE
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Feb 2023 14:34:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 112A869666C
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Feb 2023 15:19:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231787AbjBNNeM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 14 Feb 2023 08:34:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39990 "EHLO
+        id S233376AbjBNOTP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 14 Feb 2023 09:19:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231709AbjBNNeL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 14 Feb 2023 08:34:11 -0500
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C80E25951
-        for <linux-s390@vger.kernel.org>; Tue, 14 Feb 2023 05:34:10 -0800 (PST)
-Received: by mail-wr1-x42a.google.com with SMTP id by3so14349093wrb.10
-        for <linux-s390@vger.kernel.org>; Tue, 14 Feb 2023 05:34:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WGHU8++hSasBHq0auor+ITetD5qlqdDHtoEhmOgHC2Q=;
-        b=SPTzUWH/X5kgsBzTcLZOEcoua5kSuTJjKXXpUg9amC5bVjZeR8mGyuW4I/Sry1HH0u
-         kOP9zXc9AYIkxMbPlqjJlTDLKmO7Z6Zwl93nWglvDWQVCW6PaEFAoG0ncEUz/xve9CUC
-         hM0LdOix+uQqxXHMgWED0BTtP7/juaHBGpfl0PobnhwQt5Rkqa/5yDRGpb0VKHrIWecw
-         uQRl+SNTq3H3IRKIHEGMjnRL+9lotYP8JiNJVYDc4061EASMuKRHtrCft+SWJKZAOCK+
-         I9QWpQI6lkVfFJtWkzVMX7RsO/uGjLM8DfIopjft8xChJAIV6pOCjcr2IDyFnDCoVLlq
-         wyOw==
+        with ESMTP id S232568AbjBNOTE (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 14 Feb 2023 09:19:04 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9197A234CE
+        for <linux-s390@vger.kernel.org>; Tue, 14 Feb 2023 06:17:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1676384257;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7edBYp6qpX/SlmDw/QknJtcx6m2SrqGm1x4V+hfCBb4=;
+        b=Dr/ruO5te1QkjGB2h+6cjSleC97fZfeYc17YWt75faZqlO0z5sTGsNJ+fWbYcrbwqrCaSZ
+        /L4CuhJKEHVoJhgA7OP9UO0C4P9R/gxOSrzxlRQfPcI3A5R1gQxofIVGhj/rToyt06CRt4
+        fQLiHBS3dbQBRBiS38XiHw/4aajNn98=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-561-PT3ujHR5PH-7SOjlj5teUg-1; Tue, 14 Feb 2023 09:10:50 -0500
+X-MC-Unique: PT3ujHR5PH-7SOjlj5teUg-1
+Received: by mail-qt1-f197.google.com with SMTP id t5-20020a05622a180500b003b9c03cd525so9463014qtc.20
+        for <linux-s390@vger.kernel.org>; Tue, 14 Feb 2023 06:10:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WGHU8++hSasBHq0auor+ITetD5qlqdDHtoEhmOgHC2Q=;
-        b=5VvUS9CQEOw8FHIW+DuDRiL5rm0tGW+5ReHOFxhqUyFUAmcgB6DJDAM+b9eTE1gDsz
-         STCH4hKmnmKbZlamjVYW87+BAwjhtVL5q/A6EmsgOThFegruifQCiuosYPgHAdvrl5Yp
-         Oip7/cRhLVSCo9RK500UWaurWyDKCblPHLwNOBs0SqYgfc0OFcMTZJN8DbplgzbEsSV4
-         XBnY4+Yps+OO7ggXZPgNCRlgM1sVLXROX+mFbwqpbaxCgKE4UsXts/gDg45kyFFSZmz1
-         MhDainoQ2H5jLZRq2iOxM6nQSO8hMSh9Kiv/RaH7zVcajBRD1qMHMg632KUMzATLQTaf
-         Cztw==
-X-Gm-Message-State: AO0yUKVmajVzx4Xj7Wwf22IfN7yV3x8PS3wQIekL+FFIKFe/y1wv1I5a
-        m9YzWE4uFZEkr35QHBoNQLo5Ipcxh8B9jRxm22iYBg==
-X-Google-Smtp-Source: AK7set/FJhWVX9bcheAVW2cRW8gw2NQSjN3nIpKQOyB1fAOvHf8ARFeSbB8M6ccTThoujaOGWU2kcvTrKw/YjEzkTCs=
-X-Received: by 2002:adf:fd4d:0:b0:2c5:521a:18ca with SMTP id
- h13-20020adffd4d000000b002c5521a18camr112575wrs.526.1676381648896; Tue, 14
- Feb 2023 05:34:08 -0800 (PST)
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7edBYp6qpX/SlmDw/QknJtcx6m2SrqGm1x4V+hfCBb4=;
+        b=iQ7tRDScVUNrloutuT5XuxknWmDtLLeDlrW6qfShd9fgsmqrczWsy5D/vu5KKbp3Yc
+         mQIasEMGV6OzTOna/2/+DiI+R115+nEc+2YLzwMj+uaNpdrMWb8V5goMTCwI7Ejf0Oka
+         wLgN8pi/qWK8mkyVuNEWVvqWfd4mX+ZbQNC+GoU3lfkDRdfyb6/QIlTORAPyBTs8/MUg
+         uf7lsF8dNJUt39WWv59HEXP/u73gSzMCWOaVnqY1WLTCnJjLpEkxtlM573OAjB8rSvdB
+         xj64UtvM5Q6b+W/+y3YAeaXYZrTa0+h2cREy104KsyrwJ3uQnT2TRW3ZywyOPvW+fWic
+         DsCQ==
+X-Gm-Message-State: AO0yUKX0pZDGJlIbvpPs/aUXLjRr6KaDrwxXws9IQbMqxJwTCytFMFmL
+        kx2AP2VDqRkisTcgZxFAjyDQBKE3EC2W704byZW0rXLny6kYFEIulD1VvCLSzT1lQYkNlK/cjgL
+        i5rC4Ax3dKiBla4X6KHYggg==
+X-Received: by 2002:a05:622a:50:b0:3b8:691f:271 with SMTP id y16-20020a05622a005000b003b8691f0271mr3386014qtw.63.1676383850311;
+        Tue, 14 Feb 2023 06:10:50 -0800 (PST)
+X-Google-Smtp-Source: AK7set98OEMKfsGkU19OgnlE6heJ9O6LLo1g6QDlcHkAXfWHsX591p7/3MvgrPqMUwlWB9z0tPx4tA==
+X-Received: by 2002:a05:622a:50:b0:3b8:691f:271 with SMTP id y16-20020a05622a005000b003b8691f0271mr3385969qtw.63.1676383849978;
+        Tue, 14 Feb 2023 06:10:49 -0800 (PST)
+Received: from vschneid.remote.csb ([154.57.232.159])
+        by smtp.gmail.com with ESMTPSA id s184-20020ae9dec1000000b0073b38652b9csm4892065qkf.122.2023.02.14.06.10.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Feb 2023 06:10:49 -0800 (PST)
+From:   Valentin Schneider <vschneid@redhat.com>
+To:     linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        x86@kernel.org
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Guo Ren <guoren@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v4 0/7] Generic IPI sending tracepoint
+In-Reply-To: <20230119143619.2733236-1-vschneid@redhat.com>
+References: <20230119143619.2733236-1-vschneid@redhat.com>
+Date:   Tue, 14 Feb 2023 14:10:43 +0000
+Message-ID: <xhsmhh6voqqvw.mognet@vschneid.remote.csb>
 MIME-Version: 1.0
-References: <20230213183858.1473681-1-hca@linux.ibm.com>
-In-Reply-To: <20230213183858.1473681-1-hca@linux.ibm.com>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Tue, 14 Feb 2023 14:33:31 +0100
-Message-ID: <CAG_fn=Wo-RyxDDvV3bVugfxzxxQN75GaOoRhKOQv1b5yrbPynQ@mail.gmail.com>
-Subject: Re: [PATCH] s390/kfence: fix page fault reporting
-To:     Heiko Carstens <hca@linux.ibm.com>
-Cc:     Baoquan He <bhe@redhat.com>, Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Marco Elver <elver@google.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,34 +98,29 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Feb 13, 2023 at 7:39 PM Heiko Carstens <hca@linux.ibm.com> wrote:
+
+Hey folks,
+
+On 19/01/23 14:36, Valentin Schneider wrote:
+> Patches
+> =======
 >
-> Baoquan He reported lots of KFENCE reports when /proc/kcore is read,
-> e.g. with crash or even simpler with dd:
+> o Patches 1-5 spread out the tracepoint across relevant sites.
+>   Patch 5 ends up sprinkling lots of #include <trace/events/ipi.h> which I'm not
+>   the biggest fan of, but is the least horrible solution I've been able to come
+>   up with so far.
 >
->  BUG: KFENCE: invalid read in copy_from_kernel_nofault+0x5e/0x120
->  Invalid read at 0x00000000f4f5149f:
->   copy_from_kernel_nofault+0x5e/0x120
->   read_kcore+0x6b2/0x870
->   proc_reg_read+0x9a/0xf0
->   vfs_read+0x94/0x270
->   ksys_read+0x70/0x100
->   __do_syscall+0x1d0/0x200
->   system_call+0x82/0xb0
+> o Patch 7 is trying to be smart about tracing the callback associated with the
+>   IPI.
 >
-> The reason for this is that read_kcore() simply reads memory that might
-> have been unmapped by KFENCE with copy_from_kernel_nofault(). Any fault due
-> to pages being unmapped by KFENCE would be handled gracefully by the fault
-> handler (exception table fixup).
+> This results in having IPI trace events for:
 >
-> However the s390 fault handler first reports the fault, and only afterwards
-> would perform the exception table fixup. Most architectures have this in
-> reversed order, which also avoids the false positive KFENCE reports when an
-> unmapped page is accessed.
+> o smp_call_function*()
+> o smp_send_reschedule()
+> o irq_work_queue*()
+> o standalone uses of __smp_call_single_queue()
 >
-> Therefore change the s390 fault handler so it handles exception table
-> fixups before KFENCE page faults are reported.
->
-> Reported-by: Baoquan He <bhe@redhat.com>
-> Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
-Acked-by: Alexander Potapenko <glider@google.com>
+
+This still rebases cleanly on top of the latest tip/sched/core, any
+objections to parking it there?
+
