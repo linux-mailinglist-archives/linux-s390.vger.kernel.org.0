@@ -2,298 +2,236 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 922F569CF0B
-	for <lists+linux-s390@lfdr.de>; Mon, 20 Feb 2023 15:10:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48D0669D087
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Feb 2023 16:23:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231389AbjBTOKb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 20 Feb 2023 09:10:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35712 "EHLO
+        id S232419AbjBTPXL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 20 Feb 2023 10:23:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232738AbjBTOK2 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 20 Feb 2023 09:10:28 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B25EA1E9FB;
-        Mon, 20 Feb 2023 06:10:01 -0800 (PST)
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31KDBiQn031207;
-        Mon, 20 Feb 2023 14:09:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=SOFbZWyQDMdRQYS7rUHiG1DGhTtaXwwy2EaC2nW7s9k=;
- b=D5/JrAvL7Lgkqt+BXzdYqcEQ46sbekLES5oVbPKiIjFYWp8U3sXJURx86ypAskSqKvIi
- 6XY4a3AcQ6qfTw0Ryi3m5x1mmc9+HGAjWmLWhvURTenUnjxRmEuppPOtYHaqiQSgIzO5
- fe2mrOkj01bP1f/ExLsk3iK5y3yLe4DxUcVcVDWxVF+KgbWQWmNUXnfJ7SVhgsNEZ0kF
- HMdUZ/0ge+H2f2PIFTS88n3JYSIzxHFuUEf01IOYyjmPqgzYDEJ4XLh+HJH81zBExwqZ
- LMfB6oorDMZ9gI7qydwyK3kmUKt5zd9BCyfFjH9n533I6bnRaGeEc4t0KvWXf7huVTRT uA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nv9hghcf4-1
+        with ESMTP id S232359AbjBTPXJ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 20 Feb 2023 10:23:09 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0C082121;
+        Mon, 20 Feb 2023 07:22:53 -0800 (PST)
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31KEcd9q003286;
+        Mon, 20 Feb 2023 15:22:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=ocXE8dx4OzBmhhNyICrdDairyhT/foJnOuuA44gAOQk=;
+ b=Cc9CU5ZVatNxUElKlZemOCaIuKwiNcv/EdNWjj4OtL4qUs4elDsZxMQVDkELYiOv289+
+ w/KAqk3sDZUKFD/bIF21DwJceww53In+Y4ytqNRrSx/ZW2NffuR1OrCoPp2UzTluj9lF
+ xHAC9bq7bWUfo7dGsqhBb8Ei5zEdxZqz9WDrTSZ9hblKjLI3XjudnGEq2B0Z0St+pvd7
+ 7WWYTI9IwTi3MroMniyt11HP5ww1Ce3LQKEFNY0ZLOkTgZU0wcY3FBD6acpHtWg+Euy9
+ XkCmiJP9hQVl5ZZNbPDk2B7HRXs1F7s2t+w0ZNzjG6MXemMWhmWyvVuJe2Z/9zWX2K77 Zw== 
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3nva3n2f6m-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Feb 2023 14:09:36 +0000
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 31KDD70P001689;
-        Mon, 20 Feb 2023 14:09:36 GMT
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nv9hghce0-1
+        Mon, 20 Feb 2023 15:22:29 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 31KFJO5L019871;
+        Mon, 20 Feb 2023 15:22:26 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3ntnxf2uqw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Feb 2023 14:09:36 +0000
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 31K6s2vT018299;
-        Mon, 20 Feb 2023 14:09:34 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma02fra.de.ibm.com (PPS) with ESMTPS id 3ntpa62356-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Feb 2023 14:09:33 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 31KE9U1936700620
+        Mon, 20 Feb 2023 15:22:26 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 31KFMNTE23658942
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Feb 2023 14:09:30 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3D2D020043;
-        Mon, 20 Feb 2023 14:09:30 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0856420040;
-        Mon, 20 Feb 2023 14:09:30 +0000 (GMT)
-Received: from li-7e0de7cc-2d9d-11b2-a85c-de26c016e5ad.ibm.com (unknown [9.171.134.87])
-        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Feb 2023 14:09:29 +0000 (GMT)
-Message-ID: <f290bd18f33203def9da4f76082b0cc4dcaa1eed.camel@linux.ibm.com>
-Subject: Re: [kvm-unit-tests PATCH v1 1/2] s390x/spec_ex: Add test
- introducing odd address into PSW
-From:   Nina Schoetterl-Glausch <nsg@linux.ibm.com>
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc:     Thomas Huth <thuth@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Date:   Mon, 20 Feb 2023 15:09:29 +0100
-In-Reply-To: <20230217120516.13db2aa2@p-imbrenda>
-References: <20230215171852.1935156-1-nsg@linux.ibm.com>
-         <20230215171852.1935156-2-nsg@linux.ibm.com>
-         <20230217120516.13db2aa2@p-imbrenda>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.3 (3.46.3-1.fc37) 
-MIME-Version: 1.0
+        Mon, 20 Feb 2023 15:22:23 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1D7E920063;
+        Mon, 20 Feb 2023 15:22:23 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9B25E2004B;
+        Mon, 20 Feb 2023 15:22:22 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Feb 2023 15:22:22 +0000 (GMT)
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Wenjia Zhang <wenjia@linux.ibm.com>
+Cc:     Matthew Rosato <mjrosato@linux.ibm.com>,
+        Gerd Bayer <gbayer@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>, iommu@lists.linux.dev,
+        linux-s390@vger.kernel.org, borntraeger@linux.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com,
+        gerald.schaefer@linux.ibm.com, agordeev@linux.ibm.com,
+        svens@linux.ibm.com, linux-kernel@vger.kernel.org,
+        Julian Ruess <julianr@linux.ibm.com>
+Subject: [PATCH v7 0/6] iommu/dma: s390 DMA API conversion and optimized IOTLB flushing
+Date:   Mon, 20 Feb 2023 16:22:16 +0100
+Message-Id: <20230220152222.1818344-1-schnelle@linux.ibm.com>
+X-Mailer: git-send-email 2.37.2
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: RKGEdOfWVLK62W0t0Sl3XsmQ9F6Yw_ZJ
-X-Proofpoint-GUID: WM3s4Iz8Po7MGefgpMQPmlpJhO53iwEZ
+X-Proofpoint-ORIG-GUID: 0m0dHR7pXQxSfC36Mq1YIriRT3s--GIJ
+X-Proofpoint-GUID: 0m0dHR7pXQxSfC36Mq1YIriRT3s--GIJ
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
  definitions=2023-02-20_12,2023-02-20_02,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- mlxscore=0 suspectscore=0 lowpriorityscore=0 impostorscore=0 adultscore=0
- clxscore=1015 priorityscore=1501 spamscore=0 malwarescore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2302200128
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ spamscore=0 lowpriorityscore=0 priorityscore=1501 mlxlogscore=999
+ impostorscore=0 mlxscore=0 malwarescore=0 clxscore=1015 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2302200138
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 2023-02-17 at 12:05 +0100, Claudio Imbrenda wrote:
-> On Wed, 15 Feb 2023 18:18:51 +0100
-> Nina Schoetterl-Glausch <nsg@linux.ibm.com> wrote:
->=20
-> > Instructions on s390 must be halfword aligned.
-> > Introducing an odd instruction address into the PSW leads to a
-> > specification exception when attempting to execute the instruction at
-> > the odd address.
-> > Add a test for this.
-> >=20
-> > Signed-off-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
-> > ---
-> >  s390x/spec_ex.c | 73 ++++++++++++++++++++++++++++++++++++++++++++++---
-> >  1 file changed, 69 insertions(+), 4 deletions(-)
-> >=20
-> > diff --git a/s390x/spec_ex.c b/s390x/spec_ex.c
-> > index 42ecaed3..b6764677 100644
-> > --- a/s390x/spec_ex.c
-> > +++ b/s390x/spec_ex.c
-> > @@ -44,9 +44,10 @@ static void fixup_invalid_psw(struct stack_frame_int=
- *stack)
-> >  /*
-> >   * Load possibly invalid psw, but setup fixup_psw before,
-> >   * so that fixup_invalid_psw() can bring us back onto the right track.
-> > + * The provided argument is loaded into register 1.
-> >   * Also acts as compiler barrier, -> none required in expect/check_inv=
-alid_psw
-> >   */
-> > -static void load_psw(struct psw psw)
-> > +static void load_psw_with_arg(struct psw psw, uint64_t arg)
-> >  {
-> >  	uint64_t scratch;
-> > =20
-> > @@ -57,15 +58,22 @@ static void load_psw(struct psw psw)
-> >  	fixup_psw.mask =3D extract_psw_mask();
-> >  	asm volatile ( "larl	%[scratch],0f\n"
-> >  		"	stg	%[scratch],%[fixup_addr]\n"
-> > +		"	lgr	%%r1,%[arg]\n"
-> >  		"	lpswe	%[psw]\n"
-> >  		"0:	nop\n"
-> >  		: [scratch] "=3D&d" (scratch),
-> >  		  [fixup_addr] "=3D&T" (fixup_psw.addr)
-> > -		: [psw] "Q" (psw)
-> > -		: "cc", "memory"
-> > +		: [psw] "Q" (psw),
-> > +		  [arg] "d" (arg)
-> > +		: "cc", "memory", "%r1"
-> >  	);
-> >  }
-> > =20
-> > +static void load_psw(struct psw psw)
-> > +{
-> > +	load_psw_with_arg(psw, 0);
-> > +}
-> > +
-> >  static void load_short_psw(struct short_psw psw)
-> >  {
-> >  	uint64_t scratch;
-> > @@ -88,12 +96,18 @@ static void expect_invalid_psw(struct psw psw)
-> >  	invalid_psw_expected =3D true;
-> >  }
-> > =20
-> > +static void clear_invalid_psw(void)
-> > +{
-> > +	expected_psw =3D (struct psw){0};
->=20
-> as of today, you can use PSW(0, 0)  :)
->=20
-> > +	invalid_psw_expected =3D false;
-> > +}
-> > +
-> >  static int check_invalid_psw(void)
-> >  {
-> >  	/* Since the fixup sets this to false we check for false here. */
-> >  	if (!invalid_psw_expected) {
-> >  		if (expected_psw.mask =3D=3D invalid_psw.mask &&
-> > -		    expected_psw.addr =3D=3D invalid_psw.addr)
-> > +		    expected_psw.addr =3D=3D invalid_psw.addr - lowcore.pgm_int_id)
->=20
-> can you explain this change?
+Hi All,
 
-In the existing invalid PSW tests, the instruction length code is 0, so no
-change there. In case of an odd address being introduced into the PSW, the
-address is incremented by an unpredictable amount, the subtraction removes =
-that.
->=20
-> >  			return 0;
-> >  		report_fail("Wrong invalid PSW");
-> >  	} else {
-> > @@ -115,6 +129,56 @@ static int psw_bit_12_is_1(void)
-> >  	return check_invalid_psw();
-> >  }
-> > =20
-> > +static int psw_odd_address(void)
-> > +{
-> > +	struct psw odd =3D {
->=20
-> now you can use PSW_WITH_CUR_MASK(0) here
->=20
-> > +		.mask =3D extract_psw_mask(),
-> > +	};
-> > +	uint64_t regs[16];
-> > +	int r;
-> > +
-> > +	/*
-> > +	 * This asm is reentered at an odd address, which should cause a spec=
-ification
-> > +	 * exception before the first unaligned instruction is executed.
-> > +	 * In this case, the interrupt handler fixes the address and the test=
- succeeds.
-> > +	 * If, however, unaligned instructions *are* executed, they are jumpe=
-d to
-> > +	 * from somewhere, with unknown registers, so save and restore those =
-before.
-> > +	 */
->=20
-> I wonder if this could be simplified
->=20
-> > +	asm volatile ( "stmg	%%r0,%%r15,%[regs]\n"
-> > +		//can only offset by even number when using larl -> increment by one
-> > +		"	larl	%[r],0f\n"
-> > +		"	aghi	%[r],1\n"
-> > +		"	stg	%[r],%[addr]\n"
->=20
-> the above is ok (set up illegal PSW)
->=20
-> (maybe call expect_invalid_psw here, see comments below)
->=20
-> put the address of the exit label in a register
->=20
-> then do a lpswe here to jump to the invalid PSW
->=20
-> > +		"	xr	%[r],%[r]\n"
-> > +		"	brc	0xf,1f\n"
->=20
-> then do the above. that will only happen if the PSW was not loaded.
->=20
-> > +		"0:	. =3D . + 1\n"
->=20
-> if we are here, things went wrong.
-> write something in r, jump to the exit label (using the address in the
-> register that we saved earlier)
->=20
-> > +		"	lmg	%%r0,%%r15,0(%%r1)\n"
-> > +		//address of the instruction itself, should be odd, store for assert
-> > +		"	larl	%[r],0\n"
-> > +		"	stg	%[r],%[addr]\n"
-> > +		"	larl	%[r],0f\n"
-> > +		"	aghi	%[r],1\n"
-> > +		"	bcr	0xf,%[r]\n"
-> > +		"0:	. =3D . + 1\n"
-> > +		"1:\n"
-> > +	: [addr] "=3DT" (odd.addr),
-> > +	  [regs] "=3DQ" (regs),
-> > +	  [r] "=3Dd" (r)
-> > +	: : "cc", "memory"
-> > +	);
-> > +
->=20
-> if we come out here and r is 0, then things went well, otherwise we
-> fail.
->=20
-> > +	if (!r) {
-> > +		expect_invalid_psw(odd);
->=20
-> that ^ should probably go before the asm (or _in_ the asm, maybe you
-> can call the C function from asm)
->=20
-> > +		load_psw_with_arg(odd, (uint64_t)&regs);
->=20
-> this would not be needed anymore ^
->=20
->=20
-> this way you don't need to save registers or do crazy things where you
-> jump back in the middle of the asm from C code. and then you don't even
-> need load_psw_with_arg
->=20
-I'll see what I can do.
->=20
-> > +		return check_invalid_psw();
-> > +	} else {
-> > +		assert(odd.addr & 1);
-> > +		clear_invalid_psw();
-> > +		report_fail("executed unaligned instructions");
-> > +		return 1;
-> > +	}
-> > +}
-> > +
-> >  /* A short PSW needs to have bit 12 set to be valid. */
-> >  static int short_psw_bit_12_is_0(void)
-> >  {
-> > @@ -176,6 +240,7 @@ struct spec_ex_trigger {
-> >  static const struct spec_ex_trigger spec_ex_triggers[] =3D {
-> >  	{ "psw_bit_12_is_1", &psw_bit_12_is_1, false, &fixup_invalid_psw },
-> >  	{ "short_psw_bit_12_is_0", &short_psw_bit_12_is_0, false, &fixup_inva=
-lid_psw },
-> > +	{ "psw_odd_address", &psw_odd_address, false, &fixup_invalid_psw },
-> >  	{ "bad_alignment", &bad_alignment, true, NULL },
-> >  	{ "not_even", &not_even, true, NULL },
-> >  	{ NULL, NULL, false, NULL },
->=20
+This patch series converts s390's PCI support from its platform specific DMA
+API implementation in arch/s390/pci/pci_dma.c to the common DMA IOMMU layer.
+The conversion itself is done in patches 3-4 with patch 2 providing the final
+necessary IOMMU driver improvement to handle s390's special IOTLB flush
+out-of-resource indication in virtualized environments. Patches 1-2 may be
+applied independently. The conversion itself only touches the s390 IOMMU driver
+and s390 arch code moving over remaining functions from the s390 DMA API
+implementation. No changes to common code are necessary.
+
+After patch 4 the basic conversion is done and on our partitioning machine
+hypervisor LPAR performance matches or exceeds the existing code. When running
+under z/VM or KVM however, performance plummets to about half of the existing
+code due to a much higher rate of IOTLB flushes for unmapped pages. Due to the
+hypervisors use of IOTLB flushes to synchronize their shadow tables these are
+very expensive and minimizing them is key for regaining the performance loss.
+
+To this end patches 5-6 propose a new, single queue, IOTLB flushing scheme as
+an alternative to the existing per-CPU flush queues. Introducing an alternative
+scheme was also suggested by Robin Murphy[1]. In the previous RFC of this
+conversion Robin suggested reusing more of the existing queuing logic which
+I incorporated since v2. The single queue mode is introduced in patch
+5 together with a new dma_iommu_options struct and tune_dma_iommu callback in
+IOMMU ops which allows IOMMU drivers to switch to a single flush queue.
+
+Then patch 6 enables variable queue sizes using power of 2 queue sizes and
+shift/mask to keep performance as close to the existing code as possible. The
+variable queue size and a variable timeout are added to the dma_iommu_options
+struct and utilized by s390 in the z/VM and KVM guest cases. As it is
+implemented in common code the single queue IOTLB flushing scheme can of course
+be used by other platforms with expensive IOTLB flushes. Particularly
+virtio-iommu may be a candidate.
+
+In a previous version I verified that the new scheme does work on my x86_64
+Ryzen workstation by locally modifying iommu_subsys_init() to default to the
+single queue mode and verifying its use via "/sys/.../iommu_group/type". I did
+not find problems with an AMD GPU, Intel NIC (with SR-IOV and KVM
+pass-through), NVMes or any on board peripherals.
+
+As with previous series this is available via my git.kernel.org tree[3] in the
+dma_iommu_v7 branch with signed s390_dma_iommu_v7 tag. This version applies
+on top of iommu-next to incorporate the ops->set_platform_dma() and GFP
+changes.
+ 
+NOTE: Due to the large drop in performance I think we should not merge the DMA
+API conversion (patch 4) until we have a more suited IOVA flushing scheme
+with similar improvements as the proposed changes.
+
+Best regards,
+Niklas
+
+[0] https://lore.kernel.org/linux-iommu/20221109142903.4080275-1-schnelle@linux.ibm.com/
+[1] https://lore.kernel.org/linux-iommu/3e402947-61f9-b7e8-1414-fde006257b6f@arm.com/
+[2] https://lore.kernel.org/linux-iommu/a8e778da-7b41-a6ba-83c3-c366a426c3da@arm.com/
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/niks/linux.git/
+
+Changes since v6:
+- Rebased on iommu-next branch (Matt)
+  - No need for ops->set_platform_dma() anymore
+  - Add gfp_t gfp parameters for page allocations
+- In patch 4 removed a superflous s390_domain->dma_table assignment
+- Added R-bs from Matt
+
+Changes since v5:
+- Instead of introducing a new IOMMU domain type utilize a new options
+  mechanism that allows IOMMU drivers to tune the DMA IOMMU flushing (Jason,
+  Robin)
+- The above reworks patches 5 and 6
+- Dropped patch 7 as its functionality is no longer needed
+
+Changes since v4:
+- Picked up R-b's for patch 1, 2 and 3
+- In patch 5 fixed iommu_group_store_type() mistakenly initializing DMA-SQ
+  instead of DMA-FQ. This was caused by iommu_dma_init_fq() being called before
+  domain->type is set, instead pass the type as paramater. This also closes
+  a window where domain->type is still DMA while the FQ is already used. (Gerd)
+- Replaced a missed check for IOMMU_DOMAIN_DMA_FQ with the new generic
+  __IOMMU_DOMAIN_DMA_LAZY in patch 5
+- Made the ISM PCI Function Type a define (Matt)
+- Removed stale TODO comment (Matt)
+
+Changes since v3:
+- Reword commit message of patch 2 for more clarity
+- Correct typo in comment added by patch 2 (Alexandra)
+- Adapted signature of .iommu_tlb_sync mapo for sun50i IOMMU driver added in
+  v6.2-rc1 (kernel test robot)
+- Add R-b from Alexandra for patch 1
+
+Changes since v2:
+- Move the IOTLB out-of-resource handling into the IOMMU enabling it also for
+  the IOMMU API (patch 2). This also makes this independent from the DMA API
+  conversion (Robin, Jason).
+- Rename __IOMMU_DOMAIN_DMA_FQ to __IOMMU_DOMAIN_DMA_LAZY when introducing
+  single queue flushing mode.
+- Make selecting between single and per-CPU flush queues an explicit IOMMU op
+  (patch 7)
+
+Changes since RFC v1:
+- Patch 1 uses dma_set_mask_and_coherent() (Christoph)
+- Patch 3 now documents and allows the use of iommu.strict=0|1 on s390 and
+  deprecates s390_iommu=strict while making it an alias.
+- Patches 5-7 completely reworked to reuse existing queue logic (Robin)
+- Added patch 4 to allow using iommu.strict=0|1 to override
+  ops->def_domain_type.
+
+Niklas Schnelle (6):
+  s390/ism: Set DMA coherent mask
+  iommu: Allow .iotlb_sync_map to fail and handle s390's -ENOMEM return
+  s390/pci: prepare is_passed_through() for dma-iommu
+  s390/pci: Use dma-iommu layer
+  iommu/dma: Allow a single FQ in addition to per-CPU FQs
+  iommu/dma: Make flush queue sizes and timeout driver configurable
+
+ .../admin-guide/kernel-parameters.txt         |   9 +-
+ arch/s390/include/asm/pci.h                   |   7 -
+ arch/s390/include/asm/pci_clp.h               |   3 +
+ arch/s390/include/asm/pci_dma.h               | 121 +--
+ arch/s390/pci/Makefile                        |   2 +-
+ arch/s390/pci/pci.c                           |  22 +-
+ arch/s390/pci/pci_bus.c                       |   5 -
+ arch/s390/pci/pci_debug.c                     |  12 +-
+ arch/s390/pci/pci_dma.c                       | 735 ------------------
+ arch/s390/pci/pci_event.c                     |  17 +-
+ arch/s390/pci/pci_sysfs.c                     |  19 +-
+ drivers/iommu/Kconfig                         |   4 +-
+ drivers/iommu/amd/iommu.c                     |   5 +-
+ drivers/iommu/apple-dart.c                    |   5 +-
+ drivers/iommu/dma-iommu.c                     | 189 +++--
+ drivers/iommu/dma-iommu.h                     |   4 +-
+ drivers/iommu/intel/iommu.c                   |   5 +-
+ drivers/iommu/iommu.c                         |  24 +-
+ drivers/iommu/msm_iommu.c                     |   5 +-
+ drivers/iommu/mtk_iommu.c                     |   5 +-
+ drivers/iommu/s390-iommu.c                    | 435 ++++++++++-
+ drivers/iommu/sprd-iommu.c                    |   5 +-
+ drivers/iommu/sun50i-iommu.c                  |   4 +-
+ drivers/iommu/tegra-gart.c                    |   5 +-
+ drivers/s390/net/ism_drv.c                    |   2 +-
+ include/linux/iommu.h                         |  29 +-
+ 26 files changed, 671 insertions(+), 1007 deletions(-)
+ delete mode 100644 arch/s390/pci/pci_dma.c
+
+-- 
+2.37.2
 
