@@ -2,147 +2,277 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 21DF36A4D7D
-	for <lists+linux-s390@lfdr.de>; Mon, 27 Feb 2023 22:45:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 08D036A4E5B
+	for <lists+linux-s390@lfdr.de>; Mon, 27 Feb 2023 23:33:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230130AbjB0Vpg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 27 Feb 2023 16:45:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54172 "EHLO
+        id S229835AbjB0WcU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 27 Feb 2023 17:32:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229693AbjB0Vpe (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 27 Feb 2023 16:45:34 -0500
-Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 842141BAEE;
-        Mon, 27 Feb 2023 13:45:31 -0800 (PST)
-Received: by mail-ot1-x32e.google.com with SMTP id v1-20020a9d6041000000b0068d4a8a8d2dso4393520otj.12;
-        Mon, 27 Feb 2023 13:45:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kfkr/Dz64psO49jb2sCIBi5L9nMCTcssTUOvBykXPRI=;
-        b=osPgSKZIbWUPkX1P6DGPStyaykfwRRNQLUanbiOzRTVtfAGgGoCmk0qW1/ogsWl/C3
-         nM1RfW8sEe3wIIcCn5RPFCZEL9usYO4wi3Q9ZQCGR8JDMCLsUH0a8bpTgdYj2XKaWrVC
-         7I4tXl8nOPXwEdQqM95zfA0hEFY4rWYvheusgUuQQRBTJ56NoYVKOByTzYt0fwF76GbK
-         dfEZDHj6yL1A4WJsUzRKyq0B+h8ZXfusKhL9kGWIaBLam3J7p8LRU2So6FbfUEVvBMPM
-         jLIVIzCIAN8pu66WoA9I8vtCsQc9ChImXVWV6Qi8/Y0rdZeNB9iNYCQwUO/fq4wqgUVM
-         aUgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kfkr/Dz64psO49jb2sCIBi5L9nMCTcssTUOvBykXPRI=;
-        b=DP/b9jnCQaElRDQt3LNq8n8GDANU+uRnVTKHMzBoAgxqwYvPsvPspg1gBN3rebDnSw
-         LwEmJxVY0uiYs5ZrzOjjpUw1aE0K928knaChS4cqAQB2FXRvRPNzOgRKSKbYXqRtdJjN
-         C0a97xJ9i1ecDajgJbk8NLF1/p5NaJ1erue8TZNcE8F3MHrWw/Fr7wiiC5OPC0yxGM+X
-         xCxa+GuK4QGkwkqDtd3CCBLOMVYmg7Qk2/xvw/HrtVTU/5urPv465EqPYhWo58jwI5To
-         vNNcmtgmkYeHKQ2kIQrfx+Q5xpMlIA6jYjZCUhokv1ey+nbGvuAkO8GwMa4f12pIMTbX
-         9GSg==
-X-Gm-Message-State: AO0yUKWSXcKI8JInMWYEl73BoF9H5ouKgawV7Mnt7Lvgp8Aw+mBQCxMz
-        3VCEma/9rl7jRhu/Htf8UAPZ12M6DgU=
-X-Google-Smtp-Source: AK7set/gCu6d0ZKgwZbN/D4iSrNnH4erq2Uz6ro8buqv2WpMpkbspRDKy8GVV1SdvXPhjoF/xmMH8w==
-X-Received: by 2002:a05:6830:601b:b0:693:d7bf:dbe8 with SMTP id bx27-20020a056830601b00b00693d7bfdbe8mr5279912otb.10.1677534330410;
-        Mon, 27 Feb 2023 13:45:30 -0800 (PST)
-Received: from localhost ([12.97.180.36])
-        by smtp.gmail.com with ESMTPSA id m17-20020a4add11000000b00524faf3d2d7sm2102658oou.41.2023.02.27.13.45.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Feb 2023 13:45:29 -0800 (PST)
-From:   Yury Norov <yury.norov@gmail.com>
-To:     linux-kernel@vger.kernel.org,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Alexander Lobakin <aleksander.lobakin@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Yury Norov <yury.norov@gmail.com>
-Subject: [PATCH 2/2] lib/bitmap: drop optimization of bitmap_{from,to}_arr64
-Date:   Mon, 27 Feb 2023 13:45:24 -0800
-Message-Id: <20230227214524.914050-2-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230227214524.914050-1-yury.norov@gmail.com>
-References: <20230227214524.914050-1-yury.norov@gmail.com>
+        with ESMTP id S230228AbjB0Wbp (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 27 Feb 2023 17:31:45 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 325AD29E11;
+        Mon, 27 Feb 2023 14:31:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1677537096; x=1709073096;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=h3g9dfsaSYOQw9Djcf7aO6npKOb7bN/WODuQBbF8SE0=;
+  b=Ubt3Gx3414HK4ZAPqQUtqCrY0JJ1PRz/pqMyEujJszk+C6y1JlZrm5+T
+   QwIAgj62FyaDRJpWfRZszQ1PAHUrVpe2OyM0tnrzkbLt7KpPMSYhV0XjQ
+   +GPzDRqtxbJgblUy/fh/zsMoARk1aOnSX1wShQoyJNUEdW5Eu3rbObzuQ
+   oeMoCoYZTRt3MAN0NFSRu+5JaFTDB+KAv76wkukKFmyfhMRIZrCrC3Sti
+   Lv71oAIY2Thr+/Q1IqF67W61c44pl1w6hFd6jT5eITuxQwakahbOYPi64
+   EHDgeviIIASmf2Xco8s3VgN+fiY9jt7hREwB3HOUGd9eMHFqMZ+oLwIrV
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10634"; a="313657249"
+X-IronPort-AV: E=Sophos;i="5.98,220,1673942400"; 
+   d="scan'208";a="313657249"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2023 14:31:16 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10634"; a="848024459"
+X-IronPort-AV: E=Sophos;i="5.98,220,1673942400"; 
+   d="scan'208";a="848024459"
+Received: from leonqu-mobl1.amr.corp.intel.com (HELO rpedgeco-desk.amr.corp.intel.com) ([10.209.72.19])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2023 14:31:15 -0800
+From:   Rick Edgecombe <rick.p.edgecombe@intel.com>
+To:     x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H . J . Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Weijiang Yang <weijiang.yang@intel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        John Allen <john.allen@amd.com>, kcc@google.com,
+        eranian@google.com, rppt@kernel.org, jamorris@linux.microsoft.com,
+        dethoma@microsoft.com, akpm@linux-foundation.org,
+        Andrew.Cooper3@citrix.com, christina.schimpe@intel.com,
+        david@redhat.com, debug@rivosinc.com
+Cc:     rick.p.edgecombe@intel.com, linux-arm-kernel@lists.infradead.org,
+        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org
+Subject: [PATCH v7 11/41] mm: Introduce pte_mkwrite_kernel()
+Date:   Mon, 27 Feb 2023 14:29:27 -0800
+Message-Id: <20230227222957.24501-12-rick.p.edgecombe@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20230227222957.24501-1-rick.p.edgecombe@intel.com>
+References: <20230227222957.24501-1-rick.p.edgecombe@intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-bitmap_{from,to}_arr64() optimization is overly optimistic on 32-bit LE
-architectures when it's wired to bitmap_copy_clear_tail().
+The x86 Control-flow Enforcement Technology (CET) feature includes a new
+type of memory called shadow stack. This shadow stack memory has some
+unusual properties, which requires some core mm changes to function
+properly.
 
-bitmap_copy_clear_tail() takes care of unused bits in the bitmap up to
-the next word boundary. But on 32-bit machines when copying bits from
-bitmap to array of 64-bit words, it's expected that the unused part of
-a recipient array must be cleared up to 64-bit boundary, so the last 4
-bytes may stay untouched when nbits % 64 <= 32.
+One of these changes is to allow for pte_mkwrite() to create different
+types of writable memory (the existing conventionally writable type and
+also the new shadow stack type). Future patches will convert pte_mkwrite()
+to take a VMA in order to facilitate this, however there are places in the
+kernel where pte_mkwrite() is called outside of the context of a VMA.
+These are for kernel memory. So create a new variant called
+pte_mkwrite_kernel() and switch the kernel users over to it. Have
+pte_mkwrite() and pte_mkwrite_kernel() be the same for now. Future patches
+will introduce changes to make pte_mkwrite() take a VMA.
 
-While the copying part of the optimization works correct, that clear-tail
-trick makes corresponding tests reasonably fail:
+Only do this for architectures that need it because they call pte_mkwrite()
+in arch code without an associated VMA. Since it will only currently be
+used in arch code, so do not include it in arch_pgtable_helpers.rst.
 
-test_bitmap: bitmap_to_arr64(nbits == 1): tail is not safely cleared: 0xa5a5a5a500000001 (must be 0x0000000000000001)
+Cc: linux-doc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-s390@vger.kernel.org
+Cc: xen-devel@lists.xenproject.org
+Cc: linux-arch@vger.kernel.org
+Cc: linux-mm@kvack.org
+Tested-by: Pengfei Xu <pengfei.xu@intel.com>
+Tested-by: John Allen <john.allen@amd.com>
+Tested-by: Kees Cook <keescook@chromium.org>
+Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
+Acked-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Suggested-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 
-Fix it by removing bitmap_{from,to}_arr64() optimization for 32-bit LE
-arches.
-
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/lkml/20230225184702.GA3587246@roeck-us.net/
-Fixes: 0a97953fd221 ("lib: add bitmap_{from,to}_arr64")
-Signed-off-by: Yury Norov <yury.norov@gmail.com>
-Tested-by: Guenter Roeck <linux@roeck-us.net>
 ---
- include/linux/bitmap.h | 8 +++-----
- lib/bitmap.c           | 2 +-
- 2 files changed, 4 insertions(+), 6 deletions(-)
+Hi Non-x86 Arch’s,
 
-diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
-index 40e53a2ecc0d..7d4c90eb3df4 100644
---- a/include/linux/bitmap.h
-+++ b/include/linux/bitmap.h
-@@ -302,12 +302,10 @@ void bitmap_to_arr32(u32 *buf, const unsigned long *bitmap,
- #endif
+x86 has a feature that allows for the creation of a special type of
+writable memory (shadow stack) that is only writable in limited specific
+ways. Previously, changes were proposed to core MM code to teach it to
+decide when to create normally writable memory or the special shadow stack
+writable memory, but David Hildenbrand suggested[0] to change
+pXX_mkwrite() to take a VMA, so awareness of shadow stack memory can be
+moved into x86 code.
+
+Since pXX_mkwrite() is defined in every arch, it requires some tree-wide
+changes. So that is why you are seeing some patches out of a big x86
+series pop up in your arch mailing list. There is no functional change.
+After this refactor, the shadow stack series goes on to use the arch
+helpers to push shadow stack memory details inside arch/x86.
+
+Testing was just 0-day build testing.
+
+Hopefully that is enough context. Thanks!
+
+[0] https://lore.kernel.org/lkml/0e29a2d0-08d8-bcd6-ff26-4bea0e4037b0@redhat.com/#t
+
+v6:
+ - New patch
+---
+ arch/arm64/include/asm/pgtable.h | 7 ++++++-
+ arch/arm64/mm/trans_pgd.c        | 4 ++--
+ arch/s390/include/asm/pgtable.h  | 7 ++++++-
+ arch/s390/mm/pageattr.c          | 2 +-
+ arch/x86/include/asm/pgtable.h   | 7 ++++++-
+ arch/x86/xen/mmu_pv.c            | 2 +-
+ 6 files changed, 22 insertions(+), 7 deletions(-)
+
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index b6ba466e2e8a..cccf8885792e 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -180,13 +180,18 @@ static inline pmd_t set_pmd_bit(pmd_t pmd, pgprot_t prot)
+ 	return pmd;
+ }
  
- /*
-- * On 64-bit systems bitmaps are represented as u64 arrays internally. On LE32
-- * machines the order of hi and lo parts of numbers match the bitmap structure.
-- * In both cases conversion is not needed when copying data from/to arrays of
-- * u64.
-+ * On 64-bit systems bitmaps are represented as u64 arrays internally. So,
-+ * the conversion is not needed when copying data from/to arrays of u64.
-  */
--#if (BITS_PER_LONG == 32) && defined(__BIG_ENDIAN)
-+#if BITS_PER_LONG == 32
- void bitmap_from_arr64(unsigned long *bitmap, const u64 *buf, unsigned int nbits);
- void bitmap_to_arr64(u64 *buf, const unsigned long *bitmap, unsigned int nbits);
- #else
-diff --git a/lib/bitmap.c b/lib/bitmap.c
-index 1c81413c51f8..ddb31015e38a 100644
---- a/lib/bitmap.c
-+++ b/lib/bitmap.c
-@@ -1495,7 +1495,7 @@ void bitmap_to_arr32(u32 *buf, const unsigned long *bitmap, unsigned int nbits)
- EXPORT_SYMBOL(bitmap_to_arr32);
- #endif
+-static inline pte_t pte_mkwrite(pte_t pte)
++static inline pte_t pte_mkwrite_kernel(pte_t pte)
+ {
+ 	pte = set_pte_bit(pte, __pgprot(PTE_WRITE));
+ 	pte = clear_pte_bit(pte, __pgprot(PTE_RDONLY));
+ 	return pte;
+ }
  
--#if (BITS_PER_LONG == 32) && defined(__BIG_ENDIAN)
-+#if BITS_PER_LONG == 32
- /**
-  * bitmap_from_arr64 - copy the contents of u64 array of bits to bitmap
-  *	@bitmap: array of unsigned longs, the destination bitmap
++static inline pte_t pte_mkwrite(pte_t pte)
++{
++	return pte_mkwrite_kernel(pte);
++}
++
+ static inline pte_t pte_mkclean(pte_t pte)
+ {
+ 	pte = clear_pte_bit(pte, __pgprot(PTE_DIRTY));
+diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
+index 4ea2eefbc053..5c07e68d80ea 100644
+--- a/arch/arm64/mm/trans_pgd.c
++++ b/arch/arm64/mm/trans_pgd.c
+@@ -40,7 +40,7 @@ static void _copy_pte(pte_t *dst_ptep, pte_t *src_ptep, unsigned long addr)
+ 		 * read only (code, rodata). Clear the RDONLY bit from
+ 		 * the temporary mappings we use during restore.
+ 		 */
+-		set_pte(dst_ptep, pte_mkwrite(pte));
++		set_pte(dst_ptep, pte_mkwrite_kernel(pte));
+ 	} else if (debug_pagealloc_enabled() && !pte_none(pte)) {
+ 		/*
+ 		 * debug_pagealloc will removed the PTE_VALID bit if
+@@ -53,7 +53,7 @@ static void _copy_pte(pte_t *dst_ptep, pte_t *src_ptep, unsigned long addr)
+ 		 */
+ 		BUG_ON(!pfn_valid(pte_pfn(pte)));
+ 
+-		set_pte(dst_ptep, pte_mkpresent(pte_mkwrite(pte)));
++		set_pte(dst_ptep, pte_mkpresent(pte_mkwrite_kernel(pte)));
+ 	}
+ }
+ 
+diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
+index 2c70b4d1263d..d4943f2d3f00 100644
+--- a/arch/s390/include/asm/pgtable.h
++++ b/arch/s390/include/asm/pgtable.h
+@@ -1005,7 +1005,7 @@ static inline pte_t pte_wrprotect(pte_t pte)
+ 	return set_pte_bit(pte, __pgprot(_PAGE_PROTECT));
+ }
+ 
+-static inline pte_t pte_mkwrite(pte_t pte)
++static inline pte_t pte_mkwrite_kernel(pte_t pte)
+ {
+ 	pte = set_pte_bit(pte, __pgprot(_PAGE_WRITE));
+ 	if (pte_val(pte) & _PAGE_DIRTY)
+@@ -1013,6 +1013,11 @@ static inline pte_t pte_mkwrite(pte_t pte)
+ 	return pte;
+ }
+ 
++static inline pte_t pte_mkwrite(pte_t pte)
++{
++	return pte_mkwrite_kernel(pte);
++}
++
+ static inline pte_t pte_mkclean(pte_t pte)
+ {
+ 	pte = clear_pte_bit(pte, __pgprot(_PAGE_DIRTY));
+diff --git a/arch/s390/mm/pageattr.c b/arch/s390/mm/pageattr.c
+index 85195c18b2e8..4ee5fe5caa23 100644
+--- a/arch/s390/mm/pageattr.c
++++ b/arch/s390/mm/pageattr.c
+@@ -96,7 +96,7 @@ static int walk_pte_level(pmd_t *pmdp, unsigned long addr, unsigned long end,
+ 		if (flags & SET_MEMORY_RO)
+ 			new = pte_wrprotect(new);
+ 		else if (flags & SET_MEMORY_RW)
+-			new = pte_mkwrite(pte_mkdirty(new));
++			new = pte_mkwrite_kernel(pte_mkdirty(new));
+ 		if (flags & SET_MEMORY_NX)
+ 			new = set_pte_bit(new, __pgprot(_PAGE_NOEXEC));
+ 		else if (flags & SET_MEMORY_X)
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index 56eea96502c6..3607f2572f9e 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -364,11 +364,16 @@ static inline pte_t pte_mkyoung(pte_t pte)
+ 	return pte_set_flags(pte, _PAGE_ACCESSED);
+ }
+ 
+-static inline pte_t pte_mkwrite(pte_t pte)
++static inline pte_t pte_mkwrite_kernel(pte_t pte)
+ {
+ 	return pte_set_flags(pte, _PAGE_RW);
+ }
+ 
++static inline pte_t pte_mkwrite(pte_t pte)
++{
++	return pte_mkwrite_kernel(pte);
++}
++
+ static inline pte_t pte_mkhuge(pte_t pte)
+ {
+ 	return pte_set_flags(pte, _PAGE_PSE);
+diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
+index ee29fb558f2e..a23f04243c19 100644
+--- a/arch/x86/xen/mmu_pv.c
++++ b/arch/x86/xen/mmu_pv.c
+@@ -150,7 +150,7 @@ void make_lowmem_page_readwrite(void *vaddr)
+ 	if (pte == NULL)
+ 		return;		/* vaddr missing */
+ 
+-	ptev = pte_mkwrite(*pte);
++	ptev = pte_mkwrite_kernel(*pte);
+ 
+ 	if (HYPERVISOR_update_va_mapping(address, ptev, 0))
+ 		BUG();
 -- 
-2.34.1
+2.17.1
 
