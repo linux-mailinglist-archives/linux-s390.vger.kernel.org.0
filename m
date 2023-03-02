@@ -2,120 +2,159 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF9E66A7E2D
-	for <lists+linux-s390@lfdr.de>; Thu,  2 Mar 2023 10:43:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C5BD6A7E96
+	for <lists+linux-s390@lfdr.de>; Thu,  2 Mar 2023 10:48:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230036AbjCBJnI convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Thu, 2 Mar 2023 04:43:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48956 "EHLO
+        id S230251AbjCBJss convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Thu, 2 Mar 2023 04:48:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230052AbjCBJnG (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 2 Mar 2023 04:43:06 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAF319EE6;
-        Thu,  2 Mar 2023 01:43:03 -0800 (PST)
-Received: from lhrpeml100002.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PS5kJ48fpz689Rs;
-        Thu,  2 Mar 2023 17:42:48 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- lhrpeml100002.china.huawei.com (7.191.160.241) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Thu, 2 Mar 2023 09:43:00 +0000
-Received: from lhrpeml500005.china.huawei.com ([7.191.163.240]) by
- lhrpeml500005.china.huawei.com ([7.191.163.240]) with mapi id 15.01.2507.021;
- Thu, 2 Mar 2023 09:43:00 +0000
-From:   Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-To:     Nicolin Chen <nicolinc@nvidia.com>,
-        "Xu, Terrence" <terrence.xu@intel.com>
-CC:     "Liu, Yi L" <yi.l.liu@intel.com>, Jason Gunthorpe <jgg@nvidia.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "mjrosato@linux.ibm.com" <mjrosato@linux.ibm.com>,
-        "chao.p.peng@linux.intel.com" <chao.p.peng@linux.intel.com>,
-        "yi.y.sun@linux.intel.com" <yi.y.sun@linux.intel.com>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "Hao, Xudong" <xudong.hao@intel.com>,
-        "Zhao, Yan Y" <yan.y.zhao@intel.com>
-Subject: RE: [PATCH v5 00/19] Add vfio_device cdev for iommufd support
-Thread-Topic: [PATCH v5 00/19] Add vfio_device cdev for iommufd support
-Thread-Index: AQHZSpxHUh/YYv3qukeFp+lKFtoCf67jLB2AgACBDoCAAOlEAIAAn5IAgAIKi/A=
-Date:   Thu, 2 Mar 2023 09:43:00 +0000
-Message-ID: <b7c1f9d5b4b647f0b0686c3b99f3d006@huawei.com>
-References: <20230227111135.61728-1-yi.l.liu@intel.com>
- <Y/0Cr/tcNCzzIAhi@nvidia.com>
- <DS0PR11MB7529A422D4361B39CCA3D248C3AC9@DS0PR11MB7529.namprd11.prod.outlook.com>
- <SA1PR11MB5873479F73CFBAA170717624F0AC9@SA1PR11MB5873.namprd11.prod.outlook.com>
- <Y/64ejbhMiV77uUA@Asurada-Nvidia>
-In-Reply-To: <Y/64ejbhMiV77uUA@Asurada-Nvidia>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.202.227.178]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        with ESMTP id S230061AbjCBJsc (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 2 Mar 2023 04:48:32 -0500
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 973BC1F5C0;
+        Thu,  2 Mar 2023 01:48:07 -0800 (PST)
+Received: by mail-qt1-f171.google.com with SMTP id l13so17405161qtv.3;
+        Thu, 02 Mar 2023 01:48:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SFYMa4F5zx6QmdN+xdk9xuKBVfUQIkEC+rLl+xVi7rY=;
+        b=EfWCg05Dz/dIbTXy8d2dQdWFtNHulqzR5EmYrJOAWtetN56edOc/BaF2idN6KAtGMv
+         opLrvdZbPb9X+UprI3QsRj9fMZZfsDlMBtsPl68xxLKA1kn5tjSTzWXyCm6xlPhnB+xz
+         otE4rBY/2jKe1fKwVD4sYB8yq6JvRO6t5W7qaUzpPjK1Vz+l911AdHurr6Ij00EGAwER
+         6xnLNpSqAJ+hKClqQv++dhRSSmVEyVn3w0Ym5molSy/+o96NGs0uNL+1yRKOGD0lM5N3
+         Ty+i4/9XKXfBskLwETb40iZ9FHxLAMW1XmkSMHBgtcuNHFp6jqFL9vt8pxO3uqpXuUe/
+         wDwA==
+X-Gm-Message-State: AO0yUKXKX8sJ4VHXrlnHjrU6pDWVI13jwSCl3Pk36ofUfOqiYXZpBWHB
+        ASg/FHuiu1O8Ki2y3CWgeu4I7J0FPx+ppQ==
+X-Google-Smtp-Source: AK7set/8n0Vqjnq+nbmuXuxHIwYDhUAg1l+gXXyY1EkLs/qabGOfH5PkBGr8PPpz0kMiSJVhaw07kw==
+X-Received: by 2002:a05:622a:1a8c:b0:3b9:bc8c:c1fb with SMTP id s12-20020a05622a1a8c00b003b9bc8cc1fbmr2434895qtc.6.1677750486350;
+        Thu, 02 Mar 2023 01:48:06 -0800 (PST)
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com. [209.85.160.177])
+        by smtp.gmail.com with ESMTPSA id s184-20020a372cc1000000b0073bb00eb0besm10573028qkh.22.2023.03.02.01.48.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Mar 2023 01:48:05 -0800 (PST)
+Received: by mail-qt1-f177.google.com with SMTP id cf14so17332967qtb.10;
+        Thu, 02 Mar 2023 01:48:03 -0800 (PST)
+X-Received: by 2002:a81:ad43:0:b0:533:91d2:9d94 with SMTP id
+ l3-20020a81ad43000000b0053391d29d94mr5972312ywk.5.1677750462713; Thu, 02 Mar
+ 2023 01:47:42 -0800 (PST)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230302093539.372962-1-alexghiti@rivosinc.com>
+In-Reply-To: <20230302093539.372962-1-alexghiti@rivosinc.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 2 Mar 2023 10:47:31 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVC99kFpS9vL+HEqbXdDRMKVSW_t21X1p37d0oQufxKLw@mail.gmail.com>
+Message-ID: <CAMuHMdVC99kFpS9vL+HEqbXdDRMKVSW_t21X1p37d0oQufxKLw@mail.gmail.com>
+Subject: Re: [PATCH v4 00/24] Remove COMMAND_LINE_SIZE from uapi
+To:     Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Vineet Gupta <vgupta@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        WANG Xuerui <kernel@xen0n.name>,
+        Michal Simek <monstr@monstr.eu>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-arch@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Hi Alex,
 
-> -----Original Message-----
-> From: Nicolin Chen [mailto:nicolinc@nvidia.com]
-> Sent: 01 March 2023 02:29
-> To: Xu, Terrence <terrence.xu@intel.com>
-> Cc: Liu, Yi L <yi.l.liu@intel.com>; Jason Gunthorpe <jgg@nvidia.com>;
-> alex.williamson@redhat.com; Tian, Kevin <kevin.tian@intel.com>;
-> joro@8bytes.org; robin.murphy@arm.com; cohuck@redhat.com;
-> eric.auger@redhat.com; kvm@vger.kernel.org; mjrosato@linux.ibm.com;
-> chao.p.peng@linux.intel.com; yi.y.sun@linux.intel.com; peterx@redhat.com;
-> jasowang@redhat.com; Shameerali Kolothum Thodi
-> <shameerali.kolothum.thodi@huawei.com>; lulu@redhat.com;
-> suravee.suthikulpanit@amd.com; intel-gvt-dev@lists.freedesktop.org;
-> intel-gfx@lists.freedesktop.org; linux-s390@vger.kernel.org; Hao, Xudong
-> <xudong.hao@intel.com>; Zhao, Yan Y <yan.y.zhao@intel.com>
-> Subject: Re: [PATCH v5 00/19] Add vfio_device cdev for iommufd support
-> 
-> On Tue, Feb 28, 2023 at 04:58:06PM +0000, Xu, Terrence wrote:
-> 
-> > Verified this series by "Intel GVT-g GPU device mediated passthrough" and
-> "Intel GVT-d GPU device direct passthrough" technologies.
-> > Both passed VFIO legacy mode / compat mode / cdev mode, including
-> negative tests.
-> >
-> > Tested-by: Terrence Xu <terrence.xu@intel.com>
-> 
-> Sanity-tested this series on ARM64 with my wip branch:
-> https://github.com/nicolinc/iommufd/commits/wip/iommufd-v6.2-nesting
-> (Covering new iommufd and vfio-compat)
+On Thu, Mar 2, 2023 at 10:35 AM Alexandre Ghiti <alexghiti@rivosinc.com> wrote:
+> This all came up in the context of increasing COMMAND_LINE_SIZE in the
+> RISC-V port.  In theory that's a UABI break, as COMMAND_LINE_SIZE is the
+> maximum length of /proc/cmdline and userspace could staticly rely on
+> that to be correct.
+>
+> Usually I wouldn't mess around with changing this sort of thing, but
+> PowerPC increased it with a5980d064fe2 ("powerpc: Bump COMMAND_LINE_SIZE
+> to 2048").  There are also a handful of examples of COMMAND_LINE_SIZE
+> increasing, but they're from before the UAPI split so I'm not quite sure
+> what that means: e5a6a1c90948 ("powerpc: derive COMMAND_LINE_SIZE from
+> asm-generic"), 684d2fd48e71 ("[S390] kernel: Append scpdata to kernel
+> boot command line"), 22242681cff5 ("MIPS: Extend COMMAND_LINE_SIZE"),
+> and 2b74b85693c7 ("sh: Derive COMMAND_LINE_SIZE from
+> asm-generic/setup.h.").
+>
+> It seems to me like COMMAND_LINE_SIZE really just shouldn't have been
+> part of the uapi to begin with, and userspace should be able to handle
+> /proc/cmdline of whatever length it turns out to be.  I don't see any
+> references to COMMAND_LINE_SIZE anywhere but Linux via a quick Google
+> search, but that's not really enough to consider it unused on my end.
+>
+> This issue was already considered in s390 and they reached the same
+> conclusion in commit 622021cd6c56 ("s390: make command line
+> configurable").
+>
+> The feedback on the v1 seemed to indicate that COMMAND_LINE_SIZE really
+> shouldn't be part of uapi, so this now touches all the ports.  I've
+> tried to split this all out and leave it bisectable, but I haven't
+> tested it all that aggressively.
+>
+> Changes since v3 <https://lore.kernel.org/all/20230214074925.228106-1-alexghiti@rivosinc.com/>:
+> * Added RB/AB
+> * Added a mention to commit 622021cd6c56 ("s390: make command line
+>   configurable") in the cover letter
 
-Hi Nicolin,
+Thanks for the update!
 
-Thanks for the latest ARM64 branch. Do you have a working Qemu branch corresponding to the
-above one?
+ Apparently you forgot to add your own SoB?
 
-I tried the https://github.com/nicolinc/qemu/tree/wip/iommufd_rfcv3%2Bnesting%2Bsmmuv3
-but for some reason not able to launch the Guest.
+Gr{oetje,eeting}s,
 
-Please let me know.
+                        Geert
 
-Thanks,
-Shameer
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
