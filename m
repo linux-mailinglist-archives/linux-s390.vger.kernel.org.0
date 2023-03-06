@@ -2,110 +2,141 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D2CF6ABC84
-	for <lists+linux-s390@lfdr.de>; Mon,  6 Mar 2023 11:28:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AD4916ABD5F
+	for <lists+linux-s390@lfdr.de>; Mon,  6 Mar 2023 11:52:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231191AbjCFK2J (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 6 Mar 2023 05:28:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57618 "EHLO
+        id S229746AbjCFKwM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 6 Mar 2023 05:52:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229593AbjCFK1t (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 Mar 2023 05:27:49 -0500
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 706E226863;
-        Mon,  6 Mar 2023 02:26:58 -0800 (PST)
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3269LSLw001500;
-        Mon, 6 Mar 2023 10:26:47 GMT
+        with ESMTP id S229843AbjCFKwL (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 Mar 2023 05:52:11 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8812A2687C;
+        Mon,  6 Mar 2023 02:51:40 -0800 (PST)
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3269lLbt007017;
+        Mon, 6 Mar 2023 10:50:39 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
  mime-version : content-transfer-encoding : in-reply-to : references : cc :
  to : from : subject : message-id : date; s=pp1;
- bh=iMb4Xi2Co2oFwwWqjKXGwvtACKJMW3+qiWgyiZ9Bku8=;
- b=JtZF2ee7BGmb5rSjsYtJkBSJb5PkzkvxWj8aZQkMdmgKNtZlLt3U005PDJPJLHj8rMTZ
- 4Vhi7U7hYkXlZXKwV1nafh87KO/R/jEJQtp3dO2tLLm1he/x/sMeyoxy5TQIA6l9R+JG
- /gc5YvtAf57qgrpt/NVb1xZzNEEbQAlfBm4SsqS/iE+Kw0BOArzQPgTsd8t9KMi2ZwRb
- vjqeZp2MRGMde6GASbfyTZAlN55NMHp1d1JQyqHp72nyrwZIiF1mWgKqfoYZDRvaQLCB
- WSgseMkxGibr/N9V01c7U6GqXrLfJjXxaJjHvNegSGtuyKR2U2sR9T7LlDXxU+LRXVjI dw== 
+ bh=8lhZdOvnrjlCXmIF/zhQJYkCQscn7IlklVhYPKqKZ8M=;
+ b=KzCwGGiV/XbgooYrbVg7Qe6IvxjHTiYOqqV/vqANUbyw5Ve0x3Cx7l90KjCXofFGO20D
+ W9YGGmRVxZkvE2CkvDf3yHUiNZTrmYPLxgfy77i6Jv3rALUgvtsSKI1NtQsvR/qBdomy
+ weOqA0Rlu1RZyHLQfSsyKm+oUmOq0NFIx9VxptOyLMyfz/2vMT+CAqTmM2ZNWZTkNpHi
+ 8vBQlUYKUmpnn17uCltAwqTukbRLYLSNNWiZFH4YhFipM0YaTO3DTnlWE8ZiiVohfRd+
+ EfK5YjFn2jet+Obi962porKwnPaM9ou42Q+O/K1RTr6ZDD/odpb7qXnPLWGYhJ0IiQo7 xA== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p507nr7vq-1
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p4ysdh5bw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Mar 2023 10:26:47 +0000
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 326AAgom031155;
-        Mon, 6 Mar 2023 10:26:47 GMT
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p507nr7v0-1
+        Mon, 06 Mar 2023 10:50:39 +0000
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 326AFoMK020999;
+        Mon, 6 Mar 2023 10:50:39 GMT
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p4ysdh5ax-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Mar 2023 10:26:46 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 325Nhx13031465;
-        Mon, 6 Mar 2023 10:26:44 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3p418v21sa-1
+        Mon, 06 Mar 2023 10:50:39 +0000
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3265dcts003621;
+        Mon, 6 Mar 2023 10:50:36 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma04fra.de.ibm.com (PPS) with ESMTPS id 3p41b0t2dv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Mar 2023 10:26:44 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 326AQf4A41484574
+        Mon, 06 Mar 2023 10:50:36 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 326AoXu126411556
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 Mar 2023 10:26:41 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1827720078;
-        Mon,  6 Mar 2023 10:26:41 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E59962007A;
-        Mon,  6 Mar 2023 10:26:40 +0000 (GMT)
+        Mon, 6 Mar 2023 10:50:33 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0AA372004E;
+        Mon,  6 Mar 2023 10:50:33 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D237E2004B;
+        Mon,  6 Mar 2023 10:50:32 +0000 (GMT)
 Received: from t14-nrb (unknown [9.171.46.225])
-        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Mon,  6 Mar 2023 10:26:40 +0000 (GMT)
+        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Mon,  6 Mar 2023 10:50:32 +0000 (GMT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20230305135207.1793266-5-sashal@kernel.org>
-References: <20230305135207.1793266-1-sashal@kernel.org> <20230305135207.1793266-5-sashal@kernel.org>
-Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, cohuck@redhat.com,
-        pasic@linux.ibm.com, farman@linux.ibm.com, hca@linux.ibm.com,
-        gor@linux.ibm.com, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
+In-Reply-To: <20230228181633.1bd8efde@p-imbrenda>
+References: <20230224140908.75208-1-nrb@linux.ibm.com> <20230224140908.75208-2-nrb@linux.ibm.com> <20230228181633.1bd8efde@p-imbrenda>
+Cc:     borntraeger@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        mimu@linux.ibm.com, agordeev@linux.ibm.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
 From:   Nico Boehr <nrb@linux.ibm.com>
-Subject: Re: [PATCH AUTOSEL 6.2 05/16] s390/virtio: sort out physical vs virtual pointers usage
-Message-ID: <167809840006.10483.605220541481258700@t14-nrb.local>
+Subject: Re: [PATCH v2 1/1] KVM: s390: interrupt: fix virtual-physical confusion for next alert GISA
+Message-ID: <167809983224.10483.9560033030008953399@t14-nrb.local>
 User-Agent: alot/0.8.1
-Date:   Mon, 06 Mar 2023 11:26:40 +0100
+Date:   Mon, 06 Mar 2023 11:50:32 +0100
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: jzOHDmhuvYJVEW3LJ2NlFChf12DKY5XK
-X-Proofpoint-ORIG-GUID: 27xfKDkcR_DFoAg0KOcLk-zgWOwvohCA
+X-Proofpoint-ORIG-GUID: YUZUaPEW6WwtmoE-BVmYTRGW0EAZSHDa
+X-Proofpoint-GUID: 5evzX31cDgPHfbNFoBIKnoDn-zDwcI-5
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.219,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-06_02,2023-03-03_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- adultscore=0 phishscore=0 mlxlogscore=890 bulkscore=0 lowpriorityscore=0
- suspectscore=0 clxscore=1031 impostorscore=0 mlxscore=0 priorityscore=1501
+ definitions=2023-03-06_03,2023-03-06_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
+ malwarescore=0 adultscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
+ mlxlogscore=999 suspectscore=0 bulkscore=0 priorityscore=1501 mlxscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2303060088
+ definitions=main-2303060091
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Sasha, s390 maintainers,
-
-Quoting Sasha Levin (2023-03-05 14:51:56)
-> From: Alexander Gordeev <agordeev@linux.ibm.com>
+Quoting Claudio Imbrenda (2023-02-28 18:16:33)
+> On Fri, 24 Feb 2023 15:09:08 +0100
+> Nico Boehr <nrb@linux.ibm.com> wrote:
 >=20
-> [ Upstream commit 5fc5b94a273655128159186c87662105db8afeb5 ]
+> > The gisa next alert address is defined as a host absolute address so
+> > let's use virt_to_phys() to make sure we always write an absolute
+> > address to this hardware structure.
+> >=20
+> > This is not a bug and currently works, because virtual and physical
+> > addresses are the same.
+> >=20
+> > Signed-off-by: Nico Boehr <nrb@linux.ibm.com>
+> > Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+> > ---
+> >  arch/s390/kvm/interrupt.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
+> > index ab26aa53ee37..20743c5b000a 100644
+> > --- a/arch/s390/kvm/interrupt.c
+> > +++ b/arch/s390/kvm/interrupt.c
+> > @@ -305,7 +305,7 @@ static inline u8 gisa_get_ipm_or_restore_iam(struct=
+ kvm_s390_gisa_interrupt *gi)
+> > =20
+> >  static inline int gisa_in_alert_list(struct kvm_s390_gisa *gisa)
+> >  {
+> > -     return READ_ONCE(gisa->next_alert) !=3D (u32)(u64)gisa;
+> > +     return READ_ONCE(gisa->next_alert) !=3D (u32)virt_to_phys(gisa);
 >=20
-> This does not fix a real bug, since virtual addresses
-> are currently indentical to physical ones.
+> is gisa always allocated below 4G? (I assume 2G actually)
+>
+> should we check if things are proper?
+> the cast to (u32) might hide bugs if gisa is above 4G (which it
+> shouldn't be, obviously)
+>=20
+> or do we not care?
 
-not sure if it is appropriate to pick for stable, since it does not fix a b=
-ug currently.
+Yes, the gisa is always below 2 GB since it's part of the sie_page2.
 
-Alexander, Janosch, your opinion?
+I don't mind getting rid of the u32 cast really, but if it is allocated abo=
+ve 2 GB, it already is broken as it is and I didn't want to introduce unrel=
+ated changes. Also note that there is a few other places where we currently=
+ don't verify things really are below 2 GB, so you already need to be caref=
+ul when allocating.
+
+Also not sure if this is the right place to do this check, since we've alre=
+ady given the address to firmware/hardware anyways in the CHSC SGIB call, i=
+n the sie_block etc... so if we want to check this we should maybe look for=
+ a better place to check this...
