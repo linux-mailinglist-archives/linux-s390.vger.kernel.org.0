@@ -2,138 +2,272 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 40BE96AE168
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Mar 2023 14:53:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DED716AE341
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Mar 2023 15:49:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231250AbjCGNx5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 7 Mar 2023 08:53:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53944 "EHLO
+        id S229938AbjCGOt4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 7 Mar 2023 09:49:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231267AbjCGNxi (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Mar 2023 08:53:38 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96E98FF0D;
-        Tue,  7 Mar 2023 05:53:23 -0800 (PST)
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 327CrdH9024649;
-        Tue, 7 Mar 2023 13:53:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=DCON5TsuaQcWWKw79E0NJbBRLc4I/VqAtW9M+m30o3o=;
- b=hl09OTFnwkgQ3QHTlQ32HMueEX29oK0oY/RKL7U3Vr1zBxbFtHAPerK1CrCvdWPK9D5+
- duASd64jCimCIJefocFcPQBDS0GYPsynjrbAP2bPg7Z9kmodzf3kxlsx1nUNPnHCClD8
- Ahfu8AUmgAb/x7v/iOYncvv+lW04NiHvTCivyxdFWz7TrzPqtd93e25sEp0fUTi2xvj7
- TAgxTxcPtIkI/NV7YgVnRADiAoiy7XhbhG1uAhdNsBMtxvx3/bTYxOHFn8i8QoZnUo7/
- wK9Xifg31+02WOSsynauRvbFykTjzFQAv0lFsMePwedhMm3LQ5XCiC83On+zG+ZuNYI2 kQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p65p3hqbf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Mar 2023 13:53:23 +0000
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 327CsxOS028029;
-        Tue, 7 Mar 2023 13:53:22 GMT
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p65p3hqac-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Mar 2023 13:53:22 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 326Md6CL011404;
-        Tue, 7 Mar 2023 13:53:20 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3p418v3cfk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Mar 2023 13:53:20 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 327DrGr062652710
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Mar 2023 13:53:16 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 92A7F20040;
-        Tue,  7 Mar 2023 13:53:16 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 11CCA20049;
-        Tue,  7 Mar 2023 13:53:16 +0000 (GMT)
-Received: from [9.171.74.73] (unknown [9.171.74.73])
-        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Tue,  7 Mar 2023 13:53:15 +0000 (GMT)
-Message-ID: <b03e447f-6f49-cdd0-1b8a-b27f63aa6bae@linux.ibm.com>
-Date:   Tue, 7 Mar 2023 14:53:15 +0100
+        with ESMTP id S231213AbjCGOsJ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Mar 2023 09:48:09 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EFFF231D6
+        for <linux-s390@vger.kernel.org>; Tue,  7 Mar 2023 06:38:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1678199791;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=yMscSn7/v7gE6eZusBzcl4tSE2iMOh2pPYNqXPmBjFI=;
+        b=OUohGG/J1AReH1N3f63roppCEHTIvJWMC32erNzd6xvJ/34tMeNdMo1wozUgv3cRhRlEZR
+        Yo5Ws6QW0zLD4xrp3xluty7UxMqmZWi0syRUe3r0uJKkAA/zKfgFMNj0cf4fwj5qPb3Nlh
+        gehnaeNN0oniYDkjYPo8bDxdPQ09meU=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-635-8Xan7_2yOZyL38nkQLtwpw-1; Tue, 07 Mar 2023 09:36:28 -0500
+X-MC-Unique: 8Xan7_2yOZyL38nkQLtwpw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2A55D185A794;
+        Tue,  7 Mar 2023 14:36:26 +0000 (UTC)
+Received: from vschneid.remote.csb (unknown [10.33.37.13])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3D43B40CF8EE;
+        Tue,  7 Mar 2023 14:36:21 +0000 (UTC)
+From:   Valentin Schneider <vschneid@redhat.com>
+To:     linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        x86@kernel.org
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Guo Ren <guoren@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH v5 0/7] Generic IPI sending tracepoint
+Date:   Tue,  7 Mar 2023 14:35:51 +0000
+Message-Id: <20230307143558.294354-1-vschneid@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.8.0
-Subject: Re: [PATCH v1] KVM: s390: interrupt: fix virtual-physical confusion
- for next alert GISA
-To:     Nico Boehr <nrb@linux.ibm.com>, borntraeger@linux.ibm.com,
-        frankja@linux.ibm.com, imbrenda@linux.ibm.com, david@redhat.com,
-        agordeev@linux.ibm.com
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org
-References: <20230223162236.51569-1-nrb@linux.ibm.com>
-From:   Michael Mueller <mimu@linux.ibm.com>
-In-Reply-To: <20230223162236.51569-1-nrb@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 3-AWam4YN5lYCO5EDhkyNzVDy9xiTKFj
-X-Proofpoint-ORIG-GUID: Ps3J6DvEaK0aAEqMPBR71Fq0Y6Aim5Qh
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-07_07,2023-03-07_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 impostorscore=0
- spamscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 suspectscore=0
- malwarescore=0 mlxlogscore=999 mlxscore=0 priorityscore=1501 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2303070122
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Background
+==========
 
+Detecting IPI *reception* is relatively easy, e.g. using
+trace_irq_handler_{entry,exit} or even just function-trace
+flush_smp_call_function_queue() for SMP calls.  
 
-On 23.02.23 17:22, Nico Boehr wrote:
-> We sometimes put a virtual address in next_alert, which should always be
-> a physical address, since it is shared with hardware.
-> 
-> This currently works, because virtual and physical addresses are
-> the same.
-> 
-> Add phys_to_virt() to resolve the virtual-physical confusion.
-> 
-> Signed-off-by: Nico Boehr <nrb@linux.ibm.com>
-> ---
->   arch/s390/kvm/interrupt.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
-> index ab26aa53ee37..20743c5b000a 100644
-> --- a/arch/s390/kvm/interrupt.c
-> +++ b/arch/s390/kvm/interrupt.c
-> @@ -305,7 +305,7 @@ static inline u8 gisa_get_ipm_or_restore_iam(struct kvm_s390_gisa_interrupt *gi)
->   
->   static inline int gisa_in_alert_list(struct kvm_s390_gisa *gisa)
->   {
-> -	return READ_ONCE(gisa->next_alert) != (u32)(u64)gisa;
-> +	return READ_ONCE(gisa->next_alert) != (u32)virt_to_phys(gisa);
->   }
->   
->   static inline void gisa_set_ipm_gisc(struct kvm_s390_gisa *gisa, u32 gisc)
-> @@ -3167,7 +3167,7 @@ void kvm_s390_gisa_init(struct kvm *kvm)
->   	hrtimer_init(&gi->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
->   	gi->timer.function = gisa_vcpu_kicker;
->   	memset(gi->origin, 0, sizeof(struct kvm_s390_gisa));
-> -	gi->origin->next_alert = (u32)(u64)gi->origin;
-> +	gi->origin->next_alert = (u32)virt_to_phys(gi->origin);
->   	VM_EVENT(kvm, 3, "gisa 0x%pK initialized", gi->origin);
->   }
->   
+Figuring out their *origin*, is trickier as there is no generic tracepoint tied
+to e.g. smp_call_function():
 
-Here is my
+o AFAIA x86 has no tracepoint tied to sending IPIs, only receiving them
+  (cf. trace_call_function{_single}_entry()).
+o arm/arm64 do have trace_ipi_raise(), which gives us the target cpus but also a
+  mostly useless string (smp_calls will all be "Function call interrupts").
+o Other architectures don't seem to have any IPI-sending related tracepoint.  
 
-Signed-off-by: Michael Mueller <mimu@linux.ibm.com>
+I believe one reason those tracepoints used by arm/arm64 ended up as they were
+is because these archs used to handle IPIs differently from regular interrupts
+(the IRQ driver would directly invoke an IPI-handling routine), which meant they 
+never showed up in trace_irq_handler_{entry, exit}. The trace_ipi_{entry,exit}
+tracepoints gave a way to trace IPI reception but those have become redundant as
+of: 
 
-I ran hades tests as well. Thanks.
+      56afcd3dbd19 ("ARM: Allow IPIs to be handled as normal interrupts")
+      d3afc7f12987 ("arm64: Allow IPIs to be handled as normal interrupts")
+
+which gave IPIs a "proper" handler function used through
+generic_handle_domain_irq(), which makes them show up via
+trace_irq_handler_{entry, exit}.
+
+Changing stuff up
+=================
+
+Per the above, it would make sense to reshuffle trace_ipi_raise() and move it
+into generic code. This also came up during Daniel's talk on Osnoise at the CPU
+isolation MC of LPC 2022 [1]. 
+
+Now, to be useful, such a tracepoint needs to export:
+o targeted CPU(s)
+o calling context
+
+The only way to get the calling context with trace_ipi_raise() is to trigger a
+stack dump, e.g. $(trace-cmd -e ipi* -T echo 42).
+
+This is instead introducing a new tracepoint which exports the relevant context
+(callsite, and requested callback for when the callsite isn't helpful), and is
+usable by all architectures as it sits in generic code. 
+
+Another thing worth mentioning is that depending on the callsite, the _RET_IP_
+fed to the tracepoint is not always useful - generic_exec_single() doesn't tell
+you much about the actual callback being sent via IPI, which is why the new
+tracepoint also has a @callback argument.
+
+Patches
+=======
+
+o Patches 1-5 spread out the tracepoint across relevant sites.
+  Patch 5 ends up sprinkling lots of #include <trace/events/ipi.h> which I'm not
+  the biggest fan of, but is the least horrible solution I've been able to come
+  up with so far.
+  
+o Patch 7 is trying to be smart about tracing the callback associated with the
+  IPI.
+
+This results in having IPI trace events for:
+
+o smp_call_function*()
+o smp_send_reschedule()
+o irq_work_queue*()
+o standalone uses of __smp_call_single_queue()
+
+This is incomplete, just looking at arm64 there's more IPI types that aren't
+covered: 
+
+  IPI_CPU_STOP,
+  IPI_CPU_CRASH_STOP,
+  IPI_TIMER,
+  IPI_WAKEUP,
+
+but apart from IPI_TIMER (cf. tick_broadcast()), those IPIs are both unfrequent
+and accompanied with identifiable interference (stopper or cpuhp threads being
+scheduled). I've added a point in my todolist to handle those in a later series
+for the sake of completeness, but IMO this is ready to use.
+
+Results
+=======
+
+Using a recent enough libtraceevent (1.7.0 and above):
+
+  $ trace-cmd record -e 'ipi:*' hackbench
+  $ trace-cmd report
+	 hackbench-159   [002]   136.973122: ipi_send_cpumask:     cpumask=0 callsite=generic_exec_single+0x33 callback=nohz_csd_func+0x0
+	 hackbench-159   [002]   136.977945: ipi_send_cpumask:     cpumask=0 callsite=generic_exec_single+0x33 callback=nohz_csd_func+0x0
+	 hackbench-159   [002]   136.984576: ipi_send_cpumask:     cpumask=3 callsite=check_preempt_curr+0x37 callback=0x0
+	 hackbench-159   [002]   136.985996: ipi_send_cpumask:     cpumask=0 callsite=generic_exec_single+0x33 callback=nohz_csd_func+0x0
+	 [...]
+
+Links
+=====
+
+[1]: https://youtu.be/5gT57y4OzBM?t=14234
+
+Revisions
+=========
+
+v4: https://lore.kernel.org/lkml/20230119143619.2733236-1-vschneid@redhat.com/
+v3: https://lore.kernel.org/lkml/20221202155817.2102944-1-vschneid@redhat.com/
+v2: https://lore.kernel.org/lkml/20221102182949.3119584-1-vschneid@redhat.com/
+v1: https://lore.kernel.org/lkml/20221007154145.1877054-1-vschneid@redhat.com/
+
+v5 -> v4
+++++++++
+
+o Rebased against 6.3-rc1
+
+v3 -> v4
+++++++++
+
+o Rebased against 6.2-rc4
+  Re-ran my coccinelle scripts for the treewide change; only loongarch needed
+  changes
+o Dropped cpumask trace event field patch (now in 6.2-rc1)
+o Applied RB and Ack tags
+  Ingo, I wasn't sure if you meant to Ack the whole series or just the patch you
+  replied to, so since I didn't want to unlawfully forge any tag I only added
+  the one.
+o Did a small pass on comments and changelogs
+
+v2 -> v3
+++++++++
+
+o Dropped the generic export of smp_send_reschedule(), turned it into a macro
+  and a bunch of imports
+o Dropped the send_call_function_single_ipi() macro madness, split it into sched
+  and smp bits using some of Peter's suggestions
+
+v1 -> v2
+++++++++
+
+o Ditched single-CPU tracepoint
+o Changed tracepoint signature to include callback
+o Changed tracepoint callsite field to void *; the parameter is still UL to save
+  up on casts due to using _RET_IP_.
+o Fixed linking failures due to not exporting smp_send_reschedule()
+
+Valentin Schneider (7):
+  trace: Add trace_ipi_send_cpumask()
+  sched, smp: Trace IPIs sent via send_call_function_single_ipi()
+  smp: Trace IPIs sent via arch_send_call_function_ipi_mask()
+  irq_work: Trace self-IPIs sent via arch_irq_work_raise()
+  treewide: Trace IPIs sent via smp_send_reschedule()
+  smp: reword smp call IPI comment
+  sched, smp: Trace smp callback causing an IPI
+
+ arch/alpha/kernel/smp.c                  |  2 +-
+ arch/arc/kernel/smp.c                    |  2 +-
+ arch/arm/kernel/smp.c                    |  5 +-
+ arch/arm/mach-actions/platsmp.c          |  2 +
+ arch/arm64/kernel/smp.c                  |  3 +-
+ arch/csky/kernel/smp.c                   |  2 +-
+ arch/hexagon/kernel/smp.c                |  2 +-
+ arch/ia64/kernel/smp.c                   |  4 +-
+ arch/loongarch/kernel/smp.c              |  4 +-
+ arch/mips/include/asm/smp.h              |  2 +-
+ arch/mips/kernel/rtlx-cmp.c              |  2 +
+ arch/openrisc/kernel/smp.c               |  2 +-
+ arch/parisc/kernel/smp.c                 |  4 +-
+ arch/powerpc/kernel/smp.c                |  6 +-
+ arch/powerpc/kvm/book3s_hv.c             |  3 +
+ arch/powerpc/platforms/powernv/subcore.c |  2 +
+ arch/riscv/kernel/smp.c                  |  4 +-
+ arch/s390/kernel/smp.c                   |  2 +-
+ arch/sh/kernel/smp.c                     |  2 +-
+ arch/sparc/kernel/smp_32.c               |  2 +-
+ arch/sparc/kernel/smp_64.c               |  2 +-
+ arch/x86/include/asm/smp.h               |  2 +-
+ arch/x86/kvm/svm/svm.c                   |  4 ++
+ arch/x86/kvm/x86.c                       |  2 +
+ arch/xtensa/kernel/smp.c                 |  2 +-
+ include/linux/smp.h                      | 11 +++-
+ include/trace/events/ipi.h               | 22 +++++++
+ kernel/irq_work.c                        | 14 ++++-
+ kernel/sched/core.c                      | 19 ++++--
+ kernel/sched/smp.h                       |  2 +-
+ kernel/smp.c                             | 78 +++++++++++++++++++-----
+ virt/kvm/kvm_main.c                      |  2 +
+ 32 files changed, 164 insertions(+), 53 deletions(-)
+
+--
+2.31.1
+
