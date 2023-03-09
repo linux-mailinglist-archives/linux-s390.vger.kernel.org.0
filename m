@@ -2,293 +2,151 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A25506B2385
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Mar 2023 12:59:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4922A6B2B28
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Mar 2023 17:50:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231674AbjCIL7C (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 Mar 2023 06:59:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60526 "EHLO
+        id S229874AbjCIQuK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 Mar 2023 11:50:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231659AbjCIL7B (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Mar 2023 06:59:01 -0500
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB9837F011;
-        Thu,  9 Mar 2023 03:58:58 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=alibuda@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0VdTbXRD_1678363135;
-Received: from 30.221.149.231(mailfrom:alibuda@linux.alibaba.com fp:SMTPD_---0VdTbXRD_1678363135)
-          by smtp.aliyun-inc.com;
-          Thu, 09 Mar 2023 19:58:56 +0800
-Message-ID: <b8480883-eceb-f488-fdaa-2eb6647844a8@linux.alibaba.com>
-Date:   Thu, 9 Mar 2023 19:58:54 +0800
+        with ESMTP id S230409AbjCIQtv (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Mar 2023 11:49:51 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 630DCFCBFB;
+        Thu,  9 Mar 2023 08:39:25 -0800 (PST)
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 329GWbFD029678;
+        Thu, 9 Mar 2023 16:39:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=WoKGktYRxUw42/yRhVznkwqsMWqSMkRMk0spzj7c6Vw=;
+ b=eiK67enU1ipFAdh7cT4eEzcvvpQs6wKu0SN9Lmfd8ihTBwI1RMQIuKeE0ROTu6njtmy5
+ aRhESm3zEd2LqKZRUgjwnDXvgdI33ofMBAPakDPOoWrNkxyajhgFL4qzWQcz5+pQfTS5
+ b148PO8fJFhGuUMKlKPMlbGmfTP3nGEuWWK+FzCv0UHB7YPRcEYzHXNlCzyt3s4uz7D2
+ h3PTo7EFSgiV4EEpfLoV4VEs9EAmD+r5LN/uwWoIBP/yK5mFQBw2fde7biVcA12NLOet
+ 56lWBiOo12vIPBflrhB90lurgMg8JZfpzS03KUHmZ4U7+S4QeCFtfZQaj47Xh5Y09z8G Tw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3p6t3bym40-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Mar 2023 16:39:21 +0000
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 329GZMjL005382;
+        Thu, 9 Mar 2023 16:39:20 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3p6t3bym3d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Mar 2023 16:39:20 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3294LVgL020036;
+        Thu, 9 Mar 2023 16:39:19 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3p6ftvjngh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Mar 2023 16:39:18 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 329GdEMw59048436
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 9 Mar 2023 16:39:14 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AEE562004B;
+        Thu,  9 Mar 2023 16:39:14 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 28A292004D;
+        Thu,  9 Mar 2023 16:39:14 +0000 (GMT)
+Received: from [9.171.26.163] (unknown [9.171.26.163])
+        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Thu,  9 Mar 2023 16:39:14 +0000 (GMT)
+Message-ID: <4c0696c0f02cf5da747a88a40d3f29ba597482ea.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 1/4] PCI: s390: Fix use-after-free of PCI resources
+ with per-function hotplug
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Gerd Bayer <gbayer@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Date:   Thu, 09 Mar 2023 17:39:13 +0100
+In-Reply-To: <20230308231449.GA1057317@bhelgaas>
+References: <20230308231449.GA1057317@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.8.0
-Subject: Re: [PATCH bpf-next v2 2/2] bpf/selftests: add selftest for SMC bpf
- capability
-Content-Language: en-US
-To:     Martin KaFai Lau <martin.lau@linux.dev>
-Cc:     kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
-        bpf@vger.kernel.org, kgraul@linux.ibm.com, wenjia@linux.ibm.com,
-        jaka@linux.ibm.com, ast@kernel.org, daniel@iogearbox.net,
-        andrii@kernel.org
-References: <1676981919-64884-1-git-send-email-alibuda@linux.alibaba.com>
- <1676981919-64884-3-git-send-email-alibuda@linux.alibaba.com>
- <60991e56-dad5-c310-86bb-102ebf756b6b@linux.dev>
-From:   "D. Wythe" <alibuda@linux.alibaba.com>
-In-Reply-To: <60991e56-dad5-c310-86bb-102ebf756b6b@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham
-        autolearn_force=no version=3.4.6
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: mqf-Co36suubKcz5uAopTefjSOtTwt1k
+X-Proofpoint-ORIG-GUID: PHhJeJiTyC4c7s8uHMpqAjHTt4k_QlpM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-09_08,2023-03-09_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ malwarescore=0 bulkscore=0 mlxlogscore=453 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 clxscore=1015 impostorscore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
+ definitions=main-2303090132
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Wed, 2023-03-08 at 17:14 -0600, Bjorn Helgaas wrote:
+> On Mon, Mar 06, 2023 at 04:10:11PM +0100, Niklas Schnelle wrote:
+> > On s390 PCI functions may be hotplugged individually even when they
+> > belong to a multi-function device. In particular on an SR-IOV device VF=
+s
+> > may be removed and later re-added.
+> >=20
+> > In commit a50297cf8235 ("s390/pci: separate zbus creation from
+> > scanning") it was missed however that struct pci_bus and struct
+> > zpci_bus's resource list retained a reference to the PCI functions MMIO
+> > resources even though those resources are released and freed on
+> > hot-unplug. These stale resources may subsequently be claimed when the
+> > PCI function re-appears resulting in use-after-free.
+> >=20
+> > One idea of fixing this use-after-free in s390 specific code that was
+> > investigated was to simply keep resources around from the moment a PCI
+> > function first appeared until the whole virtual PCI bus created for
+> > a multi-function device disappears. The problem with this however is
+> > that due to the requirement of artificial MMIO addreesses (address
+> > cookies) extra logic is then needed to keep the address cookies
+> > compatible on re-plug. At the same time the MMIO resources semantically
+> > belong to the PCI function so tying their lifecycle to the function
+> > seems more logical.
+> >=20
+> > Instead a simpler approach is to remove the resources of an individuall=
+y
+> > hot-unplugged PCI function from the PCI bus's resource list while
+> > keeping the resources of other PCI functions on the PCI bus untouched.
+> >=20
+> > This is done by introducing pci_bus_remove_resource() to remove an
+> > individual resource. Similarly the resource also needs to be removed
+> > from the struct zpci_bus's resource list. It turns out however, that
+> > there is really no need to add the MMIO resources to the struct
+> > zpci_bus's resource list at all and instead we can simply use the
+> > zpci_bar_struct's resource pointer directly.
+> >=20
+> > Fixes: a50297cf8235 ("s390/pci: separate zbus creation from scanning")
+> > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+>=20
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>=20
+> The meat of this is mostly in s390, so I think it makes more sense to
+> merge via that tree.  But let me know if you'd rather that I take it.
+>=20
+>=20
 
-On 2/23/23 6:35 AM, Martin KaFai Lau wrote:
-> On 2/21/23 4:18 AM, D. Wythe wrote:
->> From: "D. Wythe" <alibuda@linux.alibaba.com>
->>
->> This PATCH adds a tiny selftest for SMC bpf capability,
->> making decisions on whether to use SMC by collecting
->> certain information from kernel smc sock.
->>
->> Follow the steps below to run this test.
->>
->> make -C tools/testing/selftests/bpf
->> cd tools/testing/selftests/bpf
->> sudo ./test_progs -t bpf_smc
->>
->> Results shows:
->> 18      bpf_smc:OK
->> Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
->>
->> Signed-off-by: D. Wythe <alibuda@linux.alibaba.com>
->> ---
->>   tools/testing/selftests/bpf/prog_tests/bpf_smc.c |  39 +++
->>   tools/testing/selftests/bpf/progs/bpf_smc.c      | 315 
->> +++++++++++++++++++++++
->>   2 files changed, 354 insertions(+)
->>   create mode 100644 tools/testing/selftests/bpf/prog_tests/bpf_smc.c
->>   create mode 100644 tools/testing/selftests/bpf/progs/bpf_smc.c
->>
->> diff --git a/tools/testing/selftests/bpf/prog_tests/bpf_smc.c 
->> b/tools/testing/selftests/bpf/prog_tests/bpf_smc.c
->> new file mode 100644
->> index 0000000..b143932
->> --- /dev/null
->> +++ b/tools/testing/selftests/bpf/prog_tests/bpf_smc.c
->> @@ -0,0 +1,39 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/* Copyright (c) 2019 Facebook */
->
-> copy-and-paste left-over...
+Thanks for taking a look and the valuable suggestions. I'll coordinate
+with Vasily to take this via the s390 tree. As for the locking I agree
+it is out of scope for this series. Meant more that the resource
+handling might be a good place to start splitting up the
+pci_rescan_remove_lock and that I might take a look at that if I find
+the time which of course we're all lacking.
 
-Sorry for that, but it might be more appropriate to delete it here... 😂
-
->
->> diff --git a/tools/testing/selftests/bpf/progs/bpf_smc.c 
->> b/tools/testing/selftests/bpf/progs/bpf_smc.c
->> new file mode 100644
->> index 0000000..78c7976
->> --- /dev/null
->> +++ b/tools/testing/selftests/bpf/progs/bpf_smc.c
->> @@ -0,0 +1,315 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +
->> +#include <linux/bpf.h>
->> +#include <linux/stddef.h>
->> +#include <linux/smc.h>
->> +#include <stdbool.h>
->> +#include <linux/types.h>
->> +#include <bpf/bpf_helpers.h>
->> +#include <bpf/bpf_core_read.h>
->> +#include <bpf/bpf_tracing.h>
->> +
->> +#define BPF_STRUCT_OPS(name, args...) \
->> +    SEC("struct_ops/"#name) \
->> +    BPF_PROG(name, args)
->> +
->> +#define SMC_LISTEN        (10)
->> +#define SMC_SOCK_CLOSED_TIMING    (0)
->> +extern unsigned long CONFIG_HZ __kconfig;
->> +#define HZ CONFIG_HZ
->> +
->> +char _license[] SEC("license") = "GPL";
->> +#define max(a, b) ((a) > (b) ? (a) : (b))
->> +
->> +struct sock_common {
->> +    unsigned char    skc_state;
->> +    __u16    skc_num;
->> +} __attribute__((preserve_access_index));
->> +
->> +struct sock {
->> +    struct sock_common    __sk_common;
->> +    int    sk_sndbuf;
->> +} __attribute__((preserve_access_index));
->> +
->> +struct inet_sock {
->> +    struct sock    sk;
->> +} __attribute__((preserve_access_index));
->> +
->> +struct inet_connection_sock {
->> +    struct inet_sock    icsk_inet;
->> +} __attribute__((preserve_access_index));
->> +
->> +struct tcp_sock {
->> +    struct inet_connection_sock    inet_conn;
->> +    __u32    rcv_nxt;
->> +    __u32    snd_nxt;
->> +    __u32    snd_una;
->> +    __u32    delivered;
->> +    __u8    syn_data:1,    /* SYN includes data */
->> +        syn_fastopen:1,    /* SYN includes Fast Open option */
->> +        syn_fastopen_exp:1,/* SYN includes Fast Open exp. option */
->> +        syn_fastopen_ch:1, /* Active TFO re-enabling probe */
->> +        syn_data_acked:1,/* data in SYN is acked by SYN-ACK */
->> +        save_syn:1,    /* Save headers of SYN packet */
->> +        is_cwnd_limited:1,/* forward progress limited by snd_cwnd? */
->> +        syn_smc:1;    /* SYN includes SMC */
->> +} __attribute__((preserve_access_index));
->> +
->> +struct socket {
->> +    struct sock *sk;
->> +} __attribute__((preserve_access_index));
->
-> All these tcp_sock, socket, inet_sock definitions can go away if it 
-> includes "vmlinux.h". tcp_ca_write_sk_pacing.c is a better example to 
-> follow. Try to define the "common" (eg. tcp, tc...etc) missing macros 
-> in bpf_tracing_net.h. The smc specific macros can stay in this file.
-
-Got it, i'll fix this.
-
->> +static inline struct smc_prediction *smc_prediction_get(const struct 
->> smc_sock *smc,
->> +                            const struct tcp_sock *tp, __u64 tstamp)
->> +{
->> +    struct smc_prediction zero = {}, *smc_predictor;
->> +    __u16 key;
->> +    __u32 gap;
->> +    int err;
->> +
->> +    err = bpf_core_read(&key, sizeof(__u16), 
->> &tp->inet_conn.icsk_inet.sk.__sk_common.skc_num);
->> +    if (err)
->> +        return NULL;
->> +
->> +    /* BAD key */
->> +    if (key == 0)
->> +        return NULL;
->> +
->> +    smc_predictor = bpf_map_lookup_elem(&negotiator_map, &key);
->> +    if (!smc_predictor) {
->> +        zero.start_tstamp = bpf_jiffies64();
->> +        zero.pacing_delta = SMC_PREDICTION_MIN_PACING_DELTA;
->> +        bpf_map_update_elem(&negotiator_map, &key, &zero, 0);
->> +        smc_predictor = bpf_map_lookup_elem(&negotiator_map, &key);
->> +        if (!smc_predictor)
->> +            return NULL;
->> +    }
->> +
->> +    if (tstamp) {
->> +        bpf_spin_lock(&smc_predictor->lock);
->> +        gap = (tstamp - smc_predictor->start_tstamp) / 
->> smc_predictor->pacing_delta;
->> +        /* new splice */
->> +        if (gap > 0) {
->> +            smc_predictor->start_tstamp = tstamp;
->> +            smc_predictor->last_rate_of_lcc =
->> +                (smc_prediction_calt_rate(smc_predictor) * 7) >> (2 
->> + gap);
->> +            smc_predictor->closed_long_cc = 0;
->> +            smc_predictor->closed_total_cc = 0;
->> +            smc_predictor->incoming_long_cc = 0;
->> +        }
->> +        bpf_spin_unlock(&smc_predictor->lock);
->> +    }
->> +    return smc_predictor;
->> +}
->> +
->> +/* BPF struct ops for smc protocol negotiator */
->> +struct smc_sock_negotiator_ops {
->> +    /* ret for negotiate */
->> +    int (*negotiate)(struct smc_sock *smc);
->> +
->> +    /* info gathering timing */
->> +    void (*collect_info)(struct smc_sock *smc, int timing);
->> +};
->> +
->> +int BPF_STRUCT_OPS(bpf_smc_negotiate, struct smc_sock *smc)
->> +{
->> +    struct smc_prediction *smc_predictor;
->> +    struct tcp_sock *tp;
->> +    struct sock *clcsk;
->> +    int ret = SK_DROP;
->> +    __u32 rate = 0;
->> +
->> +    /* Only make decison during listen */
->> +    if (smc->sk.__sk_common.skc_state != SMC_LISTEN)
->> +        return SK_PASS;
->> +
->> +    clcsk = BPF_CORE_READ(smc, clcsock, sk);
->
-> Instead of using bpf_core_read here, why not directly gets the clcsk 
-> like the 'smc->sk.__sk_common.skc_state' above.
->
->> +    if (!clcsk)
->> +        goto error;
->> +
->> +    tp = tcp_sk(clcsk);
->
-> There is a bpf_skc_to_tcp_sock(). Give it a try after changing the 
-> above BPF_CORE_READ.
-
-Copy that!  thanks.
-
->
->> +    if (!tp)
->> +        goto error;
->> +
->> +    smc_predictor = smc_prediction_get(smc, tp, bpf_jiffies64());
->> +    if (!smc_predictor)
->> +        return SK_PASS;
->> +
->> +    bpf_spin_lock(&smc_predictor->lock);
->> +
->> +    if (smc_predictor->incoming_long_cc == 0)
->> +        goto out_locked_pass;
->> +
->> +    if (smc_predictor->incoming_long_cc > 
->> SMC_PREDICTION_MAX_LONGCC_PER_SPLICE) {
->> +        ret = 100;
->> +        goto out_locked_drop;
->> +    }
->> +
->> +    rate = smc_prediction_calt_rate(smc_predictor);
->> +    if (rate < SMC_PREDICTION_LONGCC_RATE_THRESHOLD) {
->> +        ret = 200;
->> +        goto out_locked_drop;
->> +    }
->> +out_locked_pass:
->> +    smc_predictor->incoming_long_cc++;
->> +    bpf_spin_unlock(&smc_predictor->lock);
->> +    return SK_PASS;
->> +out_locked_drop:
->> +    bpf_spin_unlock(&smc_predictor->lock);
->> +error:
->> +    return SK_DROP;
->> +}
->> +
->> +void BPF_STRUCT_OPS(bpf_smc_collect_info, struct smc_sock *smc, int 
->> timing)
->
-> Try to stay with SEC("struct_ops/...") void BPF_PROG(....)
-
-Got it.  I have finished this modification in v4.
-
-
+Regards,
+Niklas
