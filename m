@@ -2,167 +2,373 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1AB626B4F4F
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Mar 2023 18:45:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A6F56B4FE0
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Mar 2023 19:11:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230391AbjCJRpV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 10 Mar 2023 12:45:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38528 "EHLO
+        id S230287AbjCJSLw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 10 Mar 2023 13:11:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231872AbjCJRpL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 10 Mar 2023 12:45:11 -0500
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on20628.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e89::628])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3658E12B67E;
-        Fri, 10 Mar 2023 09:44:21 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a0IriHeho38jIu5k5FCDcioC93oxnnb0BdpAakrbN/V/vX7RUF40wujqfQ2TlMc6dJssFwMt/9XP5j6471YKcl4VuUfIJWwn+C8inpLMSVMTUZHZkwWhJByAj52itE5iNdcTgXP6ZbDidTrpZBVefnM84haV75YTG4HztgmYEDNIXtP6G/gSxLp0EnV13UyQBboHR9TSJt1PORT2cQhTf5WJiHg6yy8aARwhrU6kF34lz/4NVYDcUFsYPDqJgSRY3i0Mj4TjF2e9EePSx2fdIxTXOCsU67djQ9Qa12NHW4Z/ZO7FrLWrXWtQN3AtSDbLh97B+Ofiuoa0rp5CJECC8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dc9s/FkT54Fg3KihZHFxoESDIrL2P7GjWGyv8o3EWbw=;
- b=Gpf5l7PzfZG+gW/iWKFjj9b9GiDfDV12OCCyIvHOyFjDMHW+LH3UFCtfdXBMURF5us+ggEmysoIN1uZKx/mTnO+J2eTrTuKYAdnWlhTUBddON2uXJdM7S3Oxpi0EQkcMhDc1l+EqcBOKmfmNjx9jygsHeYpmbxCmMZFkGKgdGs+/6+xLtuawiuJob+AnrX9a7JyEe6XnVglxgJx4wOU2+nJaqe32MV0+YWB/z6dmfWgydnhgy9EkHos1q9ET1v4WzIBFwuhbyklXqcRwxQ0r7AhiytQXVQfpfEQhBXMmrdfPzMSvpCmzEiAzLoMzEe2C7EII5Czj7kVAJOvQUzby6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dc9s/FkT54Fg3KihZHFxoESDIrL2P7GjWGyv8o3EWbw=;
- b=PC8xxrQ5AwUlnPe2fR014Qa3/a8dnlyOsl3ShMgykqI62yVRdUYIuslrPjEdCRAt+hWjmWl8m/qzL+jMZ84a0sfNgmb/XmRuJO27l07eAtS67Nv4XcbWSyN5NpUsphUzjBhLDTm0gJRWYtxZ7JsOskWHRDGqgC0sPnWwap1iFtln5tCkSxO8YIo5QJtBjMa3iHjVmVpkNBGMjS6qPUF+wKl6QZw9dLsb1UvXaK4gVlOdF+M5+ud40ZFC+jrDZNEdGbsJPKm4xZc02E1xt9iW8aybc//ig0wHkSYc0IX2imYU6HnuLWP07I3Q6c/cG3DFFhFNX+wxfKz/llnzL5AGgA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
- by SJ0PR12MB7475.namprd12.prod.outlook.com (2603:10b6:a03:48d::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.19; Fri, 10 Mar
- 2023 17:42:48 +0000
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::ef6d:fdf6:352f:efd1]) by LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::ef6d:fdf6:352f:efd1%3]) with mapi id 15.20.6178.017; Fri, 10 Mar 2023
- 17:42:47 +0000
-Date:   Fri, 10 Mar 2023 13:42:44 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "yi.y.sun@linux.intel.com" <yi.y.sun@linux.intel.com>,
-        "mjrosato@linux.ibm.com" <mjrosato@linux.ibm.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "Hao, Xudong" <xudong.hao@intel.com>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "Zhao, Yan Y" <yan.y.zhao@intel.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "Xu, Terrence" <terrence.xu@intel.com>,
-        "nicolinc@nvidia.com" <nicolinc@nvidia.com>,
-        "shameerali.kolothum.thodi@huawei.com" 
-        <shameerali.kolothum.thodi@huawei.com>,
-        "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "chao.p.peng@linux.intel.com" <chao.p.peng@linux.intel.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>
-Subject: Re: [PATCH v6 12/24] vfio/pci: Allow passing zero-length fd array in
- VFIO_DEVICE_PCI_HOT_RESET
-Message-ID: <ZAtsFH7lXRyjTDZT@nvidia.com>
-References: <20230308132903.465159-1-yi.l.liu@intel.com>
- <20230308132903.465159-13-yi.l.liu@intel.com>
- <BN9PR11MB5276C4BB18EC47CD047D498A8CBA9@BN9PR11MB5276.namprd11.prod.outlook.com>
- <DS0PR11MB75299B12BFB1A12DF786E6C9C3BA9@DS0PR11MB7529.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DS0PR11MB75299B12BFB1A12DF786E6C9C3BA9@DS0PR11MB7529.namprd11.prod.outlook.com>
-X-ClientProxiedBy: SJ0PR03CA0012.namprd03.prod.outlook.com
- (2603:10b6:a03:33a::17) To LV2PR12MB5869.namprd12.prod.outlook.com
- (2603:10b6:408:176::16)
+        with ESMTP id S230001AbjCJSLu (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 10 Mar 2023 13:11:50 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED8B51241CA;
+        Fri, 10 Mar 2023 10:11:48 -0800 (PST)
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32AHHLT3003147;
+        Fri, 10 Mar 2023 18:11:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=noMnFGpQ82ybOcsraTvZhV/XFUc0Bu00cBe2srAYGx8=;
+ b=FUwgKZlAZG+DmpSPPaMhc7RuSNYfrUz9JYHMEoBxIxIzN311TTjFnD6loZPyur4l3oNr
+ 3N9e/bVNSAeNLfk+BXc0wlV7nC15zbJt1qHRznR90r69Q6uOeO75MxArjcCdY6UzySue
+ YCeQE+Je83ulrmPhZpqtH9af6V3Xd2qWK4eTn7VDLZxwJYQxHKG1uu1/bxOCs07wNZGF
+ FJqhrBdsuFFiCcFhwn3ccrU9F4KVkHQwBhc/3UUj0LoTIr6buhsBfs7wvs536VVZMMcw
+ 4Cvrhw2oPqzYXPOjj/eMOqXI9WQBJx7xnqlqNiJvgUkM+WGO0HfTaDG+AEFQFkyCQ4xX uQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p88tch4dm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Mar 2023 18:11:48 +0000
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32AHbTMn022433;
+        Fri, 10 Mar 2023 18:11:48 GMT
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p88tch4d1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Mar 2023 18:11:47 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 32A7uaF7023013;
+        Fri, 10 Mar 2023 18:11:45 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3p6fysv7ds-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Mar 2023 18:11:45 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 32AIBfWb48103802
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 Mar 2023 18:11:41 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BAB232004B;
+        Fri, 10 Mar 2023 18:11:41 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6DDDA20043;
+        Fri, 10 Mar 2023 18:11:41 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Fri, 10 Mar 2023 18:11:41 +0000 (GMT)
+From:   Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+To:     Thomas Huth <thuth@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+Cc:     David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [kvm-unit-tests PATCH v5] s390x: Add tests for execute-type instructions
+Date:   Fri, 10 Mar 2023 19:11:31 +0100
+Message-Id: <20230310181131.2138736-1-nsg@linux.ibm.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|SJ0PR12MB7475:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1802e9ba-cc6a-4117-7049-08db218edccd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: w6UyLoF7oQruUs5fAz4kmxDyMhh5o/Cs2+KVIgGbrHHuubtMDuYm96I9SoroFCcWgSlvmAvWAVt8PN1PjmDVLjWKM+SpFUYJB7u8ny0XkIZE4xRxdzoqmJWa1aEdmIAHZFv+wd4p+c6TYdOPA2o5TrFHfwzXI9R73ckWrKDBJWlVNqhs3UigKUjdEto7EodPoRcy6RxUdH2uBEbyaZe5Jj6Iz9BJqqgG3i5ltLiCyy887HeAbPNAGaqttv2Udc+rKNJwU8JYWst+HbbLEONwBoPweBGtPEbxTSwf7ePdC8Iu8MfEw5cWyl6b6OYWa7VLVpjlH1wJwww+zetltqsmoNR5WnoCzExbKsA5te8zf1iw5444Px1mNFl6OMnetIY8+yCurfcJ4ESAUHS41rbsuLscGx/f21OZt6C/zd99BAfb6fvhTCnAoA4R+GmBNnZ2KuB+097ws4etkOwmIXgKqdODtEfY0BO5803R9m1MTk4fBq8wYvLfsRcirSAQf5ejkdKW4v80Idh0XrSMreio0ywaf57Yw9SIbdfhKTi7XOVATUGDPN/YbpkPG7UBEtTXeXFGSuhP2BNa5RM0j8ToSCvMl5z3wANESNmtbcQqiFGBm5/LbUyD8G/N+iXHdrYvQHPVXJ/0W6+3N6SFOjjdSA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(136003)(366004)(396003)(346002)(376002)(39860400002)(451199018)(36756003)(86362001)(38100700002)(8936002)(478600001)(6486002)(5660300002)(2906002)(7416002)(6916009)(4326008)(8676002)(66556008)(66476007)(316002)(54906003)(66946007)(41300700001)(186003)(2616005)(6666004)(6512007)(6506007)(26005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?z9WJfVb5IaMQ/4aSBBJHDTY2sjXUaJHNckzt/q616/WFJGu5hFTVUv09nBcQ?=
- =?us-ascii?Q?8MhIP5ZCbBN59sFAd0H1NUpdyCUrZ8af0TwWZCSsVdenhki62gruJOfAv3Uf?=
- =?us-ascii?Q?J0Wr2aeDbnI+SX2bEt4r8Y5U3wJw6KUdfLwfwkD3q3VHh7G8s5VUcloSW+9r?=
- =?us-ascii?Q?osnXNewms6Kk0rE13TVSPiIXGvNCmNt0YBGEhh9wPhTMUdV8Ywl9C44ucURi?=
- =?us-ascii?Q?IsWCOk6nNJmIghqYvB/YgUSw7mLx8xRFKkoKwBocDKwJXym5S9JUA4xkQKmH?=
- =?us-ascii?Q?BtFkplXisnlKEp4OdOkbI3IW0M4wBPwFV8S4Pm+J02qzX0ziItcEjjTLREfB?=
- =?us-ascii?Q?5+S7nUGwa9FqVOPV/lrDN3Xn1mDPeacR7IOUQcGS6GHEY9GGssIXbpP7qWkd?=
- =?us-ascii?Q?3hXnVVg5zrcI6LP1yU3gEW6+U5gKJZsGayBYd5AQzEX1DG1dXj2UA0/cqZei?=
- =?us-ascii?Q?XKWhYPxjGRH+z0HJjLzKEIpAU8LJCm2JSQhsAiYldpQ6yFgntX6QoWFCibvZ?=
- =?us-ascii?Q?F2m6tMp3ywSD5y0jUQzWAsZGTg8qKBZ7vkOKqC4QkpbWhI2PsT7Y18LwxTAI?=
- =?us-ascii?Q?9ng9iD5PpAieFdpUn0Z86Dk0VxhY+HUtLVEtUCn0/J+LMqWCB7j4zsCxlx6n?=
- =?us-ascii?Q?gaTd9lUIT9yt3vYwqY/sbeJuAZlfS71nH2I5bzACvTESa85L06bmxhM68PXT?=
- =?us-ascii?Q?RZ6dD5XNrtFdnV9CCF/zxwuWIccuyxtpI2vwyXy3let7wLbD67P3Cppd7Cxt?=
- =?us-ascii?Q?20bw5cm7mOhJ710X4uqs8FWS+9FisI1/ujk0ffn9kA6M5MAurSTPV4kFErLu?=
- =?us-ascii?Q?My6iAJbiK8kWBz37I4kBi+qKpxiaEXtnTmM6rp4rL/64V4DUQYkVrAMKKHAm?=
- =?us-ascii?Q?vOCXnI2L7BIkXTTSBmbl7KJQmbW0O1mwpIEHlYpfBheRVX3QEMA/5DzAAwzU?=
- =?us-ascii?Q?EUXGKzXFnQR4S6l54M3DTMAdtdt6Z2bBukdEKZXXStbkT3dJWTZf7mBlTQZO?=
- =?us-ascii?Q?ApRkn1LYSXgYNdeaErC+HZrFAZaa2kPs48T37OiS4U7PIheyhGL+ORgj0sWL?=
- =?us-ascii?Q?PVJDEcr/WtOv+UDRWqcVisZMnO47lSzM3i0vz2208sRZPfUt8WEWz7kk1ZlH?=
- =?us-ascii?Q?oHePS5TPe2ZGx/w5uK+CEonNmcsQN+rMFxPKBrYG8l9U+7/bV3kU+UkeItSy?=
- =?us-ascii?Q?OC+NtteDx2cSZJKyhMraA9XZN892RByreFUXKbzWmeq6kuAYA6YWi/cK9rPY?=
- =?us-ascii?Q?pWZKRi8S+IzkyOpu/Ac64Ni2L8fNdRax0XbW4BMmWepJhLnRL4yo7O8V3Qrb?=
- =?us-ascii?Q?HKxGF062CguopsF8WNRg4Fd3setyWRclS6ckBz0I68WjeBBz1R2tzqKR43v/?=
- =?us-ascii?Q?3c0YNXFec8gVlrYqKLROlDWLjPGd1P5IZXS3KJpv+IhRzMYsOANiOSuxTxTf?=
- =?us-ascii?Q?9VDisdSPtjSQl+2GF0Fn0wnjtYVZsD/iScM1FWdETH9dknc8jiHeeEkh5Hb2?=
- =?us-ascii?Q?DThfNES4IyWgeBuUfyFi0B6FZlLwC6nS+hIU+Wy8cRS++/h77Xgm7/RiHQhi?=
- =?us-ascii?Q?WwLFhx3QKg9XxVGi0h2n/KpQ8GNDNjKWQTqrZx7r?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1802e9ba-cc6a-4117-7049-08db218edccd
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2023 17:42:47.8768
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LxcmN+ZKQq5P1X0E5RCz3DJ03ePp08kMe80yEbBNrUfRlkG4DFJx9Jff7ZI9MehH
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB7475
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        SPF_HELO_PASS,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: VC7XSel_L5qUfFsGq1RA9uVHSL1ZOd8x
+X-Proofpoint-GUID: yolj0SXFsYUyY8P4lx8gs0AH7jWpBmz-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-10_09,2023-03-10_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ clxscore=1015 spamscore=0 mlxlogscore=999 suspectscore=0 bulkscore=0
+ impostorscore=0 priorityscore=1501 adultscore=0 lowpriorityscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2303100144
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Mar 10, 2023 at 06:04:02AM +0000, Liu, Yi L wrote:
-> > From: Tian, Kevin <kevin.tian@intel.com>
-> > Sent: Friday, March 10, 2023 1:31 PM
-> > 
-> > > From: Yi Liu
-> > > Sent: Wednesday, March 8, 2023 9:29 PM
-> > >
-> > > This is another method to issue PCI hot reset for the users that bounds
-> > > device to a positive iommufd value. In such case, iommufd is a proof of
-> > > device ownership. By passing a zero-length fd array, user indicates kernel
-> > > to do ownership check with the bound iommufd. All the opened devices
-> > > within
-> > > the affected dev_set should have been bound to the same iommufd. This
-> > is
-> > > simpler and faster as user does not need to pass a set of fds and kernel
-> > > no need to search the device within the given fds.
-> > >
-> > > Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-> > > Signed-off-by: Yi Liu <yi.l.liu@intel.com>
-> > 
-> > I think you also need a s-o-b from Jason since he wrote most of the
-> > code here.
-> 
-> Yes, it is. I'll add it if no objection from Jason.
+Test the instruction address used by targets of an execute instruction.
+When the target instruction calculates a relative address, the result is
+relative to the target instruction, not the execute instruction.
 
-Go ahead
+Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+Signed-off-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+---
 
-Jason
+
+v4 -> v5:
+ * word align the execute-type instruction, preventing a specification
+   exception if the address calculation is wrong, since LLGFRL requires
+   word alignment
+ * change wording of comment
+
+v3 -> v4:
+ * fix nits (thanks Janosch)
+ * pickup R-b (thanks Janosch)
+
+v2 -> v3:
+ * add some comments (thanks Janosch)
+ * add two new tests (drop Nico's R-b)
+ * push prefix
+
+v1 -> v2:
+ * add test to unittests.cfg and .gitlab-ci.yml
+ * pick up R-b (thanks Nico)
+
+
+TCG does the address calculation relative to the execute instruction.
+Everything that has an operand that is relative to the instruction given by
+the immediate in the instruction and goes through in2_ri2 in TCG has this
+problem, because in2_ri2 does the calculation relative to pc_next which is the
+address of the EX(RL).
+That should make fixing it easier tho.
+
+
+Range-diff against v4:
+1:  f29ef634 ! 1:  57f8f256 s390x: Add tests for execute-type instructions
+    @@ s390x/ex.c (new)
+     +		"	.popsection\n"
+     +
+     +		"	llgfrl	%[target],0b\n"
+    ++		//align (pad with nop), in case the wrong operand is used
+    ++		"	.balignw 4,0x0707\n"
+     +		"	exrl	0,0b\n"
+     +		: [target] "=d" (target),
+     +		  [value] "=d" (value)
+    @@ s390x/ex.c (new)
+     +		"	.popsection\n"
+     +
+     +		"	lrl	%[crl_word],0b\n"
+    -+		//align (pad with nop), in case the wrong bad operand is used
+    ++		//align (pad with nop), in case the wrong operand is used
+     +		"	.balignw 4,0x0707\n"
+     +		"	exrl	0,0b\n"
+     +		"	ipm	%[program_mask]\n"
+
+ s390x/Makefile      |   1 +
+ s390x/ex.c          | 172 ++++++++++++++++++++++++++++++++++++++++++++
+ s390x/unittests.cfg |   3 +
+ .gitlab-ci.yml      |   1 +
+ 4 files changed, 177 insertions(+)
+ create mode 100644 s390x/ex.c
+
+diff --git a/s390x/Makefile b/s390x/Makefile
+index 97a61611..6cf8018b 100644
+--- a/s390x/Makefile
++++ b/s390x/Makefile
+@@ -39,6 +39,7 @@ tests += $(TEST_DIR)/panic-loop-extint.elf
+ tests += $(TEST_DIR)/panic-loop-pgm.elf
+ tests += $(TEST_DIR)/migration-sck.elf
+ tests += $(TEST_DIR)/exittime.elf
++tests += $(TEST_DIR)/ex.elf
+ 
+ pv-tests += $(TEST_DIR)/pv-diags.elf
+ 
+diff --git a/s390x/ex.c b/s390x/ex.c
+new file mode 100644
+index 00000000..f05f8f90
+--- /dev/null
++++ b/s390x/ex.c
+@@ -0,0 +1,172 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright IBM Corp. 2023
++ *
++ * Test EXECUTE (RELATIVE LONG).
++ * These instructions execute a target instruction. The target instruction is formed
++ * by reading an instruction from memory and optionally modifying some of its bits.
++ * The execution of the target instruction is the same as if it was executed
++ * normally as part of the instruction sequence, except for the instruction
++ * address and the instruction-length code.
++ */
++
++#include <libcflat.h>
++
++/*
++ * BRANCH AND SAVE, register register variant.
++ * Saves the next instruction address (address from PSW + length of instruction)
++ * to the first register. No branch is taken in this test, because 0 is
++ * specified as target.
++ * BASR does *not* perform a relative address calculation with an intermediate.
++ */
++static void test_basr(void)
++{
++	uint64_t ret_addr, after_ex;
++
++	report_prefix_push("BASR");
++	asm volatile ( ".pushsection .rodata\n"
++		"0:	basr	%[ret_addr],0\n"
++		"	.popsection\n"
++
++		"	larl	%[after_ex],1f\n"
++		"	exrl	0,0b\n"
++		"1:\n"
++		: [ret_addr] "=d" (ret_addr),
++		  [after_ex] "=d" (after_ex)
++	);
++
++	report(ret_addr == after_ex, "return address after EX");
++	report_prefix_pop();
++}
++
++/*
++ * BRANCH RELATIVE AND SAVE.
++ * According to PoP (Branch-Address Generation), the address calculated relative
++ * to the instruction address is relative to BRAS when it is the target of an
++ * execute-type instruction, not relative to the execute-type instruction.
++ */
++static void test_bras(void)
++{
++	uint64_t after_target, ret_addr, after_ex, branch_addr;
++
++	report_prefix_push("BRAS");
++	asm volatile ( ".pushsection .text.ex_bras, \"x\"\n"
++		"0:	bras	%[ret_addr],1f\n"
++		"	nopr	%%r7\n"
++		"1:	larl	%[branch_addr],0\n"
++		"	j	4f\n"
++		"	.popsection\n"
++
++		"	larl	%[after_target],1b\n"
++		"	larl	%[after_ex],3f\n"
++		"2:	exrl	0,0b\n"
++		"3:	larl	%[branch_addr],0\n"
++		"4:\n"
++
++		"	.if (1b - 0b) != (3b - 2b)\n"
++		"	.error	\"right and wrong target must have same offset\"\n"
++		"	.endif\n"
++		: [after_target] "=d" (after_target),
++		  [ret_addr] "=d" (ret_addr),
++		  [after_ex] "=d" (after_ex),
++		  [branch_addr] "=d" (branch_addr)
++	);
++
++	report(after_target == branch_addr, "address calculated relative to BRAS");
++	report(ret_addr == after_ex, "return address after EX");
++	report_prefix_pop();
++}
++
++/*
++ * LOAD ADDRESS RELATIVE LONG.
++ * If it is the target of an execute-type instruction, the address is relative
++ * to the LARL.
++ */
++static void test_larl(void)
++{
++	uint64_t target, addr;
++
++	report_prefix_push("LARL");
++	asm volatile ( ".pushsection .rodata\n"
++		"0:	larl	%[addr],0\n"
++		"	.popsection\n"
++
++		"	larl	%[target],0b\n"
++		"	exrl	0,0b\n"
++		: [target] "=d" (target),
++		  [addr] "=d" (addr)
++	);
++
++	report(target == addr, "address calculated relative to LARL");
++	report_prefix_pop();
++}
++
++/* LOAD LOGICAL RELATIVE LONG.
++ * If it is the target of an execute-type instruction, the address is relative
++ * to the LLGFRL.
++ */
++static void test_llgfrl(void)
++{
++	uint64_t target, value;
++
++	report_prefix_push("LLGFRL");
++	asm volatile ( ".pushsection .rodata\n"
++		"	.balign	4\n"
++		"0:	llgfrl	%[value],0\n"
++		"	.popsection\n"
++
++		"	llgfrl	%[target],0b\n"
++		//align (pad with nop), in case the wrong operand is used
++		"	.balignw 4,0x0707\n"
++		"	exrl	0,0b\n"
++		: [target] "=d" (target),
++		  [value] "=d" (value)
++	);
++
++	report(target == value, "loaded correct value");
++	report_prefix_pop();
++}
++
++/*
++ * COMPARE RELATIVE LONG
++ * If it is the target of an execute-type instruction, the address is relative
++ * to the CRL.
++ */
++static void test_crl(void)
++{
++	uint32_t program_mask, cc, crl_word;
++
++	report_prefix_push("CRL");
++	asm volatile ( ".pushsection .rodata\n"
++		 //operand of crl must be word aligned
++		 "	.balign	4\n"
++		"0:	crl	%[crl_word],0\n"
++		"	.popsection\n"
++
++		"	lrl	%[crl_word],0b\n"
++		//align (pad with nop), in case the wrong operand is used
++		"	.balignw 4,0x0707\n"
++		"	exrl	0,0b\n"
++		"	ipm	%[program_mask]\n"
++		: [program_mask] "=d" (program_mask),
++		  [crl_word] "=d" (crl_word)
++		:: "cc"
++	);
++
++	cc = program_mask >> 28;
++	report(!cc, "operand compared to is relative to CRL");
++	report_prefix_pop();
++}
++
++int main(int argc, char **argv)
++{
++	report_prefix_push("ex");
++	test_basr();
++	test_bras();
++	test_larl();
++	test_llgfrl();
++	test_crl();
++	report_prefix_pop();
++
++	return report_summary();
++}
+diff --git a/s390x/unittests.cfg b/s390x/unittests.cfg
+index d97eb5e9..b61faf07 100644
+--- a/s390x/unittests.cfg
++++ b/s390x/unittests.cfg
+@@ -215,3 +215,6 @@ file = migration-skey.elf
+ smp = 2
+ groups = migration
+ extra_params = -append '--parallel'
++
++[execute]
++file = ex.elf
+diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+index ad7949c9..a999f64a 100644
+--- a/.gitlab-ci.yml
++++ b/.gitlab-ci.yml
+@@ -275,6 +275,7 @@ s390x-kvm:
+   - ACCEL=kvm ./run_tests.sh
+       selftest-setup intercept emulator sieve sthyi diag10 diag308 pfmf
+       cmm vector gs iep cpumodel diag288 stsi sclp-1g sclp-3g css skrf sie
++      execute
+       | tee results.txt
+   - grep -q PASS results.txt && ! grep -q FAIL results.txt
+  only:
+
+base-commit: e3c5c3ef2524c58023073c0fadde2e8ae3c04ec6
+-- 
+2.39.1
+
