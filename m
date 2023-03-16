@@ -2,42 +2,42 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BBF376BCF29
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Mar 2023 13:15:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FB286BCFAF
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Mar 2023 13:42:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230310AbjCPMPf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Mar 2023 08:15:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59884 "EHLO
+        id S229796AbjCPMmU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Mar 2023 08:42:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229732AbjCPMPd (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 Mar 2023 08:15:33 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F05B265079;
-        Thu, 16 Mar 2023 05:15:31 -0700 (PDT)
+        with ESMTP id S229687AbjCPMmT (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 Mar 2023 08:42:19 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77AD9B0B92;
+        Thu, 16 Mar 2023 05:42:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678968931; x=1710504931;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ed/7XLQtYPRpjbI2Jc0ve/djdP1J5ibXosRcrYxHLiE=;
-  b=gKHWqSM+hT9TgIStbpXVDRAnqms0N5lMgDSBn7NDLa4yu7x7YRFP089i
-   AQvdOVP+kEWCFJo8WL4cdONXttoltNuDHfnAkLQVg3By4GU2Iaw552o2n
-   nrO6t25DiBQbvP/p6swBbMRNZED2NbwfKZhWtaAU4m6S4q0iBjDQTtdtP
-   IrfYTXCBBhnjDDa3ybvyMH1M3GyYsOFSlOLMTNWjPswpcvsFhyhXWxtT8
-   lKyCaYtjwnwIcfw3WOVwV53BtwrzMbPG1ZaKqda3Q9AnV+qt2+VOH5xZK
-   b4mnjUnksVDc2EgsFffgl3sWmiV8i2Blhe8OgeQB6MlwI5EDHetujtbka
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10650"; a="336661414"
+  t=1678970538; x=1710506538;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=kBVDCZo5ppkLKXbsECV/EdBkx1cCs/f3fhiyJ7QusD8=;
+  b=mBZVVJ/vAE4BpGhU6oKGeJfisuz6+6OVyIsVdvOMUmrtO3NUh3fG7lHA
+   tzMoxsjrW8N7ICeBQRI5mF5DWtt6eBUsPJuXaprS5zrJH1puASYs40n41
+   oUviMSOZcjzHz0gvjg9RE9xFY+zRcV5me3ydi5UDAWhpicC7BiZJbUdQl
+   o9qPLnJcC99up8kkxlDkRHUEaznAfjBUPC8JVDm7PPfxRstgN6BoitAPg
+   ctxc6oovydN/ciIZs7ecLDdsOpBL6DiopOT2btkTcLOmGmRhLNR3ohNgV
+   x+H7wNpGa+kwugDK7HQxYYdxFX/0e0C4oJtpwmu7NcjI5gmGP/gdano8/
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10650"; a="321811975"
 X-IronPort-AV: E=Sophos;i="5.98,265,1673942400"; 
-   d="scan'208";a="336661414"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2023 05:15:31 -0700
+   d="scan'208";a="321811975"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2023 05:41:59 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10650"; a="679874221"
+X-IronPort-AV: E=McAfee;i="6600,9927,10650"; a="1009207801"
 X-IronPort-AV: E=Sophos;i="5.98,265,1673942400"; 
-   d="scan'208";a="679874221"
-Received: from unknown (HELO 984fee00a4c6.jf.intel.com) ([10.165.58.231])
-  by orsmga002.jf.intel.com with ESMTP; 16 Mar 2023 05:15:31 -0700
+   d="scan'208";a="1009207801"
+Received: from 984fee00a4c6.jf.intel.com ([10.165.58.231])
+  by fmsmga005.fm.intel.com with ESMTP; 16 Mar 2023 05:41:57 -0700
 From:   Yi Liu <yi.l.liu@intel.com>
 To:     alex.williamson@redhat.com, jgg@nvidia.com, kevin.tian@intel.com
 Cc:     joro@8bytes.org, robin.murphy@arm.com, cohuck@redhat.com,
@@ -49,64 +49,76 @@ Cc:     joro@8bytes.org, robin.murphy@arm.com, cohuck@redhat.com,
         intel-gvt-dev@lists.freedesktop.org,
         intel-gfx@lists.freedesktop.org, linux-s390@vger.kernel.org,
         xudong.hao@intel.com, yan.y.zhao@intel.com, terrence.xu@intel.com
-Subject: [PATCH v2 5/5] vfio: Check the presence for iommufd callbacks in __vfio_register_dev()
-Date:   Thu, 16 Mar 2023 05:15:26 -0700
-Message-Id: <20230316121526.5644-6-yi.l.liu@intel.com>
+Subject: [PATCH 0/7] Introduce new methods for verifying ownership in vfio PCI hot reset
+Date:   Thu, 16 Mar 2023 05:41:49 -0700
+Message-Id: <20230316124156.12064-1-yi.l.liu@intel.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230316121526.5644-1-yi.l.liu@intel.com>
-References: <20230316121526.5644-1-yi.l.liu@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-After making the no-DMA drivers (samples/vfio-mdev) providing iommufd
-callbacks, __vfio_register_dev() should check the presence of the iommufd
-callbacks if CONFIG_IOMMUFD is enabled.
+VFIO_DEVICE_PCI_HOT_RESET requires user to pass an array of group fds
+to prove that it owns all devices affected by resetting the calling
+device. This series introduces several extensions to allow the ownership
+check better aligned with iommufd and coming vfio device cdev support.
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Yi Liu <yi.l.liu@intel.com>
----
- drivers/vfio/iommufd.c   | 3 ---
- drivers/vfio/vfio_main.c | 5 +++--
- 2 files changed, 3 insertions(+), 5 deletions(-)
+First, resetting an unopened device is always safe given nobody is using
+it. So relax the check to allow such devices not covered by group fd
+array. [1]
 
-diff --git a/drivers/vfio/iommufd.c b/drivers/vfio/iommufd.c
-index 345ff8cf29e7..9aabd8b31c15 100644
---- a/drivers/vfio/iommufd.c
-+++ b/drivers/vfio/iommufd.c
-@@ -32,9 +32,6 @@ int vfio_iommufd_bind(struct vfio_device *vdev, struct iommufd_ctx *ictx)
- 		return 0;
- 	}
- 
--	if (WARN_ON(!vdev->ops->bind_iommufd))
--		return -ENODEV;
--
- 	ret = vdev->ops->bind_iommufd(vdev, ictx, &device_id);
- 	if (ret)
- 		return ret;
-diff --git a/drivers/vfio/vfio_main.c b/drivers/vfio/vfio_main.c
-index 43bd6b76e2b6..89497c933490 100644
---- a/drivers/vfio/vfio_main.c
-+++ b/drivers/vfio/vfio_main.c
-@@ -255,8 +255,9 @@ static int __vfio_register_dev(struct vfio_device *device,
- {
- 	int ret;
- 
--	if (WARN_ON(device->ops->bind_iommufd &&
--		    (!device->ops->unbind_iommufd ||
-+	if (WARN_ON(IS_ENABLED(CONFIG_IOMMUFD) &&
-+		    (!device->ops->bind_iommufd ||
-+		     !device->ops->unbind_iommufd ||
- 		     !device->ops->attach_ioas)))
- 		return -EINVAL;
- 
+When iommufd is used we can simply verify that all affected devices are
+bound to a same iommufd then no need for the user to provide extra fd
+information. This is enabled by the user passing a zero-length fd array
+and moving forward this should be the preferred way for hot reset. [2]
+
+However the iommufd method has difficulty working with noiommu devices
+since those devices don't have a valid iommufd, unless the noiommu device
+is in a singleton dev_set hence no ownership check is required. [3]
+
+For noiommu backward compatibility a 3rd method is introduced by allowing
+the user to pass an array of device fds to prove ownership. [4]
+
+As suggested by Jason [5], we have this series to introduce the above
+stuffs to the vfio PCI hot reset.
+
+[1] https://lore.kernel.org/kvm/Y%2FdobS6gdSkxnPH7@nvidia.com/
+[2] https://lore.kernel.org/kvm/Y%2FZOOClu8nXy2toX@nvidia.com/#t
+[3] https://lore.kernel.org/kvm/ZACX+Np%2FIY7ygqL5@nvidia.com/
+[4] https://lore.kernel.org/kvm/DS0PR11MB7529BE88460582BD599DC1F7C3B19@DS0PR11MB7529.namprd11.prod.outlook.com/#t
+[5] https://lore.kernel.org/kvm/ZAcvzvhkt9QhCmdi@nvidia.com/
+
+Regards,
+	Yi Liu
+
+Yi Liu (7):
+  vfio/pci: Update comment around group_fd get in
+    vfio_pci_ioctl_pci_hot_reset()
+  vfio/pci: Only check ownership of opened devices in hot reset
+  vfio/pci: Allow passing zero-length fd array in
+    VFIO_DEVICE_PCI_HOT_RESET
+  vfio/pci: Renaming for accepting device fd in hot reset path
+  vfio: Refine vfio file kAPIs for vfio PCI hot reset
+  vfio: Accpet device file from vfio PCI hot reset path
+  vfio/pci: Accept device fd in VFIO_DEVICE_PCI_HOT_RESET ioctl
+
+ drivers/iommu/iommufd/device.c   |   6 ++
+ drivers/vfio/group.c             |  32 +++----
+ drivers/vfio/iommufd.c           |   8 ++
+ drivers/vfio/pci/vfio_pci_core.c | 146 ++++++++++++++++++++-----------
+ drivers/vfio/vfio.h              |   2 +
+ drivers/vfio/vfio_main.c         |  44 ++++++++++
+ include/linux/iommufd.h          |   1 +
+ include/linux/vfio.h             |   4 +
+ include/uapi/linux/vfio.h        |  18 +++-
+ 9 files changed, 193 insertions(+), 68 deletions(-)
+
 -- 
 2.34.1
 
