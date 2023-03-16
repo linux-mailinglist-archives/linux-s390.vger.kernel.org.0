@@ -2,128 +2,113 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A9CB6BCE8A
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Mar 2023 12:40:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB9AC6BCF1F
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Mar 2023 13:15:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230286AbjCPLkd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Mar 2023 07:40:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36606 "EHLO
+        id S230202AbjCPMPb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Mar 2023 08:15:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229645AbjCPLk2 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 Mar 2023 07:40:28 -0400
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2106.outbound.protection.outlook.com [40.107.215.106])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55ABF570AC;
-        Thu, 16 Mar 2023 04:40:02 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T/yR1JB3UxQB/AaPRGf7wgAex4LsRiZrXfAoMXdbnU7kOCZezabHRSU54cLwq10QYo8fz3R/TUC46Hw7cy3gD2E+JM1kM7DgBbQsTX5gZOBGFSwZEdXY+CkD5fbmMddaxJwQN9/zeLMqwCDQbVqq9o8rBbd5rRQJAxeFgWrn9vNQ0dyIaT6k0ljW6bBhwkG78U1/fBLT3mGKUZE/CuCp4ajnFESqeAXuLwWOIr5b7dzsqxYk+OIB65aQjcfFKsCEdR1u6E/uVJyaTJzQ/WZ1bp+7y91Qzcd/hESRjCLdglIwhLmaYjhdtK7mGRktcDxZgJhGiDYFTrX5LMMNDVAxrg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RNjHdA8ArI7Cuj1psguUjBTy7LIFvtfRFFVg9mWk3ZU=;
- b=aoSGtznzDAI1Cxwh3iW32z3AN66hwSd2ceBh5coooJo1u8MY/TAcNtbT95VoejncV9nX+ELcjstEpiRx+t0kUKZpJfAOXFuvxYcF21MPJff8T4KJIoFV+GXuMw6DYQQM2u1akjGMHCV6ZLvp9Zgj/MZPyVTcCKxgaDuLWT5BlwfxptCSd8vpPGCBJEU53hU4WFfjjkJ2R/IpqMV079mmrpq1HOWblj4av+4OdA4xy76lkB4iqSWDwGRv0FRAuXDk72Ro2VxW8sv5FKRSYSgxL3tLsb6Pd0KfcI0BMqdcz1mxMKaAkXrKRoA3BRcQBewRL59FAGwyaBG+QeMFryHLgA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=coep.ac.in; dmarc=pass action=none header.from=coep.ac.in;
- dkim=pass header.d=coep.ac.in; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=coepac.onmicrosoft.com; s=selector2-coepac-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RNjHdA8ArI7Cuj1psguUjBTy7LIFvtfRFFVg9mWk3ZU=;
- b=ESmFWxpCUcUKrJIozWDr3VVq8qYHs2uufBo8tmKvdPLdLBztTDFVLFSaW2HI9XVXFgf1DtRL4QH+cl98b5h65J9K3nhB7qlxAsZme2gVXM2rNw47qvT72o1WBFupMDYZjnTaWwJGCnOax8DIq4yoD+VlwI1fZ8r3QSlytUD5R2M=
-Received: from TY2PR0101MB2591.apcprd01.prod.exchangelabs.com
- (2603:1096:404:ab::19) by SI2PR01MB3819.apcprd01.prod.exchangelabs.com
- (2603:1096:4:ed::5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6222.8; Thu, 16 Mar
- 2023 11:39:28 +0000
-Received: from TY2PR0101MB2591.apcprd01.prod.exchangelabs.com
- ([fe80::9f6c:1351:78bc:13bd]) by
- TY2PR0101MB2591.apcprd01.prod.exchangelabs.com
- ([fe80::9f6c:1351:78bc:13bd%5]) with mapi id 15.20.6178.026; Thu, 16 Mar 2023
- 11:39:27 +0000
-From:   BHANDKKAR YOGITA TULSHIRAM <bhandkkaryt21.civil@coep.ac.in>
-Subject: Request.
-Thread-Topic: Request.
-Thread-Index: AQHZV/v1IG9Dcr2BnEupbfnFD57NsA==
-Date:   Thu, 16 Mar 2023 11:39:25 +0000
-Message-ID: <TY2PR0101MB2591D7935D536561479CC33ECDBC9@TY2PR0101MB2591.apcprd01.prod.exchangelabs.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=coep.ac.in;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY2PR0101MB2591:EE_|SI2PR01MB3819:EE_
-x-ms-office365-filtering-correlation-id: 51f855ec-f491-409e-034d-08db26131839
-x-ms-exchange-atpmessageproperties: SA
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kHEU3ppcvq1bImwZB/uDVOKoitGPvKSQMbmQeBOdIL4vLETgV3nuzKhdDi8h8E3NKyk82BPFPP77mt6wbmRT2pPlJs46tQt5LqAV9UzDzGTRVWEXXI53jSzTx4jcstDHPXCgLq4j4U0R5Q5JUft3eXYQpQkBclpJNVLPhjh02oXIK6TKlTGZba0zVXW5eOxv4IG+XSIfnvRyN775XT9V3RauaebssYk4y6l+E1BqtKKv0e6lo/otQ/WZLCuv1iHULols6PrlJpSXIkROK2kmBf0jRJkXcFvfUmzEXwP2vYmDBnLi7OyMrxBCUDrtIMD6UBG4q5cRmjnF8Ire+nmb1OtHkiARzCKBR6j/DumS79WTV3VVBYp98/Ku0SmXysKfbT2IdAdrBEcXYop7a4Faa7E2dVzd6g9g8Xjx8s0iGSaIwkdBWgFNuBXn1KWFSzZCD1RfLYf+E8YLNeenEWTBRZBAUWqUJV0oB6ySSBFXfTAGioSuCRjOoLj+gm8r7xpxVD9JnV7b88T9UwzG0X/0N67MJY1TVZKLGYSXNnCrDHaTta+/zklgOGrVzqE+tE0XKDf/Ly1hOpx/r8uCekH1ti2IFCZNdq36PSnTw+J+ziEyX1B8Nda9Y+NPFe+5qHEslkhyCr2IJDYa8euX2ciLlLcliLVHS481eILclaD6AykkX8sU4UcpUsW0cCffLMan5VigAUwMGI5dcEo4a4JnPw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR0101MB2591.apcprd01.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(376002)(136003)(346002)(366004)(39860400002)(396003)(109986016)(451199018)(7406005)(7366002)(7336002)(7276002)(52536014)(5660300002)(41300700001)(7416002)(8936002)(7116003)(2906002)(7696005)(4744005)(33656002)(122000001)(38070700005)(3480700007)(86362001)(38100700002)(71200400001)(478600001)(66556008)(66476007)(64756008)(66446008)(91956017)(8676002)(89122003)(76116006)(66946007)(9686003)(55016003)(41320700001)(88732003)(786003)(76576003)(316002)(6506007)(26005)(186003)(55236004)(487294008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?Windows-1252?Q?YfCQnPT8bx9I/aSPpjhrXwDBZbTP5SjmSBrlcd3Gkk8G9P2hlpzEyXZa?=
- =?Windows-1252?Q?onE/rdsKvjI+kVVUPcHeyYEB7V55/xBOpinhie6lE5cVDJCQbChYaoyM?=
- =?Windows-1252?Q?oi4i0TKLha0netpJzG7GG7/Y/VlXW0zARlLKjEcSjS6WxHMm7R/QDGmL?=
- =?Windows-1252?Q?fgCBSVL4P6saBk4qXSS/ty3telh7oNkeM4e3i7UBu4kIq7eyHHpPBXAt?=
- =?Windows-1252?Q?kNIAzf3albH5tP8biP0d8t9G8BcA4ucA2ofEIYZW8675PfBuI5dqkxFb?=
- =?Windows-1252?Q?/J8anDjeJ82w+rDhtfnc6fsw65/I2a3zdJXwagouWLYhJHz4qLso9nr0?=
- =?Windows-1252?Q?QnpuGBXKN87SBinPwLvshNoi+FqEJDC04yor1nAIAC0UNRxoQRihOt9b?=
- =?Windows-1252?Q?q4mcsqX51jGrRrEjOHvjO8UCnuXoTONow/kCpyWAMrg22CfcnjSv1VDt?=
- =?Windows-1252?Q?DAJecK34PYHhPVh2IwfNzq9aEMWc8vhdUP4FRegVSbWQc+xazbcoYp+s?=
- =?Windows-1252?Q?S137Ozth8rbMozenYMZExq/au/o1zpAs8jW9EPaXC9ijYelCqNbHIANy?=
- =?Windows-1252?Q?b7rh9jcettzbGGstKai5Nm4q3oKuhbSB0CpHNS0ZRh/vse3IC885N5/n?=
- =?Windows-1252?Q?2+5m5mIfOp5vRqtaI8f3+ORnECCzIFTWWkTCKLfqThwmTbzqujkPvZJe?=
- =?Windows-1252?Q?Jszp/K5xmpe7Dkqnfxhyh1AbC3pFhjfE8CWRvfQPmpwpLOPAwE5FUxjX?=
- =?Windows-1252?Q?lFA1dgRqeA/psEkVlqOOiwigiNeZcEM0qp+Jkn59BJzD4ID7VoP5Ek5P?=
- =?Windows-1252?Q?P1jdOPFmnKBf8RKEUVTEQM3EOfdf87IsMK5qG8X/wXI23a1QieYKOWY/?=
- =?Windows-1252?Q?ofQrIzzZ621zyS3ur157875g0MjSaxYdB4UH3OoiVH+nXSHpuwtYzqcd?=
- =?Windows-1252?Q?6e8C9olThXV42g8NUzfJwyTN2nbNHO9NzcuL0TIoDA+2Msx5oJNyKVDn?=
- =?Windows-1252?Q?cS/+spb52a7UBBxzBWWqk/FtlVjeNcohVa7EZMeB/p99Y4vUCw/qJ3QI?=
- =?Windows-1252?Q?M1uPuClxCbY3AH91JD/0Z8HCb2BJVUVcWsJJIiTHm+RbYWIe3N7FOaON?=
- =?Windows-1252?Q?2BspyCeY/qN8W9KCVkfA+wh5hRT6BBpUgEKnJf9wYz5j4kO8pEnOyDMh?=
- =?Windows-1252?Q?rEBhTits7YLpZtotzRVfzbvpvjC9p+QDgCwIeKDDafpOJ9/g+7//xeUF?=
- =?Windows-1252?Q?5JAtyURoHDRfToYPowFrDZnaYq3QjTlkoAh34vdH9/wLyoLWy74UrIkE?=
- =?Windows-1252?Q?zcwm/9CVe5a/ULHuIDl7IqjiS5aWkELwrAMIQ8vU/TUHtGRZw+ojPUuL?=
- =?Windows-1252?Q?+1nZRyxm3Hri77YyE+fCvwM92VTms63yZq+3dPAC5mih7ezdspJf7i2H?=
- =?Windows-1252?Q?CJNg5Cwk5XQ6XxX6kq7HEvpZYCgc2grwGrW3f8Edlgt2ktx+ZclIQhc4?=
- =?Windows-1252?Q?emDJ+LnwKLSa3lkxBWXD4huz/sQd7ZC+b+5GRKaSAQoIgyTKufM6rclu?=
- =?Windows-1252?Q?HEVqDucdFUE2QdJzFTt2NhRTwIApsEO9t5Ztf/kl+zb+hy/hCt/qd8dF?=
- =?Windows-1252?Q?fxOkBJLo/2NeE4vwU0ZNArFvzuOLTSG85bCdor18ppI+bsouuwGhLN06?=
- =?Windows-1252?Q?rd4uPaEkF/EngiGwcswziVLUEX4rZTje?=
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229732AbjCPMP3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 Mar 2023 08:15:29 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F35862FFB;
+        Thu, 16 Mar 2023 05:15:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678968928; x=1710504928;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=sxytFivzmEF3JiIZ5gxIgrAj7qk6BTLqEQSy5lsJZpY=;
+  b=AQ8QqBosq/3VVKoOPEzh6txq85zusjYyhtoOQku6PaD7cgaLhoXed5MV
+   jgiuGmRQ0kLcbyc0LhwDm6Ke9WhK2aVVAlf7YaIPY63J+/410pV7FOcK9
+   U4YPK65io7Ocj7ATu5N8xTJk2gPFtgnGrDxpgH+gUU+iTmQvqaixNuMF5
+   6KGm+Jh/9q7by2hEI9HsPOpHcR+yZxQ9kO0AGFZGsEGfH7OT+xYsYdnGh
+   QyTAZs8oz2NVUw6syejlwxcHahouCQyGl0sbcBtfD2wVwI2LJXlyNLeMH
+   PVFnVTbg5+AwTOwvZmPyuiUZEcb7ON+cqWNUWIbHGoPORDF3vJ/NKRzTc
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10650"; a="336661357"
+X-IronPort-AV: E=Sophos;i="5.98,265,1673942400"; 
+   d="scan'208";a="336661357"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2023 05:15:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10650"; a="679874203"
+X-IronPort-AV: E=Sophos;i="5.98,265,1673942400"; 
+   d="scan'208";a="679874203"
+Received: from unknown (HELO 984fee00a4c6.jf.intel.com) ([10.165.58.231])
+  by orsmga002.jf.intel.com with ESMTP; 16 Mar 2023 05:15:27 -0700
+From:   Yi Liu <yi.l.liu@intel.com>
+To:     alex.williamson@redhat.com, jgg@nvidia.com, kevin.tian@intel.com
+Cc:     joro@8bytes.org, robin.murphy@arm.com, cohuck@redhat.com,
+        eric.auger@redhat.com, nicolinc@nvidia.com, kvm@vger.kernel.org,
+        mjrosato@linux.ibm.com, chao.p.peng@linux.intel.com,
+        yi.l.liu@intel.com, yi.y.sun@linux.intel.com, peterx@redhat.com,
+        jasowang@redhat.com, shameerali.kolothum.thodi@huawei.com,
+        lulu@redhat.com, suravee.suthikulpanit@amd.com,
+        intel-gvt-dev@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, linux-s390@vger.kernel.org,
+        xudong.hao@intel.com, yan.y.zhao@intel.com, terrence.xu@intel.com
+Subject: [PATCH v2 0/5] vfio: Make emulated devices prepared for vfio device cdev
+Date:   Thu, 16 Mar 2023 05:15:21 -0700
+Message-Id: <20230316121526.5644-1-yi.l.liu@intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-OriginatorOrg: coep.ac.in
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY2PR0101MB2591.apcprd01.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 51f855ec-f491-409e-034d-08db26131839
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Mar 2023 11:39:25.5368
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b4c6b754-54e3-41e4-a8da-304355c62816
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sOMx61OJfvKlccOGwnig88xYmwvNjol7CF077xe5cchfcVuXLnzxS2txvpHuNmxQmCOOL/8FxolMSuQ3lv5YRLMUnNLIlqwzBcB7JqaRpug=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR01MB3819
-X-Spam-Status: No, score=2.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,LOTS_OF_MONEY,MISSING_HEADERS,MONEY_FORM_SHORT,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        T_FILL_THIS_FORM_SHORT autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: **
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-I am a private investment consultant in the Netherlands representing the in=
-terest of a multinational Russian conglomerate who is desirous to upload fu=
-nds into a trust management portfolio. Can you avail my client of an invest=
-ment portfolio to nestle the fund of =80150 MILLION EURO? Please contact me=
- back through my private email address for more information: rsevriens3@gma=
-il.com =0A=
-=0A=
-Ryusei Sevriens=0A=
-SEVRIENS LAWYERS=0A=
-(Email: rsevriens3@gmail.com)=
+The .bind_iommufd op of vfio emulated devices are either empty or does
+nothing. This is different with the vfio physical devices, to add vfio
+device cdev, need to make them act the same.
+
+This series first makes the .bind_iommufd op of vfio emulated devices
+to create iommufd_access, this introduces a new iommufd API. Then let
+the driver that does not provide .bind_iommufd op to use the vfio emulated
+iommufd op set. This makes all vfio device drivers have consistent iommufd
+operations, which is good for adding new device uAPIs in the device cdev
+series.
+
+Change log:
+
+v2:
+ - Add r-b from Kevin and Jason
+ - Refine patch 01 per comments from Jason and Kevin
+
+v1: https://lore.kernel.org/kvm/20230308131340.459224-1-yi.l.liu@intel.com/
+
+Thanks,
+	Yi Liu
+
+Nicolin Chen (1):
+  iommufd: Create access in vfio_iommufd_emulated_bind()
+
+Yi Liu (4):
+  vfio-iommufd: No need to record iommufd_ctx in vfio_device
+  vfio-iommufd: Make vfio_iommufd_emulated_bind() return iommufd_access
+    ID
+  vfio/mdev: Uses the vfio emulated iommufd ops set in the mdev sample
+    drivers
+  vfio: Check the presence for iommufd callbacks in
+    __vfio_register_dev()
+
+ drivers/iommu/iommufd/device.c   | 57 ++++++++++++++++++++------------
+ drivers/iommu/iommufd/selftest.c |  8 +++--
+ drivers/vfio/iommufd.c           | 39 +++++++++++-----------
+ drivers/vfio/vfio_main.c         |  5 +--
+ include/linux/iommufd.h          |  5 +--
+ include/linux/vfio.h             |  1 -
+ samples/vfio-mdev/mbochs.c       |  3 ++
+ samples/vfio-mdev/mdpy.c         |  3 ++
+ samples/vfio-mdev/mtty.c         |  3 ++
+ 9 files changed, 76 insertions(+), 48 deletions(-)
+
+-- 
+2.34.1
+
