@@ -2,87 +2,112 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D39316CEC48
-	for <lists+linux-s390@lfdr.de>; Wed, 29 Mar 2023 16:59:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B64456CED72
+	for <lists+linux-s390@lfdr.de>; Wed, 29 Mar 2023 17:50:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230325AbjC2O7C (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 29 Mar 2023 10:59:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45578 "EHLO
+        id S230338AbjC2Puk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 29 Mar 2023 11:50:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230330AbjC2O7B (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 29 Mar 2023 10:59:01 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FC862113;
-        Wed, 29 Mar 2023 07:59:00 -0700 (PDT)
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32TDRGcJ031647;
-        Wed, 29 Mar 2023 14:59:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : content-transfer-encoding : in-reply-to : references : cc :
- subject : from : to : message-id : date; s=pp1;
- bh=2jrWUF/UKWVjUdnSzdYgtrwWLE6Bb+W9Socvg4XKr/Q=;
- b=QjEpnOzB+WeBg6rqAs5VzR2cy5hlpUxrpkhtjANtsoBJDCPVFHRWtVShYxPPjNL+Dtab
- lBzkgXjF/twB7towFRqnTF75yoRsTudROCsD5Q16dFePQaCCFohHdwM/mP48cIhlxCds
- iaCvoJZYrdnC+Gn/U7Y3Qf3O9re6fULTFzV5SyCYjq6ic0lOZiEoTxKUWzEoRhHFLiI7
- BNbzpb7TTzlXu6ZaJrhkEQBaJXyXqF3gUjwp7y7F2QbAKK96yMCcuaWaOcremlInunv0
- R1QEbgSd7ZMF1AgO3zwaDuWIANrmtScLji80C3BWptrBjComa39WklQFBx/maBaIPGCZ nw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3pmp7j2j7m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Mar 2023 14:58:59 +0000
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32TEFmMS015305;
-        Wed, 29 Mar 2023 14:58:59 GMT
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3pmp7j2j6r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Mar 2023 14:58:59 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 32T0pgNA017053;
-        Wed, 29 Mar 2023 14:58:56 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma03fra.de.ibm.com (PPS) with ESMTPS id 3phrk6m8eb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Mar 2023 14:58:56 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 32TEwrxr21168728
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Mar 2023 14:58:53 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0B2F620043;
-        Wed, 29 Mar 2023 14:58:53 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CEF9F20040;
-        Wed, 29 Mar 2023 14:58:52 +0000 (GMT)
-Received: from t14-nrb (unknown [9.171.2.202])
-        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Wed, 29 Mar 2023 14:58:52 +0000 (GMT)
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S229759AbjC2Pub (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 29 Mar 2023 11:50:31 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5BAB4487
+        for <linux-s390@vger.kernel.org>; Wed, 29 Mar 2023 08:49:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1680104989;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hP1XBMM0doEA+LEJ78VJjS+VLo2jAysv8Y016r4ZnnY=;
+        b=SPUuPbQKIxt/SsHMeVQq6+AaExhiQes6d+CzAtEUBfD0irMSNvi1phHyHw7uGYso78beU6
+        ZjIVQYQH06OojJYKJDfiMQRlbAdgJrEC2PnBOYJBcsQEmJYKiQd8jbzgNxbtZK6Qu3yPAe
+        vITdYjx+T+jZK32c1SREOTU46ShBzHw=
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
+ [209.85.166.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-294-bDkX3ecqONqWpzES_HYNFA-1; Wed, 29 Mar 2023 11:49:48 -0400
+X-MC-Unique: bDkX3ecqONqWpzES_HYNFA-1
+Received: by mail-io1-f71.google.com with SMTP id r25-20020a056602235900b0074d472df653so9592492iot.2
+        for <linux-s390@vger.kernel.org>; Wed, 29 Mar 2023 08:49:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680104987;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hP1XBMM0doEA+LEJ78VJjS+VLo2jAysv8Y016r4ZnnY=;
+        b=6njCzBy8S+U/5wXffWihjN7Okx7CRWZW+Kdcm2uiW1B3FNolLGZ56KqWADHVxs6tqP
+         H0DPiIZtduV/VXlnCUu/YSlkxQKTAbNiKzum1/snPVe1M9VLCilOO8laOXGVPNkC0heI
+         Y2OslFdZDe4K1VBi/TpswAHum8N+dcthuGBoLGK0xFu/LE/KiHUQpLB+TM8NPaWi59xf
+         pPvfzXblkVDtwjkInYK//GfYgqgvxF+4gRK6anB3e6IpGAkyaKnFGN+Xb8B1JfISHp5B
+         JlsLOSacsHnwbcrukbIQk+2vu94b5xd/xv5hIhJvHyJhZAX3Fv+ubCImGzYHuWkJebF4
+         Dwsg==
+X-Gm-Message-State: AAQBX9dRVuZp0J9mm+vBfOrHylpMGWwN6R694YnC65RMbTIvl7Gb/Rjh
+        gvWOUgRdJFF4AHGW3/bsqwIvyrR+sDJa8aLeqBllBUCRqlRaIwHebfVsRrCN/AiUkP9ckY27//U
+        zwtjKBhXgZc4Fcpez4xsAqA==
+X-Received: by 2002:a92:c743:0:b0:326:2902:e7d9 with SMTP id y3-20020a92c743000000b003262902e7d9mr2178951ilp.7.1680104987692;
+        Wed, 29 Mar 2023 08:49:47 -0700 (PDT)
+X-Google-Smtp-Source: AKy350ZSyu7j44X/rupYZlbiuoYiWibGVg929WRZpz3ftBxDYQY1mBTe8lVgtKaDoJrTKTZsWHhhjA==
+X-Received: by 2002:a92:c743:0:b0:326:2902:e7d9 with SMTP id y3-20020a92c743000000b003262902e7d9mr2178916ilp.7.1680104987361;
+        Wed, 29 Mar 2023 08:49:47 -0700 (PDT)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id n4-20020a056638110400b00400d715c57dsm10708357jal.29.2023.03.29.08.49.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Mar 2023 08:49:46 -0700 (PDT)
+Date:   Wed, 29 Mar 2023 09:49:44 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        "jgg@nvidia.com" <jgg@nvidia.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "nicolinc@nvidia.com" <nicolinc@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "mjrosato@linux.ibm.com" <mjrosato@linux.ibm.com>,
+        "chao.p.peng@linux.intel.com" <chao.p.peng@linux.intel.com>,
+        "yi.y.sun@linux.intel.com" <yi.y.sun@linux.intel.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        "shameerali.kolothum.thodi@huawei.com" 
+        <shameerali.kolothum.thodi@huawei.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "Hao, Xudong" <xudong.hao@intel.com>,
+        "Zhao, Yan Y" <yan.y.zhao@intel.com>,
+        "Xu, Terrence" <terrence.xu@intel.com>,
+        "Jiang, Yanting" <yanting.jiang@intel.com>
+Subject: Re: [PATCH v2 10/10] vfio/pci: Add
+ VFIO_DEVICE_GET_PCI_HOT_RESET_GROUP_INFO
+Message-ID: <20230329094944.50abde4e.alex.williamson@redhat.com>
+In-Reply-To: <BN9PR11MB52762E789B9C1D8021F54ECC8C899@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20230327093458.44939-1-yi.l.liu@intel.com>
+        <20230327093458.44939-11-yi.l.liu@intel.com>
+        <20230327132619.5ab15440.alex.williamson@redhat.com>
+        <DS0PR11MB7529E969C27995D535A24EC0C3889@DS0PR11MB7529.namprd11.prod.outlook.com>
+        <BL1PR11MB52717FB9E6D5C10BF4B7DA0A8C889@BL1PR11MB5271.namprd11.prod.outlook.com>
+        <20230328082536.5400da67.alex.williamson@redhat.com>
+        <DS0PR11MB7529B6782565BE8489D922F9C3889@DS0PR11MB7529.namprd11.prod.outlook.com>
+        <20230328084616.3361a293.alex.williamson@redhat.com>
+        <DS0PR11MB75290B84D334FC726A8BBA95C3889@DS0PR11MB7529.namprd11.prod.outlook.com>
+        <20230328091801.13de042a.alex.williamson@redhat.com>
+        <DS0PR11MB752903CE3D5906FE21146364C3889@DS0PR11MB7529.namprd11.prod.outlook.com>
+        <20230328100027.3b843b91.alex.williamson@redhat.com>
+        <DS0PR11MB7529C12E086DAB619FF9AFF0C3899@DS0PR11MB7529.namprd11.prod.outlook.com>
+        <BN9PR11MB52762E789B9C1D8021F54ECC8C899@BN9PR11MB5276.namprd11.prod.outlook.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.35; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20230329150032.7093e25b@p-imbrenda>
-References: <20230327082118.2177-1-nrb@linux.ibm.com> <20230327082118.2177-2-nrb@linux.ibm.com> <afcf5186-c3f2-d777-be5f-408318039f2d@linux.ibm.com> <168009425098.295696.4253423899606982653@t14-nrb> <20230329150032.7093e25b@p-imbrenda>
-Cc:     Janosch Frank <frankja@linux.ibm.com>, thuth@redhat.com,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: Re: [kvm-unit-tests PATCH v1 1/4] s390x: sie: switch to home space mode before entering SIE
-From:   Nico Boehr <nrb@linux.ibm.com>
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
-Message-ID: <168010193252.295696.17762897869912282460@t14-nrb>
-User-Agent: alot/0.8.1
-Date:   Wed, 29 Mar 2023 16:58:52 +0200
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: dVMQ4NuvmbhZ4HjltXjmsYCzbX1ICYyD
-X-Proofpoint-GUID: Q92Wlg2a3KrjHAXkkt5D5EnieAYM0EYI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-29_08,2023-03-28_02,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
- priorityscore=1501 phishscore=0 lowpriorityscore=0 adultscore=0
- suspectscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303200000 definitions=main-2303290116
-X-Spam-Status: No, score=-0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -90,68 +115,71 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Quoting Claudio Imbrenda (2023-03-29 15:00:32)
-> On Wed, 29 Mar 2023 14:50:50 +0200
-> Nico Boehr <nrb@linux.ibm.com> wrote:
->=20
-> > Quoting Janosch Frank (2023-03-28 16:13:04)
-> > > On 3/27/23 10:21, Nico Boehr wrote: =20
-> > > > This is to prepare for running guests without MSO/MSL, which is
-> > > > currently not possible.
-> > > >=20
-> > > > We already have code in sie64a to setup a guest primary ASCE before
-> > > > entering SIE, so we can in theory switch to the page tables which
-> > > > translate gpa to hpa.
-> > > >=20
-> > > > But the host is running in primary space mode already, so changing =
-the
-> > > > primary ASCE before entering SIE will also affect the host's code a=
-nd
-> > > > data.
-> > > >=20
-> > > > To make this switch useful, the host should run in a different addr=
-ess
-> > > > space mode. Hence, set up and change to home address space mode bef=
-ore
-> > > > installing the guest ASCE.
-> > > >=20
-> > > > The home space ASCE is just copied over from the primary space ASCE=
-, so
-> > > > no functional change is intended, also for tests that want to use
-> > > > MSO/MSL. If a test intends to use a different primary space ASCE, i=
-t can
-> > > > now just set the guest.asce in the save_area.
-> > > >  =20
-> > > [...] =20
-> > > > +     /* set up home address space to match primary space */
-> > > > +     old_cr13 =3D stctg(13);
-> > > > +     lctlg(13, stctg(1));
-> > > > +
-> > > > +     /* switch to home space so guest tables can be different from=
- host */
-> > > > +     psw_mask_set_bits(PSW_MASK_HOME);
-> > > > +
-> > > > +     /* also handle all interruptions in home space while in SIE */
-> > > > +     lowcore.pgm_new_psw.mask |=3D PSW_MASK_DAT_HOME; =20
-> > >  =20
-> > > > +     lowcore.ext_new_psw.mask |=3D PSW_MASK_DAT_HOME;
-> > > > +     lowcore.io_new_psw.mask |=3D PSW_MASK_DAT_HOME; =20
-> > > We didn't enable DAT in these two cases as far as I can see so this i=
-s=20
-> > > superfluous or we should change the mmu code. Also it's missing the s=
-vc=20
-> > > and machine check. =20
-> >=20
-> > Right. Is there a particular reason why we only run DAT on for PGM ints?
->=20
-> a fixup handler for PGM it might need to run with DAT on (e.g. to
-> access data that is not identity mapped), whereas for other interrupts
-> it's not needed (at least not yet ;) )
+On Wed, 29 Mar 2023 09:41:26 +0000
+"Tian, Kevin" <kevin.tian@intel.com> wrote:
 
-Makes sense.
+> > From: Liu, Yi L <yi.l.liu@intel.com>
+> > Sent: Wednesday, March 29, 2023 11:14 AM
+> >   
+> > > From: Alex Williamson <alex.williamson@redhat.com>
+> > > Sent: Wednesday, March 29, 2023 12:00 AM
+> > >
+> > >
+> > > Personally I don't like the suggestion to fail with -EPERM if the user
+> > > doesn't own all the affected devices.  This isn't a "probe if I can do
+> > > a reset" ioctl, it's a "provide information about the devices affected
+> > > by a reset to know how to call the hot-reset ioctl".  We're returning
+> > > the bdf to the cdev version of this ioctl for exactly this debugging
+> > > purpose when the devices are not owned, that becomes useless if we give
+> > > up an return -EPERM if ownership doesn't align.  
+> > 
+> > Jason's suggestion makes sense for returning the case of returning dev_id
+> > as dev_id is local to iommufd. If there are devices in the same dev_set are
+> > opened by multiple users, multiple iommufd would be used. Then the
+> > dev_id would have overlap. e.g. a dev_set has three devices. Device A and
+> > B are opened by the current user as cdev, dev_id #1 and #2 are generated.
+> > While device C opened by another user as cdev, dev_id #n is generated for
+> > it. If dev_id #n happens to be #1, then user gets two info entries that have
+> > the same dev_id.
+> >   
+> 
+> In Alex's proposal you'll set a invalid dev_id for device C so the user can
+> still get the info for diagnostic purpose instead of seeing an -EPERM error.
 
-Since one can register a cleanup for io and ext, too, I think we need to fi=
-x the
-mmu init for these cases while at it.
+Yes, we shouldn't be reporting dev_ids outside of the user's iommufd
+context.
 
-Will do that in v2.
+> btw I found an open about fd pass scheme which may affect the choice here.
+> 
+> In concept even with cdev we still expect the userspace to maintain the
+> group knowledge so it won't inadvertently attempt to assign devices in
+> the same group to different IOAS's. It also needs such knowledge when
+> constructing guest topology.
+> 
+> with fd passed in Qemu has no way to associate the fd to a group.
+
+Hmm, QEMU tries to get the group for the device address space in the
+guest, so finding an existing group with a different address space
+indeed allows QEMU to know of this conflict since the group is the
+fundamental unit IOMMU context in the legacy vfio model.
+
+> We could extend bind_iommufd to return the group id or introduce a
+> new ioctl to query it per dev_id.
+
+That would be ironic to go to all this trouble to remove groups from
+the API only to have them show up here.  But with a cdev interface,
+don't we break that model of conflating isolation and address-ability?
+
+For example, devices within a group cannot be bound to separate
+iommufds due to lack of isolation, which is handled via DMA ownership,
+but barring DMA aliasing issues, due to conventional PCI buses or
+quirks, cdev could allow devices within the same group to be managed by
+separate IOAS's.  So the group information really isn't enough for
+userspace to infer address space restrictions with cdev anyway.
+
+Therefore aren't we expecting this to be denied at attach_ioas() and
+QEMU shouldn't be making these sorts of assumptions for cdev anyway?
+Thanks,
+
+Alex
+
