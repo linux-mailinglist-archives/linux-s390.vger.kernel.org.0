@@ -2,180 +2,160 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE6636D0BC9
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Mar 2023 18:51:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E16456D0D16
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Mar 2023 19:48:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230391AbjC3Qub (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Mar 2023 12:50:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53782 "EHLO
+        id S232101AbjC3RsV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Mar 2023 13:48:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232290AbjC3Qti (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 30 Mar 2023 12:49:38 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E31EB1026B;
-        Thu, 30 Mar 2023 09:48:45 -0700 (PDT)
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32UGfhv7030918;
-        Thu, 30 Mar 2023 16:48:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=RHCwF8Eg+szLlw8GjFqPhavsqbhSspfnYnf5TBMRDKk=;
- b=ZbA49Yv5Lg1HUkOmHIvT4plysE9AMb3jQsrWD32cf/HHerexFv54MR5ka7b0y9+leMZh
- C42rerGJTWQd09kP6DERsMUSiR0ebYOCWEgfgoWwJpTP+Orr4P7IaPM6PTLlcd0OLTMu
- T5m0hmWq78bzeeLbgYj0eD5xP3QWHMueCA8CqpB3y71R4JJr8DgsEhxzCECsUXt8i4PI
- SQ/GNjIjZNNfzyMK+LVbR5OXfKoCQvmxqhViD1WvQi0nmxZLPriwlA5ElJct6Lp6sDkb
- MAFOxWNbhqKWkLZuTZLhietu6HWfJAyQorEHNiqwqm5g368OoVZpfer3dPnjVWEwZSQ7 hQ== 
+        with ESMTP id S232624AbjC3RsN (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 30 Mar 2023 13:48:13 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46F9DCDDB;
+        Thu, 30 Mar 2023 10:48:11 -0700 (PDT)
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32UGvRH7019394;
+        Thu, 30 Mar 2023 17:48:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=O3nu5QSqaF77wKli6710sNiy2Y35JQlExuqZ0f1uD+Q=;
+ b=ojL6RorF2qWFcYPzAQWYMjKBsYakR6SGMaMFRPVfe4+jYhTp9+hKk0yIFNrEfa8HAJ1C
+ yewzpb8wiWds4YqlhHZafU4Rr/DYdfMLWaY1rSAcoO2dQ9psEVr4d2tq+4jpK1XV3jA0
+ 9DjteRx9LwxHv/qw/OOXY9jI6VugGZhsZ2g2xbA31rWnH+/7NiY67OI2MYNOfKK8Gquc
+ 0I9l3G2KWhIoYJwf63rPn56YRTKTh4ie+f96Co8yi/r/dSAJ0pXDg4e6UeSxai7M3jAL
+ roJoCW+tz3YBbF/24MyK0cuID4XyyBiQ+aSIAbxCUrjThyRTwqyU5iuQyTzQopCYSq0k sw== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3pndwb0jxb-1
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3pnb4qfu16-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Mar 2023 16:48:25 +0000
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32UGNK7B014695;
-        Thu, 30 Mar 2023 16:48:24 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3pndwb0jwc-1
+        Thu, 30 Mar 2023 17:48:08 +0000
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32UHm8XQ024827;
+        Thu, 30 Mar 2023 17:48:08 GMT
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3pnb4qfu0t-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Mar 2023 16:48:24 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 32TLlYre019418;
-        Thu, 30 Mar 2023 16:48:23 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3phrk6p343-1
+        Thu, 30 Mar 2023 17:48:08 +0000
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 32UHVFn4019636;
+        Thu, 30 Mar 2023 17:48:07 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([9.208.130.99])
+        by ppma04dal.us.ibm.com (PPS) with ESMTPS id 3phrk848t7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Mar 2023 16:48:22 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 32UGmJNx13042372
+        Thu, 30 Mar 2023 17:48:07 +0000
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+        by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 32UHm6bd37617992
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Mar 2023 16:48:19 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5830220043;
-        Thu, 30 Mar 2023 16:48:19 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2052D2004E;
-        Thu, 30 Mar 2023 16:48:19 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.152.224.56])
-        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Thu, 30 Mar 2023 16:48:19 +0000 (GMT)
-Date:   Thu, 30 Mar 2023 18:48:10 +0200
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, thuth@redhat.com, nrb@linux.ibm.com,
-        linux-s390@vger.kernel.org
-Subject: Re: [kvm-unit-tests PATCH 5/5] s390x: ap: Add reset tests
-Message-ID: <20230330184810.5b08034b@p-imbrenda>
-In-Reply-To: <20230330114244.35559-6-frankja@linux.ibm.com>
-References: <20230330114244.35559-1-frankja@linux.ibm.com>
-        <20230330114244.35559-6-frankja@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.35; x86_64-redhat-linux-gnu)
+        Thu, 30 Mar 2023 17:48:06 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DC3A258045;
+        Thu, 30 Mar 2023 17:48:05 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9E45958054;
+        Thu, 30 Mar 2023 17:48:04 +0000 (GMT)
+Received: from li-479af74c-31f9-11b2-a85c-e4ddee11713b.ibm.com (unknown [9.160.65.50])
+        by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+        Thu, 30 Mar 2023 17:48:04 +0000 (GMT)
+Message-ID: <9dea1ac2f7624b74050b125bcab01272ea7bbd4e.camel@linux.ibm.com>
+Subject: Re: [PATCH v4] virtio: add VIRTIO_F_NOTIFICATION_DATA feature
+ support
+From:   Eric Farman <farman@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Viktor Prutyanov <viktor@daynix.com>
+Cc:     jasowang@redhat.com, pasic@linux.ibm.com,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, yan@daynix.com
+Date:   Thu, 30 Mar 2023 13:48:04 -0400
+In-Reply-To: <87mt44hh5f.fsf@redhat.com>
+References: <20230322141031.2211141-1-viktor@daynix.com>
+         <20230322123121-mutt-send-email-mst@kernel.org> <87mt44hh5f.fsf@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: e4OTi2iuQQSPKt_j79yhb4144DUWjZc9
-X-Proofpoint-GUID: RHr9pp755V-AMHoO5O2lrzUtphsJG6sQ
+X-Proofpoint-GUID: SeKp13MPISU9O7gIcb_u4yNu6n-p_0z3
+X-Proofpoint-ORIG-GUID: Jf2vnugQu5MVEljoStyH1BbNW2cdg9KH
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-30_09,2023-03-30_03,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- mlxscore=0 clxscore=1015 mlxlogscore=999 priorityscore=1501 bulkscore=0
- malwarescore=0 spamscore=0 suspectscore=0 phishscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
- definitions=main-2303300130
+ definitions=2023-03-30_10,2023-03-30_03,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
+ suspectscore=0 priorityscore=1501 clxscore=1011 mlxscore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2303300139
 X-Spam-Status: No, score=-0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 30 Mar 2023 11:42:44 +0000
-Janosch Frank <frankja@linux.ibm.com> wrote:
+On Wed, 2023-03-22 at 17:42 +0100, Cornelia Huck wrote:
+> On Wed, Mar 22 2023, "Michael S. Tsirkin" <mst@redhat.com> wrote:
+>=20
+> > On Wed, Mar 22, 2023 at 05:10:31PM +0300, Viktor Prutyanov wrote:
+> > > According to VirtIO spec v1.2, VIRTIO_F_NOTIFICATION_DATA feature
+> > > indicates that the driver passes extra data along with the queue
+> > > notifications.
+> > >=20
+> > > In a split queue case, the extra data is 16-bit available index.
+> > > In a
+> > > packed queue case, the extra data is 1-bit wrap counter and 15-
+> > > bit
+> > > available index.
+> > >=20
+> > > Add support for this feature for MMIO, channel I/O and modern PCI
+> > > transports.
+> > >=20
+> > > Signed-off-by: Viktor Prutyanov <viktor@daynix.com>
+> > > ---
+> > > =C2=A0v4: remove VP_NOTIFY macro and legacy PCI support, add
+> > > =C2=A0=C2=A0=C2=A0 virtio_ccw_kvm_notify_with_data to virtio_ccw
+> > > =C2=A0v3: support feature in virtio_ccw, remove VM_NOTIFY, use
+> > > avail_idx_shadow,
+> > > =C2=A0=C2=A0=C2=A0 remove byte swap, rename to vring_notification_dat=
+a
+> > > =C2=A0v2: reject the feature in virtio_ccw, replace __le32 with u32
+> > >=20
+> > > =C2=A0Tested with disabled VIRTIO_F_NOTIFICATION_DATA on qemu-system-
+> > > s390x
+> > > =C2=A0(virtio-blk-ccw), qemu-system-riscv64 (virtio-blk-device,
+> > > =C2=A0virtio-rng-device), qemu-system-x86_64 (virtio-blk-pci, virtio-
+> > > net-pci)
+> > > =C2=A0to make sure nothing is broken.
+> > > =C2=A0Tested with enabled VIRTIO_F_NOTIFICATION_DATA on 64-bit RISC-V
+> > > Linux
+> > > =C2=A0and my hardware implementation of virtio-rng.
+> >=20
+> > what did you test? virtio pci? mmio? guessing not ccw...
+> >=20
+> > Cornelia could you hack up something to quickly test ccw?
+>=20
+> Hm, I'm not entirely sure how notification data is supposed to be
+> used
+> in real life -- Viktor, what is your virtio-rng implementation doing;
+> can this be hacked into all transports?
+>=20
+> (Also, if the other ccw folks have something handy, please speak up
+> :)
+>=20
 
-> Test if the IRQ enablement is turned off on a reset or zeroize PQAP.
-> 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> ---
+(Sorry for delay, caught the illness going through our house before I
+had a chance to look at this.)
 
-[...]
+I applied v6 of this patch and hacked to QEMU to enable
+VIRTIO_F_NOTIFICATION_DATA for virtio-blk, and have the -ccw code
+ignore the additional data that then comes along the way. Not
+surprisingly, things behave fine once I accommodate the new payload.
 
-> diff --git a/s390x/ap.c b/s390x/ap.c
-> index 31dcfe29..47b4f832 100644
-> --- a/s390x/ap.c
-> +++ b/s390x/ap.c
-> @@ -341,6 +341,57 @@ static void test_pqap_aqic(void)
->  	report_prefix_pop();
->  }
->  
-> +static void test_pqap_resets(void)
-> +{
-> +	struct ap_queue_status apqsw = {};
-> +	static uint8_t not_ind_byte;
-> +	struct ap_qirq_ctrl aqic = {};
-> +	struct pqap_r2 r2 = {};
-> +
-> +	int cc;
-> +
-> +	report_prefix_push("pqap");
-> +	report_prefix_push("rapq");
-> +
-> +	/* Enable IRQs which the resets will disable */
-> +	aqic.ir = 1;
-> +	cc = ap_pqap_aqic(apn, qn, &apqsw, aqic, (uintptr_t)&not_ind_byte);
-> +	report(cc == 0 && apqsw.rc == 0, "enable");
-> +
-> +	do {
-> +		cc = ap_pqap_tapq(apn, qn, &apqsw, &r2);
-> +	} while (cc == 0 && apqsw.irq_enabled == 0);
+To Cornelia's point of how it should be used in real life... I didn't
+go beyond using this info as a "debugging aid" here, based on time
+constraints. But at least it looks reasonable.
 
-same story here as in the previous patch, waiting for interrupts 
-
-> +	report(apqsw.irq_enabled == 1, "IRQs enabled");
-> +
-> +	ap_pqap_reset(apn, qn, &apqsw);
-> +	cc = ap_pqap_tapq(apn, qn, &apqsw, &r2);
-> +	assert(!cc);
-> +	report(apqsw.irq_enabled == 0, "IRQs have been disabled");
-> +
-> +	report_prefix_pop();
-> +
-> +	report_prefix_push("zapq");
-> +
-> +	/* Enable IRQs which the resets will disable */
-> +	aqic.ir = 1;
-> +	cc = ap_pqap_aqic(apn, qn, &apqsw, aqic, (uintptr_t)&not_ind_byte);
-> +	report(cc == 0 && apqsw.rc == 0, "enable");
-> +
-> +	do {
-> +		cc = ap_pqap_tapq(apn, qn, &apqsw, &r2);
-> +	} while (cc == 0 && apqsw.irq_enabled == 0);
-
-and here
-
-> +	report(apqsw.irq_enabled == 1, "IRQs enabled");
-> +
-> +	ap_pqap_reset_zeroize(apn, qn, &apqsw);
-> +	cc = ap_pqap_tapq(apn, qn, &apqsw, &r2);
-> +	assert(!cc);
-> +	report(apqsw.irq_enabled == 0, "IRQs have been disabled");
-> +
-> +	report_prefix_pop();
-> +
-> +	report_prefix_pop();
-> +}
-> +
->  int main(void)
->  {
->  	int setup_rc = ap_setup(&apn, &qn);
-> @@ -362,6 +413,7 @@ int main(void)
->  		goto done;
->  	}
->  	test_pqap_aqic();
-> +	test_pqap_resets();
->  
->  done:
->  	report_prefix_pop();
-
+Eric
