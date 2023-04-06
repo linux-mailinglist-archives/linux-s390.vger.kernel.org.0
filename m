@@ -2,102 +2,122 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A27096D95DA
-	for <lists+linux-s390@lfdr.de>; Thu,  6 Apr 2023 13:37:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2E406D97CD
+	for <lists+linux-s390@lfdr.de>; Thu,  6 Apr 2023 15:17:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229784AbjDFLh6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 6 Apr 2023 07:37:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35052 "EHLO
+        id S237561AbjDFNR4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 6 Apr 2023 09:17:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238507AbjDFLhZ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 6 Apr 2023 07:37:25 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D77C3A5F5;
-        Thu,  6 Apr 2023 04:34:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S237453AbjDFNRt (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 6 Apr 2023 09:17:49 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 714185FDB
+        for <linux-s390@vger.kernel.org>; Thu,  6 Apr 2023 06:17:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1680787020;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LyLWq4qOx1xU0bxV6bHK7gb5g8imneWyvQWEYXMsdJw=;
+        b=DOhIqZWh4H53dA0y+MqNq4w8Vi6Xtw8aP/GG3GHEyn2n+iYi1smc55qIkRPRwqR6WsdbdO
+        graA8ERqA49F0PGWIgmue7oi8SybEluj1vO/c4gxlVzNyLrTepc9/YiNV8uTlo5af/IiJo
+        8HCJb5DeWpAR6BKoNOIhfK6IMvL5pww=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-612-LTw34yIZO-qtviR3tWXTcA-1; Thu, 06 Apr 2023 09:16:57 -0400
+X-MC-Unique: LTw34yIZO-qtviR3tWXTcA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9D10D6468E;
-        Thu,  6 Apr 2023 11:34:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33110C433EF;
-        Thu,  6 Apr 2023 11:34:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680780877;
-        bh=xgr17dnXP2bP9LZwc8V5hVCpG2/EpjRC5X6T29T4Hm0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nlb39mxt6C1itqtEgJqHgPjB0MrZad4l1rFI47w+vseoS3kZ9I9VOxNMzBUZMsDtR
-         5M74EJkaVtJH63ktFDZepPOdmCncHdbVz/EYtW03kn61ojFrbswpgeWavCJ8An5GCc
-         /9lWWcDB0rtXLy6F9OgNFHEFNsZgJu0RD0o1baveqzUTbN9RBywj7bqxzwnb4XNAMO
-         dxCjlfdetl2ex3ATnxxbBQnPm+0egA21OJj/S/MrMmuMn9GwZ4ZMZp6XsFeDrrXzf2
-         f0SzyX8udN0I8SX4t+EKukGHV9AwZXt0AvSHnMlRKxMymrcfYs3zn5KJmZ/0to/GgZ
-         eQSqTvVEF1CFQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heiko Carstens <hca@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, oleg@redhat.com,
-        agordeev@linux.ibm.com, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 6/7] s390/ptrace: fix PTRACE_GET_LAST_BREAK error handling
-Date:   Thu,  6 Apr 2023 07:34:20 -0400
-Message-Id: <20230406113421.649149-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230406113421.649149-1-sashal@kernel.org>
-References: <20230406113421.649149-1-sashal@kernel.org>
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2EF4B857F81;
+        Thu,  6 Apr 2023 13:16:55 +0000 (UTC)
+Received: from tpad.localdomain (ovpn-112-2.gru2.redhat.com [10.97.112.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 86155C1602C;
+        Thu,  6 Apr 2023 13:16:54 +0000 (UTC)
+Received: by tpad.localdomain (Postfix, from userid 1000)
+        id 8BB9E41306EC9; Thu,  6 Apr 2023 09:38:50 -0300 (-03)
+Date:   Thu, 6 Apr 2023 09:38:50 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Frederic Weisbecker <frederic@kernel.org>,
+        Yair Podemsky <ypodemsk@redhat.com>, linux@armlinux.org.uk,
+        mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com,
+        davem@davemloft.net, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, will@kernel.org, aneesh.kumar@linux.ibm.com,
+        akpm@linux-foundation.org, arnd@arndb.de, keescook@chromium.org,
+        paulmck@kernel.org, jpoimboe@kernel.org, samitolvanen@google.com,
+        ardb@kernel.org, juerg.haefliger@canonical.com,
+        rmk+kernel@armlinux.org.uk, geert+renesas@glider.be,
+        tony@atomide.com, linus.walleij@linaro.org,
+        sebastian.reichel@collabora.com, nick.hawkins@hpe.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, vschneid@redhat.com, dhildenb@redhat.com,
+        alougovs@redhat.com
+Subject: Re: [PATCH 3/3] mm/mmu_gather: send tlb_remove_table_smp_sync IPI
+ only to CPUs in kernel mode
+Message-ID: <ZC69Wmqjdwk+I8kn@tpad>
+References: <20230404134224.137038-1-ypodemsk@redhat.com>
+ <20230404134224.137038-4-ypodemsk@redhat.com>
+ <ZC1Q7uX4rNLg3vEg@lothringen>
+ <ZC1XD/sEJY+zRujE@lothringen>
+ <ZC3P3Ds/BIcpRNGr@tpad>
+ <20230405195226.GB365912@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230405195226.GB365912@hirez.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Heiko Carstens <hca@linux.ibm.com>
+On Wed, Apr 05, 2023 at 09:52:26PM +0200, Peter Zijlstra wrote:
+> On Wed, Apr 05, 2023 at 04:45:32PM -0300, Marcelo Tosatti wrote:
+> > On Wed, Apr 05, 2023 at 01:10:07PM +0200, Frederic Weisbecker wrote:
+> > > On Wed, Apr 05, 2023 at 12:44:04PM +0200, Frederic Weisbecker wrote:
+> > > > On Tue, Apr 04, 2023 at 04:42:24PM +0300, Yair Podemsky wrote:
+> > > > > +	int state = atomic_read(&ct->state);
+> > > > > +	/* will return true only for cpus in kernel space */
+> > > > > +	return state & CT_STATE_MASK == CONTEXT_KERNEL;
+> > > > > +}
+> > > > 
+> > > > Also note that this doesn't stricly prevent userspace from being interrupted.
+> > > > You may well observe the CPU in kernel but it may receive the IPI later after
+> > > > switching to userspace.
+> > > > 
+> > > > We could arrange for avoiding that with marking ct->state with a pending work bit
+> > > > to flush upon user entry/exit but that's a bit more overhead so I first need to
+> > > > know about your expectations here, ie: can you tolerate such an occasional
+> > > > interruption or not?
+> > > 
+> > > Bah, actually what can we do to prevent from that racy IPI? Not much I fear...
+> > 
+> > Use a different mechanism other than an IPI to ensure in progress
+> > __get_free_pages_fast() has finished execution.
+> > 
+> > Isnt this codepath slow path enough that it can use
+> > synchronize_rcu_expedited?
+> 
+> To actually hit this path you're doing something really dodgy.
 
-[ Upstream commit f9bbf25e7b2b74b52b2f269216a92657774f239c ]
+Apparently khugepaged is using the same infrastructure:
 
-Return -EFAULT if put_user() for the PTRACE_GET_LAST_BREAK
-request fails, instead of silently ignoring it.
+$ grep tlb_remove_table khugepaged.c 
+	tlb_remove_table_sync_one();
+	tlb_remove_table_sync_one();
 
-Reviewed-by: Sven Schnelle <svens@linux.ibm.com>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/s390/kernel/ptrace.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
-index 42e4cd20fbbed..7c635e4328b87 100644
---- a/arch/s390/kernel/ptrace.c
-+++ b/arch/s390/kernel/ptrace.c
-@@ -500,9 +500,7 @@ long arch_ptrace(struct task_struct *child, long request,
- 		}
- 		return 0;
- 	case PTRACE_GET_LAST_BREAK:
--		put_user(child->thread.last_break,
--			 (unsigned long __user *) data);
--		return 0;
-+		return put_user(child->thread.last_break, (unsigned long __user *)data);
- 	case PTRACE_ENABLE_TE:
- 		if (!MACHINE_HAS_TE)
- 			return -EIO;
-@@ -854,9 +852,7 @@ long compat_arch_ptrace(struct task_struct *child, compat_long_t request,
- 		}
- 		return 0;
- 	case PTRACE_GET_LAST_BREAK:
--		put_user(child->thread.last_break,
--			 (unsigned int __user *) data);
--		return 0;
-+		return put_user(child->thread.last_break, (unsigned int __user *)data);
- 	}
- 	return compat_ptrace_request(child, request, addr, data);
- }
--- 
-2.39.2
+So just enabling khugepaged will hit that path.
 
