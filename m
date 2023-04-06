@@ -2,125 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B21586D9BCC
-	for <lists+linux-s390@lfdr.de>; Thu,  6 Apr 2023 17:07:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BADB6D9C5B
+	for <lists+linux-s390@lfdr.de>; Thu,  6 Apr 2023 17:30:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239695AbjDFPHq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 6 Apr 2023 11:07:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58924 "EHLO
+        id S238942AbjDFPaw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 6 Apr 2023 11:30:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239672AbjDFPHg (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 6 Apr 2023 11:07:36 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C254DAD02;
-        Thu,  6 Apr 2023 08:07:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=w0SObkY+pHUk30QF/T/49A8Ec+D+ZKrAW6VBtZQhwf4=; b=j7Fc4zxUxTtlcw5lRvD3o/FO95
-        vd+g08D1sixa2R2KaSiy1LVmxgPohYklc4gHHSm1Taw7s0FRExXtIAJcK83szPro54l4LbaLUVEI0
-        DuYemUHB6v+udPGcT3CyayjiJP6rcBcfxYdSnyZl3r4HZeRhKOYjCPH03Nr4Zh/3MKjTT4PLydE08
-        gNp/OmtpGKGtGtscTMcA5G2I+asU9E2lhirwZkJNyrP8+22twBUl6F6yeFeznVIX6v57KKJdlNf91
-        3m9t5jwv6kmKwFYiwD1TYX4EXCIIw0+dwy9Z6NHfS9Su7GySsref4CZXHV3d3rT1j5ccaqf/WLFTF
-        YxR1HpFA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pkRC4-00HWBW-No; Thu, 06 Apr 2023 15:06:32 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 805333000DC;
-        Thu,  6 Apr 2023 17:06:31 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 661CC212E36AE; Thu,  6 Apr 2023 17:06:31 +0200 (CEST)
-Date:   Thu, 6 Apr 2023 17:06:31 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Marcelo Tosatti <mtosatti@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Yair Podemsky <ypodemsk@redhat.com>, linux@armlinux.org.uk,
-        mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com,
-        davem@davemloft.net, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, will@kernel.org, aneesh.kumar@linux.ibm.com,
-        akpm@linux-foundation.org, arnd@arndb.de, keescook@chromium.org,
-        paulmck@kernel.org, jpoimboe@kernel.org, samitolvanen@google.com,
-        ardb@kernel.org, juerg.haefliger@canonical.com,
-        rmk+kernel@armlinux.org.uk, geert+renesas@glider.be,
-        tony@atomide.com, linus.walleij@linaro.org,
-        sebastian.reichel@collabora.com, nick.hawkins@hpe.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org, vschneid@redhat.com, dhildenb@redhat.com,
-        alougovs@redhat.com, jannh@google.com
-Subject: Re: [PATCH 3/3] mm/mmu_gather: send tlb_remove_table_smp_sync IPI
- only to CPUs in kernel mode
-Message-ID: <20230406150631.GR386572@hirez.programming.kicks-ass.net>
-References: <20230404134224.137038-1-ypodemsk@redhat.com>
- <20230404134224.137038-4-ypodemsk@redhat.com>
- <ZC1Q7uX4rNLg3vEg@lothringen>
- <ZC1XD/sEJY+zRujE@lothringen>
- <ZC3P3Ds/BIcpRNGr@tpad>
- <20230405195226.GB365912@hirez.programming.kicks-ass.net>
- <ZC69Wmqjdwk+I8kn@tpad>
- <20230406132928.GM386572@hirez.programming.kicks-ass.net>
- <20230406140423.GA386634@hirez.programming.kicks-ass.net>
- <1654e2d5-5a32-a253-e335-0ee42f69f5ef@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1654e2d5-5a32-a253-e335-0ee42f69f5ef@redhat.com>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        with ESMTP id S237927AbjDFPat (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 6 Apr 2023 11:30:49 -0400
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8162F1BC0;
+        Thu,  6 Apr 2023 08:30:45 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R781e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=alibuda@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0VfTVmew_1680795034;
+Received: from j66a10360.sqa.eu95.tbsite.net(mailfrom:alibuda@linux.alibaba.com fp:SMTPD_---0VfTVmew_1680795034)
+          by smtp.aliyun-inc.com;
+          Thu, 06 Apr 2023 23:30:41 +0800
+From:   "D. Wythe" <alibuda@linux.alibaba.com>
+To:     kgraul@linux.ibm.com, wenjia@linux.ibm.com, jaka@linux.ibm.com,
+        ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+        martin.lau@linux.dev
+Cc:     kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [RFC PATCH bpf-next 0/5] net/smc: Introduce BPF injection capability
+Date:   Thu,  6 Apr 2023 23:30:29 +0800
+Message-Id: <1680795034-86384-1-git-send-email-alibuda@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-8.0 required=5.0 tests=ENV_AND_HDR_SPF_MATCH,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Apr 06, 2023 at 04:42:02PM +0200, David Hildenbrand wrote:
-> On 06.04.23 16:04, Peter Zijlstra wrote:
-> > On Thu, Apr 06, 2023 at 03:29:28PM +0200, Peter Zijlstra wrote:
-> > > On Thu, Apr 06, 2023 at 09:38:50AM -0300, Marcelo Tosatti wrote:
-> > > 
-> > > > > To actually hit this path you're doing something really dodgy.
-> > > > 
-> > > > Apparently khugepaged is using the same infrastructure:
-> > > > 
-> > > > $ grep tlb_remove_table khugepaged.c
-> > > > 	tlb_remove_table_sync_one();
-> > > > 	tlb_remove_table_sync_one();
-> > > > 
-> > > > So just enabling khugepaged will hit that path.
-> > > 
-> > > Urgh, WTF..
-> > > 
-> > > Let me go read that stuff :/
-> > 
-> > At the very least the one on collapse_and_free_pmd() could easily become
-> > a call_rcu() based free.
-> > 
-> > I'm not sure I'm following what collapse_huge_page() does just yet.
-> 
-> It wants to replace a leaf page table by a THP (Transparent Huge Page mapped
-> by a PMD). So we want to rip out a leaf page table while other code
-> (GUP-fast) might still be walking it. 
+From: "D. Wythe" <alibuda@linux.alibaba.com>
 
-Right, I got that far.
+This patches attempt to introduce BPF injection capability for SMC,
+and add selftest to ensure code stability.
 
-> In contrast to freeing the page table,
-> we put it into a list where it can be reuse when having to PTE-map a THP
-> again.
+As we all know that the SMC protocol is not suitable for all scenarios,
+especially for short-lived. However, for most applications, they cannot
+guarantee that there are no such scenarios at all. Therefore, apps
+may need some specific strategies to decide shall we need to use SMC
+or not, for example, apps can limit the scope of the SMC to a specific
+IP address or port.
 
-Yeah, this is the bit I couldn't find, that code is a bit of a maze.
+Based on the consideration of transparent replacement, we hope that apps
+can remain transparent even if they need to formulate some specific
+strategies for SMC using. That is, do not need to recompile their code.
 
-> Now, similar to after freeing the page table, someone else could reuse that
-> page table and modify it.
+On the other hand, we need to ensure the scalability of strategies
+implementation. Although it is simple to use socket options or sysctl,
+it will bring more complexity to subsequent expansion.
 
-So ideally we'll RCU free the page instead of sticking it on that list.
+Fortunately, BPF can solve these concerns very well, users can write
+thire own strategies in eBPF to choose whether to use SMC or not.
+And it's quite easy for them to modify their strategies in the future.
+
+This patches implement injection capability for SMC via struct_ops.
+In that way, we can add new injection scenarios in the future.
+
+D. Wythe (5):
+  net/smc: move smc_sock related structure definition
+  net/smc: net/smc: allow smc to negotiate protocols on policies
+  net/smc: allow set or get smc negotiator by sockopt
+  bpf: add smc negotiator support in BPF struct_ops
+  bpf/selftests: add selftest for SMC bpf capability
+
+ include/net/smc.h                                | 268 +++++++++++++++++
+ include/uapi/linux/smc.h                         |   1 +
+ kernel/bpf/bpf_struct_ops_types.h                |   4 +
+ net/Makefile                                     |   1 +
+ net/smc/Kconfig                                  |  13 +
+ net/smc/af_smc.c                                 | 203 ++++++++++---
+ net/smc/bpf_smc.c                                | 359 +++++++++++++++++++++++
+ net/smc/smc.h                                    | 224 --------------
+ tools/testing/selftests/bpf/prog_tests/bpf_smc.c | 107 +++++++
+ tools/testing/selftests/bpf/progs/bpf_smc.c      | 265 +++++++++++++++++
+ 10 files changed, 1186 insertions(+), 259 deletions(-)
+ create mode 100644 net/smc/bpf_smc.c
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/bpf_smc.c
+ create mode 100644 tools/testing/selftests/bpf/progs/bpf_smc.c
+
+-- 
+1.8.3.1
+
