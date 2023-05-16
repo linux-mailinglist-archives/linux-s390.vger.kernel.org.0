@@ -2,206 +2,108 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D116705501
-	for <lists+linux-s390@lfdr.de>; Tue, 16 May 2023 19:30:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88406705585
+	for <lists+linux-s390@lfdr.de>; Tue, 16 May 2023 19:57:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230197AbjEPRam (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 16 May 2023 13:30:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55768 "EHLO
+        id S232039AbjEPR4x (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 16 May 2023 13:56:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231219AbjEPRal (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 16 May 2023 13:30:41 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35354F7;
-        Tue, 16 May 2023 10:30:40 -0700 (PDT)
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34GH9BG1019087;
-        Tue, 16 May 2023 17:30:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=ZCC9vxMr9joRi3dfenpx5oloFZIV+OcEGd7qoO8+S44=;
- b=dm/Fm+Vrr8wKhkGRCFEMZ5D1IWxlaflft29mhy005ZRMsYlZ2t2wb7R8YiFDm/ND4MSY
- PjuN3xHa7tKj5Q7qvz9CiBsJwoQM1wz1xbXoUaaet8aQHyfmiU+MBZh51wgjZahV8rjD
- 8Sq0WgmHx/c46B+x6UkMQFJ11lnANlKLWc4qm3LHMpaQfsFbkbCmVBCkAKXnt10Y1DiW
- W2CPDnZb10jBKUdpkCvD7MhvKMvqXx+T1DNPJ98r0mM/m9OWS45d62eqngCcyIYuh+hr
- r9X21nKLYzyDwlz34Y7d1I56Z0ySDrdOoECGwM4vUjwuMGmIriorlF9eeSElT0A+t7Bw bw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qmdc51gkx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 May 2023 17:30:39 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34GH9J16020068;
-        Tue, 16 May 2023 17:30:39 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qmdc51gjw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 May 2023 17:30:39 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 34G67uZH005223;
-        Tue, 16 May 2023 17:30:37 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3qj264ss3k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 May 2023 17:30:36 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 34GHUXW019595788
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 May 2023 17:30:33 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7E0852004B;
-        Tue, 16 May 2023 17:30:33 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4F52C20043;
-        Tue, 16 May 2023 17:30:33 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.152.224.66])
-        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Tue, 16 May 2023 17:30:33 +0000 (GMT)
-Date:   Tue, 16 May 2023 19:30:18 +0200
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Nico Boehr <nrb@linux.ibm.com>
-Cc:     frankja@linux.ibm.com, thuth@redhat.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [kvm-unit-tests PATCH v2 5/6] s390x: lib: sie: don't reenter
- SIE on pgm int
-Message-ID: <20230516193018.2e6cab64@p-imbrenda>
-In-Reply-To: <20230516130456.256205-6-nrb@linux.ibm.com>
-References: <20230516130456.256205-1-nrb@linux.ibm.com>
-        <20230516130456.256205-6-nrb@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.37; x86_64-redhat-linux-gnu)
+        with ESMTP id S232083AbjEPR4t (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 16 May 2023 13:56:49 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30B199B;
+        Tue, 16 May 2023 10:56:45 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B906463625;
+        Tue, 16 May 2023 17:56:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9498FC433D2;
+        Tue, 16 May 2023 17:56:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684259804;
+        bh=7ULD3yxJaogVlKiE5g0T5dzK9aiAn4kF1SV1cudf0a0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SAyDZvq3aI7/IDGeV2SK+xROv4K/jTU2+ZB3sCeAk+zcBLZcL0uYl7DxSR6UkmAbc
+         GiL70Fl1igazasLe7Nfh1eye/vhD7JlpTfEwFNZa4V3mJ7oWobs3KJAybvXJUm9Z1s
+         jmqTpuxy/tY3W9o/cVEo2kiZ1ONxXb6ZX3MTypvUR7cVMr2kykDqZgrrAQO0fn0BK7
+         +bi2nP6QdG1CyxxfjVNbIRJ9UZ5OX2/Tqf04H+Q2pzva0bfJi1FstVkdad04QkvTNF
+         DQVh1PrLL/V+pmjguWD+nhXThIs7nitRkmHAwu9uwJ2r5hL9SVV0HT/H3jT/f/tTql
+         zJ9h3Yz63kG0A==
+Date:   Tue, 16 May 2023 23:26:39 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        schnelle@linux.ibm.com, linux-s390@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [PATCH RESEND 2/2] dmaengine: make QCOM_HIDMA depend on HAS_IOMEM
+Message-ID: <ZGPD1wELeXafPJ/T@matsya>
+References: <20230506111628.712316-1-bhe@redhat.com>
+ <20230506111628.712316-3-bhe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 3d70aQGzdrSMKYvO5BQwBmw-JcnG6oqj
-X-Proofpoint-GUID: P8i_mVAuNP93zFYn5K2Jmrwwj8f1-Xi_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-16_09,2023-05-16_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 bulkscore=0 mlxlogscore=514 malwarescore=0 phishscore=0
- clxscore=1015 lowpriorityscore=0 suspectscore=0 spamscore=0 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2305160145
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230506111628.712316-3-bhe@redhat.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 16 May 2023 15:04:55 +0200
-Nico Boehr <nrb@linux.ibm.com> wrote:
+On 06-05-23, 19:16, Baoquan He wrote:
+> On s390 systems (aka mainframes), it has classic channel devices for
+> networking and permanent storage that are currently even more common
+> than PCI devices. Hence it could have a fully functional s390 kernel
+> with CONFIG_PCI=n, then the relevant iomem mapping functions
+> [including ioremap(), devm_ioremap(), etc.] are not available.
+> 
+> Here let QCOM_HIDMA depend on HAS_IOMEM so that it won't be built to
+> cause below compiling error if PCI is unset.
 
-> At the moment, when a PGM int occurs while in SIE, we will just reenter
-> SIE after the interrupt handler was called.
+I have 2/2 patch here, where is patch 1 of 2..?
+
 > 
-> This is because sie() has a loop which checks icptcode and re-enters SIE
-> if it is zero.
+> --------------------------------------------------------
+> ld: drivers/dma/qcom/hidma.o: in function `hidma_probe':
+> hidma.c:(.text+0x4b46): undefined reference to `devm_ioremap_resource'
+> ld: hidma.c:(.text+0x4b9e): undefined reference to `devm_ioremap_resource'
+> make[1]: *** [scripts/Makefile.vmlinux:35: vmlinux] Error 1
+> make: *** [Makefile:1264: vmlinux] Error 2
 > 
-> However, this behaviour is quite undesirable for SIE tests, since it
-> doesn't give the host the chance to assert on the PGM int. Instead, we
-> will just re-enter SIE, on nullifing conditions even causing the
-> exception again.
-> 
-> In sie(), check whether a pgm int code is set in lowcore. If it has,
-> exit the loop so the test can react to the interrupt. Add a new function
-> read_pgm_int_code() to obtain the interrupt code.
-> 
-> Note that this introduces a slight oddity with sie and pgm int in
-> certain cases: If a PGM int occurs between a expect_pgm_int() and sie(),
-> we will now never enter SIE until the pgm_int_code is cleared by e.g.
-> clear_pgm_int().
-> 
-> Signed-off-by: Nico Boehr <nrb@linux.ibm.com>
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <andersson@kernel.org>
+> Cc: Konrad Dybcio <konrad.dybcio@linaro.org>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: dmaengine@vger.kernel.org
 > ---
->  lib/s390x/asm/interrupt.h |  1 +
->  lib/s390x/interrupt.c     | 15 +++++++++++++++
->  lib/s390x/sie.c           |  4 +++-
->  lib/s390x/sie.h           |  1 -
->  4 files changed, 19 insertions(+), 2 deletions(-)
+>  drivers/dma/qcom/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/lib/s390x/asm/interrupt.h b/lib/s390x/asm/interrupt.h
-> index 55759002dce2..2d7eb1907458 100644
-> --- a/lib/s390x/asm/interrupt.h
-> +++ b/lib/s390x/asm/interrupt.h
-> @@ -81,6 +81,7 @@ void handle_svc_int(void);
->  void expect_pgm_int(void);
->  void expect_ext_int(void);
->  uint16_t clear_pgm_int(void);
-> +uint16_t read_pgm_int_code(void);
->  void check_pgm_int_code(uint16_t code);
+> diff --git a/drivers/dma/qcom/Kconfig b/drivers/dma/qcom/Kconfig
+> index 3f926a653bd8..ace75d7b835a 100644
+> --- a/drivers/dma/qcom/Kconfig
+> +++ b/drivers/dma/qcom/Kconfig
+> @@ -45,6 +45,7 @@ config QCOM_HIDMA_MGMT
 >  
->  #define IRQ_DAT_ON	true
-> diff --git a/lib/s390x/interrupt.c b/lib/s390x/interrupt.c
-> index 2e5309cee40f..82b4259d433c 100644
-> --- a/lib/s390x/interrupt.c
-> +++ b/lib/s390x/interrupt.c
-> @@ -60,6 +60,21 @@ uint16_t clear_pgm_int(void)
->  	return code;
->  }
->  
-> +/**
-> + * read_pgm_int_code - Get the program interruption code of the last pgm int
-> + * on the current CPU.
-> + *
-> + * This is similar to clear_pgm_int(), except that it doesn't clear the
-> + * interruption information from lowcore.
-> + *
-> + * Returns 0 when none occured.
-> + */
-> +uint16_t read_pgm_int_code(void)
+>  config QCOM_HIDMA
+>  	tristate "Qualcomm Technologies HIDMA Channel support"
+> +	depends on HAS_IOMEM
+>  	select DMA_ENGINE
+>  	help
+>  	  Enable support for the Qualcomm Technologies HIDMA controller.
+> -- 
+> 2.34.1
 
-could this whole function go in the header as static inline?
-
-> +{
-> +	mb();
-
-is the mb really needed?
-
-> +	return lowcore.pgm_int_code;
-> +}
-> +
->  /**
->   * check_pgm_int_code - Check the program interrupt code on the current CPU.
->   * @code the expected program interrupt code on the current CPU
-> diff --git a/lib/s390x/sie.c b/lib/s390x/sie.c
-> index ffa8ec91a423..632740edd431 100644
-> --- a/lib/s390x/sie.c
-> +++ b/lib/s390x/sie.c
-> @@ -13,6 +13,7 @@
->  #include <libcflat.h>
->  #include <sie.h>
->  #include <asm/page.h>
-> +#include <asm/interrupt.h>
->  #include <libcflat.h>
->  #include <alloc_page.h>
->  
-> @@ -65,7 +66,8 @@ void sie(struct vm *vm)
->  	/* also handle all interruptions in home space while in SIE */
->  	irq_set_dat_mode(IRQ_DAT_ON, AS_HOME);
->  
-> -	while (vm->sblk->icptcode == 0) {
-> +	/* leave SIE when we have an intercept or an interrupt so the test can react to it */
-> +	while (vm->sblk->icptcode == 0 && !read_pgm_int_code()) {
->  		sie64a(vm->sblk, &vm->save_area);
->  		sie_handle_validity(vm);
->  	}
-> diff --git a/lib/s390x/sie.h b/lib/s390x/sie.h
-> index 0b00fb709776..147cb0f2a556 100644
-> --- a/lib/s390x/sie.h
-> +++ b/lib/s390x/sie.h
-> @@ -284,6 +284,5 @@ void sie_handle_validity(struct vm *vm);
->  void sie_guest_sca_create(struct vm *vm);
->  void sie_guest_create(struct vm *vm, uint64_t guest_mem, uint64_t guest_mem_len);
->  void sie_guest_destroy(struct vm *vm);
-> -bool sie_had_pgm_int(struct vm *vm);
-
-... ?
-
->  
->  #endif /* _S390X_SIE_H_ */
-
+-- 
+~Vinod
