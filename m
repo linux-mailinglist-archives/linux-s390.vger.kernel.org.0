@@ -2,182 +2,124 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54433705843
-	for <lists+linux-s390@lfdr.de>; Tue, 16 May 2023 22:04:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D39F770589A
+	for <lists+linux-s390@lfdr.de>; Tue, 16 May 2023 22:20:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229497AbjEPUED (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 16 May 2023 16:04:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53548 "EHLO
+        id S229491AbjEPUU0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 16 May 2023 16:20:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230050AbjEPUEC (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 16 May 2023 16:04:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 605B66EA6;
-        Tue, 16 May 2023 13:03:53 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C574263297;
-        Tue, 16 May 2023 20:03:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7543C433D2;
-        Tue, 16 May 2023 20:03:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684267432;
-        bh=IBUq0YcMljnyZhB2wJxVNSnFrVQQUd7H+bkGKtC45kU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=s98Y7KQQjV446N34ClP52dJ3bMcEazV0ZdMQzoV2DXbPiMRARfFf4FjNG3MWHkyHZ
-         8AYoOcW2/aRiaOfeDlucPmMPN9aStUxZjukaTS26EF+meqNOl0OUyQ1O6wlzOxImq6
-         B/LNbszFqSNgjoeCKyKCfqt0uJvTA5CMaMsvNR6jtacdBVjHB68lvbwbIhnWAdXK1/
-         lYyCdRs8t4rQoEHo66QNTItB4PBbY0A8Qhz5jbcWWFRXAZ1U+VszfbSaYy4u+zmlwe
-         YMcByiOFPnkTFIL59f7AV8KpwLG5Lblp9L8FA/j6o/bm7Ay0VUYHfUBIo8habKY5gH
-         htPYjVTzIpzUA==
-From:   Arnd Bergmann <arnd@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Heiko Carstens <hca@linux.ibm.com>,
+        with ESMTP id S229502AbjEPUUZ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 16 May 2023 16:20:25 -0400
+Received: from out03.mta.xmission.com (out03.mta.xmission.com [166.70.13.233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96D021BC;
+        Tue, 16 May 2023 13:20:24 -0700 (PDT)
+Received: from in01.mta.xmission.com ([166.70.13.51]:36164)
+        by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1pz19h-002ZkH-QH; Tue, 16 May 2023 14:20:21 -0600
+Received: from ip68-110-29-46.om.om.cox.net ([68.110.29.46]:56442 helo=email.froward.int.ebiederm.org.xmission.com)
+        by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1pz19g-005u3c-ER; Tue, 16 May 2023 14:20:21 -0600
+From:   "Eric W. Biederman" <ebiederm@xmission.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Sven Schnelle <svens@linux.ibm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH] irq_work: consolidate arch_irq_work_raise prototypes
-Date:   Tue, 16 May 2023 22:02:31 +0200
-Message-Id: <20230516200341.553413-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+        Frederic Weisbecker <frederic@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Lutomirski <luto@kernel.org>, linux-s390@vger.kernel.org,
+        hca@linux.ibm.com, linux-kernel@vger.kernel.org
+References: <20230516133810.171487-1-svens@linux.ibm.com>
+        <20230516133810.171487-2-svens@linux.ibm.com>
+        <20230516164221.GA2602133@hirez.programming.kicks-ass.net>
+Date:   Tue, 16 May 2023 15:20:12 -0500
+In-Reply-To: <20230516164221.GA2602133@hirez.programming.kicks-ass.net> (Peter
+        Zijlstra's message of "Tue, 16 May 2023 18:42:21 +0200")
+Message-ID: <87a5y4owoz.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-XM-SPF: eid=1pz19g-005u3c-ER;;;mid=<87a5y4owoz.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.110.29.46;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX1+C6j5vbh8LAKBFQK+BQoVJqExhcgN7PAM=
+X-SA-Exim-Connect-IP: 68.110.29.46
+X-SA-Exim-Mail-From: ebiederm@xmission.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
+X-Spam-Virus: No
+X-Spam-DCC: XMission; sa02 1397; Body=1 Fuz1=1 Fuz2=1 
+X-Spam-Combo: ;Peter Zijlstra <peterz@infradead.org>
+X-Spam-Relay-Country: 
+X-Spam-Timing: total 780 ms - load_scoreonly_sql: 0.03 (0.0%),
+        signal_user_changed: 4.2 (0.5%), b_tie_ro: 3.0 (0.4%), parse: 0.67
+        (0.1%), extract_message_metadata: 9 (1.1%), get_uri_detail_list: 0.80
+        (0.1%), tests_pri_-2000: 8 (1.0%), tests_pri_-1000: 1.98 (0.3%),
+        tests_pri_-950: 1.08 (0.1%), tests_pri_-900: 0.82 (0.1%),
+        tests_pri_-200: 0.68 (0.1%), tests_pri_-100: 3.0 (0.4%),
+        tests_pri_-90: 83 (10.6%), check_bayes: 81 (10.4%), b_tokenize: 4.4
+        (0.6%), b_tok_get_all: 5 (0.7%), b_comp_prob: 1.31 (0.2%),
+        b_tok_touch_all: 67 (8.5%), b_finish: 0.85 (0.1%), tests_pri_0: 190
+        (24.3%), check_dkim_signature: 0.38 (0.0%), check_dkim_adsp: 2.9
+        (0.4%), poll_dns_idle: 464 (59.5%), tests_pri_10: 1.66 (0.2%),
+        tests_pri_500: 474 (60.8%), rewrite_mail: 0.00 (0.0%)
+Subject: Re: [PATCH 1/2] entry: move the exit path to header files
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+Peter Zijlstra <peterz@infradead.org> writes:
 
-The prototype was hidden on x86, which causes a warning:
+> On Tue, May 16, 2023 at 03:38:09PM +0200, Sven Schnelle wrote:
+>> @@ -465,4 +470,175 @@ irqentry_state_t noinstr irqentry_nmi_enter(struct pt_regs *regs);
+>>   */
+>>  void noinstr irqentry_nmi_exit(struct pt_regs *regs, irqentry_state_t irq_state);
+>>  
+>> +static unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
+>> +					    unsigned long ti_work)
+>
+> Should these things not grow __always_inline/inline when moved into a header?
 
-kernel/irq_work.c:72:13: error: no previous prototype for 'arch_irq_work_raise' [-Werror=missing-prototypes]
+Is that actually what is desired?
 
-Fix this by providing it in only one place that is always visible.
+This is a header file that should only be included once isn't it?
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/include/asm/irq_work.h     | 2 --
- arch/arm64/include/asm/irq_work.h   | 2 --
- arch/csky/include/asm/irq_work.h    | 2 +-
- arch/powerpc/include/asm/irq_work.h | 1 -
- arch/riscv/include/asm/irq_work.h   | 2 +-
- arch/s390/include/asm/irq_work.h    | 2 --
- arch/x86/include/asm/irq_work.h     | 1 -
- include/linux/irq_work.h            | 3 +++
- 8 files changed, 5 insertions(+), 10 deletions(-)
+>> +{
+>
+>> +}
+>> +
+>> +
+>> +static void exit_to_user_mode_prepare(struct pt_regs *regs)
+>
+> idem
+>
+>> +{
+>
+>> +}
+>
+>> +static void syscall_exit_work(struct pt_regs *regs, unsigned long work)
+>
+> and more..
+>
+>> +{
+>
+>> +}
+>> +
 
-diff --git a/arch/arm/include/asm/irq_work.h b/arch/arm/include/asm/irq_work.h
-index 3149e4dc1b54..8895999834cc 100644
---- a/arch/arm/include/asm/irq_work.h
-+++ b/arch/arm/include/asm/irq_work.h
-@@ -9,6 +9,4 @@ static inline bool arch_irq_work_has_interrupt(void)
- 	return is_smp();
- }
- 
--extern void arch_irq_work_raise(void);
--
- #endif /* _ASM_ARM_IRQ_WORK_H */
-diff --git a/arch/arm64/include/asm/irq_work.h b/arch/arm64/include/asm/irq_work.h
-index 81bbfa3a035b..a1020285ea75 100644
---- a/arch/arm64/include/asm/irq_work.h
-+++ b/arch/arm64/include/asm/irq_work.h
-@@ -2,8 +2,6 @@
- #ifndef __ASM_IRQ_WORK_H
- #define __ASM_IRQ_WORK_H
- 
--extern void arch_irq_work_raise(void);
--
- static inline bool arch_irq_work_has_interrupt(void)
- {
- 	return true;
-diff --git a/arch/csky/include/asm/irq_work.h b/arch/csky/include/asm/irq_work.h
-index 33aaf39d6f94..d39fcc1f5395 100644
---- a/arch/csky/include/asm/irq_work.h
-+++ b/arch/csky/include/asm/irq_work.h
-@@ -7,5 +7,5 @@ static inline bool arch_irq_work_has_interrupt(void)
- {
- 	return true;
- }
--extern void arch_irq_work_raise(void);
-+
- #endif /* __ASM_CSKY_IRQ_WORK_H */
-diff --git a/arch/powerpc/include/asm/irq_work.h b/arch/powerpc/include/asm/irq_work.h
-index b8b0be8f1a07..c6d3078bd8c3 100644
---- a/arch/powerpc/include/asm/irq_work.h
-+++ b/arch/powerpc/include/asm/irq_work.h
-@@ -6,6 +6,5 @@ static inline bool arch_irq_work_has_interrupt(void)
- {
- 	return true;
- }
--extern void arch_irq_work_raise(void);
- 
- #endif /* _ASM_POWERPC_IRQ_WORK_H */
-diff --git a/arch/riscv/include/asm/irq_work.h b/arch/riscv/include/asm/irq_work.h
-index b53891964ae0..b27a4d64fc6a 100644
---- a/arch/riscv/include/asm/irq_work.h
-+++ b/arch/riscv/include/asm/irq_work.h
-@@ -6,5 +6,5 @@ static inline bool arch_irq_work_has_interrupt(void)
- {
- 	return IS_ENABLED(CONFIG_SMP);
- }
--extern void arch_irq_work_raise(void);
-+
- #endif /* _ASM_RISCV_IRQ_WORK_H */
-diff --git a/arch/s390/include/asm/irq_work.h b/arch/s390/include/asm/irq_work.h
-index 603783766d0a..f00c9f610d5a 100644
---- a/arch/s390/include/asm/irq_work.h
-+++ b/arch/s390/include/asm/irq_work.h
-@@ -7,6 +7,4 @@ static inline bool arch_irq_work_has_interrupt(void)
- 	return true;
- }
- 
--void arch_irq_work_raise(void);
--
- #endif /* _ASM_S390_IRQ_WORK_H */
-diff --git a/arch/x86/include/asm/irq_work.h b/arch/x86/include/asm/irq_work.h
-index 800ffce0db29..6b4d36c95165 100644
---- a/arch/x86/include/asm/irq_work.h
-+++ b/arch/x86/include/asm/irq_work.h
-@@ -9,7 +9,6 @@ static inline bool arch_irq_work_has_interrupt(void)
- {
- 	return boot_cpu_has(X86_FEATURE_APIC);
- }
--extern void arch_irq_work_raise(void);
- #else
- static inline bool arch_irq_work_has_interrupt(void)
- {
-diff --git a/include/linux/irq_work.h b/include/linux/irq_work.h
-index 8cd11a223260..136f2980cba3 100644
---- a/include/linux/irq_work.h
-+++ b/include/linux/irq_work.h
-@@ -66,6 +66,9 @@ void irq_work_sync(struct irq_work *work);
- void irq_work_run(void);
- bool irq_work_needs_cpu(void);
- void irq_work_single(void *arg);
-+
-+void arch_irq_work_raise(void);
-+
- #else
- static inline bool irq_work_needs_cpu(void) { return false; }
- static inline void irq_work_run(void) { }
--- 
-2.39.2
+Perhaps it would make most sense just to change the idiom to include
+the .c file.  That would give the optimizer every opportunity to inline
+static functions, while strongly suggesting this file should be included
+only once.
 
+Is this maybe a s390 specific problem because the s390 has something
+like ancient calling conventions that are not as efficient as they
+should be.
+
+Eric
