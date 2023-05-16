@@ -2,373 +2,314 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4202A704140
-	for <lists+linux-s390@lfdr.de>; Tue, 16 May 2023 01:02:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FB667041DB
+	for <lists+linux-s390@lfdr.de>; Tue, 16 May 2023 02:01:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245476AbjEOXC0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 15 May 2023 19:02:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54936 "EHLO
+        id S1343638AbjEPABX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 15 May 2023 20:01:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244981AbjEOXCZ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 15 May 2023 19:02:25 -0400
-X-Greylist: delayed 565 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 15 May 2023 16:02:20 PDT
-Received: from out-45.mta0.migadu.com (out-45.mta0.migadu.com [IPv6:2001:41d0:1004:224b::2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF3BBA5D7
-        for <linux-s390@vger.kernel.org>; Mon, 15 May 2023 16:02:19 -0700 (PDT)
-Message-ID: <0e1656dc-b67c-ec65-83a4-6709fb186061@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1684191171;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zLnDERJHjug7dAd+MXkM+9OUfYWGgTvS8O/k3Ot60w0=;
-        b=c2duEDoDOpFX+h6ODvobu6/kHvGSZpLC5E+/ZRYDkZOHnmw/vtYn+t0Q/5jJDOg1CE1bLZ
-        VY60LVjZ4glLAQ2YBoIiOYzCM63HyFOchysxBfZiREgwnxEAuGt0LPy2VyBJ4F8yfA95fn
-        qhmMlbfRCgnWosBFZJTP/Z+MU85xWZM=
-Date:   Mon, 15 May 2023 15:52:42 -0700
+        with ESMTP id S1343619AbjEPABS (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 15 May 2023 20:01:18 -0400
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2053.outbound.protection.outlook.com [40.107.237.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA0607DAC;
+        Mon, 15 May 2023 17:01:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mA50G3wJh66xgO8HHBaFyci71SVR0xuok2WInhD8V3LsYezfbvKihJjJt+V/fs5aCrs4XSgc8Kzl5nNeaU9HOFBb5z98Cwp85xGmm1E46JFOPEQzNtarn+3KmjDiNp/P9KkmLNtQHJtcvM2o+Nk6P1gDLwwohB1bgD9RJ0LVkxtPd02Wz79UYfs9PGkvwywRdMQ43Q2AAM41p+zm0n1uPK2TfSqodQ7PXKwMVvNXwXLW7XwaW7i9grlWyfF3q1LkcOihRmUNQSnl20bhOvlcvUR80isnAzMqCn8G0R5fgOn4ywRMLwFpTl6zftYRWmgqx9GormX/yVWo47Bo11V0og==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sHEIBiqjTtqv1+CCFbjxN5Z3GYGJ/CUZjU6XUU4igZw=;
+ b=PQmNSbnAMa9j+2JxyqgP/j+p/FU7AMHPK/u6RS87YlIao16+aD+UVbOyGD7KNgbC/8Nx8DyFktfcEcjvFTRFDZNOh6VMRpA3/vV9z2i/e/F1AFHT7jhGmAN90Un6aYVCBKuJgSFNjSbx7jBYTKt7W+hiLCOrE8WQZa0fLHvO3WkFBuEsYsMWrDjFH6+7+MKL2Q5Yn6ft3X+BniP6fzg1KOLrGOvx1yftQHXEp7W3yPrOxW5yGB4B9XNTPfIQKwHg2niqk0n/bMEja8b3Op8daT3OAxms7ceetW/mhaaqx6Im22bgvxtxpA6ubDsD8IIVHTtEgIOxkr8PYGeAhFjpiQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sHEIBiqjTtqv1+CCFbjxN5Z3GYGJ/CUZjU6XUU4igZw=;
+ b=UCM/fZBXzNWLDYHZ/zmC+4T+krAqNQ9EQx1FOkYjedUUu67Olt8EoLbhPOggWONyLDLZ8gWXEleCghfog/gcDvx1PZV50/hjkqD2ZF4hqC6AUTItOh6sUcTXa79Lc8N4XkTDzxRATGf5nEWsrXZFhhR35vu4ybUO5CLyM2QFeoO8sDwYcypRueCGyEZCv51Rzee9mCgyYyuatij7fWMhgW1AUvBrZEM4ua+ufvHrJkRFauI9hFkfmCBL6xycDRCbgMs3sBAq8T70gEHDLkXLmichuC5clAb+MlO+EsBWN7iHymWPvD3XxNvJWkzey0AJS64W2L8whWNGnzNigOM5Lw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
+ by PH7PR12MB6634.namprd12.prod.outlook.com (2603:10b6:510:211::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.30; Tue, 16 May
+ 2023 00:01:12 +0000
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::f7a7:a561:87e9:5fab]) by LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::f7a7:a561:87e9:5fab%6]) with mapi id 15.20.6387.030; Tue, 16 May 2023
+ 00:01:12 +0000
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Andy Gross <agross@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Heiko Stuebner <heiko@sntech.de>, iommu@lists.linux.dev,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-sunxi@lists.linux.dev,
+        linux-tegra@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linuxppc-dev@lists.ozlabs.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Krishna Reddy <vdumpa@nvidia.com>,
+        Chen-Yu Tsai <wens@csie.org>, Will Deacon <will@kernel.org>,
+        Yong Wu <yong.wu@mediatek.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Nicolin Chen <nicolinc@nvidia.com>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        Steven Price <steven.price@arm.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH v2 00/25] iommu: Make default_domain's mandatory
+Date:   Mon, 15 May 2023 21:00:33 -0300
+Message-Id: <0-v2-8d1dc464eac9+10f-iommu_all_defdom_jgg@nvidia.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BL0PR1501CA0025.namprd15.prod.outlook.com
+ (2603:10b6:207:17::38) To LV2PR12MB5869.namprd12.prod.outlook.com
+ (2603:10b6:408:176::16)
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v1 2/5] net/smc: allow smc to negotiate protocols
- on policies
-Content-Language: en-US
-To:     "D. Wythe" <alibuda@linux.alibaba.com>
-Cc:     kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
-        bpf@vger.kernel.org, kgraul@linux.ibm.com, wenjia@linux.ibm.com,
-        jaka@linux.ibm.com, ast@kernel.org, daniel@iogearbox.net,
-        andrii@kernel.org, pabeni@redhat.com, song@kernel.org,
-        sdf@google.com, haoluo@google.com, yhs@fb.com, edumazet@google.com,
-        john.fastabend@gmail.com, kpsingh@kernel.org, jolsa@kernel.org,
-        guwen@linux.alibaba.com
-References: <1683872684-64872-1-git-send-email-alibuda@linux.alibaba.com>
- <1683872684-64872-3-git-send-email-alibuda@linux.alibaba.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <1683872684-64872-3-git-send-email-alibuda@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|PH7PR12MB6634:EE_
+X-MS-Office365-Filtering-Correlation-Id: c562a445-3a38-427d-dbb8-08db55a0a354
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: FNsa0U+/GkuYaFXLpWhRdo9sAvqZ7mdcWOE52wgko43mNtg/7dbonY9b2Cek66gOd1Sg+eA3srqfSYipFjcUrzsbwnMz1BcrzMA3yiy+ZLPKt+z0t+tDQ3T7cYyeo9DSNauIl1U8aOuWhc7LQ8qRm8+LfPAymwKyaDlK7E8VZAelrtzoDBp0bcJmCrPn+/GJN0ngu/dM+2wFvUe/Ntu3/70N4g5pEC0iHjJfeWMucTTNO2vQapRiP2vrz5Uua1vQ9IFAu0zRAK9SNHMO5f1WhulCDxjVVsldet5TduP56U5hpBnTEO8WTF2IX/dxRjzEgw4ghQwkM1XTtRezALOf2E5CG9jG1LcTZlPcT/YTmTDexvz76JrGRRunrLiSGCx8ne0R+CJkn+Nnm1K949USFYmMv5q1eNdAc+I4AVAUnAII5JS5XS39woymAzmEi1+nPDt8DwPtpR0JdkZY/gHK+u96sgJfYXi//RiFXZ0YeVux4AfuXHyf6OwJhJzdOCf2sXR0CJxAGqrcY/BEKBZO5saDB/jMi/N7CfDkcNY1LtQy8g0T+hY1bUOCgvA5jJYX3HwrcpwsvOjaIsfRMc2wFNXJP3XtV8ISK5psMIQK290OG51FGe0eZ5+JfqD4Y1L+FdXQLN86otbJBKLko5FrLgM0p2LHdqccFuNgatclJ0OJ2ph1g3kN+yN28qY/CbugPgv3sqOp38PnavadoilPbQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(396003)(346002)(366004)(136003)(376002)(451199021)(36756003)(110136005)(54906003)(478600001)(38100700002)(41300700001)(7416002)(7406005)(8676002)(8936002)(5660300002)(2906002)(316002)(921005)(4326008)(66476007)(66946007)(66556008)(6506007)(6512007)(107886003)(86362001)(26005)(186003)(83380400001)(2616005)(966005)(6486002)(6666004)(4216001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?CXATkejbYba9s7hg1VlQciAZMwmVHHCy7JA5Dd9AC2ps9Ez1GEcXsOUtnnci?=
+ =?us-ascii?Q?Rkf0l020/5tkXXbV0uzCeSAVD1088XAfTYoVxTXqApZJYLtfCAK8b3z30tN6?=
+ =?us-ascii?Q?rTcv4gcXZy+yRsP5/BiCYEuQOB76shTgc9w354KUvk4QDqQURE0insvOLqVh?=
+ =?us-ascii?Q?EpWaVMogNiuKwfmowiuZsg2fqGELOliHlPuLywT4+e9q2nQG1cnABXDUERR2?=
+ =?us-ascii?Q?qk3e9L9SThEiXokr9Y/XI+xjaDplaKiv+uA3yZzujPQ6USSrKVWYjcbNcngD?=
+ =?us-ascii?Q?5c0oOB+DG/ocokEtEl1EGPz5o41Gjp1t1NcZp6UMPpufLpn+awUhzqadYRrL?=
+ =?us-ascii?Q?62XeQa3sdBTGlFgWBkJc6KCK+HZMAfVg8KC5vF9yppRT0ahRiFDeYXwhcxHc?=
+ =?us-ascii?Q?67q5Gmugq9Wkm4YuUqCbiglH3yrAJtbqJcLZjlWyD5CCxXnzUIO/4gc0txqf?=
+ =?us-ascii?Q?RvkmbFZqPPr3icLfqsiR+MBbBrXhdV+YPJ1NgeS69/IFn/fwepPN0Fr/MaaF?=
+ =?us-ascii?Q?IlJnaXSmPFLSOLKRUyQLBsfc/+LlWFeblqRX6ZSroehiONqJO7D+eDb+cwxD?=
+ =?us-ascii?Q?gERb6WrMc6gavIjqZu3AAemkF5iFCUPqk8b1y7eL6yL0vRqKvcQTzSKWZb+o?=
+ =?us-ascii?Q?tFah7Mdhnou2maLuIuTtPKOEgrt4KCXwZkvEvhXEaDSlTyUci9D3RL8RXw1t?=
+ =?us-ascii?Q?GeIFBfMvY6F3KKuGrsUzPu0gY6Gv5OrItjJt2sRDnd3z20KCMFd3hPZIA8wL?=
+ =?us-ascii?Q?w8sbzJ29V0cySosW4aYAwOvUCCoIqBTUjRUTLdyZvn07xJjilsJ68XYQ5KOS?=
+ =?us-ascii?Q?inufQZUDhmm1l4ct/hLWQf+R5VrH2aYp3A5dqXY+5kc4udydmHFvHgJBJCzd?=
+ =?us-ascii?Q?MX/TY1ef2VProc7WoaRLYmt3Xg7J1RX5uwcUiOhb+RWSyEdJffHUqivRbxkH?=
+ =?us-ascii?Q?5JR8WsG+MGeaJfghcpZbtZ6uZ6GsfPeH0DBBRBiu43BLTISr26shnLst6ja1?=
+ =?us-ascii?Q?aBm9bBD4dZu4BjDzes848LYgNwLAvqC46Pe348GQgqj9Sc9gIJoZcDHlaXAQ?=
+ =?us-ascii?Q?shpYt2KOBWBzuZ+MNklpD735QmEXGw0giGKbMian0C3DvIu15y2wpRiPUvc0?=
+ =?us-ascii?Q?8T6nlqYb7rVzs643kp6KvGiRzClXIOIgBOshc/cd3IDX4hdHWC0R9kB/pS53?=
+ =?us-ascii?Q?nXnp7ySWRjEFIBRQTon+v7fgjAz3P/oF0C3f+IGurFz+rY9OrssHVFZ9woUb?=
+ =?us-ascii?Q?OTLnb2AKvniFVhh1koWqCceL7G/hzejUuGY+9yCPXupIhpACe8LFfkBXqNHF?=
+ =?us-ascii?Q?Ds4sIjHmTEL0DzhUfb4oaezqDYVjw0pdJ7z3AwARXLjOS8qTDqesdaU44XBH?=
+ =?us-ascii?Q?JyjEzSzp0JC/fRDHF+RWUkczJOheLFCn2wG58WyPxPg9YpAqUQOJSuGHNXJR?=
+ =?us-ascii?Q?Ez3gspPZMLRe+TdyOxq+dsCNE+n3qiVhMtmVdxOtKLbSe7DvbuW+ph1prvcV?=
+ =?us-ascii?Q?pxYeSSPZiYqtlxtKWdBEncb0I8wT6gFHwcIZfI1B4zjjQnm5fyR5kCj7+NT1?=
+ =?us-ascii?Q?1OHGupRD8+2n2vhmEYbZV2K9v+EhDaOH4ATwS1PT?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c562a445-3a38-427d-dbb8-08db55a0a354
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2023 00:01:02.8548
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uvyKTkCh6rOFcikOl75JjcipOO2nxcV6Q8rlLpW6j4QS/ppoJeB7QEjG0BRqqx8Z
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6634
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 5/11/23 11:24 PM, D. Wythe wrote:
-> From: "D. Wythe" <alibuda@linux.alibaba.com>
-> 
-> As we all know, the SMC protocol is not suitable for all scenarios,
-> especially for short-lived. However, for most applications, they cannot
-> guarantee that there are no such scenarios at all. Therefore, apps
-> may need some specific strategies to decide shall we need to use SMC
-> or not.
-> 
-> Just like the congestion control implementation in TCP, this patch
-> provides a generic negotiator implementation. If necessary,
-> we can provide different protocol negotiation strategies for
-> apps based on this implementation.
-> 
-> But most importantly, this patch provides the possibility of
-> eBPF injection, allowing users to implement their own protocol
-> negotiation policy in userspace.
-> 
-> Signed-off-by: D. Wythe <alibuda@linux.alibaba.com>
-> ---
->   include/net/smc.h        |  32 +++++++++++
->   net/Makefile             |   1 +
->   net/smc/Kconfig          |  11 ++++
->   net/smc/af_smc.c         | 134 ++++++++++++++++++++++++++++++++++++++++++++++-
->   net/smc/smc_negotiator.c | 119 +++++++++++++++++++++++++++++++++++++++++
->   net/smc/smc_negotiator.h | 116 ++++++++++++++++++++++++++++++++++++++++
->   6 files changed, 412 insertions(+), 1 deletion(-)
->   create mode 100644 net/smc/smc_negotiator.c
->   create mode 100644 net/smc/smc_negotiator.h
-> 
-> diff --git a/include/net/smc.h b/include/net/smc.h
-> index 6d076f5..191061c 100644
-> --- a/include/net/smc.h
-> +++ b/include/net/smc.h
-> @@ -296,6 +296,8 @@ struct smc_sock {				/* smc sock container */
->   	atomic_t                queued_smc_hs;  /* queued smc handshakes */
->   	struct inet_connection_sock_af_ops		af_ops;
->   	const struct inet_connection_sock_af_ops	*ori_af_ops;
-> +	/* protocol negotiator ops */
-> +	const struct smc_sock_negotiator_ops *negotiator_ops;
->   						/* original af ops */
->   	int			sockopt_defer_accept;
->   						/* sockopt TCP_DEFER_ACCEPT
-> @@ -316,4 +318,34 @@ struct smc_sock {				/* smc sock container */
->   						 */
->   };
->   
-> +#ifdef CONFIG_SMC_BPF
-> +/* BPF struct ops for smc protocol negotiator */
-> +struct smc_sock_negotiator_ops {
-> +
-> +	struct list_head	list;
-> +
-> +	/* ops name */
-> +	char		name[16];
-> +	/* key for name */
-> +	u32			key;
-> +
-> +	/* init with sk */
-> +	void (*init)(struct sock *sk);
-> +
-> +	/* release with sk */
-> +	void (*release)(struct sock *sk);
-> +
-> +	/* advice for negotiate */
-> +	int (*negotiate)(struct sock *sk);
-> +
-> +	/* info gathering timing */
-> +	void (*collect_info)(struct sock *sk, int timing);
-> +
-> +	/* module owner */
-> +	struct module *owner;
-> +};
-> +#else
-> +struct smc_sock_negotiator_ops {};
-> +#endif
-> +
->   #endif	/* _SMC_H */
-> diff --git a/net/Makefile b/net/Makefile
-> index 4c4dc53..222916a 100644
-> --- a/net/Makefile
-> +++ b/net/Makefile
-> @@ -52,6 +52,7 @@ obj-$(CONFIG_TIPC)		+= tipc/
->   obj-$(CONFIG_NETLABEL)		+= netlabel/
->   obj-$(CONFIG_IUCV)		+= iucv/
->   obj-$(CONFIG_SMC)		+= smc/
-> +obj-$(CONFIG_SMC_BPF)		+= smc/smc_negotiator.o >   obj-$(CONFIG_RFKILL)		+= rfkill/
->   obj-$(CONFIG_NET_9P)		+= 9p/
->   obj-$(CONFIG_CAIF)		+= caif/
-> diff --git a/net/smc/Kconfig b/net/smc/Kconfig
-> index 1ab3c5a..bdcc9f1 100644
-> --- a/net/smc/Kconfig
-> +++ b/net/smc/Kconfig
-> @@ -19,3 +19,14 @@ config SMC_DIAG
->   	  smcss.
->   
->   	  if unsure, say Y.
-> +
-> +config SMC_BPF
-> +	bool "SMC: support eBPF" if SMC
+[ There was alot of unexpected complication after rc1 with this series,
+several new patches were needed ]
+
+It has been a long time coming, this series completes the default_domain
+transition and makes it so that the core IOMMU code will always have a
+non-NULL default_domain for every driver on every
+platform. set_platform_dma_ops() turned out to be a bad idea, and so
+completely remove it.
+
+This is achieved by changing each driver to either:
+
+1 - Convert the existing (or deleted) ops->detach_dev() into an
+    op->attach_dev() of an IDENTITY domain.
+
+    This is based on the theory that the ARM32 HW is able to function when
+    the iommu is turned off as so the turned off state is an IDENTITY
+    translation.
+
+2 - Use a new PLATFORM domain type. This is a hack to accommodate drivers
+    that we don't really know WTF they do. S390 is legitimately using this
+    to switch to it's platform dma_ops implementation, which is where the
+    name comes from.
+
+3 - Do #1 and force the default domain to be IDENTITY, this corrects
+    the tegra-smmu case where even an ARM64 system would have a NULL
+    default_domain.
+
+Using this we can apply the rules:
+
+a) ARM_DMA_USE_IOMMU mode always uses either the driver's
+   ops->default_domain, ops->def_domain_type(), or an IDENTITY domain.
+   All ARM32 drivers provide one of these three options.
+
+b) dma-iommu.c mode uses either the driver's ops->default_domain,
+   ops->def_domain_type or the usual DMA API policy logic based on the
+   command line/etc to pick IDENTITY/DMA domain types
+
+c) All other arch's (PPC/S390) use ops->default_domain always.
+
+See the patch "Require a default_domain for all iommu drivers" for a
+per-driver breakdown.
+
+The conversion broadly teaches a bunch of ARM32 drivers that they can do
+IDENTITY domains. There is some educated guessing involved that these are
+actual IDENTITY domains. If this turns out to be wrong the driver can be
+trivially changed to use a BLOCKING domain type instead. Further, the
+domain type only matters for drivers using ARM64's dma-iommu.c mode as it
+will select IDENTITY based on the command line and expect IDENTITY to
+work. For ARM32 and other arch cases it is purely documentation.
+
+Finally, based on all the analysis in this series, we can purge
+IOMMU_DOMAIN_UNMANAGED/DMA constants from most of the drivers. This
+greatly simplifies understanding the driver contract to the core
+code. IOMMU drivers should not be involved in policy for how the DMA API
+works, that should be a core core decision.
+
+The main gain from this work is to remove alot of ARM_DMA_USE_IOMMU
+specific code and behaviors from drivers. All that remains in iommu
+drivers after this series is the calls to arm_iommu_create_mapping().
+
+This is a step toward removing ARM_DMA_USE_IOMMU.
+
+The IDENTITY domains added to the ARM64 supporting drivers can be tested
+by booting in ARM64 mode and enabling CONFIG_IOMMU_DEFAULT_PASSTHROUGH. If
+the system still boots then most likely the implementation is an IDENTITY
+domain. If not we can trivially change it to BLOCKING or at worst PLATFORM
+if there is no detail what is going on in the HW.
+
+I think this is pretty safe for the ARM32 drivers as they don't really
+change, the code that was in detach_dev continues to be called in the same
+places it was called before.
+
+This follows the prior series:
+
+https://lore.kernel.org/r/0-v5-1b99ae392328+44574-iommu_err_unwind_jgg@nvidia.com
+
+This is on github: https://github.com/jgunthorpe/linux/commits/iommu_all_defdom
+
+v2:
+ - FSL is an IDENTITY domain
+ - Delete terga-gart instead of trying to carry it
+ - Use the policy determination from iommu_get_default_domain_type() to
+   drive the arm_iommu mode
+ - Reorganize and introduce new patches to do the above:
+    * Split the ops->identity_domain to an independent earlier patch
+    * Remove the UNMANAGED return from def_domain_type in mtk_v1 earlier
+      so the new iommu_get_default_domain_type() can work
+    * Make the driver's def_domain_type have higher policy priority than
+      untrusted
+    * Merge the set_platfom_dma_ops hunk from mtk_v1 along with rockchip
+      into the patch that forced IDENTITY on ARM32
+ - Revise sun50i to be cleaner and have a non-NULL internal domain
+ - Reword logging in exynos
+ - Remove the gdev from the group alloc path, instead add a new
+   function __iommu_group_domain_alloc() that takes in the group
+   and uses the first device. Split this to its own patch
+ - New patch to make iommufd's mock selftest into a real driver
+ - New patch to fix power's partial iommu driver
+v1: https://lore.kernel.org/r/0-v1-21cc72fcfb22+a7a-iommu_all_defdom_jgg@nvidia.com
+
+Jason Gunthorpe (25):
+  iommu: Add iommu_ops->identity_domain
+  iommu: Add IOMMU_DOMAIN_PLATFORM
+  powerpc/iommu: Setup a default domain and remove set_platform_dma_ops
+  iommu: Add IOMMU_DOMAIN_PLATFORM for S390
+  iommu/tegra-gart: Remove tegra-gart
+  iommu/mtk_iommu_v1: Implement an IDENTITY domain
+  iommu: Reorganize iommu_get_default_domain_type() to respect
+    def_domain_type()
+  iommu: Allow an IDENTITY domain as the default_domain in ARM32
+  iommu/fsl_pamu: Implement an IDENTITY domain
+  iommu/exynos: Implement an IDENTITY domain
+  iommu/tegra-smmu: Implement an IDENTITY domain
+  iommu/tegra-smmu: Support DMA domains in tegra
+  iommu/omap: Implement an IDENTITY domain
+  iommu/msm: Implement an IDENTITY domain
+  iommufd/selftest: Make the mock iommu driver into a real driver
+  iommu: Remove ops->set_platform_dma_ops()
+  iommu/qcom_iommu: Add an IOMMU_IDENTITIY_DOMAIN
+  iommu/ipmmu: Add an IOMMU_IDENTITIY_DOMAIN
+  iommu/mtk_iommu: Add an IOMMU_IDENTITIY_DOMAIN
+  iommu/sun50i: Add an IOMMU_IDENTITIY_DOMAIN
+  iommu: Require a default_domain for all iommu drivers
+  iommu: Add __iommu_group_domain_alloc()
+  iommu: Add ops->domain_alloc_paging()
+  iommu: Convert simple drivers with DOMAIN_DMA to domain_alloc_paging()
+  iommu: Convert remaining simple drivers to domain_alloc_paging()
+
+ arch/arm/configs/multi_v7_defconfig     |   1 -
+ arch/arm/configs/tegra_defconfig        |   1 -
+ arch/powerpc/kernel/iommu.c             |  38 ++-
+ drivers/iommu/Kconfig                   |  11 -
+ drivers/iommu/Makefile                  |   1 -
+ drivers/iommu/arm/arm-smmu/qcom_iommu.c |  45 ++-
+ drivers/iommu/exynos-iommu.c            |  73 +++--
+ drivers/iommu/fsl_pamu_domain.c         |  39 ++-
+ drivers/iommu/iommu-priv.h              |  16 +
+ drivers/iommu/iommu.c                   | 263 +++++++++++------
+ drivers/iommu/iommufd/iommufd_private.h |   5 +-
+ drivers/iommu/iommufd/main.c            |   8 +-
+ drivers/iommu/iommufd/selftest.c        | 141 ++++-----
+ drivers/iommu/ipmmu-vmsa.c              |  50 +++-
+ drivers/iommu/msm_iommu.c               |  30 +-
+ drivers/iommu/mtk_iommu.c               |  30 +-
+ drivers/iommu/mtk_iommu_v1.c            |  28 +-
+ drivers/iommu/omap-iommu.c              |  28 +-
+ drivers/iommu/rockchip-iommu.c          |  26 +-
+ drivers/iommu/s390-iommu.c              |  28 +-
+ drivers/iommu/sprd-iommu.c              |   7 +-
+ drivers/iommu/sun50i-iommu.c            |  35 ++-
+ drivers/iommu/tegra-gart.c              | 371 ------------------------
+ drivers/iommu/tegra-smmu.c              |  50 +++-
+ drivers/memory/tegra/mc.c               |  34 ---
+ drivers/memory/tegra/tegra20.c          |  28 --
+ include/linux/iommu.h                   |  16 +-
+ include/soc/tegra/mc.h                  |  26 --
+ 28 files changed, 622 insertions(+), 807 deletions(-)
+ create mode 100644 drivers/iommu/iommu-priv.h
+ delete mode 100644 drivers/iommu/tegra-gart.c
 
 
-so smc_negotiator will always be in the kernel image even af_smc is compiled as 
-a module? If the SMC_BPF needs to support af_smc as a module, proper 
-implementation needs to be added to bpf_struct_ops to support module first. It 
-is work-in-progress.
-
-> +	depends on BPF_SYSCALL
-> +	default n
-> +	help
-> +	  Supports eBPF to allows user mode participation in SMC's protocol process
-> +	  via ebpf programs. Alternatively, obtain information about the SMC socks
-> +	  through the ebpf program.
-> +
-> +	  If unsure, say N.
-> diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
-> index 50c38b6..7406fd4 100644
-> --- a/net/smc/af_smc.c
-> +++ b/net/smc/af_smc.c
-> @@ -52,6 +52,7 @@
->   #include "smc_close.h"
->   #include "smc_stats.h"
->   #include "smc_tracepoint.h"
-> +#include "smc_negotiator.h"
->   #include "smc_sysctl.h"
->   
->   static DEFINE_MUTEX(smc_server_lgr_pending);	/* serialize link group
-> @@ -68,6 +69,119 @@
->   static void smc_tcp_listen_work(struct work_struct *);
->   static void smc_connect_work(struct work_struct *);
->   
-> +#ifdef CONFIG_SMC_BPF
-> +
-> +/* Check if sock should use smc */
-> +int smc_sock_should_select_smc(const struct smc_sock *smc)
-> +{
-> +	const struct smc_sock_negotiator_ops *ops;
-> +	int ret;
-> +
-> +	rcu_read_lock();
-> +	ops = READ_ONCE(smc->negotiator_ops);
-> +
-> +	/* No negotiator_ops supply or no negotiate func set,
-> +	 * always pass it.
-> +	 */
-> +	if (!ops || !ops->negotiate) {
-
-A smc_sock_negotiator_ops without ->negotiate? Is it useful at all to allow the 
-register in the first place?
-
-> +		rcu_read_unlock();
-> +		return SK_PASS;
-> +	}
-> +
-> +	ret = ops->negotiate((struct sock *)&smc->sk);
-> +	rcu_read_unlock();
-> +	return ret;
-> +}
-> +
-> +void smc_sock_perform_collecting_info(const struct smc_sock *smc, int timing)
-> +{
-> +	const struct smc_sock_negotiator_ops *ops;
-> +
-> +	rcu_read_lock();
-> +	ops = READ_ONCE(smc->negotiator_ops);
-> +
-> +	if (!ops || !ops->collect_info) {
-> +		rcu_read_unlock();
-> +		return;
-> +	}
-> +
-> +	ops->collect_info((struct sock *)&smc->sk, timing);
-> +	rcu_read_unlock();
-> +}
-> +
-> +int smc_sock_assign_negotiator_ops(struct smc_sock *smc, const char *name)
-> +{
-> +	struct smc_sock_negotiator_ops *ops;
-> +	int ret = -EINVAL;
-> +
-> +	/* already set */
-> +	if (READ_ONCE(smc->negotiator_ops))
-> +		smc_sock_cleanup_negotiator_ops(smc, /* might be still referenced */ false);
-> +
-> +	/* Just for clear negotiator_ops */
-> +	if (!name || !strlen(name))
-> +		return 0;
-> +
-> +	rcu_read_lock();
-> +	ops = smc_negotiator_ops_get_by_name(name);
-> +	if (likely(ops)) {
-> +		if (unlikely(!bpf_try_module_get(ops, ops->owner))) {
-> +			ret = -EACCES;
-> +		} else {
-> +			WRITE_ONCE(smc->negotiator_ops, ops);
-> +			/* make sure ops can be seen */
-> +			smp_wmb();
-
-This rcu_read_lock(), WRITE_ONCE, and smp_wmb() combo looks very suspicious. 
-smc->negotiator_ops is protected by rcu (+refcnt) or lock_sock()?
-
-I am going to stop reviewing here.
-
-> +			if (ops->init)
-> +				ops->init(&smc->sk);
-> +			ret = 0;
-> +		}
-> +	}
-> +	rcu_read_unlock();
-> +	return ret;
-> +}
-> +
-> +void smc_sock_cleanup_negotiator_ops(struct smc_sock *smc, bool no_more)
-> +{
-> +	const struct smc_sock_negotiator_ops *ops;
-> +
-> +	ops = READ_ONCE(smc->negotiator_ops);
-> +
-> +	/* not all smc sock has negotiator_ops */
-> +	if (!ops)
-> +		return;
-> +
-> +	might_sleep();
-> +
-> +	/* Just ensure data integrity */
-> +	WRITE_ONCE(smc->negotiator_ops, NULL);
-> +	/* make sure NULL can be seen */
-> +	smp_wmb();
-> +	/* if the socks may have references to the negotiator ops to be removed.
-> +	 * it means that we might need to wait for the readers of ops
-> +	 * to complete. It's slow though.
-> +	 */
-> +	if (unlikely(!no_more))
-> +		synchronize_rcu();
-> +	if (ops->release)
-> +		ops->release(&smc->sk);
-> +	bpf_module_put(ops, ops->owner);
-> +}
-> +
-> +void smc_sock_clone_negotiator_ops(struct sock *parent, struct sock *child)
-> +{
-> +	const struct smc_sock_negotiator_ops *ops;
-> +
-> +	rcu_read_lock();
-> +	ops = READ_ONCE(smc_sk(parent)->negotiator_ops);
-> +	if (ops && bpf_try_module_get(ops, ops->owner)) {
-> +		smc_sk(child)->negotiator_ops = ops;
-> +		if (ops->init)
-> +			ops->init(child);
-> +	}
-> +	rcu_read_unlock();
-> +}
-> +#endif
-> +
->   int smc_nl_dump_hs_limitation(struct sk_buff *skb, struct netlink_callback *cb)
->   {
->   	struct smc_nl_dmp_ctx *cb_ctx = smc_nl_dmp_ctx(cb);
-> @@ -166,6 +280,9 @@ static bool smc_hs_congested(const struct sock *sk)
->   	if (workqueue_congested(WORK_CPU_UNBOUND, smc_hs_wq))
->   		return true;
->   
-> +	if (!smc_sock_should_select_smc(smc))
-> +		return true;
-> +
->   	return false;
->   }
->   
-> @@ -320,6 +437,9 @@ static int smc_release(struct socket *sock)
->   	sock_hold(sk); /* sock_put below */
->   	smc = smc_sk(sk);
->   
-> +	/* trigger info gathering if needed.*/
-> +	smc_sock_perform_collecting_info(smc, SMC_SOCK_CLOSED_TIMING);
-> +
->   	old_state = sk->sk_state;
->   
->   	/* cleanup for a dangling non-blocking connect */
-> @@ -356,6 +476,9 @@ static int smc_release(struct socket *sock)
->   
->   static void smc_destruct(struct sock *sk)
->   {
-> +	/* cleanup negotiator_ops if set */
-> +	smc_sock_cleanup_negotiator_ops(smc_sk(sk), /* no longer used */ true);
-> +
->   	if (sk->sk_state != SMC_CLOSED)
->   		return;
->   	if (!sock_flag(sk, SOCK_DEAD))
-> @@ -1627,7 +1750,14 @@ static int smc_connect(struct socket *sock, struct sockaddr *addr,
->   	}
->   
->   	smc_copy_sock_settings_to_clc(smc);
-> -	tcp_sk(smc->clcsock->sk)->syn_smc = 1;
-> +	/* accept out connection as SMC connection */
-> +	if (smc_sock_should_select_smc(smc) == SK_PASS) {
-> +		tcp_sk(smc->clcsock->sk)->syn_smc = 1;
-> +	} else {
-> +		tcp_sk(smc->clcsock->sk)->syn_smc = 0;
-> +		smc_switch_to_fallback(smc, /* active fallback */ 0);
-> +	}
-> +
->   	if (smc->connect_nonblock) {
->   		rc = -EALREADY;
->   		goto out;
-> @@ -1679,6 +1809,8 @@ static int smc_clcsock_accept(struct smc_sock *lsmc, struct smc_sock **new_smc)
->   	}
->   	*new_smc = smc_sk(new_sk);
->   
-> +	smc_sock_clone_negotiator_ops(lsk, new_sk);
-> +
->   	mutex_lock(&lsmc->clcsock_release_lock);
->   	if (lsmc->clcsock)
->   		rc = kernel_accept(lsmc->clcsock, &new_clcsock, SOCK_NONBLOCK);
-
+base-commit: 0b355ade2baf262f213da274411c0e05d8232a21
+-- 
+2.40.1
 
