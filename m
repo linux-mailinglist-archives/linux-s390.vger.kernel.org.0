@@ -2,120 +2,133 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BAFCA70911A
-	for <lists+linux-s390@lfdr.de>; Fri, 19 May 2023 10:00:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF04E70942D
+	for <lists+linux-s390@lfdr.de>; Fri, 19 May 2023 11:56:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229684AbjESIAZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 19 May 2023 04:00:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43686 "EHLO
+        id S230285AbjESJ4C (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 19 May 2023 05:56:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229572AbjESIAX (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 19 May 2023 04:00:23 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20E12EC;
-        Fri, 19 May 2023 01:00:22 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9893D654B3;
-        Fri, 19 May 2023 08:00:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EAAE4C4339E;
-        Fri, 19 May 2023 08:00:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684483221;
-        bh=sPRtpa2e0A1/1AI5Gdf3fcX269ohaGrXmwq0lvmMkCc=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=OV8c+XnXMvooXSBZzdK68WhqXtlmOrWm2QsYRg13wZxyJUrJ6ASI3Ca5GRVbuKbwN
-         kyc8QTlgITK0eH+DDI5p9HH3JZYFZEmNCYbwa45WXltdPqmY26sgwJyCopaSUwMyFw
-         W8SzoiDQDfRew4l0XXVG4AEVO3dV/qEjt6C3cjLUepBx7CpnEHC/xj0DTCaVvJHuSX
-         wK37lpi8oUUIRyMIwq7qddSzl3knBHDZsO7ucS9opL9EQlKztZy2s5cBXYryOtRU5U
-         /4CyrISWK4h/uMq0gEWQ8Ay9MYsJ34JEL1+SKZUV5dBJA1/QMp1dFgK0DyQc5eRwN8
-         NkePpPzQ82AAg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C943CC73FE0;
-        Fri, 19 May 2023 08:00:20 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S231492AbjESJz5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 19 May 2023 05:55:57 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0E23101;
+        Fri, 19 May 2023 02:55:55 -0700 (PDT)
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34J9dTKg030262;
+        Fri, 19 May 2023 09:55:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=zWrPtHA5HwykrIoUQBF1WZ+QVnbR/V6f0WbQ2BQ0qmY=;
+ b=sXtemUSAL6O5nSn5vSGZnxUfG9k17kyFx6GHZbPJsqMYDQL2r8C2RSjSTfUTctRRlqAW
+ YkVV8Zjn3wGbNeKW8ur1PqvlIdA0qdPFkZSvRg7iU9DMI+JChQ86qKSMQIpKnvUWKRle
+ hXnnqK+W12m8aYYRK7/4nfeqQQxRPynLUmnDJEi2S9Rj00a+Y4K2nJyZk8Jxf6wCCq1M
+ D8l0bJU7AtiIUUgoUsBAv3HxmNq4HYC5W1vcR9zkTdUFfEVdPA+oqvb1jyJZjQiXeQ6o
+ PyUyaqbGrYZcC9t8mDRshT+gcsODkqtneOI2dS/lPR0IztwMUISMS9WfwMYzEVut06g2 Sg== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qp4q5ufs1-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 19 May 2023 09:55:54 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 34J9bCPX011002;
+        Fri, 19 May 2023 09:37:12 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3qj264u3ms-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 19 May 2023 09:37:12 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 34J9b8tM26215042
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 May 2023 09:37:09 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D846E20043;
+        Fri, 19 May 2023 09:37:08 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 87E0320040;
+        Fri, 19 May 2023 09:37:08 +0000 (GMT)
+Received: from a46lp73.lnxne.boe (unknown [9.152.108.100])
+        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Fri, 19 May 2023 09:37:08 +0000 (GMT)
+From:   Steffen Eiden <seiden@linux.ibm.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>
+Cc:     Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Nico Boehr <nrb@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>
+Subject: [PATCH v2 0/6] s390/uvdevice: Expose secret UVCs
+Date:   Fri, 19 May 2023 11:37:02 +0200
+Message-Id: <20230519093708.810957-1-seiden@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] net/smc: Reset connection when trying to use SMCRv2
- fails.
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <168448322080.32188.9310241476362959617.git-patchwork-notify@kernel.org>
-Date:   Fri, 19 May 2023 08:00:20 +0000
-References: <1684386895-112162-1-git-send-email-guwen@linux.alibaba.com>
-In-Reply-To: <1684386895-112162-1-git-send-email-guwen@linux.alibaba.com>
-To:     Wen Gu <guwen@linux.alibaba.com>
-Cc:     kgraul@linux.ibm.com, wenjia@linux.ibm.com, jaka@linux.ibm.com,
-        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        liuyacan@corp.netease.com
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: ipRv6u8jMWiWy9gVIhYDw9I-Gqonbdkd
+X-Proofpoint-GUID: ipRv6u8jMWiWy9gVIhYDw9I-Gqonbdkd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-19_06,2023-05-17_02,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 adultscore=0 mlxscore=0 clxscore=1015 phishscore=0
+ spamscore=0 lowpriorityscore=0 priorityscore=1501 malwarescore=0
+ mlxlogscore=872 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2304280000 definitions=main-2305190080
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello:
+IBM Secure Execution guests may want to inject secrets into the Ultravisor(UV).
+Also they should be able to know which secrets the UV possesses and prevent the
+further addition of more secrets.
 
-This patch was applied to netdev/net.git (main)
-by David S. Miller <davem@davemloft.net>:
+Therefore, add three new Ultravisor-Calls and expose them via the uvdevice:
+Add Secret, List Secrets, and Lock Secrets.
+The uvdevice still acts as the messenger only and does not inspect or modify
+the requests. Only some sanity checks are made to prevent the kernel from corruption.
+Also add a new IOCTL to get information about the supported UV-calls of the uvdevice.
+As userspace wants to know which secrets, types, etc. are supported expose the corresponding
+UV Query info data to userspace via sysfs.
 
-On Thu, 18 May 2023 13:14:55 +0800 you wrote:
-> We found a crash when using SMCRv2 with 2 Mellanox ConnectX-4. It
-> can be reproduced by:
-> 
-> - smc_run nginx
-> - smc_run wrk -t 32 -c 500 -d 30 http://<ip>:<port>
-> 
->  BUG: kernel NULL pointer dereference, address: 0000000000000014
->  #PF: supervisor read access in kernel mode
->  #PF: error_code(0x0000) - not-present page
->  PGD 8000000108713067 P4D 8000000108713067 PUD 151127067 PMD 0
->  Oops: 0000 [#1] PREEMPT SMP PTI
->  CPU: 4 PID: 2441 Comm: kworker/4:249 Kdump: loaded Tainted: G        W   E      6.4.0-rc1+ #42
->  Workqueue: smc_hs_wq smc_listen_work [smc]
->  RIP: 0010:smc_clc_send_confirm_accept+0x284/0x580 [smc]
->  RSP: 0018:ffffb8294b2d7c78 EFLAGS: 00010a06
->  RAX: ffff8f1873238880 RBX: ffffb8294b2d7dc8 RCX: 0000000000000000
->  RDX: 00000000000000b4 RSI: 0000000000000001 RDI: 0000000000b40c00
->  RBP: ffffb8294b2d7db8 R08: ffff8f1815c5860c R09: 0000000000000000
->  R10: 0000000000000400 R11: 0000000000000000 R12: ffff8f1846f56180
->  R13: ffff8f1815c5860c R14: 0000000000000001 R15: 0000000000000001
->  FS:  0000000000000000(0000) GS:ffff8f1aefd00000(0000) knlGS:0000000000000000
->  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->  CR2: 0000000000000014 CR3: 00000001027a0001 CR4: 00000000003706e0
->  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->  Call Trace:
->   <TASK>
->   ? mlx5_ib_map_mr_sg+0xa1/0xd0 [mlx5_ib]
->   ? smcr_buf_map_link+0x24b/0x290 [smc]
->   ? __smc_buf_create+0x4ee/0x9b0 [smc]
->   smc_clc_send_accept+0x4c/0xb0 [smc]
->   smc_listen_work+0x346/0x650 [smc]
->   ? __schedule+0x279/0x820
->   process_one_work+0x1e5/0x3f0
->   worker_thread+0x4d/0x2f0
->   ? __pfx_worker_thread+0x10/0x10
->   kthread+0xe5/0x120
->   ? __pfx_kthread+0x10/0x10
->   ret_from_fork+0x2c/0x50
->   </TASK>
-> 
-> [...]
+The series contains:
+  * A new info IOCTL, giving information about the capabilities of the uvdevice and UV
+  * 3 patches adding new Ultravisor-Calls and expose them to userspace
+  * A patch replacing scnprintf with sysfs_emit in arch/s390/kernel/uv.c
+  * A patch with an Ultravisor Query Info update for the new secret related information
 
-Here is the summary with links:
-  - [net] net/smc: Reset connection when trying to use SMCRv2 fails.
-    https://git.kernel.org/netdev/net/c/35112271672a
 
-You are awesome, thank you!
+Changes for v2:
+  * use __set_bit instead of the atomic set_bit (Heiko)
+  * add a patch for replacing scnprintf with sysfs_emit in arch/s390/kernel/uv.c (Heiko)
+  * use scnprintf instead of sysfs_emit for the new sysfs entries in the last patch (Heiko)
+  * use hex values in struct definitions (Claudio)
+
+
+
+Steffen
+
+Steffen Eiden (6):
+  s390/uvdevice: Add info IOCTL
+  s390/uvdevice: Add 'Add Secret' UVC
+  s390/uvdevice: Add 'List Secrets' UVC
+  s390/uvdevice: Add 'Lock Secret Store' UVC
+  s390/uv: replace scnprintf with sysfs_emit
+  s390/uv: Update query for secret-UVCs
+
+ arch/s390/boot/uv.c                   |   4 +
+ arch/s390/include/asm/uv.h            |  32 +++-
+ arch/s390/include/uapi/asm/uvdevice.h |  56 ++++++-
+ arch/s390/kernel/uv.c                 |  76 ++++++---
+ drivers/s390/char/uvdevice.c          | 229 +++++++++++++++++++++++++-
+ 5 files changed, 366 insertions(+), 31 deletions(-)
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.40.1
 
