@@ -2,236 +2,124 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C30A70BCB3
-	for <lists+linux-s390@lfdr.de>; Mon, 22 May 2023 13:58:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F22470C0E0
+	for <lists+linux-s390@lfdr.de>; Mon, 22 May 2023 16:20:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233615AbjEVL6s (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 22 May 2023 07:58:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36640 "EHLO
+        id S233631AbjEVOT5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 22 May 2023 10:19:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233602AbjEVL6n (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 22 May 2023 07:58:43 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA6401B4;
-        Mon, 22 May 2023 04:58:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684756705; x=1716292705;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=FoJTA2x8O689fca/M93WyP56FZmqpQ0OhJBWveNQU+4=;
-  b=OV1pFRPtk7J4RHkk6yrTKw+apQ859NMuZB8dQrkQ87jbuWR1KkfnVM+s
-   ziCCiBIt+qQgW0oE/h8L9MHaMtmzUqx/kMMCYzv8ObkVOzReO7Ea24Zjf
-   3bUNmrbgMMk8tIoURnRBB4P05h0/gD7Jf7UPwNF1KQ2D0MjU4ITBMxAUf
-   4hPegUDsv1dHdUMD53VcPRyJc2xKNPYgvQtgoxMuVnY/3Gv5X1OWCrEC3
-   Y+1Tt4OPNBApLipVIna5rebWlLislq/S7rvcqKRMUZzTHsi699lpn6kjG
-   uiqpn3V23XWigga/3ChGSESI+DKO++2R+j7m6FgHf48e7yb/ai+UNGAD9
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10717"; a="356128244"
-X-IronPort-AV: E=Sophos;i="6.00,184,1681196400"; 
-   d="scan'208";a="356128244"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2023 04:58:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10717"; a="815660290"
-X-IronPort-AV: E=Sophos;i="6.00,184,1681196400"; 
-   d="scan'208";a="815660290"
-Received: from 984fee00a4c6.jf.intel.com ([10.165.58.231])
-  by fmsmga002.fm.intel.com with ESMTP; 22 May 2023 04:58:03 -0700
-From:   Yi Liu <yi.l.liu@intel.com>
-To:     alex.williamson@redhat.com, jgg@nvidia.com, kevin.tian@intel.com
-Cc:     joro@8bytes.org, robin.murphy@arm.com, cohuck@redhat.com,
-        eric.auger@redhat.com, nicolinc@nvidia.com, kvm@vger.kernel.org,
-        mjrosato@linux.ibm.com, chao.p.peng@linux.intel.com,
-        yi.l.liu@intel.com, yi.y.sun@linux.intel.com, peterx@redhat.com,
-        jasowang@redhat.com, shameerali.kolothum.thodi@huawei.com,
-        lulu@redhat.com, suravee.suthikulpanit@amd.com,
-        intel-gvt-dev@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, linux-s390@vger.kernel.org,
-        xudong.hao@intel.com, yan.y.zhao@intel.com, terrence.xu@intel.com,
-        yanting.jiang@intel.com, zhenzhong.duan@intel.com,
-        clegoate@redhat.com
-Subject: [PATCH v6 10/10] vfio/pci: Allow passing zero-length fd array in VFIO_DEVICE_PCI_HOT_RESET
-Date:   Mon, 22 May 2023 04:57:51 -0700
-Message-Id: <20230522115751.326947-11-yi.l.liu@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230522115751.326947-1-yi.l.liu@intel.com>
-References: <20230522115751.326947-1-yi.l.liu@intel.com>
+        with ESMTP id S233697AbjEVOTz (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 22 May 2023 10:19:55 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBD4DF9;
+        Mon, 22 May 2023 07:19:51 -0700 (PDT)
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34MEFPol018220;
+        Mon, 22 May 2023 14:18:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=z2ZSDd89AXbLMt+6T7YsO2fdF0Yi8CPnR5yZ/lkSqSY=;
+ b=b6NU5OeCXax+WrVwHJKBxU/2eP96sPFh/BlyPWwACQ/7wUWy6YKEjXCQw9pGRd6Hq9u6
+ MLWn9B4REgKuxAwXLXxVoiQ/caTY+5b2VJYARsH2GLmnE/WF+75uxVAMsycMBbGGbTN0
+ WdlESeBK8OJxuulsQRedH+dgpSmBwtogMv1YWS89315e3uleicCPE65liI3FCc0CRUsp
+ IMoEoP6IguzCWOKm9MeOaeUZ0trUtnp3AJqz9TIT2AQ7wc2ARtMGjMJ+GvNpVqnqflEm
+ 38hJ8QrXOMCAwnMAHMotE71twb0+4R7u+wbmNBqvd9/1givEuwWgmivHIjEM5kOfo1wL Yg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qr8y9au0p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 22 May 2023 14:18:53 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34MEFUDT018701;
+        Mon, 22 May 2023 14:18:52 GMT
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qr8y9atyc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 22 May 2023 14:18:52 +0000
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 34M812dN006123;
+        Mon, 22 May 2023 14:18:49 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma03fra.de.ibm.com (PPS) with ESMTPS id 3qppe08ty6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 22 May 2023 14:18:49 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 34MEIj8V35258654
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 May 2023 14:18:45 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C7DAC2004B;
+        Mon, 22 May 2023 14:18:45 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2169620040;
+        Mon, 22 May 2023 14:18:43 +0000 (GMT)
+Received: from osiris (unknown [9.171.20.176])
+        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Mon, 22 May 2023 14:18:43 +0000 (GMT)
+Date:   Mon, 22 May 2023 16:18:41 +0200
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     bigeasy@linutronix.de, mark.rutland@arm.com, maz@kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
+        kernel@xen0n.name, gor@linux.ibm.com, agordeev@linux.ibm.com,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com,
+        pbonzini@redhat.com, wanpengli@tencent.com, vkuznets@redhat.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        jgross@suse.com, boris.ostrovsky@oracle.com,
+        daniel.lezcano@linaro.org, kys@microsoft.com,
+        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+        rafael@kernel.org, longman@redhat.com, boqun.feng@gmail.com,
+        pmladek@suse.com, senozhatsky@chromium.org, rostedt@goodmis.org,
+        john.ogness@linutronix.de, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+        vschneid@redhat.com, jstultz@google.com, sboyd@kernel.org,
+        linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 06/13] s390/time: Provide sched_clock_noinstr()
+Message-ID: <ZGt5wR/VyVFTPHEK@osiris>
+References: <20230519102058.581557770@infradead.org>
+ <20230519102715.570170436@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230519102715.570170436@infradead.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 8u38vrNKBwlno1xrZVRe_usY_SDPYYwI
+X-Proofpoint-GUID: -02WeZ8d1wkDcrhX0-M0Ma7vvv7DyGGi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-05-22_10,2023-05-22_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
+ malwarescore=0 suspectscore=0 adultscore=0 priorityscore=1501 bulkscore=0
+ impostorscore=0 clxscore=1011 lowpriorityscore=0 mlxscore=0
+ mlxlogscore=643 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305220117
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This is the way user to invoke hot-reset for the devices opened by cdev
-interface. User should check the flag VFIO_PCI_HOT_RESET_FLAG_DEV_ID_OWNED
-in the output of VFIO_DEVICE_GET_PCI_HOT_RESET_INFO ioctl before doing
-hot-reset for cdev devices.
+On Fri, May 19, 2023 at 12:21:04PM +0200, Peter Zijlstra wrote:
+> With the intent to provide local_clock_noinstr(), a variant of
+> local_clock() that's safe to be called from noinstr code (with the
+> assumption that any such code will already be non-preemptible),
+> prepare for things by providing a noinstr sched_clock_noinstr()
+> function.
+> 
+> Specifically, preempt_enable_*() calls out to schedule(), which upsets
+> noinstr validation efforts.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  arch/s390/include/asm/timex.h |   13 +++++++++----
+>  arch/s390/kernel/time.c       |   11 ++++++++++-
+>  2 files changed, 19 insertions(+), 5 deletions(-)
 
-Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-Tested-by: Yanting Jiang <yanting.jiang@intel.com>
-Signed-off-by: Yi Liu <yi.l.liu@intel.com>
----
- drivers/vfio/pci/vfio_pci_core.c | 56 +++++++++++++++++++++++++-------
- include/uapi/linux/vfio.h        | 14 ++++++++
- 2 files changed, 59 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index 890065f846e4..67f1cb426505 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -181,7 +181,8 @@ static void vfio_pci_probe_mmaps(struct vfio_pci_core_device *vdev)
- struct vfio_pci_group_info;
- static void vfio_pci_dev_set_try_reset(struct vfio_device_set *dev_set);
- static int vfio_pci_dev_set_hot_reset(struct vfio_device_set *dev_set,
--				      struct vfio_pci_group_info *groups);
-+				      struct vfio_pci_group_info *groups,
-+				      struct iommufd_ctx *iommufd_ctx);
- 
- /*
-  * INTx masking requires the ability to disable INTx signaling via PCI_COMMAND
-@@ -1301,8 +1302,7 @@ vfio_pci_ioctl_pci_hot_reset_groups(struct vfio_pci_core_device *vdev,
- 	if (ret)
- 		return ret;
- 
--	/* Somewhere between 1 and count is OK */
--	if (!array_count || array_count > count)
-+	if (array_count > count || vfio_device_cdev_opened(&vdev->vdev))
- 		return -EINVAL;
- 
- 	group_fds = kcalloc(array_count, sizeof(*group_fds), GFP_KERNEL);
-@@ -1351,7 +1351,7 @@ vfio_pci_ioctl_pci_hot_reset_groups(struct vfio_pci_core_device *vdev,
- 	info.count = array_count;
- 	info.files = files;
- 
--	ret = vfio_pci_dev_set_hot_reset(vdev->vdev.dev_set, &info);
-+	ret = vfio_pci_dev_set_hot_reset(vdev->vdev.dev_set, &info, NULL);
- 
- hot_reset_release:
- 	for (file_idx--; file_idx >= 0; file_idx--)
-@@ -1380,7 +1380,11 @@ static int vfio_pci_ioctl_pci_hot_reset(struct vfio_pci_core_device *vdev,
- 	else if (pci_probe_reset_bus(vdev->pdev->bus))
- 		return -ENODEV;
- 
--	return vfio_pci_ioctl_pci_hot_reset_groups(vdev, hdr.count, slot, arg);
-+	if (hdr.count)
-+		return vfio_pci_ioctl_pci_hot_reset_groups(vdev, hdr.count, slot, arg);
-+
-+	return vfio_pci_dev_set_hot_reset(vdev->vdev.dev_set, NULL,
-+					  vfio_iommufd_device_ictx(&vdev->vdev));
- }
- 
- static int vfio_pci_ioctl_ioeventfd(struct vfio_pci_core_device *vdev,
-@@ -2347,13 +2351,16 @@ const struct pci_error_handlers vfio_pci_core_err_handlers = {
- };
- EXPORT_SYMBOL_GPL(vfio_pci_core_err_handlers);
- 
--static bool vfio_dev_in_groups(struct vfio_pci_core_device *vdev,
-+static bool vfio_dev_in_groups(struct vfio_device *vdev,
- 			       struct vfio_pci_group_info *groups)
- {
- 	unsigned int i;
- 
-+	if (!groups)
-+		return false;
-+
- 	for (i = 0; i < groups->count; i++)
--		if (vfio_file_has_dev(groups->files[i], &vdev->vdev))
-+		if (vfio_file_has_dev(groups->files[i], vdev))
- 			return true;
- 	return false;
- }
-@@ -2429,7 +2436,8 @@ static int vfio_pci_dev_set_pm_runtime_get(struct vfio_device_set *dev_set)
-  * get each memory_lock.
-  */
- static int vfio_pci_dev_set_hot_reset(struct vfio_device_set *dev_set,
--				      struct vfio_pci_group_info *groups)
-+				      struct vfio_pci_group_info *groups,
-+				      struct iommufd_ctx *iommufd_ctx)
- {
- 	struct vfio_pci_core_device *cur_mem;
- 	struct vfio_pci_core_device *cur_vma;
-@@ -2459,11 +2467,37 @@ static int vfio_pci_dev_set_hot_reset(struct vfio_device_set *dev_set,
- 		goto err_unlock;
- 
- 	list_for_each_entry(cur_vma, &dev_set->device_list, vdev.dev_set_list) {
-+		bool owned;
-+
- 		/*
--		 * Test whether all the affected devices are contained by the
--		 * set of groups provided by the user.
-+		 * Test whether all the affected devices can be reset by the
-+		 * user.
-+		 *
-+		 * If the user provides a set of groups, all the devices
-+		 * in the dev_set should be contained by the set of groups
-+		 * provided by the user.
-+		 *
-+		 * If the user provides a zero-length group fd array, then
-+		 * all the devices in the dev_set must be bound to the same
-+		 * iommufd_ctx as the input iommufd_ctx.  If there is any
-+		 * device that has not been bound to iommufd_ctx yet, check
-+		 * if its iommu_group has any device bound to the input
-+		 * iommufd_ctx Such devices can be considered owned by
-+		 * the input iommufd_ctx as the device cannot be owned
-+		 * by another iommufd_ctx when its iommu_group is owned.
-+		 *
-+		 * Otherwise, reset is not allowed.
- 		 */
--		if (!vfio_dev_in_groups(cur_vma, groups)) {
-+		if (iommufd_ctx) {
-+			int devid = vfio_iommufd_device_hot_reset_devid(&cur_vma->vdev,
-+									iommufd_ctx);
-+
-+			owned = (devid != VFIO_PCI_DEVID_NOT_OWNED);
-+		} else {
-+			owned = vfio_dev_in_groups(&cur_vma->vdev, groups);
-+		}
-+
-+		if (!owned) {
- 			ret = -EINVAL;
- 			goto err_undo;
- 		}
-diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-index 01203215251a..24858b650562 100644
---- a/include/uapi/linux/vfio.h
-+++ b/include/uapi/linux/vfio.h
-@@ -686,6 +686,9 @@ enum {
-  *	  Flag VFIO_PCI_HOT_RESET_FLAG_DEV_ID_OWNED would be set when all the
-  *	  affected devices are owned by the user.  This flag is available only
-  *	  when VFIO_PCI_HOT_RESET_FLAG_DEV_ID is set, otherwise reserved.
-+ *	  When set, user could invoke VFIO_DEVICE_PCI_HOT_RESET with a zero
-+ *	  length fd array on the calling device as the ownership is validated
-+ *	  by iommufd_ctx.
-  *
-  * Return: 0 on success, -errno on failure:
-  *	-enospc = insufficient buffer, -enodev = unsupported for device.
-@@ -717,6 +720,17 @@ struct vfio_pci_hot_reset_info {
-  * VFIO_DEVICE_PCI_HOT_RESET - _IOW(VFIO_TYPE, VFIO_BASE + 13,
-  *				    struct vfio_pci_hot_reset)
-  *
-+ * Userspace requests hot reset for the devices it operates.  Due to the
-+ * underlying topology, multiple devices can be affected in the reset
-+ * while some might be opened by another user.  To avoid interference
-+ * the calling user must ensure all affected devices are owned by itself.
-+ *
-+ * As the ownership described by VFIO_DEVICE_GET_PCI_HOT_RESET_INFO, the
-+ * cdev opened devices must exclusively provide a zero-length fd array and
-+ * the group opened devices must exclusively use an array of group fds for
-+ * proof of ownership.  Mixed access to devices between cdev and legacy
-+ * groups are not supported by this interface.
-+ *
-  * Return: 0 on success, -errno on failure.
-  */
- struct vfio_pci_hot_reset {
--- 
-2.34.1
-
+Acked-by: Heiko Carstens <hca@linux.ibm.com>
