@@ -2,259 +2,270 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EB4870F5C0
-	for <lists+linux-s390@lfdr.de>; Wed, 24 May 2023 13:58:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8FE570F95D
+	for <lists+linux-s390@lfdr.de>; Wed, 24 May 2023 16:55:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232046AbjEXL6a (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 24 May 2023 07:58:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38092 "EHLO
+        id S236254AbjEXOzv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 24 May 2023 10:55:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229630AbjEXL63 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 24 May 2023 07:58:29 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AEB3135;
-        Wed, 24 May 2023 04:58:27 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 802D622168;
-        Wed, 24 May 2023 11:58:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1684929505; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rH18iBwWnn9zYEQ2bRQgcgXCwVXM3ls6ER1KLLT/r60=;
-        b=WMTRqdgWgo5Xv1JGWXGXa/4leJ+kA3Fr2EvuxoJ+Aqe6NU5zbCpx8cdBkJRqivz3zlmCI8
-        fYweNr+iUlPQUznzgqAE9D1FG4L+KMokWqHKNGTedF59FJDkPiQa49qcPJoEz7QSNuY/TE
-        11uKzpPFgkG44/ySFC88vJeQKALxzNA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1684929505;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rH18iBwWnn9zYEQ2bRQgcgXCwVXM3ls6ER1KLLT/r60=;
-        b=5OLIE73rOKr/k1ojPtkzX/HPu5nXWbAb/WgNuvY9KLod1eci7r+KTUnNLWeyZDjI8HJPtV
-        go+jXuaQCYw1m7Dw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id F3D0D13425;
-        Wed, 24 May 2023 11:58:24 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id cu/HOuD7bWSZVgAAMHmgww
-        (envelope-from <vbabka@suse.cz>); Wed, 24 May 2023 11:58:24 +0000
-Message-ID: <18c33bf0-0c7e-7584-5149-33cf77b50b8a@suse.cz>
-Date:   Wed, 24 May 2023 13:58:24 +0200
+        with ESMTP id S236268AbjEXOzu (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 24 May 2023 10:55:50 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7116419C;
+        Wed, 24 May 2023 07:55:20 -0700 (PDT)
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34OEmEOA022580;
+        Wed, 24 May 2023 14:53:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : subject : date :
+ message-id : content-type : to : cc : content-transfer-encoding :
+ mime-version; s=pp1; bh=o3/MWFRFefepIFkX0g5w51Xxyjj/76WvtrHm4xglf9g=;
+ b=aYPWfWE37yj8XuGNdoSNI2aPYJuy/b/rs/7vZovJRz1LIRHBif/b6GyXX8f1+QGeyJi0
+ 6FjwjG53co9bP145Sc2QavIhdyDQo2QOqD/rhw8aQ9FI9occvVu3tUUzEGiMP19TkdZk
+ anihJEkkfmpjcPhlsdBIEune6tC09BcneeeWEyVnH5FbYF4c6andvcY8X1NUSyu0ewfm
+ KTO1/zHJqrrRqH8arLBGQas2pUdqT7mhav/NLoel1kyMnvQPpaQJoooLAX+Yn5PDCCZd
+ Rp8t0xy1bRqk/e74MrJVGK0/h1+JFutMm0Esb/RMCR+oIsx256jcwigKsQzFoBy4zkCJ RA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qsmca0t9c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 May 2023 14:53:27 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34OErHsx007982;
+        Wed, 24 May 2023 14:53:26 GMT
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qsmca0t7y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 May 2023 14:53:26 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 34O3dxPY018742;
+        Wed, 24 May 2023 14:53:23 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+        by ppma04ams.nl.ibm.com (PPS) with ESMTPS id 3qppdk20xy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 May 2023 14:53:23 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 34OErJW710617398
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 May 2023 14:53:19 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5623B20043;
+        Wed, 24 May 2023 14:53:19 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 785D320040;
+        Wed, 24 May 2023 14:53:18 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Wed, 24 May 2023 14:53:18 +0000 (GMT)
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+Subject: [PATCH v10 0/6] iommu/dma: s390 DMA API conversion and optimized
+ IOTLB flushing
+Date:   Wed, 24 May 2023 16:53:03 +0200
+Message-Id: <20230310-dma_iommu-v10-0-f1fbd8310854@linux.ibm.com>
+Content-Type: text/plain; charset="utf-8"
+X-B4-Tracking: v=1; b=H4sIAM8kbmQC/3WO22rDMBBEfyXouTK6OVby1P8oJeiyrhZ0KVJsE
+ oL/vXJeCqHdtxn2zMyDNKgIjZwPD1JhxYYld8HZ24G4YPIXUPTdIIIJySRn1CdzwZLSQkdgSrt
+ R6qOaSP+3pgG11WQXOpGXGLv5XWHG27Ph47PruZZEr6GC+Y0VgvFR9Bu45loqRTltLmSIEd4j5
+ uU2oE2DK2mvCdiupd6fk1e95/41btWUUSHV5GcLfjLzS9C+ZT39S586fRyt1eC9sGBf6W3bfgB
+ Bc7HIPAEAAA==
+To:     Joerg Roedel <joro@8bytes.org>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Wenjia Zhang <wenjia@linux.ibm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Gerd Bayer <gbayer@linux.ibm.com>,
+        Julian Ruess <julianr@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        Alexandra Winter <wintera@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Hector Martin <marcan@marcan.st>,
+        Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Yong Wu <yong.wu@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Krishna Reddy <vdumpa@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux.dev, asahi@lists.linux.dev,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
+        linux-doc@vger.kernel.org
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6238;
+ i=schnelle@linux.ibm.com; h=from:subject:message-id;
+ bh=yIKSQ6WeGhOEOKXK+OeLJIk/5KGQmPZUegiZ8Nq1Vqo=;
+ b=owGbwMvMwCH2Wz534YHOJ2GMp9WSGFLyVO7uVmdicuzb6JOkL9wzWSf28U21Vu4VzDvSsnisp
+ b7z+5l1lLIwiHEwyIopsizqcvZbVzDFdE9QfwfMHFYmkCEMXJwCMBG+Bwz/fVa2v7M1SnrcuXhT
+ e/V2ZRFVh5/SVlofl31h+KtzOTn3B8M/nctb7H++n+f0xE+zyNM13XSywx2OzI/tNxT3H5BqKPV
+ kBQA=
+X-Developer-Key: i=schnelle@linux.ibm.com; a=openpgp;
+ fpr=9DB000B2D2752030A5F72DDCAFE43F15E8C26090
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 4dXD_vuqQGAYNM67ugSbsuRGVKBdvinp
+X-Proofpoint-ORIG-GUID: S1Mx_-7pcxtj60EHxtM_4KJFHf524BaH
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v3 09/11] mm/slub: Fold slab_update_freelist()
-Content-Language: en-US
-To:     Peter Zijlstra <peterz@infradead.org>,
-        torvalds@linux-foundation.org
-Cc:     corbet@lwn.net, will@kernel.org, boqun.feng@gmail.com,
-        mark.rutland@arm.com, catalin.marinas@arm.com, dennis@kernel.org,
-        tj@kernel.org, cl@linux.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
-        svens@linux.ibm.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, joro@8bytes.org, suravee.suthikulpanit@amd.com,
-        robin.murphy@arm.com, dwmw2@infradead.org,
-        baolu.lu@linux.intel.com, Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
-        penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        roman.gushchin@linux.dev, 42.hyeyoo@gmail.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux.dev, linux-arch@vger.kernel.org,
-        linux-crypto@vger.kernel.org
-References: <20230515075659.118447996@infradead.org>
- <20230515080554.520976397@infradead.org>
-From:   Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20230515080554.520976397@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-05-24_09,2023-05-24_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 lowpriorityscore=0 malwarescore=0 priorityscore=1501
+ phishscore=0 clxscore=1015 adultscore=0 mlxscore=0 spamscore=0
+ mlxlogscore=999 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2304280000 definitions=main-2305240119
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 5/15/23 09:57, Peter Zijlstra wrote:
-> The two functions slab_update_freelist() and __slab_update_freelist()
-> are nearly identical, fold and add a boolean argument and rely on
-> constant propagation.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Hi All,
 
-Something like that has been tried before and the result:
-https://lore.kernel.org/all/CAHk-=wiJLqL2cUhJbvpyPQpkbVOu1rVSzgO2=S2jC55hneLtfQ@mail.gmail.com/
+This patch series converts s390's PCI support from its platform specific DMA
+API implementation in arch/s390/pci/pci_dma.c to the common DMA IOMMU layer.
+The conversion itself is done in patches 3-4 with patch 2 providing the final
+necessary IOMMU driver improvement to handle s390's special IOTLB flush
+out-of-resource indication in virtualized environments. Patches 1-2 may be
+applied independently. The conversion itself only touches the s390 IOMMU driver
+and s390 arch code moving over remaining functions from the s390 DMA API
+implementation. No changes to common code are necessary.
 
-Your parameter is not called 'locked' but 'irq_save' which is better, but
-that's just one detail.
+After patch 4 the basic conversion is done and on our partitioning machine
+hypervisor LPAR performance matches or exceeds the existing code. When running
+under z/VM or KVM however, performance plummets to about half of the existing
+code due to a much higher rate of IOTLB flushes for unmapped pages. Due to the
+hypervisors use of IOTLB flushes to synchronize their shadow tables these are
+very expensive and minimizing them is key for regaining the performance loss.
 
-After your refactoring in 08/11 which puts most of the code into
-__update_freelist_fast() and _slow() I'd say the result is not so bad already.
+To this end patches 5-6 add a new, single queue, IOTLB flushing scheme as
+an alternative to the existing per-CPU flush queues. Introducing an alternative
+scheme was also suggested by Robin Murphy[1]. In the previous RFC of this
+conversion Robin suggested reusing more of the existing queuing logic which
+I incorporated since v2. The single queue mode is introduced in patch
+5 together with a new .shadow_on_flush flag bit in struct dev_iommu
+which allows IOMMU drivers to indicate that thier IOTLB flushes do the
+extra work of shadowing and triggering the dma-iommu code to use single
+queue mode.
 
-BTW I have some suspicion that some SLUB code is based on assumptions that
-are no longer true these days. IIRC I've seen some microbenchmark results a
-while ago that showed that disabling/enabling irqs is surprisingly (to me)
-very cheap today, so maybe it's not so useful to keep doing the
-this_cpu_cmpxchg128 for the struct kmem_cache_cpu operations (less so for
-struct slab cmpxchg128 where actually different cpus may be involved). But
-it needs a closer look.
+Then patch 6 enables variable queue sizes using power of 2 queue sizes
+and shift/mask to keep performance as close to the existing code as
+possible. A larger queue size and timeout is then also used by dma-iommu
+when shadow_on_flush is set. This same scheme may also be used by other
+IOMMU drivers with similar requirements. Particularly virtio-iommu may be
+a candidate.
 
-> ---
->  mm/slub.c |   80 +++++++++++++++++++++-----------------------------------------
->  1 file changed, 28 insertions(+), 52 deletions(-)
-> 
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -559,53 +559,29 @@ __update_freelist_slow(struct slab *slab
->   * allocation/ free operation in hardirq context. Therefore nothing can
->   * interrupt the operation.
->   */
-> -static inline bool __slab_update_freelist(struct kmem_cache *s, struct slab *slab,
-> -		void *freelist_old, unsigned long counters_old,
-> -		void *freelist_new, unsigned long counters_new,
-> -		const char *n)
-> +static __always_inline
-> +bool slab_update_freelist(struct kmem_cache *s, struct slab *slab,
-> +			  void *freelist_old, unsigned long counters_old,
-> +			  void *freelist_new, unsigned long counters_new,
-> +			  bool irq_save, const char *n)
->  {
->  	bool ret;
->  
-> -	if (USE_LOCKLESS_FAST_PATH())
-> +	if (!irq_save && USE_LOCKLESS_FAST_PATH())
->  		lockdep_assert_irqs_disabled();
->  
->  	if (s->flags & __CMPXCHG_DOUBLE) {
->  		ret = __update_freelist_fast(slab, freelist_old, counters_old,
->  				            freelist_new, counters_new);
->  	} else {
-> -		ret = __update_freelist_slow(slab, freelist_old, counters_old,
-> -				            freelist_new, counters_new);
-> -	}
-> -	if (likely(ret))
-> -		return true;
-> -
-> -	cpu_relax();
-> -	stat(s, CMPXCHG_DOUBLE_FAIL);
-> -
-> -#ifdef SLUB_DEBUG_CMPXCHG
-> -	pr_info("%s %s: cmpxchg double redo ", n, s->name);
-> -#endif
-> -
-> -	return false;
-> -}
-> -
-> -static inline bool slab_update_freelist(struct kmem_cache *s, struct slab *slab,
-> -		void *freelist_old, unsigned long counters_old,
-> -		void *freelist_new, unsigned long counters_new,
-> -		const char *n)
-> -{
-> -	bool ret;
-> -
-> -	if (s->flags & __CMPXCHG_DOUBLE) {
-> -		ret = __update_freelist_fast(slab, freelist_old, counters_old,
-> -				            freelist_new, counters_new);
-> -	} else {
->  		unsigned long flags;
->  
-> -		local_irq_save(flags);
-> +		if (irq_save)
-> +			local_irq_save(flags);
->  		ret = __update_freelist_slow(slab, freelist_old, counters_old,
->  				            freelist_new, counters_new);
-> -		local_irq_restore(flags);
-> +		if (irq_save)
-> +			local_irq_restore(flags);
->  	}
->  	if (likely(ret))
->  		return true;
-> @@ -2250,10 +2226,10 @@ static inline void *acquire_slab(struct
->  	VM_BUG_ON(new.frozen);
->  	new.frozen = 1;
->  
-> -	if (!__slab_update_freelist(s, slab,
-> -			freelist, counters,
-> -			new.freelist, new.counters,
-> -			"acquire_slab"))
-> +	if (!slab_update_freelist(s, slab,
-> +				  freelist, counters,
-> +				  new.freelist, new.counters,
-> +				  false, "acquire_slab"))
->  		return NULL;
->  
->  	remove_partial(n, slab);
-> @@ -2577,9 +2553,9 @@ static void deactivate_slab(struct kmem_
->  
->  
->  	if (!slab_update_freelist(s, slab,
-> -				old.freelist, old.counters,
-> -				new.freelist, new.counters,
-> -				"unfreezing slab")) {
-> +				  old.freelist, old.counters,
-> +				  new.freelist, new.counters,
-> +				  true, "unfreezing slab")) {
->  		if (mode == M_PARTIAL)
->  			spin_unlock_irqrestore(&n->list_lock, flags);
->  		goto redo;
-> @@ -2633,10 +2609,10 @@ static void __unfreeze_partials(struct k
->  
->  			new.frozen = 0;
->  
-> -		} while (!__slab_update_freelist(s, slab,
-> -				old.freelist, old.counters,
-> -				new.freelist, new.counters,
-> -				"unfreezing slab"));
-> +		} while (!slab_update_freelist(s, slab,
-> +					       old.freelist, old.counters,
-> +					       new.freelist, new.counters,
-> +					       false, "unfreezing slab"));
->  
->  		if (unlikely(!new.inuse && n->nr_partial >= s->min_partial)) {
->  			slab->next = slab_to_discard;
-> @@ -3072,10 +3048,10 @@ static inline void *get_freelist(struct
->  		new.inuse = slab->objects;
->  		new.frozen = freelist != NULL;
->  
-> -	} while (!__slab_update_freelist(s, slab,
-> -		freelist, counters,
-> -		NULL, new.counters,
-> -		"get_freelist"));
-> +	} while (!slab_update_freelist(s, slab,
-> +				       freelist, counters,
-> +				       NULL, new.counters,
-> +				       false, "get_freelist"));
->  
->  	return freelist;
->  }
-> @@ -3666,9 +3642,9 @@ static void __slab_free(struct kmem_cach
->  		}
->  
->  	} while (!slab_update_freelist(s, slab,
-> -		prior, counters,
-> -		head, new.counters,
-> -		"__slab_free"));
-> +				       prior, counters,
-> +				       head, new.counters,
-> +				       true, "__slab_free"));
->  
->  	if (likely(!n)) {
->  
-> 
-> 
+In a previous version I verified that the new scheme does work on my x86_64
+Ryzen workstation by locally modifying iommu_subsys_init() to default to the
+single queue mode and verifying its use via "/sys/.../iommu_group/type". I did
+not find problems with an AMD GPU, Intel NIC (with SR-IOV and KVM
+pass-through), NVMes or any on board peripherals.
+
+This code is also available in the b4/dma_iommu topic branch of my
+git.kernel.org repository[3] with tags the version sent.
+
+NOTE: Due to the large drop in performance I think we should not merge the DMA
+API conversion (patch 4) until we have a more suited IOVA flushing scheme
+with similar improvements as the proposed changes.
+
+Best regards,
+Niklas
+
+[0] https://lore.kernel.org/linux-iommu/20221109142903.4080275-1-schnelle@linux.ibm.com/
+[1] https://lore.kernel.org/linux-iommu/3e402947-61f9-b7e8-1414-fde006257b6f@arm.com/
+[2] https://lore.kernel.org/linux-iommu/a8e778da-7b41-a6ba-83c3-c366a426c3da@arm.com/
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/niks/linux.git/
+
+---
+Changes in v10:
+- Rebased on v6.4-rc3
+- Removed the .tune_dma_iommu() op in favor of a .shadow_on_flush flag
+  in struct dev_iommu which then let's the dma-iommu choose a single
+  queue and larger timeouts and IOVA counts. This leaves the dma-iommu
+  with full responsibility for the settings.
+- The above change affects patches 5 and 6 and lead to a new subject for
+  patch 6 since the flush queue size and timeout is no longer driver
+  controlled
+- Link to v9: https://lore.kernel.org/r/20230310-dma_iommu-v9-0-65bb8edd2beb@linux.ibm.com
+
+Changes in v9:
+- Rebased on v6.4-rc2
+- Re-ordered iommu_group_store_type() to allow passing the device to
+  iommu_dma_init_fq()
+- Link to v8: https://lore.kernel.org/r/20230310-dma_iommu-v8-0-2347dfbed7af@linux.ibm.com
+
+---
+Niklas Schnelle (6):
+      s390/ism: Set DMA coherent mask
+      iommu: Allow .iotlb_sync_map to fail and handle s390's -ENOMEM return
+      s390/pci: prepare is_passed_through() for dma-iommu
+      s390/pci: Use dma-iommu layer
+      iommu/dma: Allow a single FQ in addition to per-CPU FQs
+      iommu/dma: Use a large flush queue and timeout for shadow_on_flush
+
+ Documentation/admin-guide/kernel-parameters.txt |   9 +-
+ arch/s390/include/asm/pci.h                     |   7 -
+ arch/s390/include/asm/pci_clp.h                 |   3 +
+ arch/s390/include/asm/pci_dma.h                 | 119 +---
+ arch/s390/pci/Makefile                          |   2 +-
+ arch/s390/pci/pci.c                             |  22 +-
+ arch/s390/pci/pci_bus.c                         |   5 -
+ arch/s390/pci/pci_debug.c                       |  12 +-
+ arch/s390/pci/pci_dma.c                         | 735 ------------------------
+ arch/s390/pci/pci_event.c                       |  17 +-
+ arch/s390/pci/pci_sysfs.c                       |  19 +-
+ drivers/iommu/Kconfig                           |   4 +-
+ drivers/iommu/amd/iommu.c                       |   5 +-
+ drivers/iommu/apple-dart.c                      |   5 +-
+ drivers/iommu/dma-iommu.c                       | 212 +++++--
+ drivers/iommu/intel/iommu.c                     |   5 +-
+ drivers/iommu/msm_iommu.c                       |   5 +-
+ drivers/iommu/mtk_iommu.c                       |   5 +-
+ drivers/iommu/s390-iommu.c                      | 422 ++++++++++++--
+ drivers/iommu/sprd-iommu.c                      |   5 +-
+ drivers/iommu/sun50i-iommu.c                    |   6 +-
+ drivers/iommu/tegra-gart.c                      |   5 +-
+ drivers/s390/net/ism_drv.c                      |   2 +-
+ include/linux/iommu.h                           |   6 +-
+ 24 files changed, 632 insertions(+), 1005 deletions(-)
+---
+base-commit: 44c026a73be8038f03dbdeef028b642880cf1511
+change-id: 20230310-dma_iommu-5e048c538647
+
+Best regards,
+-- 
+Niklas Schnelle
+Linux on Z Development
+
+IBM Deutschland Research & Development GmbH
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: David Faller
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement - https://www.ibm.com/privacy 
 
