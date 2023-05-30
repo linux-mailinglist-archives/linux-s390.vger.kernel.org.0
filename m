@@ -2,144 +2,112 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EDF5E716748
-	for <lists+linux-s390@lfdr.de>; Tue, 30 May 2023 17:40:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD1B471681D
+	for <lists+linux-s390@lfdr.de>; Tue, 30 May 2023 17:54:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230178AbjE3Pk6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 30 May 2023 11:40:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32844 "EHLO
+        id S232744AbjE3PyC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 30 May 2023 11:54:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229922AbjE3Pkz (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 30 May 2023 11:40:55 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A841C5;
-        Tue, 30 May 2023 08:40:54 -0700 (PDT)
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34UFdPHa018125;
-        Tue, 30 May 2023 15:40:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=iCIkmtgM88mWH8lRvjTLr1ymQtyEbbJ3B8adCVY/hEI=;
- b=PuUmIORdTpU6zAMRCOXGItubO9UTrVWLe0FwRsS9F/cJA2nxnrqeSSBKGVWWrSzcAf9w
- w+91QNvn4z/V5auAU+LZBEqts19dul5DDwxISxBcOqbnKwIAebJagPp9jvL6IfHJes7P
- a5RGL77GAyoIugaIptdBD8+ez/Xai8ocpIaIjb5giK8Zq4xGx1G2WnT5Z0kJw6aPb7oi
- mqKEqpdF/UsQk/LLVbP31pl96KU+dTnXdgF75TVONnITQ5vJ1LzDZys/E2gvLloGQCkr
- ionUuxY4tcaJpKKJfQ6dJpfAcC50Teut4fe1PLn5p5xNxuGptD1fu44T8qRcXyYuoHM4 gw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qwbst7g58-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 May 2023 15:40:53 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34UFdiKP020651;
-        Tue, 30 May 2023 15:40:52 GMT
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qwbst7g3j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 May 2023 15:40:52 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 34U9UlCL020426;
-        Tue, 30 May 2023 15:35:50 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-        by ppma03fra.de.ibm.com (PPS) with ESMTPS id 3qu9g59a37-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 May 2023 15:35:50 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 34UFZk8f37093900
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 May 2023 15:35:46 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 723F720043;
-        Tue, 30 May 2023 15:35:46 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2C0BA20040;
-        Tue, 30 May 2023 15:35:46 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.152.224.66])
-        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Tue, 30 May 2023 15:35:46 +0000 (GMT)
-Date:   Tue, 30 May 2023 17:35:44 +0200
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        thuth@redhat.com, kvm@vger.kernel.org, david@redhat.com,
-        nrb@linux.ibm.com, nsg@linux.ibm.com, cohuck@redhat.com
-Subject: Re: [kvm-unit-tests PATCH v4 2/2] s390x: sclp: Implement
- SCLP_RC_INSUFFICIENT_SCCB_LENGTH
-Message-ID: <20230530173544.378a63c6@p-imbrenda>
-In-Reply-To: <20230530125243.18883-3-pmorel@linux.ibm.com>
-References: <20230530125243.18883-1-pmorel@linux.ibm.com>
-        <20230530125243.18883-3-pmorel@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+        with ESMTP id S232676AbjE3Px7 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 30 May 2023 11:53:59 -0400
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BCDA102
+        for <linux-s390@vger.kernel.org>; Tue, 30 May 2023 08:53:42 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id 41be03b00d2f7-53f70f5ef60so1838361a12.1
+        for <linux-s390@vger.kernel.org>; Tue, 30 May 2023 08:53:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685462022; x=1688054022;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=WNArju2Q8+Sr5dwcNQgGMkuM+vdAY/tBFjavnfU7aAs=;
+        b=m6P4SpRmIhLWilK2bwoWEMQsEWk/K6yhndm14R57q2fmXCIxmQD0hmLtubyT0ltNsD
+         5mzb/C0TgKgAvGKJRMLkGevN9ywiUjPUBVA17GMkjuXksQd7uKuMPAsayxRi957MlXgz
+         VF+5Lk9yteg1zp99/PHovVO1luQYBqZR1begl5GE6xnlUaOH7P8fp/y6TJyqCQrhfJOz
+         GmSLlBKjWMEbPAFAhBZaduYCAy/a7mb7dItIGo7O38cxcSSHJ3fi4GVHm5aPyFiNx0y7
+         0Ylcwe2+d6CvCscSCSmWp1hLDgSsGszHIHhs0OZ+Ti2EwuimZiT8yf6j1niWNwR5h9Dm
+         4p7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685462022; x=1688054022;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WNArju2Q8+Sr5dwcNQgGMkuM+vdAY/tBFjavnfU7aAs=;
+        b=JoqX2KVFpAD3dPapPpsNHrXFyMq+wz2Mln80KKg9bffzcv+qglqKgya24aOwIQd49V
+         cZZok0TyzLuv3zDtjAixQqABaMpYgBY/dSJDGLnvmbfzUBVD+W4wIK49CwK3xhUmBqXo
+         p4tn/RNszp7uQG9+DI9tIa0W20O3LgO2BQqr8V4OBabHD2LFl2YR0kPO1uePl+NQRWIk
+         0tTOg5mnH0Bcqy1xJKReTWkz1sLbBc/9y1ibILVr8jnum6xxGku2fGuL4fxsfKiLz+Cn
+         fxNHm2aU+LSY+vIlroxeWdcXcC9eFXTBWECc8F4GP8SjPStO8NkdeNlBGgdid+9dYVsG
+         6wkQ==
+X-Gm-Message-State: AC+VfDyrnJGE3Z8Gp7qVbqIfIdX0s9dimm8/WpMSlgjvFkRiVkGc0wik
+        C+ygJKaahB7/sP8QbXCudJGfvI3ktL/ij7/4gz0=
+X-Google-Smtp-Source: ACHHUZ7sn3ztVKnJjhBggbCbONyO+AsW8XNE2yHvSV08ahzB8uFM1wykgNjVYghRFNCNNXUNIoLTKjLnsrfc/pmUUYs=
+X-Received: by 2002:a17:90a:bf8c:b0:253:25c3:7a95 with SMTP id
+ d12-20020a17090abf8c00b0025325c37a95mr11888507pjs.14.1685462021937; Tue, 30
+ May 2023 08:53:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: uHXi4Ctt2ZpbbsBJGZ9a4qntP4Xq1iNv
-X-Proofpoint-GUID: egfCoHI-lJWB85cEcEqFdvfBPeZPbMju
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-05-30_11,2023-05-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
- bulkscore=0 lowpriorityscore=0 mlxscore=0 clxscore=1015 impostorscore=0
- priorityscore=1501 adultscore=0 suspectscore=0 malwarescore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2305300124
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a05:7022:ba3:b0:65:5d1b:9a16 with HTTP; Tue, 30 May 2023
+ 08:53:41 -0700 (PDT)
+Reply-To: jkirinec101@gmail.com
+From:   marine <jessicakirinec1@gmail.com>
+Date:   Tue, 30 May 2023 16:53:41 +0100
+Message-ID: <CACrLz9RUfqd1XDcU1qQ-MXYbKcZCtOrXa35uzso1LTdRbsO_FQ@mail.gmail.com>
+Subject: Hallo
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:531 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4998]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [jkirinec101[at]gmail.com]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [jessicakirinec1[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [jessicakirinec1[at]gmail.com]
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.0 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 30 May 2023 14:52:43 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
-
-> If SCLP_CMDW_READ_SCP_INFO fails due to a short buffer, retry
-> with a greater buffer.
-
-the idea is good, but I wonder if the code can be simplified (see below)
-
-> 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> ---
->  lib/s390x/sclp.c | 58 +++++++++++++++++++++++++++++++++++++++++-------
->  1 file changed, 50 insertions(+), 8 deletions(-)
-> 
-> diff --git a/lib/s390x/sclp.c b/lib/s390x/sclp.c
-> index 34a31da..9d51ca4 100644
-> --- a/lib/s390x/sclp.c
-> +++ b/lib/s390x/sclp.c
-> @@ -17,13 +17,14 @@
->  #include "sclp.h"
->  #include <alloc_phys.h>
->  #include <alloc_page.h>
-> +#include <asm/facility.h>
->  
->  extern unsigned long stacktop;
->  
->  static uint64_t storage_increment_size;
->  static uint64_t max_ram_size;
->  static uint64_t ram_size;
-> -char _read_info[PAGE_SIZE] __attribute__((__aligned__(PAGE_SIZE)));
-> +char _read_info[2 * PAGE_SIZE] __attribute__((__aligned__(PAGE_SIZE)));
-
-this is ok ^
-
-[skip everything else]
-
->  void sclp_read_info(void)
->  {
-> -	sclp_read_scp_info((void *)_read_info, SCCB_SIZE);
-
-	sclp_read_scp_info((void *)_read_info,
-		test_facility(140) ? sizeof(_read_info) : SCCB_SIZE;
-
-> +	sclp_read_scp_info((void *)_read_info);
->  	read_info = (ReadInfo *)_read_info;
->  }
->  
-
+Hallo, es tut mir so leid, Ihre Privatsph=C3=A4re zu verletzen. Es hei=C3=
+=9Ft:
+=E2=80=9EEin Bild sagt mehr als tausend Worte, aber als ich Ihres sah, war =
+es
+mehr, als Worte erkl=C3=A4ren k=C3=B6nnten.=E2=80=9C Das charmante Profil i=
+st
+unwiderstehlich, obwohl es eine kleine pers=C3=B6nliche Nachricht ist, aber
+Ihr Aussehen verr=C3=A4t viel =C3=BCber eine nette Person ... Also musste i=
+ch
+der charmanten Person mit diesem tollen Profil eine Nachricht
+hinterlassen. Ich glaube, es ist die Neugier, die mich in einer
+solchen Zeit zu Ihnen f=C3=BChrt. Ich muss noch einmal sagen, dass es mir
+leid tut, wenn das Schreiben an Sie Ihrer moralischen Ethik
+widerspricht. Ich m=C3=B6chte dich einfach besser kennenlernen und ein
+Freund sein oder mehr. Ich hoffe, irgendwann von Ihnen zu h=C3=B6ren.
