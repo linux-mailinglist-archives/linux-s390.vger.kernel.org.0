@@ -2,367 +2,192 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 88F6B718B7E
-	for <lists+linux-s390@lfdr.de>; Wed, 31 May 2023 22:55:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DC9A718BF5
+	for <lists+linux-s390@lfdr.de>; Wed, 31 May 2023 23:31:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230038AbjEaUzV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 31 May 2023 16:55:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57704 "EHLO
+        id S230328AbjEaVbZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 31 May 2023 17:31:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229946AbjEaUzU (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 31 May 2023 16:55:20 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B10D137
-        for <linux-s390@vger.kernel.org>; Wed, 31 May 2023 13:54:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1685566475;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Cwd4SgM5APPGh7VO0y71b+pefPbg5/lxjd5iAY5Yg7M=;
-        b=Yt3bZi8gAoq/nrWw+X1MY3hobw32g7ftUdKzN3+YvEzVA4puIh/pA+GFOLKXYTVWas2H/q
-        aEyfoDG915k4gOGildsdEC4ZJb2LTZeVDuoiKN34T4Njf5BcmRX/sy+I02sF170ckEVEvm
-        NUZH6kr6sT6Q511lv/1+hlYxxkk8QmM=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-580-PpIjoCHlMcm55yBvAqX0lA-1; Wed, 31 May 2023 16:54:33 -0400
-X-MC-Unique: PpIjoCHlMcm55yBvAqX0lA-1
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-3f7d72d552fso12526951cf.0
-        for <linux-s390@vger.kernel.org>; Wed, 31 May 2023 13:54:33 -0700 (PDT)
+        with ESMTP id S229974AbjEaVbQ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 31 May 2023 17:31:16 -0400
+Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9269E19F;
+        Wed, 31 May 2023 14:31:10 -0700 (PDT)
+Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-565e6beb7aaso732517b3.2;
+        Wed, 31 May 2023 14:31:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685568670; x=1688160670;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Wjb7mkxds2Oxu0tDA//mCadvcwpJnafWf0cD82pJKQE=;
+        b=nYeBH5p3+Qt6FUJ38UmFIxO7emaaMGST1TXgppBSGlquoGi0Vu88EMjm0R/stdK090
+         rAkGmKWr2iOmn9u+Pb/kM3qRzmk4mZo0E/qCXj+6fXwb5xT2cyvDopKHOf2mbUaUTVkW
+         IZJWedT+tZ8ojnhcwbCb2MsICPKO3NlZEBtylSK1ToQ7f9kqjkh5/U5nwImpNeor9qu5
+         IqgnJLTK4zE+DQC6rph9ulLyMVpd89EilRZG10pjBGo7K+adbGLVnpAlHyiTcC9wvrmA
+         MF9mV19ie8UWuPHO/B2dxtGuMvy+vvJd/sRqVo6b1JEZ5k0xW/bO1/+Ig0OmF8ty3QFr
+         I20Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685566473; x=1688158473;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Cwd4SgM5APPGh7VO0y71b+pefPbg5/lxjd5iAY5Yg7M=;
-        b=JSQTGBHh8eNDbUYCCeV3TZ0X7uqBI1U4xw3ImfNhF4iPZG44ziuQikC5mboBn12tpm
-         hDvMzD5h8r5xYqpa80lhODwxMDFIF5LblpxwcIOAjGsu0F8Yn8alHQpEHkC3iMVEBayk
-         lrFbIk+OuCUslhcf4XeFPvsus+fKAxGiTIK/mr0T/xSetgdWIL3Wrh0t/N2b/ImUmOzk
-         LJp/vlx1gQcefjHT1BzHLdF85HBCps73itO9/ZTSnmny3J6loSQDwx4Bu1oGwnYq4tg/
-         cPEmZRBKIxxF8YZjAewMynSudVyXHUJjr9t5K6bYg8ZCy5IjVeK1TugOZjLjMYaazK4f
-         vP2g==
-X-Gm-Message-State: AC+VfDzrRUWl3S5vsSpOrSsxXkk8l80LvQfi5CBGA+yDU5fE7YSGU9AO
-        D5VWyeUOBPC1TwHDrdO+2mHTeSxelLWSlKmh0jI0vPzf9LzEMP3cih1vaUwhdsF1BCJG7WnFhyD
-        /zTQbQ3N6AEFcd48zaGRW+A==
-X-Received: by 2002:a05:620a:890d:b0:75b:23a1:82a4 with SMTP id ql13-20020a05620a890d00b0075b23a182a4mr3313676qkn.5.1685566472686;
-        Wed, 31 May 2023 13:54:32 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ7K8gisroUbkQdWW7zoLWfYHa+/7bJeNWQUDGgP3g/Ti4u2xb2+wWVE1kXodA9+OAH0aYYjBQ==
-X-Received: by 2002:a05:620a:890d:b0:75b:23a1:82a4 with SMTP id ql13-20020a05620a890d00b0075b23a182a4mr3313655qkn.5.1685566472234;
-        Wed, 31 May 2023 13:54:32 -0700 (PDT)
-Received: from x1n (bras-base-aurron9127w-grc-62-70-24-86-62.dsl.bell.ca. [70.24.86.62])
-        by smtp.gmail.com with ESMTPSA id b8-20020a05620a126800b0074df2ac52f8sm5684553qkl.21.2023.05.31.13.54.29
+        d=1e100.net; s=20221208; t=1685568670; x=1688160670;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Wjb7mkxds2Oxu0tDA//mCadvcwpJnafWf0cD82pJKQE=;
+        b=VE9GBpNyQgT57+8wlDcRZ5YrA+w1BRhc2YBtOdqozk0vOqedZEHJTEaV/3xE7tkgdf
+         rgQ8ZHs2Am2wJGexdTV2uQVii62iaC4UloRhmd6ye+x/kCOM6XrFIOW1ZAWVevZdesDl
+         2hvLuUJVJA3CDsY+/srrnba1NyIFsjpHb3QDwf+oC8+fpQbdVi3VH0auBLLnFFSkbZyb
+         J2Hlz/4QMaHN+er0VtmmmtfPL22AD7TH4T90FRyUC0KHVHQ6z9KgP+AkVvUg6mZSPj4i
+         Z+oDYeF64P9DL+72BaOZk0X4d60O65B7oAc8xxNSBu764NaqlIKrZ65t7r4pLVKNtzp0
+         Kj4w==
+X-Gm-Message-State: AC+VfDy1/Psj5CXJswVzonE49hdGtak9gs9R+HDF+0cHUzjNYHQnxBEW
+        xQXTFIYX7soYEiLgDYKYBQ4=
+X-Google-Smtp-Source: ACHHUZ5BOuY9ns1UExUd8Gqiz8IGTSQZuNKoj5s1mEJ0QIzwi0ShIzlk0w6m3uPiq99qwG8NM2Rw1w==
+X-Received: by 2002:a0d:df51:0:b0:55a:3560:8ee0 with SMTP id i78-20020a0ddf51000000b0055a35608ee0mr6881175ywe.20.1685568669613;
+        Wed, 31 May 2023 14:31:09 -0700 (PDT)
+Received: from unknowna0e70b2ca394.attlocal.net ([2600:1700:2f7d:1800::46])
+        by smtp.googlemail.com with ESMTPSA id t63-20020a0dd142000000b0055aafcef659sm658905ywd.5.2023.05.31.14.31.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 May 2023 13:54:31 -0700 (PDT)
-Date:   Wed, 31 May 2023 16:54:27 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
+        Wed, 31 May 2023 14:31:09 -0700 (PDT)
+From:   "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     linux-mm@kvack.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-openrisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-um@lists.infradead.org, xen-devel@lists.xenproject.org,
+        kvm@vger.kernel.org,
+        "Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Jonas Bonn <jonas@southpole.se>,
         David Hildenbrand <david@redhat.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        Yang Shi <shy828301@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>, Yu Zhao <yuzhao@google.com>,
-        Alistair Popple <apopple@nvidia.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Steven Price <steven.price@arm.com>,
-        SeongJae Park <sj@kernel.org>,
-        Naoya Horiguchi <naoya.horiguchi@nec.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Zack Rusin <zackr@vmware.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Axel Rasmussen <axelrasmussen@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Pasha Tatashin <pasha.tatashin@soleen.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Song Liu <song@kernel.org>,
-        Thomas Hellstrom <thomas.hellstrom@linux.intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
         Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        linux-arm-kernel@lists.infradead.org, sparclinux@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 09/12] mm/khugepaged: retract_page_tables() without mmap
- or vma lock
-Message-ID: <ZHe0A079X9B8jWlH@x1n>
-References: <35e983f5-7ed3-b310-d949-9ae8b130cdab@google.com>
- <2e9996fa-d238-e7c-1194-834a2bd1f60@google.com>
- <CAG48ez0aF1Rf1apSjn9YcnfyFQ4YqSd4GqB6f2wfhF7jMdi5Hg@mail.gmail.com>
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Richard Weinberger <richard@nod.at>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v3 00/34] Split ptdesc from struct page
+Date:   Wed, 31 May 2023 14:29:58 -0700
+Message-Id: <20230531213032.25338-1-vishal.moola@gmail.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez0aF1Rf1apSjn9YcnfyFQ4YqSd4GqB6f2wfhF7jMdi5Hg@mail.gmail.com>
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, May 31, 2023 at 05:34:58PM +0200, Jann Horn wrote:
-> On Mon, May 29, 2023 at 8:25 AM Hugh Dickins <hughd@google.com> wrote:
-> > -static int retract_page_tables(struct address_space *mapping, pgoff_t pgoff,
-> > -                              struct mm_struct *target_mm,
-> > -                              unsigned long target_addr, struct page *hpage,
-> > -                              struct collapse_control *cc)
-> > +static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
-> >  {
-> >         struct vm_area_struct *vma;
-> > -       int target_result = SCAN_FAIL;
-> >
-> > -       i_mmap_lock_write(mapping);
-> > +       i_mmap_lock_read(mapping);
-> >         vma_interval_tree_foreach(vma, &mapping->i_mmap, pgoff, pgoff) {
-> > -               int result = SCAN_FAIL;
-> > -               struct mm_struct *mm = NULL;
-> > -               unsigned long addr = 0;
-> > -               pmd_t *pmd;
-> > -               bool is_target = false;
-> > +               struct mm_struct *mm;
-> > +               unsigned long addr;
-> > +               pmd_t *pmd, pgt_pmd;
-> > +               spinlock_t *pml;
-> > +               spinlock_t *ptl;
-> >
-> >                 /*
-> >                  * Check vma->anon_vma to exclude MAP_PRIVATE mappings that
-> > -                * got written to. These VMAs are likely not worth investing
-> > -                * mmap_write_lock(mm) as PMD-mapping is likely to be split
-> > -                * later.
-> > +                * got written to. These VMAs are likely not worth removing
-> > +                * page tables from, as PMD-mapping is likely to be split later.
-> >                  *
-> > -                * Note that vma->anon_vma check is racy: it can be set up after
-> > -                * the check but before we took mmap_lock by the fault path.
-> > -                * But page lock would prevent establishing any new ptes of the
-> > -                * page, so we are safe.
-> > -                *
-> > -                * An alternative would be drop the check, but check that page
-> > -                * table is clear before calling pmdp_collapse_flush() under
-> > -                * ptl. It has higher chance to recover THP for the VMA, but
-> > -                * has higher cost too. It would also probably require locking
-> > -                * the anon_vma.
-> > +                * Note that vma->anon_vma check is racy: it can be set after
-> > +                * the check, but page locks (with XA_RETRY_ENTRYs in holes)
-> > +                * prevented establishing new ptes of the page. So we are safe
-> > +                * to remove page table below, without even checking it's empty.
-> 
-> This "we are safe to remove page table below, without even checking
-> it's empty" assumes that the only way to create new anonymous PTEs is
-> to use existing file PTEs, right? What about private shmem VMAs that
-> are registered with userfaultfd as VM_UFFD_MISSING? I think for those,
-> the UFFDIO_COPY ioctl lets you directly insert anonymous PTEs without
-> looking at the mapping and its pages (except for checking that the
-> insertion point is before end-of-file), protected only by mmap_lock
-> (shared) and pte_offset_map_lock().
+The MM subsystem is trying to shrink struct page. This patchset
+introduces a memory descriptor for page table tracking - struct ptdesc.
 
-Hmm, yes.  We probably need to keep that though, and 5b51072e97 explained
-the reason (to still respect file permissions).
+This patchset introduces ptdesc, splits ptdesc from struct page, and
+converts many callers of page table constructor/destructors to use ptdescs.
 
-Maybe the anon_vma check can also be moved into the pgtable lock section,
-with some comments explaining (but it's getting a bit ugly..)?
+Ptdesc is a foundation to further standardize page tables, and eventually
+allow for dynamic allocation of page tables independent of struct page.
+However, the use of pages for page table tracking is quite deeply
+ingrained and varied across archictectures, so there is still a lot of
+work to be done before that can happen.
 
-> 
-> 
-> >                  */
-> > -               if (READ_ONCE(vma->anon_vma)) {
-> > -                       result = SCAN_PAGE_ANON;
-> > -                       goto next;
-> > -               }
-> > +               if (READ_ONCE(vma->anon_vma))
-> > +                       continue;
-> > +
-> >                 addr = vma->vm_start + ((pgoff - vma->vm_pgoff) << PAGE_SHIFT);
-> >                 if (addr & ~HPAGE_PMD_MASK ||
-> > -                   vma->vm_end < addr + HPAGE_PMD_SIZE) {
-> > -                       result = SCAN_VMA_CHECK;
-> > -                       goto next;
-> > -               }
-> > -               mm = vma->vm_mm;
-> > -               is_target = mm == target_mm && addr == target_addr;
-> > -               result = find_pmd_or_thp_or_none(mm, addr, &pmd);
-> > -               if (result != SCAN_SUCCEED)
-> > -                       goto next;
-> > -               /*
-> > -                * We need exclusive mmap_lock to retract page table.
-> > -                *
-> > -                * We use trylock due to lock inversion: we need to acquire
-> > -                * mmap_lock while holding page lock. Fault path does it in
-> > -                * reverse order. Trylock is a way to avoid deadlock.
-> > -                *
-> > -                * Also, it's not MADV_COLLAPSE's job to collapse other
-> > -                * mappings - let khugepaged take care of them later.
-> > -                */
-> > -               result = SCAN_PTE_MAPPED_HUGEPAGE;
-> > -               if ((cc->is_khugepaged || is_target) &&
-> > -                   mmap_write_trylock(mm)) {
-> > -                       /* trylock for the same lock inversion as above */
-> > -                       if (!vma_try_start_write(vma))
-> > -                               goto unlock_next;
-> > -
-> > -                       /*
-> > -                        * Re-check whether we have an ->anon_vma, because
-> > -                        * collapse_and_free_pmd() requires that either no
-> > -                        * ->anon_vma exists or the anon_vma is locked.
-> > -                        * We already checked ->anon_vma above, but that check
-> > -                        * is racy because ->anon_vma can be populated under the
-> > -                        * mmap lock in read mode.
-> > -                        */
-> > -                       if (vma->anon_vma) {
-> > -                               result = SCAN_PAGE_ANON;
-> > -                               goto unlock_next;
-> > -                       }
-> > -                       /*
-> > -                        * When a vma is registered with uffd-wp, we can't
-> > -                        * recycle the pmd pgtable because there can be pte
-> > -                        * markers installed.  Skip it only, so the rest mm/vma
-> > -                        * can still have the same file mapped hugely, however
-> > -                        * it'll always mapped in small page size for uffd-wp
-> > -                        * registered ranges.
-> > -                        */
-> > -                       if (hpage_collapse_test_exit(mm)) {
-> > -                               result = SCAN_ANY_PROCESS;
-> > -                               goto unlock_next;
-> > -                       }
-> > -                       if (userfaultfd_wp(vma)) {
-> > -                               result = SCAN_PTE_UFFD_WP;
-> > -                               goto unlock_next;
-> > -                       }
-> > -                       collapse_and_free_pmd(mm, vma, addr, pmd);
-> 
-> The old code called collapse_and_free_pmd(), which involves MMU
-> notifier invocation...
-> 
-> > -                       if (!cc->is_khugepaged && is_target)
-> > -                               result = set_huge_pmd(vma, addr, pmd, hpage);
-> > -                       else
-> > -                               result = SCAN_SUCCEED;
-> > -
-> > -unlock_next:
-> > -                       mmap_write_unlock(mm);
-> > -                       goto next;
-> > -               }
-> > -               /*
-> > -                * Calling context will handle target mm/addr. Otherwise, let
-> > -                * khugepaged try again later.
-> > -                */
-> > -               if (!is_target) {
-> > -                       khugepaged_add_pte_mapped_thp(mm, addr);
-> > +                   vma->vm_end < addr + HPAGE_PMD_SIZE)
-> >                         continue;
-> > -               }
-> > -next:
-> > -               if (is_target)
-> > -                       target_result = result;
-> > +
-> > +               mm = vma->vm_mm;
-> > +               if (find_pmd_or_thp_or_none(mm, addr, &pmd) != SCAN_SUCCEED)
-> > +                       continue;
-> > +
-> > +               if (hpage_collapse_test_exit(mm))
-> > +                       continue;
-> > +               /*
-> > +                * When a vma is registered with uffd-wp, we cannot recycle
-> > +                * the page table because there may be pte markers installed.
-> > +                * Other vmas can still have the same file mapped hugely, but
-> > +                * skip this one: it will always be mapped in small page size
-> > +                * for uffd-wp registered ranges.
-> > +                *
-> > +                * What if VM_UFFD_WP is set a moment after this check?  No
-> > +                * problem, huge page lock is still held, stopping new mappings
-> > +                * of page which might then get replaced by pte markers: only
-> > +                * existing markers need to be protected here.  (We could check
-> > +                * after getting ptl below, but this comment distracting there!)
-> > +                */
-> > +               if (userfaultfd_wp(vma))
-> > +                       continue;
-> > +
-> > +               /* Huge page lock is still held, so page table must be empty */
-> > +               pml = pmd_lock(mm, pmd);
-> > +               ptl = pte_lockptr(mm, pmd);
-> > +               if (ptl != pml)
-> > +                       spin_lock_nested(ptl, SINGLE_DEPTH_NESTING);
-> > +               pgt_pmd = pmdp_collapse_flush(vma, addr, pmd);
-> 
-> ... while the new code only does pmdp_collapse_flush(), which clears
-> the pmd entry and does a TLB flush, but AFAICS doesn't use MMU
-> notifiers. My understanding is that that's problematic - maybe (?) it
-> is sort of okay with regards to classic MMU notifier users like KVM,
-> but it's probably wrong for IOMMUv2 users, where an IOMMU directly
-> consumes the normal page tables?
+This is rebased on next-20230531.
 
-The iommuv2 wasn't "consuming" the pgtables?  IIUC it relies on that to
-make sure no secondary (and illegal) tlb exists in the iommu tlbs.
+v3:
+  Got an Acked-by
+  Fixed the arm64 compilation issue
+  Rename some ptdesc utility functions to be pagetable_* instead
+  Add some comments to functions describing their uses
 
-For this case if the pgtable _must_ be empty when reaching here (we'd
-better make sure of it..), maybe we're good?  Because we should have just
-invalidated once when unmap all the pages in the thp range, so no existing
-tlb should generate anyway for either cpu or iommu hardwares.
+Vishal Moola (Oracle) (34):
+  mm: Add PAGE_TYPE_OP folio functions
+  s390: Use _pt_s390_gaddr for gmap address tracking
+  s390: Use pt_frag_refcount for pagetables
+  pgtable: Create struct ptdesc
+  mm: add utility functions for ptdesc
+  mm: Convert pmd_pgtable_page() to pmd_ptdesc()
+  mm: Convert ptlock_alloc() to use ptdescs
+  mm: Convert ptlock_ptr() to use ptdescs
+  mm: Convert pmd_ptlock_init() to use ptdescs
+  mm: Convert ptlock_init() to use ptdescs
+  mm: Convert pmd_ptlock_free() to use ptdescs
+  mm: Convert ptlock_free() to use ptdescs
+  mm: Create ptdesc equivalents for pgtable_{pte,pmd}_page_{ctor,dtor}
+  powerpc: Convert various functions to use ptdescs
+  x86: Convert various functions to use ptdescs
+  s390: Convert various gmap functions to use ptdescs
+  s390: Convert various pgalloc functions to use ptdescs
+  mm: Remove page table members from struct page
+  pgalloc: Convert various functions to use ptdescs
+  arm: Convert various functions to use ptdescs
+  arm64: Convert various functions to use ptdescs
+  csky: Convert __pte_free_tlb() to use ptdescs
+  hexagon: Convert __pte_free_tlb() to use ptdescs
+  loongarch: Convert various functions to use ptdescs
+  m68k: Convert various functions to use ptdescs
+  mips: Convert various functions to use ptdescs
+  nios2: Convert __pte_free_tlb() to use ptdescs
+  openrisc: Convert __pte_free_tlb() to use ptdescs
+  riscv: Convert alloc_{pmd, pte}_late() to use ptdescs
+  sh: Convert pte_free_tlb() to use ptdescs
+  sparc64: Convert various functions to use ptdescs
+  sparc: Convert pgtable_pte_page_{ctor, dtor}() to ptdesc equivalents
+  um: Convert {pmd, pte}_free_tlb() to use ptdescs
+  mm: Remove pgtable_{pmd, pte}_page_{ctor, dtor}() wrappers
 
-However OTOH, maybe it'll also be safer to just have the mmu notifiers like
-before (e.g., no idea whether anything can cache invalidate tlb
-translations from the empty pgtable)? As that doesn't seems to beat the
-purpose of the patchset as notifiers shouldn't fail.
-
-> 
-> (FWIW, last I looked, there also seemed to be some other issues with
-> MMU notifier usage wrt IOMMUv2, see the thread
-> <https://lore.kernel.org/linux-mm/Yzbaf9HW1%2FreKqR8@nvidia.com/>.)
-> 
-> 
-> > +               if (ptl != pml)
-> > +                       spin_unlock(ptl);
-> > +               spin_unlock(pml);
-> > +
-> > +               mm_dec_nr_ptes(mm);
-> > +               page_table_check_pte_clear_range(mm, addr, pgt_pmd);
-> > +               pte_free_defer(mm, pmd_pgtable(pgt_pmd));
-> >         }
-> > -       i_mmap_unlock_write(mapping);
-> > -       return target_result;
-> > +       i_mmap_unlock_read(mapping);
-> >  }
-> >
-> >  /**
-> > @@ -2261,9 +2210,11 @@ static int collapse_file(struct mm_struct *mm, unsigned long addr,
-> >
-> >         /*
-> >          * Remove pte page tables, so we can re-fault the page as huge.
-> > +        * If MADV_COLLAPSE, adjust result to call collapse_pte_mapped_thp().
-> >          */
-> > -       result = retract_page_tables(mapping, start, mm, addr, hpage,
-> > -                                    cc);
-> > +       retract_page_tables(mapping, start);
-> > +       if (cc && !cc->is_khugepaged)
-> > +               result = SCAN_PTE_MAPPED_HUGEPAGE;
-> >         unlock_page(hpage);
-> >
-> >         /*
-> > --
-> > 2.35.3
-> >
-> 
+ Documentation/mm/split_page_table_lock.rst    |  12 +-
+ .../zh_CN/mm/split_page_table_lock.rst        |  14 +-
+ arch/arm/include/asm/tlb.h                    |  12 +-
+ arch/arm/mm/mmu.c                             |   6 +-
+ arch/arm64/include/asm/tlb.h                  |  14 +-
+ arch/arm64/mm/mmu.c                           |   7 +-
+ arch/csky/include/asm/pgalloc.h               |   4 +-
+ arch/hexagon/include/asm/pgalloc.h            |   8 +-
+ arch/loongarch/include/asm/pgalloc.h          |  27 ++-
+ arch/loongarch/mm/pgtable.c                   |   7 +-
+ arch/m68k/include/asm/mcf_pgalloc.h           |  41 ++--
+ arch/m68k/include/asm/sun3_pgalloc.h          |   8 +-
+ arch/m68k/mm/motorola.c                       |   4 +-
+ arch/mips/include/asm/pgalloc.h               |  31 +--
+ arch/mips/mm/pgtable.c                        |   7 +-
+ arch/nios2/include/asm/pgalloc.h              |   8 +-
+ arch/openrisc/include/asm/pgalloc.h           |   8 +-
+ arch/powerpc/mm/book3s64/mmu_context.c        |  10 +-
+ arch/powerpc/mm/book3s64/pgtable.c            |  32 +--
+ arch/powerpc/mm/pgtable-frag.c                |  46 ++--
+ arch/riscv/include/asm/pgalloc.h              |   8 +-
+ arch/riscv/mm/init.c                          |  16 +-
+ arch/s390/include/asm/pgalloc.h               |   4 +-
+ arch/s390/include/asm/tlb.h                   |   4 +-
+ arch/s390/mm/gmap.c                           | 222 +++++++++++-------
+ arch/s390/mm/pgalloc.c                        | 126 +++++-----
+ arch/sh/include/asm/pgalloc.h                 |   9 +-
+ arch/sparc/mm/init_64.c                       |  17 +-
+ arch/sparc/mm/srmmu.c                         |   5 +-
+ arch/um/include/asm/pgalloc.h                 |  18 +-
+ arch/x86/mm/pgtable.c                         |  46 ++--
+ arch/x86/xen/mmu_pv.c                         |   2 +-
+ include/asm-generic/pgalloc.h                 |  62 +++--
+ include/asm-generic/tlb.h                     |  11 +
+ include/linux/mm.h                            | 155 ++++++++----
+ include/linux/mm_types.h                      |  14 --
+ include/linux/page-flags.h                    |  20 +-
+ include/linux/pgtable.h                       |  61 +++++
+ mm/memory.c                                   |   8 +-
+ 39 files changed, 665 insertions(+), 449 deletions(-)
 
 -- 
-Peter Xu
+2.40.1
 
