@@ -2,144 +2,129 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 449077170C2
-	for <lists+linux-s390@lfdr.de>; Wed, 31 May 2023 00:35:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8B4D717282
+	for <lists+linux-s390@lfdr.de>; Wed, 31 May 2023 02:34:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233738AbjE3Wfs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 30 May 2023 18:35:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50952 "EHLO
+        id S233854AbjEaAem (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 30 May 2023 20:34:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233440AbjE3Wfr (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 30 May 2023 18:35:47 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA0F393;
-        Tue, 30 May 2023 15:35:46 -0700 (PDT)
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34UKehde029395;
-        Tue, 30 May 2023 22:35:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=vyK0SFfPtxGTegWHGbHIf/of/w0CUmEM1+FAEBe90To=;
- b=ULbZQCyVxDg07PJ1+qIZsNdb1k93vVclmYUR9AdeFjnfOjP3L+OREBke6bMt7qyKVX7n
- iZYdXILJaiDMu6rWvpNTGNDJCYzfpsPe2L018iowDFG3ouc75V3YSdXW1jFevOlBZ6Ra
- d5TfrVrtzyqMORqJN0mdVJiQdm5XxlGy0tLwLEs4N5McqnGsq9HsqvHgjfB9AIihnCms
- ozy0/CvRnAg9S/SeHaXPqv22ctxkKwRdXBfirje40VnryAojaoP1cahAft9/joUU35Pe
- QHW8yV57iuS8glHP3w3V52hsLZa7UX8tJ8oiLLFsFmmvN4NbRMKyGdNNvGhXvbBskGyH DQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qwm1pgrqg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 May 2023 22:35:45 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34UMQS2H024001;
-        Tue, 30 May 2023 22:35:45 GMT
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qwm1pgrq0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 May 2023 22:35:45 +0000
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 34UFPYm9017360;
-        Tue, 30 May 2023 22:35:44 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([9.208.130.99])
-        by ppma03dal.us.ibm.com (PPS) with ESMTPS id 3qu9g55tqx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 May 2023 22:35:44 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-        by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 34UMZhZf22216984
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 May 2023 22:35:43 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 59AF55810B;
-        Tue, 30 May 2023 22:35:43 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9E8A95810A;
-        Tue, 30 May 2023 22:35:42 +0000 (GMT)
-Received: from li-2c1e724c-2c76-11b2-a85c-ae42eaf3cb3d.ibm.com.com (unknown [9.61.88.233])
-        by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-        Tue, 30 May 2023 22:35:42 +0000 (GMT)
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     jjherne@linux.ibm.com, pasic@linux.ibm.com, farman@linux.ibm.com,
-        mjrosato@linux.ibm.com, alex.williamson@redhat.com,
-        borntraeger@linux.ibm.com
-Subject: [PATCH 3/3] s390/vfio-ap: Wire in the vfio_device_ops request callback
-Date:   Tue, 30 May 2023 18:35:38 -0400
-Message-Id: <20230530223538.279198-4-akrowiak@linux.ibm.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20230530223538.279198-1-akrowiak@linux.ibm.com>
-References: <20230530223538.279198-1-akrowiak@linux.ibm.com>
+        with ESMTP id S233634AbjEaAel (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 30 May 2023 20:34:41 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6245DC7
+        for <linux-s390@vger.kernel.org>; Tue, 30 May 2023 17:34:18 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-64d1e96c082so3761428b3a.1
+        for <linux-s390@vger.kernel.org>; Tue, 30 May 2023 17:34:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1685493257; x=1688085257;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JjzJiAVnsEiyQDbH42BBgOLAQff4KMyAHDpgZ0nAe7A=;
+        b=Fr1wpaLPOjycQDUz0I9FHQixf/hJgEHVJn5kf6MreLAFhTSbQL71WkdzM+ox20m0tx
+         C9HD+G6BDZUZRour51+FuDaoOjUA+JDaMDVLCuZ/cchVzGaQUwr1O3F3Pnm/3pHE5i9M
+         4pv+/gMbxwXjlbDM+j8gKlrLMcWr+hcNB3Bxk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685493257; x=1688085257;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JjzJiAVnsEiyQDbH42BBgOLAQff4KMyAHDpgZ0nAe7A=;
+        b=P5mQCIkPNXqB94G9T7l2yM2rbAXQL7dm5vGjpdyfANpmHXRoR5opvJlvPy/IUJnjqz
+         Ai4ZVyTNGFnQofUqOcYgbYBiezRvy8KkKeHtxWCiNYCLPQwBJ5dqbeMBpM8ai9NUBIda
+         d67kFXQ/cWyEmkqUpAYZa1GoHCHhLdzGTsN5XwLi+lTX5i9p17VTbYKMgNmn3fXI1KsT
+         MPkNR+r2/wPQK5YTdu971OpKh9P+AYyvuxp1BvMKTEg40kYs1kMsanmQZphDH9OXiAsV
+         Z5NjtaHLb5O1HQPgHrZLs8P6PHpGHvW3UpxOSKRvj9VAy7NELX5YbA37qQ1AuvUt074s
+         2y0A==
+X-Gm-Message-State: AC+VfDwk7oGME+k9ygh77GlKYeJ/QZ065PplP4xUW47rd6ATLvOuyxMR
+        gXyda2AOPGkxzmg6SteSvxTAug==
+X-Google-Smtp-Source: ACHHUZ4X5qDGSuairtVKxDG2yKgUqeM7zao1Gk6IXDkD8LZrD8OgZtIsp8e/0KbWuh7KyootktePNQ==
+X-Received: by 2002:a05:6a20:6f05:b0:10b:a9ca:97bf with SMTP id gt5-20020a056a206f0500b0010ba9ca97bfmr4168184pzb.24.1685493257498;
+        Tue, 30 May 2023 17:34:17 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id j9-20020aa783c9000000b00640defda6d2sm2122043pfn.207.2023.05.30.17.34.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 May 2023 17:34:17 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Heiko Carstens <hca@linux.ibm.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Thorsten Leemhuis <linux@leemhuis.info>,
+        =?UTF-8?q?Joan=20Bruguera=20Mic=C3=B3?= <joanbrugueram@gmail.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Linux Kernel Functional Testing <lkft@linaro.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] s390/purgatory: Do not use fortified string functions
+Date:   Tue, 30 May 2023 17:34:15 -0700
+Message-Id: <20230531003414.never.050-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1932; h=from:subject:message-id; bh=3fzKBd1zujjv+SG6w7I7Y4v19AUyPzbSQe4ghFml234=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBkdpYGW+0BpAnJwD3TP9pZ65CDHX9QrJD+lbCVA5TY Tzp9khaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZHaWBgAKCRCJcvTf3G3AJs0cEA CiZUiBN0H8c1+y8rgHJICYG74xR2GG2LajP/p9SrpbxhpissdlyzA57ENFt0LF87e87DBVNtNV0Iay E09uGdf/Zb5Dr8ikL26Vyeug7TXOeWjSV9gTC43wG4mg7o4R1G2/SzQ83HJG71ey9w4eyINCv+2Yg4 zDbI6pTvlGUAqkH6bW+lxWZJcIGXHrP4rBB05IAw9lA8KVr+wCznrYPz+tEufVcLywElmC0WqsFHzr rs+VuthL0YG+s97qw3qexp6w4YHh7V1wIls0cHvOto/y3kT5PlyKijuqG+7f6BsHMRH7giF7x5C5un sgOEOY0v3OCHXNIqwm8wwNsWI3JOky0PRo+Sz8Vsh3dDJHk1JZLAj0K5/RWrh47BpmmgjjhI0Uq2zL g/WcmyITo50/UayP+VSE6XtCK8496iNV7lXQ7Xr7AbY6MG+XsILyCKHpv/kyKN8BcKc58UFQGOlq5D pwCuncOlx3OK2bbrCaYZeTAF8cjyJOYRDV4s9cShT/AnE0+dQ3H9krl+o5hjHWk5XTW95ztSVoY92v afgzazipmjg3I+bkS06U/i/J6cwWw6K1TjS+4QUTEYZw2dtPTN3iw9rEtTII+8FFqvVDmsKwE9u75b QO9CYHiDZ+eElpDqrzjXP7bj1IUfjpU1+3FFH2H4o6++IWEeJ31XoEjgzgRQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: xX-B1izHkR6zFY2YYoIuutFE6MDxWm5u
-X-Proofpoint-GUID: UKrVQEiqSptqVbE2baZZz3J5cSThbSWt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-05-30_16,2023-05-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
- mlxlogscore=999 priorityscore=1501 bulkscore=0 mlxscore=0 suspectscore=0
- lowpriorityscore=0 spamscore=0 adultscore=0 malwarescore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2304280000
- definitions=main-2305300184
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The mdev device is being removed, so pass the request to userspace to
-ask for a graceful cleanup. This should free up the thread that
-would otherwise loop waiting for the device to be fully released.
+With the addition of -fstrict-flex-arrays=3, struct sha256_state's
+trailing array is no longer ignored by CONFIG_FORTIFY_SOURCE:
 
-Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+struct sha256_state {
+        u32 state[SHA256_DIGEST_SIZE / 4];
+        u64 count;
+        u8 buf[SHA256_BLOCK_SIZE];
+};
+
+This means that the memcpy() calls with "buf" as a destination in
+sha256.c's code will attempt to perform run-time bounds checking, which
+could lead to calling missing functions, specifically a potential
+WARN_ONCE, which isn't callable from purgatory.
+
+Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
+Closes: https://lore.kernel.org/lkml/175578ec-9dec-7a9c-8d3a-43f24ff86b92@leemhuis.info/
+Bisected-by: "Joan Bruguera Micó" <joanbrugueram@gmail.com>
+Fixes: df8fc4e934c1 ("kbuild: Enable -fstrict-flex-arrays=3")
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+Cc: Sven Schnelle <svens@linux.ibm.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Linux Kernel Functional Testing <lkft@linaro.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-s390@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/s390/crypto/vfio_ap_ops.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ arch/s390/purgatory/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 44f159136891..a8f58e133e6e 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -1736,6 +1736,26 @@ static void vfio_ap_mdev_close_device(struct vfio_device *vdev)
- 	vfio_ap_mdev_unset_kvm(matrix_mdev);
- }
+diff --git a/arch/s390/purgatory/Makefile b/arch/s390/purgatory/Makefile
+index 32573b4f9bd2..cf14740abd1c 100644
+--- a/arch/s390/purgatory/Makefile
++++ b/arch/s390/purgatory/Makefile
+@@ -10,7 +10,7 @@ PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
+ $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
+ 	$(call if_changed_rule,cc_o_c)
  
-+static void vfio_ap_mdev_request(struct vfio_device *vdev, unsigned int count)
-+{
-+	struct device *dev = vdev->dev;
-+	struct ap_matrix_mdev *matrix_mdev;
-+
-+	matrix_mdev = container_of(vdev, struct ap_matrix_mdev, vdev);
-+
-+	if (matrix_mdev->req_trigger) {
-+		if (!(count % 10))
-+			dev_notice_ratelimited(dev,
-+					       "Relaying device request to user (#%u)\n",
-+					       count);
-+
-+		eventfd_signal(matrix_mdev->req_trigger, 1);
-+	} else if (count == 0) {
-+		dev_notice(dev,
-+			   "No device request registered, blocked until released by user\n");
-+	}
-+}
-+
- static int vfio_ap_mdev_get_device_info(unsigned long arg)
- {
- 	unsigned long minsz;
-@@ -1955,6 +1975,7 @@ static const struct vfio_device_ops vfio_ap_matrix_dev_ops = {
- 	.bind_iommufd = vfio_iommufd_emulated_bind,
- 	.unbind_iommufd = vfio_iommufd_emulated_unbind,
- 	.attach_ioas = vfio_iommufd_emulated_attach_ioas,
-+	.request = vfio_ap_mdev_request
- };
+-CFLAGS_sha256.o := -D__DISABLE_EXPORTS
++CFLAGS_sha256.o := -D__DISABLE_EXPORTS -D__NO_FORTIFY
  
- static struct mdev_driver vfio_ap_matrix_driver = {
+ $(obj)/mem.o: $(srctree)/arch/s390/lib/mem.S FORCE
+ 	$(call if_changed_rule,as_o_S)
 -- 
-2.31.1
+2.34.1
 
