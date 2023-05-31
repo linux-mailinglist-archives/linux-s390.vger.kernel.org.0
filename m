@@ -2,105 +2,140 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF38E718115
-	for <lists+linux-s390@lfdr.de>; Wed, 31 May 2023 15:09:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76E057181D3
+	for <lists+linux-s390@lfdr.de>; Wed, 31 May 2023 15:28:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236243AbjEaNJv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 31 May 2023 09:09:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36308 "EHLO
+        id S236517AbjEaN2q (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 31 May 2023 09:28:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236353AbjEaNJn (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 31 May 2023 09:09:43 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FDBD12B;
-        Wed, 31 May 2023 06:09:38 -0700 (PDT)
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34VD9Lax002204;
-        Wed, 31 May 2023 13:09:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=sMz3fBV8dPYC33/rBXj9AWmlDxb8zVk1GGTa8nX1C2Q=;
- b=BqbYo63Hc1u0zI/frttUAReKRXg0gk8GxnjvcEETvN5uEdDYkf9w7z8yOvp/qrtmwyfW
- YpPqCEv57vn0p/W3/O3jMu8NL9etOcGGApSXZOFnI/EF81ndrykJLi50Co2Htww9flh/
- qhhpasMstaEW7S4aEUh1HBjxJ+VPQRwEMJ6e4RYLGEQtPvF+/Huzm4CKADKf33gDEvZm
- UR/5l/YsQupdYi5sp7RTtRI74bg4ZDsZ2HhM2XEvzATk9qp9mxBSVX3BMU2ebHRdtbng
- TzQg/HgW5q5zGj4dFY8IEy5DwpRwURAEABTgZ9qBRhpA8vn/anuad7vPHkb+FUBDJsgF MQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qx4y3kxvu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 31 May 2023 13:09:37 +0000
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34VD9a6T003770;
-        Wed, 31 May 2023 13:09:36 GMT
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qx4y3kxcs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 31 May 2023 13:09:32 +0000
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 34VC61s5012669;
-        Wed, 31 May 2023 13:05:28 GMT
-Received: from smtprelay05.wdc07v.mail.ibm.com ([9.208.129.117])
-        by ppma05wdc.us.ibm.com (PPS) with ESMTPS id 3qu9g5upb5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 31 May 2023 13:05:28 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-        by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 34VD5Qkw6554346
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 31 May 2023 13:05:26 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 62A9158043;
-        Wed, 31 May 2023 13:05:26 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A12C958059;
-        Wed, 31 May 2023 13:05:25 +0000 (GMT)
-Received: from [9.61.88.233] (unknown [9.61.88.233])
-        by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-        Wed, 31 May 2023 13:05:25 +0000 (GMT)
-Message-ID: <64d96082-8c05-0fb8-dfdd-96ad8efa6cd8@linux.ibm.com>
-Date:   Wed, 31 May 2023 09:05:25 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH 1/3] vfio: ap: realize the VFIO_DEVICE_GET_IRQ_INFO ioctl
-Content-Language: en-US
-To:     =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clegoate@redhat.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     jjherne@linux.ibm.com, pasic@linux.ibm.com, farman@linux.ibm.com,
-        mjrosato@linux.ibm.com, alex.williamson@redhat.com,
-        borntraeger@linux.ibm.com
-References: <20230530223538.279198-1-akrowiak@linux.ibm.com>
- <20230530223538.279198-2-akrowiak@linux.ibm.com>
- <ee46966a-920a-37f6-9554-b2b10565cd58@redhat.com>
-From:   Anthony Krowiak <akrowiak@linux.ibm.com>
-In-Reply-To: <ee46966a-920a-37f6-9554-b2b10565cd58@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 3RBfMaAZAUFoEmKC1LkL4tw7WHS7K3Gw
-X-Proofpoint-ORIG-GUID: QtVqwoq2wQHB85KJRhZSvUA9fXwzf9Lj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-05-31_08,2023-05-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- malwarescore=0 adultscore=0 phishscore=0 priorityscore=1501
- mlxlogscore=850 clxscore=1015 spamscore=0 impostorscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2305310112
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H5,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S234345AbjEaN2U (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 31 May 2023 09:28:20 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0DFC126;
+        Wed, 31 May 2023 06:28:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Subject:Cc:To:From:Date:Message-ID:
+        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=wcJJV24VbYlY1PWzzae048ORvkrTfGMOvTB+4LRdIko=; b=ZCaN9EKWJgEkcuGgxM/ADbx94M
+        G03dV6vMZ01SeuX4XeUD/ST9pnnkWJlhFyUn36PeSTx4HwZLOaV1Un1/UIQdwmGQcFJy5ke1y1ph0
+        4gI+sbIacF5Qi2XhKT65K6WXemSMLSlsiRy1sMyJNOgV1Tn8vRmRMUZmDLnUwZq+cghRKjKS3YSq2
+        nov0q53CxHjOQ380s4gPZqDiXzc10/7e5vnGZl2HdRLxV+I+eL6nN6JB7wWpO5iWlxdh7Qc4sUzGU
+        t/I0z4d02H+1QiGZjucBz1TMMe0a61V9LL4YUcCfUju21PcwS5g76pVkW0OKG7aSE+R6CkRgnDmL/
+        hrab2zKA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1q4LrG-007IIj-33; Wed, 31 May 2023 13:27:22 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 03CEF30074B;
+        Wed, 31 May 2023 15:27:16 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id 7798E243B69E6; Wed, 31 May 2023 15:27:16 +0200 (CEST)
+Message-ID: <20230531130833.635651916@infradead.org>
+User-Agent: quilt/0.66
+Date:   Wed, 31 May 2023 15:08:33 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     torvalds@linux-foundation.org
+Cc:     corbet@lwn.net, will@kernel.org, peterz@infradead.org,
+        boqun.feng@gmail.com, mark.rutland@arm.com,
+        catalin.marinas@arm.com, dennis@kernel.org, tj@kernel.org,
+        cl@linux.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, joro@8bytes.org, suravee.suthikulpanit@amd.com,
+        robin.murphy@arm.com, dwmw2@infradead.org,
+        baolu.lu@linux.intel.com, Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
+        penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
+        Andrew Morton <akpm@linux-foundation.org>, vbabka@suse.cz,
+        roman.gushchin@linux.dev, 42.hyeyoo@gmail.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-s390@vger.kernel.org,
+        iommu@lists.linux.dev, linux-arch@vger.kernel.org,
+        linux-crypto@vger.kernel.org, sfr@canb.auug.org.au,
+        mpe@ellerman.id.au, James.Bottomley@hansenpartnership.com,
+        deller@gmx.de, linux-parisc@vger.kernel.org
+Subject: [PATCH 00/12] Introduce cmpxchg128() -- aka. the demise of cmpxchg_double()
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Hi!
 
+After much breaking of things, find here the improved version.
 
-On 5/31/23 8:54 AM, Cédric Le Goater wrote:
-> Reviewed-by: Cédric Le Goater <clg@redhat.com>
+Since v3:
 
-Thank you for the review.
+ - unbreak everything that does *NOT* have cmpxchg128()
+
+   Notably this_cpu_cmpxchg_double() is used unconditionally by SLUB
+   which means that this_cpu_try_cmpxchg128() needs to be unconditionally
+   available on all 64bit architectures.
+
+ - fixed up x86/x86_64 cmpxchg{8,16}b emulation for this_cpu_cmpxchg{64,128}()
+
+ - introduce {raw,this}_cpu_try_cmpxchg*()
+
+ - add fallback for !__SIZEOF_INT128__ 64bit architectures
+
+   Sadly there are supported 64bit architecture/compiler combinations that do
+   not have __SIZEOF_INT128__, specifically it was found that HPPA64 only added
+   this with GCC-11.
+
+   this is yuck, and ideally we'd simply raise compiler requirements, but this
+   'works'.
+
+My plan is to re-add this to tip/locking/core and thus -next later this week.
+
+Also available at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git locking/core
+
+---
+ Documentation/core-api/this_cpu_ops.rst     |   2 -
+ arch/arm64/include/asm/atomic_ll_sc.h       |  56 +++---
+ arch/arm64/include/asm/atomic_lse.h         |  39 ++---
+ arch/arm64/include/asm/cmpxchg.h            |  48 ++----
+ arch/arm64/include/asm/percpu.h             |  30 ++--
+ arch/s390/include/asm/cmpxchg.h             |  32 +---
+ arch/s390/include/asm/cpu_mf.h              |   2 +-
+ arch/s390/include/asm/percpu.h              |  34 ++--
+ arch/s390/kernel/perf_cpum_sf.c             |  16 +-
+ arch/x86/include/asm/cmpxchg.h              |  25 ---
+ arch/x86/include/asm/cmpxchg_32.h           |   2 +-
+ arch/x86/include/asm/cmpxchg_64.h           |  63 ++++++-
+ arch/x86/include/asm/percpu.h               | 102 ++++++-----
+ arch/x86/lib/Makefile                       |   3 +-
+ arch/x86/lib/cmpxchg16b_emu.S               |  43 +++--
+ arch/x86/lib/cmpxchg8b_emu.S                |  67 ++++++--
+ drivers/iommu/amd/amd_iommu_types.h         |   9 +-
+ drivers/iommu/amd/iommu.c                   |  10 +-
+ drivers/iommu/intel/irq_remapping.c         |   8 +-
+ include/asm-generic/percpu.h                | 257 ++++++++++++++++++++++------
+ include/crypto/b128ops.h                    |  14 +-
+ include/linux/atomic/atomic-arch-fallback.h |  95 +++++++++-
+ include/linux/atomic/atomic-instrumented.h  |  93 ++++++++--
+ include/linux/dmar.h                        | 125 +++++++-------
+ include/linux/percpu-defs.h                 |  45 ++---
+ include/linux/slub_def.h                    |  12 +-
+ include/linux/types.h                       |  12 ++
+ include/uapi/linux/types.h                  |   4 +
+ lib/crypto/curve25519-hacl64.c              |   2 -
+ lib/crypto/poly1305-donna64.c               |   2 -
+ mm/slab.h                                   |  53 +++++-
+ mm/slub.c                                   | 139 +++++++++------
+ scripts/atomic/gen-atomic-fallback.sh       |   4 +-
+ scripts/atomic/gen-atomic-instrumented.sh   |  19 +-
+ 34 files changed, 952 insertions(+), 515 deletions(-)
+
