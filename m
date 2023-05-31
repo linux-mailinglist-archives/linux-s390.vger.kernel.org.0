@@ -2,332 +2,195 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45A36718980
-	for <lists+linux-s390@lfdr.de>; Wed, 31 May 2023 20:42:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 965CD7189B3
+	for <lists+linux-s390@lfdr.de>; Wed, 31 May 2023 21:00:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230256AbjEaSmY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 31 May 2023 14:42:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36092 "EHLO
+        id S229643AbjEaTAU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 31 May 2023 15:00:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230198AbjEaSmX (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 31 May 2023 14:42:23 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAF8A12F
-        for <linux-s390@vger.kernel.org>; Wed, 31 May 2023 11:41:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1685558493;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1FWGW2Jo813Y825xd7lmduxNsukxU+ZyyJwbLRdWmSE=;
-        b=c6YEoqnZNarHAaoTAoEBOSk2HHpDMr3hMBeX4VY5g8gI9A7N8Up9waBk0vmOjmweX5NqVZ
-        YTitLp7GLIvAyys6edh4L9lREjCKCwbc/0sSiyu5iM1EYq2Uw7heHCui08NS6eAy7v7d4s
-        CovGpd1uc2VGCq9dWmyO5DlHq0WNQBk=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-124-iqHAR08FPr6z7k11PEWxFA-1; Wed, 31 May 2023 14:41:32 -0400
-X-MC-Unique: iqHAR08FPr6z7k11PEWxFA-1
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-62607e62fa8so120866d6.1
-        for <linux-s390@vger.kernel.org>; Wed, 31 May 2023 11:41:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685558492; x=1688150492;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1FWGW2Jo813Y825xd7lmduxNsukxU+ZyyJwbLRdWmSE=;
-        b=UssZuxLVYshludorWOLrwCJBtEHfOqngVkNiNBJVdpj97EhP2ysL4zfnqU5s4GFWPp
-         5mEtFVk+JW7JYZfG/h+pP93xBo8ZY/WWpgB8pcmQ0MOWjMA3+1lOFLd/LUa3WC9VVL1O
-         obi4aUYIwY6hds4UxpHVEQ9Nc+4A5utR2PIP5eZZuPnkBrIpwWnfeQLDASOKC6oI+g54
-         a5kkyC/NVBQWkVC4biCZRnpxesdsEgWWJ7YljMgiw5rp29JihDtrekqIgSufI7FrPH9g
-         OUVtdnI3iVjW8y7y/Ptd8qA3ylgtTO1jwEGd5LKKAN7pqAntUNHmORKZs7rdU+s7zlmX
-         zIYg==
-X-Gm-Message-State: AC+VfDz21ptBlZnMDQCJcx7x8ecw9YtOaPEAAFb+ybLhPybnpwqGIofl
-        /LvS+ls4bJMCRv3MtdteZKvg8I5ci0+dNbFklLFQexZfdNmIlYm0Z59xuQlGIGJGLo6JZX5aN8i
-        3Ec+QuxvEG8Qaa9n2Y2ZNAQ==
-X-Received: by 2002:a05:6214:2409:b0:61b:6b8e:16e0 with SMTP id fv9-20020a056214240900b0061b6b8e16e0mr4347566qvb.1.1685558491639;
-        Wed, 31 May 2023 11:41:31 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6BN5MQAewbvj13QLR+tXEvy0N0Wl1vLxip9GURVxevVLwA82ca7P0eDgLONQ2wtwwgro+w8w==
-X-Received: by 2002:a05:6214:2409:b0:61b:6b8e:16e0 with SMTP id fv9-20020a056214240900b0061b6b8e16e0mr4347542qvb.1.1685558491233;
-        Wed, 31 May 2023 11:41:31 -0700 (PDT)
-Received: from x1n (bras-base-aurron9127w-grc-62-70-24-86-62.dsl.bell.ca. [70.24.86.62])
-        by smtp.gmail.com with ESMTPSA id ek8-20020ad45988000000b006260a1f1534sm5314470qvb.25.2023.05.31.11.41.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 May 2023 11:41:30 -0700 (PDT)
-Date:   Wed, 31 May 2023 14:41:27 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Hildenbrand <david@redhat.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        Yang Shi <shy828301@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>, Yu Zhao <yuzhao@google.com>,
-        Alistair Popple <apopple@nvidia.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Steven Price <steven.price@arm.com>,
-        SeongJae Park <sj@kernel.org>,
-        Naoya Horiguchi <naoya.horiguchi@nec.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Zack Rusin <zackr@vmware.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Axel Rasmussen <axelrasmussen@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Pasha Tatashin <pasha.tatashin@soleen.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Song Liu <song@kernel.org>,
-        Thomas Hellstrom <thomas.hellstrom@linux.intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Jann Horn <jannh@google.com>,
-        linux-arm-kernel@lists.infradead.org, sparclinux@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 09/12] mm/khugepaged: retract_page_tables() without mmap
- or vma lock
-Message-ID: <ZHeU1ykPa0+PqIXb@x1n>
-References: <35e983f5-7ed3-b310-d949-9ae8b130cdab@google.com>
- <2e9996fa-d238-e7c-1194-834a2bd1f60@google.com>
- <ZHU0m+QIChZNdOdg@x1n>
- <48c679e9-8eed-568a-1de1-c57e315c693c@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        with ESMTP id S229561AbjEaTAT (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 31 May 2023 15:00:19 -0400
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2061.outbound.protection.outlook.com [40.107.100.61])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FA61101;
+        Wed, 31 May 2023 12:00:18 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=N3/mcF+HaVodYXNXJ0VfRE5i9R7wVaafcjQZGFl/0ECfgCWazrhq9IbUhLe6OSu4VeEAS9xibMpVkJ9pS3K6prf7m0i72Yvoa+RId02l012lWz6SEam4CbiNmMWdp9Asp0LUWewq4tYMj72TfCNGZaUIFoAUlL21Xc4q3CG1ERtTMN2M9K5HfyK0+mGQeJIUMCpWzJKQKFctAiGbGsZy7fAy/+mKBBv3cLSVWRYlM/WoIdgKrmlYd2AiYW4FH1Xx+I/opJA72hh0piMUa9/1hcD4qBqCVJqOJ27Me0GNed9psLHlZOY4tHB1ik724mYa3KSXr3aiJt5fGm2ULPmExw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Usj40FjyPgAWltEGOhU7vErOMDtGbOW1Jde7uR1g0Do=;
+ b=oFXoIz5jmcxio4NeeVpBRNO2ccjBNc0oq4nNFsfyvwPGnk693KRkXlWDYzGGEOvTrSwxfYOi3bxMuarET3/NthCwNK5hpCqcgkCshAbBttG8UkXsd8B1IXdww9rWEOGxUtDYZDB03hjDIbMT2dWt9ul+GGkDb/OicYxSxqqpMIhnb3UnkXXjuBFITn/IoHsVawwyGqKh8LAPSFFeEQQS0cGBrQKQOPg9PFLmKnml260cnntO72IEWc4vST1mRQ1GcwfGTz2U0HFA/5aiQxTo6eM3Vlm76zge/LnN54YeYi3Z3LcvVVrsKiN29G7g67z2hdvAS5+gPx/R0bHudyxlig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Usj40FjyPgAWltEGOhU7vErOMDtGbOW1Jde7uR1g0Do=;
+ b=Jn0CT64Le4ua8RbVW7szGZLQ/FK2Kwr4CF1vFnnG834Zh7Ik8eNgZ775xngy3/eAsvL8OIZNQLrRB9U2foFNKqybtRtgyWuJWI7DgoBex0dr82AvRIkplL7dfq6B04EaXjh0Z6ACcAwbpoRHO+NhDFT9Zy2jRROk+x9hUwYafxk0M0eeOHM3/Tkd7ouUFWCfEUhurd4oS+2tkQ3xKCtDRY/1JmbitAPUU0C+pX0kROsusPNt4IgCjskBjhehpvN0tjPBTSIZllRkBEw+LYfdFYDtiwCCTnOSi0aWAfb5Xu+a/shwcrLPjt2YCHkcCRFu0220a0gn5LX422DTSHMORg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
+ by SA1PR12MB5640.namprd12.prod.outlook.com (2603:10b6:806:238::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.24; Wed, 31 May
+ 2023 19:00:15 +0000
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::f7a7:a561:87e9:5fab]) by LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::f7a7:a561:87e9:5fab%6]) with mapi id 15.20.6433.024; Wed, 31 May 2023
+ 19:00:14 +0000
+Date:   Wed, 31 May 2023 16:00:12 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Baolu Lu <baolu.lu@linux.intel.com>
+Cc:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "nicolinc@nvidia.com" <nicolinc@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "mjrosato@linux.ibm.com" <mjrosato@linux.ibm.com>,
+        "chao.p.peng@linux.intel.com" <chao.p.peng@linux.intel.com>,
+        "yi.y.sun@linux.intel.com" <yi.y.sun@linux.intel.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        "shameerali.kolothum.thodi@huawei.com" 
+        <shameerali.kolothum.thodi@huawei.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "Hao, Xudong" <xudong.hao@intel.com>,
+        "Zhao, Yan Y" <yan.y.zhao@intel.com>,
+        "Xu, Terrence" <terrence.xu@intel.com>,
+        "Jiang, Yanting" <yanting.jiang@intel.com>,
+        "Duan, Zhenzhong" <zhenzhong.duan@intel.com>,
+        "clegoate@redhat.com" <clegoate@redhat.com>
+Subject: Re: [PATCH v6 09/10] vfio/pci: Extend
+ VFIO_DEVICE_GET_PCI_HOT_RESET_INFO for vfio device cdev
+Message-ID: <ZHeZPPo/MWXV1L9Q@nvidia.com>
+References: <20230522115751.326947-1-yi.l.liu@intel.com>
+ <20230522115751.326947-10-yi.l.liu@intel.com>
+ <20230524135603.33ee3d91.alex.williamson@redhat.com>
+ <DS0PR11MB752935203F87D69D4468B890C3469@DS0PR11MB7529.namprd11.prod.outlook.com>
+ <355a9f1e-64e6-d785-5a22-027b708b4935@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <48c679e9-8eed-568a-1de1-c57e315c693c@google.com>
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <355a9f1e-64e6-d785-5a22-027b708b4935@linux.intel.com>
+X-ClientProxiedBy: CH0PR03CA0029.namprd03.prod.outlook.com
+ (2603:10b6:610:b0::34) To LV2PR12MB5869.namprd12.prod.outlook.com
+ (2603:10b6:408:176::16)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|SA1PR12MB5640:EE_
+X-MS-Office365-Filtering-Correlation-Id: 57c2d8e9-379c-420c-d9a4-08db62094437
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 0s7MclbGIh+Hb9sJSdDxTFozH5gJPe27ck29FZRMrnWvF43YpAQOp+gXlgLI0HbG2WtD8kL4Z+IEEaDpL7985cxLt76gLSUtlQzbdGQUPXdAphfgAW5HgK3dAa7fvvIvxhVrm9mwaky1irkNcMSSRWOCLaNyKFbcTsX79tzRAJMbJc6u5ALobQ0lsYRoOUrYdA9c9xl2LjbYCniNHan5cuXLazaREiSA0OWY0D4LAl5nGed086foOItarLvJWUlg6UJ00drQQ9N4Sx+YFZX7F2DjA14ObMRNLmnPfyNQzZ0qEyGD7nBzdvTxbZTqFbAYQnXOjrkdHlQkb1JV0hF/FOD4wI4yMeMyayT57Hl/wnPemLVL/syIu91YmIj4QMW2wQLJ15q9luZd6HEIL6h9CPBb1Sn8jjpyjdfD2jCHc7GHmlBKTfn1OL1ri/RmaTGpUgUZSZcn0TLMP/i3mWRIHfKW+YId4V+x14DPpSqmPDPLCgEqUhA26P+Sn0/srhImroLTA1mTN6ujjA04cPiDZnNOYMaCuI16V3hR693pLf/aK4FnbPE0odripXEoUJS1
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(346002)(396003)(366004)(136003)(39860400002)(451199021)(316002)(6486002)(41300700001)(83380400001)(6512007)(86362001)(2616005)(186003)(53546011)(6506007)(26005)(2906002)(38100700002)(8936002)(36756003)(7416002)(5660300002)(4326008)(6916009)(66476007)(66556008)(478600001)(54906003)(8676002)(66946007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?XWzN3CQ69IGJH3evyrMcbXsfKEJmnhIYPYJf7tYo9Ek9z1lm9fxIGhcr7wUz?=
+ =?us-ascii?Q?vnU/1TASSMSzPAMIaRorZilcMMGfFMkteAPFt/tN4yKA2aO0rkOYqblb+Daf?=
+ =?us-ascii?Q?BzKuH5euKPc9hi4Xwr63L2V1bunT8YQun7pI/6nfz8eTKCtKOj6KR8yM0X1F?=
+ =?us-ascii?Q?brF0nZnY3EA/G50LSQhaj3+oUKITPp+Ng4cuap6ge6pCZ/LnszmFEjhh/4gR?=
+ =?us-ascii?Q?JIQSJjPJHqRGEGXgpgNneGhHkBnA3R4SdYk/BsTr8eQtthLEzQ7GBTCIHojr?=
+ =?us-ascii?Q?tG9epbOZnxHENvst605FAH1LO2TlDuFnuZm1+w1mpWteqXynYNTdkD5p+L3I?=
+ =?us-ascii?Q?pRLMKDEy77PG43DhSyIy33eVi2wiaZMRL8bhoPpzzA3YAa/wuEzwSgbCWNr9?=
+ =?us-ascii?Q?1i8hd7Vn3mfuFleK0C/YFMIEbHXOO3Egelng9312y4pqrn3nGhjeNR8hpx+V?=
+ =?us-ascii?Q?BuIaFgcX7ybQdVO/RSiviXDAChCOsfU0jtIjE2kf64mJFq1GHTYMJQBrXhUQ?=
+ =?us-ascii?Q?G05Ou8lFxRIOdKuNc5GnsBD8+gAf6pjKhaQz5pDRafvpZy3DbHGohT/xNx5x?=
+ =?us-ascii?Q?1g7lBUZ7lib2VE1RhhvmiWFZtSVUgR97l/nVDdr3qJqCPWKQLaZzXhWm8uAe?=
+ =?us-ascii?Q?sdBQ8m9+2NmY67LILjKVPi7qkXZU5pQzmweI6J/ovSM65vn/E3dWfxN6aq91?=
+ =?us-ascii?Q?7RY6RrIU2WScczOHZbh2jLskE+ct6UjUd/8gm++W/buOwScz3dzK9O7H9qBe?=
+ =?us-ascii?Q?nV0iGqGYRkOLdV34jk31uup/c95qJXEJJwaDNyEpnqi0XSF0+qS6iDyuFyho?=
+ =?us-ascii?Q?ucIXpKjaINKK+nL9VS0FQo1MwIfHt3zqH3HLZ4ttZz4/XXhMHN97ESvTVpkw?=
+ =?us-ascii?Q?rM6o8VUv8aHZ29xYuHjtbPOyvFR4b9DZyoR4tO/KmeyuqNogKhY5ZmLi+VZp?=
+ =?us-ascii?Q?a3CB7JtjZw42kV45wsyqIG609xPb76KrO0WvulaNmdH54DS+t6ngaBi3x9xS?=
+ =?us-ascii?Q?BWUuCgOISkn1gLWlb5ShVgNVZK7gwlbn6LiYerDy3rGL75WtlQAaKTBUVJgu?=
+ =?us-ascii?Q?UF5EfZR6UndunvBBsHWKlpJkxfVncDnRL5jBZiMVuKUoC2fm0ezu24Zfu1FZ?=
+ =?us-ascii?Q?9qgErPZckF3EWgPHy5Wi1YQD86SSaBsTvhqp+Lq1qKMhDklK/ApHI3RHT4Ne?=
+ =?us-ascii?Q?VPjaIUtcWs10s7gHXX1oyp43UqqJZMQMCXe+7xRS5MJ7dypYTuWqxprTMYGr?=
+ =?us-ascii?Q?w7q3nbQ6NPDONsJECiMzyOk8bLayIL8JK5EQC62G+bV+oNXGk5STMgZ7zv2h?=
+ =?us-ascii?Q?8F6c2+tyhYjpGIpzqB4l4yvraOj3ZS7urrG1qkdYngl58X7YWZ0wytuLA0Q4?=
+ =?us-ascii?Q?wUAlYiXs+fpzXZQDlnKsxclQjC4TvqWt0sTOpYUD0Ah4NuWCSe7ueT4oW2FH?=
+ =?us-ascii?Q?z0BrR32lEt5SXKJB2AtTAe23IroljUPx09wMO23ocWJ5pMkEv2nMXuQNF8j5?=
+ =?us-ascii?Q?cVj7T/9rX7JJtqCvQEIqJf5CVWKJwEpu5Prh1X3uHn87ay6FfYYvv6ymCdBJ?=
+ =?us-ascii?Q?GiSwEAa4E5geC+l2maEi5iZUKt3p63l2dhHGuMVZ?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57c2d8e9-379c-420c-d9a4-08db62094437
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2023 19:00:14.4501
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MgwDUdvIKPy3iRdRga1rYffQznPFWdwZd2dt1DVE1E/RX2+IiOYayJKvBa/4EqxL
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB5640
+X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, May 30, 2023 at 05:38:25PM -0700, Hugh Dickins wrote:
-> Thanks for looking, Peter: I was well aware of you dropping several hints
-> that you wanted to see what's intended before passing judgment on earlier
-> series, and I preferred to get on with showing this series, than go into
-> detail in responses to you there - thanks for your patience :)
-
-Not a problem at all here!
-
-> 
-> On Mon, 29 May 2023, Peter Xu wrote:
-> > On Sun, May 28, 2023 at 11:25:15PM -0700, Hugh Dickins wrote:
-> ...
-> > > @@ -1748,123 +1747,73 @@ static void khugepaged_collapse_pte_mapped_thps(struct khugepaged_mm_slot *mm_sl
-> > >  	mmap_write_unlock(mm);
-> > >  }
-> > >  
-> > > -static int retract_page_tables(struct address_space *mapping, pgoff_t pgoff,
-> > > -			       struct mm_struct *target_mm,
-> > > -			       unsigned long target_addr, struct page *hpage,
-> > > -			       struct collapse_control *cc)
-> > > +static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
-> > >  {
-> > >  	struct vm_area_struct *vma;
-> > > -	int target_result = SCAN_FAIL;
-> > >  
-> > > -	i_mmap_lock_write(mapping);
-> > > +	i_mmap_lock_read(mapping);
-> > >  	vma_interval_tree_foreach(vma, &mapping->i_mmap, pgoff, pgoff) {
-> > > -		int result = SCAN_FAIL;
-> > > -		struct mm_struct *mm = NULL;
-> > > -		unsigned long addr = 0;
-> > > -		pmd_t *pmd;
-> > > -		bool is_target = false;
-> > > +		struct mm_struct *mm;
-> > > +		unsigned long addr;
-> > > +		pmd_t *pmd, pgt_pmd;
-> > > +		spinlock_t *pml;
-> > > +		spinlock_t *ptl;
-> > >  
-> > >  		/*
-> > >  		 * Check vma->anon_vma to exclude MAP_PRIVATE mappings that
-> > > -		 * got written to. These VMAs are likely not worth investing
-> > > -		 * mmap_write_lock(mm) as PMD-mapping is likely to be split
-> > > -		 * later.
-> > > +		 * got written to. These VMAs are likely not worth removing
-> > > +		 * page tables from, as PMD-mapping is likely to be split later.
-> > >  		 *
-> > > -		 * Note that vma->anon_vma check is racy: it can be set up after
-> > > -		 * the check but before we took mmap_lock by the fault path.
-> > > -		 * But page lock would prevent establishing any new ptes of the
-> > > -		 * page, so we are safe.
-> > > -		 *
-> > > -		 * An alternative would be drop the check, but check that page
-> > > -		 * table is clear before calling pmdp_collapse_flush() under
-> > > -		 * ptl. It has higher chance to recover THP for the VMA, but
-> > > -		 * has higher cost too. It would also probably require locking
-> > > -		 * the anon_vma.
-> > > +		 * Note that vma->anon_vma check is racy: it can be set after
-> > > +		 * the check, but page locks (with XA_RETRY_ENTRYs in holes)
-> > > +		 * prevented establishing new ptes of the page. So we are safe
-> > > +		 * to remove page table below, without even checking it's empty.
-> > >  		 */
-> > > -		if (READ_ONCE(vma->anon_vma)) {
-> > > -			result = SCAN_PAGE_ANON;
-> > > -			goto next;
-> > > -		}
-> > > +		if (READ_ONCE(vma->anon_vma))
-> > > +			continue;
+On Fri, May 26, 2023 at 10:04:27AM +0800, Baolu Lu wrote:
+> On 5/25/23 9:02 PM, Liu, Yi L wrote:
+> > >   It's possible that requirement
+> > > might be relaxed in the new DMA ownership model, but as it is right
+> > > now, the code enforces that requirement and any new discussion about
+> > > what makes hot-reset available should note both the ownership and
+> > > dev_set requirement.  Thanks,
+> > I think your point is that if an iommufd_ctx has acquired DMA ownerhisp
+> > of an iommu_group, it means the device is owned. And it should not
+> > matter whether all the devices in the iommu_group is present in the
+> > dev_set. It is allowed that some devices are bound to pci-stub or
+> > pcieport driver. Is it?
 > > 
-> > Not directly related to current patch, but I just realized there seems to
-> > have similar issue as what ab0c3f1251b4 wanted to fix.
-> > 
-> > IIUC any shmem vma that used to have uprobe/bp installed will have anon_vma
-> > set here, then does it mean that any vma used to get debugged will never be
-> > able to merge into a thp (with either madvise or khugepaged)?
-> > 
-> > I think it'll only make a difference when the page cache is not huge yet
-> > when bp was uninstalled, but then it becomes a thp candidate somehow.  Even
-> > if so, I think the anon_vma should still be there.
-> > 
-> > Did I miss something, or maybe that's not even a problem?
+> > Actually I have a doubt on it. IIUC, the above requirement on dev_set
+> > is to ensure the reset to the devices are protected by the dev_set->lock.
+> > So that either the reset issued by driver itself or a hot reset request
+> > from user, there is no race. But if a device is not in the dev_set, then
+> > hot reset request from user might race with the bound driver. DMA ownership
+> > only guarantees the drivers won't handle DMA via DMA API which would have
+> > conflict with DMA mappings from user. I'm not sure if it is able to
+> > guarantee reset is exclusive as well. I see pci-stub and pcieport driver
+> > are the only two drivers that set the driver_managed_dma flag besides the
+> > vfio drivers. pci-stub may be fine. not sure about pcieport driver.
 > 
-> Finding vma->anon_vma set would discourage retract_page_tables() from
-> doing its business with that previously uprobed area; but it does not stop
-> collapse_pte_mapped_thp() (which uprobes unregister calls directly) from
-> dealing with it,
-
-This one is true to me.
-
-> and MADV_COLLAPSE works on anon_vma'ed areas too.  It's just a heuristic
-> in retract_page_tables(), when it chooses to skip the anon_vma'ed areas
-> as often not worth bothering with.
-
-This is the one I'm unsure about.
-
-What I read (at least with current code base) is that both the khugepaged
-and madvise paths will rely on SCAN_PTE_MAPPED_HUGEPAGE returned (or to be
-returned) first, then only if so we will have the attempt to collapse:
-
-  - For khugepaged, we'll add the candidate into pte_mapped_thp[] array
-    only after we set "result=SCAN_PTE_MAPPED_HUGEPAGE":
-
-		if (!is_target) {
-			khugepaged_add_pte_mapped_thp(mm, addr);
-			continue;
-		}
-
-  - For madvise, we fully rely on hpage_collapse_scan_file() retval to be
-    SCAN_PTE_MAPPED_HUGEPAGE to trigger the collapse_pte_mapped_thp().
-
-While the anon_vma check in retract_page_tables() is fairly early for each
-vma run, assuming the simplest case of 1 vma mapping IIUC it'll just never
-try to collapse such a vma?
-
+> commit c7d469849747 ("PCI: portdrv: Set driver_managed_dma") described
+> the criteria of adding driver_managed_dma to the pcieport driver.
 > 
-> As to vma merges: I haven't actually checked since the maple tree and other
-> rewrites of vma merging, but previously one vma with anon_vma set could be
-> merged with adjacent vma before or after without anon_vma set - the
-> anon_vma comparison is not just equality of anon_vma, but allows NULL too -
-> so the anon_vma will still be there, but extends to cover the wider extent.
-> Right, I find is_mergeable_anon_vma() still following that rule.
-
-Yes.
-
+> "
+> We achieve this by setting ".driver_managed_dma = true" in pci_driver
+> structure. It is safe because the portdrv driver meets below criteria:
 > 
-> (And once vmas are merged, so that the whole of the huge page falls within
-> a single vma, khugepaged can consider it, and do collapse_pte_mapped_thp()
-> on it - before or after 11/12 I think.)
+> - This driver doesn't use DMA, as you can't find any related calls like
+>   pci_set_master() or any kernel DMA API (dma_map_*() and etc.).
+> - It doesn't use MMIO as you can't find ioremap() or similar calls. It's
+>   tolerant to userspace possibly also touching the same MMIO registers
+>   via P2P DMA access.
+> "
 > 
-> As to whether it would even be a problem: generally no, the vma is supposed
-> just to be an internal representation, and so long as the code resists
-> proliferating them unnecessarily, occasional failures to merge should not
-> matter.  The one place that forever sticks in my mind as mattering (perhaps
-> there are others I'm unaware of, but I'd call them bugs) is mremap(): which
-> is sufficiently awkward and bug-prone already, that nobody ever had the
-> courage to make it independent of vma boundaries; but ideally, it's
-> mremap() that we should fix.
-> 
-> But I may have written three answers, yet still missed your point.
+> pci_rest_device() definitely shouldn't be done by the kernel drivers
+> that have driver_managed_dma set.
 
-Thanks for writing three answers. :) For me maybe what I worried is even
-simpler, please refer to above if that explains.  Again, I don't think
-that's a problem specific to this series as it was there before or after,
-and I still keep thinking I could have just missed something.
+Right
 
-I'll also need to rethink too (by reading more carefully on the follow up
-ones) since I think this series changed some facts above, maybe it'll be
-different when whole set applied, which I'll do.
+The only time it is safe to reset is if you know there is no attached
+driver or you know VFIO is the attached driver and the caller owns the
+VFIO too.
 
-> 
-> ...
-> > > +
-> > > +		mm = vma->vm_mm;
-> > > +		if (find_pmd_or_thp_or_none(mm, addr, &pmd) != SCAN_SUCCEED)
-> > > +			continue;
-> > > +
-> > > +		if (hpage_collapse_test_exit(mm))
-> > > +			continue;
-> > > +		/*
-> > > +		 * When a vma is registered with uffd-wp, we cannot recycle
-> > > +		 * the page table because there may be pte markers installed.
-> > > +		 * Other vmas can still have the same file mapped hugely, but
-> > > +		 * skip this one: it will always be mapped in small page size
-> > > +		 * for uffd-wp registered ranges.
-> > > +		 *
-> > > +		 * What if VM_UFFD_WP is set a moment after this check?  No
-> > > +		 * problem, huge page lock is still held, stopping new mappings
-> > > +		 * of page which might then get replaced by pte markers: only
-> > > +		 * existing markers need to be protected here.  (We could check
-> > > +		 * after getting ptl below, but this comment distracting there!)
-> > > +		 */
-> > > +		if (userfaultfd_wp(vma))
-> > > +			continue;
-> > 
-> > IIUC here with the new code we only hold (1) hpage lock, and (2)
-> > i_mmap_lock read.  Then could it possible that right after checking this
-> > and found !UFFD_WP, but then someone quickly (1) register uffd-wp on this
-> > vma, then UFFDIO_WRITEPROTECT to install some pte markers, before below
-> > pgtable locks taken?
-> > 
-> > The thing is installation of pte markers may not need either of the locks
-> > iiuc..
-> > 
-> > Would taking mmap read lock help in this case?
-> 
-> Isn't my comment above it a good enough answer?  If I misunderstand the
-> uffd-wp pte marker ("If"? certainly I don't understand it well enough,
-> but I may or may not be too wrong about it here), and actually it can
-> spring up in places where the page has not even been mapped yet, then
-> I'd *much* rather just move that check down into the pte_locked area,
-> than involve mmap read lock (which, though easier to acquire than its
-> write lock, would I think take us back to square 1 in terms of needing
-> trylock); but I did prefer not to have a big uffd-wp comment distracting
-> from the code flow there.
-> 
-> I expect now, that if I follow up UFFDIO_WRITEPROTECT, I shall indeed
-> find it inserting pte markers where the page has not even been mapped
-> yet.  A "Yes" from you will save me looking, but probably I shall have
-> to move that check down (oh well, the comment will be smaller there).
+We haven't done a no attached driver test due to races.
 
-I think the answer is yes, as we need to be able to install markers just to
-avoid knowing the fact on "what's inside the page cache" for file mems
-(which IIRC originates from your suggestion even if in another format of
-swap encoding, but the idea should be similar).
-
-Moving it into the pgtable locked section looks fine here too for this
-specific issue.
-
-Thanks,
-
--- 
-Peter Xu
-
+Jason
