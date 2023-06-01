@@ -2,222 +2,206 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 06003719977
-	for <lists+linux-s390@lfdr.de>; Thu,  1 Jun 2023 12:21:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E747E719963
+	for <lists+linux-s390@lfdr.de>; Thu,  1 Jun 2023 12:19:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233647AbjFAKTr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 1 Jun 2023 06:19:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55304 "EHLO
+        id S233593AbjFAKSf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 1 Jun 2023 06:18:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233454AbjFAKTK (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 1 Jun 2023 06:19:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F78B171E;
-        Thu,  1 Jun 2023 03:16:09 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A2BC76432D;
-        Thu,  1 Jun 2023 10:15:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 881EDC433A8;
-        Thu,  1 Jun 2023 10:15:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685614514;
-        bh=KP9HX6DBOdeXbh1b+aKLs5zgkX2POLO57m2Kdhv+uBE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PpK9bveSqvpewvjbyZorKqSi3Q/F2n/LjJbM2xuj27cyV2j16y21onV4vnPjeZgTl
-         zE9e28Ev7BFmducrk1/4dDKq3oOIJdBaX0QRyCLXbMWkq7hyE5K3/dP7zLmKJI/u+J
-         lhU+vPxA/p2Jf8kS/aFYDSo6FeVktlpcm+nCEuVDQIry8EXyK9YUnYblgPqXCgLqeR
-         2j1GLCveGyj3OVEyE2BDq2GHbbfSv+yRuLfu/Nry87svP0BgLxAfXOGT4DOJSO+sz1
-         hW3iK555Pl8OaMr8Z+t77LXxqmLIyxUXr+Y3h+YIQv8TpNf780OllbwDGe20NNxSf6
-         l3zqIrjNIFEhQ==
-From:   Mike Rapoport <rppt@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Helge Deller <deller@gmx.de>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Kent Overstreet <kent.overstreet@linux.dev>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Rapoport <rppt@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Song Liu <song@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        with ESMTP id S232499AbjFAKSG (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 1 Jun 2023 06:18:06 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF58A1FDB;
+        Thu,  1 Jun 2023 03:15:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=G1trJdY7ybtDfb34YzOEZVtQJ+4O7zYES3kMJ7sRdCU=; b=pytfcabSQbAioNogqcJyIjWxkb
+        I3OIRz0nPyGAHQCouHiezAZ3WYDnbr+0H5ASElPr4+OfQuPcqSEVXUzQNdmNT0vDCq0lYth70hxc+
+        nIxwWeL5rSBkZoelbLSxxySFndCPqg76D3wq86BEGZ1gkD10CrGs9NABCiAJPJkEv81csRGvvoVja
+        EaBwzktB36vi1XtuFtdCEjY2KE+yJjTGMIB4mjx3jEx3iBh0aM1LDhfieu9IZABiemcJgKbkPFNuq
+        /6ksBvE3iaE68Sn2CQ4733UmzPnTQKsAKE8EvFRBt0Ej6Ani+wvx452hsmvy64dZ4tGLH+6z41/Rs
+        43i6i9qw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1q4fJv-008GIu-Pp; Thu, 01 Jun 2023 10:14:15 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 66A3C3002F0;
+        Thu,  1 Jun 2023 12:14:09 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 374AA21484A8B; Thu,  1 Jun 2023 12:14:09 +0200 (CEST)
+Date:   Thu, 1 Jun 2023 12:14:09 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Will Deacon <will@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>, dennis@kernel.org,
+        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+        Heiko Carstens <hca@linux.ibm.com>, gor@linux.ibm.com,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        borntraeger@linux.ibm.com, Sven Schnelle <svens@linux.ibm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-modules@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-        netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Subject: [PATCH 13/13] x86/jitalloc: make memory allocated for code ROX
-Date:   Thu,  1 Jun 2023 13:12:57 +0300
-Message-Id: <20230601101257.530867-14-rppt@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20230601101257.530867-1-rppt@kernel.org>
-References: <20230601101257.530867-1-rppt@kernel.org>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
+        suravee.suthikulpanit@amd.com, Robin Murphy <robin.murphy@arm.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Baolu Lu <baolu.lu@linux.intel.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org, iommu@lists.linux.dev,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-crypto@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org
+Subject: [PATCH v2 07/12] parisc/percpu: Work around the lack of
+ __SIZEOF_INT128__
+Message-ID: <20230601101409.GS4253@hirez.programming.kicks-ass.net>
+References: <20230531130833.635651916@infradead.org>
+ <20230531132323.722039569@infradead.org>
+ <70a69deb-7ad4-45b2-8e13-34955594a7ce@app.fastmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <70a69deb-7ad4-45b2-8e13-34955594a7ce@app.fastmail.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+On Wed, May 31, 2023 at 04:21:22PM +0200, Arnd Bergmann wrote:
 
-When STRICT_KERNEL_RWX or STRICT_MODULE_RWX is enabled, force text
-allocations to use KERNEL_PAGE_ROX.
+> It would be nice to have the hack more localized to parisc
+> and guarded with a CONFIG_GCC_VERSION check so we can kill
+> it off in the future, once we drop either gcc-10 or parisc
+> support.
 
-Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
+I vote for dropping parisc -- it's the only 64bit arch that doesn't have
+sane atomics.
+
+Anyway, the below seems to work -- build tested with GCC-10.1
+
 ---
- arch/Kconfig             |  3 +++
- arch/x86/Kconfig         |  1 +
- arch/x86/kernel/ftrace.c |  3 ---
- arch/x86/mm/init.c       |  6 ++++++
- include/linux/jitalloc.h |  2 ++
- mm/jitalloc.c            | 21 +++++++++++++++++++++
- 6 files changed, 33 insertions(+), 3 deletions(-)
+Subject: parisc/percpu: Work around the lack of __SIZEOF_INT128__
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Tue May 30 22:27:40 CEST 2023
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 479a7b8be191..e7c4b01307d7 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -1307,6 +1307,9 @@ config STRICT_MODULE_RWX
- 	  and non-text memory will be made non-executable. This provides
- 	  protection against certain security exploits (e.g. writing to text)
- 
-+config ARCH_HAS_TEXT_POKE
-+	def_bool n
-+
- # select if the architecture provides an asm/dma-direct.h header
- config ARCH_HAS_PHYS_TO_DMA
- 	bool
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index fac4add6ce16..e1a512f557de 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -96,6 +96,7 @@ config X86
- 	select ARCH_HAS_SET_DIRECT_MAP
- 	select ARCH_HAS_STRICT_KERNEL_RWX
- 	select ARCH_HAS_STRICT_MODULE_RWX
-+	select ARCH_HAS_TEXT_POKE
- 	select ARCH_HAS_SYNC_CORE_BEFORE_USERMODE
- 	select ARCH_HAS_SYSCALL_WRAPPER
- 	select ARCH_HAS_UBSAN_SANITIZE_ALL
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index d50595f2c1a6..bd4dd8974ee6 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -313,7 +313,6 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 	unsigned long call_offset;
- 	unsigned long jmp_offset;
- 	unsigned long offset;
--	unsigned long npages;
- 	unsigned long size;
- 	unsigned long *ptr;
- 	void *trampoline;
-@@ -350,7 +349,6 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 		return 0;
- 
- 	*tramp_size = size + RET_SIZE + sizeof(void *);
--	npages = DIV_ROUND_UP(*tramp_size, PAGE_SIZE);
- 
- 	/* Copy ftrace_caller onto the trampoline memory */
- 	ret = text_poke_copy(trampoline, (void *)start_offset, size);
-@@ -416,7 +414,6 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 	/* ALLOC_TRAMP flags lets us know we created it */
- 	ops->flags |= FTRACE_OPS_FL_ALLOC_TRAMP;
- 
--	set_memory_rox((unsigned long)trampoline, npages);
- 	return (unsigned long)trampoline;
- fail:
- 	tramp_free(trampoline);
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index ffaf9a3840ce..c314738991fa 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -1127,6 +1127,12 @@ struct jit_alloc_params *jit_alloc_arch_params(void)
- 	jit_alloc_params.text.start = MODULES_VADDR + get_jit_load_offset();
- 	jit_alloc_params.text.end = MODULES_END;
- 
-+	if (IS_ENABLED(CONFIG_STRICT_KERNEL_RWX) ||
-+	    IS_ENABLED(CONFIG_STRICT_MODULE_RWX)) {
-+		jit_alloc_params.text.pgprot = PAGE_KERNEL_ROX;
-+		jit_alloc_params.flags |= JIT_ALLOC_USE_TEXT_POKE;
-+	}
-+
- 	return &jit_alloc_params;
- }
- #endif /* CONFIG_JIT_ALLOC */
-diff --git a/include/linux/jitalloc.h b/include/linux/jitalloc.h
-index 0ba5ef785a85..0e29e87acefe 100644
---- a/include/linux/jitalloc.h
-+++ b/include/linux/jitalloc.h
-@@ -15,9 +15,11 @@
- /**
-  * enum jit_alloc_flags - options for executable memory allocations
-  * @JIT_ALLOC_KASAN_SHADOW:	allocate kasan shadow
-+ * @JIT_ALLOC_USE_TEXT_POKE:	use text poking APIs to update memory
-  */
- enum jit_alloc_flags {
- 	JIT_ALLOC_KASAN_SHADOW	= (1 << 0),
-+	JIT_ALLOC_USE_TEXT_POKE	= (1 << 1),
- };
- 
- /**
-diff --git a/mm/jitalloc.c b/mm/jitalloc.c
-index a8ae64364d56..15d1067faf3f 100644
---- a/mm/jitalloc.c
-+++ b/mm/jitalloc.c
-@@ -7,6 +7,26 @@
- 
- static struct jit_alloc_params jit_alloc_params;
- 
-+#ifdef CONFIG_ARCH_HAS_TEXT_POKE
-+#include <asm/text-patching.h>
-+
-+static inline void jit_text_poke_copy(void *dst, const void *src, size_t len)
-+{
-+	if (jit_alloc_params.flags & JIT_ALLOC_USE_TEXT_POKE)
-+		text_poke_copy(dst, src, len);
-+	else
-+		memcpy(dst, src, len);
-+}
-+
-+static inline void jit_text_poke_set(void *addr, int c, size_t len)
-+{
-+	if (jit_alloc_params.flags & JIT_ALLOC_USE_TEXT_POKE)
-+		text_poke_set(addr, c, len);
-+	else
-+		memset(addr, c, len);
-+}
-+
-+#else
- static inline void jit_text_poke_copy(void *dst, const void *src, size_t len)
- {
- 	memcpy(dst, src, len);
-@@ -16,6 +36,7 @@ static inline void jit_text_poke_set(void *addr, int c, size_t len)
- {
- 	memset(addr, c, len);
- }
-+#endif
- 
- static void *jit_alloc(size_t len, unsigned int alignment, pgprot_t pgprot,
- 		       unsigned long start, unsigned long end,
--- 
-2.35.1
+HPPA64 is unique in not providing __SIZEOF_INT128__ across all
+supported compilers, specifically it only started doing this with
+GCC-11.
 
+Since the per-cpu ops are universally availably, and
+this_cpu_{,try_}cmpxchg128() is expected to be available on all 64bit
+architectures a wee bodge is in order.
+
+Sadly, while C reverts to memcpy() for assignment of POD types, it does
+not revert to memcmp() for for equality. Therefore frob that manually.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/parisc/include/asm/percpu.h |   77 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
+
+--- /dev/null
++++ b/arch/parisc/include/asm/percpu.h
+@@ -0,0 +1,77 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_PARISC_PERCPU_H
++#define _ASM_PARISC_PERCPU_H
++
++#include <linux/types.h>
++
++#if defined(CONFIG_64BIT) && CONFIG_GCC_VERSION < 1100000
++
++/*
++ * GCC prior to 11 does not provide __SIZEOF_INT128__ on HPPA64
++ * as such we need to provide an alternative implementation of
++ * {raw,this}_cpu_{,try_}cmpxchg128().
++ *
++ * This obviously doesn't function as u128 should, but for the purpose
++ * of per-cpu cmpxchg128 it might just do.
++ */
++typedef struct {
++	u64 a, b;
++} u128 __attribute__((aligned(16)));
++
++#define raw_cpu_generic_try_cmpxchg_memcmp(pcp, ovalp, nval)		\
++({									\
++	typeof(pcp) *__p = raw_cpu_ptr(&(pcp));				\
++	typeof(pcp) __val = *__p, __old = *(ovalp);			\
++	bool __ret;							\
++	if (!__builtin_memcmp(&__val, &__old, sizeof(pcp))) {		\
++		*__p = nval;						\
++		__ret = true;						\
++	} else {							\
++		*(ovalp) = __val;					\
++		__ret = false;						\
++	}								\
++	__ret;								\
++})
++
++#define raw_cpu_generic_cmpxchg_memcmp(pcp, oval, nval)			\
++({									\
++	typeof(pcp) __old = (oval);					\
++	raw_cpu_generic_try_cmpxchg_memcpy(pcp, &__old, nval);		\
++	__old;								\
++})
++
++#define raw_cpu_cmpxchg128(pcp, oval, nval) \
++	raw_cpu_generic_cmpxchg_memcmp(pcp, oval, nval)
++#define raw_cpu_try_cmpxchg128(pcp, ovalp, nval) \
++	raw_cpu_generic_try_cmpxchg_memcmp(pcp, ovalp, nval)
++
++#define this_cpu_generic_try_cmpxchg_memcmp(pcp, ovalp, nval)		\
++({									\
++	bool __ret;							\
++	unsigned long __flags;						\
++	raw_local_irq_save(__flags);					\
++	__ret = raw_cpu_generic_try_cmpxchg_memcmp(pcp, ovalp, nval);	\
++	raw_local_irq_restore(__flags);					\
++	__ret;								\
++})
++
++#define this_cpu_generic_cmpxchg_memcmp(pcp, oval, nval)		\
++({									\
++	typeof(pcp) __ret;						\
++	unsigned long __flags;						\
++	raw_local_irq_save(__flags);					\
++	__ret = raw_cpu_generic_cmpxchg_memcmp(pcp, oval, nval);	\
++	raw_local_irq_restore(__flags);					\
++	__ret;								\
++})
++
++#define this_cpu_cmpxchg128(pcp, oval, nval) \
++	this_cpu_generic_cmpxchg_memcmp(pcp, oval, nval)
++#define this_cpu_try_cmpxchg128(pcp, ovalp, nval) \
++	this_cpu_generic_try_cmpxchg_memcmp(pcp, ovalp, nval)
++
++#endif /* !__SIZEOF_INT128__ */
++
++#include <asm-generic/percpu.h>
++
++#endif /* _ASM_PARISC_PERCPU_H */
