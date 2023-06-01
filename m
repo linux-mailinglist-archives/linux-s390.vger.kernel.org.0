@@ -2,143 +2,123 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03CF3719E59
-	for <lists+linux-s390@lfdr.de>; Thu,  1 Jun 2023 15:35:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62D78719E53
+	for <lists+linux-s390@lfdr.de>; Thu,  1 Jun 2023 15:33:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229866AbjFANfV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 1 Jun 2023 09:35:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43428 "EHLO
+        id S233926AbjFANcs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 1 Jun 2023 09:32:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233330AbjFANfS (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 1 Jun 2023 09:35:18 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E718C13E
-        for <linux-s390@vger.kernel.org>; Thu,  1 Jun 2023 06:35:15 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-96f50e26b8bso122975966b.2
-        for <linux-s390@vger.kernel.org>; Thu, 01 Jun 2023 06:35:15 -0700 (PDT)
+        with ESMTP id S234303AbjFANcg (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 1 Jun 2023 09:32:36 -0400
+Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 643991A1
+        for <linux-s390@vger.kernel.org>; Thu,  1 Jun 2023 06:32:14 -0700 (PDT)
+Received: by mail-il1-x131.google.com with SMTP id e9e14a558f8ab-33bf12b5fb5so107345ab.1
+        for <linux-s390@vger.kernel.org>; Thu, 01 Jun 2023 06:32:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1685626514; x=1688218514;
+        d=google.com; s=20221208; t=1685626333; x=1688218333;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=M0MHDOHZ+ksADoGSH1YMQnsp1jrJ4XOCHJuXFHrOLiU=;
-        b=O/PXGn4IbX7zlX+OA/ZuADBSgNiqDVlZASh1iP6ny1zc9ezfBU29y3fSDYBHBmpfnO
-         mHGES1OhBWq6AcXO7npw2nb2OaZ6bd1WjP3auy6fWL5q+7oftNPzgghwMYTY9wencWtq
-         sQ+/tdJ64e9imgzF0Tu4hpFXDsZzZBGBpxQ0g=
+        bh=p3KtCSrqEVqtyrflNCykZkj5UeocsByaRl8X7IPAFn8=;
+        b=nEb7UmLMNlSokluULHqM3r9qwDnoeTuCxbhZyiHecz0usOSPC/uyqdsHZ7xd6QBUyR
+         idkWN5F64EAtBjPj19+RTFg6iXWGBP25dJZ/WHKJSbI78Nf4B6FKQFfIZx5W/5QST0fZ
+         jSi5W+oz4+pxH8RukzegUQ49sfyvxL8hY8S1I+HgSUT+fLqfWNHs8rfhFuGCycq2YTEj
+         /BaEsJfjqqPeuuslkWBUjfkGO32PnKAsvZU64ZLopJ+ej2ZPg07X13JKU5z1UjszHkqe
+         qWbHkQ3YufXGR4Y0zjyJFUrHwGjq1B+NSYDQtViYyV9Vj3OQjylmZh1M9WPLSLCrP5HB
+         BULg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685626514; x=1688218514;
+        d=1e100.net; s=20221208; t=1685626333; x=1688218333;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=M0MHDOHZ+ksADoGSH1YMQnsp1jrJ4XOCHJuXFHrOLiU=;
-        b=L+4XWT+AtQJqc5reJ+lIoze9YaZu4M/QA3BlbrXwpp4GmGk+qLig06sRB5uPd0C291
-         z9hPPEpl9LTgUBV7MFMrKACOvGTq7i97AjF4ZYzxkkMHZUDV3oc3fxvsTLwvE1rBPxEy
-         6lwfTUbEbNyxIKuMSYB95TQNjZCAinQoM9cqzspdZREfNLNDTJuR3TqE4MT2BvPD6FSX
-         SqZQiuCMQsVcpwYMJAagqyVTpw1jClGzc9G4jEA9WdduIo81hGOUybWBW6GnJUBB984g
-         XxDR9rin3UysTVcY2WVf4LPrrUYUYquK4QXrAqY+VC1v9N2I7oKrCLQTYOl6w3AuYqhT
-         co0w==
-X-Gm-Message-State: AC+VfDwpeyV/Rc7AQL3fj5B42EspMBd1dC1/cxTJ4546r3mnckod+6+i
-        Nqv/OTJdWE4jmZYtJdMfueu2bTnsKVoC8j+SeosPHO6J
-X-Google-Smtp-Source: ACHHUZ5od8/m2hW/RuMDKJ5bcmxCTTNtpim4JTCCMQLS0bdopmTvAeS91KHRluMqTsHiuy8bF0dBGw==
-X-Received: by 2002:a17:907:3e26:b0:969:bac4:8e22 with SMTP id hp38-20020a1709073e2600b00969bac48e22mr8137519ejc.26.1685626514301;
-        Thu, 01 Jun 2023 06:35:14 -0700 (PDT)
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com. [209.85.221.48])
-        by smtp.gmail.com with ESMTPSA id si16-20020a170906ced000b0094f1b8901e1sm10523562ejb.68.2023.06.01.06.35.13
-        for <linux-s390@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Jun 2023 06:35:14 -0700 (PDT)
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-307d58b3efbso807342f8f.0
-        for <linux-s390@vger.kernel.org>; Thu, 01 Jun 2023 06:35:13 -0700 (PDT)
-X-Received: by 2002:a17:907:2cc6:b0:973:fe5d:ef71 with SMTP id
- hg6-20020a1709072cc600b00973fe5def71mr4787778ejc.14.1685626175454; Thu, 01
- Jun 2023 06:29:35 -0700 (PDT)
+        bh=p3KtCSrqEVqtyrflNCykZkj5UeocsByaRl8X7IPAFn8=;
+        b=QJgYJWbhIfcFfgC1VerR3oRTpEVgtVXe73qNkAmr543iIgJ84A3sAfm7s6Axt/sGLG
+         QQeRtDf6due1oNfVW2q+ZbnMFBDQWYvEH0X+TiRU0o7ByyYZEe/Sfy0r+tZoYjKPwf49
+         W7/BgwYikGh7V/+hmwQfpErsLATh0n6eWAhWQ4OIn+iMhwiSVIBX5FbXq+AUgCKegn+l
+         0FCAfJOzjwtW2vPTV7jE9DxbOah0iavHze3215HdaB+9o+D3c0zElN0eSQ2fpzcPySX/
+         eSL5Yw01p/uiumbiSOIWoHTBezYs4gvmduIVl1l3cLcygiXDGZN8P+3f8Z9blljvm5nD
+         CkXw==
+X-Gm-Message-State: AC+VfDyA9d8gAp+YGuYKVnXIxfvkChE+JkXudLGr1w0vtihGYoVbdrGd
+        Vcyouy4S7pGf9LYYLlMQ2CprPYd/evJctVOdnupbJQ==
+X-Google-Smtp-Source: ACHHUZ4V/FtCLljGT1xoWt7C/8p0Y5SAaWQZYLw6rhFmZV3z+bByMi+y3Ckgjp10pBE5s1R58cJTrfBhSTUq11iJoX4=
+X-Received: by 2002:a05:6e02:b2c:b0:32a:642d:2a13 with SMTP id
+ e12-20020a056e020b2c00b0032a642d2a13mr216220ilu.6.1685626333553; Thu, 01 Jun
+ 2023 06:32:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230531130833.635651916@infradead.org> <20230531132323.722039569@infradead.org>
- <70a69deb-7ad4-45b2-8e13-34955594a7ce@app.fastmail.com> <20230601101409.GS4253@hirez.programming.kicks-ass.net>
- <14c50e58-fecc-e96a-ee73-39ef4e4617c7@gmx.de>
-In-Reply-To: <14c50e58-fecc-e96a-ee73-39ef4e4617c7@gmx.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 1 Jun 2023 09:29:18 -0400
-X-Gmail-Original-Message-ID: <CAHk-=whL65CLuy9D9gyO608acM5WLWo_ggAMP1cGu2XvyC0-hA@mail.gmail.com>
-Message-ID: <CAHk-=whL65CLuy9D9gyO608acM5WLWo_ggAMP1cGu2XvyC0-hA@mail.gmail.com>
-Subject: Re: [PATCH v2 07/12] parisc/percpu: Work around the lack of __SIZEOF_INT128__
-To:     Helge Deller <deller@gmx.de>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Will Deacon <will@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>, dennis@kernel.org,
-        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
-        Heiko Carstens <hca@linux.ibm.com>, gor@linux.ibm.com,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        borntraeger@linux.ibm.com, Sven Schnelle <svens@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
-        suravee.suthikulpanit@amd.com, Robin Murphy <robin.murphy@arm.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Baolu Lu <baolu.lu@linux.intel.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, iommu@lists.linux.dev,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-crypto@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
+References: <35e983f5-7ed3-b310-d949-9ae8b130cdab@google.com> <739964d-c535-4db4-90ec-2166285b4d47@google.com>
+In-Reply-To: <739964d-c535-4db4-90ec-2166285b4d47@google.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 1 Jun 2023 15:31:37 +0200
+Message-ID: <CAG48ez26qh_ZYuKoOQt-ci6SHt2R=5+bPgHCaZrG_TBfbPHq8g@mail.gmail.com>
+Subject: Re: [PATCH 08/12] mm/pgtable: add pte_free_defer() for pgtable as page
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Hildenbrand <david@redhat.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Qi Zheng <zhengqi.arch@bytedance.com>,
+        Yang Shi <shy828301@gmail.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Peter Xu <peterx@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>, Yu Zhao <yuzhao@google.com>,
+        Alistair Popple <apopple@nvidia.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Steven Price <steven.price@arm.com>,
+        SeongJae Park <sj@kernel.org>,
+        Naoya Horiguchi <naoya.horiguchi@nec.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Zack Rusin <zackr@vmware.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Axel Rasmussen <axelrasmussen@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Song Liu <song@kernel.org>,
+        Thomas Hellstrom <thomas.hellstrom@linux.intel.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
-        linux-parisc@vger.kernel.org,
-        John David Anglin <dave.anglin@bell.net>,
-        Sam James <sam@gentoo.org>
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        linux-arm-kernel@lists.infradead.org, sparclinux@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Jun 1, 2023 at 6:32=E2=80=AFAM Helge Deller <deller@gmx.de> wrote:
->
-> I don't think we need to care about gcc-10 on parisc.
-> Debian and Gentoo are the only supported distributions, while Debian
-> requires gcc-12 to build > 6.x kernels, and I assume Gentoo uses at least
-> gcc-12 as well.
->
-> So raising the gcc limit for parisc only (at least temporarily for now)
-> should be fine and your workaround below wouldn't be necessary, right?
+On Mon, May 29, 2023 at 8:23=E2=80=AFAM Hugh Dickins <hughd@google.com> wro=
+te:
+> Add the generic pte_free_defer(), to call pte_free() via call_rcu().
+> pte_free_defer() will be called inside khugepaged's retract_page_tables()
+> loop, where allocating extra memory cannot be relied upon.  This version
+> suits all those architectures which use an unfragmented page for one page
+> table (none of whose pte_free()s use the mm arg which was passed to it).
 
-This absolutely sounds like the right option. Let's simplify the
-problem space by just saying that parisc needs the newer compiler.
-
-Right now we have that "minimum gcc version" in a somewhat annoying
-place: it's in the ./scripts/min-tool-version.sh file as a shell
-script.
-
-I wonder if we could move the gcc minimum version check into the
-Kconfig file instead, and make it easier to let architectures override
-the minimum version.
-
-I don't quite know how to do that sanely, though. I don't think we
-have a sane way to error out at Kconfig time (except by forcing some
-syntax error inside an 'if' statement or something horrendously hacky
-like that).
-
-Added Masahiro to the (already overlong) participants list.
-
-                   Linus
+Pages that have been scheduled for deferred freeing can still be
+locked, right? So struct page's members "ptl" and "rcu_head" can now
+be in use at the same time? If that's intended, it would probably be a
+good idea to add comments in the "/* Page table pages */" part of
+struct page to point out that the first two members can be used by the
+rcu_head while the page is still used as a page table in some
+contexts, including use of the ptl.
