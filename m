@@ -2,125 +2,182 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 33DF9719E4A
-	for <lists+linux-s390@lfdr.de>; Thu,  1 Jun 2023 15:33:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B288719EF6
+	for <lists+linux-s390@lfdr.de>; Thu,  1 Jun 2023 15:59:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231790AbjFANc5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 1 Jun 2023 09:32:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41254 "EHLO
+        id S232380AbjFAN7O (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 1 Jun 2023 09:59:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233408AbjFANcq (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 1 Jun 2023 09:32:46 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5472AE5F;
-        Thu,  1 Jun 2023 06:32:37 -0700 (PDT)
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 351DDTk0018611;
-        Thu, 1 Jun 2023 13:32:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=vhd9EyMmatL80g2r4UYt6yaIWyyqCq9PEBicq4VSW50=;
- b=MEHyOEI7GxX8nGxy+vyZQC+WUvtH/1SoBvDibOGj/gqIbOXd5SGeCJ2N/ArqSCc2WQhS
- GnR9vzcDXBOXn3ECrkeuTZfXVy3N9rSU4U5NM/DviwRwTN9CUkhrhb1yZLoB2vsZ/1hh
- phe7KwwLWkrCMFw6/oYtTexrbynda0BIMJyca1ScKHMxdCSUwML/QVSWA1MiMmtsI1BT
- 5Fez3F/hC0Wuo5R34iq+3FL3eSVjS79WTQ6cvWTOYGGv2+T55f5bO9Mm09wSn2uImDU6
- H+oGeraW39zS9LtuY72Vy8WrlvJYuE9OL4HeZgGk7KtIiWUlV4qJoTjcIkBtFxOa0VSL Jg== 
+        with ESMTP id S229880AbjFAN7N (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 1 Jun 2023 09:59:13 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55844136;
+        Thu,  1 Jun 2023 06:59:12 -0700 (PDT)
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 351Dm9hh015701;
+        Thu, 1 Jun 2023 13:58:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=qT8kRrIQamscJRst5pRHoKfdEH4/busNADa3JrTVC3g=;
+ b=EcF02Jqmvf+6HAT9LaMZa+MhPEGs9/+dTMTHpBaDRYrD5RPuGnr/K2/HP64SQalUJkHk
+ ZWCjCaw2lONRj2AhM3Crarlu/K6+od0DBexSl1zjUar0MrEQxfRIg/K7oY8QhHG4KQXL
+ FdBCF9dVOXSp8UoJLVE/juG1zcIni6dNQ6K9we5th1ge6iX8NT1b3WKIBNGdBdfaq4c2
+ CzoTcRaNiE6ez9GoMWOuDymKC2ot745yFN19iHAxlwHlTTDmga8lIyU9/qTJhslkaaLq
+ jfZtcwiIOHA/pscR30JBpqbSY7VooS5bEAnLZQmzhsJp9ZR59g9tYAqGE4DeTia9Cf1r Nw== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qxv1b0sfr-1
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qxvhdg9mn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Jun 2023 13:32:36 +0000
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 351DDbab019247;
-        Thu, 1 Jun 2023 13:32:35 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qxv1b0seq-1
+        Thu, 01 Jun 2023 13:58:01 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 351DmkhY017127;
+        Thu, 1 Jun 2023 13:58:00 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qxvhdg9je-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Jun 2023 13:32:35 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3514Pmn5020346;
-        Thu, 1 Jun 2023 13:32:34 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3qu94e2j32-1
+        Thu, 01 Jun 2023 13:58:00 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 351119CB028926;
+        Thu, 1 Jun 2023 13:57:57 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3qu9g52jpr-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Jun 2023 13:32:33 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 351DWU1c36176556
+        Thu, 01 Jun 2023 13:57:57 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 351DvrTb43450766
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 1 Jun 2023 13:32:30 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 72EAD2004B;
-        Thu,  1 Jun 2023 13:32:30 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 02F4220040;
-        Thu,  1 Jun 2023 13:32:30 +0000 (GMT)
-Received: from [9.171.14.211] (unknown [9.171.14.211])
-        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Thu,  1 Jun 2023 13:32:29 +0000 (GMT)
-Message-ID: <7da25454-bee4-2d4c-a5c2-ac98a44edff0@linux.ibm.com>
-Date:   Thu, 1 Jun 2023 15:32:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [kvm-unit-tests PATCH v3 2/2] s390x: sclp: Implement
- SCLP_RC_INSUFFICIENT_SCCB_LENGTH
-Content-Language: en-US
-To:     Pierre Morel <pmorel@linux.ibm.com>,
-        Nico Boehr <nrb@linux.ibm.com>, linux-s390@vger.kernel.org
-Cc:     thuth@redhat.com, kvm@vger.kernel.org, imbrenda@linux.ibm.com,
-        david@redhat.com, nsg@linux.ibm.com, cohuck@redhat.com
-References: <20230530124056.18332-1-pmorel@linux.ibm.com>
- <20230530124056.18332-3-pmorel@linux.ibm.com>
- <3dc8e019-a3c1-8446-08ed-f76a9064f954@linux.ibm.com>
- <168562078341.164254.16306908045401776634@t14-nrb>
- <5d0ddebd-22ab-f916-2339-5edc880e5001@linux.ibm.com>
-From:   Janosch Frank <frankja@linux.ibm.com>
-In-Reply-To: <5d0ddebd-22ab-f916-2339-5edc880e5001@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 4sAd4KisSnhH0AZhQPPKb4tlFufvylCa
-X-Proofpoint-GUID: sx6PmKIIVovFNVeOdVt-byuM7Ogcd-cu
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Thu, 1 Jun 2023 13:57:54 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E094820040;
+        Thu,  1 Jun 2023 13:57:53 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BB4BD20043;
+        Thu,  1 Jun 2023 13:57:52 +0000 (GMT)
+Received: from thinkpad-T15 (unknown [9.152.212.238])
+        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Thu,  1 Jun 2023 13:57:52 +0000 (GMT)
+Date:   Thu, 1 Jun 2023 15:57:51 +0200
+From:   Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Qi Zheng <zhengqi.arch@bytedance.com>,
+        Yang Shi <shy828301@gmail.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Peter Xu <peterx@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>, Yu Zhao <yuzhao@google.com>,
+        Alistair Popple <apopple@nvidia.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Steven Price <steven.price@arm.com>,
+        SeongJae Park <sj@kernel.org>,
+        Naoya Horiguchi <naoya.horiguchi@nec.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Zack Rusin <zackr@vmware.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Axel Rasmussen <axelrasmussen@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Song Liu <song@kernel.org>,
+        Thomas Hellstrom <thomas.hellstrom@linux.intel.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Jann Horn <jannh@google.com>,
+        linux-arm-kernel@lists.infradead.org, sparclinux@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH 05/12] powerpc: add pte_free_defer() for pgtables
+ sharing page
+Message-ID: <20230601155751.7c949ca4@thinkpad-T15>
+In-Reply-To: <a8df11d-55ae-64bc-edcb-d383a7a941ea@google.com>
+References: <35e983f5-7ed3-b310-d949-9ae8b130cdab@google.com>
+        <28eb289f-ea2c-8eb9-63bb-9f7d7b9ccc11@google.com>
+        <ZHSwWgLWaEd+zi/g@casper.infradead.org>
+        <a8df11d-55ae-64bc-edcb-d383a7a941ea@google.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.37; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: SzHo2UjAE6P2WmSmv78QU1Y8kPZW3VM5
+X-Proofpoint-GUID: 3TDd0Cl2h1aUFcqmXlzGLt1BVByjS4S3
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
  definitions=2023-06-01_08,2023-05-31_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
- adultscore=0 priorityscore=1501 lowpriorityscore=0 suspectscore=0
- impostorscore=0 bulkscore=0 mlxscore=0 phishscore=0 mlxlogscore=968
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2306010115
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H5,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ impostorscore=0 lowpriorityscore=0 adultscore=0 priorityscore=1501
+ suspectscore=0 phishscore=0 mlxlogscore=999 malwarescore=0 clxscore=1011
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2306010119
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 6/1/23 14:55, Pierre Morel wrote:
-> 
-> On 6/1/23 13:59, Nico Boehr wrote:
->> Quoting Janosch Frank (2023-06-01 10:03:06)
->>> On 5/30/23 14:40, Pierre Morel wrote:
->>>> If SCLP_CMDW_READ_SCP_INFO fails due to a short buffer, retry
->>>> with a greater buffer.
->>>>
->>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->> Janosch, I think it makes sense if Pierre picks up Claudios suggestion from here:
->> https://lore.kernel.org/all/20230530173544.378a63c6@p-imbrenda/
->>
->> Do you agree?
-> 
-> from my side:
-> 
-> It simplifies greatly the code and tested without problem.
-> 
-> The documentation says the SCCB length is "at least"... so we can use a
-> greater size from the beginning.
-> 
-> 
+On Mon, 29 May 2023 07:36:40 -0700 (PDT)
+Hugh Dickins <hughd@google.com> wrote:
 
-Sounds good
+> On Mon, 29 May 2023, Matthew Wilcox wrote:
+> > On Sun, May 28, 2023 at 11:20:21PM -0700, Hugh Dickins wrote:  
+> > > +void pte_free_defer(struct mm_struct *mm, pgtable_t pgtable)
+> > > +{
+> > > +	struct page *page;
+> > > +
+> > > +	page = virt_to_page(pgtable);
+> > > +	call_rcu(&page->rcu_head, pte_free_now);
+> > > +}  
+> > 
+> > This can't be safe (on ppc).  IIRC you might have up to 16x4k page
+> > tables sharing one 64kB page.  So if you have two page tables from the
+> > same page being defer-freed simultaneously, you'll reuse the rcu_head
+> > and I cannot imagine things go well from that point.  
+> 
+> Oh yes, of course, thanks for catching that so quickly.
+> So my s390 and sparc implementations will be equally broken.
+> 
+> > 
+> > I have no idea how to solve this problem.  
+> 
+> I do: I'll have to go back to the more complicated implementation we
+> actually ran with on powerpc - I was thinking those complications just
+> related to deposit/withdraw matters, forgetting the one-rcu_head issue.
+> 
+> It uses large (0x10000) increments of the page refcount, avoiding
+> call_rcu() when already active.
+> 
+> It's not a complication I had wanted to explain or test for now,
+> but we shall have to.  Should apply equally well to sparc, but s390
+> more of a problem, since s390 already has its own refcount cleverness.
+
+Yes, we have 2 pagetables in one 4K page, which could result in same
+rcu_head reuse. It might be possible to use the cleverness from our
+page_table_free() function, e.g. to only do the call_rcu() once, for
+the case where both 2K pagetable fragments become unused, similar to
+how we decide when to actually call __free_page().
+
+However, it might be much worse, and page->rcu_head from a pagetable
+page cannot be used at all for s390, because we also use page->lru
+to keep our list of free 2K pagetable fragments. I always get confused
+by struct page unions, so not completely sure, but it seems to me that
+page->rcu_head would overlay with page->lru, right?
