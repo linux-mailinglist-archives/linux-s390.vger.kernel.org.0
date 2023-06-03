@@ -2,112 +2,56 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 92A91720A83
-	for <lists+linux-s390@lfdr.de>; Fri,  2 Jun 2023 22:44:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70AB17211F7
+	for <lists+linux-s390@lfdr.de>; Sat,  3 Jun 2023 22:02:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236189AbjFBUoo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 2 Jun 2023 16:44:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57734 "EHLO
+        id S229574AbjFCUCa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 3 Jun 2023 16:02:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236003AbjFBUom (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 2 Jun 2023 16:44:42 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D05A1E43;
-        Fri,  2 Jun 2023 13:44:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de;
- s=s31663417; t=1685738571; x=1686343371; i=deller@gmx.de;
- bh=EtVxm1q0lPS2fVvNyBPOHcvxtqGybgS/jj5fhYQ0wso=;
- h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
- b=av33vA0fDg8Z/UAXc/ThaoXut1CaK/sOxgD2P0ojBoj1qIDA/9tulc7N+nnN6AuMCaWT6U/
- V6Xt0OrS0sLjGxFvN2fm4pUcp/bWMDm9Imu6k2JfFnUNwy41AyEjCqDEuCTeluDPtxFELeRAn
- hU5hRGcxqURtCcKKwm7u7ixIjZCt8X0Ss5YuIZBZYUyCzfYFqxv+MQIVEh4Vm9ICHIR26NfQR
- 4geRw6TNt/0Kl4FxQy5jMWncprbiojBXek8gHVsXaBfI6YyVzcG+Y8doDS53puRqAdry8616+
- GX//FxMVoV+JAv49G9yedD8DUktjiPFu78LE1Bo309piw4qsYx4Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.56.61] ([109.43.112.4]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MMGRK-1po4AH280s-00JHiH; Fri, 02
- Jun 2023 22:42:51 +0200
-Message-ID: <467644b2-48e0-afcb-64df-044bfef1091e@gmx.de>
-Date:   Fri, 2 Jun 2023 22:42:36 +0200
+        with ESMTP id S229451AbjFCUCa (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 3 Jun 2023 16:02:30 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C58618D;
+        Sat,  3 Jun 2023 13:02:29 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D48E9604EF;
+        Sat,  3 Jun 2023 20:02:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 16E98C433EF;
+        Sat,  3 Jun 2023 20:02:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685822548;
+        bh=W6Ph1V7NwcCTO1o11ACZOYg3bN9VWa0uLMUPomqMqnA=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=KkH29b6rkyGAJmJHJckzZfOoD20UpfrqiArUK/vKyrIodwNmnLkiATwPc/3y9Mrnp
+         p6JAMSTlAqgMZsoCVm+jE5DNsNl2FZ2qAo4vBZrEXEtmSE1ZtjNd45CphKBRmjXhxx
+         q7BWHJKAKNPyvrQyoZ9gicOKhWi1A+1xbnQ2VB0Hbdb8/dSj8510Y4x1ELAYtPg6CI
+         OBl0Wy+4qtaMe34Ij+iYcLqx3mAO3Kszp49c2Z1i4ieuypcs84T5mTimN5Yj+Wyq6S
+         OLaN6oSBCTK3RlhUQBJfkn6YE/nOCyGSB1xaE9er6Oad+Qy5ByXBdU3tH9THm3fj5V
+         TjxT5VN3QmDEQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DC8D1C395E0;
+        Sat,  3 Jun 2023 20:02:27 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v2 07/12] parisc/percpu: Work around the lack of
- __SIZEOF_INT128__
-Content-Language: en-US
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Will Deacon <will@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>, dennis@kernel.org,
-        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
-        Heiko Carstens <hca@linux.ibm.com>, gor@linux.ibm.com,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        borntraeger@linux.ibm.com, Sven Schnelle <svens@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
-        suravee.suthikulpanit@amd.com, Robin Murphy <robin.murphy@arm.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Baolu Lu <baolu.lu@linux.intel.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, iommu@lists.linux.dev,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-crypto@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
-        linux-parisc@vger.kernel.org,
-        John David Anglin <dave.anglin@bell.net>,
-        Sam James <sam@gentoo.org>
-References: <20230531130833.635651916@infradead.org>
- <20230531132323.722039569@infradead.org>
- <70a69deb-7ad4-45b2-8e13-34955594a7ce@app.fastmail.com>
- <20230601101409.GS4253@hirez.programming.kicks-ass.net>
- <14c50e58-fecc-e96a-ee73-39ef4e4617c7@gmx.de>
- <CAHk-=whL65CLuy9D9gyO608acM5WLWo_ggAMP1cGu2XvyC0-hA@mail.gmail.com>
- <20230602143912.GI620383@hirez.programming.kicks-ass.net>
-From:   Helge Deller <deller@gmx.de>
-In-Reply-To: <20230602143912.GI620383@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:78zHS8/aoBMFCLCrh8NEXU3+Mi9dUj8jWsvJ4VEVpEUJQXsb9qg
- klluUMDHJMFGtTxpf5yHCCUToer+4drDAQNHQAgVuo2HQCUoRS2JKuO2hlIzeTb22N58bCn
- 8yjiDqiZVuqg3gAisVRWVDRtX7Hc6PybceJ1LJSdNjMWHXOtBKBZrzWHSU91N4DfP+8mnyM
- QSAG3bfiqm8ylM/aCgeMg==
-UI-OutboundReport: notjunk:1;M01:P0:wkQwUL8WRiw=;/Mf2bbmZX3J4GHZLVevV9vugLQW
- +vevBhHxQxZXsmO+8L6EOG/dEz/8oyfQfnS8wMnRTP+UZkW2Jeh5UROdSqwek1bSDc3hscquW
- juxUK9V8xf9t5FcAQDbZODfu5kKCtEssNh76o1+fCeNL32NLfl+p9rCrk8EvyceKupB9kOtVS
- Zqa1MJ/uMOsRK42oZB0Hk5wiqr1yfjDV9m1LgBSLNNrplu621iX8TL5gcIRsEl/cFBhpwMOdX
- BNtq5HJtd88nea87tEDpT53rNKNsGjzifJ8u6IMd3UP5Adhp6HiJwcPv3ifPV+iBPdBaFoGMc
- 4I6d6vqVRkP+le+e27uYMDuej7dMfA1eoefmxqS7+3MXqQfSXrAz5m8YPz6om/C8WdFXNfrq2
- TGEsP1DEsFMCEn9DK5mz9Fs/pyKSmtNBdHNOc6rrjYUJWdFFLgXFqgy0d8kkWPjkZ0BWcCPAA
- 9yBVYCRXvrrkoVM35zKJy/wM+uuqmrWbIfAG5Rzyrq5PUPN30TIKWLPiqeCJqIudsXFCrtZlt
- 9TPQTfEARXC84lZh93e5TzhkS6ofvWIBL84RG3pXlM+Z/Bfzbx7wyg84PAoAtEi7tC5x4T8lY
- XADZPaMtrDowkFDwq0f2CUNASHYZv3SDuKUaaomM9LkqoheIbfEsA0+x29VcW3Qb4jMEx2cRr
- RcsI5SwGCv/Ze2Ap4CIUYNYyCCL56PiF40vQN9nqQ4Ob9V9afxKnU4T74F5MNIYBTcSeEAm9b
- Dv2PgUjkUMmJWqS6wbLcAD6UVoBWxpixeBRJRZmMd47jiB42ghukw6uBY76L/5M09dUjKMxAc
- NpxBGg2MjVNl/5HupbhQr2chxUVvrYNBGVJXve8gPqdA+pVSM7dNTBufu+I7Ey1TE6xDBhYm8
- Gx8ST0Wd1cxeFWu/AQP5en8Fcs4Xsb39hbqI7LYqcHsqLiMtZAcZowCT5au3GGdPCHmSaa2Io
- N18lvg==
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] net/smc: Avoid to access invalid RMBs' MRs in SMCRv1 ADD
+ LINK CONT
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <168582254789.6132.5199487430130096814.git-patchwork-notify@kernel.org>
+Date:   Sat, 03 Jun 2023 20:02:27 +0000
+References: <1685608912-124996-1-git-send-email-guwen@linux.alibaba.com>
+In-Reply-To: <1685608912-124996-1-git-send-email-guwen@linux.alibaba.com>
+To:     Wen Gu <guwen@linux.alibaba.com>
+Cc:     kgraul@linux.ibm.com, wenjia@linux.ibm.com, jaka@linux.ibm.com,
+        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -115,56 +59,56 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 6/2/23 16:39, Peter Zijlstra wrote:
-> On Thu, Jun 01, 2023 at 09:29:18AM -0400, Linus Torvalds wrote:
->
->> Right now we have that "minimum gcc version" in a somewhat annoying
->> place: it's in the ./scripts/min-tool-version.sh file as a shell
->> script.
->
-> Something like so then?
->
-> ---
-> Subject: parisc: Raise minimal GCC version
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Fri Jun  2 16:33:54 CEST 2023
->
-> With 64bit builds depending on __SIZEOF_INT128__ raise the parisc
-> minimum compiler version to gcc-11.0.0.
->
-> All other 64bit architectures provide this from GCC-5.1.0 (and
-> probably before), except hppa64 which only started advertising this
-> with GCC-11.
->
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Hello:
 
-The patch raises the compiler for 32- and 64-bit parisc builds, but that's=
- OK.
+This patch was applied to netdev/net.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-So:
-Acked-by: Helge Deller <deller@gmx.de>
+On Thu,  1 Jun 2023 16:41:52 +0800 you wrote:
+> SMCRv1 has a similar issue to SMCRv2 (see link below) that may access
+> invalid MRs of RMBs when construct LLC ADD LINK CONT messages.
+> 
+>  BUG: kernel NULL pointer dereference, address: 0000000000000014
+>  #PF: supervisor read access in kernel mode
+>  #PF: error_code(0x0000) - not-present page
+>  PGD 0 P4D 0
+>  Oops: 0000 [#1] PREEMPT SMP PTI
+>  CPU: 5 PID: 48 Comm: kworker/5:0 Kdump: loaded Tainted: G W   E      6.4.0-rc3+ #49
+>  Workqueue: events smc_llc_add_link_work [smc]
+>  RIP: 0010:smc_llc_add_link_cont+0x160/0x270 [smc]
+>  RSP: 0018:ffffa737801d3d50 EFLAGS: 00010286
+>  RAX: ffff964f82144000 RBX: ffffa737801d3dd8 RCX: 0000000000000000
+>  RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff964f81370c30
+>  RBP: ffffa737801d3dd4 R08: ffff964f81370000 R09: ffffa737801d3db0
+>  R10: 0000000000000001 R11: 0000000000000060 R12: ffff964f82e70000
+>  R13: ffff964f81370c38 R14: ffffa737801d3dd3 R15: 0000000000000001
+>  FS:  0000000000000000(0000) GS:ffff9652bfd40000(0000) knlGS:0000000000000000
+>  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>  CR2: 0000000000000014 CR3: 000000008fa20004 CR4: 00000000003706e0
+>  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>  Call Trace:
+>   <TASK>
+>   smc_llc_srv_rkey_exchange+0xa7/0x190 [smc]
+>   smc_llc_srv_add_link+0x3ae/0x5a0 [smc]
+>   smc_llc_add_link_work+0xb8/0x140 [smc]
+>   process_one_work+0x1e5/0x3f0
+>   worker_thread+0x4d/0x2f0
+>   ? __pfx_worker_thread+0x10/0x10
+>   kthread+0xe5/0x120
+>   ? __pfx_kthread+0x10/0x10
+>   ret_from_fork+0x2c/0x50
+>   </TASK>
+> 
+> [...]
 
-Thank you!
-Helge
+Here is the summary with links:
+  - [net] net/smc: Avoid to access invalid RMBs' MRs in SMCRv1 ADD LINK CONT
+    https://git.kernel.org/netdev/net/c/c308e9ec0047
 
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-> ---
->   scripts/min-tool-version.sh |    6 +++++-
->   1 file changed, 5 insertions(+), 1 deletion(-)
->
-> --- a/scripts/min-tool-version.sh
-> +++ b/scripts/min-tool-version.sh
-> @@ -17,7 +17,11 @@ binutils)
->   	echo 2.25.0
->   	;;
->   gcc)
-> -	echo 5.1.0
-> +	if [ "$SRCARCH" =3D parisc ]; then
-> +		echo 11.0.0
-> +	else
-> +		echo 5.1.0
-> +	fi
->   	;;
->   llvm)
->   	if [ "$SRCARCH" =3D s390 ]; then
 
