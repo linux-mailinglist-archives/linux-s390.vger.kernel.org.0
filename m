@@ -2,160 +2,136 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD391724794
-	for <lists+linux-s390@lfdr.de>; Tue,  6 Jun 2023 17:25:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB9A2724AEC
+	for <lists+linux-s390@lfdr.de>; Tue,  6 Jun 2023 20:09:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232817AbjFFPZH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 6 Jun 2023 11:25:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47662 "EHLO
+        id S233608AbjFFSJf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 6 Jun 2023 14:09:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236547AbjFFPY5 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 6 Jun 2023 11:24:57 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78DAC1BD;
-        Tue,  6 Jun 2023 08:24:56 -0700 (PDT)
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 356FJUAP014186;
-        Tue, 6 Jun 2023 15:24:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=DU6vu7BGB9Pd7PgUM7O8HCjTO02oYXZf9At20IhpIQs=;
- b=R1229+ClY8Wi7DZALJtOvd9cmf0R9+An+WECGHflg3uuSv31DF9KHZcYpVvEzsfibZ7P
- 8wWBY7bvnnbfLo1nhvZY1sMPUkdMlRJEaKCmigPteU4q+JRWbC8SzH1VJ11SLX/5fMWN
- 0fjJFFgyMJgwmg+FnexNpuhYT/siGzHVpu6GxMBYNfa/ODt+yghPDTEaHjJLIqDbtLXy
- HwDI+KBoHzG2H6tURl/IK8YfRfLR1LUWgdfnrlkmKApABfkN8WLjqXW5uSaGkJ52QQZx
- c/1NpyLXCmWr/2XT15DPEoYfFiBf566fj6OoFbG4KIigPuMhxWxxZ5OX8NNmR/eSauKC Qg== 
+        with ESMTP id S238882AbjFFSJV (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 6 Jun 2023 14:09:21 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9F221706;
+        Tue,  6 Jun 2023 11:08:55 -0700 (PDT)
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 356I0DjB024605;
+        Tue, 6 Jun 2023 18:08:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=4+AYMDDlmTOIo1MH2O1tfigNhM2UoeatVCosaW1kfSw=;
+ b=ci66PH2oW6EAZZs+V+gg28ut6nPxJxLjF+o+m4blmyzfya8097oHqZrouftxkNXElUfR
+ v4LiTNA4r/lkOnMmKucS8XqtWrY1710Vww0OjlF2DPDAg/1dBWgEbitphxu9ZCcVuekd
+ rFLjWANoUHggW28eMemO88qHtuNuAjZWFZp7joIr/xAppIbWFqNBz5vAZNh7VKbXELTz
+ FsXzE3GD1QKMRsuFRRudakDj8p9E0NBQDBNQIp8Zm7xRYkcjIZrSuLYt1BXfGCCLD6OF
+ 19pvKKKaMqxd9mKCZOkyvBL4ZWXltzsN9Fl5qzjfYCNGPXSoUtg4xqPXHPxRPNjkh69y Mg== 
 Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r27bfr3g7-1
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r29pn893c-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Jun 2023 15:24:55 +0000
+        Tue, 06 Jun 2023 18:08:50 +0000
 Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3562k5VL001223;
-        Tue, 6 Jun 2023 15:24:53 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3qyxmyj1ks-1
+        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3563LRNA032236;
+        Tue, 6 Jun 2023 18:08:21 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3qyxmyj8x9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Jun 2023 15:24:53 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 356FOnm919399240
+        Tue, 06 Jun 2023 18:08:21 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 356I8I6F42140316
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 6 Jun 2023 15:24:49 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 936ED20043;
-        Tue,  6 Jun 2023 15:24:49 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F3CC320040;
-        Tue,  6 Jun 2023 15:24:48 +0000 (GMT)
-Received: from [9.171.79.116] (unknown [9.171.79.116])
-        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Tue,  6 Jun 2023 15:24:48 +0000 (GMT)
-Message-ID: <2e0a8215-ba68-f80c-1610-fb1e5489f6fd@linux.ibm.com>
-Date:   Tue, 6 Jun 2023 17:24:48 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v3 4/6] s390/uvdevice: Add 'Lock Secret Store' UVC
-Content-Language: en-US
-To:     Steffen Eiden <seiden@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tue, 6 Jun 2023 18:08:18 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1C2FF20043;
+        Tue,  6 Jun 2023 18:08:18 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A9B4520040;
+        Tue,  6 Jun 2023 18:08:17 +0000 (GMT)
+Received: from a46lp73.lnxne.boe (unknown [9.152.108.100])
+        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Tue,  6 Jun 2023 18:08:17 +0000 (GMT)
+From:   Steffen Eiden <seiden@linux.ibm.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         Viktor Mihajlovski <mihajlov@linux.ibm.com>
-Cc:     Claudio Imbrenda <imbrenda@linux.ibm.com>,
+Cc:     Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
         Nico Boehr <nrb@linux.ibm.com>,
         Christian Borntraeger <borntraeger@linux.ibm.com>,
         Heiko Carstens <hca@linux.ibm.com>,
         Hendrik Brueckner <brueckner@linux.ibm.com>
-References: <20230606113736.2934503-1-seiden@linux.ibm.com>
- <20230606113736.2934503-5-seiden@linux.ibm.com>
-From:   Janosch Frank <frankja@linux.ibm.com>
-In-Reply-To: <20230606113736.2934503-5-seiden@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH v4 0/6] s390/uvdevice: Expose secret UVCs
+Date:   Tue,  6 Jun 2023 20:08:11 +0200
+Message-Id: <20230606180817.3019077-1-seiden@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 77z7Siz4mRM9fw16CiqKCoRRRDhuJiMi
-X-Proofpoint-GUID: 77z7Siz4mRM9fw16CiqKCoRRRDhuJiMi
+X-Proofpoint-ORIG-GUID: 3M05lREvSir7L-JC2FxvRJ8N0HRM-qIn
+X-Proofpoint-GUID: 3M05lREvSir7L-JC2FxvRJ8N0HRM-qIn
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-06-06_10,2023-06-06_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- impostorscore=0 mlxscore=0 bulkscore=0 clxscore=1015 malwarescore=0
- lowpriorityscore=0 priorityscore=1501 adultscore=0 mlxlogscore=999
+ definitions=2023-06-06_13,2023-06-06_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 bulkscore=0 malwarescore=0 clxscore=1015 priorityscore=1501
+ adultscore=0 mlxscore=0 lowpriorityscore=0 mlxlogscore=983 spamscore=0
  phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2306060128
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H5,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+ engine=8.12.0-2304280000 definitions=main-2306060156
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 6/6/23 13:37, Steffen Eiden wrote:
-> Userspace can call the Lock Secret Store Ultravisor Call
-> using IOCTLs on the uvdevice.
-> During the handling of the new IOCTL nr the uvdevice will do some sanity
-> checks first. Then, perform the Ultravisor command, and copy the
-> return codes to userspace.
-> If the Lock Secrets UV facility is not present, UV will return
-> invalid command rc. This won't be fenced in the driver and does not
-> result in a negative return value. This is also true for any other
-> possible error code the UV can return.
-> 
-> Signed-off-by: Steffen Eiden <seiden@linux.ibm.com>
+IBM Secure Execution guests may want to inject secrets into the Ultravisor(UV).
+Also they should be able to know which secrets the UV possesses and prevent the
+further addition of more secrets.
 
-[...]
+Therefore, add three new Ultravisor-Calls and expose them via the uvdevice: Add
+Secret, List Secrets, and Lock Secrets. The uvdevice still acts as the
+messenger only and does not inspect or modify the requests. Only some sanity
+checks are made to prevent the kernel from corruption.
+Also add a new IOCTL to get information about the supported UV-calls of the
+uvdevice. As userspace wants to know which secrets, types, etc. are supported
+expose the corresponding UV Query info data to userspace via sysfs.
 
-> +/** uvio_lock_secrets() - perform a Lock Secret Store UVC
-> + * @uv_ioctl: ioctl control block
-> + *
-> + * uvio_lock_secrets() performs the Lock Secret Store Ultravisor Call. It
-> + * performs the UV-call and copies the return codes to the ioctl control block.
-> + * After this call was dispatched successfully every following Add Secret UVC
-> + * and Lock Secrets UVC will fail with return code 0x102.
-> + *
-> + * The argument address and size must be 0.
-> + *
-> + * If the List Secrets UV facility is not present, UV will return invalid
-> + * command rc. This won't be fenced in the driver and does not result in a
-> + * negative return value.
+The series contains:
+  * A new info IOCTL, giving information about the capabilities of the uvdevice and UV
+  * 3 patches adding new Ultravisor-Calls and expose them to userspace
+  * A patch replacing scnprintf with sysfs_emit in arch/s390/kernel/uv.c
+  * A patch with an Ultravisor Query Info update for the new secret related information
 
-This is not "list secrets" though.
+Changes for v4:
+  * more nits from Janosch
 
-> + *
-> + * Context: might sleep
-> + *
-> + * Return: 0 on success or a negative error code on error.
-> + */
-> +static int uvio_lock_secrets(struct uvio_ioctl_cb *ioctl)
-> +{
-> +	struct uv_cb_nodata uvcb = {
-> +		.header.len = sizeof(uvcb),
-> +		.header.cmd = UVC_CMD_LOCK_SECRETS,
-> +	};
-> +
-> +	if (ioctl->argument_addr || ioctl->argument_len)
-> +		return -EINVAL;
-> +
-> +	uv_call(0, (u64)&uvcb);
-> +	ioctl->uv_rc = uvcb.header.rc;
-> +	ioctl->uv_rrc = uvcb.header.rrc;
-> +
-> +	return 0;
-> +}
-> +
->   static int uvio_copy_and_check_ioctl(struct uvio_ioctl_cb *ioctl, void __user *argp,
->   				     unsigned long cmd)
->   {
-> @@ -384,6 +420,9 @@ static long uvio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->   	case UVIO_IOCTL_LIST_SECRETS_NR:
->   		ret = uvio_list_secrets(&uv_ioctl);
->   		break;
-> +	case UVIO_IOCTL_LOCK_SECRETS_NR:
-> +		ret = uvio_lock_secrets(&uv_ioctl);
-> +		break;
->   	default:
->   		ret = -ENOIOCTLCMD;
->   		break;
+Changes for v3:
+  * misc nits from Janosch
+
+Changes for v2:
+  * use __set_bit instead of the atomic set_bit (Heiko)
+  * add a patch for replacing scnprintf with sysfs_emit in arch/s390/kernel/uv.c (Heiko)
+  * use scnprintf instead of sysfs_emit for the new sysfs entries in the last patch (Heiko)
+  * use hex values in struct definitions (Claudio)
+
+Steffen
+Steffen Eiden (6):
+  s390/uvdevice: Add info IOCTL
+  s390/uvdevice: Add 'Add Secret' UVC
+  s390/uvdevice: Add 'List Secrets' UVC
+  s390/uvdevice: Add 'Lock Secret Store' UVC
+  s390/uv: replace scnprintf with sysfs_emit
+  s390/uv: Update query for secret-UVCs
+
+ arch/s390/boot/uv.c                   |   4 +
+ arch/s390/include/asm/uv.h            |  32 +++-
+ arch/s390/include/uapi/asm/uvdevice.h |  53 +++++-
+ arch/s390/kernel/uv.c                 |  98 +++++++----
+ drivers/s390/char/uvdevice.c          | 231 +++++++++++++++++++++++++-
+ 5 files changed, 376 insertions(+), 42 deletions(-)
+
+-- 
+2.40.1
 
