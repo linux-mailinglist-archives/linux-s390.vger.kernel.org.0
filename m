@@ -2,60 +2,60 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F6E572E5F9
-	for <lists+linux-s390@lfdr.de>; Tue, 13 Jun 2023 16:40:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A15D72E610
+	for <lists+linux-s390@lfdr.de>; Tue, 13 Jun 2023 16:43:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237019AbjFMOke (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 13 Jun 2023 10:40:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53536 "EHLO
+        id S241081AbjFMOnM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 13 Jun 2023 10:43:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240997AbjFMOk2 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 13 Jun 2023 10:40:28 -0400
+        with ESMTP id S240949AbjFMOnL (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 13 Jun 2023 10:43:11 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A657F10E6
-        for <linux-s390@vger.kernel.org>; Tue, 13 Jun 2023 07:39:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DCC8173E
+        for <linux-s390@vger.kernel.org>; Tue, 13 Jun 2023 07:42:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1686667178;
+        s=mimecast20190719; t=1686667343;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=S+BOQ4Tqi5BD1aEHFPyVALHW8m6Hj0sn3lu1rbLX0rs=;
-        b=d/8l6mbXK6PYsh0zFHjqtKxHhlRSGeHlIT3hapAGmyhV/y6zptYNuOrbJlkjB9VnmpLQW1
-        EeGEfaIs5GRrrxLx0izykWG04RSOSphI1CJbX+Ahv0WOqyMlPj/9jR4ioJmFOqe59eh/PK
-        Kcsno7yCzY8Lo7Ec8XOn/wuj+PZ+m0Q=
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
- [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=MJBdM5iFqkTDpWUz6Au4hD17+lrzXhHFsk4TwJivz9s=;
+        b=KnmSelLR0z0cSHE25ObgmocscIrEzUalKV9q2IKF+1aVZ1ai4mf4+9EMNqacrJM7k0Thyg
+        YBVkXe/Q9nSeD0OQWHMRZjlOrVME8naNn4sAbf0HXIkkfiLCar0a6jfJix3JfZKf8ezqEi
+        VTDLIf/c954h8XlFdBakyPY/tcPrabU=
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
+ [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-542-807OOG56PZa91BVLNbYLPA-1; Tue, 13 Jun 2023 10:39:37 -0400
-X-MC-Unique: 807OOG56PZa91BVLNbYLPA-1
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-33d34e7c905so64408635ab.2
-        for <linux-s390@vger.kernel.org>; Tue, 13 Jun 2023 07:39:37 -0700 (PDT)
+ us-mta-184-H3g5yKrtMaKjUnCIJEcxsw-1; Tue, 13 Jun 2023 10:42:21 -0400
+X-MC-Unique: H3g5yKrtMaKjUnCIJEcxsw-1
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-77a0fd9d2eeso649575039f.0
+        for <linux-s390@vger.kernel.org>; Tue, 13 Jun 2023 07:42:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686667177; x=1689259177;
+        d=1e100.net; s=20221208; t=1686667340; x=1689259340;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=S+BOQ4Tqi5BD1aEHFPyVALHW8m6Hj0sn3lu1rbLX0rs=;
-        b=K0ugXoEGZg1IX85kDrgw2fdMyHw1rbkcrONM/7Gt1kAuMW7LNrO4UZjK5ARdyWW5Ff
-         SkTcKzDDZk3/XSJG2Dr6eVRRQiMCQSGwS/FDURoEcY05hXJcPv4leDm7VeBRrMhIj/8P
-         K3DOULD4F1dv/X1S3tKYAR+0kpYTIAIX5YG1HW+TsrCDn4G7bzCWoN/ZMXT5fSIH+h45
-         kexOEfqQnwG8dWVeuQ8qC9frFq2cLSOWKyxJ7Li+i2v9otUlAJGxFq4aTrzD+yb8SVM/
-         K1WrTzb2YcRWIYeIhoNU/8hQYjK4XDRxbs4cFKuYohMiSj060oKtJLleJsS7to9cvpGk
-         7FVQ==
-X-Gm-Message-State: AC+VfDzd2ya5x+yC5XqlJlZGsOvEk4/t9DR7Gb2aMZF1VT6CERgiNc0P
-        +1tY5DyIcsWVpklgb/rXT/PmxFn+laca8rcpXiVavIMxX5Ab54Pe3TfFpLOyCvO/wHKlWekDflE
-        MFQe+/1d5FFAMX2iqVBTZRw==
-X-Received: by 2002:a92:d590:0:b0:33d:72c0:1b4 with SMTP id a16-20020a92d590000000b0033d72c001b4mr10835257iln.10.1686667176910;
-        Tue, 13 Jun 2023 07:39:36 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6lQI1p26NkHPKfSda2Sz1nKZGRDYL+HesOxakQURNBK5DmwF/l7Xzxa63g4qD55bYHlO7/sw==
-X-Received: by 2002:a92:d590:0:b0:33d:72c0:1b4 with SMTP id a16-20020a92d590000000b0033d72c001b4mr10835233iln.10.1686667176686;
-        Tue, 13 Jun 2023 07:39:36 -0700 (PDT)
+        bh=MJBdM5iFqkTDpWUz6Au4hD17+lrzXhHFsk4TwJivz9s=;
+        b=kRlmc0jap4Cx3o8izHZchyLsYrrkHiqK5HPdS3unxMUV6kdV9HmJcbSQpwlwSgDom+
+         YvDFU4h3xxqexnR882DnPicy7PvFguouc6S+oxXPcCdlczA3nt7/v6pfXxC0SuR0xYZJ
+         jLTga6F2Sbohncpu0GbuxQOxXqpIg7ODX58lYN8haqxZ7s+bi+uLKoJ+pDCk1For/1fD
+         c5DYIjWlLYKjtgFvFak4j5W1IptZry3FRTy8tkIXQwmjaee0aKH7l16ZeRMVCVfqOl3P
+         6Am+7qN0YglOKaQLx7uUcgHxSzhCl4n6NSnMIr4u6PN42Ffc1Kb7A4FUBH3wHnROk2no
+         rJxw==
+X-Gm-Message-State: AC+VfDxbKJ0h1YcD4GtOXAjgSsFr+gtxUTlndRQwjZVA/An1AzmA8e80
+        hB7oNzIIepcZ+rWQjWOLsg6AaAHzdzItGBSRyFckhwrObYjFOY5ojr7MVH7Q+S+TtxVJc2gv9TU
+        m8NKDfmnsjoLMu7MlZ5K3xQ==
+X-Received: by 2002:a6b:7b45:0:b0:77a:ec0c:5907 with SMTP id m5-20020a6b7b45000000b0077aec0c5907mr8777956iop.13.1686667340573;
+        Tue, 13 Jun 2023 07:42:20 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ4rchrvAq7uL6qdxBGPgYc5Il7VncBPd83zFXMFGzPeWvh3heO7+g3e0YZao/Y4oWkkn0QpGA==
+X-Received: by 2002:a6b:7b45:0:b0:77a:ec0c:5907 with SMTP id m5-20020a6b7b45000000b0077aec0c5907mr8777918iop.13.1686667340197;
+        Tue, 13 Jun 2023 07:42:20 -0700 (PDT)
 Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id g20-20020a0566380c5400b0041f5a0b7fa1sm3495024jal.144.2023.06.13.07.39.35
+        by smtp.gmail.com with ESMTPSA id e5-20020a02caa5000000b0040908cbbc5asm3525944jap.68.2023.06.13.07.42.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jun 2023 07:39:36 -0700 (PDT)
-Date:   Tue, 13 Jun 2023 08:39:35 -0600
+        Tue, 13 Jun 2023 07:42:19 -0700 (PDT)
+Date:   Tue, 13 Jun 2023 08:42:18 -0600
 From:   Alex Williamson <alex.williamson@redhat.com>
 To:     "Liu, Yi L" <yi.l.liu@intel.com>
 Cc:     "jgg@nvidia.com" <jgg@nvidia.com>,
@@ -85,15 +85,16 @@ Cc:     "jgg@nvidia.com" <jgg@nvidia.com>,
         "Jiang, Yanting" <yanting.jiang@intel.com>,
         "Duan, Zhenzhong" <zhenzhong.duan@intel.com>,
         "clegoate@redhat.com" <clegoate@redhat.com>
-Subject: Re: [PATCH v12 18/24] vfio: Add VFIO_DEVICE_BIND_IOMMUFD
-Message-ID: <20230613083935.753430ed.alex.williamson@redhat.com>
-In-Reply-To: <DS0PR11MB7529F0A41AA58AE37BCF8458C355A@DS0PR11MB7529.namprd11.prod.outlook.com>
+Subject: Re: [PATCH v12 07/24] vfio: Block device access via device fd until
+ device is opened
+Message-ID: <20230613084218.169f1c4c.alex.williamson@redhat.com>
+In-Reply-To: <DS0PR11MB7529B3DB059798EA474ACB3DC355A@DS0PR11MB7529.namprd11.prod.outlook.com>
 References: <20230602121653.80017-1-yi.l.liu@intel.com>
-        <20230602121653.80017-19-yi.l.liu@intel.com>
-        <20230612162726.16f58ea4.alex.williamson@redhat.com>
-        <DS0PR11MB752985BA514AFF36CA3A2785C355A@DS0PR11MB7529.namprd11.prod.outlook.com>
-        <20230613081808.049b9e6d.alex.williamson@redhat.com>
-        <DS0PR11MB7529F0A41AA58AE37BCF8458C355A@DS0PR11MB7529.namprd11.prod.outlook.com>
+        <20230602121653.80017-8-yi.l.liu@intel.com>
+        <20230612155210.5fd3579f.alex.williamson@redhat.com>
+        <DS0PR11MB75293327BDE6D268996FFFCCC355A@DS0PR11MB7529.namprd11.prod.outlook.com>
+        <20230613081647.740f5217.alex.williamson@redhat.com>
+        <DS0PR11MB7529B3DB059798EA474ACB3DC355A@DS0PR11MB7529.namprd11.prod.outlook.com>
 X-Mailer: Claws Mail 4.1.1 (GTK 3.24.35; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -108,37 +109,152 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 13 Jun 2023 14:28:43 +0000
+On Tue, 13 Jun 2023 14:36:14 +0000
 "Liu, Yi L" <yi.l.liu@intel.com> wrote:
 
 > > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Tuesday, June 13, 2023 10:18 PM  
-> 
-> > > > > diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-> > > > > index 83cc5dc28b7a..e80a8ac86e46 100644
-> > > > > --- a/include/linux/vfio.h
-> > > > > +++ b/include/linux/vfio.h
-> > > > > @@ -66,6 +66,7 @@ struct vfio_device {
-> > > > >  	struct iommufd_device *iommufd_device;
-> > > > >  	bool iommufd_attached;
-> > > > >  #endif
-> > > > > +	bool cdev_opened:1;  
-> > > >
-> > > > Perhaps a more strongly defined data type here as well and roll
-> > > > iommufd_attached into the same bit field scheme.  
-> > >
-> > > Ok, then needs to make iommufd_attached always defined.  
+> > Sent: Tuesday, June 13, 2023 10:17 PM
 > > 
-> > That does not follow.  Thanks,  
+> > On Tue, 13 Jun 2023 05:46:32 +0000
+> > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> >   
+> > > > From: Alex Williamson <alex.williamson@redhat.com>
+> > > > Sent: Tuesday, June 13, 2023 5:52 AM
+> > > >
+> > > > On Fri,  2 Jun 2023 05:16:36 -0700
+> > > > Yi Liu <yi.l.liu@intel.com> wrote:
+> > > >  
+> > > > > Allow the vfio_device file to be in a state where the device FD is
+> > > > > opened but the device cannot be used by userspace (i.e. its .open_device()
+> > > > > hasn't been called). This inbetween state is not used when the device
+> > > > > FD is spawned from the group FD, however when we create the device FD
+> > > > > directly by opening a cdev it will be opened in the blocked state.
+> > > > >
+> > > > > The reason for the inbetween state is that userspace only gets a FD but
+> > > > > doesn't gain access permission until binding the FD to an iommufd. So in
+> > > > > the blocked state, only the bind operation is allowed. Completing bind
+> > > > > will allow user to further access the device.
+> > > > >
+> > > > > This is implemented by adding a flag in struct vfio_device_file to mark
+> > > > > the blocked state and using a simple smp_load_acquire() to obtain the
+> > > > > flag value and serialize all the device setup with the thread accessing
+> > > > > this device.
+> > > > >
+> > > > > Following this lockless scheme, it can safely handle the device FD
+> > > > > unbound->bound but it cannot handle bound->unbound. To allow this we'd
+> > > > > need to add a lock on all the vfio ioctls which seems costly. So once
+> > > > > device FD is bound, it remains bound until the FD is closed.
+> > > > >
+> > > > > Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> > > > > Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+> > > > > Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> > > > > Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> > > > > Tested-by: Terrence Xu <terrence.xu@intel.com>
+> > > > > Tested-by: Nicolin Chen <nicolinc@nvidia.com>
+> > > > > Tested-by: Matthew Rosato <mjrosato@linux.ibm.com>
+> > > > > Tested-by: Yanting Jiang <yanting.jiang@intel.com>
+> > > > > Tested-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+> > > > > Signed-off-by: Yi Liu <yi.l.liu@intel.com>
+> > > > > ---
+> > > > >  drivers/vfio/group.c     | 11 ++++++++++-
+> > > > >  drivers/vfio/vfio.h      |  1 +
+> > > > >  drivers/vfio/vfio_main.c | 16 ++++++++++++++++
+> > > > >  3 files changed, 27 insertions(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/drivers/vfio/group.c b/drivers/vfio/group.c
+> > > > > index caf53716ddb2..088dd34c8931 100644
+> > > > > --- a/drivers/vfio/group.c
+> > > > > +++ b/drivers/vfio/group.c
+> > > > > @@ -194,9 +194,18 @@ static int vfio_df_group_open(struct vfio_device_file *df)
+> > > > >  	df->iommufd = device->group->iommufd;
+> > > > >
+> > > > >  	ret = vfio_df_open(df);
+> > > > > -	if (ret)
+> > > > > +	if (ret) {
+> > > > >  		df->iommufd = NULL;
+> > > > > +		goto out_put_kvm;
+> > > > > +	}
+> > > > > +
+> > > > > +	/*
+> > > > > +	 * Paired with smp_load_acquire() in vfio_device_fops::ioctl/
+> > > > > +	 * read/write/mmap and vfio_file_has_device_access()
+> > > > > +	 */
+> > > > > +	smp_store_release(&df->access_granted, true);
+> > > > >
+> > > > > +out_put_kvm:
+> > > > >  	if (device->open_count == 0)
+> > > > >  		vfio_device_put_kvm(device);
+> > > > >
+> > > > > diff --git a/drivers/vfio/vfio.h b/drivers/vfio/vfio.h
+> > > > > index f9eb52eb9ed7..fdf2fc73f880 100644
+> > > > > --- a/drivers/vfio/vfio.h
+> > > > > +++ b/drivers/vfio/vfio.h
+> > > > > @@ -18,6 +18,7 @@ struct vfio_container;
+> > > > >
+> > > > >  struct vfio_device_file {
+> > > > >  	struct vfio_device *device;
+> > > > > +	bool access_granted;  
+> > > >
+> > > > Should we make this a more strongly defined data type and later move
+> > > > devid (u32) here to partially fill the hole created?  
+> > >
+> > > Before your question, let me describe how I place the fields
+> > > of this structure to see if it is common practice. The first two
+> > > fields are static, so they are in the beginning. The access_granted
+> > > is lockless and other fields are protected by locks. So I tried to
+> > > put the lock and the fields it protects closely. So this is why I put
+> > > devid behind iommufd as both are protected by the same lock.  
+> > 
+> > I think the primary considerations are locality and compactness.  Hot
+> > paths data should be within the first cache line of the structure,
+> > related data should share a cache line, and we should use the space
+> > efficiently.  What you describe seems largely an aesthetic concern,
+> > which was not evident to me by the segmentation alone.  
 > 
-> Well, I meant the iommufd_attached now is defined only when
-> CONFIG_IOMMUFD is enabled. To toll it with cdev_opened, needs
-> to change this.
+> Sure.
+> 
+> >   
+> > > struct vfio_device_file {
+> > >         struct vfio_device *device;
+> > >         struct vfio_group *group;
+> > >
+> > >         bool access_granted;
+> > >         spinlock_t kvm_ref_lock; /* protect kvm field */
+> > >         struct kvm *kvm;
+> > >         struct iommufd_ctx *iommufd; /* protected by struct vfio_device_set::lock */
+> > >         u32 devid; /* only valid when iommufd is valid */
+> > > };
+> > >  
+> > > >
+> > > > I think this is being placed towards the front of the data structure
+> > > > for cache line locality given this is a hot path for file operations.
+> > > > But bool types have an implementation dependent size, making them
+> > > > difficult to pack.  Also there will be a tendency to want to make this
+> > > > a bit field, which is probably not compatible with the smp lockless
+> > > > operations being used here.  We might get in front of these issues if
+> > > > we just define it as a u8 now.  Thanks,  
+> > >
+> > > Not quite get why bit field is going to be incompatible with smp
+> > > lockless operations. Could you elaborate a bit? And should I define
+> > > the access_granted as u8 or "u8:1"?  
+> > 
+> > Perhaps FUD on my part, but load-acquire type operations have specific
+> > semantics and it's not clear to me that they interest with compiler
+> > generated bit operations.  Thanks,  
+> 
+> I see. How about below? 
+> 
+> struct vfio_device_file {
+>         struct vfio_device *device;
+>         struct vfio_group *group;
+>         u8 access_granted;
+>         u32 devid; /* only valid when iommufd is valid */
+>         spinlock_t kvm_ref_lock; /* protect kvm field */
+>         struct kvm *kvm;
+>         struct iommufd_ctx *iommufd; /* protected by struct vfio_device_set::lock */
+> };
 
-Understood, but I don't think it's true.  If defined we use one more
-bit of the bit field, which is a consideration when we approach filling
-it, but we're not using bit-shift operations to address these bits, so
-why does it matter if one has compiler conditional usage?  Thanks,
+Yep, that's essentially what I was suggesting.  Thanks,
 
 Alex
 
