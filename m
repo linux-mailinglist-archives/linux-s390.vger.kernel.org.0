@@ -2,79 +2,98 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 60CFB7314D9
-	for <lists+linux-s390@lfdr.de>; Thu, 15 Jun 2023 12:05:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 422E4731839
+	for <lists+linux-s390@lfdr.de>; Thu, 15 Jun 2023 14:11:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343617AbjFOKFv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 15 Jun 2023 06:05:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57336 "EHLO
+        id S238944AbjFOMLq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 15 Jun 2023 08:11:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343503AbjFOKFo (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 15 Jun 2023 06:05:44 -0400
+        with ESMTP id S238580AbjFOMLo (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 15 Jun 2023 08:11:44 -0400
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D068270F;
-        Thu, 15 Jun 2023 03:05:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6224B184
+        for <linux-s390@vger.kernel.org>; Thu, 15 Jun 2023 05:11:43 -0700 (PDT)
 Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35F9qaLL028514;
-        Thu, 15 Jun 2023 10:05:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=AdEqxT9Vo62yvP6SN/eeZ7PW4ghWGn2BaY6IXifXIdI=;
- b=hn6CqPbQ9NFtt4xWjlK2GcrBxsVMjaLjC4+6qwpmbyVHyUNfJ7+1iLFPxDIe3QZfrik0
- D8tYjYiLfw7IjuMNc7DpuokAOXyfKBlgmJkOgkMUg6qr7AcAPX4vlyxz19J3q5z/MekQ
- ocGTzN5ShjSncNIIXgqLivRc2n+E5wz9RQppLVPYEbRn1XrRCM0JG8FM2qSr9e6My2H9
- XmejH3ievm/SzU2QgE0yvJAuwnf6EfU2NADJwtDTFBdgP/RqPFOhGt5R34e/6MAx4lt9
- 9Qbtv5IF5JYfh9AFlkqXd6R9TIvVdfPOvCp7beUn48xgsuMgYDYSj36YZ8llIM1GlMTa Bw== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r80d18eac-1
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35FBvckU005585;
+        Thu, 15 Jun 2023 12:11:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=weMHHVI5IXIoF9N+IEmAC5kALD9U4wuUAgPd69x0aAc=;
+ b=LBfrdXhQNt4UHVmuTOEHB31KIh2ohdWtaCc3+KxhyU07cmKXrpJfqyRvDggsY8eZZIrC
+ W50fd23hvXZJuJxHAmMVQUt5tAyBAJmcHbXAyL99lUnt+GGellxM+89Tdigsy7RgmESp
+ 0/c4fIfvxeVJM5j2Nreohnea16Lov7cRFnfrYTwBYpwD5JdIyF4xGR42sCmHTp8BdEyN
+ MJrFTOqM4UV0JAFMYphNAjYMpyQyDNVC4vvhVbo6S5ha/eoPluYCUxwh2MJ2dQqg8XtC
+ i5a7hDSJ6/xJIInI12iWDRuSN07NlDY5xz3DoMSMTBrfeZaFiKyzrpLdjfUawgCGJq+v ew== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r827ughcm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 15 Jun 2023 10:05:42 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35F2iApC003049;
-        Thu, 15 Jun 2023 10:05:39 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3r4gee3h1g-1
+        Thu, 15 Jun 2023 12:11:42 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35FCBAGQ017281;
+        Thu, 15 Jun 2023 12:11:42 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r827ughbw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 15 Jun 2023 10:05:38 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35FA5Zk147448444
+        Thu, 15 Jun 2023 12:11:42 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35F0o5Dp005877;
+        Thu, 15 Jun 2023 12:11:40 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3r4gt53k21-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 15 Jun 2023 12:11:40 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35FCBZb245351242
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 15 Jun 2023 10:05:35 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 30CF72006F;
-        Thu, 15 Jun 2023 10:05:35 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 024C620071;
-        Thu, 15 Jun 2023 10:05:35 +0000 (GMT)
-Received: from a46lp73.lnxne.boe (unknown [9.152.108.100])
-        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Thu, 15 Jun 2023 10:05:34 +0000 (GMT)
-From:   Steffen Eiden <seiden@linux.ibm.com>
-To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Janosch Frank <frankja@linux.ibm.com>,
+        Thu, 15 Jun 2023 12:11:35 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5686A2004B;
+        Thu, 15 Jun 2023 12:11:35 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B8DF820049;
+        Thu, 15 Jun 2023 12:11:34 +0000 (GMT)
+Received: from thinkpad-T15 (unknown [9.179.12.110])
+        by smtpav06.fra02v.mail.ibm.com (Postfix) with SMTP;
+        Thu, 15 Jun 2023 12:11:34 +0000 (GMT)
+Date:   Thu, 15 Jun 2023 14:11:32 +0200
+From:   Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
         Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>
-Subject: [PATCH v5 7/7] s390/uv: Update query for secret-UVCs
-Date:   Thu, 15 Jun 2023 12:05:33 +0200
-Message-Id: <20230615100533.3996107-8-seiden@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230615100533.3996107-1-seiden@linux.ibm.com>
-References: <20230615100533.3996107-1-seiden@linux.ibm.com>
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH 07/12] s390: add pte_free_defer(), with use of
+ mmdrop_async()
+Message-ID: <20230615141132.63ac6e67@thinkpad-T15>
+In-Reply-To: <fc5cd62e-d85f-36c3-ba37-db87e8b625d@google.com>
+References: <35e983f5-7ed3-b310-d949-9ae8b130cdab@google.com>
+        <6dd63b39-e71f-2e8b-7e0-83e02f3bcb39@google.com>
+        <175ebec8-761-c3f-2d98-6c3bd87161c8@google.com>
+        <20230606214037.09c6b280@thinkpad-T15>
+        <dbed4c5-1d-f278-d03a-66f5eff5e48e@google.com>
+        <20230608174756.27cace18@thinkpad-T15>
+        <a948f24b-4fe6-8bc0-221a-65e9ccc8371a@google.com>
+        <20230614153042.43a52187@thinkpad-T15>
+        <fc5cd62e-d85f-36c3-ba37-db87e8b625d@google.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: jiBBxd4z5KpTienB8Vghb15vRcaEQ_Uy
-X-Proofpoint-ORIG-GUID: jiBBxd4z5KpTienB8Vghb15vRcaEQ_Uy
+X-Proofpoint-ORIG-GUID: RogeMhsqas_Dvu2Tg8B8-Np0X0LTgwvE
+X-Proofpoint-GUID: 37IOUYoC7_r69OdrDXSfwhenqbZQOpNS
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-06-15_06,2023-06-14_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- impostorscore=0 adultscore=0 mlxlogscore=999 mlxscore=0 bulkscore=0
- clxscore=1015 lowpriorityscore=0 suspectscore=0 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306150086
+ definitions=2023-06-15_08,2023-06-14_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 suspectscore=0 malwarescore=0 clxscore=1015 mlxscore=0
+ mlxlogscore=999 bulkscore=0 impostorscore=0 phishscore=0 adultscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306150105
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -85,142 +104,183 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Update the query struct such that secret-UVC related
-information can be parsed.
-Add sysfs files for these new values.
+On Wed, 14 Jun 2023 14:59:33 -0700 (PDT)
+Hugh Dickins <hughd@google.com> wrote:
 
-'supp_add_secret_req_ver' notes the supported versions for the
-Add Secret UVC. Bit 0 indicates that version 0x100 is supported,
-bit 1 indicates 0x200, and so on.
+[...]
+> > 
+> > It would be much more acceptable to simply not add back such fragments
+> > to the list, and therefore risking some memory waste, than risking to
+> > use an unstable mm in __tlb_remove_table(). The amount of wasted memory
+> > in practice might also not be a lot, depending on whether the fragments
+> > belong to the same and contiguous mapping.  
+> 
+> I agree that it's much better to waste a little memory (and only temporarily)
+> than to freeze or corrupt.  But it's not an insoluble problem, I just didn't
+> want to get into more change if there was already an answer that covers it.
+> 
+> I assume that the freed mm issue scared you away from testing my patch,
+> so we don't know whether I got those mask conditionals right or not?
 
-'supp_add_secret_pcf' notes the supported plaintext flags for
-the Add Secret UVC.
+Correct, that scared me a lot :-). On the one hand, I do not feel familiar
+enough with the common code logic that might need to be changed, or at
+least understood, in order to judge if this is a problem and how it could
+be addressed.
 
-'supp_secret_types' notes the supported types of secrets.
-Bit 0 indicates secret type 1, bit 1 indicates type 2, and so on.
+On the other hand, I am scared of subtle bugs that would not show
+immediately, and hit us by surprise later.
 
-'max_secrets' notes the maximum amount of secrets the secret store can
-store per pv guest.
+Your thoughts about using RCU to free mm, in order to address this
+"unstable mm" in __tlb_remove_table(), sound like a reasonable approach.
+But again, with my lack of understanding, I am not sure if I can cope
+with that.
 
-Signed-off-by: Steffen Eiden <seiden@linux.ibm.com>
-Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
----
- arch/s390/boot/uv.c        |  4 ++++
- arch/s390/include/asm/uv.h | 13 +++++++++++--
- arch/s390/kernel/uv.c      | 40 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 55 insertions(+), 2 deletions(-)
+So at least be prepared for call backs on that issue, not by RCU but
+by mail :-)
 
-diff --git a/arch/s390/boot/uv.c b/arch/s390/boot/uv.c
-index 0a077c0a2056..1e66d2cbb096 100644
---- a/arch/s390/boot/uv.c
-+++ b/arch/s390/boot/uv.c
-@@ -47,6 +47,10 @@ void uv_query_info(void)
- 		uv_info.conf_dump_finalize_len = uvcb.conf_dump_finalize_len;
- 		uv_info.supp_att_req_hdr_ver = uvcb.supp_att_req_hdr_ver;
- 		uv_info.supp_att_pflags = uvcb.supp_att_pflags;
-+		uv_info.supp_add_secret_req_ver = uvcb.supp_add_secret_req_ver;
-+		uv_info.supp_add_secret_pcf = uvcb.supp_add_secret_pcf;
-+		uv_info.supp_secret_types = uvcb.supp_secret_types;
-+		uv_info.max_secrets = uvcb.max_secrets;
+> 
+> > 
+> > Also, we would not need to use page->pt_mm, and therefore make room for
+> > page->pt_frag_refcount, which for some reason is (still) being used
+> > in new v4 from Vishals "Split ptdesc from struct page" series...  
+> 
+> Vishal's ptdesc: I've been ignoring as far as possible, I'll have to
+> respond on that later today, I'm afraid it will be putting this all into
+> an intolerable straitjacket.  If ptdesc is actually making more space
+> available by some magic, great: but I don't expect to find that is so.
+> Anyway, for now, there it's impossible (for me anyway) to think of that
+> at the same time as this.
+
+I can totally relate to that. And I also had the feeling and hope that
+ptdesc would give some relief on complex struct page (mis-)use, but did
+not yet get into investigating further.
+
+[...]
+> > I dot not fully understand if / why we need the new HH bits. While working
+> > on my patch it seemed to be useful for sorting out list_add/del in the
+> > various cases. Here it only seems to be used for preventing double rcu_head
+> > usage, is this correct, or am I missing something?  
+> 
+> Correct, I only needed the HH bits for avoiding double rcu_head usage (then
+> implementing the second usage one the first has completed).  If you want to
+> distinguish pte_free_defer() tables from page_table_free_rcu() tables, the
+> HH bits would need to be considered in other places too, I imagine: that
+> gets more complicated, I fear.
+
+Yes, I have the same impression. My approach would prevent scary "unstable mm"
+issues in __tlb_remove_table(), but probably introduce other subtle issue.
+Or not so subtle, like potential double list_free(), as mentioned in my last
+reply.
+
+So it seems we have no completely safe approach so far, but I would agree
+on going further with your approach for now. See below for patch comments.
+
+[...]
+> 
+> I'm getting this reply back to you, before reviewing your patch below.
+> Probably the only way I can review yours is to try it myself and compare.
+> I'll look into it, once I understand c2c224932fd0.  But may have to write
+> to Vishal first, or get the v2 of my series out: if only I could work out
+> a safe and easy way of unbreaking s390...
+> 
+> Is there any chance of you trying mine?
+> But please don't let it waste your time.
+
+I have put it to some LTP tests now, and good news is that it does not show
+any obvious issues. Only some deadlocks on mm->context.lock, but that can
+easily be solved. Problem is that we have some users of that lock, who do
+spin_lock() and not spin_lock_bh(). In the past, we had 3 different locks
+in mm->context, and then combined them to use the same. Only the pagetable
+list locks were taken with spin_lock_bh(), the others used spin_lock().
+
+Of course, after combining them to use the same lock, it would have been
+required to change the others to also use spin_lock_bh(), at least if there
+was any good reason for using _bh in the pagetable list lock.
+It seems there was not, which is why that mismatch was not causing any
+issues so far, probably we had some reason which got removed in one of
+the various reworks of that code...
+
+With your patch, we do now have a reason, because __tlb_remove_table()
+will usually be called in _bh context as RCU callback, and now also
+takes that lock. So we also need this change (and two compile fixes,
+marked below):
+
+--- a/arch/s390/include/asm/tlbflush.h
++++ b/arch/s390/include/asm/tlbflush.h
+@@ -79,12 +79,12 @@ static inline void __tlb_flush_kernel(vo
+ 
+ static inline void __tlb_flush_mm_lazy(struct mm_struct * mm)
+ {
+-	spin_lock(&mm->context.lock);
++	spin_lock_bh(&mm->context.lock);
+ 	if (mm->context.flush_mm) {
+ 		mm->context.flush_mm = 0;
+ 		__tlb_flush_mm(mm);
  	}
+-	spin_unlock(&mm->context.lock);
++	spin_unlock_bh(&mm->context.lock);
+ }
  
- #ifdef CONFIG_PROTECTED_VIRTUALIZATION_GUEST
-diff --git a/arch/s390/include/asm/uv.h b/arch/s390/include/asm/uv.h
-index 1d47b3e40be8..d2cd42bb2c26 100644
---- a/arch/s390/include/asm/uv.h
-+++ b/arch/s390/include/asm/uv.h
-@@ -123,7 +123,7 @@ struct uv_cb_qui {
- 	u32 reserved70[3];			/* 0x0070 */
- 	u32 max_num_sec_conf;			/* 0x007c */
- 	u64 max_guest_stor_addr;		/* 0x0080 */
--	u8  reserved88[158 - 136];		/* 0x0088 */
-+	u8  reserved88[0x9e - 0x88];		/* 0x0088 */
- 	u16 max_guest_cpu_id;			/* 0x009e */
- 	u64 uv_feature_indications;		/* 0x00a0 */
- 	u64 reserveda8;				/* 0x00a8 */
-@@ -135,7 +135,12 @@ struct uv_cb_qui {
- 	u64 reservedd8;				/* 0x00d8 */
- 	u64 supp_att_req_hdr_ver;		/* 0x00e0 */
- 	u64 supp_att_pflags;			/* 0x00e8 */
--	u8 reservedf0[256 - 240];		/* 0x00f0 */
-+	u64 reservedf0;				/* 0x00f0 */
-+	u64 supp_add_secret_req_ver;		/* 0x00f8 */
-+	u64 supp_add_secret_pcf;		/* 0x0100 */
-+	u64 supp_secret_types;			/* 0x0180 */
-+	u16 max_secrets;			/* 0x0110 */
-+	u8 reserved112[0x120 - 0x112];		/* 0x0112 */
- } __packed __aligned(8);
- 
- /* Initialize Ultravisor */
-@@ -384,6 +389,10 @@ struct uv_info {
- 	unsigned long conf_dump_finalize_len;
- 	unsigned long supp_att_req_hdr_ver;
- 	unsigned long supp_att_pflags;
-+	unsigned long supp_add_secret_req_ver;
-+	unsigned long supp_add_secret_pcf;
-+	unsigned long supp_secret_types;
-+	unsigned short max_secrets;
- };
- 
- extern struct uv_info uv_info;
-diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
-index b8721b67a50d..6a0153289ace 100644
---- a/arch/s390/kernel/uv.c
-+++ b/arch/s390/kernel/uv.c
-@@ -580,6 +580,42 @@ static ssize_t uv_query_supp_att_pflags(struct kobject *kobj,
- static struct kobj_attribute uv_query_supp_att_pflags_attr =
- 	__ATTR(supp_att_pflags, 0444, uv_query_supp_att_pflags, NULL);
- 
-+static ssize_t uv_query_supp_add_secret_req_ver(struct kobject *kobj,
-+						struct kobj_attribute *attr, char *buf)
-+{
-+	return sysfs_emit(buf, "%lx\n", uv_info.supp_add_secret_req_ver);
-+}
-+
-+static struct kobj_attribute uv_query_supp_add_secret_req_ver_attr =
-+	__ATTR(supp_add_secret_req_ver, 0444, uv_query_supp_add_secret_req_ver, NULL);
-+
-+static ssize_t uv_query_supp_add_secret_pcf(struct kobject *kobj,
-+					    struct kobj_attribute *attr, char *buf)
-+{
-+	return sysfs_emit(buf, "%lx\n", uv_info.supp_add_secret_pcf);
-+}
-+
-+static struct kobj_attribute uv_query_supp_add_secret_pcf_attr =
-+	__ATTR(supp_add_secret_pcf, 0444, uv_query_supp_add_secret_pcf, NULL);
-+
-+static ssize_t uv_query_supp_secret_types(struct kobject *kobj,
-+					  struct kobj_attribute *attr, char *buf)
-+{
-+	return sysfs_emit(buf, "%lx\n", uv_info.supp_secret_types);
-+}
-+
-+static struct kobj_attribute uv_query_supp_secret_types_attr =
-+	__ATTR(supp_secret_types, 0444, uv_query_supp_secret_types, NULL);
-+
-+static ssize_t uv_query_max_secrets(struct kobject *kobj,
-+				    struct kobj_attribute *attr, char *buf)
-+{
-+	return sysfs_emit(buf, "%d\n", uv_info.max_secrets);
-+}
-+
-+static struct kobj_attribute uv_query_max_secrets_attr =
-+	__ATTR(max_secrets, 0444, uv_query_max_secrets, NULL);
-+
- static struct attribute *uv_query_attrs[] = {
- 	&uv_query_facilities_attr.attr,
- 	&uv_query_feature_indications_attr.attr,
-@@ -593,6 +629,10 @@ static struct attribute *uv_query_attrs[] = {
- 	&uv_query_dump_cpu_len_attr.attr,
- 	&uv_query_supp_att_req_hdr_ver_attr.attr,
- 	&uv_query_supp_att_pflags_attr.attr,
-+	&uv_query_supp_add_secret_req_ver_attr.attr,
-+	&uv_query_supp_add_secret_pcf_attr.attr,
-+	&uv_query_supp_secret_types_attr.attr,
-+	&uv_query_max_secrets_attr.attr,
- 	NULL,
- };
- 
--- 
-2.40.1
+ /*
+--- a/arch/s390/mm/gmap.c
++++ b/arch/s390/mm/gmap.c
+@@ -102,14 +102,14 @@ struct gmap *gmap_create(struct mm_struc
+ 	if (!gmap)
+ 		return NULL;
+ 	gmap->mm = mm;
+-	spin_lock(&mm->context.lock);
++	spin_lock_bh(&mm->context.lock);
+ 	list_add_rcu(&gmap->list, &mm->context.gmap_list);
+ 	if (list_is_singular(&mm->context.gmap_list))
+ 		gmap_asce = gmap->asce;
+ 	else
+ 		gmap_asce = -1UL;
+ 	WRITE_ONCE(mm->context.gmap_asce, gmap_asce);
+-	spin_unlock(&mm->context.lock);
++	spin_unlock_bh(&mm->context.lock);
+ 	return gmap;
+ }
+ EXPORT_SYMBOL_GPL(gmap_create);
+@@ -250,7 +250,7 @@ void gmap_remove(struct gmap *gmap)
+ 		spin_unlock(&gmap->shadow_lock);
+ 	}
+ 	/* Remove gmap from the pre-mm list */
+-	spin_lock(&gmap->mm->context.lock);
++	spin_lock_bh(&gmap->mm->context.lock);
+ 	list_del_rcu(&gmap->list);
+ 	if (list_empty(&gmap->mm->context.gmap_list))
+ 		gmap_asce = 0;
+@@ -260,7 +260,7 @@ void gmap_remove(struct gmap *gmap)
+ 	else
+ 		gmap_asce = -1UL;
+ 	WRITE_ONCE(gmap->mm->context.gmap_asce, gmap_asce);
+-	spin_unlock(&gmap->mm->context.lock);
++	spin_unlock_bh(&gmap->mm->context.lock);
+ 	synchronize_rcu();
+ 	/* Put reference */
+ 	gmap_put(gmap);
 
+These are the compile fixes:
+
+> +static void pte_free_now1(struct rcu_read *head)
+
+rcu_read -> rcu_head
+
+> +{
+> +	pte_free_half(head, 1);
+> +}
+> +
+> +void pte_free_defer(struct mm_struct *mm, pgtable_t pgtable)
+> +{
+> +	unsigned int bit, mask;
+> +	struct page *page;
+> +
+> +	page = virt_to_page(pgtable);
+> +	WARN_ON_ONCE(page->pt_mm != mm);
+> +	if (mm_alloc_pgste(mm)) {
+> +		call_rcu(&page->rcu_head, pte_free_pgste)
+
+Missing ";" at the end
+
+> +		return;
+> +	}
