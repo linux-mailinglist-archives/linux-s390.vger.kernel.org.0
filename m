@@ -2,125 +2,118 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DA3A735170
-	for <lists+linux-s390@lfdr.de>; Mon, 19 Jun 2023 12:04:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 498067355E4
+	for <lists+linux-s390@lfdr.de>; Mon, 19 Jun 2023 13:34:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231135AbjFSKEl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 19 Jun 2023 06:04:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47944 "EHLO
+        id S231383AbjFSLeh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 19 Jun 2023 07:34:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230513AbjFSKEi (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 19 Jun 2023 06:04:38 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 940F6E59;
-        Mon, 19 Jun 2023 03:04:28 -0700 (PDT)
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35J9MZie027177;
-        Mon, 19 Jun 2023 10:04:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=EdEtN+o8C25mmqwDYGCqUsh3TXJ29oh+zpreQVrX0Uw=;
- b=fjovvVVzZSoIoWjrTTCriOhGIbwMWAZnx338qVOpbhGWRXkYlmSRlO+hhHTu/cRegyEl
- Mr0tYJ633CFNnLWeGxrYx8z/ZYmXoRVMPsiB8urIyE1Y6feucfoXU8syC67r7akgeROP
- D5bVCsoPWpnrbXXlQ2If+2A3f5X29Uq7MbGei7nmCJz97w+bV/NXTVvEJUSTmVMHjB7M
- 0a7LFTFWBbKEMryPP/NfjWl6qiVX4qTYBJrD/mxC+7EQgZ0PuN6IFuUKOGqEWfqfzAeE
- VcGT5eY1XqWw272LayeJD3Q48n+I+TZCN9z3mmQ2ApqgnUXotFGBXJoavfU+3WNw8NhT BQ== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ramb611w9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 19 Jun 2023 10:04:21 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35J5BQdw025864;
-        Mon, 19 Jun 2023 10:04:20 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3r943e19uc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 19 Jun 2023 10:04:19 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35JA4GWH57409962
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 19 Jun 2023 10:04:16 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8285E2004B;
-        Mon, 19 Jun 2023 10:04:16 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D29542004F;
-        Mon, 19 Jun 2023 10:04:15 +0000 (GMT)
-Received: from [9.171.4.59] (unknown [9.171.4.59])
-        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Mon, 19 Jun 2023 10:04:15 +0000 (GMT)
-Message-ID: <4f2afa34-830a-3c17-99e7-1cb5b874e7ce@linux.ibm.com>
-Date:   Mon, 19 Jun 2023 12:04:15 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.12.0
-Subject: Re: [PATCH] s390/net: lcs: use IS_ENABLED() for kconfig detection
-To:     patchwork-bot+netdevbpf@kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, wenjia@linux.ibm.com,
-        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com
-References: <20230615222152.13250-1-rdunlap@infradead.org>
- <168690302072.8823.785077843270614259.git-patchwork-notify@kernel.org>
-Content-Language: en-US
-From:   Alexandra Winter <wintera@linux.ibm.com>
-In-Reply-To: <168690302072.8823.785077843270614259.git-patchwork-notify@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: jgyEbaYa6AtKo8QDsTl54lZEVLR9-CNq
-X-Proofpoint-GUID: jgyEbaYa6AtKo8QDsTl54lZEVLR9-CNq
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        with ESMTP id S230397AbjFSLeg (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 19 Jun 2023 07:34:36 -0400
+Received: from out-57.mta0.migadu.com (out-57.mta0.migadu.com [91.218.175.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD60C9
+        for <linux-s390@vger.kernel.org>; Mon, 19 Jun 2023 04:34:34 -0700 (PDT)
+Date:   Mon, 19 Jun 2023 07:34:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1687174472;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Tt3RWh8BEKoqLhK86LDh7llJ14l6KCTXk/okAyPXAzA=;
+        b=i+cENnWbA17Y+F/fishc8UmKkX2d11aFrfbkEA/RSeJGs8DaK+pP54Vf1C7aoZ8NsEj74R
+        cXaE50KWXHIuXWZXVuGC783hgIjWLesjrEEDAYhwTaqLKdCoI85w4n4+GuOUgBvzA2QigP
+        oa1A17/zsm0VN2UgH6YNfjC3Cc/g4gI=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Kent Overstreet <kent.overstreet@linux.dev>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Mike Rapoport <rppt@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Helge Deller <deller@gmx.de>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Rick P Edgecombe <rick.p.edgecombe@intel.com>,
+        "Russell King (Oracle)" <linux@armlinux.org.uk>,
+        Song Liu <song@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-modules@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+        netdev@vger.kernel.org, sparclinux@vger.kernel.org,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [PATCH v2 02/12] mm: introduce execmem_text_alloc() and
+ jit_text_alloc()
+Message-ID: <20230619113426.c37bpwvdagbzyevn@moria.home.lan>
+References: <20230616085038.4121892-1-rppt@kernel.org>
+ <20230616085038.4121892-3-rppt@kernel.org>
+ <f9a7eebe-d36e-4587-b99d-35d4edefdd14@app.fastmail.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-19_06,2023-06-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
- mlxscore=0 priorityscore=1501 clxscore=1011 phishscore=0 bulkscore=0
- adultscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0
- mlxlogscore=864 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306190091
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f9a7eebe-d36e-4587-b99d-35d4edefdd14@app.fastmail.com>
+X-Migadu-Flow: FLOW_OUT
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H5,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 16.06.23 10:10, patchwork-bot+netdevbpf@kernel.org wrote:
-> Hello:
+On Sat, Jun 17, 2023 at 01:38:29PM -0700, Andy Lutomirski wrote:
+> On Fri, Jun 16, 2023, at 1:50 AM, Mike Rapoport wrote:
+> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+> >
+> > module_alloc() is used everywhere as a mean to allocate memory for code.
+> >
+> > Beside being semantically wrong, this unnecessarily ties all subsystems
+> > that need to allocate code, such as ftrace, kprobes and BPF to modules
+> > and puts the burden of code allocation to the modules code.
+> >
+> > Several architectures override module_alloc() because of various
+> > constraints where the executable memory can be located and this causes
+> > additional obstacles for improvements of code allocation.
+> >
+> > Start splitting code allocation from modules by introducing
+> > execmem_text_alloc(), execmem_free(), jit_text_alloc(), jit_free() APIs.
+> >
+> > Initially, execmem_text_alloc() and jit_text_alloc() are wrappers for
+> > module_alloc() and execmem_free() and jit_free() are replacements of
+> > module_memfree() to allow updating all call sites to use the new APIs.
+> >
+> > The intention semantics for new allocation APIs:
+> >
+> > * execmem_text_alloc() should be used to allocate memory that must reside
+> >   close to the kernel image, like loadable kernel modules and generated
+> >   code that is restricted by relative addressing.
+> >
+> > * jit_text_alloc() should be used to allocate memory for generated code
+> >   when there are no restrictions for the code placement. For
+> >   architectures that require that any code is within certain distance
+> >   from the kernel image, jit_text_alloc() will be essentially aliased to
+> >   execmem_text_alloc().
+> >
 > 
-> This patch was applied to netdev/net-next.git (main)
-> by David S. Miller <davem@davemloft.net>:
+> Is there anything in this series to help users do the appropriate synchronization when the actually populate the allocated memory with code?  See here, for example:
 > 
-> On Thu, 15 Jun 2023 15:21:52 -0700 you wrote:
->> When CONFIG_ETHERNET=m or CONFIG_FDDI=m, lcs.s has build errors or
->> warnings:
->>
- 
-IIUC, CONFIG_ETHERNET is bool.
-I reproduced this with CONFIG_ETHERNET=n and CONFIG_FDDI=m,
-and verified that it does compile with your patch.
+> https://lore.kernel.org/linux-fsdevel/cb6533c6-cea0-4f04-95cf-b8240c6ab405@app.fastmail.com/T/#u
 
-Thank you Randy for correcting this.
-
->> ../drivers/s390/net/lcs.c:40:2: error: #error Cannot compile lcs.c without some net devices switched on.
->>    40 | #error Cannot compile lcs.c without some net devices switched on.
->> ../drivers/s390/net/lcs.c: In function 'lcs_startlan_auto':
->> ../drivers/s390/net/lcs.c:1601:13: warning: unused variable 'rc' [-Wunused-variable]
->>  1601 |         int rc;
->>
->> [...]
-> 
-> Here is the summary with links:
->   - s390/net: lcs: use IS_ENABLED() for kconfig detection
->     https://git.kernel.org/netdev/net-next/c/128272336120
-> 
-> You are awesome, thank you!
-
+We're still in need of an arch independent text_poke() api.
