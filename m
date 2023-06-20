@@ -2,283 +2,153 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 04DEF73664E
-	for <lists+linux-s390@lfdr.de>; Tue, 20 Jun 2023 10:35:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3237B7366F6
+	for <lists+linux-s390@lfdr.de>; Tue, 20 Jun 2023 11:06:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231948AbjFTIfK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 20 Jun 2023 04:35:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46278 "EHLO
+        id S232102AbjFTJGs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 20 Jun 2023 05:06:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232030AbjFTIfD (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 20 Jun 2023 04:35:03 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3748010D5;
-        Tue, 20 Jun 2023 01:35:00 -0700 (PDT)
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35K8L6JG003242;
-        Tue, 20 Jun 2023 08:34:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=r9k7lQi40ou1RYEywLI3ovULoECVCMnO/PCd772XS7k=;
- b=nMhmyNiVEF+PjAJTmbpXRTjxFfHXoZ8/4EkJZ1Wyqw6DAqYMq68GJDLAc0BUWE1KvBHK
- 7HC3BI+h6NAFLS1Wme0LtZSJRfe2bp6JVDr9x7L+YxRPLzGSh9I81QXegDcc0SZTaUgy
- qn63+ThzikjjaWJNE1z2EQLhesOM+3l0ahSccpZhI0IuP5GDz2+xSwtZKDY9nl0sEtS8
- AdoFAR6CcEuU8kK3+O+I1175LQN2E6ckXVKixc/tOseqdFjl5Bl4qJY4bKpSGAQAxwW1
- +Aa7ezSj7uOVvRxYZtnRAEo6ZTVgx2YvHMb/c7zwn156y9/G0u9CS0SlSqxnjydtGZJi cA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rb8hbrdjt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Jun 2023 08:34:51 +0000
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35K8LNOS003902;
-        Tue, 20 Jun 2023 08:34:50 GMT
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rb8hbrdfh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Jun 2023 08:34:50 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35K3VHQw002721;
-        Tue, 20 Jun 2023 08:34:47 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-        by ppma04fra.de.ibm.com (PPS) with ESMTPS id 3r94f59f6y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Jun 2023 08:34:47 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35K8YiDM60883284
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 20 Jun 2023 08:34:44 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 12AD620040;
-        Tue, 20 Jun 2023 08:34:44 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E6E2320043;
-        Tue, 20 Jun 2023 08:34:43 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Tue, 20 Jun 2023 08:34:43 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55271)
-        id A0E00E0943; Tue, 20 Jun 2023 10:34:43 +0200 (CEST)
-From:   Alexandra Winter <wintera@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Eric Dumazet <edumazet@google.com>
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Thorsten Winkler <twinkler@linux.ibm.com>,
-        Alexandra Winter <wintera@linux.ibm.com>
-Subject: [PATCH net-next 4/4] s390/ctcm: Convert sprintf/snprintf to scnprintf
-Date:   Tue, 20 Jun 2023 10:34:11 +0200
-Message-Id: <20230620083411.508797-5-wintera@linux.ibm.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230620083411.508797-1-wintera@linux.ibm.com>
-References: <20230620083411.508797-1-wintera@linux.ibm.com>
+        with ESMTP id S231179AbjFTJGp (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 20 Jun 2023 05:06:45 -0400
+Received: from out-3.mta0.migadu.com (out-3.mta0.migadu.com [91.218.175.3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56FCCE6C
+        for <linux-s390@vger.kernel.org>; Tue, 20 Jun 2023 02:06:44 -0700 (PDT)
+Date:   Tue, 20 Jun 2023 11:06:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1687252001;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/ZhslkC1rQ0aLtForUm8Fg+bP1zBb90Ucb1xGcqnuYk=;
+        b=nbjuc1pix0rXF0fhLAOajGau+7FlP/WVv7MncllKd+TWFOpp26KunhpbEsFUoh483/OOSm
+        y1ZhpvS2cLWFuUEtSf0JOJG/h9PcqrDjYinnO8qDc4JCK13BQWue7HEKfIyWmV2lrNu+Sm
+        x9vZTtEaIO9VAXlwe8ZwJtv4QYka0Sk=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Andrew Jones <andrew.jones@linux.dev>
+To:     Gavin Shan <gshan@redhat.com>
+Cc:     kvmarm@lists.linux.dev, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-s390@vger.kernel.org,
+        lvivier@redhat.com, thuth@redhat.com, frankja@linux.ibm.com,
+        imbrenda@linux.ibm.com, david@redhat.com, pbonzini@redhat.com,
+        nrb@linux.ibm.com, shan.gavin@gmail.com
+Subject: Re: [kvm-unit-tests PATCH v3] runtime: Allow to specify properties
+ for accelerator
+Message-ID: <20230620-f496c5f56a78acc5529762a4@orel>
+References: <20230615062148.19883-1-gshan@redhat.com>
+ <20230619-339675e424da033000049f83@orel>
+ <766a1dc4-a5ad-725a-b25e-438bf1387a4f@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: T0k3veFl7649hfTy4viChnCXnBaVtsID
-X-Proofpoint-ORIG-GUID: afCmnWecz482-i6IHhiwdZw0FGylFsqO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-20_05,2023-06-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- phishscore=0 suspectscore=0 bulkscore=0 mlxlogscore=999 clxscore=1015
- priorityscore=1501 impostorscore=0 mlxscore=0 lowpriorityscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306200076
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <766a1dc4-a5ad-725a-b25e-438bf1387a4f@redhat.com>
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Thorsten Winkler <twinkler@linux.ibm.com>
+On Tue, Jun 20, 2023 at 02:13:22PM +1000, Gavin Shan wrote:
+> Hi Drew,
+> 
+> On 6/19/23 18:45, Andrew Jones wrote:
+> > On Thu, Jun 15, 2023 at 04:21:48PM +1000, Gavin Shan wrote:
+> > > There are extra properties for accelerators to enable the specific
+> > > features. For example, the dirty ring for KVM accelerator can be
+> > > enabled by "-accel kvm,dirty-ring-size=65536". Unfortuntely, the
+> > > extra properties for the accelerators aren't supported. It makes
+> > > it's impossible to test the combination of KVM and dirty ring
+> > > as the following error message indicates.
+> > > 
+> > >    # cd /home/gavin/sandbox/kvm-unit-tests/tests
+> > >    # QEMU=/home/gavin/sandbox/qemu.main/build/qemu-system-aarch64 \
+> > >      ACCEL=kvm,dirty-ring-size=65536 ./its-migration
+> > >       :
+> > >    BUILD_HEAD=2fffb37e
+> > >    timeout -k 1s --foreground 90s /home/gavin/sandbox/qemu.main/build/qemu-system-aarch64 \
+> > >    -nodefaults -machine virt -accel kvm,dirty-ring-size=65536 -cpu cortex-a57             \
+> > >    -device virtio-serial-device -device virtconsole,chardev=ctd -chardev testdev,id=ctd   \
+> > >    -device pci-testdev -display none -serial stdio -kernel _NO_FILE_4Uhere_ -smp 160      \
+> > >    -machine gic-version=3 -append its-pending-migration # -initrd /tmp/tmp.gfDLa1EtWk
+> > >    qemu-system-aarch64: kvm_init_vcpu: kvm_arch_init_vcpu failed (0): Invalid argument
+> > > 
+> > > Allow to specify extra properties for accelerators. With this, the
+> > > "its-migration" can be tested for the combination of KVM and dirty
+> > > ring.
+> > > 
+> > > Signed-off-by: Gavin Shan <gshan@redhat.com>
+> > > ---
+> > > v3: Split $ACCEL to $ACCEL and $ACCEL_PROPS in get_qemu_accelerator()
+> > >      and don't print them as output, suggested by Drew.
+> > > ---
+> > >   arm/run               | 12 ++++--------
+> > >   powerpc/run           |  5 ++---
+> > >   s390x/run             |  5 ++---
+> > >   scripts/arch-run.bash | 21 +++++++++++++--------
+> > >   x86/run               |  5 ++---
+> > >   5 files changed, 23 insertions(+), 25 deletions(-)
+> > > 
+> > > diff --git a/arm/run b/arm/run
+> > > index c6f25b8..d9ebe59 100755
+> > > --- a/arm/run
+> > > +++ b/arm/run
+> > > @@ -10,10 +10,8 @@ if [ -z "$KUT_STANDALONE" ]; then
+> > >   fi
+> > >   processor="$PROCESSOR"
+> > > -accel=$(get_qemu_accelerator) ||
+> > > -	exit $?
+> > > -
+> > > -if [ "$accel" = "kvm" ]; then
+> > > +get_qemu_accelerator || exit $?
+> > > +if [ "$ACCEL" = "kvm" ]; then
+> > >   	QEMU_ARCH=$HOST
+> > >   fi
+> > > @@ -23,11 +21,9 @@ qemu=$(search_qemu_binary) ||
+> > >   if [ "$QEMU" ] && [ -z "$ACCEL" ] &&
+> > >      [ "$HOST" = "aarch64" ] && [ "$ARCH" = "arm" ] &&
+> > >      [ "$(basename $QEMU)" = "qemu-system-arm" ]; then
+> > > -	accel=tcg
+> > > +	ACCEL="tcg"
+> > >   fi
+> > 
+> > As I pointed out in the v2 review we can't just s/accel/ACCEL/ without
+> > other changes. Now ACCEL will also be set when the above condition
+> > is checked, making it useless. Please ensure the test case that commit
+> > c7d6c7f00e7c ("arm/run: Use TCG with qemu-system-arm on arm64 systems")
+> > fixed still works with your patch.
+> > 
+> 
+> Sorry that I missed your comments for v2. In order to make the test case
+> in c7d6c7f00e7c working, we just need to call set_qemu_accelerator() after
+> the chunk of code, like below. When $ACCEL is set to "tcg" by the conditional
+> code, it won't be changed in the following set_qemu_accelerator().
+> 
+> Could you Please confirm if it looks good to you so that I can integrate
+> the changes to v4 and post it.
+> 
+> arm/run
+> --------
+> 
+> processor="$PROCESSOR"
+> 
+> if [ "$QEMU" ] && [ -z "$ACCEL" ] &&
+>    [ "$HOST" = "aarch64" ] && [ "$ARCH" = "arm" ] &&
+>    [ "$(basename $QEMU)" = "qemu-system-arm" ]; then
+>         ACCEL="tcg"
+> fi
+> 
+> set_qemu_accelerator || exit $?
+> if [ "$ACCEL" = "kvm" ]; then
+>         QEMU_ARCH=$HOST
+> fi
+>
 
-This LWN article explains the rationale for this change
-https: //lwn.net/Articles/69419/
-Ie. snprintf() returns what *would* be the resulting length,
-while scnprintf() returns the actual length.
+Looks fine, but please give it a test run.
 
-Note that ctcm_print_statistics() writes the data into the kernel log
-and is therefore not suitable for sysfs_emit(). Observable behavior is
-not changed, as there may be dependencies.
-
-Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
-Signed-off-by: Thorsten Winkler <twinkler@linux.ibm.com>
-Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
----
- drivers/s390/net/ctcm_dbug.c  |  2 +-
- drivers/s390/net/ctcm_main.c  |  6 +++---
- drivers/s390/net/ctcm_main.h  |  1 +
- drivers/s390/net/ctcm_mpc.c   | 18 ++++++++++--------
- drivers/s390/net/ctcm_sysfs.c | 36 +++++++++++++++++------------------
- 5 files changed, 33 insertions(+), 30 deletions(-)
-
-diff --git a/drivers/s390/net/ctcm_dbug.c b/drivers/s390/net/ctcm_dbug.c
-index f7ec51db3cd6..b6f0e2f114b4 100644
---- a/drivers/s390/net/ctcm_dbug.c
-+++ b/drivers/s390/net/ctcm_dbug.c
-@@ -70,7 +70,7 @@ void ctcm_dbf_longtext(enum ctcm_dbf_names dbf_nix, int level, char *fmt, ...)
- 	if (!debug_level_enabled(ctcm_dbf[dbf_nix].id, level))
- 		return;
- 	va_start(args, fmt);
--	vsnprintf(dbf_txt_buf, sizeof(dbf_txt_buf), fmt, args);
-+	vscnprintf(dbf_txt_buf, sizeof(dbf_txt_buf), fmt, args);
- 	va_end(args);
- 
- 	debug_text_event(ctcm_dbf[dbf_nix].id, level, dbf_txt_buf);
-diff --git a/drivers/s390/net/ctcm_main.c b/drivers/s390/net/ctcm_main.c
-index e0fdd54bfeb7..79fac5314e67 100644
---- a/drivers/s390/net/ctcm_main.c
-+++ b/drivers/s390/net/ctcm_main.c
-@@ -1340,7 +1340,7 @@ static int add_channel(struct ccw_device *cdev, enum ctcm_channel_types type,
- 					goto nomem_return;
- 
- 	ch->cdev = cdev;
--	snprintf(ch->id, CTCM_ID_SIZE, "ch-%s", dev_name(&cdev->dev));
-+	scnprintf(ch->id, CTCM_ID_SIZE, "ch-%s", dev_name(&cdev->dev));
- 	ch->type = type;
- 
- 	/*
-@@ -1505,8 +1505,8 @@ static int ctcm_new_device(struct ccwgroup_device *cgdev)
- 
- 	type = get_channel_type(&cdev0->id);
- 
--	snprintf(read_id, CTCM_ID_SIZE, "ch-%s", dev_name(&cdev0->dev));
--	snprintf(write_id, CTCM_ID_SIZE, "ch-%s", dev_name(&cdev1->dev));
-+	scnprintf(read_id, CTCM_ID_SIZE, "ch-%s", dev_name(&cdev0->dev));
-+	scnprintf(write_id, CTCM_ID_SIZE, "ch-%s", dev_name(&cdev1->dev));
- 
- 	ret = add_channel(cdev0, type, priv);
- 	if (ret) {
-diff --git a/drivers/s390/net/ctcm_main.h b/drivers/s390/net/ctcm_main.h
-index 90bd7b3f80c3..25164e8bf13d 100644
---- a/drivers/s390/net/ctcm_main.h
-+++ b/drivers/s390/net/ctcm_main.h
-@@ -100,6 +100,7 @@ enum ctcm_channel_types {
- #define CTCM_PROTO_MPC		4
- #define CTCM_PROTO_MAX		4
- 
-+#define CTCM_STATSIZE_LIMIT	64
- #define CTCM_BUFSIZE_LIMIT	65535
- #define CTCM_BUFSIZE_DEFAULT	32768
- #define MPC_BUFSIZE_DEFAULT	CTCM_BUFSIZE_LIMIT
-diff --git a/drivers/s390/net/ctcm_mpc.c b/drivers/s390/net/ctcm_mpc.c
-index 8ac213a55141..64996c86defc 100644
---- a/drivers/s390/net/ctcm_mpc.c
-+++ b/drivers/s390/net/ctcm_mpc.c
-@@ -144,9 +144,9 @@ void ctcmpc_dumpit(char *buf, int len)
- 
- 	for (ct = 0; ct < len; ct++, ptr++, rptr++) {
- 		if (sw == 0) {
--			sprintf(addr, "%16.16llx", (__u64)rptr);
-+			scnprintf(addr, sizeof(addr), "%16.16llx", (__u64)rptr);
- 
--			sprintf(boff, "%4.4X", (__u32)ct);
-+			scnprintf(boff, sizeof(boff), "%4.4X", (__u32)ct);
- 			bhex[0] = '\0';
- 			basc[0] = '\0';
- 		}
-@@ -155,7 +155,7 @@ void ctcmpc_dumpit(char *buf, int len)
- 		if (sw == 8)
- 			strcat(bhex, "	");
- 
--		sprintf(tbuf, "%2.2llX", (__u64)*ptr);
-+		scnprintf(tbuf, sizeof(tbuf), "%2.2llX", (__u64)*ptr);
- 
- 		tbuf[2] = '\0';
- 		strcat(bhex, tbuf);
-@@ -171,8 +171,8 @@ void ctcmpc_dumpit(char *buf, int len)
- 			continue;
- 		if ((strcmp(duphex, bhex)) != 0) {
- 			if (dup != 0) {
--				sprintf(tdup,
--					"Duplicate as above to %s", addr);
-+				scnprintf(tdup, sizeof(tdup),
-+					  "Duplicate as above to %s", addr);
- 				ctcm_pr_debug("		       --- %s ---\n",
- 						tdup);
- 			}
-@@ -197,14 +197,16 @@ void ctcmpc_dumpit(char *buf, int len)
- 			strcat(basc, " ");
- 		}
- 		if (dup != 0) {
--			sprintf(tdup, "Duplicate as above to %s", addr);
-+			scnprintf(tdup, sizeof(tdup),
-+				  "Duplicate as above to %s", addr);
- 			ctcm_pr_debug("		       --- %s ---\n", tdup);
- 		}
- 		ctcm_pr_debug("   %s (+%s) : %s  [%s]\n",
- 					addr, boff, bhex, basc);
- 	} else {
- 		if (dup >= 1) {
--			sprintf(tdup, "Duplicate as above to %s", addr);
-+			scnprintf(tdup, sizeof(tdup),
-+				  "Duplicate as above to %s", addr);
- 			ctcm_pr_debug("		       --- %s ---\n", tdup);
- 		}
- 		if (dup != 0) {
-@@ -291,7 +293,7 @@ static struct net_device *ctcmpc_get_dev(int port_num)
- 	struct net_device *dev;
- 	struct ctcm_priv *priv;
- 
--	sprintf(device, "%s%i", MPC_DEVICE_NAME, port_num);
-+	scnprintf(device, sizeof(device), "%s%i", MPC_DEVICE_NAME, port_num);
- 
- 	dev = __dev_get_by_name(&init_net, device);
- 
-diff --git a/drivers/s390/net/ctcm_sysfs.c b/drivers/s390/net/ctcm_sysfs.c
-index 98680c2cc4e4..0c5d8a3eaa2e 100644
---- a/drivers/s390/net/ctcm_sysfs.c
-+++ b/drivers/s390/net/ctcm_sysfs.c
-@@ -86,24 +86,24 @@ static void ctcm_print_statistics(struct ctcm_priv *priv)
- 		return;
- 	p = sbuf;
- 
--	p += sprintf(p, "  Device FSM state: %s\n",
--		     fsm_getstate_str(priv->fsm));
--	p += sprintf(p, "  RX channel FSM state: %s\n",
--		     fsm_getstate_str(priv->channel[CTCM_READ]->fsm));
--	p += sprintf(p, "  TX channel FSM state: %s\n",
--		     fsm_getstate_str(priv->channel[CTCM_WRITE]->fsm));
--	p += sprintf(p, "  Max. TX buffer used: %ld\n",
--		     priv->channel[WRITE]->prof.maxmulti);
--	p += sprintf(p, "  Max. chained SKBs: %ld\n",
--		     priv->channel[WRITE]->prof.maxcqueue);
--	p += sprintf(p, "  TX single write ops: %ld\n",
--		     priv->channel[WRITE]->prof.doios_single);
--	p += sprintf(p, "  TX multi write ops: %ld\n",
--		     priv->channel[WRITE]->prof.doios_multi);
--	p += sprintf(p, "  Netto bytes written: %ld\n",
--		     priv->channel[WRITE]->prof.txlen);
--	p += sprintf(p, "  Max. TX IO-time: %u\n",
--		     jiffies_to_usecs(priv->channel[WRITE]->prof.tx_time));
-+	p += scnprintf(p, CTCM_STATSIZE_LIMIT, "  Device FSM state: %s\n",
-+		       fsm_getstate_str(priv->fsm));
-+	p += scnprintf(p, CTCM_STATSIZE_LIMIT, "  RX channel FSM state: %s\n",
-+		       fsm_getstate_str(priv->channel[CTCM_READ]->fsm));
-+	p += scnprintf(p, CTCM_STATSIZE_LIMIT, "  TX channel FSM state: %s\n",
-+		       fsm_getstate_str(priv->channel[CTCM_WRITE]->fsm));
-+	p += scnprintf(p, CTCM_STATSIZE_LIMIT, "  Max. TX buffer used: %ld\n",
-+		       priv->channel[WRITE]->prof.maxmulti);
-+	p += scnprintf(p, CTCM_STATSIZE_LIMIT, "  Max. chained SKBs: %ld\n",
-+		       priv->channel[WRITE]->prof.maxcqueue);
-+	p += scnprintf(p, CTCM_STATSIZE_LIMIT, "  TX single write ops: %ld\n",
-+		       priv->channel[WRITE]->prof.doios_single);
-+	p += scnprintf(p, CTCM_STATSIZE_LIMIT, "  TX multi write ops: %ld\n",
-+		       priv->channel[WRITE]->prof.doios_multi);
-+	p += scnprintf(p, CTCM_STATSIZE_LIMIT, "  Netto bytes written: %ld\n",
-+		       priv->channel[WRITE]->prof.txlen);
-+	p += scnprintf(p, CTCM_STATSIZE_LIMIT, "  Max. TX IO-time: %u\n",
-+		       jiffies_to_usecs(priv->channel[WRITE]->prof.tx_time));
- 
- 	printk(KERN_INFO "Statistics for %s:\n%s",
- 				priv->channel[CTCM_WRITE]->netdev->name, sbuf);
--- 
-2.39.2
-
+Thanks,
+drew
