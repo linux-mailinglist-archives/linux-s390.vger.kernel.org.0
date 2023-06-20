@@ -2,189 +2,147 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87585736F96
-	for <lists+linux-s390@lfdr.de>; Tue, 20 Jun 2023 17:00:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6118736F41
+	for <lists+linux-s390@lfdr.de>; Tue, 20 Jun 2023 16:54:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233468AbjFTPAT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 20 Jun 2023 11:00:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33650 "EHLO
+        id S233101AbjFTOyU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 20 Jun 2023 10:54:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233557AbjFTO75 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 20 Jun 2023 10:59:57 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFE1419B3
-        for <linux-s390@vger.kernel.org>; Tue, 20 Jun 2023 07:58:39 -0700 (PDT)
+        with ESMTP id S233209AbjFTOyO (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 20 Jun 2023 10:54:14 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A57991709
+        for <linux-s390@vger.kernel.org>; Tue, 20 Jun 2023 07:53:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1687273079;
+        s=mimecast20190719; t=1687272805;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=IMVWP9uUwreYp41lBQlzx9rQqv8YUX+d+4RkZ35R+cQ=;
-        b=L254jKsvrdiwLTzqo0ACZ1dy6ItWkSDogbRO0+A8tyPRZaA/QAuSneIggh3s0TaQBCJAmp
-        6s5F7aQHgKMfw9rlpHdiMxSuSDaznMUqguywyifkh4kwwsumTM0caJ75Q5mDVTZl+rT7+L
-        pdN5yHtpY35gp4Ps7IsOmrbklkE1jpg=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=M+loKwD1RCVu8eKK2gw8N4KlZrUem/NzN5IicUf+C0A=;
+        b=GSv/iY2NyAPyDzCTj1n/bRJuHqv7tc6ncVZ2TEXNeHWb2ftyeLAgi3LF5usWyeYWKBkmhN
+        sju394v/cYXO1PeWmqZldEnIWpgSKYTvCMF9YndAv5s1CHYv/ulpkk61O2kSuUAEvMSvDz
+        qrvtdTXKpNtXgzTY9zUzyu6l9GYrIT0=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-582-PGZ8P0JHPzaSP3c_R985HA-1; Tue, 20 Jun 2023 10:54:43 -0400
-X-MC-Unique: PGZ8P0JHPzaSP3c_R985HA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+ us-mta-57-xInM5PQYOXiUnqhucMOkTw-1; Tue, 20 Jun 2023 10:53:23 -0400
+X-MC-Unique: xInM5PQYOXiUnqhucMOkTw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AFAFA18E0072;
-        Tue, 20 Jun 2023 14:46:51 +0000 (UTC)
-Received: from ypodemsk.tlv.csb (unknown [10.39.195.147])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E04889E9C;
-        Tue, 20 Jun 2023 14:46:42 +0000 (UTC)
-From:   Yair Podemsky <ypodemsk@redhat.com>
-To:     mtosatti@redhat.com, ppandit@redhat.com, david@redhat.com,
-        linux@armlinux.org.uk, mpe@ellerman.id.au, npiggin@gmail.com,
-        christophe.leroy@csgroup.eu, hca@linux.ibm.com, gor@linux.ibm.com,
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 344871C2CFEB;
+        Tue, 20 Jun 2023 14:49:56 +0000 (UTC)
+Received: from localhost (ovpn-12-166.pek2.redhat.com [10.72.12.166])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B5B4014682F7;
+        Tue, 20 Jun 2023 14:49:54 +0000 (UTC)
+Date:   Tue, 20 Jun 2023 22:49:50 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Eric DeVolder <eric.devolder@oracle.com>
+Cc:     linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
+        chenhuacai@kernel.org, geert@linux-m68k.org,
+        tsbogend@alpha.franken.de, James.Bottomley@hansenpartnership.com,
+        deller@gmx.de, ysato@users.sourceforge.jp, dalias@libc.org,
+        glaubitz@physik.fu-berlin.de, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, kernel@xen0n.name, mpe@ellerman.id.au,
+        npiggin@gmail.com, christophe.leroy@csgroup.eu,
+        paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, hca@linux.ibm.com, gor@linux.ibm.com,
         agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
-        svens@linux.ibm.com, davem@davemloft.net, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        hpa@zytor.com, keescook@chromium.org, paulmck@kernel.org,
-        frederic@kernel.org, will@kernel.org, peterz@infradead.org,
-        ardb@kernel.org, samitolvanen@google.com,
-        juerg.haefliger@canonical.com, arnd@arndb.de,
-        rmk+kernel@armlinux.org.uk, geert+renesas@glider.be,
-        linus.walleij@linaro.org, akpm@linux-foundation.org,
-        sebastian.reichel@collabora.com, rppt@kernel.org,
-        aneesh.kumar@linux.ibm.com, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     ypodemsk@redhat.com
-Subject: [PATCH v2 2/2] mm/mmu_gather: send tlb_remove_table_smp_sync IPI only to MM CPUs
-Date:   Tue, 20 Jun 2023 17:46:18 +0300
-Message-Id: <20230620144618.125703-3-ypodemsk@redhat.com>
-In-Reply-To: <20230620144618.125703-1-ypodemsk@redhat.com>
-References: <20230620144618.125703-1-ypodemsk@redhat.com>
+        svens@linux.ibm.com, hpa@zytor.com, keescook@chromium.org,
+        paulmck@kernel.org, peterz@infradead.org, frederic@kernel.org,
+        akpm@linux-foundation.org, ardb@kernel.org,
+        samitolvanen@google.com, juerg.haefliger@canonical.com,
+        arnd@arndb.de, rmk+kernel@armlinux.org.uk,
+        linus.walleij@linaro.org, sebastian.reichel@collabora.com,
+        rppt@kernel.org, kirill.shutemov@linux.intel.com,
+        anshuman.khandual@arm.com, ziy@nvidia.com, masahiroy@kernel.org,
+        ndesaulniers@google.com, mhiramat@kernel.org, ojeda@kernel.org,
+        thunder.leizhen@huawei.com, xin3.li@intel.com, tj@kernel.org,
+        gregkh@linuxfoundation.org, tsi@tuyoix.net, hbathini@linux.ibm.com,
+        sourabhjain@linux.ibm.com, boris.ostrovsky@oracle.com,
+        konrad.wilk@oracle.com
+Subject: Re: [PATCH v2 02/13] x86/kexec: refactor for kernel/Kconfig.kexec
+Message-ID: <ZJG8jtNUWXxmnfao@MiWiFi-R3L-srv>
+References: <20230619145801.1064716-1-eric.devolder@oracle.com>
+ <20230619145801.1064716-3-eric.devolder@oracle.com>
+ <ZJFhlsFN6DxnWsQE@MiWiFi-R3L-srv>
+ <ac065d02-61a4-3b1f-241d-443ede70d3f2@oracle.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ac065d02-61a4-3b1f-241d-443ede70d3f2@oracle.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Currently the tlb_remove_table_smp_sync IPI is sent to all CPUs
-indiscriminately, this causes unnecessary work and delays notable in
-real-time use-cases and isolated cpus.
-This patch will limit this IPI on systems with ARCH_HAS_CPUMASK_BITS,
-Where the IPI will only be sent to cpus referencing the affected mm.
+On 06/20/23 at 07:56am, Eric DeVolder wrote:
+> 
+> 
+> On 6/20/23 03:21, Baoquan He wrote:
+> > Hi Eric,
+> > 
+> > On 06/19/23 at 10:57am, Eric DeVolder wrote:
+> > ......
+> > > +config ARCH_SUPPORTS_KEXEC
+> > > +	def_bool y
+> > > -config ARCH_HAS_KEXEC_PURGATORY
+> > > -	def_bool KEXEC_FILE
+> > > +config ARCH_SUPPORTS_KEXEC_FILE
+> > > +	def_bool X86_64 && CRYPTO && CRYPTO_SHA256
+> > ......
+> > > +config ARCH_SELECTS_KEXEC_FILE
+> > > +	def_bool y
+> > >   	depends on KEXEC_FILE
+> > > -	help
+> > 
+> > I am a little confused about this ARCH_SELECTS_XX adding. Wondering what
+> > limits us defining the ARCH_SUPPORTS_KEXEC_FILE like below? I have limited
+> > knowledge about Kconfig, please correct me if I am wrong. Thanks in
+> > advance.
+> > 
+> >   +config ARCH_SUPPORTS_KEXEC_FILE
+> >   +	def_bool y
+> >    	depends on KEXEC_FILE
+> >    	depends on X86_64 && CRYPTO && CRYPTO_SHA256
+> > 
+> 
+> For the ARCH_SUPPORTS_ options, I chose to list the dependencies on the
+> def_bool line to show that it took all those conditions to result in True.
+> However, as you point out, using a def_bool y and then listing them as 'depends on' works as well.
+> Probably would have resulted in fewer changes to the Kconfig file.
+> Either way is ok (the 'depends on KEXEC_FILE' is erroneous in your example).
 
-Signed-off-by: Yair Podemsky <ypodemsk@redhat.com>
-Suggested-by: David Hildenbrand <david@redhat.com>
----
- include/asm-generic/tlb.h |  4 ++--
- mm/khugepaged.c           |  4 ++--
- mm/mmu_gather.c           | 17 ++++++++++++-----
- 3 files changed, 16 insertions(+), 9 deletions(-)
+Got it, thanks. To me, one option with explicit dependencies looks clearer
+and straightforward. I need check and investigage why two options are needed,
+whether two options are unavoidable. Not sure if other people would get
+the same feeling or not. Honestly, it's my first time to see the usage of
+XXX_SELECTS_XXX, it took me a while to dig into.
 
-diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
-index b46617207c93..0b6ba17cc8d3 100644
---- a/include/asm-generic/tlb.h
-+++ b/include/asm-generic/tlb.h
-@@ -222,7 +222,7 @@ extern void tlb_remove_table(struct mmu_gather *tlb, void *table);
- #define tlb_needs_table_invalidate() (true)
- #endif
- 
--void tlb_remove_table_sync_one(void);
-+void tlb_remove_table_sync_one(struct mm_struct *mm);
- 
- #else
- 
-@@ -230,7 +230,7 @@ void tlb_remove_table_sync_one(void);
- #error tlb_needs_table_invalidate() requires MMU_GATHER_RCU_TABLE_FREE
- #endif
- 
--static inline void tlb_remove_table_sync_one(void) { }
-+static inline void tlb_remove_table_sync_one(struct mm_struct *mm) { }
- 
- #endif /* CONFIG_MMU_GATHER_RCU_TABLE_FREE */
- 
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 6b9d39d65b73..3e5cb079d268 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1166,7 +1166,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
- 	_pmd = pmdp_collapse_flush(vma, address, pmd);
- 	spin_unlock(pmd_ptl);
- 	mmu_notifier_invalidate_range_end(&range);
--	tlb_remove_table_sync_one();
-+	tlb_remove_table_sync_one(mm);
- 
- 	spin_lock(pte_ptl);
- 	result =  __collapse_huge_page_isolate(vma, address, pte, cc,
-@@ -1525,7 +1525,7 @@ static void collapse_and_free_pmd(struct mm_struct *mm, struct vm_area_struct *v
- 				addr + HPAGE_PMD_SIZE);
- 	mmu_notifier_invalidate_range_start(&range);
- 	pmd = pmdp_collapse_flush(vma, addr, pmdp);
--	tlb_remove_table_sync_one();
-+	tlb_remove_table_sync_one(mm);
- 	mmu_notifier_invalidate_range_end(&range);
- 	mm_dec_nr_ptes(mm);
- 	page_table_check_pte_clear_range(mm, addr, pmd);
-diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
-index ea9683e12936..692d8175a88e 100644
---- a/mm/mmu_gather.c
-+++ b/mm/mmu_gather.c
-@@ -191,7 +191,13 @@ static void tlb_remove_table_smp_sync(void *arg)
- 	/* Simply deliver the interrupt */
- }
- 
--void tlb_remove_table_sync_one(void)
-+#ifdef CONFIG_ARCH_HAS_CPUMASK_BITS
-+#define REMOVE_TABLE_IPI_MASK mm_cpumask(mm)
-+#else
-+#define REMOVE_TABLE_IPI_MASK cpu_online_mask
-+#endif /* CONFIG_ARCH_HAS_CPUMASK_BITS */
-+
-+void tlb_remove_table_sync_one(struct mm_struct *mm)
- {
- 	/*
- 	 * This isn't an RCU grace period and hence the page-tables cannot be
-@@ -200,7 +206,8 @@ void tlb_remove_table_sync_one(void)
- 	 * It is however sufficient for software page-table walkers that rely on
- 	 * IRQ disabling.
- 	 */
--	smp_call_function(tlb_remove_table_smp_sync, NULL, 1);
-+	on_each_cpu_mask(REMOVE_TABLE_IPI_MASK, tlb_remove_table_smp_sync,
-+			NULL, true);
- }
- 
- static void tlb_remove_table_rcu(struct rcu_head *head)
-@@ -237,9 +244,9 @@ static inline void tlb_table_invalidate(struct mmu_gather *tlb)
- 	}
- }
- 
--static void tlb_remove_table_one(void *table)
-+static void tlb_remove_table_one(struct mm_struct *mm, void *table)
- {
--	tlb_remove_table_sync_one();
-+	tlb_remove_table_sync_one(mm);
- 	__tlb_remove_table(table);
- }
- 
-@@ -262,7 +269,7 @@ void tlb_remove_table(struct mmu_gather *tlb, void *table)
- 		*batch = (struct mmu_table_batch *)__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
- 		if (*batch == NULL) {
- 			tlb_table_invalidate(tlb);
--			tlb_remove_table_one(table);
-+			tlb_remove_table_one(tlb->mm, table);
- 			return;
- 		}
- 		(*batch)->nr = 0;
----
-v2: replaced no REMOVE_TABLE_IPI_MASK REMOVE_TABLE_IPI_MASK to cpu_online_mask
--- 
-2.39.3
+> 
+> > > -
+> > > -	  This option makes the kexec_file_load() syscall check for a valid
+> > > -	  signature of the kernel image.  The image can still be loaded without
+> > > -	  a valid signature unless you also enable KEXEC_SIG_FORCE, though if
+> > > -	  there's a signature that we can check, then it must be valid.
+> > > -
+> > > -	  In addition to this option, you need to enable signature
+> > > -	  verification for the corresponding kernel image type being
+> > > -	  loaded in order for this to work.
+> > > -
+> > 
+> 
 
