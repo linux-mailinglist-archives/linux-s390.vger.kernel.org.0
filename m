@@ -2,126 +2,109 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 816EE736E72
-	for <lists+linux-s390@lfdr.de>; Tue, 20 Jun 2023 16:13:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35979736F37
+	for <lists+linux-s390@lfdr.de>; Tue, 20 Jun 2023 16:53:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231974AbjFTONs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 20 Jun 2023 10:13:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34736 "EHLO
+        id S232881AbjFTOxT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 20 Jun 2023 10:53:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231938AbjFTONr (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 20 Jun 2023 10:13:47 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED691170F;
-        Tue, 20 Jun 2023 07:13:35 -0700 (PDT)
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35KE9Fl5007801;
-        Tue, 20 Jun 2023 14:13:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : from : to : cc : references : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=I6bRu5z9WiXNx/MxkQe6IZqRVFBXuWEUggjvUljHrIM=;
- b=EnTpzgMvoNBQELyKqWqYPkzbOMgq4edEjjv5peK18oxUs8h+imPrHqLznQ+kCu3ss9+F
- 9gLiz5Fp+F/baXPeFsfwqlo47fzYQidA6e647VNDGV0Mez8Qiv9vNeFCw00VPbF2FwBt
- 5Vw0nqyDyXUcLHjQ2UuXSG0CZvScub9QTWbct72HZ9ZfQK8Z0DEZQ9vvMjxU6YXcVQqA
- cmNK4wmOdG5znH2r9B10Xe6PuTYgTI2PcfIV0TXl91i/KfNT5yTbsxyg4oWjnxEALPhi
- 1uminvJOPC9eVpNpdmXrRZBfYc2CFuIltBVzfgB7TaBKBuLyZvRAi8jCvJ0v2Cy0P0Mj aQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rbdd38epm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Jun 2023 14:13:35 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35KEBY0M022704;
-        Tue, 20 Jun 2023 14:13:34 GMT
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rbdd38enx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Jun 2023 14:13:34 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35K6YJ0r025824;
-        Tue, 20 Jun 2023 14:13:32 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-        by ppma04fra.de.ibm.com (PPS) with ESMTPS id 3r94f59kmb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Jun 2023 14:13:32 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35KEDSfR19661562
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 20 Jun 2023 14:13:28 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CB8DF2004E;
-        Tue, 20 Jun 2023 14:13:28 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 665112004F;
-        Tue, 20 Jun 2023 14:13:28 +0000 (GMT)
-Received: from [9.171.27.251] (unknown [9.171.27.251])
-        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Tue, 20 Jun 2023 14:13:28 +0000 (GMT)
-Message-ID: <9d86e617-4e8f-da3d-0c79-e94df5f3f3a5@linux.ibm.com>
-Date:   Tue, 20 Jun 2023 16:13:28 +0200
+        with ESMTP id S231954AbjFTOxS (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 20 Jun 2023 10:53:18 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC6901A4
+        for <linux-s390@vger.kernel.org>; Tue, 20 Jun 2023 07:52:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1687272755;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=No1ZAzXRenHK6Spay7fCIW5zNaUlPsGtRXWs40EaAkg=;
+        b=E+2rvkchJP4KwUh0RKc+LmD1DNImntu3ru3cT3YZM5g2fZ3aCV7k9kvd+E50KUbgLsG/je
+        mqY1vpdk/BpDRI4qwDcEWwk2l6U9Sc3GAIoSCf+tLzUuglKT8CTOjfSLFdYZz0rAKoNZNG
+        UquCyeAIxvr6KJihM092LKnHoqHv6QQ=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-400-9hW9-9gWM06uUSep_ULxGA-1; Tue, 20 Jun 2023 10:52:31 -0400
+X-MC-Unique: 9hW9-9gWM06uUSep_ULxGA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4169729DD9A3;
+        Tue, 20 Jun 2023 14:46:34 +0000 (UTC)
+Received: from ypodemsk.tlv.csb (unknown [10.39.195.147])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 863679E9C;
+        Tue, 20 Jun 2023 14:46:25 +0000 (UTC)
+From:   Yair Podemsky <ypodemsk@redhat.com>
+To:     mtosatti@redhat.com, ppandit@redhat.com, david@redhat.com,
+        linux@armlinux.org.uk, mpe@ellerman.id.au, npiggin@gmail.com,
+        christophe.leroy@csgroup.eu, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, davem@davemloft.net, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        hpa@zytor.com, keescook@chromium.org, paulmck@kernel.org,
+        frederic@kernel.org, will@kernel.org, peterz@infradead.org,
+        ardb@kernel.org, samitolvanen@google.com,
+        juerg.haefliger@canonical.com, arnd@arndb.de,
+        rmk+kernel@armlinux.org.uk, geert+renesas@glider.be,
+        linus.walleij@linaro.org, akpm@linux-foundation.org,
+        sebastian.reichel@collabora.com, rppt@kernel.org,
+        aneesh.kumar@linux.ibm.com, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     ypodemsk@redhat.com
+Subject: [PATCH v2 0/2] send tlb_remove_table_smp_sync IPI only to necessary CPUs
+Date:   Tue, 20 Jun 2023 17:46:16 +0300
+Message-Id: <20230620144618.125703-1-ypodemsk@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [kvm-unit-tests PATCH v5 5/8] lib: s390x: uv: Add pv host
- requirement check function
-Content-Language: en-US
-From:   Janosch Frank <frankja@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, imbrenda@linux.ibm.com,
-        thuth@redhat.com, david@redhat.com, nsg@linux.ibm.com,
-        nrb@linux.ibm.com
-References: <20230619083329.22680-1-frankja@linux.ibm.com>
- <20230619083329.22680-6-frankja@linux.ibm.com>
-In-Reply-To: <20230619083329.22680-6-frankja@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: KOqK8wFc2slPqFEHA21y858u7zo7xeAh
-X-Proofpoint-ORIG-GUID: vFcwh1ZVbMdVe_uVDZDPMRpA5tM7jCRz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-20_10,2023-06-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 priorityscore=1501 suspectscore=0 mlxscore=0
- mlxlogscore=999 bulkscore=0 clxscore=1015 adultscore=0 phishscore=0
- impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2305260000 definitions=main-2306200127
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H5,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 6/19/23 10:33, Janosch Frank wrote:
-> When running PV guests some of the UV memory needs to be allocated
-> with > 31 bit addresses which means tests with PV guests will always
-> need a lot more memory than other tests.
-> Additionally facilities nr 158 and sclp.sief2 need to be available.
-> 
-> Let's add a function that checks for these requirements and prints a
-> helpful skip message.
-> 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> Reviewed-by: Nico Boehr <nrb@linux.ibm.com>
-[...]
-> +bool uv_host_requirement_checks(void)
-> +{
-> +	if (!test_facility(158)) {
-> +		report_skip("UV Call facility unavailable");
-> +		return false;
-> +	}
-> +	if (!sclp_facilities.has_sief2) {
-> +		report_skip("SIEF2 facility unavailable");
-> +		return false;
-> +	}
-> +	if (get_ram_size() < SNIPPET_PV_MIN_MEM_SIZE) {
-> +		report_skip("Not enough memory. This test needs about %ld MB of memory",
-> +			    SNIPPET_PV_MIN_MEM_SIZE / 1024 / 1024);
+Currently the tlb_remove_table_smp_sync IPI is sent to all CPUs
+indiscriminately, this causes unnecessary work and delays notable in
+real-time use-cases and isolated cpus.
+By limiting the IPI to only be sent to cpus referencing the effected
+mm.
+a config to differentiate architectures that support mm_cpumask from
+those that don't will allow safe usage of this feature.
 
-I've just replaced the 1024 divisions with SZ_1M i nthe second series. 
-Feel free to do that here when picking if I don't need to send a new 
-version.
+changes from -v1:
+- Previous version included a patch to only send the IPI to CPU's with
+context_tracking in the kernel space, this was removed due to race 
+condition concerns.
+- for archs that do not maintain mm_cpumask the mask used should be
+ cpu_online_mask (Peter Zijlstra).
+ 
+ v1: https://lore.kernel.org/all/20230404134224.137038-1-ypodemsk@redhat.com/
+
+Yair Podemsky (2):
+  arch: Introduce ARCH_HAS_CPUMASK_BITS
+  mm/mmu_gather: send tlb_remove_table_smp_sync IPI only to MM CPUs
+
+ arch/Kconfig              |  8 ++++++++
+ arch/arm/Kconfig          |  1 +
+ arch/powerpc/Kconfig      |  1 +
+ arch/s390/Kconfig         |  1 +
+ arch/sparc/Kconfig        |  1 +
+ arch/x86/Kconfig          |  1 +
+ include/asm-generic/tlb.h |  4 ++--
+ mm/khugepaged.c           |  4 ++--
+ mm/mmu_gather.c           | 17 ++++++++++++-----
+ 9 files changed, 29 insertions(+), 9 deletions(-)
+
+-- 
+2.39.3
+
