@@ -2,84 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CADF5736602
-	for <lists+linux-s390@lfdr.de>; Tue, 20 Jun 2023 10:23:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 616BF736676
+	for <lists+linux-s390@lfdr.de>; Tue, 20 Jun 2023 10:39:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230482AbjFTIXZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 20 Jun 2023 04:23:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40382 "EHLO
+        id S231978AbjFTIjk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 20 Jun 2023 04:39:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229683AbjFTIXY (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 20 Jun 2023 04:23:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1A0D132
-        for <linux-s390@vger.kernel.org>; Tue, 20 Jun 2023 01:21:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1687249313;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5XHdbMNys0EMjfbiSdwj8lWyGP51R68NotGh4ls9XCg=;
-        b=WRVER/k+Ay0bmEnq/lkWxiAFJLyW1BEfvcdA71dyRfjU7RvGJyo9k2JLTOCp0bx4+cE04x
-        XqAKYZPuO+kke/dXM/e39FFYUEqnwHxSaY5PBCSzXKVy2dboyx3VoHOzyvXl1/C6/Xs8Hp
-        q9mlrIqLDXeQiTNr8cIvXBTumAuyLdA=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-653-DHNnL6O0PoOX-_3jeDwo5g-1; Tue, 20 Jun 2023 04:21:49 -0400
-X-MC-Unique: DHNnL6O0PoOX-_3jeDwo5g-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 918E73806739;
-        Tue, 20 Jun 2023 08:21:48 +0000 (UTC)
-Received: from localhost (ovpn-12-166.pek2.redhat.com [10.72.12.166])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2B95A2166B26;
-        Tue, 20 Jun 2023 08:21:46 +0000 (UTC)
-Date:   Tue, 20 Jun 2023 16:21:42 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Eric DeVolder <eric.devolder@oracle.com>
-Cc:     linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
-        chenhuacai@kernel.org, geert@linux-m68k.org,
-        tsbogend@alpha.franken.de, James.Bottomley@hansenpartnership.com,
-        deller@gmx.de, ysato@users.sourceforge.jp, dalias@libc.org,
-        glaubitz@physik.fu-berlin.de, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, kernel@xen0n.name, mpe@ellerman.id.au,
-        npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        paul.walmsley@sifive.com, palmer@dabbelt.com,
-        aou@eecs.berkeley.edu, hca@linux.ibm.com, gor@linux.ibm.com,
-        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
-        svens@linux.ibm.com, hpa@zytor.com, keescook@chromium.org,
-        paulmck@kernel.org, peterz@infradead.org, frederic@kernel.org,
-        akpm@linux-foundation.org, ardb@kernel.org,
-        samitolvanen@google.com, juerg.haefliger@canonical.com,
-        arnd@arndb.de, rmk+kernel@armlinux.org.uk,
-        linus.walleij@linaro.org, sebastian.reichel@collabora.com,
-        rppt@kernel.org, kirill.shutemov@linux.intel.com,
-        anshuman.khandual@arm.com, ziy@nvidia.com, masahiroy@kernel.org,
-        ndesaulniers@google.com, mhiramat@kernel.org, ojeda@kernel.org,
-        thunder.leizhen@huawei.com, xin3.li@intel.com, tj@kernel.org,
-        gregkh@linuxfoundation.org, tsi@tuyoix.net, hbathini@linux.ibm.com,
-        sourabhjain@linux.ibm.com, boris.ostrovsky@oracle.com,
-        konrad.wilk@oracle.com
-Subject: Re: [PATCH v2 02/13] x86/kexec: refactor for kernel/Kconfig.kexec
-Message-ID: <ZJFhlsFN6DxnWsQE@MiWiFi-R3L-srv>
-References: <20230619145801.1064716-1-eric.devolder@oracle.com>
- <20230619145801.1064716-3-eric.devolder@oracle.com>
+        with ESMTP id S230433AbjFTIjj (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 20 Jun 2023 04:39:39 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BC4BA2;
+        Tue, 20 Jun 2023 01:39:39 -0700 (PDT)
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35K8MOnD012640;
+        Tue, 20 Jun 2023 08:39:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=4mH7jrvxyEUwm/LQv1jYIsgHBUPPOH87RzgFOklkSmA=;
+ b=gIHg8Z50tNecEujI2NAgw4U/FNeNA4ePsnSij2LG5FcmEXBPbu3LPpUPWxtX/g/O+2tu
+ aJG/prBwtz9l6IY0PLelWlsaPNXpdwlT5gcp++dNMc+3MYV3qt9SterAdIGfxIAZvdjh
+ peB8nLbBiag58b711vrcjSV5EqCb5JpT1o+S0zfoEpG3Yl74FsJRevTOYJMEbr4cv1oj
+ /ljRRv1ICv2iSKlqyruT5hNXSFkqgEmVbMF1/wbJwRclkbF7bi1Sh02x/tc8OIzk/2tu
+ JumtbFyreeUuKUJ5QD6b8JcRdf6QM9QX8+B4K6vSjoFjjspRfebj6Ir6cPv2YgfNO9MK KQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rb8hq0af3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 20 Jun 2023 08:39:36 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35K8ZFjb014904;
+        Tue, 20 Jun 2023 08:39:36 GMT
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rb8hq0ae1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 20 Jun 2023 08:39:36 +0000
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35K77sIJ000954;
+        Tue, 20 Jun 2023 08:34:33 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+        by ppma03fra.de.ibm.com (PPS) with ESMTPS id 3r94f59fdp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 20 Jun 2023 08:34:33 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35K8YUYk393868
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 20 Jun 2023 08:34:30 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 297AF20043;
+        Tue, 20 Jun 2023 08:34:30 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 14DE520040;
+        Tue, 20 Jun 2023 08:34:30 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Tue, 20 Jun 2023 08:34:30 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55271)
+        id 962C4E0652; Tue, 20 Jun 2023 10:34:29 +0200 (CEST)
+From:   Alexandra Winter <wintera@linux.ibm.com>
+To:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Eric Dumazet <edumazet@google.com>
+Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Alexandra Winter <wintera@linux.ibm.com>
+Subject: [PATCH net-next 0/4] s390/net: updates 2023-06-10
+Date:   Tue, 20 Jun 2023 10:34:07 +0200
+Message-Id: <20230620083411.508797-1-wintera@linux.ibm.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230619145801.1064716-3-eric.devolder@oracle.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: QAFYVYqDoGPgYYkxFowqHQaX08vYe1CC
+X-Proofpoint-GUID: H59BMjpWLlttp47EwkN9MbN-g2W3sB62
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-20_05,2023-06-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ spamscore=0 suspectscore=0 mlxlogscore=786 lowpriorityscore=0 phishscore=0
+ priorityscore=1501 impostorscore=0 clxscore=1015 mlxscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
+ definitions=main-2306200076
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -87,41 +93,29 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Eric,
+Please apply the following patch series for s390's ctcm and lcs drivers
+to netdev's net-next tree.
 
-On 06/19/23 at 10:57am, Eric DeVolder wrote:
-......
-> +config ARCH_SUPPORTS_KEXEC
-> +	def_bool y
->  
-> -config ARCH_HAS_KEXEC_PURGATORY
-> -	def_bool KEXEC_FILE
-> +config ARCH_SUPPORTS_KEXEC_FILE
-> +	def_bool X86_64 && CRYPTO && CRYPTO_SHA256
-......  
-> +config ARCH_SELECTS_KEXEC_FILE
-> +	def_bool y
->  	depends on KEXEC_FILE
-> -	help
+Just maintenance patches, no functional changes.
 
-I am a little confused about this ARCH_SELECTS_XX adding. Wondering what
-limits us defining the ARCH_SUPPORTS_KEXEC_FILE like below? I have limited
-knowledge about Kconfig, please correct me if I am wrong. Thanks in
-advance.
+Thanks,
+Alexandra
 
- +config ARCH_SUPPORTS_KEXEC_FILE
- +	def_bool y
-  	depends on KEXEC_FILE
-  	depends on X86_64 && CRYPTO && CRYPTO_SHA256
+Thorsten Winkler (4):
+  s390/lcs: Convert sysfs sprintf to sysfs_emit
+  s390/lcs: Convert sprintf to scnprintf
+  s390/ctcm: Convert sysfs sprintf to sysfs_emit
+  s390/ctcm: Convert sprintf/snprintf to scnprintf
 
-> -
-> -	  This option makes the kexec_file_load() syscall check for a valid
-> -	  signature of the kernel image.  The image can still be loaded without
-> -	  a valid signature unless you also enable KEXEC_SIG_FORCE, though if
-> -	  there's a signature that we can check, then it must be valid.
-> -
-> -	  In addition to this option, you need to enable signature
-> -	  verification for the corresponding kernel image type being
-> -	  loaded in order for this to work.
-> -
+ drivers/s390/net/ctcm_dbug.c  |  2 +-
+ drivers/s390/net/ctcm_main.c  |  6 ++---
+ drivers/s390/net/ctcm_main.h  |  1 +
+ drivers/s390/net/ctcm_mpc.c   | 18 ++++++++------
+ drivers/s390/net/ctcm_sysfs.c | 46 +++++++++++++++++------------------
+ drivers/s390/net/lcs.c        | 13 +++++-----
+ drivers/s390/net/lcs.h        |  2 +-
+ 7 files changed, 46 insertions(+), 42 deletions(-)
+
+-- 
+2.39.2
 
