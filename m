@@ -2,259 +2,142 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 98EAC73B1C8
-	for <lists+linux-s390@lfdr.de>; Fri, 23 Jun 2023 09:38:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47EE273B392
+	for <lists+linux-s390@lfdr.de>; Fri, 23 Jun 2023 11:29:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231383AbjFWHiu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 23 Jun 2023 03:38:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35700 "EHLO
+        id S231466AbjFWJ33 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 23 Jun 2023 05:29:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230170AbjFWHit (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 23 Jun 2023 03:38:49 -0400
-X-Greylist: delayed 111 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 23 Jun 2023 00:38:46 PDT
-Received: from out-16.mta1.migadu.com (out-16.mta1.migadu.com [IPv6:2001:41d0:203:375::10])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B46E212F
-        for <linux-s390@vger.kernel.org>; Fri, 23 Jun 2023 00:38:46 -0700 (PDT)
-Date:   Fri, 23 Jun 2023 09:38:43 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1687505924;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=PtdwSU4PYelk0dj1Hg4+fs35PD3IHMTgzkjQcNxh7n0=;
-        b=fVBHqdUJhSTW+Dl7P0h9+3UCWC1Nccb6zdJCg5Fw8CzLyPP/MHxcdxJSRFejSnI5C7xJ/F
-        STCP8aT0oCeNDG/GWVn/YiL/FDbQKOWcPL3fCdmVM0hhxSj19nKi1JwXOxnkUfYH9wHvfU
-        BA9bcB2Du+HMiRS5pfMcrFzc3xDNt14=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Andrew Jones <andrew.jones@linux.dev>
-To:     Gavin Shan <gshan@redhat.com>
-Cc:     kvmarm@lists.linux.dev, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-s390@vger.kernel.org,
-        lvivier@redhat.com, thuth@redhat.com, frankja@linux.ibm.com,
-        imbrenda@linux.ibm.com, david@redhat.com, pbonzini@redhat.com,
-        nrb@linux.ibm.com, shan.gavin@gmail.com
-Subject: Re: [kvm-unit-tests PATCH v4] runtime: Allow to specify properties
- for accelerator
-Message-ID: <20230623-285cfe53df170a6175b5369c@orel>
-References: <20230623035750.312679-1-gshan@redhat.com>
+        with ESMTP id S230117AbjFWJ31 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 23 Jun 2023 05:29:27 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCECC9D
+        for <linux-s390@vger.kernel.org>; Fri, 23 Jun 2023 02:29:26 -0700 (PDT)
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35N9Miv5018460;
+        Fri, 23 Jun 2023 09:29:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=eThdk8+cIGId+7d79qcXDw79+qJRLMGm4WNTmD9YHX0=;
+ b=EXZLu3DkkRP/CdsrisrHRI4vKi27GmMsZYotYWrBWrhBYMXZAtYS9bGZlAmwQSs/6wfS
+ S4TSfOBzLknJvNeZLcY8SkPsx4JB7vW5X+3WiEzS5byJduVHcG4afvEkjBM6Ke3jCxJJ
+ Py3BAU/C5bcwoOVVpbd+Ty2Q23mMpfiLfkqQoPgUSiPTKb+vUWwbN4TpehV5le3NzOH2
+ Z765kCOHDO3B/c01DPzzWiTC/gcYlXndyo8fIpiLsR7IE9mJh4STatQjWclzVFmVi124
+ k3PPKyXmirjycMCAUERWTvc5KpkefhiGVng4585nR6h/aSPg9yPq4VjVufZRcja0ODIB 7w== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rd869gu6n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 23 Jun 2023 09:29:26 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35N9PxFN029286;
+        Fri, 23 Jun 2023 09:29:25 GMT
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rd869gu5j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 23 Jun 2023 09:29:25 +0000
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35N4RDVP001200;
+        Fri, 23 Jun 2023 09:29:23 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+        by ppma04fra.de.ibm.com (PPS) with ESMTPS id 3r94f5b25t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 23 Jun 2023 09:29:23 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35N9TJo455509446
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 23 Jun 2023 09:29:19 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9EF922004B;
+        Fri, 23 Jun 2023 09:29:19 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EFE1F20043;
+        Fri, 23 Jun 2023 09:29:18 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.179.5.134])
+        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Fri, 23 Jun 2023 09:29:18 +0000 (GMT)
+Date:   Fri, 23 Jun 2023 11:29:17 +0200
+From:   Alexander Gordeev <agordeev@linux.ibm.com>
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: prospective 13/12 s390 pgtable_list patch
+Message-ID: <ZJVl7ZJiborhmtYh@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <a69a26c0-ec93-3ad-a443-6655b5e49df2@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230623035750.312679-1-gshan@redhat.com>
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <a69a26c0-ec93-3ad-a443-6655b5e49df2@google.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: fA411EuEnBFhxaNHSDYi6qlvoiJRCMpY
+X-Proofpoint-ORIG-GUID: 43ZjWl3Bzm5_hsi9WO2uTRt-8iYQ_CAO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-23_04,2023-06-22_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 adultscore=0 impostorscore=0 clxscore=1011 malwarescore=0
+ bulkscore=0 lowpriorityscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306230081
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Jun 23, 2023 at 01:57:50PM +1000, Gavin Shan wrote:
-> There are extra properties for accelerators to enable the specific
-> features. For example, the dirty ring for KVM accelerator can be
-> enabled by "-accel kvm,dirty-ring-size=65536". Unfortuntely, the
-> extra properties for the accelerators aren't supported. It makes
-> it's impossible to test the combination of KVM and dirty ring
-> as the following error message indicates.
+On Thu, Jun 22, 2023 at 10:49:43PM -0700, Hugh Dickins wrote:
+> Hi Gerald,
 > 
->   # cd /home/gavin/sandbox/kvm-unit-tests/tests
->   # QEMU=/home/gavin/sandbox/qemu.main/build/qemu-system-aarch64 \
->     ACCEL=kvm,dirty-ring-size=65536 ./its-migration
->      :
->   BUILD_HEAD=2fffb37e
->   timeout -k 1s --foreground 90s                                 \
->   /home/gavin/sandbox/qemu.main/build/qemu-system-aarch64        \
->   -nodefaults -machine virt -accel kvm,dirty-ring-size=65536     \
->   -cpu cortex-a57 -device virtio-serial-device                   \
->   -device virtconsole,chardev=ctd -chardev testdev,id=ctd        \
->   -device pci-testdev -display none -serial stdio                \
->   -kernel _NO_FILE_4Uhere_ -smp 160 -machine gic-version=3       \
->   -append its-pending-migration # -initrd /tmp/tmp.gfDLa1EtWk
->      :
->   qemu-system-aarch64: kvm_init_vcpu: kvm_arch_init_vcpu failed (0):
->   Invalid argument
+> It's that moment you've been dreading: I'm hoping that you can, please,
+> take a look at the patch below, and try building and running with it,
+> on top of the v2 series of 12 I sent out on Tuesday.
 > 
-> Allow to specify extra properties for accelerators. With this, the
-> "its-migration" can be tested for the combination of KVM and dirty
-> ring. Rename get_qemu_accelerator() to set_qemu_accelerator() since
-> no values are returned by printing at return.
+> If this seems okay to you, I'll send it properly as 13/12 of that series,
+> to the full Cc list; but of course you may find I've missed typos and worse
+> - please don't waste your time on it if it's rubbish, but so far as I can
+> tell, it is complete and ready now.
 > 
-> Signed-off-by: Gavin Shan <gshan@redhat.com>
-> Tested-by: Nico Boehr <nrb@linux.ibm.com>
-> Acked-by: Nico Boehr <nrb@linux.ibm.com>
-> ---
-> v4: Rename get_qemu_accelerator() to set_qemu_accelerator() and
->     don't break the fix included in commit c7d6c7f00e7c by setting
->     $ACCEL to "tcg" before set_qemu_accelerator() is called, suggested
->     by Drew.
-> ---
->  arm/run               | 20 ++++++++------------
->  powerpc/run           |  5 ++---
->  s390x/run             |  5 ++---
->  scripts/arch-run.bash | 23 ++++++++++++++---------
->  x86/run               |  5 ++---
->  5 files changed, 28 insertions(+), 30 deletions(-)
-> 
-> diff --git a/arm/run b/arm/run
-> index c6f25b8..956940f 100755
-> --- a/arm/run
-> +++ b/arm/run
-> @@ -10,24 +10,20 @@ if [ -z "$KUT_STANDALONE" ]; then
->  fi
->  processor="$PROCESSOR"
->  
-> -accel=$(get_qemu_accelerator) ||
-> -	exit $?
-> +if [ "$QEMU" ] && [ -z "$ACCEL" ] &&
-> +   [ "$HOST" = "aarch64" ] && [ "$ARCH" = "arm" ] &&
-> +   [ "$(basename $QEMU)" = "qemu-system-arm" ]; then
-> +	ACCEL="tcg"
-> +fi
->  
-> -if [ "$accel" = "kvm" ]; then
-> +set_qemu_accelerator || exit $?
-> +if [ "$ACCEL" = "kvm" ]; then
->  	QEMU_ARCH=$HOST
->  fi
->  
->  qemu=$(search_qemu_binary) ||
->  	exit $?
->  
-> -if [ "$QEMU" ] && [ -z "$ACCEL" ] &&
-> -   [ "$HOST" = "aarch64" ] && [ "$ARCH" = "arm" ] &&
-> -   [ "$(basename $QEMU)" = "qemu-system-arm" ]; then
-> -	accel=tcg
-> -fi
-> -
-> -ACCEL=$accel
-> -
->  if ! $qemu -machine '?' | grep -q 'ARM Virtual Machine'; then
->  	echo "$qemu doesn't support mach-virt ('-machine virt'). Exiting."
->  	exit 2
-> @@ -72,7 +68,7 @@ if $qemu $M -device '?' | grep -q pci-testdev; then
->  	pci_testdev="-device pci-testdev"
->  fi
->  
-> -A="-accel $ACCEL"
-> +A="-accel $ACCEL$ACCEL_PROPS"
->  command="$qemu -nodefaults $M $A -cpu $processor $chr_testdev $pci_testdev"
->  command+=" -display none -serial stdio -kernel"
->  command="$(migration_cmd) $(timeout_cmd) $command"
-> diff --git a/powerpc/run b/powerpc/run
-> index ee38e07..b353169 100755
-> --- a/powerpc/run
-> +++ b/powerpc/run
-> @@ -9,8 +9,7 @@ if [ -z "$KUT_STANDALONE" ]; then
->  	source scripts/arch-run.bash
->  fi
->  
-> -ACCEL=$(get_qemu_accelerator) ||
-> -	exit $?
-> +set_qemu_accelerator || exit $?
->  
->  qemu=$(search_qemu_binary) ||
->  	exit $?
-> @@ -21,7 +20,7 @@ if ! $qemu -machine '?' 2>&1 | grep 'pseries' > /dev/null; then
->  fi
->  
->  M='-machine pseries'
-> -M+=",accel=$ACCEL"
-> +M+=",accel=$ACCEL$ACCEL_PROPS"
->  command="$qemu -nodefaults $M -bios $FIRMWARE"
->  command+=" -display none -serial stdio -kernel"
->  command="$(migration_cmd) $(timeout_cmd) $command"
-> diff --git a/s390x/run b/s390x/run
-> index f1111db..dcbf3f0 100755
-> --- a/s390x/run
-> +++ b/s390x/run
-> @@ -9,8 +9,7 @@ if [ -z "$KUT_STANDALONE" ]; then
->  	source scripts/arch-run.bash
->  fi
->  
-> -ACCEL=$(get_qemu_accelerator) ||
-> -	exit $?
-> +set_qemu_accelerator || exit $?
->  
->  qemu=$(search_qemu_binary) ||
->  	exit $?
-> @@ -26,7 +25,7 @@ if [ "${1: -7}" = ".pv.bin" ] || [ "${TESTNAME: -3}" = "_PV" ] && [ "$MIGRATION"
->  fi
->  
->  M='-machine s390-ccw-virtio'
-> -M+=",accel=$ACCEL"
-> +M+=",accel=$ACCEL$ACCEL_PROPS"
->  command="$qemu -nodefaults -nographic $M"
->  command+=" -chardev stdio,id=con0 -device sclpconsole,chardev=con0"
->  command+=" -kernel"
-> diff --git a/scripts/arch-run.bash b/scripts/arch-run.bash
-> index 51e4b97..2d28e0b 100644
-> --- a/scripts/arch-run.bash
-> +++ b/scripts/arch-run.bash
-> @@ -410,8 +410,11 @@ hvf_available ()
->  		( [ "$HOST" = x86_64 ] && [ "$ARCH" = i386 ] )
->  }
->  
-> -get_qemu_accelerator ()
-> +set_qemu_accelerator ()
->  {
-> +	ACCEL_PROPS=${ACCEL#"${ACCEL%%,*}"}
-> +	ACCEL=${ACCEL%%,*}
-> +
->  	if [ "$ACCEL" = "kvm" ] && ! kvm_available; then
->  		echo "KVM is needed, but not available on this host" >&2
->  		return 2
-> @@ -421,13 +424,15 @@ get_qemu_accelerator ()
->  		return 2
->  	fi
->  
-> -	if [ "$ACCEL" ]; then
-> -		echo $ACCEL
-> -	elif kvm_available; then
-> -		echo kvm
-> -	elif hvf_available; then
-> -		echo hvf
-> -	else
-> -		echo tcg
-> +	if [ -z "$ACCEL" ]; then
-> +		if kvm_available; then
-> +			ACCEL="kvm"
-> +		elif hvf_available; then
-> +			ACCEL="hvf"
-> +		else
-> +			ACCEL="tcg"
-> +		fi
->  	fi
-> +
-> +	return 0
->  }
-> diff --git a/x86/run b/x86/run
-> index 4d53b72..a3d3e7d 100755
-> --- a/x86/run
-> +++ b/x86/run
-> @@ -9,8 +9,7 @@ if [ -z "$KUT_STANDALONE" ]; then
->  	source scripts/arch-run.bash
->  fi
->  
-> -ACCEL=$(get_qemu_accelerator) ||
-> -	exit $?
-> +set_qemu_accelerator || exit $?
->  
->  qemu=$(search_qemu_binary) ||
->  	exit $?
-> @@ -38,7 +37,7 @@ else
->  fi
->  
->  command="${qemu} --no-reboot -nodefaults $pc_testdev -vnc none -serial stdio $pci_testdev"
-> -command+=" -machine accel=$ACCEL"
-> +command+=" -machine accel=$ACCEL$ACCEL_PROPS"
->  if [ "${CONFIG_EFI}" != y ]; then
->  	command+=" -kernel"
->  fi
-> -- 
-> 2.40.1
->
+> Thanks!
+> Hugh
 
-Reviewed-by: Andrew Jones <andrew.jones@linux.dev>
+Hi Hugh,
+
+Gerald is off until Monday and I think is not able to answer right now.
+
+We had discussions with regard to how to better approach your series and
+did not come to a conclusion unfortunatelly.
+
+Gerald had several concerns - one of them is global mm_pgtable_list_lock,
+wich is luckily avoided with this follow-up patch. But there were others,
+which I am not able to articulate in detail.
+
+While you are doing an outstanding job in trying to adjust our fragmented
+page tables reuse scheme, one of the ideas emerged was to actually give it
+up: partially or may be even fully. That is - not to reuse page tables
+returned via pte_free_defer() or not to reuse them at all. To assess this
+possible new approaches some statistics is needed and am working on a
+prototype that would allow collecting it.
+
+Note, our existing code is extremly complicated already and we had hard
+time fixing (at least one) ugly race related to that. With the changes
+you suggest that complexity (to me personally) multiplies. But that well
+could be the other way around and I am just not smart enough to grasp it.
+At least the claim that page_table_free() no longer needs the two-step
+release indicates that.
+
+I am sorry that it is probably not the status you would like to hear,
+but I still wonder what is your opinion on that do-not-reuse-fragments
+approach? Would it simplify pte_free_defer() or had no effect?
+
+Anyway, that is just another option and I will try your patch.
+
+Thanks!
