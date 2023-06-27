@@ -2,32 +2,58 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D47E273F5A6
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Jun 2023 09:28:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B849573F614
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Jun 2023 09:50:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231492AbjF0H2H (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 27 Jun 2023 03:28:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33828 "EHLO
+        id S231529AbjF0HuD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 27 Jun 2023 03:50:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231365AbjF0H1m (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 27 Jun 2023 03:27:42 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4524D1716;
-        Tue, 27 Jun 2023 00:27:30 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8111411FB;
-        Tue, 27 Jun 2023 00:28:13 -0700 (PDT)
-Received: from [10.57.76.16] (unknown [10.57.76.16])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 476E23F663;
-        Tue, 27 Jun 2023 00:27:26 -0700 (PDT)
-Message-ID: <a729a5cb-2376-869b-96dd-cb1babac04d2@arm.com>
-Date:   Tue, 27 Jun 2023 08:27:24 +0100
+        with ESMTP id S231573AbjF0Ht4 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 27 Jun 2023 03:49:56 -0400
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA16D1716
+        for <linux-s390@vger.kernel.org>; Tue, 27 Jun 2023 00:49:54 -0700 (PDT)
+Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-401f4408955so141901cf.1
+        for <linux-s390@vger.kernel.org>; Tue, 27 Jun 2023 00:49:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1687852194; x=1690444194;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eo3fjt+pdVHwFcUAUU2kV7EYv7OpDGZ269voWMltBrg=;
+        b=lPaiuSe+QrHU/UAvIGj5ZYbZ3Cp+GUm9cg80JCZveFMlflbA5+j7acPoyJ5ZXu1Lut
+         FvOPlQDymVBgnVuR4hmh5Rco8ghw0Rg53DPB/gJFQYhTQnfSG8GRcqsJdpzvenYBbgxO
+         Bi+5qxIiGDf+RzqveF5bTQ7NC1lRm0Od9CVoE1bC8quQqKSsm1IfBZndE2JX0j2xNKaz
+         Bofk6w6z/7YGNhu0EDK+9BZHKwWBWxbdHqZDaCr+FWfJ6huk/DCN3qp5dmlaQNZlxUoB
+         mH+TY6w+jgwSZUPvcKkJsuIZP2Qo4uVMrri0wcbSXHK3rmedhiI2mEkWxD2pnIzjHwJm
+         OQrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687852194; x=1690444194;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eo3fjt+pdVHwFcUAUU2kV7EYv7OpDGZ269voWMltBrg=;
+        b=hDgrISXJ8Asvw5UzZXno+JifDNJwCIcqgyfG2T/FSZhqhC88OMKnlxIu4mnk/u9vk3
+         Gjun/sIXoFske49jLEcoCYdJNs5DkT+WXA0CTbKgheW6T550tC4S/tzaeJ0RiJKQhTC7
+         Fis4b0KRgdgUyjRjI7SZagVNzUw5KKvyzp5kIX7yfgs5R8yWfa9e3X+7CwWaUDlS26N8
+         dVJBfoGsvoYKVWyssmxX9Vbc/Qcp7WWpR+DhZPVBUeNs7vi1OnlLNEPAMsso/TzAT1St
+         kc/j6uAiorlElRphG4U/Ccny83eTS0lcurXZmyoXau8QwQvjAARhRU2+EO6vrGCAtnFm
+         AmtQ==
+X-Gm-Message-State: AC+VfDwE1IC1pYewBNOO1Nov+HE44fmdNHiIUtYeIYoJJ6KQ2sAsZECx
+        O9o02l60OwXaYJC+/UdXoPCv246MmmvJjJCMb3o80A==
+X-Google-Smtp-Source: ACHHUZ5rzyvlEwiwm8ZlPLzXXXFoW47j8ogId6VZIKwnpEI8aX6A+N2v3sluywDVKjd03Lly1yKQPmxRIaEW9WvVzeQ=
+X-Received: by 2002:a05:622a:24a:b0:3f6:97b4:1a4d with SMTP id
+ c10-20020a05622a024a00b003f697b41a4dmr430821qtx.23.1687852193576; Tue, 27 Jun
+ 2023 00:49:53 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.12.0
-Subject: Re: [PATCH v1 02/10] mm: pass gfp flags and order to
- vma_alloc_zeroed_movable_folio()
-To:     Yu Zhao <yuzhao@google.com>
+References: <20230626171430.3167004-1-ryan.roberts@arm.com> <CAOUHufaUTbUw9MTzw8D=sVrEB+RP6LSBQVGn93TWk=ozV8XobA@mail.gmail.com>
+In-Reply-To: <CAOUHufaUTbUw9MTzw8D=sVrEB+RP6LSBQVGn93TWk=ozV8XobA@mail.gmail.com>
+From:   Yu Zhao <yuzhao@google.com>
+Date:   Tue, 27 Jun 2023 01:49:17 -0600
+Message-ID: <CAOUHufa0S_ayrys0XzDbH8KJi5HxvbGCh_bSAhDpAgcmSJjFUQ@mail.gmail.com>
+Subject: Re: [PATCH v1 00/10] variable-order, large folios for anonymous memory
+To:     Ryan Roberts <ryan.roberts@arm.com>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
@@ -45,15 +71,12 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         linux-mm@kvack.org, linux-alpha@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
         linux-m68k@lists.linux-m68k.org, linux-s390@vger.kernel.org
-References: <20230626171430.3167004-1-ryan.roberts@arm.com>
- <20230626171430.3167004-3-ryan.roberts@arm.com>
- <CAOUHufYWtsAU4PvKpVhzJUeQb9cd+BifY9KzgceBXHp2F2dDRg@mail.gmail.com>
-From:   Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <CAOUHufYWtsAU4PvKpVhzJUeQb9cd+BifY9KzgceBXHp2F2dDRg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,56 +84,128 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 27/06/2023 03:27, Yu Zhao wrote:
-> On Mon, Jun 26, 2023 at 11:14 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
->>
->> Allow allocation of large folios with vma_alloc_zeroed_movable_folio().
->> This prepares the ground for large anonymous folios. The generic
->> implementation of vma_alloc_zeroed_movable_folio() now uses
->> clear_huge_page() to zero the allocated folio since it may now be a
->> non-0 order.
->>
->> Currently the function is always called with order 0 and no extra gfp
->> flags, so no functional change intended. But a subsequent commit will
->> take advantage of the new parameters to allocate large folios. The extra
->> gfp flags will be used to control the reclaim policy.
->>
->> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
->> ---
->>  arch/alpha/include/asm/page.h   |  5 +++--
->>  arch/arm64/include/asm/page.h   |  3 ++-
->>  arch/arm64/mm/fault.c           |  7 ++++---
->>  arch/ia64/include/asm/page.h    |  5 +++--
->>  arch/m68k/include/asm/page_no.h |  7 ++++---
->>  arch/s390/include/asm/page.h    |  5 +++--
->>  arch/x86/include/asm/page.h     |  5 +++--
->>  include/linux/highmem.h         | 23 +++++++++++++----------
->>  mm/memory.c                     |  5 +++--
->>  9 files changed, 38 insertions(+), 27 deletions(-)
->>
->> diff --git a/arch/alpha/include/asm/page.h b/arch/alpha/include/asm/page.h
->> index 4db1ebc0ed99..6fc7fe91b6cb 100644
->> --- a/arch/alpha/include/asm/page.h
->> +++ b/arch/alpha/include/asm/page.h
->> @@ -17,8 +17,9 @@
->>  extern void clear_page(void *page);
->>  #define clear_user_page(page, vaddr, pg)       clear_page(page)
->>
->> -#define vma_alloc_zeroed_movable_folio(vma, vaddr) \
->> -       vma_alloc_folio(GFP_HIGHUSER_MOVABLE | __GFP_ZERO, 0, vma, vaddr, false)
->> +#define vma_alloc_zeroed_movable_folio(vma, vaddr, gfp, order) \
->> +       vma_alloc_folio(GFP_HIGHUSER_MOVABLE | __GFP_ZERO | (gfp), \
->> +                       order, vma, vaddr, false)
-> 
-> I don't think we need to worry about gfp if we want to make a minimum
-> series. There would be many discussion points around it, e.g., I
-> already disagree with what you chose: GFP_TRANSHUGE_LIGHT would be
-> more suitable than __GFP_NORETRY, and there are even better options
-> than GFP_TRANSHUGE_LIGHT.
+On Mon, Jun 26, 2023 at 9:30=E2=80=AFPM Yu Zhao <yuzhao@google.com> wrote:
+>
+> On Mon, Jun 26, 2023 at 11:14=E2=80=AFAM Ryan Roberts <ryan.roberts@arm.c=
+om> wrote:
+> >
+> > Hi All,
+> >
+> > Following on from the previous RFCv2 [1], this series implements variab=
+le order,
+> > large folios for anonymous memory. The objective of this is to improve
+> > performance by allocating larger chunks of memory during anonymous page=
+ faults:
+> >
+> >  - Since SW (the kernel) is dealing with larger chunks of memory than b=
+ase
+> >    pages, there are efficiency savings to be had; fewer page faults, ba=
+tched PTE
+> >    and RMAP manipulation, fewer items on lists, etc. In short, we reduc=
+e kernel
+> >    overhead. This should benefit all architectures.
+> >  - Since we are now mapping physically contiguous chunks of memory, we =
+can take
+> >    advantage of HW TLB compression techniques. A reduction in TLB press=
+ure
+> >    speeds up kernel and user space. arm64 systems have 2 mechanisms to =
+coalesce
+> >    TLB entries; "the contiguous bit" (architectural) and HPA (uarch).
+> >
+> > This patch set deals with the SW side of things only and based on feedb=
+ack from
+> > the RFC, aims to be the most minimal initial change, upon which future
+> > incremental changes can be added. For this reason, the new behaviour is=
+ hidden
+> > behind a new Kconfig switch, CONFIG_LARGE_ANON_FOLIO, which is disabled=
+ by
+> > default. Although the code has been refactored to parameterize the desi=
+red order
+> > of the allocation, when the feature is disabled (by forcing the order t=
+o be
+> > always 0) my performance tests measure no regression. So I'm hoping thi=
+s will be
+> > a suitable mechanism to allow incremental submissions to the kernel wit=
+hout
+> > affecting the rest of the world.
+> >
+> > The patches are based on top of v6.4 plus Matthew Wilcox's set_ptes() s=
+eries
+> > [2], which is a hard dependency. I'm not sure of Matthew's exact plans =
+for
+> > getting that series into the kernel, but I'm hoping we can start the re=
+view
+> > process on this patch set independently. I have a branch at [3].
+> >
+> > I've posted a separate series concerning the HW part (contpte mapping) =
+for arm64
+> > at [4].
+> >
+> >
+> > Performance
+> > -----------
+> >
+> > Below results show 2 benchmarks; kernel compilation and speedometer 2.0=
+ (a
+> > javascript benchmark running in Chromium). Both cases are running on Am=
+pere
+> > Altra with 1 NUMA node enabled, Ubuntu 22.04 and XFS filesystem. Each b=
+enchmark
+> > is repeated 15 times over 5 reboots and averaged.
+> >
+> > All improvements are relative to baseline-4k. 'anonfolio-basic' is this=
+ series.
+> > 'anonfolio' is the full patch set similar to the RFC with the additiona=
+l changes
+> > to the extra 3 fault paths. The rest of the configs are described at [4=
+].
+> >
+> > Kernel Compilation (smaller is better):
+> >
+> > | kernel          |   real-time |   kern-time |   user-time |
+> > |:----------------|------------:|------------:|------------:|
+> > | baseline-4k     |        0.0% |        0.0% |        0.0% |
+> > | anonfolio-basic |       -5.3% |      -42.9% |       -0.6% |
+> > | anonfolio       |       -5.4% |      -46.0% |       -0.3% |
+> > | contpte         |       -6.8% |      -45.7% |       -2.1% |
+> > | exefolio        |       -8.4% |      -46.4% |       -3.7% |
+> > | baseline-16k    |       -8.7% |      -49.2% |       -3.7% |
+> > | baseline-64k    |      -10.5% |      -66.0% |       -3.5% |
+> >
+> > Speedometer 2.0 (bigger is better):
+> >
+> > | kernel          |   runs_per_min |
+> > |:----------------|---------------:|
+> > | baseline-4k     |           0.0% |
+> > | anonfolio-basic |           0.7% |
+> > | anonfolio       |           1.2% |
+> > | contpte         |           3.1% |
+> > | exefolio        |           4.2% |
+> > | baseline-16k    |           5.3% |
+>
+> Thanks for pushing this forward!
+>
+> > Changes since RFCv2
+> > -------------------
+> >
+> >   - Simplified series to bare minimum (on David Hildenbrand's advice)
+>
+> My impression is that this series still includes many pieces that can
+> be split out and discussed separately with followup series.
+>
+> (I skipped 04/10 and will look at it tomorrow.)
 
-OK, but disagreeing about what the GFP flags should be is different from
-disagreeing about whether we need a mechanism for specifying them. Given I need
-to do the changes to add `order` I thought it was sensible to add the gfp flags
-at the same time.
+I went through the series twice. Here what I think a bare minimum
+series (easier to review/debug/land) would look like:
+1. a new arch specific function providing a prefered order within (0,
+PMD_ORDER).
+2. an extended anon folio alloc API taking that order (02/10, partially).
+3. an updated folio_add_new_anon_rmap() covering the large() &&
+!pmd_mappable() case (similar to 04/10).
+4. s/folio_test_pmd_mappable/folio_test_large/ in page_remove_rmap()
+(06/10, reviewed-by provided).
+5. finally, use the extended anon folio alloc API with the arch
+preferred order in do_anonymous_page() (10/10, partially).
 
-I'll follow your advice and remove the gfp flag addition for now.
+The rest can be split out into separate series and move forward in
+parallel with probably a long list of things we need/want to do.
