@@ -2,79 +2,81 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A167773F24E
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Jun 2023 05:20:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0815873F2DA
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Jun 2023 05:37:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230460AbjF0DUR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 26 Jun 2023 23:20:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36174 "EHLO
+        id S230156AbjF0DhS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 26 Jun 2023 23:37:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231453AbjF0DTz (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 26 Jun 2023 23:19:55 -0400
-Received: from mail-yw1-x1132.google.com (mail-yw1-x1132.google.com [IPv6:2607:f8b0:4864:20::1132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 348DB30DC;
-        Mon, 26 Jun 2023 20:16:24 -0700 (PDT)
-Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-5704ddda6dfso44581037b3.1;
-        Mon, 26 Jun 2023 20:16:24 -0700 (PDT)
+        with ESMTP id S230167AbjF0DgV (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 26 Jun 2023 23:36:21 -0400
+Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8090B4C1A
+        for <linux-s390@vger.kernel.org>; Mon, 26 Jun 2023 20:31:00 -0700 (PDT)
+Received: by mail-qt1-x82e.google.com with SMTP id d75a77b69052e-4007b5bafceso96581cf.1
+        for <linux-s390@vger.kernel.org>; Mon, 26 Jun 2023 20:31:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687835778; x=1690427778;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20221208; t=1687836655; x=1690428655;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UurGuuLzED1CKQ5+YtAa+uldlNlkULcrhOlEPtYgkts=;
-        b=Bw6j1qqbA7rK2Dm84VNEOP66RtUUiWxR5Sye2bW+eq3uYQIAY2EgG1iwdb2DLJnhG8
-         GeCT0K/ZwJIKUih4HIgcFRg+mw1EU/RmQtL9RCws+bBmnGeSgMwKEqV8Sq7OOh2ekNKy
-         KxZzPsUUwTKcYY2uR69y6/3CJ/yQh13J76r7SLJTov+ctRLrvX63ZMz8HGYd0YBMtxPR
-         d4bJ4wdUGuyrpgX3PWgY/0ePtHqJFHhYHpUgd8NRua4eh9nOB+MqmDgdNijgrl/iljgo
-         W4AbA6WKPV5xVJmow0GDfY5w1hM9Ipzkd6LQ2xSzFc3wc9cyZI8JF3nhcsteILote3wU
-         0FOQ==
+        bh=Dps86R1lndJwF4gJQy/c3O9t7fuW8Q1JEcrGXaT4yyM=;
+        b=DPpXKg59gxCfYZfd9BY428kZ8iu0DYsney6Rdb3rBdwDtXCqI6by6+cpd+iFCxaq79
+         l5qUs+UtG6qNw6vClJxqZ156uilkFr4nqOfpOjwb4sCDK3cewEwBmVMA0EIXWOjk8R9i
+         TVfgsTBk1kHsR06KuWByKOPsHwpa4kfikZiOJBSb1rUERnaQZ2h4T5rsCZtkeArohaZX
+         Mkw8ML+8yLd2TpK+iFeG6sjz2DCcKu+mgd+76Du4ZXe9n58Em657zW5MzIJDxXMzqKBe
+         fEm9np6GD+3Cx5VBNcJHXVbW+BthLgsTGUPU+3D1UFEeHCXje/m+ogWz3nybucVagpcD
+         4StQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687835778; x=1690427778;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1687836655; x=1690428655;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UurGuuLzED1CKQ5+YtAa+uldlNlkULcrhOlEPtYgkts=;
-        b=af1itiHR6wgEmwEBh7daAjn0+QnPL0aIOJeH/42dqHJ7izsvOgGtaTrEi8Qx/g6EM7
-         VUCXORqHuoPzcEe5E406AXoVRTARVgCmSbUz0W90KyUOlGAtBZPdFS4RU3fj5GHSYiAg
-         /dUjfWC0F7QAp+WQhAATl7Ng/ycVim8cx8BBIqm0x3cU49FFT7kfcpKYycJNs8HlnaEs
-         44B0IqoQiuY3cGPXO8gixtO2G7ijn/NHktUfiB2+r2MA+v+gI79PHrQNjhSGrk4iAY3c
-         9BS40qav+IVT+avM629KZ/j+Va8Dcj/1li57/T4uhXF00opX0cTmWBYW46qi3dwsow4F
-         KESA==
-X-Gm-Message-State: AC+VfDw24mj6LQ4th4upi/cYvjjQZKF1kh5rYyEKkNPQskVsFy5PhdoV
-        vuD4N6tZ4ZLW0UwIa6oDUr0=
-X-Google-Smtp-Source: ACHHUZ48cJY/DPvk+Kk12K3DwipJ5tKtap76NQbk/m6+l8TYs0OHWXs1Miee1fTjpWtp4A4P8vJjEA==
-X-Received: by 2002:a81:4e88:0:b0:565:ba4b:aa81 with SMTP id c130-20020a814e88000000b00565ba4baa81mr32811368ywb.45.1687835777737;
-        Mon, 26 Jun 2023 20:16:17 -0700 (PDT)
-Received: from unknowna0e70b2ca394.attlocal.net ([2600:1700:2f7d:1800::16])
-        by smtp.googlemail.com with ESMTPSA id s4-20020a0dd004000000b0057399b3bd26sm1614798ywd.33.2023.06.26.20.16.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jun 2023 20:16:17 -0700 (PDT)
-From:   "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-openrisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-um@lists.infradead.org, xen-devel@lists.xenproject.org,
-        kvm@vger.kernel.org, Hugh Dickins <hughd@google.com>,
-        "Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
-        Mike Rapoport <rppt@kernel.org>
-Subject: [PATCH v6 33/33] mm: Remove pgtable_{pmd, pte}_page_{ctor, dtor}() wrappers
-Date:   Mon, 26 Jun 2023 20:14:31 -0700
-Message-Id: <20230627031431.29653-34-vishal.moola@gmail.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230627031431.29653-1-vishal.moola@gmail.com>
-References: <20230627031431.29653-1-vishal.moola@gmail.com>
+        bh=Dps86R1lndJwF4gJQy/c3O9t7fuW8Q1JEcrGXaT4yyM=;
+        b=EyA+L01kCAe5Lb15TEb2AHqlgPeH+xjtd2+JjoWnHi2v65MRLUQum430k40Q5Y+D0t
+         Cw+QOm0sjzu/pLS+SrntG9eSpe3hh/DJk+ICjUu9HlRdo9sWWCgo5wHyRKvK4iV58Lk3
+         YceYXE5nIBBmiqnXByyg1J5/B2ReIJS3JudPlJxMyRyo/4sDwGi99vtOc/KWjv7XTvRI
+         qt//iufnEuzwGM3gFnzLRjEG3X17zTAm4t2soR/ls1RQuFKY/BQ+IjnRevArNyn+FlUM
+         /s4QjNtVJPNJ4TWQ5xlrnQ+gRmnrCDZFDCrLnQ2zNOjCwkDpI5Gn13AznqAKC1MPxIML
+         2AFQ==
+X-Gm-Message-State: AC+VfDxK7iOSFMmRWWJUn/ImwAfOF5Hbvp+SZFC+kU2SBxZ0qaCROh90
+        bkgZ0CLhXtvAGUmmQBiEEYZZt0wAy8NnCa4oi8q2nA==
+X-Google-Smtp-Source: ACHHUZ4qGh8xmLwSTj4hOczEKK2tKapgoJ7DPtSPYajCf/D7+00nPQt51ielpDPZJ55CqXUcttPpnW7qGjNXY0ewa5Y=
+X-Received: by 2002:ac8:5953:0:b0:3f5:49b6:f18d with SMTP id
+ 19-20020ac85953000000b003f549b6f18dmr57784qtz.11.1687836655385; Mon, 26 Jun
+ 2023 20:30:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+References: <20230626171430.3167004-1-ryan.roberts@arm.com>
+In-Reply-To: <20230626171430.3167004-1-ryan.roberts@arm.com>
+From:   Yu Zhao <yuzhao@google.com>
+Date:   Mon, 26 Jun 2023 21:30:19 -0600
+Message-ID: <CAOUHufaUTbUw9MTzw8D=sVrEB+RP6LSBQVGn93TWk=ozV8XobA@mail.gmail.com>
+Subject: Re: [PATCH v1 00/10] variable-order, large folios for anonymous memory
+To:     Ryan Roberts <ryan.roberts@arm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Yin Fengwei <fengwei.yin@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-s390@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -82,156 +84,110 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-These functions are no longer necessary. Remove them and cleanup
-Documentation referencing them.
+On Mon, Jun 26, 2023 at 11:14=E2=80=AFAM Ryan Roberts <ryan.roberts@arm.com=
+> wrote:
+>
+> Hi All,
+>
+> Following on from the previous RFCv2 [1], this series implements variable=
+ order,
+> large folios for anonymous memory. The objective of this is to improve
+> performance by allocating larger chunks of memory during anonymous page f=
+aults:
+>
+>  - Since SW (the kernel) is dealing with larger chunks of memory than bas=
+e
+>    pages, there are efficiency savings to be had; fewer page faults, batc=
+hed PTE
+>    and RMAP manipulation, fewer items on lists, etc. In short, we reduce =
+kernel
+>    overhead. This should benefit all architectures.
+>  - Since we are now mapping physically contiguous chunks of memory, we ca=
+n take
+>    advantage of HW TLB compression techniques. A reduction in TLB pressur=
+e
+>    speeds up kernel and user space. arm64 systems have 2 mechanisms to co=
+alesce
+>    TLB entries; "the contiguous bit" (architectural) and HPA (uarch).
+>
+> This patch set deals with the SW side of things only and based on feedbac=
+k from
+> the RFC, aims to be the most minimal initial change, upon which future
+> incremental changes can be added. For this reason, the new behaviour is h=
+idden
+> behind a new Kconfig switch, CONFIG_LARGE_ANON_FOLIO, which is disabled b=
+y
+> default. Although the code has been refactored to parameterize the desire=
+d order
+> of the allocation, when the feature is disabled (by forcing the order to =
+be
+> always 0) my performance tests measure no regression. So I'm hoping this =
+will be
+> a suitable mechanism to allow incremental submissions to the kernel witho=
+ut
+> affecting the rest of the world.
+>
+> The patches are based on top of v6.4 plus Matthew Wilcox's set_ptes() ser=
+ies
+> [2], which is a hard dependency. I'm not sure of Matthew's exact plans fo=
+r
+> getting that series into the kernel, but I'm hoping we can start the revi=
+ew
+> process on this patch set independently. I have a branch at [3].
+>
+> I've posted a separate series concerning the HW part (contpte mapping) fo=
+r arm64
+> at [4].
+>
+>
+> Performance
+> -----------
+>
+> Below results show 2 benchmarks; kernel compilation and speedometer 2.0 (=
+a
+> javascript benchmark running in Chromium). Both cases are running on Ampe=
+re
+> Altra with 1 NUMA node enabled, Ubuntu 22.04 and XFS filesystem. Each ben=
+chmark
+> is repeated 15 times over 5 reboots and averaged.
+>
+> All improvements are relative to baseline-4k. 'anonfolio-basic' is this s=
+eries.
+> 'anonfolio' is the full patch set similar to the RFC with the additional =
+changes
+> to the extra 3 fault paths. The rest of the configs are described at [4].
+>
+> Kernel Compilation (smaller is better):
+>
+> | kernel          |   real-time |   kern-time |   user-time |
+> |:----------------|------------:|------------:|------------:|
+> | baseline-4k     |        0.0% |        0.0% |        0.0% |
+> | anonfolio-basic |       -5.3% |      -42.9% |       -0.6% |
+> | anonfolio       |       -5.4% |      -46.0% |       -0.3% |
+> | contpte         |       -6.8% |      -45.7% |       -2.1% |
+> | exefolio        |       -8.4% |      -46.4% |       -3.7% |
+> | baseline-16k    |       -8.7% |      -49.2% |       -3.7% |
+> | baseline-64k    |      -10.5% |      -66.0% |       -3.5% |
+>
+> Speedometer 2.0 (bigger is better):
+>
+> | kernel          |   runs_per_min |
+> |:----------------|---------------:|
+> | baseline-4k     |           0.0% |
+> | anonfolio-basic |           0.7% |
+> | anonfolio       |           1.2% |
+> | contpte         |           3.1% |
+> | exefolio        |           4.2% |
+> | baseline-16k    |           5.3% |
 
-Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
-Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
----
- Documentation/mm/split_page_table_lock.rst    | 12 +++++------
- .../zh_CN/mm/split_page_table_lock.rst        | 14 ++++++-------
- include/linux/mm.h                            | 20 -------------------
- 3 files changed, 13 insertions(+), 33 deletions(-)
+Thanks for pushing this forward!
 
-diff --git a/Documentation/mm/split_page_table_lock.rst b/Documentation/mm/split_page_table_lock.rst
-index a834fad9de12..e4f6972eb6c0 100644
---- a/Documentation/mm/split_page_table_lock.rst
-+++ b/Documentation/mm/split_page_table_lock.rst
-@@ -58,7 +58,7 @@ Support of split page table lock by an architecture
- ===================================================
- 
- There's no need in special enabling of PTE split page table lock: everything
--required is done by pgtable_pte_page_ctor() and pgtable_pte_page_dtor(), which
-+required is done by pagetable_pte_ctor() and pagetable_pte_dtor(), which
- must be called on PTE table allocation / freeing.
- 
- Make sure the architecture doesn't use slab allocator for page table
-@@ -68,8 +68,8 @@ This field shares storage with page->ptl.
- PMD split lock only makes sense if you have more than two page table
- levels.
- 
--PMD split lock enabling requires pgtable_pmd_page_ctor() call on PMD table
--allocation and pgtable_pmd_page_dtor() on freeing.
-+PMD split lock enabling requires pagetable_pmd_ctor() call on PMD table
-+allocation and pagetable_pmd_dtor() on freeing.
- 
- Allocation usually happens in pmd_alloc_one(), freeing in pmd_free() and
- pmd_free_tlb(), but make sure you cover all PMD table allocation / freeing
-@@ -77,7 +77,7 @@ paths: i.e X86_PAE preallocate few PMDs on pgd_alloc().
- 
- With everything in place you can set CONFIG_ARCH_ENABLE_SPLIT_PMD_PTLOCK.
- 
--NOTE: pgtable_pte_page_ctor() and pgtable_pmd_page_ctor() can fail -- it must
-+NOTE: pagetable_pte_ctor() and pagetable_pmd_ctor() can fail -- it must
- be handled properly.
- 
- page->ptl
-@@ -97,7 +97,7 @@ trick:
-    split lock with enabled DEBUG_SPINLOCK or DEBUG_LOCK_ALLOC, but costs
-    one more cache line for indirect access;
- 
--The spinlock_t allocated in pgtable_pte_page_ctor() for PTE table and in
--pgtable_pmd_page_ctor() for PMD table.
-+The spinlock_t allocated in pagetable_pte_ctor() for PTE table and in
-+pagetable_pmd_ctor() for PMD table.
- 
- Please, never access page->ptl directly -- use appropriate helper.
-diff --git a/Documentation/translations/zh_CN/mm/split_page_table_lock.rst b/Documentation/translations/zh_CN/mm/split_page_table_lock.rst
-index 4fb7aa666037..a2c288670a24 100644
---- a/Documentation/translations/zh_CN/mm/split_page_table_lock.rst
-+++ b/Documentation/translations/zh_CN/mm/split_page_table_lock.rst
-@@ -56,16 +56,16 @@ Hugetlb特定的辅助函数:
- 架构对分页表锁的支持
- ====================
- 
--没有必要特别启用PTE分页表锁：所有需要的东西都由pgtable_pte_page_ctor()
--和pgtable_pte_page_dtor()完成，它们必须在PTE表分配/释放时被调用。
-+没有必要特别启用PTE分页表锁：所有需要的东西都由pagetable_pte_ctor()
-+和pagetable_pte_dtor()完成，它们必须在PTE表分配/释放时被调用。
- 
- 确保架构不使用slab分配器来分配页表：slab使用page->slab_cache来分配其页
- 面。这个区域与page->ptl共享存储。
- 
- PMD分页锁只有在你有两个以上的页表级别时才有意义。
- 
--启用PMD分页锁需要在PMD表分配时调用pgtable_pmd_page_ctor()，在释放时调
--用pgtable_pmd_page_dtor()。
-+启用PMD分页锁需要在PMD表分配时调用pagetable_pmd_ctor()，在释放时调
-+用pagetable_pmd_dtor()。
- 
- 分配通常发生在pmd_alloc_one()中，释放发生在pmd_free()和pmd_free_tlb()
- 中，但要确保覆盖所有的PMD表分配/释放路径：即X86_PAE在pgd_alloc()中预先
-@@ -73,7 +73,7 @@ PMD分页锁只有在你有两个以上的页表级别时才有意义。
- 
- 一切就绪后，你可以设置CONFIG_ARCH_ENABLE_SPLIT_PMD_PTLOCK。
- 
--注意：pgtable_pte_page_ctor()和pgtable_pmd_page_ctor()可能失败--必
-+注意：pagetable_pte_ctor()和pagetable_pmd_ctor()可能失败--必
- 须正确处理。
- 
- page->ptl
-@@ -90,7 +90,7 @@ page->ptl用于访问分割页表锁，其中'page'是包含该表的页面struc
-    的指针并动态分配它。这允许在启用DEBUG_SPINLOCK或DEBUG_LOCK_ALLOC的
-    情况下使用分页锁，但由于间接访问而多花了一个缓存行。
- 
--PTE表的spinlock_t分配在pgtable_pte_page_ctor()中，PMD表的spinlock_t
--分配在pgtable_pmd_page_ctor()中。
-+PTE表的spinlock_t分配在pagetable_pte_ctor()中，PMD表的spinlock_t
-+分配在pagetable_pmd_ctor()中。
- 
- 请不要直接访问page->ptl - -使用适当的辅助函数。
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 0e4d5f6d10e5..dc0f19f35424 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2873,11 +2873,6 @@ static inline bool pagetable_pte_ctor(struct ptdesc *ptdesc)
- 	return true;
- }
- 
--static inline bool pgtable_pte_page_ctor(struct page *page)
--{
--	return pagetable_pte_ctor(page_ptdesc(page));
--}
--
- static inline void pagetable_pte_dtor(struct ptdesc *ptdesc)
- {
- 	struct folio *folio = ptdesc_folio(ptdesc);
-@@ -2887,11 +2882,6 @@ static inline void pagetable_pte_dtor(struct ptdesc *ptdesc)
- 	lruvec_stat_sub_folio(folio, NR_PAGETABLE);
- }
- 
--static inline void pgtable_pte_page_dtor(struct page *page)
--{
--	pagetable_pte_dtor(page_ptdesc(page));
--}
--
- pte_t *__pte_offset_map(pmd_t *pmd, unsigned long addr, pmd_t *pmdvalp);
- static inline pte_t *pte_offset_map(pmd_t *pmd, unsigned long addr)
- {
-@@ -2993,11 +2983,6 @@ static inline bool pagetable_pmd_ctor(struct ptdesc *ptdesc)
- 	return true;
- }
- 
--static inline bool pgtable_pmd_page_ctor(struct page *page)
--{
--	return pagetable_pmd_ctor(page_ptdesc(page));
--}
--
- static inline void pagetable_pmd_dtor(struct ptdesc *ptdesc)
- {
- 	struct folio *folio = ptdesc_folio(ptdesc);
-@@ -3007,11 +2992,6 @@ static inline void pagetable_pmd_dtor(struct ptdesc *ptdesc)
- 	lruvec_stat_sub_folio(folio, NR_PAGETABLE);
- }
- 
--static inline void pgtable_pmd_page_dtor(struct page *page)
--{
--	pagetable_pmd_dtor(page_ptdesc(page));
--}
--
- /*
-  * No scalability reason to split PUD locks yet, but follow the same pattern
-  * as the PMD locks to make it easier if we decide to.  The VM should not be
--- 
-2.40.1
+> Changes since RFCv2
+> -------------------
+>
+>   - Simplified series to bare minimum (on David Hildenbrand's advice)
 
+My impression is that this series still includes many pieces that can
+be split out and discussed separately with followup series.
+
+(I skipped 04/10 and will look at it tomorrow.)
