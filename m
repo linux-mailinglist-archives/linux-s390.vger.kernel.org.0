@@ -2,205 +2,203 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 96A6A740B3E
-	for <lists+linux-s390@lfdr.de>; Wed, 28 Jun 2023 10:25:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71BF1740F6D
+	for <lists+linux-s390@lfdr.de>; Wed, 28 Jun 2023 12:57:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233694AbjF1IYn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 28 Jun 2023 04:24:43 -0400
-Received: from esa.microchip.iphmx.com ([68.232.153.233]:24222 "EHLO
-        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231911AbjF1IV2 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 28 Jun 2023 04:21:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1687940488; x=1719476488;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=UMkXk+bPbzGfZkrBHrsW/8MysrRy74gOjizdruOTAJs=;
-  b=ws+yuToO/QR5a9BxSMvZrJpj/+Ahn2JZotQ33ZP56QH75SWadrTw3wXb
-   BX1fZyRswX1bZYoNSa5a2t5JoojzTzgsvYPFcWXGUZKIpcRb+IhvBxSNv
-   qrwfocm11hAGXKNs8c8oGeGzKHjbNwGDAVQEdMHbq0uPAKCzFY42WHg6h
-   BbPIUC3+5Inqtge+ZBDq9e1xWcZ9EXR947c9zgO+eVJfWgYjUbqQbehGL
-   9DaKyhdRjwz9VjOXnGA4fvGKaufyCJ18SwjUyVXqc96IVwl0uwCzReg3q
-   noPZ0YbIxOi7A6Ptlra0h2l0CVsH0/oTIYciZOXHIAA1zgK8GwNjqX+/X
-   Q==;
-X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
-   d="asc'?scan'208";a="220938489"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 Jun 2023 01:21:26 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Wed, 28 Jun 2023 01:21:15 -0700
-Received: from wendy (10.10.115.15) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
- Transport; Wed, 28 Jun 2023 01:21:04 -0700
-Date:   Wed, 28 Jun 2023 09:20:36 +0100
-From:   Conor Dooley <conor.dooley@microchip.com>
-To:     Eric DeVolder <eric.devolder@oracle.com>
-CC:     <linux@armlinux.org.uk>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <chenhuacai@kernel.org>, <geert@linux-m68k.org>,
-        <tsbogend@alpha.franken.de>,
-        <James.Bottomley@hansenpartnership.com>, <deller@gmx.de>,
-        <ysato@users.sourceforge.jp>, <dalias@libc.org>,
-        <glaubitz@physik.fu-berlin.de>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-        <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-ia64@vger.kernel.org>, <loongarch@lists.linux.dev>,
-        <linux-m68k@lists.linux-m68k.org>, <linux-mips@vger.kernel.org>,
-        <linux-parisc@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>,
-        <linux-sh@vger.kernel.org>, <kernel@xen0n.name>,
-        <mpe@ellerman.id.au>, <npiggin@gmail.com>,
-        <christophe.leroy@csgroup.eu>, <paul.walmsley@sifive.com>,
-        <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <hca@linux.ibm.com>,
-        <gor@linux.ibm.com>, <agordeev@linux.ibm.com>,
-        <borntraeger@linux.ibm.com>, <svens@linux.ibm.com>,
-        <hpa@zytor.com>, <keescook@chromium.org>, <paulmck@kernel.org>,
-        <peterz@infradead.org>, <frederic@kernel.org>,
-        <akpm@linux-foundation.org>, <ardb@kernel.org>,
-        <samitolvanen@google.com>, <juerg.haefliger@canonical.com>,
-        <arnd@arndb.de>, <rmk+kernel@armlinux.org.uk>,
-        <linus.walleij@linaro.org>, <sebastian.reichel@collabora.com>,
-        <rppt@kernel.org>, <kirill.shutemov@linux.intel.com>,
-        <anshuman.khandual@arm.com>, <ziy@nvidia.com>,
-        <masahiroy@kernel.org>, <ndesaulniers@google.com>,
-        <mhiramat@kernel.org>, <ojeda@kernel.org>,
-        <thunder.leizhen@huawei.com>, <xin3.li@intel.com>, <tj@kernel.org>,
-        <gregkh@linuxfoundation.org>, <tsi@tuyoix.net>, <bhe@redhat.com>,
-        <hbathini@linux.ibm.com>, <sourabhjain@linux.ibm.com>,
-        <boris.ostrovsky@oracle.com>, <konrad.wilk@oracle.com>
-Subject: Re: [PATCH v3 11/13] riscv/kexec: refactor for kernel/Kconfig.kexec
-Message-ID: <20230628-urologist-faction-42ebe5372206@wendy>
-References: <20230626161332.183214-1-eric.devolder@oracle.com>
- <20230626161332.183214-12-eric.devolder@oracle.com>
+        id S231213AbjF1K5B (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 28 Jun 2023 06:57:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:53656 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230451AbjF1K4z (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 28 Jun 2023 06:56:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6555AC14;
+        Wed, 28 Jun 2023 03:57:38 -0700 (PDT)
+Received: from [10.57.76.180] (unknown [10.57.76.180])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC1553F663;
+        Wed, 28 Jun 2023 03:56:51 -0700 (PDT)
+Message-ID: <b2c81404-67df-f841-ef02-919e841f49f2@arm.com>
+Date:   Wed, 28 Jun 2023 11:56:50 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="dNpbxT7522GzDtJd"
-Content-Disposition: inline
-In-Reply-To: <20230626161332.183214-12-eric.devolder@oracle.com>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.12.0
+Subject: Re: [PATCH v1 01/10] mm: Expose clear_huge_page() unconditionally
+To:     Yu Zhao <yuzhao@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Yin Fengwei <fengwei.yin@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-s390@vger.kernel.org
+References: <20230626171430.3167004-1-ryan.roberts@arm.com>
+ <20230626171430.3167004-2-ryan.roberts@arm.com>
+ <CAOUHufacvArJh7NjL_3LT-e3s1X+bazkvbgvEU+KPKGKEoW+dw@mail.gmail.com>
+ <2ff8ccf6-bf36-48b2-7dc2-e6c0d962f8b7@arm.com>
+ <CAOUHufZoT-maN3kY5eYQmrYV48shmKAAancEvabXzfTDncDa9A@mail.gmail.com>
+ <91e3364f-1d1b-f959-636b-4f60bf5a577b@arm.com>
+ <CAOUHufaEwY=cm8mBi4HSbxYBvAr_x4_vyZZM2NYHEt-U7KaFhA@mail.gmail.com>
+From:   Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CAOUHufaEwY=cm8mBi4HSbxYBvAr_x4_vyZZM2NYHEt-U7KaFhA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
---dNpbxT7522GzDtJd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 27/06/2023 19:26, Yu Zhao wrote:
+> On Tue, Jun 27, 2023 at 3:41 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>
+>> On 27/06/2023 09:29, Yu Zhao wrote:
+>>> On Tue, Jun 27, 2023 at 1:21 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>>
+>>>> On 27/06/2023 02:55, Yu Zhao wrote:
+>>>>> On Mon, Jun 26, 2023 at 11:14 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>>>>
+>>>>>> In preparation for extending vma_alloc_zeroed_movable_folio() to
+>>>>>> allocate a arbitrary order folio, expose clear_huge_page()
+>>>>>> unconditionally, so that it can be used to zero the allocated folio in
+>>>>>> the generic implementation of vma_alloc_zeroed_movable_folio().
+>>>>>>
+>>>>>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>>>>>> ---
+>>>>>>  include/linux/mm.h | 3 ++-
+>>>>>>  mm/memory.c        | 2 +-
+>>>>>>  2 files changed, 3 insertions(+), 2 deletions(-)
+>>>>>>
+>>>>>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>>>>>> index 7f1741bd870a..7e3bf45e6491 100644
+>>>>>> --- a/include/linux/mm.h
+>>>>>> +++ b/include/linux/mm.h
+>>>>>> @@ -3684,10 +3684,11 @@ enum mf_action_page_type {
+>>>>>>   */
+>>>>>>  extern const struct attribute_group memory_failure_attr_group;
+>>>>>>
+>>>>>> -#if defined(CONFIG_TRANSPARENT_HUGEPAGE) || defined(CONFIG_HUGETLBFS)
+>>>>>>  extern void clear_huge_page(struct page *page,
+>>>>>>                             unsigned long addr_hint,
+>>>>>>                             unsigned int pages_per_huge_page);
+>>>>>> +
+>>>>>> +#if defined(CONFIG_TRANSPARENT_HUGEPAGE) || defined(CONFIG_HUGETLBFS)
+>>>>>
+>>>>> We might not want to depend on THP eventually. Right now, we still
+>>>>> have to, unless splitting is optional, which seems to contradict
+>>>>> 06/10. (deferred_split_folio()  is a nop without THP.)
+>>>>
+>>>> Yes, I agree - for large anon folios to work, we depend on THP. But I don't
+>>>> think that helps us here.
+>>>>
+>>>> In the next patch, I give vma_alloc_zeroed_movable_folio() an extra `order`
+>>>> parameter. So the generic/default version of the function now needs a way to
+>>>> clear a compound page.
+>>>>
+>>>> I guess I could do something like:
+>>>>
+>>>>  static inline
+>>>>  struct folio *vma_alloc_zeroed_movable_folio(struct vm_area_struct *vma,
+>>>>                                    unsigned long vaddr, gfp_t gfp, int order)
+>>>>  {
+>>>>         struct folio *folio;
+>>>>
+>>>>         folio = vma_alloc_folio(GFP_HIGHUSER_MOVABLE | gfp,
+>>>>                                         order, vma, vaddr, false);
+>>>>         if (folio) {
+>>>> #ifdef CONFIG_LARGE_FOLIO
+>>>>                 clear_huge_page(&folio->page, vaddr, 1U << order);
+>>>> #else
+>>>>                 BUG_ON(order != 0);
+>>>>                 clear_user_highpage(&folio->page, vaddr);
+>>>> #endif
+>>>>         }
+>>>>
+>>>>         return folio;
+>>>>  }
+>>>>
+>>>> But that's pretty messy and there's no reason why other users might come along
+>>>> that pass order != 0 and will be surprised by the BUG_ON.
+>>>
+>>> #ifdef CONFIG_LARGE_ANON_FOLIO // depends on CONFIG_TRANSPARENT_HUGE_PAGE
+>>> struct folio *alloc_anon_folio(struct vm_area_struct *vma, unsigned
+>>> long vaddr, int order)
+>>> {
+>>>   // how do_huge_pmd_anonymous_page() allocs and clears
+>>>   vma_alloc_folio(..., *true*);
+>>
+>> This controls the mem allocation policy (see mempolicy.c::vma_alloc_folio()) not
+>> clearing. Clearing is done in __do_huge_pmd_anonymous_page():
+>>
+>>   clear_huge_page(page, vmf->address, HPAGE_PMD_NR);
+> 
+> Sorry for rushing this previously. This is what I meant. The #ifdef
+> makes it safe to use clear_huge_page() without 01/10. I highlighted
+> the last parameter to vma_alloc_folio() only because it's different
+> from what you chose (not implying it clears the folio).>
+>>> }
+>>> #else
+>>> #define alloc_anon_folio(vma, addr, order)
+>>> vma_alloc_zeroed_movable_folio(vma, addr)
+>>> #endif
+>>
+>> Sorry I don't get this at all... If you are suggesting to bypass
+>> vma_alloc_zeroed_movable_folio() entirely for the LARGE_ANON_FOLIO case
+> 
+> Correct.
+> 
+>> I don't
+>> think that works because the arch code adds its own gfp flags there. For
+>> example, arm64 adds __GFP_ZEROTAGS for VM_MTE VMAs.
+> 
+> I think it's the opposite: it should be safer to reuse the THP code because
+> 1. It's an existing case that has been working for PMD_ORDER folios
+> mapped by PTEs, and it's an arch-independent API which would be easier
+> to review.
+> 2. Use vma_alloc_zeroed_movable_folio() for large folios is a *new*
+> case. It's an arch-*dependent* API which I have no idea what VM_MTE
+> does (should do) to large folios and don't plan to answer that for
+> now.
 
-Hey Eric,
+I've done some archaology on this now, and convinced myself that your suggestion
+is a good one - sorry for doubting it!
 
-On Mon, Jun 26, 2023 at 12:13:30PM -0400, Eric DeVolder wrote:
-> The kexec and crash kernel options are provided in the common
-> kernel/Kconfig.kexec. Utilize the common options and provide
-> the ARCH_SUPPORTS_ and ARCH_SELECTS_ entries to recreate the
+If you are interested here are the details: Only arm64 and ia64 do something
+non-standard in vma_alloc_zeroed_movable_folio(). ia64 flushes the dcache for
+the folio - but given it does not support THP this is not a problem for the THP
+path. arm64 adds the __GFP_ZEROTAGS flag which means that the MTE tags will be
+zeroed at the same time as the page is zeroed. This is a perf optimization - if
+its not performed then it will be done at set_pte_at(), which is how this works
+for the THP path.
 
-> equivalent set of KEXEC and CRASH options.
+So on that basis, I agree we can use your proposed alloc_anon_folio() approach.
+arm64 will lose the MTE optimization but that can be added back later if needed.
+So no need to unconditionally expose clear_huge_page() and no need to modify all
+the arch vma_alloc_zeroed_movable_folio() implementations.
 
-I find this diff a little hard to follow (since the other half off the
-change is in another patch), so it may be me missing something, but are
-you sure?
+Thanks,
+Ryan
 
->=20
-> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
-> ---
->  arch/riscv/Kconfig | 48 ++++++++++++++--------------------------------
->  1 file changed, 14 insertions(+), 34 deletions(-)
->=20
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 5966ad97c30c..c484abd9bbfd 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -585,48 +585,28 @@ config RISCV_BOOT_SPINWAIT
-> =20
->  	  If unsure what to do here, say N.
-> =20
-> -config KEXEC
-> -	bool "Kexec system call"
-> -	depends on MMU
-> +config ARCH_SUPPORTS_KEXEC
-> +	def_bool MMU
-> +
-> +config ARCH_SELECTS_KEXEC
-> +	def_bool y
-> +	depends on KEXEC
->  	select HOTPLUG_CPU if SMP
-> -	select KEXEC_CORE
-> -	help
-> -	  kexec is a system call that implements the ability to shutdown your
-> -	  current kernel, and to start another kernel. It is like a reboot
-> -	  but it is independent of the system firmware. And like a reboot
-> -	  you can start any kernel with it, not just Linux.
-> =20
-> -	  The name comes from the similarity to the exec system call.
-> +config ARCH_SUPPORTS_KEXEC_FILE
-> +	def_bool 64BIT && MMU && CRYPTO=3Dy && CRYPTO_SHA256=3Dy
 
-This looks like a change to me. Previously, only KEXEC_PURGATORY
-required these crypto options to be like so, but now KEXEC_FILE needs
-them too.
+> 
+>> Perhaps we can do away with an arch-owned vma_alloc_zeroed_movable_folio() and
+>> replace it with a new arch_get_zeroed_movable_gfp_flags() then
+>> alloc_anon_folio() add in those flags?
+>>
+>> But I still think the cleanest, simplest change is just to unconditionally
+>> expose clear_huge_page() as I've done it.
+> 
+> The fundamental choice there as I see it is to whether the first step
+> of large anon folios should lean toward the THP code base or the base
+> page code base (I'm a big fan of the answer "Neither -- we should
+> create something entirely new instead"). My POV is that the THP code
+> base would allow us to move faster, since it's proven to work for a
+> very similar case (PMD_ORDER folios mapped by PTEs).
 
-What am I missing?
-
-Cheers,
-Conor.
-
-> =20
-> -config KEXEC_FILE
-> -	bool "kexec file based systmem call"
-> -	depends on 64BIT && MMU
-> -	select HAVE_IMA_KEXEC if IMA
-> -	select KEXEC_CORE
-> +config ARCH_SELECTS_KEXEC_FILE
-> +	def_bool y
-> +	depends on KEXEC_FILE
->  	select KEXEC_ELF
-> -	help
-> -	  This is new version of kexec system call. This system call is
-> -	  file based and takes file descriptors as system call argument
-> -	  for kernel and initramfs as opposed to list of segments as
-> -	  accepted by previous system call.
-> -
-> -	  If you don't know what to do here, say Y.
-> +	select HAVE_IMA_KEXEC if IMA
-> =20
->  config ARCH_HAS_KEXEC_PURGATORY
->  	def_bool KEXEC_FILE
-> -	depends on CRYPTO=3Dy
-> -	depends on CRYPTO_SHA256=3Dy
-> =20
-> -config CRASH_DUMP
-> -	bool "Build kdump crash kernel"
-> -	help
-> -	  Generate crash dump after being started by kexec. This should
-> -	  be normally only set in special crash dump kernels which are
-> -	  loaded in the main kernel with kexec-tools into a specially
-> -	  reserved region and then later executed after a crash by
-> -	  kdump/kexec.
-> -
-> -	  For more details see Documentation/admin-guide/kdump/kdump.rst
-> +config ARCH_SUPPORTS_CRASH_DUMP
-> +	def_bool y
-> =20
->  config COMPAT
->  	bool "Kernel support for 32-bit U-mode"
-> --=20
-> 2.31.1
->
-
---dNpbxT7522GzDtJd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZJvtVAAKCRB4tDGHoIJi
-0nmiAQDOO3BHXlme661CQ5d0WA+9UNnblFm/cWV3USIeSzvJAQD9Ev9vbdYVY6Uu
-ypalgd3Ta51Btqo6Gv+Pn5Xaf3a3lg4=
-=9sLY
------END PGP SIGNATURE-----
-
---dNpbxT7522GzDtJd--
