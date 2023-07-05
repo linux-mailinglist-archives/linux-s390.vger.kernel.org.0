@@ -2,345 +2,619 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DCCDD748478
-	for <lists+linux-s390@lfdr.de>; Wed,  5 Jul 2023 14:56:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A60F87485ED
+	for <lists+linux-s390@lfdr.de>; Wed,  5 Jul 2023 16:21:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231202AbjGEM4u (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 5 Jul 2023 08:56:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55174 "EHLO
+        id S232517AbjGEOVE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 5 Jul 2023 10:21:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231154AbjGEM4u (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 5 Jul 2023 08:56:50 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5746DDA;
-        Wed,  5 Jul 2023 05:56:48 -0700 (PDT)
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 365ClQhe020840;
-        Wed, 5 Jul 2023 12:55:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=3pnswunhhF06iYeiSc/KKz/p4ThnIKIhoX1aPj5MKQM=;
- b=MEk6ZVkYVDhSAmL3VJC9I10FclaUqS9amg6qM/r1LONGHl+Ai6BWxuRBWSR8OotUjCNL
- 56Os3k7jfSoD939CyODP/r7DqmuPzo/qTTOyhS+63jMG9bM7/7if6fXwU6i7iGOavKdd
- smgQNA4cHtY3Ca44/8wfCP0fN3pLjOye3jCh1gSPJywCjblhWjhZZYs491Lxp1pgoyTg
- e0JnxZuob6J0BZtWd0vbxLYfQV4moXDYmvKDGRgY6AbR0o5hx/QsIgC+NEVMyrtqfYML
- QkUNWXDnHdTKrcslyRa2KVyo8ogkRbiYvNSMZjxfowucr/lV1yrnkz5bjZHJvtCdMfwL WQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rn8tyg7c4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Jul 2023 12:55:29 +0000
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 365Cmjvq024855;
-        Wed, 5 Jul 2023 12:55:28 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rn8tyg7as-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Jul 2023 12:55:28 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3653PMfU027320;
-        Wed, 5 Jul 2023 12:55:25 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-        by ppma04ams.nl.ibm.com (PPS) with ESMTPS id 3rjbs4tk3x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Jul 2023 12:55:25 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 365CtLIH12911148
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 5 Jul 2023 12:55:21 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A0C9C20043;
-        Wed,  5 Jul 2023 12:55:21 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 98DAE2004D;
-        Wed,  5 Jul 2023 12:55:18 +0000 (GMT)
-Received: from thinkpad-T15 (unknown [9.171.49.168])
-        by smtpav07.fra02v.mail.ibm.com (Postfix) with SMTP;
-        Wed,  5 Jul 2023 12:55:18 +0000 (GMT)
-Date:   Wed, 5 Jul 2023 14:55:16 +0200
-From:   Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Hildenbrand <david@redhat.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        Yang Shi <shy828301@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Peter Xu <peterx@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>, Yu Zhao <yuzhao@google.com>,
-        Alistair Popple <apopple@nvidia.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Steven Price <steven.price@arm.com>,
-        SeongJae Park <sj@kernel.org>,
-        Lorenzo Stoakes <lstoakes@gmail.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Naoya Horiguchi <naoya.horiguchi@nec.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Zack Rusin <zackr@vmware.com>,
-        Axel Rasmussen <axelrasmussen@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Pasha Tatashin <pasha.tatashin@soleen.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Song Liu <song@kernel.org>,
-        Thomas Hellstrom <thomas.hellstrom@linux.intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Jann Horn <jannh@google.com>,
-        Vishal Moola <vishal.moola@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        linux-arm-kernel@lists.infradead.org, sparclinux@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v2 07/12] s390: add pte_free_defer() for pgtables
- sharing page
-Message-ID: <20230705145516.7d9d554d@thinkpad-T15>
-In-Reply-To: <e678affb-5eee-a055-7af1-1d29a965663b@google.com>
-References: <54cb04f-3762-987f-8294-91dafd8ebfb0@google.com>
-        <a722dbec-bd9e-1213-1edd-53cd547aa4f@google.com>
-        <20230628211624.531cdc58@thinkpad-T15>
-        <cd7c2851-1440-7220-6c53-16b343b1474@google.com>
-        <ZJ2hsM5Tn+yUZ5ZV@ziepe.ca>
-        <20230629175645.7654d0a8@thinkpad-T15>
-        <edaa96f-80c1-1252-acbb-71c4f045b035@google.com>
-        <7bef5695-fa4a-7215-7e9d-d4a83161c7ab@google.com>
-        <20230704171905.1263478f@thinkpad-T15>
-        <e678affb-5eee-a055-7af1-1d29a965663b@google.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+        with ESMTP id S232404AbjGEOU4 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 5 Jul 2023 10:20:56 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 397ED171A;
+        Wed,  5 Jul 2023 07:20:53 -0700 (PDT)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 365EDwwB014181;
+        Wed, 5 Jul 2023 14:20:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : content-transfer-encoding : content-type :
+ mime-version; s=corp-2023-03-30;
+ bh=fzE3f0KuR6wmgF4l+h9oSB5M6uWEOIqXY4TMFU9+WaM=;
+ b=Fuv1Bu++DCWp0r5pLrS4YSY/AtK7QeGFyp14Rh3e7mtCutos4paQVCS4wys8ZXwPkd6W
+ Q9OgP4YyqsPi+LeE30QvkJGMiHa9EBvr3RLx2cFBZGASokI3/nusGdx7mAZxpL9O0Ues
+ VEEbEXYpNXalecnRQBX5Hl2GBibkbdfzffx0N8X1kUt4S+9oG1eSqGpghKoSdaM//+/4
+ /inFB+LNUvrwrPCNEr1CxR8jK5mOoxQeyELhOvPvSWcv9j5uC4RIAGcSsPGX9h9Sz47a
+ 5ikdff1qCIoDMzLrQjT27qFnNlDd5NEAsxJH9OcJPGhDIaXHKE6ipEsTWINZypZQQiAW kQ== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3rjajdejrx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 05 Jul 2023 14:20:22 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 365DN1LJ010157;
+        Wed, 5 Jul 2023 14:20:21 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2175.outbound.protection.outlook.com [104.47.59.175])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3rjak5nmph-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 05 Jul 2023 14:20:20 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aOVR2kE0xR4/TJTPw0bGwcpJaFK3bBipi5Ai9DItoL7iXwRQDIAG8RuAK2fLpotZJXvEBbm32as+pL5PAysL/V8dMkA6stiSBvLOFxwa1b7zv31UKhkQn6jQigXwVodIzV3NjVq77C8E8V3T0ILpBTFfEYdzhwbzKueC5yPp+W0erVPxgiuUsPDVxVDn6iLH7TPFU5xnnS1vAyhqxj5ajfm7wBX4I5+Z6vl8dbtUyVkkDtBZJj5w+M8iDuUVEpD/LoOZkEAGc3qAtJCR5pkB1A2TZVnbcc1nbzO6z5cTfL6pK7Km10dDFz3Tebz56q5l4RaxubsEssAhiCq1b+SXfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fzE3f0KuR6wmgF4l+h9oSB5M6uWEOIqXY4TMFU9+WaM=;
+ b=Tilz3YsBHKFl+e5uLyVZ7A5S3x5QEg4jcThh71t6FN0YKqRjYtKzeUbK0xMGXCynp7y7janiu3QmM18R0/eMaAMYL8Pploc+EX1Kj4SnMFMjfSwb8jss0LrZM/jl4/dPtqPi2jzBcPMfHSwYHyBS6vG7iXhf8uTP7uFIRjoETV9F2EWjgy6dmqKGa+ut8CSKEaEiP0E0C83Ag7344CC/7PCPxSepGT4dPuzn7UH3Eu+FejAZWt5vofd9ZlrWM1av1ZFqGA6CWChFSxmAmnM0E8vengj2k89sMEVASzAnrq6fcB0tKwMmWkqCYAGuacmzLxUEn5iTAkhJGuM0uXfaCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fzE3f0KuR6wmgF4l+h9oSB5M6uWEOIqXY4TMFU9+WaM=;
+ b=wuKGkao/O8HUwXEZYOB8Gel1Sha9dsBwmg5QfjsoYEvcHMajzB7CnShKnjlhmfFf4PGH2XY3Q7rWOgtb6IA6p8pVSS4azBfWNPXmCQUeIt7AvWUHb+fgd5GZr5uHvBSVbJobFLCeRacaRFmZpZAMM0URPWZ3e8X0W3wvERdaWWY=
+Received: from CO1PR10MB4531.namprd10.prod.outlook.com (2603:10b6:303:6c::22)
+ by SA2PR10MB4732.namprd10.prod.outlook.com (2603:10b6:806:fa::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.17; Wed, 5 Jul
+ 2023 14:20:16 +0000
+Received: from CO1PR10MB4531.namprd10.prod.outlook.com
+ ([fe80::8b8f:b4b1:bb78:b048]) by CO1PR10MB4531.namprd10.prod.outlook.com
+ ([fe80::8b8f:b4b1:bb78:b048%5]) with mapi id 15.20.6565.016; Wed, 5 Jul 2023
+ 14:20:16 +0000
+From:   Eric DeVolder <eric.devolder@oracle.com>
+To:     linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
+        chenhuacai@kernel.org, geert@linux-m68k.org,
+        tsbogend@alpha.franken.de, James.Bottomley@HansenPartnership.com,
+        deller@gmx.de, ysato@users.sourceforge.jp, dalias@libc.org,
+        glaubitz@physik.fu-berlin.de, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org
+Cc:     kernel@xen0n.name, mpe@ellerman.id.au, npiggin@gmail.com,
+        christophe.leroy@csgroup.eu, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, hca@linux.ibm.com,
+        gor@linux.ibm.com, agordeev@linux.ibm.com,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com, hpa@zytor.com,
+        keescook@chromium.org, paulmck@kernel.org, peterz@infradead.org,
+        frederic@kernel.org, akpm@linux-foundation.org, ardb@kernel.org,
+        samitolvanen@google.com, juerg.haefliger@canonical.com,
+        arnd@arndb.de, rmk+kernel@armlinux.org.uk,
+        linus.walleij@linaro.org, sebastian.reichel@collabora.com,
+        rppt@kernel.org, kirill.shutemov@linux.intel.com,
+        anshuman.khandual@arm.com, ziy@nvidia.com, masahiroy@kernel.org,
+        ndesaulniers@google.com, mhiramat@kernel.org, ojeda@kernel.org,
+        thunder.leizhen@huawei.com, xin3.li@intel.com, tj@kernel.org,
+        gregkh@linuxfoundation.org, tsi@tuyoix.net, bhe@redhat.com,
+        hbathini@linux.ibm.com, sourabhjain@linux.ibm.com,
+        eric.devolder@oracle.com, boris.ostrovsky@oracle.com,
+        konrad.wilk@oracle.com
+Subject: [PATCH v4 00/13] refactor Kconfig to consolidate KEXEC and CRASH options
+Date:   Wed,  5 Jul 2023 10:19:51 -0400
+Message-Id: <20230705142004.3605799-1-eric.devolder@oracle.com>
+X-Mailer: git-send-email 2.31.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BY5PR17CA0036.namprd17.prod.outlook.com
+ (2603:10b6:a03:1b8::49) To CO1PR10MB4531.namprd10.prod.outlook.com
+ (2603:10b6:303:6c::22)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 0DQoxAF1olsdO5DFTI_7dqwv7FMriyOJ
-X-Proofpoint-ORIG-GUID: ya86xS09MgxWjeDFgH6Ca4aNmkyq7jy5
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PR10MB4531:EE_|SA2PR10MB4732:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1b2deeaf-2b3e-4b0c-f52b-08db7d62f40d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 7Bv6o1RxktwaJfv8CN7n2LHcnx6m7wPABlKW4MjOpc3bnTgaDqcvBXegC3T41oPz6Mno5YkEYPJ2Pavd4WxWSySDP108Q53nRMl9MPMdb3FYjn82MwuTFK9Wmf6pj4S2i1Gh8L5pYn6J4Zy4WzaX74dadKb+YuNuINkxS0SxYcwZZiJgoi/O/p26WJhT4myvjbdv++ytYlwIIx9ubQGEk3n003JfIe1DVNY6/a2QVPfLNmEDgldHwGUek6c9/48neWthgz/KIk4tIOaI0AEjDm5dIpui2TfamHZVyed8Lq3hoAqj4d/0jfFPiczL4o9BYkQOzTLv+Runk5vfd+E6HzMaHHHBxP6Rz+l/fJRqRde3f0fBl+3HeHJOu0g9g61Yr91OjuCAL/mWImqEli7IMu92LmojmD3te2/uOq9wuu9hzAcSqeafG4xB2WpV7mWCY3g2huWrhfXlVpnYSOS1meKYuZORuqQKys2RJHTGZ1tkSCfJApUgOXS0b8V62Ss2rD+rUTsqISZIMLLB9OxnHrVAZAGr/Q0fNUKIWdfJGLsbHnqH9QZSR0f4zdCzWfSNGgJisk2ysw0cRIpDLD0+6Xu5ccEGdmG2uZSzEbAZP0npMYZa5tBpawlCgJ9hl70I
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4531.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(366004)(376002)(39860400002)(396003)(346002)(451199021)(8936002)(8676002)(2906002)(2616005)(5660300002)(6506007)(7416002)(7406005)(26005)(1076003)(7366002)(186003)(66946007)(30864003)(41300700001)(107886003)(921005)(6666004)(6486002)(4326008)(66556008)(66476007)(36756003)(316002)(83380400001)(478600001)(6512007)(966005)(38100700002)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ZBUWl42wxNdfJxTGBLVa6kxKxDCBqXsYxjA18NaV9WWglZS6VQOT6DR6NvqI?=
+ =?us-ascii?Q?vHiOwA2//Hbaum2j6ix6WmIWr8fDo3F2LJvIkCBo2gZfbWtUHc7Ignu1o0wt?=
+ =?us-ascii?Q?ZlFnR9meNzqU/C9PjPMgK4KwzJuxwSLzVfXGSBgm3vLAqK1b2jxpwtAIp5l+?=
+ =?us-ascii?Q?bMxwIYaq9NC6sbfdH2mQyHB6Q8OY7zTs5JNVtIkZEhQCHq1P+JfD9Kg0heoy?=
+ =?us-ascii?Q?98KtzxBb6P8UJ9qSZS7nkLZanwFtQ05kWtyD+avmEadFB105fKOJ5Jlgif+m?=
+ =?us-ascii?Q?EuOuyi3MwoNYjdIZaGbpf54AlsGaSniqT0QHeGY8QQhsWLy8DDrB5yVFynkQ?=
+ =?us-ascii?Q?hCuC6TcFN8t845DE4b1BqBdW8tGQJzoZ0+G3+/d+TrxGY0crOHidiuIDJMER?=
+ =?us-ascii?Q?LMJP1BU7KJDN8KXMeK9eHw3yafWDFWEqA8DRlmmDURpb4Lydwmbu+hrEJcvg?=
+ =?us-ascii?Q?Pu5vsaBrtJOhLMKbve2mCWxMAIFC3ZozKHCpZrbMut4y/iHt7/bDju7Cpsjh?=
+ =?us-ascii?Q?jAI/sZjsH+HUazE4q5RCT7MWe12AaORBWTueyDhOE2/tMBj4SEaGCKWIY9RD?=
+ =?us-ascii?Q?178Y3bP+RGy/ric9xeCHNyXFieU1sLMWJpKNVQVs/mnbIQ4/ryDhfLwE6RpZ?=
+ =?us-ascii?Q?cQmoenoOmSfuckWJrWdEsOgDyj9mn5R0imb4trET7rCQEWBAMDh1jv3LY1AK?=
+ =?us-ascii?Q?m3gFxHHtdtS/lbgc7UIeRu+qQBt0SRXk0cdnt/8On3UUXu8em0PgKTEESndZ?=
+ =?us-ascii?Q?2/h1CyoXAMMXMpNReffUOG+JG4sAgv353oyrYp71OKO20h9+2ocTGqaH4b3p?=
+ =?us-ascii?Q?ZH8Crs4sRmO09xusrFE5DARvns0Qu0gk7vUtYepVW759OjJPJc5B6S6oTxXq?=
+ =?us-ascii?Q?m9wz2HGYnCvKfPKDCkJAWJlppn3o7EiUfGFqeeY/UGkDiQEkKaPmSF99bs4T?=
+ =?us-ascii?Q?5iGkvG55K724bCUxy4HatnKrguzn1Rnm+2mPPjfb+BkWubypzDrm/NH82nGr?=
+ =?us-ascii?Q?gsBWle9rCwZTS/W01voR0x24Ogl36IMo2AUGi4Zc4mPL+R+u+jEP+40te1rO?=
+ =?us-ascii?Q?fjzguuSxfZ6WLnOl7OcHJRD5v6n6xNPP6NkQvoKEFsUq+zvU1mtcIvhIutkm?=
+ =?us-ascii?Q?qj0cuUdQmRcicrqcGaWjy0h2vd5LCgKeMUCRkRHbTDkj5Bbiuu6mLbRZzM6w?=
+ =?us-ascii?Q?Pjmg89ZPMqnRvzAo61BH1SDXANW1jXC3t9IQsp4PX452igpQcxsaW7Oph7EV?=
+ =?us-ascii?Q?ayCfX39iucCMRpB20bh6HnRYy+5kFHFJHcAGjsvYzSTRjHxNvVLaFUwdfSR9?=
+ =?us-ascii?Q?iSGq85oQI4SMF3hgAmuAcJn/cw+3iTi2IlFDgx9VDcWOrmcUjUbE/8dEZZc5?=
+ =?us-ascii?Q?m3QeyKsODKc1JRMTMnTt4uKc2jk59S9kROTbb/JwGi/ErujtFjy5R+3j+MB/?=
+ =?us-ascii?Q?IgkkXt91ONe3REWE19ljDjCix4RP6VS1ZFTU4TNyKErdB7IVkQn6H7WfWJyo?=
+ =?us-ascii?Q?o/k61H/jSyrgigyA3i4suwlqq4MXwwn+Z+6wI4jaZPanPxspSz2C/16xo1q5?=
+ =?us-ascii?Q?T/c4T9rCBL1hy0KQn9YkLxdHlFUQ+CvdLSszWJn+BIUhWsl0BZu89El02jqq?=
+ =?us-ascii?Q?Iw=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 2
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?us-ascii?Q?upjTgeWq0E8HIEhXf0q2oTyFU8ThA/4cpFhNawmbvzbb/dzuNWIeg+sf2Pfr?=
+ =?us-ascii?Q?O7KzLKSPzFMlBBCX2iWKTMlLdAKhzT/f0cXskUuYhqW1dA164NWmm+XlM9j2?=
+ =?us-ascii?Q?NTyjo4rpsWlb23KZB2bYFWOo637ljwYfLREFp2fOBKEGS72etTQ359cshknL?=
+ =?us-ascii?Q?8leVC3Fsv8EV8VpQ1kFA+3aSpnUv3rzBlXh84dz5yoFeHhnrzvqX2FexM3dg?=
+ =?us-ascii?Q?sR3I14G4v4V1ws0NUpbg45i8y52n6PSMY+Lh+P0W1dD4zJfV+fhBZ2u+1HWW?=
+ =?us-ascii?Q?u5dJDaY6bNoeKOycKzxHc3x6W5j/DLrTIi2TTvsvvxUMtrfEjKlXVwEZ8KXy?=
+ =?us-ascii?Q?p3i4QtY+l1ptvgZMDJbSCCDJKY5XzR3V2T/XeFJYEdzRyv4p0Wzle9kxZX4b?=
+ =?us-ascii?Q?/DIGyeOdR2zHx7VZ0G3SRigbBHgXUe/+eMVJJN6IL6SphlXtqaSAkIk1QOlN?=
+ =?us-ascii?Q?W7p1+kz0lEIC8LtVTEpe9tdV+PAehOAI6OtIhKcuEojfvZAfsArgU/ClBgAE?=
+ =?us-ascii?Q?tRdANP61Pu62BK0vqVHTaAj6XwvL1LI7KxT5M6ahA4XkR9gp+m7Hd5lL86In?=
+ =?us-ascii?Q?6ijCNXo4wtT5Ftcr+eFuccYjiw8dYs/PpH/KV4dT0gWjMwe3Umg1ryMRCpir?=
+ =?us-ascii?Q?UXuC+QuhBg7Oundcf+ZqaVKyxkf3lEcacCXWO3WV+1UUUh0AD3oC0BvIhT/e?=
+ =?us-ascii?Q?/kl7MLTY5jp47YtvbKV1LMduZt8UAMHxet3aUkaO9ZeZMEhe92zgmiV22yBJ?=
+ =?us-ascii?Q?MKJmm3Ignq3hNE/alZ3Bh2KTL8S/i8gw+6CBBKt2xPp8f9JEqQZS96BqRS22?=
+ =?us-ascii?Q?NdblAortyO4An5Z2FStuXxyQliN/HkSNMcGJpS9nOUtN/7RwsrscvQPyQ6zG?=
+ =?us-ascii?Q?hvBnPOzFOVHydKoPdro2rOuMjkBgJHwadfQHyT4F+WqCxdk7qo0iuLvVeEPY?=
+ =?us-ascii?Q?YDRfebqfwuY8IfkD0Uz6bnrn/SSUwySKPArKiCN1GtOJ1gzuzfNFYL5FtSfS?=
+ =?us-ascii?Q?Rum6gzDVHnDZ6J33qActvKuTGN+tVOckqBMkuSGBwO1ZgtmsK6FU0dz82tUv?=
+ =?us-ascii?Q?5WOXmKEv6OVc4IsPUJfIO3xaZWA8hKmNs/jNoLxGa540ocxBlYREVqzjtNZR?=
+ =?us-ascii?Q?VK/333wTK3DXcE8WdMMMyizwsex8cd7j0q2MGpD0nNVe7/GEKf5mbyWBPQb0?=
+ =?us-ascii?Q?mSIxFPhtOdcCt3ebo3X4yV7mvtYA9PSnDAdwoMLMBlClmB0yjuD3l99AwBpe?=
+ =?us-ascii?Q?oRQTRkPfUfDxOUbY6NQJ2CQP6xcIEaJrErfizsO1ZneTUywXTt/G2NKWr1xM?=
+ =?us-ascii?Q?/pihDTGCf4MTrPm2e0wxAGIrXum2LowbkHWzo1X0/FHhmYAhPOniAfmasgLg?=
+ =?us-ascii?Q?eH4TTdDeUjpBRdZq0p0gRuMxEKxmpWqcQ0mJKdpwzaUqqJ+5WWfx5a66PxIC?=
+ =?us-ascii?Q?atm0IkO488XPXuJ0eZxQDdoU83y4aIMtAienrqpET/u/YPPKw4PtmRbDt3vH?=
+ =?us-ascii?Q?YZQp4yX4XZLUUEliwRrWaQm9K9WaaC4iuiLJhcL1nZIEehLb096gsjxVpGBh?=
+ =?us-ascii?Q?++bm5KH1K7OQ6UzD4nPaj93HeBOPQRt98BuKJ+EDsnTzKiO0ww3n0y4Xrw04?=
+ =?us-ascii?Q?MChJJAyntwvxyYyIYx6qgg2csJqCOtMd4G0M4kepwgVJ14SUKdeufekOMmus?=
+ =?us-ascii?Q?LE5JG+5griFnfrDpXNDOQUdSWpatfnBLFgOEOmZArm+UYZlV6rWA1b3GXxzJ?=
+ =?us-ascii?Q?ADHzkVU4p19tLB0wE/+TK12gFC6e0DoIRikEVL8O7im89ksrtQwcvvvjKRQ6?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-1: E0iM3m5C0QPUHLkippLRmmi+UKKAqM+DppTCzQggzXIrbIBz7QYgI1Evf0+dGTrwz6culTnncNKvC1wtMs8Hdz0REGpuhmUHZ/WqaHKTMx8BP52CzJ4Nv3My1WTYsGx9673y8JISp+rcK0Sptw4qRseYXRdlGKCprAWv7QiE3IbCaw87xkfVlqtmRTnTAnAgYxizGf52M3UyEeil9B+97ZzGOYPPzmtNBalWmJWWNzKgSiGFvMyB/ZklZdheSDeirLHkz8dtDm6HSvp49/aBTW2E+EQLKYTT0bj1Ln3djC8t1l4uRhlZeDsuzUjxUs4Fg3TnRBLCLAx71cUQGiB5M/X/OuegIemLVm4JBRY5JDZ57VvkLv7HBHReARh66zVEVFVWm9c2J6jbMRxqMNd0jfS68O2xXCUwDckEmoj2SRhSh+/swrhwQ9lJ73ksvhm45UHEdKezR0r7GQ==
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b2deeaf-2b3e-4b0c-f52b-08db7d62f40d
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR10MB4531.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jul 2023 14:20:15.9424
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mlINe3oNNd1a+NxozMMYC9mC4CR4UGLEeQ9gGOKZmsHtLnjwMamXJzsAC7YRyqZrdAt/CdX2gSvKP2AGq9TY5lyXX9Uj3foyXjUGgfb7uT8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR10MB4732
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-05_05,2023-07-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- priorityscore=1501 mlxlogscore=999 impostorscore=0 mlxscore=0 phishscore=0
- malwarescore=0 adultscore=0 lowpriorityscore=0 clxscore=1015
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2307050111
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,BODY_ENHANCEMENT2,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+ definitions=2023-07-05_06,2023-07-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
+ spamscore=0 mlxscore=0 adultscore=0 phishscore=0 malwarescore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2307050129
+X-Proofpoint-ORIG-GUID: EZwkfzlK4kTp9RkzSaHJtkt-dVGN_Lb-
+X-Proofpoint-GUID: EZwkfzlK4kTp9RkzSaHJtkt-dVGN_Lb-
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 4 Jul 2023 10:03:57 -0700 (PDT)
-Hugh Dickins <hughd@google.com> wrote:
+The Kconfig is refactored to consolidate KEXEC and CRASH options from
+various arch/<arch>/Kconfig files into new file kernel/Kconfig.kexec.
 
-> On Tue, 4 Jul 2023, Gerald Schaefer wrote:
-> > On Sat, 1 Jul 2023 21:32:38 -0700 (PDT)
-> > Hugh Dickins <hughd@google.com> wrote:  
-> > > On Thu, 29 Jun 2023, Hugh Dickins wrote:  
-> > > > 
-> > > > I've grown to dislike the (ab)use of pt_frag_refcount even more, to the
-> > > > extent that I've not even tried to verify it; but I think I do get the
-> > > > point now, that we need further info than just PPHHAA to know whether
-> > > > the page is on the list or not.  But I think that if we move where the
-> > > > call_rcu() is done, then the page can stay on or off the list by same
-> > > > rules as before (but need to check HH bits along with PP when deciding
-> > > > whether to allocate, and whether to list_add_tail() when freeing).    
-> > > 
-> > > No, not quite the same rules as before: I came to realize that using
-> > > list_add_tail() for the HH pages would be liable to put a page on the
-> > > list which forever blocked reuse of PP list_add_tail() pages after it
-> > > (could be solved by a list_move() somewhere, but we have agreed to
-> > > prefer simplicity).
-> > > 
-> > > I've dropped the HH bits, I'm using PageActive like we did on powerpc,
-> > > I've dropped most of the pte_free_*() helpers, and list_del_init() is
-> > > an easier way of dealing with those "is it on the list" questions.
-> > > I expect that we shall be close to reaching agreement on...  
-> > 
-> > This looks really nice, almost too good and easy to be true. I did not
-> > find any obvious flaw, just some comments below. It also survived LTP
-> > without any visible havoc, so I guess this approach is the best so far.  
-> 
-> Phew! I'm of course glad to hear this: thanks for your efforts on it.
-> 
-> ...
-> > > --- a/arch/s390/mm/pgalloc.c
-> > > +++ b/arch/s390/mm/pgalloc.c
-> > > @@ -229,6 +229,15 @@ void page_table_free_pgste(struct page *page)
-> > >   * logic described above. Both AA bits are set to 1 to denote a 4KB-pgtable
-> > >   * while the PP bits are never used, nor such a page is added to or removed
-> > >   * from mm_context_t::pgtable_list.
-> > > + *
-> > > + * pte_free_defer() overrides those rules: it takes the page off pgtable_list,
-> > > + * and prevents both 2K fragments from being reused. pte_free_defer() has to
-> > > + * guarantee that its pgtable cannot be reused before the RCU grace period
-> > > + * has elapsed (which page_table_free_rcu() does not actually guarantee).  
-> > 
-> > Hmm, I think page_table_free_rcu() has to guarantee the same, i.e. not
-> > allow reuse before grace period elapsed. And I hope that it does so, by
-> > setting the PP bits, which would be noticed in page_table_alloc(), in
-> > case the page would be seen there.
-> > 
-> > Unlike pte_free_defer(), page_table_free_rcu() would add pages back to the
-> > end of the list, and so they could be seen in page_table_alloc(), but they
-> > should not be reused before grace period elapsed and __tlb_remove_table()
-> > cleared the PP bits, as far as I understand.
-> > 
-> > So what exactly do you mean with "which page_table_free_rcu() does not actually
-> > guarantee"?  
-> 
-> I'll answer without locating and re-reading what Jason explained earlier,
-> perhaps in a separate thread, about pseudo-RCU-ness in tlb_remove_table():
-> he may have explained it better.  And without working out again all the
-> MMU_GATHER #defines, and which of them do and do not apply to s390 here.
-> 
-> The detail that sticks in my mind is the fallback in tlb_remove_table()
+The Kconfig.kexec is now a submenu titled "Kexec and crash features"
+located under "General Setup".
 
-Ah ok, I was aware of that "semi-RCU" fallback logic in tlb_remove_table(),
-but that is rather a generic issue, and not s390-specific. I thought you
-meant some s390-oddity here, of which we have a lot, unfortunately...
-Of course, we call tlb_remove_table() from our page_table_free_rcu(), so
-I guess you could say that page_table_free_rcu() cannot guarantee what
-tlb_remove_table() cannot guarantee.
+The following options are impacted:
 
-Maybe change to "which page_table_free_rcu() does not actually guarantee,
-by calling tlb_remove_table()", to make it clear that this is not a problem
-of page_table_free_rcu() itself.
+ - KEXEC
+ - KEXEC_FILE
+ - KEXEC_SIG
+ - KEXEC_SIG_FORCE
+ - KEXEC_BZIMAGE_VERIFY_SIG
+ - KEXEC_JUMP
+ - CRASH_DUMP
 
-> in mm/mmu_gather.c: if its __get_free_page(GFP_NOWAIT) fails, it cannot
-> batch the tables for freeing by RCU, and resorts instead to an immediate 
-> TLB flush (I think: that again involves chasing definitions) followed by
-> tlb_remove_table_sync_one() - which just delivers an interrupt to each CPU,
-> and is commented: 
-> /*
->  * This isn't an RCU grace period and hence the page-tables cannot be
->  * assumed to be actually RCU-freed.
->  *
->  * It is however sufficient for software page-table walkers that rely on
->  * IRQ disabling.
->  */
-> 
-> Whether that's good for your PP pages or not, I've given no thought:
-> I've just taken it on trust that what s390 has working today is good.
+Over time, these options have been copied between Kconfig files and
+are very similar to one another, but with slight differences.
 
-Yes, we should be fine with that, current code can be trusted :-)
+The following architectures are impacted by the refactor (because of
+use of one or more KEXEC/CRASH options):
 
-> 
-> If that __get_free_page(GFP_NOWAIT) fallback instead used call_rcu(),
-> then I would not have written "(which page_table_free_rcu() does not
-> actually guarantee)".  But it cannot use call_rcu() because it does
-> not have an rcu_head to work with - it's in some generic code, and
-> there is no MMU_GATHER_CAN_USE_PAGE_RCU_HEAD for architectures to set.
-> 
-> And Jason would have much preferred us to address the issue from that
-> angle; but not only would doing so destroy my sanity, I'd also destroy
-> 20 architectures TLB-flushing, unbuilt and untested, in the attempt.
+ - arm
+ - arm64
+ - ia64
+ - loongarch
+ - m68k
+ - mips
+ - parisc
+ - powerpc
+ - riscv
+ - s390
+ - sh
+ - x86 
 
-Oh yes, if your changes would have allowed to get rid of that "semi RCU"
-logic, that would really be a major boost in popularity, I guess. But
-it probably is as it is, because it is not so easily fixed...
+More information:
 
-> 
-> ...
-> > > @@ -325,10 +346,17 @@ void page_table_free(struct mm_struct *mm, unsigned long *table)
-> > >  		 */
-> > >  		mask = atomic_xor_bits(&page->_refcount, 0x11U << (bit + 24));
-> > >  		mask >>= 24;
-> > > -		if (mask & 0x03U)
-> > > +		if ((mask & 0x03U) && !PageActive(page)) {
-> > > +			/*
-> > > +			 * Other half is allocated, and neither half has had
-> > > +			 * its free deferred: add page to head of list, to make
-> > > +			 * this freed half available for immediate reuse.
-> > > +			 */
-> > >  			list_add(&page->lru, &mm->context.pgtable_list);
-> > > -		else
-> > > -			list_del(&page->lru);
-> > > +		} else {
-> > > +			/* If page is on list, now remove it. */
-> > > +			list_del_init(&page->lru);
-> > > +		}  
-> > 
-> > Ok, we might end up with some unnecessary list_del_init() here, e.g. if
-> > other half is still allocated, when called from pte_free_defer() on a
-> > fully allocated page, which was not on the list (and with PageActive, and
-> > (mask & 0x03U) true).
-> > Not sure if adding an additional mask check to the else path would be
-> > needed, but it seems that list_del_init() should also be able to handle
-> > this.  
-> 
-> list_del_init() is very cheap in the unnecessary case: the cachelines
-> required are already there.  You don't want a flag to say whether to
-> call it or not, it is already the efficient approach.
+In the patch series "crash: Kernel handling of CPU and memory hot
+un/plug"
 
-Yes, I also see no functional issue here. Just thought that the extra
-write could be avoided, e.g. by checking for list_empty() or mask first.
-But I guess that is simply the benefit of list_del_init(), that you
-don't have to check, at least if it is guaranteed that rcu_head is
-never in use here.
+ https://lore.kernel.org/lkml/20230503224145.7405-1-eric.devolder@oracle.com/
 
-Then maybe adjust the comment, because now it makes you wonder, when
-you read (and understand) the code, you see that this list_del_init()
-might also be called for pages not on the list.
+the new kernel feature introduces the config option CRASH_HOTPLUG.
 
-> 
-> (But you were right not to use it in your pt_frag_refcount version,
-> because there we were still trying to do the call_rcu() per fragment
-> rather than per page, so page->lru could have been on the RCU queue.)
+In reviewing, Thomas Gleixner requested that the new config option
+not be placed in x86 Kconfig. Rather the option needs a generic/common
+home. To Thomas' point, the KEXEC and CRASH options have largely been
+duplicated in the various arch/<arch>/Kconfig files, with minor
+differences. This kind of proliferation is to be avoid/stopped.
 
-That is actually the one thing I still try to figure out, by drawing
-pictures, i.e. if we really really never end up here on list_del_init(),
-while using rcu_head, e.g. by racing PageActive.
+ https://lore.kernel.org/lkml/875y91yv63.ffs@tglx/
 
-> 
-> > 
-> > Same thought applies to the similar logic in page_table_free_rcu()
-> > below.
-> >   
-> > >  		spin_unlock_bh(&mm->context.lock);
-> > >  		mask = atomic_xor_bits(&page->_refcount, 0x10U << (bit + 24));
-> > >  		mask >>= 24;
-> > > @@ -342,8 +370,10 @@ void page_table_free(struct mm_struct *mm, unsigned long *table)
-> > >  	}
-> > >  
-> > >  	page_table_release_check(page, table, half, mask);
-> > > -	pgtable_pte_page_dtor(page);
-> > > -	__free_page(page);
-> > > +	if (TestClearPageActive(page))
-> > > +		call_rcu(&page->rcu_head, pte_free_now);
-> > > +	else
-> > > +		pte_free_now(&page->rcu_head);  
-> > 
-> > This ClearPageActive, and the similar thing in __tlb_remove_table() below,
-> > worries me a bit, because it is done outside the spin_lock. It "feels" like
-> > there could be some race with the PageActive checks inside the spin_lock,
-> > but when drawing some pictures, I could not find any such scenario yet.
-> > Also, our existing spin_lock is probably not supposed to protect against
-> > PageActive changes anyway, right?  
-> 
-> Here (and similarly in __tlb_remove_table()) is where we are about to free
-> the page table page: both of the fragments have already been released,
-> there is nobody left who could be racing against us to set PageActive.
+To that end, I have refactored the arch Kconfigs so as to consolidate
+the various KEXEC and CRASH options. Generally speaking, this work has
+the following themes:
 
-Yes, that is what makes this approach so nice, i.e. no more checking
-for HH bits or worry about double call_rcu(), simply do the the freeing
-whenever the page is ready. At least in theory, still drawing pictures :-)
+- KEXEC and CRASH options are moved into new file kernel/Kconfig.kexec
+  - These items from arch/Kconfig:
+      CRASH_CORE KEXEC_CORE KEXEC_ELF HAVE_IMA_KEXEC
+  - These items from arch/x86/Kconfig form the common options:
+      KEXEC KEXEC_FILE KEXEC_SIG KEXEC_SIG_FORCE
+      KEXEC_BZIMAGE_VERIFY_SIG KEXEC_JUMP CRASH_DUMP
+  - The crash hotplug series appends CRASH_HOTPLUG to Kconfig.kexec
+- The Kconfig.kexec is now a submenu titled "Kexec and crash features"
+  and is now listed in "General Setup" submenu from init/Kconfig.
+- To control the main common options, new options ARCH_SUPPORTS_KEXEC,
+  ARCH_SUPPORTS_KEXEC_FILE and ARCH_SUPPORTS_CRASH_DUMP are introduced.
+  NOTE: The existing ARCH_HAS_KEXEC_PURGATORY remains unchanged.
+- To account for the slight differences, new options ARCH_SELECTS_KEXEC,
+  ARCH_SELECTS_KEXEC_FILE and ARCH_SELECTS_CRASH_DUMP are used to
+  elicit the same side effects as the original arch/<arch>/Kconfig
+  files for KEXEC and CRASH options.
 
-But this really looks very good to me, and also works with LTP not worse
-than the other approaches.
+An example, 'make menuconfig' illustrating the submenu:
+
+  > General setup > Kexec and crash features
+  [*] Enable kexec system call
+  [*] Enable kexec file based system call
+  [*]   Verify kernel signature during kexec_file_load() syscall
+  [ ]     Require a valid signature in kexec_file_load() syscall
+  [ ]     Enable bzImage signature verification support
+  [*] kexec jump
+  [*] kernel crash dumps
+  [*]   Update the crash elfcorehdr on system configuration changes
+
+The three main options are KEXEC, KEXEC_FILE and CRASH_DUMP. In the
+process of consolidating these options, I encountered slight differences
+in the coding of these options in several of the architectures. As a
+result, I settled on the following solution:
+
+- Each of three main options has a 'depends on ARCH_SUPPORTS_<option>'
+  statement: ARCH_SUPPORTS_KEXEC, ARCH_SUPPORTS_KEXEC_FILE,
+  ARCH_SUPPORTS_CRASH_DUMP.
+
+  For example, the KEXEC_FILE option has a 'depends on
+  ARCH_SUPPORTS_KEXEC_FILE' statement.
+
+- The boolean ARCH_SUPPORTS_<option> in effect allows the arch to
+  determine when the feature is allowed.  Archs which don't have the
+  feature simply do not provide the corresponding ARCH_SUPPORTS_<option>.
+  For each arch, where there previously were KEXEC and/or CRASH
+  options, these have been replaced with the corresponding boolean
+  ARCH_SUPPORTS_<option>, and an appropriate def_bool statement.
+
+  For example, if the arch supports KEXEC_FILE, then the
+  ARCH_SUPPORTS_KEXEC_FILE simply has a 'def_bool y'. This permits the
+  KEXEC_FILE option to be available.
+
+  If the arch has a 'depends on' statement in its original coding
+  of the option, then that expression becomes part of the def_bool
+  expression. For example, arm64 had:
+
+  config KEXEC
+    depends on PM_SLEEP_SMP
+
+  and in this solution, this converts to:
+
+  config ARCH_SUPPORTS_KEXEC
+    def_bool PM_SLEEP_SMP
+
+
+- In order to account for the differences in the config coding for
+  the three common options, the ARCH_SELECTS_<option> is used.
+  This options has a 'depends on <option>' statement to couple it
+  to the main option, and from there can insert the differences
+  from the common option and the arch original coding of that option.
+
+  For example, a few archs enable CRYPTO and CRYTPO_SHA256 for
+  KEXEC_FILE. These require a ARCH_SELECTS_KEXEC_FILE and
+  'select CRYPTO' and 'select CRYPTO_SHA256' statements.
+
+Illustrating the option relationships:
+
+For KEXEC:
+ ARCH_SUPPORTS_KEXEC <- KEXEC <- ARCH_SELECTS_KEXEC
+
+ KEXEC                      # in Kconfig.kexec
+ ARCH_SUPPORTS_KEXEC        # in arch/<arch>/Kconfig, as needed
+ ARCH_SELECTS_KEXEC         # in arch/<arch>/Kconfig, as needed
+
+
+For KEXEC_FILE:
+ ARCH_SUPPORTS_KEXEC_FILE <- KEXEC_FILE <- ARCH_SELECTS_KEXEC_FILE
+
+ KEXEC_FILE                 # in Kconfig.kexec
+ ARCH_SUPPORTS_KEXEC_FILE   # in arch/<arch>/Kconfig, as needed
+ ARCH_SELECTS_KEXEC_FILE    # in arch/<arch>/Kconfig, as needed
+
+
+For CRASH:
+ ARCH_SUPPORTS_CRASH_DUMP <- CRASH_DUMP <- ARCH_SELECTS_CRASH_DUMP
+
+ CRASH_DUMP                 # in Kconfig.kexec
+ ARCH_SUPPORTS_CRASH_DUMP   # in arch/<arch>/Kconfig, as needed
+ ARCH_SELECTS_CRASH_DUMP    # in arch/<arch>/Kconfig, as needed
+
+To summarize, the ARCH_SUPPORTS_<option> permits the <option> to be
+enabled, and the ARCH_SELECTS_<option> handles side effects (ie.
+select statements).
+
+Examples:
+A few examples to show the new strategy in action:
+
+===== x86 (minus the help section) =====
+Original:
+ config KEXEC
+    bool "kexec system call"
+    select KEXEC_CORE
+
+ config KEXEC_FILE
+    bool "kexec file based system call"
+    select KEXEC_CORE
+    select HAVE_IMA_KEXEC if IMA
+    depends on X86_64
+    depends on CRYPTO=y
+    depends on CRYPTO_SHA256=y
+
+ config ARCH_HAS_KEXEC_PURGATORY
+    def_bool KEXEC_FILE
+
+ config KEXEC_SIG
+    bool "Verify kernel signature during kexec_file_load() syscall"
+    depends on KEXEC_FILE
+
+ config KEXEC_SIG_FORCE
+    bool "Require a valid signature in kexec_file_load() syscall"
+    depends on KEXEC_SIG
+
+ config KEXEC_BZIMAGE_VERIFY_SIG
+    bool "Enable bzImage signature verification support"
+    depends on KEXEC_SIG
+    depends on SIGNED_PE_FILE_VERIFICATION
+    select SYSTEM_TRUSTED_KEYRING
+
+ config CRASH_DUMP
+    bool "kernel crash dumps"
+    depends on X86_64 || (X86_32 && HIGHMEM)
+
+ config KEXEC_JUMP
+    bool "kexec jump"
+    depends on KEXEC && HIBERNATION
+    help
+
+becomes...
+New:
+ config ARCH_SUPPORTS_KEXEC
+    def_bool y
+
+ config ARCH_SUPPORTS_KEXEC_FILE
+    def_bool X86_64 && CRYPTO && CRYPTO_SHA256
+
+ config ARCH_SELECTS_KEXEC_FILE
+    def_bool y
+    depends on KEXEC_FILE
+    select HAVE_IMA_KEXEC if IMA
+
+ config ARCH_HAS_KEXEC_PURGATORY
+    def_bool KEXEC_FILE
+
+ config ARCH_SUPPORTS_KEXEC_JUMP
+    def_bool y
+
+ config ARCH_SUPPORTS_CRASH_DUMP
+    def_bool X86_64 || (X86_32 && HIGHMEM)
+
+
+===== powerpc (minus the help section) =====
+Original:
+ config KEXEC
+    bool "kexec system call"
+    depends on PPC_BOOK3S || PPC_E500 || (44x && !SMP)
+    select KEXEC_CORE
+
+ config KEXEC_FILE
+    bool "kexec file based system call"
+    select KEXEC_CORE
+    select HAVE_IMA_KEXEC if IMA
+    select KEXEC_ELF
+    depends on PPC64
+    depends on CRYPTO=y
+    depends on CRYPTO_SHA256=y
+
+ config ARCH_HAS_KEXEC_PURGATORY
+    def_bool KEXEC_FILE
+
+ config CRASH_DUMP
+    bool "Build a dump capture kernel"
+    depends on PPC64 || PPC_BOOK3S_32 || PPC_85xx || (44x && !SMP)
+    select RELOCATABLE if PPC64 || 44x || PPC_85xx
+
+becomes...
+New:
+config ARCH_SUPPORTS_KEXEC
+    def_bool PPC_BOOK3S || PPC_E500 || (44x && !SMP)
+
+config ARCH_SUPPORTS_KEXEC_FILE
+    def_bool PPC64 && CRYPTO=y && CRYPTO_SHA256=y
+
+config ARCH_HAS_KEXEC_PURGATORY
+    def_bool KEXEC_FILE
+
+config ARCH_SELECTS_KEXEC_FILE
+    def_bool y
+    depends on KEXEC_FILE
+    select KEXEC_ELF
+    select HAVE_IMA_KEXEC if IMA
+
+config ARCH_SUPPORTS_CRASH_DUMP
+    def_bool PPC64 || PPC_BOOK3S_32 || PPC_85xx || (44x && !SMP)
+
+config ARCH_SELECTS_CRASH_DUMP
+    def_bool y
+    depends on CRASH_DUMP
+    select RELOCATABLE if PPC64 || 44x || PPC_85xx
+
+
+Testing Approach and Results
+
+There are 388 config files in the arch/<arch>/configs directories.
+For each of these config files, a .config is generated both before and
+after this Kconfig series, and checked for equivalence. This approach
+allows for a rather rapid check of all architectures and a wide
+variety of configs wrt/ KEXEC and CRASH, and avoids requiring
+compiling for all architectures and running kernels and run-time
+testing.
+
+As such, the following script steps compare the before and after
+of 'make olddefconfig'. The new symbols introduced by this series
+are filtered out, but otherwise the config files are PASS only if
+they were equivalent, and FAIL otherwise.
+
+The script performs the test by doing the following:
+
+ # Obtain the "golden" .config output for given config file
+ # Reset test sandbox
+ git checkout master
+ git branch -D test_Kconfig
+ git checkout -B test_Kconfig master
+ make distclean
+ # Write out updated config
+ cp -f <config file> .config
+ make ARCH=<arch> olddefconfig
+ # Track each item in .config, LHSB is "golden"
+ scoreboard .config 
+
+ # Obtain the "changed" .config output for given config file
+ # Reset test sandbox
+ make distclean
+ # Apply this Kconfig series
+ git am <this Kconfig series>
+ # Write out updated config
+ cp -f <config file> .config
+ make ARCH=<arch> olddefconfig
+ # Track each item in .config, RHSB is "changed"
+ scoreboard .config 
+
+ # Determine test result
+ # Filter-out new symbols introduced by this series
+ # Filter-out symbol=n which not in either scoreboard
+ # Compare LHSB "golden" and RHSB "changed" scoreboards and issue PASS/FAIL
+
+The script was instrumental during the refactoring of Kconfig as it
+continually revealed problems. The end result being that the solution
+presented in this series passes all configs as checked by the script.
+
+Regards,
+eric
+
+---
+v4: 5jul2023
+ - Corrected conversion issue with riscv, per Conor Dooley.
+ - Andrew Mortons's akpm test machinery found a problem with config
+   files generated by randconfig. The problem existed prior to this
+   series and manifests because most arch/<arch>/Kconfig CRASH_DUMP
+   does not have any dependencies on KEXEC. As a result, randconfig
+   produces a config file enabling CRASH_DUMP but not KEXEC, which
+   leads to compile/link-time problems. Andrew requested closing
+   this hole. To that end 'select KEXEC' has been added to CRASH_DUMP.
+   This behavior pre-existed for arm arm64 ia64 loongarch mips powerpc
+   riscv sh and x86.
+ - Applied Acked-by's from:
+   s390: Alexander Gordeev <agordeev@linux.ibm.com>
+
+v3: 26jun2023
+ https://lore.kernel.org/lkml/20230626161332.183214-1-eric.devolder@oracle.com/
+ - Rebased onto 6.4.0
+ - Reworded s390 commit message to clarify MODULE_SIG_FORMAT,
+   per Alexander Gordeev
+ - Applied Acked-by's from:
+   m68k: Geert Uytterhoeven <geert@linux-m68k.org>
+   mips: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+   sh: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+
+v2: 19jun2023
+ https://lore.kernel.org/lkml/20230619145801.1064716-1-eric.devolder@oracle.com/
+ - The ARCH_HAS_ and ARCH_SUPPORTS_ combination was found to be
+   too similar/confusing. Renamed these two new options as such:
+   ARCH_HAS_<option> ---> ARCH_SUPPORTS_<option>
+   ARCH_SUPPORTS_<option> ---> ARCH_SELECTS_<option>
+   Per Kees Cook, Michael Ellerman
+   NOTE: ARCH_HAS_KEXEC_PURGATORY was left as-is, as that is what
+   it is prior to this series.
+   Updated this cover letter to reflect the same.
+ - Some minor cleaning up of the help sections, per Zhen Lei and
+   Alexander Gordeev.
+ - Removed the MODULE_SIG_FORMAT dependency from KEXEC_SIG in
+   kernel/Kconfig.kexec. Only s390 had it prior to this series.
+   See also commit message in
+   "s390/kexec: refactor for kernel/Kconfig.kexec"
+ - Added to Kconfig.kexec the KEXEC_IMAGE_VERIFY_SIG from arm64,
+   per Zhen Lei.
+ - Fixed the powerpc ARCH_SUPPORTS_KEXEC_FILE conversion, per
+   Michael Ellerman.
+   
+v1: 12jun2023
+ https://lore.kernel.org/lkml/20230612172805.681179-1-eric.devolder@oracle.com/
+ - Initial
+ - Based on 6.4.0-rc6
+
+---
+Eric DeVolder (13):
+  kexec: consolidate kexec and crash options into kernel/Kconfig.kexec
+  x86/kexec: refactor for kernel/Kconfig.kexec
+  arm/kexec: refactor for kernel/Kconfig.kexec
+  ia64/kexec: refactor for kernel/Kconfig.kexec
+  arm64/kexec: refactor for kernel/Kconfig.kexec
+  loongarch/kexec: refactor for kernel/Kconfig.kexec
+  m68k/kexec: refactor for kernel/Kconfig.kexec
+  mips/kexec: refactor for kernel/Kconfig.kexec
+  parisc/kexec: refactor for kernel/Kconfig.kexec
+  powerpc/kexec: refactor for kernel/Kconfig.kexec
+  riscv/kexec: refactor for kernel/Kconfig.kexec
+  s390/kexec: refactor for kernel/Kconfig.kexec
+  sh/kexec: refactor for kernel/Kconfig.kexec
+
+ arch/Kconfig           |  13 -----
+ arch/arm/Kconfig       |  29 ++---------
+ arch/arm64/Kconfig     |  62 +++++------------------
+ arch/ia64/Kconfig      |  28 ++---------
+ arch/loongarch/Kconfig |  26 +++-------
+ arch/m68k/Kconfig      |  19 +------
+ arch/mips/Kconfig      |  32 ++----------
+ arch/parisc/Kconfig    |  34 +++++--------
+ arch/powerpc/Kconfig   |  55 +++++++--------------
+ arch/riscv/Kconfig     |  44 +++++------------
+ arch/s390/Kconfig      |  65 +++++++-----------------
+ arch/sh/Kconfig        |  46 +++--------------
+ arch/x86/Kconfig       |  89 +++++----------------------------
+ init/Kconfig           |   2 +
+ kernel/Kconfig.kexec   | 110 +++++++++++++++++++++++++++++++++++++++++
+ 15 files changed, 228 insertions(+), 426 deletions(-)
+ create mode 100644 kernel/Kconfig.kexec
+
+-- 
+2.31.1
+
