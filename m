@@ -2,133 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 831A7750290
-	for <lists+linux-s390@lfdr.de>; Wed, 12 Jul 2023 11:12:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93C9D750364
+	for <lists+linux-s390@lfdr.de>; Wed, 12 Jul 2023 11:40:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231786AbjGLJM0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 12 Jul 2023 05:12:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59784 "EHLO
+        id S231732AbjGLJki (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 12 Jul 2023 05:40:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231571AbjGLJMY (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 12 Jul 2023 05:12:24 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29E91F9;
-        Wed, 12 Jul 2023 02:12:23 -0700 (PDT)
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36C96i2F025353;
-        Wed, 12 Jul 2023 09:12:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=XtOzynUlSRHssA+HacLdkJH/qygEn0PXBy1TeoXyjYc=;
- b=UGdUdTl2AQn5RyhKrLiMM0HirDwvs06L6SNMdPnrxaSvQiWXdxgXIdvV+/zOPSSOBttk
- PaeOwGLrX6IYqz9HqmoFFWccKFzprSKTRxKcmdsIGtchZSCVlXQFwaboO7yJKQO0S7nX
- dp0fj6rPMiB3EobFe+zTfleyaDw7XxCnoux1+WBspr1cgI+9FICOAbJ9Vl6Uql+OD2j7
- eInAt8a8yBhTxVnOuG+PcPR3LrmU9WK1TRqXenhZKrUg0aFeInupZmCQZydX+sE378yv
- fyZ85WD7cXxjlWpDysjrQTRb0JYQIp4ES3452XSoMeErmXRZtb92ZhmxnyKHOaqryS/H JA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rss4frb91-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Jul 2023 09:12:22 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36C96nrn026235;
-        Wed, 12 Jul 2023 09:11:11 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rss4fr9jx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Jul 2023 09:11:11 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36C8AaHH018517;
-        Wed, 12 Jul 2023 09:10:33 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-        by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3rqmu0stnp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Jul 2023 09:10:33 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36C9AT2k42926602
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Jul 2023 09:10:30 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B4BCC20043;
-        Wed, 12 Jul 2023 09:10:29 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2D44D20040;
-        Wed, 12 Jul 2023 09:10:29 +0000 (GMT)
-Received: from [9.171.2.53] (unknown [9.171.2.53])
-        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Wed, 12 Jul 2023 09:10:29 +0000 (GMT)
-Message-ID: <64d6c003-6648-36bd-8f13-51ddc5c65ab8@linux.ibm.com>
-Date:   Wed, 12 Jul 2023 11:10:28 +0200
+        with ESMTP id S232442AbjGLJkY (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 12 Jul 2023 05:40:24 -0400
+Received: from mail.208.org (unknown [183.242.55.162])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ACBD1FC0
+        for <linux-s390@vger.kernel.org>; Wed, 12 Jul 2023 02:40:16 -0700 (PDT)
+Received: from mail.208.org (email.208.org [127.0.0.1])
+        by mail.208.org (Postfix) with ESMTP id 4R1CQN25zHzBR7b8
+        for <linux-s390@vger.kernel.org>; Wed, 12 Jul 2023 17:40:12 +0800 (CST)
+Authentication-Results: mail.208.org (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)" header.d=208.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=208.org; h=
+        content-transfer-encoding:content-type:message-id:user-agent
+        :references:in-reply-to:subject:to:from:date:mime-version; s=
+        dkim; t=1689154812; x=1691746813; bh=EAMpXsiaSYTo5oEE8hQAmIO+2wP
+        QvJdgOG78JHu50g8=; b=t7YSHUvk+z/tKuo72lvPku4fwQJ8AeTt9luQbiFtC6e
+        0DdatW2h4EQWH21djcv3j3yQuhLtUE1WQgje2glQZuseyC+Rs7I5QIOA+ptKwqvi
+        qj6di+5CbPEsnmVYP5J7K1IuFN29KgYYnVgSS0NoLHAn/wl0Bu3OzFMpu9czAi67
+        rUfydyV54Jubed/gFnIBsvOE1k8Czob2RDOaXnEv0TMPsZmqF/qtqfmO2PlKmZG3
+        D4A5rl6THLgQxsTnhq3HazMsbPFxiPZPZIUrNys0c35nMKAsTW98HZQD7ZqxwvOC
+        aLgD65CfCgz+T0CGwFWJ9Bgy7ZjLJinbMYqRtdOypMQ==
+X-Virus-Scanned: amavisd-new at mail.208.org
+Received: from mail.208.org ([127.0.0.1])
+        by mail.208.org (mail.208.org [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id JuhnXZBDzkFu for <linux-s390@vger.kernel.org>;
+        Wed, 12 Jul 2023 17:40:12 +0800 (CST)
+Received: from localhost (email.208.org [127.0.0.1])
+        by mail.208.org (Postfix) with ESMTPSA id 4R1CQM6bxszBR7b0;
+        Wed, 12 Jul 2023 17:40:11 +0800 (CST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [kvm-unit-tests PATCH v10 1/2] s390x: topology: Check the Perform
- Topology Function
-Content-Language: en-US
-To:     Thomas Huth <thuth@redhat.com>, Nico Boehr <nrb@linux.ibm.com>,
-        linux-s390@vger.kernel.org
-Cc:     frankja@linux.ibm.com, kvm@vger.kernel.org, imbrenda@linux.ibm.com,
-        david@redhat.com, nsg@linux.ibm.com
-References: <20230627082155.6375-1-pmorel@linux.ibm.com>
- <20230627082155.6375-2-pmorel@linux.ibm.com>
- <168802854091.40048.12063023827984391132@t14-nrb>
- <a162644d-f548-7c34-e501-d8080d1d0bef@redhat.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-In-Reply-To: <a162644d-f548-7c34-e501-d8080d1d0bef@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: V8fUtHAADfBzv_p1BaaHGddBeSVy6dxE
-X-Proofpoint-GUID: fHKiXk0dx4vkdw9ub29hygf5_Eou9Iib
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-12_06,2023-07-11_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- lowpriorityscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999
- mlxscore=0 phishscore=0 adultscore=0 clxscore=1015 malwarescore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2307120079
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Date:   Wed, 12 Jul 2023 17:40:11 +0800
+From:   pangzizhen001@208suo.com
+To:     hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Fwd: [PATCH] s390/kernel: Fix comment typo
+In-Reply-To: <20230712093757.36116-1-wangjianli@cdjrlc.com>
+References: <20230712093757.36116-1-wangjianli@cdjrlc.com>
+User-Agent: Roundcube Webmail
+Message-ID: <24163a6fd52a3a496a27740039e07dd7@208suo.com>
+X-Sender: pangzizhen001@208suo.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,DKIM_INVALID,
+        DKIM_SIGNED,RDNS_NONE,SPF_HELO_FAIL,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Delete duplicate word "the"
 
-On 7/3/23 10:42, Thomas Huth wrote:
-> On 29/06/2023 10.49, Nico Boehr wrote:
->> Quoting Pierre Morel (2023-06-27 10:21:54)
->> [...]
->>> diff --git a/s390x/topology.c b/s390x/topology.c
->>> new file mode 100644
->>> index 0000000..7e1bbf9
->>> --- /dev/null
->>> +++ b/s390x/topology.c
->>> @@ -0,0 +1,190 @@
->> [...]
->>> +static void check_privilege(int fc)
->>> +{
->>> +       unsigned long rc;
->>> +       char buf[20];
->>> +
->>> +       snprintf(buf, sizeof(buf), "Privileged fc %d", fc);
->>> +       report_prefix_push(buf);
->>
->> We have report_prefix_pushf (note the f at the end!) for this.
->>
->> I can fix that up when picking in case there's no new version, though.
->
-> With that fixed:
->
-> Reviewed-by: Thomas Huth <thuth@redhat.com>
->
-Thanks both of you.
+Signed-off-by: wangjianli <wangjianli@cdjrlc.com>
+---
+  arch/s390/kernel/perf_cpum_sf.c | 2 +-
+  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards,
-
-Pierre
-
+diff --git a/arch/s390/kernel/perf_cpum_sf.c 
+b/arch/s390/kernel/perf_cpum_sf.c
+index 06efad5b4f93..3e1d8c58e4d1 100644
+--- a/arch/s390/kernel/perf_cpum_sf.c
++++ b/arch/s390/kernel/perf_cpum_sf.c
+@@ -1193,7 +1193,7 @@ static void perf_event_count_update(struct 
+perf_event *event, u64 count)
+   * combined-sampling data entry consists of a basic- and a 
+diagnostic-sampling
+   * data entry.    The sampling function is determined by the flags in 
+the perf
+   * event hardware structure.  The function always works with a 
+combined-sampling
+- * data entry but ignores the the diagnostic portion if it is not 
+available.
++ * data entry but ignores the diagnostic portion if it is not 
+available.
+   *
+   * Note that the implementation focuses on basic-sampling data entries 
+and, if
+   * such an entry is not valid, the entire combined-sampling data entry 
+is
