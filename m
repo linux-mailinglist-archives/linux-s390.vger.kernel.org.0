@@ -2,94 +2,68 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 908BE750BE9
-	for <lists+linux-s390@lfdr.de>; Wed, 12 Jul 2023 17:09:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2747F750C95
+	for <lists+linux-s390@lfdr.de>; Wed, 12 Jul 2023 17:33:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233442AbjGLPJu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 12 Jul 2023 11:09:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56900 "EHLO
+        id S233678AbjGLPdB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 12 Jul 2023 11:33:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233507AbjGLPJh (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 12 Jul 2023 11:09:37 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA9E41FF6;
-        Wed, 12 Jul 2023 08:09:14 -0700 (PDT)
+        with ESMTP id S232884AbjGLPc6 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 12 Jul 2023 11:32:58 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70720C2;
+        Wed, 12 Jul 2023 08:32:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=DNc/ePBoNgd+bEoPBcid3Rf/V7MDlOQu7ZJsXNCj0Mw=; b=jiqWTed+ZeLN2KTPCdu1HY3ZBo
-        wH5c3x89xYsxPuc/QHg8uV5veO+oAqZ8AmXA9rY0Q98FKHPJw+OiAe6dHd+NFpKwLxhvWknI6uMXq
-        Wcg903Vv3L9yDHlbBHFkDjr+1DAA5jBhb/YE8PD7rHARUVRRUk0lkM5C7TOWCaVhccxl8adTzE5Eb
-        rO4px1w5Nj3DcFx0QKzw0kVjHuMi3zhu9LU/2T5c1R3YOdlzMfzBwe4iYmlQ9h/D+LG9RJ0VprlSG
-        4BxIWdiLfUH9WK3mMzqlzC004PI9QICt61A+eXbUdghJDnkZ+i2o5ZgjpnknSikyCmebQfhFb/MR6
-        qlI+KlLg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qJbS0-00Gnv5-1z; Wed, 12 Jul 2023 15:08:20 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9F90030036B;
-        Wed, 12 Jul 2023 17:08:18 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8781D240EBDA6; Wed, 12 Jul 2023 17:08:18 +0200 (CEST)
-Date:   Wed, 12 Jul 2023 17:08:18 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Valentin Schneider <vschneid@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, mpe@ellerman.id.au,
-        npiggin@gmail.com, christophe.leroy@csgroup.eu, hca@linux.ibm.com,
-        gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, bristot@redhat.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: Re: [RFC][PATCH] sched: Rename DIE domain
-Message-ID: <20230712150818.GL3100107@hirez.programming.kicks-ass.net>
-References: <20230712141056.GI3100107@hirez.programming.kicks-ass.net>
- <xhsmh1qhduq9d.mognet@vschneid.remote.csb>
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
+        Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description;
+        bh=689SEK0ciFY8KgDlRHFBreHHAC2z+cvH0wQ011Q2aMI=; b=df/VKiT91ZqRa0x7ofoJaXGlph
+        PM7CRP4KkwoXZKNJlvYdkig+/LLrQ9LVGVf40H6Qaywx20JwTqHlizlUxF15FF/hdi7QMcfJ88rOM
+        Tk9o3z44pMTcermnTCrLWAF39fzqRsD0ms+1lMmZtzToJzTD0SUcPG6eXBFgIigvbDeEBrSIYXiW/
+        GnykGmmqxl8DWPpBQb6tfrtLGgdO7lnddHDuy7SXW0bC9E1PhpCLadB/V3QSWJPX+bNFvOifeRdsy
+        3Vg5gSGOgGr74Cyg+9z9dxsezgnvq5bViTggfgF6K6g7cj7jT1ssxpJXUEt4gBcr4IJbEN74vqTce
+        EZsIkLBg==;
+Received: from [2601:1c2:980:9ec0::2764]
+        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1qJboy-000MRl-20;
+        Wed, 12 Jul 2023 15:32:04 +0000
+Message-ID: <03e153ce-328b-f279-2a40-4074bea2bc8f@infradead.org>
+Date:   Wed, 12 Jul 2023 08:31:55 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <xhsmh1qhduq9d.mognet@vschneid.remote.csb>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH 01/79] fs: add ctime accessors infrastructure
+Content-Language: en-US
+To:     Jeff Layton <jlayton@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>
+References: <20230621144507.55591-1-jlayton@kernel.org>
+ <20230621144507.55591-2-jlayton@kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20230621144507.55591-2-jlayton@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jul 12, 2023 at 04:02:38PM +0100, Valentin Schneider wrote:
-> On 12/07/23 16:10, Peter Zijlstra wrote:
-> > Hi
-> >
-> > Thomas just tripped over the x86 topology setup creating a 'DIE' domain
-> > for the package mask :-)
-> >
-> > Since these names are SCHED_DEBUG only, rename them.
-> > I don't think anybody *should* be relying on this, but who knows.
-> >
-> 
-> FWIW I don't care much about the actual name.
+Hi Jeff,
 
-Confusion is due to x86 growing an actual die topology and this not
-being it.
+On arch/um/, (subarch i386 or x86_64), hostfs build fails with:
 
-Other than that, I can't be bothered too much about the silly name
-either.
+../fs/hostfs/hostfs_kern.c:520:36: error: incompatible type for arg
+ument 2 of 'inode_set_ctime_to_ts'
+../include/linux/fs.h:1499:73: note: expected 'struct timespec64' b
+ut argument is of type 'const struct hostfs_timespec *'
 
-> There are some stray references to DIE in comments - see below. Bit funny
-> to see:
-> - *  - Package (DIE)
-> + *  - Package (PKG)
-> 
-> With that:
-> Acked-by: Valentin Schneider <vschneid@redhat.com>
 
-Durr, I did a git-grep SD_INIT_NAME().. Thanks!
+-- 
+~Randy
