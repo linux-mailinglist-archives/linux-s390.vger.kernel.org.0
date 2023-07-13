@@ -2,159 +2,203 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D448751BC1
-	for <lists+linux-s390@lfdr.de>; Thu, 13 Jul 2023 10:37:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0736F751D1A
+	for <lists+linux-s390@lfdr.de>; Thu, 13 Jul 2023 11:25:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234584AbjGMIho (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 13 Jul 2023 04:37:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43332 "EHLO
+        id S232630AbjGMJZy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 13 Jul 2023 05:25:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234564AbjGMIhT (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 13 Jul 2023 04:37:19 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8819330C3
-        for <linux-s390@vger.kernel.org>; Thu, 13 Jul 2023 01:29:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1689236993;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cstQukCc6R5g+iNCjcRka3+OU408qYV+ropA4l/qCyo=;
-        b=WFPjuZ+Cz1aDNkRx3CPqkbIADvV+lxCbdBWbzk5g2qwlqP7cT4W8ap21+wFaHIYTUx5wYJ
-        +6kXchsHDOxeYfVaz3ho4WQqYTtDgXPjq9rBqe2nkGJNHZf+++5wtVaMEH1gJ6beCmHBzW
-        oMr8XQv3eWlKF3oZwwzf1vL44nehWh4=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-426-gFe_UqxaOoGTYvtgbLTEOw-1; Thu, 13 Jul 2023 04:29:52 -0400
-X-MC-Unique: gFe_UqxaOoGTYvtgbLTEOw-1
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-765de3a3404so65212485a.2
-        for <linux-s390@vger.kernel.org>; Thu, 13 Jul 2023 01:29:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689236991; x=1691828991;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cstQukCc6R5g+iNCjcRka3+OU408qYV+ropA4l/qCyo=;
-        b=EnwJ/fZWWC9uF9t/j/Kmd9RGoguxZPigVjDcoUpjUBYRmURRQNf0HTFdGk/JFZDFRm
-         +VdtZY8nyrIxzvTRrntqDVTkpl8oqyaXewgmqffVpf2UDph5B20TdYaY31udNYzdKvmV
-         jYWrZPSxg3sXFxNQJCL/09Rr06vBHjqfrIsgk9FjcB4vADhMqKomAkiMqCPhlg8au3UE
-         k1KVMM1sVprz0Xb6/oPXvVu/lWM0Hiu+tJnTYK/XO2O1rM1qEVwUD+Xl8qsPmsaiXKXK
-         CV/DQTwzbACPDeMakkm9oD6Lg12Ax/5CagHz/+9p09IMU3ikDf1o8pjw2exXCLjNyt6o
-         Fdsw==
-X-Gm-Message-State: ABy/qLZshxnObHlYQJM2tvP/ycnGobPzxyNYnxZ3WkM/CDisQI+OMp7L
-        ZweYcLR1cnglKjfKBrajEvFQwrwxk2OGGvYQpOWBiIucm7zBLlpIei9yOvYBI2OeJSiIidgttWl
-        2aIgKoEmYXAvqlRSnk5M3rWF2ANiDtQ==
-X-Received: by 2002:a37:f614:0:b0:767:54fd:65b2 with SMTP id y20-20020a37f614000000b0076754fd65b2mr794382qkj.66.1689236991647;
-        Thu, 13 Jul 2023 01:29:51 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlFjcKctmvnzO/YG+UBJmNHVyxS4u/ME5z1qvrE0d4EZS0E5aAnboTMf5vel0S7sL6thtmUlLg==
-X-Received: by 2002:a37:f614:0:b0:767:54fd:65b2 with SMTP id y20-20020a37f614000000b0076754fd65b2mr794378qkj.66.1689236991380;
-        Thu, 13 Jul 2023 01:29:51 -0700 (PDT)
-Received: from [10.33.192.205] (nat-pool-str-t.redhat.com. [149.14.88.106])
-        by smtp.gmail.com with ESMTPSA id k5-20020a05620a142500b00767cb046e40sm2721587qkj.94.2023.07.13.01.29.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Jul 2023 01:29:50 -0700 (PDT)
-Message-ID: <1aac769e-7523-a858-8286-35625bfb0145@redhat.com>
-Date:   Thu, 13 Jul 2023 10:29:48 +0200
+        with ESMTP id S229737AbjGMJZx (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 13 Jul 2023 05:25:53 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8854C211F;
+        Thu, 13 Jul 2023 02:25:48 -0700 (PDT)
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36D9HAr0008323;
+        Thu, 13 Jul 2023 09:25:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : content-transfer-encoding : in-reply-to : references : to :
+ from : subject : cc : message-id : date; s=pp1;
+ bh=RQrwUJQCIX3AGQexJSBLh4onsMYx0LTKFLr4ipeMdS8=;
+ b=DvdEXOUu8lAnOKUt+OYdtML8lmoVZZx/ZuP0Pd6qqqnPiV11ARXu/KBsl0I/84oMFwQp
+ GihcEZ/8Ec0hAlbk7gsGZ7c0WXTiYhuAxK6oHD4F5SL9CTUB4B3BbLYz/Wc3s/aXZ1Z1
+ a229HOOEYl9CPheo93pBX24XcdD16Ps/eZYlhf4Y2jZox2ZVx3rnezZO3l9GLi6NL7ZM
+ J2F8I3UZrx9b3tO/6EQISxf6xrfOtNr7DenRuhjAV+ePITzsktkNHLzoH/wybP+jUsel
+ 6vy4oKkRlGzQaEfuhWO+7NN9rsrajnLr70KNS/rBwp1xwaAxnrsCq6yjWi5lOHHSdDG7 xw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rtegf073a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Jul 2023 09:25:47 +0000
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36D9IGrq011802;
+        Thu, 13 Jul 2023 09:25:46 GMT
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rtegf072t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Jul 2023 09:25:46 +0000
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36D9PjuR001058;
+        Thu, 13 Jul 2023 09:25:45 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+        by ppma04fra.de.ibm.com (PPS) with ESMTPS id 3rpye5a9vu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Jul 2023 09:25:44 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36D9Pf9d50397494
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jul 2023 09:25:41 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4DCC020040;
+        Thu, 13 Jul 2023 09:25:41 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9B5262004B;
+        Thu, 13 Jul 2023 09:25:40 +0000 (GMT)
+Received: from t14-nrb (unknown [9.171.40.128])
+        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Thu, 13 Jul 2023 09:25:40 +0000 (GMT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [kvm-unit-tests PATCH v5 6/6] s390x: add a test for SIE without
- MSO/MSL
-Content-Language: en-US
-To:     Nico Boehr <nrb@linux.ibm.com>, frankja@linux.ibm.com,
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <53d9d63f-e207-23a6-faea-8bad8b22a375@redhat.com>
+References: <20230712114149.1291580-1-nrb@linux.ibm.com> <20230712114149.1291580-2-nrb@linux.ibm.com> <53d9d63f-e207-23a6-faea-8bad8b22a375@redhat.com>
+To:     Thomas Huth <thuth@redhat.com>, frankja@linux.ibm.com,
         imbrenda@linux.ibm.com
+From:   Nico Boehr <nrb@linux.ibm.com>
+Subject: Re: [kvm-unit-tests PATCH v5 1/6] lib: s390x: introduce bitfield for PSW mask
 Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org
-References: <20230712114149.1291580-1-nrb@linux.ibm.com>
- <20230712114149.1291580-7-nrb@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-In-Reply-To: <20230712114149.1291580-7-nrb@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Message-ID: <168924033930.12187.7570757062532399357@t14-nrb>
+User-Agent: alot/0.8.1
+Date:   Thu, 13 Jul 2023 11:25:39 +0200
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: XlUO4s_eBYGLrEETeaoPze2g-z8WG7rM
+X-Proofpoint-ORIG-GUID: 8y5_E4dstqoFZZumEGuV3N-W4QJyxur_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-13_04,2023-07-11_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ clxscore=1015 impostorscore=0 mlxscore=0 spamscore=0 lowpriorityscore=0
+ phishscore=0 malwarescore=0 priorityscore=1501 mlxlogscore=784 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
+ definitions=main-2307130078
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 12/07/2023 13.41, Nico Boehr wrote:
-> Since we now have the ability to run guests without MSO/MSL, add a test
-> to make sure this doesn't break.
-> 
-> Signed-off-by: Nico Boehr <nrb@linux.ibm.com>
-> ---
->   s390x/Makefile             |   2 +
->   s390x/sie-dat.c            | 115 +++++++++++++++++++++++++++++++++++++
->   s390x/snippets/c/sie-dat.c |  58 +++++++++++++++++++
->   s390x/unittests.cfg        |   3 +
->   4 files changed, 178 insertions(+)
->   create mode 100644 s390x/sie-dat.c
->   create mode 100644 s390x/snippets/c/sie-dat.c
-> 
-> diff --git a/s390x/Makefile b/s390x/Makefile
-> index a80db538810e..4921669ee4c3 100644
-> --- a/s390x/Makefile
-> +++ b/s390x/Makefile
-> @@ -40,6 +40,7 @@ tests += $(TEST_DIR)/panic-loop-pgm.elf
->   tests += $(TEST_DIR)/migration-sck.elf
->   tests += $(TEST_DIR)/exittime.elf
->   tests += $(TEST_DIR)/ex.elf
-> +tests += $(TEST_DIR)/sie-dat.elf
->   
->   pv-tests += $(TEST_DIR)/pv-diags.elf
->   
-> @@ -120,6 +121,7 @@ snippet_lib = $(snippet_asmlib) lib/auxinfo.o
->   # perquisites (=guests) for the snippet hosts.
->   # $(TEST_DIR)/<snippet-host>.elf: snippets = $(SNIPPET_DIR)/<c/asm>/<snippet>.gbin
->   $(TEST_DIR)/mvpg-sie.elf: snippets = $(SNIPPET_DIR)/c/mvpg-snippet.gbin
-> +$(TEST_DIR)/sie-dat.elf: snippets = $(SNIPPET_DIR)/c/sie-dat.gbin
->   $(TEST_DIR)/spec_ex-sie.elf: snippets = $(SNIPPET_DIR)/c/spec_ex.gbin
->   
->   $(TEST_DIR)/pv-diags.elf: pv-snippets += $(SNIPPET_DIR)/asm/snippet-pv-diag-yield.gbin
-> diff --git a/s390x/sie-dat.c b/s390x/sie-dat.c
-> new file mode 100644
-> index 000000000000..b326995dfa85
-> --- /dev/null
-> +++ b/s390x/sie-dat.c
-> @@ -0,0 +1,115 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Tests SIE with paging.
-> + *
-> + * Copyright 2023 IBM Corp.
-> + *
-> + * Authors:
-> + *    Nico Boehr <nrb@linux.ibm.com>
-> + */
-> +#include <libcflat.h>
-> +#include <vmalloc.h>
-> +#include <asm/pgtable.h>
-> +#include <mmu.h>
-> +#include <asm/page.h>
-> +#include <asm/interrupt.h>
-> +#include <alloc_page.h>
-> +#include <sclp.h>
-> +#include <sie.h>
-> +#include <snippet.h>
-> +
-> +static struct vm vm;
-> +static pgd_t *guest_root;
-> +
-> +/* keep in sync with TEST_PAGE_COUNT in s390x/snippets/c/sie-dat.c */
-> +#define GUEST_TEST_PAGE_COUNT 10
-> +
-> +/* keep in sync with TOTAL_PAGE_COUNT in s390x/snippets/c/sie-dat.c */
-> +#define GUEST_TOTAL_PAGE_COUNT 256
+Quoting Thomas Huth (2023-07-13 08:56:41)
+> On 12/07/2023 13.41, Nico Boehr wrote:
+> > Changing the PSW mask is currently little clumsy, since there is only t=
+he
+> > PSW_MASK_* defines. This makes it hard to change e.g. only the address
+> > space in the current PSW without a lot of bit fiddling.
+> >=20
+> > Introduce a bitfield for the PSW mask. This makes this kind of
+> > modifications much simpler and easier to read.
+> >=20
+> > Signed-off-by: Nico Boehr <nrb@linux.ibm.com>
+> > ---
+> >   lib/s390x/asm/arch_def.h | 26 +++++++++++++++++++++++++-
+> >   s390x/selftest.c         | 40 ++++++++++++++++++++++++++++++++++++++++
+> >   2 files changed, 65 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
+> > index bb26e008cc68..53279572a9ee 100644
+> > --- a/lib/s390x/asm/arch_def.h
+> > +++ b/lib/s390x/asm/arch_def.h
+> > @@ -37,12 +37,36 @@ struct stack_frame_int {
+> >   };
+> >  =20
+> >   struct psw {
+> > -     uint64_t        mask;
+> > +     union {
+> > +             uint64_t        mask;
+> > +             struct {
+> > +                     uint8_t reserved00:1;
+> > +                     uint8_t per:1;
+> > +                     uint8_t reserved02:3;
+> > +                     uint8_t dat:1;
+> > +                     uint8_t io:1;
+> > +                     uint8_t ext:1;
+> > +                     uint8_t key:4;
+> > +                     uint8_t reserved12:1;
+> > +                     uint8_t mchk:1;
+> > +                     uint8_t wait:1;
+> > +                     uint8_t pstate:1;
+> > +                     uint8_t as:2;
+> > +                     uint8_t cc:2;
+> > +                     uint8_t prg_mask:4;
+> > +                     uint8_t reserved24:7;
+> > +                     uint8_t ea:1;
+> > +                     uint8_t ba:1;
+> > +                     uint32_t reserved33:31;
+> > +             };
+> > +     };
+> >       uint64_t        addr;
+> >   };
+> > +_Static_assert(sizeof(struct psw) =3D=3D 16, "PSW size");
+> >  =20
+> >   #define PSW(m, a) ((struct psw){ .mask =3D (m), .addr =3D (uint64_t)(=
+a) })
+> >  =20
+> > +
+> >   struct short_psw {
+> >       uint32_t        mask;
+> >       uint32_t        addr;
+> > diff --git a/s390x/selftest.c b/s390x/selftest.c
+> > index 13fd36bc06f8..8d81ba312279 100644
+> > --- a/s390x/selftest.c
+> > +++ b/s390x/selftest.c
+> > @@ -74,6 +74,45 @@ static void test_malloc(void)
+> >       report_prefix_pop();
+> >   }
+> >  =20
+> > +static void test_psw_mask(void)
+> > +{
+> > +     uint64_t expected_key =3D 0xF;
+> > +     struct psw test_psw =3D PSW(0, 0);
+> > +
+> > +     report_prefix_push("PSW mask");
+> > +     test_psw.dat =3D 1;
+> > +     report(test_psw.mask =3D=3D PSW_MASK_DAT, "DAT matches expected=
+=3D0x%016lx actual=3D0x%016lx", PSW_MASK_DAT, test_psw.mask);
+> > +
+> > +     test_psw.mask =3D 0;
+> > +     test_psw.io =3D 1;
+> > +     report(test_psw.mask =3D=3D PSW_MASK_IO, "IO matches expected=3D0=
+x%016lx actual=3D0x%016lx", PSW_MASK_IO, test_psw.mask);
+> > +
+> > +     test_psw.mask =3D 0;
+> > +     test_psw.ext =3D 1;
+> > +     report(test_psw.mask =3D=3D PSW_MASK_EXT, "EXT matches expected=
+=3D0x%016lx actual=3D0x%016lx", PSW_MASK_EXT, test_psw.mask);
+> > +
+> > +     test_psw.mask =3D expected_key << (63 - 11);
+> > +     report(test_psw.key =3D=3D expected_key, "PSW Key matches expecte=
+d=3D0x%lx actual=3D0x%x", expected_key, test_psw.key);
+>=20
+> Patch looks basically fine to me, but here my mind stumbled a little bit.=
+=20
+> This test is written the other way round than the others. Nothing wrong w=
+ith=20
+> that, it just feels a little bit inconsistent. I'd suggest to either do:
+>=20
+>         test_psw.mask =3D 0;
+>         test_psw.key =3D expected_key;
+>         report(test_psw.mask =3D=3D expected_key << (63 - 11), ...);
+>=20
+> or maybe even switch all the other tests around instead, so you could get=
+=20
+> rid of the "test_psw.mask =3D 0" lines, e.g. :
+>=20
+>         test_psw.mask =3D=3D PSW_MASK_IO;
+>         report(test_psw.io, "IO matches ...");
+>=20
+> etc.
 
-I'd maybe put the defines rather in a header a la s390x/snippets/c/sie-dat.h 
-and include that header here and in the snippet C code.
-
-Apart from that, test looks good to me:
-Reviewed-by: Thomas Huth <thuth@redhat.com>
-
+I like the latter option, thanks.
