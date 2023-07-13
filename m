@@ -2,80 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7638C751A57
-	for <lists+linux-s390@lfdr.de>; Thu, 13 Jul 2023 09:52:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FBF0751C5F
+	for <lists+linux-s390@lfdr.de>; Thu, 13 Jul 2023 10:57:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232359AbjGMHv5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 13 Jul 2023 03:51:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33794 "EHLO
+        id S234643AbjGMI5d (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 13 Jul 2023 04:57:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232343AbjGMHv4 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 13 Jul 2023 03:51:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF9C010FA
-        for <linux-s390@vger.kernel.org>; Thu, 13 Jul 2023 00:51:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1689234669;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=To8JA7any/hBLG5IdjVEmv3s3KYZ8RU403NMNr+HSPw=;
-        b=Lnybe5269dyiiot8yBlPlVZUoMPr1Ry8Ruit+xBXo38Lt19iK4FRWWJH5TSVvmIzH2uhm2
-        shBuof3c9esd5oLfO2obImc9rx2JMdLVW3q6gMh0tBKujecp860ZIW+cUqOFi9SgyhzUsK
-        2EupvMp/674HXR/uRfk0WM8KjOKggoM=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-608-m7SiIgx8P-GNMpj79dA5NQ-1; Thu, 13 Jul 2023 03:51:07 -0400
-X-MC-Unique: m7SiIgx8P-GNMpj79dA5NQ-1
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-765986c0568so64048285a.1
-        for <linux-s390@vger.kernel.org>; Thu, 13 Jul 2023 00:51:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689234667; x=1691826667;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=To8JA7any/hBLG5IdjVEmv3s3KYZ8RU403NMNr+HSPw=;
-        b=E9McBMYHcBo4YZwi98fcGlXeT+rjCKY5y3HRCUXf5krxTNY/lceHmxEWg53f5hgDor
-         qQThNRp9wxuWybeLOL/KfsmAtpK/CiQDjotJr7N8KIBQaaRl6Gvlr3IimfMR8ETuFvLQ
-         3FbnR0dXiuw/NSD1qaSIwc7xewDaba5HX7JrgaJ0teztk/U+zkJlYyynuiPtaEOilBdd
-         L5/wu+hf7G9pbkmPctucqrSVOhGCtIxNtzpJ7WB4qfMH97+hVB1RQ3sgJm4LMn6KaJDt
-         KkR7Sxe6JnIWlUtmy+t6khntdbJzkClGJYesrW7zdysbTfStNQvAAzQwzs9MJ9c5bX5p
-         IFAA==
-X-Gm-Message-State: ABy/qLaL4BxztqveyY0NNkxOJMOk8vvK291rxygam+sy/VWbcbRvwdUm
-        +GOO9V+YKD/oGIg6g8cZWFBh3eSwect9G+YBfjcWvkF/rHrdsQH66VHnqPfw2RbYSnyU8dbjP3u
-        6YndM9bSOLZyF62pRbZVSFg==
-X-Received: by 2002:a05:620a:4516:b0:767:dfc8:a944 with SMTP id t22-20020a05620a451600b00767dfc8a944mr1131149qkp.41.1689234667282;
-        Thu, 13 Jul 2023 00:51:07 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlEUD9CNUM6pwmJt+e9FkG4+g+mbIGrMPaT4T2LeILMDO4hAamyvLLqdQsotL+W1/HCO+2ceOQ==
-X-Received: by 2002:a05:620a:4516:b0:767:dfc8:a944 with SMTP id t22-20020a05620a451600b00767dfc8a944mr1131145qkp.41.1689234667052;
-        Thu, 13 Jul 2023 00:51:07 -0700 (PDT)
-Received: from [10.33.192.205] (nat-pool-str-t.redhat.com. [149.14.88.106])
-        by smtp.gmail.com with ESMTPSA id e10-20020a05620a12ca00b007592f2016f4sm2698226qkl.110.2023.07.13.00.51.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Jul 2023 00:51:06 -0700 (PDT)
-Message-ID: <b518c14a-bc83-3cc2-016f-20de76d3e376@redhat.com>
-Date:   Thu, 13 Jul 2023 09:51:04 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [kvm-unit-tests PATCH v5 5/6] s390x: lib: sie: don't reenter SIE
- on pgm int
-Content-Language: en-US
-To:     Nico Boehr <nrb@linux.ibm.com>, frankja@linux.ibm.com,
-        imbrenda@linux.ibm.com
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org
+        with ESMTP id S234269AbjGMI5Z (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 13 Jul 2023 04:57:25 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC196E0;
+        Thu, 13 Jul 2023 01:57:24 -0700 (PDT)
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36D8FZiD032114;
+        Thu, 13 Jul 2023 08:17:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=c2E00v6X+HS5HKC8I00Bh7T23EFf1Pk7Nd2znqVCCv4=;
+ b=kF2yElUOQ1TnD5cAu6mxxjul+K3/wC8T8fePwPR1GjF1ygIZp3DxsC4F8eTNxkon8ToJ
+ scYCjRMByXOfDaubAdiLKQk5zWCvi+3a/lsz5LTrn4C5ZJIKwcBJ5KWHI8ISPvH4fYfD
+ lI2yYXLl83JSqJat9YDw60WGhCzr4CNwEB0ceSD4Su/7UOtYR8aFbcVEvX9chhp3eoaH
+ lBgqzO72A9H2PEHclGp16/PY5ltacmFiVUKHQ47ny44tYQGnAZIEwUT7F0A+9z/Uvz6v
+ wl721ukatbg6FU3HljQoTrDlEwqcafIj0aypTcf2QTSnVitJPc/0fY0lr06qrw01uS17 XQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rtddcgd7b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Jul 2023 08:17:14 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36D8GrAZ003153;
+        Thu, 13 Jul 2023 08:17:14 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rtddcgd6c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Jul 2023 08:17:14 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36D743vl011007;
+        Thu, 13 Jul 2023 08:17:12 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+        by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3rqk4mjprt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Jul 2023 08:17:12 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36D8H9tL22545106
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jul 2023 08:17:09 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 92AB920040;
+        Thu, 13 Jul 2023 08:17:09 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 659F42004B;
+        Thu, 13 Jul 2023 08:17:09 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.152.224.66])
+        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Thu, 13 Jul 2023 08:17:09 +0000 (GMT)
+Date:   Thu, 13 Jul 2023 10:17:07 +0200
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     Thomas Huth <thuth@redhat.com>
+Cc:     Nico Boehr <nrb@linux.ibm.com>, frankja@linux.ibm.com,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [kvm-unit-tests PATCH v5 3/6] s390x: sie: switch to home space
+ mode before entering SIE
+Message-ID: <20230713101707.1d1da214@p-imbrenda>
+In-Reply-To: <3dbe3094-b796-6b78-a97f-130a82780421@redhat.com>
 References: <20230712114149.1291580-1-nrb@linux.ibm.com>
- <20230712114149.1291580-6-nrb@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-In-Reply-To: <20230712114149.1291580-6-nrb@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        <20230712114149.1291580-4-nrb@linux.ibm.com>
+        <3dbe3094-b796-6b78-a97f-130a82780421@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: QSX_blz22zSqAMMRpK9bP_OrSoVhV3Lf
+X-Proofpoint-GUID: K5sJ2YjcPAbqguCrjVMNrKZmW-bcwq7W
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-13_04,2023-07-11_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ lowpriorityscore=0 mlxscore=0 spamscore=0 priorityscore=1501 bulkscore=0
+ phishscore=0 clxscore=1015 impostorscore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
+ definitions=main-2307130069
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -83,93 +95,31 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 12/07/2023 13.41, Nico Boehr wrote:
-> At the moment, when a PGM int occurs while in SIE, we will just reenter
-> SIE after the interrupt handler was called.
-> 
-> This is because sie() has a loop which checks icptcode and re-enters SIE
-> if it is zero.
-> 
-> However, this behaviour is quite undesirable for SIE tests, since it
-> doesn't give the host the chance to assert on the PGM int. Instead, we
-> will just re-enter SIE, on nullifing conditions even causing the
-> exception again.
-> 
-> In sie(), check whether a pgm int code is set in lowcore. If it has,
-> exit the loop so the test can react to the interrupt. Add a new function
-> read_pgm_int_code() to obtain the interrupt code.
-> 
-> Note that this introduces a slight oddity with sie and pgm int in
-> certain cases: If a PGM int occurs between a expect_pgm_int() and sie(),
-> we will now never enter SIE until the pgm_int_code is cleared by e.g.
-> clear_pgm_int().
-> 
-> Also add missing include of facility.h to mem.h.
-> 
-> Signed-off-by: Nico Boehr <nrb@linux.ibm.com>
-> ---
->   lib/s390x/asm/interrupt.h | 14 ++++++++++++++
->   lib/s390x/asm/mem.h       |  1 +
->   lib/s390x/sie.c           |  4 +++-
->   3 files changed, 18 insertions(+), 1 deletion(-)
-> 
-> diff --git a/lib/s390x/asm/interrupt.h b/lib/s390x/asm/interrupt.h
-> index 55759002dce2..9e509d2f4f1e 100644
-> --- a/lib/s390x/asm/interrupt.h
-> +++ b/lib/s390x/asm/interrupt.h
-> @@ -99,4 +99,18 @@ static inline void low_prot_disable(void)
->   	ctl_clear_bit(0, CTL0_LOW_ADDR_PROT);
->   }
->   
-> +/**
-> + * read_pgm_int_code - Get the program interruption code of the last pgm int
-> + * on the current CPU.
-> + *
-> + * This is similar to clear_pgm_int(), except that it doesn't clear the
-> + * interruption information from lowcore.
-> + *
-> + * Returns 0 when none occurred.
-> + */
-> +static inline uint16_t read_pgm_int_code(void)
-> +{
-> +	return lowcore.pgm_int_code;
-> +}
-> +
->   #endif
-> diff --git a/lib/s390x/asm/mem.h b/lib/s390x/asm/mem.h
-> index 64ef59b546a4..94d58c34f53f 100644
-> --- a/lib/s390x/asm/mem.h
-> +++ b/lib/s390x/asm/mem.h
-> @@ -8,6 +8,7 @@
->   #ifndef _ASMS390X_MEM_H_
->   #define _ASMS390X_MEM_H_
->   #include <asm/arch_def.h>
-> +#include <asm/facility.h>
->   
->   /* create pointer while avoiding compiler warnings */
->   #define OPAQUE_PTR(x) ((void *)(((uint64_t)&lowcore) + (x)))
-> diff --git a/lib/s390x/sie.c b/lib/s390x/sie.c
-> index ffa8ec91a423..632740edd431 100644
-> --- a/lib/s390x/sie.c
-> +++ b/lib/s390x/sie.c
-> @@ -13,6 +13,7 @@
->   #include <libcflat.h>
->   #include <sie.h>
->   #include <asm/page.h>
-> +#include <asm/interrupt.h>
->   #include <libcflat.h>
->   #include <alloc_page.h>
->   
-> @@ -65,7 +66,8 @@ void sie(struct vm *vm)
->   	/* also handle all interruptions in home space while in SIE */
->   	irq_set_dat_mode(IRQ_DAT_ON, AS_HOME);
->   
-> -	while (vm->sblk->icptcode == 0) {
-> +	/* leave SIE when we have an intercept or an interrupt so the test can react to it */
-> +	while (vm->sblk->icptcode == 0 && !read_pgm_int_code()) {
->   		sie64a(vm->sblk, &vm->save_area);
->   		sie_handle_validity(vm);
->   	}
+On Thu, 13 Jul 2023 09:28:19 +0200
+Thomas Huth <thuth@redhat.com> wrote:
 
-Reviewed-by: Thomas Huth <thuth@redhat.com>
+[...]
+
+> > +	irq_set_dat_mode(IRQ_DAT_ON, AS_PRIM);
+> > +	psw_mask_clear_bits(PSW_MASK_HOME);
+> > +
+> > +	/* restore the old CR 13 */
+> > +	lctlg(13, old_cr13);  
+> 
+> Wouldn't it be better to always switch to HOME address mode directly in our 
+> startup code already (where we enable DAT)? Switching back and forth every 
+> time we enter SIE looks confusing to me ... or is there a reason why we 
+> should continue to run in primary address mode by default and only switch to 
+> home mode here?
+
+the existing tests are written with the assumption that they are
+running in primary mode.
+
+switching back and forth might be confusing, but avoids having to
+fix all the tests
+
+> 
+>   Thomas
+> 
+> 
 
