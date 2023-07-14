@@ -2,191 +2,204 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0675F753D20
-	for <lists+linux-s390@lfdr.de>; Fri, 14 Jul 2023 16:21:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FC10753D6D
+	for <lists+linux-s390@lfdr.de>; Fri, 14 Jul 2023 16:30:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234693AbjGNOVO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 14 Jul 2023 10:21:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38020 "EHLO
+        id S235268AbjGNOau (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 14 Jul 2023 10:30:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235798AbjGNOUy (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 14 Jul 2023 10:20:54 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on20624.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe59::624])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CBAD3C23;
-        Fri, 14 Jul 2023 07:20:41 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WxF9npEffC6rRJcFzVgYb5Hm1EaTIbNYXkjWXKYEdeEqiJW9VDzSO5+H8okAcb7N/V/AFHF79lzyPesjh9yC/3XpaHER3KIz3lMn6DDPYlgaRX1ZvEgiAz5o/V1Sx7DcP4E8Qp9/jd5NvH0IZ75t0mlbrINAEPG6isOy3U8sK/zdqMPYBXh2Y1Sgu8s/fOQ6PKh6F5ostjpznQ0VlP1sRQGV0NQaniTEld5y2MGbE3j2+YQbr9CAw7vl8DTuiZWukjM1sk0bw2zNshvrgAHUW0uWWwgKSVPUNOo3eeiuiJ3UMAPUKEAV1I7jd3a720js+hlTftZKx8SfsWFY0/BE2Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=S0gHx+sNROGeohouozKwADQS07kFX6//oqKxIRAyW7Q=;
- b=Wl8BPi8sPK/iyE/4u6WPbBk/aoDSUymdAk04asORDId6tJ1ccavp0aD9497qKqRRIv57WGoFZt3rTTOekjGdaJUZbaKx80TGrvtmoMxVapdm8L0OPluyUSTpQ2hz/IjToGfjRaPRySQuR6UlGJCqkoCJe9U0pZC/RLKHNJiH4bP9Z4kBO4WGRa64kFSfwz0DbkpLEyzIdn4LSfSU7c7JtKTpYUuOOFHTppIUCxM23iQB9Rc6QYbIUrFrIVgIv+AvRvdV2oNn9vTEqAOBfel+iFaJjqE6feOq0KQ2AmFT5MIz4rXk3JStvoecip+dpuLI807jl2bOwRcQ2JIX9JKDgA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S0gHx+sNROGeohouozKwADQS07kFX6//oqKxIRAyW7Q=;
- b=D/GRfiVZfO62/aiGqir5quzsjoEveIcwFgXHodnyLkAKgIbcn//4VvVE5frrjWp/TpYCm5GVaS4Nmrwjp1QSxKX8EgTscT+DNfcO9QhxpOIUzUUi0EZXbwRxXU/zEJAiFeXMI1rkp2X1cwc8sHNy64IPPoK7emmipfkSZ6FPif00AyuL3sCCBuEuTc/tDGCtMz2w9XSMJzAU/JbIyzUyE7NxsafeLeXGp0cOBPDyREr1BO04hK7QUUy9LvjREHlE4GWRRvZqWIYYsfhRGw6mefJm3wBQtt8APzh8S/iMOAbiGQAdZVJAEKoC8sVMbwIdUkwEppAtsaZs79dsAqp/VQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
- by CH0PR12MB5073.namprd12.prod.outlook.com (2603:10b6:610:e0::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.27; Fri, 14 Jul
- 2023 14:20:34 +0000
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::69c1:5d87:c73c:cc55]) by LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::69c1:5d87:c73c:cc55%4]) with mapi id 15.20.6565.028; Fri, 14 Jul 2023
- 14:20:34 +0000
-Date:   Fri, 14 Jul 2023 11:20:31 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Yi Liu <yi.l.liu@intel.com>
-Cc:     alex.williamson@redhat.com, kevin.tian@intel.com, joro@8bytes.org,
-        robin.murphy@arm.com, cohuck@redhat.com, eric.auger@redhat.com,
-        nicolinc@nvidia.com, kvm@vger.kernel.org, mjrosato@linux.ibm.com,
-        chao.p.peng@linux.intel.com, yi.y.sun@linux.intel.com,
-        peterx@redhat.com, jasowang@redhat.com,
-        shameerali.kolothum.thodi@huawei.com, lulu@redhat.com,
-        suravee.suthikulpanit@amd.com, intel-gvt-dev@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, linux-s390@vger.kernel.org,
-        xudong.hao@intel.com, yan.y.zhao@intel.com, terrence.xu@intel.com,
-        yanting.jiang@intel.com, zhenzhong.duan@intel.com,
-        clegoate@redhat.com
-Subject: Re: [PATCH v14 20/26] iommufd: Add iommufd_ctx_from_fd()
-Message-ID: <ZLFZr7hOTLktRthU@nvidia.com>
-References: <20230711025928.6438-1-yi.l.liu@intel.com>
- <20230711025928.6438-21-yi.l.liu@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230711025928.6438-21-yi.l.liu@intel.com>
-X-ClientProxiedBy: SJ0PR03CA0042.namprd03.prod.outlook.com
- (2603:10b6:a03:33e::17) To LV2PR12MB5869.namprd12.prod.outlook.com
- (2603:10b6:408:176::16)
+        with ESMTP id S235843AbjGNO1u (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 14 Jul 2023 10:27:50 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3B9035A7;
+        Fri, 14 Jul 2023 07:27:21 -0700 (PDT)
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36EEL3DA031786;
+        Fri, 14 Jul 2023 14:25:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=RaYm3+iL2nRghkV2cl2HfIFU9xG0uue+t8rOf4tDuVE=;
+ b=HeSCuPPFwIWrH+993IvTtMuMziGA0FY3styoQdJklfhKV0Nqcs8mHSNKsyLdWDckgvzq
+ 0z44+Sx91mHSUNkkSwrenTPdvX4f//mC0Nye0MMce2+ZqxlYnFOTmHBG2AoLVQ+p0JGE
+ YqtcpmAyDS9hV0MABQwj6HZbk6I+W6a4b9bwwvJEc+Dz2JVR12lz/W5WdlQmpmbpLqPA
+ wOrCP2yxcMnk/0fnUtQFbN6UVbNteA6I4Z8Q74RqKzq7UNIioin5RT9NKhWBdvv5vFD/
+ SC7XHDWaEbSrMWZi5SNJ8WoUQGSLmj72aHNZbZdpuo7AE0+W7OASAPXvRgwBTeISFmzM Cg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ru82082a9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Jul 2023 14:25:23 +0000
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36EEMJhG002383;
+        Fri, 14 Jul 2023 14:25:23 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ru820829k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Jul 2023 14:25:23 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36EDKsSo007376;
+        Fri, 14 Jul 2023 14:25:22 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+        by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3rtpvs1vxy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Jul 2023 14:25:22 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+        by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36EEPKSk57934270
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Jul 2023 14:25:20 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9651358063;
+        Fri, 14 Jul 2023 14:25:20 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6AB9A58056;
+        Fri, 14 Jul 2023 14:25:12 +0000 (GMT)
+Received: from [9.171.88.96] (unknown [9.171.88.96])
+        by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+        Fri, 14 Jul 2023 14:25:12 +0000 (GMT)
+Message-ID: <6006810f-6419-bc39-7eff-1bd31a572631@linux.vnet.ibm.com>
+Date:   Fri, 14 Jul 2023 19:55:10 +0530
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|CH0PR12MB5073:EE_
-X-MS-Office365-Filtering-Correlation-Id: 535b3991-6b09-4a15-d8bb-08db84757ca1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 98HfLLTDZEW6kdzi3JHZ5es4y7ITLUQkp9YAsPB+9aM3FnXI4JFQvELFvG907Tilmr/KXLCzLFJGgL1t2Ha7c/DscaCBZN1kLMsqdL1O4lVHPlyQjalGF+jwHzUICbOJBcMF1/af8Hw3ihZec5sHxFjfGkKAQ+Q5jF/ZG8617BaI9ta6gpzFgPdzokXx5dU7Jqxve+XaQDwCoty5fHzcYsOhYSeGTzXppH5WN5NNrkZ7sH5kIJwxR71V3EJT7aFod6KhvzuS/X5ynKtWetvnkmRjEWKVvx53JuM2gjUhN7BuqV7VmhIIJliMk85URBqxNpULthZFbN/93aO3kVKnFCYNaClyNC4o9Htij3w+6pKS6w51ElpduRasJnwnmA3hL5PojiMFBtCQQlP2uwZk34HTYhlNw2lnAxMpqFVjI22cEsOIabrmNRzKTIHh6usjGQuFskiQv//wxvwAd/cZ9rRgkYMEsXywW2jMD+1MTd1yy34cjMSvWj+W06kZpE+17YWnsh0Y+av/VQrt5x7kDpjVV4TWCdsdkWP7z0iNq+d9Xawr2Zux6mUKeFEYt4nW
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(376002)(346002)(366004)(396003)(136003)(451199021)(38100700002)(36756003)(86362001)(8936002)(6506007)(5660300002)(6666004)(7416002)(8676002)(41300700001)(26005)(186003)(2616005)(2906002)(83380400001)(6512007)(66556008)(316002)(4326008)(478600001)(66946007)(6916009)(66476007)(6486002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?wS4tIJpMxz8OQ07Zvrt6Rq2AyLVILWmlgLG9c8IQnSPz8uQdsPzczwmWoJB6?=
- =?us-ascii?Q?Sn8WNyjZvzMxp+D12t1qS5vMuhd6UKdBOMj0gmM++sXF8RM7mU5DWiK8PIaG?=
- =?us-ascii?Q?z6GfyKdo2rFy1swX+9PuLqJCzrOUbDbUCtK/UEOkFdQoNZRbi7eVtjeMZzFC?=
- =?us-ascii?Q?Uy/089L4SYsK5g2jYTVCQTb+5t9lNWovD6IT3HEkDNO/diQ2oeBiHsv8Wzmf?=
- =?us-ascii?Q?netkXLM+qyqVdkXuDjVXJ4m7CY4Qa13jgS4f0n5+Lgoet9sQVELlUiKR19S4?=
- =?us-ascii?Q?rQZF9WPJOzHEHUE2UWv68a7nBWNuJKx5RW9ybu6nSQn4yQlLrzRpYx3ONR26?=
- =?us-ascii?Q?xqlha38Kq6vDWmtvgbtxuSCMSZCEuld6qVYSOXC2YUHYDTQdLBeJFw3N1+8Y?=
- =?us-ascii?Q?APsyUAgkwRRaNhlLTnFu3yNyBDYQmCbTEo3ULQQQwoaaWCQB6snhfrHiX2Ze?=
- =?us-ascii?Q?RevNEjvF+zV3qrSyOsRa3urM1LQFr9U/6121JrRYoyzgLe5IfbumkOudx8Y2?=
- =?us-ascii?Q?kNLOaI69vKEj6zk1f7ZjiaztOIq/Erv+wcUJDuwItvyTJp+ylUhu9JP5hvIW?=
- =?us-ascii?Q?XHz7lIut2V3GrMTVImFTUv+AUJDYfBaSU8w5jdi4DHN1cqiConORj3o11jTP?=
- =?us-ascii?Q?FL0aM0MCVui6Q7N0AsGlYXih18FnWg6hQobD5dyH3PSSNX37SWve31VapNHz?=
- =?us-ascii?Q?95C8zx7CJBjOwjepGM+sv2XaYAvs9ubKWePsPfebpOC6TaMEa3fAzyJJvJtU?=
- =?us-ascii?Q?ptJ2M08g4hSnMtFHIxubx1qoXqgznRf1Kshd0R7In1/jRMqN2X+lQzMBh+5s?=
- =?us-ascii?Q?6RLwwiU1Z9+U1TPKJZJEsSg98j798vA0sx0WJPPGMaDE2dM+7hvsZweFPBB/?=
- =?us-ascii?Q?BRTLNWh7ospza1/hNfLX2vLRzI5icqvJxxxLv92DH7ShQSFQ3Uffx5f8yLDm?=
- =?us-ascii?Q?xnLgm0Bf4M6Lt9eUq98Hzil3XwHpJrgbLqRxEPKeHwBpV8HSrZKCmvijKFlY?=
- =?us-ascii?Q?CevcdEMMDms/rfUYBRwjFGLR8n7ZhDVRRfZki/yFWy8KpyIl5Qf979syao4M?=
- =?us-ascii?Q?q5I3Q/UjrrYEqc5RDWfjPfa2PTQdUzu03CSbStnWCfDQmQw7OQgkXSbr6Aa/?=
- =?us-ascii?Q?44JKwVLWedui+b+0zBd6EKiTmxziChBsd0J44su9b4C2vvQ8tdIhcLJBaZfy?=
- =?us-ascii?Q?lKnGV4FewRjTpgSkTwgrOE5SSg+wm/igMv5CNwwVl8pPfw6ERrGZEIaov03N?=
- =?us-ascii?Q?m9jaV190fwII5tpc4sBgEVvoEKhzTfE9rmLHrh5lta0uxpqBGU+WkJSNMdhh?=
- =?us-ascii?Q?6nZnhrRu/EZwYCcoVmGthPTUQH1Snf3E1AD4FkMV3M9mHGDilTektcSzDi/I?=
- =?us-ascii?Q?E1YPyG4FaZuh26bDuI5WUlxqPPi815CIoFoFsr8dQ2fcett/ooidO+tbA5BW?=
- =?us-ascii?Q?bM+E7+I/PqMFCy9vh48GGE96rHRW8HPxsaDBnng89NeIPxXrSM73NpRPPXi+?=
- =?us-ascii?Q?rtFyjRgzdACKNuslbPBd15uGu1oOUjSZtraWC29vNb2lWOP1G/POK6PMprJ2?=
- =?us-ascii?Q?miJxyQAvPNYD57AJDISfcRuA52KcR1HfPAZvyGAh?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 535b3991-6b09-4a15-d8bb-08db84757ca1
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2023 14:20:34.2069
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /ctRvl46h45d6YM2+HXMssimX0Kpp3x9Smp78He3PHSbEBNOVpjg0QWWM4Rn/5vc
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5073
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [RFC][PATCH] sched: Rename DIE domain
+Content-Language: en-US
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     juri.lelli@redhat.com, dave.hansen@linux.intel.com,
+        bsegall@google.com, hpa@zytor.com, agordeev@linux.ibm.com,
+        linux-s390@vger.kernel.org, vincent.guittot@linaro.org,
+        x86@kernel.org, mingo@redhat.com, mgorman@suse.de,
+        borntraeger@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com,
+        npiggin@gmail.com, bp@alien8.de, rostedt@goodmis.org,
+        dietmar.eggemann@arm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, svens@linux.ibm.com,
+        bristot@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <vschneid@redhat.com>
+References: <20230712141056.GI3100107@hirez.programming.kicks-ass.net>
+ <xhsmh1qhduq9d.mognet@vschneid.remote.csb>
+From:   Shrikanth Hegde <sshegde@linux.vnet.ibm.com>
+In-Reply-To: <xhsmh1qhduq9d.mognet@vschneid.remote.csb>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: BKnNwJuVQ5CqwoS76-lOVcxFsFRUxIUy
+X-Proofpoint-GUID: JY7YoTQ-OZAhgvru9YZBX9Ytl2G47lgR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-14_06,2023-07-13_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ malwarescore=0 lowpriorityscore=0 suspectscore=0 priorityscore=1501
+ mlxlogscore=999 phishscore=0 clxscore=1011 bulkscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2307140128
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Jul 10, 2023 at 07:59:22PM -0700, Yi Liu wrote:
-> It's common to get a reference to the iommufd context from a given file
-> descriptor. So adds an API for it. Existing users of this API are compiled
-> only when IOMMUFD is enabled, so no need to have a stub for the IOMMUFD
-> disabled case.
+
+
+On 7/12/23 8:32 PM, Valentin Schneider wrote:
+> On 12/07/23 16:10, Peter Zijlstra wrote:
+>> Hi
+>>
+>> Thomas just tripped over the x86 topology setup creating a 'DIE' domain
+>> for the package mask :-)
+>>
+>> Since these names are SCHED_DEBUG only, rename them.
+>> I don't think anybody *should* be relying on this, but who knows.
+>>
 > 
-> Signed-off-by: Yi Liu <yi.l.liu@intel.com>
+> FWIW I don't care much about the actual name.
+> 
+> There are some stray references to DIE in comments - see below. Bit funny
+> to see:
+> - *  - Package (DIE)
+> + *  - Package (PKG)
+> 
+> With that:
+> Acked-by: Valentin Schneider <vschneid@redhat.com>
+> 
 > ---
->  drivers/iommu/iommufd/main.c | 23 +++++++++++++++++++++++
->  include/linux/iommufd.h      |  1 +
->  2 files changed, 24 insertions(+)
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index a80a73909dc2a..190a647534984 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -9439,7 +9439,7 @@ static bool sched_use_asym_prio(struct sched_domain *sd, int cpu)
+>   * can only do it if @group is an SMT group and has exactly on busy CPU. Larger
+>   * imbalances in the number of CPUS are dealt with in find_busiest_group().
+>   *
+> - * If we are balancing load within an SMT core, or at DIE domain level, always
+> + * If we are balancing load within an SMT core, or at PKG domain level, always
+>   * proceed.
+>   *
+>   * Return: true if @env::dst_cpu can do with asym_packing load balance. False
+> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+> index e9d9cf776b7ab..2cdcfec1d1c89 100644
+> --- a/kernel/sched/topology.c
+> +++ b/kernel/sched/topology.c
+> @@ -1118,7 +1118,7 @@ build_overlap_sched_groups(struct sched_domain *sd, int cpu)
+>   *
+>   *  - Simultaneous multithreading (SMT)
+>   *  - Multi-Core Cache (MC)
+> - *  - Package (DIE)
+> + *  - Package (PKG)
+>   *
+>   * Where the last one more or less denotes everything up to a NUMA node.
+>   *
+> @@ -1140,13 +1140,13 @@ build_overlap_sched_groups(struct sched_domain *sd, int cpu)
+>   *
+>   * CPU   0   1   2   3   4   5   6   7
+>   *
+> - * DIE  [                             ]
+> + * PKG  [                             ]
+>   * MC   [             ] [             ]
+>   * SMT  [     ] [     ] [     ] [     ]
+>   *
+>   *  - or -
+>   *
+> - * DIE  0-7 0-7 0-7 0-7 0-7 0-7 0-7 0-7
+> + * PKG  0-7 0-7 0-7 0-7 0-7 0-7 0-7 0-7
+>   * MC	0-3 0-3 0-3 0-3 4-7 4-7 4-7 4-7
+>   * SMT  0-1 0-1 2-3 2-3 4-5 4-5 6-7 6-7
+>   *
 > 
-> diff --git a/drivers/iommu/iommufd/main.c b/drivers/iommu/iommufd/main.c
-> index 32ce7befc8dd..e99a338d4fdf 100644
-> --- a/drivers/iommu/iommufd/main.c
-> +++ b/drivers/iommu/iommufd/main.c
-> @@ -377,6 +377,29 @@ struct iommufd_ctx *iommufd_ctx_from_file(struct file *file)
->  }
->  EXPORT_SYMBOL_NS_GPL(iommufd_ctx_from_file, IOMMUFD);
->  
-> +/**
-> + * iommufd_ctx_from_fd - Acquires a reference to the iommufd context
-> + * @fd: File descriptor to obtain the reference from
-> + *
-> + * Returns a pointer to the iommufd_ctx, otherwise ERR_PTR. On success
-> + * the caller is responsible to call iommufd_ctx_put().
-> + */
-> +struct iommufd_ctx *iommufd_ctx_from_fd(int fd)
-> +{
-> +	struct iommufd_ctx *iommufd;
-> +	struct fd f;
-> +
-> +	f = fdget(fd);
-> +	if (!f.file)
-> +		return ERR_PTR(-EBADF);
-> +
-> +	iommufd = iommufd_ctx_from_file(f.file);
-> +
-> +	fdput(f);
-> +	return iommufd;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(iommufd_ctx_from_fd, IOMMUFD);
 
-This is a little wonky since iommufd_ctx_from_file() also obtains a
-reference
+A couple of comments missing the change still? Not sure if it taken care already.
 
-Just needs to be like this:
+---
+ arch/powerpc/kernel/smp.c | 2 +-
+ arch/x86/kernel/smpboot.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-struct iommufd_ctx *iommufd_ctx_from_fd(int fd)
-{
-	struct file *file;
-
-	file = fget(fd);
-	if (!file)
-		return ERR_PTR(-EBADF);
-
-	if (file->f_op != &iommufd_fops) {
-		fput(file);
-		return ERR_PTR(-EBADFD);
-	}
-	/* fget is the same as iommufd_ctx_get() */
-	return file->private_data;
-}
-EXPORT_SYMBOL_NS_GPL(iommufd_ctx_from_fd, IOMMUFD);
-
-?
-
-Jason
+diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
+index fbbb695bae3d..9b1853bf6b1d 100644
+--- a/arch/powerpc/kernel/smp.c
++++ b/arch/powerpc/kernel/smp.c
+@@ -1588,7 +1588,7 @@ static void add_cpu_to_masks(int cpu)
+ 	/* Skip all CPUs already part of current CPU core mask */
+ 	cpumask_andnot(mask, cpu_online_mask, cpu_core_mask(cpu));
+ 
+-	/* If chip_id is -1; limit the cpu_core_mask to within DIE*/
++	/* If chip_id is -1; limit the cpu_core_mask to within PKG*/
+ 	if (chip_id == -1)
+ 		cpumask_and(mask, mask, cpu_cpu_mask(cpu));
+ 
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index e1aa2cd7734b..3f175e70eb7a 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -647,7 +647,7 @@ static void __init build_sched_topology(void)
+ 	};
+ #endif
+ 	/*
+-	 * When there is NUMA topology inside the package skip the DIE domain
++	 * When there is NUMA topology inside the package skip the PKG domain
+ 	 * since the NUMA domains will auto-magically create the right spanning
+ 	 * domains based on the SLIT.
+ 	 */
