@@ -2,211 +2,172 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE22D761311
-	for <lists+linux-s390@lfdr.de>; Tue, 25 Jul 2023 13:07:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42109761A9F
+	for <lists+linux-s390@lfdr.de>; Tue, 25 Jul 2023 15:53:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234075AbjGYLHb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 25 Jul 2023 07:07:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45528 "EHLO
+        id S231185AbjGYNxo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 25 Jul 2023 09:53:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234001AbjGYLHL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 25 Jul 2023 07:07:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C2602737;
-        Tue, 25 Jul 2023 04:05:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 67D8B6166F;
-        Tue, 25 Jul 2023 11:05:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A34EC433CA;
-        Tue, 25 Jul 2023 11:05:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690283155;
-        bh=pOXvioLmt4HpMqW57Xv4XXd6GlnOcDy+UqsXfhkHrFY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kbsxLGNFdM6qSh1jsLLP+MSRG3Nkflp9aMdnQyXq9KRnC7jcnHrYscu5AiJyW/CjG
-         6vidsGf1xTa3w/b9fcx6JxLPhCpsmeaqJ+tu976ejqJN7wAnGdbGlU6QuWVEG17TOW
-         rsAyVWCFCZxfnHGF9MOOEVjBTGhN1QP4VWQjCIpV24KKAqKhH3hrLvErt0bITTzA4b
-         uQMoXtGGG92ctUBFbJvXZzxBOHsP01uMxujb2oj61jq3+VhVIPsXeIC4CFrq+i23Af
-         amrQLDym688RQVV6YIHxxMOi5kxCv3SxAF6cWfPNZ/OE5H7fNQnSQkRJa31J+pQBLa
-         k4YHM0VOJB5JQ==
-Date:   Tue, 25 Jul 2023 13:05:40 +0200
-From:   Alexey Gladkov <legion@kernel.org>
-To:     Christian Brauner <brauner@kernel.org>
-Cc:     Florian Weimer <fweimer@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        James.Bottomley@hansenpartnership.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, axboe@kernel.dk,
-        benh@kernel.crashing.org, borntraeger@de.ibm.com, bp@alien8.de,
-        catalin.marinas@arm.com, christian@brauner.io, dalias@libc.org,
-        davem@davemloft.net, deepa.kernel@gmail.com, deller@gmx.de,
-        dhowells@redhat.com, fenghua.yu@intel.com, geert@linux-m68k.org,
-        glebfm@altlinux.org, gor@linux.ibm.com, hare@suse.com,
-        hpa@zytor.com, ink@jurassic.park.msu.ru, jhogan@kernel.org,
-        kim.phillips@arm.com, ldv@altlinux.org,
-        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux@armlinux.org.uk,
-        linuxppc-dev@lists.ozlabs.org, luto@kernel.org, mattst88@gmail.com,
-        mingo@redhat.com, monstr@monstr.eu, mpe@ellerman.id.au,
-        namhyung@kernel.org, paul.burton@mips.com, paulus@samba.org,
-        peterz@infradead.org, ralf@linux-mips.org, rth@twiddle.net,
-        sparclinux@vger.kernel.org, stefan@agner.ch, tglx@linutronix.de,
-        tony.luck@intel.com, tycho@tycho.ws, will@kernel.org,
-        x86@kernel.org, ysato@users.sourceforge.jp
-Subject: Re: [PATCH v3 0/5] Add a new fchmodat4() syscall
-Message-ID: <ZL+shMg5LJgYlsDd@example.org>
-References: <87o8pscpny.fsf@oldenburg2.str.redhat.com>
- <cover.1689074739.git.legion@kernel.org>
- <87lefmbppo.fsf@oldenburg.str.redhat.com>
- <20230711-quintessenz-auswechseln-92a4640c073d@brauner>
+        with ESMTP id S231159AbjGYNxl (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 25 Jul 2023 09:53:41 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE8AB1FC0;
+        Tue, 25 Jul 2023 06:53:39 -0700 (PDT)
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36PDeFrA021874;
+        Tue, 25 Jul 2023 13:53:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=ToUYj46kmQdSwxw1juQudcMV/fW1m/kYbKVi9qquqqs=;
+ b=KIBD6Lj/RIF6ObIzRL1zIbuT3IWWVEeoYdk//yhk1HXbcPpO7nUKLgRgqpq7Nja+IwEu
+ HlZy59QKeYyJcLbW1uClZhbhHbtRFnanon3Wuvki6CpZOOscKA7w46REsve5m7Wdb16L
+ eVheEwC682L3DOOi+5fBvkj6E5NLnnS21zoBhJb/V7eNFBJS7g3/qvsGhAhg3Rpw8zLM
+ e7rk3EKbAG1vLZ7vC8EstwccVhDu0rCxB7orw58xGCORt5A+71quF2m86aVHRGGDWpr5
+ ZGHDgDRxxoiU4YHFXoAEsSmGpuQx3Q+2JvUKLtIKEFoGSJcNq/ryQuk4bMuHFaLjA177 wQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s2063bebk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Jul 2023 13:53:38 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36PDrYfl013183;
+        Tue, 25 Jul 2023 13:53:37 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s2063beb9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Jul 2023 13:53:37 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36PCqHAD014406;
+        Tue, 25 Jul 2023 13:53:37 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+        by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3s0stxvp1q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Jul 2023 13:53:37 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36PDrX8t20579038
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Jul 2023 13:53:33 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4332B20043;
+        Tue, 25 Jul 2023 13:53:33 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E0C2D2004B;
+        Tue, 25 Jul 2023 13:53:32 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.152.224.66])
+        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Tue, 25 Jul 2023 13:53:32 +0000 (GMT)
+Date:   Tue, 25 Jul 2023 10:58:56 +0200
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     Ilya Leoshkevich <iii@linux.ibm.com>
+Cc:     Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sven Schnelle <svens@linux.ibm.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jens Freimann <jfreimann@redhat.com>
+Subject: Re: [PATCH v3 2/6] KVM: s390: interrupt: Fix single-stepping into
+ program interrupt handlers
+Message-ID: <20230725105856.0ea59d3d@p-imbrenda>
+In-Reply-To: <20230724094716.91510-3-iii@linux.ibm.com>
+References: <20230724094716.91510-1-iii@linux.ibm.com>
+        <20230724094716.91510-3-iii@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230711-quintessenz-auswechseln-92a4640c073d@brauner>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: tl9_KK56J5DU5tJenNFZI1xYkUo3a1xD
+X-Proofpoint-ORIG-GUID: Kaz41tGpfMuZGg6lA1tVihq6fDilPEsr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-25_08,2023-07-25_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1015
+ lowpriorityscore=0 impostorscore=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2306200000 definitions=main-2307250119
+X-Spam-Status: No, score=-0.4 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Jul 11, 2023 at 05:14:24PM +0200, Christian Brauner wrote:
-> On Tue, Jul 11, 2023 at 02:24:51PM +0200, Florian Weimer wrote:
-> > * Alexey Gladkov:
-> > 
-> > > This patch set adds fchmodat4(), a new syscall. The actual
-> > > implementation is super simple: essentially it's just the same as
-> > > fchmodat(), but LOOKUP_FOLLOW is conditionally set based on the flags.
-> > > I've attempted to make this match "man 2 fchmodat" as closely as
-> > > possible, which says EINVAL is returned for invalid flags (as opposed to
-> > > ENOTSUPP, which is currently returned by glibc for AT_SYMLINK_NOFOLLOW).
-> > > I have a sketch of a glibc patch that I haven't even compiled yet, but
-> > > seems fairly straight-forward:
-> > >
-> > >     diff --git a/sysdeps/unix/sysv/linux/fchmodat.c b/sysdeps/unix/sysv/linux/fchmodat.c
-> > >     index 6d9cbc1ce9e0..b1beab76d56c 100644
-> > >     --- a/sysdeps/unix/sysv/linux/fchmodat.c
-> > >     +++ b/sysdeps/unix/sysv/linux/fchmodat.c
-> > >     @@ -29,12 +29,36 @@
-> > >      int
-> > >      fchmodat (int fd, const char *file, mode_t mode, int flag)
-> > >      {
-> > >     -  if (flag & ~AT_SYMLINK_NOFOLLOW)
-> > >     -    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
-> > >     -#ifndef __NR_lchmod		/* Linux so far has no lchmod syscall.  */
-> > >     +  /* There are four paths through this code:
-> > >     +      - The flags are zero.  In this case it's fine to call fchmodat.
-> > >     +      - The flags are non-zero and glibc doesn't have access to
-> > >     +	__NR_fchmodat4.  In this case all we can do is emulate the error codes
-> > >     +	defined by the glibc interface from userspace.
-> > >     +      - The flags are non-zero, glibc has __NR_fchmodat4, and the kernel has
-> > >     +	fchmodat4.  This is the simplest case, as the fchmodat4 syscall exactly
-> > >     +	matches glibc's library interface so it can be called directly.
-> > >     +      - The flags are non-zero, glibc has __NR_fchmodat4, but the kernel does
-> > 
-> > If you define __NR_fchmodat4 on all architectures, we can use these
-> > constants directly in glibc.  We no longer depend on the UAPI
-> > definitions of those constants, to cut down the number of code variants,
-> > and to make glibc's system call profile independent of the kernel header
-> > version at build time.
-> > 
-> > Your version is based on 2.31, more recent versions have some reasonable
-> > emulation for fchmodat based on /proc/self/fd.  I even wrote a comment
-> > describing the same buggy behavior that you witnessed:
-> > 
-> > +      /* Some Linux versions with some file systems can actually
-> > +        change symbolic link permissions via /proc, but this is not
-> > +        intentional, and it gives inconsistent results (e.g., error
-> > +        return despite mode change).  The expected behavior is that
-> > +        symbolic link modes cannot be changed at all, and this check
-> > +        enforces that.  */
-> > +      if (S_ISLNK (st.st_mode))
-> > +       {
-> > +         __close_nocancel (pathfd);
-> > +         __set_errno (EOPNOTSUPP);
-> > +         return -1;
-> > +       }
-> > 
-> > I think there was some kernel discussion about that behavior before, but
-> > apparently, it hasn't led to fixes.
-> 
-> I think I've explained this somewhere else a couple of months ago but
-> just in case you weren't on that thread or don't remember and apologies
-> if you should already know.
-> 
-> A lot of filesystem will happily update the mode of a symlink. The VFS
-> doesn't do anything to prevent this from happening. This is filesystem
-> specific.
-> 
-> The EOPNOTSUPP you're seeing very likely comes from POSIX ACLs.
-> Specifically it comes from filesystems that call posix_acl_chmod(),
-> e.g., btrfs via
-> 
->         if (!err && attr->ia_valid & ATTR_MODE)
->                 err = posix_acl_chmod(idmap, dentry, inode->i_mode);
-> 
-> Most filesystems don't implement i_op->set_acl() for POSIX ACLs.
-> So posix_acl_chmod() will report EOPNOTSUPP. By the time
-> posix_acl_chmod() is called, most filesystems will have finished
-> updating the inode. POSIX ACLs also often aren't integrated into
-> transactions so a rollback wouldn't even be possible on some
-> filesystems.
-> 
-> Any filesystem that doesn't implement POSIX ACLs at all will obviously
-> never fail unless it blocks mode changes on symlinks. Or filesystems
-> that do have a way to rollback failures from posix_acl_chmod(), or
-> filesystems that do return an error on chmod() on symlinks such as 9p,
-> ntfs, ocfs2.
-> 
-> > 
-> > I wonder if it makes sense to add a similar error return to the system
-> > call implementation?
-> 
-> Hm, blocking symlink mode changes is pretty regression prone. And just
-> blocking it through one interface seems weird and makes things even more
-> inconsistent.
-> 
-> So two options I see:
-> (1) minimally invasive:
->     Filesystems that do call posix_acl_chmod() on symlinks need to be
->     changed to stop doing that.
-> (2) might hit us on the head invasive:
->     Try and block symlink mode changes in chmod_common().
-> 
-> Thoughts?
-> 
+On Mon, 24 Jul 2023 11:44:08 +0200
+Ilya Leoshkevich <iii@linux.ibm.com> wrote:
 
-We have third option. We can choose not to call chmod_common and return an
-error right away:
+> Currently, after single-stepping an instruction that generates a
+> specification exception, GDB ends up on the instruction immediately
+> following it.
+> 
+> The reason is that vcpu_post_run() injects the interrupt and sets
+> KVM_GUESTDBG_EXIT_PENDING, causing a KVM_SINGLESTEP exit. The
+> interrupt is not delivered, however, therefore userspace sees the
+> address of the next instruction.
+> 
+> Fix by letting the __vcpu_run() loop go into the next iteration,
+> where vcpu_pre_run() delivers the interrupt and sets
+> KVM_GUESTDBG_EXIT_PENDING.
+> 
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+> ---
+>  arch/s390/kvm/intercept.c | 19 +++++++++++++++++--
+>  1 file changed, 17 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/s390/kvm/intercept.c b/arch/s390/kvm/intercept.c
+> index 954d39adf85c..7cdd927541b0 100644
+> --- a/arch/s390/kvm/intercept.c
+> +++ b/arch/s390/kvm/intercept.c
+> @@ -226,7 +226,22 @@ static int handle_itdb(struct kvm_vcpu *vcpu)
+>  	return 0;
+>  }
+>  
+> -#define per_event(vcpu) (vcpu->arch.sie_block->iprcc & PGM_PER)
+> +static bool should_handle_per_event(const struct kvm_vcpu *vcpu)
+> +{
+> +	if (!guestdbg_enabled(vcpu))
+> +		return false;
+> +	if (!(vcpu->arch.sie_block->iprcc & PGM_PER))
 
-diff --git a/fs/open.c b/fs/open.c
-index 39a7939f0d00..86a427a2a083 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -679,7 +679,9 @@ static int do_fchmodat(int dfd, const char __user *filename, umode_t mode, int l
- retry:
-        error = user_path_at(dfd, filename, lookup_flags, &path);
-        if (!error) {
--               error = chmod_common(&path, mode);
-+               error = -EOPNOTSUPP;
-+               if (!(flags & AT_SYMLINK_NOFOLLOW) || !S_ISLNK(path.dentry->d_inode->i_mode))
-+                       error = chmod_common(&path, mode);
-                path_put(&path);
-                if (retry_estale(error, lookup_flags)) {
-                        lookup_flags |= LOOKUP_REVAL;
+why not  if (!per_event(vcpu))  ?
 
-It doesn't seem to be invasive.
+maybe you can even merge it with the previous if:
 
--- 
-Rgrds, legion
+if (!guestdbg_enabled(vcpu) || !per_event(vcpu))
+	return false;
+
+this is closer to the old code too
+
+> +		return false;
+> +	if (guestdbg_sstep_enabled(vcpu) &&
+> +	    vcpu->arch.sie_block->iprcc != PGM_PER) {
+> +		/*
+> +		 * __vcpu_run() will exit after delivering the concurrently
+> +		 * indicated condition.
+> +		 */
+> +		return false;
+> +	}
+> +	return true;
+> +}
+>  
+>  static int handle_prog(struct kvm_vcpu *vcpu)
+>  {
+> @@ -242,7 +257,7 @@ static int handle_prog(struct kvm_vcpu *vcpu)
+>  	if (kvm_s390_pv_cpu_is_protected(vcpu))
+>  		return -EOPNOTSUPP;
+>  
+> -	if (guestdbg_enabled(vcpu) && per_event(vcpu)) {
+> +	if (should_handle_per_event(vcpu)) {
+>  		rc = kvm_s390_handle_per_event(vcpu);
+>  		if (rc)
+>  			return rc;
 
