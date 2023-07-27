@@ -2,108 +2,223 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9316F7658CF
-	for <lists+linux-s390@lfdr.de>; Thu, 27 Jul 2023 18:35:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67C1A765974
+	for <lists+linux-s390@lfdr.de>; Thu, 27 Jul 2023 19:03:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230093AbjG0QfO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 27 Jul 2023 12:35:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47898 "EHLO
+        id S230433AbjG0RDZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 27 Jul 2023 13:03:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229587AbjG0QfJ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 27 Jul 2023 12:35:09 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67CD52135;
-        Thu, 27 Jul 2023 09:35:08 -0700 (PDT)
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36RGDFN2018453;
-        Thu, 27 Jul 2023 16:34:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : references : date : in-reply-to : message-id : mime-version :
- content-type; s=pp1; bh=j1GCHC88bNq2UpqisYkcGQFb/1PV8EOHsfyuy65SSS8=;
- b=NwXRpQpYW6CS4+kRiBpaUzltyAroaCYQKU3JWrabrNOS/FKe6Rx5Dy1c6qmwfs4AB0gF
- NjPhKqtWOoeXQftk0FI96jELED5sWLNRYMpA9O2XKmbmPmHg5wW7QX81O+RqoWGvdhuI
- yvdeAFGntU8E7rjw3RQ0bm66GAqRia5Va3VHFd7JFuJvjy/1ofVtaROHH79CTdUwpGPq
- x+YbcdmBiEpoWsa5Bosd4iUzEqsiof2onJIahqGNMFm+T1upc0LU0+C/rCY/zzGYlrt7
- IvOgR9lPwHcKm8q5VVlNzwTUJ/IdxaFov27/NBfbspB6UJrEW/bgW4AzUZwcexYRTi1j +Q== 
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s3st4n8ju-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Jul 2023 16:34:43 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36RGQxgp002181;
-        Thu, 27 Jul 2023 16:34:42 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-        by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3s0unjxn44-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Jul 2023 16:34:42 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36RGYexQ44171636
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jul 2023 16:34:40 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5F2B720043;
-        Thu, 27 Jul 2023 16:34:40 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2FD9020040;
-        Thu, 27 Jul 2023 16:34:40 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
-        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Thu, 27 Jul 2023 16:34:40 +0000 (GMT)
-From:   Sven Schnelle <svens@linux.ibm.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anastasia Eskova <anastasia.eskova@ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "open list:S390 ARCHITECTURE" <linux-s390@vger.kernel.org>
-Subject: Re: linux-next: Tree for Jul 27 (arch/s390/kernel/cert_store.c)
-References: <20230727143346.079d4e5a@canb.auug.org.au>
-        <8ecb57fb-4560-bdfc-9e55-63e3b0937132@infradead.org>
-Date:   Thu, 27 Jul 2023 18:34:39 +0200
-In-Reply-To: <8ecb57fb-4560-bdfc-9e55-63e3b0937132@infradead.org> (Randy
-        Dunlap's message of "Thu, 27 Jul 2023 08:57:35 -0700")
-Message-ID: <yt9dlef15n4w.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 79VygCutHpGW_mn-IM0fyMzSkEhzjM8_
-X-Proofpoint-ORIG-GUID: 79VygCutHpGW_mn-IM0fyMzSkEhzjM8_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-27_07,2023-07-26_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
- adultscore=0 lowpriorityscore=0 phishscore=0 bulkscore=0 malwarescore=0
- mlxlogscore=999 impostorscore=0 priorityscore=1501 spamscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
- definitions=main-2307270150
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S231287AbjG0RDT (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 27 Jul 2023 13:03:19 -0400
+Received: from mgamail.intel.com (unknown [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 924972701;
+        Thu, 27 Jul 2023 10:03:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1690477396; x=1722013396;
+  h=date:from:to:cc:subject:message-id;
+  bh=+Ww5693C/UDK3tNyftzRZzJEBm3+QYIP8agAOrPSnmo=;
+  b=UQC21rs0sA3nUsSLXSnFr3h+Gue4L8qLB/eO/dl8ZCRGfNurFSNWMO/K
+   m80atDWVgi31+k/s4VxHmDHAOys0p0ZETcjnnv5X9Vjp3aKdC9H8bFn8o
+   IF2W/3+5+0noE96ahQk7NcJDIKUYDo/ysN7lwasfvtBItt4w6Mf4Y3q9h
+   yKknzXzULOnzgGU5vTQhzqNO7b8hAc0bUAG7SnjLYwOkybRC/kU/BkjP3
+   5dr0DcB0LmcAJx9sqOSVAGqbmoUQy4+hhpbItmTZUXxpDlkDvlSVQ961E
+   9LmoqGuO/PgFa72qyaU87FfB/leKd606h1J55v9v5DGdZ+6ehcuvhmm30
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10784"; a="353285657"
+X-IronPort-AV: E=Sophos;i="6.01,235,1684825200"; 
+   d="scan'208";a="353285657"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2023 10:01:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10784"; a="900928144"
+X-IronPort-AV: E=Sophos;i="6.01,235,1684825200"; 
+   d="scan'208";a="900928144"
+Received: from lkp-server02.sh.intel.com (HELO 953e8cd98f7d) ([10.239.97.151])
+  by orsmga005.jf.intel.com with ESMTP; 27 Jul 2023 10:01:25 -0700
+Received: from kbuild by 953e8cd98f7d with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qP4Mf-0002RL-0A;
+        Thu, 27 Jul 2023 17:01:25 +0000
+Date:   Fri, 28 Jul 2023 01:01:19 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Memory Management List <linux-mm@kvack.org>,
+        linux-s390@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: [linux-next:master] BUILD REGRESSION
+ 451cc82bd11eb6a374f4dbcfc1cf007eafea91ab
+Message-ID: <202307280106.CXKJsML9-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Randy Dunlap <rdunlap@infradead.org> writes:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 451cc82bd11eb6a374f4dbcfc1cf007eafea91ab  Add linux-next specific files for 20230727
 
-> On 7/26/23 21:33, Stephen Rothwell wrote:
->> Hi all,
->> 
->> Changes since 20230726:
->> 
->
-> on s390:
->
-> gcc-13.1.0-nolibc/s390-linux/bin/s390-linux-ld: arch/s390/kernel/cert_store.o: in function `check_certificate_hash':
-> arch/s390/kernel/cert_store.c:267: undefined reference to `sha256'
->
-> so config CERT_STORE should select CRYPTO_SHA256 or CRYPTO_SHA256_S390 ?
-> or both?
+Error/Warning reports:
 
-I would assume it misses 'select CRYPTO_LIB_SHA256'. We'll prepare a
-fix, thanks for letting us know!
+https://lore.kernel.org/oe-kbuild-all/202307181450.sfbuvMf5-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202307251531.p8ZLFTMZ-lkp@intel.com
+
+Error/Warning: (recently discovered and may have been fixed)
+
+../lib/gcc/loongarch64-linux/12.3.0/plugin/include/config/loongarch/loongarch-opts.h:31:10: fatal error: loongarch-def.h: No such file or directory
+arch/s390/kernel/mcount.S:133:2: error: instruction requires: distinct-ops
+drivers/regulator/max77857-regulator.c:312:16: error: initializer element is not a compile-time constant
+drivers/regulator/max77857-regulator.c:56:24: warning: cast to smaller integer type 'enum max77857_id' from 'void *' [-Wvoid-pointer-to-enum-cast]
+
+Unverified Error/Warning (likely false positive, please contact us if interested):
+
+drivers/tty/serial/8250/8250_men_mcb.c:218 serial_8250_men_mcb_probe() warn: unsigned 'data->line[i]' is never less than zero.
+
+Error/Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- i386-randconfig-m021-20230727
+|   `-- drivers-tty-serial-8250_men_mcb.c-serial_8250_men_mcb_probe()-warn:unsigned-data-line-i-is-never-less-than-zero.
+|-- loongarch-allmodconfig
+|   `-- lib-gcc-loongarch64-linux-..-plugin-include-config-loongarch-loongarch-opts.h:fatal-error:loongarch-def.h:No-such-file-or-directory
+`-- loongarch-randconfig-r005-20230727
+    `-- lib-gcc-loongarch64-linux-..-plugin-include-config-loongarch-loongarch-opts.h:fatal-error:loongarch-def.h:No-such-file-or-directory
+clang_recent_errors
+|-- arm64-randconfig-r032-20230727
+|   |-- drivers-regulator-max77857-regulator.c:error:initializer-element-is-not-a-compile-time-constant
+|   `-- drivers-regulator-max77857-regulator.c:warning:cast-to-smaller-integer-type-enum-max77857_id-from-void
+|-- i386-randconfig-i006-20230727
+|   `-- drivers-regulator-max77857-regulator.c:error:initializer-element-is-not-a-compile-time-constant
+|-- i386-randconfig-r006-20230727
+|   `-- drivers-regulator-max77857-regulator.c:error:initializer-element-is-not-a-compile-time-constant
+`-- s390-randconfig-r016-20230726
+    `-- arch-s390-kernel-mcount.S:error:instruction-requires:distinct-ops
+
+elapsed time: 722m
+
+configs tested: 113
+configs skipped: 7
+
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r012-20230727   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r036-20230727   gcc  
+arc                  randconfig-r043-20230727   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                         axm55xx_defconfig   gcc  
+arm                                 defconfig   gcc  
+arm                      footbridge_defconfig   gcc  
+arm                       omap2plus_defconfig   gcc  
+arm                          pxa168_defconfig   clang
+arm                  randconfig-r033-20230727   gcc  
+arm                  randconfig-r046-20230727   clang
+arm                        shmobile_defconfig   gcc  
+arm                       versatile_defconfig   clang
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r032-20230727   clang
+csky                                defconfig   gcc  
+hexagon              randconfig-r011-20230727   clang
+hexagon              randconfig-r041-20230727   clang
+hexagon              randconfig-r045-20230727   clang
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230727   clang
+i386                 randconfig-i002-20230727   clang
+i386                 randconfig-i003-20230727   clang
+i386                 randconfig-i004-20230727   clang
+i386                 randconfig-i005-20230727   clang
+i386                 randconfig-i006-20230727   clang
+i386                 randconfig-i011-20230727   gcc  
+i386                 randconfig-i012-20230727   gcc  
+i386                 randconfig-i013-20230727   gcc  
+i386                 randconfig-i014-20230727   gcc  
+i386                 randconfig-i015-20230727   gcc  
+i386                 randconfig-i016-20230727   gcc  
+i386                 randconfig-r006-20230727   clang
+i386                 randconfig-r013-20230727   gcc  
+i386                 randconfig-r021-20230727   gcc  
+i386                 randconfig-r023-20230727   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r005-20230727   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze           randconfig-r031-20230727   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                     cu1000-neo_defconfig   clang
+nios2                               defconfig   gcc  
+nios2                randconfig-r024-20230727   gcc  
+nios2                randconfig-r033-20230726   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r004-20230727   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                    klondike_defconfig   gcc  
+powerpc                      ppc40x_defconfig   gcc  
+powerpc                      ppc44x_defconfig   clang
+powerpc                         wii_defconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r016-20230727   gcc  
+riscv                randconfig-r034-20230727   clang
+riscv                randconfig-r042-20230727   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                          debug_defconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r044-20230727   gcc  
+sh                               allmodconfig   gcc  
+sh                   randconfig-r003-20230727   gcc  
+sh                           se7750_defconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r026-20230727   gcc  
+um                               alldefconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                   randconfig-r035-20230727   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-r014-20230727   gcc  
+x86_64               randconfig-x001-20230727   gcc  
+x86_64               randconfig-x002-20230727   gcc  
+x86_64               randconfig-x003-20230727   gcc  
+x86_64               randconfig-x004-20230727   gcc  
+x86_64               randconfig-x005-20230727   gcc  
+x86_64               randconfig-x006-20230727   gcc  
+x86_64               randconfig-x011-20230727   clang
+x86_64               randconfig-x012-20230727   clang
+x86_64               randconfig-x013-20230727   clang
+x86_64               randconfig-x014-20230727   clang
+x86_64               randconfig-x015-20230727   clang
+x86_64               randconfig-x016-20230727   clang
+x86_64                          rhel-8.3-rust   clang
+xtensa               randconfig-r002-20230727   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
