@@ -2,146 +2,124 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63F2E766779
-	for <lists+linux-s390@lfdr.de>; Fri, 28 Jul 2023 10:44:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AD987668CD
+	for <lists+linux-s390@lfdr.de>; Fri, 28 Jul 2023 11:27:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234919AbjG1IoU convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Fri, 28 Jul 2023 04:44:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42288 "EHLO
+        id S235536AbjG1J1L (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 28 Jul 2023 05:27:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233958AbjG1IoG (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 28 Jul 2023 04:44:06 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF2DD3A8D
-        for <linux-s390@vger.kernel.org>; Fri, 28 Jul 2023 01:44:03 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-66-QuWuNYGHMBmrzfdm4fjM8A-1; Fri, 28 Jul 2023 09:44:01 +0100
-X-MC-Unique: QuWuNYGHMBmrzfdm4fjM8A-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Fri, 28 Jul
- 2023 09:43:58 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Fri, 28 Jul 2023 09:43:58 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Aleksa Sarai' <cyphar@cyphar.com>,
-        Alexey Gladkov <legion@kernel.org>
-CC:     LKML <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "James.Bottomley@hansenpartnership.com" 
-        <James.Bottomley@hansenpartnership.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "christian@brauner.io" <christian@brauner.io>,
-        "dalias@libc.org" <dalias@libc.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "deepa.kernel@gmail.com" <deepa.kernel@gmail.com>,
-        "deller@gmx.de" <deller@gmx.de>,
-        "dhowells@redhat.com" <dhowells@redhat.com>,
-        "fenghua.yu@intel.com" <fenghua.yu@intel.com>,
-        "fweimer@redhat.com" <fweimer@redhat.com>,
-        "geert@linux-m68k.org" <geert@linux-m68k.org>,
-        "glebfm@altlinux.org" <glebfm@altlinux.org>,
-        "gor@linux.ibm.com" <gor@linux.ibm.com>,
-        "hare@suse.com" <hare@suse.com>, "hpa@zytor.com" <hpa@zytor.com>,
-        "ink@jurassic.park.msu.ru" <ink@jurassic.park.msu.ru>,
-        "jhogan@kernel.org" <jhogan@kernel.org>,
-        "kim.phillips@arm.com" <kim.phillips@arm.com>,
-        "ldv@altlinux.org" <ldv@altlinux.org>,
-        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "mattst88@gmail.com" <mattst88@gmail.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "monstr@monstr.eu" <monstr@monstr.eu>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "ralf@linux-mips.org" <ralf@linux-mips.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "tycho@tycho.ws" <tycho@tycho.ws>,
-        "will@kernel.org" <will@kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "ysato@users.sourceforge.jp" <ysato@users.sourceforge.jp>,
-        Palmer Dabbelt <palmer@sifive.com>
-Subject: RE: [PATCH v4 2/5] fs: Add fchmodat2()
-Thread-Topic: [PATCH v4 2/5] fs: Add fchmodat2()
-Thread-Index: AQHZwLFLeKGBJJpK+0qJRy2agWp2qK/O266A
-Date:   Fri, 28 Jul 2023 08:43:58 +0000
-Message-ID: <dc48b40748e24d3799e7ee66fa7e8cb4@AcuMS.aculab.com>
-References: <cover.1689074739.git.legion@kernel.org>
- <cover.1689092120.git.legion@kernel.org>
- <f2a846ef495943c5d101011eebcf01179d0c7b61.1689092120.git.legion@kernel.org>
- <njnhwhgmsk64e6vf3ur7fifmxlipmzez3r5g7ejozsrkbwvq7w@tu7w3ieystcq>
- <ZMEjlDNJkFpYERr1@example.org>
- <20230727.041348-imposing.uptake.velvet.nylon-712tDwzCAbCCoSGx@cyphar.com>
- <20230727.173441-loving.habit.lame.acrobat-V6VTPe8G4FRI@cyphar.com>
-In-Reply-To: <20230727.173441-loving.habit.lame.acrobat-V6VTPe8G4FRI@cyphar.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        with ESMTP id S234779AbjG1J0q (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 28 Jul 2023 05:26:46 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DFB63AA9;
+        Fri, 28 Jul 2023 02:23:47 -0700 (PDT)
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36S9EC02012984;
+        Fri, 28 Jul 2023 09:23:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=LWxQ1EEos2cV97Yv0h3NvRp8id3vWdJ7k6pejvwldaw=;
+ b=T3vRAJQRjBEqjxJux0b+10LOFR6Xk2Oox1qPuMVKzNohUA4XlcNnq5HaoQkbOjPrpDrA
+ ESq1iKXpCg/pg4R0S4oHsH2OGZniR+hZ3zx1q7RbPKaibk9SPi8t19ObrcOQxndjNB84
+ nqhuqKPLyxo3tOdJzsO/IWGBaxa8NWk5JfFZoG2ZtzO0pWpnULndKXDvkAhHTDeLLzeI
+ /Sbg1sIb2IgcZ9sAfWJz1z5bomVUdhi7ww/x/1yXOWY4EGfY336Zg3kgWmsIKqo5oUSX
+ uKb5mZ9m/7seivkNEIkJwrkGo5esELIt2E9FqIP0jRWifG8j3Fn/+6ybTNiPGnbDcJlh rA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s4av287s8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Jul 2023 09:23:46 +0000
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36S9EFXC013116;
+        Fri, 28 Jul 2023 09:23:46 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s4av287rx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Jul 2023 09:23:46 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36S6vmov002013;
+        Fri, 28 Jul 2023 09:23:45 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+        by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3s0tenmt96-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Jul 2023 09:23:45 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36S9NgHJ17957578
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jul 2023 09:23:42 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 11BC42004E;
+        Fri, 28 Jul 2023 09:23:42 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A2E1E20040;
+        Fri, 28 Jul 2023 09:23:41 +0000 (GMT)
+Received: from a46lp73.lnxne.boe (unknown [9.152.108.100])
+        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Fri, 28 Jul 2023 09:23:41 +0000 (GMT)
+From:   Steffen Eiden <seiden@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Michael Mueller <mimu@linux.vnet.ibm.com>,
+        Marc Hartmayer <mhartmay@linux.ibm.com>
+Subject: [PATCH v2 0/3]  KVM: s390: Enable AP instructions for pv-guests
+Date:   Fri, 28 Jul 2023 11:23:38 +0200
+Message-Id: <20230728092341.1131787-1-seiden@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: lB25_JTRQGoTL_y296AgFA60HxuWfoRE
+X-Proofpoint-GUID: LbtxkgT84I9fGprDZYHAaVsMSjdCtcgj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-27_10,2023-07-26_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
+ priorityscore=1501 lowpriorityscore=0 suspectscore=0 phishscore=0
+ mlxlogscore=533 impostorscore=0 clxscore=1015 adultscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2307280082
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-...
-> FWIW, I agree with Christian that these behaviours are not ideal (and
-> I'm working on a series that might allow for these things to be properly
-> blocked in the future) but there's also the consistency argument -- I
-> don't think fchownat() is much safer to allow in this way than
-> fchmodat() and (again) this behaviour is already possible through
-> procfs.
+This series enables general KVM support for AP-passthrough for Secure
+Execution guests (pv-guests).
 
-If the 'through procfs' involves readlink("/proc/self/fd/n") and
-accessing through the returned path then the permission checks
-are different.
-Using the returned path requires search permissions on all the
-directories.
+To enable AP inside pv-guests two things have to be done/considered:
+	1) set corresponding flags in the Create Secure Configuration UVC ifi
+     firmware supports AP for pv-guests (patch 3).
+	2) enable/disable AP in pv-guests if the VMM wants this (patch 2).
 
-This is all fine for xxxat() functions where a real open
-directory fd is supplied.
-But other cases definitely need a lot of thought to ensure
-they don't let programs acquire permissions they aren't
-supposed to have.
+since v1:
+  - PATCH 1: r-b from Claudio
+  - PATCH 2: fixed formatting issues (Claudio)
+  - PATCH 3: removed unnecessary checks (Claudio)
 
-	David
+Steffen
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+Steffen Eiden (3):
+  s390: uv: UV feature check utility
+  KVM: s390: Add UV feature negotiation
+  KVM: s390: pv:  Allow AP-instructions for pv guests
+
+ arch/s390/include/asm/kvm_host.h |  2 ++
+ arch/s390/include/asm/uv.h       | 17 ++++++++-
+ arch/s390/include/uapi/asm/kvm.h | 25 +++++++++++++
+ arch/s390/kernel/uv.c            |  2 +-
+ arch/s390/kvm/kvm-s390.c         | 62 +++++++++++++++++++++++++++++++-
+ arch/s390/kvm/pv.c               |  6 ++--
+ arch/s390/mm/fault.c             |  2 +-
+ 7 files changed, 110 insertions(+), 6 deletions(-)
+
+-- 
+2.40.1
 
