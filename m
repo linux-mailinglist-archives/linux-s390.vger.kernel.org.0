@@ -2,142 +2,102 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E19E773750
-	for <lists+linux-s390@lfdr.de>; Tue,  8 Aug 2023 05:07:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D72C8774356
+	for <lists+linux-s390@lfdr.de>; Tue,  8 Aug 2023 20:01:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229925AbjHHDHj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 7 Aug 2023 23:07:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42108 "EHLO
+        id S234257AbjHHSBx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 8 Aug 2023 14:01:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229553AbjHHDHh (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 7 Aug 2023 23:07:37 -0400
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D722180;
-        Mon,  7 Aug 2023 20:07:36 -0700 (PDT)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-5861116fd74so49005587b3.0;
-        Mon, 07 Aug 2023 20:07:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691464055; x=1692068855;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0G2Gm44L7ws5E/quoPqMuJmdghfzOor5wGEa6AaRIig=;
-        b=MIB1dRWNV6Yb3HUd1qPb/bgwaoUzAlGVu8CxiiwIDYwN4TMseNzdPMVbuAfPyciWjI
-         AZzeBtiA00C4EVQ8EGlp9e8Q3pbBFc8aCRl+HJu3YtRoio8lAQY1qu2UvIE5hChxs5Q1
-         PKMC/y7tlRiDWg5YOtPXbZsaYs//GKuhiSEDo5WpI7edOLzGAaAJjqvFIOQWWQAuLo7Z
-         JBsPnB5UvxOuJ1p76ZyxSuA7+KQWE3J2jS89kM5pl3PIv+dMsBBD/LquAyRZomdcC7zN
-         v+sSG+iPprRQeQoEH+XZP/GEzjEboCjqHBhNwHzm7vxhsHdZplrvrz31A5i2G+xxBQ4/
-         u+EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691464055; x=1692068855;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0G2Gm44L7ws5E/quoPqMuJmdghfzOor5wGEa6AaRIig=;
-        b=cTAhVJDVEwS8pBrL0SXNg3xFgnu4vZIU6lfQn2gDq/eIdolAU9TIC+ou5tokaftI+9
-         mtUtgXKRyRudmqhl9YfrHSS43aDD0oD/K37mVVcecuoDRxxbolTEFoZf5vO/ky7XGkXH
-         7J3sW/KIiEJvkuaE9Dq5LNGNXhIwCGi1YpPyqDosfSTIRe2oRSicB+02CwgQSwuCwQbN
-         KfJwPJEo/DaesAeCnohgFjM6xjNJlKCn7L6seUd6sfmNskz8x1+HOllrVd9Yr9Jf0HoX
-         grksd3LcUPDn23cLuTdAeryouLh/sxwbnaOABtHmiMeHIxPe22tDDyD0VPGUus1usR5P
-         OL7A==
-X-Gm-Message-State: AOJu0YznfGMieNEkSIdc/xYwQunbD1ZgIZuYbs6BDwk+bZMW8qVnrafK
-        tMz721jgIzMLSSdVF+/WF+kouKBvwYAulTCE11k=
-X-Google-Smtp-Source: AGHT+IHQrIvich9PHSVbgRXTdmB7iIbb8QzxP6y5/ZjBG6gKIk1MkGZwx3L/64MT/J6/QOrL9i/+Y+FD0/7A7U+VjlM=
-X-Received: by 2002:a0d:dd4a:0:b0:589:642d:6d84 with SMTP id
- g71-20020a0ddd4a000000b00589642d6d84mr2728002ywe.23.1691464055184; Mon, 07
- Aug 2023 20:07:35 -0700 (PDT)
+        with ESMTP id S234321AbjHHSBY (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Aug 2023 14:01:24 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C15F92D1D2
+        for <linux-s390@vger.kernel.org>; Tue,  8 Aug 2023 09:28:12 -0700 (PDT)
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 378DehYB001821;
+        Tue, 8 Aug 2023 13:57:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=wH+XVbml4PWZLeFFMXTb8CkeGQK/ylxrsb4suuw7v8w=;
+ b=A28vobJ1hqwQPEeZXnzTI9OAxjoJeimMSTozgbq5flRkOkyrRLoo6YyyItQQZjyDWuMJ
+ mpgfnsqBDSDcPpoPh/crX9XAllFtT5pfexngEK2/nTFsq3TxlQm63Bkp0WgQ5KJ3DNcF
+ wziQusWK7zYuM6YlgpusUy1RjS19/rPS0UgDkXKVp5OymhBWg1IhomHhrDOwBRwc1J17
+ QDHnE1fZ0IZpkCa8Uz2DJ2BMLxn9Sy0nWXbFZREBAj5uxB9Z8ETgSUjIh5jkkRJIM9oi
+ atHbVs87nXvhrgzQBVA6XdR7o3T3MrLNhJUBCOnxQynIzxDRmaVYAYopbYFWx0VD3wt9 ag== 
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sbph1gtdh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Aug 2023 13:57:30 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 378CI2NL006653;
+        Tue, 8 Aug 2023 13:57:29 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+        by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3sa0rsyfye-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Aug 2023 13:57:29 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 378DvQKI42795616
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 8 Aug 2023 13:57:26 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1703B20043;
+        Tue,  8 Aug 2023 13:57:26 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C4E8720040;
+        Tue,  8 Aug 2023 13:57:25 +0000 (GMT)
+Received: from osiris (unknown [9.171.5.170])
+        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Tue,  8 Aug 2023 13:57:25 +0000 (GMT)
+Date:   Tue, 8 Aug 2023 15:57:24 +0200
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     Yang Yingliang <yangyingliang@huawei.com>
+Cc:     linux-s390@vger.kernel.org, vneethv@linux.ibm.com,
+        gor@linux.ibm.com, agordeev@linux.ibm.com
+Subject: Re: [PATCH -next] s390: remove unnecessary dev_set_drvdata()
+Message-ID: <20230808135724.9396-E-hca@linux.ibm.com>
+References: <20230808125501.566824-1-yangyingliang@huawei.com>
 MIME-Version: 1.0
-References: <20230731071728.3493794-1-j.granados@samsung.com>
- <ZMgpck0rjqHR74sl@bombadil.infradead.org> <ZNFlqwwvE6w6HyHl@bombadil.infradead.org>
- <CANnsUMG3WO_19GpnsNaXPqu6eEnpBvYUpkrf1QbHwsc9wEoCZQ@mail.gmail.com>
- <ZNGBrkP7J2g/BAWV@bombadil.infradead.org> <CANnsUMGRBnatKB4-3eYjb5aG7YnXDiZG6cjuwSgtjvVF6ErJNg@mail.gmail.com>
- <ZNGv3Q5VBsS2/w4e@bombadil.infradead.org>
-In-Reply-To: <ZNGv3Q5VBsS2/w4e@bombadil.infradead.org>
-From:   Chris Maness <christopher.maness@gmail.com>
-Date:   Mon, 7 Aug 2023 20:07:24 -0700
-Message-ID: <CANnsUMGHnurbph9F7mex=1s0mxhwpNgeQbKJ6j1r37Qmd6LAMQ@mail.gmail.com>
-Subject: Re: [PATCH v2 00/14] sysctl: Add a size argument to register
- functions in sysctl
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Alexander Aring <alex.aring@gmail.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        "D. Wythe" <alibuda@linux.alibaba.com>,
-        David Ahern <dsahern@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Florian Westphal <fw@strlen.de>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jan Karcher <jaka@linux.ibm.com>,
-        Joel Granados <joel.granados@gmail.com>,
-        Joel Granados <j.granados@samsung.com>,
-        Joerg Reuter <jreuter@yaina.de>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Julian Anastasov <ja@ssi.bg>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Mat Martineau <martineau@kernel.org>,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Nikolay Aleksandrov <razor@blackwall.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Roopa Prabhu <roopa@nvidia.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        Simon Horman <horms@verge.net.au>,
-        Stefan Schmidt <stefan@datenfreihafen.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Tony Lu <tonylu@linux.alibaba.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Wen Gu <guwen@linux.alibaba.com>,
-        Wenjia Zhang <wenjia@linux.ibm.com>,
-        Will Deacon <will@kernel.org>, Xin Long <lucien.xin@gmail.com>,
-        bridge@lists.linux-foundation.org, coreteam@netfilter.org,
-        josh@joshtriplett.org, linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-wpan@vger.kernel.org, lvs-devel@vger.kernel.org,
-        mptcp@lists.linux.dev, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, rds-devel@oss.oracle.com,
-        willy@infradead.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230808125501.566824-1-yangyingliang@huawei.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: pKINBnvB74mRSGKM2ZRbpSDyu5Zw5Kgx
+X-Proofpoint-GUID: pKINBnvB74mRSGKM2ZRbpSDyu5Zw5Kgx
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-08_11,2023-08-08_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=380 spamscore=0
+ priorityscore=1501 impostorscore=0 malwarescore=0 phishscore=0
+ suspectscore=0 mlxscore=0 adultscore=0 bulkscore=0 lowpriorityscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2308080121
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
->
-> Are you reporting a separate regression that goes all the way back to v4 kernels?
->
+On Tue, Aug 08, 2023 at 08:55:01PM +0800, Yang Yingliang wrote:
+> The driver data will be cleared in device_unbind_cleanup() in driver
+> core code. So the dev_set_drvdata(..., NULL) called in remove and
+> error path in probe can be removed.
+> 
+> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+> ---
+>  drivers/s390/block/scm_drv.c      | 2 --
+>  drivers/s390/char/con3215.c       | 1 -
+>  drivers/s390/char/tape_core.c     | 1 -
+>  drivers/s390/cio/chsc_sch.c       | 2 --
+>  drivers/s390/cio/vfio_ccw_drv.c   | 2 --
+>  drivers/s390/crypto/vfio_ap_ops.c | 1 -
+>  6 files changed, 9 deletions(-)
 
-I am not certain what you mean by regression.
+And now you expect us to review six drivers if this trivial change may
+or may not introduce subtle bugs?
 
-> > v2 is fine there.
->
-> What does this mean?
-
-I have to go all the way back to kernel version 2 for the serial 6PACK
-driver to work.  If I try to use it in Kernel version 4, 5, or 6 the
-kernel panics as soon as I attempt to connect to another station.
-
->
->   Luis
-
-Chris KQ6UP
-
-
--- 
-Thanks,
-Chris Maness
+This is not going to happen, unless there is a really good reason why
+this patch makes sense besides some cleanup.
