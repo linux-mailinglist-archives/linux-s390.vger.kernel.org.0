@@ -2,245 +2,111 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BBDED778CB5
-	for <lists+linux-s390@lfdr.de>; Fri, 11 Aug 2023 13:05:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 681C0778DB4
+	for <lists+linux-s390@lfdr.de>; Fri, 11 Aug 2023 13:30:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235549AbjHKLFK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 11 Aug 2023 07:05:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51780 "EHLO
+        id S235907AbjHKL37 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 11 Aug 2023 07:29:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235374AbjHKLFJ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 11 Aug 2023 07:05:09 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 553F410DE;
-        Fri, 11 Aug 2023 04:05:07 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id DC4722187D;
-        Fri, 11 Aug 2023 11:05:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1691751905; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=62K7rmAiQlT4QiIMgUmahyvAENx33WnRwusS+e6awFw=;
-        b=WuD5vrmr3XVc5ZKVXU6zY5Sj6T7x7AAbovLYbdZRYlo4zkKtj5e/PC5sqzL0Jy1dwdnKNd
-        vwcMX2ea8HiOWZ/XQ4VV6hxcWOBjUicu8SN+0VmCJQRtnqy1CxBPBwY4VY5iyqS9yZJMy9
-        BieoyqKkgh46CTDBUJQomtmHOInJGJw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1691751905;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=62K7rmAiQlT4QiIMgUmahyvAENx33WnRwusS+e6awFw=;
-        b=b47DlquH2y42BUs1Euci8FoHZUSNF39JrvbebZkC90UwuMarbXPt68wJanMAP18jEBUXCK
-        178cJac1+fMd9dDw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id CDE9813A95;
-        Fri, 11 Aug 2023 11:05:05 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id bohBMuEV1mRQRQAAMHmgww
-        (envelope-from <jack@suse.cz>); Fri, 11 Aug 2023 11:05:05 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 14967A078D; Fri, 11 Aug 2023 13:05:05 +0200 (CEST)
-From:   Jan Kara <jack@suse.cz>
-To:     <linux-fsdevel@vger.kernel.org>
-Cc:     <linux-block@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
-        linux-s390@vger.kernel.org,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>
-Subject: [PATCH 14/29] s390/dasd: Convert to bdev_open_by_path()
-Date:   Fri, 11 Aug 2023 13:04:45 +0200
-Message-Id: <20230811110504.27514-14-jack@suse.cz>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20230810171429.31759-1-jack@suse.cz>
-References: <20230810171429.31759-1-jack@suse.cz>
+        with ESMTP id S233506AbjHKL37 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 11 Aug 2023 07:29:59 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A976E64;
+        Fri, 11 Aug 2023 04:29:58 -0700 (PDT)
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37BBSWvP014101;
+        Fri, 11 Aug 2023 11:29:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=oovwbOe3YxysVBN2CU5Se6/QCcsjf2rFHI4JDDIXwWo=;
+ b=CASHy4VpSQpzhkj9m19phsS9LFtN8NLOtcLs6Ar4KAiB2ieyGQLBpyP3Fg3LE9ozbpgx
+ 70RPYtZIKou5ScK+dSKTYT0B7TPk+v2QGAcow3wAMC5qj5yxHSh+ocacGrosuBV0Ltn5
+ kO0wWeFcuBO27TL2GtOnSzfB4jzOcg0I3p38hG+bL9ZAgS2/FVOG2hPtsAz2y32TPsWV
+ aaRlPcbR8Lv/OD62q/HUFRq1F4bMEUAUS+SPP9g+Rx4prork9Rm0i5+lEce04oXWjXV/
+ mF5H+WjD3E5DY8iQFSh0dQvorluJaetpqldhzl5/wWpgCYjQn97oUrNM8AO5VRZZ3MTO uQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sdm56g0g8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 11 Aug 2023 11:29:58 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37BBTvAj017012;
+        Fri, 11 Aug 2023 11:29:57 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sdm56g0g4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 11 Aug 2023 11:29:57 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37B9rKUI007606;
+        Fri, 11 Aug 2023 11:29:56 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+        by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3sa1502mwe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 11 Aug 2023 11:29:53 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37BBToJ562652726
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 11 Aug 2023 11:29:50 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 477BC2004F;
+        Fri, 11 Aug 2023 11:29:50 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E58DF2004E;
+        Fri, 11 Aug 2023 11:29:49 +0000 (GMT)
+Received: from t35lp63.lnxne.boe (unknown [9.152.108.100])
+        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Fri, 11 Aug 2023 11:29:49 +0000 (GMT)
+From:   Nico Boehr <nrb@linux.ibm.com>
+To:     frankja@linux.ibm.com, imbrenda@linux.ibm.com, thuth@redhat.com,
+        nsg@linux.ibm.com
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [kvm-unit-tests PATCH v1] s390x: spec_ex: load full register
+Date:   Fri, 11 Aug 2023 13:29:36 +0200
+Message-ID: <20230811112949.888903-1-nrb@linux.ibm.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6080; i=jack@suse.cz; h=from:subject; bh=0WZHEI2sSL3SXZX4/9rho4Z8TGlkksR/XxY1b45NdMo=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBk1hXPEqbPsRCUjAJyCIIc5SLwP3SUthUfb22xCLNc Td93p/KJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCZNYVzwAKCRCcnaoHP2RA2bgACA Cs2ku6xgO5K/MLN8y3rKpyYxbylHofMZz5gwtrRpxbHXPz0kC9YTkiOs+QQk99UP8ZQ8e1qv3aiVX2 BAshT3HdlrcqZyBtnOppmgz5y7c9gCrdTyCig+ipFHuLJCe/QsNP1tOdZJcO/wZCSO+hfXP0UXT2m0 gbFNebziHdqnuXRp6L8pNZrXvNQKguOHNwXCpblaRbqpHQ1BYyMfZSXh0qHmGGDewCg5sBQY1zYuWk +KO9joJ5X6d76p8iEhQ24NgwMSeoUdPBzWYfZj+p52cvStdP/VUudO5YTaDGWQeGsDI+DJvlpqfW2K dZ/QqQtjO3iAE+P67b5HwcsXTIRIPK
-X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_SOFTFAIL,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: makIMKgjNYGLz1Mpl6YyRBUExFlvCMbi
+X-Proofpoint-ORIG-GUID: Fvr5o6LZoEAHwe4Fvi-Rkqxqwv1BFlLl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-11_02,2023-08-10_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ clxscore=1015 phishscore=0 mlxlogscore=999 malwarescore=0 adultscore=0
+ impostorscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2308110101
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Convert dasd to use bdev_open_by_path() and pass the handle around.
+There may be contents left in the upper 32 bits of executed_addr; hence
+we should use a 64-bit load to make sure they are overwritten.
 
-CC: linux-s390@vger.kernel.org
-CC: Christian Borntraeger <borntraeger@linux.ibm.com>
-CC: Sven Schnelle <svens@linux.ibm.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Nico Boehr <nrb@linux.ibm.com>
 ---
- drivers/s390/block/dasd.c       | 12 +++++----
- drivers/s390/block/dasd_genhd.c | 45 ++++++++++++++++-----------------
- drivers/s390/block/dasd_int.h   |  2 +-
- drivers/s390/block/dasd_ioctl.c |  2 +-
- 4 files changed, 31 insertions(+), 30 deletions(-)
+ s390x/spec_ex.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/s390/block/dasd.c b/drivers/s390/block/dasd.c
-index 50a5ff70814a..b12f5719193f 100644
---- a/drivers/s390/block/dasd.c
-+++ b/drivers/s390/block/dasd.c
-@@ -412,7 +412,8 @@ dasd_state_ready_to_online(struct dasd_device * device)
- 					KOBJ_CHANGE);
- 			return 0;
- 		}
--		disk_uevent(device->block->bdev->bd_disk, KOBJ_CHANGE);
-+		disk_uevent(device->block->bdev_handle->bdev->bd_disk,
-+			    KOBJ_CHANGE);
- 	}
- 	return 0;
- }
-@@ -432,7 +433,8 @@ static int dasd_state_online_to_ready(struct dasd_device *device)
- 
- 	device->state = DASD_STATE_READY;
- 	if (device->block && !(device->features & DASD_FEATURE_USERAW))
--		disk_uevent(device->block->bdev->bd_disk, KOBJ_CHANGE);
-+		disk_uevent(device->block->bdev_handle->bdev->bd_disk,
-+			    KOBJ_CHANGE);
- 	return 0;
- }
- 
-@@ -3590,7 +3592,7 @@ int dasd_generic_set_offline(struct ccw_device *cdev)
- 	 * in the other openers.
- 	 */
- 	if (device->block) {
--		max_count = device->block->bdev ? 0 : -1;
-+		max_count = device->block->bdev_handle ? 0 : -1;
- 		open_count = atomic_read(&device->block->open_count);
- 		if (open_count > max_count) {
- 			if (open_count > 0)
-@@ -3636,8 +3638,8 @@ int dasd_generic_set_offline(struct ccw_device *cdev)
- 		 * so sync bdev first and then wait for our queues to become
- 		 * empty
- 		 */
--		if (device->block) {
--			rc = fsync_bdev(device->block->bdev);
-+		if (device->block && device->block->bdev_handle) {
-+			rc = fsync_bdev(device->block->bdev_handle->bdev);
- 			if (rc != 0)
- 				goto interrupted;
- 		}
-diff --git a/drivers/s390/block/dasd_genhd.c b/drivers/s390/block/dasd_genhd.c
-index fe5108a1b332..55e3abe94cde 100644
---- a/drivers/s390/block/dasd_genhd.c
-+++ b/drivers/s390/block/dasd_genhd.c
-@@ -127,15 +127,15 @@ void dasd_gendisk_free(struct dasd_block *block)
-  */
- int dasd_scan_partitions(struct dasd_block *block)
- {
--	struct block_device *bdev;
-+	struct bdev_handle *bdev_handle;
- 	int rc;
- 
--	bdev = blkdev_get_by_dev(disk_devt(block->gdp), BLK_OPEN_READ, NULL,
--				 NULL);
--	if (IS_ERR(bdev)) {
-+	bdev_handle = bdev_open_by_dev(disk_devt(block->gdp), BLK_OPEN_READ,
-+				       NULL, NULL);
-+	if (IS_ERR(bdev_handle)) {
- 		DBF_DEV_EVENT(DBF_ERR, block->base,
- 			      "scan partitions error, blkdev_get returned %ld",
--			      PTR_ERR(bdev));
-+			      PTR_ERR(bdev_handle));
- 		return -ENODEV;
- 	}
- 
-@@ -147,16 +147,15 @@ int dasd_scan_partitions(struct dasd_block *block)
- 				"scan partitions error, rc %d", rc);
- 
- 	/*
--	 * Since the matching blkdev_put call to the blkdev_get in
--	 * this function is not called before dasd_destroy_partitions
--	 * the offline open_count limit needs to be increased from
--	 * 0 to 1. This is done by setting device->bdev (see
--	 * dasd_generic_set_offline). As long as the partition
--	 * detection is running no offline should be allowed. That
--	 * is why the assignment to device->bdev is done AFTER
--	 * the BLKRRPART ioctl.
-+	 * Since the matching bdev_release() call to the
-+	 * bdev_open_by_path() in this function is not called before
-+	 * dasd_destroy_partitions the offline open_count limit needs to be
-+	 * increased from 0 to 1. This is done by setting device->bdev_handle
-+	 * (see dasd_generic_set_offline). As long as the partition detection
-+	 * is running no offline should be allowed. That is why the assignment
-+	 * to block->bdev_handle is done AFTER the BLKRRPART ioctl.
- 	 */
--	block->bdev = bdev;
-+	block->bdev_handle = bdev_handle;
- 	return 0;
- }
- 
-@@ -166,21 +165,21 @@ int dasd_scan_partitions(struct dasd_block *block)
-  */
- void dasd_destroy_partitions(struct dasd_block *block)
- {
--	struct block_device *bdev;
-+	struct bdev_handle *bdev_handle;
- 
- 	/*
--	 * Get the bdev pointer from the device structure and clear
--	 * device->bdev to lower the offline open_count limit again.
-+	 * Get the bdev_handle pointer from the device structure and clear
-+	 * device->bdev_handle to lower the offline open_count limit again.
- 	 */
--	bdev = block->bdev;
--	block->bdev = NULL;
-+	bdev_handle = block->bdev_handle;
-+	block->bdev_handle = NULL;
- 
--	mutex_lock(&bdev->bd_disk->open_mutex);
--	bdev_disk_changed(bdev->bd_disk, true);
--	mutex_unlock(&bdev->bd_disk->open_mutex);
-+	mutex_lock(&bdev_handle->bdev->bd_disk->open_mutex);
-+	bdev_disk_changed(bdev_handle->bdev->bd_disk, true);
-+	mutex_unlock(&bdev_handle->bdev->bd_disk->open_mutex);
- 
- 	/* Matching blkdev_put to the blkdev_get in dasd_scan_partitions. */
--	blkdev_put(bdev, NULL);
-+	bdev_release(bdev_handle);
- }
- 
- int dasd_gendisk_init(void)
-diff --git a/drivers/s390/block/dasd_int.h b/drivers/s390/block/dasd_int.h
-index 0aa56351da72..73c5eb0ae6ad 100644
---- a/drivers/s390/block/dasd_int.h
-+++ b/drivers/s390/block/dasd_int.h
-@@ -646,7 +646,7 @@ struct dasd_block {
- 	struct gendisk *gdp;
- 	spinlock_t request_queue_lock;
- 	struct blk_mq_tag_set tag_set;
--	struct block_device *bdev;
-+	struct bdev_handle *bdev_handle;
- 	atomic_t open_count;
- 
- 	unsigned long blocks;	   /* size of volume in blocks */
-diff --git a/drivers/s390/block/dasd_ioctl.c b/drivers/s390/block/dasd_ioctl.c
-index d55862605b82..61b9675e2a67 100644
---- a/drivers/s390/block/dasd_ioctl.c
-+++ b/drivers/s390/block/dasd_ioctl.c
-@@ -537,7 +537,7 @@ static int __dasd_ioctl_information(struct dasd_block *block,
- 	 * This must be hidden from user-space.
- 	 */
- 	dasd_info->open_count = atomic_read(&block->open_count);
--	if (!block->bdev)
-+	if (!block->bdev_handle)
- 		dasd_info->open_count++;
- 
- 	/*
+diff --git a/s390x/spec_ex.c b/s390x/spec_ex.c
+index e3dd85dcb153..72b942576369 100644
+--- a/s390x/spec_ex.c
++++ b/s390x/spec_ex.c
+@@ -142,7 +142,7 @@ static int psw_odd_address(void)
+ 		"	larl	%%r1,0f\n"
+ 		"	stg	%%r1,%[fixup_addr]\n"
+ 		"	lpswe	%[odd_psw]\n"
+-		"0:	lr	%[executed_addr],%%r0\n"
++		"0:	lgr	%[executed_addr],%%r0\n"
+ 	: [fixup_addr] "=&T" (fixup_psw.addr),
+ 	  [executed_addr] "=d" (executed_addr)
+ 	: [odd_psw] "Q" (odd)
 -- 
-2.35.3
+2.41.0
 
