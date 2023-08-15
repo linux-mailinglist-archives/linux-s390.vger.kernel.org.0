@@ -2,93 +2,116 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 33B5877CED1
-	for <lists+linux-s390@lfdr.de>; Tue, 15 Aug 2023 17:15:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A60177CF64
+	for <lists+linux-s390@lfdr.de>; Tue, 15 Aug 2023 17:42:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237858AbjHOPOp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 15 Aug 2023 11:14:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57060 "EHLO
+        id S238178AbjHOPmC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 15 Aug 2023 11:42:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237922AbjHOPOf (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 15 Aug 2023 11:14:35 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63A881BDC;
-        Tue, 15 Aug 2023 08:14:24 -0700 (PDT)
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37FEwxet001469;
-        Tue, 15 Aug 2023 15:14:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=zl5/UEVLlsLC2yVAXWkapXObekJg1H6TUvZ2bbhSqeg=;
- b=oCR19rTkWxiSS0LDzyas0HbSQdMo+BFweZd2wacATphu6QMZ7g2bQar5ds4SvK1G9paD
- D+GjWaVYPCi1d0Tx4Ec/oh4fwN7v30k9EgAntbuAFk7uKQVYzpBoNXWZgcpNyczy5vUo
- TygH46uAFInZ9A91oH7J8mMmQP6zpDwsZioVW17+sghqgMF60SJPpEtuHN/LaE7d29o/
- OqzfTz2p4p70CTu9/F27O15NCa4a60pcwnP+PdFYL0DVdiLqIvOPU1AsL2iHpIL5eC83
- 8VWzAWVgskk+4elkEGyQV4PXSbq4wcbp06epsVRF3k2Hw1+x7hfHIt6TMRZWeuiJJS5n 5w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sgbkm8kbu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 15 Aug 2023 15:14:22 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37FF0MU0006222;
-        Tue, 15 Aug 2023 15:14:22 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sgbkm8kbb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 15 Aug 2023 15:14:22 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-        by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37FDYleX007871;
-        Tue, 15 Aug 2023 15:14:21 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-        by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3senwk5ecr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 15 Aug 2023 15:14:21 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37FFEH3E15401558
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Aug 2023 15:14:17 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5A42120040;
-        Tue, 15 Aug 2023 15:14:17 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1AC9E2004E;
-        Tue, 15 Aug 2023 15:14:17 +0000 (GMT)
-Received: from a46lp73.lnxne.boe (unknown [9.152.108.100])
-        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Tue, 15 Aug 2023 15:14:17 +0000 (GMT)
-From:   Steffen Eiden <seiden@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Michael Mueller <mimu@linux.vnet.ibm.com>,
-        Marc Hartmayer <mhartmay@linux.ibm.com>,
+        with ESMTP id S238210AbjHOPl7 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 15 Aug 2023 11:41:59 -0400
+Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99454E61
+        for <linux-s390@vger.kernel.org>; Tue, 15 Aug 2023 08:41:58 -0700 (PDT)
+Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-586a3159588so78107827b3.0
+        for <linux-s390@vger.kernel.org>; Tue, 15 Aug 2023 08:41:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1692114118; x=1692718918;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=P7TsLh4UpmerFxSf2LHp//sOCj39QtIaP8NhFu7Ity0=;
+        b=v/t1rSu7IOqD7zsEvHxRPZ8PsCIFzAnrAyhA1GeAnqzR3gqcLYYTCisHr6LsT22vfP
+         4laXof+eVPcmpLgSaUurUglySIUk5wTKrOXJIVrfFuzCfybCzb0/0AVfQMVJ0iJIRG4H
+         0geKl/MMV99hPY+b1UkztXinVcOvwL2sVflQuURKZUXygILqXy0hylwT5O5AGgmvPpyb
+         srYr1if/5tuZjeqAnbfWF3gwfEMlVFJI+jpZVbFzcg3JYBWEdRGg/oIVxBn0/AdWjomv
+         dLXCkhljXHfLN7Qp8CgGrb1wPb2fkkHuSPRQ+VOFXR8Uhg34HjYmVoNDAYs3GRvk+rOp
+         M2IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692114118; x=1692718918;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=P7TsLh4UpmerFxSf2LHp//sOCj39QtIaP8NhFu7Ity0=;
+        b=JcJg75P2Ev4SiSl0m6I4BuodggBF9Y6/vqIUxM/4pJLsYRjXrV/15LSH2SHDtWMcHn
+         YMB3U3TVDzNXbGfq0MhyNC5crYsckm17k707H3jiqtA+RPL1ap/gOj5HKDezmUiD/3cA
+         5ZBu5aUS8C+LIU5gAoVrlynu4xQSYxIM0K6AtGRCCxbIjfUM97ANruedulxh9VyNk1dj
+         ItRYDqhG7lcnX/8kbAJtNTtw2/K50/cPMufROkGbQLdqjBnNQPFx8I/io9a5lJ36Dv3e
+         UkqfAz8Af+ulnkAYNau028ivfqHTQSIxtSpwuyUIM93L7hf6Wvu0UQYSsb/nmD4e0dbs
+         oEdQ==
+X-Gm-Message-State: AOJu0YwxnKktvJf9arPftYaHoV1N+BkwJnHTFrX2lwV2rfo+sJu6jjlG
+        PlMrFxu72Q97rZ7cEw+8jPFhUA==
+X-Google-Smtp-Source: AGHT+IFym1gqMNFckrS6y/rCULvNhW2b/lORvGgm0DCRSg/pwTXV+un25GqW0LvhUjQm8jbcdgknTw==
+X-Received: by 2002:a0d:cc92:0:b0:589:a4c7:ee40 with SMTP id o140-20020a0dcc92000000b00589a4c7ee40mr2727997ywd.2.1692114117698;
+        Tue, 15 Aug 2023 08:41:57 -0700 (PDT)
+Received: from ripple.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id x206-20020a814ad7000000b005707fb5110bsm3475226ywa.58.2023.08.15.08.41.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Aug 2023 08:41:57 -0700 (PDT)
+Date:   Tue, 15 Aug 2023 08:41:45 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@ripple.attlocal.net
+To:     David Hildenbrand <david@redhat.com>
+cc:     Hugh Dickins <hughd@google.com>, Jann Horn <jannh@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Qi Zheng <zhengqi.arch@bytedance.com>,
+        Yang Shi <shy828301@gmail.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Peter Xu <peterx@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>, Yu Zhao <yuzhao@google.com>,
+        Alistair Popple <apopple@nvidia.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Steven Price <steven.price@arm.com>,
+        SeongJae Park <sj@kernel.org>,
+        Lorenzo Stoakes <lstoakes@gmail.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Naoya Horiguchi <naoya.horiguchi@nec.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Zack Rusin <zackr@vmware.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Axel Rasmussen <axelrasmussen@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Song Liu <song@kernel.org>,
+        Thomas Hellstrom <thomas.hellstrom@linux.intel.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
         Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>
-Subject: [PATCH v4 4/4] KVM: s390: pv:  Allow AP-instructions for pv-guests
-Date:   Tue, 15 Aug 2023 17:14:15 +0200
-Message-ID: <20230815151415.379760-5-seiden@linux.ibm.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230815151415.379760-1-seiden@linux.ibm.com>
-References: <20230815151415.379760-1-seiden@linux.ibm.com>
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Vishal Moola <vishal.moola@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Zi Yan <ziy@nvidia.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        sparclinux@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Subject: Re: [BUG] Re: [PATCH v3 10/13] mm/khugepaged: collapse_pte_mapped_thp()
+ with mmap_read_lock()
+In-Reply-To: <76e6b2ad-4e1e-2ad3-95df-00b4d33ec9d2@redhat.com>
+Message-ID: <35d52c74-9ba9-211e-a4f-ade6ed318e76@google.com>
+References: <7cd843a9-aa80-14f-5eb2-33427363c20@google.com> <b53be6a4-7715-51f9-aad-f1347dcb7c4@google.com> <CAG48ez0FxiRC4d3VTu_a9h=rg5FW-kYD5Rg5xo_RDBM0LTTqZQ@mail.gmail.com> <cacd4a19-386d-8bea-400-e99778dbc3b@google.com>
+ <76e6b2ad-4e1e-2ad3-95df-00b4d33ec9d2@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: c5e0YDsGHZ0mqVcfYuewtArnOzZL5cVl
-X-Proofpoint-GUID: SM6JyOgy_3ThTZifKnzHrdCfW-3eQyVt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-08-15_14,2023-08-15_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- adultscore=0 mlxlogscore=999 spamscore=0 mlxscore=0 malwarescore=0
- impostorscore=0 lowpriorityscore=0 priorityscore=1501 clxscore=1015
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2308150134
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -96,67 +119,41 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Introduces new feature bits and enablement flags for AP and AP IRQ
-support.
+On Tue, 15 Aug 2023, David Hildenbrand wrote:
+> On 15.08.23 08:34, Hugh Dickins wrote:
+> > On Mon, 14 Aug 2023, Jann Horn wrote:
+> >>
+> >>          /* step 4: remove page table */
+> >> +       if (strcmp(current->comm, "DELAYME") == 0) {
+> >> +               pr_warn("%s: BEGIN DELAY INJECTION\n", __func__);
+> >> +               mdelay(5000);
+> >> +               pr_warn("%s: END DELAY INJECTION\n", __func__);
+> >> +       }
+> >>
+> >>          /* Huge page lock is still held, so page table must remain empty
+> >>          */
+> >>          pml = pmd_lock(mm, pmd);
+> >>
+> >>
+> >> And then run the attached reproducer against mm/mm-everything. You
+> >> should get this in dmesg:
+> >>
+> >> [  206.578096] BUG: Bad rss-counter state mm:000000000942ebea
+> >> type:MM_ANONPAGES val:1
+> > 
+> > Thanks a lot, Jann. I haven't thought about it at all yet; and just
+> > tried to reproduce, but haven't yet got the "BUG: Bad rss-counter":
+> > just see "Invalid argument" on the UFFDIO_COPY ioctl.
+> > Will investigate tomorrow.
+> 
+> Maybe you're missing a fixup:
+> 
+> https://lkml.kernel.org/r/20230810192128.1855570-1-axelrasmussen@google.com
+> 
+> When the src address is not page aligned, UFFDIO_COPY in mm-unstable would
+> erroneously fail.
 
-Signed-off-by: Steffen Eiden <seiden@linux.ibm.com>
-Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
----
- arch/s390/include/asm/uv.h | 12 +++++++++++-
- arch/s390/kvm/pv.c         |  6 ++++--
- 2 files changed, 15 insertions(+), 3 deletions(-)
+You got it, many thanks David: I had assumed that my next-20230808 tree
+would be up-to-date enough, but it wasn't.  Reproduced now.
 
-diff --git a/arch/s390/include/asm/uv.h b/arch/s390/include/asm/uv.h
-index 823adfff7315..0e7bd3873907 100644
---- a/arch/s390/include/asm/uv.h
-+++ b/arch/s390/include/asm/uv.h
-@@ -99,6 +99,8 @@ enum uv_cmds_inst {
- enum uv_feat_ind {
- 	BIT_UV_FEAT_MISC = 0,
- 	BIT_UV_FEAT_AIV = 1,
-+	BIT_UV_FEAT_AP = 4,
-+	BIT_UV_FEAT_AP_INTR = 5,
- };
- 
- struct uv_cb_header {
-@@ -159,7 +161,15 @@ struct uv_cb_cgc {
- 	u64 guest_handle;
- 	u64 conf_base_stor_origin;
- 	u64 conf_virt_stor_origin;
--	u64 reserved30;
-+	u8  reserved30[6];
-+	union {
-+		struct {
-+			u16 : 14;
-+			u16 ap_instr_intr : 1;
-+			u16 ap_allow_instr : 1;
-+		};
-+		u16 raw;
-+	} flags;
- 	u64 guest_stor_origin;
- 	u64 guest_stor_len;
- 	u64 guest_sca;
-diff --git a/arch/s390/kvm/pv.c b/arch/s390/kvm/pv.c
-index 8570ee324607..75e81ba26d04 100644
---- a/arch/s390/kvm/pv.c
-+++ b/arch/s390/kvm/pv.c
-@@ -576,12 +576,14 @@ int kvm_s390_pv_init_vm(struct kvm *kvm, u16 *rc, u16 *rrc)
- 	uvcb.conf_base_stor_origin =
- 		virt_to_phys((void *)kvm->arch.pv.stor_base);
- 	uvcb.conf_virt_stor_origin = (u64)kvm->arch.pv.stor_var;
-+	uvcb.flags.ap_allow_instr = kvm->arch.model.uv_feat_guest.ap;
-+	uvcb.flags.ap_instr_intr = kvm->arch.model.uv_feat_guest.ap_intr;
- 
- 	cc = uv_call_sched(0, (u64)&uvcb);
- 	*rc = uvcb.header.rc;
- 	*rrc = uvcb.header.rrc;
--	KVM_UV_EVENT(kvm, 3, "PROTVIRT CREATE VM: handle %llx len %llx rc %x rrc %x",
--		     uvcb.guest_handle, uvcb.guest_stor_len, *rc, *rrc);
-+	KVM_UV_EVENT(kvm, 3, "PROTVIRT CREATE VM: handle %llx len %llx rc %x rrc %x flags %04x",
-+		     uvcb.guest_handle, uvcb.guest_stor_len, *rc, *rrc, uvcb.flags.raw);
- 
- 	/* Outputs */
- 	kvm->arch.pv.handle = uvcb.guest_handle;
--- 
-2.41.0
-
+Hugh 
