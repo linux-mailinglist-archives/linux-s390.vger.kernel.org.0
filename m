@@ -2,85 +2,117 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2826A77F790
-	for <lists+linux-s390@lfdr.de>; Thu, 17 Aug 2023 15:21:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36EE077F7C7
+	for <lists+linux-s390@lfdr.de>; Thu, 17 Aug 2023 15:32:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351336AbjHQNUx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 17 Aug 2023 09:20:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42428 "EHLO
+        id S1351520AbjHQNbk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 17 Aug 2023 09:31:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351369AbjHQNUt (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 17 Aug 2023 09:20:49 -0400
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FE052133;
-        Thu, 17 Aug 2023 06:20:47 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=guangguan.wang@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0Vq.3QQz_1692278440;
-Received: from localhost.localdomain(mailfrom:guangguan.wang@linux.alibaba.com fp:SMTPD_---0Vq.3QQz_1692278440)
-          by smtp.aliyun-inc.com;
-          Thu, 17 Aug 2023 21:20:41 +0800
-From:   Guangguan Wang <guangguan.wang@linux.alibaba.com>
-To:     wenjia@linux.ibm.com, jaka@linux.ibm.com, kgraul@linux.ibm.com,
-        tonylu@linux.alibaba.com, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com
-Cc:     horms@kernel.org, alibuda@linux.alibaba.com,
-        guwen@linux.alibaba.com, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 6/6] net/smc: Extend SMCR v2 linkgroup netlink attribute
-Date:   Thu, 17 Aug 2023 21:20:32 +0800
-Message-Id: <20230817132032.23397-7-guangguan.wang@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.3 (Apple Git-128)
-In-Reply-To: <20230817132032.23397-1-guangguan.wang@linux.alibaba.com>
-References: <20230817132032.23397-1-guangguan.wang@linux.alibaba.com>
+        with ESMTP id S1351492AbjHQNbM (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 17 Aug 2023 09:31:12 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F225211E;
+        Thu, 17 Aug 2023 06:31:10 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id EA45921838;
+        Thu, 17 Aug 2023 13:31:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1692279068;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=rxHsVahN+II7L6QdwHgwa3dykGnq3oewSCrsfH/KRNs=;
+        b=pHNe7my7estC1s/b6vNW11izgXmUg8eLSmwUlnvrKjW45L2s+O3jB8frT5bERp44nW9BFf
+        oxFCapVFDSxEzySP1Lq1l6jfELzBVUh15T6d3FJa1ZFtKyzP5PsN2w5msAKzUcn2aM1xMG
+        iUzTD5mH+tGbv6b5/MH0uDUtd61l+QY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1692279068;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=rxHsVahN+II7L6QdwHgwa3dykGnq3oewSCrsfH/KRNs=;
+        b=ZrIkejyby1h+sgyUZ9stf6CAWIOutsF7wcK+5OakVnNnUR9eSPlgD0dCnK7CEY4g4rPXpz
+        YA5vuiECt2DwOpCQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8AEBC1392B;
+        Thu, 17 Aug 2023 13:31:08 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id ycUOIRwh3mR0AwAAMHmgww
+        (envelope-from <dsterba@suse.cz>); Thu, 17 Aug 2023 13:31:08 +0000
+Date:   Thu, 17 Aug 2023 15:24:39 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     David Sterba <dsterba@suse.cz>
+Cc:     Christian Brauner <brauner@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>,
+        Denis Efremov <efremov@linux.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        "Darrick J . Wong" <djwong@kernel.org>, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>, linux-block@vger.kernel.org,
+        nbd@other.debian.org, linux-s390@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 05/17] btrfs: open block devices after superblock creation
+Message-ID: <20230817132439.GS2420@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20230811100828.1897174-1-hch@lst.de>
+ <20230811100828.1897174-6-hch@lst.de>
+ <20230811-wildpark-bronzen-5e30a56de1a1@brauner>
+ <20230811131131.GN2420@suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230811131131.GN2420@suse.cz>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Add SMC_NLA_LGR_R_V2_MAX_CONNS and SMC_NLA_LGR_R_V2_MAX_LINKS
-to SMCR v2 linkgroup netlink attribute SMC_NLA_LGR_R_V2 for
-linkgroup's detail info showing.
+On Fri, Aug 11, 2023 at 03:11:31PM +0200, David Sterba wrote:
+> On Fri, Aug 11, 2023 at 02:44:50PM +0200, Christian Brauner wrote:
+> > On Fri, Aug 11, 2023 at 12:08:16PM +0200, Christoph Hellwig wrote:
+> > > Currently btrfs_mount_root opens the block devices before committing to
+> > > allocating a super block. That creates problems for restricting the
+> > > number of writers to a device, and also leads to a unusual and not very
+> > > helpful holder (the fs_type).
+> > > 
+> > > Reorganize the code to first check whether the superblock for a
+> > > particular fsid does already exist and open the block devices only if it
+> > > doesn't, mirroring the recent changes to the VFS mount helpers.  To do
+> > > this the increment of the in_use counter moves out of btrfs_open_devices
+> > > and into the only caller in btrfs_mount_root so that it happens before
+> > > dropping uuid_mutex around the call to sget.
+> > > 
+> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > ---
+> > 
+> > Looks good to me,
+> > Acked-by: Christian Brauner <brauner@kernel.org>
+> > 
+> > And ofc, would be great to get btrfs reviews.
+> 
+> I'll take a look but there are some performance regressions to deal with
+> and pre-merge window freeze so it won't be soon.
 
-Signed-off-by: Guangguan Wang <guangguan.wang@linux.alibaba.com>
----
- include/uapi/linux/smc.h | 2 ++
- net/smc/smc_core.c       | 4 ++++
- 2 files changed, 6 insertions(+)
-
-diff --git a/include/uapi/linux/smc.h b/include/uapi/linux/smc.h
-index bb4dacca31e7..837fcd4b0abc 100644
---- a/include/uapi/linux/smc.h
-+++ b/include/uapi/linux/smc.h
-@@ -107,6 +107,8 @@ enum {
- enum {
- 	SMC_NLA_LGR_R_V2_UNSPEC,
- 	SMC_NLA_LGR_R_V2_DIRECT,	/* u8 */
-+	SMC_NLA_LGR_R_V2_MAX_CONNS,	/* u8 */
-+	SMC_NLA_LGR_R_V2_MAX_LINKS,	/* u8 */
- 	__SMC_NLA_LGR_R_V2_MAX,
- 	SMC_NLA_LGR_R_V2_MAX = __SMC_NLA_LGR_R_V2_MAX - 1
- };
-diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
-index 1e1475084bb4..ef5336df3b09 100644
---- a/net/smc/smc_core.c
-+++ b/net/smc/smc_core.c
-@@ -319,6 +319,10 @@ static int smc_nl_fill_smcr_lgr_v2(struct smc_link_group *lgr,
- 		goto errattr;
- 	if (nla_put_u8(skb, SMC_NLA_LGR_R_V2_DIRECT, !lgr->uses_gateway))
- 		goto errv2attr;
-+	if (nla_put_u8(skb, SMC_NLA_LGR_R_V2_MAX_CONNS, lgr->max_conns))
-+		goto errv2attr;
-+	if (nla_put_u8(skb, SMC_NLA_LGR_R_V2_MAX_LINKS, lgr->max_links))
-+		goto errv2attr;
- 
- 	nla_nest_end(skb, v2_attrs);
- 	return 0;
--- 
-2.24.3 (Apple Git-128)
-
+I'd rather take the btrfs patches via my tree and get them tested for a
+longer time.  This patch in particular changes locking, mount, device
+management, that's beyond what I'd consider safe to get merged outside
+of btrfs.
