@@ -2,336 +2,140 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9983B7813A9
-	for <lists+linux-s390@lfdr.de>; Fri, 18 Aug 2023 21:43:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14C957817E4
+	for <lists+linux-s390@lfdr.de>; Sat, 19 Aug 2023 09:05:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379713AbjHRTm6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 18 Aug 2023 15:42:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53600 "EHLO
+        id S1344023AbjHSHDs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 19 Aug 2023 03:03:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379950AbjHRTmh (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 18 Aug 2023 15:42:37 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3483E4C19;
-        Fri, 18 Aug 2023 12:41:56 -0700 (PDT)
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37IJTAGe005856;
-        Fri, 18 Aug 2023 19:41:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=7RwAH1RzKm94DYtSJ8QAbSLiMrsaAziJ5ZYtmb+AKPM=;
- b=YopWwJtyQhcj7mgTpO/stYI85535el3/0aWfmP7PXcye6/lusfyv/r7mcL+fAl111zgE
- IONE8pVSXvWLs7jii2Hk/23I/qz3yuEiZtd6tE+z/rAGYgJtwrxzfQXuxO5tk5Vh1iTV
- qjDj0AnV5qB8N/d/m5VzvQR/S4S7/Mecxb/1t7Dwtr3myVFYRSgtE3xFM0W1NgfpVNak
- G0fY617ote3nnk70/sd8JODfLhqpEkvXCnL6N60agJsOX5pBO6gg22GDo/ppYJS24ZAW
- krHg5saM8z3ENz9MAVgiOlDLVs3/Zwsspsvb/lPuezNocEDvIFZx738ujc4Tww+qJRqE zA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sjeu7r7s1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 18 Aug 2023 19:41:38 +0000
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37IJfb8M019797;
-        Fri, 18 Aug 2023 19:41:37 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sjeu7r7rd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 18 Aug 2023 19:41:37 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-        by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37IIZ9HT007861;
-        Fri, 18 Aug 2023 19:41:36 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-        by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3senwm1ep3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 18 Aug 2023 19:41:36 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37IJfX1j45154766
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 18 Aug 2023 19:41:33 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C202F20040;
-        Fri, 18 Aug 2023 19:41:33 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D755D20049;
-        Fri, 18 Aug 2023 19:41:32 +0000 (GMT)
-Received: from [9.179.22.225] (unknown [9.179.22.225])
-        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Fri, 18 Aug 2023 19:41:32 +0000 (GMT)
-Message-ID: <3a40cbd7-2e8f-3a23-8e66-6f4111ab7127@linux.ibm.com>
-Date:   Fri, 18 Aug 2023 21:41:32 +0200
+        with ESMTP id S1343894AbjHSHDT (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 19 Aug 2023 03:03:19 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D3D54222
+        for <linux-s390@vger.kernel.org>; Sat, 19 Aug 2023 00:03:17 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id 006d021491bc7-56c7f47ec42so1145719eaf.2
+        for <linux-s390@vger.kernel.org>; Sat, 19 Aug 2023 00:03:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692428596; x=1693033396;
+        h=content-transfer-encoding:to:subject:message-id:date:from:sender
+         :reply-to:mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9kydyMnwD//o0quRqImkimRYfrWW9k+FT8t/oHoxyE8=;
+        b=JBXWdTgGa+H/8z7x8k6G4qRwkJ3v5AZ/3PYGnj7kkAMZbCITGbjXSuvcuKkaCUxj9A
+         hT+XSYJhdIdPsvN5uxepyoS5Yam8aiBOX7SRpGJgnvsRpFETmvB+u6CDvixjem3Auaz9
+         8XJTWSstONS7IHuP1KyK28Rq9cj9dMxehv9DuKFz97OyC6g6RCaqQCEfd1xPRF022Yxv
+         OVM1DuuVFrZOu0YWpd6OOGdZWk4r+v5LcWVhUS78S2WY/4U2qavTx1YIuX7hrkxe9nGH
+         /u9oCEeYI97+kWDS4PvF+OMWVZVDXeWZlkidVm9mYe1M2ztCdqbJibZhzUQ+rI08LuWJ
+         5AYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692428596; x=1693033396;
+        h=content-transfer-encoding:to:subject:message-id:date:from:sender
+         :reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9kydyMnwD//o0quRqImkimRYfrWW9k+FT8t/oHoxyE8=;
+        b=jlQFP4N4HOpQvjFnNCQ6EOf4G4rUX8g8PFsdXHR22AT326aKpIsCVpB53cbv9TLHJP
+         fBHfQ1MLbdjhmMmOG8hY+x7rgcqFyxE+qOUBdR+YLDyKNMlm+Mn6OnL4C/5ZySd+LVWO
+         jN919eZ9rCFknOFpGsmKFj5GMGp08uW9nq3t9hgTeBBzNhgtPWYdQiBxFsDoAM1nUF0T
+         D5VDmdvfn8jg/ZxgZKiPYFRNQjQ1q/i74EalJHlx40Q2c1kd2qKAZxU6WbvvwQNgfftT
+         jSorQr+jMIbZufSLyjYbalhBF5gKqAzXFhWr37N7nR/ApwIIEMd03wEe+ICXBRI0u1E7
+         GSQA==
+X-Gm-Message-State: AOJu0YwIhFqof3EvC7p1PEWUvdnlY7OCcG4zUcYmcRK3TfJ9Jz+NW0ta
+        NOQyJrHsqrn9FRcbKWQeDXQahRy63FptD9BnEmrpC4c5zNvjWA==
+X-Google-Smtp-Source: AGHT+IHBFHux9W7amy752XAKQ4G+pXj9K8KLABgekYkKVjTaNiUovhqWPJjy5q7mdLIzANUAVG24gzrYlmHT6Kjn7Kk=
+X-Received: by 2002:a81:8782:0:b0:589:a9fc:ffcd with SMTP id
+ x124-20020a818782000000b00589a9fcffcdmr1407212ywf.20.1692428576106; Sat, 19
+ Aug 2023 00:02:56 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH net-next v2 1/6] net/smc: support smc release version
- negotiation in clc handshake
-To:     Guangguan Wang <guangguan.wang@linux.alibaba.com>,
-        wenjia@linux.ibm.com, kgraul@linux.ibm.com,
-        tonylu@linux.alibaba.com, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com
-Cc:     horms@kernel.org, alibuda@linux.alibaba.com,
-        guwen@linux.alibaba.com, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230817132032.23397-1-guangguan.wang@linux.alibaba.com>
- <20230817132032.23397-2-guangguan.wang@linux.alibaba.com>
-From:   Jan Karcher <jaka@linux.ibm.com>
-Organization: IBM - Network Linux on Z
-In-Reply-To: <20230817132032.23397-2-guangguan.wang@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 2A2Guyfkiewp87osQ7aHjnmBcpphNc1v
-X-Proofpoint-ORIG-GUID: kGDGCYVch31s_5_gI3Kek6zxA-KSQkQk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-08-18_24,2023-08-18_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- spamscore=0 adultscore=0 mlxlogscore=999 malwarescore=0 phishscore=0
- priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2308180178
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H5,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Reply-To: razumkoykhailo@gmail.com
+Sender: mrtombaba@gmail.com
+Received: by 2002:a05:7000:5395:b0:4f4:2174:eed4 with HTTP; Sat, 19 Aug 2023
+ 00:02:55 -0700 (PDT)
+From:   "Mr.Razum Khailo" <razumkoykhailo@gmail.com>
+Date:   Sat, 19 Aug 2023 00:02:55 -0700
+X-Google-Sender-Auth: TD1SbUwALQWUaG93zNo0ky4SaO8
+Message-ID: <CADXgghn2t3mU_VvtZDjHwnbadg2QnVcJ30yFd0kN8SL6NDhY1g@mail.gmail.com>
+Subject: Greetings from Ukraine,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,LOTS_OF_MONEY,
+        MILLION_USD,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+        SPF_PASS,T_HK_NAME_FM_MR_MRS,UNDISC_MONEY autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Report: *  0.0 RCVD_IN_DNSWL_BLOCKED RBL: ADMINISTRATOR NOTICE: The query to
+        *      DNSWL was blocked.  See
+        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
+        *      for more information.
+        *      [2607:f8b0:4864:20:0:0:0:c44 listed in]
+        [list.dnswl.org]
+        * -1.9 BAYES_00 BODY: Bayes spam probability is 0 to 1%
+        *      [score: 0.0001]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [mrtombaba[at]gmail.com]
+        *  2.0 MILLION_USD BODY: Talks about millions of dollars
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
+        *  2.4 MONEY_FREEMAIL_REPTO Lots of money from someone using free
+        *      email?
+        *  2.8 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 17/08/2023 15:20, Guangguan Wang wrote:
-> Support smc release version negotiation in clc handshake based on
-> SMC v2, where no negotiation process for different releases, but
-> for different versions. The latest smc release version was updated
-> to v2.1. And currently there are two release versions of SMCv2, v2.0
-> and v2.1. In the release version negotiation, client sends the preferred
-> release version by CLC Proposal Message, server makes decision for which
-> release version to use based on the client preferred release version and
-> self-supported release version (here choose the minimum release version
-> of the client preferred and server latest supported), then the decision
-> returns to client by CLC Accept Message. Client confirms the decision by
-> CLC Confirm Message.
-> 
-> Client                                    Server
->        Proposal(preferred release version)
->       ------------------------------------>
-> 
->        Accept(accpeted release version)
->   min(client preferred, server latest supported)
->       <------------------------------------
-> 
->        Confirm(accpeted release version)
->       ------------------------------------>
-> 
-> Signed-off-by: Guangguan Wang <guangguan.wang@linux.alibaba.com>
-> Reviewed-by: Tony Lu <tonylu@linux.alibaba.com>
-
-Thank you for your contribution, Guangguan.
-
-Reviewed-by: Jan Karcher <jaka@linux.ibm.com>
-
-
-> ---
->   net/smc/af_smc.c   | 21 +++++++++++++++++----
->   net/smc/smc.h      |  5 ++++-
->   net/smc/smc_clc.c  | 14 +++++++-------
->   net/smc/smc_clc.h  | 23 ++++++++++++++++++++++-
->   net/smc/smc_core.h |  1 +
->   5 files changed, 51 insertions(+), 13 deletions(-)
-> 
-> diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
-> index a7f887d91d89..c99ac371b5b1 100644
-> --- a/net/smc/af_smc.c
-> +++ b/net/smc/af_smc.c
-> @@ -1167,8 +1167,7 @@ static int smc_connect_rdma_v2_prepare(struct smc_sock *smc,
->   	struct smc_clc_msg_accept_confirm_v2 *clc_v2 =
->   		(struct smc_clc_msg_accept_confirm_v2 *)aclc;
->   	struct smc_clc_first_contact_ext *fce =
-> -		(struct smc_clc_first_contact_ext *)
-> -			(((u8 *)clc_v2) + sizeof(*clc_v2));
-> +		smc_get_clc_first_contact_ext(clc_v2, false);
->   
->   	if (!ini->first_contact_peer || aclc->hdr.version == SMC_V1)
->   		return 0;
-> @@ -1187,6 +1186,9 @@ static int smc_connect_rdma_v2_prepare(struct smc_sock *smc,
->   			return SMC_CLC_DECL_NOINDIRECT;
->   		}
->   	}
-> +
-> +	ini->release_nr = fce->release;
-> +
->   	return 0;
->   }
->   
-> @@ -1355,6 +1357,13 @@ static int smc_connect_ism(struct smc_sock *smc,
->   		struct smc_clc_msg_accept_confirm_v2 *aclc_v2 =
->   			(struct smc_clc_msg_accept_confirm_v2 *)aclc;
->   
-> +		if (ini->first_contact_peer) {
-> +			struct smc_clc_first_contact_ext *fce =
-> +				smc_get_clc_first_contact_ext(aclc_v2, true);
-> +
-> +			ini->release_nr = fce->release;
-> +		}
-> +
->   		rc = smc_v2_determine_accepted_chid(aclc_v2, ini);
->   		if (rc)
->   			return rc;
-> @@ -1389,7 +1398,7 @@ static int smc_connect_ism(struct smc_sock *smc,
->   	}
->   
->   	rc = smc_clc_send_confirm(smc, ini->first_contact_local,
-> -				  aclc->hdr.version, eid, NULL);
-> +				  aclc->hdr.version, eid, ini);
->   	if (rc)
->   		goto connect_abort;
->   	mutex_unlock(&smc_server_lgr_pending);
-> @@ -1965,6 +1974,10 @@ static int smc_listen_v2_check(struct smc_sock *new_smc,
->   		}
->   	}
->   
-> +	ini->release_nr = pclc_v2_ext->hdr.flag.release;
-> +	if (pclc_v2_ext->hdr.flag.release > SMC_RELEASE)
-> +		ini->release_nr = SMC_RELEASE;
-> +
->   out:
->   	if (!ini->smcd_version && !ini->smcr_version)
->   		return rc;
-> @@ -2412,7 +2425,7 @@ static void smc_listen_work(struct work_struct *work)
->   	/* send SMC Accept CLC message */
->   	accept_version = ini->is_smcd ? ini->smcd_version : ini->smcr_version;
->   	rc = smc_clc_send_accept(new_smc, ini->first_contact_local,
-> -				 accept_version, ini->negotiated_eid);
-> +				 accept_version, ini->negotiated_eid, ini);
->   	if (rc)
->   		goto out_unlock;
->   
-> diff --git a/net/smc/smc.h b/net/smc/smc.h
-> index 2eeea4cdc718..9cce1a41e011 100644
-> --- a/net/smc/smc.h
-> +++ b/net/smc/smc.h
-> @@ -21,7 +21,10 @@
->   
->   #define SMC_V1		1		/* SMC version V1 */
->   #define SMC_V2		2		/* SMC version V2 */
-> -#define SMC_RELEASE	0
-> +
-> +#define SMC_RELEASE_0 0
-> +#define SMC_RELEASE_1 1
-> +#define SMC_RELEASE	SMC_RELEASE_1 /* the latest release version */
->   
->   #define SMCPROTO_SMC		0	/* SMC protocol, IPv4 */
->   #define SMCPROTO_SMC6		1	/* SMC protocol, IPv6 */
-> diff --git a/net/smc/smc_clc.c b/net/smc/smc_clc.c
-> index b9b8b07aa702..7c5627c6abcc 100644
-> --- a/net/smc/smc_clc.c
-> +++ b/net/smc/smc_clc.c
-> @@ -420,11 +420,11 @@ smc_clc_msg_decl_valid(struct smc_clc_msg_decline *dclc)
->   	return true;
->   }
->   
-> -static void smc_clc_fill_fce(struct smc_clc_first_contact_ext *fce, int *len)
-> +static void smc_clc_fill_fce(struct smc_clc_first_contact_ext *fce, int *len, int release_nr)
->   {
->   	memset(fce, 0, sizeof(*fce));
->   	fce->os_type = SMC_CLC_OS_LINUX;
-> -	fce->release = SMC_RELEASE;
-> +	fce->release = release_nr;
->   	memcpy(fce->hostname, smc_hostname, sizeof(smc_hostname));
->   	(*len) += sizeof(*fce);
->   }
-> @@ -1019,7 +1019,7 @@ static int smc_clc_send_confirm_accept(struct smc_sock *smc,
->   				memcpy(clc_v2->d1.eid, eid, SMC_MAX_EID_LEN);
->   			len = SMCD_CLC_ACCEPT_CONFIRM_LEN_V2;
->   			if (first_contact)
-> -				smc_clc_fill_fce(&fce, &len);
-> +				smc_clc_fill_fce(&fce, &len, ini->release_nr);
->   			clc_v2->hdr.length = htons(len);
->   		}
->   		memcpy(trl.eyecatcher, SMCD_EYECATCHER,
-> @@ -1063,10 +1063,10 @@ static int smc_clc_send_confirm_accept(struct smc_sock *smc,
->   				memcpy(clc_v2->r1.eid, eid, SMC_MAX_EID_LEN);
->   			len = SMCR_CLC_ACCEPT_CONFIRM_LEN_V2;
->   			if (first_contact) {
-> -				smc_clc_fill_fce(&fce, &len);
-> +				smc_clc_fill_fce(&fce, &len, ini->release_nr);
->   				fce.v2_direct = !link->lgr->uses_gateway;
->   				memset(&gle, 0, sizeof(gle));
-> -				if (ini && clc->hdr.type == SMC_CLC_CONFIRM) {
-> +				if (clc->hdr.type == SMC_CLC_CONFIRM) {
->   					gle.gid_cnt = ini->smcrv2.gidlist.len;
->   					len += sizeof(gle);
->   					len += gle.gid_cnt * sizeof(gle.gid[0]);
-> @@ -1141,7 +1141,7 @@ int smc_clc_send_confirm(struct smc_sock *smc, bool clnt_first_contact,
->   
->   /* send CLC ACCEPT message across internal TCP socket */
->   int smc_clc_send_accept(struct smc_sock *new_smc, bool srv_first_contact,
-> -			u8 version, u8 *negotiated_eid)
-> +			u8 version, u8 *negotiated_eid, struct smc_init_info *ini)
->   {
->   	struct smc_clc_msg_accept_confirm_v2 aclc_v2;
->   	int len;
-> @@ -1149,7 +1149,7 @@ int smc_clc_send_accept(struct smc_sock *new_smc, bool srv_first_contact,
->   	memset(&aclc_v2, 0, sizeof(aclc_v2));
->   	aclc_v2.hdr.type = SMC_CLC_ACCEPT;
->   	len = smc_clc_send_confirm_accept(new_smc, &aclc_v2, srv_first_contact,
-> -					  version, negotiated_eid, NULL);
-> +					  version, negotiated_eid, ini);
->   	if (len < ntohs(aclc_v2.hdr.length))
->   		len = len >= 0 ? -EPROTO : -new_smc->clcsock->sk->sk_err;
->   
-> diff --git a/net/smc/smc_clc.h b/net/smc/smc_clc.h
-> index 5fee545c9a10..b923e89acafb 100644
-> --- a/net/smc/smc_clc.h
-> +++ b/net/smc/smc_clc.h
-> @@ -370,6 +370,27 @@ smc_get_clc_smcd_v2_ext(struct smc_clc_v2_extension *prop_v2ext)
->   		 ntohs(prop_v2ext->hdr.smcd_v2_ext_offset));
->   }
->   
-> +static inline struct smc_clc_first_contact_ext *
-> +smc_get_clc_first_contact_ext(struct smc_clc_msg_accept_confirm_v2 *clc_v2,
-> +			      bool is_smcd)
-> +{
-> +	int clc_v2_len;
-> +
-> +	if (clc_v2->hdr.version == SMC_V1 ||
-> +	    !(clc_v2->hdr.typev2 & SMC_FIRST_CONTACT_MASK))
-> +		return NULL;
-> +
-> +	if (is_smcd)
-> +		clc_v2_len =
-> +			offsetofend(struct smc_clc_msg_accept_confirm_v2, d1);
-> +	else
-> +		clc_v2_len =
-> +			offsetofend(struct smc_clc_msg_accept_confirm_v2, r1);
-> +
-> +	return (struct smc_clc_first_contact_ext *)(((u8 *)clc_v2) +
-> +						    clc_v2_len);
-> +}
-> +
->   struct smcd_dev;
->   struct smc_init_info;
->   
-> @@ -382,7 +403,7 @@ int smc_clc_send_proposal(struct smc_sock *smc, struct smc_init_info *ini);
->   int smc_clc_send_confirm(struct smc_sock *smc, bool clnt_first_contact,
->   			 u8 version, u8 *eid, struct smc_init_info *ini);
->   int smc_clc_send_accept(struct smc_sock *smc, bool srv_first_contact,
-> -			u8 version, u8 *negotiated_eid);
-> +			u8 version, u8 *negotiated_eid, struct smc_init_info *ini);
->   void smc_clc_init(void) __init;
->   void smc_clc_exit(void);
->   void smc_clc_get_hostname(u8 **host);
-> diff --git a/net/smc/smc_core.h b/net/smc/smc_core.h
-> index 3c1b31bfa1cf..b6c68db61f23 100644
-> --- a/net/smc/smc_core.h
-> +++ b/net/smc/smc_core.h
-> @@ -374,6 +374,7 @@ struct smc_init_info {
->   	u8			is_smcd;
->   	u8			smc_type_v1;
->   	u8			smc_type_v2;
-> +	u8			release_nr;
->   	u8			first_contact_peer;
->   	u8			first_contact_local;
->   	unsigned short		vlan_id;
+R3JlZXRpbmdzwqBmcm9twqBVa3JhaW5lLA0KDQpNci7CoFJhenVta292wqBNeWtoYWlsbyzCoGFu
+wqBlbnRyZXByZW5ldXLCoGJ1c2luZXNzbWFuwqBmcm9twqBPZGVzc2ENClVrcmFpbmUuwqBXaXRo
+aW7CoGHCoHllYXLCoHBsdXPCoHNvbWXCoG1vbnRoc8Kgbm93LMKgbW9yZcKgdGhhbsKgOC4ywqBt
+aWxsaW9uDQpwZW9wbGXCoGFyb3VuZMKgdGhlwqBjaXRpZXPCoG9mwqBtecKgY291bnRyecKgVWty
+YWluZcKgaGF2ZcKgYmVlbsKgZXZhY3VhdGVkwqB0bw0KYcKgc2FmZcKgbG9jYXRpb27CoGFuZMKg
+b3V0wqBvZsKgdGhlwqBjb3VudHJ5LMKgbW9zdMKgZXNwZWNpYWxsecKgY2hpbGRyZW7CoHdpdGgN
+CnRoZWlywqBwYXJlbnRzLMKgbnVyc2luZ8KgbW90aGVyc8KgYW5kwqBwcmVnbmFudMKgd29tZW4s
+wqBhbmTCoHRob3NlwqB3aG/CoGhhdmUNCmJlZW7CoHNlcmlvdXNsecKgd291bmRlZMKgYW5kwqBu
+ZWVkwqB1cmdlbnTCoG1lZGljYWzCoGF0dGVudGlvbi7CoEnCoHdhc8KgYW1vbmcNCnRob3NlwqB0
+aGF0wqB3ZXJlwqBhYmxlwqB0b8KgZXZhY3VhdGXCoHRvwqBvdXLCoG5laWdoYm91cmluZ8KgY291
+bnRyaWVzwqBhbmTCoEnigJltDQpub3fCoGluwqB0aGXCoHJlZnVnZWXCoGNhbXDCoG9mwqBUZXLC
+oEFwZWzCoEdyb25pbmdlbsKgaW7CoHRoZcKgTmV0aGVybGFuZHMuDQoNCknCoG5lZWTCoGHCoGZv
+cmVpZ27CoHBhcnRuZXLCoHRvwqBlbmFibGXCoG1lwqB0b8KgdHJhbnNwb3J0wqBtecKgaW52ZXN0
+bWVudA0KY2FwaXRhbMKgYW5kwqB0aGVuwqByZWxvY2F0ZcKgd2l0aMKgbXnCoGZhbWlseSzCoGhv
+bmVzdGx5wqBpwqB3aXNowqBJwqB3aWxsDQpkaXNjdXNzwqBtb3JlwqBhbmTCoGdldMKgYWxvbmcu
+wqBJwqBuZWVkwqBhwqBwYXJ0bmVywqBiZWNhdXNlwqBtecKgaW52ZXN0bWVudA0KY2FwaXRhbMKg
+aXPCoGluwqBtecKgaW50ZXJuYXRpb25hbMKgYWNjb3VudC7CoEnigJltwqBpbnRlcmVzdGVkwqBp
+bsKgYnV5aW5nDQpwcm9wZXJ0aWVzLMKgaG91c2VzLMKgYnVpbGRpbmfCoHJlYWzCoGVzdGF0ZXMs
+wqBtecKgY2FwaXRhbMKgZm9ywqBpbnZlc3RtZW50DQppc8KgKCQzMMKgTWlsbGlvbsKgVVNEKcKg
+LsKgVGhlwqBmaW5hbmNpYWzCoGluc3RpdHV0aW9uc8KgaW7CoG15wqBjb3VudHJ5DQpVa3JhaW5l
+wqBhcmXCoGFsbMKgc2hvdMKgZG93bsKgZHVlwqB0b8KgdGhlwqBjcmlzaXPCoG9mwqB0aGlzwqB3
+YXLCoG9uwqBVa3JhaW5lDQpzb2lswqBiecKgdGhlwqBSdXNzaWFuwqBmb3JjZXMuwqBNZWFud2hp
+bGUswqBpZsKgdGhlcmXCoGlzwqBhbnnCoHByb2ZpdGFibGUNCmludmVzdG1lbnTCoHRoYXTCoHlv
+dcKgaGF2ZcKgc2/CoG11Y2jCoGV4cGVyaWVuY2XCoGluwqB5b3VywqBjb3VudHJ5LMKgdGhlbsKg
+d2UNCmNhbsKgam9pbsKgdG9nZXRoZXLCoGFzwqBwYXJ0bmVyc8Kgc2luY2XCoEnigJltwqBhwqBm
+b3JlaWduZXIuDQoNCknCoGNhbWXCoGFjcm9zc8KgeW91csKgZS1tYWlswqBjb250YWN0wqB0aHJv
+dWdowqBwcml2YXRlwqBzZWFyY2jCoHdoaWxlwqBpbsKgbmVlZA0Kb2bCoHlvdXLCoGFzc2lzdGFu
+Y2XCoGFuZMKgScKgZGVjaWRlZMKgdG/CoGNvbnRhY3TCoHlvdcKgZGlyZWN0bHnCoHRvwqBhc2vC
+oHlvdcKgaWYNCnlvdcKga25vd8KgYW55wqBsdWNyYXRpdmXCoGJ1c2luZXNzwqBpbnZlc3RtZW50
+wqBpbsKgeW91csKgY291bnRyecKgacKgY2FuDQppbnZlc3TCoG15wqBtb25lecKgc2luY2XCoG15
+wqBjb3VudHJ5wqBVa3JhaW5lwqBzZWN1cml0ecKgYW5kwqBlY29ub21pYw0KaW5kZXBlbmRlbnTC
+oGhhc8KgbG9zdMKgdG/CoHRoZcKgZ3JlYXRlc3TCoGxvd2VywqBsZXZlbCzCoGFuZMKgb3VywqBj
+dWx0dXJlwqBoYXMNCmxvc3TCoGluY2x1ZGluZ8Kgb3VywqBoYXBwaW5lc3PCoGhhc8KgYmVlbsKg
+dGFrZW7CoGF3YXnCoGZyb23CoHVzLsKgT3VywqBjb3VudHJ5DQpoYXPCoGJlZW7CoG9uwqBmaXJl
+wqBmb3LCoG1vcmXCoHRoYW7CoGHCoHllYXLCoG5vdy4NCg0KSWbCoHlvdcKgYXJlwqBjYXBhYmxl
+wqBvZsKgaGFuZGxpbmfCoHRoaXPCoGJ1c2luZXNzwqBwYXJ0bmVyc2hpcCzCoGNvbnRhY3TCoG1l
+DQpmb3LCoG1vcmXCoGRldGFpbHMswqBJwqB3aWxswqBhcHByZWNpYXRlwqBpdMKgaWbCoHlvdcKg
+Y2FuwqBjb250YWN0wqBtZQ0KaW1tZWRpYXRlbHkuwqBZb3XCoG1hecKgYXPCoHdlbGzCoHRlbGzC
+oG1lwqBhwqBsaXR0bGXCoG1vcmXCoGFib3V0wqB5b3Vyc2VsZi4NCkNvbnRhY3TCoG1lwqB1cmdl
+bnRsecKgdG/CoGVuYWJsZcKgdXPCoHRvwqBwcm9jZWVkwqB3aXRowqB0aGXCoGJ1c2luZXNzLsKg
+ScKgd2lsbA0KYmXCoHdhaXRpbmfCoGZvcsKgeW91csKgcmVzcG9uc2UuwqBNecKgc2luY2VyZcKg
+YXBvbG9naWVzwqBmb3LCoHRoZQ0KaW5jb252ZW5pZW5jZS4NCg0KDQpUaGFua8KgeW91IQ0KDQpN
+ci4gUmF6dW1rb3bCoE15a2hhaWxvLg0K
