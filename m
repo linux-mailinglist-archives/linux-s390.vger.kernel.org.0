@@ -2,113 +2,87 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E941D782A8D
-	for <lists+linux-s390@lfdr.de>; Mon, 21 Aug 2023 15:32:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 755F6782AD2
+	for <lists+linux-s390@lfdr.de>; Mon, 21 Aug 2023 15:49:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235431AbjHUNct (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 21 Aug 2023 09:32:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60978 "EHLO
+        id S235510AbjHUNtF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 21 Aug 2023 09:49:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233331AbjHUNct (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 21 Aug 2023 09:32:49 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF1A2A8
-        for <linux-s390@vger.kernel.org>; Mon, 21 Aug 2023 06:32:47 -0700 (PDT)
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37LDRctc026674;
-        Mon, 21 Aug 2023 13:32:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=5smBJS/yjG5SdZ3Ju51Sy9WkEOgWS4nztg0eEv57p4o=;
- b=k4dhnVDPZFVVKTtOIMeANe5jsIPcfEJSgqNTDsEulp/0jVn6tE1mtiCnqWuRlQELk5Mm
- zQMfbaBS59NkfTlLyCu5YqiL3TpYlPXj3eZheQ3jRRIGSCMPZ2B5NdrriArQz1bKLVZb
- Yg+Tr8jvwGGU35yCroGJ9AMHJmVNSjhaov27gVhKxzvKyyJ0I1/Jb67GtFP5GOtswKh4
- XLOAQyLy37eK4kSKIP5hMvDE5gNNNSiTKBUMfrdcwIGzOMP83sgbcxZe81tZTRWk0HWE
- ybohi97i8c9RtmDNZjO83S4hvhbnANdkOtY/gLxdAc90Go2tQWcnVZ4l/s7OuvVt78Kj qA== 
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sm8u1r75n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 21 Aug 2023 13:32:40 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-        by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37LCTDeu020705;
-        Mon, 21 Aug 2023 13:32:39 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-        by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3sk9jkb1rn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 21 Aug 2023 13:32:39 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37LDWZAt61014412
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 21 Aug 2023 13:32:35 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A8AAF2004D;
-        Mon, 21 Aug 2023 13:32:35 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0753620075;
-        Mon, 21 Aug 2023 13:32:35 +0000 (GMT)
-Received: from [9.179.30.164] (unknown [9.179.30.164])
-        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Mon, 21 Aug 2023 13:32:34 +0000 (GMT)
-Message-ID: <52efd1aa02861c4683eefa1f1c15e8cac0b835c8.camel@linux.ibm.com>
-Subject: Re: [PATCH -next] s390/pci: Use builtin_misc_device macro to
- simplify the code
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Li Zetao <lizetao1@huawei.com>, gerald.schaefer@linux.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com
-Cc:     linux-s390@vger.kernel.org
-Date:   Mon, 21 Aug 2023 15:32:34 +0200
-In-Reply-To: <20230815080833.1103609-1-lizetao1@huawei.com>
-References: <20230815080833.1103609-1-lizetao1@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        with ESMTP id S235509AbjHUNtE (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 21 Aug 2023 09:49:04 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7B4BE2
+        for <linux-s390@vger.kernel.org>; Mon, 21 Aug 2023 06:49:02 -0700 (PDT)
+Received: from kwepemi500012.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RTv1J3WRdzrSVk;
+        Mon, 21 Aug 2023 21:47:32 +0800 (CST)
+Received: from [10.67.111.176] (10.67.111.176) by
+ kwepemi500012.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Mon, 21 Aug 2023 21:48:59 +0800
+Message-ID: <b5123c01-4380-1ca0-280f-b196db723cc1@huawei.com>
+Date:   Mon, 21 Aug 2023 21:48:59 +0800
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: -wUF5eHIJa-DXtTdmocfmxJ4H-v6pwVQ
-X-Proofpoint-ORIG-GUID: -wUF5eHIJa-DXtTdmocfmxJ4H-v6pwVQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-08-21_01,2023-08-18_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- phishscore=0 priorityscore=1501 mlxscore=0 spamscore=0 suspectscore=0
- mlxlogscore=999 impostorscore=0 lowpriorityscore=0 malwarescore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2308210125
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [PATCH -next] s390/pci: Use builtin_misc_device macro to simplify
+ the code
+Content-Language: en-US
+To:     Niklas Schnelle <schnelle@linux.ibm.com>,
+        <gerald.schaefer@linux.ibm.com>, <hca@linux.ibm.com>,
+        <gor@linux.ibm.com>, <agordeev@linux.ibm.com>,
+        <borntraeger@linux.ibm.com>, <svens@linux.ibm.com>
+CC:     <linux-s390@vger.kernel.org>
+References: <20230815080833.1103609-1-lizetao1@huawei.com>
+ <52efd1aa02861c4683eefa1f1c15e8cac0b835c8.camel@linux.ibm.com>
+From:   Li Zetao <lizetao1@huawei.com>
+In-Reply-To: <52efd1aa02861c4683eefa1f1c15e8cac0b835c8.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.176]
+X-ClientProxiedBy: dggpeml500002.china.huawei.com (7.185.36.158) To
+ kwepemi500012.china.huawei.com (7.221.188.12)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 2023-08-15 at 16:08 +0800, Li Zetao wrote:
-> Use the builtin_misc_device macro to simplify the code, which is the same
-> as declaring with device_initcall().
->=20
-> Signed-off-by: Li Zetao <lizetao1@huawei.com>
-> ---
->  arch/s390/pci/pci_clp.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
->=20
-> diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
-> index ee367798e388..ee90a91ed888 100644
-> --- a/arch/s390/pci/pci_clp.c
-> +++ b/arch/s390/pci/pci_clp.c
-> @@ -666,9 +666,4 @@ static struct miscdevice clp_misc_device =3D {
->  	.fops =3D &clp_misc_fops,
->  };
-> =20
-> -static int __init clp_misc_init(void)
-> -{
-> -	return misc_register(&clp_misc_device);
-> -}
-> -
-> -device_initcall(clp_misc_init);
-> +builtin_misc_device(clp_misc_device);
+Hi Niklas,
 
-Sorry forgot to ask do you want me to take this via the s390 tree?
+On 2023/8/21 21:32, Niklas Schnelle wrote:
+> On Tue, 2023-08-15 at 16:08 +0800, Li Zetao wrote:
+>> Use the builtin_misc_device macro to simplify the code, which is the same
+>> as declaring with device_initcall().
+>>
+>> Signed-off-by: Li Zetao <lizetao1@huawei.com>
+>> ---
+>>   arch/s390/pci/pci_clp.c | 7 +------
+>>   1 file changed, 1 insertion(+), 6 deletions(-)
+>>
+>> diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
+>> index ee367798e388..ee90a91ed888 100644
+>> --- a/arch/s390/pci/pci_clp.c
+>> +++ b/arch/s390/pci/pci_clp.c
+>> @@ -666,9 +666,4 @@ static struct miscdevice clp_misc_device = {
+>>   	.fops = &clp_misc_fops,
+>>   };
+>>   
+>> -static int __init clp_misc_init(void)
+>> -{
+>> -	return misc_register(&clp_misc_device);
+>> -}
+>> -
+>> -device_initcall(clp_misc_init);
+>> +builtin_misc_device(clp_misc_device);
+> 
+> Sorry forgot to ask do you want me to take this via the s390 tree?
+Yes,thank you.
+
+With Best Regards,
+Li Zetao
