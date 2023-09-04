@@ -2,86 +2,80 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A29E7911F3
-	for <lists+linux-s390@lfdr.de>; Mon,  4 Sep 2023 09:20:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14DFB791347
+	for <lists+linux-s390@lfdr.de>; Mon,  4 Sep 2023 10:23:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233933AbjIDHU3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 4 Sep 2023 03:20:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41380 "EHLO
+        id S233442AbjIDIXj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 4 Sep 2023 04:23:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231536AbjIDHU2 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 4 Sep 2023 03:20:28 -0400
+        with ESMTP id S233525AbjIDIXi (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 4 Sep 2023 04:23:38 -0400
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9D89A7;
-        Mon,  4 Sep 2023 00:20:25 -0700 (PDT)
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38478w2u020418;
-        Mon, 4 Sep 2023 07:20:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=mime-version : date :
- from : to : cc : subject : reply-to : in-reply-to : references :
- message-id : content-type : content-transfer-encoding; s=pp1;
- bh=bKDUBlQ5AuwRYstkWVVn9yuvQNAJeOOL4UrmQDWu3Jc=;
- b=qP73+7GYPw1RbFwjpNVa9j9xLW6NQX+BEXB0o+82D7MRgJ9XYs2pzcPw2QeiTN8MGxLd
- 6Ru7D4RYFAoTJ6hPXvUYArByc0at14qPoC79TAcRmiJxY5zgHugRz3W5VpV24vGSYdNf
- YlsXGb7MqbVQRmUqKknMy1Y7Dfe3WGC57kD6Mmf8uv8LTmqrLrcVi9DQoL2wOYg4mAeK
- Lh+Ta0DbGY0csNHYY0siAnLiUrS5SAEWVAyeM3RaXrenn7+5BAhPSAkMLeG1YVl5gKcL
- cBC7Rhtcw+6xnFYOpl4yv2ye8vxQekfppGPbHliyx7o5khd0COHDncjwt+ppGV1Gjupb eA== 
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sw84euscs-1
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0537118;
+        Mon,  4 Sep 2023 01:23:24 -0700 (PDT)
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38489R8S030264;
+        Mon, 4 Sep 2023 08:23:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=Z2+eQgPUlqNLwk0TA48I+41KBK/CX+qyq9PG/BzsBcw=;
+ b=VaLCDrKejA887cSxOlvribdMO4D23vP5ojIpA2/VkaUI2kUHF+cCFdfgW3U5wY9KBC5c
+ vMgBcrQD8/WzCFPFU2ZY3y36trUY9y92SouVQ/8BlJ4Grz/oFwwYjYR5YAwNRbOcsFI5
+ Nj+ZKXUS2PfbP7ahBPVeiYvEmUw9epk0ALE2hz16OlxtRvmE4XaoyEP8B2k893bUjo7c
+ Z8bCDsOeZwLXToc1D2xvEu+OkuaAWJeXcjKtRw7ovKLt66Ya/1Lvh8mH+rHwvtddoj6I
+ qr7r/rZLemtNBOORAmNSxogy7W+qAlA62rDfjlVLxwHIQM0unXtHmSgKfgX7b2yY88M/ 5A== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sw7s755x9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 Sep 2023 07:20:24 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-        by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38479ZCt021441;
-        Mon, 4 Sep 2023 07:20:23 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-        by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3svfry0v5a-1
+        Mon, 04 Sep 2023 08:23:23 +0000
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3848BrWb006490;
+        Mon, 4 Sep 2023 08:23:23 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sw7s755wh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 Sep 2023 07:20:23 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-        by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3847KM5J60424452
+        Mon, 04 Sep 2023 08:23:23 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3846rBva011108;
+        Mon, 4 Sep 2023 08:23:22 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+        by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3svj318ega-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 04 Sep 2023 08:23:21 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3848NJqa23266014
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 4 Sep 2023 07:20:22 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 92CE05805A;
-        Mon,  4 Sep 2023 07:20:22 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3747758052;
-        Mon,  4 Sep 2023 07:20:22 +0000 (GMT)
-Received: from ltc.linux.ibm.com (unknown [9.5.196.140])
-        by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-        Mon,  4 Sep 2023 07:20:22 +0000 (GMT)
+        Mon, 4 Sep 2023 08:23:19 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0604620043;
+        Mon,  4 Sep 2023 08:23:19 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C424E20040;
+        Mon,  4 Sep 2023 08:23:18 +0000 (GMT)
+Received: from t35lp63.lnxne.boe (unknown [9.152.108.100])
+        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Mon,  4 Sep 2023 08:23:18 +0000 (GMT)
+From:   Nico Boehr <nrb@linux.ibm.com>
+To:     frankja@linux.ibm.com, imbrenda@linux.ibm.com, thuth@redhat.com
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [kvm-unit-tests PATCH v6 0/8] s390x: Add support for running guests without MSO/MSL
+Date:   Mon,  4 Sep 2023 10:22:18 +0200
+Message-ID: <20230904082318.1465055-1-nrb@linux.ibm.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Date:   Mon, 04 Sep 2023 09:20:22 +0200
-From:   Harald Freudenberger <freude@linux.ibm.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>
-Subject: Re: [PATCH v1 1/2] s390/zcrtpt: Don't leak memory if dev_set_name()
- fails
-Reply-To: freude@linux.ibm.com
-Mail-Reply-To: freude@linux.ibm.com
-In-Reply-To: <20230831110000.24279-1-andriy.shevchenko@linux.intel.com>
-References: <20230831110000.24279-1-andriy.shevchenko@linux.intel.com>
-Message-ID: <d8c5522ddfe034e839cc93e8b4ef36fb@linux.ibm.com>
-X-Sender: freude@linux.ibm.com
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: XHW5zy7UYRUzK6NFX2ztxwyeSpWIcSm1
-X-Proofpoint-GUID: XHW5zy7UYRUzK6NFX2ztxwyeSpWIcSm1
+X-Proofpoint-ORIG-GUID: K0HuOTUd3MIDRe9XOGZf2ZmwE51U-tZB
+X-Proofpoint-GUID: _6Snk4B3HLw9nAsfQBryLsGSqny0GwTw
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-04_04,2023-08-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
- malwarescore=0 clxscore=1011 impostorscore=0 bulkscore=0
- priorityscore=1501 spamscore=0 suspectscore=0 lowpriorityscore=0
- adultscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2309040063
+ definitions=2023-09-04_05,2023-08-31_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 adultscore=0 mlxscore=0 clxscore=1015 suspectscore=0
+ impostorscore=0 mlxlogscore=737 malwarescore=0 phishscore=0
+ priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2308100000 definitions=main-2309040072
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,
         RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -92,30 +86,92 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 2023-08-31 12:59, Andy Shevchenko wrote:
-> When dev_set_name() fails, the zcdn_create() doesn't free
-> the newly allocated resources. Do it.
-> 
-> Fixes: 00fab2350e6b ("s390/zcrypt: multiple zcrypt device nodes 
-> support")
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/s390/crypto/zcrypt_api.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/s390/crypto/zcrypt_api.c 
-> b/drivers/s390/crypto/zcrypt_api.c
-> index 4b23c9f7f3e5..6b99f7dd0643 100644
-> --- a/drivers/s390/crypto/zcrypt_api.c
-> +++ b/drivers/s390/crypto/zcrypt_api.c
-> @@ -413,6 +413,7 @@ static int zcdn_create(const char *name)
->  			 ZCRYPT_NAME "_%d", (int)MINOR(devt));
->  	nodename[sizeof(nodename) - 1] = '\0';
->  	if (dev_set_name(&zcdndev->device, nodename)) {
-> +		kfree(zcdndev);
->  		rc = -EINVAL;
->  		goto unlockout;
->  	}
-Thanks Andy, I picked this patch and forwarded it into the s390 
-subsystem.
-This will be visible in Linus' kernel tree with the next merge.
+v6:
+---
+* add commit "s390x: add test source dir to include paths" and share define with number of pages between snippet and test (Thomas)
+* add commit "lib: s390x: interrupt: remove TEID_ASCE defines"
+* rename dat -> use_dat (thanks Thomas)
+* remove IRQ_DAT_ON/_OFF defines (thanks Thomas)
+* add a comment to explain why we switch to home space when entering SIE (thanks Thomas)
+* clarify register_ext_cleanup_func() doesn't touch address space mode when DAT is off (thanks Thomas)
+* convert address space defines to enum (thanks Thomas)
+* switch bitfield member to uint64_t (thanks Claudio)
+* upercase hex number
+* in selftest, set the bitfield value to a define and then assert on the bitfield (thanks Thomas)
+
+v5:
+---
+* fix a big oopsie in irq_set_dat_mode() which caused parts of lowcore being
+  overwritten (thanks Claudio)
+
+v4:
+---
+- add static assert for PSW bitfield (Janosch, Claudio)
+- remove unneeded includes (Janosch)
+- move variable decls to function start (Janosch)
+- remove unneeded imports (Janosch)
+- lowerocase hex (Janosch)
+- remove unneeded attr (Janosch)
+- tyop :-) fixes (Janosch)
+
+v3:
+---
+* introduce bitfield for the PSW to make handling less clumsy
+* some variable renames (Claudio)
+* remove unneeded barriers (Claudio)
+* remove rebase leftover sie_had_pgm_int (Claudio)
+* move read_pgm_int_code to header (Claudio)
+* squash include fix commit into the one causing the issue (Claudio)
+
+v2:
+---
+* add function to change DAT/AS mode for all irq handlers (Janosch, Claudio)
+* instead of a new flag in PROG0C, check the pgm int code in lowcore (Janosch)
+* fix indents, comments (Nina)
+
+Right now, all SIE tests in kvm-unit-tests (i.e. where kvm-unit-test is the
+hypervisor) run using MSO/MSL.
+
+This is convenient, because it's simple. But it also comes with
+disadvantages, for example some features are unavailabe with MSO/MSL.
+
+This series adds support for running guests without MSO/MSL with dedicated
+guest page tables for the GPA->HPA translation.
+
+Since SIE implicitly uses the primary space mode for the guest, the host
+can't run in the primary space mode, too. To avoid moving all tests to the
+home space mode, only switch to home space mode when it is actually needed.
+
+This series also comes with various bugfixes that were caught while
+develoing this.
+
+Nico Boehr (8):
+  lib: s390x: introduce bitfield for PSW mask
+  s390x: add function to set DAT mode for all interrupts
+  s390x: sie: switch to home space mode before entering SIE
+  s390x: lib: don't forward PSW when handling exception in SIE
+  s390x: lib: sie: don't reenter SIE on pgm int
+  s390x: add test source dir to include paths
+  s390x: add a test for SIE without MSO/MSL
+  lib: s390x: interrupt: remove TEID_ASCE defines
+
+ lib/s390x/asm/arch_def.h   |  37 +++++++++++--
+ lib/s390x/asm/interrupt.h  |  21 +++++--
+ lib/s390x/asm/mem.h        |   1 +
+ lib/s390x/interrupt.c      |  36 ++++++++++++
+ lib/s390x/mmu.c            |   5 +-
+ lib/s390x/sie.c            |  30 +++++++++-
+ s390x/Makefile             |   4 +-
+ s390x/selftest.c           |  34 ++++++++++++
+ s390x/sie-dat.c            | 110 +++++++++++++++++++++++++++++++++++++
+ s390x/snippets/c/sie-dat.c |  54 ++++++++++++++++++
+ s390x/snippets/c/sie-dat.h |   5 ++
+ s390x/unittests.cfg        |   3 +
+ 12 files changed, 326 insertions(+), 14 deletions(-)
+ create mode 100644 s390x/sie-dat.c
+ create mode 100644 s390x/snippets/c/sie-dat.c
+ create mode 100644 s390x/snippets/c/sie-dat.h
+
+-- 
+2.41.0
+
