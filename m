@@ -2,148 +2,154 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 489C9792963
-	for <lists+linux-s390@lfdr.de>; Tue,  5 Sep 2023 18:52:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F06F79296B
+	for <lists+linux-s390@lfdr.de>; Tue,  5 Sep 2023 18:52:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351874AbjIEQ0V (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 Sep 2023 12:26:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39740 "EHLO
+        id S1351919AbjIEQ03 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 5 Sep 2023 12:26:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353916AbjIEIhg (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 Sep 2023 04:37:36 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 220CBCC7;
-        Tue,  5 Sep 2023 01:37:32 -0700 (PDT)
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3858bKZI009860;
-        Tue, 5 Sep 2023 08:37:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : content-transfer-encoding : in-reply-to : references : cc :
- to : subject : from : message-id : date; s=pp1;
- bh=PftVLyxWaT5nKTiMLWpPAX2kgsuGTFwBaIE8EbFXHeY=;
- b=fNFujD3vYYzCuLtossVjwddcDwHhpcoynQm3BEWPdeELcldjjEoLxJ9sm8ZMoDiX9i4A
- dbDUCVjGKjNm1pLcbPXFd8x6w4ZHqwA0yXY8Sg79qahQSpCnk+hv1tbh+6n5e7dKMX0K
- /tyf3PVOyrXnsYpENAOek4UtzfYJ/o3bJjb6tf65bC7AbDAlZQAcuZiStKUNtQW5x5Iz
- vfGjOSF2hPmgSXaaXRL4+7iDYxldIoLRHtDvOcJA9Jk5He0KNakeBJYE6TNmph8DO66/
- O8yH3XwFNkh8CK0DzN3BD/GUiHyHlFGzRblzWzig3zrQYmU6hcQt6AWrH8JgUWQKz6nr sA== 
+        with ESMTP id S1354532AbjIEMWX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 Sep 2023 08:22:23 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 466D21A8;
+        Tue,  5 Sep 2023 05:22:20 -0700 (PDT)
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 385CC1T1006030;
+        Tue, 5 Sep 2023 12:22:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=3UwuvDN+eoewhTwVqzsSpnC1hdkuSFLvc+SkpbZsX9A=;
+ b=eakCT4+KJE0QMcdkcs5LbZVZpj0SxSvU/jdZIvMlhpknI6gCbzJivJlXa1/Bm43Pu2Rk
+ Ms/MkBb0O1QkDTDFSJK4T4RL//OVIQwi4tbaCDt5deI6NhB+298WzVO7JjvicJ08Gs1J
+ Xn+kyTIIqYe+KVlL+1axSJY7QUnUW7Ir5su0iEobCprVjebCDsrr8maAqWu3eXy3SKgJ
+ O1FgODDW3MX76kpxUQmgx8aJXWBICT7TbHoEPi8/Z8B9g8OoeQ45NczhuBcS3ebvJh9B
+ r6tC7XDmsvzB9IvL53oLz030llbmHZklxF/pFFSkiDGeoPHtjauFR0IGJqFSTbguUIRz zw== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3swxq4kbpr-1
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sx44eg8hy-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 Sep 2023 08:37:30 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3858bRJx010429;
-        Tue, 5 Sep 2023 08:37:27 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3swxq4kbj9-1
+        Tue, 05 Sep 2023 12:22:19 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 385CDLWT011805;
+        Tue, 5 Sep 2023 12:22:19 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sx44eg8hh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 Sep 2023 08:37:27 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3856U7TC011138;
-        Tue, 5 Sep 2023 08:33:27 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-        by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3svj31gj2u-1
+        Tue, 05 Sep 2023 12:22:19 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 385BU3QZ001615;
+        Tue, 5 Sep 2023 12:22:18 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+        by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3svfcsjtdw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 Sep 2023 08:33:27 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3858XOdN19857932
+        Tue, 05 Sep 2023 12:22:18 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 385CMFPG52298156
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 Sep 2023 08:33:24 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9FD7C20043;
-        Tue,  5 Sep 2023 08:33:24 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 41ACF20040;
-        Tue,  5 Sep 2023 08:33:24 +0000 (GMT)
-Received: from t14-nrb (unknown [9.179.21.157])
-        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Tue,  5 Sep 2023 08:33:24 +0000 (GMT)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 5 Sep 2023 12:22:15 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 831E72004B;
+        Tue,  5 Sep 2023 12:22:15 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 38F1E20043;
+        Tue,  5 Sep 2023 12:22:15 +0000 (GMT)
+Received: from [9.171.57.58] (unknown [9.171.57.58])
+        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Tue,  5 Sep 2023 12:22:15 +0000 (GMT)
+Message-ID: <7e20d088-546a-65c1-1438-c9a9cf0c3810@linux.ibm.com>
+Date:   Tue, 5 Sep 2023 14:22:14 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <a41f6fc29032d345b3c2f24e19f32282dd627e5c.camel@linux.ibm.com>
-References: <20230904130140.22006-1-nrb@linux.ibm.com> <a41f6fc29032d345b3c2f24e19f32282dd627e5c.camel@linux.ibm.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [kvm-unit-tests PATCH v6 1/8] lib: s390x: introduce bitfield for
+ PSW mask
+Content-Language: en-US
+To:     Nico Boehr <nrb@linux.ibm.com>, imbrenda@linux.ibm.com,
+        thuth@redhat.com
 Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org
-To:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        borntraeger@linux.ibm.com, david@redhat.com, frankja@linux.ibm.com,
-        imbrenda@linux.ibm.com
-Subject: Re: [PATCH v3 0/2] KVM: s390: add counters for vsie performance
-From:   Nico Boehr <nrb@linux.ibm.com>
-Message-ID: <169390280362.97137.14761686200997364254@t14-nrb>
-User-Agent: alot/0.8.1
-Date:   Tue, 05 Sep 2023 10:33:23 +0200
+References: <20230904082318.1465055-1-nrb@linux.ibm.com>
+ <20230904082318.1465055-2-nrb@linux.ibm.com>
+From:   Janosch Frank <frankja@linux.ibm.com>
+In-Reply-To: <20230904082318.1465055-2-nrb@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: eFhMuOZ_4TVoN-a1nn2y-R_wCh0ncEMp
-X-Proofpoint-GUID: qkQFMT3OknUv3qlTW9fU39LqWPOCUC3k
+X-Proofpoint-GUID: xIhoq4W2Hr6XBLX37b3E7o36nJnZydbt
+X-Proofpoint-ORIG-GUID: 9G5yAIsXXXOL0NuPE2qbWrEPNgjcxdmO
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-05_07,2023-08-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- priorityscore=1501 mlxscore=0 bulkscore=0 clxscore=1015 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2309050076
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+ definitions=2023-09-05_10,2023-09-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
+ phishscore=0 mlxscore=0 adultscore=0 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 malwarescore=0 impostorscore=0 mlxlogscore=758
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309050107
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Quoting Niklas Schnelle (2023-09-05 09:53:40)
-> On Mon, 2023-09-04 at 15:01 +0200, Nico Boehr wrote:
-> > v3:
-> > ---
-> > * rename te -> entry (David)
-> > * add counters for gmap reuse and gmap create (David)
-> >=20
-> > v2:
-> > ---
-> > * also count shadowing of pages (Janosch)
-> > * fix naming of counters (Janosch)
-> > * mention shadowing of multiple levels is counted in each level (Claudi=
-o)
-> > * fix inaccuate commit description regarding gmap notifier (Claudio)
-> >=20
-> > When running a guest-3 via VSIE, guest-1 needs to shadow the page table
-> > structures of guest-2.
-> >=20
-> > To reflect changes of the guest-2 in the _shadowed_ page table structur=
-es,
-> > the _shadowing_ sturctures sometimes need to be rebuilt. Since this is a
-> > costly operation, it should be avoided whenever possible.
-> >=20
-> > This series adds kvm stat counters to count the number of shadow gmaps
-> > created and a tracepoint whenever something is unshadowed. This is a fi=
-rst
-> > step to try and improve VSIE performance.
-> >=20
-> > Please note that "KVM: s390: add tracepoint in gmap notifier" has some
-> > checkpatch --strict findings. I did not fix these since the tracepoint
-> > definition would then look completely different from all the other
-> > tracepoints in arch/s390/kvm/trace-s390.h. If you want me to fix that,
-> > please let me know.
-> >=20
-> > While developing this, a question regarding the stat counters came up:
-> > there's usually no locking involved when the stat counters are incremen=
-ted.
-> > On s390, GCC accidentally seems to do the right thing(TM) most of the t=
-ime
-> > by generating a agsi instruction (which should be atomic given proper
-> > alignment). However, it's not guaranteed, so would we rather want to go
-> > with an atomic for the stat counters to avoid losing events? Or do we j=
-ust
-> > accept the fact that we might loose events sometimes? Is there anything
-> > that speaks against having an atomic in kvm_stat?
-> >=20
->=20
-> FWIW the PCI counters (/sys/kernel/debug/pci/<dev>/statistics) use
-> atomic64_add(). Also, s390's memory model is strong enough that these
-> are actually just normal loads/stores/adds (see
-> arch/s390/include/asm/atomic_ops.h) with the generic atomic64_xx()
-> adding debug instrumentation.
+On 9/4/23 10:22, Nico Boehr wrote:
+> Changing the PSW mask is currently little clumsy, since there is only the
+> PSW_MASK_* defines. This makes it hard to change e.g. only the address
+> space in the current PSW without a lot of bit fiddling.
+> 
+> Introduce a bitfield for the PSW mask. This makes this kind of
+> modifications much simpler and easier to read.
+> 
+> Signed-off-by: Nico Boehr <nrb@linux.ibm.com>
+> ---
+>   lib/s390x/asm/arch_def.h | 26 +++++++++++++++++++++++++-
+>   s390x/selftest.c         | 34 ++++++++++++++++++++++++++++++++++
+>   2 files changed, 59 insertions(+), 1 deletion(-)
+> 
+> diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
+> index bb26e008cc68..5a712f97f129 100644
+> --- a/lib/s390x/asm/arch_def.h
+> +++ b/lib/s390x/asm/arch_def.h
+> @@ -37,12 +37,36 @@ struct stack_frame_int {
+>   };
+>   
+>   struct psw {
+> -	uint64_t	mask;
+> +	union {
+> +		uint64_t	mask;
+> +		struct {
+> +			uint64_t reserved00:1;
+> +			uint64_t per:1;
+> +			uint64_t reserved02:3;
+> +			uint64_t dat:1;
+> +			uint64_t io:1;
+> +			uint64_t ext:1;
+> +			uint64_t key:4;
+> +			uint64_t reserved12:1;
+> +			uint64_t mchk:1;
+> +			uint64_t wait:1;
+> +			uint64_t pstate:1;
+> +			uint64_t as:2;
+> +			uint64_t cc:2;
+> +			uint64_t prg_mask:4;
+> +			uint64_t reserved24:7;
+> +			uint64_t ea:1;
+> +			uint64_t ba:1;
+> +			uint64_t reserved33:31;
+> +		};
+> +	};
+>   	uint64_t	addr;
+>   };
+> +_Static_assert(sizeof(struct psw) == 16, "PSW size");
+>   
+>   #define PSW(m, a) ((struct psw){ .mask = (m), .addr = (uint64_t)(a) })
+>   
+> +
 
-In KVM I am mostly concerned about the compiler since we just do counter++
-- right now this always seems to result in an agsi instruction, but that's
-of course not guaranteed.
+We can fix this up when picking.
+
+Other than that:
+Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
