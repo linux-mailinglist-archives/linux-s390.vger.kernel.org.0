@@ -2,539 +2,142 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FA5979A45B
-	for <lists+linux-s390@lfdr.de>; Mon, 11 Sep 2023 09:20:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97F0079B331
+	for <lists+linux-s390@lfdr.de>; Tue, 12 Sep 2023 01:59:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230187AbjIKHUp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 11 Sep 2023 03:20:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47470 "EHLO
+        id S239649AbjIKWWv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 11 Sep 2023 18:22:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229516AbjIKHUo (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 11 Sep 2023 03:20:44 -0400
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F359FCD1;
-        Mon, 11 Sep 2023 00:20:37 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0VrnhdfX_1694416820;
-Received: from localhost(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0VrnhdfX_1694416820)
-          by smtp.aliyun-inc.com;
-          Mon, 11 Sep 2023 15:20:34 +0800
-From:   Wen Gu <guwen@linux.alibaba.com>
-To:     kgraul@linux.ibm.com, wenjia@linux.ibm.com, jaka@linux.ibm.com,
-        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com
-Cc:     alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
-        guwen@linux.alibaba.com, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH net-next] net/smc: Introduce SMC-related proc files
-Date:   Mon, 11 Sep 2023 15:20:20 +0800
-Message-Id: <1694416820-60340-1-git-send-email-guwen@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-        UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S238486AbjIKN5h (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 11 Sep 2023 09:57:37 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A569FCD7;
+        Mon, 11 Sep 2023 06:57:33 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3DCBC433C7;
+        Mon, 11 Sep 2023 13:57:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1694440653;
+        bh=CU1g8Lrs6EaUNCYAPQHJ7zHQs/cwzFvskhy2PCvPc98=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=R1YVtmnarCG1NzXEslc0QO12B4eWDiAycYzExvbrbPxKyFvPCCAgDkzl19UqGyjTZ
+         ioVI+/Q03ulHEgj5lZm9pLsIsD1nRv6cYBQPB07OFx8uR6KdPYVDBXIr9tgDskC3nS
+         77p3jjpI5betd/rMrMr4de6hAKZuPQ7GDclEBTm8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     stable@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        patches@lists.linux.dev,
+        =?UTF-8?q?Ondrej=20Mosn=C3=A1=C4=8Dek?= <omosnacek@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.vnet.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Paolo Abeni <pabeni@redhat.com>, linux-crypto@vger.kernel.org,
+        linux-s390@vger.kernel.org, regressions@lists.linux.dev,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.5 110/739] crypto: af_alg - Fix missing initialisation affecting gcm-aes-s390
+Date:   Mon, 11 Sep 2023 15:38:29 +0200
+Message-ID: <20230911134654.173764504@linuxfoundation.org>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20230911134650.921299741@linuxfoundation.org>
+References: <20230911134650.921299741@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This patch introduces /proc/net/smc4 and /proc/net/smc6 files to report
-statistic information of SMC connections.
+6.5-stable review patch.  If anyone has any objections, please let me know.
 
-Compared with 'smcss' command in smc-tools, getting SMC connections via
-proc files is not efficient. However, in some container scenarios, some
-dependencies are lacked for compiling and using smc-tools. In this case,
-using proc files to check SMC connections becomes a simple and fast way.
+------------------
 
-Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
+From: David Howells <dhowells@redhat.com>
+
+[ Upstream commit 6a4b8aa0a916b39a39175584c07222434fa6c6ef ]
+
+Fix af_alg_alloc_areq() to initialise areq->first_rsgl.sgl.sgt.sgl to point
+to the scatterlist array in areq->first_rsgl.sgl.sgl.
+
+Without this, the gcm-aes-s390 driver will oops when it tries to do
+gcm_walk_start() on req->dst because req->dst is set to the value of
+areq->first_rsgl.sgl.sgl by _aead_recvmsg() calling
+aead_request_set_crypt().
+
+The problem comes if an empty ciphertext is passed: the loop in
+af_alg_get_rsgl() just passes straight out and doesn't set areq->first_rsgl
+up.
+
+This isn't a problem on x86_64 using gcmaes_crypt_by_sg() because, as far
+as I can tell, that ignores req->dst and only uses req->src[*].
+
+[*] Is this a bug in aesni-intel_glue.c?
+
+The s390x oops looks something like:
+
+ Unable to handle kernel pointer dereference in virtual kernel address space
+ Failing address: 0000000a00000000 TEID: 0000000a00000803
+ Fault in home space mode while using kernel ASCE.
+ AS:00000000a43a0007 R3:0000000000000024
+ Oops: 003b ilc:2 [#1] SMP
+ ...
+ Call Trace:
+  [<000003ff7fc3d47e>] gcm_walk_start+0x16/0x28 [aes_s390]
+  [<00000000a2a342f2>] crypto_aead_decrypt+0x9a/0xb8
+  [<00000000a2a60888>] aead_recvmsg+0x478/0x698
+  [<00000000a2e519a0>] sock_recvmsg+0x70/0xb0
+  [<00000000a2e51a56>] sock_read_iter+0x76/0xa0
+  [<00000000a273e066>] vfs_read+0x26e/0x2a8
+  [<00000000a273e8c4>] ksys_read+0xbc/0x100
+  [<00000000a311d808>] __do_syscall+0x1d0/0x1f8
+  [<00000000a312ff30>] system_call+0x70/0x98
+ Last Breaking-Event-Address:
+  [<000003ff7fc3e6b4>] gcm_aes_crypt+0x104/0xa68 [aes_s390]
+
+Fixes: c1abe6f570af ("crypto: af_alg: Use extract_iter_to_sg() to create scatterlists")
+Reported-by: Ondrej Mosnáček <omosnacek@gmail.com>
+Link: https://lore.kernel.org/r/CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com/
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Herbert Xu <herbert@gondor.apana.org.au>
+cc: Sven Schnelle <svens@linux.ibm.com>
+cc: Harald Freudenberger <freude@linux.vnet.ibm.com>
+cc: "David S. Miller" <davem@davemloft.net>
+cc: Paolo Abeni <pabeni@redhat.com>
+cc: linux-crypto@vger.kernel.org
+cc: linux-s390@vger.kernel.org
+cc: regressions@lists.linux.dev
+Tested-by: Sven Schnelle <svens@linux.ibm.com>
+Tested-by: Ondrej Mosnáček <omosnacek@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/smc.h  |   5 +-
- net/smc/Makefile   |   2 +-
- net/smc/af_smc.c   |  22 ++++-
- net/smc/smc_diag.c |  29 +++---
- net/smc/smc_proc.c | 283 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- net/smc/smc_proc.h |  35 +++++++
- 6 files changed, 355 insertions(+), 21 deletions(-)
- create mode 100644 net/smc/smc_proc.c
- create mode 100644 net/smc/smc_proc.h
+ crypto/af_alg.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/net/smc.h b/include/net/smc.h
-index a002552..d29b332 100644
---- a/include/net/smc.h
-+++ b/include/net/smc.h
-@@ -20,10 +20,13 @@
- struct sock;
+diff --git a/crypto/af_alg.c b/crypto/af_alg.c
+index 10efb56d8b481..ad02ca0a8cdde 100644
+--- a/crypto/af_alg.c
++++ b/crypto/af_alg.c
+@@ -1192,6 +1192,7 @@ struct af_alg_async_req *af_alg_alloc_areq(struct sock *sk,
  
- #define SMC_MAX_PNETID_LEN	16	/* Max. length of PNET id */
-+#define SMC_HTABLE_SHIFT	9
-+#define SMC_HTABLE_SIZE	(1 << SMC_HTABLE_SHIFT) /* Size of SMC hashtable buckets */
- 
- struct smc_hashinfo {
-+	unsigned int bkt_idx;
- 	rwlock_t lock;
--	struct hlist_head ht;
-+	struct hlist_head ht[SMC_HTABLE_SIZE];
- };
- 
- int smc_hash_sk(struct sock *sk);
-diff --git a/net/smc/Makefile b/net/smc/Makefile
-index 875efcd..956810a 100644
---- a/net/smc/Makefile
-+++ b/net/smc/Makefile
-@@ -4,5 +4,5 @@ obj-$(CONFIG_SMC)	+= smc.o
- obj-$(CONFIG_SMC_DIAG)	+= smc_diag.o
- smc-y := af_smc.o smc_pnet.o smc_ib.o smc_clc.o smc_core.o smc_wr.o smc_llc.o
- smc-y += smc_cdc.o smc_tx.o smc_rx.o smc_close.o smc_ism.o smc_netlink.o smc_stats.o
--smc-y += smc_tracepoint.o
-+smc-y += smc_tracepoint.o smc_proc.o
- smc-$(CONFIG_SYSCTL) += smc_sysctl.o
-diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
-index bacdd97..616f9a9 100644
---- a/net/smc/af_smc.c
-+++ b/net/smc/af_smc.c
-@@ -53,6 +53,7 @@
- #include "smc_stats.h"
- #include "smc_tracepoint.h"
- #include "smc_sysctl.h"
-+#include "smc_proc.h"
- 
- static DEFINE_MUTEX(smc_server_lgr_pending);	/* serialize link group
- 						 * creation on server
-@@ -182,9 +183,8 @@ int smc_hash_sk(struct sock *sk)
- 	struct smc_hashinfo *h = sk->sk_prot->h.smc_hash;
- 	struct hlist_head *head;
- 
--	head = &h->ht;
--
- 	write_lock_bh(&h->lock);
-+	head = &h->ht[h->bkt_idx++ & (SMC_HTABLE_SIZE - 1)];
- 	sk_add_node(sk, head);
- 	write_unlock_bh(&h->lock);
- 	sock_prot_inuse_add(sock_net(sk), sk->sk_prot, 1);
-@@ -3448,7 +3448,7 @@ static void __net_exit smc_net_stat_exit(struct net *net)
- 
- static int __init smc_init(void)
- {
--	int rc;
-+	int rc, i;
- 
- 	rc = register_pernet_subsys(&smc_net_ops);
- 	if (rc)
-@@ -3520,8 +3520,11 @@ static int __init smc_init(void)
- 		pr_err("%s: sock_register fails with %d\n", __func__, rc);
- 		goto out_proto6;
- 	}
--	INIT_HLIST_HEAD(&smc_v4_hashinfo.ht);
--	INIT_HLIST_HEAD(&smc_v6_hashinfo.ht);
-+
-+	for (i = 0; i < SMC_HTABLE_SIZE; i++) {
-+		INIT_HLIST_HEAD(&smc_v4_hashinfo.ht[i]);
-+		INIT_HLIST_HEAD(&smc_v6_hashinfo.ht[i]);
-+	}
- 
- 	rc = smc_ib_register_client();
- 	if (rc) {
-@@ -3535,9 +3538,17 @@ static int __init smc_init(void)
- 		goto out_ib;
- 	}
- 
-+	rc = smc_proc_init();
-+	if (rc) {
-+		pr_err("%s: smc_proc_init fails with %d\n", __func__, rc);
-+		goto out_ulp;
-+	}
-+
- 	static_branch_enable(&tcp_have_smc);
- 	return 0;
- 
-+out_ulp:
-+	tcp_unregister_ulp(&smc_ulp_ops);
- out_ib:
- 	smc_ib_unregister_client();
- out_sock:
-@@ -3572,6 +3583,7 @@ static int __init smc_init(void)
- static void __exit smc_exit(void)
- {
- 	static_branch_disable(&tcp_have_smc);
-+	smc_proc_exit();
- 	tcp_unregister_ulp(&smc_ulp_ops);
- 	sock_unregister(PF_SMC);
- 	smc_core_exit();
-diff --git a/net/smc/smc_diag.c b/net/smc/smc_diag.c
-index 7ff2152..8f2f8b8 100644
---- a/net/smc/smc_diag.c
-+++ b/net/smc/smc_diag.c
-@@ -197,24 +197,25 @@ static int smc_diag_dump_proto(struct proto *prot, struct sk_buff *skb,
- 	int snum = cb_ctx->pos[p_type];
- 	struct nlattr *bc = NULL;
- 	struct hlist_head *head;
--	int rc = 0, num = 0;
-+	int rc = 0, num = 0, slot;
- 	struct sock *sk;
- 
- 	read_lock(&prot->h.smc_hash->lock);
--	head = &prot->h.smc_hash->ht;
--	if (hlist_empty(head))
--		goto out;
--
--	sk_for_each(sk, head) {
--		if (!net_eq(sock_net(sk), net))
--			continue;
--		if (num < snum)
--			goto next;
--		rc = __smc_diag_dump(sk, skb, cb, nlmsg_data(cb->nlh), bc);
--		if (rc < 0)
--			goto out;
-+
-+	for (slot = 0; slot < SMC_HTABLE_SIZE; slot++) {
-+		head = &prot->h.smc_hash->ht[slot];
-+
-+		sk_for_each(sk, head) {
-+			if (!net_eq(sock_net(sk), net))
-+				continue;
-+			if (num < snum)
-+				goto next;
-+			rc = __smc_diag_dump(sk, skb, cb, nlmsg_data(cb->nlh), bc);
-+			if (rc < 0)
-+				goto out;
- next:
--		num++;
-+			num++;
-+		}
- 	}
- 
- out:
-diff --git a/net/smc/smc_proc.c b/net/smc/smc_proc.c
-new file mode 100644
-index 0000000..6436b58
---- /dev/null
-+++ b/net/smc/smc_proc.c
-@@ -0,0 +1,283 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/init.h>
-+#include <linux/proc_fs.h>
-+#include <net/net_namespace.h>
-+#include <net/sock.h>
-+#include "smc.h"
-+#include "smc_proc.h"
-+#include "smc_core.h"
-+
-+static void *smc_proc_get_next(struct seq_file *seq, void *cur)
-+{
-+	struct smc_proc_private *sp = seq->private;
-+	struct smc_hashinfo *smc_hash =
-+		sp->protocol == SMCPROTO_SMC ?
-+		smc_proto.h.smc_hash : smc_proto6.h.smc_hash;
-+	struct net *net = seq_file_net(seq);
-+	struct hlist_head *head;
-+	struct sock *sk = cur;
-+
-+	if (!sk) {
-+		read_lock(&smc_hash->lock);
-+get_head:
-+		head = &smc_hash->ht[sp->bucket];
-+		sk = sk_head(head);
-+		sp->offset = 0;
-+		goto get_sk;
-+	}
-+	++sp->num;
-+	++sp->offset;
-+
-+	sk = sk_next(sk);
-+get_sk:
-+	sk_for_each_from(sk) {
-+		if (!net_eq(sock_net(sk), net))
-+			continue;
-+		return sk;
-+	}
-+	sp->offset = 0;
-+	if (++sp->bucket < SMC_HTABLE_SIZE)
-+		goto get_head;
-+
-+	read_unlock(&smc_hash->lock);
-+	return NULL;
-+}
-+
-+static void *smc_proc_seek_last_pos(struct seq_file *seq)
-+{
-+	struct smc_proc_private *sp = seq->private;
-+	int offset = sp->offset;
-+	int orig_num = sp->num;
-+	void *rc = NULL;
-+
-+	if (sp->bucket >= SMC_HTABLE_SIZE)
-+		goto out;
-+
-+	rc = smc_proc_get_next(seq, NULL);
-+	while (offset-- && rc)
-+		rc = smc_proc_get_next(seq, rc);
-+
-+	if (rc)
-+		goto out;
-+
-+	sp->bucket = 0;
-+out:
-+	sp->num = orig_num;
-+	return rc;
-+}
-+
-+static void *smc_proc_get_idx(struct seq_file *seq, loff_t pos)
-+{
-+	struct smc_proc_private *sp = seq->private;
-+	void *rc;
-+
-+	sp->bucket = 0;
-+	rc = smc_proc_get_next(seq, NULL);
-+
-+	while (rc && pos) {
-+		rc = smc_proc_get_next(seq, rc);
-+		--pos;
-+	}
-+	return rc;
-+}
-+
-+static void *__smc_proc_conn_start(struct seq_file *seq, loff_t *pos, int protocol)
-+{
-+	struct smc_proc_private *sp = seq->private;
-+	void *rc;
-+
-+	if (*pos && *pos == sp->last_pos) {
-+		rc = smc_proc_seek_last_pos(seq);
-+		if (rc)
-+			goto out;
-+	}
-+
-+	sp->num = 0;
-+	sp->bucket = 0;
-+	sp->offset = 0;
-+	sp->protocol = protocol;
-+	rc = *pos ? smc_proc_get_idx(seq, *pos - 1) : SEQ_START_TOKEN;
-+
-+out:
-+	sp->last_pos = *pos;
-+	return rc;
-+}
-+
-+static void *smc_proc_conn4_start(struct seq_file *seq, loff_t *pos)
-+{
-+	return __smc_proc_conn_start(seq, pos, SMCPROTO_SMC);
-+}
-+
-+static void *smc_proc_conn6_start(struct seq_file *seq, loff_t *pos)
-+{
-+	return __smc_proc_conn_start(seq, pos, SMCPROTO_SMC6);
-+}
-+
-+static void __smc_proc_conn_show(struct seq_file *seq, struct smc_sock *smc, int protocol)
-+{
-+	struct smc_proc_private *sp = seq->private;
-+	const struct in6_addr *dest, *src;
-+	struct smc_link_group *lgr;
-+	struct socket *clcsock;
-+	struct smc_link *lnk;
-+	struct sock *sk;
-+	bool fb = false;
-+	int i;
-+
-+	fb = smc->use_fallback;
-+	clcsock = smc->clcsock;
-+	sk = &smc->sk;
-+
-+	if (protocol == SMCPROTO_SMC)
-+		seq_printf(seq, CONN4_ADDR_FORMAT, sp->num,
-+			   clcsock->sk->sk_rcv_saddr, clcsock->sk->sk_num,
-+			   clcsock->sk->sk_daddr, ntohs(clcsock->sk->sk_dport));
-+	else if (protocol == SMCPROTO_SMC6) {
-+		dest	= &clcsock->sk->sk_v6_daddr;
-+		src	= &clcsock->sk->sk_v6_rcv_saddr;
-+		seq_printf(seq, CONN6_ADDR_FORMAT, sp->num,
-+			   src->s6_addr32[0], src->s6_addr32[1],
-+			   src->s6_addr32[2], src->s6_addr32[3], clcsock->sk->sk_num,
-+			   dest->s6_addr32[0], dest->s6_addr32[1],
-+			   dest->s6_addr32[2], dest->s6_addr32[3], ntohs(clcsock->sk->sk_dport));
-+	}
-+	seq_printf(seq, CONN_SK_FORMAT, fb ? 'Y' : 'N', fb ? smc->fallback_rsn : 0, sk,
-+		   clcsock->sk, fb ? clcsock->sk->sk_state : sk->sk_state, sock_i_ino(sk));
-+
-+	lgr = smc->conn.lgr;
-+	lnk = smc->conn.lnk;
-+
-+	if (!fb && sk->sk_state == SMC_ACTIVE && lgr) {
-+		for (i = 0; i < SMC_LGR_ID_SIZE; i++)
-+			seq_printf(seq, "%02X", lgr->id[i]);
-+
-+		seq_printf(seq, CONN_LGR_FORMAT, lgr->smc_version > SMC_V1 ? "v2" : "v1",
-+			   lgr->is_smcd ? 'D' : 'R', lgr->role == SMC_CLNT ? 'C' : 'S');
-+
-+		if (!lgr->is_smcd && lnk)
-+			seq_printf(seq, CONN_SMCR_EXT, lnk->ibname, lnk->ibport,
-+				   lnk->roce_qp->qp_num, lnk->peer_qpn);
-+	}
-+	seq_puts(seq, "\n");
-+}
-+
-+static int smc_proc_conn_show(struct seq_file *seq, void *v)
-+{
-+	struct smc_proc_private *sp = seq->private;
-+	struct socket *clcsock;
-+	struct smc_sock *smc;
-+
-+	if (v == SEQ_START_TOKEN) {
-+		seq_printf(seq, sp->protocol == SMCPROTO_SMC ? CONN4_HDR : CONN6_HDR,
-+			   "sl", "laddr", "raddr", "fb", "fbrsn", "sock", "clcsock",
-+			   "st", "inode", "lgr", "v", "t", "r");
-+		goto out;
-+	}
-+
-+	smc = smc_sk(v);
-+	clcsock = smc->clcsock;
-+	if (!clcsock)
-+		goto out;
-+
-+	__smc_proc_conn_show(seq, smc, sp->protocol);
-+out:
-+	return 0;
-+}
-+
-+static void *smc_proc_conn_next(struct seq_file *seq, void *v, loff_t *pos)
-+{
-+	struct smc_proc_private *sp = seq->private;
-+	void *rc = NULL;
-+
-+	if (v == SEQ_START_TOKEN) {
-+		rc = smc_proc_get_idx(seq, 0);
-+		goto out;
-+	}
-+	rc = smc_proc_get_next(seq, v);
-+out:
-+	++*pos;
-+	sp->last_pos = *pos;
-+	return rc;
-+}
-+
-+static void smc_proc_conn_stop(struct seq_file *seq, void *v)
-+{
-+	struct smc_proc_private *sp = seq->private;
-+	struct smc_hashinfo *smc_hash =
-+		sp->protocol == SMCPROTO_SMC ?
-+		smc_proto.h.smc_hash : smc_proto6.h.smc_hash;
-+
-+	if (v && v != SEQ_START_TOKEN)
-+		read_unlock(&smc_hash->lock);
-+}
-+
-+static struct smc_proc_entry smc_proc[] = {
-+	{
-+		.name	= "smc4",
-+		.ops = {
-+			.show	= smc_proc_conn_show,
-+			.start	= smc_proc_conn4_start,
-+			.next	= smc_proc_conn_next,
-+			.stop	= smc_proc_conn_stop,
-+		},
-+	},
-+#if IS_ENABLED(CONFIG_IPV6)
-+	{
-+		.name	= "smc6",
-+		.ops = {
-+			.show	= smc_proc_conn_show,
-+			.start	= smc_proc_conn6_start,
-+			.next	= smc_proc_conn_next,
-+			.stop	= smc_proc_conn_stop,
-+		},
-+	},
-+#endif
-+};
-+
-+static int __net_init smc_proc_dir_init(struct net *net)
-+{
-+#ifdef CONFIG_PROC_FS
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(smc_proc); i++) {
-+		if (!proc_create_net(smc_proc[i].name, 0444,
-+				     net->proc_net, &smc_proc[i].ops,
-+				     sizeof(struct smc_proc_private)))
-+			goto err;
-+	}
-+
-+	return 0;
-+
-+err:
-+	for (i -= 1; i >= 0; i--)
-+		remove_proc_entry(smc_proc[i].name, net->proc_net);
-+	return -ENOMEM;
-+#else
-+	return 0;
-+#endif
-+}
-+
-+static void __net_exit smc_proc_dir_exit(struct net *net)
-+{
-+#ifdef CONFIG_PROC_FS
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(smc_proc); i++)
-+		remove_proc_entry(smc_proc[i].name, net->proc_net);
-+#endif
-+}
-+
-+static struct pernet_operations smc_proc_ops = {
-+	.init = smc_proc_dir_init,
-+	.exit = smc_proc_dir_exit,
-+};
-+
-+int __init smc_proc_init(void)
-+{
-+	return register_pernet_subsys(&smc_proc_ops);
-+}
-+
-+void smc_proc_exit(void)
-+{
-+	unregister_pernet_subsys(&smc_proc_ops);
-+}
-diff --git a/net/smc/smc_proc.h b/net/smc/smc_proc.h
-new file mode 100644
-index 0000000..5f97023
---- /dev/null
-+++ b/net/smc/smc_proc.h
-@@ -0,0 +1,35 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef _SMC_PROC_H_
-+#define _SMC_PROC_H_
-+
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/sysctl.h>
-+#include <net/sock.h>
-+#include <net/net_namespace.h>
-+#include "smc.h"
-+
-+#define CONN4_HDR ("%4s: %-14s%-14s%-3s%-9s%-17s%-17s%-3s%-8s%-9s%-3s%-2s%-2s\n")
-+#define CONN6_HDR ("%4s: %-38s%-38s%-3s%-9s%-17s%-17s%-3s%-8s%-9s%-3s%-2s%-2s\n")
-+#define CONN4_ADDR_FORMAT ("%4d: %08X:%04X %08X:%04X")
-+#define CONN6_ADDR_FORMAT ("%4d: %08X%08X%08X%08X:%04X %08X%08X%08X%08X:%04X")
-+#define CONN_SK_FORMAT (" %c  %08X %pK %pK %2d %-7lu ")
-+#define CONN_LGR_FORMAT (" %-2s %c %c")
-+#define CONN_SMCR_EXT (" %-8s %02d %-4X %-4X")
-+
-+struct smc_proc_private {
-+	struct	seq_net_private p;
-+	int num, bucket, offset;
-+	int protocol;
-+	loff_t last_pos;
-+};
-+
-+struct smc_proc_entry {
-+	const char *name;
-+	const struct seq_operations ops;
-+};
-+
-+int __init smc_proc_init(void);
-+void smc_proc_exit(void);
-+
-+#endif
+ 	areq->areqlen = areqlen;
+ 	areq->sk = sk;
++	areq->first_rsgl.sgl.sgt.sgl = areq->first_rsgl.sgl.sgl;
+ 	areq->last_rsgl = NULL;
+ 	INIT_LIST_HEAD(&areq->rsgl_list);
+ 	areq->tsgl = NULL;
 -- 
-1.8.3.1
+2.40.1
+
+
 
