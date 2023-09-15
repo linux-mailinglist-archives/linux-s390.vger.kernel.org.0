@@ -2,138 +2,83 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B71B97A24A8
-	for <lists+linux-s390@lfdr.de>; Fri, 15 Sep 2023 19:29:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 917DF7A24B3
+	for <lists+linux-s390@lfdr.de>; Fri, 15 Sep 2023 19:29:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235637AbjIOR2f (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 15 Sep 2023 13:28:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59560 "EHLO
+        id S235896AbjIOR3K (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 15 Sep 2023 13:29:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236118AbjIOR2c (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 15 Sep 2023 13:28:32 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D3341BF2;
-        Fri, 15 Sep 2023 10:28:27 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id C91941F74D;
-        Fri, 15 Sep 2023 17:28:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1694798905; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jYlrXr9COsiXTqZelDYIvgSCoIEmwG74Vx0nCHq6QF4=;
-        b=Ri5ozDQmN+12TtSf7/86mvip2TrUxYmT0KtDA2adIhQWfaJ8nbofS2/7HSdjGItU1HaKF9
-        CU6HlSSYBR23C33IfBEmcqKS14SH6mstqOm3r4FlPvZqoxlLgggMXsz1kkBHIGO5nnmiUJ
-        OUvvykuDidP7HORcTXLRznxgIQPIXXY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1694798905;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jYlrXr9COsiXTqZelDYIvgSCoIEmwG74Vx0nCHq6QF4=;
-        b=yN+SOk2sDHFaDDAew0tRGThDY9EavXDcQkSD3mtfLV16TSOHJIRvZf2OYKiTRfnJ5LdT3m
-        IwT7IIdzFpVqV+CQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B528F1358A;
-        Fri, 15 Sep 2023 17:28:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 6Cw/LDmUBGXtTwAAMHmgww
-        (envelope-from <jack@suse.cz>); Fri, 15 Sep 2023 17:28:25 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 43D39A0759; Fri, 15 Sep 2023 19:28:25 +0200 (CEST)
-Date:   Fri, 15 Sep 2023 19:28:25 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     David Sterba <dsterba@suse.cz>
-Cc:     Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Denis Efremov <efremov@linux.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
+        with ESMTP id S235889AbjIOR2u (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 15 Sep 2023 13:28:50 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A62562105;
+        Fri, 15 Sep 2023 10:28:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=2i/sXmSR7Ozo56DuBZMs0VNeeLRw22KLzNAbjpObZmM=; b=KELzHD3jhsEdbC0d5YQRPhCjCb
+        VXnx6bRq+99LdZHQQA64VkBwEU6daG4JCKk8gA+OETsEyFUXnPD5mBRFgyTQd2djDc5LpjoOQFNug
+        awAryetTdBr2gj6hS8M/Ad9FUcpBVzNZ4zoWL+ApESxKeOX88cQBlP44ZsxzHjfm2qUt8guLGTFMX
+        yqHwEJJjW6qnTFr43xwhyHmLW73hZvZ43fr0JNeRn20U8zNfM3/sxxSfA6SQXqj8qIqSj53+bKFxY
+        Cfk7UHweI7D5BusCRJi97CiZ6RAqsxnbpohzp522AsxMtrVMe9IXIrlpuuIsM40xtC18vSpZcbwvc
+        EVNbgyEQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qhCcI-00B2xr-Ge; Fri, 15 Sep 2023 17:28:30 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Alexander Gordeev <agordeev@linux.ibm.com>,
-        "Darrick J . Wong" <djwong@kernel.org>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>, linux-block@vger.kernel.org,
-        nbd@other.debian.org, linux-s390@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: remove get_super
-Message-ID: <20230915172825.xedwomfct3sc6ars@quack3>
-References: <20230811100828.1897174-1-hch@lst.de>
- <20230912174245.GC20408@twin.jikos.cz>
- <20230914084809.arzw34svsvvkwivm@quack3>
- <20230914120320.GY20408@suse.cz>
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org
+Subject: [PATCH 1/3] mm: Use arch_make_folio_accessible() in gup_pte_range()
+Date:   Fri, 15 Sep 2023 18:28:26 +0100
+Message-Id: <20230915172829.2632994-2-willy@infradead.org>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20230915172829.2632994-1-willy@infradead.org>
+References: <20230915172829.2632994-1-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230914120320.GY20408@suse.cz>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu 14-09-23 14:03:20, David Sterba wrote:
-> On Thu, Sep 14, 2023 at 10:48:09AM +0200, Jan Kara wrote:
-> > On Tue 12-09-23 19:42:45, David Sterba wrote:
-> > > On Fri, Aug 11, 2023 at 12:08:11PM +0200, Christoph Hellwig wrote:
-> > > > Hi all,
-> > > > 
-> > > > this series against the VFS vfs.super branch finishes off the work to remove
-> > > > get_super and move (almost) all upcalls to use the holder ops.
-> > > > 
-> > > > The first part is the missing btrfs bits so that all file systems use the
-> > > > super_block as holder.
-> > > > 
-> > > > The second part is various block driver cleanups so that we use proper
-> > > > interfaces instead of raw calls to __invalidate_device and fsync_bdev.
-> > > > 
-> > > > The last part than replaces __invalidate_device and fsync_bdev with upcalls
-> > > > to the file system through the holder ops, and finally removes get_super.
-> > > > 
-> > > > It leaves user_get_super and get_active_super around.  The former is not
-> > > > used for upcalls in the traditional sense, but for legacy UAPI that for
-> > > > some weird reason take a dev_t argument (ustat) or a block device path
-> > > > (quotactl).  get_active_super is only used for calling into the file system
-> > > > on freeze and should get a similar treatment, but given that Darrick has
-> > > > changes to that code queued up already this will be handled in the next
-> > > > merge window.
-> > > > 
-> > > > A git tree is available here:
-> > > > 
-> > > >     git://git.infradead.org/users/hch/misc.git remove-get_super
-> > > 
-> > > FYI, I've added patches 2-5 as a topic branch to btrfs for-next.
-> > 
-> > Hum, I don't see them there. Some glitch somewhere?
-> 
-> There will be a delay before the patches show up in the pushed for-next
-> branch, some tests failed (maybe not related to this series) and there
-> are other merge conflicts that I need to resolve first.
+This function already uses folios, so convert the
+arch_make_page_accessible() call to arch_make_folio_accessible().
 
-Thanks for picking up the patches, I can see them in your tree now. But
-I've also noticed (by comparing my local branch with your tree), that in
-this series is also a patch 6/17 "btrfs: use the super_block as holder when
-mounting file systems" which you didn't pick up. It actually fixes block
-device freezing for btrfs as a sideeffect as Christian found out [1]. Can
-you please pick it up as well? Thanks!
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+---
+ mm/gup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-								Honza
-
-[1] https://lore.kernel.org/all/20230908-merklich-bebauen-11914a630db4@brauner
-
+diff --git a/mm/gup.c b/mm/gup.c
+index 2f8a2d89fde1..ab8a0ebc728e 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -2622,13 +2622,13 @@ static int gup_pte_range(pmd_t pmd, pmd_t *pmdp, unsigned long addr,
+ 		}
+ 
+ 		/*
+-		 * We need to make the page accessible if and only if we are
++		 * We need to make the folio accessible if and only if we are
+ 		 * going to access its content (the FOLL_PIN case).  Please
+ 		 * see Documentation/core-api/pin_user_pages.rst for
+ 		 * details.
+ 		 */
+ 		if (flags & FOLL_PIN) {
+-			ret = arch_make_page_accessible(page);
++			ret = arch_make_folio_accessible(folio);
+ 			if (ret) {
+ 				gup_put_folio(folio, 1, flags);
+ 				goto pte_unmap;
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.40.1
+
