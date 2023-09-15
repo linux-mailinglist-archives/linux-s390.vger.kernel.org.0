@@ -2,83 +2,79 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 342EA7A2132
-	for <lists+linux-s390@lfdr.de>; Fri, 15 Sep 2023 16:40:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93AEE7A24AF
+	for <lists+linux-s390@lfdr.de>; Fri, 15 Sep 2023 19:29:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235785AbjIOOkV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 15 Sep 2023 10:40:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41920 "EHLO
+        id S235813AbjIOR3I (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 15 Sep 2023 13:29:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235633AbjIOOkT (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 15 Sep 2023 10:40:19 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A9AC1AC;
-        Fri, 15 Sep 2023 07:40:15 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6453C433C9;
-        Fri, 15 Sep 2023 14:40:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694788814;
-        bh=PvlOjbLkc3tgSHNCaVnS82ty1H0lvym1p0dyZTkOFDQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GsMXd6mZ8RM6Ehv3+oeXSFdJBK4XfA1s5jG3qJW397E3aH+o329rZ/VtgcJhEI2Ek
-         GIJfdrxXDV/D+2h214W5hbDliVTBm3yN1eUgvtUVVZ1/ZgLJyELtBnprCB74Mvp2bO
-         Y9yAjyDUJYhLQ2LABIiRFS7SjQAloadGL5GvZIH6h3ow+QooG9ilUBP37mYSe/gnfx
-         Oe0um8v+i1YG5HcXkyDRJwPVS8rwGOnzAUkEZB8JlS5KwPI8HWoWokIviZ30JYSJLI
-         VjWkPZQ6+IEwE3hlmnfM8EB719A4Al+/b90kwWaliUnxciX021zodiQcb+zRxyFzBc
-         v2OPDzI9ovPwA==
-Date:   Fri, 15 Sep 2023 16:40:06 +0200
-From:   Christian Brauner <brauner@kernel.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>,
-        Heiko Carstens <hca@linux.ibm.com>,
+        with ESMTP id S235863AbjIOR2n (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 15 Sep 2023 13:28:43 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67C581BF2;
+        Fri, 15 Sep 2023 10:28:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=qrq8p9yZWY/o7Jujh/Hgy9LgFQ+ehicAWEAzhOimblQ=; b=V4WSU6j3lknAkAKGSi7BS51kBd
+        IgDYexp3G9Sq2vB35PEykRe/Z/9hxh8qCDis88/OYvmu7uoMZn/ulox76Gs9v2ZWB2ixlnT8VLQb3
+        y26PNvyHjGMuwF97rHf3T+2P1Q+6dECmvQXVcyaqcy+mzLy03+ofmwaw8HQ1kGHw8QD0OjbkOJx9u
+        QUn8qCSC7i2L6jkjmqSNtcm3cr1i/1MsR4CeKvU8LOKw61CZETdN4h6TsBnLBabChT0fI8mk5zDD3
+        nvM46wOeLE7gm99sQSfLNETpjZRyzFVtbroiPTgbbpecgUJB42e1IhhNbBiWzUyPgdmMmRaLCnlJd
+        CtTrBobw==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qhCcI-00B2xp-DA; Fri, 15 Sep 2023 17:28:30 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Alexander Gordeev <agordeev@linux.ibm.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Tejun Heo <tj@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-        cgroups@vger.kernel.org
-Subject: Re: [PATCH 03/19] fs: release anon dev_t in deactivate_locked_super
-Message-ID: <20230915-brust-gratis-156b7572a7c9@brauner>
-References: <20230913111013.77623-1-hch@lst.de>
- <20230913111013.77623-4-hch@lst.de>
- <20230913232712.GC800259@ZenIV>
- <20230914023705.GH800259@ZenIV>
- <20230914053843.GI800259@ZenIV>
- <20230914-munkeln-pelzmantel-3e3a761acb72@brauner>
- <20230914165805.GJ800259@ZenIV>
- <20230915-elstern-etatplanung-906c6780af19@brauner>
- <20230915-zweit-frech-0e06394208a3@brauner>
- <20230915142814.GL800259@ZenIV>
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org
+Subject: [PATCH 0/3] Use arch_make_folio_accessible() everywhere
+Date:   Fri, 15 Sep 2023 18:28:25 +0100
+Message-Id: <20230915172829.2632994-1-willy@infradead.org>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230915142814.GL800259@ZenIV>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-> Lifetime rules for fs-private parts of superblock are really private to
+We introduced arch_make_folio_accessible() a couple of years
+ago, and it's in use in the page writeback path.  GUP still uses
+arch_make_page_accessible(), which means that we can succeed in making
+a single page of a folio accessible, then fail to make the rest of the
+folio accessible when it comes time to do writeback and it's too late
+to do anything about it.  I'm not sure how much of a real problem this is.
 
-Fine, I'll drop that. It's still correct that a filesystem needs to take
-care when it frees sb->s_fs_info. See the RCU fun you just encountered.
+Switching everything around to arch_make_folio_accessible() also lets
+us switch the page flag to be per-folio instead of per-page, which is
+a good step towards dynamically allocated folios.
 
+Build-tested only.
+
+Matthew Wilcox (Oracle) (3):
+  mm: Use arch_make_folio_accessible() in gup_pte_range()
+  mm: Convert follow_page_pte() to use a folio
+  s390: Convert arch_make_page_accessible() to
+    arch_make_folio_accessible()
+
+ arch/s390/include/asm/page.h |  5 ++--
+ arch/s390/kernel/uv.c        | 46 +++++++++++++++++++++++-------------
+ arch/s390/mm/fault.c         | 15 ++++++------
+ include/linux/mm.h           | 20 ++--------------
+ mm/gup.c                     | 22 +++++++++--------
+ 5 files changed, 54 insertions(+), 54 deletions(-)
+
+-- 
+2.40.1
 
