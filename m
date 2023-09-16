@@ -2,58 +2,58 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 221ED7A2C64
-	for <lists+linux-s390@lfdr.de>; Sat, 16 Sep 2023 02:34:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54BEA7A2C20
+	for <lists+linux-s390@lfdr.de>; Sat, 16 Sep 2023 02:33:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238634AbjIPAdy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 15 Sep 2023 20:33:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37844 "EHLO
+        id S238461AbjIPAct (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 15 Sep 2023 20:32:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238804AbjIPAd0 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 15 Sep 2023 20:33:26 -0400
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 296951BF8
-        for <linux-s390@vger.kernel.org>; Fri, 15 Sep 2023 17:31:41 -0700 (PDT)
-Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-1c448ba292dso5561905ad.3
-        for <linux-s390@vger.kernel.org>; Fri, 15 Sep 2023 17:31:41 -0700 (PDT)
+        with ESMTP id S238501AbjIPAcV (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 15 Sep 2023 20:32:21 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BBE8E7F
+        for <linux-s390@vger.kernel.org>; Fri, 15 Sep 2023 17:31:43 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d8027f9dfefso3281238276.0
+        for <linux-s390@vger.kernel.org>; Fri, 15 Sep 2023 17:31:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694824300; x=1695429100; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1694824302; x=1695429102; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=RPxwiI+CF5oY5axnD8PplP8rMTdwT2bOTUtJzDVfTIk=;
-        b=4JDunwJWxDluddrMrRLTj/LNkgoGDpJZcWWCGcaCKouRqjfsjyOm4kgy50/93DGnZf
-         47M5ulzp+LdIpA7ytRU4ah7PBKR0ywSq/f3x4FE3+ygF+EYDC0Hwo2P6X9XHCShKXJaj
-         u71jWAsO/NSqunHJVsy6qy6pdJs6MMiXYrJBeQi6yHoqBzETx5iksGAYkEILl8n/zmcD
-         xRU9wBMR8d7612MakXTzQp0Hf9Yd/+YpQuO9F0zqCh8rS+7W/P8zRrBOCvcbZ0EmxGRP
-         +K3N+t53IM5kD3mmQa9K98Yd7WDxTdEqa/YPORKKcln/NzLt+E3f7UH1RblOyCG42MRY
-         yWBQ==
+        bh=11iXbA6RA96N2ihdzvT9DOzykVF8TPNgieg32BOfaCo=;
+        b=TMBBmJdJhKP3G7bLvh5bdJ5HGVmLAGy+9sz6UWizDB39p5JJWRUAN4BMluE44WgqaK
+         wt2Nl4rnJkO+uUW1TJHGwPYu7Wmkckr5hY3/lUNOEkpsbYkjO25i9vBxMNWLW93wE1FQ
+         eOH0ZTOXp5SxEVktCtxbclt7fwt1iwZGB5KE0Jr7gVN8jx1uM5DeCq7X08FEv0vvkXLB
+         mmgiSAzG42PIPMtMopVz6N/tt6PE6lLuAmQTEBDHCWix+mIbNF1izydhDD8DnzM0IfuM
+         /wBerUvM6cRESUAgk7f1LS+zk4wSiO+8El28U4AC5EvVZjkDW5MGweeXrUJAn/6ijUQf
+         8Q6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694824300; x=1695429100;
+        d=1e100.net; s=20230601; t=1694824302; x=1695429102;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=RPxwiI+CF5oY5axnD8PplP8rMTdwT2bOTUtJzDVfTIk=;
-        b=B0V0+mb5svhSVDW2TqssvuUS2JtCsb2JkNo5sTSf4u7z4newPs+wzF3S4wBlLZ/nXt
-         Gmyp+zJwJk1AZ23dPKAyaIn39cLC3Qtzo8OAGeKHAkLRJU0giEqTk8fXBx9mL3Dem1BU
-         F/rQAkoPADsJ6AUpL/FOsTlXTn8D0eMTBVAn+V6bLUy4lL0zvFXn3jHNFHZL2Ya5L1SI
-         pGCQcOOKViW++Swg80wmUBDRqlkKCbXifLM8icvOeYKeaT/mSCj1+DQsvJpKAcWOkM7N
-         LYLbfSsU/e58jSvvna08de5FOZbCK5efcpjdP749AAIUmoMVj6qDNIc8TPqv+Mfv7R18
-         HyCg==
-X-Gm-Message-State: AOJu0YxXkTiAS7IWhXIW3EfYThNxSZlyZE/sjaylMJkNMUMCmLx4xmhb
-        GY+JPJxnNUbXfASe3RuKBKbrxa9yTOg=
-X-Google-Smtp-Source: AGHT+IHW1P62bdhU5bhLcOltXlUxrv9g7sIQXkfjHJs3Wzbb395eeX6g+RNXiUsvwMV2ESouovB/6KamMFU=
+        bh=11iXbA6RA96N2ihdzvT9DOzykVF8TPNgieg32BOfaCo=;
+        b=lcqSkxr0SKQ011EDNkbYD7K7c4OJv5/pJcOy11FfZ6ZatACF/pf+5kIzm/6ymUCLzn
+         LAdw1LMp70g6CUbA7ZE614DxOklaQSe1ZORWgqysM5sURDwI4k0iWzVeLfRGlKnhkR5s
+         J5+nvqKfQXZKGpWABZOgGtarTK0WkeEyY7ZCHZE8uJsAIiqIUIw5kvaKfONL6rT2VdbU
+         ybNwMsUjNEausu5CtDHWYsb/Mw4m8QwCRTPuTvDNItTNO+zU6Y66mpSDwXRTwRcfIgGM
+         7+2LwIwXrDOjObZUNVatxrNCsakPWmAjMBpk6NkiiooQvBlkTJ4bLAgngpj2P+5Buy0x
+         8ItA==
+X-Gm-Message-State: AOJu0YxM7ZY5bLqQtkpZs/UklX4bUVZttrzfswgu7aTkoPWsn2RS/6T7
+        Mq6d1hFWy1Dz2S5Tu6vmWu9QEoRqO5I=
+X-Google-Smtp-Source: AGHT+IEXzBZMjfoz19MMDpz0z/mfp5J4Xc54+oTqT/y9sTC3/YRTAU+NLkJhdnChwcXUDWkKwhep1BL4HMg=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:903:2302:b0:1b8:a555:385d with SMTP id
- d2-20020a170903230200b001b8a555385dmr88540plh.9.1694824300497; Fri, 15 Sep
- 2023 17:31:40 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a05:6902:138e:b0:d78:245a:aac4 with SMTP id
+ x14-20020a056902138e00b00d78245aaac4mr82625ybu.1.1694824302614; Fri, 15 Sep
+ 2023 17:31:42 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Fri, 15 Sep 2023 17:31:02 -0700
+Date:   Fri, 15 Sep 2023 17:31:03 -0700
 In-Reply-To: <20230916003118.2540661-1-seanjc@google.com>
 Mime-Version: 1.0
 References: <20230916003118.2540661-1-seanjc@google.com>
 X-Mailer: git-send-email 2.42.0.459.ge4e396fd5e-goog
-Message-ID: <20230916003118.2540661-11-seanjc@google.com>
-Subject: [PATCH 10/26] KVM: s390: Stop selecting and depending on HAVE_KVM
+Message-ID: <20230916003118.2540661-12-seanjc@google.com>
+Subject: [PATCH 11/26] KVM: MIPS: Make HAVE_KVM a MIPS-only Kconfig
 From:   Sean Christopherson <seanjc@google.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
@@ -102,40 +102,45 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Now that nothing in s390 or architecture agnostic code consumes HAVE_KVM,
-stop selecting it in s390.  This is one of several steps towards deleting
-HAVE_KVM from the common KVM Kconfig.
+Now that MIPS is the sole remaining user of HAVE_KVM, make HAVE_KVM a
+MIPS-only Kconfig.  Because most architectures unconditionally support
+virtualization, advertising to the kernel at-large that an arch has KVM
+just led to a bunch of useless and misguided #ifdefs.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/s390/Kconfig     | 1 -
- arch/s390/kvm/Kconfig | 1 -
- 2 files changed, 2 deletions(-)
+ arch/mips/kvm/Kconfig | 3 +++
+ virt/kvm/Kconfig      | 3 ---
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index ae29e4392664..8a5dca0036d9 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -193,7 +193,6 @@ config S390
- 	select HAVE_KPROBES
- 	select HAVE_KPROBES_ON_FTRACE
- 	select HAVE_KRETPROBES
--	select HAVE_KVM
- 	select HAVE_LIVEPATCH
- 	select HAVE_MEMBLOCK_PHYS_MAP
- 	select HAVE_MOD_ARCH_SPECIFIC
-diff --git a/arch/s390/kvm/Kconfig b/arch/s390/kvm/Kconfig
-index 459d536116a6..9056cee72945 100644
---- a/arch/s390/kvm/Kconfig
-+++ b/arch/s390/kvm/Kconfig
-@@ -19,7 +19,6 @@ if VIRTUALIZATION
- config KVM
- 	def_tristate y
- 	prompt "Kernel-based Virtual Machine (KVM) support"
--	depends on HAVE_KVM
- 	select PREEMPT_NOTIFIERS
- 	select HAVE_KVM_CPU_RELAX_INTERCEPT
- 	select HAVE_KVM_VCPU_ASYNC_IOCTL
+diff --git a/arch/mips/kvm/Kconfig b/arch/mips/kvm/Kconfig
+index a8cdba75f98d..c4508f49caae 100644
+--- a/arch/mips/kvm/Kconfig
++++ b/arch/mips/kvm/Kconfig
+@@ -4,6 +4,9 @@
+ #
+ source "virt/kvm/Kconfig"
+ 
++config HAVE_KVM
++       bool
++
+ menuconfig VIRTUALIZATION
+ 	bool "Virtualization"
+ 	help
+diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
+index f0be3b55cea6..f7bb6c59658e 100644
+--- a/virt/kvm/Kconfig
++++ b/virt/kvm/Kconfig
+@@ -1,9 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # KVM common configuration items and defaults
+ 
+-config HAVE_KVM
+-       bool
+-
+ config HAVE_KVM_PFNCACHE
+        bool
+ 
 -- 
 2.42.0.459.ge4e396fd5e-goog
 
