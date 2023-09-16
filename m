@@ -2,58 +2,58 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D10B7A2C67
-	for <lists+linux-s390@lfdr.de>; Sat, 16 Sep 2023 02:34:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCA127A2C2D
+	for <lists+linux-s390@lfdr.de>; Sat, 16 Sep 2023 02:33:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239021AbjIPAdU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 15 Sep 2023 20:33:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57098 "EHLO
+        id S238441AbjIPAcz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 15 Sep 2023 20:32:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238804AbjIPAcs (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 15 Sep 2023 20:32:48 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E272630C0
-        for <linux-s390@vger.kernel.org>; Fri, 15 Sep 2023 17:31:53 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59c240e637aso11256777b3.3
-        for <linux-s390@vger.kernel.org>; Fri, 15 Sep 2023 17:31:53 -0700 (PDT)
+        with ESMTP id S238294AbjIPAcj (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 15 Sep 2023 20:32:39 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9075B30C6
+        for <linux-s390@vger.kernel.org>; Fri, 15 Sep 2023 17:31:55 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d818fb959f4so2979715276.1
+        for <linux-s390@vger.kernel.org>; Fri, 15 Sep 2023 17:31:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694824313; x=1695429113; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1694824315; x=1695429115; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=pl7bBxxWVXjTf9iTQwKV6iNN5dTCLVhIVjlh92R6IC4=;
-        b=zOLzyvf9Xh9Oyip0BwJ83PeBHCS/GkeIkYW7amwKWpbVRBulRSs+M2ewlVHSYEk8Y1
-         fZi/rLeXSktTS8MyrHSb7oSjjoji3mP8DLBFys3HTkweHkzNEjUj/MYjO6bhCObLf6WI
-         C4epHaQCDHjamTfPTIFUVJo9uV7rJeD8D3Ev5VTy1GaRUXNCbP9vUakULPRry3f2UmYw
-         gyw5WDenpiA4SZAJNYLZ4b5c/W6CHbsXfPj0GoeSA/wcWsneuM9gT86MPn9Q/cBxCCsq
-         e6qXt7/vwX6T3FspiyVRjD7e2hTXM1HQsLlpY6p8Z4vdzbokFmWoStzOeNzcENym+vhB
-         +SRw==
+        bh=PzobvpQc4vWfR42iy4RjYEgAb/kHLuzC5INLwcS+RqY=;
+        b=YxihMmMOwAJDc/bohM/izVntYK4R7FAAA53ohMstPpD0qgnNu65NkYu2rM60V2XRl7
+         SoSsFkx83Rdd2lw/hJ1tVX2Qd8mELlpNHREfNHu3j46tDd05Z9mzKhU6rlK0NCLUNPJk
+         u0wHDKMdqWe6q8hJLnKIYgmtI0x/evwMYUsYMj1jZsB04PYfON5z6J7440wSOhZcr6U/
+         I4Yw9GPYIayu+Y4uIafMn0jxhTMGSOmzI7AshUDpcZj9QzmP3AfH7ybM9cR4WGZ7qH9c
+         6+XbKkh1B/ns7LBaT8q4OYPlxGDqOAoZVtWPDp1Dfc8mwumFYq9Sg/WjhDSTNnkdA9do
+         vdhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694824313; x=1695429113;
+        d=1e100.net; s=20230601; t=1694824315; x=1695429115;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pl7bBxxWVXjTf9iTQwKV6iNN5dTCLVhIVjlh92R6IC4=;
-        b=HC4neKs/yk63zc+qRsGJTEX5soXVpcrAQwqCt8Cvvb/z0DA7lm5TMhuyPkSFAwIe1b
-         bkn3W00NeEnCfH3jd1hDr8GFGcXyfx4wlk9+GAXERc9HcvlLjHbraxlrG2zo9XkXz862
-         iOFMmAHOlKGfochscXyoZnBbP0aPua+iciUYB02mSe9Q9ZcYsAkgZjntBpjGQ0JqBu2m
-         QgZ+R7C/ttf3Awtt4jYeJBLis8UfYDfgSPKsbn1TY+dZJxcooXcPMHHQSN4rBSWNduJI
-         ozJhywYjnuxkQgycTmoS8wYRw+bM3hry7Q7DOllLzKRryxfSIdNrPWRkdA5ImS5olrRM
-         JDnw==
-X-Gm-Message-State: AOJu0YyxFCb67PRfsI6oBqwAn63NQkWXpLOVkt3XLd65ELZpkawzWPKl
-        OB+BNVTAg/6N9YvLidRDnYhmmFVlVVg=
-X-Google-Smtp-Source: AGHT+IHIEoJ5Qp0cT7058FSDnFlcgu0NfKZ+k2cnwo0UQE0i+ifeNt8ssvIZEJlieWuqLdMggeWcLX6T9W4=
+        bh=PzobvpQc4vWfR42iy4RjYEgAb/kHLuzC5INLwcS+RqY=;
+        b=bXJgf1iJa1m//j+WGaK0myUrIbgAIFVUtLtJQ4lLoDxlczTtm8WC76OibSVDy87pqN
+         YsFOh0mHFK7ZYVpPwgch5+JQqZWsmwb4rI0Lm4qGoD7kkUzvQbcQGxyaW89RUQdby+Cd
+         MseMVzfalaZp7Nm14+ncjHAx0cDqNYdz59rk+09DGqb9+Ly/gbzQFieKfVH5CzmDIZnH
+         WgVteuoJF/dKaVf01lEXrXzq4JoJ8vXjz81sKRw017hWMYxl52OpsVeN9I6+O6wCjQG/
+         uoHpv1Ut41LLR2AeuP9wG2AAYr2+R0FNjlLZDxsOKuwo/pT3rCCgaWyflEr+054REjTP
+         GGcg==
+X-Gm-Message-State: AOJu0YxemZ0cAcALNgd+jAfg/1v3+j/inuj1hz4tRSh7rQUEqv0Zrl91
+        uEA+QsA3Lx9mA0mBYvW3wsrpAzv0F88=
+X-Google-Smtp-Source: AGHT+IEHyBaVn0yDFSDy5XyxKJ2PGYyocUtrZpuSTqYnDVflp7SqStNr9ZpB4/OYXqxtlzASuEez5Ye4vGU=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:4cf:b0:d7b:92d7:5629 with SMTP id
- v15-20020a05690204cf00b00d7b92d75629mr82335ybs.8.1694824312956; Fri, 15 Sep
- 2023 17:31:52 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a25:2e06:0:b0:d77:fb4e:d85e with SMTP id
+ u6-20020a252e06000000b00d77fb4ed85emr78448ybu.6.1694824314795; Fri, 15 Sep
+ 2023 17:31:54 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Fri, 15 Sep 2023 17:31:08 -0700
+Date:   Fri, 15 Sep 2023 17:31:09 -0700
 In-Reply-To: <20230916003118.2540661-1-seanjc@google.com>
 Mime-Version: 1.0
 References: <20230916003118.2540661-1-seanjc@google.com>
 X-Mailer: git-send-email 2.42.0.459.ge4e396fd5e-goog
-Message-ID: <20230916003118.2540661-17-seanjc@google.com>
-Subject: [PATCH 16/26] KVM: MIPS: Stop adding virt/kvm to the arch include path
+Message-ID: <20230916003118.2540661-18-seanjc@google.com>
+Subject: [PATCH 17/26] KVM: PPC: Stop adding virt/kvm to the arch include path
 From:   Sean Christopherson <seanjc@google.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
@@ -102,29 +102,29 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Don't add virt/kvm to KVM MIPS' include path, the headers in virt/kvm are
+Don't add virt/kvm to KVM PPC's include path, the headers in virt/kvm are
 intended to be used only by other code in virt/kvm, i.e. are "private" to
-the core KVM code.  It's not clear that MIPS *ever* included a header from
+the core KVM code.  It's not clear that PPC *ever* included a header from
 virt/kvm, i.e. odds are good the "-Ivirt/kvm" was copied from a different
-architecture's Makefile when MIPS support was first added.
+architecture's Makefile when PPC support was first added.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/mips/kvm/Makefile | 2 +-
+ arch/powerpc/kvm/Makefile | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/kvm/Makefile b/arch/mips/kvm/Makefile
-index 805aeea2166e..96a7cd21b140 100644
---- a/arch/mips/kvm/Makefile
-+++ b/arch/mips/kvm/Makefile
-@@ -4,7 +4,7 @@
+diff --git a/arch/powerpc/kvm/Makefile b/arch/powerpc/kvm/Makefile
+index 5319d889b184..08a0e53d58c7 100644
+--- a/arch/powerpc/kvm/Makefile
++++ b/arch/powerpc/kvm/Makefile
+@@ -3,7 +3,7 @@
+ # Makefile for Kernel-based Virtual Machine module
+ #
+ 
+-ccflags-y := -Ivirt/kvm -Iarch/powerpc/kvm
++ccflags-y := -Iarch/powerpc/kvm
  
  include $(srctree)/virt/kvm/Makefile.kvm
- 
--ccflags-y += -Ivirt/kvm -Iarch/mips/kvm
-+ccflags-y += -Iarch/mips/kvm
- 
- kvm-$(CONFIG_CPU_HAS_MSA) += msa.o
  
 -- 
 2.42.0.459.ge4e396fd5e-goog
