@@ -2,58 +2,59 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 480A37A2C36
-	for <lists+linux-s390@lfdr.de>; Sat, 16 Sep 2023 02:33:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C17F17A2C69
+	for <lists+linux-s390@lfdr.de>; Sat, 16 Sep 2023 02:34:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238660AbjIPAc5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 15 Sep 2023 20:32:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57052 "EHLO
+        id S238641AbjIPAdw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 15 Sep 2023 20:33:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238796AbjIPAcq (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 15 Sep 2023 20:32:46 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A84D319AE
-        for <linux-s390@vger.kernel.org>; Fri, 15 Sep 2023 17:32:07 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d81503de9c9so3244403276.3
-        for <linux-s390@vger.kernel.org>; Fri, 15 Sep 2023 17:32:07 -0700 (PDT)
+        with ESMTP id S238503AbjIPAdW (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 15 Sep 2023 20:33:22 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD79B2130
+        for <linux-s390@vger.kernel.org>; Fri, 15 Sep 2023 17:32:09 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-58c9d29588aso33549417b3.0
+        for <linux-s390@vger.kernel.org>; Fri, 15 Sep 2023 17:32:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694824327; x=1695429127; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1694824329; x=1695429129; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=g87cF9aMFFIIQhALNgZyjDSNT/0Iy7aXKR5wCizfY2Q=;
-        b=giSg+gCVVOrEc5FageiFHVw+1BxDfcFg66J/ZK03jIn36YcQJk+0YdoenOOm/R/oor
-         a6/ngPIASQipZXnEE77CELpl9diiITyIIh4TnRIqTGgT4YIhNXP+iHw6YPv1LKJnK6Ei
-         qL6X04A6yM7kcWetXaCIFFt+0VQXyr1zOy3CDM7BpsbM3FwLgTbKTAqqO6AVkdGggrvv
-         MRnZNzzkxCyLUheux/fXhwHwIV1fehB4bA4KbUdMZF+F/wKTeL3zVEvQEmA/8u3GJ84b
-         gyDZvo481bvF5xePOkCFKztqAczCgieO4PAWhkCniU7jMdWbkJP6atgKTXgoAe1wmSud
-         2a+g==
+        bh=0VtgUtus3LRehL4neqp1OYPW/02VDjf+LHA0REetHQw=;
+        b=4AI9NYwOs7Qxw+F4NZFoKEvkF/ZhJhsoOqPm3pP+SBcEGD4pphMfgvr2oo2Sdm3PGX
+         JfCT6509S/I71oH8ban7uIF5Td8ynYv4sED2o/8WRpjFyyJkWaj14lYJRPq+LiB0L/hv
+         PJkh+NgRmVQME5EKzrxILu5YSGUY8j9n2/yjotBC6TLm7nXXUuL7ZE+vPdBE7KvfuMUR
+         8Kz2aXpwhnjFkqDktr4zIpXAVG+YentMA68hD+Kk/flY5i4QXqwc360B3xdG3OY8Q60z
+         wnOrzJWg7kW8JHZLv4A2zNYDQxxYdoKzYA4qQWREXcEWHnXvb1aQqABFI5LPbgTy1ypd
+         thSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694824327; x=1695429127;
+        d=1e100.net; s=20230601; t=1694824329; x=1695429129;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=g87cF9aMFFIIQhALNgZyjDSNT/0Iy7aXKR5wCizfY2Q=;
-        b=MVCTdBGXFVzTimrHU+c5ko+6VHwdwNEb7YLF2PX0XLewbZBxqDAeSzWHTLiOeeQsMr
-         urHyb4LMuvYRjQcpKqgTQY3vvDQG1HLL/+8nR2LAuFmDmIDKYn/7B0U0V1XTzhFvRY4p
-         iJFNZWHJQAEkhU2NkyKbg2zd05F55FGlrJ8VBaXVYdF3UgQj4qVguLi/nW7gSiavsUUq
-         Ua4EWUiHHaYURjgQzy7epxO6ffNdVvnsrHfke/uqjlGkM/Hj7n+7i/XKReoe/Q82y6K9
-         ehtYKlcf2xD2xRBh3wsrN5FOAjWiDlJPUokzXeIlMAFpx+PFhHVbBu+rMpU2eux5qi3o
-         7yzQ==
-X-Gm-Message-State: AOJu0YyJMmY0TzR3IEuKDO1swcYXdHhGpZBIvciMXhQ1XJz79FNTCMQM
-        EfWHeLxyKZaDsUGoRqmEq/wRR9pCMJs=
-X-Google-Smtp-Source: AGHT+IFjtTFMkJb5nyS/TbDu5WGvlim/mDgHE3y34bDt9PwwLEa+gj6fWVowFGkCoq7czWyFJVVkIfy0aAQ=
+        bh=0VtgUtus3LRehL4neqp1OYPW/02VDjf+LHA0REetHQw=;
+        b=oRg0aspxeGszpGuI4RtbFUMtDWeN+tdUyJig3jgt0M8r2MDyp4mM0k6eCTmxCbt3tJ
+         BPWmymHSduAIQRu9eS/4xmYDEmvAehPC8iSmW5m22/RZKjWSPMalY1FfO45hNIoXZp1U
+         6pbiUlGpA/MyeOo1zPJADh4w67p+vcUQ2qVbeez1mMzZu1t2pcIPMO37vHSCRD1wxXsv
+         TGcZBcTG5eNAHHTsQDlaCPtCJ7gXDa4d0++a+2/7Ge4VMJ1OYC5beTL1AtKdNNviN3rN
+         U0B4lWx1PFApzMZ0Sjlz9Xyg9hI5LgXwqBiVQM6z9PIuTelc9hQI4KUiFlRdPJJU1RQ3
+         qGiQ==
+X-Gm-Message-State: AOJu0YxbMNKjg6wtQT9paatMadWXVZY1D/a+h2r0UBeLAE1XrOyDhM4P
+        xCbsVvdmXgELFVTXv9K9eCtNrmnFLzQ=
+X-Google-Smtp-Source: AGHT+IGS7sQUeRqIzboGgj+JmfOv6SrnKFoWg2KC/khh+vzWzgZdEe9LRtHGjdK8tkWZSSHoGr6LIc8WFow=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a25:d28b:0:b0:d0c:c83b:94ed with SMTP id
- j133-20020a25d28b000000b00d0cc83b94edmr70330ybg.10.1694824326852; Fri, 15 Sep
- 2023 17:32:06 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a81:b620:0:b0:58c:a9b4:a64c with SMTP id
+ u32-20020a81b620000000b0058ca9b4a64cmr86672ywh.1.1694824328926; Fri, 15 Sep
+ 2023 17:32:08 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Fri, 15 Sep 2023 17:31:15 -0700
+Date:   Fri, 15 Sep 2023 17:31:16 -0700
 In-Reply-To: <20230916003118.2540661-1-seanjc@google.com>
 Mime-Version: 1.0
 References: <20230916003118.2540661-1-seanjc@google.com>
 X-Mailer: git-send-email 2.42.0.459.ge4e396fd5e-goog
-Message-ID: <20230916003118.2540661-24-seanjc@google.com>
-Subject: [PATCH 23/26] KVM: arm64: Move and consolidate "public" functions in asm/kvm_host.h
+Message-ID: <20230916003118.2540661-25-seanjc@google.com>
+Subject: [PATCH 24/26] powerpc/xics: Move declaration of xics_wake_cpu() out
+ of kvm_ppc.h
 From:   Sean Christopherson <seanjc@google.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
@@ -102,97 +103,40 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Move a variety of "public" symbols in arm64's kvm_host.h, i.e. symbols and
-functions that are used by non-KVM code, towards the top of the header.
-This will allow hiding the "private" code in kvm_host.h, i.e. the stuff
-that is intended to be KVM-internal, with a minimal amount of #ifdeffery.
+xics_wake_cpu() is provided by core PPC code, not by KVM.  Move its
+declaration out of kvm_ppc.h and into xics.h.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/arm64/include/asm/kvm_host.h | 48 ++++++++++++++-----------------
- 1 file changed, 22 insertions(+), 26 deletions(-)
+ arch/powerpc/include/asm/kvm_ppc.h | 2 --
+ arch/powerpc/include/asm/xics.h    | 3 +++
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index 90cfbf420545..89b40c34f0af 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -67,10 +67,32 @@ enum kvm_mode {
- };
- #ifdef CONFIG_KVM
- enum kvm_mode kvm_get_mode(void);
-+
-+extern phys_addr_t hyp_mem_base;
-+extern phys_addr_t hyp_mem_size;
-+void __init kvm_hyp_reserve(void);
-+
-+void kvm_set_pmu_events(u32 set, struct perf_event_attr *attr);
-+void kvm_clr_pmu_events(u32 clr);
-+bool kvm_set_pmuserenr(u64 val);
+diff --git a/arch/powerpc/include/asm/kvm_ppc.h b/arch/powerpc/include/asm/kvm_ppc.h
+index b4da8514af43..72fee202d3ec 100644
+--- a/arch/powerpc/include/asm/kvm_ppc.h
++++ b/arch/powerpc/include/asm/kvm_ppc.h
+@@ -1072,6 +1072,4 @@ static inline ulong kvmppc_get_ea_indexed(struct kvm_vcpu *vcpu, int ra, int rb)
+ 	return ea;
+ }
+ 
+-extern void xics_wake_cpu(int cpu);
+-
+ #endif /* __POWERPC_KVM_PPC_H__ */
+diff --git a/arch/powerpc/include/asm/xics.h b/arch/powerpc/include/asm/xics.h
+index 89090485bec1..17a45c022bd9 100644
+--- a/arch/powerpc/include/asm/xics.h
++++ b/arch/powerpc/include/asm/xics.h
+@@ -32,6 +32,9 @@
+ extern int icp_native_init(void);
+ extern void icp_native_flush_interrupt(void);
+ extern void icp_native_cause_ipi_rm(int cpu);
++#ifdef CONFIG_SMP
++extern void xics_wake_cpu(int cpu);
++#endif
  #else
- static inline enum kvm_mode kvm_get_mode(void) { return KVM_MODE_NONE; };
-+
-+static inline void kvm_hyp_reserve(void) { }
-+
-+static inline void kvm_set_pmu_events(u32 set, struct perf_event_attr *attr) {}
-+static inline void kvm_clr_pmu_events(u32 clr) {}
-+static inline bool kvm_set_pmuserenr(u64 val)
-+{
-+	return false;
-+}
+ static inline int icp_native_init(void) { return -ENODEV; }
  #endif
- 
-+static inline bool kvm_pmu_counter_deferred(struct perf_event_attr *attr)
-+{
-+	return (!has_vhe() && attr->exclude_host);
-+}
-+
- DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
- 
- extern unsigned int __ro_after_init kvm_sve_max_vl;
-@@ -1086,28 +1108,10 @@ void kvm_arch_vcpu_ctxsync_fp(struct kvm_vcpu *vcpu);
- void kvm_arch_vcpu_put_fp(struct kvm_vcpu *vcpu);
- void kvm_vcpu_unshare_task_fp(struct kvm_vcpu *vcpu);
- 
--static inline bool kvm_pmu_counter_deferred(struct perf_event_attr *attr)
--{
--	return (!has_vhe() && attr->exclude_host);
--}
--
- /* Flags for host debug state */
- void kvm_arch_vcpu_load_debug_state_flags(struct kvm_vcpu *vcpu);
- void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu);
- 
--#ifdef CONFIG_KVM
--void kvm_set_pmu_events(u32 set, struct perf_event_attr *attr);
--void kvm_clr_pmu_events(u32 clr);
--bool kvm_set_pmuserenr(u64 val);
--#else
--static inline void kvm_set_pmu_events(u32 set, struct perf_event_attr *attr) {}
--static inline void kvm_clr_pmu_events(u32 clr) {}
--static inline bool kvm_set_pmuserenr(u64 val)
--{
--	return false;
--}
--#endif
--
- void kvm_vcpu_load_sysregs_vhe(struct kvm_vcpu *vcpu);
- void kvm_vcpu_put_sysregs_vhe(struct kvm_vcpu *vcpu);
- 
-@@ -1142,14 +1146,6 @@ bool kvm_arm_vcpu_is_finalized(struct kvm_vcpu *vcpu);
- 	(test_bit(KVM_ARCH_FLAG_HAS_RAN_ONCE, &(kvm)->arch.flags))
- 
- int kvm_trng_call(struct kvm_vcpu *vcpu);
--#ifdef CONFIG_KVM
--extern phys_addr_t hyp_mem_base;
--extern phys_addr_t hyp_mem_size;
--void __init kvm_hyp_reserve(void);
--#else
--static inline void kvm_hyp_reserve(void) { }
--#endif
--
- void kvm_arm_vcpu_power_off(struct kvm_vcpu *vcpu);
- bool kvm_arm_vcpu_stopped(struct kvm_vcpu *vcpu);
- 
 -- 
 2.42.0.459.ge4e396fd5e-goog
 
