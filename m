@@ -2,126 +2,134 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8255C7A4C39
-	for <lists+linux-s390@lfdr.de>; Mon, 18 Sep 2023 17:29:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6A507A4DE4
+	for <lists+linux-s390@lfdr.de>; Mon, 18 Sep 2023 18:03:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229490AbjIRP2z (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 18 Sep 2023 11:28:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34926 "EHLO
+        id S229778AbjIRQDK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 18 Sep 2023 12:03:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229617AbjIRP2l (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 18 Sep 2023 11:28:41 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C1DC12A;
-        Mon, 18 Sep 2023 08:26:56 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 1F9761FF93;
-        Mon, 18 Sep 2023 15:24:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1695050653; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZTsaizh9uJKTEcz6c5p2g2QGw5JzmlLl2sAISOCHTb0=;
-        b=uNDNyyEycKJBCT8u9QqHT2QXUZQSV7KEwqPhRKMT8g78tvewNow7/PM0Dx8tyzi3UtSwzx
-        cITrOJ3w7steQa1htyVtogiSbMXtJDg/hwSQ96Jf43HJYSsCYwhj25c8Sf6DEVuyfURH1Y
-        aU9810o4zzQKZkEvrA6beovh34oBypU=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A48001358A;
-        Mon, 18 Sep 2023 15:24:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 7NFIJ5xrCGVOWQAAMHmgww
-        (envelope-from <mkoutny@suse.com>); Mon, 18 Sep 2023 15:24:12 +0000
-Date:   Mon, 18 Sep 2023 17:24:11 +0200
-From:   Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Christian Brauner <brauner@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
+        with ESMTP id S229796AbjIRQDK (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 18 Sep 2023 12:03:10 -0400
+Received: from mail-oi1-x24a.google.com (mail-oi1-x24a.google.com [IPv6:2607:f8b0:4864:20::24a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A5C610EA
+        for <linux-s390@vger.kernel.org>; Mon, 18 Sep 2023 09:02:39 -0700 (PDT)
+Received: by mail-oi1-x24a.google.com with SMTP id 5614622812f47-3acfa8f8df3so5778543b6e.3
+        for <linux-s390@vger.kernel.org>; Mon, 18 Sep 2023 09:02:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1695052762; x=1695657562; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sNXD76U7haNeW91VMZlpdLB8TVqFEiovhx95zes76gg=;
+        b=k72SlCfX3fQYm78wUXNTgG6ok+Pf1dFf32Z6j2EQS+QJX5NmS5eHFaupmDzthJWqb2
+         6Or7rhB3wQdE7sM6GbHVI4fYL+2IGXieBVw0yJPiEyraoSEvw+2h4go82gA0mAY/hp5V
+         1NreLFuza6P7XjGN+xzyD3ARsh/lnFg+4/8q0mqJ9Rn3B/dimRSKDqaADoLwcQfJsdaS
+         NwbVRd+azySRzqe5E4yiOIs75QGp1wnTpWZIBwfuBeKvn4VKbGdFAfzWRoOmwHVrHnER
+         HXUWTdiFG1xJirXuLNr3buDYAiKTKjK2IUy3/WaRCqA8WsTgan9LwmFVVDJemWcmbTQA
+         OtfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695052762; x=1695657562;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sNXD76U7haNeW91VMZlpdLB8TVqFEiovhx95zes76gg=;
+        b=u7dG6qOvWCXjcpAeuMVidYFlX0TWFdlRd05vYCNX+B/Pm88G9c+qgLtgKpYPjqXNOJ
+         2bWmTFw5MNeVLATLzJUuEIXDqO0QRImSxfuZj05Vt/KlaNtY9g/CzwvPletoGIyDku0i
+         MJQc7JLpb3gBsyd/VeKo2pNmWs+sS+Nb0bM0f8z3768/gCtU9Tfk4wsP77S4eCBD3pG1
+         zFflbxVz6jifCUV9ObnL7+Rm+riwflklpZPuZNaFz4Il1HVRdeKrpWwvhqjdGwB8gAoz
+         6b0BIjRJUhLdux5jVgH8ig1pfyVAb7L/hJySzcLM+1QfnXtll+gTYKS83OWAV0t5Kwux
+         QYdA==
+X-Gm-Message-State: AOJu0YyIgBeuZ+/e5vdsx2nquLoEub645Yr3K9LbWpFIY/bLf1MWqhwT
+        9GIkaMefGH9veYQdJNB8Unim+dGn9I0=
+X-Google-Smtp-Source: AGHT+IE1DPoRp0N2nDleDeL+nMknRqhKzdJCPwHMJrwMUBjkYLBNjcfJz91+ASKxJdGzFGGlGgloaP/fXoU=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a25:2411:0:b0:d81:78ec:c403 with SMTP id
+ k17-20020a252411000000b00d8178ecc403mr192905ybk.12.1695052199184; Mon, 18 Sep
+ 2023 08:49:59 -0700 (PDT)
+Date:   Mon, 18 Sep 2023 08:49:57 -0700
+In-Reply-To: <20230918152110.GI13795@ziepe.ca>
+Mime-Version: 1.0
+References: <20230916003118.2540661-1-seanjc@google.com> <20230916003118.2540661-6-seanjc@google.com>
+ <20230918152110.GI13795@ziepe.ca>
+Message-ID: <ZQhxpesyXeG+qbS6@google.com>
+Subject: Re: [PATCH 05/26] vfio: KVM: Pass get/put helpers from KVM to VFIO,
+ don't do circular lookup
+From:   Sean Christopherson <seanjc@google.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Anup Patel <anup@brainfault.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
         Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Alexander Gordeev <agordeev@linux.ibm.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Tejun Heo <tj@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-        cgroups@vger.kernel.org
-Subject: Re: [PATCH 15/19] kernfs: split ->kill_sb
-Message-ID: <vqax7efvf5h4agxge5g43pdl6tsa5on5mob74bydydd5vdxwb5@5fj2qgmuxjj3>
-References: <20230913111013.77623-1-hch@lst.de>
- <20230913111013.77623-16-hch@lst.de>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fb5cgu6m55xbwjgl"
-Content-Disposition: inline
-In-Reply-To: <20230913111013.77623-16-hch@lst.de>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Anish Ghulati <aghulati@google.com>,
+        Venkatesh Srinivas <venkateshs@chromium.org>,
+        Andrew Thornton <andrewth@google.com>
+Content-Type: text/plain; charset="us-ascii"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Mon, Sep 18, 2023, Jason Gunthorpe wrote:
+> On Fri, Sep 15, 2023 at 05:30:57PM -0700, Sean Christopherson wrote:
+> > Explicitly pass KVM's get/put helpers to VFIO when attaching a VM to
+> > VFIO instead of having VFIO do a symbol lookup back into KVM.  Having both
+> > KVM and VFIO do symbol lookups increases the overall complexity and places
+> > an unnecessary dependency on KVM (from VFIO) without adding any value.
+> > 
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+> >  drivers/vfio/vfio.h      |  2 ++
+> >  drivers/vfio/vfio_main.c | 74 +++++++++++++++++++---------------------
+> >  include/linux/vfio.h     |  4 ++-
+> >  virt/kvm/vfio.c          |  9 +++--
+> >  4 files changed, 47 insertions(+), 42 deletions(-)
+> 
+> I don't mind this, but Christoph had disliked my prior attempt to do
+> this with function pointers..
+> 
+> The get can be inlined, IIRC, what about putting a pointer to the put
+> inside the kvm struct?
 
---fb5cgu6m55xbwjgl
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That wouldn't allow us to achieve our goal, which is to hide the details of
+"struct kvm" from VFIO (and the rest of the kernel).
 
-On Wed, Sep 13, 2023 at 08:10:09AM -0300, Christoph Hellwig <hch@lst.de> wr=
-ote:
-> Split the kernfs_kill_sb helper into helpers for the new split
-> shutdown_sb and free_sb methods.  Note that resctrl has very odd
-> locking in ->kill_sb, so this commit only releases the locking
-> acquired in rdt_shutdown_sb in rdt_free_sb.  This is not very good
-> code and relies on ->shutdown_sb and ->free_sb to always be called
-> in pairs, which it currently is.  The next commit will try to clean
-> this up.
->=20
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/x86/kernel/cpu/resctrl/rdtgroup.c | 12 +++++++++---
->  fs/kernfs/mount.c                      | 18 ++++++++----------
->  fs/sysfs/mount.c                       |  7 ++++---
->  include/linux/kernfs.h                 |  5 ++---
->  kernel/cgroup/cgroup.c                 | 10 ++++++----
->  5 files changed, 29 insertions(+), 23 deletions(-)
+What's the objection to handing VFIO a function pointer?
 
-Reviewed-by: Michal Koutn=FD <mkoutny@suse.com>
+> The the normal kvm get/put don't have to exported symbols at all?
 
-(Also, I didn't find a necessity to have kernfs_free_sb(sb) under
-rdtgroup_mutex, so folding the following patch of the series may be fine
-too.)
+The export of kvm_get_kvm_safe() can go away (I forgot to do that in this series),
+but kvm_get_kvm() will hang around as it's needed by KVM sub-modules (PPC and x86),
+KVMGT (x86), and drivers/s390/crypto/vfio_ap_ops.c (no idea what to call that beast).
 
+Gah, KVMGT doesn't actually need to call get/put, that can be handled by
+kvm_page_track_register_notifier().
 
---fb5cgu6m55xbwjgl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQpEWyjXuwGT2dDBqAGvrMr/1gcjgUCZQhrmQAKCRAGvrMr/1gc
-joA0AQCDANwuvql51NVbMvBdMPjFI6Th8lDr5goiUMJIkDInfAEAgIpZtJp32qUD
-1HpNpPzzwxVHRHauSQjOpc8j5wdn+Qk=
-=yjqf
------END PGP SIGNATURE-----
-
---fb5cgu6m55xbwjgl--
+I am planning on making exports for sub-modules conditional on there actually
+being submodules, so that's 2 of the 3 gone, but tackling the s390 crypto driver
+is an entirely different story.
