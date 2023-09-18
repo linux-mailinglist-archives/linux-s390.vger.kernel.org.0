@@ -2,58 +2,59 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DFF0D7A4DDB
-	for <lists+linux-s390@lfdr.de>; Mon, 18 Sep 2023 18:02:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 215897A4E6F
+	for <lists+linux-s390@lfdr.de>; Mon, 18 Sep 2023 18:17:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229846AbjIRQCU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 18 Sep 2023 12:02:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57672 "EHLO
+        id S230134AbjIRQR6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 18 Sep 2023 12:17:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229832AbjIRQCP (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 18 Sep 2023 12:02:15 -0400
-Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFB3010CE
-        for <linux-s390@vger.kernel.org>; Mon, 18 Sep 2023 08:56:39 -0700 (PDT)
-Received: by mail-pl1-x649.google.com with SMTP id d9443c01a7336-1c577fea3dcso6812495ad.2
-        for <linux-s390@vger.kernel.org>; Mon, 18 Sep 2023 08:56:39 -0700 (PDT)
+        with ESMTP id S230059AbjIRQRu (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 18 Sep 2023 12:17:50 -0400
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 071117D99
+        for <linux-s390@vger.kernel.org>; Mon, 18 Sep 2023 09:12:22 -0700 (PDT)
+Received: by mail-yb1-xb2d.google.com with SMTP id 3f1490d57ef6-d852b28ec3bso575553276.2
+        for <linux-s390@vger.kernel.org>; Mon, 18 Sep 2023 09:12:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695052362; x=1695657162; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2U3xsG0fg5xdFpPmP8zowhEzmg+gfxwbZh9hlXMaF+c=;
-        b=Xq+bULNzXtlK9fQ1gwep/ALD5g9KBT8NdqTZAMyLJSUU0LH0IUGMKfe2VTQdNrHL5Y
-         UfsG6Fx8+BGtX+P9MhPlJ87fVrPojrpieBn7WhVUHFk+Mcc6QFQuYMEljzOv3krULNmI
-         WoUBThqa1u+YktUZmud48otH1zrunEhvv5FVfw0nrjvXJR8cwQ8yHM7bGuv3pXgztj03
-         iNxtXNA7emoYxaAwD4Yb8z7WaekcG/vOtAvipseGnNEWbJ3JxcikoGcP1dL7XUNtCSLw
-         NA6nDlgsQD860uV4WUZzEgAcTocSVoZd3doqHpcpySL/ybGURSvz3fvSuf6KA9iCsMxj
-         8fzw==
+        d=ziepe.ca; s=google; t=1695053541; x=1695658341; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nmpxNm78kWfejPgZcglZLNttpcA+aOzIbjCglm6BlEY=;
+        b=PfOvp4DDqhsXIubO0v9nTeL3XolQ8fusDqLFhZBLDhdQeBTizOwDDD7u+zGSndajRO
+         VCt74HzavqjVqiyuWAY7ukOp/t+wXT5jWLsYZIqKM98u68IS8qiJr1LVgdHXAFAFidsv
+         ROr/TQ3m0MY9siTv18IuM0QV8I42iQzLd7tUlthucATqpLGJul3haGFI2CViLYBFTdfh
+         Wo9imjguYJKJH7QNOG/ESWwH1rJaajYJ3TiT6CtXAbmprbXyPRuWnPkZj+23V1S+WqzY
+         ZglCB4UOhivjoWvSb2FP2s/vP8R573T34SaTaAKcA+oOC5+uq+bY2jyq/xHLzThwQbGq
+         V54Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695052362; x=1695657162;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2U3xsG0fg5xdFpPmP8zowhEzmg+gfxwbZh9hlXMaF+c=;
-        b=fVqSqJ+0DWhv0QBszZNF0uvanMSzmBsMzKyV1ZwkoB1KSPw7DAreeBklv4Vu/bheIU
-         G+te09fR6o+qd6rVknQLVIJ8HFc6FeIcZ9L0qbYi3+XJ8EdSs6LmicrGs327wxIacRZW
-         oLPQtsnfXiS7iyjxdI1SPTs8ZjEgayyVmw98H8rPk1R1naM/j4Spiwt0tFjzhFFKPKCe
-         eSAZ51tipMzTK15J5d/lNktNdyFAM2RJ6AlmAvUn7cfzMVE+PFZBOwwomB28Lo9Qwlxb
-         vfDLwFURJdM5mXf75rAKyXr5pAFJYLMpweOpfJ3lOPGYqsylIB3UNw4nOvzd9qBFJ1qy
-         YXMg==
-X-Gm-Message-State: AOJu0Yzp+12tFHFX8n0tJI+nc4ciIxF2bGdg11Ti0krYgBTgP127xtqb
-        eZr3NGkXCgHbpbdqH2cJFBIxLazEbWs=
-X-Google-Smtp-Source: AGHT+IGgNS2Vz9a89mB0wnbmpqOo9ipRBHkgWDp+LBnX1+UB/D0eQmGLqC9so7UJgprSn2d6kzcCXv9BIzw=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:903:41c2:b0:1c1:fbec:bc39 with SMTP id
- u2-20020a17090341c200b001c1fbecbc39mr210522ple.4.1695052361665; Mon, 18 Sep
- 2023 08:52:41 -0700 (PDT)
-Date:   Mon, 18 Sep 2023 08:52:40 -0700
-In-Reply-To: <20230918152946.GJ13795@ziepe.ca>
-Mime-Version: 1.0
-References: <20230916003118.2540661-1-seanjc@google.com> <20230916003118.2540661-7-seanjc@google.com>
- <20230918152946.GJ13795@ziepe.ca>
-Message-ID: <ZQhySMjmuyW2Czas@google.com>
-Subject: Re: [PATCH 06/26] KVM: Drop CONFIG_KVM_VFIO and just look at KVM+VFIO
-From:   Sean Christopherson <seanjc@google.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
+        d=1e100.net; s=20230601; t=1695053541; x=1695658341;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nmpxNm78kWfejPgZcglZLNttpcA+aOzIbjCglm6BlEY=;
+        b=YRfLuAbt37goFDGFnVEFQuYehkGEXzgv+A6o9WEzoa73yHSPdJCOHFllIMYSk0DPVt
+         xRmxR5yYzVVLfFXtNQlTUVoJRkMWsJDdwVpRtSckfJXY6Z8DcYmnZpkVMg9FrKCvBUdt
+         /144lKjthuIaGfqxoKSNbUfkWm4A5akfNOeYL3yjvO2bnGINwqDZocztcoyswr9KJy70
+         HJ0HsohgdXYlpaHip+7kef2WQxsMjUtlUrtZ4XpgBrOv6qrY1fUycHVFWVWqLV+CrtPE
+         Pnpf9lMj5zaeRnIk4v442pH4QVGFAyHV6s3llhS77qd9MmvgOgkXacAQ7nXe1yGkrkSp
+         t4Xw==
+X-Gm-Message-State: AOJu0Yyf52SlLxcrJWm5tixfDtSz2LJblc8lKPLTpsWGEhTn4YoIFGDh
+        Ihgjl6M39yHHrjdly8ys+4Ztuv9R/f/VpWnBKLk=
+X-Google-Smtp-Source: AGHT+IE5R1x821mq0T9l2iChMZP/v62/zLl2heVXzUEZigk+bm+oq/r6FG+m4/T/InbSxJxTjGr9mw==
+X-Received: by 2002:a05:620a:2887:b0:76d:aa93:2e3c with SMTP id j7-20020a05620a288700b0076daa932e3cmr11157815qkp.24.1695050987781;
+        Mon, 18 Sep 2023 08:29:47 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-26-201.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.26.201])
+        by smtp.gmail.com with ESMTPSA id s4-20020a05620a16a400b0076d0312b8basm3183843qkj.131.2023.09.18.08.29.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Sep 2023 08:29:47 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1qiGC2-0005S2-Ku;
+        Mon, 18 Sep 2023 12:29:46 -0300
+Date:   Mon, 18 Sep 2023 12:29:46 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Sean Christopherson <seanjc@google.com>
 Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
         Oliver Upton <oliver.upton@linux.dev>,
@@ -89,58 +90,66 @@ Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Anish Ghulati <aghulati@google.com>,
         Venkatesh Srinivas <venkateshs@chromium.org>,
         Andrew Thornton <andrewth@google.com>
-Content-Type: text/plain; charset="us-ascii"
+Subject: Re: [PATCH 06/26] KVM: Drop CONFIG_KVM_VFIO and just look at KVM+VFIO
+Message-ID: <20230918152946.GJ13795@ziepe.ca>
+References: <20230916003118.2540661-1-seanjc@google.com>
+ <20230916003118.2540661-7-seanjc@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230916003118.2540661-7-seanjc@google.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Sep 18, 2023, Jason Gunthorpe wrote:
-> On Fri, Sep 15, 2023 at 05:30:58PM -0700, Sean Christopherson wrote:
-> > Drop KVM's KVM_VFIO Kconfig, and instead compile in VFIO support if
-> > and only if VFIO itself is enabled.  Similar to the recent change to have
-> > VFIO stop looking at HAVE_KVM, compiling in support for talking to VFIO
-> > just because the architecture supports VFIO is nonsensical.
-> > 
-> > This fixes a bug where RISC-V doesn't select KVM_VFIO, i.e. would silently
-> > fail to do connect KVM and VFIO, even though RISC-V supports VFIO.  The
-> > bug is benign as the only driver in all of Linux that actually uses the
-> > KVM reference provided by VFIO is KVM-GT, which is x86/Intel specific.
+On Fri, Sep 15, 2023 at 05:30:58PM -0700, Sean Christopherson wrote:
+> Drop KVM's KVM_VFIO Kconfig, and instead compile in VFIO support if
+> and only if VFIO itself is enabled.  Similar to the recent change to have
+> VFIO stop looking at HAVE_KVM, compiling in support for talking to VFIO
+> just because the architecture supports VFIO is nonsensical.
 > 
-> Hmm, I recall that all the S390 drivers need it as well.
-> 
-> static int vfio_ap_mdev_open_device(struct vfio_device *vdev)
-> {
->         struct ap_matrix_mdev *matrix_mdev =
->                 container_of(vdev, struct ap_matrix_mdev, vdev);
-> 
->         if (!vdev->kvm)
->                 return -EINVAL;
-> 
->         return vfio_ap_mdev_set_kvm(matrix_mdev, vdev->kvm);
+> This fixes a bug where RISC-V doesn't select KVM_VFIO, i.e. would silently
+> fail to do connect KVM and VFIO, even though RISC-V supports VFIO.  The
+> bug is benign as the only driver in all of Linux that actually uses the
+> KVM reference provided by VFIO is KVM-GT, which is x86/Intel specific.
 
-Ah, I missed that the KVM reference was routed through VFIO in that case.
+Hmm, I recall that all the S390 drivers need it as well.
 
-> I wonder if we should be making the VFIO drivers that need the kvm to
-> ask for it? 'select CONFIG_NEED_VFIO_KVM' or something?
+static int vfio_ap_mdev_open_device(struct vfio_device *vdev)
+{
+        struct ap_matrix_mdev *matrix_mdev =
+                container_of(vdev, struct ap_matrix_mdev, vdev);
 
-I wondered the same thing, if only to make it easier to track which drivers actually
-end up interacting directly with KVM.
+        if (!vdev->kvm)
+                return -EINVAL;
 
-> Regardless, I fully agree with getting rid of the arch flag.
-> 
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> 
-> > --- a/virt/kvm/Makefile.kvm
-> > +++ b/virt/kvm/Makefile.kvm
-> > @@ -6,7 +6,9 @@
-> >  KVM ?= ../../../virt/kvm
-> >  
-> >  kvm-y := $(KVM)/kvm_main.o $(KVM)/eventfd.o $(KVM)/binary_stats.o
-> > -kvm-$(CONFIG_KVM_VFIO) += $(KVM)/vfio.o
-> > +ifdef CONFIG_VFIO
-> > +kvm-y += $(KVM)/vfio.o
-> > +endif
-> 
-> I wonder if kvm-m magically works in kbuild so you don't need the ifdef?
+        return vfio_ap_mdev_set_kvm(matrix_mdev, vdev->kvm);
 
-Yeah, that should work, no idea why I added the ifdef.
+
+I wonder if we should be making the VFIO drivers that need the kvm to
+ask for it? 'select CONFIG_NEED_VFIO_KVM' or something?
+
+Regardless, I fully agree with getting rid of the arch flag.
+
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+
+> --- a/virt/kvm/Makefile.kvm
+> +++ b/virt/kvm/Makefile.kvm
+> @@ -6,7 +6,9 @@
+>  KVM ?= ../../../virt/kvm
+>  
+>  kvm-y := $(KVM)/kvm_main.o $(KVM)/eventfd.o $(KVM)/binary_stats.o
+> -kvm-$(CONFIG_KVM_VFIO) += $(KVM)/vfio.o
+> +ifdef CONFIG_VFIO
+> +kvm-y += $(KVM)/vfio.o
+> +endif
+
+I wonder if kvm-m magically works in kbuild so you don't need the ifdef?
+
+Jason
