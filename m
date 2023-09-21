@@ -2,91 +2,88 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F0807AA5B4
-	for <lists+linux-s390@lfdr.de>; Fri, 22 Sep 2023 01:37:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9311F7AA5D7
+	for <lists+linux-s390@lfdr.de>; Fri, 22 Sep 2023 01:59:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230190AbjIUXhj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 21 Sep 2023 19:37:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46816 "EHLO
+        id S229936AbjIUX7m (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 21 Sep 2023 19:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230357AbjIUXhi (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 21 Sep 2023 19:37:38 -0400
+        with ESMTP id S229649AbjIUX7l (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 21 Sep 2023 19:59:41 -0400
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4650E129;
-        Thu, 21 Sep 2023 16:37:29 -0700 (PDT)
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38LNbLQq001748;
-        Thu, 21 Sep 2023 23:37:25 GMT
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D536F4;
+        Thu, 21 Sep 2023 16:59:35 -0700 (PDT)
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38LNaWRW019394;
+        Thu, 21 Sep 2023 23:59:31 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : from : subject : to : cc : references : in-reply-to :
+ mime-version : subject : to : cc : references : from : in-reply-to :
  content-type : content-transfer-encoding; s=pp1;
- bh=J4tPXsGAIwPWKiDS0fRDZ3GSuFmDHRRzMOCHHXbXTNI=;
- b=jUMDd6s+YrFom/9i5YFDnXx/DOisLyRKxnVuRvbUrrAznZ2vi5DkTKVN3iXF43zjGpik
- zzP/sSunnfQKgDvbaeteKAfeW2HAgU3vOv3eMsIqNQxHKsFj5+xWWKm7Fruy/ccsO3lu
- 38brUJUSh81BItccWQsX3NM7kIwc0mv2/mY+knmZ37cmiZ3y2iHLFvpHNnROBM0HZfQu
- mZ1rhVLJSU1cpkIsRHNZgPEZ5IbA0DCTo18ifC7y+gP54JMXMQyZIhQmgTv7cEuq53KT
- 2hdXuloFhRxvaPSsuwiGTjJRS7gRXt2rZ7hEts+eYhBn6CuAwLIPpIWydJiyjWO95vh2 Sg== 
+ bh=GqSRrvuzmUHbgVX5ow5+x1HPRKyMaqOJIHeMkbK/UlI=;
+ b=H+R6aZ01dXI/TZBQVlI+EvoCZZWuwSI3ZPTpOpVHynxUSSt+FdSGSfyDMsW0hc5JDG99
+ YA/N1eoZugtYAzv3gXcrwU5JNUd37RdtO7Se8aIWoAvr9cbGCRvIfxLe5dKYf7Otvojf
+ D8Xjeuv5PPR29wbHWLtKYwx95qYGzeb5LU4LJHfp4V6UTOfrSm64POInU1yLqfuHgnSf
+ bwIzKvT05qRsboK4jp6WBU3fALYvNP/+csLTJhQ7SN4wi3fE7S+Zfmp8hCJZ0V7PVU0c
+ nDbGgDlcPwoy52WvGxW24BwhmlvE7+VJq3oztZnQDPgtgN//6g0OQpj4kPTGVsLlgLn2 fw== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t8w11uwjb-1
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t8xvg9hhj-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 21 Sep 2023 23:37:24 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38LNbMEg001904;
-        Thu, 21 Sep 2023 23:37:23 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t8w11uw9a-1
+        Thu, 21 Sep 2023 23:59:30 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38LNaZx3019897;
+        Thu, 21 Sep 2023 23:59:30 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t8xvg9hgn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 21 Sep 2023 23:37:22 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38LNAYmd025939;
-        Thu, 21 Sep 2023 23:32:37 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
-        by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3t8tspmrb2-1
+        Thu, 21 Sep 2023 23:59:29 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38LN7VAC018806;
+        Thu, 21 Sep 2023 23:59:28 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+        by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3t8tsnn4eq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 21 Sep 2023 23:32:37 +0000
+        Thu, 21 Sep 2023 23:59:28 +0000
 Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-        by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38LNWbVU21758336
+        by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38LNxRQC63177088
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 Sep 2023 23:32:37 GMT
+        Thu, 21 Sep 2023 23:59:27 GMT
 Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EE45858053;
-        Thu, 21 Sep 2023 23:32:36 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 69D895805F;
+        Thu, 21 Sep 2023 23:59:27 +0000 (GMT)
 Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 927AA58043;
-        Thu, 21 Sep 2023 23:32:34 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id CB4AF58043;
+        Thu, 21 Sep 2023 23:59:25 +0000 (GMT)
 Received: from [9.171.4.137] (unknown [9.171.4.137])
         by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-        Thu, 21 Sep 2023 23:32:34 +0000 (GMT)
-Message-ID: <0a150c58-5fdc-5e8d-1ea6-861406f2c70a@linux.ibm.com>
-Date:   Fri, 22 Sep 2023 01:32:33 +0200
+        Thu, 21 Sep 2023 23:59:25 +0000 (GMT)
+Message-ID: <0902f55b-0d51-7f4d-0a9e-4b9423217fcf@linux.ibm.com>
+Date:   Fri, 22 Sep 2023 01:59:24 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.15.1
+Subject: Re: [PATCH net] net/smc: fix panic smc_tcp_syn_recv_sock() while
+ closing listen socket
+To:     "D. Wythe" <alibuda@linux.alibaba.com>, kgraul@linux.ibm.com,
+        jaka@linux.ibm.com
+Cc:     kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org
+References: <1695211714-66958-1-git-send-email-alibuda@linux.alibaba.com>
 From:   Wenjia Zhang <wenjia@linux.ibm.com>
-Subject: Re: [PATCH net-next v3 05/18] net/smc: reserve CHID range for SMC-D
- virtual device
-To:     Wen Gu <guwen@linux.alibaba.com>, kgraul@linux.ibm.com,
-        jaka@linux.ibm.com, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com
-Cc:     alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
-        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1695302360-46691-1-git-send-email-guwen@linux.alibaba.com>
- <1695302360-46691-6-git-send-email-guwen@linux.alibaba.com>
-In-Reply-To: <1695302360-46691-6-git-send-email-guwen@linux.alibaba.com>
+In-Reply-To: <1695211714-66958-1-git-send-email-alibuda@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Q_NCqUikah0oJnJqcpPiaUiAp1LeTz-o
-X-Proofpoint-GUID: R0t4DEMOwiRSCu9U8-jWZl9kEOzVC1wW
+X-Proofpoint-ORIG-GUID: UkOgE4FmI97diwg6vitq6lg7NHFC630Z
+X-Proofpoint-GUID: On0vEL_-A4dXscm68g4-a-xwmrPsRfZK
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-09-21_19,2023-09-21_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- clxscore=1015 phishscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0
- lowpriorityscore=0 impostorscore=0 bulkscore=0 adultscore=0 suspectscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2309180000 definitions=main-2309210205
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 spamscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
+ lowpriorityscore=0 phishscore=0 clxscore=1011 impostorscore=0
+ suspectscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2309180000 definitions=main-2309210205
 X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,
         RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
@@ -99,44 +96,51 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-On 21.09.23 15:19, Wen Gu wrote:
-> This patch reserve CHID range from 0xFF00 to 0xFFFF for SMC-D virtual
-> device and introduces helpers to identify them.
+On 20.09.23 14:08, D. Wythe wrote:
+> From: "D. Wythe" <alibuda@linux.alibaba.com>
 > 
-> Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
+> Consider the following scenarios:
+> 
+> smc_release
+> 	smc_close_active
+> 		write_lock_bh(&smc->clcsock->sk->sk_callback_lock);
+> 		smc->clcsock->sk->sk_user_data = NULL;
+> 		write_unlock_bh(&smc->clcsock->sk->sk_callback_lock);
+> 
+> smc_tcp_syn_recv_sock
+> 	smc = smc_clcsock_user_data(sk);
+> 	/* now */
+> 	/* smc == NULL */
+> 
+> Hence, we may read the a NULL value in smc_tcp_syn_recv_sock(). And
+> since we only unset sk_user_data during smc_release, it's safe to
+> drop the incoming tcp reqsock.
+> 
+> Fixes:  ("net/smc: net/smc: Limit backlog connections"
+> Signed-off-by: D. Wythe <alibuda@linux.alibaba.com>
 > ---
->   net/smc/smc_ism.h | 15 +++++++++++++++
->   1 file changed, 15 insertions(+)
+>   net/smc/af_smc.c | 2 ++
+>   1 file changed, 2 insertions(+)
 > 
-> diff --git a/net/smc/smc_ism.h b/net/smc/smc_ism.h
-> index 14d2e77..2ecc8de 100644
-> --- a/net/smc/smc_ism.h
-> +++ b/net/smc/smc_ism.h
-> @@ -15,6 +15,9 @@
+> diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
+> index bacdd97..b4acf47 100644
+> --- a/net/smc/af_smc.c
+> +++ b/net/smc/af_smc.c
+> @@ -125,6 +125,8 @@ static struct sock *smc_tcp_syn_recv_sock(const struct sock *sk,
+>   	struct sock *child;
 >   
->   #include "smc.h"
+>   	smc = smc_clcsock_user_data(sk);
+> +	if (unlikely(!smc))
+> +		goto drop;
 >   
-> +#define SMC_VIRT_ISM_CHID_MAX		0xFFFF
-> +#define SMC_VIRT_ISM_CHID_MIN		0xFF00
-> +
->   struct smcd_dev_list {	/* List of SMCD devices */
->   	struct list_head list;
->   	struct mutex mutex;	/* Protects list of devices */
-> @@ -57,4 +60,16 @@ static inline int smc_ism_write(struct smcd_dev *smcd, u64 dmb_tok,
->   	return rc < 0 ? rc : 0;
->   }
->   
-> +static inline bool __smc_ism_is_virtdev(u16 chid)
-> +{
-> +	return (chid >= SMC_VIRT_ISM_CHID_MIN && chid <= SMC_VIRT_ISM_CHID_MAX);
-> +}
-> +
-> +static inline bool smc_ism_is_virtdev(struct smcd_dev *smcd)
-> +{
-> +	u16 chid = smcd->ops->get_chid(smcd);
-> +
-> +	return __smc_ism_is_virtdev(chid);
-> +}
-> +
-I'm wondering if barrier is needed here.
->   #endif
+>   	if (READ_ONCE(sk->sk_ack_backlog) + atomic_read(&smc->queued_smc_hs) >
+>   				sk->sk_max_ack_backlog)
+
+Hi D.Wythe,
+
+this is unfortunately not sufficient for this fix. You have to make sure 
+that is not a life-time problem. Even so, READ_ONCE() is also needed in 
+this case.
+
+Thanks,
+Wenjia
