@@ -2,47 +2,44 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 542617AA3CB
-	for <lists+linux-s390@lfdr.de>; Thu, 21 Sep 2023 23:59:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DD667AA34B
+	for <lists+linux-s390@lfdr.de>; Thu, 21 Sep 2023 23:50:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232491AbjIUV67 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 21 Sep 2023 17:58:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46172 "EHLO
+        id S229628AbjIUVuN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 21 Sep 2023 17:50:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233346AbjIUV6l (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 21 Sep 2023 17:58:41 -0400
+        with ESMTP id S233042AbjIUVtw (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 21 Sep 2023 17:49:52 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2CFC59156;
-        Thu, 21 Sep 2023 13:42:00 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54247C433C9;
-        Thu, 21 Sep 2023 20:41:55 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B9C91FC2;
+        Thu, 21 Sep 2023 14:43:34 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F32C1C433C7;
+        Thu, 21 Sep 2023 21:43:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695328920;
-        bh=I1qPjPwX/ZgiQ8faFls/NRFN0ufD5XwNyu1yGXX83gg=;
+        s=k20201202; t=1695332613;
+        bh=Y6bFPfkkO6qcZgXwuTDH+EvOgNtkp6C+OnOSAJn+fIk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lb1ItmWrkhLoMDVa3VWNIUYsonRsAac6VG5D4Co/JV+m6nZDuol2aUe2vk2x/O9D4
-         hpeQmXHfUyeFIV09+kGiCu8iMai7dBxHEM016VFmD/OAEbY6dzlaLPjmHnIOGhByi1
-         XrbTgtJ/gRHr9RZOo7XCXkj9nrSyhvtD+n3LXW8R3EzhV/z3OC+iVbl1iaNIHe6/Be
-         Pp9tBmrlnDnpn8H8iJj7h+n8TjYgFOvvUNfayCtE8YlS3yA0t97uWmRzdm8UfWCeA9
-         UCy2rTD+kMmdafDZc5JAPjw0yYUyt3js5+j+KRfxJk4l/9RRWSQOAI6ZuZb+G2J78D
-         63FP/knQMriBg==
-Date:   Thu, 21 Sep 2023 21:41:53 +0100
+        b=capmzZ2foQYMZEhjVU0PLTsKCu1mjKJTq1wIHOtey79fmIO2FM6Yr5WKx+q4nFyHt
+         X0hnnVLSC+4QyFTSZig2ptkrlbQvaNjEgyMV8f/BVL2z4RQByfrktmJj3cyatQu5rC
+         VZVfWCY4FMXh60oGnD05BuVpiId3wwdyC+fL6yZiFQTl3PN55s51eb6odDw6WHXgyn
+         qF5q6ZWyNYs5PVwGceQm9fN01d4JflXueiJk2hArQ5MZPkls/CMEbqBVRigFj0pDe+
+         ZFMYrr5Zei9LsQUvfh66eW50UEyaLTu7cDRJqFEDqeW2CGg8jHo8DV2GaShkMx1WTR
+         k+JiyT2uk4xIw==
+Date:   Thu, 21 Sep 2023 22:43:25 +0100
 From:   Simon Horman <horms@kernel.org>
-To:     Wen Gu <guwen@linux.alibaba.com>
+To:     "D. Wythe" <alibuda@linux.alibaba.com>
 Cc:     kgraul@linux.ibm.com, wenjia@linux.ibm.com, jaka@linux.ibm.com,
-        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, alibuda@linux.alibaba.com,
-        tonylu@linux.alibaba.com, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 01/18] net/smc: decouple ism_dev from SMC-D
- device dump
-Message-ID: <20230921204153.GQ224399@kernel.org>
-References: <1695134522-126655-1-git-send-email-guwen@linux.alibaba.com>
- <1695134522-126655-2-git-send-email-guwen@linux.alibaba.com>
+        kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH net] net/smc: fix panic smc_tcp_syn_recv_sock() while
+ closing listen socket
+Message-ID: <20230921214325.GS224399@kernel.org>
+References: <1695211714-66958-1-git-send-email-alibuda@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1695134522-126655-2-git-send-email-guwen@linux.alibaba.com>
+In-Reply-To: <1695211714-66958-1-git-send-email-alibuda@linux.alibaba.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -52,58 +49,50 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Sep 19, 2023 at 10:41:45PM +0800, Wen Gu wrote:
-> This patch helps to decouple ISM device from SMC-D device, allowing
-> different underlying device forms, such as virtual ISM devices.
+On Wed, Sep 20, 2023 at 08:08:34PM +0800, D. Wythe wrote:
+> From: "D. Wythe" <alibuda@linux.alibaba.com>
 > 
-> Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
+> Consider the following scenarios:
+> 
+> smc_release
+> 	smc_close_active
+> 		write_lock_bh(&smc->clcsock->sk->sk_callback_lock);
+> 		smc->clcsock->sk->sk_user_data = NULL;
+> 		write_unlock_bh(&smc->clcsock->sk->sk_callback_lock);
+> 
+> smc_tcp_syn_recv_sock
+> 	smc = smc_clcsock_user_data(sk);
+> 	/* now */
+> 	/* smc == NULL */
+> 
+> Hence, we may read the a NULL value in smc_tcp_syn_recv_sock(). And
+> since we only unset sk_user_data during smc_release, it's safe to
+> drop the incoming tcp reqsock.
+> 
+> Fixes:  ("net/smc: net/smc: Limit backlog connections"
+
+The tag above is malformed. The correct form is:
+
+Fixes: 8270d9c21041 ("net/smc: Limit backlog connections")
+
+> Signed-off-by: D. Wythe <alibuda@linux.alibaba.com>
 > ---
->  net/smc/smc_ism.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+>  net/smc/af_smc.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/net/smc/smc_ism.c b/net/smc/smc_ism.c
-> index fbee249..0045fee 100644
-> --- a/net/smc/smc_ism.c
-> +++ b/net/smc/smc_ism.c
-> @@ -230,12 +230,11 @@ static int smc_nl_handle_smcd_dev(struct smcd_dev *smcd,
->  	char smc_pnet[SMC_MAX_PNETID_LEN + 1];
->  	struct smc_pci_dev smc_pci_dev;
->  	struct nlattr *port_attrs;
-> +	struct device *priv_dev;
->  	struct nlattr *attrs;
-> -	struct ism_dev *ism;
->  	int use_cnt = 0;
->  	void *nlh;
+> diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
+> index bacdd97..b4acf47 100644
+> --- a/net/smc/af_smc.c
+> +++ b/net/smc/af_smc.c
+> @@ -125,6 +125,8 @@ static struct sock *smc_tcp_syn_recv_sock(const struct sock *sk,
+>  	struct sock *child;
 >  
-> -	ism = smcd->priv;
->  	nlh = genlmsg_put(skb, NETLINK_CB(cb->skb).portid, cb->nlh->nlmsg_seq,
->  			  &smc_gen_nl_family, NLM_F_MULTI,
->  			  SMC_NETLINK_GET_DEV_SMCD);
-> @@ -250,7 +249,10 @@ static int smc_nl_handle_smcd_dev(struct smcd_dev *smcd,
->  	if (nla_put_u8(skb, SMC_NLA_DEV_IS_CRIT, use_cnt > 0))
->  		goto errattr;
->  	memset(&smc_pci_dev, 0, sizeof(smc_pci_dev));
-
-Hi Wen Gu,
-
-priv_dev is uninitialised here.
-
-> -	smc_set_pci_values(to_pci_dev(ism->dev.parent), &smc_pci_dev);
-> +	if (smcd->ops->get_dev)
-> +		priv_dev = smcd->ops->get_dev(smcd);
-
-It is conditionally initialised here.
-
-> +	if (priv_dev->parent)
-
-But unconditionally dereferenced here.
-
-As flagged by clang-16 W=1, and Smatch
-
-> +		smc_set_pci_values(to_pci_dev(priv_dev->parent), &smc_pci_dev);
->  	if (nla_put_u32(skb, SMC_NLA_DEV_PCI_FID, smc_pci_dev.pci_fid))
->  		goto errattr;
->  	if (nla_put_u16(skb, SMC_NLA_DEV_PCI_CHID, smc_pci_dev.pci_pchid))
+>  	smc = smc_clcsock_user_data(sk);
+> +	if (unlikely(!smc))
+> +		goto drop;
+>  
+>  	if (READ_ONCE(sk->sk_ack_backlog) + atomic_read(&smc->queued_smc_hs) >
+>  				sk->sk_max_ack_backlog)
 > -- 
 > 1.8.3.1
 > 
