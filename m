@@ -2,145 +2,147 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD7BD7A9A25
-	for <lists+linux-s390@lfdr.de>; Thu, 21 Sep 2023 20:36:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D43EB7A9FB5
+	for <lists+linux-s390@lfdr.de>; Thu, 21 Sep 2023 22:26:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229572AbjIUSgx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 21 Sep 2023 14:36:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35074 "EHLO
+        id S231975AbjIUU0y (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 21 Sep 2023 16:26:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229540AbjIUSgg (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 21 Sep 2023 14:36:36 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1F7044563F;
-        Thu, 21 Sep 2023 10:13:57 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C5882176C;
-        Thu, 21 Sep 2023 09:36:37 -0700 (PDT)
-Received: from [10.1.34.154] (XHFQ2J9959.cambridge.arm.com [10.1.34.154])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 82BA63F59C;
-        Thu, 21 Sep 2023 09:35:55 -0700 (PDT)
-Message-ID: <7c5c2c00-d657-44fd-b478-743b43c57e8a@arm.com>
-Date:   Thu, 21 Sep 2023 17:35:54 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/8] Fix set_huge_pte_at() panic on arm64
-Content-Language: en-GB
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
+        with ESMTP id S231740AbjIUU01 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 21 Sep 2023 16:26:27 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC837663E6;
+        Thu, 21 Sep 2023 10:34:22 -0700 (PDT)
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38L9bwpW025687;
+        Thu, 21 Sep 2023 10:21:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to : sender :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=4b/ESelDBjK56kwtRxdtopxwC74XrEAu2AYOxOufBuo=;
+ b=S24zo4tWYrJEqowTlMgNOh1+xfmLR68k1SpDA9Laa5AUbrHuPt/ulOpBXea+/LCZ44uX
+ 2yRg1oRr2W6ycOV2y8DNfgn6BrMxhfgI/ApG+kobcpCG+ALgHGE6H0N3bDp3b/9sIghO
+ 13aENecum1UndyQGKxXKnu4tBAPM55zJBS81+8LC0zsyboH6yutLATcy/a5iYFLMN+EL
+ eQ0VhRled5aCn0WpcrUaz61iV1nHa/4npJPJf3v4uH9mB+6aZRdyP9lL7OjoVAelVNDW
+ RDvqFymXT6Qi5tOR9Ezuwr/HUl3NWM9gRFeiY5/ulqFHipAMwpKnInjJED0pfhEZomLR pQ== 
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t81v9bybp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Sep 2023 10:21:09 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38L9im7H016841;
+        Thu, 21 Sep 2023 10:21:08 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+        by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3t5sd2f722-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Sep 2023 10:21:08 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38LAL3sF60555686
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Sep 2023 10:21:03 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6D6CC20063;
+        Thu, 21 Sep 2023 10:21:03 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 597E22004F;
+        Thu, 21 Sep 2023 10:21:03 +0000 (GMT)
+Received: from p1gen4-pw042f0m (unknown [9.196.32.213])
+        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Thu, 21 Sep 2023 10:21:03 +0000 (GMT)
+Received: from bblock by p1gen4-pw042f0m with local (Exim 4.96)
+        (envelope-from <bblock@linux.ibm.com>)
+        id 1qjGnu-001pFi-2g;
+        Thu, 21 Sep 2023 12:21:02 +0200
+Date:   Thu, 21 Sep 2023 12:21:02 +0200
+From:   Benjamin Block <bblock@linux.ibm.com>
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc:     Steffen Maier <maier@linux.ibm.com>,
         Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Alexander Gordeev <agordeev@linux.ibm.com>,
         Christian Borntraeger <borntraeger@linux.ibm.com>,
         Sven Schnelle <svens@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Muchun Song <muchun.song@linux.dev>,
-        SeongJae Park <sj@kernel.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lorenzo Stoakes <lstoakes@gmail.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Peter Xu <peterx@redhat.com>,
-        Axel Rasmussen <axelrasmussen@google.com>,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-mm@kvack.org,
-        stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20230921162007.1630149-1-ryan.roberts@arm.com>
- <20230921093026.230b2991be551093e397f462@linux-foundation.org>
-From:   Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20230921093026.230b2991be551093e397f462@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        James Bottomley <James.Bottomley@suse.de>,
+        Christof Schmitt <christof.schmitt@de.ibm.com>,
+        Swen Schillig <swen@vnet.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: zfcp: Fix a potential double free in
+ zfcp_port_enqueue
+Message-ID: <20230921102102.GF10864@p1gen4-pw042f0m.fritz.box>
+References: <20230921063915.7703-1-dinghao.liu@zju.edu.cn>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20230921063915.7703-1-dinghao.liu@zju.edu.cn>
+Sender: Benjamin Block <bblock@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: XdgFg4eL9AXiJ9gD0bGFoh6deskJr6KK
+X-Proofpoint-ORIG-GUID: XdgFg4eL9AXiJ9gD0bGFoh6deskJr6KK
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-21_07,2023-09-20_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ phishscore=0 lowpriorityscore=0 mlxlogscore=914 clxscore=1011 mlxscore=0
+ adultscore=0 bulkscore=0 impostorscore=0 priorityscore=1501 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
+ definitions=main-2309210087
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 21/09/2023 17:30, Andrew Morton wrote:
-> On Thu, 21 Sep 2023 17:19:59 +0100 Ryan Roberts <ryan.roberts@arm.com> wrote:
-> 
->> Hi All,
->>
->> This series fixes a bug in arm64's implementation of set_huge_pte_at(), which
->> can result in an unprivileged user causing a kernel panic. The problem was
->> triggered when running the new uffd poison mm selftest for HUGETLB memory. This
->> test (and the uffd poison feature) was merged for v6.6-rc1. However, upon
->> inspection there are multiple other pre-existing paths that can trigger this
->> bug.
->>
->> Ideally, I'd like to get this fix in for v6.6 if possible? And I guess it should
->> be backported too, given there are call sites where this can theoretically
->> happen that pre-date v6.6-rc1 (I've cc'ed stable@vger.kernel.org).
-> 
-> This gets you a naggygram from Greg.  The way to request a backport is
-> to add cc:stable to all the changelogs.  I'll make that change to my copy.
+Hello Liu Dinghao,
 
-Ahh, sorry about that... I just got the same moan from the kernel test robot too.
+good find.
+
+On Thu, Sep 21, 2023 at 02:39:15PM +0800, Dinghao Liu wrote:
+> When device_register() fails, zfcp_port_release() will be called
+> after put_device(). As a result, the zfcp_ccw_adapter_put() after
+> err_out is redundant because it will be called in the call-back
+> function zfcp_port_release(). Remove it from this error path.
+
+So the reference on the adapter object is doubly put, which may
+lead to a premature free of the adapter object itself. Please mention that
+either in the subject, or description; it makes it easier to see what exactly
+breaks at a glance.
 
 > 
+> Fixes: f3450c7b9172 ("[SCSI] zfcp: Replace local reference counting with common kref")
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
+>  drivers/s390/scsi/zfcp_aux.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->> Ryan Roberts (8):
->>   parisc: hugetlb: Convert set_huge_pte_at() to take vma
->>   powerpc: hugetlb: Convert set_huge_pte_at() to take vma
->>   riscv: hugetlb: Convert set_huge_pte_at() to take vma
->>   s390: hugetlb: Convert set_huge_pte_at() to take vma
->>   sparc: hugetlb: Convert set_huge_pte_at() to take vma
->>   mm: hugetlb: Convert set_huge_pte_at() to take vma
->>   arm64: hugetlb: Convert set_huge_pte_at() to take vma
->>   arm64: hugetlb: Fix set_huge_pte_at() to work with all swap entries
->>
->>  arch/arm64/include/asm/hugetlb.h              |  2 +-
->>  arch/arm64/mm/hugetlbpage.c                   | 22 ++++----------
->>  arch/parisc/include/asm/hugetlb.h             |  2 +-
->>  arch/parisc/mm/hugetlbpage.c                  |  4 +--
->>  .../include/asm/nohash/32/hugetlb-8xx.h       |  3 +-
->>  arch/powerpc/mm/book3s64/hugetlbpage.c        |  2 +-
->>  arch/powerpc/mm/book3s64/radix_hugetlbpage.c  |  2 +-
->>  arch/powerpc/mm/nohash/8xx.c                  |  2 +-
->>  arch/powerpc/mm/pgtable.c                     |  7 ++++-
->>  arch/riscv/include/asm/hugetlb.h              |  2 +-
->>  arch/riscv/mm/hugetlbpage.c                   |  3 +-
->>  arch/s390/include/asm/hugetlb.h               |  8 +++--
->>  arch/s390/mm/hugetlbpage.c                    |  8 ++++-
->>  arch/sparc/include/asm/hugetlb.h              |  8 +++--
->>  arch/sparc/mm/hugetlbpage.c                   |  8 ++++-
->>  include/asm-generic/hugetlb.h                 |  6 ++--
->>  include/linux/hugetlb.h                       |  6 ++--
->>  mm/damon/vaddr.c                              |  2 +-
->>  mm/hugetlb.c                                  | 30 +++++++++----------
->>  mm/migrate.c                                  |  2 +-
->>  mm/rmap.c                                     | 10 +++----
->>  mm/vmalloc.c                                  |  5 +++-
->>  22 files changed, 80 insertions(+), 64 deletions(-)
-> 
-> Looks scary but it's actually a fairly modest patchset.  It could
-> easily be all rolled into a single patch for ease of backporting. 
-> Maybe Greg has an opinion?
+> diff --git a/drivers/s390/scsi/zfcp_aux.c b/drivers/s390/scsi/zfcp_aux.c
+> index df782646e856..489e6239dedf 100644
+> --- a/drivers/s390/scsi/zfcp_aux.c
+> +++ b/drivers/s390/scsi/zfcp_aux.c
+> @@ -552,7 +552,7 @@ struct zfcp_port *zfcp_port_enqueue(struct zfcp_adapter *adapter, u64 wwpn,
+>  
+>  	if (device_register(&port->dev)) {
+>  		put_device(&port->dev);
+> -		goto err_out;
+> +		return ERR_PTR(retval);
 
-Yes, I thought about doing that; or perhaps 2 patches - one for the interface
-change across all arches and core code, and one for the actual bug fix?
+I'd rather have a new label at the bottom, in front of the return that is
+already there, and jump to that, instead of a different function exit point.
 
-But I thought the arch people might prefer to see exactly what's going on in
-each arch. Let me know the preference and I can repost if necessary.
-
+>  	}
+>  
+>  	write_lock_irq(&adapter->port_list_lock);
+> -- 
+> 2.17.1
 > 
 
+-- 
+Best Regards, Benjamin Block        /        Linux on IBM Z Kernel Development
+IBM Deutschland Research & Development GmbH    /   https://www.ibm.com/privacy
+Vors. Aufs.-R.: Gregor Pillen         /         Geschäftsführung: David Faller
+Sitz der Ges.: Böblingen     /    Registergericht: AmtsG Stuttgart, HRB 243294
