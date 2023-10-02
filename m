@@ -2,133 +2,128 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C2B3D7B514C
-	for <lists+linux-s390@lfdr.de>; Mon,  2 Oct 2023 13:29:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76B527B5B16
+	for <lists+linux-s390@lfdr.de>; Mon,  2 Oct 2023 21:19:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236739AbjJBL30 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 2 Oct 2023 07:29:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53876 "EHLO
+        id S238539AbjJBTPo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 2 Oct 2023 15:15:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236702AbjJBL3W (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 2 Oct 2023 07:29:22 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BE7FD7;
-        Mon,  2 Oct 2023 04:29:19 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5371DC116D2;
-        Mon,  2 Oct 2023 11:29:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696246157;
-        bh=8Y0OZ+ek4AhIcf8Sjp8fQ2M9HKsNYRF/q4Q31JpOT5o=;
-        h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-        b=HoYlpryWcQZV4xEoh38551sI60gfNK4cNGdEKgXPz9x08VsBC5G/69LBFbXuToEgn
-         BfBDfABhYQMaA/7y4/yMOLRE2yxXFJEEmhWmuOXt9SqvBUrhF02pxsFB+Oy95KS3Uo
-         lMq4M9cbbqTcQLk8Mt0GHY0NkCOn4Jd8OvFimK3fza9rF9VZ+2Ar+cUV7TeEgsIf0n
-         AfN3Z6+zr6tOgqL9qirOQi2pRK98RKq8bt6HNDMvcyBkOvRb/QX5w6hRjj7JYKtuUg
-         tRfO2u8Hi/A7XL6lw6dB721W2W3IWPxGFfSchln4SLcXKRGbevSUs6wqi75teA8l65
-         WpR4VjGman2fA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.lore.kernel.org (Postfix) with ESMTP id 3A93FE7849A;
-        Mon,  2 Oct 2023 11:29:17 +0000 (UTC)
-From:   Joel Granados via B4 Relay 
-        <devnull+j.granados.samsung.com@kernel.org>
-Date:   Mon, 02 Oct 2023 13:30:42 +0200
-Subject: [PATCH v3 7/7] c-sky: Remove now superfluous sentinel element from
- ctl_talbe array
+        with ESMTP id S229667AbjJBTPn (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 2 Oct 2023 15:15:43 -0400
+Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E44ACB8
+        for <linux-s390@vger.kernel.org>; Mon,  2 Oct 2023 12:15:38 -0700 (PDT)
+Received: by mail-io1-xd30.google.com with SMTP id ca18e2360f4ac-79f95439795so78226739f.0
+        for <linux-s390@vger.kernel.org>; Mon, 02 Oct 2023 12:15:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1696274138; x=1696878938; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Wfpu0g7eWR/bD6NFg1Hw3uuA6aj8ndONfL3cIV4EkSU=;
+        b=LD0D5C1hAgd9cfGzjB0woiGA7f3wRstHNDJpX0bwrw2c3u9EVsmqdm0tv5Re980i/c
+         Vsbd6JZ3PZcukzNx/mTB5KSLFOc1pnGBtrszLr31CzPiB6ggWixhRbX9ayte+CzTEsS0
+         H9y0OhJ8ZMW2x5QRXfVanglwbIxUO5d70UtQJbeRbFjqRvE07xx5Iulfd56FUNWXS81/
+         N8GQ3nh89nPUbMDU/ipiXqkLvyKpr4YcbBINy7nfTGRyxwKLe/BT/E7GGdxllXXgtx/y
+         GuafTq3EThpbNs8kmBfMPKWmx/NPgUDjGo0yzkqeoDLrCT2dKSpkifkeP/GxsEtfYyGa
+         +rJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696274138; x=1696878938;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Wfpu0g7eWR/bD6NFg1Hw3uuA6aj8ndONfL3cIV4EkSU=;
+        b=kBpbb0+t9AK9I4sKF9INs7ekWMktvICKW5cGRemnoRTkhgEw0SdrqyyW/1jZo3WaxM
+         X2m06x6IZukUBaK5BE9MpRmWRk7rjr0BhV0JWBWaSKlVETuxy/JCW0dFxIrgEn6TEZLu
+         17PKW64fq/iMqobtBxxRmYeJlWrw537XWZqSoqH5Wblwt+O3wK9r6SHnWtK4rtjNnfsU
+         K0tnCcq7njaVsSRMg4cl0dd4TCVFTl7XF2OZulxw59UxdTc735qiTeB7tkukB+QUaKFB
+         2hRCw4CBtQ/6AnyecNWJcjN/LDVaCwF62zReLCxeIIw+r1269NELJYjfPE6db9bvTtxQ
+         na6A==
+X-Gm-Message-State: AOJu0YyBVAtrgCb06k/RRRlzYBdgHixVp6fg6FNAkLzPk6PY9wG0NxV6
+        fsr+W8Uiqt1aM/UxQPBKMpeVsg==
+X-Google-Smtp-Source: AGHT+IHuLrLT0lmZmHDMHS0OHH96XERxHL7pJTE9KoIBXxmJHQADQKTERwsFpskdzZvEU4f1iF1V2A==
+X-Received: by 2002:a05:6e02:1d93:b0:351:2053:f4a with SMTP id h19-20020a056e021d9300b0035120530f4amr485145ila.3.1696274138264;
+        Mon, 02 Oct 2023 12:15:38 -0700 (PDT)
+Received: from ?IPV6:2605:a601:adae:4500:71c9:1cd3:823e:b180? ([2605:a601:adae:4500:71c9:1cd3:823e:b180])
+        by smtp.gmail.com with ESMTPSA id w5-20020a056638030500b0043a1fe337b9sm7192769jap.170.2023.10.02.12.15.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Oct 2023 12:15:37 -0700 (PDT)
+Message-ID: <3a5e1f6e-5fa9-46ea-8828-ca4679bf0c77@sifive.com>
+Date:   Mon, 2 Oct 2023 14:15:36 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20231002-jag-sysctl_remove_empty_elem_arch-v3-7-606da2840a7a@samsung.com>
-References: <20231002-jag-sysctl_remove_empty_elem_arch-v3-0-606da2840a7a@samsung.com>
-In-Reply-To: <20231002-jag-sysctl_remove_empty_elem_arch-v3-0-606da2840a7a@samsung.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>, willy@infradead.org,
-        josh@joshtriplett.org, Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 07/17] nbd: call blk_mark_disk_dead in
+ nbd_clear_sock_ioctl
+Content-Language: en-US
+To:     Christoph Hellwig <hch@lst.de>, Wouter Verhelst <w@uter.be>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Denis Efremov <efremov@linux.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
         Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Guo Ren <guoren@kernel.org>, Alexey Gladkov <legion@kernel.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        linux-ia64@vger.kernel.org, linux-csky@vger.kernel.org,
-        Joel Granados <j.granados@samsung.com>
-X-Mailer: b4 0.13-dev-86aa5
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1079;
- i=j.granados@samsung.com; h=from:subject:message-id;
- bh=aVH730u6MpA8SyXSwY+KroDm6RkQOYcUB41QGWJqNpM=;
- b=owEB7QES/pANAwAKAbqXzVK3lkFPAcsmYgBlGqoU5tuFWjnPIMvFbKyN6zHH0cwg/pUFRD/vM
- SfkGU2MIlyJAbMEAAEKAB0WIQSuRwlXJeYxJc7LJ5C6l81St5ZBTwUCZRqqFAAKCRC6l81St5ZB
- TyUKC/0c39WVZtnSe4HAi+KjUVd8v38cq95t+0bYTAm0t4UjG8Lsp3T5G80IFPYLmapvMnK4uVe
- Lyeg6+WlLJagatcnmBtfVxhCU0ewAPcEqiwiP6qZx3c8PLEexEriY2mthOka69yhwr3nKHEnyV8
- Bqp7zzu/E1zwrNE1+/cSzV96Y/lZ/qWZCRPRHR7SuOeWwWTDbyhgveJ+cmUr4q6nwLVv9D8Vj6M
- B7kOycGh+RMxgVTKEAlnSPVgKcwgHE24nlo5RUyuu77WXCMlCIrZdyyNDZrrQykuiXWNxLKiMrj
- XLAE5oYgpIZ9uRGWS1dzT2edeQ+COFGaR51Q/tvQualP2kfj7A2dQzLIAF8fmcWYwWVMj1RN44o
- jz1VmKwvgpAAwhyJL1nlRqp0Dx+iccYp2zBAhv5X8ptE4axnZuJSjdUGQVapPNd/0eA4u87Ubaa
- zmvv90vSv16KKgBYe+ABuMSkfh7iM8iC7eDe4BQqUi7MyRotUfD+EMFwsoiIIw56IZ6Jg=
-X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
- fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
-X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with auth_id=70
-X-Original-From: Joel Granados <j.granados@samsung.com>
-Reply-To: <j.granados@samsung.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        "Darrick J . Wong" <djwong@kernel.org>, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>, linux-block@vger.kernel.org,
+        nbd@other.debian.org, linux-s390@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+References: <20230811100828.1897174-1-hch@lst.de>
+ <20230811100828.1897174-8-hch@lst.de>
+ <79af9398-167f-440e-a493-390dc4ccbd85@sifive.com>
+ <20230925074838.GA28522@lst.de> <ZRmoHaSojk6ra5OU@pc220518.home.grep.be>
+ <20231002062159.GB1140@lst.de>
+From:   Samuel Holland <samuel.holland@sifive.com>
+In-Reply-To: <20231002062159.GB1140@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Joel Granados <j.granados@samsung.com>
+On 2023-10-02 1:21 AM, Christoph Hellwig wrote:
+> On Sun, Oct 01, 2023 at 07:10:53PM +0200, Wouter Verhelst wrote:
+>>> So what are the semantics of clearing the socket?
+>>>
+>>> The <= 6.5 behavior of invalidating fs caches, but not actually marking
+>>> the fs shutdown is pretty broken, especially if this expects to resurrect
+>>> the device and thus the file system later on.
+>>
+>> nbd-client -d calls
+>>
+>> ioctl(nbd, NBD_DISCONNECT);
+>> ioctl(nbd, NBD_CLEAR_SOCK);
+>>
+>> (error handling removed for clarity)
+>>
+>> where "nbd" is the file handle to the nbd device. This expects that the
+>> device is cleared and that then the device can be reused for a different
+>> connection, much like "losetup -d". Expecting that the next connection
+>> would talk to the same file system is wrong.
+> 
+> So a fs shutdown seems like a the right thing.  So I'm a little confused
+> on what actualy broke here.
 
-This commit comes at the tail end of a greater effort to remove the
-empty elements at the end of the ctl_table arrays (sentinels) which
-will reduce the overall build time size of the kernel and run time
-memory bloat by ~64 bytes per sentinel (further information Link :
-https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
+I'm not too familiar with the block subsystem, but my understanding is that
+blk_mark_disk_dead(nbd->disk) is permanent -- there is no way to un-mark a disk
+as dead. So this makes the device (e.g. /dev/nbd0) permanently unusable after
+the call to ioctl(nbd, NBD_CLEAR_SOCK).
 
-Remove sentinel from alignment_tbl ctl_table array. This removal is safe
-because register_sysctl_init implicitly uses ARRAY_SIZE() in addition to
-checking for the sentinel.
+Like Wouter said, the semantics should be similar to a loop device, where the
+same block device can be reused after being disconnected. That was why I
+suggested disk_force_media_change() as called from __loop_clr_fd(). The loop
+driver doesn't call blk_mark_disk_dead() anywhere.
 
-Acked-by: Guo Ren <guoren@kernel.org>
-Signed-off-by: Joel Granados <j.granados@samsung.com>
----
- arch/csky/abiv1/alignment.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/csky/abiv1/alignment.c b/arch/csky/abiv1/alignment.c
-index b60259daed1b..e5b8b4b2109a 100644
---- a/arch/csky/abiv1/alignment.c
-+++ b/arch/csky/abiv1/alignment.c
-@@ -329,7 +329,6 @@ static struct ctl_table alignment_tbl[5] = {
- 		.mode = 0666,
- 		.proc_handler = &proc_dointvec
- 	},
--	{}
- };
- 
- static int __init csky_alignment_init(void)
-
--- 
-2.30.2
+Regards,
+Samuel
 
