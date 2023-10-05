@@ -2,192 +2,84 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B4277B8D17
-	for <lists+linux-s390@lfdr.de>; Wed,  4 Oct 2023 21:21:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C74A77BA0D8
+	for <lists+linux-s390@lfdr.de>; Thu,  5 Oct 2023 16:52:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245302AbjJDTEq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 4 Oct 2023 15:04:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37926 "EHLO
+        id S239294AbjJEOrF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 5 Oct 2023 10:47:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245664AbjJDTCA (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 4 Oct 2023 15:02:00 -0400
+        with ESMTP id S240091AbjJEOox (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 5 Oct 2023 10:44:53 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFD8030CD;
-        Wed,  4 Oct 2023 11:56:17 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 675C9C433D9;
-        Wed,  4 Oct 2023 18:56:02 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB9CE6E91;
+        Thu,  5 Oct 2023 07:22:50 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2146C43391;
+        Thu,  5 Oct 2023 05:27:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696445777;
-        bh=iC7KwsOJJL3kT0M8KubHc+xTYSGXLa7gjxgf1YgvBK8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NqVtdmXPTE3K9q9deuJTm/G7a71zUKszCFqZsp5GIQNtA7H7/+QIS49PlOMCUfFNJ
-         1ydyxG0x0Zhc5NXKKvQZoNb0pMC2bwR6porAQ3qOkvHn+oCaXipMdg5DIlUK6kK3dJ
-         /qGaNm9SdmE2IDbECVrjFagXBbmQuihBc1Xhxlya1LZKKRDWQwFqYqNeRTG4/PcP8U
-         fjxjbvBWhJKav9Mn2S5Lw52vmEkf02EL+EOCc8xxck+JdDNrgRWXBSojP+3KV6r6+j
-         osY5RvD+bQgIMRf1FSVwxbtgizfCN1brIMaKXTHpZ/pGKsilyXHn7K+ZkEvj2U6B0B
-         tzn7voxPB+lnw==
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Sterba <dsterba@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>, Jeremy Kerr <jk@ozlabs.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Carlos Llamas <cmllamas@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Mattia Dongili <malattia@linux.it>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>,
-        Brad Warrum <bwarrum@linux.ibm.com>,
-        Ritu Agarwal <rituagar@linux.ibm.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Eric Van Hensbergen <ericvh@kernel.org>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Schoenebeck <linux_oss@crudebyte.com>,
-        David Sterba <dsterba@suse.com>,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Ian Kent <raven@themaw.net>,
-        Luis de Bethencourt <luisbg@kernel.org>,
-        Salah Triki <salah.triki@gmail.com>,
-        "Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
-        Joel Becker <jlbec@evilplan.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>, Gao Xiang <xiang@kernel.org>,
-        Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
-        Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Jan Kara <jack@suse.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Christoph Hellwig <hch@infradead.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Muchun Song <muchun.song@linux.dev>, Jan Kara <jack@suse.cz>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Dave Kleikamp <shaggy@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Bob Copeland <me@bobcopeland.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Anders Larsen <al@alarsen.net>,
-        Steve French <sfrench@samba.org>,
-        Paulo Alcantara <pc@manguebit.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Shyam Prasad N <sprasad@microsoft.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Evgeniy Dushistov <dushistov@mail.ru>,
-        Chandan Babu R <chandan.babu@oracle.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>,
-        Yonghong Song <yonghong.song@linux.dev>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        John Johansen <john.johansen@canonical.com>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Kent Overstreet <kent.overstreet@linux.dev>,
-        Brian Foster <bfoster@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-usb@vger.kernel.org, v9fs@lists.linux.dev,
-        linux-afs@lists.infradead.org, autofs@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        codalist@coda.cs.cmu.edu, linux-efi@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, gfs2@lists.linux.dev,
-        linux-um@lists.infradead.org, linux-mtd@lists.infradead.org,
-        jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
-        ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
-        linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
-        linux-unionfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-        reiserfs-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org,
-        linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org, linux-bcachefs@vger.kernel.org
-Subject: [PATCH v2 89/89] fs: move i_generation into new hole created after timestamp conversion
-Date:   Wed,  4 Oct 2023 14:55:30 -0400
-Message-ID: <20231004185530.82088-3-jlayton@kernel.org>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20231004185530.82088-1-jlayton@kernel.org>
-References: <20231004185530.82088-1-jlayton@kernel.org>
+        s=k20201202; t=1696483656;
+        bh=hXymtCmkQgS1mz4WN4LARQgIXsgfg8oCoZqTgfgSt/M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BbpCpY2Q0zEwY41GucwBsBZTdMge6AGCY7bXU/clMyyCXKJTV0EDLKXZQhP6Gmvyb
+         i7tzzZViGYUX1/BLXHrp9MgUNcssHkKZ+E07sMIo2XQd9Xhgj8wBFQLGyOjD2kEs17
+         PxOhx0u+oKdQ8lrzOhlumXDQrrVIpZHitXF+j0a79GixClpVIz2eZl61qc1UDcG73I
+         FDMmfOiG2H8IzEuKKw/M7PogaSgM8X2WZc5kjl+Dp1+hjjwCugO78vBqHSBJRgrtI8
+         iiiR0aNTydrnms7VNPMV5M6X+tEx0k+2XJsejW9H5dww52kR9ESsW7JTvRKWQR81qv
+         y9fkPnEwbon1w==
+Date:   Thu, 5 Oct 2023 08:26:22 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "deller@gmx.de" <deller@gmx.de>,
+        "mcgrof@kernel.org" <mcgrof@kernel.org>,
+        "bjorn@kernel.org" <bjorn@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "nadav.amit@gmail.com" <nadav.amit@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "hca@linux.ibm.com" <hca@linux.ibm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "kent.overstreet@linux.dev" <kent.overstreet@linux.dev>,
+        "puranjay12@gmail.com" <puranjay12@gmail.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "chenhuacai@kernel.org" <chenhuacai@kernel.org>,
+        "tsbogend@alpha.franken.de" <tsbogend@alpha.franken.de>,
+        "linux-trace-kernel@vger.kernel.org" 
+        <linux-trace-kernel@vger.kernel.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "will@kernel.org" <will@kernel.org>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "linux-modules@vger.kernel.org" <linux-modules@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "song@kernel.org" <song@kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 03/13] mm/execmem, arch: convert simple overrides of
+ module_alloc to execmem
+Message-ID: <20231005052622.GD3303@kernel.org>
+References: <20230918072955.2507221-1-rppt@kernel.org>
+ <20230918072955.2507221-4-rppt@kernel.org>
+ <607927885bb8ca12d4cd5787f01207c256cc8798.camel@intel.com>
+ <00277a3acb36d2309156264c7e8484071bc91614.camel@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00277a3acb36d2309156264c7e8484071bc91614.camel@intel.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -197,39 +89,30 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The recent change to use discrete integers instead of struct timespec64
-shaved 8 bytes off of struct inode, but it also moves the i_lock
-into the previous cacheline, away from the fields that it protects.
+On Wed, Oct 04, 2023 at 03:39:26PM +0000, Edgecombe, Rick P wrote:
+> On Tue, 2023-10-03 at 17:29 -0700, Rick Edgecombe wrote:
+> > It seems a bit weird to copy all of this. Is it trying to be faster
+> > or
+> > something?
+> > 
+> > Couldn't it just check r->start in execmem_text/data_alloc() path and
+> > switch to EXECMEM_DEFAULT if needed then? The execmem_range_is_data()
+> > part that comes later could be added to the logic there too. So this
+> > seems like unnecessary complexity to me or I don't see the reason.
+> 
+> I guess this is a bad idea because if you have the full size array
+> sitting around anyway you might as well use it and reduce the
+> exec_mem_alloc() logic.
 
-Move i_generation above the i_lock, which moves the new 4 byte hole to
-just after the i_fsnotify_mask in my setup.
+That's was the idea, indeed. :)
 
-Suggested-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- include/linux/fs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Just looking at it from the x86 side (and
+> similar) though, where there is actually only one execmem_range and it
+> building this whole array with identical data and it seems weird.
 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 485b5e21c8e5..686c9f33e725 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -677,6 +677,7 @@ struct inode {
- 	u32			i_atime_nsec;
- 	u32			i_mtime_nsec;
- 	u32			i_ctime_nsec;
-+	u32			i_generation;
- 	spinlock_t		i_lock;	/* i_blocks, i_bytes, maybe i_size */
- 	unsigned short          i_bytes;
- 	u8			i_blkbits;
-@@ -733,7 +734,6 @@ struct inode {
- 		unsigned		i_dir_seq;
- 	};
- 
--	__u32			i_generation;
- 
- #ifdef CONFIG_FSNOTIFY
- 	__u32			i_fsnotify_mask; /* all events this inode cares about */
+Right, most architectures have only one range, but to support all variants
+that we have, execmem has to maintain the whole array.
+
 -- 
-2.41.0
-
+Sincerely yours,
+Mike.
