@@ -2,55 +2,45 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D7117BE4B8
-	for <lists+linux-s390@lfdr.de>; Mon,  9 Oct 2023 17:29:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 977877BE62D
+	for <lists+linux-s390@lfdr.de>; Mon,  9 Oct 2023 18:19:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376424AbjJIP34 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 9 Oct 2023 11:29:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60146 "EHLO
+        id S233506AbjJIQTw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 9 Oct 2023 12:19:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346514AbjJIP3z (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 9 Oct 2023 11:29:55 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E13DA3;
-        Mon,  9 Oct 2023 08:29:53 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 596911F390;
-        Mon,  9 Oct 2023 15:29:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1696865392;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1HqVDwiKT9mbTGEItnnXsmJW+0BorQwUwbFjLDILKpM=;
-        b=IBt9Zzx2vnJP6XRjCOrKnO5zaH9qGvhlvFzX23Np5EN62Oka65H94E02xzbrf2BF2j2hYP
-        OkJFMDYyth0+YKWqpE8gZf/nEYM6P9u5OT5oGsQq8kLvUuQrnNMUOq+uI3O+dOkWhobYVE
-        MBtaz7oU8HkN92ra4x/WuptgJ4+sRsM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1696865392;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1HqVDwiKT9mbTGEItnnXsmJW+0BorQwUwbFjLDILKpM=;
-        b=FoC9feVo75wyhxH+ko20yCQhE2NzB0aY1NCI+iAyPXNH9DLlo/DznBcljU7/bC8PLaeqys
-        oH9uSBdq6JhXmiDA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 02E5A13586;
-        Mon,  9 Oct 2023 15:29:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id AEc+O28cJGVpMQAAMHmgww
-        (envelope-from <dsterba@suse.cz>); Mon, 09 Oct 2023 15:29:51 +0000
-Date:   Mon, 9 Oct 2023 17:23:06 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc:     Yury Norov <yury.norov@gmail.com>,
+        with ESMTP id S1377642AbjJIPN5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 9 Oct 2023 11:13:57 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 289E7199;
+        Mon,  9 Oct 2023 08:13:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696864422; x=1728400422;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=+6yRIfvLPKcwf5mlMamrScqtJAqi+9+pZrbd12MWyDk=;
+  b=DdYEmKQkm4xOSgJryd8pchveLDltJJDzwDbw6AsVEnDf0z9j3hK2KVz4
+   +lCBvWM0heb4jLupsghwDp9J/wtzMqO4ECG6+P2Dtg0JqIRJwCcAc0d/+
+   d6+ThuSHV+1lmGlXl91pQ4XoSGj6GhDRfCKawv8PFcD0s4B0Ta4ElShyo
+   DTv/Lz8l4OpoFZZt6CDhZcFr3NqntGvRo3JagqX0+NuwXILPQkYPOVooW
+   QRZf+73Ju8PBxaOYLB9Ivf1WFlpxjn6xeL5QDBEWkB3PfUfEf8WtGlFQ5
+   0oIrvFzpvUEywzKwtH8QIXGJ5ft1MvAE1/p+jY3Wz59Geu6wrP3lLnTNy
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10858"; a="369232317"
+X-IronPort-AV: E=Sophos;i="6.03,210,1694761200"; 
+   d="scan'208";a="369232317"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2023 08:13:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10858"; a="869288072"
+X-IronPort-AV: E=Sophos;i="6.03,210,1694761200"; 
+   d="scan'208";a="869288072"
+Received: from newjersey.igk.intel.com ([10.102.20.203])
+  by fmsmga002.fm.intel.com with ESMTP; 09 Oct 2023 08:13:33 -0700
+From:   Alexander Lobakin <aleksander.lobakin@intel.com>
+To:     Yury Norov <yury.norov@gmail.com>
+Cc:     Alexander Lobakin <aleksander.lobakin@intel.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Alexander Potapenko <glider@google.com>,
@@ -62,37 +52,134 @@ Cc:     Yury Norov <yury.norov@gmail.com>,
         netdev@vger.kernel.org, linux-btrfs@vger.kernel.org,
         dm-devel@redhat.com, ntfs3@lists.linux.dev,
         linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/14] btrfs: rename bitmap_set_bits() ->
- btrfs_bitmap_set_bits()
-Message-ID: <20231009152306.GQ28758@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
+Subject: [PATCH 09/14] bitmap: extend bitmap_{get,set}_value8() to bitmap_{get,set}_bits()
+Date:   Mon,  9 Oct 2023 17:10:21 +0200
+Message-ID: <20231009151026.66145-10-aleksander.lobakin@intel.com>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20231009151026.66145-1-aleksander.lobakin@intel.com>
 References: <20231009151026.66145-1-aleksander.lobakin@intel.com>
- <20231009151026.66145-8-aleksander.lobakin@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231009151026.66145-8-aleksander.lobakin@intel.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_SOFTFAIL autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Oct 09, 2023 at 05:10:19PM +0200, Alexander Lobakin wrote:
-> bitmap_set_bits() does not start with the FS' prefix and may collide
-> with a new generic helper one day. It operates with the FS-specific
-> types, so there's no change those two could do the same thing.
-> Just add the prefix to exclude such possible conflict.
-> 
-> Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+Sometimes there's need to get a 8/16/...-bit piece of a bitmap at a
+particular offset. Currently, there are only bitmap_{get,set}_value8()
+to do that for 8 bits and that's it.
+Instead of introducing a separate pair for u16 and so on, which doesn't
+scale well, extend the existing functions to be able to pass the wanted
+value width. Make both offset and width arbitrary, but in order to not
+over complicate the current logic and keep the helpers as optimized as
+the current ones, require the width to be a pow-2 value and the offset
+to be a multiple of the width, while the target piece should not cross
+a %BITS_PER_LONG boundary and stay within one long.
+Avoid adjusting all the already existing callsites by defining oneliner
+wrapper macros named after the former functions. bloat-o-meter shows
+almost no difference (+1-2 bytes in a couple of places), meaning the
+new helpers get optimized just nicely.
 
-Acked-by: David Sterba <dsterba@suse.com>
+Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+---
+ include/linux/bitmap.h | 51 ++++++++++++++++++++++++++++++------------
+ 1 file changed, 37 insertions(+), 14 deletions(-)
 
-We don't have any other code pending that would potentially collide with
-this change so I don't care when and via which tree this gets merged. I
-can take it by btrfs too.
+diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
+index 63e422f8ba3d..9c010a7fa331 100644
+--- a/include/linux/bitmap.h
++++ b/include/linux/bitmap.h
+@@ -6,8 +6,10 @@
+ 
+ #include <linux/align.h>
+ #include <linux/bitops.h>
++#include <linux/bug.h>
+ #include <linux/find.h>
+ #include <linux/limits.h>
++#include <linux/log2.h>
+ #include <linux/string.h>
+ #include <linux/types.h>
+ 
+@@ -569,38 +571,59 @@ static inline void bitmap_from_u64(unsigned long *dst, u64 mask)
+ }
+ 
+ /**
+- * bitmap_get_value8 - get an 8-bit value within a memory region
++ * bitmap_get_bits - get a 8/16/32/64-bit value within a memory region
+  * @map: address to the bitmap memory region
+- * @start: bit offset of the 8-bit value; must be a multiple of 8
++ * @start: bit offset of the value; must be a multiple of @len
++ * @len: bit width of the value; must be a power of two
+  *
+- * Returns the 8-bit value located at the @start bit offset within the @src
+- * memory region.
++ * Return: the 8/16/32/64-bit value located at the @start bit offset within
++ * the @src memory region. Its position (@start + @len) can't cross
++ * a ``BITS_PER_LONG`` boundary.
+  */
+-static inline unsigned long bitmap_get_value8(const unsigned long *map,
+-					      unsigned long start)
++static inline unsigned long bitmap_get_bits(const unsigned long *map,
++					    unsigned long start, size_t len)
+ {
+ 	const size_t index = BIT_WORD(start);
+ 	const unsigned long offset = start % BITS_PER_LONG;
+ 
+-	return (map[index] >> offset) & 0xFF;
++	if (WARN_ON_ONCE(!is_power_of_2(len) || offset % len ||
++			 offset + len > BITS_PER_LONG))
++		return 0;
++
++	return (map[index] >> offset) & GENMASK(len - 1, 0);
+ }
+ 
+ /**
+- * bitmap_set_value8 - set an 8-bit value within a memory region
++ * bitmap_set_bits - set a 8/16/32/64-bit value within a memory region
+  * @map: address to the bitmap memory region
+- * @value: the 8-bit value; values wider than 8 bits may clobber bitmap
+- * @start: bit offset of the 8-bit value; must be a multiple of 8
++ * @start: bit offset of the value; must be a multiple of @len
++ * @value: new value to set
++ * @len: bit width of the value; must be a power of two
++ *
++ * Replaces the 8/16/32/64-bit value located at the @start bit offset within
++ * the @src memory region with the new @value. Its position (@start + @len)
++ * can't cross a ``BITS_PER_LONG`` boundary.
+  */
+-static inline void bitmap_set_value8(unsigned long *map, unsigned long value,
+-				     unsigned long start)
++static inline void bitmap_set_bits(unsigned long *map, unsigned long start,
++				   unsigned long value, size_t len)
+ {
+ 	const size_t index = BIT_WORD(start);
+ 	const unsigned long offset = start % BITS_PER_LONG;
++	unsigned long mask = GENMASK(len - 1, 0);
+ 
+-	map[index] &= ~(0xFFUL << offset);
+-	map[index] |= value << offset;
++	if (WARN_ON_ONCE(!is_power_of_2(len) || offset % len ||
++			 offset + len > BITS_PER_LONG))
++		return;
++
++	map[index] &= ~(mask << offset);
++	map[index] |= (value & mask) << offset;
+ }
+ 
++#define bitmap_get_value8(map, start)				\
++	bitmap_get_bits(map, start, BITS_PER_BYTE)
++#define bitmap_set_value8(map, value, start)			\
++	bitmap_set_bits(map, start, value, BITS_PER_BYTE)
++
+ #endif /* __ASSEMBLY__ */
+ 
+ #endif /* __LINUX_BITMAP_H */
+-- 
+2.41.0
+
