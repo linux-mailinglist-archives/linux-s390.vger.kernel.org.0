@@ -2,80 +2,95 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB2E77C545A
-	for <lists+linux-s390@lfdr.de>; Wed, 11 Oct 2023 14:53:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39AF17C55AF
+	for <lists+linux-s390@lfdr.de>; Wed, 11 Oct 2023 15:42:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232135AbjJKMxZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 11 Oct 2023 08:53:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47178 "EHLO
+        id S232369AbjJKNl7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 11 Oct 2023 09:41:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232124AbjJKMxY (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 11 Oct 2023 08:53:24 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22A1D9D;
-        Wed, 11 Oct 2023 05:53:23 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2F85C433CC;
-        Wed, 11 Oct 2023 12:53:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697028802;
-        bh=BAn9cTmPCgYcwvId5a7izdOqRdwYY/SugU+kfhYDqmU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Ckftw/lZlJbPMA/dzRJmM/VrLm2xFZ2zbn7DGTxWiomWSOVP6zZhFIJ2BNZzOzfmi
-         WNdYzaNnpb0li5MHShlQK3oR77qATwhquIfYtbS2qcxouWrx/tYNXq544lAjKFQDpA
-         Vz9LMECi3pswPXznVM4zmgrfwP36gbWZmEY2zgeCDANjr1COzuPDnQPEfA7i1xQ8p8
-         bSEXGRHusQV4L7Fpb8YmVEuiGDQpTc2IAutv3bYkXEraZvYfx3GpqleFpTlduIcfsH
-         rSwOf/YNc5EZyzIbjBjWlirtlOXEah9MWUIUlTA8o9qnOzmXTT7DWL5nce0eSzTi43
-         DQnyck+GuK7pA==
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-1e9872c88aaso587888fac.1;
-        Wed, 11 Oct 2023 05:53:22 -0700 (PDT)
-X-Gm-Message-State: AOJu0YyHOHJUfFReogwm/1+towp+E2ZY+EngBesVYO8udKmEpgd7SVBF
-        9AvlR7IXBlVApKiAYmvNE3FwDb1vuk/XJEI8g18=
-X-Google-Smtp-Source: AGHT+IHunqCCf3/TPbLbNP9iC+WACbBVYbi8Ckvhhj1/4uAEKkWSBuHMfzGgLhnmZ11rboJKnGC/Z4MWi+rIZcz3AOo=
-X-Received: by 2002:a05:6870:5611:b0:1d1:3a58:14a5 with SMTP id
- m17-20020a056870561100b001d13a5814a5mr26035580oao.25.1697028802212; Wed, 11
- Oct 2023 05:53:22 -0700 (PDT)
+        with ESMTP id S234904AbjJKNl5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 11 Oct 2023 09:41:57 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4EC6B6;
+        Wed, 11 Oct 2023 06:41:54 -0700 (PDT)
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39BDe44M018412;
+        Wed, 11 Oct 2023 13:41:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : content-transfer-encoding : in-reply-to : references :
+ subject : to : cc : from : message-id : date; s=pp1;
+ bh=1LRfXvRpB6rL08iXZ89rsQDegbgG+NqiUFR6NwWmpBo=;
+ b=O6fquoKUs+sLmtsnMe3BoW07NMmHcbIvxUZ/SwkHEFrbQfY0DjpnPL8EwArF/vyxb1pQ
+ RzN5wU6X1WFq4j7wKzcYMkrcEGqpogkDFSjZxC7iUpAOv6R5oE0+rFEOy0yWgssAXZmn
+ /AY4exMz0+WjcwGkGOoqcjQtptbEOcWOqw+Mo7yv/eSMsnvk7uDPoT1rpH5iRTIuEkL0
+ biPlpTtdSMoC+PFXJpOV86AJ5cgELJQfwFBlDTrkK0oYEkOf8Six+isN/5JR6nqSTQ9m
+ ZNLl/E+qKVFny8XRrAkP1vDG4LieLiFSgrdGQum22C/5cvAW3BY1YN1doEAsfs2LxObx tQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tnvstr5b9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Oct 2023 13:41:48 +0000
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39BDeIdI019625;
+        Wed, 11 Oct 2023 13:41:47 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tnvstr4ar-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Oct 2023 13:41:46 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39BC00wc000647;
+        Wed, 11 Oct 2023 13:36:34 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+        by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tkk5kr250-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Oct 2023 13:36:34 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39BDaV2Q8389178
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Oct 2023 13:36:31 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 14CBC2004B;
+        Wed, 11 Oct 2023 13:36:31 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0248C20043;
+        Wed, 11 Oct 2023 13:36:31 +0000 (GMT)
+Received: from t14-nrb (unknown [9.152.224.84])
+        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Wed, 11 Oct 2023 13:36:30 +0000 (GMT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20231009124210.1064021-1-masahiroy@kernel.org>
- <20231009124210.1064021-4-masahiroy@kernel.org> <CAJF2gTTDpGgzsiRk=q6FCdX_g5maY-sT9h0jiW=p6HLziq97yA@mail.gmail.com>
-In-Reply-To: <CAJF2gTTDpGgzsiRk=q6FCdX_g5maY-sT9h0jiW=p6HLziq97yA@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 11 Oct 2023 21:52:45 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATmaSXQYFMZEw2vpn6td10+huck-vy-Rbo5Brys+j_Stg@mail.gmail.com>
-Message-ID: <CAK7LNATmaSXQYFMZEw2vpn6td10+huck-vy-Rbo5Brys+j_Stg@mail.gmail.com>
-Subject: Re: [PATCH 4/5] kbuild: unify vdso_install rules
-To:     Guo Ren <guoren@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
-        loongarch@lists.linux.dev, sparclinux@vger.kernel.org,
-        x86@kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        WANG Xuerui <kernel@xen0n.name>, Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+In-Reply-To: <20231011085635.1996346-2-nsg@linux.ibm.com>
+References: <20231011085635.1996346-1-nsg@linux.ibm.com> <20231011085635.1996346-2-nsg@linux.ibm.com>
+Subject: Re: [kvm-unit-tests PATCH 1/9] s390x: topology: Fix report message
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+Cc:     Nina Schoetterl-Glausch <nsg@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Thomas Huth <thuth@redhat.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, Andrew Jones <andrew.jones@linux.dev>,
+        Colton Lewis <coltonlewis@google.com>,
+        Nikos Nikoleris <nikos.nikoleris@arm.com>,
+        Sean Christopherson <seanjc@google.com>
+From:   Nico Boehr <nrb@linux.ibm.com>
+Message-ID: <169703139080.15053.7484690709413943726@t14-nrb>
+User-Agent: alot/0.8.1
+Date:   Wed, 11 Oct 2023 15:36:30 +0200
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Yd1eDgG96rXG0ooQC9hh87nPJsNRXIKl
+X-Proofpoint-GUID: XuC6jahXr1rjsx_IopGauKkAECt_Eiqi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-11_09,2023-10-11_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 clxscore=1011 mlxscore=0 malwarescore=0 mlxlogscore=812
+ suspectscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310110120
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -83,66 +98,9 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Oct 11, 2023 at 11:24=E2=80=AFAM Guo Ren <guoren@kernel.org> wrote:
->
-> On Mon, Oct 9, 2023 at 8:42=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.=
-org> wrote:
+Quoting Nina Schoetterl-Glausch (2023-10-11 10:56:24)
+> A polarization value of 0 means horizontal polarization.
+>=20
+> Signed-off-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
 
-> > --- a/arch/riscv/Makefile
-> > +++ b/arch/riscv/Makefile
-> > @@ -131,12 +131,6 @@ endif
-> >  libs-y +=3D arch/riscv/lib/
-> >  libs-$(CONFIG_EFI_STUB) +=3D $(objtree)/drivers/firmware/efi/libstub/l=
-ib.a
-> >
-> > -PHONY +=3D vdso_install
-> > -vdso_install:
-> > -       $(Q)$(MAKE) $(build)=3Darch/riscv/kernel/vdso $@
-> > -       $(if $(CONFIG_COMPAT),$(Q)$(MAKE) \
-> > -               $(build)=3Darch/riscv/kernel/compat_vdso compat_$@)
-> > -
-> >  ifeq ($(KBUILD_EXTMOD),)
-> >  ifeq ($(CONFIG_MMU),y)
-> >  prepare: vdso_prepare
-> > @@ -148,6 +142,9 @@ vdso_prepare: prepare0
-> >  endif
-> >  endif
-> >
-> > +vdso-install-y                 +=3D arch/riscv/kernel/vdso/vdso.so.dbg
-> > +vdso-install-$(CONFIG_COMPAT)  +=3D arch/riscv/kernel/compat_vdso/comp=
-at_vdso.so.dbg:../compat_vdso/compat_vdso.so
-> Why do we need ":../compat_vdso/compat_vdso.so" here?
-
-
-
-
-All architectures except riscv install vdso files
-to /lib/modules/$(uname -r)/vdso/.
-
-
-
-See the following code in arch/riscv/kernel/compat_vdso/Makefile:
-
-
-quiet_cmd_compat_vdso_install =3D INSTALL $@
-      cmd_compat_vdso_install =3D cp $(obj)/$@.dbg $(MODLIB)/compat_vdso/$@
-
-
-
-
-Riscv copies the compat vdso to
-/lib/modules/$(uname -r)/compat_vdso/.
-
-
-
-This commit preserves the current installation path as-is.
-
-If the riscv maintainers agree, we can change the
-installation destination to /lib/modules/$(uname -r)/vdso/
-for consistency.
-
-
-
---=20
-Best Regards
-Masahiro Yamada
+Reviewed-by: Nico Boehr <nrb@linux.ibm.com>
