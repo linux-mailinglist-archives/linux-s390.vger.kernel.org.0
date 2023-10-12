@@ -2,106 +2,120 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EEDC87C70FC
-	for <lists+linux-s390@lfdr.de>; Thu, 12 Oct 2023 17:08:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7BCD7C710E
+	for <lists+linux-s390@lfdr.de>; Thu, 12 Oct 2023 17:11:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347190AbjJLPIY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 12 Oct 2023 11:08:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51030 "EHLO
+        id S1343696AbjJLPL3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 12 Oct 2023 11:11:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379183AbjJLPIR (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 12 Oct 2023 11:08:17 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66669C4;
-        Thu, 12 Oct 2023 08:08:15 -0700 (PDT)
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39CF6AhJ025228;
-        Thu, 12 Oct 2023 15:08:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : content-transfer-encoding : in-reply-to : references : from
- : subject : cc : to : message-id : date; s=pp1;
- bh=ut3/hJUGB/VwhDN/vHeKa+Wxe0KRvu3/0a7SgW+pGWI=;
- b=se6Azl5JO3B92TzQHXgH70Uicx+2hlM5ZIQ3xKHP9azkFab8SopyczM8V9MOarNBuaMD
- jsfUdpHtusAUZ1s6pnQq0hprhb0wHjkqLHBGSUhjyxVmzKyPk/E9O95wA9pF7b0WN3f2
- AMrBtR/owQhCro+TH5CJdxj2BVDOMX1GuhnlJOYG9J84uLTGgRgqycDL0pJifc3IP9c/
- kes3oVxBwmvlUQan38G/78t/u7O1lM0YWxLMJNXMEe+tf70YwUgeTDlUk86ryRNr6BIM
- SU3vkSzoYoKvXfuWLIXRGM6uiykTAMMYn5rYdY85fE/v6PxMaiQ+FJhOK7RZpIPEvmVm aw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tpk0yrbbp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Oct 2023 15:08:01 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39CF6WIf028663;
-        Thu, 12 Oct 2023 15:08:00 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tpk0yrba4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Oct 2023 15:08:00 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39CEWw8O024465;
-        Thu, 12 Oct 2023 14:46:10 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-        by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tkhnt0f6h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Oct 2023 14:46:10 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39CEk7ot19268196
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Oct 2023 14:46:07 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B469C20043;
-        Thu, 12 Oct 2023 14:46:07 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 90D1320040;
-        Thu, 12 Oct 2023 14:46:07 +0000 (GMT)
-Received: from t14-nrb (unknown [9.171.48.18])
-        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Thu, 12 Oct 2023 14:46:07 +0000 (GMT)
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S235735AbjJLPL1 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 12 Oct 2023 11:11:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE20BC9
+        for <linux-s390@vger.kernel.org>; Thu, 12 Oct 2023 08:10:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1697123439;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=G902YRH4gMYpL3ZSti9071jAR2nOwc1FYmNDsAZeTg8=;
+        b=d50T85uGmp1r07zpTbm7mFcEaDRzdA6hj4Bb8QJASkYt92vTf61wNqpN35jvvLgpF+jgno
+        S94T4EE1RLWLEk35ek7KaYVkB5ExeoHfdHlZrQ6wXbNgOeU8iP6ctRR8P69/C7ztt0SEuQ
+        YLWCy5+OcbR/tcbZ699O0B5XCGnOLPU=
+Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com
+ [209.85.167.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-182-yRwlOeEhO1WBxQrPGs3zqw-1; Thu, 12 Oct 2023 11:10:37 -0400
+X-MC-Unique: yRwlOeEhO1WBxQrPGs3zqw-1
+Received: by mail-oi1-f199.google.com with SMTP id 5614622812f47-3af5b5d816aso1513917b6e.3
+        for <linux-s390@vger.kernel.org>; Thu, 12 Oct 2023 08:10:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697123437; x=1697728237;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G902YRH4gMYpL3ZSti9071jAR2nOwc1FYmNDsAZeTg8=;
+        b=EsGyUN9oonX8lnBb3+SjzZI8tKf5nDQ3pF8E8lZ+kSh7FcWo8P4/aIGq+8eWG23vbu
+         tfqXzgkSx9vo+hjNio0L0gvzzo7o2LhWi2/FjkfbPb8WsYQ4UsRM5H5GJcWAbtFNmqut
+         pAlhnRpOTPiXyhysGeEnBs/vscOym/1ybkWQVPUH2KzyxlXIvY4gbjWzWHEPFp0eHWav
+         p8r/DL20NbL6OB2vgF7tjed4WhDcDMYJWnewQp9bcFxEkGLk4hh0t6OGyeykc1t9eogN
+         aBRnMxh5EQG+9oyW9+cyBGO6Vc6TYtK+ZhRGIxbtY/pjjO624539GbD/cXDsbx+4JOqH
+         d9uA==
+X-Gm-Message-State: AOJu0YxjPODrhXDJkgxS+ONpdT0wac/UbnLsAETX8U2GEJv0w4rMSbct
+        SpVB89IbnVpRzE8CFo4caAywsulu9XNYHToxNjh2dsYZw2eysJdu7JHT8nJrz7xRbMk1JuqYXTQ
+        46wB/RxLYKWuO3spFU5G++SMF2R/Yy/jD7suLWg==
+X-Received: by 2002:aca:1c0a:0:b0:3ae:aa6:dc0c with SMTP id c10-20020aca1c0a000000b003ae0aa6dc0cmr25467614oic.9.1697123436913;
+        Thu, 12 Oct 2023 08:10:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGJo0OsSsOp3ULotW0l+15UUEJrghdAo4jXz8BKtcULxi61l2Ufj14ZsBlTMojK8MUO2luhwvvfwNeDNima55k=
+X-Received: by 2002:aca:1c0a:0:b0:3ae:aa6:dc0c with SMTP id
+ c10-20020aca1c0a000000b003ae0aa6dc0cmr25467596oic.9.1697123436675; Thu, 12
+ Oct 2023 08:10:36 -0700 (PDT)
 MIME-Version: 1.0
+References: <20230929155706.81033-1-imbrenda@linux.ibm.com>
+In-Reply-To: <20230929155706.81033-1-imbrenda@linux.ibm.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Date:   Thu, 12 Oct 2023 17:10:24 +0200
+Message-ID: <CABgObfa-2YkYuv6agzUfeGA6zzwPa21O74ruDJcsrU=Jo_VGiA@mail.gmail.com>
+Subject: Re: [GIT PULL 0/1] KVM: s390: gisa: one fix for 6.6
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, frankja@linux.ibm.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20231011085635.1996346-4-nsg@linux.ibm.com>
-References: <20231011085635.1996346-1-nsg@linux.ibm.com> <20231011085635.1996346-4-nsg@linux.ibm.com>
-From:   Nico Boehr <nrb@linux.ibm.com>
-Subject: Re: [kvm-unit-tests PATCH 3/9] s390x: topology: Fix parsing loop
-Cc:     Nina Schoetterl-Glausch <nsg@linux.ibm.com>,
-        Andrew Jones <andrew.jones@linux.dev>,
-        Colton Lewis <coltonlewis@google.com>,
-        Nikos Nikoleris <nikos.nikoleris@arm.com>,
-        Ricardo Koller <ricarkol@google.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Thomas Huth <thuth@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Nina Schoetterl-Glausch <nsg@linux.ibm.com>
-Message-ID: <169712196713.20608.14802427939765958998@t14-nrb>
-User-Agent: alot/0.8.1
-Date:   Thu, 12 Oct 2023 16:46:07 +0200
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Z1zaT_lhYGyc9zgVfCTasJ2tWl150hNr
-X-Proofpoint-ORIG-GUID: 1gRjvaY6sIdMgNOcaNZ_ntti8PNKNQaz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-12_05,2023-10-12_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- mlxlogscore=691 priorityscore=1501 phishscore=0 adultscore=0
- malwarescore=0 impostorscore=0 clxscore=1015 suspectscore=0 bulkscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2309180000 definitions=main-2310120125
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,RCVD_IN_SORBS_WEB,SPF_HELO_NONE,
+        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Quoting Nina Schoetterl-Glausch (2023-10-11 10:56:26)
-> Without a comparison the loop is infinite.
->=20
-> Signed-off-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+On Fri, Sep 29, 2023 at 5:57=E2=80=AFPM Claudio Imbrenda <imbrenda@linux.ib=
+m.com> wrote:
+>
+> Hi Paolo,
+>
+> a small fix for gisa, please pull :)
+>
+>
+> Claudio
+>
+> The following changes since commit 6465e260f48790807eef06b583b38ca9789b60=
+72:
+>
+>   Linux 6.6-rc3 (2023-09-24 14:31:13 -0700)
+>
+> are available in the Git repository at:
+>
+>   ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.gi=
+t tags/kvm-s390-master-6.6-1
 
-Reviewed-by: Nico Boehr <nrb@linux.ibm.com>
+Pulled, but you need to configure separate url/pushurl. :)
+
+Paolo
+
+>
+> for you to fetch changes up to f87ef5723536a6545ed9c43e18b13a9faceb3c80:
+>
+>   KVM: s390: fix gisa destroy operation might lead to cpu stalls (2023-09=
+-25 08:31:47 +0200)
+>
+> ----------------------------------------------------------------
+> One small fix for gisa to avoid stalls.
+>
+> ----------------------------------------------------------------
+>
+> Michael Mueller (1):
+>   KVM: s390: fix gisa destroy operation might lead to cpu stalls
+>
+>  arch/s390/kvm/interrupt.c | 16 ++++++----------
+>  1 file changed, 6 insertions(+), 10 deletions(-)
+>
+> --
+> 2.41.0
+>
+
