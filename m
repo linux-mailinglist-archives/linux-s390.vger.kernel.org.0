@@ -2,136 +2,138 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 92F867CCDF1
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Oct 2023 22:25:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C75BD7CD299
+	for <lists+linux-s390@lfdr.de>; Wed, 18 Oct 2023 05:18:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235137AbjJQUZz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 17 Oct 2023 16:25:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41338 "EHLO
+        id S229450AbjJRDSs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 17 Oct 2023 23:18:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344496AbjJQUZo (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 17 Oct 2023 16:25:44 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 273F8118;
-        Tue, 17 Oct 2023 13:25:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697574339; x=1729110339;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=acK3P8RbFbLJ3Y/qsHvg8A7W0ea+PDycu9fLk45ERVg=;
-  b=bAwYhPFDDn2o4/g5Fs2i2s5um2j26EQWQIyBaZJ2aaH4c46DESSmKzjG
-   m8qgnDnrDqfr9zfj/plTmMMnQ9zukuTursZT/jQ40fKZMUrMtz/at8UjB
-   2l4v9tWYfqrSphZ+M3Cau2AbRLqI7cmk5duZAgPeY3kh5iehrPes69QO8
-   jBjP+2X9WgAAlW4iqXjd8rIbUUlrF8lLVOJR7htbOzfKiGP3cWF0qEI1e
-   21/snBiup9feaslOPp3z2p9HInLQpMahJKFB49EzoOfCu4atkY9+5wd+O
-   Yaa8lCqGFJg1pF8Gipjp5bndl2kLgoWjnStIFm212TwtidEDXcPnrKg6U
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="7429610"
-X-IronPort-AV: E=Sophos;i="6.03,233,1694761200"; 
-   d="scan'208";a="7429610"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2023 13:25:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="900040478"
-X-IronPort-AV: E=Sophos;i="6.03,233,1694761200"; 
-   d="scan'208";a="900040478"
-Received: from rtdinh-mobl1.amr.corp.intel.com (HELO rpedgeco-desk4.intel.com) ([10.212.150.155])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2023 13:23:35 -0700
-From:   Rick Edgecombe <rick.p.edgecombe@intel.com>
-To:     x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, luto@kernel.org,
-        peterz@infradead.org, kirill.shutemov@linux.intel.com,
-        elena.reshetova@intel.com, isaku.yamahata@intel.com,
-        seanjc@google.com, Michael Kelley <mikelley@microsoft.com>,
-        thomas.lendacky@amd.com, decui@microsoft.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Cc:     rick.p.edgecombe@intel.com, "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: [RFC 10/10] uio_hv_generic: Don't free decrypted memory
-Date:   Tue, 17 Oct 2023 13:25:05 -0700
-Message-Id: <20231017202505.340906-11-rick.p.edgecombe@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231017202505.340906-1-rick.p.edgecombe@intel.com>
-References: <20231017202505.340906-1-rick.p.edgecombe@intel.com>
+        with ESMTP id S229449AbjJRDSr (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 17 Oct 2023 23:18:47 -0400
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D42ABA;
+        Tue, 17 Oct 2023 20:18:44 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=dust.li@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0VuPHcIo_1697599120;
+Received: from localhost(mailfrom:dust.li@linux.alibaba.com fp:SMTPD_---0VuPHcIo_1697599120)
+          by smtp.aliyun-inc.com;
+          Wed, 18 Oct 2023 11:18:41 +0800
+Date:   Wed, 18 Oct 2023 11:18:40 +0800
+From:   Dust Li <dust.li@linux.alibaba.com>
+To:     Guangguan Wang <guangguan.wang@linux.alibaba.com>,
+        kgraul@linux.ibm.com, wenjia@linux.ibm.com, jaka@linux.ibm.com,
+        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com
+Cc:     tonylu@linux.alibaba.com, alibuda@linux.alibaba.com,
+        guwen@linux.alibaba.com, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v2 1/2] net/smc: change function name from
+ smc_find_ism_store_rc to smc_find_device_store_rc
+Message-ID: <20231018031840.GX92403@linux.alibaba.com>
+Reply-To: dust.li@linux.alibaba.com
+References: <20231017124234.99574-1-guangguan.wang@linux.alibaba.com>
+ <20231017124234.99574-2-guangguan.wang@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231017124234.99574-2-guangguan.wang@linux.alibaba.com>
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+        UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On TDX it is possible for the untrusted host to cause
-set_memory_encrypted() or set_memory_decrypted() to fail such that an
-error is returned and the resulting memory is shared. Callers need to take
-care to handle these errors to avoid returning decrypted (shared) memory to
-the page allocator, which could lead to functional or security issues.
+On Tue, Oct 17, 2023 at 08:42:33PM +0800, Guangguan Wang wrote:
+>The function smc_find_ism_store_rc is not only used for ism, so it is
+>reasonable to change the function name to smc_find_device_store_rc.
+>
+>Signed-off-by: Guangguan Wang <guangguan.wang@linux.alibaba.com>
 
-uio_hv_generic could free decrypted/shared pages if
-set_memory_decrypted() fails.
+Reviewed-by: Dust Li <dust.li@linux.alibaba.com>
 
-Check the decrypted field in the gpadl before freeing in order to not
-leak the memory.
-
-Only compile tested.
-
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Wei Liu <wei.liu@kernel.org>
-Cc: Dexuan Cui <decui@microsoft.com>
-Cc: linux-hyperv@vger.kernel.org
-Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
----
- drivers/uio/uio_hv_generic.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
-index 20d9762331bd..6be3462b109f 100644
---- a/drivers/uio/uio_hv_generic.c
-+++ b/drivers/uio/uio_hv_generic.c
-@@ -181,12 +181,14 @@ hv_uio_cleanup(struct hv_device *dev, struct hv_uio_private_data *pdata)
- {
- 	if (pdata->send_gpadl.gpadl_handle) {
- 		vmbus_teardown_gpadl(dev->channel, &pdata->send_gpadl);
--		vfree(pdata->send_buf);
-+		if (!pdata->send_gpadl.decrypted)
-+			vfree(pdata->send_buf);
- 	}
- 
- 	if (pdata->recv_gpadl.gpadl_handle) {
- 		vmbus_teardown_gpadl(dev->channel, &pdata->recv_gpadl);
--		vfree(pdata->recv_buf);
-+		if (!pdata->recv_gpadl.decrypted)
-+			vfree(pdata->recv_buf);
- 	}
- }
- 
-@@ -295,7 +297,8 @@ hv_uio_probe(struct hv_device *dev,
- 	ret = vmbus_establish_gpadl(channel, pdata->recv_buf,
- 				    RECV_BUFFER_SIZE, &pdata->recv_gpadl);
- 	if (ret) {
--		vfree(pdata->recv_buf);
-+		if (!pdata->recv_gpadl.decrypted)
-+			vfree(pdata->recv_buf);
- 		goto fail_close;
- 	}
- 
-@@ -317,7 +320,8 @@ hv_uio_probe(struct hv_device *dev,
- 	ret = vmbus_establish_gpadl(channel, pdata->send_buf,
- 				    SEND_BUFFER_SIZE, &pdata->send_gpadl);
- 	if (ret) {
--		vfree(pdata->send_buf);
-+		if (!pdata->send_gpadl.decrypted)
-+			vfree(pdata->send_buf);
- 		goto fail_close;
- 	}
- 
--- 
-2.34.1
-
+>---
+> net/smc/af_smc.c | 16 ++++++++--------
+> 1 file changed, 8 insertions(+), 8 deletions(-)
+>
+>diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
+>index 35ddebae8894..b3a67a168495 100644
+>--- a/net/smc/af_smc.c
+>+++ b/net/smc/af_smc.c
+>@@ -2122,7 +2122,7 @@ static void smc_check_ism_v2_match(struct smc_init_info *ini,
+> 	}
+> }
+> 
+>-static void smc_find_ism_store_rc(u32 rc, struct smc_init_info *ini)
+>+static void smc_find_device_store_rc(u32 rc, struct smc_init_info *ini)
+> {
+> 	if (!ini->rc)
+> 		ini->rc = rc;
+>@@ -2164,7 +2164,7 @@ static void smc_find_ism_v2_device_serv(struct smc_sock *new_smc,
+> 	mutex_unlock(&smcd_dev_list.mutex);
+> 
+> 	if (!ini->ism_dev[0]) {
+>-		smc_find_ism_store_rc(SMC_CLC_DECL_NOSMCD2DEV, ini);
+>+		smc_find_device_store_rc(SMC_CLC_DECL_NOSMCD2DEV, ini);
+> 		goto not_found;
+> 	}
+> 
+>@@ -2181,7 +2181,7 @@ static void smc_find_ism_v2_device_serv(struct smc_sock *new_smc,
+> 		ini->ism_selected = i;
+> 		rc = smc_listen_ism_init(new_smc, ini);
+> 		if (rc) {
+>-			smc_find_ism_store_rc(rc, ini);
+>+			smc_find_device_store_rc(rc, ini);
+> 			/* try next active ISM device */
+> 			continue;
+> 		}
+>@@ -2218,7 +2218,7 @@ static void smc_find_ism_v1_device_serv(struct smc_sock *new_smc,
+> 		return;		/* V1 ISM device found */
+> 
+> not_found:
+>-	smc_find_ism_store_rc(rc, ini);
+>+	smc_find_device_store_rc(rc, ini);
+> 	ini->smcd_version &= ~SMC_V1;
+> 	ini->ism_dev[0] = NULL;
+> 	ini->is_smcd = false;
+>@@ -2268,7 +2268,7 @@ static void smc_find_rdma_v2_device_serv(struct smc_sock *new_smc,
+> 	ini->smcrv2.daddr = smc_ib_gid_to_ipv4(smc_v2_ext->roce);
+> 	rc = smc_find_rdma_device(new_smc, ini);
+> 	if (rc) {
+>-		smc_find_ism_store_rc(rc, ini);
+>+		smc_find_device_store_rc(rc, ini);
+> 		goto not_found;
+> 	}
+> 	if (!ini->smcrv2.uses_gateway)
+>@@ -2285,7 +2285,7 @@ static void smc_find_rdma_v2_device_serv(struct smc_sock *new_smc,
+> 	if (!rc)
+> 		return;
+> 	ini->smcr_version = smcr_version;
+>-	smc_find_ism_store_rc(rc, ini);
+>+	smc_find_device_store_rc(rc, ini);
+> 
+> not_found:
+> 	ini->smcr_version &= ~SMC_V2;
+>@@ -2332,7 +2332,7 @@ static int smc_listen_find_device(struct smc_sock *new_smc,
+> 	/* check for matching IP prefix and subnet length (V1) */
+> 	prfx_rc = smc_listen_prfx_check(new_smc, pclc);
+> 	if (prfx_rc)
+>-		smc_find_ism_store_rc(prfx_rc, ini);
+>+		smc_find_device_store_rc(prfx_rc, ini);
+> 
+> 	/* get vlan id from IP device */
+> 	if (smc_vlan_by_tcpsk(new_smc->clcsock, ini))
+>@@ -2359,7 +2359,7 @@ static int smc_listen_find_device(struct smc_sock *new_smc,
+> 		int rc;
+> 
+> 		rc = smc_find_rdma_v1_device_serv(new_smc, pclc, ini);
+>-		smc_find_ism_store_rc(rc, ini);
+>+		smc_find_device_store_rc(rc, ini);
+> 		return (!rc) ? 0 : ini->rc;
+> 	}
+> 	return prfx_rc;
+>-- 
+>2.24.3 (Apple Git-128)
