@@ -2,198 +2,164 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 694F87D513B
-	for <lists+linux-s390@lfdr.de>; Tue, 24 Oct 2023 15:17:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 001047D5888
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Oct 2023 18:35:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234069AbjJXNRz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 24 Oct 2023 09:17:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42930 "EHLO
+        id S1343853AbjJXQf6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 24 Oct 2023 12:35:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232084AbjJXNRy (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 24 Oct 2023 09:17:54 -0400
-Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91364C1;
-        Tue, 24 Oct 2023 06:17:52 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id CEEBB5C017D;
-        Tue, 24 Oct 2023 09:17:51 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 24 Oct 2023 09:17:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1698153471; x=1698239871; bh=ju
-        LUN5EOf1oun38yO5yy2NS/PjvfZz4177Yn5+hz4yQ=; b=n5JuawavBckG+td4zd
-        9bgRwuRpqQu0e1li/e77umwTpwdBwy0DLjFX3CyNt7mh81Xb8VYW0gXvlCFWRw6B
-        hj+fijwsz4eR49wI1VEhiMuAzHMpeRbELUPOmwyMHvqXjYp/QUR+9/Se6UYL+T4L
-        WDLTJHnW+8emUnHY2/S3SYHChMwDWnqqUAr12P0GwcRPCfjHc/Vx6zet1zUiY9Ab
-        QW3noxYanY1quUXitS/QIyprE60azjurUOVXm3jRf8IdUBLJOPQUfQwF1h0Y5NGi
-        6gLzeDZxr2RnAK37E9QNOt1pBZVPzuFw/z/XlaaIMV9UrlXcEYm5x7VM6gugIv8o
-        UBfw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; t=1698153471; x=1698239871; bh=juLUN5EOf1oun
-        38yO5yy2NS/PjvfZz4177Yn5+hz4yQ=; b=ho066+fpz4vqxQspl7eYkBvf670M0
-        QafoG/BnV/LA3QmmYpX25gHOuy6e1KX2q/EJoviBgTiQ8bEtGXhlgixr0PdEtdHP
-        UdgVO0ss1ZYKXyYAaPFpHpAb7uNyOApEx16iBFvqNHtzguv2pCDNgoXgDvDBXbx2
-        Eum49PB45Qv1wQwNAXunVGDvSL4OeJfcTdyC4QaVURCUcVN4eVgopaLx8oMT2E7V
-        cq9G95XNfiV1VTUkmn6go/PuJpp4x55ovVtU75KGke9BYIzfPM9PljR5ZiBtKHN/
-        HPitZ1g+BQNBBD4GmNtyUC4pTpD3oY2cjimFc6ZnqS4klc1L3cWmqG2ZQ==
-X-ME-Sender: <xms:_8M3ZWnJnKjq_-kk6s0hEnizc7y7AA36OyfNpqdFxNL3KSw6-4sY1Q>
-    <xme:_8M3Zd0zeKpSAD9_8WXmQGhYKMSP-M1Q-xFKuHbxpV6DepRGPaO4shdXDsw2hw3Al
-    eIRSW-rISm1gEikWDE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrkeekgdeiudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:_8M3ZUr74gAI76OAf2EDNunWuT_V6DLiFSCudIcNRc7aC5BeecLhVA>
-    <xmx:_8M3ZanmhGeqVetdMi6TitKDZMbJNC4wsgyPPj9eM5Vi7_rKEQrMbQ>
-    <xmx:_8M3ZU3Q4egefEBR3jYS0LbN2LFQKF0qlsVLKvLUFuM8mUjpwbnnCQ>
-    <xmx:_8M3ZVJKz9SsDBha72wGsT4j53_R7egs9Gz0MK1aBidGMKZdv-co3Q>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 5ADF0B60089; Tue, 24 Oct 2023 09:17:51 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-1048-g9229b632c5-fm-20231019.001-g9229b632
+        with ESMTP id S1343987AbjJXQf4 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 24 Oct 2023 12:35:56 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89BED93;
+        Tue, 24 Oct 2023 09:35:50 -0700 (PDT)
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39OGRZRT005791;
+        Tue, 24 Oct 2023 16:35:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=gzAjjy82jfI/5Z+fp7XVCAqrdkII0tgN1G0UzbsZCZo=;
+ b=Fnb9y0ZriqGJj5MvDcRRkh1VycEDeuyBKKqq6BatKHg9/SgcJ8G2C/45OFMoBlHYdYE6
+ yTP2oay52RuQh5gl+5MtG0DpAYIm9EbnLMH7eukwj3POJTzvZUmbGqcmwCXOXpgoGJPp
+ 0Y8iXmGzmsbtx+aX/8+3ItQHJ5HPyVUlTDqZGOnWUesixqisyFczLKU0e2HhkeOwmGn2
+ qn48lyjHbCRUU4PjrO/UKLh2TGbYYCBWj5Xzj/2DajWvBe+ga4pVeiqMY2lzcyszMVE7
+ v57Duk43ML+p4Ykl+1V0yvtHneL0yiZUciRJkI4UichkMD/HQA2NIvri3MMXMUY8oulu Vw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3txhf5r641-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Oct 2023 16:35:48 +0000
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39OGRY6k005735;
+        Tue, 24 Oct 2023 16:35:43 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3txhf5r4kk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Oct 2023 16:35:40 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39OFq1sP023782;
+        Tue, 24 Oct 2023 16:31:09 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+        by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tvryt11vj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Oct 2023 16:31:09 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39OGV6Lj37290336
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 24 Oct 2023 16:31:06 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B611120043;
+        Tue, 24 Oct 2023 16:31:06 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 069E520040;
+        Tue, 24 Oct 2023 16:31:06 +0000 (GMT)
+Received: from [9.171.57.222] (unknown [9.171.57.222])
+        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Tue, 24 Oct 2023 16:31:05 +0000 (GMT)
+Message-ID: <c82af527-d72a-476f-8a76-893d68b6a87f@linux.ibm.com>
+Date:   Tue, 24 Oct 2023 18:31:05 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] s390/qeth: replace deprecated strncpy with strscpy
+To:     Justin Stitt <justinstitt@google.com>,
+        Alexandra Winter <wintera@linux.ibm.com>,
+        Wenjia Zhang <wenjia@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20231023-strncpy-drivers-s390-net-qeth_core_main-c-v1-1-e7ce65454446@google.com>
+Content-Language: en-GB
+From:   Thorsten Winkler <twinkler@linux.ibm.com>
+In-Reply-To: <20231023-strncpy-drivers-s390-net-qeth_core_main-c-v1-1-e7ce65454446@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: BwEG0FpVjPOs9G4YuxgdOSKf9jDJn1ZN
+X-Proofpoint-ORIG-GUID: XAQV7EPJWV3xI0saw8O4bh3S0Kz7Cesg
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Message-Id: <b71034f4-5cdc-44e0-b72f-1a8ffae0593e@app.fastmail.com>
-In-Reply-To: <ZTe8NOgAjvKDA6z0@MiWiFi-R3L-srv>
-References: <20231023110308.1202042-1-arnd@kernel.org>
- <ZTe8NOgAjvKDA6z0@MiWiFi-R3L-srv>
-Date:   Tue, 24 Oct 2023 15:17:30 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Baoquan He" <bhe@redhat.com>
-Cc:     "Vivek Goyal" <vgoyal@redhat.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-        x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-crypto@vger.kernel.org, eric_devolder@yahoo.com
-Subject: Re: [PATCH 1/2] kexec: fix KEXEC_FILE dependencies
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-24_16,2023-10-24_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
+ phishscore=0 mlxlogscore=999 priorityscore=1501 mlxscore=0 adultscore=0
+ malwarescore=0 suspectscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2310170001
+ definitions=main-2310240143
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Oct 24, 2023, at 14:44, Baoquan He wrote:
-> Just add people and mailing list to CC since I didn't find this mail in
-> my box, just drag it via 'b4 am'.
->
-> On 10/23/23 at 01:01pm, Arnd Bergmann wrote:
-> ......
 
->> diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
->> index 7aff28ded2f48..bfc636d64ff2b 100644
->> --- a/kernel/Kconfig.kexec
->> +++ b/kernel/Kconfig.kexec
->> @@ -36,6 +36,7 @@ config KEXEC
->>  config KEXEC_FILE
->>  	bool "Enable kexec file based system call"
->>  	depends on ARCH_SUPPORTS_KEXEC_FILE
->> +	depends on CRYPTO_SHA256=y || !ARCH_SUPPORTS_KEXEC_PURGATORY
->
-> I am not sure if the logic is correct. In theory, kexec_file code
-> utilizes purgatory to verify the checksum digested during kernel loading
-> when try to jump to the kernel. That means kexec_file depends on
-> purgatory, but not contrary?
 
-The expression I wrote is a bit confusing, but I think this just
-keeps the existing behavior:
+On 23.10.23 21:39, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+> 
+> We expect new_entry->dbf_name to be NUL-terminated based on its use with
+> strcmp():
+> |       if (strcmp(entry->dbf_name, name) == 0) {
+> 
+> Moreover, NUL-padding is not required as new_entry is kzalloc'd just
+> before this assignment:
+> |       new_entry = kzalloc(sizeof(struct qeth_dbf_entry), GFP_KERNEL);
+> 
+> ... rendering any future NUL-byte assignments (like the ones strncpy()
+> does) redundant.
+> 
+> Considering the above, a suitable replacement is `strscpy` [2] due to
+> the fact that it guarantees NUL-termination on the destination buffer
+> without unnecessarily NUL-padding.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-- on architectures that select ARCH_SUPPORTS_KEXEC_PURGATORY
-  (powerpc, riscv, s390 and x86), we also require CRYPTO_SHA256
-  to be built-in.
-- on architectures that do not have ARCH_SUPPORTS_KEXEC_PURGATORY
-  (arm64 and parisc), CRYPTO_SHA256 is not used and can be disabled
-  or =m.
+LGTM, thank you!
 
-Since ARCH_SUPPORTS_KEXEC_PURGATORY is a 'bool' symbol, it could
-be written as
+Reviewed-by: Thorsten Winkler <twinkler@linux.ibm.com>
+Tested-by: Thorsten Winkler <twinkler@linux.ibm.com>
 
-depends on (ARCH_SUPPORTS_KEXEC_PURGATORY && CRYPTO_SHA256=y) \
-           || !ARCH_SUPPORTS_KEXEC_PURGATORY
-
-if you find that clearer. I see that the second patch
-actually gets this wrong, it should actually do
-
-select CRYPTO if ARCH_SUPPORTS_KEXEC_PURGATORY
-select CRYPTO_SHA256 if ARCH_SUPPORTS_KEXEC_PURGATORY
-
-> With these changes, we can achieve the goal to avoid building issue,
-> whereas the code logic becomes confusing. E.g people could disable
-> CONFIG_KEXEC_FILE, but still get purgatory code built in which is
-> totally useless.
->
-> Not sure if I think too much over this.
-
-I see your point here, and I would suggest changing the
-CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY symbol to just indicate
-the availability of the purgatory code for the arch, rather
-than actually controlling the code itself. I already mentioned
-this for s390, but riscv would need the same thing on top.
-
-I think the change below should address your concern.
-
-     Arnd
-
-diff --git a/arch/riscv/kernel/elf_kexec.c b/arch/riscv/kernel/elf_kexec.c
-index e60fbd8660c4..3ac341d296db 100644
---- a/arch/riscv/kernel/elf_kexec.c
-+++ b/arch/riscv/kernel/elf_kexec.c
-@@ -266,7 +266,7 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
-                cmdline = modified_cmdline;
-        }
- 
--#ifdef CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY
-+#ifdef CONFIG_KEXEC_FILE
-        /* Add purgatory to the image */
-        kbuf.top_down = true;
-        kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-@@ -280,7 +280,7 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
-                                             sizeof(kernel_start), 0);
-        if (ret)
-                pr_err("Error update purgatory ret=%d\n", ret);
--#endif /* CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY */
-+#endif /* CONFIG_KEXEC_FILE */
- 
-        /* Add the initrd to the image */
-        if (initrd != NULL) {
-diff --git a/arch/riscv/Kbuild b/arch/riscv/Kbuild
-index d25ad1c19f88..ab181d187c23 100644
---- a/arch/riscv/Kbuild
-+++ b/arch/riscv/Kbuild
-@@ -5,7 +5,7 @@ obj-$(CONFIG_BUILTIN_DTB) += boot/dts/
- obj-y += errata/
- obj-$(CONFIG_KVM) += kvm/
- 
--obj-$(CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY) += purgatory/
-+obj-$(CONFIG_KEXEC_FILE) += purgatory/
- 
- # for cleaning
- subdir- += boot
-diff --git a/arch/s390/Kbuild b/arch/s390/Kbuild
-index a5d3503b353c..361aa01dbd49 100644
---- a/arch/s390/Kbuild
-+++ b/arch/s390/Kbuild
-@@ -7,7 +7,7 @@ obj-$(CONFIG_S390_HYPFS)        += hypfs/
- obj-$(CONFIG_APPLDATA_BASE)    += appldata/
- obj-y                          += net/
- obj-$(CONFIG_PCI)              += pci/
--obj-$(CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY) += purgatory/
-+obj-$(CONFIG_KEXEC_FILE)       += purgatory/
- 
- # for cleaning
- subdir- += boot tools
-
+> ---
+> Note: build-tested only.
+> 
+> Found with: $ rg "strncpy\("
+> ---
+>   drivers/s390/net/qeth_core_main.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
+> index cd783290bde5..6af2511e070c 100644
+> --- a/drivers/s390/net/qeth_core_main.c
+> +++ b/drivers/s390/net/qeth_core_main.c
+> @@ -6226,7 +6226,7 @@ static int qeth_add_dbf_entry(struct qeth_card *card, char *name)
+>   	new_entry = kzalloc(sizeof(struct qeth_dbf_entry), GFP_KERNEL);
+>   	if (!new_entry)
+>   		goto err_dbg;
+> -	strncpy(new_entry->dbf_name, name, DBF_NAME_LEN);
+> +	strscpy(new_entry->dbf_name, name, sizeof(new_entry->dbf_name));
+>   	new_entry->dbf_info = card->debug;
+>   	mutex_lock(&qeth_dbf_list_mutex);
+>   	list_add(&new_entry->dbf_list, &qeth_dbf_list);
+> 
+> ---
+> base-commit: 9c5d00cb7b6bbc5a7965d9ab7d223b5402d1f02c
+> change-id: 20231023-strncpy-drivers-s390-net-qeth_core_main-c-0b0ee08672ec
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+> 
+> 
