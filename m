@@ -2,59 +2,59 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 133E27DF9C7
-	for <lists+linux-s390@lfdr.de>; Thu,  2 Nov 2023 19:17:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 051407DF9C5
+	for <lists+linux-s390@lfdr.de>; Thu,  2 Nov 2023 19:16:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377140AbjKBSQ6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 2 Nov 2023 14:16:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44294 "EHLO
+        id S1377119AbjKBSQ4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 2 Nov 2023 14:16:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235013AbjKBSQy (ORCPT
+        with ESMTP id S235011AbjKBSQy (ORCPT
         <rfc822;linux-s390@vger.kernel.org>); Thu, 2 Nov 2023 14:16:54 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2876192
-        for <linux-s390@vger.kernel.org>; Thu,  2 Nov 2023 11:16:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F5B8E5
+        for <linux-s390@vger.kernel.org>; Thu,  2 Nov 2023 11:16:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1698948963;
+        s=mimecast20190719; t=1698948964;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=lX9pDYhUv0xNWCwt2hkI8FAcvsPw051Wv1MARO9LEh8=;
-        b=bFfPgMvOPB2357SzbJws51CKGTPxicMLFpsF9oPnlJNwyhpmnlvX789gCsbzPxv2o7vgb3
-        ZNcAYiPz34hALSev1ScpVd5wmfiAhcNplUriMmTkF2rY8+LqKV+/PEfB3AfzERloiuSDAy
-        qaMI4Nq4u3h8ZUu5YMXKL4K/enbIy1A=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=zgG3A5hpFrp+6V7xcOap0dfvpVeqP5J5h/8swybWPW8=;
+        b=AmKeNG6e5TGAmov2bQOQ1EysZ4KQklR/7TXeewd+jGPyLxfPHn5T9d0BEEvy/xefL6F1MB
+        IWHk/IoFW9gAe01jfrFvoNErDm+78E+A8DJSFnAFYrp26F4FlSjI3TQIH0A/hIrRhYjZ/9
+        4vak1+LpLGk/nmbSVc5rqCJqFyZPiAM=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-674-MJI4G3ZmNS2YAnRAv2RGgA-1; Thu, 02 Nov 2023 14:16:02 -0400
-X-MC-Unique: MJI4G3ZmNS2YAnRAv2RGgA-1
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2c56c75ea84so2546551fa.1
+ us-mta-518-Vl-NDLeTPASZPsg4kvH3sQ-1; Thu, 02 Nov 2023 14:16:03 -0400
+X-MC-Unique: Vl-NDLeTPASZPsg4kvH3sQ-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4083a0fb583so1417925e9.1
         for <linux-s390@vger.kernel.org>; Thu, 02 Nov 2023 11:16:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698948961; x=1699553761;
+        d=1e100.net; s=20230601; t=1698948962; x=1699553762;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lX9pDYhUv0xNWCwt2hkI8FAcvsPw051Wv1MARO9LEh8=;
-        b=M3Wl0R+BEQFfZa7f5hN3IA/nrCad2NNCUZHpgJU8bEL/L3aalDAZausc5yR4tOwwpt
-         TmUKNipC4TlPoqyJTXaBOmnLhDOVOKM5vTwCA7An1YPpeX/YHJjYlDUO1ksT6tigsOj8
-         s7fQCdV69/CgEhJs41Grf4fgpSjqY34aOErXNDsynNMD5qef7AH2aOcimkf+K2BQGjW4
-         YOfI8HI9GMUNpINY5NQMPhh8InI32KKojjMBQuKgrrD/zvsgITpmtxPKje7olNZ9FQ/F
-         PRGVukkVv2QSUZ0WxeReusP7Ypycefy0Tj/6uSuvV3YcdDSoK76rz0R4816RP705IJ7N
-         5bPg==
-X-Gm-Message-State: AOJu0YxkqlZUcZJKuEet2F24h8IVdwBHS+WquvRNQbq4VI99sfWg7MYm
-        gljKj2FhdaDVASB+Wmee9rU0MwIFwF3RVi5jxmwXVKGldvNKQK1OA6UiJiIzc4mORE60nP/LXNN
-        RtWhucPCAZ4M5HcpPH6+3bw==
-X-Received: by 2002:a2e:b5cd:0:b0:2c0:7d6:1349 with SMTP id g13-20020a2eb5cd000000b002c007d61349mr13191958ljn.0.1698948960955;
-        Thu, 02 Nov 2023 11:16:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEA9GFg/9wbEsQk9hiRtyKr5Sw8+tU0lzjpfffLtjFPJgequPAx/iZqfrIIRwYQeDUno1rPwQ==
-X-Received: by 2002:a2e:b5cd:0:b0:2c0:7d6:1349 with SMTP id g13-20020a2eb5cd000000b002c007d61349mr13191934ljn.0.1698948960612;
-        Thu, 02 Nov 2023 11:16:00 -0700 (PDT)
+        bh=zgG3A5hpFrp+6V7xcOap0dfvpVeqP5J5h/8swybWPW8=;
+        b=vuOVVFrdaG8RyJ5nhVGAa524RlnkpzhdBYOxYN5XdPj3kO3bYgWdpLO/pNpiNKv0pK
+         S4PPQjFxiFs0Qr5chKji9NczYWaUgdam2bPh3UbHUMWbTmGMt5JrkTMKy1t6KZbCNOCP
+         3J6sLdYyOlXEOHrE5sBT+BuUxgcwvWTk5uBFE6XT2BFs8C+G5KbkdzFhKW+Qv12tSau3
+         SVDIXpER9QAfmcZ7QO6VRMP2pd+insNLoOS0gkRppvTwa4VkILMZghgM3Jry4FVASYcQ
+         RfDLKilpxbqfR0eUMo4ITlFuE3zz/AsYbxjYjxZwQx2szrtVBxHYafPFUOE/dalfVIUe
+         FLgg==
+X-Gm-Message-State: AOJu0YwKxbxeWEspSfRuLXVzTr4+qTaMw10rotpyiBih+uwixrVmHVHj
+        4fAkxOo9it4a2APYM8DRGlJX6DFLXt56drBhTBvRIVzGP+/eRmPsRM5qFCP0IB5cYJp8/qVNi2I
+        Rp2BU8ZLNn3SQdIL/I5KYEw==
+X-Received: by 2002:a05:600c:510a:b0:405:1ba2:4fcf with SMTP id o10-20020a05600c510a00b004051ba24fcfmr15629810wms.4.1698948962019;
+        Thu, 02 Nov 2023 11:16:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFjTetfCnz62A+Ip2Hdlm3nuttWd2b6W3o5YuoU7reIi83z2x4Kzw5EwS3QOFs2J4hJ+0CIUg==
+X-Received: by 2002:a05:600c:510a:b0:405:1ba2:4fcf with SMTP id o10-20020a05600c510a00b004051ba24fcfmr15629783wms.4.1698948961745;
+        Thu, 02 Nov 2023 11:16:01 -0700 (PDT)
 Received: from pstanner-thinkpadt14sgen1.remote.csb ([2001:9e8:32c5:d600:227b:d2ff:fe26:2a7a])
-        by smtp.gmail.com with ESMTPSA id m28-20020a05600c3b1c00b004076f522058sm3879929wms.0.2023.11.02.11.15.59
+        by smtp.gmail.com with ESMTPSA id m28-20020a05600c3b1c00b004076f522058sm3879929wms.0.2023.11.02.11.16.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Nov 2023 11:16:00 -0700 (PDT)
+        Thu, 02 Nov 2023 11:16:01 -0700 (PDT)
 From:   Philipp Stanner <pstanner@redhat.com>
 To:     Christian Borntraeger <borntraeger@linux.ibm.com>,
         Janosch Frank <frankja@linux.ibm.com>,
@@ -74,9 +74,9 @@ Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
         linux-kernel@vger.kernel.org, x86@kernel.org,
         Philipp Stanner <pstanner@redhat.com>,
         Dave Airlie <airlied@redhat.com>
-Subject: [PATCH 1/3] arch/x86/kvm: copy user-array with overflow-check
-Date:   Thu,  2 Nov 2023 19:15:24 +0100
-Message-ID: <20231102181526.43279-2-pstanner@redhat.com>
+Subject: [PATCH 2/3] arch/s390/kvm: copy userspace-array safely
+Date:   Thu,  2 Nov 2023 19:15:25 +0100
+Message-ID: <20231102181526.43279-3-pstanner@redhat.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20231102181526.43279-1-pstanner@redhat.com>
 References: <20231102181526.43279-1-pstanner@redhat.com>
@@ -85,7 +85,7 @@ Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -93,39 +93,32 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-cpuid.c utilizes vmemdup_user() and array_size() to copy two userspace
-arrays. This, currently, does not check for an overflow.
+guestdbg.c utilizes memdup_user() to copy a userspace array. This,
+currently, does not check for an overflow.
 
-Use the new wrapper vmemdup_array_user() to copy the arrays more safely.
+Use the new wrapper memdup_array_user() to copy the array more safely.
 
 Suggested-by: Dave Airlie <airlied@redhat.com>
 Signed-off-by: Philipp Stanner <pstanner@redhat.com>
 ---
- arch/x86/kvm/cpuid.c | 4 ++--
+ arch/s390/kvm/guestdbg.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 773132c3bf5a..4a15b2a20f84 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -467,7 +467,7 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
- 		return -E2BIG;
+diff --git a/arch/s390/kvm/guestdbg.c b/arch/s390/kvm/guestdbg.c
+index 3765c4223bf9..80879fc73c90 100644
+--- a/arch/s390/kvm/guestdbg.c
++++ b/arch/s390/kvm/guestdbg.c
+@@ -213,8 +213,8 @@ int kvm_s390_import_bp_data(struct kvm_vcpu *vcpu,
+ 	else if (dbg->arch.nr_hw_bp > MAX_BP_COUNT)
+ 		return -EINVAL;
  
- 	if (cpuid->nent) {
--		e = vmemdup_user(entries, array_size(sizeof(*e), cpuid->nent));
-+		e = vmemdup_array_user(entries, cpuid->nent, sizeof(*e));
- 		if (IS_ERR(e))
- 			return PTR_ERR(e);
+-	bp_data = memdup_user(dbg->arch.hw_bp,
+-			      sizeof(*bp_data) * dbg->arch.nr_hw_bp);
++	bp_data = memdup_array_user(dbg->arch.hw_bp, dbg->arch.nr_hw_bp,
++				    sizeof(*bp_data));
+ 	if (IS_ERR(bp_data))
+ 		return PTR_ERR(bp_data);
  
-@@ -511,7 +511,7 @@ int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
- 		return -E2BIG;
- 
- 	if (cpuid->nent) {
--		e2 = vmemdup_user(entries, array_size(sizeof(*e2), cpuid->nent));
-+		e2 = vmemdup_array_user(entries, cpuid->nent, sizeof(*e2));
- 		if (IS_ERR(e2))
- 			return PTR_ERR(e2);
- 	}
 -- 
 2.41.0
 
