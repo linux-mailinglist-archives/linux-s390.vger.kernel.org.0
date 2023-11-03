@@ -2,101 +2,135 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 222EE7E0883
-	for <lists+linux-s390@lfdr.de>; Fri,  3 Nov 2023 19:54:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33BDB7E0836
+	for <lists+linux-s390@lfdr.de>; Fri,  3 Nov 2023 19:33:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230197AbjKCSyA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 3 Nov 2023 14:54:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45084 "EHLO
+        id S1345103AbjKCSdr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 3 Nov 2023 14:33:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345932AbjKCSx6 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 3 Nov 2023 14:53:58 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D048BD;
-        Fri,  3 Nov 2023 11:53:55 -0700 (PDT)
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3A3IJrGl025758;
-        Fri, 3 Nov 2023 18:53:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=aX1ZdNjYKDkIA6z+Y41dUOjCE75DizEEdXwX5jTL2Bk=;
- b=o/C5hcPg4iwuIhp/1s99xQ4HHjKlN/IWr39hpdkzISL5ZfhVoLu8EfD/cEEWGJIkCogn
- 0Uhe9LuyZ8zOxzBZvJCDzQfyBuFY1EJyd7/5QGYgEQ/FELvqr8kgd33fM1k8g0qskVPe
- KO3NAbCjdtjI4UC2UvYZGTZ+3Eq5gg2/CA0lWUXav8FXz8oxK/iBP57gVDtNwcyGviMV
- luYEqvQ54tVpeRIl5PBLjyf9OkLfFe0cDjko/VDmmpZSXBwTjDBFVTniATsI/VmcXhfl
- Z2keffnBowVsjh92EF02U1gAmuhS+vaG6sLFFNDFiL4OMf+ToP5hqTT/001K/CoWaUHy RA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u561x8wks-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Nov 2023 18:53:53 +0000
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3A3ILmH4031319;
-        Fri, 3 Nov 2023 18:53:52 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u561x8wdr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Nov 2023 18:53:52 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3A3GZYex000597;
-        Fri, 3 Nov 2023 18:53:27 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-        by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3u1cmtr95t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Nov 2023 18:53:27 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3A3IrLEI10748464
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 Nov 2023 18:53:21 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5289420040;
-        Fri,  3 Nov 2023 18:53:21 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 025D620043;
-        Fri,  3 Nov 2023 18:53:21 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.152.224.66])
-        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Fri,  3 Nov 2023 18:53:20 +0000 (GMT)
-Date:   Fri, 3 Nov 2023 19:12:04 +0100
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Nina Schoetterl-Glausch <nsg@linux.ibm.com>
-Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
+        with ESMTP id S1344848AbjKCSdo (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 3 Nov 2023 14:33:44 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 265C6D76
+        for <linux-s390@vger.kernel.org>; Fri,  3 Nov 2023 11:32:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1699036374;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=PWE+Q/XUVL/eOoB2mSb/ZIqyS5bE8Px7pWAkOH6htro=;
+        b=ixRlXcvCokbPOU0Zv6LXYZmPECBeNCG4F95cbLIeqOHmGEGq6Iqmnnn+ZND5pPZZuIa8+q
+        xYT/lAevcfC05/xqGWnQpDf3d6M7OUfoV7GI5XU+4Sw/dwMT+ohKsRCo8XfuvJFQHs2OLq
+        6kMVG4/zVqscgK0HqbLkLfG41EguiSY=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-31-A0uZW-R4NAypei8eWeuFGg-1; Fri, 03 Nov 2023 14:32:53 -0400
+X-MC-Unique: A0uZW-R4NAypei8eWeuFGg-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-32cef5f8af5so2095994f8f.1
+        for <linux-s390@vger.kernel.org>; Fri, 03 Nov 2023 11:32:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699036372; x=1699641172;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PWE+Q/XUVL/eOoB2mSb/ZIqyS5bE8Px7pWAkOH6htro=;
+        b=sTuhH28N+VCjghZQjcUO6SfyWihM8Zc8dhfd+StzZUkzdtaf9p2TfcAuszWUZuLsyv
+         3sFTN4ic0ZJ9Fvp8FJ6Uc3kdcTIA15MER+xhZ+87kuvreFo3GBnDhUsPX32jPmKinwkQ
+         +rjrUwBhnOrTMwnNz3Twwrtx2aQ3Uqbt0z5grQvLjDHepnhUBu5jcPHMh0YSlYmHSnn0
+         1w95qn54sWn4JU53MK13MvLK/A4700o5xBfw5AuJNrs2TYQitRrJB+l/2huI6DSx5eVz
+         DzXt3LnWTqYG7EOt+vsQxHfFiLj7gbxseExipwDNoF9CuCHAkXaSuYoQ/rYR+Kolgo7K
+         LJvw==
+X-Gm-Message-State: AOJu0YwrmRgnOMOc06iCWs8axbl+4+bLAEnDMz1pkh1+Gs4V6ZnT6Kaj
+        R7Aq3kmUjAzbLPrpUZ6WobUw638Enobo+nem3ZKykPvA5TyK7jwvsqcq/Bf0OeHvC/yOzj1Mdra
+        m4fIC8IyKA9mDE04niSH9uA==
+X-Received: by 2002:a5d:5955:0:b0:32d:d2aa:ed21 with SMTP id e21-20020a5d5955000000b0032dd2aaed21mr3346165wri.28.1699036371855;
+        Fri, 03 Nov 2023 11:32:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGPCgeIhZEdEDU2rHChDN15msoppbthdhk75IyNMiDwIT9q/r5p/yWd9PcwOZS8FmpuzWePvA==
+X-Received: by 2002:a5d:5955:0:b0:32d:d2aa:ed21 with SMTP id e21-20020a5d5955000000b0032dd2aaed21mr3346150wri.28.1699036371410;
+        Fri, 03 Nov 2023 11:32:51 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c70a:a600:bc48:cd31:d01f:f468? (p200300cbc70aa600bc48cd31d01ff468.dip0.t-ipconnect.de. [2003:cb:c70a:a600:bc48:cd31:d01f:f468])
+        by smtp.gmail.com with ESMTPSA id er14-20020a05600c84ce00b0040472ad9a3dsm3182989wmb.14.2023.11.03.11.32.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Nov 2023 11:32:50 -0700 (PDT)
+Message-ID: <5aa4f2d5-94b5-4e7b-92e1-58ed1d013d00@redhat.com>
+Date:   Fri, 3 Nov 2023 19:32:49 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] KVM: s390: vsie: Fix STFLE interpretive execution
+ identification
+Content-Language: en-US
+To:     Nina Schoetterl-Glausch <nsg@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
         Christian Borntraeger <borntraeger@linux.ibm.com>,
         Heiko Carstens <hca@linux.ibm.com>,
         David Hildenbrand <dahi@linux.vnet.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
         Janosch Frank <frankja@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, kvm@vger.kernel.org,
-        Michael Mueller <mimu@linux.vnet.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, Michael Mueller <mimu@linux.vnet.ibm.com>,
         linux-s390@vger.kernel.org,
         Cornelia Huck <cornelia.huck@de.ibm.com>,
         Sven Schnelle <svens@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] KVM: s390: vsie: Fix STFLE interpretive execution
- identification
-Message-ID: <20231103191204.47a90d49@p-imbrenda>
-In-Reply-To: <20231103173008.630217-2-nsg@linux.ibm.com>
 References: <20231103173008.630217-1-nsg@linux.ibm.com>
-        <20231103173008.630217-2-nsg@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+ <20231103173008.630217-2-nsg@linux.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20231103173008.630217-2-nsg@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: rva-logwUAu3Pp6wSgdEVHrGjSsS7XMY
-X-Proofpoint-GUID: AlekBG3XKEz1fthEpn1Cn0aK3OZVElX0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-03_18,2023-11-02_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 bulkscore=0 impostorscore=0 malwarescore=0
- clxscore=1015 mlxscore=0 suspectscore=0 phishscore=0 spamscore=0
- adultscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2310240000 definitions=main-2311030159
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -104,9 +138,7 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri,  3 Nov 2023 18:30:05 +0100
-Nina Schoetterl-Glausch <nsg@linux.ibm.com> wrote:
-
+On 03.11.23 18:30, Nina Schoetterl-Glausch wrote:
 > STFLE can be interpretively executed.
 > This occurs when the facility list designation is unequal to zero.
 > Perform the check before applying the address mask instead of after.
@@ -114,26 +146,12 @@ Nina Schoetterl-Glausch <nsg@linux.ibm.com> wrote:
 > Fixes: 66b630d5b7f2 ("KVM: s390: vsie: support STFLE interpretation")
 > Signed-off-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
 
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+No access to documentation, but sounds plausible.
 
-> ---
->  arch/s390/kvm/vsie.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
-> index 61499293c2ac..d989772fe211 100644
-> --- a/arch/s390/kvm/vsie.c
-> +++ b/arch/s390/kvm/vsie.c
-> @@ -988,9 +988,10 @@ static void retry_vsie_icpt(struct vsie_page *vsie_page)
->  static int handle_stfle(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
->  {
->  	struct kvm_s390_sie_block *scb_s = &vsie_page->scb_s;
-> -	__u32 fac = READ_ONCE(vsie_page->scb_o->fac) & 0x7ffffff8U;
-> +	__u32 fac = READ_ONCE(vsie_page->scb_o->fac);
->  
->  	if (fac && test_kvm_facility(vcpu->kvm, 7)) {
-> +		fac = fac & 0x7ffffff8U;
->  		retry_vsie_icpt(vsie_page);
->  		if (read_guest_real(vcpu, fac, &vsie_page->fac,
->  				    sizeof(vsie_page->fac)))
+Acked-by: David Hildenbrand <david@redhat.com>
+
+-- 
+Cheers,
+
+David / dhildenb
 
