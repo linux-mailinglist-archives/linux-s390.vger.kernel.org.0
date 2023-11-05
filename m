@@ -2,76 +2,81 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC6AC7E1076
-	for <lists+linux-s390@lfdr.de>; Sat,  4 Nov 2023 18:21:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 702287E1727
+	for <lists+linux-s390@lfdr.de>; Sun,  5 Nov 2023 23:00:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231321AbjKDRVD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 4 Nov 2023 13:21:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43930 "EHLO
+        id S229893AbjKEWAU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 5 Nov 2023 17:00:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230346AbjKDRVD (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 4 Nov 2023 13:21:03 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79F5D1BF;
-        Sat,  4 Nov 2023 10:21:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=iZ7+BGlL3zWN+SVM8jQZNXOzKUk6jFAu7ijAJTmB0CI=; b=nfkprV5s7Ii9/+5g7i9kwyvnLm
-        9Gm2ylhNX07Mcj2zN9mgCu9+DxcLZ3UgS3QQxSO4OZZdQy2S7lT4iDB1F+nThKOHHsoZPPe40CYdu
-        3ALSQt7gJ6IHC0+PgArkPOTU5/RnPjM43yamW8uDNR3wwkqVnSTZFGf2ZJ3N5xgNtDcUrSwgnBaGK
-        mDg0kdZxD6h98WEsw1MS8Qa3XiW2yHZvU31Tzfrs9IeM+YMEK2lw7XD+VMzqaD367KAMcuIuo+hTz
-        Jls2hnyGZQVzlcXPoE1VZlhxf3IfGTv4V3PegJNCPA3q7QJfyzidJjZAPfPEPbpJpp2a0s/Nriv6D
-        JAVjTYSg==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qzKKM-00CZqt-UJ; Sat, 04 Nov 2023 17:20:55 +0000
-Date:   Sat, 4 Nov 2023 17:20:54 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        David Hildenbrand <david@redhat.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH v2 06/10] mm: memory: use a folio in zap_pte_range()
-Message-ID: <ZUZ9dg4YHZdUKDqO@casper.infradead.org>
-References: <20231104035522.2418660-1-wangkefeng.wang@huawei.com>
- <20231104035522.2418660-7-wangkefeng.wang@huawei.com>
+        with ESMTP id S229904AbjKEWAQ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 5 Nov 2023 17:00:16 -0500
+X-Greylist: delayed 5171 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 05 Nov 2023 14:00:13 PST
+Received: from SMTP-HCRC-200.brggroup.vn (unknown [42.112.212.144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 697F5D9;
+        Sun,  5 Nov 2023 14:00:13 -0800 (PST)
+Received: from SMTP-HCRC-200.brggroup.vn (localhost [127.0.0.1])
+        by SMTP-HCRC-200.brggroup.vn (SMTP-CTTV) with ESMTP id 379E519752;
+        Mon,  6 Nov 2023 01:58:21 +0700 (+07)
+Received: from zimbra.hcrc.vn (unknown [192.168.200.66])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by SMTP-HCRC-200.brggroup.vn (SMTP-CTTV) with ESMTPS id 3110119A89;
+        Mon,  6 Nov 2023 01:58:21 +0700 (+07)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.hcrc.vn (Postfix) with ESMTP id BB6991B8253C;
+        Mon,  6 Nov 2023 01:58:22 +0700 (+07)
+Received: from zimbra.hcrc.vn ([127.0.0.1])
+        by localhost (zimbra.hcrc.vn [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id l0haNLmNDGos; Mon,  6 Nov 2023 01:58:22 +0700 (+07)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.hcrc.vn (Postfix) with ESMTP id 8B6561B824EE;
+        Mon,  6 Nov 2023 01:58:22 +0700 (+07)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra.hcrc.vn 8B6561B824EE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hcrc.vn;
+        s=64D43D38-C7D6-11ED-8EFE-0027945F1BFA; t=1699210702;
+        bh=WOZURJ77pkiMUL2pPLC14ifVPRvyTQIBEQmxuN1ezAA=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=uUreOeCC7odSvYj9KB8yFe0HT5fRTiUFlehRG1v1ARAFWPA8ZiRnD5qvDZO8barqP
+         2iCnRepH/u6F6OX/uwFJNFKCzcS4UwR4iMyuQSLTdLyV7Mz1MHhDlkU8ySz8IIDi8n
+         Gbfso7DXWXJ/bzUJp/8C1U0Ujkb3+gcGiHQMQDEAqYGsumKcdMiHlCHUEZvxdD2Dvi
+         2Dyju1JUHDM+V/pgetrEgOzxBoWHm1pezllCsoRk8icvZba5V/6illeY8Nq4xypu++
+         /JaBZdMUAvtRi8s9HLjGvKVbciwdpjJ/+n+nhL87XzLhboj4tS9wMxhSjcC6zADX/y
+         qA5/oZfLXKm7A==
+X-Virus-Scanned: amavisd-new at hcrc.vn
+Received: from zimbra.hcrc.vn ([127.0.0.1])
+        by localhost (zimbra.hcrc.vn [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id tmd6yD6yha1L; Mon,  6 Nov 2023 01:58:22 +0700 (+07)
+Received: from [192.168.1.152] (unknown [51.179.100.52])
+        by zimbra.hcrc.vn (Postfix) with ESMTPSA id 30BC91B8254A;
+        Mon,  6 Nov 2023 01:58:15 +0700 (+07)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231104035522.2418660-7-wangkefeng.wang@huawei.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: =?utf-8?b?4oKsIDEwMC4wMDAuMDAwPw==?=
+To:     Recipients <ch.31hamnghi@hcrc.vn>
+From:   ch.31hamnghi@hcrc.vn
+Date:   Sun, 05 Nov 2023 19:58:05 +0100
+Reply-To: joliushk@gmail.com
+Message-Id: <20231105185816.30BC91B8254A@zimbra.hcrc.vn>
+X-Spam-Status: No, score=2.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_REPLYTO,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sat, Nov 04, 2023 at 11:55:18AM +0800, Kefeng Wang wrote:
-> -/* Decides whether we should zap this page with the page pointer specified */
-> -static inline bool should_zap_page(struct zap_details *details, struct page *page)
-> +/* Decides whether we should zap this folio with the folio pointer specified */
-> +static inline bool should_zap_page(struct zap_details *details, struct folio *folio)
+Goededag,
+Ik ben mevrouw Joanna Liu en een medewerker van Citi Bank Hong Kong.
+Kan ik =E2=82=AC 100.000.000 aan u overmaken? Kan ik je vertrouwen
 
-Surely we should rename this to should_zap_folio()?
 
-> @@ -1487,10 +1492,10 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
->  			 * see zap_install_uffd_wp_if_needed().
->  			 */
->  			WARN_ON_ONCE(!vma_is_anonymous(vma));
-> -			rss[mm_counter(page)]--;
-> +			rss[mm_counter(&folio->page)]--;
->  			if (is_device_private_entry(entry))
-> -				page_remove_rmap(page, vma, false);
-> -			put_page(page);
-> +				page_remove_rmap(&folio->page, vma, false);
-> +			folio_put(folio);
+Ik wacht op jullie reacties
+Met vriendelijke groeten
+mevrouw Joanna Liu
 
-This is wrong.  If we have a PTE-mapped THP, you'll remove the head page
-N times instead of removing each of N pages.
-
-I suspect you're going to collide with Ryan's work by doing this ...
