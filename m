@@ -2,125 +2,194 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10F7C7E6F9D
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Nov 2023 17:46:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EB7A7E7FDE
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Nov 2023 19:00:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234920AbjKIQqQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 Nov 2023 11:46:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48498 "EHLO
+        id S234746AbjKJSAY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 10 Nov 2023 13:00:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234985AbjKIQpv (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Nov 2023 11:45:51 -0500
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97EF844A0;
-        Thu,  9 Nov 2023 08:45:03 -0800 (PST)
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3A9GZZ38012040;
-        Thu, 9 Nov 2023 16:45:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=gQ2tRQf+68bvSbGEJ8gu3v6Z8ALX4GNpA2mskZujjWU=;
- b=iLfPKHv3wmf7T/KHpuJA5hYZRJh00B/cQrxalHydO+9+5LooeDYYQ81bnIz/W3fydtS/
- KJDaNOm7SDEC00uDmzVkGHKVJykgpmlWEvLT+o2MvLflaYGTd/c9qJGTYyepYyTsI1E9
- Wk4rLJ3p2tLurIK8GuQbo7Y08vFX4HcrV78djqWuiShFIeKU0b72+m3KIVFflMxsc3Zj
- 6sLRAQAK0vbwv2geRaoiUmWXtU8oyZmc0QYyZsKiRUQt4zCJ81xg4phi1SiAOOgXCCz0
- De5prVAm2c+pyp58uPR/DmCYMdZbCsoyWd5cqQSeyRVL+UPyZvv8vWMZDyEmvhrP7UlL jg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u9332gcku-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Nov 2023 16:45:02 +0000
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3A9GaJf2015609;
-        Thu, 9 Nov 2023 16:45:01 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u9332gck8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Nov 2023 16:45:01 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3A9EMDGt019231;
-        Thu, 9 Nov 2023 16:45:01 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-        by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3u7w2450t0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Nov 2023 16:45:01 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-        by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3A9Gj0gQ11665926
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 Nov 2023 16:45:00 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 87F6D58056;
-        Thu,  9 Nov 2023 16:45:00 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 18EF758052;
-        Thu,  9 Nov 2023 16:44:59 +0000 (GMT)
-Received: from li-2c1e724c-2c76-11b2-a85c-ae42eaf3cb3d.ibm.com.com (unknown [9.61.74.193])
-        by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-        Thu,  9 Nov 2023 16:44:58 +0000 (GMT)
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     jjherne@linux.ibm.com, pasic@linux.ibm.com,
-        borntraeger@linux.ibm.com, frankja@linux.ibm.com,
-        imbrenda@linux.ibm.com, david@redhat.com,
-        Matthew Rosato <mjrosato@linux.ibm.com>
-Subject: [PATCH v3 3/3] s390/vfio-ap: improve reaction to response code 07 from PQAP(AQIC) command
-Date:   Thu,  9 Nov 2023 11:44:22 -0500
-Message-ID: <20231109164427.460493-4-akrowiak@linux.ibm.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20231109164427.460493-1-akrowiak@linux.ibm.com>
-References: <20231109164427.460493-1-akrowiak@linux.ibm.com>
+        with ESMTP id S235606AbjKJR7o (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 10 Nov 2023 12:59:44 -0500
+Received: from gandalf.ozlabs.org (mail.ozlabs.org [IPv6:2404:9400:2221:ea00::3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 392AE5BB8;
+        Thu,  9 Nov 2023 22:17:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+        s=201909; t=1699596544;
+        bh=5G9rtOiPMLhKQC5AIoNpGhSA0wYcSeHiXqfSAm3ZoEA=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=jPWd1wPtNR/qo1bW493+Y7HQLJJGTd8Ft9ERkOPvVPie4/IBDR0Ph0z8yv6UbMWoe
+         2easmJmn0g37TC1QS3WnUf5N0Xteevrdtjq3mnKYcSHXbgTbeNc+Z0iBU8bcp2wdZa
+         iiEnHEo+GmvMi8nSVeZTwRMl9BoaS3HWGA252ZrquAXlRkgOZZXDfXoEylN+JwuMoy
+         rKrTqdOqHLvXUTkdJY5exTmN2E7S41FmYxNmFrWLyQ/4Y71WnjUFmubxy1ghF2XNLj
+         Z3suZ1pGDoaPy4ESbv+ZjYw5vibsZ+V9WAItUVYtJGqQ0Ke4jdre6OK1T+RYsV2fbU
+         PwnMp45Q/XGlA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4SRT0r49trz4xPQ;
+        Fri, 10 Nov 2023 17:09:00 +1100 (AEDT)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>
+Cc:     Jason Gunthorpe <jgg@nvidia.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        James Morse <james.morse@arm.com>, kvm@vger.kernel.org,
+        kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+        linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Marc Zyngier <maz@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, x86@kernel.org,
+        Zenghui Yu <yuzenghui@huawei.com>
+Subject: Ping? Re: [PATCH rc] kvm: Prevent compiling virt/kvm/vfio.c unless
+ VFIO is selected
+In-Reply-To: <0-v1-08396538817d+13c5-vfio_kvm_kconfig_jgg@nvidia.com>
+References: <0-v1-08396538817d+13c5-vfio_kvm_kconfig_jgg@nvidia.com>
+Date:   Fri, 10 Nov 2023 17:08:55 +1100
+Message-ID: <87edgy87ig.fsf@mail.lhotse>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: XZ8uLpD6hwxVgKkN7MZYFWq_TLcpGXCr
-X-Proofpoint-GUID: sUA7RPTBNSLoafyFgIiTZlVhD6pmQIi7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-09_14,2023-11-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 impostorscore=0
- mlxscore=0 adultscore=0 suspectscore=0 mlxlogscore=999 phishscore=0
- spamscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2311090127
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Let's improve the vfio_ap driver's reaction to reception of response code
-07 from the PQAP(AQIC) command when enabling interrupts on behalf of a
-guest:
+Jason Gunthorpe <jgg@nvidia.com> writes:
+> There are a bunch of reported randconfig failures now because of this,
+> something like:
+>
+>>> arch/powerpc/kvm/../../../virt/kvm/vfio.c:89:7: warning: attribute declaration must precede definition [-Wignored-attributes]
+>            fn = symbol_get(vfio_file_iommu_group);
+>                 ^
+>    include/linux/module.h:805:60: note: expanded from macro 'symbol_get'
+>    #define symbol_get(x) ({ extern typeof(x) x __attribute__((weak,visibility("hidden"))); &(x); })
+>
+> It happens because the arch forces KVM_VFIO without knowing if VFIO is
+> even enabled.
 
-* Unregister the guest's ISC before the pages containing the notification
-  indicator bytes are unpinned.
+This is still breaking some builds. Can we get this fix in please?
 
-* Capture the return code from the kvm_s390_gisc_unregister function and
-  log a DBF warning if it fails.
+cheers
 
-Suggested-by: Matthew Rosato <mjrosato@linux.ibm.com>
-Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-Reviewed-by: Matthew Rosato <mjrosato@linux.ibm.com>
----
- drivers/s390/crypto/vfio_ap_ops.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 25d7ce2094f8..4e80c211ba47 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -476,8 +476,11 @@ static struct ap_queue_status vfio_ap_irq_enable(struct vfio_ap_queue *q,
- 		break;
- 	case AP_RESPONSE_OTHERWISE_CHANGED:
- 		/* We could not modify IRQ settings: clear new configuration */
-+		ret = kvm_s390_gisc_unregister(kvm, isc);
-+		if (ret)
-+			VFIO_AP_DBF_WARN("%s: kvm_s390_gisc_unregister: rc=%d isc=%d, apqn=%#04x\n",
-+					 __func__, ret, isc, q->apqn);
- 		vfio_unpin_pages(&q->matrix_mdev->vdev, nib, 1);
--		kvm_s390_gisc_unregister(kvm, isc);
- 		break;
- 	default:
- 		pr_warn("%s: apqn %04x: response: %02x\n", __func__, q->apqn,
--- 
-2.41.0
-
+> Split the kconfig so the arch selects the usual HAVE_KVM_ARCH_VFIO and
+> then KVM_VFIO is only enabled if the arch wants it and VFIO is turned on.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202308251949.5IiaV0sz-lkp@intel.com/
+> Closes: https://lore.kernel.org/oe-kbuild-all/202309030741.82aLACDG-lkp@intel.com/
+> Closes: https://lore.kernel.org/oe-kbuild-all/202309110914.QLH0LU6L-lkp@intel.com/
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Fixes: c1cce6d079b8 ("vfio: Compile vfio_group infrastructure optionally")
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> ---
+>  arch/arm64/kvm/Kconfig   | 2 +-
+>  arch/powerpc/kvm/Kconfig | 2 +-
+>  arch/s390/kvm/Kconfig    | 2 +-
+>  arch/x86/kvm/Kconfig     | 2 +-
+>  virt/kvm/Kconfig         | 7 ++++++-
+>  5 files changed, 10 insertions(+), 5 deletions(-)
+>
+> Sean's large series will also address this:
+>
+> https://lore.kernel.org/kvm/20230916003118.2540661-7-seanjc@google.com/
+>
+> I don't know if it is sever enough to fix in the rc cycle, but here is the
+> patch.
+>
+> diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
+> index 83c1e09be42e5b..7c43eaea51ce05 100644
+> --- a/arch/arm64/kvm/Kconfig
+> +++ b/arch/arm64/kvm/Kconfig
+> @@ -28,7 +28,7 @@ menuconfig KVM
+>  	select KVM_MMIO
+>  	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
+>  	select KVM_XFER_TO_GUEST_WORK
+> -	select KVM_VFIO
+> +	select HAVE_KVM_ARCH_VFIO
+>  	select HAVE_KVM_EVENTFD
+>  	select HAVE_KVM_IRQFD
+>  	select HAVE_KVM_DIRTY_RING_ACQ_REL
+> diff --git a/arch/powerpc/kvm/Kconfig b/arch/powerpc/kvm/Kconfig
+> index 902611954200df..b64824e4cbc1eb 100644
+> --- a/arch/powerpc/kvm/Kconfig
+> +++ b/arch/powerpc/kvm/Kconfig
+> @@ -22,7 +22,7 @@ config KVM
+>  	select PREEMPT_NOTIFIERS
+>  	select HAVE_KVM_EVENTFD
+>  	select HAVE_KVM_VCPU_ASYNC_IOCTL
+> -	select KVM_VFIO
+> +	select HAVE_KVM_ARCH_VFIO
+>  	select IRQ_BYPASS_MANAGER
+>  	select HAVE_KVM_IRQ_BYPASS
+>  	select INTERVAL_TREE
+> diff --git a/arch/s390/kvm/Kconfig b/arch/s390/kvm/Kconfig
+> index 45fdf2a9b2e326..d206ad3a777d5d 100644
+> --- a/arch/s390/kvm/Kconfig
+> +++ b/arch/s390/kvm/Kconfig
+> @@ -31,7 +31,7 @@ config KVM
+>  	select HAVE_KVM_IRQ_ROUTING
+>  	select HAVE_KVM_INVALID_WAKEUPS
+>  	select HAVE_KVM_NO_POLL
+> -	select KVM_VFIO
+> +	select HAVE_KVM_ARCH_VFIO
+>  	select INTERVAL_TREE
+>  	select MMU_NOTIFIER
+>  	help
+> diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+> index ed90f148140dfe..8e70e693f90e30 100644
+> --- a/arch/x86/kvm/Kconfig
+> +++ b/arch/x86/kvm/Kconfig
+> @@ -45,7 +45,7 @@ config KVM
+>  	select HAVE_KVM_NO_POLL
+>  	select KVM_XFER_TO_GUEST_WORK
+>  	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
+> -	select KVM_VFIO
+> +	select HAVE_KVM_ARCH_VFIO
+>  	select INTERVAL_TREE
+>  	select HAVE_KVM_PM_NOTIFIER if PM
+>  	select KVM_GENERIC_HARDWARE_ENABLING
+> diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
+> index 484d0873061ca5..0bf34809e1bbfe 100644
+> --- a/virt/kvm/Kconfig
+> +++ b/virt/kvm/Kconfig
+> @@ -59,9 +59,14 @@ config HAVE_KVM_MSI
+>  config HAVE_KVM_CPU_RELAX_INTERCEPT
+>         bool
+>  
+> -config KVM_VFIO
+> +config HAVE_KVM_ARCH_VFIO
+>         bool
+>  
+> +config KVM_VFIO
+> +       def_bool y
+> +       depends on HAVE_KVM_ARCH_VFIO
+> +       depends on VFIO
+> +
+>  config HAVE_KVM_INVALID_WAKEUPS
+>         bool
+>  
+>
+> base-commit: 0bb80ecc33a8fb5a682236443c1e740d5c917d1d
+> -- 
+> 2.42.0
