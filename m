@@ -2,69 +2,85 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ACA397E88F1
-	for <lists+linux-s390@lfdr.de>; Sat, 11 Nov 2023 04:21:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 898177E8DB8
+	for <lists+linux-s390@lfdr.de>; Sun, 12 Nov 2023 01:55:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234845AbjKKDVK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 10 Nov 2023 22:21:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38932 "EHLO
+        id S229881AbjKLAzv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 11 Nov 2023 19:55:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230124AbjKKDVH (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 10 Nov 2023 22:21:07 -0500
-X-Greylist: delayed 4931 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 10 Nov 2023 19:21:03 PST
-Received: from mail.maprial.com (mail.maprial.com [190.181.35.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F8533C2F;
-        Fri, 10 Nov 2023 19:21:03 -0800 (PST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.maprial.com (Postfix) with ESMTP id 9DF5487B2FC5;
-        Fri, 10 Nov 2023 19:04:06 -0400 (-04)
-Received: from mail.maprial.com ([127.0.0.1])
-        by localhost (mail.maprial.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id iOJr9-IbkM37; Fri, 10 Nov 2023 19:04:06 -0400 (-04)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.maprial.com (Postfix) with ESMTP id 8C12587B2FCC;
-        Fri, 10 Nov 2023 17:54:03 -0400 (-04)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.maprial.com 8C12587B2FCC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maprial.com;
-        s=8A254412-65B9-11ED-A564-8B9C10001A2B; t=1699653243;
-        bh=WOZURJ77pkiMUL2pPLC14ifVPRvyTQIBEQmxuN1ezAA=;
-        h=MIME-Version:To:From:Date:Message-Id;
-        b=pmRhZyY+GavFN9jLYLr61x+xBxUcDfuFDQuPoOUorO7mXw/JnPclGAPk5rWHRxzYX
-         rDk7G7S7xtdodSWF6/6gvJaIt0ka7RgT8trsGoMeganGDPD6FHpq+y+yJGCDDYWh+w
-         egORbO5w1voIPHYkhS987JQNeDh6hVLJduitwMWI=
-X-Virus-Scanned: amavisd-new at mail.maprial.com
-Received: from mail.maprial.com ([127.0.0.1])
-        by localhost (mail.maprial.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id QRvMpYbWfNVU; Fri, 10 Nov 2023 17:54:03 -0400 (-04)
-Received: from [192.168.1.152] (unknown [51.179.104.230])
-        by mail.maprial.com (Postfix) with ESMTPSA id A2AF77222E1A;
-        Fri, 10 Nov 2023 17:04:36 -0400 (-04)
+        with ESMTP id S229869AbjKLAzu (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 11 Nov 2023 19:55:50 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2894930F9;
+        Sat, 11 Nov 2023 16:55:48 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8B3C5C433A9;
+        Sun, 12 Nov 2023 00:55:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1699750546;
+        bh=XrSajqyIX/GMIupsbLdryjwZSJcnce+GPP7KDkPQhtc=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=eWIdIwNOLNdqkngfPRmCRaOwzQqWEdVf4fyQfsJ9hX51PDQ3bhmSI9QZtsMgYrcIF
+         8aHZMYs4gOL/4gSqcMm7IRvWe1PcqRpqOtwPinsNQE/yPNH1jAjAZc0qUF+cE2rkNp
+         nglRwyteoICzPFjGnf2iZ6kKToydLI7h8VBgwrPRWc0yrSSWvf4CHXHy6ARxGcy9DF
+         YIFq9xAbPweOOdZvVR9AfcNgB3Ga1hsegS0aAjb+9DN11BMP4pAVieNjxsE9qae8rb
+         FS/26AIT3WSbus8G7Vwa6iQL37+L3sU0hhWl6PyV4EpenSbokJHdqOpR8gqAekhlG3
+         5K+C9ET1I0p3w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 68EEAE0008E;
+        Sun, 12 Nov 2023 00:55:46 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: =?utf-8?b?4oKsIDEwMC4wMDAuMDAwPw==?=
-To:     Recipients <gvalencia@maprial.com>
-From:   gvalencia@maprial.com
-Date:   Fri, 10 Nov 2023 22:04:27 +0100
-Reply-To: joliushk@gmail.com
-Message-Id: <20231110210437.A2AF77222E1A@mail.maprial.com>
-X-Spam-Status: No, score=3.1 required=5.0 tests=BAYES_50,DKIM_INVALID,
-        DKIM_SIGNED,FREEMAIL_FORGED_REPLYTO,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Level: ***
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 1/2] kbuild: unify vdso_install rules
+From:   patchwork-bot+linux-riscv@kernel.org
+Message-Id: <169975054642.11360.1289704479646976676.git-patchwork-notify@kernel.org>
+Date:   Sun, 12 Nov 2023 00:55:46 +0000
+References: <20231014105436.2119702-1-masahiroy@kernel.org>
+In-Reply-To: <20231014105436.2119702-1-masahiroy@kernel.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-riscv@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-csky@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
+        loongarch@lists.linux.dev, sparclinux@vger.kernel.org,
+        x86@kernel.org, svens@linux.ibm.com, nicolas@fjasle.eu,
+        guoren@kernel.org, deller@gmx.de
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Goededag,
-Ik ben mevrouw Joanna Liu en een medewerker van Citi Bank Hong Kong.
-Kan ik =E2=82=AC 100.000.000 aan u overmaken? Kan ik je vertrouwen
+Hello:
+
+This series was applied to riscv/linux.git (fixes)
+by Masahiro Yamada <masahiroy@kernel.org>:
+
+On Sat, 14 Oct 2023 19:54:35 +0900 you wrote:
+> Currently, there is no standard implementation for vdso_install,
+> leading to various issues:
+> 
+>  1. Code duplication
+> 
+>     Many architectures duplicate similar code just for copying files
+>     to the install destination.
+> 
+> [...]
+
+Here is the summary with links:
+  - [v2,1/2] kbuild: unify vdso_install rules
+    https://git.kernel.org/riscv/c/56769ba4b297
+  - [v2,2/2] kbuild: unify no-compiler-targets and no-sync-config-targets
+    https://git.kernel.org/riscv/c/9d361173edc4
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-Ik wacht op jullie reacties
-Met vriendelijke groeten
-mevrouw Joanna Liu
