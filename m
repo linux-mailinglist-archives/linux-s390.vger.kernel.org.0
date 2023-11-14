@@ -2,44 +2,130 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B3CA17EB9AA
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Nov 2023 23:55:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A9037EBA2E
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Nov 2023 00:17:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232322AbjKNWzF convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Tue, 14 Nov 2023 17:55:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52508 "EHLO
+        id S231784AbjKNXRu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 14 Nov 2023 18:17:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232443AbjKNWzE (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 14 Nov 2023 17:55:04 -0500
-X-Greylist: delayed 1328 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Nov 2023 14:55:01 PST
-Received: from mail.jan.ne.jp (mail.jan.ne.jp [211.10.90.133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CAE03DB
-        for <linux-s390@vger.kernel.org>; Tue, 14 Nov 2023 14:55:01 -0800 (PST)
-Received: from www10.jan.ne.jp (www10.jan.ne.jp [211.10.90.141])
-        by mail.jan.ne.jp (Postfix) with SMTP id 7591E1990E2
-        for <linux-s390@vger.kernel.org>; Wed, 15 Nov 2023 07:27:51 +0900 (JST)
-Received: (qmail 17027 invoked from network); 15 Nov 2023 05:35:01 +0900
-Received: from unknown (HELO ?51.195.53.194?) (eiji.i@isono-body.co.jp@51.195.53.194)
-  by www10.jan.ne.jp with SMTP; 15 Nov 2023 05:35:01 +0900
-Content-Type: text/plain; charset="iso-8859-1"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: my subject
-To:     Recipients <eiji.i@isono-body.co.jp>
-From:   "Ms Toni" <eiji.i@isono-body.co.jp>
-Date:   Tue, 14 Nov 2023 12:34:49 -0800
-Reply-To: tran24358@gmail.com
-Message-ID: <20231114203502.15580.qmail@www10.jan.ne.jp>
-X-Spam-Status: No, score=4.5 required=5.0 tests=BAYES_50,
-        FREEMAIL_FORGED_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_BL_SPAMCOP_NET,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+        with ESMTP id S230162AbjKNXRt (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 14 Nov 2023 18:17:49 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9A2CD6;
+        Tue, 14 Nov 2023 15:17:46 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BDD5C433C8;
+        Tue, 14 Nov 2023 23:17:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+        s=korg; t=1700003866;
+        bh=KB3X/TgdZDL/2SrctEZtbC9ABrG1q5tejZewZjojaG0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=I2FtgASHqT0NQ8pvMyoHDKY0L776FVzQEP+8MaG5h3awzZ83eZZkVJ5tDMyqMY0jb
+         uNf09+vkik6GFj+3lMsunyHL6E+r2LTs8yQweYL9C7/V0/hHwRijTrIX+w/vU+Tbus
+         VWm/hOguMarPwLXKltXgnv9nM3o8N2knOblTYH/4=
+Date:   Tue, 14 Nov 2023 15:17:45 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+        x86@kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, ebiederm@xmission.com,
+        takahiro.akashi@linaro.org
+Subject: Re: [PATCH 1/2] resource: add walk_system_ram_res_rev()
+Message-Id: <20231114151745.e77ed504b3fce325f54ec08e@linux-foundation.org>
+In-Reply-To: <20231114091658.228030-2-bhe@redhat.com>
+References: <20231114091658.228030-1-bhe@redhat.com>
+        <20231114091658.228030-2-bhe@redhat.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-8.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-I'm Toni Harris and I'm looking for a partner to work with in your country. I need assistance investing funds in your country. Email me to discuss this opportunity with you. Contact email: tran24358@gmail.com
+On Tue, 14 Nov 2023 17:16:57 +0800 Baoquan He <bhe@redhat.com> wrote:
+
+> This function, being a variant of walk_system_ram_res() introduced in
+> commit 8c86e70acead ("resource: provide new functions to walk through
+> resources"), walks through a list of all the resources of System RAM
+> in reversed order, i.e., from higher to lower.
+> 
+> It will be used in kexec_file code to load kernel, initrd etc when
+> preparing kexec reboot.
+>
+> ...
+>
+> +/*
+> + * This function, being a variant of walk_system_ram_res(), calls the @func
+> + * callback against all memory ranges of type System RAM which are marked as
+> + * IORESOURCE_SYSTEM_RAM and IORESOUCE_BUSY in reversed order, i.e., from
+> + * higher to lower.
+> + */
+> +int walk_system_ram_res_rev(u64 start, u64 end, void *arg,
+> +				int (*func)(struct resource *, void *))
+> +{
+> +	struct resource res, *rams;
+> +	int rams_size = 16, i;
+> +	unsigned long flags;
+> +	int ret = -1;
+> +
+> +	/* create a list */
+> +	rams = kvcalloc(rams_size, sizeof(struct resource), GFP_KERNEL);
+> +	if (!rams)
+> +		return ret;
+> +
+> +	flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+> +	i = 0;
+> +	while ((start < end) &&
+> +		(!find_next_iomem_res(start, end, flags, IORES_DESC_NONE, &res))) {
+> +		if (i >= rams_size) {
+> +			/* re-alloc */
+> +			struct resource *rams_new;
+> +			int rams_new_size;
+> +
+> +			rams_new_size = rams_size + 16;
+> +			rams_new = kvcalloc(rams_new_size, sizeof(struct resource),
+> +					    GFP_KERNEL);
+
+kvrealloc()?
+
+> +			if (!rams_new)
+> +				goto out;
+> +
+> +			memcpy(rams_new, rams,
+> +					sizeof(struct resource) * rams_size);
+> +			kvfree(rams);
+> +			rams = rams_new;
+> +			rams_size = rams_new_size;
+> +		}
+> +
+> +		rams[i].start = res.start;
+> +		rams[i++].end = res.end;
+> +
+> +		start = res.end + 1;
+> +	}
+> +
+> +	/* go reverse */
+> +	for (i--; i >= 0; i--) {
+> +		ret = (*func)(&rams[i], arg);
+> +		if (ret)
+> +			break;
+> +	}
+> +
+> +out:
+> +	kvfree(rams);
+> +	return ret;
+> +}
+> +
+>  /*
+>   * This function calls the @func callback against all memory ranges, which
+>   * are ranges marked as IORESOURCE_MEM and IORESOUCE_BUSY.
+> -- 
+> 2.41.0
