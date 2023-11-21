@@ -1,83 +1,95 @@
-Return-Path: <linux-s390+bounces-12-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C48E87F2E8E
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Nov 2023 14:41:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A5397F319F
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Nov 2023 15:52:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7DB102819F4
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Nov 2023 13:41:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0CCDE1F22062
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Nov 2023 14:52:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37BF24A99B;
-	Tue, 21 Nov 2023 13:41:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8493D4A9B8;
+	Tue, 21 Nov 2023 14:52:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fOZBM1wX"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="poue5VPW"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-yw1-x1132.google.com (mail-yw1-x1132.google.com [IPv6:2607:f8b0:4864:20::1132])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B705D52;
-	Tue, 21 Nov 2023 05:41:24 -0800 (PST)
-Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-5c08c47c055so59629027b3.1;
-        Tue, 21 Nov 2023 05:41:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700574083; x=1701178883; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pcrYwFp88pWTL6yMI9KWImk/qrP0KNOz3TtNbxnSaOM=;
-        b=fOZBM1wXb/g3/+EMdX9iCcndKGIWiISBUPuYuQ8EEYPVDamQFfFgeFI+iVL9FkvVeu
-         t9rRuRsxD3KldxrPZcy3TDcMMcJrF1mgCtEo6RX+txtmnQgw5ZqwdAaM5VlHCgmWGt1Q
-         sl1PPIDAH04hj+LKXgEi5caDL2ggREufFzFMSTJA+zeZFSLHzOQoVBFWIvfLZq3y5LUg
-         Wmpf1iIVSCQYF7Fon/hUn9i/olHSacdxc4lec4y/a/hIehKOjYv0qh6xyxlWVefptyJJ
-         pxHwH01Dp/XLzjWOQL8fIXu5bQUMIx6qLYbNZFmxwRYdWAeHh3BJSiRaeGjPnWPpwHLI
-         LCfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700574083; x=1701178883;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pcrYwFp88pWTL6yMI9KWImk/qrP0KNOz3TtNbxnSaOM=;
-        b=taPcXC2DDWagd/CHbNPxBD32mohcZFvI6ExJJjteGRWBW0vAmyAGRmZ/EHsa57+6Xh
-         aAVyGRVZrUbH8Lv0Qk/5ncEe+dLy1gsg1x1gufRZRHdwLP9leJGESrOAozegLu/54hFn
-         RDo8cyUUX0FHTyAVlVL+cMkv8+PKbXH/2GC4UYt4jqLRGnQuejP0hZICIK/Z5Dv4XTBp
-         3CQTcTJQfC9ITcmMFRyHlC9lMJWWQX2beB5TlcqJWoh7Ao0ONRKtmKQPn2n9XEz9Ut0L
-         kVL9BfxAsZtfxGZGxe+sfZDakHi0gzq13LDjtSsUVbu4k1kGviyH0XIoNqGHbCaWQRZm
-         8L7w==
-X-Gm-Message-State: AOJu0YwY3S7D348WYgdx3P2hEdR7aBnEM/63mU2bkhOi7YwnCeafRO4g
-	yZ+buewtjXK/CbsWgmoHENE=
-X-Google-Smtp-Source: AGHT+IGnNXdb+UJ4t57vmW6oRjCwsQPfEVK6tlCbkzAm50ibNiQ/2l5fJcq1gCGM97LIEYHAdXCusg==
-X-Received: by 2002:a0d:d087:0:b0:5a7:ba53:6544 with SMTP id s129-20020a0dd087000000b005a7ba536544mr10495811ywd.12.1700574083485;
-        Tue, 21 Nov 2023 05:41:23 -0800 (PST)
-Received: from localhost ([2601:344:8301:57f0:e005:b808:45e:1b60])
-        by smtp.gmail.com with ESMTPSA id q188-20020a0dcec5000000b00583f8f41cb8sm3010757ywd.63.2023.11.21.05.41.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Nov 2023 05:41:23 -0800 (PST)
-Date: Tue, 21 Nov 2023 05:41:22 -0800
-From: Yury Norov <yury.norov@gmail.com>
-To: Alexandra Winter <wintera@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, Karsten Graul <kgraul@linux.ibm.com>,
-	Wenjia Zhang <wenjia@linux.ibm.com>,
-	Jan Karcher <jaka@linux.ibm.com>,
-	"D. Wythe" <alibuda@linux.alibaba.com>,
-	Tony Lu <tonylu@linux.alibaba.com>,
-	Wen Gu <guwen@linux.alibaba.com>,
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D197136C;
+	Tue, 21 Nov 2023 14:52:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 580D7C433C7;
+	Tue, 21 Nov 2023 14:52:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1700578360;
+	bh=dGYz6IxNOUY4NpvhlMLeIB3Xxc/hARJYIHJyki7wDHE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=poue5VPWyYd+HrTAPC2kL1JwV02FvsHlUJ1z3W9FXk/U2czUqklkcawHdmmtSEsoY
+	 IlPddu/gpJsZ1UpOPQIgrM7BkkvyXf2F3hIfHrb2U18/fsMMvTR4wCzYJDyNBuBtzP
+	 SpQfWPT1cgV1qEShQyzt0KdJxLEsOUDx610rqzSQ=
+Date: Tue, 21 Nov 2023 15:12:23 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	linux-kbuild@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, Guo Ren <guoren@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Greg Ungerer <gerg@linux-m68k.org>, Michal Simek <monstr@monstr.eu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Geoff Levand <geoff@infradead.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
 	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-	Jan Kara <jack@suse.cz>,
-	Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
-	Matthew Wilcox <willy@infradead.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
-	Alexey Klimov <klimov.linux@gmail.com>
-Subject: Re: [PATCH 29/34] net: smc: fix opencoded find_and_set_bit() in
- smc_wr_tx_get_free_slot_index()
-Message-ID: <ZVyzgmb/+oUJ1xcR@yury-ThinkPad>
-References: <20231118155105.25678-1-yury.norov@gmail.com>
- <20231118155105.25678-30-yury.norov@gmail.com>
- <04ff08d1-5892-44e8-bf74-802a225eeeda@linux.ibm.com>
+	Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+	Helge Deller <deller@gmx.de>,
+	Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+	Timur Tabi <timur@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	David Woodhouse <dwmw2@infradead.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	Kees Cook <keescook@chromium.org>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+	netdev@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-bcachefs@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH 20/22] usb: fsl-mph-dr-of: mark fsl_usb2_mpc5121_init()
+ static
+Message-ID: <2023112114-cried-ramble-b3f9@gregkh>
+References: <20231108125843.3806765-1-arnd@kernel.org>
+ <20231108125843.3806765-21-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -86,60 +98,17 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <04ff08d1-5892-44e8-bf74-802a225eeeda@linux.ibm.com>
+In-Reply-To: <20231108125843.3806765-21-arnd@kernel.org>
 
-On Mon, Nov 20, 2023 at 09:43:54AM +0100, Alexandra Winter wrote:
+On Wed, Nov 08, 2023 at 01:58:41PM +0100, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
+> This function is only called locally and should always have been static:
 > 
-> On 18.11.23 16:51, Yury Norov wrote:
-> > The function opencodes find_and_set_bit() with a for_each() loop. Fix
-> > it, and make the whole function a simple almost one-liner.
-> > 
-> > Signed-off-by: Yury Norov <yury.norov@gmail.com>
-> > ---
-> >  net/smc/smc_wr.c | 10 +++-------
-> >  1 file changed, 3 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/net/smc/smc_wr.c b/net/smc/smc_wr.c
-> > index 0021065a600a..b6f0cfc52788 100644
-> > --- a/net/smc/smc_wr.c
-> > +++ b/net/smc/smc_wr.c
-> > @@ -170,15 +170,11 @@ void smc_wr_tx_cq_handler(struct ib_cq *ib_cq, void *cq_context)
-> >  
-> >  static inline int smc_wr_tx_get_free_slot_index(struct smc_link *link, u32 *idx)
-> >  {
-> > -	*idx = link->wr_tx_cnt;
-> >  	if (!smc_link_sendable(link))
-> >  		return -ENOLINK;
-> > -	for_each_clear_bit(*idx, link->wr_tx_mask, link->wr_tx_cnt) {
-> > -		if (!test_and_set_bit(*idx, link->wr_tx_mask))
-> > -			return 0;
-> > -	}
-> > -	*idx = link->wr_tx_cnt;
-> > -	return -EBUSY;
-> > +
-> > +	*idx = find_and_set_bit(link->wr_tx_mask, link->wr_tx_cnt);
-> > +	return *idx < link->wr_tx_cnt ? 0 : -EBUSY;
-> >  }
-> >  
-> >  /**
+> drivers/usb/host/fsl-mph-dr-of.c:291:5: error: no previous prototype for 'fsl_usb2_mpc5121_init' [-Werror=missing-prototypes]
 > 
-> 
-> My understanding is that you can omit the lines with
-> > -	*idx = link->wr_tx_cnt;
-> because they only apply to the error paths and you checked that the calling function
-> does not use the idx variable in the error cases. Do I understand this correct?
-> 
-> If so the removal of these 2 lines is not related to your change of using find_and_set_bit(),
-> do I understand that correctly?
-> 
-> If so, it may be worth mentioning that in the commit message.
+> Fixes: 230f7ede6c2f ("USB: add USB EHCI support for MPC5121 SoC")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-I'll add:
-
-        If find_and_set_bit() doesn't acquire a bit, it returns
-        ->wr_tx_cnt, and so explicit initialization of *idx with
-        the same value is unneeded.
-
-Makes sense?
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
