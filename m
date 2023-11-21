@@ -1,66 +1,66 @@
-Return-Path: <linux-s390+bounces-44-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-46-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F27247F38C1
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Nov 2023 23:03:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D88D17F38C6
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Nov 2023 23:03:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A77E1F22F4A
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Nov 2023 22:03:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9115F282744
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Nov 2023 22:03:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4E8B5467C;
-	Tue, 21 Nov 2023 22:03:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4B675467C;
+	Tue, 21 Nov 2023 22:03:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EHg7nucS"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cSUECP3/"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B09EB1726;
-	Tue, 21 Nov 2023 14:03:08 -0800 (PST)
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3ALLlRYF007601;
-	Tue, 21 Nov 2023 22:02:54 GMT
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AD291738;
+	Tue, 21 Nov 2023 14:03:14 -0800 (PST)
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3ALLv3Hv004850;
+	Tue, 21 Nov 2023 22:02:57 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=kfW8KavvUaBQqtKF5dduUkWqnOOlkspXX2HeV3sVIpc=;
- b=EHg7nucSytTCXs6bTnh2uWZi/7sP/W6n9Zfl098agnG1XAw4UFV3fOISFqZcnZAx3XT4
- FtFPXbEHiloENWg2nsM+hpVrcWfJQOogTYSjgF+UiNWAa4LjJ8X5wWYkol32RwK4c+sK
- sMWB1xWCK1zXTMqocR1xroXj0iPhKADU4A/Btd2GRAUZyTn9+qTljv6QEo+BPU7lF/iV
- Bw1R+fVpPlQr+Wh1661HvDo6Rplmre48e/GMWkALcYJ3jUvWeS0lHRHTO6kScvaxDsa2
- rIFs9TspV8CExsTjsIhCjCqlJenNZ9y/g3tinCnFwMm7VeaxSCJ5x7X6XMIKprK9rMZG Pw== 
+ bh=6cPRly3Y0R+ewW/cAplLp4HHPc78tqbgSvA9QXIrbXE=;
+ b=cSUECP3/8wYHkQtPjFltQjt7Z+KHjSTxV6l23cpWk/7pE4P9IwmTQYJt0BIqxPU4sRYZ
+ 4lIqc3+G4vxV3UN1WTxFQqXWKEu/ymwr/VvCva5j8czzOz6egxZoIbPiBvtU4kOakZFm
+ RyOWAyRieXBVJy2F2nOlpJSPB5RvQ4EAGCXb2fxkYAPXW1ib5lVOMF4nVvsYIKLF0511
+ C3VSmNN6bGwMq1lsB5Zdmss7l4EGc7GdEfBnvauuB/vSBhspDcjOK+NOs5hTFYxyj7js
+ wqto7C9uOylJPVdIMjJtDXzDKrFuFIGww+/lQ9+kx8BOJlC8DVKjvaUSfYp4Efn4X8uA +w== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uh4dw0w08-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uh4wn85m3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 Nov 2023 22:02:53 +0000
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3ALM2rD0023510;
-	Tue, 21 Nov 2023 22:02:53 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uh4dw0vyw-1
+	Tue, 21 Nov 2023 22:02:57 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3ALLwGcc007922;
+	Tue, 21 Nov 2023 22:02:56 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uh4wn85jv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 Nov 2023 22:02:53 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3ALLnSwA004666;
-	Tue, 21 Nov 2023 22:02:52 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uf7yykvm2-1
+	Tue, 21 Nov 2023 22:02:56 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3ALLnH8t007583;
+	Tue, 21 Nov 2023 22:02:54 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uf8knuq5v-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 Nov 2023 22:02:52 +0000
+	Tue, 21 Nov 2023 22:02:54 +0000
 Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3ALM2mwX17629892
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3ALM2peQ38797748
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 21 Nov 2023 22:02:48 GMT
+	Tue, 21 Nov 2023 22:02:51 GMT
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BE7D92006C;
-	Tue, 21 Nov 2023 22:02:48 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 29D0C20065;
+	Tue, 21 Nov 2023 22:02:51 +0000 (GMT)
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5659620063;
-	Tue, 21 Nov 2023 22:02:47 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id A629020063;
+	Tue, 21 Nov 2023 22:02:49 +0000 (GMT)
 Received: from heavy.boeblingen.de.ibm.com (unknown [9.179.23.98])
 	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 21 Nov 2023 22:02:47 +0000 (GMT)
+	Tue, 21 Nov 2023 22:02:49 +0000 (GMT)
 From: Ilya Leoshkevich <iii@linux.ibm.com>
 To: Alexander Gordeev <agordeev@linux.ibm.com>,
         Alexander Potapenko <glider@google.com>,
@@ -81,9 +81,9 @@ Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
         Roman Gushchin <roman.gushchin@linux.dev>,
         Sven Schnelle <svens@linux.ibm.com>,
         Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: [PATCH v2 24/33] s390/checksum: Add a KMSAN check
-Date: Tue, 21 Nov 2023 23:01:18 +0100
-Message-ID: <20231121220155.1217090-25-iii@linux.ibm.com>
+Subject: [PATCH v2 25/33] s390/cpacf: Unpoison the results of cpacf_trng()
+Date: Tue, 21 Nov 2023 23:01:19 +0100
+Message-ID: <20231121220155.1217090-26-iii@linux.ibm.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20231121220155.1217090-1-iii@linux.ibm.com>
 References: <20231121220155.1217090-1-iii@linux.ibm.com>
@@ -95,47 +95,39 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: L_ABN0HzUfLqG_KLz5kux9W7F8dzjLKn
-X-Proofpoint-ORIG-GUID: 16J6Q4WIDKq65IooDS5rJhcteOo_izuB
+X-Proofpoint-GUID: 4wGsEei1adE6EAeSSPCgAcoSTHesl0xI
+X-Proofpoint-ORIG-GUID: XlcEUetpo-dhFdRyXdztfF-8Z86qF_LJ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-11-21_12,2023-11-21_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=863
- spamscore=0 suspectscore=0 phishscore=0 priorityscore=1501 malwarescore=0
- clxscore=1015 impostorscore=0 adultscore=0 bulkscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311060000
- definitions=main-2311210172
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 suspectscore=0 adultscore=0 malwarescore=0
+ impostorscore=0 mlxscore=0 bulkscore=0 phishscore=0 clxscore=1015
+ spamscore=0 mlxlogscore=755 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311060000 definitions=main-2311210172
 
-Add a KMSAN check to the CKSM inline assembly, similar to how it was
-done for ASAN in commit e42ac7789df6 ("s390/checksum: always use cksm
-instruction").
+Prevent KMSAN from complaining about buffers filled by cpacf_trng()
+being uninitialized.
 
-Acked-by: Alexander Gordeev <agordeev@linux.ibm.com>
+Tested-by: Alexander Gordeev <agordeev@linux.ibm.com>
 Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
 ---
- arch/s390/include/asm/checksum.h | 2 ++
+ arch/s390/include/asm/cpacf.h | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/arch/s390/include/asm/checksum.h b/arch/s390/include/asm/checksum.h
-index 69837eec2ff5..55ba0ddd8eab 100644
---- a/arch/s390/include/asm/checksum.h
-+++ b/arch/s390/include/asm/checksum.h
-@@ -13,6 +13,7 @@
- #define _S390_CHECKSUM_H
+diff --git a/arch/s390/include/asm/cpacf.h b/arch/s390/include/asm/cpacf.h
+index b378e2b57ad8..a72b92770c4b 100644
+--- a/arch/s390/include/asm/cpacf.h
++++ b/arch/s390/include/asm/cpacf.h
+@@ -473,6 +473,8 @@ static inline void cpacf_trng(u8 *ucbuf, unsigned long ucbuf_len,
+ 		: [ucbuf] "+&d" (u.pair), [cbuf] "+&d" (c.pair)
+ 		: [fc] "K" (CPACF_PRNO_TRNG), [opc] "i" (CPACF_PRNO)
+ 		: "cc", "memory", "0");
++	kmsan_unpoison_memory(ucbuf, ucbuf_len);
++	kmsan_unpoison_memory(cbuf, cbuf_len);
+ }
  
- #include <linux/kasan-checks.h>
-+#include <linux/kmsan-checks.h>
- #include <linux/in6.h>
- 
- /*
-@@ -35,6 +36,7 @@ static inline __wsum csum_partial(const void *buff, int len, __wsum sum)
- 	};
- 
- 	kasan_check_read(buff, len);
-+	kmsan_check_memory(buff, len);
- 	asm volatile(
- 		"0:	cksm	%[sum],%[rp]\n"
- 		"	jo	0b\n"
+ /**
 -- 
 2.41.0
 
