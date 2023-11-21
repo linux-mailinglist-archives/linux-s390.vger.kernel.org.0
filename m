@@ -1,124 +1,98 @@
-Return-Path: <linux-s390+bounces-15-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-17-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BF767F3181
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Nov 2023 15:47:36 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id EFA897F326A
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Nov 2023 16:35:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6B455B21721
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Nov 2023 14:47:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7F8F2B20DBD
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Nov 2023 15:35:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C48673C477;
-	Tue, 21 Nov 2023 14:47:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26708495EF;
+	Tue, 21 Nov 2023 15:35:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WcLAhtgR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CsqJ8Nni"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D53610C;
-	Tue, 21 Nov 2023 06:47:28 -0800 (PST)
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3ALEk3tm014458;
-	Tue, 21 Nov 2023 14:47:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=Il+3Zk9hp5HPXXvA6SgYAW5XlRe/3nnrw4Xtqs9gj+s=;
- b=WcLAhtgRSqWuIUjUe6hNEbSxxML1cgZRGZ9SlhP9+p1EpwIP2wvAgJm9DDUTEuragW2o
- /8hm2vq9iEqx77qFYqA+A1HVdog+2V2Kg8761iLqayTfzz5DtpxM/gX+oixh76thfewy
- kloOCZ5InDfPvKgdlaE5vbT/R7Ok6lrzV6mgX69KbvwU1uqMj0g6g9RJ1qOfQIq4TYqZ
- 8lFBJciMhFv/t3X8pNBaMUNJnDZbL2iflj6C3SA6oRKdTf2fp6QalFrinVTYKGVIaXLj
- NJpD/HJryPYqGsi2oJ9bFshLF9RaPX9QZ6sheFx0FFFUsedGeQwnYd932PvqQWdHYN9M Pg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ugxkn013y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 Nov 2023 14:47:23 +0000
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3ALEl31K017203;
-	Tue, 21 Nov 2023 14:47:22 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ugxkn013g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 Nov 2023 14:47:22 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3ALDnIUM024887;
-	Tue, 21 Nov 2023 14:47:21 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uf9tk8vw9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 Nov 2023 14:47:21 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3ALElIiG29032798
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 21 Nov 2023 14:47:19 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D677E2004D;
-	Tue, 21 Nov 2023 14:47:18 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B4D9A2004F;
-	Tue, 21 Nov 2023 14:47:18 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.60])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 21 Nov 2023 14:47:18 +0000 (GMT)
-Date: Tue, 21 Nov 2023 15:47:17 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Vishal Moola <vishal.moola@gmail.com>, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-Subject: Re: [PATCH] pgtable: do not expose _refcount field via ptdesc
-Message-ID: <20231121144717.6318-A-hca@linux.ibm.com>
-References: <20231121120310.696335-1-agordeev@linux.ibm.com>
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1917B10C;
+	Tue, 21 Nov 2023 07:35:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700580914; x=1732116914;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=0JSxieSjCOIMhhwgkZzxKvnKqrs94/lhtiEaD2XAurk=;
+  b=CsqJ8NnihEG9nQdc4YkBtD22vYvM2v3sDz+s9fT2ptZnirWwS11ezEyD
+   YtlfVxKy514bdo0GYTyWG6LBqGO4x7GD+rgykNDMY54PmUjOFzIXOpuAG
+   +e3nSLzKvQXr0fjzAYyhEtjb3RiNma5dwGN1ZQ48SVbrsBU7JSA5s4DVM
+   QGLHtWSeb73Z0E9Md5a82BeM4tZB8Xb328VbpVF8wKQqQxIzWY37iERzS
+   o4FQMNdolMlgZnCKpqzFff9+RA/Ptn1FU3Ps7W0HJyfOfVJ8LMldBEcQN
+   xIHVperS+YLHRS15YiBLwiDrbrpnrZXkkw9OR4yNGoxd3KAfTEyrFpCFB
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="10528844"
+X-IronPort-AV: E=Sophos;i="6.04,215,1695711600"; 
+   d="scan'208";a="10528844"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 07:35:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="837079821"
+X-IronPort-AV: E=Sophos;i="6.04,215,1695711600"; 
+   d="scan'208";a="837079821"
+Received: from azanetti-mobl.ger.corp.intel.com ([10.249.46.144])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 07:35:10 -0800
+Date: Tue, 21 Nov 2023 17:35:02 +0200 (EET)
+From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    linux-serial <linux-serial@vger.kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Alexander Gordeev <agordeev@linux.ibm.com>, 
+    David Sterba <dsterba@suse.com>, Heiko Carstens <hca@linux.ibm.com>, 
+    Christian Borntraeger <borntraeger@linux.ibm.com>, 
+    Jiri Kosina <jikos@kernel.org>, Kevin Cernekee <cernekee@gmail.com>, 
+    linux-s390@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>, 
+    Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH 0/6] tty: remove unused structure members
+In-Reply-To: <20231121103626.17772-1-jirislaby@kernel.org>
+Message-ID: <fee44985-901b-3b5-3a48-38ba7363e036@linux.intel.com>
+References: <20231121103626.17772-1-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231121120310.696335-1-agordeev@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: RTfch-c1H22NI79LYQCs1Wnt6Z8SobN_
-X-Proofpoint-GUID: fiBSlMlH0We5yBP55yGtCmvKv_vNJ-za
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-21_07,2023-11-21_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
- lowpriorityscore=0 suspectscore=0 impostorscore=0 mlxscore=0
- priorityscore=1501 mlxlogscore=811 adultscore=0 malwarescore=0 spamscore=0
- phishscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2311210115
+Content-Type: multipart/mixed; boundary="8323329-910341602-1700580912=:2370"
 
-On Tue, Nov 21, 2023 at 01:03:10PM +0100, Alexander Gordeev wrote:
-> Since commit d08d4e7cd6bf ("s390/mm: use full 4KB page for 2KB PTE")
-> _refcount field is not used for fragmented page tracking on s390 and
-> there is no other code left that accesses this field explicitly.
-> 
-> Suggested-by: Heiko Carstens <hca@linux.ibm.com>
-> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
-> ---
->  include/linux/mm_types.h | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index 957ce38768b2..0330e0ddca11 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -401,11 +401,10 @@ FOLIO_MATCH(compound_head, _head_2a);
->   * @pmd_huge_pte:     Protected by ptdesc->ptl, used for THPs.
->   * @__page_mapping:   Aliases with page->mapping. Unused for page tables.
->   * @pt_mm:            Used for x86 pgds.
-> - * @pt_frag_refcount: For fragmented page table tracking. Powerpc and s390 only.
-> + * @pt_frag_refcount: For fragmented page table tracking. Powerpc only.
->   * @_pt_pad_2:        Padding to ensure proper alignment.
->   * @ptl:              Lock for the page table.
->   * @__page_type:      Same as page->page_type. Unused for page tables.
-> - * @_refcount:        Same as page refcount. Used for s390 page tables.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I would guess that you need to describe _pt_pad_3 instead here, just
-like it is done for the other two pad members.
+--8323329-910341602-1700580912=:2370
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
 
-And most likely you need to add Andrew to "To:" so he doesn't miss
-this :)
+On Tue, 21 Nov 2023, Jiri Slaby (SUSE) wrote:
+
+> I wrote a little indexer at https://github.com/jirislaby/clang-struct.
+> And it found there are few unused structure members inside tty. This
+> series removes them.
+
+> Jiri Slaby (SUSE) (6):
+>   tty: con3215: drop raw3215_info::ubuffer
+>   tty: ipwireless: remove unused ipw_dev::attribute_memory
+>   tty: jsm: remove unused members from struct board_ops
+>   tty: jsm: remove unused struct jsm_board members
+>   tty: rp2: remove unused rp2_uart_port::ignore_rx
+>   tty: serial_cs: remove unused struct serial_cfg_mem
+
+For the whole series,
+
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+
+-- 
+ i.
+
+--8323329-910341602-1700580912=:2370--
 
