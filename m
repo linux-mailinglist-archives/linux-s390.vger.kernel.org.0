@@ -1,66 +1,66 @@
-Return-Path: <linux-s390+bounces-77-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-80-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C4F77F46B1
-	for <lists+linux-s390@lfdr.de>; Wed, 22 Nov 2023 13:49:29 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31BD77F46D5
+	for <lists+linux-s390@lfdr.de>; Wed, 22 Nov 2023 13:50:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A51911C209D0
-	for <lists+linux-s390@lfdr.de>; Wed, 22 Nov 2023 12:49:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 60D2F1C20A1E
+	for <lists+linux-s390@lfdr.de>; Wed, 22 Nov 2023 12:50:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A94418645;
-	Wed, 22 Nov 2023 12:49:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1F5C4D114;
+	Wed, 22 Nov 2023 12:49:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BMwP7bLT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f5NZzk70"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9084812C
-	for <linux-s390@vger.kernel.org>; Wed, 22 Nov 2023 04:49:05 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2A851A8
+	for <linux-s390@vger.kernel.org>; Wed, 22 Nov 2023 04:49:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1700657344;
+	s=mimecast20190719; t=1700657374;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=BE3r5vWA9ymWBU6bQcXfef0kwNv/5zFbFj7ACLrh9IA=;
-	b=BMwP7bLTjCatjCu5cNqAUsJvxkiG2ET5kqH1rcI8uhUlyEwtoyKJkKQaj8q7ISYtDEcKmC
-	H7DG0Z0A6fx4mQrQUOyF8FurQNEC07j3ZHYjranuhHVJMndSAOzFuKcbKRsX6VFN0LLJ91
-	Vatz86AxQAWcM4UHBjZ8QtfUAGVDBbA=
-Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
- [209.85.167.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=eLnO7RKe/dgR2RJiPGezTaNLqYA/hbIF0TWqF/UBAZM=;
+	b=f5NZzk703gmQ6z6UWZ920oT2Onej9umK7QFGYaPt9tru4Iu+H3ojnCVo3tp+JklI6+NxKm
+	gStqANAY2gpSA1TlxjsqKgu8Wed7KkQRQy82f1vSYmvqgTlyAYDSn8LFDiV6LLmSnx1Vr+
+	8AVch7TvqEuHNSN+t3ydwWxHYTWNWlY=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-509-ME28_cFMMCC9Fcte3Xw-_Q-1; Wed, 22 Nov 2023 07:49:03 -0500
-X-MC-Unique: ME28_cFMMCC9Fcte3Xw-_Q-1
-Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-3b2e7ae47d1so8135531b6e.0
-        for <linux-s390@vger.kernel.org>; Wed, 22 Nov 2023 04:49:03 -0800 (PST)
+ us-mta-343-qo9gvEpkP-OPsZwQtluikQ-1; Wed, 22 Nov 2023 07:49:33 -0500
+X-MC-Unique: qo9gvEpkP-OPsZwQtluikQ-1
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-778ac2308e6so982693385a.3
+        for <linux-s390@vger.kernel.org>; Wed, 22 Nov 2023 04:49:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700657342; x=1701262142;
+        d=1e100.net; s=20230601; t=1700657373; x=1701262173;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BE3r5vWA9ymWBU6bQcXfef0kwNv/5zFbFj7ACLrh9IA=;
-        b=MJAe3cRJXePQkYSb62+kYorRTmlyaGUCUJxle5GXrjBGw+DYzZSD/cnZvDdACkQybW
-         McGrozxGK2K5rmColLygutJ1DkLM59J7B+l9CmK90cg/hkpjRgTcG1MqXMvcmyvwcA1U
-         Z0qjQTlkjhb/Mhy9TYteC34bL096w1AOIBS5+D74GN0IxYND14DifKuCMpuyE5xXLJdJ
-         4jHjWvvbffWz4oTAO2B9suKPFjgGdvaO5pLaTLZEmaXBM+Xc6v7sQ+UTvZRlAu+2LasO
-         g8iMcKlfwOUf+yNYua3ELnAiwjFl9ILTtH3yg188pnl6VgK0042QnnMp6Pu9oFdj1+pK
-         UUQg==
-X-Gm-Message-State: AOJu0YwSOkfWiQURHNdVA/KLFwwFCccuvBHbRPdFdskfGXTHjBLXC302
-	UQTOs/e+vXKFnGulf0jbKiWwlcH+iPfySyej2s31YoxUxc2yIOl8b7xvrVd6gHe1M0FLAscZAXt
-	D7v2Jh5JzbraQULepHNt0yQ==
-X-Received: by 2002:a05:6808:302c:b0:3b2:e469:904c with SMTP id ay44-20020a056808302c00b003b2e469904cmr2638152oib.28.1700657342751;
-        Wed, 22 Nov 2023 04:49:02 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEiXrSNWTQ60QgjLB1DOnL5kpj7QdPifeIkQNJt78LuBhzWcc+kCagRPPOTBh8ffzNmD0hKkA==
-X-Received: by 2002:a05:6808:302c:b0:3b2:e469:904c with SMTP id ay44-20020a056808302c00b003b2e469904cmr2638139oib.28.1700657342559;
-        Wed, 22 Nov 2023 04:49:02 -0800 (PST)
+        bh=eLnO7RKe/dgR2RJiPGezTaNLqYA/hbIF0TWqF/UBAZM=;
+        b=Tj7Zq3II0ftTxVjgwMvPtuqexU4q0XybQEQsor7Ze7lTXTSzIJXgXoYbS+v3YApNt1
+         +Xy6oXXYejP9L4iVAyClWJkiHb65FpogIkybm2Hw1Fbx49bw1jK6VXWJ0QMr9PsGice0
+         +ruW/Pdz08LteO0DSLTvVf1Dt/MEGc/h6DgR7qsOdWis/pAK2yjhifmsCSai719edZ3I
+         q4Y4raebiHQGW3M8C5nFG38Ghafq7HiuRNQ9NgfnSw3z3GqcINcCOObpS83XJ+0qdgBT
+         HTI5kNwcCLE4BkJRl8/tzI3XgowNpyGQJtVtkbSO1peNjOGRgK4Ge1kxCBj2kgQwFKk6
+         ZaXA==
+X-Gm-Message-State: AOJu0Yw25MiFj0j2AREG07IYqlMC0lW620QB7GsVX6r/+BDLoUSVYuju
+	SwH7W94dffdcQiTFqj2hF4z+FlVK5ysgXMcMj5dkY+BFI6xyxJ9P8AbhLs/8a26m3pT3N1l1Ve4
+	aVg+hZ1XzjuL5jA0srmwBPQ==
+X-Received: by 2002:a05:620a:1909:b0:778:9341:6707 with SMTP id bj9-20020a05620a190900b0077893416707mr2449300qkb.22.1700657373125;
+        Wed, 22 Nov 2023 04:49:33 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFqE9WUUVjzKnUDoYW1tbJtHkXEYrka+T+dUeGyXw/Hp+3dl1QOtcseNDkcc/8svMM//ShLBg==
+X-Received: by 2002:a05:620a:1909:b0:778:9341:6707 with SMTP id bj9-20020a05620a190900b0077893416707mr2449289qkb.22.1700657372922;
+        Wed, 22 Nov 2023 04:49:32 -0800 (PST)
 Received: from [192.168.0.6] (ip-109-43-176-233.web.vodafone.de. [109.43.176.233])
-        by smtp.gmail.com with ESMTPSA id v3-20020ae9e303000000b0076ceb5eb309sm4380010qkf.74.2023.11.22.04.49.00
+        by smtp.gmail.com with ESMTPSA id v3-20020ae9e303000000b0076ceb5eb309sm4380010qkf.74.2023.11.22.04.49.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Nov 2023 04:49:02 -0800 (PST)
-Message-ID: <de17f830-fcf2-4073-b4d8-4d0067e7c972@redhat.com>
-Date: Wed, 22 Nov 2023 13:49:00 +0100
+        Wed, 22 Nov 2023 04:49:32 -0800 (PST)
+Message-ID: <55ec5b50-50fa-4fed-b9b7-095c86436c08@redhat.com>
+Date: Wed, 22 Nov 2023 13:49:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -68,15 +68,15 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [kvm-unit-tests PATCH v1 05/10] s390x: ensure kernel-doc
- parameters are properly formated
+Subject: Re: [kvm-unit-tests PATCH v1 06/10] x86: properly format
+ non-kernel-doc comments
 Content-Language: en-US
 To: Nico Boehr <nrb@linux.ibm.com>, frankja@linux.ibm.com,
  imbrenda@linux.ibm.com, david@redhat.com, pbonzini@redhat.com,
  andrew.jones@linux.dev, lvivier@redhat.com
 Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org
 References: <20231106125352.859992-1-nrb@linux.ibm.com>
- <20231106125352.859992-6-nrb@linux.ibm.com>
+ <20231106125352.859992-7-nrb@linux.ibm.com>
 From: Thomas Huth <thuth@redhat.com>
 Autocrypt: addr=thuth@redhat.com; keydata=
  xsFNBFH7eUwBEACzyOXKU+5Pcs6wNpKzrlJwzRl3VGZt95VCdb+FgoU9g11m7FWcOafrVRwU
@@ -120,20 +120,33 @@ Autocrypt: addr=thuth@redhat.com; keydata=
  oiT+z+/E59qj/EKfyce3sbC9XLjXv3mHMrq1tKX4G7IJGnS989E/fg6crv6NHae9Ckm7+lSs
  IQu4bBP2GxiRQ+NV3iV/KU3ebMRzqIC//DCOxzQNFNJAKldPe/bKZMCxEqtVoRkuJtNdp/5a
  yXFZ6TfE1hGKrDBYAm4vrnZ4CXFSBDllL59cFFOJCkn4Xboj/aVxxJxF30bn
-In-Reply-To: <20231106125352.859992-6-nrb@linux.ibm.com>
+In-Reply-To: <20231106125352.859992-7-nrb@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 06/11/2023 13.51, Nico Boehr wrote:
-> In kernel-doc, parameters names should end in a colon (:). Add them
-> where they are missing.
+> These comments do not follow the kernel-doc style, hence they should not
+> start with /**.
 > 
 > Signed-off-by: Nico Boehr <nrb@linux.ibm.com>
 > ---
->   lib/s390x/interrupt.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
+>   x86/msr.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/x86/msr.c b/x86/msr.c
+> index 789f23f8de78..3a041fab160a 100644
+> --- a/x86/msr.c
+> +++ b/x86/msr.c
+> @@ -6,7 +6,7 @@
+>   #include "msr.h"
+>   #include <stdlib.h>
+>   
+> -/**
+> +/*
+>    * This test allows two modes:
+>    * 1. Default: the `msr_info' array contains the default test configurations
+>    * 2. Custom: by providing command line arguments it is possible to test any MSR and value
 
 Reviewed-by: Thomas Huth <thuth@redhat.com>
-
 
 
