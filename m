@@ -1,76 +1,217 @@
-Return-Path: <linux-s390+bounces-150-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-152-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E012D7F79A0
-	for <lists+linux-s390@lfdr.de>; Fri, 24 Nov 2023 17:44:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A8AE7F7E96
+	for <lists+linux-s390@lfdr.de>; Fri, 24 Nov 2023 19:34:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 83869B20989
-	for <lists+linux-s390@lfdr.de>; Fri, 24 Nov 2023 16:44:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9EB9C1C2136F
+	for <lists+linux-s390@lfdr.de>; Fri, 24 Nov 2023 18:34:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB2A42C862;
-	Fri, 24 Nov 2023 16:44:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0E012FC4E;
+	Fri, 24 Nov 2023 18:34:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="qWC7AvJV"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="p7O48oLw"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEFA3364A7
-	for <linux-s390@vger.kernel.org>; Fri, 24 Nov 2023 16:44:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00D05C433C8;
-	Fri, 24 Nov 2023 16:44:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1700844282;
-	bh=Jv88ICKZ110o1np2p9LtMmd50STofDmEsKMRuaqgi7I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qWC7AvJVPIlEnviCx7I6e7oQ953NxvnapmOeKmMXPK+XNf7weDESmBFKIX9Fm6kz9
-	 zQtGkUM7zWgxA2VZl4OoLv7T4usgzbJKsX+t+H85rmkSQi61+FBx+orVD4b9CR6d1i
-	 AL7IgDp6N89DKQ10Q+OvjgoKPhNwwSCrvTjKpHIU=
-Date: Fri, 24 Nov 2023 08:44:41 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Baoquan He <bhe@redhat.com>
-Cc: Ignat Korchagin <ignat@cloudflare.com>, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-s390@vger.kernel.org, eric_devolder@yahoo.com, kernel-team
- <kernel-team@cloudflare.com>
-Subject: Re: [PATCH 2/3] drivers/base/cpu: crash data showing should depends
- on KEXEC_CORE
-Message-Id: <20231124084441.b913fc404fec53d5d0946c55@linux-foundation.org>
-In-Reply-To: <ZV80X+lf2iOOTboW@MiWiFi-R3L-srv>
-References: <20231123073652.507034-1-bhe@redhat.com>
-	<20231123073652.507034-3-bhe@redhat.com>
-	<CALrw=nFzy2zq-khLUCXsuf8J5_mka0YPyTosO190OUst2QSjVQ@mail.gmail.com>
-	<ZV80X+lf2iOOTboW@MiWiFi-R3L-srv>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 237E81FC9;
+	Fri, 24 Nov 2023 10:32:55 -0800 (PST)
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AOI37Ou022263;
+	Fri, 24 Nov 2023 18:32:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : content-type : mime-version; s=pp1;
+ bh=ACDVC3s4ekodUb5H2n3lUAfe5hP46nio9gVyBK2cy6A=;
+ b=p7O48oLwjSJHlUoLI885ugUdp3xcVlofrYiOpGNwSHfwHwJqOpqGcQDcmec5W8qq8GEY
+ czNZVAJF58S0M2AjLG9WyvoC6kzONKLQi2Zh/YLa5Dzle5pNHveVe6aSH1bxpkeTCLaY
+ B7Z9CWRSD7LAtUSZt86Ygj2u7Y6uvnHSn7VG0znZTS80+W9eQH24O6aO1qz0s+FZHQb4
+ ZuWBYpqPyIYf/mMY2gLn+U5+sKWByTTj5vGGp7d/tEUNF6+oIsE9XbFeZV6nwW1FsEth
+ tsF33KnqgthtM0cREs23jcHdv4+p76nBPeK45fNlQ4aNQvEX6kL9j1QoYnaZOhtiVTdT yA== 
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uk0s08m9p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 24 Nov 2023 18:32:53 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AOF9VHN027825;
+	Fri, 24 Nov 2023 17:32:22 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uf7ktqdbg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 24 Nov 2023 17:32:22 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AOHWJjJ6357534
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 24 Nov 2023 17:32:19 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2C74020040;
+	Fri, 24 Nov 2023 17:32:19 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0936220043;
+	Fri, 24 Nov 2023 17:32:19 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri, 24 Nov 2023 17:32:18 +0000 (GMT)
+Date: Fri, 24 Nov 2023 18:32:17 +0100
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [GIT PULL] s390 fixes for 6.7-rc3
+Message-ID: <ZWDeIR0PFAqvYgmU@tuxmaker.boeblingen.de.ibm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: I5xRwTZLTVdMyjB2K7J4v2sUm6Q6f3z8
+X-Proofpoint-GUID: I5xRwTZLTVdMyjB2K7J4v2sUm6Q6f3z8
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-24_05,2023-11-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 adultscore=0
+ priorityscore=1501 lowpriorityscore=0 spamscore=0 mlxscore=0 bulkscore=0
+ mlxlogscore=999 phishscore=0 suspectscore=0 malwarescore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311060000
+ definitions=main-2311240144
 
-On Thu, 23 Nov 2023 19:15:43 +0800 Baoquan He <bhe@redhat.com> wrote:
+Hello Linus,
 
-> > > CONFIG_KEXEC is used to enable kexec_load interface, the
-> > > crash_notes/crash_notes_size/crash_hotplug showing depends on
-> > > CONFIG_KEXEC is incorrect. It should depend on KEXEC_CORE instead.
-> > >
-> > > Fix it now.
-> > 
-> > Can we add Fixes/CC stable, so it gets eventually backported into 6.6?
-> 
-> Makes sense. Will add it in v2 since I need respin to add the missing
-> stuff in patch 1. Thanks.
+Please pull s390 changes for 6.7-rc3.
 
-Please avoid mixing cc:stable patches and this-merge-window fixes in
-the same series as next-merge-window material.  Because I'll just have
-to separate them out anyway, causing what-I-merged to unnecessarily
-differ from what-you-sent.
+Please note the update to scripts/checkstack.pl concerns
+s390-specific part only.
 
+Thank you,
+Alexander
 
+The following changes since commit 98b1cc82c4affc16f5598d4fa14b1858671b2263:
+
+  Linux 6.7-rc2 (2023-11-19 15:02:14 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-6.7-3
+
+for you to fetch changes up to aab1f809d7540def24498e81347740a7239a74d5:
+
+  scripts/checkstack.pl: match all stack sizes for s390 (2023-11-22 15:06:23 +0100)
+
+----------------------------------------------------------------
+s390 updates for 6.7-rc3
+
+- Remove unnecessary assignment of the performance event last_tag.
+
+- Create missing /sys/firmware/ipl/* attributes when kernel is
+  booted in dump mode using List-directed ECKD IPL.
+
+- Remove odd comment.
+
+- Fix s390-specific part of scripts/checkstack.pl script that only
+  matches three-digit numbers starting with 3 or any higher number
+  and skips any stack sizes smaller than 304 bytes.
+
+----------------------------------------------------------------
+Heiko Carstens (2):
+      s390: remove odd comment
+      scripts/checkstack.pl: match all stack sizes for s390
+
+Mikhail Zaslonko (1):
+      s390/ipl: add missing IPL_TYPE_ECKD_DUMP case to ipl_init()
+
+Thomas Richter (1):
+      s390/pai: cleanup event initialization
+
+ arch/s390/include/asm/processor.h  |  1 -
+ arch/s390/kernel/ipl.c             |  1 +
+ arch/s390/kernel/perf_pai_crypto.c | 11 +++++------
+ arch/s390/kernel/perf_pai_ext.c    |  1 -
+ scripts/checkstack.pl              |  3 +--
+ 5 files changed, 7 insertions(+), 10 deletions(-)
+
+diff --git a/arch/s390/include/asm/processor.h b/arch/s390/include/asm/processor.h
+index dc17896a001a..c15eadbb9983 100644
+--- a/arch/s390/include/asm/processor.h
++++ b/arch/s390/include/asm/processor.h
+@@ -228,7 +228,6 @@ typedef struct thread_struct thread_struct;
+ 	execve_tail();							\
+ } while (0)
+ 
+-/* Forward declaration, a strange C thing */
+ struct task_struct;
+ struct mm_struct;
+ struct seq_file;
+diff --git a/arch/s390/kernel/ipl.c b/arch/s390/kernel/ipl.c
+index cc364fce6aa9..ba75f6bee774 100644
+--- a/arch/s390/kernel/ipl.c
++++ b/arch/s390/kernel/ipl.c
+@@ -666,6 +666,7 @@ static int __init ipl_init(void)
+ 						&ipl_ccw_attr_group_lpar);
+ 		break;
+ 	case IPL_TYPE_ECKD:
++	case IPL_TYPE_ECKD_DUMP:
+ 		rc = sysfs_create_group(&ipl_kset->kobj, &ipl_eckd_attr_group);
+ 		break;
+ 	case IPL_TYPE_FCP:
+diff --git a/arch/s390/kernel/perf_pai_crypto.c b/arch/s390/kernel/perf_pai_crypto.c
+index 77fd24e6cbb6..39a91b00438a 100644
+--- a/arch/s390/kernel/perf_pai_crypto.c
++++ b/arch/s390/kernel/perf_pai_crypto.c
+@@ -279,12 +279,6 @@ static int paicrypt_event_init(struct perf_event *event)
+ 	if (IS_ERR(cpump))
+ 		return PTR_ERR(cpump);
+ 
+-	/* Event initialization sets last_tag to 0. When later on the events
+-	 * are deleted and re-added, do not reset the event count value to zero.
+-	 * Events are added, deleted and re-added when 2 or more events
+-	 * are active at the same time.
+-	 */
+-	event->hw.last_tag = 0;
+ 	event->destroy = paicrypt_event_destroy;
+ 
+ 	if (a->sample_period) {
+@@ -318,6 +312,11 @@ static void paicrypt_start(struct perf_event *event, int flags)
+ {
+ 	u64 sum;
+ 
++	/* Event initialization sets last_tag to 0. When later on the events
++	 * are deleted and re-added, do not reset the event count value to zero.
++	 * Events are added, deleted and re-added when 2 or more events
++	 * are active at the same time.
++	 */
+ 	if (!event->hw.last_tag) {
+ 		event->hw.last_tag = 1;
+ 		sum = paicrypt_getall(event);		/* Get current value */
+diff --git a/arch/s390/kernel/perf_pai_ext.c b/arch/s390/kernel/perf_pai_ext.c
+index 8ba0f1a3a39d..e7013a2e8960 100644
+--- a/arch/s390/kernel/perf_pai_ext.c
++++ b/arch/s390/kernel/perf_pai_ext.c
+@@ -260,7 +260,6 @@ static int paiext_event_init(struct perf_event *event)
+ 	rc = paiext_alloc(a, event);
+ 	if (rc)
+ 		return rc;
+-	event->hw.last_tag = 0;
+ 	event->destroy = paiext_event_destroy;
+ 
+ 	if (a->sample_period) {
+diff --git a/scripts/checkstack.pl b/scripts/checkstack.pl
+index 84f5fb7f1cec..d83ba5d8f3f4 100755
+--- a/scripts/checkstack.pl
++++ b/scripts/checkstack.pl
+@@ -97,8 +97,7 @@ my (@stack, $re, $dre, $sub, $x, $xs, $funcre, $min_stack);
+ 		#   11160:       a7 fb ff 60             aghi   %r15,-160
+ 		# or
+ 		#  100092:	 e3 f0 ff c8 ff 71	 lay	 %r15,-56(%r15)
+-		$re = qr/.*(?:lay|ag?hi).*\%r15,-(([0-9]{2}|[3-9])[0-9]{2})
+-		      (?:\(\%r15\))?$/ox;
++		$re = qr/.*(?:lay|ag?hi).*\%r15,-([0-9]+)(?:\(\%r15\))?$/o;
+ 	} elsif ($arch eq 'sparc' || $arch eq 'sparc64') {
+ 		# f0019d10:       9d e3 bf 90     save  %sp, -112, %sp
+ 		$re = qr/.*save.*%sp, -(([0-9]{2}|[3-9])[0-9]{2}), %sp/o;
 
