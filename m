@@ -1,104 +1,183 @@
-Return-Path: <linux-s390+bounces-205-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-208-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 233E57FB6B0
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Nov 2023 11:05:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AACFE7FB8DE
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Nov 2023 12:04:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A6CD0282941
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Nov 2023 10:05:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67397282C02
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Nov 2023 11:04:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 081E94D583;
-	Tue, 28 Nov 2023 10:05:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F0D34E629;
+	Tue, 28 Nov 2023 11:04:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="ajmIPgE3"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iJE+ri/N"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19036DE
-	for <linux-s390@vger.kernel.org>; Tue, 28 Nov 2023 02:05:33 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-32fdc5be26dso3247156f8f.2
-        for <linux-s390@vger.kernel.org>; Tue, 28 Nov 2023 02:05:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1701165931; x=1701770731; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ZKJsy/O9sQNKnNFyRJVuTOt01SElG6aFkPQ2+Lfq3iI=;
-        b=ajmIPgE3cf4/VQcKecwZurNFwBZ7fhShFWpQSsfDV0gtymPBLKvL5H3127D9k1L6dp
-         hX+TAPJ6uHosbFCDtux+M7ll0rT1Bey3JLg8DNYEpumCySiJ7nd6xroxIcltB8532kPn
-         gu41KkYYBNQIm56IEzzrBy+Y2oWQCUj/A3o20=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701165931; x=1701770731;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZKJsy/O9sQNKnNFyRJVuTOt01SElG6aFkPQ2+Lfq3iI=;
-        b=YSpNNCzgqo3mdJYybBXqIDAe5LlXwgHBeZZLUshvlJMOOLTFpZu8i28Gu5VHeATWzk
-         KyS3OlnDEN8/58BDdstVJ5yl6XOe7wEqNoOP5gaodZ78xvuAZvYNmGP6M5ihGeNOdBaC
-         ZYKfBe+XyFppUiIG98Ixa/3QjnxCQlt97FhqVNUf/KLjp3beHTu1zufTMYI2mG6CIdVd
-         ePfwKHAfrbZ/PAI4Scdnpz+JS/3o/WwGFhoCl2stCsQPwsSYktvdQmT5h1pDxYWkmH+3
-         6LBNDR/BP+jV1hrl9qVu2qLyTnfWiFqejoBsh4TQ+hVb+qqpDTOizKD2AS3//zK0Lfa4
-         5Utg==
-X-Gm-Message-State: AOJu0Yw0v9HLmKhd6xqNUmvlDy6f0UcAf9ETWt33EFkE/o9GN/yTXS/K
-	tp2iu+C3KRteKPabxwTTzqjmjw==
-X-Google-Smtp-Source: AGHT+IHso67qiRejATVe+y4q8GA8WkjBME6ZXNG2nx2AvipjQBf9Fe7u/GIhGV/RuBTAoKaGDDxyQg==
-X-Received: by 2002:a5d:4bcf:0:b0:332:f81d:8dac with SMTP id l15-20020a5d4bcf000000b00332f81d8dacmr6833150wrt.67.1701165931581;
-        Tue, 28 Nov 2023 02:05:31 -0800 (PST)
-Received: from localhost ([213.195.113.99])
-        by smtp.gmail.com with ESMTPSA id l10-20020a5d674a000000b00332eef1ca7asm9779426wrw.80.2023.11.28.02.05.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Nov 2023 02:05:31 -0800 (PST)
-Date: Tue, 28 Nov 2023 11:05:30 +0100
-From: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: hch@infradead.org, ming.lei@redhat.com, axboe@kernel.dk, colyli@suse.de,
-	kent.overstreet@gmail.com, joern@lazybastard.org,
-	miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-	sth@linux.ibm.com, hoeppner@linux.ibm.com, hca@linux.ibm.com,
-	gor@linux.ibm.com, agordeev@linux.ibm.com, jejb@linux.ibm.com,
-	martin.petersen@oracle.com, clm@fb.com, josef@toxicpanda.com,
-	dsterba@suse.com, viro@zeniv.linux.org.uk, brauner@kernel.org,
-	nico@fluxnic.net, xiang@kernel.org, chao@kernel.org, tytso@mit.edu,
-	adilger.kernel@dilger.ca, agruenba@redhat.com, jack@suse.com,
-	konishi.ryusuke@gmail.com, dchinner@redhat.com,
-	linux@weissschuh.net, min15.li@samsung.com, yukuai3@huawei.com,
-	dlemoal@kernel.org, willy@infradead.org, akpm@linux-foundation.org,
-	hare@suse.de, p.raghav@samsung.com, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-	linux-bcache@vger.kernel.org, linux-mtd@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
-	linux-bcachefs@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-	linux-ext4@vger.kernel.org, gfs2@lists.linux.dev,
-	linux-nilfs@vger.kernel.org, yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: Re: [PATCH block/for-next v2 02/16] xen/blkback: use new helper to
- get inode from block_device
-Message-ID: <ZWW7ag6vIhc_Skh5@macbook>
-References: <20231127062116.2355129-1-yukuai1@huaweicloud.com>
- <20231127062116.2355129-3-yukuai1@huaweicloud.com>
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3516CD41;
+	Tue, 28 Nov 2023 03:04:02 -0800 (PST)
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3ASB26b7025942;
+	Tue, 28 Nov 2023 11:03:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=NQD5vamojNYAOy6f1K01j8XrHQ5a42dos52ZE8qgM1Y=;
+ b=iJE+ri/N+4H2FjMtF0jCEMP4DcEle6s10y8KgsTFmZMm/766SWV6CthWdMU8pra/HIMK
+ AQD9tTa0uzPKV9G4Ovt8kqKZFfHM488+qXrht+J3bbbs56KPew1k6fiDLmF3U2elEu3n
+ 4x7abuzwk2Me/TKD4610ESb5OleDMxHuNYmqW7GnjzDwS6PK//XSd1lIE6xFUn6RJs6V
+ A98qV1vUHF0imBg5e4jgeZeTBHzGLLHeedswbfv8HRBLqMU00E2W14gup0ssyZDRLl9r
+ clPFsjGt34yYoXKCmFxhroCytIJN6WcCTN7CEWtLWypATII4WKeWNuBx5xmekIcHZ84o Pw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uneyp8182-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 Nov 2023 11:03:50 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3ASB2enC027143;
+	Tue, 28 Nov 2023 11:03:50 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uneyp8174-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 Nov 2023 11:03:49 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3ASAWIhQ027647;
+	Tue, 28 Nov 2023 11:03:48 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ukumyfc00-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 Nov 2023 11:03:48 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3ASB3iuV20185732
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 28 Nov 2023 11:03:45 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B79AA20043;
+	Tue, 28 Nov 2023 11:03:44 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6813020040;
+	Tue, 28 Nov 2023 11:03:44 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 28 Nov 2023 11:03:44 +0000 (GMT)
+From: Sumanth Korikkar <sumanthk@linux.ibm.com>
+To: linux-mm <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.de>, Michal Hocko <mhocko@suse.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 0/5] implement "memmap on memory" feature on s390
+Date: Tue, 28 Nov 2023 12:03:37 +0100
+Message-Id: <20231128110342.102096-1-sumanthk@linux.ibm.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231127062116.2355129-3-yukuai1@huaweicloud.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Xx4GJybYKPXV9-pMcRk3RoptDOuwCCc8
+X-Proofpoint-GUID: e4ABum7uHinNJhNtvd3t-tsCqrLkA53J
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-28_10,2023-11-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=1 mlxlogscore=194
+ impostorscore=0 lowpriorityscore=0 malwarescore=0 priorityscore=1501
+ mlxscore=1 spamscore=1 adultscore=0 clxscore=1015 suspectscore=0
+ phishscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2311280087
 
-On Mon, Nov 27, 2023 at 02:21:02PM +0800, Yu Kuai wrote:
-> From: Yu Kuai <yukuai3@huawei.com>
-> 
-> Which is more efficiency, and also prepare to remove the field
-> 'bd_inode' from block_device.
-> 
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Hi All,
 
-Acked-by: Roger Pau Monné <roger.pau@citrix.com>
+The patch series implements "memmap on memory" feature on s390.
 
-Thanks, Roger.
+Patch 1 introduces  MEM_PREPARE_ONLINE/MEM_FINISH_OFFLINE memory
+notifiers to prepare the transition of memory to and from a physically
+accessible state. New mhp_flag MHP_OFFLINE_INACCESSIBLE is introduced to
+ensure altmap cannot be written when addidng memory - before it is set
+online. This enhancement is crucial for implementing the "memmap on
+memory" feature for s390 in a subsequent patch.
+
+Patches 2 allocates vmemmap pages from self-contained memory range for
+s390. It allocates memory map (struct pages array) from the hotplugged
+memory range, rather than using system memory by passing altmap to
+vmemmap functions.
+
+Patch 3 removes unhandled memory notifier types on s390.
+
+Patch 4 implements MEM_PREPARE_ONLINE/MEM_FINISH_OFFLINE memory
+notifiers on s390. MEM_PREPARE_ONLINE memory notifier makes memory block
+physical accessible via sclp assign command. The notifier ensures
+self-contained memory maps are accessible and hence enabling the "memmap
+on memory" on s390. MEM_FINISH_OFFLINE memory notifier shifts the memory
+block to an inaccessible state via sclp unassign command
+
+Patch 5 finally enables MHP_MEMMAP_ON_MEMORY on s390
+
+Note:
+These patches are rebased on top of three fixes:
+mm: use vmem_altmap code without CONFIG_ZONE_DEVICE
+mm/memory_hotplug: fix error handling in add_memory_resource()
+mm/memory_hotplug: add missing mem_hotplug_lock
+
+v4:
+* Introduced two new fields, altmap_start_pfn and altmap_nr_pages, in
+  the memory_notify structure and document it that it is used only in 
+  MEM_PREPARE_ONLINE/MEM_FINISH_OFFLINE callbacks.
+* Incorporated the newly added fields into s390's
+  MEM_PREPARE_ONLINE/MEM_FINISH_OFFLINE notifier callbacks.
+* Prevent access to memblock->altmap->free in the s390 notifier callback.
+* page_init_poison() could be performed similar to when adding new
+  memory in sparse_add_section(). Perform it without cond_resched().
+
+v3:
+* added comments to MHP_OFFLINE_ACCESSIBLE as suggested by David.
+* Squashed three commits related to new memory notifier.
+
+v2:
+* Fixes are integrated and hence removed from this patch series
+Suggestions from David:
+* Add new flag MHP_OFFLINE_INACCESSIBLE to avoid accessing memory
+  during memory hotplug addition phase.
+* Avoid page_init_poison() on memmap during mhp addition phase, when
+  MHP_OFFLINE_INACCESSIBLE mhp_flag is passed in add_memory().
+* Do not skip add_pages() in arch_add_memory(). Similarly, remove
+  similar hacks in arch_remove_memory(). 
+* Use MHP_PREPARE_ONLINE/MHP_FINISH_OFFLINE naming convention for
+  new memory notifiers.
+* Rearrange removal of unused s390 memory notifier.
+* Necessary commit messages changes.
+
+Thank you
+
+Sumanth Korikkar (5):
+  mm/memory_hotplug: introduce MEM_PREPARE_ONLINE/MEM_FINISH_OFFLINE
+    notifiers
+  s390/mm: allocate vmemmap pages from self-contained memory range
+  s390/sclp: remove unhandled memory notifier type
+  s390/mm: implement MEM_PREPARE_ONLINE/MEM_FINISH_OFFLINE notifiers
+  s390: enable MHP_MEMMAP_ON_MEMORY
+
+ arch/s390/Kconfig              |  1 +
+ arch/s390/mm/init.c            |  3 --
+ arch/s390/mm/vmem.c            | 62 +++++++++++++++++++---------------
+ drivers/base/memory.c          | 23 ++++++++++++-
+ drivers/s390/char/sclp_cmd.c   | 50 ++++++++++++++++++++++-----
+ include/linux/memory.h         |  9 +++++
+ include/linux/memory_hotplug.h | 18 +++++++++-
+ include/linux/memremap.h       |  1 +
+ mm/memory_hotplug.c            | 13 ++++++-
+ mm/sparse.c                    |  3 +-
+ 10 files changed, 140 insertions(+), 43 deletions(-)
+
+-- 
+2.41.0
+
 
