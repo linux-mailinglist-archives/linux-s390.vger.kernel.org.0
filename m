@@ -1,151 +1,102 @@
-Return-Path: <linux-s390+bounces-274-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-276-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01B3380102A
-	for <lists+linux-s390@lfdr.de>; Fri,  1 Dec 2023 17:33:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D8E3801061
+	for <lists+linux-s390@lfdr.de>; Fri,  1 Dec 2023 17:39:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 32F571C208BA
-	for <lists+linux-s390@lfdr.de>; Fri,  1 Dec 2023 16:33:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CDB4A281C90
+	for <lists+linux-s390@lfdr.de>; Fri,  1 Dec 2023 16:39:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 756FA36AFC;
-	Fri,  1 Dec 2023 16:32:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F15E25747;
+	Fri,  1 Dec 2023 16:39:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MfcDVb7X"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="eCPvVuKU"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 076E912A;
-	Fri,  1 Dec 2023 08:32:55 -0800 (PST)
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B1GOLeo016348;
-	Fri, 1 Dec 2023 16:32:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=5M7Oz9FzCbW5fvOTLVZ5n7LZUTsSWnNgqyueKE9l+QU=;
- b=MfcDVb7XcvA5ihwy+TolKbw91X+U37rGKph393fwxTcWG36/5xfQOgO58n2wWzCWNAcI
- +K2guh2Uh2lLbCFwGelvx8k4olYw2ojF8SticB3WQMCPy/su08QJTxiUeWaLjp1AhDwY
- NUO+vRqoRh4xiwwxWrGeMB38zqk94eu+wZDqpXVs5ZRjfBOGh5VfHy++54byuiJb2IKG
- g7nKGw5TrZZzefFafwdn364C7h1rifC+ECGSe4hH8bsMLsRJvN/DcEkyvr1stnUz8Bas
- kHo2wUdnxjHsDi2y16Vl454MD9lUhmZ4Kx9SA4leQkyeaWwK6379suNNddyqh4v/3tSr tw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uqjrb8g7y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 01 Dec 2023 16:32:51 +0000
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3B1GPhYj021690;
-	Fri, 1 Dec 2023 16:32:49 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uqjrb8fs2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 01 Dec 2023 16:32:49 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3B1DjaUU006257;
-	Fri, 1 Dec 2023 16:32:19 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ukwfkntg2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 01 Dec 2023 16:32:19 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3B1GWGOh23397048
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 1 Dec 2023 16:32:16 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 99A6F2004D;
-	Fri,  1 Dec 2023 16:32:16 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7740720043;
-	Fri,  1 Dec 2023 16:32:15 +0000 (GMT)
-Received: from [9.179.28.5] (unknown [9.179.28.5])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  1 Dec 2023 16:32:15 +0000 (GMT)
-Message-ID: <c1a7b672-4a43-4494-acd1-500026566f69@linux.ibm.com>
-Date: Fri, 1 Dec 2023 17:32:15 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3 0/7] net/smc: implement SMCv2.1 virtual ISM
- device support
-Content-Language: en-US
-To: Wen Gu <guwen@linux.alibaba.com>, wenjia@linux.ibm.com, hca@linux.ibm.com,
-        gor@linux.ibm.com, agordeev@linux.ibm.com, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        kgraul@linux.ibm.com, jaka@linux.ibm.com
-Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com, alibuda@linux.alibaba.com,
-        tonylu@linux.alibaba.com, raspl@linux.ibm.com, schnelle@linux.ibm.com,
-        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1701343695-122657-1-git-send-email-guwen@linux.alibaba.com>
-From: Alexandra Winter <wintera@linux.ibm.com>
-In-Reply-To: <1701343695-122657-1-git-send-email-guwen@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: O4Zxo2EGs2le1cBsLLdYnHE-0Nnt38hg
-X-Proofpoint-ORIG-GUID: r3w8RpXk-nuSdUnFPEnlOrVU5xgU4fXQ
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F61A1707
+	for <linux-s390@vger.kernel.org>; Fri,  1 Dec 2023 08:38:26 -0800 (PST)
+Received: by mail-io1-xd2e.google.com with SMTP id ca18e2360f4ac-7b05e65e784so15042339f.1
+        for <linux-s390@vger.kernel.org>; Fri, 01 Dec 2023 08:38:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1701448706; x=1702053506; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=F4bReDtBqdZ7CQBg8UmEdVvEuIGOtXfeTpzV766B0GQ=;
+        b=eCPvVuKUtcUML6PCcMRbRoVs9nIim4eBXq2DOUW6ltIoOSMN0LBgO83FAf+eQdrBDq
+         A/PmkuhmUd7P/48s+UEf27F2Mcv2+uZTPpLM6X1n6JWoCdpMkNuT4GtaZDIrhfzxjz/p
+         M4x1KAD0TWPjWfqQjKrbI4r6eByvIohNQ8quo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701448706; x=1702053506;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=F4bReDtBqdZ7CQBg8UmEdVvEuIGOtXfeTpzV766B0GQ=;
+        b=pqlig8ruDFzct6y20tEwfFHOBmKAeLFJuNXwzOxBK6xxWRizNioVPdt9zJREoQmrmy
+         DMYBGrIo95eIft0mbvQDIUwZUJ/GZn5wYbKdW1hhDvrGVlxBnu6Z/YRW9zBC5Vvumczo
+         88FaW0NCxGmczAJiC1drH1czRYeFPm0ApMsD53zOatEueoQSAeybs5cH0lRKXCIqbMZ2
+         YxE4jsseYbE7lLBRZVWSjESFhAkYr+rEwlz4Ahe9kiY12wOh/W2l2CT4YicY6b77rcDf
+         ezLIWGTC7t0eh63e2xff81GmJkddA0hx33MCcoX4/3MaRzSwTW1/L+d5RujSsxospn1U
+         9neg==
+X-Gm-Message-State: AOJu0YytuZZ/2/MenplS2tLraNA3EZ/QfXV2pcNaEwKXR5xBbViCCF/l
+	4HhHSCswCatDz/C3oIKAPDylbg==
+X-Google-Smtp-Source: AGHT+IHG40EFSnt4Yz6Knhpd28geD95aKAGL4h+gRV294CYt5W7hXqom/+d8jZtbFp7xj3MCvp4Ghw==
+X-Received: by 2002:a05:6602:489a:b0:7b3:95a4:de9c with SMTP id ee26-20020a056602489a00b007b395a4de9cmr22727490iob.1.1701448706259;
+        Fri, 01 Dec 2023 08:38:26 -0800 (PST)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id u1-20020a6be901000000b007b3e503d59csm1046219iof.47.2023.12.01.08.38.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Dec 2023 08:38:25 -0800 (PST)
+Message-ID: <8b95b96c-6aeb-4bf0-8ee9-2ba62330c672@linuxfoundation.org>
+Date: Fri, 1 Dec 2023 09:38:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-01_15,2023-11-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- priorityscore=1501 mlxscore=0 adultscore=0 malwarescore=0 spamscore=0
- suspectscore=0 clxscore=1015 lowpriorityscore=0 impostorscore=0
- phishscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2312010113
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] selftests: livepatch: Test livepatching a heavily
+ called syscall
+Content-Language: en-US
+To: Marcos Paulo de Souza <mpdesouza@suse.de>
+Cc: Marcos Paulo de Souza <mpdesouza@suse.com>, Shuah Khan
+ <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+ Petr Mladek <pmladek@suse.com>, Joe Lawrence <joe.lawrence@redhat.com>,
+ linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+ live-patching@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20231031-send-lp-kselftests-v3-0-2b1655c2605f@suse.com>
+ <20231031-send-lp-kselftests-v3-3-2b1655c2605f@suse.com>
+ <f9d82fa6-08d7-4ab6-badc-691987b37a82@linuxfoundation.org>
+ <unpg4z7eig6qbudgulnr6sog65fq7s2dy4u2vp2dgkdrq5csdw@dltnxuw6kw5b>
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <unpg4z7eig6qbudgulnr6sog65fq7s2dy4u2vp2dgkdrq5csdw@dltnxuw6kw5b>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 12/1/23 06:13, Marcos Paulo de Souza wrote:
+> On Thu, Nov 30, 2023 at 04:24:26PM -0700, Shuah Khan wrote:
 
-
-On 30.11.23 12:28, Wen Gu wrote:
-> The fourth edition of SMCv2 adds the SMC version 2.1 feature updates for
-> SMC-Dv2 with virtual ISM. Virtual ISM are created and supported mainly by
-> OS or hypervisor software, comparable to IBM ISM which is based on platform
-> firmware or hardware.
+>>
+>> Missing module name? Is there a reason to not name this module?
 > 
-> With the introduction of virtual ISM, SMCv2.1 makes some updates:
-> 
-> - Introduce feature bitmask to indicate supplemental features.
-> - Reserve a range of CHIDs for virtual ISM.
-> - Support extended GIDs (128 bits) in CLC handshake.
-> 
-> So this patch set aims to implement these updates in Linux kernel. And it
-> acts as the first part of SMC-D virtual ISM extension & loopback-ism [1].
-> 
-> [1] https://lore.kernel.org/netdev/1695568613-125057-1-git-send-email-guwen@linux.alibaba.com/
-> 
-> v3->v2:
-> - Rename smc_clc_fill_fce as smc_clc_fill_fce_v2x;
-> - Remove ISM_IDENT_MASK from drivers/s390/net/ism.h;
-> - Add explicitly assigning 'false' to ism_v2_capable in ism_dev_init();
-> - Remove smc_ism_set_v2_capable() helper for now, and introduce it in
->   later loopback-ism implementation;
-> 
-> v2->v1:
-> - Fix sparse complaint;
-> - Rebase to the latest net-next;
-> 
-> Wen Gu (7):
->   net/smc: Rename some variable 'fce' to 'fce_v2x' for clarity
->   net/smc: support SMCv2.x supplemental features negotiation
->   net/smc: introduce virtual ISM device support feature
->   net/smc: define a reserved CHID range for virtual ISM devices
->   net/smc: compatible with 128-bits extend GID of virtual ISM device
->   net/smc: disable SEID on non-s390 archs where virtual ISM may be used
->   net/smc: manage system EID in SMC stack instead of ISM driver
+> Can you please elaborate? This new module use the same MODULE_ macros used by
+> the current livepatch selftests. What do you mean by module name?
 > 
 
-Wen Gu,
-as you can see in [1] your patches 5/7 and 1/7 still have formatting issues. 
-In this case they need to pass
+Pre-commit checpatch script spdx check complained about the module name.
+Please run it to see the message.
 
-scripts/checkpatch.pl --strict --max-line-length=80
+thanks,
+-- Shuah
 
-(see linux/Documentation/process/coding-style.rst)
-
-[1] https://patchwork.kernel.org/project/netdevbpf/list/?series=&submitter=&state=&q=net%2Fsmc&archive=&delegate=
 
