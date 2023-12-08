@@ -1,67 +1,67 @@
-Return-Path: <linux-s390+bounces-423-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-424-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC7C080A901
-	for <lists+linux-s390@lfdr.de>; Fri,  8 Dec 2023 17:32:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 731A980A9CC
+	for <lists+linux-s390@lfdr.de>; Fri,  8 Dec 2023 17:51:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A23991F2110A
-	for <lists+linux-s390@lfdr.de>; Fri,  8 Dec 2023 16:32:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2ABEA281376
+	for <lists+linux-s390@lfdr.de>; Fri,  8 Dec 2023 16:51:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B5BB1DA52;
-	Fri,  8 Dec 2023 16:32:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B98D536B12;
+	Fri,  8 Dec 2023 16:51:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iqle0iK7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YDDwHLv7"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-oo1-xc2b.google.com (mail-oo1-xc2b.google.com [IPv6:2607:f8b0:4864:20::c2b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71F151987
-	for <linux-s390@vger.kernel.org>; Fri,  8 Dec 2023 08:32:03 -0800 (PST)
-Received: by mail-oo1-xc2b.google.com with SMTP id 006d021491bc7-58d06bfadf8so1133019eaf.1
-        for <linux-s390@vger.kernel.org>; Fri, 08 Dec 2023 08:32:03 -0800 (PST)
+Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB991212D
+	for <linux-s390@vger.kernel.org>; Fri,  8 Dec 2023 08:51:11 -0800 (PST)
+Received: by mail-qv1-xf30.google.com with SMTP id 6a1803df08f44-67a338dfca7so12968056d6.2
+        for <linux-s390@vger.kernel.org>; Fri, 08 Dec 2023 08:51:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702053122; x=1702657922; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1702054270; x=1702659070; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8sqOsISr4A6CIOB02HqyYbsWnQIUDQQ0cX4xtpbDCng=;
-        b=iqle0iK70r7pqT5OYWAQCgwCHN3//A3JOwSyNlG6jMe6rI7p7VsXp6tnD0okNWhfyG
-         GDS5nDkyqmttX2Y1P5eH5DJ9LTF97mgtFYvt/KAYfRF79WfHg0XeiRxoe6gGf63VSmb9
-         4+cvdtKhHAJC9m7q/XPZg0wwm8Y0UztbglhhKDmw2PwpS34X1rYGbdudSS+daobv0NGH
-         xM7ToxrbRZQMJW3eb3XpITf03W/WJezZM6BpNLuxDZEb7oOSPcREQ2o9wkAJ0ka08NB4
-         XcPpgMf0//yJHvlPRbLykhHmDKQhaqBRJK784pv5t2DqharXMSmttOlR03Bp79h6XX4J
-         wz8A==
+        bh=eIcp9jypYULc/a0PN4uogFYiIDljiHAuDtNHVxk71mg=;
+        b=YDDwHLv7SUyZKqLAN3Dp3qQ2a+bpKXd61JPV9sC/ojIs/BY69CbfdAf/3HMmJtKvIo
+         xOYIXIpEKPRmzEzOTeLerjXq1EUeuggZUlkssAXPSYqJsxVruf5wXoBgtC+qxQ+u1Nsj
+         J+vN5onqVkCDgZ/PvwNBbjR8gaIbVE5Vf/xJu+HRU1F1RjxEprenqLznBT+SJPkW5DrJ
+         cFFtkUTSQVtTcB8D4yTMp88UUD84FXuAawzAr4qaxMNjkeX8YlzjJggChl5AEVWPO1+i
+         OEmcw7+vZgO8zYqBF2XfNMHgoTFGriK98bH+3ci++yyTgwB24VRQUs5Z+RI28GAjV5E1
+         jEHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702053122; x=1702657922;
+        d=1e100.net; s=20230601; t=1702054270; x=1702659070;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8sqOsISr4A6CIOB02HqyYbsWnQIUDQQ0cX4xtpbDCng=;
-        b=KlltiDsnFn+np3XQGip6tUHkoBBf4KlO3OhMwyqDN0xRqRZLixn5RkXBkwb9f7hk0i
-         PTTptdYW+DqQ4jl9K6xuavMVkfpdTxObJqekEFN/I5GBxbJNvBPcTHAQidMMrBjhkaAc
-         NMUbWM29yYGUEYD9Ny+zah9w/kUrQGq6XqI5YxjOv7LLfxwAfqtF4ikAKMiS470d9/vc
-         bEXanCKu6YP60yBH1sMmgn0K8LZB8TQYeqYlNXlrlSVCywwd1hKDeOUo7jhFv7t5xYR+
-         BnuilUjvm3RtTPB+69lpr10yBV6K/KImJ/kc5PAM1DL/NJZrPn8mh43VtUziFDRhN8f5
-         eUMQ==
-X-Gm-Message-State: AOJu0Yw1glmCqOZWAshN2K3NUaLwSfbdj6UIHbEM647nAqoY9D/5bOsv
-	5TYiEYcFbBHKUd1Hamw9vNFubAbxrPhbH5cm1X/8GQ==
-X-Google-Smtp-Source: AGHT+IH04K90iuM9X1mkjifO4TvAKhiYyXmU1LNL55T1W04MJ1jjc5+Vy90i3bYg2jhfMs/BJZ+7n8AlC4vX1LbSMS4=
-X-Received: by 2002:a05:6358:7f13:b0:170:2c2d:9d8f with SMTP id
- p19-20020a0563587f1300b001702c2d9d8fmr209508rwn.1.1702053122541; Fri, 08 Dec
- 2023 08:32:02 -0800 (PST)
+        bh=eIcp9jypYULc/a0PN4uogFYiIDljiHAuDtNHVxk71mg=;
+        b=izK+L7ShIhEmshNynblSwS7lF8U9cL9p5p/GimI0CN9tQxxzs/jUz0t4ptOAFiJ3Sw
+         zRoB2Zhy2ewztTzQRyHqbKCGQ6GR2kOswZASC+bmTF2TcsjBanrILgAo2ZOgtbLLq2Ny
+         oEWwHCkAIBSlwSBX+pf3Kf18RiXg8/g9G0R5pXnxt6X748ExBUXp06UQbmgSHQS0TEU1
+         JIlaJ/HvJXrcrUNmd6O7GJWMMlLspL6uLHnB9jPVXyDE4zH9OWHJfyAJm38TDzTe9ohf
+         D6BSWtQckJ3fdUvFyYRF+lt7K8XnpbehBWI4WbyTD+0+U/qQ9zMYqVtFmzNeCgWGn8lL
+         9i6A==
+X-Gm-Message-State: AOJu0Yy/nmFKz/TugxBSSVDsFA8DDKmvHPAnXByo0xDXYbn4Vd1VyiXV
+	Z5kLtqOhecHnCt43smguocVZ250ZTngIMVkcl8+HYw==
+X-Google-Smtp-Source: AGHT+IE/6Nwbhf4SS9TLr4ojb1XW8J/22KVeKosnXzUvx9TzWSmL9hJNlMtz5gJPuHi3WKCMxewFNFHWT3ygW1WZWRI=
+X-Received: by 2002:a0c:ea88:0:b0:67a:9a7d:ee10 with SMTP id
+ d8-20020a0cea88000000b0067a9a7dee10mr256389qvp.0.1702054270555; Fri, 08 Dec
+ 2023 08:51:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231121220155.1217090-1-iii@linux.ibm.com> <20231121220155.1217090-5-iii@linux.ibm.com>
-In-Reply-To: <20231121220155.1217090-5-iii@linux.ibm.com>
+References: <20231121220155.1217090-1-iii@linux.ibm.com> <20231121220155.1217090-19-iii@linux.ibm.com>
+In-Reply-To: <20231121220155.1217090-19-iii@linux.ibm.com>
 From: Alexander Potapenko <glider@google.com>
-Date: Fri, 8 Dec 2023 17:31:26 +0100
-Message-ID: <CAG_fn=W_aH5a5grk63Uwx0Dq-dvdafAriBc3v5YtYA4cXiuJ7Q@mail.gmail.com>
-Subject: Re: [PATCH v2 04/33] kmsan: Increase the maximum store size to 4096
+Date: Fri, 8 Dec 2023 17:50:30 +0100
+Message-ID: <CAG_fn=XQkhecLYFmJugOG+GawvDQ5Xsj5fTRbOAhU8Z5CfsjPA@mail.gmail.com>
+Subject: Re: [PATCH v2 18/33] lib/string: Add KMSAN support to strlcpy() and strlcat()
 To: Ilya Leoshkevich <iii@linux.ibm.com>
 Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
 	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
@@ -76,11 +76,33 @@ Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-founda
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 21, 2023 at 11:07=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.co=
+On Tue, Nov 21, 2023 at 11:02=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.co=
 m> wrote:
 >
-> The inline assembly block in s390's chsc() stores that much.
+> Currently KMSAN does not fully propagate metadata in strlcpy() and
+> strlcat(), because they are built with -ffreestanding and call
+> memcpy(). In this combination memcpy() calls are not instrumented.
+
+Is this something specific to s390?
+
+> Fix by copying the metadata manually. Add the __STDC_HOSTED__ #ifdef in
+> case the code is compiled with different flags in the future.
 >
 > Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Reviewed-by: Alexander Potapenko <glider@google.com>
+> ---
+>  lib/string.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/lib/string.c b/lib/string.c
+> index be26623953d2..e83c6dd77ec6 100644
+> --- a/lib/string.c
+> +++ b/lib/string.c
+> @@ -111,6 +111,9 @@ size_t strlcpy(char *dest, const char *src, size_t si=
+ze)
+>         if (size) {
+>                 size_t len =3D (ret >=3D size) ? size - 1 : ret;
+>                 __builtin_memcpy(dest, src, len);
+
+On x86, I clearly see this __builtin_memcpy() being replaced with
+__msan_memcpy().
 
