@@ -1,115 +1,99 @@
-Return-Path: <linux-s390+bounces-465-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-467-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A58B480C826
-	for <lists+linux-s390@lfdr.de>; Mon, 11 Dec 2023 12:37:31 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB85880C87C
+	for <lists+linux-s390@lfdr.de>; Mon, 11 Dec 2023 12:51:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2DC29B21320
-	for <lists+linux-s390@lfdr.de>; Mon, 11 Dec 2023 11:37:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67221281E0A
+	for <lists+linux-s390@lfdr.de>; Mon, 11 Dec 2023 11:51:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3042437164;
-	Mon, 11 Dec 2023 11:37:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D894430670;
+	Mon, 11 Dec 2023 11:51:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="U284KQe8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u17OW6FU"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8041B6;
-	Mon, 11 Dec 2023 03:37:20 -0800 (PST)
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BB9qqjl019534;
-	Mon, 11 Dec 2023 11:37:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=sGwW86/Z0Trc+yHiYF3uNzOJmXmzBEn/37dRO0PcYgg=;
- b=U284KQe8vLFE8g1g0tzsggf3uc2sW6EOO+rRFnn5MoiZWuvfCrzIkZnzAkTOtvo0S6fd
- 4waVClC5ImQuOknHYRf79eYJb6keQFhN4JDUM295fBA2xEm9rvp/45ZFkx+2v26pWr5s
- 2E0sR4lozMT13axoXlWFXi7mVPPFIjrGx8I7MC6P+T6Kvin9Wgr9MeVEBNgNGyoy7Pl2
- +lBYMZWmgRgQtjC//w7jijSCc5WgXyqLF699mEtOEnEXpO/cX3f6k0H7DQXAxnSLI21a
- GgnWihzhSTTtsJfn2reIM8oVg2mc/w9s4iy5yqbMrCs2GSTaICTiIiwJyRfWRdLtNKqc bg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uwwj9q60q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 11 Dec 2023 11:37:17 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BB9tEmS025166;
-	Mon, 11 Dec 2023 11:37:16 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uwwj9q604-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 11 Dec 2023 11:37:16 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BB9E18L004101;
-	Mon, 11 Dec 2023 11:37:15 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uw4sk0nkt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 11 Dec 2023 11:37:15 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BBBbCE544827054
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 11 Dec 2023 11:37:12 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4B7B920043;
-	Mon, 11 Dec 2023 11:37:12 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 010B920040;
-	Mon, 11 Dec 2023 11:37:11 +0000 (GMT)
-Received: from [9.171.1.164] (unknown [9.171.1.164])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 11 Dec 2023 11:37:10 +0000 (GMT)
-Message-ID: <021fe50f-a70b-4d2d-b16f-25954be4e31f@linux.ibm.com>
-Date: Mon, 11 Dec 2023 12:37:10 +0100
+Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13EB5CF
+	for <linux-s390@vger.kernel.org>; Mon, 11 Dec 2023 03:51:04 -0800 (PST)
+Received: by mail-qv1-xf2f.google.com with SMTP id 6a1803df08f44-67ab16c38caso29122566d6.1
+        for <linux-s390@vger.kernel.org>; Mon, 11 Dec 2023 03:51:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1702295463; x=1702900263; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eFlOaOKOFTUGeU3hihhI0E9Jv6p6CgBMgpCcvHMWbLI=;
+        b=u17OW6FU+I47r/XfAcb5vP+2Le80pD6d5wdDVFKE2j5qnRsm+J0UIuKmqaMMryr1M+
+         CjsaO3aTGMFOawVCEqypHSyz6TV6RHpCuu4Fxi9ZTvs5umRG801QflWNLjzkR4OEYt3Z
+         4M9YKCjq3rygkxRn4mxKpPYVQsnXYwy2zxJ+8xtCTzArc4HSlyh5z1Yu7qkV3KLrapuV
+         30AzzCqO5sh4QRiWlJ5xW2C/dNKvDpkVSkC49ezfICTW5OpDSdk7mPmL4esqg+xsEdb8
+         zRezW5po+CbeFBVl6pOlTzs6HdwBER4EZPEAGvxtsISuAbxBJ5UBfI0crUGleB2ViKRy
+         J5Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702295463; x=1702900263;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eFlOaOKOFTUGeU3hihhI0E9Jv6p6CgBMgpCcvHMWbLI=;
+        b=m+s+faq1OIzcN3ktu5YuLvcvMWuJ2Bjvt8Dzvu9kUKU6IIM6IneBWgG49o/Sn5ZzL4
+         Qxc43znegwd2y9JF7PZo0Ijfyc2c+kMsozr2mVLf/EkZ0viZ6dgWnFaA9TbPCoRCkx7/
+         amLl3JEvC+yZvnBn47GO9eA3k6HiW5+UJEnRkeVCIYmBbbksacMnwFfOTHmd1avKMKuX
+         wdoI0k8mitn6c/uAHh3vr8kTH55Gx/iOGPfmnYdcsGVfpqt3T8c6XtagpofiejHywluG
+         fqpana9Zs7uqxp/e9GO590zgPxYlT8+BRVizHDEt1FUFjvcWW5AnlCoD+pLDPqtqLRuL
+         YLAA==
+X-Gm-Message-State: AOJu0YxlQygAuKH+FN9EMeEjU1a8ztgVBpKUAR8PJoZrmqqT06RAa6ub
+	r5qEkZroalLaD5Cr8coPWA10U8AcY3XsLXD5b7AEog==
+X-Google-Smtp-Source: AGHT+IESpOk1+13dVI9Xc1VuCWEKnD2SuIEKb3OpBVqsUwAw0LqpvmwqlMYZQkeY3oFDarm5X4BCzXvYf66ohaO4eV0=
+X-Received: by 2002:a05:6214:2626:b0:67a:b923:6ae2 with SMTP id
+ gv6-20020a056214262600b0067ab9236ae2mr6255559qvb.23.1702295463057; Mon, 11
+ Dec 2023 03:51:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v5 6/9] net/smc: compatible with 128-bits
- extended GID of virtual ISM device
-Content-Language: en-US
-To: Wen Gu <guwen@linux.alibaba.com>, wenjia@linux.ibm.com, hca@linux.ibm.com,
-        gor@linux.ibm.com, agordeev@linux.ibm.com, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        kgraul@linux.ibm.com, jaka@linux.ibm.com
-Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com, alibuda@linux.alibaba.com,
-        tonylu@linux.alibaba.com, raspl@linux.ibm.com, schnelle@linux.ibm.com,
-        guangguan.wang@linux.alibaba.com, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1702021259-41504-1-git-send-email-guwen@linux.alibaba.com>
- <1702021259-41504-7-git-send-email-guwen@linux.alibaba.com>
-From: Alexandra Winter <wintera@linux.ibm.com>
-In-Reply-To: <1702021259-41504-7-git-send-email-guwen@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: GF6X_gFLrDcAbTt6A9cnT5hygbTNdeBS
-X-Proofpoint-ORIG-GUID: DZ81H8hgjrB2_emnFSsBbm218YoM7fuH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-11_04,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=845
- lowpriorityscore=0 malwarescore=0 clxscore=1015 spamscore=0 bulkscore=0
- adultscore=0 phishscore=0 suspectscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2312110093
+References: <20231121220155.1217090-1-iii@linux.ibm.com> <20231121220155.1217090-13-iii@linux.ibm.com>
+In-Reply-To: <20231121220155.1217090-13-iii@linux.ibm.com>
+From: Alexander Potapenko <glider@google.com>
+Date: Mon, 11 Dec 2023 12:50:22 +0100
+Message-ID: <CAG_fn=VaJtMogdmehJoYmZRNrs5AXYs+ZwBTu3TQQVaSkFNzcw@mail.gmail.com>
+Subject: Re: [PATCH v2 12/33] kmsan: Allow disabling KMSAN checks for the
+ current task
+To: Ilya Leoshkevich <iii@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Pekka Enberg <penberg@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-s390@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Nov 21, 2023 at 11:06=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.co=
+m> wrote:
+>
+> Like for KASAN, it's useful to temporarily disable KMSAN checks around,
+> e.g., redzone accesses. Introduce kmsan_disable_current() and
+> kmsan_enable_current(), which are similar to their KASAN counterparts.
 
+Initially we used to have this disablement counter in KMSAN, but
+adding it uncontrollably can result in KMSAN not functioning properly.
+E.g. forgetting to call kmsan_disable_current() or underflowing the
+counter will break reporting.
+We'd better put this API in include/linux/kmsan.h to indicate it
+should be discouraged.
 
-On 08.12.23 08:40, Wen Gu wrote:
-> According to virtual ISM support feature defined by SMCv2.1, GIDs of
-> virtual ISM device are UUIDs defined by RFC4122, which are 128-bits
-> long. So some adaptation work is required. And note that the GIDs of
-> existing platform firmware ISM devices still remain 64-bits long.
-> 
-> Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
-> ---
+> Even though it's not strictly necessary, make them reentrant, in order
+> to match the KASAN behavior.
 
-Thank you Wen Gu.
-Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
+Until this becomes strictly necessary, I think we'd better
+KMSAN_WARN_ON if the counter is re-entered.
 
