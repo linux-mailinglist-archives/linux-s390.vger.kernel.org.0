@@ -1,134 +1,187 @@
-Return-Path: <linux-s390+bounces-466-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-468-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 683AB80C877
-	for <lists+linux-s390@lfdr.de>; Mon, 11 Dec 2023 12:50:58 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 568DE80C93D
+	for <lists+linux-s390@lfdr.de>; Mon, 11 Dec 2023 13:15:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 229E028170F
-	for <lists+linux-s390@lfdr.de>; Mon, 11 Dec 2023 11:50:57 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D302CB20DD6
+	for <lists+linux-s390@lfdr.de>; Mon, 11 Dec 2023 12:15:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E758358A9;
-	Mon, 11 Dec 2023 11:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZOOokYmG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5BC43A266;
+	Mon, 11 Dec 2023 12:15:45 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 432D69B;
-	Mon, 11 Dec 2023 03:50:52 -0800 (PST)
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BBBnDu1019329;
-	Mon, 11 Dec 2023 11:50:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=g/OpsuF0w/ezjdOt1y1XRBvIP8co9yItLc4jPWanbV0=;
- b=ZOOokYmGmmVp51O0dGWUb90Pc3CKvxJp1s3jtuYeivB9BWiENkynUsjTPG0WSHA9JQmU
- qqUNQq5Uy7CR4Cv7VWNJQ+fZ5szid2D+hBrhCbS6X26TSCnFGh9SeDmdnuXrc+sRujmM
- P2xPOY+oyUsXM5NfIm5mHOKTxjC5DvGAyYfvoX6JLFVbtuf7V1sBta54AFe5HlIVmLb/
- aq08YZsoWJETms1X5pvZg+n/kWcStobnnVlNJDge3FLOyL8f4uqCDffg3f7SfWfZfA6T
- SBNo6EPT2vOevZzR7USd22VDfyAoNchNQJUiW9ws3RO0gN9+sBnnqZWrcbO99TmDI/hl Vw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ux1vq81ax-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 11 Dec 2023 11:50:44 +0000
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BBBnwHp021051;
-	Mon, 11 Dec 2023 11:50:43 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ux1vq81ad-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 11 Dec 2023 11:50:43 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BB9sDxZ013874;
-	Mon, 11 Dec 2023 11:50:42 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uw591rgdr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 11 Dec 2023 11:50:42 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BBBod4v27853536
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 11 Dec 2023 11:50:39 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BB4D320040;
-	Mon, 11 Dec 2023 11:50:39 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7D9EC20043;
-	Mon, 11 Dec 2023 11:50:38 +0000 (GMT)
-Received: from [9.171.1.164] (unknown [9.171.1.164])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 11 Dec 2023 11:50:38 +0000 (GMT)
-Message-ID: <a7abaf57-a49a-4a31-a7e6-0d5312367480@linux.ibm.com>
-Date: Mon, 11 Dec 2023 12:50:38 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v5 7/9] net/smc: support extended GID in SMC-D
- lgr netlink attribute
-Content-Language: en-US
-To: Wen Gu <guwen@linux.alibaba.com>, wenjia@linux.ibm.com, hca@linux.ibm.com,
-        gor@linux.ibm.com, agordeev@linux.ibm.com, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        kgraul@linux.ibm.com, jaka@linux.ibm.com
-Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com, alibuda@linux.alibaba.com,
-        tonylu@linux.alibaba.com, raspl@linux.ibm.com, schnelle@linux.ibm.com,
-        guangguan.wang@linux.alibaba.com, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1702021259-41504-1-git-send-email-guwen@linux.alibaba.com>
- <1702021259-41504-8-git-send-email-guwen@linux.alibaba.com>
- <8b651c68-c51d-49a9-9df0-58e9110fa47d@linux.ibm.com>
- <1c14f769-8da2-fdac-cec2-a59ab69284ad@linux.alibaba.com>
-From: Alexandra Winter <wintera@linux.ibm.com>
-In-Reply-To: <1c14f769-8da2-fdac-cec2-a59ab69284ad@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Pa-SLE7kdb9xgaosGmzVJpt4wpjlfvWN
-X-Proofpoint-ORIG-GUID: jdoe_snMf-7DmBs02uL24sx8-JQ6gp8N
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10BF711F;
+	Mon, 11 Dec 2023 04:15:30 -0800 (PST)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R571e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VyIPaKz_1702296927;
+Received: from 30.221.130.53(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0VyIPaKz_1702296927)
+          by smtp.aliyun-inc.com;
+          Mon, 11 Dec 2023 20:15:28 +0800
+Message-ID: <9a6d57c0-f5b4-9b2c-dc5f-dc47d0518141@linux.alibaba.com>
+Date: Mon, 11 Dec 2023 20:15:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-11_04,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- priorityscore=1501 lowpriorityscore=0 spamscore=0 bulkscore=0
- impostorscore=0 mlxscore=0 malwarescore=0 mlxlogscore=749 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2312110095
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.15.1
+Subject: Re: [PATCH net-next v5 2/9] net/smc: introduce sub-functions for
+ smc_clc_send_confirm_accept()
+To: Alexandra Winter <wintera@linux.ibm.com>, wenjia@linux.ibm.com,
+ hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, kgraul@linux.ibm.com, jaka@linux.ibm.com
+Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com,
+ alibuda@linux.alibaba.com, tonylu@linux.alibaba.com, raspl@linux.ibm.com,
+ schnelle@linux.ibm.com, guangguan.wang@linux.alibaba.com,
+ linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <1702021259-41504-1-git-send-email-guwen@linux.alibaba.com>
+ <1702021259-41504-3-git-send-email-guwen@linux.alibaba.com>
+ <ac3c0823-8705-4225-96c8-ed7bc55d1bfc@linux.ibm.com>
+From: Wen Gu <guwen@linux.alibaba.com>
+In-Reply-To: <ac3c0823-8705-4225-96c8-ed7bc55d1bfc@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
 
-On 11.12.23 11:09, Wen Gu wrote:
+On 2023/12/11 18:43, Alexandra Winter wrote:
 > 
 > 
-> On 2023/12/11 17:39, Alexandra Winter wrote:
+> On 08.12.23 08:40, Wen Gu wrote:
+>> There is a large if-else block in smc_clc_send_confirm_accept() and it
+>> is better to split it into two sub-functions.
 >>
->>
->> On 08.12.23 08:40, Wen Gu wrote:
->>> Virtual ISM devices introduced in SMCv2.1 requires a 128 bit extended
->>> GID vs. the existing ISM 64bit GID. So the 2nd 64 bit of extended GID
->>> should be included in SMC-D linkgroup netlink attribute as well.
->>>
->>> Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
->>> ---
->>
->> This patch did not apply cleanly.
->> Please always base patches on the current net-next
+>> Suggested-by: Alexandra Winter <wintera@linux.ibm.com>
+>> Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
+>> ---
 > 
-> Strange.. I can apply them cleanly with the latest net-next
-> (6e944cc68633 ("Merge branch 'rswitch-jumbo-frames'")).
+> Thank you very much Wen Gu for improving the codebase.
 > 
-> Could you please try again? Thanks.
+I'm glad I could help.
+
+> 
+>>   net/smc/smc_clc.c | 196 +++++++++++++++++++++++++++++++-----------------------
+>>   1 file changed, 114 insertions(+), 82 deletions(-)
+>>
+>> diff --git a/net/smc/smc_clc.c b/net/smc/smc_clc.c
+>> index 0fcb035..52b4ea9 100644
+>> --- a/net/smc/smc_clc.c
+>> +++ b/net/smc/smc_clc.c
+>> @@ -998,6 +998,111 @@ int smc_clc_send_proposal(struct smc_sock *smc, struct smc_init_info *ini)
+>>   	return reason_code;
+>>   }
+>>   
+>> +static void smcd_clc_prep_confirm_accept(struct smc_connection *conn,
+>> +				struct smc_clc_msg_accept_confirm_v2 *clc_v2,
+>> +				int first_contact, u8 version,
+>> +				u8 *eid, struct smc_init_info *ini,
+>> +				int *fce_len,
+>> +				struct smc_clc_first_contact_ext_v2x *fce_v2x,
+>> +				struct smc_clc_msg_trail *trl)
+>> +{
+>> +	struct smcd_dev *smcd = conn->lgr->smcd;
+>> +	struct smc_clc_msg_accept_confirm *clc;
+>> +	int len;
+>> +
+>> +	/* SMC-D specific settings */
+>> +	clc = (struct smc_clc_msg_accept_confirm *)clc_v2;
+> 
+> Why is this cast neccessary? (Here as well as in smcr_clc_prep_confirm_accept
+> and in smc_clc_send_confirm_accept)
+> smc_clc_msg_accept_confirm_v2 has hdr and d0 as well.
+
+I think the cast is to imply that v2 is an expansion of v1, or v1 is the base of v2.
+So here using clc(v1) reperesents their common set.
+
+If we use smc_clc_msg_accept_confirm_v2 for all, I think readers may be tempted to
+check whether the hdr and d0 in 'smc_clc_msg_accept_confirm_v2' are also applicable to v1.
+
+And there are settings below that are specific for v1. It may be confusing if we
+change it like this:
+
+if (version == SMC_V1) {
+	clc_v2->hdr.length = htons(SMCD_CLC_ACCEPT_CONFIRM_LEN);
+} else {
+
+
+> 
+> IMO, it would be a nice seperate patch to get rid of the 2 type defs for
+> smc_clc_msg_accept_confirm and smc_clc_msg_accept_confirm_v2
+> and all the related casting anyhow.
 > 
 
-Sorry, the patches were somehow re-ordered when I downloaded them from
-https://lore.kernel.org/netdev/4ad3a168-f506-fc21-582d-fe8764f404c0@linux.alibaba.com/t.mbox.gz
+Do you mean to define only smc_clc_msg_accept_confirm_v2 or define with the name
+of smc_clc_msg_accept_confirm but the contents of smc_clc_msg_accept_confirm_v2?
 
-Everything is ok with this patch.
+I have a different opinion on this, since I think the smc_clc_msg_accept_confirm
+and smc_clc_msg_accept_confirm_v2 clearly shows the difference between v1 and
+v2 messages and remind people what is currently working on. So I perfer to keep them.
+Am I missing something?
+
+> 
+> 
+>> +	memcpy(clc->hdr.eyecatcher, SMCD_EYECATCHER,
+>> +	       sizeof(SMCD_EYECATCHER));
+>> +	clc->hdr.typev1 = SMC_TYPE_D;
+>> +	clc->d0.gid = htonll(smcd->ops->get_local_gid(smcd));
+>> +	clc->d0.token = htonll(conn->rmb_desc->token);
+>> +	clc->d0.dmbe_size = conn->rmbe_size_comp;
+>> +	clc->d0.dmbe_idx = 0;
+>> +	memcpy(&clc->d0.linkid, conn->lgr->id, SMC_LGR_ID_SIZE);
+>> +	if (version == SMC_V1) {
+>> +		clc->hdr.length = htons(SMCD_CLC_ACCEPT_CONFIRM_LEN);
+>> +	} else {
+>> +		clc_v2->d1.chid = htons(smc_ism_get_chid(smcd));
+>> +		if (eid && eid[0])
+>> +			memcpy(clc_v2->d1.eid, eid, SMC_MAX_EID_LEN);
+>> +		len = SMCD_CLC_ACCEPT_CONFIRM_LEN_V2;
+>> +		if (first_contact) {
+>> +			*fce_len = smc_clc_fill_fce_v2x(fce_v2x, ini);
+>> +			len += *fce_len;
+>> +		}
+>> +		clc_v2->hdr.length = htons(len);
+>> +	}
+>> +	memcpy(trl->eyecatcher, SMCD_EYECATCHER,
+>> +	       sizeof(SMCD_EYECATCHER));
+>> +}
+>> +
+>> +static void smcr_clc_prep_confirm_accept(struct smc_connection *conn,
+>> +				struct smc_clc_msg_accept_confirm_v2 *clc_v2,
+>> +				int first_contact, u8 version,
+>> +				u8 *eid, struct smc_init_info *ini,
+>> +				int *fce_len,
+>> +				struct smc_clc_first_contact_ext_v2x *fce_v2x,
+>> +				struct smc_clc_fce_gid_ext *gle,
+>> +				struct smc_clc_msg_trail *trl)
+>> +{
+>> +	struct smc_clc_msg_accept_confirm *clc;
+>> +	struct smc_link *link = conn->lnk;
+>> +	int len;
+>> +
+>> +	/* SMC-R specific settings */
+>> +	clc = (struct smc_clc_msg_accept_confirm *)clc_v2;
+> 
+> Why is this cast neccessary?
+> smc_clc_msg_accept_confirm_v2 has hdr and r0 as well.
+> 
+Similar thought as SMCD.
+
+>> +	memcpy(clc->hdr.eyecatcher, SMC_EYECATCHER,
+>> +	       sizeof(SMC_EYECATCHER));
+>> +	clc->hdr.typev1 = SMC_TYPE_R;
+>> +	clc->hdr.length = htons(SMCR_CLC_ACCEPT_CONFIRM_LEN);
+> 
+> ^^ this is overwritten below, so no need to set it here.
+> 
+
+Good catch! It will be removed. Thank you.
+
+<...>
 
