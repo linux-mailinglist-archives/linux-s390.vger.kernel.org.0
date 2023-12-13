@@ -1,81 +1,81 @@
-Return-Path: <linux-s390+bounces-556-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-559-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2701E811A44
-	for <lists+linux-s390@lfdr.de>; Wed, 13 Dec 2023 18:00:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7EFBA811A4B
+	for <lists+linux-s390@lfdr.de>; Wed, 13 Dec 2023 18:01:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B92ED1F21C94
-	for <lists+linux-s390@lfdr.de>; Wed, 13 Dec 2023 17:00:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 88654282A6E
+	for <lists+linux-s390@lfdr.de>; Wed, 13 Dec 2023 17:01:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75B683A28E;
-	Wed, 13 Dec 2023 17:00:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA2043A8C4;
+	Wed, 13 Dec 2023 17:01:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SvLU7m6R"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Bcay2Ih4"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 872D0D0;
-	Wed, 13 Dec 2023 09:00:46 -0800 (PST)
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BDF0kfW007437;
-	Wed, 13 Dec 2023 17:00:43 GMT
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DEADD0;
+	Wed, 13 Dec 2023 09:00:57 -0800 (PST)
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BDFND9T027050;
+	Wed, 13 Dec 2023 17:00:49 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
  subject : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=pp1;
- bh=sID6Zen2aLoeGx9IP5NpRxYcUv+fyWUvPj+bK1tGY04=;
- b=SvLU7m6RMip5C+U5W8qztHVGDYsnQSABf0orKjsd+6KoGhT5/vIObB96SWvRDjuRjEG4
- wkIPcyv9WPphrQHoim8q+nJqz0uDBWG4J3t04j/he26hczWd7X2IIOEPbDdUPz3enHC1
- i4Q8HWherQLq5SiXOiBi5wlJzB+A58BwM4O7tdBxXEF+leGTYfNzixLkQT2WMuvh5tDq
- TWOu9uBZyQkRDXI4qApHdFZRSqlA3WvRTBajjchSMHCH0qynZlLbJV4RsWbfLKrkQf9S
- p79rQZbMiV8/3XcuIXt3kfVNlI+AWWlwPeHRRfBZ2F+qIIw2aPz19N7Y1tFKmTw+n7/s 8w== 
+ bh=hNTPoikdwEb6oOA+VqHykjaZKyLdgxvqiEq+g0mXvnA=;
+ b=Bcay2Ih4p00UyajuRWlMmZKjgmQAbxEiQuD2fTjgXuc7PdnHyqUYWpOVFVX8OmJzNYu8
+ x3HBGQV/hKLs9xKwv++mCP8CKMr846dIRJlg9hqNGqWqlGffkcxi78PbIgfIX5YyMtOM
+ 8bW8CUEYBX7AhZDwTai1pdda2aehMpv5GC9ya0Mm+0SsFGPD9RGiGewSLgsjeXSeBqdE
+ +oESxMoOFV+0bTEGE45flMBBBczahV8VtSLpA0yHqwmLfSIr9+e32c614vVYV9uRaKvJ
+ f3V98oJawVCjZgrDhX4KzRUI0O1/RXx7RrRs6C9XDZCZ3tb7LWDnpw/Maht0XIRlc7du Xw== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uybw4s3dt-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uyf72b2ms-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Dec 2023 17:00:43 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BDGtAfC029377;
-	Wed, 13 Dec 2023 17:00:42 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uybw4s3da-1
+	Wed, 13 Dec 2023 17:00:48 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BDGgPrk002823;
+	Wed, 13 Dec 2023 17:00:47 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uyf72b2jq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Dec 2023 17:00:42 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BDGKg0Z008455;
-	Wed, 13 Dec 2023 17:00:41 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uw2jtjhu5-1
+	Wed, 13 Dec 2023 17:00:47 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BDG4cWH013878;
+	Wed, 13 Dec 2023 17:00:44 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uw5929sd1-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Dec 2023 17:00:41 +0000
+	Wed, 13 Dec 2023 17:00:44 +0000
 Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BDH0d5j30736858
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BDH0fX133358570
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 13 Dec 2023 17:00:39 GMT
+	Wed, 13 Dec 2023 17:00:42 GMT
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 00ADB20043;
-	Wed, 13 Dec 2023 17:00:39 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id E05A820043;
+	Wed, 13 Dec 2023 17:00:41 +0000 (GMT)
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CABFD20040;
-	Wed, 13 Dec 2023 17:00:38 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id C130720040;
+	Wed, 13 Dec 2023 17:00:41 +0000 (GMT)
 Received: from p-imbrenda (unknown [9.152.224.66])
 	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 13 Dec 2023 17:00:38 +0000 (GMT)
-Date: Wed, 13 Dec 2023 17:45:00 +0100
+	Wed, 13 Dec 2023 17:00:41 +0000 (GMT)
+Date: Wed, 13 Dec 2023 18:00:33 +0100
 From: Claudio Imbrenda <imbrenda@linux.ibm.com>
 To: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
 Cc: Nico =?UTF-8?B?QsO2aHI=?= <nrb@linux.ibm.com>,
-        Thomas Huth
- <thuth@redhat.com>, Janosch Frank <frankja@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Andrew Jones <andrew.jones@linux.dev>,
-        David
- Hildenbrand <david@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [kvm-unit-tests PATCH 4/5] s390x: Use library functions for
- snippet exit
-Message-ID: <20231213174500.77f3d26f@p-imbrenda>
-In-Reply-To: <20231213124942.604109-5-nsg@linux.ibm.com>
+        Janosch Frank
+ <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>, linux-s390@vger.kernel.org,
+        Andrew Jones <andrew.jones@linux.dev>, kvm@vger.kernel.org,
+        Thomas Huth <thuth@redhat.com>
+Subject: Re: [kvm-unit-tests PATCH 5/5] s390x: Add test for STFLE
+ interpretive execution (format-0)
+Message-ID: <20231213180033.54516bdd@p-imbrenda>
+In-Reply-To: <20231213124942.604109-6-nsg@linux.ibm.com>
 References: <20231213124942.604109-1-nsg@linux.ibm.com>
-	<20231213124942.604109-5-nsg@linux.ibm.com>
+	<20231213124942.604109-6-nsg@linux.ibm.com>
 Organization: IBM
 X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 Precedence: bulk
@@ -87,99 +87,215 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: YLvs-k7-e9KKL_nedE6r4ge-k_0kJQ9B
-X-Proofpoint-ORIG-GUID: BYqt4KpTMvo0UdLJNlPIfN-XX-6tY7UE
+X-Proofpoint-ORIG-GUID: lDwjlNG91U_8fU0YMzihknB93SPAe1B3
+X-Proofpoint-GUID: o1kTSGK_bC_RgErfPTfEsE6CHBlrsSwB
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-13_10,2023-12-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- phishscore=0 spamscore=0 suspectscore=0 clxscore=1015 lowpriorityscore=0
- impostorscore=0 priorityscore=1501 mlxscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2312130121
+ definitions=2023-12-13_09,2023-12-13_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 phishscore=0 adultscore=0 mlxscore=0 malwarescore=0
+ mlxlogscore=999 lowpriorityscore=0 impostorscore=0 spamscore=0
+ clxscore=1015 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2312130119
 
-On Wed, 13 Dec 2023 13:49:41 +0100
+On Wed, 13 Dec 2023 13:49:42 +0100
 Nina Schoetterl-Glausch <nsg@linux.ibm.com> wrote:
 
-> Replace the existing code for exiting from snippets with the newly
-> introduced library functionality.
-> This causes additional report()s, otherwise no change in functionality
-> intended.
+> The STFLE instruction indicates installed facilities.
+> SIE can interpretively execute STFLE.
+> Use a snippet guest executing STFLE to get the result of
+> interpretive execution and check the result.
 > 
 > Signed-off-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
-> ---
->  s390x/sie-dat.c            | 10 ++--------
->  s390x/snippets/c/sie-dat.c | 19 +------------------
->  2 files changed, 3 insertions(+), 26 deletions(-)
-> 
-> diff --git a/s390x/sie-dat.c b/s390x/sie-dat.c
-> index 9e60f26e..6b6e6868 100644
-> --- a/s390x/sie-dat.c
-> +++ b/s390x/sie-dat.c
-> @@ -27,23 +27,17 @@ static void test_sie_dat(void)
->  	uint64_t test_page_gpa, test_page_hpa;
->  	uint8_t *test_page_hva, expected_val;
->  	bool contents_match;
-> -	uint8_t r1;
->  
->  	/* guest will tell us the guest physical address of the test buffer */
->  	sie(&vm);
-> -	assert(vm.sblk->icptcode == ICPT_INST &&
-> -	       (vm.sblk->ipa & 0xff00) == 0x8300 && vm.sblk->ipb == 0x9c0000);
-> -
-> -	r1 = (vm.sblk->ipa & 0xf0) >> 4;
-> -	test_page_gpa = vm.save_area.guest.grs[r1];
-> +	assert(snippet_get_force_exit_value(&vm, &test_page_gpa));
 
-but the function inside the assert will already report a failure, right?
-then why the assert? (the point I'm trying to make is that the function
-should not report stuff, see my comments in the previous patch)
+[...]
 
->  	test_page_hpa = virt_to_pte_phys(guest_root, (void*)test_page_gpa);
->  	test_page_hva = __va(test_page_hpa);
->  	report_info("test buffer gpa=0x%lx hva=%p", test_page_gpa, test_page_hva);
->  
->  	/* guest will now write to the test buffer and we verify the contents */
->  	sie(&vm);
-> -	assert(vm.sblk->icptcode == ICPT_INST &&
-> -	       vm.sblk->ipa == 0x8300 && vm.sblk->ipb == 0x440000);
-> +	assert(snippet_check_force_exit(&vm));
->  
->  	contents_match = true;
->  	for (unsigned int i = 0; i < GUEST_TEST_PAGE_COUNT; i++) {
-> diff --git a/s390x/snippets/c/sie-dat.c b/s390x/snippets/c/sie-dat.c
-> index ecfcb60e..414afd42 100644
-> --- a/s390x/snippets/c/sie-dat.c
-> +++ b/s390x/snippets/c/sie-dat.c
-> @@ -9,28 +9,11 @@
->   */
->  #include <libcflat.h>
->  #include <asm-generic/page.h>
+>  static inline void setup_facilities(void)
+> diff --git a/s390x/snippets/c/stfle.c b/s390x/snippets/c/stfle.c
+> new file mode 100644
+> index 00000000..eb024a6a
+> --- /dev/null
+> +++ b/s390x/snippets/c/stfle.c
+> @@ -0,0 +1,26 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright IBM Corp. 2023
+> + *
+> + * Snippet used by the STLFE interpretive execution facilities test.
+> + */
+> +#include <libcflat.h>
 > +#include <snippet-guest.h>
->  #include "sie-dat.h"
->  
->  static uint8_t test_pages[GUEST_TEST_PAGE_COUNT * PAGE_SIZE] __attribute__((__aligned__(PAGE_SIZE)));
->  
-> -static inline void force_exit(void)
-> -{
-> -	asm volatile("diag	0,0,0x44\n"
-> -		     :
-> -		     :
-> -		     : "memory"
-> -	);
-> -}
-> -
-> -static inline void force_exit_value(uint64_t val)
-> -{
-> -	asm volatile("diag	%[val],0,0x9c\n"
-> -		     :
-> -		     : [val] "d"(val)
-> -		     : "memory"
-> -	);
-> -}
-> -
->  int main(void)
->  {
->  	uint8_t *invalid_ptr;
+> +
+> +int main(void)
+> +{
+> +	const unsigned int max_fac_len = 8;
+
+why 8?
+
+> +	uint64_t res[max_fac_len + 1];
+> +
+> +	res[0] = max_fac_len - 1;
+> +	asm volatile ( "lg	0,%[len]\n"
+> +		"	stfle	%[fac]\n"
+> +		"	stg	0,%[len]\n"
+> +		: [fac] "=QS"(*(uint64_t(*)[max_fac_len])&res[1]),
+> +		  [len] "+RT"(res[0])
+> +		:
+> +		: "%r0", "cc"
+> +	);
+> +	force_exit_value((uint64_t)&res);
+> +	return 0;
+> +}
+> diff --git a/s390x/stfle-sie.c b/s390x/stfle-sie.c
+> new file mode 100644
+> index 00000000..574319ed
+> --- /dev/null
+> +++ b/s390x/stfle-sie.c
+> @@ -0,0 +1,132 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright IBM Corp. 2023
+> + *
+> + * SIE with STLFE interpretive execution facilities test.
+> + */
+> +#include <libcflat.h>
+> +#include <stdlib.h>
+> +#include <asm/facility.h>
+> +#include <asm/time.h>
+> +#include <snippet-host.h>
+> +#include <alloc_page.h>
+> +#include <sclp.h>
+> +
+> +static struct vm vm;
+> +static uint64_t (*fac)[PAGE_SIZE / sizeof(uint64_t)];
+> +static rand_state rand_s;
+> +
+> +static void setup_guest(void)
+> +{
+> +	extern const char SNIPPET_NAME_START(c, stfle)[];
+> +	extern const char SNIPPET_NAME_END(c, stfle)[];
+> +
+> +	setup_vm();
+> +	fac = alloc_pages_flags(0, AREA_DMA31);
+> +
+> +	snippet_setup_guest(&vm, false);
+> +	snippet_init(&vm, SNIPPET_NAME_START(c, stfle),
+> +		     SNIPPET_LEN(c, stfle), SNIPPET_UNPACK_OFF);
+> +}
+> +
+> +struct guest_stfle_res {
+> +	uint16_t len;
+> +	uint64_t reg;
+> +	unsigned char *mem;
+> +};
+> +
+> +static struct guest_stfle_res run_guest(void)
+> +{
+> +	struct guest_stfle_res res;
+> +	uint64_t guest_stfle_addr;
+> +
+> +	sie(&vm);
+> +	assert(snippet_get_force_exit_value(&vm, &guest_stfle_addr));
+> +	res.mem = &vm.guest_mem[guest_stfle_addr];
+> +	memcpy(&res.reg, res.mem, sizeof(res.reg));
+> +	res.len = (res.reg & 0xff) + 1;
+> +	res.mem += sizeof(res.reg);
+> +	return res;
+> +}
+> +
+> +static void test_stfle_format_0(void)
+> +{
+> +	struct guest_stfle_res res;
+> +
+> +	report_prefix_push("format-0");
+> +	for (int j = 0; j < stfle_size(); j++)
+> +		WRITE_ONCE((*fac)[j], rand64(&rand_s));
+
+do you really need random numbers? can't you use a static pattern?
+maybe something like 0x0001020304050607 etc...
+
+> +	vm.sblk->fac = (uint32_t)(uint64_t)fac;
+> +	res = run_guest();
+> +	report(res.len == stfle_size(), "stfle len correct");
+> +	report(!memcmp(*fac, res.mem, res.len * sizeof(uint64_t)),
+> +	       "Guest facility list as specified");
+
+it seems like you are comparing the full facility list (stfle_size
+doublewords long) with the result of STFLE in the guest, but the guest
+is limited to 8 double words?
+
+> +	report_prefix_pop();
+> +}
+> +
+> +struct args {
+> +	uint64_t seed;
+> +};
+> +
+> +static bool parse_uint64_t(const char *arg, uint64_t *out)
+> +{
+> +	char *end;
+> +	uint64_t num;
+> +
+> +	if (arg[0] == '\0')
+> +		return false;
+> +	num = strtoul(arg, &end, 0);
+> +	if (end[0] != '\0')
+> +		return false;
+> +	*out = num;
+> +	return true;
+> +}
+> +
+> +static struct args parse_args(int argc, char **argv)
+> +{
+> +	struct args args;
+> +	const char *flag;
+> +	unsigned int i;
+> +	uint64_t arg;
+> +	bool has_arg;
+> +
+> +	stck(&args.seed);
+> +
+> +	for (i = 1; i < argc; i++) {
+> +		if (i + 1 < argc)
+> +			has_arg = parse_uint64_t(argv[i + 1], &arg);
+> +		else
+> +			has_arg = false;
+> +
+> +		flag = "--seed";
+> +		if (!strcmp(flag, argv[i])) {
+> +			if (!has_arg)
+> +				report_abort("%s needs an uint64_t parameter", flag);
+> +			args.seed = arg;
+> +			++i;
+> +			continue;
+> +		}
+> +		report_abort("Unsupported parameter '%s'",
+> +			     argv[i]);
+> +	}
+> +
+> +	return args;
+> +}
+
+this is lots of repeated code in all tests, I should really resurrect
+and polish my patchseries for argument parsing
+
+> +
+> +int main(int argc, char **argv)
+> +{
+> +	struct args args = parse_args(argc, argv);
+> +
+> +	if (!sclp_facilities.has_sief2) {
+> +		report_skip("SIEF2 facility unavailable");
+> +		goto out;
+> +	}
+> +
+> +	report_info("pseudo rand seed: 0x%lx", args.seed);
+> +	rand_s = RAND_STATE_INIT(args.seed);
+> +	setup_guest();
+> +	if (test_facility(7))
+> +		test_stfle_format_0();
+> +out:
+> +	return report_summary();
+> +}
 
 
