@@ -1,150 +1,142 @@
-Return-Path: <linux-s390+bounces-543-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-549-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99DCE81113D
-	for <lists+linux-s390@lfdr.de>; Wed, 13 Dec 2023 13:43:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FD0B8111B3
+	for <lists+linux-s390@lfdr.de>; Wed, 13 Dec 2023 13:50:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4291D1F2128D
-	for <lists+linux-s390@lfdr.de>; Wed, 13 Dec 2023 12:43:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4AB9C1F21394
+	for <lists+linux-s390@lfdr.de>; Wed, 13 Dec 2023 12:50:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3026928E2D;
-	Wed, 13 Dec 2023 12:43:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 487DE2C875;
+	Wed, 13 Dec 2023 12:50:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qq2nN8wP"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DnuRkQdf"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09F3911A;
-	Wed, 13 Dec 2023 04:43:29 -0800 (PST)
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BDCNv0G026163;
-	Wed, 13 Dec 2023 12:43:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=3P4mF1U1catJ/0RHY0io+Zd41V6xKcH6OFa5aBbmp0M=;
- b=qq2nN8wPOqC+Das7fNosYy9e9Yy9DYjPyUbbF9ofbgtV467jaXit2cB8UYksWho3odgy
- itgDroGTels1gd+0EfVkP2/edLq94/g3B0tqkxJftob1InvJ3h6rpI+iftMwlK8LnZ4P
- MvJMhwSS9yuzL0Gi2Fi/VhKcc3w0udplmuNJbtVwoj9Wt4p7Llbk+Los1bjOIVkNtw8B
- Eq9PV483pM9UZVJNesxZzjvlEooPIPpzw5Ho1RvdvpXdybHQCqS5oej/FFMVZNpejSje
- 2KfyLxjUIjBhhK+XAEtNQgisK+PwPRp2/wTSIZP/jQfQYAYx7rbv6xNtcdGEPIWAvnSk mA== 
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uycjwgm4k-1
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54451120;
+	Wed, 13 Dec 2023 04:49:57 -0800 (PST)
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BDCLTNP032482;
+	Wed, 13 Dec 2023 12:49:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=JvRD3WuyG3QmNvwgRY+KL+S1xRNX+Q4YFY2HVcc5qLI=;
+ b=DnuRkQdfvRv90KoOWt8BIjk57YAJCuwIrh2Lmf1O1r/xYdUqEC7s7nNx90Wxn9MaGNQX
+ Z2/9JYhEAVpp8u6okuSriXRdH1VvsBj5zdQ7OVEHA88vsqBnMVX4c/8APGmNeLfjmPVq
+ RGEzhq3/OxfaO/9HXLCPIikVc4mV/AINOKHPhnYax2foJn8kpCyAn3BiypGs3TLpUG5s
+ cHyZctBbDZ9iK0bLmmZTaoJkap/8/UaSAeVQ6wKQMkAS8ZXdYhMJagwsQ+E7P61xqPXU
+ SiObXvm6x4jWTV/AB7W28tzq58i0864gK1akbACExSYYf806ZNwIpWffG5/d3LxMOgkN AA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uybw4j3ep-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Dec 2023 12:43:28 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BDArZVA004139;
-	Wed, 13 Dec 2023 12:43:28 GMT
-Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uw4skgcyj-1
+	Wed, 13 Dec 2023 12:49:48 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BDCjOrL007562;
+	Wed, 13 Dec 2023 12:49:48 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uybw4j3ed-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Dec 2023 12:43:28 +0000
-Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
-	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BDChQ8F197142
+	Wed, 13 Dec 2023 12:49:48 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BDB1fB7008544;
+	Wed, 13 Dec 2023 12:49:47 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uw2jth14p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 13 Dec 2023 12:49:46 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BDCniqb44696016
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 13 Dec 2023 12:43:27 GMT
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D45065805A;
-	Wed, 13 Dec 2023 12:43:26 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9048A58054;
-	Wed, 13 Dec 2023 12:43:25 +0000 (GMT)
-Received: from li-479af74c-31f9-11b2-a85c-e4ddee11713b.ibm.com (unknown [9.61.110.228])
-	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 13 Dec 2023 12:43:25 +0000 (GMT)
-Message-ID: <81409a5fbe25ff2f3fcb3b6da2439ed5262ad5d3.camel@linux.ibm.com>
-Subject: Re: [PATCH] KVM: s390: fix cc for successful PQAP
-From: Eric Farman <farman@linux.ibm.com>
-To: Anthony Krowiak <akrowiak@linux.ibm.com>,
-        Janosch Frank
- <frankja@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Wed, 13 Dec 2023 12:49:44 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 18CD12004D;
+	Wed, 13 Dec 2023 12:49:44 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D9EDD20043;
+	Wed, 13 Dec 2023 12:49:43 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 13 Dec 2023 12:49:43 +0000 (GMT)
+From: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+To: Nina Schoetterl-Glausch <nsg@linux.ibm.com>,
         Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Halil Pasic
- <pasic@linux.ibm.com>,
-        Jason Herne <jjherne@linux.ibm.com>
-Cc: Sven Schnelle <svens@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Date: Wed, 13 Dec 2023 07:43:25 -0500
-In-Reply-To: <918b6276-f423-49c8-8719-4517e9d23bad@linux.ibm.com>
-References: <20231201181657.1614645-1-farman@linux.ibm.com>
-	 <fe3082f7-70fd-479f-b6a2-d753d271d6d5@linux.ibm.com>
-	 <0fe89d1a4ef539bef4bdf2302faf23f6d5848bf2.camel@linux.ibm.com>
-	 <918b6276-f423-49c8-8719-4517e9d23bad@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.50.2 (3.50.2-1.fc39) 
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ygi-5ikECu4ckdLuK-7uPFB27XWcKzAU
-X-Proofpoint-ORIG-GUID: ygi-5ikECu4ckdLuK-7uPFB27XWcKzAU
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Thomas Huth <thuth@redhat.com>, Nico Boehr <nrb@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Andrew Jones <andrew.jones@linux.dev>
+Cc: kvm@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        linux-s390@vger.kernel.org
+Subject: [kvm-unit-tests PATCH 0/5] s390x: STFLE nested interpretation
+Date: Wed, 13 Dec 2023 13:49:37 +0100
+Message-Id: <20231213124942.604109-1-nsg@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Ymbu3nF3FB5ULw9LXTQfrr2zC8dZ40yA
+X-Proofpoint-ORIG-GUID: EhLXEmgd13kX2cZOk2awkTsaHNh9Powk
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-12-13_05,2023-12-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- lowpriorityscore=0 bulkscore=0 spamscore=0 clxscore=1015
- priorityscore=1501 impostorscore=0 suspectscore=0 phishscore=0
- mlxlogscore=769 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2312130093
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ phishscore=0 spamscore=0 suspectscore=0 clxscore=1011 lowpriorityscore=0
+ impostorscore=0 priorityscore=1501 mlxscore=0 mlxlogscore=633 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2312130093
 
-On Fri, 2023-12-08 at 09:21 -0500, Anthony Krowiak wrote:
->=20
-> On 12/8/23 6:24 AM, Eric Farman wrote:
-> > On Fri, 2023-12-08 at 11:31 +0100, Janosch Frank wrote:
-> > > On 12/1/23 19:16, Eric Farman wrote:
-> > > > The various errors that are possible when processing a PQAP
-> > > > instruction (the absence of a driver hook, an error FROM that
-> > > > hook), all correctly set the PSW condition code to 3. But if
-> > > > that processing works successfully, CC0 needs to be set to
-> > > > convey that everything was fine.
-> > > >=20
-> > > > Fix the check so that the guest can examine the condition code
-> > > > to determine whether GPR1 has meaningful data.
-> > > >=20
-> > > Hey Eric, I have yet to see this produce a fail in my AP KVM unit
-> > > tests.
-> > > If you find some spare time I'd like to discuss how I can extend
-> > > my
-> > > test
-> > > so that I can see the fail before it's fixed.
-> > >=20
-> > Hi Janosch, absolutely. I had poked around kvm-unit-tests before I
-> > sent
-> > this up to see if I could adapt something to show this scenario,
-> > but
-> > came up empty and didn't want to go too far down that rabbit hole
-> > creating something from scratch. I'll ping you offline to find a
-> > time
-> > to talk.
->=20
->=20
-> If this is recreateable, I'd like to know how. I don't see any code
-> path=20
-> that would cause this result.
+Add a test case that tests the interpretation of STFLE performed by a
+nested guest using a snippet.
+Also add some functionality to lib/, namely:
+* simple pseudo random number generation (arch independent)
+* exit (optionally with return code) from snippet (s390x)
 
-Janosch and I spoke offline... He was using a proposed series of kvm-
-unit-tests [1] as a base, but the condition code of the PSW was zero at
-the time of the PQAP, meaning everything seemed fine. By dirtying the
-CC before the PQAP, this problem pops up quite easily, and this patch
-gets things back in line.
+Nina Schoetterl-Glausch (5):
+  lib: Add pseudo random functions
+  s390x: lib: Remove double include
+  s390x: Add library functions for exiting from snippet
+  s390x: Use library functions for snippet exit
+  s390x: Add test for STFLE interpretive execution (format-0)
 
-[1]
-https://lore.kernel.org/kvm/20231117151939.971079-1-frankja@linux.ibm.com/
+ Makefile                                |   1 +
+ s390x/Makefile                          |   3 +
+ lib/s390x/asm/arch_def.h                |  13 +++
+ lib/s390x/asm/facility.h                |  10 +-
+ lib/libcflat.h                          |   7 ++
+ lib/s390x/sie.h                         |   1 +
+ lib/s390x/snippet-guest.h               |  26 +++++
+ lib/s390x/{snippet.h => snippet-host.h} |   9 +-
+ lib/rand.c                              |  19 ++++
+ lib/s390x/sie.c                         |  29 +++++-
+ lib/s390x/snippet-host.c                |  40 +++++++
+ lib/s390x/uv.c                          |   2 +-
+ s390x/mvpg-sie.c                        |   2 +-
+ s390x/pv-diags.c                        |   2 +-
+ s390x/pv-icptcode.c                     |   2 +-
+ s390x/pv-ipl.c                          |   2 +-
+ s390x/sie-dat.c                         |  12 +--
+ s390x/snippets/c/sie-dat.c              |  19 +---
+ s390x/snippets/c/stfle.c                |  26 +++++
+ s390x/spec_ex-sie.c                     |   2 +-
+ s390x/stfle-sie.c                       | 132 ++++++++++++++++++++++++
+ s390x/uv-host.c                         |   2 +-
+ 22 files changed, 322 insertions(+), 39 deletions(-)
+ create mode 100644 lib/s390x/snippet-guest.h
+ rename lib/s390x/{snippet.h => snippet-host.h} (93%)
+ create mode 100644 lib/rand.c
+ create mode 100644 lib/s390x/snippet-host.c
+ create mode 100644 s390x/snippets/c/stfle.c
+ create mode 100644 s390x/stfle-sie.c
 
->=20
->=20
-> >=20
-> > Eric
-> >=20
->=20
+
+base-commit: 6b31aa76a038bb56b144825f55301b2ab64c02e9
+-- 
+2.41.0
 
 
