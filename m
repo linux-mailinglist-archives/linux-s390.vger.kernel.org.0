@@ -1,253 +1,149 @@
-Return-Path: <linux-s390+bounces-617-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-626-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD136814BC3
-	for <lists+linux-s390@lfdr.de>; Fri, 15 Dec 2023 16:28:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0775D815121
+	for <lists+linux-s390@lfdr.de>; Fri, 15 Dec 2023 21:36:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 531451F24E63
-	for <lists+linux-s390@lfdr.de>; Fri, 15 Dec 2023 15:28:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 93DA71F22EB9
+	for <lists+linux-s390@lfdr.de>; Fri, 15 Dec 2023 20:36:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FCA237153;
-	Fri, 15 Dec 2023 15:28:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8293F45C16;
+	Fri, 15 Dec 2023 20:36:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jU0h0J0c"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bFLKVLtd"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBBA364D3;
-	Fri, 15 Dec 2023 15:28:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BFEVfTm028210;
-	Fri, 15 Dec 2023 15:28:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=FsDBn/f0pqi2JIhLRWKxsJ29yr3T+I8RIFAi6yJXrsI=;
- b=jU0h0J0cYnunBZXR10zQsL9oPgXb0spHGSBzrKuJx9EHVd70dkndNX8v1qJceRdFdozs
- tNEUo4ODCllS4GZpfu+OGtmU1SVMw1bO2bNcxnYoIHeN8l4bMgGA3JbsaQuDQPVeYQFf
- L9pHrtxuEJCj/BSRlr9I1CcCXrbKxBzMmraCHSDw2VV8BOC61kt1/+TYRaSL6BA0QcHW
- ty2r/RImRma3xlqXxnGgZkRL+3LnuPn9wSS79RHx7wkJE65G1eih/E+/JQgwnHmH5ptl
- TxqlTvwTQEhnpU538VEmaptdaGoj+jp9yK6OHVfVNte581I8+BztQQdVY6EiCX9lKqRe 0g== 
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v0pymm63b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 15 Dec 2023 15:28:15 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BFEw0PI004390;
-	Fri, 15 Dec 2023 15:28:15 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uw4sm0huv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 15 Dec 2023 15:28:15 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BFFSAdl3146418
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 15 Dec 2023 15:28:10 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2CCE42004D;
-	Fri, 15 Dec 2023 15:28:10 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1B0AA20043;
-	Fri, 15 Dec 2023 15:28:10 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 15 Dec 2023 15:28:10 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
-	id A4276E156A; Fri, 15 Dec 2023 16:28:09 +0100 (CET)
-From: Stefan Haberland <sth@linux.ibm.com>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 09/10] s390/dasd: Use dev_*() for device log messages
-Date: Fri, 15 Dec 2023 16:28:09 +0100
-Message-Id: <20231215152809.882602-10-sth@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20231215152809.882602-1-sth@linux.ibm.com>
-References: <20231215152809.882602-1-sth@linux.ibm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7D036B03
+	for <linux-s390@vger.kernel.org>; Fri, 15 Dec 2023 20:36:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702672593;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LqhsEugKtVuOP/CErLGwgtJcZIJDT+/OEzsNO/Pyaec=;
+	b=bFLKVLtdwVthuoDJeRvxNahzdKf3+TEDBq+pgByr4XHfeF41NH8h/Q2HfjZ8X+ixBQ9fue
+	5T5xA8a7ibVzI9ljBO1jrUJbMfMmDubFXyu0mxxCfRU8sJrzelFtqOeW8AM7kFkwu2PFii
+	KAYJgV4guDcbFPd9ugwAwJf7vCkjQMo=
+Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com
+ [209.85.161.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-651-UOhRvtY7NqqxLa0JtZKz8w-1; Fri, 15 Dec 2023 15:36:31 -0500
+X-MC-Unique: UOhRvtY7NqqxLa0JtZKz8w-1
+Received: by mail-oo1-f70.google.com with SMTP id 006d021491bc7-58dad14ab40so1330087eaf.1
+        for <linux-s390@vger.kernel.org>; Fri, 15 Dec 2023 12:36:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702672591; x=1703277391;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LqhsEugKtVuOP/CErLGwgtJcZIJDT+/OEzsNO/Pyaec=;
+        b=f+FyEpF31e2T4mtNNDhaa3pSrCfIE2FwAGqMLTRoY7jA6SOku5q0j2k0HG+xft6Xla
+         NID3N7H4j69hh1wvsVV0IYm9w4nbum2Z83R6J+VNkeANFdymK5Ci33v4Su91OdD2l6xb
+         Sn2nl4WpHVMifSLyJ10dp3NajXaSqof0nA9nc7POyRb2f+V1ypSCtwnDkTmZfP058FiX
+         tFbwwGEiaH0A6VSz9RBpS/Qgd3B4wF1GHle990TyhdVlyQv2sDTevQTEZf1h3zm75HDZ
+         eFRx5SfXgSsYEEG3Wzy1eKepLIqXq6d3d1TWsEPT+RRT21MpioEes8yO+ijrT/vd/Jcb
+         64eg==
+X-Gm-Message-State: AOJu0Yz+2pGWoHvIn7ow7cuSxuudOyNoTJL1gaLhSunrr/O6sYaxv1L7
+	MwtJvmSwoRSTGrZ0hp+SJWcfC5FXJ/zsc3n7pfalbWLzewtX07x9NP68txptdw4LCPUc0PlPvfr
+	0gA814Z43QvGaV8ahRrqc0A==
+X-Received: by 2002:a05:6359:6b82:b0:16e:579a:4d6b with SMTP id ta2-20020a0563596b8200b0016e579a4d6bmr8756621rwb.18.1702672591022;
+        Fri, 15 Dec 2023 12:36:31 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGwpyGuMx2YomS1YYURUwzmQgXKlPAVYfeFz7G58bPgH6jpGQedpReEFTAX5oswnIusdcpIrA==
+X-Received: by 2002:a05:6359:6b82:b0:16e:579a:4d6b with SMTP id ta2-20020a0563596b8200b0016e579a4d6bmr8756610rwb.18.1702672590685;
+        Fri, 15 Dec 2023 12:36:30 -0800 (PST)
+Received: from [192.168.1.14] (pool-68-160-135-240.bstnma.fios.verizon.net. [68.160.135.240])
+        by smtp.gmail.com with ESMTPSA id w14-20020a0cef8e000000b0067f172531cbsm891936qvr.114.2023.12.15.12.36.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Dec 2023 12:36:30 -0800 (PST)
+Message-ID: <8a433f12-b930-6095-9a49-db5f1d2836b5@redhat.com>
+Date: Fri, 15 Dec 2023 15:36:28 -0500
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v3 3/3] selftests: livepatch: Test livepatching a heavily
+ called syscall
+Content-Language: en-US
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: mpdesouza@suse.com, Marcos Paulo de Souza <mpdesouza@suse.de>,
+ Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Jiri Kosina <jikos@kernel.org>, Petr Mladek <pmladek@suse.com>,
+ linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+ live-patching@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>
+References: <20231031-send-lp-kselftests-v3-0-2b1655c2605f@suse.com>
+ <20231031-send-lp-kselftests-v3-3-2b1655c2605f@suse.com>
+ <f9d82fa6-08d7-4ab6-badc-691987b37a82@linuxfoundation.org>
+ <unpg4z7eig6qbudgulnr6sog65fq7s2dy4u2vp2dgkdrq5csdw@dltnxuw6kw5b>
+ <8b95b96c-6aeb-4bf0-8ee9-2ba62330c672@linuxfoundation.org>
+ <12a9ec1bc84dc6d4b461e5c780ba7d3c3aa91740.camel@suse.com>
+ <76c4b967-1cb6-4f77-9402-f835b15adb10@linuxfoundation.org>
+ <alpine.LSU.2.21.2312061530470.13051@pobox.suse.cz>
+ <2498bf91-8057-43e8-98f2-4ed93c53ce9f@linuxfoundation.org>
+From: Joe Lawrence <joe.lawrence@redhat.com>
+In-Reply-To: <2498bf91-8057-43e8-98f2-4ed93c53ce9f@linuxfoundation.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 4w5KaVxDBl8b_1BXDOGZgY5O8wPoHddK
-X-Proofpoint-GUID: 4w5KaVxDBl8b_1BXDOGZgY5O8wPoHddK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-15_09,2023-12-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 adultscore=0 clxscore=1015 mlxscore=0 lowpriorityscore=0
- suspectscore=0 bulkscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2312150105
 
-From: Jan Höppner <hoeppner@linux.ibm.com>
+On 12/11/23 16:53, Shuah Khan wrote:
+> On 12/6/23 07:39, Miroslav Benes wrote:
+>> Hi,
+>>
+>> On Tue, 5 Dec 2023, Shuah Khan wrote:
+>>
+>>> On 12/5/23 05:52, mpdesouza@suse.com wrote:
+>>>> On Fri, 2023-12-01 at 16:38 +0000, Shuah Khan wrote:
+>>>
+>>>> 0003-selftests-livepatch-Test-livepatching-a-heavily-call.patch has
+>>>> style problems, please review.
+>>>>
+>>>> NOTE: If any of the errors are false positives, please report
+>>>>         them to the maintainer, see CHECKPATCH in MAINTAINERS.
+>>>>
+>>>> I couldn't find any mention about "missing module name". Is your script
+>>>> showing more warnings than these ones? Can you please share your
+>>>> output?
+>>>>
+>>>> I'll fix MAINTAINERS file but I'll wait until I understand what's
+>>>> missing in your checkpatch script to resend the patchset.
+>>>>
+>>>
+>>> Looks like it is coming a script - still my question stands on
+>>> whether or not you would need a module name for this module?
+>>
+>> I admit I am also clueless here. The module name is given in Makefile. In
+>> this case in test_modules/Makefile. I do not know of anything else. There
+>> is no MODULE_NAME macro. Could you elaborate, please?
+>>
+> 
+> I see that now.
+> 
 
-All log messages in dasd.c use the printk variants of pr_*(). They all
-add the name of the affected device manually to the log message.
-This can be simplified by using the dev_*() variants of printk, which
-include the device information and make a separate call to dev_name()
-unnecessary.
+Hi Shuah,
 
-The KMSG_COMPONENT and the pr_fmt() definition can be dropped. Note that
-this removes the "dasd: " prefix from the one pr_info() call in
-dasd_init(). However, the log message already provides all relevant
-information.
+In the other replies to this thread, Marcos noted that he would add some
+text to the commit / documentation on running and building the selftests
+directly in the kernel tree (that would get my Ack) ... is there
+anything else to be updated for a hopefully final v4 (for your Ack)?
 
-Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
-Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
----
- drivers/s390/block/dasd.c | 50 +++++++++++++++++++--------------------
- 1 file changed, 24 insertions(+), 26 deletions(-)
-
-diff --git a/drivers/s390/block/dasd.c b/drivers/s390/block/dasd.c
-index c6a5fddd4389..1af8edd6c509 100644
---- a/drivers/s390/block/dasd.c
-+++ b/drivers/s390/block/dasd.c
-@@ -8,9 +8,6 @@
-  * Copyright IBM Corp. 1999, 2009
-  */
- 
--#define KMSG_COMPONENT "dasd"
--#define pr_fmt(fmt) KMSG_COMPONENT ": " fmt
--
- #include <linux/kmod.h>
- #include <linux/init.h>
- #include <linux/interrupt.h>
-@@ -3387,8 +3384,7 @@ static void dasd_generic_auto_online(void *data, async_cookie_t cookie)
- 
- 	ret = ccw_device_set_online(cdev);
- 	if (ret)
--		pr_warn("%s: Setting the DASD online failed with rc=%d\n",
--			dev_name(&cdev->dev), ret);
-+		dev_warn(&cdev->dev, "Setting the DASD online failed with rc=%d\n", ret);
- }
- 
- /*
-@@ -3475,8 +3471,11 @@ int dasd_generic_set_online(struct ccw_device *cdev,
- {
- 	struct dasd_discipline *discipline;
- 	struct dasd_device *device;
-+	struct device *dev;
- 	int rc;
- 
-+	dev = &cdev->dev;
-+
- 	/* first online clears initial online feature flag */
- 	dasd_set_feature(cdev, DASD_FEATURE_INITIAL_ONLINE, 0);
- 	device = dasd_create_device(cdev);
-@@ -3489,11 +3488,10 @@ int dasd_generic_set_online(struct ccw_device *cdev,
- 			/* Try to load the required module. */
- 			rc = request_module(DASD_DIAG_MOD);
- 			if (rc) {
--				pr_warn("%s Setting the DASD online failed "
--					"because the required module %s "
--					"could not be loaded (rc=%d)\n",
--					dev_name(&cdev->dev), DASD_DIAG_MOD,
--					rc);
-+				dev_warn(dev, "Setting the DASD online failed "
-+					 "because the required module %s "
-+					 "could not be loaded (rc=%d)\n",
-+					 DASD_DIAG_MOD, rc);
- 				dasd_delete_device(device);
- 				return -ENODEV;
- 			}
-@@ -3501,8 +3499,7 @@ int dasd_generic_set_online(struct ccw_device *cdev,
- 		/* Module init could have failed, so check again here after
- 		 * request_module(). */
- 		if (!dasd_diag_discipline_pointer) {
--			pr_warn("%s Setting the DASD online failed because of missing DIAG discipline\n",
--				dev_name(&cdev->dev));
-+			dev_warn(dev, "Setting the DASD online failed because of missing DIAG discipline\n");
- 			dasd_delete_device(device);
- 			return -ENODEV;
- 		}
-@@ -3523,8 +3520,8 @@ int dasd_generic_set_online(struct ccw_device *cdev,
- 	/* check_device will allocate block device if necessary */
- 	rc = discipline->check_device(device);
- 	if (rc) {
--		pr_warn("%s Setting the DASD online with discipline %s failed with rc=%i\n",
--			dev_name(&cdev->dev), discipline->name, rc);
-+		dev_warn(dev, "Setting the DASD online with discipline %s failed with rc=%i\n",
-+			 discipline->name, rc);
- 		module_put(discipline->owner);
- 		module_put(base_discipline->owner);
- 		dasd_delete_device(device);
-@@ -3533,16 +3530,15 @@ int dasd_generic_set_online(struct ccw_device *cdev,
- 
- 	dasd_set_target_state(device, DASD_STATE_ONLINE);
- 	if (device->state <= DASD_STATE_KNOWN) {
--		pr_warn("%s Setting the DASD online failed because of a missing discipline\n",
--			dev_name(&cdev->dev));
-+		dev_warn(dev, "Setting the DASD online failed because of a missing discipline\n");
- 		rc = -ENODEV;
- 		dasd_set_target_state(device, DASD_STATE_NEW);
- 		if (device->block)
- 			dasd_free_block(device->block);
- 		dasd_delete_device(device);
--	} else
--		pr_debug("dasd_generic device %s found\n",
--				dev_name(&cdev->dev));
-+	} else {
-+		dev_dbg(dev, "dasd_generic device found\n");
-+	}
- 
- 	wait_event(dasd_init_waitq, _wait_for_device(device));
- 
-@@ -3553,10 +3549,13 @@ EXPORT_SYMBOL_GPL(dasd_generic_set_online);
- 
- int dasd_generic_set_offline(struct ccw_device *cdev)
- {
-+	int max_count, open_count, rc;
- 	struct dasd_device *device;
- 	struct dasd_block *block;
--	int max_count, open_count, rc;
- 	unsigned long flags;
-+	struct device *dev;
-+
-+	dev = &cdev->dev;
- 
- 	rc = 0;
- 	spin_lock_irqsave(get_ccwdev_lock(cdev), flags);
-@@ -3577,11 +3576,10 @@ int dasd_generic_set_offline(struct ccw_device *cdev)
- 		open_count = atomic_read(&device->block->open_count);
- 		if (open_count > max_count) {
- 			if (open_count > 0)
--				pr_warn("%s: The DASD cannot be set offline with open count %i\n",
--					dev_name(&cdev->dev), open_count);
-+				dev_warn(dev, "The DASD cannot be set offline with open count %i\n",
-+					 open_count);
- 			else
--				pr_warn("%s: The DASD cannot be set offline while it is in use\n",
--					dev_name(&cdev->dev));
-+				dev_warn(dev, "The DASD cannot be set offline while it is in use\n");
- 			rc = -EBUSY;
- 			goto out_err;
- 		}
-@@ -3941,8 +3939,8 @@ static int dasd_handle_autoquiesce(struct dasd_device *device,
- 	if (dasd_eer_enabled(device))
- 		dasd_eer_write(device, NULL, DASD_EER_AUTOQUIESCE);
- 
--	pr_info("%s: The DASD has been put in the quiesce state\n",
--		dev_name(&device->cdev->dev));
-+	dev_info(&device->cdev->dev,
-+		 "The DASD has been put in the quiesce state\n");
- 	dasd_device_set_stop_bits(device, DASD_STOPPED_QUIESCE);
- 
- 	if (device->features & DASD_FEATURE_REQUEUEQUIESCE)
+Thanks,
 -- 
-2.40.1
+Joe
 
 
