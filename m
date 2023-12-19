@@ -1,305 +1,154 @@
-Return-Path: <linux-s390+bounces-646-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-648-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C69578183CF
-	for <lists+linux-s390@lfdr.de>; Tue, 19 Dec 2023 09:48:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CE7728184BA
+	for <lists+linux-s390@lfdr.de>; Tue, 19 Dec 2023 10:46:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 71CC8287F0D
-	for <lists+linux-s390@lfdr.de>; Tue, 19 Dec 2023 08:48:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D8F8284D55
+	for <lists+linux-s390@lfdr.de>; Tue, 19 Dec 2023 09:46:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1383A1805C;
-	Tue, 19 Dec 2023 08:46:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C2CC14267;
+	Tue, 19 Dec 2023 09:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jy/1nwU7"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1969B182A4;
-	Tue, 19 Dec 2023 08:46:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R371e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0VyqJ4yo_1702975561;
-Received: from localhost(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0VyqJ4yo_1702975561)
-          by smtp.aliyun-inc.com;
-          Tue, 19 Dec 2023 16:46:03 +0800
-From: Wen Gu <guwen@linux.alibaba.com>
-To: wintera@linux.ibm.com,
-	wenjia@linux.ibm.com,
-	hca@linux.ibm.com,
-	gor@linux.ibm.com,
-	agordeev@linux.ibm.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	kgraul@linux.ibm.com,
-	jaka@linux.ibm.com
-Cc: borntraeger@linux.ibm.com,
-	svens@linux.ibm.com,
-	alibuda@linux.alibaba.com,
-	tonylu@linux.alibaba.com,
-	guwen@linux.alibaba.com,
-	raspl@linux.ibm.com,
-	schnelle@linux.ibm.com,
-	guangguan.wang@linux.alibaba.com,
-	linux-s390@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v7 10/10] net/smc: manage system EID in SMC stack instead of ISM driver
-Date: Tue, 19 Dec 2023 16:45:36 +0800
-Message-Id: <20231219084536.8158-11-guwen@linux.alibaba.com>
-X-Mailer: git-send-email 2.32.0.3.g01195cf9f
-In-Reply-To: <20231219084536.8158-1-guwen@linux.alibaba.com>
-References: <20231219084536.8158-1-guwen@linux.alibaba.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9F213FFB;
+	Tue, 19 Dec 2023 09:45:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BJ97Px2030485;
+	Tue, 19 Dec 2023 09:45:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=Ms7ur4E7a6ZJUk/bHA5Ykjz39zDPiKYSt7oHdQpIPPI=;
+ b=jy/1nwU7wMQnFl6CpxuS3EpDYjjwObCIz+RgC57cstzhAjBC921/9HXn6IbhjIFRVPvn
+ MDOpgERvSeMszWsPibrwuW4qr7qY1lonXQudwAzqNUXbmEJKvYSGyTT7sy++GSvdtZsx
+ syxxRofn8cHOH9yNVVP8XAAADpIRItv2ayYi2ENDDbAwCIgvfyWqoMQCBdTuBVp5mAg/
+ OGd+q+E11v84HfUePzX7s5dZluu7XDkgQ1E+8Mr2GQO3WTwbuiyFd8yq6FcrSp1izCyS
+ 7akyi5HVhtzCvyX/Xza5ZEazV7fUyXmJpYOQyoyQ2hQYj5U+JcTaghCrkdEGaB09qxcb VA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v388xs03x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 Dec 2023 09:45:36 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BJ98iEe001724;
+	Tue, 19 Dec 2023 09:45:36 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v388xs02d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 Dec 2023 09:45:35 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BJ7nQOn014071;
+	Tue, 19 Dec 2023 09:45:33 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3v1qqk6m1b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 Dec 2023 09:45:33 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BJ9jVHT25886988
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 19 Dec 2023 09:45:31 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5E21B2004D;
+	Tue, 19 Dec 2023 09:45:31 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BDABA20043;
+	Tue, 19 Dec 2023 09:45:30 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.6.112])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 19 Dec 2023 09:45:30 +0000 (GMT)
+Date: Tue, 19 Dec 2023 10:45:29 +0100
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>,
+        linux-kselftest@vger.kernel.org, live-patching@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: Re: selftests/livepatch fails on s390
+Message-ID: <ZYFmOfFgsOdeikec@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <ZYAimyPYhxVA9wKg@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+ <cf087c7e-d24d-5cee-eadd-dd1fe26efe39@redhat.com>
+ <ZYDLZkXdJ22AXtLW@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZYDLZkXdJ22AXtLW@redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: NR-FdXTkh4blAX33UwBTX-3agsjxwepP
+X-Proofpoint-GUID: FKrE8q9QEkDHMrS0xBKqlLC2w5BS57B7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-19_05,2023-12-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ spamscore=0 adultscore=0 lowpriorityscore=0 clxscore=1015 suspectscore=0
+ phishscore=0 bulkscore=0 malwarescore=0 priorityscore=1501 mlxlogscore=676
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2312190072
 
-The System EID (SEID) is an internal EID that is used by the SMCv2
-software stack that has a predefined and constant value representing
-the s390 physical machine that the OS is executing on. So it should
-be managed by SMC stack instead of ISM driver and be consistent for
-all ISMv2 device (including virtual ISM devices) on s390 architecture.
+On Mon, Dec 18, 2023 at 05:44:54PM -0500, Joe Lawrence wrote:
 
-Suggested-by: Alexandra Winter <wintera@linux.ibm.com>
-Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
-Reviewed-and-tested-by: Wenjia Zhang <wenjia@linux.ibm.com>
-Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
----
- drivers/s390/net/ism.h     |  7 -------
- drivers/s390/net/ism_drv.c | 38 ++++++--------------------------------
- include/linux/ism.h        |  1 -
- include/net/smc.h          |  1 -
- net/smc/smc_ism.c          | 33 ++++++++++++++++++++++++---------
- net/smc/smc_ism.h          |  7 +++++++
- 6 files changed, 37 insertions(+), 50 deletions(-)
+Hi Joe!
 
-diff --git a/drivers/s390/net/ism.h b/drivers/s390/net/ism.h
-index 70c5bbda0fea..047fa6101555 100644
---- a/drivers/s390/net/ism.h
-+++ b/drivers/s390/net/ism.h
-@@ -16,7 +16,6 @@
-  */
- #define ISM_DMB_WORD_OFFSET	1
- #define ISM_DMB_BIT_OFFSET	(ISM_DMB_WORD_OFFSET * 32)
--#define ISM_IDENT_MASK		0x00FFFF
- 
- #define ISM_REG_SBA	0x1
- #define ISM_REG_IEQ	0x2
-@@ -192,12 +191,6 @@ struct ism_sba {
- #define ISM_CREATE_REQ(dmb, idx, sf, offset)		\
- 	((dmb) | (idx) << 24 | (sf) << 23 | (offset))
- 
--struct ism_systemeid {
--	u8	seid_string[24];
--	u8	serial_number[4];
--	u8	type[4];
--};
--
- static inline void __ism_read_cmd(struct ism_dev *ism, void *data,
- 				  unsigned long offset, unsigned long len)
- {
-diff --git a/drivers/s390/net/ism_drv.c b/drivers/s390/net/ism_drv.c
-index 34dd06324e38..2c8e964425dc 100644
---- a/drivers/s390/net/ism_drv.c
-+++ b/drivers/s390/net/ism_drv.c
-@@ -36,6 +36,7 @@ static struct ism_client *clients[MAX_CLIENTS];	/* use an array rather than */
- 						/* a list for fast mapping  */
- static u8 max_client;
- static DEFINE_MUTEX(clients_lock);
-+static bool ism_v2_capable;
- struct ism_dev_list {
- 	struct list_head list;
- 	struct mutex mutex; /* protects ism device list */
-@@ -443,32 +444,6 @@ int ism_move(struct ism_dev *ism, u64 dmb_tok, unsigned int idx, bool sf,
- }
- EXPORT_SYMBOL_GPL(ism_move);
- 
--static struct ism_systemeid SYSTEM_EID = {
--	.seid_string = "IBM-SYSZ-ISMSEID00000000",
--	.serial_number = "0000",
--	.type = "0000",
--};
--
--static void ism_create_system_eid(void)
--{
--	struct cpuid id;
--	u16 ident_tail;
--	char tmp[5];
--
--	get_cpu_id(&id);
--	ident_tail = (u16)(id.ident & ISM_IDENT_MASK);
--	snprintf(tmp, 5, "%04X", ident_tail);
--	memcpy(&SYSTEM_EID.serial_number, tmp, 4);
--	snprintf(tmp, 5, "%04X", id.machine);
--	memcpy(&SYSTEM_EID.type, tmp, 4);
--}
--
--u8 *ism_get_seid(void)
--{
--	return SYSTEM_EID.seid_string;
--}
--EXPORT_SYMBOL_GPL(ism_get_seid);
--
- static void ism_handle_event(struct ism_dev *ism)
- {
- 	struct ism_event *entry;
-@@ -560,7 +535,9 @@ static int ism_dev_init(struct ism_dev *ism)
- 
- 	if (!ism_add_vlan_id(ism, ISM_RESERVED_VLANID))
- 		/* hardware is V2 capable */
--		ism_create_system_eid();
-+		ism_v2_capable = true;
-+	else
-+		ism_v2_capable = false;
- 
- 	mutex_lock(&ism_dev_list.mutex);
- 	mutex_lock(&clients_lock);
-@@ -665,8 +642,7 @@ static void ism_dev_exit(struct ism_dev *ism)
- 	}
- 	mutex_unlock(&clients_lock);
- 
--	if (SYSTEM_EID.serial_number[0] != '0' ||
--	    SYSTEM_EID.type[0] != '0')
-+	if (ism_v2_capable)
- 		ism_del_vlan_id(ism, ISM_RESERVED_VLANID);
- 	unregister_ieq(ism);
- 	unregister_sba(ism);
-@@ -813,8 +789,7 @@ static int smcd_move(struct smcd_dev *smcd, u64 dmb_tok, unsigned int idx,
- 
- static int smcd_supports_v2(void)
- {
--	return SYSTEM_EID.serial_number[0] != '0' ||
--		SYSTEM_EID.type[0] != '0';
-+	return ism_v2_capable;
- }
- 
- static u64 ism_get_local_gid(struct ism_dev *ism)
-@@ -860,7 +835,6 @@ static const struct smcd_ops ism_ops = {
- 	.signal_event = smcd_signal_ieq,
- 	.move_data = smcd_move,
- 	.supports_v2 = smcd_supports_v2,
--	.get_system_eid = ism_get_seid,
- 	.get_local_gid = smcd_get_local_gid,
- 	.get_chid = smcd_get_chid,
- 	.get_dev = smcd_get_dev,
-diff --git a/include/linux/ism.h b/include/linux/ism.h
-index 9a4c204df3da..5428edd90982 100644
---- a/include/linux/ism.h
-+++ b/include/linux/ism.h
-@@ -86,7 +86,6 @@ int  ism_register_dmb(struct ism_dev *dev, struct ism_dmb *dmb,
- int  ism_unregister_dmb(struct ism_dev *dev, struct ism_dmb *dmb);
- int  ism_move(struct ism_dev *dev, u64 dmb_tok, unsigned int idx, bool sf,
- 	      unsigned int offset, void *data, unsigned int size);
--u8  *ism_get_seid(void);
- 
- const struct smcd_ops *ism_get_smcd_ops(void);
- 
-diff --git a/include/net/smc.h b/include/net/smc.h
-index a0dc1187e96e..c9dcb30e3fd9 100644
---- a/include/net/smc.h
-+++ b/include/net/smc.h
-@@ -73,7 +73,6 @@ struct smcd_ops {
- 			 bool sf, unsigned int offset, void *data,
- 			 unsigned int size);
- 	int (*supports_v2)(void);
--	u8* (*get_system_eid)(void);
- 	void (*get_local_gid)(struct smcd_dev *dev, struct smcd_gid *gid);
- 	u16 (*get_chid)(struct smcd_dev *dev);
- 	struct device* (*get_dev)(struct smcd_dev *dev);
-diff --git a/net/smc/smc_ism.c b/net/smc/smc_ism.c
-index a33f861cf7c1..ac88de2a06a0 100644
---- a/net/smc/smc_ism.c
-+++ b/net/smc/smc_ism.c
-@@ -43,6 +43,27 @@ static struct ism_client smc_ism_client = {
- };
- #endif
- 
-+static void smc_ism_create_system_eid(void)
-+{
-+	struct smc_ism_seid *seid =
-+		(struct smc_ism_seid *)smc_ism_v2_system_eid;
-+#if IS_ENABLED(CONFIG_S390)
-+	struct cpuid id;
-+	u16 ident_tail;
-+	char tmp[5];
-+
-+	memcpy(seid->seid_string, "IBM-SYSZ-ISMSEID00000000", 24);
-+	get_cpu_id(&id);
-+	ident_tail = (u16)(id.ident & SMC_ISM_IDENT_MASK);
-+	snprintf(tmp, 5, "%04X", ident_tail);
-+	memcpy(seid->serial_number, tmp, 4);
-+	snprintf(tmp, 5, "%04X", id.machine);
-+	memcpy(seid->type, tmp, 4);
-+#else
-+	memset(seid, 0, SMC_MAX_EID_LEN);
-+#endif
-+}
-+
- /* Test if an ISM communication is possible - same CPC */
- int smc_ism_cantalk(struct smcd_gid *peer_gid, unsigned short vlan_id,
- 		    struct smcd_dev *smcd)
-@@ -431,14 +452,8 @@ static void smcd_register_dev(struct ism_dev *ism)
- 
- 	mutex_lock(&smcd_dev_list.mutex);
- 	if (list_empty(&smcd_dev_list.list)) {
--		u8 *system_eid = NULL;
--
--		system_eid = smcd->ops->get_system_eid();
--		if (smcd->ops->supports_v2()) {
-+		if (smcd->ops->supports_v2())
- 			smc_ism_v2_capable = true;
--			memcpy(smc_ism_v2_system_eid, system_eid,
--			       SMC_MAX_EID_LEN);
--		}
- 	}
- 	/* sort list: devices without pnetid before devices with pnetid */
- 	if (smcd->pnetid[0])
-@@ -542,10 +557,10 @@ int smc_ism_init(void)
- {
- 	int rc = 0;
- 
--#if IS_ENABLED(CONFIG_ISM)
- 	smc_ism_v2_capable = false;
--	memset(smc_ism_v2_system_eid, 0, SMC_MAX_EID_LEN);
-+	smc_ism_create_system_eid();
- 
-+#if IS_ENABLED(CONFIG_ISM)
- 	rc = ism_register_client(&smc_ism_client);
- #endif
- 	return rc;
-diff --git a/net/smc/smc_ism.h b/net/smc/smc_ism.h
-index 0e5e563099ec..ffff40c30a06 100644
---- a/net/smc/smc_ism.h
-+++ b/net/smc/smc_ism.h
-@@ -16,6 +16,7 @@
- #include "smc.h"
- 
- #define SMC_VIRTUAL_ISM_CHID_MASK	0xFF00
-+#define SMC_ISM_IDENT_MASK		0x00FFFF
- 
- struct smcd_dev_list {	/* List of SMCD devices */
- 	struct list_head list;
-@@ -30,6 +31,12 @@ struct smc_ism_vlanid {			/* VLAN id set on ISM device */
- 	refcount_t refcnt;		/* Reference count */
- };
- 
-+struct smc_ism_seid {
-+	u8 seid_string[24];
-+	u8 serial_number[4];
-+	u8 type[4];
-+};
-+
- struct smcd_dev;
- 
- int smc_ism_cantalk(struct smcd_gid *peer_gid, unsigned short vlan_id,
--- 
-2.32.0.3.g01195cf9f
+...
+> > If we pre-trim the timestamps, the output is what we expect:
+> > 
+> >   $ comm --nocheck-order -13 \
+> >       <(sed 's/^\[[ 0-9.]*\] //' /tmp/A) \
+> >       <(sed 's/^\[[ 0-9.]*\] //' /tmp/B)
+> >   message four
+> > 
+> > however, I'm not sure if that fix would easily apply.  It looks like I
+> > provided a disclaimer notice in check_result():
+> > 
+> > 	# Note: when comparing dmesg output, the kernel log timestamps
+> > 	# help differentiate repeated testing runs.  Remove them with a
+> > 	# post-comparison sed filter.
+> > 
+> > so I wonder if comm will get confused with repeated selftest runs?
 
+I would think so. AFAICT even a single run would produce duplicate lines.
+
+...
+> This is *very* lightly tested, but I thought maybe you could give it a
+> spin.  Hopefully it's less brittle than diff/comm strategy.
+
+That seems to be working. However, please see below.
+
+...
+> @@ -280,7 +268,13 @@ function set_pre_patch_ret {
+>  function start_test {
+>  	local test="$1"
+>  
+> -	save_dmesg
+> +	# Dump something unique into the dmesg log, then stash the entry
+> +	# in LAST_DMESG.  The check_result() function will use it to
+> +	# find new kernel messages since the test started.
+> +	local timestamp="$(date --rfc-3339=ns)"
+> +	log "livepatch kselftest timestamp: $timestamp"
+> +	LAST_DMESG=$(dmesg | grep "livepatch kselftest timestamp: $timestamp")
+
+Not sure if it not paranoid mode, but still..
+If the 'log' call is guaranteed synced? AKA would 'grep' always catch the line?
+
+And yeah.. if the log output is pushed away (e.g by a crazy-dumping concurrent
+logger), then nothing here would work. But this is not a new problem, so just
+my two cents.
+
+>  	echo -n "TEST: $test ... "
+>  	log "===== TEST: $test ====="
+>  }
+
+Thanks!
 
