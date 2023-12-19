@@ -1,86 +1,56 @@
-Return-Path: <linux-s390+bounces-655-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-657-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90D66818968
-	for <lists+linux-s390@lfdr.de>; Tue, 19 Dec 2023 15:10:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 32EA08189CA
+	for <lists+linux-s390@lfdr.de>; Tue, 19 Dec 2023 15:26:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A8E971C212C9
-	for <lists+linux-s390@lfdr.de>; Tue, 19 Dec 2023 14:10:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3F6F71C241CF
+	for <lists+linux-s390@lfdr.de>; Tue, 19 Dec 2023 14:26:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EE4E1CFA7;
-	Tue, 19 Dec 2023 14:09:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kKJeB3Ht"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 185FD1B288;
+	Tue, 19 Dec 2023 14:26:28 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16901CAAE;
-	Tue, 19 Dec 2023 14:09:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BJCRSSp028082;
-	Tue, 19 Dec 2023 14:09:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=6QFhjOxADw8oxhqs1NGsWposBeC0e3ZC1JVOPpN+qPY=;
- b=kKJeB3Ht3GW7UJ+U+kAq+GhXuDAymWJDzpxf0ARjA1EbjfPRIB/a2qpgDLLzTZf6LBo5
- e5gK/HHlmodsXWxxe8wKatOkkBZCZMMHf0dqEvAlG6PZSZSTN4/AmDyw2M2SJxZjxCOz
- pYPEdCGEEe2nV7r3L8BTFx+B6XMxFZZUItMSjq1zlClZNySFVRXtw4DmsEOtcEFJFi+4
- waOz/a+GDUgjPEIaPSbxe/Rk8XI79vcs+yI5T9y8vtXsMhj183KRucJRhCeybOQPyfzR
- 772RZXVI6Xa7rjnv8FQSS6+gfqM6STvA4O1vkU8U0Xug1/vQdZeDtkI6re5HsC9SldF+ 8g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v3b6r2kvg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Dec 2023 14:09:01 +0000
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BJDqGdj019960;
-	Tue, 19 Dec 2023 14:09:01 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v3b6r2kuv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Dec 2023 14:09:01 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BJCtZYx004797;
-	Tue, 19 Dec 2023 14:08:59 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3v1pkyr9cx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Dec 2023 14:08:59 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BJE8uim59113970
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 19 Dec 2023 14:08:56 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C14512004B;
-	Tue, 19 Dec 2023 14:08:56 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8600720040;
-	Tue, 19 Dec 2023 14:08:56 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 19 Dec 2023 14:08:56 +0000 (GMT)
-From: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
-To: Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>
-Cc: Nina Schoetterl-Glausch <nsg@linux.ibm.com>, linux-s390@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>,
-        Sven Schnelle <svens@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: [PATCH v4 4/4] KVM: s390: Minor refactor of base/ext facility lists
-Date: Tue, 19 Dec 2023 15:08:53 +0100
-Message-Id: <20231219140854.1042599-5-nsg@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20231219140854.1042599-1-nsg@linux.ibm.com>
-References: <20231219140854.1042599-1-nsg@linux.ibm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4411B27B;
+	Tue, 19 Dec 2023 14:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R741e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0Vyr6180_1702995977;
+Received: from localhost(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0Vyr6180_1702995977)
+          by smtp.aliyun-inc.com;
+          Tue, 19 Dec 2023 22:26:22 +0800
+From: Wen Gu <guwen@linux.alibaba.com>
+To: wintera@linux.ibm.com,
+	wenjia@linux.ibm.com,
+	hca@linux.ibm.com,
+	gor@linux.ibm.com,
+	agordeev@linux.ibm.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	kgraul@linux.ibm.com,
+	jaka@linux.ibm.com
+Cc: borntraeger@linux.ibm.com,
+	svens@linux.ibm.com,
+	alibuda@linux.alibaba.com,
+	tonylu@linux.alibaba.com,
+	guwen@linux.alibaba.com,
+	raspl@linux.ibm.com,
+	schnelle@linux.ibm.com,
+	guangguan.wang@linux.alibaba.com,
+	linux-s390@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v8 00/10] net/smc: implement SMCv2.1 virtual ISM device support
+Date: Tue, 19 Dec 2023 22:26:06 +0800
+Message-ID: <20231219142616.80697-1-guwen@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -88,117 +58,124 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Y94m9_wMZ9ZeChafezNsbSD1z0tpkSGM
-X-Proofpoint-ORIG-GUID: yiqJi11fctYRkMgNX-CyM_AVhav685l9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-19_08,2023-12-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
- suspectscore=0 bulkscore=0 spamscore=0 clxscore=1015 malwarescore=0
- adultscore=0 impostorscore=0 lowpriorityscore=0 priorityscore=1501
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2312190105
 
-Directly use the size of the arrays instead of going through the
-indirection of kvm_s390_fac_size().
-Don't use magic number for the number of entries in the non hypervisor
-managed facility bit mask list.
-Make the constraint of that number on kvm_s390_fac_base obvious.
-Get rid of implicit double anding of stfle_fac_list.
+The fourth edition of SMCv2 adds the SMC version 2.1 feature updates for
+SMC-Dv2 with virtual ISM. Virtual ISM are created and supported mainly by
+OS or hypervisor software, comparable to IBM ISM which is based on platform
+firmware or hardware.
 
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Signed-off-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
----
+With the introduction of virtual ISM, SMCv2.1 makes some updates:
 
-Notes:
-    I think it's nicer this way but it might be needless churn.
+- Introduce feature bitmask to indicate supplemental features.
+- Reserve a range of CHIDs for virtual ISM.
+- Support extended GIDs (128 bits) in CLC handshake.
 
- arch/s390/kvm/kvm-s390.c | 44 +++++++++++++++++-----------------------
- 1 file changed, 19 insertions(+), 25 deletions(-)
+So this patch set aims to implement these updates in Linux kernel. And it
+acts as the first part of SMC-D virtual ISM extension & loopback-ism [1].
 
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 7aa0e668488f..ac8d551f8b32 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -224,33 +224,25 @@ static int async_destroy = 1;
- module_param(async_destroy, int, 0444);
- MODULE_PARM_DESC(async_destroy, "Asynchronous destroy for protected guests");
- 
--/*
-- * For now we handle at most 16 double words as this is what the s390 base
-- * kernel handles and stores in the prefix page. If we ever need to go beyond
-- * this, this requires changes to code, but the external uapi can stay.
-- */
--#define SIZE_INTERNAL 16
--
-+#define HMFAI_DWORDS 16
- /*
-  * Base feature mask that defines default mask for facilities. Consists of the
-  * defines in FACILITIES_KVM and the non-hypervisor managed bits.
-  */
--static unsigned long kvm_s390_fac_base[SIZE_INTERNAL] = { FACILITIES_KVM };
-+static unsigned long kvm_s390_fac_base[HMFAI_DWORDS] = { FACILITIES_KVM };
-+static_assert(ARRAY_SIZE(((long[]){ FACILITIES_KVM })) <= HMFAI_DWORDS);
-+static_assert(ARRAY_SIZE(kvm_s390_fac_base) <= S390_ARCH_FAC_MASK_SIZE_U64);
-+static_assert(ARRAY_SIZE(kvm_s390_fac_base) <= S390_ARCH_FAC_LIST_SIZE_U64);
-+static_assert(ARRAY_SIZE(kvm_s390_fac_base) <= ARRAY_SIZE(stfle_fac_list));
-+
- /*
-  * Extended feature mask. Consists of the defines in FACILITIES_KVM_CPUMODEL
-  * and defines the facilities that can be enabled via a cpu model.
-  */
--static unsigned long kvm_s390_fac_ext[SIZE_INTERNAL] = { FACILITIES_KVM_CPUMODEL };
--
--static unsigned long kvm_s390_fac_size(void)
--{
--	BUILD_BUG_ON(SIZE_INTERNAL > S390_ARCH_FAC_MASK_SIZE_U64);
--	BUILD_BUG_ON(SIZE_INTERNAL > S390_ARCH_FAC_LIST_SIZE_U64);
--	BUILD_BUG_ON(SIZE_INTERNAL * sizeof(unsigned long) >
--		sizeof(stfle_fac_list));
--
--	return SIZE_INTERNAL;
--}
-+static const unsigned long kvm_s390_fac_ext[] = { FACILITIES_KVM_CPUMODEL };
-+static_assert(ARRAY_SIZE(kvm_s390_fac_ext) <= S390_ARCH_FAC_MASK_SIZE_U64);
-+static_assert(ARRAY_SIZE(kvm_s390_fac_ext) <= S390_ARCH_FAC_LIST_SIZE_U64);
-+static_assert(ARRAY_SIZE(kvm_s390_fac_ext) <= ARRAY_SIZE(stfle_fac_list));
- 
- /* available cpu features supported by kvm */
- static DECLARE_BITMAP(kvm_s390_available_cpu_feat, KVM_S390_VM_CPU_FEAT_NR_BITS);
-@@ -3348,13 +3340,16 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
- 	kvm->arch.sie_page2->kvm = kvm;
- 	kvm->arch.model.fac_list = kvm->arch.sie_page2->fac_list;
- 
--	for (i = 0; i < kvm_s390_fac_size(); i++) {
-+	for (i = 0; i < ARRAY_SIZE(kvm_s390_fac_base); i++) {
- 		kvm->arch.model.fac_mask[i] = stfle_fac_list[i] &
--					      (kvm_s390_fac_base[i] |
--					       kvm_s390_fac_ext[i]);
-+					      kvm_s390_fac_base[i];
- 		kvm->arch.model.fac_list[i] = stfle_fac_list[i] &
- 					      kvm_s390_fac_base[i];
- 	}
-+	for (i = 0; i < ARRAY_SIZE(kvm_s390_fac_ext); i++) {
-+		kvm->arch.model.fac_mask[i] |= stfle_fac_list[i] &
-+					       kvm_s390_fac_ext[i];
-+	}
- 	kvm->arch.model.subfuncs = kvm_s390_available_subfunc;
- 
- 	/* we are always in czam mode - even on pre z14 machines */
-@@ -5868,9 +5863,8 @@ static int __init kvm_s390_init(void)
- 		return -EINVAL;
- 	}
- 
--	for (i = 0; i < 16; i++)
--		kvm_s390_fac_base[i] |=
--			stfle_fac_list[i] & nonhyp_mask(i);
-+	for (i = 0; i < HMFAI_DWORDS; i++)
-+		kvm_s390_fac_base[i] |= nonhyp_mask(i);
- 
- 	r = __kvm_s390_init();
- 	if (r)
+[1] https://lore.kernel.org/netdev/1695568613-125057-1-git-send-email-guwen@linux.alibaba.com/
+
+v8->v7:
+- Patch #7: v7 mistakenly changed the type of gid_ext in
+  smc_clc_msg_accept_confirm to u64 instead of __be64 as previous versions
+  when fixing the rebase conflicts. So fix this mistake.
+
+v7->v6:
+Link: https://lore.kernel.org/netdev/20231219084536.8158-1-guwen@linux.alibaba.com/
+- Collect the Reviewed-by tag in v6;
+- Patch #3: redefine the struct smc_clc_msg_accept_confirm;
+- Patch #7: Because that the Patch #3 already adds '__packed' to
+  smc_clc_msg_accept_confirm, so Patch #7 doesn't need to do the same thing.
+  But this is a minor change, so I kept the 'Reviewed-by' tag.
+
+Other changes in previous versions but not yet acked:
+- Patch #1: Some minor changes in subject and fix the format issue
+  (length exceeds 80 columns) compared to v3.
+- Patch #5: removes useless ini->feature_mask assignment in __smc_connect()
+  and smc_listen_v2_check() compared to v4.
+- Patch #8: new added, compared to v3.
+
+v6->v5:
+Link: https://lore.kernel.org/netdev/1702371151-125258-1-git-send-email-guwen@linux.alibaba.com/
+- Add 'Reviewed-by' label given in the previous versions:
+  * Patch #4, #6, #9, #10 have nothing changed since v3;
+- Patch #2:
+  * fix the format issue (Alignment should match open parenthesis) compared to v5;
+  * remove useless clc->hdr.length assignment in smcr_clc_prep_confirm_accept()
+    compared to v5;
+- Patch #3: new added compared to v5.
+- Patch #7: some minor changes like aclc_v2->aclc or clc_v2->clc compared to v5
+  due to the introduction of Patch #3. Since there were no major changes, I kept
+  the 'Reviewed-by' label.
+
+Other changes in previous versions but not yet acked:
+- Patch #1: Some minor changes in subject and fix the format issue
+  (length exceeds 80 columns) compared to v3.
+- Patch #5: removes useless ini->feature_mask assignment in __smc_connect()
+  and smc_listen_v2_check() compared to v4.
+- Patch #8: new added, compared to v3.
+
+v5->v4:
+Link: https://lore.kernel.org/netdev/1702021259-41504-1-git-send-email-guwen@linux.alibaba.com/
+- Patch #6: improve the comment of SMCD_CLC_MAX_V2_GID_ENTRIES;
+- Patch #4: remove useless ini->feature_mask assignment;
+
+v4->v3:
+https://lore.kernel.org/netdev/1701920994-73705-1-git-send-email-guwen@linux.alibaba.com/
+- Patch #6: use SMCD_CLC_MAX_V2_GID_ENTRIES to indicate the max gid
+  entries in CLC proposal and using SMC_MAX_V2_ISM_DEVS to indicate the
+  max devices to propose;
+- Patch #6: use i and i+1 in smc_find_ism_v2_device_serv();
+- Patch #2: replace the large if-else block in smc_clc_send_confirm_accept()
+  with 2 subfunctions;
+- Fix missing byte order conversion of GID and token in CLC handshake,
+  which is in a separate patch sending to net:
+  https://lore.kernel.org/netdev/1701882157-87956-1-git-send-email-guwen@linux.alibaba.com/
+- Patch #7: add extended GID in SMC-D lgr netlink attribute;
+
+v3->v2:
+https://lore.kernel.org/netdev/1701343695-122657-1-git-send-email-guwen@linux.alibaba.com/
+- Rename smc_clc_fill_fce as smc_clc_fill_fce_v2x;
+- Remove ISM_IDENT_MASK from drivers/s390/net/ism.h;
+- Add explicitly assigning 'false' to ism_v2_capable in ism_dev_init();
+- Remove smc_ism_set_v2_capable() helper for now, and introduce it in
+  later loopback-ism implementation;
+
+v2->v1:
+- Fix sparse complaint;
+- Rebase to the latest net-next;
+
+Wen Gu (10):
+  net/smc: rename some 'fce' to 'fce_v2x' for clarity
+  net/smc: introduce sub-functions for smc_clc_send_confirm_accept()
+  net/smc: unify the structs of accept or confirm message for v1 and v2
+  net/smc: support SMCv2.x supplemental features negotiation
+  net/smc: introduce virtual ISM device support feature
+  net/smc: define a reserved CHID range for virtual ISM devices
+  net/smc: compatible with 128-bits extended GID of virtual ISM device
+  net/smc: support extended GID in SMC-D lgr netlink attribute
+  net/smc: disable SEID on non-s390 archs where virtual ISM may be used
+  net/smc: manage system EID in SMC stack instead of ISM driver
+
+ drivers/s390/net/ism.h        |   7 -
+ drivers/s390/net/ism_drv.c    |  57 ++----
+ include/linux/ism.h           |   1 -
+ include/net/smc.h             |  16 +-
+ include/uapi/linux/smc.h      |   2 +
+ include/uapi/linux/smc_diag.h |   2 +
+ net/smc/af_smc.c              | 118 ++++++++-----
+ net/smc/smc.h                 |  10 +-
+ net/smc/smc_clc.c             | 318 +++++++++++++++++++++-------------
+ net/smc/smc_clc.h             |  64 +++----
+ net/smc/smc_core.c            |  37 ++--
+ net/smc/smc_core.h            |  18 +-
+ net/smc/smc_diag.c            |   9 +-
+ net/smc/smc_ism.c             |  50 ++++--
+ net/smc/smc_ism.h             |  30 +++-
+ net/smc/smc_pnet.c            |   4 +-
+ 16 files changed, 448 insertions(+), 295 deletions(-)
+
 -- 
-2.40.1
+2.43.0
 
 
