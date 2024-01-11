@@ -1,31 +1,31 @@
-Return-Path: <linux-s390+bounces-898-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-895-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91D8F82AD1E
-	for <lists+linux-s390@lfdr.de>; Thu, 11 Jan 2024 12:14:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B714B82AD1A
+	for <lists+linux-s390@lfdr.de>; Thu, 11 Jan 2024 12:14:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5D44CB2645B
-	for <lists+linux-s390@lfdr.de>; Thu, 11 Jan 2024 11:14:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3C376B27997
+	for <lists+linux-s390@lfdr.de>; Thu, 11 Jan 2024 11:14:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D422B154AE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 053C71549B;
 	Thu, 11 Jan 2024 11:13:42 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9556B1548F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2301548D;
 	Thu, 11 Jan 2024 11:13:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4T9hpk0Z0yz1Q7T4;
-	Thu, 11 Jan 2024 19:12:46 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4T9hqH5C5vz1wn3P;
+	Thu, 11 Jan 2024 19:13:15 +0800 (CST)
 Received: from dggpemm100001.china.huawei.com (unknown [7.185.36.93])
-	by mail.maildlp.com (Postfix) with ESMTPS id BE9AF180071;
-	Thu, 11 Jan 2024 19:13:31 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 368751400E8;
+	Thu, 11 Jan 2024 19:13:32 +0800 (CST)
 Received: from localhost.localdomain (10.175.112.125) by
  dggpemm100001.china.huawei.com (7.185.36.93) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
@@ -34,9 +34,9 @@ From: Kefeng Wang <wangkefeng.wang@huawei.com>
 To: Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>
 CC: <willy@infradead.org>, <david@redhat.com>, <linux-s390@vger.kernel.org>,
 	<linux-perf-users@vger.kernel.org>, Kefeng Wang <wangkefeng.wang@huawei.com>
-Subject: [PATCH v2 3/8] mm: huge_memory: use pfn_swap_entry_to_folio() in __split_huge_pmd_locked()
-Date: Thu, 11 Jan 2024 19:12:34 +0800
-Message-ID: <20240111111239.2453282-4-wangkefeng.wang@huawei.com>
+Subject: [PATCH v2 4/8] mm: huge_memory: use pfn_swap_entry_to_folio() in zap_huge_pmd()
+Date: Thu, 11 Jan 2024 19:12:35 +0800
+Message-ID: <20240111111239.2453282-5-wangkefeng.wang@huawei.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20240111111239.2453282-1-wangkefeng.wang@huawei.com>
 References: <20240111111239.2453282-1-wangkefeng.wang@huawei.com>
@@ -51,36 +51,65 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
  dggpemm100001.china.huawei.com (7.185.36.93)
 
-Using pfn_swap_entry_to_folio() in __split_huge_pmd_locked() which is
+Using pfn_swap_entry_to_folio() in zap_huge_pmd(), which is a
 preparetion for converting mm counter functions to take a folio.
 
 Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
- mm/huge_memory.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/huge_memory.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
 diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 94ef5c02b459..6139887933a7 100644
+index 6139887933a7..b024edb55855 100644
 --- a/mm/huge_memory.c
 +++ b/mm/huge_memory.c
-@@ -2432,7 +2432,7 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
- 			swp_entry_t entry;
+@@ -1895,12 +1895,14 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
+ 		zap_deposited_table(tlb->mm, pmd);
+ 		spin_unlock(ptl);
+ 	} else {
+-		struct page *page = NULL;
++		struct folio *folio = NULL;
+ 		int flush_needed = 1;
  
- 			entry = pmd_to_swp_entry(old_pmd);
+ 		if (pmd_present(orig_pmd)) {
+-			page = pmd_page(orig_pmd);
+-			folio_remove_rmap_pmd(page_folio(page), page, vma);
++			struct page *page = pmd_page(orig_pmd);
++
++			folio = page_folio(page);
++			folio_remove_rmap_pmd(folio, page, vma);
+ 			VM_BUG_ON_PAGE(page_mapcount(page) < 0, page);
+ 			VM_BUG_ON_PAGE(!PageHead(page), page);
+ 		} else if (thp_migration_supported()) {
+@@ -1908,23 +1910,24 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
+ 
+ 			VM_BUG_ON(!is_pmd_migration_entry(orig_pmd));
+ 			entry = pmd_to_swp_entry(orig_pmd);
 -			page = pfn_swap_entry_to_page(entry);
 +			folio = pfn_swap_entry_to_folio(entry);
- 		} else {
- 			page = pmd_page(old_pmd);
- 			folio = page_folio(page);
-@@ -2443,7 +2443,7 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
- 			folio_remove_rmap_pmd(folio, page, vma);
- 			folio_put(folio);
- 		}
--		add_mm_counter(mm, mm_counter_file(page), -HPAGE_PMD_NR);
-+		add_mm_counter(mm, mm_counter_file(&folio->page), -HPAGE_PMD_NR);
- 		return;
- 	}
+ 			flush_needed = 0;
+ 		} else
+ 			WARN_ONCE(1, "Non present huge pmd without pmd migration enabled!");
  
+-		if (PageAnon(page)) {
++		if (folio_test_anon(folio)) {
+ 			zap_deposited_table(tlb->mm, pmd);
+ 			add_mm_counter(tlb->mm, MM_ANONPAGES, -HPAGE_PMD_NR);
+ 		} else {
+ 			if (arch_needs_pgtable_deposit())
+ 				zap_deposited_table(tlb->mm, pmd);
+-			add_mm_counter(tlb->mm, mm_counter_file(page), -HPAGE_PMD_NR);
++			add_mm_counter(tlb->mm, mm_counter_file(&folio->page),
++				       -HPAGE_PMD_NR);
+ 		}
+ 
+ 		spin_unlock(ptl);
+ 		if (flush_needed)
+-			tlb_remove_page_size(tlb, page, HPAGE_PMD_SIZE);
++			tlb_remove_page_size(tlb, &folio->page, HPAGE_PMD_SIZE);
+ 	}
+ 	return 1;
+ }
 -- 
 2.27.0
 
