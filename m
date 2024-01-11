@@ -1,42 +1,42 @@
-Return-Path: <linux-s390+bounces-899-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-901-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 972E982AD1D
-	for <lists+linux-s390@lfdr.de>; Thu, 11 Jan 2024 12:14:10 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4207682AD21
+	for <lists+linux-s390@lfdr.de>; Thu, 11 Jan 2024 12:14:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 365A61F23BE0
-	for <lists+linux-s390@lfdr.de>; Thu, 11 Jan 2024 11:14:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8BC9AB267C0
+	for <lists+linux-s390@lfdr.de>; Thu, 11 Jan 2024 11:14:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0088154BD;
-	Thu, 11 Jan 2024 11:13:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF8CE156C7;
+	Thu, 11 Jan 2024 11:13:44 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E088515491;
-	Thu, 11 Jan 2024 11:13:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B3815483;
+	Thu, 11 Jan 2024 11:13:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4T9hpt1TpfzNkrX;
-	Thu, 11 Jan 2024 19:12:54 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4T9hpc5HTZzWm4Q;
+	Thu, 11 Jan 2024 19:12:40 +0800 (CST)
 Received: from dggpemm100001.china.huawei.com (unknown [7.185.36.93])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1346914040D;
+	by mail.maildlp.com (Postfix) with ESMTPS id 7DC5C180077;
 	Thu, 11 Jan 2024 19:13:33 +0800 (CST)
 Received: from localhost.localdomain (10.175.112.125) by
  dggpemm100001.china.huawei.com (7.185.36.93) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 11 Jan 2024 19:13:32 +0800
+ 15.1.2507.35; Thu, 11 Jan 2024 19:13:33 +0800
 From: Kefeng Wang <wangkefeng.wang@huawei.com>
 To: Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>
 CC: <willy@infradead.org>, <david@redhat.com>, <linux-s390@vger.kernel.org>,
 	<linux-perf-users@vger.kernel.org>, Kefeng Wang <wangkefeng.wang@huawei.com>
-Subject: [PATCH v2 6/8] mm: memory: convert to should_zap_folio()
-Date: Thu, 11 Jan 2024 19:12:37 +0800
-Message-ID: <20240111111239.2453282-7-wangkefeng.wang@huawei.com>
+Subject: [PATCH v2 7/8] mm: convert mm_counter() to take a folio
+Date: Thu, 11 Jan 2024 19:12:38 +0800
+Message-ID: <20240111111239.2453282-8-wangkefeng.wang@huawei.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20240111111239.2453282-1-wangkefeng.wang@huawei.com>
 References: <20240111111239.2453282-1-wangkefeng.wang@huawei.com>
@@ -51,90 +51,152 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
  dggpemm100001.china.huawei.com (7.185.36.93)
 
-Make should_zap_page() to take a folio and convert it to
-should_zap_folio() which is preparetion for converting mm
-counter functions to take a folio.
+Since all mm_counter() callers with a folio, let's convert
+mm_counter() to take a folio.
 
 Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
- mm/memory.c | 29 ++++++++++++++++-------------
- 1 file changed, 16 insertions(+), 13 deletions(-)
+ arch/s390/mm/pgtable.c |  2 +-
+ include/linux/mm.h     |  6 +++---
+ mm/memory.c            | 10 +++++-----
+ mm/rmap.c              |  8 ++++----
+ mm/userfaultfd.c       |  2 +-
+ 5 files changed, 14 insertions(+), 14 deletions(-)
 
+diff --git a/arch/s390/mm/pgtable.c b/arch/s390/mm/pgtable.c
+index e8fc5c55968e..4c92b08e3c59 100644
+--- a/arch/s390/mm/pgtable.c
++++ b/arch/s390/mm/pgtable.c
+@@ -723,7 +723,7 @@ static void ptep_zap_swap_entry(struct mm_struct *mm, swp_entry_t entry)
+ 	else if (is_migration_entry(entry)) {
+ 		struct folio *folio = pfn_swap_entry_to_folio(entry);
+ 
+-		dec_mm_counter(mm, mm_counter(&folio->page));
++		dec_mm_counter(mm, mm_counter(folio));
+ 	}
+ 	free_swap_and_cache(entry);
+ }
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index f5a97dec5169..22e597b36b38 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2603,11 +2603,11 @@ static inline int mm_counter_file(struct page *page)
+ 	return MM_FILEPAGES;
+ }
+ 
+-static inline int mm_counter(struct page *page)
++static inline int mm_counter(struct folio *folio)
+ {
+-	if (PageAnon(page))
++	if (folio_test_anon(folio))
+ 		return MM_ANONPAGES;
+-	return mm_counter_file(page);
++	return mm_counter_file(&folio->page);
+ }
+ 
+ static inline unsigned long get_mm_rss(struct mm_struct *mm)
 diff --git a/mm/memory.c b/mm/memory.c
-index 7b3fbeb21534..afba8b156457 100644
+index afba8b156457..2f858263e5a2 100644
 --- a/mm/memory.c
 +++ b/mm/memory.c
-@@ -1369,19 +1369,20 @@ static inline bool should_zap_cows(struct zap_details *details)
- 	return details->even_cows;
- }
+@@ -808,7 +808,7 @@ copy_nonpresent_pte(struct mm_struct *dst_mm, struct mm_struct *src_mm,
+ 	} else if (is_migration_entry(entry)) {
+ 		folio = pfn_swap_entry_to_folio(entry);
  
--/* Decides whether we should zap this page with the page pointer specified */
--static inline bool should_zap_page(struct zap_details *details, struct page *page)
-+/* Decides whether we should zap this folio with the folio pointer specified */
-+static inline bool should_zap_folio(struct zap_details *details,
-+				    struct folio *folio)
- {
--	/* If we can make a decision without *page.. */
-+	/* If we can make a decision without *folio.. */
- 	if (should_zap_cows(details))
- 		return true;
+-		rss[mm_counter(&folio->page)]++;
++		rss[mm_counter(folio)]++;
  
--	/* E.g. the caller passes NULL for the case of a zero page */
--	if (!page)
-+	/* E.g. the caller passes NULL for the case of a zero folio */
-+	if (!folio)
- 		return true;
+ 		if (!is_readable_migration_entry(entry) &&
+ 				is_cow_mapping(vm_flags)) {
+@@ -840,7 +840,7 @@ copy_nonpresent_pte(struct mm_struct *dst_mm, struct mm_struct *src_mm,
+ 		 * keep things as they are.
+ 		 */
+ 		folio_get(folio);
+-		rss[mm_counter(page)]++;
++		rss[mm_counter(folio)]++;
+ 		/* Cannot fail as these pages cannot get pinned. */
+ 		folio_try_dup_anon_rmap_pte(folio, page, src_vma);
  
--	/* Otherwise we should only zap non-anon pages */
--	return !PageAnon(page);
-+	/* Otherwise we should only zap non-anon folios */
-+	return !folio_test_anon(folio);
- }
- 
- static inline bool zap_drop_file_uffd_wp(struct zap_details *details)
-@@ -1447,7 +1448,10 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
- 			unsigned int delay_rmap;
- 
- 			page = vm_normal_page(vma, addr, ptent);
--			if (unlikely(!should_zap_page(details, page)))
-+			if (page)
-+				folio = page_folio(page);
-+
-+			if (unlikely(!should_zap_folio(details, folio)))
- 				continue;
- 			ptent = ptep_get_and_clear_full(mm, addr, pte,
- 							tlb->fullmm);
-@@ -1460,7 +1464,6 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
- 				continue;
+@@ -1476,7 +1476,7 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
+ 				if (pte_young(ptent) && likely(vma_has_recency(vma)))
+ 					folio_mark_accessed(folio);
  			}
- 
--			folio = page_folio(page);
- 			delay_rmap = 0;
- 			if (!folio_test_anon(folio)) {
- 				if (pte_dirty(ptent)) {
-@@ -1492,7 +1495,7 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
- 		    is_device_exclusive_entry(entry)) {
- 			page = pfn_swap_entry_to_page(entry);
- 			folio = page_folio(page);
--			if (unlikely(!should_zap_page(details, page)))
-+			if (unlikely(!should_zap_folio(details, folio)))
- 				continue;
- 			/*
- 			 * Both device private/exclusive mappings should only
-@@ -1513,10 +1516,10 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
- 			if (unlikely(!free_swap_and_cache(entry)))
- 				print_bad_pte(vma, addr, ptent, NULL);
- 		} else if (is_migration_entry(entry)) {
--			page = pfn_swap_entry_to_page(entry);
--			if (!should_zap_page(details, page))
-+			folio = pfn_swap_entry_to_folio(entry);
-+			if (!should_zap_folio(details, folio))
- 				continue;
 -			rss[mm_counter(page)]--;
-+			rss[mm_counter(&folio->page)]--;
++			rss[mm_counter(folio)]--;
+ 			if (!delay_rmap) {
+ 				folio_remove_rmap_pte(folio, page, vma);
+ 				if (unlikely(page_mapcount(page) < 0))
+@@ -1504,7 +1504,7 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
+ 			 * see zap_install_uffd_wp_if_needed().
+ 			 */
+ 			WARN_ON_ONCE(!vma_is_anonymous(vma));
+-			rss[mm_counter(page)]--;
++			rss[mm_counter(folio)]--;
+ 			if (is_device_private_entry(entry))
+ 				folio_remove_rmap_pte(folio, page, vma);
+ 			folio_put(folio);
+@@ -1519,7 +1519,7 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
+ 			folio = pfn_swap_entry_to_folio(entry);
+ 			if (!should_zap_folio(details, folio))
+ 				continue;
+-			rss[mm_counter(&folio->page)]--;
++			rss[mm_counter(folio)]--;
  		} else if (pte_marker_entry_uffd_wp(entry)) {
  			/*
  			 * For anon: always drop the marker; for file: only
+diff --git a/mm/rmap.c b/mm/rmap.c
+index f5d43edad529..4648cf1d8178 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -1780,7 +1780,7 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+ 				set_huge_pte_at(mm, address, pvmw.pte, pteval,
+ 						hsz);
+ 			} else {
+-				dec_mm_counter(mm, mm_counter(&folio->page));
++				dec_mm_counter(mm, mm_counter(folio));
+ 				set_pte_at(mm, address, pvmw.pte, pteval);
+ 			}
+ 
+@@ -1795,7 +1795,7 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+ 			 * migration) will not expect userfaults on already
+ 			 * copied pages.
+ 			 */
+-			dec_mm_counter(mm, mm_counter(&folio->page));
++			dec_mm_counter(mm, mm_counter(folio));
+ 		} else if (folio_test_anon(folio)) {
+ 			swp_entry_t entry = page_swap_entry(subpage);
+ 			pte_t swp_pte;
+@@ -2181,7 +2181,7 @@ static bool try_to_migrate_one(struct folio *folio, struct vm_area_struct *vma,
+ 				set_huge_pte_at(mm, address, pvmw.pte, pteval,
+ 						hsz);
+ 			} else {
+-				dec_mm_counter(mm, mm_counter(&folio->page));
++				dec_mm_counter(mm, mm_counter(folio));
+ 				set_pte_at(mm, address, pvmw.pte, pteval);
+ 			}
+ 
+@@ -2196,7 +2196,7 @@ static bool try_to_migrate_one(struct folio *folio, struct vm_area_struct *vma,
+ 			 * migration) will not expect userfaults on already
+ 			 * copied pages.
+ 			 */
+-			dec_mm_counter(mm, mm_counter(&folio->page));
++			dec_mm_counter(mm, mm_counter(folio));
+ 		} else {
+ 			swp_entry_t entry;
+ 			pte_t swp_pte;
+diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+index 216ab4c8621f..662ab304cca3 100644
+--- a/mm/userfaultfd.c
++++ b/mm/userfaultfd.c
+@@ -124,7 +124,7 @@ int mfill_atomic_install_pte(pmd_t *dst_pmd,
+ 	 * Must happen after rmap, as mm_counter() checks mapping (via
+ 	 * PageAnon()), which is set by __page_set_anon_rmap().
+ 	 */
+-	inc_mm_counter(dst_mm, mm_counter(page));
++	inc_mm_counter(dst_mm, mm_counter(folio));
+ 
+ 	set_pte_at(dst_mm, dst_addr, dst_pte, _dst_pte);
+ 
 -- 
 2.27.0
 
