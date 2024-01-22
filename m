@@ -1,95 +1,109 @@
-Return-Path: <linux-s390+bounces-1082-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-1084-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DA4A837618
-	for <lists+linux-s390@lfdr.de>; Mon, 22 Jan 2024 23:31:38 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A38088377C2
+	for <lists+linux-s390@lfdr.de>; Tue, 23 Jan 2024 00:33:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4225B2872D0
-	for <lists+linux-s390@lfdr.de>; Mon, 22 Jan 2024 22:31:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 43D6D1F26911
+	for <lists+linux-s390@lfdr.de>; Mon, 22 Jan 2024 23:33:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0027F4F9;
-	Mon, 22 Jan 2024 22:31:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DED74D5B7;
+	Mon, 22 Jan 2024 23:33:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qI9A/shm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K7Gp1DGx"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9866B15E94;
-	Mon, 22 Jan 2024 22:31:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30474D59A;
+	Mon, 22 Jan 2024 23:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705962693; cv=none; b=lnNoRUBbCLElkIgzuziuPv5MB2oJao4cq/Mn8ZnanHcM2EFMA/iYYN1TYwzs9jkFq6gQJO8DCCrwiiwUIL8oLZb6uwTTSkQAtzR4tWSBQ9zqYZ5OVp7tyRn3hCeYI46FSLETb3LWS+atPLlarVXdujFS5xrbhLubfxS4u3sQVao=
+	t=1705966410; cv=none; b=YwGBhD8KS+bVfXLAlKwcZvPhu6evbaCsrprpire0k5AcF7fEBXfpQXiXue6hH2DkHd/UEwAe+ZQKLvHT5+si2sKpdug/dUb5p/0fHafcXTCJ5WpzZYMU2rheC4Cla9N0L1FnQlXcFTpIEGBiYc5X8pXRkRzaose4ncW3cYhbknI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705962693; c=relaxed/simple;
-	bh=3JHtLyrtdIeR4lpdqLo4ZU4AipE0Puso/vddbxf5HZ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hwuje5gWsMHygu5AJdaezDL4u/7u8ayTveIpHsb4Y1aPztG7YzgBYxKkcFuut9SyoDnFk4whK11StcvZi3UnJ+fSskscF6dUktz/xwVjzaFvG3IPaVGC9I4cjSRpyeDY4LZTW1QeCjiYn2oAl1kh0ZtDRHsglFPjv6Sr1mBpMP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qI9A/shm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A343BC433C7;
-	Mon, 22 Jan 2024 22:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705962693;
-	bh=3JHtLyrtdIeR4lpdqLo4ZU4AipE0Puso/vddbxf5HZ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qI9A/shmvVcKK9J87UeI9xEBdcU3a2OlzH3Oa171BAtNE19qHkRAMUUEayiO632Zx
-	 aH8yDOUkV64DHJTL8uqRLK/8ZVWO1B2NF0glxFNvQvbVFpi5IJWpwV56//WnwjwVa5
-	 UnrB8I1Bidr6tBCbavofefh4qWZbQbEg5vLIdhktRevMgiHzmZn9mmwzndRIrCpT6J
-	 YbrHJ42W2RpqMgNxKdIPUqTDRQNDX2Jfwq3Cdiavg/+OfeTnUD/2fEZcSzRbo7mnWd
-	 py65TvhX2Khv1K21fmhi2ZPEGjBtUEOHUxi+emQ4hZ5mb5HDG8HW9jyQDQbMJujyoD
-	 B5mxBKAZ2ihrA==
-Date: Mon, 22 Jan 2024 23:31:30 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Heiko Carstens <hca@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>, linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org
+	s=arc-20240116; t=1705966410; c=relaxed/simple;
+	bh=3ua4aeYsQyY22UzxCGBCdj5W+o+Q8xSEVa1JTmEzpJ4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KnHO0LCeVChoI8/njRxyMZo3ydUfm/bvjykWwhgQzLeyrpX+ELd2WkXyNH86vAr7+qsPFi73bojTkcYS6+yFTLOCTrcMAhiZKSgKrIznBsOoGeUV6MBEJgvYa3PSmjzkpQigTiKYl1NzLKRPFdkENfmW+rVj0uyLy5Q2JaVYxgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K7Gp1DGx; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705966409; x=1737502409;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=3ua4aeYsQyY22UzxCGBCdj5W+o+Q8xSEVa1JTmEzpJ4=;
+  b=K7Gp1DGxNlD+ftKxFlxPdvLDnXv/SXb5SBvtgBPXbft9P7qwEvjN978c
+   CYqO7b9fuB4CD56o5TwRIg6rclw8I9tJkeXRYSuZqVqH98mQ40ynuw+pG
+   CN0DL0VGOIiii3Bd9A8fl/VXMsge2lW7RKTvJNAX3j+0o6tTsJcXh92TJ
+   CRzcXoH6KuOJhgoGwXre6kj72LNNXLfAGWTGufyfD9SJs/0IqEspDFFDw
+   e9jfnkZzw6QR5irYzchjstRWMC1C4hvhrb45b9vOIR/I3Lsx7hg5qgdZk
+   NYwRUyLPjaRVBUzMQ3Y21Uu/Q44sizQNvAC0s6+m4jQj/a+M6Cb1gJwua
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="8032317"
+X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
+   d="scan'208";a="8032317"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:33:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="1117040587"
+X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
+   d="scan'208";a="1117040587"
+Received: from ishandes-mobl1.amr.corp.intel.com (HELO [10.209.49.194]) ([10.209.49.194])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:33:27 -0800
+Message-ID: <d6b7203d11aac2d83ddcd181f05a6074388d32d4.camel@linux.intel.com>
 Subject: Re: [PATCH] tick-sched: fix idle and iowait sleeptime accounting vs
  CPU hotplug
-Message-ID: <Za7swp31JRzGJwzS@pavilion.home>
+From: Tim Chen <tim.c.chen@linux.intel.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Heiko Carstens <hca@linux.ibm.com>, Thomas Gleixner
+ <tglx@linutronix.de>,  Ingo Molnar <mingo@kernel.org>, Gerald Schaefer
+ <gerald.schaefer@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+ linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Date: Mon, 22 Jan 2024 15:33:27 -0800
+In-Reply-To: <Za7swp31JRzGJwzS@pavilion.home>
 References: <20240115163555.1004144-1-hca@linux.ibm.com>
- <0928660b39aea2828a79a87fef57447e657d43b4.camel@linux.intel.com>
+	 <0928660b39aea2828a79a87fef57447e657d43b4.camel@linux.intel.com>
+	 <Za7swp31JRzGJwzS@pavilion.home>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0928660b39aea2828a79a87fef57447e657d43b4.camel@linux.intel.com>
 
-Le Mon, Jan 22, 2024 at 10:19:30AM -0800, Tim Chen a écrit :
-> On Mon, 2024-01-15 at 17:35 +0100, Heiko Carstens wrote:
-> > 
-> >  
-> > +	idle_sleeptime = ts->idle_sleeptime;
-> > +	iowait_sleeptime = ts->iowait_sleeptime;
-> >  	memset(ts, 0, sizeof(*ts));
-> > +	ts->idle_sleeptime = idle_sleeptime;
-> > +	ts->iowait_sleeptime = iowait_sleeptime;
-> >  }
-> 
-> Should idle_calls and idle_sleeps be preserved and
-> restored too?  
-> 
-> Seems like if we preserve the
-> idle_sleeptime, and wish to compute the average
-> sleep time per sleep, we will need to know the value of
-> idle_sleeps that's also preserved across CPU offline/online.
+On Mon, 2024-01-22 at 23:31 +0100, Frederic Weisbecker wrote:
+> Le Mon, Jan 22, 2024 at 10:19:30AM -0800, Tim Chen a =C3=A9crit :
+> > On Mon, 2024-01-15 at 17:35 +0100, Heiko Carstens wrote:
+> > >=20
+> > > =20
+> > > +	idle_sleeptime =3D ts->idle_sleeptime;
+> > > +	iowait_sleeptime =3D ts->iowait_sleeptime;
+> > >  	memset(ts, 0, sizeof(*ts));
+> > > +	ts->idle_sleeptime =3D idle_sleeptime;
+> > > +	ts->iowait_sleeptime =3D iowait_sleeptime;
+> > >  }
+> >=20
+> > Should idle_calls and idle_sleeps be preserved and
+> > restored too? =C2=A0
+> >=20
+> > Seems like if we preserve the
+> > idle_sleeptime, and wish to compute the average
+> > sleep time per sleep, we will need to know the value of
+> > idle_sleeps that's also preserved across CPU offline/online.
+>=20
+> I guess those can be saved as well. Would you like to send the patch?
+>=20
 
-I guess those can be saved as well. Would you like to send the patch?
+Okay, sent the patch in a separate email.
 
-Thanks.
-
-> 
-> Tim
+Tim
 
