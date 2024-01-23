@@ -1,122 +1,200 @@
-Return-Path: <linux-s390+bounces-1083-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-1086-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D3AC8377C0
-	for <lists+linux-s390@lfdr.de>; Tue, 23 Jan 2024 00:32:56 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DE05837EC8
+	for <lists+linux-s390@lfdr.de>; Tue, 23 Jan 2024 02:44:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 69AC21C2256F
-	for <lists+linux-s390@lfdr.de>; Mon, 22 Jan 2024 23:32:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CB384B22DDE
+	for <lists+linux-s390@lfdr.de>; Tue, 23 Jan 2024 01:43:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAEC64D5B7;
-	Mon, 22 Jan 2024 23:32:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 767A013B78F;
+	Tue, 23 Jan 2024 00:46:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kAsQDr9E"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XGH8bbX5"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA564BA94;
-	Mon, 22 Jan 2024 23:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16B01272CF
+	for <linux-s390@vger.kernel.org>; Tue, 23 Jan 2024 00:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705966370; cv=none; b=Cc+NeFNv8VBd25yYO6nMUdahuzrkQiLasjzL/bEg/nfpIsspS1Jgrpmmc3RbfOYwQQTsBipeY6BQR6GpUO96H9rsd+2kyNaEFeQuWLVxSsg9IOLQVcKcMcpDC2kiWt2mD9ozTRBC7vZQTbLl42LAnVStQOajuJCQMpJORsvC4gc=
+	t=1705970762; cv=none; b=pOppfeh2JNs7SSnA1FWrGw5oSTpVIYcHjBT60YZLO2L2At3zQuQ2I91QuNOFkUWBNavCB4yJte6m93aFoc5DTuy+p4kGg20r0JmFNjvJ5IzQAxaMEeJOGrjtIrU85FjaOTSde3Z0iRamjZljbKQ2Untyv/KZW29qI+Z/FKquLis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705966370; c=relaxed/simple;
-	bh=wdogNbU04LOAOQXqJeol5FweB9QazmHCRKAJ8Y2dXfM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FwEO2U65fxQRFW+YYtgoOH1pnDMpX/n/ZYUH2bPDxd9+yIcFmpqqkQ6wFzLaDy/ETZ95S8iwSYpS0MLLm4rdhUI8xIt2YHEHCiU53ye7ucyzZhu4Fkz74UWTEUmRkl/3a/6t4V8fyiCKpY07gPqSDzq+bWeyKdp/UdAcBP5MLII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kAsQDr9E; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705966369; x=1737502369;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=wdogNbU04LOAOQXqJeol5FweB9QazmHCRKAJ8Y2dXfM=;
-  b=kAsQDr9E18/GFTjXsp8pqQf3EoIAP5voG6vPDRjoCpC23WCDcB7ZfxiF
-   ysuYGmW/IkFIeKPoTr8SQ4XpV/aJUAdr3SIYGCAIoZdBuAvhO6m9aJvSL
-   7qtDZEMVVlTjrPk7wQ1kjz36UuBgHcqs3Sr8EcaXeIWORUz0rkZnc5WHg
-   STJ9BceFxwgydjxwxQ83geU8qQEOYpTWih7eC08utZB5RYWo6vBlEo2ut
-   2Mdz+hvucFEs64aujNcGN/ZKC6wMz9xWK7uFRfx4SynIFbtlj4GSxMqpM
-   wP/8W1mtA8ETO0Bj+2EE+ljYHV0wJu3Lzq8ffcVXWwlF5SI3MsPnW+e9q
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="8032170"
-X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="8032170"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:32:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="1117040507"
-X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="1117040507"
-Received: from b04f130c83f2.jf.intel.com ([10.165.154.98])
-  by fmsmga005.fm.intel.com with ESMTP; 22 Jan 2024 15:32:47 -0800
-From: Tim Chen <tim.c.chen@linux.intel.com>
-To: Heiko Carstens <hca@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
+	s=arc-20240116; t=1705970762; c=relaxed/simple;
+	bh=cmItHHDJ2/yorzOokW4wLWtGAZ57hv5idzTs6y53l8w=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=tup38QUXfNJUY8CCT4BqIaRQ1dznjiToJPXUgQqEQPPB7FSPhis/xK2JXhvecDxMcvVvh7HuCmXZ84pY0lGiGEYoB2kLKr81M/NgaAT5OzU3geETu2h7/smCY+is7jZTsRwf1INvYN2C+M6GYyycz9ZGPgM93Ce5uBMnBa5BBfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XGH8bbX5; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5cfa71498feso3329246a12.1
+        for <linux-s390@vger.kernel.org>; Mon, 22 Jan 2024 16:46:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1705970760; x=1706575560; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Qw2b3tHeJEx9a76sk3FUumHURyBJJwj65NrMowk875Q=;
+        b=XGH8bbX50dKD/LNZcdxj+jrFHSVD8nYifl2SGv+MYAtVxPyjHYryStFOrD767hbrUe
+         GtskbhS/uzdFqJ5rcTltcvGpsMf9p6fZxMuEPowXsvPGIjMGA2aBS8PwVMKN/y8W/9mK
+         Ju26un/oZVQPE9C29V0+Parje4ArmGhLc9dcQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705970760; x=1706575560;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Qw2b3tHeJEx9a76sk3FUumHURyBJJwj65NrMowk875Q=;
+        b=Jfec/VEtsm3/tzzbTlOXSJi+T6+YM96G5BgRnOt9cWSlfEVear61d2SIASXRWsDt0H
+         +0VltN1JzePuu5fPBNDOak/d6Bc0703zpK8crcqvIxqZWNqduOBBUZZr/QtzEI12I4cw
+         /5NxSHlbwy+H5eCCaxmwZbsoJ5gRRJi9ILMrsT9NEphYAZ2KyvUlGkBaNAFHy96ML+pj
+         UBnuQogeQ73q3sPhdP5h1GkEql2U0VKEPvkiyBvzEH1wqnO9BrTjEWK7gNmNMM7ocbF5
+         2ae7K6tzTXJdZ2T0GMj4rDUfaMzbnKQUHJ38WA8umWdAd+xFmLJuy5xuVVjH+BYhtsRV
+         LeMg==
+X-Gm-Message-State: AOJu0Ywhb/EXNZLbPHJB1pv0R9rwge9d8vBBrrRg1QlQfCqcp+gYiLAE
+	6yJlba89tySpDC3g5Cs52kZNbmLBGLHJJAQAZ9LnwB/0OI8GPMN4NK9ov1jMcw==
+X-Google-Smtp-Source: AGHT+IFpnmN5NeFDZoCtNSPJnK9l8YLwar/VS6Y7pK5lbfaQcHzj8ixTBuINNoXW+BgKQQm3i/BUKQ==
+X-Received: by 2002:a05:6a20:354d:b0:199:e237:1497 with SMTP id f13-20020a056a20354d00b00199e2371497mr4858984pze.65.1705970760341;
+        Mon, 22 Jan 2024 16:46:00 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id e9-20020aa78249000000b006dae568baedsm10164690pfn.24.2024.01.22.16.45.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 16:45:57 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: linux-hardening@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
 	Vasily Gorbik <gor@linux.ibm.com>,
-	linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org
-Subject: [PATCH] tick-sched: Preserve number of idle sleeps across CPU hotplug events
-Date: Mon, 22 Jan 2024 15:35:34 -0800
-Message-Id: <20240122233534.3094238-1-tim.c.chen@linux.intel.com>
-X-Mailer: git-send-email 2.32.0
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Nico Boehr <nrb@linux.ibm.com>,
+	Philipp Rudo <prudo@redhat.com>,
+	Baoquan He <bhe@redhat.com>,
+	Tao Liu <ltao@redhat.com>,
+	Alexander Egorenkov <egorenar@linux.ibm.com>,
+	linux-s390@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 30/82] s390/kexec_file: Refactor intentional wrap-around calculation
+Date: Mon, 22 Jan 2024 16:27:05 -0800
+Message-Id: <20240123002814.1396804-30-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240122235208.work.748-kees@kernel.org>
+References: <20240122235208.work.748-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3531; i=keescook@chromium.org;
+ h=from:subject; bh=cmItHHDJ2/yorzOokW4wLWtGAZ57hv5idzTs6y53l8w=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgHS1qljwX0OBc821aP1oPgrqcP/CIrbF9OK
+ s6Ar47XlguJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IBwAKCRCJcvTf3G3A
+ JmY8D/4lOAfDyZzxJuod1mr8o99HqUKS7ycJ2w+BmUnwdIT7FhMHPjXYoOdI4ma1NGPbJghRMX1
+ KQh4FV76MnS1guDFLwXwYDsJKWpS3LyA+nT73MbsxUuacxblqt5Hh3MLWsexvC3I5rq8UnyZ8Rz
+ OxP9Q7+HCEtVVq95HnnbN4NH0ssyF02BVeyeP3cg1KVo7MMrKpR3oRkKY5uQ4ANfxACiQP8ERkC
+ 45YM4DwsS1FmhsgCHCGraTPD7DYb2sV5bhvL21RPfNaXig08zMT/5ZUQ9ZjYwxIoSByFzm7Il77
+ JwwfaVVgTNG7P3Rs9WKhVNOmxa3xDsgK9dTuvm72SLUQI+Zwb8997/d7vjECwWEeGWfRUiMrguP
+ vBRHMDpNBBg5NNXV7zCvcPmyv++hO8F98tw3mLfrc3I/zJJ5p1F3Df0LKZ2x/4WL2WDIcolRjFz
+ +AOJQe6vXf62QuIPIf5w7zvk0yyUTLqdvT3OWqxqmCnvHsze82MBf8A+ZYHr3YxF6u3exhea9t8
+ b0oMGLlaiEtp+HYdg27KcvRIktdQeyqQj1+pUWLNuoSWK4xIpaTmoHwpNyigdAUI/I6sw+LKfKe
+ L0szrDlREhEFJ1ygZbsZfF5wnN2NSu6FsohS1ZFZt+JaQP/V4vq/nnABS/LJxgLyTU9lzo+nMcu NTXqQzK2ZrdRSTg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Patch 71fee48f ("tick-sched: Fix idle and iowait sleeptime accounting vs
-CPU hotplug") preserved total idle sleep time and iowait sleeptime
-across CPU hotplug events.
+In an effort to separate intentional arithmetic wrap-around from
+unexpected wrap-around, we need to refactor places that depend on this
+kind of math. One of the most common code patterns of this is:
 
-In order to derive average sleep time per sleep event, we should also
-preserve number of sleeps too in idle_calls and idle_sleeps. Fix that.
+	VAR + value < VAR
 
-Fixes: 71fee48f ("tick-sched: Fix idle and iowait sleeptime accounting vs CPU hotplug")
-Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
+Notably, this is considered "undefined behavior" for signed and pointer
+types, which the kernel works around by using the -fno-strict-overflow
+option in the build[1] (which used to just be -fwrapv). Regardless, we
+want to get the kernel source to the position where we can meaningfully
+instrument arithmetic wrap-around conditions and catch them when they
+are unexpected, regardless of whether they are signed[2], unsigned[3],
+or pointer[4] types.
+
+Refactor open-coded unsigned wrap-around addition test to use
+check_add_overflow(), retaining the result for later usage (which removes
+the redundant open-coded addition). This paves the way to enabling the
+unsigned wrap-around sanitizer[2] in the future.
+
+Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
+Link: https://github.com/KSPP/linux/issues/26 [2]
+Link: https://github.com/KSPP/linux/issues/27 [3]
+Link: https://github.com/KSPP/linux/issues/344 [4]
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+Cc: Sven Schnelle <svens@linux.ibm.com>
+Cc: Nico Boehr <nrb@linux.ibm.com>
+Cc: Philipp Rudo <prudo@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Tao Liu <ltao@redhat.com>
+Cc: Alexander Egorenkov <egorenar@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- kernel/time/tick-sched.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/s390/include/asm/stacktrace.h    | 6 ++++--
+ arch/s390/kernel/machine_kexec_file.c | 5 +++--
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index d2501673028d..01fb50c1b17e 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -1577,6 +1577,7 @@ void tick_cancel_sched_timer(int cpu)
+diff --git a/arch/s390/include/asm/stacktrace.h b/arch/s390/include/asm/stacktrace.h
+index 31ec4f545e03..3ce08d32a8ad 100644
+--- a/arch/s390/include/asm/stacktrace.h
++++ b/arch/s390/include/asm/stacktrace.h
+@@ -34,11 +34,13 @@ int get_stack_info(unsigned long sp, struct task_struct *task,
+ static inline bool on_stack(struct stack_info *info,
+ 			    unsigned long addr, size_t len)
  {
- 	struct tick_sched *ts = &per_cpu(tick_cpu_sched, cpu);
- 	ktime_t idle_sleeptime, iowait_sleeptime;
-+	unsigned long idle_calls, idle_sleeps;
- 
- # ifdef CONFIG_HIGH_RES_TIMERS
- 	if (ts->sched_timer.base)
-@@ -1585,9 +1586,13 @@ void tick_cancel_sched_timer(int cpu)
- 
- 	idle_sleeptime = ts->idle_sleeptime;
- 	iowait_sleeptime = ts->iowait_sleeptime;
-+	idle_calls = ts->idle_calls;
-+	idle_sleeps = ts->idle_sleeps;
- 	memset(ts, 0, sizeof(*ts));
- 	ts->idle_sleeptime = idle_sleeptime;
- 	ts->iowait_sleeptime = iowait_sleeptime;
-+	ts->idle_calls = idle_calls;
-+	ts->idle_sleeps = idle_sleeps;
++	unsigned long sum;
++
+ 	if (info->type == STACK_TYPE_UNKNOWN)
+ 		return false;
+-	if (addr + len < addr)
++	if (check_add_overflow(addr, len, &sum))
+ 		return false;
+-	return addr >= info->begin && addr + len <= info->end;
++	return addr >= info->begin && sum <= info->end;
  }
- #endif
  
+ /*
+diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
+index 8d207b82d9fe..e5e925423061 100644
+--- a/arch/s390/kernel/machine_kexec_file.c
++++ b/arch/s390/kernel/machine_kexec_file.c
+@@ -238,6 +238,7 @@ void *kexec_file_add_components(struct kimage *image,
+ 	unsigned long max_command_line_size = LEGACY_COMMAND_LINE_SIZE;
+ 	struct s390_load_data data = {0};
+ 	unsigned long minsize;
++	unsigned long sum;
+ 	int ret;
+ 
+ 	data.report = ipl_report_init(&ipl_block);
+@@ -256,10 +257,10 @@ void *kexec_file_add_components(struct kimage *image,
+ 	if (data.parm->max_command_line_size)
+ 		max_command_line_size = data.parm->max_command_line_size;
+ 
+-	if (minsize + max_command_line_size < minsize)
++	if (check_add_overflow(minsize, max_command_line_size, &sum))
+ 		goto out;
+ 
+-	if (image->kernel_buf_len < minsize + max_command_line_size)
++	if (image->kernel_buf_len < sum)
+ 		goto out;
+ 
+ 	if (image->cmdline_buf_len >= max_command_line_size)
 -- 
-2.32.0
+2.34.1
 
 
