@@ -1,60 +1,60 @@
-Return-Path: <linux-s390+bounces-1175-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-1176-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B26E83CC37
-	for <lists+linux-s390@lfdr.de>; Thu, 25 Jan 2024 20:34:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D32BB83CC3C
+	for <lists+linux-s390@lfdr.de>; Thu, 25 Jan 2024 20:34:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DFE83B22D91
-	for <lists+linux-s390@lfdr.de>; Thu, 25 Jan 2024 19:34:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8B19029B190
+	for <lists+linux-s390@lfdr.de>; Thu, 25 Jan 2024 19:34:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6434137C58;
-	Thu, 25 Jan 2024 19:33:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80D0113664C;
+	Thu, 25 Jan 2024 19:33:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NojYa8rs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K4BloqQm"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F8E137C59
-	for <linux-s390@vger.kernel.org>; Thu, 25 Jan 2024 19:33:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DD413666C
+	for <linux-s390@vger.kernel.org>; Thu, 25 Jan 2024 19:33:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706211193; cv=none; b=TZjlULiKHFNJvwrTsBr/9sYuFNtGqSZ4ZmuoE6QqpxC6e9yQ4+RG4zZhXYlBeXnjtOVuO+IN8e1pkbsx4+93fUDYqnQkP43LklCH9k6xF8pxFla3Wv0o9YmQzRwVduyBUlqXsN+e/vZFhKh0BGOXvzGCjQ8kIWV8SBcULdmwpoE=
+	t=1706211198; cv=none; b=E3pnw1vdsiOOs4jOK2ItCJAAv3evmPo8Af7qmGHvyp6CIMYQkMae5bZeHFgoMcjzUTZ5iVj/a2SCS/YtuDQGekEE16ZuKoPkalKf94x1oIsQKE5kkqlDfiOtQ0z0Zgd8Hfy6pAvSC3KxdPLgljLn5JbQlLZ69S3tsz/4e+VP25k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706211193; c=relaxed/simple;
-	bh=z0pv7nQf3+BHeMquvzePcn+FXugfWYxDh8sD9Yk/afY=;
+	s=arc-20240116; t=1706211198; c=relaxed/simple;
+	bh=beb0W7yX0tkUismMES7zCBKaj0ApRHIrR9uFe/KO3kM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hvquHY9P9H20k1aZLO69QpAQS2owAX5AmjbqUXmufdj7qQ5vJMq5oDSihwZFpgyvMrQv7bb+hxUOJUwxdiKueHZ1/e/bAFBO6phjIoxhb0iUPLhondsNsl+wToe4dUsEbdHl1UdVQ14RYOn8k+/AfRIhyjynGho9zkgTRAsVazc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NojYa8rs; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=IAsJfl/mgDojvvX5wRLFGjtQlPXCZhOGuwsh/YE1yoK3v3txSi5MNBGZO0ViKhaX0qKcQ/U2uhM6HjEZqAANA/WW8eDkEl66fPlYSUMrtprQYZqpCpkBLWLCtbb33TG6k4mkvO9Pn3ylcSkfktOybqijxpAjeYTn4Km+ulM2l0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K4BloqQm; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706211191;
+	s=mimecast20190719; t=1706211196;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JLkdB3aR8b5AzZf8mrQLfb2UlnHWewFM+noupjKQsYY=;
-	b=NojYa8rsnlGQpAElfyYOesIjD5LETWGFcNKsiEpQUCyBzlkNEhTJsHVooaEw9ssbekUV5C
-	nKj5qPmaEhenzPm5vXRLouSXwt5k8CEiJ+vzKkkc90iI3DdcwGxlKPgfuGCldfdrIgPtTw
-	B+8iqA+xu/b220WkynRoazHYLoQxLcU=
+	bh=HOFElmHyy38IK1/HVpenWSDjKK2a/ajysR8u0SxNo40=;
+	b=K4BloqQmZRQ1Kl8v243UgL+rcTYdfdMQzulwhjXjWz5oGgKCr9QgqK7v3i3NDeEH5RRxoG
+	9udZdhQIG5/fPBajyoZFTJo/G4/jC7H4g5npbXSYo4GpdNopqcLl8oOY85R5Xq0uSrLmn1
+	WQWMikzvuOLHw9rLIpQnL1ZVgnDWw1E=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-140-gRvtxHOMNz2NEaPqxmRHPw-1; Thu, 25 Jan 2024 14:33:06 -0500
-X-MC-Unique: gRvtxHOMNz2NEaPqxmRHPw-1
+ us-mta-213-Hevm4ONKNRujmourt_4mew-1; Thu, 25 Jan 2024 14:33:10 -0500
+X-MC-Unique: Hevm4ONKNRujmourt_4mew-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 045F81013673;
-	Thu, 25 Jan 2024 19:33:04 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 708AB8350EB;
+	Thu, 25 Jan 2024 19:33:09 +0000 (UTC)
 Received: from t14s.redhat.com (unknown [10.39.193.154])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 59F4E492BC6;
-	Thu, 25 Jan 2024 19:32:58 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 644EE492BC6;
+	Thu, 25 Jan 2024 19:33:04 +0000 (UTC)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org,
@@ -85,11 +85,10 @@ Cc: linux-mm@kvack.org,
 	linuxppc-dev@lists.ozlabs.org,
 	linux-riscv@lists.infradead.org,
 	linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v2 05/15] riscv/pgtable: define PFN_PTE_SHIFT
-Date: Thu, 25 Jan 2024 20:32:17 +0100
-Message-ID: <20240125193227.444072-6-david@redhat.com>
+	sparclinux@vger.kernel.org
+Subject: [PATCH v2 06/15] s390/pgtable: define PFN_PTE_SHIFT
+Date: Thu, 25 Jan 2024 20:32:18 +0100
+Message-ID: <20240125193227.444072-7-david@redhat.com>
 In-Reply-To: <20240125193227.444072-1-david@redhat.com>
 References: <20240125193227.444072-1-david@redhat.com>
 Precedence: bulk
@@ -104,25 +103,24 @@ X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 We want to make use of pte_next_pfn() outside of set_ptes(). Let's
 simply define PFN_PTE_SHIFT, required by pte_next_pfn().
 
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- arch/riscv/include/asm/pgtable.h | 2 ++
+ arch/s390/include/asm/pgtable.h | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index 0c94260b5d0c1..add5cd30ab34d 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -523,6 +523,8 @@ static inline void __set_pte_at(pte_t *ptep, pte_t pteval)
- 	set_pte(ptep, pteval);
- }
+diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
+index 1299b56e43f6f..4b91e65c85d97 100644
+--- a/arch/s390/include/asm/pgtable.h
++++ b/arch/s390/include/asm/pgtable.h
+@@ -1316,6 +1316,8 @@ pgprot_t pgprot_writecombine(pgprot_t prot);
+ #define pgprot_writethrough	pgprot_writethrough
+ pgprot_t pgprot_writethrough(pgprot_t prot);
  
-+#define PFN_PTE_SHIFT		_PAGE_PFN_SHIFT
++#define PFN_PTE_SHIFT		PAGE_SHIFT
 +
- static inline void set_ptes(struct mm_struct *mm, unsigned long addr,
- 		pte_t *ptep, pte_t pteval, unsigned int nr)
- {
+ /*
+  * Set multiple PTEs to consecutive pages with a single call.  All PTEs
+  * are within the same folio, PMD and VMA.
 -- 
 2.43.0
 
