@@ -1,139 +1,113 @@
-Return-Path: <linux-s390+bounces-1203-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-1208-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00D8B83F993
-	for <lists+linux-s390@lfdr.de>; Sun, 28 Jan 2024 20:59:17 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F046A83FBF6
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Jan 2024 02:58:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 331911C20FFF
-	for <lists+linux-s390@lfdr.de>; Sun, 28 Jan 2024 19:59:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 66D16B21F17
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Jan 2024 01:58:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EE6036138;
-	Sun, 28 Jan 2024 19:59:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F2CADDD7;
+	Mon, 29 Jan 2024 01:58:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sY1zb8vB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N1UCfSOX"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C848D33CFC;
-	Sun, 28 Jan 2024 19:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0867DDDD
+	for <linux-s390@vger.kernel.org>; Mon, 29 Jan 2024 01:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706471951; cv=none; b=rs8MSf9VgmsuzOaQR9C7+nwZDoGFkvAxqIj8GKhsJTz+Te2zkUo0pdOws81CwtjJ8Cbr8QP4wiMxtZDFmhLZpnYvHjuzAxsxukaWGHbhx/+I6HsRcGkACCKVIrfbaGtY4tU7FwOhkuSB27QSWJVH2BBhNxoxN92DAuJzn5dBbew=
+	t=1706493486; cv=none; b=g4CIsVj2vDGj0PPD8gUoP31k5CiSozu/qw36qHBACkgRvQgSj0Z5r6IwkHZb/OEay4aDYZGq6bLrHGIZqhCe3rje2dePSlOf8UjimDFf5ZwnpvNONQi9EbEEDo8pCt00gjGn/yzaHqx10VExz8nA+ye79Jy9B5K6YNEtl1qM+gE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706471951; c=relaxed/simple;
-	bh=+LAYmQFi5BW50XdmxpqctlvWtS9od0aDr8/h/M7PYTU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CUBpE+C5UjqTIdYHuEGyLPGFKa7Ma8uFBPM4WPYDTbJ5W6/RiiNeOEm51LfS70nQvwzu6VG17GRFmpZi6wXOM7S4gpYejSDb/a2LtdJiJIym2eiIsdUEy03Ig5CTqL08zsJ1vRkJOIPFiXkyFZm09Uj9vwiY0qHNeDQWHCy1cno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=sY1zb8vB; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40SEUaic022216;
-	Sun, 28 Jan 2024 19:58:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=Ty6vjLOwPP33OPQjO3uFsILZSqZnowDhF4Yj7NgqsI0=;
- b=sY1zb8vBP/MJfDvvMQ1ngSiGOkh5zbG89sLqCvUh6r2rFh5nIXOUqLbWINVhejLcUqrj
- 01lrTm3/kaJfVNS7VQXm5vU1bEGGfMoi6adQiO66cGiHsCQYg8SEn+NcNbSrY3x+ur2g
- j+jzWpWTXGcBx66kLHsAcNSliHPfIwsxrKCZotvfg7ggifIMOMxtHwLL1BadmosmZh7F
- r0a36Ktwp5spT9odHM7qP7NWeBg/c7DDbaxW3mOf3Y29v/K0QnMYAVFLBJ4rO9a8A6W+
- iQjPjzHfozGXAP6Al1LGAcvnsZSCxQmnZJNzY/9eZHn1mh69CHt8/xGV86qXZLbgcB3Q zQ== 
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vw5nm3mh4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 28 Jan 2024 19:58:58 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40SIopO6007189;
-	Sun, 28 Jan 2024 19:58:58 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vwev1urnj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 28 Jan 2024 19:58:58 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40SJwtrr34013692
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 28 Jan 2024 19:58:55 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 33AA820043;
-	Sun, 28 Jan 2024 19:58:55 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2334520040;
-	Sun, 28 Jan 2024 19:58:55 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Sun, 28 Jan 2024 19:58:55 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
-	id B30D5E098B; Sun, 28 Jan 2024 20:58:54 +0100 (CET)
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 5/5] sched/vtime: do not include <asm/vtime.h> header
-Date: Sun, 28 Jan 2024 20:58:54 +0100
-Message-Id: <2402f44309e1c9705501bdc9b798e8fe6d73f905.1706470223.git.agordeev@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1706470223.git.agordeev@linux.ibm.com>
-References: <cover.1706470223.git.agordeev@linux.ibm.com>
+	s=arc-20240116; t=1706493486; c=relaxed/simple;
+	bh=0mhzEdT5ZWQobZjqIOBxffQqKPXOl3ltg0R2BB5HqAA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L80/H/eG8iCfee1fUQ4yXCDwfsHPe1INYkVPpZYdxejbZAacSR/axqd8cl1sV5MFu/WIDWvNHolTEo4ybqu4bmcHnDvzKX0yorzf/L/9xY5TmP1kTTucce/GH8J3+mjAq3CvD967RczydkPGvzmCGj3m+jXh4jGtIZ/RWp/POZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N1UCfSOX; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706493483;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t5X+7+XPWD/yMamo09E+vqa8mLL0GiWmMXKBvuKtVnc=;
+	b=N1UCfSOX44fze5X0atXJdeND/qv9Nxqa+rOZ6LdLhDKpPWS1bGn1jCjmZMUGyXDxtbe2Bk
+	zSPvXL83dpmjeNe74axWd/srsoK60Ys7Jt48DJi25arZf2JddvZhSRC+LzTL4/gWT2g7az
+	Oh+UvMEp8/8hwUTEqLE01XfmGschb/Q=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-320-9WvTuAhnPa6eorfNUQwX4g-1; Sun,
+ 28 Jan 2024 20:57:58 -0500
+X-MC-Unique: 9WvTuAhnPa6eorfNUQwX4g-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 255BC1C05AF0;
+	Mon, 29 Jan 2024 01:57:57 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.15])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 085BB492BE2;
+	Mon, 29 Jan 2024 01:57:55 +0000 (UTC)
+Date: Mon, 29 Jan 2024 09:57:50 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Klara Modin <klarasmodin@gmail.com>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+	loongarch@lists.linux.dev, akpm@linux-foundation.org,
+	ebiederm@xmission.com, hbathini@linux.ibm.com, piliu@redhat.com,
+	viro@zeniv.linux.org.uk
+Subject: Re: [PATCH linux-next v3 01/14] kexec: split crashkernel reservation
+ code out from crash_core.c
+Message-ID: <ZbcGHoLZfqro7i8g@MiWiFi-R3L-srv>
+References: <20240124051254.67105-1-bhe@redhat.com>
+ <20240124051254.67105-2-bhe@redhat.com>
+ <0b14826b-9373-4458-919d-1da2a62d4226@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Vc4e6bh2MHI0qSI1BxnPS8gjiOEC6MYu
-X-Proofpoint-ORIG-GUID: Vc4e6bh2MHI0qSI1BxnPS8gjiOEC6MYu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-25_14,2024-01-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=514
- mlxscore=0 clxscore=1011 bulkscore=0 priorityscore=1501 malwarescore=0
- impostorscore=0 lowpriorityscore=0 spamscore=0 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2401280151
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0b14826b-9373-4458-919d-1da2a62d4226@gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-There is no architecture-specific code or data left
-that generic <linux/vtime.h> needs to know about.
-Thus, avoid the inclusion of <asm/vtime.h> header.
+On 01/28/24 at 02:28am, Klara Modin wrote:
+> Hi,
+> 
+> On 2024-01-24 06:12, Baoquan He wrote:
+> > And also add config item CRASH_RESERVE to control its enabling of the
+> > codes. And update config items which has relationship with crashkernel
+> > reservation.
+> > 
+> > And also change ifdeffery from CONFIG_CRASH_CORE to CONFIG_CRASH_RESERVE
+> > when those scopes are only crashkernel reservation related.
+> 
+> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > index 502986237cb6..a9243e0948a3 100644
+> > --- a/arch/x86/Kconfig
+> > +++ b/arch/x86/Kconfig
+> > @@ -2106,7 +2106,7 @@ config ARCH_SUPPORTS_CRASH_HOTPLUG
+> >   	def_bool y
+> >   config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+> > -	def_bool CRASH_CORE
+> > +	def_bool CRASH_RESEERVE
+> >   config PHYSICAL_START
+> >   	hex "Physical address where the kernel is loaded" if (EXPERT || CRASH_DUMP)
+> 
+> CRASH_RESEERVE is probably a typo and should be CRASH_RESERVE (with the
+> former ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION isn't defined in my .config
+> and `crashkernel=...` parameter has no effect).
 
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
----
- include/asm-generic/vtime.h | 1 -
- include/linux/vtime.h       | 4 ----
- 2 files changed, 5 deletions(-)
- delete mode 100644 include/asm-generic/vtime.h
-
-diff --git a/include/asm-generic/vtime.h b/include/asm-generic/vtime.h
-deleted file mode 100644
-index b1a49677fe25..000000000000
---- a/include/asm-generic/vtime.h
-+++ /dev/null
-@@ -1 +0,0 @@
--/* no content, but patch(1) dislikes empty files */
-diff --git a/include/linux/vtime.h b/include/linux/vtime.h
-index 593466ceebed..29dd5b91dd7d 100644
---- a/include/linux/vtime.h
-+++ b/include/linux/vtime.h
-@@ -5,10 +5,6 @@
- #include <linux/context_tracking_state.h>
- #include <linux/sched.h>
- 
--#ifdef CONFIG_VIRT_CPU_ACCOUNTING_NATIVE
--#include <asm/vtime.h>
--#endif
--
- /*
-  * Common vtime APIs
-  */
--- 
-2.40.1
+You are right, thanks a lot. Will fix that.
 
 
