@@ -1,159 +1,90 @@
-Return-Path: <linux-s390+bounces-1612-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-1614-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5BD7684E97E
-	for <lists+linux-s390@lfdr.de>; Thu,  8 Feb 2024 21:17:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E6F2684EA4E
+	for <lists+linux-s390@lfdr.de>; Thu,  8 Feb 2024 22:22:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 97B77B2CB80
-	for <lists+linux-s390@lfdr.de>; Thu,  8 Feb 2024 20:16:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EA83DB2B232
+	for <lists+linux-s390@lfdr.de>; Thu,  8 Feb 2024 21:21:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B64A3C063;
-	Thu,  8 Feb 2024 20:16:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9620B4EB41;
+	Thu,  8 Feb 2024 21:21:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CVSC5H8G"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="iTzlcjDx"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B818383BA;
-	Thu,  8 Feb 2024 20:16:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 245C4381D3;
+	Thu,  8 Feb 2024 21:21:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707423367; cv=none; b=p5BJW/ZmkTf2PgOBp6RzVrXL+mK0cbKnxRfHfZPBNKW5fSa9hUfLIjan9uFT2I3Dr2Cpp/W4HxZ1mM05mg/omexcJVi5KFBkc7LPM3dr6n0aQWHM+d+Uc8Y6NxyPQEqEbUhyJRZ8hSXkiNT4Knnpxq6v6kk8xhw5vN1hxYSKKmM=
+	t=1707427274; cv=none; b=oZLB2JNf6HtpyEXurCDWm5wL0UMy71O3oVIdrqBPv/OUG5dOjgdH7uBeLntmZkDaapGBZcpZRHzy44yghna3Gr/CP5ws9F3ESevHQCNFRE1VTrdoIiABkmaSgn1pLiBPvxKXfY3i2KZdBuGabPmmffQoIpL3/NNQ8tqcmtbWjX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707423367; c=relaxed/simple;
-	bh=KheXcUzlMOfoXsfF8fLTK+gIOCd+wehX9PQD4vTnt7w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BmyRPRzDmuv6VeInQl+MmwCZ+k8Gnu+wLY4hbAiy49ZqtOSo3QnYRcKMpsUHZIjg8kr8HwK/veycWxmWUwXfKeFBuMV56IxGRi/zVjd4w7XHgBreYNe1QSykx/50s30FjfYGqlsIA+YWM18QhfZpJ0HdmDicJd00n2eiHHN9r60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CVSC5H8G; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 418K2Dw7018455;
-	Thu, 8 Feb 2024 20:15:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=Zow24WyxPBCa3qs5bHb+5ubemW+MG+lG4ez4A7Taqgk=;
- b=CVSC5H8GS2fmMF76PkHCGq/213ANGAUNsHN0LSX9JHjqq8Wk/yeBQxyqeN0VSt6VELTO
- ATtkkIdt9aHKZsY9hl74YuIXO0f0A0VDSeT7mtjDp3k/N9lC38rlAnuElWlTFtc9quHD
- KF2lFIvBQKQNAtDwfA5dOr14EZCsLGdXGl5a2cqK5tjWOvghLL6XXZQNveNUNnaEQeQS
- DcCH0MJc4Oa8TUorCHFwWV7pzstEwb4SqCAaGHUZJjPmupUjf+Gh1/kKEoFHZbT8rGts
- OZDa6HTskpmfzLJfDQE+vIGLMbzEPlOTWY/54thQn42eAJGCgUf0d6Mt6QfeCO0PCq2S fQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w55mu8c7j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 Feb 2024 20:15:55 +0000
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 418K2ufF020018;
-	Thu, 8 Feb 2024 20:15:54 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w55mu8c6v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 Feb 2024 20:15:54 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 418IR1GN008494;
-	Thu, 8 Feb 2024 20:15:53 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3w221kejv5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 Feb 2024 20:15:53 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 418KFocK21496320
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 8 Feb 2024 20:15:50 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EE8062004B;
-	Thu,  8 Feb 2024 20:15:49 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DD48C20040;
-	Thu,  8 Feb 2024 20:15:49 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu,  8 Feb 2024 20:15:49 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
-	id 8119FE1541; Thu,  8 Feb 2024 21:15:49 +0100 (CET)
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 5/5] sched/vtime: do not include <asm/vtime.h> header
-Date: Thu,  8 Feb 2024 21:15:49 +0100
-Message-Id: <e0827ac2f96d87f623575098f9d55e77351b63c6.1707422448.git.agordeev@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1707422448.git.agordeev@linux.ibm.com>
-References: <cover.1707422448.git.agordeev@linux.ibm.com>
+	s=arc-20240116; t=1707427274; c=relaxed/simple;
+	bh=TE6VqizE4efLqCBitG06M/VRnFw1efWMckznBQfEJ1k=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=PXrf5Nz4FP0ig29bAgPdvVwVkPvPgk35WtyCE1mVIMSPKewRNUFvLyIVd9qbwMK25LTj+GS8bKVyGSZwU4KV2ZNd8P1AXQKN8sWvK/Xhktqtmzs7YFzmTl/2OnhQyuSHEYE7ZHh/fVL2G4uH16HfArVCsi4idSeURs+0OAGNfj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=iTzlcjDx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEBB6C433C7;
+	Thu,  8 Feb 2024 21:21:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1707427273;
+	bh=TE6VqizE4efLqCBitG06M/VRnFw1efWMckznBQfEJ1k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=iTzlcjDxZeqzpLgM2c0UDW8zutFRN4NZqOJxe/vrUtVOb0QDld35QCt+eWiNlHKal
+	 rin8MDPU0+SovgV8/BHHKMuKlFuhrSakoXhhtMP/YjSVL/NpHL9xNGmg0I9kHVZovM
+	 TVqUTU26ZDU8HiClwub6vU1ocBypCHs/iQdkq2dg=
+Date: Thu, 8 Feb 2024 13:21:12 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, Arnd Bergmann <arnd@arndb.de>,
+ Dave Chinner <david@fromorbit.com>, linux-kernel@vger.kernel.org, Linus
+ Torvalds <torvalds@linux-foundation.org>, Vishal Verma
+ <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, Matthew
+ Wilcox <willy@infradead.org>, Russell King <linux@armlinux.org.uk>,
+ linux-arch@vger.kernel.org, linux-cxl@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-xfs@vger.kernel.org, dm-devel@lists.linux.dev,
+ nvdimm@lists.linux.dev, linux-s390@vger.kernel.org, Alasdair Kergon
+ <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, Mikulas Patocka
+ <mpatocka@redhat.com>
+Subject: Re: [PATCH v4 01/12] nvdimm/pmem: Fix leak on dax_add_host()
+ failure
+Message-Id: <20240208132112.b5e82e1720e80da195ef0927@linux-foundation.org>
+In-Reply-To: <20240208184913.484340-2-mathieu.desnoyers@efficios.com>
+References: <20240208184913.484340-1-mathieu.desnoyers@efficios.com>
+	<20240208184913.484340-2-mathieu.desnoyers@efficios.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: cE_iiBipX1nKYHLnLpahvenDMlutxuTG
-X-Proofpoint-ORIG-GUID: AAm_5AQcNpyFHo9NGIHcHS2xdJMFOVU-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-08_08,2024-02-08_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=333 malwarescore=0 phishscore=0 mlxscore=0 clxscore=1015
- lowpriorityscore=0 suspectscore=0 adultscore=0 priorityscore=1501
- spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402080108
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-There is no architecture-specific code or data left
-that generic <linux/vtime.h> needs to know about.
-Thus, avoid the inclusion of <asm/vtime.h> header.
+On Thu,  8 Feb 2024 13:49:02 -0500 Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
----
- arch/powerpc/include/asm/Kbuild | 1 -
- include/asm-generic/vtime.h     | 1 -
- include/linux/vtime.h           | 4 ----
- 3 files changed, 6 deletions(-)
- delete mode 100644 include/asm-generic/vtime.h
+> Fix a leak on dax_add_host() error, where "goto out_cleanup_dax" is done
+> before setting pmem->dax_dev, which therefore issues the two following
+> calls on NULL pointers:
+> 
+> out_cleanup_dax:
+>         kill_dax(pmem->dax_dev);
+>         put_dax(pmem->dax_dev);
 
-diff --git a/arch/powerpc/include/asm/Kbuild b/arch/powerpc/include/asm/Kbuild
-index 61a8d5555cd7..e5fdc336c9b2 100644
---- a/arch/powerpc/include/asm/Kbuild
-+++ b/arch/powerpc/include/asm/Kbuild
-@@ -6,5 +6,4 @@ generic-y += agp.h
- generic-y += kvm_types.h
- generic-y += mcs_spinlock.h
- generic-y += qrwlock.h
--generic-y += vtime.h
- generic-y += early_ioremap.h
-diff --git a/include/asm-generic/vtime.h b/include/asm-generic/vtime.h
-deleted file mode 100644
-index b1a49677fe25..000000000000
---- a/include/asm-generic/vtime.h
-+++ /dev/null
-@@ -1 +0,0 @@
--/* no content, but patch(1) dislikes empty files */
-diff --git a/include/linux/vtime.h b/include/linux/vtime.h
-index 593466ceebed..29dd5b91dd7d 100644
---- a/include/linux/vtime.h
-+++ b/include/linux/vtime.h
-@@ -5,10 +5,6 @@
- #include <linux/context_tracking_state.h>
- #include <linux/sched.h>
- 
--#ifdef CONFIG_VIRT_CPU_ACCOUNTING_NATIVE
--#include <asm/vtime.h>
--#endif
--
- /*
-  * Common vtime APIs
-  */
--- 
-2.40.1
+Seems inappropriate that this fix is within this patch series?
+
+otoh I assume dax_add_host() has never failed so it doesn't matter much.
+
+
+The series seems useful but is at v4 without much sign of review
+activity.  I think I'll take silence as assent and shall slam it all
+into -next and see who shouts at me.
 
 
