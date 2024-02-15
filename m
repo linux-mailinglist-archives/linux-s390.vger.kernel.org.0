@@ -1,196 +1,126 @@
-Return-Path: <linux-s390+bounces-1830-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-1844-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F7688567E9
-	for <lists+linux-s390@lfdr.de>; Thu, 15 Feb 2024 16:35:41 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA05D856919
+	for <lists+linux-s390@lfdr.de>; Thu, 15 Feb 2024 17:12:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EB3862897DA
-	for <lists+linux-s390@lfdr.de>; Thu, 15 Feb 2024 15:35:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4AD5A1F226A3
+	for <lists+linux-s390@lfdr.de>; Thu, 15 Feb 2024 16:12:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3C8D1350C0;
-	Thu, 15 Feb 2024 15:33:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3771113399A;
+	Thu, 15 Feb 2024 16:06:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nGllkKwQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dvWlp838"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68000132C07;
-	Thu, 15 Feb 2024 15:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95CA6134CEA
+	for <linux-s390@vger.kernel.org>; Thu, 15 Feb 2024 16:06:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708011237; cv=none; b=pDcSxcWkMSCSKfYdr083enVCZs4daSHrm4LZmDYjtHlwCYoQSTFCpzunmJC8K6x4jpMZZGRpOI5mxmxASYsN6yb3uDAO2RLHF3QpFOzhSy0QD4mMTXxRvOWEX8IVOV9+p0bc4xirAr9wxzZq9LpjHqoWUhoxm99IlVm/1ah7n1E=
+	t=1708013167; cv=none; b=USgD83aHuTcQ9CsTvmUOn94XVe2yBEk7feTBQN5p8eUSs4HBfP16NhcnjgHCEEtTKuFknVHb9axtIJ84RSWFN0Y/XPIWjpr0eOOqPRbCBMfqGg1C5wW+0L8NxDjRJ1jEJ/C3pePKeUUM0wBvip3KvPaXa/KjygiLpaPmKTBxl30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708011237; c=relaxed/simple;
-	bh=QpPS49oK1eurDaNJnWrdAIx+QaBf1IHnSt389MR5rv8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AKB8BrJvnO4jkm1otEKhPWNowNkvcyL3Dw7iSPEWUlvmS/WmBRkGSb/XVeE1opzRaMwmPVm7o60H8Gp5c8ThAbMFnTykEjhFdrafgRg1DarevU3ZpoasQhp383lnSvVRJp2D4dGshWtpbLcCfvYc2LfAC9lfH8lEGr7cDjG1GV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nGllkKwQ; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41FFNVse010881;
-	Thu, 15 Feb 2024 15:33:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=sg+aoNSY4TJzQIzmQVERhni+tOhV8KJA1pX7OPh0Bd4=;
- b=nGllkKwQFM4jf8zFiqfMbnBQb8YLW33OZS/0ThT4KKGJKnGv3Ywit/QGqbBfH2OA+rXC
- igmWnl/QH1PKPpsgSv4skPq5M9GNW8cE1vGIvDDv+yxpn9WBS6L48kkDNPOcSv3M4tWJ
- tnC2KoHHIZMNhVge+m6QvMG5ZZ8llvHDGbCZQ5+5RWX8gyyVMdwYFWrSx95V1TtLG7Yz
- sv0fY58K+Jfm4rigmda64pJ3JJDudfJ0Fa/BEHuh726SoJIsPKp8D2IjG5Bantisr28S
- WgydUYLqPp9Yc96wChnlbAaN79Z95M8ZA5S2XIVoSj9KJIFqwSo4Pxl4x9+pYEJlXe1U vw== 
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w9n73g84v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 Feb 2024 15:33:52 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41FD3GYw009914;
-	Thu, 15 Feb 2024 15:31:49 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3w6p635463-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 Feb 2024 15:31:49 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41FFVkp651642970
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 15 Feb 2024 15:31:49 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A1B4558055;
-	Thu, 15 Feb 2024 15:31:46 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D6EEF5805B;
-	Thu, 15 Feb 2024 15:31:45 +0000 (GMT)
-Received: from li-4795344c-3451-11b2-a85c-ab40c30bcc43.ibm.com.com (unknown [9.61.11.51])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 15 Feb 2024 15:31:45 +0000 (GMT)
-From: "Jason J. Herne" <jjherne@linux.ibm.com>
-To: linux-s390@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, pasic@linux.ibm.com, akrowiak@linux.ibm.com,
-        borntraeger@de.ibm.com, agordeev@linux.ibm.com, gor@linux.ibm.com
-Subject: [PATCH] s390/vfio-ap: handle hardware checkstop state on queue reset operation
-Date: Thu, 15 Feb 2024 10:31:44 -0500
-Message-ID: <20240215153144.14747-1-jjherne@linux.ibm.com>
-X-Mailer: git-send-email 2.41.0
+	s=arc-20240116; t=1708013167; c=relaxed/simple;
+	bh=dra+vz7V749tqxklahoC5fJAfUQ3hlCwWDhw5EAPx/0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=btOUUiF8IcGPO2TJl+jXYszuvhakizeNo1puVD0zjRFzIEHTM7jm4gQ3j8vNpuOqwnQhkkRJb3zcIWXlv5uZRhCtfhByhHAA9Bjq97BlHBS0ACfZVM/kRNjZYK78dI+BZ8G3vCHQflt/cainniuwA3vBgamoywYkw4uz2i+GItY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dvWlp838; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708013164;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=dra+vz7V749tqxklahoC5fJAfUQ3hlCwWDhw5EAPx/0=;
+	b=dvWlp838zzjqfUeg4zKcWvudLTYcmHJoz9g2wsIWmiqJ8vAcl7Xs7j0mEBiSR80php7UHE
+	IPZ/adtpcb19Vho9JZkqQ9wekrf/zXXNGlBsq9DtTijjGr0UqAiayw5C6EDhCVkMVXvut5
+	PdF08Zn1aJNas6RT8z0crG4C6Xl/npo=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-253-aNjVvLLAMWWoIsn1lTrJNw-1; Thu, 15 Feb 2024 11:06:02 -0500
+X-MC-Unique: aNjVvLLAMWWoIsn1lTrJNw-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-411e27d561dso2493945e9.0
+        for <linux-s390@vger.kernel.org>; Thu, 15 Feb 2024 08:06:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708013161; x=1708617961;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dra+vz7V749tqxklahoC5fJAfUQ3hlCwWDhw5EAPx/0=;
+        b=uxiXo/tuEfqnO0tGZ0U5h+bMXijX0/q9gdb8yBiDwHG/dhUFVlv2ZF/iYnbDroEbeY
+         E22yrju/oiOasRODtZ9qiliQu84Q/aXcpM9Yp1vkHUUalDVvVZZ8z3ANfCNl/SqMrcuU
+         +sF7NQtyaA2yoERprE4KYuEVwOCg8QMqH9sWGkpM4RgUB92PJ6uhBOW7FxLRs3PZs8yK
+         6ZpALmsrucQ278bg4y1M9TC/lOUOUgiWca57BtL3P2Bhsr9kd3JjojyYStjyaet/C8rv
+         9jwiZVWw2vz4HSBskq1pNrK4NuwkCptnC7o76ck4ChSZDpAGZIyG5elhsB94sOihAFjX
+         tVTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWfhE8icnAPuV1lljYSTG4M2McBvdH8TkWdH4ZC4KJvonUYjR11T7gAibSmCwx8A9I1nArcLoDmtT6m143wfzixK52SolNfqKQGNA==
+X-Gm-Message-State: AOJu0YzHWFEQxB+jV/t1upmt3TsaiGbcuOFcT1ic81iMRcHEuBHdXOYa
+	uNRIp0DF+EVv2dWsz4oULGOzirz6nJL4fdGY6XhN/vJq1vIqCcIqXrYY5xIAat3By9DSAvx0xRX
+	bb4RBUsDDjqXYqmez/ZSe0JXaZdPlnYLIxdHMN3T4ECoeHiU+3MEpK2EuLGA=
+X-Received: by 2002:a05:600c:3b25:b0:412:a19:d8da with SMTP id m37-20020a05600c3b2500b004120a19d8damr1626592wms.4.1708013161134;
+        Thu, 15 Feb 2024 08:06:01 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGyLy/Xzkxe9V6/Ov7++peLCkLsjxrRToc+E4V62gLp2VY35n1ffxwxKajcGntaKklmbHyMhA==
+X-Received: by 2002:a05:600c:3b25:b0:412:a19:d8da with SMTP id m37-20020a05600c3b2500b004120a19d8damr1626574wms.4.1708013160803;
+        Thu, 15 Feb 2024 08:06:00 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-227-156.dyn.eolo.it. [146.241.227.156])
+        by smtp.gmail.com with ESMTPSA id e6-20020a5d5306000000b0033b0d2ba3a1sm2192553wrv.63.2024.02.15.08.05.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Feb 2024 08:06:00 -0800 (PST)
+Message-ID: <bb560ae4edc37d4d66cdddacb849f4d04baa7dd7.camel@redhat.com>
+Subject: Re: [PATCH v2 net-next] net: Deprecate SO_DEBUG and reclaim
+ SOCK_DBG bit.
+From: Paolo Abeni <pabeni@redhat.com>
+To: Jakub Kicinski <kuba@kernel.org>, Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>,  Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
+ <martineau@kernel.org>, Wenjia Zhang <wenjia@linux.ibm.com>,  Jan Karcher
+ <jaka@linux.ibm.com>, Wen Gu <guwen@linux.alibaba.com>, Tony Lu
+ <tonylu@linux.alibaba.com>,  "D . Wythe" <alibuda@linux.alibaba.com>,
+ Kuniyuki Iwashima <kuni1840@gmail.com>, netdev@vger.kernel.org, 
+ mptcp@lists.linux.dev, linux-s390@vger.kernel.org, Gerd Bayer
+ <gbayer@linux.ibm.com>
+Date: Thu, 15 Feb 2024 17:05:58 +0100
+In-Reply-To: <20240215070702.717e8e9b@kernel.org>
+References: <20240214195407.3175-1-kuniyu@amazon.com>
+	 <20240215070702.717e8e9b@kernel.org>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: KO9wTbmw1cmeyp4pmphURgM60pUNsfA-
-X-Proofpoint-GUID: KO9wTbmw1cmeyp4pmphURgM60pUNsfA-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-15_14,2024-02-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 malwarescore=0 bulkscore=0 impostorscore=0
- mlxlogscore=999 mlxscore=0 lowpriorityscore=0 suspectscore=0 clxscore=1011
- adultscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402150125
 
-Update vfio_ap_mdev_reset_queue() to handle an unexpected checkstop (hardware error) the
-same as the deconfigured case. This prevents unexpected and unhelpful warnings in the
-event of a hardware error.
+On Thu, 2024-02-15 at 07:07 -0800, Jakub Kicinski wrote:
+> On Wed, 14 Feb 2024 11:54:07 -0800 Kuniyuki Iwashima wrote:
+> > Recently, commit 8e5443d2b866 ("net: remove SOCK_DEBUG leftovers")
+> > removed the last users of SOCK_DEBUG(), and commit b1dffcf0da22 ("net:
+> > remove SOCK_DEBUG macro") removed the macro.
+>=20
+> Unrelated to this patch but speaking of deprecating things - do you
+> want to go ahead with deleting DCCP? I don't recall our exact plan,
+> I thought it was supposed to happen early in the year :)
 
-We also stop lying about a queue's reset response code. This was originally done so we
-could force vfio_ap_mdev_filter_matrix to pass a deconfigured device through to the guest
-for the hotplug scenario. vfio_ap_mdev_filter_matrix is instead modified to allow
-passthrough for all queues with reset state normal, deconfigured, or checkstopped. In the
-checkstopped case we choose to pass the device through and let the error state be
-reflected at the guest level.
+My personal "current year" counter tend to be outdated till at least
+May, but I *think* it's supposed to happen the next year:
 
-Signed-off-by: Jason J. Herne <jjherne@linux.ibm.com>
-Reviewed-by: Anthony Krowiak <akrowiak@linux.ibm.com>
----
- drivers/s390/crypto/vfio_ap_ops.c | 35 ++++++++++++++++---------------
- 1 file changed, 18 insertions(+), 17 deletions(-)
+https://elixir.bootlin.com/linux/v6.8-rc4/source/net/dccp/proto.c#L193
 
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 983b3b16196c..fc169bc61593 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -659,6 +659,21 @@ static bool vfio_ap_mdev_filter_cdoms(struct ap_matrix_mdev *matrix_mdev)
- 			     AP_DOMAINS);
- }
- 
-+static bool _queue_passable(struct vfio_ap_queue *q)
-+{
-+	if (!q)
-+		return false;
-+
-+	switch (q->reset_status.response_code) {
-+	case AP_RESPONSE_NORMAL:
-+	case AP_RESPONSE_DECONFIGURED:
-+	case AP_RESPONSE_CHECKSTOPPED:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
- /*
-  * vfio_ap_mdev_filter_matrix - filter the APQNs assigned to the matrix mdev
-  *				to ensure no queue devices are passed through to
-@@ -687,7 +702,6 @@ static bool vfio_ap_mdev_filter_matrix(struct ap_matrix_mdev *matrix_mdev,
- 	unsigned long apid, apqi, apqn;
- 	DECLARE_BITMAP(prev_shadow_apm, AP_DEVICES);
- 	DECLARE_BITMAP(prev_shadow_aqm, AP_DOMAINS);
--	struct vfio_ap_queue *q;
- 
- 	bitmap_copy(prev_shadow_apm, matrix_mdev->shadow_apcb.apm, AP_DEVICES);
- 	bitmap_copy(prev_shadow_aqm, matrix_mdev->shadow_apcb.aqm, AP_DOMAINS);
-@@ -716,8 +730,7 @@ static bool vfio_ap_mdev_filter_matrix(struct ap_matrix_mdev *matrix_mdev,
- 			 * hardware device.
- 			 */
- 			apqn = AP_MKQID(apid, apqi);
--			q = vfio_ap_mdev_get_queue(matrix_mdev, apqn);
--			if (!q || q->reset_status.response_code) {
-+			if (!_queue_passable(vfio_ap_mdev_get_queue(matrix_mdev, apqn))) {
- 				clear_bit_inv(apid, matrix_mdev->shadow_apcb.apm);
- 
- 				/*
-@@ -1691,6 +1704,7 @@ static int apq_status_check(int apqn, struct ap_queue_status *status)
- 	switch (status->response_code) {
- 	case AP_RESPONSE_NORMAL:
- 	case AP_RESPONSE_DECONFIGURED:
-+	case AP_RESPONSE_CHECKSTOPPED:
- 		return 0;
- 	case AP_RESPONSE_RESET_IN_PROGRESS:
- 	case AP_RESPONSE_BUSY:
-@@ -1747,14 +1761,6 @@ static void apq_reset_check(struct work_struct *reset_work)
- 				memcpy(&q->reset_status, &status, sizeof(status));
- 				continue;
- 			}
--			/*
--			 * When an AP adapter is deconfigured, the
--			 * associated queues are reset, so let's set the
--			 * status response code to 0 so the queue may be
--			 * passed through (i.e., not filtered)
--			 */
--			if (status.response_code == AP_RESPONSE_DECONFIGURED)
--				q->reset_status.response_code = 0;
- 			if (q->saved_isc != VFIO_AP_ISC_INVALID)
- 				vfio_ap_free_aqic_resources(q);
- 			break;
-@@ -1781,12 +1787,7 @@ static void vfio_ap_mdev_reset_queue(struct vfio_ap_queue *q)
- 		queue_work(system_long_wq, &q->reset_work);
- 		break;
- 	case AP_RESPONSE_DECONFIGURED:
--		/*
--		 * When an AP adapter is deconfigured, the associated
--		 * queues are reset, so let's set the status response code to 0
--		 * so the queue may be passed through (i.e., not filtered).
--		 */
--		q->reset_status.response_code = 0;
-+	case AP_RESPONSE_CHECKSTOPPED:
- 		vfio_ap_free_aqic_resources(q);
- 		break;
- 	default:
--- 
-2.41.0
+:)
+
+/P
 
 
