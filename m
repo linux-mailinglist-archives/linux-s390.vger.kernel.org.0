@@ -1,154 +1,77 @@
-Return-Path: <linux-s390+bounces-1818-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-1820-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1DD5856675
-	for <lists+linux-s390@lfdr.de>; Thu, 15 Feb 2024 15:48:49 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40BD08566E9
+	for <lists+linux-s390@lfdr.de>; Thu, 15 Feb 2024 16:08:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 738B71F2732F
-	for <lists+linux-s390@lfdr.de>; Thu, 15 Feb 2024 14:48:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 71C79B255B0
+	for <lists+linux-s390@lfdr.de>; Thu, 15 Feb 2024 15:07:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63D24134CD0;
-	Thu, 15 Feb 2024 14:46:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B96E132493;
+	Thu, 15 Feb 2024 15:07:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ENsTjpMx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p6CMUpjy"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03521332A3;
-	Thu, 15 Feb 2024 14:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE2713248C;
+	Thu, 15 Feb 2024 15:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708008406; cv=none; b=nhxdkOII6Cqq0Y7ojeIXW6k3zJXYWI1yioPRKP2g8OIOWfAvmzAgulMyjh6rqZLfjM5bO7KB9PbVZSer00DiGCSsIPJPCPzzYmng8u5oSrsH2Y1TjLCd5a1aS1xuIqWNQvqUFnbySnaPULcB1s46R9wnzFNivSQR3VxDz432P9c=
+	t=1708009625; cv=none; b=jkfrNzWGXEcMWN3f98s/jWkm1rqo9IdlGllc2B6W3JMg1fk1d0YB8SOXten+2rMafccCuBvGOFUb0L9f22/yy791QF0zkuo0+kbRa74mjb8JOoTbRS739fGlCBzuVksFIgC5fxj5gFeAtguQMzLmULiLeUTChKP+kfahGNywkzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708008406; c=relaxed/simple;
-	bh=5LHEXykJS2jSVE2sCzHC5a4cdCFsRj5a/HPr77qf3tA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rKzoFS3MRSeTMf9OfIgfcuntynBmB6FPdxIWonmKPryybJ9sxB3JQx6HW0h1cfZrZW/Qb2YrpoKQAFka+k4iEnzxZGbu++ub+2Wg5Kp5p0uuscIZVRqqrII0ZMpqs0YY+WEGnbuXJfEFS4qaXrrW+9G3VhuDKNQBR4CRnSuIBDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=ENsTjpMx; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1708008402;
-	bh=5LHEXykJS2jSVE2sCzHC5a4cdCFsRj5a/HPr77qf3tA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ENsTjpMxLU1wLGqd749X/HFQGZd/c3vnn8cNkbklbkw6Pg6ZW7i6kFn81cmiMnX3+
-	 AbjNIOQ8Du3bNfmEJ8ZLtHAEh0KN98NHRKAqLepXYe1cfaCpmfcsbCNtihbA+rngpk
-	 gdKdOKG+DbN5qVXdiKBMVZ7wpzDIjNSoxyh+Vd42SjLriNTZtWbYCMLCt7u6Qn1nmu
-	 FRcBlkrrjkJK8qAxMZJRIWdmbiie8ckjCZ+DVLtUMi93fbaISmkA9HGWfDx1wJBAES
-	 AWp7GQO12TcvOlhqO1bgojD2BVkaufnnQiT6uu4SauxatVT43b1st5JzJmJMrUSf6v
-	 pZsOUVUzt8qNA==
-Received: from thinkos.internal.efficios.com (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TbHvQ3nTxzZPr;
-	Thu, 15 Feb 2024 09:46:42 -0500 (EST)
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Dan Williams <dan.j.williams@intel.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dave Chinner <david@fromorbit.com>
-Cc: linux-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-arch@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-xfs@vger.kernel.org,
-	dm-devel@lists.linux.dev,
-	nvdimm@lists.linux.dev,
-	linux-s390@vger.kernel.org
-Subject: [PATCH v6 9/9] dax: Fix incorrect list of data cache aliasing architectures
-Date: Thu, 15 Feb 2024 09:46:33 -0500
-Message-Id: <20240215144633.96437-10-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240215144633.96437-1-mathieu.desnoyers@efficios.com>
-References: <20240215144633.96437-1-mathieu.desnoyers@efficios.com>
+	s=arc-20240116; t=1708009625; c=relaxed/simple;
+	bh=APbTYbrFKsK1aFlZYDmNbwlcHKD8AvqIn33+kl5q9Zs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NvKNfeaQkVBTVuW/lThxXHCN2gFU5NWLGCy4nD04j5sb+ZSJwkuO/8SodkvirBUt4f0/FJtkzQZOHrPOSrrM12mxw1vaz5N7uXMswYaM6rNpoW9NCCmwxZrQINtN6uvAjpSVMHs1H5CZy9kPC0Pg6kwWD1+zYff62IQQTDee/PI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p6CMUpjy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD018C433F1;
+	Thu, 15 Feb 2024 15:07:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708009624;
+	bh=APbTYbrFKsK1aFlZYDmNbwlcHKD8AvqIn33+kl5q9Zs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=p6CMUpjybOvijzJAz14N+SxauIPXop8vdct1x+z6embZyTHJTPNs3V+5oSqFVq7nA
+	 ncvew9PwtqYtSYdNydVEaw4ATxcEvBePDg0QTJEKFWCgevl+Gx2VGtWUx4VtK0MB8Y
+	 RolV6FhYvXiimJCMaq2MIOVzTlk1T3AHdBELhhmUXZ80uJPsa5srF83+cGFe9ISB0Q
+	 J3ZijV/+eaW/PWSFcDqgcC2ROddPv6yHUvycyTtku9kYuFNFfXtHjMpg0TQMCMGVsa
+	 popozFcVHZSx4MiSe/YNqgwdjxvBGmJudrTSqz4cc2cFv+HD2MYjvzPyg16x1Qq6uu
+	 U06aBDnSPO7Og==
+Date: Thu, 15 Feb 2024 07:07:02 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Matthieu Baerts
+ <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Wenjia Zhang
+ <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>, Wen Gu
+ <guwen@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>, "D . Wythe"
+ <alibuda@linux.alibaba.com>, Kuniyuki Iwashima <kuni1840@gmail.com>,
+ <netdev@vger.kernel.org>, <mptcp@lists.linux.dev>,
+ <linux-s390@vger.kernel.org>, Gerd Bayer <gbayer@linux.ibm.com>
+Subject: Re: [PATCH v2 net-next] net: Deprecate SO_DEBUG and reclaim
+ SOCK_DBG bit.
+Message-ID: <20240215070702.717e8e9b@kernel.org>
+In-Reply-To: <20240214195407.3175-1-kuniyu@amazon.com>
+References: <20240214195407.3175-1-kuniyu@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-commit d92576f1167c ("dax: does not work correctly with virtual aliasing caches")
-prevents DAX from building on architectures with virtually aliased
-dcache with:
+On Wed, 14 Feb 2024 11:54:07 -0800 Kuniyuki Iwashima wrote:
+> Recently, commit 8e5443d2b866 ("net: remove SOCK_DEBUG leftovers")
+> removed the last users of SOCK_DEBUG(), and commit b1dffcf0da22 ("net:
+> remove SOCK_DEBUG macro") removed the macro.
 
-  depends on !(ARM || MIPS || SPARC)
-
-This check is too broad (e.g. recent ARMv7 don't have virtually aliased
-dcaches), and also misses many other architectures with virtually
-aliased data cache.
-
-This is a regression introduced in the v4.0 Linux kernel where the
-dax mount option is removed for 32-bit ARMv7 boards which have no data
-cache aliasing, and therefore should work fine with FS_DAX.
-
-This was turned into the following check in alloc_dax() by a preparatory
-change:
-
-        if (ops && (IS_ENABLED(CONFIG_ARM) ||
-            IS_ENABLED(CONFIG_MIPS) ||
-            IS_ENABLED(CONFIG_SPARC)))
-                return NULL;
-
-Use cpu_dcache_is_aliasing() instead to figure out whether the environment
-has aliasing data caches.
-
-Fixes: d92576f1167c ("dax: does not work correctly with virtual aliasing caches")
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: linux-arch@vger.kernel.org
-Cc: linux-cxl@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-xfs@vger.kernel.org
-Cc: dm-devel@lists.linux.dev
-Cc: nvdimm@lists.linux.dev
----
- drivers/dax/super.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/dax/super.c b/drivers/dax/super.c
-index ce5bffa86bba..a21a7c262382 100644
---- a/drivers/dax/super.c
-+++ b/drivers/dax/super.c
-@@ -13,6 +13,7 @@
- #include <linux/uio.h>
- #include <linux/dax.h>
- #include <linux/fs.h>
-+#include <linux/cacheinfo.h>
- #include "dax-private.h"
- 
- /**
-@@ -455,9 +456,7 @@ struct dax_device *alloc_dax(void *private, const struct dax_operations *ops)
- 	 * except for device-dax (NULL operations pointer), which does
- 	 * not use aliased mappings from the kernel.
- 	 */
--	if (ops && (IS_ENABLED(CONFIG_ARM) ||
--	    IS_ENABLED(CONFIG_MIPS) ||
--	    IS_ENABLED(CONFIG_SPARC)))
-+	if (ops && cpu_dcache_is_aliasing())
- 		return ERR_PTR(-EOPNOTSUPP);
- 
- 	if (WARN_ON_ONCE(ops && !ops->zero_page_range))
--- 
-2.39.2
-
+Unrelated to this patch but speaking of deprecating things - do you
+want to go ahead with deleting DCCP? I don't recall our exact plan,
+I thought it was supposed to happen early in the year :)
 
