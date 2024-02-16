@@ -1,178 +1,147 @@
-Return-Path: <linux-s390+bounces-1853-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-1856-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3023C856EE7
-	for <lists+linux-s390@lfdr.de>; Thu, 15 Feb 2024 21:54:01 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D095E857233
+	for <lists+linux-s390@lfdr.de>; Fri, 16 Feb 2024 01:05:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CB36B288584
-	for <lists+linux-s390@lfdr.de>; Thu, 15 Feb 2024 20:53:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 874F51F24DD1
+	for <lists+linux-s390@lfdr.de>; Fri, 16 Feb 2024 00:05:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 650E913B293;
-	Thu, 15 Feb 2024 20:53:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0A9A63D;
+	Fri, 16 Feb 2024 00:05:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="g/HRHtMr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IR3cI7bt"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0E313AA41;
-	Thu, 15 Feb 2024 20:53:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD3519E
+	for <linux-s390@vger.kernel.org>; Fri, 16 Feb 2024 00:05:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708030437; cv=none; b=PL3KmKRDkpbgvGblobfhdlAIuqguF/6IujxhCYam95eb0xaOQN2hh6B8n0k9HhdqpxEaycYZHvjPsgoxWH+Nrc+bEblCnq3oRfoCrXSfXFDIctU7hb4TcG/g7vXdAi++Qaq5NMbR4Oa1UzTQbVJBtr14Di/G8lfdtW/PafGxCEI=
+	t=1708041912; cv=none; b=MRGcJxMrzNH1ygdB1iF9yWDaalTxHINgn9U7JXZQXSbBWCX3o8OtNDQkxdbJhAFUkixXmOYFpnMtRZWhq9tKfebbwvafJ0tP3EYNV3BdwqeoDe5DyYL0emRaUBOlcZbcT2We3QGD8ASGlOPUVVGcT5kcpvicdpsF62NhxA7nRS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708030437; c=relaxed/simple;
-	bh=wFHRWFNDjByZdkECXDT5AIayYLGLuLsqg4VpCTDXaxk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mUAfjOmVLoF8aZnh5JNwl+9t9W+i58104Q8v6Lt0U+0tQbV9Qrlm+gpehSc2Um7sGtXILEAa1vBJpbdSp1cJ2npwPOJwQrP5zMuy0tTXRkS/2wjex93XT6yp3+nbiQiE5ztrRpB38e5jIjL5VIbLiMwUv0K2WBamigdDxxGipXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=g/HRHtMr; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41FK0xwu022048;
-	Thu, 15 Feb 2024 20:53:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=naSuFLOBCRRosC0sA+aZ1BhtQ2Dg+R11DdlDmvqw/e4=;
- b=g/HRHtMru8XRydjbuofVyRwLgOX5KtVrIsP8/xWU3kjO/0SdSSHQYIA1xpCdjuXEUFeP
- puwW6oY7STMSa2CnLvg7sb9fWJgr40eCfgJNtCN0MTyv73tLBOs7Sb2aZab08C20lKsP
- OueyiOQAvKhh+REuho8wZ9EadA7HyXbbflQ+YkkmE/wg/UEkJhBsxZi5kw0NTwCKcOcy
- eOrSM+wB/AqECsx/T8VVpY+byBZCngMFHVuqTAkKvJJYcMQ8U2D1rOYdHBc9bRpWKM4o
- MNCJAV1lg+iogyEXsCe++Z60plU2P9DHf9faNWCK1jXpTgrZI0AXZf+0BNK4eX0n7jNu YA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w9ruqhk7u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 Feb 2024 20:53:53 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41FKZFg3010104;
-	Thu, 15 Feb 2024 20:53:52 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w9ruqhk7h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 Feb 2024 20:53:52 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41FI95da009896;
-	Thu, 15 Feb 2024 20:53:51 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3w6npm6vwd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 Feb 2024 20:53:51 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41FKrkEb41288114
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 15 Feb 2024 20:53:48 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2A96720043;
-	Thu, 15 Feb 2024 20:53:46 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 192432004B;
-	Thu, 15 Feb 2024 20:53:46 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 15 Feb 2024 20:53:46 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
-	id D7FF0E15C0; Thu, 15 Feb 2024 21:53:45 +0100 (CET)
-From: Eric Farman <farman@linux.ibm.com>
-To: Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>
-Cc: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, Eric Farman <farman@linux.ibm.com>
-Subject: [PATCH v2 2/2] KVM: s390: selftests: memop: add a simple AR test
-Date: Thu, 15 Feb 2024 21:53:44 +0100
-Message-Id: <20240215205344.2562020-3-farman@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240215205344.2562020-1-farman@linux.ibm.com>
-References: <20240215205344.2562020-1-farman@linux.ibm.com>
+	s=arc-20240116; t=1708041912; c=relaxed/simple;
+	bh=LoOnC4FQRv0F/O+cUjwXbOIDhDRls+e8GzdMRDc8KhE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EYbYGZSf0uJnKcifrlbGxmr39HEEguKAUSkExEZ1XNbARZL0HToDRhsPO/+UlIbDktI7M9qYr2geDwU+T0CBTCpKHtgdkpsySVu7SHlIPVLGI5RqQrAUOpw8wwlTnTu5kMIUDmXnOkfIpOul+ArTnDnQzTu2w0oWxcIapiuOOdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IR3cI7bt; arc=none smtp.client-ip=209.85.222.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-7d2940ad0e1so886348241.1
+        for <linux-s390@vger.kernel.org>; Thu, 15 Feb 2024 16:05:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708041910; x=1708646710; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=diXWtKNJBAfA4PgnFo0WoPDjp1XguB77YFwSlLLsiFQ=;
+        b=IR3cI7bt53zqM6Rc7R51ECix2OD1Bni9dQscoOPEc91+WbeHHbF3BCKuMNlasG/U4U
+         OwGBqeehAdnI5o+KOfuLE90YqX2QiLNHIozy4XyBdQwCjftvbbNkKnC3C5MUUpf35MA/
+         EonINoUytCJwydT/Bt33pRiYJ8z+OGM00rPJUwOTMTzZRAlWX4aM7mbLwkm8rrPs/XqZ
+         pGiu0YHAl+h7ferrSZGBT/iHOpbLNGzfwzUvyuDzebALNlQxVrjRA0l8BNkvqh6hK14y
+         NKwp4TSXgA0LgRim67alJuaPLOly6jjXQYe+KlEfEv08q0nLMrnze/MBx9UBx7rPTRvJ
+         nM6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708041910; x=1708646710;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=diXWtKNJBAfA4PgnFo0WoPDjp1XguB77YFwSlLLsiFQ=;
+        b=Nq3PhCyesD6U3pLB0yCO2I7uWb2f14/hJvAymnJOjRIqmCKUb3fgtoTWiMVVraSD4s
+         Nul7rbnm/XncF9HrgVhH0XQE7tUzf+tS6uKsN62hmHyDan5obSyBrmBNRGEuAhDdj+vE
+         YzIXeFnd2H2HVBPfPuP3lsswBuocEvbJ+7SacJ39sRcivQWo0pHywvH3wANmYShILciW
+         NRtreW9dZvy2NBKWxf29b5MNTWbBtGYi0BEPt8bMAAWgV+b0Xr1j7mhyjebsnDUJdha5
+         31QVtQyMPYINUnE7oJGyCz7raATuHPZooxMWwLPePREoz/+ei1nif5y5JHE4+1rgC2vf
+         yb4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVvggOCVKCqkE4lTD5JahHhjLnfGh2jfBdE8MrYJDuKNt6Z61IiRMNrmX6LJdaI/sScMmpCT8QnCpGvdVFZyePZPVVDRwl1IN+k0g==
+X-Gm-Message-State: AOJu0YwnGVV96JNuap/7irbiD0UcpaOSCgWegyQom/rgKS2nC9SQWMwf
+	KNr+7gdKoneClDNt80BYclI3VijGkhszsG8G0qS76dlC6wbUVvdccu1j7XWH5qc8r6/amaKOwsc
+	+Uv475VMuTU0N29sUWEsBw4JJEKtC34hTrtJ2
+X-Google-Smtp-Source: AGHT+IFIplzGzmriL1xaco+Og2hYr/egwhzq10LIBoz2G6IYXCZo3nz2w4ZXagy0mqXn2T0wS9sEvcT0l7HtxNN29lo=
+X-Received: by 2002:a1f:edc1:0:b0:4c0:2181:81ac with SMTP id
+ l184-20020a1fedc1000000b004c0218181acmr3240323vkh.14.1708041909812; Thu, 15
+ Feb 2024 16:05:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: q5HIoWVPQ2WFVNTxT_t0V7S6We9xQ13I
-X-Proofpoint-GUID: B3wchCvCjPM5t6wfpYG63O3gsLTd_2bm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-15_19,2024-02-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- phishscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0 spamscore=0
- mlxlogscore=999 impostorscore=0 malwarescore=0 priorityscore=1501
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402150167
+References: <CADVnQykqkpNTfO30_aswZEaeSkdu5YNuKag++h-RSguALdeohw@mail.gmail.com>
+ <20240215201627.14449-1-kuniyu@amazon.com>
+In-Reply-To: <20240215201627.14449-1-kuniyu@amazon.com>
+From: Neal Cardwell <ncardwell@google.com>
+Date: Thu, 15 Feb 2024 17:04:53 -0700
+Message-ID: <CADVnQynSy8V9etoiL9jLMgqAdGwbLXnCYia4j3pp60pxbdg7zA@mail.gmail.com>
+Subject: Re: [PATCH v1 net-next] net: Deprecate SO_DEBUG and reclaim SOCK_DBG bit.
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: davem@davemloft.net, edumazet@google.com, jaka@linux.ibm.com, 
+	jonesrick@google.com, kuba@kernel.org, kuni1840@gmail.com, 
+	linux-s390@vger.kernel.org, martineau@kernel.org, matttbe@kernel.org, 
+	mptcp@lists.linux.dev, netdev@vger.kernel.org, pabeni@redhat.com, 
+	soheil@google.com, wenjia@linux.ibm.com, ycheng@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-There is a selftest that checks for an (expected) error when an
-invalid AR is specified, but not one that exercises the AR path.
+On Thu, Feb 15, 2024 at 1:16=E2=80=AFPM Kuniyuki Iwashima <kuniyu@amazon.co=
+m> wrote:
+>
+> From: Neal Cardwell <ncardwell@google.com>
+> Date: Thu, 15 Feb 2024 12:57:35 -0700
+> > On Tue, Feb 13, 2024 at 3:32=E2=80=AFPM Kuniyuki Iwashima <kuniyu@amazo=
+n.com> wrote:
+> > >
+> > > Recently, commit 8e5443d2b866 ("net: remove SOCK_DEBUG leftovers")
+> > > removed the last users of SOCK_DEBUG(), and commit b1dffcf0da22 ("net=
+:
+> > > remove SOCK_DEBUG macro") removed the macro.
+> > >
+> > > Now is the time to deprecate the oldest socket option.
+> > >
+> > > Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+> > > ---
+> >
+> > I would like to kindly implore you to please not remove the
+> > functionality of the SO_DEBUG socket option. This socket option is a
+> > key mechanism that the Google TCP team uses for automated testing of
+> > Linux TCP, including BBR congestion control.
+> >
+> > Widely used tools like netperf allow users to enable the SO_DEBUG
+> > socket option via the command line (-g in netperf). Then debugging
+> > code in the kernel can use the SOCK_DBG bit to decide whether to take
+> > special actions, such as logging debug information, which can be used
+> > to generate graphs or assertions about correct internal behavior. For
+> > example, the transperf network testing tool that our team open-sourced
+> > - https://github.com/google/transperf - uses the netperf -g/SO_DEBUG
+> > mechanism to trigger debug logging that we use for testing,
+> > troubleshooting, analysis, and development.
+> >
+> > The SO_DEBUG mechanism is nice in that it works well no matter what
+> > policy an application or benchmarking tool uses for choosing other
+> > attributes (like port numbers) that could conceivably be used to point
+> > out connections that should receive debug treatment. For example, most
+> > benchmarking or production workloads will effectively end up with
+> > random port numbers, which makes port numbers hard to use  for
+> > triggering debug treatment.
+> >
+> > This mechanism is very simple and battle-tested, it works well, and
+> > IMHO it would be a tragedy to remove it. It would cause our team
+> > meaningful headaches to replace it. Please keep the SO_DEBUG socket
+> > option functionality as-is. :-)
+> >
+> > Thanks for your consideration on this!
+>
+> Oh that's an interesting use case!
+> I didn't think of out-of-tree uses.
+> Sure, I'll drop the patch.
+>
+> Thanks!
 
-Add a simple test that mirrors the vanilla write/read test while
-providing an AR. An AR that contains zero will direct the CPU to
-use the primary address space normally used anyway. AR[1] is
-selected for this test because the host AR[1] is usually non-zero,
-and KVM needs to correctly swap those values.
+Great! Thank you!
 
-Signed-off-by: Eric Farman <farman@linux.ibm.com>
----
- tools/testing/selftests/kvm/s390x/memop.c | 28 +++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-diff --git a/tools/testing/selftests/kvm/s390x/memop.c b/tools/testing/selftests/kvm/s390x/memop.c
-index bb3ca9a5d731..be20c26ee545 100644
---- a/tools/testing/selftests/kvm/s390x/memop.c
-+++ b/tools/testing/selftests/kvm/s390x/memop.c
-@@ -375,6 +375,29 @@ static void test_copy(void)
- 	kvm_vm_free(t.kvm_vm);
- }
- 
-+static void test_copy_access_register(void)
-+{
-+	struct test_default t = test_default_init(guest_copy);
-+
-+	HOST_SYNC(t.vcpu, STAGE_INITED);
-+
-+	prepare_mem12();
-+	t.run->psw_mask &= ~(3UL << (63 - 17));
-+	t.run->psw_mask |= 1UL << (63 - 17);  /* Enable AR mode */
-+
-+	CHECK_N_DO(MOP, t.vcpu, LOGICAL, WRITE, mem1, t.size,
-+		   GADDR_V(mem1), AR(1));
-+	HOST_SYNC(t.vcpu, STAGE_COPIED);
-+
-+	CHECK_N_DO(MOP, t.vcpu, LOGICAL, READ, mem2, t.size,
-+		   GADDR_V(mem2), AR(1));
-+	ASSERT_MEM_EQ(mem1, mem2, t.size);
-+
-+	t.run->psw_mask &= ~(3UL << (63 - 17));   /* Disable AR mode */
-+
-+	kvm_vm_free(t.kvm_vm);
-+}
-+
- static void set_storage_key_range(void *addr, size_t len, uint8_t key)
- {
- 	uintptr_t _addr, abs, i;
-@@ -1101,6 +1124,11 @@ int main(int argc, char *argv[])
- 			.test = test_copy_key_fetch_prot_override,
- 			.requirements_met = extension_cap > 0,
- 		},
-+		{
-+			.name = "copy with access register mode",
-+			.test = test_copy_access_register,
-+			.requirements_met = true,
-+		},
- 		{
- 			.name = "error checks with key",
- 			.test = test_errors_key,
--- 
-2.40.1
-
+neal
 
