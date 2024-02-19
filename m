@@ -1,156 +1,217 @@
-Return-Path: <linux-s390+bounces-1896-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-1898-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6628585A49C
-	for <lists+linux-s390@lfdr.de>; Mon, 19 Feb 2024 14:28:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A3D685A55E
+	for <lists+linux-s390@lfdr.de>; Mon, 19 Feb 2024 15:05:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1C31F1F217F3
-	for <lists+linux-s390@lfdr.de>; Mon, 19 Feb 2024 13:28:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E429A1F24401
+	for <lists+linux-s390@lfdr.de>; Mon, 19 Feb 2024 14:05:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F24593612D;
-	Mon, 19 Feb 2024 13:28:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C8F637155;
+	Mon, 19 Feb 2024 14:04:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fW715D71"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="jUCOuyn9"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from out199-15.us.a.mail.aliyun.com (out199-15.us.a.mail.aliyun.com [47.90.199.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DEBA2E85A
-	for <linux-s390@vger.kernel.org>; Mon, 19 Feb 2024 13:28:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CBD8381BD;
+	Mon, 19 Feb 2024 14:04:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708349298; cv=none; b=dI2CrfqvjrqqnSe2zSMHI3VjYGyMHAWdpmrdBWm5vh4crlmEe4oArXcM1LDX+lHWCMxXhk5sD9Ovc3xDas8SP+/Ft/Ui+gkC+rgVubREqvoMXh42Wqz4cholxZiSX1DD3Qe9tim++TTBDki7+md7RRU+Yg3k+1E6h9wbjFmEw2Y=
+	t=1708351496; cv=none; b=A0nRmhDTqdX0Yz4KHimMmHKZXMIMZ4yjyQkZjOEQV3E+Tm72VNuh6jjUWZA66iBJV4NQt0VSgp6qXqXKO+X9BdnLdmIOnDffarjOw+CDLSB7M+aMu5hjS6j9pFiEfY2z4Iea3YYvUyfRCLxMSVaMIJRu3su8GA1UVCB1x8t3jSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708349298; c=relaxed/simple;
-	bh=3nzKQiVrfK9DjysDqKu2OZOGa1DQyG3DMhJQ4Eexgn4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ihxJONNGueefKFI83XeUxspxIrs0mse1pUXGE2Hw1pRAQmVkDN0LpYPQLWAgMF8UNLusHHan/fdHgB4PKTZylDQN2+mwmf4ca+nPJcE67HAuJqkKgAr45icYGcDSF7UGiRa+PvHtaFjFhSjCxqvUUGTiS9sMHRAcwK1gM1HocOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fW715D71; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41JCs2RH004892;
-	Mon, 19 Feb 2024 13:28:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=s5aNOhGVmOl3JVVyXQ3eebMHLBZEGKDfv58exim1edM=;
- b=fW715D710OUKkNR5a8cqCaolEtCutyLLSId73hVS/L2UWg/9Ip5jDkUG+lbBdwN/kX99
- CnGvN+PeIeLIvGjnJYxyBIX7gTtN6xBqL8YchK0fdgGtENQlse2Q34LAkc97F+Sr3uTq
- vKQuxpNoMgY0THbGVzevBvyvbY1GjnUQE0E7NIlBG4b+z+N/0odhO8lnXTyHRxgWROW3
- TWaaUZi1aes5ooVIDJlfREM5xAfmOpD0a44tuDUTMCk0G39KMsLVsbWtSk1MM5hGELx7
- SWx61MwyZcJeHWnVoPYVuCKUaEH+SQizinUhmLHfqgtg+iVA8HbanEEtBjIrNf28k6Eo aA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wc7d3gy1b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 Feb 2024 13:28:15 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41JCvIkY013170;
-	Mon, 19 Feb 2024 13:28:14 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wc7d3gy07-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 Feb 2024 13:28:14 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41JAtq6a009541;
-	Mon, 19 Feb 2024 13:28:13 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wb84p1dfw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 Feb 2024 13:28:13 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41JDS6eG58524004
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 19 Feb 2024 13:28:08 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7E76E20074;
-	Mon, 19 Feb 2024 13:28:06 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 540F72004F;
-	Mon, 19 Feb 2024 13:28:06 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 19 Feb 2024 13:28:06 +0000 (GMT)
-From: Sumanth Korikkar <sumanthk@linux.ibm.com>
-To: linux-s390@vger.kernel.org, hca@linux.ibm.com, jpoimboe@kernel.org,
-        joe.lawrence@redhat.com, gor@linux.ibm.com
-Cc: iii@linux.ibm.com, agordeev@linux.ibm.com, sumanthk@linux.ibm.com
-Subject: [PATCH v2 4/4] s390/kernel: vmlinux.lds.S: handle orphan .rela sections
-Date: Mon, 19 Feb 2024 14:27:34 +0100
-Message-Id: <20240219132734.22881-5-sumanthk@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240219132734.22881-1-sumanthk@linux.ibm.com>
-References: <20240219132734.22881-1-sumanthk@linux.ibm.com>
+	s=arc-20240116; t=1708351496; c=relaxed/simple;
+	bh=zXE55Wn1vwBRvTQKi9WOqRZmT86viMgSf4go7Yu3bbg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=owAQlgxIHuzo3aggXv/2qIjGNDHTZnJZf/dR4p35y2/QYBHHZ7ipSlvj+qndX9rv5VA7rV8A2on0D5RO2cJzOcgDZ3H4dcoq0yxgmw6IwP5nlv2fxxCmOLZ1oofDkP/lbZ6ZCjI11PPawllKFU9NsDRu/W/VRvjDiQagWKSUUuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=jUCOuyn9; arc=none smtp.client-ip=47.90.199.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1708351474; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=BNkhxppDcbFezZ4gGJ8AqJVbJcBTfeeZ+zXUxQ8+TPE=;
+	b=jUCOuyn91MI2xA/eVE+GsD/JFOoJByBj0SaPY53TCHgq9g9L5cUwM0JoLersIFC7zh5Xhnok6v7lfxNBj38xhv8HnjT6SIJPsu0hSKgAFZFSzEirN7LV97QHCoMnswY5zkZ2JMwlUOL4VN19YSopr42jJyTjydorIGNDIuZn71s=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W0tkCQI_1708351472;
+Received: from 30.221.128.181(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W0tkCQI_1708351472)
+          by smtp.aliyun-inc.com;
+          Mon, 19 Feb 2024 22:04:33 +0800
+Message-ID: <8a333c58-4a74-4a1c-9680-a0b9b4020a62@linux.alibaba.com>
+Date: Mon, 19 Feb 2024 22:04:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: QWDk_vitsdcSuxrOrudlg3u7olp_SZQn
-X-Proofpoint-GUID: QXKAq_RbZ72HgFSqpuFSlBkV2jPHjgWQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-19_09,2024-02-19_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- malwarescore=0 bulkscore=0 adultscore=0 mlxscore=0 mlxlogscore=689
- priorityscore=1501 impostorscore=0 phishscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402190100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 00/15] net/smc: implement loopback-ism used by
+ SMC-D
+To: Alexandra Winter <wintera@linux.ibm.com>, wenjia@linux.ibm.com,
+ hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, jaka@linux.ibm.com
+Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com,
+ alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
+ linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240111120036.109903-1-guwen@linux.alibaba.com>
+ <83b9d600-339c-4c9f-860d-ab4539a0ae6b@linux.ibm.com>
+From: Wen Gu <guwen@linux.alibaba.com>
+In-Reply-To: <83b9d600-339c-4c9f-860d-ab4539a0ae6b@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When kernel is built with CONFIG_LD_ORPHAN_WARN and -fno-PIE, there are
-several warnings:
 
-ld: warning: orphan section `.rela.iplt' from
-`arch/s390/kernel/head64.o' being placed in section `.rela.dyn'
-ld: warning: orphan section `.rela.head.text' from
-`arch/s390/kernel/head64.o' being placed in section `.rela.dyn'
-ld: warning: orphan section `.rela.init.text' from
-`arch/s390/kernel/head64.o' being placed in section `.rela.dyn'
-ld: warning: orphan section `.rela.rodata.cst8' from
-`arch/s390/kernel/head64.o' being placed in section `.rela.dyn'
 
-Orphan sections are sections that exist in an object file but don't have
-a corresponding output section in the final executable. ld raises a
-warning when it identifies such sections.
+On 2024/2/6 20:18, Alexandra Winter wrote:
+> 
+> 
+> On 11.01.24 13:00, Wen Gu wrote:
+>> This patch set acts as the second part of the new version of [1] (The first
+>> part can be referred from [2]), the updated things of this version are listed
+>> at the end.
+>>
+>> # Background
+>>
+>> SMC-D is now used in IBM z with ISM function to optimize network interconnect
+>> for intra-CPC communications. Inspired by this, we try to make SMC-D available
+>> on the non-s390 architecture through a software-implemented virtual ISM device,
+>> that is the loopback-ism device here, to accelerate inter-process or
+>> inter-containers communication within the same OS instance.
+> 
+> 
+> Hello Wen Gu,
+> 
+> thank you very much for this patchset. I have been looking at it a bit.
+> I installed in on a testserver, but did not yet excercise the loopback-ism device.
+> I want to continue investigations, but daily work interferes, so I thought I
+> send you some comments now. So this is not at all a code review, but some
+> thoughts and observations about the general concept.
+> 
 
-Eliminate the warning by placing all .rela orphan sections in .rela.dyn
-and raise an error when size of .rela.dyn is greater than zero. i.e.
-Dont just neglect orphan sections.
+Thank you very much, Sandy.
 
-This is similar to adjustment performed in x86, where kernel is built
-with -fno-PIE.
-commit 5354e84598f2 ("x86/build: Add asserts for unwanted sections")
+> 
+> In [1] there was a discussion about an abstraction layer between smc-d and the
+> ism devices.
+> I am not sure what you are proposing now, is it an smc-d feature or independent of smc?
+> In 3/15 you say it is part of the SMC module, but then it has its own device entry.
+> Didn't you want to use it for other things as well? Or is it an SMC-D only feature?
+> Is it a device (Config help: "kind of virtual device")? Or an SMC-D feature?
+> 
 
-Acked-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
----
- arch/s390/kernel/vmlinux.lds.S | 6 ++++++
- 1 file changed, 6 insertions(+)
+This patchset aims to propose an SMC feature, which is SMC-D loopback. The main work
+to achieve this feature is to implement an Emulated-ISM, which is loopback-ism. The
+loopback-ism is a 'built-in' dummy device of SMC and only serves SMC.
 
-diff --git a/arch/s390/kernel/vmlinux.lds.S b/arch/s390/kernel/vmlinux.lds.S
-index 222b06662e19..404883b1b023 100644
---- a/arch/s390/kernel/vmlinux.lds.S
-+++ b/arch/s390/kernel/vmlinux.lds.S
-@@ -277,6 +277,12 @@ SECTIONS
- 		*(.plt) *(.plt.*) *(.iplt) *(.igot .igot.plt)
- 	}
- 	ASSERT(SIZEOF(.plt) == 0, "Unexpected run-time procedure linkages detected!")
-+#ifndef CONFIG_PIE_BUILD
-+	.rela.dyn : {
-+		*(.rela.*) *(.rela_*)
-+	}
-+	ASSERT(SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations (.rela) detected!")
-+#endif
- 
- 	/* Sections to be discarded */
- 	DISCARDS
--- 
-2.40.1
+SMC-D protocol + 'built-in dummy device' (loopback-ism device) = SMC-D loopback feature.
 
+To provide the runtime switch and statistics of loopback-ism, I need to find a sysfs
+entry for it, since it doesn't belong to any class (e.g. pci_bus), I created an 'smc'
+entry under /sys/devices/virtual/ and put loopback-ism under it.
+
+The other SMC devices, such as RoCE, s390 ISM, virtio-ism will be in their own sysfs
+entry, not under the /sys/devices/*virtual*/smc/.
+
+The Config help is somewhat inaccurate. To be more precise, the SMC_LO config is used to
+configure whether to enable this built-in dummy device for intra-OS communication.
+
+> Will we have a class of ism devices (s390 ism, ism-loopback, virtio-ism)
+> That share common properties (internal API?)
+> and smc-d will work with any of those? > But they all can exist without smc ?! BTW: This is what we want for s390-ism.
+> The client-registration interface [2] is currently the way to achieve this.
+> But maybe we need a more general concept?
+> 
+
+I didn't mean to create a class to cover all the ISM devices. It is only for
+loopback-ism. Because loopback-ism can not be classified, so I create an entry
+under /sys/devices/virtual/.
+
+> Maybe first a preparation patchset that introduces a class/ism
+> Together with an improved API?
+> In case you want to use ISM devices for other purposes as well..
+> But then the whole picture of ism-loopback in one patchset (RFC?)
+> has its benefits as well.
+> 
+
+Sorry for causing, I didn't mean to create a class to cover all the ISM devices.
+They should be in their own sysfs entries (e.g. pci_bus), since they will be used
+out of SMC. Only loopback-ism belongs only to SMC.
+
+> 
+> Other points that I noticed:
+> 
+> Naming: smc loopback, ism-loopback, loopback-ism ?
+> 
+> config: why not tristate? Why under net/smc?
+> 
+
+'SMC-D loopback' or 'SMC loopback' is used to indicate the feature or capability.
+'loopback-ism' is the emulated-ISM device that 'SMC/SMC-D loopback' used.
+('ism-loopback' doesn't seem to appear in my patchset)
+If we all agree with these, I will check all the terms in the patch and unify them.
+
+SMC_LO is used to configure whether SMC is allowed to use loopback-ism (CONFIG_SMC_LO),
+it acts as a check in the code, so I defined it as a bool.
+And loopback-ism only serves SMC-D loopback, as a feature of SMC, so the implementation
+(net/smc/smc_loopback.{c|h}) is under net/smc.
+
+> /sys/devices/virtual/smc  does not initially show up in my installation!!!
+> root@t35lp50:/sys/devices/virtual/> ls
+> 3270/  bdi/  block/  graphics/  iommu/  mem/  memory_tiering/  misc/  net/  tty/  vc/  vtconsole/  workqueue/
+> root@t35lp50:/sys/devices/virtual/> ls smc/loopback-ism
+> active  dmb_copy  dmbs_cnt  dmb_type  subsystem@  uevent  xfer_bytes
+> root@t35lp50:/sys/devices/virtual/> ls
+> 3270/  bdi/  block/  graphics/  iommu/  mem/  memory_tiering/  misc/  net/  smc/  tty/  vc/  vtconsole/  workqueue/
+> Is that normal behaviour?
+> 
+
+/sys/devices/virtual/smc is created after SMC module initialization.
+During the SMC module initialization, smc_loopback_init() is called, and the
+/sys/devices/virtual/smc entry is created.
+
+> You introduced a class/smc
+> Maybe class/ism would be better?
+> The other smc interfaces do not show up in class/smc!! Not so good
+> 
+
+Sorry for causing, I didn't mean to create a class to cover all the ISM devices.
+They should be in their own sysfs entries (e.g. pci_bus), since they can be used
+out of SMC. But loopback-ism is a SMC 'built-in' dummy device, it belongs only
+to SMC and can't be classified to other entries.
+
+
+> Why doesn't it show in smc_rnics?
+> (Maybe some deficiency of smc_rnics?)
+> 
+smc_rnics can't be used on the arch other than s390.
+
+# ./smc_rnics  -a
+Error: s390/s390x supported only
+
+
+> But then it shows in other smc-tools:
+> root@t35lp50:/sys/> smcd device
+> FID  Type  PCI-ID        PCHID  InUse  #LGs  PNET-ID
+> 0000 0     loopback-ism  ffff   No        0
+> 0029 ISM   0000:00:00.0  07c1   No        0  NET1
+> Nice!
+> 
+
+Yes, this is did on patch 01/15.
+
+Best regards,
+Wen Gu
+
+> Kind regards
+> Sandy
+> 
+> 
+> [1] https://lore.kernel.org/lkml/e3819550-7b10-4f9c-7347-dcf1f97b8e6b@linux.alibaba.com/
+> [2] 89e7d2ba61b7 ("net/ism: Add new API for client registration")
 
