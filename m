@@ -1,161 +1,193 @@
-Return-Path: <linux-s390+bounces-1892-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-1897-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F21E85A2C8
-	for <lists+linux-s390@lfdr.de>; Mon, 19 Feb 2024 13:03:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B715C85A49D
+	for <lists+linux-s390@lfdr.de>; Mon, 19 Feb 2024 14:28:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 53B2B1C23C58
-	for <lists+linux-s390@lfdr.de>; Mon, 19 Feb 2024 12:03:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C34541C211C0
+	for <lists+linux-s390@lfdr.de>; Mon, 19 Feb 2024 13:28:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E62472D051;
-	Mon, 19 Feb 2024 12:02:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 343F42E85A;
+	Mon, 19 Feb 2024 13:28:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BN6952uD"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Mj1jaWuB"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63BE52CCDF;
-	Mon, 19 Feb 2024 12:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8AF36124
+	for <linux-s390@vger.kernel.org>; Mon, 19 Feb 2024 13:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708344164; cv=none; b=jtDcCRoebN7UxyNzYX/1HtXYADZ3I9jUzXxSf/7990PV2emwQ5j5zalcD1zc5qhyE4IQPMM4JoEZ6SqrkxlXRMYgbteSw5kxQn5zhz/UW0eLazTT66pwwI1u6uk9HzZhwkocGJkkkQ1PqzEQyIltUTC/8sXN/qHqQLg0GPIXUQE=
+	t=1708349299; cv=none; b=PHTPMYHXTq1EifVMRhpPdFhMyBLLEb8KphJexGW/XkQmZlTNeUMG4FfVjy6TgAJy51c7gbHYBLDDPFBuDo2ogqlabv/radWp6qR512cIecnGh/JSaBoZpGJuDgxsB6eznHN8SpA8xEy+6ISby52NTTTWsQz760xiVp13sLPDzt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708344164; c=relaxed/simple;
-	bh=SJNxDovJQU4s53wEmE6hVUIUVXIND8lC8ymI4e7vDRc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=Eb2jMD1X0u9ysy5IXsJ7VO7rn45vWcDlLEt4boLWrClBBVS8ppvPKE1rcHYXvxlQ3XyA1OjK+TLZUsiXrOYNVzSghGk0RK4i+29O8ayGTbgpsf73GPCV9eGJi5KgJRAOkGeufqEA9lZr3L/a81RV6YC4fdTJJ2NP8xZHI7M/g34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BN6952uD; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6e0a37751cbso3022709b3a.2;
-        Mon, 19 Feb 2024 04:02:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708344162; x=1708948962; darn=vger.kernel.org;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sXVHiQqTVvLwPVSN4wK295H+HuDvWyHMdFATUrh61Qw=;
-        b=BN6952uDxwxzji1jp1NOEAxqAE6Mt8Ty4Rk7UVasrFsq/nr4FV9qhPnZ7IsF1962bD
-         TwhI/+MQfmO3Ur3hInyZIf9dLpS0NVg9GQDS62oylZMY7bMtmjoXOOuKTzth1klzmlzc
-         S/fFHjB2ylCa0P44ig6uJT/RUUjuhhBEePJGcNTfHuZYZlUVnhm8oJ8+AU8zxE/8S8SU
-         2VW8kG7u0CHn6H3SO2ANYTh0XC3BN9q5BiZh8DNvuEmInY3f/mYaDopk3vaFsxKFcM8R
-         k+1IDQ/aceYMagYc/uolGF6UKSIx4EFPhrBNxsLkQ0phM9qrBg7uOJxg0Jr6phUwSa7j
-         OwyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708344162; x=1708948962;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=sXVHiQqTVvLwPVSN4wK295H+HuDvWyHMdFATUrh61Qw=;
-        b=F8VjputUtWGW/I+jc9NOSZg1TBjUbwX0gz7TOOm42sAc3bHEXuGp3lBytYVLoIU9xh
-         f+w3xRLcE8nNtSzagAw3Lf7g4z8fGyP843bV1GBJPe4pvIRsIoDoP/yPSFnk6u4LSItb
-         yJms46iDNJua0hbQaE/llSCCEyEggqfXlKWtvmn+amWbbKgOAPQaEvOqEcynKBDML0kR
-         ZdCQrz7OjU/j8I2mBnbcJFRBk/cyIFclZX+2vFlMYLARS7Rr9/fuoyScFt5mebWVorKd
-         lajOClaxY1GObDFLYlGAYLpyZWfnWVSTBNudPMcDacMQI4xvnfgQ945S2WB9zWzNTfgO
-         WWoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWMenXay8ud/RXB+5qfqpF7UxtuDiszfwaU4TkMkJpENOhtXfAfTLJvnGWMWBpYGqTOUSAsNTq98+c4sJZpPW+iFOIgIpGMQCcnjQ==
-X-Gm-Message-State: AOJu0YyPGqHVqE5lb89mYMpHYn1XMNhMP9w6Q0ThUS4dpgIA90KhAg8v
-	cSWDu3FQZ0SwByNtj94bje8FzbkJmy0iNUIpUayZ41UbXf3kE3GCE5RtKkp1
-X-Google-Smtp-Source: AGHT+IGM/mBl6p+7VQ/UBUY0liSnc0g8tiRAnqqtUyMEBG/QP3L26RLnUqLU9SBZSVRFhEVzjBzHUg==
-X-Received: by 2002:a05:6a20:2d13:b0:1a0:aea4:f15c with SMTP id g19-20020a056a202d1300b001a0aea4f15cmr656909pzl.4.1708344161563;
-        Mon, 19 Feb 2024 04:02:41 -0800 (PST)
-Received: from localhost (123-243-155-241.static.tpgi.com.au. [123.243.155.241])
-        by smtp.gmail.com with ESMTPSA id y17-20020aa78551000000b006e0e66369e5sm4638738pfn.66.2024.02.19.04.02.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Feb 2024 04:02:41 -0800 (PST)
+	s=arc-20240116; t=1708349299; c=relaxed/simple;
+	bh=rpeObInOdG569gWzEaWGwR5xTm61TnbYaq2pla/HbhI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lAdEr4XnFpojhFGtD5CIIw+TisiuOI4BCLx8QILyNpqwQXOlGUW8zNji6psNCreaJerb0+CNo+II+k+g6t0oq0u09Y1jbzruIaQCdxKO4wWSOII+yqkVH8fEpIfHICTkXQqAR1neDFyPSiR3Ynu+yj2Xa1f0xmNkzqNpSsCtdXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Mj1jaWuB; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41JC5bvp015362;
+	Mon, 19 Feb 2024 13:28:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=qp0j5ihD5dApt7l2D+Jx6zE42ZeYHFS+I+4KogURNOY=;
+ b=Mj1jaWuBiF7J/2svDlHbMW/8LZSRJEoiK+xegw1KFOGIqIb1r3Pr5+GYPlTEIazT+Nel
+ bGmbSskb1y7IUVLq4v3Me8G/e4uLDyNaoQqfcnoxaAcB8SPPK/UesYCuKwI1YmhnHGhU
+ yilxSbq7EaDkKfeAklKUS40v3+KBKDu3vqMKOJVQQmc9CVNytQmWy7jdhN+DExMoGp5b
+ tLUuYa2ChJvburhd1vzBZAIjnAlZTggHzBRm0vCnRK0iiGim1hFbPIC3KIH8swpcfqhb
+ GGCa/FXF6FI6O9YByb2NDiWQhfluCK9qje+ogkRJgLWGEBojVgdND4yK4KoUymwhjN+F KA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wc4vhchxx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 Feb 2024 13:28:15 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41JDHAA0015898;
+	Mon, 19 Feb 2024 13:28:14 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wc4vhcgxj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 Feb 2024 13:28:14 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41JDHJW2003596;
+	Mon, 19 Feb 2024 13:27:46 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wb74t9r9a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 Feb 2024 13:27:46 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41JDRfUH33292632
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 19 Feb 2024 13:27:43 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 815C42004E;
+	Mon, 19 Feb 2024 13:27:41 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 557592004D;
+	Mon, 19 Feb 2024 13:27:41 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 19 Feb 2024 13:27:41 +0000 (GMT)
+From: Sumanth Korikkar <sumanthk@linux.ibm.com>
+To: linux-s390@vger.kernel.org, hca@linux.ibm.com, jpoimboe@kernel.org,
+        joe.lawrence@redhat.com, gor@linux.ibm.com
+Cc: iii@linux.ibm.com, agordeev@linux.ibm.com, sumanthk@linux.ibm.com
+Subject: [PATCH v2 0/4] s390: compile relocatable kernel with/without fPIE
+Date: Mon, 19 Feb 2024 14:27:30 +0100
+Message-Id: <20240219132734.22881-1-sumanthk@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 3aXdfi6wFU7HpD4xl59xK85_dBmH3Ekn
+X-Proofpoint-GUID: YW5QXk0bL-6CosbnV1sdqzx-kPD6CSdI
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 19 Feb 2024 22:02:32 +1000
-Message-Id: <CZ91GLI40959.3EGSUC8X9D0WU@wheely>
-To: "Thomas Huth" <thuth@redhat.com>
-Cc: <kvm@vger.kernel.org>, "Laurent Vivier" <lvivier@redhat.com>, "Shaoqin
- Huang" <shahuang@redhat.com>, "Andrew Jones" <andrew.jones@linux.dev>,
- "Nico Boehr" <nrb@linux.ibm.com>, "Paolo Bonzini" <pbonzini@redhat.com>,
- "Alexandru Elisei" <alexandru.elisei@arm.com>, "Eric Auger"
- <eric.auger@redhat.com>, "Janosch Frank" <frankja@linux.ibm.com>, "Claudio
- Imbrenda" <imbrenda@linux.ibm.com>, "David Hildenbrand" <david@redhat.com>,
- "Marc Hartmayer" <mhartmay@linux.ibm.com>, <linuxppc-dev@lists.ozlabs.org>,
- <linux-s390@vger.kernel.org>, <kvmarm@lists.linux.dev>,
- <kvm-riscv@lists.infradead.org>
-Subject: Re: [kvm-unit-tests PATCH v4 8/8] migration: add a migration
- selftest
-From: "Nicholas Piggin" <npiggin@gmail.com>
-X-Mailer: aerc 0.15.2
-References: <20240209091134.600228-1-npiggin@gmail.com>
- <20240209091134.600228-9-npiggin@gmail.com>
- <abbcbb47-1ae7-4793-a918-dede8dcaf07f@redhat.com>
- <CZ7673PUQ853.DB10GSBEZ65Z@wheely>
- <4d73467d-2091-4342-87a1-822f4aeb8b70@redhat.com>
-In-Reply-To: <4d73467d-2091-4342-87a1-822f4aeb8b70@redhat.com>
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-19_09,2024-02-19_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 priorityscore=1501 bulkscore=0 phishscore=0 mlxscore=0
+ suspectscore=0 spamscore=0 impostorscore=0 adultscore=0 mlxlogscore=707
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402190100
 
-On Mon Feb 19, 2024 at 4:56 PM AEST, Thomas Huth wrote:
-> On 17/02/2024 08.19, Nicholas Piggin wrote:
-> > On Fri Feb 16, 2024 at 9:15 PM AEST, Thomas Huth wrote:
-> >> On 09/02/2024 10.11, Nicholas Piggin wrote:
-> >>> Add a selftest for migration support in  guest library and test harne=
-ss
-> >>> code. It performs migrations in a tight loop to irritate races and bu=
-gs
-> >>> in the test harness code.
-> >>>
-> >>> Include the test in arm, s390, powerpc.
-> >>>
-> >>> Acked-by: Claudio Imbrenda <imbrenda@linux.ibm.com> (s390x)
-> >>> Reviewed-by: Thomas Huth <thuth@redhat.com>
-> >>> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-> >>> ---
-> >>>    arm/Makefile.common          |  1 +
-> >>>    arm/selftest-migration.c     |  1 +
-> >>>    arm/unittests.cfg            |  6 ++++++
-> >>
-> >>    Hi Nicholas,
-> >>
-> >> I just gave the patches a try, but the arm test seems to fail for me: =
-Only
-> >> the first getchar() seems to wait for a character, all the subsequent =
-ones
-> >> don't wait anymore and just continue immediately ... is this working f=
-or
-> >> you? Or do I need another patch on top?
-> >=20
-> > Hey sorry missed this comment....
-> >=20
-> > It does seem to work for me, I've mostly tested pseries but I did test
-> > others too (that's how I saw the arm getchar limit).
-> >=20
-> > How are you observing it not waiting for migration?
->
-> According to you other mail, I think you figured it out already, but just=
-=20
-> for the records: You can see it when running the guest manually, e.g.=20
-> something like:
->
->   qemu-system-aarch64 -nodefaults -machine virt -accel tcg -cpu cortex-a5=
-7 \
->     -device virtio-serial-device -device virtconsole,chardev=3Dctd \
->     -chardev testdev,id=3Dctd -device pci-testdev -display none \
->     -serial mon:stdio -kernel arm/selftest-migration.flat -smp 1
->
-> Without my "lib/arm/io: Fix calling getchar() multiple times" patch, the=
-=20
-> guest only waits during the first getchar(), all the others simply return=
-=20
-> immediately.
+Hi All,
 
-Yeah I got it -- I re-ran it on arm and it is obvious since you told
-me it's not waiting. At the time I tested I thought it was just arm
-migrating really fast :D
+This is a rebased version of Josh's patch series with a few fixups.
+https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git/log/?h=s390
 
-Thanks,
-Nick
+This introduces the capability to compile the s390 relocatable kernel
+with and without the -fPIE option.
+
+When utilizing the kpatch functionality, it is advisable to compile the
+kernel without the -fPIE option. This is particularly important if the
+kernel is built with the -ffunction-sections and -fdata-sections flags.
+The linker imposes a restriction on the number of sections (limited to
+64k), necessitating the omission of -fPIE.
+
+[1] https://gcc.gnu.org/pipermail/gcc-patches/2023-June/622872.html
+[2] https://gcc.gnu.org/pipermail/gcc-patches/2023-August/625986.html
+
+Gcc recently implemented an optimization [1] for loading symbols without
+explicit alignment, aligning with the IBM Z ELF ABI. This ABI mandates
+symbols to reside on a 2-byte boundary, enabling the use of the larl
+instruction. However, kernel linker scripts may still generate unaligned
+symbols. To address this, a new -munaligned-symbols option has been
+introduced [2] in recent gcc versions. This option has to be used with
+future gcc versions.
+
+Older Clang lacks support for handling unaligned symbols generated
+by kernel linker scripts when the kernel is built without -fPIE. However,
+future versions of Clang will include support for the -munaligned-symbols
+option. When the support is unavailable, compile the kernel with -fPIE
+to maintain the existing behavior.
+
+Patch 1 filters out -munaligned-symbol flag for vdso code. This is beneficial
+when compiling kernel with -fno-PIE and -munaligned-symbols combination.
+
+Patch 2 introduces the 'relocs' tool, which reads the vmlinux file and
+generates a vmlinux.relocs_64 section, containing offsets for all
+R_390_64 relocations.
+
+Patch 3 enables the compilation of a relocatable kernel with or without
+the -fPIE option. It  allows for building the relocatable kernel without
+-fPIE.  However, if compiler cannot handle unaligned symbols, the kernel
+is built with -fPIE.
+
+Patch 4 handles orphan .rela sections when kernel is built with
+-fno-PIE.
+
+kpatch tools changes:
+* -mno-pic-data-is-text-relative prevents relative addressing between
+  code and data. This is needed to avoid relocation error when klp text
+  and data are too far apart. kpatch already includes this flag.
+  However, with these changes, ARCH_KFLAGS+="-fPIC" should be added to
+  s390 kpatch tools, As -mno-pic-data-is-text-relative can be used only
+  with -fPIC. The corresponding pull request will be sent to kpatch
+  tools.
+
+v2:
+* Add Acked-by 
+* Add my signed-off by:
+* Rebase it to features branch
+
+Thank you,
+Sumanth
+
+Josh Poimboeuf (2):
+  s390: Add relocs tool
+  s390: Compile relocatable kernel without -fPIE
+
+Sumanth Korikkar (2):
+  s390/vdso64: filter out munaligned-symbols flag for vdso
+  s390/kernel: vmlinux.lds.S: handle orphan .rela sections
+
+ arch/s390/Kconfig                    |  15 +-
+ arch/s390/Makefile                   |   8 +-
+ arch/s390/boot/.gitignore            |   1 +
+ arch/s390/boot/Makefile              |  14 +-
+ arch/s390/boot/boot.h                |   6 +
+ arch/s390/boot/startup.c             |  80 +++++-
+ arch/s390/boot/vmlinux.lds.S         |  18 ++
+ arch/s390/include/asm/physmem_info.h |   1 +
+ arch/s390/kernel/vdso64/Makefile     |   1 +
+ arch/s390/kernel/vmlinux.lds.S       |  15 ++
+ arch/s390/tools/.gitignore           |   1 +
+ arch/s390/tools/Makefile             |   5 +
+ arch/s390/tools/relocs.c             | 390 +++++++++++++++++++++++++++
+ 13 files changed, 542 insertions(+), 13 deletions(-)
+ create mode 100644 arch/s390/tools/relocs.c
+
+-- 
+2.40.1
+
 
