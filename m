@@ -1,199 +1,163 @@
-Return-Path: <linux-s390+bounces-1974-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-1977-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5085085C5E1
-	for <lists+linux-s390@lfdr.de>; Tue, 20 Feb 2024 21:34:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F28785C605
+	for <lists+linux-s390@lfdr.de>; Tue, 20 Feb 2024 21:45:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0493F281D07
-	for <lists+linux-s390@lfdr.de>; Tue, 20 Feb 2024 20:34:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C1CE62819DE
+	for <lists+linux-s390@lfdr.de>; Tue, 20 Feb 2024 20:45:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD50A15098A;
-	Tue, 20 Feb 2024 20:33:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D6F514C596;
+	Tue, 20 Feb 2024 20:44:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b="3DviofDb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FLZ9AkMy"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-00823401.pphosted.com (mx0b-00823401.pphosted.com [148.163.152.46])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E426E69D10;
-	Tue, 20 Feb 2024 20:33:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212AF1FDB;
+	Tue, 20 Feb 2024 20:44:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708461225; cv=none; b=CdX9j/OPLFznpaahddYFbNpl80Zr8DlhcxXmnxIS59L7jzEdFTrAWpSD6HDNPi80eLMKvYY/xrK3vMEYL7fZFNw6NVuqrq1FkoLF0Wcn8NQL6CBNxsaYgTrS29wC7NalwMfCxvoPV69SWYp60Z2nZ39KeBJP9I6hStnP8qTsduY=
+	t=1708461899; cv=none; b=Ewl0lGQtcnuj5D6+i/QSMYjAp/BIlUO/DJ+AR7TwBurDJulbim6LfEsz7hsPS78xP4bw/7bqWLGUqHNyvUN5QG8VVfRovKmp3vMSvX5NapQjC2z9ReZeWvZNJ1pvd5j8IdiE99aQK1TJxZQ6qV7220fqSxmG8vJ2+12/6YDlv+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708461225; c=relaxed/simple;
-	bh=5fyrpL6I35oXbQ79JL+OMciY0wUkV8Hs5J/Gm9DAExw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Esn3ERIaTK7klEhKDQMe3hOzgksO7Nl+CNIf7IyxneyjzbjE93haTcvy5Q34FYAB5H5EqBLElPW28QdRtZIf8rGYRxpCaxgAZ6/WU07n/I52RrqHD/hBcO5C/rp/Kb6Zu6vT2NoQJxydHB5K6GIiSExFhLgYzXIfQ+XB8TR08sU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com; spf=pass smtp.mailfrom=motorola.com; dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b=3DviofDb; arc=none smtp.client-ip=148.163.152.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motorola.com
-Received: from pps.filterd (m0355089.ppops.net [127.0.0.1])
-	by mx0b-00823401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41KJFBgl020507;
-	Tue, 20 Feb 2024 20:33:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=motorola.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references; s=
-	DKIM202306; bh=yYaZ6KkZCfPgvE7ldRLRah8LlOxOAhyoW4Oo9vMYLI4=; b=3
-	DviofDb9pzniwChbEs283Q/nhrnZBOGxIjIbYC1Xij4+lyhygZxJPN3GIzERfFUn
-	FRqnViLZyoLn8VtqSCE6yax3k1cyJkMzduys1f9K06sujdOQdyJ5v8X4aLSf7YQv
-	DJpHBVfe55tafJqy9d0n6/2snEve64mdY1j6Ao9A4r/vZEWTvqGph4TEb0IydBJV
-	29uSUIr0Bz33FEtALIf1RFGASoSx7cTH2Mlm/csy1VwndF+H5rvB0gZI1BGaao9K
-	uo4ExG1esCF3SuXWz284KarBuUKzF8ywJu6hJwimy2/BNJtTjQCKyOnRt9V1ibg4
-	196bpTuBMlRupJNonffFg==
-Received: from va32lpfpp02.lenovo.com ([104.232.228.22])
-	by mx0b-00823401.pphosted.com (PPS) with ESMTPS id 3wd22x86fy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Feb 2024 20:33:23 +0000 (GMT)
-Received: from ilclmmrp01.lenovo.com (ilclmmrp01.mot.com [100.65.83.165])
-	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by va32lpfpp02.lenovo.com (Postfix) with ESMTPS id 4TfWM709tKz50TkW;
-	Tue, 20 Feb 2024 20:33:23 +0000 (UTC)
-Received: from ilclasset01.mot.com (ilclasset01.mot.com [100.64.7.105])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: mbland)
-	by ilclmmrp01.lenovo.com (Postfix) with ESMTPSA id 4TfWM65bfHz3n3fr;
-	Tue, 20 Feb 2024 20:33:22 +0000 (UTC)
-From: Maxwell Bland <mbland@motorola.com>
-To: linux-arm-kernel@lists.infradead.org
-Cc: gregkh@linuxfoundation.org, agordeev@linux.ibm.com,
-        akpm@linux-foundation.org, andreyknvl@gmail.com, andrii@kernel.org,
-        aneesh.kumar@kernel.org, aou@eecs.berkeley.edu, ardb@kernel.org,
-        arnd@arndb.de, ast@kernel.org, borntraeger@linux.ibm.com,
-        bpf@vger.kernel.org, brauner@kernel.org, catalin.marinas@arm.com,
-        christophe.leroy@csgroup.eu, cl@linux.com, daniel@iogearbox.net,
-        dave.hansen@linux.intel.com, david@redhat.com, dennis@kernel.org,
-        dvyukov@google.com, glider@google.com, gor@linux.ibm.com,
-        guoren@kernel.org, haoluo@google.com, hca@linux.ibm.com,
-        hch@infradead.org, john.fastabend@gmail.com, jolsa@kernel.org,
-        kasan-dev@googlegroups.com, kpsingh@kernel.org,
-        linux-arch@vger.kernel.org, linux@armlinux.org.uk,
-        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        lstoakes@gmail.com, mark.rutland@arm.com, martin.lau@linux.dev,
-        meted@linux.ibm.com, michael.christie@oracle.com, mjguzik@gmail.com,
-        mpe@ellerman.id.au, mst@redhat.com, muchun.song@linux.dev,
-        naveen.n.rao@linux.ibm.com, npiggin@gmail.com, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, quic_nprakash@quicinc.com,
-        quic_pkondeti@quicinc.com, rick.p.edgecombe@intel.com,
-        ryabinin.a.a@gmail.com, ryan.roberts@arm.com, samitolvanen@google.com,
-        sdf@google.com, song@kernel.org, surenb@google.com,
-        svens@linux.ibm.com, tj@kernel.org, urezki@gmail.com,
-        vincenzo.frascino@arm.com, will@kernel.org, wuqiang.matt@bytedance.com,
-        yonghong.song@linux.dev, zlim.lnx@gmail.com, mbland@motorola.com,
-        awheeler@motorola.com
-Subject: [PATCH 4/4] arm64: dynamic enforcement of pmd-level PXNTable
-Date: Tue, 20 Feb 2024 14:32:56 -0600
-Message-Id: <20240220203256.31153-5-mbland@motorola.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240220203256.31153-1-mbland@motorola.com>
-References: <20240220203256.31153-1-mbland@motorola.com>
-X-Proofpoint-ORIG-GUID: IdOVOSFTH5OwTQnHH7fAIQBlI2JoJAu-
-X-Proofpoint-GUID: IdOVOSFTH5OwTQnHH7fAIQBlI2JoJAu-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-20_06,2024-02-20_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 mlxlogscore=766 spamscore=0 malwarescore=0 adultscore=0
- suspectscore=0 impostorscore=0 priorityscore=1501 bulkscore=0 mlxscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2402200146
+	s=arc-20240116; t=1708461899; c=relaxed/simple;
+	bh=OlPlBXfeiIiilwpBpvXgoBdAmfQVCnZRvZ/9m9sPvyg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qXvn0hn5wWlINlrh4wUzUoXWePOIQaeeyhkeMLSK2a+uuBvvCV31yd/jdWPIk+aTRit7cfL/wSw2d6CHn72f4G1o7lgfs1q3l14dMvZTA7be2ZfLGM+I7cVlHTp0uBj+vkdvQZPrzCRHIo7HSl5RmH9alzcnwYrDdq4zj1VOnDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FLZ9AkMy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFDD6C433F1;
+	Tue, 20 Feb 2024 20:44:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708461898;
+	bh=OlPlBXfeiIiilwpBpvXgoBdAmfQVCnZRvZ/9m9sPvyg=;
+	h=From:Date:Subject:To:Cc:From;
+	b=FLZ9AkMyZiZ38MqIQThs5/Y9gkE61pEhYH8tnAsMssL5enLjtwL/oat7iF2Nk7b6s
+	 xclO05FuoFJ3Lz8UbtTudq8mkj0k98K1kpqs8GwPwzvZ4s3Bzuv6uhsiUpPV3h4Z8l
+	 XfH9TnmTYrJVhzXIItCugWLHOgbRafUJYCjHcdPymhANjjJBk7T8BgZB1qRBy+f2Vt
+	 eE4GlmNqJ+hbu76NoJuEWTbC5/ztKnmbGIRVqhiX/cL8AnWLWxewmpw6J5loAfGRGv
+	 0dxriJ1YxnNB2cONDBFsb6b0ijP6fEO0TrELyTqOlbyFMmNIhr6PR3zFP6HqdCG/aG
+	 zTacgvnIrmTJQ==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Tue, 20 Feb 2024 13:44:48 -0700
+Subject: [PATCH] s390/boot: Workaround current 'llvm-objdump -t -j ...'
+ behavior
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240220-s390-work-around-llvm-objdump-t-j-v1-1-47bb0366a831@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAD8P1WUC/x3NPQ6DMAxA4asgz7UUXIbSq1QdIHZaU0iQU34kx
+ N0bdfyW9w7IYioZ7tUBJqtmTbGgvlTg3118CSoXAzlqHJHDfG0dbsk+2FlaIuM4rhOmfuBlmvG
+ LA/bhxp59E6itoXRmk6D7//F4nucPyQ+KOHMAAAA=
+To: hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com
+Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com, morbo@google.com, 
+ justinstitt@google.com, linux-s390@vger.kernel.org, llvm@lists.linux.dev, 
+ patches@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3960; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=OlPlBXfeiIiilwpBpvXgoBdAmfQVCnZRvZ/9m9sPvyg=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDKlX+T1nSYgumrn2mEpeR5L9k3OnhHtVFhie2qXwb82bh
+ xtqNurd7ihlYRDjYpAVU2Spfqx63NBwzlnGG6cmwcxhZQIZwsDFKQATWbqDkeFLT09Yw1Uu1XVV
+ /CHsOvpNvJfWHE537j7yrS391rF/Uf8Z/vuke74RiTI2r/OXMTs7e89kue/Ty1YusIqWP/FN8vm
+ 6K8wA
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-In an attempt to protect against write-then-execute attacks wherein an
-adversary stages malicious code into a data page and then later uses a
-write gadget to mark the data page executable, arm64 enforces PXNTable
-when allocating pmd descriptors during the init process. However, these
-protections are not maintained for dynamic memory allocations, creating
-an extensive threat surface to write-then-execute attacks targeting
-pages allocated through the vmalloc interface.
+When building with OBJDUMP=llvm-objdump, there are a series of warnings
+from the section comparisons that arch/s390/boot/Makefile performs
+between vmlinux and arch/s390/boot/vmlinux:
 
-Straightforward modifications to the pgalloc interface allow for the
-dynamic enforcement of PXNTable, restricting writable and
-privileged-executable code pages to known kernel text, bpf-allocated
-programs, and kprobe-allocated pages, all of which have more extensive
-verification interfaces than the generic vmalloc region.
+  llvm-objdump: warning: section '.boot.preserved.data' mentioned in a -j/--section option, but not found in any input file
+  llvm-objdump: warning: section '.boot.data' mentioned in a -j/--section option, but not found in any input file
+  llvm-objdump: warning: section '.boot.preserved.data' mentioned in a -j/--section option, but not found in any input file
+  llvm-objdump: warning: section '.boot.data' mentioned in a -j/--section option, but not found in any input file
 
-This patch adds a preprocessor define to check whether a pmd is
-allocated by vmalloc and exists outside of a known code region, and if
-so, marks the pmd as PXNTable, protecting over 100 last-level page
-tables from manipulation in the process.
+The warning is a little misleading, as these sections do exist in the
+input files. It is really pointing out that llvm-objdump does not match
+GNU objdump's behavior of respecting '-j' / '--section' in combination
+with '-t' / '--syms':
 
-Signed-off-by: Maxwell Bland <mbland@motorola.com>
+  $ s390x-linux-gnu-objdump -t -j .boot.data vmlinux.full
+
+  vmlinux.full:     file format elf64-s390
+
+  SYMBOL TABLE:
+  0000000001951000 l     O .boot.data     0000000000003000 sclp_info_sccb
+  00000000019550e0 l     O .boot.data     0000000000000001 sclp_info_sccb_valid
+  00000000019550e2 g     O .boot.data     0000000000001000 early_command_line
+  ...
+
+  $ llvm-objdump -t -j .boot.data vmlinux.full
+
+  vmlinux.full:   file format elf64-s390
+
+  SYMBOL TABLE:
+  0000000000100040 l     O .text  0000000000000010 dw_psw
+  0000000000000000 l    df *ABS*  0000000000000000 main.c
+  00000000001001b0 l     F .text  00000000000000c6 trace_event_raw_event_initcall_level
+  0000000000100280 l     F .text  0000000000000100 perf_trace_initcall_level
+  ...
+
+It may be possible to change llvm-objdump's behavior to match GNU
+objdump's behavior but the difficulty of that task has not yet been
+explored. The combination of '$(OBJDUMP) -t -j' is not common in the
+kernel tree on a whole, so workaround this tool difference by grepping
+for the sections in the full symbol table output in a similar manner to
+the sed invocation. This results in no visible change for GNU objdump
+users while fixing the warnings for OBJDUMP=llvm-objdump, further
+enabling use of LLVM=1 for ARCH=s390 with versions of LLVM that have
+support for s390 in ld.lld and llvm-objcopy.
+
+Reported-by: Heiko Carstens <hca@linux.ibm.com>
+Closes: https://lore.kernel.org/20240219113248.16287-C-hca@linux.ibm.com/
+Link: https://github.com/ClangBuiltLinux/linux/issues/859
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 ---
- arch/arm64/include/asm/pgalloc.h | 11 +++++++++--
- arch/arm64/include/asm/vmalloc.h |  5 +++++
- arch/arm64/mm/trans_pgd.c        |  2 +-
- 3 files changed, 15 insertions(+), 3 deletions(-)
+s390 llvm-objcopy support may be backported to LLVM 18.1.0 in time for
+the final release.
 
-diff --git a/arch/arm64/include/asm/pgalloc.h b/arch/arm64/include/asm/pgalloc.h
-index 237224484d0f..5e9262241e8b 100644
---- a/arch/arm64/include/asm/pgalloc.h
-+++ b/arch/arm64/include/asm/pgalloc.h
-@@ -13,6 +13,7 @@
- #include <asm/cacheflush.h>
- #include <asm/tlbflush.h>
+https://github.com/llvm/llvm-project/pull/82324
+
+s390 ld.lld has already made it into release/18.x:
+
+https://github.com/llvm/llvm-project/commit/0a44c3792a6ff799df5f100670d7e19d1bc49f03
+
+If the objcopy change makes 18.1.0 final, features + this change should
+build cleanly with LLVM 18.1.0+ using LLVM=1 :)
+---
+ arch/s390/boot/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/s390/boot/Makefile b/arch/s390/boot/Makefile
+index aecafabc2054..294f08a8811a 100644
+--- a/arch/s390/boot/Makefile
++++ b/arch/s390/boot/Makefile
+@@ -60,9 +60,9 @@ clean-files += vmlinux.map
  
-+#define __HAVE_ARCH_ADDR_COND_PMD
- #define __HAVE_ARCH_PGD_FREE
- #include <asm-generic/pgalloc.h>
- 
-@@ -74,10 +75,16 @@ static inline void __pmd_populate(pmd_t *pmdp, phys_addr_t ptep,
-  * of the mm address space.
-  */
- static inline void
--pmd_populate_kernel(struct mm_struct *mm, pmd_t *pmdp, pte_t *ptep)
-+pmd_populate_kernel(struct mm_struct *mm, pmd_t *pmdp, pte_t *ptep,
-+			unsigned long address)
- {
-+	pmdval_t pmd = PMD_TYPE_TABLE | PMD_TABLE_UXN;
- 	VM_BUG_ON(mm && mm != &init_mm);
--	__pmd_populate(pmdp, __pa(ptep), PMD_TYPE_TABLE | PMD_TABLE_UXN);
-+	if (IS_DATA_VMALLOC_ADDR(address) &&
-+		IS_DATA_VMALLOC_ADDR(address + PMD_SIZE)) {
-+		pmd |= PMD_TABLE_PXN;
-+	}
-+	__pmd_populate(pmdp, __pa(ptep), pmd);
- }
- 
- static inline void
-diff --git a/arch/arm64/include/asm/vmalloc.h b/arch/arm64/include/asm/vmalloc.h
-index dbcf8ad20265..6f254ab83f4a 100644
---- a/arch/arm64/include/asm/vmalloc.h
-+++ b/arch/arm64/include/asm/vmalloc.h
-@@ -34,4 +34,9 @@ static inline pgprot_t arch_vmap_pgprot_tagged(pgprot_t prot)
- extern unsigned long code_region_start __ro_after_init;
- extern unsigned long code_region_end __ro_after_init;
- 
-+#define IS_DATA_VMALLOC_ADDR(vaddr) (((vaddr) < code_region_start || \
-+				      (vaddr) > code_region_end) && \
-+				      ((vaddr) >= VMALLOC_START && \
-+				       (vaddr) < VMALLOC_END))
-+
- #endif /* _ASM_ARM64_VMALLOC_H */
-diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
-index 7b14df3c6477..7f903c51e1eb 100644
---- a/arch/arm64/mm/trans_pgd.c
-+++ b/arch/arm64/mm/trans_pgd.c
-@@ -69,7 +69,7 @@ static int copy_pte(struct trans_pgd_info *info, pmd_t *dst_pmdp,
- 	dst_ptep = trans_alloc(info);
- 	if (!dst_ptep)
- 		return -ENOMEM;
--	pmd_populate_kernel(NULL, dst_pmdp, dst_ptep);
-+	pmd_populate_kernel_at(NULL, dst_pmdp, dst_ptep, addr);
- 	dst_ptep = pte_offset_kernel(dst_pmdp, start);
- 
- 	src_ptep = pte_offset_kernel(src_pmdp, start);
+ quiet_cmd_section_cmp = SECTCMP $*
+ define cmd_section_cmp
+-	s1=`$(OBJDUMP) -t -j "$*" "$<" | sort | \
++	s1=`$(OBJDUMP) -t "$<" | grep "\s$*\s\+" | sort | \
+ 		sed -n "/0000000000000000/! s/.*\s$*\s\+//p" | sha256sum`; \
+-	s2=`$(OBJDUMP) -t -j "$*" "$(word 2,$^)" | sort | \
++	s2=`$(OBJDUMP) -t "$(word 2,$^)" | grep "\s$*\s\+" | sort | \
+ 		sed -n "/0000000000000000/! s/.*\s$*\s\+//p" | sha256sum`; \
+ 	if [ "$$s1" != "$$s2" ]; then \
+ 		echo "error: section $* differs between $< and $(word 2,$^)" >&2; \
+
+---
+base-commit: 778666df60f0d96f215e33e27448de47a2207fb3
+change-id: 20240220-s390-work-around-llvm-objdump-t-j-bf8dcdc4f291
+
+Best regards,
 -- 
-2.39.2
+Nathan Chancellor <nathan@kernel.org>
 
 
