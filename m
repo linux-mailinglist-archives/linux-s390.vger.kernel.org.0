@@ -1,163 +1,144 @@
-Return-Path: <linux-s390+bounces-1977-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-1979-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F28785C605
-	for <lists+linux-s390@lfdr.de>; Tue, 20 Feb 2024 21:45:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD40885C766
+	for <lists+linux-s390@lfdr.de>; Tue, 20 Feb 2024 22:12:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C1CE62819DE
-	for <lists+linux-s390@lfdr.de>; Tue, 20 Feb 2024 20:45:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0C94A1C21C90
+	for <lists+linux-s390@lfdr.de>; Tue, 20 Feb 2024 21:12:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D6F514C596;
-	Tue, 20 Feb 2024 20:44:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5855151CE8;
+	Tue, 20 Feb 2024 21:12:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FLZ9AkMy"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tDfL1I8D"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212AF1FDB;
-	Tue, 20 Feb 2024 20:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D20C612D7;
+	Tue, 20 Feb 2024 21:12:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708461899; cv=none; b=Ewl0lGQtcnuj5D6+i/QSMYjAp/BIlUO/DJ+AR7TwBurDJulbim6LfEsz7hsPS78xP4bw/7bqWLGUqHNyvUN5QG8VVfRovKmp3vMSvX5NapQjC2z9ReZeWvZNJ1pvd5j8IdiE99aQK1TJxZQ6qV7220fqSxmG8vJ2+12/6YDlv+I=
+	t=1708463545; cv=none; b=EXLjik/0KB/IN45LtERTpiYC5y35UNppNXPPk4m/pGGWQ7A2dzriNZ7kFcY4LmVtoif7P6jMfkicVTA+iTkvTWBKVQdLeNKj0W+k2ksrFRXarbdrdpt88dqq5jD+Sy8vvxBca76wTEXZk5UjlXOucCd63yHIP8W+USM0AUmKcTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708461899; c=relaxed/simple;
-	bh=OlPlBXfeiIiilwpBpvXgoBdAmfQVCnZRvZ/9m9sPvyg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qXvn0hn5wWlINlrh4wUzUoXWePOIQaeeyhkeMLSK2a+uuBvvCV31yd/jdWPIk+aTRit7cfL/wSw2d6CHn72f4G1o7lgfs1q3l14dMvZTA7be2ZfLGM+I7cVlHTp0uBj+vkdvQZPrzCRHIo7HSl5RmH9alzcnwYrDdq4zj1VOnDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FLZ9AkMy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFDD6C433F1;
-	Tue, 20 Feb 2024 20:44:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708461898;
-	bh=OlPlBXfeiIiilwpBpvXgoBdAmfQVCnZRvZ/9m9sPvyg=;
-	h=From:Date:Subject:To:Cc:From;
-	b=FLZ9AkMyZiZ38MqIQThs5/Y9gkE61pEhYH8tnAsMssL5enLjtwL/oat7iF2Nk7b6s
-	 xclO05FuoFJ3Lz8UbtTudq8mkj0k98K1kpqs8GwPwzvZ4s3Bzuv6uhsiUpPV3h4Z8l
-	 XfH9TnmTYrJVhzXIItCugWLHOgbRafUJYCjHcdPymhANjjJBk7T8BgZB1qRBy+f2Vt
-	 eE4GlmNqJ+hbu76NoJuEWTbC5/ztKnmbGIRVqhiX/cL8AnWLWxewmpw6J5loAfGRGv
-	 0dxriJ1YxnNB2cONDBFsb6b0ijP6fEO0TrELyTqOlbyFMmNIhr6PR3zFP6HqdCG/aG
-	 zTacgvnIrmTJQ==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Tue, 20 Feb 2024 13:44:48 -0700
-Subject: [PATCH] s390/boot: Workaround current 'llvm-objdump -t -j ...'
- behavior
+	s=arc-20240116; t=1708463545; c=relaxed/simple;
+	bh=2b/TBXFc7Ngj4lYkWZR0AtquaqmyHgrue1RjZw5DqIA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d7m2k6Tw8o9ManA+0f67ELhikzqvoF6wqHXsL/lUMZSt1rNVF7u1PGWGZ3msaWwYJiiS50Se1SmpAUYnzm9MpgojNoiXm/bE63a+uZ3C9oRPbrnkS0l1j1x5FXEIcGyt6ZRbMJV5yQucwhAmLYK3ZoNy5B86ECAws4GTHcTUxik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tDfL1I8D; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41KL7iSj015515;
+	Tue, 20 Feb 2024 21:12:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=T6ai+h3Ps3tOexGpnPubrh9NaPw+d5RswAkH6epS5z4=;
+ b=tDfL1I8D3uDPd68YwOQOFxx9TaEZ6I4662pU30kWLIr+VskoX9EvzIaolD9fo7bjFNuo
+ DnXSSwEPfkp6Pj8pSYIFSmJBun1ZEgZ2M333/eXaEXxqolwbKlYLxsJty2OsL3++DOE+
+ kp9aGxdBK9KN33yRN14PA7zFiEu/ZRvBJADDIgy51Q1IJ597nkvTPeVADyxmzFRsW081
+ pmy64j/pQr+Xkmj014rG8MpCOlFKirdi7Fv6Tl7NTthx94pSUZU5F8iqFQOfWzhCIZCT
+ 2j2YGUooNnMyEI1kxCcqia7tmmoboShv54BDUjIVH9R81yLUho8s56Nkj1k/GC6ti29i xw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wcyst5w4f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 Feb 2024 21:12:20 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41KL8fvN020506;
+	Tue, 20 Feb 2024 21:12:20 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wcyst5w4d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 Feb 2024 21:12:20 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41KK5CjP009547;
+	Tue, 20 Feb 2024 21:12:19 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wb84pauj0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 Feb 2024 21:12:19 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41KLCDLx18088514
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 20 Feb 2024 21:12:15 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9BE2420043;
+	Tue, 20 Feb 2024 21:12:13 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 88BA320040;
+	Tue, 20 Feb 2024 21:12:13 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 20 Feb 2024 21:12:13 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
+	id 3879BE0172; Tue, 20 Feb 2024 22:12:13 +0100 (CET)
+From: Eric Farman <farman@linux.ibm.com>
+To: Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>
+Cc: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, Eric Farman <farman@linux.ibm.com>
+Subject: [PATCH v4 0/2] KVM: s390: Fix AR parameter in ioctl
+Date: Tue, 20 Feb 2024 22:12:09 +0100
+Message-Id: <20240220211211.3102609-1-farman@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 3YNrl-RDEMkXYgu0XoayVkjVacCpBjO9
+X-Proofpoint-GUID: 4USiI4tudUtV9ab_p4FoITrfIGkq6cF0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240220-s390-work-around-llvm-objdump-t-j-v1-1-47bb0366a831@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAD8P1WUC/x3NPQ6DMAxA4asgz7UUXIbSq1QdIHZaU0iQU34kx
- N0bdfyW9w7IYioZ7tUBJqtmTbGgvlTg3118CSoXAzlqHJHDfG0dbsk+2FlaIuM4rhOmfuBlmvG
- LA/bhxp59E6itoXRmk6D7//F4nucPyQ+KOHMAAAA=
-To: hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com
-Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com, morbo@google.com, 
- justinstitt@google.com, linux-s390@vger.kernel.org, llvm@lists.linux.dev, 
- patches@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3960; i=nathan@kernel.org;
- h=from:subject:message-id; bh=OlPlBXfeiIiilwpBpvXgoBdAmfQVCnZRvZ/9m9sPvyg=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDKlX+T1nSYgumrn2mEpeR5L9k3OnhHtVFhie2qXwb82bh
- xtqNurd7ihlYRDjYpAVU2Spfqx63NBwzlnGG6cmwcxhZQIZwsDFKQATWbqDkeFLT09Yw1Uu1XVV
- /CHsOvpNvJfWHE537j7yrS391rF/Uf8Z/vuke74RiTI2r/OXMTs7e89kue/Ty1YusIqWP/FN8vm
- 6K8wA
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-20_06,2024-02-20_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ bulkscore=0 mlxlogscore=839 spamscore=0 priorityscore=1501 phishscore=0
+ lowpriorityscore=0 impostorscore=0 mlxscore=0 malwarescore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2402200151
 
-When building with OBJDUMP=llvm-objdump, there are a series of warnings
-from the section comparisons that arch/s390/boot/Makefile performs
-between vmlinux and arch/s390/boot/vmlinux:
+Hi Janosch,
 
-  llvm-objdump: warning: section '.boot.preserved.data' mentioned in a -j/--section option, but not found in any input file
-  llvm-objdump: warning: section '.boot.data' mentioned in a -j/--section option, but not found in any input file
-  llvm-objdump: warning: section '.boot.preserved.data' mentioned in a -j/--section option, but not found in any input file
-  llvm-objdump: warning: section '.boot.data' mentioned in a -j/--section option, but not found in any input file
+Here is a new (final?) version for the AR/MEM_OP issue I'm attempting to
+address. Hopefully they can be picked up to whatever tree makes sense.
 
-The warning is a little misleading, as these sections do exist in the
-input files. It is really pointing out that llvm-objdump does not match
-GNU objdump's behavior of respecting '-j' / '--section' in combination
-with '-t' / '--syms':
+Changes:
+v4:
+        [HC,CB,NSG] Add tags (thank you!)
+        [NSG] Add commentary
+v3: https://lore.kernel.org/r/20240216213616.3819805-1-farman@linux.ibm.com/
+        [HC] Drop the AR swap in MEM_OP path
+        [HC] Remove WARN and don't do save_access_regs on !bool
+v2: https://lore.kernel.org/r/20240215205344.2562020-1-farman@linux.ibm.com/
+        [HC] Add a flag to indicate access registers have been loaded
+v1: https://lore.kernel.org/r/20240209204539.4150550-1-farman@linux.ibm.com/
+        [CB] Store access registers around memop ioctl
+        [JF] Add a kernel selftest
+RFC: https://lore.kernel.org/r/20240131205832.2179029-1-farman@linux.ibm.com/
 
-  $ s390x-linux-gnu-objdump -t -j .boot.data vmlinux.full
+Eric Farman (2):
+  KVM: s390: fix access register usage in ioctls
+  KVM: s390: selftests: memop: add a simple AR test
 
-  vmlinux.full:     file format elf64-s390
+ arch/s390/include/asm/kvm_host.h          |  2 ++
+ arch/s390/kvm/gaccess.c                   |  3 ++-
+ arch/s390/kvm/kvm-s390.c                  |  3 +++
+ tools/testing/selftests/kvm/s390x/memop.c | 31 +++++++++++++++++++++++
+ 4 files changed, 38 insertions(+), 1 deletion(-)
 
-  SYMBOL TABLE:
-  0000000001951000 l     O .boot.data     0000000000003000 sclp_info_sccb
-  00000000019550e0 l     O .boot.data     0000000000000001 sclp_info_sccb_valid
-  00000000019550e2 g     O .boot.data     0000000000001000 early_command_line
-  ...
-
-  $ llvm-objdump -t -j .boot.data vmlinux.full
-
-  vmlinux.full:   file format elf64-s390
-
-  SYMBOL TABLE:
-  0000000000100040 l     O .text  0000000000000010 dw_psw
-  0000000000000000 l    df *ABS*  0000000000000000 main.c
-  00000000001001b0 l     F .text  00000000000000c6 trace_event_raw_event_initcall_level
-  0000000000100280 l     F .text  0000000000000100 perf_trace_initcall_level
-  ...
-
-It may be possible to change llvm-objdump's behavior to match GNU
-objdump's behavior but the difficulty of that task has not yet been
-explored. The combination of '$(OBJDUMP) -t -j' is not common in the
-kernel tree on a whole, so workaround this tool difference by grepping
-for the sections in the full symbol table output in a similar manner to
-the sed invocation. This results in no visible change for GNU objdump
-users while fixing the warnings for OBJDUMP=llvm-objdump, further
-enabling use of LLVM=1 for ARCH=s390 with versions of LLVM that have
-support for s390 in ld.lld and llvm-objcopy.
-
-Reported-by: Heiko Carstens <hca@linux.ibm.com>
-Closes: https://lore.kernel.org/20240219113248.16287-C-hca@linux.ibm.com/
-Link: https://github.com/ClangBuiltLinux/linux/issues/859
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
----
-s390 llvm-objcopy support may be backported to LLVM 18.1.0 in time for
-the final release.
-
-https://github.com/llvm/llvm-project/pull/82324
-
-s390 ld.lld has already made it into release/18.x:
-
-https://github.com/llvm/llvm-project/commit/0a44c3792a6ff799df5f100670d7e19d1bc49f03
-
-If the objcopy change makes 18.1.0 final, features + this change should
-build cleanly with LLVM 18.1.0+ using LLVM=1 :)
----
- arch/s390/boot/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/s390/boot/Makefile b/arch/s390/boot/Makefile
-index aecafabc2054..294f08a8811a 100644
---- a/arch/s390/boot/Makefile
-+++ b/arch/s390/boot/Makefile
-@@ -60,9 +60,9 @@ clean-files += vmlinux.map
- 
- quiet_cmd_section_cmp = SECTCMP $*
- define cmd_section_cmp
--	s1=`$(OBJDUMP) -t -j "$*" "$<" | sort | \
-+	s1=`$(OBJDUMP) -t "$<" | grep "\s$*\s\+" | sort | \
- 		sed -n "/0000000000000000/! s/.*\s$*\s\+//p" | sha256sum`; \
--	s2=`$(OBJDUMP) -t -j "$*" "$(word 2,$^)" | sort | \
-+	s2=`$(OBJDUMP) -t "$(word 2,$^)" | grep "\s$*\s\+" | sort | \
- 		sed -n "/0000000000000000/! s/.*\s$*\s\+//p" | sha256sum`; \
- 	if [ "$$s1" != "$$s2" ]; then \
- 		echo "error: section $* differs between $< and $(word 2,$^)" >&2; \
-
----
-base-commit: 778666df60f0d96f215e33e27448de47a2207fb3
-change-id: 20240220-s390-work-around-llvm-objdump-t-j-bf8dcdc4f291
-
-Best regards,
 -- 
-Nathan Chancellor <nathan@kernel.org>
+2.40.1
 
 
