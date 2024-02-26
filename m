@@ -1,142 +1,142 @@
-Return-Path: <linux-s390+bounces-2150-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-2154-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B4D98674AC
-	for <lists+linux-s390@lfdr.de>; Mon, 26 Feb 2024 13:22:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D29EC8675B8
+	for <lists+linux-s390@lfdr.de>; Mon, 26 Feb 2024 13:55:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 94F411C22BA7
-	for <lists+linux-s390@lfdr.de>; Mon, 26 Feb 2024 12:22:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0F4941C237E6
+	for <lists+linux-s390@lfdr.de>; Mon, 26 Feb 2024 12:55:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E0491D53D;
-	Mon, 26 Feb 2024 12:22:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B1347F7EC;
+	Mon, 26 Feb 2024 12:55:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="C5V2eFUU"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aiF3CKFo"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17591B27D;
-	Mon, 26 Feb 2024 12:22:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC558002E
+	for <linux-s390@vger.kernel.org>; Mon, 26 Feb 2024 12:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708950141; cv=none; b=tGhIU6t9/PAT9duF0RCwOoelXoI4ygyEo6HlU/JwGtgwG8kbzoqiSrXtdqp1PqOg38ye1tynMDU5edt9vbfWq9ZvoUekvqfHiYWYAS1J0TJQuaGmbTFHnZYDGbepVCOS1Aj1857vCl8FAxURnoYXlsgZuQ/TOFvXg6ISZxRC9Kg=
+	t=1708952121; cv=none; b=lgUe+1rEDW7p++RuBgQqlUG+5JvbaionwO07AITm6Smd5CyoKA1iqNNXKHKUzAwqSdUBqFi4bXElOIcXCfg56cRdLHH6bVbLYmAWNHL68PESRopkBKRTHMBfxOAwH9G8uCmrESqfdLYkb+VObEbWxkdTPnYXWW+K/2lq92gv1wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708950141; c=relaxed/simple;
-	bh=QFPvDa2lxmo4YOn1ORSLR33cthEAeOK/nOOiHFx4OGM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WOmU4hpyC/MnNYvKLHslFWNZulwQZexlhIkon344Gr4zWDnSpCyqUxgyFvmHPVSFpDutMt6oC1rOproF1hKwj2nSf6wmcfQRn5QdwyFP+i/PDOsVON6CMjWt2VW8aIFU4cRRZnWyKNvH9nrY+yhsadQXpk8neuPMvWxD0VfONbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=C5V2eFUU; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1708952121; c=relaxed/simple;
+	bh=pxoza3HTK4aEM0yoDZZn3CQlIl4aJ5/4N0lcwlV+Vg8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uO17aOfWv6o2UO3gqcPO+ADtTEwsmrZkDhp3GOkvnzC7hs/4qDO5cY3hBDAu2t5aVx5Aq1JvOJnZ3+PNqCHBp6FbkdcACUnh7ziNTIqM2QworCJCcGC2F9Vs/uteyDKaYJksgghRHTkUrmeF5Er2uZg/ABhYNMQa5FZDZ6y9Ew0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aiF3CKFo; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41QBHxf8017101;
-	Mon, 26 Feb 2024 12:22:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : content-transfer-encoding
- : mime-version; s=pp1; bh=VyO/Bn9rRziw5b+b8H3zbS3vRf3SyqHOy0xyWMtCGEA=;
- b=C5V2eFUU/Lq7vAdwpvXuel4JDv8yqamSRuALt99g9NF3N4qy9OwqZObrBmdyk03TY2BN
- Y/eOJpMwC/TZ9qZmLsFTNSaD1NXIRzQ3dQIjqZC82Y6adb6rnHQ+yDV/a9lpBeYBUwjb
- 2yFcIYcEW5nGBJFn0LUGyLYI5x08AbJ0ji3s0ffq/ZHSZAbQXZXsQSOk3MOKvGBh4rpn
- IpRveIVroBU5xWAh3zEhvLDpqndONZA9ICmBLVcYfYJ28N0w8CUmYG8w3XL1VzNX25KH
- q4+mrdjM5Ughk0ycQubFA60s2fNlshNzn2n1uJVuEnR6qMhtsWMTge82V/ws49nvnAGw Hg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wgsmvharc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 12:22:18 +0000
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41QBJSSs022278;
-	Mon, 26 Feb 2024 12:22:18 GMT
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41QCrg0h019519;
+	Mon, 26 Feb 2024 12:55:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=MTTKM4lAsqhrHQGT9bk4v2RhnpxvXSCKUbRyxVSpChk=;
+ b=aiF3CKFoXgZVG4CbuH9tKcud+KWaa8WFw8g7AV7KXlGF0IFnlHqAIR2IgM3IawedvIC1
+ xUZMZ4bvNOWafXPYMhUWMt4ZifSHtuBFPHL7wCvPJC0NZ9gJFG7DlFkTZ1ifYh8JN0cG
+ FUpczilzOq5u4oQXyaUid/8a9nh9JU+0svbzmVTmGo/Neacr3J6v2Sc0zdGYxgToJqxg
+ nPG04Pb3OeUmYMRHTCzmKAut8PR7OjIyFnbROhy/nMRNxNPXOLB51dxvhIeLPMXTZCx6
+ RTvY8fRkXfjwofjPZDQpO3TqfVLNJgL2uEs3RFqHBCJ3V8sWYD8RVft9FGzPRX2Hp5RC 9A== 
 Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wgsmvhapt-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wgu1v811p-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 12:22:18 +0000
+	Mon, 26 Feb 2024 12:55:08 +0000
 Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41Q9x4uF023910;
-	Mon, 26 Feb 2024 12:22:17 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wfw0k0jvx-1
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41QA6jci024144;
+	Mon, 26 Feb 2024 12:55:08 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wfw0k0qns-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 12:22:17 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41QCMBJW12255798
+	Mon, 26 Feb 2024 12:55:08 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41QCt2im39649648
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 26 Feb 2024 12:22:13 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id ACB0120040;
-	Mon, 26 Feb 2024 12:22:11 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F111D2004B;
-	Mon, 26 Feb 2024 12:22:10 +0000 (GMT)
-Received: from li-9fd7f64c-3205-11b2-a85c-df942b00d78d.fritz.box (unknown [9.171.77.191])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 26 Feb 2024 12:22:10 +0000 (GMT)
-From: Janosch Frank <frankja@linux.ibm.com>
-To: pbonzini@redhat.com
-Cc: kvm@vger.kernel.org, frankja@linux.ibm.com, david@redhat.com,
-        borntraeger@linux.ibm.com, cohuck@redhat.com,
-        linux-s390@vger.kernel.org, imbrenda@linux.ibm.com,
-        seiden@linux.ibm.com, nsg@linux.ibm.com, farman@linux.ibm.com,
-        agordeev@linux.ibm.com
-Subject: [GIT PULL 3/3] KVM: s390: selftest: memop: Fix undefined behavior
-Date: Mon, 26 Feb 2024 13:13:08 +0100
-Message-ID: <20240226122059.58099-4-frankja@linux.ibm.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240226122059.58099-1-frankja@linux.ibm.com>
-References: <20240226122059.58099-1-frankja@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 64ySW8unw7eWraq9kQCf9cdKBuA1ykN9
-X-Proofpoint-GUID: nBb8vMWyGElU3ko5lbyI1ziYHwOPO2ZD
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	Mon, 26 Feb 2024 12:55:04 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5850620043;
+	Mon, 26 Feb 2024 12:55:02 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C88822004F;
+	Mon, 26 Feb 2024 12:55:01 +0000 (GMT)
+Received: from li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com (unknown [9.171.21.235])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 26 Feb 2024 12:55:01 +0000 (GMT)
+Date: Mon, 26 Feb 2024 13:55:00 +0100
+From: Sumanth Korikkar <sumanthk@linux.ibm.com>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: kernel test robot <lkp@intel.com>, s-vadapalli@ti.com,
+        r-gunasekaran@ti.com, rogerq@kernel.org, oe-kbuild-all@lists.linux.dev,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        iii@linux.ibm.com, agordeev@linux.ibm.com, davem@davemloft.net,
+        naresh.kamboju@linaro.org
+Subject: Re: [s390:features 97/98] Unsupported relocation type: 21
+Message-ID: <ZdyKJMEkm6r_ArrZ@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+References: <202402221404.T2TGs8El-lkp@intel.com>
+ <ZdhtYc9THmX4Ddse@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+ <20240223235939.abycpq35ydgahdz2@treble>
+ <Zdxt97Ni3p8ptNyv@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zdxt97Ni3p8ptNyv@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: RPhIPv3wNwU_IlHXDnRJCg9vYUg2zR2v
+X-Proofpoint-GUID: RPhIPv3wNwU_IlHXDnRJCg9vYUg2zR2v
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-26_09,2024-02-26_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- lowpriorityscore=0 spamscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
- phishscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402260094
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 phishscore=0 impostorscore=0 spamscore=0 mlxlogscore=661
+ malwarescore=0 suspectscore=0 mlxscore=0 bulkscore=0 lowpriorityscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402260097
 
-From: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+On Mon, Feb 26, 2024 at 11:54:50AM +0100, Sumanth Korikkar wrote:
+> Hi Josh,
+> 
+> On Fri, Feb 23, 2024 at 03:59:39PM -0800, Josh Poimboeuf wrote:
+> > On Fri, Feb 23, 2024 at 11:03:13AM +0100, Sumanth Korikkar wrote:
+> > > In the random config generated by lkp test robot
+> > > 
+> > >  CONFIG_TI_CPSW=m
+> > >  CONFIG_TI_DAVINCI_EMAC=y
+> > > 
+> > > In drivers/net/ethernet/ti/Makefile:
+> > >  11 obj-$(CONFIG_TI_DAVINCI_EMAC) += ti_davinci_emac.o
+> > >  12 ti_davinci_emac-y := davinci_emac.o davinci_cpdma.o
+> > >  ...
+> > >  16 obj-$(CONFIG_TI_CPSW) += ti_cpsw.o
+> > >  17 ti_cpsw-y := cpsw.o davinci_cpdma.o cpsw_ale.o cpsw_priv.o cpsw_sl.o cpsw_ethtool.o
+> > > 
+> > > Here davinci_cpdma.o is used in both   obj-$(CONFIG_TI_DAVINCI_EMAC) and
+> > > obj-$(CONFIG_TI_CPSW), one built as inbuilt and one built as module
+> > > correspondingly (randconfig)
+> > > 
+> > > This leads to conflict in Kbuild and results in linking  davinci_cpdma.o
+> > > in vmlinux.
+> > > * However, davinci_cpdma.o is built with -DMODULE -fPIC.
+> > > * vmlinux is built with -fno-PIE.
+> > > 
+> > > This leads to R_390_GOTENT and R_390_GOTDBL entries in vmlinux, which is
+> > > not expected when building kernel with -fno-PIE.
+> > 
+> > Nice.
+> > 
+> > I suppose the current s390 memory model wouldn't support removing
+> > -fPIC for modules?
+> 
+> Answer from our toolchain team - Andreas Krebbel: It should be ideally
+> feasible to build modules without -fPIC on s390.
 
-If an integer's type has x bits, shifting the integer left by x or more
-is undefined behavior.
-This can happen in the rotate function when attempting to do a rotation
-of the whole value by 0.
-
-Fixes: 0dd714bfd200 ("KVM: s390: selftest: memop: Add cmpxchg tests")
-Signed-off-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
-Link: https://lore.kernel.org/r/20240111094805.363047-1-nsg@linux.ibm.com
-Acked-by: Janosch Frank <frankja@linux.ibm.com>
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-Message-Id: <20240111094805.363047-1-nsg@linux.ibm.com>
----
- tools/testing/selftests/kvm/s390x/memop.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/tools/testing/selftests/kvm/s390x/memop.c b/tools/testing/selftests/kvm/s390x/memop.c
-index bb3ca9a5d731..4ec8d0181e8d 100644
---- a/tools/testing/selftests/kvm/s390x/memop.c
-+++ b/tools/testing/selftests/kvm/s390x/memop.c
-@@ -489,6 +489,8 @@ static __uint128_t rotate(int size, __uint128_t val, int amount)
- 
- 	amount = (amount + bits) % bits;
- 	val = cut_to_size(size, val);
-+	if (!amount)
-+		return val;
- 	return (val << (bits - amount)) | (val >> amount);
- }
- 
--- 
-2.43.2
-
+FWIW, I'm looking into this right now. Let's see how things go.
 
