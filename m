@@ -1,46 +1,46 @@
-Return-Path: <linux-s390+bounces-2266-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-2267-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7786286D4C7
-	for <lists+linux-s390@lfdr.de>; Thu, 29 Feb 2024 21:48:25 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BAAD986D50F
+	for <lists+linux-s390@lfdr.de>; Thu, 29 Feb 2024 21:54:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 31F2028448F
-	for <lists+linux-s390@lfdr.de>; Thu, 29 Feb 2024 20:48:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5B3ADB26472
+	for <lists+linux-s390@lfdr.de>; Thu, 29 Feb 2024 20:54:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A93915B97B;
-	Thu, 29 Feb 2024 20:39:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D12AC15CA88;
+	Thu, 29 Feb 2024 20:40:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KLJHsXEf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ce5Dpriv"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3DE14EA2F;
-	Thu, 29 Feb 2024 20:39:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960A715CA80;
+	Thu, 29 Feb 2024 20:40:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709239194; cv=none; b=i5Kt33weVYlz+eXgaA/rXMYrGbXdLi4xy9D1HL/j2YWrVFwDPOuXLOsLcDL93UGQnNDwC9rEhLTLijhzgMJpg8CL7HqL549V0k5arLRAhqis11QrgYvhGrB6IfMgR1bmPK3+rNZyPS3efJwt31HA+KccgKTtNUs+z84HTjDUTBQ=
+	t=1709239252; cv=none; b=VLkQUvCevwdCOWc51T61p/IxxvyywYkqQaqwsJOGD4pecS3q3Y4nTSLuefQuNPWisobmWPWH34tcpGzSwLvYfIR3ZuHi6pcqoaNxsB47Nh2XclJbH2aC5rTa/uVuA8q0QxFmLXHfwWUreF1+h3k8smAlX4jgAnw9aUnLtlGNfrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709239194; c=relaxed/simple;
+	s=arc-20240116; t=1709239252; c=relaxed/simple;
 	bh=74kBJTUxv1Q4HgbcKWpYMeYUi0KuiFLvBp1n22KuFJM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ucAaYf6nxf6FzjVLuztZF1snsWiB42Sdn5im9Z4FvsD7iJxh/uOgAToS4aian9fbrte8jCIYUCx/c3tRFa/H92Yq4rta+YuPTc69f5lqPMykwcUiuaE3lg8LWjVYoSjQcAa11EODQ+/GpchclV4G5d/lTGIXPPTjEyPFVIY3LhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KLJHsXEf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBC79C43601;
-	Thu, 29 Feb 2024 20:39:52 +0000 (UTC)
+	 MIME-Version; b=cpa0vxhK0IQXtq+ukRESvXloeYaWITsJK2ywWqyODCuoh3Q9FY/KrqN/jiUNdShQIWXZFxAI/WnilkVNKlyLltzwPEyjHzhV7uEro+fWShGfjuPyRnHDKDFYwjmEdxYlejfrNAMdLJjTDWEJpH+CotkCnvXGMsDvUSJyek4qMFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ce5Dpriv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDBCFC433C7;
+	Thu, 29 Feb 2024 20:40:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709239194;
+	s=k20201202; t=1709239252;
 	bh=74kBJTUxv1Q4HgbcKWpYMeYUi0KuiFLvBp1n22KuFJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KLJHsXEfpHwQp+dPRbHUulzog5Uel1dSQoZugbvjlkg96beYw4DBT/1V221WsKj4I
-	 2RCvvMICH4dWFaN/9kpxKJKRiutE8HRb8nfOJODwDYqnvALqCqZHJM9xYLwR114Etv
-	 YPQMB/C2ufFObuL4iMTEjM06q7PQXlJ2WYXDZ5epVPcFELohrnuvdyUct/McPCsFS8
-	 UbfGVmLOdNGy3DS8hM8caa19pgPELhq2Lpt/vQ8iiiICh+Fxfzbh6bASoyYi9HKskq
-	 cEaESM2G4ZSJdL5L3AHTklEz8pXZajlcnHEMSvJj0IctckoAYs0iTsMlcvGF2HK7n2
-	 9Y5QvMqkXqSIw==
+	b=Ce5Dpriv6xqSS+1if9tmuN75n5ljt3A62gLUL8SMfggqlkQrnL2YdTxTfUQSed4Fd
+	 UzkYKPZemvgWk9DkhA3jz7/bRV0UDkbXoBRNJSt4r8sYbO8zGuIOxwVaiHiC8oHxqK
+	 c/KIrJasraTkEjYQSGHTLy6EnI0U+8DL2QcwHCaCDusTAcqqvLNuouwj+hBnkLWtNn
+	 SMQ3w48KzFHL36iIy/WN/pjZ91Hkus2zXk4NmLLAl9kT5CZ5RuAjbOzrYaC39WGG02
+	 UNHB/oqw6RdEGMhz+ZUxDoA1zYPqoBhPHBaD1PVHP7x0+AI1twtq+/d2jI/gU/Z1pl
+	 UV/dxWcr1vPmA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -54,12 +54,12 @@ Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
 	pabeni@redhat.com,
 	linux-s390@vger.kernel.org,
 	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 09/22] net/iucv: fix the allocation size of iucv_path_table array
-Date: Thu, 29 Feb 2024 15:39:02 -0500
-Message-ID: <20240229203933.2861006-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 07/12] net/iucv: fix the allocation size of iucv_path_table array
+Date: Thu, 29 Feb 2024 15:40:29 -0500
+Message-ID: <20240229204039.2861519-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240229203933.2861006-1-sashal@kernel.org>
-References: <20240229203933.2861006-1-sashal@kernel.org>
+In-Reply-To: <20240229204039.2861519-1-sashal@kernel.org>
+References: <20240229204039.2861519-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.18
+X-stable-base: Linux 6.1.79
 Content-Transfer-Encoding: 8bit
 
 From: Alexander Gordeev <agordeev@linux.ibm.com>
