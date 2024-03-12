@@ -1,230 +1,136 @@
-Return-Path: <linux-s390+bounces-2486-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-2490-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD15C878CC2
-	for <lists+linux-s390@lfdr.de>; Tue, 12 Mar 2024 03:09:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5BFD6878CD6
+	for <lists+linux-s390@lfdr.de>; Tue, 12 Mar 2024 03:10:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 04B801C20314
-	for <lists+linux-s390@lfdr.de>; Tue, 12 Mar 2024 02:09:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F3F7B2826DE
+	for <lists+linux-s390@lfdr.de>; Tue, 12 Mar 2024 02:10:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0F6E1FA2;
-	Tue, 12 Mar 2024 02:09:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F170A8F5D;
+	Tue, 12 Mar 2024 02:10:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TQ1qkU7K"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="B+cUXyME"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5E779C0;
-	Tue, 12 Mar 2024 02:09:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3414D6FB9;
+	Tue, 12 Mar 2024 02:10:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710209379; cv=none; b=VPNeafI1D45HEKvcRtm24FUGzoV5crV5QHQlbuPLSuIWGh0FyUPfdOphZrdZZYJ/GUpE195rC7K2UA3x22IZ3rR3ZnBQZh2L3YXpwGMKawcFCxTz0kejccapdNOO6Plwpzh2j3iAFtKAJw7e18la8Ac5NHLan72UINkc1TPta6A=
+	t=1710209425; cv=none; b=qCvFsIFkZsrBXy8WcoVAEqcA4DoQqMN0LFuju9K1FuY6y4ofTxP9PSWLItNLl7AQb8sbde+x+px8BmWVPIA8q74cCDuW+JSbXmhFYX0ucJty3nc5lrGQBoVCW2nMiXVyasw9oIQaFFhK3FMPzsxZEXh6DpBVpIwaV6bkNbSSiok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710209379; c=relaxed/simple;
-	bh=MUN7lvB0UfY/wJL8qyyPEvDzT/66bkDUGhfDsuGFPYg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UG3dhBTmHuSUFLgvolaqyuRF7bRhIdX07GZ8igRbuAE94zHvc+u2qzmw313NXbfJq1IVD4uB0CSFflXQlHkLuxYjNqI8bMvLUyM+563UIELv4P0Xr2OMNPCAQzQ2Y4R1YJO16TiUMHaaPF/cAxR741iQwjoGV678iEqpbsKPPkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TQ1qkU7K; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-33e285a33bdso2931514f8f.2;
-        Mon, 11 Mar 2024 19:09:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710209376; x=1710814176; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O7OazjLh3TJZJaBxgYhNmL2BYNu/aO7IPEXCMBRgvJk=;
-        b=TQ1qkU7K1LIz072vCKojVBdHTguIKr0PDP7G0Ksy5EyEQPIaeXfwq38iCT1nUD+21p
-         vkRH3hL+wKcbQef5pi4j0M3JlEmsMP2bJ4DvsxlFfVfMIZ0zBGmZukYRQQxjdHVnfMhc
-         GxH/hXrAX48DS0aUHp4ideUmS2OBKXA7QscPpFM8G5O4RlVuAbdph1gI8xKmJWjLg83o
-         GP2E0/iW1ad6hrMUqzL+VjDG5pJbkVlO2hvYF4zKC68M/pd1/6rrWWFfOYjp4PIZDvkk
-         LpwSwu/I6WsXRspS/+fq9UgpxUAFvHOPzFFySkMiVNS+DxkfVhwHn8TXy0he4Ap4e9ja
-         D6Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710209376; x=1710814176;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=O7OazjLh3TJZJaBxgYhNmL2BYNu/aO7IPEXCMBRgvJk=;
-        b=OApJ2pE/DB1ratz3ZA0YvEkbfTrND8RRd1DH1uHOsNlLOoHezhwCNdE6dr7AOXH0BT
-         HZNIGvOAI16q1oJibESBXEUnKjZvtLBJ8oxzBdbJQU/2as0LzT2VhxqFNiGcoiNpNvIR
-         0vBp9mWYghuRae5i0l5dLkDLdTX6aBV2LBFy3NmDmph6FZeLom8NhuS0NoDQYX/MO9vJ
-         91huYSEJs22Y2EhPgJfQZTZldZ0mVQ0OFtmboUkqSMGsNMbCbnpcmw7QKZRO/fiI5WG1
-         muTWylxTyXDjwWaCplzUr8dc72Gtmq+UdWAbmmF38a1Sl5fgGcbJ1AKexYk/Q1WcIjjM
-         B3vA==
-X-Forwarded-Encrypted: i=1; AJvYcCUdsa5COikWxxa3WK5bu3L71y8Gd3wDhzRdUAXSvUFEZcNh+2mZignmRPbnpC0eB2qRwxwcmKWi79p4rIVkri2SPmTTs18ikStMH4bNknPez/5THY6x7GEBb3XnPUvd3eq3JF4aw6nau6wMaQsEMT1BfrypKj9ZNAwauISaVEwV2+oZUF61pq8AI9C1fDkbA5oWjifhw6sXbRn9b8GZLrftGvck80ve215iotIu7/5RRJbX19rpVUr/BwhHM+YDVSIqCk0ZnRaB3GecFyYRnX/NGfDhnumsNCQJ7g==
-X-Gm-Message-State: AOJu0YzNar4qdJGkYE/rKROcW6n+fqhheBajHhfpM0EhGGs1VLde8ApX
-	BuXVdpTk+vIv3I+0V8H5LOtCYizYEFIR7qu3WoJC91mjLhwkCjLQdIgABvTCrb5z0RKzimQsDPO
-	XycjVn8jqkRBWJbXfVdIGbqgWqd0=
-X-Google-Smtp-Source: AGHT+IEicWbuFZqdg/xqQNzdGQlw9skotEo3jcZk3zVibmZ6sCWBpxxOKUqsLebol1eFrvMKXlFvA4Sc4ycQD3B2uCo=
-X-Received: by 2002:a5d:424d:0:b0:33e:7adc:516c with SMTP id
- s13-20020a5d424d000000b0033e7adc516cmr5003733wrr.57.1710209376134; Mon, 11
- Mar 2024 19:09:36 -0700 (PDT)
+	s=arc-20240116; t=1710209425; c=relaxed/simple;
+	bh=7sM4it/sLlFJgMn6vXgBs9cjjyYlwmbxnWNAQnNS6to=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fO0kdCoPewrWmzeNFmjpxdcZpDe91Qu39BiEaxHtyzC8VjFH5B8riONx12fNlddUy7j87WSQuu9R/pM2e07VjbK9IxCnkELU1E4LgmM3wemUtLYBdUdZ7PMCuemL5gepuT+skz9Pxdd5Pl3onC8G6qGAdPkg5mO0BcSelLtQmrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=B+cUXyME; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1710209415; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=93N4BPytBZxlC/Q2oeD9Rd8EctJjuaPCcnJKvMa7iTk=;
+	b=B+cUXyMEIbHlJuKhgv5FhbA9dv85kXWxnl4dNBmU08iaAii7xROrlkXHDgOgQnrfNLcBnSrpVLiqyHpalg4TqqnyMWz4v0RtIbR/kUWBxe9LDbpnbQ45YcTc3ix73C+vE1AMXTDh/ti8LU5why8oTHSj05ztjm44TpCACESVphY=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R811e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=25;SR=0;TI=SMTPD_---0W2JwVQv_1710209413;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W2JwVQv_1710209413)
+          by smtp.aliyun-inc.com;
+          Tue, 12 Mar 2024 10:10:14 +0800
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: virtualization@lists.linux.dev
+Cc: Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Vadim Pasternak <vadimp@nvidia.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Cornelia Huck <cohuck@redhat.com>,
+	Halil Pasic <pasic@linux.ibm.com>,
+	Eric Farman <farman@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	linux-um@lists.infradead.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: [PATCH vhost v3 0/4] refactor the params of find_vqs()
+Date: Tue, 12 Mar 2024 10:10:09 +0800
+Message-Id: <20240312021013.88656-1-xuanzhuo@linux.alibaba.com>
+X-Mailer: git-send-email 2.32.0.3.g01195cf9f
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240311093526.1010158-1-dongmenglong.8@bytedance.com>
- <20240311093526.1010158-2-dongmenglong.8@bytedance.com> <CAADnVQKQPS5NcvEouH4JqZ2fKgQAC+LtcwhX9iXYoiEkF_M94Q@mail.gmail.com>
- <CALz3k9i5G5wWi+rtvHPwVLOUAXVMCiU_8QUZs87TEYgR_0wpPA@mail.gmail.com>
-In-Reply-To: <CALz3k9i5G5wWi+rtvHPwVLOUAXVMCiU_8QUZs87TEYgR_0wpPA@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Mon, 11 Mar 2024 19:09:25 -0700
-Message-ID: <CAADnVQJ_ZCzMmT1aBsNXEBFfYNSVBdBXmLocjR0PPEWtYQrQFw@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH bpf-next v2 1/9] bpf: tracing: add support
- to record and check the accessed args
-To: =?UTF-8?B?5qKm6b6Z6JGj?= <dongmenglong.8@bytedance.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	David Ahern <dsahern@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	X86 ML <x86@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Quentin Monnet <quentin@isovalent.com>, 
-	bpf <bpf@vger.kernel.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, 
-	Network Development <netdev@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Git-Hash: 8d1a4cfe2924
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 11, 2024 at 7:01=E2=80=AFPM =E6=A2=A6=E9=BE=99=E8=91=A3 <dongme=
-nglong.8@bytedance.com> wrote:
->
-> On Tue, Mar 12, 2024 at 9:46=E2=80=AFAM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-> >
-> > On Mon, Mar 11, 2024 at 2:34=E2=80=AFAM Menglong Dong
-> > <dongmenglong.8@bytedance.com> wrote:
-> > >
-> > > In this commit, we add the 'accessed_args' field to struct bpf_prog_a=
-ux,
-> > > which is used to record the accessed index of the function args in
-> > > btf_ctx_access().
-> > >
-> > > Meanwhile, we add the function btf_check_func_part_match() to compare=
- the
-> > > accessed function args of two function prototype. This function will =
-be
-> > > used in the following commit.
-> > >
-> > > Signed-off-by: Menglong Dong <dongmenglong.8@bytedance.com>
-> > > ---
-> > >  include/linux/bpf.h |   4 ++
-> > >  kernel/bpf/btf.c    | 108 ++++++++++++++++++++++++++++++++++++++++++=
-+-
-> > >  2 files changed, 110 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-> > > index 95e07673cdc1..0f677fdcfcc7 100644
-> > > --- a/include/linux/bpf.h
-> > > +++ b/include/linux/bpf.h
-> > > @@ -1461,6 +1461,7 @@ struct bpf_prog_aux {
-> > >         const struct btf_type *attach_func_proto;
-> > >         /* function name for valid attach_btf_id */
-> > >         const char *attach_func_name;
-> > > +       u64 accessed_args;
-> > >         struct bpf_prog **func;
-> > >         void *jit_data; /* JIT specific data. arch dependent */
-> > >         struct bpf_jit_poke_descriptor *poke_tab;
-> > > @@ -2565,6 +2566,9 @@ struct bpf_reg_state;
-> > >  int btf_prepare_func_args(struct bpf_verifier_env *env, int subprog)=
-;
-> > >  int btf_check_type_match(struct bpf_verifier_log *log, const struct =
-bpf_prog *prog,
-> > >                          struct btf *btf, const struct btf_type *t);
-> > > +int btf_check_func_part_match(struct btf *btf1, const struct btf_typ=
-e *t1,
-> > > +                             struct btf *btf2, const struct btf_type=
- *t2,
-> > > +                             u64 func_args);
-> > >  const char *btf_find_decl_tag_value(const struct btf *btf, const str=
-uct btf_type *pt,
-> > >                                     int comp_idx, const char *tag_key=
-);
-> > >  int btf_find_next_decl_tag(const struct btf *btf, const struct btf_t=
-ype *pt,
-> > > diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-> > > index 170d017e8e4a..c2a0299d4358 100644
-> > > --- a/kernel/bpf/btf.c
-> > > +++ b/kernel/bpf/btf.c
-> > > @@ -6125,19 +6125,24 @@ static bool is_int_ptr(struct btf *btf, const=
- struct btf_type *t)
-> > >  }
-> > >
-> > >  static u32 get_ctx_arg_idx(struct btf *btf, const struct btf_type *f=
-unc_proto,
-> > > -                          int off)
-> > > +                          int off, int *aligned_idx)
-> > >  {
-> > >         const struct btf_param *args;
-> > >         const struct btf_type *t;
-> > >         u32 offset =3D 0, nr_args;
-> > >         int i;
-> > >
-> > > +       if (aligned_idx)
-> > > +               *aligned_idx =3D -ENOENT;
-> > > +
-> > >         if (!func_proto)
-> > >                 return off / 8;
-> > >
-> > >         nr_args =3D btf_type_vlen(func_proto);
-> > >         args =3D (const struct btf_param *)(func_proto + 1);
-> > >         for (i =3D 0; i < nr_args; i++) {
-> > > +               if (aligned_idx && offset =3D=3D off)
-> > > +                       *aligned_idx =3D i;
-> > >                 t =3D btf_type_skip_modifiers(btf, args[i].type, NULL=
-);
-> > >                 offset +=3D btf_type_is_ptr(t) ? 8 : roundup(t->size,=
- 8);
-> > >                 if (off < offset)
-> > > @@ -6207,7 +6212,7 @@ bool btf_ctx_access(int off, int size, enum bpf=
-_access_type type,
-> > >                         tname, off);
-> > >                 return false;
-> > >         }
-> > > -       arg =3D get_ctx_arg_idx(btf, t, off);
-> > > +       arg =3D get_ctx_arg_idx(btf, t, off, NULL);
-> > >         args =3D (const struct btf_param *)(t + 1);
-> > >         /* if (t =3D=3D NULL) Fall back to default BPF prog with
-> > >          * MAX_BPF_FUNC_REG_ARGS u64 arguments.
-> > > @@ -6217,6 +6222,9 @@ bool btf_ctx_access(int off, int size, enum bpf=
-_access_type type,
-> > >                 /* skip first 'void *__data' argument in btf_trace_##=
-name typedef */
-> > >                 args++;
-> > >                 nr_args--;
-> > > +               prog->aux->accessed_args |=3D (1 << (arg + 1));
-> > > +       } else {
-> > > +               prog->aux->accessed_args |=3D (1 << arg);
-> >
-> > What do you need this aligned_idx for ?
-> > I'd expect that above "accessed_args |=3D (1 << arg);" is enough.
-> >
->
-> Which aligned_idx? No aligned_idx in the btf_ctx_access(), and
-> aligned_idx is only used in the btf_check_func_part_match().
->
-> In the btf_check_func_part_match(), I need to compare the
-> t1->args[i] and t2->args[j], which have the same offset. And
-> the aligned_idx is to find the "j" according to the offset of
-> t1->args[i].
+This pathset is splited from the
 
-And that's my question.
-Why you don't do the max of accessed_args across all attach
-points and do btf_check_func_type_match() to that argno
-instead of nargs1.
-This 'offset +=3D btf_type_is_ptr(t1) ? 8 : roundup...
-is odd.
+     http://lore.kernel.org/all/20240229072044.77388-1-xuanzhuo@linux.alibaba.com
+
+That may needs some cycles to discuss. But that notifies too many people.
+
+But just the four commits need to notify so many people.
+And four commits are independent. So I split that patch set,
+let us review these first.
+
+The patch set try to  refactor the params of find_vqs().
+Then we can just change the structure, when introducing new
+features.
+
+Thanks.
+
+v3:
+  1. fix the bug: "assignment of read-only location '*cfg.names'"
+
+v2:
+  1. add kerneldoc for "struct vq_transport_config" @ilpo.jarvinen
+
+v1:
+  1. fix some comments from ilpo.jarvinen@linux.intel.com
+
+
+
+Xuan Zhuo (4):
+  virtio: find_vqs: pass struct instead of multi parameters
+  virtio: vring_create_virtqueue: pass struct instead of multi
+    parameters
+  virtio: vring_new_virtqueue(): pass struct instead of multi parameters
+  virtio_ring: simplify the parameters of the funcs related to
+    vring_create/new_virtqueue()
+
+ arch/um/drivers/virtio_uml.c             |  31 ++--
+ drivers/platform/mellanox/mlxbf-tmfifo.c |  24 ++--
+ drivers/remoteproc/remoteproc_virtio.c   |  31 ++--
+ drivers/s390/virtio/virtio_ccw.c         |  33 ++---
+ drivers/virtio/virtio_mmio.c             |  30 ++--
+ drivers/virtio/virtio_pci_common.c       |  60 ++++----
+ drivers/virtio/virtio_pci_common.h       |   9 +-
+ drivers/virtio/virtio_pci_legacy.c       |  16 ++-
+ drivers/virtio/virtio_pci_modern.c       |  38 +++--
+ drivers/virtio/virtio_ring.c             | 173 ++++++++---------------
+ drivers/virtio/virtio_vdpa.c             |  45 +++---
+ include/linux/virtio_config.h            |  85 ++++++++---
+ include/linux/virtio_ring.h              |  93 +++++++-----
+ tools/virtio/virtio_test.c               |   4 +-
+ tools/virtio/vringh_test.c               |  28 ++--
+ 15 files changed, 363 insertions(+), 337 deletions(-)
+
+--
+2.32.0.3.g01195cf9f
+
 
