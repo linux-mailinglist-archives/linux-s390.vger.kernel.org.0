@@ -1,310 +1,300 @@
-Return-Path: <linux-s390+bounces-2586-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-2588-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 182B887C9C5
-	for <lists+linux-s390@lfdr.de>; Fri, 15 Mar 2024 09:17:31 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDC5E87CB5F
+	for <lists+linux-s390@lfdr.de>; Fri, 15 Mar 2024 11:29:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D3CD281103
-	for <lists+linux-s390@lfdr.de>; Fri, 15 Mar 2024 08:17:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1D2FC1C20AC1
+	for <lists+linux-s390@lfdr.de>; Fri, 15 Mar 2024 10:29:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FEB4175A7;
-	Fri, 15 Mar 2024 08:17:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E7EA1865A;
+	Fri, 15 Mar 2024 10:29:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="BnLnF6jp"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="B52dFGlI"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5779D17581
-	for <linux-s390@vger.kernel.org>; Fri, 15 Mar 2024 08:17:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E28182AE;
+	Fri, 15 Mar 2024 10:29:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710490646; cv=none; b=A1yP73LvsKWp92w64nZ1WEQ2OKZWmmf/IML0/zVsNZ283tJISHd+9H+GnOE5dpT4/+bsx8+ZBles5mhH2zvg9BicbkyUleQNe0ThJ4pvW4uc2TK1+Llg9rzFAs98K0CXBQxnI6gBDcTVf7apY9L70ZD/pjEeIJ+6hkck8b31T2U=
+	t=1710498591; cv=none; b=tC6WJAb9Oi2/vy0+ibG4qdraPZgldfLIZ5C2S4MBOYPcBFX4qRCinDuMDqGxLzopZvvIOHxd0fYeWOD2LPBEa4seALVJD1eMmJIsPVQ3OHDii2l2xVuy2SWZJdiwDMHbPxdMxTIDuD9FW7E1fDrghvcs3PBtsDV/XgyAybc0J9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710490646; c=relaxed/simple;
-	bh=3Veip/OxCnGKCQ+Abe6TiS3hdoh9knWDIAqJQrDZQBc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gsF2Sb6AsfKNccWpWnUok1kE4B+lImG0Q42XnUwlrP5TaONYFv1hHQpMMTXmF6TAJlfLnEL/suX43do5+qb08ok/Qyzr/0wn008rVMC+1JDKYrmTjmnZu5aMPvKycJcLPg63U0ow4AaPSa8CAroa/TwHLi4LtzV15bpyjwG8vlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=BnLnF6jp; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-29c52a90417so1337354a91.1
-        for <linux-s390@vger.kernel.org>; Fri, 15 Mar 2024 01:17:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1710490644; x=1711095444; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ux+mgvQeyHLipAJjQDCARUR07kgvWhujuDpfd9PKvNE=;
-        b=BnLnF6jpTf0M3GTFjcSWetvSvIQOQ369PIgwF3aG0VASfibFMiCxnhy8vtyqhOsjyx
-         4iCua5b7xLUAUwDsGjXK/pp/XgXWUnBG6c/CKGhyio9pC/GzFGLP2/VFJWSe+yw6/QC2
-         SLs4tMFzW1MrA6ts1TTFeTkDa7eHXNIoux2jcNUZcTWqGHBe6mTwr32HfYOFkkZcXOe2
-         z2RVX0Hq5om3SYzgJ9iR3RM98+/Fv0UMU7l6EP5buU4YPD8LDhyAIISras9vEeQp4wfc
-         3SPkE0rovMXGjiRmz7PzUbWxW1Z1HmnSlwKnklK6x/rX5v3TAVv47PoG9ldtlB1sAHTd
-         tnGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710490644; x=1711095444;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ux+mgvQeyHLipAJjQDCARUR07kgvWhujuDpfd9PKvNE=;
-        b=ETNbKXbz5sqXRh75U5/mp+QjQBmRNKldfL+aWWa03Sep4uh+aksmVsyR/FoDSeH8fS
-         6xk7EbDEv6opH2FeUiShOxzfihyQsL5YRBBB3rrmxnh/YbQ374/hYI3tKYuRGtxtpWJr
-         L2wc4JOlra4X8WxQGEGgnCU/h9ndhvzmyuq+TYhX8U6UFpSEtd16uudBKSN8osstOU14
-         zzrxxaDQRMlglf7Emt7RRiCmWi97WnfC1OjZK50uvTB6HJsYIJUwv0KErWhQD14T1RmX
-         zCdzXkwbTnD6pkolfGPe9j9Gwt9qjPIXppygv3+Fjugz6gQ2y6TPnj8PYql+A5TmUMCa
-         84nQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWJPa4GU5VpnDdm7nG6Wm33EEUahB0X3GGLwAg2POwXbC0zdnKKUddnEpK/ia47tpi8rqoDIkoExlMfQpIajmtQrj6eP8Owjbtrdw==
-X-Gm-Message-State: AOJu0YxWtLi9EcKuhzq+wYAnyaik0lVqfV97i36AbKUIELEPs3TjD54C
-	s1LAdHKrUj/+/8sdqZOjVB9MAmsclf0ZEWrrHkj6V0OqJeyrHAjpuAI5bj5yT6bqylXnDwmdNYT
-	dPb+tEQsl5BPv/36HKva0Rq2dqlcipKoyzU0NWA==
-X-Google-Smtp-Source: AGHT+IH6WVj2QW6HVMnPZetJyxE6GBO3ARfmDCsMA75RFQoJ7vWKBd9vtLcWlAX1Fz+oArSrbQ03zFV2IWXrG37YkmE=
-X-Received: by 2002:a17:90a:fa18:b0:29c:735:a758 with SMTP id
- cm24-20020a17090afa1800b0029c0735a758mr6401475pjb.19.1710490643623; Fri, 15
- Mar 2024 01:17:23 -0700 (PDT)
+	s=arc-20240116; t=1710498591; c=relaxed/simple;
+	bh=MdR9Rgj6lYbnvYBc5Ry+EeGq9GbsLqebF8J2pH4Rs2Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FXhnlyZsXxT5XUZxImAANjCQCHNnEMCvis9Iy1c9z5Uh+CJiHv7auz0sRfZvRtHejNI/UltHKFRd53weL4JsNSknmd1bqJp1FNcqANtQPcqz+SxhvHE05UL3vVfs1kFdkoVFq3BEic29ThIIZyMQdFOEPr5rsFpxcS48L3iUPDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=B52dFGlI; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42F8vKqW009801;
+	Fri, 15 Mar 2024 10:29:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=Qv/ns6i5YE/Ff9QJj3RIHIOHrMPS5bhUM3j/hsm8baA=;
+ b=B52dFGlI1KNYDOQZJtZlC9h4p0mC7L9v3qO0bsrwNNob7vpzQKEysh8hJCrb1ItfmNXO
+ jcj9e2P6uQsXPm86rqRqhwfS7aHYshA6yjCmVX+qBZ0wW60rjLbYFw+k/DXKdhN0mdhz
+ 4n6lYO2eIU8ausMb7mom93NEHxsdcCMI9vql3ZGxhdGk0Bi/r8GA0JbyXpBK7jJ8h9jb
+ XVhDgOcJKDZZfutAOT8ZPaW4Krl2NfUpmLq+fvwvW5hC5ZNuYmFzECXvMLk6GXlDMYD7
+ zmK7YNZeneVTyXn4vwVNUbxllEXykjN7+rnvgt/EY0rwr5qPzROGVlox1YVbGqn7IiIz 0A== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wvk96h0dg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 15 Mar 2024 10:29:37 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42FATalM017963;
+	Fri, 15 Mar 2024 10:29:37 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wvk96h0bq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 15 Mar 2024 10:29:36 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42F97H2l018155;
+	Fri, 15 Mar 2024 10:27:35 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ws23tue9u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 15 Mar 2024 10:27:35 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42FARUs834144638
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 15 Mar 2024 10:27:32 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 343A02005A;
+	Fri, 15 Mar 2024 10:27:30 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AFE8420043;
+	Fri, 15 Mar 2024 10:27:28 +0000 (GMT)
+Received: from [9.171.8.212] (unknown [9.171.8.212])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 15 Mar 2024 10:27:28 +0000 (GMT)
+Message-ID: <ef98b16d-2965-4297-a2ed-143b0b592a25@linux.ibm.com>
+Date: Fri, 15 Mar 2024 11:27:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240311093526.1010158-1-dongmenglong.8@bytedance.com>
- <20240311093526.1010158-2-dongmenglong.8@bytedance.com> <CAADnVQKQPS5NcvEouH4JqZ2fKgQAC+LtcwhX9iXYoiEkF_M94Q@mail.gmail.com>
- <CALz3k9i5G5wWi+rtvHPwVLOUAXVMCiU_8QUZs87TEYgR_0wpPA@mail.gmail.com>
- <CAADnVQJ_ZCzMmT1aBsNXEBFfYNSVBdBXmLocjR0PPEWtYQrQFw@mail.gmail.com>
- <CALz3k9icPePb0c4FE67q=u1U0hrePorN9gDpQrKTR_sXbLMfDA@mail.gmail.com>
- <CAADnVQLwgw8bQ7OHBbqLhcPJ2QpxiGw3fkMFur+2cjZpM_78oA@mail.gmail.com>
- <CALz3k9g9k7fEwdTZVLhrmGoXp8CE47Q+83r-AZDXrzzuR+CjVA@mail.gmail.com>
- <CAADnVQLHpi3J6cBJ0QBgCQ2aY6fWGnVvNGdfi3W-jmoa9d1eVQ@mail.gmail.com> <ZfKY6E8xhSgzYL1I@krava>
-In-Reply-To: <ZfKY6E8xhSgzYL1I@krava>
-From: =?UTF-8?B?5qKm6b6Z6JGj?= <dongmenglong.8@bytedance.com>
-Date: Fri, 15 Mar 2024 16:17:12 +0800
-Message-ID: <CALz3k9jM0eqgw1=RKQPFpn8nk4MZRadEC3ge0kRutfvN2WVbwg@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH bpf-next v2 1/9] bpf: tracing: add support
- to record and check the accessed args
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	David Ahern <dsahern@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	X86 ML <x86@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Quentin Monnet <quentin@isovalent.com>, 
-	bpf <bpf@vger.kernel.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, 
-	Network Development <netdev@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v3 01/11] net/smc: adapt SMC-D device dump for
+ Emulated-ISM
+To: Wen Gu <guwen@linux.alibaba.com>, wintera@linux.ibm.com,
+        twinkler@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, wenjia@linux.ibm.com
+Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com, alibuda@linux.alibaba.com,
+        tonylu@linux.alibaba.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, netdev@vger.kernel.org
+References: <20240312142743.41406-1-guwen@linux.alibaba.com>
+ <20240312142743.41406-2-guwen@linux.alibaba.com>
+ <caab067b-f5c3-490f-9259-262624c236b4@linux.ibm.com>
+ <a6e4c563-e1d4-44ae-bfab-a0021584220f@linux.alibaba.com>
+From: Jan Karcher <jaka@linux.ibm.com>
+Organization: IBM - Network Linux on Z
+In-Reply-To: <a6e4c563-e1d4-44ae-bfab-a0021584220f@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: oEwCmu99UV7vREH5MKSDphISc6tEivza
+X-Proofpoint-GUID: cFdS7VR90OoK6LTTeGo30vThpscFQisn
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-14_13,2024-03-13_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ malwarescore=0 spamscore=0 phishscore=0 bulkscore=0 adultscore=0
+ impostorscore=0 suspectscore=0 mlxscore=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311290000 definitions=main-2403150085
 
-On Thu, Mar 14, 2024 at 2:29=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com> wrot=
-e:
->
-> On Wed, Mar 13, 2024 at 05:25:35PM -0700, Alexei Starovoitov wrote:
-> > On Tue, Mar 12, 2024 at 6:53=E2=80=AFPM =E6=A2=A6=E9=BE=99=E8=91=A3 <do=
-ngmenglong.8@bytedance.com> wrote:
-> > >
-> > > On Wed, Mar 13, 2024 at 12:42=E2=80=AFAM Alexei Starovoitov
-> > > <alexei.starovoitov@gmail.com> wrote:
-> > > >
-> > > > On Mon, Mar 11, 2024 at 7:42=E2=80=AFPM =E6=A2=A6=E9=BE=99=E8=91=A3=
- <dongmenglong.8@bytedance.com> wrote:
-> > > > >
-> > > [......]
-> > > >
-> > > > I see.
-> > > > I thought you're sharing the trampoline across attachments.
-> > > > (since bpf prog is the same).
-> > >
-> > > That seems to be a good idea, which I hadn't thought before.
-> > >
-> > > > But above approach cannot possibly work with a shared trampoline.
-> > > > You need to create individual trampoline for all attachment
-> > > > and point them to single bpf prog.
-> > > >
-> > > > tbh I'm less excited about this feature now, since sharing
-> > > > the prog across different attachments is nice, but it won't scale
-> > > > to thousands of attachments.
-> > > > I assumed that there will be a single trampoline with max(argno)
-> > > > across attachments and attach/detach will scale to thousands.
-> > > >
-> > > > With individual trampoline this will work for up to a hundred
-> > > > attachments max.
-> > >
-> > > What does "a hundred attachments max" means? Can't I
-> > > trace thousands of kernel functions with a bpf program of
-> > > tracing multi-link?
-> >
-> > I mean what time does it take to attach one program
-> > to 100 fentry-s ?
-> > What is the time for 1k and for 10k ?
-> >
-> > The kprobe multi test attaches to pretty much all funcs in
-> > /sys/kernel/tracing/available_filter_functions
-> > and it's fast enough to run in test_progs on every commit in bpf CI.
-> > See get_syms() in prog_tests/kprobe_multi_test.c
-> >
-> > Can this new multi fentry do that?
-> > and at what speed?
-> > The answer will decide how applicable this api is going to be.
-> > Generating different trampolines for every attach point
-> > is an approach as well. Pls benchmark it too.
-> >
-> > > >
-> > > > Let's step back.
-> > > > What is the exact use case you're trying to solve?
-> > > > Not an artificial one as selftest in patch 9, but the real use case=
-?
-> > >
-> > > I have a tool, which is used to diagnose network problems,
-> > > and its name is "nettrace". It will trace many kernel functions, whos=
-e
-> > > function args contain "skb", like this:
-> > >
-> > > ./nettrace -p icmp
-> > > begin trace...
-> > > ***************** ffff889be8fbd500,ffff889be8fbcd00 ***************
-> > > [1272349.614564] [dev_gro_receive     ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614579] [__netif_receive_skb_core] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614585] [ip_rcv              ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614592] [ip_rcv_core         ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614599] [skb_clone           ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614616] [nf_hook_slow        ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614629] [nft_do_chain        ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614635] [ip_rcv_finish       ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614643] [ip_route_input_slow ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614647] [fib_validate_source ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614652] [ip_local_deliver    ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614658] [nf_hook_slow        ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614663] [ip_local_deliver_finish] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614666] [icmp_rcv            ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614671] [icmp_echo           ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614675] [icmp_reply          ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614715] [consume_skb         ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614722] [packet_rcv          ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614725] [consume_skb         ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > >
-> > > For now, I have to create a bpf program for every kernel
-> > > function that I want to trace, which is up to 200.
-> > >
-> > > With this multi-link, I only need to create 5 bpf program,
-> > > like this:
-> > >
-> > > int BPF_PROG(trace_skb_1, struct *skb);
-> > > int BPF_PROG(trace_skb_2, u64 arg0, struct *skb);
-> > > int BPF_PROG(trace_skb_3, u64 arg0, u64 arg1, struct *skb);
-> > > int BPF_PROG(trace_skb_4, u64 arg0, u64 arg1, u64 arg2, struct *skb);
-> > > int BPF_PROG(trace_skb_5, u64 arg0, u64 arg1, u64 arg2, u64 arg3, str=
-uct *skb);
-> > >
-> > > Then, I can attach trace_skb_1 to all the kernel functions that
-> > > I want to trace and whose first arg is skb; attach trace_skb_2 to ker=
-nel
-> > > functions whose 2nd arg is skb, etc.
-> > >
-> > > Or, I can create only one bpf program and store the index
-> > > of skb to the attachment cookie, and attach this program to all
-> > > the kernel functions that I want to trace.
-> > >
-> > > This is my use case. With the multi-link, now I only have
-> > > 1 bpf program, 1 bpf link, 200 trampolines, instead of 200
-> > > bpf programs, 200 bpf link and 200 trampolines.
-> >
-> > I see. The use case makes sense to me.
-> > Andrii's retsnoop is used to do similar thing before kprobe multi was
-> > introduced.
-> >
-> > > The shared trampoline you mentioned seems to be a
-> > > wonderful idea, which can make the 200 trampolines
-> > > to one. Let me have a look, we create a trampoline and
-> > > record the max args count of all the target functions, let's
-> > > mark it as arg_count.
-> > >
-> > > During generating the trampoline, we assume that the
-> > > function args count is arg_count. During attaching, we
-> > > check the consistency of all the target functions, just like
-> > > what we do now.
-> >
-> > For one trampoline to handle all attach points we might
-> > need some arch support, but we can start simple.
-> > Make btf_func_model with MAX_BPF_FUNC_REG_ARGS
-> > by calling btf_distill_func_proto() with func=3D=3DNULL.
-> > And use that to build a trampoline.
-> >
-> > The challenge is how to use minimal number of trampolines
-> > when bpf_progA is attached for func1, func2, func3
-> > and bpf_progB is attached to func3, func4, func5.
-> > We'd still need 3 trampolines:
-> > for func[12] to call bpf_progA,
-> > for func3 to call bpf_progA and bpf_progB,
-> > for func[45] to call bpf_progB.
-> >
-> > Jiri was trying to solve it in the past. His slides from LPC:
-> > https://lpc.events/event/16/contributions/1350/attachments/1033/1983/pl=
-umbers.pdf
-> >
-> > Pls study them and his prior patchsets to avoid stepping on the same ra=
-kes.
->
-> yep, I refrained from commenting not to take you down the same path
-> I did, but if you insist.. ;-)
->
-> I managed to forgot almost all of it, but the IIRC the main pain point
-> was that at some point I had to split existing trampoline which caused
-> the whole trampolines management and error paths to become a mess
->
-> I tried to explain things in [1] changelog and the latest patchset is in =
-[0]
->
-> feel free to use/take anything, but I advice strongly against it ;-)
-> please let me know if I can help
 
-I have to say that I have not gone far enough to encounter
-this problem, and I didn't dig enough to be aware of the
-complexity.
 
-I suspect that I can't overcome this challenge. The only thing that
-I thought when I hear about the "shared trampoline" is to fallback
-and not use the shared trampoline for the kernel functions who
-already have a trampoline.
+On 15/03/2024 04:44, Wen Gu wrote:
+> 
+> 
+> On 2024/3/14 18:23, Jan Karcher wrote:
+>>
+>>
+>> On 12/03/2024 15:27, Wen Gu wrote:
+>>> The introduction of Emulated-ISM requires adaptation of SMC-D device
+>>> dump. Software implemented non-PCI device (loopback-ism) should be
+>>> handled correctly and the CHID reserved for Emulated-ISM should be got
+>>> from smcd_ops interface instead of PCI information.
+>>>
+>>> Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
+>>> ---
+>>>   net/smc/smc_ism.c | 13 ++++++++++---
+>>>   1 file changed, 10 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/net/smc/smc_ism.c b/net/smc/smc_ism.c
+>>> index ac88de2a06a0..b6eca4231913 100644
+>>> --- a/net/smc/smc_ism.c
+>>> +++ b/net/smc/smc_ism.c
+>>> @@ -252,12 +252,11 @@ static int smc_nl_handle_smcd_dev(struct 
+>>> smcd_dev *smcd,
+>>>       char smc_pnet[SMC_MAX_PNETID_LEN + 1];
+>>>       struct smc_pci_dev smc_pci_dev;
+>>>       struct nlattr *port_attrs;
+>>> +    struct device *device;
+>>>       struct nlattr *attrs;
+>>> -    struct ism_dev *ism;
+>>>       int use_cnt = 0;
+>>>       void *nlh;
+>>> -    ism = smcd->priv;
+>>>       nlh = genlmsg_put(skb, NETLINK_CB(cb->skb).portid, 
+>>> cb->nlh->nlmsg_seq,
+>>>                 &smc_gen_nl_family, NLM_F_MULTI,
+>>>                 SMC_NETLINK_GET_DEV_SMCD);
+>>> @@ -272,7 +271,15 @@ static int smc_nl_handle_smcd_dev(struct 
+>>> smcd_dev *smcd,
+>>>       if (nla_put_u8(skb, SMC_NLA_DEV_IS_CRIT, use_cnt > 0))
+>>>           goto errattr;
+>>>       memset(&smc_pci_dev, 0, sizeof(smc_pci_dev));
+>>> -    smc_set_pci_values(to_pci_dev(ism->dev.parent), &smc_pci_dev);
+>>> +    device = smcd->ops->get_dev(smcd);
+>>> +    if (device->parent)
+>>> +        smc_set_pci_values(to_pci_dev(device->parent), &smc_pci_dev);
+>>> +    if (smc_ism_is_emulated(smcd)) {
+>>> +        smc_pci_dev.pci_pchid = smc_ism_get_chid(smcd);
+>>> +        if (!device->parent)
+>>> +            snprintf(smc_pci_dev.pci_id, sizeof(smc_pci_dev.pci_id),
+>>> +                 "%s", dev_name(device));
+>>> +    }
+>>
+>> Hi Wen Gu,
+>>
+>> playing around with the loopback-ism device and testing it, i 
+>> developed some concerns regarding this exposure. Basically this 
+>> enables us to see the loopback device in the `smcd device` tool 
+>> without any changes.
+>> E.g.:
+>> ```
+>> # smcd device
+>> FID  Type  PCI-ID        PCHID  InUse  #LGs  PNET-ID
+>> 0000 0     loopback-ism  ffff   No        0
+>> 102a ISM   0000:00:00.0  07c2   No        0  NET1
+>> ```
+>>
+>> Now the problem with this is that "loopback-ism" is no valid PCI-ID 
+>> and should not be there. My first thought was to put an "n/a" instead, 
+>> but that opens up another problem. Currently you could set - even if 
+>> it does not make sense - a PNET_ID for the loopback device:
+>> ```
+> 
+> Yes, and we can exclude loopback-ism in smc_pnet_enter() if necessary.
 
-Anyway, let's have a try on it, based on your research.
+We could, but we have to make sure we implement those distinctions at 
+the right location. E.g.: if virtio-ism is coming. Does a PNETID make 
+sense for a virtio-ism device? Do we want to exclude is also there or do 
+we want an abstracted layer/mechanism to recognize if a device has a 
+PNETId capability or not?
+
+> 
+>> # smc_pnet -a -D loopback-ism NET1
+>> # smcd device
+>> FID  Type  PCI-ID        PCHID  InUse  #LGs  PNET-ID
+>> 0000 0     loopback-ism  ffff   No        0  *NET1
+>> 102a ISM   0000:00:00.0  07c2   No        0  NET1
+>> ```
+>> If we would change the PCI-ID to "n/a" it would be a valid input 
+>> parameter for the tooling which is... to put it nice... not so beautiful.
+> 
+> FID  Type  PCI-ID        PCHID  InUse  #LGs  PNET-ID
+> 0000 0     n/a           ffff   No        0
+> 
+> IIUC, the problem is that the 'n/a', which would be an input for other 
+> tools, is somewhat strange?
+
+Exactly.
+
+> 
+> Since PCHID 0xffff is clear defined for loopback-ism, I am wondering if 
+> it can be a specific sign
+> of loopback-ism for tooling to not take PCI-ID into account? Would you 
+> also consider that inelegant?
+
+I think deciding on PCHID is the only way we can currently differentiate 
+what kind of device we are talking about. So my guess would be that 
+PCHID is going to play a big role in future design decisions.
+
+> 
+>> I brainstormed this with them team and the problem is more complex.
+>> In theory there shouldn't be PCI information set for the loopback 
+>> device. There should be a better abstraction in the netlink interface 
+>> that creates this output and the tooling should be made aware of it.
+>>
+> 
+> Yes, it is better. But I couldn't surely picture how the abstraction 
+> looks like, and if it is necessary
+> to introduce it just for a special case of loopback-ism (note that 
+> virtio-ISM also has PCI information),
+> since we can identify loopback-ism by CHID.
+
+Please take the following with a grain of salt. I just want to give you 
+a bit insight of our current train of thought. None of it is final or 
+set in stone. The idea would be to have device core information that 
+contain the information which other fields are important for this 
+device. And corresponding "extensions" that contain the information. The 
+tooling cvould then decide soley on the core information which features 
+are supported by a device and which are not.
+If that is really needed: Not sure yet. Is this the best solution: 
+Propably not.
+E.g.:
+
+SMC-D netlink abstraction
+
++------------------------------------+
+| Core information                   |
+| (e.g. PCHID, InUse, isPCI, isS390) |
++------------------------------------+
+
++----------------+
+| s390 extension |
+| (e.g.FID)      |
++----------------+
+
++--------------------+
+| PCI extension      |
+| (e.g. PCI-ID, ...) |
++--------------------+
+
+
+> 
+>> Do you rely on the output currently? What are your thoughts about it?
+>> If not I'd ask you to not fill the netlink interface for the loopback 
+>> device and refactor it with the next stage when we create a right 
+>> interface for it.
+>>
+> 
+> Currently we don't rely on the output, and I have no objection to the 
+> proposal that not fill the netlink
+> interface for loopback-ism and refactor it in the next stage.
+
+Thank you! If you have ideas regarding the design of the interface hit 
+us up. As soon as we are going to think about this further I'm going to 
+invite you to those discussions.
+
+> 
+>> Since the Merge-Window is closed feel free to send new versions as RFC.
+> 
+> OK, I will send the new version as an RFC.
+> 
+> Thank you!
 
 Thanks!
-Menglong Dong
+- Jan
 
->
-> jirka
->
->
-> [0] https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git/log/?h=
-=3Dbpf/batch
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git/commit=
-/?h=3Dbpf/batch&id=3D52a1d4acdf55df41e99ca2cea51865e6821036ce
+> 
+>> Thank you
+>> - Jan
+>>
+>>>       if (nla_put_u32(skb, SMC_NLA_DEV_PCI_FID, smc_pci_dev.pci_fid))
+>>>           goto errattr;
+>>>       if (nla_put_u16(skb, SMC_NLA_DEV_PCI_CHID, smc_pci_dev.pci_pchid))
 
