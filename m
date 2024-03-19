@@ -1,148 +1,126 @@
-Return-Path: <linux-s390+bounces-2635-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-2637-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D09C18802A3
-	for <lists+linux-s390@lfdr.de>; Tue, 19 Mar 2024 17:44:59 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 253AA880526
+	for <lists+linux-s390@lfdr.de>; Tue, 19 Mar 2024 19:55:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0E4EE1C22492
-	for <lists+linux-s390@lfdr.de>; Tue, 19 Mar 2024 16:44:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 569E91C22D3B
+	for <lists+linux-s390@lfdr.de>; Tue, 19 Mar 2024 18:55:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B76911CA1;
-	Tue, 19 Mar 2024 16:44:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8A2A39FED;
+	Tue, 19 Mar 2024 18:55:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VPPauEtw"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="b7gzV3Cb"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56302208A1;
-	Tue, 19 Mar 2024 16:44:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4FB839FC1
+	for <linux-s390@vger.kernel.org>; Tue, 19 Mar 2024 18:55:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710866685; cv=none; b=OEws/F/aurNmhNwqMXRBRALFT+31fDVHm50OehQcs+P2yZ/EFMPyjQVvK52BrH9iPIopPJquEcV3wskcYnC17otQ38bog3vWRHzLvLp3/4jFCXDB0lTXPHRaIi++JWCTPUr6HLC9ADOLRA8vLrq9h5dKd1njuZPwnMIZokyrAlI=
+	t=1710874509; cv=none; b=ktTgnHrzRG2KJ14ws2DG6A6g5Xjs+As3994ExVr4p4HrJnjkLTK2IbVgf52jcE2zH1kTqxxaPtn9SFjBIfGPxEIpCrSIlVcDDCe4QCQYgtPTcN20VtCvoH0EETLGcaddhUm4YqBe4McacAb9qilfSck8jHCvs9UVG2RjGyZ+Llc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710866685; c=relaxed/simple;
-	bh=i7kPFXFJBnxsnKWbGIxgq669WYiKOTewKT1ClzlYNC0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Cb/zqERqf67DKGKSIAmrBxR7+4GL6mmt93WJO0l08ZpKlUUw1KaNoR5mMXgHN1IijrCJEYuXKfL0s30fjwgznhi3M8Ct76/MHCOWb1793426So9ENGATqMkq6kGLlUWTtL6KfRIYA0CeGbNHmzi69CmzTvcQ9sLv18HS7oVqz1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VPPauEtw; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42JGPh6g013870;
-	Tue, 19 Mar 2024 16:44:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=A2EMMp35xjopyzyXHi+YYmTRR2UohzKQHty1QJYLSSI=;
- b=VPPauEtwc+Y4yn+n4ZAkwdH5rNW5l2+FIqN5lW9dUsuAC9Dmis/6dPghmNZdkZEXi2eK
- UgSEseJIyp9fj3G1ABLTMOEH02YBMxfF+T5oPugrMQ3SxU44xQJW8ayh3svdyv+sHfwe
- TzdpYabE53GoyqkNmMmVfVXXdDeaJ+UydwvwISC7Z/mvOSdrZ7wxxQ+tcex8bY97Eodr
- P2bRuFD2a8oL1261No76cVYTmF9JFhfEe5HtSo7PCf0HT8oJkC3ZnEKWPQXIhggrdIKv
- HyzPtwKe04Z4bWrzM2yGEEvgaO71o3QBJglkivvL9MCI4VDRA7Y2CfIWX3F3FUS2+CD3 bw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wyb5ps3fs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 16:44:41 +0000
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42JGieNo011728;
-	Tue, 19 Mar 2024 16:44:40 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wyb5ps3fp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 16:44:40 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42JGhKpX011615;
-	Tue, 19 Mar 2024 16:44:39 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wwq8m0pa1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 16:44:39 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42JGiXUF47710556
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 19 Mar 2024 16:44:35 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4DF952005A;
-	Tue, 19 Mar 2024 16:44:33 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F268220040;
-	Tue, 19 Mar 2024 16:44:32 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 19 Mar 2024 16:44:32 +0000 (GMT)
-From: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
-To: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>
-Cc: Nina Schoetterl-Glausch <nsg@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        Sven Schnelle <svens@linux.ibm.com>, kvm@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>, linux-s390@vger.kernel.org
-Subject: [PATCH 2/2] KVM: s390: vsie: Use virt_to_phys for facility control block
-Date: Tue, 19 Mar 2024 17:44:20 +0100
-Message-Id: <20240319164420.4053380-3-nsg@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240319164420.4053380-1-nsg@linux.ibm.com>
-References: <20240319164420.4053380-1-nsg@linux.ibm.com>
+	s=arc-20240116; t=1710874509; c=relaxed/simple;
+	bh=cquyfRZ0VBetvG8+L3oqKgTGchO/YG/tGhNA+Cv+Co0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iFny4A5O5LqCsnuaSCt95jenivyHQ95HEpwf/Ul+Yctmk8ZZeT0ThXZ5WTHzOQUIyaXHwGMb9zvhikmeAQ407y+IVhOhSPWC9Pr54tRelWcYk4ROlMPzyFUhmwMRy67fxCZyVS3TD3a1jPsHWgpON6w8C1UZwbSvx0seX9Z6bqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=b7gzV3Cb; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-56b85146589so308854a12.0
+        for <linux-s390@vger.kernel.org>; Tue, 19 Mar 2024 11:55:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1710874506; x=1711479306; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=u4KodDa0zT/HNzbAX2EO8nLcPy/wnsGHD7zCwXLN7BY=;
+        b=b7gzV3Cbtoo13O7zkMZsbBl0KrI+htHS+KyP8w5EUiEyjwvAbXFlqGMAA65pfARnkV
+         mHixlgRLdzQHXtXpWZQA9STVE6BVA2JNjaLOQgztT1CbX8gO6tCCWFGvl+Uxhg6/jd9C
+         SuN1HVOuPAStpUUhLYFwOk1hy6Gczc0oqVmEQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710874506; x=1711479306;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=u4KodDa0zT/HNzbAX2EO8nLcPy/wnsGHD7zCwXLN7BY=;
+        b=vfw3l1Bl9sSEH6E5t137GtVsYSHhK6rPc6T0VEvPHAHKudab8h7jJjWGgZG24nTykm
+         3oIbGs59mLdQvTw0EcasERm7EXDwXDO3VU7twY5qcnVoQFKVyN1rGIe8NFWIdCVEyOWJ
+         yar0HHToglcNc1zxPAz7MQkYMBuXJ9xXHTGrxgZ+eP/78zYHcPqLrhBQ3z5WQgqWqEBz
+         5XO81Wvl6GS4epAA5newOQvQhpEd5NBhsMCkZry+yw+e1jiBWiYMSFZ5mLGtdi6qhWp9
+         vpDQk5qCnUN1P8SByiJV9ytDCgLrnKcxG08JgWxkolYYPFlQXuxzb0DwglFxLCtAv3Wd
+         LF5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV9KYiF9RT3d9ryS1l0Fbhn0KgLrxYWOj+DBL40VAnlI6nwzHry8VQof5xXHTBF+MkCgrIfulZGoB2jsRZKEXY5MSNVUdHa7S8oug==
+X-Gm-Message-State: AOJu0YwiE0GlX66GOjn3hYQo4EZV+zv/BnCs7x8F9c1kHbTA3UiJY2LL
+	LCgG8UWm5hH74617ZSG+4SOete/YwieFKwqgiIhLIfieo+Tsq7eH/8703mNSIF2IosCXz3QzT1g
+	C8zQejQ==
+X-Google-Smtp-Source: AGHT+IGIYF706kM24H6xgZKcn1jgt7+aq+ZMx6QOJ1eXk5hlD2HMYzLKraf9sa//SPx9LC8FFF5O1Q==
+X-Received: by 2002:a05:6402:3224:b0:566:59a2:7a10 with SMTP id g36-20020a056402322400b0056659a27a10mr409393eda.1.1710874505538;
+        Tue, 19 Mar 2024 11:55:05 -0700 (PDT)
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
+        by smtp.gmail.com with ESMTPSA id u10-20020a50950a000000b0056b909e8b8dsm1303121eda.40.2024.03.19.11.55.04
+        for <linux-s390@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Mar 2024 11:55:05 -0700 (PDT)
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-565c6cf4819so253375a12.1
+        for <linux-s390@vger.kernel.org>; Tue, 19 Mar 2024 11:55:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUqtuJE+y/xKC4H3M9a+Rz8BlGsNp9EAgIpXW68GWPSKeeQterXBxw3cZhmFX94ADmscd4Kv8YSZzbS3ZcolYqep7d9X1LB39WcWQ==
+X-Received: by 2002:a17:906:c7d4:b0:a46:dd1f:7dc6 with SMTP id
+ dc20-20020a170906c7d400b00a46dd1f7dc6mr2839426ejb.24.1710874504637; Tue, 19
+ Mar 2024 11:55:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: GVvoP0BoWq9gnMm7sJAbK0SoBJpjk2Cq
-X-Proofpoint-ORIG-GUID: jN2QESoqSejbF59F-UOdSC336KK_sQNI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-19_05,2024-03-18_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 adultscore=0 spamscore=0 lowpriorityscore=0 impostorscore=0
- mlxscore=0 malwarescore=0 bulkscore=0 mlxlogscore=923 phishscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403140000 definitions=main-2403190126
+References: <20240319141230.23303-F-hca@linux.ibm.com>
+In-Reply-To: <20240319141230.23303-F-hca@linux.ibm.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 19 Mar 2024 11:54:47 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiGkerd+_ARB6bbSgAm02nkoOxRiy4LVsS_24ANQV-eZA@mail.gmail.com>
+Message-ID: <CAHk-=wiGkerd+_ARB6bbSgAm02nkoOxRiy4LVsS_24ANQV-eZA@mail.gmail.com>
+Subject: Re: [GIT PULL] more s390 updates for 6.9 merge window
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-In order for SIE to interpretively execute STFLE, it requires the real
-or absolute address of a facility-list control block.
-Before writing the location into the shadow SIE control block, convert
-it from a virtual address.
-We currently do not run into this bug because the lower 31 bits are the
-same for virtual and physical addresses.
+On Tue, 19 Mar 2024 at 07:12, Heiko Carstens <hca@linux.ibm.com> wrote:
+>
+> - Add new bitwise types and helper functions and use them in s390 specific
+>   drivers and code to make it easier to find virtual vs physical address
+>   usage bugs.
 
-Signed-off-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
----
- arch/s390/kvm/vsie.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Hmm. Because you still want to be able to do arithmetic on them, this
+is really what "__nocast" should be used for rather than "__bitwise".
 
-diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
-index 3af3bd20ac7b..da2819112e1d 100644
---- a/arch/s390/kvm/vsie.c
-+++ b/arch/s390/kvm/vsie.c
-@@ -12,6 +12,7 @@
- #include <linux/list.h>
- #include <linux/bitmap.h>
- #include <linux/sched/signal.h>
-+#include <linux/io.h>
- 
- #include <asm/gmap.h>
- #include <asm/mmu_context.h>
-@@ -1006,7 +1007,7 @@ static int handle_stfle(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
- 		if (read_guest_real(vcpu, fac, &vsie_page->fac,
- 				    stfle_size() * sizeof(u64)))
- 			return set_validity_icpt(scb_s, 0x1090U);
--		scb_s->fac = (__u32)(__u64) &vsie_page->fac;
-+		scb_s->fac = (u32)virt_to_phys(&vsie_page->fac);
- 	}
- 	return 0;
- }
--- 
-2.40.1
+__bitwise was intended (as the name implies) for things that can only
+be mixed bitwise with similar types. It was _mainly_ for big-endian vs
+little-endian marking, where it's actually perfectly fine to do
+bitwise operations on two big-endian values without ever translation
+them to "cpu endianness", but you can't for example do normal
+arithmetic on them.
 
+So __bitwise has those very specific rules that seem odd until you
+realize what the reason for them are.
+
+In contrast, your types actually *would* be fine with arithmetic and
+logical operations being done on them, and that is what "__nocast"
+really was meant to be.
+
+But we basically never had much use for __nocast in the kernel, and
+largely as a result __nocast was never fleshed out to work very well
+(and it gets lost *much* too easily), so __bitwise it is.
+
+Oh well.
+
+It looks like it's not a lot of arithmetic you want to allow anyway,
+so I guess the fact that __bitwise forces you to do some silly helper
+functions for that isn't too much of an issue.
+
+              Linus
 
