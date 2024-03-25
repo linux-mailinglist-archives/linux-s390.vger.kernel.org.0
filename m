@@ -1,231 +1,143 @@
-Return-Path: <linux-s390+bounces-2714-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-2732-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5754D88A749
-	for <lists+linux-s390@lfdr.de>; Mon, 25 Mar 2024 16:44:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBCE388A2A0
+	for <lists+linux-s390@lfdr.de>; Mon, 25 Mar 2024 14:41:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1088DB44508
-	for <lists+linux-s390@lfdr.de>; Mon, 25 Mar 2024 13:06:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 077CB1C3833C
+	for <lists+linux-s390@lfdr.de>; Mon, 25 Mar 2024 13:41:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C640913D501;
-	Mon, 25 Mar 2024 08:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Iusz8THA"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8B3D13C9B4;
+	Mon, 25 Mar 2024 10:27:12 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022AA16132B;
-	Mon, 25 Mar 2024 06:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396B51509A3;
+	Mon, 25 Mar 2024 08:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711348966; cv=none; b=gK2JwSk6GyYwVJ9S4Pb92Mox71mS1NyhR9m0kblJ4eDLhIYm6kVYDJWtJdhve7qcvUaqtyuu7ofEXgPVWEuiXXYPbSmJ6mg0q9pSiosuznYe8UPQZo8ij+MPAY4iGsnYtJ3cLScmn9tWEYfbwTEPvpzQUMwMF8XtYmelO7waH58=
+	t=1711355096; cv=none; b=M/a45R0rf4gEbfcBTpz9aZgrv3csgIWLMyvH13H0/04JfZeG4HoTm7AoGYIZAlnuBJxAEYqpWDpxgZpJ+x3hzXNm3x1h3x+QQhS5EdQzIEjLIhzEwPniH2OgTgguVe2kcFtPb0U0lrT5vZRhOvlSR53PYdl3eRZdsf/DYv85ug8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711348966; c=relaxed/simple;
-	bh=jWLLlF4KdyRZzGfn4U2lSdQ4Wei7Cj+yXLsz+I6EvZY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LE9FZcWd3irT9IPTb6zwdxVOrwrBSrf9nEwHBckP7kQimDWD9bVhpT5Ph+vvMDUeZsbOxOSoKU00Bu7Ds0FKlKWK1mhu10nZ16Z1gNfkOaqTreVELOE+ScKRSIrQSOAGwP6ru/hjFEuEqcHY63BV7mHkNBl2EujTjzooME7ZAbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Iusz8THA; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711348965; x=1742884965;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=jWLLlF4KdyRZzGfn4U2lSdQ4Wei7Cj+yXLsz+I6EvZY=;
-  b=Iusz8THA13pqubRw6kvkL5p5vNxVzykvnS/33uQZKIHDT+sb1IA3LO5W
-   OqgjDeLnZvl/26QtHvzEliO4MDb+09t6wQm8fEFboF5kAPLoJT0mNBkPA
-   Y3drThHz2EovOYR9Dx4xU9d1XlODfXO44aVF+ya3xqPSrh/Pv+3FyjmPN
-   PykU0G74QD/wy7uaamV/+vSpJP1sRHWVPke0Oz6Lv7ckGvAzsf3E44uED
-   jd1pJwNHD+9Ih+5c2RkTvIiTFcLY+tPyO2ilQCRUHNbzbhc+hFiV5JMcc
-   Tpr3x3Jng+qxMTIpEaFugbo5lml35Xbt2Z1bH66mkH40gzU/xps9bBVT8
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6191609"
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="6191609"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 23:42:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="38629719"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.251.211.155])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 23:42:38 -0700
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	John Stultz <jstultz@google.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org
-Subject: [PATCH V2 19/19] clocksource: Make watchdog and suspend-timing multiplication overflow safe
-Date: Mon, 25 Mar 2024 08:40:23 +0200
-Message-Id: <20240325064023.2997-20-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240325064023.2997-1-adrian.hunter@intel.com>
-References: <20240325064023.2997-1-adrian.hunter@intel.com>
+	s=arc-20240116; t=1711355096; c=relaxed/simple;
+	bh=HdSwpyEJcq7QPVhfAp25p0Tw/TeM+r3NiX2oIuYDiE8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=a+MwYvUJZnSB/k4Ok37XnD+aT46BgIeTclTTAXqZieq9pFAdoc9EKyiPmztsyVpnj/k1AjoUM83VVehh1Cd8jzZ38pUHyjAJIHNXftViSpc9HV4/Nbd3Hqv0lOV4qNMtTcwldAW1inzjrkIDS38vfGNuQOtRwyIQInDBLEDs6bE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-609ff069a40so46203857b3.1;
+        Mon, 25 Mar 2024 01:24:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711355091; x=1711959891;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZEfLIiCMu33AlwMloMoi4ICYWpFuuaEkY/DY4cDIgmE=;
+        b=jOo68WsePLya0UTIv2mo5i4/kpavPY6FzloQwGpk/Hb87ae3OvvWibgRGJNpmcB9Ix
+         jAOa0lxGK6X3n1oQd7CtLaycLmodX1mG6K3MRmxry/IsJ9efzUM8XKZSLWiRJoz7dxzm
+         8LhF0Wj4aJlsigUWi5E83+xUtMtB1FiOnucflQLTGxc6RazDoyMqagCAS3Qwlctk0UW+
+         nOTzdGqHmyXwwfc8o3CtdXkymG76zNYPiRKZ6X1hlvwmTqVLlotr8N+okyFk/NJ6C5zQ
+         lCWYBar3zwCiH5Oh7jjor3B+JW4HDtGPhOO/+J0m7Vi5FQWQB5phXP/jMjr5OCkpIi6i
+         pa+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUD6qLHe7qp+XRyqDyvBRnIchmFCkcZzhgztE842VmmMtxA1rlrDXJQQe3P14STXyTaGPaXgFKd8hiIxo4gPI9NjJc4/GRF0hthsv3PzxRCRD+NJdQDiFBnmVwSo3zPxJodU4aDdP59endufe2a1bFfJ8qIuBd+4rZWdSS2iB2TTQ==
+X-Gm-Message-State: AOJu0Yz4nFJOEz4UUHf4gy/PH60aRJTGnwq8u/MyDsQX7jjzy1PQNP+O
+	kbc3fOhf0webxK5FU2VN+sutlnSWbTDTcY8ypXqGcbD1bulNVNck2TkjheNHDkQ=
+X-Google-Smtp-Source: AGHT+IEww2fSQ3Wu/wewUYOYe8KvgDN4m9NQCLgkoHzNH55wlqFjWJPXZrCNHaP/T2qgp1YHW40w6g==
+X-Received: by 2002:a81:9e44:0:b0:609:e4b4:c2fb with SMTP id n4-20020a819e44000000b00609e4b4c2fbmr4842276ywj.27.1711355091363;
+        Mon, 25 Mar 2024 01:24:51 -0700 (PDT)
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
+        by smtp.gmail.com with ESMTPSA id t6-20020a81ce06000000b0060a4b02124dsm953873ywi.144.2024.03.25.01.24.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Mar 2024 01:24:50 -0700 (PDT)
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dcc71031680so3466484276.2;
+        Mon, 25 Mar 2024 01:24:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWkKKcySviIElzJ6y7iHyqgGKarKOKI+9+vGQxIlQ66PG47Bwsq0BZ/z4Y1MTBxEYjvhuR6Ro7Lu+r6wCVA7IsMZuEq4U9HDK5RIPEKSySxwUQKI8ijFMeqOgn+coEs8e4g8+xcKQ1x7FIqCvP0UhCtdiZbUycSnN2TT/wKlQN4BA==
+X-Received: by 2002:a25:a2cf:0:b0:dcc:f0a:e495 with SMTP id
+ c15-20020a25a2cf000000b00dcc0f0ae495mr4291545ybn.3.1711355089475; Mon, 25 Mar
+ 2024 01:24:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+References: <20240124051254.67105-1-bhe@redhat.com> <20240124051254.67105-3-bhe@redhat.com>
+In-Reply-To: <20240124051254.67105-3-bhe@redhat.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 25 Mar 2024 09:24:37 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVxKEGYj9C1=P-493vcrN_HmLNx8gS6i1nheXO9gH46oA@mail.gmail.com>
+Message-ID: <CAMuHMdVxKEGYj9C1=P-493vcrN_HmLNx8gS6i1nheXO9gH46oA@mail.gmail.com>
+Subject: Re: [PATCH linux-next v3 02/14] crash: split vmcoreinfo exporting
+ code out from crash_core.c
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	loongarch@lists.linux.dev, akpm@linux-foundation.org, ebiederm@xmission.com, 
+	hbathini@linux.ibm.com, piliu@redhat.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Kernel timekeeping is designed to keep the change in cycles (since the last
-timer interrupt) below max_cycles, which prevents multiplication overflow
-when converting cycles to nanoseconds. However, if timer interrupts stop,
-the clocksource_cyc2ns() calculation will eventually overflow.
+Hi Baoquan,
 
-Add protection against that. Simplify by folding together
-clocksource_delta() and clocksource_cyc2ns() into cycles_to_nsec_safe().
-Check against max_cycles, falling back to a slower higher precision
-calculation.
+On Wed, Jan 24, 2024 at 6:13=E2=80=AFAM Baoquan He <bhe@redhat.com> wrote:
+> Now move the relevant codes into separate files:
+> kernel/crash_reserve.c, include/linux/crash_reserve.h.
+>
+> And add config item CRASH_RESERVE to control its enabling.
+>
+> And also update the old ifdeffery of CONFIG_CRASH_CORE, including of
+> <linux/crash_core.h> and config item dependency on CRASH_CORE
+> accordingly.
+>
+> And also do renaming as follows:
+>  - arch/xxx/kernel/{crash_core.c =3D> vmcore_info.c}
+> because they are only related to vmcoreinfo exporting on x86, arm64,
+> riscv.
+>
+> And also Remove config item CRASH_CORE, and rely on CONFIG_KEXEC_CORE to
+> decide if build in crash_core.c.
+>
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+> v2->v3:
+> - There's conflict when rebasing to linux-next in kernel/crash_core.c
+>   because of below commits from Uladzislau:
+>   commit 699d9351822e ("mm: vmalloc: Fix a warning in the crash_save_vmco=
+reinfo_init()")
+>   commit 5f4c0c1e2a51 (:mm/vmalloc: remove vmap_area_list")
 
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- kernel/time/clocksource.c | 42 +++++++++++++++++++--------------------
- 1 file changed, 20 insertions(+), 22 deletions(-)
+Thanks for your patch, which is now commit 443cbaf9e2fdbef7
+("crash: split vmcoreinfo exporting code out from
+crash_core.c") in v6.9-rc1.
 
-diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index e5b260aa0e02..4d50d53ac719 100644
---- a/kernel/time/clocksource.c
-+++ b/kernel/time/clocksource.c
-@@ -20,6 +20,16 @@
- #include "tick-internal.h"
- #include "timekeeping_internal.h"
- 
-+static noinline u64 cycles_to_nsec_safe(struct clocksource *cs, u64 start, u64 end)
-+{
-+	u64 delta = clocksource_delta(end, start, cs->mask);
-+
-+	if (likely(delta < cs->max_cycles))
-+		return clocksource_cyc2ns(delta, cs->mult, cs->shift);
-+
-+	return mul_u64_u32_shr(delta, cs->mult, cs->shift);
-+}
-+
- /**
-  * clocks_calc_mult_shift - calculate mult/shift factors for scaled math of clocks
-  * @mult:	pointer to mult variable
-@@ -222,8 +232,8 @@ enum wd_read_status {
- static enum wd_read_status cs_watchdog_read(struct clocksource *cs, u64 *csnow, u64 *wdnow)
- {
- 	unsigned int nretries, max_retries;
--	u64 wd_end, wd_end2, wd_delta;
- 	int64_t wd_delay, wd_seq_delay;
-+	u64 wd_end, wd_end2;
- 
- 	max_retries = clocksource_get_max_watchdog_retry();
- 	for (nretries = 0; nretries <= max_retries; nretries++) {
-@@ -234,9 +244,7 @@ static enum wd_read_status cs_watchdog_read(struct clocksource *cs, u64 *csnow,
- 		wd_end2 = watchdog->read(watchdog);
- 		local_irq_enable();
- 
--		wd_delta = clocksource_delta(wd_end, *wdnow, watchdog->mask);
--		wd_delay = clocksource_cyc2ns(wd_delta, watchdog->mult,
--					      watchdog->shift);
-+		wd_delay = cycles_to_nsec_safe(watchdog, *wdnow, wd_end);
- 		if (wd_delay <= WATCHDOG_MAX_SKEW) {
- 			if (nretries > 1 || nretries >= max_retries) {
- 				pr_warn("timekeeping watchdog on CPU%d: %s retried %d times before success\n",
-@@ -254,8 +262,7 @@ static enum wd_read_status cs_watchdog_read(struct clocksource *cs, u64 *csnow,
- 		 * report system busy, reinit the watchdog and skip the current
- 		 * watchdog test.
- 		 */
--		wd_delta = clocksource_delta(wd_end2, wd_end, watchdog->mask);
--		wd_seq_delay = clocksource_cyc2ns(wd_delta, watchdog->mult, watchdog->shift);
-+		wd_seq_delay = cycles_to_nsec_safe(watchdog, wd_end, wd_end2);
- 		if (wd_seq_delay > WATCHDOG_MAX_SKEW/2)
- 			goto skip_test;
- 	}
-@@ -366,8 +373,7 @@ void clocksource_verify_percpu(struct clocksource *cs)
- 		delta = (csnow_end - csnow_mid) & cs->mask;
- 		if (delta < 0)
- 			cpumask_set_cpu(cpu, &cpus_ahead);
--		delta = clocksource_delta(csnow_end, csnow_begin, cs->mask);
--		cs_nsec = clocksource_cyc2ns(delta, cs->mult, cs->shift);
-+		cs_nsec = cycles_to_nsec_safe(cs, csnow_begin, csnow_end);
- 		if (cs_nsec > cs_nsec_max)
- 			cs_nsec_max = cs_nsec;
- 		if (cs_nsec < cs_nsec_min)
-@@ -398,8 +404,8 @@ static inline void clocksource_reset_watchdog(void)
- 
- static void clocksource_watchdog(struct timer_list *unused)
- {
--	u64 csnow, wdnow, cslast, wdlast, delta;
- 	int64_t wd_nsec, cs_nsec, interval;
-+	u64 csnow, wdnow, cslast, wdlast;
- 	int next_cpu, reset_pending;
- 	struct clocksource *cs;
- 	enum wd_read_status read_ret;
-@@ -456,12 +462,8 @@ static void clocksource_watchdog(struct timer_list *unused)
- 			continue;
- 		}
- 
--		delta = clocksource_delta(wdnow, cs->wd_last, watchdog->mask);
--		wd_nsec = clocksource_cyc2ns(delta, watchdog->mult,
--					     watchdog->shift);
--
--		delta = clocksource_delta(csnow, cs->cs_last, cs->mask);
--		cs_nsec = clocksource_cyc2ns(delta, cs->mult, cs->shift);
-+		wd_nsec = cycles_to_nsec_safe(watchdog, cs->wd_last, wdnow);
-+		cs_nsec = cycles_to_nsec_safe(cs, cs->cs_last, csnow);
- 		wdlast = cs->wd_last; /* save these in case we print them */
- 		cslast = cs->cs_last;
- 		cs->cs_last = csnow;
-@@ -832,7 +834,7 @@ void clocksource_start_suspend_timing(struct clocksource *cs, u64 start_cycles)
-  */
- u64 clocksource_stop_suspend_timing(struct clocksource *cs, u64 cycle_now)
- {
--	u64 now, delta, nsec = 0;
-+	u64 now, nsec = 0;
- 
- 	if (!suspend_clocksource)
- 		return 0;
-@@ -847,12 +849,8 @@ u64 clocksource_stop_suspend_timing(struct clocksource *cs, u64 cycle_now)
- 	else
- 		now = suspend_clocksource->read(suspend_clocksource);
- 
--	if (now > suspend_start) {
--		delta = clocksource_delta(now, suspend_start,
--					  suspend_clocksource->mask);
--		nsec = mul_u64_u32_shr(delta, suspend_clocksource->mult,
--				       suspend_clocksource->shift);
--	}
-+	if (now > suspend_start)
-+		nsec = cycles_to_nsec_safe(suspend_clocksource, suspend_start, now);
- 
- 	/*
- 	 * Disable the suspend timer to save power if current clocksource is
--- 
-2.34.1
+After this, there are still two references left to CRASH_CORE:
 
+  1. Documentation/admin-guide/kdump/kdump.rst:
+
+         Subsequently, CRASH_CORE is selected by KEXEC_CORE::
+
+  2. arch/loongarch/Kconfig
+
+         config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+             def_bool CRASH_CORE
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
