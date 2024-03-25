@@ -1,131 +1,194 @@
-Return-Path: <linux-s390+bounces-2709-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-2710-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D450F88A986
-	for <lists+linux-s390@lfdr.de>; Mon, 25 Mar 2024 17:35:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF9F588A0C3
+	for <lists+linux-s390@lfdr.de>; Mon, 25 Mar 2024 14:02:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2ADCFB27D6A
-	for <lists+linux-s390@lfdr.de>; Mon, 25 Mar 2024 12:46:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3608B1F350E6
+	for <lists+linux-s390@lfdr.de>; Mon, 25 Mar 2024 13:02:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4FD76BFCA;
-	Mon, 25 Mar 2024 07:32:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95486130496;
+	Mon, 25 Mar 2024 08:23:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GdKqpJYq"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ukYZTjjr"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D80D1C257F;
-	Mon, 25 Mar 2024 04:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C8514F9F6;
+	Mon, 25 Mar 2024 06:03:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711341756; cv=none; b=BXYC03+e9Pf8tNjlmaC1/b3s1mJhF7xoiuVyBtZWF5w0dGyQ2ILl7DyowtlJ8N93//FLR8mC/Oid1kWOEImu9HGUc7yjU3YSQ0H6JIRq9HKYm2nBfn/oLVKP2nlqWqy+aSNqZLmWtBsguIkBfwrT4mAePx69Rn5gOryRcrWU/6U=
+	t=1711346637; cv=none; b=cQCISauqLhTqp4tl3qd/1GI1EnaettVebp4OkUEbADsuaWGGUTQoQ8Tsv/lrX3UYabozxCZOeQLoI/XIREBill9ltlK245MmSne0ctxs7+8an3BeidTdblhGh4Cgyh83ZzV3yTocaD8RNfwxcUjfxxgt5JR1rfS/oWOpJTPffcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711341756; c=relaxed/simple;
-	bh=XMszcJq9qKpbV4DFBwSekh9f/MWb18ne5dXsAM6kKD8=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=n6GUeeA950p+sk6iXYaZAimMUE/yxDbJ1+xLOKUDGpOiNkSW2dLd65hj7kHgwHe492ZHdrzfZT3vpzC6P+6aKbRdY2Yhq4qMBGZ7KKoLi9EHaU/bRE4HDTjC5ItxMTZ5v88uF3moovDA/2PsMZj3bfUYnA3oXMrJb+2IijCkVnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GdKqpJYq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CB0CCC43143;
-	Mon, 25 Mar 2024 04:42:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711341754;
-	bh=XMszcJq9qKpbV4DFBwSekh9f/MWb18ne5dXsAM6kKD8=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=GdKqpJYqq4nzWFRO9Hpv5UH3Py1smxmB/DXoCXJtllla7M+UbtYM4CJ5/L896W7IV
-	 yQNZ+TVXisg+8sTpUFlmLRoFuUc0LEioY4l5kubTTV7+kTnb8wBKXBmUQuqxFirQOM
-	 +r7s6pXT4cgp/uVDoprMn8sgYkXHbx8mHeeSxDTGj5EF3mvSNK50KxsmorJkJA4wO7
-	 zDT9ZpkpOD2ZRWN3OzSLAbYkoL+iyKgdNDK5cCLI9ndEy0u4mkYkxx8ZcQ9kia61k/
-	 zgU/eNUoN3a7r9NnvA0lfHszFUpclZw3XcF/Xe2dG4exz/EXhbcXzChTQzT6SVcFzX
-	 xxSpvAwPq1e4Q==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id BB1EAD95072;
-	Mon, 25 Mar 2024 04:42:34 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1711346637; c=relaxed/simple;
+	bh=nh7RRQLuaSddz65FK3Wb9wuNv3HNQBBH9TtjgCZM/8o=;
+	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=A7tIcPQgNaob80xGsfi49mwhPIEy9qh+e11mL2LDg86SBDYW5+/xwjZxvLjsOr+Z+vAD3wp6qEs3csOvsxJ+ahw9QGtS2mmPpM4I79HAVUmGjoEGV4LyNDbdvGQAlyvtznWY9CY3mslAR8jFIv4YDsyhJTTLmedVgTxEA9WT9VE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ukYZTjjr; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1711346627; h=Message-ID:Subject:Date:From:To;
+	bh=2wvKbE33fAJ4kNFKPB3UPmddRQV+uumgQtNtBaMBvfA=;
+	b=ukYZTjjrjHhX2o2r+fAJbe9hE47/vJ9QzoRWspS7blS1koKFCbZ/3vknAEdHiAOdkxI0NGp7J15hs7NNdAWXCrjRsk6vxaknMn9fbB8cczRF4NlXPEeJ6SQnYf4V2twbyf6PJYHNFsk6xh2rS8qJURNumzjj/nRgcttCQ+imAIE=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=25;SR=0;TI=SMTPD_---0W39d4bX_1711346625;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W39d4bX_1711346625)
+          by smtp.aliyun-inc.com;
+          Mon, 25 Mar 2024 14:03:46 +0800
+Message-ID: <1711346600.0136697-1-xuanzhuo@linux.alibaba.com>
+Subject: Re: [PATCH vhost v4 1/6] virtio_balloon: remove the dependence where names[] is null
+Date: Mon, 25 Mar 2024 14:03:20 +0800
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Vadim Pasternak <vadimp@nvidia.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Cornelia Huck <cohuck@redhat.com>,
+ Halil Pasic <pasic@linux.ibm.com>,
+ Eric Farman <farman@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ "Michael S. Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>,
+ linux-um@lists.infradead.org,
+ platform-driver-x86@vger.kernel.org,
+ linux-remoteproc@vger.kernel.org,
+ linux-s390@vger.kernel.org,
+ kvm@vger.kernel.org,
+ virtualization@lists.linux.dev
+References: <20240321101532.59272-1-xuanzhuo@linux.alibaba.com>
+ <20240321101532.59272-2-xuanzhuo@linux.alibaba.com>
+ <3620be9c-e288-4ff2-a7be-1fcf806e6e6e@redhat.com>
+In-Reply-To: <3620be9c-e288-4ff2-a7be-1fcf806e6e6e@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3 00/15] mm/memory: optimize fork() with PTE-mapped THP
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <171134175476.18749.11889611045887549553.git-patchwork-notify@kernel.org>
-Date: Mon, 25 Mar 2024 04:42:34 +0000
-References: <20240129124649.189745-1-david@redhat.com>
-In-Reply-To: <20240129124649.189745-1-david@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, akpm@linux-foundation.org, willy@infradead.org,
- ryan.roberts@arm.com, linux@armlinux.org.uk, catalin.marinas@arm.com,
- will@kernel.org, dinguyen@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
- christophe.leroy@csgroup.eu, aneesh.kumar@kernel.org,
- naveen.n.rao@linux.ibm.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, agordeev@linux.ibm.com, gerald.schaefer@linux.ibm.com,
- hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@linux.ibm.com,
- svens@linux.ibm.com, davem@davemloft.net,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org, sparclinux@vger.kernel.org
 
-Hello:
+On Fri, 22 Mar 2024 12:56:46 +0100, David Hildenbrand <david@redhat.com> wrote:
+> On 21.03.24 11:15, Xuan Zhuo wrote:
+> > Currently, the init_vqs function within the virtio_balloon driver relies
+> > on the condition that certain names array entries are null in order to
+> > skip the initialization of some virtual queues (vqs). This behavior is
+> > unique to this part of the codebase. In an upcoming commit, we plan to
+> > eliminate this dependency by removing the function entirely. Therefore,
+> > with this change, we are ensuring that the virtio_balloon no longer
+> > depends on the aforementioned function.
+> >
+> > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> > ---
+> >   drivers/virtio/virtio_balloon.c | 41 +++++++++++++++------------------
+> >   1 file changed, 19 insertions(+), 22 deletions(-)
+> >
+> > diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> > index 1f5b3dd31fcf..becc12a05407 100644
+> > --- a/drivers/virtio/virtio_balloon.c
+> > +++ b/drivers/virtio/virtio_balloon.c
+> > @@ -531,49 +531,46 @@ static int init_vqs(struct virtio_balloon *vb)
+> >   	struct virtqueue *vqs[VIRTIO_BALLOON_VQ_MAX];
+> >   	vq_callback_t *callbacks[VIRTIO_BALLOON_VQ_MAX];
+> >   	const char *names[VIRTIO_BALLOON_VQ_MAX];
+> > -	int err;
+> > +	int err, nvqs, idx;
+> >
+> > -	/*
+> > -	 * Inflateq and deflateq are used unconditionally. The names[]
+> > -	 * will be NULL if the related feature is not enabled, which will
+> > -	 * cause no allocation for the corresponding virtqueue in find_vqs.
+> > -	 */
+> >   	callbacks[VIRTIO_BALLOON_VQ_INFLATE] = balloon_ack;
+> >   	names[VIRTIO_BALLOON_VQ_INFLATE] = "inflate";
+> >   	callbacks[VIRTIO_BALLOON_VQ_DEFLATE] = balloon_ack;
+> >   	names[VIRTIO_BALLOON_VQ_DEFLATE] = "deflate";
+>
+> I'd remove the static dependencies here completely and do it
+> consistently:
+>
+> nvqs = 0;
+>
+> callbacks[nvqs] = balloon_ack;
+> names[nvqs++] = "inflate";
+> callbacks[nvqs] = balloon_ack;
+> names[nvqs++] = "deflate";
+>
+>
+> > -	callbacks[VIRTIO_BALLOON_VQ_STATS] = NULL;
+> > -	names[VIRTIO_BALLOON_VQ_STATS] = NULL;
+> > -	callbacks[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
+> > -	names[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
+> > -	names[VIRTIO_BALLOON_VQ_REPORTING] = NULL;
+> > +
+> > +	nvqs = VIRTIO_BALLOON_VQ_DEFLATE + 1;
+> >
+> >   	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
+> > -		names[VIRTIO_BALLOON_VQ_STATS] = "stats";
+> > -		callbacks[VIRTIO_BALLOON_VQ_STATS] = stats_request;
+> > +		names[nvqs] = "stats";
+> > +		callbacks[nvqs] = stats_request;
+> > +		++nvqs;
+>
+> callbacks[nvqs++] = stats_request;
+>
+> If you prefer to keep it separate, "nvqs++" please.
+>
+> ... same here:
+>
+> idx = 0;
+> vb->inflate_vq = vqs[idx++];
+> vb->deflate_vq = vqs[idx++];
+>
+> ...
+>
+> >
+> >   	vb->inflate_vq = vqs[VIRTIO_BALLOON_VQ_INFLATE];
+> >   	vb->deflate_vq = vqs[VIRTIO_BALLOON_VQ_DEFLATE];
+> > +
+> > +	idx = VIRTIO_BALLOON_VQ_DEFLATE + 1;
+> > +
+> >   	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
+> >   		struct scatterlist sg;
+> >   		unsigned int num_stats;
+> > -		vb->stats_vq = vqs[VIRTIO_BALLOON_VQ_STATS];
+> > +		vb->stats_vq = vqs[idx++];
+> >
+> >   		/*
+> >   		 * Prime this virtqueue with one buffer so the hypervisor can
+> > @@ -593,10 +590,10 @@ static int init_vqs(struct virtio_balloon *vb)
+> >   	}
+> >
+> >   	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
+> > -		vb->free_page_vq = vqs[VIRTIO_BALLOON_VQ_FREE_PAGE];
+> > +		vb->free_page_vq = vqs[idx++];
+> >
+> >   	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING))
+> > -		vb->reporting_vq = vqs[VIRTIO_BALLOON_VQ_REPORTING];
+> > +		vb->reporting_vq = vqs[idx++];
+> >
+>
+> Apart from that LGTM
 
-This series was applied to riscv/linux.git (fixes)
-by Andrew Morton <akpm@linux-foundation.org>:
+Will fix in next version.
 
-On Mon, 29 Jan 2024 13:46:34 +0100 you wrote:
-> Now that the rmap overhaul[1] is upstream that provides a clean interface
-> for rmap batching, let's implement PTE batching during fork when processing
-> PTE-mapped THPs.
-> 
-> This series is partially based on Ryan's previous work[2] to implement
-> cont-pte support on arm64, but its a complete rewrite based on [1] to
-> optimize all architectures independent of any such PTE bits, and to
-> use the new rmap batching functions that simplify the code and prepare
-> for further rmap accounting changes.
-> 
-> [...]
-
-Here is the summary with links:
-  - [v3,01/15] arm64/mm: Make set_ptes() robust when OAs cross 48-bit boundary
-    (no matching commit)
-  - [v3,02/15] arm/pgtable: define PFN_PTE_SHIFT
-    (no matching commit)
-  - [v3,03/15] nios2/pgtable: define PFN_PTE_SHIFT
-    (no matching commit)
-  - [v3,04/15] powerpc/pgtable: define PFN_PTE_SHIFT
-    (no matching commit)
-  - [v3,05/15] riscv/pgtable: define PFN_PTE_SHIFT
-    https://git.kernel.org/riscv/c/57c254b2fb31
-  - [v3,06/15] s390/pgtable: define PFN_PTE_SHIFT
-    (no matching commit)
-  - [v3,07/15] sparc/pgtable: define PFN_PTE_SHIFT
-    (no matching commit)
-  - [v3,08/15] mm/pgtable: make pte_next_pfn() independent of set_ptes()
-    (no matching commit)
-  - [v3,09/15] arm/mm: use pte_next_pfn() in set_ptes()
-    (no matching commit)
-  - [v3,10/15] powerpc/mm: use pte_next_pfn() in set_ptes()
-    (no matching commit)
-  - [v3,11/15] mm/memory: factor out copying the actual PTE in copy_present_pte()
-    (no matching commit)
-  - [v3,12/15] mm/memory: pass PTE to copy_present_pte()
-    (no matching commit)
-  - [v3,13/15] mm/memory: optimize fork() with PTE-mapped THP
-    (no matching commit)
-  - [v3,14/15] mm/memory: ignore dirty/accessed/soft-dirty bits in folio_pte_batch()
-    (no matching commit)
-  - [v3,15/15] mm/memory: ignore writable bit in folio_pte_batch()
-    (no matching commit)
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Thanks.
 
 
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
 
