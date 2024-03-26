@@ -1,137 +1,102 @@
-Return-Path: <linux-s390+bounces-2782-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-2784-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9320E88BB9B
-	for <lists+linux-s390@lfdr.de>; Tue, 26 Mar 2024 08:47:31 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FA6088BC84
+	for <lists+linux-s390@lfdr.de>; Tue, 26 Mar 2024 09:33:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C46E11C2E02B
-	for <lists+linux-s390@lfdr.de>; Tue, 26 Mar 2024 07:47:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 517501C2F38E
+	for <lists+linux-s390@lfdr.de>; Tue, 26 Mar 2024 08:33:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9404E131BB9;
-	Tue, 26 Mar 2024 07:47:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA87621353;
+	Tue, 26 Mar 2024 08:32:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="INdaDbHP"
+	dkim=pass (2048-bit key) header.d=softline.com header.i=@softline.com header.b="GZwnl0QV"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mail03.softline.ru (mail03.softline.ru [185.31.132.229])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926C24CB2E;
-	Tue, 26 Mar 2024 07:47:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A7FEED6;
+	Tue, 26 Mar 2024 08:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.31.132.229
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711439247; cv=none; b=jxbaKsbbDSwTIcRfEQhp2iR6DomWiNZvjkeG1v7n/5x+E+TtYUFnbvBeOLEQ93m9UBbNvP1gxgOL1IIFM2nY9ZKyOhdkiDW0LwkkqeSYnUB5JLxhkC08KUg5zD3faZbnc+KXLX7aTLAff3wkH9bH2i3Ki8gK8ln1SxCl+f7QgYc=
+	t=1711441978; cv=none; b=NJAZlYhDTm4/NVZR6sdqz/QxasBALtqzxoyGJtIb8ovHn00ErIElPQJoUqLppZ2wkTgKV9Ighu533+dd4w8vmPxV6+1eCo2mvObnLxPj/k7nJFoCwps7QXmQR56TFleIRrOkO0F0XebAzbcj+9oOF3Pkkmnkc3PG1ibl/U+oLeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711439247; c=relaxed/simple;
-	bh=d5uVWB5omXFzH/9lQAppLxcXO8IDXnKpI8b31IMNmVY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AsB7hOVEjkWfTYLWSrkvTGWfZ/wQvMQ5BLaADC5h00KE1AChTnwBe38Zwy3IcQKJbzSsNLx6LWpaZsJqBnwmgqghwnFZx4/cxsa8WTzNsaIdfyhyvsP1IwJhC4z0lL/3bJiQp4Z5Hhy04BvFnuCRpyiH6wyHl59NCbxTf6jBSh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=INdaDbHP; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42Q5CR5f028966;
-	Tue, 26 Mar 2024 07:47:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=eh6YWin4ixIRlQKZhkJaK+gt1fOR8Sruq8BTre+DvX4=;
- b=INdaDbHPtQmyBuX1tZ1m1DYNfH2BxAXTDyvYkZfi8dJywOagtoEhhMkvPV1PvyRVn1hL
- Wqyow3rpDF/kDRel7qV1BQprSuXOTJg3hO7hhR9f7K5vYAsYlIEumyIVvvldX4E6QbXm
- Jwe/yZG/ysPYV54qp8MWPEKg69KxHVDsUxa6MN+jn8mowsc35QftvpCkJzi3qzwGOaSd
- wivFdkI18icHFlE6zXRUCqvne2mSw0EAwgAW/9ILbwCgiROirB1C6GP398jp4X7ScHgi
- 5t9rTUuoazqaj4wJdnCZz0SfDIowbnzCcldHnrWj/1h0cLkHV8YjI99P6rx7UoRGYN7S Qw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x3r0nrcr9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 07:47:05 +0000
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42Q7l4nS012588;
-	Tue, 26 Mar 2024 07:47:05 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x3r0nrcr4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 07:47:04 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42Q54JOd003767;
-	Tue, 26 Mar 2024 07:47:03 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x2c42nve8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 07:47:03 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42Q7kwd253019068
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 26 Mar 2024 07:47:00 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 820542004D;
-	Tue, 26 Mar 2024 07:46:58 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3F3B82004B;
-	Tue, 26 Mar 2024 07:46:58 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.60])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 26 Mar 2024 07:46:58 +0000 (GMT)
-Date: Tue, 26 Mar 2024 08:46:56 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Qi Zheng <zhengqi.arch@bytedance.com>
-Cc: akpm@linux-foundation.org, vishal.moola@gmail.com, hughd@google.com,
-        david@redhat.com, rppt@kernel.org, willy@infradead.org,
-        muchun.song@linux.dev, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, Alexander Gordeev <agordeev@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v2 3/3] s390: supplement for ptdesc conversion
-Message-ID: <20240326074656.6078-C-hca@linux.ibm.com>
-References: <04beaf3255056ffe131a5ea595736066c1e84756.1709541697.git.zhengqi.arch@bytedance.com>
- <20240305072154.26168-1-zhengqi.arch@bytedance.com>
+	s=arc-20240116; t=1711441978; c=relaxed/simple;
+	bh=+khCV1ORRWjue2vAhs6LLDgZaeQG/wO4Ggi2gFVAe30=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=SlphoveXIdpadKm9SzzZr3OpkoR9rV/DFhbZXj0Zh1hu1COtBffwxlodz4cR1HlJahPdFH5wWl7XbNJ4FxjM1f6e4ZgyNjObB8afRnsca4VWccmxqy2p9mpI29J5l4t3Ej1Br04W9JtJobp0m5Sgy2nXes5NjbGSj+0zkhkvy50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=softline.com; spf=pass smtp.mailfrom=softline.com; dkim=pass (2048-bit key) header.d=softline.com header.i=@softline.com header.b=GZwnl0QV; arc=none smtp.client-ip=185.31.132.229
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=softline.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=softline.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=softline.com;
+	s=relay; t=1711441123;
+	bh=+khCV1ORRWjue2vAhs6LLDgZaeQG/wO4Ggi2gFVAe30=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+	b=GZwnl0QVLxEOjw2B9WUcXWgOxkrx157uG7SF6tuhK/4YEdBVMoG7Pe/fjicpz/Wda
+	 8zD9THcCHR+6luud4VFzQAbCFrXTY7USfYaSjV+CtWK33MdMwrMvYWF9IKznW8jIvW
+	 ZcRGt/uGy6NbEC9UznuvMcMZZGK/MCeoerl96MlvxMAAgwMXKNd03oAfYCeSKuINzd
+	 2c248ieOuDi7fe5F4CwxKaqX6PmqM4XUUoUjleU5GKd7Fh0RyfI3RzgNqaCk40kFCJ
+	 mEagjJLZ2DAkMvr44VRxz1sd430hIcuEqiltdU2xfcu6ClN4BD5R2Y4JBlvlPQ3+6h
+	 JNJ58LW+yMKGg==
+From: "Antipov, Dmitriy" <Dmitriy.Antipov@softline.com>
+To: "gbayer@linux.ibm.com" <gbayer@linux.ibm.com>, "guwen@linux.alibaba.com"
+	<guwen@linux.alibaba.com>, "wenjia@linux.ibm.com" <wenjia@linux.ibm.com>,
+	"jaka@linux.ibm.com" <jaka@linux.ibm.com>
+CC: "lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>, "Shvetsov,
+ Alexander" <Alexander.Shvetsov@softline.com>, "linux-s390@vger.kernel.org"
+	<linux-s390@vger.kernel.org>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>
+Subject: Re: [lvc-project] [PATCH] [RFC] net: smc: fix fasync leak in
+ smc_release()
+Thread-Topic: [lvc-project] [PATCH] [RFC] net: smc: fix fasync leak in
+ smc_release()
+Thread-Index: AQHaZNb+eL3YMOb6v02FhrfSeOr3x7EXFu4AgBCQ6wCAAwYsAIAAOGyAgAEJXgCAAAaTAIAduhIA
+Date: Tue, 26 Mar 2024 08:18:43 +0000
+Message-ID: <941b129e87fec6b2f22ed3bc75334bd8515565a1.camel@softline.com>
+References: <20240221051608.43241-1-dmantipov@yandex.ru>
+	 <819353f3-f5f9-4a15-96a1-4f3a7fd6b33e@linux.alibaba.com>
+	 <659c7821842fca97513624b713ced72ab970cdfc.camel@softline.com>
+	 <19d7d71b-c911-45cc-9671-235d98720be6@linux.alibaba.com>
+	 <380043fa-3208-4856-92b1-be9c87caeeb6@yandex.ru>
+	 <2c9c9ffe-13c4-44b8-982a-a3b4070b8a11@linux.alibaba.com>
+	 <35584a9f-f4c2-423a-8bb8-2c729cedb6fe@yandex.ru>
+	 <93077cee-b81a-4690-9aa8-cc954f9be902@linux.ibm.com>
+	 <4a65f2f04d502a770627ccaacd099fd6a9d7f43a.camel@softline.com>
+In-Reply-To: <4a65f2f04d502a770627ccaacd099fd6a9d7f43a.camel@softline.com>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A5829988BFE8C848B374725DCC6A8A00@softline.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240305072154.26168-1-zhengqi.arch@bytedance.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: ju8ifvxWc2aeJahBllXnpXcsnT2z65ij
-X-Proofpoint-GUID: IArssar9KmfzzvMUCAa5e8JZkKunr0L3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-26_04,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- malwarescore=0 spamscore=0 clxscore=1011 lowpriorityscore=0 suspectscore=0
- mlxscore=0 mlxlogscore=292 phishscore=0 bulkscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2403210000
- definitions=main-2403260052
 
-On Tue, Mar 05, 2024 at 03:21:54PM +0800, Qi Zheng wrote:
-> After commit 6326c26c1514 ("s390: convert various pgalloc functions to use
-> ptdescs"), there are still some positions that use page->{lru, index}
-> instead of ptdesc->{pt_list, pt_index}. In order to make the use of
-> ptdesc->{pt_list, pt_index} clearer, it would be better to convert them
-> as well.
-> 
-> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
-> Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-> Cc: Janosch Frank <frankja@linux.ibm.com>
-> Cc: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: kvm@vger.kernel.org
-> Cc: linux-s390@vger.kernel.org
-> ---
-> v1 -> v2: fix build failure (cross compilation successful)
-> 
->  arch/s390/include/asm/pgalloc.h |  4 ++--
->  arch/s390/mm/gmap.c             | 38 +++++++++++++++++----------------
->  arch/s390/mm/pgalloc.c          |  8 +++----
->  3 files changed, 26 insertions(+), 24 deletions(-)
-
-Same here: Christian, Janosch, or Claudio, please have a look and
-provide an ACK if this is ok with you.
+T24gVGh1LCAyMDI0LTAzLTA3IGF0IDEzOjIxICswMzAwLCBEbWl0cnkgQW50aXBvdiB3cm90ZToN
+Cg0KPiBPbiBUaHUsIDIwMjQtMDMtMDcgYXQgMTA6NTcgKzAxMDAsIEphbiBLYXJjaGVyIHdyb3Rl
+Og0KPiANCj4gPiBXZSB0aGluayBpdCBtaWdodCBiZSBhbiBvcHRpb24gdG8gc2VjdXJlIHRoZSBw
+YXRoIGluIHRoaXMgZnVuY3Rpb24gd2l0aCANCj4gPiB0aGUgc21jLT5jbGNzb2NrX3JlbGVhc2Vf
+bG9jay4NCj4gPiANCj4gPiBgYGANCj4gPiAJbG9ja19zb2NrKCZzbWMtPnNrKTsNCj4gPiAJaWYg
+KHNtYy0+dXNlX2ZhbGxiYWNrKSB7DQo+ID4gCQlpZiAoIXNtYy0+Y2xjc29jaykgew0KPiA+IAkJ
+CXJlbGVhc2Vfc29jaygmc21jLT5zayk7DQo+ID4gCQkJcmV0dXJuIC1FQkFERjsNCj4gPiAJCX0N
+Cj4gPiArCQltdXRleF9sb2NrKCZzbWMtPmNsY3NvY2tfcmVsZWFzZV9sb2NrKTsNCj4gPiAJCWFu
+c3cgPSBzbWMtPmNsY3NvY2stPm9wcy0+aW9jdGwoc21jLT5jbGNzb2NrLCBjbWQsIGFyZyk7DQo+
+ID4gKwkJbXV0ZXhfdW5sb2NrKCZzbWMtPmNsY3NvY2tfcmVsZWFzZV9sb2NrKTsNCj4gPiAJCXJl
+bGVhc2Vfc29jaygmc21jLT5zayk7DQo+ID4gCQlyZXR1cm4gYW5zdzsNCj4gPiAJfQ0KPiA+IGBg
+YA0KPiA+IA0KPiA+IFdoYXQgZG8geW8gdGhpbmsgYWJvdXQgdGhpcz8NCj4gDQo+IFlvdSdyZSB0
+cnlpbmcgdG8gZml4IGl0IG9uIHRoZSB3cm9uZyBwYXRoLiBGSU9BU1lOQyBpcyBhIGdlbmVyaWMg
+cmF0aGVyDQo+IHRoYW4gcHJvdG9jb2wtc3BlY2lmaWMgdGhpbmcuIFNvIHVzZXJzcGFjZSAnaW9j
+dGwoc29jaywgRklPQVNZTkMsIFtdKScNCj4gY2FsbCBpcyBoYW5kbGVkIHdpdGg6DQo+IA0KPiAt
+PiBzeXNfaW9jdGwoKQ0KPiAgIC0+IGRvX3Zmc19pb2N0bCgpDQo+ICAgICAtPiBpb2N0bF9maW9h
+c3luYygpDQo+ICAgICAgIC0+IGZpbHAtPmZfb3AtPmZhc3luYygpICh3aGljaCBpcyBzb2NrX2Zh
+c3luYygpIGZvciBhbGwgc29ja2V0cykNCj4gDQo+IHJhdGhlciB0aGFuICdzb2NrLT5vcHMtPmlv
+Y3RsKC4uLiknLg0KDQpBbnkgcHJvZ3Jlc3Mgb24gdGhpcz8NCg0KRG1pdHJ5DQoNCg==
 
