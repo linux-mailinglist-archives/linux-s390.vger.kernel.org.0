@@ -1,43 +1,44 @@
-Return-Path: <linux-s390+bounces-2942-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-2945-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E521C894CEC
-	for <lists+linux-s390@lfdr.de>; Tue,  2 Apr 2024 09:53:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AE02894CEF
+	for <lists+linux-s390@lfdr.de>; Tue,  2 Apr 2024 09:53:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 221FD1C218FE
-	for <lists+linux-s390@lfdr.de>; Tue,  2 Apr 2024 07:53:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9D06C1C21B9C
+	for <lists+linux-s390@lfdr.de>; Tue,  2 Apr 2024 07:53:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58BEC3D0B8;
-	Tue,  2 Apr 2024 07:53:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A12A73D0CD;
+	Tue,  2 Apr 2024 07:53:23 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A563D2BD1C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A142E648
 	for <linux-s390@vger.kernel.org>; Tue,  2 Apr 2024 07:53:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712044401; cv=none; b=SR7c26jU6naR4uS9HNJzitGhStBu9XzjCthO4Y9pLmwUUax1B0L3gLCmA8fH2dcMZvs/9SzcVz6Z+au8aBVntFnNBvq0NLr7T6NzwSPErNn5nWdyY7jGtaXF/v9gTTRV7+bYId+4VAWXD3R47XLxxCyfjpBUzk5F9XaGHsbY1wY=
+	t=1712044403; cv=none; b=PewVmjoZI3WnlBkVr43dDAZivJVKtlZKVaI7kb8/XYeCQ9ZetOyxX8o3rKz2E2aGAEvnt/3sz7F3AtM9UwP7DHV3TgwXt03EXWExL5Ys/O7KcTo/B5gr5r6UTAjTOL8PXOAx5h+6IWwhaUzcdpSMvDd4exStnKV3Cw3+5CCx8nU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712044401; c=relaxed/simple;
-	bh=IOqmJt1/AaAARoF+FylX1lGFuV+OIgMvhrmNtax4e2Q=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=h5qCYPxpRohjyXYLCYrH79XDD5EwFWMrOmFdZqXePy8YqRltYxk90Pyw0xy0KM9Au2Grqh3OzJoqkwD4p4eFwZVDiZfn7gqvAup+HsGzbW6btA1l81Tq+ly+LAaRChjUp2xiFcCiXWZaEwG8wNXzVsCC8QDgYlyndTSrNAsLHV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+	s=arc-20240116; t=1712044403; c=relaxed/simple;
+	bh=HQBxte7laqjWauAPBDPkls6X7HxMS/UNG4Z/Za9w6fM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jT9SNyu+OPf5CNLQ0bf/fGZd7l8/4hrOV4Sz0dLejhLGtzLMqOKtH3IJuTaRYMSf2qwl6MvsoTWIJGcs5o2Q5Qm+9LFjYPC7vCkDNkPbVRkmN5D3jIaWuU+dGTNggPsoAxLbmJ4DghHy3Dn83xGwg5ELRYK/Cj8Hd4iWxND4wrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4V80RS5xc3zwRBB;
-	Tue,  2 Apr 2024 15:50:28 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4V80Td65bhzbdsR;
+	Tue,  2 Apr 2024 15:52:21 +0800 (CST)
 Received: from dggpemm100001.china.huawei.com (unknown [7.185.36.93])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7B67C140415;
-	Tue,  2 Apr 2024 15:53:15 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 58068140F7F;
+	Tue,  2 Apr 2024 15:53:16 +0800 (CST)
 Received: from localhost.localdomain (10.175.112.125) by
  dggpemm100001.china.huawei.com (7.185.36.93) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 2 Apr 2024 15:53:14 +0800
+ 15.1.2507.35; Tue, 2 Apr 2024 15:53:15 +0800
 From: Kefeng Wang <wangkefeng.wang@huawei.com>
 To: <akpm@linux-foundation.org>
 CC: Russell King <linux@armlinux.org.uk>, Catalin Marinas
@@ -52,10 +53,12 @@ CC: Russell King <linux@armlinux.org.uk>, Catalin Marinas
 	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
 	<linux-s390@vger.kernel.org>, <surenb@google.com>, Kefeng Wang
 	<wangkefeng.wang@huawei.com>
-Subject: [PATCH 0/7] arch/mm/fault: accelerate pagefault when badaccess
-Date: Tue, 2 Apr 2024 15:51:35 +0800
-Message-ID: <20240402075142.196265-1-wangkefeng.wang@huawei.com>
+Subject: [PATCH 1/7] arm64: mm: cleanup __do_page_fault()
+Date: Tue, 2 Apr 2024 15:51:36 +0800
+Message-ID: <20240402075142.196265-2-wangkefeng.wang@huawei.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20240402075142.196265-1-wangkefeng.wang@huawei.com>
+References: <20240402075142.196265-1-wangkefeng.wang@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -67,32 +70,67 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  dggpemm100001.china.huawei.com (7.185.36.93)
 
-After VMA lock-based page fault handling enabled, if bad access met
-under per-vma lock, it will fallback to mmap_lock-based handling,
-so it leads to unnessary mmap lock and vma find again. A test from
-lmbench shows 34% improve after this changes on arm64,
+The __do_page_fault() only check vma->flags and call handle_mm_fault(),
+and only called by do_page_fault(), let's squash it into do_page_fault()
+to cleanup code.
 
-  lat_sig -P 1 prot lat_sig 0.29194 -> 0.19198
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+---
+ arch/arm64/mm/fault.c | 27 +++++++--------------------
+ 1 file changed, 7 insertions(+), 20 deletions(-)
 
-Only build test on other archs except arm64.
-
-Kefeng Wang (7):
-  arm64: mm: cleanup __do_page_fault()
-  arm64: mm: accelerate pagefault when VM_FAULT_BADACCESS
-  arm: mm: accelerate pagefault when VM_FAULT_BADACCESS
-  powerpc: mm: accelerate pagefault when badaccess
-  riscv: mm: accelerate pagefault when badaccess
-  s390: mm: accelerate pagefault when badaccess
-  x86: mm: accelerate pagefault when badaccess
-
- arch/arm/mm/fault.c     |  4 +++-
- arch/arm64/mm/fault.c   | 31 ++++++++++---------------------
- arch/powerpc/mm/fault.c | 33 ++++++++++++++++++++-------------
- arch/riscv/mm/fault.c   |  5 ++++-
- arch/s390/mm/fault.c    |  3 ++-
- arch/x86/mm/fault.c     | 23 ++++++++++++++---------
- 6 files changed, 53 insertions(+), 46 deletions(-)
-
+diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+index 8251e2fea9c7..9bb9f395351a 100644
+--- a/arch/arm64/mm/fault.c
++++ b/arch/arm64/mm/fault.c
+@@ -486,25 +486,6 @@ static void do_bad_area(unsigned long far, unsigned long esr,
+ 	}
+ }
+ 
+-#define VM_FAULT_BADMAP		((__force vm_fault_t)0x010000)
+-#define VM_FAULT_BADACCESS	((__force vm_fault_t)0x020000)
+-
+-static vm_fault_t __do_page_fault(struct mm_struct *mm,
+-				  struct vm_area_struct *vma, unsigned long addr,
+-				  unsigned int mm_flags, unsigned long vm_flags,
+-				  struct pt_regs *regs)
+-{
+-	/*
+-	 * Ok, we have a good vm_area for this memory access, so we can handle
+-	 * it.
+-	 * Check that the permissions on the VMA allow for the fault which
+-	 * occurred.
+-	 */
+-	if (!(vma->vm_flags & vm_flags))
+-		return VM_FAULT_BADACCESS;
+-	return handle_mm_fault(vma, addr, mm_flags, regs);
+-}
+-
+ static bool is_el0_instruction_abort(unsigned long esr)
+ {
+ 	return ESR_ELx_EC(esr) == ESR_ELx_EC_IABT_LOW;
+@@ -519,6 +500,9 @@ static bool is_write_abort(unsigned long esr)
+ 	return (esr & ESR_ELx_WNR) && !(esr & ESR_ELx_CM);
+ }
+ 
++#define VM_FAULT_BADMAP		((__force vm_fault_t)0x010000)
++#define VM_FAULT_BADACCESS	((__force vm_fault_t)0x020000)
++
+ static int __kprobes do_page_fault(unsigned long far, unsigned long esr,
+ 				   struct pt_regs *regs)
+ {
+@@ -617,7 +601,10 @@ static int __kprobes do_page_fault(unsigned long far, unsigned long esr,
+ 		goto done;
+ 	}
+ 
+-	fault = __do_page_fault(mm, vma, addr, mm_flags, vm_flags, regs);
++	if (!(vma->vm_flags & vm_flags))
++		fault = VM_FAULT_BADACCESS;
++	else
++		fault = handle_mm_fault(vma, addr, mm_flags, regs);
+ 
+ 	/* Quick path to respond to signals */
+ 	if (fault_signal_pending(fault, regs)) {
 -- 
 2.27.0
 
