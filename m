@@ -1,44 +1,44 @@
-Return-Path: <linux-s390+bounces-2947-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-2949-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63B96894CF1
-	for <lists+linux-s390@lfdr.de>; Tue,  2 Apr 2024 09:53:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 151DC894CF6
+	for <lists+linux-s390@lfdr.de>; Tue,  2 Apr 2024 09:53:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 03E1F1F2285E
-	for <lists+linux-s390@lfdr.de>; Tue,  2 Apr 2024 07:53:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 44EA11C2193F
+	for <lists+linux-s390@lfdr.de>; Tue,  2 Apr 2024 07:53:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9E5E2E648;
-	Tue,  2 Apr 2024 07:53:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 042482E648;
+	Tue,  2 Apr 2024 07:53:32 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3668C3D0C4
-	for <linux-s390@vger.kernel.org>; Tue,  2 Apr 2024 07:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9BB92BD1C
+	for <linux-s390@vger.kernel.org>; Tue,  2 Apr 2024 07:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712044404; cv=none; b=PmD/vdfhUImb4y/fNrdhe9qUVj8uKODx8p2v1wc5nqO+Wd312TlsY04l3cOHYOeJM4RkQdndQu9pvMPFBNEMmFcLG4huF/xa5Jj+AfaOGyv9DxjbZlVabKiqrWG0HPcIhb77nQ5k/9Dugvfpy3t1onlcH+Yh9j4RIgSrIy9SeBQ=
+	t=1712044411; cv=none; b=S71BiMFnprDwRHYgfl5zSRzldDWOfT+8+w7PT/UEqzEkg5eEcAZ8+2HS70APGZUEBs3FArHuha1nbyRurEBxpguQpac1esSAqRotpQvyIjc8k6ooQpk7t7aqma6Urh23oPZOUKFBOg07YyVVNg3XS0aGQdWQb5eJMGISizvWIYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712044404; c=relaxed/simple;
-	bh=ztExGHyh4rH9+6267FI7141vunmEWg+m1+gxQbT5pns=;
+	s=arc-20240116; t=1712044411; c=relaxed/simple;
+	bh=Y4j6W4b2nsvuYc7NSGeH63FNbh0Qhm3lJgZNwtatPSc=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mCCrzOOygEzQcoPsfIF1l+DQ8GdQbIpXgneN9F/MLwVOZokc+X0aRT0h8ADwxIGLGXVF5yMhub2uULgPUVjuf1wAjcpXYiFsXIorZwry06Tc3IFvFG+ywnnQHRXld1VToNgFmJK57qH21AXY4NRJne3MJGwKfiSokzGwQ3FyGpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	 MIME-Version:Content-Type; b=Np0BInQcau7DVnTJOIn2vrKM8KRjddxX73JMzLpkxu9RWe+oY1SPjaoOyaQCzjrS+2magiN5seC5ZRkr75ZuMjOF/vCNnoB3NTCeTtzaE/C8uFY0ygGYeyHovMnOIFWn8fmdXqB4+7PAIrGIs19/N7axUzbGUGK2wOhAiLJGl7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4V80Tk2SWLzbds4;
-	Tue,  2 Apr 2024 15:52:26 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4V80Rc70dCz29kHr;
+	Tue,  2 Apr 2024 15:50:36 +0800 (CST)
 Received: from dggpemm100001.china.huawei.com (unknown [7.185.36.93])
-	by mail.maildlp.com (Postfix) with ESMTPS id CD95B18007B;
-	Tue,  2 Apr 2024 15:53:20 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id B81221A016C;
+	Tue,  2 Apr 2024 15:53:21 +0800 (CST)
 Received: from localhost.localdomain (10.175.112.125) by
  dggpemm100001.china.huawei.com (7.185.36.93) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 2 Apr 2024 15:53:19 +0800
+ 15.1.2507.35; Tue, 2 Apr 2024 15:53:20 +0800
 From: Kefeng Wang <wangkefeng.wang@huawei.com>
 To: <akpm@linux-foundation.org>
 CC: Russell King <linux@armlinux.org.uk>, Catalin Marinas
@@ -53,9 +53,9 @@ CC: Russell King <linux@armlinux.org.uk>, Catalin Marinas
 	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
 	<linux-s390@vger.kernel.org>, <surenb@google.com>, Kefeng Wang
 	<wangkefeng.wang@huawei.com>
-Subject: [PATCH 6/7] s390: mm: accelerate pagefault when badaccess
-Date: Tue, 2 Apr 2024 15:51:41 +0800
-Message-ID: <20240402075142.196265-7-wangkefeng.wang@huawei.com>
+Subject: [PATCH 7/7] x86: mm: accelerate pagefault when badaccess
+Date: Tue, 2 Apr 2024 15:51:42 +0800
+Message-ID: <20240402075142.196265-8-wangkefeng.wang@huawei.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20240402075142.196265-1-wangkefeng.wang@huawei.com>
 References: <20240402075142.196265-1-wangkefeng.wang@huawei.com>
@@ -76,23 +76,77 @@ lock_mm_and_find_vma() and check vm_flags again.
 
 Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
- arch/s390/mm/fault.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/mm/fault.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
-index c421dd44ffbe..162ca2576fd4 100644
---- a/arch/s390/mm/fault.c
-+++ b/arch/s390/mm/fault.c
-@@ -325,7 +325,8 @@ static void do_exception(struct pt_regs *regs, int access)
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index a4cc20d0036d..67b18adc75dd 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -866,14 +866,17 @@ bad_area_nosemaphore(struct pt_regs *regs, unsigned long error_code,
+ 
+ static void
+ __bad_area(struct pt_regs *regs, unsigned long error_code,
+-	   unsigned long address, u32 pkey, int si_code)
++	   unsigned long address, struct mm_struct *mm,
++	   struct vm_area_struct *vma, u32 pkey, int si_code)
+ {
+-	struct mm_struct *mm = current->mm;
+ 	/*
+ 	 * Something tried to access memory that isn't in our memory map..
+ 	 * Fix it, but check if it's kernel or user first..
+ 	 */
+-	mmap_read_unlock(mm);
++	if (mm)
++		mmap_read_unlock(mm);
++	else
++		vma_end_read(vma);
+ 
+ 	__bad_area_nosemaphore(regs, error_code, address, pkey, si_code);
+ }
+@@ -897,7 +900,8 @@ static inline bool bad_area_access_from_pkeys(unsigned long error_code,
+ 
+ static noinline void
+ bad_area_access_error(struct pt_regs *regs, unsigned long error_code,
+-		      unsigned long address, struct vm_area_struct *vma)
++		      unsigned long address, struct mm_struct *mm,
++		      struct vm_area_struct *vma)
+ {
+ 	/*
+ 	 * This OSPKE check is not strictly necessary at runtime.
+@@ -927,9 +931,9 @@ bad_area_access_error(struct pt_regs *regs, unsigned long error_code,
+ 		 */
+ 		u32 pkey = vma_pkey(vma);
+ 
+-		__bad_area(regs, error_code, address, pkey, SEGV_PKUERR);
++		__bad_area(regs, error_code, address, mm, vma, pkey, SEGV_PKUERR);
+ 	} else {
+-		__bad_area(regs, error_code, address, 0, SEGV_ACCERR);
++		__bad_area(regs, error_code, address, mm, vma, 0, SEGV_ACCERR);
+ 	}
+ }
+ 
+@@ -1357,8 +1361,9 @@ void do_user_addr_fault(struct pt_regs *regs,
  		goto lock_mmap;
- 	if (!(vma->vm_flags & access)) {
- 		vma_end_read(vma);
+ 
+ 	if (unlikely(access_error(error_code, vma))) {
+-		vma_end_read(vma);
 -		goto lock_mmap;
++		bad_area_access_error(regs, error_code, address, NULL, vma);
 +		count_vm_vma_lock_event(VMA_LOCK_SUCCESS);
-+		return handle_fault_error_nolock(regs, SEGV_ACCERR);
++		return;
  	}
  	fault = handle_mm_fault(vma, address, flags | FAULT_FLAG_VMA_LOCK, regs);
  	if (!(fault & (VM_FAULT_RETRY | VM_FAULT_COMPLETED)))
+@@ -1394,7 +1399,7 @@ void do_user_addr_fault(struct pt_regs *regs,
+ 	 * we can handle it..
+ 	 */
+ 	if (unlikely(access_error(error_code, vma))) {
+-		bad_area_access_error(regs, error_code, address, vma);
++		bad_area_access_error(regs, error_code, address, mm, vma);
+ 		return;
+ 	}
+ 
 -- 
 2.27.0
 
