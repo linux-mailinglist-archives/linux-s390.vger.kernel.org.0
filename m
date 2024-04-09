@@ -1,140 +1,140 @@
-Return-Path: <linux-s390+bounces-3148-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-3154-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A35D289D237
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Apr 2024 08:18:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4F0F89D266
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Apr 2024 08:27:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 449041F22802
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Apr 2024 06:18:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 399292863F7
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Apr 2024 06:27:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 634D26E5EF;
-	Tue,  9 Apr 2024 06:18:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AA0A6EB7B;
+	Tue,  9 Apr 2024 06:27:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b="SUexIQz8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="miU+wAIC"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail.tkos.co.il (guitar.tkos.co.il [84.110.109.230])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E7D524AF;
-	Tue,  9 Apr 2024 06:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.110.109.230
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6EC6EB72;
+	Tue,  9 Apr 2024 06:27:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712643504; cv=none; b=EeKCDzvCq08XfAVcQjySJm86ldQg2hS+U2RerxpmDoTPPwSD1G9lX8vf+sXg7iCqOdFA/WFJFomMcJoLKBvNwdIzuxLD9CuO79um/Efdf/9ShJsNcNtMd3GXBTyv9PKelgwuw9d1BhLr2bB0Czbl3gn8esokmvPUZy00mrDwNIk=
+	t=1712644027; cv=none; b=JyUGyF4T3eqLtpeAvz9AVyoJ16KFmdf6kAXRCwbd888d6sXM76fUsL9UJk72u1JX2h9ihtSIw6uYXD1NYYL+K6/CcXOO6vr0mdYlmOii7AdT0DTox09UbCRhiTDtiArhxr6aFCvEpAUFGqrr75IY+sQzYuo91WNC8uhhwJwme/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712643504; c=relaxed/simple;
-	bh=R7K6bnEO9GvrFuZ5cBFijMFOruRQKScFkxZi8ojrTRc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UXxhH/KOyLIjo0v7B+ttvaOzE24upXLbyKk6jN5lgihovaLs8lCX1EyZrFeG9z15pkO3LDfxAK8uwLS5vcMm7V4zXxDsLuOyvle/AhiUZFZKQ7/oGJyFJ9Hsvykz3ksTXxiS3uFYMb8MiTNw3LOL2GLYKRq5teE7y0NoinpfPPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il; spf=pass smtp.mailfrom=tkos.co.il; dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b=SUexIQz8; arc=none smtp.client-ip=84.110.109.230
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tkos.co.il
-Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.tkos.co.il (Postfix) with ESMTPS id 48858440459;
-	Tue,  9 Apr 2024 09:17:45 +0300 (IDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
-	s=default; t=1712643465;
-	bh=R7K6bnEO9GvrFuZ5cBFijMFOruRQKScFkxZi8ojrTRc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SUexIQz8PPD4zBDvys8qW4vICsMoWwrv/Gnfl1XbfryJUgAXmhmvGF4hBnq0rrs9u
-	 dJkOWwvsTTJp49f/96CsJAOe7SVxyJYmn5IBK2tBlDDM4FQfyhOmfOsb7RCYJ7mGFQ
-	 Z4pxD5uzbWSNMoTrZSEaMPdDEDESwEICV6BGapb1jO3WPznEXPBWQu8Uyy1eK7bhgh
-	 VJ2vFMvDL4Ab8KkyRmwnBkXCZkJWEUa948eREug5DCra0Vd7D1+U+jx3rFF10m0DVj
-	 SXe8/7ivvfBvgkUsoa+sOWN7M+3AT9z4tW1kFS6QMaNP60x6miJmpnTgoukgFTIE6O
-	 pV1sS2D6zWaJw==
-From: Baruch Siach <baruch@tkos.co.il>
-To: Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Cc: Baruch Siach <baruch@tkos.co.il>,
-	Robin Murphy <robin.murphy@arm.com>,
-	iommu@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
+	s=arc-20240116; t=1712644027; c=relaxed/simple;
+	bh=YBgFeEcKNu6z1EOuKIDtV8ucxUi4txUooaEev8PsP28=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EMPJooZMe1g3veisa8CVLAb/Xm0KM4uveW8RgRDirDpQpY7/3cv8ditkXvD+Q2lgDHPBuZtE0xQUX+9UWDwrMesogbpvjnMqpoS13b5BVgTFL3DtI03iRPGv62iaACJsnZtwD55w03dXZgCiUZWwZWRBITC3wXLwbBki3xPbkH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=miU+wAIC; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712644025; x=1744180025;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YBgFeEcKNu6z1EOuKIDtV8ucxUi4txUooaEev8PsP28=;
+  b=miU+wAICFFcFOK7b9Dmg5vu9UP0H4+ZOgiDv2bPK9JVIZyLVxdQOMxwW
+   kGCaDFU7vM3MSt1R07nhG62iQo1PDSHvudeWDcKkWA5pn0fNKk6GWsphW
+   K71ZnhTACbZXPcWEvPcCvzIUyXICKpDp5v/D/4QRyw9jetqGnyeYFce3W
+   f+/G/DVDkgDGyhYHJQn7QTfJ3ZrmtPQrS7G8c29bMewb+7uYFhevupoDq
+   WfrGDUxltz1aJy1sTNT9yDerQTFEVtzVBIYiQ7msgHPeq3XLy6st3Hxhx
+   9IZK7W8wiH2nf6PQAPuyF8Qf8WeKuTu6GdokMJMheGYa5GS3E80h2/E/m
+   Q==;
+X-CSE-ConnectionGUID: zlronA/dQIKXGUkaEzQQDg==
+X-CSE-MsgGUID: k4KOnJmTSB2UFhSUaOq4fg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="30436608"
+X-IronPort-AV: E=Sophos;i="6.07,188,1708416000"; 
+   d="scan'208";a="30436608"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 23:27:05 -0700
+X-CSE-ConnectionGUID: i4DhQ/5wQ5+lYrCrL9n3Kg==
+X-CSE-MsgGUID: HlKELBhTQnaCEeG1ZpmSMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,188,1708416000"; 
+   d="scan'208";a="51129094"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.249.37.26])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 23:26:57 -0700
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	John Stultz <jstultz@google.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
 	linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org,
-	=?UTF-8?q?Petr=20Tesa=C5=99=C3=ADk?= <petr@tesarici.cz>,
-	Ramon Fried <ramon@neureality.ai>,
-	Elad Nachman <enachman@marvell.com>
-Subject: [PATCH RFC v2 5/5] arm64: mm: take DMA zone offset into account
-Date: Tue,  9 Apr 2024 09:17:58 +0300
-Message-ID: <2fa9d7954a99b018a32314b9baab25ba18504f15.1712642324.git.baruch@tkos.co.il>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1712642324.git.baruch@tkos.co.il>
-References: <cover.1712642324.git.baruch@tkos.co.il>
+	linux-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org
+Subject: [PATCH] vdso: Fix powerpc build U64_MAX undeclared error
+Date: Tue,  9 Apr 2024 09:26:39 +0300
+Message-Id: <20240409062639.3393-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
 
-Commit 791ab8b2e3db ("arm64: Ignore any DMA offsets in the
-max_zone_phys() calculation") made DMA/DMA32 zones span the entire RAM
-when RAM starts above 32-bits. This breaks hardware with DMA area that
-start above 32-bits. But the commit log says that "we haven't noticed
-any such hardware". It turns out that such hardware does exist.
+U64_MAX is not in include/vdso/limits.h, although that isn't noticed on x86
+because x86 includes include/linux/limits.h indirectly. However powerpc
+is more selective, resulting in the following build error:
 
-One such platform has RAM starting at 32GB with an internal bus that has
-the following DMA limits:
+  In file included from <command-line>:
+  lib/vdso/gettimeofday.c: In function 'vdso_calc_ns':
+  lib/vdso/gettimeofday.c:11:33: error: 'U64_MAX' undeclared
+     11 | # define VDSO_DELTA_MASK(vd)    U64_MAX
+        |                                 ^~~~~~~
 
-  #address-cells = <2>;
-  #size-cells = <2>;
-  dma-ranges = <0x00 0xc0000000 0x08 0x00000000 0x00 0x40000000>;
+Use ULLONG_MAX instead which will work just as well and is in
+include/vdso/limits.h.
 
-Devices under this bus can see 1GB of DMA range between 3GB-4GB in each
-device address space. This range is mapped to CPU memory at 32GB-33GB.
-With current code DMA allocations for devices under this bus are not
-limited to DMA area, leading to run-time allocation failure.
-
-Modify 'zone_dma_bits' calculation (via dt_zone_dma_bits) to only cover
-the actual DMA area starting at 'zone_dma_off'. Use the newly introduced
-'min' parameter of of_dma_get_cpu_limits() to set 'zone_dma_off'.
-
-DMA32 zone is useless in this configuration, so make its limit the same
-as the DMA zone when the lower DMA limit is higher than 32-bits.
-
-The result is DMA zone that properly reflects the hardware constraints
-as follows:
-
-[    0.000000] Zone ranges:
-[    0.000000]   DMA      [mem 0x0000000800000000-0x000000083fffffff]
-[    0.000000]   DMA32    empty
-[    0.000000]   Normal   [mem 0x0000000840000000-0x0000000bffffffff]
-
-Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Closes: https://lore.kernel.org/all/20240409124905.6816db37@canb.auug.org.au/
+Fixes: c8e3a8b6f2e6 ("vdso: Consolidate vdso_calc_delta()")
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- arch/arm64/mm/init.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ lib/vdso/gettimeofday.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 77e942ca578b..cd283ae0178d 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -128,9 +128,11 @@ static void __init zone_sizes_init(void)
+diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
+index 9c3a8d2440c9..899850bd6f0b 100644
+--- a/lib/vdso/gettimeofday.c
++++ b/lib/vdso/gettimeofday.c
+@@ -8,7 +8,7 @@
+ #ifndef vdso_calc_ns
  
- #ifdef CONFIG_ZONE_DMA
- 	acpi_zone_dma_limit = acpi_iort_dma_get_max_cpu_address();
--	of_dma_get_cpu_limits(NULL, &dt_zone_dma_limit, NULL);
-+	of_dma_get_cpu_limits(NULL, &dt_zone_dma_limit, &zone_dma_base);
- 	zone_dma_limit = min(dt_zone_dma_limit, acpi_zone_dma_limit);
- 	arm64_dma_phys_limit = max_zone_phys(zone_dma_limit);
-+	if (zone_dma_base > U32_MAX)
-+		dma32_phys_limit = arm64_dma_phys_limit;
- 	max_zone_pfns[ZONE_DMA] = PFN_DOWN(arm64_dma_phys_limit);
+ #ifdef VDSO_DELTA_NOMASK
+-# define VDSO_DELTA_MASK(vd)	U64_MAX
++# define VDSO_DELTA_MASK(vd)	ULLONG_MAX
+ #else
+ # define VDSO_DELTA_MASK(vd)	(vd->mask)
  #endif
- #ifdef CONFIG_ZONE_DMA32
 -- 
-2.43.0
+2.34.1
 
 
