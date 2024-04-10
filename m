@@ -1,199 +1,312 @@
-Return-Path: <linux-s390+bounces-3199-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-3201-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BF4289FEB0
-	for <lists+linux-s390@lfdr.de>; Wed, 10 Apr 2024 19:36:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B9BD89FED5
+	for <lists+linux-s390@lfdr.de>; Wed, 10 Apr 2024 19:45:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8DC211F23F5F
-	for <lists+linux-s390@lfdr.de>; Wed, 10 Apr 2024 17:36:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 86F7F1C22CDA
+	for <lists+linux-s390@lfdr.de>; Wed, 10 Apr 2024 17:45:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3184417F36C;
-	Wed, 10 Apr 2024 17:36:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FB3E17F39F;
+	Wed, 10 Apr 2024 17:44:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Wo/su6ux";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="pwQ8usD0";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Wo/su6ux";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="pwQ8usD0"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sJSz3ERr"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12ED11779B4;
-	Wed, 10 Apr 2024 17:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6938013D502;
+	Wed, 10 Apr 2024 17:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712770571; cv=none; b=ufmzr/kxYKt4NTP9Vv/eyTUSMaAz2nDiGNT+ZRYVTmMm1G/mQsE14HMOrFdWgvhHIM5FJDKArOnrFEXbSj0bgtL4EKpga4XvUrbH1K7UQLRwes1vtQswpNIqRC9ztZKUYjB7XbjU8znidFZTGR/kkgr3JHiRrWt6kt9tmREXylg=
+	t=1712771099; cv=none; b=hL7X6cTBiVZSW8N2JXWc4pJTmE0zb7Dne4NbvqA4ZvAWonVE4PYPP+tM7lzIjSI3LhodT/BJreXIW5Uwge7o0U8rTzKdySw9KUdLuhnXJ7Kik0peukPFUDshhORR2seM154OCHyuy4qLLCZU33DoyNNiqretMrvfB4ZycI/uByQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712770571; c=relaxed/simple;
-	bh=s7AlPHnjW1gFs3weqR//JnIAW3hG+/Mp+aTuvYmxgTU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p2+x3X32CoKrZ801XtkYFNGmkdaDWfFjB3IA9loQOFj+haLX+43yX/Qrqx0UVHKz2mKYkJhVdUEuz67bSAPtr4mMpb+FH5h03XTzcdKa4Z0aPLJ98l6kBSsGYiWHwwnMnpqbGgQrgr1WO8tVj0ye7KrJMr1S9CA6R6ITlRItAw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Wo/su6ux; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=pwQ8usD0; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Wo/su6ux; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=pwQ8usD0; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3395033A89;
-	Wed, 10 Apr 2024 17:36:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1712770567;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0ZHHE5aOwQ1Ezn/ab1buAuDtcCLPcpIIchKLIUxoBbM=;
-	b=Wo/su6uxAz3KDCet7sG1IMbLmZNu/s492NxBN+stUG6oo2qYtuABn+4iFfLZA7KwEty81H
-	IdrOqxowTjwdMcGmvVJuVhd3KhUwlHGwlvUKUWet7620GxVeKx3CiehY9/HodlAMarXBGu
-	QKA3ILsUtN07gfz8aoS5W8ffx3zw7mU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1712770567;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0ZHHE5aOwQ1Ezn/ab1buAuDtcCLPcpIIchKLIUxoBbM=;
-	b=pwQ8usD0NAyGD6U1k6UXV+bVfsviAAMcwHC0rXMTXFxYTDSQht5I5OMD0LYFtofyWnG5ZB
-	JIolcEC5hlnuCvCg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1712770567;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0ZHHE5aOwQ1Ezn/ab1buAuDtcCLPcpIIchKLIUxoBbM=;
-	b=Wo/su6uxAz3KDCet7sG1IMbLmZNu/s492NxBN+stUG6oo2qYtuABn+4iFfLZA7KwEty81H
-	IdrOqxowTjwdMcGmvVJuVhd3KhUwlHGwlvUKUWet7620GxVeKx3CiehY9/HodlAMarXBGu
-	QKA3ILsUtN07gfz8aoS5W8ffx3zw7mU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1712770567;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0ZHHE5aOwQ1Ezn/ab1buAuDtcCLPcpIIchKLIUxoBbM=;
-	b=pwQ8usD0NAyGD6U1k6UXV+bVfsviAAMcwHC0rXMTXFxYTDSQht5I5OMD0LYFtofyWnG5ZB
-	JIolcEC5hlnuCvCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EFAAD13691;
-	Wed, 10 Apr 2024 17:36:06 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 20hgOgbOFmZrWQAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Wed, 10 Apr 2024 17:36:06 +0000
-Date: Wed, 10 Apr 2024 19:28:37 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Jan Kara <jack@suse.cz>
-Cc: Matthew Wilcox <willy@infradead.org>, Yu Kuai <yukuai1@huaweicloud.com>,
-	axboe@kernel.dk, roger.pau@citrix.com, colyli@suse.de,
-	kent.overstreet@gmail.com, joern@lazybastard.org,
-	miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-	sth@linux.ibm.com, hoeppner@linux.ibm.com, hca@linux.ibm.com,
-	gor@linux.ibm.com, agordeev@linux.ibm.com, jejb@linux.ibm.com,
-	martin.petersen@oracle.com, clm@fb.com, josef@toxicpanda.com,
-	dsterba@suse.com, viro@zeniv.linux.org.uk, brauner@kernel.org,
-	nico@fluxnic.net, xiang@kernel.org, chao@kernel.org, tytso@mit.edu,
-	adilger.kernel@dilger.ca, jack@suse.com, konishi.ryusuke@gmail.com,
-	akpm@linux-foundation.org, hare@suse.de, p.raghav@samsung.com,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	xen-devel@lists.xenproject.org, linux-bcache@vger.kernel.org,
-	linux-mtd@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-bcachefs@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-	linux-nilfs@vger.kernel.org, yukuai3@huawei.com,
-	yi.zhang@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH RFC v3 for-6.8/block 09/17] btrfs: use bdev apis
-Message-ID: <20240410172837.GO3492@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20231221085712.1766333-1-yukuai1@huaweicloud.com>
- <20231221085712.1766333-10-yukuai1@huaweicloud.com>
- <ZYcZi5YYvt5QHrG9@casper.infradead.org>
- <20240104114958.f3cit5q7syp3tn3a@quack3>
+	s=arc-20240116; t=1712771099; c=relaxed/simple;
+	bh=/BMaKXEy6NNnwFMwmVk9KIRRaSKysgILBBq5AXYyV/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QiGbn/PWF4xfkw2PcwjGl0CNq72Xe0hKqF776uwwlvv1f3wmzVxQtoW5d8N5/rL8tgqcKDmB9h7RwHOlY9Z4DaGxTneV2oFu5b6EoYxF+DJXmnAkcZB7t+OX5bhQK/zWWf7qYg9w3+NivhuebAGn8z7rMAMCUYICZQAr1Fc6RfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=sJSz3ERr; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43AHW32D027181;
+	Wed, 10 Apr 2024 17:44:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=NcCV+vYF6bMCP5PVebzSA3U7LOVkS5kUCoHa1vCxPrs=;
+ b=sJSz3ERrXB216gg8xrrXCN9+IMLNefnQMvzHDHZqMKFGtnKCe20Cc9cU0vXipoYDDg2C
+ 6kdq0Ix2I3HXc1sjqhsSdz42J7cNfkCnJJR7pDIoOdDA8zysxox87aGN96qxNx8RjtQa
+ 8gcKzA4xy7etKCCdz2kIdc762QWkgdmGusCbV0a2PIpAtqRNfECkvnaxqhSt5fsvLpSW
+ HuNO0xpM3YrkL8h261znCFaC3yzd0M1TLfn71q2ExBOdoifYYnwLyol8jAkvhDsrNSnE
+ wd/t3RHg0BO/DG8U8nJXATh0CIlY167Jr80kwVYfYwonIF8cUDixsyd7Z/PyvB9X1GVd CA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xdy8j00rk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Apr 2024 17:44:44 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43AHihtw011980;
+	Wed, 10 Apr 2024 17:44:43 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xdy8j00rh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Apr 2024 17:44:43 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43AFqkcu019119;
+	Wed, 10 Apr 2024 17:44:42 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xbh40ef83-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Apr 2024 17:44:42 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43AHia1Y16187780
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 10 Apr 2024 17:44:38 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 69E3F2004B;
+	Wed, 10 Apr 2024 17:44:36 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3B2B720040;
+	Wed, 10 Apr 2024 17:44:36 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.152.224.66])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 10 Apr 2024 17:44:36 +0000 (GMT)
+Date: Wed, 10 Apr 2024 19:31:50 +0200
+From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        Matthew Wilcox
+ <willy@infradead.org>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
+ <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian
+ Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle
+ <svens@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Gerald
+ Schaefer <gerald.schaefer@linux.ibm.com>,
+        Thomas Huth <thuth@redhat.com>
+Subject: Re: [PATCH v1 2/5] s390/uv: convert gmap_make_secure() to work on
+ folios
+Message-ID: <20240410193150.655df790@p-imbrenda>
+In-Reply-To: <20240404163642.1125529-3-david@redhat.com>
+References: <20240404163642.1125529-1-david@redhat.com>
+	<20240404163642.1125529-3-david@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240104114958.f3cit5q7syp3tn3a@quack3>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Flag: NO
-X-Spam-Score: -2.50
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.50 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[49];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLtpaten8pmzgjg419jubxqoa7)];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[infradead.org,huaweicloud.com,kernel.dk,citrix.com,suse.de,gmail.com,lazybastard.org,bootlin.com,nod.at,ti.com,linux.ibm.com,oracle.com,fb.com,toxicpanda.com,suse.com,zeniv.linux.org.uk,kernel.org,fluxnic.net,mit.edu,dilger.ca,linux-foundation.org,samsung.com,vger.kernel.org,lists.xenproject.org,lists.infradead.org,lists.ozlabs.org,huawei.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	TAGGED_RCPT(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: rkGJLSWwyI4FSBzce00f3hjUwHMGtIj8
+X-Proofpoint-GUID: g0vFXYAqO7tLKK4XeNGPxST4QRrLVVev
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-10_04,2024-04-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
+ adultscore=0 priorityscore=1501 bulkscore=0 malwarescore=0 spamscore=0
+ phishscore=0 suspectscore=0 mlxlogscore=858 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404100130
 
-On Thu, Jan 04, 2024 at 12:49:58PM +0100, Jan Kara wrote:
-> On Sat 23-12-23 17:31:55, Matthew Wilcox wrote:
-> > On Thu, Dec 21, 2023 at 04:57:04PM +0800, Yu Kuai wrote:
-> > > @@ -3674,16 +3670,17 @@ struct btrfs_super_block *btrfs_read_dev_one_super(struct block_device *bdev,
-> > >  		 * Drop the page of the primary superblock, so later read will
-> > >  		 * always read from the device.
-> > >  		 */
-> > > -		invalidate_inode_pages2_range(mapping,
-> > > -				bytenr >> PAGE_SHIFT,
-> > > +		invalidate_bdev_range(bdev, bytenr >> PAGE_SHIFT,
-> > >  				(bytenr + BTRFS_SUPER_INFO_SIZE) >> PAGE_SHIFT);
-> > >  	}
-> > >  
-> > > -	page = read_cache_page_gfp(mapping, bytenr >> PAGE_SHIFT, GFP_NOFS);
-> > > -	if (IS_ERR(page))
-> > > -		return ERR_CAST(page);
-> > > +	nofs_flag = memalloc_nofs_save();
-> > > +	folio = bdev_read_folio(bdev, bytenr);
-> > > +	memalloc_nofs_restore(nofs_flag);
-> > 
-> > This is the wrong way to use memalloc_nofs_save/restore.  They should be
-> > used at the point that the filesystem takes/releases whatever lock is
-> > also used during reclaim.  I don't know btrfs well enough to suggest
-> > what lock is missing these annotations.
+On Thu,  4 Apr 2024 18:36:39 +0200
+David Hildenbrand <david@redhat.com> wrote:
+
+> We have various goals that require gmap_make_secure() to only work on
+> folios. We want to limit the use of page_mapcount() to the places where it
+> is absolutely necessary, we want to avoid using page flags of tail
+> pages, and we want to remove page_has_private().
 > 
-> In principle I agree with you but in this particular case I agree the ask
-> is just too big. I suspect it is one of btrfs btree locks or maybe
-> chunk_mutex but I doubt even btrfs developers know and maybe it is just a
-> cargo cult. And it is not like this would be the first occurence of this
-> anti-pattern in btrfs - see e.g. device_list_add(), add_missing_dev(),
-> btrfs_destroy_delalloc_inodes() (here the wrapping around
-> invalidate_inode_pages2() looks really weird), and many others...
+> So, let's convert gmap_make_secure() to folios. While s390x makes sure
+> to never have PMD-mapped THP in processes that use KVM -- by remapping
+> them using PTEs in thp_split_walk_pmd_entry()->split_huge_pmd() -- we might
+> still find PTE-mapped THPs and could end up working on tail pages of
+> such large folios for now.
+> 
+> To handle that cleanly, let's simply split any PTE-mapped large folio,
+> so we can be sure that we are always working with small folios and never
+> on tail pages.
+> 
+> There is no real change: splitting will similarly fail on unexpected folio
+> references, just like it would already when we try to freeze the folio
+> refcount.
+> 
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  arch/s390/include/asm/page.h |  1 +
+>  arch/s390/kernel/uv.c        | 66 ++++++++++++++++++++++--------------
+>  2 files changed, 42 insertions(+), 25 deletions(-)
+> 
+> diff --git a/arch/s390/include/asm/page.h b/arch/s390/include/asm/page.h
+> index 9381879f7ecf..54d015bcd8e3 100644
+> --- a/arch/s390/include/asm/page.h
+> +++ b/arch/s390/include/asm/page.h
+> @@ -215,6 +215,7 @@ static inline unsigned long __phys_addr(unsigned long x, bool is_31bit)
+>  
+>  #define phys_to_page(phys)	pfn_to_page(phys_to_pfn(phys))
+>  #define page_to_phys(page)	pfn_to_phys(page_to_pfn(page))
+> +#define folio_to_phys(page)	pfn_to_phys(folio_pfn(folio))
+>  
+>  static inline void *pfn_to_virt(unsigned long pfn)
+>  {
+> diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
+> index 7401838b960b..adcbd4b13035 100644
+> --- a/arch/s390/kernel/uv.c
+> +++ b/arch/s390/kernel/uv.c
+> @@ -181,36 +181,36 @@ int uv_convert_owned_from_secure(unsigned long paddr)
+>  }
+>  
+>  /*
+> - * Calculate the expected ref_count for a page that would otherwise have no
+> + * Calculate the expected ref_count for a folio that would otherwise have no
+>   * further pins. This was cribbed from similar functions in other places in
+>   * the kernel, but with some slight modifications. We know that a secure
+> - * page can not be a huge page for example.
+> + * folio can only be a small folio for example.
+>   */
+> -static int expected_page_refs(struct page *page)
+> +static int expected_folio_refs(struct folio *folio)
+>  {
+>  	int res;
+>  
+> -	res = page_mapcount(page);
+> -	if (PageSwapCache(page)) {
+> +	res = folio_mapcount(folio);
+> +	if (folio_test_swapcache(folio)) {
+>  		res++;
+> -	} else if (page_mapping(page)) {
+> +	} else if (folio_mapping(folio)) {
+>  		res++;
+> -		if (page_has_private(page))
+> +		if (folio_has_private(folio))
+>  			res++;
+>  	}
+>  	return res;
+>  }
+>  
+> -static int make_page_secure(struct page *page, struct uv_cb_header *uvcb)
+> +static int make_folio_secure(struct folio *folio, struct uv_cb_header *uvcb)
+>  {
+>  	int expected, cc = 0;
+>  
+> -	if (PageWriteback(page))
+> +	if (folio_test_writeback(folio))
+>  		return -EAGAIN;
+> -	expected = expected_page_refs(page);
+> -	if (!page_ref_freeze(page, expected))
+> +	expected = expected_folio_refs(folio);
+> +	if (!folio_ref_freeze(folio, expected))
+>  		return -EBUSY;
+> -	set_bit(PG_arch_1, &page->flags);
+> +	set_bit(PG_arch_1, &folio->flags);
+>  	/*
+>  	 * If the UVC does not succeed or fail immediately, we don't want to
+>  	 * loop for long, or we might get stall notifications.
+> @@ -220,9 +220,9 @@ static int make_page_secure(struct page *page, struct uv_cb_header *uvcb)
+>  	 * -EAGAIN and we let the callers deal with it.
+>  	 */
+>  	cc = __uv_call(0, (u64)uvcb);
+> -	page_ref_unfreeze(page, expected);
+> +	folio_ref_unfreeze(folio, expected);
+>  	/*
+> -	 * Return -ENXIO if the page was not mapped, -EINVAL for other errors.
+> +	 * Return -ENXIO if the folio was not mapped, -EINVAL for other errors.
+>  	 * If busy or partially completed, return -EAGAIN.
+>  	 */
+>  	if (cc == UVC_CC_OK)
+> @@ -277,7 +277,7 @@ int gmap_make_secure(struct gmap *gmap, unsigned long gaddr, void *uvcb)
+>  	bool local_drain = false;
+>  	spinlock_t *ptelock;
+>  	unsigned long uaddr;
+> -	struct page *page;
+> +	struct folio *folio;
+>  	pte_t *ptep;
+>  	int rc;
+>  
+> @@ -306,33 +306,49 @@ int gmap_make_secure(struct gmap *gmap, unsigned long gaddr, void *uvcb)
+>  	if (!ptep)
+>  		goto out;
+>  	if (pte_present(*ptep) && !(pte_val(*ptep) & _PAGE_INVALID) && pte_write(*ptep)) {
+> -		page = pte_page(*ptep);
+> +		folio = page_folio(pte_page(*ptep));
+>  		rc = -EAGAIN;
+> -		if (trylock_page(page)) {
+> +
+> +		/* We might get PTE-mapped large folios; split them first. */
+> +		if (folio_test_large(folio)) {
+> +			rc = -E2BIG;
+> +		} else if (folio_trylock(folio)) {
+>  			if (should_export_before_import(uvcb, gmap->mm))
+> -				uv_convert_from_secure(page_to_phys(page));
+> -			rc = make_page_secure(page, uvcb);
+> -			unlock_page(page);
+> +				uv_convert_from_secure(folio_to_phys(folio));
+> +			rc = make_folio_secure(folio, uvcb);
+> +			folio_unlock(folio);
+>  		}
+>  
+>  		/*
+> -		 * Once we drop the PTL, the page may get unmapped and
+> +		 * Once we drop the PTL, the folio may get unmapped and
+>  		 * freed immediately. We need a temporary reference.
+>  		 */
+> -		if (rc == -EAGAIN)
+> -			get_page(page);
+> +		if (rc == -EAGAIN || rc == -E2BIG)
+> +			folio_get(folio);
+>  	}
+>  	pte_unmap_unlock(ptep, ptelock);
+>  out:
+>  	mmap_read_unlock(gmap->mm);
+>  
+> +	if (rc == -E2BIG) {
+> +		/*
+> +		 * Splitting might fail with -EBUSY due to unexpected folio
+> +		 * references, just like make_folio_secure(). So handle it
+> +		 * ahead of time without the PTL being held.
+> +		 */
+> +		folio_lock(folio);
+> +		rc = split_folio(folio);
 
-The pattern is intentional and a temporary solution before we could
-implement the scoped NOFS. Functions calling allocations get converted
-from GFP_NOFS to GFP_KERNEL but in case they're called from a context
-that either holds big locks or can recursively enter the filesystem then
-it's protected by the memalloc calls. This should not be surprising.
-What may not be obvious is which locks or kmalloc calling functions it
-could be, this depends on the analysis of the function call chain and
-usually there's enough evidence why it's needed.
+if split_folio returns -EAGAIN...
+
+> +		folio_unlock(folio);
+> +		folio_put(folio);
+> +	}
+> +
+>  	if (rc == -EAGAIN) {
+
+... we will not skip this ...
+
+>  		/*
+>  		 * If we are here because the UVC returned busy or partial
+>  		 * completion, this is just a useless check, but it is safe.
+>  		 */
+> -		wait_on_page_writeback(page);
+> -		put_page(page);
+> +		folio_wait_writeback(folio);
+> +		folio_put(folio);
+
+... and we will do one folio_put() too many
+
+>  	} else if (rc == -EBUSY) {
+>  		/*
+>  		 * If we have tried a local drain and the page refcount
+
+are we sure that split_folio() can never return -EAGAIN now and in the
+future too?
+
+maybe just change it to  } else if (...   ?
+
 
