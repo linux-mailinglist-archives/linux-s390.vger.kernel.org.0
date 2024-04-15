@@ -1,136 +1,131 @@
-Return-Path: <linux-s390+bounces-3333-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-3335-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B76D58A46D9
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Apr 2024 04:20:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D0208A4964
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Apr 2024 09:53:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B3248280D23
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Apr 2024 02:20:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CD5A91C220EF
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Apr 2024 07:53:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B24CF125DC;
-	Mon, 15 Apr 2024 02:20:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 655482C69B;
+	Mon, 15 Apr 2024 07:53:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Wfh3cBf0"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q4YHS8Fj"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A881171C;
-	Mon, 15 Apr 2024 02:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAACF28DD0;
+	Mon, 15 Apr 2024 07:53:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713147603; cv=none; b=aVDQN3/hwD7pfBZq74lZHm/FsunK+tHIkQyIypd8E4P2Fr5K97U5deHSDl0WjJRuUdawBjjs8Q732qFL2byBhL813Pm/Yn9MXTKf29kj58cU9brzr/caDKAykmMR86f5WVxHE3OVxcYeZq/svT/ewINb3JL+jfuAG4oKFbTIYBs=
+	t=1713167605; cv=none; b=Bftrst38ohshy+gJwBFi/uBU3blaI4M2S60sb44IQdGDCqVjcipcxKwY8K5ykWYqaQFHMm4wiUVUPobRVTHkUFiRDdNetOIaq1sw/6Jlhr3mEL3JlgXpXnnI4u4FjbEFET3jGFYMZJqDJl3H6TmWitBYL2Nh7bjTF/ZSRPxntmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713147603; c=relaxed/simple;
-	bh=3oU2p1In4W0koqh6Uc5YWekxPtYLC4K4W2NNnFMhURg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Zija+UX4+NovIuO79+qsNwT9xPRsaBdQ6eKC7wDaU4YK8H/MeMaO4yorlv2ubpmzhM0/CLg4OSoGHaev5OU2qX2xy1gQ7H0fHFkH67ajNnju0FoG8MFPOObzw6YH1D2ChbrumWU4IHt2lv/Jyqa7wCySEStQJZA8NtV4BfcONGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=Wfh3cBf0; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1713147597;
-	bh=8o4K5dRyl8sIUjU0EgivmjJC3lGXyfUukYQCR3Ov8pA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Wfh3cBf0QS/1UiJCGd9wNTsg4Z3JgU/S53A7sXuE66QjWbiVD9T5UErj+qdU+566N
-	 hjbiVLnV+ds0WJ+Ev+xRCLWWsYkNs/ydYleOUGiOgEvXor3j+0XD5ZTGMx7r9XyYx5
-	 jn2svY0f1Sry8eWSJqE0BMCHAzNMPGqqW0t7XdRo/lDxhdZw7wJ9e8/OC/PSiEPyk7
-	 59A2AycixIle915lKXR/ZEVvbbDPyQIwTiMKuZDpZGbvMmBz2pFKC82F8PzOQcpTbi
-	 j7+dgyBZn3vKLSDfhQN2vQw0ZU/QKf2x+gGzusuyAGdNvKz8OxQs5aM4xz/lfB0l96
-	 UWGlHWQT/t0iQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VHrV23GDlz4wcr;
-	Mon, 15 Apr 2024 12:19:53 +1000 (AEST)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Arnd Bergmann <arnd@arndb.de>, Adrian Hunter <adrian.hunter@intel.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Peter Zijlstra <peterz@infradead.org>, Dave Hansen
- <dave.hansen@linux.intel.com>, John Stultz <jstultz@google.com>, "H. Peter
- Anvin" <hpa@zytor.com>, Alexander Gordeev <agordeev@linux.ibm.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>,
- "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>, Naresh Kamboju
- <naresh.kamboju@linaro.org>, "x86@kernel.org" <x86@kernel.org>, "Aneesh
- Kumar K.V" <aneesh.kumar@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Heiko
- Carstens <hca@linux.ibm.com>, Nicholas Piggin <npiggin@gmail.com>,
- Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Bjorn
- Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>,
- Anna-Maria Gleixner <anna-maria@linutronix.de>, Stephen Boyd
- <sboyd@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sven
- Schnelle <svens@linux.ibm.com>, "linuxppc-dev@lists.ozlabs.org"
- <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH] bug: Fix no-return-statement warning with !CONFIG_BUG
-In-Reply-To: <dd6653b2-3a88-4b95-af13-c6fda5b27b39@app.fastmail.com>
-References: <20240410153212.127477-1-adrian.hunter@intel.com>
- <87be83da-6102-483d-b1dc-a77eecc9f780@app.fastmail.com>
- <c9f382b2-cd96-4ee3-ad68-95381d9e09c0@intel.com>
- <a434248a-1e9f-4f4f-8f90-d36d8e979f53@csgroup.eu>
- <ff9d7032-a3b6-4ecd-ac26-d7d4a06a5c7f@csgroup.eu>
- <4d429a10-eb45-4262-8e74-69af810ef1ac@intel.com>
- <dd6653b2-3a88-4b95-af13-c6fda5b27b39@app.fastmail.com>
-Date: Mon, 15 Apr 2024 12:19:50 +1000
-Message-ID: <875xwjcqpl.fsf@mail.lhotse>
+	s=arc-20240116; t=1713167605; c=relaxed/simple;
+	bh=6C9NIzF+m8a2CDD8beqRxV+bOBsa2BmfOGJBAutgECA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VILgSAG52SObUlkW+nJe+hDJyaNtFq5AAjYdhBAhVGFZD2hmXklM8c97JsqY5i5lWVyWkfpu7oyrh2njKjyNqjmTS/ZVuI2Zl0SU89uXuYWcW3pjsJ6fZOHzBCQ7wMSB/BGKUzqobfs2+RleM3gemxodNDEHIEZsXLrCEobTI7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=q4YHS8Fj; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=8YIeaNZhu2VwYrI498gRkCoUAUbEjZA2ART1G/gViK0=; b=q4YHS8FjBEAnMbuDl+TMKsEKGP
+	DM6iyFt6uA7Bo5adMws5/s0t1+j9HugdPjdNQD0yCOEfV7ZoW+QC17+eG/HZdmmEoyHPU8JoOx9XL
+	7Fx3fT7PsknHnmu65yuhapSgCRz6CXa3c6A/kM7Sga97giJ17RK2CcTur3HI5Bz9lkxAWJiegTEQD
+	TRBs7jlUSsh22rwhDKkQsCKrJadSsFPPtwcG8DzvOoayr4YqBfDfQ7mNeiHohXm2HpjY17hnCJFMz
+	Wnf5Q5krVNT8G7J3KzkDXMsJA5bvEb5NAjurd+XnOU9adVQGbZMEFeMoQqJ3YmHp5tNlP8wxE1yRv
+	RKdldQfQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rwH8s-0000000AT0A-1En1;
+	Mon, 15 Apr 2024 07:52:44 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E025B30040C; Mon, 15 Apr 2024 09:52:41 +0200 (CEST)
+Date: Mon, 15 Apr 2024 09:52:41 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Donald Dutile <ddutile@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v4 05/15] mm: introduce execmem_alloc() and execmem_free()
+Message-ID: <20240415075241.GF40213@noisy.programming.kicks-ass.net>
+References: <20240411160051.2093261-1-rppt@kernel.org>
+ <20240411160051.2093261-6-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240411160051.2093261-6-rppt@kernel.org>
 
-"Arnd Bergmann" <arnd@arndb.de> writes:
-> On Thu, Apr 11, 2024, at 11:27, Adrian Hunter wrote:
->> On 11/04/24 11:22, Christophe Leroy wrote:
->>> Le 11/04/2024 =C3=A0 10:12, Christophe Leroy a =C3=A9crit=C2=A0:
->>>>
->>>> Looking at the report, I think the correct fix should be to use=20
->>>> BUILD_BUG() instead of BUG()
->>>=20
->>> I confirm the error goes away with the following change to next-2024041=
-1=20
->>> on powerpc tinyconfig with gcc 13.2
->>>=20
->>> diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
->>> index 4e18db1819f8..3d5ac0cdd721 100644
->>> --- a/kernel/time/timekeeping.c
->>> +++ b/kernel/time/timekeeping.c
->>> @@ -282,7 +282,7 @@ static inline void timekeeping_check_update(struct=
-=20
->>> timekeeper *tk, u64 offset)
->>>   }
->>>   static inline u64 timekeeping_debug_get_ns(const struct tk_read_base =
-*tkr)
->>>   {
->>> -	BUG();
->>> +	BUILD_BUG();
->>>   }
->>>   #endif
->>>=20
->>
->> That is fragile because it depends on defined(__OPTIMIZE__),
->> so it should still be:
->
-> If there is a function that is defined but that must never be
-> called, I think we are doing something wrong.
+On Thu, Apr 11, 2024 at 07:00:41PM +0300, Mike Rapoport wrote:
+> +/**
+> + * enum execmem_type - types of executable memory ranges
+> + *
+> + * There are several subsystems that allocate executable memory.
+> + * Architectures define different restrictions on placement,
+> + * permissions, alignment and other parameters for memory that can be used
+> + * by these subsystems.
+> + * Types in this enum identify subsystems that allocate executable memory
+> + * and let architectures define parameters for ranges suitable for
+> + * allocations by each subsystem.
+> + *
+> + * @EXECMEM_DEFAULT: default parameters that would be used for types that
+> + * are not explcitly defined.
+> + * @EXECMEM_MODULE_TEXT: parameters for module text sections
+> + * @EXECMEM_KPROBES: parameters for kprobes
+> + * @EXECMEM_FTRACE: parameters for ftrace
+> + * @EXECMEM_BPF: parameters for BPF
+> + * @EXECMEM_TYPE_MAX:
+> + */
+> +enum execmem_type {
+> +	EXECMEM_DEFAULT,
+> +	EXECMEM_MODULE_TEXT = EXECMEM_DEFAULT,
+> +	EXECMEM_KPROBES,
+> +	EXECMEM_FTRACE,
+> +	EXECMEM_BPF,
+> +	EXECMEM_TYPE_MAX,
+> +};
 
-It's a pretty inevitable result of using IS_ENABLED(), which the docs
-encourage people to use.
+Can we please get a break-down of how all these types are actually
+different from one another?
 
-In this case it could easily be turned into a build error by just making
-it an extern rather than a static inline.
-
-But I think Christophe's solution is actually better, because it's more
-explicit, ie. this function should not be called and if it is that's a
-build time error.
-
-cheers
+I'm thinking some platforms have a tiny immediate space (arm64 comes to
+mind) and has less strict placement constraints for some of them?
 
