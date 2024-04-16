@@ -1,110 +1,124 @@
-Return-Path: <linux-s390+bounces-3376-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-3379-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C184E8A6956
-	for <lists+linux-s390@lfdr.de>; Tue, 16 Apr 2024 13:05:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFE898A69D3
+	for <lists+linux-s390@lfdr.de>; Tue, 16 Apr 2024 13:42:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6B7E91F21C6F
-	for <lists+linux-s390@lfdr.de>; Tue, 16 Apr 2024 11:05:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 75D101F2172C
+	for <lists+linux-s390@lfdr.de>; Tue, 16 Apr 2024 11:42:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62518127B7A;
-	Tue, 16 Apr 2024 11:05:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 259A8129A7D;
+	Tue, 16 Apr 2024 11:42:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AnNWPFk2"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OLJ7zm+n"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35961127B5D;
-	Tue, 16 Apr 2024 11:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E395E1292FF;
+	Tue, 16 Apr 2024 11:42:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713265545; cv=none; b=uGgKSQH5sjRM5LAYtrKaDWbml5DpUjnJOBO6P2sd+sGT+B4wTfO/IBN2muxshJmzgHuYW6n7zOClegGCQBw7tPVbZZmPRloIKWechn89a3EvAJiDWoZ+DqbM7zBZjxSS2loCFJrvkvOnn9lxBNzIYaE2QKVZY8DxHAXIWKY0QVA=
+	t=1713267752; cv=none; b=gSDoL9ivzy6sV6E4CXoSWBSkVQIyn2l78TIF7bo7ROm91lljqr/7GIUOtPO/HlItvzT8vrCYWF5UJmCwuPzOyNxa0eQtpVBeYaSLN8s0a8a6tdtoeWchRGz7kH7pY6CLsXcYvA1PhXF/thINzr6k6rFPrIu7w3eTMRwnLYYsd+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713265545; c=relaxed/simple;
-	bh=b+bXT9aw+B73/v9YDMYAG7FfnV6DKgNRfmqZTWXBmro=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SAceiJeMWoY0cYC/tMYRj86TdD4d/jotBpSRqoHzwG/6J66JIInjfeCn38UQ25+ixWe7kiqXD+bOg6UkTMKaKczhdzdU3xCnxs3q+J2/tPTzLUiaKPZoc/aTuH0aSf6QySBlXBqA9koIlGhi2kykuHUJQ26yvpSwEJZdVKCjc6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AnNWPFk2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0989AC113CE;
-	Tue, 16 Apr 2024 11:05:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713265545;
-	bh=b+bXT9aw+B73/v9YDMYAG7FfnV6DKgNRfmqZTWXBmro=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AnNWPFk2cPR63aap4cP380v2VxcbontjhUIhUDPw8VjdKLYXol+uDqChzoz/vIqtL
-	 CQtNYOSG4NFjgYm9zRpzIk4mWQtwesDabP+lVQv3DvXQ7HHk9ZR1OAOJxu3Laa+Dss
-	 ER3dOztV7KK7i3p58jW3/6z1qhX35ggZxlWrFV8PRmnRjYErVyg77pPpHPFnFNQA4c
-	 1RjPN1THSUmFrxOFwFqY+ktddtmpprzrSEYJldb280LYiFDLuy+7sKVVV3GSIJ+zip
-	 /4q8iaRzwAv7K1qNssIlLRfvzkzyemk7WcqEbP24uViUsrW2oynJePbU1/mSQLkQoZ
-	 SRFhaDiceip7A==
-Date: Tue, 16 Apr 2024 12:05:38 +0100
-From: Simon Horman <horms@kernel.org>
-To: Wen Gu <guwen@linux.alibaba.com>
-Cc: wintera@linux.ibm.com, twinkler@linux.ibm.com, hca@linux.ibm.com,
-	gor@linux.ibm.com, agordeev@linux.ibm.com, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	wenjia@linux.ibm.com, jaka@linux.ibm.com, borntraeger@linux.ibm.com,
-	svens@linux.ibm.com, alibuda@linux.alibaba.com,
-	tonylu@linux.alibaba.com, linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH net-next v6 10/11] net/smc: adapt cursor update when
- sndbuf and peer DMB are merged
-Message-ID: <20240416110538.GK2320920@kernel.org>
-References: <20240414040304.54255-1-guwen@linux.alibaba.com>
- <20240414040304.54255-11-guwen@linux.alibaba.com>
+	s=arc-20240116; t=1713267752; c=relaxed/simple;
+	bh=q3lBDce4HNEiVrdQdtt3WuGh2tYMUeZ5GnShOn2kylE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iQ4zqnspNU3r7354QUB8XQxlwPY/zkQx2sPWxljlt27WOgunR39ciC4wo9PoQMK6388+2H0O3KxeRpGaYZlsbcMgUI9IwIhroiJdUV4Aopw7xoupd1t53Ye1vmKizmrzaMubjZbHdeav0bJTHoM6XOTJP+i0nHirZEEApXo6IE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OLJ7zm+n; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43GAwBD5031627;
+	Tue, 16 Apr 2024 11:42:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=hKbWqZiR5So+vb841wV12n/dE9jFQYX/o5+nphH3lqo=;
+ b=OLJ7zm+nwKOZLAYYq/jdxi6JiK5GxMZVOekDu8cWu0J6oabHHObU5OxNZ/qk5z0B2kvz
+ PC7aqWfE7+M88OWAfH2QQQhrzpmwLOc0kUGL7iWu+FLm8kHyeIYBt2cKgDwj36k7RWTx
+ Uiio4eO4RR3tie9k1O8Oz9eZ8mJMC21tAw/A0qyVLf9Q2sURHTwMu6xpLyHeDC4LtwRo
+ 8T0UVu0dLD93OJ6dZ39gCWSl2yfQWo5SPvrxQSuvehZ9PNLGli1z/oF7LGutZFDHtVUI
+ Ee6uCPwwziyJMv1K8lGz4oorIx+xwDWA930T4uGQ3sX3OmfT3P5t82h+HPvYnFdLoQDN Dg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xhr1fg2h1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Apr 2024 11:42:27 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43GBgRtV004291;
+	Tue, 16 Apr 2024 11:42:27 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xhr1fg2gy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Apr 2024 11:42:27 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43G8k53e023576;
+	Tue, 16 Apr 2024 11:42:26 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xg5cnwtbh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Apr 2024 11:42:26 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43GBgKeL53739838
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 16 Apr 2024 11:42:22 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 538FF20043;
+	Tue, 16 Apr 2024 11:42:20 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 25BE820040;
+	Tue, 16 Apr 2024 11:42:20 +0000 (GMT)
+Received: from p-imbrenda.boeblingen.de.ibm.com (unknown [9.152.224.66])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 16 Apr 2024 11:42:20 +0000 (GMT)
+From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+To: linux-s390@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, frankja@linux.ibm.com, nrb@linux.ibm.com,
+        nsg@linux.ibm.com, borntraeger@de.ibm.com, hca@linux.ibm.com,
+        gerald.schaefer@linux.ibm.com, david@redhat.com
+Subject: [PATCH v1 0/2] s390/mm: fix improper use of __storage_key_init_range
+Date: Tue, 16 Apr 2024 13:42:18 +0200
+Message-ID: <20240416114220.28489-1-imbrenda@linux.ibm.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240414040304.54255-11-guwen@linux.alibaba.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: fCnGpB0yf90yxINshwSZgIHV9VblGN2I
+X-Proofpoint-GUID: BjZCMELtseTwRyJlXnaWfp15y66KVAJW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-16_08,2024-04-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 bulkscore=0 mlxlogscore=873 adultscore=0 mlxscore=0
+ impostorscore=0 clxscore=1015 phishscore=0 spamscore=0 lowpriorityscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404160072
 
-On Sun, Apr 14, 2024 at 12:03:03PM +0800, Wen Gu wrote:
-> If the local sndbuf shares the same physical memory with peer DMB,
-> the cursor update processing needs to be adapted to ensure that the
-> data to be consumed won't be overwritten.
-> 
-> So in this case, the fin_curs and sndbuf_space that were originally
-> updated after sending the CDC message should be modified to not be
-> update until the peer updates cons_curs.
-> 
-> Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
+The function __storage_key_init_range() expects the end address to be
+the first byte outside the range to be initialized. I.e. end - start
+should be the size of the area to be initialized.
 
-...
+This small series fixes two cases in which the last address in the
+range was passed as end address. This was still functionally correct,
+since __storage_key_init_range() will still loop over single pages and
+correctly clear the given range, but it will be slower than clearing
+the storage keys for the whole 1M block with a single instruction.
 
-> @@ -255,6 +256,14 @@ int smcd_cdc_msg_send(struct smc_connection *conn)
->  		return rc;
->  	smc_curs_copy(&conn->rx_curs_confirmed, &curs, conn);
->  	conn->local_rx_ctrl.prod_flags.cons_curs_upd_req = 0;
-> +
-> +	if (smc_ism_support_dmb_nocopy(conn->lgr->smcd))
-> +		/* if local sndbuf shares the same memory region with
-> +		 * peer DMB, then don't update the tx_curs_fin
-> +		 * and sndbuf_space until peer has consumed the data.
-> +		 */
-> +		return rc;
+Claudio Imbrenda (2):
+  s390/mm: fix storage key clearing for guest huge pages
+  s390/mm: fix clearing storage keys for huge pages
 
-Hi Wen Gu,
+ arch/s390/mm/gmap.c        | 2 +-
+ arch/s390/mm/hugetlbpage.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-A minor nit from my side:
+-- 
+2.44.0
 
-To my mind "return rc" implies returning an error value.
-But here rc is 0, which based on the comment seems correct.
-So perhaps it would be clearer to simply return 0.
-
-Flagged by Smatch.
-
-> +
->  	/* Calculate transmitted data and increment free send buffer space */
->  	diff = smc_curs_diff(conn->sndbuf_desc->len, &conn->tx_curs_fin,
->  			     &conn->tx_curs_sent);
-
-...
 
