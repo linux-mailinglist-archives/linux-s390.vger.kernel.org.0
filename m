@@ -1,128 +1,173 @@
-Return-Path: <linux-s390+bounces-3401-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-3403-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50CFE8A8357
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Apr 2024 14:46:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92D3C8A8361
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Apr 2024 14:47:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DD02BB21EB3
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Apr 2024 12:46:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0957D1F21351
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Apr 2024 12:47:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55C70132803;
-	Wed, 17 Apr 2024 12:46:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFAB213CF94;
+	Wed, 17 Apr 2024 12:47:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cgIPe3xp"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WyUY8cEF"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A6013CFBD;
-	Wed, 17 Apr 2024 12:46:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7663D72;
+	Wed, 17 Apr 2024 12:47:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713357984; cv=none; b=lLnGotsw8pgGWUzntfOff6gxjR7TkBqhXG8SKT9oE078SOZ64pkzqizVg0EMN+cx206WF1AWGAL2OWZl4RJDTyzDapoT6juhMvsZmZD8AlbW16OV8M9QK9rusyOpF68QkLWmCK2G4o7olMDydrU3OykKLgXaMTgQ+WgVEMpFOeQ=
+	t=1713358073; cv=none; b=P7jfeGiKUvqb8hRwUJeG/XVvKiaeLkWTGyey/gQ/97bviGPHBUV/X3EEnUwWVHydLDg/V+uV5MuzUk12d79jyhZAb4TmWeRYn9Fy2CRMTCCT92DQbZRnTEanP9+iWxkJ1Udg2IpMr5Vp/DQIIgUxXAaywksSP3OCK2cUzBoQpf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713357984; c=relaxed/simple;
-	bh=fiavUOvWZVE5pmBDnmjK1riI/G3q7OCzJP2xW2NEEg4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=LV4OfEsWTGfG/zahM/5tgWGueCI0pt4jkvhsJQ9Q3UicA2H8fzVRwx9asVlH3pAnY+nm8sZBfSuJflewwI5V2crxde4OKj1zb9H4kqg9aHxdIqILQPiWWepqx8SQMrJ6wULvBUu/Q3es4oIdX/cW0hRH/KrI5BWGUy3T8SQGgGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cgIPe3xp; arc=none smtp.client-ip=148.163.158.5
+	s=arc-20240116; t=1713358073; c=relaxed/simple;
+	bh=yxbc01E0e4nTR/6Zi239IWaOS8B4C9D8BXhUt4FFEj0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TRBF4N8Y4A+QNLeWsr4ozFRq8M7Vlki8leUckdmAnBlx5MRLWiXm45AycpKleLbxGGgsYWSkGqZrHv8i2iPYowq2MiHOZzjTxXeLvVNLeouzlkgq1xfytuUB0VZ7uOQ5JMMAwm/D077qqoNaN/gZe3wA8wCEqFg7dgu2HxDUnXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WyUY8cEF; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43HC5rn3011335;
-	Wed, 17 Apr 2024 12:46:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=pp1; bh=fiavUOvWZVE5pmBDnmjK1riI/G3q7OCzJP2xW2NEEg4=;
- b=cgIPe3xpoTIrAKgl6UmWHPMcuN/H+jVwdE7EDyOfXoRFRcv7hpdIcaybO3g0+bDktiuP
- C43Uvft7mYulucB+rRAzmbeMxQUTXKRaiFcxuuJSBIGxOpnWCHDJP868Z8qUKN1y5GEL
- ad1H0FP5ZmCSTdMX6w0TO4LPn3S0zWmmxBakTNbobUWTUnrar8tO245odV6t/mZrYH7B
- vOYq9DP9+h1iQ4NHATAW88Gh84cAkN49eJx3rPXbF/GOr5EoLw0on9pgLk9IUSvLbavE
- ecVr9sPLTdTevCtxbjbFKfWAzfGLwoFKYDg3HHsgw8JcwGpikq/3tSQsfnkjDs9oHd3i pQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xje4cr31s-1
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43HCgJlx010002;
+	Wed, 17 Apr 2024 12:47:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=MXPOw+Np7H2q/8CV5vR1O5+Cs6lgumWnTKFEEgRg/7U=;
+ b=WyUY8cEFN529rohcvw7bolSO9r+RiVXjiDDg1yDVFOAEFPqXT6Q9xydy1kIqrLwZLIGw
+ qO+hCVg3AgU39HZZEE992QLY/9Iq9LJd53jW+WEBfX5MSfF7VX3UNGEynJQ77KlLuHr9
+ qnnwofYH8EBsCNNptBFJXHh8lu0VG0qTgsr7ePbOabopzo3nZfCBSplhABVIlWw8NGMb
+ /cQSXk/BuNZByz4EjsJAYjYXQRZytJSSx/nzDDTnfStA/rf3Pwgm8X5PNND5EA1/m0kh
+ vbKP1dW+kKD2cL/6522tMqViSZk5CH6/DQ+KTaM3Qf8HT8V4UcUReZnfpSbE2C3yP6HH rQ== 
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xjenqg0ah-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Apr 2024 12:46:16 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43HCgsqu001129;
-	Wed, 17 Apr 2024 12:46:15 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xje4cr31m-1
+	Wed, 17 Apr 2024 12:47:22 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43HCJktH015835;
+	Wed, 17 Apr 2024 12:47:20 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xg5vmcbw7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Apr 2024 12:46:15 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43HAX5k0021366;
-	Wed, 17 Apr 2024 12:46:15 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xg6kkm3sv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Apr 2024 12:46:15 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43HCk9Cb14811424
+	Wed, 17 Apr 2024 12:47:20 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43HClHFM25559758
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 17 Apr 2024 12:46:11 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B1E3220043;
-	Wed, 17 Apr 2024 12:46:09 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6AF5620040;
-	Wed, 17 Apr 2024 12:46:09 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 17 Apr 2024 12:46:09 +0000 (GMT)
-Date: Wed, 17 Apr 2024 14:46:08 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Xu <peterx@redhat.com>, Sven Schnelle <svens@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] s390/mm: shared zeropage + KVM fixes
-Message-ID: <Zh/EkOPBRS1q0ru2@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20240411161441.910170-1-david@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240411161441.910170-1-david@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: DiMi4inaKsPPHwYi2zSjQpD6kQB3mZz4
-X-Proofpoint-ORIG-GUID: HRLfBySLDHbhCMwMIzRcmBKuqE6JUE-a
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	Wed, 17 Apr 2024 12:47:19 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 37A8658061;
+	Wed, 17 Apr 2024 12:47:17 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1C55D58057;
+	Wed, 17 Apr 2024 12:47:15 +0000 (GMT)
+Received: from [9.152.212.230] (unknown [9.152.212.230])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 17 Apr 2024 12:47:14 +0000 (GMT)
+Message-ID: <ca513589-2110-45fe-95b7-5ce23487ea10@linux.ibm.com>
+Date: Wed, 17 Apr 2024 14:47:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH vfs.all 15/26] s390/dasd: use bdev api in dasd_format()
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-s390@vger.kernel.org, jack@suse.cz, hch@lst.de, brauner@kernel.org,
+        axboe@kernel.dk, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+        yukuai3@huawei.com, Yu Kuai <yukuai1@huaweicloud.com>,
+        Eduard Shishkin <edward6@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>
+References: <20240406090930.2252838-1-yukuai1@huaweicloud.com>
+ <20240406090930.2252838-16-yukuai1@huaweicloud.com>
+ <20240416013555.GZ2118490@ZenIV>
+ <Zh47IY7M1LQXjckX@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+Content-Language: en-US
+From: Stefan Haberland <sth@linux.ibm.com>
+In-Reply-To: <Zh47IY7M1LQXjckX@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Y94lO4p7X-84KujGc7Oc6H9VBrYPh5dA
+X-Proofpoint-ORIG-GUID: Y94lO4p7X-84KujGc7Oc6H9VBrYPh5dA
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-17_09,2024-04-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 bulkscore=0 mlxscore=0 adultscore=0 phishscore=0
- spamscore=0 mlxlogscore=587 suspectscore=0 priorityscore=1501
- lowpriorityscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2404010000 definitions=main-2404170086
+ definitions=2024-04-17_10,2024-04-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ phishscore=0 priorityscore=1501 mlxscore=0 adultscore=0 suspectscore=0
+ bulkscore=0 clxscore=1011 lowpriorityscore=0 mlxlogscore=999
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404170088
 
-On Thu, Apr 11, 2024 at 06:14:39PM +0200, David Hildenbrand wrote:
+Am 16.04.24 um 10:47 schrieb Alexander Gordeev:
+> On Tue, Apr 16, 2024 at 02:35:55AM +0100, Al Viro wrote:
+>>>   drivers/s390/block/dasd_ioctl.c | 5 +++--
+>>>   1 file changed, 3 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/s390/block/dasd_ioctl.c b/drivers/s390/block/dasd_ioctl.c
+>>> index 7e0ed7032f76..c1201590f343 100644
+>>> --- a/drivers/s390/block/dasd_ioctl.c
+>>> +++ b/drivers/s390/block/dasd_ioctl.c
+>>> @@ -215,8 +215,9 @@ dasd_format(struct dasd_block *block, struct format_data_t *fdata)
+>>>   	 * enabling the device later.
+>>>   	 */
+>>>   	if (fdata->start_unit == 0) {
+>>> -		block->gdp->part0->bd_inode->i_blkbits =
+>>> -			blksize_bits(fdata->blksize);
+>>> +		rc = set_blocksize(block->gdp->part0, fdata->blksize);
+>> Could somebody (preferably s390 folks) explain what is going on in
+>> dasd_format()?  The change in this commit is *NOT* an equivalent
+>> transformation - mainline does not evict the page cache of device.
+>>
+>> Is that
+>> 	* intentional behaviour in mainline version, possibly broken
+>> by this patch
+>> 	* a bug in mainline accidentally fixed by this patch
+>> 	* something else?
+>>
+>> And shouldn't there be an exclusion between that and having a filesystem
+>> on a partition of that disk currently mounted?
+> CC-ing Stefan and Jan.
+>
+> Thanks!
 
-Hi David,
+Hi,
+from my point of view this was an equivalent transformation.
 
-> Based on s390/features. Andrew agreed that both patches can go via the
-> s390x tree.
+set_blocksize() does basically also set i_blkbits like it was before.
+The dasd_format ioctl does only work on a disabled device. To achieve this
+all partitions need to be unmounted.
+The tooling also refuses to work on disks actually in use.
 
-I am going to put on a branch this series together with the selftest:
-https://lore.kernel.org/r/20240412084329.30315-1-david@redhat.com
+So there should be no page cache to evict.
 
-I there something in s390/features your three patches depend on?
-Or v6.9-rc2 contains everything needed already?
+The comment above this code says:
 
-Thanks!
+/* Since dasdfmt keeps the device open after it was disabled,
+  * there still exists an inode for this device.
+  * We must update i_blkbits, otherwise we might get errors when
+  * enabling the device later.
+  */
+
+This is the reason for updating i_blkbits.
+
+However, I get your point to question the code itself.
+
+Honestly this code exists for many years and I can not tell if the
+circumstances of the comment have changed in between somehow.
+A quick test without this code did not show any change or errors but
+there might be corner cases I am missing.
+
+Maybe you can give a hint if this makes any sense from your point of view.
+
+Thanks,
+Stefan
+
 
