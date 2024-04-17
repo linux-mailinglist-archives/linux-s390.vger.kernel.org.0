@@ -1,81 +1,81 @@
-Return-Path: <linux-s390+bounces-3402-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-3404-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E2C28A835D
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Apr 2024 14:47:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 920938A8743
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Apr 2024 17:18:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A401B2829DD
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Apr 2024 12:47:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B505A1C20FB9
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Apr 2024 15:18:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C38BA13C3FF;
-	Wed, 17 Apr 2024 12:47:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3225A146D62;
+	Wed, 17 Apr 2024 15:18:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O/r/3tJr"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jv0wX1H1"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5547FBB2
-	for <linux-s390@vger.kernel.org>; Wed, 17 Apr 2024 12:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F0D146D77;
+	Wed, 17 Apr 2024 15:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713358050; cv=none; b=KU4IS9lxBCEYqcxY8armv7vcN/GN5i1Its/mbP9WByn6/pElN+oOQJA93O71plRggOXsLTZHZQSU4Dgqt0XdzJkmMZHWZSzV4Eaw3ONPpF9wDV6+SCVtbFP/Nn5HaBp6EXkJVcygRSKuJkfx5L9LMx+W51YiKvKQ66vdWZ+a3FQ=
+	t=1713367097; cv=none; b=OfrvZ4oNIk8n228869t+jn5fLhh3pBVLVu3jbdudmYK043aCbckHT4B9Bblic7yXw9poe0kr19C5geV/nAba1RYuEpvxAuEpKWNfqfIoaUzDbmKOpAyDMGdHpbCrycbmWfwX/Ed0MZ422bCOBS8z/8pvRMI9LeMRn3Wwazh+Gk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713358050; c=relaxed/simple;
-	bh=kgMTTNaQ41H283hTf4Cx0qam6oDRZjIKFuf0V/Qv8fQ=;
+	s=arc-20240116; t=1713367097; c=relaxed/simple;
+	bh=YHaVPj+iSuEOyB6ZA3xnahzX1PCRmORtT89CkjQ7/BU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OGIdBZfjIXhnvCMGSwmwxTitLD9J7pJmq9iWyTRyS7ZNPrYDf2tLPivYaORI/CXHEQfzPmhEitMt57DgXWrEoz3T0obqxO6cv4U+4xkRsV5UtWt7taf9hJ/BfCcG5dkqBNn1q3IjKXSYDDbaOR8TZbK7Qamb0eTNudKIcjSTJ08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O/r/3tJr; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713358048;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=6neZnIM4zQvOSiYD3BD6EG/L+KQ7xlZ8zd6Zxrru2bc=;
-	b=O/r/3tJrlGNOgvqkuivuY1gfnktCoIQGJTDH6ySd21ndWNvKBRYImBhbHY25Kcf5kSncZf
-	l8RWSIZMpbeFVHkFqeflixynfpYJmKywDkJfNKQ6n8Y6sXLohjk7ZA6/xWHc4hCRrDptVl
-	WbRU68yW7WhyqtLL/0RZuwm/IaIn+9s=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-395-432kgn7pO4qiZ1IPJFO6Ww-1; Wed, 17 Apr 2024 08:47:26 -0400
-X-MC-Unique: 432kgn7pO4qiZ1IPJFO6Ww-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-415591b1500so22538145e9.3
-        for <linux-s390@vger.kernel.org>; Wed, 17 Apr 2024 05:47:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713358046; x=1713962846;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=6neZnIM4zQvOSiYD3BD6EG/L+KQ7xlZ8zd6Zxrru2bc=;
-        b=lqV0lTSnxvWm18nBrX6sEkMxABJAT04Ju8VmxmizD6B2MEK8IkW90NHq3cj+ZwrbKB
-         gFikzPfH8DUpRlfd196StiyUd+mc8y6+KnhelWd0EvPHvEQMsZwHsT5kxR/a6s2iHJ+3
-         YzwlnSnrEXIwQUX5AN3Rkh6PnTnv1S+L2tcBwe2co60UmxGM3v8BnmX5rmn53wTOYRQc
-         HFmbDCkclf+TQ8dmOXGaflyEHTo4GQL7xLPP1JuznbenwlrEzsvXN2l79reFAspeHfp8
-         9cIxGFkO6TA6mujb53TitSCRuSCEez2o1EpIkSKfqtUS2rPH/6Np139pE5H8RYjPIn7/
-         GmVA==
-X-Forwarded-Encrypted: i=1; AJvYcCUp1nXxiu9pkU1gRUctXwY0j7mLoiVco+O/8F1LK9ELPoEWODpvEbJCnkX4BshfOQWVyM8Na/+li2/N0g8hEnvEzUZ236v7q8oNvQ==
-X-Gm-Message-State: AOJu0YxsnvR4aEORVOwF7Jn30O/aLmgIcoOmHMrIX8BPzctFwWAueKOB
-	+rmIyAdffAu+ytPzsJVT/6NrWdOA5YTC2tbOoNXzs9ALnm9nBvSCWSdzYNIQwcP1N8zC9okwPR7
-	yBinInnwTWMoaWdRZYx51HMpmgHxqeJ2EswOMaLnsde1aADChhv5pDZ0K/OQ=
-X-Received: by 2002:a05:600c:4f89:b0:413:f80f:9f9 with SMTP id n9-20020a05600c4f8900b00413f80f09f9mr11608442wmq.25.1713358045823;
-        Wed, 17 Apr 2024 05:47:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFhLwVof5ztMHPDkvE33UvEQlz/QFIkU/DttVah8FamM3AipfWS1hmkqSLm0VjbJTikgXzjXQ==
-X-Received: by 2002:a05:600c:4f89:b0:413:f80f:9f9 with SMTP id n9-20020a05600c4f8900b00413f80f09f9mr11608431wmq.25.1713358045413;
-        Wed, 17 Apr 2024 05:47:25 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c745:2300:653:c844:4858:570f? (p200300cbc74523000653c8444858570f.dip0.t-ipconnect.de. [2003:cb:c745:2300:653:c844:4858:570f])
-        by smtp.gmail.com with ESMTPSA id u12-20020a05600c19cc00b004182cd07133sm2730213wmq.3.2024.04.17.05.47.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Apr 2024 05:47:25 -0700 (PDT)
-Message-ID: <5554ef27-bb94-4e22-ad86-92053681879d@redhat.com>
-Date: Wed, 17 Apr 2024 14:47:23 +0200
+	 In-Reply-To:Content-Type; b=CFoQkHxTHXCIr82GuEPiWiRd8KVJKmPBNcwU5f9zMjWBafp3xCXqleNF+5dvmrCo2rJ5v9vyYvRvk4bFw5wZ0gQRtD4N99zbtGdO3j8SFY25vcBakb+hHzieUgQUOHBjQfP3VMpTCzxoEn5MyS6p3Xn6fIPHwN/9tFWaiHF2pok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jv0wX1H1; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43HFGrXc022375;
+	Wed, 17 Apr 2024 15:18:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=vFsflYqoST0FVYmNY0FM+GujFSx1cOAiMV41fi3PiAQ=;
+ b=jv0wX1H1Topyjqsjx5xw8Veh9EEMLY6r+FKZn/uwj/BUT92Bm8lHBSE/ZJlbPPVH2Oyi
+ 0wIytvCfhmZ+jH78huE2McXwv80WgT2sPOxJIViwENhcSbbgC5BNPRAyd+xe4WVUG3s5
+ P/4B+9BfctirQ70slBLxiylbHTJbhnkeNiWsy8Tn8LXFvbxJNqpavXEdZvnDbUWa4zIh
+ DlQjgUI813v41gHWn2avRU+J+5J2L1dzAh/nTkrTXVMKXgUbJuSi3DQ8u2+iQ7JuBzsD
+ 7jjHPE0J+4Ywc2AyzQbXE7TZOVUbhGCIA1YqiybRVYz7dHVwn2qQ82OKzGCssxndbZpG Ww== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xjgx6g03n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Apr 2024 15:18:01 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43HFI0YW025508;
+	Wed, 17 Apr 2024 15:18:00 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xjgx6g03d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Apr 2024 15:18:00 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43HExNFf023582;
+	Wed, 17 Apr 2024 15:17:59 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xg5cp56sp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Apr 2024 15:17:59 +0000
+Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43HFHuwM39977294
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 17 Apr 2024 15:17:58 GMT
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 37C865804E;
+	Wed, 17 Apr 2024 15:17:56 +0000 (GMT)
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 699645803F;
+	Wed, 17 Apr 2024 15:17:53 +0000 (GMT)
+Received: from [9.171.10.59] (unknown [9.171.10.59])
+	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 17 Apr 2024 15:17:53 +0000 (GMT)
+Message-ID: <f614e5fe-29cb-42f5-a02b-b777c043e014@linux.ibm.com>
+Date: Wed, 17 Apr 2024 17:17:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -83,90 +83,86 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] s390/mm: shared zeropage + KVM fixes
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Janosch Frank <frankja@linux.ibm.com>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>, Heiko Carstens
- <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Andrew Morton <akpm@linux-foundation.org>, Peter Xu <peterx@redhat.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
- Andrea Arcangeli <aarcange@redhat.com>, kvm@vger.kernel.org,
- linux-s390@vger.kernel.org
-References: <20240411161441.910170-1-david@redhat.com>
- <Zh/EkOPBRS1q0ru2@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <Zh/EkOPBRS1q0ru2@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+Subject: Re: [PATCH net] net/smc: fix potential sleeping issue in
+ smc_switch_conns
+Content-Language: en-GB
+To: Guangguan Wang <guangguan.wang@linux.alibaba.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Zhengchao Shao <shaozhengchao@huawei.com>
+Cc: jaka@linux.ibm.com, alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
+        guwen@linux.alibaba.com, weiyongjun1@huawei.com, yuehaibing@huawei.com,
+        tangchengchang@huawei.com, kuba@kernel.org, edumazet@google.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org
+References: <20240413035150.3338977-1-shaozhengchao@huawei.com>
+ <b2573ccf2340a19b6cb039dac639b2d431c1404c.camel@redhat.com>
+ <a94de96f-8b18-482c-90e2-7f8584528bc8@linux.alibaba.com>
+From: Wenjia Zhang <wenjia@linux.ibm.com>
+In-Reply-To: <a94de96f-8b18-482c-90e2-7f8584528bc8@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: jgDXjJUjAdZnjbZAPbzUCf9MNtWSnraZ
+X-Proofpoint-ORIG-GUID: lEFEOn2K2zQADe4HYYnjeTqF0kjUGp9G
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-17_12,2024-04-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ mlxlogscore=791 spamscore=0 clxscore=1015 bulkscore=0 malwarescore=0
+ mlxscore=0 priorityscore=1501 suspectscore=0 lowpriorityscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404170106
 
-On 17.04.24 14:46, Alexander Gordeev wrote:
-> On Thu, Apr 11, 2024 at 06:14:39PM +0200, David Hildenbrand wrote:
+
+
+On 17.04.24 09:32, Guangguan Wang wrote:
 > 
-> Hi David,
 > 
->> Based on s390/features. Andrew agreed that both patches can go via the
->> s390x tree.
+> On 2024/4/16 20:06, Paolo Abeni wrote:
+>> On Sat, 2024-04-13 at 11:51 +0800, Zhengchao Shao wrote:
+>>> Potential sleeping issue exists in the following processes:
+>>> smc_switch_conns
+>>>    spin_lock_bh(&conn->send_lock)
+>>>    smc_switch_link_and_count
+>>>      smcr_link_put
+>>>        __smcr_link_clear
+>>>          smc_lgr_put
+>>>            __smc_lgr_free
+>>>              smc_lgr_free_bufs
+>>>                __smc_lgr_free_bufs
+>>>                  smc_buf_free
+>>>                    smcr_buf_free
+>>>                      smcr_buf_unmap_link
+>>>                        smc_ib_put_memory_region
+>>>                          ib_dereg_mr
+>>>                            ib_dereg_mr_user
+>>>                              mr->device->ops.dereg_mr
+>>> If scheduling exists when the IB driver implements .dereg_mr hook
+>>> function, the bug "scheduling while atomic" will occur. For example,
+>>> cxgb4 and efa driver. Use mutex lock instead of spin lock to fix it.
+>>
+>> I tried to inspect all the lock call sites, and it *look* like they are
+>> all in process context, so the switch should be feasible.
 > 
-> I am going to put on a branch this series together with the selftest:
-> https://lore.kernel.org/r/20240412084329.30315-1-david@redhat.com
+> There exist some calls from tasklet, where mutex lock is infeasible.
+> For example:
+> - tasklet -> smc_wr_tx_tasklet_fn -> smc_wr_tx_process_cqe -> pnd_snd.handler -> smc_cdc_tx_handler -> smc_tx_pending -> smc_tx_sndbuf_nonempty -> smcr_tx_sndbuf_nonempty -> spin_lock_bh(&conn->send_lock)
+> - tasklet -> smc_wr_rx_tasklet_fn -> smc_wr_rx_process_cqes -> smc_wr_rx_demultiplex -> smc_cdc_rx_handler -> smc_cdc_msg_validate -> spin_lock_bh(&conn->send_lock)
 > 
-> I there something in s390/features your three patches depend on?
-> Or v6.9-rc2 contains everything needed already?
-
-v6.9-rc2 should have all we need IIRC.
-
--- 
-Cheers,
-
-David / dhildenb
-
+> Thanks,
+> Guangguan Wang
+> Agree! Thank you, Guangguan, for the examples!
+If we can verify that this bug exits, we should find other solutions.
+>>
+>> Still the fact that the existing lock is a BH variant is suspect.
+>> Either the BH part was not needed or this can introduce subtle
+>> regressions/issues.
+>>
+>> I think this deserves at least a 3rd party testing.
+>>
+>> Thanks,
+>>
+>> Paolo
+>>
+> 
 
