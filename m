@@ -1,135 +1,116 @@
-Return-Path: <linux-s390+bounces-3484-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-3486-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B9098AC80B
-	for <lists+linux-s390@lfdr.de>; Mon, 22 Apr 2024 10:55:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E23728AC817
+	for <lists+linux-s390@lfdr.de>; Mon, 22 Apr 2024 10:55:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B2AA1F21522
-	for <lists+linux-s390@lfdr.de>; Mon, 22 Apr 2024 08:55:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1FA361C20FB3
+	for <lists+linux-s390@lfdr.de>; Mon, 22 Apr 2024 08:55:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2530F5FBAA;
-	Mon, 22 Apr 2024 08:51:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 412FA53E25;
+	Mon, 22 Apr 2024 08:52:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eVoUrqTz"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ekqEMJpx"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8887E567;
-	Mon, 22 Apr 2024 08:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644E652F9B;
+	Mon, 22 Apr 2024 08:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713775909; cv=none; b=j2YajQveaubYaNLPKrGDBEHIYatytdCzbQnNTXDUI1n8Cv3Ck6Kei1yzZ+nAuZ+dz0Co2zurlW/Eu2nxNNZUYP61TXblwcLFde3v4tStW12I5yUlSyEXoDAyTsnXASdSOg3jyYQLaaIAlP1VAvJVuI2G0UPeGfzv6Zze3lztDG0=
+	t=1713775964; cv=none; b=oAuaPQ0/C7JbJv9bJq3sfrSFXMVg9hvuwea2S5UmywtBpbYGTHQVGGkJaw5coGF4yhwWqdYWCI1CpAfHPMdaKDz7RenRsL+Jqa5+kmgr4MmccjS7mAQjdNVExVrZNImXBnE5atdDmQl8WBGvADWsn4AQ3DLNOmRKXjtLfyt6CGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713775909; c=relaxed/simple;
-	bh=+AOj3OMDSB3feHYUPdQfVhUVtDWDdcImqVlO1v4xpng=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YEDwt0l9v8lB35XKRroRbPbCxgcWjoqJ2meU6t6ltBAJpAoaKVriI3UqdUfpGgbt73TFKrVkc/B5Ignb/Oq69/ZBjDyqVl30PqectyZWpoV4NDtfIeaMHJR25801S7w1Vx+wvGk88EzgDENcF9XVdx/5kmWr0YP7nAylLd9XCgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eVoUrqTz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38C17C2BD11;
-	Mon, 22 Apr 2024 08:51:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713775908;
-	bh=+AOj3OMDSB3feHYUPdQfVhUVtDWDdcImqVlO1v4xpng=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eVoUrqTzKvKDMlRbSWxMwMfDr77F/fKfaXZo2D+M3jvbmz9/9rPDY11wr5uJd9WHR
-	 73qR6p9MsEwspl1mw67ZTeyYCQ1FdiUxyXu6GbwzDfstwCeP1NpczqvSY3Ba3Z0ExF
-	 qBMPc7gnPplQ3FSNK9aAmG5M0zlt/ivtRKIDO9W7wAAOdsxTPJAPWUmM+W1fP4IdGd
-	 KAT9/hPs4sBh1ZzDW2QkE9pzzbAWiIcuTpjmeUWW8EYfxXBJk1pSD+eFGRvkHE7PRe
-	 d4xcLwN7QI4MoUdGlr27hLmYCSgh98aXj/Vzt/0ZDsn1XD4giLiMchiuCvfBPl67Xb
-	 qXJvsrGnAVEqQ==
-From: Mike Rapoport <rppt@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Mike Rapoport <rppt@kernel.org>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev,
-	netdev@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH v5 15/15] bpf: remove CONFIG_BPF_JIT dependency on CONFIG_MODULES of
-Date: Mon, 22 Apr 2024 11:50:28 +0300
-Message-ID: <20240422085028.3602777-6-rppt@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240422085028.3602777-1-rppt@kernel.org>
-References: <20240422085028.3602777-1-rppt@kernel.org>
+	s=arc-20240116; t=1713775964; c=relaxed/simple;
+	bh=wvC3r31r/dnZ/Aer2+n+k3UMKWG3Kakej/Pn2Amk9kQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KopLPfZkDr0CoS+waFN0zoRxmHJDGYLn32sv5SpBF2WuU+Gx2WPGG5aW3S2msKXkCeDc/FwA5AQxJa61oQU4qUfqsMG/99a1MjU7pONC6cpGO8So3e9esYVCiLMqkQRfBROjlh3C0bkwvSUPBa4jcjxGNacC1IpClsKIUTvfTJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ekqEMJpx; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43M8HUpl005727;
+	Mon, 22 Apr 2024 08:52:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=dRfBgUXTFeRUe+bgqycMr9Bno2Q7MZS2kPSIFxmpW5s=;
+ b=ekqEMJpxCzR6e/JCvInq2gsOI+p3VYW32rC9IC47XAlewjYrMw+exuV6pwWqeMeQzMfF
+ kKyNjbAU6pZiduLBZ8VB5K0LbF7nTneCB/QMz9iVFA27ZvrnNMpPUSrq9+dG69zTbMW1
+ rLVXfEJ04iz9JyFycz34j6IqhzE9fg6iX3J67HCMesxT1WMddHggsl0thoQ911wB/gv2
+ Uvmj60JNcGaTx89NEw17t4YTpjtNv4y1K7XhzTr95kFE8oUseTZivZaB6zauL6Lbmd2f
+ w3VaiCOJi35WtmADzdM6CWW0U06a9atOCRJKLoABtNGrhALPeWHzUxSdAkfHuqc+JiAf 8A== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xnm8gr2e5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 Apr 2024 08:52:41 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43M8qeBE024013;
+	Mon, 22 Apr 2024 08:52:40 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xnm8gr2e3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 Apr 2024 08:52:40 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43M5OsiX020908;
+	Mon, 22 Apr 2024 08:52:39 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xmrdypuj5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 Apr 2024 08:52:39 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43M8qWN516253330
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 22 Apr 2024 08:52:34 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C139D2004E;
+	Mon, 22 Apr 2024 08:52:32 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 892DD2004B;
+	Mon, 22 Apr 2024 08:52:32 +0000 (GMT)
+Received: from a46lp57.lnxne.boe (unknown [9.152.108.100])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 22 Apr 2024 08:52:32 +0000 (GMT)
+From: Nico Boehr <nrb@linux.ibm.com>
+To: frankja@linux.ibm.com, imbrenda@linux.ibm.com, thuth@redhat.com
+Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [kvm-unit-tests PATCH v2 0/1] s390x: cmm: test no-translate bit after reset
+Date: Mon, 22 Apr 2024 10:51:49 +0200
+Message-ID: <20240422085232.21097-1-nrb@linux.ibm.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: tqJcVworsWH1Mrp-Yw-AjoWVQNBn-s_R
+X-Proofpoint-ORIG-GUID: vb2TWc1znH6VulPDHbgqZ6tBASDCz-0h
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-22_05,2024-04-19_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ adultscore=0 mlxscore=0 bulkscore=0 mlxlogscore=999 spamscore=0
+ clxscore=1015 suspectscore=0 priorityscore=1501 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404220038
 
-From: "Mike Rapoport (IBM)" <rppt@kernel.org>
-
-BPF just-in-time compiler depended on CONFIG_MODULES because it used
-module_alloc() to allocate memory for the generated code.
-
-Since code allocations are now implemented with execmem, drop dependency of
-CONFIG_BPF_JIT on CONFIG_MODULES and make it select CONFIG_EXECMEM.
-
-Suggested-by: Björn Töpel <bjorn@kernel.org>
-Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
+v2:
 ---
- kernel/bpf/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+* fix reverse christmas tree
 
-diff --git a/kernel/bpf/Kconfig b/kernel/bpf/Kconfig
-index bc25f5098a25..f999e4e0b344 100644
---- a/kernel/bpf/Kconfig
-+++ b/kernel/bpf/Kconfig
-@@ -43,7 +43,7 @@ config BPF_JIT
- 	bool "Enable BPF Just In Time compiler"
- 	depends on BPF
- 	depends on HAVE_CBPF_JIT || HAVE_EBPF_JIT
--	depends on MODULES
-+	select EXECMEM
- 	help
- 	  BPF programs are normally handled by a BPF interpreter. This option
- 	  allows the kernel to generate native code when a program is loaded
+
+
+Nico Boehr (1):
+  s390x: cmm: test no-translate bit after reset
+
+ s390x/cmm.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
 -- 
-2.43.0
+2.41.0
 
 
