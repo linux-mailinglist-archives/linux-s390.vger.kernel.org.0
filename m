@@ -1,185 +1,156 @@
-Return-Path: <linux-s390+bounces-3537-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-3539-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1AA588AE24D
-	for <lists+linux-s390@lfdr.de>; Tue, 23 Apr 2024 12:35:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0AFFB8AE37E
+	for <lists+linux-s390@lfdr.de>; Tue, 23 Apr 2024 13:11:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AAFA31F221F1
-	for <lists+linux-s390@lfdr.de>; Tue, 23 Apr 2024 10:35:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B556C1F22A5E
+	for <lists+linux-s390@lfdr.de>; Tue, 23 Apr 2024 11:11:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D912433DD;
-	Tue, 23 Apr 2024 10:35:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A13BA80600;
+	Tue, 23 Apr 2024 11:10:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gjGe2y+N"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ERnBvNby"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED47208BC;
-	Tue, 23 Apr 2024 10:35:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20EDF80028;
+	Tue, 23 Apr 2024 11:10:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713868540; cv=none; b=RTkUe5QioUfyQxT6lZXX9V32WR7R4mC359G3IYzKdwFeN+r5ybTf+DEnYiczI2m/DVTANF0TyypEbDyqsyvsGm7FeowTrcHYogW/GsNHM6wkpWxewkxAjZFNYXXKAUN0FcymSJFtmM123ouNgrNuyfBwSlbvhCvpsKP+1BGuoeY=
+	t=1713870646; cv=none; b=McIFTCSSLlautCAxL3r8ISgCDKGc0PtRggL2S+KbrCwPhsDhWwLCBbosgekjZIIvy53Cts8GbLC0eRZ+g9W2cW3iUqoKCov7id1Eg8rx9UPnBMbwoZFMycvmfpWT55qBwsv5EvBIyxSuGjvxvM5te/7GlzVSyAJiffqZgNU4+98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713868540; c=relaxed/simple;
-	bh=/iWAo8oILFNgWLzShi+8Mx92XJbaOZaKmF2DxhL0xKw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZPzry16fkz2bpwIEJ1HlbT7PWGreK9OT8k0Iq/qdntg8zjdlDM/WgXnsB1wy2Tzv/4wZ5NbjxTDxaXZDZfGGsMVL402VDexEIO176/mGD0+9E+CHzxTdGJwONjxVQncNRzIhBrstRWhjJdLUKNydeLsys424JCkexseJe9oVw3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gjGe2y+N; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43NAU2WF022449;
-	Tue, 23 Apr 2024 10:35:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : content-transfer-encoding
- : mime-version; s=pp1; bh=oZVa1McnfVjnR7hgvPmvE49sWfu02hCrKiT0rqMTs3M=;
- b=gjGe2y+N5fXI3KkYbVNX0rkNV3TG9vb1UnBBsjkCWpueWiT7o3QXOcnp0GyNePWrxZQo
- WLUUkcxfuwwoV1BqM8Zc7EyRGbV3gyJkbbbxIPewNXOWI+K/xOop7EknTHUuZwLOVWTG
- 3GPmPGgSR4d5eYDnbvNzAEC8oLt++YW+XRm9yTsV3jrBeMedQS5eyEzTszJVHxBabelq
- 7RNHXI69ByG+YdFLFUEme+4DCdJoaB1EvqlMGAwkqUSpmsaqlEaxBSOFK71OgjoZjAKS
- q58LYUKu5Nb+PasINKojdsUTlhV40rowyzU0Jde+oJB5SClm3Vqc50Ykdfar14VjNXho SA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xp9q4075g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Apr 2024 10:35:37 +0000
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43NAVl8l025087;
-	Tue, 23 Apr 2024 10:35:36 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xp9q4075d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Apr 2024 10:35:36 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43N9i9fl029854;
-	Tue, 23 Apr 2024 10:35:35 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xmr1td99s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Apr 2024 10:35:35 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43NAZU1N15925528
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 23 Apr 2024 10:35:32 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 976802004F;
-	Tue, 23 Apr 2024 10:35:30 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 699372004B;
-	Tue, 23 Apr 2024 10:35:30 +0000 (GMT)
-Received: from a46lp57.lnxne.boe (unknown [9.152.108.100])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 23 Apr 2024 10:35:30 +0000 (GMT)
-From: Nico Boehr <nrb@linux.ibm.com>
-To: frankja@linux.ibm.com, imbrenda@linux.ibm.com, thuth@redhat.com
-Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [kvm-unit-tests PATCH v3 1/1] s390x: cmm: test no-translate bit after reset
-Date: Tue, 23 Apr 2024 12:34:59 +0200
-Message-ID: <20240423103529.313782-2-nrb@linux.ibm.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20240423103529.313782-1-nrb@linux.ibm.com>
-References: <20240423103529.313782-1-nrb@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 8SrWLNqgwWNqf_lMrSvyl25QzIQiaQRg
-X-Proofpoint-ORIG-GUID: j9u3eyZTtKs0LdYIJ9ZebiQwkcRM14TV
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	s=arc-20240116; t=1713870646; c=relaxed/simple;
+	bh=FhMYwpD0Jy+0t5UX4wrDuIaENfV+qwJP/+xWhZFZCdQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GHkX7VD6nLSh6upVA9fIJm9w2KmOdWzm9TWX+uBPXXpxGUDUmefcuoqmVEyjgqCW2K94IDiuVvYT+wyKl7LXiF3vssX8M54uUlDsi7aLOrxTg8hhBpXwQ+zhnUyR4tskoNOC50PDjo4jJs1A5YICrpNEAV9CY/jUZVYBhBidrD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ERnBvNby; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713870645; x=1745406645;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=FhMYwpD0Jy+0t5UX4wrDuIaENfV+qwJP/+xWhZFZCdQ=;
+  b=ERnBvNbyFK6VwTLE/1IyNhrnjvj0TxFuN2XL4Gq4yAOJ7yN7lSkTHEOX
+   CDlc2aCKPJPboY8CRQ9p25ZrTi0xPKZuDho4/fJGNiDcoXAExx5WCcUT7
+   k1Ot3Y0us4F2uybfjrr42Qo85nTF/Jmcg9zLevTfktr3qGwmdSW6fDX4u
+   oTSHr0zY+q3Of+/1/hBTnL1uVqM88Npsrax+/yF5sxl/b18eE4LkXFwEC
+   8rX2uGqbODoQIr+zy0zp+Xw2b4xHI78iHrjfyCgGijDyqdO1VYQBh/OOC
+   Igdk54FoXmzzQn2j3gpp4kz7UQAw2sFDxEGa/Tc3pVTe6HmSSwbPnLjKU
+   A==;
+X-CSE-ConnectionGUID: yTIwQevkT9CXDZpZ5SC9lQ==
+X-CSE-MsgGUID: 8EmlvmEuT8+Ut7spIoLwrQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="26905757"
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="26905757"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 04:10:45 -0700
+X-CSE-ConnectionGUID: GHANmPF1QaSu/tzRusNdUw==
+X-CSE-MsgGUID: zm+oKK03QECvY3VX9hfdGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="24342606"
+Received: from mszycik-mobl1.ger.corp.intel.com (HELO [10.246.35.198]) ([10.246.35.198])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 04:10:37 -0700
+Message-ID: <eb54c7bb-db63-4361-b42f-dc02e2c37fbf@linux.intel.com>
+Date: Tue, 23 Apr 2024 13:10:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-23_09,2024-04-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- suspectscore=0 spamscore=0 priorityscore=1501 phishscore=0 malwarescore=0
- impostorscore=0 bulkscore=0 lowpriorityscore=0 mlxlogscore=999
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404230028
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Intel-wired-lan] [PATCH 0/5] Ensure the copied buf is NULL
+ terminated
+To: Bui Quang Minh <minhquangbui99@gmail.com>,
+ Jesse Brandeburg <jesse.brandeburg@intel.com>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>,
+ Rasesh Mody <rmody@marvell.com>, Sudarsana Kalluru <skalluru@marvell.com>,
+ GR-Linux-NIC-Dev@marvell.com, Krishna Gudipati <kgudipat@brocade.com>,
+ Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
+ Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Fabian Frederick <fabf@skynet.be>, Saurav Kashyap <skashyap@marvell.com>,
+ Javed Hasan <jhasan@marvell.com>, GR-QLogic-Storage-Upstream@marvell.com,
+ Nilesh Javali <nilesh.javali@cavium.com>, Arun Easi <arun.easi@cavium.com>,
+ Manish Rangankar <manish.rangankar@cavium.com>,
+ Vineeth Vijayan <vneethv@linux.ibm.com>,
+ Peter Oberparleiter <oberpar@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-s390@vger.kernel.org,
+ linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+ Saurav Kashyap <saurav.kashyap@cavium.com>
+References: <20240422-fix-oob-read-v1-0-e02854c30174@gmail.com>
+Content-Language: en-US
+From: Marcin Szycik <marcin.szycik@linux.intel.com>
+In-Reply-To: <20240422-fix-oob-read-v1-0-e02854c30174@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-KVM did not properly reset the no-translate bit after reset, see
-https://lore.kernel.org/kvm/20231109123624.37314-1-imbrenda@linux.ibm.com/
 
-Add a test which performs a load normal reset (includes a subsystem
-reset) and verify that this clears the no-translate bit.
 
-Signed-off-by: Nico Boehr <nrb@linux.ibm.com>
----
- s390x/cmm.c | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+On 22.04.2024 18:41, Bui Quang Minh wrote:
+> Hi everyone,
+> 
+> I found that some drivers contains an out-of-bound read pattern like this
+> 
+> 	kern_buf = memdup_user(user_buf, count);
+> 	...
+> 	sscanf(kern_buf, ...);
+> 
+> The sscanf can be replaced by some other string-related functions. This
+> pattern can lead to out-of-bound read of kern_buf in string-related
+> functions.
+> 
+> This series fix the above issue by replacing memdup_user with
+> memdup_user_nul or allocating count + 1 buffer then writing the NULL
+> terminator to end of buffer after userspace copying.
+> 
+> Thanks,
+> Quang Minh.
+> 
+> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
+> ---
+> Bui Quang Minh (5):
+>       drivers/net/ethernet/intel-ice: ensure the copied buf is NULL terminated
+>       drivers/net/brocade-bnad: ensure the copied buf is NULL terminated
+>       drivers/scsi/bfa/bfad: ensure the copied buf is NULL terminated
+>       drivers/scsi/qedf: ensure the copied buf is NULL terminated
+>       drivers/s390/cio: ensure the copied buf is NULL terminated
 
-diff --git a/s390x/cmm.c b/s390x/cmm.c
-index af852838851e..536f2bfc3c93 100644
---- a/s390x/cmm.c
-+++ b/s390x/cmm.c
-@@ -9,13 +9,17 @@
-  */
- 
- #include <libcflat.h>
-+#include <bitops.h>
- #include <asm/asm-offsets.h>
- #include <asm/interrupt.h>
- #include <asm/page.h>
- #include <asm/cmm.h>
-+#include <asm/facility.h>
- 
- static uint8_t pagebuf[PAGE_SIZE] __attribute__((aligned(PAGE_SIZE)));
- 
-+extern int diag308_load_reset(u64);
-+
- static void test_params(void)
- {
- 	report_prefix_push("invalid ORC 8");
-@@ -35,6 +39,35 @@ static void test_priv(void)
- 	report_prefix_pop();
- }
- 
-+static void test_reset_no_translate(void)
-+{
-+	const uint64_t mask_no_translate = BIT(63 - 58);
-+	unsigned long state;
-+
-+	if (!test_facility(147)) {
-+		report_prefix_push("no-translate unavailable");
-+		expect_pgm_int();
-+		essa(ESSA_SET_STABLE_NODAT, (unsigned long)pagebuf);
-+		check_pgm_int_code(PGM_INT_CODE_SPECIFICATION);
-+		report_prefix_pop();
-+		return;
-+	}
-+
-+	report_prefix_push("reset no-translate");
-+	essa(ESSA_SET_STABLE_NODAT, (unsigned long)pagebuf);
-+
-+	state = essa(ESSA_GET_STATE, (unsigned long)pagebuf);
-+	report(state & mask_no_translate, "no-translate bit set before reset");
-+
-+	/* Load normal reset - includes subsystem reset */
-+	diag308_load_reset(1);
-+
-+	state = essa(ESSA_GET_STATE, (unsigned long)pagebuf);
-+	report(!(state & mask_no_translate), "no-translate bit unset after reset");
-+
-+	report_prefix_pop();
-+}
-+
- int main(void)
- {
- 	bool has_essa = check_essa_available();
-@@ -47,6 +80,7 @@ int main(void)
- 
- 	test_priv();
- 	test_params();
-+	test_reset_no_translate();
- done:
- 	report_prefix_pop();
- 	return report_summary();
--- 
-2.41.0
+Typically you don't include path to module in title, instead:
+ice: ensure the copied buf is NULL terminated
+bna: ensure the copied buf is NULL terminated
+etc.
 
+> 
+>  drivers/net/ethernet/brocade/bna/bnad_debugfs.c | 4 ++--
+>  drivers/net/ethernet/intel/ice/ice_debugfs.c    | 8 ++++----
+>  drivers/s390/cio/cio_inject.c                   | 3 ++-
+>  drivers/scsi/bfa/bfad_debugfs.c                 | 4 ++--
+>  drivers/scsi/qedf/qedf_debugfs.c                | 2 +-
+>  5 files changed, 11 insertions(+), 10 deletions(-)
+> ---
+> base-commit: ed30a4a51bb196781c8058073ea720133a65596f
+> change-id: 20240422-fix-oob-read-19ae7f8f3711
+> 
+> Best regards,
+
+Thanks,
+Marcin
 
