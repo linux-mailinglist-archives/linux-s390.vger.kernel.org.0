@@ -1,363 +1,417 @@
-Return-Path: <linux-s390+bounces-3583-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-3586-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC5A88B2044
-	for <lists+linux-s390@lfdr.de>; Thu, 25 Apr 2024 13:30:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31CA18B20F0
+	for <lists+linux-s390@lfdr.de>; Thu, 25 Apr 2024 14:03:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E60DFB25AD5
-	for <lists+linux-s390@lfdr.de>; Thu, 25 Apr 2024 11:30:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B3B03282A88
+	for <lists+linux-s390@lfdr.de>; Thu, 25 Apr 2024 12:03:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2726312BF15;
-	Thu, 25 Apr 2024 11:30:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52BE612BF31;
+	Thu, 25 Apr 2024 12:03:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Wc2s88kA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jv5/3gzC"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D18112BEB8;
-	Thu, 25 Apr 2024 11:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39D012AAF8;
+	Thu, 25 Apr 2024 12:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714044623; cv=none; b=J+YHZSRbMiRERmX7YjxRU5t0B+gc5Zu1QMzw+Ch11IynFHUGlC90N8W7bbUn63bKGop5stDgOUzLZg4PnYfUtp5XDE0tV3uIzrrciv0FxQgPA184AwuPR15iD9HIkXl7n0xljCmQEXbovv7dypBy/2i+defiYSdlVFuDQdCeUFM=
+	t=1714046620; cv=none; b=fOvyxq0h32+Lxl/s5aciJfeUQY8CuZDBSmBvr/S3vgt/p2LqLpPaYvqlc4SPHRnjm/ZMAJB3dvJNlQJIKvt7ST+2Ls/+Aw4/jfJMMx+ZJixSYQyzJEKA4ag/Q79DfIMfXCSiq3De/Dh/bTS85JW+yokF8XiR79wckNf1WosvsFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714044623; c=relaxed/simple;
-	bh=7q84ME6y+fcBqveGSowGZRxGuw4P5y9oUZiGmbzNteI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Npz6kaDnTYmpILqoRj61kalWpofFxiL2X1PUeRIjI8QVD81Bgq92kMJeiUp1NjOxFdEZQE8wkwXnOcKBLMNllBbvij521ln4ftvAgz7nR/8Nxy0g2zHvK5jnKbcGZo9II7uNeHfh/xlekyRe4ZV7pJzWG14kWka+8rQf0oyHlp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Wc2s88kA; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43PBRJ3L025891;
-	Thu, 25 Apr 2024 11:30:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=I6XGV3Vz8a3wGJnf0sY8yZgCD+7SDnIv+ElV1klFDKI=;
- b=Wc2s88kA8oSyNfr0DomTCiCAKg3nEu6kHHY+uEUYKRglegGtgMLVYyRvXzsBYeSe3qVc
- fOQGLjIMgPPZuM6kWtjbk8FKljc4cuVEIiWhaoLKdMdMZ5p+hqzlSjqBHjc+5JKKQBKE
- 7E46WzbIrivT6bYqcA4Y4aAYHSRC357D74VUEB3LwltwuyyvbD6TKiroRPYLQgWVozn6
- Kf1J7l9D9uSyWwOpwoLykfgYgBF03M9xfjYUBCW0JLzJFEgeNafftNtIZgxd2/93L6rQ
- pe/4Ms2urR0suoRrKAODRJHOhnlY1VYufz6ZP11w2Y0pCn5sPRnV1LsTxW9rDlcHEaD8 mQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xqpagg0a9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Apr 2024 11:30:15 +0000
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43PBUFvI031166;
-	Thu, 25 Apr 2024 11:30:15 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xqpagg09x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Apr 2024 11:30:15 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43P9tPcm005736;
-	Thu, 25 Apr 2024 11:30:14 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xmx3cr73y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Apr 2024 11:30:14 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43PBUBTt23659080
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 25 Apr 2024 11:30:13 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 212C55808A;
-	Thu, 25 Apr 2024 11:30:11 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5767D58089;
-	Thu, 25 Apr 2024 11:30:08 +0000 (GMT)
-Received: from [9.171.19.157] (unknown [9.171.19.157])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 25 Apr 2024 11:30:08 +0000 (GMT)
-Message-ID: <defb2c4b-ddb7-4359-9e13-9f9b7723238f@linux.ibm.com>
-Date: Thu, 25 Apr 2024 13:30:07 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v6 00/11] net/smc: SMC intra-OS shortcut with
- loopback-ism
-Content-Language: en-GB
-To: Wen Gu <guwen@linux.alibaba.com>, wintera@linux.ibm.com,
-        twinkler@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        agordeev@linux.ibm.com, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com, jaka@linux.ibm.com
-Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com, alibuda@linux.alibaba.com,
-        tonylu@linux.alibaba.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, netdev@vger.kernel.org
-References: <20240414040304.54255-1-guwen@linux.alibaba.com>
-From: Wenjia Zhang <wenjia@linux.ibm.com>
-In-Reply-To: <20240414040304.54255-1-guwen@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: QTyECMJUpdD-vD6ivkttejOxzX5Hp93F
-X-Proofpoint-ORIG-GUID: o7nbmZhOTiNgdm9g6gn0YU2LQAm69vgR
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	s=arc-20240116; t=1714046620; c=relaxed/simple;
+	bh=z4KRjIbbsJSqGmAGg8o8k7Lsw48MCLoNj1a/WNPurWw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FKpX6mZ0I42s/04mj+iP6oAaPC7xZWQ1XiUGLtEPb5wOwM5GrdnOVSLrCe/y/Hy2zX1Z4jRqt40g6J12uJ6OTxu2I+wMO1QsCqAbFnuVJ3iEluufZqkWA1uyG+QgLpSBgiFBzLh3bZkNpULMOlRvcSQLdtd8btVk3stB0LFB7vY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jv5/3gzC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8A4F5C2BD10;
+	Thu, 25 Apr 2024 12:03:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714046619;
+	bh=z4KRjIbbsJSqGmAGg8o8k7Lsw48MCLoNj1a/WNPurWw=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=Jv5/3gzCJrXVfTeDKWAV5E8N61AXvgSkBc9xdReFhrqWBomRKaL3nPrwajQcSC43Z
+	 V19Gu1UHHzp8Xs4Uq5PqOgYMX7O5F6ONnMhIHttAia+X9ru0MAqZBOxjygfRcktKKD
+	 3AA+Uc6qvsBOgrNJDrbPczfwfOIUmWDRkcfGpstW5Ji4/uhphPW0PR6RCjRyqWjD3i
+	 zBfYIlMftFXh85p9UHZRb0SKJWXKXcMEIQohxj55c1EV4AcPiZWd/URDPR+FwtO0p7
+	 FfZYtpDRyVNq0lu034yqGpw661+4u20+Pd5RbVsEWB0ROpgLuq4s9+NF5tBVE9BiL9
+	 3bvgldOI0Ly5A==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60656C4345F;
+	Thu, 25 Apr 2024 12:03:39 +0000 (UTC)
+From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
+Subject: [PATCH v4 0/8] sysctl: Remove sentinel elements from networking
+Date: Thu, 25 Apr 2024 14:02:58 +0200
+Message-Id: <20240425-jag-sysctl_remset_net-v4-0-9e82f985777d@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-25_11,2024-04-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- lowpriorityscore=0 suspectscore=0 impostorscore=0 bulkscore=0 adultscore=0
- spamscore=0 malwarescore=0 clxscore=1015 mlxscore=0 mlxlogscore=999
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404250083
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHJGKmYC/3XO0QrCMAwF0F+RPltZ0qqrT/6HyOjabqu4Tpo5F
+ Nm/2wmiInu8CfckD0Yuekdst3iw6AZPvgspyOWCmUaH2nFvU2aYocwEAD/pmtOdTH8uomvJ9UV
+ wPbdpqUErYTclS91LdJW/vdzDMeXGU9/F++vMANP0LcoZcQCeca1xU0ppUVm1J93SNdQr07VsM
+ gf8cjCfczA5azSq0lalF6t/R3wcCTjniOQAQL61IAwC/DrjOD4BxsuYO0wBAAA=
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Alexander Aring <alex.aring@gmail.com>, 
+ Stefan Schmidt <stefan@datenfreihafen.org>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, David Ahern <dsahern@kernel.org>, 
+ Steffen Klassert <steffen.klassert@secunet.com>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, 
+ Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, 
+ Remi Denis-Courmont <courmisch@gmail.com>, 
+ Allison Henderson <allison.henderson@oracle.com>, 
+ David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
+ Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, 
+ Xin Long <lucien.xin@gmail.com>, Wenjia Zhang <wenjia@linux.ibm.com>, 
+ Jan Karcher <jaka@linux.ibm.com>, "D. Wythe" <alibuda@linux.alibaba.com>, 
+ Tony Lu <tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>, 
+ Trond Myklebust <trond.myklebust@hammerspace.com>, 
+ Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
+ Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, Jon Maloy <jmaloy@redhat.com>, 
+ Ying Xue <ying.xue@windriver.com>, Martin Schiller <ms@dev.tdt.de>, 
+ Pablo Neira Ayuso <pablo@netfilter.org>, 
+ Jozsef Kadlecsik <kadlec@netfilter.org>, Florian Westphal <fw@strlen.de>, 
+ Roopa Prabhu <roopa@nvidia.com>, Nikolay Aleksandrov <razor@blackwall.org>, 
+ Simon Horman <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>, 
+ Joerg Reuter <jreuter@yaina.de>, Luis Chamberlain <mcgrof@kernel.org>, 
+ Kees Cook <keescook@chromium.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ dccp@vger.kernel.org, linux-wpan@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-hams@vger.kernel.org, linux-rdma@vger.kernel.org, 
+ rds-devel@oss.oracle.com, linux-afs@lists.infradead.org, 
+ linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org, 
+ linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net, 
+ linux-x25@vger.kernel.org, netfilter-devel@vger.kernel.org, 
+ coreteam@netfilter.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org, 
+ Joel Granados <j.granados@samsung.com>
+X-Mailer: b4 0.13-dev-2d940
+X-Developer-Signature: v=1; a=openpgp-sha256; l=15110;
+ i=j.granados@samsung.com; h=from:subject:message-id;
+ bh=zBmytE4RXeXsfs2R37Cc3NmnPMXNcZF6hCbgLnPrpWg=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGYqRpSAjk77t9X/LxyFMa4bCs8zj3S6nmBRI
+ LlM/lF/0WkIfYkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmKkaUAAoJELqXzVK3
+ lkFPkn8L/ji9z/RcTAJaHdhrakLG3z/EQK6Q9BElYrCtmU6QzLtcbIcXBxPKJOLV3S5qeRt9u1C
+ wuB8xOT/u0pWHLdexg+hqI05qIhD38TL6Tp0Q34uMERiJifzMZQDNc0Pp2JowTYLZSnVNYIee0T
+ IuMBZGoYbt82u6Na7Tfq4p74YWdtyInXE2Ahcm4cO/8exIO39N8VzQAB2V/GGnW3R7twOSzzlXt
+ JV9RTahw7Ur9hmAucmPuSJQAo8Xo3YPuEkWWDyuj7R/e1VF20ZKSRvjkZC+0sijpfS/1KKG+VAu
+ NrEoofmqbFFC4SyNQnbBpUL7VUAxAamGlLpHYmx0Oep23XuklThW6eIboE81c9aRe9ME8MC/cQK
+ VLmpvZPoP5xtPsy9Tag9M36oDkdcduVHrbW+EhfP0rNYlnZdxBrhswLT72mBaikgrCTPwD4wcp3
+ Jok24YjqSneVDmFAd7lh929IQexalQ2+kILqcQkMDNNOvjOWyglROtxzMFm8AojZpLFd5eVmnJ5
+ rw=
+X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
+ fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
+X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
+ auth_id=70
+X-Original-From: Joel Granados <j.granados@samsung.com>
+Reply-To: j.granados@samsung.com
+
+From: Joel Granados <j.granados@samsung.com>
+
+What?
+These commits remove the sentinel element (last empty element) from the
+sysctl arrays of all the files under the "net/" directory that register
+a sysctl array. The merging of the preparation patches [4] to mainline
+allows us to just remove sentinel elements without changing behavior.
+This is safe because the sysctl registration code (register_sysctl() and
+friends) use the array size in addition to checking for a sentinel [1].
+
+Why?
+By removing the sysctl sentinel elements we avoid kernel bloat as
+ctl_table arrays get moved out of kernel/sysctl.c into their own
+respective subsystems. This move was started long ago to avoid merge
+conflicts; the sentinel removal bit came after Mathew Wilcox suggested
+it to avoid bloating the kernel by one element as arrays moved out. This
+patchset will reduce the overall build time size of the kernel and run
+time memory bloat by about ~64 bytes per declared ctl_table array (more
+info here [5]).
+
+When are we done?
+There are 4 patchest (25 commits [2]) that are still outstanding to
+completely remove the sentinels: files under "net/" (this patchset),
+files under "kernel/" dir, misc dirs (files under mm/ security/ and
+others) and the final set that removes the unneeded check for ->procname
+== NULL.
+
+Testing:
+* Ran sysctl selftests (./tools/testing/selftests/sysctl/sysctl.sh)
+* Ran this through 0-day with no errors or warnings
+
+Savings in vmlinux:
+  A total of 64 bytes per sentinel is saved after removal; I measured in
+  x86_64 to give an idea of the aggregated savings. The actual savings
+  will depend on individual kernel configuration.
+    * bloat-o-meter
+        - The "yesall" config saves 3976 bytes (bloat-o-meter output [6])
+        - A reduced config [3] saves 1263 bytes (bloat-o-meter output [7])
+
+Savings in allocated memory:
+  None in this set but will occur when the superfluous allocations are
+  removed from proc_sysctl.c. I include it here for context. The
+  estimated savings during boot for config [3] are 6272 bytes. See [8]
+  for how to measure it.
+
+Comments/feedback greatly appreciated
+
+Changes in v4:
+- Keep reverse xmas tree order when introducing new variables
+- Use a table_size variable to keep the value of ARRAY_SIZE
+- Separated the original "networking: Remove the now superfluous
+  sentinel elements from ctl_table arra" into smaller commits to ease
+  review
+- Merged x.25 and ax.25 commits together.
+- Removed any SOB from the commits that were changed
+- Link to v3: https://lore.kernel.org/r/20240412-jag-sysctl_remset_net-v3-0-11187d13c211@samsung.com
+
+Changes in v3:
+- Reworkded ax.25
+  - Added a BUILD_BUG_ON for the ax.25 commit
+  - Added a CONFIG_AX25_DAMA_SLAVE guard where needed
+- Link to v2: https://lore.kernel.org/r/20240328-jag-sysctl_remset_net-v2-0-52c9fad9a1af@samsung.com
+
+Changes in v2:
+- Rebased to v6.9-rc1
+- Removed unneeded comment from sysctl_net_ax25.c
+- Link to v1: https://lore.kernel.org/r/20240314-jag-sysctl_remset_net-v1-0-aa26b44d29d9@samsung.com
+
+Best
+Joel
+
+[1] https://lore.kernel.org/all/20230809105006.1198165-1-j.granados@samsung.com/
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/joel.granados/linux.git/tag/?h=sysctl_remove_empty_elem_v5
+[3] https://gist.github.com/Joelgranados/feaca7af5537156ca9b73aeaec093171
+[4] https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/
+
+[5]
+Links Related to the ctl_table sentinel removal:
+* Good summaries from Luis:
+  https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/
+  https://lore.kernel.org/all/ZMFizKFkVxUFtSqa@bombadil.infradead.org/
+* Patches adjusting sysctl register calls:
+  https://lore.kernel.org/all/20230302204612.782387-1-mcgrof@kernel.org/
+  https://lore.kernel.org/all/20230302202826.776286-1-mcgrof@kernel.org/
+* Discussions about expectations and approach
+  https://lore.kernel.org/all/20230321130908.6972-1-frank.li@vivo.com
+  https://lore.kernel.org/all/20220220060626.15885-1-tangmeng@uniontech.com
+
+[6]
+add/remove: 0/1 grow/shrink: 2/67 up/down: 76/-4052 (-3976)
+Function                                     old     new   delta
+llc_sysctl_init                              306     377     +71
+nf_log_net_init                              866     871      +5
+sysctl_core_net_init                         375     366      -9
+lowpan_frags_init_net                        618     598     -20
+ip_vs_control_net_init_sysctl               2446    2422     -24
+sysctl_route_net_init                        521     493     -28
+__addrconf_sysctl_register                   678     650     -28
+xfrm_sysctl_init                             405     374     -31
+mpls_net_init                                367     334     -33
+sctp_sysctl_net_register                     386     346     -40
+__ip_vs_lblcr_init                           546     501     -45
+__ip_vs_lblc_init                            546     501     -45
+neigh_sysctl_register                       1011     958     -53
+mpls_dev_sysctl_register                     475     419     -56
+ipv6_route_sysctl_init                       450     394     -56
+xs_tunables_table                            448     384     -64
+xr_tunables_table                            448     384     -64
+xfrm_table                                   320     256     -64
+xfrm6_policy_table                           128      64     -64
+xfrm4_policy_table                           128      64     -64
+x25_table                                    448     384     -64
+vs_vars                                     1984    1920     -64
+unix_table                                   128      64     -64
+tipc_table                                   448     384     -64
+svcrdma_parm_table                           832     768     -64
+smc_table                                    512     448     -64
+sctp_table                                   256     192     -64
+sctp_net_table                              2304    2240     -64
+rxrpc_sysctl_table                           704     640     -64
+rose_table                                   704     640     -64
+rds_tcp_sysctl_table                         192     128     -64
+rds_sysctl_rds_table                         384     320     -64
+rds_ib_sysctl_table                          384     320     -64
+phonet_table                                 128      64     -64
+nr_table                                     832     768     -64
+nf_log_sysctl_table                          768     704     -64
+nf_log_sysctl_ftable                         128      64     -64
+nf_ct_sysctl_table                          3200    3136     -64
+nf_ct_netfilter_table                        128      64     -64
+nf_ct_frag6_sysctl_table                     256     192     -64
+netns_core_table                             320     256     -64
+net_core_table                              2176    2112     -64
+neigh_sysctl_template                       1416    1352     -64
+mptcp_sysctl_table                           576     512     -64
+mpls_dev_table                               128      64     -64
+lowpan_frags_ns_ctl_table                    256     192     -64
+lowpan_frags_ctl_table                       128      64     -64
+llc_station_table                             64       -     -64
+llc2_timeout_table                           320     256     -64
+ipv6_table_template                         1344    1280     -64
+ipv6_route_table_template                    768     704     -64
+ipv6_rotable                                 320     256     -64
+ipv6_icmp_table_template                     448     384     -64
+ipv4_table                                  1024     960     -64
+ipv4_route_table                             832     768     -64
+ipv4_route_netns_table                       320     256     -64
+ipv4_net_table                              7552    7488     -64
+ip6_frags_ns_ctl_table                       256     192     -64
+ip6_frags_ctl_table                          128      64     -64
+ip4_frags_ns_ctl_table                       320     256     -64
+ip4_frags_ctl_table                          128      64     -64
+devinet_sysctl                              2184    2120     -64
+debug_table                                  384     320     -64
+dccp_default_table                           576     512     -64
+ctl_forward_entry                            128      64     -64
+brnf_table                                   448     384     -64
+ax25_param_table                             960     896     -64
+atalk_table                                  320     256     -64
+addrconf_sysctl                             3904    3840     -64
+vs_vars_table                                256     128    -128
+Total: Before=440631035, After=440627059, chg -0.00%
+
+[7]
+add/remove: 0/0 grow/shrink: 1/22 up/down: 8/-1263 (-1255)
+Function                                     old     new   delta
+sysctl_route_net_init                        189     197      +8
+__addrconf_sysctl_register                   306     294     -12
+ipv6_route_sysctl_init                       201     185     -16
+neigh_sysctl_register                        385     366     -19
+unix_table                                   128      64     -64
+netns_core_table                             256     192     -64
+net_core_table                              1664    1600     -64
+neigh_sysctl_template                       1416    1352     -64
+ipv6_table_template                         1344    1280     -64
+ipv6_route_table_template                    768     704     -64
+ipv6_rotable                                 192     128     -64
+ipv6_icmp_table_template                     448     384     -64
+ipv4_table                                   768     704     -64
+ipv4_route_table                             832     768     -64
+ipv4_route_netns_table                       320     256     -64
+ipv4_net_table                              7040    6976     -64
+ip6_frags_ns_ctl_table                       256     192     -64
+ip6_frags_ctl_table                          128      64     -64
+ip4_frags_ns_ctl_table                       320     256     -64
+ip4_frags_ctl_table                          128      64     -64
+devinet_sysctl                              2184    2120     -64
+ctl_forward_entry                            128      64     -64
+addrconf_sysctl                             3392    3328     -64
+Total: Before=8523801, After=8522546, chg -0.01%
+
+[8]
+To measure the in memory savings apply this on top of this patchset.
+
+"
+diff --git i/fs/proc/proc_sysctl.c w/fs/proc/proc_sysctl.c
+index 37cde0efee57..896c498600e8 100644
+--- i/fs/proc/proc_sysctl.c
++++ w/fs/proc/proc_sysctl.c
+@@ -966,6 +966,7 @@ static struct ctl_dir *new_dir(struct ctl_table_set *set,
+        table[0].procname = new_name;
+        table[0].mode = S_IFDIR|S_IRUGO|S_IXUGO;
+        init_header(&new->header, set->dir.header.root, set, node, table, 1);
++       printk("%ld sysctl saved mem kzalloc\n", sizeof(struct ctl_table));
+
+        return new;
+ }
+@@ -1189,6 +1190,7 @@ static struct ctl_table_header *new_links(struct ctl_dir *dir, s>
+                link_name += len;
+                link++;
+        }
++       printk("%ld sysctl saved mem kzalloc\n", sizeof(struct ctl_table));
+        init_header(links, dir->header.root, dir->header.set, node, link_table,
+                    head->ctl_table_size);
+        links->nreg = nr_entries;
+"
+and then run the following bash script in the kernel:
+
+accum=0
+for n in $(dmesg | grep kzalloc | awk '{print $3}') ; do
+    accum=$(calc "$accum + $n")
+done
+echo $accum
+
+Signed-off-by: Joel Granados <j.granados@samsung.com>
+
+--
+
+---
+---
+Joel Granados (8):
+      net: Remove the now superfluous sentinel elements from ctl_table array
+      net: ipv{6,4}: Remove the now superfluous sentinel elements from ctl_table array
+      net: rds: Remove the now superfluous sentinel elements from ctl_table array
+      net: sunrpc: Remove the now superfluous sentinel elements from ctl_table array
+      net: Remove ctl_table sentinel elements from several networking subsystems
+      netfilter: Remove the now superfluous sentinel elements from ctl_table array
+      appletalk: Remove the now superfluous sentinel elements from ctl_table array
+      ax.25: x.25: Remove the now superfluous sentinel elements from ctl_table array
+
+ include/net/ax25.h                      |  2 ++
+ net/appletalk/sysctl_net_atalk.c        |  1 -
+ net/ax25/ax25_dev.c                     |  3 +++
+ net/ax25/ax25_ds_timer.c                |  4 ++++
+ net/ax25/sysctl_net_ax25.c              |  3 +--
+ net/bridge/br_netfilter_hooks.c         |  1 -
+ net/core/neighbour.c                    |  5 +----
+ net/core/sysctl_net_core.c              | 12 +++++-------
+ net/dccp/sysctl.c                       |  2 --
+ net/ieee802154/6lowpan/reassembly.c     |  6 +-----
+ net/ipv4/devinet.c                      |  5 ++---
+ net/ipv4/ip_fragment.c                  |  2 --
+ net/ipv4/route.c                        |  8 ++------
+ net/ipv4/sysctl_net_ipv4.c              |  7 +++----
+ net/ipv4/xfrm4_policy.c                 |  1 -
+ net/ipv6/addrconf.c                     |  8 +++-----
+ net/ipv6/icmp.c                         |  1 -
+ net/ipv6/netfilter/nf_conntrack_reasm.c |  1 -
+ net/ipv6/reassembly.c                   |  2 --
+ net/ipv6/route.c                        |  5 -----
+ net/ipv6/sysctl_net_ipv6.c              |  8 +++-----
+ net/ipv6/xfrm6_policy.c                 |  1 -
+ net/llc/sysctl_net_llc.c                |  8 ++------
+ net/mpls/af_mpls.c                      | 12 ++++++------
+ net/mptcp/ctrl.c                        |  1 -
+ net/netfilter/ipvs/ip_vs_ctl.c          |  5 +----
+ net/netfilter/ipvs/ip_vs_lblc.c         |  5 +----
+ net/netfilter/ipvs/ip_vs_lblcr.c        |  5 +----
+ net/netfilter/nf_conntrack_standalone.c |  6 +-----
+ net/netfilter/nf_log.c                  |  3 +--
+ net/netrom/sysctl_net_netrom.c          |  1 -
+ net/phonet/sysctl.c                     |  1 -
+ net/rds/ib_sysctl.c                     |  1 -
+ net/rds/sysctl.c                        |  1 -
+ net/rds/tcp.c                           |  1 -
+ net/rose/sysctl_net_rose.c              |  1 -
+ net/rxrpc/sysctl.c                      |  1 -
+ net/sctp/sysctl.c                       | 10 +++-------
+ net/smc/smc_sysctl.c                    |  1 -
+ net/sunrpc/sysctl.c                     |  1 -
+ net/sunrpc/xprtrdma/svc_rdma.c          |  1 -
+ net/sunrpc/xprtrdma/transport.c         |  1 -
+ net/sunrpc/xprtsock.c                   |  1 -
+ net/tipc/sysctl.c                       |  1 -
+ net/unix/sysctl_net_unix.c              |  1 -
+ net/x25/sysctl_net_x25.c                |  1 -
+ net/xfrm/xfrm_sysctl.c                  |  5 +----
+ 47 files changed, 47 insertions(+), 116 deletions(-)
+---
+base-commit: 4cece764965020c22cff7665b18a012006359095
+change-id: 20240311-jag-sysctl_remset_net-d403a1a93d6b
+
+Best regards,
+-- 
+Joel Granados <j.granados@samsung.com>
 
 
-
-On 14.04.24 06:02, Wen Gu wrote:
-> This patch set acts as the second part of the new version of [1] (The first
-> part can be referred from [2]), the updated things of this version are listed
-> at the end.
-> 
-> - Background
-> 
-> SMC-D is now used in IBM z with ISM function to optimize network interconnect
-> for intra-CPC communications. Inspired by this, we try to make SMC-D available
-> on the non-s390 architecture through a software-implemented Emulated-ISM device,
-> that is the loopback-ism device here, to accelerate inter-process or
-> inter-containers communication within the same OS instance.
-> 
-> - Design
-> 
-> This patch set includes 3 parts:
-> 
->   - Patch #1: some prepare work for loopback-ism.
->   - Patch #2-#7: implement loopback-ism device and adapt SMC-D for it.
->     loopback-ism now serves only SMC and no userspace interfaces exposed.
->   - Patch #8-#11: memory copy optimization for intra-OS scenario.
-> 
-> The loopback-ism device is designed as an ISMv2 device and not be limited to
-> a specific net namespace, ends of both inter-process connection (1/1' in diagram
-> below) or inter-container connection (2/2' in diagram below) can find the same
-> available loopback-ism and choose it during the CLC handshake.
-> 
->   Container 1 (ns1)                              Container 2 (ns2)
->   +-----------------------------------------+    +-------------------------+
->   | +-------+      +-------+      +-------+ |    |        +-------+        |
->   | | App A |      | App B |      | App C | |    |        | App D |<-+     |
->   | +-------+      +---^---+      +-------+ |    |        +-------+  |(2') |
->   |     |127.0.0.1 (1')|             |192.168.0.11       192.168.0.12|     |
->   |  (1)|   +--------+ | +--------+  |(2)   |    | +--------+   +--------+ |
->   |     `-->|   lo   |-` |  eth0  |<-`      |    | |   lo   |   |  eth0  | |
->   +---------+--|---^-+---+-----|--+---------+    +-+--------+---+-^------+-+
->                |   |           |                                  |
->   Kernel       |   |           |                                  |
->   +----+-------v---+-----------v----------------------------------+---+----+
->   |    |                            TCP                               |    |
->   |    |                                                              |    |
->   |    +--------------------------------------------------------------+    |
->   |                                                                        |
->   |                           +--------------+                             |
->   |                           | smc loopback |                             |
->   +---------------------------+--------------+-----------------------------+
-> 
-> loopback-ism device creates DMBs (shared memory) for each connection peer.
-> Since data transfer occurs within the same kernel, the sndbuf of each peer
-> is only a descriptor and point to the same memory region as peer DMB, so that
-> the data copy from sndbuf to peer DMB can be avoided in loopback-ism case.
-> 
->   Container 1 (ns1)                              Container 2 (ns2)
->   +-----------------------------------------+    +-------------------------+
->   | +-------+                               |    |        +-------+        |
->   | | App C |-----+                         |    |        | App D |        |
->   | +-------+     |                         |    |        +-^-----+        |
->   |               |                         |    |          |              |
->   |           (2) |                         |    |     (2') |              |
->   |               |                         |    |          |              |
->   +---------------|-------------------------+    +----------|--------------+
->                   |                                         |
->   Kernel          |                                         |
->   +---------------|-----------------------------------------|--------------+
->   | +--------+ +--v-----+                           +--------+ +--------+  |
->   | |dmb_desc| |snd_desc|                           |dmb_desc| |snd_desc|  |
->   | +-----|--+ +--|-----+                           +-----|--+ +--------+  |
->   | +-----|--+    |                                 +-----|--+             |
->   | | DMB C  |    +---------------------------------| DMB D  |             |
->   | +--------+                                      +--------+             |
->   |                                                                        |
->   |                           +--------------+                             |
->   |                           | smc loopback |                             |
->   +---------------------------+--------------+-----------------------------+
-> 
-> - Benchmark Test
-> 
->   * Test environments:
->        - VM with Intel Xeon Platinum 8 core 2.50GHz, 16 GiB mem.
->        - SMC sndbuf/DMB size 1MB.
-> 
->   * Test object:
->        - TCP: run on TCP loopback.
->        - SMC lo: run on SMC loopback-ism.
-> 
-> 1. ipc-benchmark (see [3])
-> 
->   - ./<foo> -c 1000000 -s 100
-> 
->                              TCP                  SMC-lo
-> Message
-> rate (msg/s)              79693                  148236(+86.01%)
-> 
-> 2. sockperf
-> 
->   - serv: <smc_run> sockperf sr --tcp
->   - clnt: <smc_run> sockperf { tp | pp } --tcp --msg-size={ 64000 for tp | 14 for pp } -i 127.0.0.1 -t 30
-> 
->                              TCP                  SMC-lo
-> Bandwidth(MBps)         4815.18                 8061.77(+67.42%)
-> Latency(us)               6.176                   3.449(-44.15%)
-> 
-> 3. nginx/wrk
-> 
->   - serv: <smc_run> nginx
->   - clnt: <smc_run> wrk -t 8 -c 1000 -d 30 http://127.0.0.1:80
-> 
->                             TCP                   SMC-lo
-> Requests/s           196555.02                263270.95(+33.94%)
-> 
-> 4. redis-benchmark
-> 
->   - serv: <smc_run> redis-server
->   - clnt: <smc_run> redis-benchmark -h 127.0.0.1 -q -t set,get -n 400000 -c 200 -d 1024
-> 
->                             TCP                   SMC-lo
-> GET(Requests/s)       88711.47                120048.02(+35.32%)
-> SET(Requests/s)       89465.44                123152.71(+37.65%)
-> 
-> 
-> Change log:
-> 
-> v6->RFC v5
-> - Patch #2: make the use of CONFIG_SMC_LO cleaner.
-> - Patch #5: mark some smcd_ops that loopback-ism doesn't support as
->    optional and check for the support when they are called.
-> - Patch #7: keep loopback-ism at the beginning of the SMC-D device list.
-> - Some expression changes in commit logs and comments.
-> 
-> RFC v5->RFC v4:
-> Link: https://lore.kernel.org/netdev/20240324135522.108564-1-guwen@linux.alibaba.com/
-> - Patch #2: minor changes in description of config SMC_LO and comments.
-> - Patch #10: minor changes in comments and if(smc_ism_support_dmb_nocopy())
->    check in smcd_cdc_msg_send().
-> - Patch #3: change smc_lo_generate_id() to smc_lo_generate_ids() and SMC_LO_CHID
->    to SMC_LO_RESERVED_CHID.
-> - Patch #5: memcpy while holding the ldev->dmb_ht_lock.
-> - Some expression changes in commit logs.
-> 
-> RFC v4->v3:
-> Link: https://lore.kernel.org/netdev/20240317100545.96663-1-guwen@linux.alibaba.com/
-> - The merge window of v6.9 is open, so post this series as an RFC.
-> - Patch #6: since some information fed back by smc_nl_handle_smcd_dev() dose
->    not apply to Emulated-ISM (including loopback-ism here), loopback-ism is
->    not exposed through smc netlink for the time being. we may refactor this
->    part when smc netlink interface is updated.
-> 
-> v3->v2:
-> Link: https://lore.kernel.org/netdev/20240312142743.41406-1-guwen@linux.alibaba.com/
-> - Patch #11: use tasklet_schedule(&conn->rx_tsklet) instead of smcd_cdc_rx_handler()
->    to avoid possible recursive locking of conn->send_lock and use {read|write}_lock_bh()
->    to acquire dmb_ht_lock.
-> 
-> v2->v1:
-> Link: https://lore.kernel.org/netdev/20240307095536.29648-1-guwen@linux.alibaba.com/
-> - All the patches: changed the term virtual-ISM to Emulated-ISM as defined by SMCv2.1.
-> - Patch #3: optimized the description of SMC_LO config. Avoid exposing loopback-ism
->    to sysfs and remove all the knobs until future definition clear.
-> - Patch #3: try to make lockdep happy by using read_lock_bh() in smc_lo_move_data().
-> - Patch #6: defaultly use physical contiguous DMB buffers.
-> - Patch #11: defaultly enable DMB no-copy for loopback-ism and free the DMB in
->    unregister_dmb or detach_dmb when dmb_node->refcnt reaches 0, instead of using
->    wait_event to keep waiting in unregister_dmb.
-> 
-> v1->RFC:
-> Link: https://lore.kernel.org/netdev/20240111120036.109903-1-guwen@linux.alibaba.com/
-> - Patch #9: merge rx_bytes and tx_bytes as xfer_bytes statistics:
->    /sys/devices/virtual/smc/loopback-ism/xfer_bytes
-> - Patch #10: add support_dmb_nocopy operation to check if SMC-D device supports
->    merging sndbuf with peer DMB.
-> - Patch #13 & #14: introduce loopback-ism device control of DMB memory type and
->    control of whether to merge sndbuf and DMB. They can be respectively set by:
->    /sys/devices/virtual/smc/loopback-ism/dmb_type
->    /sys/devices/virtual/smc/loopback-ism/dmb_copy
->    The motivation for these two control is that a performance bottleneck was
->    found when using vzalloced DMB and sndbuf is merged with DMB, and there are
->    many CPUs and CONFIG_HARDENED_USERCOPY is set [4]. The bottleneck is caused
->    by the lock contention in vmap_area_lock [5] which is involved in memcpy_from_msg()
->    or memcpy_to_msg(). Currently, Uladzislau Rezki is working on mitigating the
->    vmap lock contention [6]. It has significant effects, but using virtual memory
->    still has additional overhead compared to using physical memory.
->    So this new version provides controls of dmb_type and dmb_copy to suit
->    different scenarios.
-> - Some minor changes and comments improvements.
-> 
-> RFC->old version([1]):
-> Link: https://lore.kernel.org/netdev/1702214654-32069-1-git-send-email-guwen@linux.alibaba.com/
-> - Patch #1: improve the loopback-ism dump, it shows as follows now:
->    # smcd d
->    FID  Type  PCI-ID        PCHID  InUse  #LGs  PNET-ID
->    0000 0     loopback-ism  ffff   No        0
-> - Patch #3: introduce the smc_ism_set_v2_capable() helper and set
->    smc_ism_v2_capable when ISMv2 or virtual ISM is registered,
->    regardless of whether there is already a device in smcd device list.
-> - Patch #3: loopback-ism will be added into /sys/devices/virtual/smc/loopback-ism/.
-> - Patch #8: introduce the runtime switch /sys/devices/virtual/smc/loopback-ism/active
->    to activate or deactivate the loopback-ism.
-> - Patch #9: introduce the statistics of loopback-ism by
->    /sys/devices/virtual/smc/loopback-ism/{{tx|rx}_tytes|dmbs_cnt}.
-> - Some minor changes and comments improvements.
-> 
-> [1] https://lore.kernel.org/netdev/1695568613-125057-1-git-send-email-guwen@linux.alibaba.com/
-> [2] https://lore.kernel.org/netdev/20231219142616.80697-1-guwen@linux.alibaba.com/
-> [3] https://github.com/goldsborough/ipc-bench
-> [4] https://lore.kernel.org/all/3189e342-c38f-6076-b730-19a6efd732a5@linux.alibaba.com/
-> [5] https://lore.kernel.org/all/238e63cd-e0e8-4fbf-852f-bc4d5bc35d5a@linux.alibaba.com/
-> [6] https://lore.kernel.org/all/20240102184633.748113-1-urezki@gmail.com/
-> 
-> Wen Gu (11):
->    net/smc: decouple ism_client from SMC-D DMB registration
->    net/smc: introduce loopback-ism for SMC intra-OS shortcut
->    net/smc: implement ID-related operations of loopback-ism
->    net/smc: implement DMB-related operations of loopback-ism
->    net/smc: mark optional smcd_ops and check for support when called
->    net/smc: ignore loopback-ism when dumping SMC-D devices
->    net/smc: register loopback-ism into SMC-D device list
->    net/smc: add operations to merge sndbuf with peer DMB
->    net/smc: {at|de}tach sndbuf to peer DMB if supported
->    net/smc: adapt cursor update when sndbuf and peer DMB are merged
->    net/smc: implement DMB-merged operations of loopback-ism
-> 
->   drivers/s390/net/ism_drv.c |   2 +-
->   include/net/smc.h          |  21 +-
->   net/smc/Kconfig            |  13 ++
->   net/smc/Makefile           |   1 +
->   net/smc/af_smc.c           |  28 ++-
->   net/smc/smc_cdc.c          |  34 ++-
->   net/smc/smc_core.c         |  61 +++++-
->   net/smc/smc_core.h         |   1 +
->   net/smc/smc_ism.c          |  88 ++++++--
->   net/smc/smc_ism.h          |  10 +
->   net/smc/smc_loopback.c     | 427 +++++++++++++++++++++++++++++++++++++
->   net/smc/smc_loopback.h     |  62 ++++++
->   12 files changed, 721 insertions(+), 27 deletions(-)
->   create mode 100644 net/smc/smc_loopback.c
->   create mode 100644 net/smc/smc_loopback.h
-> 
-
-Hi Wen,
-
-They look good to me. Thank you again for the effort and the patience!
-
-Here is my reviewed-by for the whole patches series:
-Reviewed-by: Wenjia Zhang <wenjia@linux.ibm.com>
-
-Thanks,
-Wenjia
 
