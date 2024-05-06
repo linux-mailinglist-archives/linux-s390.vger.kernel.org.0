@@ -1,154 +1,87 @@
-Return-Path: <linux-s390+bounces-3869-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-3874-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EF3C8BD5BC
-	for <lists+linux-s390@lfdr.de>; Mon,  6 May 2024 21:46:45 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A83558BD7B3
+	for <lists+linux-s390@lfdr.de>; Tue,  7 May 2024 00:50:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BEFA0281275
-	for <lists+linux-s390@lfdr.de>; Mon,  6 May 2024 19:46:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EFE86B22D17
+	for <lists+linux-s390@lfdr.de>; Mon,  6 May 2024 22:50:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6281C15B54B;
-	Mon,  6 May 2024 19:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DJA/6M38"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7C9C158DD3;
+	Mon,  6 May 2024 22:50:18 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBBCA15B122;
-	Mon,  6 May 2024 19:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B533F13DDD6;
+	Mon,  6 May 2024 22:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715024711; cv=none; b=PtsP3LwwVn/ewlZz7WwSqMmXVDCmCFWY6qB+CoJVDTquHxIH+JXRGb0nn8el3ua/oZ2odnXNoi7gTSsFyYCIHqMyKbOB8TL2mOEjFG4tk1NFWbvCPXqRFCZFLKu76AsUuBSmx7BeEH8yyxzW7SoZv3jALyYbh5xY+M+r4elYK2Y=
+	t=1715035818; cv=none; b=SkkejeIULPk8pJHU7yyDOgBqws6lUuslcs6+Ic8wp5R6ndbAILR0n7lnbIXAizxgqk/vvkmYATWpP2oHAlqQpRpk16Yl5Ch3bREc4qjFb4GUro2BSYVSVssAxRKuxYI3tT/02Xr0S31FSLGPELcbfkX1YQf4s0S27loQCuFI57g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715024711; c=relaxed/simple;
-	bh=8we1prCctjwdaXUgYnpclnX4bIKNr83K4LXA485iABY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uG3W1KA8WncP5pzl7VELhNYeGmIN80x0b7o+lqm6mmzHyKl1XTEUvnK3TdmIVpGOJav6Tz6/6wLuYlZ6XXjsyE8N6tQ6+VJZfhM8f0TcdURyDmqdNr2EIFN3LnuMdP3r5scTzHkqemyoRlze5/B3nc2AtVG03LzD9KjQqfPunas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DJA/6M38; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 446JhE7S006590;
-	Mon, 6 May 2024 19:45:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=w7f3GppcRf21WKGCq9yibtFRa/ZnOdFa39UXqIdtoKU=;
- b=DJA/6M38lZK7qDeQbT5Ssi9788+WxIx8tcDT8UrtMM154PyIfqw+sZlP0VLriPWRNR+R
- WTXRCiQMQKl2g+ZS7Jan/kIt1kiIalLeDTUWcMB7r9fDcor4FwZwuN0Bs6UYwwtli+7T
- S85zHYCy98aHhqWBPUeMaGqo6ar6KDaHaPhLWjElbRvbsFT8qirzve5N3pf8hOVU8tfS
- +TGAgSMgkh47nG4AQLWrk7rdpKUXgVck6otGUC4q+kzj4rRJ2LqPr9nwRhAe+ERjT+AK
- nfIWLabQsVM5zGS+D8sRf6H0G8gT6B8V0dv0F4GcCLoEzpDQRW2yuVmw7R27awRwQVWE iw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xy5kmr04e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 May 2024 19:45:03 +0000
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 446Jj2Cl009149;
-	Mon, 6 May 2024 19:45:02 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xy5kmr049-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 May 2024 19:45:02 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 446H3Nd6022444;
-	Mon, 6 May 2024 19:45:01 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xx1jksj5q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 May 2024 19:45:01 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 446Jiu7Z45547828
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 6 May 2024 19:44:58 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6DC212004E;
-	Mon,  6 May 2024 19:44:56 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 30FD120067;
-	Mon,  6 May 2024 19:44:56 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  6 May 2024 19:44:56 +0000 (GMT)
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Nathan Chancellor <nathan@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Thomas Huth <thuth@redhat.com>,
-        Alexandra Winter <wintera@linux.ibm.com>,
-        Thorsten Winkler <twinkler@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>, netdev@vger.kernel.org,
-        llvm@lists.linux.dev, patches@lists.linux.dev,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>
-Subject: [PATCH 6/6] s390/iucv: Unexport iucv_root
-Date: Mon,  6 May 2024 21:44:54 +0200
-Message-Id: <20240506194454.1160315-7-hca@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240506194454.1160315-1-hca@linux.ibm.com>
-References: <20240506194454.1160315-1-hca@linux.ibm.com>
+	s=arc-20240116; t=1715035818; c=relaxed/simple;
+	bh=HW1RkINGTg4M4Dd689Rj4QzJskWnTMP/SxEOVvrXQGQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tZCWQkRQ0rZujSVtmXSk10lzE2QaWNlmJVjjesUqv22hzoS4sjc43axzSbnm0W0Zl6N3n6sYpooJA1qpvnpuk9Lk5Weq/Fv7Qa6Jf8Rg27wcb121apJ8ug19tzYXrSRWq0WO7CI96k32k7NaheFxYggYuI9aLUVa21gfMyjOQRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7B1AC116B1;
+	Mon,  6 May 2024 22:50:14 +0000 (UTC)
+Date: Mon, 6 May 2024 18:50:20 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Stephen Brennan <stephen.s.brennan@oracle.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Guo Ren
+ <guoren@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, "Naveen N. Rao"
+ <naveen.n.rao@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger
+ <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Thomas
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
+ Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+ "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+ "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+ "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+ "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>
+Subject: Re: [PATCH v3] kprobe/ftrace: bail out if ftrace was killed
+Message-ID: <20240506185020.2f156bc8@gandalf.local.home>
+In-Reply-To: <fd8283ac-232e-49e8-a5be-60e54d87b9eb@csgroup.eu>
+References: <20240501162956.229427-1-stephen.s.brennan@oracle.com>
+	<fd8283ac-232e-49e8-a5be-60e54d87b9eb@csgroup.eu>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 3f9n6fcI-d5kukff0yptGiX05QuXh7iW
-X-Proofpoint-GUID: ieBCS--FXtdlM5wZF388GejDYApfwOg0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-06_14,2024-05-06_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
- clxscore=1015 mlxlogscore=999 priorityscore=1501 malwarescore=0
- suspectscore=0 adultscore=0 mlxscore=0 bulkscore=0 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2405060142
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-There is no user of iucv_root outside of the core IUCV code left.
-Therefore remove the EXPORT_SYMBOL.
+On Mon, 6 May 2024 14:46:57 +0000
+Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
 
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
----
- include/net/iucv/iucv.h | 1 -
- net/iucv/iucv.c         | 3 +--
- 2 files changed, 1 insertion(+), 3 deletions(-)
+> Isn't it safer to provide a fonction rather than a direct access to a 
+> variable ?
+> 
+> By the way, wouldn't it be more performant to use a static branch (jump 
+> label) ?
 
-diff --git a/include/net/iucv/iucv.h b/include/net/iucv/iucv.h
-index b3736e66fe1a..4d114e6d6d23 100644
---- a/include/net/iucv/iucv.h
-+++ b/include/net/iucv/iucv.h
-@@ -82,7 +82,6 @@ struct iucv_array {
- } __attribute__ ((aligned (8)));
- 
- extern const struct bus_type iucv_bus;
--extern struct device *iucv_root;
- 
- struct device_driver;
- 
-diff --git a/net/iucv/iucv.c b/net/iucv/iucv.c
-index 9db7c2c0ae72..2e61f19621ee 100644
---- a/net/iucv/iucv.c
-+++ b/net/iucv/iucv.c
-@@ -73,8 +73,7 @@ const struct bus_type iucv_bus = {
- };
- EXPORT_SYMBOL(iucv_bus);
- 
--struct device *iucv_root;
--EXPORT_SYMBOL(iucv_root);
-+static struct device *iucv_root;
- 
- static void iucv_release_device(struct device *device)
- {
--- 
-2.40.1
+A static branch could work, but the point of this is that if ftrace
+failed, it was likely due to an issue with text modification. Do we want to
+stop it via text modification?
 
+-- Steve
 
