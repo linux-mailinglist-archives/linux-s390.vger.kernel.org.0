@@ -1,146 +1,135 @@
-Return-Path: <linux-s390+bounces-3898-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-3904-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D35A08BE94B
-	for <lists+linux-s390@lfdr.de>; Tue,  7 May 2024 18:39:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B8C38BE9F8
+	for <lists+linux-s390@lfdr.de>; Tue,  7 May 2024 19:02:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6245F1F27991
-	for <lists+linux-s390@lfdr.de>; Tue,  7 May 2024 16:39:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 27298282F26
+	for <lists+linux-s390@lfdr.de>; Tue,  7 May 2024 17:02:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE5C916D4D0;
-	Tue,  7 May 2024 16:35:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1739C1509AC;
+	Tue,  7 May 2024 17:02:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nr7sLE9O"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G9K57g5L"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43E3116D304;
-	Tue,  7 May 2024 16:35:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E3B50A67
+	for <linux-s390@vger.kernel.org>; Tue,  7 May 2024 17:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715099707; cv=none; b=Lq4iR2kpuIWnfI/QWYLohZ/BWK8SFmxPvz77BqCa9p0ptwt/tRSlqiW4wMwZRzMYTvlKzjjJu77/fs/VhvBWM1RQs6bZQ0IsWfC0o6VKMrhWbf3R5PQUIjmUl/a5mlTFifZ4mIo/ZJ4fSyMuLPDbs4/ZrvMqVo9oItVGgnx8gOM=
+	t=1715101328; cv=none; b=rKQ55bdKdhIfRS9FX/M4abpBMnJqBg1GVZQ2lV9cso1uvtAF+qYDr5AL0e6QsgTIhURjUqCrYuEoVRIYanrcRqSwey0HwXWQh5XA96LJqPLfI514DF5WuG+b9VQWkP1weE4QS9dr7Zl59SafD9JVTXGKxJ59q7LmHQ5F6ZCf8/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715099707; c=relaxed/simple;
-	bh=3zMNh/O1NvS66HKRoTqlD9Jh9hBzUu4UaBBr6ynZF3M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gmd3MLgeAqu1YaHiqGY6sr8NUq4oG5HdS11yAKd7VUPc36hmqp9QPyy9/c2tS29NaSYSJprCOoJqF++g6qgY78+NhA3QZb8O+KAT3xK+MpiEC8K3lq/8YFjoyULj/Rg18IOC3av8AxsbKk9cMB0WnqID/ogvC1EG0QFvX9QN4IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nr7sLE9O; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 447GSxEn011653;
-	Tue, 7 May 2024 16:35:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=2JWGsGzPG9xj8K85LWOxfi5vbVOu4GgVaaG+8IQyXuA=;
- b=nr7sLE9Oa+QdhhpHcRhc/cKv7BvVOH+kW6o9LJfP1S8ZnjifgpuggLi47POyg1nAIRbz
- J1E84RROEuo92drfSoQxPHQJWvB84g9i4VXV7sIjGZat9fpOBPyZ208e5wq0BOfNfhAe
- 1CSq6LFFjzTN65gWjk0dLYgLd72i4H286/6NHGTppjyHZeI6l6pX5IvgVLzxgSsGJvbj
- YT+sUMAl+Jnm+GVt3rhph/0FZqJIWIvw63lbaeDo9Eg4C/Ux8MGUrGOxlLGsdkaKCSo2
- uGziJll+eCQ3qZJHWkRimx+oReG/rkolnHxcljNbdGpBEHnvMJfgRZC695DhkViI9tuq Fg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xyqup80fw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 May 2024 16:35:00 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 447GZ0mk021759;
-	Tue, 7 May 2024 16:35:00 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xyqup80fs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 May 2024 16:35:00 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 447Fh7YY010635;
-	Tue, 7 May 2024 16:34:59 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xx0bp7ad0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 May 2024 16:34:59 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 447GYr4U52560292
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 7 May 2024 16:34:55 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C58822004B;
-	Tue,  7 May 2024 16:34:53 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8F9D420043;
-	Tue,  7 May 2024 16:34:53 +0000 (GMT)
-Received: from p-imbrenda.boeblingen.de.ibm.com (unknown [9.152.224.66])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  7 May 2024 16:34:53 +0000 (GMT)
-Date: Tue, 7 May 2024 18:34:30 +0200
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        Vasily Gorbik
- <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian
- Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle
- <svens@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Gerald
- Schaefer <gerald.schaefer@linux.ibm.com>,
-        Matthew Wilcox
- <willy@infradead.org>, Thomas Huth <thuth@redhat.com>
-Subject: Re: [PATCH v2 00/10] s390: PG_arch_1+folio cleanups for uv+hugetlb
-Message-ID: <20240507183430.4e956c45@p-imbrenda.boeblingen.de.ibm.com>
-In-Reply-To: <20240506083830.28332-B-hca@linux.ibm.com>
-References: <20240412142120.220087-1-david@redhat.com>
-	<f53a87ed-c3fe-4a60-8723-3eea25189553@redhat.com>
-	<20240506083830.28332-B-hca@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1715101328; c=relaxed/simple;
+	bh=lnmeGx6mM8HK2cbcBMXEki7Leq6zV0uSfpE3Sd53tq4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NblHAGjk+Sy24Np6c+JgaxXwu7gf2q9BqFZEkHTZDoAZTc/FfRm5xJ4fSzEFO7oT4rTPEueDrHKB85VAk0Rp20tgjI7Bsh3V6UYhCQG9WZiJnm7wwHqnR7vtY4hTD8q4nEV624EBlyhDLRuK3+rYLFHWIWppUPUkIwc38HKWbfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G9K57g5L; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715101325;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=35j9M18N36vk6wSyApQ+5MJ9yl+jkARaDRgd2CC1aRs=;
+	b=G9K57g5Ldj8+5aRyDO4TSPNhy08JNth3j4UVNl9yIHy5iaoSgq2a4CY/UFaKfI6aoTnk3i
+	8MfIDd5lTDxITCutQdovtNiFMkRK3yWqiqCRLyMEkex0NeUGxSMZuIxpoUA0V75J0eKeix
+	TmPLKSb4duF5zlpL5B26dd+fZ6NE4Xk=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-659-rjc_9USPMg2RILvfWyZLpg-1; Tue, 07 May 2024 13:02:02 -0400
+X-MC-Unique: rjc_9USPMg2RILvfWyZLpg-1
+Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2e289eec4d1so31611441fa.0
+        for <linux-s390@vger.kernel.org>; Tue, 07 May 2024 10:02:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715101321; x=1715706121;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=35j9M18N36vk6wSyApQ+5MJ9yl+jkARaDRgd2CC1aRs=;
+        b=jpIrqWZJKj1n//5lg/YxFiiIvehJCCcLnfKraHUfUKzs7tBCnEFsfhk6QKLxRqK2oE
+         /03IWPK3Au7xB2uj7gT9byVXdRhqaJ9fvs+e/1oaWBNotCaK39O8U8Cxdhi/BnaQEUGd
+         BvS18n/SPseCQZ615PwXJd5V7aaCdflHZhkonL+PeZdSQbTU+V0BRC7tbeNMWr9BKeli
+         3DAxBFr1EzhODwZtLIcaF0nQj9wAegvdS8wjsF3jiaraC1zgL3Pg0xz6mDLQNA3mGJDZ
+         0dwdk/CRt9M/DNLpRZBLBvPZNSiz4WJykMLBiGAwntc6dMAg5cG6zFMpwAxCs2ScVmVe
+         /YHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUSF6AFO0Dshm//J1pbEcINj5XRxil4TJRIbYaK0E6vvWhIqnapNVG37ZGGZOlAteoa4nQQJVncg9TpYfXK6lKWLAvIxYFAdHz07g==
+X-Gm-Message-State: AOJu0YxrzCovf9jisiX3Pdy3huA+vNljkE8jyQUp54Z7dpk8hBRnFOU9
+	9AARqQtKALsxcSQ72Xmmvzfe4VsWFpxyoZHlUzBSFySlmpVhggvWGEf30Oy9mUl0wMaTH7apNHZ
+	l+CIfpsxZun8mASnn3zT+kSUW++vbSdXSluP4hpjxTUFKK/HsTdAXKwRfOKOOG594ndg3ZfiFMN
+	8RPACDwbxNFiPtC4EaZwoAciHU0pIslzdlbQ==
+X-Received: by 2002:ac2:5e30:0:b0:518:ce4b:17ef with SMTP id 2adb3069b0e04-5217cf3b0dbmr60097e87.60.1715101321278;
+        Tue, 07 May 2024 10:02:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH6IWm96F+cIDzth/uQd3l0oaQARW+aFQiEI+UhoNsuY9HQ0VD+mdg3aAHEreT/EfAicuI1kFYJx5l4fRs6tJo=
+X-Received: by 2002:ac2:5e30:0:b0:518:ce4b:17ef with SMTP id
+ 2adb3069b0e04-5217cf3b0dbmr60070e87.60.1715101320848; Tue, 07 May 2024
+ 10:02:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: vc6hztu4I8AzPgN9plqRzhWW84EkSdue
-X-Proofpoint-GUID: sjrGchoLm2-zoo3bStpdk6fL4JIWnN0c
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-07_09,2024-05-06_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- mlxlogscore=989 priorityscore=1501 adultscore=0 clxscore=1015
- impostorscore=0 phishscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2405070112
+References: <20240507122945.2571-1-borntraeger@linux.ibm.com>
+In-Reply-To: <20240507122945.2571-1-borntraeger@linux.ibm.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Tue, 7 May 2024 19:01:49 +0200
+Message-ID: <CABgObfaww5Dtp0Ji1ff99RrW11stWhf_JahJAyUwpV=RyTxpCQ@mail.gmail.com>
+Subject: Re: [GIT PULL 0/1] KVM: s390: Fix for 6.9
+To: Christian Borntraeger <borntraeger@linux.ibm.com>
+Cc: KVM <kvm@vger.kernel.org>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, David Hildenbrand <david@redhat.com>, 
+	linux-s390 <linux-s390@vger.kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Thomas Huth <thuth@redhat.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 6 May 2024 10:38:30 +0200
-Heiko Carstens <hca@linux.ibm.com> wrote:
+On Tue, May 7, 2024 at 2:29=E2=80=AFPM Christian Borntraeger
+<borntraeger@linux.ibm.com> wrote:
+>
+> Paolo,
+>
+> one fix for s390.
 
-> On Tue, Apr 30, 2024 at 08:49:31PM +0200, David Hildenbrand wrote:
-> > On 12.04.24 16:21, David Hildenbrand wrote:  
-> > > This is v2 of [1] with changed subject:
-> > >   "[PATCH v1 0/5] s390: page_mapcount(), page_has_private() and PG_arch_1"
-> > > 
-> > > Rebased on s390x/features which contains the page_mapcount() and
-> > > page_has_private() cleanups, and some PG_arch_1 cleanups from Willy. To
-> > > compensate, I added some more cleanups ;)
-> > > 
-> > > One "easy" fix upfront. Another issue I spotted is documented in [1].
-> > > 
-> > > Once this hits upstream, we can remove HAVE_ARCH_MAKE_PAGE_ACCESSIBLE
-> > > from core-mm and s390x, so only the folio variant will remain.  
-> > 
-> > Ping.  
-> 
-> Claudio, Janosch, this series requires your review.
+Pulled, thanks.
 
-oops! I had started reviewing it, but then other things got in the
-way...
+Paolo
+
+> The following changes since commit 16c20208b9c2fff73015ad4e609072feafbf81=
+ad:
+>
+>   Merge tag 'kvmarm-fixes-6.9-2' of git://git.kernel.org/pub/scm/linux/ke=
+rnel/git/kvmarm/kvmarm into HEAD (2024-04-30 13:50:55 -0400)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git tags/kv=
+m-s390-master-6.9-1
+>
+> for you to fetch changes up to 175f2f5bcdfce9e728f1ff956a50f28824d28791:
+>
+>   KVM: s390: Check kvm pointer when testing KVM_CAP_S390_HPAGE_1M (2024-0=
+5-02 09:41:38 +0200)
+>
+> ----------------------------------------------------------------
+> KVM: s390: Fix for 6.9
+>
+> Fix wild read on capability check.
+>
+> ----------------------------------------------------------------
+> Jean-Philippe Brucker (1):
+>       KVM: s390: Check kvm pointer when testing KVM_CAP_S390_HPAGE_1M
+>
+>  arch/s390/kvm/kvm-s390.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
 
 
