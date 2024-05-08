@@ -1,60 +1,60 @@
-Return-Path: <linux-s390+bounces-3920-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-3922-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 346728C045B
-	for <lists+linux-s390@lfdr.de>; Wed,  8 May 2024 20:30:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DDF498C0460
+	for <lists+linux-s390@lfdr.de>; Wed,  8 May 2024 20:31:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5873B1C2142E
-	for <lists+linux-s390@lfdr.de>; Wed,  8 May 2024 18:30:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 99A6D281B74
+	for <lists+linux-s390@lfdr.de>; Wed,  8 May 2024 18:31:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDC4412FB3F;
-	Wed,  8 May 2024 18:30:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE86B7FBD0;
+	Wed,  8 May 2024 18:30:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MkTYOg3v"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F5GbmIiO"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9F4128803
-	for <linux-s390@vger.kernel.org>; Wed,  8 May 2024 18:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1207653E16
+	for <linux-s390@vger.kernel.org>; Wed,  8 May 2024 18:30:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715193011; cv=none; b=qJ+7hZJFQEiDVgsd3hsJ/HboAhl+KIlhlk0PvFu17I5Q0HI/fEVfmU1BfP0+URULFOjM2MYqziwUb4ZHNKfH5/cLXAr8LP0U5Y+730e/2M8imC6iJHczDW4N46D7YWl+PQS9m3a3aW48SeJ818yv2mln495kNKu+tfMX/KfRHiQ=
+	t=1715193017; cv=none; b=nJVPJGP5bhJ8GtDwwrnJbZ08S7f7rT63YiYHfpfNGqlAMqzPjkwrNu5b1oOwFnb5gR2FKBz6cWGd298d1xBC9rHJY8SZPfnV4bWTB1JHF3wWpm7UbSdh93wBTxJobQglXa5JVb34TB9uGyem23mAh2P7rk4vwypgvneb5Qp0Adc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715193011; c=relaxed/simple;
-	bh=tGeTT+tQWNJbKsFVdDmQOB1mb9yMQs3jSrIboV+0orM=;
+	s=arc-20240116; t=1715193017; c=relaxed/simple;
+	bh=4Ant1hPx1kFJaIwGTzV/S4xrLjPsAStc05zlJcLsxfI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uHa3uRxsFpk5ubkVUR1MMvRJGazh2E5PBpAd8PVUeJP090UJOuk8a96koy7Ta5HHYrAjsLCe5B9t5lGpeI5EtUYHLBo8d7HKvZ4E9/aSz83Od9vJed+CiAmIhtsKDJBsLu2m+XbrM4rjlM2fhoTXrpuepDaZGVbNjtqfI/xAyKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MkTYOg3v; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=KPDZb7qFS+cZ3n0nv6FPXoQ0L/VgfawQtkMaXuuMsz7mLY+MbMMZmFiQdfVfgo3uUxydTSz96cUhwbHG1gMJox47Q+RjsZUbFpTSqfoPJ8lSFn9Yd2Mct3lDAOPDujIetpm3MW6yPsFTerWoQPtAnKxvcA8TbLFhVM84ARHHkBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F5GbmIiO; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715193009;
+	s=mimecast20190719; t=1715193015;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=y29b0cT6yB5VZTvsbZqA3LcuNrLGP3cN/SVFA7pEfpw=;
-	b=MkTYOg3vjNs2ZnK0nrYGDQTbYPfqy2cnYA1YIp9Y3/65x/ymhtBs01i6rbrexBBfD6mkdw
-	Kuc5Z4isBbntVas2fGNl2xC0RRg71jyyreOBZSehWsjCGdLZEO35KJ+RdG77X037YhUyMC
-	YGcltCTYdtrwSBaU4uPZjSag2Lqls6A=
+	bh=Z0zJtbHvVl56vNC8QA+cdVl06TDILXjVZh0VBjwQ4rY=;
+	b=F5GbmIiOeoB94e9VVLk1sJ3vLbWCq4JHCEElic9m1sIcKJMLAIeceCDCZTV9/CIS9l7U8m
+	AaanVxwaEIc2XKJiGjZgQXFiPSS1VlYIkALxB9zvAQz00nS9BWo24kjjLgZvWvIR4klpbh
+	nwEB/XbgjARCA5GIKm0M62qffEu6LdM=
 Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
  by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-74-36QGDf8mNPue-GhiuNEv6w-1; Wed,
- 08 May 2024 14:30:06 -0400
-X-MC-Unique: 36QGDf8mNPue-GhiuNEv6w-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-663-Z4KsAZmoMXSB97FxwWbamg-1; Wed,
+ 08 May 2024 14:30:12 -0400
+X-MC-Unique: Z4KsAZmoMXSB97FxwWbamg-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A9031380009B;
-	Wed,  8 May 2024 18:30:05 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0F9193C0C492;
+	Wed,  8 May 2024 18:30:09 +0000 (UTC)
 Received: from t14s.fritz.box (unknown [10.39.192.63])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id DBAED10000AD;
-	Wed,  8 May 2024 18:30:02 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 121C010009E6;
+	Wed,  8 May 2024 18:30:05 +0000 (UTC)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: kvm@vger.kernel.org,
@@ -70,9 +70,9 @@ Cc: kvm@vger.kernel.org,
 	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
 	Matthew Wilcox <willy@infradead.org>,
 	Thomas Huth <thuth@redhat.com>
-Subject: [PATCH v3 02/10] s390/uv: gmap_make_secure() cleanups for further changes
-Date: Wed,  8 May 2024 20:29:47 +0200
-Message-ID: <20240508182955.358628-3-david@redhat.com>
+Subject: [PATCH v3 03/10] s390/uv: split large folios in gmap_make_secure()
+Date: Wed,  8 May 2024 20:29:48 +0200
+Message-ID: <20240508182955.358628-4-david@redhat.com>
 In-Reply-To: <20240508182955.358628-1-david@redhat.com>
 References: <20240508182955.358628-1-david@redhat.com>
 Precedence: bulk
@@ -84,112 +84,87 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-Let's factor out handling of LRU cache draining and convert the if-else
-chain to a switch-case.
+While s390x makes sure to never have PMD-mapped THP in processes that use
+KVM -- by remapping them using PTEs in
+thp_split_walk_pmd_entry()->split_huge_pmd() -- there is still the
+possibility of having PTE-mapped THPs (large folios) mapped into guest
+memory.
 
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+This would happen if user space allocates memory before calling
+KVM_CREATE_VM (which would call s390_enable_sie()). With upstream QEMU,
+this currently doesn't happen, because guest memory is setup and
+conditionally preallocated after KVM_CREATE_VM.
+
+Could it happen with shmem/file-backed memory when another process
+allocated memory in the pagecache? Likely, although currently not a
+common setup.
+
+Trying to split any PTE-mapped large folios sounds like the right and
+future-proof thing to do here. So let's call split_folio() and handle the
+return values accordingly.
+
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- arch/s390/kernel/uv.c | 66 ++++++++++++++++++++++++++-----------------
- 1 file changed, 40 insertions(+), 26 deletions(-)
+ arch/s390/kernel/uv.c | 31 +++++++++++++++++++++++++------
+ 1 file changed, 25 insertions(+), 6 deletions(-)
 
 diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
-index 016993e9eb72..25fe28d189df 100644
+index 25fe28d189df..3c6d86e3e828 100644
 --- a/arch/s390/kernel/uv.c
 +++ b/arch/s390/kernel/uv.c
-@@ -266,6 +266,36 @@ static bool should_export_before_import(struct uv_cb_header *uvcb, struct mm_str
- 	return atomic_read(&mm->context.protected_count) > 1;
- }
- 
-+/*
-+ * Drain LRU caches: the local one on first invocation and the ones of all
-+ * CPUs on successive invocations. Returns "true" on the first invocation.
-+ */
-+static bool drain_lru(bool *drain_lru_called)
-+{
-+	/*
-+	 * If we have tried a local drain and the folio refcount
-+	 * still does not match our expected safe value, try with a
-+	 * system wide drain. This is needed if the pagevecs holding
-+	 * the page are on a different CPU.
-+	 */
-+	if (*drain_lru_called) {
-+		lru_add_drain_all();
-+		/* We give up here, don't retry immediately. */
-+		return false;
-+	}
-+	/*
-+	 * We are here if the folio refcount does not match the
-+	 * expected safe value. The main culprits are usually
-+	 * pagevecs. With lru_add_drain() we drain the pagevecs
-+	 * on the local CPU so that hopefully the refcount will
-+	 * reach the expected safe value.
-+	 */
-+	lru_add_drain();
-+	*drain_lru_called = true;
-+	/* The caller should try again immediately */
-+	return true;
-+}
-+
- /*
-  * Requests the Ultravisor to make a page accessible to a guest.
-  * If it's brought in the first time, it will be cleared. If
-@@ -275,7 +305,7 @@ static bool should_export_before_import(struct uv_cb_header *uvcb, struct mm_str
- int gmap_make_secure(struct gmap *gmap, unsigned long gaddr, void *uvcb)
- {
- 	struct vm_area_struct *vma;
--	bool local_drain = false;
-+	bool drain_lru_called = false;
- 	spinlock_t *ptelock;
- 	unsigned long uaddr;
- 	struct folio *folio;
-@@ -331,37 +361,21 @@ int gmap_make_secure(struct gmap *gmap, unsigned long gaddr, void *uvcb)
+@@ -338,11 +338,10 @@ int gmap_make_secure(struct gmap *gmap, unsigned long gaddr, void *uvcb)
+ 		goto out;
+ 	if (pte_present(*ptep) && !(pte_val(*ptep) & _PAGE_INVALID) && pte_write(*ptep)) {
+ 		folio = page_folio(pte_page(*ptep));
+-		rc = -EINVAL;
+-		if (folio_test_large(folio))
+-			goto unlock;
+ 		rc = -EAGAIN;
+-		if (folio_trylock(folio)) {
++		if (folio_test_large(folio)) {
++			rc = -E2BIG;
++		} else if (folio_trylock(folio)) {
+ 			if (should_export_before_import(uvcb, gmap->mm))
+ 				uv_convert_from_secure(PFN_PHYS(folio_pfn(folio)));
+ 			rc = make_folio_secure(folio, uvcb);
+@@ -353,15 +352,35 @@ int gmap_make_secure(struct gmap *gmap, unsigned long gaddr, void *uvcb)
+ 		 * Once we drop the PTL, the folio may get unmapped and
+ 		 * freed immediately. We need a temporary reference.
+ 		 */
+-		if (rc == -EAGAIN)
++		if (rc == -EAGAIN || rc == -E2BIG)
+ 			folio_get(folio);
+ 	}
+-unlock:
+ 	pte_unmap_unlock(ptep, ptelock);
  out:
  	mmap_read_unlock(gmap->mm);
  
--	if (rc == -EAGAIN) {
-+	switch (rc) {
-+	case -EAGAIN:
+ 	switch (rc) {
++	case -E2BIG:
++		folio_lock(folio);
++		rc = split_folio(folio);
++		folio_unlock(folio);
++		folio_put(folio);
++
++		switch (rc) {
++		case 0:
++			/* Splitting succeeded, try again immediately. */
++			goto again;
++		case -EAGAIN:
++			/* Additional folio references. */
++			if (drain_lru(&drain_lru_called))
++				goto again;
++			return -EAGAIN;
++		case -EBUSY:
++			/* Unexpected race. */
++			return -EAGAIN;
++		}
++		WARN_ON_ONCE(1);
++		return -ENXIO;
+ 	case -EAGAIN:
  		/*
  		 * If we are here because the UVC returned busy or partial
- 		 * completion, this is just a useless check, but it is safe.
- 		 */
- 		folio_wait_writeback(folio);
- 		folio_put(folio);
--	} else if (rc == -EBUSY) {
--		/*
--		 * If we have tried a local drain and the folio refcount
--		 * still does not match our expected safe value, try with a
--		 * system wide drain. This is needed if the pagevecs holding
--		 * the page are on a different CPU.
--		 */
--		if (local_drain) {
--			lru_add_drain_all();
--			/* We give up here, and let the caller try again */
--			return -EAGAIN;
--		}
--		/*
--		 * We are here if the folio refcount does not match the
--		 * expected safe value. The main culprits are usually
--		 * pagevecs. With lru_add_drain() we drain the pagevecs
--		 * on the local CPU so that hopefully the refcount will
--		 * reach the expected safe value.
--		 */
--		lru_add_drain();
--		local_drain = true;
--		/* And now we try again immediately after draining */
--		goto again;
--	} else if (rc == -ENXIO) {
-+		return -EAGAIN;
-+	case -EBUSY:
-+		/* Additional folio references. */
-+		if (drain_lru(&drain_lru_called))
-+			goto again;
-+		return -EAGAIN;
-+	case -ENXIO:
- 		if (gmap_fault(gmap, gaddr, FAULT_FLAG_WRITE))
- 			return -EFAULT;
- 		return -EAGAIN;
 -- 
 2.45.0
 
