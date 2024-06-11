@@ -1,307 +1,182 @@
-Return-Path: <linux-s390+bounces-4174-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-4176-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 673B4902EFC
-	for <lists+linux-s390@lfdr.de>; Tue, 11 Jun 2024 05:17:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2116E902FE2
+	for <lists+linux-s390@lfdr.de>; Tue, 11 Jun 2024 07:20:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 655C91C21226
-	for <lists+linux-s390@lfdr.de>; Tue, 11 Jun 2024 03:17:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9DB731F23750
+	for <lists+linux-s390@lfdr.de>; Tue, 11 Jun 2024 05:20:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B15DB16F916;
-	Tue, 11 Jun 2024 03:17:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C61217108C;
+	Tue, 11 Jun 2024 05:19:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SP0peDuU"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8212E1E488;
-	Tue, 11 Jun 2024 03:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C871E488;
+	Tue, 11 Jun 2024 05:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718075843; cv=none; b=bzFhPBjXkT2+OQSGdRKTUXzMmJgmnFPm776I2tAVlvuMrfzi8Pup8DiFu5USKX+geBps/pPmsc0OHkVXuxejaFeSaaNoVXjU01AZU0tgV8zTKpgytS1XRWsra0aLWhZ4LfH6IckOlLEi+HFVaS3Po4IIwCbvmtUZpTHIoMguj1w=
+	t=1718083189; cv=none; b=EIoK7UfaGzKLbDeD2AwyFmoVe3q2q6nFxBwB+VXj3JsI06ziL4u6t6Xdj9PFyk+g5wOArVoEF4y47qAKKpMCbxPHkCmus9Zj9XU1vZqQGUS0x64bnrsV4vyb3GEMB+T9M6QAhC1iC5ED7oq7+9ECVCHIxE/xETkCfa3cGOMIc6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718075843; c=relaxed/simple;
-	bh=lUzhAUVd8BVhSUWECv6sd9TH51t8XCPlXoOV4Dg21+Q=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=tPMeBuFfhW5qKhY3U3DcCFYw6t5FSY7mL2mJajhuNGj/bTgSggpBoXM7cT7oF+0IfhxYR6y+bceP6sTFUHCq0mlkP8Fk1fRAEi/uI4uMouy5vrNR1eIuUofFl8E5i5nUZlul0XFxIKE/OsluyASmCyb1KoA4z/hfeuXTuufVy7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C7E5C4AF1C;
-	Tue, 11 Jun 2024 03:17:23 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1sGs0w-00000001JhD-0WrV;
-	Mon, 10 Jun 2024 23:17:38 -0400
-Message-ID: <20240611031737.982047614@goodmis.org>
-User-Agent: quilt/0.68
-Date: Mon, 10 Jun 2024 23:09:36 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org,
- loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>,
- Guo Ren <guoren@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>,
- Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>,
- Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH 2/2] function_graph: Everyone uses HAVE_FUNCTION_GRAPH_RET_ADDR_PTR,
- remove it
-References: <20240611030934.162955582@goodmis.org>
+	s=arc-20240116; t=1718083189; c=relaxed/simple;
+	bh=hch/0P55byq5GbA9713XqbKHtmWPgz2RFxBLYpB4kbo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HgNOG+OsbdsKoI80rVrawWwkHXtiCxMFIge11OjQjS0nMJqW7ILOnHLQ+dKFsfE5PhQYY9X7rfMSn2HXUXZZ1ONt9kYnXVV230HaCBnJcGtK9h8V9OnD9NHgyzKm9GhIQQOXCAYZM6zJXKRV9b+SCyzuhvcHtflJAJiOj8cyyGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SP0peDuU; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=xQZ0tGVxbRfMe28F2c3vaqhpukPqzWUR2mw3UooUIr8=; b=SP0peDuUs+KEwheRnMyMlYgkS7
+	BJO3TbWxLcYZrtF9hG/zSYlaaEBbMSCF64VvtU307jsPdSrtdMGsHLbLIPlb+3JQ+eYPkj0WFLQ82
+	0RHyWfdxKEhDZW5T1ob5hHG0b14ikv/6qveZEUAQmVDgvdsZVt4TYWW6sqJaVmrwg5KcUOZQ84nPg
+	CjpVq303dQfXA8cJ1suDHbBA/aeCpy9t1nwAxlcRoZCDjrGUy5Vn9fE6+OpvbxggFWtigsP5ZcQpg
+	pUZerKUXlbVu4I0/QgfLjMkjQJmRXdy7KEomGmmJMn8IDs2fYlaMIz6Izl+aZ3CL2CjeVsmwbwNGT
+	O/+0DiLA==;
+Received: from 2a02-8389-2341-5b80-cdb4-8e7d-405d-6b77.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:cdb4:8e7d:405d:6b77] helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sGtuu-00000007Qnj-2sBx;
+	Tue, 11 Jun 2024 05:19:33 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+	Richard Weinberger <richard@nod.at>,
+	Philipp Reisner <philipp.reisner@linbit.com>,
+	Lars Ellenberg <lars.ellenberg@linbit.com>,
+	=?UTF-8?q?Christoph=20B=C3=B6hmwalder?= <christoph.boehmwalder@linbit.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Ming Lei <ming.lei@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	=?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+	Alasdair Kergon <agk@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>,
+	Mikulas Patocka <mpatocka@redhat.com>,
+	Song Liu <song@kernel.org>,
+	Yu Kuai <yukuai3@huawei.com>,
+	Vineeth Vijayan <vneethv@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-m68k@lists.linux-m68k.org,
+	linux-um@lists.infradead.org,
+	drbd-dev@lists.linbit.com,
+	nbd@other.debian.org,
+	linuxppc-dev@lists.ozlabs.org,
+	ceph-devel@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	xen-devel@lists.xenproject.org,
+	linux-bcache@vger.kernel.org,
+	dm-devel@lists.linux.dev,
+	linux-raid@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	linux-mtd@lists.infradead.org,
+	nvdimm@lists.linux.dev,
+	linux-nvme@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	linux-block@vger.kernel.org
+Subject: move features flags into queue_limits
+Date: Tue, 11 Jun 2024 07:19:00 +0200
+Message-ID: <20240611051929.513387-1-hch@lst.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Hi all,
 
-All architectures that implement function graph also implements
-HAVE_FUNCTION_GRAPH_RET_ADDR_PTR. Remove it, as it is no longer a
-differentiator.
+this is the third and last major series to convert settings to
+queue_limits for this merge window.  After a bunch of prep patches to
+get various drivers in shape, it moves all the queue_flags that specify
+driver controlled features into the queue limits so that they can be
+set atomically and are separated from the blk-mq internal flags.
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- Documentation/trace/ftrace-design.rst | 12 ---------
- arch/arm64/include/asm/ftrace.h       | 11 ---------
- arch/csky/include/asm/ftrace.h        |  2 --
- arch/loongarch/include/asm/ftrace.h   |  1 -
- arch/powerpc/include/asm/ftrace.h     |  2 --
- arch/riscv/include/asm/ftrace.h       |  1 -
- arch/s390/include/asm/ftrace.h        |  1 -
- arch/x86/include/asm/ftrace.h         |  2 --
- include/linux/ftrace.h                |  2 --
- kernel/trace/fgraph.c                 | 35 +--------------------------
- 10 files changed, 1 insertion(+), 68 deletions(-)
+Note that I've only Cc'ed the maintainers for drivers with non-mechanical
+changes as the Cc list is already huge.
 
-diff --git a/Documentation/trace/ftrace-design.rst b/Documentation/trace/ftrace-design.rst
-index 6893399157f0..dc82d64b3a44 100644
---- a/Documentation/trace/ftrace-design.rst
-+++ b/Documentation/trace/ftrace-design.rst
-@@ -217,18 +217,6 @@ along to ftrace_push_return_trace() instead of a stub value of 0.
- 
- Similarly, when you call ftrace_return_to_handler(), pass it the frame pointer.
- 
--HAVE_FUNCTION_GRAPH_RET_ADDR_PTR
----------------------------------
--
--An arch may pass in a pointer to the return address on the stack.  This
--prevents potential stack unwinding issues where the unwinder gets out of
--sync with ret_stack and the wrong addresses are reported by
--ftrace_graph_ret_addr().
--
--Adding support for it is easy: just define the macro in asm/ftrace.h and
--pass the return address pointer as the 'retp' argument to
--ftrace_push_return_trace().
--
- HAVE_SYSCALL_TRACEPOINTS
- ------------------------
- 
-diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
-index ab158196480c..dc9cf0bd2a4c 100644
---- a/arch/arm64/include/asm/ftrace.h
-+++ b/arch/arm64/include/asm/ftrace.h
-@@ -12,17 +12,6 @@
- 
- #define HAVE_FUNCTION_GRAPH_FP_TEST
- 
--/*
-- * HAVE_FUNCTION_GRAPH_RET_ADDR_PTR means that the architecture can provide a
-- * "return address pointer" which can be used to uniquely identify a return
-- * address which has been overwritten.
-- *
-- * On arm64 we use the address of the caller's frame record, which remains the
-- * same for the lifetime of the instrumented function, unlike the return
-- * address in the LR.
-- */
--#define HAVE_FUNCTION_GRAPH_RET_ADDR_PTR
--
- #ifdef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
- #define ARCH_SUPPORTS_FTRACE_OPS 1
- #else
-diff --git a/arch/csky/include/asm/ftrace.h b/arch/csky/include/asm/ftrace.h
-index fd215c38ef27..00f9f7647e3f 100644
---- a/arch/csky/include/asm/ftrace.h
-+++ b/arch/csky/include/asm/ftrace.h
-@@ -7,8 +7,6 @@
- 
- #define HAVE_FUNCTION_GRAPH_FP_TEST
- 
--#define HAVE_FUNCTION_GRAPH_RET_ADDR_PTR
--
- #define ARCH_SUPPORTS_FTRACE_OPS 1
- 
- #define MCOUNT_ADDR	((unsigned long)_mcount)
-diff --git a/arch/loongarch/include/asm/ftrace.h b/arch/loongarch/include/asm/ftrace.h
-index de891c2c83d4..c0a682808e07 100644
---- a/arch/loongarch/include/asm/ftrace.h
-+++ b/arch/loongarch/include/asm/ftrace.h
-@@ -28,7 +28,6 @@ struct dyn_ftrace;
- struct dyn_arch_ftrace { };
- 
- #define ARCH_SUPPORTS_FTRACE_OPS 1
--#define HAVE_FUNCTION_GRAPH_RET_ADDR_PTR
- 
- #define ftrace_init_nop ftrace_init_nop
- int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
-diff --git a/arch/powerpc/include/asm/ftrace.h b/arch/powerpc/include/asm/ftrace.h
-index 107fc5a48456..559560286e6d 100644
---- a/arch/powerpc/include/asm/ftrace.h
-+++ b/arch/powerpc/include/asm/ftrace.h
-@@ -8,8 +8,6 @@
- #define MCOUNT_ADDR		((unsigned long)(_mcount))
- #define MCOUNT_INSN_SIZE	4 /* sizeof mcount call */
- 
--#define HAVE_FUNCTION_GRAPH_RET_ADDR_PTR
--
- /* Ignore unused weak functions which will have larger offsets */
- #if defined(CONFIG_MPROFILE_KERNEL) || defined(CONFIG_ARCH_USING_PATCHABLE_FUNCTION_ENTRY)
- #define FTRACE_MCOUNT_MAX_OFFSET	16
-diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
-index 9eb31a7ea0aa..2cddd79ff21b 100644
---- a/arch/riscv/include/asm/ftrace.h
-+++ b/arch/riscv/include/asm/ftrace.h
-@@ -11,7 +11,6 @@
- #if defined(CONFIG_FUNCTION_GRAPH_TRACER) && defined(CONFIG_FRAME_POINTER)
- #define HAVE_FUNCTION_GRAPH_FP_TEST
- #endif
--#define HAVE_FUNCTION_GRAPH_RET_ADDR_PTR
- 
- #define ARCH_SUPPORTS_FTRACE_OPS 1
- #ifndef __ASSEMBLY__
-diff --git a/arch/s390/include/asm/ftrace.h b/arch/s390/include/asm/ftrace.h
-index 77e479d44f1e..fbadca645af7 100644
---- a/arch/s390/include/asm/ftrace.h
-+++ b/arch/s390/include/asm/ftrace.h
-@@ -2,7 +2,6 @@
- #ifndef _ASM_S390_FTRACE_H
- #define _ASM_S390_FTRACE_H
- 
--#define HAVE_FUNCTION_GRAPH_RET_ADDR_PTR
- #define ARCH_SUPPORTS_FTRACE_OPS 1
- #define MCOUNT_INSN_SIZE	6
- 
-diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
-index 897cf02c20b1..0152a81d9b4a 100644
---- a/arch/x86/include/asm/ftrace.h
-+++ b/arch/x86/include/asm/ftrace.h
-@@ -20,8 +20,6 @@
- #define ARCH_SUPPORTS_FTRACE_OPS 1
- #endif
- 
--#define HAVE_FUNCTION_GRAPH_RET_ADDR_PTR
--
- #ifndef __ASSEMBLY__
- extern void __fentry__(void);
- 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 4135dc171447..845c2ab0bc1c 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -1071,9 +1071,7 @@ struct ftrace_ret_stack {
- #ifdef HAVE_FUNCTION_GRAPH_FP_TEST
- 	unsigned long fp;
- #endif
--#ifdef HAVE_FUNCTION_GRAPH_RET_ADDR_PTR
- 	unsigned long *retp;
--#endif
- };
- 
- /*
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 91f1eef256af..8317d1a7f43a 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -593,9 +593,7 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
- #ifdef HAVE_FUNCTION_GRAPH_FP_TEST
- 	ret_stack->fp = frame_pointer;
- #endif
--#ifdef HAVE_FUNCTION_GRAPH_RET_ADDR_PTR
- 	ret_stack->retp = retp;
--#endif
- 	return offset;
- }
- 
-@@ -887,10 +885,8 @@ ftrace_graph_get_ret_stack(struct task_struct *task, int idx)
-  * will be assigned that location so that if called again, it will continue
-  * where it left off.
-  *
-- * @retp is a pointer to the return address on the stack.  It's ignored if
-- * the arch doesn't have HAVE_FUNCTION_GRAPH_RET_ADDR_PTR defined.
-+ * @retp is a pointer to the return address on the stack.
-  */
--#ifdef HAVE_FUNCTION_GRAPH_RET_ADDR_PTR
- unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
- 				    unsigned long ret, unsigned long *retp)
- {
-@@ -926,35 +922,6 @@ unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
- 
- 	return ret;
- }
--#else /* !HAVE_FUNCTION_GRAPH_RET_ADDR_PTR */
--unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
--				    unsigned long ret, unsigned long *retp)
--{
--	struct ftrace_ret_stack *ret_stack;
--	unsigned long return_handler = (unsigned long)dereference_kernel_function_descriptor(return_to_handler);
--	int offset = task->curr_ret_stack;
--	int i;
--
--	if (ret != return_handler)
--		return ret;
--
--	if (!idx)
--		return ret;
--
--	i = *idx;
--	do {
--		ret_stack = get_ret_stack(task, offset, &offset);
--		if (ret_stack && ret_stack->ret == return_handler)
--			continue;
--		i--;
--	} while (i >= 0 && ret_stack);
--
--	if (ret_stack)
--		return ret_stack->ret;
--
--	return ret;
--}
--#endif /* HAVE_FUNCTION_GRAPH_RET_ADDR_PTR */
- 
- static struct ftrace_ops graph_ops = {
- 	.func			= ftrace_graph_func,
--- 
-2.43.0
+This series sits on top of the "convert the SCSI ULDs to the atomic queue
+limits API v2" and "move integrity settings to queue_limits v2" series.
 
+A git tree is available here:
 
+    git://git.infradead.org/users/hch/block.git block-limit-flags
+
+Gitweb:
+
+    http://git.infradead.org/?p=users/hch/block.git;a=shortlog;h=refs/heads/block-limit-flags
+
+Diffstat:
+ Documentation/block/writeback_cache_control.rst |   67 +++++---
+ arch/m68k/emu/nfblock.c                         |    1 
+ arch/um/drivers/ubd_kern.c                      |    3 
+ arch/xtensa/platforms/iss/simdisk.c             |    5 
+ block/blk-core.c                                |    7 
+ block/blk-flush.c                               |   36 ++--
+ block/blk-mq-debugfs.c                          |   13 -
+ block/blk-mq.c                                  |   42 +++--
+ block/blk-settings.c                            |   46 ++----
+ block/blk-sysfs.c                               |  118 ++++++++-------
+ block/blk-wbt.c                                 |    4 
+ block/blk.h                                     |    2 
+ drivers/block/amiflop.c                         |    5 
+ drivers/block/aoe/aoeblk.c                      |    1 
+ drivers/block/ataflop.c                         |    5 
+ drivers/block/brd.c                             |    6 
+ drivers/block/drbd/drbd_main.c                  |    6 
+ drivers/block/floppy.c                          |    3 
+ drivers/block/loop.c                            |   79 +++++-----
+ drivers/block/mtip32xx/mtip32xx.c               |    2 
+ drivers/block/n64cart.c                         |    2 
+ drivers/block/nbd.c                             |   24 +--
+ drivers/block/null_blk/main.c                   |   13 -
+ drivers/block/null_blk/zoned.c                  |    3 
+ drivers/block/pktcdvd.c                         |    1 
+ drivers/block/ps3disk.c                         |    8 -
+ drivers/block/rbd.c                             |   12 -
+ drivers/block/rnbd/rnbd-clt.c                   |   14 -
+ drivers/block/sunvdc.c                          |    1 
+ drivers/block/swim.c                            |    5 
+ drivers/block/swim3.c                           |    5 
+ drivers/block/ublk_drv.c                        |   21 +-
+ drivers/block/virtio_blk.c                      |   37 ++--
+ drivers/block/xen-blkfront.c                    |   33 +---
+ drivers/block/zram/zram_drv.c                   |    6 
+ drivers/cdrom/gdrom.c                           |    1 
+ drivers/md/bcache/super.c                       |    9 -
+ drivers/md/dm-table.c                           |  181 +++++-------------------
+ drivers/md/dm-zone.c                            |    2 
+ drivers/md/dm-zoned-target.c                    |    2 
+ drivers/md/dm.c                                 |   13 -
+ drivers/md/md.c                                 |   40 -----
+ drivers/md/raid5.c                              |    6 
+ drivers/mmc/core/block.c                        |   42 ++---
+ drivers/mmc/core/queue.c                        |   20 +-
+ drivers/mmc/core/queue.h                        |    3 
+ drivers/mtd/mtd_blkdevs.c                       |    9 -
+ drivers/nvdimm/btt.c                            |    4 
+ drivers/nvdimm/pmem.c                           |   14 -
+ drivers/nvme/host/core.c                        |   33 ++--
+ drivers/nvme/host/multipath.c                   |   24 ---
+ drivers/nvme/host/zns.c                         |    3 
+ drivers/s390/block/dasd_genhd.c                 |    1 
+ drivers/s390/block/dcssblk.c                    |    2 
+ drivers/s390/block/scm_blk.c                    |    5 
+ drivers/scsi/iscsi_tcp.c                        |    8 -
+ drivers/scsi/scsi_lib.c                         |    5 
+ drivers/scsi/sd.c                               |   60 +++----
+ drivers/scsi/sd.h                               |    7 
+ drivers/scsi/sd_zbc.c                           |   17 +-
+ include/linux/blkdev.h                          |  119 +++++++++++----
+ 61 files changed, 556 insertions(+), 710 deletions(-)
 
