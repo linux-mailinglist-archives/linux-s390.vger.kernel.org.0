@@ -1,77 +1,63 @@
-Return-Path: <linux-s390+bounces-4418-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-4420-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 364ED90B5C6
-	for <lists+linux-s390@lfdr.de>; Mon, 17 Jun 2024 18:07:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05B8A90B99A
+	for <lists+linux-s390@lfdr.de>; Mon, 17 Jun 2024 20:24:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 165EAB42247
-	for <lists+linux-s390@lfdr.de>; Mon, 17 Jun 2024 15:16:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ACDB51F225DA
+	for <lists+linux-s390@lfdr.de>; Mon, 17 Jun 2024 18:24:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0C77158A3B;
-	Mon, 17 Jun 2024 14:35:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F4B1199236;
+	Mon, 17 Jun 2024 18:22:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eD5n/nvW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OYTKNQDk"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FFF0158A05;
-	Mon, 17 Jun 2024 14:35:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102741991D0;
+	Mon, 17 Jun 2024 18:22:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718634907; cv=none; b=KiM+GgE2CCBVWpN14REjdiO72KjyYUmBKg67cledLbY/epVdRh6CJP+Vf0f9Uo4SErntKCp1kHdg+6oafnVXLfqlUJ6HvnhRrxu5ZIwGltQ4+RyGI82xdYmCDyMCmsPT031/CCSitVczlum9qoR1P2zh8dMEanXHjwTf65H3FjQ=
+	t=1718648576; cv=none; b=YcNTiNgOjxMqNi3+yja4BuJ1pRW+Q2RdRxosM5bAe9HuZLuoB2kaPZLofW6r74Nj8/JhCyOW/UyHKWxrIU9/eEJ3TUofio5Oa2sMwUPxcZphK6Rh4c+Vop+w8lhrHnUTlcg3Ne8y2enJAPTa40Dp6zMeUaurHetqmPCnXBjhXcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718634907; c=relaxed/simple;
-	bh=zR4PmzG8eM11uEea9QT6dpcyWJEpQ/sobqtYRuY7p2o=;
+	s=arc-20240116; t=1718648576; c=relaxed/simple;
+	bh=NCfs8+3fHX5/tKNCnEGfSHtJp8L4wyAuoa/GOOiGtoo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eqxtyjYTm+h4cPOpB1NvrWKHldAZ4h173Lde+YoP6k2ni4/MzlbFBgoPS/eXrrTslI7YBsrMv7EbJzgVUcWcaxDA0Q/9e0VDr4hV3alIXfduWEOdvuCjvnEnwOm4OmK2R3gLQIJL9SWbQjN9sDXBVSCXExXRiR7GQyPxiiDyOgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eD5n/nvW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7346C2BD10;
-	Mon, 17 Jun 2024 14:35:04 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=BS4x1zx8KxvM5KP3JLTuYKFIgHrsJclflQf0QnnF2nHOllrmrx4ZenAwWmHjO+1PyOSJ3GI3/iI15wfygNJmeZpcM46Y46IL4dpoys5RQXtdJC4k6GeXBnUr10RqYiB6Wxq0e1j/tNikKzilSAdh97PCht7ucnwdM0qzdSky724=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OYTKNQDk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7838C2BD10;
+	Mon, 17 Jun 2024 18:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718634907;
-	bh=zR4PmzG8eM11uEea9QT6dpcyWJEpQ/sobqtYRuY7p2o=;
+	s=k20201202; t=1718648575;
+	bh=NCfs8+3fHX5/tKNCnEGfSHtJp8L4wyAuoa/GOOiGtoo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eD5n/nvWPH0mROLi1mYqjLG+6CkIkCxCEDr7KHYv5mCJ6cJ3axvL3iUR8FSfF/NAJ
-	 aWF+hMFp26+MYq12L40CvD0LxAzWJTFIpFvJFlT/13JJ1EJCWWsc/XXuMYInx3fYPk
-	 PVqFFZp9qinzyqQ1wbJp1uQUpFSEgZjA7/AJ/D87BnMG71EbVAfG4CFQOyKDe6kjS2
-	 0qjhzv59DCAwJqh60nhssiSotn3a1GiLXJljndQUFTrzdMkRj7pO46aG6KaDjyXOpw
-	 MXJnwDrZxtrM68cj9z93ToW3XbCMjuJFfQuHw/qbhAPx1AOR5+hjUoIbpzcdxhC3Vq
-	 UbiPTmWDLBjCA==
-Date: Mon, 17 Jun 2024 08:35:02 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>, Geert Uytterhoeven <geert@linux-m68k.org>,
-	Richard Weinberger <richard@nod.at>,
-	Philipp Reisner <philipp.reisner@linbit.com>,
-	Lars Ellenberg <lars.ellenberg@linbit.com>,
-	Christoph =?iso-8859-1?Q?B=F6hmwalder?= <christoph.boehmwalder@linbit.com>,
-	Josef Bacik <josef@toxicpanda.com>, Ming Lei <ming.lei@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>,
-	Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
-	Mikulas Patocka <mpatocka@redhat.com>, Song Liu <song@kernel.org>,
-	Yu Kuai <yukuai3@huawei.com>,
-	Vineeth Vijayan <vneethv@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-m68k@lists.linux-m68k.org, linux-um@lists.infradead.org,
-	drbd-dev@lists.linbit.com, nbd@other.debian.org,
-	linuxppc-dev@lists.ozlabs.org, ceph-devel@vger.kernel.org,
-	virtualization@lists.linux.dev, xen-devel@lists.xenproject.org,
-	linux-bcache@vger.kernel.org, dm-devel@lists.linux.dev,
-	linux-raid@vger.kernel.org, linux-mmc@vger.kernel.org,
-	linux-mtd@lists.infradead.org, nvdimm@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
-	Damien Le Moal <dlemoal@kernel.org>
-Subject: Re: [PATCH 26/26] block: move the bounce flag into the features field
-Message-ID: <ZnBJlix63Fj_G1px@kbusch-mbp.dhcp.thefacebook.com>
-References: <20240617060532.127975-1-hch@lst.de>
- <20240617060532.127975-27-hch@lst.de>
+	b=OYTKNQDkBo4oTu9itBH1S+qnTg9b9i6GMOgnDPStEM6Pa/BynSfWqQ3mgzbBtNcZ1
+	 bhHhT78ngG45kzg9IIAZESHxq+jnZwKuJC4lP1pYyMV0t1ilAraGndXeTiFEdnpsHH
+	 vT/vRStrwMYfu9Zxn1IkG1tK4uU4Fvj4vmdS1PVOLLSOKDGKi+laFMAMs1iqvDx9E/
+	 GPCUHFVkoS1Unx6OZXfJJ1Vq+IE0rbmT2G6OQeHLi65iKl6JdERAaZ1bJRXF2hz22S
+	 vl7GtpyBXdLLSFjhYQXmOrdVVgh7WwStO1Q0JZSINGTAwXILEhWJyEz2tU0p3/lfOl
+	 KroXUSvl1cGKA==
+Date: Mon, 17 Jun 2024 11:22:55 -0700
+From: Kees Cook <kees@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Yuntao Liu <liuyuntao12@huawei.com>, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org,
+	catalin.marinas@arm.com, will@kernel.org, hca@linux.ibm.com,
+	gor@linux.ibm.com, agordeev@linux.ibm.com,
+	borntraeger@linux.ibm.com, svens@linux.ibm.com, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, gustavoars@kernel.org, arnd@arndb.de,
+	leobras@redhat.com, broonie@kernel.org, imbrenda@linux.ibm.com,
+	pawan.kumar.gupta@linux.intel.com
+Subject: Re: [PATCH] remove AND operation in choose_random_kstack_offset()
+Message-ID: <202406171122.B5FDA6A@keescook>
+References: <20240617133721.377540-1-liuyuntao12@huawei.com>
+ <ZnBbr2CAqBGDe2aN@J2N7QTR9R3>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -80,16 +66,28 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240617060532.127975-27-hch@lst.de>
+In-Reply-To: <ZnBbr2CAqBGDe2aN@J2N7QTR9R3>
 
-On Mon, Jun 17, 2024 at 08:04:53AM +0200, Christoph Hellwig wrote:
-> @@ -352,7 +355,6 @@ enum blk_bounce {
+On Mon, Jun 17, 2024 at 04:52:15PM +0100, Mark Rutland wrote:
+> On Mon, Jun 17, 2024 at 01:37:21PM +0000, Yuntao Liu wrote:
+> > Since the offset would be bitwise ANDed with 0x3FF in
+> > add_random_kstack_offset(), so just remove AND operation here.
+> > 
+> > Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
+> 
+> The comments in arm64 and x86 say that they're deliberately capping the
+> offset at fewer bits than the result of KSTACK_OFFSET_MAX() masking the
+> value with 0x3FF.
+> 
+> Maybe it's ok to expand that, but if that's the case the commit message
+> needs to explain why it's safe add extra bits (2 on arm64, 3 on s39 and
+> x86), and those comments need to be updated accordingly.
+> 
+> As-is, I do not think this patch is ok.
 
-No more users of "enum blk_bounce" after this, so you can delete that
-too.
+Yeah, I agree: the truncation is intentional and tuned to the
+architecture.
 
->  struct queue_limits {
->  	unsigned int		features;
->  	unsigned int		flags;
-> -	enum blk_bounce		bounce;
+-- 
+Kees Cook
 
