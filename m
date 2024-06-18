@@ -1,192 +1,126 @@
-Return-Path: <linux-s390+bounces-4433-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-4435-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58A7490C8B3
-	for <lists+linux-s390@lfdr.de>; Tue, 18 Jun 2024 13:13:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC13390C9B9
+	for <lists+linux-s390@lfdr.de>; Tue, 18 Jun 2024 13:37:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0DB6282FD1
-	for <lists+linux-s390@lfdr.de>; Tue, 18 Jun 2024 11:13:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2B21A285BD9
+	for <lists+linux-s390@lfdr.de>; Tue, 18 Jun 2024 11:37:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8917820C5B0;
-	Tue, 18 Jun 2024 09:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XdrFMMFv"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C50D1514EC;
+	Tue, 18 Jun 2024 10:45:34 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 047BA20C5AF
-	for <linux-s390@vger.kernel.org>; Tue, 18 Jun 2024 09:57:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B75811CAB0;
+	Tue, 18 Jun 2024 10:45:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718704647; cv=none; b=L5UgdHeuO4CQm3dyiQq5Bv1lzrBVEtAMhCccNtFKMf4pukbw8L/WOo7CN7H/iQWXQVGFRN5E4HdmIG5cfqTQxZY+oaXUNmSKt1EDmY/lcfORLC05GX1IxlH7IlgvFU+zrbRt2ccN6C3vDXnIiTG3qEf8+2+5fn3XbEiPReIkvVw=
+	t=1718707534; cv=none; b=Jzi5HdSAYlKwIA/IaJku3uTRb5y5KFaXEFivbktOP4ZPds3bMP8HKs/0KUE46d5ohteBPcaImeA6gwEw+0qoVGwgu6zSUXBUcSN5PW8QXElovKxf+wrTcrDxqrqDdt1BkTG16TfaoQ+M+YTYrJ/f7BxTE0ab05Z4Xn9MDepF7JM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718704647; c=relaxed/simple;
-	bh=zHKySP+EhAjEhkOM4e6WVbgojcJbC7/esjDgsPt5RJU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VORZlMc8/pAaXQ87yWYnAHxQbx3whHtWw1R3oeXid09Wtnk1/FrRsWx9IHJbAIb+0naSGYzX8UjLGBt9pPJFv2RMF5aEMOMFmRIWh6NQfXDDL+QGl/S1iyLJxEA4YJvRVXomNCQlmc0iDWNKWTE6rqQxd/3v7K4ymMT7prnK+nA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XdrFMMFv; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718704644;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WbXpHb98FLaqgjtCsdMyl1KZ1e/Ur0AIXYqnzGExZh8=;
-	b=XdrFMMFv2XK8PupO9k4SK1JsZpObrAEkR1h/g/KVm5JrUw0MXCuHyaF/QUbNEDCKmcZd/e
-	lRKyaestCl1DVMtr3d4pob0O28Ux2zEMzF90ilRwSq/wAdp47GEfCrY5Esm5W6Bal+iNOb
-	u0SG/ziMTYTHptUDHkj65rzbvgaZ3zU=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-328-J0zTDy-MN2aPwaB79HjBcA-1; Tue, 18 Jun 2024 05:57:23 -0400
-X-MC-Unique: J0zTDy-MN2aPwaB79HjBcA-1
-Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-52c989652e6so3729302e87.0
-        for <linux-s390@vger.kernel.org>; Tue, 18 Jun 2024 02:57:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718704642; x=1719309442;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WbXpHb98FLaqgjtCsdMyl1KZ1e/Ur0AIXYqnzGExZh8=;
-        b=KWvgpvZk3HrJUkLMK3IdQoBHT8GbiYD+zCIgHc9hE4r+5jbbIeER023XBm0OMsxm4T
-         j5YgFJcMumQwg2uj/djIbAVpBtaOoOZuXwC7JG4+zL+cvHyiS4qX0hyoOddlqkH+D6+1
-         HEULI7byKPVynE636kx5+h39osB2IoaJq8ru9CY2VBbkJaqWG5f7YYflo731txyhLBDO
-         r53f4yghrl+ijmYIuXpE37uVAfV0aAZ771mRH7J6w2yXSl3GhPnlyZvCtLNuEqwRsPu6
-         JvmLW5SZ6fnTXlbC4xQIg2/hjzn1olhC8NurK47uQ+E/PlqBphbJwIuDEajzEGmPvRMk
-         Gh3w==
-X-Gm-Message-State: AOJu0Yz0dEvvIc8O+fHTBHy9eqbznxQ2P3ntCg4wa0uwko9UMhm+ECOj
-	q0Gi5r9rMrMwpk5g6A8Kz2F8DeuXEAVB9hKsHOpycCv5B69gzGG2tLFM71733EQDP+S4ZcH7cDr
-	zw7HwjbSvKsBTzcxW9NWabkb8ss8AgLYVZ2ypib/he6iNizEYJS90e1FEYgs=
-X-Received: by 2002:ac2:58e5:0:b0:52b:bd21:eea7 with SMTP id 2adb3069b0e04-52ca6e9a4bemr8845385e87.66.1718704641731;
-        Tue, 18 Jun 2024 02:57:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHR09GmuA97h360mswfj4ZRjZr+Cfz9q2tgOxitakWoOPfHa/LPgqv0uUKMzXBacQAhJWUUJg==
-X-Received: by 2002:ac2:58e5:0:b0:52b:bd21:eea7 with SMTP id 2adb3069b0e04-52ca6e9a4bemr8845372e87.66.1718704641251;
-        Tue, 18 Jun 2024 02:57:21 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c705:1400:78ba:c2d2:22a1:8858? (p200300cbc705140078bac2d222a18858.dip0.t-ipconnect.de. [2003:cb:c705:1400:78ba:c2d2:22a1:8858])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422f641a6c1sm184681675e9.40.2024.06.18.02.57.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jun 2024 02:57:20 -0700 (PDT)
-Message-ID: <75ee1ec6-12b0-461e-9dab-6fb6d5cc235f@redhat.com>
-Date: Tue, 18 Jun 2024 11:57:19 +0200
+	s=arc-20240116; t=1718707534; c=relaxed/simple;
+	bh=SUO+snBgG6k1yaJlPtX7BkWdgL43IP8KrgWkPiIs9WA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JfN+u911RNG855PojBhslLiaP8lP4lUB3QtDCwSdqzQyNtQ8SlbaTZYsIj8o+7r/Cw7CypVlYyhZoYstql963U/mQOqVf5ek3HDw3xMYxVxM2Ah3+Tkb7/R1EH0Mp20v8hvRBPjfv7fyWuJ7cvf6HobBALRlrNLCgMKIYGU5bSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6EF0DA7;
+	Tue, 18 Jun 2024 03:45:55 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B48F53F6A8;
+	Tue, 18 Jun 2024 03:45:27 -0700 (PDT)
+Date: Tue, 18 Jun 2024 11:45:22 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Kees Cook <kees@kernel.org>, Yuntao Liu <liuyuntao12@huawei.com>,
+	x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+	gor@linux.ibm.com, Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Leonardo Bras <leobras@redhat.com>, Mark Brown <broonie@kernel.org>,
+	imbrenda@linux.ibm.com, pawan.kumar.gupta@linux.intel.com
+Subject: Re: [PATCH] remove AND operation in choose_random_kstack_offset()
+Message-ID: <ZnFlQgVSTtf0t2cU@J2N7QTR9R3>
+References: <20240617133721.377540-1-liuyuntao12@huawei.com>
+ <ZnBbr2CAqBGDe2aN@J2N7QTR9R3>
+ <202406171122.B5FDA6A@keescook>
+ <d0959336-4430-4062-b909-54d553238468@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] s390/mm: get total ram pages from memblock
-To: Wei Yang <richard.weiyang@gmail.com>, agordeev@linux.ibm.com,
- gerald.schaefer@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
- borntraeger@linux.ibm.com, svens@linux.ibm.com
-Cc: linux-s390@vger.kernel.org, linux-mm@kvack.org,
- Mike Rapoport <rppt@kernel.org>
-References: <20240616013537.20338-1-richard.weiyang@gmail.com>
-Content-Language: en-US
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240616013537.20338-1-richard.weiyang@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d0959336-4430-4062-b909-54d553238468@app.fastmail.com>
 
-On 16.06.24 03:35, Wei Yang wrote:
-> On s390, zero page's size relies on total ram pages.
+Hi Arnd,
+
+On Mon, Jun 17, 2024 at 10:33:08PM +0200, Arnd Bergmann wrote:
+> On Mon, Jun 17, 2024, at 20:22, Kees Cook wrote:
+> > On Mon, Jun 17, 2024 at 04:52:15PM +0100, Mark Rutland wrote:
+> >> On Mon, Jun 17, 2024 at 01:37:21PM +0000, Yuntao Liu wrote:
+> >> > Since the offset would be bitwise ANDed with 0x3FF in
+> >> > add_random_kstack_offset(), so just remove AND operation here.
+> >> > 
+> >> > Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
+> >> 
+> >> The comments in arm64 and x86 say that they're deliberately capping the
+> >> offset at fewer bits than the result of KSTACK_OFFSET_MAX() masking the
+> >> value with 0x3FF.
+> >> 
+> >> Maybe it's ok to expand that, but if that's the case the commit message
+> >> needs to explain why it's safe add extra bits (2 on arm64, 3 on s39 and
+> >> x86), and those comments need to be updated accordingly.
+> >> 
+> >> As-is, I do not think this patch is ok.
+> >
+> > Yeah, I agree: the truncation is intentional and tuned to the
+> > architecture.
 > 
-> Since we plan to move the accounting into __free_pages_core(),
-> totalram_pages may not represent the total usable pages on system
-> at this point when defer_init is enabled.
+> It may be intentional, but it's clearly nonsense: there is nothing
+> inherent to the architecture that means we have can go only 256
+> bytes instead of 512 bytes into the 16KB available stack space.
 > 
-> We can get the total usable pages from memblock directly. The size maybe
-> not accurate due to the alignment, but enough for the calculation.
+> As far as I can tell, any code just gets bloated to the point
+> where it fills up the available memory, regardless of how
+> much you give it. I'm sure one can find code paths today that
+> exceed the 16KB, so there is no point pretending that 15.75KB
+> is somehow safe to use while 15.00KB is not.
 > 
-> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-> CC: Mike Rapoport (IBM) <rppt@kernel.org>
-> CC: David Hildenbrand <david@redhat.com>
-> 
-> ---
-> Not tested on a machine, hope it is fine.
-> ---
->   arch/s390/mm/init.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-> index e769d2726f4e..d811ffa5e147 100644
-> --- a/arch/s390/mm/init.c
-> +++ b/arch/s390/mm/init.c
-> @@ -65,12 +65,13 @@ static void __init setup_zero_pages(void)
->   	unsigned int order;
->   	struct page *page;
->   	int i;
-> +	unsigned long total_pages = PHYS_PFN(memblock_phys_mem_size() - memblock_reserved_size());
->   
->   	/* Latest machines require a mapping granularity of 512KB */
->   	order = 7;
->   
->   	/* Limit number of empty zero pages for small memory sizes */
-> -	while (order > 2 && (totalram_pages() >> 10) < (1UL << order))
-> +	while (order > 2 && (total_pages >> 10) < (1UL << order))
->   		order--;
->   
->   	empty_zero_page = __get_free_pages(GFP_KERNEL | __GFP_ZERO, order);
+> I'm definitely in favor of making this less architecture
+> specific, we just need to pick a good value, and we may well
+> end up deciding to use less than the default 1KB. We can also
+> go the opposite way and make the limit 4KB but then increase
+> the default stack size to 20KB for kernels that enable
+> randomization.
 
-I suspect that this is good enough as an approximation for that purpose.
+Sorry, to be clear, I'm happy for this to change, so long as:
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+* The commit message explains why that's safe.
 
--- 
-Cheers,
+  IIUC this goes from 511 to 1023 bytes on arm64, which is ~3% of the
+  stack, so maybe that is ok. It'd be nice to see any rationale/analysis
+  beyond "the offset would be bitwise ANDed with 0x3FF".
 
-David / dhildenb
+* The comments in architecture code referring to the masking get
+  removed/updated along with the masking.
 
+My complaint was that the patch didn't do those things.
+
+Mark.
 
