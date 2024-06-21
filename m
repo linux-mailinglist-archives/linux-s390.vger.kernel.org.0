@@ -1,215 +1,292 @@
-Return-Path: <linux-s390+bounces-4664-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-4669-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC76F9123BE
-	for <lists+linux-s390@lfdr.de>; Fri, 21 Jun 2024 13:33:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 501049123F1
+	for <lists+linux-s390@lfdr.de>; Fri, 21 Jun 2024 13:37:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EFC931C2348D
-	for <lists+linux-s390@lfdr.de>; Fri, 21 Jun 2024 11:33:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CF0C61F2371A
+	for <lists+linux-s390@lfdr.de>; Fri, 21 Jun 2024 11:37:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02AAE175549;
-	Fri, 21 Jun 2024 11:32:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A54F6174EDB;
+	Fri, 21 Jun 2024 11:37:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hXP+yZTb"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="C9tQpxfJ"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E79175555
-	for <linux-s390@vger.kernel.org>; Fri, 21 Jun 2024 11:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2098C16F84A;
+	Fri, 21 Jun 2024 11:37:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718969532; cv=none; b=aFq8XsalqqkUEXfZeADaKF2m+jEgJPZMD6TGyzpcqNgGccukE+2lREkjqvyagm3Zpg2mWjvfs0rkLW/309T8J3rLcYxC2nQBGwu0Xvn9RKXFE0HA7+JlfOqzFCUZZMj3//qiS3mEzklEhSnGjhKQvKdzui1XUst4ymrWAxiHo+k=
+	t=1718969861; cv=none; b=QvMfDeSpAiulvFI0KEsIDTwNbGzMGSU0WPpFK2VbTfX4fcZysQAvNzTglZWKOhHYfNfr+0QcITDRNMKqyfkJdcszk/9klQdonljz/RwMC8gLFSDdMf3LjhIHf5rCf6tseqFwJMpgdDagpEjJ70RX1hiVxcbVOMIvA+1YTSgNltk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718969532; c=relaxed/simple;
-	bh=VeF0F1+ARm8lJ6YTQi3bfWy9GcD1dbee8bDA93i2Rr4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g60ppfyw6VbHeFAnFa3Npjz6YGz7JKiJahvtAB9zmvA2HpOw/VUZh4ns8JM0Gu+wy9OieYr0cYb71bMHaIVthewj5xS55FwkaiF3hKCfa28zfR/gh++qoBf43XbFnx4y4lDASk9ABVbaWHSdF7DGDnnVQ4cv0pQYzgB01v9mXH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hXP+yZTb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718969530;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jawNzosRvaFHOamcHl07uvLvaEo2dcY68u0YsWO1zVw=;
-	b=hXP+yZTbDMsET744qRCgUUtjpxj6tnp2nZ8Od0TLw9NKuEcxnW4bCPhhSXyci36UDtIpo0
-	B1wb7ZGnzEbjqFinlLOcNnWw+2hAT+uAC1etGAbzslvE7LZdzT+mYjyNOa1qQUKVKkiJDd
-	tnDmxqHPY+gSmXr/0ahDcf1PvSs0RNI=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-186-N8iG_vyNNkenpRvR6KWnhQ-1; Fri, 21 Jun 2024 07:32:08 -0400
-X-MC-Unique: N8iG_vyNNkenpRvR6KWnhQ-1
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-795fb161698so263979585a.2
-        for <linux-s390@vger.kernel.org>; Fri, 21 Jun 2024 04:32:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718969528; x=1719574328;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jawNzosRvaFHOamcHl07uvLvaEo2dcY68u0YsWO1zVw=;
-        b=cestwB9E2na6E40FyVFIqv2hMj4umWpcP/EzoRHavGeLd7RzViLw1/Vfg5KI2YwBSW
-         X2gHuyAnMecIgUQ8PhRluloCcXiPq0/w3sIbWySs3jkjNm/GAHTnt/rsdU04QIHTXjVH
-         cUyee0TKhBu0u4FN5YuDbfcfoYFzWEVo6JayMPf/n8Dd8Sa/NevvhshmllKX62a3JyjT
-         4YQ3BK6pLu3IE1LGlg9mJANEKg1PGx4lZr7JBosjDmVGSkAMa9LZqlHFLfYoot6LgBf/
-         k0kMdbevDszK6B6gIJRx/ye7ILT1qfE/ldx1ImC9hJ85rLW2tiuwGhvcQjmZjwT+oXew
-         Kk2Q==
-X-Gm-Message-State: AOJu0YxQ6k+/jvEJal7eNCFdjUDfBhgcpZ3sK0/XzC3hXtrrAB0VUK27
-	4Wu8HX0Mj1G2zmlNZWeB6Zpq+eMUVL2GnNRyL8maTfkRpn9+bdzUj806mizHvCTUT42LZY3/kji
-	/yNXyjtKbtHmfOxu0A5foVCHq2NFLNp616RKvn62xPcJztHasUS1Gl9NlLCwz9s9Gkek=
-X-Received: by 2002:a05:620a:4093:b0:795:512e:4ade with SMTP id af79cd13be357-79bb3e2dd49mr847985885a.24.1718969527801;
-        Fri, 21 Jun 2024 04:32:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEBioo5BRFVIz0XxlwQgvVaKb9AC75ZDv83nK6vRgGmb3+R/3Zg8KDQvuKgdB1E3PA60UQfxQ==
-X-Received: by 2002:a05:620a:4093:b0:795:512e:4ade with SMTP id af79cd13be357-79bb3e2dd49mr847983585a.24.1718969527436;
-        Fri, 21 Jun 2024 04:32:07 -0700 (PDT)
-Received: from [192.168.1.24] (pool-68-160-135-240.bstnma.fios.verizon.net. [68.160.135.240])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-79bce9310cesm77901685a.106.2024.06.21.04.32.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Jun 2024 04:32:06 -0700 (PDT)
-Message-ID: <ed2152fe-dd0a-a230-c0ef-0d3a67b5e2ac@redhat.com>
-Date: Fri, 21 Jun 2024 07:32:05 -0400
+	s=arc-20240116; t=1718969861; c=relaxed/simple;
+	bh=2LyPOzJ0hwkvElFf9UG3vMYftJikHrdK9dl2Zy8jkOI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zu2Mj731df7C7rO5kzoyqNcGVKu42w64h1jvBLHDwdRdiD+o6L+yRBRbFdl0Ce9TQ76tGcqIIfDENGPe9IkHpEKdwquXdgu221293/oHJXpJnXd+U0VtJI500qC5zAghQeMfKzACzlRwvErytWsI2PnXBiPG03v3W+/8KoLuWTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=C9tQpxfJ; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45LBSaKx028638;
+	Fri, 21 Jun 2024 11:37:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:content-transfer-encoding
+	:mime-version; s=pp1; bh=LD4y64NXjfsWIMTssA+LHzsu6fB1ePs+Yjvug9w
+	x+Yk=; b=C9tQpxfJo5RK+SZzLoYYFvhj/+XqJuXavKt99N1fCjPHuj51LA8T+iT
+	C/xgn2GbozJpDIjVHHbAZ6XVrmAZQnNtj6vN+8/9NHoUMAYVOSHjbZmWR0vsVGnb
+	1Rr33SHi+SEjGyQ9Y/l08Y/dkMLZvurHWoRmr+tv9UeS3OQUGUx+vwMo1OgwcygA
+	XNjJ9xjZfdrj8hf192yG/NrBCU4lpSmUJkjpyVfp6ORPDBxa9uD//zVop8oRQui6
+	Wz9s5A1qWV3bcNz2GfGsD73ne8GPNa+ON9rEVYOi4ckfdm4+RTq/k8Ev4gvOkpHe
+	uz8qSZlyY+TWn9ENtdA2gObpwRgjRsw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yw8p080mb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Jun 2024 11:37:17 +0000 (GMT)
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45LBbGeB008753;
+	Fri, 21 Jun 2024 11:37:16 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yw8p080m3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Jun 2024 11:37:16 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45L97SQx019946;
+	Fri, 21 Jun 2024 11:37:15 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yvrqupvyf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Jun 2024 11:37:15 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45LBb9Mi19136862
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 21 Jun 2024 11:37:11 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1C3BE20040;
+	Fri, 21 Jun 2024 11:37:09 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7B3942004B;
+	Fri, 21 Jun 2024 11:37:08 +0000 (GMT)
+Received: from black.boeblingen.de.ibm.com (unknown [9.155.200.166])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 21 Jun 2024 11:37:08 +0000 (GMT)
+From: Ilya Leoshkevich <iii@linux.ibm.com>
+To: Alexander Gordeev <agordeev@linux.ibm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil Babka <vbabka@suse.cz>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>
+Subject: [PATCH v7 00/38] kmsan: Enable on s390
+Date: Fri, 21 Jun 2024 13:34:44 +0200
+Message-ID: <20240621113706.315500-1-iii@linux.ibm.com>
+X-Mailer: git-send-email 2.45.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: fBcB1S0a0ZcmDcjFwjNRhDtTMO9ibhv3
+X-Proofpoint-ORIG-GUID: sdukBvbsRI7ijb82kB8u2lBcB9wtwI2P
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 0/4] s390: compile relocatable kernel with/without fPIE
-Content-Language: en-US
-To: Sumanth Korikkar <sumanthk@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, hca@linux.ibm.com, jpoimboe@kernel.org,
- gor@linux.ibm.com, iii@linux.ibm.com, agordeev@linux.ibm.com,
- Joe Lawrence <joe.lawrence@redhat.com>
-References: <20240219132734.22881-1-sumanthk@linux.ibm.com>
- <ZnHv/HmiYHoQRkUU@redhat.com>
- <ZnMO4DOBZ2qz4Twg@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
- <4610b08d-46a4-b6fc-2ec5-a88abba7022c@redhat.com>
- <ZnUoRESborBG95aJ@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
-From: Joe Lawrence <joe.lawrence@redhat.com>
-In-Reply-To: <ZnUoRESborBG95aJ@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-21_04,2024-06-21_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ suspectscore=0 priorityscore=1501 spamscore=0 malwarescore=0 clxscore=1015
+ impostorscore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406210084
 
-On 6/21/24 03:14, Sumanth Korikkar wrote:
-> On Wed, Jun 19, 2024 at 02:23:49PM -0400, Joe Lawrence wrote:
->> On 6/19/24 13:01, Sumanth Korikkar wrote:
->>> On Tue, Jun 18, 2024 at 04:37:16PM -0400, Joe Lawrence wrote:
->>>> On Mon, Feb 19, 2024 at 02:27:30PM +0100, Sumanth Korikkar wrote:
->>>>> Hi All,
->>>>>
->>>>> This is a rebased version of Josh's patch series with a few fixups.
->>>>> https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git/log/?h=s390
->>>>>
->>>>> This introduces the capability to compile the s390 relocatable kernel
->>>>> with and without the -fPIE option.
->>>>>
->>>>> When utilizing the kpatch functionality, it is advisable to compile the
->>>>> kernel without the -fPIE option. This is particularly important if the
->>>>> kernel is built with the -ffunction-sections and -fdata-sections flags.
->>>>> The linker imposes a restriction on the number of sections (limited to
->>>>> 64k), necessitating the omission of -fPIE.
->>>>>
->>>>> [1] https://gcc.gnu.org/pipermail/gcc-patches/2023-June/622872.html
->>>>> [2] https://gcc.gnu.org/pipermail/gcc-patches/2023-August/625986.html
->>>>>
->>>>> Gcc recently implemented an optimization [1] for loading symbols without
->>>>> explicit alignment, aligning with the IBM Z ELF ABI. This ABI mandates
->>>>> symbols to reside on a 2-byte boundary, enabling the use of the larl
->>>>> instruction. However, kernel linker scripts may still generate unaligned
->>>>> symbols. To address this, a new -munaligned-symbols option has been
->>>>> introduced [2] in recent gcc versions. This option has to be used with
->>>>> future gcc versions.
->>>>>
->>>>> Older Clang lacks support for handling unaligned symbols generated
->>>>> by kernel linker scripts when the kernel is built without -fPIE. However,
->>>>> future versions of Clang will include support for the -munaligned-symbols
->>>>> option. When the support is unavailable, compile the kernel with -fPIE
->>>>> to maintain the existing behavior.
->>>>>
->>>>> Patch 1 filters out -munaligned-symbol flag for vdso code. This is beneficial
->>>>> when compiling kernel with -fno-PIE and -munaligned-symbols combination.
->>>>>
->>>>> Patch 2 introduces the 'relocs' tool, which reads the vmlinux file and
->>>>> generates a vmlinux.relocs_64 section, containing offsets for all
->>>>> R_390_64 relocations.
->>>>>
->>>>> Patch 3 enables the compilation of a relocatable kernel with or without
->>>>> the -fPIE option. It  allows for building the relocatable kernel without
->>>>> -fPIE.  However, if compiler cannot handle unaligned symbols, the kernel
->>>>> is built with -fPIE.
->>>>>
->>>>> Patch 4 handles orphan .rela sections when kernel is built with
->>>>> -fno-PIE.
->>>>>
->>>>> kpatch tools changes:
->>>>> * -mno-pic-data-is-text-relative prevents relative addressing between
->>>>>   code and data. This is needed to avoid relocation error when klp text
->>>>>   and data are too far apart. kpatch already includes this flag.
->>>>>   However, with these changes, ARCH_KFLAGS+="-fPIC" should be added to
->>>>>   s390 kpatch tools, As -mno-pic-data-is-text-relative can be used only
->>>>>   with -fPIC. The corresponding pull request will be sent to kpatch
->>>>>   tools.
->>>>
->>>> Hi Sumanth,
->>>>
->>>> I noticed interesting compiler differences when adding -fPIC build
->>>> option and not.  The difference in resulting output can confuse
->>>> kpatch-build when it tries to verify that its reference build (with the
->>>> mentioned options, plus --ffunction-sections and -fdata-sections),
->>>> doesn't line up closely enough with the original vmlinux source (sans
->>>> all these options).
->>>
->>> Hi Joe,
->>>
->>> kpatch for s390 already uses extra compiler flag -mno-pic-data-is-text-relative
->>> inorder to prevent relative addressing between code and data. Also,
->>> includes -ffunction-sections and -fdata-sections along with it to identify
->>> modified functions and its relocations.
->>>
->>> Both the source code and modified code are built with the same
->>> options during kpatch-build (-fPIC added to
->>> -mno-pic-data-is-text-relative). kpatch-build was able to identify
->>> modified functions and its associated relocations and include these
->>> changes in the final kpatch module.
->>>
->>> May be I am missing some info: Does this deviation cause confusion to kpatch?
->>>
->>
->> Hi Sumanth,
->>
->> Yes, in the example I provided, the __mmput() function is only inlined
->> in kpatch builds, but not the builds that create the target vmlinux.
->> Here is a reproducer tarball that you can try against a local
->> create-diff-object binary:
->>
->> https://file.rdu.redhat.com/~jolawren/repro-s390x-shadow-newpid.tar.gz
->>
->> create-diff-object: ERROR: fork.ORIG.o: find_local_syms: 222: couldn't
->> find matching fork.c local symbols in vmlinux symbol table.
-> 
-> Hi Joe,
-> 
-> I tried to download the tarball and rhel config. Both are unreachable.
-> Failed to resolve 'file.rdu.redhat.com' (Name or service not known)
-> 
-> Could you please provide alternative link to it?
-> 
+v6: https://lore.kernel.org/lkml/20240621002616.40684-1-iii@linux.ibm.com/
+v6 -> v7: Drop the ptdump patch.
+          All patches are reviewed.
 
-D'oh, I uploaded them to our internal filespace.  Try these links, they
-should be visible to everyone:
+v5: https://lore.kernel.org/lkml/20240619154530.163232-1-iii@linux.ibm.com/
+v5 -> v6: Include KMSAN vmalloc areas in page table dump.
+          Fix doc comments; use KMSAN_WARN_ON (Alexander P.).
+          Patches that need review:
+          - [PATCH 16/39] kmsan: Expose KMSAN_WARN_ON()
+          - [PATCH 32/39] s390/ptdump: Add KMSAN page markers
 
-https://people.redhat.com/~jolawren/kernel-s390x-rhel.config
-https://people.redhat.com/~jolawren/repro-s390x-special-static.tar.gz
+v4: https://lore.kernel.org/lkml/20240613153924.961511-1-iii@linux.ibm.com/
+v4 -> v5: Fix the __memset() build issue.
+          Change the attribute #defines to lowercase in order to match
+          the existing code style.
+          Fix the kmsan_virt_addr_valid() implementation to avoid
+          recursion in debug builds, like it's done on x86_64 - dropped
+          R-bs, please take another look.
+          Add kmsan_disable_current()/kmsan_enable_current() doc;
+          Fix the poisoned memchr_inv() value in a different way;
+          Add the missing linux/instrumented.h #include;
+          (Alexander P.).
+          Patches that need review:
+          - [PATCH 12/37] kmsan: Introduce memset_no_sanitize_memory()
+          - [PATCH 13/37] kmsan: Support SLAB_POISON
+          - [PATCH 17/37] mm: slub: Disable KMSAN when checking the padding bytes
+          - [PATCH 36/37] s390/kmsan: Implement the architecture-specific functions
+
+v3: https://lore.kernel.org/lkml/20231213233605.661251-1-iii@linux.ibm.com/
+v3 -> v4: Rebase.
+          Elaborate why ftrace_ops_list_func() change is needed on
+          x64_64 (Steven).
+          Add a comment to the DFLTCC patch (Alexander P.).
+          Simplify diag224();
+          Improve __arch_local_irq_attributes style;
+          Use IS_ENABLED(CONFIG_KMSAN) for vmalloc area (Heiko).
+          Align vmalloc area on _SEGMENT_SIZE (Alexander G.).
+
+v2: https://lore.kernel.org/lkml/20231121220155.1217090-1-iii@linux.ibm.com/
+v2 -> v3: Drop kmsan_memmove_metadata() and strlcpy() patches;
+          Remove kmsan_get_metadata() stub;
+          Move kmsan_enable_current() and kmsan_disable_current() to
+          include/linux/kmsan.h, explain why a counter is needed;
+          Drop the memset_no_sanitize_memory() patch;
+          Use __memset() in the SLAB_POISON patch;
+          Add kmsan-checks.h to the DFLTCC patch;
+          Add recursion check to the arch_kmsan_get_meta_or_null()
+          patch (Alexander P.).
+
+          Fix inline + __no_kmsan_checks issues.
+          New patch for s390/irqflags, that resolves a lockdep warning.
+          New patch for s390/diag, that resolves a false positive when
+          running on an LPAR.
+          New patch for STCCTM, same as above.
+          New patch for check_bytes_and_report() that resolves a false
+          positive that occurs even on Intel.
+
+v1: https://lore.kernel.org/lkml/20231115203401.2495875-1-iii@linux.ibm.com/
+v1 -> v2: Add comments, sort #includes, introduce
+          memset_no_sanitize_memory() and use it to avoid unpoisoning
+          of redzones, change vmalloc alignment to _REGION3_SIZE, add
+          R-bs (Alexander P.).
+
+          Fix building
+          [PATCH 28/33] s390/string: Add KMSAN support
+          with FORTIFY_SOURCE.
+          Reported-by: kernel test robot <lkp@intel.com>
+          Closes: https://lore.kernel.org/oe-kbuild-all/202311170550.bSBo44ix-lkp@intel.com/
+
+Hi,
+
+This series provides the minimal support for Kernel Memory Sanitizer on
+s390. Kernel Memory Sanitizer is clang-only instrumentation for finding
+accesses to uninitialized memory. The clang support for s390 has already
+been merged [1].
+
+With this series, I can successfully boot s390 defconfig and
+debug_defconfig with kmsan.panic=1. The tool found one real
+s390-specific bug (fixed in master).
+
+Best regards,
+Ilya
+
+[1] https://reviews.llvm.org/D148596
+
+Ilya Leoshkevich (38):
+  ftrace: Unpoison ftrace_regs in ftrace_ops_list_func()
+  kmsan: Make the tests compatible with kmsan.panic=1
+  kmsan: Disable KMSAN when DEFERRED_STRUCT_PAGE_INIT is enabled
+  kmsan: Increase the maximum store size to 4096
+  kmsan: Fix is_bad_asm_addr() on arches with overlapping address spaces
+  kmsan: Fix kmsan_copy_to_user() on arches with overlapping address
+    spaces
+  kmsan: Remove a useless assignment from
+    kmsan_vmap_pages_range_noflush()
+  kmsan: Remove an x86-specific #include from kmsan.h
+  kmsan: Expose kmsan_get_metadata()
+  kmsan: Export panic_on_kmsan
+  kmsan: Allow disabling KMSAN checks for the current task
+  kmsan: Introduce memset_no_sanitize_memory()
+  kmsan: Support SLAB_POISON
+  kmsan: Use ALIGN_DOWN() in kmsan_get_metadata()
+  kmsan: Do not round up pg_data_t size
+  kmsan: Expose KMSAN_WARN_ON()
+  mm: slub: Let KMSAN access metadata
+  mm: slub: Disable KMSAN when checking the padding bytes
+  mm: kfence: Disable KMSAN when checking the canary
+  lib/zlib: Unpoison DFLTCC output buffers
+  kmsan: Accept ranges starting with 0 on s390
+  s390/boot: Turn off KMSAN
+  s390: Use a larger stack for KMSAN
+  s390/boot: Add the KMSAN runtime stub
+  s390/checksum: Add a KMSAN check
+  s390/cpacf: Unpoison the results of cpacf_trng()
+  s390/cpumf: Unpoison STCCTM output buffer
+  s390/diag: Unpoison diag224() output buffer
+  s390/ftrace: Unpoison ftrace_regs in kprobe_ftrace_handler()
+  s390/irqflags: Do not instrument arch_local_irq_*() with KMSAN
+  s390/mm: Define KMSAN metadata for vmalloc and modules
+  s390/string: Add KMSAN support
+  s390/traps: Unpoison the kernel_stack_overflow()'s pt_regs
+  s390/uaccess: Add KMSAN support to put_user() and get_user()
+  s390/uaccess: Add the missing linux/instrumented.h #include
+  s390/unwind: Disable KMSAN checks
+  s390/kmsan: Implement the architecture-specific functions
+  kmsan: Enable on s390
+
+ Documentation/dev-tools/kmsan.rst   |  11 ++-
+ arch/s390/Kconfig                   |   1 +
+ arch/s390/Makefile                  |   2 +-
+ arch/s390/boot/Makefile             |   3 +
+ arch/s390/boot/kmsan.c              |   6 ++
+ arch/s390/boot/startup.c            |   7 ++
+ arch/s390/boot/string.c             |  16 ++++
+ arch/s390/include/asm/checksum.h    |   2 +
+ arch/s390/include/asm/cpacf.h       |   3 +
+ arch/s390/include/asm/cpu_mf.h      |   6 ++
+ arch/s390/include/asm/irqflags.h    |  17 ++++-
+ arch/s390/include/asm/kmsan.h       |  59 +++++++++++++++
+ arch/s390/include/asm/pgtable.h     |  12 +++
+ arch/s390/include/asm/string.h      |  20 +++--
+ arch/s390/include/asm/thread_info.h |   2 +-
+ arch/s390/include/asm/uaccess.h     | 112 ++++++++++++++++++++--------
+ arch/s390/kernel/diag.c             |  10 ++-
+ arch/s390/kernel/ftrace.c           |   2 +
+ arch/s390/kernel/traps.c            |   6 ++
+ arch/s390/kernel/unwind_bc.c        |   4 +
+ drivers/s390/char/sclp.c            |   2 +-
+ include/linux/kmsan.h               |  76 +++++++++++++++++++
+ include/linux/kmsan_types.h         |   2 +-
+ kernel/trace/ftrace.c               |   1 +
+ lib/zlib_dfltcc/dfltcc.h            |   1 +
+ lib/zlib_dfltcc/dfltcc_util.h       |  28 +++++++
+ mm/Kconfig                          |   1 +
+ mm/kfence/core.c                    |  11 ++-
+ mm/kmsan/core.c                     |   1 -
+ mm/kmsan/hooks.c                    |  23 ++++--
+ mm/kmsan/init.c                     |   7 +-
+ mm/kmsan/instrumentation.c          |  11 +--
+ mm/kmsan/kmsan.h                    |  33 ++------
+ mm/kmsan/kmsan_test.c               |   5 ++
+ mm/kmsan/report.c                   |   8 +-
+ mm/kmsan/shadow.c                   |   9 +--
+ mm/slub.c                           |  33 ++++++--
+ tools/objtool/check.c               |   2 +
+ 38 files changed, 445 insertions(+), 110 deletions(-)
+ create mode 100644 arch/s390/boot/kmsan.c
+ create mode 100644 arch/s390/include/asm/kmsan.h
 
 -- 
-Joe
+2.45.1
 
 
