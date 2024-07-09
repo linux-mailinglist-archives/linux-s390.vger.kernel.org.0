@@ -1,46 +1,46 @@
-Return-Path: <linux-s390+bounces-4907-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-4908-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5FB0092C06B
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Jul 2024 18:37:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC1B192C0B5
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Jul 2024 18:43:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 866B91C22C47
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Jul 2024 16:37:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67BC828BB36
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Jul 2024 16:43:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 207C41C8FDB;
-	Tue,  9 Jul 2024 16:23:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC60E21C19E;
+	Tue,  9 Jul 2024 16:24:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NOsCd8vE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qFvyltkx"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBBE11A01CB;
-	Tue,  9 Jul 2024 16:23:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D5221C19A;
+	Tue,  9 Jul 2024 16:24:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720542192; cv=none; b=gXEbYiOnmN5WmnYlA8kmDK44Zsb4IkwlyTLoiMZGyfIMg04z7+wmugI6tcTgRIp+yI0Z7dg6WvVKerLN6p394lex55wblFS55IDCQmUBdPMT8LEaBwV41Jg6ve0aUt2IdpXzblnBQmV7wP8CqMAh8/gibFv91FEqa/uoXKklC5o=
+	t=1720542272; cv=none; b=X8CNfrF0uFS29glWdPvhdcT7l6ayBThrXcxkhP0JO3/AoG92pbcYpFUFHllQpbOWImkzArLbg+h3dL6CK7gVoO8KB+aQajAT9ggeYT+07+YOAKWX6qVFRbKdrowef56z4WujGzyiFjG4IIB8ZKYX7kYsvqVHXb/KVkfVUDGTa8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720542192; c=relaxed/simple;
-	bh=ibK/2xnq3vrRFAnUUMDPbKk+m+YGVPga+tbED3t8NpA=;
+	s=arc-20240116; t=1720542272; c=relaxed/simple;
+	bh=1qWIUDUCuPx43fMEYaRgHnIlTPQYKWBHiVQwhhJPMaY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cO4DCeyhwotYTugEaz9Cak7NfmK/u86LgwEtHM0tNBneKYucsfgheeo99EabuBJ46XFJu187U/SrCl8BrKr0+VYE+6U0t70u7gF2yWFfeLlCRO8VbUZvGZCnnbxb8BKj8Jt/uJTKtiTQz+e+Ptv6+76yHedwHM4G6IOeIYDuG1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NOsCd8vE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57C4EC3277B;
-	Tue,  9 Jul 2024 16:23:10 +0000 (UTC)
+	 MIME-Version; b=LiYwVXDwhuWmCAxvljMH7R1DeP83m6tQOhpti0ckHNBPOe3q3sSPuQb+xZvmaPN0JXJl066eEOED8xVPPVsbZOCsrWGUjrWd7dWZTm53JeQCkB+vnwPu+hEFtBMi60Gqo3y9jM4KhSpsK7T7DfAWDx6Kcxf72tTQmRvPuvNhb64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qFvyltkx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E134C32782;
+	Tue,  9 Jul 2024 16:24:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720542191;
-	bh=ibK/2xnq3vrRFAnUUMDPbKk+m+YGVPga+tbED3t8NpA=;
+	s=k20201202; t=1720542272;
+	bh=1qWIUDUCuPx43fMEYaRgHnIlTPQYKWBHiVQwhhJPMaY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NOsCd8vE38nP3nHbqUxV3560s20wyESgJNkQzNKKSrOyZr9wQJry/t4uEp/FsDZrR
-	 /6EFBlNp67JdCWcRVcxM9Cii9KgiTc26VtkZfpLuscOyk196/fPULB6MZVh5nX2Kvt
-	 BlVZ7RLYhznQ02bDISQe9ivAY+vxwS1IKdUFJ9ZcpRPwyai3lDcOmibkd0WTDEB7aW
-	 pH7Qsy8/4wDpJtArNtO4YcdRSz73/iXJByHiBDedXY4bnFbwZ7UKxLTcCaKbDCMM4B
-	 ewXM89ASwmM9TF/xB/psFXYLoijk7vCQ43OUSergpQ9eegpcMG6hM+NseysmPZ3Vfb
-	 uiD1agJebGQng==
+	b=qFvyltkxGkY3792VDB+mFGrc4EETW3+frQX3Jhr9r4Pz4HaDSE4oD12+Ci0uejrEL
+	 F6h7NpGi/FUohpN9evBTIeSHYXNQD7omToJcXoqQONiIZGXIP6Io0vIxwl41ccrm8M
+	 ERczyWJw80YGz1WjDOqaL5AUDd/B7hKuYc15TADA8Qs0cW77JM2CCp8Q8S3yq2dTbi
+	 rAKBCpfANSMQ6WPiURglI5eV7muS578b9LfH/YFdAn/KZ/1GumxVAJARTMoldHPGJL
+	 ttC1LmmDe1ah7s9M2rykLPaAsWc4nuz68t7RhEXwrSfPWnBqYMQiCILpgmyg7G2gfe
+	 Z7VAuKxc3EkTA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -50,13 +50,14 @@ Cc: Heiko Carstens <hca@linux.ibm.com>,
 	Sasha Levin <sashal@kernel.org>,
 	gor@linux.ibm.com,
 	justinstitt@google.com,
+	kees@kernel.org,
 	linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 20/33] s390/sclp: Fix sclp_init() cleanup on failure
-Date: Tue,  9 Jul 2024 12:21:46 -0400
-Message-ID: <20240709162224.31148-20-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 14/27] s390/sclp: Fix sclp_init() cleanup on failure
+Date: Tue,  9 Jul 2024 12:23:28 -0400
+Message-ID: <20240709162401.31946-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240709162224.31148-1-sashal@kernel.org>
-References: <20240709162224.31148-1-sashal@kernel.org>
+In-Reply-To: <20240709162401.31946-1-sashal@kernel.org>
+References: <20240709162401.31946-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -65,7 +66,7 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.38
+X-stable-base: Linux 6.1.97
 Content-Transfer-Encoding: 8bit
 
 From: Heiko Carstens <hca@linux.ibm.com>
@@ -106,10 +107,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/s390/char/sclp.c b/drivers/s390/char/sclp.c
-index 8f74db689a0c2..ba10f9b8fac72 100644
+index ae1d6ee382a50..889d719c2d1f9 100644
 --- a/drivers/s390/char/sclp.c
 +++ b/drivers/s390/char/sclp.c
-@@ -1293,6 +1293,7 @@ sclp_init(void)
+@@ -1290,6 +1290,7 @@ sclp_init(void)
  fail_unregister_reboot_notifier:
  	unregister_reboot_notifier(&sclp_reboot_notifier);
  fail_init_state_uninitialized:
