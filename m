@@ -1,128 +1,152 @@
-Return-Path: <linux-s390+bounces-4955-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-4958-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3055B92FD6F
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2024 17:24:05 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94521930971
+	for <lists+linux-s390@lfdr.de>; Sun, 14 Jul 2024 11:06:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DE48F286D86
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2024 15:24:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1F85D1F21727
+	for <lists+linux-s390@lfdr.de>; Sun, 14 Jul 2024 09:06:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CE46172793;
-	Fri, 12 Jul 2024 15:24:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54F144965F;
+	Sun, 14 Jul 2024 09:06:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YBxNIVFQ"
+	dkim=pass (4096-bit key) header.d=envs.net header.i=@envs.net header.b="N9D5n6Gt"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail.envs.net (mail.envs.net [5.199.136.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6419717107F
-	for <linux-s390@vger.kernel.org>; Fri, 12 Jul 2024 15:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E5945000;
+	Sun, 14 Jul 2024 09:06:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.199.136.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720797841; cv=none; b=RluK4KtBn3yMFHDFHlREOVoZVn2Zd3MlaVXAHRWHShNgy7UOXE5kJTebTdfp7X7G5QLt6EMtXNR/a/9OIBxmsW6yzjJPEyLEI/1o5rNFKTwAzdsfYEoMAJIPsWbmVZUHrcNp8k8XKAco7RytjaDpYNAGXrWHbfEdWisMn6at1vU=
+	t=1720947967; cv=none; b=eRqefWMEcOTxbypA/f/FNaweMqIcOEziBVO6sJRZIJDZCXrwREsmg6GK0CAlTB/5FWNfKNfBV7MIfmNp4HNsHV68qrOPvZbxXZPbhyndbzMwNIe+bgj1L4iENvVftUgvJC/soPVjHgOo6BrjBv5T67jg1Qs7qPqNESkkNgnXrBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720797841; c=relaxed/simple;
-	bh=2EqlVnEcPlUgYU2TK7tDUJK58Mn7vIB+p95JiCF5dq8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yg9aDNkLHP/DAa4ne4QAcxNlFLc4V5CpG5THbRW3AOHKmSrjj9U9e6Q618oFPuORsLA4pQc2DoTC54uJ5suHS8nsTAuS4V+RcTcFPJOcxtEF7SqrmTOiWIxRFWi4HR6VJsXqcsCYsFjlYYnQUfJqN5sJnELVTeJiC+LPEad4lKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YBxNIVFQ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720797839;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MGzOi0mcN1gpHM6n5xGEHSGZPwc/Apw3EWbMa56Stsw=;
-	b=YBxNIVFQhVZAXonlkW0HVLEwXSFyEXXbPbRDwjfWxLsyiBGZSOEHXENazSeWt+WpIf0LPR
-	1IpflCznD8Dbso1yEgyZcdhBYrQ7tm1UxN0ZU+2k0pM3NodxO4f0FFwxVzqdSNcmEyudHm
-	kittYuW0I269MoZdfv1lIH0j6odfzw8=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-410-4V2pWeyJOlmodP4G1UnwYQ-1; Fri, 12 Jul 2024 11:23:58 -0400
-X-MC-Unique: 4V2pWeyJOlmodP4G1UnwYQ-1
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-367879e8395so1179829f8f.0
-        for <linux-s390@vger.kernel.org>; Fri, 12 Jul 2024 08:23:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720797837; x=1721402637;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MGzOi0mcN1gpHM6n5xGEHSGZPwc/Apw3EWbMa56Stsw=;
-        b=j3gJ06m+ctRGVoujwxthfcoe5VHS8Y62GpVcbzU4VTUclMFoYii4JQHXKDs8lQmimN
-         D+HsV5pAZ039r1r3dopoANlUa9VyCysKbgvV+yEaHcPqAymq37NEhp3xnXQuk5Vbcech
-         QFdvjK4ty9LM3cnbCZKJ8nYKyr56Gd8R7MdKRWy+mQaOPKm7DSH8L8eV2KIZ4kHs3dm3
-         YkrQQiP52whn+/vDpyyTy4M2Ns2Snk0NynLZhzg/tt7Fv95NZhWzcbF9h7Es+DeKXYBm
-         U+G5mnF+9EMiCEm6SCO3E0IE1VW8zemIHIu4PFO7/1CKUL0GZqGCVPCFkwPciVK42S/g
-         1YVA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/d0IaGHc8Z3l2EmR9SFDE3A9o9OQNRJyzeyWQySi/vPu4Kncdp6guVcTsrcPXKndUrqrjiN1dYaU8Uzl4OBkZbslmCvyNVmwmCw==
-X-Gm-Message-State: AOJu0YwzV+44yyCB1+u9da09xZ5K2dmOIcX0bJW27coztLrH5CefcQ8w
-	LJtuk/BD8BFyKsDiGu50zCkRgMvN+ICHqfgZG+ltdJs6BTTQDY7fNQO0m6XKGZ+RKC1EgIrM3KO
-	p1nRRd70yOmabWWhMa8A+GdPcLfcoDKvGp5Mv7kNnYsfPa6zQ340DJmdyxowitj+Uzjs+4GDKt4
-	kEMRZrnx5oCKhZup4rDLA7IhV2SGZU3utP4g==
-X-Received: by 2002:a5d:4ec3:0:b0:367:94e7:9591 with SMTP id ffacd0b85a97d-367cea9643bmr7473293f8f.36.1720797836990;
-        Fri, 12 Jul 2024 08:23:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFWWWA6ULb295t40qJUfl0BIxfNmBzQZfn3oLBjJX3wQ37ZJrJcc4UwCuC4zX3texJ5JVV8/INj0bhDsdt57cc=
-X-Received: by 2002:a5d:4ec3:0:b0:367:94e7:9591 with SMTP id
- ffacd0b85a97d-367cea9643bmr7473274f8f.36.1720797836621; Fri, 12 Jul 2024
- 08:23:56 -0700 (PDT)
+	s=arc-20240116; t=1720947967; c=relaxed/simple;
+	bh=JON8F2LhEpKeCfNUzxa5Cw3iz9OiKleIBXDTxpGM5Ds=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M5RdjVmBlgF+uo1yzrSjIVpF2AfdBXSl019nQJrU/r9vF48TJ+YDSGUgknqXgkLp6YjpAGOABkaTGMKwaukKMGnk9AchFlh2arhGddR92bimGihUfevG53RAH3SIP5JHDcpwhmLXrQqzTk67PbapL39E9p1XSB2uCO29Bf6IhwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=envs.net; spf=pass smtp.mailfrom=envs.net; dkim=pass (4096-bit key) header.d=envs.net header.i=@envs.net header.b=N9D5n6Gt; arc=none smtp.client-ip=5.199.136.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=envs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=envs.net
+Received: from localhost (mail.envs.net [127.0.0.1])
+	by mail.envs.net (Postfix) with ESMTP id 58F5638A399D;
+	Sun, 14 Jul 2024 08:58:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=envs.net; s=modoboa;
+	t=1720947486; bh=B10Vnlot+2ilvHh7OCvlmhyXD6mosKAEgX9C4cq3ecg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=N9D5n6GtwH3qiq3p2Rzh9SVuJAnEifqgMQyqesEqh+rAcGqNpZ6q9N9b0nhJiPNlJ
+	 PEDPoE3u41YojQH+7XAMCQEKnXMRTlqFjGrhy6MJDDh2aIb+VtL1gSthA5kxqmyOyN
+	 3ZoeWdceL9TP/JWEe9pIZBQbUIv00JAlxRpCZNniJHRC6CQDRSr7ufL4DGpth/2sdO
+	 TEKPrwzRH4vqz3fxgS9PMoErT2yNwY5ghdNNkfH+s2/E9Uk/VRgScWp9ABq71z+so2
+	 asZZh8t+lH2mNxDjZjOJgF5i0V2/C8imuDXoi6qWCA5tKfNPRnRKJ7tg78BDgQd8M/
+	 kGYuUOGE1KHimjYZSAJ2kfC4vmYtdT4BCjGSETK1ZNOKD6d0/4t+OXI5E7U5cngxEF
+	 fvDsbR9PyEOBKuB5EcBlKliQEg/mzXJ+g3oKKZ5SdHREM3MBmSi3Tcs0B+iHVyHaxp
+	 YIH+agaGkHtPkDO8eVN50i7feX/ovB73Wfbf5dR347DlCZFkVn10UTktYSoa49yWIt
+	 cVyAS01Y4MLkyxd6ca04e5RNOuVjIWdecu3zBmhqmWWdmQrTb9HaJN6nTqhaw5V9/G
+	 uDtg+M5JyeT/e16lqkqdH0tT55WGB1DA5XlwzgFl7OSD/keHJq/okoE19Fl5pNpdhM
+	 7a75ulRRnKxBl8Q5K22HnnqU=
+X-Virus-Scanned: Debian amavisd-new at mail.envs.net
+Received: from mail.envs.net ([127.0.0.1])
+	by localhost (mail.envs.net [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id fJoepO1z1VH4; Sun, 14 Jul 2024 08:57:55 +0000 (UTC)
+Received: from xtexx.eu.org (unknown [120.230.214.120])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.envs.net (Postfix) with ESMTPSA;
+	Sun, 14 Jul 2024 08:57:55 +0000 (UTC)
+From: Zhang Bingwu <xtex@envs.net>
+To: Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Zhang Bingwu <xtexchooser@duck.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>
+Cc: x86@kernel.org,
+	linux-kbuild@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org,
+	linux-parisc@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org
+Subject: [RESEND PATCH 0/2] kbuild: Fix install errors when INSTALL_PATH does not exist
+Date: Sun, 14 Jul 2024 16:57:49 +0800
+Message-ID: <20240714085751.176357-1-xtex@envs.net>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240711110654.40152-1-frankja@linux.ibm.com>
-In-Reply-To: <20240711110654.40152-1-frankja@linux.ibm.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Fri, 12 Jul 2024 17:23:44 +0200
-Message-ID: <CABgObfZzVwpewT88=dPRL4vp7v+HR79dd8=L96ht0HPxvzKkyQ@mail.gmail.com>
-Subject: Re: [GIT PULL 0/3] KVM: s390x: changes for v6.11
-To: Janosch Frank <frankja@linux.ibm.com>
-Cc: kvm@vger.kernel.org, david@redhat.com, borntraeger@linux.ibm.com, 
-	cohuck@redhat.com, linux-s390@vger.kernel.org, imbrenda@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 11, 2024 at 1:08=E2=80=AFPM Janosch Frank <frankja@linux.ibm.co=
-m> wrote:
->
-> A couple of minor changes/fixes for 6.11 which aren't time critical.
->
-> Christoph's ucontrol selftests are on the list but might need another
-> round or two so they are not included but will be in 6.12.
->
-> Please pull:
->
-> The following changes since commit c3f38fa61af77b49866b006939479069cd4511=
-73:
->
->   Linux 6.10-rc2 (2024-06-02 15:44:56 -0700)
+From: Zhang Bingwu <xtexchooser@duck.com>
 
-> are available in the Git repository at:
->
->   https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git tags/=
-kvm-s390-next-6.11-1
->
-> for you to fetch changes up to 7816e58967d0e6cadce05c8540b47ed027dc2499:
->
->   kvm: s390: Reject memory region operations for ucontrol VMs (2024-07-04=
- 09:07:24 +0200)
->
-> ----------------------------------------------------------------
-> Assortment of tiny fixes which are not time critical:
->  - Rejecting memory region operations for ucontrol mode VMs
->  - Rewind the PSW on host intercepts for VSIE
->  - Remove unneeded include
-> --------------------------------------
+When running 'make zinstall INSTALL_PATH=somepath'
+ where 'somepath' does not exist, the install
+ scripts (install.sh) print error messages
+ but also return a success status code.
+This will make 'make' regard 'install' (and 'zinstall', etc)
+ succeeded.
+When there are also other targets at the same time,
+ for example, 'make zinstall dtbs_install modules_install',
+ make will keep going on and other outputs will fill stdout,
+ and make the error message hard to find.
 
-Done, thanks.
+dtbs_install and modules_install creates the target directory
+ if it does not exist. install, zinstall and others should
+ have the same behaviour.
 
-Paolo
+If INSTALL_PATH is not a valid directory, we should create it.
+If the installation process still fails with errors, for example,
+ insufficient space on disk or permission denied, make should regard
+ the install target failed, stop as soon as possible,
+ and exit with error.
+
+Zhang Bingwu (2):
+  kbuild: Abort make on install failures
+  kbuild: Create INSTALL_PATH directory if it does not exist
+
+ arch/arm/boot/install.sh   | 2 ++
+ arch/arm64/boot/install.sh | 2 ++
+ arch/m68k/install.sh       | 2 ++
+ arch/nios2/boot/install.sh | 2 ++
+ arch/parisc/install.sh     | 2 ++
+ arch/riscv/boot/install.sh | 2 ++
+ arch/s390/boot/install.sh  | 2 ++
+ arch/sparc/boot/install.sh | 2 ++
+ arch/x86/boot/install.sh   | 2 ++
+ scripts/install.sh         | 4 ++++
+ 10 files changed, 22 insertions(+)
+
+
+base-commit: d0f86d080e3d7d5e1e75a56d88daf8e5f56a4146
+-- 
+2.43.0
 
 
