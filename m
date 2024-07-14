@@ -1,139 +1,104 @@
-Return-Path: <linux-s390+bounces-4957-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-4959-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4858930968
-	for <lists+linux-s390@lfdr.de>; Sun, 14 Jul 2024 10:58:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EC67D9309DD
+	for <lists+linux-s390@lfdr.de>; Sun, 14 Jul 2024 14:14:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 959F81F21602
-	for <lists+linux-s390@lfdr.de>; Sun, 14 Jul 2024 08:58:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9135C1F215AC
+	for <lists+linux-s390@lfdr.de>; Sun, 14 Jul 2024 12:14:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D4203D97A;
-	Sun, 14 Jul 2024 08:58:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B37A6F505;
+	Sun, 14 Jul 2024 12:13:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=envs.net header.i=@envs.net header.b="Yxeb2wDg"
+	dkim=pass (4096-bit key) header.d=envs.net header.i=@envs.net header.b="YWKv6Mtr"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mail.envs.net (mail.envs.net [5.199.136.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA894D11B;
-	Sun, 14 Jul 2024 08:58:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4911D8F5C;
+	Sun, 14 Jul 2024 12:13:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.199.136.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720947523; cv=none; b=gO/9fGCsGcHsJrVETSROqjrHINe0hxuoXttom8dNEvVQ1Ho5uYiMPyWgjUyybL3DWorROMfyTfLd2zNb0I3FWON1ZOiWtav/QPRM0TQ8KWMip76Jco51akqOn74uaMTbp3TcWjzR/PdOfjXVr/xO3HRy8o87liMH/4VwZ4z1vOk=
+	t=1720959237; cv=none; b=hA8PwBKIT+GlrPXHDHHnYSeywunK/YJXKq+nY37oQm7XkPPcp9yCVg5vFhbY9XuO4Ecx1ZeeoH2/IEVq0SKi1zsCRit8TXDthqkMf0EbQvsvFC2pqyUWd0YugFH3s2hGnJchak3QHs13LaWZlsyMI8eHMnYdVnAqUd3JDRmf29Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720947523; c=relaxed/simple;
-	bh=GZiZoI6e3JvsqnLrL5xGsh92gGaBzJaPJ2zt48adfWs=;
+	s=arc-20240116; t=1720959237; c=relaxed/simple;
+	bh=gAoILYv37xkB5P91uGQmdeyt0K2wQQvTn3nam4BAk54=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=C3EaWj4b2/pQsqymsV/BQ+tpDSBuAl2DXMua8pZZjR7TQtTyGgA1NXoCr1EJ7MYT6uU5anIJoW7uTTXShkaJAxxXpU25ld84zhY5aw45phVKJ9YeI7SlmKP5o6uGoVNEzAUbI8LykPt5yKwWVphwkwo2qiqCbW4yiHPnJlu4Gg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=envs.net; spf=pass smtp.mailfrom=envs.net; dkim=pass (4096-bit key) header.d=envs.net header.i=@envs.net header.b=Yxeb2wDg; arc=none smtp.client-ip=5.199.136.28
+	 MIME-Version:Content-Type; b=TZee5tnZVcGQBDu567kKrw8hPWUqWiRg9C0TC58BV6dY80hqkXMui1974bZMHhpTj+qdyy6wJ6xM/iv8D3uVnOJi/oqMK9ysmT5XXcrnxC+hwF4BC7aADkak2KIkgVeNtTZN51eIRYzMGuJqoUaJfQWKJEMkb4uiIBmXzgHIFLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=envs.net; spf=pass smtp.mailfrom=envs.net; dkim=pass (4096-bit key) header.d=envs.net header.i=@envs.net header.b=YWKv6Mtr; arc=none smtp.client-ip=5.199.136.28
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=envs.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=envs.net
 Received: from localhost (mail.envs.net [127.0.0.1])
-	by mail.envs.net (Postfix) with ESMTP id 5A89638A39A0;
-	Sun, 14 Jul 2024 08:58:38 +0000 (UTC)
+	by mail.envs.net (Postfix) with ESMTP id 42C4038A399D;
+	Sun, 14 Jul 2024 12:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=envs.net; s=modoboa;
-	t=1720947518; bh=3RXoGcCjW+CB+wVoqLryQrySRvbelditpYUk0T7yTSY=;
+	t=1720959232; bh=gAoILYv37xkB5P91uGQmdeyt0K2wQQvTn3nam4BAk54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Yxeb2wDgejzOcVVnBnS/+WSj4hVrhCdfZp86xCr1uxSFHj3oyiRHXJuQZsPOdeFf+
-	 QwsdEM4lYdILp7QQ7+gF4JHJFlZzIkglpVaa9Jth2npuU3GtpUq5C/O8U8PqAK52Xg
-	 oEzKqdmTsD800zMMcQBsuxIcOHgJK67FM9gXEzAQJM3jOBb6rY8BYA9g5+OkIxMGDX
-	 QIv6XcJ6tM0UIt4M1wsqBEgdDPznCePITV6kytVXayXeYGtCChVBzad0OUig9I2LN+
-	 jffwEGwCw61rhGknsDSD4FlbN/fOpM27CaiWF5r0f5GsFGjkDUp7biL9Y44N1fMPoy
-	 3XBEIBpoWSzO4s6XjJDn11MfzinWfrAohQ2m+mplZK0y+MCyeTdCkYUd2rjLn1Z68k
-	 fgp04oFcNAj5XTLrDXxzE222ziQx3tel+Eevr1b2LfjSqZjqzfCutqejV6iG7kQIdv
-	 691slFWz8P/RStIunv7yIp2HQOHn89RZubeDi/LphxRFvKTJvJ29yEcfSsgQKH6vsv
-	 GPgvcZeAE2MByB8W8r0VKw5DJrKcZjAHQoDBUKKd3JVZrW+vMjLB1+y349YKr3jSkt
-	 LdAX4sLLK++K613ZmI/6yp8P+fYm2mLrjNSiIrMcpCKUdQWGevpzh6Iuqpxe87iRws
-	 CP0WcrxYs1ADXePPmP/CoQt8=
+	b=YWKv6Mtr6HpRcKQbX922yleEE6km7IxjhqiYboH8P/kASFz1cXbjvIMTkQbazsWs1
+	 oPM54b8eTIzxvy5NDhiEk33O0ZMKR6KniSSb/knNc4EXongbqa93x1swoaRumYLzrr
+	 t6UUVjWqgkf+A1niskGt6Ms3Vt0ATuZzPM0EItDCttRPj9WGxrbWlpcs07XUBt49Zb
+	 pmze7bJfXINVZmUg56dJB3/bFxtCkp2BS+2hsIvy3T2afItMejuoxLrQ0JhCHahCpq
+	 FdxC/AivuJWLee+JlWphV3lVk0hIsjWtFSYennQtttJd1iUdvc9Mce/hGBf9OQAjTX
+	 xmjOYl6R3knzZeLiUln3zX262S/F2kwVfg4xt034dvoCxsy0F4w2NRMgTxDH1+XdyF
+	 izejiMc1lIxk67tFFsCWL0pe1vMmS2nLmsqFV+PScnCHHc9+ztVj7l4QZYhP60IHQS
+	 1yBHuO1rer+MbOAiaxVQlvvcfH3bpapCMoAJfiNjPBJwUb2WmHPZRkwPLqJJW0vY7a
+	 BS2clvoeza5tH7T8P2RpY4LwzNgWhut4/EhNkB+HD7jSNJvCuQwv/IFYjKDmUgTrG/
+	 LSotwgfKXXMZtTqXh/ygoTpS6lZEEmfLepet0VkHLd8Jtvx37yYfy8Qhb3mkaCFh1Q
+	 vQpBC9nvU7w4xCXZFGpbeuXc=
 X-Virus-Scanned: Debian amavisd-new at mail.envs.net
 Received: from mail.envs.net ([127.0.0.1])
 	by localhost (mail.envs.net [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id xu_dqvWydv6f; Sun, 14 Jul 2024 08:58:28 +0000 (UTC)
-Received: from xtexx.eu.org (unknown [120.230.214.120])
+	with ESMTP id FBxerkmRPHKp; Sun, 14 Jul 2024 12:13:10 +0000 (UTC)
+Received: from xtex (unknown [120.230.214.120])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	by mail.envs.net (Postfix) with ESMTPSA;
-	Sun, 14 Jul 2024 08:58:28 +0000 (UTC)
-From: Zhang Bingwu <xtex@envs.net>
+	Sun, 14 Jul 2024 12:13:10 +0000 (UTC)
+From: xtex <xtex@envs.net>
 To: Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	Helge Deller <deller@gmx.de>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Zhang Bingwu <xtexchooser@duck.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>
-Cc: x86@kernel.org,
-	linux-kbuild@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-m68k@lists.linux-m68k.org,
-	linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org
-Subject: [PATCH 2/2] kbuild: Create INSTALL_PATH directory if it does not exist
-Date: Sun, 14 Jul 2024 16:57:51 +0800
-Message-ID: <20240714085751.176357-3-xtex@envs.net>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240714085751.176357-1-xtex@envs.net>
-References: <20240714085751.176357-1-xtex@envs.net>
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>, Dinh Nguyen <dinguyen@kernel.org>,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ Helge Deller <deller@gmx.de>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Masahiro Yamada <masahiroy@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>
+Cc: x86@kernel.org, linux-kbuild@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-m68k@lists.linux-m68k.org, linux-parisc@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ sparclinux@vger.kernel.org
+Subject:
+ Re: [PATCH 2/2] kbuild: Create INSTALL_PATH directory if it does not exist
+Date: Sun, 14 Jul 2024 20:12:58 +0800
+Message-ID: <2146419.9o76ZdvQCi@xtex>
+In-Reply-To: <20240714085751.176357-3-xtex@envs.net>
+References:
+ <20240714085751.176357-1-xtex@envs.net>
+ <20240714085751.176357-3-xtex@envs.net>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-From: Zhang Bingwu <xtexchooser@duck.com>
+Reviewed-by: Nicolas Schier <nicolas@jasle.eu>
+Link: https://lore.kernel.org/linux-riscv/Zcfp8fn7o74K08g0@fjasle.eu/
 
-If INSTALL_PATH is not a valid directory, create it, like what
-modules_install and dtbs_install will do in the same situation.
 
-Signed-off-by: Zhang Bingwu <xtexchooser@duck.com>
----
- scripts/install.sh | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/scripts/install.sh b/scripts/install.sh
-index 9bb0fb44f04a..02b845e7ab33 100755
---- a/scripts/install.sh
-+++ b/scripts/install.sh
-@@ -20,6 +20,10 @@ do
- 	fi
- done
- 
-+if [ "${INSTALL_PATH}" != "" ] && ! [ -e "${INSTALL_PATH}" ]; then
-+	mkdir -p "${INSTALL_PATH}"
-+fi
-+
- # User/arch may have a custom install script
- for file in "${HOME}/bin/${INSTALLKERNEL}"		\
- 	    "/sbin/${INSTALLKERNEL}"			\
--- 
-2.43.0
 
 
