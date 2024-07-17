@@ -1,76 +1,78 @@
-Return-Path: <linux-s390+bounces-5004-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-5001-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F43B934475
-	for <lists+linux-s390@lfdr.de>; Thu, 18 Jul 2024 00:03:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD3C393446F
+	for <lists+linux-s390@lfdr.de>; Thu, 18 Jul 2024 00:02:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 101751F2216A
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Jul 2024 22:03:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DDA1A1C2120F
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Jul 2024 22:02:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61EDF433C4;
-	Wed, 17 Jul 2024 22:02:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B9C03BBFB;
+	Wed, 17 Jul 2024 22:02:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bUS8Q/hV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aJnOSk2K"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F4132482D7
-	for <linux-s390@vger.kernel.org>; Wed, 17 Jul 2024 22:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03AD628
+	for <linux-s390@vger.kernel.org>; Wed, 17 Jul 2024 22:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721253754; cv=none; b=U18YjUJZPfP9M9VGwt3FykBrPfV+ho9OeOxN30QJ+yNI+cAt7j7i2MXbZ0AbVMfG4W2K8/TmKwcfrErvEpOaDxlQbTvqIRTuy9xdQscoGm+543u3oxKM6HmI/JzP6V7GhYWMGo3rVSdeFZd6XEzvirAIIDAm81rs4qiU4iFeB60=
+	t=1721253749; cv=none; b=hAUDd555eZINI2cWm7BO71/M0L2Bqb6ZDquqiwsqJGITahm8E+TbLf75th3TDU33g0bYx7m3z7358TbjifwcU9n2B7ML6AygQyrW/ERfnKvGZFuTWNYpgqr4av05bopfF96FDhoaOgFzj/JRYFvMszwbBgjeusU1iqEPiDdVqvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721253754; c=relaxed/simple;
-	bh=h4xl6b3PoYqvLzNlz0SM88ksOLWtGLD4AUDpTlKuruA=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=en/NdmKouYl1Wayh5HPdSj16G4f0bN8caiBD9EZYn5YG3iAlSrEBgC4K6H/ntKBnIArWRtix7IxDkl20emHZEwjWqrEOl5N3H2NgOH9sjYwx23H08uqQel9lkXhR7t8ldjbrWDUIqQ7WJq3yrFgMLT9+3loLbnMsbebI+SMnYg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bUS8Q/hV; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1721253749; c=relaxed/simple;
+	bh=NcfwDzo/WAY/ja+2Q9yeFepQLgCd/NmFOsGANafDbuM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=T8Gk1okmsNDc+JFSoFS5Kl8ts8gxdWuhcasJ2cpxJ+vNpVM5oxiGulD5wx2qyz2Wg5TaFYLElV4HqaX41BTsDTI5+W/5Fc3TIZ0WUShOZLIPD4CdZId5ycgGYwNRbwgznYMho19Btyf3ZWWYbf+TaYDEKub7VTKNXX/MINkCx70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aJnOSk2K; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721253747;
+	s=mimecast20190719; t=1721253746;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=22URfq8NjvGndByOojJP9eQog6fnp2xGbHVHJb+hEIw=;
-	b=bUS8Q/hVJwvdieG8OJ5NEL+mrZfsI3UrZ331myDZFuqGVuxFEL2fwuktG6bJPdbQEZgBhe
-	jk3BZxZmHuTMJMqWDcIDZuce/9NnqKfonz0CPEk4ThRe9s1l01x+91g3egkAhjixEv6lxt
-	tW2S6TIKG2h6hs4QFXPYr+L9klj4VjM=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6jtsZY5Ha1GOE7eeXCKiwGrLCKWt0M5FAlFhM8vgy8I=;
+	b=aJnOSk2Ky+um/JOkse7yFgUDt26Oaxp0bqlarkmpBInI8g5MweTXUEstB1UaDmW2eQ5ps0
+	1FzcZdjFNCLUKeHRs4AdS9I95caRBtkfNUPGH+nBXoZgXXVjfj8BsFmFzn3UEyDUFhcsmu
+	/RqAwUbILNNLPjCZEOfb2tSrNJrBQqo=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-45-MkmmjUKdN86FXWAQASIEeA-1; Wed, 17 Jul 2024 18:02:23 -0400
-X-MC-Unique: MkmmjUKdN86FXWAQASIEeA-1
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6b79fbc7ed2so45776d6.3
-        for <linux-s390@vger.kernel.org>; Wed, 17 Jul 2024 15:02:23 -0700 (PDT)
+ us-mta-390-TqLByAOQM5uQJh4rtDieVQ-1; Wed, 17 Jul 2024 18:02:25 -0400
+X-MC-Unique: TqLByAOQM5uQJh4rtDieVQ-1
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-448335bb53aso257501cf.0
+        for <linux-s390@vger.kernel.org>; Wed, 17 Jul 2024 15:02:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721253743; x=1721858543;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=22URfq8NjvGndByOojJP9eQog6fnp2xGbHVHJb+hEIw=;
-        b=Zy5TFIYBgKQlKsK+R6asHObCjUrCTQGdRLUs7aXKZ67pKMwiG6PhQwX+LGm5SaIRSb
-         ULT2+FyD4vdOkkXu7ChDIzXRvQGw0BdmW22xyilc5ItyQ7jXuN1MlXwuvpRttrz297KQ
-         hP3GMgdK1cR6hZ5kO15zknPQFwlXPoZbnWzoP6mW1MWPVRJOQokc1fJ4T7A2TlsQZTyM
-         HeOB+a0ybWzMqcI54qbmPB8YDPnI3tHqhiRddDFRvwIX0Pykj3GTpNEqNfV3NLy7HeVV
-         lRo+0btNdGh4Z3WngfeLABvOq0nvx36FmPPCfW9DpbVwdog9bQZOfevNBvMirTAFW4lD
-         o9RA==
-X-Forwarded-Encrypted: i=1; AJvYcCWDC6IHjIwMyduHYJG954MrFYb1g+ywIJHoWI+iWm3e1Wsbw4oJNI6d/t5LxjdLOA2Lv6eBQsMbvS9c@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdYwnxYisQZ1Jp/pCbH21BqlaO8OEtccKrjuDejVfQ3Pdh3kIg
-	hK/pnPNBDiJnqwGhKjWwxdbW3tbmW9R1olruxW+UMpc2DHaPnexuTbTb2Wy9ZUGL5IzH4mBqYKm
-	aQ0NSsNcijcolkU0aLD+SktpfyJP+07XxWa9NszUCM2aahrTLzuoCQMyElYo=
-X-Received: by 2002:ac8:5e4e:0:b0:44f:89e3:e8d2 with SMTP id d75a77b69052e-44f89e3ec09mr15923641cf.12.1721253742883;
-        Wed, 17 Jul 2024 15:02:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH030U/0PuH20CJyPZJMzLVzXnymjVCbugSgXnKR5JUMtRiVtVl+1d1cBUhmI+Iq8e7T2bLTA==
-X-Received: by 2002:ac8:5e4e:0:b0:44f:89e3:e8d2 with SMTP id d75a77b69052e-44f89e3ec09mr15923181cf.12.1721253742192;
-        Wed, 17 Jul 2024 15:02:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1721253745; x=1721858545;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6jtsZY5Ha1GOE7eeXCKiwGrLCKWt0M5FAlFhM8vgy8I=;
+        b=VpCsnPIQoGAb1S0K+zjdjH3P5t18asR0p2iQCthRcPkEDmC061s2BOW+PhVf6YXmZv
+         V3y3acAS1CwLau+OHpBbkm6HYDgDpkBYRjaQvH3VyGZwjsIkY6enjUNWQeSMlmLDbHEO
+         40fru/FXJkqEMg6thJm2YddZVrMeCzh6r0C6Fg9GA/ab4VKncq0emU3I3/yh3d5ogU4t
+         Cw04sl5L+Idb3/41oypt0ZbGr/82PA9bxzkPz7ZTVilNJhlRTp9dWnXzU0aOz9gVf7rh
+         FEKAnZaTVFsebx2AsdRaEP/RE9IkhAdqbQvgkDtzowrwmD4Cmr2ZsV3QpGPYsfu/sRSb
+         zsQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXo+P1+raRIVQ67hbzDZLZao2P5aEknCbN8E3lObQF4tEccAAKanlYL7If9KbDOxrw4VM+29LUJyzh4pkdfgwPQum+Rx7HvgVMJeg==
+X-Gm-Message-State: AOJu0YwyN4NDFrC02YenMvMWUJvk3gh+MENI9toOGjgbuQZkMlJoWhLI
+	Yvf/yxzliRLmC/pzgjnQx/N8exED1S2KBqzt2AA3LQFZSE9pNcjrEPcNJHP7pETZkqXQ6xakFWx
+	pfdX2iZR0HW8OFlc8EnVvSzBU2pM2qCpA6xXn5e8BxAAqjKj8cIZeq21Kly0=
+X-Received: by 2002:a05:622a:19a8:b0:446:5a29:c501 with SMTP id d75a77b69052e-44f864afa6cmr22369361cf.1.1721253744671;
+        Wed, 17 Jul 2024 15:02:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFUvRqkcMnpaLn941R1BXuIssxTrm35f8/3mo50id9Lq3VPmnZD9wDrl4u3hs2U9BoucnNtpA==
+X-Received: by 2002:a05:622a:19a8:b0:446:5a29:c501 with SMTP id d75a77b69052e-44f864afa6cmr22369171cf.1.1721253744329;
+        Wed, 17 Jul 2024 15:02:24 -0700 (PDT)
 Received: from x1n.redhat.com (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-44f5b83f632sm53071651cf.85.2024.07.17.15.02.20
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-44f5b83f632sm53071651cf.85.2024.07.17.15.02.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jul 2024 15:02:21 -0700 (PDT)
+        Wed, 17 Jul 2024 15:02:23 -0700 (PDT)
 From: Peter Xu <peterx@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
@@ -94,11 +96,12 @@ Cc: Vlastimil Babka <vbabka@suse.cz>,
 	Ryan Roberts <ryan.roberts@arm.com>,
 	Hugh Dickins <hughd@google.com>,
 	Axel Rasmussen <axelrasmussen@google.com>
-Subject: [PATCH RFC 0/6] mm: THP-agnostic refactor on huge mappings
-Date: Wed, 17 Jul 2024 18:02:13 -0400
-Message-ID: <20240717220219.3743374-1-peterx@redhat.com>
+Subject: [PATCH RFC 1/6] mm/treewide: Remove pgd_devmap()
+Date: Wed, 17 Jul 2024 18:02:14 -0400
+Message-ID: <20240717220219.3743374-2-peterx@redhat.com>
 X-Mailer: git-send-email 2.45.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20240717220219.3743374-1-peterx@redhat.com>
+References: <20240717220219.3743374-1-peterx@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -107,111 +110,94 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This is an RFC series, so not yet for merging.  Please don't be scared by
-the code changes: most of them are code movements only.
+It's always 0 for all archs, and there's no sign to even support p4d entry
+in the near future.  Remove it until it's needed for real.
 
-This series is based on the dax mprotect fix series here (while that one is
-based on mm-unstable):
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ arch/arm64/include/asm/pgtable.h             | 5 -----
+ arch/powerpc/include/asm/book3s/64/pgtable.h | 5 -----
+ arch/x86/include/asm/pgtable.h               | 5 -----
+ include/linux/pgtable.h                      | 4 ----
+ mm/gup.c                                     | 2 --
+ 5 files changed, 21 deletions(-)
 
-  [PATCH v3 0/8] mm/mprotect: Fix dax puds
-  https://lore.kernel.org/r/20240715192142.3241557-1-peterx@redhat.com
-
-Overview
-========
-
-This series doesn't provide any feature change.  The only goal of this
-series is to start decoupling two ideas: "THP" and "huge mapping".  We
-already started with having PGTABLE_HAS_HUGE_LEAVES config option, and this
-one extends that idea into the code.
-
-The issue is that we have so many functions that only compile with
-CONFIG_THP=on, even though they're about huge mappings, and huge mapping is
-a pretty common concept, which can apply to many things besides THPs
-nowadays.  The major THP file is mm/huge_memory.c as of now.
-
-The first example of such huge mapping users will be hugetlb.  We lived
-until now with no problem simply because Linux almost duplicated all the
-logics there in the "THP" files into hugetlb APIs.  If we want to get rid
-of hugetlb specific APIs and paths, this _might_ be the first thing we want
-to do, because we want to be able to e.g., zapping a hugetlb pmd entry even
-if !CONFIG_THP.
-
-Then consider other things like dax / pfnmaps.  Dax can depend on THP, then
-it'll naturally be able to use pmd/pud helpers, that's okay.  However is it
-a must?  Do we also want to have every new pmd/pud mappings in the future
-to depend on THP (like PFNMAP)?  My answer is no, but I'm open to opinions.
-
-If anyone agrees with me that "huge mapping" (aka, PMD/PUD mappings that
-are larger than PAGE_SIZE) is a more generic concept than THP, then I think
-at some point we need to move the generic code out of THP code into a
-common code base.
-
-This is what this series does as a start.
-
-In general, this series tries to move many THP things (mostly resides in
-huge_memory.c right now) into two new files: huge_mapping_{pmd|pud}.c.
-When I move them out, I also put them separately into different files for
-different layers.  Then if an arch supports e.g. only PMD, it can avoid
-compile the PUD helpers, with things like:
-
-        CONFIG_PGTABLE_HAS_PUD_LEAVES=n
-        obj-$(CONFIG_PGTABLE_HAS_PUD_LEAVES) += huge_mapping_pud.o
-
-Note that there're a few tree-wide changes into arch/, but that's not a
-lot, to make this not disturbing too much people, I only copied the open
-lists of each arch not yet the arch maintainers.
-
-Tests
-=====
-
-My normal 19-archs cross-compilation tests pass with it, and smoke tested
-on x86_64 with a local config of mine.
-
-Comments welcomed, thanks.
-
-Peter Xu (6):
-  mm/treewide: Remove pgd_devmap()
-  mm: PGTABLE_HAS_P[MU]D_LEAVES config options
-  mm/treewide: Make pgtable-generic.c THP agnostic
-  mm: Move huge mapping declarations from internal.h to huge_mm.h
-  mm/huge_mapping: Create huge_mapping_pxx.c
-  mm: Convert "*_trans_huge() || *_devmap()" to use *_leaf()
-
- arch/arm64/include/asm/pgtable.h             |   11 +-
- arch/powerpc/include/asm/book3s/64/pgtable.h |    7 +-
- arch/powerpc/mm/book3s64/pgtable.c           |    2 +-
- arch/riscv/include/asm/pgtable.h             |    4 +-
- arch/s390/include/asm/pgtable.h              |    2 +-
- arch/s390/mm/pgtable.c                       |    4 +-
- arch/sparc/mm/tlb.c                          |    2 +-
- arch/x86/include/asm/pgtable.h               |    5 -
- arch/x86/mm/pgtable.c                        |   15 +-
- include/linux/huge_mm.h                      |  332 ++++--
- include/linux/mm.h                           |   18 +
- include/linux/mm_types.h                     |    2 +-
- include/linux/pgtable.h                      |   61 +-
- include/trace/events/huge_mapping.h          |   41 +
- include/trace/events/thp.h                   |   28 -
- mm/Kconfig                                   |    6 +
- mm/Makefile                                  |    2 +
- mm/gup.c                                     |    2 -
- mm/hmm.c                                     |    4 +-
- mm/huge_mapping_pmd.c                        |  976 +++++++++++++++
- mm/huge_mapping_pud.c                        |  235 ++++
- mm/huge_memory.c                             | 1125 +-----------------
- mm/internal.h                                |   33 -
- mm/mapping_dirty_helpers.c                   |    4 +-
- mm/memory.c                                  |   16 +-
- mm/migrate_device.c                          |    2 +-
- mm/mprotect.c                                |    4 +-
- mm/mremap.c                                  |    5 +-
- mm/page_vma_mapped.c                         |    5 +-
- mm/pgtable-generic.c                         |   37 +-
- 30 files changed, 1595 insertions(+), 1395 deletions(-)
- create mode 100644 include/trace/events/huge_mapping.h
- create mode 100644 mm/huge_mapping_pmd.c
- create mode 100644 mm/huge_mapping_pud.c
-
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index f8efbc128446..5d5d1b18b837 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -1119,11 +1119,6 @@ static inline int pud_devmap(pud_t pud)
+ {
+ 	return 0;
+ }
+-
+-static inline int pgd_devmap(pgd_t pgd)
+-{
+-	return 0;
+-}
+ #endif
+ 
+ #ifdef CONFIG_PAGE_TABLE_CHECK
+diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
+index 5da92ba68a45..051b1b6d729c 100644
+--- a/arch/powerpc/include/asm/book3s/64/pgtable.h
++++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
+@@ -1431,11 +1431,6 @@ static inline int pud_devmap(pud_t pud)
+ {
+ 	return pte_devmap(pud_pte(pud));
+ }
+-
+-static inline int pgd_devmap(pgd_t pgd)
+-{
+-	return 0;
+-}
+ #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+ 
+ #define __HAVE_ARCH_PTEP_MODIFY_PROT_TRANSACTION
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index 701593c53f3b..0d234f48ceeb 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -311,11 +311,6 @@ static inline int pud_devmap(pud_t pud)
+ 	return 0;
+ }
+ #endif
+-
+-static inline int pgd_devmap(pgd_t pgd)
+-{
+-	return 0;
+-}
+ #endif
+ #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+ 
+diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+index 2289e9f7aa1b..0a904300ac90 100644
+--- a/include/linux/pgtable.h
++++ b/include/linux/pgtable.h
+@@ -1626,10 +1626,6 @@ static inline int pud_devmap(pud_t pud)
+ {
+ 	return 0;
+ }
+-static inline int pgd_devmap(pgd_t pgd)
+-{
+-	return 0;
+-}
+ #endif
+ 
+ #if !defined(CONFIG_TRANSPARENT_HUGEPAGE) || \
+diff --git a/mm/gup.c b/mm/gup.c
+index 54d0dc3831fb..b023bcd38235 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -3149,8 +3149,6 @@ static int gup_fast_pgd_leaf(pgd_t orig, pgd_t *pgdp, unsigned long addr,
+ 	if (!pgd_access_permitted(orig, flags & FOLL_WRITE))
+ 		return 0;
+ 
+-	BUILD_BUG_ON(pgd_devmap(orig));
+-
+ 	page = pgd_page(orig);
+ 	refs = record_subpages(page, PGDIR_SIZE, addr, end, pages + *nr);
+ 
 -- 
 2.45.0
 
