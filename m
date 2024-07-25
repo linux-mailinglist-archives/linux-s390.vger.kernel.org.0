@@ -1,81 +1,89 @@
-Return-Path: <linux-s390+bounces-5112-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-5114-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C03E93BEC4
-	for <lists+linux-s390@lfdr.de>; Thu, 25 Jul 2024 11:11:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57A1393C13A
+	for <lists+linux-s390@lfdr.de>; Thu, 25 Jul 2024 13:58:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 00C391F210AA
-	for <lists+linux-s390@lfdr.de>; Thu, 25 Jul 2024 09:11:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 893421C21BCC
+	for <lists+linux-s390@lfdr.de>; Thu, 25 Jul 2024 11:58:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DE3D196C9B;
-	Thu, 25 Jul 2024 09:11:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F4AB199258;
+	Thu, 25 Jul 2024 11:58:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="B5/gBYl3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=uter.be header.i=@uter.be header.b="HRSnzfY+"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from lounge.grep.be (lounge.grep.be [144.76.219.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA9A1741EF
-	for <linux-s390@vger.kernel.org>; Thu, 25 Jul 2024 09:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24523C3C;
+	Thu, 25 Jul 2024 11:57:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721898661; cv=none; b=WRS9Xym+0Zg2MihWFgF7fxTN8Kyagpanh+KD7AZOAPBcgEqXA7WFLR0aG3eqcPhbiHjA4ikwnWXYmGQiOpex2ryuFmTM+dp6H9/gfzUuybUyI7hXbDqI2VNE0JGXDQM0HiodYpG/TOwWgmLZhx4HnMOK69fMTKo1cdE3fWqg68I=
+	t=1721908683; cv=none; b=T6O4KC99b08b+g+WWGqY8FZEe1qOcoUmJTNxAJ/eFLguczN5rReawo91ht6N+gMpbapMr3Z/1oLF3T4TSaKk8a0NLq581AgTnMLn34hQQYHI5GRs+Mq4bm6DNlYnzn8ykfKaYWmnGZlrA82BESQZV0eRdR80xtcXCF/sp6Y6EYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721898661; c=relaxed/simple;
-	bh=FSh3hFJL6BqklUA0Dtjj2K0sCEC0fRxNaTnZ4l45HY8=;
+	s=arc-20240116; t=1721908683; c=relaxed/simple;
+	bh=SUGuNHYDGosNycUsgB3AByvAAi9UaKUxeW+YSC9jcyw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qPAA8ikWIQf4/8rTxfBUykhnboHJVBeFaf7cm/ZMntB/xSCO4OEKUgVRPsxwE9HR7crALe3PdP5IjD5+FM5zvNX5PEGLSBoOn4npcGSPKEGb95uOFsKZLvxizt8d/gk73k2YWBuhyH+IJKQ2o3iu3K6Wa+23eAFmg09mcvTKM0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=B5/gBYl3; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46P911Ob030940
-	for <linux-s390@vger.kernel.org>; Thu, 25 Jul 2024 09:10:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
-	:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pp1; bh=XeDFScjttdt2wYwBdRLFAFPSjVP
-	mcxpCK7I2EC67NW8=; b=B5/gBYl3ECA07rJ0jI53cFxd2TbhQbslFt09mKn5njJ
-	BHSMcJwqx0aU7yjf1lY2QBCovITKC8ksJMdQ0/beQPQPnw/cHNDSLGlWgfYlW7PZ
-	XfHc4aRRycZGLp/CMBZmZjcIKMi+FNBi3XLTuskYMdvIilSuT1INSJ/RmReYlJGx
-	XbyxqxqV1RzkXVcpSRQY4wTrwB77Lg/CjqjANiCuF973XHATpJo+2MnlEa4q1pnV
-	VcxtHPw8KLaUHITVHnKouTXdF+aEgZ+0tFQ1cSiCtmDStLJLpREF4oA1pPwGi2XR
-	KzD0UqanXusqZYVDw0mJS0C1W1tOaBBiVlEApbC9VUg==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40kdgx0wbd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-s390@vger.kernel.org>; Thu, 25 Jul 2024 09:10:57 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46P64n9q009111
-	for <linux-s390@vger.kernel.org>; Thu, 25 Jul 2024 09:10:57 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 40gt93nvds-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-s390@vger.kernel.org>; Thu, 25 Jul 2024 09:10:57 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46P9ApVS54002170
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 25 Jul 2024 09:10:53 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B7A592004E;
-	Thu, 25 Jul 2024 09:10:51 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4EBF620040;
-	Thu, 25 Jul 2024 09:10:51 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.38.250])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 25 Jul 2024 09:10:51 +0000 (GMT)
-Date: Thu, 25 Jul 2024 11:10:49 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH 2/2] s390/ptdump: Add KMSAN page markers
-Message-ID: <ZqIWmS8bBbFqAG1v@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20240723124441.120044-1-iii@linux.ibm.com>
- <20240723124441.120044-3-iii@linux.ibm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=KzvJeReR8fKFPiAdwy7sdOG8OAge3ZGHb2wvDKg/Mn/0ZT2/9jLKDKf+Et4HXwrocgFXzVI+z1wKxI3qApuSwv7OMqmBQFUG3aqzhkybfMhIfgaZIUNc4JsFM6N0smbKlZJ87az7v80bQYCL71QMyB7cGTto17V914xdsLGAHaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uter.be; spf=pass smtp.mailfrom=uter.be; dkim=pass (2048-bit key) header.d=uter.be header.i=@uter.be header.b=HRSnzfY+; arc=none smtp.client-ip=144.76.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uter.be
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uter.be
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=uter.be;
+	s=2021.lounge; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=A2VuDAKeSGGGRwdNEgASvdRePK2jE6LTgdknFzfGiVg=; b=HRSnzfY+SxqUo9lzjJBHswdyNO
+	izEqhcP/7tFCFgJJGzzhTZHV+hkIJ95lvet5keDsrZB2SVJh4LM2TT0rY+nfGtvBDiOATcCiQ/ZZp
+	NX14nRCfBdImELKCJsEds0YwtB87PNneYsFwhe69klvX8hKaVd3bPAdUOO5oKLpwqsdI1TpEV3xHA
+	zPeruYumASMydrGBh8+RD0p+DiFqZyJ0vUaImcbHlwd7Aik2LDO+RgK3xJUkwPiJj9pwJIeGrrPKF
+	y3yZwQEUsA40VBWzlQvQ+rZPVwPFNOT65DR9yRxPQziuObFSyUbJuGiw7PBH1R7FTtIfgagxi0sHi
+	wC/6XZ8A==;
+Received: from [102.39.153.168] (helo=pc220518)
+	by lounge.grep.be with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <w@uter.be>)
+	id 1sWwlF-001dJr-31;
+	Thu, 25 Jul 2024 13:35:53 +0200
+Received: from wouter by pc220518 with local (Exim 4.98)
+	(envelope-from <w@uter.be>)
+	id 1sWwl8-00000002sGZ-0mps;
+	Thu, 25 Jul 2024 13:35:46 +0200
+Date: Thu, 25 Jul 2024 13:35:46 +0200
+From: Wouter Verhelst <w@uter.be>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>, Geert Uytterhoeven <geert@linux-m68k.org>,
+	Richard Weinberger <richard@nod.at>,
+	Philipp Reisner <philipp.reisner@linbit.com>,
+	Lars Ellenberg <lars.ellenberg@linbit.com>,
+	Christoph =?iso-8859-1?Q?B=F6hmwalder?= <christoph.boehmwalder@linbit.com>,
+	Josef Bacik <josef@toxicpanda.com>, Ming Lei <ming.lei@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>,
+	Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
+	Mikulas Patocka <mpatocka@redhat.com>, Song Liu <song@kernel.org>,
+	Yu Kuai <yukuai3@huawei.com>,
+	Vineeth Vijayan <vneethv@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-m68k@lists.linux-m68k.org, linux-um@lists.infradead.org,
+	drbd-dev@lists.linbit.com, nbd@other.debian.org,
+	linuxppc-dev@lists.ozlabs.org, ceph-devel@vger.kernel.org,
+	virtualization@lists.linux.dev, xen-devel@lists.xenproject.org,
+	linux-bcache@vger.kernel.org, dm-devel@lists.linux.dev,
+	linux-raid@vger.kernel.org, linux-mmc@vger.kernel.org,
+	linux-mtd@lists.infradead.org, nvdimm@lists.linux.dev,
+	linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
+	Damien Le Moal <dlemoal@kernel.org>
+Subject: Re: [PATCH 14/26] block: move the nonrot flag to queue_limits
+Message-ID: <ZqI4kosy20WkLC2P@pc220518.home.grep.be>
+References: <20240617060532.127975-1-hch@lst.de>
+ <20240617060532.127975-15-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -84,52 +92,46 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240723124441.120044-3-iii@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: lrTGTaBCPcRQfjayMvVN3iKMuVDj2EAD
-X-Proofpoint-GUID: lrTGTaBCPcRQfjayMvVN3iKMuVDj2EAD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-25_09,2024-07-25_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 priorityscore=1501 spamscore=0 phishscore=0 bulkscore=0
- clxscore=1015 mlxlogscore=613 adultscore=0 malwarescore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407250058
+In-Reply-To: <20240617060532.127975-15-hch@lst.de>
+X-Speed: Gates' Law: Every 18 months, the speed of software halves.
+Organization: none
 
-On Tue, Jul 23, 2024 at 02:44:12PM +0200, Ilya Leoshkevich wrote:
-> Add KMSAN vmalloc metadata areas to
-> /sys/kernel/debug/kernel_page_tables. Example output:
-> 
->     0x000003a95fff9000-0x000003a960000000        28K PTE I
->     ---[ vmalloc Area End ]---
->     ---[ Kmsan vmalloc Shadow Start ]---
->     0x000003a960000000-0x000003a960010000        64K PTE RW NX
->     [...]
->     0x000003d3dfff9000-0x000003d3e0000000        28K PTE I
->     ---[ Kmsan vmalloc Shadow End ]---
->     ---[ Kmsan vmalloc Origins Start ]---
->     0x000003d3e0000000-0x000003d3e0010000        64K PTE RW NX
->     [...]
->     0x000003fe5fff9000-0x000003fe60000000        28K PTE I
->     ---[ Kmsan vmalloc Origins End ]---
->     ---[ Kmsan Modules Shadow Start ]---
->     0x000003fe60000000-0x000003fe60001000         4K PTE RW NX
->     [...]
->     0x000003fe60100000-0x000003fee0000000      2047M PMD I
->     ---[ Kmsan Modules Shadow End ]---
->     ---[ Kmsan Modules Origins Start ]---
->     0x000003fee0000000-0x000003fee0001000         4K PTE RW NX
->     [...]
->     0x000003fee0100000-0x000003ff60000000      2047M PMD I
->     ---[ Kmsan Modules Origins End ]---
->     ---[ Modules Area Start ]---
->     0x000003ff60000000-0x000003ff60001000         4K PTE RO X
-> 
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-> ---
->  arch/s390/mm/dump_pagetables.c | 30 ++++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
+On Mon, Jun 17, 2024 at 08:04:41AM +0200, Christoph Hellwig wrote:
+> Use the chance to switch to defaulting to non-rotational and require
+> the driver to opt into rotational, which matches the polarity of the
+> sysfs interface.
+[...]
+> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+> index cb1c86a6a3fb9d..6cddf5baffe02a 100644
+> --- a/drivers/block/nbd.c
+> +++ b/drivers/block/nbd.c
+> @@ -1867,11 +1867,6 @@ static struct nbd_device *nbd_dev_add(int index, unsigned int refs)
+>  		goto out_err_disk;
+>  	}
+>  
+> -	/*
+> -	 * Tell the block layer that we are not a rotational device
+> -	 */
+> -	blk_queue_flag_set(QUEUE_FLAG_NONROT, disk->queue);
+> -
+>  	mutex_init(&nbd->config_lock);
+>  	refcount_set(&nbd->config_refs, 0);
+>  	/*
 
-Acked-by: Alexander Gordeev <agordeev@linux.ibm.com>
+NBD actually exports a flag for rotational devices; it's defined in
+nbd.h in the NBD userland source as
+
+#define NBD_FLAG_ROTATIONAL     (1 << 4)        /* Use elevator algorithm - rotational media */
+
+which is passed in the same flags field which also contains the
+NBD_FLAG_SEND_FLUSH and NBD_FLAG_SEND_FUA flags.
+
+Perhaps we might want to look at that flag and set the device to
+rotational if it is specified?
+
+-- 
+     w@uter.{be,co.za}
+wouter@{grep.be,fosdem.org,debian.org}
+
+I will have a Tin-Actinium-Potassium mixture, thanks.
 
