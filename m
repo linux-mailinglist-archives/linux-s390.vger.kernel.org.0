@@ -1,46 +1,46 @@
-Return-Path: <linux-s390+bounces-5139-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-5140-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A880E93E696
-	for <lists+linux-s390@lfdr.de>; Sun, 28 Jul 2024 17:49:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A062D93E6D6
+	for <lists+linux-s390@lfdr.de>; Sun, 28 Jul 2024 17:56:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DB0711C210BC
-	for <lists+linux-s390@lfdr.de>; Sun, 28 Jul 2024 15:49:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 493FD1F24DDE
+	for <lists+linux-s390@lfdr.de>; Sun, 28 Jul 2024 15:56:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DDF250A80;
-	Sun, 28 Jul 2024 15:45:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B4D7144D3F;
+	Sun, 28 Jul 2024 15:47:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="emCip19s"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IjNYT85P"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71BD13A24B;
-	Sun, 28 Jul 2024 15:45:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7262F823CB;
+	Sun, 28 Jul 2024 15:47:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722181512; cv=none; b=ld/Wzbhe+XevYkUk2WajPwUNnxysDttKacRAGbDqsM7x6SworBekgeMk3d5jun3ikNK+k++zr3bhbuZnT4kiXMJT3y6UgA2P7qr9Opq0YX8OQxLYfKYQDlibkVb2WNatXJUxYtAnH8eIHGIq/2I8dOEgP8sOYSBJ9zDluQGx7eU=
+	t=1722181643; cv=none; b=mVUAMlCh6C065o1JflddoMTsw9J7esEvBaLeECFfS1y51ysY+WqB2GQNzRwTTGcmG8h0LV46xf7kUlkxgHtxsBxMDGRNhLEyEUmeGSUbbdVxVLRLiUDspXKBGEaYXj4t0F60K9LF1jFCAG0VFJ/Mgtk3r0auzjVbkkJNW+o2V48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722181512; c=relaxed/simple;
+	s=arc-20240116; t=1722181643; c=relaxed/simple;
 	bh=fu9IFAHAFSVZXRrNmnKacWWm82vIqE+AmfedSfWIhuU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H3PXquZ2USBnifiMP/3JzTWIVGAcM/z6Pp849B/ePlFsKOCLeXCBMgu4vkLgRuFih0qVtAi6Y0IzSyVFRXz1yfA+97gEfJaXwVdL3pv/fIfsPRi824HA+/+YIaUD2831dPa4V8B1yCJ791NEJ+wVinAc/udnCm8Ls3ilmfBdlig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=emCip19s; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FF23C4AF0B;
-	Sun, 28 Jul 2024 15:45:11 +0000 (UTC)
+	 MIME-Version; b=pMfeeL7oar2JPNg7FjOgLnoPdi/Tmto/ozdMv3E+yHhUa/6lnDYPYvRL9tjcU3HVItxWqQgPSwo61TtRtfAyAz2GDrPQDTTHgDfe8PIZZLak8IDccrkqwsOCVWskQsBZpS+AWXMici1h7zp5h6+IDXNsVi6VbRxsnfZBeLhvFx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IjNYT85P; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B75BC116B1;
+	Sun, 28 Jul 2024 15:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722181512;
+	s=k20201202; t=1722181643;
 	bh=fu9IFAHAFSVZXRrNmnKacWWm82vIqE+AmfedSfWIhuU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=emCip19snW+SY2MZLlFYbvchg2Mmcyv16Vvg4dfPX+C1c41dL6sgFhMb4A20Q/u4u
-	 /FIyrgLHsFMjsEgiXje9BAoTC6aTbfRnuEQVMb0NsFeV6YTP7AAAp+CscD9YUIycsz
-	 nyopGgiROv4QJn1tLtCQf5BdKYXD9NiMQtc3DYcW/kQmGlsrzINeBUYS1V5xgIJP72
-	 3mzgXy4ZW7R+lHxqsKnR19PiPdfCGLjUlL/P7vRSUWuatODgBAB8HNIoBO1suKYaQH
-	 1pJHO1Y+3+36wDMHROllSJVI9DzTkDfmA+AVHK/pOUc58NctEw2HREU5ePyprPqbSo
-	 hAiR3K5QIQspA==
+	b=IjNYT85PEEaMERS9RJLWmsgyM6MX2HYG4t4Ip2VYkA7isxH1cCOggDHufMt9RhvZC
+	 hqpCU/MtB2kcv8YNwvUr+VQBnNF7M76Qr1iR4ju9D3YTYmiAFSryisCcyHEHNL95Vl
+	 7Bg1unJ1P/3/eyV+NK0vLdqcBopD1b0pzFBlkC9Ew5kRmxGb08Gd4mLmTYlZcn5s5N
+	 wUnwUnbPbWUMhCY0M3fCuobar0HTIZKS4PcVx/4SNSQ5c1L04/1QnBWLggmx8X4w7g
+	 dG1flmyOHKsuOh4ZY3aqsPwPkduERKlRiOvHaVmAjgCvSDO+1T8h0UYUUVFjq9G+ph
+	 R5ZhIgfWwyDvA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -50,12 +50,12 @@ Cc: Peter Oberparleiter <oberpar@linux.ibm.com>,
 	Sasha Levin <sashal@kernel.org>,
 	gor@linux.ibm.com,
 	linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.10 32/34] s390/sclp: Prevent release of buffer in I/O
-Date: Sun, 28 Jul 2024 11:40:56 -0400
-Message-ID: <20240728154230.2046786-32-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 19/20] s390/sclp: Prevent release of buffer in I/O
+Date: Sun, 28 Jul 2024 11:45:17 -0400
+Message-ID: <20240728154605.2048490-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240728154230.2046786-1-sashal@kernel.org>
-References: <20240728154230.2046786-1-sashal@kernel.org>
+In-Reply-To: <20240728154605.2048490-1-sashal@kernel.org>
+References: <20240728154605.2048490-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.10.2
+X-stable-base: Linux 6.6.43
 Content-Transfer-Encoding: 8bit
 
 From: Peter Oberparleiter <oberpar@linux.ibm.com>
