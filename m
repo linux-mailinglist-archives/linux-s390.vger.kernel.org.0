@@ -1,192 +1,177 @@
-Return-Path: <linux-s390+bounces-5152-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-5155-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3492893F33A
-	for <lists+linux-s390@lfdr.de>; Mon, 29 Jul 2024 12:52:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12B6493F55D
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Jul 2024 14:28:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D342D281C01
-	for <lists+linux-s390@lfdr.de>; Mon, 29 Jul 2024 10:52:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 327591C21701
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Jul 2024 12:28:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA11814532A;
-	Mon, 29 Jul 2024 10:52:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A649145A01;
+	Mon, 29 Jul 2024 12:28:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b="vBf0lRuB"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Bc82reZ4"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail.tkos.co.il (mail.tkos.co.il [84.110.109.230])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7EB1448F1;
-	Mon, 29 Jul 2024 10:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.110.109.230
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17151482F6;
+	Mon, 29 Jul 2024 12:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722250320; cv=none; b=bp/B04RDxjQeMlU6obJXuo7Q5bc8ggaK+UiTYWnOcZfVfogtBHjn3PbjwQUcJr0Rskd1TZqYCEWGk+C6LnKHi4FLEBilJcbfD6ZAD/t1xabUnXCw/OO++kIATOYUILH0zGfmyACfhjBPlf9UKR+iDbaodPEJjcDeOOYMRZo8gvQ=
+	t=1722256114; cv=none; b=qfwyJjwTFF6PaFrQcfPXn0/Js9BJvG92WXfT9f0C/Vpdoz6+5fJA2CEBee80R1n+mABl4nEfCSeRQggSw/zGCfFRf6xRhdKDDWdQlp+8mb0jArlj/3U61jj0pnanZnA4cRp9lk3Zf0JAOUdPTl82hzTpZzC5bLizAt/io74FHGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722250320; c=relaxed/simple;
-	bh=jwVrNkJU6TTXZr03Aq1yS4EYBFAKJQ5ZGtsXERqr5z8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qyJp5CIA932iDjU3XqM4JFxoyBF0wQaBZgneA33ntXRhzjfOI0Htbgu+E1elRSumfxBE7AVJ8y8DElD3kgmq35SRQ7u3CxCMAcYYAqQf2spc6kMLXKKd3+qnnaT6/bJ1UiZHympxc1tXqi2oiuR90H/hAzyD4JB3bMufqGeP4gY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il; spf=pass smtp.mailfrom=tkos.co.il; dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b=vBf0lRuB; arc=none smtp.client-ip=84.110.109.230
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tkos.co.il
-Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.tkos.co.il (Postfix) with ESMTPS id 29561440F5F;
-	Mon, 29 Jul 2024 13:50:33 +0300 (IDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
-	s=default; t=1722250233;
-	bh=jwVrNkJU6TTXZr03Aq1yS4EYBFAKJQ5ZGtsXERqr5z8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=vBf0lRuBpzD9o62Xp531a74Gq1NOBiZZUSIxG/oPDdoC8/1xjDtYtq/akdkDcE0kj
-	 D1/LaqCflZE12HPEnrCkolPF8KvnZtr0KrWCTKoSR/xXowyJXF3UOmXUIhLeKQV+o1
-	 DIHAXmMYS3wurN++0F2Ju5m35D+DKYCAgyT5xBmceFFbv2mGTM4Ju+wr8gnSO79YxY
-	 /GvtYpbvpKizJHES0JaD2aqYkam5SjvYosOTgWeHXdlvH1I8p3GU3NQ2+uxTWff2bQ
-	 uF95ALYYrb+0bwo2KdyQGoaHC7xT0IU01q0mAmBI5/zLflThrleJzDthkYSfLQq70b
-	 sxZH+zJqWlzmA==
-From: Baruch Siach <baruch@tkos.co.il>
-To: Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Cc: Baruch Siach <baruch@tkos.co.il>,
-	Robin Murphy <robin.murphy@arm.com>,
-	iommu@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org,
-	=?UTF-8?q?Petr=20Tesa=C5=99=C3=ADk?= <petr@tesarici.cz>,
-	Ramon Fried <ramon@neureality.ai>,
-	Elad Nachman <enachman@marvell.com>
-Subject: [PATCH v3 3/3] dma-direct: use RAM start to offset zone_dma_limit
-Date: Mon, 29 Jul 2024 13:51:26 +0300
-Message-ID: <629b184354fa22cb32a90bd1fa0e1dc258251f81.1722249878.git.baruch@tkos.co.il>
+	s=arc-20240116; t=1722256114; c=relaxed/simple;
+	bh=lTGJF5ueK5ItT508wCogsfzRhnN++E2Y/UtH4sd9wAE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=COMbLorsSaNwkSWYFbU1ce8F6KY/IR0ZAmZGXNnOrC2pT4ajMV6Wt9o11+xVAPOp8ea0tBctv8HLiMPNWWgZzsy1f6aBNkXFaA+AFxxAIctyg8uSVSSYRE8g9Ugzjg9CZ9l6vr8NhGqdeGiX/J26Nzpk3iRS46/haUGyHCz8YgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=de.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Bc82reZ4; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.ibm.com
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46TCSNFq008557;
+	Mon, 29 Jul 2024 12:28:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:content-transfer-encoding
+	:mime-version; s=pp1; bh=clW8iS8GzuUl3bXBZcKoi9MelcyzggKXvvuyVFV
+	ehk4=; b=Bc82reZ47sNh2aD1OfWOtwOfUACx2Z6DS9ZyDlLTS5Rp3oQpIlypxF3
+	0zPYMYNK4+fL6B6/PplWsMBLtFjvpcOKpXjHHnqvDmGJZTP2K4ZB30zQR9pMzcWm
+	s+I+1dfwbfpAjUcE6FKOgz3aFgOIY+YJtx2HkaRZQ26O9cheI5KPsOifF4p6F0gI
+	tJ6fJHwwXsNGPvQbV9oCxHbqIFxcf9lU1SEDXmJDzhN0CYG/5GGmkc20fCp7CyWL
+	KYKtLdLT0mcIo2T0eZd3H5L9Pr45EH+1Anl8i+f281qHsuBxlAHGMvUy9ixbRX1R
+	Mt7k+ygom6c2B8e5DxTyAb6Hhi3voWA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40pb46000h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 29 Jul 2024 12:28:26 +0000 (GMT)
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46TCSPbB008626;
+	Mon, 29 Jul 2024 12:28:26 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40pb46000e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 29 Jul 2024 12:28:25 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46TBUhTm003773;
+	Mon, 29 Jul 2024 12:28:25 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 40ndem6btr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 29 Jul 2024 12:28:24 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46TCSJgi30540198
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 29 Jul 2024 12:28:21 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4D9B220043;
+	Mon, 29 Jul 2024 12:28:19 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3B06420040;
+	Mon, 29 Jul 2024 12:28:19 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 29 Jul 2024 12:28:19 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55271)
+	id B68ECE04DE; Mon, 29 Jul 2024 14:28:18 +0200 (CEST)
+From: Alexandra Winter <wintera@linux.ibm.com>
+To: David Miller <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>
+Cc: netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Thorsten Winkler <twinkler@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Subject: [PATCH net] net/iucv: fix use after free in iucv_sock_close()
+Date: Mon, 29 Jul 2024 14:28:16 +0200
+Message-ID: <20240729122818.947756-1-wintera@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1722249878.git.baruch@tkos.co.il>
-References: <cover.1722249878.git.baruch@tkos.co.il>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: RjE4ke_5k9nvWCxYZJ5JzbJNXBEntWTm
+X-Proofpoint-ORIG-GUID: 522Yh1WYRag8tED8KSzo-DVvqj1jW7BT
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-29_10,2024-07-26_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ clxscore=1011 spamscore=0 mlxscore=0 lowpriorityscore=0 mlxlogscore=763
+ bulkscore=0 priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2407110000
+ definitions=main-2407290083
 
-Current code using zone_dma_limit assume that all address range below
-limit is suitable for DMA. For some existing platforms this assumption
-is not correct. DMA range might have non zero lower limit.
+iucv_sever_path() is called from process context and from bh context.
+iucv->path is used as indicator whether somebody else is taking care of
+severing the path (or it is already removed / never existed).
+This needs to be done with atomic compare and swap, otherwise there is a
+small window where iucv_sock_close() will try to work with a path that has
+already been severed and freed by iucv_callback_connrej() called by
+iucv_tasklet_fn().
 
-Commit 791ab8b2e3db ("arm64: Ignore any DMA offsets in the
-max_zone_phys() calculation") made DMA/DMA32 zones span the entire RAM
-when RAM starts above 32-bits. This breaks hardware with DMA area that
-start above 32-bits. But the commit log says that "we haven't noticed
-any such hardware". It turns out that such hardware does exist.
+Example:
+[452744.123844] Call Trace:
+[452744.123845] ([<0000001e87f03880>] 0x1e87f03880)
+[452744.123966]  [<00000000d593001e>] iucv_path_sever+0x96/0x138
+[452744.124330]  [<000003ff801ddbca>] iucv_sever_path+0xc2/0xd0 [af_iucv]
+[452744.124336]  [<000003ff801e01b6>] iucv_sock_close+0xa6/0x310 [af_iucv]
+[452744.124341]  [<000003ff801e08cc>] iucv_sock_release+0x3c/0xd0 [af_iucv]
+[452744.124345]  [<00000000d574794e>] __sock_release+0x5e/0xe8
+[452744.124815]  [<00000000d5747a0c>] sock_close+0x34/0x48
+[452744.124820]  [<00000000d5421642>] __fput+0xba/0x268
+[452744.124826]  [<00000000d51b382c>] task_work_run+0xbc/0xf0
+[452744.124832]  [<00000000d5145710>] do_notify_resume+0x88/0x90
+[452744.124841]  [<00000000d5978096>] system_call+0xe2/0x2c8
+[452744.125319] Last Breaking-Event-Address:
+[452744.125321]  [<00000000d5930018>] iucv_path_sever+0x90/0x138
+[452744.125324]
+[452744.125325] Kernel panic - not syncing: Fatal exception in interrupt
 
-One such platform has RAM starting at 32GB with an internal bus that has
-the following DMA limits:
+Note that bh_lock_sock() is not serializing the tasklet context against
+process context, because the check for sock_owned_by_user() and
+corresponding handling is missing.
 
-  #address-cells = <2>;
-  #size-cells = <2>;
-  dma-ranges = <0x00 0xc0000000 0x08 0x00000000 0x00 0x40000000>;
+Ideas for a future clean-up patch:
+A) Correct usage of bh_lock_sock() in tasklet context, as described in
+Link: https://lore.kernel.org/netdev/1280155406.2899.407.camel@edumazet-laptop/
+Re-enqueue, if needed. This may require adding return values to the
+tasklet functions and thus changes to all users of iucv.
 
-Devices under this bus can see 1GB of DMA range between 3GB-4GB in each
-device address space. This range is mapped to CPU memory at 32GB-33GB.
-With current code DMA allocations for devices under this bus are not
-limited to DMA area, leading to run-time allocation failure.
+B) Change iucv tasklet into worker and use only lock_sock() in af_iucv.
 
-Add start of RAM address to zone_dma_limit to make DMA allocation for
-constrained devices possible.
-
-The result is DMA zone that properly reflects the hardware constraints
-as follows:
-
-[    0.000000] Zone ranges:
-[    0.000000]   DMA      [mem 0x0000000800000000-0x000000083fffffff]
-[    0.000000]   DMA32    empty
-[    0.000000]   Normal   [mem 0x0000000840000000-0x0000000bffffffff]
-
-Rename the dma_direct_supported() local 'min_mask' variable to better
-describe its use as limit.
-
-Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+Fixes: 7d316b945352 ("af_iucv: remove IUCV-pathes completely")
+Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
+Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
 ---
- kernel/dma/direct.c  | 7 ++++---
- kernel/dma/pool.c    | 3 ++-
- kernel/dma/swiotlb.c | 4 ++--
- 3 files changed, 8 insertions(+), 6 deletions(-)
+The following inactive mailaddresses were not cc'ed:
+schwidefsky@de.ibm.com, frank.blaschka@de.ibm.com, ursula.braun@de.ibm.com
+---
+ net/iucv/af_iucv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 3dbc0b89d6fb..bd7972d3b101 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -563,7 +563,7 @@ int dma_direct_mmap(struct device *dev, struct vm_area_struct *vma,
+diff --git a/net/iucv/af_iucv.c b/net/iucv/af_iucv.c
+index c3b0b610b0aa..c00323fa9eb6 100644
+--- a/net/iucv/af_iucv.c
++++ b/net/iucv/af_iucv.c
+@@ -335,8 +335,8 @@ static void iucv_sever_path(struct sock *sk, int with_user_data)
+ 	struct iucv_sock *iucv = iucv_sk(sk);
+ 	struct iucv_path *path = iucv->path;
  
- int dma_direct_supported(struct device *dev, u64 mask)
- {
--	u64 min_mask = (max_pfn - 1) << PAGE_SHIFT;
-+	u64 min_limit = (max_pfn - 1) << PAGE_SHIFT;
- 
- 	/*
- 	 * Because 32-bit DMA masks are so common we expect every architecture
-@@ -580,8 +580,9 @@ int dma_direct_supported(struct device *dev, u64 mask)
- 	 * part of the check.
- 	 */
- 	if (IS_ENABLED(CONFIG_ZONE_DMA))
--		min_mask = min_t(u64, min_mask, zone_dma_limit);
--	return mask >= phys_to_dma_unencrypted(dev, min_mask);
-+		min_limit = min_t(u64, min_limit,
-+				memblock_start_of_DRAM() + zone_dma_limit);
-+	return mask >= phys_to_dma_unencrypted(dev, min_limit);
- }
- 
- /*
-diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
-index 410a7b40e496..ded3d841c88c 100644
---- a/kernel/dma/pool.c
-+++ b/kernel/dma/pool.c
-@@ -12,6 +12,7 @@
- #include <linux/set_memory.h>
- #include <linux/slab.h>
- #include <linux/workqueue.h>
-+#include <linux/memblock.h>
- 
- static struct gen_pool *atomic_pool_dma __ro_after_init;
- static unsigned long pool_size_dma;
-@@ -70,7 +71,7 @@ static bool cma_in_zone(gfp_t gfp)
- 	/* CMA can't cross zone boundaries, see cma_activate_area() */
- 	end = cma_get_base(cma) + size - 1;
- 	if (IS_ENABLED(CONFIG_ZONE_DMA) && (gfp & GFP_DMA))
--		return end <= zone_dma_limit;
-+		return end <= memblock_start_of_DRAM() + zone_dma_limit;
- 	if (IS_ENABLED(CONFIG_ZONE_DMA32) && (gfp & GFP_DMA32))
- 		return end <= DMA_BIT_MASK(32);
- 	return true;
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index dfd83e5ee0b3..2813eeb8b375 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -450,7 +450,7 @@ int swiotlb_init_late(size_t size, gfp_t gfp_mask,
- 	if (!remap)
- 		io_tlb_default_mem.can_grow = true;
- 	if (IS_ENABLED(CONFIG_ZONE_DMA) && (gfp_mask & __GFP_DMA))
--		io_tlb_default_mem.phys_limit = zone_dma_limit;
-+		io_tlb_default_mem.phys_limit = memblock_start_of_DRAM() + zone_dma_limit;
- 	else if (IS_ENABLED(CONFIG_ZONE_DMA32) && (gfp_mask & __GFP_DMA32))
- 		io_tlb_default_mem.phys_limit = DMA_BIT_MASK(32);
- 	else
-@@ -629,7 +629,7 @@ static struct page *swiotlb_alloc_tlb(struct device *dev, size_t bytes,
- 	}
- 
- 	gfp &= ~GFP_ZONEMASK;
--	if (phys_limit <= zone_dma_limit)
-+	if (phys_limit <= memblock_start_of_DRAM() + zone_dma_limit)
- 		gfp |= __GFP_DMA;
- 	else if (phys_limit <= DMA_BIT_MASK(32))
- 		gfp |= __GFP_DMA32;
+-	if (iucv->path) {
+-		iucv->path = NULL;
++	/* Whoever resets the path pointer, must sever and free it. */
++	if (xchg(&iucv->path, NULL)) {
+ 		if (with_user_data) {
+ 			low_nmcpy(user_data, iucv->src_name);
+ 			high_nmcpy(user_data, iucv->dst_name);
 -- 
 2.43.0
 
