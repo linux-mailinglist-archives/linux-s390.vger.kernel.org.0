@@ -1,298 +1,174 @@
-Return-Path: <linux-s390+bounces-5269-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-5271-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E7A0944687
-	for <lists+linux-s390@lfdr.de>; Thu,  1 Aug 2024 10:25:44 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57ECD9446E4
+	for <lists+linux-s390@lfdr.de>; Thu,  1 Aug 2024 10:44:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8293B1C235BE
-	for <lists+linux-s390@lfdr.de>; Thu,  1 Aug 2024 08:25:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B9F01B2417B
+	for <lists+linux-s390@lfdr.de>; Thu,  1 Aug 2024 08:44:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2018216E86E;
-	Thu,  1 Aug 2024 08:25:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96F7F16F0F9;
+	Thu,  1 Aug 2024 08:44:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b="ssxJC2sJ"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hZmfDDZO"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail.tkos.co.il (golan.tkos.co.il [84.110.109.230])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A736416D332;
-	Thu,  1 Aug 2024 08:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.110.109.230
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C236716EBFF;
+	Thu,  1 Aug 2024 08:44:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722500737; cv=none; b=nSL3jDQla+cAJWJH+pRR5undZ5jedQwA0GKzyYEY9jJy6xWOIg/ODPOrUFakXqL/eNGtJTqaJ42ww/JjEKiz3/aAsnJCLCYMGv4dmUFze8hI48/SF+IZw892ANWN8Ca05+27ErZP9XxY/XezAHPmGZuYor1Rav4LVQ01FXlDguU=
+	t=1722501858; cv=none; b=htWDtKoDTxEzieSW6aXIGm5SG8HLQ9yC2OgLEHbV5Q6tI0PpeMjSZCzPFhF0sloPz3mZgI6UkJ9BvNWIaDrbfKs/xY513rlIoFkc3Kg337I688XU/451vm3jXPC1TsBXkMLQs3fq5lBxrG/DR+A40auGyjVxaemode8OG7jZ8zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722500737; c=relaxed/simple;
-	bh=VYVg6dcZoMgPVC5tuSCiZfCedBjhw7Yn+Yo8u4T9MuM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tQUYrie/a2Pa+mJviXUS5Fst300qJmsmDOIVTvh/89r1toWQTeD4jRpo1Nvjp81j8pSkZFsD8bRDdqJw6rSNxLNXWPvOsAwebIPztUndKPam1dD01zb1sRM3SmFq/tNxZULh8jL/RobXBqP9ypsTJPBuHPdcKJNtRvIWnCP+5VA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il; spf=pass smtp.mailfrom=tkos.co.il; dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b=ssxJC2sJ; arc=none smtp.client-ip=84.110.109.230
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tkos.co.il
-Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.tkos.co.il (Postfix) with ESMTPS id 3A250440C81;
-	Thu,  1 Aug 2024 11:24:08 +0300 (IDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
-	s=default; t=1722500648;
-	bh=VYVg6dcZoMgPVC5tuSCiZfCedBjhw7Yn+Yo8u4T9MuM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ssxJC2sJd1ijT27i1CV2M9jYOwBkr6JiQYHHngELXwKyu5I9JhzfU99bTyh06TtFO
-	 Srdqp5si6rY/clGAqYHZT1D29gf6+NM+pQitik8pY4S+v6OPowHT/08oLa1wMU/XAe
-	 JtwZLyQhv1GWdlo+ekjGN2D4tiC7FbN6BZVOXHzEYeL439+1Om6k7NJ0Mh+PqKpZ0M
-	 yLHdXOMxPUx+VLOiKTDLBsYyjx/5R+TE4s+U/ZGExJ8LEd9dHI5/8HK3NENUWGjhgu
-	 quovkSb1C42G3Ihaqs0FtgNmEwfw5QKO65Q7WPPaaK0Gz95ng8M2HQEqwbJV8FSWWh
-	 2iglGBoKd9B9Q==
-From: Baruch Siach <baruch@tkos.co.il>
-To: Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Cc: Baruch Siach <baruch@tkos.co.il>,
-	Robin Murphy <robin.murphy@arm.com>,
-	iommu@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org,
-	=?UTF-8?q?Petr=20Tesa=C5=99=C3=ADk?= <petr@tesarici.cz>,
-	Ramon Fried <ramon@neureality.ai>,
-	Elad Nachman <enachman@marvell.com>
-Subject: [PATCH v4 2/2] dma: replace zone_dma_bits by zone_dma_limit
-Date: Thu,  1 Aug 2024 11:25:07 +0300
-Message-ID: <f05178048096908a13379a61ca56f0035a5cdb2d.1722499975.git.baruch@tkos.co.il>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1722499975.git.baruch@tkos.co.il>
-References: <cover.1722499975.git.baruch@tkos.co.il>
+	s=arc-20240116; t=1722501858; c=relaxed/simple;
+	bh=slfWe62xhHdipKA+jVyi+Mb/k8SGjLROPmMgowJgvKk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SmxH4LheGfsUXDgqu8HSXOYDuXVQ2mjBkuIP/F51fQLxVIVCBiYZPhglunta3pTBgTOiSjNKa0Q4nhUisoPCEkI2DPCr7S8bGI6nP3hYyQUm8UJzmuMORBDBTfrFye0AmyRswC3GzZLEKU5uc31gE7dhiGf9RRv7taBDxqNA6wE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hZmfDDZO; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4716x6Oj020234;
+	Thu, 1 Aug 2024 08:44:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=u
+	zu7WKJ/qtNJ40pIunxyhy8ISssdrhXhEhGfcGQ6gM4=; b=hZmfDDZO/Y+MN2vxM
+	oE3sAOMEcX/pSSEqcZ0bS/EY9l6eweB+KGhw8v1ZuPzSfvsdKZnwAc18iWKFfK4M
+	XB2hFvQI55mjF5bgcUiHIF9Gbbh81i7xjlZKFdYR5pLdyBEn5zCBWxRRHIe6kzpK
+	Zp8Rpib4qfZNaC32vvEiHGxWccVf4xpMJwMlp4K6H3LyfAbGA3KxbR/KEJAVJ7HI
+	JOri8NcaQja5KPA1yVJmgqEWbeF1rrbAgyDz84wnijTUObR0TI7SydYR54v72CjE
+	IrdguemUk1+vDrVhtssaZ8FrJjBxcGwM7++1T4zHEcAP+4ag3OgZPH+WyXPCHWxV
+	kzpnA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40r5jsg7uw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 Aug 2024 08:44:12 +0000 (GMT)
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4718iCBr012345;
+	Thu, 1 Aug 2024 08:44:12 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40r5jsg7ut-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 Aug 2024 08:44:11 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4717KTW2007479;
+	Thu, 1 Aug 2024 08:44:11 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 40nb7uh0t3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 Aug 2024 08:44:11 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4718i5Ph44302742
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 1 Aug 2024 08:44:07 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6018020043;
+	Thu,  1 Aug 2024 08:44:05 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 327BF20040;
+	Thu,  1 Aug 2024 08:44:05 +0000 (GMT)
+Received: from [9.152.224.253] (unknown [9.152.224.253])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  1 Aug 2024 08:44:05 +0000 (GMT)
+Message-ID: <56690b92-67a7-48eb-b5df-ad176097ca13@linux.ibm.com>
+Date: Thu, 1 Aug 2024 10:44:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 05/10] selftests: kvm: s390: Add debug print functions
+To: Christoph Schlameuss <schlameuss@linux.ibm.com>, kvm@vger.kernel.org
+Cc: linux-s390@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+References: <20240730072413.143556-1-schlameuss@linux.ibm.com>
+ <20240730072413.143556-6-schlameuss@linux.ibm.com>
+Content-Language: en-US
+From: Janosch Frank <frankja@linux.ibm.com>
+Autocrypt: addr=frankja@linux.ibm.com; keydata=
+ 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
+In-Reply-To: <20240730072413.143556-6-schlameuss@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 4I4z5ylnmcXUpr62jz3tTjDKehfUrsmA
+X-Proofpoint-GUID: vH7OBISx1YCFwifaydDJfyyewOb5TBP0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-01_05,2024-07-31_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ phishscore=0 mlxscore=0 mlxlogscore=889 suspectscore=0 priorityscore=1501
+ malwarescore=0 clxscore=1015 impostorscore=0 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2408010050
 
-From: Catalin Marinas <catalin.marinas@arm.com>
+On 7/30/24 9:24 AM, Christoph Schlameuss wrote:
+[...]
 
-Hardware DMA limit might not be power of 2. When RAM range starts above
-0, say 4GB, DMA limit of 30 bits should end at 5GB. A single high bit
-can not encode this limit.
+> +#endif /* SELFTEST_KVM_DEBUG_PRINT_H */
+> diff --git a/tools/testing/selftests/kvm/s390x/ucontrol_test.c b/tools/testing/selftests/kvm/s390x/ucontrol_test.c
+> index d103a92e7495..029233374465 100644
+> --- a/tools/testing/selftests/kvm/s390x/ucontrol_test.c
+> +++ b/tools/testing/selftests/kvm/s390x/ucontrol_test.c
+> @@ -7,6 +7,7 @@
+>    * Authors:
+>    *  Christoph Schlameuss <schlameuss@linux.ibm.com>
+>    */
+> +#include "debug_print.h"
+>   #include "kselftest_harness.h"
+>   #include "kvm_util.h"
+>   #include "processor.h"
 
-Use direct phys_addr_t limit address for DMA zone limit.
-
-Current code using zone_dma_bits assume that all address range below
-limit is suitable for DMA. For some existing platforms this assumption
-is not correct. DMA range might have non zero lower limit.
-
-Commit 791ab8b2e3db ("arm64: Ignore any DMA offsets in the
-max_zone_phys() calculation") made arm64 DMA/DMA32 zones span the entire
-RAM when RAM starts above 32-bits. This breaks hardware with DMA area
-that start above 32-bits. But the commit log says that "we haven't
-noticed any such hardware". It turns out that such hardware does exist.
-
-One such platform has RAM starting at 32GB with an internal bus that has
-the following DMA limits:
-
-  #address-cells = <2>;
-  #size-cells = <2>;
-  dma-ranges = <0x00 0xc0000000 0x08 0x00000000 0x00 0x40000000>;
-
-That is, devices under this bus see 1GB of DMA range between 3GB-4GB in
-their address space. This range is mapped to CPU memory at 32GB-33GB.
-With current code DMA allocations for devices under this bus are not
-limited to DMA area, leading to run-time allocation failure.
-
-With the move to zone_dma_limit DMA allocation for constrained devices
-becomes possible.
-
-The result is DMA zone that properly reflects the hardware constraints
-as follows:
-
-[    0.000000] Zone ranges:
-[    0.000000]   DMA      [mem 0x0000000800000000-0x000000083fffffff]
-[    0.000000]   DMA32    empty
-[    0.000000]   Normal   [mem 0x0000000840000000-0x0000000bffffffff]
-
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Co-developed-by: Baruch Siach <baruch@tkos.co.il>
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
----
- arch/arm64/mm/init.c       | 30 +++++++++++++++---------------
- arch/powerpc/mm/mem.c      |  9 ++++-----
- arch/s390/mm/init.c        |  2 +-
- include/linux/dma-direct.h |  2 +-
- kernel/dma/direct.c        |  4 ++--
- kernel/dma/pool.c          |  5 +++--
- kernel/dma/swiotlb.c       |  2 +-
- 7 files changed, 27 insertions(+), 27 deletions(-)
-
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 9b5ab6818f7f..c45e2152ca9e 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -115,35 +115,35 @@ static void __init arch_reserve_crashkernel(void)
- }
- 
- /*
-- * Return the maximum physical address for a zone accessible by the given bits
-- * limit. If DRAM starts above 32-bit, expand the zone to the maximum
-+ * Return the maximum physical address for a zone given its limit.
-+ * If DRAM starts above 32-bit, expand the zone to the maximum
-  * available memory, otherwise cap it at 32-bit.
-  */
--static phys_addr_t __init max_zone_phys(unsigned int zone_bits)
-+static phys_addr_t __init max_zone_phys(phys_addr_t zone_limit)
- {
--	phys_addr_t zone_mask = DMA_BIT_MASK(zone_bits);
- 	phys_addr_t phys_start = memblock_start_of_DRAM();
- 
- 	if (phys_start > U32_MAX)
--		zone_mask = PHYS_ADDR_MAX;
--	else if (phys_start > zone_mask)
--		zone_mask = U32_MAX;
-+		zone_limit = PHYS_ADDR_MAX;
-+	else if (phys_start > zone_limit)
-+		zone_limit = U32_MAX;
- 
--	return min(zone_mask, memblock_end_of_DRAM() - 1) + 1;
-+	return min(zone_limit, memblock_end_of_DRAM() - 1) + 1;
- }
- 
- static void __init zone_sizes_init(void)
- {
- 	unsigned long max_zone_pfns[MAX_NR_ZONES]  = {0};
--	unsigned int __maybe_unused acpi_zone_dma_bits;
--	unsigned int __maybe_unused dt_zone_dma_bits;
--	phys_addr_t __maybe_unused dma32_phys_limit = max_zone_phys(32);
-+	phys_addr_t __maybe_unused acpi_zone_dma_limit;
-+	phys_addr_t __maybe_unused dt_zone_dma_limit;
-+	phys_addr_t __maybe_unused dma32_phys_limit =
-+		max_zone_phys(DMA_BIT_MASK(32));
- 
- #ifdef CONFIG_ZONE_DMA
--	acpi_zone_dma_bits = fls64(acpi_iort_dma_get_max_cpu_address());
--	dt_zone_dma_bits = fls64(of_dma_get_max_cpu_address(NULL));
--	zone_dma_bits = min3(32U, dt_zone_dma_bits, acpi_zone_dma_bits);
--	arm64_dma_phys_limit = max_zone_phys(zone_dma_bits);
-+	acpi_zone_dma_limit = acpi_iort_dma_get_max_cpu_address();
-+	dt_zone_dma_limit = of_dma_get_max_cpu_address(NULL);
-+	zone_dma_limit = min(dt_zone_dma_limit, acpi_zone_dma_limit);
-+	arm64_dma_phys_limit = max_zone_phys(zone_dma_limit);
- 	max_zone_pfns[ZONE_DMA] = PFN_DOWN(arm64_dma_phys_limit);
- #endif
- #ifdef CONFIG_ZONE_DMA32
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index d325217ab201..342c006cc1b8 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -216,7 +216,7 @@ static int __init mark_nonram_nosave(void)
-  * everything else. GFP_DMA32 page allocations automatically fall back to
-  * ZONE_DMA.
-  *
-- * By using 31-bit unconditionally, we can exploit zone_dma_bits to inform the
-+ * By using 31-bit unconditionally, we can exploit zone_dma_limit to inform the
-  * generic DMA mapping code.  32-bit only devices (if not handled by an IOMMU
-  * anyway) will take a first dip into ZONE_NORMAL and get otherwise served by
-  * ZONE_DMA.
-@@ -252,13 +252,12 @@ void __init paging_init(void)
- 	 * powerbooks.
- 	 */
- 	if (IS_ENABLED(CONFIG_PPC32))
--		zone_dma_bits = 30;
-+		zone_dma_limit = DMA_BIT_MASK(30);
- 	else
--		zone_dma_bits = 31;
-+		zone_dma_limit = DMA_BIT_MASK(31);
- 
- #ifdef CONFIG_ZONE_DMA
--	max_zone_pfns[ZONE_DMA]	= min(max_low_pfn,
--				      1UL << (zone_dma_bits - PAGE_SHIFT));
-+	max_zone_pfns[ZONE_DMA]	= min(max_low_pfn, zone_dma_limit >> PAGE_SHIFT);
- #endif
- 	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
- #ifdef CONFIG_HIGHMEM
-diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-index ddcd39ef4346..91fc2b91adfc 100644
---- a/arch/s390/mm/init.c
-+++ b/arch/s390/mm/init.c
-@@ -97,7 +97,7 @@ void __init paging_init(void)
- 
- 	vmem_map_init();
- 	sparse_init();
--	zone_dma_bits = 31;
-+	zone_dma_limit = DMA_BIT_MASK(31);
- 	memset(max_zone_pfns, 0, sizeof(max_zone_pfns));
- 	max_zone_pfns[ZONE_DMA] = virt_to_pfn(MAX_DMA_ADDRESS);
- 	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
-diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
-index edbe13d00776..98b7d8015043 100644
---- a/include/linux/dma-direct.h
-+++ b/include/linux/dma-direct.h
-@@ -12,7 +12,7 @@
- #include <linux/mem_encrypt.h>
- #include <linux/swiotlb.h>
- 
--extern unsigned int zone_dma_bits;
-+extern phys_addr_t zone_dma_limit;
- 
- /*
-  * Record the mapping of CPU physical to DMA addresses for a given region.
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 3b4be4ca3b08..3dbc0b89d6fb 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -20,7 +20,7 @@
-  * it for entirely different regions. In that case the arch code needs to
-  * override the variable below for dma-direct to work properly.
-  */
--unsigned int zone_dma_bits __ro_after_init = 24;
-+phys_addr_t zone_dma_limit __ro_after_init = DMA_BIT_MASK(24);
- 
- static inline dma_addr_t phys_to_dma_direct(struct device *dev,
- 		phys_addr_t phys)
-@@ -580,7 +580,7 @@ int dma_direct_supported(struct device *dev, u64 mask)
- 	 * part of the check.
- 	 */
- 	if (IS_ENABLED(CONFIG_ZONE_DMA))
--		min_mask = min_t(u64, min_mask, DMA_BIT_MASK(zone_dma_bits));
-+		min_mask = min_t(u64, min_mask, zone_dma_limit);
- 	return mask >= phys_to_dma_unencrypted(dev, min_mask);
- }
- 
-diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
-index d10613eb0f63..a6e15db9d1e7 100644
---- a/kernel/dma/pool.c
-+++ b/kernel/dma/pool.c
-@@ -70,9 +70,10 @@ static bool cma_in_zone(gfp_t gfp)
- 	/* CMA can't cross zone boundaries, see cma_activate_area() */
- 	end = cma_get_base(cma) + size - 1;
- 	if (IS_ENABLED(CONFIG_ZONE_DMA) && (gfp & GFP_DMA))
--		return end <= DMA_BIT_MASK(zone_dma_bits);
-+		return end <= zone_dma_limit;
-+	/* Account for possible zone_dma_limit > DMA_BIT_MASK(32) */
- 	if (IS_ENABLED(CONFIG_ZONE_DMA32) && (gfp & GFP_DMA32))
--		return end <= DMA_BIT_MASK(32);
-+		return end <= DMA_BIT_MASK(32) || end <= zone_dma_limit;
- 	return true;
- }
- 
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index 043b0ecd3e8d..53595eb41922 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -450,7 +450,7 @@ int swiotlb_init_late(size_t size, gfp_t gfp_mask,
- 	if (!remap)
- 		io_tlb_default_mem.can_grow = true;
- 	if (IS_ENABLED(CONFIG_ZONE_DMA) && (gfp_mask & __GFP_DMA))
--		io_tlb_default_mem.phys_limit = DMA_BIT_MASK(zone_dma_bits);
-+		io_tlb_default_mem.phys_limit = zone_dma_limit;
- 	else if (IS_ENABLED(CONFIG_ZONE_DMA32) && (gfp_mask & __GFP_DMA32))
- 		io_tlb_default_mem.phys_limit = DMA_BIT_MASK(32);
- 	else
--- 
-2.43.0
-
+Acked if you move that to the next patch
 
