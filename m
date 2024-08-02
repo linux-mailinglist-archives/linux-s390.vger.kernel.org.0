@@ -1,134 +1,119 @@
-Return-Path: <linux-s390+bounces-5337-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-5343-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C997A94613B
-	for <lists+linux-s390@lfdr.de>; Fri,  2 Aug 2024 18:01:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2668E9461F6
+	for <lists+linux-s390@lfdr.de>; Fri,  2 Aug 2024 18:44:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 07AF61C22D75
-	for <lists+linux-s390@lfdr.de>; Fri,  2 Aug 2024 16:01:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CC4121F21480
+	for <lists+linux-s390@lfdr.de>; Fri,  2 Aug 2024 16:44:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DB9B166F19;
-	Fri,  2 Aug 2024 15:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NG27yxeh"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0EB913634A;
+	Fri,  2 Aug 2024 16:44:49 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97C81A34C7;
-	Fri,  2 Aug 2024 15:59:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4823816BE0B;
+	Fri,  2 Aug 2024 16:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722614398; cv=none; b=KHITXteT5ISUGE2rUJu+OzISwYJnuSUZ6vL+CPycjz4SbZwbEmb98i1mKPlgjM3YWpwNexxK+yNEFysyjCpZdk+Fv34w2rmBluhAqByV/Dn3nv86sgZjOtQYcIIVyyoB1w8pDlwSqru7S0E5fZ8kDM5yHHvcqHm95d6d5IzRL7w=
+	t=1722617089; cv=none; b=D++J5nz4W2qB0UvFG9MIHJXD8C7wV6h5WlA4WoHP6DaOmfQ6Z0yK9BADE2hpDG0L++hmOSS3w4aHIiFpw+G/w/64hKhVnqkcOQDX8u6awsSAA79dtqngqscDCIraPv0p9bOP49sn6aecIpxyA2EZzJXvXP7kLqJl99NP0acsCkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722614398; c=relaxed/simple;
-	bh=UTJTTwakb0Y4F7S7LSoa6aFHpamUUlndwuz8rJPyuuE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PNzfApD7rvF1AXkpXCSAUh6tYAGK48h32YNFle3wOrldIsUTTpugQ2INgw211HaXA6QJxOsz6OgLpajn76IGXg+LkjwPCXmflqcOJ/1ab3/gH//u2vovZkG3vXRvgUICN9TZ0WHiCjPb1K0iyeGemJsWgEXuIGPqwgAYPQDn0Pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NG27yxeh; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 472Fwlus002142;
-	Fri, 2 Aug 2024 15:59:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=MQSuH22OjStRM
-	MP7ECvV1lS5lhnW+ejlhB0cuzypbEs=; b=NG27yxehgKfqDazbxzrMS98m5DRQp
-	Cq0HVV7cSUCUzP7TwNCtG97bSWLQOE3MBzPzshIP8YMfFdMqvEh1bdpWwvkAQ942
-	9sRFbEXVP+z6RQqs2nbFeqzP50vncYwuiY1O9l7z6XBf0TGXoz+dMQoRhR/glJV1
-	tSQrhb4hxvG1rjg1PlupPEnREIW47BREHdL4/2TmRimQjS8NRVEOjhoF6Y1udX8c
-	Cyxp7TG7B/yEqUZYP2+ozaMYh36KjFEgLaQg+F434UXAYoJMeVLswCPqFgbuTJgV
-	mVgQxF2MCtCpp+yqJsn9lBXBb9jvJzt6DQM0GTy3bqPWC068RLAcr7jfw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40s2jm002f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Aug 2024 15:59:53 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 472FxqV3003413;
-	Fri, 2 Aug 2024 15:59:52 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40s2jm002d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Aug 2024 15:59:52 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 472EYJRK011129;
-	Fri, 2 Aug 2024 15:59:52 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40ncqn7wcc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Aug 2024 15:59:51 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 472Fxk5f48824778
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 2 Aug 2024 15:59:48 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 261332004D;
-	Fri,  2 Aug 2024 15:59:46 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 82F2F20040;
-	Fri,  2 Aug 2024 15:59:45 +0000 (GMT)
-Received: from darkmoore.ibmuc.com (unknown [9.171.84.102])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  2 Aug 2024 15:59:45 +0000 (GMT)
-From: Christoph Schlameuss <schlameuss@linux.ibm.com>
-To: kvm@vger.kernel.org
-Cc: linux-s390@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Nina Schoetterl-Glausch <nsg@linux.ibm.com>
-Subject: [PATCH v4 10/10] s390: Enable KVM_S390_UCONTROL config in debug_defconfig
-Date: Fri,  2 Aug 2024 17:59:13 +0200
-Message-ID: <20240802155913.261891-11-schlameuss@linux.ibm.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240802155913.261891-1-schlameuss@linux.ibm.com>
-References: <20240802155913.261891-1-schlameuss@linux.ibm.com>
+	s=arc-20240116; t=1722617089; c=relaxed/simple;
+	bh=NCbcoYaXRkWCPqQyDc3SvLTQKqJDdoxXXdNRp7Lxpbs=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lCLHlV6CpOm8I3ytXZV58odGzhKssSn4mYVx+u82uzv2NNPAt2KhqqLINfwmoktDWEPfarSn0pNNgy2pndspbrAFJOAOv800Z1YiIQHDiCFGqttqzLNKeoo+jeIP/yMK0EOY3KVFIeqaHdCChPcptQkkK+4SJIg+2NX1uFpYF8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WbBTD2kfFz6K5YZ;
+	Sat,  3 Aug 2024 00:42:40 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id A6A811404F5;
+	Sat,  3 Aug 2024 00:44:44 +0800 (CST)
+Received: from localhost (10.203.177.66) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 2 Aug
+ 2024 17:44:43 +0100
+Date: Fri, 2 Aug 2024 17:44:43 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Mike Rapoport <rppt@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, Alexander Gordeev
+	<agordeev@linux.ibm.com>, Andreas Larsson <andreas@gaisler.com>, "Andrew
+ Morton" <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "Borislav
+ Petkov" <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>, Christophe
+ Leroy <christophe.leroy@csgroup.eu>, Dan Williams <dan.j.williams@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, David Hildenbrand
+	<david@redhat.com>, "David S. Miller" <davem@davemloft.net>, Davidlohr Bueso
+	<dave@stgolabs.net>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, Heiko
+ Carstens <hca@linux.ibm.com>, Huacai Chen <chenhuacai@kernel.org>, Ingo
+ Molnar <mingo@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>, "John Paul
+ Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>, Jonathan Corbet
+	<corbet@lwn.net>, Michael Ellerman <mpe@ellerman.id.au>, Palmer Dabbelt
+	<palmer@dabbelt.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring
+	<robh@kernel.org>, Samuel Holland <samuel.holland@sifive.com>, Thomas
+ Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner
+	<tglx@linutronix.de>, "Vasily Gorbik" <gor@linux.ibm.com>, Will Deacon
+	<will@kernel.org>, Zi Yan <ziy@nvidia.com>, <devicetree@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-cxl@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-mips@vger.kernel.org>,
+	<linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
+	<linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <loongarch@lists.linux.dev>,
+	<nvdimm@lists.linux.dev>, <sparclinux@vger.kernel.org>, <x86@kernel.org>
+Subject: Re: [PATCH v3 00/26] mm: introduce numa_memblks
+Message-ID: <20240802174443.0000710c@Huawei.com>
+In-Reply-To: <20240801060826.559858-1-rppt@kernel.org>
+References: <20240801060826.559858-1-rppt@kernel.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 1ugd__24DPps2eXDGMihnzCTpXqQq49x
-X-Proofpoint-GUID: lb4NYBnHjSQNZm4NGGi4yCUKSndCQyta
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-02_11,2024-08-02_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- mlxlogscore=933 spamscore=0 clxscore=1015 lowpriorityscore=0
- suspectscore=0 malwarescore=0 phishscore=0 mlxscore=0 impostorscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2408020110
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-To simplify testing enable UCONTROL KVM by default in debug kernels.
+On Thu,  1 Aug 2024 09:08:00 +0300
+Mike Rapoport <rppt@kernel.org> wrote:
 
-Signed-off-by: Christoph Schlameuss <schlameuss@linux.ibm.com>
-Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
----
- arch/s390/configs/debug_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> 
+> Hi,
+> 
+> Following the discussion about handling of CXL fixed memory windows on
+> arm64 [1] I decided to bite the bullet and move numa_memblks from x86 to
+> the generic code so they will be available on arm64/riscv and maybe on
+> loongarch sometime later.
+> 
+> While it could be possible to use memblock to describe CXL memory windows,
+> it currently lacks notion of unpopulated memory ranges and numa_memblks
+> does implement this.
+> 
+> Another reason to make numa_memblks generic is that both arch_numa (arm64
+> and riscv) and loongarch use trimmed copy of x86 code although there is no
+> fundamental reason why the same code cannot be used on all these platforms.
+> Having numa_memblks in mm/ will make it's interaction with ACPI and FDT
+> more consistent and I believe will reduce maintenance burden.
+> 
+> And with generic numa_memblks it is (almost) straightforward to enable NUMA
+> emulation on arm64 and riscv.
 
-diff --git a/arch/s390/configs/debug_defconfig b/arch/s390/configs/debug_defconfig
-index ea63a7342f5f..0c989caed19a 100644
---- a/arch/s390/configs/debug_defconfig
-+++ b/arch/s390/configs/debug_defconfig
-@@ -59,6 +59,7 @@ CONFIG_CMM=m
- CONFIG_APPLDATA_BASE=y
- CONFIG_S390_HYPFS_FS=y
- CONFIG_KVM=m
-+CONFIG_KVM_S390_UCONTROL=y
- CONFIG_S390_UNWIND_SELFTEST=m
- CONFIG_S390_KPROBES_SANITY_TEST=m
- CONFIG_S390_MODULES_SANITY_TEST=m
--- 
-2.45.2
+Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> #arm64 + CXL via QEMU
+With that one fix in patch 7.
+
+Feel free to figure out which patches actually got tested by that
+(or tag them all - I'll pretend I tested ip27 :)
+
+Jonathan
 
 
