@@ -1,94 +1,163 @@
-Return-Path: <linux-s390+bounces-5293-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-5295-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B50DF945655
-	for <lists+linux-s390@lfdr.de>; Fri,  2 Aug 2024 04:38:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 030D49457E3
+	for <lists+linux-s390@lfdr.de>; Fri,  2 Aug 2024 08:04:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 10C90B214F0
-	for <lists+linux-s390@lfdr.de>; Fri,  2 Aug 2024 02:38:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B25AF283128
+	for <lists+linux-s390@lfdr.de>; Fri,  2 Aug 2024 06:04:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EE821B7E9;
-	Fri,  2 Aug 2024 02:38:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7482247F64;
+	Fri,  2 Aug 2024 06:04:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="AJcNKghG"
+	dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b="laksWbYU"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Received: from mail.tkos.co.il (wiki.tkos.co.il [84.110.109.230])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21359256D;
-	Fri,  2 Aug 2024 02:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42D6249EB;
+	Fri,  2 Aug 2024 06:04:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.110.109.230
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722566291; cv=none; b=WreWsrbZEEpx6mDM87UdnKnMUNIhiBJ1COmePhILD1+C3fSCVyC32cjDE6qN+yl/V6YwpNAXsWBeXSK8eZwTDm2g/o7pcclyw2ZAazbFD0TN5XanE4kMR/WPvMRbcJb+y7GDG8z/tUZJlafg2OUow56Egg/z2PlPVJbTYCzXNkI=
+	t=1722578645; cv=none; b=V+Pf9f2a6g1J4zwEsEHW37twUGGLMm+tS2WW55iAYt5KIsWJI63R6VuZNLjbMOFFEzxDIVADZ1vjMJgBcaniA/MgwaIPgrk5fD/cW+q813ma+FsZlamLZiWT+ODSsv0WKaiMcjkBnr6gJWwHL0lWDhazxfn2nfsD/Nb6idhnlXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722566291; c=relaxed/simple;
-	bh=qsERdodKVvGHkmLwF7ZiXQoVYz+Du1NbfybhRREWwr8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hZyCk4olz9KWVm8I7InVeTZrj9CPCl4ZX8la65xzPw6ZbDjJKmlA/tlwsVM+z6zIomES2hElj4FWQ7L8UDMdsKMtFJew0U+qVZHXxVaG4qYb1ytXAQktM6+to34YbDPzvoggJRd16YC8yvfZ7bka/0bswRgIJaH8K4o2DCIDEn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=AJcNKghG; arc=none smtp.client-ip=115.124.30.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1722566286; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=aWAgTe3/d2vuRvpihukkRtHTKAqcY/yAFBxhWx6czPY=;
-	b=AJcNKghGoiUO+XYPR2LMWS8yLLLJEgjFI7w4ST2Lw59ZwrvXlpyX/W+dR2PVEyZnf08HATnnHGEFmXt2hejC/t+Xh1RAtKwMwtXdEtDfN0O4pUSSfKUOaPkdacV5uR9H03GA70y34UvgUhRkyvBexX8Sdjd1CY0xUM9A1+otvA0=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R941e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045046011;MF=alibuda@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0WBvdzkc_1722566283;
-Received: from 30.221.149.103(mailfrom:alibuda@linux.alibaba.com fp:SMTPD_---0WBvdzkc_1722566283)
-          by smtp.aliyun-inc.com;
-          Fri, 02 Aug 2024 10:38:05 +0800
-Message-ID: <a69bfb91-3cfa-4e98-b655-e8f0d462c55d@linux.alibaba.com>
-Date: Fri, 2 Aug 2024 10:38:03 +0800
+	s=arc-20240116; t=1722578645; c=relaxed/simple;
+	bh=f7+YSeoZjV+nruyrLf+ETcyb6ScBPRAvwyyjAC4FQFo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FLwKKcm45u3U24sDf4AokOfURWnuSIpxEQBZ9Df4ZEgOBdTK8DE138/PTtjw9fNErSrAUFuyTGBJW0lip78lqnuzIlyrbIzq4QhRgwO+NqGfUjwt/5/zxkvaoHyJpc1Aqc8ktgY2b05/7DNbAqoBS8CXLIehPEwZBRKJK33JFV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il; spf=pass smtp.mailfrom=tkos.co.il; dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b=laksWbYU; arc=none smtp.client-ip=84.110.109.230
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tkos.co.il
+Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.tkos.co.il (Postfix) with ESMTPS id 9BC03440478;
+	Fri,  2 Aug 2024 09:02:39 +0300 (IDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
+	s=default; t=1722578559;
+	bh=f7+YSeoZjV+nruyrLf+ETcyb6ScBPRAvwyyjAC4FQFo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=laksWbYUuGR2eviQWANC1xAkZ5reUbsIdGDAQi60pNfJnr9Tq/TA0Nu8H11CbROwt
+	 b4RU0Di3OEWiWem+oVrGHX4EfVbuliW88g7AvkZ5CAmuWE8NpmoK9nUe+GATiCEah5
+	 3NolBe5dO8DPW8Np5CyQ31lkq7WtkAQn3mutHMQgAN4qGZvDJjmeFRl+WtMrVP2tau
+	 uLsiRCoAKsagrgIXD6p64YY9icUL0ImBDYq0yVmy2S7/vfPmrsAr1+B0f3zoO1q8/J
+	 tUv++lFihD0+OhzQ8OA5qqZ3x5Duqa+BfhsEMq/LSWhT6xEyp9k7fhzwIjYXEsHGxk
+	 gmuxHtLZfz+kg==
+From: Baruch Siach <baruch@tkos.co.il>
+To: Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+Cc: Baruch Siach <baruch@tkos.co.il>,
+	Robin Murphy <robin.murphy@arm.com>,
+	iommu@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org,
+	=?UTF-8?q?Petr=20Tesa=C5=99=C3=ADk?= <petr@tesarici.cz>,
+	Ramon Fried <ramon@neureality.ai>,
+	Elad Nachman <enachman@marvell.com>
+Subject: [PATCH v5 0/3] dma: support DMA zone starting above 4GB
+Date: Fri,  2 Aug 2024 09:03:45 +0300
+Message-ID: <cover.1722578375.git.baruch@tkos.co.il>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] net/smc: add the max value of fallback reason
- count
-To: Zhengchao Shao <shaozhengchao@huawei.com>, linux-s390@vger.kernel.org,
- netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com
-Cc: wenjia@linux.ibm.com, jaka@linux.ibm.com, tonylu@linux.alibaba.com,
- guwen@linux.alibaba.com, weiyongjun1@huawei.com, yuehaibing@huawei.com
-References: <20240801113549.98301-1-shaozhengchao@huawei.com>
-Content-Language: en-US
-From: "D. Wythe" <alibuda@linux.alibaba.com>
-In-Reply-To: <20240801113549.98301-1-shaozhengchao@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+DMA zones code assumes that DMA lower limit is zero. When there is no RAM 
+below 4GB, arm64 platform code sets DMA/DMA32 zone limits to cover the entire 
+RAM[0].
+
+My target platform has RAM starting at 32GB. Devices with 30-bit DMA mask are 
+mapped to 1GB at the bottom of RAM, between 32GB - 33GB. DMA zone over the 
+entire RAM breaks DMA allocation for these devices.
+
+In response to a previous RFC hack[1] Catalin Marinas suggested to add a
+separate offset value as base address for the DMA zone, and then refined the 
+suggestion to use start of RAM[3]. This series attempts to implement that 
+suggestion.
+
+With this series applied, the DMA zone covers the right RAM range for my 
+platform.
+
+v5:
+
+  * Test the correct kernel
+
+  * Add missing patch that actually makes DMA zone work
+
+  * Extend the treatment of zone_dma_limit > DMA_BIT_MASK(32)
+
+  * Use max() to make the code somewhat more readable
+
+  * Change zone_dma_limit type to u64 to match DMA_BIT_MASK()
+
+v4:
+
+  * Drop last patch. zone_dma_limit includes RAM base address.
+
+  * Adjust DMA zone selection in swiotlb as well.
+
+  * Don't change max_zone_phys() behaviour
+
+  * Update code to fallback to DMA zone when zone_dma_limit > DMA_BIT_MASK(32)
+
+v3:
+
+  * Rebase on v6.11-rc1.
+
+  * Drop zone_dma_base. Use memblock_start_of_DRAM() instead.
+
+  * Drop DT patches. Low DMA range limit no longer needed.
+
+  * Add patch to improve dma_direct_optimal_gfp_mask() heuristics as Catalin 
+    suggested.
+
+RFC v2:
+
+  * Add patch from Catalin[2] changing zone_dma_bits to zone_dma_limit to 
+    simplify subsequent patches
+
+  * Test on real hardware
+
+RFC v1: https://lore.kernel.org/all/cover.1703683642.git.baruch@tkos.co.il/
+
+[0] See commit 791ab8b2e3db ("arm64: Ignore any DMA offsets in the 
+    max_zone_phys() calculation")
+
+[1] https://lore.kernel.org/all/9af8a19c3398e7dc09cfc1fbafed98d795d9f83e.1699464622.git.baruch@tkos.co.il/
+
+[2] https://lore.kernel.org/all/ZZ2HnHJV3gdzu1Aj@arm.com/
+
+[3] https://lore.kernel.org/all/ZnH-VU2iz9Q2KLbr@arm.com/
+
+Baruch Siach (1):
+  dma: improve DMA zone selection
+
+Catalin Marinas (2):
+  dma: replace zone_dma_bits by zone_dma_limit
+  arm64: support DMA zone above 4GB
+
+ arch/arm64/mm/init.c       | 32 ++++++++++----------------------
+ arch/powerpc/mm/mem.c      |  9 ++++-----
+ arch/s390/mm/init.c        |  2 +-
+ include/linux/dma-direct.h |  2 +-
+ kernel/dma/direct.c        | 10 +++++-----
+ kernel/dma/pool.c          |  4 ++--
+ kernel/dma/swiotlb.c       |  8 ++++----
+ 7 files changed, 27 insertions(+), 40 deletions(-)
 
 
-On 8/1/24 7:35 PM, Zhengchao Shao wrote:
-> The number of fallback reasons defined in the smc_clc.h file has reached
-> 36. For historical reasons, some are no longer quoted, and there's 33
-> actually in use. So, add the max value of fallback reason count to 50.
->
-> Signed-off-by: Zhengchao Shao <shaozhengchao@huawei.com>
-> ---
->   net/smc/smc_stats.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/net/smc/smc_stats.h b/net/smc/smc_stats.h
-> index 9d32058db2b5..ab5aafc6f44c 100644
-> --- a/net/smc/smc_stats.h
-> +++ b/net/smc/smc_stats.h
-> @@ -19,7 +19,7 @@
->   
->   #include "smc_clc.h"
->   
-> -#define SMC_MAX_FBACK_RSN_CNT 30
-> +#define SMC_MAX_FBACK_RSN_CNT 50
->   
-It feels more like a fix ？
-
->   enum {
->   	SMC_BUF_8K,
+base-commit: 8400291e289ee6b2bf9779ff1c83a291501f017b
+-- 
+2.43.0
 
 
