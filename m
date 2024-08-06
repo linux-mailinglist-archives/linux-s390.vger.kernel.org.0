@@ -1,128 +1,136 @@
-Return-Path: <linux-s390+bounces-5372-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-5375-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76DC5948815
-	for <lists+linux-s390@lfdr.de>; Tue,  6 Aug 2024 05:53:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B8E1948B88
+	for <lists+linux-s390@lfdr.de>; Tue,  6 Aug 2024 10:46:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A7D421C22063
-	for <lists+linux-s390@lfdr.de>; Tue,  6 Aug 2024 03:53:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E66C1C2237F
+	for <lists+linux-s390@lfdr.de>; Tue,  6 Aug 2024 08:46:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C163317C203;
-	Tue,  6 Aug 2024 03:53:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B95EC1BDA86;
+	Tue,  6 Aug 2024 08:45:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="S25DXj2o"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8909F4ED;
-	Tue,  6 Aug 2024 03:53:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3CC1BDA80;
+	Tue,  6 Aug 2024 08:45:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722916387; cv=none; b=EIqokeeiboeQFmyBZi2BTxAm7YaZo88bB0pREuPAidw0NeA28hHFi7DPOmA8dbnlm+g7EzJTGb4NFZTnJO5fUcXKGDC+b4KomVf0uJZChYpJzGpR9IqzfqhQbT10R2+KFvnv1eccKOe4oYAnraNTsKD/D6KY3YH8+iOYVwg6YY4=
+	t=1722933949; cv=none; b=Ar7In/iTigayqjtZTZYYZYl03ZSWfzSncCCdSWEaSTbs7xvmGfj49AQjAcq83BvUevk4bBx2SMI/WooJ68mse5UtKXY/d+44xu3A2mBxy3MyNhwoiVfamAp4Rr/tyaYXscSY6p5YiDYn9XrvXKPfopOve4to/gole9K1MYmEeQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722916387; c=relaxed/simple;
-	bh=iBIAgpNfjFOWcanfd3pJH3vtDVP3lWkqexHsDtuvqXc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=eMZqlS19AJeIpihlTcW9KSoKU5/3zrQcUV0HgnTNawsvPa++qkYHLUtgnLRtErOP6K02k3f1UROcx6uUkvl2gmGlkdqPPQ6EJ70SIqvFXdC6XAH/WIH7enMOeoNfjQm8j4mvI34892rb3mBy3c9P1kKbTyOaBeRjiw6wZQH79/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WdK926cRRzfZ3g;
-	Tue,  6 Aug 2024 11:51:02 +0800 (CST)
-Received: from dggpeml500026.china.huawei.com (unknown [7.185.36.106])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2C062180102;
-	Tue,  6 Aug 2024 11:52:56 +0800 (CST)
-Received: from [10.174.178.66] (10.174.178.66) by
- dggpeml500026.china.huawei.com (7.185.36.106) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 6 Aug 2024 11:52:55 +0800
-Message-ID: <7f2decb7-3f32-1501-91db-c6b0da6baf37@huawei.com>
-Date: Tue, 6 Aug 2024 11:52:55 +0800
+	s=arc-20240116; t=1722933949; c=relaxed/simple;
+	bh=MTpvAa5ZdIwtyFlgbw3nzvFRRSzTur6/doN26CKr+wU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=teBPMYMQDm1cThQbnxtc2Yc3cx6qlTXQLxM0pchWN6PmgSEsCItuxLVW4aVa1YQNX95mlxIRmzwAXa0vnyraE9CPNL+QxRPLtT6Tn1Dnih/2cHGA5VuQPU1a71qL07iXxdZo38zbypG16MdI2mYspdL8twe7it2vZaGzRwVN2Kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=S25DXj2o; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4766winu003006;
+	Tue, 6 Aug 2024 08:45:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding; s=pp1; bh=+YOf7NfAOCizzjI3BD88yyJHbd
+	+5feuhKgBXDm2j448=; b=S25DXj2ominhGJm85WI+3qdngEzFJl1poZ9VzhmxJ7
+	FZWWcuK+x6hy2OUEaIuO0fLOENd9BBnn72y+GWyhBPcqDyE1+VG9/igtSgpnmf6g
+	ul2UHF3yrOJLyAAmdK8s7SCof10vLitylHHXP71XLNlNQs3GQ+Sj7SoQFk+Yv8Sf
+	oG2W+RWrJaf2RjUwNnRsSmryfmK6KHz0QNkQVhEHQv2m5dpTxaBb2hNzvpnturTB
+	psKBEaLGoYCCIHWfJveTmSMqhgAILVtSfBUDzbik+8P9lZGnowcHLiUxI63cWCjn
+	GUFdaZVD7hZUzN02Hl+5MHNeCk3mtb51DPQ/32DAN2kA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40uf1hr7a8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 Aug 2024 08:45:40 +0000 (GMT)
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4768jeMN019908;
+	Tue, 6 Aug 2024 08:45:40 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40uf1hr7a5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 Aug 2024 08:45:40 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 47670bIV018626;
+	Tue, 6 Aug 2024 08:45:39 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 40sxvu30w8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 Aug 2024 08:45:39 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4768jXvB55509362
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 6 Aug 2024 08:45:35 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 59A9C20063;
+	Tue,  6 Aug 2024 08:45:33 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1E9F620043;
+	Tue,  6 Aug 2024 08:45:33 +0000 (GMT)
+Received: from a46lp67.lnxne.boe (unknown [9.152.108.100])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  6 Aug 2024 08:45:33 +0000 (GMT)
+From: Janosch Frank <frankja@linux.ibm.com>
+To: kvm@vger.kernel.org
+Cc: linux-s390@vger.kernel.org, imbrenda@linux.ibm.com, nrb@linux.ibm.com,
+        schlameuss@linux.ibm.com, nsg@linux.ibm.com, npiggin@gmail.com,
+        mhartmay@linux.ibm.com
+Subject: [kvm-unit-tests PATCH v2 0/4] s390x: split off snippet and sie related code
+Date: Tue,  6 Aug 2024 08:42:26 +0000
+Message-ID: <20240806084409.169039-1-frankja@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.0.2
-Subject: Re: [PATCH net-next 0/2] net/smc: introduce ringbufs usage statistics
-To: Wen Gu <guwen@linux.alibaba.com>, <wenjia@linux.ibm.com>,
-	<jaka@linux.ibm.com>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>
-CC: <alibuda@linux.alibaba.com>, <tonylu@linux.alibaba.com>,
-	<linux-kernel@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-	<netdev@vger.kernel.org>
-References: <20240805090551.80786-1-guwen@linux.alibaba.com>
-From: shaozhengchao <shaozhengchao@huawei.com>
-In-Reply-To: <20240805090551.80786-1-guwen@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpeml500026.china.huawei.com (7.185.36.106)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: LcgBrnGxtiFMkcj4og_H4vwOjQkrb7_X
+X-Proofpoint-ORIG-GUID: atIxbGuA3_0Itp7JRH2Oyq0mL71KQfbJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-06_06,2024-08-02_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 malwarescore=0 impostorscore=0 lowpriorityscore=0
+ bulkscore=0 mlxscore=0 suspectscore=0 clxscore=1015 spamscore=0
+ mlxlogscore=897 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2407110000 definitions=main-2408060060
 
-Hi Wen Gu:
-    Your patchset looks fine. However, the current smc-tools tool is not
-supported, so will you update the smc-tools tool?
+The makefile is getting long and increasingly complex. Let's move the
+snippet part to s390x/snippets/ and sprinkle a couple comments on top.
 
-Thank you
+While we're moving things around we can split lib/s390x/sie.h into sie
+architecture code and sie library code and split the sie assembly in
+cpu.S into its own file.
 
-Zhengchao Shao
+v2:
+	- Rebased on Marc's makefile patch
+	- Fixed commit messages in patches 1 & 4
+	- Picked up R-Bs
 
-On 2024/8/5 17:05, Wen Gu wrote:
-> Currently, we have histograms that show the sizes of ringbufs that ever
-> used by SMC connections. However, they are always incremental and since
-> SMC allows the reuse of ringbufs, we cannot know the actual amount of
-> ringbufs being allocated or actively used.
-> 
-> So this patch set introduces statistics for the amount of ringbufs that
-> actually allocated by link group and actively used by connections of a
-> certain net namespace, so that we can react based on these memory usage
-> information, e.g. active fallback to TCP.
-> 
-> With appropriate adaptations of smc-tools, we can obtain these ringbufs
-> usage information:
-> 
-> $ smcr -d linkgroup
-> LG-ID    : 00000500
-> LG-Role  : SERV
-> LG-Type  : ASYML
-> VLAN     : 0
-> PNET-ID  :
-> Version  : 1
-> Conns    : 0
-> Sndbuf   : 12910592 B    <-
-> RMB      : 12910592 B    <-
-> 
-> or
-> 
-> $ smcr -d stats
-> [...]
-> RX Stats
->    Data transmitted (Bytes)      869225943 (869.2M)
->    Total requests                 18494479
->    Buffer usage  (Bytes)          12910592 (12.31M)  <-
->    [...]
-> 
-> TX Stats
->    Data transmitted (Bytes)    12760884405 (12.76G)
->    Total requests                 36988338
->    Buffer usage  (Bytes)          12910592 (12.31M)  <-
->    [...]
-> [...]
-> 
-> Wen Gu (2):
->    net/smc: introduce statistics for allocated ringbufs of link group
->    net/smc: introduce statistics for ringbufs usage of net namespace
-> 
->   include/uapi/linux/smc.h |  6 ++++
->   net/smc/smc_core.c       | 74 ++++++++++++++++++++++++++++++++++------
->   net/smc/smc_core.h       |  2 ++
->   net/smc/smc_stats.c      |  8 +++++
->   net/smc/smc_stats.h      | 27 ++++++++++-----
->   5 files changed, 97 insertions(+), 20 deletions(-)
-> 
+Janosch Frank (4):
+  s390x/Makefile: Split snippet makefile rules into new file
+  s390x/Makefile: Add more comments
+  s390x: Move SIE assembly into new file
+  lib: s390x: Split SIE fw structs from lib structs
+
+ lib/s390x/{sie.h => asm/sie-arch.h} |  58 +------
+ lib/s390x/sie.h                     | 231 +---------------------------
+ s390x/Makefile                      |  45 ++----
+ s390x/{cpu.S => cpu-sie.S}          |  59 +------
+ s390x/cpu.S                         |  64 --------
+ s390x/snippets/Makefile             |  34 ++++
+ 6 files changed, 49 insertions(+), 442 deletions(-)
+ copy lib/s390x/{sie.h => asm/sie-arch.h} (81%)
+ copy s390x/{cpu.S => cpu-sie.S} (56%)
+ create mode 100644 s390x/snippets/Makefile
+
+-- 
+2.43.0
+
 
