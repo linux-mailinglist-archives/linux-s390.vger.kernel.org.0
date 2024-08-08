@@ -1,161 +1,149 @@
-Return-Path: <linux-s390+bounces-5513-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-5516-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6221094C074
-	for <lists+linux-s390@lfdr.de>; Thu,  8 Aug 2024 17:01:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C64294C24F
+	for <lists+linux-s390@lfdr.de>; Thu,  8 Aug 2024 18:10:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DDEF7B22CC2
-	for <lists+linux-s390@lfdr.de>; Thu,  8 Aug 2024 15:01:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7CF9E1C21C51
+	for <lists+linux-s390@lfdr.de>; Thu,  8 Aug 2024 16:10:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C6DE18C915;
-	Thu,  8 Aug 2024 15:01:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBEB78003F;
+	Thu,  8 Aug 2024 16:10:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="c8uHoEvJ"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AaZ8lDqW"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF9325570;
-	Thu,  8 Aug 2024 15:01:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3959584A36;
+	Thu,  8 Aug 2024 16:10:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723129305; cv=none; b=nOerr+3TZENiwSJ/nnIXfkVMcOxDWK6GmFkJnn+uXL86/VA9uiMJ0xvOH9cvksbWuaq27djFK0vjfW2SAdB1Lt6ARlKqepVJd17CLMEf408oqR7NZ7lZ59y/vQRCIE3ABM7OrDopDRqY3awamgo09zOgd18teLctSHSH6L66xsE=
+	t=1723133451; cv=none; b=gtujtyHUrskVPKZ32ceAKIh7KYmS2Eza7G5Nhp7caLzVk2vN+9js5InLP27iDgKgUZhj9jP5XvJGXDuMAackWGeQ8R4CDBxbX8JFIZgKwquG54zFDLS4cTwN+RzsYlDL4o9jRWGwbi/WImuAfOXkrCbyMTnxvHFS0Xj4BUycuvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723129305; c=relaxed/simple;
-	bh=sgjfVfijeWWj+meR8ZMo9VaB7Jn0DSJk72V/MHNRPEQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EgKCvjx0dMCutFvHloO+B1OSE3UY/fR4POaxiV2Wc1B3wFWwXgaXt+eM4wdoP7DRlCtm1uCRD3RcR+q7k8jhnJUKG7QXyd7YYfEPm46YlDkfGCmizBnYL6K1SkvdPrVeCZQt272oNjTQsSs+v3Ow1tnlgZQAqYOVMmZgSrReClo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=c8uHoEvJ; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1723133451; c=relaxed/simple;
+	bh=t3Eh3P81p7u2J1jD19hGT51qcAJhVxSMOMR3RVzxMmU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n4JW0oK5Raqk66vSs8X5KoJnngb+2OFNmVK4RkObCcOLnkj6aV0XNg+kcDMtbNZJQJ3UbrWOkUCGN2ueVR67iw6xUedZA+Kx5TTFPCfuL2W0upPG7GZAlmguQgDWGIaAZKmrS0aMWCLptEXUbiR8R2y69x4E87puEcdJCZcQxzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AaZ8lDqW; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 478CaJfg024954;
-	Thu, 8 Aug 2024 15:01:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:in-reply-to:references
-	:content-transfer-encoding:mime-version; s=pp1; bh=JMFDGGQiQschd
-	gv+u+Yj27Nvdqg47ExYi2Q4W/mBKk0=; b=c8uHoEvJkHQNB/u4rm8yH1TSsc6Rg
-	N5OJO/gQtDEDssDvGeO96l8FDYo/O1X2jqizNqxJAzFqps2IxQKcv6LLJYiqil0L
-	YlE6k5X7zBj1kZeN10k/jTfIntiF4H5pUQdJ5DwWhAXPVbgZkn0JOHwpRz6Gi1HA
-	ArAsPLSKzeIJiQBA/g/12bybNgqZ4EgI1DhOMXbJKamSdYZAT5oaEkVoPDnSDaDf
-	aLtnAzsgF1lz0Rj5du18Przds+IZONNHWSR0k4Z4d0JvuPP8hc8vkKaCXsbGjSAH
-	PZJTfn5bl/kq2Htd9FIR31I+QZVheDe9RZKKQakGm5Uia1KPnqnWOYp+w==
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 478CaIS9024933;
+	Thu, 8 Aug 2024 16:10:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
+	:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=pp1; bh=zIwRR2ClsX9LOSQZIlPTXaUS9gt
+	aMzoDoSdw+VJqN/s=; b=AaZ8lDqWuPeVYa6azYSmbUt5+KRlb4WhBdVixNZlws+
+	dbTNwPqKVCy3OsMqreBMGhIdL8hAl5PQPX9oSZHsirKcNk5okVxTGJAsK66j6/1G
+	SpcOWYNq8adxKwfclQmzxXQ8qvjUkEJWxRktwaYanndZDEw8zLyw/p0RpAzbQC2j
+	vAomBwfWkGCSxO35HD1P2wMFHXMWudSnpPFSB03NBd3Qb275mEyfygrON14hvxsS
+	JEscr/ydOSS95X8ZKWeyxIm7uapKPCrfgkI31IZKLzEX9ZlNs1kM+dGTKQNXcSWB
+	v7DkZZJsCxhmV0dz54cdbPU3gU/i+sPDBxckpYj7yKw==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40vwkbre94-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40vwkbrm4f-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 Aug 2024 15:01:39 +0000 (GMT)
+	Thu, 08 Aug 2024 16:10:34 +0000 (GMT)
 Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 478F1dh5016870;
-	Thu, 8 Aug 2024 15:01:39 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40vwkbre92-1
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 478GAXLX012271;
+	Thu, 8 Aug 2024 16:10:33 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40vwkbrm4b-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 Aug 2024 15:01:39 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 478C1UDk018004;
-	Thu, 8 Aug 2024 15:01:38 GMT
+	Thu, 08 Aug 2024 16:10:33 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 478EQlMp024322;
+	Thu, 8 Aug 2024 16:10:32 GMT
 Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40t0cmxq7j-1
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40sy90yaab-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 Aug 2024 15:01:38 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 478F1W2a48366008
+	Thu, 08 Aug 2024 16:10:32 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 478GAQrx40829282
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 8 Aug 2024 15:01:34 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BC37520075;
-	Thu,  8 Aug 2024 15:01:30 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 38A962004B;
-	Thu,  8 Aug 2024 15:01:30 +0000 (GMT)
-Received: from li-9fd7f64c-3205-11b2-a85c-df942b00d78d.ibm.com.com (unknown [9.171.38.33])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  8 Aug 2024 15:01:30 +0000 (GMT)
-From: Janosch Frank <frankja@linux.ibm.com>
-To: pbonzini@redhat.com
-Cc: kvm@vger.kernel.org, frankja@linux.ibm.com, david@redhat.com,
-        borntraeger@linux.ibm.com, cohuck@redhat.com,
-        linux-s390@vger.kernel.org, imbrenda@linux.ibm.com,
-        Steffen Eiden <seiden@linux.ibm.com>
-Subject: [GIT PULL 2/2] s390/uv: Panic for set and remove shared access UVC errors
-Date: Thu,  8 Aug 2024 16:52:13 +0200
-Message-ID: <20240808150026.11404-3-frankja@linux.ibm.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20240808150026.11404-1-frankja@linux.ibm.com>
-References: <20240808150026.11404-1-frankja@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Em8wYqHNHejInlUH_tI3ceVZyfCpgchs
-X-Proofpoint-ORIG-GUID: JS78gups867CFs-r7lkzMTwNJLlhJG-_
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	Thu, 8 Aug 2024 16:10:28 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4942F20040;
+	Thu,  8 Aug 2024 16:10:26 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 07EF920067;
+	Thu,  8 Aug 2024 16:10:26 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu,  8 Aug 2024 16:10:25 +0000 (GMT)
+Date: Thu, 8 Aug 2024 18:10:24 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Wei Yang <richard.weiyang@gmail.com>
+Cc: gerald.schaefer@linux.ibm.com, hca@linux.ibm.com, rppt@kernel.org,
+        akpm@linux-foundation.org, brauner@kernel.org, oleg@redhat.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v6 1/3] mm/memblock: introduce a new helper
+ memblock_estimated_nr_free_pages()
+Message-ID: <ZrTt8NLqaPpKBZKr@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <20240808001415.6298-1-richard.weiyang@gmail.com>
+ <ZrSYruB/Aa8+oBoZ@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+ <20240808142405.ttlcfkximywtde6i@master>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240808142405.ttlcfkximywtde6i@master>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: I88Rgv0M3bv42Qfs8v2efCUYJ-hx4yuQ
+X-Proofpoint-ORIG-GUID: lyNApa4Ov3JeXE1Hu1WbH0xjvn8aptV0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-08_15,2024-08-07_01,2024-05-17_01
+ definitions=2024-08-08_16,2024-08-07_01,2024-05-17_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
  priorityscore=1501 bulkscore=0 lowpriorityscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=590 spamscore=0 clxscore=1015 impostorscore=0
+ suspectscore=0 mlxlogscore=862 spamscore=0 clxscore=1015 impostorscore=0
  phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2408080103
+ engine=8.19.0-2407110000 definitions=main-2408080114
 
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+On Thu, Aug 08, 2024 at 02:24:05PM +0000, Wei Yang wrote:
+> >> + * An estimated number of free pages from memblock point of view.
+> >> + */
+> >> +unsigned long __init memblock_estimated_nr_free_pages(void)
+> >> +{
+> >> +	return PHYS_PFN(memblock_phys_mem_size() - memblock_reserved_size());
+> >> +}
+> >
+> >This could possibly be short on up to two pages due to lack of alignment.
+> >The current uses are okay, but since you make it generic it probably matters.
+> >
+> 
+> I don't follow, would you mind giving more detail?
 
-The return value uv_set_shared() and uv_remove_shared() (which are
-wrappers around the share() function) is not always checked. The system
-integrity of a protected guest depends on the Share and Unshare UVCs
-being successful. This means that any caller that fails to check the
-return value will compromise the security of the protected guest.
+memblock_estimated_nr_free_pages() returns number of pages, not bytes.
+Yet, both memblock_phys_mem_size() and memblock_reserved_size() return
+a value which is not aligned on PAGE_SIZE. Therefore, the result of
+PHYS_PFN() applied to the difference between the two functions might
+be short on one (two?) page(s).
 
-No code path that would lead to such violation of the security
-guarantees is currently exercised, since all the areas that are shared
-never get unshared during the lifetime of the system. This might
-change and become an issue in the future.
+> >Also, the returned value is not an estimation. Meaning the function name
+> >is rather unfortunate AFAICT.
+> 
+> From my point of view, this is an estimation for two reasons:
+> 
+> * value from memblock_xxx is not page size aligned
+> * reserved memory maybe released during boot stage
+> 
+> It is not that easy to get the exact number of free pages here. Do I miss
+> something?
 
-The Share and Unshare UVCs can only fail in case of hypervisor
-misbehaviour (either a bug or malicious behaviour). In such cases there
-is no reasonable way forward, and the system needs to panic.
+No, with this reasoning it makes sense to me.
 
-This patch replaces the return at the end of the share() function with
-a panic, to guarantee system integrity.
+> -- 
+> Wei Yang
+> Help you, Help me
 
-Fixes: 5abb9351dfd9 ("s390/uv: introduce guest side ultravisor code")
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@linux.ibm.com>
-Reviewed-by: Steffen Eiden <seiden@linux.ibm.com>
-Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
-Link: https://lore.kernel.org/r/20240801112548.85303-1-imbrenda@linux.ibm.com
-Message-ID: <20240801112548.85303-1-imbrenda@linux.ibm.com>
-[frankja@linux.ibm.com: Fixed up patch subject]
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
----
- arch/s390/include/asm/uv.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/arch/s390/include/asm/uv.h b/arch/s390/include/asm/uv.h
-index 0b5f8f3e84f1..153d93468b77 100644
---- a/arch/s390/include/asm/uv.h
-+++ b/arch/s390/include/asm/uv.h
-@@ -441,7 +441,10 @@ static inline int share(unsigned long addr, u16 cmd)
- 
- 	if (!uv_call(0, (u64)&uvcb))
- 		return 0;
--	return -EINVAL;
-+	pr_err("%s UVC failed (rc: 0x%x, rrc: 0x%x), possible hypervisor bug.\n",
-+	       uvcb.header.cmd == UVC_CMD_SET_SHARED_ACCESS ? "Share" : "Unshare",
-+	       uvcb.header.rc, uvcb.header.rrc);
-+	panic("System security cannot be guaranteed unless the system panics now.\n");
- }
- 
- /*
--- 
-2.46.0
-
+Thank you for the clarification!
 
