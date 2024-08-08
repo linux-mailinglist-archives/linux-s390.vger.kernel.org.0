@@ -1,134 +1,148 @@
-Return-Path: <linux-s390+bounces-5512-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-5514-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 567AA94BFA5
-	for <lists+linux-s390@lfdr.de>; Thu,  8 Aug 2024 16:24:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A1F394C076
+	for <lists+linux-s390@lfdr.de>; Thu,  8 Aug 2024 17:01:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EF1B51F277F6
-	for <lists+linux-s390@lfdr.de>; Thu,  8 Aug 2024 14:24:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CA3671F2BEBC
+	for <lists+linux-s390@lfdr.de>; Thu,  8 Aug 2024 15:01:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE99B18E755;
-	Thu,  8 Aug 2024 14:24:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1328D18EFE8;
+	Thu,  8 Aug 2024 15:01:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YJIj9B1R"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="M1lmXShS"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4132770E;
-	Thu,  8 Aug 2024 14:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41EBB18C321;
+	Thu,  8 Aug 2024 15:01:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723127050; cv=none; b=bkcU2YOD8vlVUJSk+JchkAAzkpKvuRH9P6O7JaxIGNdoWwCdcm3FyRN4ech0s9gWi/XAPJsfFUSqfPEQuIgVOYhIPvSlv6xnZViqDkptgfN3W0R+RmaF/gA8dcKbbHMBg3YxtpmmqXQ0ZIcOICmtCZow+Rx91pDfFscHBYfZLEg=
+	t=1723129307; cv=none; b=Qa++gqQXYAwtkeRtbdLPhqV+nQQprwtNXYLA1BW5jdtmB+Lf4G94Z5lQSqCxd4w2yvTRQYI+NEPILKZx9e//FYXMJLf00vZ8Qwunp9Xtz/fJGY11sqUA4DLQFegA9qPe+nYJcFZ2UAvrksBcCrBT5RxkurBuvNeNiQdUPGSeZbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723127050; c=relaxed/simple;
-	bh=rQPaIp3gvnKwKfiqvePOZNVA8JAw1Wkt4p/m1gvKaw0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sqocDkX1xeRlOF/XILtzB0AJak+PgbdscqwNlDWsodFoSMHyLlAbnGplFU4J/3ggm4xFKS1CZgVwWSpdFEbYNPAjlXa2QD1HuAphuAP6h7iiK4n3wSGJuDgREt7bn8qTxzDFe4dY6TKxHtEfoSUIELQRz5udVm1kQgnIp/8RtWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YJIj9B1R; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5a20de39cfbso1097041a12.1;
-        Thu, 08 Aug 2024 07:24:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723127047; x=1723731847; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RwycnN0pOkHu6v/Wf/jldzzdbOFGNUEkeQ9Th2/NQ/k=;
-        b=YJIj9B1ROlIyVwnHpiD9Xf274ZdsAQGXytU/uS3unuWwHLflDKixniOCrrx5jMNfED
-         D8PiqBsArP9KnB2afDpHDGfH/DHtBmaVKAq/RmTjrIaVazZMHK3bX+VQ+DuDHkQo2OFa
-         t5un8r65lN6Z6RIZz0cQ8iniRfwzT+D4I8IWL6flAWjOwrDbgSobuwpWEYT3uh3OoxRu
-         ZjTOUzqidxuUU+3qRJBmSPsRKrseUUGbOmQKcQsutlikL3brTy/H/ES5krRBty7DZT78
-         HvfSIdJ9iNJ7ulMrU6pkgJLhhnIj+UjIb+3K0gIlzmTFA931LRu7XonG8n11BBqzrvxC
-         q4nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723127047; x=1723731847;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=RwycnN0pOkHu6v/Wf/jldzzdbOFGNUEkeQ9Th2/NQ/k=;
-        b=P63nYuMs/nqoQSz4Uf3Tw4rAx/95bt/oPxf35XZWX4nSV2ICAeIqU0kDLju3eIO/ws
-         75x+k7sP0s2T3cOBb/9yaIoeeIQHSIesr3g5+gB0cfCyV0W25303yh4nzCqoB25vlmI1
-         9jYI/If8OwN5LhGmXd+TvYPErxE0yGq8OTKT35LRolEQmhNJX8i+FJKB36pJDeop+U1D
-         kE7cY6eqKhP2P6elxNJOHrwmO3eWNL78L38g+v0xv4LagLutjj6nwYW/EHjSvsRxzYOG
-         KMApsWIHcGV9GCCIbjkJsDzZq68TbBP636OFbrSFGNRcUlHdrhsKqm87JUzH47DTO7Gl
-         Jryw==
-X-Forwarded-Encrypted: i=1; AJvYcCX+3walGzgncUs+61ur4XtqA11e1Y+itQXAB+nv6rfptwM7RGM3y4KCGdlaXxSRd7vy3CL0zLAV4eEKZYJKSEkkYbSUqOzqvoxMjgyyB4ye1u7zuL3GhB5eOCoZp4c62NBNkP6mf1hjtw==
-X-Gm-Message-State: AOJu0YzkmeDVsslUoxkm1J24zK71Ppmy395P5+/GwyDqdpVR3ztB0cE4
-	edx6ZSX50rZ9l65T/MlQC6wXtMuj7eAkkr6N54Hf8t/zD4PKc8r5
-X-Google-Smtp-Source: AGHT+IGAINzcfiz5VbZvk6czh2iTO/zbsODVhNEtsHllWPWdBHr1pJaKrq/NQVeRwkMi6E2tT4xUfg==
-X-Received: by 2002:a05:6402:2708:b0:5a2:189:6306 with SMTP id 4fb4d7f45d1cf-5bbb22330a3mr1890210a12.18.1723127047008;
-        Thu, 08 Aug 2024 07:24:07 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5bbb2c6f6ebsm682635a12.56.2024.08.08.07.24.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 08 Aug 2024 07:24:06 -0700 (PDT)
-Date: Thu, 8 Aug 2024 14:24:05 +0000
-From: Wei Yang <richard.weiyang@gmail.com>
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Wei Yang <richard.weiyang@gmail.com>, gerald.schaefer@linux.ibm.com,
-	hca@linux.ibm.com, rppt@kernel.org, akpm@linux-foundation.org,
-	brauner@kernel.org, oleg@redhat.com, linux-s390@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH v6 1/3] mm/memblock: introduce a new helper
- memblock_estimated_nr_free_pages()
-Message-ID: <20240808142405.ttlcfkximywtde6i@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20240808001415.6298-1-richard.weiyang@gmail.com>
- <ZrSYruB/Aa8+oBoZ@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+	s=arc-20240116; t=1723129307; c=relaxed/simple;
+	bh=9e4wjzp0e1e7SRkcMRAhZaNNaTtr1K3WnMN4766ZiFc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NmPXDG8diXvCnR0o06XYJAmPlnTcNtiMV0kiRRIAk0o4hXzJ/4cls9KpA9F7ADl8HYXxLYoe7nVQRd5VzPoAFVeEXb93uueKT2AuygmoWv8k0TLXtfO5gPw9IKAzpSmcfvyrSuyduitkN/O5J1T//FVyLAVVlrDGXZwZrT6LcPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=M1lmXShS; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 478CaRgc007476;
+	Thu, 8 Aug 2024 15:01:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:content-transfer-encoding
+	:mime-version; s=pp1; bh=hqYZ71vgm59bmStqe+W7m9vOR1J+RaoL268X2LS
+	X3Lg=; b=M1lmXShScKnILxJEq5Zf96tCK+jXuj6wo6/HJNAgqHD5LE5IWyxQSPy
+	EMTiQcV7NLYoH5EXRJ+oLDX0Ju6YbYm20WKvOqkmRpAQZExiTh0TvHk6+8Royr6T
+	Obve83NLdyKSWOVRHbrDRtpe6M3FzW436WdRJ7F69kU7Q49T/94y8yAYdiF+qc5e
+	7EiJUNIuBeYDuM1Yu4IcmC2+cQ94o4mZXDZFXrKgZ8yyfWH/mIuSoXpCnzJfiIms
+	pnndP1uJeKMOPeKTCfobHRlOgJMsGY1CUdRaETSf7ZNxGirwy0TS14NI1H25owNf
+	pKIdK4/1P3D7roVD/KRPP3fHxbxXKvw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40vwkbrdn9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 Aug 2024 15:01:36 +0000 (GMT)
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 478F1ZsL031565;
+	Thu, 8 Aug 2024 15:01:35 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40vwkbrdn5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 Aug 2024 15:01:35 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 478EQjs5018618;
+	Thu, 8 Aug 2024 15:01:34 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 40sxvuf3r1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 Aug 2024 15:01:34 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 478F1T2B50987370
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 8 Aug 2024 15:01:31 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 62A2720040;
+	Thu,  8 Aug 2024 15:01:29 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D5F1F20075;
+	Thu,  8 Aug 2024 15:01:28 +0000 (GMT)
+Received: from li-9fd7f64c-3205-11b2-a85c-df942b00d78d.ibm.com.com (unknown [9.171.38.33])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  8 Aug 2024 15:01:28 +0000 (GMT)
+From: Janosch Frank <frankja@linux.ibm.com>
+To: pbonzini@redhat.com
+Cc: kvm@vger.kernel.org, frankja@linux.ibm.com, david@redhat.com,
+        borntraeger@linux.ibm.com, cohuck@redhat.com,
+        linux-s390@vger.kernel.org, imbrenda@linux.ibm.com
+Subject: [GIT PULL 0/2] KVM: s390: Fixes for 6.11
+Date: Thu,  8 Aug 2024 16:52:11 +0200
+Message-ID: <20240808150026.11404-1-frankja@linux.ibm.com>
+X-Mailer: git-send-email 2.46.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Y9SnwOJ6ZAO5nwvk-CZocBydsnUMF6Vm
+X-Proofpoint-ORIG-GUID: A73dzeWco_NmcDYCAYa7UYhDSyWOZLEZ
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZrSYruB/Aa8+oBoZ@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-08_15,2024-08-07_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0 clxscore=1015
+ adultscore=0 malwarescore=0 bulkscore=0 mlxlogscore=709 impostorscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2408080103
 
-On Thu, Aug 08, 2024 at 12:06:38PM +0200, Alexander Gordeev wrote:
->On Thu, Aug 08, 2024 at 12:14:13AM +0000, Wei Yang wrote:
->
->Hi Wei,
->
->...
->> + * Return:
->> + * An estimated number of free pages from memblock point of view.
->> + */
->> +unsigned long __init memblock_estimated_nr_free_pages(void)
->> +{
->> +	return PHYS_PFN(memblock_phys_mem_size() - memblock_reserved_size());
->> +}
->
->This could possibly be short on up to two pages due to lack of alignment.
->The current uses are okay, but since you make it generic it probably matters.
->
+Paolo,
+two fixes for s390.
 
-I don't follow, would you mind giving more detail?
+Turning gisa off was making us write an uninitialized value into the
+SIE control block due to the V!=R changes.
 
->Also, the returned value is not an estimation. Meaning the function name
->is rather unfortunate AFAICT.
+Errors when (un)sharing SE memory which were previously unchecked are
+now resulting in panics since there's nothing that the guest can do to
+fix the situation.
 
-From my point of view, this is an estimation for two reasons:
+Please pull.
 
-* value from memblock_xxx is not page size aligned
-* reserved memory maybe released during boot stage
+The following changes since commit de9c2c66ad8e787abec7c9d7eff4f8c3cdd28aed:
 
-It is not that easy to get the exact number of free pages here. Do I miss
-something?
+  Linux 6.11-rc2 (2024-08-04 13:50:53 -0700)
 
->
->> +#define PHYS_PFN(x)	((unsigned long)((x) >> PAGE_SHIFT))
->
->Thanks!
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git tags/kvm-s390-master-6.11-1
+
+for you to fetch changes up to cff59d8631e1409ffdd22d9d717e15810181b32c:
+
+  s390/uv: Panic for set and remove shared access UVC errors (2024-08-07 11:04:43 +0000)
+
+----------------------------------------------------------------
+Fix invalid gisa designation value when gisa is not in use.
+Panic if (un)share fails to maintain security.
+----------------------------------------------------------------
+
+
+Claudio Imbrenda (1):
+  s390/uv: Panic for set and remove shared access UVC errors
+
+Michael Mueller (1):
+  KVM: s390: fix validity interception issue when gisa is switched off
+
+ arch/s390/include/asm/uv.h | 5 ++++-
+ arch/s390/kvm/kvm-s390.h   | 7 ++++++-
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
 -- 
-Wei Yang
-Help you, Help me
+2.46.0
+
 
