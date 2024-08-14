@@ -1,94 +1,59 @@
-Return-Path: <linux-s390+bounces-5609-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-5615-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 989E9951E17
-	for <lists+linux-s390@lfdr.de>; Wed, 14 Aug 2024 17:06:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D71B0951EE1
+	for <lists+linux-s390@lfdr.de>; Wed, 14 Aug 2024 17:44:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5ACF828258B
-	for <lists+linux-s390@lfdr.de>; Wed, 14 Aug 2024 15:06:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8DB5F1F23C89
+	for <lists+linux-s390@lfdr.de>; Wed, 14 Aug 2024 15:44:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FDDE1B3F2D;
-	Wed, 14 Aug 2024 15:06:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94DF41B5802;
+	Wed, 14 Aug 2024 15:44:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lo8Pr/Gg"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Nlp68Wv4"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730FE1B3F25;
-	Wed, 14 Aug 2024 15:06:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024531B582B;
+	Wed, 14 Aug 2024 15:44:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723647967; cv=none; b=mZ95FJWjKh14HUYG4v0ImcJ4vPSKpfqD63rcvNtWPA/GLB+Fc3Ps9nS0+/sL6l7pMKsS3R204y5PCS/n2izDFd1KmBHXqq/2lICOhBxb6t96iQmTFuIH75k/40W4fwdW2pm/5RAYogxn9diwGKJmZ3ASiKl+SCRcMAllFbo5iAk=
+	t=1723650278; cv=none; b=uj23HwJMDowyIvLJWWV6RN6yWh4b/h3GdROMBgCHO8XTVNhVFCbN20Usd6uMFZ2NA43nnvFg0I8E2hOaqylBunbt6WWP0weJw8Ir5LOCwp0BAFZAd31w0r77sWAxwwiGOHt1U8OdEKuALj/f587kPKLkV7B2/tKmu3+1G/xQmPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723647967; c=relaxed/simple;
-	bh=8cK0GvF5QFceshCvw1XcYlJrjfm3NLa//F8dGczr9ko=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Pq4UKPT5HuQQBAr+FkaoKUsFyKWKvJfeQIeCVMFA3inN9VmheMnzJjrFndMTPP2zksXAmkdwBK4AOgKWn7iDI0z1gST91/4xQaUZjME23rTs1PMmiA3W8VtgvYMxy0Qp9mwZffV791KqGoHszRTTkjR2jtOS9CeaF2E1Vg8I9Jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lo8Pr/Gg; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-71275436546so147935b3a.1;
-        Wed, 14 Aug 2024 08:06:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723647965; x=1724252765; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vBNNXqbtdbYFsD6uUrAH/OBdUYwLKiBcMh/OK4+Ox7A=;
-        b=lo8Pr/GgxyuPfLeUK/umgoYFUZK5tUXYSdZYuNggW//zHX68On+LkmORQelEWYAUX8
-         eY72aUYnLLprhuK+AN2q9uQT37mLstTQ5JJBWa+voy3Sn0/NYnKpqg6bpaP3q53Tpzlz
-         4QgDmpixBL1Y6s4jxW+08B/FHLmSOBGSgb7Uk3RDyJNvQGp+lggBCk/q6gVcV8kYNNPd
-         yQc4HQrMt9ArL9XTZPC/GnHjYKclWK13fkey93cxUxll8VOv3j5JhYPn/Bu5RGww0JWi
-         sYokc8/Kma5lCm0XtGuIuhpflc0LOpuL8RRihjHnSeFLfY500YV6VjZZ1VQX6KGx1HZ5
-         F9tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723647965; x=1724252765;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vBNNXqbtdbYFsD6uUrAH/OBdUYwLKiBcMh/OK4+Ox7A=;
-        b=bpJXwmckvOL7WlPtHrlXxT4z7zFUkGG1gZXMeChP8OoFnFdBj2tgQLxJze9tf99WCv
-         3RmBmY9ouPkU+JjaCFflSgqkZu70kJymvYQO3mlcoDTp39Jr4fIMq9v51sM2bzttZ3j0
-         MyGBwttDdMCJXpqvnowO6kPOkfLTLglaGj1R0CKqyqzuh1p+SpJsdRgDCmGIA/+i13nJ
-         YhKfoH7L4CBcTX449f3omewQ66oUgNmKxZLP6I/eQt0FvZT62qSqccVoCGZQlWQGmTAq
-         ReKNdyfx3rg6bGnegjBAH4pxaDGLdn3e1JRNF23WlD6M7RkgotWhWn4Bl7fY8x9ciMwp
-         155A==
-X-Forwarded-Encrypted: i=1; AJvYcCUzI9LgZOwLxLQFK8dDNqC0buQlBDfOBoC4ciRSlqn+COKxQd302qGR71L1ubxaRiVrCOBV3nR1QKxK2vfWvi/ubntTMP0kWiG21V7IIHv9O70MwePOyp+xYvKFkOKa6gttH6e9eweMf6uNiTPD7reyt2ok3eDte/jPMaRYlvs6Iw==
-X-Gm-Message-State: AOJu0Yw7ZS6wpPL1BPNSjxBYtbp0jGLsjetvbe9jFtOODzfU7tvjTWsv
-	8mZb2sIOAN3RzJOkLWasWr5/LP/ayBvpK7cF6HV+5mQh/OUtY1T4
-X-Google-Smtp-Source: AGHT+IG6NXju3u9uZ1M2mdalYsZOqTUXuZluM3xmOKU+R9fWBY3JxN9QRZVLpL2g6H83xxWtFjtB2Q==
-X-Received: by 2002:a05:6a20:d486:b0:1c4:ba7c:741c with SMTP id adf61e73a8af0-1c8eae811a1mr4098557637.21.1723647964422;
-        Wed, 14 Aug 2024 08:06:04 -0700 (PDT)
-Received: from kernelexploit-virtual-machine.localdomain ([121.185.186.233])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7126ad714a6sm1236278b3a.186.2024.08.14.08.06.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Aug 2024 08:06:04 -0700 (PDT)
-From: Jeongjun Park <aha310510@gmail.com>
-To: wintera@linux.ibm.com,
-	alibuda@linux.alibaba.com,
-	gbayer@linux.ibm.com,
-	guwen@linux.alibaba.com,
-	jaka@linux.ibm.com,
-	tonylu@linux.alibaba.com,
-	wenjia@linux.ibm.com
-Cc: davem@davemloft.net,
-	dust.li@linux.alibaba.com,
-	edumazet@google.com,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
+	s=arc-20240116; t=1723650278; c=relaxed/simple;
+	bh=U7WuHYR57mLXTPaEpqW6Wd2ZQf59JaIgOYyS+tdv5xU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DAw4KtLV8kS69IFmow5Mf6Nh5tCWHOeAyG588t6zHfKr9yB4bmqx6e14jy0Rqtx9qAJINT6ru++kwzYEmcx3pNt3HAU6EqPvWr7J3P6XchW5i36ummUx1KNyc+KbibxyhRl97AjMgKGcyGY3CaspNM75MdomRHMTSjlo8Inn39A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Nlp68Wv4; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=Y8GzTtU2QoStw/WgTavIsPk3vntaV6mcfxUlw+vTkw4=; b=Nlp68Wv4gWlG8g9amXu9RSnoTE
+	bGIkORrON8YDkyXuNB3pHR0x3EWS8Cj46g5V0nmkoNra8NLu3eoLcdQDcSfXtQUcNoQv73JbO5irY
+	YO/2KtHV5uYXpcKre5wKy5/4Hv3pAdgjf5CgBoylTiilTIclax+k/Y1qqeGMWDIu25oBopw+ZSuo/
+	+PbCg3gzutTroTrptbNhWjqMZBqJlVGdigr+h7eL9Gwfxuq3uaXQEiYu6lJesN6VHloOF2NJxcVQ5
+	g8Bi5zp2BmmvlEC8p4EYP5Qf2CZacyuv2wEMcW0vqzDern12I/bCWq9yZIfLqu4qinNlF3KSoMUbe
+	DgnzBqVg==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1seGAr-00000000gH2-3gSE;
+	Wed, 14 Aug 2024 15:44:33 +0000
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To: linux-mm@kvack.org,
+	linux-arch@vger.kernel.org
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
 	linux-s390@vger.kernel.org,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com
-Subject: Re: [PATCH net,v4] net/smc: prevent NULL pointer dereference in txopt_get
-Date: Thu, 15 Aug 2024 00:05:58 +0900
-Message-Id: <20240814150558.46178-1-aha310510@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <64c2d755-eb4b-42fa-befb-c4afd7e95f03@linux.ibm.com>
-References: <64c2d755-eb4b-42fa-befb-c4afd7e95f03@linux.ibm.com>
+	linux-um@lists.infradead.org,
+	x86@kernel.org
+Subject: [PATCH 0/5] Provide a single definition of mk_pte()
+Date: Wed, 14 Aug 2024 16:44:20 +0100
+Message-ID: <20240814154427.162475-1-willy@infradead.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -97,54 +62,59 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Alexandra Winter wrote:
-> 
-> On 14.08.24 15:11, D. Wythe wrote:
-> >     struct smc_sock {                /* smc sock container */
-> > -    struct sock        sk;
-> > +    union {
-> > +        struct sock        sk;
-> > +        struct inet_sock    inet;
-> > +    };
-> 
-> 
-> I don't see a path where this breaks, but it looks risky to me.
-> Is an smc_sock always an inet_sock as well? Then can't you go with smc_sock->inet_sock->sk ?
-> Or only in the IPPROTO SMC case, and in the AF_SMC case it is not an inet_sock?
+Each architecturee must provide a definition of mk_pte() today.  They must
+also provide pfn_pte().  Usually the former is defined in terms of the
+latter, but not on some architectures.  I was trying to decide what we
+should do for creating PTEs in a folio world, and it struck me that we
+should have architectures only provide pfn_pte() and then I don't need
+to trouble the arch maintainers with whatever MM API I come up with.
 
-hmm... then how about changing it to something like this?
+The architectures not on the cc list I considered trivial.  The
+architectures who have named patches are less trivial, and I did my
+best to write a decent commit message explaining why I did what I did
+to each architecture.
 
-@@ -283,7 +283,7 @@ struct smc_connection {
- };
- 
- struct smc_sock {				/* smc sock container */
--	struct sock		sk;
-+	struct inet_sock	inet;
- 	struct socket		*clcsock;	/* internal tcp socket */
- 	void			(*clcsk_state_change)(struct sock *sk);
- 						/* original stat_change fct. */
-@@ -327,7 +327,7 @@ struct smc_sock {				/* smc sock container */
- 						 * */
- };
- 
--#define smc_sk(ptr) container_of_const(ptr, struct smc_sock, sk)
-+#define smc_sk(ptr) container_of_const(ptr, struct smc_sock, inet.sk)
- 
- static inline void smc_init_saved_callbacks(struct smc_sock *smc)
- {
+I have some followup patches which remove folio->page conversions, but
+if this set of patches are wrong on any architecture, then they'll also
+be wrong, so I'm not sending them right now.
 
-It is definitely not normal to make the first member of smc_sock as sock. 
+Matthew Wilcox (Oracle) (5):
+  mm: Introduce a common definition of mk_pte()
+  x86: Remove custom definition of mk_pte()
+  um: Remove custom definition of mk_pte()
+  s390: Remove custom definition of mk_pte()
+  mm: Make mk_pte() definition unconditional
 
-Therefore, I think it would be appropriate to modify it to use inet_sock 
-as the first member like other protocols (sctp, dccp) and access sk in a 
-way like &smc->inet.sk.
+ arch/alpha/include/asm/pgtable.h         |  7 -------
+ arch/arc/include/asm/pgtable-levels.h    |  1 -
+ arch/arm/include/asm/pgtable.h           |  1 -
+ arch/arm64/include/asm/pgtable.h         |  6 ------
+ arch/csky/include/asm/pgtable.h          |  5 -----
+ arch/hexagon/include/asm/pgtable.h       |  3 ---
+ arch/loongarch/include/asm/pgtable.h     |  6 ------
+ arch/m68k/include/asm/mcf_pgtable.h      |  6 ------
+ arch/m68k/include/asm/motorola_pgtable.h |  6 ------
+ arch/m68k/include/asm/sun3_pgtable.h     |  6 ------
+ arch/microblaze/include/asm/pgtable.h    |  8 --------
+ arch/mips/include/asm/pgtable.h          |  6 ------
+ arch/nios2/include/asm/pgtable.h         |  6 ------
+ arch/openrisc/include/asm/pgtable.h      |  2 --
+ arch/parisc/include/asm/pgtable.h        |  2 --
+ arch/powerpc/include/asm/pgtable.h       |  1 -
+ arch/riscv/include/asm/pgtable.h         |  2 --
+ arch/s390/include/asm/pgtable.h          | 10 ----------
+ arch/sh/include/asm/pgtable_32.h         |  8 --------
+ arch/sparc/include/asm/pgtable_32.h      |  9 ++-------
+ arch/sparc/include/asm/pgtable_64.h      |  1 -
+ arch/um/include/asm/pgtable-2level.h     |  1 -
+ arch/um/include/asm/pgtable-3level.h     |  9 ---------
+ arch/um/include/asm/pgtable.h            | 17 ++++++++++-------
+ arch/x86/include/asm/pgtable.h           | 19 +++----------------
+ arch/xtensa/include/asm/pgtable.h        |  1 -
+ include/linux/pgtable.h                  |  5 +++++
+ 27 files changed, 20 insertions(+), 134 deletions(-)
 
-Although this fix would require more code changes, we tested the bug and 
-confirmed that it was not triggered and the functionality was working 
-normally.
+-- 
+2.43.0
 
-What do you think?
-
-Regards,
-Jeongjun Park
 
