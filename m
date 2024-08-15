@@ -1,124 +1,150 @@
-Return-Path: <linux-s390+bounces-5645-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-5647-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 707DC95307B
-	for <lists+linux-s390@lfdr.de>; Thu, 15 Aug 2024 15:43:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B442953785
+	for <lists+linux-s390@lfdr.de>; Thu, 15 Aug 2024 17:45:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 14034283435
-	for <lists+linux-s390@lfdr.de>; Thu, 15 Aug 2024 13:43:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 50240288D76
+	for <lists+linux-s390@lfdr.de>; Thu, 15 Aug 2024 15:45:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B026619E7EF;
-	Thu, 15 Aug 2024 13:43:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B98E1B1506;
+	Thu, 15 Aug 2024 15:45:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="nzgwInHZ"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="T3mOzxN4"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450F1198E78;
-	Thu, 15 Aug 2024 13:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8981A4F3B;
+	Thu, 15 Aug 2024 15:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723729408; cv=none; b=R3SB0/iCYIn+BBhft6KB5+sGItdIgPolOQK0UZd3J7+0O//iL+0ZVLz1Sr6bAr3MdeH3okWPshMW9wrBDIbPs3cwXgLQrm/v1iQW9cBLjVqViZRmHKdwerD+wXMQqU01Kf2E+2Oq+7Hxm3rAwLotbVAfvGg3OVho+QvExJ+n4W0=
+	t=1723736751; cv=none; b=hT6dEbm+QONo2QECDRykI3R3vuMjv22LxXZ/VFoLcRvpGtA1jmSFizO9NMZP28RCZzrHN2I2ugtUGmexdkfMOmI+iBQpbbnzTdl16oBTjTmgJDzqU4S1w47VbnW3nGDOGD3WF4Vt/0TMSHTNh4qcN50gPQlSi1z7M9DQ4KF4Jpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723729408; c=relaxed/simple;
-	bh=Ph4FtNVKoaw0OcMp+awfgaGWGwBkaALXj3ATCIi+uXs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KKhYBpGBjaskRCuNErFq2/INDxnyFc2CNjVPKZkn4XC4uR+0hZmliqkOd+85mKZpJriByyxq8cPmivaQcqg7peJKVZPVVaAqlq+auMzyrr6F5Ip4Y+bAa/LRAUdBilKGRcsjsDkVlO6a29rEVkuJAxiPOGLo5WzmENmYOWfsPXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=nzgwInHZ; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4Wl5tL0xQDz9shW;
-	Thu, 15 Aug 2024 15:43:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1723729402;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9Hpq6ksyDyUHd4So1QZsJOGGQCrhZxE48p6ibJ33Odk=;
-	b=nzgwInHZh2zeO0XU7LkZpRjNksVr9RPBAtBO6uSA0SBZSI6osMxGbjzKZeUGCqgcFLM1U9
-	Yf6SUO2S5rhtQdG2BGJeY0mcm2vGlEH51AcB8HO1QcIaDM1tya/vrNGGnT4vBmGnJiuovv
-	izOVHYDETMo7KAZfZBl0lxZDGzeLV37X7QARxem5/QDu+VeSijdCV4E7TVMveIMLn5kYJl
-	rVE8mFs6a+HgbcO2jmWNHwB0OP8sEfCkzU+UddH1/GtWXsH729UGALyOy0ZsC58q+XPZwz
-	EAxMTmPZUKrYOUWa5qaTQ56aq2xwWR80CwgAFTCsboURZZ7II2R5KuQPFgFsQg==
-Date: Thu, 15 Aug 2024 13:43:16 +0000
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Pankaj Raghav <p.raghav@samsung.com>, agordeev@linux.ibm.com,
-	akpm@linux-foundation.org, borntraeger@linux.ibm.com,
-	corbet@lwn.net, frankja@linux.ibm.com,
-	gerald.schaefer@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com,
-	imbrenda@linux.ibm.com, kvm@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-s390@vger.kernel.org, svens@linux.ibm.com,
-	willy@infradead.org
-Subject: Re: [PATCH v1 07/11] mm/huge_memory: convert split_huge_pages_pid()
- from follow_page() to folio_walk
-Message-ID: <20240815134316.h4l4wohtgm2oz2uo@quentin>
-References: <20240802155524.517137-8-david@redhat.com>
- <20240815100423.974775-1-p.raghav@samsung.com>
- <6938b43c-ec61-46f1-bccc-d1b8f6850253@redhat.com>
+	s=arc-20240116; t=1723736751; c=relaxed/simple;
+	bh=c6FMcZ9Ro1bNyGdFqF+qhqczyAwQU8FuOvu8/tuyQc4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VLL+WX+bUpjSCVlyyhFelsDfFZaQbvJ/sk2QmzCYNhKkFf+5AR0qi7d6ISCqS9hGBnCW3r9FGll7DTu/D0at30WDzQc3f7sUSTNJf1gBt7KqScSjeobvBHhodrmy4f33jTXjCyHrgjPzSFMJTp+IkspHTa6+D94StlvzXfe+wng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=T3mOzxN4; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47FApERC011906;
+	Thu, 15 Aug 2024 15:45:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:content-transfer-encoding
+	:mime-version; s=pp1; bh=4xMYHboKlORg0xp/54DTE5qzUoPwtIBM67yaG+E
+	cZns=; b=T3mOzxN4/xCToatHfcR01zb8CJDF3rID6dkxqnEWJezfpYDDa6+pgB+
+	QQwahNqdsnGLkFBZGmbe4OVaQeVPDAeaovoPjdBlyd6yxYISNNd2/qedizCPmtts
+	pzn8lKbBT7pwhpmm6mxjLrtS8yMYVdYpGSRc+4wZ22EV3PYxZrfsPpk57bBbWDto
+	rVJpo6wm7yheUWfk3dk0N0jMwS/sLekxF9rHO0IDeeL+Ckf9aMbtKyrLuycpkQsr
+	EEXu8a79G2jrZLfy+K04UUjUIOAlL++Z0kIAN0SZpXhfYZtqG6ZxOsCKZSiSfRbt
+	T8RXqlmzvLNnekS63N8rnRjyBhx+xTQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4111d6cd1s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 Aug 2024 15:45:40 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 47FFjd3Y005421;
+	Thu, 15 Aug 2024 15:45:39 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4111d6cd1p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 Aug 2024 15:45:39 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 47FCXbeM011523;
+	Thu, 15 Aug 2024 15:45:38 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 40xjhufm7e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 Aug 2024 15:45:38 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 47FFjXR957475518
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 15 Aug 2024 15:45:35 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 42CBD2004B;
+	Thu, 15 Aug 2024 15:45:33 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A352220040;
+	Thu, 15 Aug 2024 15:45:32 +0000 (GMT)
+Received: from darkmoore.ibmuc.com (unknown [9.171.32.201])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 15 Aug 2024 15:45:32 +0000 (GMT)
+From: Christoph Schlameuss <schlameuss@linux.ibm.com>
+To: kvm@vger.kernel.org
+Cc: linux-s390@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Nina Schoetterl-Glausch <nsg@linux.ibm.com>, schlameuss@linux.ibm.com
+Subject: [PATCH 0/3] selftests: kvm: s390: Add ucontrol memory selftests
+Date: Thu, 15 Aug 2024 17:45:26 +0200
+Message-ID: <20240815154529.628087-1-schlameuss@linux.ibm.com>
+X-Mailer: git-send-email 2.46.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: mbhvlfLvbijOgEPLbOqkCAOt_u8MgiWM
+X-Proofpoint-ORIG-GUID: 2dztltn4Be-GLIimnPyvb2ie2XxEA_Ed
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6938b43c-ec61-46f1-bccc-d1b8f6850253@redhat.com>
-X-Rspamd-Queue-Id: 4Wl5tL0xQDz9shW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-15_08,2024-08-15_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=770 phishscore=0
+ spamscore=0 malwarescore=0 priorityscore=1501 impostorscore=0 adultscore=0
+ bulkscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2407110000
+ definitions=main-2408150113
 
-On Thu, Aug 15, 2024 at 12:20:04PM +0200, David Hildenbrand wrote:
-> On 15.08.24 12:04, Pankaj Raghav wrote:
-> > Hi David,
-> > 
-> > On Fri, Aug 02, 2024 at 05:55:20PM +0200, David Hildenbrand wrote:
-> > >   			continue;
-> > >   		}
-> > > -		/* FOLL_DUMP to ignore special (like zero) pages */
-> > > -		page = follow_page(vma, addr, FOLL_GET | FOLL_DUMP);
-> > > -
-> > > -		if (IS_ERR_OR_NULL(page))
-> > > +		folio = folio_walk_start(&fw, vma, addr, 0);
-> > > +		if (!folio)
-> > >   			continue;
-> > > -		folio = page_folio(page);
-> > >   		if (!is_transparent_hugepage(folio))
-> > >   			goto next;
-> > > @@ -3544,13 +3542,19 @@ static int split_huge_pages_pid(int pid, unsigned long vaddr_start,
-> > >   		if (!folio_trylock(folio))
-> > >   			goto next;
-> > > +		folio_get(folio);
-> > 
-> > Shouldn't we lock the folio after we increase the refcount on the folio?
-> > i.e we do folio_get() first and then folio_trylock()?
-> > 
-> > That is how it was done before (through follow_page) and this patch changes
-> > that. Maybe it doesn't matter? To me increasing the refcount and then
-> > locking sounds more logical but I do see this ordering getting mixed all
-> > over the kernel.
-> 
-> There is no need to grab a folio reference if we hold an implicit reference
-> through the mapping that cannot go away (not that we hold the page table
-> lock). Locking the folio is not special in that regard: we just have to make
-> sure that the folio cannot get freed concurrently, which is the case here.
-> 
-> So here, we really only grab a reference if we have to -- when we are about
-> to drop the page table lock and will continue using the folio afterwards.
-Got it. Thanks!
-> 
-> -- 
-> Cheers,
-> 
-> David / dhildenb
-> 
+This patch series adds a some not yet picked selftests to the kvm s390x
+selftest suite.
+
+The additional test cases are covering:
+* Assert KVM_EXIT_S390_UCONTROL exit on not mapped memory access
+* Assert functionality of storage keys in ucontrol VM
+* Assert that memory region operations are rejected for ucontrol VMs
+
+Running the test cases requires sys_admin capabilities to start the
+ucontrol VM.
+This can be achieved by running as root or with a command like:
+
+sudo setpriv --reuid nobody --inh-caps -all,+sys_admin \
+  --ambient-caps -all,+sys_admin --bounding-set -all,+sys_admin \
+  ./ucontrol_test
+
+---
+
+The patches in this series have been part of the previous patch series.
+The test cases added here do depend on the fixture added in the earlier patches.
+From v5 PATCH 7-9 the segment and page table generation has been removed and DAT
+has been disabled. Since DAT is not necessary to validate the KVM code.
+
+Previeous series:
+https://lore.kernel.org/kvm/20240807154512.316936-1-schlameuss@linux.ibm.com/
+
+Also see:
+https://lore.kernel.org/kvm/d97f4dec-31c3-45c0-ac33-90e665eb6e99@linux.ibm.com/
+
+Christoph Schlameuss (3):
+  selftests: kvm: s390: Add uc_map_unmap VM test case
+  selftests: kvm: s390: Add uc_skey VM test case
+  selftests: kvm: s390: Verify reject memory region operations for
+    ucontrol VMs
+
+ .../selftests/kvm/s390x/ucontrol_test.c       | 218 +++++++++++++++++-
+ 1 file changed, 217 insertions(+), 1 deletion(-)
+
+-- 
+2.46.0
+
 
