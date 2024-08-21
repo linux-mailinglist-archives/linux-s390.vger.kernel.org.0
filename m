@@ -1,164 +1,143 @@
-Return-Path: <linux-s390+bounces-5687-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-5689-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E456958B51
-	for <lists+linux-s390@lfdr.de>; Tue, 20 Aug 2024 17:30:53 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE1C69591C4
+	for <lists+linux-s390@lfdr.de>; Wed, 21 Aug 2024 02:26:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C1445282573
-	for <lists+linux-s390@lfdr.de>; Tue, 20 Aug 2024 15:30:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 42624B216BD
+	for <lists+linux-s390@lfdr.de>; Wed, 21 Aug 2024 00:26:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FCE1194129;
-	Tue, 20 Aug 2024 15:29:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51BB418E2A;
+	Wed, 21 Aug 2024 00:26:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jR/RfzQT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e7j+Ka7e"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B88A193071;
-	Tue, 20 Aug 2024 15:29:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988318F47;
+	Wed, 21 Aug 2024 00:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724167771; cv=none; b=V1gvGcLflDS/J8dbv/k/Eo6qCQ7iPWUTymWn1TY8hkjIrandMg52LlWnbINCtxzRbSQ4chqHiUqE1h20qMa4tiRQoeuDYXgfSyI6WLKsQs2cShrPgCjqTXhZB3VoaN/CRiEKwLyu/OdG53FQK3qeT0xWbYnlhlTrLqhhtjv222A=
+	t=1724199974; cv=none; b=Z/9f9GxlJBOW4cxgSq1CQ7VynaEZU1cULb2LSoWPrBHc4vVJxs5ljtlnXQB/PQzv0Orav38gBK3aj2m+F1+1mtjSWdQU1sVW28R7MboUSstWpHiJvUeSVyfavls4SnZn2uQAk5Sx7ViI1+vsOI5I29cZ6H7FZCKly5dcnkw1OTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724167771; c=relaxed/simple;
-	bh=KbR9Z5dA+UQWywHjxVmp/37dcVUsfNC0p+2b4VpqyDA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eIVLiwrv7qwla87GDZCh6XlCSJZrobweQ7Z1Bi5BJm6zBy/hgDLCgJ0J+R8q1sE4atxTX+SJED6G2QIRoI/eocdfQmXtVanE8iMTrPO91i9C1pbDZp5FL3JNtmss9Gskef/bn1K6+VivzuWCFLFOfjU7OkNqVFaiTnN8MKw/bDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=de.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jR/RfzQT; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47KDnPU5014197;
-	Tue, 20 Aug 2024 15:29:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:content-transfer-encoding
-	:mime-version; s=pp1; bh=xETE7DSKr+Zv/9nlZb4rsqzdzPP6r970NW5xRyy
-	dMHg=; b=jR/RfzQT7R4JEv/t4odIml7GkfQpp2ZA92hMzP+Xo0y5CDzjt7oQb7K
-	EOKp+/K7JVJQHEAyYvsE642w3fHs3P7Mms7f2V2rGJwh/ldLZmRuJSs95rp4Ux7/
-	FSqI5yMVXmWqugcgXqPlWo0qs2YEWuVS7iKpPhTax9w2cpj3oLKiiBBCjBlMOQxv
-	JXK3kwhWEZJhEwhEBJ/bJWqcM+rocOZrVvzHIkQjco9k0bxCGLNETrexnL+LjSC3
-	I1Bnnvt+4BmYTg+It3RMjFPaD4ek+9qiQF92NxRpw8oXQlhbIl5B1Ql2cDwqbZ+F
-	pgU8777uTT3+bM9Ae/10466ol8HqR/g==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 412mcydwjj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Aug 2024 15:29:19 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 47KFMgrU016403;
-	Tue, 20 Aug 2024 15:29:19 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 412mcydwjc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Aug 2024 15:29:19 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 47KFFnVF019123;
-	Tue, 20 Aug 2024 15:29:18 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 41376puf70-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Aug 2024 15:29:18 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 47KFTC7x30081298
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 20 Aug 2024 15:29:14 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 19B0A2004D;
-	Tue, 20 Aug 2024 15:29:12 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 06F8A2004B;
-	Tue, 20 Aug 2024 15:29:12 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 20 Aug 2024 15:29:11 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55271)
-	id 7CF05E024A; Tue, 20 Aug 2024 17:29:11 +0200 (CEST)
-From: Alexandra Winter <wintera@linux.ibm.com>
-To: David Miller <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>
-Cc: netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Thorsten Winkler <twinkler@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH net v3] s390/iucv: Fix vargs handling in iucv_alloc_device()
-Date: Tue, 20 Aug 2024 17:29:11 +0200
-Message-ID: <20240820152911.3701814-1-wintera@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: a-9Xw3jUsYxRBoXMz02DcrQ8EurX0pt9
-X-Proofpoint-GUID: d0F_at3YRvjxGQItmz95bp-hjKFNrje8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	s=arc-20240116; t=1724199974; c=relaxed/simple;
+	bh=yiOrsKpKHnfpWAPkH1T1M3NIWSoBOmf55VQx29FXUfI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nIGJVM0c0kDCI+F/QNemRgAUtSMwXKC00H6i1rTbn3moZpBCm9IXmTOvuM291t2n6ALEzIU4RucU9hRMeaqEHt7UB4qISw+pIIGTrJYdwAczs9h++siJxx+li8+sd1O6GHMhlWTCy3aZEfAGHBWtwuzJ6tot1mr6g8rju2jlkc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e7j+Ka7e; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724199973; x=1755735973;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yiOrsKpKHnfpWAPkH1T1M3NIWSoBOmf55VQx29FXUfI=;
+  b=e7j+Ka7etBroMu4026c8IKsAszdA/E4RyXzpg7Su0k0aEloer/7V84+i
+   P/GK3JYnytb9ApTs7e8f+zI0689rysm4oiaR4kyqBrRykdmP/wIK+KJip
+   nyMFd3qXf4MlspyQ9qK74WTcClUeqCg4q0Vtl7VrvWFUGCU+Ss2+QxJKt
+   hGTuKWDRz/9s3WxzMfhvTtdKlkt1l7Qv4mNIflUOchQ6vEhyJm/Gbnb+T
+   sZ9r21WAlVphZ1r7llCTdLyAV2YZJ2z5GXpB51g7tFJgmZ4MNgxl3yIhC
+   WVGbRdqXUJBearjVuksScESExQBKUpmtYALU2/e34YBLwrjVfIT14BJRv
+   Q==;
+X-CSE-ConnectionGUID: KnGtC441QayFsyEnXNYXPQ==
+X-CSE-MsgGUID: Za85nHv5RIiBSIzBnEBqtw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11170"; a="33102272"
+X-IronPort-AV: E=Sophos;i="6.10,163,1719903600"; 
+   d="scan'208";a="33102272"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2024 17:26:10 -0700
+X-CSE-ConnectionGUID: nubAASboTKCuHX2AnKUcoQ==
+X-CSE-MsgGUID: uwh7sdDLT5GzWAY+UF2bFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,163,1719903600"; 
+   d="scan'208";a="61679439"
+Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 20 Aug 2024 17:25:58 -0700
+Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sgZAi-000Aio-0M;
+	Wed, 21 Aug 2024 00:25:56 +0000
+Date: Wed, 21 Aug 2024 08:25:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jeongjun Park <aha310510@gmail.com>, wenjia@linux.ibm.com,
+	jaka@linux.ibm.com, alibuda@linux.alibaba.com,
+	tonylu@linux.alibaba.com, guwen@linux.alibaba.com
+Cc: oe-kbuild-all@lists.linux.dev, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, utz.bacher@de.ibm.com,
+	dust.li@linux.alibaba.com, linux-s390@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	syzkaller <syzkaller@googlegroups.com>,
+	Jeongjun Park <aha310510@gmail.com>
+Subject: Re: [PATCH net,v6,2/2] net/smc: initialize ipv6_pinfo_offset in
+ smc_inet6_prot and add smc6_sock structure
+Message-ID: <202408210816.Z0iGhrhb-lkp@intel.com>
+References: <20240820121548.380342-1-aha310510@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-20_10,2024-08-19_03,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 phishscore=0 mlxscore=0 bulkscore=0 malwarescore=0
- mlxlogscore=999 spamscore=0 lowpriorityscore=0 clxscore=1011
- suspectscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2407110000 definitions=main-2408200112
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240820121548.380342-1-aha310510@gmail.com>
 
-iucv_alloc_device() gets a format string and a varying number of
-arguments. This is incorrectly forwarded by calling dev_set_name() with
-the format string and a va_list, while dev_set_name() expects also a
-varying number of arguments.
+Hi Jeongjun,
 
-Symptoms:
-Corrupted iucv device names, which can result in log messages like:
-sysfs: cannot create duplicate filename '/devices/iucv/hvc_iucv1827699952'
+kernel test robot noticed the following build errors:
 
-Fixes: 4452e8ef8c36 ("s390/iucv: Provide iucv_alloc_device() / iucv_release_device()")
-Link: https://bugzilla.suse.com/show_bug.cgi?id=1228425
-Reference-ID: https://bugzilla.linux.ibm.com/show_bug.cgi?id=208008
-Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
-Reviewed-by: Thorsten Winkler <twinkler@linux.ibm.com>
-Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
----
-v2 -> v3: use "%s" (Przemek Kitszel)
-Discussion of v1:
-Link: https://lore.kernel.org/all/2024081326-shifter-output-cb8f@gregkh/T/#mf8ae979de8acdc01f7ede0b94af6f2e110eea209
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202408091131.ATGn6YSh-lkp@intel.com/
-Vasily Gorbik asked me to send this version via the netdev mailing list.
----
- net/iucv/iucv.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.11-rc4 next-20240820]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/net/iucv/iucv.c b/net/iucv/iucv.c
-index 1e42e13ad24e..d3e9efab7f4b 100644
---- a/net/iucv/iucv.c
-+++ b/net/iucv/iucv.c
-@@ -86,13 +86,15 @@ struct device *iucv_alloc_device(const struct attribute_group **attrs,
- {
- 	struct device *dev;
- 	va_list vargs;
-+	char buf[20];
- 	int rc;
- 
- 	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
- 	if (!dev)
- 		goto out_error;
- 	va_start(vargs, fmt);
--	rc = dev_set_name(dev, fmt, vargs);
-+	vsnprintf(buf, sizeof(buf), fmt, vargs);
-+	rc = dev_set_name(dev, "%s", buf);
- 	va_end(vargs);
- 	if (rc)
- 		goto out_error;
+url:    https://github.com/intel-lab-lkp/linux/commits/Jeongjun-Park/net-smc-modify-smc_sock-structure/20240820-201856
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20240820121548.380342-1-aha310510%40gmail.com
+patch subject: [PATCH net,v6,2/2] net/smc: initialize ipv6_pinfo_offset in smc_inet6_prot and add smc6_sock structure
+config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20240821/202408210816.Z0iGhrhb-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 14.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240821/202408210816.Z0iGhrhb-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202408210816.Z0iGhrhb-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> net/smc/smc_inet.c:78:68: error: expected '}' before ';' token
+      78 |         .ipv6_pinfo_offset      = offsetof(struct smc6_sock, inet6);
+         |                                                                    ^
+   net/smc/smc_inet.c:68:38: note: to match this '{'
+      68 | static struct proto smc_inet6_prot = {
+         |                                      ^
+
+
+vim +78 net/smc/smc_inet.c
+
+    67	
+    68	static struct proto smc_inet6_prot = {
+    69		.name		= "INET6_SMC",
+    70		.owner		= THIS_MODULE,
+    71		.init		= smc_inet_init_sock,
+    72		.hash		= smc_hash_sk,
+    73		.unhash		= smc_unhash_sk,
+    74		.release_cb	= smc_release_cb,
+    75		.obj_size	= sizeof(struct smc6_sock),
+    76		.h.smc_hash	= &smc_v6_hashinfo,
+    77		.slab_flags	= SLAB_TYPESAFE_BY_RCU,
+  > 78		.ipv6_pinfo_offset	= offsetof(struct smc6_sock, inet6);
+    79	};
+    80	
+
 -- 
-2.39.3 (Apple Git-146)
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
