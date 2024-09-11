@@ -1,70 +1,70 @@
-Return-Path: <linux-s390+bounces-6026-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-6027-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91DD0975D1D
-	for <lists+linux-s390@lfdr.de>; Thu, 12 Sep 2024 00:25:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81B5C975D20
+	for <lists+linux-s390@lfdr.de>; Thu, 12 Sep 2024 00:26:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 077AF1F22ED0
-	for <lists+linux-s390@lfdr.de>; Wed, 11 Sep 2024 22:25:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 37503285683
+	for <lists+linux-s390@lfdr.de>; Wed, 11 Sep 2024 22:26:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7218F1BBBFC;
-	Wed, 11 Sep 2024 22:25:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF7A31BC9EE;
+	Wed, 11 Sep 2024 22:25:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lN07+KR0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oqaIBLh1"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E3E1BB6AB
-	for <linux-s390@vger.kernel.org>; Wed, 11 Sep 2024 22:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE871BBBE3
+	for <linux-s390@vger.kernel.org>; Wed, 11 Sep 2024 22:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726093515; cv=none; b=j37mB4clbB4mjOoRBqSi7hHGOydUcUettCVqIB8W41j21duk8026gpH48PhYfc6PXnRTvUcT3Dt2lfzXVZ9ejdczT9fIW8aYw/CE/V+LxFmIhY8i/QEsUAXMAv7wgFsmaGizjoE2dbzq6Nw68rMrzl2V0WBXyW7Mi0GEHuU5fy8=
+	t=1726093516; cv=none; b=nWJ6Ni8VHgW12DZfViHWCRvFbQgJ5AxB+9KX3CuuH1E3ri1jITyR0f2AOBf5IfbKy6nfD9E6Y3SIiPLU5EuObNojmEHavtlU0VeVL+/vSaW7DwH6k3F5hwnjBs2sh1Rh2952zK0T0hruzhqfEfBO9qxtFgPV/mVCoelsnNnSxv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726093515; c=relaxed/simple;
-	bh=Qe6ZURpmPiYgTTi7nxbvffzfT5qXIMw8HIC3oO1Vo3I=;
+	s=arc-20240116; t=1726093516; c=relaxed/simple;
+	bh=Aav80nw+Oj48/H0OfvSqZnp5S221N6H/skMuhsyP0SY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=srb7Yyu19AZ56hyMWPHdEv+tXS53xXKl19jM0cgw5X4GGYj4FV0qxigfPLdbnLfEUS/EUsSqw6AK0c3tRuG1qmgVcRyBCyrMr/DNqrvYsMZmtcQUXS4grxW91U4N79YpTmDic0oBWqR9Ucxh6Qe8PY4nAyfXD3frHvofmtPTmEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lN07+KR0; arc=none smtp.client-ip=209.85.128.201
+	 To:Cc:Content-Type; b=ih+xktlSv6RAQEtwRAflqyP89FVeEKgZv6rWgleyL/SY2rg45Z5+KjZysD+vDlGZiFwxx+mmp3k5G02+QIsdFQGqzfuARwtjTOVwN/rNv5oYFZ2MJODnPjcU56qu7Eog4YUojPrEyxgXitOiUV+R2Vx4dU3tw9go7n5OLvmW7S4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oqaIBLh1; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6db7a8c6831so17486457b3.3
-        for <linux-s390@vger.kernel.org>; Wed, 11 Sep 2024 15:25:13 -0700 (PDT)
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e0b3d35ccfbso727919276.3
+        for <linux-s390@vger.kernel.org>; Wed, 11 Sep 2024 15:25:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1726093513; x=1726698313; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1726093514; x=1726698314; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=l4XmBjdboaUqTeMgRqbSdf4DSeJIVFEq/lNcpwN1ftE=;
-        b=lN07+KR076rJbAvNKbHXlC+K9jYGDh/m0feLEKennZiE7o/4IMwdIfJpXLgi8ga3fc
-         7HG+6DHe+N20ufjbGFaJCGo4ZhHvQUvApUUQZMgOVlTtfDYh2yL+U+QzjE1ihb6YID7f
-         3249cpFumZ40IBNEjertayqY9aCkRVVUUJu8aawI3ZNtZqGxHul60PWWHbXu3NcWfiqx
-         HKWcTyjOlLDjx+w52vlECO3oRs+nUjOVi4f5YNKb97pEw65Duv13Jzg/dWYojxgoqpfj
-         sPTdlpFyCaCPVtryq+GT2FFi10HcazjGsIjDsjPlyDsTQSocaIk+eAHvfiy0c+Tv26JP
-         0EXA==
+        bh=qY7jazBJP8pJhg0f/dQ9sIJIXrzux0tRJtWLf7xpCl4=;
+        b=oqaIBLh1F8VtMse8EnrBoVRex59kZw6XAZv2ohMMLtReSM8F2bldrwdzIfFXiNK0hL
+         4InH02T6Dg/wdUWkanSqAcWpeI755R6TkUUrCIgH/mFFJ+i/glt9N3ZvTlTlUe422cNv
+         RFzN6TBQ6gf8sM3OSur9+CtTgx82aZilHRnDVQLkXRrBcea6ZhGkCWJwdWyqWMF0Op6K
+         cokS2LfUS7ZgS8Dxkz0R/Lz5nHaZ+ttENoUBCV4Eg9LR3pnh5wSOZRjHeggewpEwApKY
+         s2mbThuBr6bkzY4F5TIbjhHihVih/2uEPNsfAH9kKjxm4sxl+0qJiy/z3uLTL3PbgvBI
+         YjMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726093513; x=1726698313;
+        d=1e100.net; s=20230601; t=1726093514; x=1726698314;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l4XmBjdboaUqTeMgRqbSdf4DSeJIVFEq/lNcpwN1ftE=;
-        b=HEH4fGg315e3CBTUBQnOqcGrEKHzrv+2D4/mAo5sGiBzs/rsDyfcr4OeyEOBVtO488
-         AZzalQPggNAgN2l1ubKRoFaeB4cwmusVa13gjB4fcLth9ddiHjpaxp4or+t9F4Uy5gm7
-         hpyaiAsJQpvUJbRYJKLqqO255i4daGHGC5lR3GR/1y0BB+wNX2GHibY1gyg+55vUeb7Z
-         2fovLg6OU6ija4DJnxT9MO4MDmoKSVZ8HQ6to64FR4UJu7U6r2sIs03Otc2agfaOYtgJ
-         Ud+peXlVdLB3PkrF8g4Ync2dxNqB47LnNoLBcW+hyBZgsmj7apSW+yyWO0y1dSMuFktK
-         qMnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW5czFvRybijxIHDm7SVtVRgjaMIOR8fweFNU2ojY/s6LXUT9M/oFHdRO8fs/COyclFJEUM7ILYxtKZ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd+gyoTxvAp7PtWW20a9IYtCHC/69v7oNHTbPg8TM0pE63I9XS
-	I1bUQmYZNoRiitPfrBtI12f5F94TGwp4cEG97L0aMSQyrZ97ji1AuwX5BQZYMhmUc0VYhRVCeKm
-	E4rLbnnGYpqdzCi/6GputwA==
-X-Google-Smtp-Source: AGHT+IHahPlfxq0OnDlBxbNh4kFfba2/NbBP9j+SjDxLZau6fx+NZ8cgucf9q6YqSrrkRp98eVZcQ/vy+HEi7ntE2A==
+        bh=qY7jazBJP8pJhg0f/dQ9sIJIXrzux0tRJtWLf7xpCl4=;
+        b=CIVrkn91u035nEuzRlHULhCRDX/JZnoV1FDjZGiHGLTEFrOUj28k2ZjO8+pCBt6wcQ
+         i2m+ScYSNedjECmFi504xEwo6obvvV9yoPlTtux9NMqyhHgLsRcfRqIqFZ4WDE1c/h9x
+         YCKIrp5fIaCssfMB/NA5pBLcCy8Yl1hT/MPi4xhRANlNk0X9/0d/aOfyghuKH/jRy5Mt
+         mWFPAFqi1zfMQpx4PXqv2xnvTqEw8N0TVhJDM9inlt7qZYjeNjrfEggWusH6QqJs+hRH
+         QGAel7YkjTAr2UmvYpxpsWc68fhJCjaSe3fhqRD6XD1vAbaekKHQ4PqkW3PehareqH92
+         hNxA==
+X-Forwarded-Encrypted: i=1; AJvYcCWk35zfd6maX7gWo0Vav6kFxb4YEcn2chFOtGCqyA3dqecx2h9KnCBs9fcaX+o9C3q3HrTOZmXJ7rid@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfmgjxmRK4Zg/unT1uQ3GvMaU2xSjSO2B92wV8PG4hFJY2XtCT
+	U7dKkmmzCKBtEhHIT4OfU7F2cll6wz6KelcIxvVvhTapyw3iu5hfJbZi7znuj3i1rc428uKp5Ow
+	p0PZeH0PdfRleOSMQH6FaAg==
+X-Google-Smtp-Source: AGHT+IEJ4qXFa/RnEyqgs+UMl0d9RUxwmlrJg7JrBYtR4wSiyNcS6y1wcbWXE0ormIQyuX+hDspZQAPbFzn+ORG1EA==
 X-Received: from coltonlewis-kvm.c.googlers.com ([fda3:e722:ac3:cc00:11b:3898:ac11:fa18])
- (user=coltonlewis job=sendgmr) by 2002:a05:690c:6083:b0:6c3:e9e5:e6a with
- SMTP id 00721157ae682-6dbb6ba1041mr322647b3.8.1726093512763; Wed, 11 Sep 2024
- 15:25:12 -0700 (PDT)
-Date: Wed, 11 Sep 2024 22:24:30 +0000
+ (user=coltonlewis job=sendgmr) by 2002:a05:6902:27c1:b0:e1a:22d5:d9eb with
+ SMTP id 3f1490d57ef6-e1d9db894c5mr1072276.1.1726093513931; Wed, 11 Sep 2024
+ 15:25:13 -0700 (PDT)
+Date: Wed, 11 Sep 2024 22:24:31 +0000
 In-Reply-To: <20240911222433.3415301-1-coltonlewis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
@@ -74,8 +74,8 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240911222433.3415301-1-coltonlewis@google.com>
 X-Mailer: git-send-email 2.46.0.598.g6f2099f65c-goog
-Message-ID: <20240911222433.3415301-4-coltonlewis@google.com>
-Subject: [PATCH v2 3/5] powerpc: perf: Use perf_arch_instruction_pointer()
+Message-ID: <20240911222433.3415301-5-coltonlewis@google.com>
+Subject: [PATCH v2 4/5] x86: perf: Refactor misc flag assignments
 From: Colton Lewis <coltonlewis@google.com>
 To: kvm@vger.kernel.org
 Cc: Oliver Upton <oliver.upton@linux.dev>, Sean Christopherson <seanjc@google.com>, 
@@ -98,55 +98,83 @@ Cc: Oliver Upton <oliver.upton@linux.dev>, Sean Christopherson <seanjc@google.co
 	Colton Lewis <coltonlewis@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Make sure powerpc uses the arch-specific function now that those have
-been reorganized.
+Break the assignment logic for misc flags into their own respective
+functions to reduce the complexity of the nested logic.
 
 Signed-off-by: Colton Lewis <coltonlewis@google.com>
 ---
- arch/powerpc/perf/callchain.c    | 2 +-
- arch/powerpc/perf/callchain_32.c | 2 +-
- arch/powerpc/perf/callchain_64.c | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/events/core.c            | 31 +++++++++++++++++++++++--------
+ arch/x86/include/asm/perf_event.h |  2 ++
+ 2 files changed, 25 insertions(+), 8 deletions(-)
 
-diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-index 6b4434dd0ff3..26aa26482c9a 100644
---- a/arch/powerpc/perf/callchain.c
-+++ b/arch/powerpc/perf/callchain.c
-@@ -51,7 +51,7 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 760ad067527c..d51e5d24802b 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2948,16 +2948,34 @@ unsigned long perf_arch_instruction_pointer(struct pt_regs *regs)
+ 	return regs->ip + code_segment_base(regs);
+ }
  
- 	lr = regs->link;
- 	sp = regs->gpr[1];
--	perf_callchain_store(entry, perf_instruction_pointer(regs));
-+	perf_callchain_store(entry, perf_arch_instruction_pointer(regs));
++static unsigned long common_misc_flags(struct pt_regs *regs)
++{
++	if (regs->flags & PERF_EFLAGS_EXACT)
++		return PERF_RECORD_MISC_EXACT_IP;
++
++	return 0;
++}
++
++unsigned long perf_arch_guest_misc_flags(struct pt_regs *regs)
++{
++	unsigned long guest_state = perf_guest_state();
++	unsigned long flags = common_misc_flags(regs);
++
++	if (guest_state & PERF_GUEST_USER)
++		flags |= PERF_RECORD_MISC_GUEST_USER;
++	else if (guest_state & PERF_GUEST_ACTIVE)
++		flags |= PERF_RECORD_MISC_GUEST_KERNEL;
++
++	return flags;
++}
++
+ unsigned long perf_arch_misc_flags(struct pt_regs *regs)
+ {
+ 	unsigned int guest_state = perf_guest_state();
+-	int misc = 0;
++	unsigned long misc = common_misc_flags(regs);
  
- 	if (!validate_sp(sp, current))
- 		return;
-diff --git a/arch/powerpc/perf/callchain_32.c b/arch/powerpc/perf/callchain_32.c
-index ea8cfe3806dc..ddcc2d8aa64a 100644
---- a/arch/powerpc/perf/callchain_32.c
-+++ b/arch/powerpc/perf/callchain_32.c
-@@ -139,7 +139,7 @@ void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
- 	long level = 0;
- 	unsigned int __user *fp, *uregs;
+ 	if (guest_state) {
+-		if (guest_state & PERF_GUEST_USER)
+-			misc |= PERF_RECORD_MISC_GUEST_USER;
+-		else
+-			misc |= PERF_RECORD_MISC_GUEST_KERNEL;
++		misc |= perf_arch_guest_misc_flags(regs);
+ 	} else {
+ 		if (user_mode(regs))
+ 			misc |= PERF_RECORD_MISC_USER;
+@@ -2965,9 +2983,6 @@ unsigned long perf_arch_misc_flags(struct pt_regs *regs)
+ 			misc |= PERF_RECORD_MISC_KERNEL;
+ 	}
  
--	next_ip = perf_instruction_pointer(regs);
-+	next_ip = perf_arch_instruction_pointer(regs);
- 	lr = regs->link;
- 	sp = regs->gpr[1];
- 	perf_callchain_store(entry, next_ip);
-diff --git a/arch/powerpc/perf/callchain_64.c b/arch/powerpc/perf/callchain_64.c
-index 488e8a21a11e..115d1c105e8a 100644
---- a/arch/powerpc/perf/callchain_64.c
-+++ b/arch/powerpc/perf/callchain_64.c
-@@ -74,7 +74,7 @@ void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
- 	struct signal_frame_64 __user *sigframe;
- 	unsigned long __user *fp, *uregs;
+-	if (regs->flags & PERF_EFLAGS_EXACT)
+-		misc |= PERF_RECORD_MISC_EXACT_IP;
+-
+ 	return misc;
+ }
  
--	next_ip = perf_instruction_pointer(regs);
-+	next_ip = perf_arch_instruction_pointer(regs);
- 	lr = regs->link;
- 	sp = regs->gpr[1];
- 	perf_callchain_store(entry, next_ip);
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index feb87bf3d2e9..d95f902acc52 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -538,7 +538,9 @@ struct x86_perf_regs {
+ 
+ extern unsigned long perf_arch_instruction_pointer(struct pt_regs *regs);
+ extern unsigned long perf_arch_misc_flags(struct pt_regs *regs);
++extern unsigned long perf_arch_guest_misc_flags(struct pt_regs *regs);
+ #define perf_arch_misc_flags(regs)	perf_arch_misc_flags(regs)
++#define perf_arch_guest_misc_flags(regs)	perf_arch_guest_misc_flags(regs)
+ 
+ #include <asm/stacktrace.h>
+ 
 -- 
 2.46.0.598.g6f2099f65c-goog
 
