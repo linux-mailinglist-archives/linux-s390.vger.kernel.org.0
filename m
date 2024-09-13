@@ -1,51 +1,51 @@
-Return-Path: <linux-s390+bounces-6068-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-6070-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E71997818E
-	for <lists+linux-s390@lfdr.de>; Fri, 13 Sep 2024 15:53:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 583709781F5
+	for <lists+linux-s390@lfdr.de>; Fri, 13 Sep 2024 16:00:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 199A3284273
-	for <lists+linux-s390@lfdr.de>; Fri, 13 Sep 2024 13:53:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 91A951C23CD0
+	for <lists+linux-s390@lfdr.de>; Fri, 13 Sep 2024 14:00:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DCC01DB54A;
-	Fri, 13 Sep 2024 13:53:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91AB91DB93B;
+	Fri, 13 Sep 2024 13:56:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="a/HBLjJx"
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="I9nLfr1v"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3317143144;
-	Fri, 13 Sep 2024 13:53:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD981DB54F;
+	Fri, 13 Sep 2024 13:56:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726235628; cv=none; b=cJf74ZAXtL4NGiJFpZVw8w3SxAggUNQLfrG1pIyPQW93F4EEHLuA5499OlC7m5gT6+44nioMJVmTguIXrzIdD48DdqoE9lxdFUjNcv4A9EF17HHeNvwOHvSPYZ5MhztWa8ShxWHzxlnvUHvHT2mrO3Qdzemsej/MUcJCiHrVrAs=
+	t=1726235807; cv=none; b=g75Yieerloj+zx2JrJBO5mMyU8r4v7vbBkdqZOSj9Zw8F2t7mLWBP4OTMN6QpxMzQJlObsrb5oyliHUgSInmLRMy2LXRNeLz6xwdgfsgkuckoSrN8QctA8HyRIJBppIpYsy0LBbHdPM3uozNCswo15hEYU3R8X/S18JQFmEdPkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726235628; c=relaxed/simple;
-	bh=juI5630aqctV+NqY5uamwwA3WxN+ZI+u/KMYEKTGY2c=;
+	s=arc-20240116; t=1726235807; c=relaxed/simple;
+	bh=Z+JGJC4cGVy8Es4BV7Gea7Hxxm66ryAaCGe4Wx2jH70=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TzgTKgMrculX8XxOPA9mYtWnsctrFZNPM3jP8ALyR1DUSgdZyP14CLMLqHcfP1FV2Cs3WhY8SVAQj+h8ypGjK4LdK63nuwOmyJaNnYxgxkOHAlpyYRpptx54RTTJI8pIXonOn9hX82pWogvdrUtfrSOl1N8z8HS5AO4P+JvCo6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=a/HBLjJx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 145F8C4CEC5;
-	Fri, 13 Sep 2024 13:53:47 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mfz3WMIatT9ZmwrNN1B7kIRriJNHEOyqv55RXpnnoZoB0Ni3/3DA9xn+VsS3Ny9+n+5IfY6IWZl2TctMmt8r8sTxQYtUflOghM8tuNm0uU3H9Fqctri/B0ZcxOaBKagoZmjhHXyq+4Z8GfRHOTHg8C+At/2IJL5a6DkzXBW+aJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=I9nLfr1v; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DED5C4CEC0;
+	Fri, 13 Sep 2024 13:56:45 +0000 (UTC)
 Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="a/HBLjJx"
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="I9nLfr1v"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1726235625;
+	t=1726235803;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HCNDLSiKXcPuEEF+DIXaBydnj4KDUjibgOzKdFWgOSg=;
-	b=a/HBLjJx6dXjO84R2gV0hbY5LDsulbVOvFUyQT2hPXqpvjSP7cFNEdGHCSzeIVyvnAD4eB
-	auNZdbRHipGuiSfbxfsopIi73549XeUZ8RCSRHEILEp164ULbwr2NlN0CJhSNqa1D5Gy7W
-	pJmUqpkcmibFXbyNUdBMPUTusXVOKIk=
+	bh=sT7Jk5lsyiM42TzxIImcQ2IqsDCQPtqaIpgfI0clKJc=;
+	b=I9nLfr1vmnutnLjQhhSx43pZVxtwinw/inCJLCNAUL/k2rYcvg0efI4wkSUTme9JgV+TEr
+	bD7x34B2fDbK1yZ+Zlhiy91NcAcbQBHMWbHRwXtqfChc+pXjBFgbZBX1qJK5H2UiujPcSf
+	RNx5mfh9ozmvtI/SFeJavievQHEsIa0=
 Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 5e565c20 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Fri, 13 Sep 2024 13:53:45 +0000 (UTC)
-Date: Fri, 13 Sep 2024 15:53:43 +0200
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id ab438405 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Fri, 13 Sep 2024 13:56:43 +0000 (UTC)
+Date: Fri, 13 Sep 2024 15:56:41 +0200
 From: "Jason A. Donenfeld" <Jason@zx2c4.com>
 To: Heiko Carstens <hca@linux.ibm.com>
 Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
@@ -55,10 +55,10 @@ Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
 	Harald Freudenberger <freude@linux.ibm.com>,
 	Stefan Liebler <stli@linux.ibm.com>, linux-kernel@vger.kernel.org,
 	linux-crypto@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH 7/7] s390/vdso: Wire up getrandom() vdso implementation
-Message-ID: <ZuRD58DrEzzcXKZg@zx2c4.com>
+Subject: Re: [PATCH 0/7] s390/vdso: getrandom() vdso implementation
+Message-ID: <ZuREmWTzI3Vg7tZE@zx2c4.com>
 References: <20240913130544.2398678-1-hca@linux.ibm.com>
- <20240913130544.2398678-8-hca@linux.ibm.com>
+ <ZuRDp4DPOz8BlGAz@zx2c4.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -67,33 +67,35 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240913130544.2398678-8-hca@linux.ibm.com>
+In-Reply-To: <ZuRDp4DPOz8BlGAz@zx2c4.com>
 
-On Fri, Sep 13, 2024 at 03:05:43PM +0200, Heiko Carstens wrote:
-> Provide the s390 specific vdso getrandom() architecture backend.
+On Fri, Sep 13, 2024 at 03:52:39PM +0200, Jason A. Donenfeld wrote:
+> Hey Heiko,
 > 
-> _vdso_rng_data required data is placed within the _vdso_data vvar page, by
-> using a hardcoded offset larger than vdso_data.
+> On Fri, Sep 13, 2024 at 03:05:36PM +0200, Heiko Carstens wrote:
+> > Hi Jason,
+> > 
+> > quite late but finally the s390 vdso getrandom implementation which applies
+> > on top of your random git tree.
+> > 
+> > As a prerequisite this requires some changes to s390 core code to allow
+> > alternatives in vdso code. It is fine when all of this gets routed via your
+> > tree.
 > 
-> As required the chacha20 implementation does not write to the stack.
+> On first glance, this series looks perfect. I can't comment too much on
+> the s390 parts, but first pass of the crypto/vdso/api parts looks spot
+> on. Nice going.
 > 
-> The implementation follows more or less the arm64 implementations and
-> makes use of vector instructions. It has a fallback to the getrandom()
-> system call for machines where the vector facility is not
-> installed.
-> The check if the vector facility is installed, as well as an
-> optimization for machines with the vector-enhancements facility 2,
-> is implemented with alternatives, avoiding runtime checks.
-> 
-> Note that __kernel_getrandom() is implemented without the vdso user wrapper
-> which would setup a stack frame for odd cases (aka very old glibc variants)
-> where the caller has not done that. All callers of __kernel_getrandom() are
-> required to setup a stack frame, like the C ABI requires it.
-> 
-> The vdso testcases vdso_test_getrandom and vdso_test_chacha pass.
+> Were you thinking you'd like me to take these via the random.git tree
+> for 6.12 next week, or were you thinking of delaying it a release and
+> taking it into the arch tree for 6.13?
 
-I'd be curious to see the results of ./vdso_test_getrandom bench-single
-and such.
+If you did want it to be in 6.12, assuming this series continues to look
+good, I think we'd still want it to be in -next for at least a week, so
+maybe that'd take the form of me sending an additional late pull during
+the merge window for this. Either way, I'll defer to your judgement
+here, as most of these changes are fiddly s390 things more than anything
+else.
 
 Jason
 
