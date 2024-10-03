@@ -1,85 +1,82 @@
-Return-Path: <linux-s390+bounces-6229-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-6234-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E093A98E033
-	for <lists+linux-s390@lfdr.de>; Wed,  2 Oct 2024 18:08:03 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 567F898EEAA
+	for <lists+linux-s390@lfdr.de>; Thu,  3 Oct 2024 14:02:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BE0EDB25A31
-	for <lists+linux-s390@lfdr.de>; Wed,  2 Oct 2024 16:05:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E9B49B20FB5
+	for <lists+linux-s390@lfdr.de>; Thu,  3 Oct 2024 12:02:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9A861D0E2A;
-	Wed,  2 Oct 2024 16:05:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 870D1156F2B;
+	Thu,  3 Oct 2024 12:02:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BxK571YU"
+	dkim=pass (2048-bit key) header.d=toertel.de header.i=@toertel.de header.b="bWxy/mFk"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9EB1D0E0D;
-	Wed,  2 Oct 2024 16:05:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993AC146A73;
+	Thu,  3 Oct 2024 12:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727885141; cv=none; b=lHILlOcZ0SbHL3DXBmUiwkbg691Oz2PzSvGN+6HO7d9wsgqb1k02n0YCNxz7V7/eK+jR+iIX66e3Zfxze62+iFROIgjZXBNb6stAlz4toS3lbg5Zfe1mwb1Az/Ze9ebklNGgX4CfOIh1NU5v1zerBsoVIZVSOhaK5I13R4Cy1hs=
+	t=1727956961; cv=none; b=R9qioF0qv6wq5V6vigscQfGP5PLmWdtomkrzK0zBJGfMixWLZA1UWwn5SiKbyOH+veyloQOFPezKwnDOFKN+pXZOCwbghcZp0x7o/Vo6cslV29xPsisDohcpH34gt6QGLD/QPAwlSd+ZuY02hPXT3JX/kj9BWWVCavvrC2RfHPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727885141; c=relaxed/simple;
-	bh=l5u9Ae6fpRtxlVLGHJo5C8D9qTMJrkkRkUp5yNSXD8o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d1o4Igtw1V21OrGnVLb+LB6HXK6mX/VPphXIYhCmCf6aUWBYi4VHdFxmUa/YQiFr7ysvoIy8KYbTFoZ2RAZh5LZOhrorUz4zgWkvEO016xOmnI9frjjHymRbiU3KCl0CpQLXOlb82zu5EzoxG2p6io9JtpIureoj1PIChahmgu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BxK571YU; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 492FseDL007834;
-	Wed, 2 Oct 2024 16:05:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=TOEfP3oBitGV4
-	g2BcQpqynQT6m6MJccErdWVQRXkhCg=; b=BxK571YUbhclRCfIcvEgBCyOeHzjA
-	Ah++lzS5ChqYyrxDQCRTpf8AvTZagvGoQTlstUyLFjMGopsJ9n7anknUPmZAz7Rm
-	GitJxrd5V+LDvA4aI5oHOc64ew4eUHp2jRA+sn4Hgp+iCyyY7rk1DDh+hqfSq9Z/
-	9ehJ9feophO/bBzPsUoDZYhwCKTvRUpUJL1gEFL/pS6dIzNDw6RDv7dTaBky0EH3
-	WYZ9Zy12B11zAeDtiKG8FUBHfYfTn2X0mtFzKBw025eI0myICYy2w/g4VA/iLAuH
-	M1Y4TzBljGi/0kL33HQYYzG+eg3WoAnVtOnGGIHy6bt7V78CMTKV6AaVQ==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42197t81vq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Oct 2024 16:05:39 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 492FqPLA020409;
-	Wed, 2 Oct 2024 16:05:38 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 41xv4sbehv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Oct 2024 16:05:38 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 492G5ZAV54460886
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 2 Oct 2024 16:05:35 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 05BBE20040;
-	Wed,  2 Oct 2024 16:05:35 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AB90C20043;
-	Wed,  2 Oct 2024 16:05:34 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  2 Oct 2024 16:05:34 +0000 (GMT)
-From: Steffen Eiden <seiden@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Cc: Ingo Franzki <ifranzki@linux.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Christoph Schlameuss <schlameuss@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>
-Subject: [PATCH v2 4/6] s390/uvdevice: Increase indent in IOCTL definitions
-Date: Wed,  2 Oct 2024 18:05:30 +0200
-Message-ID: <20241002160532.2425734-5-seiden@linux.ibm.com>
+	s=arc-20240116; t=1727956961; c=relaxed/simple;
+	bh=iLCrUuOVzAYv1y7l14VGKpaWltyXFfLqv/OjMjsEi5A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p7WCIRqUHtC1lA67mETbvHybfuuUrbSeekd/mJxeyFKEHNQJ2CHcIOGZ9AiqWv53eelPxMOqR1qsSpA/1uQ/+kshW17vrqndwcm+nET9m7hD6G5AtuC8+easKuJjHBFAy8WncCciZe0KddpTzvJ8q9t3+u/1voRvYExM6ibw38c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toertel.de; spf=pass smtp.mailfrom=toertel.de; dkim=pass (2048-bit key) header.d=toertel.de header.i=@toertel.de header.b=bWxy/mFk; arc=none smtp.client-ip=188.68.61.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toertel.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toertel.de
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4XK9CK3BvDz7ywf;
+	Thu,  3 Oct 2024 13:57:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=toertel.de; s=key2;
+	t=1727956637; bh=iLCrUuOVzAYv1y7l14VGKpaWltyXFfLqv/OjMjsEi5A=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bWxy/mFkJCQposUC4x8DM/lEgf/2XisJdi/XtYiNqmcVl9HMkFQYD5yrF8yeJ2sKI
+	 AnCjkdKIK94Uyk++gT1vZ13YICfa8uUTfycCHRM0vUUfHBl0PB0qKvZ8vASQc4FuYB
+	 hZznxepOM79lvap52YEtB6tWWvNBAJAI4TP+eUeij25GQmU44ZR6NQDfRWWGE5pKnC
+	 gaa/Z0VmlLcswIXyPYDJg4grMvH8lAJXPcTai2DNQHG+iSYtfVdjw8lEa6unyqiQJ7
+	 DSvw2tXY53HYJW37Ro3XZeod70hpCAkqbTAlcMvZxK73GmdYLV4UDVe2CVHEuRwOe3
+	 Vz6V/s2pzS+nQ==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4XK9CK2n56z7ywV;
+	Thu,  3 Oct 2024 13:57:17 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe932.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4XK9CJ5y57z8tZ8;
+	Thu,  3 Oct 2024 13:57:16 +0200 (CEST)
+Received: from localhost.localdomain (p5b3330c7.dip0.t-ipconnect.de [91.51.48.199])
+	by mxe932.netcup.net (Postfix) with ESMTPSA id 27E04603CF;
+	Thu,  3 Oct 2024 13:57:12 +0200 (CEST)
+Authentication-Results: mxe932;
+	spf=pass (sender IP is 91.51.48.199) smtp.mailfrom=antonia@toertel.de smtp.helo=localhost.localdomain
+Received-SPF: pass (mxe932: connection is authenticated)
+From: Antonia Jonas <antonia@toertel.de>
+To: Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Sumanth Korikkar <sumanthk@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	toertel@gmail.com,
+	Antonia Jonas <antonia@toertel.de>
+Subject: [PATCH] s390: Correct typo CYLCE
+Date: Thu,  3 Oct 2024 13:56:40 +0200
+Message-ID: <20241003115648.26188-1-antonia@toertel.de>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241002160532.2425734-1-seiden@linux.ibm.com>
-References: <20241002160532.2425734-1-seiden@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -87,77 +84,29 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: pWBUXDGGZ5UJ3sSCI6WAOShoIJJOapyj
-X-Proofpoint-GUID: pWBUXDGGZ5UJ3sSCI6WAOShoIJJOapyj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-02_15,2024-09-30_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
- adultscore=0 priorityscore=1501 mlxscore=0 bulkscore=0 suspectscore=0
- malwarescore=0 lowpriorityscore=0 impostorscore=0 spamscore=0
- mlxlogscore=858 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2408220000 definitions=main-2410020114
+X-PPP-Message-ID: <172795663255.537852.16134110211128304351@mxe932.netcup.net>
+X-Rspamd-Queue-Id: 27E04603CF
+X-Rspamd-Server: rspamd-worker-8404
+X-NC-CID: awclxUwxGO/2dI8cQH18HrQ1x3p31oda0kI7IxPNJcyM9A==
 
-Increase the indentations in the IOCTL defines so that we will not have
-problems with upcoming, longer constant names.
-While at it, fix a minor typo.
-
-Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
-Reviewed-by: Christoph Schlameuss <schlameuss@linux.ibm.com>
-Signed-off-by: Steffen Eiden <seiden@linux.ibm.com>
+Signed-off-by: Antonia Jonas <antonia@toertel.de>
 ---
- arch/s390/include/uapi/asm/uvdevice.h | 30 +++++++++++++--------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ arch/s390/kernel/perf_cpum_cf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/include/uapi/asm/uvdevice.h b/arch/s390/include/uapi/asm/uvdevice.h
-index 70657e87d130..72c188f7819f 100644
---- a/arch/s390/include/uapi/asm/uvdevice.h
-+++ b/arch/s390/include/uapi/asm/uvdevice.h
-@@ -52,7 +52,7 @@ struct uvio_uvdev_info {
- 	__u64 supp_uvio_cmds;
- 	/*
- 	 * If bit `n` is set, the Ultravisor(UV) supports the UV-call
--	 * corresponding to the IOCTL with nr `n` in the calling contextx (host
-+	 * corresponding to the IOCTL with nr `n` in the calling context (host
- 	 * or guest).  The value is only valid if the corresponding bit in
- 	 * @supp_uvio_cmds is set as well.
- 	 */
-@@ -87,20 +87,20 @@ enum UVIO_IOCTL_NR {
- 	UVIO_IOCTL_NUM_IOCTLS
- };
+diff --git a/arch/s390/kernel/perf_cpum_cf.c b/arch/s390/kernel/perf_cpum_cf.c
+index e2e0aa463fbd..b32da69c2281 100644
+--- a/arch/s390/kernel/perf_cpum_cf.c
++++ b/arch/s390/kernel/perf_cpum_cf.c
+@@ -835,7 +835,7 @@ static int __hw_perf_event_init(struct perf_event *event, unsigned int type)
+ 	return validate_ctr_version(hwc->config, set);
+ }
  
--#define UVIO_IOCTL(nr)		_IOWR(UVIO_TYPE_UVC, nr, struct uvio_ioctl_cb)
--#define UVIO_IOCTL_UVDEV_INFO	UVIO_IOCTL(UVIO_IOCTL_UVDEV_INFO_NR)
--#define UVIO_IOCTL_ATT		UVIO_IOCTL(UVIO_IOCTL_ATT_NR)
--#define UVIO_IOCTL_ADD_SECRET	UVIO_IOCTL(UVIO_IOCTL_ADD_SECRET_NR)
--#define UVIO_IOCTL_LIST_SECRETS	UVIO_IOCTL(UVIO_IOCTL_LIST_SECRETS_NR)
--#define UVIO_IOCTL_LOCK_SECRETS	UVIO_IOCTL(UVIO_IOCTL_LOCK_SECRETS_NR)
--#define UVIO_IOCTL_RETR_SECRET	UVIO_IOCTL(UVIO_IOCTL_RETR_SECRET_NR)
-+#define UVIO_IOCTL(nr)			_IOWR(UVIO_TYPE_UVC, nr, struct uvio_ioctl_cb)
-+#define UVIO_IOCTL_UVDEV_INFO		UVIO_IOCTL(UVIO_IOCTL_UVDEV_INFO_NR)
-+#define UVIO_IOCTL_ATT			UVIO_IOCTL(UVIO_IOCTL_ATT_NR)
-+#define UVIO_IOCTL_ADD_SECRET		UVIO_IOCTL(UVIO_IOCTL_ADD_SECRET_NR)
-+#define UVIO_IOCTL_LIST_SECRETS		UVIO_IOCTL(UVIO_IOCTL_LIST_SECRETS_NR)
-+#define UVIO_IOCTL_LOCK_SECRETS		UVIO_IOCTL(UVIO_IOCTL_LOCK_SECRETS_NR)
-+#define UVIO_IOCTL_RETR_SECRET		UVIO_IOCTL(UVIO_IOCTL_RETR_SECRET_NR)
- 
--#define UVIO_SUPP_CALL(nr)	(1ULL << (nr))
--#define UVIO_SUPP_UDEV_INFO	UVIO_SUPP_CALL(UVIO_IOCTL_UDEV_INFO_NR)
--#define UVIO_SUPP_ATT		UVIO_SUPP_CALL(UVIO_IOCTL_ATT_NR)
--#define UVIO_SUPP_ADD_SECRET	UVIO_SUPP_CALL(UVIO_IOCTL_ADD_SECRET_NR)
--#define UVIO_SUPP_LIST_SECRETS	UVIO_SUPP_CALL(UVIO_IOCTL_LIST_SECRETS_NR)
--#define UVIO_SUPP_LOCK_SECRETS	UVIO_SUPP_CALL(UVIO_IOCTL_LOCK_SECRETS_NR)
--#define UVIO_SUPP_RETR_SECRET	UVIO_SUPP_CALL(UVIO_IOCTL_RETR_SECRET_NR)
-+#define UVIO_SUPP_CALL(nr)		(1ULL << (nr))
-+#define UVIO_SUPP_UDEV_INFO		UVIO_SUPP_CALL(UVIO_IOCTL_UDEV_INFO_NR)
-+#define UVIO_SUPP_ATT			UVIO_SUPP_CALL(UVIO_IOCTL_ATT_NR)
-+#define UVIO_SUPP_ADD_SECRET		UVIO_SUPP_CALL(UVIO_IOCTL_ADD_SECRET_NR)
-+#define UVIO_SUPP_LIST_SECRETS		UVIO_SUPP_CALL(UVIO_IOCTL_LIST_SECRETS_NR)
-+#define UVIO_SUPP_LOCK_SECRETS		UVIO_SUPP_CALL(UVIO_IOCTL_LOCK_SECRETS_NR)
-+#define UVIO_SUPP_RETR_SECRET		UVIO_SUPP_CALL(UVIO_IOCTL_RETR_SECRET_NR)
- 
- #endif /* __S390_ASM_UVDEVICE_H */
+-/* Events CPU_CYLCES and INSTRUCTIONS can be submitted with two different
++/* Events CPU_CYCLES and INSTRUCTIONS can be submitted with two different
+  * attribute::type values:
+  * - PERF_TYPE_HARDWARE:
+  * - pmu->type:
 -- 
 2.43.0
 
