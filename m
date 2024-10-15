@@ -1,288 +1,138 @@
-Return-Path: <linux-s390+bounces-6520-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-6524-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C46D99E44D
-	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2024 12:41:15 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A491A99E4AB
+	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2024 12:55:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4CA501C21A8F
-	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2024 10:41:14 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 41A9AB219BB
+	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2024 10:55:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 313A41E5724;
-	Tue, 15 Oct 2024 10:41:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 188901E9068;
+	Tue, 15 Oct 2024 10:54:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ti0/cPd8"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="n//Oe3bf"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF871E4110
-	for <linux-s390@vger.kernel.org>; Tue, 15 Oct 2024 10:41:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670671E32D0;
+	Tue, 15 Oct 2024 10:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728988869; cv=none; b=Gg/54J9p4jbIgFyK4+A8h/3FP7aRPUd6YVDmD1SXOPcfgOftnLO5Le92jgYwfetPeLOn4HMjcp8K5fPypJ6PsKCBN6Rl9yAW9ACYqEP4CCBJUgpbdwVxtqhXAtAg4OMQTaHJSVI6qKaUCKKapjUWCnW7C1BnRvMfWLN6PpTuEVM=
+	t=1728989688; cv=none; b=XqatZJYWq1gS6IIDYxk/Jn8jdE+QWDHtNLQROkkheAf2sr/upnj9MDB8rmiiHc/9FFrIBwuGX9a4LdBpmgz+umWFruLwMCturv2V2YgzpU1tcTPkXU0t8sqYCV2+PavSUfXDYxYF8UVvAftfVLcnxJ5jVhcpFwgD9OYFBCCLHLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728988869; c=relaxed/simple;
-	bh=9ShdzO/bmLu67IAiwcstveks6ejOJ8Y6MaKWflhjXWU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oQSawGj2czQagv/NIFUyLA3Afri07hW8y89lpb1d0XKx40HMmwFNNzt/umXbWRB72YdVjneQKS3b9L7Egre5hpXugtEF9kYMt2j9qkf48GT+wj1orY4WOZ6kz9s11EB1rfiPYzwZYv6DdF9hp+uGl4yXZjs2OPz3MHRfVV3lFlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ti0/cPd8; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728988865;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=o9Xc3pdTU7L6bKaIQgVX9nuyeL3ZIBH7Lpn32FEE8B0=;
-	b=Ti0/cPd86k7VBscaCxQfs10Fh2I/V6hO0Jcc3fGBa6ygC6sX9zy84ZNlGQ3cbljBnakJjT
-	UQoJbildgfseegc6mKmlcORMmJLCSpeqjz5NZ+umYbcFEdcVGmsYTT9PLH8tZfV7/pitor
-	ZoEOqmyADuf3bUEroyF9ArRVDMip5vc=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-659-Of9KHF7sOcKeZzUdZgXOzQ-1; Tue, 15 Oct 2024 06:41:03 -0400
-X-MC-Unique: Of9KHF7sOcKeZzUdZgXOzQ-1
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-37d49887a2cso2666430f8f.0
-        for <linux-s390@vger.kernel.org>; Tue, 15 Oct 2024 03:41:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728988862; x=1729593662;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=o9Xc3pdTU7L6bKaIQgVX9nuyeL3ZIBH7Lpn32FEE8B0=;
-        b=b+rOpD8iwVj7y9LUjR2shjeK/9xXwMTTvH1obI8KlrLywsKBqqqqYLdftZz7eYRw7j
-         0I3DgtJwRql9eBD9Ah0cb7aBpPI5EU/MQj1UfRj7e4ZVeQTC6rzwxsEk/6+/df30FBNA
-         +IoYtIooRuorll0Ylo2lLuYrN//z7ZhhdonV2iq759IYcmXqQual6vVy64s197OUgFAC
-         LEZHCmLkHz1+C5xfnPWzsg802xHoEZdlJdwbbrxFEldpjdTsP2AE4RaLJwrpzGocJxcJ
-         WLWno+cMHmJNC4lDC2kc2Cap+zkEs16o/yUqb66d8sBEjXNyj81LVJvGStQVAPhr1Z+5
-         +Elw==
-X-Forwarded-Encrypted: i=1; AJvYcCWzKGnR7mDrJK1JqcjqeCEBiNbN/bwoRjUibp1n/9K/u5e75fLZOWsYjAr8xF/1OJgeo8bm8f4ZxF6s@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzk0rb74FrzeGqkKFxbPKtbq+Wibt5FxM9zt39v3uD+65ZitGPz
-	9mrpBg2F9I4G7SsT7HwkwSzOM1EMrM2rw88n829jcgqXNERyVQ2wem03WDU4lJPNN/YasYGg7B9
-	hP2D7ztEZb999jsZ0TwG/UsIt7ONa49J3i/n1UQyMLHwuhrCU5f/Bcgd0AQc=
-X-Received: by 2002:adf:a111:0:b0:374:bcfe:e73 with SMTP id ffacd0b85a97d-37d552cdf30mr11133683f8f.28.1728988862543;
-        Tue, 15 Oct 2024 03:41:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG7DAcwtn/nc+ImvyMGU6FVrMUn2vES2YhfCeC9HkbCeAs9L2ilLS/PV2swbFEL1HNIJja0EA==
-X-Received: by 2002:adf:a111:0:b0:374:bcfe:e73 with SMTP id ffacd0b85a97d-37d552cdf30mr11133644f8f.28.1728988862041;
-        Tue, 15 Oct 2024 03:41:02 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c730:9700:d653:fb19:75e5:ab5c? (p200300cbc7309700d653fb1975e5ab5c.dip0.t-ipconnect.de. [2003:cb:c730:9700:d653:fb19:75e5:ab5c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d7fa92741sm1240283f8f.60.2024.10.15.03.41.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Oct 2024 03:41:01 -0700 (PDT)
-Message-ID: <a3f310d0-b878-44c4-9454-f7faf8be04ad@redhat.com>
-Date: Tue, 15 Oct 2024 12:40:59 +0200
+	s=arc-20240116; t=1728989688; c=relaxed/simple;
+	bh=0GjnuafM8+MuY524RzRyuybMbh2e1W5adOorLwp9ITw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d+pEJs9JD+Uu1lNEaGOTkYYZAqkaPP/kQInb8RONULWZrzKcETg+2NdcMzMpz2bBtZ0aaB6f1LgW7/Xttql6W7ErF2Rw6ZJWc6bWwOVaqLDeYqKAoFawO8GgXiHpIT2kjHmJis1NwukiDJAu2OW8txCv+aaRZH9n7ooRuz0865Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=n//Oe3bf; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49FApOv6013632;
+	Tue, 15 Oct 2024 10:54:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=6fsOagLG+nDf85J5DatB5patV9Oe55a8JmOALUnjE
+	80=; b=n//Oe3bfyDbve1gkdx9BaQ38NYVprDivMQSdj9tpmCiLJzc62VAt2kfR9
+	Yb1Ty5NicPsgEAnhJZaegaxTebyN2bUJfNeXJA1vg8Vlb+ASM70rej5dyGoM/6R7
+	qbfox8En6vxWmXRtoEVJh2C0RJGbNsvs3YVcEmM4WRMzCHv0ksVzqZKHlwgWJoHk
+	CApMVNrAPXXgHnQ2AXbv/5+b7Uf80iydpTGINVZWtBkWkAt+iD7IV+RcgqprW0pN
+	8gO1IMGE9dStHo6eFFRMlNx6+cw23mZ5ZgcgJAWyEngQLWKRRgntzZqe/MEl9kc+
+	ppAxyFZvogei+W/dwyPNfHBI7Vuzw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 429q0gg0n1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Oct 2024 10:54:34 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49FAsYRl020601;
+	Tue, 15 Oct 2024 10:54:34 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 429q0gg0mw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Oct 2024 10:54:34 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49F943eJ005951;
+	Tue, 15 Oct 2024 10:54:33 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 428650u092-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Oct 2024 10:54:33 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49FAsUtj45154746
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 15 Oct 2024 10:54:30 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0981D20040;
+	Tue, 15 Oct 2024 10:54:30 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EAC6A2005A;
+	Tue, 15 Oct 2024 10:54:29 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 15 Oct 2024 10:54:29 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55390)
+	id 7A0F4E0125; Tue, 15 Oct 2024 12:54:29 +0200 (CEST)
+From: Sven Schnelle <svens@linux.ibm.com>
+To: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Ricardo B. Marliere" <ricardo@marliere.net>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH RESEND 0/3] PtP driver for s390 clocks
+Date: Tue, 15 Oct 2024 12:54:11 +0200
+Message-ID: <20241015105414.2825635-1-svens@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/7] s390/kdump: implement is_kdump_kernel()
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
- linux-doc@vger.kernel.org, kvm@vger.kernel.org,
- Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Thomas Huth <thuth@redhat.com>,
- Cornelia Huck <cohuck@redhat.com>, Janosch Frank <frankja@linux.ibm.com>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
- Jonathan Corbet <corbet@lwn.net>, Mario Casquero <mcasquer@redhat.com>,
- Alexander Egorenkov <egorenar@linux.ibm.com>,
- Mikhail Zaslonko <zaslonko@linux.ibm.com>
-References: <20241014144622.876731-1-david@redhat.com>
- <20241014144622.876731-2-david@redhat.com>
- <20241014182054.10447-D-hca@linux.ibm.com>
- <f93b2c89-821a-4da1-8953-73ccd129a074@redhat.com>
- <20241015083040.7641-C-hca@linux.ibm.com>
- <0c7e876f-5648-4a82-b809-ca48f778b4a6@redhat.com>
- <20241015100854.7641-J-hca@linux.ibm.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20241015100854.7641-J-hca@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: iOuI4dTUGHzT8hkOBGbOW4ro6_dV7sy3
+X-Proofpoint-GUID: v7l7l6wg5oaeQfeQFKftht8yVhUZCnBN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 phishscore=0 clxscore=1011 mlxlogscore=514
+ priorityscore=1501 bulkscore=0 spamscore=0 mlxscore=0 malwarescore=0
+ adultscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2409260000 definitions=main-2410150072
 
-On 15.10.24 12:08, Heiko Carstens wrote:
-> On Tue, Oct 15, 2024 at 10:41:21AM +0200, David Hildenbrand wrote:
->> On 15.10.24 10:30, Heiko Carstens wrote:
->>> On Mon, Oct 14, 2024 at 09:26:03PM +0200, David Hildenbrand wrote:
->>>> On 14.10.24 20:20, Heiko Carstens wrote:
->>>>> Looks like this could work. But the comment in smp.c above
->>>>> dump_available() needs to be updated.
->>>>
->>>> A right, I remember that there was some outdated documentation.
-> 
-> ...
-> 
->> My concern is that we'll now have
->>
->> bool is_kdump_kernel(void)
->> {
->>         return oldmem_data.start && !is_ipl_type_dump();
->> }
->>
->> Which matches 3), but if 2) is also called "kdump", then should it actually
->> be
->>
->> bool is_kdump_kernel(void)
->> {
->>         return oldmem_data.start;
->> }
->>
->> ?
->>
->> When I wrote that code I was rather convinced that the variant in this patch
->> is the right thing to do.
-> 
-> Oh well, we simply of too many dump options. I'll let Alexander and
-> Mikhail better comment on this :)
+Hi,
 
-Thanks!
+these patches add support for using the s390 physical and TOD clock as ptp
+clock. To do so, the first patch adds a clock id to the s390 TOD clock. The
+second patch adds sending a udev event when a ptp device is added, so that
+userspace is able to generate stable device names for virtual ptp devices.
+The last patch adds the PtP driver itself.
 
-> 
-> Alexander, Mikhail, the discussion starts here, and we need a sane
-> is_kdump_kernel() for s390:
-> https://lore.kernel.org/all/20241014144622.876731-1-david@redhat.com/
-> 
+Sven Schnelle (3):
+  s390/time: Add clocksource id to TOD clock
+  ptp: Add clock name to uevent
+  s390/time: Add PtP driver
 
-With the following cleanup in mind:
-
- From 9fbbff43f725a8482ce9e85857316ab8484ff3c8 Mon Sep 17 00:00:00 2001
-From: David Hildenbrand <david@redhat.com>
-Date: Tue, 15 Oct 2024 11:07:43 +0200
-Subject: [PATCH] s390: use !dump_available() instead of "!oldmem_data.start &&
-  !is_ipl_type_dump()"
-
-Let's make the code more readable:
-
-    !dump_available()
--> !(oldmem_data.start || is_ipl_type_dump())
--> !oldmem_data.start && !is_ipl_type_dump()
-
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
-  arch/s390/kernel/crash_dump.c | 2 +-
-  arch/s390/kernel/os_info.c    | 2 +-
-  2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/s390/kernel/crash_dump.c b/arch/s390/kernel/crash_dump.c
-index cca1827d3d2e..fbc5de66d03b 100644
---- a/arch/s390/kernel/crash_dump.c
-+++ b/arch/s390/kernel/crash_dump.c
-@@ -609,7 +609,7 @@ int elfcorehdr_alloc(unsigned long long *addr, unsigned long long *size)
-  	u64 hdr_off;
-  
-  	/* If we are not in kdump or zfcp/nvme dump mode return */
--	if (!oldmem_data.start && !is_ipl_type_dump())
-+	if (!dump_available())
-  		return 0;
-  	/* If we cannot get HSA size for zfcp/nvme dump return error */
-  	if (is_ipl_type_dump() && !sclp.hsa_size)
-diff --git a/arch/s390/kernel/os_info.c b/arch/s390/kernel/os_info.c
-index b695f980bbde..09578f400ef7 100644
---- a/arch/s390/kernel/os_info.c
-+++ b/arch/s390/kernel/os_info.c
-@@ -148,7 +148,7 @@ static void os_info_old_init(void)
-  
-  	if (os_info_init)
-  		return;
--	if (!oldmem_data.start && !is_ipl_type_dump())
-+	if (!dump_available())
-  		goto fail;
-  	if (copy_oldmem_kernel(&addr, __LC_OS_INFO, sizeof(addr)))
-  		goto fail;
--- 
-2.46.1
-
-
-It looks like we create /proc/vmcore, allocating the elfcorehdr essentially
-if dump_available() && (!is_ipl_type_dump() || !sclp.hsa_size).
-
-So in the condition, we would have previously made is_kdump_kernel() happt *after* the
-fs init calls.
-
-So I'm wondering if is_kdump_kernel() should simply translate to dump_available(). It
-doesn't sound completely right to create /proc/vmcore for "standard zfcp/nvme dump",
-but that is what we currently do.
-
-I would have thought we have that special zcore thingy for that.
-
-
-So I think we should either have
-
-bool is_kdump_kernel(void)
-{
-	return dump_available();
-}
-
-Or
-
-bool is_kdump_kernel(void)
-{
-	return dump_available() && (!is_ipl_type_dump() || !sclp.hsa_size);
-}
-
-
-I'd prefer the first version.
+ MAINTAINERS                     |   6 ++
+ arch/s390/include/asm/timex.h   |   8 ++
+ arch/s390/kernel/time.c         |   8 ++
+ drivers/ptp/Kconfig             |  11 +++
+ drivers/ptp/Makefile            |   1 +
+ drivers/ptp/ptp_clock.c         |  11 ++-
+ drivers/ptp/ptp_s390.c          | 127 ++++++++++++++++++++++++++++++++
+ include/linux/clocksource_ids.h |   1 +
+ 8 files changed, 172 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/ptp/ptp_s390.c
 
 -- 
-Cheers,
-
-David / dhildenb
+2.43.0
 
 
