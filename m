@@ -1,163 +1,83 @@
-Return-Path: <linux-s390+bounces-6562-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-6565-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08A4D99F303
-	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2024 18:44:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5837E99F479
+	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2024 19:54:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2BEB31C22571
-	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2024 16:44:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6F81C1C22EA7
+	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2024 17:54:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A76F61FC7C3;
-	Tue, 15 Oct 2024 16:43:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19C25207A37;
+	Tue, 15 Oct 2024 17:54:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZytbZPv4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eSMyFVxP"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B65C51F76D1;
-	Tue, 15 Oct 2024 16:43:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E21701FC7F5;
+	Tue, 15 Oct 2024 17:54:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729010616; cv=none; b=AQ6auebO/ut1oj9XuEW1r/FyDBjCbYMNqOARMfYdbagrss8Fe2ZRZtkIYKSXdxtQfgm0Xqu2az8G1NBOvnf5t12DH8Jz5U+RTWdzHuVfeCCfUtjRfn0XTJtpy4JJvHUNpZ1duUGckh3+tidXgXbfH63zHhQ993JXZSo/OBIG7WY=
+	t=1729014865; cv=none; b=OA+vjqAyzUiPapotyDDofFZQ+lfMZwvd+U5qOKpQbrCeO9v2zrNqIxoxDDPqH8/EzE2l9R6acyHurGdcFY3C4AhnNr/77fs5uBrR9aqiNmrT0y3fxvPzpFCp6BKwGgAvMIJr57vpAyX0mrcxr9Qtun9228A/MY/8vWoqMItOsOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729010616; c=relaxed/simple;
-	bh=OD/CTOrwcg6OiHs7buhnlA46yO9ruiybpAnnQ2ioFXg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gamNBTTcBoKjIAmoXzOu6NO2u24X6mQT12/saMGjSzOpdkrBqJP8ygxFUDXCiEXWIv7wgcQJCdk1PdCCf83mJAW3diRIYkNTkL3Jj4asg5CBLYDcDivphgD26sYzIxpksdP+M9Bee7E59NEjxHL+SITlc0Hw2SdISFTD4rhJotw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZytbZPv4; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49FFoWDb031605;
-	Tue, 15 Oct 2024 16:43:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=b1hrL5t3INOADSR8l
-	YZwbXlFlIC3oQgm2SthebZwLds=; b=ZytbZPv4e3P1bzMOue/sbbzVsbqPyTIrJ
-	ZzWDvHW9Z7VNzYfy+az5kh5PvwZVVrOKujAzxBWHB4iZP33ibMJv+vVv2YKzdTfW
-	c4yGTP42d+L1cY5FF9MwvXFdDqXCuUWahUY1ix/Zo1JqK4A6d6rUI7RHd0GenP3x
-	hAkzLrEQCFig3JfwutXa5eGNNF1KPc4zjadXlNZXu35wVfTIgN2oqmJ2NId1PbFI
-	1w2Hd1o4DomMYmkZAdZkwF0ZL9vDZcj9sBPoucmpsiuRFd5gG6ZYZMdxiDh3xHxp
-	GClhUJqyWetYgCtCaMnnRRUNFJFXlLH37VcGWbrraO3x0kN+B9bZg==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 429ucwg8m0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 15 Oct 2024 16:43:33 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49FEmnAp007025;
-	Tue, 15 Oct 2024 16:43:32 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4284xk4tre-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 15 Oct 2024 16:43:32 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49FGhSqp50069782
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 15 Oct 2024 16:43:29 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DDC952004B;
-	Tue, 15 Oct 2024 16:43:28 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B70A320040;
-	Tue, 15 Oct 2024 16:43:28 +0000 (GMT)
-Received: from p-imbrenda.boeblingen.de.ibm.com (unknown [9.152.224.66])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 15 Oct 2024 16:43:28 +0000 (GMT)
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: linux-kernel@vger.kernel.org
-Cc: borntraeger@de.ibm.com, nsg@linux.ibm.com, nrb@linux.ibm.com,
-        frankja@linux.ibm.com, seiden@linux.ibm.com, hca@linux.ibm.com,
-        agordeev@linux.ibm.com, gor@linux.ibm.com,
-        gerald.schaefer@linux.ibm.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH v3 11/11] s390/mm: Convert to LOCK_MM_AND_FIND_VMA
-Date: Tue, 15 Oct 2024 18:43:26 +0200
-Message-ID: <20241015164326.124987-12-imbrenda@linux.ibm.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241015164326.124987-1-imbrenda@linux.ibm.com>
-References: <20241015164326.124987-1-imbrenda@linux.ibm.com>
+	s=arc-20240116; t=1729014865; c=relaxed/simple;
+	bh=TKkHOtHw4EpEoRW4tFb7+DwqeGdvapb0bR/7pBnYXy0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BOBbAQ3x5L+cFmVmnAOaERa7RlDxAxGg6i0jbNmxBRzHaQk3tHBEVkw95AoC9imSnuJIXntT9lHrksI92m0+hZXRQARaikArG5Pl1cV3QGPA9MjU2XnDHFjmrl4/V19wwepJ1+uv1q5ekCYlzw+0EDdK0czlkinhQP6a3LTza1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eSMyFVxP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDFEBC4CEC7;
+	Tue, 15 Oct 2024 17:54:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729014864;
+	bh=TKkHOtHw4EpEoRW4tFb7+DwqeGdvapb0bR/7pBnYXy0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=eSMyFVxP9HKDJ9mweMNbv1Y5coJepV6ePImSCzQbjQiV+PKmuxVQlQBLo6n46DPNK
+	 yxWGG2WaGeOi4m88jtHjSlXEgpLEIL0YrCYb0DkDASCV1X/6tB7xzbiEJJ00ncfm3D
+	 yrj9JwxTNhWq0p9cs64LUk/sl92kUZNKT7Vwa7x0SYdRyc5xlphLAJ6qfynfcZQ1V4
+	 fCMzgq/7FHnq0hZPxFEaHKsSmQ+sSMDa6bxkDK3DZsDHivPIBLZkk10c0EEh65hTJ+
+	 6eDSw0CRaF6lU9aWy6oms5CKqky4NCl9aPJDOnUaXFhaWNRB9C8MCh33XkKO8OTLmp
+	 p4icCJVxRdQoQ==
+Date: Tue, 15 Oct 2024 10:54:23 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Daniel Yang <danielyangkang@gmail.com>
+Cc: Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>,
+ "D. Wythe" <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>,
+ Wen Gu <guwen@linux.alibaba.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] resolve gtp possible deadlock warning
+Message-ID: <20241015105423.0f23c697@kernel.org>
+In-Reply-To: <20241014073038.27215-1-danielyangkang@gmail.com>
+References: <20241014073038.27215-1-danielyangkang@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: mIwXe_1YdEff2xHHUJkxrOJMh3WJJF-U
-X-Proofpoint-GUID: mIwXe_1YdEff2xHHUJkxrOJMh3WJJF-U
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
- mlxlogscore=641 spamscore=0 priorityscore=1501 impostorscore=0
- lowpriorityscore=0 suspectscore=0 bulkscore=0 adultscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2410150113
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Heiko Carstens <hca@linux.ibm.com>
+On Mon, 14 Oct 2024 00:30:36 -0700 Daniel Yang wrote:
+> Fixes deadlock described in this bug:
+> https://syzkaller.appspot.com/bug?extid=e953a8f3071f5c0a28fd.
+> Specific crash report here:
+> https://syzkaller.appspot.com/text?tag=CrashReport&x=14670e07980000.
+> 
+> This bug is a false positive lockdep warning since gtp and smc use
+> completely different socket protocols.
+> 
+> Lockdep thinks that lock_sock() in smc will deadlock with gtp's
+> lock_sock() acquisition.
+> 
+> Adding lockdep annotations on smc socket creation prevents these false
+> positives.
 
-With the gmap code gone s390 can be easily converted to
-LOCK_MM_AND_FIND_VMA like it has been done for most other
-architectures.
-
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
-Reviewed-by: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
----
- arch/s390/Kconfig    |  1 +
- arch/s390/mm/fault.c | 13 ++-----------
- 2 files changed, 3 insertions(+), 11 deletions(-)
-
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index d339fe4fdedf..8109446f7b24 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -224,6 +224,7 @@ config S390
- 	select HAVE_VIRT_CPU_ACCOUNTING_IDLE
- 	select IOMMU_HELPER		if PCI
- 	select IOMMU_SUPPORT		if PCI
-+	select LOCK_MM_AND_FIND_VMA
- 	select MMU_GATHER_MERGE_VMAS
- 	select MMU_GATHER_NO_GATHER
- 	select MMU_GATHER_RCU_TABLE_FREE
-diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
-index 93ae097ef0e0..8bd2b8d64273 100644
---- a/arch/s390/mm/fault.c
-+++ b/arch/s390/mm/fault.c
-@@ -308,18 +308,10 @@ static void do_exception(struct pt_regs *regs, int access)
- 		return;
- 	}
- lock_mmap:
--	mmap_read_lock(mm);
- retry:
--	vma = find_vma(mm, address);
-+	vma = lock_mm_and_find_vma(mm, address, regs);
- 	if (!vma)
--		return handle_fault_error(regs, SEGV_MAPERR);
--	if (unlikely(vma->vm_start > address)) {
--		if (!(vma->vm_flags & VM_GROWSDOWN))
--			return handle_fault_error(regs, SEGV_MAPERR);
--		vma = expand_stack(mm, address);
--		if (!vma)
--			return handle_fault_error_nolock(regs, SEGV_MAPERR);
--	}
-+		return handle_fault_error_nolock(regs, SEGV_MAPERR);
- 	if (unlikely(!(vma->vm_flags & access)))
- 		return handle_fault_error(regs, SEGV_ACCERR);
- 	fault = handle_mm_fault(vma, address, flags, regs);
-@@ -337,7 +329,6 @@ static void do_exception(struct pt_regs *regs, int access)
- 	}
- 	if (fault & VM_FAULT_RETRY) {
- 		flags |= FAULT_FLAG_TRIED;
--		mmap_read_lock(mm);
- 		goto retry;
- 	}
- 	mmap_read_unlock(mm);
--- 
-2.47.0
-
+This posting looks corrupted, please fix and repost, if it's 
+not accidental.
 
