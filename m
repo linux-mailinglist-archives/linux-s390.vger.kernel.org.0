@@ -1,362 +1,749 @@
-Return-Path: <linux-s390+bounces-6594-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-6596-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B9899A0F1E
-	for <lists+linux-s390@lfdr.de>; Wed, 16 Oct 2024 17:55:08 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11AC49A111C
+	for <lists+linux-s390@lfdr.de>; Wed, 16 Oct 2024 20:03:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 90E411F20F3F
-	for <lists+linux-s390@lfdr.de>; Wed, 16 Oct 2024 15:55:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 487A0B253F3
+	for <lists+linux-s390@lfdr.de>; Wed, 16 Oct 2024 18:03:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B3B520F5B2;
-	Wed, 16 Oct 2024 15:55:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65E8F210C3E;
+	Wed, 16 Oct 2024 18:03:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pawzloib"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Y6Qq5Ag0"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C72B20E011
-	for <linux-s390@vger.kernel.org>; Wed, 16 Oct 2024 15:55:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38AAF14A09E;
+	Wed, 16 Oct 2024 18:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729094105; cv=none; b=laMW11FOhqWEStQuBIofPxrmrZ5jfZPBaYZxDKl5QFLutSGViW0rZTLXArWwHNdI9cTq+GsGG3EN/+U0eoXnv6Fkc+QlTELdSWfPmGqzjfbXd7U9+p3y7pK1jPDVlzEw1JK7fZn6z50blUWCQHydDrvDQK1xOrAUZ06E1N0B6hk=
+	t=1729101812; cv=none; b=fVofO7ZZsXaBzWKSear/+S1a8unaTQ32uWnEyEk5eGKMe5CHEj/lw5IQW2sNfLHIalz7p0hSI0GTGi3+Bwoe5d0WYyevSSG+jsuTCm8fVP0y/qMnSMoS7WLObEAoTw4RmYGhcQRbWmouk/b4XvGGOCkQwL+2oZI9hlUBGpdTcy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729094105; c=relaxed/simple;
-	bh=qYl2Sy0hY1O7mS4Yywghy4Pbib9+2/q8/iAS6YXwtjw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=JU63y5sjAT4nwgR4icXqh1SpCoQD5gJDffSOFkmX/u3seFMI/vDESNczPlO9zutCAOzAnVp/tp0Tc5XWA0XX5emcL34SkE8YVifNbS233HyOfInJ2srkCmvvTogiCdxVgEEggoDk9CIqx7kchGkD0zBJliSeh9KhK1urBLapAbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Pawzloib; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729094102;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=48P55mGkCCxQ03xjhgzSLSsbrSXDZPkk4TcShvxlXM8=;
-	b=PawzloibEchqWsf88lDRJrxPiJ/wCbmaBNzWfNbaOM9+sC1b5+ZCDII/rmQOwRauNVBHIR
-	7A8oYDjywRPn1HfkWzqtXlwpBqyH+fBm7MZrfmuM1EUaB2lF/IiLXIpAgUPHDKXLoNMeXS
-	K8HQhLRa52LA92hEMSRidTX4bD4eenw=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-611-MHdlFP2gO46W4IO9EAfpmQ-1; Wed, 16 Oct 2024 11:55:01 -0400
-X-MC-Unique: MHdlFP2gO46W4IO9EAfpmQ-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-37d45f1e935so2091857f8f.0
-        for <linux-s390@vger.kernel.org>; Wed, 16 Oct 2024 08:55:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729094100; x=1729698900;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:from:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=48P55mGkCCxQ03xjhgzSLSsbrSXDZPkk4TcShvxlXM8=;
-        b=q+uiTPyQsoy08zv0RldyaEO8F/6vLE/T22fWvJJVbrvYY8gPud2AAUBF39bph4R6r+
-         IfhZ5WXisdsu4iGG0Zd3IFY2AqsTFzOllrv8COLmuc1MW7iwvSzcsWKu7fbGMykK9jza
-         rEaNy0ucWPfKjB6vIAIRmdbDsOae4lbvk6TlXN4JKLG2RIbazg0uOfRPRJkeAxEamf3U
-         0CvRHEwtI0YthNbsy+79dlRv9bBBuf8cyvrGT6cPtPMA0+cibcuB3Grh+2l0HndIiTxK
-         fz1zgTTwfiLiO5f5WCQPlMpelMm00h8uiNKb2bSxwLTY9SnUvnkC7nkj9i8FWDQ2r2Br
-         UnDg==
-X-Forwarded-Encrypted: i=1; AJvYcCV/eQbquOwMIEhDG9LAmzhLOWq7RcS0GKEhz/tNLnLYYckqgwWj9XsPdHF9hShy3c6zUKm+96O309Ge@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyZ4NOzNTaltuaAmMFbYDKCISrysEJTcHvVv040nyzlHMpapVN
-	m/WdKPYQwxptfRO5OV/Y6WLvYQjcIUUNusdDWy7pXDFnqyORc8BR9Y2E9ewzNmXTCzigBXpkZP4
-	CF5JCE6Jm+yTDd/IPZkMKfzPe95j7Sh3iWjxi0XVV7ehGgnXTgjHnC9Yl9+A=
-X-Received: by 2002:a05:6000:10c1:b0:37d:4a68:61a1 with SMTP id ffacd0b85a97d-37d601cd19amr10687163f8f.56.1729094100044;
-        Wed, 16 Oct 2024 08:55:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFQtbfVTBZ5NkmWo/03oyq9JfbDyRlPhDr0wCs2j6/mCMXk6wnjrnWGYEMTUmZ0bShmT8bRQQ==
-X-Received: by 2002:a05:6000:10c1:b0:37d:4a68:61a1 with SMTP id ffacd0b85a97d-37d601cd19amr10687102f8f.56.1729094098224;
-        Wed, 16 Oct 2024 08:54:58 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c74b:d000:3a9:de5c:9ae6:ccb3? (p200300cbc74bd00003a9de5c9ae6ccb3.dip0.t-ipconnect.de. [2003:cb:c74b:d000:3a9:de5c:9ae6:ccb3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d7fa7a04asm4651030f8f.8.2024.10.16.08.54.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Oct 2024 08:54:57 -0700 (PDT)
-Message-ID: <87956f31-472d-4091-8061-1e55fea7a3d7@redhat.com>
-Date: Wed, 16 Oct 2024 17:54:56 +0200
+	s=arc-20240116; t=1729101812; c=relaxed/simple;
+	bh=UXCcOWKZV6I6/yVF2lJgJlrVeIINzW/NgqHEuwaLZT4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=blemapqO0EcsqyBBQPh7nCuepMHmS2DCaSWWl7LY3cBU+6MoF3+NU479EwJajJBpVtqDt/ykc20QH/KOLgZLe+WA6ziPE0zTKXOd5tZLjt7SGRD+8HvvbhKw5E1bti7tNdIrcQ3bZSeB/gykPi3jeRQgU6aj8z9on1paSlimgH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Y6Qq5Ag0; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49GFcfu1017296;
+	Wed, 16 Oct 2024 18:03:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=GhoLq1R3rr4ntpqOd0mFpzX3nXiEXAbiMKdPNo5ol
+	bU=; b=Y6Qq5Ag0XO4pVSLIyH8mrG4YNbaYW8+4HpzmBW9cK1ENvrg8DVc+lEEeo
+	XZsTPIwqmkkFW0PzL3Vl9PKJoDyP+JKpST08Al2sr3hljKYa41kyDffZjjVxx4Zb
+	ZETM4kDOZZjQwO67Kp6SAO5jsN+5FoMxTvSB9f5MPGTxv55bFnPoIWCXKGFSLzfy
+	gP+ZsWZnHzBD0Cg1XaPyhq6vVYV9KyfAdq19erXNTC5Avn8Xj5glt8wCHIwXUoFo
+	9In2fQTALklkevgnabz0QvgdJyrlZW9G6UknwsqjWuFgVAKkaK7O0rprLhmP8r4O
+	9pvss3sd+cIvqdsK6CWkd9rV1Lrjw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42af3t93kh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Oct 2024 18:03:28 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49GI3Rpo019979;
+	Wed, 16 Oct 2024 18:03:27 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42af3t93kf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Oct 2024 18:03:27 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49GEaAvA005377;
+	Wed, 16 Oct 2024 18:03:26 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4285njagrf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Oct 2024 18:03:26 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49GI3NpE50004464
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Oct 2024 18:03:23 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 11CF620049;
+	Wed, 16 Oct 2024 18:03:23 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AA6692004B;
+	Wed, 16 Oct 2024 18:03:22 +0000 (GMT)
+Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 16 Oct 2024 18:03:22 +0000 (GMT)
+From: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+To: =?UTF-8?q?Nico=20B=C3=B6hr?= <nrb@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>, Thomas Huth <thuth@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc: Nina Schoetterl-Glausch <nsg@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: [kvm-unit-tests PATCH v4 0/6] s390x: STFLE nested interpretation
+Date: Wed, 16 Oct 2024 20:03:11 +0200
+Message-ID: <20241016180320.686132-1-nsg@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/7] s390/kdump: implement is_kdump_kernel()
-From: David Hildenbrand <david@redhat.com>
-To: Alexander Egorenkov <egorenar@linux.ibm.com>
-Cc: agordeev@linux.ibm.com, akpm@linux-foundation.org,
- borntraeger@linux.ibm.com, cohuck@redhat.com, corbet@lwn.net,
- eperezma@redhat.com, frankja@linux.ibm.com, gor@linux.ibm.com,
- hca@linux.ibm.com, imbrenda@linux.ibm.com, jasowang@redhat.com,
- kvm@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-s390@vger.kernel.org, mcasquer@redhat.com, mst@redhat.com,
- svens@linux.ibm.com, thuth@redhat.com, virtualization@lists.linux.dev,
- xuanzhuo@linux.alibaba.com, zaslonko@linux.ibm.com
-References: <87ed4g5fwk.fsf@li-0ccc18cc-2c67-11b2-a85c-a193851e4c5d.ibm.com>
- <76f4ed45-5a40-4ac4-af24-a40effe7725c@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <76f4ed45-5a40-4ac4-af24-a40effe7725c@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: WEho0cf4UHaqne8akJzPU35RNOqpnq45
+X-Proofpoint-ORIG-GUID: oWYUpPuIIGwB7IrPZq5ixhvv5GmGsLHI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ bulkscore=0 impostorscore=0 malwarescore=0 clxscore=1015
+ priorityscore=1501 spamscore=0 adultscore=0 phishscore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410160115
 
-On 16.10.24 17:47, David Hildenbrand wrote:
->>>
->>> When I wrote that code I was rather convinced that the variant in this patch
->>> is the right thing to do.
->>
->> A short explanation about what a stand-alone kdump is.
->>
->> * First, it's not really a _regular_ kdump activated with kexec-tools and
->>     executed by Linux itself but a regular stand-alone dump (SCSI) from the
->>     FW's perspective (one has to use HMC or dumpconf to execute it and not
->>     with kexec-tools like for the _regular_ kdump).
-> 
-> Ah, that makes sense.
-> 
->> * One has to reserve crashkernel memory region in the old crashed kernel
->>     even if it remains unused until the dump starts.
->> * zipl uses regular kdump kernel and initramfs to create stand-alone
->>     dumper images and to write them to a dump disk which is used for
->>     IPLIng the stand-alone dumper.
->> * The zipl bootloader takes care of transferring the old kernel memory
->>     saved in HSA by the FW to the crashkernel memory region reserved by the old
->>     crashed kernel before it enters the dumper. The HSA memory is released
->>     by the zipl bootloader _before_ the dumper image is entered,
->>     therefore, we cannot use HSA to read old kernel memory, and instead
->>     use memory from crashkernel region, just like the regular kdump.
->> * is_ipl_type_dump() will be true for a stand-alone kdump because we IPL
->>     the dumper like a regular stand-alone dump (e.g. zfcpdump).
->> * Summarized, zipl bootloader prepares an environment which is expected by
->>     the regular kdump for a stand-alone kdump dumper before it is entered.
-> 
-> Thanks for the details!
-> 
->>
->> In my opinion, the correct version of is_kdump_kernel() would be
->>
->> bool is_kdump_kernel(void)
->> {
->>           return oldmem_data.start;
->> }
->>
->> because Linux kernel doesn't differentiate between both the regular
->> and the stand-alone kdump where it matters while performing dumper
->> operations (e.g. reading saved old kernel memory from crashkernel memory region).
->>
-> 
-> Right, but if we consider "/proc/vmcore is available", a better version
-> would IMHO be:
-> 
-> bool is_kdump_kernel(void)
-> {
->             return dump_available();
-> }
-> 
-> Because that is mostly (not completely) how is_kdump_kernel() would have
-> worked right now *after* we had the elfcorehdr_alloc() during the
-> fs_init call.
-> 
-> 
->> Furthermore, if i'm not mistaken then the purpose of is_kdump_kernel()
->> is to tell us whether Linux kernel runs in a kdump like environment and not
->> whether the current mode is identical to the proper and true kdump,
->> right ? And if stand-alone kdump swims like a duck, quacks like one, then it
->> is one, regardless how it was started, by kexecing or IPLing
->> from a disk.
-> 
-> Same thinking here.
-> 
->>
->> The stand-alone kdump has a very special use case which most users will
->> never encounter. And usually, one just takes zfcpdump instead which is
->> more robust and much smaller considering how big kdump initrd can get.
->> stand-alone kdump dumper images cannot exceed HSA memory limit on a Z machine.
-> 
-> Makes sense, so it boils down to either
-> 
-> bool is_kdump_kernel(void)
-> {
->            return oldmem_data.start;
-> }
-> 
-> Which means is_kdump_kernel() can be "false" even though /proc/vmcore is
-> available or
-> 
-> bool is_kdump_kernel(void)
-> {
->            return dump_available();
-> }
-> 
-> Which means is_kdump_kernel() can never be "false" if /proc/vmcore is
-> available. There is the chance of is_kdump_kernel() being "true" if
-> "elfcorehdr_alloc()" fails with -ENODEV.
-> 
-> 
-> You're call :) Thanks!
-> 
+v3 -> v4:
+ * pick up R-b's (thanks Claudio, Janosch, Nick)
+ * move diag intercept functions into sie-icpt.[hc]
+   expose some more functionality to avoid interpreting the diag text
+   with bit operations
+ * move snippet exit functions into snippet-exit.h,
+   guest part in s390x/snippet/lib
+ * add barrier before snippet exit
+ * simplify test (host and guest), add skip message
 
-What I think we should do is the following (improved comment + patch
-description), but I'll do whatever you think is better:
+Add a test case that tests the interpretation of STFLE performed by a
+nested guest using a snippet.
+Also add some functionality to s390x lib, namely:
+* exit (optionally with return code) from snippet
+* add function for checking diag intercepts, replacing pv_icptdata_check_diag
 
+v2 -> v3:
+ * pick up Ack (thanks Andrew)
+ * minor cosmetic change to rand generator
+ * add sie_is_pv function
+ * extend sie_is_diag_icpt to support pv, replace pv_icptdata_check_diag
 
- From e86194b5195c743eff33f563796b9c725fecc65f Mon Sep 17 00:00:00 2001
-From: David Hildenbrand <david@redhat.com>
-Date: Wed, 4 Sep 2024 14:57:10 +0200
-Subject: [PATCH] s390/kdump: provide custom is_kdump_kernel()
+v1 -> v2:
+ * implement SHA-256 based PRNG
+ * pick up R-b (thanks Claudio)
+ * change snippet exit API and implementation (thanks Claudio)
+ * add stfle-sie to unittests.cfg
 
-s390 currently always results in is_kdump_kernel() == false until
-vmcore_init()->elfcorehdr_alloc() ran, because it sets
-"elfcorehdr_addr = ELFCORE_ADDR_MAX;" early during setup_arch to deactivate
-any elfcorehdr= kernel parameter.
+Nina Schoetterl-Glausch (6):
+  s390x: lib: Remove double include
+  s390x: Add sie_is_pv
+  s390x: Add function for checking diagnose intercepts
+  s390x: Add library functions for exiting from snippet
+  s390x: Use library functions for snippet exit
+  s390x: Add test for STFLE interpretive execution (format-0)
 
-Let's follow the powerpc example and implement our own logic. Let's use
-"dump_available()", because this is mostly (with one exception when
-elfcorehdr_alloc() fails with -ENODEV) when we would create /proc/vmcore
-and when is_kdump_kernel() would have returned "true" after
-vmcore_init().
+ s390x/Makefile                    |   7 +-
+ lib/s390x/asm/arch_def.h          |  13 +++
+ lib/s390x/asm/facility.h          |  10 ++-
+ lib/s390x/pv_icptdata.h           |  42 ---------
+ lib/s390x/sie-icpt.h              |  39 +++++++++
+ lib/s390x/sie.h                   |   6 ++
+ lib/s390x/snippet-exit.h          |  47 ++++++++++
+ lib/s390x/sie-icpt.c              |  60 +++++++++++++
+ lib/s390x/sie.c                   |   5 +-
+ s390x/snippets/lib/snippet-exit.h |  28 ++++++
+ s390x/pv-diags.c                  |   9 +-
+ s390x/pv-icptcode.c               |  12 +--
+ s390x/pv-ipl.c                    |   8 +-
+ s390x/sie-dat.c                   |  12 +--
+ s390x/snippets/c/sie-dat.c        |  19 +---
+ s390x/snippets/c/stfle.c          |  29 +++++++
+ s390x/stfle-sie.c                 | 138 ++++++++++++++++++++++++++++++
+ s390x/unittests.cfg               |   3 +
+ 18 files changed, 399 insertions(+), 88 deletions(-)
+ delete mode 100644 lib/s390x/pv_icptdata.h
+ create mode 100644 lib/s390x/sie-icpt.h
+ create mode 100644 lib/s390x/snippet-exit.h
+ create mode 100644 lib/s390x/sie-icpt.c
+ create mode 100644 s390x/snippets/lib/snippet-exit.h
+ create mode 100644 s390x/snippets/c/stfle.c
+ create mode 100644 s390x/stfle-sie.c
 
-This is required for virtio-mem to reliably identify a kdump
-environment before vmcore_init() was called to not try hotplugging memory.
+Range-diff against v3:
+1:  baecabf2 < -:  -------- lib: Add pseudo random functions
+2:  b30314eb ! 1:  74832900 s390x: lib: Remove double include
+    @@ Commit message
+         libcflat.h was included twice.
+     
+         Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+    +    Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+         Signed-off-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+     
+      ## lib/s390x/sie.c ##
+3:  f2af539b ! 2:  973607d1 s390x: Add sie_is_pv
+    @@ Commit message
+     
+         Add a function to check if a guest VM is currently running protected.
+     
+    +    Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+    +    Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+    +    Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
+         Signed-off-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+     
+      ## lib/s390x/sie.h ##
+4:  c4331d19 ! 3:  56f16e10 s390x: Add function for checking diagnose intercepts
+    @@ Commit message
+     
+         Signed-off-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+     
+    + ## s390x/Makefile ##
+    +@@ s390x/Makefile: cflatobjs += lib/s390x/css_lib.o
+    + cflatobjs += lib/s390x/malloc_io.o
+    + cflatobjs += lib/s390x/uv.o
+    + cflatobjs += lib/s390x/sie.o
+    ++cflatobjs += lib/s390x/sie-icpt.o
+    + cflatobjs += lib/s390x/fault.o
+    + 
+    + OBJDIRS += lib/s390x
+    +
+      ## lib/s390x/pv_icptdata.h (deleted) ##
+     @@
+     -/* SPDX-License-Identifier: GPL-2.0-only */
+    @@ lib/s390x/pv_icptdata.h (deleted)
+     -}
+     -#endif
+     
+    - ## lib/s390x/sie.h ##
+    -@@ lib/s390x/sie.h: static inline bool sie_is_pv(struct vm *vm)
+    - 	return vm->sblk->sdf == 2;
+    - }
+    - 
+    + ## lib/s390x/sie-icpt.h (new) ##
+    +@@
+    ++/* SPDX-License-Identifier: GPL-2.0-only */
+    ++/*
+    ++ * Functionality for SIE interception handling.
+    ++ *
+    ++ * Copyright IBM Corp. 2024
+    ++ */
+    ++
+    ++#ifndef _S390X_SIE_ICPT_H_
+    ++#define _S390X_SIE_ICPT_H_
+    ++
+    ++#include <libcflat.h>
+    ++#include <sie.h>
+    ++
+    ++struct diag_itext {
+    ++	uint64_t opcode   :  8;
+    ++	uint64_t r_1      :  4;
+    ++	uint64_t r_2      :  4;
+    ++	uint64_t r_base   :  4;
+    ++	uint64_t displace : 12;
+    ++	uint64_t zero     : 16;
+    ++	uint64_t          : 16;
+    ++};
+    ++
+    ++struct diag_itext sblk_ip_as_diag(struct kvm_s390_sie_block *sblk);
+    ++
+     +/**
+     + * sie_is_diag_icpt() - Check if intercept is due to diagnose instruction
+     + * @vm: the guest
+     + * @diag: the expected diagnose code
+     + *
+     + * Check that the intercept is due to diagnose @diag and valid.
+    -+ * For protected virtualisation, check that the intercept data meets additional
+    ++ * For protected virtualization, check that the intercept data meets additional
+     + * constraints.
+     + *
+     + * Returns: true if intercept is due to a valid and has matching diagnose code
+     + */
+     +bool sie_is_diag_icpt(struct vm *vm, unsigned int diag);
+    - void sie_guest_sca_create(struct vm *vm);
+    - void sie_guest_create(struct vm *vm, uint64_t guest_mem, uint64_t guest_mem_len);
+    - void sie_guest_destroy(struct vm *vm);
+    ++
+    ++#endif /* _S390X_SIE_ICPT_H_ */
+     
+    - ## lib/s390x/sie.c ##
+    -@@ lib/s390x/sie.c: void sie_check_validity(struct vm *vm, uint16_t vir_exp)
+    - 	report(vir_exp == vir, "VALIDITY: %x", vir);
+    - }
+    - 
+    -+bool sie_is_diag_icpt(struct vm *vm, unsigned int diag)
+    + ## lib/s390x/sie-icpt.c (new) ##
+    +@@
+    ++/* SPDX-License-Identifier: GPL-2.0-only */
+    ++/*
+    ++ * Functionality for SIE interception handling.
+    ++ *
+    ++ * Copyright IBM Corp. 2024
+    ++ */
+    ++
+    ++#include <sie-icpt.h>
+    ++
+    ++struct diag_itext sblk_ip_as_diag(struct kvm_s390_sie_block *sblk)
+     +{
+     +	union {
+     +		struct {
+    -+			uint64_t     : 16;
+     +			uint64_t ipa : 16;
+     +			uint64_t ipb : 32;
+    ++			uint64_t     : 16;
+     +		};
+    -+		struct {
+    -+			uint64_t          : 16;
+    -+			uint64_t opcode   :  8;
+    -+			uint64_t r_1      :  4;
+    -+			uint64_t r_2      :  4;
+    -+			uint64_t r_base   :  4;
+    -+			uint64_t displace : 12;
+    -+			uint64_t zero     : 16;
+    -+		};
+    -+	} instr = { .ipa = vm->sblk->ipa, .ipb = vm->sblk->ipb };
+    ++		struct diag_itext diag;
+    ++	} instr = { .ipa = sblk->ipa, .ipb = sblk->ipb };
+    ++
+    ++	return instr.diag;
+    ++}
+    ++
+    ++bool sie_is_diag_icpt(struct vm *vm, unsigned int diag)
+    ++{
+    ++	struct diag_itext instr = sblk_ip_as_diag(vm->sblk);
+     +	uint8_t icptcode;
+     +	uint64_t code;
+     +
+    @@ lib/s390x/sie.c: void sie_check_validity(struct vm *vm, uint16_t vir_exp)
+     +		break;
+     +	default:
+     +		/* If a new diag is introduced add it to the cases above! */
+    -+		assert_msg(false, "unknown diag");
+    ++		assert_msg(false, "unknown diag 0x%x", diag);
+     +	}
+     +
+     +	if (sie_is_pv(vm)) {
+    @@ lib/s390x/sie.c: void sie_check_validity(struct vm *vm, uint16_t vir_exp)
+     +	code = (code + instr.displace) & 0xffff;
+     +	return code == diag;
+     +}
+    -+
+    - void sie_handle_validity(struct vm *vm)
+    - {
+    - 	if (vm->sblk->icptcode != ICPT_VALIDITY)
+     
+      ## s390x/pv-diags.c ##
+     @@
+    @@ s390x/pv-diags.c
+      #include <libcflat.h>
+      #include <snippet.h>
+     -#include <pv_icptdata.h>
+    ++#include <sie-icpt.h>
+      #include <sie.h>
+      #include <sclp.h>
+      #include <asm/facility.h>
+    @@ s390x/pv-icptcode.c
+      #include <sclp.h>
+      #include <snippet.h>
+     -#include <pv_icptdata.h>
+    ++#include <sie-icpt.h>
+      #include <asm/facility.h>
+      #include <asm/barrier.h>
+      #include <asm/sigp.h>
+    @@ s390x/pv-ipl.c
+      #include <sclp.h>
+      #include <snippet.h>
+     -#include <pv_icptdata.h>
+    ++#include <sie-icpt.h>
+      #include <asm/facility.h>
+      #include <asm/uv.h>
+      
+5:  a3f92777 ! 4:  8cafb8da s390x: Add library functions for exiting from snippet
+    @@ Commit message
+         Signed-off-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+     
+      ## s390x/Makefile ##
+    -@@ s390x/Makefile: cflatobjs += lib/s390x/css_lib.o
+    - cflatobjs += lib/s390x/malloc_io.o
+    - cflatobjs += lib/s390x/uv.o
+    - cflatobjs += lib/s390x/sie.o
+    -+cflatobjs += lib/s390x/snippet-host.o
+    - cflatobjs += lib/s390x/fault.o
+    +@@ s390x/Makefile: test_cases: $(tests)
+    + test_cases_binary: $(tests_binary)
+    + test_cases_pv: $(tests_pv_binary)
+    + 
+    +-INCLUDE_PATHS = $(SRCDIR)/lib $(SRCDIR)/lib/s390x $(SRCDIR)/s390x
+    ++SNIPPET_INCLUDE :=
+    ++INCLUDE_PATHS = $(SNIPPET_INCLUDE) $(SRCDIR)/lib $(SRCDIR)/lib/s390x $(SRCDIR)/s390x
+    + # Include generated header files (e.g. in case of out-of-source builds)
+    + INCLUDE_PATHS += lib
+    + CPPFLAGS = $(addprefix -I,$(INCLUDE_PATHS))
+    +@@ s390x/Makefile: endif
+    + $(SNIPPET_DIR)/asm/%.o: $(SNIPPET_DIR)/asm/%.S $(asm-offsets)
+    + 	$(CC) $(CFLAGS) -c -nostdlib -o $@ $<
+    + 
+    ++$(SNIPPET_DIR)/c/%.o: SNIPPET_INCLUDE := $(SNIPPET_DIR)/lib
+    + $(SNIPPET_DIR)/c/%.o: $(SNIPPET_DIR)/c/%.c $(asm-offsets)
+    + 	$(CC) $(CFLAGS) -c -nostdlib -o $@ $<
+      
+    - OBJDIRS += lib/s390x
+     
+      ## lib/s390x/asm/arch_def.h ##
+     @@ lib/s390x/asm/arch_def.h: static inline uint32_t get_prefix(void)
+    @@ lib/s390x/asm/arch_def.h: static inline uint32_t get_prefix(void)
+     +
+      #endif
+     
+    - ## lib/s390x/snippet-guest.h (new) ##
+    + ## lib/s390x/snippet-exit.h (new) ##
+     @@
+     +/* SPDX-License-Identifier: GPL-2.0-only */
+     +/*
+    -+ * Snippet functionality for the guest.
+    ++ * Functionality handling snippet exits
+     + *
+    -+ * Copyright IBM Corp. 2023
+    ++ * Copyright IBM Corp. 2024
+     + */
+     +
+    -+#ifndef _S390X_SNIPPET_GUEST_H_
+    -+#define _S390X_SNIPPET_GUEST_H_
+    -+
+    -+#include <asm/arch_def.h>
+    -+#include <asm/barrier.h>
+    -+
+    -+static inline void force_exit(void)
+    -+{
+    -+	diag44();
+    -+	mb(); /* allow host to modify guest memory */
+    -+}
+    -+
+    -+static inline void force_exit_value(uint64_t val)
+    -+{
+    -+	diag9c(val);
+    -+	mb(); /* allow host to modify guest memory */
+    -+}
+    -+
+    -+#endif /* _S390X_SNIPPET_GUEST_H_ */
+    -
+    - ## lib/s390x/snippet.h => lib/s390x/snippet-host.h ##
+    -@@
+    - /* SPDX-License-Identifier: GPL-2.0-only */
+    - /*
+    -- * Snippet definitions
+    -+ * Snippet functionality for the host.
+    -  *
+    -  * Copyright IBM Corp. 2021
+    -  * Author: Janosch Frank <frankja@linux.ibm.com>
+    -  */
+    - 
+    --#ifndef _S390X_SNIPPET_H_
+    --#define _S390X_SNIPPET_H_
+    -+#ifndef _S390X_SNIPPET_HOST_H_
+    -+#define _S390X_SNIPPET_HOST_H_
+    - 
+    - #include <sie.h>
+    - #include <uv.h>
+    -@@ lib/s390x/snippet-host.h: static inline void snippet_setup_guest(struct vm *vm, bool is_pv)
+    - 	}
+    - }
+    - 
+    -+bool snippet_is_force_exit(struct vm *vm);
+    -+bool snippet_is_force_exit_value(struct vm *vm);
+    -+uint64_t snippet_get_force_exit_value(struct vm *vm);
+    -+void snippet_check_force_exit_value(struct vm *vm, uint64_t exit_exp);
+    - #endif
+    -
+    - ## lib/s390x/snippet-host.c (new) ##
+    -@@
+    -+/* SPDX-License-Identifier: GPL-2.0-only */
+    -+/*
+    -+ * Snippet functionality for the host.
+    -+ *
+    -+ * Copyright IBM Corp. 2023
+    -+ */
+    ++#ifndef _S390X_SNIPPET_EXIT_H_
+    ++#define _S390X_SNIPPET_EXIT_H_
+     +
+     +#include <libcflat.h>
+    -+#include <snippet-host.h>
+     +#include <sie.h>
+    ++#include <sie-icpt.h>
+     +
+    -+bool snippet_is_force_exit(struct vm *vm)
+    ++static inline bool snippet_is_force_exit(struct vm *vm)
+     +{
+     +	return sie_is_diag_icpt(vm, 0x44);
+     +}
+     +
+    -+bool snippet_is_force_exit_value(struct vm *vm)
+    ++static inline bool snippet_is_force_exit_value(struct vm *vm)
+     +{
+     +	return sie_is_diag_icpt(vm, 0x9c);
+     +}
+     +
+    -+uint64_t snippet_get_force_exit_value(struct vm *vm)
+    ++static inline uint64_t snippet_get_force_exit_value(struct vm *vm)
+     +{
+     +	struct kvm_s390_sie_block *sblk = vm->sblk;
+     +
+     +	assert(snippet_is_force_exit_value(vm));
+     +
+    -+	return vm->save_area.guest.grs[(sblk->ipa & 0xf0) >> 4];
+    ++	return vm->save_area.guest.grs[sblk_ip_as_diag(sblk).r_1];
+     +}
+     +
+    -+void snippet_check_force_exit_value(struct vm *vm, uint64_t value_exp)
+    ++static inline void snippet_check_force_exit_value(struct vm *vm, uint64_t value_exp)
+     +{
+     +	uint64_t value;
+     +
+    @@ lib/s390x/snippet-host.c (new)
+     +		report_fail("guest forced exit with value");
+     +	}
+     +}
+    -
+    - ## lib/s390x/uv.c ##
+    -@@
+    - #include <asm/uv.h>
+    - #include <uv.h>
+    - #include <sie.h>
+    --#include <snippet.h>
+    -+#include <snippet-host.h>
+    - 
+    - static struct uv_cb_qui uvcb_qui = {
+    - 	.header.cmd = UVC_CMD_QUI,
+    -
+    - ## s390x/mvpg-sie.c ##
+    -@@
+    - #include <alloc_page.h>
+    - #include <sclp.h>
+    - #include <sie.h>
+    --#include <snippet.h>
+    -+#include <snippet-host.h>
+    - 
+    - static struct vm vm;
+    - 
+    -
+    - ## s390x/pv-diags.c ##
+    -@@
+    -  *  Janosch Frank <frankja@linux.ibm.com>
+    -  */
+    - #include <libcflat.h>
+    --#include <snippet.h>
+    -+#include <snippet-host.h>
+    - #include <sie.h>
+    - #include <sclp.h>
+    - #include <asm/facility.h>
+    -
+    - ## s390x/pv-icptcode.c ##
+    -@@
+    - #include <sie.h>
+    - #include <smp.h>
+    - #include <sclp.h>
+    --#include <snippet.h>
+    -+#include <snippet-host.h>
+    - #include <asm/facility.h>
+    - #include <asm/barrier.h>
+    - #include <asm/sigp.h>
+    -
+    - ## s390x/pv-ipl.c ##
+    -@@
+    - #include <libcflat.h>
+    - #include <sie.h>
+    - #include <sclp.h>
+    --#include <snippet.h>
+    -+#include <snippet-host.h>
+    - #include <asm/facility.h>
+    - #include <asm/uv.h>
+    - 
+    -
+    - ## s390x/sie-dat.c ##
+    -@@
+    - #include <alloc_page.h>
+    - #include <sclp.h>
+    - #include <sie.h>
+    --#include <snippet.h>
+    -+#include <snippet-host.h>
+    - #include "snippets/c/sie-dat.h"
+    - 
+    - static struct vm vm;
+    -
+    - ## s390x/spec_ex-sie.c ##
+    -@@
+    - #include <asm/arch_def.h>
+    - #include <alloc_page.h>
+    - #include <sie.h>
+    --#include <snippet.h>
+    -+#include <snippet-host.h>
+    - #include <hardware.h>
+    - 
+    - static struct vm vm;
+    -
+    - ## s390x/uv-host.c ##
+    -@@
+    - #include <sclp.h>
+    - #include <smp.h>
+    - #include <uv.h>
+    --#include <snippet.h>
+    -+#include <snippet-host.h>
+    - #include <mmu.h>
+    - #include <asm/page.h>
+    - #include <asm/pgtable.h>
+    ++
+    ++#endif /* _S390X_SNIPPET_EXIT_H_ */
+    +
+    + ## s390x/snippets/lib/snippet-exit.h (new) ##
+    +@@
+    ++/* SPDX-License-Identifier: GPL-2.0-only */
+    ++/*
+    ++ * Functionality for exiting the snippet.
+    ++ *
+    ++ * Copyright IBM Corp. 2023
+    ++ */
+    ++
+    ++#ifndef _S390X_SNIPPET_LIB_EXIT_H_
+    ++#define _S390X_SNIPPET_LIB_EXIT_H_
+    ++
+    ++#include <asm/arch_def.h>
+    ++#include <asm/barrier.h>
+    ++
+    ++static inline void force_exit(void)
+    ++{
+    ++	mb(); /* host may read any memory written by the guest before */
+    ++	diag44();
+    ++	mb(); /* allow host to modify guest memory */
+    ++}
+    ++
+    ++static inline void force_exit_value(uint64_t val)
+    ++{
+    ++	mb(); /* host may read any memory written by the guest before */
+    ++	diag9c(val);
+    ++	mb(); /* allow host to modify guest memory */
+    ++}
+    ++
+    ++#endif /* _S390X_SNIPPET_LIB_EXIT_H_ */
+6:  a1db588b ! 5:  cd79e654 s390x: Use library functions for snippet exit
+    @@ Commit message
+         Replace the existing code for exiting from snippets with the newly
+         introduced library functionality.
+     
+    +    Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+    +    Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
+         Signed-off-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+     
+      ## s390x/sie-dat.c ##
+    +@@
+    + #include <sclp.h>
+    + #include <sie.h>
+    + #include <snippet.h>
+    ++#include <snippet-exit.h>
+    + #include "snippets/c/sie-dat.h"
+    + 
+    + static struct vm vm;
+     @@ s390x/sie-dat.c: static void test_sie_dat(void)
+      	uint64_t test_page_gpa, test_page_hpa;
+      	uint8_t *test_page_hva, expected_val;
+    @@ s390x/snippets/c/sie-dat.c
+      #include <libcflat.h>
+      #include <asm-generic/page.h>
+      #include <asm/mem.h>
+    -+#include <snippet-guest.h>
+    ++#include <snippet-exit.h>
+      #include "sie-dat.h"
+      
+      static uint8_t test_pages[GUEST_TEST_PAGE_COUNT * PAGE_SIZE] __attribute__((__aligned__(PAGE_SIZE)));
+7:  0b89b3c6 ! 6:  1e9893b6 s390x: Add test for STFLE interpretive execution (format-0)
+    @@ s390x/snippets/c/stfle.c (new)
+     + * Snippet used by the STLFE interpretive execution facilities test.
+     + */
+     +#include <libcflat.h>
+    -+#include <snippet-guest.h>
+    ++#include <snippet-exit.h>
+     +
+     +int main(void)
+     +{
+     +	const unsigned int max_fac_len = 8;
+    ++	uint64_t len_arg = max_fac_len - 1;
+     +	uint64_t res[max_fac_len + 1];
+    ++	uint64_t fac[max_fac_len];
+     +
+    -+	res[0] = max_fac_len - 1;
+    -+	asm volatile ( "lg	0,%[len]\n"
+    ++	asm volatile ( "lgr	0,%[len]\n"
+     +		"	stfle	%[fac]\n"
+    -+		"	stg	0,%[len]\n"
+    -+		: [fac] "=QS"(*(uint64_t(*)[max_fac_len])&res[1]),
+    -+		  [len] "+RT"(res[0])
+    ++		"	lgr	%[len],0\n"
+    ++		: [fac] "=Q"(fac),
+    ++		  [len] "+d"(len_arg)
+     +		:
+     +		: "%r0", "cc"
+     +	);
+    ++	res[0] = len_arg;
+    ++	memcpy(&res[1], fac, sizeof(fac));
+     +	force_exit_value((uint64_t)&res);
+     +	return 0;
+     +}
+    @@ s390x/stfle-sie.c (new)
+     +#include <stdlib.h>
+     +#include <asm/facility.h>
+     +#include <asm/time.h>
+    -+#include <snippet-host.h>
+    ++#include <snippet.h>
+    ++#include <snippet-exit.h>
+     +#include <alloc_page.h>
+     +#include <sclp.h>
+     +#include <rand.h>
+    @@ s390x/stfle-sie.c (new)
+     +
+     +struct guest_stfle_res {
+     +	uint16_t len;
+    -+	uint64_t reg;
+     +	unsigned char *mem;
+     +};
+     +
+    @@ s390x/stfle-sie.c (new)
+     +{
+     +	struct guest_stfle_res res;
+     +	uint64_t guest_stfle_addr;
+    ++	uint64_t reg;
+     +
+     +	sie(&vm);
+     +	assert(snippet_is_force_exit_value(&vm));
+     +	guest_stfle_addr = snippet_get_force_exit_value(&vm);
+     +	res.mem = &vm.guest_mem[guest_stfle_addr];
+    -+	memcpy(&res.reg, res.mem, sizeof(res.reg));
+    -+	res.len = (res.reg & 0xff) + 1;
+    -+	res.mem += sizeof(res.reg);
+    ++	memcpy(&reg, res.mem, sizeof(reg));
+    ++	res.len = (reg & 0xff) + 1;
+    ++	res.mem += sizeof(reg);
+     +	return res;
+     +}
+     +
+    @@ s390x/stfle-sie.c (new)
+     +int main(int argc, char **argv)
+     +{
+     +	struct args args = parse_args(argc, argv);
+    ++	bool run_format_0 = test_facility(7);
+     +
+     +	if (!sclp_facilities.has_sief2) {
+     +		report_skip("SIEF2 facility unavailable");
+     +		goto out;
+     +	}
+    ++	if (!run_format_0)
+    ++		report_skip("STFLE facility not available");
+     +
+     +	report_info("PRNG seed: 0x%lx", args.seed);
+     +	prng_s = prng_init(args.seed);
+     +	setup_guest();
+    -+	if (test_facility(7))
+    ++	if (run_format_0)
+     +		test_stfle_format_0();
+     +out:
+     +	return report_summary();
 
-Update the documentation above dump_available().
-
-Tested-by: Mario Casquero <mcasquer@redhat.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
-  arch/s390/include/asm/kexec.h |  4 ++++
-  arch/s390/kernel/crash_dump.c |  6 ++++++
-  arch/s390/kernel/smp.c        | 16 ++++++++--------
-  3 files changed, 18 insertions(+), 8 deletions(-)
-
-diff --git a/arch/s390/include/asm/kexec.h b/arch/s390/include/asm/kexec.h
-index 1bd08eb56d5f..bd20543515f5 100644
---- a/arch/s390/include/asm/kexec.h
-+++ b/arch/s390/include/asm/kexec.h
-@@ -94,6 +94,9 @@ void arch_kexec_protect_crashkres(void);
-  
-  void arch_kexec_unprotect_crashkres(void);
-  #define arch_kexec_unprotect_crashkres arch_kexec_unprotect_crashkres
-+
-+bool is_kdump_kernel(void);
-+#define is_kdump_kernel is_kdump_kernel
-  #endif
-  
-  #ifdef CONFIG_KEXEC_FILE
-@@ -107,4 +110,5 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
-  int arch_kimage_file_post_load_cleanup(struct kimage *image);
-  #define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
-  #endif
-+
-  #endif /*_S390_KEXEC_H */
-diff --git a/arch/s390/kernel/crash_dump.c b/arch/s390/kernel/crash_dump.c
-index 51313ed7e617..43bbaf534dd2 100644
---- a/arch/s390/kernel/crash_dump.c
-+++ b/arch/s390/kernel/crash_dump.c
-@@ -237,6 +237,12 @@ int remap_oldmem_pfn_range(struct vm_area_struct *vma, unsigned long from,
-  						       prot);
-  }
-  
-+bool is_kdump_kernel(void)
-+{
-+	return dump_available();
-+}
-+EXPORT_SYMBOL_GPL(is_kdump_kernel);
-+
-  static const char *nt_name(Elf64_Word type)
-  {
-  	const char *name = "LINUX";
-diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
-index 4df56fdb2488..bd41e35a27a0 100644
---- a/arch/s390/kernel/smp.c
-+++ b/arch/s390/kernel/smp.c
-@@ -574,7 +574,7 @@ int smp_store_status(int cpu)
-  
-  /*
-   * Collect CPU state of the previous, crashed system.
-- * There are four cases:
-+ * There are three cases:
-   * 1) standard zfcp/nvme dump
-   *    condition: OLDMEM_BASE == NULL && is_ipl_type_dump() == true
-   *    The state for all CPUs except the boot CPU needs to be collected
-@@ -587,16 +587,16 @@ int smp_store_status(int cpu)
-   *    with sigp stop-and-store-status. The firmware or the boot-loader
-   *    stored the registers of the boot CPU in the absolute lowcore in the
-   *    memory of the old system.
-- * 3) kdump and the old kernel did not store the CPU state,
-- *    or stand-alone kdump for DASD
-- *    condition: OLDMEM_BASE != NULL && !is_kdump_kernel()
-+ * 3) kdump or stand-alone kdump for DASD
-+ *    condition: OLDMEM_BASE != NULL && !is_ipl_type_dump() == false
-   *    The state for all CPUs except the boot CPU needs to be collected
-   *    with sigp stop-and-store-status. The kexec code or the boot-loader
-   *    stored the registers of the boot CPU in the memory of the old system.
-- * 4) kdump and the old kernel stored the CPU state
-- *    condition: OLDMEM_BASE != NULL && is_kdump_kernel()
-- *    This case does not exist for s390 anymore, setup_arch explicitly
-- *    deactivates the elfcorehdr= kernel parameter
-+ *
-+ * Note that the old kdump mode where the old kernel stored the CPU state
-+ * does no longer exist: setup_arch explicitly deactivates the elfcorehdr=
-+ * kernel parameter. The is_kdump_kernel() implementation on s390 is independent
-+ * of the elfcorehdr= parameter, and is purely based on dump_available().
-   */
-  static bool dump_available(void)
-  {
+base-commit: f246b16099478a916eab37b9bd1eb07c743a67d5
 -- 
-2.46.1
-
-
--- 
-Cheers,
-
-David / dhildenb
+2.44.0
 
 
