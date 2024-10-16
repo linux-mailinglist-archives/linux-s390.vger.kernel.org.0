@@ -1,166 +1,144 @@
-Return-Path: <linux-s390+bounces-6582-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-6585-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DCC99A0789
-	for <lists+linux-s390@lfdr.de>; Wed, 16 Oct 2024 12:37:24 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 786219A08BF
+	for <lists+linux-s390@lfdr.de>; Wed, 16 Oct 2024 13:52:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 05B4D28887F
-	for <lists+linux-s390@lfdr.de>; Wed, 16 Oct 2024 10:37:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D570AB273D3
+	for <lists+linux-s390@lfdr.de>; Wed, 16 Oct 2024 11:52:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6ED4206970;
-	Wed, 16 Oct 2024 10:37:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AD5F207A22;
+	Wed, 16 Oct 2024 11:50:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Q45K40cU"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VpOvVWWc"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A06F206055;
-	Wed, 16 Oct 2024 10:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C94207A1A;
+	Wed, 16 Oct 2024 11:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729075040; cv=none; b=URriE+SZM61k8IP2K0DXNy5ECFbATaaDHi/fUQB9+ElQI7P5o2ttp5NqsVuxW1B/I4t/OSHdgB8tLSyc/woKfsOjQoeG0prOphePMmu7BgaM/Uic/Jaw4B2BBtiQREguSWTrKSHxDlJsF8mrU2FEqhBN/J8FXePL9B+LK1SIVcQ=
+	t=1729079453; cv=none; b=jjw4G5/754yk1WWRXUk7hIxZLFEsRPTkig2vffWbkMlJFnnRJxscYrwQHwFRDhGCHhXys4YijwHxV7NAXIMosdlFZTbgzl8nRKzBmUF1bo9CRgjEkex0dHj+/ONdlXNpdEXIRVHmuqIE6y6pJgFNUOa6f/Azn9lGX1WNEhg9XCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729075040; c=relaxed/simple;
-	bh=PotmV07TYsdzBCkgsXti5FhmuYzcIq8RKvfDe6ByBpI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WyMqSWmDmQs4q32Fj2LHIIvBhpu7OXVM1XwYKzjhAxBCHnwu2OTtD/YclQp9DjeuSkiT1klSQHTY8PJyantYrmUtNepguWcmdpOuNM5ciR3zlYXkVo+GTwpFnYyYE0DfaQM9SQlKgY4mrLh3lfKqJNuMpTpXes4AjE0XOzOhZN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Q45K40cU; arc=none smtp.client-ip=148.163.158.5
+	s=arc-20240116; t=1729079453; c=relaxed/simple;
+	bh=AX30tUD6dKOkQQBmFEEpg1NhT/sQin54YAyP7K2bkRQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jppENS1K8wwuK19ZkZ5zEb9nFOED/2WuTETn+wTfkkDsn9btfQYQXXd3eNu/dqnmK15xjSMLWcErfODgRg7FA7JD1ozlkhF4V3hLROeI5HRmRJI/PQBX6kbNC4/8eg1JO4VZoTncJNFR07Ppd4lMjGXVdT1n+NhIZWs3c2eISDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VpOvVWWc; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49GAKEWI023035;
-	Wed, 16 Oct 2024 10:37:11 GMT
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49G9P1tP023751;
+	Wed, 16 Oct 2024 11:50:41 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=zMeyJS
-	0z7cn5JjFKCkgSbMvXgBCHzt6or6qpLiwiFAU=; b=Q45K40cUR2vLXWMfC1NfAw
-	3W9w4L+9Wmtz7d1DOvF7KIZrrQHVUkrrP+0zBcp16g34JBH++2G7ot7vQY++mQgS
-	5bWRJojDib/0i1n1YVPJ4WNZ8N74YLnQkZbKkhI5RsfLGPv4nO3XYMc0rzdBYyQA
-	tg53sJwG5m6bhZlm8C6OTIfm4bekpYXr0ZacrXcQC4HY0YPhBuuOacC8zNX/nqRg
-	dU+cppVGBrL7ApVDQdEBv2sxL9hNI1uZeOOmITYquvwWtXxVBxC/NR98bZgLT0fK
-	Xay0Mr+nrttKPuensrB4bqaX4PWWyyIzcHzNgBeNBWzSJLjN848iN8RO/5V8mBNg
-	==
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=2iEKv6VzLgvZF9EE2zsOh7qrMnIjPazyMscKpQ65L
+	5Y=; b=VpOvVWWcWiCUyrF8JH4Qe6/LgUbE2ffkQ3/wOW4mxL8EA/ZPtcaTLs4l0
+	djiUSNGZrW2kfOLcbYA06FlCF4mnk02RvJ95ZcoC9CgORPAjCvCwpweF2fqBjaaL
+	n5+/gkr9+a16OYoyidSJW3HQe8qPvcBsS0LSE0bW6XRq4Ugyt7cZOEPBvWsLHBDe
+	W1UAQK07e5xb/gmo6zLXCHB7FwZIImPNreAxAnPA0dIuIWEA3jD9K0hpthCtEXUF
+	UkzE/vYL5ked/U062pGSmrMNGFOyXB68aQ/NokU9xKFUU4Kq3eGArB2p2v0H2oMN
+	yCC9vi5+VmvtsK/Ou+YOWXhOLZ1lw==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42abn0g2wk-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42aau5rrg7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Oct 2024 10:37:10 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49GAbAcC030714;
-	Wed, 16 Oct 2024 10:37:10 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42abn0g2w6-1
+	Wed, 16 Oct 2024 11:50:40 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49GBoe05026734;
+	Wed, 16 Oct 2024 11:50:40 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42aau5rrg0-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Oct 2024 10:37:10 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49G81Lrc005215;
-	Wed, 16 Oct 2024 10:37:09 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4285nj8kqt-1
+	Wed, 16 Oct 2024 11:50:40 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49GATBRT002452;
+	Wed, 16 Oct 2024 11:50:38 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4284ems70h-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Oct 2024 10:37:09 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49GAb5vm54985128
+	Wed, 16 Oct 2024 11:50:38 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49GBoZO653608790
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 16 Oct 2024 10:37:05 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7ED8F20040;
-	Wed, 16 Oct 2024 10:37:05 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3953A2004D;
-	Wed, 16 Oct 2024 10:37:04 +0000 (GMT)
-Received: from li-ce58cfcc-320b-11b2-a85c-85e19b5285e0 (unknown [9.171.7.78])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with SMTP;
-	Wed, 16 Oct 2024 10:37:04 +0000 (GMT)
-Date: Wed, 16 Oct 2024 12:37:02 +0200
-From: Halil Pasic <pasic@linux.ibm.com>
-To: Eric Farman <farman@linux.ibm.com>
-Cc: Heiko Carstens <hca@linux.ibm.com>, David Hildenbrand
- <david@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
-        linux-doc@vger.kernel.org, kvm@vger.kernel.org,
-        Vasily Gorbik
- <gor@linux.ibm.com>,
+	Wed, 16 Oct 2024 11:50:35 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E3D122004E;
+	Wed, 16 Oct 2024 11:50:34 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D178C2004D;
+	Wed, 16 Oct 2024 11:50:34 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 16 Oct 2024 11:50:34 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55390)
+	id 8FB92E069D; Wed, 16 Oct 2024 13:50:34 +0200 (CEST)
+From: Sven Schnelle <svens@linux.ibm.com>
+To: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
         Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian
- Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle
- <svens@linux.ibm.com>, Thomas Huth <thuth@redhat.com>,
-        Cornelia Huck
- <cohuck@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio
- Imbrenda <imbrenda@linux.ibm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-        Eugenio =?UTF-8?B?UMOpcmV6?= <eperezma@redhat.com>,
-        Andrew Morton
- <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mario
- Casquero <mcasquer@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Subject: Re: [PATCH v2 4/7] s390/physmem_info: query diag500(STORAGE LIMIT)
- to support QEMU/KVM memory devices
-Message-ID: <20241016123702.04688e2d.pasic@linux.ibm.com>
-In-Reply-To: <8131b905c61a7baf4bd09ec4a08e1ace84d36754.camel@linux.ibm.com>
-References: <20241014144622.876731-1-david@redhat.com>
-	<20241014144622.876731-5-david@redhat.com>
-	<20241014184339.10447-E-hca@linux.ibm.com>
-	<8131b905c61a7baf4bd09ec4a08e1ace84d36754.camel@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: H5ULsniXk0Rfka_9RRyv3agVS3JiWal7
-X-Proofpoint-ORIG-GUID: FKcGPPcfDhFwjLM7_HrSq6Zn3U2EPmeB
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        "Ricardo B. Marliere" <ricardo@marliere.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH 0/2] PtP driver for s390 clocks
+Date: Wed, 16 Oct 2024 13:50:28 +0200
+Message-ID: <20241016115030.2653675-1-svens@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: y2DgTJzREa8t7SWzXBIzwFMUk93jmmA9
+X-Proofpoint-GUID: GbgkTQxseAY5nFGDhbu6YQncIuqXBD1x
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
  definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- mlxscore=0 priorityscore=1501 mlxlogscore=919 lowpriorityscore=0
- clxscore=1011 bulkscore=0 malwarescore=0 spamscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2410160065
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=864
+ priorityscore=1501 bulkscore=0 suspectscore=0 malwarescore=0 spamscore=0
+ impostorscore=0 lowpriorityscore=0 mlxscore=0 phishscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2409260000
+ definitions=main-2410160073
 
-On Tue, 15 Oct 2024 11:01:44 -0400
-Eric Farman <farman@linux.ibm.com> wrote:
+Hi,
 
-> > +		  [subcode] "i" (DIAG500_SC_STOR_LIMIT)
-> > +		: "memory", "1", "2");
-> > +	if (!storage_limit)
-> > +		return -EINVAL;
-> > +	/* Convert inclusive end to exclusive end */
-> > +	*max_physmem_end = storage_limit + 1;
-> >  	return 0;
-> >  }
-> >  
-> >   
-> 
-> I like the idea of a defined constant here instead of hardcoded, but maybe it should be placed
-> somewhere in include/uapi so that QEMU can pick it up with update-linux-headers.sh and be in sync
-> with the kernel, instead of just an equivalent definition in [1] ?
-> 
-> [1] https://lore.kernel.org/qemu-devel/20241008105455.2302628-8-david@redhat.com/
+these patches add support for using the s390 physical and TOD clock as ptp
+clock. To do so, the first patch adds a clock id to the s390 TOD clock,
+while the second patch adds the PtP driver itself.
 
-I think it is fine to have equivalent definitions. This is more or less
-an ISA thing we are introducing here. And IMHO it would be fine to have
-such a definition even if the emulator was supposed to run on an OS that
-is not Linux and without without KVM.
+Changes in v2:
+- add missing MODULE_DESCRIPTION()
+- drop udev event patch
+- simplify eitod_to_ns()
+- use store_tod_clock_ext() instead of store_tod_clock_ext_cc()
+- move stp_enabled() declaration to stp.h
+- use s390 instead of 'Z' in clock names
+- defconfig symbol should be default-n
 
-Regards,
-Halil
+Sven Schnelle (2):
+  s390/time: Add clocksource id to TOD clock
+  s390/time: Add PtP driver
+
+ MAINTAINERS                     |   6 ++
+ arch/s390/include/asm/stp.h     |   1 +
+ arch/s390/include/asm/timex.h   |   6 ++
+ arch/s390/kernel/time.c         |   7 ++
+ drivers/ptp/Kconfig             |  11 +++
+ drivers/ptp/Makefile            |   1 +
+ drivers/ptp/ptp_s390.c          | 129 ++++++++++++++++++++++++++++++++
+ include/linux/clocksource_ids.h |   1 +
+ 8 files changed, 162 insertions(+)
+ create mode 100644 drivers/ptp/ptp_s390.c
+
+-- 
+2.43.0
+
 
