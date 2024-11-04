@@ -1,216 +1,258 @@
-Return-Path: <linux-s390+bounces-6917-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-6915-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC4AE9BB9D8
-	for <lists+linux-s390@lfdr.de>; Mon,  4 Nov 2024 17:08:46 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7EF979BB99F
+	for <lists+linux-s390@lfdr.de>; Mon,  4 Nov 2024 16:59:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CFEF01C22C9E
-	for <lists+linux-s390@lfdr.de>; Mon,  4 Nov 2024 16:08:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3BC4028285F
+	for <lists+linux-s390@lfdr.de>; Mon,  4 Nov 2024 15:59:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B52BE1C07F3;
-	Mon,  4 Nov 2024 16:08:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64BCF1C07E5;
+	Mon,  4 Nov 2024 15:59:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="T58QmFrh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L+r634Er"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0061C07E5;
-	Mon,  4 Nov 2024 16:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BAE670816;
+	Mon,  4 Nov 2024 15:59:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730736520; cv=none; b=NlBMizffosPU6FHd3DvCxYAC913brB+u551mvl8mwi2ZXbZoeodxWQFFgOVUXm2Ongi+Acr9FHxw8fn0Ct5h63Im3tO7cjd9np0S/kvbOkENpeikwj/7Jf9+VExquS9FcFYuC+rbwcw9Jd2qUjxbZSFtNfqQhMwEhG8WWB4hc0g=
+	t=1730735942; cv=none; b=YUSkITEI5yVp0C3vD9K3CaZ6Wc42jhaWi1MSpnuxLux2D5BVC9e4Cb+Z4T7NTmkjgclxeIHZ2bK8v7gPWIS/ZmtGz4FzctB2PfuPZLApPQjVsj0Eps7BBEZLU6Fhp65bq65DkyRcu+GXqNdYRcuquZCgBmoNyIQgo2oHi1d6bvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730736520; c=relaxed/simple;
-	bh=AKZxtJ4ffU13mmHVTasjpozRFhvW4v2i47Nv2xkHlUs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sPtsSZog0GqoMI+BHJufatStgq10tNiClLrUKperKyODszwxaXlZtA75JmJzq68MhOKul2dKuVgTi/V1/xIDBzvnfM2ybcm1U8Ir7d6nVMgZ3hrIhqBtpUlH9XmIS8Rdu+Z7csB070AJO9EdRT54/dj/1a+PjqP2cbAlnsyL2EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=T58QmFrh; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A4FeGol015296;
-	Mon, 4 Nov 2024 16:08:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=uCZFnTPm6MfL+4NTgwEJRO4AQGJM7gK8Yn7cfGTQO
-	ig=; b=T58QmFrh07lglIZkr4JWJ0o8hwUhsch0SlZUoZoJrCKTNXjjpZC632/ih
-	3Qz2KAqmTjoRXqy98xtAgKazkP+/y+vs9Hc8aOuOrYO8+zEjAWpDvebSDmGaxg/N
-	ReL4V3B5aIivkui8Nv7C0pH1E/lemZmF3VDflrM208+nQqmLS+4mhxkd26blCotn
-	+C/ASbcWH/hI/+oO5173VN/mBlZCjDlDqxqb1yeyWiDBdYhx8iaLKikyauGUgwaT
-	JDGrB4KfZSaoviA5b3LN+d1BiUq4JtVV89KjXhAcWqTAPJiKWETJg5yM4EGiVvYM
-	mSJnBqitKupLw7OPmklBb27tfx41g==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42q14303nw-5
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 04 Nov 2024 16:08:37 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4A4ENdFY023983;
-	Mon, 4 Nov 2024 15:36:13 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 42nxsxxj6m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 04 Nov 2024 15:36:13 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4A4Fa9lh33292978
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 4 Nov 2024 15:36:09 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C470320043;
-	Mon,  4 Nov 2024 15:36:09 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A5D7F20040;
-	Mon,  4 Nov 2024 15:36:09 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  4 Nov 2024 15:36:09 +0000 (GMT)
-From: Steffen Eiden <seiden@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Cc: Ingo Franzki <ifranzki@linux.ibm.com>,
-        Christoph Schlameuss <schlameuss@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>, borntraeger@linux.ibm.com
-Subject: [PATCH v3] s390/uvdevice: Support longer secret lists
-Date: Mon,  4 Nov 2024 16:36:09 +0100
-Message-ID: <20241104153609.1361388-1-seiden@linux.ibm.com>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1730735942; c=relaxed/simple;
+	bh=nfbYyjxKn/6I7KeeEZRpVU1jWeaAip9FWL9OkYwgvck=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DYa8muGXkI7K/f8Nx2E+bFKIWkUPPfpKxnp3q99I91dzvcm/tJjqrXHjWrI6t5Zd3t5/22hdolyul8EZHw6xYbYT9fhmHX1rQXr2HpujF6VrkuAngUmokXCfv3EEyC06KVwdcD4F6bsJUDGEzlemv3s41zD168ezRWmT7Lrcin8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L+r634Er; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93956C4CECE;
+	Mon,  4 Nov 2024 15:59:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730735941;
+	bh=nfbYyjxKn/6I7KeeEZRpVU1jWeaAip9FWL9OkYwgvck=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=L+r634Erl+WncXlEz4rsmMXCY8pHbVcHBzX48fyrMeKPL0TKRWGO+wiqFNNk2+bG3
+	 +EpXJQRdYvygLy9/3ELIAb/8ofnXplEM6wi31doRQhPpma9mFRpzKmtc8jteqnIuuQ
+	 y2hUCBnfM2JitLA7URtD/EpPbu2C3HrK6XK+ZsPGzQczgr5Ywo4JZ4LkH1xj3Rlsvd
+	 cnObx/9CHx2OljMMP4/ygK8PuiYs7OjnWWXkoHfXClw6C6fM35CEVlbxx3SdrDa+kG
+	 mKkn8iOJFfd3EOnWuF6R5QB2V6M0bDB2CQXbwqP5lD5+gYZVgejmFCy0JGPvPxHlu1
+	 YJOPQwrbsGUyg==
+Date: Mon, 4 Nov 2024 07:59:00 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org, x86@kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH v3 15/18] ext4: switch to using the crc32c library
+Message-ID: <20241104155900.GH21832@frogsfrogsfrogs>
+References: <20241103223154.136127-1-ebiggers@kernel.org>
+ <20241103223154.136127-16-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: zWPRhq9sGEdPvMOfHW1Z6BAxZL85Wj6f
-X-Proofpoint-ORIG-GUID: zWPRhq9sGEdPvMOfHW1Z6BAxZL85Wj6f
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- mlxscore=0 phishscore=0 bulkscore=0 clxscore=1015 impostorscore=0
- priorityscore=1501 malwarescore=0 mlxlogscore=826 lowpriorityscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2411040137
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241103223154.136127-16-ebiggers@kernel.org>
 
-Enable the list IOCTL to provide lists longer than one page (85 entries).
-The list IOCTL now accepts any argument length in page granularity.
-It fills the argument up to this length with entries until the list
-ends. User space unaware of this enhancement will still receive one page
-of data and an uv_rc 0x0100.
+On Sun, Nov 03, 2024 at 02:31:51PM -0800, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> Now that the crc32c() library function directly takes advantage of
+> architecture-specific optimizations, it is unnecessary to go through the
+> crypto API.  Just use crc32c().  This is much simpler, and it improves
+> performance due to eliminating the crypto API overhead.
+> 
+> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+>  fs/ext4/Kconfig |  3 +--
+>  fs/ext4/ext4.h  | 25 +++----------------------
+>  fs/ext4/super.c | 15 ---------------
+>  3 files changed, 4 insertions(+), 39 deletions(-)
+> 
+> diff --git a/fs/ext4/Kconfig b/fs/ext4/Kconfig
+> index e20d59221fc0..c9ca41d91a6c 100644
+> --- a/fs/ext4/Kconfig
+> +++ b/fs/ext4/Kconfig
+> @@ -29,12 +29,11 @@ config EXT3_FS_SECURITY
+>  config EXT4_FS
+>  	tristate "The Extended 4 (ext4) filesystem"
+>  	select BUFFER_HEAD
+>  	select JBD2
+>  	select CRC16
+> -	select CRYPTO
+> -	select CRYPTO_CRC32C
+> +	select CRC32
 
-Signed-off-by: Steffen Eiden <seiden@linux.ibm.com>
----
- v3: remove upper boundary (8 pages) for arg len
+Hmm.  Looking at your git branch (which was quite helpful to link to!) I
+think for XFS we don't need to change the crc32c() calls, and the only
+porting work that needs to be done is mirroring this Kconfig change?
+And that doesn't even need to be done until someone wants to get rid of
+CONFIG_LIBCRC32C, right?
 
- drivers/s390/char/uvdevice.c | 71 ++++++++++++++++++++++++++----------
- 1 file changed, 52 insertions(+), 19 deletions(-)
+>  	select FS_IOMAP
+>  	select FS_ENCRYPTION_ALGS if FS_ENCRYPTION
+>  	help
+>  	  This is the next generation of the ext3 filesystem.
+>  
+> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> index 44b0d418143c..99aa512a7de1 100644
+> --- a/fs/ext4/ext4.h
+> +++ b/fs/ext4/ext4.h
+> @@ -31,11 +31,11 @@
+>  #include <linux/wait.h>
+>  #include <linux/sched/signal.h>
+>  #include <linux/blockgroup_lock.h>
+>  #include <linux/percpu_counter.h>
+>  #include <linux/ratelimit.h>
+> -#include <crypto/hash.h>
+> +#include <linux/crc32c.h>
+>  #include <linux/falloc.h>
+>  #include <linux/percpu-rwsem.h>
+>  #include <linux/fiemap.h>
+>  #ifdef __KERNEL__
+>  #include <linux/compat.h>
+> @@ -1660,13 +1660,10 @@ struct ext4_sb_info {
+>  	struct task_struct *s_mmp_tsk;
+>  
+>  	/* record the last minlen when FITRIM is called. */
+>  	unsigned long s_last_trim_minblks;
+>  
+> -	/* Reference to checksum algorithm driver via cryptoapi */
+> -	struct crypto_shash *s_chksum_driver;
+> -
+>  	/* Precomputed FS UUID checksum for seeding other checksums */
+>  	__u32 s_csum_seed;
+>  
+>  	/* Reclaim extents from extent status tree */
+>  	struct shrinker *s_es_shrinker;
+> @@ -2465,23 +2462,11 @@ static inline __le16 ext4_rec_len_to_disk(unsigned len, unsigned blocksize)
+>  #define DX_HASH_LAST 			DX_HASH_SIPHASH
+>  
+>  static inline u32 ext4_chksum(struct ext4_sb_info *sbi, u32 crc,
+>  			      const void *address, unsigned int length)
+>  {
+> -	struct {
+> -		struct shash_desc shash;
+> -		char ctx[4];
+> -	} desc;
+> -
+> -	BUG_ON(crypto_shash_descsize(sbi->s_chksum_driver)!=sizeof(desc.ctx));
+> -
+> -	desc.shash.tfm = sbi->s_chksum_driver;
+> -	*(u32 *)desc.ctx = crc;
+> -
+> -	BUG_ON(crypto_shash_update(&desc.shash, address, length));
+> -
+> -	return *(u32 *)desc.ctx;
+> +	return crc32c(crc, address, length);
+>  }
+>  
+>  #ifdef __KERNEL__
+>  
+>  /* hash info structure used by the directory hash */
+> @@ -3278,15 +3263,11 @@ extern void ext4_group_desc_csum_set(struct super_block *sb, __u32 group,
+>  extern int ext4_register_li_request(struct super_block *sb,
+>  				    ext4_group_t first_not_zeroed);
+>  
+>  static inline int ext4_has_metadata_csum(struct super_block *sb)
+>  {
+> -	WARN_ON_ONCE(ext4_has_feature_metadata_csum(sb) &&
+> -		     !EXT4_SB(sb)->s_chksum_driver);
+> -
+> -	return ext4_has_feature_metadata_csum(sb) &&
+> -	       (EXT4_SB(sb)->s_chksum_driver != NULL);
+> +	return ext4_has_feature_metadata_csum(sb);
+>  }
 
-diff --git a/drivers/s390/char/uvdevice.c b/drivers/s390/char/uvdevice.c
-index 1f90976293e8..7551b03d5f99 100644
---- a/drivers/s390/char/uvdevice.c
-+++ b/drivers/s390/char/uvdevice.c
-@@ -297,6 +297,43 @@ static int uvio_add_secret(struct uvio_ioctl_cb *uv_ioctl)
- 	return ret;
- }
- 
-+/*
-+ * Do the actual secret list creation. Calls the list secrets UVC until there
-+ * is no more space in the user buffer, or the list ends.
-+ */
-+static int uvio_get_list(void *zpage, struct uvio_ioctl_cb *uv_ioctl)
-+{
-+	const size_t data_off = offsetof(struct uv_secret_list, secrets);
-+	u8 __user *user_buf = (u8 __user *)uv_ioctl->argument_addr;
-+	struct uv_secret_list *list = zpage;
-+	u16 num_secrets_stored = 0;
-+	size_t user_off = data_off;
-+	size_t copy_len;
-+
-+	do {
-+		uv_list_secrets(list, list->next_secret_idx, &uv_ioctl->uv_rc,
-+				&uv_ioctl->uv_rrc);
-+		if (uv_ioctl->uv_rc != UVC_RC_EXECUTED &&
-+		    uv_ioctl->uv_rc != UVC_RC_MORE_DATA)
-+			break;
-+
-+		copy_len = sizeof(list->secrets[0]) * list->num_secr_stored;
-+		WARN_ON(copy_len > sizeof(list->secrets));
-+
-+		if (copy_to_user(user_buf + user_off, list->secrets, copy_len))
-+			return -EFAULT;
-+
-+		user_off += copy_len;
-+		num_secrets_stored += list->num_secr_stored;
-+	} while (uv_ioctl->uv_rc == UVC_RC_MORE_DATA &&
-+		 user_off + sizeof(*list) <= uv_ioctl->argument_len);
-+
-+	list->num_secr_stored = num_secrets_stored;
-+	if (copy_to_user(user_buf, list, data_off))
-+		return -EFAULT;
-+	return 0;
-+}
-+
- /** uvio_list_secrets() - perform a List Secret UVC
-  * @uv_ioctl: ioctl control block
-  *
-@@ -308,6 +345,12 @@ static int uvio_add_secret(struct uvio_ioctl_cb *uv_ioctl)
-  *
-  * The argument specifies the location for the result of the UV-Call.
-  *
-+ * Argument length must be a multiple of a page.
-+ * The list secrets IOCTL will call the list UVC multiple times and fill
-+ * the provided user-buffer with list elements until either the list ends or
-+ * the buffer is full. The list header is merged over all list header from the
-+ * individual UVCs.
-+ *
-  * If the List Secrets UV facility is not present, UV will return invalid
-  * command rc. This won't be fenced in the driver and does not result in a
-  * negative return value.
-@@ -318,31 +361,21 @@ static int uvio_add_secret(struct uvio_ioctl_cb *uv_ioctl)
-  */
- static int uvio_list_secrets(struct uvio_ioctl_cb *uv_ioctl)
- {
--	void __user *user_buf_arg = (void __user *)uv_ioctl->argument_addr;
--	struct uv_cb_guest_addr uvcb = {
--		.header.len = sizeof(uvcb),
--		.header.cmd = UVC_CMD_LIST_SECRETS,
--	};
--	void *secrets = NULL;
--	int ret = 0;
-+	void *zpage = NULL;
-+	int rc;
- 
--	if (uv_ioctl->argument_len != UVIO_LIST_SECRETS_LEN)
-+	if (uv_ioctl->argument_len == 0 ||
-+	    uv_ioctl->argument_len % UVIO_LIST_SECRETS_LEN != 0)
- 		return -EINVAL;
- 
--	secrets = kvzalloc(UVIO_LIST_SECRETS_LEN, GFP_KERNEL);
--	if (!secrets)
-+	zpage = (void *)get_zeroed_page(GFP_KERNEL);
-+	if (!zpage)
- 		return -ENOMEM;
- 
--	uvcb.addr = (u64)secrets;
--	uv_call_sched(0, (u64)&uvcb);
--	uv_ioctl->uv_rc = uvcb.header.rc;
--	uv_ioctl->uv_rrc = uvcb.header.rrc;
--
--	if (copy_to_user(user_buf_arg, secrets, UVIO_LIST_SECRETS_LEN))
--		ret = -EFAULT;
-+	rc = uvio_get_list(zpage, uv_ioctl);
- 
--	kvfree(secrets);
--	return ret;
-+	free_page((unsigned long)zpage);
-+	return rc;
- }
- 
- /** uvio_lock_secrets() - perform a Lock Secret Store UVC
--- 
-2.45.2
+Nit: Someone might want to
+s/ext4_has_metadata_csum/ext4_has_feature_metadata_csum/ here to get rid
+of the confusingly named trivial helper.
 
+Otherwise this logic looks ok to me, so
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+
+--D
+
+
+>  
+>  static inline int ext4_has_group_desc_csum(struct super_block *sb)
+>  {
+>  	return ext4_has_feature_gdt_csum(sb) || ext4_has_metadata_csum(sb);
+> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> index 16a4ce704460..1a821093cc0d 100644
+> --- a/fs/ext4/super.c
+> +++ b/fs/ext4/super.c
+> @@ -1371,12 +1371,10 @@ static void ext4_put_super(struct super_block *sb)
+>  	 * Now that we are completely done shutting down the
+>  	 * superblock, we need to actually destroy the kobject.
+>  	 */
+>  	kobject_put(&sbi->s_kobj);
+>  	wait_for_completion(&sbi->s_kobj_unregister);
+> -	if (sbi->s_chksum_driver)
+> -		crypto_free_shash(sbi->s_chksum_driver);
+>  	kfree(sbi->s_blockgroup_lock);
+>  	fs_put_dax(sbi->s_daxdev, NULL);
+>  	fscrypt_free_dummy_policy(&sbi->s_dummy_enc_policy);
+>  #if IS_ENABLED(CONFIG_UNICODE)
+>  	utf8_unload(sb->s_encoding);
+> @@ -4586,19 +4584,10 @@ static int ext4_init_metadata_csum(struct super_block *sb, struct ext4_super_blo
+>  		return -EINVAL;
+>  	}
+>  	ext4_setup_csum_trigger(sb, EXT4_JTR_ORPHAN_FILE,
+>  				ext4_orphan_file_block_trigger);
+>  
+> -	/* Load the checksum driver */
+> -	sbi->s_chksum_driver = crypto_alloc_shash("crc32c", 0, 0);
+> -	if (IS_ERR(sbi->s_chksum_driver)) {
+> -		int ret = PTR_ERR(sbi->s_chksum_driver);
+> -		ext4_msg(sb, KERN_ERR, "Cannot load crc32c driver.");
+> -		sbi->s_chksum_driver = NULL;
+> -		return ret;
+> -	}
+> -
+>  	/* Check superblock checksum */
+>  	if (!ext4_superblock_csum_verify(sb, es)) {
+>  		ext4_msg(sb, KERN_ERR, "VFS: Found ext4 filesystem with "
+>  			 "invalid superblock checksum.  Run e2fsck?");
+>  		return -EFSBADCRC;
+> @@ -5638,13 +5627,10 @@ failed_mount8: __maybe_unused
+>  	flush_work(&sbi->s_sb_upd_work);
+>  	ext4_stop_mmpd(sbi);
+>  	del_timer_sync(&sbi->s_err_report);
+>  	ext4_group_desc_free(sbi);
+>  failed_mount:
+> -	if (sbi->s_chksum_driver)
+> -		crypto_free_shash(sbi->s_chksum_driver);
+> -
+>  #if IS_ENABLED(CONFIG_UNICODE)
+>  	utf8_unload(sb->s_encoding);
+>  #endif
+>  
+>  #ifdef CONFIG_QUOTA
+> @@ -7433,8 +7419,7 @@ static void __exit ext4_exit_fs(void)
+>  }
+>  
+>  MODULE_AUTHOR("Remy Card, Stephen Tweedie, Andrew Morton, Andreas Dilger, Theodore Ts'o and others");
+>  MODULE_DESCRIPTION("Fourth Extended Filesystem");
+>  MODULE_LICENSE("GPL");
+> -MODULE_SOFTDEP("pre: crc32c");
+>  module_init(ext4_init_fs)
+>  module_exit(ext4_exit_fs)
+> -- 
+> 2.47.0
+> 
+> 
 
