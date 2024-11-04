@@ -1,257 +1,216 @@
-Return-Path: <linux-s390+bounces-6914-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-6917-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 092D99BB576
-	for <lists+linux-s390@lfdr.de>; Mon,  4 Nov 2024 14:10:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AC4AE9BB9D8
+	for <lists+linux-s390@lfdr.de>; Mon,  4 Nov 2024 17:08:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2D7901C21526
-	for <lists+linux-s390@lfdr.de>; Mon,  4 Nov 2024 13:10:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CFEF01C22C9E
+	for <lists+linux-s390@lfdr.de>; Mon,  4 Nov 2024 16:08:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4F071BD00A;
-	Mon,  4 Nov 2024 13:10:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B52BE1C07F3;
+	Mon,  4 Nov 2024 16:08:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="QoTIF90w"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="T58QmFrh"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D74A1BCA0A;
-	Mon,  4 Nov 2024 13:10:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0061C07E5;
+	Mon,  4 Nov 2024 16:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730725836; cv=none; b=SdxEWwYhFu8XBOMhS+FwFcSwwEavDKuGVEaTJndb1gzXetXPc1yPtRtSnG6akP0GL+QTWEXZoXw2EYmNCkPEB8WZ7rpb9MQq9fNGgDBnl6F9FQHezWeZrryGDWuFhGAaLgHkTM5gLyomPNWjCEsikg0u86n6B9hTLCxYMu70Qwo=
+	t=1730736520; cv=none; b=NlBMizffosPU6FHd3DvCxYAC913brB+u551mvl8mwi2ZXbZoeodxWQFFgOVUXm2Ongi+Acr9FHxw8fn0Ct5h63Im3tO7cjd9np0S/kvbOkENpeikwj/7Jf9+VExquS9FcFYuC+rbwcw9Jd2qUjxbZSFtNfqQhMwEhG8WWB4hc0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730725836; c=relaxed/simple;
-	bh=Z2mbvpWFAdMTDdYcO4ugyL1b/eLURJbnO0cdjQkMi0g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=aTxoXK6YzjHYIwg2lvQYUZlpXg8hVxTYtoup7yFB898d4uH9CKQhu3ayW/XbG4C0p0MYk3l6EVkjU88+++ctvWubTJI//rnpjv5UV2SR8NkFvHvOgxCQthGQPsjg8qYssd3W2bOp39AuryeopnRBPhwAGT9Lg/HqfFeRKbihgF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=QoTIF90w; arc=none smtp.client-ip=99.78.197.217
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
-  s=amazon201209; t=1730725835; x=1762261835;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=1btoMBa04UyDS7nxAQeta6RxSxmw/jW1eQwuNLcFWgs=;
-  b=QoTIF90wZ8QEM6c9ZU1c6D0fCy/devysZRUFiMxBNaDETFcCS5TF0buN
-   ySxxtWnlKlPf32IA5bfYodyMaJudiRTQRBTDk+pHfQX1kDo9YrHYf+PEz
-   nip4s4G7eE/JK5iAUVs1d1cAILUXF5mKVrE/AHe/DprZ0wqumiJEKW/CR
-   s=;
-X-IronPort-AV: E=Sophos;i="6.11,257,1725321600"; 
-   d="scan'208";a="1844949"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2024 13:10:06 +0000
-Received: from EX19MTAEUB002.ant.amazon.com [10.0.10.100:54379]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.22.75:2525] with esmtp (Farcaster)
- id 22e5bca5-2878-4e31-8cc8-18fdd76ac967; Mon, 4 Nov 2024 13:10:04 +0000 (UTC)
-X-Farcaster-Flow-ID: 22e5bca5-2878-4e31-8cc8-18fdd76ac967
-Received: from EX19D022EUA002.ant.amazon.com (10.252.50.201) by
- EX19MTAEUB002.ant.amazon.com (10.252.51.59) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Mon, 4 Nov 2024 13:09:59 +0000
-Received: from EX19MTAUEC002.ant.amazon.com (10.252.135.146) by
- EX19D022EUA002.ant.amazon.com (10.252.50.201) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Mon, 4 Nov 2024 13:09:59 +0000
-Received: from email-imr-corp-prod-iad-all-1b-a03c1db8.us-east-1.amazon.com
- (10.43.8.6) by mail-relay.amazon.com (10.252.135.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
- 15.2.1258.34 via Frontend Transport; Mon, 4 Nov 2024 13:09:59 +0000
-Received: from [127.0.0.1] (dev-dsk-roypat-1c-dbe2a224.eu-west-1.amazon.com [172.19.88.180])
-	by email-imr-corp-prod-iad-all-1b-a03c1db8.us-east-1.amazon.com (Postfix) with ESMTPS id 238228042B;
-	Mon,  4 Nov 2024 13:09:54 +0000 (UTC)
-Message-ID: <90c9d8c0-814e-4c86-86ef-439cb5552cb6@amazon.co.uk>
-Date: Mon, 4 Nov 2024 13:09:53 +0000
+	s=arc-20240116; t=1730736520; c=relaxed/simple;
+	bh=AKZxtJ4ffU13mmHVTasjpozRFhvW4v2i47Nv2xkHlUs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sPtsSZog0GqoMI+BHJufatStgq10tNiClLrUKperKyODszwxaXlZtA75JmJzq68MhOKul2dKuVgTi/V1/xIDBzvnfM2ybcm1U8Ir7d6nVMgZ3hrIhqBtpUlH9XmIS8Rdu+Z7csB070AJO9EdRT54/dj/1a+PjqP2cbAlnsyL2EM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=T58QmFrh; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A4FeGol015296;
+	Mon, 4 Nov 2024 16:08:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=uCZFnTPm6MfL+4NTgwEJRO4AQGJM7gK8Yn7cfGTQO
+	ig=; b=T58QmFrh07lglIZkr4JWJ0o8hwUhsch0SlZUoZoJrCKTNXjjpZC632/ih
+	3Qz2KAqmTjoRXqy98xtAgKazkP+/y+vs9Hc8aOuOrYO8+zEjAWpDvebSDmGaxg/N
+	ReL4V3B5aIivkui8Nv7C0pH1E/lemZmF3VDflrM208+nQqmLS+4mhxkd26blCotn
+	+C/ASbcWH/hI/+oO5173VN/mBlZCjDlDqxqb1yeyWiDBdYhx8iaLKikyauGUgwaT
+	JDGrB4KfZSaoviA5b3LN+d1BiUq4JtVV89KjXhAcWqTAPJiKWETJg5yM4EGiVvYM
+	mSJnBqitKupLw7OPmklBb27tfx41g==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42q14303nw-5
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 Nov 2024 16:08:37 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4A4ENdFY023983;
+	Mon, 4 Nov 2024 15:36:13 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 42nxsxxj6m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 Nov 2024 15:36:13 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4A4Fa9lh33292978
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 4 Nov 2024 15:36:09 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C470320043;
+	Mon,  4 Nov 2024 15:36:09 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A5D7F20040;
+	Mon,  4 Nov 2024 15:36:09 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  4 Nov 2024 15:36:09 +0000 (GMT)
+From: Steffen Eiden <seiden@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Cc: Ingo Franzki <ifranzki@linux.ibm.com>,
+        Christoph Schlameuss <schlameuss@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>, borntraeger@linux.ibm.com
+Subject: [PATCH v3] s390/uvdevice: Support longer secret lists
+Date: Mon,  4 Nov 2024 16:36:09 +0100
+Message-ID: <20241104153609.1361388-1-seiden@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 0/6] Direct Map Removal for guest_memfd
-To: David Hildenbrand <david@redhat.com>, <tabba@google.com>,
-	<quic_eberman@quicinc.com>, <seanjc@google.com>, <pbonzini@redhat.com>,
-	<jthoughton@google.com>, <ackerleytng@google.com>, <vannapurve@google.com>,
-	<rppt@kernel.org>
-CC: <graf@amazon.com>, <jgowans@amazon.com>, <derekmn@amazon.com>,
-	<kalyazin@amazon.com>, <xmarcalx@amazon.com>, <linux-mm@kvack.org>,
-	<corbet@lwn.net>, <catalin.marinas@arm.com>, <will@kernel.org>,
-	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <paul.walmsley@sifive.com>,
-	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <hca@linux.ibm.com>,
-	<gor@linux.ibm.com>, <agordeev@linux.ibm.com>, <borntraeger@linux.ibm.com>,
-	<svens@linux.ibm.com>, <gerald.schaefer@linux.ibm.com>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <hpa@zytor.com>, <luto@kernel.org>, <peterz@infradead.org>,
-	<rostedt@goodmis.org>, <mhiramat@kernel.org>,
-	<mathieu.desnoyers@efficios.com>, <shuah@kernel.org>, <kvm@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
-	<linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-References: <20241030134912.515725-1-roypat@amazon.co.uk>
- <4aa0ccf4-ebbe-4244-bc85-8bc8dcd14e74@redhat.com>
- <27646c08-f724-49f7-9f45-d03bad500219@amazon.co.uk>
- <d1a69eb7-85d5-4ffa-88e2-f4841713c1d7@redhat.com>
-From: Patrick Roy <roypat@amazon.co.uk>
-Content-Language: en-US
-Autocrypt: addr=roypat@amazon.co.uk; keydata=
- xjMEY0UgYhYJKwYBBAHaRw8BAQdA7lj+ADr5b96qBcdINFVJSOg8RGtKthL5x77F2ABMh4PN
- NVBhdHJpY2sgUm95IChHaXRodWIga2V5IGFtYXpvbikgPHJveXBhdEBhbWF6b24uY28udWs+
- wpMEExYKADsWIQQ5DAcjaM+IvmZPLohVg4tqeAbEAgUCY0UgYgIbAwULCQgHAgIiAgYVCgkI
- CwIEFgIDAQIeBwIXgAAKCRBVg4tqeAbEAmQKAQC1jMl/KT9pQHEdALF7SA1iJ9tpA5ppl1J9
- AOIP7Nr9SwD/fvIWkq0QDnq69eK7HqW14CA7AToCF6NBqZ8r7ksi+QLOOARjRSBiEgorBgEE
- AZdVAQUBAQdAqoMhGmiXJ3DMGeXrlaDA+v/aF/ah7ARbFV4ukHyz+CkDAQgHwngEGBYKACAW
- IQQ5DAcjaM+IvmZPLohVg4tqeAbEAgUCY0UgYgIbDAAKCRBVg4tqeAbEAtjHAQDkh5jZRIsZ
- 7JMNkPMSCd5PuSy0/Gdx8LGgsxxPMZwePgEAn5Tnh4fVbf00esnoK588bYQgJBioXtuXhtom
- 8hlxFQM=
-In-Reply-To: <d1a69eb7-85d5-4ffa-88e2-f4841713c1d7@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: zWPRhq9sGEdPvMOfHW1Z6BAxZL85Wj6f
+X-Proofpoint-ORIG-GUID: zWPRhq9sGEdPvMOfHW1Z6BAxZL85Wj6f
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ mlxscore=0 phishscore=0 bulkscore=0 clxscore=1015 impostorscore=0
+ priorityscore=1501 malwarescore=0 mlxlogscore=826 lowpriorityscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2411040137
 
+Enable the list IOCTL to provide lists longer than one page (85 entries).
+The list IOCTL now accepts any argument length in page granularity.
+It fills the argument up to this length with entries until the list
+ends. User space unaware of this enhancement will still receive one page
+of data and an uv_rc 0x0100.
 
-Hi David,
+Signed-off-by: Steffen Eiden <seiden@linux.ibm.com>
+---
+ v3: remove upper boundary (8 pages) for arg len
 
-On 11/4/24 12:18, David Hildenbrand wrote:
-> On 31.10.24 11:42, Patrick Roy wrote:
->> On Thu, 2024-10-31 at 09:50 +0000, David Hildenbrand wrote:
->>> On 30.10.24 14:49, Patrick Roy wrote:
->>>> Unmapping virtual machine guest memory from the host kernel's direct map
->>>> is a successful mitigation against Spectre-style transient execution
->>>> issues: If the kernel page tables do not contain entries pointing to
->>>> guest memory, then any attempted speculative read through the direct map
->>>> will necessarily be blocked by the MMU before any observable
->>>> microarchitectural side-effects happen. This means that Spectre-gadgets
->>>> and similar cannot be used to target virtual machine memory. Roughly 60%
->>>> of speculative execution issues fall into this category [1, Table 1].
->>>>
->>>> This patch series extends guest_memfd with the ability to remove its
->>>> memory from the host kernel's direct map, to be able to attain the above
->>>> protection for KVM guests running inside guest_memfd.
->>>>
->>>> === Changes to v2 ===
->>>>
->>>> - Handle direct map removal for physically contiguous pages in arch code
->>>>     (Mike R.)
->>>> - Track the direct map state in guest_memfd itself instead of at the
->>>>     folio level, to prepare for huge pages support (Sean C.)
->>>> - Allow configuring direct map state of not-yet faulted in memory
->>>>     (Vishal A.)
->>>> - Pay attention to alignment in ftrace structs (Steven R.)
->>>>
->>>> Most significantly, I've reduced the patch series to focus only on
->>>> direct map removal for guest_memfd for now, leaving the whole "how to do
->>>> non-CoCo VMs in guest_memfd" for later. If this separation is
->>>> acceptable, then I think I can drop the RFC tag in the next revision
->>>> (I've mainly kept it here because I'm not entirely sure what to do with
->>>> patches 3 and 4).
->>>
->>> Hi,
->>>
->>> keeping upcoming "shared and private memory in guest_memfd" in mind, I
->>> assume the focus would be to only remove the direct map for private memory?
->>>
->>> So in the current upstream state, you would only be removing the direct
->>> map for private memory, currently translating to "encrypted"/"protected"
->>> memory that is inaccessible either way already.
->>>
->>> Correct?
->>
->> Yea, with the upcomming "shared and private" stuff, I would expect the
->> the shared<->private conversions would call the routines from patch 3 to
->> restore direct map entries on private->shared, and zap them on
->> shared->private.
-> 
-> I wanted to follow-up to the discussion we had in the bi-weekly call.
+ drivers/s390/char/uvdevice.c | 71 ++++++++++++++++++++++++++----------
+ 1 file changed, 52 insertions(+), 19 deletions(-)
 
-Thanks for summarizing!
+diff --git a/drivers/s390/char/uvdevice.c b/drivers/s390/char/uvdevice.c
+index 1f90976293e8..7551b03d5f99 100644
+--- a/drivers/s390/char/uvdevice.c
++++ b/drivers/s390/char/uvdevice.c
+@@ -297,6 +297,43 @@ static int uvio_add_secret(struct uvio_ioctl_cb *uv_ioctl)
+ 	return ret;
+ }
+ 
++/*
++ * Do the actual secret list creation. Calls the list secrets UVC until there
++ * is no more space in the user buffer, or the list ends.
++ */
++static int uvio_get_list(void *zpage, struct uvio_ioctl_cb *uv_ioctl)
++{
++	const size_t data_off = offsetof(struct uv_secret_list, secrets);
++	u8 __user *user_buf = (u8 __user *)uv_ioctl->argument_addr;
++	struct uv_secret_list *list = zpage;
++	u16 num_secrets_stored = 0;
++	size_t user_off = data_off;
++	size_t copy_len;
++
++	do {
++		uv_list_secrets(list, list->next_secret_idx, &uv_ioctl->uv_rc,
++				&uv_ioctl->uv_rrc);
++		if (uv_ioctl->uv_rc != UVC_RC_EXECUTED &&
++		    uv_ioctl->uv_rc != UVC_RC_MORE_DATA)
++			break;
++
++		copy_len = sizeof(list->secrets[0]) * list->num_secr_stored;
++		WARN_ON(copy_len > sizeof(list->secrets));
++
++		if (copy_to_user(user_buf + user_off, list->secrets, copy_len))
++			return -EFAULT;
++
++		user_off += copy_len;
++		num_secrets_stored += list->num_secr_stored;
++	} while (uv_ioctl->uv_rc == UVC_RC_MORE_DATA &&
++		 user_off + sizeof(*list) <= uv_ioctl->argument_len);
++
++	list->num_secr_stored = num_secrets_stored;
++	if (copy_to_user(user_buf, list, data_off))
++		return -EFAULT;
++	return 0;
++}
++
+ /** uvio_list_secrets() - perform a List Secret UVC
+  * @uv_ioctl: ioctl control block
+  *
+@@ -308,6 +345,12 @@ static int uvio_add_secret(struct uvio_ioctl_cb *uv_ioctl)
+  *
+  * The argument specifies the location for the result of the UV-Call.
+  *
++ * Argument length must be a multiple of a page.
++ * The list secrets IOCTL will call the list UVC multiple times and fill
++ * the provided user-buffer with list elements until either the list ends or
++ * the buffer is full. The list header is merged over all list header from the
++ * individual UVCs.
++ *
+  * If the List Secrets UV facility is not present, UV will return invalid
+  * command rc. This won't be fenced in the driver and does not result in a
+  * negative return value.
+@@ -318,31 +361,21 @@ static int uvio_add_secret(struct uvio_ioctl_cb *uv_ioctl)
+  */
+ static int uvio_list_secrets(struct uvio_ioctl_cb *uv_ioctl)
+ {
+-	void __user *user_buf_arg = (void __user *)uv_ioctl->argument_addr;
+-	struct uv_cb_guest_addr uvcb = {
+-		.header.len = sizeof(uvcb),
+-		.header.cmd = UVC_CMD_LIST_SECRETS,
+-	};
+-	void *secrets = NULL;
+-	int ret = 0;
++	void *zpage = NULL;
++	int rc;
+ 
+-	if (uv_ioctl->argument_len != UVIO_LIST_SECRETS_LEN)
++	if (uv_ioctl->argument_len == 0 ||
++	    uv_ioctl->argument_len % UVIO_LIST_SECRETS_LEN != 0)
+ 		return -EINVAL;
+ 
+-	secrets = kvzalloc(UVIO_LIST_SECRETS_LEN, GFP_KERNEL);
+-	if (!secrets)
++	zpage = (void *)get_zeroed_page(GFP_KERNEL);
++	if (!zpage)
+ 		return -ENOMEM;
+ 
+-	uvcb.addr = (u64)secrets;
+-	uv_call_sched(0, (u64)&uvcb);
+-	uv_ioctl->uv_rc = uvcb.header.rc;
+-	uv_ioctl->uv_rrc = uvcb.header.rrc;
+-
+-	if (copy_to_user(user_buf_arg, secrets, UVIO_LIST_SECRETS_LEN))
+-		ret = -EFAULT;
++	rc = uvio_get_list(zpage, uv_ioctl);
+ 
+-	kvfree(secrets);
+-	return ret;
++	free_page((unsigned long)zpage);
++	return rc;
+ }
+ 
+ /** uvio_lock_secrets() - perform a Lock Secret Store UVC
+-- 
+2.45.2
 
-> We talked about shared (faultable) vs. private (unfaultable), and how it
-> would interact with the directmap patches here.
-> 
-> As discussed, having private (unfaultable) memory with the direct-map
-> removed and shared (faultable) memory with the direct-mapping can make
-> sense for non-TDX/AMD-SEV/... non-CoCo use cases. Not sure about CoCo,
-> the discussion here seems to indicate that it might currently not be
-> required.
->
-> So one thing we could do is that shared (faultable) will have a direct
-> mapping and be gup-able and private (unfaultable) memory will not have a
-> direct mapping and is, by design, not gup-able.> 
-> Maybe it could make sense to not have a direct map for all guest_memfd
-> memory, making it behave like secretmem (and it would be easy to
-> implement)? But I'm not sure if that is really desirable in VM context.
-
-This would work for us (in this scenario, the swiotlb areas would be
-"traditional" memory, e.g. set to shared via mem attributes instead of
-"shared" inside KVM), it's kinda what I had prototyped in my v1 of this
-series (well, we'd need to figure out how to get the mappings of gmem
-back into KVM, since in this setup, short-circuiting it into
-userspace_addr wouldn't work, unless we banish swiotlb into a different
-memslot altogether somehow). But I don't think it'd work for pKVM, iirc
-they need GUP on gmem, and also want direct map removal (... but maybe,
-the gmem VMA for non-CoCo usecase and the gmem VMA for pKVM could be
-behave differently?  non-CoCo gets essentially memfd_secret, pKVM gets
-GUP+no faults of private mem).
-
-> Having a mixture of "has directmap" and "has no directmap" for shared
-> (faultable) memory should not be done. Similarly, private memory really
-> should stay "unfaultable".
-
-You've convinced me that having both GUP-able and non GUP-able
-memory in the same VMA will be tricky. However, I'm less convinced on
-why private memory should stay unfaultable; only that it shouldn't be
-faultable into a VMA that also allows GUP. Can we have two VMAs? One
-that disallows GUP, but allows userspace access to shared and private,
-and one that allows GUP, but disallows accessing private memory? Maybe
-via some `PROT_NOGUP` flag to `mmap`? I guess this is a slightly
-different spin of the above idea.
-
-> I think one of the points raised during the bi-weekly call was that
-> using a viommu/swiotlb might be the right call, such that all memory can
-> be considered private (unfaultable) that is not explicitly
-> shared/expected to be modified by the hypervisor (-> faultable, ->
-> GUP-able).
-> 
-> Further, I think Sean had some good points why we should explore that
-> direction, but I recall that there were some issue to be sorted out
-> (interpreted instructions requiring direct map when accessing "private"
-> memory?), not sure if that is already working/can be made working in KVM.
-
-Yeah, the big one is MMIO instruction emulation on x86, which does guest
-page table walks and instruction fetch (and particularly the latter
-cannot be known ahead-of-time by the guest, aka cannot be explicitly
-"shared"). That's what the majority of my v2 series was about. For
-traditional memslots, KVM handles these via get_user and friends, but if
-we don't have a VMA that allows faulting all of gmem, then that's
-impossible, and we're in "temporarily restore direct map" land. Which
-comes with significantly performance penalties due to TLB flushes.
-
-> What's your opinion after the call and the next step for use cases like
-> you have in mind (IIRC firecracker, which wants to not have the
-> direct-map for guest memory where it can be avoided)?
-
-Yea, the usecase is for Firecracker to not have direct map entries for
-guest memory, unless needed for I/O (-> swiotlb).
-
-As for next steps, let's determine once and for all if we can do the
-KVM-internal guest memory accesses for MMIO emulation through userspace
-mappings (although if we can't I'll have some serious soul-searching to
-do, because all other solutions we talked about so far also have fairly
-big drawbacks; on-demand direct map reinsertion has terrible
-performance, protection keys would limit us to 15 VMs on the host, and
-the page table swapping runs into problems with NMIs if I understood
-Sean correctly last Thursday :( ).
-
-> -- 
-> Cheers,
-> 
-> David / dhildenb
-
-Best, 
-Patrick
 
