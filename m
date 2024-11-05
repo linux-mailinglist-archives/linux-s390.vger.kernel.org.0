@@ -1,164 +1,228 @@
-Return-Path: <linux-s390+bounces-6949-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-6947-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30DA19BD1BD
-	for <lists+linux-s390@lfdr.de>; Tue,  5 Nov 2024 17:09:19 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0B1B9BD0C3
+	for <lists+linux-s390@lfdr.de>; Tue,  5 Nov 2024 16:39:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 51F151C24873
-	for <lists+linux-s390@lfdr.de>; Tue,  5 Nov 2024 16:09:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3E16BB23AA1
+	for <lists+linux-s390@lfdr.de>; Tue,  5 Nov 2024 15:39:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD61713B294;
-	Tue,  5 Nov 2024 16:08:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADC6313AA27;
+	Tue,  5 Nov 2024 15:37:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AjadvngL"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ajsypDbA"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284E113E04B;
-	Tue,  5 Nov 2024 16:08:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE93C1779A4;
+	Tue,  5 Nov 2024 15:37:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730822886; cv=none; b=kBOwp/0jt7J/TwTaSN1CfovUl7J5JkfvFn7g7n1S/0PX/dq8w+NL3dK4u89x6lAYrKodbR46SToe+u3ygcWRvrZRgnPu8Zs/lRLPCg0NvG5iH9GVZ0ULjxVgapAF7aAAdIuBjVkQAU48c1PMCXPFw0EMpdyLJDmO9QgdNGnjjL0=
+	t=1730821062; cv=none; b=GtEcq4H1lHO0FycLhPhvavXjmaIKPthW89XnHPyoT1Znf7mZfkMpGONPL+ZRkMOi2toQTmH1ClkRVo6BQfbmMJAnxLC6REp0SuHgFRG5C29PJlQoLW5s4kJjRhd646PHcsyquTak98JxJXhSsLq8oaAX0aKutlSif+w6MO7/iOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730822886; c=relaxed/simple;
-	bh=GnvD6s9MeTiXCjVbmwdRNdrYglCDctBXp6jTZChnCNM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iDlbMzFCgH+OcT+wZe7EjZgNR/P2vP9PhMXghA5knEv02tX9XsP8CFr6Sm/1A/X1/9PgH9IWCHLMxDSAcTLZKHtVy278O/tW39Ws1g3GBbOr6gPqDIvEeF/YhOF9r5MTEvz/cXkbaDyFqQEU7+9GYa840umfPm3hKVKqrdrFJJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AjadvngL; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1730821062; c=relaxed/simple;
+	bh=oh6ZWRugK+yD+jIwObkk9DUhPVdGbA3YYhI/9o84w2g=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=N6icsNaR+x3+IvgrZYjcBlmAPslhf6Bz+GqLy9LjH3S7SH+Z/0R6tipHHOAiN/B1wyMcmfCMRfokikGqkz6T8ypHiYVGZ05FZ0TPmXgj9Ys44GcR/TmIEshBZTZ7ALa4MPDE8HPBgvSR4IBSaiEqhrtjalFSsycuDQ/KOKby9Pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ajsypDbA; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A5Fdt1g017497;
-	Tue, 5 Nov 2024 16:03:00 GMT
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A5FA43o019290;
+	Tue, 5 Nov 2024 15:37:39 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=Ajb5XI
-	wuc91MXG2T4vk9EwqnUW1WO2OidJO49fMqsDk=; b=AjadvngLLDO53OrCHTU9df
-	qjeuvsDRVKRzkr0UiSCrG8GxKDwJ+GGdDfkaXQ6kKzky+mnpTTwahpALx6a7GQRN
-	KhXyqeqN+8dv5OSHfaPS6Gd1t9y5Ak0unjZlJ7P4spUaI9NCF5HiJfyZsbD+Bjfg
-	rfoXud3hqoCKByD6LtSwF5RZ6s/JqwKaw8GhD+whlf0EIl88E/s21CeoZg+LtSl7
-	ousVo+RzIwRwsSin7wfTByyRQLfhLvhks03JsQNN5OySvX+m3F70OnbuFBnr+w/A
-	cISeJnG2UAmDtWy/Z0NEDGj7rfA50YeaDB4qXRoSCxpoLpcNGBcmLgXNs2c8EY6Q
+	:message-id:mime-version:references:subject:to; s=pp1; bh=oh6ZWR
+	ugK+yD+jIwObkk9DUhPVdGbA3YYhI/9o84w2g=; b=ajsypDbAANpAkFJrwPL1Y1
+	+KuBigyZgGNkQlSYln6qr+2Ro5ue6jOTnb15npYlaDXOngy3LTD+yPi4hA4IPKTv
+	n9Gh+rWRBm/N2KoWS1GZB4VehsUzy5q2s7fLLXndMOodI9n09M3JIZXNxsJMUZBM
+	ZAsQfFaAn89Awsp/KI06uSe5Ujyv3w/kskiaHPzEGikZ50uLISoIYwrYpX+YrG7/
+	lJinihCO5aAlvDCwWATgTqycLsmpuQFxFqTivc3wylZS5u2y/Lbj2V41+7qkYIlr
+	u2GmxfDN16XezoG33GeqXB7HvGtLNKZfO9cpogQPr44H2+w5yUbgtDhdOUal43tA
 	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42qp6wr316-3
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42qnrw04tn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Nov 2024 16:02:56 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4A57JSqE031516;
-	Tue, 5 Nov 2024 15:34:01 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 42nydmmcvx-1
+	Tue, 05 Nov 2024 15:37:37 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4A5Fbb7t004003;
+	Tue, 5 Nov 2024 15:37:37 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42qnrw04c5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Nov 2024 15:34:01 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4A5FXvmA56230158
+	Tue, 05 Nov 2024 15:37:36 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4A5F8v9P005873;
+	Tue, 5 Nov 2024 15:34:08 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 42p0mj4aey-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 05 Nov 2024 15:34:08 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4A5FY7oc54722832
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 5 Nov 2024 15:33:58 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D9A3E20043;
-	Tue,  5 Nov 2024 15:33:57 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B887B20040;
-	Tue,  5 Nov 2024 15:33:57 +0000 (GMT)
-Received: from [9.152.224.243] (unknown [9.152.224.243])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  5 Nov 2024 15:33:57 +0000 (GMT)
-Message-ID: <26ee840b-bff5-4cbb-9e12-ed15d28777a4@linux.ibm.com>
-Date: Tue, 5 Nov 2024 16:33:57 +0100
+	Tue, 5 Nov 2024 15:34:08 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DFD845803F;
+	Tue,  5 Nov 2024 15:34:07 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 41BFB58061;
+	Tue,  5 Nov 2024 15:34:05 +0000 (GMT)
+Received: from [9.152.212.119] (unknown [9.152.212.119])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  5 Nov 2024 15:34:05 +0000 (GMT)
+Message-ID: <8d6535b523f2aad694e5825ac3f514cff788b2bf.camel@linux.ibm.com>
+Subject: Re: [PATCH v2] PCI: s390: Handle ARI on bus without associated
+ struct pci_dev
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+        Gerald Schaefer
+ <gerald.schaefer@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily
+ Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Christian Borntraeger
+ <borntraeger@linux.ibm.com>,
+        Gerd Bayer <gbayer@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Date: Tue, 05 Nov 2024 16:34:04 +0100
+In-Reply-To: <20240918-ari_no_bus_dev-v2-1-83cfa991082f@linux.ibm.com>
+References: <20240918-ari_no_bus_dev-v2-1-83cfa991082f@linux.ibm.com>
+Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: HyU4bCelNQgopBVc-VvxUY2AquQ01MAu
+X-Proofpoint-GUID: Fu_ZUpmqzRQNVAlfxDF8GIJD75wLXbMI
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] s390/crypto: New s390 specific shash phmac
-To: Harald Freudenberger <freude@linux.ibm.com>, herbert@gondor.apana.org.au,
-        davem@davemloft.net, hca@linux.ibm.com
-Cc: linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org
-References: <20241105135833.391957-1-freude@linux.ibm.com>
- <20241105135833.391957-4-freude@linux.ibm.com>
-Content-Language: de-DE, en-US
-From: Holger Dengler <dengler@linux.ibm.com>
-In-Reply-To: <20241105135833.391957-4-freude@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: aZlSjl6yXQJ_CxqhMCLRl9j66ssBd84O
-X-Proofpoint-GUID: aZlSjl6yXQJ_CxqhMCLRl9j66ssBd84O
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
  definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 spamscore=0 suspectscore=0 mlxscore=0 impostorscore=0
- clxscore=1011 mlxlogscore=863 lowpriorityscore=0 bulkscore=0
- malwarescore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2409260000 definitions=main-2411050121
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ mlxscore=0 bulkscore=0 spamscore=0 impostorscore=0 mlxlogscore=639
+ lowpriorityscore=0 priorityscore=1501 adultscore=0 clxscore=1011
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2411050121
 
-On 05/11/2024 14:58, Harald Freudenberger wrote:
-> From: Holger Dengler <dengler@linux.ibm.com>
-> 
-> Add support for protected key hmac ("phmac") for s390 arch.
-> 
-> With the latest machine generation there is now support for
-> protected key (that is a key wrapped by a master key stored
-> in firmware) hmac for sha2 (sha224, sha256, sha384 and sha512)
-> for the s390 specific CPACF instruction kmac.
-> 
-> This patch adds support via 4 new shashes registered as
-> phmac(sha224), phmac(sha256), phmac(sha384) and phmac(sha512).
-> 
-> Please note that as of now, there is no selftest enabled for
-> these shashes, but the implementation has been tested with
-> testcases via AF_ALG interface.
-> 
-> Signed-off-by: Holger Dengler <dengler@linux.ibm.com>
-> Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+On Wed, 2024-09-18 at 11:04 +0200, Niklas Schnelle wrote:
+> On s390 PCI busses are virtualized and the downstream ports are
+> invisible to the OS and struct pci_bus::self is NULL. This associated
+> struct pci_dev is however relied upon in pci_ari_enabled() to check
+> whether ARI is enabled for the bus. ARI is therefor always detected as
+> disabled.
+>=20
+> At the same time firmware on s390 always enables and relies upon ARI
+> thus causing a mismatch. Moreover with per-PCI function pass-through
+> there may exist busses with no function with devfn 0. For example
+> a SR-IOV capable device with two PFs may have separate function
+> dependency link chains for each of the PFs and their child VFs. In this
+> case the OS may only see the second PF and its child VFs on a bus
+> without a devfn 0 function. A situation which is also not supported by
+> the common pci_configure_ari() code.
+>=20
+> Dispite simply being a mismatch this causes problems as some PCI devices
+> present a different SR-IOV topology depending on PCI_SRIOV_CTRL_ARI.
+>=20
+> A similar mismatch may occur with SR-IOV when virtfn_add_bus() creates new
+> busses with no associated struct pci_dev. Here too pci_ari_enabled()
+> on these busses would return false even if ARI is actually used.
+>=20
+> Prevent both mismatches by moving the ari_enabled flag from struct
+> pci_dev to struct pci_bus making it independent from struct pci_bus::
+> self. Let the bus inherit the ari_enabled state from its parent bus when
+> there is no bridge device such that busses added by virtfn_add_bus()
+> match their parent. For s390 set ari_enabled when the device supports
+> ARI in the awareness that all PCIe ports on s390 systems are ARI
+> capable.
+>=20
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
 > ---
->  arch/s390/configs/debug_defconfig |   1 +
->  arch/s390/configs/defconfig       |   1 +
->  arch/s390/crypto/Makefile         |   1 +
->  arch/s390/crypto/phmac_s390.c     | 468 ++++++++++++++++++++++++++++++
->  drivers/crypto/Kconfig            |  12 +
->  5 files changed, 483 insertions(+)
->  create mode 100644 arch/s390/crypto/phmac_s390.c
-> 
-[...]
-> diff --git a/arch/s390/crypto/phmac_s390.c b/arch/s390/crypto/phmac_s390.c
-> new file mode 100644
-> index 000000000000..10835fcb818a
-> --- /dev/null
-> +++ b/arch/s390/crypto/phmac_s390.c
-> @@ -0,0 +1,468 @@
-[...]
-> +static int s390_phmac_sha2_clone_tfm(struct crypto_shash *dst,
-> +				     struct crypto_shash *src)
-> +{
-> +	struct s390_phmac_ctx *src_ctx = crypto_shash_ctx(src);
-> +	int rc;
-> +
-> +	rc = s390_phmac_sha2_init_tfm(dst);
-> +	if (rc)
-> +		return rc;
-> +
-> +	return s390_phmac_sha2_setkey(dst, src_ctx->key, src_ctx->keylen);
+> Note: In a comment of the v1 thread I discussed an alternative idea for
+> a generic solution that would include the Jailhouse hypervisor via
+> hypervisor_isolated_pci_functions(). As Bjorn correctly pointed out this
+> more generic solution however lacks a way to indicate that ARI is really
+> enabled in the hardware. So instead for now I propose to stick with this
+> patch which only enables this unconditionally on s390x and SR-IOV
+> virtual busses where the ARI is inherited.
+> ---
+> Changes in v2:
+> - Rebased on v6.11
+> - Link to v1: https://lore.kernel.org/r/20240730-ari_no_bus_dev-v1-1-7de1=
+7676f9fe@linux.ibm.com
+>=20
+>=20
 
-You should call setkey() only if the key in src_ctx has been set.
+@Bjorn, this seems to have dropped off your radar or would you like me
+to see if I can find a different approach?
 
-return src_ctx->key ? s390_phmac_sha2_setkey(dst, src_ctx->key, src_ctx->keylen) : 0;
-
-> +}
-
--- 
-Mit freundlichen Grüßen / Kind regards
-Holger Dengler
---
-IBM Systems, Linux on IBM Z Development
-dengler@linux.ibm.com
+Thanks,
+Niklas
 
 
