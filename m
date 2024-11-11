@@ -1,157 +1,184 @@
-Return-Path: <linux-s390+bounces-7029-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-7031-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA5569C3E46
-	for <lists+linux-s390@lfdr.de>; Mon, 11 Nov 2024 13:15:52 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92A139C3F2F
+	for <lists+linux-s390@lfdr.de>; Mon, 11 Nov 2024 14:05:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C9F21F222A1
-	for <lists+linux-s390@lfdr.de>; Mon, 11 Nov 2024 12:15:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B64FA1C219DD
+	for <lists+linux-s390@lfdr.de>; Mon, 11 Nov 2024 13:05:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96DBF139578;
-	Mon, 11 Nov 2024 12:15:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E1FE19CC29;
+	Mon, 11 Nov 2024 13:04:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AHOo2XVY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C5Q2k2tq"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E6F15990C;
-	Mon, 11 Nov 2024 12:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A96A615853B;
+	Mon, 11 Nov 2024 13:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731327345; cv=none; b=Jqb+5LG70wzwP4dmHhMui/D5YRbz2/t1eSVlnzn0ccrdAs9UxgvMG7ZWsIkmgZOsZr5N9MAbcHXY+8COK4spy40u/fku96mwTMAaDWzQsHh8WH3Uuysjp0PtgpcPzmDLfG6EFt63qNeKWwX3PpBVp1SpfKYeazkrsPsv0yxOoSM=
+	t=1731330289; cv=none; b=FLYAS0SZWQPJandaYPoAXDaF8W0WLkSpaKus4Dx5EVyW4V6VoP64AtpBoFq/KhOrqLHAMEIcyxX1CD0AoL0xWf7IbgXS+/vurh9pa2gi5+dJhF10DM8oN8l8n6fT90E8Hh1fnqaCsgP/3dfWuNwF3Ypr0awq7PG0sIEVBQEdfL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731327345; c=relaxed/simple;
-	bh=VeLGDjWFjGNsS1+Q2bgVDRve0k4hPsFJl6GlyFuuVfo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I6aLI21t+m32gAJcnjFrnpDF1/MBzpsey8i7LS05H0ujRmLA/O6a/eMVgj+0E/LFBxfFZ1ItUE11lFtz23GZbUm92KzkC/pBdthcH1NFMgpHKEobwICs2uDxwsZNUUoGh6JL8XjRxBWT+4CpWNglm7wPY2tjpxVvNi54sn1glCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AHOo2XVY; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4ABAg1wh013505;
-	Mon, 11 Nov 2024 12:15:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=gC/XBV
-	YIehfHQoUxN4OjycAxNuF083KPaOt4/qhE/tw=; b=AHOo2XVYCDX/rDoQdxVhSu
-	DFZkbxf7Mdm3nyyOBMnyiFM0jsMLM/+KOi8VME2cKIOhrARSoQRYltCr8ftVx8vZ
-	qFrTlT/dsyRceJWeu7NhqSVZ3dhs0yymwREUIWzqy+tetWWUsamRAkETud2N79gV
-	jzUfjMXgsqtBFJfgQet0IhgwMqs+74CUHRiNMlfI7Rv4ZXEXPmQq87PbvY1TRbEw
-	8r7uS19VLx+hysBq765QJQq755ABjNaLqLW41XYlDrKD+7j8+yzm2unbfdVUpenR
-	xkpXBO3FHOo8RgyMJvLFxmw246KX69LfXBx6l/SseMHlzVwQnzcn5mQcm/3nkXaw
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42ue5y0vgc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 11 Nov 2024 12:15:41 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4ABAQjv7008404;
-	Mon, 11 Nov 2024 12:15:40 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 42tjey5x0h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 11 Nov 2024 12:15:40 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4ABCFaQt56361428
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 11 Nov 2024 12:15:36 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 301BE2004B;
-	Mon, 11 Nov 2024 12:15:36 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CCE8A20040;
-	Mon, 11 Nov 2024 12:15:35 +0000 (GMT)
-Received: from [9.171.52.169] (unknown [9.171.52.169])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 11 Nov 2024 12:15:35 +0000 (GMT)
-Message-ID: <51c9ad4a-d4c2-4ba1-bc8e-30cfff541911@linux.ibm.com>
-Date: Mon, 11 Nov 2024 13:15:35 +0100
+	s=arc-20240116; t=1731330289; c=relaxed/simple;
+	bh=hatzcmcpYWhOgP/hmNNf7DP0hfQHOCGuemkUWFuPGpI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=LU/fGYz7nJiv/GkCam/8xg5pKZbsJXtO/BHNFKuzAtG2UkxCnYShgdWSvRjGP8EzkVF/xz8T5UlQspg/wYz1Ccd/vb0eob6tGIkuyOpKNMxRlIR0WeoIdJymJIQqJklOtQHgx6xoYe49A05rjHLof8xaC30xOnp5mbvk2ubVPd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C5Q2k2tq; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7240fa50694so3167323b3a.1;
+        Mon, 11 Nov 2024 05:04:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1731330287; x=1731935087; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=72gZPrPs6Lnv3vB1NA324RXBbJosSR4imJkzuREYYVo=;
+        b=C5Q2k2tqNjxOVnDbqXXA3Sep6oOxbJp07n2H9E16s9DVzTuBB2untstTkIikk9Y8jb
+         /4tFhNiZ9973BkG5cf3ISXkcsjjTs0YSjDmn/2l4DK6GwDp1088xJWPr7I4WYHTs3oG2
+         wY5+Bt3sYstrJWpu2GhyNKLfvqdFkLmiwYTpf1o9XCopMikG3leWGUKsc6HDM/ELtkg0
+         CwGgQMAHN3ECMRptxLMM9HdSeEOAVUMoXg5w/CCNqA4MSahHteIqPx1wwY0vEgjfgVwz
+         5kV/3EJDO3JA3swAR80Gmrh9R9LeUkLLTzP/eWugET2oBjzJGBN3igxt49udIgmL0h7M
+         RhiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731330287; x=1731935087;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=72gZPrPs6Lnv3vB1NA324RXBbJosSR4imJkzuREYYVo=;
+        b=bDjbiUqCo00ljgBhQnKy+cjj5rVevrtGbw2MkmALbu5LgWWkGzQM092G9vAbQoIZrd
+         Ew66dIygwHvexJAv4KP4IGgM/UYVKJIY9IqzI4iBWsXoZrqyHPHcUrdM8EyZN2VGOzMo
+         Q+sdnCwJ6biUGiBBFVMej+Sl811c/5lP3hsIMQczxo4g4xIHPOJPxwnBvxCGyAOKer3H
+         w5xYuXScwzttjehp8xV+OdkDC3EJ0Kel3wF5L7SWhwMN33NJMWjD7fNZk5Utk5GPbfne
+         NbYrWLENT+iWaWTManlC0IcsYEmpnAfZ6VtX5i1eXy/V7Q2QSjtmBnUleH4U1gm3R2T/
+         y8AA==
+X-Forwarded-Encrypted: i=1; AJvYcCVOA+6AKcCX9kUvZ1Y07W1ht5GAxP5GYcPGtaAC3bdl8HvnbZG0axCvYxikdm1KOjvhUrnhXCdO@vger.kernel.org, AJvYcCVTYKUmsbeSBkaL4Ho1SQAXb3gzosI+EkzgSxLys4VUL1+3FIIGHEdcqlsiemsMtJ3bSE4QQAWymjwh2Rc=@vger.kernel.org, AJvYcCWlv/u/PUkfPbFglUk4fLkh0JnR0S0INCaQ3L+/VYbw1PsbevEb38p6M1BL5eBRJ874zAJfLZebH9SNWQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNDdW/WFXIjxKH5wbru14H6lX+9SmVlZ5nTzQXrKR6u7NfF2iY
+	AOZ38gTprh+Rco76U1LiKbNM6bbzc4/D869TmwKJULcJ2xrgCBTgbe6NsHUmGbk=
+X-Google-Smtp-Source: AGHT+IFBqDxOxf1PfVYJckn+qxMYKlRIW2aAqR5G/gwisPE+GQFN8erp7XgljKTDwF3QpbDf1rsfWw==
+X-Received: by 2002:a05:6a00:1909:b0:71e:818a:97d9 with SMTP id d2e1a72fcca58-72413278818mr16586268b3a.5.1731330286874;
+        Mon, 11 Nov 2024 05:04:46 -0800 (PST)
+Received: from kernelexploit-virtual-machine.localdomain ([121.185.186.233])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724078a7c50sm9355801b3a.60.2024.11.11.05.04.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2024 05:04:46 -0800 (PST)
+From: Jeongjun Park <aha310510@gmail.com>
+To: devnull+manas18244.iiitd.ac.in@kernel.org
+Cc: alibuda@linux.alibaba.com,
+	anupnewsmail@gmail.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	guwen@linux.alibaba.com,
+	horms@kernel.org,
+	jaka@linux.ibm.com,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	manas18244@iiitd.ac.in,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	shuah@kernel.org,
+	tonylu@linux.alibaba.com,
+	wenjia@linux.ibm.com
+Subject: Re: [PATCH] Remove unused function parameter in __smc_diag_dump
+Date: Mon, 11 Nov 2024 22:04:39 +0900
+Message-Id: <20241111130439.7536-1-aha310510@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20241109-fix-oops-__smc_diag_dump-v1-1-1c55a3e54ad4@iiitd.ac.in>
+References: <20241109-fix-oops-__smc_diag_dump-v1-1-1c55a3e54ad4@iiitd.ac.in>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] KVM: s390: selftests: Add regression tests for PFCR
- subfunctions
-To: Hendrik Brueckner <brueckner@linux.ibm.com>, kvm@vger.kernel.org
-Cc: linux-s390@vger.kernel.org, imbrenda@linux.ibm.com, thuth@redhat.com,
-        david@redhat.com, borntraeger@linux.ibm.com
-References: <20241107152319.77816-1-brueckner@linux.ibm.com>
- <20241107152319.77816-5-brueckner@linux.ibm.com>
-Content-Language: en-US
-From: Janosch Frank <frankja@linux.ibm.com>
-Autocrypt: addr=frankja@linux.ibm.com; keydata=
- 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
-In-Reply-To: <20241107152319.77816-5-brueckner@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: sRAB1ENNg7Fzmk50tGW3YPNxXAVUwEES
-X-Proofpoint-ORIG-GUID: sRAB1ENNg7Fzmk50tGW3YPNxXAVUwEES
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 impostorscore=0 phishscore=0 mlxscore=0 bulkscore=0
- priorityscore=1501 mlxlogscore=699 spamscore=0 adultscore=0 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2411110101
+Content-Transfer-Encoding: 8bit
 
-On 11/7/24 4:23 PM, Hendrik Brueckner wrote:
-> Signed-off-by: Hendrik Brueckner <brueckner@linux.ibm.com>
-> Reviewed-by: Hariharan Mari <hari55@linux.ibm.com>
+Manas <devnull+manas18244.iiitd.ac.in@kernel.org> wrote:
+> The last parameter in __smc_diag_dump (struct nlattr *bc) is unused.
+> There is only one instance of this function being called and its passed
+> with a NULL value in place of bc.
+> 
+> Signed-off-by: Manas <manas18244@iiitd.ac.in>
+> ---
+> The last parameter in __smc_diag_dump (struct nlattr *bc) is unused.
+> There is only one instance of this function being called and its passed
+> with a NULL value in place of bc.
+> 
+> Though, the compiler (gcc) optimizes it. Looking at the object dump of
+> vmlinux (via `objdump -D vmlinux`), a new function clone
+> (__smc_diag_dump.constprop.0) is added which removes this parameter from
+> calling convention altogether.
+> 
+> ffffffff8a701770 <__smc_diag_dump.constprop.0>:
+> ffffffff8a701770:       41 57                   push   %r15
+> ffffffff8a701772:       41 56                   push   %r14
+> ffffffff8a701774:       41 55                   push   %r13
+> ffffffff8a701776:       41 54                   push   %r12
+> 
+> There are 5 parameters in original function, but in the cloned function
+> only 4.
+> 
+> I believe this patch also fixes this oops bug[1], which arises in the
+> same function __smc_diag_dump. But I couldn't verify it further. Can
+> someone please test this?
+> 
+> [1] https://syzkaller.appspot.com/bug?extid=271fed3ed6f24600c364
 
-How about:
-Check if a PFCR query in userspace coincides with the kernel reported 
-function list. Right now we don't mask the functions in the kernel so 
-they have to be the same.
+Unfortunately, I tested it myself and this bug is still triggering. Basically,
+this bug is not triggered in normal situations, but triggered when a race
+condition occurs, so I think the root cause is somewhere else.
 
+Regards,
 
-I can add that to the patch when picking (which I'm trying to do right now).
+Jeongjun Park
+
+> ---
+>  net/smc/smc_diag.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/net/smc/smc_diag.c b/net/smc/smc_diag.c
+> index 6fdb2d96777ad704c394709ec845f9ddef5e599a..8f7bd40f475945171a0afa5a2cce12d9aa2b1eb4 100644
+> --- a/net/smc/smc_diag.c
+> +++ b/net/smc/smc_diag.c
+> @@ -71,8 +71,7 @@ static int smc_diag_msg_attrs_fill(struct sock *sk, struct sk_buff *skb,
+>  
+>  static int __smc_diag_dump(struct sock *sk, struct sk_buff *skb,
+>  			   struct netlink_callback *cb,
+> -			   const struct smc_diag_req *req,
+> -			   struct nlattr *bc)
+> +			   const struct smc_diag_req *req)
+>  {
+>  	struct smc_sock *smc = smc_sk(sk);
+>  	struct smc_diag_fallback fallback;
+> @@ -199,7 +198,6 @@ static int smc_diag_dump_proto(struct proto *prot, struct sk_buff *skb,
+>  	struct smc_diag_dump_ctx *cb_ctx = smc_dump_context(cb);
+>  	struct net *net = sock_net(skb->sk);
+>  	int snum = cb_ctx->pos[p_type];
+> -	struct nlattr *bc = NULL;
+>  	struct hlist_head *head;
+>  	int rc = 0, num = 0;
+>  	struct sock *sk;
+> @@ -214,7 +212,7 @@ static int smc_diag_dump_proto(struct proto *prot, struct sk_buff *skb,
+>  			continue;
+>  		if (num < snum)
+>  			goto next;
+> -		rc = __smc_diag_dump(sk, skb, cb, nlmsg_data(cb->nlh), bc);
+> +		rc = __smc_diag_dump(sk, skb, cb, nlmsg_data(cb->nlh));
+>  		if (rc < 0)
+>  			goto out;
+>  next:
+> 
+> ---
+> base-commit: 59b723cd2adbac2a34fc8e12c74ae26ae45bf230
+> change-id: 20241109-fix-oops-__smc_diag_dump-06ab3e9d39f4
+> 
+> Best regards,
+> -- 
+> Manas <manas18244@iiitd.ac.in>
 
