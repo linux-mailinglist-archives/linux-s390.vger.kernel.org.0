@@ -1,64 +1,93 @@
-Return-Path: <linux-s390+bounces-7068-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-7071-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 984889C69B8
-	for <lists+linux-s390@lfdr.de>; Wed, 13 Nov 2024 08:14:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 754D19C777E
+	for <lists+linux-s390@lfdr.de>; Wed, 13 Nov 2024 16:42:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 225ABB24312
-	for <lists+linux-s390@lfdr.de>; Wed, 13 Nov 2024 07:14:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0421D1F260AC
+	for <lists+linux-s390@lfdr.de>; Wed, 13 Nov 2024 15:42:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0961187855;
-	Wed, 13 Nov 2024 07:14:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7472F2010F6;
+	Wed, 13 Nov 2024 15:40:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ofi2b00u"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lstaTiAC"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC8817D341;
-	Wed, 13 Nov 2024 07:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E012582;
+	Wed, 13 Nov 2024 15:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731482062; cv=none; b=P8X3KZYiuhuW2jeGpA3YOAGcJys2ze5xBqjuD6HEwtPlJZRjraDs7HUzRvz7wl8ut/FYC8q3dPX49g21NlFkISOdmdIK7cc4tvqBIF0XS2po7B57tE7+V513xQZRUoO9Xg9X0dS386JXcdBuBKwIN9MWQ7CIwCBHCU87/aFxhQ4=
+	t=1731512429; cv=none; b=g6EUK2VeJzSiQ2efLAhRQZDTD+vsKjZvORyTtdl9vyj6jmGx/kVIJ3OPXBHOVJ41N/m7piG0W970Tft0L9YtilAevlgeUE6oTncrgjBa11unypnvokNh50rRRrpa5is/586ap7avJwGjoeLLPUrWo/qPb6G6nczKDVCDUCmZGls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731482062; c=relaxed/simple;
-	bh=tmZYFTOl3WudTuEIAVaOUqs664VJPGr8Q7jZvsTOGXU=;
+	s=arc-20240116; t=1731512429; c=relaxed/simple;
+	bh=+wX6xsRfvGOGnmxGwsu16KEHsk5gDt40PhT7M1NaflM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CCZx3wyVUkSjq7gcRw+rAb9QlmMn+GTNEzXxOhObN063DvYAI06gWLtBJX+aX9B/euYYQPu/1endXapelX5wcfracbWOjN0OLHJeeejXJuY9UAnxpR0dQK17bJwa8WQdnedhOab2BBh7kN20ruMCab/rU0QsHHzrYcJhZJcLJe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ofi2b00u; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1731482051; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=SNx7FPzEHfUmQ7BbVvthdJvm0Dd1tGLSqyuQY84NouY=;
-	b=ofi2b00uyOwKaU9Nq0JkU6/iiVypLniG2FhFAcYOOypy0UVYZB4QidtCcbeaXe65kynVtjPGdPfVMUUqktI5C32T0+9T4x8h6nFiWPEFefb0gehlUz+1OMDecx4gUe6rDFtsuLtMurP9ToHrD5Xtgqo3w0CHq94UeGWSdijXeUM=
-Received: from j66a10360.sqa.eu95.tbsite.net(mailfrom:alibuda@linux.alibaba.com fp:SMTPD_---0WJK51Yk_1731482051 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 13 Nov 2024 15:14:11 +0800
-From: "D. Wythe" <alibuda@linux.alibaba.com>
-To: kgraul@linux.ibm.com,
-	wenjia@linux.ibm.com,
-	jaka@linux.ibm.com,
-	wintera@linux.ibm.com,
-	guwen@linux.alibaba.com
-Cc: kuba@kernel.org,
-	davem@davemloft.net,
-	netdev@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	tonylu@linux.alibaba.com,
-	pabeni@redhat.com,
-	edumazet@google.com
-Subject: [PATCH net-next 3/3] net/smc: Isolate the smc_xxx_lgr_pending with ib_device
-Date: Wed, 13 Nov 2024 15:14:05 +0800
-Message-ID: <20241113071405.67421-4-alibuda@linux.alibaba.com>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20241113071405.67421-1-alibuda@linux.alibaba.com>
-References: <20241113071405.67421-1-alibuda@linux.alibaba.com>
+	 MIME-Version; b=to0PSel+12Df4EwBnUygkC9uVYumacstM7nF9w04rCq6AF47o5i8gwYsTswNzMoEuETZxGc2+Zm1yEt/t0VwalK8KpfR7Q5SXUYI5CfyWE+M88Wm8qLIbWn8FCxbXXKH/4YabVA2mpG03Rlbi4se7X9mNVlJr2yLNrFYTwhYv4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lstaTiAC; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4ADEetpE022028;
+	Wed, 13 Nov 2024 15:40:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=hfzH9a8cVGnegLZnk
+	cfqLIYfgVsdbIvqgz2fIhQhfpQ=; b=lstaTiACOf/HJG7ABwbbNkiKrshi65ySl
+	9Ve8yXtfoEL+uHsrYKmGHaeYWQN13qZNyqeCoIrQZE1i1+YbOs1JTd3u8BMzXcqz
+	+6nIASGOvqe5lkJ5m8GEKcUFtmQWx5lZBw8XKPoeZlE4Q9dJGRKbMD2ehLc37M2f
+	0f4bBBYuGxftsyp7azepzMHZ+4xLKZUzEfuAHTC5eGKG/LzZuYi9xSbePzD4W7Wr
+	O2vdx7D24S7z7BhBG2l6iokMEEsfd2PYu8z16A1u+URLPcxTyBVNAhMaUiACyZS3
+	qBsnKWpdYBNtxWIAlgSsJpJgMlq3RxdX/pKLPRD0ZTCD3mst/Yphw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42vx3208gh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 13 Nov 2024 15:40:19 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4ADFeJBH003132;
+	Wed, 13 Nov 2024 15:40:19 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42vx3208gf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 13 Nov 2024 15:40:18 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4ADFYVcn007379;
+	Wed, 13 Nov 2024 15:40:18 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 42tm9jeb2x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 13 Nov 2024 15:40:18 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4ADFeE9u57999766
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 13 Nov 2024 15:40:14 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AEFCA2004D;
+	Wed, 13 Nov 2024 15:40:14 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 500B72004B;
+	Wed, 13 Nov 2024 15:40:14 +0000 (GMT)
+Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 13 Nov 2024 15:40:14 +0000 (GMT)
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>
+Subject: [PATCH 1/2] scripts/min-tool-version.sh: Raise minimum clang version to 19.1.0 for s390
+Date: Wed, 13 Nov 2024 16:40:12 +0100
+Message-ID: <20241113154013.961113-2-hca@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20241113154013.961113-1-hca@linux.ibm.com>
+References: <20241113154013.961113-1-hca@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -66,120 +95,42 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: yHm55OPMTycFrIfuuIZJwJRz75a-rsFK
+X-Proofpoint-GUID: 5I56uXFyd4HLzSLoiBb5izrm2O93h5sx
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=815
+ impostorscore=0 malwarescore=0 suspectscore=0 adultscore=0 clxscore=1015
+ bulkscore=0 lowpriorityscore=0 spamscore=0 phishscore=0 priorityscore=1501
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2411130131
 
-It is widely known that SMC introduced a global lock to protect the
-creation of the first connection. This lock not only brings performance
-issues but also poses a serious security risk. In a multi-tenant
-container environment, malicious tenants can construct attacks that keep
-the lock occupied for an extended period, thereby affecting the
-connections of other tenants.
+Raise minimum clang version to 19.1.0 for s390 so that various inline
+assembly format flags can be used. The missing format flags were
+implemented with llvm-project commit 9c75a981554d ("[SystemZ] Implement A,
+O and R inline assembly format flags (#80685)").
 
-Considering that this lock is essentially meant to protect the QP, which
-belongs to a device, we can limit the scope of the lock to within the
-device rather than having it be global. This way, when a container
-exclusively occupies the device, it can avoid being affected by other
-malicious tenants.
-
-Also make on impact on SMC-D since the path of SMC-D is shorter.
-
-Signed-off-by: D. Wythe <alibuda@linux.alibaba.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 ---
- net/smc/af_smc.c | 18 ++++++++++--------
- net/smc/smc_ib.c |  2 ++
- net/smc/smc_ib.h |  2 ++
- 3 files changed, 14 insertions(+), 8 deletions(-)
+ scripts/min-tool-version.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
-index 19480d8affb0..d5b9ea7661db 100644
---- a/net/smc/af_smc.c
-+++ b/net/smc/af_smc.c
-@@ -56,11 +56,8 @@
- #include "smc_loopback.h"
- #include "smc_inet.h"
- 
--static DEFINE_MUTEX(smc_server_lgr_pending);	/* serialize link group
--						 * creation on server
--						 */
--static DEFINE_MUTEX(smc_client_lgr_pending);	/* serialize link group
--						 * creation on client
-+static DEFINE_MUTEX(smcd_server_lgr_pending);	/* serialize link group
-+						 * creation on server for SMC-D
- 						 */
- 
- static struct workqueue_struct	*smc_tcp_ls_wq;	/* wq for tcp listen work */
-@@ -1251,7 +1248,9 @@ static int smc_connect_rdma(struct smc_sock *smc,
- 	if (reason_code)
- 		return reason_code;
- 
--	smc_lgr_pending_lock(ini, &smc_client_lgr_pending);
-+	smc_lgr_pending_lock(ini, (ini->smcr_version & SMC_V2) ?
-+				&ini->smcrv2.ib_dev_v2->smc_server_lgr_pending :
-+				&ini->ib_dev->smc_server_lgr_pending);
- 	reason_code = smc_conn_create(smc, ini);
- 	if (reason_code) {
- 		smc_lgr_pending_unlock(ini);
-@@ -1412,7 +1411,7 @@ static int smc_connect_ism(struct smc_sock *smc,
- 	ini->ism_peer_gid[ini->ism_selected].gid = ntohll(aclc->d0.gid);
- 
- 	/* there is only one lgr role for SMC-D; use server lock */
--	smc_lgr_pending_lock(ini, &smc_server_lgr_pending);
-+	smc_lgr_pending_lock(ini, &smcd_server_lgr_pending);
- 	rc = smc_conn_create(smc, ini);
- 	if (rc) {
- 		smc_lgr_pending_unlock(ini);
-@@ -2044,6 +2043,9 @@ static int smc_listen_rdma_init(struct smc_sock *new_smc,
- {
- 	int rc;
- 
-+	smc_lgr_pending_lock(ini, (ini->smcr_version & SMC_V2) ?
-+			     &ini->smcrv2.ib_dev_v2->smc_server_lgr_pending :
-+			     &ini->ib_dev->smc_server_lgr_pending);
- 	/* allocate connection / link group */
- 	rc = smc_conn_create(new_smc, ini);
- 	if (rc)
-@@ -2064,6 +2066,7 @@ static int smc_listen_ism_init(struct smc_sock *new_smc,
- {
- 	int rc;
- 
-+	smc_lgr_pending_lock(ini, &smcd_server_lgr_pending);
- 	rc = smc_conn_create(new_smc, ini);
- 	if (rc)
- 		return rc;
-@@ -2478,7 +2481,6 @@ static void smc_listen_work(struct work_struct *work)
- 	if (rc)
- 		goto out_decl;
- 
--	smc_lgr_pending_lock(ini, &smc_server_lgr_pending);
- 	smc_close_init(new_smc);
- 	smc_rx_init(new_smc);
- 	smc_tx_init(new_smc);
-diff --git a/net/smc/smc_ib.c b/net/smc/smc_ib.c
-index 9c563cdbea90..fb8b81b628b8 100644
---- a/net/smc/smc_ib.c
-+++ b/net/smc/smc_ib.c
-@@ -952,6 +952,8 @@ static int smc_ib_add_dev(struct ib_device *ibdev)
- 	init_waitqueue_head(&smcibdev->lnks_deleted);
- 	mutex_init(&smcibdev->mutex);
- 	mutex_lock(&smc_ib_devices.mutex);
-+	mutex_init(&smcibdev->smc_server_lgr_pending);
-+	mutex_init(&smcibdev->smc_client_lgr_pending);
- 	list_add_tail(&smcibdev->list, &smc_ib_devices.list);
- 	mutex_unlock(&smc_ib_devices.mutex);
- 	ib_set_client_data(ibdev, &smc_ib_client, smcibdev);
-diff --git a/net/smc/smc_ib.h b/net/smc/smc_ib.h
-index ef8ac2b7546d..322547a5a23d 100644
---- a/net/smc/smc_ib.h
-+++ b/net/smc/smc_ib.h
-@@ -57,6 +57,8 @@ struct smc_ib_device {				/* ib-device infos for smc */
- 	atomic_t		lnk_cnt_by_port[SMC_MAX_PORTS];
- 						/* number of links per port */
- 	int			ndev_ifidx[SMC_MAX_PORTS]; /* ndev if indexes */
-+	struct mutex    smc_server_lgr_pending; /* serialize link group creation on server */
-+	struct mutex    smc_client_lgr_pending; /* serialize link group creation on client */
- };
- 
- static inline __be32 smc_ib_gid_to_ipv4(u8 gid[SMC_GID_SIZE])
+diff --git a/scripts/min-tool-version.sh b/scripts/min-tool-version.sh
+index 91c91201212c..2dc674a74624 100755
+--- a/scripts/min-tool-version.sh
++++ b/scripts/min-tool-version.sh
+@@ -25,7 +25,7 @@ gcc)
+ 	;;
+ llvm)
+ 	if [ "$SRCARCH" = s390 ]; then
+-		echo 15.0.0
++		echo 19.1.0
+ 	elif [ "$SRCARCH" = loongarch ]; then
+ 		echo 18.0.0
+ 	else
 -- 
-2.45.0
+2.45.2
 
 
