@@ -1,117 +1,95 @@
-Return-Path: <linux-s390+bounces-7185-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-7188-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E34C9D1486
-	for <lists+linux-s390@lfdr.de>; Mon, 18 Nov 2024 16:35:18 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E1CA9D14C8
+	for <lists+linux-s390@lfdr.de>; Mon, 18 Nov 2024 16:54:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 534CBB2DA91
-	for <lists+linux-s390@lfdr.de>; Mon, 18 Nov 2024 15:05:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 92767B25B21
+	for <lists+linux-s390@lfdr.de>; Mon, 18 Nov 2024 15:44:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E61401BBBC0;
-	Mon, 18 Nov 2024 15:03:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36BE91AA1E5;
+	Mon, 18 Nov 2024 15:44:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="qKVE/Hso"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ckg/Vk0s"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C38B1AC43E;
-	Mon, 18 Nov 2024 15:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA4F79DC7;
+	Mon, 18 Nov 2024 15:44:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731942193; cv=none; b=KDkX3PvHDcx2XjfRUz6wr5nAy8MwvMAGwsvO0OE1zFW7vOZiV9NWl9d0arefQYsTB2/YSVb1sTrWGmj1cfyE76FyIm5I6FR6KE6QwxHz56yWlysAhhl99ytZFGMM3gKESQ4zQVou2pOJWNsjZpoQUHD+uKLUWI+u5tY/i7gOIMw=
+	t=1731944660; cv=none; b=Ppwon3F6BtD7kNtLuVN+v2TXAYf32jXZcZuloXVMyIx4A1ACvm/fKdCXPn4U1PBn0CHnffenA/WmMfRsyBCZmcRgK4IN+GbVDKIK0EZFAHlXR7iSfJaiDlfmbiViSZe6LbwtrcyVhLuJmCdoukpmq0eqQAiKL+mSyCliCrS9G5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731942193; c=relaxed/simple;
-	bh=Y6IKnnnehrgtsOGYcC4soeo5EMiO1x9gQENuPzItkvw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=k1HLydlOcVx9CmBZcNuduBqH+j3bGOKlVYr4hoBTammaMEw7hEC3s7ZT4eT97iye4cdyYDkjR+mrqkffLoIkj37WM8+BVI51xSRWYGZcF7xiHiI2xCmAgkDDZn2rCsihW5vEH4SZCiADWkPACePHdonEgVClpH7XFpF5v8+XzZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=qKVE/Hso; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1731942187;
-	bh=Y6IKnnnehrgtsOGYcC4soeo5EMiO1x9gQENuPzItkvw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=qKVE/HsoamW7WBskfH/JsFzqNNnUf/9fRciYOl7BrVHQXChEVo/w4I3wRgSQ5AUAW
-	 Vb4vvj5ITSI/+WNv+Q2iQ2YgzjhvabKGVsAscoMYItGIak7OwlNAzTS6UQVDerSbli
-	 NC2t654mYZuILJ2S2lxjBfPZgTIirWgI1p6S96sk=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Mon, 18 Nov 2024 16:02:49 +0100
-Subject: [PATCH 3/3] cpu: Remove spurious NULL in attribute_group
- definition
+	s=arc-20240116; t=1731944660; c=relaxed/simple;
+	bh=6lfS5m0L5sAIIFt8Olzxk6U3G2hwwOEHH7gfpjErpxY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kp4plNKVW69dmXcnUB5sq+GyhnKVGKQqTHVYm3VdM8xMZKaG9UB1p28krZv5vnhmGW9LUGJUzU9nwXfQN2NDSQI+5Gs5NxqEOlySxIjPfk6MEHWy5t2j81Zsh6AnsfCDXH4daE2Ol8HYitC2feUxMuF5hF5B4LrEMQrjB2ElEEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ckg/Vk0s; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46FFCC4CECC;
+	Mon, 18 Nov 2024 15:44:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1731944659;
+	bh=6lfS5m0L5sAIIFt8Olzxk6U3G2hwwOEHH7gfpjErpxY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ckg/Vk0sB0utTnyYclq9aYw8ZIt6rOgyYWigZJV+xIyZ90ZFurgr/jmJ0XITw4Hxs
+	 AYQHlUUJAD6TBWqWhidg89x4ildm/+wSHYeDtX9m19PRqUo5UU06vKefhAg4xNjF4f
+	 wGDEhxe1xbd6p5nHKb0MKlonT3X9I1Y90krxcnDY=
+Date: Mon, 18 Nov 2024 16:22:08 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org
+Subject: Re: [PATCH 0/3] sysfs: treewide: Remove spurious NULL in
+ attribute_group definition
+Message-ID: <2024111856-busboy-unglue-1022@gregkh>
+References: <20241118-sysfs-const-attribute_group-fixes-v1-0-48e0b0ad8cba@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Message-Id: <20241118-sysfs-const-attribute_group-fixes-v1-3-48e0b0ad8cba@weissschuh.net>
-References: <20241118-sysfs-const-attribute_group-fixes-v1-0-48e0b0ad8cba@weissschuh.net>
 In-Reply-To: <20241118-sysfs-const-attribute_group-fixes-v1-0-48e0b0ad8cba@weissschuh.net>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, Heiko Carstens <hca@linux.ibm.com>, 
- Vasily Gorbik <gor@linux.ibm.com>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, 
- Peter Zijlstra <peterz@infradead.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-s390@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1731942187; l=1161;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=Y6IKnnnehrgtsOGYcC4soeo5EMiO1x9gQENuPzItkvw=;
- b=SSps8DBII7qesqAsv+xf0NzLA2Q2RkAGnWvq5dXhTqti/ZR3bY+tTVFcPUvGfpHjOTATQg1/u
- H3o+/TmtbdRCrrDyEimbS9Q1Keupowt8TUyAnhPOvDjwEHLC8qQl6tc
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-This NULL value is most-likely a copy-paste error from an array
-definition. The NULL doesn't have any effect.
+On Mon, Nov 18, 2024 at 04:02:46PM +0100, Thomas Weiﬂschuh wrote:
+> Generated with the following coccinelle script:
+> 
+> virtual patch
+> 
+> 	@@
+> 	identifier ag, pattrs;
+> 	@@
+> 
+> 	  struct attribute_group ag = {
+> 	    .attrs = pattrs,
+> 	-   NULL
+> 	  };
+> 
+> This series is meant to be applied through the driver-core tree.
+> 
+> See also:
+> https://lore.kernel.org/lkml/71fe4030-d6a1-47da-b8a7-28b899187168@t-8ch.de/
+> 
+> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
 
-Signed-off-by: Thomas Wei√üschuh <linux@weissschuh.net>
----
- kernel/cpu.c | 3 ---
- 1 file changed, 3 deletions(-)
+All now applied, thanks!
 
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index d293d52a3e00e1e8d7c82bdf2f1365bb459f8bb6..f3ee615d2274f161857ef0180454f30b54477cc1 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -2866,7 +2866,6 @@ static struct attribute *cpuhp_cpu_attrs[] = {
- static const struct attribute_group cpuhp_cpu_attr_group = {
- 	.attrs = cpuhp_cpu_attrs,
- 	.name = "hotplug",
--	NULL
- };
- 
- static ssize_t states_show(struct device *dev,
-@@ -2898,7 +2897,6 @@ static struct attribute *cpuhp_cpu_root_attrs[] = {
- static const struct attribute_group cpuhp_cpu_root_attr_group = {
- 	.attrs = cpuhp_cpu_root_attrs,
- 	.name = "hotplug",
--	NULL
- };
- 
- #ifdef CONFIG_HOTPLUG_SMT
-@@ -3020,7 +3018,6 @@ static struct attribute *cpuhp_smt_attrs[] = {
- static const struct attribute_group cpuhp_smt_attr_group = {
- 	.attrs = cpuhp_smt_attrs,
- 	.name = "smt",
--	NULL
- };
- 
- static int __init cpu_smt_sysfs_init(void)
-
--- 
-2.47.0
-
+greg k-h
 
