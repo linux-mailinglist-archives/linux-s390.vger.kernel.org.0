@@ -1,189 +1,190 @@
-Return-Path: <linux-s390+bounces-7227-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-7229-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3ABF69D59C9
-	for <lists+linux-s390@lfdr.de>; Fri, 22 Nov 2024 08:16:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1ABB9D59FE
+	for <lists+linux-s390@lfdr.de>; Fri, 22 Nov 2024 08:31:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E068A1F22CF0
-	for <lists+linux-s390@lfdr.de>; Fri, 22 Nov 2024 07:16:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 860F528110F
+	for <lists+linux-s390@lfdr.de>; Fri, 22 Nov 2024 07:31:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90C3B170A20;
-	Fri, 22 Nov 2024 07:16:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82711165EE3;
+	Fri, 22 Nov 2024 07:31:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="KbmIKtKr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L8gUn1cu"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3343616BE01;
-	Fri, 22 Nov 2024 07:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833D42AE96
+	for <linux-s390@vger.kernel.org>; Fri, 22 Nov 2024 07:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732259807; cv=none; b=gIKPNhyD1PinyPRc52QTGPobIanvfIzZjt6685ewBnJkh/kfaNufDxXjvKJccRswALR9SaPUWNRLwST4ecoooYwxc3dnWNxmDgCgb9OtS+HdcxW2nhbb2gsWinWd470vGnCGq5U0ytFP2gpTEFuo3TtTp9RHtOTvhkdb2Trcguw=
+	t=1732260693; cv=none; b=ewdNP6NTfxRutJ13TdqG8UEHWxe7oeRrCBek+epCfCyNssyk9hF9r4/iNpydBsL5KYOXFpTM3IA+X2kSKAMlqGtQgxx+RgOVsE8r1r4D5IWkB5Kt8oet9WSXNKcwTa5JnKwalcl5aojAJ/bXKAhpyBMcbuYYzfbd3dqm7hJ2Fcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732259807; c=relaxed/simple;
-	bh=2cSQxrteySvr13xOvnwTvI9SQX8fC71lvBVAvXlndMM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LW2J8syc8VxN7ITpdFUg2Mtukbgx1ZKmxVrzYw+MC3FrD0T1wZmBvvppyITo2j/04E2AgzY7z83FYbFHUMKdrhG3k4qhlHNJ64Yl560HFke9aorrdbZduEopu2T+VUnbssqAK4cwQX0nZjonDdzbRhIurenpyM51w6EyBKux6f4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=KbmIKtKr; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1732259796; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=ijdPFqMJEXQyY7cj+GbQC+Q1McJItiVYA1uEbryR+DM=;
-	b=KbmIKtKrUjbelgN1+PZrVTI5HbgPeId/UAeBaJo998/EmwUhWxFUGOaxqL5SPSBrcucoU5iystuQgQ88dOTZGghWAqFhFq6mc0l8lvGfjacBtZ17XxYjKjYEm3963E5jXskt8zttdv0jrmUMsRRBeN4HTf6MGJSnyI+xQUWGreI=
-Received: from localhost(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0WJzhgeP_1732259794 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 22 Nov 2024 15:16:35 +0800
-From: Wen Gu <guwen@linux.alibaba.com>
-To: wenjia@linux.ibm.com,
-	jaka@linux.ibm.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: alibuda@linux.alibaba.com,
-	tonylu@linux.alibaba.com,
-	guwen@linux.alibaba.com,
-	horms@kernel.org,
-	linux-rdma@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net 2/2] net/smc: fix LGR and link use-after-free issue
-Date: Fri, 22 Nov 2024 15:16:30 +0800
-Message-Id: <20241122071630.63707-3-guwen@linux.alibaba.com>
-X-Mailer: git-send-email 2.32.0.3.g01195cf9f
-In-Reply-To: <20241122071630.63707-1-guwen@linux.alibaba.com>
-References: <20241122071630.63707-1-guwen@linux.alibaba.com>
+	s=arc-20240116; t=1732260693; c=relaxed/simple;
+	bh=HQvBfxRd8qJug47oyF/nl4DbLd5Lm22tQlEI+j4EkI8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NwqksJEQHPjrhTInt4JrQcmxwQXNcus+xjQro34dxHrv0ArHW1/8GocMNN2ptylZfFjTOxUmzp4qYUTi3rVHD4fnBKC+WEFmQ2hXL8n9x7Jqf29ugiXFSYFI7dEtxg4jcwgxx85lAgGG9MfVygj9syU6WLNSnfuu02qY53WicMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L8gUn1cu; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1732260690;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PXq9Wjiti00hPsb6uBFVS+EGZ67OZCcyDnwcfoAoCsg=;
+	b=L8gUn1cuaPeEPv5GU4jo9q+JJztMmIBWRZIwv3oI80MAIfaN0yjQSKjEHDq/OP1yN5MwLw
+	qnHieZRlIXfgEnl/NqMSRIHRFZNtS9oud+9Vqmn9pIB7qz/YfgS8rIOeg9Ow3gjuMEzXjh
+	mgGD9fETSQWJpTl17qB1DvgoVjg2qCw=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-641-sLMKtwRkP9C3ZZ084QJlQw-1; Fri,
+ 22 Nov 2024 02:31:28 -0500
+X-MC-Unique: sLMKtwRkP9C3ZZ084QJlQw-1
+X-Mimecast-MFC-AGG-ID: sLMKtwRkP9C3ZZ084QJlQw
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E8D46195608A;
+	Fri, 22 Nov 2024 07:31:25 +0000 (UTC)
+Received: from localhost (unknown [10.72.113.10])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DA2AF19560A3;
+	Fri, 22 Nov 2024 07:31:23 +0000 (UTC)
+Date: Fri, 22 Nov 2024 15:31:19 +0800
+From: Baoquan He <bhe@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
+	kvm@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	kexec@lists.infradead.org, Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	Thomas Huth <thuth@redhat.com>, Cornelia Huck <cohuck@redhat.com>,
+	Janosch Frank <frankja@linux.ibm.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Eric Farman <farman@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v1 07/11] fs/proc/vmcore: introduce
+ PROC_VMCORE_DEVICE_RAM to detect device RAM ranges in 2nd kernel
+Message-ID: <Z0AzR2Yhl527wkbP@MiWiFi-R3L-srv>
+References: <20241025151134.1275575-1-david@redhat.com>
+ <20241025151134.1275575-8-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241025151134.1275575-8-david@redhat.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-We encountered a LGR/link use-after-free issue, which manifested as
-the LGR/link refcnt reaching 0 early and entering the clear process,
-making resource access unsafe.
+On 10/25/24 at 05:11pm, David Hildenbrand wrote:
+......snip...
+> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+> index 3e90416ee54e..c332a9a4920b 100644
+> --- a/fs/proc/vmcore.c
+> +++ b/fs/proc/vmcore.c
+> @@ -69,6 +69,8 @@ static LIST_HEAD(vmcore_cb_list);
+>  /* Whether the vmcore has been opened once. */
+>  static bool vmcore_opened;
+>  
+> +static void vmcore_process_device_ram(struct vmcore_cb *cb);
+> +
+>  void register_vmcore_cb(struct vmcore_cb *cb)
+>  {
+>  	INIT_LIST_HEAD(&cb->next);
+> @@ -80,6 +82,8 @@ void register_vmcore_cb(struct vmcore_cb *cb)
+>  	 */
+>  	if (vmcore_opened)
+>  		pr_warn_once("Unexpected vmcore callback registration\n");
+> +	else if (cb->get_device_ram)
+> +		vmcore_process_device_ram(cb);
 
- refcount_t: addition on 0; use-after-free.
- WARNING: CPU: 14 PID: 107447 at lib/refcount.c:25 refcount_warn_saturate+0x9c/0x140
- Workqueue: events smc_lgr_terminate_work [smc]
- Call trace:
-  refcount_warn_saturate+0x9c/0x140
-  __smc_lgr_terminate.part.45+0x2a8/0x370 [smc]
-  smc_lgr_terminate_work+0x28/0x30 [smc]
-  process_one_work+0x1b8/0x420
-  worker_thread+0x158/0x510
-  kthread+0x114/0x118
+Global variable 'vmcore_opened' is used to indicate if /proc/vmcore is
+opened. With &vmcore_mutex, we don't need to worry about concurrent
+opening and modification. However, if people just open /proc/vmcore and
+close it after checking, then s390 will miss the vmcore dumping, is it
+acceptable?
 
-or
+>  	mutex_unlock(&vmcore_mutex);
+>  }
+>  EXPORT_SYMBOL_GPL(register_vmcore_cb);
+> @@ -1511,6 +1515,158 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+......
+> +
+> +static void vmcore_process_device_ram(struct vmcore_cb *cb)
+> +{
+> +	unsigned char *e_ident = (unsigned char *)elfcorebuf;
+> +	struct vmcore_mem_node *first, *m;
+> +	LIST_HEAD(list);
+> +	int count;
+> +
+> +	if (cb->get_device_ram(cb, &list)) {
+> +		pr_err("Kdump: obtaining device ram ranges failed\n");
+> +		return;
+> +	}
+> +	count = list_count_nodes(&list);
+> +	if (!count)
+> +		return;
+> +
+> +	/* We only support Elf64 dumps for now. */
+> +	if (WARN_ON_ONCE(e_ident[EI_CLASS] != ELFCLASS64)) {
+> +		pr_err("Kdump: device ram ranges only support Elf64\n");
+> +		goto out_free;
+> +	}
 
- refcount_t: underflow; use-after-free.
- WARNING: CPU: 6 PID: 93140 at lib/refcount.c:28 refcount_warn_saturate+0xf0/0x140
- Workqueue: smc_hs_wq smc_listen_work [smc]
- Call trace:
-  refcount_warn_saturate+0xf0/0x140
-  smcr_link_put+0x1cc/0x1d8 [smc]
-  smc_conn_free+0x110/0x1b0 [smc]
-  smc_conn_abort+0x50/0x60 [smc]
-  smc_listen_find_device+0x75c/0x790 [smc]
-  smc_listen_work+0x368/0x8a0 [smc]
-  process_one_work+0x1b8/0x420
-  worker_thread+0x158/0x510
-  kthread+0x114/0x118
+Only supporting Elf64 dumps seems to be a basic checking, do we need
+to put it at the beginning of function? Otherwise, we spend efforts to
+call cb->get_device_ram(), then fail.
 
-It is caused by repeated release of LGR/link refcnt. One suspect is that
-smc_conn_free() is called repeatedly because some smc_conn_free() are not
-protected by sock lock.
-
-Calls under socklock        | Calls not under socklock
--------------------------------------------------------
-lock_sock(sk)               | smc_conn_abort
-smc_conn_free               | \- smc_conn_free
-\- smcr_link_put            |    \- smcr_link_put (duplicated)
-release_sock(sk)
-
-So make sure smc_conn_free() is called under the sock lock.
-
-Fixes: 8cf3f3e42374 ("net/smc: use helper smc_conn_abort() in listen processing")
-Co-developed-by: Guangguan Wang <guangguan.wang@linux.alibaba.com>
-Signed-off-by: Guangguan Wang <guangguan.wang@linux.alibaba.com>
-Co-developed-by: Kai <KaiShen@linux.alibaba.com>
-Signed-off-by: Kai <KaiShen@linux.alibaba.com>
-Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
----
- net/smc/af_smc.c | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
-
-diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
-index ed6d4d520bc7..e0a7a0151b11 100644
---- a/net/smc/af_smc.c
-+++ b/net/smc/af_smc.c
-@@ -973,7 +973,8 @@ static int smc_connect_decline_fallback(struct smc_sock *smc, int reason_code,
- 	return smc_connect_fallback(smc, reason_code);
- }
- 
--static void smc_conn_abort(struct smc_sock *smc, int local_first)
-+static void __smc_conn_abort(struct smc_sock *smc, int local_first,
-+			     bool locked)
- {
- 	struct smc_connection *conn = &smc->conn;
- 	struct smc_link_group *lgr = conn->lgr;
-@@ -982,11 +983,27 @@ static void smc_conn_abort(struct smc_sock *smc, int local_first)
- 	if (smc_conn_lgr_valid(conn))
- 		lgr_valid = true;
- 
--	smc_conn_free(conn);
-+	if (!locked) {
-+		lock_sock(&smc->sk);
-+		smc_conn_free(conn);
-+		release_sock(&smc->sk);
-+	} else {
-+		smc_conn_free(conn);
-+	}
- 	if (local_first && lgr_valid)
- 		smc_lgr_cleanup_early(lgr);
- }
- 
-+static void smc_conn_abort(struct smc_sock *smc, int local_first)
-+{
-+	__smc_conn_abort(smc, local_first, false);
-+}
-+
-+static void smc_conn_abort_locked(struct smc_sock *smc, int local_first)
-+{
-+	__smc_conn_abort(smc, local_first, true);
-+}
-+
- /* check if there is a rdma device available for this connection. */
- /* called for connect and listen */
- static int smc_find_rdma_device(struct smc_sock *smc, struct smc_init_info *ini)
-@@ -1352,7 +1369,7 @@ static int smc_connect_rdma(struct smc_sock *smc,
- 
- 	return 0;
- connect_abort:
--	smc_conn_abort(smc, ini->first_contact_local);
-+	smc_conn_abort_locked(smc, ini->first_contact_local);
- 	mutex_unlock(&smc_client_lgr_pending);
- 	smc->connect_nonblock = 0;
- 
-@@ -1454,7 +1471,7 @@ static int smc_connect_ism(struct smc_sock *smc,
- 
- 	return 0;
- connect_abort:
--	smc_conn_abort(smc, ini->first_contact_local);
-+	smc_conn_abort_locked(smc, ini->first_contact_local);
- 	mutex_unlock(&smc_server_lgr_pending);
- 	smc->connect_nonblock = 0;
- 
--- 
-2.32.0.3.g01195cf9f
+> +
+> +	/*
+> +	 * For some reason these ranges are already know? Might happen
+> +	 * with unusual register->unregister->register sequences; we'll simply
+> +	 * sanity check using the first range.
+> +	 */
+> +	first = list_first_entry(&list, struct vmcore_mem_node, list);
+> +	list_for_each_entry(m, &vmcore_list, list) {
+> +		unsigned long long m_end = m->paddr + m->size;
+> +		unsigned long long first_end = first->paddr + first->size;
+> +
+> +		if (first->paddr < m_end && m->paddr < first_end)
+> +			goto out_free;
+> +	}
+> +
+> +	/* If adding the mem nodes succeeds, they must not be freed. */
+> +	if (!vmcore_add_device_ram_elf64(&list, count))
+> +		return;
+> +out_free:
+> +	vmcore_free_mem_nodes(&list);
+> +}
+> +#else /* !CONFIG_PROC_VMCORE_DEVICE_RAM */
+> +static void vmcore_process_device_ram(struct vmcore_cb *cb)
+> +{
+> +}
+> +#endif /* CONFIG_PROC_VMCORE_DEVICE_RAM */
+> +
+>  /* Free all dumps in vmcore device dump list */
+>  static void vmcore_free_device_dumps(void)
+>  {
+> diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
+> index 722dbcff7371..8e581a053d7f 100644
+> --- a/include/linux/crash_dump.h
+> +++ b/include/linux/crash_dump.h
 
 
