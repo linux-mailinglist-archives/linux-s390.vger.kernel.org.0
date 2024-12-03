@@ -1,61 +1,60 @@
-Return-Path: <linux-s390+bounces-7392-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-7390-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96DFE9E2B52
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Dec 2024 19:48:06 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56E189E2C0A
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Dec 2024 20:30:52 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6B9FE166DB3
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Dec 2024 18:48:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6D9A6B2673A
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Dec 2024 18:48:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8403E1FDE2E;
-	Tue,  3 Dec 2024 18:47:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 245E8193403;
+	Tue,  3 Dec 2024 18:47:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IB40EH78"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HRFiJEZ+"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9782D1FA251;
-	Tue,  3 Dec 2024 18:47:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4951362;
+	Tue,  3 Dec 2024 18:47:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733251679; cv=none; b=YgEB7uhEZEDcFRfCqkLVdtKkJ/kFCE4L4ATqlX7iomBel3Bthch8JqbXfGpav7Hfl/yZwNY0F6L9+XvYt6UG427zhqwrnskNgudfdRTFVrCP47NHxVCO3qXVBjM5u0UjwFAnMMftUZsmE9YENYR5BRCM7o1FDRUHobh84YUTZ2s=
+	t=1733251677; cv=none; b=RuQI9lAXLIVE8OA6vgrz4EgaqWVfPxFzItKQ86AtU8WDHupVcLEhJLn4LuQwX0OBtcnZgr/sVP+QGy8UPG6qqeEqAjVQ77uUtApNaDbX/mO+Uv2i39JSl7NkeTsycLXYMX5nPuwAmLWzYSlyyGGvovVfekNI/OMdy4puBTkd4vM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733251679; c=relaxed/simple;
-	bh=MpXlci4bxso5/v7WqNwNowlxVwMFOzqPts08hgEvzbI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ox6qukI9HABMGaay0O047XqcYrMgvhYjMZ2MTxw3Sms3WvoaM9Yesqb3DiBKHqVloLIvp2VP8kP0O3BEdKskERdo/Kl/XhIQQIgiOgOfhsEIkG+mTNBYvLuu1GcegFwl/gcPKR7Ov9vcWXsF4BkeGlqkBYz1mKuqfts0FlYOBqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IB40EH78; arc=none smtp.client-ip=198.175.65.15
+	s=arc-20240116; t=1733251677; c=relaxed/simple;
+	bh=62qKMZZWNcz5M+209QiFVBa+TWcB3rtKMsA/EBEsFAM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TAJ7JXOqycZLAdkgaiiCXF/NvSdXdrH/VVgc5rngXdmafp3c0KxcCp+QFFpqaL1nLkjFYzQcujsCpD5UuGxnRhy64s5LsgIRbzWg9zeRtzkhsf1IqGDOOODEcICZnhZaa46B9mH87NZwaE4Z6I0QV8WtuIkZ1pdgUv/BVILzCLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HRFiJEZ+; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733251678; x=1764787678;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=MpXlci4bxso5/v7WqNwNowlxVwMFOzqPts08hgEvzbI=;
-  b=IB40EH78AepaGHOmLB3bRJ+UUYcAevtUf+MU6WqYIAfnppH32MvrqSlq
-   YcLR0BoJPMuW8IEoqizyktUhAWQ/ihs4dW68F8dIfzHFMUPkaEKWCKWbO
-   iP4yX0SXqGbOLR6UwykIJsdX/HAgB3kbDUbGU/JhiY1zOLyf9D6CiWXeG
-   QBeTGlZpZTSF8/7sVWsHkWoDJVqr8VwbuMI4Fv9XqOP4Mm+t/hKgMoEiB
-   3B3ritwFuXVm6rJ7CjexuS6thiuXNViQyDzp1iBbJxc/Zk6C1vFWKBOJ2
-   NRpFthNc58UWAYhFZ1yUpcfuVZkfqNac7kBnie8y8KMVM2JAgw+BIuz71
-   w==;
-X-CSE-ConnectionGUID: f8X28IaeTaK2nRZGyajUPw==
-X-CSE-MsgGUID: xNKtpk+JRgyLDfFViJO9iw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11275"; a="37143174"
+  t=1733251676; x=1764787676;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=62qKMZZWNcz5M+209QiFVBa+TWcB3rtKMsA/EBEsFAM=;
+  b=HRFiJEZ+UeJKefNw6UgtRSjQtVrQqDsikbJGgcfFF1/wmVLQYqtZGdGE
+   05Xy4vbEgn4FhMOznsKPOmIkTE/X/iNmAh/m3S0PyhQAYkuoIX8wFc83m
+   2N7FH3ll57MCVY9+cobLNaP7OBKJxBO+fCNFQuds1fYglvKflqA+CGOdT
+   G2iXiSvmOEBRPkaf8S3Pzn8GZBg/mpC8og7VoqeNDZ+c66uv8Z7nknumB
+   6LNMEHWWJoYpyHA9LONR+h7W+cz9CADZo1D7zxCUe9LHGvGOBCHW3fL+G
+   x73QJqTZvMAVn8fqmgl+AYZasC1GmcJLadj9QVaIO4Qa7PkkfDwsw1UXz
+   A==;
+X-CSE-ConnectionGUID: afDQlZKeRlay4ai3iymM4g==
+X-CSE-MsgGUID: +vmghaZmRSyREKPlNae/JA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11275"; a="37143160"
 X-IronPort-AV: E=Sophos;i="6.12,205,1728975600"; 
-   d="scan'208";a="37143174"
+   d="scan'208";a="37143160"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 10:47:56 -0800
-X-CSE-ConnectionGUID: 8K9XQrofRBaJ5Ud55CXlfQ==
-X-CSE-MsgGUID: IgyH0VlyRbuCbtv4WyhDqg==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 10:47:55 -0800
+X-CSE-ConnectionGUID: AsBODGdQSZOoo3sEf9T5GQ==
+X-CSE-MsgGUID: n+55R6mgRIebNkinu6YKpg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,205,1728975600"; 
-   d="scan'208";a="93420018"
+   d="scan'208";a="93420011"
 Received: from rthomas.sc.intel.com ([172.25.112.51])
   by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 10:47:54 -0800
 From: Ramesh Thomas <ramesh.thomas@intel.com>
@@ -73,12 +72,10 @@ Cc: kvm@vger.kernel.org,
 	ramesh.thomas@intel.com,
 	kevin.tian@intel.com,
 	cho@microsoft.com
-Subject: [PATCH v2 2/2] vfio/pci: Remove #ifdef iowrite64 and #ifdef ioread64
-Date: Tue,  3 Dec 2024 10:41:58 -0800
-Message-Id: <20241203184158.172492-3-ramesh.thomas@intel.com>
+Subject: [PATCH v2 0/2] Extend 8-byte PCI load/store support to x86 arch
+Date: Tue,  3 Dec 2024 10:41:56 -0800
+Message-Id: <20241203184158.172492-1-ramesh.thomas@intel.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241203184158.172492-1-ramesh.thomas@intel.com>
-References: <20241203184158.172492-1-ramesh.thomas@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -87,75 +84,42 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Remove the #ifdef iowrite64 and #ifdef ioread64 checks around calls to
-64 bit IO access. Since default implementations have been enabled, the
-checks are not required. Such checks can hide potential bugs as well.
-Instead check for CONFIG_64BIT to make the 64 bit IO calls only when 64
-bit support is enabled.
+This patch series extends the recently added 8-byte PCI load/store
+support to the x86 architecture. 
 
-Signed-off-by: Ramesh Thomas <ramesh.thomas@intel.com>
----
- drivers/vfio/pci/vfio_pci_rdwr.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Refer patch series adding above support:
+https://lore.kernel.org/all/20240522150651.1999584-1-gbayer@linux.ibm.com/
 
-diff --git a/drivers/vfio/pci/vfio_pci_rdwr.c b/drivers/vfio/pci/vfio_pci_rdwr.c
-index a0595c745732..02a3f1cb8f77 100644
---- a/drivers/vfio/pci/vfio_pci_rdwr.c
-+++ b/drivers/vfio/pci/vfio_pci_rdwr.c
-@@ -62,7 +62,7 @@ EXPORT_SYMBOL_GPL(vfio_pci_core_iowrite##size);
- VFIO_IOWRITE(8)
- VFIO_IOWRITE(16)
- VFIO_IOWRITE(32)
--#ifdef iowrite64
-+#ifdef CONFIG_64BIT
- VFIO_IOWRITE(64)
- #endif
- 
-@@ -90,7 +90,7 @@ EXPORT_SYMBOL_GPL(vfio_pci_core_ioread##size);
- VFIO_IOREAD(8)
- VFIO_IOREAD(16)
- VFIO_IOREAD(32)
--#ifdef ioread64
-+#ifdef CONFIG_64BIT
- VFIO_IOREAD(64)
- #endif
- 
-@@ -128,7 +128,7 @@ static int vfio_pci_iordwr##size(struct vfio_pci_core_device *vdev,\
- VFIO_IORDWR(8)
- VFIO_IORDWR(16)
- VFIO_IORDWR(32)
--#if defined(ioread64) && defined(iowrite64)
-+#ifdef CONFIG_64BIT
- VFIO_IORDWR(64)
- #endif
- 
-@@ -156,7 +156,7 @@ ssize_t vfio_pci_core_do_io_rw(struct vfio_pci_core_device *vdev, bool test_mem,
- 		else
- 			fillable = 0;
- 
--#if defined(ioread64) && defined(iowrite64)
-+#ifdef CONFIG_64BIT
- 		if (fillable >= 8 && !(off % 8)) {
- 			ret = vfio_pci_iordwr64(vdev, iswrite, test_mem,
- 						io, buf, off, &filled);
-@@ -382,7 +382,7 @@ static void vfio_pci_ioeventfd_do_write(struct vfio_pci_ioeventfd *ioeventfd,
- 		vfio_pci_core_iowrite32(ioeventfd->vdev, test_mem,
- 					ioeventfd->data, ioeventfd->addr);
- 		break;
--#ifdef iowrite64
-+#ifdef CONFIG_64BIT
- 	case 8:
- 		vfio_pci_core_iowrite64(ioeventfd->vdev, test_mem,
- 					ioeventfd->data, ioeventfd->addr);
-@@ -441,7 +441,7 @@ int vfio_pci_ioeventfd(struct vfio_pci_core_device *vdev, loff_t offset,
- 	      pos >= vdev->msix_offset + vdev->msix_size))
- 		return -EINVAL;
- 
--#ifndef iowrite64
-+#ifndef CONFIG_64BIT
- 	if (count == 8)
- 		return -EINVAL;
- #endif
+The 8-byte implementations are enclosed inside #ifdef checks of the
+macros "ioread64" and "iowrite64". These macros don't get defined if
+CONFIG_GENERIC_IOMAP is defined. CONFIG_GENERIC_IOMAP gets defined for
+x86 and hence the macros are undefined. Due to this the 8-byte support
+was not enabled for x86 architecture.
+
+To resolve this, include the header file io-64-nonatomic-lo-hi.h that
+maps the ioread64 and iowrite64 macros to a generic implementation in
+lib/iomap.c. This was the intention of defining CONFIG_GENERIC_IOMAP.
+
+Tested using a pass-through PCI device bound to vfio-pci driver and
+doing BAR reads and writes that trigger calls to
+vfio_pci_core_do_io_rw() that does the 8-byte reads and writes.
+
+Patch history:
+v2: Based on Jason's feedback moved #include io-64-nonatomic-lo-hi.h
+to vfio_pci_rdwr.c and replaced #ifdef checks of iowrite64 and ioread64
+macros with checks for CONFIG_64BIT.
+
+https://lore.kernel.org/all/20240522232125.548643-1-ramesh.thomas@intel.com/
+https://lore.kernel.org/all/20240524140013.GM69273@ziepe.ca/
+https://lore.kernel.org/all/bfb273b2-fc5e-4a8b-a40d-56996fc9e0af@intel.com/
+
+Ramesh Thomas (2):
+  vfio/pci: Enable iowrite64 and ioread64 for vfio pci
+  vfio/pci: Remove #ifdef iowrite64 and #ifdef ioread64
+
+ drivers/vfio/pci/vfio_pci_rdwr.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
 -- 
 2.34.1
 
