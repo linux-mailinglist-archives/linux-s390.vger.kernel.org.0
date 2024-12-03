@@ -1,68 +1,84 @@
-Return-Path: <linux-s390+bounces-7389-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-7391-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9BF89E2A42
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Dec 2024 19:04:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 440649E2B51
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Dec 2024 19:48:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6F85A284C6F
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Dec 2024 18:04:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0941F2830A0
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Dec 2024 18:48:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F32C81FC7EC;
-	Tue,  3 Dec 2024 18:04:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 410461FDE14;
+	Tue,  3 Dec 2024 18:47:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pgbFiohB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pb9YzMdL"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98D71FC7E7;
-	Tue,  3 Dec 2024 18:04:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288411F7545;
+	Tue,  3 Dec 2024 18:47:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733249083; cv=none; b=Kb7JQxvABi9idK9E0XYCf33I0XAKter+kiz7sUFWI/IXH/M/GTLqbP0IxW72nckBI668mShiGHXBj0FBPOaSiuhUd2Xq6rNw3QOhdN7gW+zB7WWGa2+WG/BDF+pGKVsz+qIJUvynCr0rgyTx+2gwxgtWBP+77hjw9tL/6JWxxzE=
+	t=1733251679; cv=none; b=TvHyVtWfTBez2XF9aHFpfH6QcB0JxuZyNdiNTwCQuE8aJKJM/Tb1rG/WBUM9/TA6gcq7G3105VMZiyPWbDw9UKdaKw8Pt8l3sM2lCT1A6WcnwDNNP+o1MnLoXzImcwfBAYrymYVEg0lwYoRdCkqfrFWVOYFyouCTVPTDAZnFF3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733249083; c=relaxed/simple;
-	bh=L4BkkKXTWvXmMfLn0RL6KeEHKDcuO56tiD37MnLutg8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BHziIZAA/C2nTUypAEZDzOwnSP29lbjQl7vktzo4zpHMPj23WLDMu+MSE851e55FzeZS4fvhv7zdS7CMle+DYvHS79U1ls6Qhi3solS042UysyLCCAdepDQ6iZtPkf5Rc9vgKT1qRGH/N5W6tebn9oDb/zYj53MeRpd6tMMjq5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pgbFiohB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0750C4CED6;
-	Tue,  3 Dec 2024 18:04:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733249083;
-	bh=L4BkkKXTWvXmMfLn0RL6KeEHKDcuO56tiD37MnLutg8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pgbFiohBsH/JTSqPwJps3HwoZwk6/6ppcl+lWIPQ5HCMfj5Vhe+qkqVgvu95WJtSI
-	 SgipJV+KwH71M1yriIsYzZ354vj7RR6SBPcow4dEpMaCgaUzwNJInKFoDOd+oE99+h
-	 LgBJxJkSAbXlJ4VjE4GIkFUOZY0pAKwpFz/CjZ56PkT/YuP1LXiSGyBdE7NRCTsxPU
-	 YmgG2jsopH7Lh3cxAvfra7B6VKeS+XPjNPKM54BqyCpyQVhJib4mMXuRxAJBcrA89/
-	 jtQbSnw1wvAfyzpxmZ9I+yu2gPOLKJJXajtNri0OrDzpfK/LSozVv9o0mHksfPchfe
-	 F1V6UrdAFeo8A==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	linux-s390@vger.kernel.org
-Subject: [PATCH 1/2] perf/core: Export perf_exclude_event()
-Date: Tue,  3 Dec 2024 10:04:40 -0800
-Message-ID: <20241203180441.1634709-2-namhyung@kernel.org>
-X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
-In-Reply-To: <20241203180441.1634709-1-namhyung@kernel.org>
-References: <20241203180441.1634709-1-namhyung@kernel.org>
+	s=arc-20240116; t=1733251679; c=relaxed/simple;
+	bh=KGE06P5wGdeAx3Y/4+t5a/rj5ZkKtAQ3902PJPsdsog=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=uSj5dMgjUaJ5E3HYwZZZNUszmTX56/TIevWX6RbG8JI6u0El/q1t+G06kQl26WJimgfiXDo5Q0vhajSx7ocHH2NoYISydg4S/wDCPVnkVt6lfENKRYnCG3ATsIid5vfxnK7crAI29yxPO53Ej+wOny6kmzIFV/q/lsdxuOdeJ70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pb9YzMdL; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733251678; x=1764787678;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=KGE06P5wGdeAx3Y/4+t5a/rj5ZkKtAQ3902PJPsdsog=;
+  b=Pb9YzMdLSUx51/qpaydecMuLsswxSlAeKIFFLlE1r6nbC9KA4EVK1X82
+   5hl2+5ZLIdvO1JAB59WKxLKc0OxL28fIFPITArEiB9gsQtK/Y36ChzrW/
+   l5jsFjtouqE4FurmHVnOGyNjEne2mcWZ+XlmVl0yIyuzAkTBaV/uVay3N
+   2Q1E1EOfs1Q4/yqhZSYeDZE/Zv2PPwROsLcfjYLyWbc+45SNy3IDgBSo9
+   yW0PkmF6pBQNpyW7bY1H6kIRMZ9CRBdR47fFWa80iGQmYf5ffQaE5QdWq
+   cfLTqBfpYOBFM97O+yGJTU/+3r19wlYYLL7l+3ciDnPm6nH1MXvwT5xCA
+   w==;
+X-CSE-ConnectionGUID: 0b8FcaoxRNCi2MurX923Gg==
+X-CSE-MsgGUID: J04FnVW5R2KbwUPn+JAN0Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11275"; a="37143167"
+X-IronPort-AV: E=Sophos;i="6.12,205,1728975600"; 
+   d="scan'208";a="37143167"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 10:47:55 -0800
+X-CSE-ConnectionGUID: rEk1kLcETp6SCybnrqNSug==
+X-CSE-MsgGUID: YHyvKJ04Si6l+HfHlWuBeQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,205,1728975600"; 
+   d="scan'208";a="93420015"
+Received: from rthomas.sc.intel.com ([172.25.112.51])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2024 10:47:54 -0800
+From: Ramesh Thomas <ramesh.thomas@intel.com>
+To: alex.williamson@redhat.com,
+	jgg@ziepe.ca,
+	schnelle@linux.ibm.com,
+	gbayer@linux.ibm.com
+Cc: kvm@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	ankita@nvidia.com,
+	yishaih@nvidia.com,
+	pasic@linux.ibm.com,
+	julianr@linux.ibm.com,
+	bpsegal@us.ibm.com,
+	ramesh.thomas@intel.com,
+	kevin.tian@intel.com,
+	cho@microsoft.com
+Subject: [PATCH v2 1/2] vfio/pci: Enable iowrite64 and ioread64 for vfio pci
+Date: Tue,  3 Dec 2024 10:41:57 -0800
+Message-Id: <20241203184158.172492-2-ramesh.thomas@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20241203184158.172492-1-ramesh.thomas@intel.com>
+References: <20241203184158.172492-1-ramesh.thomas@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -71,93 +87,40 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-While at it, rename the same function in s390 cpum_sf PMU.
+Definitions of ioread64 and iowrite64 macros in asm/io.h called by vfio
+pci implementations are enclosed inside check for CONFIG_GENERIC_IOMAP.
+They don't get defined if CONFIG_GENERIC_IOMAP is defined. Include
+linux/io-64-nonatomic-lo-hi.h to define iowrite64 and ioread64 macros
+when they are not defined. io-64-nonatomic-lo-hi.h maps the macros to
+generic implementation in lib/iomap.c. The generic implementation does
+64 bit rw if readq/writeq is defined for the architecture, otherwise it
+would do 32 bit back to back rw.
 
-Acked-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-and-tested-by: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-Cc: Sven Schnelle <svens@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Note that there are two versions of the generic implementation that
+differs in the order the 32 bit words are written if 64 bit support is
+not present. This is not the little/big endian ordering, which is
+handled separately. This patch uses the lo followed by hi word ordering
+which is consistent with current back to back implementation in the
+vfio/pci code.
+
+Signed-off-by: Ramesh Thomas <ramesh.thomas@intel.com>
 ---
- arch/s390/kernel/perf_cpum_sf.c | 6 +++---
- include/linux/perf_event.h      | 6 ++++++
- kernel/events/core.c            | 3 +--
- 3 files changed, 10 insertions(+), 5 deletions(-)
+ drivers/vfio/pci/vfio_pci_rdwr.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
-index 1e99514fb7ae3db4..5f60248cb46873ea 100644
---- a/arch/s390/kernel/perf_cpum_sf.c
-+++ b/arch/s390/kernel/perf_cpum_sf.c
-@@ -981,7 +981,7 @@ static void cpumsf_pmu_disable(struct pmu *pmu)
- 	cpuhw->flags &= ~PMU_F_ENABLED;
- }
+diff --git a/drivers/vfio/pci/vfio_pci_rdwr.c b/drivers/vfio/pci/vfio_pci_rdwr.c
+index 66b72c289284..a0595c745732 100644
+--- a/drivers/vfio/pci/vfio_pci_rdwr.c
++++ b/drivers/vfio/pci/vfio_pci_rdwr.c
+@@ -16,6 +16,7 @@
+ #include <linux/io.h>
+ #include <linux/vfio.h>
+ #include <linux/vgaarb.h>
++#include <linux/io-64-nonatomic-lo-hi.h>
  
--/* perf_exclude_event() - Filter event
-+/* perf_event_exclude() - Filter event
-  * @event:	The perf event
-  * @regs:	pt_regs structure
-  * @sde_regs:	Sample-data-entry (sde) regs structure
-@@ -990,7 +990,7 @@ static void cpumsf_pmu_disable(struct pmu *pmu)
-  *
-  * Return non-zero if the event shall be excluded.
-  */
--static int perf_exclude_event(struct perf_event *event, struct pt_regs *regs,
-+static int perf_event_exclude(struct perf_event *event, struct pt_regs *regs,
- 			      struct perf_sf_sde_regs *sde_regs)
- {
- 	if (event->attr.exclude_user && user_mode(regs))
-@@ -1073,7 +1073,7 @@ static int perf_push_sample(struct perf_event *event,
- 	data.tid_entry.pid = basic->hpp & LPP_PID_MASK;
+ #include "vfio_pci_priv.h"
  
- 	overflow = 0;
--	if (perf_exclude_event(event, &regs, sde_regs))
-+	if (perf_event_exclude(event, &regs, sde_regs))
- 		goto out;
- 	if (perf_event_overflow(event, &data, &regs)) {
- 		overflow = 1;
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index bf831b1485ff5b3a..8333f132f4a96cff 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1690,6 +1690,8 @@ static inline int perf_allow_tracepoint(struct perf_event_attr *attr)
- 	return security_perf_event_open(attr, PERF_SECURITY_TRACEPOINT);
- }
- 
-+extern int perf_exclude_event(struct perf_event *event, struct pt_regs *regs);
-+
- extern void perf_event_init(void);
- extern void perf_tp_event(u16 event_type, u64 count, void *record,
- 			  int entry_size, struct pt_regs *regs,
-@@ -1895,6 +1897,10 @@ static inline u64 perf_event_pause(struct perf_event *event, bool reset)
- {
- 	return 0;
- }
-+static inline int perf_exclude_event(struct perf_event *event, struct pt_regs *regs)
-+{
-+	return 0;
-+}
- #endif
- 
- #if defined(CONFIG_PERF_EVENTS) && defined(CONFIG_CPU_SUP_INTEL)
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 4c6f6c286b2d8d1d..1089c41b63c1e683 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10081,8 +10081,7 @@ static void perf_swevent_event(struct perf_event *event, u64 nr,
- 	perf_swevent_overflow(event, 0, data, regs);
- }
- 
--static int perf_exclude_event(struct perf_event *event,
--			      struct pt_regs *regs)
-+int perf_exclude_event(struct perf_event *event, struct pt_regs *regs)
- {
- 	if (event->hw.state & PERF_HES_STOPPED)
- 		return 1;
 -- 
-2.47.0.338.g60cca15819-goog
+2.34.1
 
 
