@@ -1,227 +1,215 @@
-Return-Path: <linux-s390+bounces-7417-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-7419-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 163AA9E3E00
-	for <lists+linux-s390@lfdr.de>; Wed,  4 Dec 2024 16:17:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C65A9E3F1E
+	for <lists+linux-s390@lfdr.de>; Wed,  4 Dec 2024 17:05:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 12EACB34ADC
-	for <lists+linux-s390@lfdr.de>; Wed,  4 Dec 2024 14:36:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CB6B32857CF
+	for <lists+linux-s390@lfdr.de>; Wed,  4 Dec 2024 16:05:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E968209691;
-	Wed,  4 Dec 2024 14:36:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6696C20CCC7;
+	Wed,  4 Dec 2024 15:59:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d/N+NBeD"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L9iuDnc8"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D36D205AB3
-	for <linux-s390@vger.kernel.org>; Wed,  4 Dec 2024 14:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7552020FAA5
+	for <linux-s390@vger.kernel.org>; Wed,  4 Dec 2024 15:58:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733322978; cv=none; b=SHIFV1xZ7jO0orZBLm9kiYkz4RQX12+GQtTwsPbfo1wwtbJ0iqBNfBbRb23RMpM7d1w3O+n2sB2TNubMMc4ayZ1F5IrW0FCAFM6uhOP9qG7SjDD/8Jn18UZQuwo6qj4BPhznTQtEoJMSZiodZ7aFwPtboZ+qvgx0YHti3FFat94=
+	t=1733327941; cv=none; b=H59atalu5czuavOYwLV3LMvcHjAEc+jqlrtGKw1lU0mmWmu9FxjRk2vB97WSosWzYb0O1zbdG+Lnujo7IVPCIHG6ixVvMkuX7CWuZZ4oN5XdP0NzvIQBRxoLsIwC7UIwjWkwiCmfefTen/tYmxirSjadmdq0d+VcYGfHl7tXEwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733322978; c=relaxed/simple;
-	bh=0bmVTFLt+sSuwGomKHtqnx/4VeqH+qO24iiSXNbBrC8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AjMkpSOn+b6CrjPKXydyZvchWACub9yfkUp4eplmAGS7xdkQmwaoCu5GxGoVDmecJ8c5kcqvjnqr/cnVdOOtdSKU/me+022vWOClwx8e+ojGQDeQ6r78hlX0QsMr4ID5Y+z482f2G10+bO5+K6AdqFcx3awi5Cq+iXgmIoGPN+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d/N+NBeD; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5d0b922a637so6940168a12.1
-        for <linux-s390@vger.kernel.org>; Wed, 04 Dec 2024 06:36:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1733322975; x=1733927775; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AbAqviTrMDFEsTtVuuw8r7wXVGU0Ghm0Gjor+kN86R8=;
-        b=d/N+NBeDo+aFN6UpVAwGsjyR/CahMSWfKkk8jB3lB49aOF6MHsOam1xVkR/Duk8UwC
-         HFGG7mrjeRBPGCMdFSWwNTWd0EV3VStjDaX2nkmzGQRUtCVJBch7MDyLeENc9/6qalBr
-         y9n7K+nR6b9m687aXra6bvN8h6ZV8u2ovIGftx3wFKf9YXsGdREsiB0DG/U0rvinYfzZ
-         5kYCyqSQhYcZQxDDl5Ub4f4biMmIVew7Qhvi5ZmPc/tHft4WZ7kfTu7v3C1mg9mFtoUN
-         tVy5yTOgReUKdH7it23NmSpm6yfXnmKLKSo8qZu1ex494eRR0uvHXygDK9IVpid4Piuo
-         zaGQ==
+	s=arc-20240116; t=1733327941; c=relaxed/simple;
+	bh=MkIX+0Q7uVANQn1tUXSoOXDigaq3pzGNPuLxZollUPg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S8DfQgIe+gqtoBBJiEJhdc5FBjGxQlMYaAODBHZFbNUv7Ykqwa/rOUY4BqvBRhHE9HoeoRyjvZsUYLZV0crTcihS3M46p/e2k58eFUYY/BV5Lq3bzENiUF3NevFjkb387zObMWWVy/Aa7LxjvqOiVx9vf9rujGgqwahs4jmc+3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L9iuDnc8; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1733327938;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=PKbyfYlEzsBujPEJXUvTgJm5gyk4gXBwn1S2KY6PxE0=;
+	b=L9iuDnc8SdhvbPBYy/7F5qniOwSf7SbrFE0ZBFzdXaDToPjcmlOHVFme+asyEKjWziI05T
+	T97sEsfQqNqqLcIN6wuL4Tkge7MHFIeuMMdaPsLMamlE0vCnZQPxi8YQnrNGOlTtI3RBfL
+	NHE6DcGPMHyPCy8C/9xGO6U1BDXczZY=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-128-fK-dcKD6PbGv43FZNxl-Pg-1; Wed, 04 Dec 2024 10:58:57 -0500
+X-MC-Unique: fK-dcKD6PbGv43FZNxl-Pg-1
+X-Mimecast-MFC-AGG-ID: fK-dcKD6PbGv43FZNxl-Pg
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4349c5e58a3so57079295e9.2
+        for <linux-s390@vger.kernel.org>; Wed, 04 Dec 2024 07:58:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733322975; x=1733927775;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AbAqviTrMDFEsTtVuuw8r7wXVGU0Ghm0Gjor+kN86R8=;
-        b=j7T/gmiaX93/3DD1/toAb45c0buliLim0Fl5SYmSNaTz8H26uSwAOh/6UUIO6E26hO
-         Lqq3wVEv1wB9WP0UaNwWKbXe0DvVLLTMoXkSNN0HTLKkI1YmoYT8HeGJ38gPtQ9xmzc9
-         av1i7uO+3AUIo+zsGYgo67tr7CdXRVNkGnqtA+wHWyudIU0rIgzgtrEcYX77JFIn9lcD
-         8L6ZXSv6oTwNLrfw+kKFccvm0AWXBqH0fUxSM0ihWW9o1oHUphpG+qhsDt3IsD3V0mHu
-         d6fx4sQ/xnCu3FUfT819+8pGLBqwESs7wf6wllzkN6T32bhvl5CfxFRQVk6M1SS6tZDh
-         xg/w==
-X-Forwarded-Encrypted: i=1; AJvYcCU0qFWCgtRz0Eefp5vmz3HXaCIeVk3bGrZJdp/w4rMY5zowWShiz5nVIU3GnXiRdKXbYRNXW7CpZP28@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcgiZEsjy++vJSdz7GhSv8r6h5SlbpSRfgz8f8VUyqwRGDU9Pv
-	PEODqNaGOq8bCCra+2JQUSp69eCf0as0IAn1249WUPiLdhUy3wLm8DYdSoJzi/nSHB7TeAsy5Vr
-	3YQB6YbONsQ/RZkBGMWeRqY1pcTQEjwqi/5Xl
-X-Gm-Gg: ASbGncsr00SPM/aD6GBfFgOOsEhhOWdzkVJ+tMs47w13fK5v6DTCNlKlJtIA5xiZfYF
-	9U6eqo+CJT086Lq9gqb2Yel/Qk0RRMYEt
-X-Google-Smtp-Source: AGHT+IGqiljbVJjmQnZSRdM2ia+5ZMDXyoUQDvZMEhHDr/1UgtgLahldyAAKyV3ach4I6XtjDqMwCUGI8KTP1sEJZS4=
-X-Received: by 2002:a05:6402:4405:b0:5d0:aa2d:6eee with SMTP id
- 4fb4d7f45d1cf-5d10cb8017fmr5185516a12.26.1733322974391; Wed, 04 Dec 2024
- 06:36:14 -0800 (PST)
+        d=1e100.net; s=20230601; t=1733327936; x=1733932736;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PKbyfYlEzsBujPEJXUvTgJm5gyk4gXBwn1S2KY6PxE0=;
+        b=A58yTy4Qq13tmvdwAwlxah2uggWDwrePn62FA8dXbZh8f2F1xPF+PKCKeAM6GZWEb3
+         5OH/y1I9tEQ1CCMOTMBhQKyBfLJo3ELkoaM8xa4INKFllItPdZLYFxQcH+gCHX5z03PK
+         D8jpal+bQfcX4RtUt2NL2sv+DxRuKUXY4UAORw1gE/aXhRDF7T249JW0hqG9RJndjF2h
+         4FubJ6cz7DZ6vcCNQPtRpKDpyqXQTP7uyNrXFcPwSPdsABLYIhuoTIqRQcqqji+4sVOo
+         WbHvdgFEXd6Aii0hwY19DMa/GwD5YWfWtIqP4ZRm6B+DbFa3Spxg5wrgW4XCEbuPm2Mh
+         bDQw==
+X-Forwarded-Encrypted: i=1; AJvYcCXRd5ycmvmcvGb+c7FQbsklxj7M+PPWvqa2n9+en56d6W/MF/TxYU5PLoS8NiEaRdohWxtxLuPdSjGF@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5v7yqTEVRnujEyAVXFV3mhHmfUNJqYXEhk9oYK3JBFnYLxBPO
+	YImJuaJZBbVWUHjPipHXCP14AhBmbcfDaUZlWCVxqNkQg47mGS1jx4hWVtHgJJIcxHYVH8HXf6U
+	Yqx2z1gzmnlkCCI5s44xgOnT+mIWyVenB17HU6Fqbuv5g9RWjxMW9aOqjVms=
+X-Gm-Gg: ASbGncuZAuXvBPeUhfjDfzFhwMBP6dQrUgvyfBowmt2HlE1EGiotMyRQz4sdoOQLhi9
+	xxBj64ysAiH3FAMnt5Dxxnb3XklzXqlzO1CnroIrRJrgoYHExCpqfujWWictymWyUDi2CrA5Kp5
+	q2o3Zb2XtqtHdwwgTuPNcrABvJn89NnoKW6DsFUiW0JdScNyvoBtWlCbae5PhbCsKMv259eW1Pw
+	+tIJjxKDYBoh1cWH9D3J2QI5ysQqDlFA7hacpCYOufIMP08IVrKRQljgRWnPFgpwFWKqCpJ8CB+
+	4la0eZycLeNuVWQPp0U0PbzWxp0qvs1hsx3UG8R79OUViU8sl8jhbMmusrsy3nAeu8yse+E4fbb
+	L1w==
+X-Received: by 2002:a5d:6d0a:0:b0:385:df87:28de with SMTP id ffacd0b85a97d-385fd433607mr5947955f8f.56.1733327936068;
+        Wed, 04 Dec 2024 07:58:56 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFdOQUBULKzvFzkHWqPRGxc1LuUQ7T34ds9Ipq4JMMTeGrEwEobbTL5YAOMuZklHAw/mSdAhw==
+X-Received: by 2002:a5d:6d0a:0:b0:385:df87:28de with SMTP id ffacd0b85a97d-385fd433607mr5947932f8f.56.1733327935659;
+        Wed, 04 Dec 2024 07:58:55 -0800 (PST)
+Received: from ?IPV6:2003:cb:c70b:e100:38d6:8aa1:11b0:a20a? (p200300cbc70be10038d68aa111b0a20a.dip0.t-ipconnect.de. [2003:cb:c70b:e100:38d6:8aa1:11b0:a20a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-385faec0c9dsm6142889f8f.20.2024.12.04.07.58.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Dec 2024 07:58:54 -0800 (PST)
+Message-ID: <cebb44b2-e258-43ff-80a5-6bd19c8edab8@redhat.com>
+Date: Wed, 4 Dec 2024 16:58:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241204140230.23858-1-wintera@linux.ibm.com> <CANn89i+DX-b4PM4R2uqtcPmztCxe_Onp7Vk+uHU4E6eW1H+=zA@mail.gmail.com>
-In-Reply-To: <CANn89i+DX-b4PM4R2uqtcPmztCxe_Onp7Vk+uHU4E6eW1H+=zA@mail.gmail.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Wed, 4 Dec 2024 15:36:03 +0100
-Message-ID: <CANn89iJZfKntPrZdC=oc0_8j89a7was90+6Fh=fCf4hR7LZYSQ@mail.gmail.com>
-Subject: Re: [PATCH net-next] net/mlx5e: Transmit small messages in linear skb
-To: Alexandra Winter <wintera@linux.ibm.com>
-Cc: Rahul Rameshbabu <rrameshbabu@nvidia.com>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Tariq Toukan <tariqt@nvidia.com>, Leon Romanovsky <leon@kernel.org>, David Miller <davem@davemloft.net>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	Nils Hoppmann <niho@linux.ibm.com>, netdev@vger.kernel.org, linux-s390@vger.kernel.org, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Thorsten Winkler <twinkler@linux.ibm.com>, 
-	Simon Horman <horms@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Removing page->index
+To: Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-fsdevel@vger.kernel.org
+Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-s390@vger.kernel.org, Claudio Imbrenda <imbrenda@linux.ibm.com>
+References: <Z09hOy-UY9KC8WMb@casper.infradead.org>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <Z09hOy-UY9KC8WMb@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Dec 4, 2024 at 3:16=E2=80=AFPM Eric Dumazet <edumazet@google.com> w=
-rote:
->
-> On Wed, Dec 4, 2024 at 3:02=E2=80=AFPM Alexandra Winter <wintera@linux.ib=
-m.com> wrote:
-> >
-> > Linearize the skb if the device uses IOMMU and the data buffer can fit
-> > into one page. So messages can be transferred in one transfer to the ca=
-rd
-> > instead of two.
-> >
-> > Performance issue:
-> > ------------------
-> > Since commit 472c2e07eef0 ("tcp: add one skb cache for tx")
-> > tcp skbs are always non-linear. Especially on platforms with IOMMU,
-> > mapping and unmapping two pages instead of one per transfer can make a
-> > noticeable difference. On s390 we saw a 13% degradation in throughput,
-> > when running uperf with a request-response pattern with 1k payload and
-> > 250 connections parallel. See [0] for a discussion.
-> >
-> > This patch mitigates these effects using a work-around in the mlx5 driv=
-er.
-> >
-> > Notes on implementation:
-> > ------------------------
-> > TCP skbs never contain any tailroom, so skb_linearize() will allocate a
-> > new data buffer.
-> > No need to handle rc of skb_linearize(). If it fails, we continue with =
-the
-> > unchanged skb.
-> >
-> > As mentioned in the discussion, an alternative, but more invasive appro=
-ach
-> > would be: premapping a coherent piece of memory in which you can copy
-> > small skbs.
-> >
-> > Measurement results:
-> > --------------------
-> > We see an improvement in throughput of up to 16% compared to kernel v6.=
-12.
-> > We measured throughput and CPU consumption of uperf benchmarks with
-> > ConnectX-6 cards on s390 architecture and compared results of kernel v6=
-.12
-> > with and without this patch.
-> >
-> > +------------------------------------------+
-> > | Transactions per Second - Deviation in % |
-> > +-------------------+----------------------+
-> > | Workload          |                      |
-> > |  rr1c-1x1--50     |          4.75        |
-> > |  rr1c-1x1-250     |         14.53        |
-> > | rr1c-200x1000--50 |          2.22        |
-> > | rr1c-200x1000-250 |         12.24        |
-> > +-------------------+----------------------+
-> > | Server CPU Consumption - Deviation in %  |
-> > +-------------------+----------------------+
-> > | Workload          |                      |
-> > |  rr1c-1x1--50     |         -1.66        |
-> > |  rr1c-1x1-250     |        -10.00        |
-> > | rr1c-200x1000--50 |         -0.83        |
-> > | rr1c-200x1000-250 |         -8.71        |
-> > +-------------------+----------------------+
-> >
-> > Note:
-> > - CPU consumption: less is better
-> > - Client CPU consumption is similar
-> > - Workload:
-> >   rr1c-<bytes send>x<bytes received>-<parallel connections>
-> >
-> >   Highly transactional small data sizes (rr1c-1x1)
-> >     This is a Request & Response (RR) test that sends a 1-byte request
-> >     from the client and receives a 1-byte response from the server. Thi=
-s
-> >     is the smallest possible transactional workload test and is smaller
-> >     than most customer workloads. This test represents the RR overhead
-> >     costs.
-> >   Highly transactional medium data sizes (rr1c-200x1000)
-> >     Request & Response (RR) test that sends a 200-byte request from the
-> >     client and receives a 1000-byte response from the server. This test
-> >     should be representative of a typical user's interaction with a rem=
-ote
-> >     web site.
-> >
-> > Link: https://lore.kernel.org/netdev/20220907122505.26953-1-wintera@lin=
-ux.ibm.com/#t [0]
-> > Suggested-by: Rahul Rameshbabu <rrameshbabu@nvidia.com>
-> > Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
-> > Co-developed-by: Nils Hoppmann <niho@linux.ibm.com>
-> > Signed-off-by: Nils Hoppmann <niho@linux.ibm.com>
-> > ---
-> >  drivers/net/ethernet/mellanox/mlx5/core/en_tx.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c b/drivers/=
-net/ethernet/mellanox/mlx5/core/en_tx.c
-> > index f8c7912abe0e..421ba6798ca7 100644
-> > --- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
-> > +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
-> > @@ -32,6 +32,7 @@
-> >
-> >  #include <linux/tcp.h>
-> >  #include <linux/if_vlan.h>
-> > +#include <linux/iommu-dma.h>
-> >  #include <net/geneve.h>
-> >  #include <net/dsfield.h>
-> >  #include "en.h"
-> > @@ -269,6 +270,10 @@ static void mlx5e_sq_xmit_prepare(struct mlx5e_txq=
-sq *sq, struct sk_buff *skb,
-> >  {
-> >         struct mlx5e_sq_stats *stats =3D sq->stats;
-> >
-> > +       /* Don't require 2 IOMMU TLB entries, if one is sufficient */
-> > +       if (use_dma_iommu(sq->pdev) && skb->truesize <=3D PAGE_SIZE)
-> > +               skb_linearize(skb);
-> > +
-> >         if (skb_is_gso(skb)) {
-> >                 int hopbyhop;
-> >                 u16 ihs =3D mlx5e_tx_get_gso_ihs(sq, skb, &hopbyhop);
-> > --
-> > 2.45.2
->
->
-> Was this tested on x86_64 or any other arch than s390, especially ones
-> with PAGE_SIZE =3D 65536 ?
+On 03.12.24 20:51, Matthew Wilcox wrote:
+> I've pushed out a new tree to
+> git://git.infradead.org/users/willy/pagecache.git shrunk-page
+> aka
+> http://git.infradead.org/?p=users/willy/pagecache.git;a=shortlog;h=refs/heads/shrunk-page
+> 
+> The observant will notice that it doesn't actually shrink struct page
+> yet.  However, we're getting close.  What it does do is rename
+> page->index to page->__folio_index to prevent new users of page->index
+> from showing up.
 
-I would suggest the opposite : copy the headers (typically less than
-128 bytes) on a piece of coherent memory.
+BTW, I was wondering how often we convert a page to a folio to then 
+access folio->index / folio->mapping and not actually having a folio (in 
+the future).
 
-As a bonus, if skb->len is smaller than 256 bytes, copy the whole skb.
+I suspect this will need quite some changes to get it right, and I would 
+count that as "less obvious".
 
-include/net/tso.h and net/core/tso.c users do this.
+Calling PageAnon() on anything mapped into user space page tables might 
+be one such case, for example.
 
-Sure, patch is going to be more invasive, but all arches will win.
+> 
+> There are (I believe) three build failures in that tree:
+> 
+>   - fb_defio
+>   - fbtft
+>   - s390's gmap (and vsie?  is that the same thing?)
+
+Not completely (vsie (nested VMs) uses shadow gmap, ordinary VMs use 
+ordinary gmap) , but they are very related (-> KVM implementation on s390x).
+
+I know that Claudio is working on some changes, but not sure how that 
+would affect gmap's usage of page->index.
+
+s390x gmap is 64bit only, so we have to store stuff in 8byte. gmap page 
+tables are
+
+Maybew e could simply switch from page->index to page->private? But I 
+lost track if that will also be gone in the near future :)
+
+> 
+> Other than that, allmodconfig builds on x86 and I'm convinced the build
+> bots will tell me about anything else I missed.
+> 
+> Lorenzo is working on fb_defio and fbtft will come along for the ride
+> (it's a debug printk, so could just be deleted).
+> 
+> s390 is complicated.  I'd really appreciate some help.
+> 
+> The next step is to feed most of the patches through the appropriate
+> subsystems.  Some have already gone into various maintainer trees
+> (thanks!)
+> 
+> 
+> There are still many more steps to go after this; eliminating memcg_data
+> is closest to complete, and after that will come (in some order)
+> eliminating ->lru, ->mapping, ->refcount and ->mapcount. 
+
+Will continue working on the latter ;)
+
+-- 
+Cheers,
+
+David / dhildenb
+
 
