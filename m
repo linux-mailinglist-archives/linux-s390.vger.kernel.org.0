@@ -1,193 +1,227 @@
-Return-Path: <linux-s390+bounces-7395-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-7398-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0AAE39E3792
-	for <lists+linux-s390@lfdr.de>; Wed,  4 Dec 2024 11:34:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9E739E38AE
+	for <lists+linux-s390@lfdr.de>; Wed,  4 Dec 2024 12:22:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BF5C9281E46
-	for <lists+linux-s390@lfdr.de>; Wed,  4 Dec 2024 10:34:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7A830282C54
+	for <lists+linux-s390@lfdr.de>; Wed,  4 Dec 2024 11:22:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 720131BD9E9;
-	Wed,  4 Dec 2024 10:31:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A18591B2522;
+	Wed,  4 Dec 2024 11:22:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kaFXz3tY"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bWzMLmK6"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A0B1DE4E0
-	for <linux-s390@vger.kernel.org>; Wed,  4 Dec 2024 10:31:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8EF61B2188;
+	Wed,  4 Dec 2024 11:22:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733308285; cv=none; b=k/bI97haES0hWOkDeIBs1xbiGbHVbC/5Itqg9wHai2k/xslT5NBjMVcqGe/I4PGqzPy8N8URBeomWNUuJyvDl3rkNNYVb3qAM/IXHFDZNwf15axmnakEfdHCc1+Ayvb+d50dGWO82Qu8MrsDwWeoUuB6dZSKTM+YHRhju+8vIV4=
+	t=1733311365; cv=none; b=nMMECPFoG2mpHBN+The37VdNJHS0/uxuLZ92G3Blg/5R1bJIW2bf2U+QMWVaZWdFaf7R2JITDHcF0XVCUZSRbjaHp3pX3aUBVcGz01LnP1/wxnD9kf8NMoFYvf4A3oV5gskuz3Zt8ujPkDqYX0Y8GqRwYsp8CO2V+r4z8/h86GM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733308285; c=relaxed/simple;
-	bh=vAsH6MnaEk9q60JG7f9rI5ko+v1PT6qYTJsjyeNqYbI=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=ZMfpPpMPvmzPL370VgSW/aKFIGkiIK5pkK8aHaW6UbDFynTdbGOl1QXYSSXXy5ENzPPR1xDBUO5ewJQ75kP7c29xvk6GANiigSw9cjVWlqyExk00Xfn/4IWcq37cgUihuT2t7evI4p5cyImslmWNsdqafnLk8ZT6qe0U2nVLpPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kaFXz3tY; arc=none smtp.client-ip=209.85.222.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-85bc5d0509bso734432241.1
-        for <linux-s390@vger.kernel.org>; Wed, 04 Dec 2024 02:31:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1733308282; x=1733913082; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=MHZqGoUWlClziZon67vL+ZIDd0uUbSc5vRlqScvdhAg=;
-        b=kaFXz3tY0GIbrT1g86GIl81ycSxWM5x/AYiH1t7zEmCioFYr3RPsV0/V7/JF3cYCzE
-         Z0b/7d0FWEHLBD8QMTmMDV55NOqy7WIyRnO6ZWa5ZLQ4G5i+vlPE19nlIZLTKe4w+8du
-         Oyw2oqRkwc5R9NFRZEkXmb64szvafHkK9RmwBbXTR9aY2WzCve8y69lAOCyk9KWtFUA2
-         AE9WEnzm/9C1QGOgZ4BS9F4XZCQxsdruZt4tnPcdRszREbAgo2dJq9lc0ZNLxNIZoi9B
-         cWVRjFhyH3Mw3d2iOwVsZwVx08mKPBzfBehuHzCkOAruWN90WcbvfijtNHynBNO/ontZ
-         Nsbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733308282; x=1733913082;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MHZqGoUWlClziZon67vL+ZIDd0uUbSc5vRlqScvdhAg=;
-        b=VtTDmksi9Royj201dh40C5yVW51rB60bhDpyxnr0JOIkkC6r0s1BmFQr4hIndEuBC8
-         Jj6LI371tyXETOurjiHQ8D+y4CBC8NK0QvjdG383oEBYFfnJ9PpFdivEw73ua0tpFuDw
-         ZQflPyP/rKVAyr4EF+V7X0O97GSpkJUNlaUdJ9nN+btsAXFYhd5VRCHGgla3r5Ixk4EW
-         elFwc+/NMwQifvBtz/BL/MJ8CGZMgUhe/cza3Gry8OqxvjOD0hvyBgDsi/HpWz4FB/CO
-         RqeoqcrIRoQByDkqBwBSfpHL+v2n0nB7aqZiEfgSUjrOlwcUelPkoay9zYHN57qfu0ce
-         QTsA==
-X-Gm-Message-State: AOJu0Yy4tVttF4DsO1sPf5TMMyhYe2Sjk82mHc4W+GRZ7YIT+oo9y40p
-	y7pPeqikGioGbrGETGGI2pSsPuwN1tX1i29vQRS1CHZg+iMb36yUjPBZUmTZPBYOoCe295oDifG
-	I1XbsJqmZQ/B2CfPaa+088RWL9jzxplbjs9pX0nCqayv7OO/FQy8=
-X-Gm-Gg: ASbGncu7kvq+/jMD2JvVQl3Vg/SJ9v6ExQ6sMOF5Se6D4dz+rZtZtQFQFhTPJUXiWIp
-	0FMR4YF4ky36toqdKEtkX7mS9uIgSEfxb
-X-Google-Smtp-Source: AGHT+IGzmWUJVmPN1eOgu9kN8rAcGofAl+lpuZp+XiCWblexF4Qy5RN+9yN7Hxl4Y5rZ7gNdO/a89AZ+ZMppZu2Bfcc=
-X-Received: by 2002:a05:6102:26d5:b0:4af:3fc1:e02 with SMTP id
- ada2fe7eead31-4af973825d7mr6798788137.27.1733308281831; Wed, 04 Dec 2024
- 02:31:21 -0800 (PST)
+	s=arc-20240116; t=1733311365; c=relaxed/simple;
+	bh=cG4X1g+Cyw5ORMuTSCacksTgm8Zr2q4a2ZuM9e6OGeQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Wmnh0Zv46SsYO4Srgp11bSHlz1SDywfast6azrI1UOA56dghGhht+6/vhsdqjkQXypNXUDguVP8pHHoNwqYCRn1+rmbarfrp8psaspOewF3LffnTJXwEH3v2UGDEpelFY45qJx3NXFwylEOWeYx3OCUciQbNFZKc1/m39a8818o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bWzMLmK6; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B49MwxA014510;
+	Wed, 4 Dec 2024 11:21:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=GxVgtAf8P4SUMfimwoMw6gyNiS7g+I6hF1pNORe1k
+	94=; b=bWzMLmK6vs09Tuitg27Katu2V6KjG+Nx/X8Foq912FmIe6IALNf05ZYfd
+	X0Fb0HM5GEeoKlkJEyQAcPp1Bu0tiDH1kZ1YMtAnsG3nGsefSdMVkwXzNf3uLtF9
+	tY1ifzaaZJr6kz3hnMkkPEc/Kvw50iQUnKcVKzecWkIUI3JnG0GP362d9gcNX2jX
+	JgmLvEbg+O2nBnd+bpYwBAYxwubaCJCXGrafGW+u2zW3ByX3xNbM9IsUlyWOKCod
+	zIperZZrd1oT+GXM/J+Kkh0KWF3ikU/UJeNFYIo4IXTmQXWbiwuyUgGXuwwGomiI
+	kFy+6ap9NkbpF/EiJzxhk+8erc39g==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 437tbxq27w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Dec 2024 11:21:56 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4B4BF5vC031019;
+	Wed, 4 Dec 2024 11:21:55 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 437tbxq27s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Dec 2024 11:21:55 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4B4B1xuk031778;
+	Wed, 4 Dec 2024 11:21:54 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 438ehm0j0s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Dec 2024 11:21:54 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4B4BLpWh48234856
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 4 Dec 2024 11:21:51 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 290F920043;
+	Wed,  4 Dec 2024 11:21:51 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6A84D20040;
+	Wed,  4 Dec 2024 11:21:50 +0000 (GMT)
+Received: from IBM-PW0CRK36.ibm.com (unknown [9.171.34.7])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  4 Dec 2024 11:21:50 +0000 (GMT)
+From: Tobias Huschle <huschle@linux.ibm.com>
+To: linux-kernel@vger.kernel.org
+Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        vschneid@redhat.com, linux-s390@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sshegde@linux.ibm.com
+Subject: [RFC PATCH 0/2] sched/fair: introduce new scheduler group type group_parked
+Date: Wed,  4 Dec 2024 12:21:47 +0100
+Message-Id: <20241204112149.25872-1-huschle@linux.ibm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 4 Dec 2024 16:01:09 +0530
-Message-ID: <CA+G9fYsD7mw13wredcZn0L-KBA3yeoVSTuxnss-AEWMN3ha0cA@mail.gmail.com>
-Subject: s390: block/blk-iocost.c:1101:11: error: call to '__compiletime_assert_557'
- declared with 'error' attribute: clamp() low limit 1 greater than high limit active
-To: linux-s390@vger.kernel.org, clang-built-linux <llvm@lists.linux.dev>, 
-	linux-block <linux-block@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Anders Roxell <anders.roxell@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Jens Axboe <axboe@kernel.dk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: LuHQQqjJCkWme8YbWMlpHYJZ0yP3ZBEy
+X-Proofpoint-GUID: XLRTwxkGZFuGw3gP5EDeUtRaL_gio7WX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 impostorscore=0
+ mlxscore=0 suspectscore=0 mlxlogscore=999 priorityscore=1501 bulkscore=0
+ phishscore=0 adultscore=0 malwarescore=0 spamscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2412040086
 
-The s390 builds failed with clang-19 with defconfig on the
-Linux next-20241203 tag due to following build warnings / errors.
-Build pass with gcc-13 defconfig for s390.
+Adding a new scheduler group type which allows to remove all tasks 
+from certain CPUs through load balancing can help in scenarios where
+such CPUs are currently unfavorable to use, for example in a 
+virtualized environment.
 
-First seen on Linux next-20241203 tag
-GOOD: Linux next-20241128 tag
-BAD: Linux next-20241203 tag
+Functionally, this works as intended. The question would be, if this
+could be considered to be added and would be worth going forward 
+with. If so, which areas would need additional attention? 
+Some cases are referenced below.
 
-List of arch and toolchains :
-  s390 defconfig with clang-19
+The underlying concept and the approach of adding a new scheduler 
+group type were presented in the Sched MC of the 2024 LPC.
+A short summary:
 
-s390:
-  build:
-    * clang-19-defconfig
-    * korg-clang-19-lkftconfig-lto-full
-    * korg-clang-19-lkftconfig-hardening
-    * korg-clang-19-lkftconfig-lto-thing
+Some architectures (e.g. s390) provide virtualization on a firmware
+level. This implies, that Linux kernels running on such architectures
+run on virtualized CPUs.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Like in other virtualized environments, the CPUs are most likely shared
+with other guests on the hardware level. This implies, that Linux
+kernels running in such an environment may encounter 'steal time'. In
+other words, instead of being able to use all available time on a
+physical CPU, some of said available time is 'stolen' by other guests.
 
-Build log:
-===========
-block/blk-iocost.c:1101:11: error: call to '__compiletime_assert_557'
-declared with 'error' attribute: clamp() low limit 1 greater than high
-limit active
- 1101 |                 inuse = clamp_t(u32, inuse, 1, active);
-      |                         ^
-include/linux/minmax.h:218:36: note: expanded from macro 'clamp_t'
-  218 | #define clamp_t(type, val, lo, hi) __careful_clamp(type, val, lo, hi)
-      |                                    ^
-include/linux/minmax.h:195:2: note: expanded from macro '__careful_clamp'
-  195 |         __clamp_once(type, val, lo, hi, __UNIQUE_ID(v_),
-__UNIQUE_ID(l_), __UNIQUE_ID(h_))
-      |         ^
-include/linux/minmax.h:188:2: note: expanded from macro '__clamp_once'
-  188 |         BUILD_BUG_ON_MSG(statically_true(ulo > uhi),
-                 \
-      |         ^
-note: (skipping 2 expansions in backtrace; use
--fmacro-backtrace-limit=0 to see all)
-include/linux/compiler_types.h:530:2: note: expanded from macro
-'_compiletime_assert'
-  530 |         __compiletime_assert(condition, msg, prefix, suffix)
-      |         ^
-include/linux/compiler_types.h:523:4: note: expanded from macro
-'__compiletime_assert'
-  523 |                         prefix ## suffix();
-         \
-      |                         ^
-<scratch space>:38:1: note: expanded from here
-   38 | __compiletime_assert_557
-      | ^
-block/blk-iocost.c:1101:11: error: call to '__compiletime_assert_557'
-declared with 'error' attribute: clamp() low limit 1 greater than high
-limit active
-include/linux/minmax.h:218:36: note: expanded from macro 'clamp_t'
-  218 | #define clamp_t(type, val, lo, hi) __careful_clamp(type, val, lo, hi)
-      |                                    ^
-include/linux/minmax.h:195:2: note: expanded from macro '__careful_clamp'
-  195 |         __clamp_once(type, val, lo, hi, __UNIQUE_ID(v_),
-__UNIQUE_ID(l_), __UNIQUE_ID(h_))
-      |         ^
-include/linux/minmax.h:188:2: note: expanded from macro '__clamp_once'
-  188 |         BUILD_BUG_ON_MSG(statically_true(ulo > uhi),
-                 \
-      |         ^
-note: (skipping 2 expansions in backtrace; use
--fmacro-backtrace-limit=0 to see all)
-include/linux/compiler_types.h:530:2: note: expanded from macro
-'_compiletime_assert'
-  530 |         __compiletime_assert(condition, msg, prefix, suffix)
-      |         ^
-include/linux/compiler_types.h:523:4: note: expanded from macro
-'__compiletime_assert'
-  523 |                         prefix ## suffix();
-         \
-      |                         ^
-<scratch space>:38:1: note: expanded from here
-   38 | __compiletime_assert_557
-      | ^
-2 errors generated.
+This can cause side effects if a guest is interrupted at an unfavorable
+point in time or if the guest is waiting for one of its other virtual 
+CPUs to perform certain actions while those are suspended in favour of 
+another guest.
 
-Links:
----
-- https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20241203/testrun/26188938/suite/build/test/clang-19-defconfig/log
-- https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20241203/testrun/26188938/suite/build/test/clang-19-defconfig/history/
-- https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20241203/testrun/26188938/suite/build/test/clang-19-defconfig/details/
+Architectures, like arch/s390, address this issue by providing an
+alternative classification for the CPUs seen by the Linux kernel.
 
-Steps to reproduce:
-------------
-# tuxmake --runtime podman --target-arch s390 --toolchain clang-19
---kconfig defconfig LLVM_IAS=1
+The following example is arch/s390 specific:
+In the default mode (horizontal CPU polarization), all CPUs are treated
+equally and can be subject to steal time equally. 
+In the alternate mode (vertical CPU polarization), the underlying
+firmware hypervisor assigns the CPUs, visible to the guest, different
+types, depending on how many CPUs the guest is entitled to use. Said
+entitlement is configured by assigning weights to all active guests.
+The three CPU types are:
+    - vertical high   : On these CPUs, the guest has always highest
+                        priority over other guests. This means
+                        especially that if the guest executes tasks on
+                        these CPUs, it will encounter no steal time.
+    - vertical medium : These CPUs are meant to cover fractions of
+                        entitlement.
+    - vertical low    : These CPUs will have no priority when being
+                        scheduled. This implies especially, that while
+                        all other guests are using their full
+                        entitlement, these CPUs might not be ran for a
+                        significant amount of time.
 
-metadata:
-----
-  git describe: next-20241203
-  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-  git sha: c245a7a79602ccbee780c004c1e4abcda66aec32
-  kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2pjAPS9UrJkbAKFHktQei7eqW4Y/config
-  build url: https://storage.tuxsuite.com/public/linaro/lkft/builds/2pjAPS9UrJkbAKFHktQei7eqW4Y/
-  toolchain: clang-19
-  config: clang-19-defconfig
-  arch: s390
+As a consequence, using vertical lows while the underlying hypervisor
+experiences a high load, driven by all defined guests, is to be avoided.
 
---
-Linaro LKFT
-https://lkft.linaro.org
+In order to consequently move tasks off of vertical lows, introduce a
+new type of scheduler groups: group_parked.
+Parked implies, that processes should be evacuated as fast as possible
+from these CPUs. This implies that other CPUs should start pulling tasks
+immediately, while the parked CPUs should refuse to pull any tasks
+themselves.
+Adding a group type beyond group_overloaded achieves the expected
+behavior. By making its selection architecture dependent, it has
+no effect on architectures which will not make use of that group type.
+
+This approach works very well for many kinds of workloads. Tasks are
+getting migrated back and forth in line with changing the parked
+state of the involved CPUs.
+
+There are a couple of issues and corner cases which need further
+considerations:
+- no_hz:        While the scheduler tick can and should still be disabled
+                on idle CPUs, it should not be disabled on parked CPUs
+                which run only one task, as that task will not be
+                scheduled away in time. Side effects and completeness
+                need to be further investigated. One option might be to
+                allow dynamic changes to tick_nohz_full_mask. It is also
+                possible to handle this in exclusively fair.c, but that 
+                seems not to be the best environment to do so.
+- pinned tasks: If a task is pinned to CPUs which are all parked, it will
+                get moved to other CPUs. Like during CPU hotplug, the 
+                information about the tasks initial CPU mask gets lost.
+- rt & dl:      Realtime and deadline scheduling require some additional 
+                attention. 
+- ext:          Probably affected as well. Needs some conceptional
+                thoughts first.
+- idle vs parked: It could be considered whether an idle parked CPU
+                would contribute to the count of idle CPUs. It is
+                usually preferable to utilize idle CPUs, but parked CPUs
+                should not be used. So a scheduler group with many idle, 
+                but parked, CPUs, should not be the target for additional 
+                workload. At this point, some more thought needs to be 
+                spent to evaluate if it would be ok to not set the idle 
+                flag on parked CPUs.
+- optimization: It is probably possible to cut some corners. In order to
+                avoid tampering with scheduler statistics too much, the
+                actions based on the parkedness on the CPU are not always
+                taken on the earliest possible occasion yet.
+- raciness:     Right now, there are no synchronization efforts. It needs
+                to be considered whether those might be necessary or if
+                it is alright that the parked-state of a CPU might change
+                during load-balancing. 
+
+Patches apply to tip:sched/core
+
+The s390 patch serves as a simplified implementation example.
+
+Tobias Huschle (2):
+  sched/fair: introduce new scheduler group type group_parked
+  s390/topology: Add initial implementation for selection of parked CPUs
+
+ arch/s390/include/asm/topology.h |   3 +
+ arch/s390/kernel/topology.c      |   5 ++
+ include/linux/sched/topology.h   |  20 +++++
+ kernel/sched/core.c              |  10 ++-
+ kernel/sched/fair.c              | 122 +++++++++++++++++++++++++------
+ 5 files changed, 135 insertions(+), 25 deletions(-)
+
+-- 
+2.34.1
+
 
