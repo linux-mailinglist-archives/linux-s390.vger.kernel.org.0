@@ -1,117 +1,99 @@
-Return-Path: <linux-s390+bounces-7406-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-7413-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 969169E3AED
-	for <lists+linux-s390@lfdr.de>; Wed,  4 Dec 2024 14:14:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 101E89E3BFE
+	for <lists+linux-s390@lfdr.de>; Wed,  4 Dec 2024 15:03:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B5B2DB30B43
-	for <lists+linux-s390@lfdr.de>; Wed,  4 Dec 2024 12:57:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C4FA1285EF1
+	for <lists+linux-s390@lfdr.de>; Wed,  4 Dec 2024 14:03:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC0E61F7594;
-	Wed,  4 Dec 2024 12:55:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA2761EE006;
+	Wed,  4 Dec 2024 14:03:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O6nHUCsJ"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dVie2Qfk"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137461F7080
-	for <linux-s390@vger.kernel.org>; Wed,  4 Dec 2024 12:55:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF07C1CEADF;
+	Wed,  4 Dec 2024 14:02:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733316910; cv=none; b=bJTqZXHPRC2H/gnj8oK8WHxozz3Fg6p4W6BgpLdABjoMlXxanx9S/1Z9DwJJOC1LR2T/tkM08vQSzs6KLOCeSfWMnMd2g33wrzKIAogolmuUyl1uQeu0Wrh6VhZtigS+WhiSJ1zftq/Act+EE+RQMw4wuxqordQpyKVwtIckgVM=
+	t=1733320980; cv=none; b=u8sG5ChJ34ztIX0lCI1dbDZjr+ZpnirSm15nwiCw7R1a2Jyqiu6K6LbP8z2xOeTl2rDoXjFme7wdaQcyi7XxuYwa1sHFT7SztdgnuzdlIeArIU9Apkg7G5SSdU0C2q99fcIH8Wx5xxrIQDC5OHRHrYvZGXD5bl8+DUdiAYdF2XI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733316910; c=relaxed/simple;
-	bh=GU+EylrtNkBl0PCgVUrji2d7nB4cQuMPE/K3NHw4YGM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NMAfUbaE3swduQoiz7um/zkgu0JmHYDNVGZdRg4bZcMr2kXz3TWYo8Wm8DZ7nglZMqYQk4FRctTRxuR6qREPBqbK/SnZk57X91BX1fJAvARecpbQNT2uEIwFpvJSuFQKUOcRYpw5voM0GkJ7J1sz0UzpCvrHHtYOkpub/CegNWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O6nHUCsJ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1733316908;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3TMBFu0zsYs/BK8mI3BuEemyVvVnFxsrbDwOUtwonV0=;
-	b=O6nHUCsJ7VBy/f4+kT+4tfTdhK/ev61TkwjjZmbff2s2hSLFi7tSIAgK3HtznPqESiFD67
-	3GPit59iFITU0dpq2t2encr920VrsREEynoNQas1dY6Twbx1LmfOX6U7FTd0C2wr16YROs
-	ko1dwVeLZENjU3yZ0sIbtda2Qki/U44=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-470-2VQirv0mOTuBtGyJtqBPrQ-1; Wed, 04 Dec 2024 07:55:07 -0500
-X-MC-Unique: 2VQirv0mOTuBtGyJtqBPrQ-1
-X-Mimecast-MFC-AGG-ID: 2VQirv0mOTuBtGyJtqBPrQ
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-385dfa9b758so2188674f8f.0
-        for <linux-s390@vger.kernel.org>; Wed, 04 Dec 2024 04:55:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733316906; x=1733921706;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3TMBFu0zsYs/BK8mI3BuEemyVvVnFxsrbDwOUtwonV0=;
-        b=nf1JrAUERSkoQ6yFlMn4T2kxtQpUrKvLBFnXxXX6nKOtR7YNtTXIXV7q304kJpJULY
-         G1I8++C2nQNSlruIG6+EIAJ5JjUl3Bn3zLDUiD62f0sNWb9ncc3+7zG45Rdiv35jNtl/
-         j7AEV3dLxMlTGAmS5zu6iE7Z1IRkzQslvYvqwpQt/PL/IxhNz0gDG9PG1D59jnKhNaMS
-         7LFbzZ+7gjD6+JN4Ipc/TP29h8IyrFA7FJtn7EPlxiTuBPcnkEKZWWRnY7EWTRlqNuz6
-         hr6tVvxgyeC5mMA04yXzLQ0cLGLSMy5DP1c61laXPDnGRBMUN3whj5u3pQfVRNW/rTbU
-         uA5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUpAeaXvfuZKAtEyhW9UIqWVZqG40CflpybLfjtaPdOblN+gKuJhQswzESxoQB+blYvtpXkptfIlZL6@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTqNs8Yv49ZMqx7vdxziqNDfdUerQRCLltaYGdYknJjiURWNKF
-	1w5w8uJKALdApn2pclp36tU/OWvTCMNEnSSchP8gh6PMDo4l4emurxgppORePY1AtgPgJGjaTLk
-	thRxsQdXqZNWHMgDPU0OHDVungCDl2jmeyaEIpJWTnADr3+u2wHkvZjDS7bo=
-X-Gm-Gg: ASbGncvp126qA3Y7Pf3du8itY/u0mUNU+q24kHYlZtIoQKtmYriaN/8SnlagyUyTaCh
-	SC6C8RYDOxbzNNY1YKhKXEAIu9WehKrNVazW9MU9jywfcMoKC8l8ddcNYt/BnGJhWO8zCY/j/eR
-	uSKZSodpkOoR04Chhm4a5bvxaY1iqkJGfpE11juvRH7kwKmCOFnQbGxW22ci9zTP0KURfqFTBej
-	VKiVpr5NL1cUwIL3e3EvCHO/9HZ6xVKQZC1WNeW6j8/vcHNBHVELDFTwij0vmDXjyK8OU0ExXEI
-	GKv9pPetRuV/G2910maL/QPenWVCXULPLAs=
-X-Received: by 2002:a05:6000:156e:b0:385:fa2e:a33e with SMTP id ffacd0b85a97d-38607c0e1e7mr3561613f8f.43.1733316905766;
-        Wed, 04 Dec 2024 04:55:05 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH3Vs5XvVpD9wVjl4Do+O4dwdUFKsmLeUCgsK0LBk5udBDNdRPox9DV3gXL42llKQONJirIJg==
-X-Received: by 2002:a05:6000:156e:b0:385:fa2e:a33e with SMTP id ffacd0b85a97d-38607c0e1e7mr3561572f8f.43.1733316905408;
-        Wed, 04 Dec 2024 04:55:05 -0800 (PST)
-Received: from localhost (p200300cbc70be10038d68aa111b0a20a.dip0.t-ipconnect.de. [2003:cb:c70b:e100:38d6:8aa1:11b0:a20a])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-385ed8dee66sm10241947f8f.104.2024.12.04.04.55.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Dec 2024 04:55:04 -0800 (PST)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	linux-s390@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	kvm@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	David Hildenbrand <david@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	Baoquan He <bhe@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	Thomas Huth <thuth@redhat.com>,
-	Cornelia Huck <cohuck@redhat.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	Eric Farman <farman@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2 06/12] fs/proc/vmcore: factor out allocating a vmcore range and adding it to a list
-Date: Wed,  4 Dec 2024 13:54:37 +0100
-Message-ID: <20241204125444.1734652-7-david@redhat.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20241204125444.1734652-1-david@redhat.com>
-References: <20241204125444.1734652-1-david@redhat.com>
+	s=arc-20240116; t=1733320980; c=relaxed/simple;
+	bh=y0oAHHEAf/jLUw+oPniy2chA+dzwlDRLzGB7DxkGF4c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WShepuYQw7tWdVYX/LlfAVksFNVxLiOqfXx2qQY+lydX6737nQkgpcsNDeFII23WD1ku1HLctQBzEVgezt1PgiiacoW8qWOtY3OvVf+S2R5sgJ9WB5xzz4XMjAeu8jxqptKow/vB8blSJ6Hm8GobLG7vFVvPTYcjJTbj1if4UZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dVie2Qfk; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B480N9t005582;
+	Wed, 4 Dec 2024 14:02:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=kc+cLkePYKI1a0U9UKKEWLLtvUq4zsoHCKdEMA4A0
+	r4=; b=dVie2Qfk6MeL5ZJx9WHYQ/hkZJ+5jpHKQUbqaTwXi7pK3c2SdkY1GjFHh
+	geodkw/oOdQgDLqlp9cHHfV3pdthrc/7L4s1SL1CnK7hSyIvrLCl0IRcSX7i1pq+
+	09M7th65LYiMWKhOm2Xizv3rtbiIIwx00OQ0kzg58Qyo+7NtmJOKO2pkn4Kc38OH
+	2wGS+q9k6iDHarkP7z6dKlLrMwdPwWaO9TG5LrX7gN8Za1GbhGCA4GV17cVg63Sb
+	wrDoLHj8IZav77h7ddFGQA87sqmWvVTCdmjY8nOK20gGoh6yJc/k6FIZaC9UiM+H
+	M68UHB0ZvYw0vmmiGoArmuX1jAbtA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 437te98xd2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Dec 2024 14:02:36 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4B4DxFAF009627;
+	Wed, 4 Dec 2024 14:02:35 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 437te98xcx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Dec 2024 14:02:35 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4B4APEX7007467;
+	Wed, 4 Dec 2024 14:02:34 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 438f8jn0xv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Dec 2024 14:02:34 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4B4E2Vgn21234168
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 4 Dec 2024 14:02:31 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 401C02004B;
+	Wed,  4 Dec 2024 14:02:31 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 28BF320040;
+	Wed,  4 Dec 2024 14:02:31 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed,  4 Dec 2024 14:02:31 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55271)
+	id BA37DE0788; Wed, 04 Dec 2024 15:02:30 +0100 (CET)
+From: Alexandra Winter <wintera@linux.ibm.com>
+To: Rahul Rameshbabu <rrameshbabu@nvidia.com>,
+        Saeed Mahameed <saeedm@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Andrew Lunn <andrew+netdev@lunn.ch>
+Cc: Nils Hoppmann <niho@linux.ibm.com>, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Thorsten Winkler <twinkler@linux.ibm.com>,
+        Simon Horman <horms@kernel.org>
+Subject: [PATCH net-next] net/mlx5e: Transmit small messages in linear skb
+Date: Wed,  4 Dec 2024 15:02:30 +0100
+Message-ID: <20241204140230.23858-1-wintera@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -119,105 +101,120 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 49W39RiHlGhq9C68PtpvaJtRfl09BlnE
+X-Proofpoint-ORIG-GUID: kU1xrMSuKHv2JksqzIUyy2V3I12o5UpA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
+ mlxscore=0 phishscore=0 adultscore=0 clxscore=1011 spamscore=0
+ malwarescore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412040107
 
-Let's factor it out into include/linux/crash_dump.h, from where we can
-use it also outside of vmcore.c later.
+Linearize the skb if the device uses IOMMU and the data buffer can fit
+into one page. So messages can be transferred in one transfer to the card
+instead of two.
 
-Acked-by: Baoquan He <bhe@redhat.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Performance issue:
+------------------
+Since commit 472c2e07eef0 ("tcp: add one skb cache for tx")
+tcp skbs are always non-linear. Especially on platforms with IOMMU,
+mapping and unmapping two pages instead of one per transfer can make a
+noticeable difference. On s390 we saw a 13% degradation in throughput,
+when running uperf with a request-response pattern with 1k payload and
+250 connections parallel. See [0] for a discussion.
+
+This patch mitigates these effects using a work-around in the mlx5 driver.
+
+Notes on implementation:
+------------------------
+TCP skbs never contain any tailroom, so skb_linearize() will allocate a
+new data buffer.
+No need to handle rc of skb_linearize(). If it fails, we continue with the
+unchanged skb.
+
+As mentioned in the discussion, an alternative, but more invasive approach
+would be: premapping a coherent piece of memory in which you can copy
+small skbs.
+
+Measurement results:
+--------------------
+We see an improvement in throughput of up to 16% compared to kernel v6.12.
+We measured throughput and CPU consumption of uperf benchmarks with
+ConnectX-6 cards on s390 architecture and compared results of kernel v6.12
+with and without this patch.
+
++------------------------------------------+
+| Transactions per Second - Deviation in % |
++-------------------+----------------------+
+| Workload          |                      |
+|  rr1c-1x1--50     |          4.75        |
+|  rr1c-1x1-250     |         14.53        |
+| rr1c-200x1000--50 |          2.22        |
+| rr1c-200x1000-250 |         12.24        |
++-------------------+----------------------+
+| Server CPU Consumption - Deviation in %  |
++-------------------+----------------------+
+| Workload          |                      |
+|  rr1c-1x1--50     |         -1.66        |
+|  rr1c-1x1-250     |        -10.00        |
+| rr1c-200x1000--50 |         -0.83        |
+| rr1c-200x1000-250 |         -8.71        |
++-------------------+----------------------+
+
+Note:
+- CPU consumption: less is better
+- Client CPU consumption is similar
+- Workload:
+  rr1c-<bytes send>x<bytes received>-<parallel connections>
+
+  Highly transactional small data sizes (rr1c-1x1)
+    This is a Request & Response (RR) test that sends a 1-byte request
+    from the client and receives a 1-byte response from the server. This
+    is the smallest possible transactional workload test and is smaller
+    than most customer workloads. This test represents the RR overhead
+    costs.
+  Highly transactional medium data sizes (rr1c-200x1000)
+    Request & Response (RR) test that sends a 200-byte request from the
+    client and receives a 1000-byte response from the server. This test
+    should be representative of a typical user's interaction with a remote
+    web site.
+
+Link: https://lore.kernel.org/netdev/20220907122505.26953-1-wintera@linux.ibm.com/#t [0]
+Suggested-by: Rahul Rameshbabu <rrameshbabu@nvidia.com>
+Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
+Co-developed-by: Nils Hoppmann <niho@linux.ibm.com>
+Signed-off-by: Nils Hoppmann <niho@linux.ibm.com>
 ---
- fs/proc/vmcore.c           | 21 ++-------------------
- include/linux/crash_dump.h | 14 ++++++++++++++
- 2 files changed, 16 insertions(+), 19 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_tx.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 8d262017ca11..9b72e255dd03 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -709,11 +709,6 @@ static const struct proc_ops vmcore_proc_ops = {
- 	.proc_mmap	= mmap_vmcore,
- };
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+index f8c7912abe0e..421ba6798ca7 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+@@ -32,6 +32,7 @@
  
--static struct vmcore_range * __init get_new_element(void)
--{
--	return kzalloc(sizeof(struct vmcore_range), GFP_KERNEL);
--}
--
- static u64 get_vmcore_size(size_t elfsz, size_t elfnotesegsz,
- 			   struct list_head *vc_list)
+ #include <linux/tcp.h>
+ #include <linux/if_vlan.h>
++#include <linux/iommu-dma.h>
+ #include <net/geneve.h>
+ #include <net/dsfield.h>
+ #include "en.h"
+@@ -269,6 +270,10 @@ static void mlx5e_sq_xmit_prepare(struct mlx5e_txqsq *sq, struct sk_buff *skb,
  {
-@@ -1116,7 +1111,6 @@ static int __init process_ptload_program_headers_elf64(char *elfptr,
- 						size_t elfnotes_sz,
- 						struct list_head *vc_list)
- {
--	struct vmcore_range *new;
- 	int i;
- 	Elf64_Ehdr *ehdr_ptr;
- 	Elf64_Phdr *phdr_ptr;
-@@ -1139,13 +1133,8 @@ static int __init process_ptload_program_headers_elf64(char *elfptr,
- 		end = roundup(paddr + phdr_ptr->p_memsz, PAGE_SIZE);
- 		size = end - start;
+ 	struct mlx5e_sq_stats *stats = sq->stats;
  
--		/* Add this contiguous chunk of memory to vmcore list.*/
--		new = get_new_element();
--		if (!new)
-+		if (vmcore_alloc_add_range(vc_list, start, size))
- 			return -ENOMEM;
--		new->paddr = start;
--		new->size = size;
--		list_add_tail(&new->list, vc_list);
- 
- 		/* Update the program header offset. */
- 		phdr_ptr->p_offset = vmcore_off + (paddr - start);
-@@ -1159,7 +1148,6 @@ static int __init process_ptload_program_headers_elf32(char *elfptr,
- 						size_t elfnotes_sz,
- 						struct list_head *vc_list)
- {
--	struct vmcore_range *new;
- 	int i;
- 	Elf32_Ehdr *ehdr_ptr;
- 	Elf32_Phdr *phdr_ptr;
-@@ -1182,13 +1170,8 @@ static int __init process_ptload_program_headers_elf32(char *elfptr,
- 		end = roundup(paddr + phdr_ptr->p_memsz, PAGE_SIZE);
- 		size = end - start;
- 
--		/* Add this contiguous chunk of memory to vmcore list.*/
--		new = get_new_element();
--		if (!new)
-+		if (vmcore_alloc_add_range(vc_list, start, size))
- 			return -ENOMEM;
--		new->paddr = start;
--		new->size = size;
--		list_add_tail(&new->list, vc_list);
- 
- 		/* Update the program header offset */
- 		phdr_ptr->p_offset = vmcore_off + (paddr - start);
-diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-index 788a45061f35..9717912ce4d1 100644
---- a/include/linux/crash_dump.h
-+++ b/include/linux/crash_dump.h
-@@ -121,6 +121,20 @@ struct vmcore_range {
- 	loff_t offset;
- };
- 
-+/* Allocate a vmcore range and add it to the list. */
-+static inline int vmcore_alloc_add_range(struct list_head *list,
-+		unsigned long long paddr, unsigned long long size)
-+{
-+	struct vmcore_range *m = kzalloc(sizeof(*m), GFP_KERNEL);
++	/* Don't require 2 IOMMU TLB entries, if one is sufficient */
++	if (use_dma_iommu(sq->pdev) && skb->truesize <= PAGE_SIZE)
++		skb_linearize(skb);
 +
-+	if (!m)
-+		return -ENOMEM;
-+	m->paddr = paddr;
-+	m->size = size;
-+	list_add_tail(&m->list, list);
-+	return 0;
-+}
-+
- #else /* !CONFIG_CRASH_DUMP */
- static inline bool is_kdump_kernel(void) { return false; }
- #endif /* CONFIG_CRASH_DUMP */
+ 	if (skb_is_gso(skb)) {
+ 		int hopbyhop;
+ 		u16 ihs = mlx5e_tx_get_gso_ihs(sq, skb, &hopbyhop);
 -- 
-2.47.1
+2.45.2
 
 
