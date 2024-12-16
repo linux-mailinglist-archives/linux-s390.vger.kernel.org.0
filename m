@@ -1,316 +1,491 @@
-Return-Path: <linux-s390+bounces-7731-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-7733-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id F28699F32C6
-	for <lists+linux-s390@lfdr.de>; Mon, 16 Dec 2024 15:16:23 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F01159F359A
+	for <lists+linux-s390@lfdr.de>; Mon, 16 Dec 2024 17:17:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EB7B37A2654
-	for <lists+linux-s390@lfdr.de>; Mon, 16 Dec 2024 14:16:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 59B41167442
+	for <lists+linux-s390@lfdr.de>; Mon, 16 Dec 2024 16:16:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7E0320C465;
-	Mon, 16 Dec 2024 14:11:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BE492040AF;
+	Mon, 16 Dec 2024 16:13:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EjoICeHS";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KECvIYz+"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZdNccYHk"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED92B20ADE4;
-	Mon, 16 Dec 2024 14:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495B714D6EB;
+	Mon, 16 Dec 2024 16:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734358267; cv=none; b=K1q1IpSnwT5/iIyVFa97IR4wuMmTZkt27T9177T6+Yx6cX7wqLqgznDcoluDgXn9FVhBcEzNLz/BwoXO4Y9ImEBz9iD8lNcP9cBkoDquAxs76iMWo0Ew3fbn4KqQ47Lc52AGQGTWUd26zUqt79ooVeMdZGiPZkOW0Del1YvTo4M=
+	t=1734365610; cv=none; b=ODx+y0sCgyA7cq71v/fefRZDu5I+vc2yjGRVAA48d+vKQqvv2/xVt4mLATaWXTBqnputy0uy0iqDbcWbdo37wlhkfBGT3R16hFPM70uCbap1FFcydwuoR4AGDdSJX/z/dMz3IHqE+iy/YYOKzYzjR9I8Ke+CKt+1v+uiitLK5jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734358267; c=relaxed/simple;
-	bh=B3Pxps8DfM8WSROY05rM3B3CvxrQAIRj6LTHSkhSnYg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FG3Pm7K2/E7xRJVTQVZz/RX4uy2sExDLlrHgaiHjrScKwspgdwm68sLVGvUskW7XKssOsMgPhNwLYBGaPgYl+kvT4gBHjLl/yd81KZ9T3PvrLf/XgrGpJVepUli7b9gbKAe3snx0PEgCl33dWZCqajNHIy4jyMomQt4Nx9qyKM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EjoICeHS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KECvIYz+; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1734358262;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bePNlp/p1MKrXnwHvq18neFXwP/Nn0Iwf/MlDsyNHuc=;
-	b=EjoICeHSoeCF4ZnBJ9XgtzZV1pN3f1QjAeD7QCf+3aVhPiz8k0cI5OYvMb9at3m1YoQo00
-	QxcgRU9yQlcCvRqMGy9YtWGoy8DednXn8akTfqVDPVDM9naMl7lJyC6TGs2tra4zlGN/y4
-	8Q9grBYJTiSl1VryvOrnh5vQH+Vi8EYxI4aAIzgV1zv9ZQKcvu4egNauUDGhI+gBR7wUr9
-	a4X6yi4tRfusEBVw0KvWPmt9fjCvaCOpNZAfAxNmbOIOZjb6a92iKI2uIwT27MTd4Vsyew
-	igUOaIXKIt+iqcFyXmAXRY93TD8fWsJMg0igtK7/UWXWxz55MthMdrKziRYp1Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1734358262;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bePNlp/p1MKrXnwHvq18neFXwP/Nn0Iwf/MlDsyNHuc=;
-	b=KECvIYz+QDi1Lg1U24XopJRnWfCqmvgh/zHf4Hm2lwuMnEcD35EWrMTHJZbh80gEuxbyHo
-	NOPMwX89Q3TYBNDw==
-Date: Mon, 16 Dec 2024 15:10:13 +0100
-Subject: [PATCH 17/17] vdso: Remove kconfig symbol GENERIC_VDSO_DATA_STORE
+	s=arc-20240116; t=1734365610; c=relaxed/simple;
+	bh=GjsbIOswakWmdmJK59rEOCRALmO3wKsh/ddSs2ZuNC4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dahM/CBXV+D8QNH1UWnX7N27YoejE1dSzDjHc1KN4d1El5YyI2BJYNCDxOWeXfKX7SazDpAUMXSTpAzqndLtACjwQEGbt6X03MC1F/XfsD7kIlVioRs5AFAQTNryUB+G60CuE/5vgR4vi/hReXPtEElbladnqy1VsV5cg8ZnPrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZdNccYHk; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BGEbIiq021883;
+	Mon, 16 Dec 2024 16:13:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=55xDJn
+	wamWEvLUYplPWLCEqHmOTHUDb53EAxjaXbnws=; b=ZdNccYHk7XqDotJnkjsLEr
+	qqj35WzeQWxIKs2FU4Z4xv0AKkl3OXcWEEeDSmgiFcSf82/3UKYyAPuQP5f19DBp
+	lPb0KlHtxV5lF21HKq1rTZc9iToZep5Ea+AznrQjL5IbL/OsWitSO5+DxagaiJJN
+	PUwVy2EOo3JF31aDh3dDjLzBkMh0x0dGRbq8vJzFReqUH299GijdESIeumtenTqB
+	lAq4n12wTmcqN4M2vjinLThk8j750VuJCz93paWumylrW+2cJBDOZsf9KoCOXM+8
+	9JXrKQGtbqANVUZO2X8l+sq4YchOGVxicnWTaOzs3t2dp/jis5S9satHPaJhh9WA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43jcpgucap-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Dec 2024 16:13:11 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4BGG6poW002541;
+	Mon, 16 Dec 2024 16:13:10 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43jcpgucak-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Dec 2024 16:13:10 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4BGCbok2029326;
+	Mon, 16 Dec 2024 16:13:09 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 43hmbseux1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Dec 2024 16:13:09 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4BGGD76H21889418
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 16 Dec 2024 16:13:08 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D19AC20040;
+	Mon, 16 Dec 2024 16:13:07 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 402D720043;
+	Mon, 16 Dec 2024 16:13:07 +0000 (GMT)
+Received: from [9.171.5.238] (unknown [9.171.5.238])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 16 Dec 2024 16:13:07 +0000 (GMT)
+Message-ID: <68e14c6a-76fd-4d47-b8d6-4ed6eef33a48@linux.ibm.com>
+Date: Mon, 16 Dec 2024 17:13:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/2] sched/fair: introduce new scheduler group type
+ group_parked
+To: Shrikanth Hegde <sshegde@linux.ibm.com>
+Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        vschneid@redhat.com, linux-s390@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20241204112149.25872-1-huschle@linux.ibm.com>
+ <543d376c-85a7-4628-a38e-52bc117258a5@linux.ibm.com>
+ <27c4288d-5617-4195-8424-e6e346acefd0@linux.ibm.com>
+ <4f3b49cb-15bc-43ef-b4cb-3af98c8a1c5f@linux.ibm.com>
+From: Tobias Huschle <huschle@linux.ibm.com>
+In-Reply-To: <4f3b49cb-15bc-43ef-b4cb-3af98c8a1c5f@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Message-Id: <20241216-vdso-store-rng-v1-17-f7aed1bdb3b2@linutronix.de>
-References: <20241216-vdso-store-rng-v1-0-f7aed1bdb3b2@linutronix.de>
-In-Reply-To: <20241216-vdso-store-rng-v1-0-f7aed1bdb3b2@linutronix.de>
-To: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
- Helge Deller <deller@gmx.de>, Andy Lutomirski <luto@kernel.org>, 
- Thomas Gleixner <tglx@linutronix.de>, 
- Vincenzo Frascino <vincenzo.frascino@arm.com>, 
- Anna-Maria Behnsen <anna-maria@linutronix.de>, 
- Frederic Weisbecker <frederic@kernel.org>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
- Theodore Ts'o <tytso@mit.edu>, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- Russell King <linux@armlinux.org.uk>, Heiko Carstens <hca@linux.ibm.com>, 
- Vasily Gorbik <gor@linux.ibm.com>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Sven Schnelle <svens@linux.ibm.com>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
- "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
- loongarch@lists.linux.dev, linux-s390@vger.kernel.org, 
- linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
- linux-arch@vger.kernel.org, Nam Cao <namcao@linutronix.de>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1734358247; l=7961;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=B3Pxps8DfM8WSROY05rM3B3CvxrQAIRj6LTHSkhSnYg=;
- b=Oujw7cI/7WlZWvTQ3ZWZntnrNHHoMDU1Q/wYpvdHfSwL0otiu725rLX1pEEaqlUNfNxVHLwj8
- lafYlnufGXFCYaPDDreGNGBiZeZ6bE4uQeNdj0LLpThLGExnnWj8LPu
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: QZuURhEIQhQEvDj3gTHYtPIjl5sDziEv
+X-Proofpoint-ORIG-GUID: rK9OKIz43AZx9a3MJwSxrnPi6R_RAKCu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
+ mlxscore=0 phishscore=0 impostorscore=0 adultscore=0 lowpriorityscore=0
+ spamscore=0 mlxlogscore=999 malwarescore=0 priorityscore=1501 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2412160133
 
-All users of HAVE_GENERIC_VDSO have been switched over to the generic
-storage logic. The dedicated kconfig symbol can be removed and replaced
-by HAVE_GENERIC_VDSO.
 
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
----
- arch/Kconfig             | 2 +-
- arch/arm/mm/Kconfig      | 1 -
- arch/arm64/Kconfig       | 1 -
- arch/loongarch/Kconfig   | 1 -
- arch/mips/Kconfig        | 1 -
- arch/powerpc/Kconfig     | 1 -
- arch/riscv/Kconfig       | 1 -
- arch/s390/Kconfig        | 1 -
- arch/x86/Kconfig         | 1 -
- include/vdso/datapage.h  | 8 +-------
- lib/Kconfig              | 1 -
- lib/vdso_kernel/Kconfig  | 7 -------
- lib/vdso_kernel/Makefile | 2 +-
- 13 files changed, 3 insertions(+), 25 deletions(-)
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 48f37e6c00674f433a0d6e6e05ce72c27cf000b7..63e20e5e779d5c6d786b90ccb139e16a23445fcb 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -1577,7 +1577,7 @@ config HAVE_SPARSE_SYSCALL_NR
- 	  related optimizations for a given architecture.
- 
- config ARCH_HAS_VDSO_ARCH_DATA
--	depends on GENERIC_VDSO_DATA_STORE
-+	depends on HAVE_GENERIC_VDSO
- 	bool
- 
- config ARCH_HAS_VDSO_TIME_DATA
-diff --git a/arch/arm/mm/Kconfig b/arch/arm/mm/Kconfig
-index 5c1023a6d78c1b4db67b2d62b71af5a79b7e701f..2b6f50dd547840adecbe08e684ed8f1a032cd7c2 100644
---- a/arch/arm/mm/Kconfig
-+++ b/arch/arm/mm/Kconfig
-@@ -928,7 +928,6 @@ config VDSO
- 	select GENERIC_TIME_VSYSCALL
- 	select GENERIC_VDSO_32
- 	select GENERIC_GETTIMEOFDAY
--	select GENERIC_VDSO_DATA_STORE
- 	help
- 	  Place in the process address space an ELF shared object
- 	  providing fast implementations of gettimeofday and
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 1a4a78ec593328d6e6bceacc1abb0821eab988ca..100570a048c5e8892c0112704f9ca74c4fc55b27 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -159,7 +159,6 @@ config ARM64
- 	select GENERIC_SMP_IDLE_THREAD
- 	select GENERIC_TIME_VSYSCALL
- 	select GENERIC_GETTIMEOFDAY
--	select GENERIC_VDSO_DATA_STORE
- 	select GENERIC_VDSO_TIME_NS
- 	select HARDIRQS_SW_RESEND
- 	select HAS_IOPORT
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 6ec7ef705199fdd4039afd23ec9050a28aa894eb..4dffb5ccd46397eedd27870183a105688ab23c5e 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -105,7 +105,6 @@ config LOONGARCH
- 	select GENERIC_SCHED_CLOCK
- 	select GENERIC_SMP_IDLE_THREAD
- 	select GENERIC_TIME_VSYSCALL
--	select GENERIC_VDSO_DATA_STORE
- 	select GENERIC_VDSO_TIME_NS
- 	select GPIOLIB
- 	select HAS_IOPORT
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 94fae59589ae80d590ac250b52ba30e9dd6eda32..467b10f4361aeb7aad0121f334eaa5d23351010c 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -49,7 +49,6 @@ config MIPS
- 	select GENERIC_SMP_IDLE_THREAD
- 	select GENERIC_IDLE_POLL_SETUP
- 	select GENERIC_TIME_VSYSCALL
--	select GENERIC_VDSO_DATA_STORE
- 	select GUP_GET_PXX_LOW_HIGH if CPU_MIPS32 && PHYS_ADDR_T_64BIT
- 	select HAS_IOPORT if !NO_IOPORT_MAP || ISA
- 	select HAVE_ARCH_COMPILER_H
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 600fa3b917ee902d016f2a04376950a9dc49074f..744c09813c43736089e69d06541a7a7d48a4d6da 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -207,7 +207,6 @@ config PPC
- 	select GENERIC_PTDUMP
- 	select GENERIC_SMP_IDLE_THREAD
- 	select GENERIC_TIME_VSYSCALL
--	select GENERIC_VDSO_DATA_STORE
- 	select GENERIC_VDSO_TIME_NS
- 	select HAS_IOPORT			if PCI
- 	select HAVE_ARCH_AUDITSYSCALL
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index a42d74aa53fe7c18e76820499d0ae43cd3b0c0bd..25023e4bc41b2aa02242ed1fe31caa3031a3edd5 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -115,7 +115,6 @@ config RISCV
- 	select GENERIC_SCHED_CLOCK
- 	select GENERIC_SMP_IDLE_THREAD
- 	select GENERIC_TIME_VSYSCALL if MMU && 64BIT
--	select GENERIC_VDSO_DATA_STORE if HAVE_GENERIC_VDSO
- 	select GENERIC_VDSO_TIME_NS if HAVE_GENERIC_VDSO
- 	select HARDIRQS_SW_RESEND
- 	select HAS_IOPORT if MMU
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index 6472eb4c210f378eaa61ddff04a6abc2f4aa2940..0077969170e8b4ca4c99e87ec75f6ea94f3e8e00 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -158,7 +158,6 @@ config S390
- 	select GENERIC_PTDUMP
- 	select GENERIC_SMP_IDLE_THREAD
- 	select GENERIC_TIME_VSYSCALL
--	select GENERIC_VDSO_DATA_STORE
- 	select GENERIC_VDSO_TIME_NS
- 	select GENERIC_IOREMAP if PCI
- 	select HAVE_ALIGNED_STRUCT_PAGE
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index e3d7f17dc414ca93d6e746dbc7f02afd2bc043a8..9d7bd0ae48c4260f4abb6dbedc696e3915c230ea 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -177,7 +177,6 @@ config X86
- 	select GENERIC_SMP_IDLE_THREAD
- 	select GENERIC_TIME_VSYSCALL
- 	select GENERIC_GETTIMEOFDAY
--	select GENERIC_VDSO_DATA_STORE
- 	select GENERIC_VDSO_TIME_NS
- 	select GENERIC_VDSO_OVERFLOW_PROTECT
- 	select GUP_GET_PXX_LOW_HIGH		if X86_PAE
-diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
-index fe2368d9ae6a759101de80b1746f5cc221d7d142..49b23b35df5fc0699ac7f34693b7de1201aa4486 100644
---- a/include/vdso/datapage.h
-+++ b/include/vdso/datapage.h
-@@ -29,7 +29,7 @@ struct arch_vdso_time_data {};
- 
- #if defined(CONFIG_ARCH_HAS_VDSO_ARCH_DATA)
- #include <asm/vdso/arch_data.h>
--#elif defined(CONFIG_GENERIC_VDSO_DATA_STORE)
-+#else
- struct vdso_arch_data {
- 	/* Needed for the generic code, never actually used at runtime */
- 	char __unused;
-@@ -147,7 +147,6 @@ struct vdso_rng_data {
-  * With the hidden visibility, the compiler simply generates a PC-relative
-  * relocation, and this is what we need.
-  */
--#ifdef CONFIG_GENERIC_VDSO_DATA_STORE
- extern const struct vdso_time_data vdso_u_time_data[CS_BASES] __attribute__((visibility("hidden")));
- extern const struct vdso_time_data vdso_u_timens_data[CS_BASES] __attribute__((visibility("hidden")));
- extern const struct vdso_rng_data vdso_u_rng_data __attribute__((visibility("hidden")));
-@@ -156,9 +155,6 @@ extern const struct vdso_arch_data vdso_u_arch_data __attribute__((visibility("h
- extern struct vdso_time_data *vdso_k_time_data;
- extern struct vdso_rng_data *vdso_k_rng_data;
- extern struct vdso_arch_data *vdso_k_arch_data;
--#endif
--
--#ifdef CONFIG_GENERIC_VDSO_DATA_STORE
- 
- #define VDSO_ARCH_DATA_SIZE ALIGN(sizeof(struct vdso_arch_data), PAGE_SIZE)
- #define VDSO_ARCH_DATA_PAGES (VDSO_ARCH_DATA_SIZE >> PAGE_SHIFT)
-@@ -191,8 +187,6 @@ static __always_inline const struct vdso_rng_data *__arch_get_vdso_u_rng_data(vo
- }
- #endif /* CONFIG_VDSO_GETRANDOM */
- 
--#endif /* CONFIG_GENERIC_VDSO_DATA_STORE */
--
- #ifdef CONFIG_ARCH_HAS_VDSO_ARCH_DATA
- static __always_inline const struct vdso_arch_data *__arch_get_vdso_u_arch_data(void)
- {
-diff --git a/lib/Kconfig b/lib/Kconfig
-index 7d59b2c10ce5ffab03378ead254d9f9017a4482f..5a318f753b2f44cb0a7905cc0092e81c133bc112 100644
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@ -659,7 +659,6 @@ config UCS2_STRING
- # generic vdso
- #
- source "lib/vdso/Kconfig"
--source "lib/vdso_kernel/Kconfig"
- 
- source "lib/fonts/Kconfig"
- 
-diff --git a/lib/vdso_kernel/Kconfig b/lib/vdso_kernel/Kconfig
-deleted file mode 100644
-index 0c7ade9b3ece67c0c0ca892544b9e29e53c860c4..0000000000000000000000000000000000000000
---- a/lib/vdso_kernel/Kconfig
-+++ /dev/null
-@@ -1,7 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--
--config GENERIC_VDSO_DATA_STORE
--	bool
--	depends on HAVE_GENERIC_VDSO
--	help
--	  Selected by architectures that use the generic vDSO data store.
-diff --git a/lib/vdso_kernel/Makefile b/lib/vdso_kernel/Makefile
-index 4826e49f9edbdb48506b50957584ed89bde5f37f..aadc987caa434ef99c1420c62bb71fde04a07603 100644
---- a/lib/vdso_kernel/Makefile
-+++ b/lib/vdso_kernel/Makefile
-@@ -1,3 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0
- 
--obj-$(CONFIG_GENERIC_VDSO_DATA_STORE) += datastore.o
-+obj-$(CONFIG_HAVE_GENERIC_VDSO) += datastore.o
+On 10/12/2024 21:24, Shrikanth Hegde wrote:
+> 
+> 
+> On 12/9/24 13:35, Tobias Huschle wrote:
+>>
+> [...]
+>>> So I gave it a try with using a debugfs based hint to say which CPUs 
+>>> are parked.
+>>> It is a hack to try it out. patch is below so one could try something 
+>>> similar is their archs
+>>> and see if it help if they have a use case.
+>>>
+>>> Notes:
+>>> 1. Arch shouldn't set cpu_parked for all CPUs at boot. It causes panic.
+>>> 2. Workload gets unpacked to all CPUs when changing from 40 CPUs to 
+>>> 80 CPUs, but
+>>>     doesn't get packed when changing the from 80 to 40 CPUs.
+>>
+>> With stress-ng -l 100 this can happen, I tested with stress-ng -l 50 
+>> and that worked well in all cases. As mentioned above, the -l 100 case 
+>> would need changes to handle the no-hz scenario. I have a patch for 
+>> that which works, but it is a bit hacky.
+>> If this also happens with non-100% stressors on your end, something 
+>> needs ot be fixed code-wise.
+>>
+> 
+> It was happening with 100% stress-ng case. I was wondering since i dont 
+> have no-hz full enabled.
+> I found out the reason why and one way to do is to trigger active load 
+> balance if there are any parked cpus
+> in the group. That probably needs a IS_ENABLED check not to hurt the 
+> regular case.
+> 
+> Also, I gave a try to include arch_cpu_parked in idle_cpu and friends. 
+> It seems to working for me.
+> I will attach the code below. It simplifies code quite a bit.
 
--- 
-2.47.1
+I agree, that this makes things cleaner. One concern might be that this 
+interferes with disabling the tick on idle CPUs. Will need to check.
+
+> 
+> Also, I am thinking to rely on active balance codepath more than the 
+> regular pull model.
+> so this would be akin to asym packing codepaths. The below code does 
+> that too.>
+> Feel free to take the bits as necessary if it works.
+
+I appreciate your suggestions. Experimenting with these changes worked 
+fine for me so far. I'll try to remove as many checks as possible and 
+hopefully be able to provide a v2 soon.
+
+Things that I observed: With your changes incorporated and some things 
+that I added, it seems to work pretty fine, even with stress-ng using 
+100% stressors. But, it occasionally takes a while to reclaim unparked 
+CPUs. With any percentage below 100, the changes are almost instantly.
+
+I also see some issues where the load balancer is very hesitant to 
+reclaim unparked CPUs which are part of another scheduling domain.
+
+> 
+> ---
+>   include/linux/sched/topology.h | 20 ++++++++++
+>   kernel/sched/core.c            |  6 ++-
+>   kernel/sched/fair.c            | 72 ++++++++++++++++++++++++++++++++--
+>   kernel/sched/syscalls.c        |  3 ++
+>   4 files changed, 97 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/sched/topology.h b/include/linux/sched/ 
+> topology.h
+> index 4237daa5ac7a..cfe3c59bc329 100644
+> --- a/include/linux/sched/topology.h
+> +++ b/include/linux/sched/topology.h
+> @@ -270,6 +270,26 @@ unsigned long arch_scale_cpu_capacity(int cpu)
+>   }
+>   #endif
+> 
+> +#ifndef arch_cpu_parked
+> +/**
+> + * arch_cpu_parked - Check if a given CPU is currently parked.
+> + *
+> + * A parked CPU cannot run any kind of workload since underlying
+> + * physical CPU should not be used at the moment .
+> + *
+> + * @cpu: the CPU in question.
+> + *
+> + * By default assume CPU is not parked
+> + *
+> + * Return: Parked state of CPU
+> + */
+> +static __always_inline
+> +unsigned long arch_cpu_parked(int cpu)
+> +{
+> +    return false;
+> +}
+> +#endif
+> +
+>   #ifndef arch_scale_hw_pressure
+>   static __always_inline
+>   unsigned long arch_scale_hw_pressure(int cpu)
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 5fbec67d48b2..78ca95aad66b 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -2437,7 +2437,7 @@ static inline bool is_cpu_allowed(struct 
+> task_struct *p, int cpu)
+> 
+>       /* Non kernel threads are not allowed during either online or 
+> offline. */
+>       if (!(p->flags & PF_KTHREAD))
+> -        return cpu_active(cpu);
+> +        return !arch_cpu_parked(cpu) && cpu_active(cpu);
+> 
+>       /* KTHREAD_IS_PER_CPU is always allowed. */
+>       if (kthread_is_per_cpu(p))
+> @@ -2447,6 +2447,10 @@ static inline bool is_cpu_allowed(struct 
+> task_struct *p, int cpu)
+>       if (cpu_dying(cpu))
+>           return false;
+> 
+> +    /* CPU should be avoided at the moment */
+> +    if (arch_cpu_parked(cpu))
+> +        return false;
+> +
+>       /* But are allowed during online. */
+>       return cpu_online(cpu);
+>   }
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index d5127d9beaea..a6216f63b756 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -6898,6 +6898,9 @@ static int sched_idle_rq(struct rq *rq)
+>   #ifdef CONFIG_SMP
+>   static int sched_idle_cpu(int cpu)
+>   {
+> +    if (arch_cpu_parked(cpu))
+> +        return 0;
+> +
+>       return sched_idle_rq(cpu_rq(cpu));
+>   }
+>   #endif
+> @@ -7415,6 +7418,9 @@ static int wake_affine(struct sched_domain *sd, 
+> struct task_struct *p,
+>   {
+>       int target = nr_cpumask_bits;
+> 
+> +    if (arch_cpu_parked(target))
+> +        return prev_cpu;
+> +
+>       if (sched_feat(WA_IDLE))
+>           target = wake_affine_idle(this_cpu, prev_cpu, sync);
+> 
+> @@ -9198,7 +9204,13 @@ enum group_type {
+>        * The CPU is overloaded and can't provide expected CPU cycles to all
+>        * tasks.
+>        */
+> -    group_overloaded
+> +    group_overloaded,
+> +    /*
+> +     * The CPU should be avoided as it can't provide expected CPU cycles
+> +     * even for small amounts of workload.
+> +     */
+> +    group_parked
+> +
+>   };
+> 
+>   enum migration_type {
+> @@ -9880,6 +9892,9 @@ struct sg_lb_stats {
+>       unsigned int nr_numa_running;
+>       unsigned int nr_preferred_running;
+>   #endif
+> +    unsigned int sum_nr_parked;
+> +    unsigned int parked_cpus;
+> +
+>   };
+> 
+>   /*
+> @@ -10127,6 +10142,9 @@ group_type group_classify(unsigned int 
+> imbalance_pct,
+>                 struct sched_group *group,
+>                 struct sg_lb_stats *sgs)
+>   {
+> +    if (sgs->parked_cpus)
+> +        return group_parked;
+> +
+
+This could be changed to:
+
+	if (sgs->sum_nr_parked)
+		return group_parked;
+
+This makes sure that we don't care about parked CPUs which do not run 
+any tasks at the moment. Needs an additional check for the case that all 
+CPUs of a group are parked.
+
+>       if (group_is_overloaded(imbalance_pct, sgs))
+>           return group_overloaded;
+> 
+> @@ -10328,6 +10346,11 @@ static inline void update_sg_lb_stats(struct 
+> lb_env *env,
+>           sgs->nr_numa_running += rq->nr_numa_running;
+>           sgs->nr_preferred_running += rq->nr_preferred_running;
+>   #endif
+> +        if (rq->cfs.h_nr_running) {
+> +            sgs->parked_cpus += arch_cpu_parked(i);
+> +            sgs->sum_nr_parked += arch_cpu_parked(i) * rq- 
+>  >cfs.h_nr_running;
+> +        }
+> +
+
+I'm still a bit torn on this, as in how to count the parked cpus and 
+make use of that count. I think they should be removed from the overall 
+weight of the group. Probably also from the capacity. Otherwise, the 
+calculations for overloaded groups are off. Will look at that.
+
+>           /*
+>            * No need to call idle_cpu() if nr_running is not 0
+>            */
+> @@ -10422,6 +10445,8 @@ static bool update_sd_pick_busiest(struct lb_env 
+> *env,
+>        */
+> 
+>       switch (sgs->group_type) {
+> +    case group_parked:
+> +        return sgs->sum_nr_parked > busiest->sum_nr_parked;
+>       case group_overloaded:
+>           /* Select the overloaded group with highest avg_load. */
+>           return sgs->avg_load > busiest->avg_load;
+> @@ -10633,6 +10658,8 @@ static inline void update_sg_wakeup_stats(struct 
+> sched_domain *sd,
+>           nr_running = rq->nr_running - local;
+>           sgs->sum_nr_running += nr_running;
+> 
+> +        sgs->parked_cpus += arch_cpu_parked(i);
+> +        sgs->sum_nr_parked += arch_cpu_parked(i) * rq->cfs.h_nr_running;
+>           /*
+>            * No need to call idle_cpu_without() if nr_running is not 0
+>            */
+> @@ -10680,6 +10707,8 @@ static bool update_pick_idlest(struct 
+> sched_group *idlest,
+>        */
+> 
+>       switch (sgs->group_type) {
+> +    case group_parked:
+> +        return false;
+>       case group_overloaded:
+>       case group_fully_busy:
+>           /* Select the group with lowest avg_load. */
+> @@ -10730,7 +10759,7 @@ sched_balance_find_dst_group(struct sched_domain 
+> *sd, struct task_struct *p, int
+>       unsigned long imbalance;
+>       struct sg_lb_stats idlest_sgs = {
+>               .avg_load = UINT_MAX,
+> -            .group_type = group_overloaded,
+> +            .group_type = group_parked,
+>       };
+> 
+>       do {
+> @@ -10788,6 +10817,8 @@ sched_balance_find_dst_group(struct sched_domain 
+> *sd, struct task_struct *p, int
+>           return idlest;
+> 
+>       switch (local_sgs.group_type) {
+> +    case group_parked:
+> +        return idlest;
+>       case group_overloaded:
+>       case group_fully_busy:
+> 
+> @@ -11039,6 +11070,12 @@ static inline void calculate_imbalance(struct 
+> lb_env *env, struct sd_lb_stats *s
+>       local = &sds->local_stat;
+>       busiest = &sds->busiest_stat;
+> 
+> +    if (busiest->group_type == group_parked) {
+> +        env->migration_type = migrate_task;
+> +        env->imbalance = busiest->sum_nr_parked;
+> +        return;
+> +    }
+> +
+>       if (busiest->group_type == group_misfit_task) {
+>           if (env->sd->flags & SD_ASYM_CPUCAPACITY) {
+>               /* Set imbalance to allow misfit tasks to be balanced. */
+> @@ -11252,6 +11289,13 @@ static struct sched_group 
+> *sched_balance_find_src_group(struct lb_env *env)
+>           goto out_balanced;
+> 
+>       busiest = &sds.busiest_stat;
+> +    local = &sds.local_stat;
+> +
+> +    if (local->group_type == group_parked)
+> +        goto out_balanced;
+> +
+> +    if (busiest->group_type == group_parked)
+> +        goto force_balance;
+> 
+>       /* Misfit tasks should be dealt with regardless of the avg load */
+>       if (busiest->group_type == group_misfit_task)
+> @@ -11273,7 +11317,6 @@ static struct sched_group 
+> *sched_balance_find_src_group(struct lb_env *env)
+>       if (busiest->group_type == group_imbalanced)
+>           goto force_balance;
+> 
+> -    local = &sds.local_stat;
+>       /*
+>        * If the local group is busier than the selected busiest group
+>        * don't try and pull any tasks.
+> @@ -11386,6 +11429,9 @@ static struct rq 
+> *sched_balance_find_src_rq(struct lb_env *env,
+>           enum fbq_type rt;
+> 
+>           rq = cpu_rq(i);
+> +        if (arch_cpu_parked(i) && rq->cfs.h_nr_running)
+> +            return rq;
+> +
+>           rt = fbq_classify_rq(rq);
+> 
+>           /*
+> @@ -11556,6 +11602,9 @@ static int need_active_balance(struct lb_env *env)
+>   {
+>       struct sched_domain *sd = env->sd;
+> 
+> +    if (arch_cpu_parked(env->src_cpu))
+> +        return 1;
+> +
+>       if (asym_active_balance(env))
+>           return 1;
+> 
+> @@ -11588,6 +11637,20 @@ static int should_we_balance(struct lb_env *env)
+>       struct cpumask *swb_cpus = 
+> this_cpu_cpumask_var_ptr(should_we_balance_tmpmask);
+>       struct sched_group *sg = env->sd->groups;
+>       int cpu, idle_smt = -1;
+> +    int cpus_parked = 0;
+> +
+> +    if (arch_cpu_parked(env->dst_cpu))
+> +        return 0;
+> +
+> +    for_each_cpu(cpu, sched_domain_span(env->sd)) {
+> +        if (arch_cpu_parked(cpu)) {
+> +            cpus_parked ++;
+> +        }
+> +    }
+> +
+> +    if (cpus_parked && !arch_cpu_parked(env->dst_cpu)) {
+> +        return 1;
+> +    }
+> 
+>       /*
+>        * Ensure the balancing environment is consistent; can happen
+> @@ -12708,6 +12771,9 @@ static int sched_balance_newidle(struct rq 
+> *this_rq, struct rq_flags *rf)
+> 
+>       update_misfit_status(NULL, this_rq);
+> 
+> +    if (arch_cpu_parked(this_cpu))
+> +        return 0;
+> +
+>       /*
+>        * There is a task waiting to run. No need to search for one.
+>        * Return 0; the task will be enqueued when switching to idle.
+> diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
+> index ff0e5ab4e37c..d408d87da563 100644
+> --- a/kernel/sched/syscalls.c
+> +++ b/kernel/sched/syscalls.c
+> @@ -203,6 +203,9 @@ int idle_cpu(int cpu)
+>   {
+>       struct rq *rq = cpu_rq(cpu);
+> 
+> +    if (arch_cpu_parked(cpu))
+> +        return 0;
+> +
+>       if (rq->curr != rq->idle)
+>           return 0;
+> 
 
 
