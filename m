@@ -1,112 +1,135 @@
-Return-Path: <linux-s390+bounces-7702-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-7706-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA6FF9F2C9E
-	for <lists+linux-s390@lfdr.de>; Mon, 16 Dec 2024 10:12:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD07E9F2CD5
+	for <lists+linux-s390@lfdr.de>; Mon, 16 Dec 2024 10:22:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 038E016363A
-	for <lists+linux-s390@lfdr.de>; Mon, 16 Dec 2024 09:11:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8680C1884263
+	for <lists+linux-s390@lfdr.de>; Mon, 16 Dec 2024 09:22:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56D2720011D;
-	Mon, 16 Dec 2024 09:11:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA2D8202C20;
+	Mon, 16 Dec 2024 09:22:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LgjlQtsF"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eiqNBbsm"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F96D2E628;
-	Mon, 16 Dec 2024 09:11:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC9820127A;
+	Mon, 16 Dec 2024 09:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734340315; cv=none; b=IJkEz76JFscEjusV/XMXxGHaqFwKQDOEQH/qGn7VdsSIu3ZXn7F+WPmB2YrbVYg7UlHOr1xr48CtU7UL2Otjtymkqg5xRuGEbNa5RxcHZ6BZD3HZTt8mFWy2HHWIa34MAeEAUIfNu0SSImqMr+lhsoX+sVpQclGxZXjC4vRUpOI=
+	t=1734340934; cv=none; b=DksTgPsyojenGbBge9duJB/8cG563+JiNPS6r2QqWUFGgMxfSAiCfGYtQ+7OG9UcLkTklTwTSnsvqWujqM7n4+nc+12kmfEh2rqXy7GFn8/KZYTe3kSbZHJpNmF+W1lwDNjYM9POMbIhg08MF/tDLqZNr7a3SX4fbWNrgij0ph0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734340315; c=relaxed/simple;
-	bh=jc+ktQpe1snGAisoPsN0qsFlu6le9/TqPnUf04ohDYE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=dUt9IhzOQZjIigNx8S/ocQv4xnmrbmJX5rWOSQgRoo7Bc6QJKKAOqE+EFpDZfGos4p+4NkUhdiF5zR6JsD9681uTerZuqgZkJWYVNi3riss94upbyScdGBTlwogcMnKyoJfau/qzZCBJCp6lBrS6k8TyUxRKTXWRi6fgqcM/c3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LgjlQtsF; arc=none smtp.client-ip=148.163.158.5
+	s=arc-20240116; t=1734340934; c=relaxed/simple;
+	bh=sbEEUkpQe8slEBBADusNCTPxw48Fxk2pqpa2j2+J0Ss=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KukHxwx2R5LEBc7se+OV/JzbWtfMOpf1vKIiBf983IGXy5rKcnF9CbB0alqQ5uFt53lfevEWIQhT3vnynkFJQgCDJyMIf2pKKh0pBvaTd2M1vwUGYpVEw6gc0jFNcktSNr99d5kU5eZ1vkNt+j0Wk4FqZ9b5mDv8zzUOvRp8yXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eiqNBbsm; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BG85Um5027009;
-	Mon, 16 Dec 2024 09:11:52 GMT
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BFNw7Yx006313;
+	Mon, 16 Dec 2024 09:22:02 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:message-id:mime-version:subject:to; s=
-	pp1; bh=jc+ktQpe1snGAisoPsN0qsFlu6le9/TqPnUf04ohDYE=; b=LgjlQtsF
-	uCWedpcoooVezw6YEMeSvHgzLqd9LocHH2MRUbSTRMZ7w9QACBO2I3GgqW5I/9il
-	gcgr44ZNVF2FsuX6nJF/TcHum9wzmG+STIZfKut3ClrLhGQOlG7mCcw0dkS8kuyq
-	vJMLWmWaK2jfbGBuP4w1sO53a+XgEp2Z6M2Ib2Dcem7YfjK34RhwXYVRdlaAqXbK
-	NY4zifyNvNP0t5jYAy6QfudDIG1uobDdf2HLVykLm4grP1YhVP1papB7yFZtfrOm
-	8XZ7TGxbLJigvyX+UHlCYZsJo3T0REFRfmX0wzevYQfCzcx8Q/qoumuWlr72GjAn
-	TVXbk6bAMpcxnA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43jgd289fa-1
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=s7CDuadi59DbdJQYtEXF2MmygEGRsK2onQV1LrfHL
+	MQ=; b=eiqNBbsmW3n9RWcPP2Z4o16EGaw8YwZW272w9W2Z6gEernZA1TG37DVqF
+	GP4qS4LswrgsfCsDQe4mtaa3AKB1CXK1SMLdUmkoWUT+ADRe+dJGegDn4lsxdlZG
+	U1FV1KKhOAhvsiIeEu6s4APiLreYK+nm3KqRNAlgQtRixOqQxnlOHcyJ+tq0cx+a
+	Gm16tFkda1w1HmLbGUoy95BnIoYqAIM4IrryTeCR55iw93hgyYBg+hhWZvKDMZax
+	tTfA88meVun/EkZhw+9O24kvR4M5/KIjJgvAPdkwW3LNfJ59TBR4fCbRBqCeEdh7
+	YNjH5/FbSsy61youE5Pin6Obs3CWg==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43j98h20d8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Dec 2024 09:11:51 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4BG97mSa025745;
-	Mon, 16 Dec 2024 09:11:51 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43jgd289f7-1
+	Mon, 16 Dec 2024 09:22:02 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4BG6BEJm011252;
+	Mon, 16 Dec 2024 09:22:01 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 43hpjjw0na-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Dec 2024 09:11:51 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4BG56cqV024044;
-	Mon, 16 Dec 2024 09:11:50 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 43hnuk54c8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Dec 2024 09:11:50 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4BG9BmiQ29295160
+	Mon, 16 Dec 2024 09:22:01 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4BG9Lwgx52494770
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 16 Dec 2024 09:11:49 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D4BBF2004D;
-	Mon, 16 Dec 2024 09:11:48 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1C4AB20040;
-	Mon, 16 Dec 2024 09:11:48 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.179.5.32])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 16 Dec 2024 09:11:48 +0000 (GMT)
-Date: Mon, 16 Dec 2024 10:11:46 +0100
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Dave Penkler <dpenkler@gmail.com>
-Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: GPIB build failures
-Message-ID: <Z1/u0u9Nu4aEHA5h@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+	Mon, 16 Dec 2024 09:21:58 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1A99620043;
+	Mon, 16 Dec 2024 09:21:58 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5005620040;
+	Mon, 16 Dec 2024 09:21:57 +0000 (GMT)
+Received: from darkmoore.ibmuc.com (unknown [9.179.0.126])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 16 Dec 2024 09:21:57 +0000 (GMT)
+From: Christoph Schlameuss <schlameuss@linux.ibm.com>
+To: kvm@vger.kernel.org
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
+        linux-s390@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Ulrich Weigand <ulrich.weigand@de.ibm.com>,
+        Dominik Dingel <dingel@linux.vnet.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: [PATCH v2 0/6] selftests: kvm: s390: Reject invalid ioctls on ucontrol VMs
+Date: Mon, 16 Dec 2024 10:21:34 +0100
+Message-ID: <20241216092140.329196-1-schlameuss@linux.ibm.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: n7FPiz6nEczHTxmAXZPgqfP8F6fAcdDe
-X-Proofpoint-GUID: swZOic95wKZ-YcZEdGzI69jv_opTL1sv
+X-Proofpoint-ORIG-GUID: ioP2lhAIBxCiOCbpJk-EVV-7_VVCGrrn
+X-Proofpoint-GUID: ioP2lhAIBxCiOCbpJk-EVV-7_VVCGrrn
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
  definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
- suspectscore=0 lowpriorityscore=0 adultscore=0 clxscore=1011
- mlxlogscore=588 priorityscore=1501 malwarescore=0 impostorscore=0
- mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0 bulkscore=0
+ adultscore=0 mlxscore=0 impostorscore=0 mlxlogscore=754 suspectscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2411120000 definitions=main-2412160074
 
-Hi Dave,
+This patch series adds more test case issuing ioctls to ucontrol VMs and
+its floating interrupt controller.
+The test cases trigger three possible null pointer dereferences within
+the handling of the KVM_DEV_FLIC_APF_ENABLE,
+KVM_DEV_FLIC_APF_DISABLE_WAIT and KVM_SET_GSI_ROUTING ioctl.
 
-Drivers in drivers/staging/gpib/ cause multiple build errors (I guess not only)
-on s390, when allyesconfig configuration is used. Please, let me know if I am
-missing something.
+All of these issues do only exist on ucontrol VMs. Fixes for the issues
+are included within the patch series.
 
-Thanks!
+v2:
+- added documentation changes
+- simplify uc_flic_attrs; remove .getrc and .setrc from uc_flic_attrs
+(Thanks Claudio)
+
+Christoph Schlameuss (6):
+  kvm: s390: Reject setting flic pfault attributes on ucontrol VMs
+  selftests: kvm: s390: Add ucontrol flic attr selftests
+  kvm: s390: Reject KVM_SET_GSI_ROUTING on ucontrol VMs
+  selftests: kvm: s390: Add ucontrol gis routing test
+  selftests: kvm: s390: Streamline uc_skey test to issue iske after sske
+  selftests: kvm: s390: Add has device attr check to uc_attr_mem_limit
+    selftest
+
+ Documentation/virt/kvm/api.rst                |   3 +
+ Documentation/virt/kvm/devices/s390_flic.rst  |   4 +
+ arch/s390/kvm/interrupt.c                     |   6 +
+ .../selftests/kvm/s390x/ucontrol_test.c       | 194 ++++++++++++++++--
+ 4 files changed, 189 insertions(+), 18 deletions(-)
+
+-- 
+2.47.1
+
 
