@@ -1,69 +1,71 @@
-Return-Path: <linux-s390+bounces-7750-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-7755-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF21C9F5A36
-	for <lists+linux-s390@lfdr.de>; Wed, 18 Dec 2024 00:13:17 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0AE29F5D0E
+	for <lists+linux-s390@lfdr.de>; Wed, 18 Dec 2024 03:45:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 052C71715A7
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Dec 2024 23:10:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1C692189371E
+	for <lists+linux-s390@lfdr.de>; Wed, 18 Dec 2024 02:45:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72E8C1FA175;
-	Tue, 17 Dec 2024 23:10:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AA9714B959;
+	Wed, 18 Dec 2024 02:44:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iwdwlmJW"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="aKI0l9Fs"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E03E01EBA07;
-	Tue, 17 Dec 2024 23:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE7913F42F;
+	Wed, 18 Dec 2024 02:44:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734477005; cv=none; b=sVpjeOBbOerZEzrufDmzbb2QKfYf988Zy6HqDSiOKU8POA72muKu+JucxYLFh6uOx+s8d5xfJk65OFGIDZ/jIc6YRKr4GfdrbMr+KaWGFMonzyMPj/kzvzDBAHrZcWc0f6F12DVNRoWSzHkvKEatDr+yoJqAvzWG7tuTHsT9slo=
+	t=1734489879; cv=none; b=EbDdZxPcC7BPNWrjiydJXezlSD/dyfcKpe8K8niO0PS1FIyes2EYHLWPSiR9yxHI49tlSMUd35+oxjpTL3zyIfv3tSGlzS1tU9QxJb4bXEEZpBqtrJF+KhrcDGCziRPmSj4FOcWxjc0qFGEy1MUhpREh9Gh3TYMha5/aimEy5/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734477005; c=relaxed/simple;
-	bh=ZA5Vo3QaMUoEv0CB2a2TWNZh5CmOBLwYO51ucHEYKsA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HFDLZuK+RU6N18btabn9kcoH+saHvpqiEVu77A5feqibcvXGSrPuU7SpX/1hvfOhYerdMCX+ZqD8xHiOgTRHg80J9/IJmq1DL2zTMHJj26KETY52Z6S06l7sBbjZR79Yub72Km7PWEfLOxkLgGUuabV8m0wTQ7u7mZZAod6aFO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=iwdwlmJW; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from eahariha-devbox.5bhznamrcrmeznzvghz2s0u2eh.xx.internal.cloudapp.net (unknown [40.91.112.99])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 7D995238AF4D;
-	Tue, 17 Dec 2024 15:10:03 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7D995238AF4D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1734477003;
-	bh=WocG0qxvmHcCOlpFOfTVCHfuoVdDuRdRUMu/Tae06EM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iwdwlmJW9qmIm61ZFLg+K9NF/W/Mf3IGZ6u1kM2LvNovgglyn7uykJyWC/0cHnKMH
-	 xOrih05Dx8L3HtDpwfM4vZgdNtAl3SgdVOv38G2x7Isnx+P2YgIE4vMKZn1M06l9qn
-	 +o/yu0kCeChISYvXyWEyyLC8bkIpZLAUQnQRVGYg=
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	Miroslav Benes <mbenes@suse.cz>,
-	Petr Mladek <pmladek@suse.com>,
-	Joe Lawrence <joe.lawrence@redhat.com>
-Cc: linux-s390@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	live-patching@vger.kernel.org,
-	Easwar Hariharan <eahariha@linux.microsoft.com>
-Subject: [PATCH v4 2/2] livepatch: Convert timeouts to secs_to_jiffies()
-Date: Tue, 17 Dec 2024 23:09:59 +0000
-Message-ID: <20241217231000.228677-3-eahariha@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241217231000.228677-1-eahariha@linux.microsoft.com>
-References: <20241217231000.228677-1-eahariha@linux.microsoft.com>
+	s=arc-20240116; t=1734489879; c=relaxed/simple;
+	bh=AajkgNdYfDVPf5h30MJZ28AMOzbXrlyF3F9tu4DAi9w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ETdFRXCmQGSrHzEGfAGy2K3dOe9beDk9hktGYun60u8CjquEjPujDIQNo/1YB8kNG7z3pTyI8QciMHTzZW74gaYAaVuXoSPBXS094xsGhjWkDFbbxscqfIZxOdgHnuWrjSwFO8c1+LzAS62RdvUOeANsTqG6BawLjVoKFNlKl4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=aKI0l9Fs; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1734489868; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=GiaqvJ/ATJVxRZbvIn3hyHmB1fPXH0dg0ZXdH0cIS+k=;
+	b=aKI0l9FsdOz2X4cHeIAnjtDlPFOTQcqu42kLbVEtGvRrBkqXpd9XLMBWJQ9SnH3CajX4bNgTuJjJfNkyxgezvJ94TQZDBIxa+Z7tN2i+Hi/ZU15KgvYb2RwplzBnGXF/ca7myd/pUY8PN4pP5a68z8fBUdwu6dvnV1ieauD5nuI=
+Received: from j66a10360.sqa.eu95.tbsite.net(mailfrom:alibuda@linux.alibaba.com fp:SMTPD_---0WLko6by_1734489862 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 18 Dec 2024 10:44:27 +0800
+From: "D. Wythe" <alibuda@linux.alibaba.com>
+To: kgraul@linux.ibm.com,
+	wenjia@linux.ibm.com,
+	jaka@linux.ibm.com,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	pabeni@redhat.com,
+	song@kernel.org,
+	sdf@google.com,
+	haoluo@google.com,
+	yhs@fb.com,
+	edumazet@google.com,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	jolsa@kernel.org,
+	guwen@linux.alibaba.com
+Cc: kuba@kernel.org,
+	davem@davemloft.net,
+	netdev@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH bpf-next v3 0/5] net/smc: Introduce smc_ops
+Date: Wed, 18 Dec 2024 10:44:16 +0800
+Message-ID: <20241218024422.23423-1-alibuda@linux.alibaba.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -72,106 +74,70 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Commit b35108a51cf7 ("jiffies: Define secs_to_jiffies()") introduced
-secs_to_jiffies(). As the value here is a multiple of 1000, use
-secs_to_jiffies() instead of msecs_to_jiffies to avoid the multiplication.
+This patches attempt to introduce BPF injection capability for SMC,
+and add selftest to ensure code stability.
 
-This is converted using scripts/coccinelle/misc/secs_to_jiffies.cocci with
-the following Coccinelle rules:
+Since the SMC protocol is not suitable for all scenarios,
+especially for short-lived. For most applications, they cannot
+guarantee that there are no such scenarios at all. Therefore, apps
+may need some specific strategies to decide shall we need to use SMC
+or not, for example, apps can limit the scope of the SMC to a specific
+IP address or port.
 
-@@ constant C; @@
+Based on the consideration of transparent replacement, we hope that apps
+can remain transparent even if they need to formulate some specific
+strategies for SMC using. That is, do not need to recompile their code.
 
-- msecs_to_jiffies(C * 1000)
-+ secs_to_jiffies(C)
+On the other hand, we need to ensure the scalability of strategies
+implementation. Although it is simple to use socket options or sysctl,
+it will bring more complexity to subsequent expansion.
 
-@@ constant C; @@
+Fortunately, BPF can solve these concerns very well, users can write
+thire own strategies in eBPF to choose whether to use SMC or not.
+And it's quite easy for them to modify their strategies in the future.
 
-- msecs_to_jiffies(C * MSEC_PER_SEC)
-+ secs_to_jiffies(C)
+v2:
+  1. Rename smc_bpf_ops to smc_ops.
+  2. Change the scope of smc_ops from global to per netns.
+  3. Directly pass parameters to ops instead of smc_ops_ctx.
+  4. Remove struct smc_ops_ctx.
+  5. Remove exports that are no longer needed.
 
-While here, replace the schedule_delayed_work() call with a 0 timeout
-with an immediate schedule_work() call.
+v3:
+  1. Remove find_ksym_btf_id_by_prefix_kind.
+  2. Enhance selftest, introduce a complete ops for filtering smc
+     connections based on ip pairs and a realistic topology test
+     to verify it.
 
-Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
----
- samples/livepatch/livepatch-callbacks-busymod.c |  3 +--
- samples/livepatch/livepatch-shadow-fix1.c       |  3 +--
- samples/livepatch/livepatch-shadow-mod.c        | 15 +++++----------
- 3 files changed, 7 insertions(+), 14 deletions(-)
+D. Wythe (5):
+  bpf: export necessary sympols for modules with struct_ops
+  net/smc: Introduce generic hook smc_ops
+  net/smc: bpf: register smc_ops info struct_ops
+  libbpf: fix error when st-prefix_ops and ops from differ btf
+  bpf/selftests: add selftest for bpf_smc_ops
 
-diff --git a/samples/livepatch/livepatch-callbacks-busymod.c b/samples/livepatch/livepatch-callbacks-busymod.c
-index 378e2d40271a..0220f7715fcc 100644
---- a/samples/livepatch/livepatch-callbacks-busymod.c
-+++ b/samples/livepatch/livepatch-callbacks-busymod.c
-@@ -44,8 +44,7 @@ static void busymod_work_func(struct work_struct *work)
- static int livepatch_callbacks_mod_init(void)
- {
- 	pr_info("%s\n", __func__);
--	schedule_delayed_work(&work,
--		msecs_to_jiffies(1000 * 0));
-+	schedule_work(&work);
- 	return 0;
- }
- 
-diff --git a/samples/livepatch/livepatch-shadow-fix1.c b/samples/livepatch/livepatch-shadow-fix1.c
-index 6701641bf12d..f3f153895d6c 100644
---- a/samples/livepatch/livepatch-shadow-fix1.c
-+++ b/samples/livepatch/livepatch-shadow-fix1.c
-@@ -72,8 +72,7 @@ static struct dummy *livepatch_fix1_dummy_alloc(void)
- 	if (!d)
- 		return NULL;
- 
--	d->jiffies_expire = jiffies +
--		msecs_to_jiffies(1000 * EXPIRE_PERIOD);
-+	d->jiffies_expire = jiffies + secs_to_jiffies(EXPIRE_PERIOD);
- 
- 	/*
- 	 * Patch: save the extra memory location into a SV_LEAK shadow
-diff --git a/samples/livepatch/livepatch-shadow-mod.c b/samples/livepatch/livepatch-shadow-mod.c
-index 7e753b0d2fa6..5d83ad5a8118 100644
---- a/samples/livepatch/livepatch-shadow-mod.c
-+++ b/samples/livepatch/livepatch-shadow-mod.c
-@@ -101,8 +101,7 @@ static __used noinline struct dummy *dummy_alloc(void)
- 	if (!d)
- 		return NULL;
- 
--	d->jiffies_expire = jiffies +
--		msecs_to_jiffies(1000 * EXPIRE_PERIOD);
-+	d->jiffies_expire = jiffies + secs_to_jiffies(EXPIRE_PERIOD);
- 
- 	/* Oops, forgot to save leak! */
- 	leak = kzalloc(sizeof(*leak), GFP_KERNEL);
-@@ -152,8 +151,7 @@ static void alloc_work_func(struct work_struct *work)
- 	list_add(&d->list, &dummy_list);
- 	mutex_unlock(&dummy_list_mutex);
- 
--	schedule_delayed_work(&alloc_dwork,
--		msecs_to_jiffies(1000 * ALLOC_PERIOD));
-+	schedule_delayed_work(&alloc_dwork, secs_to_jiffies(ALLOC_PERIOD));
- }
- 
- /*
-@@ -184,16 +182,13 @@ static void cleanup_work_func(struct work_struct *work)
- 	}
- 	mutex_unlock(&dummy_list_mutex);
- 
--	schedule_delayed_work(&cleanup_dwork,
--		msecs_to_jiffies(1000 * CLEANUP_PERIOD));
-+	schedule_delayed_work(&cleanup_dwork, secs_to_jiffies(CLEANUP_PERIOD));
- }
- 
- static int livepatch_shadow_mod_init(void)
- {
--	schedule_delayed_work(&alloc_dwork,
--		msecs_to_jiffies(1000 * ALLOC_PERIOD));
--	schedule_delayed_work(&cleanup_dwork,
--		msecs_to_jiffies(1000 * CLEANUP_PERIOD));
-+	schedule_delayed_work(&alloc_dwork, secs_to_jiffies(ALLOC_PERIOD));
-+	schedule_delayed_work(&cleanup_dwork, secs_to_jiffies(CLEANUP_PERIOD));
- 
- 	return 0;
- }
+ include/net/netns/smc.h                       |   3 +
+ include/net/smc.h                             |  51 ++
+ kernel/bpf/bpf_struct_ops.c                   |   2 +
+ kernel/bpf/syscall.c                          |   1 +
+ net/ipv4/tcp_output.c                         |  15 +-
+ net/smc/Kconfig                               |  12 +
+ net/smc/Makefile                              |   1 +
+ net/smc/af_smc.c                              |  10 +
+ net/smc/smc_ops.c                             | 150 +++++
+ net/smc/smc_ops.h                             |  31 +
+ net/smc/smc_sysctl.c                          |  95 ++++
+ tools/lib/bpf/libbpf.c                        |  25 +-
+ tools/testing/selftests/bpf/config            |   4 +
+ .../selftests/bpf/prog_tests/test_bpf_smc.c   | 535 ++++++++++++++++++
+ tools/testing/selftests/bpf/progs/bpf_smc.c   | 109 ++++
+ 15 files changed, 1032 insertions(+), 12 deletions(-)
+ create mode 100644 net/smc/smc_ops.c
+ create mode 100644 net/smc/smc_ops.h
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/test_bpf_smc.c
+ create mode 100644 tools/testing/selftests/bpf/progs/bpf_smc.c
+
 -- 
-2.43.0
+2.45.0
 
 
