@@ -1,363 +1,171 @@
-Return-Path: <linux-s390+bounces-7918-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-7920-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF7939FF7A0
-	for <lists+linux-s390@lfdr.de>; Thu,  2 Jan 2025 10:46:35 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D092A9FFAFE
+	for <lists+linux-s390@lfdr.de>; Thu,  2 Jan 2025 16:27:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4C9AA162014
-	for <lists+linux-s390@lfdr.de>; Thu,  2 Jan 2025 09:46:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3B86C7A07F0
+	for <lists+linux-s390@lfdr.de>; Thu,  2 Jan 2025 15:27:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AF1919ABA3;
-	Thu,  2 Jan 2025 09:46:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F20BF1B4127;
+	Thu,  2 Jan 2025 15:27:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="elIisGb9"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Nvsjs2o/"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5639192B89;
-	Thu,  2 Jan 2025 09:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0481B4120
+	for <linux-s390@vger.kernel.org>; Thu,  2 Jan 2025 15:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735811187; cv=none; b=mztEs/0P3IWJjwCi0q9nCR8EdvYJV2i3cd9JhcbCdsqXProjMHu0JeP/TB1ALOfwTShuGe6T6GxLTqdlV4a0be65saFuUPFZcPQ9Ax5DO8WUSejn2eg+ohoH3KEJLHtOI+aTtDqBlLvUMReoPQ4KH53FTpBa8Ep2FvPvAZ8QRyI=
+	t=1735831665; cv=none; b=dq0e4rOHlHKUydg+hd9emM1hNQ+nzbOt3ZbwNz1IneDao0Iy/kZUFxc0h6WqW/vbMnZbI3r1aJabyTcvF/ErjSrXizv9kWsF0vZkRpJ8ylJ95mkOWEQrJ7oGI9b/ttmEMM65a6naZomyvRMZBRm450UNiaoSLCvY+o8+lLXdYJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735811187; c=relaxed/simple;
-	bh=umM8wNgp37Q2grbeOtXCEKLQLs0LPxP6pRkQB46gXPY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cnOIqXgdtanccuuMk7Bjk0eY2ZT5pR1/B+4+aN5u5kB9N3fRFAx6ArmsOa6vxwjmJ4f0hvGQfaauWqOvsjKlJNdW1+O48isd32b2Xqj64RjJbWcgpJASWSEjtog0PQgKZUzNVXptVqOxfXm0EFPKdj2F8gz/7VvBFNrLPMpVVJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=elIisGb9; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50285gwT014776;
-	Thu, 2 Jan 2025 09:46:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=u8OyPDHUt/e9x+Z2J
-	NgmZyMqYzkfNgis59tgA1SA5R8=; b=elIisGb9ckqelq+Ahvy8/bXccfNW2V3tW
-	IoTPzQN3N1yUY0hSCWVy5QgvPdNC8Mr0hpNfzw1iWjRtb+4YRVbUrtPeNDEfAHVp
-	kKOJRjHeUSsg8cHMLlMLwwgXLaY91fw3pvdUt0E5zpcqyByyNpLEWL9CFONw/n7I
-	qhBBrGWX2zgYJSsNy42rQCddjsAU+TfFDY7xlx8P3cw7Kitox7CvXlrVoZb3lSFv
-	rw9jKDR+ahN60qxzmUJ0uFGvJ37J5WulNdCHo8gASaPb3rb/w03FGgchWPx0IrwF
-	H6/YugefLptBW72KJwNiy2ltojU/aS/ZPe/DGxWn1EH9bOYxgociw==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43wq0289y5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 02 Jan 2025 09:46:20 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5024h4S9016661;
-	Thu, 2 Jan 2025 09:46:19 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 43tw5khfkq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 02 Jan 2025 09:46:19 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5029kHCo56820028
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 2 Jan 2025 09:46:17 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9435E2004D;
-	Thu,  2 Jan 2025 09:46:17 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 45A632004E;
-	Thu,  2 Jan 2025 09:46:17 +0000 (GMT)
-Received: from funtu2.fritz.box?044ibm.com (unknown [9.171.11.208])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  2 Jan 2025 09:46:17 +0000 (GMT)
-From: Harald Freudenberger <freude@linux.ibm.com>
-To: herbert@gondor.apana.org.au, davem@davemloft.net, dengler@linux.ibm.com
-Cc: linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org
-Subject: [PATCH v9 3/3] s390/crypto: Enable phmac selftest invocation
-Date: Thu,  2 Jan 2025 10:46:15 +0100
-Message-ID: <20250102094615.99181-4-freude@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250102094615.99181-1-freude@linux.ibm.com>
-References: <20250102094615.99181-1-freude@linux.ibm.com>
+	s=arc-20240116; t=1735831665; c=relaxed/simple;
+	bh=n+Gj8NdzfT6j/tuL1ZIoARiw552+ZjcUH8ctsmzGD2Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LBCd5pYewik3mQXJWex2JUzCCGRj6zS4fNcGLIL7hiC0rcGkgwdM6kTkKPm3leRJPCWakWQceAYAUd7cH4e/hWZpfZzcJmQWAR6P5vYzJQt0ts2VLhOnsaKui8rhBEPNKp79GySQh+E7UR9/kN/n7+4k2TUDoWH3cZfANCmg7rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Nvsjs2o/; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4362f61757fso114337715e9.2
+        for <linux-s390@vger.kernel.org>; Thu, 02 Jan 2025 07:27:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1735831661; x=1736436461; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=05upqEVJPolnyr/HoSHZRKWoniI8eKda58PhaQdla5Y=;
+        b=Nvsjs2o/GLN5+oGmb64SN7c3a5HDtS8oU2w1l2X0BGXj+J7C67dJSQeEP2J0eIi/va
+         DPg9FkqXtNEbpjGKZskeuYeeGl+h2odl4et+tnPWVHJzezneb5V7nOrBGRXVWBINHvaP
+         GWtYwQid70k4s2Vk3cUPMb8/kaPBvlAH6LqkV4Re4qcyC2FBFzCqezPqRBvrtp3tq9m5
+         IFYellCDkg5ySJLoVZCZvfumtgdhhRH0UQzNwtX8zUZm1CHonSWY3K4taNJgWOLelLrz
+         oNssUzAAsUVxpXHbHWG/yOxj+A3bT4zR1vfrhYrRRAQiu+IbqTvkQRH6HJxMgpVGCfJv
+         b/WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735831661; x=1736436461;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=05upqEVJPolnyr/HoSHZRKWoniI8eKda58PhaQdla5Y=;
+        b=Ig8vmYHIwtOlQeJV8nIwAOvu9KY8brQwCLY7NS8d7ZaPcWBSV5Dnlt/3kHU2FwQau7
+         jrxCeCRP7gsvXJvQULX5xBt5/P3GAAdavV46UlmcT95OrsSILDz/0x9XZmiWtAS9GCX6
+         F6WusvPN5fPbqX99NeXk4dRG2Wc/43tfASwGMDxjeQx7MibiKhNa3egfISGPUEvKPj7P
+         +XL+jRj4+7AzeIF6sjxjGYpXd8fifBYE3lDKMZTC6h+lMhucXJqSdv0U5CE6Ahx+9bYJ
+         SsJSxVp5UgehtvqNne2v+1VpWRGV9L7ho+OCYMoK6ekDEeulvspHpM16IEQVpa+pS1SP
+         QT7g==
+X-Forwarded-Encrypted: i=1; AJvYcCUUsfV99bu3aXrd+PPbaDXItqj9eZn8P7pdOfU75KyTdSD/MF28sk7I7OgFZflEBSjWlNgbG2WoTvkM@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2Vxay4tW8DBa094s2DGKZj+UsUNNy/ZSRMPSjnvgOsfPKhLXl
+	bayJEQRM9iqPxoyA34y5DytWfhCMlgzdCu6JGC10x8ehyDTKM3oe2v9dR0daum4=
+X-Gm-Gg: ASbGncvJaNSk5tmYIr3qdqpFSywex0Ffp7RZiTHfUDpnJDdQABezrPBLDN4y2pa6ntt
+	0h3xZp7KAn0cbIKopKJQBQKmLRaDNrGCjr4bxYrFNcdT+DB648KhpwAC2x0OTh4hLIWORfUiT2Z
+	qSqvKYUbJD+05c5JKgwVzsnCu7U2u+jdzgon9jqnpStMA6puKP27kpSIeWduoR8VpVx6NxUrimz
+	jcS6/JsSRsUnJgpOmvTr760Kzjf0z9q47hz9VSdnZPEDkPfA/xsW/kEAw==
+X-Google-Smtp-Source: AGHT+IFcM1oKMh1kjxBO7ycMH/tQaCFmKpK0dg2zqRMgKTMW78Q/ZGzddqirXlD2dJ4tXVJnV9Cs1Q==
+X-Received: by 2002:a05:600c:35d2:b0:435:d22:9c9e with SMTP id 5b1f17b1804b1-43668646335mr389612275e9.19.1735831660707;
+        Thu, 02 Jan 2025 07:27:40 -0800 (PST)
+Received: from pathway.suse.cz ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43661218f43sm458314275e9.19.2025.01.02.07.27.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2025 07:27:39 -0800 (PST)
+Date: Thu, 2 Jan 2025 16:27:36 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Easwar Hariharan <eahariha@linux.microsoft.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+	Joe Lawrence <joe.lawrence@redhat.com>, linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] livepatch: Convert timeouts to secs_to_jiffies()
+Message-ID: <Z3awaFzhgvY3bypu@pathway.suse.cz>
+References: <20241217231000.228677-1-eahariha@linux.microsoft.com>
+ <20241217231000.228677-3-eahariha@linux.microsoft.com>
+ <Z2KJ8C7nOOK2tJ1X@pathway.suse.cz>
+ <f54d34f8-05cd-4081-92a2-85df3f76a35b@csgroup.eu>
+ <195abda2-8209-45aa-9652-f981a5de2eae@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: N1uPCkdJ-g5x-CIGgkfSkC5L1aBFAFU8
-X-Proofpoint-GUID: N1uPCkdJ-g5x-CIGgkfSkC5L1aBFAFU8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 mlxscore=0 phishscore=0 clxscore=1015 malwarescore=0
- impostorscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0 mlxlogscore=999
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501020081
+In-Reply-To: <195abda2-8209-45aa-9652-f981a5de2eae@linux.microsoft.com>
 
-- Add a little helper inline function
-    crypto_tfm_alg_get_flags()
-  to crypto.h to retrieve the alg flags.
-- Add key preparation code in case of selftest running
-  to the phmac setkey function.
-- Add phmac selftest invocation to the crypto testmanager.
+On Wed 2024-12-18 09:35:46, Easwar Hariharan wrote:
+> On 12/18/2024 12:48 AM, Christophe Leroy wrote:
+> > 
+> > 
+> > Le 18/12/2024 à 09:38, Petr Mladek a écrit :
+> >> On Tue 2024-12-17 23:09:59, Easwar Hariharan wrote:
+> >>> Commit b35108a51cf7 ("jiffies: Define secs_to_jiffies()") introduced
+> >>> secs_to_jiffies(). As the value here is a multiple of 1000, use
+> >>> secs_to_jiffies() instead of msecs_to_jiffies to avoid the
+> >>> multiplication.
+> >>>
+> >>> This is converted using scripts/coccinelle/misc/secs_to_jiffies.cocci
+> >>> with
+> >>> the following Coccinelle rules:
+> >>>
+> >>> @@ constant C; @@
+> >>>
+> >>> - msecs_to_jiffies(C * 1000)
+> >>> + secs_to_jiffies(C)
+> >>>
+> >>> @@ constant C; @@
+> >>>
+> >>> - msecs_to_jiffies(C * MSEC_PER_SEC)
+> >>> + secs_to_jiffies(C)
+> >>>
+> >>> While here, replace the schedule_delayed_work() call with a 0 timeout
+> >>> with an immediate schedule_work() call.
+> >>>
+> >>> --- a/samples/livepatch/livepatch-callbacks-busymod.c
+> >>> +++ b/samples/livepatch/livepatch-callbacks-busymod.c
+> >>> @@ -44,8 +44,7 @@ static void busymod_work_func(struct work_struct
+> >>> *work)
+> >>>   static int livepatch_callbacks_mod_init(void)
+> >>>   {
+> >>>       pr_info("%s\n", __func__);
+> >>> -    schedule_delayed_work(&work,
+> >>> -        msecs_to_jiffies(1000 * 0));
+> >>> +    schedule_work(&work);
+> >>
+> >> Is it safe to use schedule_work() for struct delayed_work?
+> > 
+> > Should be, but you are right it should then be a standard work not a
+> > delayed work.
+> > 
+> > So probably the easiest is to keep
+> > 
+> >     schedule_delayed_work(&work, 0)
+> > 
+> > And eventually changing it to a not delayed work could be a follow-up
+> > patch.
+> > 
+> >>
+> 
+> Thanks for the catch, Petr! This suggestion would effectively revert
+> this patch to the v3 version, albeit with some extra explanation in the
+> commit message. I'd propose just keeping the v3 in the next branch where
+> it is.
+> 
+> Andrew, Petr, Christophe, what do you think?
 
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
----
- arch/s390/crypto/phmac_s390.c | 144 ++++++++++++++++++++++++++++++++--
- crypto/testmgr.c              |  30 +++++++
- include/linux/crypto.h        |   5 ++
- 3 files changed, 174 insertions(+), 5 deletions(-)
+I am fine with keeping v3 in next.
 
-diff --git a/arch/s390/crypto/phmac_s390.c b/arch/s390/crypto/phmac_s390.c
-index b2b389e94a37..3d80168775ab 100644
---- a/arch/s390/crypto/phmac_s390.c
-+++ b/arch/s390/crypto/phmac_s390.c
-@@ -112,6 +112,19 @@ struct s390_phmac_req_ctx {
- 	struct s390_kmac_sha2_ctx sha2_ctx;
- };
- 
-+/*
-+ * Pkey 'token' struct used to derive a protected key value from a clear key.
-+ */
-+struct hmac_clrkey_token {
-+	u8  type;
-+	u8  res0[3];
-+	u8  version;
-+	u8  res1[3];
-+	u32 keytype;
-+	u32 len;
-+	u8 key[];
-+} __packed;
-+
- /*
-  * kmac_sha2_set_imbl - sets the input message bit-length based on the blocksize
-  */
-@@ -132,6 +145,101 @@ static inline void kmac_sha2_set_imbl(u8 *param, unsigned int buflen,
- 	}
- }
- 
-+static int hash_key(const u8 *in, unsigned int inlen,
-+		    u8 *digest, unsigned int digestsize)
-+{
-+	unsigned long func;
-+	union {
-+		struct sha256_paramblock {
-+			u32 h[8];
-+			u64 mbl;
-+		} sha256;
-+		struct sha512_paramblock {
-+			u64 h[8];
-+			u128 mbl;
-+		} sha512;
-+	} __packed param;
-+
-+#define PARAM_INIT(x, y, z)		   \
-+	param.sha##x.h[0] = SHA##y ## _H0; \
-+	param.sha##x.h[1] = SHA##y ## _H1; \
-+	param.sha##x.h[2] = SHA##y ## _H2; \
-+	param.sha##x.h[3] = SHA##y ## _H3; \
-+	param.sha##x.h[4] = SHA##y ## _H4; \
-+	param.sha##x.h[5] = SHA##y ## _H5; \
-+	param.sha##x.h[6] = SHA##y ## _H6; \
-+	param.sha##x.h[7] = SHA##y ## _H7; \
-+	param.sha##x.mbl = (z)
-+
-+	switch (digestsize) {
-+	case SHA224_DIGEST_SIZE:
-+		func = CPACF_KLMD_SHA_256;
-+		PARAM_INIT(256, 224, inlen * 8);
-+		break;
-+	case SHA256_DIGEST_SIZE:
-+		func = CPACF_KLMD_SHA_256;
-+		PARAM_INIT(256, 256, inlen * 8);
-+		break;
-+	case SHA384_DIGEST_SIZE:
-+		func = CPACF_KLMD_SHA_512;
-+		PARAM_INIT(512, 384, inlen * 8);
-+		break;
-+	case SHA512_DIGEST_SIZE:
-+		func = CPACF_KLMD_SHA_512;
-+		PARAM_INIT(512, 512, inlen * 8);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+#undef PARAM_INIT
-+
-+	cpacf_klmd(func, &param, in, inlen);
-+
-+	memcpy(digest, &param, digestsize);
-+
-+	return 0;
-+}
-+
-+/*
-+ * make_clrkey_token() - wrap the clear key into a pkey clearkey token.
-+ */
-+static inline int make_clrkey_token(const u8 *clrkey, size_t clrkeylen,
-+				    unsigned int digestsize, u8 *dest)
-+{
-+	struct hmac_clrkey_token *token = (struct hmac_clrkey_token *)dest;
-+	unsigned int blocksize;
-+	int rc;
-+
-+	token->type = 0x00;
-+	token->version = 0x02;
-+	switch (digestsize) {
-+	case SHA224_DIGEST_SIZE:
-+	case SHA256_DIGEST_SIZE:
-+		token->keytype = PKEY_KEYTYPE_HMAC_512;
-+		blocksize = 64;
-+		break;
-+	case SHA384_DIGEST_SIZE:
-+	case SHA512_DIGEST_SIZE:
-+		token->keytype = PKEY_KEYTYPE_HMAC_1024;
-+		blocksize = 128;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	token->len = blocksize;
-+
-+	if (clrkeylen > blocksize) {
-+		rc = hash_key(clrkey, clrkeylen, token->key, digestsize);
-+		if (rc)
-+			return rc;
-+	} else {
-+		memcpy(token->key, clrkey, clrkeylen);
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * Convert the raw key material into a protected key via PKEY api.
-  * This function may sleep - don't call in non-sleeping context.
-@@ -680,6 +788,10 @@ static int s390_phmac_setkey(struct crypto_ahash *tfm,
- 			     const u8 *key, unsigned int keylen)
- {
- 	struct s390_phmac_ctx *tfm_ctx = crypto_ahash_ctx(tfm);
-+	struct crypto_tfm *tfm_base = crypto_ahash_tfm(tfm);
-+	unsigned int ds = crypto_ahash_digestsize(tfm);
-+	unsigned int bs = crypto_ahash_blocksize(tfm);
-+	int rc = 0;
- 
- 	if (tfm_ctx->keylen) {
- 		kfree_sensitive(tfm_ctx->key);
-@@ -687,10 +799,26 @@ static int s390_phmac_setkey(struct crypto_ahash *tfm,
- 		tfm_ctx->keylen = 0;
- 	}
- 
--	tfm_ctx->key = kmemdup(key, keylen, GFP_ATOMIC);
--	if (!tfm_ctx->key)
--		return -ENOMEM;
--	tfm_ctx->keylen = keylen;
-+	if (crypto_tfm_alg_get_flags(tfm_base) & CRYPTO_ALG_TESTED) {
-+		/* no selftest: key is always a key token digestable by PKEY */
-+		tfm_ctx->key = kmemdup(key, keylen, GFP_ATOMIC);
-+		if (!tfm_ctx->key) {
-+			rc = -ENOMEM;
-+			goto out;
-+		}
-+		tfm_ctx->keylen = keylen;
-+	} else {
-+		/* selftest running: key is a raw hmac clear key */
-+		tfm_ctx->keylen = sizeof(struct hmac_clrkey_token) + bs;
-+		tfm_ctx->key = kzalloc(tfm_ctx->keylen, GFP_ATOMIC);
-+		if (!tfm_ctx->key) {
-+			rc = -ENOMEM;
-+			goto out;
-+		}
-+		rc = make_clrkey_token(key, keylen, ds, tfm_ctx->key);
-+		if (rc)
-+			goto out;
-+	}
- 
- 	/* Always trigger an asynch key convert */
- 	spin_lock_bh(&tfm_ctx->pk_lock);
-@@ -698,8 +826,9 @@ static int s390_phmac_setkey(struct crypto_ahash *tfm,
- 	spin_unlock_bh(&tfm_ctx->pk_lock);
- 	schedule_delayed_work(&tfm_ctx->work, 0);
- 
-+out:
- 	pr_debug("rc=0\n");
--	return 0;
-+	return rc;
- }
- 
- static int s390_phmac_import(struct ahash_request *req, const void *in)
-@@ -816,6 +945,11 @@ static int __init phmac_s390_init(void)
- 	struct s390_hmac_alg *hmac;
- 	int i, rc = -ENODEV;
- 
-+	if (!cpacf_query_func(CPACF_KLMD, CPACF_KLMD_SHA_256))
-+		return -ENODEV;
-+	if (!cpacf_query_func(CPACF_KLMD, CPACF_KLMD_SHA_512))
-+		return -ENODEV;
-+
- 	for (i = 0; i < ARRAY_SIZE(s390_hmac_algs); i++) {
- 		hmac = &s390_hmac_algs[i];
- 		if (!cpacf_query_func(CPACF_KMAC, hmac->fc))
-diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-index 1f5f48ab18c7..e753a68be861 100644
---- a/crypto/testmgr.c
-+++ b/crypto/testmgr.c
-@@ -5539,6 +5539,36 @@ static const struct alg_test_desc alg_test_descs[] = {
- 			.cipher = __VECS(fcrypt_pcbc_tv_template)
- 		}
- 	}, {
-+#if IS_ENABLED(CONFIG_CRYPTO_PHMAC_S390)
-+		.alg = "phmac(sha224)",
-+		.test = alg_test_hash,
-+		.fips_allowed = 1,
-+		.suite = {
-+			.hash = __VECS(hmac_sha224_tv_template)
-+		}
-+	}, {
-+		.alg = "phmac(sha256)",
-+		.test = alg_test_hash,
-+		.fips_allowed = 1,
-+		.suite = {
-+			.hash = __VECS(hmac_sha256_tv_template)
-+		}
-+	}, {
-+		.alg = "phmac(sha384)",
-+		.test = alg_test_hash,
-+		.fips_allowed = 1,
-+		.suite = {
-+			.hash = __VECS(hmac_sha384_tv_template)
-+		}
-+	}, {
-+		.alg = "phmac(sha512)",
-+		.test = alg_test_hash,
-+		.fips_allowed = 1,
-+		.suite = {
-+			.hash = __VECS(hmac_sha512_tv_template)
-+		}
-+	}, {
-+#endif
- 		.alg = "pkcs1(rsa,none)",
- 		.test = alg_test_sig,
- 		.suite = {
-diff --git a/include/linux/crypto.h b/include/linux/crypto.h
-index b164da5e129e..8b37d381cd97 100644
---- a/include/linux/crypto.h
-+++ b/include/linux/crypto.h
-@@ -472,6 +472,11 @@ static inline unsigned int crypto_tfm_alg_alignmask(struct crypto_tfm *tfm)
- 	return tfm->__crt_alg->cra_alignmask;
- }
- 
-+static inline u32 crypto_tfm_alg_get_flags(struct crypto_tfm *tfm)
-+{
-+	return tfm->__crt_alg->cra_flags;
-+}
-+
- static inline u32 crypto_tfm_get_flags(struct crypto_tfm *tfm)
- {
- 	return tfm->crt_flags;
--- 
-2.43.0
-
+Best Regards,
+Petr
 
