@@ -1,133 +1,163 @@
-Return-Path: <linux-s390+bounces-8021-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-8023-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 838C8A03F51
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Jan 2025 13:35:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 87724A03FB9
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Jan 2025 13:49:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7AA9D164C88
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Jan 2025 12:35:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7E757166449
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Jan 2025 12:49:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45F871E52D;
-	Tue,  7 Jan 2025 12:35:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 181C11F2373;
+	Tue,  7 Jan 2025 12:47:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="X68KFNeR"
+	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="CQTrywj7"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6D928E37;
-	Tue,  7 Jan 2025 12:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9561F03CF
+	for <linux-s390@vger.kernel.org>; Tue,  7 Jan 2025 12:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736253338; cv=none; b=M0gpgkpQeFWT5njZdkUAkU0W/CeIAeD0OQhr9Xc29OAmYBEEiWEZX2W284qZEk07tp0dXW7gr7amJOT2aIytLjy5JDqfGNa1znb2ySt7CoE90qFqTLua7PC+AxxYElxDHe+nbWov8Q4rN0uCYkgGUNSelefd+Sv1yhtMPEtSX9U=
+	t=1736254078; cv=none; b=K481tUTqQw9wuovaOSlLavN9LoLpXBMgaCwma13lMTtxTCHkwz2eOcf0Xh0C00LlCvzJdOtkPnt1lGLjUMfpgofRx0UVWICY62AWkvqtJWW6dSXrBaY6wROGeaGhFsY2USu4irK2hfm6uUzm3kh7Vk2LWon9XYA+OWdwAkWKWtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736253338; c=relaxed/simple;
-	bh=0O311cBlJrQ2gPJ2KwNJEGoVZEQemESwgik+5DVRZ6M=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Cc:To:Subject:
-	 References:In-Reply-To; b=TTpTfE9pVyRBFW+k2eVRzxa9YXvkYbWdYaz6KiLrmKvjY3MARJ0cNEIPZxQKYB2oz3VdcTzfIm7QokJWAT/CLKfz5yNoQFt6dQay17buPhgwKNMXz+Pw2MLZNZDNA7H04H/omCnlNDHWCP/DSpVOgoEjHGtgrERae7uxLIPBsfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=X68KFNeR; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5073t59o021223;
-	Tue, 7 Jan 2025 12:35:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=QIcVh6
-	cB7rM/VTSdrWxFMHfyScByyJD3LhZyhlO4RVM=; b=X68KFNeRUdj3xqWnJyajUx
-	lCROUQmMUN8WufnUEGSnoRjdF0nkElYtPtpei01ePZU6juwlXEnix6/qagAuCq6K
-	tXwp/k9hdXA0Zg2YYZUipGfufuF5D1hqNDUSJ95ShA4J2rim9EFeyIOaAlCrxwlU
-	GWX0ttLRw9OKf+sxuy4+i0Y3iAQWS0j43RignS82YU5+m/DNZ/k0iBfE75KqPc3R
-	OheNAAVmZEH5TYrg/zsPYgM/0rsDu/RtLP4FCWS2P1S2Mlgc2Lh1phBPqOdluQF/
-	Y1Y/RFy26tSJf2Cf/n1vcoDmGD3R7lmLigmlnXxUVgKpI/bynCty6qEvg0X1a5ww
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 440s0aaqum-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Jan 2025 12:35:27 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 507COwxO008851;
-	Tue, 7 Jan 2025 12:35:26 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 43yfpythsb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Jan 2025 12:35:26 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 507CZK9H55640424
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 7 Jan 2025 12:35:20 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 67F7A20049;
-	Tue,  7 Jan 2025 12:35:20 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 46A3A20040;
-	Tue,  7 Jan 2025 12:35:20 +0000 (GMT)
-Received: from darkmoore (unknown [9.171.31.59])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  7 Jan 2025 12:35:20 +0000 (GMT)
+	s=arc-20240116; t=1736254078; c=relaxed/simple;
+	bh=Oduf8yJfn6BPnkdQYS3faalrxm2ycKrnWGoNvF+FQtk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ALPRoKPlMlE2g0cknYMHH13lcYubKvimfSDAwKhMk07UPaJ9UrFdNzWXxDH963spmrzx01Te7FUyJOkkca65DLfbLLJU6WSEqLP9fb7jj2JZ14NtIqIzhuG57EgmFe5fo76zgi3h6/QFU1lPmefkZRLjHcwQ+HOzUzloV12wBL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=CQTrywj7; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-219f8263ae0so178323765ad.0
+        for <linux-s390@vger.kernel.org>; Tue, 07 Jan 2025 04:47:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1736254073; x=1736858873; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=opIuyGFUTzWuwcM2pYQXlXkOFxHji1aKoxh7XPTxYrQ=;
+        b=CQTrywj7pfsrB6zy2oh/C98ue+ctVi3i8Xn/h6DpHC+vQBzKYDkpUlqGtKPx+9EtJy
+         KYGEcDeA15r7V3uurpFft3VnJ/eLmKvbRZA4e2HVDwJRc5kY4+1QsfngNmJi9rXh3iqC
+         ha0VAAUkDnm8RO2DktEEMAH1tZb1JLyuOd8kMrquf5PWUPn0mGE8QmCOSZRQTQE9BsQU
+         SxArSiLkw39ErzsJoZAZbm9HeM66k8kfLlUJX8jXMDlXBCVgajp7qHug450zqPuu969m
+         Fcw6HhN+iGfNzVU5eDh38rCqkG30PKUPmKzeCSwYDjGeSyKPO6kqPnHvILcaODD//qqQ
+         CnBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736254073; x=1736858873;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=opIuyGFUTzWuwcM2pYQXlXkOFxHji1aKoxh7XPTxYrQ=;
+        b=nKW3x0pZROf3pf7FTfNiwQXqzVhBzAcmuGJsuqAXI1AnjEvlQmdqlYYPJuO8r8TBeF
+         v1RhFTH4W2N9LBhvtak7dGkCqnatNuipHcTTeWvu/GPe2kNE+qdigystpWdx6Ol7gaUK
+         BiNyDWY7pNKqyT6wRRNFZpogbhXz6yxef3L1b0YrMnaHWWY7k4gxJHihG9iG2f6MtlQb
+         ZXSKHC96X7O8cw2Avtc1Ea6Vph4ElRRtSRO20s5nhGHRSj2hqtgQRXjFJ2Am0tyVKfvX
+         8wkCw6TwO1yZUbE6ct4y0QnN4sXVoh7BRd6tPvEk9ayGyONT7gw2BlS5mCDfS1Z1zfU3
+         7UaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXsk9EXY54E9WVBSznRvogJ5baCgWl0G2An/iIFM9TYbuQf9Ep/1AX4Zh2FpL+w1/ujj97JIv0/aVUN@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8bBctsdKby4ImtGmaOR1sPzfGAIGh/zKpvit1PFA2QAM1mfTG
+	9HxMiZKWJdgabvzirMHmAaqC/0sNw09Zp3mEa2+DOSXsOyIDr8k0wC/bF4lQDtI=
+X-Gm-Gg: ASbGncuwMBQDpk8vSx4aMQRW96eJG7QDRfx3kGufpsz3mac8fJoecEV/bZshnFiPlwu
+	2nEdoxVeqdSkPg4fifjAv3QSVLTOvi+rTOxV4dHsrk21l0QA4YhvpiB+azNJPVNqayYxpr1robm
+	AuYG2SFHxzUMsWtFu8AZuS96kgCQ3zI/LIgSwA382VB2q8XXiDqnBP8Bw6Le6603ugx+FkLvQ6K
+	YOCt1HGOI8/tKBpHu/iIlajjo/NvblGk5wPo2491ajSZfaqWhXYT9vzTNU=
+X-Google-Smtp-Source: AGHT+IH/TI3sUb6l2+b2WaTSh1evq6vZuS5S4szn4UoWwy5hsMxR0UzHoKY9BZVjFfB8co0JCgCCAg==
+X-Received: by 2002:a17:903:11d2:b0:216:2f91:92c7 with SMTP id d9443c01a7336-219e6e89278mr972540505ad.12.1736254072686;
+        Tue, 07 Jan 2025 04:47:52 -0800 (PST)
+Received: from localhost ([157.82.203.37])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-219dc972b0dsm309970895ad.112.2025.01.07.04.47.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jan 2025 04:47:52 -0800 (PST)
+From: Akihiko Odaki <akihiko.odaki@daynix.com>
+Subject: [PATCH v3 0/6] elf: Define note name macros
+Date: Tue, 07 Jan 2025 21:45:51 +0900
+Message-Id: <20250107-elf-v3-0-99cb505b1ab2@daynix.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 07 Jan 2025 13:35:15 +0100
-Message-Id: <D6VUFLL8PPTQ.1VZ6VWPZWRVTD@linux.ibm.com>
-From: "Christoph Schlameuss" <schlameuss@linux.ibm.com>
-Cc: "Claudio Imbrenda" <imbrenda@linux.ibm.com>,
-        "Linux Kernel Mailing List"
- <linux-kernel@vger.kernel.org>,
-        "Linux Next Mailing List"
- <linux-next@vger.kernel.org>
-To: "Stephen Rothwell" <sfr@canb.auug.org.au>,
-        "Christian Borntraeger"
- <borntraeger@de.ibm.com>,
-        "Janosch Frank" <frankja@linux.ibm.com>, "KVM"
- <kvm@vger.kernel.org>,
-        "S390" <linux-s390@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the kvms390-fixes tree
-X-Mailer: aerc 0.18.2
-References: <20250106064232.3c34fdb1@canb.auug.org.au>
-In-Reply-To: <20250106064232.3c34fdb1@canb.auug.org.au>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Cf8xlSbxDmbr82tg_VUuzZ8-ujP5302K
-X-Proofpoint-ORIG-GUID: Cf8xlSbxDmbr82tg_VUuzZ8-ujP5302K
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
- phishscore=0 mlxlogscore=654 lowpriorityscore=0 impostorscore=0
- malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501070105
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAP8hfWcC/1WMwQ7CIBAFf6XhLGZZwIon/8N4aGFrSbQYMKRN0
+ 3+XVj14nJc3M7NE0VNip2pmkbJPPgwF5K5itm+GG3HvCjMEVAIFcLp3vD0CNdIoY6Vh5fmM1Pl
+ xq1yuhXufXiFOWzSLdf36qDc/Cy54bcgokBqchrNrpsGPexsebA1k/EkaBKiPhBx4XTuLBAfXK
+ vqTlmV5A7A3TXfMAAAA
+To: Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Mark Brown <broonie@kernel.org>, 
+ Dave Martin <Dave.Martin@arm.com>, Baoquan He <bhe@redhat.com>, 
+ Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
+ kexec@lists.infradead.org, binutils@sourceware.org, devel@daynix.com, 
+ Akihiko Odaki <akihiko.odaki@daynix.com>
+X-Mailer: b4 0.14-dev-fd6e3
 
-On Sun Jan 5, 2025 at 8:42 PM CET, Stephen Rothwell wrote:
-> Hi all,
->
-> In commit
->
->   6c2b70cc4887 ("selftests: kvm: s390: Streamline uc_skey test to issue i=
-ske after sske")
->
-> Fixes tag
->
->   Fixes: 7d900f8ac191 ("selftests: kvm: s390: Add uc_skey VM test case")
->
-> has these problem(s):
->
->   - Target SHA1 does not exist
->
-> Maybe you meant
->
-> Fixes: 0185fbc6a2d3 ("KVM: s390: selftests: Add uc_skey VM test case")
+elf.h had a comment saying:
+> Notes used in ET_CORE. Architectures export some of the arch register
+> sets using the corresponding note types via the PTRACE_GETREGSET and
+> PTRACE_SETREGSET requests.
+> The note name for these types is "LINUX", except NT_PRFPREG that is
+> named "CORE".
 
-Yes, I double checked. Your proposal is the correct hash / commit on the ma=
-ster
-branch.
-Sorry for the mixup.
+However, NT_PRSTATUS is also named "CORE". It is also unclear what
+"these types" refers to.
+
+To fix these problems, define a name for each note type. The added
+definitions are macros so the kernel and userspace can directly refer to
+them.
+
+For userspace program developers
+---------------------------------------------------
+While the main purpose of new macros is documentation, they are also
+hoped to be useful for userspace programs. Please check patch
+"elf: Define note name macros" and if you have a suggestion to make it
+more convenient for you, please share.
+
+I added the Binutils mailing list to the CC as it contains code to parse
+dumps. I'm also planning to share this series on LLVM Discourse.
+
+Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
+---
+Changes in v3:
+- Added patch "s390/crash: Use note name macros".
+- Changed to interleave note name and type macros.
+- Described NN_ and NT_ macros.
+- Link to v2: https://lore.kernel.org/r/20250104-elf-v2-0-77dc2e06db4e@daynix.com
+
+Changes in v2:
+- Added a macro definition for each note type instead of trying to
+  describe in a comment.
+- Link to v1: https://lore.kernel.org/r/20241225-elf-v1-1-79e940350d50@daynix.com
+
+---
+Akihiko Odaki (6):
+      elf: Define note name macros
+      binfmt_elf: Use note name macros
+      powwerpc: Use note name macros
+      crash: Use note name macros
+      s390/crash: Use note name macros
+      crash: Remove KEXEC_CORE_NOTE_NAME
+
+ arch/powerpc/kernel/fadump.c               |  2 +-
+ arch/powerpc/platforms/powernv/opal-core.c |  8 +--
+ arch/s390/kernel/crash_dump.c              | 62 ++++++++-------------
+ fs/binfmt_elf.c                            | 21 ++++----
+ fs/binfmt_elf_fdpic.c                      |  8 +--
+ fs/proc/kcore.c                            | 12 ++---
+ include/linux/kexec.h                      |  2 -
+ include/linux/vmcore_info.h                |  3 +-
+ include/uapi/linux/elf.h                   | 86 ++++++++++++++++++++++++++++--
+ kernel/crash_core.c                        |  2 +-
+ 10 files changed, 133 insertions(+), 73 deletions(-)
+---
+base-commit: a32e14f8aef69b42826cf0998b068a43d486a9e9
+change-id: 20241210-elf-b80ea3949c39
+
+Best regards,
+-- 
+Akihiko Odaki <akihiko.odaki@daynix.com>
+
 
