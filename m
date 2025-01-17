@@ -1,225 +1,175 @@
-Return-Path: <linux-s390+bounces-8441-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-8446-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DC80A157E3
-	for <lists+linux-s390@lfdr.de>; Fri, 17 Jan 2025 20:10:57 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3235A1589A
+	for <lists+linux-s390@lfdr.de>; Fri, 17 Jan 2025 21:29:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 684483A89DE
-	for <lists+linux-s390@lfdr.de>; Fri, 17 Jan 2025 19:10:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E44B91686AB
+	for <lists+linux-s390@lfdr.de>; Fri, 17 Jan 2025 20:29:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77B341D47A2;
-	Fri, 17 Jan 2025 19:09:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EAC41A9B35;
+	Fri, 17 Jan 2025 20:29:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JKwAh2Pq"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="CIhbYKM9"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5FC91AC891;
-	Fri, 17 Jan 2025 19:09:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B83187550;
+	Fri, 17 Jan 2025 20:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737140994; cv=none; b=KsvV4besW5e9u6+ELbpyKiCy6whsruKC+k3fXFwcLN/GXeNk7bhjSnJJXJ5HkSSFmXd+QD4eoB5ZcoLkK0nyhSJi84xBsbcBt31IMTcbJt4w3D+xJ2yXBfNvrqmR4LIYSQWYSXXdAaJAv3xcoFoKp6BXFu/Km8alU2HTJaUAUsw=
+	t=1737145764; cv=none; b=LoIh2tc4N8DeKlf9U0WxlWCd7gXvJIxhaVmHR8Em4hbAfYHtSnbMVIFl4veKDKL6JToTeX36ihhQDS3WBblM9Ruxyve0aUyq55ddR5tTNKUZdgVnwMFNlCX8+4MkrEMt+zxWYAJmWMyFCL1vv9pNQoc6xWvoDVPuWIX6+dopZxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737140994; c=relaxed/simple;
-	bh=M1+2Gdr6ZfIHk7HL4Ms8+Bn7JrH//G9mXMn7bmEgCb4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mnQTrYzNZRrR3dyE7SvJtt8AIIVcjKUfi9jbMha1h97RAs28NBVMPMcFL75G1KWT4tViHRvM4jt0Prh6sz1OaOdMSKQ1YqFPLw+XP/1RLHQR3W9F1TogPzRWNvejeLdRGqI/duG+wj4JLtiH5/UqYvHhhIWDIHeSrUS1xoeKDg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JKwAh2Pq; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50HE6H9F021079;
-	Fri, 17 Jan 2025 19:09:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=PANzgD+7+9K9R9hwI
-	gHbnoTibClpGRmCkQuwfoE5VNQ=; b=JKwAh2Pq5r+RuQPgNQHF/k8KKJ6hGNZnk
-	V8ZVoHJMbs8fBsbbxAj7vzeUTVbWG2ACgTDiH/u6249HTAsXRwckdeLZfUjEsIXA
-	CUWmKqBHDZtrUi33+0eTvHK3K1UeaWTSxVvQD/iJgxg7Wya5mhBq5TQ1/LjbnPnc
-	lj+G6HSkq8CLo5QbNDiey/xIKE8HnGWBv9A8Y9yEY7ebjYN8t46V8/swb7d8b7ap
-	6puaafp7Z/x/AUQiLfx5y4nzUstvDaZmhLHzuVUgVSdKRARp3jex9sFYJGxSRvGJ
-	6a+5dYdj7A2E4kgT4rh84LgSJYCdA7kQBRYaW8XvoeqR8oshaN8Aw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 447rp59fkm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 Jan 2025 19:09:47 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50HItRKs004907;
-	Fri, 17 Jan 2025 19:09:47 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 447rp59fkg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 Jan 2025 19:09:47 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50HIXXYC017359;
-	Fri, 17 Jan 2025 19:09:46 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4444fkma8p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 Jan 2025 19:09:46 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50HJ9hRk65536318
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 17 Jan 2025 19:09:43 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E892820040;
-	Fri, 17 Jan 2025 19:09:42 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B4E3C20043;
-	Fri, 17 Jan 2025 19:09:42 +0000 (GMT)
-Received: from p-imbrenda.boeblingen.de.ibm.com (unknown [9.152.224.66])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 17 Jan 2025 19:09:42 +0000 (GMT)
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: kvm@vger.kernel.org
-Cc: linux-s390@vger.kernel.org, frankja@linux.ibm.com, borntraeger@de.ibm.com,
-        schlameuss@linux.ibm.com, david@redhat.com, willy@infradead.org,
-        hca@linux.ibm.com, svens@linux.ibm.com, agordeev@linux.ibm.com,
-        gor@linux.ibm.com, nrb@linux.ibm.com, nsg@linux.ibm.com,
-        seanjc@google.com, seiden@linux.ibm.com
-Subject: [PATCH v3 15/15] KVM: s390: remove the last user of page->index
-Date: Fri, 17 Jan 2025 20:09:38 +0100
-Message-ID: <20250117190938.93793-16-imbrenda@linux.ibm.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250117190938.93793-1-imbrenda@linux.ibm.com>
-References: <20250117190938.93793-1-imbrenda@linux.ibm.com>
+	s=arc-20240116; t=1737145764; c=relaxed/simple;
+	bh=EtdlRyzsag0emijMlfhFTVgivQHeSsN6MFP/B2AC+5E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FC52WEWADz0ELZwM7Q1x9b39wjzWrgoN5w2d1nP7HybyStzWq1E9m7nVvO0XLVzPRGIRWz3nMk9qE0IvE/Bh4bdfRPBk2HeFFqvQBT2QiETuoUk0PLwJ1bUzjosigRLjyXfJd2UeKeOhS8higw/LD/VJ2AsCbeeNKegIjkVyzjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=CIhbYKM9; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=rMi/cjvuR8Du4cB7SgfDtqM1hJlv318nstpvkSQl7gQ=; b=CIhbYKM9teKXe7hQkikw48b19q
+	nCVLHuJxYW5SgGOEUbxheIMCZ0hRFSKd2ZYJhkPVx0VMbupR+bgy88rJSG5UxaxG24DQ4SBdJHU3a
+	fNE5INv2H5uQVOQrOrmQteFYF/MQPGrsLdE4WAAorgghKrPN4X0idv4EBloXF3xNLVkA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tYsxp-005bMs-MR; Fri, 17 Jan 2025 21:29:09 +0100
+Date: Fri, 17 Jan 2025 21:29:09 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Niklas Schnelle <schnelle@linux.ibm.com>
+Cc: dust.li@linux.alibaba.com, Alexandra Winter <wintera@linux.ibm.com>,
+	Julian Ruess <julianr@linux.ibm.com>,
+	Wenjia Zhang <wenjia@linux.ibm.com>,
+	Jan Karcher <jaka@linux.ibm.com>, Gerd Bayer <gbayer@linux.ibm.com>,
+	Halil Pasic <pasic@linux.ibm.com>,
+	"D. Wythe" <alibuda@linux.alibaba.com>,
+	Tony Lu <tonylu@linux.alibaba.com>,
+	Wen Gu <guwen@linux.alibaba.com>,
+	Peter Oberparleiter <oberpar@linux.ibm.com>,
+	David Miller <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Thorsten Winkler <twinkler@linux.ibm.com>, netdev@vger.kernel.org,
+	linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Simon Horman <horms@kernel.org>
+Subject: Re: [RFC net-next 0/7] Provide an ism layer
+Message-ID: <85d94131-6c2b-41bd-ad93-c0e7c24801db@lunn.ch>
+References: <20250115195527.2094320-1-wintera@linux.ibm.com>
+ <20250116093231.GD89233@linux.alibaba.com>
+ <D73H7Q080GUQ.3BDOH23P4WDOL@linux.ibm.com>
+ <0f96574a-567e-495a-b815-6aef336f12e6@linux.ibm.com>
+ <20250117021353.GF89233@linux.alibaba.com>
+ <dc2ff4c83ce8f7884872068570454f285510bda2.camel@linux.ibm.com>
+ <034e69fe-84b4-44f2-80d1-7c36ab4ee4c9@lunn.ch>
+ <64df7d8ca3331be205171ddaf7090cae632b7768.camel@linux.ibm.com>
+ <7dc80dfb-5a75-4638-9d44-d5a080ddb693@lunn.ch>
+ <c2eb6fd7e9a786749d70a17266a04fb50dbd5bb8.camel@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: yl0OkPrl59Fb6XDkz57mKBAYSlQEQNaP
-X-Proofpoint-ORIG-GUID: CaBMUrGmtRBE9MOIql-lrgL9RL0UOfug
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-17_06,2025-01-16_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
- impostorscore=0 lowpriorityscore=0 mlxscore=0 adultscore=0 malwarescore=0
- priorityscore=1501 clxscore=1015 spamscore=0 bulkscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
- definitions=main-2501170149
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c2eb6fd7e9a786749d70a17266a04fb50dbd5bb8.camel@linux.ibm.com>
 
-Shadow page tables use page->index to keep the g2 address of the guest
-page table being shadowed.
+On Fri, Jan 17, 2025 at 05:57:10PM +0100, Niklas Schnelle wrote:
+> On Fri, 2025-01-17 at 17:33 +0100, Andrew Lunn wrote:
+> > > Conceptually kind of but the existing s390 specific ISM device is a bit
+> > > special. But let me start with some background. On s390 aka Mainframes
+> > > OSs including Linux runs in so called logical partitions (LPARs) which
+> > > are machine hypervisor VMs which use partitioned non-paging memory. The
+> > > fact that memory is partitioned is important because this means LPARs
+> > > can not share physical memory by mapping it.
+> > > 
+> > > Now at a high level an ISM device allows communication between two such
+> > > Linux LPARs on the same machine. The device is discovered as a PCI
+> > > device and allows Linux to take a buffer called a DMB map that in the
+> > > IOMMU and generate a token specific to another LPAR which also sees an
+> > > ISM device sharing the same virtual channel identifier (VCHID). This
+> > > token can then be transferred out of band (e.g. as part of an extended
+> > > TCP handshake in SMC-D) to that other system. With the token the other
+> > > system can use its ISM device to securely (authenticated by the token,
+> > > LPAR identity and the IOMMU mapping) write into the original systems
+> > > DMB at throughput and latency similar to doing a memcpy() via a
+> > > syscall.
+> > > 
+> > > On the implementation level the ISM device is actually a piece of
+> > > firmware and the write to a remote DMB is a special case of our PCI
+> > > Store Block instruction (no real MMIO on s390, instead there are
+> > > special instructions). Sadly there are a few more quirks but in
+> > > principle you can think of it as redirecting writes to a part of the
+> > > ISM PCI devices' BAR to the DMB in the peer system if that makes sense.
+> > > There's of course also a mechanism to cause an interrupt on the
+> > > receiver as the write completes.
+> > 
+> > So the s390 details are interesting, but as you say, it is
+> > special. Ideally, all the special should be hidden away inside the
+> > driver.
+> 
+> Yes and it will be. There are some exceptions e.g. for vfio-pci pass-
+> through but that's not unusual and why there is already the concept of
+> vfio-pci extension module.
+> 
+> > 
+> > So please take a step back. What is the abstract model?
+> 
+> I think my high level description may be a good start. The abstract
+> model is the ability to share a memory buffer (DMB) for writing by a
+> communication partner, authenticated by a DMB Token. Plus stuff like
+> triggering an interrupt on write or explicit trigger. Then Alibaba
+> added optional support for what they called attaching the buffer which
+> means it becomes truly shared between the peers but which IBM's ISM
+> can't support. Plus a few more optional pieces such as VLANs, PNETIDs
+> don't ask. The idea for the new layer then is to define this interface
+> with operations and documentation.
+> 
+> > 
+> > Can the abstract model be mapped onto CLX? Could it be used with a GPU
+> > vRAM? SoC with real shared memory between a pool of CPUs.
+> > 
+> > 	Andrew
+> 
+> I'd think that yes, one could implement such a mechanism on top of CXL
+> as well as on SoC. Or even with no special hardware between a host and
+> a DPU (e.g. via PCIe endpoint framework). Basically anything that can
+> DMA and IRQs between two OS instances.
 
-Instead of keeping the information in page->index, split the address
-and smear it over the 16-bit softbits areas of 4 PGSTEs.
+Is DMA part of the abstract model? That would suggest a true shared
+memory system is excluded, since that would not require DMA.
 
-This removes the last s390 user of page->index.
+Maybe take a look at subsystems like USB, I2C.
 
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Steffen Eiden <seiden@linux.ibm.com>
----
- arch/s390/include/asm/pgtable.h | 15 +++++++++++++++
- arch/s390/kvm/gaccess.c         |  6 ++++--
- arch/s390/mm/gmap.c             | 22 ++++++++++++++++++++--
- 3 files changed, 39 insertions(+), 4 deletions(-)
+usb_submit_urb(struct urb *urb, gfp_t mem_flags)
 
-diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
-index 151488bb9ed7..948100a8fa7e 100644
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -419,6 +419,7 @@ static inline int is_module_addr(void *addr)
- #define PGSTE_HC_BIT	0x0020000000000000UL
- #define PGSTE_GR_BIT	0x0004000000000000UL
- #define PGSTE_GC_BIT	0x0002000000000000UL
-+#define PGSTE_ST2_MASK	0x0000ffff00000000UL
- #define PGSTE_UC_BIT	0x0000000000008000UL	/* user dirty (migration) */
- #define PGSTE_IN_BIT	0x0000000000004000UL	/* IPTE notify bit */
- #define PGSTE_VSIE_BIT	0x0000000000002000UL	/* ref'd in a shadow table */
-@@ -2001,4 +2002,18 @@ extern void s390_reset_cmma(struct mm_struct *mm);
- #define pmd_pgtable(pmd) \
- 	((pgtable_t)__va(pmd_val(pmd) & -sizeof(pte_t)*PTRS_PER_PTE))
- 
-+static inline unsigned long gmap_pgste_get_index(unsigned long *pgt)
-+{
-+	unsigned long *pgstes, res;
-+
-+	pgstes = pgt + _PAGE_ENTRIES;
-+
-+	res = (pgstes[0] & PGSTE_ST2_MASK) << 16;
-+	res |= pgstes[1] & PGSTE_ST2_MASK;
-+	res |= (pgstes[2] & PGSTE_ST2_MASK) >> 16;
-+	res |= (pgstes[3] & PGSTE_ST2_MASK) >> 32;
-+
-+	return res;
-+}
-+
- #endif /* _S390_PAGE_H */
-diff --git a/arch/s390/kvm/gaccess.c b/arch/s390/kvm/gaccess.c
-index 560b5677929b..3bf3a80942de 100644
---- a/arch/s390/kvm/gaccess.c
-+++ b/arch/s390/kvm/gaccess.c
-@@ -1409,6 +1409,7 @@ static int kvm_s390_shadow_tables(struct gmap *sg, unsigned long saddr,
- static int gmap_shadow_pgt_lookup(struct gmap *sg, unsigned long saddr, unsigned long *pgt,
- 				  int *dat_protection, int *fake)
- {
-+	unsigned long pt_index;
- 	unsigned long *table;
- 	struct page *page;
- 	int rc;
-@@ -1418,9 +1419,10 @@ static int gmap_shadow_pgt_lookup(struct gmap *sg, unsigned long saddr, unsigned
- 	if (table && !(*table & _SEGMENT_ENTRY_INVALID)) {
- 		/* Shadow page tables are full pages (pte+pgste) */
- 		page = pfn_to_page(*table >> PAGE_SHIFT);
--		*pgt = page->index & ~GMAP_SHADOW_FAKE_TABLE;
-+		pt_index = gmap_pgste_get_index(page_to_virt(page));
-+		*pgt = pt_index & ~GMAP_SHADOW_FAKE_TABLE;
- 		*dat_protection = !!(*table & _SEGMENT_ENTRY_PROTECT);
--		*fake = !!(page->index & GMAP_SHADOW_FAKE_TABLE);
-+		*fake = !!(pt_index & GMAP_SHADOW_FAKE_TABLE);
- 		rc = 0;
- 	} else  {
- 		rc = -EAGAIN;
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index 38f044321704..d678b3fa331d 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -1733,6 +1733,23 @@ int gmap_shadow_sgt(struct gmap *sg, unsigned long saddr, unsigned long sgt,
- }
- EXPORT_SYMBOL_GPL(gmap_shadow_sgt);
- 
-+static void gmap_pgste_set_index(struct ptdesc *ptdesc, unsigned long pgt_addr)
-+{
-+	unsigned long *pgstes = page_to_virt(ptdesc_page(ptdesc));
-+
-+	pgstes += _PAGE_ENTRIES;
-+
-+	pgstes[0] &= ~PGSTE_ST2_MASK;
-+	pgstes[1] &= ~PGSTE_ST2_MASK;
-+	pgstes[2] &= ~PGSTE_ST2_MASK;
-+	pgstes[3] &= ~PGSTE_ST2_MASK;
-+
-+	pgstes[0] |= (pgt_addr >> 16) & PGSTE_ST2_MASK;
-+	pgstes[1] |= pgt_addr & PGSTE_ST2_MASK;
-+	pgstes[2] |= (pgt_addr << 16) & PGSTE_ST2_MASK;
-+	pgstes[3] |= (pgt_addr << 32) & PGSTE_ST2_MASK;
-+}
-+
- /**
-  * gmap_shadow_pgt - instantiate a shadow page table
-  * @sg: pointer to the shadow guest address space structure
-@@ -1760,9 +1777,10 @@ int gmap_shadow_pgt(struct gmap *sg, unsigned long saddr, unsigned long pgt,
- 	ptdesc = page_table_alloc_pgste(sg->mm);
- 	if (!ptdesc)
- 		return -ENOMEM;
--	ptdesc->pt_index = pgt & _SEGMENT_ENTRY_ORIGIN;
-+	origin = pgt & _SEGMENT_ENTRY_ORIGIN;
- 	if (fake)
--		ptdesc->pt_index |= GMAP_SHADOW_FAKE_TABLE;
-+		origin |= GMAP_SHADOW_FAKE_TABLE;
-+	gmap_pgste_set_index(ptdesc, origin);
- 	s_pgt = page_to_phys(ptdesc_page(ptdesc));
- 	/* Install shadow page table */
- 	spin_lock(&sg->guest_table_lock);
--- 
-2.48.1
+An URB is a data structure with a block of memory associated with it,
+contains the detail to pass to the USB device.
 
+i2c_transfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
+
+*msgs points to num of messages which get transferred to/from the I2C
+device.
+
+Could the high level API look like this? No DMA, no IRQ, no concept of
+a somewhat shared memory. Just an API which asks for a message to be
+sent to the other end? struct urb has some USB concepts in it, struct
+i2c_msg has some I2C concepts in it. A struct ism_msg would follow the
+same pattern, but does it need to care about the DMA, the IRQ, the
+memory which is semi shared?
+
+	Andrew
 
