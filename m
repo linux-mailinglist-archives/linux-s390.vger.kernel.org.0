@@ -1,82 +1,82 @@
-Return-Path: <linux-s390+bounces-8476-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-8478-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E18E7A16C4E
-	for <lists+linux-s390@lfdr.de>; Mon, 20 Jan 2025 13:25:49 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE528A16DB8
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Jan 2025 14:48:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 062B03A0862
-	for <lists+linux-s390@lfdr.de>; Mon, 20 Jan 2025 12:25:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 42B5018865C7
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Jan 2025 13:48:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2CD71DF993;
-	Mon, 20 Jan 2025 12:25:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1237F1E103B;
+	Mon, 20 Jan 2025 13:48:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dhn+qNHr"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mwwYuU0x"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6CD1B6CEC;
-	Mon, 20 Jan 2025 12:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5465D1E1C34;
+	Mon, 20 Jan 2025 13:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737375945; cv=none; b=BcTjC6TS9zigcjFiqF8X6CByuCb/xgVhJHshzRRrXNRksLmphV/gwjUnd3G5h5+jooR24AKp/Q3YbQJ5w8zqsUektrZok/pk6OoRRklEvl/+VwLPgKhgXTM5Pjr2JW432PnBqnh5ZXC+fpzIdRJJgJpF9ffIoggblniPjxA/2Mw=
+	t=1737380887; cv=none; b=aRQ2gE71oSaAHd/YNFaNqpYuo7FGqDj5Xhet19dtQex7xH+d82T/xlse7jFmKqBadKdXOv6OVIGAsV5FpvLyPeryppbX1RVrANAO6IDzuhO0qvSAOXU4kum+5THimJ06uDHpsHXqTea4GSNCW1qw1/AKf31UD/bd0xmHa20aBP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737375945; c=relaxed/simple;
-	bh=qSCh7Suqxs9E+vjNMIoLUE4zFZSehbM/bG/8ZCb2K/g=;
+	s=arc-20240116; t=1737380887; c=relaxed/simple;
+	bh=bqXqi8Tsrjenn7mblBIrG9ggWm5/DJ3V/kqYlLzikbY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=htfolrErKGlCwdrYvfP66P6mMm5Ot5WLK/vSfyKMKkGczzJ2AtjWMOtpFiiniptMyGLfN7YoocpQBgaaitoj87K+4k3v8aeDFZ/BYkgsYwEyWxxzRlNfLgAJm4lxSluGdAnAGS/hg/j5UEE0KMKBdHyEoJP8Qek65GQJUzsEr5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dhn+qNHr; arc=none smtp.client-ip=148.163.158.5
+	 In-Reply-To:Content-Type; b=iJPK8n7ebYH0eEISvOADiYfK+92TCFRea+6uk316tgDHsWrs/FfzVD/gZU77s9izc0seO0MFfGGQekpTxS3mAx7eNLi1m8D18QCqTfgMASdmB6ISk3OyBefRsAiixKJHah1ghAiIdySb/tOi+6bwtCYiD3cdkurdOwrfD+YNIPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mwwYuU0x; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50JNumCC025423;
-	Mon, 20 Jan 2025 12:25:39 GMT
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50KDSTTp031294;
+	Mon, 20 Jan 2025 13:48:01 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=BF8Y+U
-	ztZWnF0xD25b28b6aQHmTfHKAYCG0ZqEftieQ=; b=dhn+qNHrS5eEE1+DGVKDbm
-	xGX7Y712XetMhYpXDIYtN9v5S9Fx1XONtoRkDlbogmae8gvaxVXR2HhX8rO0/EJZ
-	gGzK/ZQs/zK5mqR/KlCvl1BBCDP5NSjM6RvQ9ASJc/qLsKtTJLPz8+iHD7K2P/Wv
-	80nQtW049qXZDCMeimmnoyg58Y04ok5mh0f7ElHpm3a2A7CO2zrHDJK4zpRidBZh
-	WAbiCLq9gfR/JOblyb93cfnlIuTxGAlkkJIc3yALWoOPLPJXSHORKaw9oG4hWhud
-	DiLq/+lo0MxafH0p2jllcJBZa9M3+uB0Po9ssRleAOpC4jpfwVenYqAvtM4jFuBA
+	:message-id:mime-version:references:subject:to; s=pp1; bh=jYVoYW
+	RQQtcXPSz3xEvthai/4k/mgxiY8VVon8Psums=; b=mwwYuU0xqjDAjOxNI4MwM0
+	iMQsDavnGuRpELFcDyH4ZHAVawlRF8mAiDS9WhaPPeB4cti98kP5GVbTQkK7IZVb
+	WA5weDE1yeo/3gZAFu4qoY1ANNtAGpAvp9S9ICAOOkWEff06YS/Ljlcpo5qYfyT3
+	xqS8psCBDIV92TZ9rxNA267WbUiyskw74PT6olUpg7s8amr5uzSUTYJV4PE1kUpU
+	NUTtmJVTewuzBecYhh+GPAJyUojLQKUJidxxGf1UQDRv+C9yFxKgn7f9EdKghO7Q
+	b4Z2lDlkESfJbibleHWnJNIFaMMkpm1wAUWOvIn1zM5uEhQmtTmuTxWZqEDaKLUA
 	==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44947suwt1-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 449cj931a9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Jan 2025 12:25:39 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50KCLP9t013056;
-	Mon, 20 Jan 2025 12:25:39 GMT
+	Mon, 20 Jan 2025 13:48:01 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50KDlAwc004282;
+	Mon, 20 Jan 2025 13:48:00 GMT
 Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44947suwsy-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 449cj931a3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Jan 2025 12:25:38 +0000 (GMT)
+	Mon, 20 Jan 2025 13:48:00 +0000 (GMT)
 Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50KAZdIF019218;
-	Mon, 20 Jan 2025 12:25:38 GMT
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50KB26gL019261;
+	Mon, 20 Jan 2025 13:47:59 GMT
 Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 448pms6fsn-1
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 448pms6rww-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Jan 2025 12:25:38 +0000
+	Mon, 20 Jan 2025 13:47:59 +0000
 Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50KCPYli56754482
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50KDlu5l54919644
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 20 Jan 2025 12:25:34 GMT
+	Mon, 20 Jan 2025 13:47:56 GMT
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 86D0A20077;
-	Mon, 20 Jan 2025 12:25:34 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 293532004F;
+	Mon, 20 Jan 2025 13:47:56 +0000 (GMT)
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DC0D0200B3;
-	Mon, 20 Jan 2025 12:25:33 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 74FDF2004B;
+	Mon, 20 Jan 2025 13:47:55 +0000 (GMT)
 Received: from [9.171.10.126] (unknown [9.171.10.126])
 	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 20 Jan 2025 12:25:33 +0000 (GMT)
-Message-ID: <bbf555da-1c72-40ae-8c2a-1a3020e2a26e@linux.ibm.com>
-Date: Mon, 20 Jan 2025 13:25:33 +0100
+	Mon, 20 Jan 2025 13:47:55 +0000 (GMT)
+Message-ID: <76d8c896-5c28-4e0b-b8a9-a23b63571717@linux.ibm.com>
+Date: Mon, 20 Jan 2025 14:47:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -84,7 +84,8 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 13/15] KVM: s390: remove useless page->index usage
+Subject: Re: [PATCH v2 12/15] KVM: s390: move gmap_shadow_pgt_lookup() into
+ kvm
 To: Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org
 Cc: linux-s390@vger.kernel.org, borntraeger@de.ibm.com,
         schlameuss@linux.ibm.com, david@redhat.com, willy@infradead.org,
@@ -92,7 +93,7 @@ Cc: linux-s390@vger.kernel.org, borntraeger@de.ibm.com,
         gor@linux.ibm.com, nrb@linux.ibm.com, nsg@linux.ibm.com,
         seanjc@google.com, seiden@linux.ibm.com
 References: <20250116113355.32184-1-imbrenda@linux.ibm.com>
- <20250116113355.32184-14-imbrenda@linux.ibm.com>
+ <20250116113355.32184-13-imbrenda@linux.ibm.com>
 Content-Language: en-US
 From: Janosch Frank <frankja@linux.ibm.com>
 Autocrypt: addr=frankja@linux.ibm.com; keydata=
@@ -137,71 +138,79 @@ Autocrypt: addr=frankja@linux.ibm.com; keydata=
  DchCqFm5adiSP5+OT4NjkKUeGpBe/aRyQSle/RropTgCi85pje/juYEn2P9UAgkfBJrOHvQ9
  Z+2Sva8FRd61NJLkCJ4LFumRn9wQlX2icFbi8UDV3do0hXJRRYTWCxrHscMhkrFWLhYiPF4i
  phX7UNdOWBQ90qpHyAxHmDazdo27gEjfvsgYMdveKknEOTEb5phwxWgg7BcIDoJf9UMC
-In-Reply-To: <20250116113355.32184-14-imbrenda@linux.ibm.com>
+In-Reply-To: <20250116113355.32184-13-imbrenda@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: SyUXgnZ6gDc8QgO9R6-jED59Ci2IBdDX
-X-Proofpoint-ORIG-GUID: 5lrWTSk2k1VZzze1Wm8PSbzxjr2HrOWn
+X-Proofpoint-ORIG-GUID: AJb-IrjlIWjcsAxMArL1DO55EdnZeJwh
+X-Proofpoint-GUID: yNOpeXKfSD0tBE-3tw0UaiB6oz0V_Gel
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-01-20_02,2025-01-20_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- malwarescore=0 lowpriorityscore=0 bulkscore=0 priorityscore=1501
- clxscore=1015 impostorscore=0 phishscore=0 adultscore=0 spamscore=0
- suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501200100
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
+ lowpriorityscore=0 bulkscore=0 adultscore=0 spamscore=0 impostorscore=0
+ priorityscore=1501 mlxscore=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501200112
 
 On 1/16/25 12:33 PM, Claudio Imbrenda wrote:
-> The page->index field for VSIE dat tables is only used for segment
-> tables.
-> 
-> Stop setting the field for all region tables.
+> Move gmap_shadow_pgt_lookup() from mm/gmap.c into kvm/gaccess.c .
 > 
 > Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-
-Haha, I never noticed, good catch.
-
-Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
-
-
 > ---
->   arch/s390/mm/gmap.c | 9 ---------
->   1 file changed, 9 deletions(-)
-> 
-> diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-> index 9d4a62628e51..80674bbf0f7b 100644
-> --- a/arch/s390/mm/gmap.c
-> +++ b/arch/s390/mm/gmap.c
-> @@ -1507,9 +1507,6 @@ int gmap_shadow_r2t(struct gmap *sg, unsigned long saddr, unsigned long r2t,
->   	page = gmap_alloc_crst();
->   	if (!page)
->   		return -ENOMEM;
-> -	page->index = r2t & _REGION_ENTRY_ORIGIN;
-> -	if (fake)
-> -		page->index |= GMAP_SHADOW_FAKE_TABLE;
->   	s_r2t = page_to_phys(page);
->   	/* Install shadow region second table */
->   	spin_lock(&sg->guest_table_lock);
-> @@ -1590,9 +1587,6 @@ int gmap_shadow_r3t(struct gmap *sg, unsigned long saddr, unsigned long r3t,
->   	page = gmap_alloc_crst();
->   	if (!page)
->   		return -ENOMEM;
-> -	page->index = r3t & _REGION_ENTRY_ORIGIN;
-> -	if (fake)
-> -		page->index |= GMAP_SHADOW_FAKE_TABLE;
->   	s_r3t = page_to_phys(page);
->   	/* Install shadow region second table */
->   	spin_lock(&sg->guest_table_lock);
-> @@ -1673,9 +1667,6 @@ int gmap_shadow_sgt(struct gmap *sg, unsigned long saddr, unsigned long sgt,
->   	page = gmap_alloc_crst();
->   	if (!page)
->   		return -ENOMEM;
-> -	page->index = sgt & _REGION_ENTRY_ORIGIN;
-> -	if (fake)
-> -		page->index |= GMAP_SHADOW_FAKE_TABLE;
->   	s_sgt = page_to_phys(page);
->   	/* Install shadow region second table */
->   	spin_lock(&sg->guest_table_lock);
+>   arch/s390/include/asm/gmap.h |  3 +--
+>   arch/s390/kvm/gaccess.c      | 40 +++++++++++++++++++++++++++++++
+>   arch/s390/kvm/gmap.h         |  2 ++
+>   arch/s390/mm/gmap.c          | 46 ++----------------------------------
+>   4 files changed, 45 insertions(+), 46 deletions(-)
 
+[...]
+
+>   
+> +/**
+> + * gmap_shadow_pgt_lookup - find a shadow page table
+
+The other two VSIE functions in gaccess.c have the kvm_s390_shadow 
+prefix but this one is only static anyway and hence we could just drop 
+the gmap_ from the name.
+
+> + * @sg: pointer to the shadow guest address space structure
+> + * @saddr: the address in the shadow aguest address space
+> + * @pgt: parent gmap address of the page table to get shadowed
+> + * @dat_protection: if the pgtable is marked as protected by dat
+> + * @fake: pgt references contiguous guest memory block, not a pgtable
+> + *
+> + * Returns 0 if the shadow page table was found and -EAGAIN if the page
+> + * table was not found.
+> + *
+> + * Called with sg->mm->mmap_lock in read.
+> + */
+> +static int gmap_shadow_pgt_lookup(struct gmap *sg, unsigned long saddr, unsigned long *pgt,
+> +				  int *dat_protection, int *fake)
+> +{
+> +	unsigned long *table;
+> +	struct page *page;
+> +	int rc;
+> +
+> +	spin_lock(&sg->guest_table_lock);
+> +	table = gmap_table_walk(sg, saddr, 1); /* get segment pointer */
+
+I'd be happy if you could introduce an enum for the level argument in a 
+future series.
+
+> +	if (table && !(*table & _SEGMENT_ENTRY_INVALID)) {
+> +		/* Shadow page tables are full pages (pte+pgste) */
+> +		page = pfn_to_page(*table >> PAGE_SHIFT);
+> +		*pgt = page->index & ~GMAP_SHADOW_FAKE_TABLE;
+> +		*dat_protection = !!(*table & _SEGMENT_ENTRY_PROTECT);
+> +		*fake = !!(page->index & GMAP_SHADOW_FAKE_TABLE);
+> +		rc = 0;
+> +	} else  {
+> +		rc = -EAGAIN;
+> +	}
+> +	spin_unlock(&sg->guest_table_lock);
+> +	return rc;
+> +}
+> +
+>
 
