@@ -1,122 +1,174 @@
-Return-Path: <linux-s390+bounces-8496-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-8505-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE965A17075
-	for <lists+linux-s390@lfdr.de>; Mon, 20 Jan 2025 17:44:45 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3BE08A17130
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Jan 2025 18:18:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E22263A905F
-	for <lists+linux-s390@lfdr.de>; Mon, 20 Jan 2025 16:44:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 77715161330
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Jan 2025 17:18:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A44FF1EE013;
-	Mon, 20 Jan 2025 16:44:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 506E7171E49;
+	Mon, 20 Jan 2025 17:18:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MJr8eRoJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QmS/AmZ/"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02341EBA09;
-	Mon, 20 Jan 2025 16:44:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2600615575C;
+	Mon, 20 Jan 2025 17:18:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737391450; cv=none; b=BLfjPXPfITSZwNwEV9OpdBNeF0zSFjaoNXtu8kMwCA+4xNiNj7TuUlQpaI472er44kzKXnX8UrkXqARxflJ7DRcpZ7C358TaRVatebOeP6tMybnyE+fFKTZ9Oo4x/SfgnKngyGJ2MtODCfYUCjmtfsmk9ywEWIvRZj6smyk+oos=
+	t=1737393507; cv=none; b=hPl5RIk25aZb/V32tQVmMX/YFF8vyWu8TRIqziOPXHBsdGxkP4JXabIwM+aJPvlUufhpFypVvp8O0sdfIoKVuFD93MP1RYWdzn2y7pFgRF1HFunuQTJyF3UpHkdWAPGnna28i8Gk4+JED2+vCAHj9eGhddmX3lX+6YLrLpLsTyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737391450; c=relaxed/simple;
-	bh=Bhaz6HwAMlKSMz7Ft5tGRHH17H9GBssSq5TkTZsy3Aw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KehidWSkd3OY+oS/cCMjyVv4mmX9i0o3BLRDmw26uuXyypCwUEjYRUk/ngs15rGKbpQI5TAhKWrEt5UU/VHHMu0xa8G89OIXbiwBi2wmJMF67CueLBoWY/qzgNur7/o+SsDy7kIdcAEEjT/eupRqvxX/BIOaY5NAaMq5LZwdmH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=MJr8eRoJ; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50KF1WYb004516;
-	Mon, 20 Jan 2025 16:44:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=XmrgOnz+coGd8vNa0W7ubihq3ILrBNP9i4xzPR4A8
-	1Y=; b=MJr8eRoJDoboMgfcS/7PbJcR+DTM7WeHkUNlypNqEbLNfsI/9HnWF+ykK
-	w3sfUCHelmItMXjic7f6yG/fpAx7XRLx3E5wmL9B+afQfd2JVWI10YmGIGR+6UKY
-	D45I3gBLZnF/5pT26Uy7hpBqx1gn1i1DVAGsqz5Yadi5deWtJMoKqpjMcCTVxsis
-	pQMl8tzsfC5OMkADk5tl013CybZJNmf7TkUyUHUD8BGth1Yv36zo42C7UOc/LTjB
-	TJoZ6sVa21s1XKWPnV/yYGoEuSD6kvfvEetnsnGoTtvwlXswiIvyQb0t7fKAMHqn
-	wX6giEh6FlHdefWPAMuVyVs0MW9tw==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 449rry8f13-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Jan 2025 16:44:05 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50KGGRaJ022449;
-	Mon, 20 Jan 2025 16:44:04 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 448r4jy3ac-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Jan 2025 16:44:04 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50KGi0F557475522
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 20 Jan 2025 16:44:00 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BEE8720049;
-	Mon, 20 Jan 2025 16:44:00 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9123320040;
-	Mon, 20 Jan 2025 16:44:00 +0000 (GMT)
-Received: from a46lp57.lnxne.boe (unknown [9.152.108.100])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 20 Jan 2025 16:44:00 +0000 (GMT)
-From: Nico Boehr <nrb@linux.ibm.com>
-To: frankja@linux.ibm.com, imbrenda@linux.ibm.com, thuth@redhat.com
-Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [kvm-unit-tests PATCH v1] s390x: pv: fix arguments for out-of-tree-builds
-Date: Mon, 20 Jan 2025 17:43:29 +0100
-Message-ID: <20250120164400.2261408-1-nrb@linux.ibm.com>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1737393507; c=relaxed/simple;
+	bh=gZrH04UrX1WzhsZDJ37CiKj8KVsDcg7H2g4hjNtlYew=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cQ0JxqRjFlv4rBUGxtMxuqnq82fK+spGuA8t/lITGg69mJBVwKkHdesSdNPAFNTmlwaXIYNkqHCceCEEZl1glIJ9PbyTF/pA/+2fSZQJe6uqjIZFIwb5c23XPBCnxt/rmxKtuFsyyZLGwqPcJSTNti6VTNjc15LlRNLUNQlGgFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QmS/AmZ/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 511C2C4CEDD;
+	Mon, 20 Jan 2025 17:18:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737393506;
+	bh=gZrH04UrX1WzhsZDJ37CiKj8KVsDcg7H2g4hjNtlYew=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QmS/AmZ/XZiYmDkFCc3bvJ2XzG3ZC6buxBF6j8Znwaw8k3LcUrpv1LJKhZ8SSb8Ch
+	 EIiC6VgjwJCFOtb80cwW35+Sp6Rfk49xw/XoZmXFg0kbVH2Vv1MTFtzMZrqXYprogk
+	 WIQfkiHZCK73OFWMi+32le76O/yOwXeqlwHzN7CFmSoz9dEkaVlc80yvSNO0ghf5jB
+	 odCCvUoOU8UkU73zKjzd8e7csaQ+BHg29/+5g11BbN+5f/KxmOvUWtWEFdJGnEEiRW
+	 dz03F3ymb6OHIID/zMaxW1uHzOzS3mMK2jZOWHikZ59M4yrerxwr6cByj7px5VRSvX
+	 PQAZxH16AgK6A==
+Date: Mon, 20 Jan 2025 17:18:20 +0000
+From: Simon Horman <horms@kernel.org>
+To: Alexandra Winter <wintera@linux.ibm.com>
+Cc: Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>,
+	Gerd Bayer <gbayer@linux.ibm.com>,
+	Halil Pasic <pasic@linux.ibm.com>,
+	"D. Wythe" <alibuda@linux.alibaba.com>,
+	Tony Lu <tonylu@linux.alibaba.com>,
+	Wen Gu <guwen@linux.alibaba.com>,
+	Peter Oberparleiter <oberpar@linux.ibm.com>,
+	David Miller <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Julian Ruess <julianr@linux.ibm.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Thorsten Winkler <twinkler@linux.ibm.com>, netdev@vger.kernel.org,
+	linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>
+Subject: Re: [RFC net-next 3/7] net/ism: Use uuid_t for ISM GID
+Message-ID: <20250120171820.GC6206@kernel.org>
+References: <20250115195527.2094320-1-wintera@linux.ibm.com>
+ <20250115195527.2094320-4-wintera@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 8_Wu87rllANVlYk7kmNk91Yn-oXAUmbl
-X-Proofpoint-ORIG-GUID: 8_Wu87rllANVlYk7kmNk91Yn-oXAUmbl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-20_04,2025-01-20_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 phishscore=0 priorityscore=1501 suspectscore=0 spamscore=0
- bulkscore=0 mlxscore=0 adultscore=0 lowpriorityscore=0 clxscore=1015
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501200136
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250115195527.2094320-4-wintera@linux.ibm.com>
 
-When building out-of-tree, the parmfile was not passed to genprotimg,
-causing the selftest-setup_PV test to fail.
+On Wed, Jan 15, 2025 at 08:55:23PM +0100, Alexandra Winter wrote:
+> SMC uses 64 Bit and 128 Bit Global Identifiers (GIDs)
+> that need to be sent via the SMC protocol.
+> When integers are used network endianness and host endianness
+> need to be considered.
+> 
+> Avoid this in the ISM layer by using uuid_t byte arrays.
+> Follow on patches could do the same change for SMC, for now
+> conversion helper functions are introduced.
+> 
+> ISM-vPCI devices provide 64 Bit GIDs. Map them to ISM uuid_t GIDs
+> like this:
+>  _________________________________________
+> | 64 Bit ISM-vPCI GID | 00000000_00000000 |
+>  -----------------------------------------
+> If interpreted as UUID, this would be interpreted as th UIID variant,
+> that is reserved for NCS backward compatibility. So it will not collide
+> with UUIDs that were generated according to the standard.
+> 
+> Future ISM devices, shall use real UUIDs as 128 Bit GIDs.
+> 
+> Note:
+> - In this RFC patch smcd_gid is now moved back to smc.h,
+>   future patchset should avoid that.
+> - ism_dmb and ism_event structs still contain 64 Bit rgid and info
+>   fields. A future patch could change them to uuid_t gids. This
+>   does not break anything, because ism_loopback does not use them.
+> 
+> Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
 
-Fix the Makefile rule s.t. parmfile is correctly passed.
+...
 
-Suggested-by: Marc Hartmayer <mhartmay@linux.ibm.com>
-Signed-off-by: Nico Boehr <nrb@linux.ibm.com>
----
- s390x/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> diff --git a/net/smc/smc_ism.h b/net/smc/smc_ism.h
+> index 6763133dd8d0..d041e5a7c459 100644
+> --- a/net/smc/smc_ism.h
+> +++ b/net/smc/smc_ism.h
+> @@ -12,6 +12,7 @@
+>  #include <linux/uio.h>
+>  #include <linux/types.h>
+>  #include <linux/mutex.h>
+> +#include <linux/ism.h>
+>  
+>  #include "smc.h"
+>  
+> @@ -94,4 +95,24 @@ static inline bool smc_ism_is_loopback(struct smcd_dev *smcd)
+>  	return (smcd->ops->get_chid(smcd) == 0xFFFF);
+>  }
+>  
+> +static inline void copy_to_smcdgid(struct smcd_gid *sgid, uuid_t *igid)
+> +{
+> +	__be64 temp;
+> +
+> +	memcpy(&temp, igid, sizeof(sgid->gid));
+> +	sgid->gid = ntohll(temp);
+> +	memcpy(&temp, igid + sizeof(sgid->gid), sizeof(sgid->gid_ext));
 
-diff --git a/s390x/Makefile b/s390x/Makefile
-index 23342bd64f44..a6cf3c144fbf 100644
---- a/s390x/Makefile
-+++ b/s390x/Makefile
-@@ -218,7 +218,7 @@ else
- 	GENPROTIMG_PCF := 0x000000e0
- endif
- 
--$(patsubst %.parmfile,%.pv.bin,$(wildcard s390x/*.parmfile)): %.pv.bin: %.parmfile
-+$(TEST_DIR)/selftest.pv.bin: $(SRCDIR)/s390x/selftest.parmfile
- %.pv.bin: %.bin $(HOST_KEY_DOCUMENT) $(comm-key)
- 	$(eval parmfile_args = $(if $(filter %.parmfile,$^),--parmfile $(filter %.parmfile,$^),))
- 	$(GENPROTIMG) --host-key-document $(HOST_KEY_DOCUMENT) --no-verify $(GENPROTIMG_COMM_OPTION) $(comm-key) --x-pcf $(GENPROTIMG_PCF) $(parmfile_args) --image $(filter %.bin,$^) -o $@
--- 
-2.47.1
+Hi Alexandra,
 
+The stride of the pointer arithmetic is the width of igid
+so this write will be at an offset of:
+
+   sizeof(igid) + sizeof(sgid->gid) = 128 bytes
+
+Which is beyond the end of *igid.
+
+I think the desired operation is to write at an offset of 8 bytes, so
+perhaps this is a way to achieve that, as the bi field is a
+16 byte array of u8:
+
+	memcpy(&temp, igid->b + sizeof(sgid->gid), sizeof(sgid->gid_ext));
+
+
+Flagged by W=1 builds with gcc-14 and clang-19, and by Smatch.
+
+> +	sgid->gid_ext = ntohll(temp);
+> +}
+> +
+> +static inline void copy_to_ismgid(uuid_t *igid, struct smcd_gid *sgid)
+> +{
+> +	__be64 temp;
+> +
+> +	temp = htonll(sgid->gid);
+> +	memcpy(igid, &temp, sizeof(sgid->gid));
+> +	temp = htonll(sgid->gid_ext);
+> +	memcpy(igid + sizeof(sgid->gid), &temp, sizeof(sgid->gid_ext));
+
+I believe there is a similar problem here too.
+
+> +}
+> +
+>  #endif
+> -- 
+> 2.45.2
+> 
 
