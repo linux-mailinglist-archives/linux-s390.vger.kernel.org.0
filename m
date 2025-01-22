@@ -1,207 +1,172 @@
-Return-Path: <linux-s390+bounces-8555-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-8558-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17DA1A1949F
-	for <lists+linux-s390@lfdr.de>; Wed, 22 Jan 2025 16:06:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92CA4A1963F
+	for <lists+linux-s390@lfdr.de>; Wed, 22 Jan 2025 17:14:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E81AE3A08A0
-	for <lists+linux-s390@lfdr.de>; Wed, 22 Jan 2025 15:06:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3630F18896A7
+	for <lists+linux-s390@lfdr.de>; Wed, 22 Jan 2025 16:14:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E059213E86;
-	Wed, 22 Jan 2025 15:06:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98FCD214A7C;
+	Wed, 22 Jan 2025 16:14:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cDq19TXe"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ULalPNQ4"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD9FECF;
-	Wed, 22 Jan 2025 15:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C2D2135B9;
+	Wed, 22 Jan 2025 16:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737558377; cv=none; b=N8enMLVpPdQ0pm+coxq1oMI5Avq+6lwTXBx/2kPp/bM+dZkYKJFFEo0OXX5bYUzMQlxwWqZ6gbQKSe4rZAa291SeM82iwAkXpNJcKZj4jlQL1Ewe+fg7pgTVgDqjXhvp34eBUamOgbOZGSqAbtXnwuLmUoTm0hNlMASli+dZr+M=
+	t=1737562445; cv=none; b=L3crnmHNYndqwcuCTMhSUiKp8EuhVQRYhU+siWJ3JGqNA+yL275Zd+OfpdPyKP2gcGY5TS4lA30GNJvoeYe+0jDHbkJyIx7+8heCa0DR+ebNO+3DuWmf2g44FKaqzMArApaCjweRtHAhi4d3XSTqfVHCb8m1ojgI/8NLM4K9DR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737558377; c=relaxed/simple;
-	bh=dMl8o0XND35oOQJxQk1TJXjXoYG0oljoyi+EsoBYIs8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WzE4gNT6MovfmOlLTOfYPAzxis9PCGbytVYwRLgo6rTjYbmBr/5B9x53LCT8nBGnkCy2X+0A57XJ+fUGgGANYqklI4QKUQuNoUezHM66KG5ry1Vi40PMTGjOwOsvCAqs+Ju4I9S5VTCd0tHms7WtYQChkqUyTJ1iXmivIzyBmNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cDq19TXe; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1737562445; c=relaxed/simple;
+	bh=NkwaTxP8IA6CmS+YykzZg2T095iGHWlpqqTwcvnulco=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:Subject:From:
+	 References:In-Reply-To; b=KRqALu4He+dOKKmnGHNyBkve2le8mnwEQk2VKPXx2gnPvkvYErvWRxAAEiAlIHkYGqBR3Mfblb98WoDmBVXkzSIp0+qLac65A+p6B7/ScP8sVgDM6FrG4Q3Ct/dnRCmwDtd+/DGLkqxlv0FoWorxk82Y7CkX3pYm0d4PG8KNa8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ULalPNQ4; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50MCRIC5015192;
-	Wed, 22 Jan 2025 15:06:03 GMT
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50M7WhWd012550;
+	Wed, 22 Jan 2025 16:13:59 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=pFOqVh
-	2RNGstu/3AXWagFiYFpW9dqc3T/e9cFJkWBfI=; b=cDq19TXei8RVyZm5A62uQc
-	PtnCj7HUIJm/Z3VPFvajtqvseEX74QHPsXV6/dmAQcaxMoPJEWdZePQCJ6tAMc3V
-	S2J+bnZ5WkVynr00BC97rRup4dPqPaWK9sR4YCZv4+PXd5Mk5zJRmyw/fDgIxY5c
-	iGXV+4CKKE+oG26uGKT0ewAtqvsrEp1PRqmYYnMTm+9zVgx/uzlUjPERNrQfnAtn
-	MXOyEIObs34YvPbnJfcm5Nf06PrWuEZnqwnWACPhZVYTXMJ+H5DuUYgGuM7d1nj9
-	x0jlaCcOxBRVG58kZ5qNs3zP15MphQ2d/TSkYk5pbNdIEf5BztAKoJCQuz4Kgxmg
+	:message-id:mime-version:references:subject:to; s=pp1; bh=6DANvi
+	+7gXKGveupMBUuxZKlQYZ1T2zB8HoODupJwCI=; b=ULalPNQ44LQzC0qOwcJnSi
+	AItQspz8ox2eH/9JdGDsfQEOhNyfKdmYRBPka5Skpq7ZbZbmM2zrQsI0Puqt+/uv
+	lsIoilAMxh9v32vQ12tCbuu/seueuqeUSfIw1/PgqWgz1c8q1nnYJTvFmy+j9Zx/
+	wKIzcx4GXyeZO+zrwHwhhGOxWy0VUT42mkrHsywZpMJiB/DGVKGMJhppv4X/6Ct4
+	8umJGH09xjGHuRat9pFY6yjVqxNMaRGb5XLrZmWxpSTob7P+0J+OdJJPWZ/wa8It
+	gapPghZPdyLjbaRxS4uOo6KEYTo/yTjeGAbXvAdel/k+MwwqBpe//7Ph3GPdQf2w
 	==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44apr9bf16-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44avcp2bww-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Jan 2025 15:06:03 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50MF2CkR024289;
-	Wed, 22 Jan 2025 15:06:02 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44apr9bf13-1
+	Wed, 22 Jan 2025 16:13:59 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50MG5bZ2025385;
+	Wed, 22 Jan 2025 16:13:59 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44avcp2bwt-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Jan 2025 15:06:02 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50MEWxU0029604;
-	Wed, 22 Jan 2025 15:06:01 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 448qmngxba-1
+	Wed, 22 Jan 2025 16:13:59 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50MFrUYh020997;
+	Wed, 22 Jan 2025 16:13:58 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 448sb1gu3u-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Jan 2025 15:06:01 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50MF5vDL21496196
+	Wed, 22 Jan 2025 16:13:58 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50MGDsPh42991916
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 22 Jan 2025 15:05:57 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5F17E20040;
-	Wed, 22 Jan 2025 15:05:57 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9757A20043;
-	Wed, 22 Jan 2025 15:05:56 +0000 (GMT)
-Received: from [9.179.15.229] (unknown [9.179.15.229])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 22 Jan 2025 15:05:56 +0000 (GMT)
-Message-ID: <15b619e7-cc5e-48a4-ab70-f9dd0f026048@linux.ibm.com>
-Date: Wed, 22 Jan 2025 16:05:56 +0100
+	Wed, 22 Jan 2025 16:13:55 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E3EF220043;
+	Wed, 22 Jan 2025 16:13:54 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CCE0620040;
+	Wed, 22 Jan 2025 16:13:54 +0000 (GMT)
+Received: from darkmoore (unknown [9.155.210.150])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 22 Jan 2025 16:13:54 +0000 (GMT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 09/15] KVM: s390: move some gmap shadowing functions
- away from mm/gmap.c
-To: Christoph Schlameuss <schlameuss@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org
-Cc: linux-s390@vger.kernel.org, borntraeger@de.ibm.com, david@redhat.com,
-        willy@infradead.org, hca@linux.ibm.com, svens@linux.ibm.com,
-        agordeev@linux.ibm.com, gor@linux.ibm.com, nrb@linux.ibm.com,
-        nsg@linux.ibm.com, seanjc@google.com, seiden@linux.ibm.com
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 22 Jan 2025 17:13:49 +0100
+Message-Id: <D78QH4KP3LD3.ERGCXUJU0TT5@linux.ibm.com>
+Cc: <linux-s390@vger.kernel.org>, <frankja@linux.ibm.com>,
+        <borntraeger@de.ibm.com>, <david@redhat.com>, <willy@infradead.org>,
+        <hca@linux.ibm.com>, <svens@linux.ibm.com>, <agordeev@linux.ibm.com>,
+        <gor@linux.ibm.com>, <nrb@linux.ibm.com>, <nsg@linux.ibm.com>,
+        <seanjc@google.com>, <seiden@linux.ibm.com>
+To: "Claudio Imbrenda" <imbrenda@linux.ibm.com>, <kvm@vger.kernel.org>
+Subject: Re: [PATCH v3 11/15] KVM: s390: stop using lists to keep track of
+ used dat tables
+From: "Christoph Schlameuss" <schlameuss@linux.ibm.com>
+X-Mailer: aerc 0.18.2
 References: <20250117190938.93793-1-imbrenda@linux.ibm.com>
- <20250117190938.93793-10-imbrenda@linux.ibm.com>
- <D78M5FNORE1Y.1SJAXHNVZS9GL@linux.ibm.com>
-Content-Language: en-US
-From: Janosch Frank <frankja@linux.ibm.com>
-Autocrypt: addr=frankja@linux.ibm.com; keydata=
- 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
-In-Reply-To: <D78M5FNORE1Y.1SJAXHNVZS9GL@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <20250117190938.93793-12-imbrenda@linux.ibm.com>
+In-Reply-To: <20250117190938.93793-12-imbrenda@linux.ibm.com>
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: L6oE3Xg2X3mLMCgpuw73AWS-zgh9UUcH
-X-Proofpoint-ORIG-GUID: aloPTU9s2fnIeKpI368D_3ayOX2nTbjR
+X-Proofpoint-ORIG-GUID: AtgpRgliOq3P8PKqJpypFrRqru_x1zie
+X-Proofpoint-GUID: X6SQHu5ZgNr7CwmVZTBLxaK23Aw7vSBI
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-22_06,2025-01-22_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 lowpriorityscore=0 suspectscore=0 mlxscore=0
- spamscore=0 clxscore=1015 bulkscore=0 phishscore=0 malwarescore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2411120000 definitions=main-2501220111
+ definitions=2025-01-22_07,2025-01-22_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ bulkscore=0 mlxlogscore=909 spamscore=0 phishscore=0 mlxscore=0
+ suspectscore=0 lowpriorityscore=0 priorityscore=1501 clxscore=1015
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501220118
 
-On 1/22/25 1:50 PM, Christoph Schlameuss wrote:
-> On Fri Jan 17, 2025 at 8:09 PM CET, Claudio Imbrenda wrote:
->> Move some gmap shadowing functions from mm/gmap.c to kvm/kvm-s390.c and
->> the newly created kvm/gmap-vsie.c
->>
->> This is a step toward removing gmap from mm.
->>
+On Fri Jan 17, 2025 at 8:09 PM CET, Claudio Imbrenda wrote:
+> Until now, every dat table allocated to map a guest was put in a
+> linked list. The page->lru field of struct page was used to keep track
+> of which pages were being used, and when the gmap is torn down, the
+> list was walked and all pages freed.
+>
+> This patch gets rid of the usage of page->lru. Page tables are now
+> freed by recursively walking the dat table tree.
+>
+> Since s390_unlist_old_asce() becomes useless now, remove it.
+>
+> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+
+With comment fixes done:
+
+Reviewed-by: Christoph Schlameuss <schlameuss@linux.ibm.com>
+
+> ---
+>  arch/s390/include/asm/gmap.h |   3 --
+>  arch/s390/mm/gmap.c          | 102 ++++++++---------------------------
+>  2 files changed, 23 insertions(+), 82 deletions(-)
+>
+> diff --git a/arch/s390/include/asm/gmap.h b/arch/s390/include/asm/gmap.h
+> index dbf2329281d2..904d97f0bc5e 100644
+> --- a/arch/s390/include/asm/gmap.h
+> +++ b/arch/s390/include/asm/gmap.h
+> @@ -45,7 +45,6 @@
+>   */
+>  struct gmap {
+>  	struct list_head list;
+> -	struct list_head crst_list;
+
+nit: Please also remove @crst_list and @pt_list from the struct gmap commen=
+t.
+
+>  	struct mm_struct *mm;
+>  	struct radix_tree_root guest_to_host;
+>  	struct radix_tree_root host_to_guest;
+> @@ -61,7 +60,6 @@ struct gmap {
+>  	/* Additional data for shadow guest address spaces */
+>  	struct radix_tree_root host_to_rmap;
+>  	struct list_head children;
+> -	struct list_head pt_list;
+>  	spinlock_t shadow_lock;
+>  	struct gmap *parent;
+>  	unsigned long orig_asce;
+> @@ -141,7 +139,6 @@ int gmap_protect_one(struct gmap *gmap, unsigned long=
+ gaddr, int prot, unsigned
+>  void gmap_sync_dirty_log_pmd(struct gmap *gmap, unsigned long dirty_bitm=
+ap[4],
+>  			     unsigned long gaddr, unsigned long vmaddr);
+>  int s390_disable_cow_sharing(void);
+> -void s390_unlist_old_asce(struct gmap *gmap);
+>  int s390_replace_asce(struct gmap *gmap);
+>  void s390_uv_destroy_pfns(unsigned long count, unsigned long *pfns);
+>  int __s390_uv_destroy_range(struct mm_struct *mm, unsigned long start,
 
 [...]
-
->> +/**
->> + * gmap_shadow_valid - check if a shadow guest address space matches the
->> + *                     given properties and is still valid
->> + * @sg: pointer to the shadow guest address space structure
->> + * @asce: ASCE for which the shadow table is requested
->> + * @edat_level: edat level to be used for the shadow translation
->> + *
->> + * Returns 1 if the gmap shadow is still valid and matches the given
->> + * properties, the caller can continue using it. Returns 0 otherwise, the
->> + * caller has to request a new shadow gmap in this case.
->> + *
->> + */
->> +static inline int gmap_shadow_valid(struct gmap *sg, unsigned long asce, int edat_level)
->> +{
->> +	if (sg->removed)
->> +		return 0;
->> +	return sg->orig_asce == asce && sg->edat_level == edat_level;
-> 
-> This can simply be a single return:
-> 
-> return !sg->removed && sg->orig_asce == asce && sg->edat_level == edat_level;
-
-NACK, at some point (and that point might be very arbitrary) my eyes 
-start bleeding
-
-> 
->> +}
->>   
->>   #endif
->> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
->> index b626c87480ed..482f0968abfa 100644
->> --- a/arch/s390/kvm/kvm-s390.c
->> +++ b/arch/s390/kvm/kvm-s390.c
->> @@ -4509,6 +4509,63 @@ static bool ibs_enabled(struct kvm_vcpu *vcpu)
->>   	return kvm_s390_test_cpuflags(vcpu, CPUSTAT_IBS);
->>   }
-> 
-> [...]
-> 
 
 
