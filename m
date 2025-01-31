@@ -1,88 +1,79 @@
-Return-Path: <linux-s390+bounces-8741-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-8743-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DFAAA23CD4
-	for <lists+linux-s390@lfdr.de>; Fri, 31 Jan 2025 12:24:29 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1582A23CF7
+	for <lists+linux-s390@lfdr.de>; Fri, 31 Jan 2025 12:28:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B0320168C5B
-	for <lists+linux-s390@lfdr.de>; Fri, 31 Jan 2025 11:24:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 46D3A169343
+	for <lists+linux-s390@lfdr.de>; Fri, 31 Jan 2025 11:27:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD4941BEF6A;
-	Fri, 31 Jan 2025 11:24:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 677711EF09C;
+	Fri, 31 Jan 2025 11:25:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ffgQtixe"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sOf/ii5K"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1501581EE;
-	Fri, 31 Jan 2025 11:24:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF221EC016;
+	Fri, 31 Jan 2025 11:25:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738322665; cv=none; b=uMmTX2XbzEmrKhNe6sqxR2XF/1QOBzjVsmu7jdceM4VdMMXm+TYIVDeC3PyyXyxQYiEa7VSK5hLnuHZFuwIJPDxEhJNay/lZUmowWPK5jpBLa6katRKmISuIXCajuWLfWIbDV/r25F53Q+o0wJPZMyejjKzj5AyT0f92JDo6hVo=
+	t=1738322724; cv=none; b=T5w3vPQrDJJY07Qvj2+gW4IMbsjkPFfWa81icTJMCTZOlx5K4DgrqkESfiwmGC8u3NoNt2itvTCctzewkywBTTAtF3Jx1aLCGHtn+MIAP57XM/WZ3fEjh3+J+fLFWFrC2uayIaEQAJgmN7b27ADymX1tyDtTYw+mEH0Cte+dD8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738322665; c=relaxed/simple;
-	bh=Iaerg3+8AqywBAEG/lTnaM1Incy9T2wnxZu5PIc97OU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=okTvFen6BIkJ7a7aGxDChLyBuuuZ9lnr41T6iVNRcViLMaPMwpLlqqev3rCvFaG0RvoCivX2agns0C/DRhyBsGaegnlUfOKOhi/wqEFzTlLPEKv40qht+CxOKqesJXw2rXWIuVTWjkBPWv0eF5vy0odPgNqxfqnfa7oroIr4A2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ffgQtixe; arc=none smtp.client-ip=148.163.158.5
+	s=arc-20240116; t=1738322724; c=relaxed/simple;
+	bh=FWTDP1rk8DhN4KiP/c62NuMgHbTEIYOMQ9gSclJYTf4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PhdmtH5UbRgSxa0l6gbHTY9emqKaledTvhN1ko7qJh1MiEYPC3Pi/g/qIO06RfRoDU0DBfkrVCgSVcgEK9bVL4/HUBJUB8FWN87haT0iPLlooBvykUiL/ZS/6bwOnR03YGppfgHpeWnv1HM5bJr6qrcTXw6NOy9MRcGgMrt7EfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=sOf/ii5K; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50V2OEm5021886;
-	Fri, 31 Jan 2025 11:24:19 GMT
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50V7Wqbd009647;
+	Fri, 31 Jan 2025 11:25:20 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=YKonbqfAFfY7D++WK16sg2VVxpRaEGjOFyqVTb3N6
-	zE=; b=ffgQtixeyVrwsAEPVJ5PjlarEp1hE18SJ4VNtAU2JIOxoQCclRfrOo+En
-	H64p2MT1CanAxUtAGBXeJ31C/15/shqMCimdAUJ3gXwIrDhHL1nTCRX/gs6Q6dQE
-	4hStrTG37DAadT+XRi8pBwZLlG3Gtdx/FTtSzfpG4dDC7IZHmQx4D3iOcswhZo/+
-	xYcptYCxpJ0jc5zmi2/5q0u8fvjegvb6hK4Qok1qDiqBk0vX+ID0PtpeHhc/QPMf
-	U6YOiDicmDxQ0MPO+wV2rbGLR1UUQuF+GFrZSpEvwKamS0P2gcOFtoJOZDLNJiJx
-	kkAXK96ag+GFAz3NGxMPgRAAyhl8Q==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44gnby9wvv-1
+	:subject:to; s=pp1; bh=QdZ7+INnoGa6djL8g+i1n3RTdyMfjnw8D3kNVHAT8
+	rg=; b=sOf/ii5KCmAn36pB2udvrplnJobrkbpToAfmwck4yv1qx/eO/bACr0pw4
+	/WfIho/JKanma6Y6xVnXQmZSpeWPH9ErOhsXr3eFS1GO4d9J3I6lIhTkgKphOY94
+	pELpbhJIdu+gVcOJ6dqv1cguOPsHaKV+bjDGuzh2gOMT44L84b/lc9RrOgfRX/RV
+	Jf8nA0X5j9UsLJ3Fev7D55AdeAsvH4Q3lGN1gZOJxvc1gSlA0DpSnPZP51gHQXeL
+	7BIgymAZM1dHa0/1VFfqAoNMjHMmu61hylE1+01oUMQP6SYOrSsR3K6T1ePWBtJS
+	95gihteeRiCAGm8E4AdOFCst85M2g==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44gt7n8v2w-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 Jan 2025 11:24:19 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50VBDOmA032750;
-	Fri, 31 Jan 2025 11:24:18 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44gnby9wvu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 Jan 2025 11:24:18 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50V8CARs013878;
-	Fri, 31 Jan 2025 11:24:18 GMT
+	Fri, 31 Jan 2025 11:25:19 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50V8MOpt017346;
+	Fri, 31 Jan 2025 11:25:19 GMT
 Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44gf93b9c3-1
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44gfaxb8jp-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 Jan 2025 11:24:17 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50VBOEQo53870880
+	Fri, 31 Jan 2025 11:25:19 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50VBPFBh56820006
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 Jan 2025 11:24:14 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6A5F620098;
-	Fri, 31 Jan 2025 11:24:14 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 35A5B20097;
-	Fri, 31 Jan 2025 11:24:14 +0000 (GMT)
-Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 31 Jan 2025 11:24:14 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
-        irogers@google.com
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf test: Fix perf test 11 hwmon endianess issue
-Date: Fri, 31 Jan 2025 12:24:00 +0100
-Message-ID: <20250131112400.568975-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.45.2
+	Fri, 31 Jan 2025 11:25:15 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 18B952013A;
+	Fri, 31 Jan 2025 11:25:15 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6585220132;
+	Fri, 31 Jan 2025 11:25:10 +0000 (GMT)
+Received: from p-imbrenda.ibmuc.com (unknown [9.171.25.38])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 31 Jan 2025 11:25:10 +0000 (GMT)
+From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+To: pbonzini@redhat.com
+Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        borntraeger@de.ibm.com, david@redhat.com
+Subject: [GIT PULL v2 00/20] KVM: s390: some non-trivial fixes and cleanups for 6.14
+Date: Fri, 31 Jan 2025 12:24:50 +0100
+Message-ID: <20250131112510.48531-1-imbrenda@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -91,222 +82,101 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: IDtSwy56-IGCMBjimdl43szoBURNTuYo
-X-Proofpoint-GUID: 1hBudgDVj2TlOtdukJ4Tpwz7dElzPNZJ
+X-Proofpoint-GUID: OIDRb8r_C0OQ5VB7rQVG2Iruzpg2B439
+X-Proofpoint-ORIG-GUID: OIDRb8r_C0OQ5VB7rQVG2Iruzpg2B439
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-01-31_04,2025-01-31_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 lowpriorityscore=0 impostorscore=0 mlxscore=0
- malwarescore=0 suspectscore=0 phishscore=0 mlxlogscore=999 clxscore=1015
- bulkscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0
+ clxscore=1015 mlxscore=0 spamscore=0 bulkscore=0 mlxlogscore=635
+ phishscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2501170000 definitions=main-2501310083
 
-perf test 11 hwmon fails on s390 with this error
+Ciao Paolo,
 
- # ./perf test -Fv 11
- --- start ---
- ---- end ----
- 11.1: Basic parsing test             : Ok
- --- start ---
- Testing 'temp_test_hwmon_event1'
- Using CPUID IBM,3931,704,A01,3.7,002f
- temp_test_hwmon_event1 -> hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/
- FAILED tests/hwmon_pmu.c:189 Unexpected config for
-    'temp_test_hwmon_event1', 292470092988416 != 655361
- ---- end ----
- 11.2: Parsing without PMU name       : FAILED!
- --- start ---
- Testing 'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/'
- FAILED tests/hwmon_pmu.c:189 Unexpected config for
-    'hwmon_a_test_hwmon_pmu/temp_test_hwmon_event1/',
-    292470092988416 != 655361
- ---- end ----
- 11.3: Parsing with PMU name          : FAILED!
- #
+please pull the following changes:
 
-The root cause is in member test_event::config which is initialized
-to 0xA0001 or 655361. During event parsing a long list event parsing
-functions are called and end up with this gdb call stack:
+- some selftest fixes
+- move some kvm-related functions from mm into kvm
+- remove all usage of page->index and page->lru from kvm
+- fixes and cleanups for vsie
 
- #0  hwmon_pmu__config_term (hwm=0x168dfd0, attr=0x3ffffff5ee8,
-	term=0x168db60, err=0x3ffffff81c8) at util/hwmon_pmu.c:623
- #1  hwmon_pmu__config_terms (pmu=0x168dfd0, attr=0x3ffffff5ee8,
-	terms=0x3ffffff5ea8, err=0x3ffffff81c8) at util/hwmon_pmu.c:662
- #2  0x00000000012f870c in perf_pmu__config_terms (pmu=0x168dfd0,
-	attr=0x3ffffff5ee8, terms=0x3ffffff5ea8, zero=false,
-	apply_hardcoded=false, err=0x3ffffff81c8) at util/pmu.c:1519
- #3  0x00000000012f88a4 in perf_pmu__config (pmu=0x168dfd0, attr=0x3ffffff5ee8,
-	head_terms=0x3ffffff5ea8, apply_hardcoded=false, err=0x3ffffff81c8)
-	at util/pmu.c:1545
- #4  0x00000000012680c4 in parse_events_add_pmu (parse_state=0x3ffffff7fb8,
-	list=0x168dc00, pmu=0x168dfd0, const_parsed_terms=0x3ffffff6090,
-	auto_merge_stats=true, alternate_hw_config=10)
-	at util/parse-events.c:1508
- #5  0x00000000012684c6 in parse_events_multi_pmu_add (parse_state=0x3ffffff7fb8,
-	event_name=0x168ec10 "temp_test_hwmon_event1", hw_config=10,
-	const_parsed_terms=0x0, listp=0x3ffffff6230, loc_=0x3ffffff70e0)
-	at util/parse-events.c:1592
- #6  0x00000000012f0e4e in parse_events_parse (_parse_state=0x3ffffff7fb8,
-	scanner=0x16878c0) at util/parse-events.y:293
- #7  0x00000000012695a0 in parse_events__scanner (str=0x3ffffff81d8
-	"temp_test_hwmon_event1", input=0x0, parse_state=0x3ffffff7fb8)
-	at util/parse-events.c:1867
- #8  0x000000000126a1e8 in __parse_events (evlist=0x168b580,
-	str=0x3ffffff81d8 "temp_test_hwmon_event1", pmu_filter=0x0,
-	err=0x3ffffff81c8, fake_pmu=false, warn_if_reordered=true,
-	fake_tp=false) at util/parse-events.c:2136
- #9  0x00000000011e36aa in parse_events (evlist=0x168b580,
-	str=0x3ffffff81d8 "temp_test_hwmon_event1", err=0x3ffffff81c8)
-	at /root/linux/tools/perf/util/parse-events.h:41
- #10 0x00000000011e3e64 in do_test (i=0, with_pmu=false, with_alias=false)
-	at tests/hwmon_pmu.c:164
- #11 0x00000000011e422c in test__hwmon_pmu (with_pmu=false)
-	at tests/hwmon_pmu.c:219
- #12 0x00000000011e431c in test__hwmon_pmu_without_pmu (test=0x1610368
-	<suite.hwmon_pmu>, subtest=1) at tests/hwmon_pmu.c:23
 
-where the attr::config is set to value 292470092988416 or 0x10a0000000000
-in line 625 of file ./util/hwmon_pmu.c:
+and this time I did not forget any Signed-off-by: tags! *facepalm*
+sorry for the noise
 
-   attr->config = key.type_and_num;
 
-However member key::type_and_num is defined as union and bit field:
+The following changes since commit 72deda0abee6e705ae71a93f69f55e33be5bca5c:
 
-   union hwmon_pmu_event_key {
-        long type_and_num;
-        struct {
-                int num :16;
-                enum hwmon_type type :8;
-        };
-   };
+  Merge tag 'soundwire-6.14-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/soundwire (2025-01-29 14:38:19 -0800)
 
-s390 is big endian and Intel is little endian architecture.
-The events for the hwmon dummy pmu have num = 1 or num = 2 and
-type is set to HWMON_TYPE_TEMP (which is 10).
-On s390 this assignes member key::type_and_num the value of
-0x10a0000000000 (which is 292470092988416) as shown in above
-trace output.
+are available in the Git repository at:
 
-Fix this and export the structure/union hwmon_pmu_event_key
-so the test shares the same implementation as the event parsing
-functions for union and bit fields. This should avoid
-endianess issues on all platforms.
+  https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git tags/kvm-s390-next-6.14-2
 
-Output after:
- # ./perf test -F 11
- 11.1: Basic parsing test         : Ok
- 11.2: Parsing without PMU name   : Ok
- 11.3: Parsing with PMU name      : Ok
- #
+for you to fetch changes up to 32239066776a27287837a193b37c6e55259e5c10:
 
-Fixes: 531ee0fd4836 ("perf test: Add hwmon "PMU" test")
-Cc: Ian Rogers <irogers@google.com>
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
----
- tools/perf/tests/hwmon_pmu.c | 16 +++++++++++-----
- tools/perf/util/hwmon_pmu.c  | 14 --------------
- tools/perf/util/hwmon_pmu.h  | 16 ++++++++++++++++
- 3 files changed, 27 insertions(+), 19 deletions(-)
+  KVM: s390: selftests: Streamline uc_skey test to issue iske after sske (2025-01-31 12:03:53 +0100)
 
-diff --git a/tools/perf/tests/hwmon_pmu.c b/tools/perf/tests/hwmon_pmu.c
-index d2b066a2b557..0837aca1cdfa 100644
---- a/tools/perf/tests/hwmon_pmu.c
-+++ b/tools/perf/tests/hwmon_pmu.c
-@@ -13,17 +13,23 @@
- static const struct test_event {
- 	const char *name;
- 	const char *alias;
--	long config;
-+	union hwmon_pmu_event_key key;
- } test_events[] = {
- 	{
- 		"temp_test_hwmon_event1",
- 		"temp1",
--		0xA0001,
-+		.key = {
-+			.num = 1,
-+			.type = 10
-+		},
- 	},
- 	{
- 		"temp_test_hwmon_event2",
- 		"temp2",
--		0xA0002,
-+		.key = {
-+			.num = 2,
-+			.type = 10
-+		},
- 	},
- };
- 
-@@ -183,11 +189,11 @@ static int do_test(size_t i, bool with_pmu, bool with_alias)
- 		    strcmp(evsel->pmu->name, "hwmon_a_test_hwmon_pmu"))
- 			continue;
- 
--		if (evsel->core.attr.config != (u64)test_events[i].config) {
-+		if (evsel->core.attr.config != (u64)test_events[i].key.type_and_num) {
- 			pr_debug("FAILED %s:%d Unexpected config for '%s', %lld != %ld\n",
- 				__FILE__, __LINE__, str,
- 				evsel->core.attr.config,
--				test_events[i].config);
-+				test_events[i].key.type_and_num);
- 			ret = TEST_FAIL;
- 			goto out;
- 		}
-diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
-index 4acb9bb19b84..acd889b2462f 100644
---- a/tools/perf/util/hwmon_pmu.c
-+++ b/tools/perf/util/hwmon_pmu.c
-@@ -107,20 +107,6 @@ struct hwmon_pmu {
- 	int hwmon_dir_fd;
- };
- 
--/**
-- * union hwmon_pmu_event_key: Key for hwmon_pmu->events as such each key
-- * represents an event.
-- *
-- * Related hwmon files start <type><number> that this key represents.
-- */
--union hwmon_pmu_event_key {
--	long type_and_num;
--	struct {
--		int num :16;
--		enum hwmon_type type :8;
--	};
--};
--
- /**
-  * struct hwmon_pmu_event_value: Value in hwmon_pmu->events.
-  *
-diff --git a/tools/perf/util/hwmon_pmu.h b/tools/perf/util/hwmon_pmu.h
-index 882566846df4..b3329774d2b2 100644
---- a/tools/perf/util/hwmon_pmu.h
-+++ b/tools/perf/util/hwmon_pmu.h
-@@ -91,6 +91,22 @@ enum hwmon_item {
- 	HWMON_ITEM__MAX,
- };
- 
-+/**
-+ * union hwmon_pmu_event_key: Key for hwmon_pmu->events as such each key
-+ * represents an event.
-+ * union is exposed for testing to ensure problems are avoided on big
-+ * endian machines.
-+ *
-+ * Related hwmon files start <type><number> that this key represents.
-+ */
-+union hwmon_pmu_event_key {
-+	long type_and_num;
-+	struct {
-+		int num :16;
-+		enum hwmon_type type :8;
-+	};
-+};
-+
- bool perf_pmu__is_hwmon(const struct perf_pmu *pmu);
- bool evsel__is_hwmon(const struct evsel *evsel);
- 
--- 
-2.48.1
+----------------------------------------------------------------
+- some selftest fixes
+- move some kvm-related functions from mm into kvm
+- remove all usage of page->index and page->lru from kvm
+- fixes and cleanups for vsie
 
+----------------------------------------------------------------
+Christoph Schlameuss (1):
+      KVM: s390: selftests: Streamline uc_skey test to issue iske after sske
+
+Claudio Imbrenda (14):
+      KVM: s390: wrapper for KVM_BUG
+      KVM: s390: fake memslot for ucontrol VMs
+      KVM: s390: selftests: fix ucontrol memory region test
+      KVM: s390: move pv gmap functions into kvm
+      KVM: s390: use __kvm_faultin_pfn()
+      KVM: s390: get rid of gmap_fault()
+      KVM: s390: get rid of gmap_translate()
+      KVM: s390: move some gmap shadowing functions away from mm/gmap.c
+      KVM: s390: stop using page->index for non-shadow gmaps
+      KVM: s390: stop using lists to keep track of used dat tables
+      KVM: s390: move gmap_shadow_pgt_lookup() into kvm
+      KVM: s390: remove useless page->index usage
+      KVM: s390: move PGSTE softbits
+      KVM: s390: remove the last user of page->index
+
+David Hildenbrand (4):
+      KVM: s390: vsie: fix some corner-cases when grabbing vsie pages
+      KVM: s390: vsie: stop using page->index
+      KVM: s390: vsie: stop messing with page refcount
+      KVM: s390: vsie: stop using "struct page" for vsie page
+
+Sean Christopherson (1):
+      KVM: Do not restrict the size of KVM-internal memory regions
+
+ Documentation/virt/kvm/api.rst                   |   2 +-
+ arch/s390/include/asm/gmap.h                     |  20 +-
+ arch/s390/include/asm/kvm_host.h                 |   6 +-
+ arch/s390/include/asm/pgtable.h                  |  21 +-
+ arch/s390/include/asm/uv.h                       |   6 +-
+ arch/s390/kernel/uv.c                            | 292 +---------
+ arch/s390/kvm/Makefile                           |   2 +-
+ arch/s390/kvm/gaccess.c                          |  44 +-
+ arch/s390/kvm/gmap-vsie.c                        | 142 +++++
+ arch/s390/kvm/gmap.c                             | 212 +++++++
+ arch/s390/kvm/gmap.h                             |  39 ++
+ arch/s390/kvm/intercept.c                        |   7 +-
+ arch/s390/kvm/interrupt.c                        |  19 +-
+ arch/s390/kvm/kvm-s390.c                         | 237 ++++++--
+ arch/s390/kvm/kvm-s390.h                         |  19 +
+ arch/s390/kvm/pv.c                               |  21 +
+ arch/s390/kvm/vsie.c                             | 106 ++--
+ arch/s390/mm/gmap.c                              | 681 +++++------------------
+ arch/s390/mm/pgalloc.c                           |   2 -
+ tools/testing/selftests/kvm/s390/ucontrol_test.c |  32 +-
+ virt/kvm/kvm_main.c                              |  10 +-
+ 21 files changed, 990 insertions(+), 930 deletions(-)
+ create mode 100644 arch/s390/kvm/gmap-vsie.c
+ create mode 100644 arch/s390/kvm/gmap.c
+ create mode 100644 arch/s390/kvm/gmap.h
 
