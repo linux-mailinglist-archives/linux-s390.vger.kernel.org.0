@@ -1,179 +1,116 @@
-Return-Path: <linux-s390+bounces-8760-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-8763-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24D21A23D1D
-	for <lists+linux-s390@lfdr.de>; Fri, 31 Jan 2025 12:30:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA1F1A24033
+	for <lists+linux-s390@lfdr.de>; Fri, 31 Jan 2025 17:23:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 80F021886300
-	for <lists+linux-s390@lfdr.de>; Fri, 31 Jan 2025 11:30:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4391A163FD5
+	for <lists+linux-s390@lfdr.de>; Fri, 31 Jan 2025 16:23:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1822A1F3D3F;
-	Fri, 31 Jan 2025 11:25:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75F561E3DD6;
+	Fri, 31 Jan 2025 16:23:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MP+QKVvg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vxxKAnKH"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 860311C07DB;
-	Fri, 31 Jan 2025 11:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961F18467
+	for <linux-s390@vger.kernel.org>; Fri, 31 Jan 2025 16:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738322747; cv=none; b=lVV6l1LHqTieaE3IKZ7ouAQQkJHd/g1P+phTow3gSllr4EibG2Qfc41w5MjcBeCu/HoGJrvCk+2Bbo7KTLFrVMkNyu8+04zldd4JsODw8t4mAFE4FCPICdsrDBnDGiybIlLQ1VmO7669wuUVoEkqS5BuPJljRI7fsxPRtV8/dks=
+	t=1738340600; cv=none; b=rkCUnCVmmiGwy94SuDWO4WLQi9QMXPCPAWlYLKhWKkPVsl1f3qaxRoY1PvAtzXztySKszSoSpC50MzyhjfVDYwKd9/l6nn+dqA9wpT4z46gQn4r6OR+3G/1mzOga9/KCipeTgcltqbccRdg46Iqx7G9bun0lNdOgG1LyNNnyaQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738322747; c=relaxed/simple;
-	bh=Tm5yoTT5bQSaPlXmP71PXDTDC1SM1eJs7+Ig1825A08=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nyamQbvxGnjxipjmleuLYlfnmWtq29T9sTVWFsDPOEHW2ug23rpy1OtZ7sgcEZKqjhWEoBQLVGeFTjrXAbKHKiy/k1L13uPrfYF4L4gVPzVWgNEWr8LOj1KVTmZ09POUoeQ/m8wDngiPk4R4qYIVU64MgKKLkSnji/olvx+zTVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=MP+QKVvg; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50V2OCi4014643;
-	Fri, 31 Jan 2025 11:25:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=VmN3nvdAgnv/4lbjJ
-	KfSAgFyvI659GLqZraGOKNFYqQ=; b=MP+QKVvgEaPE33rUAlkB67cIJX08drB4W
-	D4ib/Et6PwoUcd+GsunBNwaIjjT0UsBjx1V94zgZmTZu2xiVeVKEUFTcMbztF48P
-	zpcfNMTag/U9WCn7+Y2cx6cUZHcd7OD1vzRob4hEqUTT4MM7KXLsgSPp1jAfln0X
-	b/mZAbTph9/PYg2Oihx2OzNthLRgwQ+CUr35lVidBzB2sXGM4A9oxDZ0t4UFXCYv
-	W4+pSk08OC7hNyFwpmfvw72rqhNDa6FoKg/urFPOd7UP234a1w0yz3vYkKXpaqjL
-	jcHCy9HbAP3J/tOvi7m32sdTpCUnsEiMr6yJQ9Y9J0DPZXZvdideQ==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44gfn4ued3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 Jan 2025 11:25:42 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50V8Awsk013864;
-	Fri, 31 Jan 2025 11:25:41 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44gf93b9gs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 Jan 2025 11:25:41 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50VBPcOK42402110
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 Jan 2025 11:25:38 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 10AEE20136;
-	Fri, 31 Jan 2025 11:25:38 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B742B20135;
-	Fri, 31 Jan 2025 11:25:37 +0000 (GMT)
-Received: from p-imbrenda.ibmuc.com (unknown [9.171.25.38])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 31 Jan 2025 11:25:37 +0000 (GMT)
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: pbonzini@redhat.com
-Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        borntraeger@de.ibm.com, david@redhat.com
-Subject: [GIT PULL v2 20/20] KVM: s390: selftests: Streamline uc_skey test to issue iske after sske
-Date: Fri, 31 Jan 2025 12:25:10 +0100
-Message-ID: <20250131112510.48531-21-imbrenda@linux.ibm.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250131112510.48531-1-imbrenda@linux.ibm.com>
-References: <20250131112510.48531-1-imbrenda@linux.ibm.com>
+	s=arc-20240116; t=1738340600; c=relaxed/simple;
+	bh=XR5lx6T2OZX3TvgFfUCQ2wqoocF1737mUfcufcBWu3Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jxNHajC14gmmO3fBV870354QJ3r/jnlvkMbNs5iKl7cuCgBnERjdzNlwFT+j1a0j8gB0TygO5ZSqWfHHxwNLKscR9GhY4T02wLsoS/5CLqeegj9Aph4+WGbWI7q0z8XlpVnWAPu8XGNKM3XmotQCcSZPEfiEEUaHW0qL1c63k/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vxxKAnKH; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-38be3bfb045so2281672f8f.0
+        for <linux-s390@vger.kernel.org>; Fri, 31 Jan 2025 08:23:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738340597; x=1738945397; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ccsQCvgWKqv3yygq/7Q/nlBWnWSWfZGyLmBYGuzRwP0=;
+        b=vxxKAnKHC7G4bKKCD04ERw4VFCG+qDpfzIw8T5IhExw0kBfT5A3ksQ+YcPVtnAfgFK
+         5Q69tOkwHXS0BQGfLl5++vpUDVqRb0vGoHxGdnSKA9yOpbhFfQer3qVAlwO91UiN68ez
+         lYgOCvkiTAz0mnKl2/jWuRRyYmlnLU4o9orCRm4aPq8hq819x0SREQm8p9P4TiTEeyAv
+         kvuhbnh/n/KLMIeXQPOuzb33Ub4r8RVNi7Jrf3pfn39D/nVDODSdTecNYKI3wd+C2M7x
+         UuUQR+8s9T+DcTVOrJzlVTcOaYPpwyALmZA6oi9orncB2ZLwp9bPbsU/npJXJJgHYb9v
+         hr4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738340597; x=1738945397;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ccsQCvgWKqv3yygq/7Q/nlBWnWSWfZGyLmBYGuzRwP0=;
+        b=cYrc66HhRuv0tgAGawLFe6kjUmNU3cnPgV8n7qyvbsaeKJpVVun7HBmZavSAV09VwS
+         XnsXubAGDYn4I+px4NFH9mWgwkFzxtopdxUtjfFgAtxh7D3IRVok5e+70otMCkDOD3Zv
+         sGoyrQxtVea60J1bWmfhvLtfAmK4sv1PMvUF5HOzywVcCdzJYPvGtMePTOvA8cR6+Vfq
+         nQ81SDJ8fdMtaHFJObA5xhTGlvVVmLmOCVRV1DLLbf5/GaQv3G3wWtWTDN4b91qYi1IV
+         eP5IAluCH9XsAIh127cvBWkC85nMYTVucJkeYYExw+gPH0EAJZyLYPC1lg01oeaDQHPW
+         XIDw==
+X-Forwarded-Encrypted: i=1; AJvYcCVZqe+vjd3WkyFnKhM5pfE/QcWa/SCY9+Oaf7o9w//WVtGl+5B2uD6vnT0yvT/kOSkyfqZjrltsGR1e@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUcH7Rzm02X6xEM51MuSDIPo9S35Mi4Sx+Q++613Mi5oJYGcHV
+	TWVVivesp9ztXK+C2N0NXlYpoSIOhgVykXPzoMpXEniVJg2pg0PaGE6W98jvqew=
+X-Gm-Gg: ASbGncuH4l5Zg1w3m7onlHcmM2/UtJkjnUeES+oocFJjHmlJbFoJKEBXEnrbl555Tfx
+	5TXP26HaLnTmVhoquwZgK9iwje5TNJfC8QXThFeRLKHobgnJHMvZsZkxIEb9FUrQ+U+733Od7V/
+	RX0Fen+FSCvCxtS0QHCooz9qZJRq/zjvJvw+SmDSq8ji5aA69viMY7wXrlDdgSvlBGWIVVVw7lq
+	qopcqzJtDVjHJYaQ8fNsGjmacjOMiadAQU65Azo6nUstiIZSw8aZoYL22/sqNh3W7cQZ8DNxQ8J
+	kImLm4jlueWR/1wSyPWyuo48kA==
+X-Google-Smtp-Source: AGHT+IHjR1HpSI+OxXVo1rJx/d3HvscdknUv4GZNTW8wQmSNUAcS/oELkxUcnST2xhCMAatVE56veA==
+X-Received: by 2002:a5d:59a9:0:b0:386:4244:15c7 with SMTP id ffacd0b85a97d-38c60f7788amr3570705f8f.25.1738340596916;
+        Fri, 31 Jan 2025 08:23:16 -0800 (PST)
+Received: from [192.168.68.163] ([145.224.90.107])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b576csm5113346f8f.63.2025.01.31.08.22.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jan 2025 08:22:44 -0800 (PST)
+Message-ID: <0ee49250-47e9-4719-898e-644b30ef8585@linaro.org>
+Date: Fri, 31 Jan 2025 16:22:15 +0000
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: lYGi5rqFyaIP-jYAY4FbqJzUsjip8Fvw
-X-Proofpoint-ORIG-GUID: lYGi5rqFyaIP-jYAY4FbqJzUsjip8Fvw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-31_04,2025-01-31_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 clxscore=1015 impostorscore=0 mlxlogscore=999 malwarescore=0
- phishscore=0 lowpriorityscore=0 bulkscore=0 suspectscore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2501310083
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2 v3] perf test: perf record tests (114) changes
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+ hca@linux.ibm.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+ linux-s390@vger.kernel.org
+References: <20250131102756.4185235-1-tmricht@linux.ibm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250131102756.4185235-1-tmricht@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Christoph Schlameuss <schlameuss@linux.ibm.com>
 
-In some rare situations a non default storage key is already set on the
-memory used by the test. Within normal VMs the key is reset / zapped
-when the memory is added to the VM. This is not the case for ucontrol
-VMs. With the initial iske check removed this test case can work in all
-situations. The function of the iske instruction is still validated by
-the remaining code.
 
-Fixes: 0185fbc6a2d3 ("KVM: s390: selftests: Add uc_skey VM test case")
-Signed-off-by: Christoph Schlameuss <schlameuss@linux.ibm.com>
-Link: https://lore.kernel.org/r/20250128131803.1047388-1-schlameuss@linux.ibm.com
-Message-ID: <20250128131803.1047388-1-schlameuss@linux.ibm.com>
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
----
- .../selftests/kvm/s390/ucontrol_test.c        | 24 +++++--------------
- 1 file changed, 6 insertions(+), 18 deletions(-)
+On 31/01/2025 10:27 am, Thomas Richter wrote:
+> Change event intructions to cycles for subtests
+>   - precise_max attribute
+>   - Basic leader sampling
+> as event instructions can not be used for sampling on s390.
+> 
+> Thomas Richter (2):
+>    perf test: Fix perf test 114 perf record test subtest precise_max
+>    perf test: Change event in perf test 114 perf record test subtest
+>      test_leader_sampling
+> 
+>   tools/perf/tests/shell/record.sh | 53 ++++++++++++++++++++------------
+>   1 file changed, 34 insertions(+), 19 deletions(-)
+> 
 
-diff --git a/tools/testing/selftests/kvm/s390/ucontrol_test.c b/tools/testing/selftests/kvm/s390/ucontrol_test.c
-index 22ce9219620c..d265b34c54be 100644
---- a/tools/testing/selftests/kvm/s390/ucontrol_test.c
-+++ b/tools/testing/selftests/kvm/s390/ucontrol_test.c
-@@ -88,10 +88,6 @@ asm("test_skey_asm:\n"
- 	"	ahi	%r0,1\n"
- 	"	st	%r1,0(%r5,%r6)\n"
- 
--	"	iske	%r1,%r6\n"
--	"	ahi	%r0,1\n"
--	"	diag	0,0,0x44\n"
--
- 	"	sske	%r1,%r6\n"
- 	"	xgr	%r1,%r1\n"
- 	"	iske	%r1,%r6\n"
-@@ -600,7 +596,9 @@ TEST_F(uc_kvm, uc_skey)
- 	ASSERT_EQ(true, uc_handle_exit(self));
- 	ASSERT_EQ(1, sync_regs->gprs[0]);
- 
--	/* ISKE */
-+	/* SSKE + ISKE */
-+	sync_regs->gprs[1] = skeyvalue;
-+	run->kvm_dirty_regs |= KVM_SYNC_GPRS;
- 	ASSERT_EQ(0, uc_run_once(self));
- 
- 	/*
-@@ -612,21 +610,11 @@ TEST_F(uc_kvm, uc_skey)
- 	TEST_ASSERT_EQ(0, sie_block->ictl & (ICTL_ISKE | ICTL_SSKE | ICTL_RRBE));
- 	TEST_ASSERT_EQ(KVM_EXIT_S390_SIEIC, self->run->exit_reason);
- 	TEST_ASSERT_EQ(ICPT_INST, sie_block->icptcode);
--	TEST_REQUIRE(sie_block->ipa != 0xb229);
-+	TEST_REQUIRE(sie_block->ipa != 0xb22b);
- 
--	/* ISKE contd. */
-+	/* SSKE + ISKE contd. */
- 	ASSERT_EQ(false, uc_handle_exit(self));
- 	ASSERT_EQ(2, sync_regs->gprs[0]);
--	/* assert initial skey (ACC = 0, R & C = 1) */
--	ASSERT_EQ(0x06, sync_regs->gprs[1]);
--	uc_assert_diag44(self);
--
--	/* SSKE + ISKE */
--	sync_regs->gprs[1] = skeyvalue;
--	run->kvm_dirty_regs |= KVM_SYNC_GPRS;
--	ASSERT_EQ(0, uc_run_once(self));
--	ASSERT_EQ(false, uc_handle_exit(self));
--	ASSERT_EQ(3, sync_regs->gprs[0]);
- 	ASSERT_EQ(skeyvalue, sync_regs->gprs[1]);
- 	uc_assert_diag44(self);
- 
-@@ -635,7 +623,7 @@ TEST_F(uc_kvm, uc_skey)
- 	run->kvm_dirty_regs |= KVM_SYNC_GPRS;
- 	ASSERT_EQ(0, uc_run_once(self));
- 	ASSERT_EQ(false, uc_handle_exit(self));
--	ASSERT_EQ(4, sync_regs->gprs[0]);
-+	ASSERT_EQ(3, sync_regs->gprs[0]);
- 	/* assert R reset but rest of skey unchanged */
- 	ASSERT_EQ(skeyvalue & 0xfa, sync_regs->gprs[1]);
- 	ASSERT_EQ(0, sync_regs->gprs[1] & 0x04);
--- 
-2.48.1
+LGTM
 
 
