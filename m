@@ -1,95 +1,89 @@
-Return-Path: <linux-s390+bounces-9002-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-9005-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C78A6A37F8F
-	for <lists+linux-s390@lfdr.de>; Mon, 17 Feb 2025 11:13:16 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 658AAA381CF
+	for <lists+linux-s390@lfdr.de>; Mon, 17 Feb 2025 12:33:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 144581899F08
-	for <lists+linux-s390@lfdr.de>; Mon, 17 Feb 2025 10:08:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 97310170EA5
+	for <lists+linux-s390@lfdr.de>; Mon, 17 Feb 2025 11:33:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1339217719;
-	Mon, 17 Feb 2025 10:06:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6812219A80;
+	Mon, 17 Feb 2025 11:33:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XHsffdNj"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gsjLuHyJ"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4165121766A;
-	Mon, 17 Feb 2025 10:06:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DF8218ACC;
+	Mon, 17 Feb 2025 11:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739786815; cv=none; b=YFINC+Nv1rV9+HnURn5HftcNY5PD3hcmPG1rFfy5uU/cnv7RpxnBki1QuaNYz+A5Sk1N2tcPUBdwdV3u/WAW7ENq8825yxqX2c2G2UjabYm8BfY1CzUrG6XmkYD6n2123+S/riZrYJEZWFenA9XWu3QUrHQtsK5tnhqvbMAueHc=
+	t=1739791996; cv=none; b=GeUUjOUUtOXeyLjSd36a775EOnSP+4Wq340CIDJCQN6Gp6LHLzJlT/UmOVRcAIHlGcvu1AnLIEJi8W261FJyLi83rDWaifUBiTJQiM2Ft3/htCzz6CdcHEvKaZoXnZ+yHDfxiJwLvo0dWfgquH6KzWFTzudMme1be8cm9FbDHD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739786815; c=relaxed/simple;
-	bh=558d9/IVBYnUtRILUcTAq7bt9vxz/+fiXDjqRWuB0eg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PmmkeZx+Tkk1L1QxO75ZoDfJzR2wNwVpFlzQ9gU3Xx+mP3qQ+M9zD/z7z6OzBA00naqvyLLy5NJKc0uRdayYtt7moY4oi1kX80ru+lkD6dctVEIlja8+NvCrcW6da0J7rVKeskw6lSB7BudoTxkysJJDFfGvMb/e6cMuw9z53rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XHsffdNj; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1739791996; c=relaxed/simple;
+	bh=WG6oFMu0mavX59UOQ/nB/6Igb8jBzB7sBymod9A4D/Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lvzlcuijiGnUgM2n6WTKUqNI1SNraGUb/V+x8uuON3yYHwLHg7zw8dp0P8lECgDG6ugmxp49YuN/cJR1ZmrOEX7KDu6cff1D1oSOfn15yiDTxciJKj+1kevWLP6m5Wd0s1PPJS8CUTQu8b7wUkxMOXyDgG1x37+5WBZ95HvvWzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gsjLuHyJ; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51H18nQ3015205;
-	Mon, 17 Feb 2025 10:06:31 GMT
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51H9KCAK014827;
+	Mon, 17 Feb 2025 11:32:54 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=hfJFI3kZ5VCZCB7Js
-	iW1N0I9+4gi+bwnuBr+APbwOWM=; b=XHsffdNjZW9RU6XdKadUkM7y5zlbzMBE1
-	FDBJ2nSkVyq/CBNy+m4vIPUp4c3sLDOxNWfeIUrjm5DNVbA6VQ/iJq06Ks3+0sMM
-	3oVLBXF5+MSwMWmSIW4g3VET5imQNGDUP8UrKV0Uz9beE6aQimq8u3I0hr2Zj2FQ
-	iLARE46GOFDZ4MbZqvwItbS+CrArxxhcXPqgUpEcjfhVET2ERBVdXwtT4oAmjdri
-	3PceJXI72DYj7q7gI31sC2lyYO3j6FXMiB5wLL+5wjlVVnVP487NuN+852+Uao2d
-	KFD6Cp6kSZpfHxBcjOxFfT1kFSQXcFChJEy6edICb7vuixn7AqSgA==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44uu69a51n-1
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=IWw1qBEFfYIm6QclJ1UrfL1To/oRw0rQiumIkfQdu
+	D4=; b=gsjLuHyJ4DTXNHcjB8Mg1o+pvLwSRG2zJjjP1JvxmUPrqF/xwJ17p3f1D
+	rKCAyLA1HfeHeK1L1yxDqE1+xZ0ozA2h3lUmEMgWb0utnxxqLs4PaAyfqL2+qmUT
+	78UmvUEZourmF1OT2Ypvs+ma5od3adqcWmDDtz5xj7GTEn4KBKMIpb9kq8y6wrYc
+	KoXg0TTCFADLSeTtl2mILmyGvHJs+ufO8kql1H1+2iL8Z1Jh253onrPE5TTjNW2W
+	L8eUzM91ao2xkeY5OL+lIhsQEd8V9L6SQwiWbtgbLPiHwVkLF/9L6ETWB8kUR6VD
+	xSeHWiR7L8A6sOB6ZBqy5Yxszwejw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44ujutkv08-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Feb 2025 10:06:30 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51H8MxO4001633;
-	Mon, 17 Feb 2025 10:06:29 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44u5mynnna-1
+	Mon, 17 Feb 2025 11:32:54 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51HBF4LT025482;
+	Mon, 17 Feb 2025 11:32:54 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44ujutkv06-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Feb 2025 10:06:29 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51HA6Pjg55443788
+	Mon, 17 Feb 2025 11:32:54 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51H92rKt000498;
+	Mon, 17 Feb 2025 11:32:53 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44u6rknrus-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Feb 2025 11:32:53 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51HBWnmp45416852
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 17 Feb 2025 10:06:25 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8465E20063;
-	Mon, 17 Feb 2025 10:06:25 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 476F82006A;
-	Mon, 17 Feb 2025 10:06:25 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 17 Feb 2025 10:06:25 +0000 (GMT)
-From: Halil Pasic <pasic@linux.ibm.com>
-To: Eric Farman <farman@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        Jason Herne <jjherne@linux.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Holger Dengler <dengler@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thorsten Blum <thorsten.blum@linux.dev>
-Subject: [PATCH 2/2] s390/vfio-ccw: make mdev_types not look like a fake flex array
-Date: Mon, 17 Feb 2025 11:06:14 +0100
-Message-ID: <20250217100614.3043620-3-pasic@linux.ibm.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250217100614.3043620-1-pasic@linux.ibm.com>
-References: <20250217100614.3043620-1-pasic@linux.ibm.com>
+	Mon, 17 Feb 2025 11:32:49 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 723F720043;
+	Mon, 17 Feb 2025 11:32:49 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9030C20040;
+	Mon, 17 Feb 2025 11:32:48 +0000 (GMT)
+Received: from IBM-PW0CRK36.ibm.com (unknown [9.179.18.115])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 17 Feb 2025 11:32:48 +0000 (GMT)
+From: Tobias Huschle <huschle@linux.ibm.com>
+To: linux-kernel@vger.kernel.org
+Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        vschneid@redhat.com, sshegde@linux.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
+Subject: [RFC PATCH v2 0/3] sched/fair: introduce new scheduler group type group_parked
+Date: Mon, 17 Feb 2025 12:32:49 +0100
+Message-Id: <20250217113252.21796-1-huschle@linux.ibm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -98,101 +92,144 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Nisoc6HnoD0j1Gl5QcbaBTgUpqRHKjHX
-X-Proofpoint-ORIG-GUID: Nisoc6HnoD0j1Gl5QcbaBTgUpqRHKjHX
+X-Proofpoint-ORIG-GUID: jisq5b9NzwsiHEJVlQjp-AErtlLHVOEf
+X-Proofpoint-GUID: HMGIeooP4puJgdixk0Z1y-LE4DyO9FLr
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-17_04,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- malwarescore=0 priorityscore=1501 suspectscore=0 impostorscore=0
- lowpriorityscore=0 spamscore=0 clxscore=1015 mlxscore=0 mlxlogscore=888
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502170088
+ definitions=2025-02-17_05,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ suspectscore=0 phishscore=0 lowpriorityscore=0 impostorscore=0
+ adultscore=0 priorityscore=1501 clxscore=1011 mlxlogscore=999
+ malwarescore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502170101
 
-The vfio-ccw driver and the vfio parent device provided by it (parent)
-support just a single mdev_type, and this is not likely to change any
-time soon. To match the mdev interfaces nicely initially the choice was
-made that mdev_types (which gets passed into mdev_register_parent())
-shall be an array of pointers to struct mdev_type with a single element,
-and to make things worse it ended up being the last member.
+Changes to v1
 
-Now the problem with that is that before C99 the usual way to get
-something similar to a flexible array member was to use a trailing array
-of size 0 or 1. This is what I called fake flex array. For a while now
-the community is trying to get rid of fake flex arrays. And while
-mdev_types was not a fake flex array but an array of size one, because
-it can easily be and probably was mistaken for a fake flex array it got
-converted into a real C99 flex array with a compile time known constant
-size of one.
+parked vs idle
+- parked CPUs are now never considered to be idle
+- a scheduler group is now considered parked iff there are parked CPUs 
+  and there are no idle CPUs, i.e. all non parked CPUs are busy or there
+  are only parked CPUs. A scheduler group with parked tasks can be
+  considered to not be parked, if it has idle CPUs which can pick up
+  the parked tasks.
+- idle_cpu_without always returns that the CPU will not be idle if the 
+  CPU is parked
 
-As per [1] it was established that "only fake flexible arrays should be
-transformed into C99 flex-array members". Since IMHO the entire point of
-flex arrays is being flexible about the array size at run time, a C99
-flex array is a poor fit for mdev_types.  But an array of a size one is
-a poor fit as well for the reason stated above, let us try to get rid of
-the flex array without introducing back the one sized array.
+active balance, no_hz, queuing
+- should_we_balance always returns true if a scheduler groups contains 
+  a parked CPU and that CPU has a running task
+- stopping the tick on parked CPUs is now prevented in sched_can_stop_tick
+  if a task is running
+- tasks are being prevented to be queued on parked CPUs in ttwu_queue_cond
 
-So, lets make mdev_types a pointer to struct mdev_type and pass in the
-address of that pointer as the 4th formal parameter of
-mdev_register_parent().
+cleanup
+- removed duplicate checks for parked CPUs
 
-[1] https://lore.kernel.org/lkml/85863d7a-2d8b-4c1b-b76a-e2f40834a7a8@embeddedor.com/
+CPU capacity
+- added a patch which removes parked cpus and their capacity from 
+  scheduler statistics
 
-Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-Reviewed-by: Matthew Rosato <mjrosato@linux.ibm.com>
-Tested-by: Eric Farman <farman@linux.ibm.com>
 
----
+Original description:
 
-I've also considered switching up the order in which the members
-mdev_types and mdev_type are defined in struct vfio_ccw_parent but
-decided against that because that could look to somebody like
-well known mistake that can be made when using fake flex arrays.
----
- drivers/s390/cio/vfio_ccw_drv.c     | 6 +++---
- drivers/s390/cio/vfio_ccw_private.h | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+Adding a new scheduler group type which allows to remove all tasks 
+from certain CPUs through load balancing can help in scenarios where
+such CPUs are currently unfavorable to use, for example in a 
+virtualized environment.
 
-diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-index 914dde041675..6ff5c9cfb7ed 100644
---- a/drivers/s390/cio/vfio_ccw_drv.c
-+++ b/drivers/s390/cio/vfio_ccw_drv.c
-@@ -171,7 +171,7 @@ static int vfio_ccw_sch_probe(struct subchannel *sch)
- 		return -ENODEV;
- 	}
- 
--	parent = kzalloc(struct_size(parent, mdev_types, 1), GFP_KERNEL);
-+	parent = kzalloc(sizeof(*parent), GFP_KERNEL);
- 	if (!parent)
- 		return -ENOMEM;
- 
-@@ -186,10 +186,10 @@ static int vfio_ccw_sch_probe(struct subchannel *sch)
- 
- 	parent->mdev_type.sysfs_name = "io";
- 	parent->mdev_type.pretty_name = "I/O subchannel (Non-QDIO)";
--	parent->mdev_types[0] = &parent->mdev_type;
-+	parent->mdev_types = &parent->mdev_type;
- 	ret = mdev_register_parent(&parent->parent, &sch->dev,
- 				   &vfio_ccw_mdev_driver,
--				   parent->mdev_types, 1);
-+				   &parent->mdev_types, 1);
- 	if (ret)
- 		goto out_unreg;
- 
-diff --git a/drivers/s390/cio/vfio_ccw_private.h b/drivers/s390/cio/vfio_ccw_private.h
-index b62bbc5c6376..0501d4bbcdbd 100644
---- a/drivers/s390/cio/vfio_ccw_private.h
-+++ b/drivers/s390/cio/vfio_ccw_private.h
-@@ -79,7 +79,7 @@ struct vfio_ccw_parent {
- 
- 	struct mdev_parent	parent;
- 	struct mdev_type	mdev_type;
--	struct mdev_type	*mdev_types[];
-+	struct mdev_type	*mdev_types;
- };
- 
- /**
+Functionally, this works as intended. The question would be, if this
+could be considered to be added and would be worth going forward 
+with. If so, which areas would need additional attention? 
+Some cases are referenced below.
+
+The underlying concept and the approach of adding a new scheduler 
+group type were presented in the Sched MC of the 2024 LPC.
+A short summary:
+
+Some architectures (e.g. s390) provide virtualization on a firmware
+level. This implies, that Linux kernels running on such architectures
+run on virtualized CPUs.
+
+Like in other virtualized environments, the CPUs are most likely shared
+with other guests on the hardware level. This implies, that Linux
+kernels running in such an environment may encounter 'steal time'. In
+other words, instead of being able to use all available time on a
+physical CPU, some of said available time is 'stolen' by other guests.
+
+This can cause side effects if a guest is interrupted at an unfavorable
+point in time or if the guest is waiting for one of its other virtual 
+CPUs to perform certain actions while those are suspended in favour of 
+another guest.
+
+Architectures, like arch/s390, address this issue by providing an
+alternative classification for the CPUs seen by the Linux kernel.
+
+The following example is arch/s390 specific:
+In the default mode (horizontal CPU polarization), all CPUs are treated
+equally and can be subject to steal time equally. 
+In the alternate mode (vertical CPU polarization), the underlying
+firmware hypervisor assigns the CPUs, visible to the guest, different
+types, depending on how many CPUs the guest is entitled to use. Said
+entitlement is configured by assigning weights to all active guests.
+The three CPU types are:
+    - vertical high   : On these CPUs, the guest has always highest
+                        priority over other guests. This means
+                        especially that if the guest executes tasks on
+                        these CPUs, it will encounter no steal time.
+    - vertical medium : These CPUs are meant to cover fractions of
+                        entitlement.
+    - vertical low    : These CPUs will have no priority when being
+                        scheduled. This implies especially, that while
+                        all other guests are using their full
+                        entitlement, these CPUs might not be ran for a
+                        significant amount of time.
+
+As a consequence, using vertical lows while the underlying hypervisor
+experiences a high load, driven by all defined guests, is to be avoided.
+
+In order to consequently move tasks off of vertical lows, introduce a
+new type of scheduler groups: group_parked.
+Parked implies, that processes should be evacuated as fast as possible
+from these CPUs. This implies that other CPUs should start pulling tasks
+immediately, while the parked CPUs should refuse to pull any tasks
+themselves.
+Adding a group type beyond group_overloaded achieves the expected
+behavior. By making its selection architecture dependent, it has
+no effect on architectures which will not make use of that group type.
+
+This approach works very well for many kinds of workloads. Tasks are
+getting migrated back and forth in line with changing the parked
+state of the involved CPUs.
+
+There are a couple of issues and corner cases which need further
+considerations:
+- rt & dl:      Realtime and deadline scheduling require some additional 
+                attention. 
+- ext:          Probably affected as well. Needs some conceptional
+                thoughts first.
+- raciness:     Right now, there are no synchronization efforts. It needs
+                to be considered whether those might be necessary or if
+                it is alright that the parked-state of a CPU might change
+                during load-balancing. 
+
+Patches apply to tip:sched/core
+
+The s390 patch serves as a simplified implementation example.
+
+Tobias Huschle (3):
+  sched/fair: introduce new scheduler group type group_parked
+  sched/fair: adapt scheduler group weight and capacity for parked CPUs
+  s390/topology: Add initial implementation for selection of parked CPUs
+
+ arch/s390/include/asm/smp.h    |   2 +
+ arch/s390/kernel/smp.c         |   5 ++
+ include/linux/sched/topology.h |  19 ++++++
+ kernel/sched/core.c            |  13 ++++-
+ kernel/sched/fair.c            | 104 ++++++++++++++++++++++++++++-----
+ kernel/sched/syscalls.c        |   3 +
+ 6 files changed, 130 insertions(+), 16 deletions(-)
+
 -- 
-2.45.2
+2.34.1
 
 
