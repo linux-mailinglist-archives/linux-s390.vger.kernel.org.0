@@ -1,129 +1,138 @@
-Return-Path: <linux-s390+bounces-9023-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-9030-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2241DA38B3F
-	for <lists+linux-s390@lfdr.de>; Mon, 17 Feb 2025 19:25:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5765A38C1E
+	for <lists+linux-s390@lfdr.de>; Mon, 17 Feb 2025 20:10:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DE21716F43A
-	for <lists+linux-s390@lfdr.de>; Mon, 17 Feb 2025 18:25:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E78063B54AB
+	for <lists+linux-s390@lfdr.de>; Mon, 17 Feb 2025 19:08:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48ECB235BEE;
-	Mon, 17 Feb 2025 18:25:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C35D237164;
+	Mon, 17 Feb 2025 19:08:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aqfLbHSZ"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Jz34MUBk"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B04235359;
-	Mon, 17 Feb 2025 18:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC3A2376E1;
+	Mon, 17 Feb 2025 19:08:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739816737; cv=none; b=RoS7viI1sKtUoctOH7Qb1XTEeLxZiJnXLa8RDjlDCYiX90QX+imh2AdQjelz2Nkl9bxcd4DZXsosGNRG/oBrCr7UxkgUXefQWWFaDypJhVxTV0WTbTfkIu7G+Lj5HxxLRIXNHTXsXvLvjql5jplSJY2Dq7tU5cwNx42b/Xa18XE=
+	t=1739819327; cv=none; b=rsogVB3izDyyXOy+ub75ckh+5qNDanr8HL3LK/jlAJTi8QED4O8BjxYK8UJPES0TF8XA1+U56V0lQiXEt9dprG4s4/ybKn4yPxytyqcX+qLoIXqHljWfyYuJfPH6eS5isGGtWUFUa/b+pY1z+DZNHgRpoKjbA0vhhdLu0BUqJN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739816737; c=relaxed/simple;
-	bh=5khgD35fjPwEHUWM6/Tc1Rdzv1qWoYBP4oYEhlwM75Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pnLi3W2DgafaCPr5yrRSiwQyL+MJAxsTb8GMsyDHRB57RwbIFeR7dORcHBxIPvTEyZk4HVxa1sDSQNIelDrdmLrrceQLPWh2FupqPlsro2blr58RKGtQqYN4mDEt4em+g+rfbAOi/LVMuktT29eqUaGe1wH9ZSIYj+gs5ufz8as=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aqfLbHSZ; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51HCNVbt030844;
-	Mon, 17 Feb 2025 18:25:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=zqBWVLibSN2BnE1MhuGrsYhIzK+bPL
-	ENN2DgCYa3zGI=; b=aqfLbHSZ05m12NX0QHqoj2JANDUFRzv2NtiD1jKyEUvg6+
-	f6ISN7Y2PSuDY793sEWcDRZ0Zh9zw2SYTCEli0IDzPFXwwXo3pqdwg8iRmGTL5BT
-	p+mp6kAcCVAcwpnPfcoaQcArQnHMap4mfYPj8Aemyl+EOkVegeGfoaEJZ7Spm16c
-	pIWG4Ks0vRBrnzVzJRoU3iZbpKpfp1+0M9MVMGbNT3hqqbxHq6izSgBozhXyfetv
-	MIGqKVWH/PHvha4BRd9/eT2YX2N1skGscTUzSC35VN7uVmswsYVp/fMx3kBkQd7N
-	8PnaunHTLsUEZwQUsUKqP6QdEUS5S+UtB5vhW37g==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44us5a506f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Feb 2025 18:25:24 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51HIObQ7014538;
-	Mon, 17 Feb 2025 18:25:24 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44us5a506d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Feb 2025 18:25:24 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51HGFOkL008133;
-	Mon, 17 Feb 2025 18:25:23 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44u58tfjwf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Feb 2025 18:25:23 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51HIPKCM40108400
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 17 Feb 2025 18:25:20 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F1C9020043;
-	Mon, 17 Feb 2025 18:25:19 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7BB0C20040;
-	Mon, 17 Feb 2025 18:25:19 +0000 (GMT)
-Received: from localhost (unknown [9.179.20.129])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 17 Feb 2025 18:25:19 +0000 (GMT)
-Date: Mon, 17 Feb 2025 19:25:18 +0100
-From: Vasily Gorbik <gor@linux.ibm.com>
-To: Sami Tolvanen <samitolvanen@google.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, kernel test robot <lkp@intel.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390/purgatory: Use -D__DISABLE_EXPORTS
-Message-ID: <your-ad-here.call-01739816718-ext-0992@work.hours>
-References: <20250213211614.3537605-2-samitolvanen@google.com>
+	s=arc-20240116; t=1739819327; c=relaxed/simple;
+	bh=mkVi65pda2R6WvNDvWvDbwDD/REKhNIKZ0M6+x/ENQA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NIaRy81d3htS6XsSeDEV1FHs5RJRKIYINqcQJ5rYcNk6Ap+0IIyucnLzCXYMO8U+TffjM+9KJZPBiFSrPbHmMSKmJJFB7erNnT07bRavv4dNOELV9p901m6s7apou3F/ERx62rMcrEbgR1I8y2KSGmJRKCSj1VhDZLiQIv/QulQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Jz34MUBk; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=xPK3eVt9+7xzyAPyUDSt55ICTTIrX4D95c1avul6TRk=; b=Jz34MUBk12WoNx3nG8DYnhoKOG
+	5TdzeRiHmtpKkxk3YXdh4WT9xz/u9O9dg4xXajm73CZ4nwIf4hXUUIxmUVzFDLLEyA49LyHVhFg/9
+	jU6cGlj48Pp3AWlNkp0kOGJcYR/oBWOnJAzuGrKSBapUz5885RV7u33SS6rGZosC/WoLJ7AznBLb/
+	EZvh5DXpj7mTNzZeCv/ZM98Mo2dpj/YL54x3ceiSxdjzRgT8zbBhqErxpxXc0wRy2tCqrBVz6bvp+
+	cPfmrAjIb2VvaLUmvPF5AYOczpX9oO0vXS9N0GfX3WQ14h4ExIX+z2eRJHTarDPAnImAruOehyCzZ
+	6W7zMzMw==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tk6Tu-00000001pBB-2EX9;
+	Mon, 17 Feb 2025 19:08:38 +0000
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To: linux-mm@kvack.org
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	linux-arch@vger.kernel.org,
+	x86@kernel.org,
+	linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-um@lists.infradead.org
+Subject: [PATCH 0/7] Add folio_mk_pte() and simplify mk_pte()
+Date: Mon, 17 Feb 2025 19:08:27 +0000
+Message-ID: <20250217190836.435039-1-willy@infradead.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250213211614.3537605-2-samitolvanen@google.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: ULpRvCYuDWIoWXxio4zaoQsMVRNwQ262
-X-Proofpoint-GUID: HUYvxhw7rzp0YxDkpSZyF3zHGveGiFl4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-17_07,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
- mlxlogscore=368 suspectscore=0 phishscore=0 impostorscore=0 bulkscore=0
- spamscore=0 mlxscore=0 adultscore=0 lowpriorityscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502170143
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 13, 2025 at 09:16:14PM +0000, Sami Tolvanen wrote:
-> The object files in purgatory do not export symbols, so disable exports
-> for all the object files, not only sha256.o, with -D__DISABLE_EXPORTS.
-> 
-> This fixes a build failure with CONFIG_GENDWARFKSYMS, where we would
-> otherwise attempt to calculate symbol versions for purgatory objects and
-> fail because they're not built with debugging information:
-> 
-> error: gendwarfksyms: process_module: dwarf_get_units failed: no debugging information?
-> make[5]: *** [../scripts/Makefile.build:207: arch/s390/purgatory/string.o] Error 1
-> make[5]: *** Deleting file 'arch/s390/purgatory/string.o'
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202502120752.U3fOKScQ-lkp@intel.com/
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> ---
->  arch/s390/purgatory/Makefile | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+The intent is to add folio_mk_pte() to remove the conversion from folio
+to page necessary to call mk_pte().  Eventually we might end up removing
+mk_pte(), but that's not what's being proposed today.
 
-Applied, thank you!
+I didn't want to add folio_mk_pte() to each architecture, and I didn't
+want to lose any optimisations that architectures have from their own
+implementation of mk_pte().  Fortunately, most architectures have by
+now turned their mk_pte() into a fairly bland variant of pfn_pte(),
+but s390 is different.
+
+So patch 1 hoists the optimisation of calling pte_mkdirty() from s390
+to generic code.  I'd appreciate some eyes on this from mm people who
+understand this better than I do.  I originally had
+
+-	if (write)
++	if (write || folio_test_dirty(folio))
+		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+
+and I think that broke COW under some circumstances that 01.org could
+reproduce and I couldn't.
+
+The various architecture maintainers might care to make sure that what
+I've done is an equivalent transformation.  x86 was particularly tricky.
+The build bots say it works ... at least now I've dealt with the pesky
+!MMU problem.
+
+The last patch to actually use folio_mk_pte() ought to be the least likely
+to have a problem  since it's equivalent to calling mk_pte(&folio->page).
+
+Matthew Wilcox (Oracle) (7):
+  mm: Set the pte dirty if the folio is already dirty
+  mm: Introduce a common definition of mk_pte()
+  sparc32: Remove custom definition of mk_pte()
+  x86: Remove custom definition of mk_pte()
+  um: Remove custom definition of mk_pte()
+  mm: Make mk_pte() definition unconditional
+  mm: Add folio_mk_pte()
+
+ arch/alpha/include/asm/pgtable.h         |  7 -------
+ arch/arc/include/asm/pgtable-levels.h    |  1 -
+ arch/arm/include/asm/pgtable.h           |  1 -
+ arch/arm64/include/asm/pgtable.h         |  6 ------
+ arch/csky/include/asm/pgtable.h          |  5 -----
+ arch/hexagon/include/asm/pgtable.h       |  3 ---
+ arch/loongarch/include/asm/pgtable.h     |  6 ------
+ arch/m68k/include/asm/mcf_pgtable.h      |  6 ------
+ arch/m68k/include/asm/motorola_pgtable.h |  6 ------
+ arch/m68k/include/asm/sun3_pgtable.h     |  6 ------
+ arch/microblaze/include/asm/pgtable.h    |  8 --------
+ arch/mips/include/asm/pgtable.h          |  6 ------
+ arch/nios2/include/asm/pgtable.h         |  6 ------
+ arch/openrisc/include/asm/pgtable.h      |  2 --
+ arch/parisc/include/asm/pgtable.h        |  6 ------
+ arch/powerpc/include/asm/pgtable.h       |  3 +--
+ arch/riscv/include/asm/pgtable.h         |  2 --
+ arch/s390/include/asm/pgtable.h          | 10 ----------
+ arch/sh/include/asm/pgtable_32.h         |  8 --------
+ arch/sparc/include/asm/pgtable_32.h      | 15 +++++----------
+ arch/sparc/include/asm/pgtable_64.h      |  1 -
+ arch/um/include/asm/pgtable-2level.h     |  1 -
+ arch/um/include/asm/pgtable-4level.h     |  9 ---------
+ arch/um/include/asm/pgtable.h            | 18 ++++++++----------
+ arch/x86/include/asm/pgtable.h           | 19 +++----------------
+ arch/xtensa/include/asm/pgtable.h        |  6 ------
+ include/linux/mm.h                       | 22 ++++++++++++++++++++++
+ mm/memory.c                              |  8 +++++---
+ mm/userfaultfd.c                         |  2 +-
+ 29 files changed, 45 insertions(+), 154 deletions(-)
+
+-- 
+2.47.2
+
 
