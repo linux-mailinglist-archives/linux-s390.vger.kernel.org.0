@@ -1,46 +1,46 @@
-Return-Path: <linux-s390+bounces-9076-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-9077-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D76BA3AA09
-	for <lists+linux-s390@lfdr.de>; Tue, 18 Feb 2025 21:54:16 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A920DA3A9F8
+	for <lists+linux-s390@lfdr.de>; Tue, 18 Feb 2025 21:52:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0A8733B1EAA
-	for <lists+linux-s390@lfdr.de>; Tue, 18 Feb 2025 20:48:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9CC267A5CB1
+	for <lists+linux-s390@lfdr.de>; Tue, 18 Feb 2025 20:49:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7B7F23472D;
-	Tue, 18 Feb 2025 20:29:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 213B5286282;
+	Tue, 18 Feb 2025 20:29:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I1N3QyCI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cka1kJs1"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2C123472A;
-	Tue, 18 Feb 2025 20:29:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC27223472A;
+	Tue, 18 Feb 2025 20:29:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739910551; cv=none; b=agO8a7VwzMc2FlFYIcD7VOHaMOqU7dndqlSl0Kh3mjqv9RdMQB14TkHMkHDfo6e6zg5UlwYueN6RBjZt4Uk60qTJaymLKZy7+RcNiNSYydA5S9LSIdMqj8dGNE2F3vnCHlsbWSAsft2EcKr4vZbzRzRv4vv6XIP2TfBBU1/7n2Q=
+	t=1739910563; cv=none; b=jBU6uvkl29ikNwRYW7YL/ozxBZ1BfiZzQXRxbRLmKz5I5RwQ1BjKU0NsEDrjyWXHzt7ZOG1IJdM2oGdkcJsXEZgoyUXQFe7FZWQ0g+DBxF93cl8TKYivuCoB2Zr0/GiTXzBWaBFGvwOUH3HujPti0Ezl61z7/AK/I+Zu7ibeV3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739910551; c=relaxed/simple;
-	bh=U7qPuXalWb4LIeb8BXR0SZjS2Oh1QwM0RdKEnSuLcpc=;
+	s=arc-20240116; t=1739910563; c=relaxed/simple;
+	bh=dmPRugDYWLomWeFIK7sg+U6WYeBFqFFsqpCpSW2sVdk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WhjxlXrPCZ9XGaBgXq7ER3RJR1IBYXtIIjRbEJwmfev4evz3XhelD5ActRk5qjaCq2tqaYOVZ+R84zhccmqm52QiwSEDuM7WMkD4w7I0shFxAFSG7alqV67WmqzG5/lpGpgS4Xo3gGhOmpmqKGAYyLSPkc2eaDWUCe/3VshUBgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I1N3QyCI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AC2CC4CEE2;
-	Tue, 18 Feb 2025 20:29:10 +0000 (UTC)
+	 MIME-Version; b=SgMEBbyw3NHJViRlde+/oD6x8lqRJ1nrmeaa0axCszuF50ORJ2SbQVNWln3B/kBEZcf/ACrnfE/GUJuxSQe4o7AiYYinos4GrmBgkjoU1xignvrM42z3BJMSjcgBE01hWkIvqUvXJTihWbFj2z+5lEU8x+jeM361Tj2JDP6znrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cka1kJs1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 668A8C4CEE4;
+	Tue, 18 Feb 2025 20:29:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739910551;
-	bh=U7qPuXalWb4LIeb8BXR0SZjS2Oh1QwM0RdKEnSuLcpc=;
+	s=k20201202; t=1739910562;
+	bh=dmPRugDYWLomWeFIK7sg+U6WYeBFqFFsqpCpSW2sVdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=I1N3QyCI7nA97tBjzv2bAHHiRTYFQK7FRfSn195ZdroJ77Mrtvnbd/sRHrnMZMV1/
-	 JXY341LCROdiBY6mtSOOqH1hOokSybsW/o8MRnixHHFr1nMtdHR7psBat6Z91MYRCG
-	 vw7CcLnr7/e4G9vqk5+o0//+lCQgtq6Yzq33lBlm9hbR+xsPXHcob4hXpHB52woro1
-	 wHmOUzvFwMYwiIV8c3IO+FvbTE+pdb0wnawI7lDEi7CFpSZgS8F1V8bCX9oy2ZIjRx
-	 bmSslZTwZY8oa3OEwVmMB23zMlj8LHFwx2RbDO/tqBq+9AJY0yPK/Ab7MsskZfdhEZ
-	 4TnB2i3RSvB7A==
+	b=Cka1kJs1BZblNpbZwt1sK9VkMWY7N86Cm7yshD7KEnsB4KAdirb+2IdZYbcJSLln0
+	 JOIxXvklBaOQ8LagwKoYhjjc8CZNiI5ETpCEI5bmhPfET8pcYJ2YSIjOTY5l/EgrJN
+	 y15vf0iNkGSftlLpIgw8L6sPz7Vuio73L2gpIJre3vixZjALE0uabtSce21/kShHpn
+	 6S7+InCjOv+tS46kier2GdyWZDt06PosPWz46lmNViXjC9f1d3a6KwR+r3DT3jh6dy
+	 IAyD19BawKzRW68czJ8iO2q6jnH6nYjkZFGBEFiDtKDFrCTfquCmiIvYus2UBo9vvY
+	 2HjIHv2I3oC6w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -52,12 +52,12 @@ Cc: Peter Oberparleiter <oberpar@linux.ibm.com>,
 	hca@linux.ibm.com,
 	agordeev@linux.ibm.com,
 	linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 3/4] s390/cio: Fix CHPID "configure" attribute caching
-Date: Tue, 18 Feb 2025 15:29:01 -0500
-Message-Id: <20250218202903.3593960-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 3/3] s390/cio: Fix CHPID "configure" attribute caching
+Date: Tue, 18 Feb 2025 15:29:13 -0500
+Message-Id: <20250218202914.3594039-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250218202903.3593960-1-sashal@kernel.org>
-References: <20250218202903.3593960-1-sashal@kernel.org>
+In-Reply-To: <20250218202914.3594039-1-sashal@kernel.org>
+References: <20250218202914.3594039-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -66,7 +66,7 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.234
+X-stable-base: Linux 5.4.290
 Content-Transfer-Encoding: 8bit
 
 From: Peter Oberparleiter <oberpar@linux.ibm.com>
@@ -108,7 +108,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/s390/cio/chp.c b/drivers/s390/cio/chp.c
-index 93e22785a0e09..0b84ced33b3ca 100644
+index 1fd982b4d64bd..18b2fc50463ba 100644
 --- a/drivers/s390/cio/chp.c
 +++ b/drivers/s390/cio/chp.c
 @@ -646,7 +646,8 @@ static int info_update(void)
