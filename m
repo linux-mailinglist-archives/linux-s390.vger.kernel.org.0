@@ -1,68 +1,68 @@
-Return-Path: <linux-s390+bounces-9129-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-9138-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39909A40DD4
-	for <lists+linux-s390@lfdr.de>; Sun, 23 Feb 2025 10:55:15 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8B6DA40DE6
+	for <lists+linux-s390@lfdr.de>; Sun, 23 Feb 2025 10:56:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 520DD3AC66A
-	for <lists+linux-s390@lfdr.de>; Sun, 23 Feb 2025 09:55:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C31F0189C3E2
+	for <lists+linux-s390@lfdr.de>; Sun, 23 Feb 2025 09:55:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24923202F60;
-	Sun, 23 Feb 2025 09:55:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F7582045A5;
+	Sun, 23 Feb 2025 09:55:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DD8mwZo+"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ABKkMSW5"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615C5201269
-	for <linux-s390@vger.kernel.org>; Sun, 23 Feb 2025 09:55:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C10D201269
+	for <linux-s390@vger.kernel.org>; Sun, 23 Feb 2025 09:55:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740304510; cv=none; b=UmksBXdNlsHKr0COFbgLZTwYVIugZKVgZeqOKkhDcoL3lk+zBctsFd3rZAvbXNChj0HzrT/mbcobn2+bxGHhqZU+JyO7KAXtOeoXCfO+tMGgA5C7tY7i6Gz2l5uceDRBDxNYDHj+603zfjvUT4bHtFYHYo/QVTea6zJCSfpT4U0=
+	t=1740304513; cv=none; b=upnRaRQJfDsLy+WpZlQ6D7rZSBhx4Wkmd49dnQS84DbxaA0xtk4Shilxf7sh5mAQCEO4MzcgYv3PKPDvrtaoGKB/jfdsVFxiBgSqzpZPRlZ4jJ2LL9thuvPnvGMy8GU00Rsg16bo6ezSVZJqAVlZ8iUfr+vRIjxprPx330N51/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740304510; c=relaxed/simple;
-	bh=xPpb9Eaw3eqhvqYCVQPKo9YswBiU23gnk2F0y2dBzG4=;
+	s=arc-20240116; t=1740304513; c=relaxed/simple;
+	bh=JFrb1B8/I56HkkYF1YPg7G2tYfeBHxjAGZdZjUumCVk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WB0h1NWbfun/Tg/cUNOPkwf+c0coeLmilK/hX5nDEXDd+0yO7PjkyBK+9rdZ6Qa/N4uJv3ozwbEPIJm0xSEv9DBjGmvD4E3vVsmB3r6k70SM2NUvy2YQdcmGvSIa2gj7eHxnqG1ovajaJ2G6AUDGmmKANAy8ZmicU46jAVnwr/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DD8mwZo+; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=TpBC6Qd0gQG0dyUj+wnYvbdDU08BEc49Yf5OEFSJmd9Vz4TVC/0vfKM+/YJP36ltvTFRANBFgwy+bnjXLhw5cQPPoZKFm72a6clhn7WK9xbXwLuZ6vzyQTqefmrfCw5CdBI1CE9eEiDJmpQAG9FJxxnet69fHDl2wFpAdW0exis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ABKkMSW5; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51N8qiNX017991;
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51N902kr005248;
 	Sun, 23 Feb 2025 09:55:06 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=NpYquDehzRiUPnzjc
-	RHuwOan59mMOLhoBUz1c4Ev964=; b=DD8mwZo+Su4bV4XKvBklh5MNm9f2yqVJb
-	AgY/cPaPLj1HZLfMBPtheBIAWyT2jWmYdn5s2o7WvEXazokZDJcl7ILaZn/Bc10O
-	hY/IiPB6PP071lQm1+NWn0h3mVhQqV92vs64gsGoCaHZ1Fl8hWIWCp8Oj3ceEKhz
-	mC7PP3kg5rdhmkothCPYctbFMLYFdmnYD9gxLKRZh8pWhn1ABJxzx5FdoqaJW2H/
-	VXsWeVxTkfTutOSbZE/YxTiVkldekfcLHiGV3qAP/E60xGgcTA9smW//iJXu1FnY
-	+6d2t2PLYZaQoMyunq8+OKhYtqO+MCOEpCHepx6bqiDhQhiBZ9MYw==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44ysr9sapm-1
+	:mime-version:references:subject:to; s=pp1; bh=2/N3uoafYIAgIo16z
+	zyTVL0kTZLUr+Sdfe4MEmHpcic=; b=ABKkMSW5afAo1iwB11P1dCFNLLdzsJUp0
+	2jHF6j8FfhX1h58yO4n9opeVykpA9VM2S/DZPsCe1QD3uQ2h2rjdjGDJdXMhdlY/
+	G2obSKZmMCjOQvNRfiwajAqHVHFMlo2L3I3oIH5Yw49CzM4asKG1ax02aAbQE9KX
+	dHptU6rlm2779ZIihq/L8njeyhbpXMEtX2SosysF5iNkjZUklCdAdsKVWOp4r09z
+	cmlLL3kdPgMs/2I/emUe2JT0fWzClqdqPp0OWTFrip08hTHQm4Ozq79fSB1wgPve
+	Cr1bG7KgwwGxpXLcNm4c+ocDJVzVpNMdzIATF7q7HVIEOO6iHzRMw==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44yth016dt-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 23 Feb 2025 09:55:05 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51N8mV6o012470;
-	Sun, 23 Feb 2025 09:55:04 GMT
+	Sun, 23 Feb 2025 09:55:06 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51N75Is0002595;
+	Sun, 23 Feb 2025 09:55:05 GMT
 Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44yrwsa0hq-1
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44yu4j9ecs-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 23 Feb 2025 09:55:04 +0000
+	Sun, 23 Feb 2025 09:55:05 +0000
 Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51N9t1rj46334406
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51N9t1r646334408
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 23 Feb 2025 09:55:01 GMT
+	Sun, 23 Feb 2025 09:55:02 GMT
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 644C520040;
+	by IMSVA (Postfix) with ESMTP id CB44320040;
 	Sun, 23 Feb 2025 09:55:01 +0000 (GMT)
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 23CAD2004D;
+	by IMSVA (Postfix) with ESMTP id 75F6320049;
 	Sun, 23 Feb 2025 09:55:01 +0000 (GMT)
 Received: from funtu2.fritz.box?044ibm.com (unknown [9.171.19.146])
 	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
@@ -70,9 +70,9 @@ Received: from funtu2.fritz.box?044ibm.com (unknown [9.171.19.146])
 From: Harald Freudenberger <freude@linux.ibm.com>
 To: dengler@linux.ibm.com, ifranzki@linux.ibm.com, fcallies@linux.ibm.com
 Cc: linux-s390@vger.kernel.org, herbert@gondor.apana.org.au
-Subject: [PATCH v1 03/20] s390/ap: Introduce ap message buffer pool
-Date: Sun, 23 Feb 2025 10:54:42 +0100
-Message-ID: <20250223095459.43058-4-freude@linux.ibm.com>
+Subject: [PATCH v1 04/20] s390/zcrypt: Rework zcrypt layer to support new flag NOMEMALLOC
+Date: Sun, 23 Feb 2025 10:54:43 +0100
+Message-ID: <20250223095459.43058-5-freude@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250223095459.43058-1-freude@linux.ibm.com>
 References: <20250223095459.43058-1-freude@linux.ibm.com>
@@ -84,225 +84,412 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: TTDOWnzqCYlq68V-3l8imTUqMtoFyUvl
-X-Proofpoint-GUID: TTDOWnzqCYlq68V-3l8imTUqMtoFyUvl
+X-Proofpoint-GUID: 0SmuKcxC-zvN1riDWD7PwtbDfRD3Xiod
+X-Proofpoint-ORIG-GUID: 0SmuKcxC-zvN1riDWD7PwtbDfRD3Xiod
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-23_04,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- mlxlogscore=835 clxscore=1015 mlxscore=0 lowpriorityscore=0 malwarescore=0
- phishscore=0 priorityscore=1501 impostorscore=0 bulkscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2502230073
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 spamscore=0 phishscore=0 adultscore=0 clxscore=1015
+ suspectscore=0 priorityscore=1501 mlxscore=0 malwarescore=0
+ mlxlogscore=999 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2502100000 definitions=main-2502230073
 
-There is a need for a do-not-allocate-memory path through the
-ap bus layer. When ap_init_apmsg() with the AP_MSG_FLAG_MEMPOOL
-xflag is called, instead of kmalloc() the ap message buffer is
-allocated from the ap_msg_pool. This pool only holds a limited
-amount of buffers: AP_MSG_POOL_MIN_ITEMS with the item size
-AP_DEFAULT_MAX_MSG_SIZE and exactly one of these items (if available)
-is returned if ap_init_apmsg() with the MEMPOOL flag is called.
-When this pool is exhausted and the MEMPOOL flag is effective,
-ap_init_apmsg() returns -ENOMEM without any attempt to allocate
-memory.
+Introduce a new flag parameter for the both cprb send functions
+zcrypt_send_cprb() and zcrypt_send_ep11_cprb(). This new
+xflags parameter ("execution flags") shall be used to provide
+execution hints and flags for this crypto request.
 
-The zcrypt layer may use this flag to indicate to the ap bus
-that the processing path for this message should not allocate
-memory. This is to prevent deadlocks with crypto and io for
-example with encrypted swap volumes.
+One flag is implemented: The xflag ZCRYPT_XFLAG_NOMEMALLOC
+tells the zcrypt_send_*() functions to not allocate memory
+via kmalloc() and friends with the goal to not trigger any
+IO operations. If this xflag is given, it is also forwarded
+to the AP bus functions as AP_MSG_FLAG_MEMPOOL when the
+ap_init_apmsg() is invoked.
+
+If the ZCRYPT_XFLAG_NOMEMALLOC is given, the zcrypt layer
+does not allocate any memory but may fail to send a crypto
+load:
+- The number of EP11 targets if given must not exceed 16 APQNs.
+- As the flag is passed down to the AP bus functions the
+  AP bus uses a limited mem pool (with limited item size)
+  to construct the AP msg. The AP bus mem pool may be depleted
+  and/or the message size may exceed the item size of the
+  AP bus mem pool. Currently the AP bus mem pool is limited
+  to 4 mem pool items of 12KB each. On not being able to process
+  a crypto request without memory allocation the result will
+  be -ENOMEM returned from the zcrypt_send_cprb_*() functions.
 
 Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
 ---
- drivers/s390/crypto/ap_bus.c     | 59 +++++++++++++++++++++++++++-----
- drivers/s390/crypto/ap_bus.h     |  3 +-
- drivers/s390/crypto/zcrypt_api.c | 10 +++---
- 3 files changed, 57 insertions(+), 15 deletions(-)
+ drivers/s390/crypto/zcrypt_api.c      | 65 +++++++++++++++------------
+ drivers/s390/crypto/zcrypt_api.h      | 12 ++++-
+ drivers/s390/crypto/zcrypt_ccamisc.c  | 16 +++----
+ drivers/s390/crypto/zcrypt_ep11misc.c | 10 ++---
+ 4 files changed, 59 insertions(+), 44 deletions(-)
 
-diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
-index 4940eaf538e9..b585b5d11074 100644
---- a/drivers/s390/crypto/ap_bus.c
-+++ b/drivers/s390/crypto/ap_bus.c
-@@ -40,6 +40,7 @@
- #include <linux/module.h>
- #include <asm/uv.h>
- #include <asm/chsc.h>
-+#include <linux/mempool.h>
- 
- #include "ap_bus.h"
- #include "ap_debug.h"
-@@ -101,6 +102,21 @@ static struct ap_config_info *const ap_qci_info_old = &qci[1];
-  */
- debug_info_t *ap_dbf_info;
- 
-+/*
-+ * There is a need for a do-not-allocate-memory path through the
-+ * ap bus layer. When ap_init_apmsg() with the AP_MSG_FLAG_MEMPOOL
-+ * xflag is called, instead of kmalloc() the ap message buffer is
-+ * allocated from the ap_msg_pool. This pool only holds a limited
-+ * amount of buffers: AP_MSG_POOL_MIN_ITEMS with the item size
-+ * AP_DEFAULT_MAX_MSG_SIZE and exactly one of these items (if available)
-+ * is returned if ap_init_apmsg() with the MEMPOOL flag is called.
-+ * When this pool is exhausted and the MEMPOOL flag is effective,
-+ * ap_init_apmsg() returns -ENOMEM without any attempt to allocate
-+ * memory.
-+ */
-+#define AP_MSG_POOL_MIN_ITEMS 4
-+static mempool_t *ap_msg_pool;
-+
- /*
-  * AP bus rescan related things.
-  */
-@@ -546,16 +562,27 @@ static void ap_poll_thread_stop(void)
- #define is_card_dev(x) ((x)->parent == ap_root_device)
- #define is_queue_dev(x) ((x)->parent != ap_root_device)
- 
--/**
-+/*
-  * ap_init_apmsg() - Initialize ap_message.
-- * Initialize a message before using. Otherwise this might result in
-- * unexpected behaviour.
-+ * Initialize struct ap_message and allocate buffer to construct
-+ * the ap message.
-  */
--int ap_init_apmsg(struct ap_message *ap_msg)
-+int ap_init_apmsg(struct ap_message *ap_msg, u32 xflags)
- {
--	unsigned int maxmsgsize = atomic_read(&ap_max_msg_size);
-+	unsigned int maxmsgsize;
- 
- 	memset(ap_msg, 0, sizeof(*ap_msg));
-+
-+	if (xflags & AP_MSG_FLAG_MEMPOOL) {
-+		ap_msg->msg = mempool_alloc_preallocated(ap_msg_pool);
-+		if (!ap_msg->msg)
-+			return -ENOMEM;
-+		ap_msg->bufsize = AP_DEFAULT_MAX_MSG_SIZE;
-+		ap_msg->flags |= AP_MSG_FLAG_MEMPOOL;
-+		return 0;
-+	}
-+
-+	maxmsgsize = atomic_read(&ap_max_msg_size);
- 	ap_msg->msg = kmalloc(maxmsgsize, GFP_KERNEL);
- 	if (!ap_msg->msg)
- 		return -ENOMEM;
-@@ -565,14 +592,18 @@ int ap_init_apmsg(struct ap_message *ap_msg)
- }
- EXPORT_SYMBOL(ap_init_apmsg);
- 
--/**
-+/*
-  * ap_release_apmsg() - Release ap_message.
-- * Releases all memory used internal within the ap_message struct
-- * Currently this is the message and private field.
-+ * Cleanup struct ap_message and release all memory held.
-  */
- void ap_release_apmsg(struct ap_message *ap_msg)
- {
--	kfree_sensitive(ap_msg->msg);
-+	if (ap_msg->flags & AP_MSG_FLAG_MEMPOOL) {
-+		memzero_explicit(ap_msg->msg, ap_msg->bufsize);
-+		mempool_free(ap_msg->msg, ap_msg_pool);
-+	} else {
-+		kfree_sensitive(ap_msg->msg);
-+	}
- }
- EXPORT_SYMBOL(ap_release_apmsg);
- 
-@@ -2461,6 +2492,14 @@ static int __init ap_module_init(void)
- 	/* init ap_queue hashtable */
- 	hash_init(ap_queues);
- 
-+	/* create ap msg buffer memory pool */
-+	ap_msg_pool = mempool_create_kmalloc_pool(AP_MSG_POOL_MIN_ITEMS,
-+						  AP_DEFAULT_MAX_MSG_SIZE);
-+	if (IS_ERR(ap_msg_pool)) {
-+		ap_msg_pool = NULL;
-+		goto out;
-+	}
-+
- 	/* set up the AP permissions (ioctls, ap and aq masks) */
- 	ap_perms_init();
- 
-@@ -2507,6 +2546,7 @@ static int __init ap_module_init(void)
- out_bus:
- 	bus_unregister(&ap_bus_type);
- out:
-+	mempool_destroy(ap_msg_pool);
- 	ap_debug_exit();
- 	return rc;
- }
-@@ -2517,6 +2557,7 @@ static void __exit ap_module_exit(void)
- 	ap_irq_exit();
- 	root_device_unregister(ap_root_device);
- 	bus_unregister(&ap_bus_type);
-+	mempool_destroy(ap_msg_pool);
- 	ap_debug_exit();
- }
- 
-diff --git a/drivers/s390/crypto/ap_bus.h b/drivers/s390/crypto/ap_bus.h
-index 3956a5e945bd..8b20506d6a60 100644
---- a/drivers/s390/crypto/ap_bus.h
-+++ b/drivers/s390/crypto/ap_bus.h
-@@ -240,8 +240,9 @@ struct ap_message {
- #define AP_MSG_FLAG_SPECIAL  0x0001	/* flag msg as 'special' with NQAP */
- #define AP_MSG_FLAG_USAGE    0x0002	/* CCA, EP11: usage (no admin) msg */
- #define AP_MSG_FLAG_ADMIN    0x0004	/* CCA, EP11: admin (=control) msg */
-+#define AP_MSG_FLAG_MEMPOOL  0x0008	/* ap msg buffer via mempool */
- 
--int ap_init_apmsg(struct ap_message *ap_msg);
-+int ap_init_apmsg(struct ap_message *ap_msg, u32 xflags);
- void ap_release_apmsg(struct ap_message *ap_msg);
- 
- enum ap_sm_wait ap_sm_event(struct ap_queue *aq, enum ap_sm_event event);
 diff --git a/drivers/s390/crypto/zcrypt_api.c b/drivers/s390/crypto/zcrypt_api.c
-index 78df25da0b95..ce5f7cb974b9 100644
+index ce5f7cb974b9..f6deb10329e6 100644
 --- a/drivers/s390/crypto/zcrypt_api.c
 +++ b/drivers/s390/crypto/zcrypt_api.c
-@@ -648,7 +648,7 @@ static long zcrypt_rsa_modexpo(struct ap_perms *perms,
+@@ -846,7 +846,7 @@ static long zcrypt_rsa_crt(struct ap_perms *perms,
  
- 	trace_s390_zcrypt_req(mex, TP_ICARSAMODEXPO);
- 
--	rc = ap_init_apmsg(&ap_msg);
-+	rc = ap_init_apmsg(&ap_msg, 0);
- 	if (rc)
- 		goto out;
- 
-@@ -753,7 +753,7 @@ static long zcrypt_rsa_crt(struct ap_perms *perms,
- 
- 	trace_s390_zcrypt_req(crt, TP_ICARSACRT);
- 
--	rc = ap_init_apmsg(&ap_msg);
-+	rc = ap_init_apmsg(&ap_msg, 0);
- 	if (rc)
- 		goto out;
- 
-@@ -861,7 +861,7 @@ static long _zcrypt_send_cprb(bool userspace, struct ap_perms *perms,
+ static long _zcrypt_send_cprb(bool userspace, struct ap_perms *perms,
+ 			      struct zcrypt_track *tr,
+-			      struct ica_xcRB *xcrb)
++			      struct ica_xcRB *xcrb, u32 xflags)
+ {
+ 	struct zcrypt_card *zc, *pref_zc;
+ 	struct zcrypt_queue *zq, *pref_zq;
+@@ -861,7 +861,8 @@ static long _zcrypt_send_cprb(bool userspace, struct ap_perms *perms,
  
  	xcrb->status = 0;
  
--	rc = ap_init_apmsg(&ap_msg);
-+	rc = ap_init_apmsg(&ap_msg, 0);
+-	rc = ap_init_apmsg(&ap_msg, 0);
++	rc = ap_init_apmsg(&ap_msg, xflags & ZCRYPT_XFLAG_NOMEMALLOC ?
++			   AP_MSG_FLAG_MEMPOOL : 0);
  	if (rc)
  		goto out;
  
-@@ -1045,7 +1045,7 @@ static long _zcrypt_send_ep11_cprb(bool userspace, struct ap_perms *perms,
+@@ -977,7 +978,7 @@ static long _zcrypt_send_cprb(bool userspace, struct ap_perms *perms,
+ 	return rc;
+ }
+ 
+-long zcrypt_send_cprb(struct ica_xcRB *xcrb)
++long zcrypt_send_cprb(struct ica_xcRB *xcrb, u32 xflags)
+ {
+ 	struct zcrypt_track tr;
+ 	int rc;
+@@ -985,13 +986,14 @@ long zcrypt_send_cprb(struct ica_xcRB *xcrb)
+ 	memset(&tr, 0, sizeof(tr));
+ 
+ 	do {
+-		rc = _zcrypt_send_cprb(false, &ap_perms, &tr, xcrb);
++		rc = _zcrypt_send_cprb(false, &ap_perms, &tr, xcrb, xflags);
+ 	} while (rc == -EAGAIN && ++tr.again_counter < TRACK_AGAIN_MAX);
+ 
+ 	/* on ENODEV failure: retry once again after a requested rescan */
+ 	if (rc == -ENODEV && zcrypt_process_rescan())
+ 		do {
+-			rc = _zcrypt_send_cprb(false, &ap_perms, &tr, xcrb);
++			rc = _zcrypt_send_cprb(false, &ap_perms,
++					       &tr, xcrb, xflags);
+ 		} while (rc == -EAGAIN && ++tr.again_counter < TRACK_AGAIN_MAX);
+ 	if (rc == -EAGAIN && tr.again_counter >= TRACK_AGAIN_MAX)
+ 		rc = -EIO;
+@@ -1031,11 +1033,11 @@ static bool is_desired_ep11_queue(unsigned int dev_qid,
+ 
+ static long _zcrypt_send_ep11_cprb(bool userspace, struct ap_perms *perms,
+ 				   struct zcrypt_track *tr,
+-				   struct ep11_urb *xcrb)
++				   struct ep11_urb *xcrb, u32 xflags)
+ {
+ 	struct zcrypt_card *zc, *pref_zc;
+ 	struct zcrypt_queue *zq, *pref_zq;
+-	struct ep11_target_dev *targets;
++	struct ep11_target_dev targetbuf[16], *targets = NULL;
+ 	unsigned short target_num;
+ 	unsigned int wgt = 0, pref_wgt = 0;
+ 	unsigned int func_code = 0, domain;
+@@ -1045,36 +1047,39 @@ static long _zcrypt_send_ep11_cprb(bool userspace, struct ap_perms *perms,
  
  	trace_s390_zcrypt_req(xcrb, TP_ZSENDEP11CPRB);
  
--	rc = ap_init_apmsg(&ap_msg);
-+	rc = ap_init_apmsg(&ap_msg, 0);
+-	rc = ap_init_apmsg(&ap_msg, 0);
++	rc = ap_init_apmsg(&ap_msg, xflags & ZCRYPT_XFLAG_NOMEMALLOC ?
++			   AP_MSG_FLAG_MEMPOOL : 0);
  	if (rc)
  		goto out;
  
-@@ -1219,7 +1219,7 @@ static long zcrypt_rng(char *buffer)
+ 	target_num = (unsigned short)xcrb->targets_num;
  
- 	trace_s390_zcrypt_req(buffer, TP_HWRNGCPRB);
+ 	/* empty list indicates autoselect (all available targets) */
+-	targets = NULL;
++	rc = -ENOMEM;
+ 	if (target_num != 0) {
+ 		struct ep11_target_dev __user *uptr;
  
--	rc = ap_init_apmsg(&ap_msg);
-+	rc = ap_init_apmsg(&ap_msg, 0);
+-		targets = kcalloc(target_num, sizeof(*targets), GFP_KERNEL);
+-		if (!targets) {
+-			func_code = 0;
+-			rc = -ENOMEM;
++		if (target_num <= ARRAY_SIZE(targetbuf)) {
++			targets = targetbuf;
++		} else if (xflags & ZCRYPT_XFLAG_NOMEMALLOC) {
+ 			goto out;
++		} else {
++			targets = kcalloc(target_num,
++					  sizeof(*targets), GFP_KERNEL);
++			if (!targets)
++				goto out;
+ 		}
+-
+ 		uptr = (struct ep11_target_dev __force __user *)xcrb->targets;
+ 		if (z_copy_from_user(userspace, targets, uptr,
+ 				     target_num * sizeof(*targets))) {
+-			func_code = 0;
+ 			rc = -EFAULT;
+-			goto out_free;
++			goto out;
+ 		}
+ 	}
+ 
+ 	rc = prep_ep11_ap_msg(userspace, xcrb, &ap_msg, &func_code, &domain);
  	if (rc)
- 		goto out;
- 	rc = prep_rng_ap_msg(&ap_msg, &func_code, &domain);
+-		goto out_free;
++		goto out;
+ 	print_hex_dump_debug("ep11req: ", DUMP_PREFIX_ADDRESS, 16, 1,
+ 			     ap_msg.msg, ap_msg.len, false);
+ 
+@@ -1082,11 +1087,11 @@ static long _zcrypt_send_ep11_cprb(bool userspace, struct ap_perms *perms,
+ 		if (ap_msg.flags & AP_MSG_FLAG_ADMIN) {
+ 			if (!test_bit_inv(domain, perms->adm)) {
+ 				rc = -ENODEV;
+-				goto out_free;
++				goto out;
+ 			}
+ 		} else if ((ap_msg.flags & AP_MSG_FLAG_USAGE) == 0) {
+ 			rc = -EOPNOTSUPP;
+-			goto out_free;
++			goto out;
+ 		}
+ 	}
+ 
+@@ -1154,7 +1159,7 @@ static long _zcrypt_send_ep11_cprb(bool userspace, struct ap_perms *perms,
+ 			pr_debug("no match for address ff.ffff => ENODEV\n");
+ 		}
+ 		rc = -ENODEV;
+-		goto out_free;
++		goto out;
+ 	}
+ 
+ 	qid = pref_zq->queue->qid;
+@@ -1168,9 +1173,9 @@ static long _zcrypt_send_ep11_cprb(bool userspace, struct ap_perms *perms,
+ 	zcrypt_drop_queue(pref_zc, pref_zq, mod, wgt);
+ 	spin_unlock(&zcrypt_list_lock);
+ 
+-out_free:
+-	kfree(targets);
+ out:
++	if (targets && targets != targetbuf)
++		kfree(targets);
+ 	ap_release_apmsg(&ap_msg);
+ 	if (tr) {
+ 		tr->last_rc = rc;
+@@ -1181,7 +1186,7 @@ static long _zcrypt_send_ep11_cprb(bool userspace, struct ap_perms *perms,
+ 	return rc;
+ }
+ 
+-long zcrypt_send_ep11_cprb(struct ep11_urb *xcrb)
++long zcrypt_send_ep11_cprb(struct ep11_urb *xcrb, u32 xflags)
+ {
+ 	struct zcrypt_track tr;
+ 	int rc;
+@@ -1189,13 +1194,15 @@ long zcrypt_send_ep11_cprb(struct ep11_urb *xcrb)
+ 	memset(&tr, 0, sizeof(tr));
+ 
+ 	do {
+-		rc = _zcrypt_send_ep11_cprb(false, &ap_perms, &tr, xcrb);
++		rc = _zcrypt_send_ep11_cprb(false, &ap_perms,
++					    &tr, xcrb, xflags);
+ 	} while (rc == -EAGAIN && ++tr.again_counter < TRACK_AGAIN_MAX);
+ 
+ 	/* on ENODEV failure: retry once again after a requested rescan */
+ 	if (rc == -ENODEV && zcrypt_process_rescan())
+ 		do {
+-			rc = _zcrypt_send_ep11_cprb(false, &ap_perms, &tr, xcrb);
++			rc = _zcrypt_send_ep11_cprb(false, &ap_perms,
++						    &tr, xcrb, xflags);
+ 		} while (rc == -EAGAIN && ++tr.again_counter < TRACK_AGAIN_MAX);
+ 	if (rc == -EAGAIN && tr.again_counter >= TRACK_AGAIN_MAX)
+ 		rc = -EIO;
+@@ -1539,13 +1546,13 @@ static int zsecsendcprb_ioctl(struct ap_perms *perms, unsigned long arg)
+ 		return -EFAULT;
+ 
+ 	do {
+-		rc = _zcrypt_send_cprb(true, perms, &tr, &xcrb);
++		rc = _zcrypt_send_cprb(true, perms, &tr, &xcrb, 0);
+ 	} while (rc == -EAGAIN && ++tr.again_counter < TRACK_AGAIN_MAX);
+ 
+ 	/* on ENODEV failure: retry once again after a requested rescan */
+ 	if (rc == -ENODEV && zcrypt_process_rescan())
+ 		do {
+-			rc = _zcrypt_send_cprb(true, perms, &tr, &xcrb);
++			rc = _zcrypt_send_cprb(true, perms, &tr, &xcrb, 0);
+ 		} while (rc == -EAGAIN && ++tr.again_counter < TRACK_AGAIN_MAX);
+ 	if (rc == -EAGAIN && tr.again_counter >= TRACK_AGAIN_MAX)
+ 		rc = -EIO;
+@@ -1569,13 +1576,13 @@ static int zsendep11cprb_ioctl(struct ap_perms *perms, unsigned long arg)
+ 		return -EFAULT;
+ 
+ 	do {
+-		rc = _zcrypt_send_ep11_cprb(true, perms, &tr, &xcrb);
++		rc = _zcrypt_send_ep11_cprb(true, perms, &tr, &xcrb, 0);
+ 	} while (rc == -EAGAIN && ++tr.again_counter < TRACK_AGAIN_MAX);
+ 
+ 	/* on ENODEV failure: retry once again after a requested rescan */
+ 	if (rc == -ENODEV && zcrypt_process_rescan())
+ 		do {
+-			rc = _zcrypt_send_ep11_cprb(true, perms, &tr, &xcrb);
++			rc = _zcrypt_send_ep11_cprb(true, perms, &tr, &xcrb, 0);
+ 		} while (rc == -EAGAIN && ++tr.again_counter < TRACK_AGAIN_MAX);
+ 	if (rc == -EAGAIN && tr.again_counter >= TRACK_AGAIN_MAX)
+ 		rc = -EIO;
+diff --git a/drivers/s390/crypto/zcrypt_api.h b/drivers/s390/crypto/zcrypt_api.h
+index 4ed481df57ca..06ff697d171c 100644
+--- a/drivers/s390/crypto/zcrypt_api.h
++++ b/drivers/s390/crypto/zcrypt_api.h
+@@ -76,6 +76,14 @@ struct zcrypt_track {
+ #define TRACK_AGAIN_CARD_WEIGHT_PENALTY  1000
+ #define TRACK_AGAIN_QUEUE_WEIGHT_PENALTY 10000
+ 
++/*
++ * Do not allocate memory xflag. To be used with
++ * zcrypt_send_cprb() and zcrypt_send_ep11_cprb().
++ * Currently only available and used for the in-kernel
++ * zcrpyt api.
++ */
++#define ZCRYPT_XFLAG_NOMEMALLOC 0x0001
++
+ struct zcrypt_ops {
+ 	long (*rsa_modexpo)(struct zcrypt_queue *, struct ica_rsa_modexpo *,
+ 			    struct ap_message *);
+@@ -161,8 +169,8 @@ void zcrypt_msgtype_unregister(struct zcrypt_ops *);
+ struct zcrypt_ops *zcrypt_msgtype(unsigned char *, int);
+ int zcrypt_api_init(void);
+ void zcrypt_api_exit(void);
+-long zcrypt_send_cprb(struct ica_xcRB *xcRB);
+-long zcrypt_send_ep11_cprb(struct ep11_urb *urb);
++long zcrypt_send_cprb(struct ica_xcRB *xcRB, u32 xflags);
++long zcrypt_send_ep11_cprb(struct ep11_urb *urb, u32 xflags);
+ void zcrypt_device_status_mask_ext(struct zcrypt_device_status_ext *devstatus);
+ int zcrypt_device_status_ext(int card, int queue,
+ 			     struct zcrypt_device_status_ext *devstatus);
+diff --git a/drivers/s390/crypto/zcrypt_ccamisc.c b/drivers/s390/crypto/zcrypt_ccamisc.c
+index 43a27cb3db84..521baaea06ff 100644
+--- a/drivers/s390/crypto/zcrypt_ccamisc.c
++++ b/drivers/s390/crypto/zcrypt_ccamisc.c
+@@ -379,7 +379,7 @@ int cca_genseckey(u16 cardnr, u16 domain,
+ 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
+ 
+ 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
+-	rc = zcrypt_send_cprb(&xcrb);
++	rc = zcrypt_send_cprb(&xcrb, 0);
+ 	if (rc) {
+ 		ZCRYPT_DBF_ERR("%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, errno %d\n",
+ 			       __func__, (int)cardnr, (int)domain, rc);
+@@ -517,7 +517,7 @@ int cca_clr2seckey(u16 cardnr, u16 domain, u32 keybitsize,
+ 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
+ 
+ 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
+-	rc = zcrypt_send_cprb(&xcrb);
++	rc = zcrypt_send_cprb(&xcrb, 0);
+ 	if (rc) {
+ 		ZCRYPT_DBF_ERR("%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, rc=%d\n",
+ 			       __func__, (int)cardnr, (int)domain, rc);
+@@ -644,7 +644,7 @@ int cca_sec2protkey(u16 cardnr, u16 domain,
+ 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
+ 
+ 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
+-	rc = zcrypt_send_cprb(&xcrb);
++	rc = zcrypt_send_cprb(&xcrb, 0);
+ 	if (rc) {
+ 		ZCRYPT_DBF_ERR("%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, rc=%d\n",
+ 			       __func__, (int)cardnr, (int)domain, rc);
+@@ -872,7 +872,7 @@ int cca_gencipherkey(u16 cardnr, u16 domain, u32 keybitsize, u32 keygenflags,
+ 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
+ 
+ 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
+-	rc = zcrypt_send_cprb(&xcrb);
++	rc = zcrypt_send_cprb(&xcrb, 0);
+ 	if (rc) {
+ 		ZCRYPT_DBF_ERR("%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, rc=%d\n",
+ 			       __func__, (int)cardnr, (int)domain, rc);
+@@ -1038,7 +1038,7 @@ static int _ip_cprb_helper(u16 cardnr, u16 domain,
+ 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
+ 
+ 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
+-	rc = zcrypt_send_cprb(&xcrb);
++	rc = zcrypt_send_cprb(&xcrb, 0);
+ 	if (rc) {
+ 		ZCRYPT_DBF_ERR("%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, rc=%d\n",
+ 			       __func__, (int)cardnr, (int)domain, rc);
+@@ -1249,7 +1249,7 @@ int cca_cipher2protkey(u16 cardnr, u16 domain, const u8 *ckey,
+ 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
+ 
+ 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
+-	rc = zcrypt_send_cprb(&xcrb);
++	rc = zcrypt_send_cprb(&xcrb, 0);
+ 	if (rc) {
+ 		ZCRYPT_DBF_ERR("%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, rc=%d\n",
+ 			       __func__, (int)cardnr, (int)domain, rc);
+@@ -1412,7 +1412,7 @@ int cca_ecc2protkey(u16 cardnr, u16 domain, const u8 *key,
+ 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
+ 
+ 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
+-	rc = zcrypt_send_cprb(&xcrb);
++	rc = zcrypt_send_cprb(&xcrb, 0);
+ 	if (rc) {
+ 		ZCRYPT_DBF_ERR("%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, rc=%d\n",
+ 			       __func__, (int)cardnr, (int)domain, rc);
+@@ -1526,7 +1526,7 @@ int cca_query_crypto_facility(u16 cardnr, u16 domain,
+ 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
+ 
+ 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
+-	rc = zcrypt_send_cprb(&xcrb);
++	rc = zcrypt_send_cprb(&xcrb, 0);
+ 	if (rc) {
+ 		ZCRYPT_DBF_ERR("%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, rc=%d\n",
+ 			       __func__, (int)cardnr, (int)domain, rc);
+diff --git a/drivers/s390/crypto/zcrypt_ep11misc.c b/drivers/s390/crypto/zcrypt_ep11misc.c
+index cb7e6da43602..b60e262bcaa3 100644
+--- a/drivers/s390/crypto/zcrypt_ep11misc.c
++++ b/drivers/s390/crypto/zcrypt_ep11misc.c
+@@ -636,7 +636,7 @@ static int ep11_query_info(u16 cardnr, u16 domain, u32 query_type,
+ 		 req, sizeof(*req) + sizeof(*req_pl),
+ 		 rep, sizeof(*rep) + sizeof(*rep_pl) + buflen);
+ 
+-	rc = zcrypt_send_ep11_cprb(urb);
++	rc = zcrypt_send_ep11_cprb(urb, 0);
+ 	if (rc) {
+ 		ZCRYPT_DBF_ERR("%s zcrypt_send_ep11_cprb(card=%d dom=%d) failed, rc=%d\n",
+ 			       __func__, (int)cardnr, (int)domain, rc);
+@@ -892,7 +892,7 @@ static int _ep11_genaeskey(u16 card, u16 domain,
+ 		 req, sizeof(*req) + req_pl_size,
+ 		 rep, sizeof(*rep) + sizeof(*rep_pl));
+ 
+-	rc = zcrypt_send_ep11_cprb(urb);
++	rc = zcrypt_send_ep11_cprb(urb, 0);
+ 	if (rc) {
+ 		ZCRYPT_DBF_ERR("%s zcrypt_send_ep11_cprb(card=%d dom=%d) failed, rc=%d\n",
+ 			       __func__, (int)card, (int)domain, rc);
+@@ -1049,7 +1049,7 @@ static int ep11_cryptsingle(u16 card, u16 domain,
+ 		 req, sizeof(*req) + req_pl_size,
+ 		 rep, sizeof(*rep) + rep_pl_size);
+ 
+-	rc = zcrypt_send_ep11_cprb(urb);
++	rc = zcrypt_send_ep11_cprb(urb, 0);
+ 	if (rc) {
+ 		ZCRYPT_DBF_ERR("%s zcrypt_send_ep11_cprb(card=%d dom=%d) failed, rc=%d\n",
+ 			       __func__, (int)card, (int)domain, rc);
+@@ -1212,7 +1212,7 @@ static int _ep11_unwrapkey(u16 card, u16 domain,
+ 		 req, sizeof(*req) + req_pl_size,
+ 		 rep, sizeof(*rep) + sizeof(*rep_pl));
+ 
+-	rc = zcrypt_send_ep11_cprb(urb);
++	rc = zcrypt_send_ep11_cprb(urb, 0);
+ 	if (rc) {
+ 		ZCRYPT_DBF_ERR("%s zcrypt_send_ep11_cprb(card=%d dom=%d) failed, rc=%d\n",
+ 			       __func__, (int)card, (int)domain, rc);
+@@ -1372,7 +1372,7 @@ static int _ep11_wrapkey(u16 card, u16 domain,
+ 		 req, sizeof(*req) + req_pl_size,
+ 		 rep, sizeof(*rep) + sizeof(*rep_pl));
+ 
+-	rc = zcrypt_send_ep11_cprb(urb);
++	rc = zcrypt_send_ep11_cprb(urb, 0);
+ 	if (rc) {
+ 		ZCRYPT_DBF_ERR("%s zcrypt_send_ep11_cprb(card=%d dom=%d) failed, rc=%d\n",
+ 			       __func__, (int)card, (int)domain, rc);
 -- 
 2.43.0
 
