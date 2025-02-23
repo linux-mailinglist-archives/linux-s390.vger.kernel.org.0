@@ -1,78 +1,78 @@
-Return-Path: <linux-s390+bounces-9132-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-9136-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22E21A40DD6
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9728AA40DD8
 	for <lists+linux-s390@lfdr.de>; Sun, 23 Feb 2025 10:55:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7FD053B349F
-	for <lists+linux-s390@lfdr.de>; Sun, 23 Feb 2025 09:55:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 45D2916A83C
+	for <lists+linux-s390@lfdr.de>; Sun, 23 Feb 2025 09:55:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D12BF2040BD;
-	Sun, 23 Feb 2025 09:55:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EB7720371A;
+	Sun, 23 Feb 2025 09:55:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aeUp+ZQh"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MfMZ0/Ja"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9921202C42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0A1200100
 	for <linux-s390@vger.kernel.org>; Sun, 23 Feb 2025 09:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740304511; cv=none; b=BVbyAUUCrOTkRTMYtPJZQ4PUJLaRjLnEIRGqhXpBiSN9YbU1wxK54ODPbQt0zY1KB2EqE8jPyHm2VL2oJMWFEM/N2+2SwMn5MF9WaUIDvGepB2jZ2VUdZVItb2hezu0hnWahiAcrUJYIGmnlUdZEjF7F4MWokDnEWQpxcVJKuJA=
+	t=1740304513; cv=none; b=IjVQ/YNMWkXd7A8VFgps7LVwkvy8Vf1qQZ+5JdOASDCXJiuEY3TaoNx/UY3m5XWm5/GL4Lztr3eIxcJW1Anp76k8mFtWv3tqM2EZhHUpJMZIuYUX8F5qhmNzDdTycAj7s9+3dozFAsYLze1JOnhbt0eE4ZBlXyxkgJP0kk97G80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740304511; c=relaxed/simple;
-	bh=w2wSSBiPUpWjK7DUeWFBDWG52Hcz/F6XzVllkKvnWL4=;
+	s=arc-20240116; t=1740304513; c=relaxed/simple;
+	bh=qAQiEf3ldZ7hd/L3VT6/VHzYxSzCOZQkfdBuZfsj7T0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RbyTPKXOqjcxUzvg6W4ximesLV7WdB00eConA6FMIKI+MXjUypyq17vKEyt2FiotKxGk4vdZ3qkXlJ9udSPhvDcR1+Wm8RCNySujU/n6gM9n1K3ivc3mvzUzjmqrvpUPMfzeEBtmK9oGepzxrPjJlSpts5LEXbKQLgrPbDSy/iE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aeUp+ZQh; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=gslR4XK6kwYWACdRqd1CF950GyKhdJqV/bRDluI6w5jl9kDtcKhNLgBS4cXlV1R+DV8nZiUdI5gPN6fp4tS8L+pbCQkVK4k557WkaMOa84gXAIpbeQsKzp8/+OTOjBuif7OMZmYH7b0MSMLKsklg9xJucUD8m+Nj4w0EwRkm+f4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=MfMZ0/Ja; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51N18MA2019838;
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51N211wX019615;
 	Sun, 23 Feb 2025 09:55:07 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=v/DLtqDIw07OtcVrE
-	a6dsB0PFJ03cB5gIemVcBlq+N4=; b=aeUp+ZQhOB9th8FQO2FTTdSGu2dOEL7gJ
-	JVYDB3D5yN0cDuLquhmrqAyVtXay6rbBgqVYhlee0/IgrHTz+9XDwn24tyHyOH65
-	gB1uYNJi4u4it6RBdR/ECqvuk0YiFX2eXQK+XB9KRYbkweBUK6hmgBsmJ0KfuC8H
-	hJU3Wm9q+M5tluCV0qTQgvKD4PMgLYBYGws2VEELyZhiz4nigb0t+DF5rqFMKtS9
-	TZH3JnVCdPuPXukXl4kwKxlkHJT67aAE8mn3ef1egmfexJlhWKEVWp7wlkF9mlYY
-	QvBDRvDn2DX5aaQV5QIMbmtL35MRRjfTUnAixDYOfbNBhak2UwiJA==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44ysr9sapp-1
+	:mime-version:references:subject:to; s=pp1; bh=yKqlOOLKf1xRfzJlA
+	4K6SpAzqChlsC9Y/7j8OCC9Ojs=; b=MfMZ0/Jalqtp0AHclNA8D81Rg8nCFZfzp
+	ISPn11f2IhqTrmbGsK8D9B7KGMIcJV6y9iaOfSG2Oi5N6pxZiERJHMlahC1xB+UT
+	DJ9Fe84eF7RoNRmFN4UpBambWt6fqlJ4EQx4FvhGruQhA7S0kZLlV2BrnjwBUg8h
+	doDvFVPVm2R1mst+D0mCLispe3RY8KaplkUVjmjU+Mf1f0PklLaLYC/Ry3Rrxgsj
+	aWSm+O0wDdIzw5GhX2i2t+b/7TkPZXUOO0WtBheAogFIdwr8q6kKMSnlezLT5FRT
+	NHYQK3H9KtW4ZayVqpS+MJMJsD69KyLYl69d8dhrubwwlEnxIrwaQ==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44yth016dv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Sun, 23 Feb 2025 09:55:07 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51N60IMF026404;
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51N9E6Vg012491;
 	Sun, 23 Feb 2025 09:55:06 GMT
 Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44yswn1pyh-1
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44ys9y1wgd-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Sun, 23 Feb 2025 09:55:06 +0000
 Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51N9t2Bf58655184
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51N9t2a759376114
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Sun, 23 Feb 2025 09:55:02 GMT
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 33F6720040;
+	by IMSVA (Postfix) with ESMTP id 90BB92004D;
 	Sun, 23 Feb 2025 09:55:02 +0000 (GMT)
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DD7B42004B;
-	Sun, 23 Feb 2025 09:55:01 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 45E0D20049;
+	Sun, 23 Feb 2025 09:55:02 +0000 (GMT)
 Received: from funtu2.fritz.box?044ibm.com (unknown [9.171.19.146])
 	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sun, 23 Feb 2025 09:55:01 +0000 (GMT)
+	Sun, 23 Feb 2025 09:55:02 +0000 (GMT)
 From: Harald Freudenberger <freude@linux.ibm.com>
 To: dengler@linux.ibm.com, ifranzki@linux.ibm.com, fcallies@linux.ibm.com
 Cc: linux-s390@vger.kernel.org, herbert@gondor.apana.org.au
-Subject: [PATCH v1 05/20] s390/zcrypt: Introduce cprb mempool for cca misc functions
-Date: Sun, 23 Feb 2025 10:54:44 +0100
-Message-ID: <20250223095459.43058-6-freude@linux.ibm.com>
+Subject: [PATCH v1 06/20] s390/zcrypt: Introduce cprb mempool for ep11 misc functions
+Date: Sun, 23 Feb 2025 10:54:45 +0100
+Message-ID: <20250223095459.43058-7-freude@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250223095459.43058-1-freude@linux.ibm.com>
 References: <20250223095459.43058-1-freude@linux.ibm.com>
@@ -84,391 +84,442 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: h_V4mbLscAaVytlj4VXFeBhk9lh7fjE_
-X-Proofpoint-GUID: h_V4mbLscAaVytlj4VXFeBhk9lh7fjE_
+X-Proofpoint-GUID: OGDnZ2m2R2Bj3Il2wPDch6vSsNAli1gs
+X-Proofpoint-ORIG-GUID: OGDnZ2m2R2Bj3Il2wPDch6vSsNAli1gs
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-23_04,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- mlxlogscore=999 clxscore=1015 mlxscore=0 lowpriorityscore=0 malwarescore=0
- phishscore=0 priorityscore=1501 impostorscore=0 bulkscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2502230073
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 spamscore=0 phishscore=0 adultscore=0 clxscore=1015
+ suspectscore=0 priorityscore=1501 mlxscore=0 malwarescore=0
+ mlxlogscore=999 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2502100000 definitions=main-2502230073
 
-Intruduce a cprb mempool for the zcrypt cca misc functions
-(zcrypt_ccamisc.*) do some preparation rework to support
-a do-not-allocate path through some zcrypt cca misc functions.
+Introduce a cprb mempool for zcrypt ep11 misc functions
+(zcrpyt_ep11misc.*) and do some preparation rework to
+support a do-not-allocate memory path through some
+zcrypt ep11 misc functions.
 
-This is only part of an rework to support a new xflag
+This is only part one of a rework to support a new xflag
 ZCRYPT_XFLAG_NOMEMALLOC but not jet complete.
 
 Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
 ---
- drivers/s390/crypto/zcrypt_api.c     |   9 ++-
- drivers/s390/crypto/zcrypt_ccamisc.c | 115 ++++++++++++++++++++-------
- drivers/s390/crypto/zcrypt_ccamisc.h |   1 +
- 3 files changed, 94 insertions(+), 31 deletions(-)
+ drivers/s390/crypto/zcrypt_api.c      |   6 +
+ drivers/s390/crypto/zcrypt_ep11misc.c | 159 ++++++++++++++++----------
+ drivers/s390/crypto/zcrypt_ep11misc.h |   1 +
+ 3 files changed, 105 insertions(+), 61 deletions(-)
 
 diff --git a/drivers/s390/crypto/zcrypt_api.c b/drivers/s390/crypto/zcrypt_api.c
-index f6deb10329e6..6be60b9dc83f 100644
+index 6be60b9dc83f..3a521e65f3fe 100644
 --- a/drivers/s390/crypto/zcrypt_api.c
 +++ b/drivers/s390/crypto/zcrypt_api.c
-@@ -2154,7 +2154,11 @@ int __init zcrypt_api_init(void)
- 
- 	rc = zcdn_init();
+@@ -2160,6 +2160,10 @@ int __init zcrypt_api_init(void)
  	if (rc)
--		goto out;
-+		goto out_zcdn_init_failed;
-+
-+	rc = zcrypt_ccamisc_init();
-+	if (rc)
-+		goto out_ccamisc_init_failed;
+ 		goto out_ccamisc_init_failed;
  
++	rc = zcrypt_ep11misc_init();
++	if (rc)
++		goto out_ep11misc_init_failed;
++
  	/* Register the request sprayer. */
  	rc = misc_register(&zcrypt_misc_device);
-@@ -2167,7 +2171,10 @@ int __init zcrypt_api_init(void)
+ 	if (rc < 0)
+@@ -2171,6 +2175,8 @@ int __init zcrypt_api_init(void)
  	return 0;
  
  out_misc_register_failed:
-+	zcrypt_ccamisc_exit();
-+out_ccamisc_init_failed:
++	zcrypt_ep11misc_exit();
++out_ep11misc_init_failed:
+ 	zcrypt_ccamisc_exit();
+ out_ccamisc_init_failed:
  	zcdn_exit();
-+out_zcdn_init_failed:
- 	zcrypt_debug_exit();
- out:
- 	return rc;
-diff --git a/drivers/s390/crypto/zcrypt_ccamisc.c b/drivers/s390/crypto/zcrypt_ccamisc.c
-index 521baaea06ff..e604a69e40fc 100644
---- a/drivers/s390/crypto/zcrypt_ccamisc.c
-+++ b/drivers/s390/crypto/zcrypt_ccamisc.c
-@@ -11,6 +11,7 @@
+diff --git a/drivers/s390/crypto/zcrypt_ep11misc.c b/drivers/s390/crypto/zcrypt_ep11misc.c
+index b60e262bcaa3..3d96bd236c16 100644
+--- a/drivers/s390/crypto/zcrypt_ep11misc.c
++++ b/drivers/s390/crypto/zcrypt_ep11misc.c
+@@ -10,9 +10,10 @@
  #define pr_fmt(fmt) KMSG_COMPONENT ": " fmt
  
  #include <linux/init.h>
 +#include <linux/mempool.h>
  #include <linux/module.h>
- #include <linux/slab.h>
+-#include <linux/slab.h>
  #include <linux/random.h>
-@@ -40,6 +41,17 @@ struct cca_info_list_entry {
- static LIST_HEAD(cca_info_list);
- static DEFINE_SPINLOCK(cca_info_list_lock);
++#include <linux/slab.h>
+ #include <asm/zcrypt.h>
+ #include <asm/pkey.h>
+ #include <crypto/aes.h>
+@@ -30,6 +31,15 @@
+ static const u8 def_iv[16] = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+ 			       0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff };
  
 +/*
 + * Cprb memory pool held for urgend cases where no memory
-+ * can be allocated via kmalloc. This pool is only used
-+ * when alloc_and_prep_cprbmem() is called with the xflag
-+ * ZCRYPT_XFLAG_NOMEMALLOC. The cprb memory needs to hold
-+ * space for request AND reply!
++ * can be allocated via kmalloc. This pool is only used when
++ * alloc_cprbmem() is called with the xflag ZCRYPT_XFLAG_NOMEMALLOC.
 + */
-+#define CPRB_MEMPOOL_MIN_ITEMS 4
-+#define CPRB_MEMPOOL_ITEM_SIZE (16 * 1024)
++#define CPRB_MEMPOOL_MIN_ITEMS 8
++#define CPRB_MEMPOOL_ITEM_SIZE (8 * 1024)
 +static mempool_t *cprb_mempool;
 +
+ /* ep11 card info cache */
+ struct card_list_entry {
+ 	struct list_head list;
+@@ -411,12 +421,19 @@ EXPORT_SYMBOL(ep11_check_aes_key);
  /*
-  * Simple check if the token is a valid CCA secure AES data key
-  * token. If keybitsize is given, the bitsize of the key is
-@@ -219,9 +231,10 @@ EXPORT_SYMBOL(cca_check_sececckeytoken);
- static int alloc_and_prep_cprbmem(size_t paramblen,
- 				  u8 **p_cprb_mem,
- 				  struct CPRBX **p_req_cprb,
--				  struct CPRBX **p_rep_cprb)
-+				  struct CPRBX **p_rep_cprb,
-+				  u32 xflags)
- {
--	u8 *cprbmem;
-+	u8 *cprbmem = NULL;
- 	size_t cprbplusparamblen = sizeof(struct CPRBX) + paramblen;
- 	struct CPRBX *preqcblk, *prepcblk;
- 
-@@ -229,7 +242,13 @@ static int alloc_and_prep_cprbmem(size_t paramblen,
- 	 * allocate consecutive memory for request CPRB, request param
- 	 * block, reply CPRB and reply param block
- 	 */
--	cprbmem = kcalloc(2, cprbplusparamblen, GFP_KERNEL);
-+	if (xflags & ZCRYPT_XFLAG_NOMEMALLOC) {
-+		if (cprb_mempool &&
-+		    2 * cprbplusparamblen <= CPRB_MEMPOOL_ITEM_SIZE)
-+			cprbmem = mempool_alloc_preallocated(cprb_mempool);
-+	} else {
-+		cprbmem = kcalloc(2, cprbplusparamblen, GFP_KERNEL);
-+	}
- 	if (!cprbmem)
- 		return -ENOMEM;
- 
-@@ -261,11 +280,15 @@ static int alloc_and_prep_cprbmem(size_t paramblen,
-  * with zeros before freeing (useful if there was some
-  * clear key material in there).
+  * Allocate and prepare ep11 cprb plus additional payload.
   */
--static void free_cprbmem(void *mem, size_t paramblen, int scrub)
-+static void free_cprbmem(void *mem, size_t paramblen, bool scrub, u32 xflags)
+-static inline struct ep11_cprb *alloc_cprb(size_t payload_len)
++static void *alloc_cprbmem(size_t payload_len, u32 xflags)
  {
- 	if (scrub)
- 		memzero_explicit(mem, 2 * (sizeof(struct CPRBX) + paramblen));
--	kfree(mem);
+ 	size_t len = sizeof(struct ep11_cprb) + payload_len;
+-	struct ep11_cprb *cprb;
++	struct ep11_cprb *cprb = NULL;
+ 
+-	cprb = kzalloc(len, GFP_KERNEL);
++	if (xflags & ZCRYPT_XFLAG_NOMEMALLOC) {
++		if (cprb_mempool && len <= CPRB_MEMPOOL_ITEM_SIZE) {
++			cprb = mempool_alloc_preallocated(cprb_mempool);
++			memset(cprb, 0, len);
++		}
++	} else {
++		cprb = kzalloc(len, GFP_KERNEL);
++	}
+ 	if (!cprb)
+ 		return NULL;
+ 
+@@ -429,6 +446,20 @@ static inline struct ep11_cprb *alloc_cprb(size_t payload_len)
+ 	return cprb;
+ }
+ 
++/*
++ * Free ep11 cprb buffer space.
++ */
++static void free_cprbmem(void *mem, size_t payload_len, bool scrub, u32 xflags)
++{
++	if (scrub)
++		memzero_explicit(mem, sizeof(struct ep11_cprb) + payload_len);
 +
 +	if (xflags & ZCRYPT_XFLAG_NOMEMALLOC)
 +		mempool_free(mem, cprb_mempool);
 +	else
 +		kfree(mem);
- }
- 
++}
++
  /*
-@@ -330,9 +353,11 @@ int cca_genseckey(u16 cardnr, u16 domain,
- 			} keyblock;
- 		} lv3;
- 	} __packed * prepparm;
+  * Some helper functions related to ASN1 encoding.
+  * Limited to length info <= 2 byte.
+@@ -605,11 +636,12 @@ static int ep11_query_info(u16 cardnr, u16 domain, u32 query_type,
+ 	} __packed * rep_pl;
+ 	struct ep11_cprb *req = NULL, *rep = NULL;
+ 	struct ep11_target_dev target;
+-	struct ep11_urb *urb = NULL;
++	struct ep11_urb urb;
+ 	int api = EP11_API_V1, rc = -ENOMEM;
 +	const u32 xflags = 0;
  
- 	/* get already prepared memory for 2 cprbs with param block each */
--	rc = alloc_and_prep_cprbmem(PARMBSIZE, &mem, &preqcblk, &prepcblk);
-+	rc = alloc_and_prep_cprbmem(PARMBSIZE, &mem,
-+				    &preqcblk, &prepcblk, xflags);
- 	if (rc)
- 		return rc;
+ 	/* request cprb and payload */
+-	req = alloc_cprb(sizeof(struct ep11_info_req_pl));
++	req = alloc_cprbmem(sizeof(struct ep11_info_req_pl), xflags);
+ 	if (!req)
+ 		goto out;
+ 	req_pl = (struct ep11_info_req_pl *)(((u8 *)req) + sizeof(*req));
+@@ -621,22 +653,20 @@ static int ep11_query_info(u16 cardnr, u16 domain, u32 query_type,
+ 	req_pl->query_subtype_len = sizeof(u32);
  
-@@ -379,7 +404,7 @@ int cca_genseckey(u16 cardnr, u16 domain,
- 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
+ 	/* reply cprb and payload */
+-	rep = alloc_cprb(sizeof(struct ep11_info_rep_pl) + buflen);
++	rep = alloc_cprbmem(sizeof(struct ep11_info_rep_pl) + buflen, xflags);
+ 	if (!rep)
+ 		goto out;
+ 	rep_pl = (struct ep11_info_rep_pl *)(((u8 *)rep) + sizeof(*rep));
  
- 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
--	rc = zcrypt_send_cprb(&xcrb, 0);
-+	rc = zcrypt_send_cprb(&xcrb, xflags);
+ 	/* urb and target */
+-	urb = kmalloc(sizeof(*urb), GFP_KERNEL);
+-	if (!urb)
+-		goto out;
++	memset(&urb, 0, sizeof(urb));
+ 	target.ap_id = cardnr;
+ 	target.dom_id = domain;
+-	prep_urb(urb, &target, 1,
++	prep_urb(&urb, &target, 1,
+ 		 req, sizeof(*req) + sizeof(*req_pl),
+ 		 rep, sizeof(*rep) + sizeof(*rep_pl) + buflen);
+ 
+-	rc = zcrypt_send_ep11_cprb(urb, 0);
++	rc = zcrypt_send_ep11_cprb(&urb, xflags);
  	if (rc) {
- 		ZCRYPT_DBF_ERR("%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, errno %d\n",
+ 		ZCRYPT_DBF_ERR("%s zcrypt_send_ep11_cprb(card=%d dom=%d) failed, rc=%d\n",
  			       __func__, (int)cardnr, (int)domain, rc);
-@@ -424,7 +449,7 @@ int cca_genseckey(u16 cardnr, u16 domain,
- 	memcpy(seckey, prepparm->lv3.keyblock.tok, SECKEYBLOBSIZE);
+@@ -667,9 +697,8 @@ static int ep11_query_info(u16 cardnr, u16 domain, u32 query_type,
+ 	memcpy(buf, ((u8 *)rep_pl) + sizeof(*rep_pl), rep_pl->data_len);
  
  out:
--	free_cprbmem(mem, PARMBSIZE, 0);
-+	free_cprbmem(mem, PARMBSIZE, false, xflags);
- 	return rc;
- }
- EXPORT_SYMBOL(cca_genseckey);
-@@ -471,9 +496,11 @@ int cca_clr2seckey(u16 cardnr, u16 domain, u32 keybitsize,
- 			} keyblock;
- 		} lv3;
- 	} __packed * prepparm;
-+	const u32 xflags = 0;
- 
- 	/* get already prepared memory for 2 cprbs with param block each */
--	rc = alloc_and_prep_cprbmem(PARMBSIZE, &mem, &preqcblk, &prepcblk);
-+	rc = alloc_and_prep_cprbmem(PARMBSIZE, &mem,
-+				    &preqcblk, &prepcblk, xflags);
- 	if (rc)
- 		return rc;
- 
-@@ -517,7 +544,7 @@ int cca_clr2seckey(u16 cardnr, u16 domain, u32 keybitsize,
- 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
- 
- 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
--	rc = zcrypt_send_cprb(&xcrb, 0);
-+	rc = zcrypt_send_cprb(&xcrb, xflags);
- 	if (rc) {
- 		ZCRYPT_DBF_ERR("%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, rc=%d\n",
- 			       __func__, (int)cardnr, (int)domain, rc);
-@@ -563,7 +590,7 @@ int cca_clr2seckey(u16 cardnr, u16 domain, u32 keybitsize,
- 		memcpy(seckey, prepparm->lv3.keyblock.tok, SECKEYBLOBSIZE);
- 
- out:
--	free_cprbmem(mem, PARMBSIZE, 1);
-+	free_cprbmem(mem, PARMBSIZE, true, xflags);
- 	return rc;
- }
- EXPORT_SYMBOL(cca_clr2seckey);
-@@ -617,9 +644,11 @@ int cca_sec2protkey(u16 cardnr, u16 domain,
- 			} ckb;
- 		} lv3;
- 	} __packed * prepparm;
-+	const u32 xflags = 0;
- 
- 	/* get already prepared memory for 2 cprbs with param block each */
--	rc = alloc_and_prep_cprbmem(PARMBSIZE, &mem, &preqcblk, &prepcblk);
-+	rc = alloc_and_prep_cprbmem(PARMBSIZE, &mem,
-+				    &preqcblk, &prepcblk, xflags);
- 	if (rc)
- 		return rc;
- 
-@@ -644,7 +673,7 @@ int cca_sec2protkey(u16 cardnr, u16 domain,
- 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
- 
- 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
--	rc = zcrypt_send_cprb(&xcrb, 0);
-+	rc = zcrypt_send_cprb(&xcrb, xflags);
- 	if (rc) {
- 		ZCRYPT_DBF_ERR("%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, rc=%d\n",
- 			       __func__, (int)cardnr, (int)domain, rc);
-@@ -712,7 +741,7 @@ int cca_sec2protkey(u16 cardnr, u16 domain,
- 		*protkeylen = prepparm->lv3.ckb.len;
- 
- out:
--	free_cprbmem(mem, PARMBSIZE, 0);
-+	free_cprbmem(mem, PARMBSIZE, true, xflags);
- 	return rc;
- }
- EXPORT_SYMBOL(cca_sec2protkey);
-@@ -811,9 +840,11 @@ int cca_gencipherkey(u16 cardnr, u16 domain, u32 keybitsize, u32 keygenflags,
- 		} kb;
- 	} __packed * prepparm;
- 	struct cipherkeytoken *t;
-+	const u32 xflags = 0;
- 
- 	/* get already prepared memory for 2 cprbs with param block each */
--	rc = alloc_and_prep_cprbmem(PARMBSIZE, &mem, &preqcblk, &prepcblk);
-+	rc = alloc_and_prep_cprbmem(PARMBSIZE, &mem,
-+				    &preqcblk, &prepcblk, xflags);
- 	if (rc)
- 		return rc;
- 
-@@ -872,7 +903,7 @@ int cca_gencipherkey(u16 cardnr, u16 domain, u32 keybitsize, u32 keygenflags,
- 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
- 
- 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
--	rc = zcrypt_send_cprb(&xcrb, 0);
-+	rc = zcrypt_send_cprb(&xcrb, xflags);
- 	if (rc) {
- 		ZCRYPT_DBF_ERR("%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, rc=%d\n",
- 			       __func__, (int)cardnr, (int)domain, rc);
-@@ -923,7 +954,7 @@ int cca_gencipherkey(u16 cardnr, u16 domain, u32 keybitsize, u32 keygenflags,
- 	*keybufsize = t->len;
- 
- out:
--	free_cprbmem(mem, PARMBSIZE, 0);
-+	free_cprbmem(mem, PARMBSIZE, false, xflags);
- 	return rc;
- }
- EXPORT_SYMBOL(cca_gencipherkey);
-@@ -987,9 +1018,11 @@ static int _ip_cprb_helper(u16 cardnr, u16 domain,
- 	} __packed * prepparm;
- 	struct cipherkeytoken *t;
- 	int complete = strncmp(rule_array_2, "COMPLETE", 8) ? 0 : 1;
-+	const u32 xflags = 0;
- 
- 	/* get already prepared memory for 2 cprbs with param block each */
--	rc = alloc_and_prep_cprbmem(PARMBSIZE, &mem, &preqcblk, &prepcblk);
-+	rc = alloc_and_prep_cprbmem(PARMBSIZE, &mem,
-+				    &preqcblk, &prepcblk, xflags);
- 	if (rc)
- 		return rc;
- 
-@@ -1038,7 +1071,7 @@ static int _ip_cprb_helper(u16 cardnr, u16 domain,
- 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
- 
- 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
--	rc = zcrypt_send_cprb(&xcrb, 0);
-+	rc = zcrypt_send_cprb(&xcrb, xflags);
- 	if (rc) {
- 		ZCRYPT_DBF_ERR("%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, rc=%d\n",
- 			       __func__, (int)cardnr, (int)domain, rc);
-@@ -1077,7 +1110,7 @@ static int _ip_cprb_helper(u16 cardnr, u16 domain,
- 	*key_token_size = t->len;
- 
- out:
--	free_cprbmem(mem, PARMBSIZE, 0);
-+	free_cprbmem(mem, PARMBSIZE, false, xflags);
+-	kfree(req);
+-	kfree(rep);
+-	kfree(urb);
++	free_cprbmem(req, 0, false, xflags);
++	free_cprbmem(rep, 0, false, xflags);
  	return rc;
  }
  
-@@ -1217,9 +1250,11 @@ int cca_cipher2protkey(u16 cardnr, u16 domain, const u8 *ckey,
- 		} kb;
- 	} __packed * prepparm;
- 	int keytoklen = ((struct cipherkeytoken *)ckey)->len;
+@@ -823,9 +852,10 @@ static int _ep11_genaeskey(u16 card, u16 domain,
+ 	struct ep11_cprb *req = NULL, *rep = NULL;
+ 	size_t req_pl_size, pinblob_size = 0;
+ 	struct ep11_target_dev target;
+-	struct ep11_urb *urb = NULL;
++	struct ep11_urb urb;
+ 	int api, rc = -ENOMEM;
+ 	u8 *p;
 +	const u32 xflags = 0;
  
- 	/* get already prepared memory for 2 cprbs with param block each */
--	rc = alloc_and_prep_cprbmem(PARMBSIZE, &mem, &preqcblk, &prepcblk);
-+	rc = alloc_and_prep_cprbmem(PARMBSIZE, &mem,
-+				    &preqcblk, &prepcblk, xflags);
- 	if (rc)
- 		return rc;
- 
-@@ -1249,7 +1284,7 @@ int cca_cipher2protkey(u16 cardnr, u16 domain, const u8 *ckey,
- 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
- 
- 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
--	rc = zcrypt_send_cprb(&xcrb, 0);
-+	rc = zcrypt_send_cprb(&xcrb, xflags);
- 	if (rc) {
- 		ZCRYPT_DBF_ERR("%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, rc=%d\n",
- 			       __func__, (int)cardnr, (int)domain, rc);
-@@ -1323,7 +1358,7 @@ int cca_cipher2protkey(u16 cardnr, u16 domain, const u8 *ckey,
- 		*protkeylen = prepparm->vud.ckb.keylen;
- 
- out:
--	free_cprbmem(mem, PARMBSIZE, 0);
-+	free_cprbmem(mem, PARMBSIZE, true, xflags);
- 	return rc;
- }
- EXPORT_SYMBOL(cca_cipher2protkey);
-@@ -1380,9 +1415,11 @@ int cca_ecc2protkey(u16 cardnr, u16 domain, const u8 *key,
- 		/* followed by a key block */
- 	} __packed * prepparm;
- 	int keylen = ((struct eccprivkeytoken *)key)->len;
-+	const u32 xflags = 0;
- 
- 	/* get already prepared memory for 2 cprbs with param block each */
--	rc = alloc_and_prep_cprbmem(PARMBSIZE, &mem, &preqcblk, &prepcblk);
-+	rc = alloc_and_prep_cprbmem(PARMBSIZE, &mem,
-+				    &preqcblk, &prepcblk, xflags);
- 	if (rc)
- 		return rc;
- 
-@@ -1412,7 +1449,7 @@ int cca_ecc2protkey(u16 cardnr, u16 domain, const u8 *key,
- 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
- 
- 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
--	rc = zcrypt_send_cprb(&xcrb, 0);
-+	rc = zcrypt_send_cprb(&xcrb, xflags);
- 	if (rc) {
- 		ZCRYPT_DBF_ERR("%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, rc=%d\n",
- 			       __func__, (int)cardnr, (int)domain, rc);
-@@ -1470,7 +1507,7 @@ int cca_ecc2protkey(u16 cardnr, u16 domain, const u8 *key,
- 		*protkeytype = PKEY_KEYTYPE_ECC;
- 
- out:
--	free_cprbmem(mem, PARMBSIZE, 0);
-+	free_cprbmem(mem, PARMBSIZE, true, xflags);
- 	return rc;
- }
- EXPORT_SYMBOL(cca_ecc2protkey);
-@@ -1503,9 +1540,11 @@ int cca_query_crypto_facility(u16 cardnr, u16 domain,
- 		u8  subfunc_code[2];
- 		u8  lvdata[];
- 	} __packed * prepparm;
-+	const u32 xflags = 0;
- 
- 	/* get already prepared memory for 2 cprbs with param block each */
--	rc = alloc_and_prep_cprbmem(parmbsize, &mem, &preqcblk, &prepcblk);
-+	rc = alloc_and_prep_cprbmem(parmbsize, &mem,
-+				    &preqcblk, &prepcblk, xflags);
- 	if (rc)
- 		return rc;
- 
-@@ -1526,7 +1565,7 @@ int cca_query_crypto_facility(u16 cardnr, u16 domain,
- 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
- 
- 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
--	rc = zcrypt_send_cprb(&xcrb, 0);
-+	rc = zcrypt_send_cprb(&xcrb, xflags);
- 	if (rc) {
- 		ZCRYPT_DBF_ERR("%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, rc=%d\n",
- 			       __func__, (int)cardnr, (int)domain, rc);
-@@ -1573,7 +1612,7 @@ int cca_query_crypto_facility(u16 cardnr, u16 domain,
+ 	switch (keybitsize) {
+ 	case 128:
+@@ -851,7 +881,7 @@ static int _ep11_genaeskey(u16 card, u16 domain,
+ 		pinblob_size = EP11_PINBLOB_V1_BYTES;
  	}
+ 	req_pl_size = sizeof(struct keygen_req_pl) + ASN1TAGLEN(pinblob_size);
+-	req = alloc_cprb(req_pl_size);
++	req = alloc_cprbmem(req_pl_size, xflags);
+ 	if (!req)
+ 		goto out;
+ 	req_pl = (struct keygen_req_pl *)(((u8 *)req) + sizeof(*req));
+@@ -877,22 +907,20 @@ static int _ep11_genaeskey(u16 card, u16 domain,
+ 	*p++ = pinblob_size;
+ 
+ 	/* reply cprb and payload */
+-	rep = alloc_cprb(sizeof(struct keygen_rep_pl));
++	rep = alloc_cprbmem(sizeof(struct keygen_rep_pl), xflags);
+ 	if (!rep)
+ 		goto out;
+ 	rep_pl = (struct keygen_rep_pl *)(((u8 *)rep) + sizeof(*rep));
+ 
+ 	/* urb and target */
+-	urb = kmalloc(sizeof(*urb), GFP_KERNEL);
+-	if (!urb)
+-		goto out;
++	memset(&urb, 0, sizeof(urb));
+ 	target.ap_id = card;
+ 	target.dom_id = domain;
+-	prep_urb(urb, &target, 1,
++	prep_urb(&urb, &target, 1,
+ 		 req, sizeof(*req) + req_pl_size,
+ 		 rep, sizeof(*rep) + sizeof(*rep_pl));
+ 
+-	rc = zcrypt_send_ep11_cprb(urb, 0);
++	rc = zcrypt_send_ep11_cprb(&urb, xflags);
+ 	if (rc) {
+ 		ZCRYPT_DBF_ERR("%s zcrypt_send_ep11_cprb(card=%d dom=%d) failed, rc=%d\n",
+ 			       __func__, (int)card, (int)domain, rc);
+@@ -925,9 +953,8 @@ static int _ep11_genaeskey(u16 card, u16 domain,
+ 	*keybufsize = rep_pl->data_len;
  
  out:
--	free_cprbmem(mem, parmbsize, 0);
-+	free_cprbmem(mem, parmbsize, false, xflags);
+-	kfree(req);
+-	kfree(rep);
+-	kfree(urb);
++	free_cprbmem(req, 0, false, xflags);
++	free_cprbmem(rep, sizeof(struct keygen_rep_pl), true, xflags);
  	return rc;
  }
- EXPORT_SYMBOL(cca_query_crypto_facility);
-@@ -1959,7 +1998,23 @@ int cca_findcard2(u32 **apqns, u32 *nr_apqns, u16 cardnr, u16 domain,
- }
- EXPORT_SYMBOL(cca_findcard2);
  
--void __exit zcrypt_ccamisc_exit(void)
-+int __init zcrypt_ccamisc_init(void)
+@@ -1000,10 +1027,11 @@ static int ep11_cryptsingle(u16 card, u16 domain,
+ 	} __packed * rep_pl;
+ 	struct ep11_cprb *req = NULL, *rep = NULL;
+ 	struct ep11_target_dev target;
+-	struct ep11_urb *urb = NULL;
++	struct ep11_urb urb;
+ 	size_t req_pl_size, rep_pl_size;
+ 	int n, api = EP11_API_V1, rc = -ENOMEM;
+ 	u8 *p;
++	const u32 xflags = 0;
+ 
+ 	/* the simple asn1 coding used has length limits */
+ 	if (keysize > 0xFFFF || inbufsize > 0xFFFF)
+@@ -1012,7 +1040,7 @@ static int ep11_cryptsingle(u16 card, u16 domain,
+ 	/* request cprb and payload */
+ 	req_pl_size = sizeof(struct crypt_req_pl) + (iv ? 16 : 0)
+ 		+ ASN1TAGLEN(keysize) + ASN1TAGLEN(inbufsize);
+-	req = alloc_cprb(req_pl_size);
++	req = alloc_cprbmem(req_pl_size, xflags);
+ 	if (!req)
+ 		goto out;
+ 	req_pl = (struct crypt_req_pl *)(((u8 *)req) + sizeof(*req));
+@@ -1034,22 +1062,20 @@ static int ep11_cryptsingle(u16 card, u16 domain,
+ 
+ 	/* reply cprb and payload, assume out data size <= in data size + 32 */
+ 	rep_pl_size = sizeof(struct crypt_rep_pl) + ASN1TAGLEN(inbufsize + 32);
+-	rep = alloc_cprb(rep_pl_size);
++	rep = alloc_cprbmem(rep_pl_size, xflags);
+ 	if (!rep)
+ 		goto out;
+ 	rep_pl = (struct crypt_rep_pl *)(((u8 *)rep) + sizeof(*rep));
+ 
+ 	/* urb and target */
+-	urb = kmalloc(sizeof(*urb), GFP_KERNEL);
+-	if (!urb)
+-		goto out;
++	memset(&urb, 0, sizeof(urb));
+ 	target.ap_id = card;
+ 	target.dom_id = domain;
+-	prep_urb(urb, &target, 1,
++	prep_urb(&urb, &target, 1,
+ 		 req, sizeof(*req) + req_pl_size,
+ 		 rep, sizeof(*rep) + rep_pl_size);
+ 
+-	rc = zcrypt_send_ep11_cprb(urb, 0);
++	rc = zcrypt_send_ep11_cprb(&urb, xflags);
+ 	if (rc) {
+ 		ZCRYPT_DBF_ERR("%s zcrypt_send_ep11_cprb(card=%d dom=%d) failed, rc=%d\n",
+ 			       __func__, (int)card, (int)domain, rc);
+@@ -1095,9 +1121,8 @@ static int ep11_cryptsingle(u16 card, u16 domain,
+ 	*outbufsize = n;
+ 
+ out:
+-	kfree(req);
+-	kfree(rep);
+-	kfree(urb);
++	free_cprbmem(req, req_pl_size, true, xflags);
++	free_cprbmem(rep, rep_pl_size, true, xflags);
+ 	return rc;
+ }
+ 
+@@ -1143,9 +1168,10 @@ static int _ep11_unwrapkey(u16 card, u16 domain,
+ 	struct ep11_cprb *req = NULL, *rep = NULL;
+ 	size_t req_pl_size, pinblob_size = 0;
+ 	struct ep11_target_dev target;
+-	struct ep11_urb *urb = NULL;
++	struct ep11_urb urb;
+ 	int api, rc = -ENOMEM;
+ 	u8 *p;
++	const u32 xflags = 0;
+ 
+ 	/* request cprb and payload */
+ 	api = (!keygenflags || keygenflags & 0x00200000) ?
+@@ -1161,7 +1187,7 @@ static int _ep11_unwrapkey(u16 card, u16 domain,
+ 	req_pl_size = sizeof(struct uw_req_pl) + (iv ? 16 : 0)
+ 		+ ASN1TAGLEN(keksize) + ASN1TAGLEN(0)
+ 		+ ASN1TAGLEN(pinblob_size) + ASN1TAGLEN(enckeysize);
+-	req = alloc_cprb(req_pl_size);
++	req = alloc_cprbmem(req_pl_size, xflags);
+ 	if (!req)
+ 		goto out;
+ 	req_pl = (struct uw_req_pl *)(((u8 *)req) + sizeof(*req));
+@@ -1197,22 +1223,20 @@ static int _ep11_unwrapkey(u16 card, u16 domain,
+ 	p += asn1tag_write(p, 0x04, enckey, enckeysize);
+ 
+ 	/* reply cprb and payload */
+-	rep = alloc_cprb(sizeof(struct uw_rep_pl));
++	rep = alloc_cprbmem(sizeof(struct uw_rep_pl), xflags);
+ 	if (!rep)
+ 		goto out;
+ 	rep_pl = (struct uw_rep_pl *)(((u8 *)rep) + sizeof(*rep));
+ 
+ 	/* urb and target */
+-	urb = kmalloc(sizeof(*urb), GFP_KERNEL);
+-	if (!urb)
+-		goto out;
++	memset(&urb, 0, sizeof(urb));
+ 	target.ap_id = card;
+ 	target.dom_id = domain;
+-	prep_urb(urb, &target, 1,
++	prep_urb(&urb, &target, 1,
+ 		 req, sizeof(*req) + req_pl_size,
+ 		 rep, sizeof(*rep) + sizeof(*rep_pl));
+ 
+-	rc = zcrypt_send_ep11_cprb(urb, 0);
++	rc = zcrypt_send_ep11_cprb(&urb, xflags);
+ 	if (rc) {
+ 		ZCRYPT_DBF_ERR("%s zcrypt_send_ep11_cprb(card=%d dom=%d) failed, rc=%d\n",
+ 			       __func__, (int)card, (int)domain, rc);
+@@ -1245,9 +1269,8 @@ static int _ep11_unwrapkey(u16 card, u16 domain,
+ 	*keybufsize = rep_pl->data_len;
+ 
+ out:
+-	kfree(req);
+-	kfree(rep);
+-	kfree(urb);
++	free_cprbmem(req, req_pl_size, true, xflags);
++	free_cprbmem(rep, sizeof(struct uw_rep_pl), true, xflags);
+ 	return rc;
+ }
+ 
+@@ -1319,15 +1342,16 @@ static int _ep11_wrapkey(u16 card, u16 domain,
+ 	} __packed * rep_pl;
+ 	struct ep11_cprb *req = NULL, *rep = NULL;
+ 	struct ep11_target_dev target;
+-	struct ep11_urb *urb = NULL;
++	struct ep11_urb urb;
+ 	size_t req_pl_size;
+ 	int api, rc = -ENOMEM;
+ 	u8 *p;
++	const u32 xflags = 0;
+ 
+ 	/* request cprb and payload */
+ 	req_pl_size = sizeof(struct wk_req_pl) + (iv ? 16 : 0)
+ 		+ ASN1TAGLEN(keysize) + 4;
+-	req = alloc_cprb(req_pl_size);
++	req = alloc_cprbmem(req_pl_size, xflags);
+ 	if (!req)
+ 		goto out;
+ 	if (!mech || mech == 0x80060001)
+@@ -1357,22 +1381,20 @@ static int _ep11_wrapkey(u16 card, u16 domain,
+ 	*p++ = 0;
+ 
+ 	/* reply cprb and payload */
+-	rep = alloc_cprb(sizeof(struct wk_rep_pl));
++	rep = alloc_cprbmem(sizeof(struct wk_rep_pl), xflags);
+ 	if (!rep)
+ 		goto out;
+ 	rep_pl = (struct wk_rep_pl *)(((u8 *)rep) + sizeof(*rep));
+ 
+ 	/* urb and target */
+-	urb = kmalloc(sizeof(*urb), GFP_KERNEL);
+-	if (!urb)
+-		goto out;
++	memset(&urb, 0, sizeof(urb));
+ 	target.ap_id = card;
+ 	target.dom_id = domain;
+-	prep_urb(urb, &target, 1,
++	prep_urb(&urb, &target, 1,
+ 		 req, sizeof(*req) + req_pl_size,
+ 		 rep, sizeof(*rep) + sizeof(*rep_pl));
+ 
+-	rc = zcrypt_send_ep11_cprb(urb, 0);
++	rc = zcrypt_send_ep11_cprb(&urb, xflags);
+ 	if (rc) {
+ 		ZCRYPT_DBF_ERR("%s zcrypt_send_ep11_cprb(card=%d dom=%d) failed, rc=%d\n",
+ 			       __func__, (int)card, (int)domain, rc);
+@@ -1405,9 +1427,8 @@ static int _ep11_wrapkey(u16 card, u16 domain,
+ 	*datasize = rep_pl->data_len;
+ 
+ out:
+-	kfree(req);
+-	kfree(rep);
+-	kfree(urb);
++	free_cprbmem(req, req_pl_size, true, xflags);
++	free_cprbmem(rep, sizeof(struct wk_rep_pl), true, xflags);
+ 	return rc;
+ }
+ 
+@@ -1459,7 +1480,7 @@ int ep11_clr2keyblob(u16 card, u16 domain, u32 keybitsize, u32 keygenflags,
+ 			    encbuf, encbuflen, 0, def_iv,
+ 			    keybitsize, 0, keybuf, keybufsize, keytype);
+ 	if (rc) {
+-		ZCRYPT_DBF_ERR("%s importing key value as new key failed,, rc=%d\n",
++		ZCRYPT_DBF_ERR("%s importing key value as new key failed, rc=%d\n",
+ 			       __func__, rc);
+ 		goto out;
+ 	}
+@@ -1658,7 +1679,23 @@ int ep11_findcard2(u32 **apqns, u32 *nr_apqns, u16 cardnr, u16 domain,
+ }
+ EXPORT_SYMBOL(ep11_findcard2);
+ 
+-void __exit zcrypt_ep11misc_exit(void)
++int __init zcrypt_ep11misc_init(void)
 +{
-+	/* Pre-allocate a small memory pool for cca cprbs. */
++	/* Pre-allocate a small memory pool for ep11 cprbs. */
 +	cprb_mempool = mempool_create_kmalloc_pool(CPRB_MEMPOOL_MIN_ITEMS,
 +						   CPRB_MEMPOOL_ITEM_SIZE);
 +	if (IS_ERR(cprb_mempool)) {
@@ -481,23 +532,23 @@ index 521baaea06ff..e604a69e40fc 100644
 +	return 0;
 +}
 +
-+void zcrypt_ccamisc_exit(void)
++void zcrypt_ep11misc_exit(void)
  {
- 	mkvp_cache_free();
+ 	card_cache_free();
 +	mempool_destroy(cprb_mempool);
  }
-diff --git a/drivers/s390/crypto/zcrypt_ccamisc.h b/drivers/s390/crypto/zcrypt_ccamisc.h
-index 26bdca702523..273edf2bb036 100644
---- a/drivers/s390/crypto/zcrypt_ccamisc.h
-+++ b/drivers/s390/crypto/zcrypt_ccamisc.h
-@@ -272,6 +272,7 @@ struct cca_info {
-  */
- int cca_get_info(u16 card, u16 dom, struct cca_info *ci, int verify);
+diff --git a/drivers/s390/crypto/zcrypt_ep11misc.h b/drivers/s390/crypto/zcrypt_ep11misc.h
+index 9f1bdffdec68..a4b98eca8431 100644
+--- a/drivers/s390/crypto/zcrypt_ep11misc.h
++++ b/drivers/s390/crypto/zcrypt_ep11misc.h
+@@ -152,6 +152,7 @@ int ep11_findcard2(u32 **apqns, u32 *nr_apqns, u16 cardnr, u16 domain,
+ int ep11_kblob2protkey(u16 card, u16 dom, const u8 *key, u32 keylen,
+ 		       u8 *protkey, u32 *protkeylen, u32 *protkeytype);
  
-+int zcrypt_ccamisc_init(void);
- void zcrypt_ccamisc_exit(void);
++int zcrypt_ep11misc_init(void);
+ void zcrypt_ep11misc_exit(void);
  
- #endif /* _ZCRYPT_CCAMISC_H_ */
+ #endif /* _ZCRYPT_EP11MISC_H_ */
 -- 
 2.43.0
 
