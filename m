@@ -1,207 +1,138 @@
-Return-Path: <linux-s390+bounces-9146-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-9149-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61CA3A40DE1
-	for <lists+linux-s390@lfdr.de>; Sun, 23 Feb 2025 10:55:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0A6EA41099
+	for <lists+linux-s390@lfdr.de>; Sun, 23 Feb 2025 18:54:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 08E1616ADD6
-	for <lists+linux-s390@lfdr.de>; Sun, 23 Feb 2025 09:55:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3B2B918926E4
+	for <lists+linux-s390@lfdr.de>; Sun, 23 Feb 2025 17:54:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B756720127F;
-	Sun, 23 Feb 2025 09:55:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B20BC86359;
+	Sun, 23 Feb 2025 17:54:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="m/5nS/ci"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jhMQcmO5"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F18A202F9A
-	for <linux-s390@vger.kernel.org>; Sun, 23 Feb 2025 09:55:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795AD2770B;
+	Sun, 23 Feb 2025 17:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740304516; cv=none; b=EM6LiXL0XG0P/d1yXuddYBnZ9f+MxP7c+HOFrAIAyUUwMuF2u8fJR6LdkjwoJJ3I3Z5gzXLYz8ntmaPXzKjr/lMmJTsSm2dLB/Seagmd6M0o9uqXNRzel7ijeMXMBalxslleEi2VMD1i6OnJ84tiIihlPOGjQc0EAxYLlK5W2Ig=
+	t=1740333272; cv=none; b=jD0cK8GHjZOIqaXjrViix7+I9MD7EnTUHlfjbV4TWKDqqvx+t5nwx3r0MbSbdpIiBQz/HfB/xdeq2vuxDwGdOSLhyD+xi4quIca+67Ttc+v7onWnfjMdtZj9KY3n4rCiy6RVVsFbfUpevTzdVAy/b2QAGshukaV5f1O9Htr35f4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740304516; c=relaxed/simple;
-	bh=xTPrJ8JNvsjO8CJCC/x0n9j7ZeZWFyF1QITKTxCUPy8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ic9/QGtaXYdUiJtlsSssLSyYYPxFBNMuwP3/ajhkEd9Nw3sRM9bAQA66FzSBFTcv13jDU/omFiEOB6zO62je+RqGHYVJNtMqJwLeY3g0gRZhg0maI/ou0kU8RXrJphpKvm60lZcSCPViKj7MABwcvcIcchHQaUPg6lHUdpHkO54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=m/5nS/ci; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51N4gOEj004922;
-	Sun, 23 Feb 2025 09:55:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=6TWGVLXzL219/8/aE
-	3DGqmNEhY3zFUfZiu2IOlWaK88=; b=m/5nS/civV/prj1/10mbl1TuWwCzt2gUp
-	EQCrKUitaFmGx0baTp2bxXJ+gx0rpROoSazw3XwLgxsQKscuPcwN4236cbuY7IwR
-	2XMmoSHCfZT9Dg9vMXJTAq4v4ZB1IhpCxMtvjdkx2j89ZS9YUNsfOIXlqMNrgg3Z
-	+M8zk7SFIXv79pvu8JRj+/a12m4m+3XbKS3iOEbNisMZ2yCTKQDdLBn0Z64dkJhk
-	MiXKhpz/H/nj9yNtFiJ8G3EB07mtIw7UjzAqziKEBuSdNHzIBr2QlytrW0gDk912
-	o8H2JAL4wA9MzTB0SSPSZFOpM/9ewcM1Zr6p9jvx2xoFq0+0JiLtQ==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44ysr9sapu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 23 Feb 2025 09:55:12 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51N5v8E2026354;
-	Sun, 23 Feb 2025 09:55:11 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44yswn1pyw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 23 Feb 2025 09:55:11 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51N9t8pb33882532
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 23 Feb 2025 09:55:08 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0360F20049;
-	Sun, 23 Feb 2025 09:55:08 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B3FA020040;
-	Sun, 23 Feb 2025 09:55:07 +0000 (GMT)
-Received: from funtu2.fritz.box?044ibm.com (unknown [9.171.19.146])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sun, 23 Feb 2025 09:55:07 +0000 (GMT)
-From: Harald Freudenberger <freude@linux.ibm.com>
-To: dengler@linux.ibm.com, ifranzki@linux.ibm.com, fcallies@linux.ibm.com
-Cc: linux-s390@vger.kernel.org, herbert@gondor.apana.org.au
-Subject: [PATCH v1 20/20] s390/pkey/crypto: Introduce xflags param for pkey in-kernel API
-Date: Sun, 23 Feb 2025 10:54:59 +0100
-Message-ID: <20250223095459.43058-21-freude@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250223095459.43058-1-freude@linux.ibm.com>
-References: <20250223095459.43058-1-freude@linux.ibm.com>
+	s=arc-20240116; t=1740333272; c=relaxed/simple;
+	bh=9iFdhdTQZ2gneruKLG7YkE93h9YE3aeXMlyNM4pD9u8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jIP0V28ztaYO0Pj+kdmGfGGgsK1xuJl5JcFehJrNXHyCyk9tOWV8NmXBbUiUUi0tWPJ3O1bUaOrlMXDHFyStDTBS5bU2269qSwuh6t+I+RzLar9YzMHG7sKBomMzAsxuHZ9nuOrMs55e/LbumMWognPb42q563CgT9FFACazUNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jhMQcmO5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 009D7C4CEDD;
+	Sun, 23 Feb 2025 17:54:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740333271;
+	bh=9iFdhdTQZ2gneruKLG7YkE93h9YE3aeXMlyNM4pD9u8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jhMQcmO5owvm412qh9aUibQCAE5R3H0Y3labMbi96L/jt2+CCd3WvH8UF16mZ5MQB
+	 Op9z/uv4OxpBHVLnUkOdjvePsC4VrM+yzCROUe68AVgBUrv7w2DmJHs4xbHfzB8QpG
+	 Ozv4nty8IY+SrpRbBFPQHCs0ru5G1hevXj0yQo/cLPvQgyoOxJf1iid9sarJrcIcRd
+	 eCJ2zlHemard7aIoWHBWDMYtSOYnbGfGHmDHpa7KlLg3WtovNvwgZK8HmKTQRBnOID
+	 k675DyqrTrGHvR6fyQY78uyW/dVn8TdfgorHiV6DURp3ebpe+dlJCScpuL1M0bgk3c
+	 jWSaiEQEmv7uA==
+Date: Sun, 23 Feb 2025 19:54:07 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Dave Young <dyoung@redhat.com>, Alexander Graf <graf@amazon.com>,
+	linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Anthony Yznaga <anthony.yznaga@oracle.com>,
+	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pratyush Yadav <ptyadav@amazon.de>,
+	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Usama Arif <usama.arif@bytedance.com>,
+	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
+	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+	Philipp Rudo <prudo@redhat.com>, Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org
+Subject: Re: [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
+Message-ID: <Z7tgvwRkV-GAtBL_@kernel.org>
+References: <20250206132754.2596694-1-rppt@kernel.org>
+ <CALu+AoRMQyRDFS_4L0KQkmrFT_S+yk=uZ-Mqt86JQYKKnj-5Ug@mail.gmail.com>
+ <Z7WJD6eBLuIRnLwk@kernel.org>
+ <CALu+AoSaEthfed1NOYPiQgm_g-dhibVMRAp0+=_+9qTT4_x=tg@mail.gmail.com>
+ <d8c43707-65a2-4176-85e2-acdb4c9d16ad@amazon.com>
+ <CALu+AoR0BbmbZeOkLU55OpD8kxGsVnFs+pXgEC9Y_MpB4=GMvQ@mail.gmail.com>
+ <Z7dbxJNxlW2EA_aa@tuxmaker.boeblingen.de.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: tHJ-7NtDvimCv2WMw90jdVl4q2qMAh_v
-X-Proofpoint-GUID: tHJ-7NtDvimCv2WMw90jdVl4q2qMAh_v
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-23_04,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- mlxlogscore=999 clxscore=1015 mlxscore=0 lowpriorityscore=0 malwarescore=0
- phishscore=0 priorityscore=1501 impostorscore=0 bulkscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2502230073
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z7dbxJNxlW2EA_aa@tuxmaker.boeblingen.de.ibm.com>
 
-Add a new parameter xflags to the in-kernel API function
-pkey_key2protkey(). Currently there is only one flag supported:
+On Thu, Feb 20, 2025 at 05:43:48PM +0100, Alexander Gordeev wrote:
+> On Thu, Feb 20, 2025 at 09:49:52AM +0800, Dave Young wrote:
+> > On Wed, 19 Feb 2025 at 21:55, Alexander Graf <graf@amazon.com> wrote:
+> > > >>> What architecture exactly does this KHO work fine?   Device Tree
+> > > >>> should be ok on arm*, x86 and power*, but how about s390?
+> > > >> KHO does not use device tree as the boot protocol, it uses FDT as a data
+> > > >> structure and adds architecture specific bits to the boot structures to
+> > > >> point to that data, very similar to how IMA_KEXEC works.
+> > > >>
+> > > >> Currently KHO is implemented on arm64 and x86, but there is no fundamental
+> > > >> reason why it wouldn't work on any architecture that supports kexec.
+> > > > Well,  the problem is whether there is a way to  add dtb in the early
+> > > > boot path,  for X86 it is added via setup_data,  if there is no such
+> > > > way I'm not sure if it is doable especially for passing some info for
+> > > > early boot use.  Then the KHO will be only for limited use cases.
+> > >
+> > >
+> > > Every architecture has a platform specific way of passing data into the
+> > > kernel so it can find its command line and initrd. S390x for example has
+> > > struct parmarea. To enable s390x, you would remove some of its padding
+> > > and replace it with a KHO base addr + size, so that the new kernel can
+> > > find the KHO state tree.
+> > 
+> > Ok, thanks for the info,  I cced s390 people maybe they can provide inputs.
+> 
+> If I understand correctly, the parmarea would be used for passing the
+> FDT address - which appears to be fine. However, s390 does not implement
+> early_memremap()/early_memunmap(), which KHO needs.
 
-  * PKEY_XFLAG_NOMEMALLOC - If this flag is given in the xflags
-    parameter, the pkey implementation is not allowed to allocate
-    memory but instead should fail with -ENOMEM. This flag is for
-    protected key derive within a cipher or similar which must not
-    allocate memory - see also the CRYPTO_ALG_ALLOCATES_MEMORY
-    flag in crypto.h.
-
-The one and only user of this in-kernel API - the skcipher
-implementations PAES in paes_s390.c set this flag upon request
-to derive a protected key from the given raw key material.
-
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
----
- arch/s390/crypto/paes_s390.c     |  2 +-
- arch/s390/include/asm/pkey.h     | 13 ++++++++++++-
- drivers/s390/crypto/pkey_api.c   |  3 +--
- drivers/s390/crypto/zcrypt_api.h | 10 +++++++---
- 4 files changed, 21 insertions(+), 7 deletions(-)
-
-diff --git a/arch/s390/crypto/paes_s390.c b/arch/s390/crypto/paes_s390.c
-index 511093713a6f..646cbbf0678d 100644
---- a/arch/s390/crypto/paes_s390.c
-+++ b/arch/s390/crypto/paes_s390.c
-@@ -189,7 +189,7 @@ static inline int __paes_keyblob2pkey(const u8 *key, unsigned int keylen,
- 				return -EINTR;
- 		}
- 		rc = pkey_key2protkey(key, keylen, pk->protkey, &pk->len,
--				      &pk->type);
-+				      &pk->type, PKEY_XFLAG_NOMEMALLOC);
- 	}
+KHO uses early_memremap()/early_memunmap() because it parses FDT before
+phys_to_virt() is available on arm64 and x86. AFAIU on s390 phys_to_virt()
+can be used at setup_arch() time, so it shouldn't be a problem to add
+appropriate wrappers.
  
- 	return rc;
-diff --git a/arch/s390/include/asm/pkey.h b/arch/s390/include/asm/pkey.h
-index 5dca1a46a9f6..2bd344cbc2ec 100644
---- a/arch/s390/include/asm/pkey.h
-+++ b/arch/s390/include/asm/pkey.h
-@@ -20,9 +20,20 @@
-  * @param key pointer to a buffer containing the key blob
-  * @param keylen size of the key blob in bytes
-  * @param protkey pointer to buffer receiving the protected key
-+ * @param xflags additional execution flags (see PKEY_XFLAG_* definitions below)
-  * @return 0 on success, negative errno value on failure
-  */
- int pkey_key2protkey(const u8 *key, u32 keylen,
--		     u8 *protkey, u32 *protkeylen, u32 *protkeytype);
-+		     u8 *protkey, u32 *protkeylen, u32 *protkeytype,
-+		     u32 xflags);
-+
-+/*
-+ * If this flag is given in the xflags parameter, the pkey implementation
-+ * is not allowed to allocate memory but instead should fail with -ENOMEM.
-+ * This flag is for protected key derive within a cipher or similar
-+ * which must not allocate memory - see also the CRYPTO_ALG_ALLOCATES_MEMORY
-+ * flag in crypto.h.
-+ */
-+#define PKEY_XFLAG_NOMEMALLOC 0x0001
- 
- #endif /* _KAPI_PKEY_H */
-diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
-index 55a4e70b866b..cef60770f68b 100644
---- a/drivers/s390/crypto/pkey_api.c
-+++ b/drivers/s390/crypto/pkey_api.c
-@@ -53,10 +53,9 @@ static int key2protkey(const struct pkey_apqn *apqns, size_t nr_apqns,
-  * In-Kernel function: Transform a key blob (of any type) into a protected key
-  */
- int pkey_key2protkey(const u8 *key, u32 keylen,
--		     u8 *protkey, u32 *protkeylen, u32 *protkeytype)
-+		     u8 *protkey, u32 *protkeylen, u32 *protkeytype, u32 xflags)
- {
- 	int rc;
--	const u32 xflags = 0;
- 
- 	rc = key2protkey(NULL, 0, key, keylen,
- 			 protkey, protkeylen, protkeytype, xflags);
-diff --git a/drivers/s390/crypto/zcrypt_api.h b/drivers/s390/crypto/zcrypt_api.h
-index 92027304f0d8..f6d84751631f 100644
---- a/drivers/s390/crypto/zcrypt_api.h
-+++ b/drivers/s390/crypto/zcrypt_api.h
-@@ -16,6 +16,7 @@
- 
- #include <linux/atomic.h>
- #include <asm/debug.h>
-+#include <asm/pkey.h>
- #include <asm/zcrypt.h>
- #include "ap_bus.h"
- 
-@@ -79,10 +80,13 @@ struct zcrypt_track {
- /*
-  * Do not allocate memory xflag. To be used with
-  * zcrypt_send_cprb() and zcrypt_send_ep11_cprb().
-- * Currently only available and used for the in-kernel
-- * zcrpyt api.
-+ * But also used within the cca and ep11 misc functions
-+ * and the pkey layer exposes this as a PKEY_XFLAG_
-+ * via the in-kernel-api for protected key support.
-+ * ZCRYPT_XFLAG_NOMEMALLOC and PKEY_XFLAG_NOMEMALLOC
-+ * should have same value to avoid unnecessary conversions.
-  */
--#define ZCRYPT_XFLAG_NOMEMALLOC 0x0001
-+#define ZCRYPT_XFLAG_NOMEMALLOC PKEY_XFLAG_NOMEMALLOC
- 
- struct zcrypt_ops {
- 	long (*rsa_modexpo)(struct zcrypt_queue *, struct ica_rsa_modexpo *,
 -- 
-2.43.0
-
+Sincerely yours,
+Mike.
 
