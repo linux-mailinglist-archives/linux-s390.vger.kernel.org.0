@@ -1,78 +1,81 @@
-Return-Path: <linux-s390+bounces-9128-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-9130-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5CECA40DD3
-	for <lists+linux-s390@lfdr.de>; Sun, 23 Feb 2025 10:55:12 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEB68A40DE5
+	for <lists+linux-s390@lfdr.de>; Sun, 23 Feb 2025 10:56:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3F7E81692F8
-	for <lists+linux-s390@lfdr.de>; Sun, 23 Feb 2025 09:55:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EE62B18989C2
+	for <lists+linux-s390@lfdr.de>; Sun, 23 Feb 2025 09:55:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E75D91C863A;
-	Sun, 23 Feb 2025 09:55:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30B2A202F9A;
+	Sun, 23 Feb 2025 09:55:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="I3wy0fYC"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PwnnAwcC"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A2621FCF5F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A2C7200100
 	for <linux-s390@vger.kernel.org>; Sun, 23 Feb 2025 09:55:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740304509; cv=none; b=ZvA/+ZV6AxWRxb9HYbbAD1/q4wB33/Gmu3HOmhDzXyOAfXkZsQJQyWRKJi5x61+8BWZRWtHTtLK5poaI3mK4QLeUAUag4DsP/GVjD4BG+lb6BLZ9d6o9Llm4wnWbEK3Ty1Agztme5ajdnGyw87yegaVBwBHOjHQTV6g45a2DytI=
+	t=1740304510; cv=none; b=BJ0p2+VyeIOWji/KiPOp2PCZzI5RY5gQEMDYmnPkW0VSPC3903xmhDcLy/F4QFX34rq/CrBXYV4MX8nKYMMcKTj9jocx9340npQg892jBlSoc58jYwdVBPyTI058o+eHDOtXAwYCS9ul34Z5P17Fyzz+uA0ijZIH00TUqSkUrF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740304509; c=relaxed/simple;
-	bh=N1ZC/6rgsYB0kKn2nEtSwAsxV92XIsQNwXhQTfMx01g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aQ7led8PuuPizfiVAb/vHX1sf2fsV+UrfvAf1MRJsVl3MaNxJ/9LDltoB1O470QYgOUhJlWCQjUdsOGGJntav1xuSAJ4PVydPyR1PdkImw5RYZi0XDw8qLwn4JSza6sqhVd9TCtIN/JHGeQlfInVugkgMRpLLKvfz2vKcv6YRU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=I3wy0fYC; arc=none smtp.client-ip=148.163.158.5
+	s=arc-20240116; t=1740304510; c=relaxed/simple;
+	bh=FapUxCD/Nug1dO3/DWoPnUSlZB92zkO5IPL1JWWBg0s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FjpDESbpNaKdvPF4kab/HuLGYs3bFuzCLDlGa61UgM+XUokRcLPEl41xMda1uhsv3BH5I7UvddTmtiExYHrnnbcOxOcQgIJEvepbPT/BeSExlgwFFiFU0A+8NuQT07F/yngoBQxfLoqZTXWVD4FWhHNQjMZq/LYbVSM95RfAMFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PwnnAwcC; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51N7WvuW026606;
-	Sun, 23 Feb 2025 09:55:04 GMT
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51N7XLqH026896;
+	Sun, 23 Feb 2025 09:55:05 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=IfYKnZv/MjzhX1mlNMGCfNaTVGt4c61p3d4WEK0DG
-	mc=; b=I3wy0fYC04794pgUUEE22TFMDOxR+ivGdmWYNCgNu1QYnp2DW72k+RHlE
-	LgtO0oEKV9LBSerjq/Yz/lf6I0ly7QpcshzFiCR2tzWKtxO7kuDYRd1iL7QBBKYj
-	idv9jlX1Idr/zGQdOgjXd6qY3/+z0MA9n/eA7Rx7bxReJCaY/gU6B/WGFk/16leD
-	/t/fgXVAFOnrofqEYVyd8KC6qGw7NNOsYzSpw8byWB2kBmJEmLzfAURP3hn3tfe1
-	rEY3VeoaWgkiY6lUNoRivOIxGe6mTi6g0g1tEf+9kYaQh8oHdZeGCgV4+uJPQyJg
-	XVWZIqwSjIfLmk8rN4boY/qu+BCiQ==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44yycnrbuv-1
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=9ulQ9eCtK69sECoJD
+	zL7KMxwTM5OAZ7wB+RUPqiAHcs=; b=PwnnAwcCrPuuJTBlgHcPq7FNubsUFX4Je
+	iKxak7WvFqYZ0xyRTaljW1ctwrhmGGQJLTX0xguG7dU5kETYowuSUPb1yArF4WCG
+	LLKgy1UM/dJFbx2yMCtfYFUmOPUsFesD+XLcnQl1yvbvwuUw0DYc9iQjcUbcPnoi
+	4q3CYTatL7tbq1zuCLLflssw0IdwAs8E8+00bW/VDISWu74iiQpmT5M9YimrwAnp
+	7RquHbUWjNG4KAS+vUrbDCapuNBYWV5EW9G/OpvMJFnikzYTAzrDYBbIXHMJvh4s
+	aZueOkgAysk4rYoc4mLcFS4yRkoG+egeBEuc91SdJNFBkwU2GkSlg==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44yycnrbux-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 23 Feb 2025 09:55:04 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51N7aeMG027337;
-	Sun, 23 Feb 2025 09:55:03 GMT
+	Sun, 23 Feb 2025 09:55:05 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51N6LXki026964;
+	Sun, 23 Feb 2025 09:55:04 GMT
 Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44yum1hapx-1
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44ytdk1kyf-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 23 Feb 2025 09:55:03 +0000
+	Sun, 23 Feb 2025 09:55:04 +0000
 Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51N9t0BF35259060
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51N9t0fp35259064
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Sun, 23 Feb 2025 09:55:00 GMT
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4B9E520049;
+	by IMSVA (Postfix) with ESMTP id A951120040;
 	Sun, 23 Feb 2025 09:55:00 +0000 (GMT)
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0018E20040;
-	Sun, 23 Feb 2025 09:54:59 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 5D8D42004B;
+	Sun, 23 Feb 2025 09:55:00 +0000 (GMT)
 Received: from funtu2.fritz.box?044ibm.com (unknown [9.171.19.146])
 	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sun, 23 Feb 2025 09:54:59 +0000 (GMT)
+	Sun, 23 Feb 2025 09:55:00 +0000 (GMT)
 From: Harald Freudenberger <freude@linux.ibm.com>
 To: dengler@linux.ibm.com, ifranzki@linux.ibm.com, fcallies@linux.ibm.com
 Cc: linux-s390@vger.kernel.org, herbert@gondor.apana.org.au
-Subject: [PATCH v1 00/20] AP bus/zcrypt/pkey/paes no-mem-alloc patches
-Date: Sun, 23 Feb 2025 10:54:39 +0100
-Message-ID: <20250223095459.43058-1-freude@linux.ibm.com>
+Subject: [PATCH v1 01/20] s390/ap: Move response_type struct into ap_msg struct
+Date: Sun, 23 Feb 2025 10:54:40 +0100
+Message-ID: <20250223095459.43058-2-freude@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250223095459.43058-1-freude@linux.ibm.com>
+References: <20250223095459.43058-1-freude@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -81,8 +84,8 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: -2zsezAWXlk7wOnTXGuM5oUtkHipDdv1
-X-Proofpoint-ORIG-GUID: -2zsezAWXlk7wOnTXGuM5oUtkHipDdv1
+X-Proofpoint-GUID: -AJq_7sqxpn2afqvUdZq86jtspJ0M81H
+X-Proofpoint-ORIG-GUID: -AJq_7sqxpn2afqvUdZq86jtspJ0M81H
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-23_04,2025-02-20_02,2024-11-22_01
@@ -92,89 +95,423 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorit
  spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2502100000 definitions=main-2502230073
 
-This series of patches has the goal to open up a do-not-allocate
-memory path from the callers of the pkey in-kernel api down to
-the crypto cards and back.
+Move the very small response_type struct into struct ap_msg.
+So there is no need to kmalloc this tiny struct with each
+ap message preparation.
 
-The asynch in-kernel cipher implementations (and the s390 PAES
-cipher implementations are one of them) may be called in a
-context where memory allocations which trigger IO is not acceptable.
+Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+---
+ drivers/s390/crypto/ap_bus.h           |  12 ++-
+ drivers/s390/crypto/zcrypt_msgtype50.c |  22 +++---
+ drivers/s390/crypto/zcrypt_msgtype6.c  | 101 ++++++++++---------------
+ 3 files changed, 59 insertions(+), 76 deletions(-)
 
-So this patch series reworks the AP bus code, the zcrypt layer,
-the pkey layer and the pkey handlers to respect this situation
-by processing a new parameter xflags (execution hints flags).
-There is a flag PKEY_XFLAG_NOMEMALLOC which tells the code to
-not allocate memory which may lead to IO operations.
-
-To reach this goal, the actual code changes have been differed.
-The zcrypt misc functions which need memory for cprb build
-use a pre allocated memory pool for this purpose. The findcard()
-functions have one temp memory area preallocated and protected
-with a mutex. Some smaller data is not allocated any more but went
-to the stack instead. The AP bus also uses a pre-allocated
-memory pool for building AP message requests.
-
-Note that the PAES implementation still needs to get reworked
-to run the protected key derivation in a real asynchronous way.
-However, this rework of AP bus, zcrypt and pkey is the base work
-required before reconsidering the PAES implementation.
-
-The patch series starts bottom (AP bus) and goes up the call
-chain (PKEY). At any time in the patch stack it should compile.
-For easier review I tried to have one logic code change by
-each patch and thus keep the patches "small". For the upstream
-version I intend to fold them together into only a few commits.
-
-Harald Freudenberger (20):
-  s390/ap: Move response_type struct into ap_msg struct
-  s390/ap/zcrypt: Rework AP message buffer allocation
-  s390/ap: Introduce ap message buffer pool
-  s390/zcrypt: Rework zcrypt layer to support new flag NOMEMALLOC
-  s390/zcrypt: Introduce cprb mempool for cca misc functions
-  s390/zcrypt: Introduce cprb mempool for ep11 misc functions
-  s390/zcrypt: New zcrypt function zcrypt_device_status_mask_ext2
-  s390/zcrypt: Introduce pre-allocated device status array for cca misc
-  s390/zcrypt: Introduce pre-allocated device status array for ep11 misc
-  s390/zcrypt/pkey: Rework cca findcard() implementation and callers
-  s390/zcrypt/pkey: Rework ep11 findcard() implementation and callers
-  s390/zcrypt: Rework cca misc functions kmallocs to use the cprb
-    mempool
-  s390/zcrypt: Add small mempool for cca info list entries
-  s390/zcrypt: Locate ep11_domain_query_info onto the stack instead of
-    kmalloc
-  s390/zcrypt: Rework ep11 misc functions to use cprb mempool
-  s390/zcrypt: Add small mempool for ep11 card info list entries
-  s390/pkey: Rework CCA pkey handler to use stack for small memory
-    allocs
-  s390/pkey: Rework EP11 pkey handler to use stack for small memory
-    allocs
-  s390/zcrypt/pkey: Provide and pass xflags within pkey and zcrypt
-    layers
-  s390/pkey/crypto: Introduce xflags param for pkey in-kernel API
-
- arch/s390/crypto/paes_s390.c           |   2 +-
- arch/s390/include/asm/pkey.h           |  13 +-
- drivers/s390/crypto/ap_bus.c           |  71 +++++
- drivers/s390/crypto/ap_bus.h           |  34 +--
- drivers/s390/crypto/pkey_api.c         |  50 ++--
- drivers/s390/crypto/pkey_base.c        |  34 ++-
- drivers/s390/crypto/pkey_base.h        |  37 ++-
- drivers/s390/crypto/pkey_cca.c         | 121 ++++----
- drivers/s390/crypto/pkey_ep11.c        | 106 +++----
- drivers/s390/crypto/pkey_pckmo.c       |   9 +-
- drivers/s390/crypto/pkey_sysfs.c       |   4 +-
- drivers/s390/crypto/pkey_uv.c          |  16 +-
- drivers/s390/crypto/zcrypt_api.c       | 151 +++++++---
- drivers/s390/crypto/zcrypt_api.h       |  18 +-
- drivers/s390/crypto/zcrypt_ccamisc.c   | 343 +++++++++++++++-------
- drivers/s390/crypto/zcrypt_ccamisc.h   |  41 +--
- drivers/s390/crypto/zcrypt_cex4.c      |  16 +-
- drivers/s390/crypto/zcrypt_ep11misc.c  | 385 ++++++++++++++++---------
- drivers/s390/crypto/zcrypt_ep11misc.h  |  28 +-
- drivers/s390/crypto/zcrypt_msgtype50.c |  36 ++-
- drivers/s390/crypto/zcrypt_msgtype6.c  | 119 ++++----
- 21 files changed, 988 insertions(+), 646 deletions(-)
-
+diff --git a/drivers/s390/crypto/ap_bus.h b/drivers/s390/crypto/ap_bus.h
+index f4622ee4d894..a5d8f805625f 100644
+--- a/drivers/s390/crypto/ap_bus.h
++++ b/drivers/s390/crypto/ap_bus.h
+@@ -214,6 +214,15 @@ struct ap_queue {
+ 
+ typedef enum ap_sm_wait (ap_func_t)(struct ap_queue *queue);
+ 
++struct ap_response_type {
++	struct completion work;
++	int type;
++};
++
++#define CEXXC_RESPONSE_TYPE_ICA  1
++#define CEXXC_RESPONSE_TYPE_XCRB 2
++#define CEXXC_RESPONSE_TYPE_EP11 3
++
+ struct ap_message {
+ 	struct list_head list;		/* Request queueing. */
+ 	unsigned long psmid;		/* Message id. */
+@@ -222,7 +231,7 @@ struct ap_message {
+ 	size_t bufsize;			/* allocated msg buffer size */
+ 	u16 flags;			/* Flags, see AP_MSG_FLAG_xxx */
+ 	int rc;				/* Return code for this message */
+-	void *private;			/* ap driver private pointer. */
++	struct ap_response_type response;
+ 	/* receive is called from tasklet context */
+ 	void (*receive)(struct ap_queue *, struct ap_message *,
+ 			struct ap_message *);
+@@ -250,7 +259,6 @@ static inline void ap_init_message(struct ap_message *ap_msg)
+ static inline void ap_release_message(struct ap_message *ap_msg)
+ {
+ 	kfree_sensitive(ap_msg->msg);
+-	kfree_sensitive(ap_msg->private);
+ }
+ 
+ enum ap_sm_wait ap_sm_event(struct ap_queue *aq, enum ap_sm_event event);
+diff --git a/drivers/s390/crypto/zcrypt_msgtype50.c b/drivers/s390/crypto/zcrypt_msgtype50.c
+index adc65eddaa1e..222deb4040f3 100644
+--- a/drivers/s390/crypto/zcrypt_msgtype50.c
++++ b/drivers/s390/crypto/zcrypt_msgtype50.c
+@@ -438,7 +438,7 @@ static void zcrypt_msgtype50_receive(struct ap_queue *aq,
+ 		msg->len = sizeof(error_reply);
+ 	}
+ out:
+-	complete((struct completion *)msg->private);
++	complete(&msg->response.work);
+ }
+ 
+ static atomic_t zcrypt_step = ATOMIC_INIT(0);
+@@ -454,25 +454,24 @@ static long zcrypt_msgtype50_modexpo(struct zcrypt_queue *zq,
+ 				     struct ica_rsa_modexpo *mex,
+ 				     struct ap_message *ap_msg)
+ {
+-	struct completion work;
+ 	int rc;
+ 
+ 	ap_msg->bufsize = MSGTYPE50_CRB3_MAX_MSG_SIZE;
+-	ap_msg->msg = kmalloc(ap_msg->bufsize, GFP_KERNEL);
++	if (!ap_msg->msg)
++		ap_msg->msg = kmalloc(ap_msg->bufsize, GFP_KERNEL);
+ 	if (!ap_msg->msg)
+ 		return -ENOMEM;
+ 	ap_msg->receive = zcrypt_msgtype50_receive;
+ 	ap_msg->psmid = (((unsigned long)current->pid) << 32) +
+ 		atomic_inc_return(&zcrypt_step);
+-	ap_msg->private = &work;
+ 	rc = ICAMEX_msg_to_type50MEX_msg(zq, ap_msg, mex);
+ 	if (rc)
+ 		goto out;
+-	init_completion(&work);
++	init_completion(&ap_msg->response.work);
+ 	rc = ap_queue_message(zq->queue, ap_msg);
+ 	if (rc)
+ 		goto out;
+-	rc = wait_for_completion_interruptible(&work);
++	rc = wait_for_completion_interruptible(&ap_msg->response.work);
+ 	if (rc == 0) {
+ 		rc = ap_msg->rc;
+ 		if (rc == 0)
+@@ -485,7 +484,6 @@ static long zcrypt_msgtype50_modexpo(struct zcrypt_queue *zq,
+ 	}
+ 
+ out:
+-	ap_msg->private = NULL;
+ 	if (rc)
+ 		pr_debug("send me cprb at dev=%02x.%04x rc=%d\n",
+ 			 AP_QID_CARD(zq->queue->qid),
+@@ -504,25 +502,24 @@ static long zcrypt_msgtype50_modexpo_crt(struct zcrypt_queue *zq,
+ 					 struct ica_rsa_modexpo_crt *crt,
+ 					 struct ap_message *ap_msg)
+ {
+-	struct completion work;
+ 	int rc;
+ 
+ 	ap_msg->bufsize = MSGTYPE50_CRB3_MAX_MSG_SIZE;
+-	ap_msg->msg = kmalloc(ap_msg->bufsize, GFP_KERNEL);
++	if (!ap_msg->msg)
++		ap_msg->msg = kmalloc(ap_msg->bufsize, GFP_KERNEL);
+ 	if (!ap_msg->msg)
+ 		return -ENOMEM;
+ 	ap_msg->receive = zcrypt_msgtype50_receive;
+ 	ap_msg->psmid = (((unsigned long)current->pid) << 32) +
+ 		atomic_inc_return(&zcrypt_step);
+-	ap_msg->private = &work;
+ 	rc = ICACRT_msg_to_type50CRT_msg(zq, ap_msg, crt);
+ 	if (rc)
+ 		goto out;
+-	init_completion(&work);
++	init_completion(&ap_msg->response.work);
+ 	rc = ap_queue_message(zq->queue, ap_msg);
+ 	if (rc)
+ 		goto out;
+-	rc = wait_for_completion_interruptible(&work);
++	rc = wait_for_completion_interruptible(&ap_msg->response.work);
+ 	if (rc == 0) {
+ 		rc = ap_msg->rc;
+ 		if (rc == 0)
+@@ -535,7 +532,6 @@ static long zcrypt_msgtype50_modexpo_crt(struct zcrypt_queue *zq,
+ 	}
+ 
+ out:
+-	ap_msg->private = NULL;
+ 	if (rc)
+ 		pr_debug("send crt cprb at dev=%02x.%04x rc=%d\n",
+ 			 AP_QID_CARD(zq->queue->qid),
+diff --git a/drivers/s390/crypto/zcrypt_msgtype6.c b/drivers/s390/crypto/zcrypt_msgtype6.c
+index b64c9d9fc613..21ee311cf33d 100644
+--- a/drivers/s390/crypto/zcrypt_msgtype6.c
++++ b/drivers/s390/crypto/zcrypt_msgtype6.c
+@@ -31,15 +31,6 @@
+ 
+ #define CEIL4(x) ((((x) + 3) / 4) * 4)
+ 
+-struct response_type {
+-	struct completion work;
+-	int type;
+-};
+-
+-#define CEXXC_RESPONSE_TYPE_ICA  0
+-#define CEXXC_RESPONSE_TYPE_XCRB 1
+-#define CEXXC_RESPONSE_TYPE_EP11 2
+-
+ MODULE_AUTHOR("IBM Corporation");
+ MODULE_DESCRIPTION("Cryptographic Coprocessor (message type 6), " \
+ 		   "Copyright IBM Corp. 2001, 2023");
+@@ -856,7 +847,7 @@ static void zcrypt_msgtype6_receive(struct ap_queue *aq,
+ 		.type = TYPE82_RSP_CODE,
+ 		.reply_code = REP82_ERROR_MACHINE_FAILURE,
+ 	};
+-	struct response_type *resp_type = msg->private;
++	struct ap_response_type *resp_type = &msg->response;
+ 	struct type86x_reply *t86r;
+ 	int len;
+ 
+@@ -920,7 +911,7 @@ static void zcrypt_msgtype6_receive_ep11(struct ap_queue *aq,
+ 		.type = TYPE82_RSP_CODE,
+ 		.reply_code = REP82_ERROR_MACHINE_FAILURE,
+ 	};
+-	struct response_type *resp_type = msg->private;
++	struct ap_response_type *resp_type = &msg->response;
+ 	struct type86_ep11_reply *t86r;
+ 	int len;
+ 
+@@ -967,9 +958,7 @@ static long zcrypt_msgtype6_modexpo(struct zcrypt_queue *zq,
+ 				    struct ica_rsa_modexpo *mex,
+ 				    struct ap_message *ap_msg)
+ {
+-	struct response_type resp_type = {
+-		.type = CEXXC_RESPONSE_TYPE_ICA,
+-	};
++	struct ap_response_type *resp_type = &ap_msg->response;
+ 	int rc;
+ 
+ 	ap_msg->msg = (void *)get_zeroed_page(GFP_KERNEL);
+@@ -979,15 +968,15 @@ static long zcrypt_msgtype6_modexpo(struct zcrypt_queue *zq,
+ 	ap_msg->receive = zcrypt_msgtype6_receive;
+ 	ap_msg->psmid = (((unsigned long)current->pid) << 32) +
+ 		atomic_inc_return(&zcrypt_step);
+-	ap_msg->private = &resp_type;
+ 	rc = icamex_msg_to_type6mex_msgx(zq, ap_msg, mex);
+ 	if (rc)
+ 		goto out_free;
+-	init_completion(&resp_type.work);
++	resp_type->type = CEXXC_RESPONSE_TYPE_ICA;
++	init_completion(&resp_type->work);
+ 	rc = ap_queue_message(zq->queue, ap_msg);
+ 	if (rc)
+ 		goto out_free;
+-	rc = wait_for_completion_interruptible(&resp_type.work);
++	rc = wait_for_completion_interruptible(&resp_type->work);
+ 	if (rc == 0) {
+ 		rc = ap_msg->rc;
+ 		if (rc == 0)
+@@ -1001,7 +990,6 @@ static long zcrypt_msgtype6_modexpo(struct zcrypt_queue *zq,
+ 
+ out_free:
+ 	free_page((unsigned long)ap_msg->msg);
+-	ap_msg->private = NULL;
+ 	ap_msg->msg = NULL;
+ 	return rc;
+ }
+@@ -1017,9 +1005,7 @@ static long zcrypt_msgtype6_modexpo_crt(struct zcrypt_queue *zq,
+ 					struct ica_rsa_modexpo_crt *crt,
+ 					struct ap_message *ap_msg)
+ {
+-	struct response_type resp_type = {
+-		.type = CEXXC_RESPONSE_TYPE_ICA,
+-	};
++	struct ap_response_type *resp_type = &ap_msg->response;
+ 	int rc;
+ 
+ 	ap_msg->msg = (void *)get_zeroed_page(GFP_KERNEL);
+@@ -1029,15 +1015,15 @@ static long zcrypt_msgtype6_modexpo_crt(struct zcrypt_queue *zq,
+ 	ap_msg->receive = zcrypt_msgtype6_receive;
+ 	ap_msg->psmid = (((unsigned long)current->pid) << 32) +
+ 		atomic_inc_return(&zcrypt_step);
+-	ap_msg->private = &resp_type;
+ 	rc = icacrt_msg_to_type6crt_msgx(zq, ap_msg, crt);
+ 	if (rc)
+ 		goto out_free;
+-	init_completion(&resp_type.work);
++	resp_type->type = CEXXC_RESPONSE_TYPE_ICA;
++	init_completion(&resp_type->work);
+ 	rc = ap_queue_message(zq->queue, ap_msg);
+ 	if (rc)
+ 		goto out_free;
+-	rc = wait_for_completion_interruptible(&resp_type.work);
++	rc = wait_for_completion_interruptible(&resp_type->work);
+ 	if (rc == 0) {
+ 		rc = ap_msg->rc;
+ 		if (rc == 0)
+@@ -1051,7 +1037,6 @@ static long zcrypt_msgtype6_modexpo_crt(struct zcrypt_queue *zq,
+ 
+ out_free:
+ 	free_page((unsigned long)ap_msg->msg);
+-	ap_msg->private = NULL;
+ 	ap_msg->msg = NULL;
+ 	return rc;
+ }
+@@ -1061,28 +1046,26 @@ static long zcrypt_msgtype6_modexpo_crt(struct zcrypt_queue *zq,
+  * Prepare a CCA AP msg: fetch the required data from userspace,
+  * prepare the AP msg, fill some info into the ap_message struct,
+  * extract some data from the CPRB and give back to the caller.
+- * This function allocates memory and needs an ap_msg prepared
+- * by the caller with ap_init_message(). Also the caller has to
+- * make sure ap_release_message() is always called even on failure.
++ * This function may allocate memory if the ap_msg msg buffer is
++ * not preallocated and needs an ap_msg prepared by the caller
++ * with ap_init_message(). Also the caller has to make sure
++ * ap_release_message() is always called even on failure.
+  */
+ int prep_cca_ap_msg(bool userspace, struct ica_xcRB *xcrb,
+ 		    struct ap_message *ap_msg,
+ 		    unsigned int *func_code, unsigned short **dom)
+ {
+-	struct response_type resp_type = {
+-		.type = CEXXC_RESPONSE_TYPE_XCRB,
+-	};
++	struct ap_response_type *resp_type = &ap_msg->response;
+ 
+ 	ap_msg->bufsize = atomic_read(&ap_max_msg_size);
+-	ap_msg->msg = kmalloc(ap_msg->bufsize, GFP_KERNEL);
++	if (!ap_msg->msg)
++		ap_msg->msg = kmalloc(ap_msg->bufsize, GFP_KERNEL);
+ 	if (!ap_msg->msg)
+ 		return -ENOMEM;
+ 	ap_msg->receive = zcrypt_msgtype6_receive;
+ 	ap_msg->psmid = (((unsigned long)current->pid) << 32) +
+ 				atomic_inc_return(&zcrypt_step);
+-	ap_msg->private = kmemdup(&resp_type, sizeof(resp_type), GFP_KERNEL);
+-	if (!ap_msg->private)
+-		return -ENOMEM;
++	resp_type->type = CEXXC_RESPONSE_TYPE_XCRB;
+ 	return xcrb_msg_to_type6cprb_msgx(userspace, ap_msg, xcrb, func_code, dom);
+ }
+ 
+@@ -1097,7 +1080,7 @@ static long zcrypt_msgtype6_send_cprb(bool userspace, struct zcrypt_queue *zq,
+ 				      struct ica_xcRB *xcrb,
+ 				      struct ap_message *ap_msg)
+ {
+-	struct response_type *rtype = ap_msg->private;
++	struct ap_response_type *resp_type = &ap_msg->response;
+ 	struct {
+ 		struct type6_hdr hdr;
+ 		struct CPRBX cprbx;
+@@ -1128,11 +1111,11 @@ static long zcrypt_msgtype6_send_cprb(bool userspace, struct zcrypt_queue *zq,
+ 		msg->hdr.fromcardlen1 -= delta;
+ 	}
+ 
+-	init_completion(&rtype->work);
++	init_completion(&resp_type->work);
+ 	rc = ap_queue_message(zq->queue, ap_msg);
+ 	if (rc)
+ 		goto out;
+-	rc = wait_for_completion_interruptible(&rtype->work);
++	rc = wait_for_completion_interruptible(&resp_type->work);
+ 	if (rc == 0) {
+ 		rc = ap_msg->rc;
+ 		if (rc == 0)
+@@ -1158,28 +1141,26 @@ static long zcrypt_msgtype6_send_cprb(bool userspace, struct zcrypt_queue *zq,
+  * Prepare an EP11 AP msg: fetch the required data from userspace,
+  * prepare the AP msg, fill some info into the ap_message struct,
+  * extract some data from the CPRB and give back to the caller.
+- * This function allocates memory and needs an ap_msg prepared
+- * by the caller with ap_init_message(). Also the caller has to
+- * make sure ap_release_message() is always called even on failure.
++ * This function may allocate memory if the ap_msg msg buffer is
++ * not preallocated and needs an ap_msg prepared by the caller
++ * with ap_init_message(). Also the caller has to make sure
++ * ap_release_message() is always called even on failure.
+  */
+ int prep_ep11_ap_msg(bool userspace, struct ep11_urb *xcrb,
+ 		     struct ap_message *ap_msg,
+ 		     unsigned int *func_code, unsigned int *domain)
+ {
+-	struct response_type resp_type = {
+-		.type = CEXXC_RESPONSE_TYPE_EP11,
+-	};
++	struct ap_response_type *resp_type = &ap_msg->response;
+ 
+ 	ap_msg->bufsize = atomic_read(&ap_max_msg_size);
+-	ap_msg->msg = kmalloc(ap_msg->bufsize, GFP_KERNEL);
++	if (!ap_msg->msg)
++		ap_msg->msg = kmalloc(ap_msg->bufsize, GFP_KERNEL);
+ 	if (!ap_msg->msg)
+ 		return -ENOMEM;
+ 	ap_msg->receive = zcrypt_msgtype6_receive_ep11;
+ 	ap_msg->psmid = (((unsigned long)current->pid) << 32) +
+ 				atomic_inc_return(&zcrypt_step);
+-	ap_msg->private = kmemdup(&resp_type, sizeof(resp_type), GFP_KERNEL);
+-	if (!ap_msg->private)
+-		return -ENOMEM;
++	resp_type->type = CEXXC_RESPONSE_TYPE_EP11;
+ 	return xcrb_msg_to_type6_ep11cprb_msgx(userspace, ap_msg, xcrb,
+ 					       func_code, domain);
+ }
+@@ -1197,7 +1178,7 @@ static long zcrypt_msgtype6_send_ep11_cprb(bool userspace, struct zcrypt_queue *
+ {
+ 	int rc;
+ 	unsigned int lfmt;
+-	struct response_type *rtype = ap_msg->private;
++	struct ap_response_type *resp_type = &ap_msg->response;
+ 	struct {
+ 		struct type6_hdr hdr;
+ 		struct ep11_cprb cprbx;
+@@ -1251,11 +1232,11 @@ static long zcrypt_msgtype6_send_ep11_cprb(bool userspace, struct zcrypt_queue *
+ 	msg->hdr.fromcardlen1 = zq->reply.bufsize -
+ 		sizeof(struct type86_hdr) - sizeof(struct type86_fmt2_ext);
+ 
+-	init_completion(&rtype->work);
++	init_completion(&resp_type->work);
+ 	rc = ap_queue_message(zq->queue, ap_msg);
+ 	if (rc)
+ 		goto out;
+-	rc = wait_for_completion_interruptible(&rtype->work);
++	rc = wait_for_completion_interruptible(&resp_type->work);
+ 	if (rc == 0) {
+ 		rc = ap_msg->rc;
+ 		if (rc == 0)
+@@ -1279,20 +1260,18 @@ static long zcrypt_msgtype6_send_ep11_cprb(bool userspace, struct zcrypt_queue *
+ int prep_rng_ap_msg(struct ap_message *ap_msg, int *func_code,
+ 		    unsigned int *domain)
+ {
+-	struct response_type resp_type = {
+-		.type = CEXXC_RESPONSE_TYPE_XCRB,
+-	};
++	struct ap_response_type *resp_type = &ap_msg->response;
+ 
+ 	ap_msg->bufsize = AP_DEFAULT_MAX_MSG_SIZE;
+-	ap_msg->msg = kmalloc(ap_msg->bufsize, GFP_KERNEL);
++	if (!ap_msg->msg)
++		ap_msg->msg = kmalloc(ap_msg->bufsize, GFP_KERNEL);
+ 	if (!ap_msg->msg)
+ 		return -ENOMEM;
+ 	ap_msg->receive = zcrypt_msgtype6_receive;
+ 	ap_msg->psmid = (((unsigned long)current->pid) << 32) +
+ 				atomic_inc_return(&zcrypt_step);
+-	ap_msg->private = kmemdup(&resp_type, sizeof(resp_type), GFP_KERNEL);
+-	if (!ap_msg->private)
+-		return -ENOMEM;
++
++	resp_type->type = CEXXC_RESPONSE_TYPE_XCRB;
+ 
+ 	rng_type6cprb_msgx(ap_msg, ZCRYPT_RNG_BUFFER_SIZE, domain);
+ 
+@@ -1319,16 +1298,16 @@ static long zcrypt_msgtype6_rng(struct zcrypt_queue *zq,
+ 		short int verb_length;
+ 		short int key_length;
+ 	} __packed * msg = ap_msg->msg;
+-	struct response_type *rtype = ap_msg->private;
++	struct ap_response_type *resp_type = &ap_msg->response;
+ 	int rc;
+ 
+ 	msg->cprbx.domain = AP_QID_QUEUE(zq->queue->qid);
+ 
+-	init_completion(&rtype->work);
++	init_completion(&resp_type->work);
+ 	rc = ap_queue_message(zq->queue, ap_msg);
+ 	if (rc)
+ 		goto out;
+-	rc = wait_for_completion_interruptible(&rtype->work);
++	rc = wait_for_completion_interruptible(&resp_type->work);
+ 	if (rc == 0) {
+ 		rc = ap_msg->rc;
+ 		if (rc == 0)
 -- 
 2.43.0
 
