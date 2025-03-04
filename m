@@ -1,79 +1,79 @@
-Return-Path: <linux-s390+bounces-9329-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-9332-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E50C3A4E9DB
-	for <lists+linux-s390@lfdr.de>; Tue,  4 Mar 2025 18:50:37 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0085EA4EB5D
+	for <lists+linux-s390@lfdr.de>; Tue,  4 Mar 2025 19:24:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1C9D71891483
-	for <lists+linux-s390@lfdr.de>; Tue,  4 Mar 2025 17:45:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 12E6C8A0346
+	for <lists+linux-s390@lfdr.de>; Tue,  4 Mar 2025 17:45:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 359682857FC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6AA128D063;
 	Tue,  4 Mar 2025 17:21:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="M073cy3R"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="izDciSWI"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74DF92853F1
-	for <linux-s390@vger.kernel.org>; Tue,  4 Mar 2025 17:21:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0360E2C374D
+	for <linux-s390@vger.kernel.org>; Tue,  4 Mar 2025 17:21:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741108890; cv=none; b=ot+7o9YR24H8SnoO8kyo0Kk5Wydf9lT60T8C430ZvaVIUaG6+v2OlIaxCD8vK02+EcdZCgOixX96e8ktuNWm2zR1DYPnPsGWc/GYeo+DM9C30SIJasJIXu/6F1h8ieiTuBN1MnpzqjhTz+58oxjCLZwD3xqhtSte71j+8VQAnrw=
+	t=1741108890; cv=none; b=dwMEb8m4HHOA2N6rL1I/qLrpyK4BAM8a7ImkWUKSGXPtcfFAcO8QmWbY9tY3ksFGQvQ+W78NX1hsHuTpdlbPswxmDtbKyzPx/DTW8hqbC/eolQScaQ1bqaB1JC1ID6KOw109+dqJbNOo6Iy6rNRG+RXYqSxVw4eRojT5qFiZ2QA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741108890; c=relaxed/simple;
-	bh=HJky8kPIfYCJ3cOU05ulkvblgacBsoVEh/xMlA1Q1Sk=;
+	bh=Xc5IVwSUBFe34X27I13PlHGPxXrpaB6yCz30nSUvbzw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fyJ5jgkEFHaED4Adujyqmu3X/9Q/4yp8aDg600d9ltaefXwMb9aLIFSzmFThY2PSrmMqR3z6/Bvt7c8+58z7ktVVfYWNxroTx4ZTl7AWsqp+fcDb28apHKgcIRZuwpzh6C+vm6fb5iPQ/wcTw9FWGcr8ygxi7Mr0nRd6FGr0J4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=M073cy3R; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=jG4YHMR3/uq3bSRatb7ZtbjMB7BynpF8dgqiKmGEd7021lsFLUEaflCsfGD14rM6NVKfaecWx3uzqhPvf1VuXTJuqEzMGQCLMGxH+2cStKu8Hw1h14PInNbj35TAASOkdE1yLkb7+cpxWCzB3bwRWhWvDyhODrdGDu8gSbCKaLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=izDciSWI; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 524F6cLR021865;
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 524CS4Bt006540;
 	Tue, 4 Mar 2025 17:21:26 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=VdsS7OOUHSyelCVVW
-	vcvXA72Kbiwtt0JymfFREotTDY=; b=M073cy3RurE26pgozB17eKse4brwhLlws
-	LUVWX9sDprRzUPfy5Vdqe4fxfnUbKnAtgup4myhhBlDCVJgOACWQ6UsfbMw9k0dv
-	aQ+XtwhCu3h/0w9/9tqyDxj/2Ogn2ltPJ26iQQUHEvfh/DGUW/su6n9xe8ppBz35
-	nw1Xzm9jY2G6QwVacftNlC5tTlrmZ65rtvHAnWdKr53vKEwd9EXA5SzZ7MUyOsJm
-	9iXTlnct9MGqdJiejTXzZ6AHsRGpJsikkONeoICPfsnOuCZrqHMtt8kbNHkRre6t
-	CYwpZQE8iGy+Cf9qPdAw9T658hvAyQ9m7XKt+yb+5KdfvLEgOr0DQ==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 455sw7kugy-1
+	:mime-version:references:subject:to; s=pp1; bh=zY1GlZoAIVuefaXbt
+	LiFOIbm5/xKR/FjWMwabxzSjwY=; b=izDciSWIBZyBbzhfXOnLMdiKW7C8NZ3vR
+	2WOLhFaJaKB6gWr4NerIb+rcJHhPlQlvDEJgDQ2m5GWTPaBZQEskZgob7IYe5C8l
+	G9+mARhCnzeN4jU8jU+9mxAkJYS9tlUJtVaQTPVYnKiOpqtIoNAwU1dtUastBwxo
+	YsoI8ap7aJj6ks2Wm+agv7pbf9cJZnc/5T0P5QQFmPbAKQAcg/d/LTUTdfjqbHGM
+	RlJG1xrBjAg3ScdihYs6wB/68aTm1Vg8eCjMjbHh69htaYTpgV1FLhNBG+78txSq
+	F0UlleY//DKGqBBUVBsp1lI+wTuVw4xqt4EGk5B78fJzYy9FV4Hfw==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4561j31fjr-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 04 Mar 2025 17:21:26 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 524F0TN8008934;
-	Tue, 4 Mar 2025 17:21:24 GMT
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 524Fxq7k013776;
+	Tue, 4 Mar 2025 17:21:25 GMT
 Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454cxyenr6-1
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454e2kpep4-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Mar 2025 17:21:24 +0000
+	Tue, 04 Mar 2025 17:21:25 +0000
 Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 524HLLhI29491732
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 524HLL5d29491736
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Tue, 4 Mar 2025 17:21:21 GMT
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0CCDA20040;
+	by IMSVA (Postfix) with ESMTP id 7E15120043;
 	Tue,  4 Mar 2025 17:21:21 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A01A52004B;
-	Tue,  4 Mar 2025 17:21:20 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 1B4662004D;
+	Tue,  4 Mar 2025 17:21:21 +0000 (GMT)
 Received: from funtu2.fritz.box?044ibm.com (unknown [9.171.1.147])
 	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  4 Mar 2025 17:21:20 +0000 (GMT)
+	Tue,  4 Mar 2025 17:21:21 +0000 (GMT)
 From: Harald Freudenberger <freude@linux.ibm.com>
 To: dengler@linux.ibm.com, ifranzki@linux.ibm.com, fcallies@linux.ibm.com,
         hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com
 Cc: linux-s390@vger.kernel.org, herbert@gondor.apana.org.au
-Subject: [PATCH v2 07/20] s390/zcrypt: Rework zcrypt function zcrypt_device_status_mask_ext
-Date: Tue,  4 Mar 2025 18:21:03 +0100
-Message-ID: <20250304172116.85374-8-freude@linux.ibm.com>
+Subject: [PATCH v2 08/20] s390/zcrypt: Introduce pre-allocated device status array for cca misc
+Date: Tue,  4 Mar 2025 18:21:04 +0100
+Message-ID: <20250304172116.85374-9-freude@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250304172116.85374-1-freude@linux.ibm.com>
 References: <20250304172116.85374-1-freude@linux.ibm.com>
@@ -85,215 +85,192 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 7LwLlaFk9ZFhRKn8PDWNZ3qwRDUGcFH9
-X-Proofpoint-GUID: 7LwLlaFk9ZFhRKn8PDWNZ3qwRDUGcFH9
+X-Proofpoint-GUID: dHIyLT55xKPm24iQ1k_9CtX8KxL5zjeZ
+X-Proofpoint-ORIG-GUID: dHIyLT55xKPm24iQ1k_9CtX8KxL5zjeZ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-03-04_07,2025-03-03_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 mlxlogscore=999 mlxscore=0 adultscore=0 bulkscore=0
- malwarescore=0 lowpriorityscore=0 suspectscore=0 clxscore=1015 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 spamscore=0 mlxlogscore=999 phishscore=0 clxscore=1015
+ priorityscore=1501 adultscore=0 mlxscore=0 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2502100000 definitions=main-2503040136
 
-Rework the existing function zcrypt_device_status_mask_ext():
-* Add two new parameters to provide upper limits for
-  cards and queues. The existing implementation needed an
-  array of 256 * 256 * 4 = 256 KB which is really huge. The
-  reworked function is more flexible in the sense that the
-  caller can decide the upper limit for cards and domains to
-  be stored into the status array. So for example a caller may
-  decide to only query for cards 0...127 and queues 0...127
-  and thus only an array of size 128 * 128 * 4 = 64 KB is needed.
-* Instead of void the reworked function now returns an int.
-  The currently only way to have the function return != 0
-  is by providing card or domains limits beyond 256.
+Introduce a pre-allocated device status array memory together with
+a mutex controlling the occupation to be used by the two findcard()
+functions. Limit the device status array to max 128 cards and max
+128 domains to reduce the size of this pre-allocated memory to 64 KB.
 
 Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
 ---
- drivers/s390/crypto/zcrypt_api.c      | 20 +++++++++++++++-----
- drivers/s390/crypto/zcrypt_api.h      |  3 ++-
- drivers/s390/crypto/zcrypt_ccamisc.c  | 22 +++++++++++++++++-----
- drivers/s390/crypto/zcrypt_ep11misc.c | 14 ++++++++++----
- 4 files changed, 44 insertions(+), 15 deletions(-)
+ drivers/s390/crypto/zcrypt_ccamisc.c | 78 +++++++++++++++++++---------
+ 1 file changed, 53 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/s390/crypto/zcrypt_api.c b/drivers/s390/crypto/zcrypt_api.c
-index 62cc05881b13..bd2738e3792a 100644
---- a/drivers/s390/crypto/zcrypt_api.c
-+++ b/drivers/s390/crypto/zcrypt_api.c
-@@ -1317,19 +1317,25 @@ static void zcrypt_device_status_mask(struct zcrypt_device_status *devstatus)
- 	spin_unlock(&zcrypt_list_lock);
- }
- 
--void zcrypt_device_status_mask_ext(struct zcrypt_device_status_ext *devstatus)
-+int zcrypt_device_status_mask_ext(struct zcrypt_device_status_ext *devstatus,
-+				  int maxcard, int maxqueue)
- {
- 	struct zcrypt_card *zc;
- 	struct zcrypt_queue *zq;
- 	struct zcrypt_device_status_ext *stat;
- 	int card, queue;
- 
-+	if (maxcard > MAX_ZDEV_CARDIDS_EXT || maxqueue > MAX_ZDEV_DOMAINS_EXT)
-+		return -EINVAL;
-+
- 	spin_lock(&zcrypt_list_lock);
- 	for_each_zcrypt_card(zc) {
- 		for_each_zcrypt_queue(zq, zc) {
- 			card = AP_QID_CARD(zq->queue->qid);
- 			queue = AP_QID_QUEUE(zq->queue->qid);
--			stat = &devstatus[card * AP_DOMAINS + queue];
-+			if (card >= maxcard || queue >= maxqueue)
-+				continue;
-+			stat = &devstatus[card * maxqueue + queue];
- 			stat->hwtype = zc->card->ap_dev.device_type;
- 			stat->functions = zc->card->hwinfo.fac >> 26;
- 			stat->qid = zq->queue->qid;
-@@ -1337,6 +1343,8 @@ void zcrypt_device_status_mask_ext(struct zcrypt_device_status_ext *devstatus)
- 		}
- 	}
- 	spin_unlock(&zcrypt_list_lock);
-+
-+	return 0;
- }
- EXPORT_SYMBOL(zcrypt_device_status_mask_ext);
- 
-@@ -1635,9 +1643,11 @@ static long zcrypt_unlocked_ioctl(struct file *filp, unsigned int cmd,
- 					 GFP_KERNEL);
- 		if (!device_status)
- 			return -ENOMEM;
--		zcrypt_device_status_mask_ext(device_status);
--		if (copy_to_user((char __user *)arg, device_status,
--				 total_size))
-+		rc = zcrypt_device_status_mask_ext(device_status,
-+						   MAX_ZDEV_CARDIDS_EXT,
-+						   MAX_ZDEV_DOMAINS_EXT);
-+		if (!rc && copy_to_user((char __user *)arg, device_status,
-+					total_size))
- 			rc = -EFAULT;
- 		kvfree(device_status);
- 		return rc;
-diff --git a/drivers/s390/crypto/zcrypt_api.h b/drivers/s390/crypto/zcrypt_api.h
-index 25a339ef52c3..3b57e7437f3d 100644
---- a/drivers/s390/crypto/zcrypt_api.h
-+++ b/drivers/s390/crypto/zcrypt_api.h
-@@ -178,7 +178,8 @@ int zcrypt_api_init(void);
- void zcrypt_api_exit(void);
- long zcrypt_send_cprb(struct ica_xcRB *xcRB, u32 xflags);
- long zcrypt_send_ep11_cprb(struct ep11_urb *urb, u32 xflags);
--void zcrypt_device_status_mask_ext(struct zcrypt_device_status_ext *devstatus);
-+int zcrypt_device_status_mask_ext(struct zcrypt_device_status_ext *devstatus,
-+				  int maxcard, int maxqueue);
- int zcrypt_device_status_ext(int card, int queue,
- 			     struct zcrypt_device_status_ext *devstatus);
- 
 diff --git a/drivers/s390/crypto/zcrypt_ccamisc.c b/drivers/s390/crypto/zcrypt_ccamisc.c
-index 2c2ca2d67e2d..420895df70f0 100644
+index 420895df70f0..65b4cdb9b478 100644
 --- a/drivers/s390/crypto/zcrypt_ccamisc.c
 +++ b/drivers/s390/crypto/zcrypt_ccamisc.c
-@@ -1807,7 +1807,12 @@ static int findcard(u64 mkvp, u16 *pcardnr, u16 *pdomain,
- 				 GFP_KERNEL);
- 	if (!device_status)
- 		return -ENOMEM;
--	zcrypt_device_status_mask_ext(device_status);
+@@ -51,6 +51,22 @@ static DEFINE_SPINLOCK(cca_info_list_lock);
+ #define CPRB_MEMPOOL_ITEM_SIZE (16 * 1024)
+ static mempool_t *cprb_mempool;
+ 
++/*
++ * This is a pre-allocated memory for the device status array
++ * used within the findcard() functions. It is currently
++ * 128 * 128 * 4 bytes = 64 KB big. Usage of this memory is
++ * controlled via dev_status_mem_mutex. Needs adaption if more
++ * than 128 cards or domains to be are supported.
++ */
++#define ZCRYPT_DEV_STATUS_CARD_MAX 128
++#define ZCRYPT_DEV_STATUS_QUEUE_MAX 128
++#define ZCRYPT_DEV_STATUS_ENTRIES (ZCRYPT_DEV_STATUS_CARD_MAX * \
++				   ZCRYPT_DEV_STATUS_QUEUE_MAX)
++#define ZCRYPT_DEV_STATUS_EXT_SIZE (ZCRYPT_DEV_STATUS_ENTRIES * \
++		sizeof(struct zcrypt_device_status_ext))
++static void *dev_status_mem;
++static DEFINE_MUTEX(dev_status_mem_mutex);
 +
-+	rc = zcrypt_device_status_mask_ext(device_status,
-+					   MAX_ZDEV_CARDIDS_EXT,
-+					   MAX_ZDEV_DOMAINS_EXT);
-+	if (rc)
-+		goto out;
+ /*
+  * Simple check if the token is a valid CCA secure AES data key
+  * token. If keybitsize is given, the bitsize of the key is
+@@ -1801,21 +1817,20 @@ static int findcard(u64 mkvp, u16 *pcardnr, u16 *pdomain,
+ 	if (mkvp == 0 || minhwtype < 0)
+ 		return -EINVAL;
+ 
+-	/* fetch status of all crypto cards */
+-	device_status = kvcalloc(MAX_ZDEV_ENTRIES_EXT,
+-				 sizeof(struct zcrypt_device_status_ext),
+-				 GFP_KERNEL);
+-	if (!device_status)
+-		return -ENOMEM;
++	/* occupy the device status memory */
++	mutex_lock(&dev_status_mem_mutex);
++	memset(dev_status_mem, 0, ZCRYPT_DEV_STATUS_EXT_SIZE);
++	device_status = (struct zcrypt_device_status_ext *)dev_status_mem;
+ 
++	/* fetch crypto device status into this struct */
+ 	rc = zcrypt_device_status_mask_ext(device_status,
+-					   MAX_ZDEV_CARDIDS_EXT,
+-					   MAX_ZDEV_DOMAINS_EXT);
++					   ZCRYPT_DEV_STATUS_CARD_MAX,
++					   ZCRYPT_DEV_STATUS_QUEUE_MAX);
+ 	if (rc)
+ 		goto out;
  
  	/* walk through all crypto cards */
- 	for (i = 0; i < MAX_ZDEV_ENTRIES_EXT; i++) {
-@@ -1875,6 +1880,7 @@ static int findcard(u64 mkvp, u16 *pcardnr, u16 *pdomain,
+-	for (i = 0; i < MAX_ZDEV_ENTRIES_EXT; i++) {
++	for (i = 0; i < ZCRYPT_DEV_STATUS_ENTRIES; i++) {
+ 		card = AP_QID_CARD(device_status[i].qid);
+ 		dom = AP_QID_QUEUE(device_status[i].qid);
+ 		if (device_status[i].online &&
+@@ -1842,9 +1857,9 @@ static int findcard(u64 mkvp, u16 *pcardnr, u16 *pdomain,
+ 			cca_info_cache_scrub(card, dom);
+ 		}
+ 	}
+-	if (i >= MAX_ZDEV_ENTRIES_EXT) {
++	if (i >= ZCRYPT_DEV_STATUS_ENTRIES) {
+ 		/* nothing found, so this time without cache */
+-		for (i = 0; i < MAX_ZDEV_ENTRIES_EXT; i++) {
++		for (i = 0; i < ZCRYPT_DEV_STATUS_ENTRIES; i++) {
+ 			if (!(device_status[i].online &&
+ 			      device_status[i].functions & 0x04))
+ 				continue;
+@@ -1864,24 +1879,26 @@ static int findcard(u64 mkvp, u16 *pcardnr, u16 *pdomain,
+ 					oi = i;
+ 			}
+ 		}
+-		if (i >= MAX_ZDEV_ENTRIES_EXT && oi >= 0) {
++		if (i >= ZCRYPT_DEV_STATUS_ENTRIES && oi >= 0) {
+ 			/* old mkvp matched, use this card then */
+ 			card = AP_QID_CARD(device_status[oi].qid);
+ 			dom = AP_QID_QUEUE(device_status[oi].qid);
+ 		}
+ 	}
+-	if (i < MAX_ZDEV_ENTRIES_EXT || oi >= 0) {
++	if (i < ZCRYPT_DEV_STATUS_ENTRIES || oi >= 0) {
+ 		if (pcardnr)
+ 			*pcardnr = card;
+ 		if (pdomain)
+ 			*pdomain = dom;
+-		rc = (i < MAX_ZDEV_ENTRIES_EXT ? 0 : 1);
++		rc = (i < ZCRYPT_DEV_STATUS_ENTRIES ? 0 : 1);
+ 	} else {
  		rc = -ENODEV;
  	}
  
-+out:
- 	kvfree(device_status);
+ out:
+-	kvfree(device_status);
++	/* release the device status memory */
++	mutex_unlock(&dev_status_mem_mutex);
++
  	return rc;
  }
-@@ -1914,7 +1920,7 @@ int cca_findcard2(u32 **apqns, u32 *nr_apqns, u16 cardnr, u16 domain,
- {
- 	struct zcrypt_device_status_ext *device_status;
- 	u32 *_apqns = NULL, _nr_apqns = 0;
--	int i, card, dom, curmatch, oldmatch, rc = 0;
-+	int i, card, dom, curmatch, oldmatch, rc;
+ 
+@@ -1923,16 +1940,15 @@ int cca_findcard2(u32 **apqns, u32 *nr_apqns, u16 cardnr, u16 domain,
+ 	int i, card, dom, curmatch, oldmatch, rc;
  	struct cca_info ci;
  
- 	/* fetch status of all crypto cards */
-@@ -1923,13 +1929,18 @@ int cca_findcard2(u32 **apqns, u32 *nr_apqns, u16 cardnr, u16 domain,
- 				 GFP_KERNEL);
- 	if (!device_status)
- 		return -ENOMEM;
--	zcrypt_device_status_mask_ext(device_status);
-+
-+	rc = zcrypt_device_status_mask_ext(device_status,
-+					   MAX_ZDEV_CARDIDS_EXT,
-+					   MAX_ZDEV_DOMAINS_EXT);
-+	if (rc)
-+		goto out;
- 
- 	/* allocate 1k space for up to 256 apqns */
- 	_apqns = kmalloc_array(256, sizeof(u32), GFP_KERNEL);
- 	if (!_apqns) {
--		kvfree(device_status);
+-	/* fetch status of all crypto cards */
+-	device_status = kvcalloc(MAX_ZDEV_ENTRIES_EXT,
+-				 sizeof(struct zcrypt_device_status_ext),
+-				 GFP_KERNEL);
+-	if (!device_status)
 -		return -ENOMEM;
-+		rc = -ENOMEM;
-+		goto out;
++	/* occupy the device status memory */
++	mutex_lock(&dev_status_mem_mutex);
++	memset(dev_status_mem, 0, ZCRYPT_DEV_STATUS_EXT_SIZE);
++	device_status = (struct zcrypt_device_status_ext *)dev_status_mem;
+ 
++	/* fetch crypto device status into this struct */
+ 	rc = zcrypt_device_status_mask_ext(device_status,
+-					   MAX_ZDEV_CARDIDS_EXT,
+-					   MAX_ZDEV_DOMAINS_EXT);
++					   ZCRYPT_DEV_STATUS_CARD_MAX,
++					   ZCRYPT_DEV_STATUS_QUEUE_MAX);
+ 	if (rc)
+ 		goto out;
+ 
+@@ -1944,7 +1960,7 @@ int cca_findcard2(u32 **apqns, u32 *nr_apqns, u16 cardnr, u16 domain,
  	}
  
  	/* walk through all the crypto apqnss */
-@@ -1994,6 +2005,7 @@ int cca_findcard2(u32 **apqns, u32 *nr_apqns, u16 cardnr, u16 domain,
- 		rc = 0;
+-	for (i = 0; i < MAX_ZDEV_ENTRIES_EXT; i++) {
++	for (i = 0; i < ZCRYPT_DEV_STATUS_ENTRIES; i++) {
+ 		card = AP_QID_CARD(device_status[i].qid);
+ 		dom = AP_QID_QUEUE(device_status[i].qid);
+ 		/* check online state */
+@@ -2006,7 +2022,9 @@ int cca_findcard2(u32 **apqns, u32 *nr_apqns, u16 cardnr, u16 domain,
  	}
  
-+out:
- 	kvfree(device_status);
+ out:
+-	kvfree(device_status);
++	/* release the device status memory */
++	mutex_unlock(&dev_status_mem_mutex);
++
  	return rc;
  }
-diff --git a/drivers/s390/crypto/zcrypt_ep11misc.c b/drivers/s390/crypto/zcrypt_ep11misc.c
-index 86578a95b140..df16294eff9e 100644
---- a/drivers/s390/crypto/zcrypt_ep11misc.c
-+++ b/drivers/s390/crypto/zcrypt_ep11misc.c
-@@ -1603,7 +1603,7 @@ int ep11_findcard2(u32 **apqns, u32 *nr_apqns, u16 cardnr, u16 domain,
- {
- 	struct zcrypt_device_status_ext *device_status;
- 	u32 *_apqns = NULL, _nr_apqns = 0;
--	int i, card, dom, rc = -ENOMEM;
-+	int i, card, dom, rc;
- 	struct ep11_domain_info edi;
- 	struct ep11_card_info eci;
- 
-@@ -1613,13 +1613,18 @@ int ep11_findcard2(u32 **apqns, u32 *nr_apqns, u16 cardnr, u16 domain,
- 				 GFP_KERNEL);
- 	if (!device_status)
+ EXPORT_SYMBOL(cca_findcard2);
+@@ -2023,11 +2041,21 @@ int __init zcrypt_ccamisc_init(void)
+ 		cprb_mempool = NULL;
  		return -ENOMEM;
--	zcrypt_device_status_mask_ext(device_status);
+ 	}
 +
-+	rc = zcrypt_device_status_mask_ext(device_status,
-+					   MAX_ZDEV_CARDIDS_EXT,
-+					   MAX_ZDEV_DOMAINS_EXT);
-+	if (rc)
-+		goto out;
++	/* Pre-allocate one crypto status card struct used in findcard() */
++	dev_status_mem = kvmalloc(ZCRYPT_DEV_STATUS_EXT_SIZE, GFP_KERNEL);
++	if (!dev_status_mem) {
++		ZCRYPT_DBF_ERR("%s allocation of dev_status_mem failed\n", __func__);
++		mempool_destroy(cprb_mempool);
++		return -ENOMEM;
++	}
++
+ 	return 0;
+ }
  
- 	/* allocate 1k space for up to 256 apqns */
- 	_apqns = kmalloc_array(256, sizeof(u32), GFP_KERNEL);
- 	if (!_apqns) {
--		kvfree(device_status);
--		return -ENOMEM;
-+		rc = -ENOMEM;
-+		goto out;
- 	}
- 
- 	/* walk through all the crypto apqnss */
-@@ -1673,6 +1678,7 @@ int ep11_findcard2(u32 **apqns, u32 *nr_apqns, u16 cardnr, u16 domain,
- 		rc = 0;
- 	}
- 
-+out:
- 	kvfree(device_status);
- 	return rc;
+ void zcrypt_ccamisc_exit(void)
+ {
+ 	mkvp_cache_free();
++	kvfree(dev_status_mem);
+ 	mempool_destroy(cprb_mempool);
  }
 -- 
 2.43.0
