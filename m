@@ -1,166 +1,203 @@
-Return-Path: <linux-s390+bounces-9347-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-9324-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15159A4EB3A
-	for <lists+linux-s390@lfdr.de>; Tue,  4 Mar 2025 19:22:10 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62376A4EC03
+	for <lists+linux-s390@lfdr.de>; Tue,  4 Mar 2025 19:40:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C151C7AC56C
-	for <lists+linux-s390@lfdr.de>; Tue,  4 Mar 2025 18:21:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2F8A28A4B15
+	for <lists+linux-s390@lfdr.de>; Tue,  4 Mar 2025 17:45:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BB401F17E9;
-	Tue,  4 Mar 2025 18:09:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD9192853E8;
+	Tue,  4 Mar 2025 17:21:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J2PnJ8Er";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GwBc4N7J"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FfssWd2o"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from beeline1.cc.itu.edu.tr (beeline1.cc.itu.edu.tr [160.75.25.115])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE733280404
-	for <linux-s390@vger.kernel.org>; Tue,  4 Mar 2025 18:09:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=160.75.25.115
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741111794; cv=fail; b=SaFrq8Eycm5dkMty6LMYHHReUQVxWwio9LCQQAE5FR6E+JxZPRkRT5rJTqRJwr5hoXzHz2pp4L7ZIcdnW8YPmE0u28+SlSFwEOMJrR21IqRUBEjZLlPtzeCAnrcokOejrkhtT5NQ3N/DLpS3vfZ4L6d+fih4kmzrFqzTcYkLX1U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741111794; c=relaxed/simple;
-	bh=0xL0F9rdElvB+NQbmj2NrRU9PnlyhTsMf4tikqFVt+Q=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uIsUEI953L9u9WnK0yWPa3I0MNzJDwfYmnhgiD7UnB4Pzi9UIL6Y9k4C0erPi/yVkAFyO1+DnhwmziRAAzo0uitVkpALp09cofmXomHA8+6bZGENc9tEcogriOTSlTGdkBBOExaPwHAltO5hmw43cq9ll6w062apabPPW//xks0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linutronix.de; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=fail (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J2PnJ8Er reason="signature verification failed"; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GwBc4N7J; arc=none smtp.client-ip=193.142.43.55; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; arc=fail smtp.client-ip=160.75.25.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr
-Received: from lesvatest1.cc.itu.edu.tr (lesvatest1.cc.itu.edu.tr [10.146.128.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by beeline1.cc.itu.edu.tr (Postfix) with ESMTPS id 61BAC408B64C
-	for <linux-s390@vger.kernel.org>; Tue,  4 Mar 2025 21:09:51 +0300 (+03)
-X-Envelope-From: <root@cc.itu.edu.tr>
-Authentication-Results: lesvatest1.cc.itu.edu.tr;
-	dkim=fail reason="signature verification failed" (2048-bit key, unprotected) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=J2PnJ8Er;
-	dkim=fail reason="signature verification failed" header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=GwBc4N7J
-Received: from lesva1.cc.itu.edu.tr (unknown [160.75.70.79])
-	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6dCK5nlGzFwNs
-	for <linux-s390@vger.kernel.org>; Tue,  4 Mar 2025 17:21:17 +0300 (+03)
-Received: by le1 (Postfix, from userid 0)
-	id 4DBB34278D; Tue,  4 Mar 2025 17:20:58 +0300 (+03)
-Authentication-Results: lesva1.cc.itu.edu.tr;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J2PnJ8Er;
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GwBc4N7J
-X-Envelope-From: <linux-kernel+bounces-541541-bozkiru=itu.edu.tr@vger.kernel.org>
-Authentication-Results: lesva2.cc.itu.edu.tr;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J2PnJ8Er;
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GwBc4N7J
-Received: from fgw1.itu.edu.tr (fgw1.itu.edu.tr [160.75.25.103])
-	by le2 (Postfix) with ESMTP id 0982542978
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 14:25:07 +0300 (+03)
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by fgw1.itu.edu.tr (Postfix) with SMTP id 93E8C3063EFC
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 14:25:07 +0300 (+03)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 282E83BD09A
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 11:17:39 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 225271F3FCB;
-	Mon,  3 Mar 2025 11:11:25 +0000 (UTC)
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BCB41FBEAF;
-	Mon,  3 Mar 2025 11:11:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FDFD283CAF
+	for <linux-s390@vger.kernel.org>; Tue,  4 Mar 2025 17:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741000281; cv=none; b=athv0CKh7zM7vFISJQg4WlOv7FrUaI0AwztdvCYwSMSOlZQ7HzVM4Sqa4yfo7XwngoE+tlfYy+KxcGi6bUZrnxIe3oe0gNBoGvcW1q879oVKg5SBMXlhlx2OCYM1SbSWXbwY6maJWwRqIJRavzHiKZ7/vDO5ZPrfJPv9yg8GQ4E=
+	t=1741108886; cv=none; b=ntALn2Bx0ABtzlvJ5lCNomfwXinYpyez/CkpS7vNC5lNM47fPresVl4bxD5MSdfrSTJ0xYWxCRV7UWuA5lOLmimzzJKXahJM1ZQtzFJT3GP9+3R0edzvgToS/Klrf7U7KdSDHCziyp1eaSNgEMrX4WJf/ywSmThMSryebmUcUCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741000281; c=relaxed/simple;
-	bh=98E4VrqWtF5AW/xLBGM4T2qtKg+zPc3dVoKozXn+hFA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TIzTo9XaJwaMXRDzZQRL78CEfCNqff3GbkRC9kVMhP+8V+9E1OfEJ/PeI/Gw9kIjz0pBdwmEJFRdU59JoThUL5ClfHJB04W4Wo6Eycj/hLM7mmSN1iJ3W/Omkir9y8/3HOabtAaLyFmi4IF/7ouBVjOwBXf9tiLgVesJGU+hqSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J2PnJ8Er; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GwBc4N7J; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741000277;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kZM1ca5Q9+J4hpNMdg9ysh15hAgKOmycAt5hVatLnOo=;
-	b=J2PnJ8ErcXhVIuRvqvkHXj7+dnNdS1EYL5YDEQZoOxgEkdIVKIFeg07b0VEIi3KThnzbt0
-	ah3FK8WH0SUuZVYvxjp9pmpwO9vjxDPFsKHVNT/DUtprc2AbKlrSe/944ut+VipnhpibNE
-	29SbO2Xuxo/jL/txmYAIO16qHVwJFP+bvw3QcgHJXU/FohbxePmQm/Y+7++xwQnw/Hws2/
-	Hfq0VCWqKAR6lbMcAGPJux4b9Ev4LSi4bIfjXBPTW28XOqHQejdiPSeTSjqNqMnc5FIwO/
-	uUO5w4RFlrbUUu8nnclDM2MIzMtXJU72CkI7ELp9NW9W5sVsPcqWIk3/EMh6Aw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741000277;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kZM1ca5Q9+J4hpNMdg9ysh15hAgKOmycAt5hVatLnOo=;
-	b=GwBc4N7JUlvmihVy8GcCVvbKSPyE3aY+zPykltsPgrrIWLNMhdZU0VqRTlm2Ku0wvazGx9
-	XnuHfIQjnht8pgCw==
-Date: Mon, 03 Mar 2025 12:11:19 +0100
-Subject: [PATCH 17/19] powerpc/vdso: Prepare introduction of struct
- vdso_clock
-Precedence: bulk
+	s=arc-20240116; t=1741108886; c=relaxed/simple;
+	bh=UVeWl3tUjJp3gcde9t2BA84PFjIsktftwUcbybqe7KM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iQgZutno7VBqMzPSHcj7qg77V9NrnuauanXEja25ARHyT4iNZGzNSeAgCTMfu9PoQjCFNcaHNbMExicKGoK/9ituyZjzK63gL2WVhIlkJu1vsg/rZNmbxJBSuwhk3db2+84PvpNLNfKwaah+AhHWioJNiwvTWqLwWDweCdFeyRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FfssWd2o; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 524CSboM007621;
+	Tue, 4 Mar 2025 17:21:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=XdULB0FkkYJpDKMEmupdMxDPd5UyGG5lu9JRQBhmS
+	N0=; b=FfssWd2olb+wOT0O+Avl+5u031W4YBgqqAThUvrlZBZL8IN1FhTo06Dje
+	GTWvJj9hMqDs3ySwmKceSpgZ3sASsZM4ugtGDIHWAyZ4CVSoWbt00b8tJWgUU1hI
+	huHjZ8z4cmvZBj9gl2xmvdG/eHZfumbPpn7AQMOH2rvqkmtvd/SLpIpvpZOwa8k6
+	274J8c71MCFSpNiePF9RjsIz5T/Hdb6+GKRIhctJSvxElyqWBlzZpVM2a7buDqAO
+	+wc3lT0YVEdqDOb/DH6RFqAx9e5LEA2VEF5CKjdsJbr8n+Dmihf6X94KJ6aEuW60
+	dXqtAFD+RfEIWROCBcwt3hq/H58TQ==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4561j31fhr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Mar 2025 17:21:22 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 524Gf6QU020788;
+	Tue, 4 Mar 2025 17:21:21 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 454esjx78m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Mar 2025 17:21:21 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 524HLH6u35521276
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 4 Mar 2025 17:21:17 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6D3DA20043;
+	Tue,  4 Mar 2025 17:21:17 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1F2F420040;
+	Tue,  4 Mar 2025 17:21:17 +0000 (GMT)
+Received: from funtu2.fritz.box?044ibm.com (unknown [9.171.1.147])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  4 Mar 2025 17:21:17 +0000 (GMT)
+From: Harald Freudenberger <freude@linux.ibm.com>
+To: dengler@linux.ibm.com, ifranzki@linux.ibm.com, fcallies@linux.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com
+Cc: linux-s390@vger.kernel.org, herbert@gondor.apana.org.au
+Subject: [PATCH v2 00/20] AP bus/zcrypt/pkey/paes no-mem-alloc patches
+Date: Tue,  4 Mar 2025 18:20:56 +0100
+Message-ID: <20250304172116.85374-1-freude@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <20250303-vdso-clock-v1-17-c1b5c69a166f@linutronix.de>
-References: <20250303-vdso-clock-v1-0-c1b5c69a166f@linutronix.de>
-In-Reply-To: <20250303-vdso-clock-v1-0-c1b5c69a166f@linutronix.de>
-To: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
- Vincenzo Frascino <vincenzo.frascino@arm.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
- Anna-Maria Behnsen <anna-maria@linutronix.de>, 
- Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
- Vasily Gorbik <gor@linux.ibm.com>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Sven Schnelle <svens@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
- linux-arch@vger.kernel.org, Nam Cao <namcao@linutronix.de>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741000267; l=1274;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=J/Meo4khXD/IuyjcSchvegknYNCvt5RiCWDXgeCNEuA=;
- b=ipqT0aYN+nLJcWWGgAiulZ2z34jv+h8RZjUb8zE4PSrDBBV3fg7CNnQswUAW4p7fvphbY9V95
- iF6oxWHwSrZAnFYXR+PzpHDR0Rb2CslyLmtoDfl4dn1AAze7BQJj/Ii
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
-Content-Transfer-Encoding: quoted-printable
-X-ITU-Libra-ESVA-Information: Please contact Istanbul Teknik Universitesi for more information
-X-ITU-Libra-ESVA-ID: 4Z6dCK5nlGzFwNs
-X-ITU-Libra-ESVA: No virus found
-X-ITU-Libra-ESVA-From: root@cc.itu.edu.tr
-X-ITU-Libra-ESVA-Watermark: 1741716478.397@5Eu9z0RBDi5i3p2UaApPzA
-X-ITU-MailScanner-SpamCheck: not spam
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: xZzRUfGYk8Lhy4MMegmLa7M-Qn7d3xBB
+X-Proofpoint-ORIG-GUID: xZzRUfGYk8Lhy4MMegmLa7M-Qn7d3xBB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-04_07,2025-03-03_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 spamscore=0 mlxlogscore=999 phishscore=0 clxscore=1015
+ priorityscore=1501 adultscore=0 mlxscore=0 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2503040136
 
-From: Nam Cao <namcao@linutronix.de>
+This series of patches has the goal to open up a do-not-allocate
+memory path from the callers of the pkey in-kernel api down to
+the crypto cards and back.
 
-To support multiple PTP clocks, the VDSO data structure needs to be
-reworked. All clock specific data will end up in struct vdso_clock and in
-struct vdso_time_data there will be array of it. By now, vdso_clock is
-simply a define which maps vdso_clock to vdso_time_data.
+The asynch in-kernel cipher implementations (and the s390 PAES
+cipher implementations are one of them) may be called in a
+context where memory allocations which trigger IO is not acceptable.
 
-To prepare for the rework of the data structures, replace the struct
-vdso_time_data pointer with struct vdso_clock pointer whenever applicable=
+So this patch series reworks the AP bus code, the zcrypt layer,
+the pkey layer and the pkey handlers to respect this situation
+by processing a new parameter xflags (execution hints flags).
+There is a flag PKEY_XFLAG_NOMEMALLOC which tells the code to
+not allocate memory which may lead to IO operations.
+
+To reach this goal, the actual code changes have been differed.
+The zcrypt misc functions which need memory for cprb build
+use a pre allocated memory pool for this purpose. The findcard()
+functions have one temp memory area preallocated and protected
+with a mutex. Some smaller data is not allocated any more but went
+to the stack instead. The AP bus also uses a pre-allocated
+memory pool for building AP message requests.
+
+Note that the PAES implementation still needs to get reworked
+to run the protected key derivation in a real asynchronous way.
+However, this rework of AP bus, zcrypt and pkey is the base work
+required before reconsidering the PAES implementation.
+
+The patch series starts bottom (AP bus) and goes up the call
+chain (PKEY). At any time in the patch stack it should compile.
+For easier review I tried to have one logic code change by
+each patch and thus keep the patches "small". For the upstream
+version I intend to fold them together into only a few commits.
+
+Changelog:
+v1: initial version
+v2: - Rework on patch 0001 and 0002 based on feedback from Holger.
+      Also there was one place in zcrypt_msgtype50.c where still
+      an ap msg buffer was alloacated.
+    - Rework on patch 0003 - fixed feedback from Holger. Also the
+      min poolitems is now a module parameter and defaults to 8.
+    - Rework on patch 0004 - as suggested by Holger the "userspace"
+      parameter is now included into the ap msg flags.
+    - Rework on patch 0005 - nr of cca cprbs in the mempool is now
+      a module parameter.
+    - Rework on patch 0006 - nr of ep11 cprbs in the mempool is now
+      a module parameter.
+    - Rework on patch 0007 - as suggested by Holger instead of
+      implementing a copy-and-pasted new function
+      zcrypt_device_status_mask_ext2() use and extend the existing
+      the existing function to avoid code duplication.
+    - The rest of the patch series needed adaptions but there is
+      no functional change compared to v1.
+
+Harald Freudenberger (20):
+  s390/ap: Move response_type struct into ap_msg struct
+  s390/ap/zcrypt: Rework AP message buffer allocation
+  s390/ap: Introduce ap message buffer pool
+  s390/ap/zcrypt: New xflag parameter and extension of the ap msg flags
+  s390/zcrypt: Introduce cprb mempool for cca misc functions
+  s390/zcrypt: Introduce cprb mempool for ep11 misc functions
+  s390/zcrypt: Rework zcrypt function zcrypt_device_status_mask_ext
+  s390/zcrypt: Introduce pre-allocated device status array for cca misc
+  s390/zcrypt: Introduce pre-allocated device status array for ep11 misc
+  s390/zcrypt/pkey: Rework cca findcard() implementation and callers
+  s390/zcrypt/pkey: Rework ep11 findcard() implementation and callers
+  s390/zcrypt: Rework cca misc functions kmallocs to use the cprb
+    mempool
+  s390/zcrypt: Add small mempool for cca info list entries
+  s390/zcrypt: Locate ep11_domain_query_info onto the stack instead of
+    kmalloc
+  s390/zcrypt: Rework ep11 misc functions to use cprb mempool
+  s390/zcrypt: Add small mempool for ep11 card info list entries
+  s390/pkey: Rework CCA pkey handler to use stack for small memory
+    allocs
+  s390/pkey: Rework EP11 pkey handler to use stack for small memory
+    allocs
+  s390/zcrypt/pkey: Provide and pass xflags within pkey and zcrypt
+    layers
+  s390/pkey/crypto: Introduce xflags param for pkey in-kernel API
+
+ arch/s390/crypto/paes_s390.c           |   2 +-
+ arch/s390/include/asm/pkey.h           |  15 +-
+ drivers/s390/crypto/ap_bus.c           |  73 +++++
+ drivers/s390/crypto/ap_bus.h           |  37 +--
+ drivers/s390/crypto/pkey_api.c         |  54 ++--
+ drivers/s390/crypto/pkey_base.c        |  34 ++-
+ drivers/s390/crypto/pkey_base.h        |  37 ++-
+ drivers/s390/crypto/pkey_cca.c         | 121 ++++----
+ drivers/s390/crypto/pkey_ep11.c        | 106 +++----
+ drivers/s390/crypto/pkey_pckmo.c       |   9 +-
+ drivers/s390/crypto/pkey_sysfs.c       |   4 +-
+ drivers/s390/crypto/pkey_uv.c          |  16 +-
+ drivers/s390/crypto/zcrypt_api.c       | 172 +++++++----
+ drivers/s390/crypto/zcrypt_api.h       |  42 ++-
+ drivers/s390/crypto/zcrypt_ccamisc.c   | 350 +++++++++++++++-------
+ drivers/s390/crypto/zcrypt_ccamisc.h   |  41 +--
+ drivers/s390/crypto/zcrypt_cex4.c      |  16 +-
+ drivers/s390/crypto/zcrypt_ep11misc.c  | 387 ++++++++++++++++---------
+ drivers/s390/crypto/zcrypt_ep11misc.h  |  28 +-
+ drivers/s390/crypto/zcrypt_msgtype50.c |  36 ++-
+ drivers/s390/crypto/zcrypt_msgtype6.c  | 121 ++++----
+ drivers/s390/crypto/zcrypt_msgtype6.h  |   4 +-
+ 22 files changed, 1032 insertions(+), 673 deletions(-)
+
+--
+2.43.0
+
 
