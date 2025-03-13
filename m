@@ -1,539 +1,235 @@
-Return-Path: <linux-s390+bounces-9443-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-9445-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BB4AA5E3DA
-	for <lists+linux-s390@lfdr.de>; Wed, 12 Mar 2025 19:49:41 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6044A5ED42
+	for <lists+linux-s390@lfdr.de>; Thu, 13 Mar 2025 08:47:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E9EE5189A84F
-	for <lists+linux-s390@lfdr.de>; Wed, 12 Mar 2025 18:49:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 460523B3414
+	for <lists+linux-s390@lfdr.de>; Thu, 13 Mar 2025 07:47:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3FB125744E;
-	Wed, 12 Mar 2025 18:49:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DD6E25F97C;
+	Thu, 13 Mar 2025 07:47:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="s8ii1kH0"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PggQ7cNO"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E91258CD6;
-	Wed, 12 Mar 2025 18:49:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5791C84AA;
+	Thu, 13 Mar 2025 07:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741805364; cv=none; b=JfZLNXjwfV/5vlD9NN57AHoP/Ef628IMgiWlDoVXrFblyAChuvQU0t8n47bGw1qTr+TEyNSNB+TY6MAOOwUBIO27JKpjWJOInTG3AxfCWMGWpYUHaftq1H15UN5jteIbqmMxV69qvCdOyipt0xrjFney1Yfi4vxR0cb0m88N5bY=
+	t=1741852070; cv=none; b=uJ8y9kooR3EICvreQUQdmQqv8q3DzI8tv7WDhxMn6OtQK3WZc912+ts7Lu+65snJzXgQZFdNXAlMdiD/M2a6kIs+q2mXf4+ioipKPirzm6CuMKWLSuDwcqeZeyDhvJ/N9lqfNqjFvd/BTj0+M1uOl0H4DSCQ1wG+GPLXOFWIemk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741805364; c=relaxed/simple;
-	bh=DmIQBNPxCkSnC+XwfLMKqNbeV1vxdX9Bb1YpACve2rI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q1eZx2z4X0MZap9uSsIOoHEk8fbO+kcd4iETkik1dkXtnnQOMrWTg4HDaK+aEvEAujRB7vVDCOi0V/aUiVHNl/tkbDjnhjKZata59hGrmNs+gDeTz4ZFOWYohL7wB6qxBOT0GEY1qRFpBNmcTMAYM3xxveAo3q29WJqvW3GX7Dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=s8ii1kH0; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1741852070; c=relaxed/simple;
+	bh=W3UPsC0myzOAp3Fllix+rHiBPdE0rsYU/7717F4GDZk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iOOLIXa8tzWJ8Am1iDAwVxY24u7MC9PhHDTftq2aqVDxy0LbLZXwP3+lWEBnGK4tAv5X3GxPrvc8em0Rizzssbgkmrx1oYza5WHQgJro3btAzkG4lIUWfBAzbJlxcmhzSMT9g5QNwYLdIJRbDBPQ43YjqX5vIrst8c4SNmZ5XXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PggQ7cNO; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52CE3Dgd023091;
-	Wed, 12 Mar 2025 18:49:18 GMT
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52CKZoIu026642;
+	Thu, 13 Mar 2025 07:47:41 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=Pf9iND1o9enBdYU7H
-	AxmnncuZjJFOmWp3hST91krQ7Y=; b=s8ii1kH0WAYZx9yrdMvUf8F3O+WYXZ2P6
-	nIJiCicouq5p70na2QPIZl4eCAapb9zCDSPc8NW2cshfz9w14aJTvzEKq5qmsJ5t
-	Jbn/NSXMhK8QlCgap3Qefsgz3AUu9b6BCPMo7F2NPykzeBM1sxCRzRtCN2POpm41
-	rfTU/URqs4cWDWlygSaNGtz62pDYeqprjJanJbKXWxtO0eDiVtvd7xcKku1s7Ako
-	eaZu0um+yKYbGD3hZ1kzhsTP7lJNi4IN6JK0Rp/C6Ya6HaVvDtMhuov5VI4c6HGd
-	9jFnGRtCl78Hft03K81xXjOyGEJ+YVvoxuNzzCvhUSv4+vJ2Sm2eg==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45bbppshwk-1
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=6KKLZv
+	+Ah3wluN0jEfHqdNL/PYQ+sFgKqpAxlzMlagg=; b=PggQ7cNOWRJXkg4gBqwZnR
+	lLAkdI8ACoWhJJ6/QN+fMzdfX5GY6wHp9ox8q/BqvFAWNrV0pfUwDLSqBTkXbq7K
+	pl1J758W3YxKSJpRnXwsSeGVYKo33NjQTodJm/2iMb8+mYssMVt6nggsmD43L//H
+	7wl3v3pmr8x/MZwCh8lv37ZUYlKsVU21X7Rdr6tV/RdPiPQ6a/xs4DjKMMLdkO5n
+	tpeSEyyAYmfzkrJGJdtmsXCg1yeiy7q8FALgza+O931Jn30DHtnOT9xnWQbK9N26
+	llDtRzAvMrhhoOdUL2zTQj0MJEkNCu2PU2F+x7fHzsF5NO62rcWuLWirYFpKQZ+A
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45bhepj9gv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Mar 2025 18:49:18 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52CH8C5x015405;
-	Wed, 12 Mar 2025 18:49:17 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 45atspdq40-1
+	Thu, 13 Mar 2025 07:47:41 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52D7VU1H017576;
+	Thu, 13 Mar 2025 07:47:40 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45bhepj9gs-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Mar 2025 18:49:17 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52CInEvl36766058
+	Thu, 13 Mar 2025 07:47:40 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52D4mhNq026166;
+	Thu, 13 Mar 2025 07:47:39 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 45atspgjva-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Mar 2025 07:47:39 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52D7lccr28770854
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 12 Mar 2025 18:49:14 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 06F5B20040;
-	Wed, 12 Mar 2025 18:49:14 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 98C692004B;
-	Wed, 12 Mar 2025 18:49:13 +0000 (GMT)
-Received: from p-imbrenda.boeblingen.de.ibm.com (unknown [9.152.224.66])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 12 Mar 2025 18:49:13 +0000 (GMT)
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: kvm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        frankja@linux.ibm.com, borntraeger@de.ibm.com, david@redhat.com,
-        nrb@linux.ibm.com, seiden@linux.ibm.com, nsg@linux.ibm.com,
-        schlameuss@linux.ibm.com, hca@linux.ibm.com
-Subject: [PATCH v5 1/1] KVM: s390: pv: fix race when making a page secure
-Date: Wed, 12 Mar 2025 19:49:12 +0100
-Message-ID: <20250312184912.269414-2-imbrenda@linux.ibm.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250312184912.269414-1-imbrenda@linux.ibm.com>
-References: <20250312184912.269414-1-imbrenda@linux.ibm.com>
+	Thu, 13 Mar 2025 07:47:38 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 197405806F;
+	Thu, 13 Mar 2025 07:47:38 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1424758087;
+	Thu, 13 Mar 2025 07:46:58 +0000 (GMT)
+Received: from [9.179.27.216] (unknown [9.179.27.216])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 13 Mar 2025 07:46:57 +0000 (GMT)
+Message-ID: <80afe99b-ca14-4b21-a200-1d695ed6ae63@linux.ibm.com>
+Date: Thu, 13 Mar 2025 08:46:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2] net/smc: use the correct ndev to find pnetid
+ by pnetid table
+To: Guangguan Wang <guangguan.wang@linux.alibaba.com>, pasic@linux.ibm.com,
+        jaka@linux.ibm.com, alibuda@linux.alibaba.com,
+        tonylu@linux.alibaba.com, guwen@linux.alibaba.com,
+        mjambigi@linux.ibm.com, sidraya@linux.ibm.com
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com, horms@kernel.org, linux-rdma@vger.kernel.org,
+        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250304124304.13732-1-guangguan.wang@linux.alibaba.com>
+Content-Language: en-US
+From: Wenjia Zhang <wenjia@linux.ibm.com>
+In-Reply-To: <20250304124304.13732-1-guangguan.wang@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 3Z-r9aPYrh9rK8W_DmpzyGdQWj7qDzQN
-X-Proofpoint-GUID: 3Z-r9aPYrh9rK8W_DmpzyGdQWj7qDzQN
+X-Proofpoint-GUID: BEvM-THc_fy69j_TOkPvOEkro3aniTba
+X-Proofpoint-ORIG-GUID: 7Ruz8LHPlvLXZIsG537MxOl_DWe-m7js
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-12_06,2025-03-11_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 phishscore=0 lowpriorityscore=0 impostorscore=0 spamscore=0
- adultscore=0 malwarescore=0 bulkscore=0 clxscore=1015 mlxscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503120128
+ definitions=2025-03-13_03,2025-03-11_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 impostorscore=0 bulkscore=0 phishscore=0 spamscore=0
+ suspectscore=0 mlxscore=0 malwarescore=0 clxscore=1011 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503130058
 
-Holding the pte lock for the page that is being converted to secure is
-needed to avoid races. A previous commit removed the locking, which
-caused issues. Fix by locking the pte again.
 
-Fixes: 5cbe24350b7d ("KVM: s390: move pv gmap functions into kvm")
-Reported-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Tested-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-[david@redhat.com: replace use of get_locked_pte() with folio_walk_start()]
----
- arch/s390/include/asm/gmap.h |   1 -
- arch/s390/include/asm/uv.h   |   2 +-
- arch/s390/kernel/uv.c        | 136 +++++++++++++++++++++++++++++++++--
- arch/s390/kvm/gmap.c         | 103 ++------------------------
- arch/s390/kvm/kvm-s390.c     |  25 ++++---
- arch/s390/mm/gmap.c          |  28 --------
- 6 files changed, 151 insertions(+), 144 deletions(-)
 
-diff --git a/arch/s390/include/asm/gmap.h b/arch/s390/include/asm/gmap.h
-index 4e73ef46d4b2..9f2814d0e1e9 100644
---- a/arch/s390/include/asm/gmap.h
-+++ b/arch/s390/include/asm/gmap.h
-@@ -139,7 +139,6 @@ int s390_replace_asce(struct gmap *gmap);
- void s390_uv_destroy_pfns(unsigned long count, unsigned long *pfns);
- int __s390_uv_destroy_range(struct mm_struct *mm, unsigned long start,
- 			    unsigned long end, bool interruptible);
--int kvm_s390_wiggle_split_folio(struct mm_struct *mm, struct folio *folio, bool split);
- unsigned long *gmap_table_walk(struct gmap *gmap, unsigned long gaddr, int level);
- 
- /**
-diff --git a/arch/s390/include/asm/uv.h b/arch/s390/include/asm/uv.h
-index b11f5b6d0bd1..46fb0ef6f984 100644
---- a/arch/s390/include/asm/uv.h
-+++ b/arch/s390/include/asm/uv.h
-@@ -631,7 +631,7 @@ int uv_pin_shared(unsigned long paddr);
- int uv_destroy_folio(struct folio *folio);
- int uv_destroy_pte(pte_t pte);
- int uv_convert_from_secure_pte(pte_t pte);
--int make_folio_secure(struct folio *folio, struct uv_cb_header *uvcb);
-+int make_hva_secure(struct mm_struct *mm, unsigned long hva, struct uv_cb_header *uvcb);
- int uv_convert_from_secure(unsigned long paddr);
- int uv_convert_from_secure_folio(struct folio *folio);
- 
-diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
-index 9f05df2da2f7..9a5d5be8acf4 100644
---- a/arch/s390/kernel/uv.c
-+++ b/arch/s390/kernel/uv.c
-@@ -206,6 +206,39 @@ int uv_convert_from_secure_pte(pte_t pte)
- 	return uv_convert_from_secure_folio(pfn_folio(pte_pfn(pte)));
- }
- 
-+/**
-+ * should_export_before_import - Determine whether an export is needed
-+ * before an import-like operation
-+ * @uvcb: the Ultravisor control block of the UVC to be performed
-+ * @mm: the mm of the process
-+ *
-+ * Returns whether an export is needed before every import-like operation.
-+ * This is needed for shared pages, which don't trigger a secure storage
-+ * exception when accessed from a different guest.
-+ *
-+ * Although considered as one, the Unpin Page UVC is not an actual import,
-+ * so it is not affected.
-+ *
-+ * No export is needed also when there is only one protected VM, because the
-+ * page cannot belong to the wrong VM in that case (there is no "other VM"
-+ * it can belong to).
-+ *
-+ * Return: true if an export is needed before every import, otherwise false.
-+ */
-+static bool should_export_before_import(struct uv_cb_header *uvcb, struct mm_struct *mm)
-+{
-+	/*
-+	 * The misc feature indicates, among other things, that importing a
-+	 * shared page from a different protected VM will automatically also
-+	 * transfer its ownership.
-+	 */
-+	if (uv_has_feature(BIT_UV_FEAT_MISC))
-+		return false;
-+	if (uvcb->cmd == UVC_CMD_UNPIN_PAGE_SHARED)
-+		return false;
-+	return atomic_read(&mm->context.protected_count) > 1;
-+}
-+
- /*
-  * Calculate the expected ref_count for a folio that would otherwise have no
-  * further pins. This was cribbed from similar functions in other places in
-@@ -228,7 +261,7 @@ static int expected_folio_refs(struct folio *folio)
- }
- 
- /**
-- * make_folio_secure() - make a folio secure
-+ * __make_folio_secure() - make a folio secure
-  * @folio: the folio to make secure
-  * @uvcb: the uvcb that describes the UVC to be used
-  *
-@@ -237,20 +270,18 @@ static int expected_folio_refs(struct folio *folio)
-  *
-  * Return: 0 on success;
-  *         -EBUSY if the folio is in writeback or has too many references;
-- *         -E2BIG if the folio is large;
-  *         -EAGAIN if the UVC needs to be attempted again;
-  *         -ENXIO if the address is not mapped;
-  *         -EINVAL if the UVC failed for other reasons.
-  *
-  * Context: The caller must hold exactly one extra reference on the folio
-- *          (it's the same logic as split_folio())
-+ *          (it's the same logic as split_folio()), and the folio must be
-+ *          locked.
-  */
--int make_folio_secure(struct folio *folio, struct uv_cb_header *uvcb)
-+static int __make_folio_secure(struct folio *folio, struct uv_cb_header *uvcb)
- {
- 	int expected, cc = 0;
- 
--	if (folio_test_large(folio))
--		return -E2BIG;
- 	if (folio_test_writeback(folio))
- 		return -EBUSY;
- 	expected = expected_folio_refs(folio) + 1;
-@@ -277,7 +308,98 @@ int make_folio_secure(struct folio *folio, struct uv_cb_header *uvcb)
- 		return -EAGAIN;
- 	return uvcb->rc == 0x10a ? -ENXIO : -EINVAL;
- }
--EXPORT_SYMBOL_GPL(make_folio_secure);
-+
-+static int make_folio_secure(struct mm_struct *mm, struct folio *folio, struct uv_cb_header *uvcb)
-+{
-+	int rc;
-+
-+	if (!folio_trylock(folio))
-+		return -EAGAIN;
-+	if (should_export_before_import(uvcb, mm))
-+		uv_convert_from_secure(folio_to_phys(folio));
-+	rc = __make_folio_secure(folio, uvcb);
-+	folio_unlock(folio);
-+
-+	return rc;
-+}
-+
-+/**
-+ * s390_wiggle_split_folio() - try to drain extra references to a folio and optionally split.
-+ * @mm:    the mm containing the folio to work on
-+ * @folio: the folio
-+ * @split: whether to split a large folio
-+ *
-+ * Context: Must be called while holding an extra reference to the folio;
-+ *          the mm lock should not be held.
-+ * Return: 0 if the folio was split successfully;
-+ *         -EAGAIN if the folio was not split successfully but another attempt
-+ *                 can be made, or if @split was set to false;
-+ *         -EINVAL in case of other errors. See split_folio().
-+ */
-+static int s390_wiggle_split_folio(struct mm_struct *mm, struct folio *folio, bool split)
-+{
-+	int rc;
-+
-+	lockdep_assert_not_held(&mm->mmap_lock);
-+	folio_wait_writeback(folio);
-+	lru_add_drain_all();
-+	if (split) {
-+		folio_lock(folio);
-+		rc = split_folio(folio);
-+		folio_unlock(folio);
-+
-+		if (rc != -EBUSY)
-+			return rc;
-+	}
-+	return -EAGAIN;
-+}
-+
-+int make_hva_secure(struct mm_struct *mm, unsigned long hva, struct uv_cb_header *uvcb)
-+{
-+	struct vm_area_struct *vma;
-+	struct folio_walk fw;
-+	struct folio *folio;
-+	int rc;
-+
-+	mmap_read_lock(mm);
-+	vma = vma_lookup(mm, hva);
-+	if (!vma) {
-+		mmap_read_unlock(mm);
-+		return -EFAULT;
-+	}
-+	folio = folio_walk_start(&fw, vma, hva, 0);
-+	if (!folio) {
-+		mmap_read_unlock(mm);
-+		return -ENXIO;
-+	}
-+
-+	folio_get(folio);
-+	/*
-+	 * Secure pages cannot be huge and userspace should not combine both.
-+	 * In case userspace does it anyway this will result in an -EFAULT for
-+	 * the unpack. The guest is thus never reaching secure mode.
-+	 * If userspace plays dirty tricks and decides to map huge pages at a
-+	 * later point in time, it will receive a segmentation fault or
-+	 * KVM_RUN will return -EFAULT.
-+	 */
-+	if (folio_test_hugetlb(folio))
-+		rc = -EFAULT;
-+	else if (folio_test_large(folio))
-+		rc = -E2BIG;
-+	else if (!pte_write(fw.pte) || (pte_val(fw.pte) & _PAGE_INVALID))
-+		rc = -ENXIO;
-+	else
-+		rc = make_folio_secure(mm, folio, uvcb);
-+	folio_walk_end(&fw, vma);
-+	mmap_read_unlock(mm);
-+
-+	if (rc == -E2BIG || rc == -EBUSY)
-+		rc = s390_wiggle_split_folio(mm, folio, rc == -E2BIG);
-+	folio_put(folio);
-+
-+	return rc;
-+}
-+EXPORT_SYMBOL_GPL(make_hva_secure);
- 
- /*
-  * To be called with the folio locked or with an extra reference! This will
-diff --git a/arch/s390/kvm/gmap.c b/arch/s390/kvm/gmap.c
-index 02adf151d4de..6d8944d1b4a0 100644
---- a/arch/s390/kvm/gmap.c
-+++ b/arch/s390/kvm/gmap.c
-@@ -22,92 +22,6 @@
- 
- #include "gmap.h"
- 
--/**
-- * should_export_before_import - Determine whether an export is needed
-- * before an import-like operation
-- * @uvcb: the Ultravisor control block of the UVC to be performed
-- * @mm: the mm of the process
-- *
-- * Returns whether an export is needed before every import-like operation.
-- * This is needed for shared pages, which don't trigger a secure storage
-- * exception when accessed from a different guest.
-- *
-- * Although considered as one, the Unpin Page UVC is not an actual import,
-- * so it is not affected.
-- *
-- * No export is needed also when there is only one protected VM, because the
-- * page cannot belong to the wrong VM in that case (there is no "other VM"
-- * it can belong to).
-- *
-- * Return: true if an export is needed before every import, otherwise false.
-- */
--static bool should_export_before_import(struct uv_cb_header *uvcb, struct mm_struct *mm)
--{
--	/*
--	 * The misc feature indicates, among other things, that importing a
--	 * shared page from a different protected VM will automatically also
--	 * transfer its ownership.
--	 */
--	if (uv_has_feature(BIT_UV_FEAT_MISC))
--		return false;
--	if (uvcb->cmd == UVC_CMD_UNPIN_PAGE_SHARED)
--		return false;
--	return atomic_read(&mm->context.protected_count) > 1;
--}
--
--static int __gmap_make_secure(struct gmap *gmap, struct page *page, void *uvcb)
--{
--	struct folio *folio = page_folio(page);
--	int rc;
--
--	/*
--	 * Secure pages cannot be huge and userspace should not combine both.
--	 * In case userspace does it anyway this will result in an -EFAULT for
--	 * the unpack. The guest is thus never reaching secure mode.
--	 * If userspace plays dirty tricks and decides to map huge pages at a
--	 * later point in time, it will receive a segmentation fault or
--	 * KVM_RUN will return -EFAULT.
--	 */
--	if (folio_test_hugetlb(folio))
--		return -EFAULT;
--	if (folio_test_large(folio)) {
--		mmap_read_unlock(gmap->mm);
--		rc = kvm_s390_wiggle_split_folio(gmap->mm, folio, true);
--		mmap_read_lock(gmap->mm);
--		if (rc)
--			return rc;
--		folio = page_folio(page);
--	}
--
--	if (!folio_trylock(folio))
--		return -EAGAIN;
--	if (should_export_before_import(uvcb, gmap->mm))
--		uv_convert_from_secure(folio_to_phys(folio));
--	rc = make_folio_secure(folio, uvcb);
--	folio_unlock(folio);
--
--	/*
--	 * In theory a race is possible and the folio might have become
--	 * large again before the folio_trylock() above. In that case, no
--	 * action is performed and -EAGAIN is returned; the callers will
--	 * have to try again later.
--	 * In most cases this implies running the VM again, getting the same
--	 * exception again, and make another attempt in this function.
--	 * This is expected to happen extremely rarely.
--	 */
--	if (rc == -E2BIG)
--		return -EAGAIN;
--	/* The folio has too many references, try to shake some off */
--	if (rc == -EBUSY) {
--		mmap_read_unlock(gmap->mm);
--		kvm_s390_wiggle_split_folio(gmap->mm, folio, false);
--		mmap_read_lock(gmap->mm);
--		return -EAGAIN;
--	}
--
--	return rc;
--}
--
- /**
-  * gmap_make_secure() - make one guest page secure
-  * @gmap: the guest gmap
-@@ -115,24 +29,19 @@ static int __gmap_make_secure(struct gmap *gmap, struct page *page, void *uvcb)
-  * @uvcb: the UVCB specifying which operation needs to be performed
-  *
-  * Context: needs to be called with kvm->srcu held.
-- * Return: 0 on success, < 0 in case of error (see __gmap_make_secure()).
-+ * Return: 0 on success, < 0 in case of error.
-  */
- int gmap_make_secure(struct gmap *gmap, unsigned long gaddr, void *uvcb)
- {
- 	struct kvm *kvm = gmap->private;
--	struct page *page;
--	int rc = 0;
-+	unsigned long vmaddr;
- 
- 	lockdep_assert_held(&kvm->srcu);
- 
--	page = gfn_to_page(kvm, gpa_to_gfn(gaddr));
--	mmap_read_lock(gmap->mm);
--	if (page)
--		rc = __gmap_make_secure(gmap, page, uvcb);
--	kvm_release_page_clean(page);
--	mmap_read_unlock(gmap->mm);
--
--	return rc;
-+	vmaddr = gfn_to_hva(kvm, gpa_to_gfn(gaddr));
-+	if (kvm_is_error_hva(vmaddr))
-+		return -EFAULT;
-+	return make_hva_secure(gmap->mm, vmaddr, uvcb);
- }
- 
- int gmap_convert_to_secure(struct gmap *gmap, unsigned long gaddr)
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index ebecb96bacce..020502af7dc9 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -4952,6 +4952,7 @@ static int vcpu_post_run_handle_fault(struct kvm_vcpu *vcpu)
- {
- 	unsigned int flags = 0;
- 	unsigned long gaddr;
-+	int rc;
- 
- 	gaddr = current->thread.gmap_teid.addr * PAGE_SIZE;
- 	if (kvm_s390_cur_gmap_fault_is_write())
-@@ -4961,16 +4962,6 @@ static int vcpu_post_run_handle_fault(struct kvm_vcpu *vcpu)
- 	case 0:
- 		vcpu->stat.exit_null++;
- 		break;
--	case PGM_NON_SECURE_STORAGE_ACCESS:
--		kvm_s390_assert_primary_as(vcpu);
--		/*
--		 * This is normal operation; a page belonging to a protected
--		 * guest has not been imported yet. Try to import the page into
--		 * the protected guest.
--		 */
--		if (gmap_convert_to_secure(vcpu->arch.gmap, gaddr) == -EINVAL)
--			send_sig(SIGSEGV, current, 0);
--		break;
- 	case PGM_SECURE_STORAGE_ACCESS:
- 	case PGM_SECURE_STORAGE_VIOLATION:
- 		kvm_s390_assert_primary_as(vcpu);
-@@ -4995,6 +4986,20 @@ static int vcpu_post_run_handle_fault(struct kvm_vcpu *vcpu)
- 			send_sig(SIGSEGV, current, 0);
- 		}
- 		break;
-+	case PGM_NON_SECURE_STORAGE_ACCESS:
-+		kvm_s390_assert_primary_as(vcpu);
-+		/*
-+		 * This is normal operation; a page belonging to a protected
-+		 * guest has not been imported yet. Try to import the page into
-+		 * the protected guest.
-+		 */
-+		rc = gmap_convert_to_secure(vcpu->arch.gmap, gaddr);
-+		if (rc == -EINVAL)
-+			send_sig(SIGSEGV, current, 0);
-+		if (rc != -ENXIO)
-+			break;
-+		flags = FAULT_FLAG_WRITE;
-+		fallthrough;
- 	case PGM_PROTECTION:
- 	case PGM_SEGMENT_TRANSLATION:
- 	case PGM_PAGE_TRANSLATION:
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index 94d927785800..d14b488e7a1f 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -2626,31 +2626,3 @@ int s390_replace_asce(struct gmap *gmap)
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(s390_replace_asce);
--
--/**
-- * kvm_s390_wiggle_split_folio() - try to drain extra references to a folio and optionally split
-- * @mm:    the mm containing the folio to work on
-- * @folio: the folio
-- * @split: whether to split a large folio
-- *
-- * Context: Must be called while holding an extra reference to the folio;
-- *          the mm lock should not be held.
-- */
--int kvm_s390_wiggle_split_folio(struct mm_struct *mm, struct folio *folio, bool split)
--{
--	int rc;
--
--	lockdep_assert_not_held(&mm->mmap_lock);
--	folio_wait_writeback(folio);
--	lru_add_drain_all();
--	if (split) {
--		folio_lock(folio);
--		rc = split_folio(folio);
--		folio_unlock(folio);
--
--		if (rc != -EBUSY)
--			return rc;
--	}
--	return -EAGAIN;
--}
--EXPORT_SYMBOL_GPL(kvm_s390_wiggle_split_folio);
--- 
-2.48.1
+On 04.03.25 13:43, Guangguan Wang wrote:
+> When using smc_pnet in SMC, it will only search the pnetid in the
+> base_ndev of the netdev hierarchy(both HW PNETID and User-defined
+> sw pnetid). This may not work for some scenarios when using SMC in
+> container on cloud environment.
+> In container, there have choices of different container network,
+> such as directly using host network, virtual network IPVLAN, veth,
+> etc. Different choices of container network have different netdev
+> hierarchy. Examples of netdev hierarchy show below. (eth0 and eth1
+> in host below is the netdev directly related to the physical device).
+>              _______________________________
+>             |   _________________           |
+>             |  |POD              |          |
+>             |  |                 |          |
+>             |  | eth0_________   |          |
+>             |  |____|         |__|          |
+>             |       |         |             |
+>             |       |         |             |
+>             |   eth1|base_ndev| eth0_______ |
+>             |       |         |    | RDMA  ||
+>             | host  |_________|    |_______||
+>             ---------------------------------
+>       netdev hierarchy if directly using host network
+>             ________________________________
+>             |   _________________           |
+>             |  |POD  __________  |          |
+>             |  |    |upper_ndev| |          |
+>             |  |eth0|__________| |          |
+>             |  |_______|_________|          |
+>             |          |lower netdev        |
+>             |        __|______              |
+>             |   eth1|         | eth0_______ |
+>             |       |base_ndev|    | RDMA  ||
+>             | host  |_________|    |_______||
+>             ---------------------------------
+>              netdev hierarchy if using IPVLAN
+>              _______________________________
+>             |   _____________________       |
+>             |  |POD        _________ |      |
+>             |  |          |base_ndev||      |
+>             |  |eth0(veth)|_________||      |
+>             |  |____________|________|      |
+>             |               |pairs          |
+>             |        _______|_              |
+>             |       |         | eth0_______ |
+>             |   veth|base_ndev|    | RDMA  ||
+>             |       |_________|    |_______||
+>             |        _________              |
+>             |   eth1|base_ndev|             |
+>             | host  |_________|             |
+>             ---------------------------------
+>               netdev hierarchy if using veth
+> Due to some reasons, the eth1 in host is not RDMA attached netdevice,
+> pnetid is needed to map the eth1(in host) with RDMA device so that POD
+> can do SMC-R. Because the eth1(in host) is managed by CNI plugin(such
+> as Terway, network management plugin in container environment), and in
+> cloud environment the eth(in host) can dynamically be inserted by CNI
+> when POD create and dynamically be removed by CNI when POD destroy and
+> no POD related to the eth(in host) anymore. It is hard to config the
+> pnetid to the eth1(in host). But it is easy to config the pnetid to the
+> netdevice which can be seen in POD. When do SMC-R, both the container
+> directly using host network and the container using veth network can
+> successfully match the RDMA device, because the configured pnetid netdev
+> is a base_ndev. But the container using IPVLAN can not successfully
+> match the RDMA device and 0x03030000 fallback happens, because the
+> configured pnetid netdev is not a base_ndev. Additionally, if config
+> pnetid to the eth1(in host) also can not work for matching RDMA device
+> when using veth network and doing SMC-R in POD.
+> 
+> To resolve the problems list above, this patch extends to search user
+> -defined sw pnetid in the clc handshake ndev when no pnetid can be found
+> in the base_ndev, and the base_ndev take precedence over ndev for backward
+> compatibility. This patch also can unify the pnetid setup of different
+> network choices list above in container(Config user-defined sw pnetid in
+> the netdevice can be seen in POD).
+> 
+> Signed-off-by: Guangguan Wang <guangguan.wang@linux.alibaba.com>
+> ---
+>   net/smc/smc_pnet.c | 8 +++++---
+>   1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/net/smc/smc_pnet.c b/net/smc/smc_pnet.c
+> index 716808f374a8..b391c2ef463f 100644
+> --- a/net/smc/smc_pnet.c
+> +++ b/net/smc/smc_pnet.c
+> @@ -1079,14 +1079,16 @@ static void smc_pnet_find_roce_by_pnetid(struct net_device *ndev,
+>   					 struct smc_init_info *ini)
+>   {
+>   	u8 ndev_pnetid[SMC_MAX_PNETID_LEN];
+> +	struct net_device *base_ndev;
+>   	struct net *net;
+>   
+> -	ndev = pnet_find_base_ndev(ndev);
+> +	base_ndev = pnet_find_base_ndev(ndev);
+>   	net = dev_net(ndev);
+> -	if (smc_pnetid_by_dev_port(ndev->dev.parent, ndev->dev_port,
+> +	if (smc_pnetid_by_dev_port(base_ndev->dev.parent, base_ndev->dev_port,
+>   				   ndev_pnetid) &&
+> +	    smc_pnet_find_ndev_pnetid_by_table(base_ndev, ndev_pnetid) &&
+>   	    smc_pnet_find_ndev_pnetid_by_table(ndev, ndev_pnetid)) {
+> -		smc_pnet_find_rdma_dev(ndev, ini);
+> +		smc_pnet_find_rdma_dev(base_ndev, ini);
+>   		return; /* pnetid could not be determined */
+>   	}
+>   	_smc_pnet_find_roce_by_pnetid(ndev_pnetid, ini, NULL, net);
+
+Hi Guangguan,
+
+sorry for the late answer! It looks good to me. Here is my R-b:
+
+Reviewed-by: Wenjia Zhang <wenjia@linux.ibm.com>
+
+Btw. could you give Halil some time for the review? He also wants to 
+have a look.
+
+Thanks,
+Wenjia
 
 
