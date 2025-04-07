@@ -1,190 +1,174 @@
-Return-Path: <linux-s390+bounces-9843-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-9847-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF922A7DF75
-	for <lists+linux-s390@lfdr.de>; Mon,  7 Apr 2025 15:37:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C94FEA7E433
+	for <lists+linux-s390@lfdr.de>; Mon,  7 Apr 2025 17:26:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6A0273B4EE6
-	for <lists+linux-s390@lfdr.de>; Mon,  7 Apr 2025 13:33:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 657D3423806
+	for <lists+linux-s390@lfdr.de>; Mon,  7 Apr 2025 15:14:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B4C8146593;
-	Mon,  7 Apr 2025 13:32:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D0F81F7066;
+	Mon,  7 Apr 2025 15:12:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QcCbgyRZ"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iGIlK/ui"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE015680
-	for <linux-s390@vger.kernel.org>; Mon,  7 Apr 2025 13:32:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 712D51FBC89;
+	Mon,  7 Apr 2025 15:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744032743; cv=none; b=Y23/SxRtgc/uWrfkfe63ozU7q3Ugob508OC1Kb9MhfXaV9DL70Vy3vyxSLMz6tayk1/i+rea12lPY38FSQI73LCpGaw61brJA5Wb0VjvFFw4iae2M94GQuRWQx424AU7+kBGZghwd2PE5gKPo0hxXd69FxiFqPo82RR4b9ladOM=
+	t=1744038735; cv=none; b=OkNdW3yDxy/m0pMuHT6qm5oXxx+VitmIIjNxlMewtZ3Bxuc/+xHSa+z7d4ohxVxniOCQXXqnI6+X38svFC2+qFD42BUNZhWR1NYlMFCCNVanM07kSmBQ5MHS+hTCfRVIeEl1rTroiUAJLcJLaJX0ZBuC4g+nACLSJabEKD8QQhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744032743; c=relaxed/simple;
-	bh=OuqnqTBRovbLLVo3HjN6qkc40vRHSouYVZwbCzzmelk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FqyEnlYd2M2z5sf6+b9P+diXSNvYqzT25kELruRVmnY55mm2FPrDzzUzywKTfXhx4rEoE1yx4khzXlrzpOmBQOPzhsSpgztezBqOs2W8MQLFf78oCRtUinOzkrAz8bCZvcvNQ1x/iC++dXFVbQX4Dm0y0pErx5Kl9hG3Yhq5/R4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QcCbgyRZ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744032740;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=h2t9badq02L1YqSPP4iwtiUyd5ByYzFMz5Gq8uEjc+Q=;
-	b=QcCbgyRZC1Aqfk2KumHdOp+2tEJTmf0OvgK0XsRfAp5aFGx+JaY8CqK3fH9UJ0Kpyzj9l2
-	uC6BY2cNcbb0+Fob/5s+RjLnIn0Y1PVVgu4KSNt6ZG2Niv977eeGFyRYkPsoOiKmSPYj1S
-	fmSmyUJhc+NOSvPZRi6517G32BXRiD4=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-80--nPoxOgTM6SXX19S1VksqA-1; Mon, 07 Apr 2025 09:32:19 -0400
-X-MC-Unique: -nPoxOgTM6SXX19S1VksqA-1
-X-Mimecast-MFC-AGG-ID: -nPoxOgTM6SXX19S1VksqA_1744032738
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3913aea90b4so1776752f8f.2
-        for <linux-s390@vger.kernel.org>; Mon, 07 Apr 2025 06:32:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744032738; x=1744637538;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h2t9badq02L1YqSPP4iwtiUyd5ByYzFMz5Gq8uEjc+Q=;
-        b=MaWYZqwEm5fgIErmmFq43M1JTv9FzbPpX724d8Xi3do/NdJwSDXsug5fUbUvcpMIjR
-         ONrjJGCP1oIBG7fZv7/T5I67+nn5dbNgyuVi9sGVEUbADl71r74bGWncWupfFabfUXjR
-         /bY+CPDdVgffo0X6sZGuWVOOTT9lWqbu9tPvIBJIYACPdNlFCUj76M+0XXwuYnhc7EGx
-         nkSbAFdNH8HuLwy/9ptwHtlIG8aJaFzfsV508ufPlJpNiOUZn0QQO5uwgUPBDMlCi43i
-         KZCH9UMKoW4nEIyvNNIAQtkcmVnGBjkvn04ntPDAz+1Hh1leNTt5LEclb6mzbFmidzEG
-         hrTA==
-X-Forwarded-Encrypted: i=1; AJvYcCUcF1xv7PPiQWp4sGzNvrsyPtJsr7fu+lQxgTAQ32rkTcmv8AJOXP56UzZJswR5zMkpVGgdLrNc2e4r@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5e8bjDxGsUQplCSUUvSeKESim48evMC+YFkdEz7x8vuYgOcvP
-	MdRvbZ0XZ6FrbuzNBWMRBsZ0QF1x6qXaMaxTd7RrB7LPgjelfzheXgZcmVXB4OnJqiXdgV17FH6
-	SwZxzzib7ewpIdaxivMKGsgZIXT3WJPr41iiaTJN2Ov0D5tfrDVHlWKZ2URQ=
-X-Gm-Gg: ASbGncsSMNXlUK5tM6LWa79miPTbCe1e0D5m70KpTKA15bfiJe76wJTinhElBKLMlIP
-	Jfs61Z9WJ2mI0bsnuW7A56Bp+h0JDGWBP7UZ3xeRwQNwszMnIeVP8x+iizvYhU1qNEbXF/4xKep
-	e8x2PpkvQFJDW5tRDoF6tBTj5jaCYyEJujSRpLQ0KKCcBZPDw4JDZlaFTt7eNVrG9FGuemo6jUD
-	MR7WFgHBdUrYkSMXiGfYXp1RQp/rawTZ8jSIyuwDVtgl8ZqUPlcUul9VJTkvzMYb5jTFAcwaSVY
-	wCqnXmjQKg==
-X-Received: by 2002:a5d:64cb:0:b0:391:3f64:ed00 with SMTP id ffacd0b85a97d-39d6fc4e930mr7966126f8f.26.1744032738400;
-        Mon, 07 Apr 2025 06:32:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGvXFTZnDhg+4j5062m2TfC0SmlVES+KRW+YMFO/ahaSOai2rwVuCa6Gs1wgPmSJN+hQ8wtpg==
-X-Received: by 2002:a5d:64cb:0:b0:391:3f64:ed00 with SMTP id ffacd0b85a97d-39d6fc4e930mr7966079f8f.26.1744032737999;
-        Mon, 07 Apr 2025 06:32:17 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020da49sm11908898f8f.80.2025.04.07.06.32.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 06:32:17 -0700 (PDT)
-Date: Mon, 7 Apr 2025 09:32:14 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Cornelia Huck <cohuck@redhat.com>
-Cc: David Hildenbrand <david@redhat.com>, Halil Pasic <pasic@linux.ibm.com>,
-	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-	virtualization@lists.linux.dev, kvm@vger.kernel.org,
-	Chandra Merla <cmerla@redhat.com>, Stable@vger.kernel.org,
-	Thomas Huth <thuth@redhat.com>, Eric Farman <farman@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Wei Wang <wei.w.wang@intel.com>
-Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
- non-existing queues
-Message-ID: <20250407093047-mutt-send-email-mst@kernel.org>
-References: <d6f5f854-1294-4afa-b02a-657713435435@redhat.com>
- <20250404160025.3ab56f60.pasic@linux.ibm.com>
- <6f548b8b-8c6e-4221-a5d5-8e7a9013f9c3@redhat.com>
- <20250404173910.6581706a.pasic@linux.ibm.com>
- <20250407034901-mutt-send-email-mst@kernel.org>
- <2b187710-329d-4d36-b2e7-158709ea60d6@redhat.com>
- <20250407042058-mutt-send-email-mst@kernel.org>
- <20250407151249.7fe1e418.pasic@linux.ibm.com>
- <9126bfbf-9461-4959-bd38-1d7bc36d7701@redhat.com>
- <87h6309k42.fsf@redhat.com>
+	s=arc-20240116; t=1744038735; c=relaxed/simple;
+	bh=Bv+HXBC6tImKXE0VtWuf7TNcLsOWPLVrT3SoEzD7juY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A/aipInePS0lKku7eFUC3BTzupiv9U+Iz3AzJ4TYF40eWZA8kdVCnk3Wl3FWYVhydPoWGQL7LygfRQb6vtAv2YjHhFWnAJ87FsPLciPnh1R7Opv1o+Z+vShhj0sVyMi7sPygR5e7N/DURE5nAihmkzm5BSgZWdiyN0CjS0fMdQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iGIlK/ui; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 537A4FUU022813;
+	Mon, 7 Apr 2025 15:11:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=57tQfDvPr0M3Zui29k18xkGtBTpws7x4blA2kXuxz
+	E8=; b=iGIlK/uiqdwuuf9zAUYWVbUStdknMBEmUkgThwL21bB/Sd94w2sdtqjJ6
+	dJe+6DW30QoIDJsNbKc/dZcuKhjcDWF6ylYzDQJGNnUk0+Ygr+50BWT4LDTxGWqY
+	8padbZLV871KozFzwN9bOqXMlqjJ7RbObNcLqR3NAQYePc0p6mCr5tM1Z5Odo619
+	BGJg7HjYIXonr8831xQs777AncSUFfbhV2RPC8LzfnFZQoyNqzoMPy4Ja4Jd8NPr
+	Rxf1l6vOppm1MTueitrL0VGC56TA8UD47RsK6/d0JYqhbNuE0NIwbVM5FbiEmYju
+	AvVYm2qccIa5K0tX1PNa5CBQs1tFw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45v0spm8qr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Apr 2025 15:11:34 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 537EmSRd022056;
+	Mon, 7 Apr 2025 15:11:33 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45v0spm8qm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Apr 2025 15:11:33 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 537BsEeX018863;
+	Mon, 7 Apr 2025 15:11:32 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 45uhj26182-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Apr 2025 15:11:32 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 537FBVvI21823898
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 7 Apr 2025 15:11:31 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F08A920043;
+	Mon,  7 Apr 2025 15:11:30 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DB1AD20040;
+	Mon,  7 Apr 2025 15:11:30 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon,  7 Apr 2025 15:11:30 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
+	id 7C925E0EFF; Mon, 07 Apr 2025 17:11:30 +0200 (CEST)
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: Hugh Dickins <hughd@google.com>, Nicholas Piggin <npiggin@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>, Juergen Gross <jgross@suse.com>,
+        Jeremy Fitzhardinge <jeremy@goop.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, kasan-dev@googlegroups.com,
+        sparclinux@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
+Subject: [PATCH v1 0/4] mm: Fix apply_to_pte_range() vs lazy MMU mode
+Date: Mon,  7 Apr 2025 17:11:26 +0200
+Message-ID: <cover.1744037648.git.agordeev@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87h6309k42.fsf@redhat.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: K4njNltb3a39PrtZv2_ODEkMFtlx96GJ
+X-Proofpoint-ORIG-GUID: HmhRseE7QFEwjmUit74LYcV6TtFzZkug
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-07_04,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ bulkscore=0 impostorscore=0 suspectscore=0 lowpriorityscore=0 mlxscore=0
+ adultscore=0 phishscore=0 priorityscore=1501 spamscore=0 mlxlogscore=625
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504070104
 
-On Mon, Apr 07, 2025 at 03:28:13PM +0200, Cornelia Huck wrote:
-> On Mon, Apr 07 2025, David Hildenbrand <david@redhat.com> wrote:
-> 
-> > On 07.04.25 15:12, Halil Pasic wrote:
-> >> On Mon, 7 Apr 2025 04:34:29 -0400
-> >> "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> >> 
-> >>> On Mon, Apr 07, 2025 at 10:17:10AM +0200, David Hildenbrand wrote:
-> >>>> On 07.04.25 09:52, Michael S. Tsirkin wrote:
-> >>>>> On Fri, Apr 04, 2025 at 05:39:10PM +0200, Halil Pasic wrote:
-> >>>>>>>
-> >>>>>>> Not perfect, but AFAIKS, not horrible.
-> >>>>>>
-> >>>>>> It is like it is. QEMU does queue exist if the corresponding feature
-> >>>>>> is offered by the device, and that is what we have to live with.
-> >>>>>
-> >>>>> I don't think we can live with this properly though.
-> >>>>> It means a guest that does not know about some features
-> >>>>> does not know where to find things.
-> >>>>
-> >>>> Please describe a real scenario, I'm missing the point.
-> >>>
-> >>>
-> >>> OK so.
-> >>>
-> >>> Device has VIRTIO_BALLOON_F_FREE_PAGE_HINT and VIRTIO_BALLOON_F_REPORTING
-> >>> Driver only knows about VIRTIO_BALLOON_F_REPORTING so
-> >>> it does not know what does VIRTIO_BALLOON_F_FREE_PAGE_HINT do.
-> >>> How does it know which vq to use for reporting?
-> >>> It will try to use the free page hint one.
-> >> 
-> >> First, sorry for not catching up again with the discussion earlier.
-> >> 
-> >> I think David's point is based on the assumption that by the time feature
-> >> with the feature bit N+1 is specified and allocates a queue Q, all
-> >> queues with indexes smaller than Q are allocated and possibly associated
-> >> with features that were previously specified (and probably have feature
-> >> bits smaller than N+1).
-> >> 
-> >> I.e. that we can mandate, even if you don't want to care about other
-> >> optional features, you have to, because we say so, for the matter of
-> >> virtqueue existence. And anything in the future, you don't have to care
-> >> about because the queue index associated with future features is larger
-> >> than Q, so it does not affect our position.
-> >> 
-> >> I think that argument can fall a part if:
-> >> * future features reference optional queues defined in the past
-> >> * somebody managed to introduce a limbo where a feature is reserved, and
-> >>    they can not decide if they want a queue or not, or make the existence
-> >>    of the queue depend on something else than a feature bit.
-> >
-> > Staring at the cross-vmm, including the adding+removing of features and 
-> > queues that are not in the spec, I am wondering if (in a world with 
-> > fixed virtqueues)
-> >
-> > 1) Feature bits must be reserved before used.
-> >
-> > 2) Queue indices must be reserved before used.
-> >
-> > It all smells like a problem similar to device IDs ...
-> 
-> Indeed, we need a rule "reserve a feature bit/queue index before using
-> it, even if you do not plan to spec it properly".
+Hi All,
 
+This series is an attempt to fix the violation of lazy MMU mode context
+requirement as described for arch_enter_lazy_mmu_mode():
 
-Reserving feature bits is something I do my best to advocate for
-in all presentations I do.
+    This mode can only be entered and left under the protection of
+    the page table locks for all page tables which may be modified.
 
+On s390 if I make arch_enter_lazy_mmu_mode() -> preempt_enable() and
+arch_leave_lazy_mmu_mode() -> preempt_disable() I am getting this:
+
+    [  553.332108] preempt_count: 1, expected: 0
+    [  553.332117] no locks held by multipathd/2116.
+    [  553.332128] CPU: 24 PID: 2116 Comm: multipathd Kdump: loaded Tainted:
+    [  553.332139] Hardware name: IBM 3931 A01 701 (LPAR)
+    [  553.332146] Call Trace:
+    [  553.332152]  [<00000000158de23a>] dump_stack_lvl+0xfa/0x150
+    [  553.332167]  [<0000000013e10d12>] __might_resched+0x57a/0x5e8
+    [  553.332178]  [<00000000144eb6c2>] __alloc_pages+0x2ba/0x7c0
+    [  553.332189]  [<00000000144d5cdc>] __get_free_pages+0x2c/0x88
+    [  553.332198]  [<00000000145663f6>] kasan_populate_vmalloc_pte+0x4e/0x110
+    [  553.332207]  [<000000001447625c>] apply_to_pte_range+0x164/0x3c8
+    [  553.332218]  [<000000001448125a>] apply_to_pmd_range+0xda/0x318
+    [  553.332226]  [<000000001448181c>] __apply_to_page_range+0x384/0x768
+    [  553.332233]  [<0000000014481c28>] apply_to_page_range+0x28/0x38
+    [  553.332241]  [<00000000145665da>] kasan_populate_vmalloc+0x82/0x98
+    [  553.332249]  [<00000000144c88d0>] alloc_vmap_area+0x590/0x1c90
+    [  553.332257]  [<00000000144ca108>] __get_vm_area_node.constprop.0+0x138/0x260
+    [  553.332265]  [<00000000144d17fc>] __vmalloc_node_range+0x134/0x360
+    [  553.332274]  [<0000000013d5dbf2>] alloc_thread_stack_node+0x112/0x378
+    [  553.332284]  [<0000000013d62726>] dup_task_struct+0x66/0x430
+    [  553.332293]  [<0000000013d63962>] copy_process+0x432/0x4b80
+    [  553.332302]  [<0000000013d68300>] kernel_clone+0xf0/0x7d0
+    [  553.332311]  [<0000000013d68bd6>] __do_sys_clone+0xae/0xc8
+    [  553.332400]  [<0000000013d68dee>] __s390x_sys_clone+0xd6/0x118
+    [  553.332410]  [<0000000013c9d34c>] do_syscall+0x22c/0x328
+    [  553.332419]  [<00000000158e7366>] __do_syscall+0xce/0xf0
+    [  553.332428]  [<0000000015913260>] system_call+0x70/0x98
+
+This exposes a KASAN issue fixed with patch 1 and apply_to_pte_range()
+issue fixed with patches 2-3. Patch 4 is a debug improvement on top,
+that could have helped to notice the issue.
+
+Commit b9ef323ea168 ("powerpc/64s: Disable preemption in hash lazy mmu
+mode") looks like powerpc-only fix, yet not entirely conforming to the
+above provided requirement (page tables itself are still not protected).
+If I am not mistaken, xen and sparc are alike.
+
+Thanks!
+
+Alexander Gordeev (4):
+  kasan: Avoid sleepable page allocation from atomic context
+  mm: Cleanup apply_to_pte_range() routine
+  mm: Protect kernel pgtables in apply_to_pte_range()
+  mm: Allow detection of wrong arch_enter_lazy_mmu_mode() context
+
+ include/linux/pgtable.h | 15 ++++++++++++---
+ mm/kasan/shadow.c       |  9 +++------
+ mm/memory.c             | 33 +++++++++++++++++++++------------
+ 3 files changed, 36 insertions(+), 21 deletions(-)
 
 -- 
-MST
+2.45.2
 
 
