@@ -1,38 +1,38 @@
-Return-Path: <linux-s390+bounces-9861-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-9863-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2765A7FAAA
-	for <lists+linux-s390@lfdr.de>; Tue,  8 Apr 2025 12:02:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 31F54A7FAB2
+	for <lists+linux-s390@lfdr.de>; Tue,  8 Apr 2025 12:02:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E22D617F887
-	for <lists+linux-s390@lfdr.de>; Tue,  8 Apr 2025 10:00:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0CB01440153
+	for <lists+linux-s390@lfdr.de>; Tue,  8 Apr 2025 10:00:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACD0826AA85;
-	Tue,  8 Apr 2025 09:53:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 375E0267718;
+	Tue,  8 Apr 2025 09:53:36 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E726C21B19E;
-	Tue,  8 Apr 2025 09:53:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A1EF267704;
+	Tue,  8 Apr 2025 09:53:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744106006; cv=none; b=H4m1LPC5pYDXsIV69iTGh5RopsUwPRVenyzi1wpaNeIrgu5TZk/Ld5eOBKpbcXFpBYWsfNyPUC2T67X9yKyazza1vTqhOvrmWqRG1M9XowaVl1XnMauFoum8cDXcPd5037/B2yEtULW0LGtB6j/YzEHR3h/v5oPMHvZcjE1gn6c=
+	t=1744106016; cv=none; b=ixFWn5tcvylANSeJ+o1Lmwg69e2U0B1WM56zQLK4KaNPdoNP2tkEv5U4kXy6wg50jzo1wR/2gL+cj3caEjQ++aiGJK0FE8eZj4FT3exTyg+IfM52Lyf05wccmu/t+p3mfpUpK7gYxOb34BV4PPG12M0ykWWTpvgRbu+QiNm+t3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744106006; c=relaxed/simple;
-	bh=yaGbP0RRjuMb4PmVHnVJQFnfu+TDNATFKp/gxQ8CUio=;
+	s=arc-20240116; t=1744106016; c=relaxed/simple;
+	bh=sJY3k14WBl1j2uqNZ+rNzVrFO/O8YxCuCcrCnNtLeO4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MkNaCl2oIRw2XQMXC14pX/PDKXgAcZmxrJMiWgzxErsElKxzAU2lpUK37yZTUScr7Vdm19PkvDJFR8ncpJ+keIHx2Ucbg4nAKdDMHAgNfKywTn3MBESebgnj6YPOYiHEoviQndZ7t/S+07jD4/js41XXxXIUXu9h7vROw47TShE=
+	 MIME-Version; b=n7aUcn3xMBdFknPB8/W4pKIEdPMDHkWBLORUYRWqKnHkgZCQLMGBUOqMK1+3FuCGSqoeVgnbZM4RKRAnD9LwhS0uYF+Pd+d+HVcAkiB8ZgCA6tiP0ZVEI4oNifd1RLc69ua7+aAzlmFib4E8O2azu7J41pKW0cTp+HFK40MAOdc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66F6A22FA;
-	Tue,  8 Apr 2025 02:53:25 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CCE4822FC;
+	Tue,  8 Apr 2025 02:53:34 -0700 (PDT)
 Received: from e123572-lin.arm.com (e123572-lin.cambridge.arm.com [10.1.194.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 27BC83F6A8;
-	Tue,  8 Apr 2025 02:53:20 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D5873F6A8;
+	Tue,  8 Apr 2025 02:53:29 -0700 (PDT)
 From: Kevin Brodsky <kevin.brodsky@arm.com>
 To: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org,
@@ -67,9 +67,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linuxppc-dev@lists.ozlabs.org,
 	sparclinux@vger.kernel.org,
 	x86@kernel.org
-Subject: [PATCH v2 03/12] mm: Call ctor/dtor for kernel PTEs
-Date: Tue,  8 Apr 2025 10:52:13 +0100
-Message-ID: <20250408095222.860601-4-kevin.brodsky@arm.com>
+Subject: [PATCH v2 05/12] powerpc: mm: Call ctor/dtor for kernel PTEs
+Date: Tue,  8 Apr 2025 10:52:15 +0100
+Message-ID: <20250408095222.860601-6-kevin.brodsky@arm.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20250408095222.860601-1-kevin.brodsky@arm.com>
 References: <20250408095222.860601-1-kevin.brodsky@arm.com>
@@ -81,130 +81,71 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since [1], constructors/destructors are expected to be called for
-all page table pages, at all levels and for both user and kernel
-pgtables. There is however one glaring exception: kernel PTEs are
-managed via separate helpers (pte_alloc_kernel/pte_free_kernel),
-which do not call the [cd]tor, at least not in the generic
-implementation.
+The generic implementation of pte_{alloc_one,free}_kernel now calls
+the [cd]tor, without initialising the ptlock needlessly as
+pagetable_pte_ctor() skips it for init_mm.
 
-The most obvious reason for this anomaly is that init_mm is
-special-cased not to use split page table locks. As a result calling
-ptlock_init() for PTEs associated with init_mm would be wasteful,
-potentially resulting in dynamic memory allocation. However, pgtable
-[cd]tors perform other actions - currently related to
-accounting/statistics, and potentially more functionally significant
-in the future.
-
-Now that pagetable_pte_ctor() is passed the associated mm, we can
-make it skip the call to ptlock_init() for init_mm; this allows us
-to call the ctor from pte_alloc_one_kernel() too. This is matched by
-a call to the pgtable destructor in pte_free_kernel(); no
-special-casing is needed on that path, as ptlock_free() is already
-called unconditionally. (ptlock_free() is a no-op unless a ptlock
-was allocated for the given PTP.)
-
-This patch ensures that all architectures that rely on
-<asm-generic/pgalloc.h> call the [cd]tor for kernel PTEs.
-pte_free_kernel() cannot be overridden so changing the generic
-implementation is sufficient. pte_alloc_one_kernel() can be
-overridden using __HAVE_ARCH_PTE_ALLOC_ONE_KERNEL, and a few
-architectures implement it by calling the page allocator directly.
-We amend those so that they call the generic
-__pte_alloc_one_kernel() instead, if possible, ensuring that the
-ctor is called.
-
-A few architectures do not use <asm-generic/pgalloc.h>; those will
-be taken care of separately.
-
-[1] https://lore.kernel.org/linux-mm/20250103184415.2744423-1-kevin.brodsky@arm.com/
+On powerpc, all functions related to PTE allocation are implemented
+by common helpers, which are passed a boolean to differentiate user
+from kernel pgtables. This patch aligns the powerpc implementation
+with the generic one by calling pagetable_pte_[cd]tor()
+unconditionally in those helpers.
 
 Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 ---
- arch/csky/include/asm/pgalloc.h | 2 +-
- arch/microblaze/mm/pgtable.c    | 2 +-
- arch/openrisc/mm/ioremap.c      | 2 +-
- include/asm-generic/pgalloc.h   | 7 ++++++-
- include/linux/mm.h              | 2 +-
- 5 files changed, 10 insertions(+), 5 deletions(-)
+ arch/powerpc/mm/pgtable-frag.c | 30 +++++++++++++-----------------
+ 1 file changed, 13 insertions(+), 17 deletions(-)
 
-diff --git a/arch/csky/include/asm/pgalloc.h b/arch/csky/include/asm/pgalloc.h
-index 11055c574968..9ed2b15ffd94 100644
---- a/arch/csky/include/asm/pgalloc.h
-+++ b/arch/csky/include/asm/pgalloc.h
-@@ -29,7 +29,7 @@ static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
- 	pte_t *pte;
- 	unsigned long i;
- 
--	pte = (pte_t *) __get_free_page(GFP_KERNEL);
-+	pte = __pte_alloc_one_kernel(mm);
- 	if (!pte)
- 		return NULL;
- 
-diff --git a/arch/microblaze/mm/pgtable.c b/arch/microblaze/mm/pgtable.c
-index 9f73265aad4e..e96dd1b7aba4 100644
---- a/arch/microblaze/mm/pgtable.c
-+++ b/arch/microblaze/mm/pgtable.c
-@@ -245,7 +245,7 @@ unsigned long iopa(unsigned long addr)
- __ref pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
+diff --git a/arch/powerpc/mm/pgtable-frag.c b/arch/powerpc/mm/pgtable-frag.c
+index 387e9b1fe12c..77e55eac16e4 100644
+--- a/arch/powerpc/mm/pgtable-frag.c
++++ b/arch/powerpc/mm/pgtable-frag.c
+@@ -56,19 +56,17 @@ static pte_t *__alloc_for_ptecache(struct mm_struct *mm, int kernel)
  {
- 	if (mem_init_done)
--		return (pte_t *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
-+		return __pte_alloc_one_kernel(mm);
- 	else
- 		return memblock_alloc_try_nid(PAGE_SIZE, PAGE_SIZE,
- 					      MEMBLOCK_LOW_LIMIT,
-diff --git a/arch/openrisc/mm/ioremap.c b/arch/openrisc/mm/ioremap.c
-index 8e63e86251ca..3b352f97fecb 100644
---- a/arch/openrisc/mm/ioremap.c
-+++ b/arch/openrisc/mm/ioremap.c
-@@ -36,7 +36,7 @@ pte_t __ref *pte_alloc_one_kernel(struct mm_struct *mm)
- 	pte_t *pte;
+ 	void *ret = NULL;
+ 	struct ptdesc *ptdesc;
++	gfp_t gfp = PGALLOC_GFP;
  
- 	if (likely(mem_init_done)) {
--		pte = (pte_t *)get_zeroed_page(GFP_KERNEL);
-+		pte = __pte_alloc_one_kernel(mm);
- 	} else {
- 		pte = memblock_alloc_or_panic(PAGE_SIZE, PAGE_SIZE);
- 	}
-diff --git a/include/asm-generic/pgalloc.h b/include/asm-generic/pgalloc.h
-index e164ca66f0f6..3c8ec3bfea44 100644
---- a/include/asm-generic/pgalloc.h
-+++ b/include/asm-generic/pgalloc.h
-@@ -23,6 +23,11 @@ static inline pte_t *__pte_alloc_one_kernel_noprof(struct mm_struct *mm)
- 
- 	if (!ptdesc)
- 		return NULL;
+-	if (!kernel) {
+-		ptdesc = pagetable_alloc(PGALLOC_GFP | __GFP_ACCOUNT, 0);
+-		if (!ptdesc)
+-			return NULL;
+-		if (!pagetable_pte_ctor(mm, ptdesc)) {
+-			pagetable_free(ptdesc);
+-			return NULL;
+-		}
+-	} else {
+-		ptdesc = pagetable_alloc(PGALLOC_GFP, 0);
+-		if (!ptdesc)
+-			return NULL;
++	if (!kernel)
++		gfp |= __GFP_ACCOUNT;
++
++	ptdesc = pagetable_alloc(gfp, 0);
++	if (!ptdesc)
++		return NULL;
 +	if (!pagetable_pte_ctor(mm, ptdesc)) {
 +		pagetable_free(ptdesc);
 +		return NULL;
-+	}
-+
- 	return ptdesc_address(ptdesc);
- }
- #define __pte_alloc_one_kernel(...)	alloc_hooks(__pte_alloc_one_kernel_noprof(__VA_ARGS__))
-@@ -48,7 +53,7 @@ static inline pte_t *pte_alloc_one_kernel_noprof(struct mm_struct *mm)
-  */
- static inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
- {
--	pagetable_free(virt_to_ptdesc(pte));
-+	pagetable_dtor_free(virt_to_ptdesc(pte));
+ 	}
+ 
+ 	atomic_set(&ptdesc->pt_frag_refcount, 1);
+@@ -124,12 +122,10 @@ void pte_fragment_free(unsigned long *table, int kernel)
+ 
+ 	BUG_ON(atomic_read(&ptdesc->pt_frag_refcount) <= 0);
+ 	if (atomic_dec_and_test(&ptdesc->pt_frag_refcount)) {
+-		if (kernel)
+-			pagetable_free(ptdesc);
+-		else if (folio_test_clear_active(ptdesc_folio(ptdesc)))
+-			call_rcu(&ptdesc->pt_rcu_head, pte_free_now);
+-		else
++		if (kernel || !folio_test_clear_active(ptdesc_folio(ptdesc)))
+ 			pte_free_now(&ptdesc->pt_rcu_head);
++		else
++			call_rcu(&ptdesc->pt_rcu_head, pte_free_now);
+ 	}
  }
  
- /**
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index f9b793cce2c1..3f48e449574a 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -3103,7 +3103,7 @@ static inline void pagetable_dtor_free(struct ptdesc *ptdesc)
- static inline bool pagetable_pte_ctor(struct mm_struct *mm,
- 				      struct ptdesc *ptdesc)
- {
--	if (!ptlock_init(ptdesc))
-+	if (mm != &init_mm && !ptlock_init(ptdesc))
- 		return false;
- 	__pagetable_ctor(ptdesc);
- 	return true;
 -- 
 2.47.0
 
