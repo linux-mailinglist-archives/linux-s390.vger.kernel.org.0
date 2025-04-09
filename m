@@ -1,81 +1,81 @@
-Return-Path: <linux-s390+bounces-9912-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-9914-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A218A82714
-	for <lists+linux-s390@lfdr.de>; Wed,  9 Apr 2025 16:05:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E187EA82720
+	for <lists+linux-s390@lfdr.de>; Wed,  9 Apr 2025 16:06:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C52314629B2
-	for <lists+linux-s390@lfdr.de>; Wed,  9 Apr 2025 14:04:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 315F88A72EA
+	for <lists+linux-s390@lfdr.de>; Wed,  9 Apr 2025 14:03:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C63F9265CC6;
-	Wed,  9 Apr 2025 14:03:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 219C525F788;
+	Wed,  9 Apr 2025 14:03:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ArAxBGdc"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UWhF9UDL"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 249A6265CA7
-	for <linux-s390@vger.kernel.org>; Wed,  9 Apr 2025 14:03:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6258225F972
+	for <linux-s390@vger.kernel.org>; Wed,  9 Apr 2025 14:03:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744207406; cv=none; b=YVtSXVlyswThABwI33K25z09jkxs/g9vOh4f2M/M+NDPybjMDjd97eOpYFDOKkbIu7tlpwJKskAf6uU0JyZ6weiDLBkETxnm5wTknaTQW/vxXDyYc3vacS1tNtR15a9v99DweyMhpju/w5ZiH165VRWzhjFHx1l/MgSfo1C2K/c=
+	t=1744207408; cv=none; b=aob7SG/K5vIBjtzVvAh0yyQi1CodibVk6x5RNdjFlkHmkV5l8iVGErz+FGpUDdKL6zizPqRCwUaz7apkE6tsED5zXlbYh4P8VREOJohbFyXAit6t8QCkpQS8Arop72ZTas0h3rAZURblAzz9E4tLNychJKUjW1Viq2WaqDmfNYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744207406; c=relaxed/simple;
-	bh=TLOp0TyJ3DZkSLJDbbHKO8NCyyIOCgOOtseQksnZfMs=;
+	s=arc-20240116; t=1744207408; c=relaxed/simple;
+	bh=bUjmygEbaKVCAdim7d7RDKelyqhAlf4DfbQvbK8Sp6U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O1MQ7F3Wwe7E/WSXsZY4AXJHELukDOr8FqtCdN+bY5zFT51xkhZd+B4PEGKBEA1fk1p/oHkGXhLrmJ3cq4DSvRO5pPrmrEw1+W2aEVaffre8KY+p8OzdSY8ZY72Z+rY9wATli4+CfM9BcDrJv3gKeOdCmjJwXBYkiS6KQD10+WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ArAxBGdc; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=FoYd8Wstc+wMyUjx6XF7QJKD+5+w/IQdJuaNtJeBdUvr/9UvNvVfCQh3X6nw75ppR9Q/CSyWylByNC7x41puZpNdhOJMvK42u7YQHgWP2Z8Sjg6m5wC1gmkseuLzNpkkntT/FPi4R54vn6IXnAubYG+jgEUhEHZe/YyusAjrULY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UWhF9UDL; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 539D6ktG003389;
-	Wed, 9 Apr 2025 14:03:22 GMT
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5399J9YS009215;
+	Wed, 9 Apr 2025 14:03:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=Ruv2THun2A6aLFSbY
-	5wWOabXhrxxxjT97zmwRHc6OF8=; b=ArAxBGdcnTBuFd9reFzCk8lSwQkkQhCc/
-	CP/O7yo51woJ4FHFBEunHWc/g1GzAXYxFz/UxhmC6SUBDd6FdR1x8vl6WA5LTbGK
-	a969sWM7HZFxejRcupYWdYQ/k9n/Zs1UeoWXu4fsEMdGXNy7w9bwTlNdq3ceD43S
-	+IOKQ2Fw4/NoWjh4un6kAvX63nqNIUdlzTbJKDLRPi269Gbc2FzZVHgw9zJ5075w
-	F6VU+sDN8oSI9fVjRHhAaVCJ6ECEJBQkNBGGUeUr5LFCLJoZft5sThd239b8B8K2
-	JlMXOOoxg3QY1q9pX7OEsxSSMYaLRNdzo16WfUdjQwwsJJGmEG8Iw==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45w7yxd07r-1
+	:mime-version:references:subject:to; s=pp1; bh=sxPYmdP8dEfnJ6gwk
+	+Hs3YHDgbG5KiDXMF2Rh8hmguo=; b=UWhF9UDL1V6Quu4qfQys9spw0FvaRt97U
+	kiQ4Uj00mlQF8lur6UhRUg5mrbmeIGUEifgdVOJTn7vNhPkiAgFTi5tGFJb8rYWU
+	Yj8CrzhP9Y2C3yu0+Heg7E4TEei0vRdHsEQ5fqinxtJ/NdiOnFxXv4gwOSgXYXaO
+	hx7GSS0KHncmwmonjF7K6nLyZO7y7jfZVQ7RwVab+bBuPKmHbxZ8Yqm4l0/soS1L
+	j91iiDnQWC/KCzq8O7B5P6DXTdQpMkJRF+ZE3wAHmAsdj2sfp83wbJ2+iyMaboXG
+	t8Zw4kfF6I4DUbkc3kmEAtghCn5ZSyoe2gea61ZmvR7zJhNFGQSiQ==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45wayr40y9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 09 Apr 2025 14:03:21 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 539D0HAA024610;
-	Wed, 9 Apr 2025 14:03:20 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 45ueutg78c-1
+	Wed, 09 Apr 2025 14:03:23 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 539E0pZa017825;
+	Wed, 9 Apr 2025 14:03:22 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 45uh2kqucp-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 09 Apr 2025 14:03:20 +0000
+	Wed, 09 Apr 2025 14:03:22 +0000
 Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 539E3Hks59572636
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 539E3Jlk20578802
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 9 Apr 2025 14:03:17 GMT
+	Wed, 9 Apr 2025 14:03:19 GMT
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 306E420063;
-	Wed,  9 Apr 2025 14:03:17 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 0C7112006B;
+	Wed,  9 Apr 2025 14:03:19 +0000 (GMT)
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A640220040;
-	Wed,  9 Apr 2025 14:03:16 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 8A6832004E;
+	Wed,  9 Apr 2025 14:03:18 +0000 (GMT)
 Received: from funtu2.fritz.box?044ibm.com (unknown [9.171.93.164])
 	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  9 Apr 2025 14:03:16 +0000 (GMT)
+	Wed,  9 Apr 2025 14:03:18 +0000 (GMT)
 From: Harald Freudenberger <freude@linux.ibm.com>
 To: dengler@linux.ibm.com, ifranzki@linux.ibm.com, fcallies@linux.ibm.com,
         hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
         seiden@linux.ibm.com, borntraeger@linux.ibm.com, frankja@linux.ibm.com,
         imbrenda@linux.ibm.com
 Cc: linux-s390@vger.kernel.org, herbert@gondor.apana.org.au
-Subject: [PATCH v4 16/24] s390/zcrypt: Propagate xflags argument with cca_get_info()
-Date: Wed,  9 Apr 2025 16:02:57 +0200
-Message-ID: <20250409140305.58900-17-freude@linux.ibm.com>
+Subject: [PATCH v4 19/24] s390/pkey: Rework CCA pkey handler to use stack for small memory allocs
+Date: Wed,  9 Apr 2025 16:03:00 +0200
+Message-ID: <20250409140305.58900-20-freude@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250409140305.58900-1-freude@linux.ibm.com>
 References: <20250409140305.58900-1-freude@linux.ibm.com>
@@ -87,113 +87,165 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: gsrLSblnQFr4QSBNBKeEy_r7UlS4hYJd
-X-Proofpoint-GUID: gsrLSblnQFr4QSBNBKeEy_r7UlS4hYJd
+X-Proofpoint-ORIG-GUID: YGGIQkIcMfGdB1x1zqlcIRpRf9O1wMWz
+X-Proofpoint-GUID: YGGIQkIcMfGdB1x1zqlcIRpRf9O1wMWz
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-09_05,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- spamscore=0 impostorscore=0 lowpriorityscore=0 priorityscore=1501
- clxscore=1015 malwarescore=0 mlxscore=0 suspectscore=0 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ priorityscore=1501 impostorscore=0 malwarescore=0 bulkscore=0
+ clxscore=1015 lowpriorityscore=0 spamscore=0 adultscore=0 phishscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2502280000 definitions=main-2504090086
 
-Propagate the xflags argument from the cca_get_info()
-caller down to the lower level functions for proper
-memory allocation hints.
+There have been some places in the CCA handler code where relatively
+small amounts of memory have been allocated an freed at the end
+of the function. This code has been reworked to use the stack instead.
 
 Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+Reviewed-by: Holger Dengler <dengler@linux.ibm.com>
 ---
- drivers/s390/crypto/zcrypt_ccamisc.c | 11 ++++++-----
- drivers/s390/crypto/zcrypt_ccamisc.h |  2 +-
- drivers/s390/crypto/zcrypt_cex4.c    |  4 ++--
- 3 files changed, 9 insertions(+), 8 deletions(-)
+ drivers/s390/crypto/pkey_cca.c | 43 ++++++++--------------------------
+ 1 file changed, 10 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/s390/crypto/zcrypt_ccamisc.c b/drivers/s390/crypto/zcrypt_ccamisc.c
-index 88f3c7708c2a..2257410110f5 100644
---- a/drivers/s390/crypto/zcrypt_ccamisc.c
-+++ b/drivers/s390/crypto/zcrypt_ccamisc.c
-@@ -1636,14 +1636,14 @@ EXPORT_SYMBOL(cca_query_crypto_facility);
- /*
-  * Fetch cca_info values via query_crypto_facility from adapter.
-  */
--static int fetch_cca_info(u16 cardnr, u16 domain, struct cca_info *ci)
-+static int fetch_cca_info(u16 cardnr, u16 domain,
-+			  struct cca_info *ci, u32 xflags)
+diff --git a/drivers/s390/crypto/pkey_cca.c b/drivers/s390/crypto/pkey_cca.c
+index 5b1f4c571c88..6986611fcde5 100644
+--- a/drivers/s390/crypto/pkey_cca.c
++++ b/drivers/s390/crypto/pkey_cca.c
+@@ -213,7 +213,7 @@ static int cca_key2protkey(const struct pkey_apqn *apqns, size_t nr_apqns,
+ 			   u8 *protkey, u32 *protkeylen, u32 *protkeytype)
  {
- 	void *mem;
- 	int rc, found = 0;
- 	size_t rlen, vlen;
- 	u8 *rarray, *varray;
- 	struct zcrypt_device_status_ext devstat;
--	u32 xflags = 0;
+ 	struct keytoken_header *hdr = (struct keytoken_header *)key;
+-	struct pkey_apqn *local_apqns = NULL;
++	struct pkey_apqn _apqns[MAXAPQNSINLIST];
+ 	int i, rc;
  
- 	memset(ci, 0, sizeof(*ci));
+ 	if (keylen < sizeof(*hdr))
+@@ -251,14 +251,10 @@ static int cca_key2protkey(const struct pkey_apqn *apqns, size_t nr_apqns,
+ 	if (!apqns || (nr_apqns == 1 &&
+ 		       apqns[0].card == 0xFFFF && apqns[0].domain == 0xFFFF)) {
+ 		nr_apqns = MAXAPQNSINLIST;
+-		local_apqns = kmalloc_array(nr_apqns, sizeof(struct pkey_apqn),
+-					    GFP_KERNEL);
+-		if (!local_apqns)
+-			return -ENOMEM;
+-		rc = cca_apqns4key(key, keylen, 0, local_apqns, &nr_apqns);
++		rc = cca_apqns4key(key, keylen, 0, _apqns, &nr_apqns);
+ 		if (rc)
+ 			goto out;
+-		apqns = local_apqns;
++		apqns = _apqns;
+ 	}
  
-@@ -1717,9 +1717,9 @@ static int fetch_cca_info(u16 cardnr, u16 domain, struct cca_info *ci)
- /*
-  * Fetch cca information about a CCA queue.
-  */
--int cca_get_info(u16 card, u16 dom, struct cca_info *ci)
-+int cca_get_info(u16 card, u16 dom, struct cca_info *ci, u32 xflags)
+ 	for (rc = -ENODEV, i = 0; rc && i < nr_apqns; i++) {
+@@ -283,7 +279,6 @@ static int cca_key2protkey(const struct pkey_apqn *apqns, size_t nr_apqns,
+ 	}
+ 
+ out:
+-	kfree(local_apqns);
+ 	pr_debug("rc=%d\n", rc);
+ 	return rc;
+ }
+@@ -302,7 +297,7 @@ static int cca_gen_key(const struct pkey_apqn *apqns, size_t nr_apqns,
+ 		       u32 keybitsize, u32 flags,
+ 		       u8 *keybuf, u32 *keybuflen, u32 *_keyinfo)
  {
--	return fetch_cca_info(card, dom, ci);
-+	return fetch_cca_info(card, dom, ci, xflags);
+-	struct pkey_apqn *local_apqns = NULL;
++	struct pkey_apqn _apqns[MAXAPQNSINLIST];
+ 	int i, len, rc;
+ 
+ 	/* check keytype, subtype, keybitsize */
+@@ -338,15 +333,10 @@ static int cca_gen_key(const struct pkey_apqn *apqns, size_t nr_apqns,
+ 	if (!apqns || (nr_apqns == 1 &&
+ 		       apqns[0].card == 0xFFFF && apqns[0].domain == 0xFFFF)) {
+ 		nr_apqns = MAXAPQNSINLIST;
+-		local_apqns = kmalloc_array(nr_apqns, sizeof(struct pkey_apqn),
+-					    GFP_KERNEL);
+-		if (!local_apqns)
+-			return -ENOMEM;
+-		rc = cca_apqns4type(subtype, NULL, NULL, 0,
+-				    local_apqns, &nr_apqns);
++		rc = cca_apqns4type(subtype, NULL, NULL, 0, _apqns, &nr_apqns);
+ 		if (rc)
+ 			goto out;
+-		apqns = local_apqns;
++		apqns = _apqns;
+ 	}
+ 
+ 	for (rc = -ENODEV, i = 0; rc && i < nr_apqns; i++) {
+@@ -363,7 +353,6 @@ static int cca_gen_key(const struct pkey_apqn *apqns, size_t nr_apqns,
+ 	}
+ 
+ out:
+-	kfree(local_apqns);
+ 	pr_debug("rc=%d\n", rc);
+ 	return rc;
  }
- EXPORT_SYMBOL(cca_get_info);
+@@ -383,7 +372,7 @@ static int cca_clr2key(const struct pkey_apqn *apqns, size_t nr_apqns,
+ 		       const u8 *clrkey, u32 clrkeylen,
+ 		       u8 *keybuf, u32 *keybuflen, u32 *_keyinfo)
+ {
+-	struct pkey_apqn *local_apqns = NULL;
++	struct pkey_apqn _apqns[MAXAPQNSINLIST];
+ 	int i, len, rc;
  
-@@ -1730,6 +1730,7 @@ int cca_findcard2(u32 *apqns, u32 *nr_apqns, u16 cardnr, u16 domain,
- 	int i, card, dom, curmatch, oldmatch;
- 	struct cca_info ci;
- 	u32 _nr_apqns = 0;
-+	u32 xflags = 0;
+ 	/* check keytype, subtype, clrkeylen, keybitsize */
+@@ -424,15 +413,10 @@ static int cca_clr2key(const struct pkey_apqn *apqns, size_t nr_apqns,
+ 	if (!apqns || (nr_apqns == 1 &&
+ 		       apqns[0].card == 0xFFFF && apqns[0].domain == 0xFFFF)) {
+ 		nr_apqns = MAXAPQNSINLIST;
+-		local_apqns = kmalloc_array(nr_apqns, sizeof(struct pkey_apqn),
+-					    GFP_KERNEL);
+-		if (!local_apqns)
+-			return -ENOMEM;
+-		rc = cca_apqns4type(subtype, NULL, NULL, 0,
+-				    local_apqns, &nr_apqns);
++		rc = cca_apqns4type(subtype, NULL, NULL, 0, _apqns, &nr_apqns);
+ 		if (rc)
+ 			goto out;
+-		apqns = local_apqns;
++		apqns = _apqns;
+ 	}
  
- 	/* occupy the device status memory */
- 	mutex_lock(&dev_status_mem_mutex);
-@@ -1758,7 +1759,7 @@ int cca_findcard2(u32 *apqns, u32 *nr_apqns, u16 cardnr, u16 domain,
- 		if (domain != 0xFFFF && dom != domain)
- 			continue;
- 		/* get cca info on this apqn */
--		if (cca_get_info(card, dom, &ci))
-+		if (cca_get_info(card, dom, &ci, xflags))
- 			continue;
- 		/* current master key needs to be valid */
- 		if (mktype == AES_MK_SET && ci.cur_aes_mk_state != '2')
-diff --git a/drivers/s390/crypto/zcrypt_ccamisc.h b/drivers/s390/crypto/zcrypt_ccamisc.h
-index ca41a675dd3b..38d69aceefe6 100644
---- a/drivers/s390/crypto/zcrypt_ccamisc.h
-+++ b/drivers/s390/crypto/zcrypt_ccamisc.h
-@@ -255,7 +255,7 @@ struct cca_info {
- /*
-  * Fetch cca information about an CCA queue.
-  */
--int cca_get_info(u16 card, u16 dom, struct cca_info *ci);
-+int cca_get_info(u16 card, u16 dom, struct cca_info *ci, u32 xflags);
+ 	for (rc = -ENODEV, i = 0; rc && i < nr_apqns; i++) {
+@@ -449,7 +433,6 @@ static int cca_clr2key(const struct pkey_apqn *apqns, size_t nr_apqns,
+ 	}
  
- int zcrypt_ccamisc_init(void);
- void zcrypt_ccamisc_exit(void);
-diff --git a/drivers/s390/crypto/zcrypt_cex4.c b/drivers/s390/crypto/zcrypt_cex4.c
-index ecf1fcc6315e..84cbcbab2741 100644
---- a/drivers/s390/crypto/zcrypt_cex4.c
-+++ b/drivers/s390/crypto/zcrypt_cex4.c
-@@ -85,7 +85,7 @@ static ssize_t cca_serialnr_show(struct device *dev,
- 	memset(&ci, 0, sizeof(ci));
- 
- 	if (ap_domain_index >= 0)
--		cca_get_info(ac->id, ap_domain_index, &ci);
-+		cca_get_info(ac->id, ap_domain_index, &ci, 0);
- 
- 	return sysfs_emit(buf, "%s\n", ci.serial);
+ out:
+-	kfree(local_apqns);
+ 	pr_debug("rc=%d\n", rc);
+ 	return rc;
  }
-@@ -119,7 +119,7 @@ static ssize_t cca_mkvps_show(struct device *dev,
+@@ -552,8 +535,8 @@ static int cca_slowpath_key2protkey(const struct pkey_apqn *apqns,
+ {
+ 	const struct keytoken_header *hdr = (const struct keytoken_header *)key;
+ 	const struct clearkeytoken *t = (const struct clearkeytoken *)key;
++	u8 tmpbuf[SECKEYBLOBSIZE]; /* 64 bytes */
+ 	u32 tmplen, keysize = 0;
+-	u8 *tmpbuf;
+ 	int i, rc;
  
- 	cca_get_info(AP_QID_CARD(zq->queue->qid),
- 		     AP_QID_QUEUE(zq->queue->qid),
--		     &ci);
-+		     &ci, 0);
+ 	if (keylen < sizeof(*hdr))
+@@ -565,11 +548,6 @@ static int cca_slowpath_key2protkey(const struct pkey_apqn *apqns,
+ 	if (!keysize || t->len != keysize)
+ 		return -EINVAL;
  
- 	if (ci.new_aes_mk_state >= '1' && ci.new_aes_mk_state <= '3')
- 		n += sysfs_emit_at(buf, n, "AES NEW: %s 0x%016llx\n",
+-	/* alloc tmp key buffer */
+-	tmpbuf = kmalloc(SECKEYBLOBSIZE, GFP_ATOMIC);
+-	if (!tmpbuf)
+-		return -ENOMEM;
+-
+ 	/* try two times in case of failure */
+ 	for (i = 0, rc = -ENODEV; i < 2 && rc; i++) {
+ 		tmplen = SECKEYBLOBSIZE;
+@@ -584,7 +562,6 @@ static int cca_slowpath_key2protkey(const struct pkey_apqn *apqns,
+ 		pr_debug("cca_key2protkey()=%d\n", rc);
+ 	}
+ 
+-	kfree(tmpbuf);
+ 	pr_debug("rc=%d\n", rc);
+ 	return rc;
+ }
 -- 
 2.43.0
 
