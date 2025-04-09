@@ -1,81 +1,81 @@
-Return-Path: <linux-s390+bounces-9915-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-9917-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF767A82703
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1D0BA82704
 	for <lists+linux-s390@lfdr.de>; Wed,  9 Apr 2025 16:04:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3FFAC1B6657E
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4838D1B67E71
 	for <lists+linux-s390@lfdr.de>; Wed,  9 Apr 2025 14:04:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E533426562A;
-	Wed,  9 Apr 2025 14:03:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80C7F25F972;
+	Wed,  9 Apr 2025 14:03:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rAo9Fc9I"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sTk62rdJ"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F5E26560D
-	for <linux-s390@vger.kernel.org>; Wed,  9 Apr 2025 14:03:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC46826560D
+	for <linux-s390@vger.kernel.org>; Wed,  9 Apr 2025 14:03:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744207408; cv=none; b=VtH4rEujY2mnMeFdg1mEod9572mk7duWRIG529pqVF6FvIcNZ/mTHrQbavEeCdG2rEJuMyfqEukP7EmuxdVusB9lzZyXd51YgUwD0Gatopa4H3wFFiCWZVksia2jGZItbHlbzPnIx3gVfBixOvAYkSj/0nXWL4z/IVvFtTsERNI=
+	t=1744207411; cv=none; b=WRujUUag46C4Mb64GF0uBo1Mkv4b/t8LAw4a9sHGCcVNjNGw3zBDZGjiEZQxl4W5VNutlorRE+G/R05XGZy1VEYpqwhhid836lQ1cUi3co3kYjNSLiaze/gmiaDp/+6H/WgUwSqN6N2LDPu/tK1VFYLEEj0FZN+i+KHpb61B5W8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744207408; c=relaxed/simple;
-	bh=M/CihbpymVeG2xsJrPAZyxvn0Dcebo9mOWwj6XQB8Rk=;
+	s=arc-20240116; t=1744207411; c=relaxed/simple;
+	bh=n3CfPqXwnuSsAuUwk96BN6gJGzrTBqd0aGlx/lppxnA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SUXhTyUzB4xlgmUt45bw1C774L3+OHUHhVDafTcAy8PqThH6sSAa0FqKtHTB61ZzEkreSukSCJbfDloaD35btOzM43Y1FDy/3tOhUOnUuMC3C7ei6Nmr7rpuFJ4/nBh/E6EhBBe8rfPJ3VsdGydvaaaz+QVudadavY0kWOEfwz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rAo9Fc9I; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=FifTDyvULR9Y/LTpLZGmJ5sZcxdIxqhzuSW/jXLxBHwt8qep3B39y5fZafe3AI0ha5hkWCiL5Iy5BVlS2jCDBjo+ZlPJ12uooMU7HjdYSizLuR8PXuejR0oA0rX/eh8n/VyecJYBZpD+10Wg5Eef9PCz392l1dlxS2K/G6d/kKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=sTk62rdJ; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5398PSSt008107;
-	Wed, 9 Apr 2025 14:03:24 GMT
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5399IV3H027285;
+	Wed, 9 Apr 2025 14:03:27 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=T7WkMhQ8AOZGOLGMV
-	9HZDODJTy3iO623qXi/z7LzlLk=; b=rAo9Fc9IJJ8dAYI0/bRfPjrP+b0gTiATO
-	uQYKh0D54BnmRQGiWIm75i2GElQcWHF6okVcCbx8IAh3aD3c3Y2Yw8zwtM/yg4Eo
-	6gNzgXPdw6a4iXiPFq+IcY2O2ncuk5x5OiVv1q0x7HcH23ZdAOeBSNqyJm8DbeRX
-	pPsWKZ00OIqIiPhw2Bh60DYVP36OBCwNb5/LsYA0FtLh33p+IcHs1TTaCyOTPoWQ
-	4UjpXSQqYC0UiapBmDkKsMqPaDGFTX2OqctljsrO2JzdiSkOi7YOZVuvAT+/W3tA
-	5JnwufYjp/lVlnTw/t2GpG0WQMKwxguqhIdXNVa2bDHvWKtpT9O2Q==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45wayr40yg-1
+	:mime-version:references:subject:to; s=pp1; bh=EwPYLHxor6WAUrQT5
+	DRBwJAj65VYA+rDXfr3p/Y0s9g=; b=sTk62rdJpCKi2WaC5fepY8oOZKFIiOqAy
+	NVVw/xP6ZpWe4bU02c3jiNN5Z4ZnCYImQhF9xVzKmYRcVPaCjaaOeGkzpp8XZl+s
+	1s1eO2Cq+tJQUSfTwpB3kJ0SVwNvM2DHUxrSeTzvi37rjiDS3u5v/r6YOMlQThhD
+	v6c+WmmsQ+pWUSG4yhKc6ZCqaeY9kJ6kqE/LpMpV7HgiKb5Ld/XfE7VoefXu4iYv
+	XHKI7Gq1JMw0/+thuBAsYpEzI6ciwVYujyER8fKnpRhM+bWLgzj9mm2obC4rD00T
+	PtyYaqU3PpkgOpbjW8qei/1dh84Ndij4QyWobuvLU31KJ4UZTGEMQ==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45wb10m0fq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 09 Apr 2025 14:03:24 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 539CWxco011522;
-	Wed, 9 Apr 2025 14:03:23 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45uf7yr5ht-1
+	Wed, 09 Apr 2025 14:03:26 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 539E1TL2018432;
+	Wed, 9 Apr 2025 14:03:26 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 45uh2kqucy-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 09 Apr 2025 14:03:23 +0000
+	Wed, 09 Apr 2025 14:03:26 +0000
 Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 539E3J5I9109850
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 539E3MDA34538214
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 9 Apr 2025 14:03:19 GMT
+	Wed, 9 Apr 2025 14:03:22 GMT
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BE84C20040;
-	Wed,  9 Apr 2025 14:03:19 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 8DEC52005A;
+	Wed,  9 Apr 2025 14:03:22 +0000 (GMT)
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2D5E42004E;
-	Wed,  9 Apr 2025 14:03:19 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 12BDD20040;
+	Wed,  9 Apr 2025 14:03:22 +0000 (GMT)
 Received: from funtu2.fritz.box?044ibm.com (unknown [9.171.93.164])
 	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  9 Apr 2025 14:03:19 +0000 (GMT)
+	Wed,  9 Apr 2025 14:03:22 +0000 (GMT)
 From: Harald Freudenberger <freude@linux.ibm.com>
 To: dengler@linux.ibm.com, ifranzki@linux.ibm.com, fcallies@linux.ibm.com,
         hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
         seiden@linux.ibm.com, borntraeger@linux.ibm.com, frankja@linux.ibm.com,
         imbrenda@linux.ibm.com
 Cc: linux-s390@vger.kernel.org, herbert@gondor.apana.org.au
-Subject: [PATCH v4 20/24] s390/pkey: Rework EP11 pkey handler to use stack for small memory allocs
-Date: Wed,  9 Apr 2025 16:03:01 +0200
-Message-ID: <20250409140305.58900-21-freude@linux.ibm.com>
+Subject: [PATCH v4 24/24] s390/pkey/crypto: Introduce xflags param for pkey in-kernel API
+Date: Wed,  9 Apr 2025 16:03:05 +0200
+Message-ID: <20250409140305.58900-25-freude@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250409140305.58900-1-freude@linux.ibm.com>
 References: <20250409140305.58900-1-freude@linux.ibm.com>
@@ -87,165 +87,119 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Ykyq-tMNW9LtcpEoUblPbBVQYVIhLnwC
-X-Proofpoint-GUID: Ykyq-tMNW9LtcpEoUblPbBVQYVIhLnwC
+X-Proofpoint-ORIG-GUID: PH-7Z2TkL5TH9fPEaXCzTjELPenpwXMH
+X-Proofpoint-GUID: PH-7Z2TkL5TH9fPEaXCzTjELPenpwXMH
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-09_05,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- priorityscore=1501 impostorscore=0 malwarescore=0 bulkscore=0
- clxscore=1015 lowpriorityscore=0 spamscore=0 adultscore=0 phishscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 malwarescore=0 suspectscore=0 impostorscore=0
+ priorityscore=1501 adultscore=0 bulkscore=0 mlxlogscore=997 mlxscore=0
+ phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2502280000 definitions=main-2504090086
 
-There have been some places in the EP11 handler code where relatively
-small amounts of memory have been allocated an freed at the end
-of the function. This code has been reworked to use the stack instead.
+Add a new parameter xflags to the in-kernel API function
+pkey_key2protkey(). Currently there is only one flag supported:
+
+* PKEY_XFLAG_NOMEMALLOC:
+  If this flag is given in the xflags parameter, the pkey
+  implementation is not allowed to allocate memory but instead should
+  fall back to use preallocated memory or simple fail with -ENOMEM.
+  This flag is for protected key derive within a cipher or similar
+  which must not allocate memory which would cause io operations - see
+  also the CRYPTO_ALG_ALLOCATES_MEMORY flag in crypto.h.
+
+The one and only user of this in-kernel API - the skcipher
+implementations PAES in paes_s390.c set this flag upon request
+to derive a protected key from the given raw key material.
 
 Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
 Reviewed-by: Holger Dengler <dengler@linux.ibm.com>
 ---
- drivers/s390/crypto/pkey_ep11.c | 43 ++++++++-------------------------
- 1 file changed, 10 insertions(+), 33 deletions(-)
+ arch/s390/crypto/paes_s390.c   |  6 +++---
+ arch/s390/include/asm/pkey.h   | 15 ++++++++++++++-
+ drivers/s390/crypto/pkey_api.c | 11 +++++++----
+ 3 files changed, 24 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/s390/crypto/pkey_ep11.c b/drivers/s390/crypto/pkey_ep11.c
-index 38aa0c7807c2..429c08facbfe 100644
---- a/drivers/s390/crypto/pkey_ep11.c
-+++ b/drivers/s390/crypto/pkey_ep11.c
-@@ -186,7 +186,7 @@ static int ep11_key2protkey(const struct pkey_apqn *apqns, size_t nr_apqns,
- 			    u8 *protkey, u32 *protkeylen, u32 *protkeytype)
+diff --git a/arch/s390/crypto/paes_s390.c b/arch/s390/crypto/paes_s390.c
+index 511093713a6f..1f62a9460405 100644
+--- a/arch/s390/crypto/paes_s390.c
++++ b/arch/s390/crypto/paes_s390.c
+@@ -182,14 +182,14 @@ static inline int __paes_keyblob2pkey(const u8 *key, unsigned int keylen,
  {
- 	struct keytoken_header *hdr = (struct keytoken_header *)key;
--	struct pkey_apqn *local_apqns = NULL;
-+	struct pkey_apqn _apqns[MAXAPQNSINLIST];
- 	int i, rc;
+ 	int i, rc = -EIO;
  
- 	if (keylen < sizeof(*hdr))
-@@ -223,14 +223,10 @@ static int ep11_key2protkey(const struct pkey_apqn *apqns, size_t nr_apqns,
- 	if (!apqns || (nr_apqns == 1 &&
- 		       apqns[0].card == 0xFFFF && apqns[0].domain == 0xFFFF)) {
- 		nr_apqns = MAXAPQNSINLIST;
--		local_apqns = kmalloc_array(nr_apqns, sizeof(struct pkey_apqn),
--					    GFP_KERNEL);
--		if (!local_apqns)
--			return -ENOMEM;
--		rc = ep11_apqns4key(key, keylen, 0, local_apqns, &nr_apqns);
-+		rc = ep11_apqns4key(key, keylen, 0, _apqns, &nr_apqns);
- 		if (rc)
- 			goto out;
--		apqns = local_apqns;
-+		apqns = _apqns;
+-	/* try three times in case of busy card */
++	/* try three times in case of busy card or no mem */
+ 	for (i = 0; rc && i < 3; i++) {
+-		if (rc == -EBUSY && in_task()) {
++		if ((rc == -EBUSY || rc == -ENOMEM) && in_task()) {
+ 			if (msleep_interruptible(1000))
+ 				return -EINTR;
+ 		}
+ 		rc = pkey_key2protkey(key, keylen, pk->protkey, &pk->len,
+-				      &pk->type);
++				      &pk->type, PKEY_XFLAG_NOMEMALLOC);
  	}
  
- 	for (rc = -ENODEV, i = 0; rc && i < nr_apqns; i++) {
-@@ -259,7 +255,6 @@ static int ep11_key2protkey(const struct pkey_apqn *apqns, size_t nr_apqns,
- 	}
- 
- out:
--	kfree(local_apqns);
- 	pr_debug("rc=%d\n", rc);
  	return rc;
- }
-@@ -278,7 +273,7 @@ static int ep11_gen_key(const struct pkey_apqn *apqns, size_t nr_apqns,
- 			u32 keybitsize, u32 flags,
- 			u8 *keybuf, u32 *keybuflen, u32 *_keyinfo)
+diff --git a/arch/s390/include/asm/pkey.h b/arch/s390/include/asm/pkey.h
+index 5dca1a46a9f6..c0e7f8c25e9f 100644
+--- a/arch/s390/include/asm/pkey.h
++++ b/arch/s390/include/asm/pkey.h
+@@ -20,9 +20,22 @@
+  * @param key pointer to a buffer containing the key blob
+  * @param keylen size of the key blob in bytes
+  * @param protkey pointer to buffer receiving the protected key
++ * @param xflags additional execution flags (see PKEY_XFLAG_* definitions below)
++ *        As of now the only supported flag is PKEY_XFLAG_NOMEMALLOC.
+  * @return 0 on success, negative errno value on failure
+  */
+ int pkey_key2protkey(const u8 *key, u32 keylen,
+-		     u8 *protkey, u32 *protkeylen, u32 *protkeytype);
++		     u8 *protkey, u32 *protkeylen, u32 *protkeytype,
++		     u32 xflags);
++
++/*
++ * If this flag is given in the xflags parameter, the pkey implementation
++ * is not allowed to allocate memory but instead should fall back to use
++ * preallocated memory or simple fail with -ENOMEM.
++ * This flag is for protected key derive within a cipher or similar
++ * which must not allocate memory which would cause io operations - see
++ * also the CRYPTO_ALG_ALLOCATES_MEMORY flag in crypto.h.
++ */
++#define PKEY_XFLAG_NOMEMALLOC 0x0001
+ 
+ #endif /* _KAPI_PKEY_H */
+diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
+index 55a4e70b866b..c46b57001550 100644
+--- a/drivers/s390/crypto/pkey_api.c
++++ b/drivers/s390/crypto/pkey_api.c
+@@ -53,17 +53,20 @@ static int key2protkey(const struct pkey_apqn *apqns, size_t nr_apqns,
+  * In-Kernel function: Transform a key blob (of any type) into a protected key
+  */
+ int pkey_key2protkey(const u8 *key, u32 keylen,
+-		     u8 *protkey, u32 *protkeylen, u32 *protkeytype)
++		     u8 *protkey, u32 *protkeylen, u32 *protkeytype, u32 xflags)
  {
--	struct pkey_apqn *local_apqns = NULL;
-+	struct pkey_apqn _apqns[MAXAPQNSINLIST];
- 	int i, len, rc;
- 	const u32 xflags = 0;
++	u32 flags;
+ 	int rc;
+-	const u32 xflags = 0;
++
++	/* as of now only the NOMEMALLOC flag is supported */
++	flags = xflags & PKEY_XFLAG_NOMEMALLOC ? ZCRYPT_XFLAG_NOMEMALLOC : 0;
  
-@@ -315,15 +310,10 @@ static int ep11_gen_key(const struct pkey_apqn *apqns, size_t nr_apqns,
- 	if (!apqns || (nr_apqns == 1 &&
- 		       apqns[0].card == 0xFFFF && apqns[0].domain == 0xFFFF)) {
- 		nr_apqns = MAXAPQNSINLIST;
--		local_apqns = kmalloc_array(nr_apqns, sizeof(struct pkey_apqn),
--					    GFP_KERNEL);
--		if (!local_apqns)
--			return -ENOMEM;
--		rc = ep11_apqns4type(subtype, NULL, NULL, 0,
--				     local_apqns, &nr_apqns);
-+		rc = ep11_apqns4type(subtype, NULL, NULL, 0, _apqns, &nr_apqns);
- 		if (rc)
- 			goto out;
--		apqns = local_apqns;
-+		apqns = _apqns;
+ 	rc = key2protkey(NULL, 0, key, keylen,
+-			 protkey, protkeylen, protkeytype, xflags);
++			 protkey, protkeylen, protkeytype, flags);
+ 	if (rc == -ENODEV) {
+ 		pkey_handler_request_modules();
+ 		rc = key2protkey(NULL, 0, key, keylen,
+-				 protkey, protkeylen, protkeytype, xflags);
++				 protkey, protkeylen, protkeytype, flags);
  	}
  
- 	for (rc = -ENODEV, i = 0; rc && i < nr_apqns; i++) {
-@@ -333,7 +323,6 @@ static int ep11_gen_key(const struct pkey_apqn *apqns, size_t nr_apqns,
- 	}
- 
- out:
--	kfree(local_apqns);
- 	pr_debug("rc=%d\n", rc);
  	return rc;
- }
-@@ -353,7 +342,7 @@ static int ep11_clr2key(const struct pkey_apqn *apqns, size_t nr_apqns,
- 			const u8 *clrkey, u32 clrkeylen,
- 			u8 *keybuf, u32 *keybuflen, u32 *_keyinfo)
- {
--	struct pkey_apqn *local_apqns = NULL;
-+	struct pkey_apqn _apqns[MAXAPQNSINLIST];
- 	int i, len, rc;
- 
- 	/* check keytype, subtype, clrkeylen, keybitsize */
-@@ -394,15 +383,10 @@ static int ep11_clr2key(const struct pkey_apqn *apqns, size_t nr_apqns,
- 	if (!apqns || (nr_apqns == 1 &&
- 		       apqns[0].card == 0xFFFF && apqns[0].domain == 0xFFFF)) {
- 		nr_apqns = MAXAPQNSINLIST;
--		local_apqns = kmalloc_array(nr_apqns, sizeof(struct pkey_apqn),
--					    GFP_KERNEL);
--		if (!local_apqns)
--			return -ENOMEM;
--		rc = ep11_apqns4type(subtype, NULL, NULL, 0,
--				     local_apqns, &nr_apqns);
-+		rc = ep11_apqns4type(subtype, NULL, NULL, 0, _apqns, &nr_apqns);
- 		if (rc)
- 			goto out;
--		apqns = local_apqns;
-+		apqns = _apqns;
- 	}
- 
- 	for (rc = -ENODEV, i = 0; rc && i < nr_apqns; i++) {
-@@ -412,7 +396,6 @@ static int ep11_clr2key(const struct pkey_apqn *apqns, size_t nr_apqns,
- 	}
- 
- out:
--	kfree(local_apqns);
- 	pr_debug("rc=%d\n", rc);
- 	return rc;
- }
-@@ -502,8 +485,8 @@ static int ep11_slowpath_key2protkey(const struct pkey_apqn *apqns,
- {
- 	const struct keytoken_header *hdr = (const struct keytoken_header *)key;
- 	const struct clearkeytoken *t = (const struct clearkeytoken *)key;
-+	u8 tmpbuf[MAXEP11AESKEYBLOBSIZE]; /* 336 bytes */
- 	u32 tmplen, keysize = 0;
--	u8 *tmpbuf;
- 	int i, rc;
- 
- 	if (keylen < sizeof(*hdr))
-@@ -515,11 +498,6 @@ static int ep11_slowpath_key2protkey(const struct pkey_apqn *apqns,
- 	if (!keysize || t->len != keysize)
- 		return -EINVAL;
- 
--	/* alloc tmp key buffer */
--	tmpbuf = kmalloc(MAXEP11AESKEYBLOBSIZE, GFP_ATOMIC);
--	if (!tmpbuf)
--		return -ENOMEM;
--
- 	/* try two times in case of failure */
- 	for (i = 0, rc = -ENODEV; i < 2 && rc; i++) {
- 		tmplen = MAXEP11AESKEYBLOBSIZE;
-@@ -534,7 +512,6 @@ static int ep11_slowpath_key2protkey(const struct pkey_apqn *apqns,
- 		pr_debug("ep11_key2protkey()=%d\n", rc);
- 	}
- 
--	kfree(tmpbuf);
- 	pr_debug("rc=%d\n", rc);
- 	return rc;
- }
 -- 
 2.43.0
 
