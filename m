@@ -1,115 +1,138 @@
-Return-Path: <linux-s390+bounces-9979-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-9982-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D312A86605
-	for <lists+linux-s390@lfdr.de>; Fri, 11 Apr 2025 21:16:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04F5FA86701
+	for <lists+linux-s390@lfdr.de>; Fri, 11 Apr 2025 22:25:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 25C3E4A1AC1
-	for <lists+linux-s390@lfdr.de>; Fri, 11 Apr 2025 19:15:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2167B9A8613
+	for <lists+linux-s390@lfdr.de>; Fri, 11 Apr 2025 20:24:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ADE3278E5A;
-	Fri, 11 Apr 2025 19:15:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE6F2280CE6;
+	Fri, 11 Apr 2025 20:24:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FXAVJFgx"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eADgly6d"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C241D89E3;
-	Fri, 11 Apr 2025 19:15:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A6F280CD9;
+	Fri, 11 Apr 2025 20:24:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744398922; cv=none; b=ldq/bpiop4HXUbxcle1p0mlSs/V0Iccd+yv2b+/x6uoIr0OgnJ4k7Zo6mvdIzoQDWmHV9W5iiiI8n5GQEDeRrY7LWjHfcn/EJQ+5VdNVtQVjvqIDxRcwtBbdVFitHJJuk+YhkGKXP1XrPQU4Vf8AijSHPKofam1HHeb8Jk5TZ+E=
+	t=1744403094; cv=none; b=VLFfTKFDdIq3n4ZOCxwkaxE/L0kqVeDEaAIMWJ7PTHMj15MvVzrefZI5EfHIroZ+u703f4XamVfdXmZYBDIXKG7QWqg6IPlnkM1+MUwYBYGKEedlpP2JHbvdjuJI+iyR1NYidex+waHoI7IAqO/JV9JHsNvAso3+tWzlWJehNRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744398922; c=relaxed/simple;
-	bh=p5E4jzbJsjtPzisWgDf+2fFSm8/uNEdo+bU8P1gyV30=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Te2sGD1UrXw/RumcLFFfAptEW9GDl421nJy1qBfWxaJDN43lJVW5Kw7ejHkzetGMDRYVpTIYQF6UzL68BFzPXfiG7J2tdXWiU3rUpzL9doBifR7NXjSJYrw7sJJC3zUSGURHgD/O7nFHRyrV921AKjCedv8eoZL5jywMdQ8v4es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FXAVJFgx; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-7043db8491dso24481547b3.0;
-        Fri, 11 Apr 2025 12:15:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744398920; x=1745003720; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=z3M2ksm7ZNotH00YuRSfmtJ3TDHSlVqunlfQget/e54=;
-        b=FXAVJFgxBbuGv9WEuKPyreL2Qv5DkXJkbN8sNXxN4CyX/epNSXdm15G71MFkrbi3Fu
-         5ZiW1fUx0F/5M89B6tQxcB7Pc+lFEAact3UNWXkNb9MbHMPlVzxLRp7GlGu1syuY7C22
-         kgBGsOANJLuvBMIKYfVGEXRi942ZD4Qr6EAqI1uPvPrmqJzLzKnJXUASLeO9vbQXsjce
-         HUGwmnWg+naURx8M5giLbWTGWy7EIHtgnUiFnkOR6lNlIH8ZzSc9fZ4ZcnIvjab6r6ZI
-         OxRu3SwuCUHlyu6lBPecw5TH5kTsUbPx8VZ2DyJeAGK2WaacMSD7zaV9Io1z5WAh1s0V
-         XGHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744398920; x=1745003720;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z3M2ksm7ZNotH00YuRSfmtJ3TDHSlVqunlfQget/e54=;
-        b=YIzkxdBf34QEFAMUgLnKJB4NIP+8LknDq40QNqHyiRhO6BLnfYz/0FkvO58WguBJPB
-         i9qOlTWSb8n2humuV2HrhqoMT1aqBeq16njtc1cQKyAZdzFPEdofGdzOnQSvWuEbJak5
-         V9LhDwIYohBg/kAAraKO4E+UGEUSwmyk0VawKuqhaiYpHpETXsUjollPrxL+ehSkdnNg
-         QCRgyF0IIz+6EqywG453FO12PIt0WIt/OQM00jfPhTDDg1+xSNDpOECYwd6M+FdYZwdv
-         31TX9q7goUc0vTfYB8MHMSpQuLE50Hx/59UBqIttXzhGxWPRhQ0xO7AELVFUoJdGNVbM
-         eZOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUG91Dx3CX3B23zP1341go04wKBM4BHbS3gi2GmA/AkqwkMiB60Y5/nIlkQPT5Dy7mpKiQzq5QHMKPWbg==@vger.kernel.org, AJvYcCVjKYZw4kvqqakL4/NeAOkykHXpxlP8xFlHh8lENQdz6yiUTky4VLS3hO331t5mGqm9G3pKu2KX2BhMOBU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDPjNCKGr7zt+gy24fz8MhmfqAOKKrixHcxfl9mAR39l4rfMZz
-	XFuVbYSwocflXdYcnBGxOXPtI1u9aCxn9BOU/4oQWDKwapodPzwsZGXs/vRq
-X-Gm-Gg: ASbGnctfC4DynvMfswBC+tZMBVIBF83EXgxjBeb1BH1sVIggey0dta2YAqlf0c6tj9i
-	4GOKWvbmTqlj9uafAxEmO10TV++Nt3uBWR+xZEsa9SUr2RwGozPGOByaqiMzlr7HPP2hgMLET6v
-	rgYxxBmoYgAYLboE92txrKx/6N+uvi+3rGzsYqW1+svzLFFH03ngrijvKM+QKePQOwinG6SuTHS
-	RmDEH3pC82i1bb4Gx+V6WnVtdsKQ71njY2YamyLjV0dIi7JYyGJLB9KSPGwzg1xHfoRPeG/wfBE
-	+VfVnFhp5rFySZDY0mgf9mBI2o+PCDAbSUgGog==
-X-Google-Smtp-Source: AGHT+IHZtYGR4wzPKIni8qIrVhsiAmx3LfOm7Ku3doCQQI0y4sBD8aJvfTBj6p1X2cajBUvi4gj3pw==
-X-Received: by 2002:a05:690c:6d88:b0:6f9:7b99:8a29 with SMTP id 00721157ae682-70559a8ed8dmr63113557b3.34.1744398919754;
-        Fri, 11 Apr 2025 12:15:19 -0700 (PDT)
-Received: from fedora.attlocal.net ([2600:1700:89c0:5780::42])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-7053e372b6dsm15913617b3.88.2025.04.11.12.15.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 12:15:19 -0700 (PDT)
-Date: Fri, 11 Apr 2025 12:15:16 -0700
-From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-To: nifan.cxl@gmail.com
-Cc: willy@infradead.org, mcgrof@kernel.org, a.manzanares@samsung.com,
-	dave@stgolabs.net, akpm@linux-foundation.org, david@redhat.com,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, will@kernel.org,
-	aneesh.kumar@kernel.org, hca@linux.ibm.com, gor@linux.ibm.com,
-	linux-s390@vger.kernel.org, ziy@nvidia.com,
-	Fan Ni <fan.ni@samsung.com>
-Subject: Re: [PATCH] mm: Introduce free_folio_and_swap_cache() to replace
- free_page_and_swap_cache()
-Message-ID: <Z_lqRPL9HIyN1f6P@fedora.attlocal.net>
-References: <20250410180254.164118-1-nifan.cxl@gmail.com>
+	s=arc-20240116; t=1744403094; c=relaxed/simple;
+	bh=n8K15PPjyjU9zgMxma4R+5zqZAkCM90jZquIgPswRuo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dJKO44DE6UpWjRgupqO65BMS3kuYexePEfDRsFe1tzcCggraqhuajyUZDt7SHtQDkvU8cgTZ9Z/eWsgUEO2gtr1ZlGuh28eJ8v7/8ZX5gi0n0doilz7mlNMXTaBwytd9R6gTXqfqsstMhmDf8n9dr7SJudQQ6sqK8jEYyMTRYaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eADgly6d; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BIIP14023248;
+	Fri, 11 Apr 2025 20:24:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=pgbVZm3FmUBQ81FjNursYtSljrkVXH8NWFQSolPjB
+	G0=; b=eADgly6dz19IvF/72BeuVlI+2NVgbOdw4BeHRQ7in7qam9gxrQlVJGeOY
+	1awaCkJz2yaifymYyT2ZXKpTy4dutAfGpZs6UGJippsmjdSVEeQxp5DUNm1FQVz9
+	3rhf1899WUwYGWvdrgvzCNghtmOPpm7HZEWkdwONg39wmOsEClaoGuojnZRDJo9D
+	e+Tc7LNMY964NIL1wbuw6LODlm8y7FNb2KsOSfyjK3aJhQiV32GQ5qzaiB+QzKPb
+	xjrgMWvy00WslWAoUNN3VS5W11gukKc7iIhaOpEPtpqj4gIRR3cElChcjK8RdLJE
+	WhWMTUMx0wEIPyh/VbKfWW67wbeXA==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45y343tb6e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Apr 2025 20:24:36 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53BIw4tM017825;
+	Fri, 11 Apr 2025 20:24:35 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 45uh2m4he9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Apr 2025 20:24:35 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53BKOYaT30736968
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 11 Apr 2025 20:24:35 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D9F0E5805A;
+	Fri, 11 Apr 2025 20:24:34 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D831D58051;
+	Fri, 11 Apr 2025 20:24:33 +0000 (GMT)
+Received: from li-2311da4c-2e09-11b2-a85c-c003041e9174.ibm.com.com (unknown [9.61.105.190])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 11 Apr 2025 20:24:33 +0000 (GMT)
+From: Matthew Rosato <mjrosato@linux.ibm.com>
+To: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
+        gerald.schaefer@linux.ibm.com, schnelle@linux.ibm.com
+Cc: hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+        svens@linux.ibm.com, borntraeger@linux.ibm.com, clg@redhat.com,
+        iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH v5 0/5] iommu/s390: support additional table regions
+Date: Fri, 11 Apr 2025 16:24:28 -0400
+Message-ID: <20250411202433.181683-1-mjrosato@linux.ibm.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410180254.164118-1-nifan.cxl@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: gBIZNC05wFANwEVJbwq4M8do_xbDqVA6
+X-Proofpoint-ORIG-GUID: gBIZNC05wFANwEVJbwq4M8do_xbDqVA6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-11_08,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 adultscore=0 malwarescore=0 impostorscore=0
+ lowpriorityscore=0 spamscore=0 mlxscore=0 suspectscore=0 mlxlogscore=708
+ clxscore=1015 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504110127
 
-On Thu, Apr 10, 2025 at 11:00:31AM -0700, nifan.cxl@gmail.com wrote:
-> From: Fan Ni <fan.ni@samsung.com>
-> 
-> The function free_page_and_swap_cache() takes a struct page pointer as
-> input parameter, but it will immediately convert it to folio and all
-> operations following within use folio instead of page.  It makes more
-> sense to pass in folio directly.
-> 
-> Introduce free_folio_and_swap_cache(), which takes folio as input to
-> replace free_page_and_swap_cache().  And apply it to all occurrences
-> where free_page_and_swap_cache() was used.
-> 
-> Signed-off-by: Fan Ni <fan.ni@samsung.com>
+The series extends the maximum table size allowed by s390-iommu by
+increasing the number of table regions supported.  It also adds logic to
+construct the table use the minimum number of regions based upon aperture
+calculation.
 
-Aside from the unnecessary folio_test_slab() others have already
-mentioned, LGTM.
+Changes for v5:
+- fix GFP_KERNEL under spinlock in patch 5
 
-Reviewed-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+Changes for v4:
+- rebase onto master/merge window
+- convert patches 3 per Niklas to remove gotos
+- convert patch 4 to also remove gotos
+- add review tags
+
+Changes for v3:
+- rebase onto iommu-next
+- move IOTA region type setting into s390-iommu
+- remove origin_type and max_table_size from zdev
+- adjust reserved region calculation to be dependent on the domain
+
+Changes for v2:
+- rebase onto 6.13
+- remove 'iommu/s390: add basic routines for region 1st and 2nd tables'
+  and put routines in first patch that uses each.  No functional change.
+
+Matthew Rosato (5):
+  iommu/s390: set appropriate IOTA region type
+  iommu/s390: support cleanup of additional table regions
+  iommu/s390: support iova_to_phys for additional table regions
+  iommu/s390: support map/unmap for additional table regions
+  iommu/s390: allow larger region tables
+
+ arch/s390/include/asm/pci_dma.h |   3 +
+ drivers/iommu/s390-iommu.c      | 345 ++++++++++++++++++++++++++++----
+ 2 files changed, 314 insertions(+), 34 deletions(-)
+
+-- 
+2.49.0
+
 
