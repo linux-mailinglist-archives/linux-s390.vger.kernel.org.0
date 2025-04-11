@@ -1,258 +1,187 @@
-Return-Path: <linux-s390+bounces-9983-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-9986-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2988FA86700
-	for <lists+linux-s390@lfdr.de>; Fri, 11 Apr 2025 22:25:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8223A867CD
+	for <lists+linux-s390@lfdr.de>; Fri, 11 Apr 2025 23:00:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D93D91B87CBE
-	for <lists+linux-s390@lfdr.de>; Fri, 11 Apr 2025 20:25:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C4A5E170B91
+	for <lists+linux-s390@lfdr.de>; Fri, 11 Apr 2025 21:00:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FF3D28D83B;
-	Fri, 11 Apr 2025 20:24:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B351293B55;
+	Fri, 11 Apr 2025 21:00:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hQ2AiEVp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a/pTzjaX"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C7D28C5C6;
-	Fri, 11 Apr 2025 20:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B25284B33;
+	Fri, 11 Apr 2025 21:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744403095; cv=none; b=PsYgOVHaLNokqMYgAJb6x4fJs+Si6wOh3um0BpEqC3V5YZpeSLkG9A5gavSn1BDmath8gcqxLZC19DmijS5lAGSui7yKjbqQqw0PXZpnQmagS5kx75sSe4KtQ9M9HFeA59T+xuVDUID1W4pFlh1tLVz6/LliyI5l2Kc9bLR17b8=
+	t=1744405204; cv=none; b=HhtCN69r0YgThc1+vfcZ4R3IbUc5vgT+JYQIAAXPOI7REtXh5T5kfAXjsEx4KbsbinQfX2RI3VSN/KiDVjx22tXFeZJ7vXSNN9T+54ErEQmyBQzuNhvloiPKEJFpBJ/gUC4WnHmp0ZJd+pi3BSfFyWk+/l3vIkhxQR5nvB7Ngx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744403095; c=relaxed/simple;
-	bh=OZlu8f89BYxknWQX/kA3bt6HxJ89EN0pJVICj/4m1H0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eIrXWnvbDvHWIGu6qkt6dexdA9GTK/birgCjhX5c3PlV+FrobhLPm3jWg+OM5JigTCMYOMx0GHgeELjA2jmHDqXYxAzMhpCGAZs+X7jEoZvq9ggfIDUgFezBNW0B4BJvFgm1ST9g3VayQVwupLmupYOlupqb6sEHstUFEq21XMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hQ2AiEVp; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53BII4DN022316;
-	Fri, 11 Apr 2025 20:24:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=Qov1yGhcG5wRklZOK
-	SeRMBsnOSzne165QTDxfJ9nals=; b=hQ2AiEVpr2jp+6FslHYjsROpdPph/Ha92
-	TWPLvNgcd6RReSf86ZW5Bj9SMuG5N+BoGiPOx0GStggtGRoWS5C9LFOQ0inah7BC
-	3hk+MwdnMdujNTq5bKgPhkGcfGJGkkSQbuluQZA+OJj7MZsV8IkJrXyRnor1Gdh8
-	TBitV52Gzg8sV8jpfwGi85xozkVvDcehymd/tSsG7ciYjyNw4PCOXWKZwlnNLSFR
-	YAiK1RaAIx8mCaUMqPzCr3i/aQ3QlmcIPX5qceKJCKZQ14Tz8zXebXXU5pAfh4Zl
-	P5QatcWyIfNUR2X0LfzjWfWYt+wCeiRvTI4KWtOLQxc2crwPOv4DA==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45y343tb6p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Apr 2025 20:24:43 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53BHcN8J011078;
-	Fri, 11 Apr 2025 20:24:42 GMT
-Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45uf804ux8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 11 Apr 2025 20:24:41 +0000
-Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
-	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53BKOeLf28639926
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 11 Apr 2025 20:24:40 GMT
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5F04F58051;
-	Fri, 11 Apr 2025 20:24:40 +0000 (GMT)
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 62C815805A;
-	Fri, 11 Apr 2025 20:24:39 +0000 (GMT)
-Received: from li-2311da4c-2e09-11b2-a85c-c003041e9174.ibm.com.com (unknown [9.61.105.190])
-	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 11 Apr 2025 20:24:39 +0000 (GMT)
-From: Matthew Rosato <mjrosato@linux.ibm.com>
-To: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
-        gerald.schaefer@linux.ibm.com, schnelle@linux.ibm.com
-Cc: hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        svens@linux.ibm.com, borntraeger@linux.ibm.com, clg@redhat.com,
-        iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH v5 5/5] iommu/s390: allow larger region tables
-Date: Fri, 11 Apr 2025 16:24:33 -0400
-Message-ID: <20250411202433.181683-6-mjrosato@linux.ibm.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250411202433.181683-1-mjrosato@linux.ibm.com>
-References: <20250411202433.181683-1-mjrosato@linux.ibm.com>
+	s=arc-20240116; t=1744405204; c=relaxed/simple;
+	bh=58p2bEquuNdeDBo6V10v9l3W14scmxAZKVaTyX4C2DU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lG3p3vAXZ49oEukR4MCkGma/IncZ7cVqWBb2+herjczIjrGVUp+E6si/ngrZvF2/rBl5Fyo/DX802N87nHWrwi2CopXO/RSAmVR+AogVf5y4Rsu3m2f/WgstqlFvYFBFafuuaZ5ObKAxybBslbusaUdllRuWlfiSZKkGOtsVrmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a/pTzjaX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 327E9C4CEE5;
+	Fri, 11 Apr 2025 21:00:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744405203;
+	bh=58p2bEquuNdeDBo6V10v9l3W14scmxAZKVaTyX4C2DU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a/pTzjaXAvsi9ClqZx5p4Cr4BE6hFCH8vUC6zbaUcx5WOxNaokll3EvoYWyiM6Add
+	 JTp8sInrMJm3b8y18oMjUrcaIRK0DDdkObJ0ny1O27ZoUA2mRCAGwzxBv6mFT62pFS
+	 LIweVAqIyRESZx50DwvExRcsgfpqu8Z+QlLjm0OFCCT3E3fB40oE1lzQFn9RpjQNLc
+	 uh4HbTaM/9S+nw3mQUGLaB40EGszYS+I4HsDPZhdwBRV9dv6+yEpcxOBLqncvZZoo1
+	 y3/9wQjlGTSruOmWi7ASma0R+G6wJOaLWchWVRVQisqbdLAcMBqUx1ZmcR0cexQH6h
+	 jtcAGBcPtIKmw==
+Date: Fri, 11 Apr 2025 14:00:01 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, acme@kernel.org,
+	ctshao@google.com, rogers@google.com, agordeev@linux.ibm.com,
+	gor@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com,
+	Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH v3] perf test: Allow tolerance for leader sampling test
+Message-ID: <Z_mC0d2_yRaNEb1F@z2>
+References: <20250410085522.465401-1-tmricht@linux.ibm.com>
+ <Z_hkF6R9giaDGQZD@google.com>
+ <27901544-619e-4704-a2a6-132e8ab6a6e4@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: SG2dXj0RIqhu0JwkeonmFgGDZdaryUdI
-X-Proofpoint-ORIG-GUID: SG2dXj0RIqhu0JwkeonmFgGDZdaryUdI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-11_08,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 adultscore=0 malwarescore=0 impostorscore=0
- lowpriorityscore=0 spamscore=0 mlxscore=0 suspectscore=0 mlxlogscore=852
- clxscore=1015 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504110127
+In-Reply-To: <27901544-619e-4704-a2a6-132e8ab6a6e4@linux.ibm.com>
 
-Extend the aperture calculation to consider sizes beyond the maximum
-size of a region third table.  Attempt to always use the smallest
-table size possible to avoid unnecessary extra steps during translation.
-Update reserved region calculations to use the appropriate table size.
+On Fri, Apr 11, 2025 at 08:58:45AM +0200, Thomas Richter wrote:
+> On 4/11/25 02:36, Namhyung Kim wrote:
+> > Hello,
+> > 
+> > On Thu, Apr 10, 2025 at 10:55:22AM +0200, Thomas Richter wrote:
+> >> V3: Added check for missing samples as suggested by Chun-Tse.
+> >> V2: Changed bc invocation to return 0 on success and 1 on error.
+> >>
+> >> There is a known issue that the leader sampling is inconsistent, since
+> >> throttle only affect leader, not the slave. The detail is in [1]. To
+> >> maintain test coverage, this patch sets a tolerance rate of 80% to
+> >> accommodate the throttled samples and prevent test failures due to
+> >> throttling.
+> >>
+> >> [1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
+> >>
+> >> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> >> Suggested-by: Ian Rogers <irogers@google.com>
+> >> Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
+> >> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+> >> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> >> ---
+> >>  tools/perf/tests/shell/record.sh | 33 ++++++++++++++++++++++++++------
+> >>  1 file changed, 27 insertions(+), 6 deletions(-)
+> >>
+> >> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+> >> index ba8d873d3ca7..0075ffe783ad 100755
+> >> --- a/tools/perf/tests/shell/record.sh
+> >> +++ b/tools/perf/tests/shell/record.sh
+> >> @@ -238,22 +238,43 @@ test_leader_sampling() {
+> >>      err=1
+> >>      return
+> >>    fi
+> >> +  perf script -i "${perfdata}" | grep brstack > $script_output
+> >> +  # Check if the two instruction counts are equal in each record.
+> >> +  # However, the throttling code doesn't consider event grouping. During throttling, only the
+> >> +  # leader is stopped, causing the slave's counts significantly higher. To temporarily solve this,
+> >> +  # let's set the tolerance rate to 80%.
+> >> +  # TODO: Revert the code for tolerance once the throttling mechanism is fixed.
+> >>    index=0
+> >> -  perf script -i "${perfdata}" > $script_output
+> >> +  valid_counts=0
+> >> +  invalid_counts=0
+> >> +  tolerance_rate=0.8
+> >>    while IFS= read -r line
+> >>    do
+> >> -    # Check if the two instruction counts are equal in each record
+> >>      cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
+> >>      if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
+> >>      then
+> >> -      echo "Leader sampling [Failed inconsistent cycles count]"
+> >> -      err=1
+> >> -      return
+> >> +      invalid_counts=$(($invalid_counts+1))
+> >> +    else
+> >> +      valid_counts=$(($valid_counts+1))
+> >>      fi
+> >>      index=$(($index+1))
+> >>      prev_cycles=$cycles
+> >>    done < $script_output
+> >> -  echo "Basic leader sampling test [Success]"
+> >> +  total_counts=$(bc <<< "$invalid_counts+$valid_counts")
+> >> +  if (( $(bc <<< "$total_counts <= 0") ))
+> >> +  then
+> >> +    echo "Leader sampling [No sample generated]"
+> >> +    err=1
+> >> +    return
+> >> +  fi
+> >> +  isok=$(bc <<< "scale=2; if (($invalid_counts/$total_counts) < (1-$tolerance_rate)) { 0 } else { 1 };")
+> > 
+> > Is 'scale=2' really needed?  Does something similar to the above like
+> > 
+> >   if (( $(bc <<< "($invalid_counts / $total_counts) < (1 - $tolerance_rate)") ))
+> > 
+> > work?
+> > 
+> > Thanks,
+> > Namhyung
+> > 
+> > 
+> 
+> From the man page of bc:
+> 
+> 
+> NUMBERS
+>        The most basic element in bc is the number.  Numbers are arbitrary precision numbers.   This
+>        precision  is both in the integer part and the fractional part.  All numbers are represented
+>        internally in decimal and all computation is done in decimal.  (This version  truncates  re‐
+>        sults from divide and multiply operations.)
+>        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+> This can be proved with:
+> # bc <<< "2/27"
+> 0
+> # bc <<< "scale=2;2/27"
+> .07
+> #
+> 
+> Without scale there is no fractional part and integer arithmetic will lead to wrong results.
+> 
+> I think scale=2 is necessary or we need to use something different like awk.
 
-Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
----
- arch/s390/include/asm/pci_dma.h |  1 +
- drivers/iommu/s390-iommu.c      | 70 ++++++++++++++++++++++++---------
- 2 files changed, 53 insertions(+), 18 deletions(-)
+Ok, thanks for checking it.  Right, the scale=2 is necessary.
 
-diff --git a/arch/s390/include/asm/pci_dma.h b/arch/s390/include/asm/pci_dma.h
-index 8d8962e4fd58..d12e17201661 100644
---- a/arch/s390/include/asm/pci_dma.h
-+++ b/arch/s390/include/asm/pci_dma.h
-@@ -25,6 +25,7 @@ enum zpci_ioat_dtype {
- #define ZPCI_KEY			(PAGE_DEFAULT_KEY << 5)
- 
- #define ZPCI_TABLE_SIZE_RT	(1UL << 42)
-+#define ZPCI_TABLE_SIZE_RS	(1UL << 53)
- 
- #define ZPCI_IOTA_STO_FLAG	(ZPCI_IOTA_IOT_ENABLED | ZPCI_KEY | ZPCI_IOTA_DT_ST)
- #define ZPCI_IOTA_RTTO_FLAG	(ZPCI_IOTA_IOT_ENABLED | ZPCI_KEY | ZPCI_IOTA_DT_RT)
-diff --git a/drivers/iommu/s390-iommu.c b/drivers/iommu/s390-iommu.c
-index 46f45b136993..433b59f43530 100644
---- a/drivers/iommu/s390-iommu.c
-+++ b/drivers/iommu/s390-iommu.c
-@@ -511,9 +511,25 @@ static bool s390_iommu_capable(struct device *dev, enum iommu_cap cap)
- 	}
- }
- 
-+static inline u64 max_tbl_size(struct s390_domain *domain)
-+{
-+	switch (domain->origin_type) {
-+	case ZPCI_TABLE_TYPE_RTX:
-+		return ZPCI_TABLE_SIZE_RT - 1;
-+	case ZPCI_TABLE_TYPE_RSX:
-+		return ZPCI_TABLE_SIZE_RS - 1;
-+	case ZPCI_TABLE_TYPE_RFX:
-+		return U64_MAX;
-+	default:
-+		return 0;
-+	}
-+}
-+
- static struct iommu_domain *s390_domain_alloc_paging(struct device *dev)
- {
-+	struct zpci_dev *zdev = to_zpci_dev(dev);
- 	struct s390_domain *s390_domain;
-+	u64 aperture_size;
- 
- 	s390_domain = kzalloc(sizeof(*s390_domain), GFP_KERNEL);
- 	if (!s390_domain)
-@@ -524,10 +540,26 @@ static struct iommu_domain *s390_domain_alloc_paging(struct device *dev)
- 		kfree(s390_domain);
- 		return NULL;
- 	}
-+
-+	aperture_size = min(s390_iommu_aperture,
-+			    zdev->end_dma - zdev->start_dma + 1);
-+	if (aperture_size <= (ZPCI_TABLE_SIZE_RT - zdev->start_dma)) {
-+		s390_domain->origin_type = ZPCI_TABLE_TYPE_RTX;
-+	} else if (aperture_size <= (ZPCI_TABLE_SIZE_RS - zdev->start_dma) &&
-+		  (zdev->dtsm & ZPCI_IOTA_DT_RS)) {
-+		s390_domain->origin_type = ZPCI_TABLE_TYPE_RSX;
-+	} else if (zdev->dtsm & ZPCI_IOTA_DT_RF) {
-+		s390_domain->origin_type = ZPCI_TABLE_TYPE_RFX;
-+	} else {
-+		/* Assume RTX available */
-+		s390_domain->origin_type = ZPCI_TABLE_TYPE_RTX;
-+		aperture_size = ZPCI_TABLE_SIZE_RT - zdev->start_dma;
-+	}
-+	zdev->end_dma = zdev->start_dma + aperture_size - 1;
-+
- 	s390_domain->domain.geometry.force_aperture = true;
- 	s390_domain->domain.geometry.aperture_start = 0;
--	s390_domain->domain.geometry.aperture_end = ZPCI_TABLE_SIZE_RT - 1;
--	s390_domain->origin_type = ZPCI_TABLE_TYPE_RTX;
-+	s390_domain->domain.geometry.aperture_end = max_tbl_size(s390_domain);
- 
- 	spin_lock_init(&s390_domain->list_lock);
- 	INIT_LIST_HEAD_RCU(&s390_domain->devices);
-@@ -680,6 +712,8 @@ static void s390_iommu_get_resv_regions(struct device *dev,
- {
- 	struct zpci_dev *zdev = to_zpci_dev(dev);
- 	struct iommu_resv_region *region;
-+	u64 max_size, end_resv;
-+	unsigned long flags;
- 
- 	if (zdev->start_dma) {
- 		region = iommu_alloc_resv_region(0, zdev->start_dma, 0,
-@@ -689,10 +723,21 @@ static void s390_iommu_get_resv_regions(struct device *dev,
- 		list_add_tail(&region->list, list);
- 	}
- 
--	if (zdev->end_dma < ZPCI_TABLE_SIZE_RT - 1) {
--		region = iommu_alloc_resv_region(zdev->end_dma + 1,
--						 ZPCI_TABLE_SIZE_RT - zdev->end_dma - 1,
--						 0, IOMMU_RESV_RESERVED, GFP_KERNEL);
-+	spin_lock_irqsave(&zdev->dom_lock, flags);
-+	if (zdev->s390_domain->type == IOMMU_DOMAIN_BLOCKED ||
-+	    zdev->s390_domain->type == IOMMU_DOMAIN_IDENTITY) {
-+		spin_unlock_irqrestore(&zdev->dom_lock, flags);
-+		return;
-+	}
-+
-+	max_size = max_tbl_size(to_s390_domain(zdev->s390_domain));
-+	spin_unlock_irqrestore(&zdev->dom_lock, flags);
-+
-+	if (zdev->end_dma < max_size) {
-+		end_resv = max_size - zdev->end_dma;
-+		region = iommu_alloc_resv_region(zdev->end_dma + 1, end_resv,
-+						 0, IOMMU_RESV_RESERVED,
-+						 GFP_KERNEL);
- 		if (!region)
- 			return;
- 		list_add_tail(&region->list, list);
-@@ -708,13 +753,9 @@ static struct iommu_device *s390_iommu_probe_device(struct device *dev)
- 
- 	zdev = to_zpci_dev(dev);
- 
--	if (zdev->start_dma > zdev->end_dma ||
--	    zdev->start_dma > ZPCI_TABLE_SIZE_RT - 1)
-+	if (zdev->start_dma > zdev->end_dma)
- 		return ERR_PTR(-EINVAL);
- 
--	if (zdev->end_dma > ZPCI_TABLE_SIZE_RT - 1)
--		zdev->end_dma = ZPCI_TABLE_SIZE_RT - 1;
--
- 	if (zdev->tlb_refresh)
- 		dev->iommu->shadow_on_flush = 1;
- 
-@@ -999,7 +1040,6 @@ struct zpci_iommu_ctrs *zpci_get_iommu_ctrs(struct zpci_dev *zdev)
- 
- int zpci_init_iommu(struct zpci_dev *zdev)
- {
--	u64 aperture_size;
- 	int rc = 0;
- 
- 	rc = iommu_device_sysfs_add(&zdev->iommu_dev, NULL, NULL,
-@@ -1017,12 +1057,6 @@ int zpci_init_iommu(struct zpci_dev *zdev)
- 	if (rc)
- 		goto out_sysfs;
- 
--	zdev->start_dma = PAGE_ALIGN(zdev->start_dma);
--	aperture_size = min3(s390_iommu_aperture,
--			     ZPCI_TABLE_SIZE_RT - zdev->start_dma,
--			     zdev->end_dma - zdev->start_dma + 1);
--	zdev->end_dma = zdev->start_dma + aperture_size - 1;
--
- 	return 0;
- 
- out_sysfs:
--- 
-2.49.0
+  $ bc <<< '(1 / 10) < (1 - 0.8)'
+  1
+
+  $ bc <<< '(3 / 10) < (1 - 0.8)'
+  1
+
+  $ bc <<< 'scale=2; (1 / 10) < (1 - 0.8)'
+  1
+
+  $ bc <<< 'scale=2; (3 / 10) < (1 - 0.8)'
+  0
+
+Thanks,
+Namhyung
 
 
