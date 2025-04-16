@@ -1,83 +1,96 @@
-Return-Path: <linux-s390+bounces-10086-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-10088-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72F8CA905D3
-	for <lists+linux-s390@lfdr.de>; Wed, 16 Apr 2025 16:14:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8550A90CF2
+	for <lists+linux-s390@lfdr.de>; Wed, 16 Apr 2025 22:17:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C21318E4E97
-	for <lists+linux-s390@lfdr.de>; Wed, 16 Apr 2025 14:07:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9ED751903862
+	for <lists+linux-s390@lfdr.de>; Wed, 16 Apr 2025 20:17:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47B08219A8C;
-	Wed, 16 Apr 2025 13:58:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79696226D08;
+	Wed, 16 Apr 2025 20:17:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MJTGgHfj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a0QMCywE"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD3B2192FB
-	for <linux-s390@vger.kernel.org>; Wed, 16 Apr 2025 13:58:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A500E1E9B04;
+	Wed, 16 Apr 2025 20:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744811906; cv=none; b=dUrdgbshOg11FitMzAX948y0Oz1QzAfp5E92NFPUHQ34zYGGrOgrsY834HYb395rSHGGgo/fQ49QV0Z5qyyYlj4eRsop3/hNsHrA63Awh0SL6xVRD1chPivD8vVJWBis3vJY+O2/9IrKg0eeQBJ1ft03KPXwOZbiFpbVh1xLCVo=
+	t=1744834659; cv=none; b=uyOfvPLPuMOKFMp5qtIL0CbBZNvRu6PUI8vy+TOlLrVxYXq2YuAri/v+zUgFkbRCYVkQNuepjiJ1ImdN9oKwXXpLjYP2GOOHJ7JRGxX/U3BkukUJYKR9ExUtZgGSGCwYIkrYb1XqCDhBWaoUEucYv0+hzeQabcIaf5mb2L9eS5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744811906; c=relaxed/simple;
-	bh=f6jcIqT+JsYnrezf5LeEU+5Dka+j50OVfXs9ZpBrvh0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uWku2N6TkpN9RQnUuunXlfjhfonVx6E2T8CNa7zcZ6cZm1DxFOXUlltFCi65DHY0Zu0XBXUr+OTqjDgMHc5uh1UY6vmq/c2gZWVhkKUeGt0ZhaHJ7DAC0yj8beDOg1cXPCDmEaN5VwR3uD2h7P5czX430kEJ/KKbW1/T1h4J5tA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=MJTGgHfj; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53GA3k2b028742;
-	Wed, 16 Apr 2025 13:58:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=h23wedpUjHTyWPCtF
-	3UkOaPF4PfUB53x8ns+m87CGdo=; b=MJTGgHfjdk5het9w8GiNRzOUMcljsbZt+
-	2V45FGqQe5/42trphq+Z0B8aVD+0tFqtUQIjeccxI3P7live6A94Cu+G438vU+gy
-	QKHAK5TKpGRYRoRKahaKUnSdc/967d9M+8TfY6IaPgC7rTKymZEQ3w3BhZx/9grE
-	/INIrs0jWg3ozI+PidOLnhkZQP5TFIMM1HjB1RgwPZsVSVRWik81vC4UOhm+sJVA
-	JM3433OxO//Ez5SHAZtN/d9ELqT/DP7x8FlKLL58nFLmD58hTo+pwzOXrGW8H6r7
-	iQh7lbW34c0tHCrgMZNECr4if+vdnYZ5pcx1k9bJa1hEPCQovSHEw==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 462aff97jd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 13:58:22 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53GDawZD001265;
-	Wed, 16 Apr 2025 13:58:21 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4602w00sq1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 13:58:21 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53GDwHQb51183888
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 16 Apr 2025 13:58:17 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B97E620040;
-	Wed, 16 Apr 2025 13:58:17 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 41F6A2004B;
-	Wed, 16 Apr 2025 13:58:17 +0000 (GMT)
-Received: from funtu2.fritz.box?044ibm.com (unknown [9.171.41.243])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 16 Apr 2025 13:58:17 +0000 (GMT)
-From: Harald Freudenberger <freude@linux.ibm.com>
-To: dengler@linux.ibm.com, ifranzki@linux.ibm.com, fcallies@linux.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        seiden@linux.ibm.com
-Cc: linux-s390@vger.kernel.org, herbert@gondor.apana.org.au
-Subject: [PATCH v6 25/25] s390/pkey/crypto: Introduce xflags param for pkey in-kernel API
-Date: Wed, 16 Apr 2025 15:58:00 +0200
-Message-ID: <20250416135801.133909-26-freude@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250416135801.133909-1-freude@linux.ibm.com>
-References: <20250416135801.133909-1-freude@linux.ibm.com>
+	s=arc-20240116; t=1744834659; c=relaxed/simple;
+	bh=99zRorP8cOkcXThC1Qaj8lC6JNXD/pvBFsE1oF1v4UA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gzNaCeIfC1yF5TWlJqyWhP58RRKnUxfJsnAsiy/merMveaDT1H9+Nh4DXh/xuxYa8k4UdcwfgeQxMzP2vHIlq7G4jVtUxFH8uijWQLfh2drbVAmEsWsxC5YJohKoXLZT/TmXx4WL+iqO2WzZP+qTauYRxU9C/dVYTaElnTy7grc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a0QMCywE; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e461015fbd4so81600276.2;
+        Wed, 16 Apr 2025 13:17:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744834656; x=1745439456; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CflYkpCwmcNHOZhPPaWFtrcabnpu0tQed65YHPVcA00=;
+        b=a0QMCywE5oUkJmZtO4zflJp/SfLsLc1PJ2/8RLyWxVD3hgmsRVVBU7NgVIhI9QuKPq
+         vfdoBZ4Jk0zXI1CboeivrtKYtQOHgnmV94ijDOOkkfxqfKvek7DRILktmZDzhMYCkt3K
+         pJg4tXzqJnIJc47zx8srk+e5x+OG65EXvdXRc76GFyKT1rl5lHYI/LzI4lCuNyEiJiCP
+         Vex/xg+lJAgVfHS3SSamSvPP8vTqJ3spoYLLS5UDgUvouzey6VghGXUNw96Ca+dKPSfP
+         O5swKYjdjxPP/sKn00h3kTKcuoWlouzddWFzDyYIEDMlacha4ew+9bBXort0j3CwiVuP
+         1a4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744834656; x=1745439456;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CflYkpCwmcNHOZhPPaWFtrcabnpu0tQed65YHPVcA00=;
+        b=gNdv3APklisvGJOKW95UWaLphnk0cjc81GgLmBEVcSalkb5rQ5rTu/jyrtjDEBSEhc
+         +FXVEoSTmLoWLI5uYq8gYH2a0DJfJbyrbaksVtoIdyZoXR+JymHwC0QNzfPXouZljHQN
+         gVfHjyA866YBhoNOlHNJ1mgJ6fdXVD0mZrXYw9DdbiA+aLLoO9uxQwbTVpqOMyhR8VcK
+         VHJGZXzoUSpm9kpAyxHLU+txIHkREpPv/iE1HdbOXh8EDvnIlLic73/HhyHwg9QSEwzP
+         lvoU+4P58TNdRXcu3aNQU+AiUzc2EzOTPaiKgaTiq+s3LEM14cZqsprrAhw0oKbjSwV/
+         6Qug==
+X-Forwarded-Encrypted: i=1; AJvYcCUrEV/4bokxh4T4u0agSQs3t4Yrcj60PvsIAg+xsVQMLGWa/3/UxvnoHekXwcV/+/2IFIODZYPM3T5d3w==@vger.kernel.org, AJvYcCVg7rwNsfGjxfztaTzUWAlBnBj7memUkyOwAIoaGcgbbEOwwCTI0Qz1dJNkNQbYiX68COVHUQfxUh6c5z8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVlJPMBImGpRosaDZesAL4Imq4Wo12ENDGOWivpLETHgMq1roG
+	mGQJbV/pzfcBjG/tf4gpDmuE3wDRtTHDrwpNSFCX6RJC4xWE7+lR
+X-Gm-Gg: ASbGncuPHuBIu7sI8T6kxQog1Loh1zwSpn9pN5wMbEVeP2H3i+UIGmSSlHqpo+2saKy
+	MqYk14PRqFvPCjppAlJRs58aF5x6mgWQuQel03vJxe/6u6xCqGLbwa+SYun8SnxDTNRE340lZ+U
+	zukwsakI24aLCQNJ888veQhZW9aFFFkmSlY/hUbAqP2HO3K/vYLmNulZUzP0IxPAeTT3F6XkJc9
+	vdlphzS/M1rlwEkot6Nmp7C+cuhW6vbT9Z5SeWcipjVdM3VTMDqwVVBH4Ofl3TvP2li7vOzYI/2
+	D/o1pOMI8vLINV4F2ty40THDQMcpzKaE4LIHYnm2cOad7ShCeOM=
+X-Google-Smtp-Source: AGHT+IFFXzgbUYgP60nqbnEnfLWEDGbfDou4lsJyEpl6suKqcdpb+qylOcokWL9qWwzjfiOf9tXo/A==
+X-Received: by 2002:a05:6902:2681:b0:e5b:1b55:1325 with SMTP id 3f1490d57ef6-e7275967f68mr4277783276.25.1744834656400;
+        Wed, 16 Apr 2025 13:17:36 -0700 (PDT)
+Received: from localhost.localdomain ([50.205.20.42])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e7032783effsm3887699276.56.2025.04.16.13.17.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 13:17:35 -0700 (PDT)
+From: nifan.cxl@gmail.com
+To: willy@infradead.org
+Cc: mcgrof@kernel.org,
+	a.manzanares@samsung.com,
+	dave@stgolabs.net,
+	akpm@linux-foundation.org,
+	david@redhat.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	will@kernel.org,
+	aneesh.kumar@kernel.org,
+	hca@linux.ibm.com,
+	gor@linux.ibm.com,
+	linux-s390@vger.kernel.org,
+	ziy@nvidia.com,
+	Fan Ni <fan.ni@samsung.com>,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Subject: [PATCH] mm: Convert free_page_and_swap_cache() to free_folio_and_swap_cache()
+Date: Wed, 16 Apr 2025 13:12:15 -0700
+Message-ID: <20250416201720.41678-1-nifan.cxl@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -85,99 +98,132 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: GJLwSTRn6McG-b69el8sLZCYU5ozW4Im
-X-Proofpoint-GUID: GJLwSTRn6McG-b69el8sLZCYU5ozW4Im
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-16_04,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 mlxscore=0 phishscore=0 priorityscore=1501
- impostorscore=0 malwarescore=0 spamscore=0 clxscore=1015 bulkscore=0
- suspectscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2502280000 definitions=main-2504160111
 
-Add a new parameter xflags to the in-kernel API function
-pkey_key2protkey(). Currently there is only one flag supported:
+From: Fan Ni <fan.ni@samsung.com>
 
-* PKEY_XFLAG_NOMEMALLOC:
-  If this flag is given in the xflags parameter, the pkey
-  implementation is not allowed to allocate memory but instead should
-  fall back to use preallocated memory or simple fail with -ENOMEM.
-  This flag is for protected key derive within a cipher or similar
-  which must not allocate memory which would cause io operations - see
-  also the CRYPTO_ALG_ALLOCATES_MEMORY flag in crypto.h.
+The function free_page_and_swap_cache() takes a struct page pointer as
+input parameter, but it will immediately convert it to folio and all
+operations following within use folio instead of page.  It makes more
+sense to pass in folio directly.
 
-The one and only user of this in-kernel API - the skcipher
-implementations PAES in paes_s390.c set this flag upon request
-to derive a protected key from the given raw key material.
+Convert free_page_and_swap_cache() to free_folio_and_swap_cache() to
+consume folio directly.
 
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Reviewed-by: Holger Dengler <dengler@linux.ibm.com>
+Signed-off-by: Fan Ni <fan.ni@samsung.com>
+Acked-by: Davidlohr Bueso <dave@stgolabs.net>
+Acked-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Zi Yan <ziy@nvidia.com>
+Reviewed-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- arch/s390/crypto/paes_s390.c   | 6 +++---
- arch/s390/include/asm/pkey.h   | 5 ++++-
- drivers/s390/crypto/pkey_api.c | 3 +--
- 3 files changed, 8 insertions(+), 6 deletions(-)
+v3: Rephase the commit log, apply reviewed-by and Acked-by tags, and remove
+    comments on sparc.
+v2: https://lore.kernel.org/linux-mm/20250413042316.533763-1-nifan.cxl@gmail.com/
+v1: https://lore.kernel.org/linux-mm/20250410180254.164118-1-nifan.cxl@gmail.com/
+---
+ arch/s390/include/asm/tlb.h | 4 ++--
+ include/linux/swap.h        | 8 +++-----
+ mm/huge_memory.c            | 2 +-
+ mm/khugepaged.c             | 2 +-
+ mm/swap_state.c             | 8 +++-----
+ 5 files changed, 10 insertions(+), 14 deletions(-)
 
-diff --git a/arch/s390/crypto/paes_s390.c b/arch/s390/crypto/paes_s390.c
-index 511093713a6f..1f62a9460405 100644
---- a/arch/s390/crypto/paes_s390.c
-+++ b/arch/s390/crypto/paes_s390.c
-@@ -182,14 +182,14 @@ static inline int __paes_keyblob2pkey(const u8 *key, unsigned int keylen,
+diff --git a/arch/s390/include/asm/tlb.h b/arch/s390/include/asm/tlb.h
+index f20601995bb0..e5103e8e697d 100644
+--- a/arch/s390/include/asm/tlb.h
++++ b/arch/s390/include/asm/tlb.h
+@@ -40,7 +40,7 @@ static inline bool __tlb_remove_folio_pages(struct mmu_gather *tlb,
+ /*
+  * Release the page cache reference for a pte removed by
+  * tlb_ptep_clear_flush. In both flush modes the tlb for a page cache page
+- * has already been freed, so just do free_page_and_swap_cache.
++ * has already been freed, so just do free_folio_and_swap_cache.
+  *
+  * s390 doesn't delay rmap removal.
+  */
+@@ -49,7 +49,7 @@ static inline bool __tlb_remove_page_size(struct mmu_gather *tlb,
  {
- 	int i, rc = -EIO;
+ 	VM_WARN_ON_ONCE(delay_rmap);
  
--	/* try three times in case of busy card */
-+	/* try three times in case of busy card or no mem */
- 	for (i = 0; rc && i < 3; i++) {
--		if (rc == -EBUSY && in_task()) {
-+		if ((rc == -EBUSY || rc == -ENOMEM) && in_task()) {
- 			if (msleep_interruptible(1000))
- 				return -EINTR;
+-	free_page_and_swap_cache(page);
++	free_folio_and_swap_cache(page_folio(page));
+ 	return false;
+ }
+ 
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index db46b25a65ae..4e4e27d3ce3d 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -450,7 +450,7 @@ static inline unsigned long total_swapcache_pages(void)
+ }
+ 
+ void free_swap_cache(struct folio *folio);
+-void free_page_and_swap_cache(struct page *);
++void free_folio_and_swap_cache(struct folio *folio);
+ void free_pages_and_swap_cache(struct encoded_page **, int);
+ /* linux/mm/swapfile.c */
+ extern atomic_long_t nr_swap_pages;
+@@ -520,10 +520,8 @@ static inline void put_swap_device(struct swap_info_struct *si)
+ 
+ #define si_swapinfo(val) \
+ 	do { (val)->freeswap = (val)->totalswap = 0; } while (0)
+-/* only sparc can not include linux/pagemap.h in this file
+- * so leave put_page and release_pages undeclared... */
+-#define free_page_and_swap_cache(page) \
+-	put_page(page)
++#define free_folio_and_swap_cache(folio) \
++	folio_put(folio)
+ #define free_pages_and_swap_cache(pages, nr) \
+ 	release_pages((pages), (nr));
+ 
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index e97a97586478..0d28da37f826 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -3648,7 +3648,7 @@ static int __split_unmapped_folio(struct folio *folio, int new_order,
+ 		 * requires taking the lru_lock so we do the put_page
+ 		 * of the tail pages after the split is complete.
+ 		 */
+-		free_page_and_swap_cache(&new_folio->page);
++		free_folio_and_swap_cache(new_folio);
+ 	}
+ 	return ret;
+ }
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index b8838ba8207a..5cf204ab6af0 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -746,7 +746,7 @@ static void __collapse_huge_page_copy_succeeded(pte_t *pte,
+ 			ptep_clear(vma->vm_mm, address, _pte);
+ 			folio_remove_rmap_pte(src, src_page, vma);
+ 			spin_unlock(ptl);
+-			free_page_and_swap_cache(src_page);
++			free_folio_and_swap_cache(src);
  		}
- 		rc = pkey_key2protkey(key, keylen, pk->protkey, &pk->len,
--				      &pk->type);
-+				      &pk->type, PKEY_XFLAG_NOMEMALLOC);
  	}
  
- 	return rc;
-diff --git a/arch/s390/include/asm/pkey.h b/arch/s390/include/asm/pkey.h
-index a709a72be79a..c0e7f8c25e9f 100644
---- a/arch/s390/include/asm/pkey.h
-+++ b/arch/s390/include/asm/pkey.h
-@@ -20,10 +20,13 @@
-  * @param key pointer to a buffer containing the key blob
-  * @param keylen size of the key blob in bytes
-  * @param protkey pointer to buffer receiving the protected key
-+ * @param xflags additional execution flags (see PKEY_XFLAG_* definitions below)
-+ *        As of now the only supported flag is PKEY_XFLAG_NOMEMALLOC.
-  * @return 0 on success, negative errno value on failure
-  */
- int pkey_key2protkey(const u8 *key, u32 keylen,
--		     u8 *protkey, u32 *protkeylen, u32 *protkeytype);
-+		     u8 *protkey, u32 *protkeylen, u32 *protkeytype,
-+		     u32 xflags);
+diff --git a/mm/swap_state.c b/mm/swap_state.c
+index ec2b1c9c9926..c354435a0923 100644
+--- a/mm/swap_state.c
++++ b/mm/swap_state.c
+@@ -231,13 +231,11 @@ void free_swap_cache(struct folio *folio)
+ }
  
  /*
-  * If this flag is given in the xflags parameter, the pkey implementation
-diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
-index 55a4e70b866b..cef60770f68b 100644
---- a/drivers/s390/crypto/pkey_api.c
-+++ b/drivers/s390/crypto/pkey_api.c
-@@ -53,10 +53,9 @@ static int key2protkey(const struct pkey_apqn *apqns, size_t nr_apqns,
-  * In-Kernel function: Transform a key blob (of any type) into a protected key
+- * Perform a free_page(), also freeing any swap cache associated with
+- * this page if it is the last user of the page.
++ * Freeing a folio and also freeing any swap cache associated with
++ * this folio if it is the last user.
   */
- int pkey_key2protkey(const u8 *key, u32 keylen,
--		     u8 *protkey, u32 *protkeylen, u32 *protkeytype)
-+		     u8 *protkey, u32 *protkeylen, u32 *protkeytype, u32 xflags)
+-void free_page_and_swap_cache(struct page *page)
++void free_folio_and_swap_cache(struct folio *folio)
  {
- 	int rc;
--	const u32 xflags = 0;
- 
- 	rc = key2protkey(NULL, 0, key, keylen,
- 			 protkey, protkeylen, protkeytype, xflags);
+-	struct folio *folio = page_folio(page);
+-
+ 	free_swap_cache(folio);
+ 	if (!is_huge_zero_folio(folio))
+ 		folio_put(folio);
 -- 
-2.43.0
+2.47.2
 
 
