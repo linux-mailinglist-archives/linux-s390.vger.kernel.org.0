@@ -1,69 +1,69 @@
-Return-Path: <linux-s390+bounces-10194-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-10197-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1B7FA98705
-	for <lists+linux-s390@lfdr.de>; Wed, 23 Apr 2025 12:15:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1691BA98711
+	for <lists+linux-s390@lfdr.de>; Wed, 23 Apr 2025 12:15:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 847E11B62BCA
-	for <lists+linux-s390@lfdr.de>; Wed, 23 Apr 2025 10:16:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 465563A5A7D
+	for <lists+linux-s390@lfdr.de>; Wed, 23 Apr 2025 10:15:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADA1B7DA6D;
-	Wed, 23 Apr 2025 10:15:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D40411FC7F1;
+	Wed, 23 Apr 2025 10:15:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rLe/BLKX"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Hsqg3r70"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1430D24466D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5681F4615
 	for <linux-s390@vger.kernel.org>; Wed, 23 Apr 2025 10:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745403353; cv=none; b=lFntbZccqqrl1fiUl6ow6TEbHO1k4U1gtk+nBPf/otbED49tG3YJa0wLIr+TM04/UAYs1w/xdmhIw7JI0HYtRKpdqTLA46rGACfeizY+KV6SkPhbUbpAHefB7rZd3zvcD9ydgMpSXAstDCKI9GVP2vqg7HNgBmjoZazG8Y49bMs=
+	t=1745403354; cv=none; b=mUj1LnlUagtDNdQ64xrWx2zqwRNi8scr6P7Zi8DibOyulgMj0TeHzaVmJ+Mr86yJ7dfRp3D1vse7MF9V7egiYhXZKsNP4nqbcOBWhaQkZwLw6s/+5FpG1z8j9DsB6bPhJ4DOFEyvG9fZX8JG2LH8Qu3Y2A8NI7nSgm95Io1pwdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745403353; c=relaxed/simple;
-	bh=IoV73Vwl4hKbPbPvWlG2ASVtgbm7kQEoViWBwsHINQo=;
+	s=arc-20240116; t=1745403354; c=relaxed/simple;
+	bh=PNEqngqRq7IWrydiwICfVuyVxVwwvzNlRUZOYVj5I6c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kmtH7sOg6TJKfSiu2WClXoEVd7PPpUEZDF3fGjGC4OqfnbzQUVVdLo3QiA+UGJgndgKHxC5g1LbA+AYCu/T8UkuqGrPN0uJLWRBh5Ms+/RqYL6Lw/Dn22oVpdsSM5wYBxPiJ5lCuP/s4zi4sPEcwgU15kyBF8v/7eU8dHECHKac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rLe/BLKX; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=dxo9v12QmJPCmcEhoNzmULNs8TxQ0rbVvZsmuFTb/p2l6J92YPHhTOPAxnqQFf/CvBlVEw8wB2P3qPGA5/QAoQgnO5LubQWROEJBvxkR4w1OT4PmiX30y8pu20MwzuuRCMeLBQTXe6BvHMC+eKivfUaHsJ3rmcjGOxfkqc7OSkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Hsqg3r70; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N6fiww002087;
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N6fiGA007071;
 	Wed, 23 Apr 2025 10:15:50 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=e84DMjTn65pFZ20ri
-	WL4cmNPkRDerl3UeScbV8lWlQ4=; b=rLe/BLKXQVnTkv4b7C3xjJVt403Zf7dkR
-	3x88FeEOxm8JpEAoRNuF8cPGCp0+yrwtc+uIQI0g8vkpqmV4yj3AS8wC66NMpNYC
-	tFenLghn6r0MclgicMDPrrOg0tPjTdMl6lkT3bT7d1kiq7eFSoq3qsRAtEl5izi7
-	JtTfrK2uEp6pO3srZ52uwFBkSdERoOeIV/8cnoxZCGlSIzuz8FIGP3+c4zO8uEYh
-	iTHovfXm38844X2EpuJc9gldPK0ueCr6Bbuaj82/YIFIso2JKvdmwI2RGMMhYrRx
-	gCTxQI/JzvpCvLoTrp8xL2907W6vj3fg6vS2vaExmsvle0eRrwJZg==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 466jpt2puf-1
+	:mime-version:references:subject:to; s=pp1; bh=tpBkU+bod3j+TLA0i
+	ogawmxb1n1lwupmkPVwNFEKNyE=; b=Hsqg3r70anUNpEhRRYt4nIv9xm+yxrFHC
+	F0IUE2ZFT8OFSHB9/vRkRqeBr3JZxUbPtGDffR3kS8VUYNYSDfn/k74jW8Yxlgq/
+	5M+SyQX7kSXSAibm1ABNrku5WulMyPDSjL9GfDBIAO1F4SMItehRyIWL/qHkK0DG
+	O+nhX+mM5EFIxsx8Z/wqr6EZuCUVqoMui/oLDs+PPD7sVqdcPYb3JWuDD1OfkPow
+	n+dknPwIfzc5O2x4q2CzTyULbCyfuImCCOGoUQPaeUVcTMbstquGtc9Zhp4PGIYn
+	+xJl3L0ZZxXwGBtWaFEQpvf/f9mtPACqbKmduSDg/d1R9a19CvMRQ==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 466psnstn5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 10:15:49 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53N6jGpY000976;
-	Wed, 23 Apr 2025 10:15:48 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 466jfxth3x-1
+	Wed, 23 Apr 2025 10:15:50 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53N6WMoO005829;
+	Wed, 23 Apr 2025 10:15:49 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 466jfxahjk-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 10:15:48 +0000
+	Wed, 23 Apr 2025 10:15:49 +0000
 Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53NAFj0Z51446124
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53NAFjn855640334
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Wed, 23 Apr 2025 10:15:45 GMT
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E244D20049;
-	Wed, 23 Apr 2025 10:15:44 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 959C52004F;
+	Wed, 23 Apr 2025 10:15:45 +0000 (GMT)
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7501E2004D;
-	Wed, 23 Apr 2025 10:15:44 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 037822004D;
+	Wed, 23 Apr 2025 10:15:45 +0000 (GMT)
 Received: from funtu2.fritz.box?044ibm.com (unknown [9.87.147.99])
 	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
 	Wed, 23 Apr 2025 10:15:44 +0000 (GMT)
@@ -72,9 +72,9 @@ To: dengler@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
         agordeev@linux.ibm.com
 Cc: linux-s390@vger.kernel.org, herbert@gondor.apana.org.au,
         ifranzki@linux.ibm.com, fcallies@linux.ibm.com
-Subject: [PATCH v7 15/25] s390/zcrypt: Rework cca misc functions kmallocs to use the cprb mempool
-Date: Wed, 23 Apr 2025 12:15:24 +0200
-Message-ID: <20250423101535.143137-16-freude@linux.ibm.com>
+Subject: [PATCH v7 16/25] s390/zcrypt: Propagate xflags argument with cca_get_info()
+Date: Wed, 23 Apr 2025 12:15:25 +0200
+Message-ID: <20250423101535.143137-17-freude@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250423101535.143137-1-freude@linux.ibm.com>
 References: <20250423101535.143137-1-freude@linux.ibm.com>
@@ -86,127 +86,106 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: xNrUkv01w71VD802FWyRtMSHmY0H66fy
-X-Proofpoint-ORIG-GUID: xNrUkv01w71VD802FWyRtMSHmY0H66fy
-X-Authority-Analysis: v=2.4 cv=a/Qw9VSF c=1 sm=1 tr=0 ts=6808bdd6 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=90Hg82fxA5viHaBFFW8A:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA2OSBTYWx0ZWRfX8+6GSNdy5v7R /I3bwU+bfCkj5/zgP/kMloDcDhELNDt+UvpdmvooSXFbB3Z13Q6vuwGW4GiRf5QhJAAuKxnbDUM i2gHWgZ19McMCoKmqFenf+ZQE3TtoPvlIC7hc2SRpplrdrm6tfROfYgFlO5TFp/HInI8sfhN7CR
- vUXDlQsQP1UbdlADn6JZmtQEDlLG2X5gh2oqsdchGzFsV2BcmuzbPJrLQEWwHMV1tSobHUPZ1eY Y6A487to7LWG3HD9v3rmdpbE70Iqatm9F0tDf5eBlrFcb+x+vAS+1+6t8r6ijItnoTO3UvIhNMv BpwpY/oOo7Oa5lMxewPJOijwOIF1zBXs3HOqkqn+ZHOWtFdqWQiR1ug7QrPtSK/y3ATCrs5FmCx
- YcqNLAFlOOKf8kUQUMijaU+9Me4i4BPuckrjeOPrx3C49YydbnH0wSlehaKY3wR7OZLAK8VA
+X-Proofpoint-GUID: FSvBHbfnp-q-SMWwPgh3uQtjXm0nIkDq
+X-Authority-Analysis: v=2.4 cv=BIezrEQG c=1 sm=1 tr=0 ts=6808bdd6 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=OHbkrU8AMn62nkaBgakA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA2OSBTYWx0ZWRfXx9HkecZa66Hr VWMKRtysvdIt6HzsTNHxgr8+kCd0wSydqoKvEXBX6TOXs2SwZ3afv1LW7EXi9HqpaKZmQj3HGWN alOjw9sM8TIk2cW12YIukrf9xENgI4+gJG+0ZXbbVaTx0p1nD/uP3cy37T2gILUqvNJ4Kb1Gdzu
+ qL4t9SPF+uMQWSjJv8yA/UY78osCsUJkaSbHcDeCXEJzTJcPFCmfAdvBZAo7vQt9JMoasRPpiXG AUV56zOBWc07Os7FduHxfd99XghxDgHsvxG8NFHbDSl3wC3bASM+3+VA01rr2w+6e57rmPSGNJu qNQoe5MRv/G13Y1/OH+XpSV/PAx4UF1fBiAzn1f73WWEg3NMArZAs87TkTV/YSccE1GPwMX+Dz/
+ VOa5X7ID9jirwygYgAc6JbsFWYEsTtypx5ut15o4IWx+nSh5M09PCpbUp0sAw3orkw6T+0bk
+X-Proofpoint-ORIG-GUID: FSvBHbfnp-q-SMWwPgh3uQtjXm0nIkDq
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-23_07,2025-04-22_01,2024-11-22_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 mlxscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
- impostorscore=0 spamscore=0 adultscore=0 bulkscore=0 lowpriorityscore=0
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ impostorscore=0 mlxscore=0 phishscore=0 malwarescore=0 clxscore=1015
+ suspectscore=0 lowpriorityscore=0 spamscore=0 adultscore=0 bulkscore=0
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
  definitions=main-2504230069
 
-Rework two places in the zcrypt cca misc code using kmalloc() for
-ephemeral memory allocation. As there is anyway now a cprb mempool
-let's use this pool instead to satisfy these short term memory
-allocations.
+Propagate the xflags argument from the cca_get_info()
+caller down to the lower level functions for proper
+memory allocation hints.
 
 Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
 Reviewed-by: Holger Dengler <dengler@linux.ibm.com>
 ---
- drivers/s390/crypto/zcrypt_ccamisc.c | 42 +++++++++++++++++++---------
- 1 file changed, 29 insertions(+), 13 deletions(-)
+ drivers/s390/crypto/zcrypt_ccamisc.c | 6 +++---
+ drivers/s390/crypto/zcrypt_ccamisc.h | 2 +-
+ drivers/s390/crypto/zcrypt_cex4.c    | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/s390/crypto/zcrypt_ccamisc.c b/drivers/s390/crypto/zcrypt_ccamisc.c
-index 6abfa3da7607..33e4deafadd3 100644
+index 33e4deafadd3..51f84af09170 100644
 --- a/drivers/s390/crypto/zcrypt_ccamisc.c
 +++ b/drivers/s390/crypto/zcrypt_ccamisc.c
-@@ -1126,20 +1126,29 @@ int cca_clr2cipherkey(u16 card, u16 dom, u32 keybitsize, u32 keygenflags,
- 		      const u8 *clrkey, u8 *keybuf, u32 *keybufsize)
- {
- 	int rc;
--	u8 *token;
-+	void *mem;
- 	int tokensize;
--	u8 exorbuf[32];
-+	u8 *token, exorbuf[32];
- 	struct cipherkeytoken *t;
-+	u32 xflags = 0;
- 
- 	/* fill exorbuf with random data */
- 	get_random_bytes(exorbuf, sizeof(exorbuf));
- 
--	/* allocate space for the key token to build */
--	token = kmalloc(MAXCCAVLSCTOKENSIZE, GFP_KERNEL);
--	if (!token)
-+	/*
-+	 * Allocate space for the key token to build.
-+	 * Also we only need up to MAXCCAVLSCTOKENSIZE bytes for this
-+	 * we use the already existing cprb mempool to solve this
-+	 * short term memory requirement.
-+	 */
-+	mem = (xflags & ZCRYPT_XFLAG_NOMEMALLOC) ?
-+		mempool_alloc_preallocated(cprb_mempool) :
-+		mempool_alloc(cprb_mempool, GFP_KERNEL);
-+	if (!mem)
- 		return -ENOMEM;
- 
- 	/* prepare the token with the key skeleton */
-+	token = (u8 *)mem;
- 	tokensize = SIZEOF_SKELETON;
- 	memcpy(token, aes_cipher_key_skeleton, tokensize);
- 
-@@ -1196,7 +1205,7 @@ int cca_clr2cipherkey(u16 card, u16 dom, u32 keybitsize, u32 keygenflags,
- 	*keybufsize = tokensize;
- 
- out:
--	kfree(token);
-+	mempool_free(mem, cprb_mempool);
- 	return rc;
- }
- EXPORT_SYMBOL(cca_clr2cipherkey);
-@@ -1628,10 +1637,12 @@ EXPORT_SYMBOL(cca_query_crypto_facility);
+@@ -1635,14 +1635,13 @@ EXPORT_SYMBOL(cca_query_crypto_facility);
+  * Fetch cca_info values about a CCA queue via
+  * query_crypto_facility from adapter.
   */
- int cca_get_info(u16 cardnr, u16 domain, struct cca_info *ci)
+-int cca_get_info(u16 cardnr, u16 domain, struct cca_info *ci)
++int cca_get_info(u16 cardnr, u16 domain, struct cca_info *ci, u32 xflags)
  {
-+	void *mem;
+ 	void *mem;
  	int rc, found = 0;
  	size_t rlen, vlen;
--	u8 *rarray, *varray, *pg;
-+	u8 *rarray, *varray;
+ 	u8 *rarray, *varray;
  	struct zcrypt_device_status_ext devstat;
-+	u32 xflags = 0;
+-	u32 xflags = 0;
  
  	memset(ci, 0, sizeof(*ci));
  
-@@ -1641,12 +1652,17 @@ int cca_get_info(u16 cardnr, u16 domain, struct cca_info *ci)
- 		return rc;
- 	ci->hwtype = devstat.hwtype;
+@@ -1721,6 +1720,7 @@ int cca_findcard2(u32 *apqns, u32 *nr_apqns, u16 cardnr, u16 domain,
+ 	int i, card, dom, curmatch, oldmatch;
+ 	struct cca_info ci;
+ 	u32 _nr_apqns = 0;
++	u32 xflags = 0;
  
--	/* prep page for rule array and var array use */
--	pg = (u8 *)__get_free_page(GFP_KERNEL);
--	if (!pg)
-+	/*
-+	 * Prep memory for rule array and var array use.
-+	 * Use the cprb mempool for this.
-+	 */
-+	mem = (xflags & ZCRYPT_XFLAG_NOMEMALLOC) ?
-+		mempool_alloc_preallocated(cprb_mempool) :
-+		mempool_alloc(cprb_mempool, GFP_KERNEL);
-+	if (!mem)
- 		return -ENOMEM;
--	rarray = pg;
--	varray = pg + PAGE_SIZE / 2;
-+	rarray = (u8 *)mem;
-+	varray = (u8 *)mem + PAGE_SIZE / 2;
- 	rlen = vlen = PAGE_SIZE / 2;
+ 	/* occupy the device status memory */
+ 	mutex_lock(&dev_status_mem_mutex);
+@@ -1749,7 +1749,7 @@ int cca_findcard2(u32 *apqns, u32 *nr_apqns, u16 cardnr, u16 domain,
+ 		if (domain != 0xFFFF && dom != domain)
+ 			continue;
+ 		/* get cca info on this apqn */
+-		if (cca_get_info(card, dom, &ci))
++		if (cca_get_info(card, dom, &ci, xflags))
+ 			continue;
+ 		/* current master key needs to be valid */
+ 		if (mktype == AES_MK_SET && ci.cur_aes_mk_state != '2')
+diff --git a/drivers/s390/crypto/zcrypt_ccamisc.h b/drivers/s390/crypto/zcrypt_ccamisc.h
+index ca41a675dd3b..38d69aceefe6 100644
+--- a/drivers/s390/crypto/zcrypt_ccamisc.h
++++ b/drivers/s390/crypto/zcrypt_ccamisc.h
+@@ -255,7 +255,7 @@ struct cca_info {
+ /*
+  * Fetch cca information about an CCA queue.
+  */
+-int cca_get_info(u16 card, u16 dom, struct cca_info *ci);
++int cca_get_info(u16 card, u16 dom, struct cca_info *ci, u32 xflags);
  
- 	/* QF for this card/domain */
-@@ -1693,7 +1709,7 @@ int cca_get_info(u16 cardnr, u16 domain, struct cca_info *ci)
- 	}
+ int zcrypt_ccamisc_init(void);
+ void zcrypt_ccamisc_exit(void);
+diff --git a/drivers/s390/crypto/zcrypt_cex4.c b/drivers/s390/crypto/zcrypt_cex4.c
+index ecf1fcc6315e..84cbcbab2741 100644
+--- a/drivers/s390/crypto/zcrypt_cex4.c
++++ b/drivers/s390/crypto/zcrypt_cex4.c
+@@ -85,7 +85,7 @@ static ssize_t cca_serialnr_show(struct device *dev,
+ 	memset(&ci, 0, sizeof(ci));
  
- out:
--	free_page((unsigned long)pg);
-+	mempool_free(mem, cprb_mempool);
- 	return found == 2 ? 0 : -ENOENT;
+ 	if (ap_domain_index >= 0)
+-		cca_get_info(ac->id, ap_domain_index, &ci);
++		cca_get_info(ac->id, ap_domain_index, &ci, 0);
+ 
+ 	return sysfs_emit(buf, "%s\n", ci.serial);
  }
- EXPORT_SYMBOL(cca_get_info);
+@@ -119,7 +119,7 @@ static ssize_t cca_mkvps_show(struct device *dev,
+ 
+ 	cca_get_info(AP_QID_CARD(zq->queue->qid),
+ 		     AP_QID_QUEUE(zq->queue->qid),
+-		     &ci);
++		     &ci, 0);
+ 
+ 	if (ci.new_aes_mk_state >= '1' && ci.new_aes_mk_state <= '3')
+ 		n += sysfs_emit_at(buf, n, "AES NEW: %s 0x%016llx\n",
 -- 
 2.43.0
 
