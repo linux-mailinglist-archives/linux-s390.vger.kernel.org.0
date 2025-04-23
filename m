@@ -1,82 +1,80 @@
-Return-Path: <linux-s390+bounces-10206-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-10208-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91EA6A9871D
-	for <lists+linux-s390@lfdr.de>; Wed, 23 Apr 2025 12:16:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1473A987B7
+	for <lists+linux-s390@lfdr.de>; Wed, 23 Apr 2025 12:41:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DB4F97A8560
-	for <lists+linux-s390@lfdr.de>; Wed, 23 Apr 2025 10:14:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7DFA51B670FA
+	for <lists+linux-s390@lfdr.de>; Wed, 23 Apr 2025 10:41:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FED022F77F;
-	Wed, 23 Apr 2025 10:16:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D42426A092;
+	Wed, 23 Apr 2025 10:40:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qfKb4XAQ"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RzVeSK8t"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F701F2C44
-	for <linux-s390@vger.kernel.org>; Wed, 23 Apr 2025 10:15:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16EC26AA99
+	for <linux-s390@vger.kernel.org>; Wed, 23 Apr 2025 10:40:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745403360; cv=none; b=GYoP38Wm7L9uESqkoQZt27XelTmrxJSjZsdeEkaF2JTFDy5dfAcnMquDuqTbDKZxYpNfy7lh53CXrzb91TdImiTkOdkaIBhvARzMJYz73WK2d9V+ZPZ0gb11EwN5+vMBLx3ODzFiibrHMrCvjirPpW7+VN5alRL/VTztUUREeC0=
+	t=1745404856; cv=none; b=gVJc4vlEzSdw+D4rrcQg7/EXFVNhwPslM7q+fTodLSrdUrT54NPHYDuQv/i0lJwsfE1ZAa7cTztQtzJw+ZJ0QCJOC05QrrS0GnkIIagu2DfCCHohZnYJaGwPmEn+JWBR1vihfQtwMf0nVyuo9hA+ORwOD7x9xN6dwRDvtbsIffI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745403360; c=relaxed/simple;
-	bh=f6jcIqT+JsYnrezf5LeEU+5Dka+j50OVfXs9ZpBrvh0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LOeazEMv2amhab31hGKLLLg0rTJnfpBOhEOlm3d1EIVyPIXH6+ae0AO3k8ko+dw7YtiaaVLmrQTbMrpcePD9s9rzeh0boodg7QUxkuaRxsSCKsS6v3izQRKtRDtU5ZonFdoimiKJsaRp/i5ldu6Dzfa1Nw7m5KuCFzDQ4P7m6fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qfKb4XAQ; arc=none smtp.client-ip=148.163.158.5
+	s=arc-20240116; t=1745404856; c=relaxed/simple;
+	bh=SZT9JajVIJetXqLAKxafzRRMiR+/qU+C4ZW7jsM/D6Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XwyXXvEJrbjXMmZK1TDJhoQYoo/WLCLfe4XT1irpBQy9b6Hy8xIJhRY2Ki9yJsFGO16Rr+zSaT/3iEJ7vuGUgAINmP9W1rxLiqquqa5ql4/QOKoSN/oo/mQFQyaLk82qn1K2z1xD6brT14qeUeb75UH9EU1hP9iNctPTX8KN+lM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=RzVeSK8t; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N6fkMA007171;
-	Wed, 23 Apr 2025 10:15:56 GMT
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N6fjlg007115;
+	Wed, 23 Apr 2025 10:40:51 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=h23wedpUjHTyWPCtF
-	3UkOaPF4PfUB53x8ns+m87CGdo=; b=qfKb4XAQXx4hjA0n4jZBuPDJHt3Lld/0Z
-	5c78TsuGuZdV4GvRWLViePZ72ufjBRW6r4ASQXz5LPW8RstKLuFpKXF4//PCD4OK
-	F2tPdPgpvE2jDYKEex2VEfc4lZP3HWSVnkVFjF4Criv0i+1/p3TLlLF//AZbxzyJ
-	N21kB9lyZ285jUH3+gTfED6l7eUlewdOwn1ZGKBW9Ot1ow5BmBVdCWZK1dRF5eM3
-	BTKB5Zq7tfFrcFRF0+PKeFpEDBfrKDGGv1do8uHfmvG1gDEf+5k1WRfjhXTa0Gls
-	m7de9N/yhRAoMwWdBXsVBoxLOr9E0U2a5Dv8tWJUopNt2oKWiDinQ==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 466psnstna-1
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=SZT9JajVIJetXqLAKxafzRRMiR+/qU
+	+C4ZW7jsM/D6Y=; b=RzVeSK8tNj8ArWdYCcZK/CJK1lSlRvw5LMUz5qVV2q+3wl
+	8OSHT8qmewVSjZcXddNIakLzaJtIPRGgA6jvH6CC2KJjYwYlN2TKEy7yifqWAZ/C
+	I6N1l28Vn/7/yrNMo+hLn0XC8R0DIJl1c3Iq9K8e6mpu9NYTVvfcAQkNelOYsxmr
+	0GKcw8se1sbj12eSB6zXRR+E6+ldkfo7njo7nHCrCDCnaYaS50cL4m/Nly0aIxCU
+	1HXtjLS9mAcLA2nHUTCp3iyWbwc3ALOw8nvGKAIFWc1PMuUHP0pwFGQ6znu9NYBY
+	rDRBTJWVVg7I8CzTTVpaT68AqD2T9PehOxMm8v3w==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 466psnswwp-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 10:15:55 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53N6gk0j028446;
-	Wed, 23 Apr 2025 10:15:55 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 466jfvjhe9-1
+	Wed, 23 Apr 2025 10:40:51 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53N6NdQ8008666;
+	Wed, 23 Apr 2025 10:40:50 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 466jfxjm8w-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 10:15:54 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53NAFpZE47055282
+	Wed, 23 Apr 2025 10:40:50 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53NAelsD56951164
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 23 Apr 2025 10:15:51 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 15B6D20049;
-	Wed, 23 Apr 2025 10:15:51 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9D0852004E;
-	Wed, 23 Apr 2025 10:15:50 +0000 (GMT)
-Received: from funtu2.fritz.box?044ibm.com (unknown [9.87.147.99])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 23 Apr 2025 10:15:50 +0000 (GMT)
-From: Harald Freudenberger <freude@linux.ibm.com>
-To: dengler@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        agordeev@linux.ibm.com
-Cc: linux-s390@vger.kernel.org, herbert@gondor.apana.org.au,
+	Wed, 23 Apr 2025 10:40:47 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E164B20040;
+	Wed, 23 Apr 2025 10:40:46 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9547020043;
+	Wed, 23 Apr 2025 10:40:46 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.60])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 23 Apr 2025 10:40:46 +0000 (GMT)
+Date: Wed, 23 Apr 2025 12:40:45 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Harald Freudenberger <freude@linux.ibm.com>
+Cc: dengler@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+        linux-s390@vger.kernel.org, herbert@gondor.apana.org.au,
         ifranzki@linux.ibm.com, fcallies@linux.ibm.com
-Subject: [PATCH v7 25/25] s390/pkey/crypto: Introduce xflags param for pkey in-kernel API
-Date: Wed, 23 Apr 2025 12:15:34 +0200
-Message-ID: <20250423101535.143137-26-freude@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250423101535.143137-1-freude@linux.ibm.com>
+Subject: Re: [PATCH v7 00/25] AP bus/zcrypt/pkey/paes no-mem-alloc patches
+Message-ID: <20250423104045.8056D38-hca@linux.ibm.com>
 References: <20250423101535.143137-1-freude@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
@@ -84,105 +82,35 @@ List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423101535.143137-1-freude@linux.ibm.com>
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: GX2HEDe18LriKrqXfG8juf-QIcg_e4TD
-X-Authority-Analysis: v=2.4 cv=BIezrEQG c=1 sm=1 tr=0 ts=6808bddb cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=PJCvTKg1WW3ThAoDuw0A:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA2OSBTYWx0ZWRfXyYhDJpF9AZ3x EikfbJ2Ib8n9h2n13m6fgkMnoQB0kxDURfQPTWuF9Bhy5v/iuCn5V0LgtKe256eLGKa1bEChcJi 8z1JnE3xilB3/aGD0ba/gi2SBszVNpWNzS8/5HssngM45BFKbuA4H9leIWu/VR2hhl6KXQI9hVc
- m91eZgvaO8ZBGO6yzpmy0S1SxzMX6LNhlNmQAyA+h5gWExyHr9lhkTP8aaB3g2qPwkpjBtOVM49 3x+SqUMVPfis1XKJAQ/dYU00bVl5XBTcxGcVG590lSHpiDxOPmwwwyIIhOtiMurTOTNHnOA29bn EyntjRW/MlEzmsYdqtwBqrPG9OXmm6h1r6TWC8ffzcprjMk71j+pE5ULIZXZ0dZb4ZFA7KaXmD2
- n1RZy0TUWtqnh6+TWYD1IKmqo0B+GeVaX+kNCd1EFCsC2ZUi6BLH/8Zr1i+YWfsje8c+VZb8
-X-Proofpoint-ORIG-GUID: GX2HEDe18LriKrqXfG8juf-QIcg_e4TD
+X-Proofpoint-GUID: WEDZ9D4Jqb7dfVpCEZEBNh71Ga9rEbVO
+X-Authority-Analysis: v=2.4 cv=BIezrEQG c=1 sm=1 tr=0 ts=6808c3b3 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=5Wwa1OfWjk28_BsrzmoA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA3MyBTYWx0ZWRfX4u1t/CsOqyh6 qZj0uVObRn2Vw6wnll/CDndgxqE31YMc/Ss9VSLf8ffpmFCyzLFLKuigDP2qFsXyyfva/C1M4ps O971oBUm1U9/hMceBAdZE9JF0uNYA59BRTQBKXgDr79388q9YJzGKvmUEMJUJE182NaEhH63Y46
+ dr9GY5qbyU5/w3s5lM5BkMklR+KQ56CHLkWQaqfSU0IsyVFplCKNHmHk/PhkRefw4tyowE/gdlJ qiAuorb+zQkVKcG56nQ9iEDalssPritiMSPKLBHEBsORxKFQEKCF/DvGcLuouxbzNRYf5Wrfvbu TvnXgYk5T4vl3HxJSTs++dKNii+SLn3w2Gywr77Iq59IaoQB0m/PhccQS/7GOb1Yd2vjfDSgT/9
+ z3v2lqjaXiN3ANbhM278QlR/QBtX3ye0BAwWgPLe2p20cp0F0qP6Jw2KfZwFpybkU04oFeKs
+X-Proofpoint-ORIG-GUID: WEDZ9D4Jqb7dfVpCEZEBNh71Ga9rEbVO
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-23_07,2025-04-22_01,2024-11-22_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  impostorscore=0 mlxscore=0 phishscore=0 malwarescore=0 clxscore=1015
  suspectscore=0 lowpriorityscore=0 spamscore=0 adultscore=0 bulkscore=0
- mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ mlxlogscore=821 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504230069
+ definitions=main-2504230073
 
-Add a new parameter xflags to the in-kernel API function
-pkey_key2protkey(). Currently there is only one flag supported:
+Hi Harald,
 
-* PKEY_XFLAG_NOMEMALLOC:
-  If this flag is given in the xflags parameter, the pkey
-  implementation is not allowed to allocate memory but instead should
-  fall back to use preallocated memory or simple fail with -ENOMEM.
-  This flag is for protected key derive within a cipher or similar
-  which must not allocate memory which would cause io operations - see
-  also the CRYPTO_ALG_ALLOCATES_MEMORY flag in crypto.h.
+On Wed, Apr 23, 2025 at 12:15:09PM +0200, Harald Freudenberger wrote:
+> The patch series starts bottom (AP bus) and goes up the call
+> chain (PKEY). At any time in the patch stack it should compile.
+> For easier review I tried to have one logic code change by
+> each patch and thus keep the patches "small". For the upstream
+> version I intend to fold them together into only a few commits.
 
-The one and only user of this in-kernel API - the skcipher
-implementations PAES in paes_s390.c set this flag upon request
-to derive a protected key from the given raw key material.
-
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Reviewed-by: Holger Dengler <dengler@linux.ibm.com>
----
- arch/s390/crypto/paes_s390.c   | 6 +++---
- arch/s390/include/asm/pkey.h   | 5 ++++-
- drivers/s390/crypto/pkey_api.c | 3 +--
- 3 files changed, 8 insertions(+), 6 deletions(-)
-
-diff --git a/arch/s390/crypto/paes_s390.c b/arch/s390/crypto/paes_s390.c
-index 511093713a6f..1f62a9460405 100644
---- a/arch/s390/crypto/paes_s390.c
-+++ b/arch/s390/crypto/paes_s390.c
-@@ -182,14 +182,14 @@ static inline int __paes_keyblob2pkey(const u8 *key, unsigned int keylen,
- {
- 	int i, rc = -EIO;
- 
--	/* try three times in case of busy card */
-+	/* try three times in case of busy card or no mem */
- 	for (i = 0; rc && i < 3; i++) {
--		if (rc == -EBUSY && in_task()) {
-+		if ((rc == -EBUSY || rc == -ENOMEM) && in_task()) {
- 			if (msleep_interruptible(1000))
- 				return -EINTR;
- 		}
- 		rc = pkey_key2protkey(key, keylen, pk->protkey, &pk->len,
--				      &pk->type);
-+				      &pk->type, PKEY_XFLAG_NOMEMALLOC);
- 	}
- 
- 	return rc;
-diff --git a/arch/s390/include/asm/pkey.h b/arch/s390/include/asm/pkey.h
-index a709a72be79a..c0e7f8c25e9f 100644
---- a/arch/s390/include/asm/pkey.h
-+++ b/arch/s390/include/asm/pkey.h
-@@ -20,10 +20,13 @@
-  * @param key pointer to a buffer containing the key blob
-  * @param keylen size of the key blob in bytes
-  * @param protkey pointer to buffer receiving the protected key
-+ * @param xflags additional execution flags (see PKEY_XFLAG_* definitions below)
-+ *        As of now the only supported flag is PKEY_XFLAG_NOMEMALLOC.
-  * @return 0 on success, negative errno value on failure
-  */
- int pkey_key2protkey(const u8 *key, u32 keylen,
--		     u8 *protkey, u32 *protkeylen, u32 *protkeytype);
-+		     u8 *protkey, u32 *protkeylen, u32 *protkeytype,
-+		     u32 xflags);
- 
- /*
-  * If this flag is given in the xflags parameter, the pkey implementation
-diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
-index 55a4e70b866b..cef60770f68b 100644
---- a/drivers/s390/crypto/pkey_api.c
-+++ b/drivers/s390/crypto/pkey_api.c
-@@ -53,10 +53,9 @@ static int key2protkey(const struct pkey_apqn *apqns, size_t nr_apqns,
-  * In-Kernel function: Transform a key blob (of any type) into a protected key
-  */
- int pkey_key2protkey(const u8 *key, u32 keylen,
--		     u8 *protkey, u32 *protkeylen, u32 *protkeytype)
-+		     u8 *protkey, u32 *protkeylen, u32 *protkeytype, u32 xflags)
- {
- 	int rc;
--	const u32 xflags = 0;
- 
- 	rc = key2protkey(NULL, 0, key, keylen,
- 			 protkey, protkeylen, protkeytype, xflags);
--- 
-2.43.0
-
+What about the statement about "only a few commits"? I asked the same question
+also for the previous series, but didn't get an answer, instead v7 appeared.
 
