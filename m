@@ -1,68 +1,68 @@
-Return-Path: <linux-s390+bounces-10192-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-10184-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DB4FA9870B
-	for <lists+linux-s390@lfdr.de>; Wed, 23 Apr 2025 12:15:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 344A3A986FF
+	for <lists+linux-s390@lfdr.de>; Wed, 23 Apr 2025 12:15:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 503333A24A2
-	for <lists+linux-s390@lfdr.de>; Wed, 23 Apr 2025 10:15:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 21241189A7DC
+	for <lists+linux-s390@lfdr.de>; Wed, 23 Apr 2025 10:16:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC3E41F4C8C;
-	Wed, 23 Apr 2025 10:15:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD9541F4C8C;
+	Wed, 23 Apr 2025 10:15:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fmTkFRbI"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iZxi5p3O"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC4622F77F
-	for <linux-s390@vger.kernel.org>; Wed, 23 Apr 2025 10:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E8D1FFC5E
+	for <linux-s390@vger.kernel.org>; Wed, 23 Apr 2025 10:15:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745403352; cv=none; b=R9/wGG+/5hQgoGKpDnAIq9AnSeDNrJ7m4k+MwoOn6lssHqqg5eDG6i0ropoVDUZrAaCYEm8X8blvbLCxOncDCK8HASbtxb9Hh+kH9X0zPTByANCORvh0XdrSkV884nyWmX6Y3jVDkhokhYaMXroWX0A+dludSB95BsuTayhlo7w=
+	t=1745403347; cv=none; b=huPpVO/OEmRDXKKPltBvwhWDOrGA9PUHfXQlkBUSHkxNVPAPVTNGsdFVnX3pKO9d9YiXKwHb3jOa+0yf0X57ZTkwAOQBmOAbrPwrjOcCuvqU2Wr7E0xlJRKIMi3d6N8KpXFvoamspQWg8u7iD92vZad/XkACOs642XiENWXLm14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745403352; c=relaxed/simple;
-	bh=DtrvJA8QKOlqTfQYf6HOfX5fGAus1MWq9TvuiYRHGuo=;
+	s=arc-20240116; t=1745403347; c=relaxed/simple;
+	bh=ulwEfnZKRw3jCLA7bTcYxZEfDubEd2w2YYuWSdrkjJc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WBGJEL7/7SBVoCav3FvBlhPhMuX1OYCZIHxMSXsck5RjLEbqFXkA270ejaTQCGgHoYlZEurAB+cdpJV4EDHKR1wQd7/CN0S1kOvirpV3KlI6xNVYo8LUJAGUZ2JSsObCnwSgT3NkTgHuVhwDYBbdC0pD6jSeoQuI/w8eaATTnh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fmTkFRbI; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=Z5cnVDlKj/0vZX4g0bINZzcqgloOH6ObfOCknuGbi3s8F7LsQne1YBaaAfZJfx4OCvmka7GD/hdpjYaezIPlo+nidjnxFZfPLA1sTctoQDWUXaWSjCXp6zCXAcFakP8pklnsynb3LqrZaN+SgB2CS4T7AuYpkNoh+IThe/ny0Qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iZxi5p3O; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N6fj7I012556;
-	Wed, 23 Apr 2025 10:15:42 GMT
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NA417c024477;
+	Wed, 23 Apr 2025 10:15:44 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=ci9t6190HigHl2YoV
-	K8TSvROYJo41c5Nl0sQT0kxRgI=; b=fmTkFRbIropDyXfMMqe2EPf9EUVEmjUdv
-	kUZ2hy5GjPgmXlLxW8N6jn2Z0/cpwmveRIIHprCW87KhYPxMFNNnYQ3xSvLBxYu0
-	CbSoib7os1QKxlo8Z85eWZFDoz6K2IaKIudjuCZWebbvDaDviTOa0RGDU2dK8mL1
-	gEpNnXkxmNwqy9VT7IXiDL6U0HKZ8bSybm5P9Kq2X4BI8lsHaDVNvG16+xW1LWzz
-	5fcfKFze4zg1NfnepgiUa0eS0u47RoDmQkyOrbMR7OhQsUFOllW4rEBUGlx5XqJX
-	+nMwRZcCAr9nx4/mXCU/voUViUQwUw4WIUrnVdlZktoA2yPk3SITA==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 466n30a5nq-1
+	:mime-version:references:subject:to; s=pp1; bh=SsDzMd98wVtHV7ihp
+	OmJw0TVQIx8rB72SFXI545IFjk=; b=iZxi5p3OBgxnwnJ9PCZ5ymHmdoiczGIqC
+	lEDNXo2ICkkUvbBNZFoTQvEOx2k482TPF2izFMsiYojj8w/xsjgL8S960l4q8oHC
+	Sdo9LbPex9o7QaImVUBtRDBOTz3pOyXCgLywUyH9/bK8FaAVEV4w3szENmdGjMyk
+	u4JUNJGWDTI2j3pHhcHvAIsTmP12dxxqmfhnjyLJFJRK6kH7KN+LmgDeNyPvjnPJ
+	y1+i/LB67EZwnYfwLNL7QIiH6Of3E74jjGUtBDXCPNW71KEW9VlKK/6VSgFY1f8I
+	J6WCZjzvVLoYpN3kLY4iQScupN7ZDpcJ8RbPlWykIArK3VHhT8N1g==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 466x4jr1cx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 10:15:42 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53N6YFvl028443;
-	Wed, 23 Apr 2025 10:15:41 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 466jfvjhdc-1
+	Wed, 23 Apr 2025 10:15:43 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53N6V47p005844;
+	Wed, 23 Apr 2025 10:15:42 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 466jfxahj8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 10:15:41 +0000
+	Wed, 23 Apr 2025 10:15:42 +0000
 Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53NAFbga51773798
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53NAFcNk39387516
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 23 Apr 2025 10:15:37 GMT
+	Wed, 23 Apr 2025 10:15:38 GMT
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BD7C120049;
-	Wed, 23 Apr 2025 10:15:37 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 4A38920049;
+	Wed, 23 Apr 2025 10:15:38 +0000 (GMT)
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3B6522004D;
+	by IMSVA (Postfix) with ESMTP id D2F492004E;
 	Wed, 23 Apr 2025 10:15:37 +0000 (GMT)
 Received: from funtu2.fritz.box?044ibm.com (unknown [9.87.147.99])
 	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
@@ -72,9 +72,9 @@ To: dengler@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
         agordeev@linux.ibm.com
 Cc: linux-s390@vger.kernel.org, herbert@gondor.apana.org.au,
         ifranzki@linux.ibm.com, fcallies@linux.ibm.com
-Subject: [PATCH v7 03/25] s390/ap: Introduce ap message buffer pool
-Date: Wed, 23 Apr 2025 12:15:12 +0200
-Message-ID: <20250423101535.143137-4-freude@linux.ibm.com>
+Subject: [PATCH v7 04/25] s390/zcrypt: Avoid alloc and copy of ep11 targets if kernelspace cprb
+Date: Wed, 23 Apr 2025 12:15:13 +0200
+Message-ID: <20250423101535.143137-5-freude@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250423101535.143137-1-freude@linux.ibm.com>
 References: <20250423101535.143137-1-freude@linux.ibm.com>
@@ -86,233 +86,129 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA2OSBTYWx0ZWRfX8Am8SZk7mhZa /73trDs/ynhfVbrubcFtgM9YNYdH+ehjcYDjvfg6qQLTddk/7DgmqgH6lBabDWazJnDKlDaXqFc 7TD5r5S/pf1u9NzB0wtY5YJNlNdNrGauqrLt3tSkitZTQrh4T6imUR+hyIfQzB9bQ7FXprgf61n
- ySfmEw4Y7RLG22S6COPqJznn9IsUuPh0JKkMNAAX6CKYLCMbEZffk/WjZYAxWgJlkONp6jmwUUT K//gnd5go6m8llxiep/71yn6oe5sw3uUZXVay+sXosJa+UJA6SElPAB+FguXfeuuJHWLtjmTpjW nEOTlPSh7DbyLz+xXRS14tiK/Q0o9Prwk5seQ2wzASjRPWBXrYddI9xOPdPDgckULvYgWWhU7CY
- rZaD+ixa/j9UB5H3w9dKvnsO/vvGtvLYpx/ZGnEzYycbANBISqeKUe/CbNpAupgclVOspOxy
-X-Authority-Analysis: v=2.4 cv=aoiyCTZV c=1 sm=1 tr=0 ts=6808bdce cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=NDFkFa-y9k07oviRi3EA:9
-X-Proofpoint-GUID: vVrKVkY81lEkY1cwn1cNCj1BJSOxiFAO
-X-Proofpoint-ORIG-GUID: vVrKVkY81lEkY1cwn1cNCj1BJSOxiFAO
+X-Authority-Analysis: v=2.4 cv=eJ4TjGp1 c=1 sm=1 tr=0 ts=6808bdcf cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=hVqa_wrnkZ1V3SoaiB8A:9
+X-Proofpoint-GUID: RH77SjaxnGwASr52UvAoANDhQCmy6tI8
+X-Proofpoint-ORIG-GUID: RH77SjaxnGwASr52UvAoANDhQCmy6tI8
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA2OSBTYWx0ZWRfX0rbtF0c7n+tK 5KU/dVsCWisMzD+iQYqhfAKD6ey3ZsfIjcYdhKetfanwGdHrfF2gFGdfzOptTTy8F0ZthqsTLn0 YDWZ0qR82YVBJy97PLKPyLk/0Q5pxvt/IgdU5e9rV2AOEO8atVcxE+eH2oLNUVaIv+iMIKYSutf
+ cmxKWYhCVbqQgCHnO5kUmXDpw226BTKmonMpwuGAX1WxtAvD3Wzs85nFEYik/8mEGS9FJ0VK4dX s1VGEgEwbN0Teolu+dOWCsAuCay0KkQrY93ahDtJforw7TkSs5xzB1oFvL6N/bPQ8IPx9s3dsCZ zdaVyYrBwqtU1o/xEfvTZF3Zi0rRRg1EUlL2FQOJD9Ig5BzaKPWXTqPBLWRu2Cs1Wh6JMiZVUhT
+ 0I9hL/3JLq67N2zMtS7D4ypcU0uzchnoUPZev2EcFk4jifKOysWOVAATTxWKa7L+TebCwfDT
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-23_07,2025-04-22_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
- bulkscore=0 mlxlogscore=999 lowpriorityscore=0 spamscore=0 malwarescore=0
- clxscore=1015 impostorscore=0 priorityscore=1501 suspectscore=0 mlxscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
+ bulkscore=0 adultscore=0 mlxscore=0 phishscore=0 priorityscore=1501
+ spamscore=0 mlxlogscore=999 suspectscore=0 lowpriorityscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
  definitions=main-2504230069
 
-There is a need for a do-not-allocate-memory path through the AP bus
-layer. The pkey layer may be triggered via the in-kernel interface
-from a protected key crypto algorithm (namely PAES) to convert a
-secure key into a protected key. This happens in a workqueue context,
-so sleeping is allowed but memory allocations causing IO operations
-are not permitted.
+If there is a target list of APQNs given when an CPRB is
+to be send via zcrypt_send_ep11_cprb() there is always a
+kmalloc() done and the targets are copied via z_copy_from_user.
 
-To accomplish this, an AP message memory pool with pre-allocated space
-is established. When ap_init_apmsg() with use_mempool set to true is
-called, instead of kmalloc() the ap message buffer is allocated from
-the ap_msg_pool. This pool only holds a limited amount of buffers:
-ap_msg_pool_min_items with the item size AP_DEFAULT_MAX_MSG_SIZE and
-exactly one of these items (if available) is returned if
-ap_init_apmsg() with the use_mempool arg set to true is called. When
-this pool is exhausted and use_mempool is set true, ap_init_apmsg()
-returns -ENOMEM without any attempt to allocate memory and the caller
-has to deal with that.
-
-Default values for this mempool of ap messages is:
- * Each buffer is 12KB (that is the default AP bus size
-   and all the urgent messages should fit into this space).
- * Minimum items held in the pool is 8. This value is adjustable
-   via module parameter ap.msgpool_min_items.
-
-The zcrypt layer may use this flag to indicate to the ap bus that the
-processing path for this message should not allocate memory but should
-use pre-allocated memory buffer instead.  This is to prevent deadlocks
-with crypto and io for example with encrypted swap volumes.
+As there are callers from kernel space (zcrypt_ep11misc.c)
+which signal this via the userspace parameter improve this
+code to directly use the given target list in case of
+kernelspace thus removing the unnecessary memory alloc
+and mem copy.
 
 Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
 Reviewed-by: Holger Dengler <dengler@linux.ibm.com>
 ---
- drivers/s390/crypto/ap_bus.c     | 54 ++++++++++++++++++++++++++++++--
- drivers/s390/crypto/ap_bus.h     |  3 +-
- drivers/s390/crypto/zcrypt_api.c | 10 +++---
- 3 files changed, 58 insertions(+), 9 deletions(-)
+ drivers/s390/crypto/zcrypt_api.c | 42 +++++++++++++++-----------------
+ 1 file changed, 19 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
-index 8935b3ee3a33..1e4784e9efd1 100644
---- a/drivers/s390/crypto/ap_bus.c
-+++ b/drivers/s390/crypto/ap_bus.c
-@@ -41,6 +41,7 @@
- #include <linux/module.h>
- #include <asm/uv.h>
- #include <asm/chsc.h>
-+#include <linux/mempool.h>
- 
- #include "ap_bus.h"
- #include "ap_debug.h"
-@@ -102,6 +103,27 @@ static struct ap_config_info *const ap_qci_info_old = &qci[1];
-  */
- debug_info_t *ap_dbf_info;
- 
-+/*
-+ * There is a need for a do-not-allocate-memory path through the AP bus
-+ * layer. The pkey layer may be triggered via the in-kernel interface from
-+ * a protected key crypto algorithm (namely PAES) to convert a secure key
-+ * into a protected key. This happens in a workqueue context, so sleeping
-+ * is allowed but memory allocations causing IO operations are not permitted.
-+ * To accomplish this, an AP message memory pool with pre-allocated space
-+ * is established. When ap_init_apmsg() with use_mempool set to true is
-+ * called, instead of kmalloc() the ap message buffer is allocated from
-+ * the ap_msg_pool. This pool only holds a limited amount of buffers:
-+ * ap_msg_pool_min_items with the item size AP_DEFAULT_MAX_MSG_SIZE and
-+ * exactly one of these items (if available) is returned if ap_init_apmsg()
-+ * with the use_mempool arg set to true is called. When this pool is exhausted
-+ * and use_mempool is set true, ap_init_apmsg() returns -ENOMEM without
-+ * any attempt to allocate memory and the caller has to deal with that.
-+ */
-+static mempool_t *ap_msg_pool;
-+static unsigned int ap_msg_pool_min_items = 8;
-+module_param_named(msgpool_min_items, ap_msg_pool_min_items, uint, 0440);
-+MODULE_PARM_DESC(msgpool_min_items, "AP message pool minimal items");
-+
- /*
-  * AP bus rescan related things.
-  */
-@@ -550,11 +572,22 @@ static void ap_poll_thread_stop(void)
- /*
-  * ap_init_apmsg() - Initialize ap_message.
-  */
--int ap_init_apmsg(struct ap_message *ap_msg)
-+int ap_init_apmsg(struct ap_message *ap_msg, bool use_mempool)
- {
--	unsigned int maxmsgsize = atomic_read(&ap_max_msg_size);
-+	unsigned int maxmsgsize;
- 
- 	memset(ap_msg, 0, sizeof(*ap_msg));
-+
-+	if (use_mempool) {
-+		ap_msg->msg = mempool_alloc_preallocated(ap_msg_pool);
-+		if (!ap_msg->msg)
-+			return -ENOMEM;
-+		ap_msg->bufsize = AP_DEFAULT_MAX_MSG_SIZE;
-+		ap_msg->flags |= AP_MSG_FLAG_MEMPOOL;
-+		return 0;
-+	}
-+
-+	maxmsgsize = atomic_read(&ap_max_msg_size);
- 	ap_msg->msg = kmalloc(maxmsgsize, GFP_KERNEL);
- 	if (!ap_msg->msg)
- 		return -ENOMEM;
-@@ -569,7 +602,12 @@ EXPORT_SYMBOL(ap_init_apmsg);
-  */
- void ap_release_apmsg(struct ap_message *ap_msg)
- {
--	kfree_sensitive(ap_msg->msg);
-+	if (ap_msg->flags & AP_MSG_FLAG_MEMPOOL) {
-+		memzero_explicit(ap_msg->msg, ap_msg->bufsize);
-+		mempool_free(ap_msg->msg, ap_msg_pool);
-+	} else {
-+		kfree_sensitive(ap_msg->msg);
-+	}
- }
- EXPORT_SYMBOL(ap_release_apmsg);
- 
-@@ -2457,6 +2495,14 @@ static int __init ap_module_init(void)
- 	/* init ap_queue hashtable */
- 	hash_init(ap_queues);
- 
-+	/* create ap msg buffer memory pool */
-+	ap_msg_pool = mempool_create_kmalloc_pool(ap_msg_pool_min_items,
-+						  AP_DEFAULT_MAX_MSG_SIZE);
-+	if (!ap_msg_pool) {
-+		rc = -ENOMEM;
-+		goto out;
-+	}
-+
- 	/* set up the AP permissions (ioctls, ap and aq masks) */
- 	ap_perms_init();
- 
-@@ -2503,6 +2549,7 @@ static int __init ap_module_init(void)
- out_bus:
- 	bus_unregister(&ap_bus_type);
- out:
-+	mempool_destroy(ap_msg_pool);
- 	ap_debug_exit();
- 	return rc;
- }
-@@ -2513,6 +2560,7 @@ static void __exit ap_module_exit(void)
- 	ap_irq_exit();
- 	root_device_unregister(ap_root_device);
- 	bus_unregister(&ap_bus_type);
-+	mempool_destroy(ap_msg_pool);
- 	ap_debug_exit();
- }
- 
-diff --git a/drivers/s390/crypto/ap_bus.h b/drivers/s390/crypto/ap_bus.h
-index 483231bcdea6..60c41d8116ad 100644
---- a/drivers/s390/crypto/ap_bus.h
-+++ b/drivers/s390/crypto/ap_bus.h
-@@ -236,8 +236,9 @@ struct ap_message {
- #define AP_MSG_FLAG_SPECIAL  0x0001	/* flag msg as 'special' with NQAP */
- #define AP_MSG_FLAG_USAGE    0x0002	/* CCA, EP11: usage (no admin) msg */
- #define AP_MSG_FLAG_ADMIN    0x0004	/* CCA, EP11: admin (=control) msg */
-+#define AP_MSG_FLAG_MEMPOOL  0x0008 /* ap msg buffer allocated via mempool */
- 
--int ap_init_apmsg(struct ap_message *ap_msg);
-+int ap_init_apmsg(struct ap_message *ap_msg, bool use_mempool);
- void ap_release_apmsg(struct ap_message *ap_msg);
- 
- enum ap_sm_wait ap_sm_event(struct ap_queue *aq, enum ap_sm_event event);
 diff --git a/drivers/s390/crypto/zcrypt_api.c b/drivers/s390/crypto/zcrypt_api.c
-index 78df25da0b95..ad09c5306e28 100644
+index ad09c5306e28..f95e12bbd69c 100644
 --- a/drivers/s390/crypto/zcrypt_api.c
 +++ b/drivers/s390/crypto/zcrypt_api.c
-@@ -648,7 +648,7 @@ static long zcrypt_rsa_modexpo(struct ap_perms *perms,
+@@ -1035,7 +1035,7 @@ static long _zcrypt_send_ep11_cprb(bool userspace, struct ap_perms *perms,
+ {
+ 	struct zcrypt_card *zc, *pref_zc;
+ 	struct zcrypt_queue *zq, *pref_zq;
+-	struct ep11_target_dev *targets;
++	struct ep11_target_dev *targets = NULL;
+ 	unsigned short target_num;
+ 	unsigned int wgt = 0, pref_wgt = 0;
+ 	unsigned int func_code = 0, domain;
+@@ -1052,29 +1052,25 @@ static long _zcrypt_send_ep11_cprb(bool userspace, struct ap_perms *perms,
+ 	target_num = (unsigned short)xcrb->targets_num;
  
- 	trace_s390_zcrypt_req(mex, TP_ICARSAMODEXPO);
+ 	/* empty list indicates autoselect (all available targets) */
+-	targets = NULL;
++	rc = -ENOMEM;
+ 	if (target_num != 0) {
+-		struct ep11_target_dev __user *uptr;
+-
+-		targets = kcalloc(target_num, sizeof(*targets), GFP_KERNEL);
+-		if (!targets) {
+-			func_code = 0;
+-			rc = -ENOMEM;
+-			goto out;
+-		}
+-
+-		uptr = (struct ep11_target_dev __force __user *)xcrb->targets;
+-		if (z_copy_from_user(userspace, targets, uptr,
+-				     target_num * sizeof(*targets))) {
+-			func_code = 0;
+-			rc = -EFAULT;
+-			goto out_free;
++		if (userspace) {
++			targets = kcalloc(target_num, sizeof(*targets), GFP_KERNEL);
++			if (!targets)
++				goto out;
++			if (copy_from_user(targets, xcrb->targets,
++					   target_num * sizeof(*targets))) {
++				rc = -EFAULT;
++				goto out;
++			}
++		} else {
++			targets = (struct ep11_target_dev __force __kernel *)xcrb->targets;
+ 		}
+ 	}
  
--	rc = ap_init_apmsg(&ap_msg);
-+	rc = ap_init_apmsg(&ap_msg, false);
+ 	rc = prep_ep11_ap_msg(userspace, xcrb, &ap_msg, &func_code, &domain);
  	if (rc)
- 		goto out;
+-		goto out_free;
++		goto out;
+ 	print_hex_dump_debug("ep11req: ", DUMP_PREFIX_ADDRESS, 16, 1,
+ 			     ap_msg.msg, ap_msg.len, false);
  
-@@ -753,7 +753,7 @@ static long zcrypt_rsa_crt(struct ap_perms *perms,
+@@ -1082,11 +1078,11 @@ static long _zcrypt_send_ep11_cprb(bool userspace, struct ap_perms *perms,
+ 		if (ap_msg.flags & AP_MSG_FLAG_ADMIN) {
+ 			if (!test_bit_inv(domain, perms->adm)) {
+ 				rc = -ENODEV;
+-				goto out_free;
++				goto out;
+ 			}
+ 		} else if ((ap_msg.flags & AP_MSG_FLAG_USAGE) == 0) {
+ 			rc = -EOPNOTSUPP;
+-			goto out_free;
++			goto out;
+ 		}
+ 	}
  
- 	trace_s390_zcrypt_req(crt, TP_ICARSACRT);
+@@ -1154,7 +1150,7 @@ static long _zcrypt_send_ep11_cprb(bool userspace, struct ap_perms *perms,
+ 			pr_debug("no match for address ff.ffff => ENODEV\n");
+ 		}
+ 		rc = -ENODEV;
+-		goto out_free;
++		goto out;
+ 	}
  
--	rc = ap_init_apmsg(&ap_msg);
-+	rc = ap_init_apmsg(&ap_msg, false);
- 	if (rc)
- 		goto out;
+ 	qid = pref_zq->queue->qid;
+@@ -1168,9 +1164,9 @@ static long _zcrypt_send_ep11_cprb(bool userspace, struct ap_perms *perms,
+ 	zcrypt_drop_queue(pref_zc, pref_zq, mod, wgt);
+ 	spin_unlock(&zcrypt_list_lock);
  
-@@ -861,7 +861,7 @@ static long _zcrypt_send_cprb(bool userspace, struct ap_perms *perms,
- 
- 	xcrb->status = 0;
- 
--	rc = ap_init_apmsg(&ap_msg);
-+	rc = ap_init_apmsg(&ap_msg, false);
- 	if (rc)
- 		goto out;
- 
-@@ -1045,7 +1045,7 @@ static long _zcrypt_send_ep11_cprb(bool userspace, struct ap_perms *perms,
- 
- 	trace_s390_zcrypt_req(xcrb, TP_ZSENDEP11CPRB);
- 
--	rc = ap_init_apmsg(&ap_msg);
-+	rc = ap_init_apmsg(&ap_msg, false);
- 	if (rc)
- 		goto out;
- 
-@@ -1219,7 +1219,7 @@ static long zcrypt_rng(char *buffer)
- 
- 	trace_s390_zcrypt_req(buffer, TP_HWRNGCPRB);
- 
--	rc = ap_init_apmsg(&ap_msg);
-+	rc = ap_init_apmsg(&ap_msg, false);
- 	if (rc)
- 		goto out;
- 	rc = prep_rng_ap_msg(&ap_msg, &func_code, &domain);
+-out_free:
+-	kfree(targets);
+ out:
++	if (userspace)
++		kfree(targets);
+ 	ap_release_apmsg(&ap_msg);
+ 	if (tr) {
+ 		tr->last_rc = rc;
 -- 
 2.43.0
 
