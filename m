@@ -1,68 +1,68 @@
-Return-Path: <linux-s390+bounces-10230-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-10228-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6D92A9AF2A
-	for <lists+linux-s390@lfdr.de>; Thu, 24 Apr 2025 15:36:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF289A9AF27
+	for <lists+linux-s390@lfdr.de>; Thu, 24 Apr 2025 15:36:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5CC541B8012A
-	for <lists+linux-s390@lfdr.de>; Thu, 24 Apr 2025 13:37:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C83C89A3C6A
+	for <lists+linux-s390@lfdr.de>; Thu, 24 Apr 2025 13:36:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E6291581E1;
-	Thu, 24 Apr 2025 13:36:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC67F14D2BB;
+	Thu, 24 Apr 2025 13:36:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="I4CjBoAx"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XMgC09yR"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7428B1531E8
-	for <linux-s390@vger.kernel.org>; Thu, 24 Apr 2025 13:36:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D613186E20
+	for <linux-s390@vger.kernel.org>; Thu, 24 Apr 2025 13:36:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745501806; cv=none; b=FZpWd1IzaPuHyJ2WvUMfGR3fmCtNYEpWe6hlHws8iCHX4w/i66vSyzQldC7LGYjLBEGS0FLyUy2fxw5HEnc3HKo2xbofh0XcGG/dzFFg58qrJiy4i5yBpWeeDITaBGCNXn9EN9uX2VuEkczzkKwBV6Ps60HiZ8eH21o+YPl4q6Q=
+	t=1745501799; cv=none; b=qcXsRkzMU5LprP+Vu0alSVenzCVFnYIvr1zSwWhUQtU5G1A1P50p7ULmmjjFNjxrKD3v2rqf0ZHzu2PPu3GMVWFt/WSnqsH2u84zuzNFkcAVc3yyjh/YumGFmgiqsttOibbyySEpn0f2mUxZoU+XRrHExlODIRfKzrQwnCeNtH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745501806; c=relaxed/simple;
-	bh=u90DkGJHd03+dXu2R2Tv4CFJJDxkDOap6r+1mCOfWnk=;
+	s=arc-20240116; t=1745501799; c=relaxed/simple;
+	bh=ISiHYjqxvjuqXImLCuEAuWiQFl6ZW1KwD7XscIpSshI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GUniEmi961jyv1BhoMpvRJPQ2YcJQ8M4zuUUDhj7P8SLTIAYYhQCEIUzOD/3IdjYzN7G5hvxoXg/pvu83Uf3lEfCKHOBJOF4qOb49rAbliVXGwAnOCZ8dJq8Cz78nfLA9KVP4SrJmdEue422gQblz8kGsiYaRBENYJdNeEAJ51Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=I4CjBoAx; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=M4uPlcYJFqUKny+23SEBEF7H1ZUj7IbTza6tAJjIESjT5tWkzP5wEYi/vtEa0O6TgRyNX1VKx2EBsNLR20B7mdSAMB/ABqXP/GPAHqvrp0aH6xwQf9EVjWYQyTMDqzNwt6TnCi95/oxVr5/VImrxz1QWpIPrL2w5xeO8JzfsKYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XMgC09yR; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OA4At6001165;
-	Thu, 24 Apr 2025 13:36:43 GMT
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OB6uog006230;
+	Thu, 24 Apr 2025 13:36:35 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=ok3HxG9dbo2okbIgz
-	6uRowsUwoxwuQiFRoVeO8LnITY=; b=I4CjBoAxABn4uZiCKT9h2LoqkCnK5knAl
-	9qFx67UaCnIagu75PfZtmtGUsdJehJPX3SfDJV2+TO+LPnvpmeLDRZoFIf0gzgDY
-	y9oFyQhv+usbBzKuJHvUv5PD6/v4U5YDmwfHBpX7RUuXwiQmKa8UZgffWEY7eBIa
-	Zb6FlOYjCEocSMIB8JSq5nvy15ZgDCvY9VI3P5GNxvTsqWzvtx4x66KNq1tldpU9
-	D+z1jGQ1aP9aPEtmD/ttJCYS6Q4XRRjvZw+upm/+kQzviXgrKJPHk9ZQkbFQ8iHu
-	GvIXq0SMeWBHhqqPh2kDUCbO3NA96k/TQ7GS87+tWwz00F6Yf+5Jw==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 467k7k10hh-1
+	:mime-version:references:subject:to; s=pp1; bh=0xbNcA9386SR3u9HM
+	FmxE6BNB5l8J6lx7Z+kOTKGqLY=; b=XMgC09yRO2npv0J0nkNwLwUaUny/PEpHl
+	9FAofVby790OO75PzYeflGDBunzJ4VithroJWIvyuTUb7jabdm5YPHEeMSSszkPW
+	0LR5UACj149KcoXck58dmYKbBnyopi8oeG0Gj+jiNoIk71VP5BL7jizMJuSI4SxS
+	R8Lwqle0Cfen6S/X0aVNu0T3J4APcse+JouuviEgjKyNfeQbC8AKxFwwdHcJCNNT
+	FwP9sW/876JO5eumcdWWS/OE3XPpz7jIauNSkL3CptgB4h0IhTXBCUtChbsb2qZ1
+	//qo/7RfoHQNYLoeox+3v22q7//fMEOK3BQBjW3yobhMDbU2OZzrg==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 467a60u8x2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 13:36:40 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53OBcFUg022313;
-	Thu, 24 Apr 2025 13:36:34 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 466jfxgdep-1
+	Thu, 24 Apr 2025 13:36:35 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53OBbxiO005844;
+	Thu, 24 Apr 2025 13:36:35 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 466jfxgd4j-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 24 Apr 2025 13:36:34 +0000
 Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53ODaUEF53150108
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53ODaVAI49021326
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 24 Apr 2025 13:36:30 GMT
+	Thu, 24 Apr 2025 13:36:31 GMT
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AD98B20043;
-	Thu, 24 Apr 2025 13:36:30 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 1C51D2004D;
+	Thu, 24 Apr 2025 13:36:31 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5C2302004D;
+	by IMSVA (Postfix) with ESMTP id BF5122004E;
 	Thu, 24 Apr 2025 13:36:30 +0000 (GMT)
 Received: from funtu2.boeblingen.de.ibm.com (unknown [9.152.224.229])
 	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
@@ -72,9 +72,9 @@ To: dengler@linux.ibm.com, ifranzki@linux.ibm.com, fcallies@linux.ibm.com,
         hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
         seiden@linux.ibm.com
 Cc: linux-s390@vger.kernel.org, herbert@gondor.apana.org.au
-Subject: [PATCH v8 22/25] s390/pkey: Use preallocated memory for retrieve of UV secret metadata
-Date: Thu, 24 Apr 2025 15:36:16 +0200
-Message-ID: <20250424133619.16495-23-freude@linux.ibm.com>
+Subject: [PATCH v8 23/25] s390/uv: Remove uv_get_secret_metadata function
+Date: Thu, 24 Apr 2025 15:36:17 +0200
+Message-ID: <20250424133619.16495-24-freude@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250424133619.16495-1-freude@linux.ibm.com>
 References: <20250424133619.16495-1-freude@linux.ibm.com>
@@ -86,128 +86,89 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: f_yCRElYNKaOA9nxQ91UNCzRzDt8u2js
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA5MiBTYWx0ZWRfX42XLDl52y8Sb 0B+L6Aejw5guatYdmZT0zNKEIFikKFUAv+Ols1GUU4ujthVUnx9y1G6G+i2InNeLqUvmPNGdPzX rlN4AIl16zaRTY1j2gEZYw6p48Fjx6zdgZDaSNYiE9zlDZsWTHkAGupW4uvr3JdkUZlul6cg68V
- IZUeiny3ktX9hqXBpGHwZntirmWb4NZ/tFaqvdxCWgup/wDP1Wiw079wNN74ZTlVNEvJIQZEssF QktKLLqZUDqmdgfaWlynA/vcKlFsPbYLNg5jd2LA7MrNsF5VlrZTGdbk3HsTT3YjEdEpIh2d+my Iba3xMKpXhQsYLbr6ZeYLd/50HU5FQFbJFK3dBtKrIvHM0fP/HIfelcaUev8+CSluzY9cOAGk+n
- PZZuf0kN/jKD6h5rWisDDWT/GHQwIMR+zUcFGFLmtPm9vJ8rCuWmksfeMzPxuAQ3OYFIk54P
-X-Authority-Analysis: v=2.4 cv=KZjSsRYD c=1 sm=1 tr=0 ts=680a3e6a cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=1jaWCiF71yEpXFdmnB4A:9
-X-Proofpoint-GUID: f_yCRElYNKaOA9nxQ91UNCzRzDt8u2js
+X-Authority-Analysis: v=2.4 cv=Q47S452a c=1 sm=1 tr=0 ts=680a3e63 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=M5ODTVqq-DlaZZw1mYcA:9
+X-Proofpoint-GUID: uZPhGifkftnAe1r3pVu9QIvIyYY2yZKy
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA4OCBTYWx0ZWRfXxXVT6Vn10dAQ X0J6SwjktEG/Os4Q42dAQ6jgUSTfFdrRYtmLeqE4Gh8TvWixCckWkg3Q00q/RFOjkz6Cf+i8oYk EefJBL72Ecsgl8MZAe+X6i/cE9LjHR6qcCW5DlBtvgKxD/dFvk+5NLAc9TWyJeLhpaF+TiMEpMC
+ j6VDpgw3Q9ApvrmVujf0uthBmglodVZ33k+DmCEDO8GvWv4BmbkdoZlaZYy0YbCw9SQbJ5JKACL 5xFlUfyN6jaDg21RwYsUyndmyYpe+3/w91IFI6JVIXruomRkI4iRbiE2rpBvpK7CDNeiRwX20k0 jjTvxOiaRP7m3gaHfsH1ifWZCPWo9nso2ALQwu+N+dpVTFE9VoRhi14c2AdKZ9Vq79+S+UjhbbQ
+ IHjnSvS3bw9dKrNOXIkBJaiTcEgZZpYCPsbWbOFCJgH0PnbmO574IeKejivJ8XJI08w2kdU6
+X-Proofpoint-ORIG-GUID: uZPhGifkftnAe1r3pVu9QIvIyYY2yZKy
 X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-24_06,2025-04-24_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- impostorscore=0 clxscore=1015 bulkscore=0 lowpriorityscore=0
- malwarescore=0 mlxlogscore=999 adultscore=0 mlxscore=0 spamscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504240092
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-24_06,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ impostorscore=0 adultscore=0 mlxscore=0 bulkscore=0 priorityscore=1501
+ lowpriorityscore=0 spamscore=0 suspectscore=0 mlxlogscore=884 phishscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504240088
 
-The pkey uv functions may be called in a situation where memory
-allocations which trigger IO operations are not allowed. An example:
-decryption of the swap partition with protected key (PAES).
+The uv_get_secret_metadata() in-kernel function was only
+offered and used by the pkey uv handler. Remove it as there
+is no customer any more.
 
-The pkey uv code takes care of this by holding one preallocated
-struct uv_secret_list to be used with the new UV function
-uv_find_secret(). The older function uv_get_secret_metadata()
-used before always allocates/frees an ephemeral memory buffer.
-The preallocated struct is concurrency protected by a mutex.
-
+Suggested-by: Steffen Eiden <seiden@linux.ibm.com>
 Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Reviewed-by: Holger Dengler <dengler@linux.ibm.com>
 Reviewed-by: Steffen Eiden <seiden@linux.ibm.com>
+Acked-by: Holger Dengler <dengler@linux.ibm.com>
 ---
- drivers/s390/crypto/pkey_uv.c | 38 ++++++++++++++++++++++++++++++++---
- 1 file changed, 35 insertions(+), 3 deletions(-)
+ arch/s390/include/asm/uv.h |  2 --
+ arch/s390/kernel/uv.c      | 30 ------------------------------
+ 2 files changed, 32 deletions(-)
 
-diff --git a/drivers/s390/crypto/pkey_uv.c b/drivers/s390/crypto/pkey_uv.c
-index 805817b14354..afbdb59c90f5 100644
---- a/drivers/s390/crypto/pkey_uv.c
-+++ b/drivers/s390/crypto/pkey_uv.c
-@@ -20,6 +20,12 @@ MODULE_LICENSE("GPL");
- MODULE_AUTHOR("IBM Corporation");
- MODULE_DESCRIPTION("s390 protected key UV handler");
+diff --git a/arch/s390/include/asm/uv.h b/arch/s390/include/asm/uv.h
+index 7f53fe755f3f..b008402ec9aa 100644
+--- a/arch/s390/include/asm/uv.h
++++ b/arch/s390/include/asm/uv.h
+@@ -619,8 +619,6 @@ static inline int uv_remove_shared(unsigned long addr)
+ int uv_find_secret(const u8 secret_id[UV_SECRET_ID_LEN],
+ 		   struct uv_secret_list *list,
+ 		   struct uv_secret_list_item_hdr *secret);
+-int uv_get_secret_metadata(const u8 secret_id[UV_SECRET_ID_LEN],
+-			   struct uv_secret_list_item_hdr *secret);
+ int uv_retrieve_secret(u16 secret_idx, u8 *buf, size_t buf_size);
  
-+/*
-+ * One pre-allocated uv_secret_list for use with uv_find_secret()
-+ */
-+static struct uv_secret_list *uv_list;
-+static DEFINE_MUTEX(uv_list_mutex);
-+
- /*
-  * UV secret token struct and defines.
-  */
-@@ -85,13 +91,26 @@ static bool is_uv_keytype(enum pkey_key_type keytype)
- 	}
+ extern int prot_virt_host;
+diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
+index faac43359e23..4ab0b6b4866e 100644
+--- a/arch/s390/kernel/uv.c
++++ b/arch/s390/kernel/uv.c
+@@ -840,36 +840,6 @@ int uv_find_secret(const u8 secret_id[UV_SECRET_ID_LEN],
  }
+ EXPORT_SYMBOL_GPL(uv_find_secret);
  
-+static int get_secret_metadata(const u8 secret_id[UV_SECRET_ID_LEN],
-+			       struct uv_secret_list_item_hdr *secret)
-+{
-+	int rc;
-+
-+	mutex_lock(&uv_list_mutex);
-+	memset(uv_list, 0, sizeof(*uv_list));
-+	rc = uv_find_secret(secret_id, uv_list, secret);
-+	mutex_unlock(&uv_list_mutex);
-+
-+	return rc;
-+}
-+
- static int retrieve_secret(const u8 secret_id[UV_SECRET_ID_LEN],
- 			   u16 *secret_type, u8 *buf, u32 *buflen)
- {
- 	struct uv_secret_list_item_hdr secret_meta_data;
- 	int rc;
- 
--	rc = uv_get_secret_metadata(secret_id, &secret_meta_data);
-+	rc = get_secret_metadata(secret_id, &secret_meta_data);
- 	if (rc)
- 		return rc;
- 
-@@ -225,7 +244,7 @@ static int uv_verifykey(const u8 *key, u32 keylen,
- 	if (rc)
- 		goto out;
- 
--	rc = uv_get_secret_metadata(t->secret_id, &secret_meta_data);
-+	rc = get_secret_metadata(t->secret_id, &secret_meta_data);
- 	if (rc)
- 		goto out;
- 
-@@ -263,13 +282,23 @@ static struct pkey_handler uv_handler = {
-  */
- static int __init pkey_uv_init(void)
- {
-+	int rc;
-+
- 	if (!is_prot_virt_guest())
- 		return -ENODEV;
- 
- 	if (!test_bit_inv(BIT_UVC_CMD_RETR_SECRET, uv_info.inst_calls_list))
- 		return -ENODEV;
- 
--	return pkey_handler_register(&uv_handler);
-+	uv_list = kmalloc(sizeof(*uv_list), GFP_KERNEL);
-+	if (!uv_list)
-+		return -ENOMEM;
-+
-+	rc = pkey_handler_register(&uv_handler);
-+	if (rc)
-+		kfree(uv_list);
-+
-+	return rc;
- }
- 
- /*
-@@ -278,6 +307,9 @@ static int __init pkey_uv_init(void)
- static void __exit pkey_uv_exit(void)
- {
- 	pkey_handler_unregister(&uv_handler);
-+	mutex_lock(&uv_list_mutex);
-+	kvfree(uv_list);
-+	mutex_unlock(&uv_list_mutex);
- }
- 
- module_cpu_feature_match(S390_CPU_FEATURE_UV, pkey_uv_init);
+-/**
+- * uv_get_secret_metadata() - get secret metadata for a given secret id.
+- * @secret_id: search pattern.
+- * @secret: output data, containing the secret's metadata.
+- *
+- * Search for a secret with the given secret_id in the Ultravisor secret store.
+- *
+- * Context: might sleep.
+- *
+- * Return:
+- * * %0:	- Found entry; secret->idx and secret->type are valid.
+- * * %ENOENT	- No entry found.
+- * * %ENODEV:	- Not supported: UV not available or command not available.
+- * * %EIO:	- Other unexpected UV error.
+- */
+-int uv_get_secret_metadata(const u8 secret_id[UV_SECRET_ID_LEN],
+-			   struct uv_secret_list_item_hdr *secret)
+-{
+-	struct uv_secret_list *buf;
+-	int rc;
+-
+-	buf = kzalloc(sizeof(*buf), GFP_KERNEL);
+-	if (!buf)
+-		return -ENOMEM;
+-	rc = uv_find_secret(secret_id, buf, secret);
+-	kfree(buf);
+-	return rc;
+-}
+-EXPORT_SYMBOL_GPL(uv_get_secret_metadata);
+-
+ /**
+  * uv_retrieve_secret() - get the secret value for the secret index.
+  * @secret_idx: Secret index for which the secret should be retrieved.
 -- 
 2.43.0
 
