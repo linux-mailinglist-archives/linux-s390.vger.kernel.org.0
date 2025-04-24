@@ -1,188 +1,207 @@
-Return-Path: <linux-s390+bounces-10236-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-10251-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05695A9AF33
-	for <lists+linux-s390@lfdr.de>; Thu, 24 Apr 2025 15:37:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F9B5A9B034
+	for <lists+linux-s390@lfdr.de>; Thu, 24 Apr 2025 16:09:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BC5A91B676CE
-	for <lists+linux-s390@lfdr.de>; Thu, 24 Apr 2025 13:37:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EEDD79A83A4
+	for <lists+linux-s390@lfdr.de>; Thu, 24 Apr 2025 14:09:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0F3C1624C5;
-	Thu, 24 Apr 2025 13:37:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0C3C192D97;
+	Thu, 24 Apr 2025 14:09:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dsZk9Fa4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gqI10tR6"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C050849C
-	for <linux-s390@vger.kernel.org>; Thu, 24 Apr 2025 13:36:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A9317D346
+	for <linux-s390@vger.kernel.org>; Thu, 24 Apr 2025 14:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745501820; cv=none; b=q6iln+9y0IlgSTzp/osqLJP05C+R3Z2M9yvd2+PkVX1bl9WbHYG8dtJMjuwi93JxX9RHMRGDm/vtmPEegbGR0m7v0tQNjLNN0RK4y5f+ZuUcy0pVcoKDhRX9XIMqWb4IYeFOZXodjSxrfDVCw5L9qPzwyiW3UplltZmFeK50K+0=
+	t=1745503791; cv=none; b=UwlEj6LVvhad9VipxBSHZL3oXR44Hg38vyv7GdsTNAld4DPX3iPj6Azf94V8qIyWDzQrI9mbdUmpKYKWX0vlK9vWvwCgOykip50ugyhRIPoTh9iYKwB7zjzU1rpiLQq6uJh4+YJXuMIpaHjDd26RzJu0hlu69sEvFfCp2ODRf7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745501820; c=relaxed/simple;
-	bh=f6jcIqT+JsYnrezf5LeEU+5Dka+j50OVfXs9ZpBrvh0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q7leMomYtYdTubkm1pKXPU3G1Hex+pTFBWIXIbqsyJ47UQVIetCsmYcdRE3UWXU661HU6wVqgztUjKAvZnfXL1jo1MTQkq6+CWv5HxzIN41e4iStU4/rJfEyN5xwrsibRyLC/eg++aSRgJfmc4iRSmrAqFgxkAXDFBXxnW2i+iE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dsZk9Fa4; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OAIZH5028707;
-	Thu, 24 Apr 2025 13:36:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=h23wedpUjHTyWPCtF
-	3UkOaPF4PfUB53x8ns+m87CGdo=; b=dsZk9Fa41QAoAILKcwH09xvaH/w/a5rpe
-	6bS/yrsUKsQCfmr/QzV05/kf7jDJfAi1OuMrNG3FrSOhSNIGLqpBz2fiSwp114SQ
-	wZ4UcUE8EJ6RgPIsrBHNKItOumjcsYBiOigGet1WnNUxxxraJyajFWVOOObJYqJD
-	9ZaBNMSEwYX48WJGVrzKpAhJj7thX4Yz6igoLV7axW38u42PyBPv8YuELciid6y1
-	0irq1LaNa6oxYMq+V2sAa/vYbNXnBZr9ykkDZYgS8M5UIrESLl8isYLPIB1AUG/b
-	vh9eEydz5+6+NUEcHoCxq060urL1IvdyuK/4WTjUvywTm24ux/FAA==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4678aabua0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 13:36:54 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53OBcFUh022313;
-	Thu, 24 Apr 2025 13:36:35 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 466jfxgder-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 13:36:35 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53ODaWMj29426232
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 24 Apr 2025 13:36:32 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EBD942004E;
-	Thu, 24 Apr 2025 13:36:31 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9D8F420043;
-	Thu, 24 Apr 2025 13:36:31 +0000 (GMT)
-Received: from funtu2.boeblingen.de.ibm.com (unknown [9.152.224.229])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 24 Apr 2025 13:36:31 +0000 (GMT)
-From: Harald Freudenberger <freude@linux.ibm.com>
-To: dengler@linux.ibm.com, ifranzki@linux.ibm.com, fcallies@linux.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        seiden@linux.ibm.com
-Cc: linux-s390@vger.kernel.org, herbert@gondor.apana.org.au
-Subject: [PATCH v8 25/25] s390/pkey/crypto: Introduce xflags param for pkey in-kernel API
-Date: Thu, 24 Apr 2025 15:36:19 +0200
-Message-ID: <20250424133619.16495-26-freude@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250424133619.16495-1-freude@linux.ibm.com>
-References: <20250424133619.16495-1-freude@linux.ibm.com>
+	s=arc-20240116; t=1745503791; c=relaxed/simple;
+	bh=Byl8wGqJTtnl74RJ2YKMT0DDlnonSferfdT8IKzK5+w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FpJTt3HSVi+IWRcoifcAz7JuxNp/CKNrcIzUo+6cirxKHpabSOYFEAxkv0Fkrsm5FJQCZoAHdoc39tm3+lBClSzIhlEQ7VtyGresvaX0ZlYLEsGiSjIPwHJ2R8QVc/QstjG/ztUb6OMDYSVRZdyl/sh0EpViYsle0jGfCVoxwj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gqI10tR6; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745503789;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Kcd6o2tvUH9Wlq0TU9ZCul/Ej7huhlgPAxSc9bD4eg0=;
+	b=gqI10tR6664EVHaUzsi6pGv6tz0HdbE9geKp9ilsJrCv/IGdHdIl3F+t87ZV5iEWJ36BFT
+	90ww/K6AwKDagRwpzvjf85EZ5QIlj0H5iBbyf6dpvyMJHbcAUl6S24WnFsa6qAyHGrCAeF
+	PakxFVdr+Mlayu7wN0mHe39Alz4ycjw=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-128-g29E1KCNMnmnyt0x93RAew-1; Thu, 24 Apr 2025 10:09:47 -0400
+X-MC-Unique: g29E1KCNMnmnyt0x93RAew-1
+X-Mimecast-MFC-AGG-ID: g29E1KCNMnmnyt0x93RAew_1745503787
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43ceb011ea5so6581045e9.2
+        for <linux-s390@vger.kernel.org>; Thu, 24 Apr 2025 07:09:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745503786; x=1746108586;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Kcd6o2tvUH9Wlq0TU9ZCul/Ej7huhlgPAxSc9bD4eg0=;
+        b=ueo4BMJobfZxAvscEc/Ib3FlBvCK+aXtgf3CcYMz06xbNsCtS3Fdqr9MlJ8a1JuRKV
+         aKsumy5NOghbiscqAuKgq+7chjGdhH53rUvpLv3nFfUHsn0KWzX8yL/8x7qtfv+/W5gr
+         8kOzJ82G9DCBpP8zQluN0SiOGls1P3YX5rCfMi+N3NnYgnZA0mhVSO1u96D8zZwdGM4K
+         UNSoAS60GKxz3wq802hbnDC4uDpdl/+K3dJ6BApcDvPUcWZIvfHpMD4Hg82SCTGwC313
+         mlz8K6R6OJqRkJ8CtiW6ZHLUqd0+mjbvKTc1nmICib+ovnTdQHiPWOHJyKP93EiggY2e
+         +BtA==
+X-Forwarded-Encrypted: i=1; AJvYcCWf5DDzNWe+60+TUymUhgj7xB6kso7Bl0ILlGYic4P8kgn6fW2u9bjX1Pn2+TaUtoizc3U8pR6CoG8v@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtKYXCdJIud2Ht5vk38FjkxYE8BIU7Cyv9HicSPrvkl9L8tX4U
+	YULHi4u/n5fkefTMRt7C5osppvVHpZkhaDjENrpow1VP48PcamBLyjbZULR3t1zTpFAOdcs14A5
+	3e1xhxdlnl0pQj5KCZmEKOgZHz+tfdZ56Ne9hpmjEFbActSIhZdVddQbHHio=
+X-Gm-Gg: ASbGncsDmsaCda0qABZANWxo3MQYocGTiBrdUDFt1et+b2DncxdMZPgsuOvalShnlZf
+	eUctbmo+OiTp52JXI1JmTrTF363xM+0oQJ9szwaq9QI9GOmVYeyvi/pqbat4YIyuipBr5S0xrK9
+	jazkImc1+uKQsoz826vgatfeU8rVtPiTQQA7Po8R945Q3v2yEUzJApBgqOOrmlzXHv1uHN0R8bJ
+	Qubc9tfIlzMWigSfaF1+Dw3VNe5HTxZthKmCx4k+9mTsCVSMHxdMDxmBEcOJsOHk3vNQHt2r2qd
+	vGTuUE6I3fIu6GowHCE6FuIbTQ==
+X-Received: by 2002:a05:6000:40dd:b0:39c:2669:d786 with SMTP id ffacd0b85a97d-3a06cf564f6mr2030226f8f.19.1745503786479;
+        Thu, 24 Apr 2025 07:09:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHCLnvnPrTr2kA4EPsTX8eBJWla0qlNHBLrDC/aXaOPuzLScpVQ0iwMUi89EkItUdIH45LJew==
+X-Received: by 2002:a05:6000:40dd:b0:39c:2669:d786 with SMTP id ffacd0b85a97d-3a06cf564f6mr2030125f8f.19.1745503785858;
+        Thu, 24 Apr 2025 07:09:45 -0700 (PDT)
+Received: from t14ultra (109-81-82-22.rct.o2.cz. [109.81.82.22])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4c4945sm2217236f8f.47.2025.04.24.07.09.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 07:09:44 -0700 (PDT)
+Date: Thu, 24 Apr 2025 16:10:04 +0200
+From: Jan Stancek <jstancek@redhat.com>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+	linux-arch@vger.kernel.org, Nam Cao <namcao@linutronix.de>,
+	jstancek@redhat.com
+Subject: Re: [PATCH 08/19] vdso/gettimeofday: Prepare do_hres_timens() for
+ introduction of struct vdso_clock
+Message-ID: <aApGPAoctq_eoE2g@t14ultra>
+References: <20250303-vdso-clock-v1-0-c1b5c69a166f@linutronix.de>
+ <20250303-vdso-clock-v1-8-c1b5c69a166f@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA5MiBTYWx0ZWRfX/RlvEg0XBEjJ deOVcRMLXmoZKWPMsm4WB4elAbOLEQu4xvxWZFjvs2zg58Lffnx/bdBHhQwxQB9P6LK+jX0YOSl NF+8DWq2sC9L8q6QCdYUwMxyrOeQXcqeVA1wPGVUX+l+EyYCt/fpShD1XdQoSlk9jW3+slq6MRU
- mTg4PCKSvx89RL3ZmPmC2kUuzUtrfEomWadrub3BsTMNnXY5+ecaGvW0q2fA+2toQ/FtCPmsuMD afOtlsqnl4pUcRMEArDvYWTBoLdyKTFUDstX9+EZBnOswWuvHyrbdCXDTs3GXeCz1qaGsN4/806 TKU2trKWGa8UMTZ0SUjznoGJsea8smXvZRNbNHq/tbGji4UYHJDma9Ui3ruI/muxLS8Df4Xes6x
- OXpV1Yb3cBjxzyunwyrhwIdgAqmx4Qba4M0XNGewBBnEaNTHoEm6ect6qqAlcfeWhb5sd6zv
-X-Proofpoint-ORIG-GUID: 7mcINNiBTLPwX6xK4YEHL-Pm8-RXQ4kY
-X-Proofpoint-GUID: 7mcINNiBTLPwX6xK4YEHL-Pm8-RXQ4kY
-X-Authority-Analysis: v=2.4 cv=KejSsRYD c=1 sm=1 tr=0 ts=680a3e78 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=PJCvTKg1WW3ThAoDuw0A:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-24_06,2025-04-24_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 impostorscore=0 suspectscore=0 mlxscore=0 clxscore=1015
- mlxlogscore=999 phishscore=0 bulkscore=0 priorityscore=1501 spamscore=0
- adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504240092
+In-Reply-To: <20250303-vdso-clock-v1-8-c1b5c69a166f@linutronix.de>
 
-Add a new parameter xflags to the in-kernel API function
-pkey_key2protkey(). Currently there is only one flag supported:
+On Mon, Mar 03, 2025 at 12:11:10PM +0100, Thomas Weiﬂschuh wrote:
+>From: Anna-Maria Behnsen <anna-maria@linutronix.de>
+>
+>To support multiple PTP clocks, the VDSO data structure needs to be
+>reworked. All clock specific data will end up in struct vdso_clock and in
+>struct vdso_time_data there will be array of it. By now, vdso_clock is
+>simply a define which maps vdso_clock to vdso_time_data.
+>
+>Prepare for the rework of these structures by adding struct vdso_clock
+>pointer argument to do_hres_timens(), and replace the struct vdso_time_data
+>pointer with the new pointer arugment whenever applicable.
+>
+>No functional change.
+>
+>Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
+>Signed-off-by: Nam Cao <namcao@linutronix.de>
+>Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+>---
+> lib/vdso/gettimeofday.c | 35 ++++++++++++++++++-----------------
+> 1 file changed, 18 insertions(+), 17 deletions(-)
+>
 
-* PKEY_XFLAG_NOMEMALLOC:
-  If this flag is given in the xflags parameter, the pkey
-  implementation is not allowed to allocate memory but instead should
-  fall back to use preallocated memory or simple fail with -ENOMEM.
-  This flag is for protected key derive within a cipher or similar
-  which must not allocate memory which would cause io operations - see
-  also the CRYPTO_ALG_ALLOCATES_MEMORY flag in crypto.h.
+Hi,
 
-The one and only user of this in-kernel API - the skcipher
-implementations PAES in paes_s390.c set this flag upon request
-to derive a protected key from the given raw key material.
+starting with this patch, I'm seeing user-space crashes when using clock_gettime():
+   BAD  -> 83a2a6b8cfc5 vdso/gettimeofday: Prepare do_hres_timens() for introduction of struct vdso_clock
+   GOOD -> 64c3613ce31a vdso/gettimeofday: Prepare do_hres() for introduction of struct vdso_clock
 
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Reviewed-by: Holger Dengler <dengler@linux.ibm.com>
----
- arch/s390/crypto/paes_s390.c   | 6 +++---
- arch/s390/include/asm/pkey.h   | 5 ++++-
- drivers/s390/crypto/pkey_api.c | 3 +--
- 3 files changed, 8 insertions(+), 6 deletions(-)
+It appears to be unique to aarch64 with 64k pages, and can be reproduced with
+LTP clock_gettime03 [1]:
+   command: clock_gettime03 
+   tst_kconfig.c:88: TINFO: Parsing kernel config '/lib/modules/6.15.0-0.rc3.20250423gitbc3372351d0c.30.eln147.aarch64+64k/build/.config'
+   tst_test.c:1903: TINFO: LTP version: 20250130-231-gd02c2aea3
+   tst_test.c:1907: TINFO: Tested kernel: 6.15.0-0.rc3.20250423gitbc3372351d0c.30.eln147.aarch64+64k #1 SMP PREEMPT_DYNAMIC Wed Apr 23 23:23:54 UTC 2025 aarch64
+   tst_kconfig.c:88: TINFO: Parsing kernel config '/lib/modules/6.15.0-0.rc3.20250423gitbc3372351d0c.30.eln147.aarch64+64k/build/.config'
+   tst_test.c:1720: TINFO: Overall timeout per run is 0h 05m 24s
+   clock_gettime03.c:121: TINFO: Testing variant: vDSO or syscall with libc spec
+   clock_gettime03.c:76: TPASS: Offset (CLOCK_MONOTONIC) is correct 10000ms
+   clock_gettime03.c:86: TPASS: Offset (CLOCK_MONOTONIC) is correct 0ms
+   clock_gettime03.c:76: TPASS: Offset (CLOCK_BOOTTIME) is correct 10000ms
+   clock_gettime03.c:86: TPASS: Offset (CLOCK_BOOTTIME) is correct 0ms
+   clock_gettime03.c:76: TPASS: Offset (CLOCK_MONOTONIC) is correct -10000ms
+   clock_gettime03.c:86: TPASS: Offset (CLOCK_MONOTONIC) is correct 0ms
+   clock_gettime03.c:76: TPASS: Offset (CLOCK_BOOTTIME) is correct -10000ms
+   clock_gettime03.c:86: TPASS: Offset (CLOCK_BOOTTIME) is correct 0ms
+   tst_test.c:438: TBROK: Child (233649) killed by signal SIGSEGV
 
-diff --git a/arch/s390/crypto/paes_s390.c b/arch/s390/crypto/paes_s390.c
-index 511093713a6f..1f62a9460405 100644
---- a/arch/s390/crypto/paes_s390.c
-+++ b/arch/s390/crypto/paes_s390.c
-@@ -182,14 +182,14 @@ static inline int __paes_keyblob2pkey(const u8 *key, unsigned int keylen,
- {
- 	int i, rc = -EIO;
- 
--	/* try three times in case of busy card */
-+	/* try three times in case of busy card or no mem */
- 	for (i = 0; rc && i < 3; i++) {
--		if (rc == -EBUSY && in_task()) {
-+		if ((rc == -EBUSY || rc == -ENOMEM) && in_task()) {
- 			if (msleep_interruptible(1000))
- 				return -EINTR;
- 		}
- 		rc = pkey_key2protkey(key, keylen, pk->protkey, &pk->len,
--				      &pk->type);
-+				      &pk->type, PKEY_XFLAG_NOMEMALLOC);
- 	}
- 
- 	return rc;
-diff --git a/arch/s390/include/asm/pkey.h b/arch/s390/include/asm/pkey.h
-index a709a72be79a..c0e7f8c25e9f 100644
---- a/arch/s390/include/asm/pkey.h
-+++ b/arch/s390/include/asm/pkey.h
-@@ -20,10 +20,13 @@
-  * @param key pointer to a buffer containing the key blob
-  * @param keylen size of the key blob in bytes
-  * @param protkey pointer to buffer receiving the protected key
-+ * @param xflags additional execution flags (see PKEY_XFLAG_* definitions below)
-+ *        As of now the only supported flag is PKEY_XFLAG_NOMEMALLOC.
-  * @return 0 on success, negative errno value on failure
-  */
- int pkey_key2protkey(const u8 *key, u32 keylen,
--		     u8 *protkey, u32 *protkeylen, u32 *protkeytype);
-+		     u8 *protkey, u32 *protkeylen, u32 *protkeytype,
-+		     u32 xflags);
- 
- /*
-  * If this flag is given in the xflags parameter, the pkey implementation
-diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
-index 55a4e70b866b..cef60770f68b 100644
---- a/drivers/s390/crypto/pkey_api.c
-+++ b/drivers/s390/crypto/pkey_api.c
-@@ -53,10 +53,9 @@ static int key2protkey(const struct pkey_apqn *apqns, size_t nr_apqns,
-  * In-Kernel function: Transform a key blob (of any type) into a protected key
-  */
- int pkey_key2protkey(const u8 *key, u32 keylen,
--		     u8 *protkey, u32 *protkeylen, u32 *protkeytype)
-+		     u8 *protkey, u32 *protkeylen, u32 *protkeytype, u32 xflags)
- {
- 	int rc;
--	const u32 xflags = 0;
- 
- 	rc = key2protkey(NULL, 0, key, keylen,
- 			 protkey, protkeylen, protkeytype, xflags);
--- 
-2.43.0
+or with:
+--------------------- 8< ----------------------
+#define _GNU_SOURCE
+#include <sched.h>
+#include <time.h>
+#include <unistd.h>                                                                                                                                                                                                                          #include <sys/wait.h>
+
+int main(void)
+{
+         struct timespec tp;
+         pid_t child;
+         int status;
+
+         unshare(CLONE_NEWTIME);
+
+         child = fork();
+         if (child == 0) {
+                 clock_gettime(CLOCK_MONOTONIC_RAW, &tp);
+         }
+
+         wait(&status);
+         return status;
+}
+
+# ./a.out ; echo $?
+139
+--------------------- >8 ----------------------
+
+RPMs and configs can be found at Fedora koji, latest build is at [2] (look for kernel-64k).
+
+Regards,
+Jan
+
+[1] https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/syscalls/clock_gettime/clock_gettime03.c
+[2] https://koji.fedoraproject.org/koji/buildinfo?buildID=2704401
 
 
