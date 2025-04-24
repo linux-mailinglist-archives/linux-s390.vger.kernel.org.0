@@ -1,80 +1,80 @@
-Return-Path: <linux-s390+bounces-10229-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-10246-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA870A9AF28
-	for <lists+linux-s390@lfdr.de>; Thu, 24 Apr 2025 15:36:58 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24888A9AF40
+	for <lists+linux-s390@lfdr.de>; Thu, 24 Apr 2025 15:37:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4175F9A3CA0
-	for <lists+linux-s390@lfdr.de>; Thu, 24 Apr 2025 13:36:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 631111B80001
+	for <lists+linux-s390@lfdr.de>; Thu, 24 Apr 2025 13:37:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 390A315C15F;
-	Thu, 24 Apr 2025 13:36:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ABB818FC89;
+	Thu, 24 Apr 2025 13:37:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gmRV4xt1"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lOcu/N83"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BDA6849C
-	for <linux-s390@vger.kernel.org>; Thu, 24 Apr 2025 13:36:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74598191F72
+	for <linux-s390@vger.kernel.org>; Thu, 24 Apr 2025 13:37:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745501806; cv=none; b=JkhBlcuZQgPR06VwzrvA2yXIbzgTDPlQEEv3tmXjIuO6W10EDf5hSOxFQp6qeU5R9Op44dCb0n71+C+5cCCcNS/qQGH7okTltYr2RlwsE54/ASuSDxuxUGDhk33v+MFDl80OgvR4EOWcVWMTjs/90f/YmeDL0zsvwb9VJtEoaMw=
+	t=1745501826; cv=none; b=J/FW0jTqxGWgHig0T7Hq8veAQEmaBWlVgh3ZLkIFwRMjsXfBRFjoKGFoNCVT0avr4UyKNQRa1vWM/FuBeVqeX1tLCT3hV5iRZ93484PDXVumkdCOQ4PcOesQaaM+uuJ6aUyC+cyleeGFv40rfNbu3hDGfk/aSHvR/WHFgu7+/O0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745501806; c=relaxed/simple;
-	bh=K2LM1mEOsbJjSbE297OXJ+YiNBMBt3FcmTEBOgF8Ypg=;
+	s=arc-20240116; t=1745501826; c=relaxed/simple;
+	bh=wc+HrYqer4bCMeQVmQUNyLWdMgq4fAEyOW+wUE/L/E8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Jkfd1gnUFUuEYL4m1raqA0fUcGfNQxZkyXv6dTD+heevmkaowa6H7T+i60SGIQmU87ClS3dsC4yyilTCSxmgW6L1Lr/pt4mNZu3m8ZHCbIw3rT6nF2AYZObcwB9pVnbtmfa1rBScgmwUa+n3lyFwxYHQdbjSeuZZvkOSm/IpXZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gmRV4xt1; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=dC9Pzes+n8Us4CMIyiSd3R6nTYPuHCd7DpW9pPhGaAmnC7q5x7euqLUQg8cDMegNW7rjrMoVLH1kugfsuD/o7rABPOx+2p2CVf3UC7NAEu4/zs7fhUTi5iXb4WLu8aiaI/wgI5Yh6r00ZPDgUx0SNkMWs6+P8Q0geqUe78WHQ/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lOcu/N83; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OA45bn001042;
-	Thu, 24 Apr 2025 13:36:42 GMT
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OAfMKM022647;
+	Thu, 24 Apr 2025 13:37:00 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=9CVGO0ifVHmbo/2OI
-	CyBR7Kcaz8Vnf9DKRj3607AbBU=; b=gmRV4xt1fzABBSxPfRHwf2xezXoMP4oZ1
-	H63DtH+sOSwFv2+DHrkJ27q5raqXOmzknFYRRGdi3E+aKulPV5TRiMAfX8QTokJV
-	KqEVhvUyLz7rj+ndKrlJhz9rutt+r4SMR2bt/il3kYwdx5GEldf1Zf79gOtbTo0x
-	03rcn6o5PH5rtolIcy0QQHGqkBRl0LKPzXxKpcF/GLuL/xTDhQ8MSUc/+4Qr6Jfp
-	vUC5cNYIalUxVN8mJDM+2ekQidQJtfS+h0MeEOS4y1nMgI/L4osJrbqZMGFu3dHF
-	TvHhZhGFWbqCXMftlHoPEp3hoXPod0IxftiR1qa4sdj0V1V9OkYoA==
+	:mime-version:references:subject:to; s=pp1; bh=tupADF7pMYakfg73S
+	VtHAxVg8/MmhuaI/13cG8+v3bo=; b=lOcu/N83EGGHj0JOZFMtK5k9HgnZBdkd5
+	YqB/65Ma9lXdK6v24JXvP3gMmLGMTezPh8VyIr2CMCUOCKgB48sQEYQFMQcN1BPn
+	GnPetEnHr+404ySMz6kaW0jajAqLd0V3imuXLmng+vKQfrkSO+dNKx7iYKDrrj6C
+	UtTji+mzqCRP+6wfHWJ4MF1EAVmrxb4OQs8kXQ6Z3LZfnDxY+Eyal5tJwRZ7CyOT
+	8KIRMhXb/5o7uLD3RBwjko0u0O8TLJ4SM8mGjudiYMof0gF2X9uqn6r7REGNdM/m
+	rN7pdbnql8elDn5OXFEXW9Jdkq9YGsRC+PICNgXdMGHcGigjEq0aw==
 Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 467k7k10he-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 467krsrujx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 13:36:41 +0000 (GMT)
+	Thu, 24 Apr 2025 13:37:00 +0000 (GMT)
 Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53OBdVu3001305;
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53OBSqpR000973;
 	Thu, 24 Apr 2025 13:36:32 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 466jfy0cuy-1
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 466jfy0cv2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 24 Apr 2025 13:36:32 +0000
 Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53ODaS1455640548
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53ODaTQv41550318
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 24 Apr 2025 13:36:28 GMT
+	Thu, 24 Apr 2025 13:36:29 GMT
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 639AA20043;
+	by IMSVA (Postfix) with ESMTP id E57E72004B;
 	Thu, 24 Apr 2025 13:36:28 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0C8592004F;
+	by IMSVA (Postfix) with ESMTP id 715942004D;
 	Thu, 24 Apr 2025 13:36:28 +0000 (GMT)
 Received: from funtu2.boeblingen.de.ibm.com (unknown [9.152.224.229])
 	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 24 Apr 2025 13:36:27 +0000 (GMT)
+	Thu, 24 Apr 2025 13:36:28 +0000 (GMT)
 From: Harald Freudenberger <freude@linux.ibm.com>
 To: dengler@linux.ibm.com, ifranzki@linux.ibm.com, fcallies@linux.ibm.com,
         hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
         seiden@linux.ibm.com
 Cc: linux-s390@vger.kernel.org, herbert@gondor.apana.org.au
-Subject: [PATCH v8 17/25] s390/zcrypt: Locate ep11_domain_query_info onto the stack instead of kmalloc
-Date: Thu, 24 Apr 2025 15:36:11 +0200
-Message-ID: <20250424133619.16495-18-freude@linux.ibm.com>
+Subject: [PATCH v8 18/25] s390/zcrypt: Rework ep11 misc functions to use cprb mempool
+Date: Thu, 24 Apr 2025 15:36:12 +0200
+Message-ID: <20250424133619.16495-19-freude@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250424133619.16495-1-freude@linux.ibm.com>
 References: <20250424133619.16495-1-freude@linux.ibm.com>
@@ -86,82 +86,471 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: QNuDDZs7TwNW1UVpLpLH8VgG-oHC47dv
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA5MiBTYWx0ZWRfX6K+uH4QvH52R wvrztDA1nnR1/V1sPvEj/27LIBfLLjGNdj5YAp1Hh2cy1fiPyDNhtCW3Gg04T7QRNbb6ByAoQqN sMgPKeTqOs0b8UymRMo5tWd+E/2VuL1sQW7wgQxewXU6cbSizRe+9kiO/Cl+wMMU+p+hQueAH2L
- LolbESoS+VW0lOIPwzavyA1KrbIFXg5UvFd37eCS/jbzRmGPdhrJrD6b873se+VYzyT3IipfOzt Ak248keJPKBy94MqqcK/+ByXJiTxj7/0VDa1oON3ZeAf0sfhuIJA9jr4dAj5H7XZDLZVnQu7VkW tU9qAV3eYlT8SFomJZRNpHrwEgakxdxt8VE1cmgXeoCbk8uXJcRMC0TcvQwlQb1hHl/xKpTvGH9
- KlMbyCk4b71YT6AYUZMnkmBzIZnyiTHrbvWVZFaCbIKgXX+0t5xYfGHd8B+sdqNHrSRuTQ8Y
-X-Authority-Analysis: v=2.4 cv=KZjSsRYD c=1 sm=1 tr=0 ts=680a3e69 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=Rt_IQ_Eltt8tSNyM_tYA:9
-X-Proofpoint-GUID: QNuDDZs7TwNW1UVpLpLH8VgG-oHC47dv
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA5MiBTYWx0ZWRfXyVEd4AH7ifzy JdvOXQ8JmwnBaRCijzJmr5afcb6aowOG2gSjKIKo4hJWZH/36grKdyvfNIuaA2tBRmmSxscs0OY EcH1PW4mKtVeE6sPCgdQucDcw7zVbkLgx1yDNOCpdDXOX6L98K2sr5WW6MrLa2nJut8R/hAfiXa
+ +bS7PY7qaMII5sRrtIvK7TtiIzQnRGzPQ9ejgDM+xV2hTa1xKRGDPtL+v1llwr0WofjX6jbjxNt +wI0rrDKqyW7/QpLk0d5YMGa0VX0m/BxEZvFQaQldmhrfnJvM8PQdiSfX7Xu8Y9aTO1uyGSCsB1 9JrrE5zwRYNzJmmTBhi3IesFOhA1MQyEPWrs8DIVHrq3wkzuzf1uNPfbrxuksakQcXJV7JLPl56
+ FdEQFZRj1uHywvYlu6XC+bjeRyRqAllyc7bnpBOD0acr59dEjqGL6cgFaNYLolgbf5xgIe7V
+X-Proofpoint-GUID: 7OpubRyviBQ_5xSnHiN9BbJm8ZDhaUYZ
+X-Authority-Analysis: v=2.4 cv=IciHWXqa c=1 sm=1 tr=0 ts=680a3e7c cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=uT_iiDmZClQAR4kWP5sA:9
+X-Proofpoint-ORIG-GUID: 7OpubRyviBQ_5xSnHiN9BbJm8ZDhaUYZ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-04-24_06,2025-04-24_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- impostorscore=0 clxscore=1015 bulkscore=0 lowpriorityscore=0
- malwarescore=0 mlxlogscore=956 adultscore=0 mlxscore=0 spamscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 adultscore=0 mlxlogscore=999 mlxscore=0 impostorscore=0
+ phishscore=0 bulkscore=0 clxscore=1015 spamscore=0 priorityscore=1501
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
  definitions=main-2504240092
 
-Locate the relative small struct ep11_domain_query_info variable
-onto the stack instead of kmalloc()/kfree().
+There are two places in the ep11 misc code where a short term
+memory buffer is needed. Rework this code to use the cprb mempool
+to satisfy this ephemeral memory requirements.
 
 Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
 Reviewed-by: Holger Dengler <dengler@linux.ibm.com>
 ---
- drivers/s390/crypto/zcrypt_ep11misc.c | 25 ++++++++++---------------
- 1 file changed, 10 insertions(+), 15 deletions(-)
+ drivers/s390/crypto/pkey_ep11.c       |   3 +-
+ drivers/s390/crypto/zcrypt_cex4.c     |  12 +--
+ drivers/s390/crypto/zcrypt_ep11misc.c | 103 ++++++++++++++++----------
+ drivers/s390/crypto/zcrypt_ep11misc.h |   7 +-
+ 4 files changed, 76 insertions(+), 49 deletions(-)
 
+diff --git a/drivers/s390/crypto/pkey_ep11.c b/drivers/s390/crypto/pkey_ep11.c
+index b970f0be84be..38aa0c7807c2 100644
+--- a/drivers/s390/crypto/pkey_ep11.c
++++ b/drivers/s390/crypto/pkey_ep11.c
+@@ -280,6 +280,7 @@ static int ep11_gen_key(const struct pkey_apqn *apqns, size_t nr_apqns,
+ {
+ 	struct pkey_apqn *local_apqns = NULL;
+ 	int i, len, rc;
++	const u32 xflags = 0;
+ 
+ 	/* check keytype, subtype, keybitsize */
+ 	switch (keytype) {
+@@ -328,7 +329,7 @@ static int ep11_gen_key(const struct pkey_apqn *apqns, size_t nr_apqns,
+ 	for (rc = -ENODEV, i = 0; rc && i < nr_apqns; i++) {
+ 		rc = ep11_genaeskey(apqns[i].card, apqns[i].domain,
+ 				    keybitsize, flags,
+-				    keybuf, keybuflen, subtype);
++				    keybuf, keybuflen, subtype, xflags);
+ 	}
+ 
+ out:
+diff --git a/drivers/s390/crypto/zcrypt_cex4.c b/drivers/s390/crypto/zcrypt_cex4.c
+index 84cbcbab2741..6ba7fbddd3f7 100644
+--- a/drivers/s390/crypto/zcrypt_cex4.c
++++ b/drivers/s390/crypto/zcrypt_cex4.c
+@@ -214,7 +214,7 @@ static ssize_t ep11_api_ordinalnr_show(struct device *dev,
+ 
+ 	memset(&ci, 0, sizeof(ci));
+ 
+-	ep11_get_card_info(ac->id, &ci);
++	ep11_get_card_info(ac->id, &ci, 0);
+ 
+ 	if (ci.API_ord_nr > 0)
+ 		return sysfs_emit(buf, "%u\n", ci.API_ord_nr);
+@@ -234,7 +234,7 @@ static ssize_t ep11_fw_version_show(struct device *dev,
+ 
+ 	memset(&ci, 0, sizeof(ci));
+ 
+-	ep11_get_card_info(ac->id, &ci);
++	ep11_get_card_info(ac->id, &ci, 0);
+ 
+ 	if (ci.FW_version > 0)
+ 		return sysfs_emit(buf, "%d.%d\n",
+@@ -256,7 +256,7 @@ static ssize_t ep11_serialnr_show(struct device *dev,
+ 
+ 	memset(&ci, 0, sizeof(ci));
+ 
+-	ep11_get_card_info(ac->id, &ci);
++	ep11_get_card_info(ac->id, &ci, 0);
+ 
+ 	if (ci.serial[0])
+ 		return sysfs_emit(buf, "%16.16s\n", ci.serial);
+@@ -293,7 +293,7 @@ static ssize_t ep11_card_op_modes_show(struct device *dev,
+ 
+ 	memset(&ci, 0, sizeof(ci));
+ 
+-	ep11_get_card_info(ac->id, &ci);
++	ep11_get_card_info(ac->id, &ci, 0);
+ 
+ 	for (i = 0; ep11_op_modes[i].mode_txt; i++) {
+ 		if (ci.op_mode & (1ULL << ep11_op_modes[i].mode_bit)) {
+@@ -343,7 +343,7 @@ static ssize_t ep11_mkvps_show(struct device *dev,
+ 	if (zq->online)
+ 		ep11_get_domain_info(AP_QID_CARD(zq->queue->qid),
+ 				     AP_QID_QUEUE(zq->queue->qid),
+-				     &di);
++				     &di, 0);
+ 
+ 	if (di.cur_wk_state == '0') {
+ 		n = sysfs_emit(buf, "WK CUR: %s -\n",
+@@ -390,7 +390,7 @@ static ssize_t ep11_queue_op_modes_show(struct device *dev,
+ 	if (zq->online)
+ 		ep11_get_domain_info(AP_QID_CARD(zq->queue->qid),
+ 				     AP_QID_QUEUE(zq->queue->qid),
+-				     &di);
++				     &di, 0);
+ 
+ 	for (i = 0; ep11_op_modes[i].mode_txt; i++) {
+ 		if (di.op_mode & (1ULL << ep11_op_modes[i].mode_bit)) {
 diff --git a/drivers/s390/crypto/zcrypt_ep11misc.c b/drivers/s390/crypto/zcrypt_ep11misc.c
-index 5bb72ca40105..d8a8afebe211 100644
+index d8a8afebe211..65c2f961e42a 100644
 --- a/drivers/s390/crypto/zcrypt_ep11misc.c
 +++ b/drivers/s390/crypto/zcrypt_ep11misc.c
-@@ -702,36 +702,31 @@ int ep11_get_domain_info(u16 card, u16 domain, struct ep11_domain_info *info)
- 		u8  new_WK_VP[32];
- 		u32 dom_flags;
- 		u64 op_mode;
--	} __packed * p_dom_info;
--
--	p_dom_info = kmalloc(sizeof(*p_dom_info), GFP_KERNEL);
--	if (!p_dom_info)
--		return -ENOMEM;
-+	} __packed dom_query_info;
+@@ -549,7 +549,7 @@ static int check_reply_cprb(const struct ep11_cprb *rep, const char *func)
+  * Helper function which does an ep11 query with given query type.
+  */
+ static int ep11_query_info(u16 cardnr, u16 domain, u32 query_type,
+-			   size_t buflen, u8 *buf)
++			   size_t buflen, u8 *buf, u32 xflags)
+ {
+ 	struct ep11_info_req_pl {
+ 		struct pl_head head;
+@@ -573,7 +573,6 @@ static int ep11_query_info(u16 cardnr, u16 domain, u32 query_type,
+ 	struct ep11_target_dev target;
+ 	struct ep11_urb urb;
+ 	int api = EP11_API_V1, rc = -ENOMEM;
+-	const u32 xflags = 0;
  
- 	rc = ep11_query_info(card, domain, 0x03 /* domain info query */,
--			     sizeof(*p_dom_info), (u8 *)p_dom_info);
-+			     sizeof(dom_query_info), (u8 *)&dom_query_info);
+ 	/* request cprb and payload */
+ 	req = alloc_cprbmem(sizeof(struct ep11_info_req_pl), xflags);
+@@ -639,7 +638,7 @@ static int ep11_query_info(u16 cardnr, u16 domain, u32 query_type,
+ /*
+  * Provide information about an EP11 card.
+  */
+-int ep11_get_card_info(u16 card, struct ep11_card_info *info)
++int ep11_get_card_info(u16 card, struct ep11_card_info *info, u32 xflags)
+ {
+ 	int rc;
+ 	struct ep11_module_query_info {
+@@ -669,12 +668,15 @@ int ep11_get_card_info(u16 card, struct ep11_card_info *info)
+ 		u32 max_CP_index;
+ 	} __packed * pmqi = NULL;
+ 
+-	pmqi = kmalloc(sizeof(*pmqi), GFP_KERNEL);
++	/* use the cprb mempool to satisfy this short term mem alloc */
++	pmqi = (xflags & ZCRYPT_XFLAG_NOMEMALLOC) ?
++		mempool_alloc_preallocated(cprb_mempool) :
++		mempool_alloc(cprb_mempool, GFP_KERNEL);
+ 	if (!pmqi)
+ 		return -ENOMEM;
+ 	rc = ep11_query_info(card, AUTOSEL_DOM,
+ 			     0x01 /* module info query */,
+-			     sizeof(*pmqi), (u8 *)pmqi);
++			     sizeof(*pmqi), (u8 *)pmqi, xflags);
  	if (rc)
  		goto out;
  
- 	memset(info, 0, sizeof(*info));
- 	info->cur_wk_state = '0';
- 	info->new_wk_state = '0';
--	if (p_dom_info->dom_flags & 0x10 /* left imprint mode */) {
--		if (p_dom_info->dom_flags & 0x02 /* cur wk valid */) {
-+	if (dom_query_info.dom_flags & 0x10 /* left imprint mode */) {
-+		if (dom_query_info.dom_flags & 0x02 /* cur wk valid */) {
- 			info->cur_wk_state = '1';
--			memcpy(info->cur_wkvp, p_dom_info->cur_WK_VP, 32);
-+			memcpy(info->cur_wkvp, dom_query_info.cur_WK_VP, 32);
- 		}
--		if (p_dom_info->dom_flags & 0x04 || /* new wk present */
--		    p_dom_info->dom_flags & 0x08 /* new wk committed */) {
-+		if (dom_query_info.dom_flags & 0x04 || /* new wk present */
-+		    dom_query_info.dom_flags & 0x08 /* new wk committed */) {
- 			info->new_wk_state =
--				p_dom_info->dom_flags & 0x08 ? '2' : '1';
--			memcpy(info->new_wkvp, p_dom_info->new_WK_VP, 32);
-+				dom_query_info.dom_flags & 0x08 ? '2' : '1';
-+			memcpy(info->new_wkvp, dom_query_info.new_WK_VP, 32);
- 		}
- 	}
--	info->op_mode = p_dom_info->op_mode;
-+	info->op_mode = dom_query_info.op_mode;
+@@ -685,7 +687,7 @@ int ep11_get_card_info(u16 card, struct ep11_card_info *info)
+ 	info->op_mode = pmqi->op_mode;
  
  out:
--	kfree(p_dom_info);
+-	kfree(pmqi);
++	mempool_free(pmqi, cprb_mempool);
  	return rc;
  }
- EXPORT_SYMBOL(ep11_get_domain_info);
+ EXPORT_SYMBOL(ep11_get_card_info);
+@@ -693,7 +695,8 @@ EXPORT_SYMBOL(ep11_get_card_info);
+ /*
+  * Provide information about a domain within an EP11 card.
+  */
+-int ep11_get_domain_info(u16 card, u16 domain, struct ep11_domain_info *info)
++int ep11_get_domain_info(u16 card, u16 domain,
++			 struct ep11_domain_info *info, u32 xflags)
+ {
+ 	int rc;
+ 	struct ep11_domain_query_info {
+@@ -705,7 +708,8 @@ int ep11_get_domain_info(u16 card, u16 domain, struct ep11_domain_info *info)
+ 	} __packed dom_query_info;
+ 
+ 	rc = ep11_query_info(card, domain, 0x03 /* domain info query */,
+-			     sizeof(dom_query_info), (u8 *)&dom_query_info);
++			     sizeof(dom_query_info), (u8 *)&dom_query_info,
++			     xflags);
+ 	if (rc)
+ 		goto out;
+ 
+@@ -739,7 +743,7 @@ EXPORT_SYMBOL(ep11_get_domain_info);
+ 
+ static int _ep11_genaeskey(u16 card, u16 domain,
+ 			   u32 keybitsize, u32 keygenflags,
+-			   u8 *keybuf, size_t *keybufsize)
++			   u8 *keybuf, size_t *keybufsize, u32 xflags)
+ {
+ 	struct keygen_req_pl {
+ 		struct pl_head head;
+@@ -777,7 +781,6 @@ static int _ep11_genaeskey(u16 card, u16 domain,
+ 	struct ep11_urb urb;
+ 	int api, rc = -ENOMEM;
+ 	u8 *p;
+-	const u32 xflags = 0;
+ 
+ 	switch (keybitsize) {
+ 	case 128:
+@@ -880,7 +883,7 @@ static int _ep11_genaeskey(u16 card, u16 domain,
+ }
+ 
+ int ep11_genaeskey(u16 card, u16 domain, u32 keybitsize, u32 keygenflags,
+-		   u8 *keybuf, u32 *keybufsize, u32 keybufver)
++		   u8 *keybuf, u32 *keybufsize, u32 keybufver, u32 xflags)
+ {
+ 	struct ep11kblob_header *hdr;
+ 	size_t hdr_size, pl_size;
+@@ -901,7 +904,7 @@ int ep11_genaeskey(u16 card, u16 domain, u32 keybitsize, u32 keygenflags,
+ 		return rc;
+ 
+ 	rc = _ep11_genaeskey(card, domain, keybitsize, keygenflags,
+-			     pl, &pl_size);
++			     pl, &pl_size, xflags);
+ 	if (rc)
+ 		return rc;
+ 
+@@ -921,7 +924,8 @@ static int ep11_cryptsingle(u16 card, u16 domain,
+ 			    u16 mode, u32 mech, const u8 *iv,
+ 			    const u8 *key, size_t keysize,
+ 			    const u8 *inbuf, size_t inbufsize,
+-			    u8 *outbuf, size_t *outbufsize)
++			    u8 *outbuf, size_t *outbufsize,
++			    u32 xflags)
+ {
+ 	struct crypt_req_pl {
+ 		struct pl_head head;
+@@ -952,7 +956,6 @@ static int ep11_cryptsingle(u16 card, u16 domain,
+ 	size_t req_pl_size, rep_pl_size = 0;
+ 	int n, api = EP11_API_V1, rc = -ENOMEM;
+ 	u8 *p;
+-	const u32 xflags = 0;
+ 
+ 	/* the simple asn1 coding used has length limits */
+ 	if (keysize > 0xFFFF || inbufsize > 0xFFFF)
+@@ -1051,7 +1054,7 @@ static int _ep11_unwrapkey(u16 card, u16 domain,
+ 			   const u8 *enckey, size_t enckeysize,
+ 			   u32 mech, const u8 *iv,
+ 			   u32 keybitsize, u32 keygenflags,
+-			   u8 *keybuf, size_t *keybufsize)
++			   u8 *keybuf, size_t *keybufsize, u32 xflags)
+ {
+ 	struct uw_req_pl {
+ 		struct pl_head head;
+@@ -1091,7 +1094,6 @@ static int _ep11_unwrapkey(u16 card, u16 domain,
+ 	struct ep11_urb urb;
+ 	int api, rc = -ENOMEM;
+ 	u8 *p;
+-	const u32 xflags = 0;
+ 
+ 	/* request cprb and payload */
+ 	api = (!keygenflags || keygenflags & 0x00200000) ?
+@@ -1199,7 +1201,7 @@ static int ep11_unwrapkey(u16 card, u16 domain,
+ 			  u32 mech, const u8 *iv,
+ 			  u32 keybitsize, u32 keygenflags,
+ 			  u8 *keybuf, u32 *keybufsize,
+-			  u8 keybufver)
++			  u8 keybufver, u32 xflags)
+ {
+ 	struct ep11kblob_header *hdr;
+ 	size_t hdr_size, pl_size;
+@@ -1213,7 +1215,7 @@ static int ep11_unwrapkey(u16 card, u16 domain,
+ 
+ 	rc = _ep11_unwrapkey(card, domain, kek, keksize, enckey, enckeysize,
+ 			     mech, iv, keybitsize, keygenflags,
+-			     pl, &pl_size);
++			     pl, &pl_size, xflags);
+ 	if (rc)
+ 		return rc;
+ 
+@@ -1232,7 +1234,7 @@ static int ep11_unwrapkey(u16 card, u16 domain,
+ static int _ep11_wrapkey(u16 card, u16 domain,
+ 			 const u8 *key, size_t keysize,
+ 			 u32 mech, const u8 *iv,
+-			 u8 *databuf, size_t *datasize)
++			 u8 *databuf, size_t *datasize, u32 xflags)
+ {
+ 	struct wk_req_pl {
+ 		struct pl_head head;
+@@ -1265,7 +1267,6 @@ static int _ep11_wrapkey(u16 card, u16 domain,
+ 	size_t req_pl_size;
+ 	int api, rc = -ENOMEM;
+ 	u8 *p;
+-	const u32 xflags = 0;
+ 
+ 	/* request cprb and payload */
+ 	req_pl_size = sizeof(struct wk_req_pl) + (iv ? 16 : 0)
+@@ -1355,8 +1356,10 @@ int ep11_clr2keyblob(u16 card, u16 domain, u32 keybitsize, u32 keygenflags,
+ 		     u32 keytype)
+ {
+ 	int rc;
+-	u8 encbuf[64], *kek = NULL;
++	void *mem;
++	u8 encbuf[64], *kek;
+ 	size_t clrkeylen, keklen, encbuflen = sizeof(encbuf);
++	const u32 xflags = 0;
+ 
+ 	if (keybitsize == 128 || keybitsize == 192 || keybitsize == 256) {
+ 		clrkeylen = keybitsize / 8;
+@@ -1366,18 +1369,24 @@ int ep11_clr2keyblob(u16 card, u16 domain, u32 keybitsize, u32 keygenflags,
+ 		return -EINVAL;
+ 	}
+ 
+-	/* allocate memory for the temp kek */
++	/*
++	 * Allocate space for the temp kek.
++	 * Also we only need up to MAXEP11AESKEYBLOBSIZE bytes for this
++	 * we use the already existing cprb mempool to solve this
++	 * short term memory requirement.
++	 */
++	mem = (xflags & ZCRYPT_XFLAG_NOMEMALLOC) ?
++		mempool_alloc_preallocated(cprb_mempool) :
++		mempool_alloc(cprb_mempool, GFP_KERNEL);
++	if (!mem)
++		return -ENOMEM;
++	kek = (u8 *)mem;
+ 	keklen = MAXEP11AESKEYBLOBSIZE;
+-	kek = kmalloc(keklen, GFP_ATOMIC);
+-	if (!kek) {
+-		rc = -ENOMEM;
+-		goto out;
+-	}
+ 
+ 	/* Step 1: generate AES 256 bit random kek key */
+ 	rc = _ep11_genaeskey(card, domain, 256,
+ 			     0x00006c00, /* EN/DECRYPT, WRAP/UNWRAP */
+-			     kek, &keklen);
++			     kek, &keklen, xflags);
+ 	if (rc) {
+ 		ZCRYPT_DBF_ERR("%s generate kek key failed, rc=%d\n",
+ 			       __func__, rc);
+@@ -1386,7 +1395,7 @@ int ep11_clr2keyblob(u16 card, u16 domain, u32 keybitsize, u32 keygenflags,
+ 
+ 	/* Step 2: encrypt clear key value with the kek key */
+ 	rc = ep11_cryptsingle(card, domain, 0, 0, def_iv, kek, keklen,
+-			      clrkey, clrkeylen, encbuf, &encbuflen);
++			      clrkey, clrkeylen, encbuf, &encbuflen, xflags);
+ 	if (rc) {
+ 		ZCRYPT_DBF_ERR("%s encrypting key value with kek key failed, rc=%d\n",
+ 			       __func__, rc);
+@@ -1396,7 +1405,7 @@ int ep11_clr2keyblob(u16 card, u16 domain, u32 keybitsize, u32 keygenflags,
+ 	/* Step 3: import the encrypted key value as a new key */
+ 	rc = ep11_unwrapkey(card, domain, kek, keklen,
+ 			    encbuf, encbuflen, 0, def_iv,
+-			    keybitsize, 0, keybuf, keybufsize, keytype);
++			    keybitsize, 0, keybuf, keybufsize, keytype, xflags);
+ 	if (rc) {
+ 		ZCRYPT_DBF_ERR("%s importing key value as new key failed, rc=%d\n",
+ 			       __func__, rc);
+@@ -1404,7 +1413,7 @@ int ep11_clr2keyblob(u16 card, u16 domain, u32 keybitsize, u32 keygenflags,
+ 	}
+ 
+ out:
+-	kfree(kek);
++	mempool_free(mem, cprb_mempool);
+ 	return rc;
+ }
+ EXPORT_SYMBOL(ep11_clr2keyblob);
+@@ -1427,6 +1436,7 @@ int ep11_kblob2protkey(u16 card, u16 dom,
+ 	} __packed * wki;
+ 	u8 *wkbuf = NULL;
+ 	int rc = -EIO;
++	const u32 xflags = 0;
+ 
+ 	if (ep11_kb_decode((u8 *)keyblob, keybloblen, &hdr, NULL, &key, &keylen))
+ 		return -EINVAL;
+@@ -1437,15 +1447,29 @@ int ep11_kblob2protkey(u16 card, u16 dom,
+ 	}
+ 	/* !!! hdr is no longer a valid header !!! */
+ 
+-	/* alloc temp working buffer */
++	/* need a temp working buffer */
+ 	wkbuflen = (keylen + AES_BLOCK_SIZE) & (~(AES_BLOCK_SIZE - 1));
+-	wkbuf = kmalloc(wkbuflen, GFP_ATOMIC);
+-	if (!wkbuf)
+-		return -ENOMEM;
++	if (wkbuflen > CPRB_MEMPOOL_ITEM_SIZE) {
++		/* this should never happen */
++		rc = -ENOMEM;
++		ZCRYPT_DBF_WARN("%s wkbuflen %d > cprb mempool item size %d, rc=%d\n",
++				__func__, (int)wkbuflen, CPRB_MEMPOOL_ITEM_SIZE, rc);
++		return rc;
++	}
++	/* use the cprb mempool to satisfy this short term mem allocation */
++	wkbuf = (xflags & ZCRYPT_XFLAG_NOMEMALLOC) ?
++		mempool_alloc_preallocated(cprb_mempool) :
++		mempool_alloc(cprb_mempool, GFP_ATOMIC);
++	if (!wkbuf) {
++		rc = -ENOMEM;
++		ZCRYPT_DBF_WARN("%s allocating tmp buffer via cprb mempool failed, rc=%d\n",
++				__func__, rc);
++		return rc;
++	}
+ 
+ 	/* ep11 secure key -> protected key + info */
+ 	rc = _ep11_wrapkey(card, dom, (u8 *)key, keylen,
+-			   0, def_iv, wkbuf, &wkbuflen);
++			   0, def_iv, wkbuf, &wkbuflen, xflags);
+ 	if (rc) {
+ 		ZCRYPT_DBF_ERR("%s rewrapping ep11 key to pkey failed, rc=%d\n",
+ 			       __func__, rc);
+@@ -1512,7 +1536,7 @@ int ep11_kblob2protkey(u16 card, u16 dom,
+ 	*protkeylen = wki->pkeysize;
+ 
+ out:
+-	kfree(wkbuf);
++	mempool_free(wkbuf, cprb_mempool);
+ 	return rc;
+ }
+ EXPORT_SYMBOL(ep11_kblob2protkey);
+@@ -1525,6 +1549,7 @@ int ep11_findcard2(u32 *apqns, u32 *nr_apqns, u16 cardnr, u16 domain,
+ 	struct ep11_card_info eci;
+ 	u32 _nr_apqns = 0;
+ 	int i, card, dom;
++	const u32 xflags = 0;
+ 
+ 	/* occupy the device status memory */
+ 	mutex_lock(&dev_status_mem_mutex);
+@@ -1557,14 +1582,14 @@ int ep11_findcard2(u32 *apqns, u32 *nr_apqns, u16 cardnr, u16 domain,
+ 			continue;
+ 		/* check min api version if given */
+ 		if (minapi > 0) {
+-			if (ep11_get_card_info(card, &eci))
++			if (ep11_get_card_info(card, &eci, xflags))
+ 				continue;
+ 			if (minapi > eci.API_ord_nr)
+ 				continue;
+ 		}
+ 		/* check wkvp if given */
+ 		if (wkvp) {
+-			if (ep11_get_domain_info(card, dom, &edi))
++			if (ep11_get_domain_info(card, dom, &edi, xflags))
+ 				continue;
+ 			if (edi.cur_wk_state != '1')
+ 				continue;
+diff --git a/drivers/s390/crypto/zcrypt_ep11misc.h b/drivers/s390/crypto/zcrypt_ep11misc.h
+index 2abd77aa16cf..e875af369caf 100644
+--- a/drivers/s390/crypto/zcrypt_ep11misc.h
++++ b/drivers/s390/crypto/zcrypt_ep11misc.h
+@@ -104,18 +104,19 @@ struct ep11_domain_info {
+ /*
+  * Provide information about an EP11 card.
+  */
+-int ep11_get_card_info(u16 card, struct ep11_card_info *info);
++int ep11_get_card_info(u16 card, struct ep11_card_info *info, u32 xflags);
+ 
+ /*
+  * Provide information about a domain within an EP11 card.
+  */
+-int ep11_get_domain_info(u16 card, u16 domain, struct ep11_domain_info *info);
++int ep11_get_domain_info(u16 card, u16 domain,
++			 struct ep11_domain_info *info, u32 xflags);
+ 
+ /*
+  * Generate (random) EP11 AES secure key.
+  */
+ int ep11_genaeskey(u16 card, u16 domain, u32 keybitsize, u32 keygenflags,
+-		   u8 *keybuf, u32 *keybufsize, u32 keybufver);
++		   u8 *keybuf, u32 *keybufsize, u32 keybufver, u32 xflags);
+ 
+ /*
+  * Generate EP11 AES secure key with given clear key value.
 -- 
 2.43.0
 
