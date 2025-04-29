@@ -1,94 +1,80 @@
-Return-Path: <linux-s390+bounces-10358-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-10355-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE164AA062B
-	for <lists+linux-s390@lfdr.de>; Tue, 29 Apr 2025 10:51:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9067AAA0622
+	for <lists+linux-s390@lfdr.de>; Tue, 29 Apr 2025 10:50:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E6FCA3BF684
-	for <lists+linux-s390@lfdr.de>; Tue, 29 Apr 2025 08:50:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 535EC17F8E6
+	for <lists+linux-s390@lfdr.de>; Tue, 29 Apr 2025 08:50:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75DA127A934;
-	Tue, 29 Apr 2025 08:50:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF2E328C5DC;
+	Tue, 29 Apr 2025 08:49:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="jBeAYNdR"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76397279347;
-	Tue, 29 Apr 2025 08:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A147E29DB79;
+	Tue, 29 Apr 2025 08:49:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745916638; cv=none; b=qOjqaDU0GMmEvO+mpcBbSVBbdnqP57twnfbAlRcP/+yOJ2DmgSbH/q0fBIHCfOrMOq3v3JR6g1F47qyip67t/FrABh6zRmk06Cu4xGAiPh5wH6Hs5dP4GR8JFhYpWX22/p1FJCdFmqgrCKkKD7FkeW0TSAtG09Ft38aCgw7IVGE=
+	t=1745916577; cv=none; b=SDTdseD+zXzG2aAjU61u8ltUpnBY8zasv2UeJd/G9jyYsfI6wTBxI460h17Rmjm4v8xrb6cSjPQdKP7Gk69yPHms6obm97HUM+nC7Tw9+2/iQZ2wILFW9avF/LX3Sdv4w+YgwAlSKgKYV8jssuYMyJyJUI/z6BI5+ljdh71zWVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745916638; c=relaxed/simple;
-	bh=6C2TMS+n6qqj5M83V5ptzbHpW40e+AmDHnNCpPTAXdc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t5eoK39GHJVxFvL2PADcfoUMuOSQhG5sS2nzrD2nF681IPXkQa6QHRO7a7wwQzBK0Uu2W9TSHkWiwdIQtFI/MCL2iTQ5Mb3wD0OiUohQL6K/6Zq+UUmEvM7fQrYS4fhuIqorRqeRtwEvi2hAJzYin3cyUVXEn1GnghSkWfsXgRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4ZmtbH6JVvz9sFT;
-	Tue, 29 Apr 2025 10:22:19 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id e30qWr8CZO0g; Tue, 29 Apr 2025 10:22:19 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4ZmtbG0699z9sCk;
-	Tue, 29 Apr 2025 10:22:18 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id F1CD98B766;
-	Tue, 29 Apr 2025 10:22:17 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id 2CpqnVV7VgEF; Tue, 29 Apr 2025 10:22:17 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 3E7F68B763;
-	Tue, 29 Apr 2025 10:22:17 +0200 (CEST)
-Message-ID: <df566157-5320-47cf-ae14-a2e578f68a35@csgroup.eu>
-Date: Tue, 29 Apr 2025 10:22:16 +0200
+	s=arc-20240116; t=1745916577; c=relaxed/simple;
+	bh=H5K//5oJi2n2cTlYABZNbEIjwdJfrOL7BV7QEzoZCTM=;
+	h=Date:Message-Id:From:Subject:To:Cc; b=AT4SSitkQeBd/lJ7Sj/IFvrA7LxmyZCCiXYkriVyp1t+BeHNTYwud6VbD+oU13FYGNzEDJ5ImAk9+z432EnczQ6+41FGyozzv9nXdaj926JPbESJCvugtBVRkLG09pNN1nTqj7XNZ6laHCYBBDS6p0itG/ZGaWNiBNUCSZNEQPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=jBeAYNdR; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=Cc:To:Subject:From:Message-Id:Date:Sender:Reply-To:MIME-Version
+	:Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=gai7WJW5v50AocdvHn3GT8iGFrAaP3spBCKjqsB4buU=; b=jBeAYNdRA1NYYPKq/Cv6VRT4as
+	OAZdYv34Ooo9oinQtfGB8bWIpIhAzXru8Zd0kyYPytDqe9lyKvd166ESIea5yhYq+P6vFfbXJLOzU
+	3RQFb6Vwgy0mXArqMBqXRn9iJ+nGCHCj6NFs/hBFYJRQLAMc3nUGV8lbJXfbHz7mELtmDtXWQuJVS
+	sDdOCI2yUQ+ukt5MvJOWshjQ8QjQTM/ndIGq6snhByPqxNh7/AxjdCTQoAexx2cRMbI9m34ovUgn0
+	L1qGEcJ6+VDGVBDT4kkZ0S9r2Q9hHH3Tn054/aNUnFf6uTGiUjEs/uTpLeJlPoJo5faHDVYXxUt9l
+	XZxkHXyg==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u9geg-001t5a-1P;
+	Tue, 29 Apr 2025 16:49:31 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 29 Apr 2025 16:49:30 +0800
+Date: Tue, 29 Apr 2025 16:49:30 +0800
+Message-Id: <cover.1745916278.git.herbert@gondor.apana.org.au>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 0/2] crypto: s390/hmac - Use generic hash export format
+To: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Cc: Harald Freudenberger <freude@linux.ibm.com>, Holger Dengler <dengler@linux.ibm.com>, linux-s390@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/13] crypto: powerpc - drop redundant dependencies on
- PPC
-To: Eric Biggers <ebiggers@kernel.org>, linux-crypto@vger.kernel.org
-Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, x86@kernel.org,
- "Jason A . Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>
-References: <20250422152716.5923-1-ebiggers@kernel.org>
- <20250422152716.5923-3-ebiggers@kernel.org>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250422152716.5923-3-ebiggers@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
+This mini series converts the s390 hmac implementation to use
+the generic export format.  First it extends the implementation
+to support large lengths (you could always import a partial hash
+with a length that is just about to overflow), and then it adds
+export/import functions matching the format of the generic hmac
+sha2 implementation.
 
+Herbert Xu (2):
+  crypto: s390/hmac - Extend hash length counters to 128 bits
+  crypto: s390/hmac - Use generic hash export format
 
-Le 22/04/2025 à 17:27, Eric Biggers a écrit :
-> From: Eric Biggers <ebiggers@google.com>
-> 
-> arch/powerpc/crypto/Kconfig is sourced only when CONFIG_PPC=y, so there
-> is no need for the symbols defined inside it to depend on PPC.
-> 
-> Acked-by: Ard Biesheuvel <ardb@kernel.org>
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
+ arch/s390/crypto/Kconfig     |   4 +-
+ arch/s390/crypto/hmac_s390.c | 200 ++++++++++++++++++++++++++++++++---
+ 2 files changed, 187 insertions(+), 17 deletions(-)
 
-
-Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-
-Note that there are other redundancies in the file, for instance 
-CONFIG_VSX already depends on CONFIG_PPC64
-
-Christophe
+-- 
+2.39.5
 
 
