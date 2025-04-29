@@ -1,314 +1,193 @@
-Return-Path: <linux-s390+bounces-10357-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-10359-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1616AA0625
-	for <lists+linux-s390@lfdr.de>; Tue, 29 Apr 2025 10:50:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3470DAA0757
+	for <lists+linux-s390@lfdr.de>; Tue, 29 Apr 2025 11:33:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D6C3D46284D
-	for <lists+linux-s390@lfdr.de>; Tue, 29 Apr 2025 08:50:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CA2DB189FBC7
+	for <lists+linux-s390@lfdr.de>; Tue, 29 Apr 2025 09:31:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0F8D2951B9;
-	Tue, 29 Apr 2025 08:49:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBD052BD5AB;
+	Tue, 29 Apr 2025 09:29:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="Mh3FYn1P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gs27kCSZ"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16AC929DB79;
-	Tue, 29 Apr 2025 08:49:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABEFA2BCF7F;
+	Tue, 29 Apr 2025 09:29:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745916581; cv=none; b=M/YyPlf5dH1Abw+55uUlpD8P6p/TAbS1g5wMO/crC5C0GZ48tKaK9rzAGjQe/3/aI8QdD8nxc5oYBdnprfCT4f8ouUyJzV9OPTVeu+uos5fg6RBlq8u1AscfyDeXqYquNOeXrOC+t5/qCEXK4j5Z+0dGM2NXOTsVQrrs1ejyJ6g=
+	t=1745918946; cv=none; b=aGr8gw7H8of3deXOOtyzVwyGFyfEkvo/T6JuaCZBExOltVntJ11L3XUcDYgQ/bLzFwt+W11wJigZUWEpJi8ZxAa+6N8K1amxOeVIO5o4jOvpDldJGXhBtUxKll3M3jiJBPH8FT8j9/c3qsjGAwQYRZOR5zbuoogch5X1mEQT2cU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745916581; c=relaxed/simple;
-	bh=jg+lymy4mj5ThNoZxb00tNuhdEbP/S1gRXJYL3X8Q2k=;
-	h=Date:Message-Id:In-Reply-To:References:From:Subject:To:Cc; b=UvO9Yw131aQXi/QOj7ImOyIEgrZ9G+iMlCFtc4SHszlUs8AcUrEH+Kq1j3bCPbjHRILQKyn8tNyTv9R0XutVzVR5Y/JohacY/TNBwigEubt/8sKJ+XzpLlcl8ajr260Rd2UYFbyMxG/hqCI4RmcGeLhhmekVnjXjHYNLlGt81lM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=Mh3FYn1P; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=Cc:To:Subject:From:References:In-Reply-To:Message-Id:Date:
-	Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=fNZHqYKyf8pJWU/Udc/dkvjl+m1VOEutDtQ/8YuT3E4=; b=Mh3FYn1PZEOAoQaxjF9u9DfolB
-	mdmYQhRyEppBp6FzZ0m/NwOSrEBNNnyNw7w2HZYk6fryryQDyKAV0XSjPknh1EDIWJ83JGfC3H+kw
-	WSnJytLzcUPTrTEVw121ow6pTea7XxFXRyHEsqNRSsafwQM17UQrsdSOit4syqiW0Sj0IXS3/Q/K6
-	TlJfsXXL5LjqHoGsP43tWsAh3ZmYSBz09p5Dim9K6yWjMeBfKsPEqT1ewrakDp77Pn7DkZ1OAS61r
-	uF375GrZ2hbg8u/TW3NTcTcS53MAMqGFXlfjxwJKNXuvM7R/tUMYq1HdmjisNxkQriyd2YzRrxSdT
-	7ENfuXiA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u9gel-001t5u-0G;
-	Tue, 29 Apr 2025 16:49:36 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 29 Apr 2025 16:49:35 +0800
-Date: Tue, 29 Apr 2025 16:49:35 +0800
-Message-Id: <81cab16fad98103d8b5c28f2870de08b337c2d78.1745916278.git.herbert@gondor.apana.org.au>
-In-Reply-To: <cover.1745916278.git.herbert@gondor.apana.org.au>
-References: <cover.1745916278.git.herbert@gondor.apana.org.au>
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 2/2] crypto: s390/hmac - Use generic hash export format
-To: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Cc: Harald Freudenberger <freude@linux.ibm.com>, Holger Dengler <dengler@linux.ibm.com>, linux-s390@vger.kernel.org
+	s=arc-20240116; t=1745918946; c=relaxed/simple;
+	bh=qthhIS2sbIHVipb5R95AqwmnO3UiPRBek2PMgNdIq3Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UJ6CYtumvKIq2sYQTJ92hHHF7EruUWhKJq5YQ8KzMdCjIavN3WXj0Ql5b5zKisi3KrhTcAuwCfh0rJohd6SzAn1UFH9EzetFrODGmMyd3CgDSaqJW48gb3oWLyM4FRNGSzK0mbXzSGvo5We5JgW+KqUQu0okeB5etyd5Jd/xpSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gs27kCSZ; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30bf3f3539dso58646541fa.1;
+        Tue, 29 Apr 2025 02:29:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745918943; x=1746523743; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K4HbJI2TaZ5p5PECT4YgcEuGczzkMoTravmRNHRE5eI=;
+        b=gs27kCSZxk8rPM0YgZuyfCEW+krlsoVRCi1gSGfAkjNJsD/R4enza1/P+ln0iRvkcw
+         9IuEBtOsG6D+3eRnPM4oNvWCNPDx4swJHJ9tQsUNhzVmyr+fracNM9gX0J5/xjNZmdvp
+         XqyPn62D1El64nAddOPCtmLgfS+KLIFhEFWda3qdzcG4kOjYT3DvDAzwS2Sgfz5cPadP
+         T+j3Jb2MazeyANO2nsEMd39HDQtegVXK46GWo2plcQXYhEYSv7VU2J3Y08Swsp2z45Rr
+         XrUyUuYZFcKeGcLYdfFHTlsVJJbHkQHZmRE51+KHntyoIYOjgrxsItH2XhmvC/Co2hs9
+         4Rkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745918943; x=1746523743;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K4HbJI2TaZ5p5PECT4YgcEuGczzkMoTravmRNHRE5eI=;
+        b=KIlLVSUAzCJ1mGQpxWWmkWv5YonQ+t5hUmtKHel2gzSWBqASkEgNwbpUMAQV8zVaYE
+         bts6RJNQTmiwGM9d7kBY3T5abyW0Ih+pqFM4F+RH7n15Mk19+R1J5pazlIjH4tmwJfWF
+         cRPA4zB9gs0lnRUyJn/qxerkaoE9woamyDe3ku+N8b2qAs82iqq+bSh8UaieNjrEJx+k
+         OPqw/5f2Fx9ktn/EdTCk/i6/OgO7BEAmj3KxPLB0Bau7cy2KIoi4KB8/P5ywG4KsjwcM
+         5y58Ewp5xibdCMIphnyTUhcGXQlmdNdcB5Kl5Hm7jGvBhOh6YWOpwDehH1PUT2Xrgyky
+         Ci6g==
+X-Forwarded-Encrypted: i=1; AJvYcCWqGObtD0ek5UkuID+lNTdV1XIp6EdsoMAGBMzNYTbKaXAyDvG+nlRAxTB+5ODbsGMiVmY4VlrXZqzsdZc=@vger.kernel.org, AJvYcCXkZgkUubySNKYTmyhcSpybCFvZBXrzUj5qSGI28LuRpCTheGcSZaY4BDoOTU1adLn3EPcGC7OS8noYDQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaE8bvPeUNcdnjBTdT3Uato/v/dEeLWiA57AB7z6LAgufhtpCE
+	3MsBqrfuEbeJ9VFQksK6MS/Z6AH59nryx8ePHuInVIfKnEkHjn4xc6f4/RtEj/+UoJzdDxdKxG4
+	ZZ0svhOUcTHgDhLCkd7vzRmleHuc=
+X-Gm-Gg: ASbGncvUd0ZqOYSWBActS/uK7sVCxY/d/r101KfNg1fJX0RGwlgqlbUhpf2o4BUGzSb
+	KccP0SlMojFAhI5H1KDZE+FYiwHsJzto7hmA9KoBFBhyVW+QRh7xOWdv8m4Vvsx7dXOn5DXnlIg
+	wHxro+7k++LGt5AARvQz5V
+X-Google-Smtp-Source: AGHT+IESmF8fnKi74wMNXb/eCavuqV/Np6RfEqYXvn022sBQ1S/XO/vlRm6oW45MXTxrFvmT1XK7Rj5wMDy+FW2d3yw=
+X-Received: by 2002:a05:651c:239:b0:30c:1aa6:5565 with SMTP id
+ 38308e7fff4ca-31d46cdac61mr6581451fa.20.1745918942346; Tue, 29 Apr 2025
+ 02:29:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250313165935.63303-1-ryncsn@gmail.com> <20250313165935.63303-7-ryncsn@gmail.com>
+ <20250428135252.25453B17-hca@linux.ibm.com> <CAMgjq7CJO-GdmZGN7_xG6gtneAv3Wv8qv6FjE9udh18_qmCgRA@mail.gmail.com>
+ <20250429073122.8629Bfd-hca@linux.ibm.com>
+In-Reply-To: <20250429073122.8629Bfd-hca@linux.ibm.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Tue, 29 Apr 2025 17:28:44 +0800
+X-Gm-Features: ATxdqUE8MV67NN4VfPof8UShLSKyGK-kjeH5qnLFyHPxBOwVyDA0D4sjxfEt1Ds
+Message-ID: <CAMgjq7B2JsnSHgaBEnxxN+9RAexyrNkurYk9w+LG=gDVpJB6Qw@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] mm, swap: remove swap slot cache
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Chris Li <chrisl@kernel.org>, Barry Song <v-songbaohua@oppo.com>, 
+	Hugh Dickins <hughd@google.com>, Yosry Ahmed <yosryahmed@google.com>, 
+	"Huang, Ying" <ying.huang@linux.alibaba.com>, Baoquan He <bhe@redhat.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Kalesh Singh <kaleshsingh@google.com>, 
+	Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, 
+	linux-s390@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Convert the hash export format to match that of the generic
-algorithm.
+On Tue, Apr 29, 2025 at 3:31=E2=80=AFPM Heiko Carstens <hca@linux.ibm.com> =
+wrote:
+>
+> On Mon, Apr 28, 2025 at 11:31:59PM +0800, Kairui Song wrote:
+> > On Mon, Apr 28, 2025 at 9:53=E2=80=AFPM Heiko Carstens <hca@linux.ibm.c=
+om> wrote:
+> > > > +     if (order) {
+> > > > +             /*
+> > > > +              * Should not even be attempting large allocations wh=
+en huge
+> > > > +              * page swap is disabled. Warn and fail the allocatio=
+n.
+> > > > +              */
+> > > > +             if (!IS_ENABLED(CONFIG_THP_SWAP) || size > SWAPFILE_C=
+LUSTER) {
+> > > > +                     VM_WARN_ON_ONCE(1);
+> > > > +                     return entry;
+> > > > +             }
+> > > > +     }
+> >
+> > The !CONFIG_THP_SWAP check existed before because slot cache should
+> > reject high order allocation. But slot cache is gone, so large
+> > allocation will directly go to the allocator.
+> >
+> > It was not a meaningful WARN in the first place, and now the allocator
+> > should just fail silently for high order allocation, that's totally
+> > fine and expected and will just inform the caller to split the folio.
+> >
+> > I'll just change the WARN_ON condition to `if (order && size >
+> > SWAPFILE_CLUSTER)` then, this should silence the WARN.
+>
+> If I understand your suggestion correctly then this would be the
+> resulting code:
+>
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index 2eff8b51a945..5a7797143948 100644
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -1276,7 +1276,7 @@ int folio_alloc_swap(struct folio *folio, gfp_t gfp=
+)
+>          * Should not even be attempting large allocations when huge
+>          * page swap is disabled. Warn and fail the allocation.
+>          */
+> -       if (order && (!IS_ENABLED(CONFIG_THP_SWAP) || size > SWAPFILE_CLU=
+STER)) {
+> +       if (order && size > SWAPFILE_CLUSTER) {
+>                 VM_WARN_ON_ONCE(1);
+>                 return -EINVAL;
+>         }
+>
+> However, with that change I get this splat (and a few more) instead:
 
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Sorry my bad, the allocator needs to fail silencely, not ignore and go
+on. So it should be:
+
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index e727021b8e2c..b86637cfb17a 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -1272,13 +1272,22 @@ int folio_alloc_swap(struct folio *folio, gfp_t gfp=
+)
+        VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
+        VM_BUG_ON_FOLIO(!folio_test_uptodate(folio), folio);
+
+-       /*
+-        * Should not even be attempting large allocations when huge
+-        * page swap is disabled. Warn and fail the allocation.
+-        */
+-       if (order && (!IS_ENABLED(CONFIG_THP_SWAP) || size >
+SWAPFILE_CLUSTER)) {
+-               VM_WARN_ON_ONCE(1);
+-               return -EINVAL;
++       if (order) {
++               /*
++                * Reject large allocation when THP_SWAP is disabled,
++                * the caller should split the folio and try again.
++                */
++               if (!IS_ENABLED(CONFIG_THP_SWAP))
++                       return -EAGAIN;
++
++               /*
++                * Allocation size should never exceed cluster size
++                * (HPAGE_PMD_SIZE).
++                */
++               if (size > SWAPFILE_CLUSTER) {
++                       VM_WARN_ON_ONCE(1);
++                       return -EINVAL;
++               }
+        }
+
+        local_lock(&percpu_swap_cluster.lock);
+
 ---
- arch/s390/crypto/Kconfig     |   4 +-
- arch/s390/crypto/hmac_s390.c | 175 ++++++++++++++++++++++++++++++++++-
- 2 files changed, 173 insertions(+), 6 deletions(-)
 
-diff --git a/arch/s390/crypto/Kconfig b/arch/s390/crypto/Kconfig
-index e2c27588b21a..342c639ce2dc 100644
---- a/arch/s390/crypto/Kconfig
-+++ b/arch/s390/crypto/Kconfig
-@@ -91,7 +91,9 @@ config CRYPTO_DES_S390
- 
- config CRYPTO_HMAC_S390
- 	tristate "Keyed-hash message authentication code: HMAC"
--	select CRYPTO_HASH
-+	select CRYPTO_HMAC
-+	select CRYPTO_SHA256
-+	select CRYPTO_SHA512
- 	help
- 	  s390 specific HMAC hardware support for SHA224, SHA256, SHA384 and
- 	  SHA512.
-diff --git a/arch/s390/crypto/hmac_s390.c b/arch/s390/crypto/hmac_s390.c
-index e6edf1013228..44f2a5d394d1 100644
---- a/arch/s390/crypto/hmac_s390.c
-+++ b/arch/s390/crypto/hmac_s390.c
-@@ -53,6 +53,7 @@
- #define SHA2_KEY_OFFSET(bs)	(SHA2_CV_SIZE(bs) + SHA2_IMBL_SIZE(bs))
- 
- struct s390_hmac_ctx {
-+	struct crypto_shash *fb;
- 	u8 key[MAX_BLOCK_SIZE];
- };
- 
-@@ -157,6 +158,11 @@ static int s390_hmac_sha2_setkey(struct crypto_shash *tfm,
- 	struct s390_hmac_ctx *tfm_ctx = crypto_shash_ctx(tfm);
- 	unsigned int ds = crypto_shash_digestsize(tfm);
- 	unsigned int bs = crypto_shash_blocksize(tfm);
-+	int err;
-+
-+	err = crypto_shash_setkey(tfm_ctx->fb, key, keylen);
-+	if (err)
-+		return err;
- 
- 	memset(tfm_ctx, 0, sizeof(*tfm_ctx));
- 
-@@ -273,7 +279,160 @@ static int s390_hmac_sha2_digest(struct shash_desc *desc,
- 	return 0;
- }
- 
--#define S390_HMAC_SHA2_ALG(x) {						\
-+static int s390_hmac_sha2_init_tfm(struct crypto_shash *tfm)
-+{
-+	struct s390_hmac_ctx *ctx = crypto_shash_ctx(tfm);
-+	struct crypto_shash *fb;
-+
-+	fb = crypto_alloc_shash(crypto_shash_alg_name(tfm), 0,
-+				CRYPTO_ALG_NEED_FALLBACK);
-+	if (IS_ERR(fb))
-+		return PTR_ERR(fb);
-+
-+	ctx->fb = fb;
-+	return 0;
-+}
-+
-+static void s390_hmac_sha2_exit_tfm(struct crypto_shash *tfm)
-+{
-+	struct s390_hmac_ctx *ctx = crypto_shash_ctx(tfm);
-+
-+	crypto_free_shash(ctx->fb);
-+}
-+
-+static int s390_hmac_export_zero(struct shash_desc *desc, void *out)
-+{
-+	struct s390_hmac_ctx *ctx = crypto_shash_ctx(desc->tfm);
-+	struct crypto_shash *fb = ctx->fb;
-+	SHASH_DESC_ON_STACK(fbdesc, fb);
-+
-+	fbdesc->tfm = fb;
-+	return crypto_shash_init(fbdesc) ?:
-+	       crypto_shash_export(fbdesc, out);
-+}
-+
-+static int s390_hmac_export_sha256(struct shash_desc *desc, void *out)
-+{
-+	struct s390_kmac_sha2_ctx *ctx = shash_desc_ctx(desc);
-+	u64 total = ctx->buflen[0];
-+	union {
-+		u8 *u8;
-+		u64 *u64;
-+	} p = { .u8 = out };
-+	unsigned int remain;
-+	u64 hashed;
-+	int err = 0;
-+
-+	hashed = round_down(total, SHA256_BLOCK_SIZE);
-+	remain = total - hashed;
-+
-+	if (!hashed)
-+		err = s390_hmac_export_zero(desc, out);
-+	else
-+		memcpy(p.u8, ctx->param, SHA256_DIGEST_SIZE);
-+
-+	p.u8 += SHA256_DIGEST_SIZE;
-+	put_unaligned(total, p.u64++);
-+
-+	memcpy(p.u8, ctx->buf, remain);
-+
-+	return err;
-+}
-+
-+static int s390_hmac_import_sha256(struct shash_desc *desc, const void *in)
-+{
-+	struct s390_kmac_sha2_ctx *ctx = shash_desc_ctx(desc);
-+	union {
-+		const u8 *u8;
-+		const u64 *u64;
-+	} p = { .u8 = in };
-+	unsigned int remain;
-+	u64 total;
-+	int err;
-+
-+	err = s390_hmac_sha2_init(desc);
-+	if (err)
-+		return err;
-+
-+	memcpy(ctx->param, p.u8, SHA256_DIGEST_SIZE);
-+	p.u8 += SHA256_DIGEST_SIZE;
-+
-+	total = get_unaligned(p.u64++);
-+	remain = total % SHA256_BLOCK_SIZE;
-+	ctx->buflen[0] = total;
-+
-+	if (total - remain)
-+		ctx->gr0.ikp = 1;
-+
-+	memcpy(ctx->buf, p.u8, remain);
-+
-+	return 0;
-+}
-+
-+static int s390_hmac_export_sha512(struct shash_desc *desc, void *out)
-+{
-+	struct s390_kmac_sha2_ctx *ctx = shash_desc_ctx(desc);
-+	u64 total_hi = ctx->buflen[1];
-+	u64 total = ctx->buflen[0];
-+	union {
-+		u8 *u8;
-+		u32 *u32;
-+		u64 *u64;
-+	} p = { .u8 = out };
-+	unsigned int remain;
-+	u64 hashed;
-+	int err = 0;
-+
-+	hashed = round_down(total, SHA512_BLOCK_SIZE);
-+	remain = total - hashed;
-+
-+	if (!(hashed | total_hi))
-+		err = s390_hmac_export_zero(desc, out);
-+	else
-+		memcpy(p.u8, ctx->param, SHA512_DIGEST_SIZE);
-+
-+	p.u8 += SHA512_DIGEST_SIZE;
-+	put_unaligned(total, p.u64++);
-+	put_unaligned(total_hi, p.u64++);
-+
-+	memcpy(p.u8, ctx->buf, remain);
-+
-+	return err;
-+}
-+
-+static int s390_hmac_import_sha512(struct shash_desc *desc, const void *in)
-+{
-+	struct s390_kmac_sha2_ctx *ctx = shash_desc_ctx(desc);
-+	union {
-+		const u8 *u8;
-+		const u64 *u64;
-+	} p = { .u8 = in };
-+	unsigned int remain;
-+	u64 total, total_hi;
-+	int err;
-+
-+	err = s390_hmac_sha2_init(desc);
-+	if (err)
-+		return err;
-+
-+	memcpy(ctx->param, p.u8, SHA512_DIGEST_SIZE);
-+	p.u8 += SHA512_DIGEST_SIZE;
-+
-+	total = get_unaligned(p.u64++);
-+	total_hi = get_unaligned(p.u64++);
-+	ctx->buflen[0] = total;
-+	ctx->buflen[1] = total_hi;
-+
-+	remain = total % SHA512_BLOCK_SIZE;
-+	if ((total - remain) | total_hi)
-+		ctx->gr0.ikp = 1;
-+
-+	memcpy(ctx->buf, p.u8, remain);
-+
-+	return 0;
-+}
-+
-+#define S390_HMAC_SHA2_ALG(x, exf, imf, state) {			\
- 	.fc = CPACF_KMAC_HMAC_SHA_##x,					\
- 	.alg = {							\
- 		.init = s390_hmac_sha2_init,				\
-@@ -281,8 +440,13 @@ static int s390_hmac_sha2_digest(struct shash_desc *desc,
- 		.final = s390_hmac_sha2_final,				\
- 		.digest = s390_hmac_sha2_digest,			\
- 		.setkey = s390_hmac_sha2_setkey,			\
-+		.init_tfm = s390_hmac_sha2_init_tfm,			\
-+		.exit_tfm = s390_hmac_sha2_exit_tfm,			\
-+		.export = exf,						\
-+		.import = imf,						\
- 		.descsize = sizeof(struct s390_kmac_sha2_ctx),		\
- 		.halg = {						\
-+			.statesize = sizeof(struct state),		\
- 			.digestsize = SHA##x##_DIGEST_SIZE,		\
- 			.base = {					\
- 				.cra_name = "hmac(sha" #x ")",		\
-@@ -291,6 +455,7 @@ static int s390_hmac_sha2_digest(struct shash_desc *desc,
- 				.cra_priority = 400,			\
- 				.cra_ctxsize = sizeof(struct s390_hmac_ctx), \
- 				.cra_module = THIS_MODULE,		\
-+				.cra_flags = CRYPTO_ALG_NEED_FALLBACK,	\
- 			},						\
- 		},							\
- 	},								\
-@@ -301,10 +466,10 @@ static struct s390_hmac_alg {
- 	unsigned int fc;
- 	struct shash_alg alg;
- } s390_hmac_algs[] = {
--	S390_HMAC_SHA2_ALG(224),
--	S390_HMAC_SHA2_ALG(256),
--	S390_HMAC_SHA2_ALG(384),
--	S390_HMAC_SHA2_ALG(512),
-+	S390_HMAC_SHA2_ALG(224, s390_hmac_export_sha256, s390_hmac_import_sha256, sha256_state),
-+	S390_HMAC_SHA2_ALG(256, s390_hmac_export_sha256, s390_hmac_import_sha256, sha256_state),
-+	S390_HMAC_SHA2_ALG(384, s390_hmac_export_sha512, s390_hmac_import_sha512, sha512_state),
-+	S390_HMAC_SHA2_ALG(512, s390_hmac_export_sha512, s390_hmac_import_sha512, sha512_state),
- };
- 
- static __always_inline void _s390_hmac_algs_unregister(void)
--- 
-2.39.5
-
+I've tested locally and it seems to work well, I'll send a patch to fix it.
 
