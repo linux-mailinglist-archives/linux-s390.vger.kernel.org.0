@@ -1,160 +1,148 @@
-Return-Path: <linux-s390+bounces-10559-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-10561-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4E1BAB5569
-	for <lists+linux-s390@lfdr.de>; Tue, 13 May 2025 14:58:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 94919AB58E1
+	for <lists+linux-s390@lfdr.de>; Tue, 13 May 2025 17:40:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E17064A4359
-	for <lists+linux-s390@lfdr.de>; Tue, 13 May 2025 12:58:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1FD1416964C
+	for <lists+linux-s390@lfdr.de>; Tue, 13 May 2025 15:40:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D137528DF4D;
-	Tue, 13 May 2025 12:58:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C661B2BE0FD;
+	Tue, 13 May 2025 15:40:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HJa03EcJ"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hxvAFFFb"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2D928DB72;
-	Tue, 13 May 2025 12:58:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 249852BE0F9;
+	Tue, 13 May 2025 15:40:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747141125; cv=none; b=rqC6FbUU9RjDelPwBCmZsdi34tuo8dDX26z4aZm4OBtPFpxtO6eQHnqH3L9uCphkKUkyRqO/K9He9dBB98obGy3jPjpSCcMJZbrL+Dq7PMgggWtjyZzV11NWcX4p17O2GF1mLJXd7aEQhzOwNdLAtBtsYjP24GugyqORTvTzRmg=
+	t=1747150840; cv=none; b=Aql6TjgsEScNtPCK70s1OpRMUCCibwoGI78XKhI1k6JkCHHh06ylVeZnuItXoMwLYQ9Jx9bcWjxQmGTrP1Olum6AAp8aYNNDeyWuL9MG3PY9Ku+8E5B9Q2rVZyn7fBKuBODv1QFN2vvNaylK+nxsPHzqV+ppLBPZZnN2i/2vMcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747141125; c=relaxed/simple;
-	bh=2xIaivkbZl7DdZBmxs97N/RKaoCOHaz1NNoE7jjdeNc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qVp1YIL1jwUt21rf7/Jy1WvrH0+s7Z7s6Ku5uIfBV3j8nLs0JZNA7G1aALAMKG5zu61825BghByJFk3mbhjF41LYE+XScuFKxBJZhCSxRasZ6t61gRLOlbSkMT1eJKdC9QV1qbbDTiWOr26PiiIYKdI37Cnlca36vhfeXjFA5ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HJa03EcJ; arc=none smtp.client-ip=148.163.158.5
+	s=arc-20240116; t=1747150840; c=relaxed/simple;
+	bh=CA9HKh4zrFSNCYLEtZ0JCP1cKMnxrY99Mpg4RTowzeE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TkYyJk/PuFKetPWsw8DJHz/nHHEOmjbiiIbduYnAzOokPdLu3XPR45JpMFvkfjvtpxnZsaFXSnWtAa4WW4aaL33enxcGFHRZplqg0ZFSF53vHpoVzSWPlpfLh8yQzlGdjfOnRZNXPwn7hzi0D/l31Rf1xSdnri9fI/sTBpH0LgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hxvAFFFb; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54D7edHg019138;
-	Tue, 13 May 2025 12:58:40 GMT
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54DDni6C032140;
+	Tue, 13 May 2025 15:40:31 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=tp3MLZ
-	KG7W7RFaoIcRBdhZwY4PyTxg2MSIoSNLmN+6A=; b=HJa03EcJYRaNtIVFYivMYr
-	komzX8EKc63Ha9FbmMMb5wDjlMjrELWY8WEWFC+1JXbexmwzu9uGS4eYgkCKfor+
-	MKfbguq5IiMxw270kSknPt36ztpf+KGduMJ0araV8iixWKKTYi3Zc5vGgW2z807f
-	14MtIu7b1JSbRZXus136GD2KxxvQlpBVo3bos920p8qE6MJ6SnKE5GQDes/eJZK0
-	++I/qpOaeaBus/eRqmP1qQP6LBpOTaMB3+B85VcrClSL4O2x6KORAXYKhUkXc2XI
-	ifFz7+rnV+BlpOvKkCn9ghJu1JAeGHcTKMm1cFVpsHWYMrQT/S2+laMOSifAXiWQ
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46kpp7c7qm-1
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=CQfh1MzvC6iT6mM7lVHwgZXBAw8DRUvB7ncdS0TY2
+	e0=; b=hxvAFFFbkhqdWNx95+5jOo17Y6uIjiDUF7i8oTaX/TkUPk3FjUkX1Wjl+
+	y9t5ShYsSoAYgxO2faRcbywCasa2mSvTKs9Ylkx1mjVQPEoyeir2fAwlhnT77uKl
+	MrS4AxM58esi9zO8wNKw1uFULgqn7L71vIo2IGkNXx+EW78lrBUTzD5F3Bz51ctA
+	10wfAh6abnhyXwFvfr3yDVVB9plJNW+w4pDuxaOvU/1KGmIUtUTWRRpDEzMzoJ01
+	ZgN043TjpKI/NVgfuHQYqnxedrP/G8qZdZf6qJo20gkuqFJzvItSZOPWyBwODPOb
+	vpq/7kK7y6EXr5qPUSbOB3PokCSHg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46m7a70jc6-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 May 2025 12:58:39 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54DBG55W003781;
-	Tue, 13 May 2025 12:58:38 GMT
-Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46jkbkjwha-1
+	Tue, 13 May 2025 15:40:31 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54DFNlGl022147;
+	Tue, 13 May 2025 15:40:30 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46m7a70jc1-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 May 2025 12:58:38 +0000
-Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
-	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54DCwbx528312126
+	Tue, 13 May 2025 15:40:30 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54DBt8I0011552;
+	Tue, 13 May 2025 15:40:29 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46jku2be14-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 May 2025 15:40:29 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54DFeSHS52822340
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 13 May 2025 12:58:38 GMT
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CFB655805A;
-	Tue, 13 May 2025 12:58:37 +0000 (GMT)
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B472858060;
-	Tue, 13 May 2025 12:58:36 +0000 (GMT)
-Received: from [9.155.201.30] (unknown [9.155.201.30])
-	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 13 May 2025 12:58:36 +0000 (GMT)
-Message-ID: <3bd33a06-f8e2-4901-ada1-e970d18afcd4@linux.ibm.com>
-Date: Tue, 13 May 2025 14:58:35 +0200
+	Tue, 13 May 2025 15:40:28 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4E17F20102;
+	Tue, 13 May 2025 15:21:03 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3AAFE20101;
+	Tue, 13 May 2025 15:21:03 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 13 May 2025 15:21:03 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
+	id CCFCBE0609; Tue, 13 May 2025 17:21:02 +0200 (CEST)
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Daniel Axtens <dja@axtens.net>, Harry Yoo <harry.yoo@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        kasan-dev@googlegroups.com, linux-s390@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH v8 0/1] kasan: Avoid sleepable page allocation from atomic context
+Date: Tue, 13 May 2025 17:21:01 +0200
+Message-ID: <cover.1747149155.git.agordeev@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv7 10/24] zram: add zlib compression backend support
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org
-References: <20240902105656.1383858-1-senozhatsky@chromium.org>
- <20240902105656.1383858-11-senozhatsky@chromium.org>
- <6046d139-2a46-4824-bdfc-687750c1ee5b@linux.ibm.com>
- <gekqwhcpombpm2u3b4xl7zladuyzbxybeq5wcwt47k7tsgo4bh@rfrxaeqwzypi>
- <df805c0e-bf25-4cf6-9601-aac594fa0f45@linux.ibm.com>
- <uaxb7sbvrg3eqn2sp66sg77urjzr7jwi2m2bwigvj5n5cta2xu@qsks2da3zrha>
-Content-Language: en-US
-From: Zaslonko Mikhail <zaslonko@linux.ibm.com>
-In-Reply-To: <uaxb7sbvrg3eqn2sp66sg77urjzr7jwi2m2bwigvj5n5cta2xu@qsks2da3zrha>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: OID9ya9tM6jNP4UBa0tR3CjUMnw5YYIm
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDEyMCBTYWx0ZWRfXwGe/IBl2fgcA LUPgZKVmYN1EYSp06KyPYbiP2liaz3/zY5INM/bhLx2YB/gR2WUFwlzVhc8DNAd054HkNrdZmAm GyDTww2ZDW2t4dRGfr0LE/CQZ9mRNvwBf0KPyLUlX+0OYGQhmc2wOzZV9jy9S/TnM1zfml4imh8
- KidxaUGHzUEtMxl3PmnjaM8nuugB1w3fbFcgFklbT3IVCWMHE/boSnU42Nuuw8FrygyYetTCQ5K OTKIrM5hqeUy7BIk5gbyjDRcGeXsYdap5UQxacPEpQYwDDQNTm+gIEd1bahS+nKKxCbT5htPDR3 DZ+imPRTlLbKbqxYXkmPXXTlJPgGE3TGU3hOtcmik2punG7aQWgnPxS9RwYQhbWRtkWlSHpwwT5
- KjS3d57a+eF6uTfB6GRyCzCBhyAdflr6w9lJiIh0ltT99ZI0mmT5dZLR+Tj5SUVEaYosdz9B
-X-Authority-Analysis: v=2.4 cv=ZY8dNtVA c=1 sm=1 tr=0 ts=682341ff cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=pkiKMm3ovRzUbvQedLsA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: OID9ya9tM6jNP4UBa0tR3CjUMnw5YYIm
+X-Authority-Analysis: v=2.4 cv=K8ciHzWI c=1 sm=1 tr=0 ts=682367ef cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=dt9VzEwgFbYA:10 a=M4n5Zv9w_bjhLjlc4U8A:9 a=zZCYzV9kfG8A:10
+X-Proofpoint-GUID: DBBehTTBvX9qsC78fS4B-Pq9qcDH0x5W
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEzMDE0OCBTYWx0ZWRfX3Ro2qgunbtst YpiEJWshZEpwgFgNh6DUgLqham72fs4BvvKMKutOoHPSH07AlpYe7pQ5YCi2HdZ5nILC75uCiju IWYImiPzfWf3podYFZOjSls1rcOdgk72yDa3rolzKL4vg7MxTtRRzOD7Zs54dCpcFIWuxuu+EK0
+ QkIJ/BRGoGmhUCBjzaDyz1IMReBDty2ghHIQLCL1vaAhGz9JkAgbrDVty+dUOHB1jXN44t7HVJK cMtIYLYwLwmus3mL71kB6cl1K28JDvLF2O3KG8dkNu9dJXSM3ofh9geWQ4w/j6r7+O4igy6meEp 0nXf51BmQu16OcHzaLETtDpfMQ+PxaAqgY6hNFo+C5dr11+LBz1O0Gz/NEb1ZL+oousbZmNyN0g
+ kS3cSLrkhmXIK/w+vptnwdeTNCkhyZ72QS3kKi57VyvofCfZSG4SaN1iUvPpz4AIUvoDujXn
+X-Proofpoint-ORIG-GUID: eeJyLkhC8F1qa6Wbqxc-xE5X7ub4YSI3
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-13_01,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 mlxlogscore=999 bulkscore=0 adultscore=0 malwarescore=0
- priorityscore=1501 phishscore=0 clxscore=1015 mlxscore=0 spamscore=0
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ definitions=2025-05-13_03,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ impostorscore=0 bulkscore=0 suspectscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=721
+ phishscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505130120
+ definitions=main-2505130148
 
-Hello,
+Hi All,
 
-On 13.05.2025 07:41, Sergey Senozhatsky wrote:
-> Sorry for the delay,
-> 
-> On (25/05/09 17:18), Zaslonko Mikhail wrote:
->>> When zram transitioned from Crypto API (scomp) to custom compression
->>> API I picked the CryptoAPI deflate DEFLATE_DEF_WINBITS value:
->>>
->>> crypto/deflate.c: DEFLATE_DEF_WINBITS	11
->>>
->>> which is then passed to zlib_deflateInit2() and zlib_inflateInit2().
->>>
->>>> I tried to build the kernel with DEFLATE_DEF_WINBITS set to 15 and
->>>> verified that s390 hardware deflate acceleration works for zram devices
->>>> with a deflate compression.
->>>
->>> If we define it as 15 on non-s390 machines, will there be any
->>> consequences?  Increased memory usage?  By how much?
->>
->> On s390, setting windowBits to 15 would lead to zlib workarea size
->> increased by 120K (0x24dc8 -> 0x42dc8) per compression stream,
->> i.e. per online CPU. 
->> On non-s390 machine, that impact will be about 115K per stream. 
->> Increasing window size should improve deflate compression,
->> although the compression speed might be affected. Couldn't find any
->> relevant zlib benchmarks though.
->>
->> Not sure what other consequences might there be for zram. Do you see any?
-> 
-> The increased per-CPU memory usage is the only thing I can think of.
-> I guess for zram we could turn this into a run-time parameter, but for
-> Crypto API compile-time is the only option, I guess.
+Chages since v7:
+- drop "unnecessary free pages" optimization
+- fix error path page leak
 
-With 'run-time parameter' you mean adding 'windowBits' as another deflate compression
-algorithm parameter for zram? Guess we could do this, using default value of 15 then.
+Chages since v6:
+- do not unnecessary free pages across iterations
 
-> 
-> Can you send a patch series (for zram and Crypto API) that sets
-> windowBits to 15?
+Chages since v5:
+- full error message included into commit description
 
-I can do it for zram. Not sure if Crypto should be changed as well. Or is it
-supposed to have the same compression defaults as zram?
+Chages since v4:
+- unused pages leak is avoided
 
-Thanks,
-Mikhail
+Chages since v3:
+- pfn_to_virt() changed to page_to_virt() due to compile error
+
+Chages since v2:
+- page allocation moved out of the atomic context
+
+Chages since v1:
+- Fixes: and -stable tags added to the patch description
+
+Thanks!
+
+Alexander Gordeev (1):
+  kasan: Avoid sleepable page allocation from atomic context
+
+ mm/kasan/shadow.c | 77 ++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 63 insertions(+), 14 deletions(-)
+
+-- 
+2.45.2
+
 
