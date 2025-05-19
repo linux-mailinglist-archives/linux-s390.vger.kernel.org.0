@@ -1,133 +1,129 @@
-Return-Path: <linux-s390+bounces-10673-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-10675-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7EFC7ABC428
-	for <lists+linux-s390@lfdr.de>; Mon, 19 May 2025 18:16:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76DF4ABC576
+	for <lists+linux-s390@lfdr.de>; Mon, 19 May 2025 19:20:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 299B21B654EA
-	for <lists+linux-s390@lfdr.de>; Mon, 19 May 2025 16:16:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 98A671B63B79
+	for <lists+linux-s390@lfdr.de>; Mon, 19 May 2025 17:20:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1827288531;
-	Mon, 19 May 2025 16:12:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 659BC286417;
+	Mon, 19 May 2025 17:20:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="M2KhjROW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nv6a6o/9"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B0328852F;
-	Mon, 19 May 2025 16:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03DEF1DE2DF;
+	Mon, 19 May 2025 17:20:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747671173; cv=none; b=hT9zcbqW1uEE1feeAQusW8sLYFPLdDKAEWiURQvUxgeLewxZvYQP8tNyx5Ji/RMfP4ZuUW/ToT3lrcIyYCC5d8/aIld8Hgi7fyCnUGxVkTMPOvcwRq/HQhnq9hMjzU1ruWganNMNjnOqst/1jGpSZVrrUKa6rqNo3eJ5BRl24U4=
+	t=1747675209; cv=none; b=nzmdV7pdP3ZqRQcDjNmd+hDZ+c0HQu+Up+tVHBWPoO+LiuRJa8SiZWy65vZdNOQpA/iK0XVIPMbbt5zybdhNoHiHI/cNqmAHE2L0X10m6O27s6EwmX92eOfOyZ1XaRo2oE8IIvGXgBXOxFrgOBXu6dUEFFbRnIEa6XQQd/i9CjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747671173; c=relaxed/simple;
-	bh=0FGdQRX9yNviOG8w2LZFl68BDWbCCJVv9JvAf65PiDk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KjvDcjnBvOM5nfqdYi9EyAwnEe+Meexlm9XGjTt++FqKqe5SXnDwyjkGQkeYUr0ZtCzQ6Lp/X+9CnL+hkV9IYPmMziaoweZOF2WzB+MahGBCU3Jhk1kZnM+88E4Jcg3uMLnC3HkQFLAArwQrfSHvdIskHBYeQk5hHGs8yjfjmyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=M2KhjROW; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JFQLM8000802;
-	Mon, 19 May 2025 16:12:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=nqnqfE
-	7gub+NUOX2zT4UR7GMAyLzSWzrgGteEK4vUZw=; b=M2KhjROWh+BYDJ9C1yd0iD
-	SoHUSv2K/Tc7WzRYMa0CiPBQ95hWM3GgM20cXq3izgvem3JIRgfSlXezGWi8FQtj
-	1oij6g67MxXYt3l3MbYIEjbpnj0uwvOlkrZVqZl7T/Xa7CM0as+1pBET8wKkVvBU
-	48QoTwmy0OrhRec+16MuH5bfFNpJg2dljijtch38sD3LQcg5WBbkpT+EouTZj29K
-	nR62ENOxgKJb0IMqVb7HebjKQsQjsKUZL0XHa1WZyizd+cfr0SR/K+q0ybxe3LFr
-	/OXYxfbfx8moiw1hIOaDQC68eRL40oy+PAQTw7smFHOhq+ytxotDIRhvH4bLGEWA
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46r2qhsq0k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 May 2025 16:12:47 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54JDMUBi028874;
-	Mon, 19 May 2025 16:12:46 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46q55yqku0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 May 2025 16:12:46 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54JGCjB529491900
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 19 May 2025 16:12:45 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 52201201A2;
-	Mon, 19 May 2025 16:12:45 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0ED242019F;
-	Mon, 19 May 2025 16:12:45 +0000 (GMT)
-Received: from [9.87.157.62] (unknown [9.87.157.62])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 19 May 2025 16:12:44 +0000 (GMT)
-Message-ID: <a44deb14-8c48-44fc-8773-432c00bcaf06@linux.ibm.com>
-Date: Mon, 19 May 2025 18:12:44 +0200
+	s=arc-20240116; t=1747675209; c=relaxed/simple;
+	bh=/qDPGAJe6QWZQRFh5mkIaN3rUECBPrvhVDophOu0STQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kDsIzr/h8OwM3S8fzRfwd/auHPBxqnubkI86JW5C5n+qO8fxXY5mlWvOtqDpvlRZDXRuruys3PudRSuSyVdMzsxV2dbG8SV+IMsIBBXrXa9mUJS9Pc9iw0+26i0+8KWprzLHPZ+w8UYWg7E2isrgyp0sG13GsICfwfaIIe7W2fI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nv6a6o/9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0486C4CEE4;
+	Mon, 19 May 2025 17:19:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747675208;
+	bh=/qDPGAJe6QWZQRFh5mkIaN3rUECBPrvhVDophOu0STQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nv6a6o/9GXqFce+WdqziKMZrgOnXd14Xk3g4S1nNlUHZltfdV2rEB9RDQCOmCeSgK
+	 ebQsjcpfmgR6sWVWBw5dta/I6m1xLYkae6rTJ4OSb859vEywgddyloj50eaFEjRTPe
+	 8FJ2qDU6rfYPGiDk1ORLqVzTGk/lQ8qlSrYclPnaRHuqKyuUafe4DFZ6lMgRdY6Wt1
+	 dRptEgZtQ8qGZDrQUwGD8JbkbioWwAY9aSpa8iIJWxNVsecoqluy1Xci9uIALX28U6
+	 ObnLi7IgFlid4DAXOMe7kw3cQbAB55J7ruXkv/fKErQRWuv0MXWPHfuo3pZS732DBZ
+	 yyZPReh2t/BVw==
+Date: Mon, 19 May 2025 20:19:48 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Alexandre Ghiti <alex@ghiti.fr>
+Cc: Pratyush Yadav <ptyadav@amazon.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Mark Brown <broonie@kernel.org>, Matt Turner <mattst88@gmail.com>,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>,
+	Stafford Horne <shorne@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>,
+	Will Deacon <will@kernel.org>, Praveen Kumar <pravkmr@amazon.de>,
+	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+Subject: Re: [PATCH v2 10/13] arch, mm: set high_memory in free_area_init()
+Message-ID: <aCtoNLf1FbtqijGr@kernel.org>
+References: <20250313135003.836600-1-rppt@kernel.org>
+ <20250313135003.836600-11-rppt@kernel.org>
+ <mafs05xi0o9ri.fsf@amazon.de>
+ <aCdveN2w9ThjVhae@kernel.org>
+ <dc4e60dc-9b78-473a-9c18-3a2f128a02d2@ghiti.fr>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v2 PATCH] crypto: s390/hmac - Use API partial block handling
-To: Herbert Xu <herbert@gondor.apana.org.au>, T Pratham <t-pratham@ti.com>
-Cc: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        linux-s390@vger.kernel.org
-References: <cover.1745916278.git.herbert@gondor.apana.org.au>
- <81cab16fad98103d8b5c28f2870de08b337c2d78.1745916278.git.herbert@gondor.apana.org.au>
- <a0a6f359-27c8-4381-8619-d4aa2cd186fc@ti.com>
- <aBH8p-YEF3wEe4Qm@gondor.apana.org.au> <aBSJu3PTcPFNHViG@gondor.apana.org.au>
-Content-Language: de-DE
-From: Holger Dengler <dengler@linux.ibm.com>
-In-Reply-To: <aBSJu3PTcPFNHViG@gondor.apana.org.au>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDE0NSBTYWx0ZWRfX041MjvNXJT+F 5ag6WvA5Cy9qrBlfpBdQCNitNqkiVevWajNMRJIQDVpWkFxeN/sPoJN9oxXPRCHAQCZhXl6yj5D mMlYKM1pVZAvUJn9EmE30Eo9Dvq/JHKTpDcIR6BoxH1O6MXZCX+FhsBHHD0iiRdqWec/jcO6sJj
- PX2dcpkndu9NArPTkj13QSlOZLbP5ET3a0XfO9Gua1wEWA7m/X5TF4yoe86ox+lh8HrZ4MIbDhN AVpoCA53cIVn8v9jx/wt41FAoDbNVusVpsRkEzVnGQyZVCll18pxe2UajEzaeLUVQsX3ihkbYd6 6dVk08RgWA5ZV0zuOPSyCXBFo8vTPH/Sya2Y9oGD4h8VJF4iKafL41Zn4/TwHZswf7HjGoMpM9m
- nT1nj4I11F/orHmlHLRa68wj1oPjXR/eXsfs3N+/wV6PG3kDyQZXMPPwlwbiu+M1zzArJamu
-X-Proofpoint-ORIG-GUID: HkfdU7EHESaKEhSmEdi22nOIYypfZQrw
-X-Proofpoint-GUID: HkfdU7EHESaKEhSmEdi22nOIYypfZQrw
-X-Authority-Analysis: v=2.4 cv=P406hjAu c=1 sm=1 tr=0 ts=682b587f cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=FNyBlpCuAAAA:8 a=VnNF1IyMAAAA:8 a=w4HzK-rsqA_2YikTyBoA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=RlW-AWeGUCXs_Nkyno-6:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-19_06,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1011 mlxscore=0 adultscore=0 impostorscore=0 spamscore=0
- malwarescore=0 priorityscore=1501 mlxlogscore=973 bulkscore=0 phishscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505190145
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dc4e60dc-9b78-473a-9c18-3a2f128a02d2@ghiti.fr>
 
-On 02/05/2025 11:00, Herbert Xu wrote:
-> v2 fixes the export of 224 and 384.
-> 
-> ---8<---
-> Use the Crypto API partial block handling.
-> 
-> Also switch to the generic export format.
-> 
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Hi Alexandre,
 
-This patch was also included in the test. Looks good to me.
-Tested-by: Holger Dengler <dengler@linux.ibm.com>
-Reviewed-by: Holger Dengler <dengler@linux.ibm.com>
+On Mon, May 19, 2025 at 05:54:23PM +0200, Alexandre Ghiti wrote:
+> Hi Mike,
+> 
+> I encountered the same error as Pratyush and the above diff fixes it: do you
+> plan on sending this fix for 6.15?
+> 
+> If so, you can add:
+> 
+> Tested-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+
+Thanks!
+Here's the patch:
+https://lore.kernel.org/linux-mm/20250519171805.1288393-1-rppt@kernel.org
+
+> Thanks,
+> Alex
 
 -- 
-Mit freundlichen Grüßen / Kind regards
-Holger Dengler
---
-IBM Systems, Linux on IBM Z Development
-dengler@linux.ibm.com
-
+Sincerely yours,
+Mike.
 
