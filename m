@@ -1,203 +1,169 @@
-Return-Path: <linux-s390+bounces-10661-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-10664-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33A9FABBAB6
-	for <lists+linux-s390@lfdr.de>; Mon, 19 May 2025 12:12:53 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5C14ABBCA8
+	for <lists+linux-s390@lfdr.de>; Mon, 19 May 2025 13:38:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7B159168B87
-	for <lists+linux-s390@lfdr.de>; Mon, 19 May 2025 10:12:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 038257A7781
+	for <lists+linux-s390@lfdr.de>; Mon, 19 May 2025 11:36:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5E3A26FDB6;
-	Mon, 19 May 2025 10:12:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54F66274FCD;
+	Mon, 19 May 2025 11:37:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nscdB7qP"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZQw3czxz"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EDB835957;
-	Mon, 19 May 2025 10:12:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE12274657;
+	Mon, 19 May 2025 11:37:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747649558; cv=none; b=HjaupA7uqE9u7r9kVscyw3aO2IHY2vT3k68kHNj8xi1w1JVaTBeHXQ8K28t32XExNnE6Bj9AMcWVeqQglgwGOHZVctOBKZyUdazQtTY0WbwuJ0W91qeFUxWQw9PaRNUabF7VsCt9Ra1oyvsK7Uvdrx2o08LcGb9rB/KxM/vwBLo=
+	t=1747654673; cv=none; b=rgU71HXWiqY1r0S4Z6tRIbXQvFLhZWvkbqMLSovCKcSKvSf2IOvG1ikzj5V+MKRNB51On6OfevEr8yjYcDmAFLtTr/CKmGzi3ttVXwIfrwwkyWDYZBH8ZKawXje1Eo7EGCJUDl13p971ckKjNvp1y2j6OYYdmInrTpr1W0VLhfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747649558; c=relaxed/simple;
-	bh=36bTK+sJWp8PopkJbOlgwt9Ctf7FBzVSvSeBcSMc0sE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b4QI6M4hH612+ZUsQlN8JivqYO8abq96p7lGWrLJpFxuVdVE6tbdD6HxUcwU8yqkxCVu9Yom2GoMPnzHdY0p1+olg8S508PndUiSpOwoCaju+o/gDRjVHf9mCE8j+96MymOcnuxyr+/wUznGVyJxxpRs/ISElAhKECQKNYFG/8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nscdB7qP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1230AC4CEE4;
-	Mon, 19 May 2025 10:12:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747649557;
-	bh=36bTK+sJWp8PopkJbOlgwt9Ctf7FBzVSvSeBcSMc0sE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nscdB7qPs2zNee5BR3hmpAZQZCQBcXkdlF7Y6HsbM6UzPRdA3dF1BnWAVcJTPuKIv
-	 O3FYecQBdB24pQIIhnt57UfVPAxV9LgWpjYqCVizpPuKxRzp3e1tGtoxdxzCiww3pg
-	 KrBMVyUKbWn6bQi5E33gX2v1WUEStGoaCf1YS4m8mdcMbsKi6bgaKULPdgFE1O08w4
-	 NTbvxawzw3RhqwBP/2mlOvuL311cjPZ4d3W4fwM+V1XeLsP7wD/Giz/f3N3kZmH93H
-	 7tJGZQKhVupyasLyUF8vXgTKkesU5dptYyyOeOnTmIGAbpjsR1fJD00I4DSLdkVhBQ
-	 vnhqqJsWmqhWw==
-Date: Mon, 19 May 2025 12:12:21 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, 
-	Andrey Albershteyn <aalbersh@redhat.com>, Richard Henderson <richard.henderson@linaro.org>, 
-	Matt Turner <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, "David S . Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
-	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
-	Tyler Hicks <code@tyhicks.com>, Miklos Szeredi <miklos@szeredi.hu>, linux-alpha@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org, 
-	Linux-Arch <linux-arch@vger.kernel.org>, selinux@vger.kernel.org, ecryptfs@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	Andrey Albershteyn <aalbersh@kernel.org>
-Subject: Re: [PATCH v5 0/7] fs: introduce file_getattr and file_setattr
- syscalls
-Message-ID: <20250519-reklamieren-unsolidarisch-7cd73317561d@brauner>
-References: <20250513-xattrat-syscall-v5-0-22bb9c6c767f@kernel.org>
- <399fdabb-74d3-4dd6-9eee-7884a986dab1@app.fastmail.com>
- <20250515-bedarf-absagen-464773be3e72@brauner>
- <CAOQ4uxicuEkOas2UR4mqfus9Q2RAeKKYTwbE2XrkcE_zp8oScQ@mail.gmail.com>
+	s=arc-20240116; t=1747654673; c=relaxed/simple;
+	bh=BjOYZ5eMDuDFUDfOQrRfHFuJXV9suk2SlHZ3XosSVeE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=pwWff06ywvSsKvorbNS/iH6lADypVx1FxJ6gZNYKztxmP63aAT0xX+Prnhd1VI/8gyAzdFuF9Hjt41inUOJi4U08ZM+PevH2HAAfBgOjifDpRqBUkzMMUri0SMkIVZt2+IMw05WhwYSLCkxzvXKiAltmZ0LpqARcwUaVBAVv9+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZQw3czxz; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54J96lTt011883;
+	Mon, 19 May 2025 11:37:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=XzUO9GWAhqAPVJpKlbziEV6/5FdW
+	sskOYtQ4cTcbUc8=; b=ZQw3czxzCQHSS/SnwtIJ7Ozeqg1UxkwuJCV0RngVdKIx
+	OFReKu4pDcswMiR7rCnACfS5BVm8Ie0zJcn+RJXWsX7ErbhEQvgko40geQoOkxKd
+	24jnLeo2qK50AHa+zu2P5ZMfoIClO7t9R6HItHGaW0a90ltsQnBbZh3XwsU8lS2W
+	B8zcmETR++tOwX18qCU00BheVwJgSoj9e5VhP0DfPBgL++nvLhXRYKHo3FYqMEZc
+	VKbodbsVpaWW3V9Z2a9qggZJw0LG8C4uGKzCg6CYJonN+vASswlA5ce4jh7QzRsp
+	D5tqfjnNEPZjqzp2kZ0r2dZzHzbwmF1J2xRcvXqUcg==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46qn87ub3j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 May 2025 11:37:48 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54JAGcsx002518;
+	Mon, 19 May 2025 11:37:19 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46q5snpdsj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 May 2025 11:37:19 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54JBbGJ846596370
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 19 May 2025 11:37:16 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EC1E2204BF;
+	Mon, 19 May 2025 11:37:15 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7D8A8204BB;
+	Mon, 19 May 2025 11:37:15 +0000 (GMT)
+Received: from [192.168.88.52] (unknown [9.111.40.56])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 19 May 2025 11:37:15 +0000 (GMT)
+From: Christoph Schlameuss <schlameuss@linux.ibm.com>
+Subject: [PATCH v2 0/3] KVM: s390: Use ESCA instead of BSCA at VM init
+Date: Mon, 19 May 2025 13:36:08 +0200
+Message-Id: <20250519-rm-bsca-v2-0-e3ea53dd0394@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxicuEkOas2UR4mqfus9Q2RAeKKYTwbE2XrkcE_zp8oScQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKgXK2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyjHQUlJIzE
+ vPSU3UzU4B8JSMDI1MDU0Nj3aJc3aTi5ETdxCTDVAszE8vE5ERzJaDqgqLUtMwKsEnRsbW1AK3
+ SXNVZAAAA
+X-Change-ID: 20250513-rm-bsca-ab1e8649aca7
+To: kvm@vger.kernel.org
+Cc: linux-s390@vger.kernel.org,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Christoph Schlameuss <schlameuss@linux.ibm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1809;
+ i=schlameuss@linux.ibm.com; h=from:subject:message-id;
+ bh=BjOYZ5eMDuDFUDfOQrRfHFuJXV9suk2SlHZ3XosSVeE=;
+ b=owGbwMvMwCUmoqVx+bqN+mXG02pJDBna4q+/WXRenVdZou48K/PC+fkbBF+vOPV/RXCjxOYTV
+ yxdTpu87ChlYRDjYpAVU2SpFrfOq+prXTrnoOU1mDmsTCBDGLg4BWAid/cxMixZ/Zx7xdzLbd6O
+ /H9EDzW/vDaFKdZe9/h57Wrth0Y1DyQZfrO/8r148Emx77V/VusSWXwPXdrt1Mpj9qLLdTb3gvX
+ L7vICAA==
+X-Developer-Key: i=schlameuss@linux.ibm.com; a=openpgp;
+ fpr=0E34A68642574B2253AF4D31EEED6AB388551EC3
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE5MDEwOSBTYWx0ZWRfXzrUNuA8HkmpK v4WGMtGVodhsHd//wzWPRYktkcRE3YVrHQJVz26kaOVpUN55uTi93bbukGB7sQRto6Uc5V3brzA 5UWWxoqPCepZf+LKhJ8reDM/79hEiIhweDdFnispejtjwxQSu5avoW9yH7xTtkozygMOmpZUnLj
+ PeQdPpXEqCQLp4twRF/k9Ul7VX+C3kKXMptVU/34/JMMdBN11LRhlRFhvFBH2djdFLJt0zYHtvM UmpmFeBPcXdZlnCLabbyNKnCf588qM1bo2mKB/5imrxbVoX3kZLJOmswOOQsMwOHp+xCMx4UaDE IllVL7exEgEimyQ1VOyl5Fp0ZzpgWbhpW1uOsl8YshZAUWyUj46aeIwzExlJJeKWeystiV3FzXN
+ to4QD9P6ih3PR2f2xe+Cb3EFE6m5KpgEMU6zL5SJUkkPxM5q/qCNGzxMvrA3/oiPwbkN/Fnw
+X-Proofpoint-ORIG-GUID: 8l3Clqd0MehytZKcdX0NtGoe1yZadxzz
+X-Authority-Analysis: v=2.4 cv=ff+ty1QF c=1 sm=1 tr=0 ts=682b180c cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=ydhgtpP_JLF7X-5lMI8A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: 8l3Clqd0MehytZKcdX0NtGoe1yZadxzz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-19_05,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 impostorscore=0 suspectscore=0 spamscore=0
+ mlxlogscore=268 adultscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0
+ bulkscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505190109
 
-On Thu, May 15, 2025 at 12:33:31PM +0200, Amir Goldstein wrote:
-> On Thu, May 15, 2025 at 11:02 AM Christian Brauner <brauner@kernel.org> wrote:
-> >
-> > On Tue, May 13, 2025 at 11:53:23AM +0200, Arnd Bergmann wrote:
-> > > On Tue, May 13, 2025, at 11:17, Andrey Albershteyn wrote:
-> > >
-> > > >
-> > > >     long syscall(SYS_file_getattr, int dirfd, const char *pathname,
-> > > >             struct fsxattr *fsx, size_t size, unsigned int at_flags);
-> > > >     long syscall(SYS_file_setattr, int dirfd, const char *pathname,
-> > > >             struct fsxattr *fsx, size_t size, unsigned int at_flags);
-> > >
-> > > I don't think we can have both the "struct fsxattr" from the uapi
-> > > headers, and a variable size as an additional argument. I would
-> > > still prefer not having the extensible structure at all and just
-> >
-> > We're not going to add new interfaces that are fixed size unless for the
-> > very basic cases. I don't care if we're doing that somewhere else in the
-> > kernel but we're not doing that for vfs apis.
-> >
-> > > use fsxattr, but if you want to make it extensible in this way,
-> > > it should use a different structure (name). Otherwise adding
-> > > fields after fsx_pad[] would break the ioctl interface.
-> >
-> > Would that really be a problem? Just along the syscall simply add
-> > something like:
-> >
-> > diff --git a/fs/ioctl.c b/fs/ioctl.c
-> > index c91fd2b46a77..d3943805c4be 100644
-> > --- a/fs/ioctl.c
-> > +++ b/fs/ioctl.c
-> > @@ -868,12 +868,6 @@ static int do_vfs_ioctl(struct file *filp, unsigned int fd,
-> >         case FS_IOC_SETFLAGS:
-> >                 return ioctl_setflags(filp, argp);
-> >
-> > -       case FS_IOC_FSGETXATTR:
-> > -               return ioctl_fsgetxattr(filp, argp);
-> > -
-> > -       case FS_IOC_FSSETXATTR:
-> > -               return ioctl_fssetxattr(filp, argp);
-> > -
-> >         case FS_IOC_GETFSUUID:
-> >                 return ioctl_getfsuuid(filp, argp);
-> >
-> > @@ -886,6 +880,20 @@ static int do_vfs_ioctl(struct file *filp, unsigned int fd,
-> >                 break;
-> >         }
-> >
-> > +       switch (_IOC_NR(cmd)) {
-> > +       case _IOC_NR(FS_IOC_FSGETXATTR):
-> > +               if (WARN_ON_ONCE(_IOC_TYPE(cmd) != _IOC_TYPE(FS_IOC_FSGETXATTR)))
-> > +                       return SOMETHING_SOMETHING;
-> > +               /* Only handle original size. */
-> > +               return ioctl_fsgetxattr(filp, argp);
-> > +
-> > +       case _IOC_NR(FFS_IOC_FSSETXATTR):
-> > +               if (WARN_ON_ONCE(_IOC_TYPE(cmd) != _IOC_TYPE(FFS_IOC_FSSETXATTR)))
-> > +                       return SOMETHING_SOMETHING;
-> > +               /* Only handle original size. */
-> > +               return ioctl_fssetxattr(filp, argp);
-> > +       }
-> > +
-> 
-> I think what Arnd means is that we will not be able to change struct
-> sfxattr in uapi
-> going forward, because we are not going to deprecate the ioctls and
-> certainly not
-> the XFS specific ioctl XFS_IOC_FSGETXATTRA.
+All modern IBM Z and Linux One machines do offer support for the
+Extended System Control Area (ESCA). The ESCA is available since the
+z114/z196 released in 2010.
+KVM needs to allocate and manage the SCA for guest VMs. Prior to this
+change the SCA was setup as Basic SCA only supporting a maximum of 64
+vCPUs when initializing the VM. With addition of the 65th vCPU the SCA
+was needed to be converted to a ESCA.
 
-Sure, I'm just saying this could very likely be handled without the
-kernel or userspace having to care about the changed structure provided
-we teach the kernel to use the ioctl number, not the command and only
-ever copy v1 of the struct for the ioctls in new kernels. But anyway...
+Instead we will now allocate the ESCA directly upon VM creation
+simplifying the code in multiple places as well as completely removing
+the need to convert an existing SCA.
 
-> 
-> This struct is part of XFS uapi:
-> https://man7.org/linux/man-pages/man2/ioctl_xfs_fsgetxattr.2.html
-> 
-> Should we will need to depart from this struct definition and we might
-> as well do it for the initial release of the syscall rather than later on, e.g.:
-> 
-> --- a/include/uapi/linux/fs.h
-> +++ b/include/uapi/linux/fs.h
-> @@ -148,6 +148,17 @@ struct fsxattr {
->         unsigned char   fsx_pad[8];
->  };
-> 
-> +/*
-> + * Variable size structure for file_[sg]et_attr().
-> + */
-> +struct fsx_fileattr {
-> +       __u32           fsx_xflags;     /* xflags field value (get/set) */
-> +       __u32           fsx_extsize;    /* extsize field value (get/set)*/
-> +       __u32           fsx_nextents;   /* nextents field value (get)   */
-> +       __u32           fsx_projid;     /* project identifier (get/set) */
-> +       __u32           fsx_cowextsize; /* CoW extsize field value (get/set)*/
-> +};
-> +
-> +#define FSXATTR_SIZE_VER0 20
-> +#define FSXATTR_SIZE_LATEST FSXATTR_SIZE_VER0
-> +
-> 
-> Right?
+In cases where the ESCA is not supported (z10 and earlier) the use of
+the SCA entries and with that SIGP interpretation are disabled for VMs.
+This increases the number of exits from the VM in multiprocessor
+scenarios and thus decreases performance.
+The same is true for VSIE where SIGP is currently disabled and thus no
+SCA entries are used.
 
-Sure, I don't have a problem with that since I find the current name
-with "fsxattr" quite problematic anyway.
+--
+
+v2:
+- properly apply checkpatch --strict (Thanks Claudio)
+- some small comment wording changes
+- rebased
+
+---
+Christoph Schlameuss (3):
+      KVM: s390: Set KVM_MAX_VCPUS to 256
+      KVM: s390: Always allocate esca_block
+      KVM: s390: Specify kvm->arch.sca as esca_block
+
+ arch/s390/include/asm/kvm_host.h       |   7 +-
+ arch/s390/include/asm/kvm_host_types.h |   2 +
+ arch/s390/kvm/gaccess.c                |  10 +-
+ arch/s390/kvm/interrupt.c              |  67 ++++----------
+ arch/s390/kvm/kvm-s390.c               | 161 ++++++---------------------------
+ arch/s390/kvm/kvm-s390.h               |   9 +-
+ 6 files changed, 52 insertions(+), 204 deletions(-)
+---
+base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
+change-id: 20250513-rm-bsca-ab1e8649aca7
+
+Best regards,
+-- 
+Christoph Schlameuss <schlameuss@linux.ibm.com>
+
 
