@@ -1,155 +1,84 @@
-Return-Path: <linux-s390+bounces-10740-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-10743-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEDBAAC0815
-	for <lists+linux-s390@lfdr.de>; Thu, 22 May 2025 11:00:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2941FAC0839
+	for <lists+linux-s390@lfdr.de>; Thu, 22 May 2025 11:10:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 46ADE3BFB7E
-	for <lists+linux-s390@lfdr.de>; Thu, 22 May 2025 08:59:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D798D4A59F1
+	for <lists+linux-s390@lfdr.de>; Thu, 22 May 2025 09:10:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35333288C13;
-	Thu, 22 May 2025 08:58:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4643422259B;
+	Thu, 22 May 2025 09:10:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rwWSVvGO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="DXG0JjPa"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8162882DA;
-	Thu, 22 May 2025 08:58:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50BF52222AA;
+	Thu, 22 May 2025 09:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747904287; cv=none; b=p05VOBl6calDtcLKi2rW13bIKRpIoxGxDqlvCAjy1vCfwomm4JUup/PWiiP7FYVm6Lbt/Dw31xcwDkY2qrBVQlXv6rKMBnbprCFhTmUEXur9kwpEZiV8ER4nhP5A5aGpo+OFP4ufbXaHn4fGtL/TWWhqEmmdlDVnpEWR22CUKA8=
+	t=1747905041; cv=none; b=uE+G4pqO468X/QaLTuhX4ucTKeLqwEQ+xYfD9JcnjB80OJKJmVHZampNPP/wNtQlHuInl4g6VAznjLnScaLYakRDn3zCIrklCUKHt5k7KefEICUCAiy9maMfv5eJYi/rxQxyFToyUCtpXoZzEhiFqWWPA9LF1j8fyVHs+K7pp0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747904287; c=relaxed/simple;
-	bh=uh6o7nqqrQyI4M5JpcgaHSm6sNXuiY6tBXOE2qQRV0Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jYJdqWOFlwZSeK6nENhSBNoPhBncIjru/UiLUJISYXPZyC13LIe2BGmj1V6Xco8C9mn5K7oTOIRR0rXGHg+2PItcQ40pNFH4L/5+fV+BYu53H+x3l4mzbjvCv8fHy46mdZIKnoK9JdiuDJxXgvcGuZjyrejfKaw0c6rJHUpnUOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rwWSVvGO; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54M6JnIM031689;
-	Thu, 22 May 2025 08:58:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=TR8fLmrx/0VNd92Tb
-	FI0992Nup43AbUnhdp1N6djg6M=; b=rwWSVvGOzm3VRelXuvTVw+Jw/ylEGjiJv
-	jidxn9cVVTvIQdbwwq70BsvxOGn5YRibD2S3QT1vDo36Dh8gaWwNzhuPCjTuxjHL
-	v2cp5WNqZuC0iQkwxjAM8RIS62ysm/DIfmiG1kWEj6Yli328BXzV+y88Wh41h+bD
-	aH4xwbOS2HYzBBqgrkmA5ozUGP2NyQkTHnVGPVAo7oPAi2ZKfUhVPBW2MYZQnM7P
-	r7/JDVOYWCQl/Kxw4dFzjh7KpNF5/HEuyyPt6pT2NP3pvwfxksQMJM5P2ApEtPGl
-	EAWeExNpu6tMzOTgBkVtOSUChwnGxUilv8Lj9eqB1QRUx9kNbUA9A==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46sc1j5xp9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 08:58:02 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54M5bDNt015431;
-	Thu, 22 May 2025 08:58:01 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46rwnngp1n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 08:58:01 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54M8vvxG29884856
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 22 May 2025 08:57:57 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A1F1520040;
-	Thu, 22 May 2025 08:57:57 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 695D92004D;
-	Thu, 22 May 2025 08:57:57 +0000 (GMT)
-Received: from funtu2.fritz.box?044ibm.com (unknown [9.152.224.229])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 22 May 2025 08:57:57 +0000 (GMT)
-From: Harald Freudenberger <freude@linux.ibm.com>
-To: herbert@gondor.apana.org.au, dengler@linux.ibm.com, ifranzki@linux.ibm.com
-Cc: linux-crypto@vger.kernel.org, linux-s390@vger.kernel.org,
-        fcallies@linux.ibm.com
-Subject: [PATCH v11 6/6] crypto: testmgr - Enable phmac selftest
-Date: Thu, 22 May 2025 10:57:55 +0200
-Message-ID: <20250522085755.40732-7-freude@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250522085755.40732-1-freude@linux.ibm.com>
+	s=arc-20240116; t=1747905041; c=relaxed/simple;
+	bh=Z7C3FkAdhDHl65bFDBkjPkW9Dg4HAVtrSrOqaJxFKWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iw7cfm2lEamWYYSBQR+icFUDC36o4/mZw1w7boQDaUD7NxYqexRqDwTShivdrHluZlgpT0vmbmkkonC7GIqazxl190opdHq1Tfhc7DI0li0167I7jV5O2izF00QhUwjJbWq+7irTUJ3YgbijbCh3I7P5xmcc8pK96cA46tKNgR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=DXG0JjPa; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=ovSNxS1fxSZa/ELAjpofGQwNWi6OG9AFazGPgh1bUW4=; b=DXG0JjPacEV6yXspg7m4Xr92+o
+	vGpdqeeGNGlMZniWnaQsTkjILGmjFDGY4WxO8BFjL7226oansI/k5FEucju9x4FsafhCqQTeiFKyQ
+	Ble/i56GQIc7/+ZTIXmjS/MEwklm9tN85IAQFRNWgIsuPGOTjwa5xQcU+Cg4vHKXaYXNRKQeMalkI
+	qqSb4zKGlopsq4ErcgdUP+15LtSryZ687ptpOFLWMe5Wx8OTpC89Gy6gwueCnuIf75z/gCE1MewHI
+	FQVFqozo2v77zSYz61o1oQZyrm17iX4S49m+EuzpDiIi6jgVpqA5p//O8cH2nOob5ae4nyKYFmg6G
+	ukacg3YQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uI1wg-0082sF-0h;
+	Thu, 22 May 2025 17:10:35 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 22 May 2025 17:10:34 +0800
+Date: Thu, 22 May 2025 17:10:34 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Harald Freudenberger <freude@linux.ibm.com>
+Cc: dengler@linux.ibm.com, ifranzki@linux.ibm.com,
+	linux-crypto@vger.kernel.org, linux-s390@vger.kernel.org,
+	fcallies@linux.ibm.com
+Subject: Re: [PATCH v11 5/6] s390/crypto: Add selftest support for phmac
+Message-ID: <aC7qCsLN84LfWy-e@gondor.apana.org.au>
 References: <20250522085755.40732-1-freude@linux.ibm.com>
+ <20250522085755.40732-6-freude@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: XZB2oEIHWxcFwXKk4TWoilQTZX5MgaN4
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDA4NiBTYWx0ZWRfX+Lbu04CiW79+ 4bg8o2tkvBD77Y3vSPdvIqG+UssDvM1IPKVIb2rIIqcBv4y36FVhgniMQhkLSri/Q4xQNTSrcVA Xw6+d4s0lM8D1t6tRcXuFRCWVpptVJwdXd4hNTxrFyrfAHNIQ8q3vHiwk4eZrJXxw30C/P1iAN2
- v5QkuRjnf1Iq9zVC9Llo6vEpmQyxuPcW6iGa0ULuU+nHjPrsU3jjqu97aqczGTRODpZQWgv+0lf C0APB0icw91JflDrWYxnPw3X+woSDmJFZPi11v9OQbc0HJbm1ZmfivQOyvzTfqEIbwHe1QbcZFm tdSGSikCGPizfxeqA7p16AO+E3mw7Trrr6KpMquIDAguo1Oz0WldC1pKV/rbYw8LHxsYqcLleZD
- //M2BaJ/v1By8m1ONPqhlTLz/RYEQjttk3cmN2EP3boBz+9S95doyfdIbLqPefT6LYPhpWt9
-X-Authority-Analysis: v=2.4 cv=GpdC+l1C c=1 sm=1 tr=0 ts=682ee71a cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=ud-KSx1zIYYy2-pHJA4A:9
-X-Proofpoint-GUID: XZB2oEIHWxcFwXKk4TWoilQTZX5MgaN4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-22_04,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- priorityscore=1501 phishscore=0 spamscore=0 adultscore=0
- lowpriorityscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
- malwarescore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505220086
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250522085755.40732-6-freude@linux.ibm.com>
 
-Add phmac selftest invocation to the crypto testmanager.
+On Thu, May 22, 2025 at 10:57:54AM +0200, Harald Freudenberger wrote:
+>
+> +	if (!(crypto_tfm_alg_get_flags(tfm_base) & CRYPTO_ALG_TESTED)) {
 
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
----
- crypto/testmgr.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+I think a better helper would be
 
-diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-index abd609d4c8ef..243dbe8f02e3 100644
---- a/crypto/testmgr.c
-+++ b/crypto/testmgr.c
-@@ -5385,6 +5385,36 @@ static const struct alg_test_desc alg_test_descs[] = {
- 			.cipher = __VECS(fcrypt_pcbc_tv_template)
- 		}
- 	}, {
-+#if IS_ENABLED(CONFIG_CRYPTO_PHMAC_S390)
-+		.alg = "phmac(sha224)",
-+		.test = alg_test_hash,
-+		.fips_allowed = 1,
-+		.suite = {
-+			.hash = __VECS(hmac_sha224_tv_template)
-+		}
-+	}, {
-+		.alg = "phmac(sha256)",
-+		.test = alg_test_hash,
-+		.fips_allowed = 1,
-+		.suite = {
-+			.hash = __VECS(hmac_sha256_tv_template)
-+		}
-+	}, {
-+		.alg = "phmac(sha384)",
-+		.test = alg_test_hash,
-+		.fips_allowed = 1,
-+		.suite = {
-+			.hash = __VECS(hmac_sha384_tv_template)
-+		}
-+	}, {
-+		.alg = "phmac(sha512)",
-+		.test = alg_test_hash,
-+		.fips_allowed = 1,
-+		.suite = {
-+			.hash = __VECS(hmac_sha512_tv_template)
-+		}
-+	}, {
-+#endif
- 		.alg = "pkcs1(rsa,none)",
- 		.test = alg_test_sig,
- 		.suite = {
+	if (!crypto_ahash_tested(tfm)) {
+
+Thanks,
 -- 
-2.43.0
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
 
