@@ -1,208 +1,205 @@
-Return-Path: <linux-s390+bounces-10765-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-10769-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26A18AC1AC5
-	for <lists+linux-s390@lfdr.de>; Fri, 23 May 2025 05:49:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C97BFAC1B2C
+	for <lists+linux-s390@lfdr.de>; Fri, 23 May 2025 06:40:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 58F591B6835E
-	for <lists+linux-s390@lfdr.de>; Fri, 23 May 2025 03:49:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67D6DA4220C
+	for <lists+linux-s390@lfdr.de>; Fri, 23 May 2025 04:39:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FCF5222578;
-	Fri, 23 May 2025 03:49:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 941F7226D0E;
+	Fri, 23 May 2025 04:39:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VrG+HFJM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KqTkaNur"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49BA01519A0;
-	Fri, 23 May 2025 03:49:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F072722331C;
+	Fri, 23 May 2025 04:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747972149; cv=none; b=A0vX/MpFbE0KvFWZbyj6H6FxJIw12tapgU/HguL+uU/JOx62dui5N/kB7aDysQOjmbCoKf7qcRsxfw9LvAbTxywiC/zK/KiUzpuhFUXB2KuK5jEvqz9vNQF6YYsizA1CP9B923kQiiFvcuZ8BHnJzE8o1YhT+kBzjtp+sfpc8Rw=
+	t=1747975179; cv=none; b=AKHBp7/3Hk7I3GVacuEKp9P6G1X3OH15iciL8EZTyX0/XDLsgxq3TvDohhUTNnDb8IW0M/x0lk1J+AjV09LJDFUKJ1T+LAPVJ5OyywErqF3iu5MqSHvEuxijxGRZhgCM7pF6K01/+syQCC9znBioXsL6gZEc+iM4m/kaahnEyaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747972149; c=relaxed/simple;
-	bh=W0I1h/EFOaXWHoneVKr55BZEEapiZElQ6WMainFSWps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kZvOpb1LPVQPP28KiDftXSj1FcMAHrw9rqu/IoOHA4V+GX3AIC4nr5oAJv3qGIigjwegLU0STmfY2LDBDCENWZEIlTNEAmj/4RkCk2RTNbIsgqOFzi7gmkdeLp0kCsw9kZfXKXJu7+iB1hdpK7T8FHQdwRJOuTh7GzfUBJj+kDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VrG+HFJM; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747972147; x=1779508147;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=W0I1h/EFOaXWHoneVKr55BZEEapiZElQ6WMainFSWps=;
-  b=VrG+HFJM91OCsbD6N9+HLYS3XnDpXuLdP6ll4N+DqJZEzElPR9XhT1EV
-   lmA+QNLHGN95GRAkmjFVvJkx0BBwwyt7oIY9E1/M1O5naca8DHLTJtTRR
-   cewSfhF8ElS1vVHAi4Q23pbJjo2gg53C439VYOBAydCqp/XLcPZDZQQ35
-   O8bI8mvtZNFrxYtH/zeiS/JERhN1Eci4W4lRiFSERjSmApyyAslUz3Jnw
-   f8Zq0nVcZ+77pR7/MJy8GXO1wPUYPtDk5BhbRZaii2S8kbfVI0Ho3Xmox
-   UeuqBQvumPVwQohKALtjase5wQoXU9V4puhwzqI6URcteAT5/O5NulpK+
-   g==;
-X-CSE-ConnectionGUID: LAsLKR51SjSmMAXOw9wqBA==
-X-CSE-MsgGUID: d+eFs/pyRQavSbLtqYvkWg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="49915778"
-X-IronPort-AV: E=Sophos;i="6.15,307,1739865600"; 
-   d="scan'208";a="49915778"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 20:49:06 -0700
-X-CSE-ConnectionGUID: dkunbL94RdmQJVUYFsoLtw==
-X-CSE-MsgGUID: 2AmUQwVESvaXiXzhANKj0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,307,1739865600"; 
-   d="scan'208";a="140747623"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 22 May 2025 20:49:02 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uIJP2-000PzW-0E;
-	Fri, 23 May 2025 03:49:00 +0000
-Date: Fri, 23 May 2025 11:48:20 +0800
-From: kernel test robot <lkp@intel.com>
-To: Claudio Imbrenda <imbrenda@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, kvm@vger.kernel.org,
-	linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-	borntraeger@de.ibm.com, seiden@linux.ibm.com, nsg@linux.ibm.com,
-	nrb@linux.ibm.com, david@redhat.com, hca@linux.ibm.com,
-	agordeev@linux.ibm.com, svens@linux.ibm.com, gor@linux.ibm.com,
-	schlameuss@linux.ibm.com
-Subject: Re: [PATCH v3 3/4] KVM: s390: refactor and split some gmap helpers
-Message-ID: <202505231158.TssIVgKH-lkp@intel.com>
-References: <20250522132259.167708-4-imbrenda@linux.ibm.com>
+	s=arc-20240116; t=1747975179; c=relaxed/simple;
+	bh=XVwkrc3glEUjTIVHxhgADYvS6InRhqZwcVUoNmb8gLs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=U5pJTOStoqqY6gTLrXUWuAWRQiSiy/+7Rron68ZxI5sl+cLAF5KnZ1o9mEXmc5cszsJJPe9f6CxAlfPBYKaqpTjuUtjdIpjBA3jZnWLNMTxBe6+Ek/pcdljRWa/mX+T721LTtZncXyp7IQcQxvgvAu3mKO+XjhrPkfUdE1i1+S0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KqTkaNur; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66D66C4AF09;
+	Fri, 23 May 2025 04:39:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747975178;
+	bh=XVwkrc3glEUjTIVHxhgADYvS6InRhqZwcVUoNmb8gLs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KqTkaNurs9FhJf2xVT2AAgHgZfsZLI22JZrnjsUUd3dLV4GIqcY/egNqMcrSdZ7KY
+	 Qoe1xFjyvbHFLLwX8ltHL+UpEgH2pwDrHXGVG+gI/ZXCJ/PiG9bEf2d8W+XPMqCPxS
+	 t7/QNPmTyrPco7X6qhPfaX8HwI7V5XMmTaddqEdLhPnbgxtzwoZVUVrHAupH5HXUWC
+	 uJs8xAoP8DhUEFmLxMG2167yDtwxbVR5eXKMzN/8qSh6Y2P0fAEW0W27jJaqa0EEmQ
+	 aqWuakzIBlY2iT7g7eX7sCheOJj+u51pIrSHjL9O7SZk51OYxQaixUP2zLbVkjOfiA
+	 pVI4tIZzEwhLA==
+From: Kees Cook <kees@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	kasan-dev@googlegroups.com,
+	linux-doc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH v2 00/14] stackleak: Support Clang stack depth tracking
+Date: Thu, 22 May 2025 21:39:10 -0700
+Message-Id: <20250523043251.it.550-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250522132259.167708-4-imbrenda@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5806; i=kees@kernel.org; h=from:subject:message-id; bh=XVwkrc3glEUjTIVHxhgADYvS6InRhqZwcVUoNmb8gLs=; b=owGbwMvMwCVmps19z/KJym7G02pJDBn6v7/zd349lB4js43v/P8PVhOrZ671qt7bkPjchC/4n VqhgOyjjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIm8qWdkeLn+6AuHlaaR0h8X HD0uxWndd9xPfAPD46tHXz3TfCnRVcDwTy94qstMZtfd7Myfr9qe83KzmFlVcIJ9CYvupkfljK9 kmQE=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-Hi Claudio,
+ v2:
+  - rename stackleak to kstack_erase (mingo)
+  - address __init vs inline with KCOV changes
+ v1:  https://lore.kernel.org/lkml/20250507180852.work.231-kees@kernel.org/
+ RFC: https://lore.kernel.org/lkml/20250502185834.work.560-kees@kernel.org/
 
-kernel test robot noticed the following build errors:
+Hi,
 
-[auto build test ERROR on kvms390/next]
-[also build test ERROR on s390/features kvm/queue kvm/next mst-vhost/linux-next linus/master v6.15-rc7 next-20250522]
-[cannot apply to kvm/linux-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+As part of looking at what GCC plugins could be replaced with Clang
+implementations, this series uses the recently landed stack depth tracking
+callback in Clang[1] to implement the stackleak feature. Since the Clang
+feature is now landed, I'm moving this out of RFC to a v1.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Claudio-Imbrenda/s390-remove-unneeded-includes/20250522-212623
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git next
-patch link:    https://lore.kernel.org/r/20250522132259.167708-4-imbrenda%40linux.ibm.com
-patch subject: [PATCH v3 3/4] KVM: s390: refactor and split some gmap helpers
-config: s390-randconfig-001-20250523 (https://download.01.org/0day-ci/archive/20250523/202505231158.TssIVgKH-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250523/202505231158.TssIVgKH-lkp@intel.com/reproduce)
+Since this touches a lot of arch-specific Makefiles, I tried to trim
+the CC list down to just mailing lists in those cases, otherwise the CC
+was giant.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505231158.TssIVgKH-lkp@intel.com/
+Thanks!
 
-All errors (new ones prefixed by >>):
+-Kees
 
-   arch/s390/mm/gmap_helpers.c: In function 'ptep_zap_swap_entry':
->> arch/s390/mm/gmap_helpers.c:26:7: error: implicit declaration of function 'non_swap_entry'; did you mean 'init_wait_entry'? [-Werror=implicit-function-declaration]
-     if (!non_swap_entry(entry))
-          ^~~~~~~~~~~~~~
-          init_wait_entry
->> arch/s390/mm/gmap_helpers.c:28:11: error: implicit declaration of function 'is_migration_entry'; did you mean 'list_first_entry'? [-Werror=implicit-function-declaration]
-     else if (is_migration_entry(entry))
-              ^~~~~~~~~~~~~~~~~~
-              list_first_entry
->> arch/s390/mm/gmap_helpers.c:29:33: error: implicit declaration of function 'pfn_swap_entry_folio'; did you mean 'filemap_dirty_folio'? [-Werror=implicit-function-declaration]
-      dec_mm_counter(mm, mm_counter(pfn_swap_entry_folio(entry)));
-                                    ^~~~~~~~~~~~~~~~~~~~
-                                    filemap_dirty_folio
-   arch/s390/mm/gmap_helpers.c:29:33: warning: passing argument 1 of 'mm_counter' makes pointer from integer without a cast [-Wint-conversion]
-      dec_mm_counter(mm, mm_counter(pfn_swap_entry_folio(entry)));
-                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-   In file included from arch/s390/mm/gmap_helpers.c:9:
-   include/linux/mm.h:2725:44: note: expected 'struct folio *' but argument is of type 'int'
-    static inline int mm_counter(struct folio *folio)
-                                 ~~~~~~~~~~~~~~^~~~~
->> arch/s390/mm/gmap_helpers.c:30:2: error: implicit declaration of function 'free_swap_and_cache'; did you mean 'free_pgd_range'? [-Werror=implicit-function-declaration]
-     free_swap_and_cache(entry);
-     ^~~~~~~~~~~~~~~~~~~
-     free_pgd_range
-   arch/s390/mm/gmap_helpers.c: In function 'gmap_helper_zap_one_page':
->> arch/s390/mm/gmap_helpers.c:60:27: error: implicit declaration of function 'pte_to_swp_entry'; did you mean 'ptep_zap_swap_entry'? [-Werror=implicit-function-declaration]
-      ptep_zap_swap_entry(mm, pte_to_swp_entry(*ptep));
-                              ^~~~~~~~~~~~~~~~
-                              ptep_zap_swap_entry
->> arch/s390/mm/gmap_helpers.c:60:27: error: incompatible type for argument 2 of 'ptep_zap_swap_entry'
-      ptep_zap_swap_entry(mm, pte_to_swp_entry(*ptep));
-                              ^~~~~~~~~~~~~~~~~~~~~~~
-   arch/s390/mm/gmap_helpers.c:24:67: note: expected 'swp_entry_t' {aka 'struct <anonymous>'} but argument is of type 'int'
-    static void ptep_zap_swap_entry(struct mm_struct *mm, swp_entry_t entry)
-                                                          ~~~~~~~~~~~~^~~~~
-   cc1: some warnings being treated as errors
+[1] https://clang.llvm.org/docs/SanitizerCoverage.html#tracing-stack-depth
 
+Kees Cook (14):
+  stackleak: Rename STACKLEAK to KSTACK_ERASE
+  stackleak: Rename stackleak_track_stack to __sanitizer_cov_stack_depth
+  stackleak: Split KSTACK_ERASE_CFLAGS from GCC_PLUGINS_CFLAGS
+  x86: Handle KCOV __init vs inline mismatches
+  arm: Handle KCOV __init vs inline mismatches
+  arm64: Handle KCOV __init vs inline mismatches
+  s390: Handle KCOV __init vs inline mismatches
+  powerpc: Handle KCOV __init vs inline mismatches
+  mips: Handle KCOV __init vs inline mismatches
+  loongarch: Handle KCOV __init vs inline mismatches
+  init.h: Disable sanitizer coverage for __init and __head
+  kstack_erase: Support Clang stack depth tracking
+  configs/hardening: Enable CONFIG_KSTACK_ERASE
+  configs/hardening: Enable CONFIG_INIT_ON_FREE_DEFAULT_ON
 
-vim +26 arch/s390/mm/gmap_helpers.c
-
-    14	
-    15	/**
-    16	 * ptep_zap_swap_entry() - discard a swap entry.
-    17	 * @mm: the mm
-    18	 * @entry: the swap entry that needs to be zapped
-    19	 *
-    20	 * Discards the given swap entry. If the swap entry was an actual swap
-    21	 * entry (and not a migration entry, for example), the actual swapped
-    22	 * page is also discarded from swap.
-    23	 */
-    24	static void ptep_zap_swap_entry(struct mm_struct *mm, swp_entry_t entry)
-    25	{
-  > 26		if (!non_swap_entry(entry))
-    27			dec_mm_counter(mm, MM_SWAPENTS);
-  > 28		else if (is_migration_entry(entry))
-  > 29			dec_mm_counter(mm, mm_counter(pfn_swap_entry_folio(entry)));
-  > 30		free_swap_and_cache(entry);
-    31	}
-    32	
-    33	/**
-    34	 * gmap_helper_zap_one_page() - discard a page if it was swapped.
-    35	 * @mm: the mm
-    36	 * @vmaddr: the userspace virtual address that needs to be discarded
-    37	 *
-    38	 * If the given address maps to a swap entry, discard it.
-    39	 *
-    40	 * Context: needs to be called while holding the mmap lock.
-    41	 */
-    42	void gmap_helper_zap_one_page(struct mm_struct *mm, unsigned long vmaddr)
-    43	{
-    44		struct vm_area_struct *vma;
-    45		spinlock_t *ptl;
-    46		pte_t *ptep;
-    47	
-    48		mmap_assert_locked(mm);
-    49	
-    50		/* Find the vm address for the guest address */
-    51		vma = vma_lookup(mm, vmaddr);
-    52		if (!vma || is_vm_hugetlb_page(vma))
-    53			return;
-    54	
-    55		/* Get pointer to the page table entry */
-    56		ptep = get_locked_pte(mm, vmaddr, &ptl);
-    57		if (unlikely(!ptep))
-    58			return;
-    59		if (pte_swap(*ptep))
-  > 60			ptep_zap_swap_entry(mm, pte_to_swp_entry(*ptep));
-    61		pte_unmap_unlock(ptep, ptl);
-    62	}
-    63	EXPORT_SYMBOL_GPL(gmap_helper_zap_one_page);
-    64	
+ arch/Kconfig                                  |  4 +-
+ arch/arm/Kconfig                              |  2 +-
+ arch/arm64/Kconfig                            |  2 +-
+ arch/riscv/Kconfig                            |  2 +-
+ arch/s390/Kconfig                             |  2 +-
+ arch/x86/Kconfig                              |  2 +-
+ security/Kconfig.hardening                    | 45 +++++++++-------
+ Makefile                                      |  1 +
+ arch/arm/boot/compressed/Makefile             |  2 +-
+ arch/arm/vdso/Makefile                        |  2 +-
+ arch/arm64/kernel/pi/Makefile                 |  2 +-
+ arch/arm64/kernel/vdso/Makefile               |  3 +-
+ arch/arm64/kvm/hyp/nvhe/Makefile              |  2 +-
+ arch/riscv/kernel/pi/Makefile                 |  2 +-
+ arch/riscv/purgatory/Makefile                 |  2 +-
+ arch/sparc/vdso/Makefile                      |  3 +-
+ arch/x86/entry/vdso/Makefile                  |  3 +-
+ arch/x86/purgatory/Makefile                   |  2 +-
+ drivers/firmware/efi/libstub/Makefile         |  8 +--
+ drivers/misc/lkdtm/Makefile                   |  2 +-
+ kernel/Makefile                               | 10 ++--
+ lib/Makefile                                  |  2 +-
+ scripts/Makefile.gcc-plugins                  | 16 +-----
+ scripts/Makefile.kstack_erase                 | 21 ++++++++
+ scripts/gcc-plugins/stackleak_plugin.c        | 52 +++++++++----------
+ Documentation/admin-guide/sysctl/kernel.rst   |  4 +-
+ Documentation/arch/x86/x86_64/mm.rst          |  2 +-
+ Documentation/security/self-protection.rst    |  2 +-
+ .../zh_CN/security/self-protection.rst        |  2 +-
+ arch/arm64/include/asm/acpi.h                 |  2 +-
+ arch/loongarch/include/asm/smp.h              |  2 +-
+ arch/mips/include/asm/time.h                  |  2 +-
+ arch/s390/hypfs/hypfs.h                       |  2 +-
+ arch/s390/hypfs/hypfs_diag.h                  |  2 +-
+ arch/x86/entry/calling.h                      |  4 +-
+ arch/x86/include/asm/acpi.h                   |  4 +-
+ arch/x86/include/asm/init.h                   |  2 +-
+ arch/x86/include/asm/realmode.h               |  2 +-
+ include/linux/acpi.h                          |  4 +-
+ include/linux/bootconfig.h                    |  2 +-
+ include/linux/efi.h                           |  2 +-
+ include/linux/init.h                          |  4 +-
+ include/linux/{stackleak.h => kstack_erase.h} | 20 +++----
+ include/linux/memblock.h                      |  2 +-
+ include/linux/mfd/dbx500-prcmu.h              |  2 +-
+ include/linux/sched.h                         |  4 +-
+ arch/arm/kernel/entry-common.S                |  2 +-
+ arch/arm64/kernel/entry.S                     |  2 +-
+ arch/riscv/kernel/entry.S                     |  2 +-
+ arch/s390/kernel/entry.S                      |  2 +-
+ arch/arm/mm/cache-feroceon-l2.c               |  2 +-
+ arch/arm/mm/cache-tauros2.c                   |  2 +-
+ arch/loongarch/kernel/time.c                  |  2 +-
+ arch/loongarch/mm/ioremap.c                   |  4 +-
+ arch/powerpc/mm/book3s64/hash_utils.c         |  2 +-
+ arch/powerpc/mm/book3s64/radix_pgtable.c      |  2 +-
+ arch/s390/mm/init.c                           |  2 +-
+ arch/x86/kernel/kvm.c                         |  2 +-
+ drivers/clocksource/timer-orion.c             |  2 +-
+ .../lkdtm/{stackleak.c => kstack_erase.c}     | 26 +++++-----
+ drivers/platform/x86/thinkpad_acpi.c          |  4 +-
+ drivers/soc/ti/pm33xx.c                       |  2 +-
+ fs/proc/base.c                                |  6 +--
+ kernel/fork.c                                 |  2 +-
+ kernel/{stackleak.c => kstack_erase.c}        | 22 ++++----
+ tools/objtool/check.c                         |  4 +-
+ tools/testing/selftests/lkdtm/config          |  2 +-
+ MAINTAINERS                                   |  6 ++-
+ kernel/configs/hardening.config               |  6 +++
+ 69 files changed, 203 insertions(+), 171 deletions(-)
+ create mode 100644 scripts/Makefile.kstack_erase
+ rename include/linux/{stackleak.h => kstack_erase.h} (81%)
+ rename drivers/misc/lkdtm/{stackleak.c => kstack_erase.c} (89%)
+ rename kernel/{stackleak.c => kstack_erase.c} (87%)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
 
