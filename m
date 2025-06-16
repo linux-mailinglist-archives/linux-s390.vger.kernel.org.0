@@ -1,64 +1,73 @@
-Return-Path: <linux-s390+bounces-11120-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-11122-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 973B2ADA60E
-	for <lists+linux-s390@lfdr.de>; Mon, 16 Jun 2025 03:44:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF6E9ADA656
+	for <lists+linux-s390@lfdr.de>; Mon, 16 Jun 2025 04:30:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C650B1890626
-	for <lists+linux-s390@lfdr.de>; Mon, 16 Jun 2025 01:44:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B2DBC3AED24
+	for <lists+linux-s390@lfdr.de>; Mon, 16 Jun 2025 02:30:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2B4028AAEB;
-	Mon, 16 Jun 2025 01:42:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C68E828E59E;
+	Mon, 16 Jun 2025 02:30:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z9IltaIR"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DQLERJrq"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9C128A73A;
-	Mon, 16 Jun 2025 01:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59441684B4;
+	Mon, 16 Jun 2025 02:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750038121; cv=none; b=eEph7riZRv7oXwmHTitBaAgIyniJhR3oj5E/ZHfqSwrGCgxvHYGrW6hX2ucTnwnvVOHolxskTH23Mt8OlDJWYDDKT8Wjxb1cHyVjj/lu71j3JfhieEZGbm53FgTq6aZ1akWK+e0Au7oIc0h8qhjs1r/SQ1aGsz/XlGpyBImkxQo=
+	t=1750041023; cv=none; b=pRvr3x3elkE42vyuTDYYLV+ScXEoU0+aUE2Vb772z+b7IE8L5u8vJzvQ9N1nf5bqQ27vvkP13p7TyPytOU039XOrfj+phoy1plgLSZFQpzviVSiialOFdfe54gHgUrbq9yaxK/jBo5GedkuTeZ7ORgQiP2OidfAfPr64JA3sG6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750038121; c=relaxed/simple;
-	bh=CfGkdjItRjUxPxMuzjk2hmHTtGTMsfQDaBtxQ0B43iQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LCKzGVcv5RGculu3QY3Xe+LjH2bJAFYmH40bORHvPPIEl1Jubu8HSsQ8K0E8APiiRklxjXW1bbFzmvHmrgPfZjn/FHnily0QDilvzF9LFJEtK2Rnj/kOfxV//idmPMfDJT9YnV78q9WTuKSV7EJLqd7P9lZYYgSKkQRZQOTYyLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z9IltaIR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA646C4CEE3;
-	Mon, 16 Jun 2025 01:42:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750038121;
-	bh=CfGkdjItRjUxPxMuzjk2hmHTtGTMsfQDaBtxQ0B43iQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Z9IltaIRjEW++YedV0DJ3CfVXd+Xyc7fbLUV/Wx4ucCrQ0eghn9Gn9GJLaLoHQVh2
-	 XWSblcvLg5aJ6vTHHX0EpXozgUUi9Uzq6dkphqTF0lKlOQC4aum2aNqlQp8QB6g6HT
-	 esK2eRppRjAlbT7fR0qd47BLDn+Dehao1YqIPheBSkseELa9k0v7QMfHeuSMyONqFu
-	 XlhnCLu0f4rh7xQVIPjwyOol+ByI0FqzhdGYWsbVD+DLrHAd2ZCzDy3c4KUvwSFOoM
-	 F6i0N8lU4ojD88r5m6lMYIRLIwadhObfSa85hyV1Z44CHV+Nt1IS7Q+6NgA4WlnvUV
-	 F3EO2mtC8d6Ww==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
+	s=arc-20240116; t=1750041023; c=relaxed/simple;
+	bh=d99D5Krm7mKYs6va4kUf7uKaI9HolviebMCYWhi1034=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rdaZhYkc+3Zjj6HIphX1gJS46WhYctnBzwD0GyrT12oTucYP6DPun4c1PZ4xwYJCgfhOrNnIUESTjc5sZrhidMwSxYgOmrObK/cPW7TlqJhRzoqvX1Ay3QoO574fD1C2bUbso8a5djIB2oLLDS5xP33ONnvARXQpH2uXdprEQt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DQLERJrq; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750041008;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=KIW9tIcYwbZjo1QxGJ4orrM2LqJaaYmiNgbtFxQwPmQ=;
+	b=DQLERJrqrvBj5++7xzFmkax2EMVbQ54JQjD5+/QkLzlYUxXiMJXoo9LOzD4hkSs0gixMYm
+	MAOIUR2fQUfrS39XTVuZHhg5c7hsbu+xwNboPoXChPtHGm32av53FS3O0bZQ75nDdol/qY
+	oO2vcvxwFZ+0FwH6uU3jO52/MwioTP8=
+From: Hao Ge <hao.ge@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-alpha@vger.kernel.org,
 	linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH v2 17/17] crypto: sha512 - remove sha512_base.h
-Date: Sun, 15 Jun 2025 18:40:19 -0700
-Message-ID: <20250616014019.415791-18-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250616014019.415791-1-ebiggers@kernel.org>
-References: <20250616014019.415791-1-ebiggers@kernel.org>
+	Hao Ge <hao.ge@linux.dev>,
+	Hao Ge <gehao@kylinos.cn>
+Subject: [PATCH v3 0/2] mm: Restrict the static definition of the per-CPU variable _shared_alloc_tag to s390 and alpha architectures only
+Date: Mon, 16 Jun 2025 10:29:16 +0800
+Message-Id: <cover.1750040317.git.gehao@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -66,141 +75,96 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Eric Biggers <ebiggers@google.com>
+From: Hao Ge <gehao@kylinos.cn>
 
-sha512_base.h is no longer used, so remove it.
+Recently discovered this entry while checking kallsyms on ARM64:
+ffff800083e509c0 D _shared_alloc_tag
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- include/crypto/sha512_base.h | 117 -----------------------------------
- 1 file changed, 117 deletions(-)
- delete mode 100644 include/crypto/sha512_base.h
+If ARCH_NEEDS_WEAK_PER_CPU is not defined((it is only defined for
+s390 and alpha architectures),there's no need to statically define
+the percpu variable _shared_alloc_tag. As the number of CPUs
+increases,the wasted memory will grow correspondingly.
 
-diff --git a/include/crypto/sha512_base.h b/include/crypto/sha512_base.h
-deleted file mode 100644
-index d1361b3eb70b0..0000000000000
---- a/include/crypto/sha512_base.h
-+++ /dev/null
-@@ -1,117 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--/*
-- * sha512_base.h - core logic for SHA-512 implementations
-- *
-- * Copyright (C) 2015 Linaro Ltd <ard.biesheuvel@linaro.org>
-- */
--
--#ifndef _CRYPTO_SHA512_BASE_H
--#define _CRYPTO_SHA512_BASE_H
--
--#include <crypto/internal/hash.h>
--#include <crypto/sha2.h>
--#include <linux/compiler.h>
--#include <linux/math.h>
--#include <linux/string.h>
--#include <linux/types.h>
--#include <linux/unaligned.h>
--
--typedef void (sha512_block_fn)(struct sha512_state *sst, u8 const *src,
--			       int blocks);
--
--static inline int sha384_base_init(struct shash_desc *desc)
--{
--	struct sha512_state *sctx = shash_desc_ctx(desc);
--
--	sctx->state[0] = SHA384_H0;
--	sctx->state[1] = SHA384_H1;
--	sctx->state[2] = SHA384_H2;
--	sctx->state[3] = SHA384_H3;
--	sctx->state[4] = SHA384_H4;
--	sctx->state[5] = SHA384_H5;
--	sctx->state[6] = SHA384_H6;
--	sctx->state[7] = SHA384_H7;
--	sctx->count[0] = sctx->count[1] = 0;
--
--	return 0;
--}
--
--static inline int sha512_base_init(struct shash_desc *desc)
--{
--	struct sha512_state *sctx = shash_desc_ctx(desc);
--
--	sctx->state[0] = SHA512_H0;
--	sctx->state[1] = SHA512_H1;
--	sctx->state[2] = SHA512_H2;
--	sctx->state[3] = SHA512_H3;
--	sctx->state[4] = SHA512_H4;
--	sctx->state[5] = SHA512_H5;
--	sctx->state[6] = SHA512_H6;
--	sctx->state[7] = SHA512_H7;
--	sctx->count[0] = sctx->count[1] = 0;
--
--	return 0;
--}
--
--static inline int sha512_base_do_update_blocks(struct shash_desc *desc,
--					       const u8 *data,
--					       unsigned int len,
--					       sha512_block_fn *block_fn)
--{
--	unsigned int remain = len - round_down(len, SHA512_BLOCK_SIZE);
--	struct sha512_state *sctx = shash_desc_ctx(desc);
--
--	len -= remain;
--	sctx->count[0] += len;
--	if (sctx->count[0] < len)
--		sctx->count[1]++;
--	block_fn(sctx, data, len / SHA512_BLOCK_SIZE);
--	return remain;
--}
--
--static inline int sha512_base_do_finup(struct shash_desc *desc, const u8 *src,
--				       unsigned int len,
--				       sha512_block_fn *block_fn)
--{
--	unsigned int bit_offset = SHA512_BLOCK_SIZE / 8 - 2;
--	struct sha512_state *sctx = shash_desc_ctx(desc);
--	union {
--		__be64 b64[SHA512_BLOCK_SIZE / 4];
--		u8 u8[SHA512_BLOCK_SIZE * 2];
--	} block = {};
--
--	if (len >= SHA512_BLOCK_SIZE) {
--		int remain;
--
--		remain = sha512_base_do_update_blocks(desc, src, len, block_fn);
--		src += len - remain;
--		len = remain;
--	}
--
--	if (len >= bit_offset * 8)
--		bit_offset += SHA512_BLOCK_SIZE / 8;
--	memcpy(&block, src, len);
--	block.u8[len] = 0x80;
--	sctx->count[0] += len;
--	block.b64[bit_offset] = cpu_to_be64(sctx->count[1] << 3 |
--					    sctx->count[0] >> 61);
--	block.b64[bit_offset + 1] = cpu_to_be64(sctx->count[0] << 3);
--	block_fn(sctx, block.u8, (bit_offset + 2) * 8 / SHA512_BLOCK_SIZE);
--	memzero_explicit(&block, sizeof(block));
--
--	return 0;
--}
--
--static inline int sha512_base_finish(struct shash_desc *desc, u8 *out)
--{
--	unsigned int digest_size = crypto_shash_digestsize(desc->tfm);
--	struct sha512_state *sctx = shash_desc_ctx(desc);
--	__be64 *digest = (__be64 *)out;
--	int i;
--
--	for (i = 0; digest_size > 0; i++, digest_size -= sizeof(__be64))
--		put_unaligned_be64(sctx->state[i], digest++);
--	return 0;
--}
--
--#endif /* _CRYPTO_SHA512_BASE_H */
+Therefore,we need to implement isolation for this purpose.
+
+However,currently ARCH_NEEDS_WEAK_PER_CPU is a #define and
+is enclosed within the #if defined(MODULE) conditional block.
+
+When building the core kernel code for s390 or alpha architectures,
+ARCH_NEEDS_WEAK_PER_CPU remains undefined (as it is gated
+by #if defined(MODULE)). However,when building modules for these
+architectures,the macro is explicitly defined.
+
+Therefore,we need to make ARCH_NEEDS_WEAK_PER_CPU a Kconfig option.
+And replace all instances of ARCH_NEEDS_WEAK_PER_CPU in the kernel
+code with MODULE_NEEDS_WEAK_PER_CPU,MODULE_NEEDS_WEAK_PER_CPU might
+be a more accurate description,because it was only needed for modules.
+Then,when defining the percpu variable _shared_alloc_tag,wrap it with the
+CONFIG_ARCH_NEEDS_WEAK_PER_CPU condition.
+
+The following version can be regarded as the most original version:
+https://lore.kernel.org/all/20250529073537.563107-1-hao.ge@linux.dev/
+But unfortunately,it caused build errors on s390.
+Based on Suren's guidance and suggestions,
+I've refined it into this patch series.
+Many thanks to Suren for his patient instruction.
+
+Verify:
+     1. On Arm64:
+        nm vmlinux | grep "_shared_alloc_tag",no output is returned.
+     2. On S390:
+        Compile tested.
+        nm vmlinux | grep "_shared_alloc_tag"
+        00000000015605b4 r __crc__shared_alloc_tag
+        0000000001585fef r __kstrtab__shared_alloc_tag
+        0000000001586897 r __kstrtabns__shared_alloc_tag
+        00000000014f6548 r __ksymtab__shared_alloc_tag
+        0000000001a8fa28 D _shared_alloc_tag
+        nm net/ceph/libceph.ko | grep "_shared"
+        U _shared_alloc_tag
+     3. On alpha
+        Compile tested.
+        nm vmlinux | grep "_shared_alloc_tag"
+        fffffc0000b080fa r __kstrtab__shared_alloc_tag
+        fffffc0000b07ee7 r __kstrtabns__shared_alloc_tag
+        fffffc0000adee98 r __ksymtab__shared_alloc_tag
+        fffffc0000b83d38 D _shared_alloc_tag
+        nm crypto/cryptomgr.ko | grep "_share"
+        U _shared_alloc_tag
+
+v3:
+    Suren pointed out that patches 1-2 can be merged into a single patch
+    in version 2. And the commit message for patch 3 can be made more
+    concise.Make corresponding modifications based on the pointed-out
+    issues and update the corresponding commit message.
+
+v2:
+    Heiko pointed out that when defining MODULE_NEEDS_WEAK_PER_CPU,
+    the CONFIG_ARCH_NEEDS_WEAK_PER_CPU condition in the v1 version
+    should be removed,as it is always true for s390 and alpha
+    architectures.And He also pointed out that patches 2-4 need to
+    be merged into one patch. Modify the code according to the suggestions
+    and update the corresponding commit message.
+
+Hao Ge (2):
+  mm: Optimize the ARCH_NEEDS_WEAK_PER_CPU logic for s390/alpha
+    architectures
+  mm/alloc_tag: add the CONFIG_ARCH_NEEDS_WEAK_PER_CPU macro when
+    statically defining the percpu variable _shared_alloc_tag
+
+ arch/alpha/Kconfig              | 1 +
+ arch/alpha/include/asm/percpu.h | 2 +-
+ arch/s390/Kconfig               | 1 +
+ arch/s390/include/asm/percpu.h  | 2 +-
+ include/linux/alloc_tag.h       | 6 +++---
+ include/linux/percpu-defs.h     | 4 ++--
+ lib/alloc_tag.c                 | 2 ++
+ mm/Kconfig                      | 4 ++++
+ 8 files changed, 15 insertions(+), 7 deletions(-)
+
 -- 
-2.49.0
+2.25.1
 
 
