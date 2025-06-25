@@ -1,105 +1,104 @@
-Return-Path: <linux-s390+bounces-11272-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-11275-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A393FAE8049
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Jun 2025 12:55:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9888AE828C
+	for <lists+linux-s390@lfdr.de>; Wed, 25 Jun 2025 14:21:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 47BD47B655A
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Jun 2025 10:52:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8DEA11BC0D83
+	for <lists+linux-s390@lfdr.de>; Wed, 25 Jun 2025 12:21:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 195FE2BEFF9;
-	Wed, 25 Jun 2025 10:50:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5470122ACEF;
+	Wed, 25 Jun 2025 12:21:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="D/cOxRnO"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BEEE2BEFEE;
-	Wed, 25 Jun 2025 10:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E79E25E806;
+	Wed, 25 Jun 2025 12:21:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750848637; cv=none; b=Fnh6xRb5gi4MH0CAIgZVAvwrMaCarYd8hpehQOMCvOdBaQS0LCxAMmP/EU8w7K53gfciUk4i9MKvdu9jmNkcknoUXUyTq9ujnDu8uKAcaBGi1GBP1TsbT3ySscUREn14pb4SsJYN3kobqXGpZPnPSE0nD9AQ9hrD/kggzNvdWtw=
+	t=1750854083; cv=none; b=UCfays6U3p76bIYIxXqjYtjXX9CbZKdDMNQQTG7xQyVNoLF1rn+XN7mIpTmCNPlUaFsKhSmEY/6+j7tYoCuEDeKI+4eH3s0AEphMgazHFk2I+wycf4RHmc2Sx0uhal6I6oZ9cpmOE3uPkOxICvW2RnxJIu8ulepjCTLPzo6M7PI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750848637; c=relaxed/simple;
-	bh=WUP8nXq5KsTHI2rcQ0k70+I98OUUvrsNTfGRLXCoSzQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=esxZXr/+IAYXE8Q1hGLsKtQnOdOnd9tffDSLIG2ep+abJgIKrmRf7NwgHUNYvQ1URn3xJ15T+TacL3juLA+dLErsc66y6ne5cBxcy8KgRt/1ppw5dH2a54sqEypEqeH/qvK+B+jMIcXE6vOVU58w12jvDcFM/GDDuW2ZG3d4Vfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4bRys55D17z9vDH;
-	Wed, 25 Jun 2025 12:35:53 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id E-qPa8r-zWGB; Wed, 25 Jun 2025 12:35:53 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4bRys54JGWz9vDF;
-	Wed, 25 Jun 2025 12:35:53 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 87F7D8B7B7;
-	Wed, 25 Jun 2025 12:35:53 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id Tp4ps0JWzqlx; Wed, 25 Jun 2025 12:35:53 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 942C38B7A7;
-	Wed, 25 Jun 2025 12:35:51 +0200 (CEST)
-Message-ID: <db30beb6-a331-46b7-92a3-1ee7782e317a@csgroup.eu>
-Date: Wed, 25 Jun 2025 12:35:51 +0200
+	s=arc-20240116; t=1750854083; c=relaxed/simple;
+	bh=j9lxAywOv5yt4LeQ6A3AxT624fpEB3GL4l9rgh6gKj8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=OjWncCcpEEB441kwaMnil4R5UBP5vXajxu5F22S1LZFiRBlJ4T+ZCDOyGw0KYXNbbW9JRdneHyAng+tvVISKDun8AheBEtq2zB1d8J7xVmGsgT32d8no66MryM3c0fq/ETAz2Rv/DRuqTk10RFVoBpWOhjIXmY+0vzCMXEHYop0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=D/cOxRnO; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=j9lxAywOv5yt4LeQ6A3AxT624fpEB3GL4l9rgh6gKj8=;
+	t=1750854081; x=1752063681; b=D/cOxRnO7VMqyRtGInj2VexJGr2raup6RlPuGSVHyN6lRqY
+	wxmERjFFyTtHe3UyBYwGvO6/vhu/JsDhihck9/wkvkDMUALxRdPwSMJ9y/LHmLPxyxBeiAxD2dWhM
+	2EkoXrhRyRM/pJS5/3lHBj0ADeol0FzhbYYu1IQnHoJBw80hE+/9yeX0DzxFRhwMzD4zvhFy4ABnT
+	7eKTYQme/O6mGvrfdldpDPEApYfHyl01qIEnkgVVFV3G6NSpZ28FBZtNE4+ZyDxoc6b8ALPOXmdsL
+	d4YBPGGdrHDY8D2dAbR1SfwdlfQSFsFigZvecjKVaK+0fqdMc1jA2VqkFJyAIMrQ==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1uUP7I-00000009xkX-2M7X;
+	Wed, 25 Jun 2025 14:20:40 +0200
+Message-ID: <dd87fa28e596126536d79281e87e2e0f52d9dfd4.camel@sipsolutions.net>
+Subject: Re: [PATCH 6/9] kasan/um: call kasan_init_generic in kasan_init
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>, ryabinin.a.a@gmail.com, 
+	glider@google.com, andreyknvl@gmail.com, dvyukov@google.com, 
+	vincenzo.frascino@arm.com, catalin.marinas@arm.com, will@kernel.org, 
+	chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com,
+ mpe@ellerman.id.au, 	npiggin@gmail.com, christophe.leroy@csgroup.eu,
+ hca@linux.ibm.com, 	gor@linux.ibm.com, agordeev@linux.ibm.com,
+ borntraeger@linux.ibm.com, 	svens@linux.ibm.com, richard@nod.at,
+ anton.ivanov@cambridgegreys.com, 	dave.hansen@linux.intel.com,
+ luto@kernel.org, peterz@infradead.org, 	tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com, 
+	chris@zankel.net, jcmvbkbc@gmail.com, akpm@linux-foundation.org
+Cc: guoweikang.kernel@gmail.com, geert@linux-m68k.org, rppt@kernel.org, 
+	tiwei.btw@antgroup.com, richard.weiyang@gmail.com, benjamin.berg@intel.com,
+ 	kevin.brodsky@arm.com, kasan-dev@googlegroups.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	linux-s390@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org
+Date: Wed, 25 Jun 2025 14:20:38 +0200
+In-Reply-To: <20250625095224.118679-7-snovitoll@gmail.com> (sfid-20250625_115328_891177_CC2D325A)
+References: <20250625095224.118679-1-snovitoll@gmail.com>
+	 <20250625095224.118679-7-snovitoll@gmail.com>
+	 (sfid-20250625_115328_891177_CC2D325A)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/9] kasan: unify static kasan_flag_enabled across modes
-To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>, ryabinin.a.a@gmail.com,
- glider@google.com, andreyknvl@gmail.com, dvyukov@google.com,
- vincenzo.frascino@arm.com, catalin.marinas@arm.com, will@kernel.org,
- chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com,
- mpe@ellerman.id.au, npiggin@gmail.com, hca@linux.ibm.com, gor@linux.ibm.com,
- agordeev@linux.ibm.com, borntraeger@linux.ibm.com, svens@linux.ibm.com,
- richard@nod.at, anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
- dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
- hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com,
- akpm@linux-foundation.org
-Cc: guoweikang.kernel@gmail.com, geert@linux-m68k.org, rppt@kernel.org,
- tiwei.btw@antgroup.com, richard.weiyang@gmail.com, benjamin.berg@intel.com,
- kevin.brodsky@arm.com, kasan-dev@googlegroups.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org
-References: <20250625095224.118679-1-snovitoll@gmail.com>
- <20250625095224.118679-2-snovitoll@gmail.com>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250625095224.118679-2-snovitoll@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-malware-bazaar: not-scanned
 
+On Wed, 2025-06-25 at 14:52 +0500, Sabyrzhan Tasbolatov wrote:
+> Call kasan_init_generic() which enables the static flag
+> to mark generic KASAN initialized, otherwise it's an inline stub.
+>=20
+> Delete the key `kasan_um_is_ready` in favor of the global static flag in
+> linux/kasan-enabled.h which is enabled with kasan_init_generic().
+>=20
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218315
+> Signed-off-by: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
 
+Looks fine, I guess. You can test/build it without qemu - on x86 - by
+using 'make ARCH=3Dum' or so.
 
-Le 25/06/2025 à 11:52, Sabyrzhan Tasbolatov a écrit :
-> Historically the fast-path static key `kasan_flag_enabled` existed
-> only for `CONFIG_KASAN_HW_TAGS`. Generic and SW_TAGS either relied on
-> `kasan_arch_is_ready()` or evaluated KASAN checks unconditionally.
-> As a result every architecture had to toggle a private flag
-> in its `kasan_init()`.
-> 
-> This patch turns the flag into a single global runtime predicate that
-> is built for every `CONFIG_KASAN` mode and adds a helper that flips
-> the key once KASAN is ready.
+I'm assuming it'll go through some kasan tree since there are
+dependencies:
 
-Shouldn't kasan_init_generic() also perform the following line to reduce 
-even more code duplication between architectures ?
+Acked-by: Johannes Berg <johannes@sipsolutions.net>
 
-	init_task.kasan_depth = 0;
-
-Christophe
-
+johannes
 
