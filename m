@@ -1,185 +1,171 @@
-Return-Path: <linux-s390+bounces-11318-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-11316-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF2E8AE9C6E
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Jun 2025 13:20:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C7E0AE9BEC
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Jun 2025 12:55:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F29C916150A
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Jun 2025 11:20:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 770EE4A1F64
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Jun 2025 10:55:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3A3C275106;
-	Thu, 26 Jun 2025 11:20:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDCCF26B080;
+	Thu, 26 Jun 2025 10:54:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="JzIZAb9y"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 968A01DE2DC;
-	Thu, 26 Jun 2025 11:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFAF26B97F;
+	Thu, 26 Jun 2025 10:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750936844; cv=none; b=GhwZaooK4TRUjw9wqiP+eyV8OXoMzjH1/u73gEgMfjBjOOFR713/Sk51miYYaitdAfdtdr7xpfsYOcdp2+exjfWAWkMswBHmyFRIc8aLmGD1EajMOJTHEkuVjQu9ifAwd84DLmuoWnapt8FvwAjB4L9B3/qj47VDSOL5mFifm+0=
+	t=1750935289; cv=none; b=gnx6fnBsWcimWVcGK+1tRKi234nJFJEIue2Kyx4Sxwc/tj0PNPFgn/S2k9T+3pSBe2Msp7RPK4cAv9O7tcS+5kQ7tUWR2jzO1TTjjn16PvqHR9Op2c4ytEd/xRtNq8/CI3mbYOmiV7eJIzsH5Zw7WuAAFmVkMQX/zNj205pg53Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750936844; c=relaxed/simple;
-	bh=C4f7VtU2IxWUn/+6CtPz+hcR/TxIpvkTdAdow77mhkk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UsF4wNNwOQGUwacVgxHLQQp7h1K/+1JYCjckRW50m6ornAh2O7621y0tgIbkV9wNob4zD/N9epX5eSZt/K48R1/TG1OohxGu/JU6I1LnazCiiRDu/PweEzC2VzOw+ZZx+fuphXBJD5rfz6/tpOdl9jVLLWYIizFR1yIb739M3P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4bSbB02K49z9vGJ;
-	Thu, 26 Jun 2025 12:52:40 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id uDQegORpF3hS; Thu, 26 Jun 2025 12:52:40 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4bSbB017ZFz9vGH;
-	Thu, 26 Jun 2025 12:52:40 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 1B36F8B7B7;
-	Thu, 26 Jun 2025 12:52:40 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id 1FFBuvr_5nqx; Thu, 26 Jun 2025 12:52:39 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 8F3C38B7A7;
-	Thu, 26 Jun 2025 12:52:37 +0200 (CEST)
-Message-ID: <3b6ff3a9-6b88-4a28-a0fd-31f31ae3e84b@csgroup.eu>
-Date: Thu, 26 Jun 2025 12:52:37 +0200
+	s=arc-20240116; t=1750935289; c=relaxed/simple;
+	bh=SEM6HyExhFU2GWoujVoE6yGCN9Pv/tey8fAImhfz2kk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l8JxqjVMYCfwFP9gOrglv53CNwR74p0LMB96/mDj2sNN7YJzDYDMsDwzvl1xdvNYIiYChRrMRrVnuqoouyyzgfudaZc5gCtX/bx6vCsGf21rdtakKvVuUF7KxyG6IEcMT7z9f/Io4g6Hp0/LXhElsU/suvc8UsnSIYxCAYQWspE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=JzIZAb9y; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=nbd0Ne0622VhFQiazAeSeSd0HZDZzfsQfD/fxeuiTBM=; b=JzIZAb9yqA/BKjnoVRJ6SgLrdF
+	P9oJV+WK8T4kZ8BDAcptbzra9ua1gWjGlGljyxyKdDC4qE+9zWV2C23yHrpE8rvY3zxYfEVY/+tWs
+	zrGAb4FHicj0S7VJZGuke4v8muMVe6AHKWQnFvyPjyP5QpwhC2gbRoskLTYNyYMMn8hxDIk7LDKrZ
+	VP0VTOtQWzhq3MWafMzGTLl0YvOp3jfhqmfk/E0CDf3BTJDjgDFkepVxsHCn9UlMSg5Q7umPkBt+f
+	N+9RmOz+UdyEGEVoBqKM18onqC6yaCFY4hxwjNsLKee+ipC4GOYCmo3hSbP0UT/pRacv8GEXkGljG
+	ikYavItw==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uUk0D-001AxH-26;
+	Thu, 26 Jun 2025 18:54:43 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 26 Jun 2025 18:54:42 +0800
+Date: Thu, 26 Jun 2025 18:54:42 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Harald Freudenberger <freude@linux.ibm.com>
+Cc: linux-crypto@vger.kernel.org, linux-s390@vger.kernel.org,
+	dengler@linux.ibm.com, ifranzki@linux.ibm.com,
+	fcallies@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
+	agordeev@linux.ibm.com
+Subject: Re: [PATCH v12 0/6] New s390 specific protected key hmac
+Message-ID: <aF0m8szuDueszXrP@gondor.apana.org.au>
+References: <20250617134440.48000-1-freude@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 9/9] kasan/powerpc: call kasan_init_generic in kasan_init
-To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>, ryabinin.a.a@gmail.com,
- glider@google.com, andreyknvl@gmail.com, dvyukov@google.com,
- vincenzo.frascino@arm.com, catalin.marinas@arm.com, will@kernel.org,
- chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com,
- mpe@ellerman.id.au, npiggin@gmail.com, hca@linux.ibm.com, gor@linux.ibm.com,
- agordeev@linux.ibm.com, borntraeger@linux.ibm.com, svens@linux.ibm.com,
- richard@nod.at, anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
- dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
- hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com,
- akpm@linux-foundation.org
-Cc: guoweikang.kernel@gmail.com, geert@linux-m68k.org, rppt@kernel.org,
- tiwei.btw@antgroup.com, richard.weiyang@gmail.com, benjamin.berg@intel.com,
- kevin.brodsky@arm.com, kasan-dev@googlegroups.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org
-References: <20250625095224.118679-1-snovitoll@gmail.com>
- <20250625095224.118679-10-snovitoll@gmail.com>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250625095224.118679-10-snovitoll@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617134440.48000-1-freude@linux.ibm.com>
 
-
-
-Le 25/06/2025 à 11:52, Sabyrzhan Tasbolatov a écrit :
-> Call kasan_init_generic() which enables the static flag
-> to mark generic KASAN initialized, otherwise it's an inline stub.
-> Also prints the banner from the single place.
+On Tue, Jun 17, 2025 at 03:44:34PM +0200, Harald Freudenberger wrote:
+> Add support for protected key hmac ("phmac") for s390 arch.
 > 
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218315
-> Fixes: 55d77bae7342 ("kasan: fix Oops due to missing calls to kasan_arch_is_ready()")
-> Signed-off-by: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-> ---
->   arch/powerpc/include/asm/kasan.h       | 14 --------------
->   arch/powerpc/mm/kasan/init_book3s_64.c |  6 +-----
->   2 files changed, 1 insertion(+), 19 deletions(-)
+> With the latest machine generation there is now support for
+> protected key (that is a key wrapped by a master key stored
+> in firmware) hmac for sha2 (sha224, sha256, sha384 and sha512)
+> for the s390 specific CPACF instruction kmac.
 > 
-> diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/asm/kasan.h
-> index b5bbb94c51f..23a06fbec72 100644
-> --- a/arch/powerpc/include/asm/kasan.h
-> +++ b/arch/powerpc/include/asm/kasan.h
-> @@ -52,20 +52,6 @@
->   
->   #endif
->   
-> -#ifdef CONFIG_KASAN
+> This patch adds support via 4 new hashes registered as
+> phmac(sha224), phmac(sha256), phmac(sha384) and phmac(sha512).
+> 
+> Changelog:
+> v1: Initial version
+> v2: Increase HASH_MAX_DESCSIZE generic (not just for arch s390).
+>     Fix one finding to use kmemdup instead of kmalloc/memcpy from test
+>     robot. Remove unneeded cpacf subfunctions checks. Simplify
+>     clone_tfm() function. Rebased to s390/features.
+> v3: Feedback from Herbert: Use GFP_ATOMIC in setkey function.
+>     Feedback from Holger: rework tfm clone function, move convert key
+>     invocation from setkey to init function. Rebased to updated
+>     s390/features from 11/7/2024. Ready for integration if there are
+>     no complains on v3.
+> v4: Rewind back more or less to v2. Add code to check for non-sleeping
+>     context. Non-sleeping context during attempt to derive the
+>     protected key from raw key material is not accepted and
+>     -EOPNOTSUPP is returned (also currently all derivation pathes
+>     would in fact never sleep). In general the phmac implementation is
+>     not to be used within non-sleeping context and the code header
+>     mentions this. Tested with (patched) dm-integrity - works fine.
+> v5: As suggested by Herbert now the shashes have been marked as
+>     'internal' and wrapped by ahashes which use the cryptd if an
+>     atomic context is detected. So the visible phmac algorithms are
+>     now ahashes. Unfortunately the dm-integrity implementation
+>     currently requests and deals only with shashes and this phmac
+>     implementation is not fitting to the original goal any more...
+> v6: As suggested by Herbert now a pure async phmac implementation.
+>     Tested via AF_ALG interface. Untested via dm-integrity as this layer
+>     only supports shashes. Maybe I'll develop a patch to switch the
+>     dm-integrity to ahash as it is anyway the more flexible interface.
+> v7: Total rework of the implementation. Now uses workqueues and triggers
+>     asynch requests for key convert, init, update, final and digest.
+>     Tested with instrumented code and with a reworked version of
+>     dm-integrity which uses asynchronous hashes. A patch for dm-integrity
+>     is on the way but yet needs some last hone work.
+> v8: Added selftest. With the selftest comes some code which wraps the
+>     clear key into a "clear key token" digestible by PKEY. The
+>     selftest also uses import() and export(), so these are now also
+>     implemented. Furthermore a finup() implementation is now also
+>     available. Tested with AF_ALG testcases and dm-integrity, also
+>     tested with some instrumented code to check that the asynch
+>     workqueue functions do their job correctly. Coding is complete!
+> v9: As suggested by Herbert use ahash_request_complete() and surround it
+>     with local_bh_disable().
+> v10: Split the pkey selftest patch into 3 patches. Slight rework of the
+>      setkey function as suggested by Holger: When selftest is running
+>      as much as possible of the production code should run. So now the
+>      key prep with selftest is one additional if/then block instead of
+>      an if/then/else construct.
+>      Code is ready for integration and well tested.
+> v11: Utterly rework with the insights collected with the paes rework
+>      and the basic work done with the pkey rework over the last 5 month.
+>      Note that patch #1 effectively reverts commit 7fa481734016
+>      ("crypto: ahash - make hash walk functions private to ahash.c")
+>      from Eric Biggers.
+> v12: Fixed some typos, adaptions to 128 bit total counter,
+>      misc_register() invocation was missing in the patches series,
+>      added Herbert's proposal for a new function crypto_ahash_tested().
+> 
+> Harald Freudenberger (5):
+>   crypto: ahash - make hash walk functions from ahash.c  public
+>   s390/crypto: New s390 specific protected key hash phmac
+>   crypto: api - Add crypto_ahash_tested() helper function
+>   s390/crypto: Add selftest support for phmac
+>   crypto: testmgr - Enable phmac selftest
+> 
+> Holger Dengler (1):
+>   s390/crypto: Add protected key hmac subfunctions for KMAC
+> 
+>  arch/s390/configs/debug_defconfig |    1 +
+>  arch/s390/configs/defconfig       |    1 +
+>  arch/s390/crypto/Makefile         |    1 +
+>  arch/s390/crypto/phmac_s390.c     | 1048 +++++++++++++++++++++++++++++
+>  arch/s390/include/asm/cpacf.h     |    4 +
+>  crypto/ahash.c                    |   26 +-
+>  crypto/testmgr.c                  |   30 +
+>  drivers/crypto/Kconfig            |   13 +
+>  include/crypto/internal/hash.h    |   30 +
+>  9 files changed, 1133 insertions(+), 21 deletions(-)
+>  create mode 100644 arch/s390/crypto/phmac_s390.c
+> 
+> 
+> base-commit: 1029436218e50168812dbc44b16bca6d35721b0b
+> --
+> 2.43.0
 
-The above #ifdef must remain, at the moment I get:
-
-   CC      arch/powerpc/kernel/asm-offsets.s
-In file included from ./arch/powerpc/include/asm/nohash/32/pgtable.h:65,
-                  from ./arch/powerpc/include/asm/nohash/pgtable.h:13,
-                  from ./arch/powerpc/include/asm/pgtable.h:20,
-                  from ./include/linux/pgtable.h:6,
-                  from ./arch/powerpc/include/asm/kup.h:43,
-                  from ./arch/powerpc/include/asm/uaccess.h:8,
-                  from ./include/linux/uaccess.h:12,
-                  from ./include/linux/sched/task.h:13,
-                  from ./include/linux/sched/signal.h:9,
-                  from ./include/linux/rcuwait.h:6,
-                  from ./include/linux/percpu-rwsem.h:7,
-                  from ./include/linux/fs.h:34,
-                  from ./include/linux/compat.h:17,
-                  from arch/powerpc/kernel/asm-offsets.c:12:
-./arch/powerpc/include/asm/kasan.h:70:2: error: #endif without #if
-  #endif
-   ^~~~~
-In file included from ./include/linux/kasan.h:21,
-                  from ./include/linux/slab.h:260,
-                  from ./include/linux/fs.h:46,
-                  from ./include/linux/compat.h:17,
-                  from arch/powerpc/kernel/asm-offsets.c:12:
-./arch/powerpc/include/asm/kasan.h:70:2: error: #endif without #if
-  #endif
-   ^~~~~
-make[2]: *** [scripts/Makefile.build:182: 
-arch/powerpc/kernel/asm-offsets.s] Error 1
-
-
-> -#ifdef CONFIG_PPC_BOOK3S_64
-> -DECLARE_STATIC_KEY_FALSE(powerpc_kasan_enabled_key);
-> -
-> -static __always_inline bool kasan_arch_is_ready(void)
-> -{
-> -	if (static_branch_likely(&powerpc_kasan_enabled_key))
-> -		return true;
-> -	return false;
-> -}
-> -
-> -#define kasan_arch_is_ready kasan_arch_is_ready
-> -#endif
-> -
->   void kasan_early_init(void);
->   void kasan_mmu_init(void);
->   void kasan_init(void);
-> diff --git a/arch/powerpc/mm/kasan/init_book3s_64.c b/arch/powerpc/mm/kasan/init_book3s_64.c
-> index 7d959544c07..dcafa641804 100644
-> --- a/arch/powerpc/mm/kasan/init_book3s_64.c
-> +++ b/arch/powerpc/mm/kasan/init_book3s_64.c
-> @@ -19,8 +19,6 @@
->   #include <linux/memblock.h>
->   #include <asm/pgalloc.h>
->   
-> -DEFINE_STATIC_KEY_FALSE(powerpc_kasan_enabled_key);
-> -
->   static void __init kasan_init_phys_region(void *start, void *end)
->   {
->   	unsigned long k_start, k_end, k_cur;
-> @@ -92,11 +90,9 @@ void __init kasan_init(void)
->   	 */
->   	memset(kasan_early_shadow_page, 0, PAGE_SIZE);
->   
-> -	static_branch_inc(&powerpc_kasan_enabled_key);
-> -
->   	/* Enable error messages */
->   	init_task.kasan_depth = 0;
-> -	pr_info("KASAN init done\n");
-> +	kasan_init_generic();
->   }
->   
->   void __init kasan_early_init(void) { }
-
+All applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
 
