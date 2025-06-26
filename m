@@ -1,189 +1,185 @@
-Return-Path: <linux-s390+bounces-11315-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-11318-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19BEDAE9A12
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Jun 2025 11:32:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF2E8AE9C6E
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Jun 2025 13:20:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9938A6A2E73
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Jun 2025 09:31:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F29C916150A
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Jun 2025 11:20:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 007A42C08BB;
-	Thu, 26 Jun 2025 09:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LgoUIGxh"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3A3C275106;
+	Thu, 26 Jun 2025 11:20:44 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202C52BF3F8;
-	Thu, 26 Jun 2025 09:31:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 968A01DE2DC;
+	Thu, 26 Jun 2025 11:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750930286; cv=none; b=IV1rO0ZPrzsbwnFD4M3WGv3jSL/X2MxNGupxmK+YnP3ZizE8LNRlTSvsSkmBo+opeLwbT1loMfRawRAbDkCVm5NmbsZOQ9e3ZBNzgFlXzxZnleyYKOgHPIUEGUe2bzksSvYA7TRbhqwz12ZfTH2cgtag0D1LWl+fmwmrZ2aps7I=
+	t=1750936844; cv=none; b=GhwZaooK4TRUjw9wqiP+eyV8OXoMzjH1/u73gEgMfjBjOOFR713/Sk51miYYaitdAfdtdr7xpfsYOcdp2+exjfWAWkMswBHmyFRIc8aLmGD1EajMOJTHEkuVjQu9ifAwd84DLmuoWnapt8FvwAjB4L9B3/qj47VDSOL5mFifm+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750930286; c=relaxed/simple;
-	bh=ekv2eO6oe4yBEEcGx/v664SW1vBsIAVNXe/2ysde03Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n40brPWjCbmlvthR+07wZ1fQqX5wT81ZpzahNi53JzA6zhrXjKblFIImEjIxflhyNdFZdfOEdtwv1DmYkJnkEDMmnGOwLli2UpKfvbU3MEScuJ7SOGlmFnSadEL4OrVpp8WrfIvV69NXwFQ3R/q9mRis/KMJQGn1wIejWKinSwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LgoUIGxh; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-553bcf41440so805577e87.3;
-        Thu, 26 Jun 2025 02:31:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750930283; x=1751535083; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iuFmqpRengejqXGMt8z0krXQLsPU94kcoziX8PACH+I=;
-        b=LgoUIGxhPNV4WNEaGU0tVQDsGfdHOraRR7tnGFcPlXDVtYFujOYiyUTJQEdrvr/hph
-         DI/2DA6Nh8/La+q1oKW8LO4dNDxuu5k3GI8VudtdQJ3BNJ5M1cnbi7NkQYNh1yXT9NSc
-         m0LloyQ6QYeSSVOUIQYYfETIdfoNSh7luAt5x6NOr9TT3Kmn5oNIqlNrflR8ZiNTIuG4
-         K4BHOanK3+s3ak8h4imzAcNVr7k6ZeCnmISIt/tjgsgFJ7cDG0AFOcSlQsAUkOKWUqcm
-         xc/mFl8Nj+AGF+J/H+OoAOD0s1JOW2uPOHzzQQnWRtL3IzCO8TBdeqkpDXJfBWVdl+zk
-         r1RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750930283; x=1751535083;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iuFmqpRengejqXGMt8z0krXQLsPU94kcoziX8PACH+I=;
-        b=GK+tJmn1Sja9J6ytrrdw0Mna3Ixmk2FyFyIRJ5hf2aNH/zhGJ2yB+js3GjS9vCoH2V
-         M1HHRpITZxKLdBc+GC62QUZcrBpc14w/3xutPU7c8ZbmAM521YHvAT4bdVubhP01xgDe
-         Sot3J7Ray0GeaQCWbDPm5bcuKUluYbPFp1iY/agTRZ7avKimnXwSPM9oXpc0UYmujRl8
-         QgdGOx9rGkmGivSg8ft88Hq3K32AT5E9TOicHiy0fViHIRf8xgreGPnzECi0iFpT+4qE
-         HoWDSOztV9ebzb0NmU2Xgn9r59PbXMbwaFwJsQGvLRta+Exlh0sRe8OupPOwH7QcUPcQ
-         G4Hw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1pp4EXb+uWH33HEMBu3v9rvG6Hk8KdrtcDOQNzyx7LblKrzMh3tRYtbU7HQxg/LoEHiH9ZZMhk61ZuvI=@vger.kernel.org, AJvYcCVs/oIilUo37E2VFGGGFwK1DqEjbjRgi+igyCgJ96mJDskvepE5Ha9HYWc5goGI1SlRCKbCrPr5VOVHmQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqSZooKgPFfIEbrtJp0Vimh7uHh1VyZQ927AzNBa8d2iBt+DuH
-	nEFJbW1/Xm9GeT4cnQ+f7+o0WYrlMHO7xExINQLRN/LdvCDAF3rm55WVZMwUq3apNtQIbTLTCIx
-	yl/Gl2U+el6QMgQGiNvXQTlXDCyLMMDk=
-X-Gm-Gg: ASbGncunmaqP8OKhOkHZe6QXmyveZiCS8CJOjHzAONNnAEouz4j8I5k+Dio+cz7KYDz
-	RFw/zBh6IfHlFuoV6YeCmdK1VwEmfUr0B0h7rYpWjpuZztNwnp5uqxwAh9zS8Oj+fdZ0H5cs/N1
-	hsm6ISI49dAMYCFSweXQrMrLJtPSw1zwkOBgc5kAEo9bjsYuzuLvWx
-X-Google-Smtp-Source: AGHT+IHKD9vv7E6n80MsMeNjpJwBWGKsDmTjk3A0J3+cAywyuJ59mQfEiaL2YVTpTIc2tcdraTY+Dh5qWDg83RmXaIY=
-X-Received: by 2002:a05:6512:1150:b0:553:36b7:7b14 with SMTP id
- 2adb3069b0e04-554fdf96ec2mr2102615e87.37.1750930282937; Thu, 26 Jun 2025
- 02:31:22 -0700 (PDT)
+	s=arc-20240116; t=1750936844; c=relaxed/simple;
+	bh=C4f7VtU2IxWUn/+6CtPz+hcR/TxIpvkTdAdow77mhkk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UsF4wNNwOQGUwacVgxHLQQp7h1K/+1JYCjckRW50m6ornAh2O7621y0tgIbkV9wNob4zD/N9epX5eSZt/K48R1/TG1OohxGu/JU6I1LnazCiiRDu/PweEzC2VzOw+ZZx+fuphXBJD5rfz6/tpOdl9jVLLWYIizFR1yIb739M3P0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4bSbB02K49z9vGJ;
+	Thu, 26 Jun 2025 12:52:40 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id uDQegORpF3hS; Thu, 26 Jun 2025 12:52:40 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4bSbB017ZFz9vGH;
+	Thu, 26 Jun 2025 12:52:40 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 1B36F8B7B7;
+	Thu, 26 Jun 2025 12:52:40 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id 1FFBuvr_5nqx; Thu, 26 Jun 2025 12:52:39 +0200 (CEST)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 8F3C38B7A7;
+	Thu, 26 Jun 2025 12:52:37 +0200 (CEST)
+Message-ID: <3b6ff3a9-6b88-4a28-a0fd-31f31ae3e84b@csgroup.eu>
+Date: Thu, 26 Jun 2025 12:52:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625095224.118679-1-snovitoll@gmail.com> <20250625095224.118679-2-snovitoll@gmail.com>
- <db30beb6-a331-46b7-92a3-1ee7782e317a@csgroup.eu>
-In-Reply-To: <db30beb6-a331-46b7-92a3-1ee7782e317a@csgroup.eu>
-From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-Date: Thu, 26 Jun 2025 14:31:05 +0500
-X-Gm-Features: Ac12FXyxTyp0b2hD3uhdVzbeUTYpXnyKRANJYa2mQoNch15i1MQX1xBLZECmC3k
-Message-ID: <CACzwLxj3KWdy-mBu-te1OFf2FZ8eTp5CieYswF5NVY4qPWD93Q@mail.gmail.com>
-Subject: Re: [PATCH 1/9] kasan: unify static kasan_flag_enabled across modes
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: ryabinin.a.a@gmail.com, glider@google.com, andreyknvl@gmail.com, 
-	dvyukov@google.com, vincenzo.frascino@arm.com, catalin.marinas@arm.com, 
-	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, 
-	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, hca@linux.ibm.com, 
-	gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com, 
-	svens@linux.ibm.com, richard@nod.at, anton.ivanov@cambridgegreys.com, 
-	johannes@sipsolutions.net, dave.hansen@linux.intel.com, luto@kernel.org, 
-	peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	x86@kernel.org, hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com, 
-	akpm@linux-foundation.org, guoweikang.kernel@gmail.com, geert@linux-m68k.org, 
-	rppt@kernel.org, tiwei.btw@antgroup.com, richard.weiyang@gmail.com, 
-	benjamin.berg@intel.com, kevin.brodsky@arm.com, kasan-dev@googlegroups.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	linux-s390@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 9/9] kasan/powerpc: call kasan_init_generic in kasan_init
+To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>, ryabinin.a.a@gmail.com,
+ glider@google.com, andreyknvl@gmail.com, dvyukov@google.com,
+ vincenzo.frascino@arm.com, catalin.marinas@arm.com, will@kernel.org,
+ chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com,
+ mpe@ellerman.id.au, npiggin@gmail.com, hca@linux.ibm.com, gor@linux.ibm.com,
+ agordeev@linux.ibm.com, borntraeger@linux.ibm.com, svens@linux.ibm.com,
+ richard@nod.at, anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+ dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+ hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com,
+ akpm@linux-foundation.org
+Cc: guoweikang.kernel@gmail.com, geert@linux-m68k.org, rppt@kernel.org,
+ tiwei.btw@antgroup.com, richard.weiyang@gmail.com, benjamin.berg@intel.com,
+ kevin.brodsky@arm.com, kasan-dev@googlegroups.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+ linux-s390@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org
+References: <20250625095224.118679-1-snovitoll@gmail.com>
+ <20250625095224.118679-10-snovitoll@gmail.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250625095224.118679-10-snovitoll@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 25, 2025 at 3:35=E2=80=AFPM Christophe Leroy
-<christophe.leroy@csgroup.eu> wrote:
->
->
->
-> Le 25/06/2025 =C3=A0 11:52, Sabyrzhan Tasbolatov a =C3=A9crit :
-> > Historically the fast-path static key `kasan_flag_enabled` existed
-> > only for `CONFIG_KASAN_HW_TAGS`. Generic and SW_TAGS either relied on
-> > `kasan_arch_is_ready()` or evaluated KASAN checks unconditionally.
-> > As a result every architecture had to toggle a private flag
-> > in its `kasan_init()`.
-> >
-> > This patch turns the flag into a single global runtime predicate that
-> > is built for every `CONFIG_KASAN` mode and adds a helper that flips
-> > the key once KASAN is ready.
->
-> Shouldn't kasan_init_generic() also perform the following line to reduce
-> even more code duplication between architectures ?
->
->         init_task.kasan_depth =3D 0;
 
-I've tried to introduce a new function kasan_mark_ready() to gather
-all arch duplicated code in one place:
 
-In mm/kasan/common.c:
+Le 25/06/2025 à 11:52, Sabyrzhan Tasbolatov a écrit :
+> Call kasan_init_generic() which enables the static flag
+> to mark generic KASAN initialized, otherwise it's an inline stub.
+> Also prints the banner from the single place.
+> 
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218315
+> Fixes: 55d77bae7342 ("kasan: fix Oops due to missing calls to kasan_arch_is_ready()")
+> Signed-off-by: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+> ---
+>   arch/powerpc/include/asm/kasan.h       | 14 --------------
+>   arch/powerpc/mm/kasan/init_book3s_64.c |  6 +-----
+>   2 files changed, 1 insertion(+), 19 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/asm/kasan.h
+> index b5bbb94c51f..23a06fbec72 100644
+> --- a/arch/powerpc/include/asm/kasan.h
+> +++ b/arch/powerpc/include/asm/kasan.h
+> @@ -52,20 +52,6 @@
+>   
+>   #endif
+>   
+> -#ifdef CONFIG_KASAN
 
-void __init kasan_mark_ready(void)
-{
-        /* Enable error reporting */
-        init_task.kasan_depth =3D 0;
-        /* Mark KASAN as ready */
-        static_branch_enable(&kasan_flag_enabled);
-}
+The above #ifdef must remain, at the moment I get:
 
-So we could've called it
-in mm/kasan/generic.c:
-void __init kasan_init_generic(void)
-{
-        kasan_mark_ready();
-        pr_info("KernelAddressSanitizer initialized (generic)\n");
-}
+   CC      arch/powerpc/kernel/asm-offsets.s
+In file included from ./arch/powerpc/include/asm/nohash/32/pgtable.h:65,
+                  from ./arch/powerpc/include/asm/nohash/pgtable.h:13,
+                  from ./arch/powerpc/include/asm/pgtable.h:20,
+                  from ./include/linux/pgtable.h:6,
+                  from ./arch/powerpc/include/asm/kup.h:43,
+                  from ./arch/powerpc/include/asm/uaccess.h:8,
+                  from ./include/linux/uaccess.h:12,
+                  from ./include/linux/sched/task.h:13,
+                  from ./include/linux/sched/signal.h:9,
+                  from ./include/linux/rcuwait.h:6,
+                  from ./include/linux/percpu-rwsem.h:7,
+                  from ./include/linux/fs.h:34,
+                  from ./include/linux/compat.h:17,
+                  from arch/powerpc/kernel/asm-offsets.c:12:
+./arch/powerpc/include/asm/kasan.h:70:2: error: #endif without #if
+  #endif
+   ^~~~~
+In file included from ./include/linux/kasan.h:21,
+                  from ./include/linux/slab.h:260,
+                  from ./include/linux/fs.h:46,
+                  from ./include/linux/compat.h:17,
+                  from arch/powerpc/kernel/asm-offsets.c:12:
+./arch/powerpc/include/asm/kasan.h:70:2: error: #endif without #if
+  #endif
+   ^~~~~
+make[2]: *** [scripts/Makefile.build:182: 
+arch/powerpc/kernel/asm-offsets.s] Error 1
 
-in mm/kasan/sw_tags.c:
-void __init kasan_init_sw_tags(void)
-{
-...
-        kasan_mark_ready();
-        pr_info("KernelAddressSanitizer initialized ..");
-}
 
-in mm/kasan/hw_tags.c:
-void __init kasan_init_hw_tags(void)
-{
-...
-        kasan_mark_ready();
-        pr_info("KernelAddressSanitizer initialized ..");
-}
+> -#ifdef CONFIG_PPC_BOOK3S_64
+> -DECLARE_STATIC_KEY_FALSE(powerpc_kasan_enabled_key);
+> -
+> -static __always_inline bool kasan_arch_is_ready(void)
+> -{
+> -	if (static_branch_likely(&powerpc_kasan_enabled_key))
+> -		return true;
+> -	return false;
+> -}
+> -
+> -#define kasan_arch_is_ready kasan_arch_is_ready
+> -#endif
+> -
+>   void kasan_early_init(void);
+>   void kasan_mmu_init(void);
+>   void kasan_init(void);
+> diff --git a/arch/powerpc/mm/kasan/init_book3s_64.c b/arch/powerpc/mm/kasan/init_book3s_64.c
+> index 7d959544c07..dcafa641804 100644
+> --- a/arch/powerpc/mm/kasan/init_book3s_64.c
+> +++ b/arch/powerpc/mm/kasan/init_book3s_64.c
+> @@ -19,8 +19,6 @@
+>   #include <linux/memblock.h>
+>   #include <asm/pgalloc.h>
+>   
+> -DEFINE_STATIC_KEY_FALSE(powerpc_kasan_enabled_key);
+> -
+>   static void __init kasan_init_phys_region(void *start, void *end)
+>   {
+>   	unsigned long k_start, k_end, k_cur;
+> @@ -92,11 +90,9 @@ void __init kasan_init(void)
+>   	 */
+>   	memset(kasan_early_shadow_page, 0, PAGE_SIZE);
+>   
+> -	static_branch_inc(&powerpc_kasan_enabled_key);
+> -
+>   	/* Enable error messages */
+>   	init_task.kasan_depth = 0;
+> -	pr_info("KASAN init done\n");
+> +	kasan_init_generic();
+>   }
+>   
+>   void __init kasan_early_init(void) { }
 
-But it works only for CONFIG_KASAN_GENERIC mode,
-when arch code calls kasan_init(), for example, arm64:
-
-void __init kasan_init(void)
-{
-        kasan_init_shadow();
-        kasan_init_generic();
-}
-
-And for HW_TAGS, SW_TAGS it won't work.
-Fails during compiling:
-mm/kasan/common.c:45:12: error: no member named 'kasan_depth' in
-'struct task_struct'
-   45 |         init_task.kasan_depth =3D 0;
-
-because kasan_init_sw_tags(), kasan_init_hw_tags() are called
-once on CPU boot. For arm64, where these KASAN modes are supported,
-both functions are called in smp_prepare_boot_cpu().
-
-So I guess, every arch kasan_init() has to set in kasan_init()
-       init_task.kasan_depth =3D 0;
-to enable error messages before switching KASAN readiness
-via enabling kasan_flag_enabled key.
-
->
-> Christophe
->
 
