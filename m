@@ -1,172 +1,134 @@
-Return-Path: <linux-s390+bounces-11304-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-11306-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 088E7AE96F2
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Jun 2025 09:39:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF1F4AE9866
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Jun 2025 10:34:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 39032177C29
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Jun 2025 07:39:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9A4784A162D
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Jun 2025 08:34:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00457238141;
-	Thu, 26 Jun 2025 07:39:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4609E2957A7;
+	Thu, 26 Jun 2025 08:34:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YFoNCyfq"
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="T1lz9gJs"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6522F1B043C;
-	Thu, 26 Jun 2025 07:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 286E92949FF;
+	Thu, 26 Jun 2025 08:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750923565; cv=none; b=oEub0fMMnxWEUcfC2NvTZWTEDoZ5h5b9NmIqLPraOaQKWW6vJVFp++5aSv2MXyFAUDt+Z/wERfrR0YClcSCCyXe8OjO6YAvrN4eDB5uuAwNORiEElid8GJ8TbglDrroqvR9WSNU+KOd3DYYku26FNtnSzzdz+A6VwSlaEPbbTQw=
+	t=1750926860; cv=none; b=pbWDxAdMPWmQ/PYSS43QiCNV50ZSUJs4Wxc0K6KC+bFcl4iojhFPNz4AeSKKadbd7QUQuFooMdnVCXwY2XC3x+665KP1kLxkmv5H4s2zsiCkIha65KDw3skP56m76KXk5X+Guvd3AOFvzT1Ae8KilHbOVXNDs7KZPsJSL2htlnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750923565; c=relaxed/simple;
-	bh=EtPDjFi+XnuRhMRKP3rZUOFK2bjQDeiMwOur+xiZTUs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t2Vr7QbMorGa831D9NDqr++ohqDpoVPrQbRV4VuM/21AZP2Na/wwpSaZxkPtYiQdUqT1vzCpX0nXb2LuINfTWsmU/yerMNb1bSW/KL7iuJF77rBpVwXfiV/eiuneFxfV9kcA5kJbjAGSpB5QklUff8n9O7pqPGgmRy1Zn3RMTcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YFoNCyfq; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q4AZht015779;
-	Thu, 26 Jun 2025 07:39:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=XqhQ1W
-	VIGZgb/9ywZtvmcV5uYQ5lVsNXe04xKbEf1LU=; b=YFoNCyfqhIP6P9ZGIrwvc0
-	lZdq6vLMlsFDwPdl7NiIsPaNaMazJccTfyEfyMHtYVVT+EXVe/SMbstbqlp6HR+T
-	0AdSeWsxNJATaSrG3tWORNfHyzh+gDejUDYV0k2aEJ2lpPXVGQfBYWF9LiK+Wvp6
-	ANs/xEpq/kiA5+S6Dhm8qC6wzP0XMW1HMKgQwxd9qNEHtOiPdBCsEvisvbVWnKX2
-	08749Zwxgap0Hl1ZPmyNm/WXLvNfJ2M2h1QOq8A4DOLEZv2NaZvTklXXx5N6FAZF
-	Vm7Oy4ixSYA21P7Vvr/Y2Lhic1MDoCTlokG+J5gMTVsnh/JElhwfwCatar1DfMnw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dm8jmwbq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 07:39:16 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55Q7PE4h009937;
-	Thu, 26 Jun 2025 07:39:15 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dm8jmwbh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 07:39:15 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q4wbfU006397;
-	Thu, 26 Jun 2025 07:39:14 GMT
-Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47e82pdsxe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 26 Jun 2025 07:39:14 +0000
-Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
-	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55Q7dDb417564288
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 26 Jun 2025 07:39:13 GMT
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0A4C85805D;
-	Thu, 26 Jun 2025 07:39:13 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 16D9B5805A;
-	Thu, 26 Jun 2025 07:39:10 +0000 (GMT)
-Received: from [9.87.149.7] (unknown [9.87.149.7])
-	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 26 Jun 2025 07:39:09 +0000 (GMT)
-Message-ID: <7349ba11-f977-443c-b60c-c401cf58a23d@linux.ibm.com>
-Date: Thu, 26 Jun 2025 09:39:09 +0200
+	s=arc-20240116; t=1750926860; c=relaxed/simple;
+	bh=FN1dmMdntBApB4y6/lfPGkEMnKeVudcZ2z+5Sc1rh8g=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Tg5BivWcY95j8AlITsIgjwevTzLFwIf0plzk66K6yQOZN1hI5K+4p6P/hLzLVWANsFYRLSDY1eOlKPZ/tg8O76AdPPQrCuNyDR71q6A55bIj+TTAl8DbIAxqabaZLOpllGh4HEzbbNgH3hp0Ut/MwSNrSlLDEU1v5aLFDHcDcRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=T1lz9gJs; arc=none smtp.client-ip=185.226.149.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
+	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1uUi3d-00GFhq-LQ; Thu, 26 Jun 2025 10:34:09 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector2; h=Cc:To:Content-Transfer-Encoding:Content-Type:MIME-Version:
+	Message-Id:Date:Subject:From; bh=kS9LXDq20z8OjgHj2ryQ3q5/7FnNSMm+rTcaXVSxdds=
+	; b=T1lz9gJsk8zFyeAhFYB2uaRG7kvg2I2GXBqbJsBUFauEBt6USYg8ciFGXIwrakSzFLTNDgAyB
+	hLJs9UEkj0zI71O909fgdqe8jxMjhNTOmOAGKMENaNNhbL0leyu2vS1UwNdBhpQ15nUWK2v98ok72
+	Hfwvn5mKxPusU9WxYayJzc1EW8b2Nmv7PKu8h1Q15tlhU2FK4Qu0AKvbCdpT0/F2UVP0s1srsmiCf
+	qR5gUB+nPSsBCohEN6Z64SC08JXc+BQZ/9CyVJ1r0KijPqEi5XJ7zMFS1L1MndamwU9VOkoIrUAmM
+	IkiVhsNFlJRQ0Dgnj/Zk1hsXTAGb3cgWDIIjBQ==;
+Received: from [10.9.9.73] (helo=submission02.runbox)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1uUi3d-0004q4-7F; Thu, 26 Jun 2025 10:34:09 +0200
+Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1uUi3K-009Fh5-AG; Thu, 26 Jun 2025 10:33:50 +0200
+From: Michal Luczaj <mhal@rbox.co>
+Subject: [PATCH net-next v2 0/9] net: Remove unused function parameters in
+ skbuff.c
+Date: Thu, 26 Jun 2025 10:33:33 +0200
+Message-Id: <20250626-splice-drop-unused-v2-0-3268fac1af89@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v2] MAINTAINERS: update smc section
-To: Jan Karcher <jaka@linux.ibm.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
-        David Miller <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Alexandra Winter
- <wintera@linux.ibm.com>,
-        Thorsten Winkler <twinkler@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Sidraya Jayagond <sidraya@linux.ibm.com>,
-        Mahanta Jambigi <mjambigi@linux.ibm.com>,
-        Tony Lu
- <tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>,
-        "D. Wythe" <alibuda@linux.alibaba.com>
-References: <20250626051653.4259-1-jaka@linux.ibm.com>
-Content-Language: en-US
-From: Wenjia Zhang <wenjia@linux.ibm.com>
-In-Reply-To: <20250626051653.4259-1-jaka@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDA1OCBTYWx0ZWRfX2hq+g/X2FgyC LFeUXWKxcoIiwPtjuKCuiF9d9+mw+99hkfstxnIW7Dq2WFqP63oLY3qs2uGCGfloJsQPerGQUBy mRvlZ4X6xyeNtHPIMB3tvaobT89IHkrDfbbs9yXm08l81HSSYIp8nZS3FPEwp6d91oW82xB4Lp/
- sXgsxIXnXgT6yXA+a4fq1aDYg1eviZ9KndVinmc9NYGUWSo3QFcamXbGH8ur0uVc9mIo1Z2G8nt RSPnZ4t3xSrHsHJWezIkx8mysFhxdFFPp91zoVrA8kBmEHN+imH1bxrjOmqktZTShEIoNFtAQMQ BkjFHElqsNxqWxPmscy5B68RbhR0v0NqOS+e1WP8OdxByjx3CAVSVjrN1rJjy9NVLnu7ZEh0x76
- FY8s1MiNNZlIDeisP+Y0ZxloFo2KoTYsurF0WNfhOq7haFl2JsRs8oMtV2KkZIfLnMKE0Tau
-X-Proofpoint-GUID: rhdBHarsnlOQeBsy9nQoyi_Enq38eJIh
-X-Proofpoint-ORIG-GUID: -6JO3-8b-ByJPCxafyVT6NP9Mq-yJjLr
-X-Authority-Analysis: v=2.4 cv=combk04i c=1 sm=1 tr=0 ts=685cf924 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=SRrdq9N9AAAA:8 a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=qPgYS-SWOX8TBiLe_hsA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_03,2025-06-25_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 spamscore=0 adultscore=0 mlxlogscore=937 clxscore=1015
- impostorscore=0 suspectscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506260058
+X-B4-Tracking: v=1; b=H4sIAN0FXWgC/22NQQrDIBBFrxJm3Skq1kpXvUfJwuqkGSgqmoSUk
+ LtX0m2Xj8d/f4NKhanCrdug0MKVU2ygTh340cUXIYfGoIS6CCMt1vxmTxhKyjjHuVJAQZqcdVI
+ ZK6ENc6GB1yP6gEgTRlon6JsZuU6pfI63RR7+F1b6X3iRKNAPRktnriYIfS/PtJ59gn7f9y/MT
+ HecvAAAAA==
+X-Change-ID: 20250618-splice-drop-unused-0e4ea8a12681
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+ Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
+ David Ahern <dsahern@kernel.org>, Boris Pismenny <borisp@nvidia.com>, 
+ John Fastabend <john.fastabend@gmail.com>, 
+ Ayush Sawal <ayush.sawal@chelsio.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>, 
+ "D. Wythe" <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>, 
+ Wen Gu <guwen@linux.alibaba.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org, 
+ Michal Luczaj <mhal@rbox.co>
+X-Mailer: b4 0.14.2
 
+Couple of cleanup patches to get rid of unused function parameters around
+skbuff.c, plus little things spotted along the way.
 
+Offshoot of my question in [1], but way more contained. Found by adding
+"-Wunused-parameter -Wno-error" to KBUILD_CFLAGS and grepping for specific
+skbuff.c warnings.
 
-On 26.06.25 07:16, Jan Karcher wrote:
-> Due to changes of my responsibilities within IBM i
-> can no longer act as maintainer for smc.
-> 
-> As a result of the co-operation with Alibaba over
-> the last years we decided to, once more, give them
-> more responsibility for smc by appointing
-> D. Wythe <alibuda@linux.alibaba.com> and
-> Dust Li <dust.li@linux.alibaba.com>
-> as maintainers as well.
-> 
-> Within IBM Sidraya Jayagond <sidraya@linux.ibm.com>
-> and Mahanta Jambigi <mjambigi@linux.ibm.com>
-> are going to take over the maintainership for smc.
-> 
-> v1 -> v2:
-> * Added Mahanta as reviewer for the time being due
-> to missing contributions.
-> 
-> Signed-off-by: Jan Karcher <jaka@linux.ibm.com>
-> ---
->   MAINTAINERS | 6 ++++--
->   1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c3f7fbd0d67a..cfe9d000fbff 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -22550,9 +22550,11 @@ S:	Maintained
->   F:	drivers/misc/sgi-xp/
->   
->   SHARED MEMORY COMMUNICATIONS (SMC) SOCKETS
-> +M:	D. Wythe <alibuda@linux.alibaba.com>
-> +M:	Dust Li <dust.li@linux.alibaba.com>
-> +M:	Sidraya Jayagond <sidraya@linux.ibm.com>
->   M:	Wenjia Zhang <wenjia@linux.ibm.com>
-> -M:	Jan Karcher <jaka@linux.ibm.com>
-> -R:	D. Wythe <alibuda@linux.alibaba.com>
-> +R:	Mahanta Jambigi <mjambigi@linux.ibm.com>
->   R:	Tony Lu <tonylu@linux.alibaba.com>
->   R:	Wen Gu <guwen@linux.alibaba.com>
->   L:	linux-rdma@vger.kernel.org
+[1]: https://lore.kernel.org/netdev/972af569-0c90-4585-9e1f-f2266dab6ec6@rbox.co/
 
-Reviewed-by: Wenjia Zhang <wenjia@linux.ibm.com>
+Signed-off-by: Michal Luczaj <mhal@rbox.co>
+---
+Changes in v2:
+- Fix typos in commit messages
+- Remove one more unused parameter in skbuff.c (patch 9)
+- Collect R-b, add a one-line cleanup of smc_rx_splice() (patch 7) [Simon]
+- Link to v1: https://lore.kernel.org/r/20250624-splice-drop-unused-v1-0-cf641a676d04@rbox.co
+
+---
+Michal Luczaj (9):
+      net: splice: Drop unused @pipe
+      net: splice: Drop unused @flags
+      tcp: Drop tcp_splice_state::flags
+      af_unix: Drop unix_stream_read_state::splice_flags
+      net: splice: Drop unused @gfp
+      net: splice: Drop nr_pages_max initialization
+      net/smc: Drop nr_pages_max initialization
+      net: skbuff: Drop unused @skb
+      net: skbuff: Drop unused @skb
+
+ .../chelsio/inline_crypto/chtls/chtls_io.c         |  3 +-
+ include/linux/skbuff.h                             |  5 ++-
+ net/core/skbuff.c                                  | 37 ++++++++--------------
+ net/ipv4/ip_output.c                               |  3 +-
+ net/ipv4/tcp.c                                     |  7 ++--
+ net/ipv6/ip6_output.c                              |  3 +-
+ net/kcm/kcmsock.c                                  |  5 ++-
+ net/smc/smc_rx.c                                   |  1 -
+ net/tls/tls_sw.c                                   |  2 +-
+ net/unix/af_unix.c                                 |  7 ++--
+ 10 files changed, 26 insertions(+), 47 deletions(-)
+---
+base-commit: a9b24b3583ae1da7dbda031f141264f2da260219
+change-id: 20250618-splice-drop-unused-0e4ea8a12681
+
+Best regards,
+-- 
+Michal Luczaj <mhal@rbox.co>
+
 
