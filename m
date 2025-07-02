@@ -1,202 +1,133 @@
-Return-Path: <linux-s390+bounces-11435-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-11438-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4EA8AF5966
-	for <lists+linux-s390@lfdr.de>; Wed,  2 Jul 2025 15:37:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AFCECAF59C1
+	for <lists+linux-s390@lfdr.de>; Wed,  2 Jul 2025 15:43:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D0A8F481264
-	for <lists+linux-s390@lfdr.de>; Wed,  2 Jul 2025 13:33:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B7FA83AD8D1
+	for <lists+linux-s390@lfdr.de>; Wed,  2 Jul 2025 13:39:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A780B28312B;
-	Wed,  2 Jul 2025 13:25:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D5AE283FD9;
+	Wed,  2 Jul 2025 13:38:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fEcHzlCz"
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="uOsqb9wO"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31BF327FD78
-	for <linux-s390@vger.kernel.org>; Wed,  2 Jul 2025 13:25:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC56F280025;
+	Wed,  2 Jul 2025 13:38:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751462720; cv=none; b=mKLbiJOTNG3GrdBxePU0G2eQZIKgpCBbGV6q3+z9I3VecJ+L0keOhPMK4r9CuoETOF0Kt9cYS464uK6LvMPc1xvUOhqID1RMMGvanSbzWXA003WEi8xUVHN+wLlI17oHdsTQNiEWCxBMnl94HSTsa78CaPbljrkeqWhmKC6dlGY=
+	t=1751463527; cv=none; b=sP7La/pv4CdMEQbo67jpwonHzm+f91m0XZuBmXk0XVy7LAodAfeBdXq3tVts7+ldnPCUdLoyNgnKUD6iNPVRfo3D875rMelPQdaKD6/EV0OYmhPj7iwDAU4jbEWgaF3VmFF7B4oIRJ18w0+TrzGi5b297DWdyKxVenSNUZ7afFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751462720; c=relaxed/simple;
-	bh=MdRMMy04lIaDZD3VtMFnBPIPBh10oPPKF2nlCw+gDhM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TRXFamJbHH520TafFhyxuU7gKlsd2SFdgg0cy9EPvluuv/s1JFEjJViP+U/COQO5dbHv2mFELc4PxKTgs46s/3rHlvZ7ORxBIRwgfZkKCbwHvC/pNYpzEovIU2mA/Ctx4dWky1E25DJDcYvtdF4WcIkTDImgPrCBR9gS7JXMcHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fEcHzlCz; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Date: Wed, 2 Jul 2025 15:25:11 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751462716;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2AtJHOMqWJ6F384E1w5rTvvzxDPe7+FoXKxbqUWmqh0=;
-	b=fEcHzlCzoPeE8qMosDj/PqdbnAnnkrLQNiWkgozTiYWQq6moOFQNZ4ULGlSvdSNKqwQ4S9
-	nMXZblScAuwIsDzDRl15678OpFRLRdgz43IY9yL+B+sgJrH05LN+7X+kCVgKG4C/cwuq8I
-	Jkon6MWpJl2/v5wgBBDf4twpORJobbg=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Andrew Jones <andrew.jones@linux.dev>
-To: Alexandru Elisei <alexandru.elisei@arm.com>
-Cc: eric.auger@redhat.com, lvivier@redhat.com, thuth@redhat.com, 
-	frankja@linux.ibm.com, imbrenda@linux.ibm.com, nrb@linux.ibm.com, david@redhat.com, 
-	pbonzini@redhat.com, kvm@vger.kernel.org, kvmarm@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	will@kernel.org, julien.thierry.kdev@gmail.com, maz@kernel.org, 
-	oliver.upton@linux.dev, suzuki.poulose@arm.com, yuzenghui@huawei.com, joey.gouly@arm.com, 
-	andre.przywara@arm.com, shahuang@redhat.com
-Subject: Re: [kvm-unit-tests PATCH v4 00/13] arm/arm64: Add kvmtool to the
- runner script
-Message-ID: <20250702-c37fbf095d2665019da2c037@orel>
-References: <20250625154813.27254-1-alexandru.elisei@arm.com>
+	s=arc-20240116; t=1751463527; c=relaxed/simple;
+	bh=9UXv6Lv8Mgx5xwLb6Alh24jufOJ2+q7DhT8Nl4HXuvY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eL8mvjIBO/pT8ugQEzO2fKX4IurUqRJXTucp6EKWK1yTWaVKj1J+KvpeUZJ9MNsrDzKoVAzswRgI9ptM/YgXEjP+QRVE0WDd6wsdY5anXp/5nEX6GFRwJlbhyH8n9mufuYUq8XzGBOQKZtkoE5+D5/vR53WhZJO78PmwyOh6vEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=uOsqb9wO; arc=none smtp.client-ip=185.226.149.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1uWxfV-00GxOo-Ac; Wed, 02 Jul 2025 15:38:33 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector2; h=Cc:To:Content-Transfer-Encoding:Content-Type:MIME-Version:
+	Message-Id:Date:Subject:From; bh=rLI/a9ECryxZRQ9J4BCJbHJwt0Oclm9wiohMCVJ1XXA=
+	; b=uOsqb9wOvgHeZuau00vHqMtqAy75L00axpt98nL9aqznLT7tk/UllZTTi8Vx4Rcz1+oPLzxVs
+	fcP7sVuf77kt4ektZYfHpFoXJ3u98QpDFVZJjT0egF0xzhusweqXBoMUDRqtK6XTLzTp3o6ZgC4jK
+	ihLtc6Jt5ReVmJ/ktfEH/wUFUhVqalFfhO2/xynWTdNwQN6mQ2kE5As6MCPBdqfpaau3thNFuOAWp
+	g/jHEkaI8rgC4R9cHXlnEnEmOygn7QzbL+WFmlbb7VAq76GS7pndcPvL1oJ0s+6wO3Om5LuKcEUoo
+	v2ZoioVJq1Wy6WRsAPmVM65aio0kR06jgVUT/A==;
+Received: from [10.9.9.73] (helo=submission02.runbox)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1uWxfT-0006EX-TZ; Wed, 02 Jul 2025 15:38:32 +0200
+Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1uWxfC-009LCR-Li; Wed, 02 Jul 2025 15:38:14 +0200
+From: Michal Luczaj <mhal@rbox.co>
+Subject: [PATCH net-next v3 0/6] net: Remove unused function parameters in
+ skbuff.c
+Date: Wed, 02 Jul 2025 15:38:06 +0200
+Message-Id: <20250702-splice-drop-unused-v3-0-55f68b60d2b7@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625154813.27254-1-alexandru.elisei@arm.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAD82ZWgC/23OQQ7CIBAF0KuYWYsBioiuvIdxgTBYEgMNtKSm6
+ d0luNBFlz8/8/4skDF5zHDZLZCw+OxjqKHb78D0OjyReFszcMqPVDJF8vDyBolNcSBTmDJaQlG
+ gVppxqRjUwyGh83NDbxBwJAHnEe616X0eY3q3tcJa/4W52IILI5QYJwXT8iQtFdf0iPPBxIYV/
+ g/ITYBXoKt/OW2Ydur8A9Z1/QB6xmzK/QAAAA==
+X-Change-ID: 20250618-splice-drop-unused-0e4ea8a12681
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+ Ayush Sawal <ayush.sawal@chelsio.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ David Ahern <dsahern@kernel.org>, Neal Cardwell <ncardwell@google.com>, 
+ Kuniyuki Iwashima <kuniyu@google.com>, Wenjia Zhang <wenjia@linux.ibm.com>, 
+ Jan Karcher <jaka@linux.ibm.com>, "D. Wythe" <alibuda@linux.alibaba.com>, 
+ Tony Lu <tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org, 
+ Michal Luczaj <mhal@rbox.co>, Sidraya Jayagond <sidraya@linux.ibm.com>, 
+ Dust Li <dust.li@linux.alibaba.com>
+X-Mailer: b4 0.14.2
 
-Hi Paolo, Thomas, and others,
+Couple of cleanup patches to get rid of unused function parameters around
+skbuff.c, plus little things spotted along the way.
 
-This series has a subject of arm, but it makes lots of changes to
-common scripts. Can I get an ack on it? I'd like to merge it.
+Offshoot of my question in [1], but way more contained. Found by adding
+"-Wunused-parameter -Wno-error" to KBUILD_CFLAGS and grepping for specific
+skbuff.c warnings.
 
-Thanks,
-drew
+[1]: https://lore.kernel.org/netdev/972af569-0c90-4585-9e1f-f2266dab6ec6@rbox.co/
 
+Signed-off-by: Michal Luczaj <mhal@rbox.co>
+---
+Changes in v3:
+- Keep skb_splice_bits() @flags [Jakub, Paolo]
+- Link to v2: https://lore.kernel.org/r/20250626-splice-drop-unused-v2-0-3268fac1af89@rbox.co
 
-On Wed, Jun 25, 2025 at 04:48:00PM +0100, Alexandru Elisei wrote:
-> v3 can be found here [1]. Based on top of the series that add qemu_params and
-> test_args [2].
-> 
-> To goal is to allow the user to do:
-> 
-> $ ./configure --target=kvmtool
-> $ make clean && make
-> $ ./run_tests.sh
-> 
-> to run all the tests automatically with kvmtool.
-> 
-> Reasons to use kvmtool:
-> 
-> * kvmtool is smaller and a lot easier to modify compared to qemu, which
-> means developers may prefer it when adding or prototyping new features to
-> KVM, and being able to run all the tests reliably and automatically is very
-> useful.
-> 
-> * kvmtool is faster to run the tests (a couple of times faster on
-> my rockpro64), making for a quick turnaround. But do keep in mind that not
-> all tests work on kvmtool because of missing features compared to qemu.
-> 
-> * kvmtool does things differently than qemu: different memory layout,
-> different uart, PMU emulation is disabled by default, etc. This makes it a
-> good testing vehicule for kvm-unit-tests itself.
-> 
-> Changes v3->v4
-> --------------
-> 
-> Overview of the changes:
-> 
-> * Gathered Reviewed-by tags - thanks for the review!
-> 
-> * Sent patches #1 ("scripts: unittests.cfg: Rename 'extra_params' to
-> 'qemu_params'") and #2 ("scripts: Add 'test_args' test definition parameter")
-> as a separate series.
-> 
-> * Fixed the typos reported during the review.
-> 
-> * Ran shellcheck on the patches, this resulted in minor changes.
-> 
-> * Dropped patch "configure: Export TARGET unconditionally" - now the functions
-> in vmm.bash will check if TARGET is set, instead of having the other scripts use
-> $TARGET to directly index the vmm_opts array.
-> 
-> * Direct reads of $TARGET have been replaced with vmm_get_target(), to account
-> for the fact that most architectures don't configure $TARGET (only arm and
-> arm64 do that).
-> 
-> * Renamed check_vmm_supported() to vmm_check_supported() to match the
-> function names introduced in subsequent patches.
-> 
-> * Renamed vmm_opts->vmm_optname to match the new function names.
-> 
-> * Reordered the key-value pairs from vmm_optname in alphabetical order.
-> 
-> * Use the "," separator for the composite keys of the associative array instead
-> of ":" (don't remember why I originally settled on ":", but it was a really poor
-> choice).
-> 
-> * Dropped the Reviewed-by tags from Drew and Shaoqin Huang from patch #6
-> ("scripts: Use an associative array for qemu argument names") - the review is
-> much appreciated, but the way the vmm_opts array (now renamed to vmm_optname) is
-> created, and used, has changed, and since the patch is about introducing the
-> associative array, I thought it would be useful to have another round of review.
-> 
-> * Use functions instead of indexing vmm_opts (now vmm_optname) directly.
-> 
-> * Fixed standalone test generation by removing 'source vmm.bash' from
-> scripts/arch-run.bash, $arch/run and scripts/runtime, and having
-> scripts/mkstandalone.sh::generate_test() copy it directly in the final test
-> script. Didn't catch that during the previous iterations because I was
-> running the standalone tests from the top level source directory, and
-> "source scripts/vmm.bash" happened to work.
-> 
-> More details in the changelog for the modified patches.
-> 
-> [1] https://lore.kernel.org/kvm/20250507151256.167769-1-alexandru.elisei@arm.com/
-> [2] https://lore.kernel.org/kvm/20250625154354.27015-1-alexandru.elisei@arm.com/
-> 
-> Alexandru Elisei (13):
->   run_tests.sh: Document --probe-maxsmp argument
->   scripts: Document environment variables
->   scripts: Refuse to run the tests if not configured for qemu
->   scripts: Use an associative array for qemu argument names
->   scripts: Add 'kvmtool_params' to test definition
->   scripts: Add support for kvmtool
->   scripts: Add default arguments for kvmtool
->   scripts: Add KVMTOOL environment variable for kvmtool binary path
->   scripts: Detect kvmtool failure in premature_failure()
->   scripts: Do not probe for maximum number of VCPUs when using kvmtool
->   scripts/mkstandalone: Export $TARGET
->   scripts: Add 'disabled_if' test definition parameter for kvmtool to
->     use
->   scripts: Enable kvmtool
-> 
->  README.md               |  18 +++-
->  arm/efi/run             |   8 ++
->  arm/run                 | 161 ++++++++++++++++-----------
->  arm/unittests.cfg       |  31 ++++++
->  configure               |   1 -
->  docs/unittests.txt      |  26 ++++-
->  powerpc/run             |   5 +-
->  riscv/run               |   5 +-
->  run_tests.sh            |  35 +++---
->  s390x/run               |   3 +-
->  scripts/arch-run.bash   | 112 +++++++------------
->  scripts/common.bash     |  30 ++++--
->  scripts/mkstandalone.sh |   8 +-
->  scripts/runtime.bash    |  35 ++----
->  scripts/vmm.bash        | 234 ++++++++++++++++++++++++++++++++++++++++
->  x86/run                 |   5 +-
->  16 files changed, 525 insertions(+), 192 deletions(-)
->  create mode 100644 scripts/vmm.bash
-> 
-> -- 
-> 2.50.0
-> 
-> 
-> -- 
-> kvm-riscv mailing list
-> kvm-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kvm-riscv
+Changes in v2:
+- Fix typos in commit messages
+- Remove one more unused parameter in skbuff.c (patch 9)
+- Collect R-b, add a one-line cleanup of smc_rx_splice() (patch 7) [Simon]
+- Link to v1: https://lore.kernel.org/r/20250624-splice-drop-unused-v1-0-cf641a676d04@rbox.co
+
+---
+Michal Luczaj (6):
+      net: splice: Drop unused @pipe
+      net: splice: Drop unused @gfp
+      net: splice: Drop nr_pages_max initialization
+      net/smc: Drop nr_pages_max initialization
+      net: skbuff: Drop unused @skb
+      net: skbuff: Drop unused @skb
+
+ .../chelsio/inline_crypto/chtls/chtls_io.c         |  3 +-
+ include/linux/skbuff.h                             |  2 +-
+ net/core/skbuff.c                                  | 34 +++++++++-------------
+ net/ipv4/ip_output.c                               |  3 +-
+ net/ipv4/tcp.c                                     |  3 +-
+ net/ipv6/ip6_output.c                              |  3 +-
+ net/kcm/kcmsock.c                                  |  3 +-
+ net/smc/smc_rx.c                                   |  1 -
+ net/unix/af_unix.c                                 |  3 +-
+ 9 files changed, 20 insertions(+), 35 deletions(-)
+---
+base-commit: e96ee511c906c59b7c4e6efd9d9b33917730e000
+change-id: 20250618-splice-drop-unused-0e4ea8a12681
+
+Best regards,
+-- 
+Michal Luczaj <mhal@rbox.co>
+
 
