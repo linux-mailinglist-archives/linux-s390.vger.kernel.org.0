@@ -1,185 +1,152 @@
-Return-Path: <linux-s390+bounces-11731-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-11734-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28225B19D93
-	for <lists+linux-s390@lfdr.de>; Mon,  4 Aug 2025 10:26:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AFFEFB19F0F
+	for <lists+linux-s390@lfdr.de>; Mon,  4 Aug 2025 11:55:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EFE85174DB7
-	for <lists+linux-s390@lfdr.de>; Mon,  4 Aug 2025 08:26:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 70DBD3BB57F
+	for <lists+linux-s390@lfdr.de>; Mon,  4 Aug 2025 09:55:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7206323B63C;
-	Mon,  4 Aug 2025 08:26:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79C5F244673;
+	Mon,  4 Aug 2025 09:55:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="e+6ibFyJ"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JX8u+a3c"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D327241673;
-	Mon,  4 Aug 2025 08:26:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD691245031;
+	Mon,  4 Aug 2025 09:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754295986; cv=none; b=XrP2sGE/2HpnMN+O+UtVhyfjehxnrGyY3Zjm6yjrZSd2DgEgqPef3elEDn34Qw3Dyn5DWTYFK+D7aY3YggUV3jZs95LsPJ8mkC64iIVeZsXvPzNR4vVhjAzJxszyePKJzNc1hCdarNO3vaSz81TEt3ihoQaZSd980myANZFMhug=
+	t=1754301346; cv=none; b=dSZb5dL+Sp/U9Mc2mYIum+o9g8HMZkzM/gNuhf0OkjjwQWlWqohlxomZQAfEJ1I0RVwF6F7G2Tf32M9XFmtAr32aAimFz/SssuBYF24+1kZrIcv8U8viwHib1/DM+hsSLnUw0cIuGhTzdZVq59JcijecA6xj2DJlLO7J7cJmr3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754295986; c=relaxed/simple;
-	bh=4nz2pQeFXCsvdMKj0bF/k07bhoSmBAiNp2ChdL1jFzo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=frUe/QE8MxWKGgTt5BfLTjmU/H8Ln4FrLLfkdOCApE8yt6SITRRlLqAfArBoewLQLvor+KXZLuRADPU9Y4XtWb90n+HfaLN2DlsMZtEEhN/FxzJxn09JQ3Pu+3QnIRBwIFP7XT0Ju0b7PTs6UF2o8Wxrmb5YV1/BzgcLYhGYWi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=e+6ibFyJ; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=hf1vje5kyoKYOcmhLP1VHV7D/dW4HdknY9UdhcGoZdM=;
-	b=e+6ibFyJF1BjSOiseLpLnkNuk553jPYcnTOS2E5AGSqDF9L0hXkZZChIeIbDux
-	0QhKjaqnhF2RKC1eqiFYZHeCRjFCFixMVWaciK9yGq0SPhCLqsJX6Y767k2yYx+T
-	rZmHGs2rLSXhapWARp+KpSztDCRo4Qaj94jPGlTHWzk8A=
-Received: from [192.168.106.52] (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wCHQqGAbpBohEodJg--.27698S2;
-	Mon, 04 Aug 2025 16:25:39 +0800 (CST)
-Message-ID: <f4dfc405-1841-4254-95e9-2079c183277d@163.com>
-Date: Mon, 4 Aug 2025 16:25:35 +0800
+	s=arc-20240116; t=1754301346; c=relaxed/simple;
+	bh=LXaJJmPQqXnbL/bmZnzqXb0txLVlMmOtBWlErQC9Kr4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=urXng2deX39EQv1UFo9TLVFW0hZL94dm7j/LPsSFUzwzzfBswYD3WN25oNPtMvcHLD6QCSYnd9JgvtkLEOjcpr+Ji8dC+WXS9U8+OZ76LmQGHd7f3TPCFiF+RauRB1PLEJ3ImmHCQbj5fHTvBGMlQQ/j8kIwfiAxm95RDSZqqRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JX8u+a3c; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 573IecYw009060;
+	Mon, 4 Aug 2025 09:55:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=DAQV0AwXeHE/PwMvOBgIQg+ASlsQc1X48WemPBpqA
+	p8=; b=JX8u+a3cp4KDC/RV+NejW54b99E6nfTYDShlIaekUf1ehXchWAO2YpvP/
+	tgAIFJUbMXx3+jiGiGH0PQH2a02nZWyCLNpMCrIPaRqGNN6EZiLD7sTfV0C1vNs4
+	XLquDB49vtvYYvlSZjVaABXxwIg4WDEjKPow34Bc1a1I+CuqJp8wH/e2qV3mRUmq
+	GXzLbIITjlyj8AvLfNr2uvyC6uX7gfQ7n8DV3Wi//saBdgVbRW9ITKSApHjdQTBF
+	SCYKxFP/4ksZ4h38AJ/2KTVM0lSrlJL8qUhRON3ROTC0SdcooDEegCMqDSQes8If
+	VtnxKCD4nv+oJPGeeOsTfhwW+9iHg==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48983t0ggv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 Aug 2025 09:55:39 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5746go6e006876;
+	Mon, 4 Aug 2025 09:55:39 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 489xgmd38b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 Aug 2025 09:55:38 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5749tYsA39715282
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 4 Aug 2025 09:55:34 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 748E420328;
+	Mon,  4 Aug 2025 08:40:30 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5238D20326;
+	Mon,  4 Aug 2025 08:40:30 +0000 (GMT)
+Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  4 Aug 2025 08:40:30 +0000 (GMT)
+From: Sumanth Korikkar <sumanthk@linux.ibm.com>
+To: Andrew Morton <akpm@linux-foundation.org>, linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>
+Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>, sumanthk@linux.ibm.com
+Subject: [PATCH] mm: fix accounting of memmap pages for early sections
+Date: Mon,  4 Aug 2025 10:40:15 +0200
+Message-ID: <20250804084015.270570-1-sumanthk@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: Fix endianness issues in pci_bus_read_config()
-To: Arnd Bergmann <arnd@kernel.org>, Gerd Bayer <gbayer@linux.ibm.com>,
- Manivannan Sadhasivam <mani@kernel.org>, Hans Zhang <hans.zhang@cixtech.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- jingoohan1@gmail.com, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>, linux-kernel@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-next <linux-next@vger.kernel.org>,
- linux-pci@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Rob Herring <robh@kernel.org>, Niklas Schnelle <schnelle@linux.ibm.com>,
- Geert Uytterhoeven <geert@linux-m68k.org>
-References: <20250731183944.GA3424583@bhelgaas>
- <6e34b4af-dff9-4360-b3da-c95ca7c740c9@app.fastmail.com>
- <vf65usnffqzlkgijm72nuaslxnflwrugc25vw6q6blbn2s2d2s@b35vjkowd6yc>
- <9a155e45-f723-4eec-81d3-2547bfe9a4e9@cixtech.com>
- <ofsbfhor5ah3yzvkc5g5kb4fpjlzoqkkzukctmr3f6ur4vl2e7@7zvudt63ucbk>
- <c8ffdd21-9000-40c2-9f4d-4d6318e730b5@cixtech.com>
- <cu7qdbwmnixqjce4aetr5ldwe3sqoixgq4fuzmzajzphjdywqq@yw6ojbgeqktm>
- <06f16b1a55eede3dc3e0bf31ff14eca89ab6f009.camel@linux.ibm.com>
- <06012cc6-824d-4a7d-85c9-9995ec915382@163.com>
- <74c17623-f1b5-4b28-a118-4e828e1e711a@app.fastmail.com>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <74c17623-f1b5-4b28-a118-4e828e1e711a@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wCHQqGAbpBohEodJg--.27698S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXFykWF4DAF45JrW7Zr1rCrg_yoW5CryDpF
-	Z8Cr4Fyw45Grn2krW0v3W0q3W0qa1rtFsIkwn5X34UuFsYgr13GFWY9w4a9r1ak3y8X3WI
-	vFZrKFy7G3Z0yFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jbR6wUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxafo2iQaIvKrgAAsO
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA0MDA1MyBTYWx0ZWRfX9UqKj1uDacui
+ qq95fm1prsbYncAw2VJR/2hLoXU2AqQa4QXuYW3LutQBIZId2CnnxZqTbXsqoAZvQjl6BNc1SyF
+ Yw/4ArdNT74fBp+fXzfEaRz7j/Geihorx3YRrZskAV9y5OSvP2RuULBc+QrjyAlBVHNOD/Zg8tc
+ WIQmobi9rnIrPFgtzmsueEcoKBkpMH0u/nD9Zixw0+QQ5yaFnS/7KB3OXEj8KQeimDOQ4JNrTxT
+ Lbyz0xBl7SZ31ni2rxEvlS/g6NDsAzN/fE3M0yB0RclbL1pCEkxQL+mFKRmNgYomit8p+tefSVS
+ Pd9+ztjHpBn1yZMC/+9aaLmQkUIU0uenFiDJye4d6x1mPiWGHQ9Xv7lJPmIULd+2t9cVzER1IeC
+ L4pgNYl7iJhDxjKvQCI9BARrrl2r6dSVgZO52vAQ/dtWoFvYktlF73iDeIK2Yzms/hk/Fwio
+X-Proofpoint-GUID: PFTZoDSImDPPihjzNlw7i8WSy-lbRLhl
+X-Proofpoint-ORIG-GUID: PFTZoDSImDPPihjzNlw7i8WSy-lbRLhl
+X-Authority-Analysis: v=2.4 cv=AZSxH2XG c=1 sm=1 tr=0 ts=6890839b cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=2OwXVqhp2XgA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=KawUSfIWrfKEQJWuwW8A:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-04_04,2025-08-04_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 priorityscore=1501 impostorscore=0 bulkscore=0
+ lowpriorityscore=0 mlxscore=0 spamscore=0 malwarescore=0 phishscore=0
+ suspectscore=0 mlxlogscore=434 adultscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2508040053
 
+memmap pages  can be allocated either from the memblock (boot) allocator
+during early boot or from the buddy allocator.
 
+When these memmap pages are removed via arch_remove_memory(), the
+deallocation path depends on their source:
 
-On 2025/8/4 16:03, Arnd Bergmann wrote:
-> On Mon, Aug 4, 2025, at 05:06, Hans Zhang wrote:
->> On 2025/8/1 19:30, Gerd Bayer wrote:
->>> On Fri, 2025-08-01 at 16:24 +0530, Manivannan Sadhasivam wrote:
->>    }
->>
->> +#define CDNS_PCI_OP_READ(size, type, len)		\
->> +static inline int cdns_pcie_read_cfg_##size		\
->> +	(struct cdns_pcie *pcie, int where, type *val)	\
->> +{							\
->> +	if (len == 4)					\
->> +		*val = cdns_pcie_readl(pcie, where);	\
->> +	else if (len == 2)				\
->> +		*val = cdns_pcie_readw(pcie, where);	\
->> +	else if (len == 1)				\
->> +		*val = cdns_pcie_readb(pcie, where);	\
->> +	else						\
->> +		return PCIBIOS_BAD_REGISTER_NUMBER;	\
->> +							\
->> +	return PCIBIOS_SUCCESSFUL;			\
->> +}
->> +
->> +CDNS_PCI_OP_READ(byte, u8, 1)
->> +CDNS_PCI_OP_READ(word, u16, 2)
->> +CDNS_PCI_OP_READ(dword, u32, 4)
->> +
-> 
-> This is fine for the calling conventions, but the use of a macro
-> doesn't really help readability, so I'd suggest just having
-> separate inline functions if they are even needed.
-> 
+* For pages from the buddy allocator, depopulate_section_memmap() is
+  called, which also decrements the count of nr_memmap_pages.
 
-Dear Arnd,
+* For pages from the boot allocator, free_map_bootmem() is called. But
+  it currently does not adjust the nr_memmap_boot_pages.
 
-Thank you very much for your reply.
+To fix this inconsistency, update free_map_bootmem() to also decrement
+the nr_memmap_boot_pages count by invoking memmap_boot_pages_add(),
+mirroring how free_vmemmap_page() handles this for boot-allocated pages.
 
-Will change.
+This ensures correct tracking of memmap pages regardless of allocation
+source.
 
->> @@ -112,17 +110,17 @@ int pci_bus_read_config(void *priv, unsigned int
->> devfn, int where, u32 size,
->>    ({									\
->>    	int __ttl = PCI_FIND_CAP_TTL;					\
->>    	u8 __id, __found_pos = 0;					\
->> -	u32 __pos = (start);						\
->> -	u32 __ent;							\
->> +	u8 __pos = (start);						\
->> +	u16 __ent;							\
->>    									\
->> -	read_cfg(args, __pos, 1, &__pos);				\
->> +	read_cfg##_byte(args, __pos, &__pos);				\
->>    									\
->>    	while (__ttl--) {						\
->>    		if (__pos < PCI_STD_HEADER_SIZEOF)			\
->>    			break;						\
->>    									\
->>    		__pos = ALIGN_DOWN(__pos, 4);				\
->> -		read_cfg(args, __pos, 2, &__ent);			\
->> +		read_cfg##_word(args, __pos, &__ent);			\
->>    									\
->>    		__id = FIELD_GET(PCI_CAP_ID_MASK, __ent);		\
->>    		if (__id == 0xff)					\
-> 
-> I still don't feel great about this macro either, and suspect
-> we should have a better abstraction with fixed types and a
-> global function to do it, but I don't see anything obviously
-> wrong here either.
+Cc: stable@vger.kernel.org
+Fixes: 15995a352474 ("mm: report per-page metadata information")
+Signed-off-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+---
+ mm/sparse.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-
-Here is the history of communication with Bjorn and Ilpo. Because 
-variable parameters need to be used, otherwise it will be very difficult 
-to unify. I'll also think about your proposal again.
-
-
-Bjorn:
-https://lore.kernel.org/linux-pci/20250715224705.GA2504490@bhelgaas/
- > > I would like this a lot better if it could be implemented as a
- > > function, but I assume it has to be a macro for some varargs reason.
- > >
- >
-Hans:
-https://lore.kernel.org/linux-pci/903ea9c4-87d6-45a8-9825-4a0d45ec608f@163.com/
- > Yes. The macro definitions used in combination with the previous review
- > opinions of Ilpo.
-
-Ilpo:
-https://lore.kernel.org/linux-pci/d59fde6e-3e4a-248a-ae56-c35b4c6ec44c@linux.intel.com/
-The other option would be to standardize the accessor interface signature
-and pass the function as a pointer. One might immediately think of generic
-PCI core accessors making it sound simpler than it is but here the
-complication is the controller drivers want to pass some internal
-structure due to lack of pci_dev so it would need to be void
-*read_cfg_data. Then we'd need to deal with those voids also in some
-generic PCI accessors which is a bit ugly.
-
-
-Best regards,
-Hans
+diff --git a/mm/sparse.c b/mm/sparse.c
+index 3c012cf83cc2..d7c128015397 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -688,6 +688,7 @@ static void free_map_bootmem(struct page *memmap)
+ 	unsigned long start = (unsigned long)memmap;
+ 	unsigned long end = (unsigned long)(memmap + PAGES_PER_SECTION);
+ 
++	memmap_boot_pages_add(-1L * (DIV_ROUND_UP(end - start, PAGE_SIZE)));
+ 	vmemmap_free(start, end, NULL);
+ }
+ 
+-- 
+2.48.1
 
 
