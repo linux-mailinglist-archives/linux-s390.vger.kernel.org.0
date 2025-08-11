@@ -1,195 +1,200 @@
-Return-Path: <linux-s390+bounces-11896-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-11898-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4E84B1FECB
-	for <lists+linux-s390@lfdr.de>; Mon, 11 Aug 2025 07:50:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 489E4B203D4
+	for <lists+linux-s390@lfdr.de>; Mon, 11 Aug 2025 11:36:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 657A43BB4EB
-	for <lists+linux-s390@lfdr.de>; Mon, 11 Aug 2025 05:50:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1204716997E
+	for <lists+linux-s390@lfdr.de>; Mon, 11 Aug 2025 09:35:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63EA9275B0A;
-	Mon, 11 Aug 2025 05:50:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43F2B1F3B98;
+	Mon, 11 Aug 2025 09:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nAVbP5DY"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53CDB26E71F;
-	Mon, 11 Aug 2025 05:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CA972624;
+	Mon, 11 Aug 2025 09:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754891438; cv=none; b=o+hfy+3/eRRHCQc/1a8lEk2H4b8ju/PxnVUVvpqGI2sKBE5dLm74JgCe/woe7sRlr1qLGbGiVM8GI/tJ3Pgm1M87yZ4Kzr5lHdBZUEihKdyG28QOFv2sezZSiizp52JrPDiuFH++z6WRwKWgg9fXTcSHm4udF/Qu9ByZ5xshGlc=
+	t=1754904914; cv=none; b=RDRyRLHZ62/FTTGQWvyR0Qleminn7e8dI5GYDhV+cPifEX5br91JxBvKsqXfsBobGTe2MeS8GuCwLVK1TVt/DmV6Qa8IgrGV19PT3PRDtqlIvT+5LHPyGSxx96kALJGMbAoN7CeiuKqAQ6B01bTsUQuCzzgauH+oNGC/IWovdks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754891438; c=relaxed/simple;
-	bh=W8N+9T3GwRiE6nS55sm/L2P+TWEETv7v1ISfhrS0rjA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MhsuPi5ei6JnwajX0UhAgkBlbcUl9O+oeXDJ1yOsMtF4UvfFjtt0K8Zr9AMHefrUug7+s2rbMlWfZ4HeUZmS7SlYIfCZBJG4jzz3GDN/cXgzbk0kxHVj6mpMG9dQZ5ztVMlwsc6GDGea5wGhZ3IMLuLkMnu4GA8b9sIbrzOyZlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4c0k2w2kRcz9sSL;
-	Mon, 11 Aug 2025 07:39:04 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 3Mxf0H61E1tl; Mon, 11 Aug 2025 07:39:04 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4c0k2w1bMnz9sSK;
-	Mon, 11 Aug 2025 07:39:04 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 199008B764;
-	Mon, 11 Aug 2025 07:39:04 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id bIxmuQ19phXS; Mon, 11 Aug 2025 07:39:03 +0200 (CEST)
-Received: from [10.25.207.160] (unknown [10.25.207.160])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id BAC418B763;
-	Mon, 11 Aug 2025 07:39:03 +0200 (CEST)
-Message-ID: <b8345cfe-0bde-44cd-b9b7-9a946ff8fc36@csgroup.eu>
-Date: Mon, 11 Aug 2025 07:39:03 +0200
+	s=arc-20240116; t=1754904914; c=relaxed/simple;
+	bh=2ZwxylsB2Cwq/rvyoSTDwCTj2j1ikXNbgKvfQtzfiIM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=Khr9OSXBMxkqFGqP15P20MZo4iXgf3w74WWu17fjrs2Lhr1izR0yRLtYtqaby2UCIJqxaDLJxe3BymYGrjT4OS4d/uCAHFYMambCnfKObSCQvDrBi0t3EKWCjNmTeWWn+/Rm1Vz2gv9/GhnX0rAQpkyrkKJNOC+N1grvA8ll6hI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nAVbP5DY; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57ALLNoK029952;
+	Mon, 11 Aug 2025 09:34:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=U9zuCk
+	9a4CIQxDbpkwJyEPUlSTdQtCQi9qS3qt6IsBE=; b=nAVbP5DYod1gSp3wPYwypP
+	pn1A0jycqfztbzTb+M9q3iXpzAfUi9Yu56MPE5Ehgdc3l/G++UwTjEA7XMrObiO4
+	8RvS5pJIPHO8M+6wp+05xD2yikC4/9LQkpWc5rdXpiMKboRDMyZHhMeGraEB+AXX
+	fOWLuR4ga9gE6o4JuFQaSfURE6M2BGaA0iHOs8A9/dRBJvQDl5atOxTzDxpqDRCy
+	TNJP34dmomxwh/6uu2JFbFmJU5SVcP46Q7b+pKEIBjtdy8cnLUejnRSAcSqyLQck
+	XLl7Msj5aNx+nsS+BiEUZE2SyFnh66HK7uP/FXBFu19Bmw3Fqq56UDVRvLW82iaQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48dwud0k4r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 11 Aug 2025 09:34:56 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 57B9YtHl004330;
+	Mon, 11 Aug 2025 09:34:55 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48dwud0k4p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 11 Aug 2025 09:34:55 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 57B6jXVD025654;
+	Mon, 11 Aug 2025 09:34:54 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 48ejvm50j7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 11 Aug 2025 09:34:54 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 57B9Yoau23069100
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 11 Aug 2025 09:34:51 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D349020043;
+	Mon, 11 Aug 2025 09:34:50 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3201420040;
+	Mon, 11 Aug 2025 09:34:49 +0000 (GMT)
+Received: from localhost (unknown [9.111.3.65])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 11 Aug 2025 09:34:49 +0000 (GMT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/2] kasan: call kasan_init_generic in kasan_init
-To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>, ryabinin.a.a@gmail.com,
- bhe@redhat.com, hca@linux.ibm.com, andreyknvl@gmail.com,
- akpm@linux-foundation.org, zhangqing@loongson.cn, chenhuacai@loongson.cn,
- davidgow@google.com, glider@google.com, dvyukov@google.com,
- alexghiti@rivosinc.com
-Cc: alex@ghiti.fr, agordeev@linux.ibm.com, vincenzo.frascino@arm.com,
- elver@google.com, kasan-dev@googlegroups.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-um@lists.infradead.org, linux-mm@kvack.org
-References: <20250810125746.1105476-1-snovitoll@gmail.com>
- <20250810125746.1105476-3-snovitoll@gmail.com>
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-Content-Language: fr-FR
-In-Reply-To: <20250810125746.1105476-3-snovitoll@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 11 Aug 2025 11:34:45 +0200
+Message-Id: <DBZHV2Z3T4M5.1G8HW0HFP8GLO@linux.ibm.com>
+Subject: Re: [RFC net-next 15/17] net/dibs: Move query_remote_gid() to
+ dibs_dev_ops
+From: "Julian Ruess" <julianr@linux.ibm.com>
+To: "Alexandra Winter" <wintera@linux.ibm.com>,
+        "David Miller"
+ <davem@davemloft.net>,
+        "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni"
+ <pabeni@redhat.com>,
+        "Eric Dumazet" <edumazet@google.com>,
+        "Andrew Lunn"
+ <andrew+netdev@lunn.ch>,
+        "D. Wythe" <alibuda@linux.alibaba.com>,
+        "Dust Li"
+ <dust.li@linux.alibaba.com>,
+        "Sidraya Jayagond" <sidraya@linux.ibm.com>,
+        "Wenjia Zhang" <wenjia@linux.ibm.com>,
+        "Julian Ruess"
+ <julianr@linux.ibm.com>
+Cc: <netdev@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+        "Heiko Carstens"
+ <hca@linux.ibm.com>,
+        "Vasily Gorbik" <gor@linux.ibm.com>,
+        "Alexander
+ Gordeev" <agordeev@linux.ibm.com>,
+        "Christian Borntraeger"
+ <borntraeger@linux.ibm.com>,
+        "Sven Schnelle" <svens@linux.ibm.com>,
+        "Thorsten Winkler" <twinkler@linux.ibm.com>,
+        "Simon Horman"
+ <horms@kernel.org>,
+        "Mahanta Jambigi" <mjambigi@linux.ibm.com>,
+        "Tony Lu"
+ <tonylu@linux.alibaba.com>,
+        "Wen Gu" <guwen@linux.alibaba.com>,
+        "Halil
+ Pasic" <pasic@linux.ibm.com>, <linux-rdma@vger.kernel.org>
+X-Mailer: aerc 0.20.1-89-g2ed71ec4c9b9
+References: <20250806154122.3413330-1-wintera@linux.ibm.com>
+ <20250806154122.3413330-16-wintera@linux.ibm.com>
+In-Reply-To: <20250806154122.3413330-16-wintera@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODExMDA2MiBTYWx0ZWRfXywnBeQ0XHwDl
+ hmuPWPtAAEM2SQixHHoQ5fsvDse7vTMzrC/2Q846CfxPP2CnGxab7FYurfgxDZFTdYAkpMa8nbQ
+ UaHwjcM7y9bkK0hMxhbwVnq61eScEtIr0TrO068kGhLxF9WqJsqEt+YmoWd+Gg7FlUQLJ9kXkqR
+ LKUEw/q2z34xEb53WsYg4q7jYQ66oabQyAf/p69Ex4y+SCSpH8KtxpkBXH2TRDndLmHw5nlJ+Gj
+ dDuZ/u2qmlGMpYPIyQJP6YByWYSGxXAsepFcsYsTnSRhy52xAQET/FqLcBiciEgLt6ifpLh5H2d
+ PGzA8Eu7NUD5rEJvj0c4z2cEMDhuI9eqyLFmcxCZtN5uXsGUArIGToLcxbe1MFQtE1UlJiUgwE7
+ gHAWW9OW1RTSwIsmcN1ZgLt3qN7THRyjMsQSFrjDcySxuGOgBq0HbCt3nrP+PeuzuVdidjRM
+X-Authority-Analysis: v=2.4 cv=d/31yQjE c=1 sm=1 tr=0 ts=6899b940 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=VnNF1IyMAAAA:8 a=jCXx2w3Ciln4EzbrpMcA:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: nzGxTHx6airBsFf8-a7MLiG6oquhhpt4
+X-Proofpoint-ORIG-GUID: bAGj4ybGNeTeedoc1_sO0gOPQD2F6qwW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-11_01,2025-08-06_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 mlxscore=0 suspectscore=0 impostorscore=0 priorityscore=1501
+ mlxlogscore=999 phishscore=0 lowpriorityscore=0 adultscore=0 spamscore=0
+ bulkscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2507300000
+ definitions=main-2508110062
 
-
-
-Le 10/08/2025 à 14:57, Sabyrzhan Tasbolatov a écrit :
-> Call kasan_init_generic() which handles Generic KASAN initialization.
-> For architectures that do not select ARCH_DEFER_KASAN,
-> this will be a no-op for the runtime flag but will
-> print the initialization banner.
-> 
-> For SW_TAGS and HW_TAGS modes, their respective init functions will
-> handle the flag enabling, if they are enabled/implemented.
-> 
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217049
-> Signed-off-by: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-> Tested-by: Alexandre Ghiti <alexghiti@rivosinc.com> # riscv
-> Acked-by: Alexander Gordeev <agordeev@linux.ibm.com> # s390
-
-Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-
+On Wed Aug 6, 2025 at 5:41 PM CEST, Alexandra Winter wrote:
+> Provide the dibs_dev_ops->query_remote_gid() in ism and dibs_loopback
+> dibs_devices. And call it in smc dibs_client.
+>
+> Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
+> Reviewed-by: Julian Ruess <julianr@linux.ibm.com>
 > ---
-> Changes in v6:
-> - Call kasan_init_generic() in arch/riscv _after_ local_flush_tlb_all()
-> ---
->   arch/arm/mm/kasan_init.c    | 2 +-
->   arch/arm64/mm/kasan_init.c  | 4 +---
->   arch/riscv/mm/kasan_init.c  | 1 +
->   arch/s390/kernel/early.c    | 3 ++-
->   arch/x86/mm/kasan_init_64.c | 2 +-
->   arch/xtensa/mm/kasan_init.c | 2 +-
->   6 files changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/arm/mm/kasan_init.c b/arch/arm/mm/kasan_init.c
-> index 111d4f703136..c6625e808bf8 100644
-> --- a/arch/arm/mm/kasan_init.c
-> +++ b/arch/arm/mm/kasan_init.c
-> @@ -300,6 +300,6 @@ void __init kasan_init(void)
->   	local_flush_tlb_all();
->   
->   	memset(kasan_early_shadow_page, 0, PAGE_SIZE);
-> -	pr_info("Kernel address sanitizer initialized\n");
->   	init_task.kasan_depth = 0;
-> +	kasan_init_generic();
->   }
-> diff --git a/arch/arm64/mm/kasan_init.c b/arch/arm64/mm/kasan_init.c
-> index d541ce45daeb..abeb81bf6ebd 100644
-> --- a/arch/arm64/mm/kasan_init.c
-> +++ b/arch/arm64/mm/kasan_init.c
-> @@ -399,14 +399,12 @@ void __init kasan_init(void)
->   {
->   	kasan_init_shadow();
->   	kasan_init_depth();
-> -#if defined(CONFIG_KASAN_GENERIC)
-> +	kasan_init_generic();
->   	/*
->   	 * Generic KASAN is now fully initialized.
->   	 * Software and Hardware Tag-Based modes still require
->   	 * kasan_init_sw_tags() and kasan_init_hw_tags() correspondingly.
->   	 */
-> -	pr_info("KernelAddressSanitizer initialized (generic)\n");
-> -#endif
->   }
->   
->   #endif /* CONFIG_KASAN_GENERIC || CONFIG_KASAN_SW_TAGS */
-> diff --git a/arch/riscv/mm/kasan_init.c b/arch/riscv/mm/kasan_init.c
-> index 41c635d6aca4..c4a2a9e5586e 100644
-> --- a/arch/riscv/mm/kasan_init.c
-> +++ b/arch/riscv/mm/kasan_init.c
-> @@ -533,4 +533,5 @@ void __init kasan_init(void)
->   
->   	csr_write(CSR_SATP, PFN_DOWN(__pa(swapper_pg_dir)) | satp_mode);
->   	local_flush_tlb_all();
-> +	kasan_init_generic();
->   }
-> diff --git a/arch/s390/kernel/early.c b/arch/s390/kernel/early.c
-> index 9adfbdd377dc..544e5403dd91 100644
-> --- a/arch/s390/kernel/early.c
-> +++ b/arch/s390/kernel/early.c
-> @@ -21,6 +21,7 @@
->   #include <linux/kernel.h>
->   #include <asm/asm-extable.h>
->   #include <linux/memblock.h>
-> +#include <linux/kasan.h>
->   #include <asm/access-regs.h>
->   #include <asm/asm-offsets.h>
->   #include <asm/machine.h>
-> @@ -65,7 +66,7 @@ static void __init kasan_early_init(void)
->   {
->   #ifdef CONFIG_KASAN
->   	init_task.kasan_depth = 0;
-> -	pr_info("KernelAddressSanitizer initialized\n");
-> +	kasan_init_generic();
->   #endif
->   }
->   
-> diff --git a/arch/x86/mm/kasan_init_64.c b/arch/x86/mm/kasan_init_64.c
-> index 0539efd0d216..998b6010d6d3 100644
-> --- a/arch/x86/mm/kasan_init_64.c
-> +++ b/arch/x86/mm/kasan_init_64.c
-> @@ -451,5 +451,5 @@ void __init kasan_init(void)
->   	__flush_tlb_all();
->   
->   	init_task.kasan_depth = 0;
-> -	pr_info("KernelAddressSanitizer initialized\n");
-> +	kasan_init_generic();
->   }
-> diff --git a/arch/xtensa/mm/kasan_init.c b/arch/xtensa/mm/kasan_init.c
-> index f39c4d83173a..0524b9ed5e63 100644
-> --- a/arch/xtensa/mm/kasan_init.c
-> +++ b/arch/xtensa/mm/kasan_init.c
-> @@ -94,5 +94,5 @@ void __init kasan_init(void)
->   
->   	/* At this point kasan is fully initialized. Enable error messages. */
->   	current->kasan_depth = 0;
-> -	pr_info("KernelAddressSanitizer initialized\n");
-> +	kasan_init_generic();
->   }
+>  drivers/s390/net/ism_drv.c | 41 +++++++++++++++++---------------------
+>  include/linux/dibs.h       | 14 +++++++++++++
+>  include/net/smc.h          |  2 --
+>  net/dibs/dibs_loopback.c   | 10 ++++++++++
+>  net/smc/smc_ism.c          |  8 ++++++--
+>  net/smc/smc_loopback.c     | 13 ------------
+>  6 files changed, 48 insertions(+), 40 deletions(-)
+>
 
+-- snip --
+
+> diff --git a/include/linux/dibs.h b/include/linux/dibs.h
+> index 10be10ae4660..d940411aa179 100644
+> --- a/include/linux/dibs.h
+> +++ b/include/linux/dibs.h
+> @@ -133,6 +133,20 @@ struct dibs_dev_ops {
+>  	 * Return: 2 byte dibs fabric id
+>  	 */
+>  	u16 (*get_fabric_id)(struct dibs_dev *dev);
+> +	/**
+> +	 * query_remote_gid()
+> +	 * @dev: local dibs device
+> +	 * @rgid: gid of remote dibs device
+> +	 * @vid_valid: if zero, vid will be ignored;
+> +	 *	       deprecated, ignored if device does not support vlan
+> +	 * @vid: VLAN id; deprecated, ignored if device does not support vlan
+> +	 *
+> +	 * Query whether a remote dibs device is reachable via this local devic=
+e
+> +	 * and this vlan id.
+> +	 * Return: 0 if remote gid is reachable.
+> +	 */
+> +	int (*query_remote_gid)(struct dibs_dev *dev, uuid_t *rgid,
+> +				u32 vid_valid, u32 vid);
+
+Shouldn't this be 'const uuid_t *rgid'?
+
+-- snip --
+
+Thanks,
+Julian
 
