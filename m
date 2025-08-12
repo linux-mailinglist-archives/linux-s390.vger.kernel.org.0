@@ -1,174 +1,120 @@
-Return-Path: <linux-s390+bounces-11957-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-11960-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B19D2B239D1
-	for <lists+linux-s390@lfdr.de>; Tue, 12 Aug 2025 22:13:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F38AB23C14
+	for <lists+linux-s390@lfdr.de>; Wed, 13 Aug 2025 00:57:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F0C2C1893687
-	for <lists+linux-s390@lfdr.de>; Tue, 12 Aug 2025 20:13:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D07021AA57DF
+	for <lists+linux-s390@lfdr.de>; Tue, 12 Aug 2025 22:57:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 040992F067A;
-	Tue, 12 Aug 2025 20:13:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 989C12D540D;
+	Tue, 12 Aug 2025 22:57:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gZk5s4qd"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="BGPxhRb2"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E152F0673;
-	Tue, 12 Aug 2025 20:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53751DFCB;
+	Tue, 12 Aug 2025 22:57:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755029609; cv=none; b=f+t5OakJvHg2tdZdYK1Cb5Q33bj15u3NXbgdA2soajct3WCtpMlDYwMxX8Mz31g3gEYEMXpla4dPU14/wPPGHxIp7Bq+Da7SN6yalTKc4SSFG3DtfmYw3wnQqximghMPGlaQft2lPFBR3zT/XpboyPwLhw1+G98b851rs15WciY=
+	t=1755039452; cv=none; b=BfobgZGaF7oCuWBixQpk9tYc6AY5IRrLltEe5yZCd5wY6j6TGzxCIbPTy8EN9OrrLEpDL5qB7vfTVdLUY+dsRlMf9uW/R+j2yiyOHKggUtGF0cybbfqlQ+2ewKUmUQ6mn9ly7Y92VkqmUfvOSQF9Z+IQ//LPRPQo9S82Jas/qyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755029609; c=relaxed/simple;
-	bh=67thnts7t0DLgkZq/Ii6wBw0jrSFJtM5mUMWCYrbVS8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gpmu5EpKg06/gjEnOBvYRUSECSS0AJpSo/Jg3E7SPM8lTzATPALntaAnVPGdHWcgOzWNPc20gGgrlIszCa4t6mbqeg6AKSECBHM8/1zTkWeQfXOyivUjt+GsgkdQAZFYi9G019HsjrBqFBLJOhvpehSAn9VhdAx9tf/AMsODE3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gZk5s4qd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AD26C4CEF0;
-	Tue, 12 Aug 2025 20:13:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755029609;
-	bh=67thnts7t0DLgkZq/Ii6wBw0jrSFJtM5mUMWCYrbVS8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gZk5s4qdbM6pcT8YroWmQOKRLwIIFGieYYi0v9aoNi2ICJDuc3wg8bhKf+s6pvQNd
-	 c+i3MR/y/FAagcjMfROfPVLTOsoG3YlP79F/PpCEZGyFDsyuBtQtypuh96jit6toX0
-	 v+aQUOZ71f1sVS4LLJKLKq+8hdeGPjE2mpVgs/FuY2KZSzhX/6T7dzeh6CvpLmMDoF
-	 weuTiAVwv1mVOxNZA1KKoDpEA1hk0wwazemaioBJiDYkvkx74pTiTr9+YupNxQLK8F
-	 rz5RHVzbW4bBYKxh5nyMODvXXmIYvJS3DB65gwqyMSJvM3wUZw/6uqpQTB/gIvOiXG
-	 Gs3FPiwr7oo7A==
-From: SeongJae Park <sj@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	s=arc-20240116; t=1755039452; c=relaxed/simple;
+	bh=Jn0Scey20IWQjV8yQsVwKnL3ajtRwc+Pa/RAser3aRM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a9xXtR00nweE8cXiOYS7xPTD0ffFxPwu+JG+pBGjI3qE2U1H1gbvKixvfRHYevDzp7Evx0ne1bt+6EnPhnV0s3wY2upMWdXtzWGwp8+wkRQXXZJ9cqG/GXOe3v6Ideo4/WuZF+Rhp/wab6FeZQlROZzTuJDuPGOdik4exhItIX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=BGPxhRb2; arc=none smtp.client-ip=115.124.30.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1755039447; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
+	bh=hzyGLAvYMg6i3Vhc3/4W2C3KZxciNBuhQJ30QdiHlJ0=;
+	b=BGPxhRb2O1Y2qYxuVTH/UopSDG7gWn3T8ZVgwPzFlnQGtaQAWMCZ/6bQ88xqWAudIc8x88wATofOb8LmgWYbaB7u2M7jAY5spcOZlcRUTLRCEmyayIelQPft2/d+ZXnf86OvRQPyoTXVATt6AgGbziB5wLrktjlYnpeJQTAmO2c=
+Received: from localhost(mailfrom:dust.li@linux.alibaba.com fp:SMTPD_---0WlcqLHL_1755039124 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 13 Aug 2025 06:52:05 +0800
+Date: Wed, 13 Aug 2025 06:52:04 +0800
+From: Dust Li <dust.li@linux.alibaba.com>
+To: Alexandra Winter <wintera@linux.ibm.com>,
+	David Miller <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"D. Wythe" <alibuda@linux.alibaba.com>,
+	Sidraya Jayagond <sidraya@linux.ibm.com>,
+	Wenjia Zhang <wenjia@linux.ibm.com>,
+	Julian Ruess <julianr@linux.ibm.com>
+Cc: netdev@vger.kernel.org, linux-s390@vger.kernel.org,
 	Heiko Carstens <hca@linux.ibm.com>,
 	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
 	Christian Borntraeger <borntraeger@linux.ibm.com>,
 	Sven Schnelle <svens@linux.ibm.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Kees Cook <kees@kernel.org>,
-	David Hildenbrand <david@redhat.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Nico Pache <npache@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>,
-	Barry Song <baohua@kernel.org>,
-	Xu Xin <xu.xin16@zte.com.cn>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	David Rientjes <rientjes@google.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Peter Xu <peterx@redhat.com>,
-	Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	Matthew Wilcox <willy@infradead.org>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	linux-s390@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 00/10] mm: make mm->flags a bitmap and 64-bit on all arches
-Date: Tue, 12 Aug 2025 13:13:26 -0700
-Message-Id: <20250812201326.60843-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <cover.1755012943.git.lorenzo.stoakes@oracle.com>
-References: 
+	Thorsten Winkler <twinkler@linux.ibm.com>,
+	Simon Horman <horms@kernel.org>,
+	Mahanta Jambigi <mjambigi@linux.ibm.com>,
+	Tony Lu <tonylu@linux.alibaba.com>,
+	Wen Gu <guwen@linux.alibaba.com>, Halil Pasic <pasic@linux.ibm.com>,
+	linux-rdma@vger.kernel.org
+Subject: Re: [RFC net-next 08/17] net/dibs: Register ism as dibs device
+Message-ID: <aJvFlBISHJMe-0Jt@linux.alibaba.com>
+Reply-To: dust.li@linux.alibaba.com
+References: <20250806154122.3413330-1-wintera@linux.ibm.com>
+ <20250806154122.3413330-9-wintera@linux.ibm.com>
+ <aJiwrG-XD06gTKb3@linux.alibaba.com>
+ <2d511067-0cc6-4911-846a-ab815a0b318b@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2d511067-0cc6-4911-846a-ab815a0b318b@linux.ibm.com>
 
-On Tue, 12 Aug 2025 16:44:09 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+On 2025-08-11 16:27:21, Alexandra Winter wrote:
+>
+>
+>On 10.08.25 16:46, Dust Li wrote:
+>> I've been wondering whether we should completely remove the ISM concept
+>> from SMC. Including rename smc_ism.c into smc_dibs.c.
+>> 
+>> Since DIBS already serves as the replacement for ISM, having both ISM
+>> and DIBS coexist in the codebase seems a bit confusing and inconsistent.
+>> Removing ISM could help streamline the code and improve clarity.
+>> 
+>> Best regards,
+>> Dust
+>
+>I second that.
+>Like I wrote in the last commit message:
+>"[RFC net-next 17/17] net/dibs: Move event handling to dibs layer
+>...
+>SMC-D and ISM are now independent.
+>struct ism_dev can be moved to drivers/s390/net/ism.h.
+>
+>Note that in smc, the term 'ism' is still used. Future patches could
+>replace that with 'dibs' or 'smc-d' as appropriate."
+>
+>
+>I am not sure what would be the best way to do such a global replacement.
+>One big patch on top of dibs-series? That would be a lot of changes without
+>adding any functionality.
 
-> We are currently in the bizarre situation where we are constrained on the
-> number of flags we can set in an mm_struct based on whether this is a
-> 32-bit or 64-bit kernel.
-> 
-> This is because mm->flags is an unsigned long field, which is 32-bits on a
-> 32-bit system and 64-bits on a 64-bit system.
-> 
-> In order to keep things functional across both architectures, we do not
-> permit mm flag bits to be set above flag 31 (i.e. the 32nd bit).
-> 
-> This is a silly situation, especially given how profligate we are in
-> storing metadata in mm_struct, so let's convert mm->flags into a bitmap and
-> allow ourselves as many bits as we like.
+I prefer this approach. Renaming without changing functionality keeps
+the patch clean and makes it easier to cherry-pick.
 
-I like this conversion.
+Best regards,
+Dust
 
-[...]
-> 
-> In order to execute this change, we introduce a new opaque type -
-> mm_flags_t - which wraps a bitmap.
-
-I have no strong opinion here, but I think coding-style.rst[1] has one?  To
-quote,
-
-    Please don't use things like ``vps_t``.
-    It's a **mistake** to use typedef for structures and pointers. 
-
-checkpatch.pl also complains similarly.
-
-Again, I have no strong opinion, but I think adding a clarification about why
-we use typedef despite of the documented recommendation here might be nice?
-
-[...]
-> For mm->flags initialisation on fork, we adjust the logic to ensure all
-> bits are cleared correctly, and then adjust the existing intialisation
-
-Nit.  s/intialisation/initialisation/ ?
-
-[...]
-
-[1] https://docs.kernel.org/process/coding-style.html#typedefs
-
-
-Thanks,
-SJ
+>Or do you have other clarity improvements in the pipeline that could be combined?
+>I would like to defer that decision to the smc maintainers. Would that be ok for you?
+>
 
