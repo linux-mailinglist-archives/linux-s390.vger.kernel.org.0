@@ -1,88 +1,90 @@
-Return-Path: <linux-s390+bounces-12110-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-12115-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06FC3B304DB
-	for <lists+linux-s390@lfdr.de>; Thu, 21 Aug 2025 22:23:01 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D10D3B304DA
+	for <lists+linux-s390@lfdr.de>; Thu, 21 Aug 2025 22:22:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC3E916E1F8
-	for <lists+linux-s390@lfdr.de>; Thu, 21 Aug 2025 20:19:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9022FB660AD
+	for <lists+linux-s390@lfdr.de>; Thu, 21 Aug 2025 20:21:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B90D350D66;
-	Thu, 21 Aug 2025 20:08:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EBDA37D5AF;
+	Thu, 21 Aug 2025 20:08:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Khicoxdz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ez15zeTT"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB7436CC9B
-	for <linux-s390@vger.kernel.org>; Thu, 21 Aug 2025 20:08:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FD4137CCA5
+	for <linux-s390@vger.kernel.org>; Thu, 21 Aug 2025 20:08:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755806897; cv=none; b=hr5ZfhKzSg5C2mJdEh1dUu4TzYls+xfPTSXac6APjCdgIDfpJmslg+L8Xj20lxzd9L85NXf+sgS1MUR+yTc9pgbisp9e98kiLhTir9ojWGUa2bgBIRH5LHHt75m9uHkhqEP5Gt1ZkC4XMeqUFZVuMBRAj+hYYFD8DwZyDDTSkbw=
+	t=1755806914; cv=none; b=IjNnAFrTs/iqMKOcoxW5NYEOLmpSXkQaw4FI0kMdh6Qk+JHPb+AxWWVpHnyIJyCA2Yy981hgBix/+0Fp5wT1HKrWOJy5gstwdyuNvE5mdOOjdnlWqP2vnEMmjbr6V0cfKPABmo5LeMR9D7VwnMha3pq/nKJc1f7yZ9mabuc8w1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755806897; c=relaxed/simple;
-	bh=kURokXQjB5Kuo7a6U8usTL1aQ1tfaOTG2Bf9aj2NBoo=;
+	s=arc-20240116; t=1755806914; c=relaxed/simple;
+	bh=o0B/aIsMAhafmNCelOfWp+ALdEBw0Dyti3dxNNba1Sw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qGpqePNEOsOgo8CVtPszDmo05IfohZrnOptARl3LwCHhINcFmgze3lOMU5nDarFc4RR2MkwEaLQrCxDy9dNeTbuoG4WJpGhUAvx/Q6OyFDTAc0jiqkrxSqhbxFVAwDny4HqMT6hT//l5OKjFc4S83YH0+HCH16jyvxxP+pKoZRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Khicoxdz; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=WNECOHxkMtTrYfBdv6I/xXyS+Ap5VBqIQ3He6xf5Jip1K+Y7Fk++6KiTielf5aOVvVb4AgecL4ZhPBD/SM9youms69nhUF5wGQR57nIIF5ak7HzNYfcyKWVsb3aBMyp0Il00q3R31pFPYdPOO2rrZ5J0DBjPn3cyP5qRquu1rbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ez15zeTT; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755806894;
+	s=mimecast20190719; t=1755806910;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=NKFS9/TuG2v9AIcAoooIJr3bGKW6zmP0XL+5izT5Y+4=;
-	b=KhicoxdzduubvKuf9Iix+KNDtDzlxsA85V/w/CkCqx1xtIvlyjeP3gOZ/UnD/kHm56z7up
-	eS44Wa9teIG8fACDAtSRj0kPBZVX2cqe191Dx4vfjIoobrYjhQVYZW022ea1CcbPdqagcY
-	qnSL7AEaR1rOqyOpAnE/tpK//DFlKbQ=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=qEz5al18caSg7WeU7/xaDhHrA43/vq8xaUIrOF+uMyw=;
+	b=Ez15zeTTSoQ7LtmjnTiLG9pQHXOTnPbEhkmb6bsxXkTzpFERwB57E4nPpa1LbfRSmHkoeU
+	AdnTTe1Ax7VgR6ue8oigJqZU+yszoAo/BybgP0IQjYjZ4mpFw5Rj6emA/4VJzQY/Ap9Ai+
+	m4ruHqFDS0YUSIEfVDJwvfkX1IMzkAQ=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-558-QmjZLB51NGWrSL4IVJRWLw-1; Thu, 21 Aug 2025 16:08:13 -0400
-X-MC-Unique: QmjZLB51NGWrSL4IVJRWLw-1
-X-Mimecast-MFC-AGG-ID: QmjZLB51NGWrSL4IVJRWLw_1755806892
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-45a1b05d251so7744145e9.1
-        for <linux-s390@vger.kernel.org>; Thu, 21 Aug 2025 13:08:12 -0700 (PDT)
+ us-mta-664-kQRmlf04M9aha1ifUIgZBQ-1; Thu, 21 Aug 2025 16:08:20 -0400
+X-MC-Unique: kQRmlf04M9aha1ifUIgZBQ-1
+X-Mimecast-MFC-AGG-ID: kQRmlf04M9aha1ifUIgZBQ_1755806895
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3b9dc56225aso832774f8f.1
+        for <linux-s390@vger.kernel.org>; Thu, 21 Aug 2025 13:08:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755806892; x=1756411692;
+        d=1e100.net; s=20230601; t=1755806894; x=1756411694;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NKFS9/TuG2v9AIcAoooIJr3bGKW6zmP0XL+5izT5Y+4=;
-        b=rk7nbczazcalZ95iiTpweVJGPSqxDyx4dWBaiWxtS3616MlyQzV9fJl57d9iZKzmr6
-         aQYQcHNHOxFk8+YJHpG0VczIc1YmYK9qHOupQ91wKRRQTb7igrBRLuP4KoZCAj/9iUEY
-         ie3+nTORtSosdMJ3tgdbfOHkN+AnyHCo2NYIGK5USuPn2tMFb2HV8z7at/1FpSMbLEDy
-         OR0YN3IXTgQh0wYfBmxsBPQqxFhOSaj8/y0O7xj4+CF39ZJAZu/Yh2qsdSt3UsuEfRQo
-         HPABAZ/mW9yeVs5tr21Lje9qeaSiJToPhWY20auGhFtXcm91pn09ZT8thbrvbnLYYPWG
-         Cq4g==
-X-Forwarded-Encrypted: i=1; AJvYcCXlx3ExpAUFA/n4jUsNwe/akChfUINRpz/gYRbg8WbyBm91sbaqfqkV3vEqVIC8jUQ7iI7IhfmwNXGc@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzbaw9PgZ1sdP0NlqA+2sS2TrczCwFOloyGq27ECEd9LkCxYtlT
-	AJ7afVg7tNcFYNJSdvV5Un8oGQXeLCDaTnZFoYt5mLWYFjdMOnWN3qt+feofwNScTu7mggNstl8
-	LEkd+PzWGn8p2eJr9rQTkAP5l2Do0GBwSlGDtVDFojtNFVcZO7Do17mBDSiRJqWs=
-X-Gm-Gg: ASbGnctN9751UKYjIjt14CfQr6yi5of4AsH+hnycD4MSfZ50cnwZ3vx+0/Ovzqy0Y61
-	drgm6KIgM/tQUuOsN8m2hYE9lZkE/3zvqQmwW/PMvJX1QjQTMqEvpiLXkEuq2aji+DuCeE5y3bp
-	SrO8ckkyLIz+Gtk7Z3xKgXzk4yuMrh/aCVILYqUDWUC9FIjExKsJsGIuJG3Xg1DRvqWAicH7rU+
-	7Jrt6X7IhiJcIcYDrYrR2yUpMPYFcFHYnkPk/McypbcYzZ+Eauk5ED+ytb1u71bCw8lVtN2smoG
-	CcHMFVZeAXhfvO8tRorNdrYJIQlRh5dnZT3M7ee7gkhYrfnjWHNnzA40B6XMiw2Zg+8Nl6oXMqC
-	NngB6NBUh0LUX/4RypjwMkQ==
-X-Received: by 2002:a05:600c:1f1a:b0:45b:43cc:e557 with SMTP id 5b1f17b1804b1-45b517cbee2mr2552765e9.34.1755806891791;
-        Thu, 21 Aug 2025 13:08:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE/z26sBz7JGLAktk/cnLNnmvA2KmHoRy5M1TseKC0NpCNohvOWfWbiwnk6fyruz4Gv4BdEig==
-X-Received: by 2002:a05:600c:1f1a:b0:45b:43cc:e557 with SMTP id 5b1f17b1804b1-45b517cbee2mr2552235e9.34.1755806891155;
-        Thu, 21 Aug 2025 13:08:11 -0700 (PDT)
+        bh=qEz5al18caSg7WeU7/xaDhHrA43/vq8xaUIrOF+uMyw=;
+        b=gBRetjP4phNf9dkbZAiUszUMwkngTqNJw+fPKpylghwo12v0Bc5yE9neln+fhFHCqV
+         Y0yQDOdxG1bcujJfKqllLekHE1mpkftSO2jjiZygDkQS1tM4kF8JlNWDtIOYNK5Wl5C9
+         uNfkuqnS4LftnsU66fuvaKTda4sW0JE+jdiql5A3EUZz89zWXxxX7wD9Cq9WeBlUuhxH
+         68sD7nPD8MpAHWvvOZOLuD7HUXrVEMG3swyKOOZvpOVIN0M0w0DXu/Nlvj50nhPlFM3E
+         7SUfW3gcUg6y4tM0LCUdFops71mZXyExvQDuGm/XPUR3sgCSGJojcOz57zql6bFH0tW9
+         tozQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWyVSlGa/5HUjlyzsiL6C6UG+VXWmlVUVS9vczFTBvU5TdTtasSNWMD5Gr2LfwH5Q3BCIQrBerZsD9w@vger.kernel.org
+X-Gm-Message-State: AOJu0YxySIddwXC2AAJhKrfuO+31/AuM/uaSqyX0+kyV5xCrxwnd8coo
+	QaPtkWwMq6xQmDfrBC2k6YhoCEJyf144G7P5+AS31Zdki5/or+YJVqYsHwUJUPXH4IQv7uATx9H
+	Xj+MpE4Fudb+eAWbRM218/mIuYSFQ8XA4lLw4ypN3lznXvlcOiM6phlOMJvwY2MY=
+X-Gm-Gg: ASbGncvLAqHG60pfWzliHA75gt1RKdEk72agjjIo3wDFlYPsQxUN9t4ARZT0mDqxEOF
+	C72sEta1J+wMCJ/IsoFEseYX4mYbU3EuQi265wl6j7KGO2cA5J53JszB4Bv1XDJxZTRYjEDUDBV
+	OoKPBOtIWiF4kq4gxE0GunRlqgRFyUYj3eyNxjbUrJAI6xqap57AfUXyHegaf8P5uy0SjL1JM50
+	IibRjKZxOa2Bhdaz9nTU8CJuTz+pBh/Q5VnxqFk6gEmzPq5ZMoYZ02JhXK6n6mj2xqGBnYwb2pm
+	KhLwejwGV1FJx5BTL0Aqr7DVnWGoBQVy9dr1QZ1wY9CJX5Oi+yd7tkcDsZXGAsRncDc8NJHuI3B
+	+WQ6FEI5rstFFoo6aDqSZVw==
+X-Received: by 2002:a05:6000:18ad:b0:3b7:9c79:32bb with SMTP id ffacd0b85a97d-3c5dcdf9bd9mr215853f8f.44.1755806894499;
+        Thu, 21 Aug 2025 13:08:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGYrE9N2OTZOZSEOVxEUY9xhX4UsF8UOhI+5wOqBRpd/3VSIxUjVMLdiea20BiXkc+w3FSZ8A==
+X-Received: by 2002:a05:6000:18ad:b0:3b7:9c79:32bb with SMTP id ffacd0b85a97d-3c5dcdf9bd9mr215789f8f.44.1755806894010;
+        Thu, 21 Aug 2025 13:08:14 -0700 (PDT)
 Received: from localhost (p200300d82f26ba0008036ec5991806fd.dip0.t-ipconnect.de. [2003:d8:2f26:ba00:803:6ec5:9918:6fd])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3c0748797acsm12277591f8f.10.2025.08.21.13.08.09
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3c074e38d65sm12982954f8f.27.2025.08.21.13.08.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Aug 2025 13:08:10 -0700 (PDT)
+        Thu, 21 Aug 2025 13:08:13 -0700 (PDT)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: David Hildenbrand <david@redhat.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
 	Alexander Potapenko <glider@google.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Brendan Jackman <jackmanb@google.com>,
@@ -129,9 +131,9 @@ Cc: David Hildenbrand <david@redhat.com>,
 	wireguard@lists.zx2c4.com,
 	x86@kernel.org,
 	Zi Yan <ziy@nvidia.com>
-Subject: [PATCH RFC 23/35] scatterlist: disallow non-contigous page ranges in a single SG entry
-Date: Thu, 21 Aug 2025 22:06:49 +0200
-Message-ID: <20250821200701.1329277-24-david@redhat.com>
+Subject: [PATCH RFC 24/35] ata: libata-eh: drop nth_page() usage within SG entry
+Date: Thu, 21 Aug 2025 22:06:50 +0200
+Message-ID: <20250821200701.1329277-25-david@redhat.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250821200701.1329277-1-david@redhat.com>
 References: <20250821200701.1329277-1-david@redhat.com>
@@ -143,55 +145,47 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The expectation is that there is currently no user that would pass in
-non-contigous page ranges: no allocator, not even VMA, will hand these
-out.
+It's no longer required to use nth_page() when iterating pages within a
+single SG entry, so let's drop the nth_page() usage.
 
-The only problematic part would be if someone would provide a range
-obtained directly from memblock, or manually merge problematic ranges.
-If we find such cases, we should fix them to create separate
-SG entries.
-
-Let's check in sg_set_page() that this is really the case. No need to
-check in sg_set_folio(), as pages in a folio are guaranteed to be
-contiguous.
-
-We can now drop the nth_page() usage in sg_page_iter_page().
-
+Cc: Damien Le Moal <dlemoal@kernel.org>
+Cc: Niklas Cassel <cassel@kernel.org>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- include/linux/scatterlist.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/ata/libata-sff.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/scatterlist.h b/include/linux/scatterlist.h
-index 6f8a4965f9b98..8196949dfc82c 100644
---- a/include/linux/scatterlist.h
-+++ b/include/linux/scatterlist.h
-@@ -6,6 +6,7 @@
- #include <linux/types.h>
- #include <linux/bug.h>
- #include <linux/mm.h>
-+#include <linux/mm_inline.h>
- #include <asm/io.h>
+diff --git a/drivers/ata/libata-sff.c b/drivers/ata/libata-sff.c
+index 7fc407255eb46..9f5d0f9f6d686 100644
+--- a/drivers/ata/libata-sff.c
++++ b/drivers/ata/libata-sff.c
+@@ -614,7 +614,7 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
+ 	offset = qc->cursg->offset + qc->cursg_ofs;
  
- struct scatterlist {
-@@ -158,6 +159,7 @@ static inline void sg_assign_page(struct scatterlist *sg, struct page *page)
- static inline void sg_set_page(struct scatterlist *sg, struct page *page,
- 			       unsigned int len, unsigned int offset)
- {
-+	VM_WARN_ON_ONCE(!page_range_contiguous(page, ALIGN(len + offset, PAGE_SIZE) / PAGE_SIZE));
- 	sg_assign_page(sg, page);
- 	sg->offset = offset;
- 	sg->length = len;
-@@ -600,7 +602,7 @@ void __sg_page_iter_start(struct sg_page_iter *piter,
-  */
- static inline struct page *sg_page_iter_page(struct sg_page_iter *piter)
- {
--	return nth_page(sg_page(piter->sg), piter->sg_pgoffset);
-+	return sg_page(piter->sg) + piter->sg_pgoffset;
- }
+ 	/* get the current page and offset */
+-	page = nth_page(page, (offset >> PAGE_SHIFT));
++	page += offset / PAGE_SHIFT;
+ 	offset %= PAGE_SIZE;
  
- /**
+ 	/* don't overrun current sg */
+@@ -631,7 +631,7 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
+ 		unsigned int split_len = PAGE_SIZE - offset;
+ 
+ 		ata_pio_xfer(qc, page, offset, split_len);
+-		ata_pio_xfer(qc, nth_page(page, 1), 0, count - split_len);
++		ata_pio_xfer(qc, page + 1, 0, count - split_len);
+ 	} else {
+ 		ata_pio_xfer(qc, page, offset, count);
+ 	}
+@@ -751,7 +751,7 @@ static int __atapi_pio_bytes(struct ata_queued_cmd *qc, unsigned int bytes)
+ 	offset = sg->offset + qc->cursg_ofs;
+ 
+ 	/* get the current page and offset */
+-	page = nth_page(page, (offset >> PAGE_SHIFT));
++	page += offset / PAGE_SIZE;
+ 	offset %= PAGE_SIZE;
+ 
+ 	/* don't overrun current sg */
 -- 
 2.50.1
 
