@@ -1,54 +1,54 @@
-Return-Path: <linux-s390+bounces-12206-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-12209-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58D87B35335
-	for <lists+linux-s390@lfdr.de>; Tue, 26 Aug 2025 07:20:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 739AEB35343
+	for <lists+linux-s390@lfdr.de>; Tue, 26 Aug 2025 07:25:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C492A1B27D77
-	for <lists+linux-s390@lfdr.de>; Tue, 26 Aug 2025 05:21:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 215E73B5035
+	for <lists+linux-s390@lfdr.de>; Tue, 26 Aug 2025 05:25:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2878A2D5C68;
-	Tue, 26 Aug 2025 05:20:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D20822ECE9F;
+	Tue, 26 Aug 2025 05:25:10 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 424611E8332;
-	Tue, 26 Aug 2025 05:20:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D8DA1DB95E;
+	Tue, 26 Aug 2025 05:25:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756185637; cv=none; b=ZmmOJWSL3KrsOvuyuv56BqqaazHuFF/qxmn7VkBzgjNFwb7FCDJWlSmCGEb04Eanas6dHmwaS6IMopRjYFQ9+C8lUg0N3qltq4wHxvKSPrePMDQZtN/8MP4i5tdSMAmYInIPIdMsEvK6uL/6w4di6uhnIENX2SK2mHA4siYWWJQ=
+	t=1756185910; cv=none; b=dnCtGO72tT/pwdVn6heGC2rfHEKHQsA5hl67NklzPYz2dT9pGXZpg/OzZFQvmhCeMS8wKFLtwM+59hbkuXLEjFojSBDpghug5hTZr4VUKMaqzXId2b/xm6gjwImnhnIeV7lBWDySTpmvIYcYsRU89wAJJ7FiOQmgTz6kT9YuZec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756185637; c=relaxed/simple;
-	bh=YK+oeaSt00qyZM6XFlXDNRfO/DjLnJWEt9IhYu7oppY=;
+	s=arc-20240116; t=1756185910; c=relaxed/simple;
+	bh=ecf59KpVXnVU4LJKy9jLmYErrPVQTbsTnjCrcxVuU84=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=INs79gR/tSjk/WrfStlYwb9uMsOXhm2qyQABOL3++lIGQ5+4/OV2UJn5mAoSh/Z8Up6aQgf9ENcumLEr8su7j7xnATQ72lNtAEvlGvFTCYMQbJ+0FuBW7w8AxPmNJUHJHYwCxXZJ7kzaHxUyO5D+iitU+dTL0DMumvLUsuX0Yqc=
+	 In-Reply-To:Content-Type; b=SF4GVgF9ZK0y562YAFQzyLUUASVazGY93Z27xYgh/v12oEGCuIboobnXG99h1sxALCTCjwfqXEgV+2Hsg+yP78TXmgkRq9L4ZKF+qfDat52fch9xQ3IOtargROQ2B4doBFJyGhIvGVU4W4JA1Mp1MMtSnS1hTNWkoTzhT0T8668=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
 Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4c9wLb6DMvz9sSL;
-	Tue, 26 Aug 2025 06:54:31 +0200 (CEST)
+	by localhost (Postfix) with ESMTP id 4c9wXB51PCz9sSS;
+	Tue, 26 Aug 2025 07:02:50 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from pegase2.c-s.fr ([172.26.127.65])
 	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id NrvWrUS7BScP; Tue, 26 Aug 2025 06:54:31 +0200 (CEST)
+	with ESMTP id OAnSCdrgSj6y; Tue, 26 Aug 2025 07:02:50 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4c9wLb4cWgz9sSK;
-	Tue, 26 Aug 2025 06:54:31 +0200 (CEST)
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4c9wXB3qBmz9sSN;
+	Tue, 26 Aug 2025 07:02:50 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 75E4E8B764;
-	Tue, 26 Aug 2025 06:54:31 +0200 (CEST)
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 60C3D8B764;
+	Tue, 26 Aug 2025 07:02:50 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
 	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id F2eraKjHbKgo; Tue, 26 Aug 2025 06:54:31 +0200 (CEST)
+	with ESMTP id aPCU04BVP-5t; Tue, 26 Aug 2025 07:02:50 +0200 (CEST)
 Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 93E148B763;
-	Tue, 26 Aug 2025 06:54:29 +0200 (CEST)
-Message-ID: <1c8392b8-ea7b-48ef-8932-02f41e1233a3@csgroup.eu>
-Date: Tue, 26 Aug 2025 06:54:29 +0200
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 7C6B38B763;
+	Tue, 26 Aug 2025 07:02:48 +0200 (CEST)
+Message-ID: <6e197065-a782-4e24-bf38-5e423d0509ff@csgroup.eu>
+Date: Tue, 26 Aug 2025 07:02:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 3/8] powerpc/smp: Export cpu_coregroup_mask()
+Subject: Re: [PATCH v7 2/8] powerpc/smp: Rename cpu_corgroup_* to cpu_corgrp_*
 To: K Prateek Nayak <kprateek.nayak@amd.com>,
  Madhavan Srinivasan <maddy@linux.ibm.com>,
  Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
@@ -90,84 +90,134 @@ Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
  Tim Chen <tim.c.chen@linux.intel.com>,
  Vinicius Costa Gomes <vinicius.gomes@intel.com>
 References: <20250826041319.1284-1-kprateek.nayak@amd.com>
- <20250826041319.1284-4-kprateek.nayak@amd.com>
+ <20250826041319.1284-3-kprateek.nayak@amd.com>
 From: Christophe Leroy <christophe.leroy@csgroup.eu>
 Content-Language: fr-FR
-In-Reply-To: <20250826041319.1284-4-kprateek.nayak@amd.com>
+In-Reply-To: <20250826041319.1284-3-kprateek.nayak@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
 
 Le 26/08/2025 à 06:13, K Prateek Nayak a écrit :
-> Deine cpu_coregroup_mask() to export the per-cpu cpu_corgrp_map when
-> coregroups are supported(). When has_coregroup_support() returns false,
-> cpu_coregroup_mask() returns the mask used by the PKG domain.
+> Rename cpu_corgroup_{map,mask} to cpu_corgrp_{map,mask} to free up the
+> cpu_corgroup_* namespace. cpu_corgroup_mask() will be added back in the
+> subsequent commit for CONFIG_SCHED_MC enablement.
+
+This renaming seems odd and uncomplete. For instance 
+update_coregroup_mask() should probably be renamed as well shoudln't it ?
+
+When you say cpu_corgroup_mask() will be added back, you mean the same 
+function or a completely different function but with the same name ?
+
+What's really the difference between corgrp and coregroup ?
+
+Shouldn't also has_coregroup_support() now be renamed has_corgrp_support() ?
+
+Christophe
+
 > 
-> Since this will only be used after CONFIG_SCHED_MC is added for PowerPC,
-> no functional changes are intended at this point.
+> No functional changes intended.
 > 
 > Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
 > ---
->   arch/powerpc/include/asm/smp.h | 2 ++
->   arch/powerpc/kernel/smp.c      | 8 ++++++++
->   2 files changed, 10 insertions(+)
+>   arch/powerpc/kernel/smp.c | 26 +++++++++++++-------------
+>   1 file changed, 13 insertions(+), 13 deletions(-)
 > 
-> diff --git a/arch/powerpc/include/asm/smp.h b/arch/powerpc/include/asm/smp.h
-> index b77927ccb0ab..86de4d0dd0aa 100644
-> --- a/arch/powerpc/include/asm/smp.h
-> +++ b/arch/powerpc/include/asm/smp.h
-> @@ -148,6 +148,8 @@ static inline const struct cpumask *cpu_smt_mask(int cpu)
->   }
->   #endif /* CONFIG_SCHED_SMT */
->   
-> +extern const struct cpumask *cpu_coregroup_mask(int cpu);
-
-'extern' keyword is pointless for function prototypes, remove it.
-
-See report from checkpatch:
-
-$ ./scripts/checkpatch.pl --strict -g a064a30c52a5
-CHECK: extern prototypes should be avoided in .h files
-#28: FILE: arch/powerpc/include/asm/smp.h:151:
-+extern const struct cpumask *cpu_coregroup_mask(int cpu);
-
-total: 0 errors, 0 warnings, 1 checks, 22 lines checked
-
-NOTE: For some of the reported defects, checkpatch may be able to
-       mechanically convert to the typical style using --fix or 
---fix-inplace.
-
-Commit a064a30c52a5 ("powerpc/smp: Export cpu_coregroup_mask()") has 
-style problems, please review.
-
-NOTE: If any of the errors are false positives, please report
-       them to the maintainer, see CHECKPATCH in MAINTAINERS.
-
-
-
-> +
->   /* Since OpenPIC has only 4 IPIs, we use slightly different message numbers.
->    *
->    * Make sure this matches openpic_request_IPIs in open_pic.c, or what shows up
 > diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-> index 4f48262658cc..e623f2864dc4 100644
+> index 862f50c09539..4f48262658cc 100644
 > --- a/arch/powerpc/kernel/smp.c
 > +++ b/arch/powerpc/kernel/smp.c
-> @@ -1059,6 +1059,14 @@ static bool has_coregroup_support(void)
->   	return coregroup_enabled;
+> @@ -87,7 +87,7 @@ DEFINE_PER_CPU(cpumask_var_t, cpu_sibling_map);
+>   DEFINE_PER_CPU(cpumask_var_t, cpu_smallcore_map);
+>   DEFINE_PER_CPU(cpumask_var_t, cpu_l2_cache_map);
+>   DEFINE_PER_CPU(cpumask_var_t, cpu_core_map);
+> -static DEFINE_PER_CPU(cpumask_var_t, cpu_coregroup_map);
+> +static DEFINE_PER_CPU(cpumask_var_t, cpu_corgrp_map);
+>   
+>   EXPORT_PER_CPU_SYMBOL(cpu_sibling_map);
+>   EXPORT_PER_CPU_SYMBOL(cpu_l2_cache_map);
+> @@ -1045,9 +1045,9 @@ static const struct cpumask *tl_smt_mask(struct sched_domain_topology_level *tl,
+>   }
+>   #endif
+>   
+> -static struct cpumask *cpu_coregroup_mask(int cpu)
+> +static struct cpumask *cpu_corgrp_mask(int cpu)
+>   {
+> -	return per_cpu(cpu_coregroup_map, cpu);
+> +	return per_cpu(cpu_corgrp_map, cpu);
 >   }
 >   
-> +const struct cpumask *cpu_coregroup_mask(int cpu)
-> +{
-> +	if (has_coregroup_support())
-> +		return per_cpu(cpu_corgrp_map, cpu);
-> +
-> +	return cpu_node_mask(cpu);
-> +}
-> +
+>   static bool has_coregroup_support(void)
+> @@ -1061,7 +1061,7 @@ static bool has_coregroup_support(void)
+>   
 >   static const struct cpumask *cpu_mc_mask(struct sched_domain_topology_level *tl, int cpu)
 >   {
->   	return cpu_corgrp_mask(cpu);
+> -	return cpu_coregroup_mask(cpu);
+> +	return cpu_corgrp_mask(cpu);
+>   }
+>   
+>   static const struct cpumask *cpu_pkg_mask(struct sched_domain_topology_level *tl, int cpu)
+> @@ -1124,7 +1124,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
+>   		zalloc_cpumask_var_node(&per_cpu(cpu_core_map, cpu),
+>   					GFP_KERNEL, cpu_to_node(cpu));
+>   		if (has_coregroup_support())
+> -			zalloc_cpumask_var_node(&per_cpu(cpu_coregroup_map, cpu),
+> +			zalloc_cpumask_var_node(&per_cpu(cpu_corgrp_map, cpu),
+>   						GFP_KERNEL, cpu_to_node(cpu));
+>   
+>   #ifdef CONFIG_NUMA
+> @@ -1145,7 +1145,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
+>   	cpumask_set_cpu(boot_cpuid, cpu_core_mask(boot_cpuid));
+>   
+>   	if (has_coregroup_support())
+> -		cpumask_set_cpu(boot_cpuid, cpu_coregroup_mask(boot_cpuid));
+> +		cpumask_set_cpu(boot_cpuid, cpu_corgrp_mask(boot_cpuid));
+>   
+>   	init_big_cores();
+>   	if (has_big_cores) {
+> @@ -1510,8 +1510,8 @@ static void remove_cpu_from_masks(int cpu)
+>   		set_cpus_unrelated(cpu, i, cpu_core_mask);
+>   
+>   	if (has_coregroup_support()) {
+> -		for_each_cpu(i, cpu_coregroup_mask(cpu))
+> -			set_cpus_unrelated(cpu, i, cpu_coregroup_mask);
+> +		for_each_cpu(i, cpu_corgrp_mask(cpu))
+> +			set_cpus_unrelated(cpu, i, cpu_corgrp_mask);
+>   	}
+>   }
+>   #endif
+> @@ -1543,7 +1543,7 @@ static void update_coregroup_mask(int cpu, cpumask_var_t *mask)
+>   	if (!*mask) {
+>   		/* Assume only siblings are part of this CPU's coregroup */
+>   		for_each_cpu(i, submask_fn(cpu))
+> -			set_cpus_related(cpu, i, cpu_coregroup_mask);
+> +			set_cpus_related(cpu, i, cpu_corgrp_mask);
+>   
+>   		return;
+>   	}
+> @@ -1551,18 +1551,18 @@ static void update_coregroup_mask(int cpu, cpumask_var_t *mask)
+>   	cpumask_and(*mask, cpu_online_mask, cpu_node_mask(cpu));
+>   
+>   	/* Update coregroup mask with all the CPUs that are part of submask */
+> -	or_cpumasks_related(cpu, cpu, submask_fn, cpu_coregroup_mask);
+> +	or_cpumasks_related(cpu, cpu, submask_fn, cpu_corgrp_mask);
+>   
+>   	/* Skip all CPUs already part of coregroup mask */
+> -	cpumask_andnot(*mask, *mask, cpu_coregroup_mask(cpu));
+> +	cpumask_andnot(*mask, *mask, cpu_corgrp_mask(cpu));
+>   
+>   	for_each_cpu(i, *mask) {
+>   		/* Skip all CPUs not part of this coregroup */
+>   		if (coregroup_id == cpu_to_coregroup_id(i)) {
+> -			or_cpumasks_related(cpu, i, submask_fn, cpu_coregroup_mask);
+> +			or_cpumasks_related(cpu, i, submask_fn, cpu_corgrp_mask);
+>   			cpumask_andnot(*mask, *mask, submask_fn(i));
+>   		} else {
+> -			cpumask_andnot(*mask, *mask, cpu_coregroup_mask(i));
+> +			cpumask_andnot(*mask, *mask, cpu_corgrp_mask(i));
+>   		}
+>   	}
+>   }
 
 
