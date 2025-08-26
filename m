@@ -1,370 +1,278 @@
-Return-Path: <linux-s390+bounces-12268-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-12266-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A65B8B369D9
-	for <lists+linux-s390@lfdr.de>; Tue, 26 Aug 2025 16:31:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B52F2B367B1
+	for <lists+linux-s390@lfdr.de>; Tue, 26 Aug 2025 16:09:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 78FB9564FD8
-	for <lists+linux-s390@lfdr.de>; Tue, 26 Aug 2025 14:18:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 688791C40477
+	for <lists+linux-s390@lfdr.de>; Tue, 26 Aug 2025 14:02:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAE27352FF3;
-	Tue, 26 Aug 2025 14:16:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED25F352078;
+	Tue, 26 Aug 2025 14:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="neojCg+B";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="vkG+X90m"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from leontynka.twibright.com (leontynka.twibright.com [109.81.181.203])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC98352FDF;
-	Tue, 26 Aug 2025 14:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.81.181.203
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756217786; cv=none; b=o2QmPGbf4wyJeDjq77tEjSccQMTfDPG8Xa7rhRqnos7QfWaJyei07SAQfJvyCxrVVemBLdSQakvkXeUxfu5lABI9XEij4+05D3R9Rs6gyavOVRdC5DliMrLUWv3V7pgepDxsxKp8m1lneRUNJcFz85YG5nvSVvgKniU57cvao9I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756217786; c=relaxed/simple;
-	bh=dn2NfWACofZ69eOD3sNRkPRFohsh/ayFLZUSR3XeEBY=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=evJpigB+K/SyELGN7iKmWLL3MwS60nNo7Xom2DJNBJoiCCpJNFgzzzB0NcZQ15z+eu4TqlMVDOCwj8slVopCTOch8ePGarw3R979QDt/MjLjRxIis0/gHu693HaMm33i7L7nstMSrQcUXzEORDdjLP5Wb5mxPHNG0isMMq9rsV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com; spf=fail smtp.mailfrom=redhat.com; arc=none smtp.client-ip=109.81.181.203
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=redhat.com
-Received: from zen ([192.168.128.17] helo=debian.vm)
-	by leontynka.twibright.com with smtp (Exim 4.96)
-	(envelope-from <mpatocka@redhat.com>)
-	id 1uqu9W-008Vs1-0f;
-	Tue, 26 Aug 2025 15:55:59 +0200
-Received: by debian.vm (sSMTP sendmail emulation); Tue, 26 Aug 2025 15:55:57 +0200
-Message-ID: <20250826135557.707275415@debian4.vm>
-User-Agent: quilt/0.68
-Date: Tue, 26 Aug 2025 15:55:00 +0200
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: Harald Freudenberger <freude@linux.ibm.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>,
- Eric Biggers <ebiggers@kernel.org>,
- dengler@linux.ibm.com,
- linux-s390@vger.kernel.org,
- dm-devel@lists.linux.dev,
- ifranzki@linux.ibm.com,
- agk@redhat.com,
- snitzer@kernel.org,
- gmazyland@gmail.com,
- Mikulas Patocka <mpatocka@redhat.com>
-Subject: [PATCH 7/7] dm-integrity: enable asynchronous hash interface
-References: <20250826135453.012446010@debian4.vm>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A38341AA6;
+	Tue, 26 Aug 2025 14:00:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756216829; cv=fail; b=KduLq/jgDmV7marZ7Q0pimgrQKGvITXUoDGEr7TVcGPmlTmPjpgW+17jq9Br/ljs8JtQUkiL0l8X+fjy9Yp/dauh4vBqk6aqerfCv1L+AXckmJ1xIxmmFCMP3uI7DReZoZHVPUdwkWGXTs7uXHpRSzwKm2syJ72P5vgv7wp9y3U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756216829; c=relaxed/simple;
+	bh=wACkQcvg530bzA9+eiAs+1oW6a9K5xHKZBMR9Q7+xWI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=RwXdbSje3Tv5mtDbzLJmYkxD34BlOxhxr3qa4aG2+HMVWKNPNqx6pp1DP+ZkmQlc0xjUxbyypWsrAN7VrPpg6rrefiVVzEkPx1uDEKRfH0kJNB3GkBV++R7XzuSK8SILW6deYLelZN+qInKGiDuEQSdAum+LGVGMhYitjRQk/no=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=neojCg+B; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=vkG+X90m; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57QCGpw1028522;
+	Tue, 26 Aug 2025 13:59:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=wACkQcvg530bzA9+ei
+	As+1oW6a9K5xHKZBMR9Q7+xWI=; b=neojCg+B9HQB/bLV7G7+EmxmHAdstrLk0O
+	8Q3TU+imLFTfJUe4jkgo/Ubslp8gLqnEK0V69KnKGv1JXIePGRXW4IgA2lx0D79D
+	nhQh7RWA+fhmFE7ug3L80sWE814iff8zLP1xVVMGF6KmNOywL4YF+c67GyJVxBCn
+	7TG0uYsRhdKClBjQfWZfMhGbQguXlWQ9w30+h9OyTTzGwAQbAU6VN7o7xwcc6wff
+	BKUI23vprWynygsQhIenw4/7QXwt07/TM5MvcXLJscoJdZ9h2m00+N9jANvxjZpa
+	0loOuF/guJjO3Z28GpK0T5EwKDp7ehUblZLU1Es5+VubiMrVno6A==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 48q48emhvb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 26 Aug 2025 13:59:36 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 57QCL4h7005065;
+	Tue, 26 Aug 2025 13:59:36 GMT
+Received: from bl2pr02cu003.outbound.protection.outlook.com (mail-eastusazon11013010.outbound.protection.outlook.com [52.101.54.10])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 48q439rdnj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 26 Aug 2025 13:59:36 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FtQWu7zX51fTZjasmHU/sD53K/QEky6ULB1ahD34wAPeqppBWOp0apipfIu8YQYmRGyBvCK7B8zQt3t/TsjpCnoO6wGULhmjSmaOgVW1K+Ed8LroBeLPANb4oeqk1VGhS/s8NaZ2EL3XlFff8UywtbjdeEGWZ6d26XoAyRmrbvzNsTjL3ntrrEI1PmFW1Dc5HEm+7Lq6w8S6zjFYIO/rsUXuAa47voFArb7H9N1fMMakcK9aHoP71rfORD74EbffDBEcRuc7HovluDQ8C/VNhRQmFa+ZpHFx/FNWYT19a2BDSupKJKkCUE85ejXCF9TdtHpzKgW3J5ZU5pmdRymgag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wACkQcvg530bzA9+eiAs+1oW6a9K5xHKZBMR9Q7+xWI=;
+ b=C7ehG5UBM6wN/8kO1mrjj3/W2U5r6mR2iuwCRGjGJ1b+yw+lXYQpSulmKd1c0HdbDITSzviFFFIWVwaEMwor3NvS+UObaSdzqCvoWgIiqQhmrMVG22AIo5AtPQa/2yUeSujN3cf/IDFntHs+P8OJWiyd1lcGm8eqiF80fL+rnHwZTRmn5rkXwhWunI2vuGYts3dtQuUUZW7RRyLCPMtSMkTG98F1sCptZTu8ZkZsfuUYJppG/ibSMjSV9po5dxHmHIfjW51b3xNs6avHvLK0w0Sw/oh+LxLEiIaxQisUovfwCid+xrKlXHoW+Lkyjc8fnoAKcZVaDGqnk42yYK4T+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wACkQcvg530bzA9+eiAs+1oW6a9K5xHKZBMR9Q7+xWI=;
+ b=vkG+X90mJcpW8aUT5EQanG9laZJa/AbzKzDAToTYutTSxh5067tMcjMlUrESrJjWNwp9EGot9W2tN1kZkGrpR0IaUa39FnTT0Jap26ABnWrsWD6U/BtiUOCCn906g+eDusfVGZz9Rl5+VmNAPobWKUQ9mkhGIodc2DiNwG+o3QQ=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by DM3PPF545856187.namprd10.prod.outlook.com (2603:10b6:f:fc00::c27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.21; Tue, 26 Aug
+ 2025 13:59:30 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.9052.019; Tue, 26 Aug 2025
+ 13:59:30 +0000
+Date: Tue, 26 Aug 2025 14:59:28 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Andreas Larsson <andreas@gaisler.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        Kees Cook <kees@kernel.org>, Zi Yan <ziy@nvidia.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+        Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+        Xu Xin <xu.xin16@zte.com.cn>,
+        Chengming Zhou <chengming.zhou@linux.dev>,
+        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeel.butt@linux.dev>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+        Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+        Peter Xu <peterx@redhat.com>, Jann Horn <jannh@google.com>,
+        Pedro Falcato <pfalcato@suse.de>, Matthew Wilcox <willy@infradead.org>,
+        Mateusz Guzik <mjguzik@gmail.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 07/10] mm: correct sign-extension issue in MMF_* flag
+ masks
+Message-ID: <2a5bd51a-869b-406c-9ff6-5c9799fdd4c6@lucifer.local>
+References: <cover.1755012943.git.lorenzo.stoakes@oracle.com>
+ <f92194bee8c92a04fd4c9b2c14c7e65229639300.1755012943.git.lorenzo.stoakes@oracle.com>
+ <f77fd9af-5824-4f5d-ba97-54d70bbd1935@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f77fd9af-5824-4f5d-ba97-54d70bbd1935@redhat.com>
+X-ClientProxiedBy: LO4P123CA0610.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:314::12) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|DM3PPF545856187:EE_
+X-MS-Office365-Filtering-Correlation-Id: 36b157cc-2df5-475a-5236-08dde4a8c731
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?YLkX9v+5E/jzON6TA9C0rdxgkUBIej/t3pjjAtTLBVKCgkXSUKtRreXSvan4?=
+ =?us-ascii?Q?JrR5X4Adhp39Kgr1zATa0puov3ADBlaNwbX9QMriC1ehcx3Tp7i4udVyGEuH?=
+ =?us-ascii?Q?6Fs2KSCNDHd15WIqQxxYk0autxJOHiTNuGR/OuTSzgetQFJXPpnuOWNRNz8R?=
+ =?us-ascii?Q?jNunLgZ9R1vn0j6oCIGdZ+DxtrLxZ0C/hXv3ZaijdwXEB+GL/1YlySc+3kEW?=
+ =?us-ascii?Q?LzixI0Hej/PcSI1Jt3SiJdMntfxYL3p1j9V7YLeclnc4Iup3FQYw4877df3b?=
+ =?us-ascii?Q?9MnmWxaCQmKZcYnINzl3D3Dr993bumkz/SjxTw5quH9S3vQAXNGk3gPlhZP2?=
+ =?us-ascii?Q?n93ce98o28se2sSAUTnIkE2D3MjNEzWoQd4f9ekyLHIuaBQZzdGELRIXy6iG?=
+ =?us-ascii?Q?A6u5MoUttQGLKGe2Y+jhncKiExhyk4tHN//x8hOV5bVcbTNGcHX5fmhvSB1c?=
+ =?us-ascii?Q?uDiLDQ/toGG7EWBXotslGzoQo7L0+tRnoOXhNDli2PL9PvumUrm4AFMRLjqG?=
+ =?us-ascii?Q?GQ/zD+1EDCGXptvDNZ/WuBTizg1bWRX4JkOCh9cn8yTVWwk4xe4x7XG6gK+n?=
+ =?us-ascii?Q?vG33kobXTA7Fk0H6gvYWtW9A+ST/rArH0e0sMbNR/ZlLwlz7FMIhFNiJXk1E?=
+ =?us-ascii?Q?VsXRm1ZQhrLILHDqf2EHnaCbyxuGbvKWFGe2ZkvLI4ypZvY9KmlOjwRUXlKm?=
+ =?us-ascii?Q?Ep8A6JFPdYGvwylOmB62t6DXTqNX8RHe0W5uSyiyb0kd36qepUUSdnsnZJaV?=
+ =?us-ascii?Q?6z0XX3XhueCWyMHvDuyhJtyOYPHxeXFiiF9aIu1scOKx7xzZ07yqEatcGeAx?=
+ =?us-ascii?Q?eNxmdqjUMLQ36YEso0MfRmwSe5TcIUc3n6HRa9PPccRoQxZ3Px0IHXpREQJk?=
+ =?us-ascii?Q?C3esED9gHedSP3d7SjA124Dcj978Oh1sBNZko4jnIHM7uNJxR3ZCTPbOtZ3I?=
+ =?us-ascii?Q?cTXkXsP0w92i1ZI7ToNbDXLfHksx0MO9YrUa5proWYmg82NzaX9SYy3EcDDW?=
+ =?us-ascii?Q?e72vAEenJrrHuZPKrdgxx+Ryqpu//Agz4sRpvmI+NTjL9sd9Au19ppj8Owxy?=
+ =?us-ascii?Q?VcTtscLwxBAmkwBgFE9aPpSqfboqpGuEwWPeysK9+mIEJxgDWrZdhsFvQIhc?=
+ =?us-ascii?Q?DLZ7Lw6dA7fjUS8OoA3tTpwIgBWtTKs8sD9SzJIhkESTSSOW86+18OXwtAib?=
+ =?us-ascii?Q?+jwcrIXlWbpNt7qZcqwErihF391ZFgOEbw4yz1C6/KoQzMloLpXTvGb94asN?=
+ =?us-ascii?Q?7p2EkwiYPHE+EWJ1XzKJ7/xfjXnMZR4AnXykjcIx/lY+p6JBQlLn5KNgf5zs?=
+ =?us-ascii?Q?S+FjeU58+/a8IQd808/bDsu3TeqSq2GN8chReu+S0lBZFZ/ICWmE9OKNS/74?=
+ =?us-ascii?Q?O1hxdZmm/AtgY3UMdPiAk/t1JEn6yuZkbtExQMFTcVW6u8RJU3mERNNbe9bY?=
+ =?us-ascii?Q?HI/xHbH7ASo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?IbgsqKEJgrN35VDicaqUIGjkGyyEhXvEcoN4PTDHk4DJoY4rWT2ILRbZxz2B?=
+ =?us-ascii?Q?VZ2uS5eYft4zfusTjPfpl4uZSyWoojL83eiT0QuT4zq7euF1U8RgWbb62sC+?=
+ =?us-ascii?Q?k7BopCDlaPXjCBMJh3MceDTboFEpskiRH3f78Im33OHvqzLbZp9i6TmeN2p9?=
+ =?us-ascii?Q?4Wx/PFyHxcZNw/bq7CTCb9bzudGcawQJP7Yi29kzoscAvwLrxPISqR3TMUR0?=
+ =?us-ascii?Q?ULfh3PLgeaaJthMm5LSyzbUUCXEN69xedFeACXbTlmnlOM4A8HD95fj1fdzd?=
+ =?us-ascii?Q?r2O9aIu2Ga+2xGRrjk2SMzh97cfcdR9q/Y9v+zzDPrBcjypNuyF7FRpRfsZA?=
+ =?us-ascii?Q?CIYs5KezieKivH7m3PQs6EtDU6iBKgFFT5N1DoEFdd5b1lOYAes7vb+FTilQ?=
+ =?us-ascii?Q?mfWPR8/zG2XidzMccJTwkWIDiJRs2sdDByeey0pLbbe1chx/+SZvfP533NV9?=
+ =?us-ascii?Q?w9+22fAw66zky7+4vabbyj9s16i+XCuahs+0LZcrJaBxfOJlmB8pbHiKapjt?=
+ =?us-ascii?Q?YJzkkbq19nLcUXDZVnb4x6PhI+/BwEqSJTk45SULZSQw5H4pyFhqBsWzdbSZ?=
+ =?us-ascii?Q?cPix9nSLFGN+SETWVMM8eNgJd5LgEyxUzwot6kVdauMn/XjRXwfr7CvTX8gq?=
+ =?us-ascii?Q?XT3XPoHKXdlAdQjxGtTqiU1iehOEk7NHyqufnr0DdZXy0fecAysWg7zSMz1L?=
+ =?us-ascii?Q?WpzQPWXdt3DuhH/UfAHDbtSBMm85xId1vUXK1L/qp9LXDD7adXYbJ7EBeTzk?=
+ =?us-ascii?Q?uamZba95CegSOW6TNIl5C7DooiX1eDwqfTK0PLtGPFFrW/yICHDkSCl3NaQQ?=
+ =?us-ascii?Q?JJZnJw+FBkkHJQ+LnOMfahySpG+DcNQhIreZYG5nYc5jzrhNkKeRh/wzdYdq?=
+ =?us-ascii?Q?isXgTm235Q330o1eCdYDUjpBfOc144T/JxveriimoIUVM1aCYCegUyRq/jiH?=
+ =?us-ascii?Q?CJ8gnKG6+YFId+1tVTzamcv1UreaMAzODIFiTmPVl95/zn2YXRvhTaTYqANP?=
+ =?us-ascii?Q?kTK/d43sIUxhlBZyRIpsx5hvLS/UeoFLnlrQSxh6UY0Yce4I/mmm/+SjewKM?=
+ =?us-ascii?Q?lHQLJBZ7J2Yi23TNIZ8lwJgT70gPPNuj3caUkoudqTZH4aymDk9dlQ2yPYVM?=
+ =?us-ascii?Q?rJm8LwnVl9iEKZweXoN0uFN7EdvWjeRBqA2LmcgXgAmtbTyIqDhz9vKWIWKm?=
+ =?us-ascii?Q?cqMh13sk348mfrIsEVH1tPqI/LmNrN2Xp5Jdx07cqREsib6nhYLUPqGyy1H3?=
+ =?us-ascii?Q?eRSAIAPLLiCmdyx0gvy2+0Set1s1ssWymQtuoKRSPseAteV2laekHHz+1kOv?=
+ =?us-ascii?Q?GwSft9xxyRXB/MVAyk97BRn+J4QxvOA3edgcuUnaXeTeFCk/sJGNXAu7QmTq?=
+ =?us-ascii?Q?qGr/BdmuM5Y4691mrEbu4hwCrVmM9ml9P4DcpN85c/Oei0hG+zgQm6OC+keG?=
+ =?us-ascii?Q?U8caA2BoGw2km9EI04c4lH1Nqu/zfeqNr6Lo35T4uv5A0W2HWp5OGwHre4Bu?=
+ =?us-ascii?Q?LmslneGvGdzRzUyJEfvGeaGpDZqIqvHKel7jjpju72un3PyEQUC9QLFut+BI?=
+ =?us-ascii?Q?atlqzssDxlh7fcHpXakNu3yCXsH2FL5f42zxeiIBEBxio1IFpGsnOzG6s8Ct?=
+ =?us-ascii?Q?FA=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	/eiXmfTy3cIr3KeB2xouRaA1zp72VWQHQzk/pcSF0/eg7Co0DF2OIuorwpXCgvfpUurc57IBTDBljNuFu3/UxV28wwIVD2mJv6O/3ldXje4qyi7DMwCGqIVmaVRHCsdnZEDalrPFWRa6xkOvFki5+N8KkDJISaTquQegmW4MqZxg05WJV+jpY+Xt6mqWI39yFN0mBVXoI6isYpAd1u4w8fJv/B3t7FrcSCsPQl1u9zMu3aKe1db1cpcdzF6RNE+puyiwLg/O53m2nw95IMBFEvxk1FPsWBczsQggclXVEEqIUO/HTPTE9MXAMhnU+kx6DbMAYzYrtXFhgN1n73AGNA7MLsNRSp5OaZV3QDL3tAruIjouIPo/Xyk8fvXO59ei3gjmcLOsbQfWIXYX4Vi/vAF2sZCo73S2r584bfz9e7oCe0aGCWPx27I7+l0uIxk7oK6DxPiOVdutsXAQqugsNUbDzznlc3jlut7tHBzLCWTsm8A990GKxyszEooY3vjpcaCwQDO1PZEfcBfGLFWx21RdWE2bzEKFvEV2dqDCHKj8x1vtzYjAA8qLJsPQ+i/34+K+CPMBIMTDguwH4C9bW35J67vnZvkHcG9JsMHFidI=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36b157cc-2df5-475a-5236-08dde4a8c731
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2025 13:59:30.4772
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aqJCaq0cgvLDerKJprdM3gojKi8HiB0YzJVwYo7upIUBm+vyR8wCmaP1+Nbw4kN7l6vxLHiRBnjydnLljL5x9sPm3iHrnpajXglEei5avAw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPF545856187
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-26_02,2025-08-26_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0
+ mlxlogscore=897 spamscore=0 suspectscore=0 malwarescore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2508110000 definitions=main-2508260122
+X-Proofpoint-GUID: 2on69QWa2k4oCyGQVufdfWgWfCmSIKGP
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODIzMDAxNCBTYWx0ZWRfX9a4HiYREImEb
+ xCH6cWy9dHqdI+UtAfsn/W317Iep0LQ17o5CMCJbp6KHiM8aqc2kB/gpiGBqDJvxilPi+h4sWaD
+ 4haHIsnsuCykzXEcgdHcAp9MMd/US8Lwv4wziVEnLY43kgwJDbrw0MizSGfDcyXkx98SfaBFwNO
+ nxcrKNvSg5uQE16VFlXCe+5FgX2N77MN3H3RX60Zgth/JcWj3W2ivkRwQGLEN8cX8lsSReXOukk
+ 3W2BBLyfE0XV2CON6B0w6hVGU74/9e0Qq+4XbYMjNYyQZNuTwcsy44SOJF+I5+atj6z2y/MDMUq
+ p/mGAc/zXQR9cDeyIqgPNrAVjvJ0gTTE/G2Q58PsMGjxdWX4+sZpE/WOCOPyJlCKudA1BvRmEec
+ A4M7k5BP
+X-Authority-Analysis: v=2.4 cv=FtgF/3rq c=1 sm=1 tr=0 ts=68adbdc9 b=1 cx=c_pps
+ a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=2OwXVqhp2XgA:10 a=GoEa3M9JfhUA:10 a=JQTSjhKJAz_8l_SivT4A:9
+ a=CjuIK1q_8ugA:10
+X-Proofpoint-ORIG-GUID: 2on69QWa2k4oCyGQVufdfWgWfCmSIKGP
 
-This commit enables the asynchronous hash interface in dm-integrity.
+On Tue, Aug 26, 2025 at 03:05:27PM +0200, David Hildenbrand wrote:
+> On 12.08.25 17:44, Lorenzo Stoakes wrote:
+> > There is an issue with the mask declarations in linux/mm_types.h, which
+> > naively do (1 << bit) operations. Unfortunately this results in the 1 being
+> > defaulted as a signed (32-bit) integer.
+> >
+> > When the compiler expands the MMF_INIT_MASK bitmask it comes up with:
+> >
+> > (((1 << 2) - 1) | (((1 << 9) - 1) << 2) | (1 << 24) | (1 << 28) | (1 << 30)
+> > | (1 << 31))
+> >
+> > Which overflows the signed integer to -788,527,105. Implicitly casting this
+> > to an unsigned integer results in sign-expansion, and thus this value
+> > becomes 0xffffffffd10007ff, rather than the intended 0xd10007ff.
+> >
+> > While we're limited to a maximum of 32 bits in mm->flags, this isn't an
+> > issue as the remaining bits being masked will always be zero.
+> >
+> > However, now we are moving towards having more bits in this flag, this
+> > becomes an issue.
+> >
+> > Simply resolve this by using the _BITUL() helper to cast the shifted value
+> > to an unsigned long.
+>
+> Hmm, I thought BIT() should be used and would just fine?
 
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
----
- drivers/md/dm-integrity.c |  196 ++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 162 insertions(+), 34 deletions(-)
-
-Index: linux-2.6/drivers/md/dm-integrity.c
-===================================================================
---- linux-2.6.orig/drivers/md/dm-integrity.c	2025-08-25 18:17:21.000000000 +0200
-+++ linux-2.6/drivers/md/dm-integrity.c	2025-08-25 22:08:31.000000000 +0200
-@@ -224,6 +224,7 @@ struct dm_integrity_c {
- 	int failed;
- 
- 	struct crypto_shash *internal_shash;
-+	struct crypto_ahash *internal_ahash;
- 	unsigned int internal_hash_digestsize;
- 
- 	struct dm_target *ti;
-@@ -1636,8 +1637,8 @@ static void integrity_end_io(struct bio
- 	dec_in_flight(dio);
- }
- 
--static void integrity_sector_checksum(struct dm_integrity_c *ic, sector_t sector,
--				      const char *data, unsigned offset, char *result)
-+static void integrity_sector_checksum_shash(struct dm_integrity_c *ic, sector_t sector,
-+					    const char *data, unsigned offset, char *result)
- {
- 	__le64 sector_le = cpu_to_le64(sector);
- 	SHASH_DESC_ON_STACK(req, ic->internal_shash);
-@@ -1689,14 +1690,84 @@ failed:
- 	get_random_bytes(result, ic->tag_size);
- }
- 
-+static void integrity_sector_checksum_ahash(struct dm_integrity_c *ic, sector_t sector,
-+					    struct page *page, unsigned offset, char *result)
-+{
-+	__le64 sector_le = cpu_to_le64(sector);
-+	HASH_REQUEST_ON_STACK(req, ic->internal_ahash);
-+	DECLARE_CRYPTO_WAIT(wait);
-+	struct scatterlist sg[3], *s = sg;
-+	int r;
-+	unsigned int digest_size;
-+	unsigned int nbytes = 0;
-+
-+	might_sleep();
-+
-+	req->base.flags &= ~CRYPTO_TFM_REQ_ON_STACK;
-+	ahash_request_set_callback(req, 0, crypto_req_done, &wait);
-+
-+	if (ic->sb->flags & cpu_to_le32(SB_FLAG_FIXED_HMAC)) {
-+		sg_init_table(sg, 3);
-+		sg_set_buf(s, (const __u8 *)&ic->sb->salt, SALT_SIZE);
-+		nbytes += SALT_SIZE;
-+		s++;
-+	} else {
-+		sg_init_table(sg, 2);
-+	}
-+
-+	if (likely(!is_vmalloc_addr(&sector_le))) {
-+		sg_set_buf(s, &sector_le, sizeof(sector_le));
-+	} else {
-+		struct page *sec_page = vmalloc_to_page(&sector_le);
-+		unsigned int sec_off = offset_in_page(&sector_le);
-+		sg_set_page(s, sec_page, sizeof(sector_le), sec_off);
-+	}
-+	s++;
-+	nbytes += sizeof(sector_le);
-+
-+	sg_set_page(s, page, ic->sectors_per_block << SECTOR_SHIFT, offset);
-+	nbytes += ic->sectors_per_block << SECTOR_SHIFT;
-+
-+	ahash_request_set_crypt(req, sg, result, nbytes);
-+
-+	r = crypto_wait_req(crypto_ahash_digest(req), &wait);
-+	if (unlikely(r)) {
-+		dm_integrity_io_error(ic, "crypto_ahash_digest", r);
-+		goto failed;
-+	}
-+
-+	digest_size = ic->internal_hash_digestsize;
-+	if (unlikely(digest_size < ic->tag_size))
-+		memset(result + digest_size, 0, ic->tag_size - digest_size);
-+
-+	return;
-+
-+failed:
-+	/* this shouldn't happen anyway, the hash functions have no reason to fail */
-+	get_random_bytes(result, ic->tag_size);
-+}
-+
-+static void integrity_sector_checksum(struct dm_integrity_c *ic, sector_t sector,
-+				      const char *data, unsigned offset, char *result)
-+{
-+	if (likely(ic->internal_shash != NULL))
-+		integrity_sector_checksum_shash(ic, sector, data, offset, result);
-+	else
-+		integrity_sector_checksum_ahash(ic, sector, (struct page *)data, offset, result);
-+}
-+
- static void *integrity_kmap(struct dm_integrity_c *ic, struct page *p)
- {
--	return kmap_local_page(p);
-+	if (likely(ic->internal_shash != NULL))
-+		return kmap_local_page(p);
-+	else
-+		return p;
- }
- 
- static void integrity_kunmap(struct dm_integrity_c *ic, const void *ptr)
- {
--	kunmap_local(ptr);
-+	if (likely(ic->internal_shash != NULL))
-+		kunmap_local(ptr);
- }
- 
- static void *integrity_identity(struct dm_integrity_c *ic, void *data)
-@@ -1705,7 +1776,10 @@ static void *integrity_identity(struct d
- 	BUG_ON(offset_in_page(data));
- 	BUG_ON(!virt_addr_valid(data));
- #endif
--	return data;
-+	if (likely(ic->internal_shash != NULL))
-+		return data;
-+	else
-+		return virt_to_page(data);
- }
- 
- static noinline void integrity_recheck(struct dm_integrity_io *dio, char *checksum)
-@@ -2623,32 +2697,58 @@ static void dm_integrity_inline_recheck(
- 	bio_endio(bio);
- }
- 
-+static inline bool dm_integrity_check(struct dm_integrity_c *ic, struct dm_integrity_io *dio)
-+{
-+	struct bio *bio = dm_bio_from_per_bio_data(dio, sizeof(struct dm_integrity_io));
-+	unsigned pos = 0;
-+
-+	while (dio->bio_details.bi_iter.bi_size) {
-+		char digest[HASH_MAX_DIGESTSIZE];
-+		struct bio_vec bv = bio_iter_iovec(bio, dio->bio_details.bi_iter);
-+		char *mem = integrity_kmap(ic, bv.bv_page);
-+		integrity_sector_checksum(ic, dio->bio_details.bi_iter.bi_sector, mem, bv.bv_offset, digest);
-+		if (unlikely(crypto_memneq(digest, dio->integrity_payload + pos,
-+				min(ic->internal_hash_digestsize, ic->tag_size)))) {
-+			integrity_kunmap(ic, mem);
-+			dm_integrity_free_payload(dio);
-+			INIT_WORK(&dio->work, dm_integrity_inline_recheck);
-+			queue_work(ic->offload_wq, &dio->work);
-+			return false;
-+		}
-+		integrity_kunmap(ic, mem);
-+		pos += ic->tuple_size;
-+		bio_advance_iter_single(bio, &dio->bio_details.bi_iter, ic->sectors_per_block << SECTOR_SHIFT);
-+	}
-+
-+	return true;
-+}
-+
-+static void dm_integrity_inline_async_check(struct work_struct *w)
-+{
-+	struct dm_integrity_io *dio = container_of(w, struct dm_integrity_io, work);
-+	struct bio *bio = dm_bio_from_per_bio_data(dio, sizeof(struct dm_integrity_io));
-+	struct dm_integrity_c *ic = dio->ic;
-+
-+	if (likely(dm_integrity_check(ic, dio)))
-+		bio_endio(bio);
-+}
-+
- static int dm_integrity_end_io(struct dm_target *ti, struct bio *bio, blk_status_t *status)
- {
- 	struct dm_integrity_c *ic = ti->private;
- 	if (ic->mode == 'I') {
- 		struct dm_integrity_io *dio = dm_per_bio_data(bio, sizeof(struct dm_integrity_io));
--		if (dio->op == REQ_OP_READ && likely(*status == BLK_STS_OK)) {
--			unsigned pos = 0;
-+		if (dio->op == REQ_OP_READ && likely(*status == BLK_STS_OK) && likely(dio->bio_details.bi_iter.bi_size != 0)) {
- 			if (ic->sb->flags & cpu_to_le32(SB_FLAG_RECALCULATING) &&
- 			    unlikely(dio->integrity_range_locked))
--				goto skip_check;
--			while (dio->bio_details.bi_iter.bi_size) {
--				char digest[HASH_MAX_DIGESTSIZE];
--				struct bio_vec bv = bio_iter_iovec(bio, dio->bio_details.bi_iter);
--				char *mem = integrity_kmap(ic, bv.bv_page);
--				integrity_sector_checksum(ic, dio->bio_details.bi_iter.bi_sector, mem, bv.bv_offset, digest);
--				if (unlikely(crypto_memneq(digest, dio->integrity_payload + pos,
--						min(ic->internal_hash_digestsize, ic->tag_size)))) {
--					integrity_kunmap(ic, mem);
--					dm_integrity_free_payload(dio);
--					INIT_WORK(&dio->work, dm_integrity_inline_recheck);
--					queue_work(ic->offload_wq, &dio->work);
-+			    	goto skip_check;
-+			if (likely(ic->internal_shash != NULL)) {
-+				if (unlikely(!dm_integrity_check(ic, dio)))
- 					return DM_ENDIO_INCOMPLETE;
--				}
--				integrity_kunmap(ic, mem);
--				pos += ic->tuple_size;
--				bio_advance_iter_single(bio, &dio->bio_details.bi_iter, ic->sectors_per_block << SECTOR_SHIFT);
-+			} else {
-+				INIT_WORK(&dio->work, dm_integrity_inline_async_check);
-+				queue_work(ic->offload_wq, &dio->work);
-+				return DM_ENDIO_INCOMPLETE;
- 			}
- 		}
- skip_check:
-@@ -4229,27 +4329,49 @@ nomem:
- 	return -ENOMEM;
- }
- 
--static int get_mac(struct crypto_shash **hash, struct alg_spec *a, char **error,
--		   char *error_alg, char *error_key)
-+static int get_mac(struct crypto_shash **shash, struct crypto_ahash **ahash,
-+		   struct alg_spec *a, char **error, char *error_alg, char *error_key)
- {
- 	int r;
- 
- 	if (a->alg_string) {
--		*hash = crypto_alloc_shash(a->alg_string, 0, CRYPTO_ALG_ALLOCATES_MEMORY);
--		if (IS_ERR(*hash)) {
-+		if (ahash) {
-+			*ahash = crypto_alloc_ahash(a->alg_string, 0, CRYPTO_ALG_ALLOCATES_MEMORY);
-+			if (IS_ERR(*ahash)) {
-+				*ahash = NULL;
-+				goto try_shash;
-+			}
-+
-+			if (a->key) {
-+				r = crypto_ahash_setkey(*ahash, a->key, a->key_size);
-+				if (r) {
-+					*error = error_key;
-+					return r;
-+				}
-+			} else if (crypto_ahash_get_flags(*ahash) & CRYPTO_TFM_NEED_KEY) {
-+				*error = error_key;
-+				return -ENOKEY;
-+			}
-+
-+			return 0;
-+		}
-+
-+try_shash:
-+		*shash = crypto_alloc_shash(a->alg_string, 0, CRYPTO_ALG_ALLOCATES_MEMORY);
-+		if (IS_ERR(*shash)) {
- 			*error = error_alg;
--			r = PTR_ERR(*hash);
--			*hash = NULL;
-+			r = PTR_ERR(*shash);
-+			*shash = NULL;
- 			return r;
- 		}
- 
- 		if (a->key) {
--			r = crypto_shash_setkey(*hash, a->key, a->key_size);
-+			r = crypto_shash_setkey(*shash, a->key, a->key_size);
- 			if (r) {
- 				*error = error_key;
- 				return r;
- 			}
--		} else if (crypto_shash_get_flags(*hash) & CRYPTO_TFM_NEED_KEY) {
-+		} else if (crypto_shash_get_flags(*shash) & CRYPTO_TFM_NEED_KEY) {
- 			*error = error_key;
- 			return -ENOKEY;
- 		}
-@@ -4709,7 +4831,7 @@ static int dm_integrity_ctr(struct dm_ta
- 		buffer_sectors = 1;
- 	ic->log2_buffer_sectors = min((int)__fls(buffer_sectors), 31 - SECTOR_SHIFT);
- 
--	r = get_mac(&ic->internal_shash, &ic->internal_hash_alg, &ti->error,
-+	r = get_mac(&ic->internal_shash, &ic->internal_ahash, &ic->internal_hash_alg, &ti->error,
- 		    "Invalid internal hash", "Error setting internal hash key");
- 	if (r)
- 		goto bad;
-@@ -4717,8 +4839,12 @@ static int dm_integrity_ctr(struct dm_ta
- 		ic->internal_hash = true;
- 		ic->internal_hash_digestsize = crypto_shash_digestsize(ic->internal_shash);
- 	}
-+	if (ic->internal_ahash) {
-+		ic->internal_hash = true;
-+		ic->internal_hash_digestsize = crypto_ahash_digestsize(ic->internal_ahash);
-+	}
- 
--	r = get_mac(&ic->journal_mac, &ic->journal_mac_alg, &ti->error,
-+	r = get_mac(&ic->journal_mac, NULL, &ic->journal_mac_alg, &ti->error,
- 		    "Invalid journal mac", "Error setting journal mac key");
- 	if (r)
- 		goto bad;
-@@ -5240,6 +5366,8 @@ static void dm_integrity_dtr(struct dm_t
- 
- 	if (ic->internal_shash)
- 		crypto_free_shash(ic->internal_shash);
-+	if (ic->internal_ahash)
-+		crypto_free_ahash(ic->internal_ahash);
- 	free_alg(&ic->internal_hash_alg);
- 
- 	if (ic->journal_crypt)
-@@ -5256,7 +5384,7 @@ static void dm_integrity_dtr(struct dm_t
- 
- static struct target_type integrity_target = {
- 	.name			= "integrity",
--	.version		= {1, 13, 0},
-+	.version		= {1, 14, 0},
- 	.module			= THIS_MODULE,
- 	.features		= DM_TARGET_SINGLETON | DM_TARGET_INTEGRITY,
- 	.ctr			= dm_integrity_ctr,
-
+Sure.
 
