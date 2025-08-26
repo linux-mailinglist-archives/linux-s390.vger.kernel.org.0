@@ -1,54 +1,54 @@
-Return-Path: <linux-s390+bounces-12208-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-12206-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69389B35341
-	for <lists+linux-s390@lfdr.de>; Tue, 26 Aug 2025 07:25:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58D87B35335
+	for <lists+linux-s390@lfdr.de>; Tue, 26 Aug 2025 07:20:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6E34C1B226B6
-	for <lists+linux-s390@lfdr.de>; Tue, 26 Aug 2025 05:25:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C492A1B27D77
+	for <lists+linux-s390@lfdr.de>; Tue, 26 Aug 2025 05:21:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6805C2EA74C;
-	Tue, 26 Aug 2025 05:25:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2878A2D5C68;
+	Tue, 26 Aug 2025 05:20:37 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C72CC1DB95E;
-	Tue, 26 Aug 2025 05:25:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 424611E8332;
+	Tue, 26 Aug 2025 05:20:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756185906; cv=none; b=XC7zzsDks/0QP5+YBqcoMzLkdcK7NKsJX+zGPJOyNssexaeDArc5f74oCrWHf0D6ZDaY9La0Kff6rimZ7u1BarAjZ98a4XiN9lvKFUcIznwFPr1h3BuSsVrM4Y+lYG2q6UU2I9LqCDBomBsi80mSEDmOFBSruT3vEtQH43hBbzw=
+	t=1756185637; cv=none; b=ZmmOJWSL3KrsOvuyuv56BqqaazHuFF/qxmn7VkBzgjNFwb7FCDJWlSmCGEb04Eanas6dHmwaS6IMopRjYFQ9+C8lUg0N3qltq4wHxvKSPrePMDQZtN/8MP4i5tdSMAmYInIPIdMsEvK6uL/6w4di6uhnIENX2SK2mHA4siYWWJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756185906; c=relaxed/simple;
-	bh=LnW1Xga/wIskvG3PVpiteg7zMuMWtO0WP5WXGqcrkVw=;
+	s=arc-20240116; t=1756185637; c=relaxed/simple;
+	bh=YK+oeaSt00qyZM6XFlXDNRfO/DjLnJWEt9IhYu7oppY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NGw+2hHAtU5jMG7cUxd792gotAythpUulweFVDzWBRc7mmwX7SAjf/dUlN/WcoNe+5NneDPomKcVIVTZZpi0fTWABo0HkuY9DNcxs9sD9T8+dwLnHI3hWFyyRxXJB7tW5BlU5a9xyMIPHcnFNYYCKuNeoaf05FIh8unM3ap/WMc=
+	 In-Reply-To:Content-Type; b=INs79gR/tSjk/WrfStlYwb9uMsOXhm2qyQABOL3++lIGQ5+4/OV2UJn5mAoSh/Z8Up6aQgf9ENcumLEr8su7j7xnATQ72lNtAEvlGvFTCYMQbJ+0FuBW7w8AxPmNJUHJHYwCxXZJ7kzaHxUyO5D+iitU+dTL0DMumvLUsuX0Yqc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
 Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4c9wDs5fW7z9sSH;
-	Tue, 26 Aug 2025 06:49:33 +0200 (CEST)
+	by localhost (Postfix) with ESMTP id 4c9wLb6DMvz9sSL;
+	Tue, 26 Aug 2025 06:54:31 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from pegase2.c-s.fr ([172.26.127.65])
 	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 9WAMtYgIKbQJ; Tue, 26 Aug 2025 06:49:33 +0200 (CEST)
+	with ESMTP id NrvWrUS7BScP; Tue, 26 Aug 2025 06:54:31 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4c9wDs4Dc9z9sS8;
-	Tue, 26 Aug 2025 06:49:33 +0200 (CEST)
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4c9wLb4cWgz9sSK;
+	Tue, 26 Aug 2025 06:54:31 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 6B3918B764;
-	Tue, 26 Aug 2025 06:49:33 +0200 (CEST)
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 75E4E8B764;
+	Tue, 26 Aug 2025 06:54:31 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
 	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id cTXo-oIxDOpC; Tue, 26 Aug 2025 06:49:33 +0200 (CEST)
+	with ESMTP id F2eraKjHbKgo; Tue, 26 Aug 2025 06:54:31 +0200 (CEST)
 Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 8219A8B763;
-	Tue, 26 Aug 2025 06:49:31 +0200 (CEST)
-Message-ID: <609a980b-cbe3-442b-a492-91722870b156@csgroup.eu>
-Date: Tue, 26 Aug 2025 06:49:29 +0200
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 93E148B763;
+	Tue, 26 Aug 2025 06:54:29 +0200 (CEST)
+Message-ID: <1c8392b8-ea7b-48ef-8932-02f41e1233a3@csgroup.eu>
+Date: Tue, 26 Aug 2025 06:54:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -56,8 +56,7 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 4/8] powerpc/smp: Introduce CONFIG_SCHED_MC to guard MC
- scheduling bits
+Subject: Re: [PATCH v7 3/8] powerpc/smp: Export cpu_coregroup_mask()
 To: K Prateek Nayak <kprateek.nayak@amd.com>,
  Madhavan Srinivasan <maddy@linux.ibm.com>,
  Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
@@ -91,121 +90,84 @@ Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
  Tim Chen <tim.c.chen@linux.intel.com>,
  Vinicius Costa Gomes <vinicius.gomes@intel.com>
 References: <20250826041319.1284-1-kprateek.nayak@amd.com>
- <20250826041319.1284-5-kprateek.nayak@amd.com>
+ <20250826041319.1284-4-kprateek.nayak@amd.com>
 From: Christophe Leroy <christophe.leroy@csgroup.eu>
 Content-Language: fr-FR
-In-Reply-To: <20250826041319.1284-5-kprateek.nayak@amd.com>
+In-Reply-To: <20250826041319.1284-4-kprateek.nayak@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
 
 Le 26/08/2025 à 06:13, K Prateek Nayak a écrit :
-> PowerPC enables the MC scheduling domain by default on systems with
-> coregroup support without having a SCHED_MC config in Kconfig.
+> Deine cpu_coregroup_mask() to export the per-cpu cpu_corgrp_map when
+> coregroups are supported(). When has_coregroup_support() returns false,
+> cpu_coregroup_mask() returns the mask used by the PKG domain.
 > 
-> The scheduler uses CONFIG_SCHED_MC to introduce the MC domain in the
-> default topology (core) and to optimize the default CPU selection
-> routine (sched-ext).
-> 
-> Introduce CONFIG_SCHED_MC for powerpc and note that it should be
-> preferably enabled given the current default behavior. This also ensures
-> PowerPC is tested during future developments that come to depend on
-> CONFIG_SCHED_MC.
+> Since this will only be used after CONFIG_SCHED_MC is added for PowerPC,
+> no functional changes are intended at this point.
 > 
 > Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
 > ---
->   arch/powerpc/Kconfig           | 9 +++++++++
 >   arch/powerpc/include/asm/smp.h | 2 ++
->   arch/powerpc/kernel/smp.c      | 4 ++++
->   3 files changed, 15 insertions(+)
+>   arch/powerpc/kernel/smp.c      | 8 ++++++++
+>   2 files changed, 10 insertions(+)
 > 
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index 93402a1d9c9f..e954ab3f635f 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -971,6 +971,15 @@ config SCHED_SMT
->   	  when dealing with POWER5 cpus at a cost of slightly increased
->   	  overhead in some places. If unsure say N here.
->   
-> +config SCHED_MC
-> +	bool "Multi-Core Cache (MC) scheduler support"
-> +	depends on PPC64 && SMP
-> +	default y
-> +	help
-> +	  MC scheduler support improves the CPU scheduler's decision making
-> +	  when dealing with POWER systems that contain multiple Last Level
-> +	  Cache instances on the same socket. If unsure say Y here.
-> +
-
-You shouldn't duplicate CONFIG_SCHED_MC in every architecture, instead 
-you should define a CONFIG_ARCH_HAS_SCHED_MC in arch/Kconfig that gets 
-selected by architectures then have CONFIG_SCHED_MC defined in 
-init/Kconfig or kernel/Kconfig or so.
-
->   config PPC_DENORMALISATION
->   	bool "PowerPC denormalisation exception handling"
->   	depends on PPC_BOOK3S_64
 > diff --git a/arch/powerpc/include/asm/smp.h b/arch/powerpc/include/asm/smp.h
-> index 86de4d0dd0aa..9a320d96e891 100644
+> index b77927ccb0ab..86de4d0dd0aa 100644
 > --- a/arch/powerpc/include/asm/smp.h
 > +++ b/arch/powerpc/include/asm/smp.h
-> @@ -148,7 +148,9 @@ static inline const struct cpumask *cpu_smt_mask(int cpu)
+> @@ -148,6 +148,8 @@ static inline const struct cpumask *cpu_smt_mask(int cpu)
 >   }
 >   #endif /* CONFIG_SCHED_SMT */
 >   
-> +#ifdef CONFIG_SCHED_MC
->   extern const struct cpumask *cpu_coregroup_mask(int cpu);
-> +#endif
+> +extern const struct cpumask *cpu_coregroup_mask(int cpu);
 
-Why do you need this ifdef ? Leaving it outside #ifdef allows you to do 
-constructs like:
+'extern' keyword is pointless for function prototypes, remove it.
 
-	if (IS_ENABLED(CONFIG_SCHED_MC))
-		cpu_coregroup_mask(cpu);
+See report from checkpatch:
 
-Otherwise you'll need to ensure all calls to cpu_coregroup_mask() are 
-also inside #ifdefs, which is not the recommended way nowadays.
+$ ./scripts/checkpatch.pl --strict -g a064a30c52a5
+CHECK: extern prototypes should be avoided in .h files
+#28: FILE: arch/powerpc/include/asm/smp.h:151:
++extern const struct cpumask *cpu_coregroup_mask(int cpu);
 
->   
+total: 0 errors, 0 warnings, 1 checks, 22 lines checked
+
+NOTE: For some of the reported defects, checkpatch may be able to
+       mechanically convert to the typical style using --fix or 
+--fix-inplace.
+
+Commit a064a30c52a5 ("powerpc/smp: Export cpu_coregroup_mask()") has 
+style problems, please review.
+
+NOTE: If any of the errors are false positives, please report
+       them to the maintainer, see CHECKPATCH in MAINTAINERS.
+
+
+
+> +
 >   /* Since OpenPIC has only 4 IPIs, we use slightly different message numbers.
 >    *
+>    * Make sure this matches openpic_request_IPIs in open_pic.c, or what shows up
 > diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-> index e623f2864dc4..7f79b853b221 100644
+> index 4f48262658cc..e623f2864dc4 100644
 > --- a/arch/powerpc/kernel/smp.c
 > +++ b/arch/powerpc/kernel/smp.c
-> @@ -1059,6 +1059,7 @@ static bool has_coregroup_support(void)
+> @@ -1059,6 +1059,14 @@ static bool has_coregroup_support(void)
 >   	return coregroup_enabled;
 >   }
 >   
-> +#ifdef CONFIG_SCHED_MC
->   const struct cpumask *cpu_coregroup_mask(int cpu)
->   {
->   	if (has_coregroup_support())
-> @@ -1071,6 +1072,7 @@ static const struct cpumask *cpu_mc_mask(struct sched_domain_topology_level *tl,
+> +const struct cpumask *cpu_coregroup_mask(int cpu)
+> +{
+> +	if (has_coregroup_support())
+> +		return per_cpu(cpu_corgrp_map, cpu);
+> +
+> +	return cpu_node_mask(cpu);
+> +}
+> +
+>   static const struct cpumask *cpu_mc_mask(struct sched_domain_topology_level *tl, int cpu)
 >   {
 >   	return cpu_corgrp_mask(cpu);
->   }
-> +#endif
->   
->   static const struct cpumask *cpu_pkg_mask(struct sched_domain_topology_level *tl, int cpu)
->   {
-> @@ -1729,10 +1731,12 @@ static void __init build_sched_topology(void)
->   			SDTL_INIT(shared_cache_mask, powerpc_shared_cache_flags, CACHE);
->   	}
->   
-> +#ifdef CONFIG_SCHED_MC
-
-As I said above, define the function prototype at all time in smp.h and 
-use IS_ENABLED(CONFIG_SCHED_MC) here instead of a #ifdef
-
->   	if (has_coregroup_support()) {
->   		powerpc_topology[i++] =
->   			SDTL_INIT(cpu_mc_mask, powerpc_shared_proc_flags, MC);
->   	}
-> +#endif
->   
->   	powerpc_topology[i++] = SDTL_INIT(cpu_pkg_mask, powerpc_shared_proc_flags, PKG);
->   
 
 
