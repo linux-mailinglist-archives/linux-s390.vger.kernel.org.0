@@ -1,79 +1,79 @@
-Return-Path: <linux-s390+bounces-12532-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-12534-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB1E2B3E32D
-	for <lists+linux-s390@lfdr.de>; Mon,  1 Sep 2025 14:36:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4CE3B3E340
+	for <lists+linux-s390@lfdr.de>; Mon,  1 Sep 2025 14:37:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2F57C7AC396
-	for <lists+linux-s390@lfdr.de>; Mon,  1 Sep 2025 12:34:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B766216273A
+	for <lists+linux-s390@lfdr.de>; Mon,  1 Sep 2025 12:36:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D9AD346A0A;
-	Mon,  1 Sep 2025 12:30:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CECF134A329;
+	Mon,  1 Sep 2025 12:30:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="IGWxn0AM"
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="aHgTrVy+"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F0334574F
-	for <linux-s390@vger.kernel.org>; Mon,  1 Sep 2025 12:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56071346A10
+	for <linux-s390@vger.kernel.org>; Mon,  1 Sep 2025 12:30:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756729849; cv=none; b=E2mA0pEwQ8123ndWsW0OnAWMjiIdWjAgTKe9USrZQt2PTjMB7pTrGz2QksykKx0z/l0xFPKMSWfRMyT8wRjWSBYyVJ3Cv+c3AwEnuqO/9XBcWE5NoX8TKUtfhVuWRT96TgEOmfbCpIhF1CeRTZ2jIQXRuj/1Z8uO6I0NBH83xuw=
+	t=1756729852; cv=none; b=Wt+jZBJnnBUbHwujsENO8jwIFICUYr3qEhLEmoHMqrKlrt0gRIaKTMJA/HPNye4EDbnXMr6rHQDFl5qNx3XMY5OlP8M3mwV/iXj41BxzkZoN56uFRbBrYbzC+DqCEaHN1Vn2nMYs6ct65ueK0q/pPgHmDVEIllXGo+tuiOXO8R4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756729849; c=relaxed/simple;
-	bh=oY+kVrJSUNMT6cURQZxHlXP0Zp0Aq1m5o0k1qFqpfkg=;
+	s=arc-20240116; t=1756729852; c=relaxed/simple;
+	bh=EPJbyRWxHnT9AgTmdS6KO9CuajUKQ+wmYGiqrI3ZBAk=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W5fUxwUgnKCukfh8f9Jo4G/MGzey+J3WaXbJE8w7psWO8foPgCTNZphpILuiPSDna75E43SeNmu+Tq7IC2C5igF+65b6zloCDx+arApEAUrLYbqpl12T61qLYTZf7+Cbibwr1T5zgtP1Y6EhrEphPLJm4m/8aqPvJZgOmWxe3qU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=IGWxn0AM; arc=none smtp.client-ip=209.85.218.49
+	 MIME-Version; b=QhYxov95/NGVfG7Oh5Nq2yteMvhgUfxK98Qhd8x2i8Yy6YWDlvns2ZDBtWSHmHGJGzua0c7jDrWfe9JH+EcciPCoeFMjYHc2eoDIJvGbH0bSHd5Bim/dSxTVeJylIjmXKubj6rhWBTNr10oQwkPhmj/VjbAXJhBArdJx5ivCLaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=aHgTrVy+; arc=none smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aff0365277aso436475366b.1
-        for <linux-s390@vger.kernel.org>; Mon, 01 Sep 2025 05:30:47 -0700 (PDT)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-61ce4c32a36so6732605a12.3
+        for <linux-s390@vger.kernel.org>; Mon, 01 Sep 2025 05:30:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1756729846; x=1757334646; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1756729849; x=1757334649; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=TakQ8h85rIAa1grDUxPMVyoALGVgUpKOsAVdRA9oxes=;
-        b=IGWxn0AMjS7kGyrlVUR+4CL7D3H6J/2wHRGBk0IEFRRq50Z/9BMQkC3kD7SFCdanyf
-         LWoObgGoAcB4Ll0Mrg99BgD1jqghxx1/+4TeO1cUqPvlh2ZJZTDK3jPspzsN4vXPzIAd
-         +G5FCUQErcl37gyIi3W5p+vvIW4chQ1C7AmPLfwLXIEwlgO+FHsVjUek75c2caWvPTaz
-         dIVY6jvCc/5S5gpJh2LgqoolixwNxw5xosp6bEIOyGHEyEOu59XAE93ObyWJlQ5s9UNv
-         827S8WtDxpF8JF1lgnec72E4HJaKH32O7PAmo7EcuI5LSq6jP2YvLlegnbFESRjv/FuQ
-         GonQ==
+        bh=wDGNHui84WsHVpXgfTg7/ZQpp3R8ARaLofrymMcz4P4=;
+        b=aHgTrVy+UXwL9vMATMLTBzYygvkvl1PXOOkgjbsIQG3AtnAibegqVurFbnCgst5vw3
+         Tdn6BM6pdncPEzEN9ifHpCA8P6Pi4hRjnYSm2XHIsHhjBoa2yZ23NHuGkS26Mta2ynDG
+         hHyJrdulDtB0BpZ5BnpS002ShEm4bThnIuHBA36CXsVQXZQl8TLN9ouFxkOu79st1Lun
+         n/4mA3ksechY3UCwBukK3jOeMXCtdgFo4nnd+QD7ghAwOcthXOafw9+qg7Ty7/sIIJGA
+         Xon6LXD5Nx/5nBd1kfpFV4EZRE0nIo8tJwVUDxwZbsqTwpnlVC8IN3f1JRwVMOGUYrZL
+         3tqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756729846; x=1757334646;
+        d=1e100.net; s=20230601; t=1756729849; x=1757334649;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TakQ8h85rIAa1grDUxPMVyoALGVgUpKOsAVdRA9oxes=;
-        b=iVGifWudAAQi+n3RzUeowaC9u9NYmaEsiGWFRD7WuN7zQMHPumpjgrmraprcpoiywS
-         CBzdjRoNUJ8qG4DQJbQnx+JwSqV8KkRPhNf84ZuvZvSeEtNxv70iFeyHxvr6glJM0U4n
-         V0Xmoj1U5Lg6NVOjrs3Qek7QA/+oZA2xscU9oHyh5JyUKoE0Th3Igff6iIlYsR+h3Abx
-         YUSnnFD0KFeNCTNOpf9e31IM5MYfyZ4ffAaGO8xlXpYQZJRM1juPnvG/4JZsXwmT93PK
-         zM/gW0M8+Cc07Ee3BpYpgL1lDd8bSuqc7TqZmL8Fw7qv4kXqw9FobfpFwmNaOlwkgwsJ
-         R5GQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUETErLhu6A4qUiEzT5znH2OQtjRisA6MIo+uh5PSmNsXiNlhv6BHCBiudr1p0QwntMlhpdW4JrRP0P@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/z9/XHzjOBCzL7aGMd+rdClNunnMIbtWOreHStBI9CwtGkcJO
-	RPeCI3xuEBtwZN0W89L8qajkhbHtYyVpdmCYwLwPkXO+78uU+XzJq35DniCnF1YKPwc=
-X-Gm-Gg: ASbGnctWxNSN43CxH1KnzT7/mQ53A3/cDned32UX5yWg2T7Gr5dmmTP/zFqsS6ihtiG
-	e+yEBcWYOjKbCa1RJFz8XEfQ39d/uQEhv5CZsTHy6DVOBWltn9nBZeHrtIBKaapSVWKMDF4cC1F
-	KKjdU4+0PuMdVJYxEWbMeAVC89OlfnqjZDXEFE6AjdP3U2JwpqMCuRBnwafMbIlbnTCtFrjwjGb
-	OPygnqVXiclvPQQjv00IN25ioVgpqI9L1bK56YhfpmUfnmpQmKMR5XFME7Db0MRhOIhkD/KmwtC
-	YyTjOFDrq5r2wU2y0SenhUqYSiHC+5NlM806HHTjDIrNgqKRDO5UITovn+ta942CqodGB69rfX8
-	pQHxFTCzaaAcndDUon+azdchWpa2uRjPKTFuZ4fjSQWY1zc0HB23uE18Oz8S3P+BwztzIDiaNO8
-	j9YPlXh4ryNaRc/v55y5umQzqj9J9r9PQg
-X-Google-Smtp-Source: AGHT+IEFyUt84N4Cv2kdLXAVUn+1e4FWCkv0k7DfQxCZiqDejVRSf4epoqkxZrOG2Uh7zwz0dBY6jw==
-X-Received: by 2002:a17:907:7f1f:b0:afe:94d7:7283 with SMTP id a640c23a62f3a-b01083377eamr695696366b.32.1756729846177;
-        Mon, 01 Sep 2025 05:30:46 -0700 (PDT)
+        bh=wDGNHui84WsHVpXgfTg7/ZQpp3R8ARaLofrymMcz4P4=;
+        b=D5S+BX2TQWurZ3HKTKzp5N7gCwcM2UxJ/eUczayj+eNCDBS0QoGSeTITglfQV7n/Fg
+         91YkWtVLTiIoxIaekiBjEu/sNwYWktjhoyro/8VHutjVq4uHeNNn9X1KeuO7f/uZ2l3x
+         KQjWZu2PxmURynyQCo9SPoXGcmJiywnQVmjYyF8LxcycVPBuuH2CDjqTxbzIM2tAqqbW
+         z0Kg8GkbHoFyVJSNRfiAqJTkZVf+yEcUYDfi/NRvcFncFP/1iVFplAStTN33NEyTBuHF
+         ylAPyKIkJIHmHfhNMUwIGVkjaXTA5F7ysD9pl2O49KrEINzdMjD6iBXE92yYgd/VJoZg
+         vngQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQwn6reIa0mbJV8iXvFAQqmNEyYSwG58Doy9I3/pJv+JEsVCYhgaIByrzEte5xjL5PeA09qiEtZ9iD@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhibVhow0X8F09BTPf9xdeVxJa+tavb3LIRtRmbHaov7xlk97D
+	R5ccsgNtlC21l7b95ktkLv9GgdR10o5NzwuHDZQXflcJhQ7TFhmQqSMjbNBuAFmeXzQ=
+X-Gm-Gg: ASbGncuqI6wrMPkW/ktJ0nE0WyWyzSO4l07b2D7TC4Qz9StViO6DVGhRhg++m9HN8AI
+	jyt2OrWvCuTh5JprNVQDN84w9THhr0J1OBv5jIMvbxi78pr1+cXnZOzBtQLDSfJuJODebhfZ+cX
+	Yb+dtqX6O6eczuiBnYV7pxFZMCys9F+05fg8DDBsiOh2ljHW7KbWA6Fzs0MEc+iNBog4bsz0sxH
+	JpAc2mz9qyyn8n0OpuZEQcwyWQXacpuXhCel3K54XFO9VVVxd7oVcxer5z6/IN6g7/q4adQ9C7G
+	tio6bv8HHC4MVX/+altlZ97Tuh3uXimk+0dWMlD3uLqnxkw/PnaluT04Po+5W67TsKQrMettcC0
+	2ZLXPqTm6lZ1BeFfCOdBUtj1wZv1jWpADVzdXcEmFF8J1lzvTQlY0oXY6C0swpelikQeYxHlDV2
+	1hSSloFXwsem58gHUt938/NnUaR7I+RPzX
+X-Google-Smtp-Source: AGHT+IFKdIH/XV8PMBLWofBOVQFCiNzD1MryqiWSI9A5CR0R39RCWddVIJNZ79UXnDKy/e8yeVnjDw==
+X-Received: by 2002:a05:6402:2549:b0:618:afa:70b1 with SMTP id 4fb4d7f45d1cf-61d26c32e70mr6177153a12.20.1756729848021;
+        Mon, 01 Sep 2025 05:30:48 -0700 (PDT)
 Received: from raven.intern.cm-ag (p200300dc6f1d0f00023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f1d:f00:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-61eaf5883b6sm255566a12.20.2025.09.01.05.30.44
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-61eaf5883b6sm255566a12.20.2025.09.01.05.30.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Sep 2025 05:30:45 -0700 (PDT)
+        Mon, 01 Sep 2025 05:30:47 -0700 (PDT)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: akpm@linux-foundation.org,
 	david@redhat.com,
@@ -130,9 +130,9 @@ To: akpm@linux-foundation.org,
 	linux-s390@vger.kernel.org,
 	sparclinux@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org
-Subject: [PATCH v5 07/12] parisc: constify mmap_upper_limit() parameter for improved const-correctness
-Date: Mon,  1 Sep 2025 14:30:23 +0200
-Message-ID: <20250901123028.3383461-8-max.kellermann@ionos.com>
+Subject: [PATCH v5 08/12] mm: constify arch_pick_mmap_layout() for improved const-correctness
+Date: Mon,  1 Sep 2025 14:30:24 +0200
+Message-ID: <20250901123028.3383461-9-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250901123028.3383461-1-max.kellermann@ionos.com>
 References: <20250901123028.3383461-1-max.kellermann@ionos.com>
@@ -144,42 +144,147 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This piece is necessary to make the `rlim_stack` parameter to
-mmap_base() const.
+This function only reads from the rlimit pointer (but writes to the
+mm_struct pointer which is kept without `const`).
+
+All callees are already const-ified or (internal functions) are being
+constified by this patch.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 Reviewed-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
 ---
- arch/parisc/include/asm/processor.h | 2 +-
- arch/parisc/kernel/sys_parisc.c     | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/s390/mm/mmap.c              | 5 +++--
+ arch/sparc/kernel/sys_sparc_64.c | 3 ++-
+ arch/x86/mm/mmap.c               | 7 ++++---
+ include/linux/sched/mm.h         | 4 ++--
+ mm/util.c                        | 9 ++++++---
+ 5 files changed, 17 insertions(+), 11 deletions(-)
 
-diff --git a/arch/parisc/include/asm/processor.h b/arch/parisc/include/asm/processor.h
-index 4c14bde39aac..dd0b5e199559 100644
---- a/arch/parisc/include/asm/processor.h
-+++ b/arch/parisc/include/asm/processor.h
-@@ -48,7 +48,7 @@
- #ifndef __ASSEMBLER__
+diff --git a/arch/s390/mm/mmap.c b/arch/s390/mm/mmap.c
+index c0f619fb9ab3..a47c7133d82a 100644
+--- a/arch/s390/mm/mmap.c
++++ b/arch/s390/mm/mmap.c
+@@ -47,7 +47,7 @@ static unsigned long mmap_base_legacy(unsigned long rnd)
+ }
  
- struct rlimit;
--unsigned long mmap_upper_limit(struct rlimit *rlim_stack);
-+unsigned long mmap_upper_limit(const struct rlimit *rlim_stack);
- unsigned long calc_max_stack_size(unsigned long stack_max);
- 
- /*
-diff --git a/arch/parisc/kernel/sys_parisc.c b/arch/parisc/kernel/sys_parisc.c
-index f852fe274abe..c2bbaef7e6b7 100644
---- a/arch/parisc/kernel/sys_parisc.c
-+++ b/arch/parisc/kernel/sys_parisc.c
-@@ -77,7 +77,7 @@ unsigned long calc_max_stack_size(unsigned long stack_max)
-  * indicating that "current" should be used instead of a passed-in
-  * value from the exec bprm as done with arch_pick_mmap_layout().
-  */
--unsigned long mmap_upper_limit(struct rlimit *rlim_stack)
-+unsigned long mmap_upper_limit(const struct rlimit *const rlim_stack)
+ static inline unsigned long mmap_base(unsigned long rnd,
+-				      struct rlimit *rlim_stack)
++				      const struct rlimit *const rlim_stack)
  {
- 	unsigned long stack_base;
+ 	unsigned long gap = rlim_stack->rlim_cur;
+ 	unsigned long pad = stack_maxrandom_size() + stack_guard_gap;
+@@ -169,7 +169,8 @@ unsigned long arch_get_unmapped_area_topdown(struct file *filp, unsigned long ad
+  * This function, called very early during the creation of a new
+  * process VM image, sets up which VM layout function to use:
+  */
+-void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
++void arch_pick_mmap_layout(struct mm_struct *const mm,
++			   const struct rlimit *const rlim_stack)
+ {
+ 	unsigned long random_factor = 0UL;
  
+diff --git a/arch/sparc/kernel/sys_sparc_64.c b/arch/sparc/kernel/sys_sparc_64.c
+index 785e9909340f..1c243bb461b2 100644
+--- a/arch/sparc/kernel/sys_sparc_64.c
++++ b/arch/sparc/kernel/sys_sparc_64.c
+@@ -294,7 +294,8 @@ static unsigned long mmap_rnd(void)
+ 	return rnd << PAGE_SHIFT;
+ }
+ 
+-void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
++void arch_pick_mmap_layout(struct mm_struct *const mm,
++			   const struct rlimit *const rlim_stack)
+ {
+ 	unsigned long random_factor = mmap_rnd();
+ 	unsigned long gap;
+diff --git a/arch/x86/mm/mmap.c b/arch/x86/mm/mmap.c
+index 708f85dc9380..13bde4ba2f24 100644
+--- a/arch/x86/mm/mmap.c
++++ b/arch/x86/mm/mmap.c
+@@ -80,7 +80,7 @@ unsigned long arch_mmap_rnd(void)
+ }
+ 
+ static unsigned long mmap_base(unsigned long rnd, unsigned long task_size,
+-			       struct rlimit *rlim_stack)
++			       const struct rlimit *const rlim_stack)
+ {
+ 	unsigned long gap = rlim_stack->rlim_cur;
+ 	unsigned long pad = stack_maxrandom_size(task_size) + stack_guard_gap;
+@@ -110,7 +110,7 @@ static unsigned long mmap_legacy_base(unsigned long rnd,
+  */
+ static void arch_pick_mmap_base(unsigned long *base, unsigned long *legacy_base,
+ 		unsigned long random_factor, unsigned long task_size,
+-		struct rlimit *rlim_stack)
++		const struct rlimit *const rlim_stack)
+ {
+ 	*legacy_base = mmap_legacy_base(random_factor, task_size);
+ 	if (mmap_is_legacy())
+@@ -119,7 +119,8 @@ static void arch_pick_mmap_base(unsigned long *base, unsigned long *legacy_base,
+ 		*base = mmap_base(random_factor, task_size, rlim_stack);
+ }
+ 
+-void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
++void arch_pick_mmap_layout(struct mm_struct *const mm,
++			   const struct rlimit *const rlim_stack)
+ {
+ 	if (mmap_is_legacy())
+ 		mm_flags_clear(MMF_TOPDOWN, mm);
+diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+index 2201da0afecc..0232d983b715 100644
+--- a/include/linux/sched/mm.h
++++ b/include/linux/sched/mm.h
+@@ -178,7 +178,7 @@ static inline void mm_update_next_owner(struct mm_struct *mm)
+ #endif
+ 
+ extern void arch_pick_mmap_layout(struct mm_struct *mm,
+-				  struct rlimit *rlim_stack);
++				  const struct rlimit *rlim_stack);
+ 
+ unsigned long
+ arch_get_unmapped_area(struct file *filp, unsigned long addr,
+@@ -211,7 +211,7 @@ generic_get_unmapped_area_topdown(struct file *filp, unsigned long addr,
+ 				  unsigned long flags, vm_flags_t vm_flags);
+ #else
+ static inline void arch_pick_mmap_layout(struct mm_struct *mm,
+-					 struct rlimit *rlim_stack) {}
++					 const struct rlimit *rlim_stack) {}
+ #endif
+ 
+ static inline bool in_vfork(struct task_struct *tsk)
+diff --git a/mm/util.c b/mm/util.c
+index f5a35efba7bf..24f08217cd95 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -431,7 +431,8 @@ static int mmap_is_legacy(const struct rlimit *const rlim_stack)
+ #define MIN_GAP		(SZ_128M)
+ #define MAX_GAP		(STACK_TOP / 6 * 5)
+ 
+-static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
++static unsigned long mmap_base(const unsigned long rnd,
++			       const struct rlimit *const rlim_stack)
+ {
+ #ifdef CONFIG_STACK_GROWSUP
+ 	/*
+@@ -462,7 +463,8 @@ static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
+ #endif
+ }
+ 
+-void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
++void arch_pick_mmap_layout(struct mm_struct *const mm,
++			   const struct rlimit *const rlim_stack)
+ {
+ 	unsigned long random_factor = 0UL;
+ 
+@@ -478,7 +480,8 @@ void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
+ 	}
+ }
+ #elif defined(CONFIG_MMU) && !defined(HAVE_ARCH_PICK_MMAP_LAYOUT)
+-void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
++void arch_pick_mmap_layout(struct mm_struct *const mm,
++			   const struct rlimit *const rlim_stack)
+ {
+ 	mm->mmap_base = TASK_UNMAPPED_BASE;
+ 	mm_flags_clear(MMF_TOPDOWN, mm);
 -- 
 2.47.2
 
