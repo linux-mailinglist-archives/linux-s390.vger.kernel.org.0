@@ -1,79 +1,79 @@
-Return-Path: <linux-s390+bounces-12538-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-12535-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3578EB3E356
-	for <lists+linux-s390@lfdr.de>; Mon,  1 Sep 2025 14:39:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6267CB3E347
+	for <lists+linux-s390@lfdr.de>; Mon,  1 Sep 2025 14:38:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C0707203A61
-	for <lists+linux-s390@lfdr.de>; Mon,  1 Sep 2025 12:38:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DBD111679B3
+	for <lists+linux-s390@lfdr.de>; Mon,  1 Sep 2025 12:36:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8132F32C330;
-	Mon,  1 Sep 2025 12:31:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3375234AB1C;
+	Mon,  1 Sep 2025 12:30:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="QRQj1tz2"
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="HTecopPj"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6753314B1
-	for <linux-s390@vger.kernel.org>; Mon,  1 Sep 2025 12:31:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D57A34AAF1
+	for <linux-s390@vger.kernel.org>; Mon,  1 Sep 2025 12:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756729872; cv=none; b=MejIuMrMk4m5OR+GA3wbVx8gTM8kRGm3s+wPT2Wnk3qpXniz8AM+a41cYMa1TlFwalEGCn2a9C/CNPTISffVcndaLlgw8cgsV/8zdbweyE9jj9IsstJfU/O9mdY+pOMSSVNKcQlKnNy7wS9JPoCTf3C5yfY+xfyDTnqHUwxrB7w=
+	t=1756729858; cv=none; b=A8L3HcuuiSkXlk6esqhjv/rNOoPM+0qlr1RcmN5BvGJMZbGR1s4I7/Wv7o4HsYdd7CDHmYNM8xvgN78T67/Na6RYcnC87k6yurZfqq+TML9K6lYXvjzb284pXNZL1NS2otvh2GwSAWNafkXzHlq43ppwnI0QPNOsWitLyJ0gfqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756729872; c=relaxed/simple;
-	bh=KDOJlWebDr1r9JKcB/6qXXsMuiPZ+GrvsOQJ8M+vAGk=;
+	s=arc-20240116; t=1756729858; c=relaxed/simple;
+	bh=31+JNbBxEbgRy394xiEY0SqE+foE7WaLBkkkvVJFhXI=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=i19d0RWmFDDuU02zoNdn9qYrx5It3cT4OknbtbA0RPJv2ueEnF7uaRTtA75qlnWNJDSUoKJBwWrJgS52zUo+WZtnYGGbRVcsPb9E74+rvLylFIEu5hH/lU4g1+59Wf7C7ifrj6xg38BfgNX+8iKZPFxWl5HJgxnE5/PPCC+mjd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=QRQj1tz2; arc=none smtp.client-ip=209.85.218.51
+	 MIME-Version; b=g4Kt8+XYXWzmt9OH4GftJcu1uhnFiu7RVMeuJ36utyzN7NFZdIszWNcFALdI7JgszAxEHmVDYm5gLnBj9boyeYlcyoTkbKM/LNfkwWQDHhU5ktos9IvPX0c9XXGeWP+knU8qvw3cNzjdxv+W9j4ctkGWutACqBfUIeW/sjMymjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=HTecopPj; arc=none smtp.client-ip=209.85.208.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-afcb7a16441so664099666b.2
-        for <linux-s390@vger.kernel.org>; Mon, 01 Sep 2025 05:31:10 -0700 (PDT)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6188b6f501cso4788273a12.2
+        for <linux-s390@vger.kernel.org>; Mon, 01 Sep 2025 05:30:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1756729869; x=1757334669; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1756729854; x=1757334654; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=hZckJdWYT65mLwvxCWKoPCArrn6/MXXjzKwssfU7w+U=;
-        b=QRQj1tz2wCYs/dw/kpTXZlD+jIy5gt0yrnfJgBeIMZTw7rXoFpyN02yhhU0/c5CfOF
-         3DwTx/LO7H0Shh7hHHvTY1L9bcnK5mj+kNha49DViiEK00n2lG0EcAJrXeE0UExKbUpC
-         FXCIb3ZYwq7ih+LfEXYc8XOtBYA7mmLP36z8iPML0Un8008JO381ZlkusHZz+wzBOJBp
-         mb2kx15zXIDojufwabs97GVReA+0X6+xyJdBBR4NYw/lmYEmiWhxi68HiXiqKR4RBXTl
-         yzq4hBQ+CWvUq0RvyIz+mXXCFw/8+Tg3CbAF1TjyqpdPP5lo1KBs9ARYuYmm7Zow5fHv
-         Mgog==
+        bh=719Ia0lSRQecbD5eusFA1tVcXf6dgvDvzBCqCYcJwqw=;
+        b=HTecopPjrD6O6KseQfBkDG2HF0HXMdtaPLkAcOX6N17X/H8SSj08ozVOo6VICD8tJT
+         SM3yElEPB5BaDOZKwCX+jKOCy5TdVAHnMj3KUcHdGTo2ZNvhB9ATKfj8aDhR0EzZ99mP
+         5mlPHdWYRm1qYMG7YJPxZbx9X1yrA+bX1C0QRpjpLmdxCVJreADV3BbviOU6BP+lXjMQ
+         XxLV91GA7QwoNavmE6sCiGEtJk0l4X37hGtM0r5nfrphswI/4j2uii4DukJuc/jziMui
+         xnwwbEtMXMTpDxQrKTKJSEpdNL8k32HKyDF1iSJNzuS9QvwU9pKVe14g1ANmpEgQsjC1
+         5ICQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756729869; x=1757334669;
+        d=1e100.net; s=20230601; t=1756729854; x=1757334654;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hZckJdWYT65mLwvxCWKoPCArrn6/MXXjzKwssfU7w+U=;
-        b=QTFPDSY+Ebsz9ykyMj84lX/7ldu5j9vv2IENLbU8N7HYOacDNOyCPjdQ18m9f8lqeN
-         nEzY4yYkmX6OlzWx1avU1W4I1MCf9/sUtv+JxYX7Tv5STbcQ9xO1Ns0AGsR0l6jialhA
-         VK1qyqH8dtY0EQ88/KnpVzszPIyBy7GvUJ+Brrrjh+v1gaM7wQe0wKIGmY/2GP+K66Vx
-         9/7+i/V6+kJDzawmTR3IACo2OARunv9XxBXtkTc0Nh4bfXhcAMIi1lWO1Q1W24PcJ2la
-         XkJ+MgmX0Tg5GZFD+HazFKez1EOoKXpWFbdHCIjw5O5SKq0TuKONBSES4mwE1tlOCVeX
-         5qCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUTeOFbw5StprUjb0R9SdrNHdugSRlsPl79qZrHGLWLj98+7/93hDXm7ELabCOsANJs7YcnnhMviRMf@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyy5+ZFBCO28Qdvzu/DqhqOa2dBV/u/4Ns8nucMks1RpHiUrN6R
-	VodjwEuP4+hyvoLLQ9xk+iLlXUufxwhUOfacXKwYiZZD6WSDYl080E8gTg7zFp+KO3I=
-X-Gm-Gg: ASbGnctLlV2jt+8MavyycCnpUUigg0H1Qx8slY+IqaaFjMVzQePaVmBSV3jDbu8qBMf
-	dut4ONovpu8a1ht7ZBWhs9YNp9q/4vOrSlIIOymQUdPV3G4+G9UC1igyeb28pg3O5JD/EIGnqA0
-	iUr0bcT9eRarY110WtKEU60qx3f9Ipovi43D1a+R9R9CztdUUN1LrlShxyg0OjkMp4GK6Zcqfy2
-	XUvPURYxcbbjTD4UfLVqf9xFRrlYKQx8Ty1dMaCVFdzld1RBup6qLPsWPQodxooK8jSX4GJPjT9
-	8ngQc0WgBQDeQQcsV8c4K9PU4RiRivZfiT4p474lLUjqo/4S1JPPo+rx9tWtCabPFweX1rBx7M5
-	Vnyo3iV6/Li5zGGZmq3wLNDXTKA3nz2aviogQf15felJlVc6O7eIt3Ov1UdbgRqqKv4ytAV4LPl
-	7YREDc6JvBB/ue7ADmCzGyyrUq8AS34lFQ
-X-Google-Smtp-Source: AGHT+IETxUI3qvvcJof3qThaTHBjP7BahOV3yuMasi46ZJMakvC6EwAs8jjOUppbppRZ2B64GjsX3A==
-X-Received: by 2002:a05:6402:5207:b0:61c:5cac:293f with SMTP id 4fb4d7f45d1cf-61d26869f4fmr7390296a12.6.1756729850374;
-        Mon, 01 Sep 2025 05:30:50 -0700 (PDT)
+        bh=719Ia0lSRQecbD5eusFA1tVcXf6dgvDvzBCqCYcJwqw=;
+        b=g+gbQqqqsxgX2VyGVgNcyR4hrlAL6bY8r3F5xMmZ+qDQjd0xMB8hzhpnUgK2pEOgkD
+         YSgfk6vyPzigfSAXFLksE/x3U4XtYw1bLXb3VAQRDeMmaiQBjddEt4DrBaH0LkWZidlc
+         9HUn1+UwwQZjThcprEt22Ladg5Yoxj63sO5TLNdFQ+GmmjNs74+RiYhumbKvcPcpgip5
+         WERiGTQ3IsB/8MUE8aP5JKpJkPCW3RALN9vu/+lkLjV5goMsllY2CKs5JLDhWMlTMit4
+         1RkPqM/uXcmCihoYw272tZ3mAbJD2Ywy2nHKmfXGZbMJN+ZDhasCPzWFi1BwxY59tcFn
+         ajtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVoJo2M+NzTwJKOTviFkDO4dC5lgOPea05WZW77x3Qv99RZ4xF8HnFT5/Bnp7/PtCixSXkCaaQclmck@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQqQn07at/kTOL9OZguGcnA6T3OsvCyqIXGSzF0pD3uC7NDAx6
+	c+sk9A1HEIwAWzuK4t7kA2GmC+z4TioOigwk9CyOIk4l/80Z5JixcXTrCslNx/EKlGQ=
+X-Gm-Gg: ASbGnctMKTqCH67fwUgxKudcsqxP1dcD+f6WlCgv1oFGZZVRkGmDWeJfefllOqVncxj
+	4MENLe6d2yaGcoD4GKXD/WdIZYR0yFy51H4/g8A3tAmFG5da/h7Tx9h2ph9vFvLOJHi1P1rowgB
+	W94rUrArQlg47yi9dGXZaau1XhUapB7g4NnezkvR5fdnGARXSMLbzGRQFdcjC/z9B9tB0CgNG7W
+	CaOam0uDYPafxkCS7W+uKeMnIQgg8pSWJzDFNX5CJuYpD/V35Srnj5ZdScUhpIXTGUSMniBDRCR
+	2Q5TBPLBx+TptTDiN/YRXl7x8YvQxFKmJdcU+1Co0686ifZKHH9OcPipadNKjntEWX/M+t1z4qh
+	hcReDWUeDXg+xOcvWJ3soVHmYZFmUxq0pQaQYxw4rrbX5UiDCD2AlVUeUhaC3gL93tokYaMbb4C
+	F18TTu2g9T47u0sLKr2uMnb042QfPKvPMec6AcdrMQZ+s=
+X-Google-Smtp-Source: AGHT+IFXpOqRLV7jtUuVW63S0urvzzT2Ybqzsy1IuQBF5NxQ7SlgahydrdjD1p/lIEKi/iaMHlbMCA==
+X-Received: by 2002:a05:6402:3510:b0:61c:5cac:2961 with SMTP id 4fb4d7f45d1cf-61d2699455emr6335145a12.14.1756729854314;
+        Mon, 01 Sep 2025 05:30:54 -0700 (PDT)
 Received: from raven.intern.cm-ag (p200300dc6f1d0f00023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f1d:f00:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-61eaf5883b6sm255566a12.20.2025.09.01.05.30.48
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-61eaf5883b6sm255566a12.20.2025.09.01.05.30.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Sep 2025 05:30:50 -0700 (PDT)
+        Mon, 01 Sep 2025 05:30:54 -0700 (PDT)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: akpm@linux-foundation.org,
 	david@redhat.com,
@@ -130,9 +130,9 @@ To: akpm@linux-foundation.org,
 	linux-s390@vger.kernel.org,
 	sparclinux@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org
-Subject: [PATCH v5 09/12] mm: constify ptdesc_pmd_pts_count() and folio_get_private()
-Date: Mon,  1 Sep 2025 14:30:25 +0200
-Message-ID: <20250901123028.3383461-10-max.kellermann@ionos.com>
+Subject: [PATCH v5 10/12] mm: constify various inline test functions for improved const-correctness
+Date: Mon,  1 Sep 2025 14:30:26 +0200
+Message-ID: <20250901123028.3383461-11-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250901123028.3383461-1-max.kellermann@ionos.com>
 References: <20250901123028.3383461-1-max.kellermann@ionos.com>
@@ -144,37 +144,134 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-These functions from mm_types.h are trivial getters that should never
-write to the given pointers.
+We select certain test functions from mm_inline.h which either invoke
+each other, functions that are already const-ified, or no further
+functions.
+
+It is therefore relatively trivial to const-ify them, which
+provides a basis for further const-ification further up the call
+stack.
+
+One exception is the function folio_migrate_refs() which does write to
+the "new" folio pointer; there, only the "old" folio pointer is being
+constified; only its "flags" field is read, but nothing written.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 Reviewed-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
 ---
- include/linux/mm_types.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/mm_inline.h | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index d934a3a5b443..46e27ee14bcf 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -632,7 +632,7 @@ static inline void ptdesc_pmd_pts_dec(struct ptdesc *ptdesc)
- 	atomic_dec(&ptdesc->pt_share_count);
+diff --git a/include/linux/mm_inline.h b/include/linux/mm_inline.h
+index 150302b4a905..8c4f6f95ba9f 100644
+--- a/include/linux/mm_inline.h
++++ b/include/linux/mm_inline.h
+@@ -25,7 +25,7 @@
+  * 0 if @folio is a normal anonymous folio, a tmpfs folio or otherwise
+  * ram or swap backed folio.
+  */
+-static inline int folio_is_file_lru(struct folio *folio)
++static inline int folio_is_file_lru(const struct folio *const folio)
+ {
+ 	return !folio_test_swapbacked(folio);
+ }
+@@ -84,7 +84,7 @@ static __always_inline void __folio_clear_lru_flags(struct folio *folio)
+  * Return: The LRU list a folio should be on, as an index
+  * into the array of LRU lists.
+  */
+-static __always_inline enum lru_list folio_lru_list(struct folio *folio)
++static __always_inline enum lru_list folio_lru_list(const struct folio *const folio)
+ {
+ 	enum lru_list lru;
+ 
+@@ -141,7 +141,7 @@ static inline int lru_tier_from_refs(int refs, bool workingset)
+ 	return workingset ? MAX_NR_TIERS - 1 : order_base_2(refs);
  }
  
--static inline int ptdesc_pmd_pts_count(struct ptdesc *ptdesc)
-+static inline int ptdesc_pmd_pts_count(const struct ptdesc *const ptdesc)
+-static inline int folio_lru_refs(struct folio *folio)
++static inline int folio_lru_refs(const struct folio *const folio)
  {
- 	return atomic_read(&ptdesc->pt_share_count);
- }
-@@ -660,7 +660,7 @@ static inline void set_page_private(struct page *page, unsigned long private)
- 	page->private = private;
+ 	unsigned long flags = READ_ONCE(folio->flags.f);
+ 
+@@ -154,14 +154,14 @@ static inline int folio_lru_refs(struct folio *folio)
+ 	return ((flags & LRU_REFS_MASK) >> LRU_REFS_PGOFF) + 1;
  }
  
--static inline void *folio_get_private(struct folio *folio)
-+static inline void *folio_get_private(const struct folio *const folio)
+-static inline int folio_lru_gen(struct folio *folio)
++static inline int folio_lru_gen(const struct folio *folio)
  {
- 	return folio->private;
+ 	unsigned long flags = READ_ONCE(folio->flags.f);
+ 
+ 	return ((flags & LRU_GEN_MASK) >> LRU_GEN_PGOFF) - 1;
  }
+ 
+-static inline bool lru_gen_is_active(struct lruvec *lruvec, int gen)
++static inline bool lru_gen_is_active(const struct lruvec *const lruvec, const int gen)
+ {
+ 	unsigned long max_seq = lruvec->lrugen.max_seq;
+ 
+@@ -217,12 +217,13 @@ static inline void lru_gen_update_size(struct lruvec *lruvec, struct folio *foli
+ 	VM_WARN_ON_ONCE(lru_gen_is_active(lruvec, old_gen) && !lru_gen_is_active(lruvec, new_gen));
+ }
+ 
+-static inline unsigned long lru_gen_folio_seq(struct lruvec *lruvec, struct folio *folio,
++static inline unsigned long lru_gen_folio_seq(const struct lruvec *const lruvec,
++					      const struct folio *const folio,
+ 					      bool reclaiming)
+ {
+ 	int gen;
+ 	int type = folio_is_file_lru(folio);
+-	struct lru_gen_folio *lrugen = &lruvec->lrugen;
++	const struct lru_gen_folio *lrugen = &lruvec->lrugen;
+ 
+ 	/*
+ 	 * +-----------------------------------+-----------------------------------+
+@@ -302,7 +303,8 @@ static inline bool lru_gen_del_folio(struct lruvec *lruvec, struct folio *folio,
+ 	return true;
+ }
+ 
+-static inline void folio_migrate_refs(struct folio *new, struct folio *old)
++static inline void folio_migrate_refs(struct folio *const new,
++				      const struct folio *const old)
+ {
+ 	unsigned long refs = READ_ONCE(old->flags.f) & LRU_REFS_MASK;
+ 
+@@ -330,7 +332,7 @@ static inline bool lru_gen_del_folio(struct lruvec *lruvec, struct folio *folio,
+ 	return false;
+ }
+ 
+-static inline void folio_migrate_refs(struct folio *new, struct folio *old)
++static inline void folio_migrate_refs(struct folio *new, const struct folio *old)
+ {
+ 
+ }
+@@ -508,7 +510,7 @@ static inline void dec_tlb_flush_pending(struct mm_struct *mm)
+ 	atomic_dec(&mm->tlb_flush_pending);
+ }
+ 
+-static inline bool mm_tlb_flush_pending(struct mm_struct *mm)
++static inline bool mm_tlb_flush_pending(const struct mm_struct *const mm)
+ {
+ 	/*
+ 	 * Must be called after having acquired the PTL; orders against that
+@@ -521,7 +523,7 @@ static inline bool mm_tlb_flush_pending(struct mm_struct *mm)
+ 	return atomic_read(&mm->tlb_flush_pending);
+ }
+ 
+-static inline bool mm_tlb_flush_nested(struct mm_struct *mm)
++static inline bool mm_tlb_flush_nested(const struct mm_struct *const mm)
+ {
+ 	/*
+ 	 * Similar to mm_tlb_flush_pending(), we must have acquired the PTL
+@@ -605,7 +607,7 @@ pte_install_uffd_wp_if_needed(struct vm_area_struct *vma, unsigned long addr,
+ 	return false;
+ }
+ 
+-static inline bool vma_has_recency(struct vm_area_struct *vma)
++static inline bool vma_has_recency(const struct vm_area_struct *const vma)
+ {
+ 	if (vma->vm_flags & (VM_SEQ_READ | VM_RAND_READ))
+ 		return false;
 -- 
 2.47.2
 
