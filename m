@@ -1,566 +1,315 @@
-Return-Path: <linux-s390+bounces-12798-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-12806-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3FA0B48F39
-	for <lists+linux-s390@lfdr.de>; Mon,  8 Sep 2025 15:18:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B220B48FD8
+	for <lists+linux-s390@lfdr.de>; Mon,  8 Sep 2025 15:39:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8B3D14E1AAB
-	for <lists+linux-s390@lfdr.de>; Mon,  8 Sep 2025 13:18:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 636D3169B1A
+	for <lists+linux-s390@lfdr.de>; Mon,  8 Sep 2025 13:38:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 490C32C859;
-	Mon,  8 Sep 2025 13:18:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DF0830B52F;
+	Mon,  8 Sep 2025 13:38:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AnQtq8tL"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="i3qlpWmh";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="XV2pbl8d"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25BEF3054E4
-	for <linux-s390@vger.kernel.org>; Mon,  8 Sep 2025 13:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757337507; cv=none; b=T9cSZoGqbepiSI/Ag8IEWmhfQWd7xdxLwx3nkT89c1Cz47vp0gsR7DFIBymnv0oYyytWvX1lvwBmML86jM6myZmJxSN2TPVyWVxb2fy45368GEMm0Y49nrSgAFMPQ2CR6tZOmZtXX2HwE9wMjFYTPy4URnGO/1q+AdvyOvhgMJo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757337507; c=relaxed/simple;
-	bh=PK0y0vqtsy6YkAkyBvw6BE/xj6vfcZUDENEyZlWAzG4=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=jSj7escQWVBPGZTnAxt6tNx6YGLgHD9jPyuV6Jgy+dIlQJmwUlRq3GLDFYMq+lVh24EgQ/RWWsNKS+zlHXojd1UAvKtniTpPt9gJ2Fc7XWEig5WeVrvva+fNmIPiaP0qjNV/eYNyVH7p/1LSHu3PknpoXUuZhs+MMnzsAALbVOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AnQtq8tL; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1757337504;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=bVVzzwf9omM4d7hkeIxwEE/rlE76W3S1JrGVa6DtMKY=;
-	b=AnQtq8tLXHz/JgglNFgzvNpTTd8CxNlDKvvWbITGMDIENCQFlr2edG6BMphylLDABF6ATL
-	aQWTfIsN6dGMwXPsT9hnMNl3RX03I6mtOkXHQpb7aDpogbG9OK1r701UFNo7qEJ0VubbVE
-	b0STJKeI0P1emcEoc7Y8CWztVf2IVQs=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-626-50BIsSqkOUSbNrQHvul63Q-1; Mon,
- 08 Sep 2025 09:18:19 -0400
-X-MC-Unique: 50BIsSqkOUSbNrQHvul63Q-1
-X-Mimecast-MFC-AGG-ID: 50BIsSqkOUSbNrQHvul63Q_1757337498
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 18B9718002C0;
-	Mon,  8 Sep 2025 13:18:18 +0000 (UTC)
-Received: from debian4.vm (unknown [10.44.32.12])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 0E9281955F24;
-	Mon,  8 Sep 2025 13:18:13 +0000 (UTC)
-Received: by debian4.vm (sSMTP sendmail emulation); Mon, 08 Sep 2025 15:18:11 +0200
-Message-ID: <20250908131811.800802198@debian4.vm>
-User-Agent: quilt/0.68
-Date: Mon, 08 Sep 2025 15:16:49 +0200
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: Harald Freudenberger <freude@linux.ibm.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>,
- Eric Biggers <ebiggers@kernel.org>,
- dengler@linux.ibm.com,
- linux-s390@vger.kernel.org,
- dm-devel@lists.linux.dev,
- ifranzki@linux.ibm.com,
- agk@redhat.com,
- snitzer@kernel.org,
- gmazyland@gmail.com,
- Mikulas Patocka <mpatocka@redhat.com>
-Subject: [PATCH v2 7/7] dm-integrity: enable asynchronous hash interface
-References: <20250908131642.385445532@debian4.vm>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D485225A3B;
+	Mon,  8 Sep 2025 13:38:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757338686; cv=fail; b=ANCB0wR+w46S10K3pwl6kLgRNa7lJxYzOlCtMOYVM1VbxG7fyoA+uZ8H6ST5tC1x+rNXU9megOnCoxvUTSENr9h5KHgtUfxN4nuRTusyfAkWX8eFYv8wUPLn+VQNGXecIlkxJTp9BYz9VXt0aUqp/G3Kh5Kw9iwcmB/L5wRNv9w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757338686; c=relaxed/simple;
+	bh=56IIqXgg7uYRnAy1l1QiDuHXSaFcdlldk+8gVCpLZX0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=KS0hiq/fL+MrnYMmeUek0zPx/yf2OJhLNXILsDvLtf6aH65NhH6vWX/AJ0+PFVM0eFFedwCN9XkOlqFMg5uAGry9goic5rMq0l8mcRw60y2LpYlbtj8RHW/wuo8r0gj2UfaXMYLCrNDlWxSBb5ARS64IBQXtNaG5ehSC3+UbXUA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=i3qlpWmh; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=XV2pbl8d; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 588D0lwx005677;
+	Mon, 8 Sep 2025 13:37:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=gwIxBqBclQv86/ati1
+	fbZ0mVGj+PzEqvYDzaI6mk2fg=; b=i3qlpWmhTtZ6CglMusVL/XiQzQVRz3pACu
+	miexsnydFh4cMU52XRc3XE65e1IEPvWeMI1Jgn/rtKM+ICvMa10rrs/NshRuP06g
+	M4tl0aO398ruuXCtWRxVZYyAQ3oSGesFlfqpNt1xP+suGyE2FJ6dEn9o1tMdYk5z
+	X3b5ybNi3f1XGJUoqhgVPnu5DOjV5zVkBD2mIrA+16xjDOq+pUX18JwJg+tiCS0k
+	35f0iFg6nWhSEq5AbOe2+9ixT59M9q4iGMGuSsLyo9r0tuCCYBOwpz6T09gy5DWA
+	TZFlN0BtnHKnD4NCM8PncfH2optRPrF2BYPfDRXBUV3CtamkwSEg==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 491y4br50g-7
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 08 Sep 2025 13:37:23 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 588DGkof002759;
+	Mon, 8 Sep 2025 13:19:21 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12on2048.outbound.protection.outlook.com [40.107.243.48])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 490bdepn38-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 08 Sep 2025 13:19:21 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Fd8q1BvVLrJIjZZkYkj5VetzTsU40c/eNENS17rSakvZG0cTdI64RfTkBxBph9Sn/HS3Ty17DCFFaw0DxV7j7Rhyc52jUjTdmKjOauJN+jYxGrznvGqy5cLhpUx6JTgLPJ9nZqzOL7GF17BOO6eCcxKut+RS7qM/nS+bp+Yfu5sUUNmtI7yBKJa3BaPtP5qWp27n/ug19MJcuK6Cb7/8hcYJcrTBbny1iGO+tR7Osoj40GqWc36hOk2MSTVFNRXrCvxcOl/M1RrQkPdw/tliUVOz0isRqZ/1XUEPa3aqi1bQjqFzyMB3OOxlg46dV7LIXXDMxo6I3mK/Eg1J1mCZpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gwIxBqBclQv86/ati1fbZ0mVGj+PzEqvYDzaI6mk2fg=;
+ b=MvXfEuvgZXtto2o69gjEMhq2qy3IZEDT8CabjfPV8pDHqtVsFscae1e4hewldjZFj78XFWl1nu2XE/6eVAQoUIdX3mJTHIeIsekBB2mWVUWE65BZAfzaIbA2OLp9pFbXO5jGRVzLYat0yE1sd2/umYncDYZ68ikinPbJsI/DW7MKW6cPUe5ztmSIW/2ZTh7aUEF6bOv4reQQ7XFKMqwSRaquma0arTAJLyoll1rwJWLtuR41kaOF4NM129p/+YnoKbBVbjsQzGl4jnjcWFYel7hmTsf8Ev6BkNTgcCWApBrMwhGKawu6yWxGcaEW7n5QWwGYDjX3YZ5blVedB06aMg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gwIxBqBclQv86/ati1fbZ0mVGj+PzEqvYDzaI6mk2fg=;
+ b=XV2pbl8dq3rmcHuMDQ9HA/n0D3loTMKtgzF0OGPcCZ/ThTp2tmuVK8bxyEfoFObGpZSqdDsl/idJl/a+XkBd685rpNbHPHoF+JWt+OEioWig5leIU5Uhj0Tb43AlZsTzmPLZhDCSIWStuEHZ1TgqhxTo2R1Whs5d7DAfdIA/9yc=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by IA3PR10MB8465.namprd10.prod.outlook.com (2603:10b6:208:581::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.19; Mon, 8 Sep
+ 2025 13:19:17 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.9094.018; Mon, 8 Sep 2025
+ 13:19:17 +0000
+Date: Mon, 8 Sep 2025 14:19:14 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
+        Guo Ren <guoren@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Andreas Larsson <andreas@gaisler.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, Nicolas Pitre <nico@fluxnic.net>,
+        Muchun Song <muchun.song@linux.dev>,
+        Oscar Salvador <osalvador@suse.de>,
+        David Hildenbrand <david@redhat.com>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+        Dave Young <dyoung@redhat.com>, Tony Luck <tony.luck@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>, Jann Horn <jannh@google.com>,
+        Pedro Falcato <pfalcato@suse.de>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-mm@kvack.org,
+        ntfs3@lists.linux.dev, kexec@lists.infradead.org,
+        kasan-dev@googlegroups.com
+Subject: Re: [PATCH 06/16] mm: introduce the f_op->mmap_complete, mmap_abort
+ hooks
+Message-ID: <0df59b0c-dd8d-4087-9ddf-3659326f57e9@lucifer.local>
+References: <cover.1757329751.git.lorenzo.stoakes@oracle.com>
+ <ea1a5ab9fff7330b69f0b97c123ec95308818c98.1757329751.git.lorenzo.stoakes@oracle.com>
+ <20250908125526.GY616306@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250908125526.GY616306@nvidia.com>
+X-ClientProxiedBy: LO4P123CA0186.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1a4::11) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|IA3PR10MB8465:EE_
+X-MS-Office365-Filtering-Correlation-Id: d3b508f6-bffd-4656-45f1-08ddeeda501c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?cOQtH+YWiPInnydj3XcA6gtlIiwdxuhhtUvPbTOUmUYaZ5YChR4SruE863W/?=
+ =?us-ascii?Q?/ZUoRXXK0EYoFrsp7y5biN1UOs6TwVuNAa0QrXAfIL/B3MCCgVXzw4Jf63Qa?=
+ =?us-ascii?Q?k9EVRoNA3BNb0kQv069IUTPB7bH9pcfAYTIvxBQgX3df6WNwQr3rFPqN/kUB?=
+ =?us-ascii?Q?0NN0guNAPEe4nFxSzLgEXSqIxNhYM8KXFdlPwel4ronUt1FPVzbhGUqpgTvq?=
+ =?us-ascii?Q?FzWIsuOaZ+y4GOFikdhuMT3PIVw+B1SSHgvejXI6HpBVYOAXQLuVuRSdmWQM?=
+ =?us-ascii?Q?b/wfswQOwipCJNv58wy6gYhXvGT9DHc2QHCGc899WXn+Kj9kiFNB6v40zjBN?=
+ =?us-ascii?Q?QRAY+efzWGplnhrgQ2G2Y7XFE5nMnxvWV+CHWngSwNmT2aZGGPYWmcVVxztz?=
+ =?us-ascii?Q?uFFvPqpj1JXXBQKIHj6g6AlbWOxiBCxgouuSiHmT1NGuAsCvBgN4vTeZYubT?=
+ =?us-ascii?Q?v4BZ8TvyBES3smEAnYtgXIf/P5lKxv8LuYdcN0U0W7cRV9emHdcU7Xq/vM8F?=
+ =?us-ascii?Q?dwZGpCQ+s2l6tCs+pvlKc0J5aCLkDuv7GNGrV9H6w9V6LwIqMWK1qKMt3TsS?=
+ =?us-ascii?Q?drFecKC6MnMCKvDIvXESr1/pIA7fOAFj8+/8XCWOvozIDQAXm76P85B8io6k?=
+ =?us-ascii?Q?AD8c28n7NMMZDQAl6TSyTG6NQ8meuXgK07ogG0PY2o63THgsJqpiGGcah+U6?=
+ =?us-ascii?Q?aw4PkvwX1Iej+17UqTYSdsSbbeBJgJewY4ikQ8VBVeAsQQn1awPbPvMQ/R9p?=
+ =?us-ascii?Q?pnjPrsH7QPaEOL7pBokUGn2/+f3nD/gOSpEId2byctKvQ74HKXwonXOWtyJc?=
+ =?us-ascii?Q?P0VHsIRLitZbMdVwtVTxWaubHjD6hCVOtMklRZe256WDE/rcDTDXesselrn9?=
+ =?us-ascii?Q?YuKW5Lp+2Q3PN5z7wpVx7Ydflg8I6AVJ/0rU7Lz8vjdCQ/Htlre/lFx3BEwF?=
+ =?us-ascii?Q?WUtsI5hXROPRpstNno6s6adn3ujIJ1xgYRcy0j5loCry/5lnlytG4DWwE3P7?=
+ =?us-ascii?Q?dvmNRULx61KKVApZQf7sek0CQxrnjRzGAY+dcBT7ZUdzWEf675wTWRE3Mg9B?=
+ =?us-ascii?Q?w4VM02ZFHv/EdqRTNUq/7mBK3PlCjYDsJB8Frm6U4OyYjysqnY2ziJRl4sO+?=
+ =?us-ascii?Q?rNfEguAuM5sMv6GhATcPmqCo9jssKSBhTHBlhJ3/3DCaqYoZrEv0j6YSUne1?=
+ =?us-ascii?Q?CPwMxV8BjF1xrKWsqujv4cOw/lcHt5dYmdfqpT9WMGo2xomw881XfZXX3I1S?=
+ =?us-ascii?Q?nDSRGoWhcpn0j1DWfI0kNe2tOV5IHWBzqPrVeU7b5YWl9DC4SviEZfSR2vn/?=
+ =?us-ascii?Q?3NbnRrFDvW8MFxisE0SJbm61i0vFUb5q4WgVKuIPudTXDkX2G9LHq9eCCf53?=
+ =?us-ascii?Q?ytMEeQuAefA5KOd2xHKczN+ZVGb2riUaXHJDF1IUAUWU64zv3cWLUAAFNkgP?=
+ =?us-ascii?Q?28Sdf1ltdR8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?0wQ5+KHgwYZMGzu7PdJolbi0UNaD70M2cfzqnRikylhdzvugpF4C7b3A4C/d?=
+ =?us-ascii?Q?G7LUV6eztYwZn4BwykvUeCHBjvZqXFBMC/x61gZtQrCcp+z8OH5tkh1vi4Xg?=
+ =?us-ascii?Q?Uqp0uvBfazz9D59NPd/KlOoFEIgXb+U8w0TdskfkwtTRNuVb0Nb6QQSZFwnl?=
+ =?us-ascii?Q?0q/aPIjHSxOFIOgG9fSlcyG44YB71bHtRK1PHS1jleaNBdqhbtzB8BmxVKQl?=
+ =?us-ascii?Q?3a4kWFDSGAX+nqJsGyrMNSmYre7TuLnxn0S12lMBpKna35DEJ4VacvRVEgiV?=
+ =?us-ascii?Q?mLCAdAgiZ9ugfMVmvfxISJaWWSfH20H4+iMEXTLgpAXHrdbUCXzKnI6ySkfl?=
+ =?us-ascii?Q?h/hd/HDoAbaOb/G3Lnv1JgmItMRnpPnYSz8IZHVZXTb9qeNpFbLYQTBmkouS?=
+ =?us-ascii?Q?mBbFSoFEPkJ+6ldyhvWP+q0tDMVyi752cY/gQir8R0f10aCtia7MsbUOY/+2?=
+ =?us-ascii?Q?N6LDF9krgJpIcCpPnWZt3/lafZh2w7pOSFdqV6POb/KYoKqF4DnnwjxL+Z36?=
+ =?us-ascii?Q?KCyW57Z44PqGmv9rx9FyScu7mjOyvrHW9NSZg8cgvQBeyTW6vdHrrY5zijAo?=
+ =?us-ascii?Q?sjkI4tq9mrseCkP7g6Qazix7vLtCA8SuBwuI2cVmeBgc8i079surcLtZRf6e?=
+ =?us-ascii?Q?Bxi10nt3T1z1fMUuEA92qu3R9JsPvadzO6HcU6C/3WtxxsL1EePbrwnc2M/V?=
+ =?us-ascii?Q?n/2RqKrx1j/Utq/C6wlolBSacMVyJDX/SnsnmAnXvB6qAhZrm2SYtVS18gqn?=
+ =?us-ascii?Q?OROjKkavaBvGAkcB8zSkAttu/oxLNoy7pe/048e6JRStLAMyUeHHyz/+16I+?=
+ =?us-ascii?Q?jeNSQnj+G5iFtpK6TLUxumT25ItUmpwmxQs1Lv2PU4ow+RVqOZSP/+0ieXOv?=
+ =?us-ascii?Q?z/xtL/KNVQTCkhZ2Dg09bL19xo48crj5d58HcRfBt0kyBkEiLce+SZDp87yX?=
+ =?us-ascii?Q?LUOMz4MEV/n1/g7bMb3CLBNS6fY+Xe45XNBbQZ3oFm33+gws0Nqijvr+giG6?=
+ =?us-ascii?Q?5QFJa6RVZgIYYXr9VUHj8PTARG7xEwoj9hCLT94MP+jYb2fkZ+04i0WAVB2q?=
+ =?us-ascii?Q?3TH8b8K7ENt8aPjWFAymFMkujWQU3eCoc0nsi1Unq15SnMI3tXIS+gAoXjxO?=
+ =?us-ascii?Q?r3CHNfwkgAxzcwpWj/jOA16TG8tnhnAaGc4sq/yZRqPbRadrGJ5nFvlc/Swu?=
+ =?us-ascii?Q?9QOIh1rjwnx+hB/lh7i471ZjIUGnJD9jt1ccBVWre3AuWq0rQkosOuU+6/Fm?=
+ =?us-ascii?Q?0AMpsps+V1P9OpG97Fl2FnC0hihdSvNdh1USYsIjjLubQ7HpN8rP96mI+fRy?=
+ =?us-ascii?Q?BgHqdWRxcGRK01WyXGxVmdN/IdtYQOzbNxV7jT7YCW0Sz8zSSjUlSn4wkYOP?=
+ =?us-ascii?Q?CWruFw+PNfz3JIHfNUbICdWTx6rDJ1SNN4vPyPCBKgs2lrD1K2hY2e2IfEAw?=
+ =?us-ascii?Q?yX/jSBIjjqdonlUCoTaKeiK3S0CtJO651t/9eI2tvnPC1ILtUkjOHrt5vpTv?=
+ =?us-ascii?Q?2PYw4ArzMj9e6/eSRfHxvTygIBecEIg8hWZ15029VFlN3ZkkMAcR89v4O0FP?=
+ =?us-ascii?Q?tuDYSfWRNsgTQiqmQhretxvDETr7mK17CiJAByvjSweescXgvzuCk8+F8TC3?=
+ =?us-ascii?Q?Hw=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	uUcUXiX+kJ1gjxVzAwzrHlGcW64V5mOBed2mkCeIDaCBhqiWyKyCKLZVKawK5cXu5VhKWMTbi+cBWxSWki5whXDCRA7gAZodFa6uFTnkQKIlEkjm1IR3xs/OOCUyLbBI41zWClhIMaReEIS06IUEKZn4ZR3KBYrl7D1RBDx3DOn3jb7KIm3n8Fyb9FMisuVA8heCT2q8NOtvI6XZ2GcffkCnC+lk46IFs3M2tzU36o0k6gij+827LAU8xc+hKp++qvBQAC/k+jsZOUb8KN72J61iqM+TEdJr9aeHdK4pTewb2lQ4/v2tMdzcrmnqNwNX4rMY/NFiQ3GjHrLEjj/l50Z7EOQ3jrL/Y2cIyAAlZmSSFa2OpBBGUCQHb5L2xu0vwO3b3WvctP+aTnu/jp3ikwP7BlAYBoQlYrzppado7k4tzU5g1Yr1FYiSj5i7Aphb8sMT9s3GK8OQBnB7JOb1biUeYMtuadZqvwX7uH7eojGxIqxpZGF+B3mTtHZ622YwHxp4Loh3Jbymryh5PW83W8UMlRDeDPFLCbrY0mo3+MdEshVeC8Vu2iip0+0tCn/Zaz18B4oLR6V1/tCrxB+db4n0TomsSeYTmx45s/Up6J8=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d3b508f6-bffd-4656-45f1-08ddeeda501c
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2025 13:19:17.2648
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uzS2Y5s4KexMsdva0kHUIrHXWXr8/MtjxUaZPK+3Ksm7cTHEizy+PN7ikmCzFhWqAjOWRk60TPKWVHSZTPjggDP6T7uAD1UnovryvhwRLB4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR10MB8465
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-08_04,2025-09-08_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 suspectscore=0
+ bulkscore=0 mlxscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2508110000
+ definitions=main-2509080133
+X-Proofpoint-ORIG-GUID: XiK2x3xyJQv5mjRr3pvPFXWW2LoxNB2q
+X-Authority-Analysis: v=2.4 cv=ILACChvG c=1 sm=1 tr=0 ts=68bedc13 b=1 cx=c_pps
+ a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=yJojWOMRYYMA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=Ikd4Dj_1AAAA:8
+ a=sd7PVl68wqFViJiyaNUA:9 a=CjuIK1q_8ugA:10 cc=ntf awl=host:12069
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA4MDEyNCBTYWx0ZWRfX7cbQBPKxMj7N
+ nJT0g+cwWIX2E6G65eAunircjqUDIgY3Ocyehk4+SSFUk36Jm8GIDyifgbUOQu05oFX6WO9vHS7
+ 4qZRtqF+0YhVjpVksFA/E/4OxnGiflh5AL5HZQnDjkygaOCfDqo7PQhFPl6ECOnLYfPjLF01N8r
+ qta26wMtPFBRr2IQa0Ij7Lu8+XyQbSOhQTbgj6EUNza8H31wye2VocjHS9T4ZZ1LLX1KVtbEZFL
+ jkdqCrO2Q8K9f+5MHtRj0HRV1bIixgC+5iZ1vjGZI2iX4bOz3QU3pI66+PmGQy7D/oK/JtuRul6
+ 7MGy9ysSz9r0RLGYT46NsGOsnpQYv917wCRaGjg+kO8NGjuioYZZz5EEA1XofGxaW/HUrDZtHFi
+ ZxJh6khzFkrNe/HNa+LQv9rUS1BK7Q==
+X-Proofpoint-GUID: XiK2x3xyJQv5mjRr3pvPFXWW2LoxNB2q
 
-This commit enables the asynchronous hash interface in dm-integrity.
+On Mon, Sep 08, 2025 at 09:55:26AM -0300, Jason Gunthorpe wrote:
+> On Mon, Sep 08, 2025 at 12:10:37PM +0100, Lorenzo Stoakes wrote:
+> > We have introduced the f_op->mmap_prepare hook to allow for setting up a
+> > VMA far earlier in the process of mapping memory, reducing problematic
+> > error handling paths, but this does not provide what all
+> > drivers/filesystems need.
+> >
+> > In order to supply this, and to be able to move forward with removing
+> > f_op->mmap altogether, introduce f_op->mmap_complete.
+> >
+> > This hook is called once the VMA is fully mapped and everything is done,
+> > however with the mmap write lock and VMA write locks held.
+> >
+> > The hook is then provided with a fully initialised VMA which it can do what
+> > it needs with, though the mmap and VMA write locks must remain held
+> > throughout.
+> >
+> > It is not intended that the VMA be modified at this point, attempts to do
+> > so will end in tears.
+>
+> The commit message should call out if this has fixed the race
+> condition with unmap mapping range and prepopulation in mmap()..
 
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
----
- drivers/md/dm-integrity.c |  243 +++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 199 insertions(+), 44 deletions(-)
+To be claer, this isn't the intent of the series, the intent is to make it
+possible for mmap_prepare to replace mmap. This is just a bonus :)
 
-Index: linux-2.6/drivers/md/dm-integrity.c
-===================================================================
---- linux-2.6.orig/drivers/md/dm-integrity.c	2025-09-03 15:41:06.000000000 +0200
-+++ linux-2.6/drivers/md/dm-integrity.c	2025-09-03 16:25:58.000000000 +0200
-@@ -224,6 +224,7 @@ struct dm_integrity_c {
- 	int failed;
- 
- 	struct crypto_shash *internal_shash;
-+	struct crypto_ahash *internal_ahash;
- 	unsigned int internal_hash_digestsize;
- 
- 	struct dm_target *ti;
-@@ -279,6 +280,9 @@ struct dm_integrity_c {
- 	bool fix_hmac;
- 	bool legacy_recalculate;
- 
-+	mempool_t ahash_req_pool;
-+	struct ahash_request *journal_ahash_req;
-+
- 	struct alg_spec internal_hash_alg;
- 	struct alg_spec journal_crypt_alg;
- 	struct alg_spec journal_mac_alg;
-@@ -328,6 +332,8 @@ struct dm_integrity_io {
- 	unsigned payload_len;
- 	bool integrity_payload_from_mempool;
- 	bool integrity_range_locked;
-+
-+	struct ahash_request *ahash_req;
- };
- 
- struct journal_completion {
-@@ -354,6 +360,7 @@ struct bitmap_block_status {
- static struct kmem_cache *journal_io_cache;
- 
- #define JOURNAL_IO_MEMPOOL	32
-+#define AHASH_MEMPOOL		32
- 
- #ifdef DEBUG_PRINT
- #define DEBUG_print(x, ...)			printk(KERN_DEBUG x, ##__VA_ARGS__)
-@@ -1636,8 +1643,8 @@ static void integrity_end_io(struct bio
- 	dec_in_flight(dio);
- }
- 
--static void integrity_sector_checksum(struct dm_integrity_c *ic, sector_t sector,
--				      const char *data, unsigned offset, char *result)
-+static void integrity_sector_checksum_shash(struct dm_integrity_c *ic, sector_t sector,
-+					    const char *data, unsigned offset, char *result)
- {
- 	__le64 sector_le = cpu_to_le64(sector);
- 	SHASH_DESC_ON_STACK(req, ic->internal_shash);
-@@ -1689,14 +1696,90 @@ failed:
- 	get_random_bytes(result, ic->tag_size);
- }
- 
-+static void integrity_sector_checksum_ahash(struct dm_integrity_c *ic, struct ahash_request **ahash_req,
-+					    sector_t sector, struct page *page, unsigned offset, char *result)
-+{
-+	__le64 sector_le = cpu_to_le64(sector);
-+	struct ahash_request *req;
-+	DECLARE_CRYPTO_WAIT(wait);
-+	struct scatterlist sg[3], *s = sg;
-+	int r;
-+	unsigned int digest_size;
-+	unsigned int nbytes = 0;
-+
-+	might_sleep();
-+
-+	req = *ahash_req;
-+	if (unlikely(!req)) {
-+		req = mempool_alloc(&ic->ahash_req_pool, GFP_NOIO);
-+		*ahash_req = req;
-+	}
-+
-+	ahash_request_set_tfm(req, ic->internal_ahash);
-+	ahash_request_set_callback(req, CRYPTO_TFM_REQ_MAY_SLEEP, crypto_req_done, &wait);
-+
-+	if (ic->sb->flags & cpu_to_le32(SB_FLAG_FIXED_HMAC)) {
-+		sg_init_table(sg, 3);
-+		sg_set_buf(s, (const __u8 *)&ic->sb->salt, SALT_SIZE);
-+		nbytes += SALT_SIZE;
-+		s++;
-+	} else {
-+		sg_init_table(sg, 2);
-+	}
-+
-+	if (likely(!is_vmalloc_addr(&sector_le))) {
-+		sg_set_buf(s, &sector_le, sizeof(sector_le));
-+	} else {
-+		struct page *sec_page = vmalloc_to_page(&sector_le);
-+		unsigned int sec_off = offset_in_page(&sector_le);
-+		sg_set_page(s, sec_page, sizeof(sector_le), sec_off);
-+	}
-+	nbytes += sizeof(sector_le);
-+	s++;
-+
-+	sg_set_page(s, page, ic->sectors_per_block << SECTOR_SHIFT, offset);
-+	nbytes += ic->sectors_per_block << SECTOR_SHIFT;
-+
-+	ahash_request_set_crypt(req, sg, result, nbytes);
-+
-+	r = crypto_wait_req(crypto_ahash_digest(req), &wait);
-+	if (unlikely(r)) {
-+		dm_integrity_io_error(ic, "crypto_ahash_digest", r);
-+		goto failed;
-+	}
-+
-+	digest_size = ic->internal_hash_digestsize;
-+	if (unlikely(digest_size < ic->tag_size))
-+		memset(result + digest_size, 0, ic->tag_size - digest_size);
-+
-+	return;
-+
-+failed:
-+	/* this shouldn't happen anyway, the hash functions have no reason to fail */
-+	get_random_bytes(result, ic->tag_size);
-+}
-+
-+static void integrity_sector_checksum(struct dm_integrity_c *ic, struct ahash_request **ahash_req,
-+				      sector_t sector, const char *data, unsigned offset, char *result)
-+{
-+	if (likely(ic->internal_shash != NULL))
-+		integrity_sector_checksum_shash(ic, sector, data, offset, result);
-+	else
-+		integrity_sector_checksum_ahash(ic, ahash_req, sector, (struct page *)data, offset, result);
-+}
-+
- static void *integrity_kmap(struct dm_integrity_c *ic, struct page *p)
- {
--	return kmap_local_page(p);
-+	if (likely(ic->internal_shash != NULL))
-+		return kmap_local_page(p);
-+	else
-+		return p;
- }
- 
- static void integrity_kunmap(struct dm_integrity_c *ic, const void *ptr)
- {
--	kunmap_local(ptr);
-+	if (likely(ic->internal_shash != NULL))
-+		kunmap_local(ptr);
- }
- 
- static void *integrity_identity(struct dm_integrity_c *ic, void *data)
-@@ -1705,7 +1788,10 @@ static void *integrity_identity(struct d
- 	BUG_ON(offset_in_page(data));
- 	BUG_ON(!virt_addr_valid(data));
- #endif
--	return data;
-+	if (likely(ic->internal_shash != NULL))
-+		return data;
-+	else
-+		return virt_to_page(data);
- }
- 
- static noinline void integrity_recheck(struct dm_integrity_io *dio, char *checksum)
-@@ -1759,7 +1845,7 @@ static noinline void integrity_recheck(s
- 				goto free_ret;
- 			}
- 
--			integrity_sector_checksum(ic, logical_sector, integrity_identity(ic, buffer), buffer_offset, checksum);
-+			integrity_sector_checksum(ic, &dio->ahash_req, logical_sector, integrity_identity(ic, buffer), buffer_offset, checksum);
- 			r = dm_integrity_rw_tag(ic, checksum, &dio->metadata_block,
- 						&dio->metadata_offset, ic->tag_size, TAG_CMP);
- 			if (r) {
-@@ -1863,7 +1949,7 @@ again:
- 			pos = 0;
- 			checksums_ptr = checksums;
- 			do {
--				integrity_sector_checksum(ic, sector, mem, bv_copy.bv_offset + pos, checksums_ptr);
-+				integrity_sector_checksum(ic, &dio->ahash_req, sector, mem, bv_copy.bv_offset + pos, checksums_ptr);
- 				checksums_ptr += ic->tag_size;
- 				sectors_to_process -= ic->sectors_per_block;
- 				pos += ic->sectors_per_block << SECTOR_SHIFT;
-@@ -1971,6 +2057,7 @@ static int dm_integrity_map(struct dm_ta
- 	dio->ic = ic;
- 	dio->bi_status = 0;
- 	dio->op = bio_op(bio);
-+	dio->ahash_req = NULL;
- 
- 	if (ic->mode == 'I') {
- 		bio->bi_iter.bi_sector = dm_target_offset(ic->ti, bio->bi_iter.bi_sector);
-@@ -2140,10 +2227,10 @@ retry_kmap:
- 					if (unlikely(digest_size > ic->tag_size)) {
- 						char checksums_onstack[HASH_MAX_DIGESTSIZE];
- 
--						integrity_sector_checksum(ic, logical_sector, js_page, js_offset, checksums_onstack);
-+						integrity_sector_checksum(ic, &dio->ahash_req, logical_sector, js_page, js_offset, checksums_onstack);
- 						memcpy(journal_entry_tag(ic, je), checksums_onstack, ic->tag_size);
- 					} else
--						integrity_sector_checksum(ic, logical_sector, js_page, js_offset, journal_entry_tag(ic, je));
-+						integrity_sector_checksum(ic, &dio->ahash_req, logical_sector, js_page, js_offset, journal_entry_tag(ic, je));
- 				}
- 
- 				journal_entry_set_sector(je, logical_sector);
-@@ -2519,7 +2606,7 @@ skip_spinlock:
- 			const char *mem = integrity_kmap(ic, bv.bv_page);
- 			if (ic->tag_size < ic->tuple_size)
- 				memset(dio->integrity_payload + pos + ic->tag_size, 0, ic->tuple_size - ic->tuple_size);
--			integrity_sector_checksum(ic, dio->bio_details.bi_iter.bi_sector, mem, bv.bv_offset, dio->integrity_payload + pos);
-+			integrity_sector_checksum(ic, &dio->ahash_req, dio->bio_details.bi_iter.bi_sector, mem, bv.bv_offset, dio->integrity_payload + pos);
- 			integrity_kunmap(ic, mem);
- 			pos += ic->tuple_size;
- 			bio_advance_iter_single(bio, &dio->bio_details.bi_iter, ic->sectors_per_block << SECTOR_SHIFT);
-@@ -2599,7 +2686,7 @@ static void dm_integrity_inline_recheck(
- 		}
- 		bio_put(outgoing_bio);
- 
--		integrity_sector_checksum(ic, dio->bio_details.bi_iter.bi_sector, integrity_identity(ic, outgoing_data), 0, digest);
-+		integrity_sector_checksum(ic, &dio->ahash_req, dio->bio_details.bi_iter.bi_sector, integrity_identity(ic, outgoing_data), 0, digest);
- 		if (unlikely(crypto_memneq(digest, dio->integrity_payload, min(ic->internal_hash_digestsize, ic->tag_size)))) {
- 			DMERR_LIMIT("%pg: Checksum failed at sector 0x%llx",
- 				ic->dev->bdev, dio->bio_details.bi_iter.bi_sector);
-@@ -2623,32 +2710,58 @@ static void dm_integrity_inline_recheck(
- 	bio_endio(bio);
- }
- 
-+static inline bool dm_integrity_check(struct dm_integrity_c *ic, struct dm_integrity_io *dio)
-+{
-+	struct bio *bio = dm_bio_from_per_bio_data(dio, sizeof(struct dm_integrity_io));
-+	unsigned pos = 0;
-+
-+	while (dio->bio_details.bi_iter.bi_size) {
-+		char digest[HASH_MAX_DIGESTSIZE];
-+		struct bio_vec bv = bio_iter_iovec(bio, dio->bio_details.bi_iter);
-+		char *mem = integrity_kmap(ic, bv.bv_page);
-+		integrity_sector_checksum(ic, &dio->ahash_req, dio->bio_details.bi_iter.bi_sector, mem, bv.bv_offset, digest);
-+		if (unlikely(crypto_memneq(digest, dio->integrity_payload + pos,
-+				min(ic->internal_hash_digestsize, ic->tag_size)))) {
-+			integrity_kunmap(ic, mem);
-+			dm_integrity_free_payload(dio);
-+			INIT_WORK(&dio->work, dm_integrity_inline_recheck);
-+			queue_work(ic->offload_wq, &dio->work);
-+			return false;
-+		}
-+		integrity_kunmap(ic, mem);
-+		pos += ic->tuple_size;
-+		bio_advance_iter_single(bio, &dio->bio_details.bi_iter, ic->sectors_per_block << SECTOR_SHIFT);
-+	}
-+
-+	return true;
-+}
-+
-+static void dm_integrity_inline_async_check(struct work_struct *w)
-+{
-+	struct dm_integrity_io *dio = container_of(w, struct dm_integrity_io, work);
-+	struct dm_integrity_c *ic = dio->ic;
-+	struct bio *bio = dm_bio_from_per_bio_data(dio, sizeof(struct dm_integrity_io));
-+
-+	if (likely(dm_integrity_check(ic, dio)))
-+		bio_endio(bio);
-+}
-+
- static int dm_integrity_end_io(struct dm_target *ti, struct bio *bio, blk_status_t *status)
- {
- 	struct dm_integrity_c *ic = ti->private;
-+	struct dm_integrity_io *dio = dm_per_bio_data(bio, sizeof(struct dm_integrity_io));
- 	if (ic->mode == 'I') {
--		struct dm_integrity_io *dio = dm_per_bio_data(bio, sizeof(struct dm_integrity_io));
--		if (dio->op == REQ_OP_READ && likely(*status == BLK_STS_OK)) {
--			unsigned pos = 0;
-+		if (dio->op == REQ_OP_READ && likely(*status == BLK_STS_OK) && likely(dio->bio_details.bi_iter.bi_size != 0)) {
- 			if (ic->sb->flags & cpu_to_le32(SB_FLAG_RECALCULATING) &&
- 			    unlikely(dio->integrity_range_locked))
--				goto skip_check;
--			while (dio->bio_details.bi_iter.bi_size) {
--				char digest[HASH_MAX_DIGESTSIZE];
--				struct bio_vec bv = bio_iter_iovec(bio, dio->bio_details.bi_iter);
--				char *mem = integrity_kmap(ic, bv.bv_page);
--				integrity_sector_checksum(ic, dio->bio_details.bi_iter.bi_sector, mem, bv.bv_offset, digest);
--				if (unlikely(crypto_memneq(digest, dio->integrity_payload + pos,
--						min(ic->internal_hash_digestsize, ic->tag_size)))) {
--					integrity_kunmap(ic, mem);
--					dm_integrity_free_payload(dio);
--					INIT_WORK(&dio->work, dm_integrity_inline_recheck);
--					queue_work(ic->offload_wq, &dio->work);
-+			    	goto skip_check;
-+			if (likely(ic->internal_shash != NULL)) {
-+				if (unlikely(!dm_integrity_check(ic, dio)))
- 					return DM_ENDIO_INCOMPLETE;
--				}
--				integrity_kunmap(ic, mem);
--				pos += ic->tuple_size;
--				bio_advance_iter_single(bio, &dio->bio_details.bi_iter, ic->sectors_per_block << SECTOR_SHIFT);
-+			} else {
-+				INIT_WORK(&dio->work, dm_integrity_inline_async_check);
-+				queue_work(ic->offload_wq, &dio->work);
-+				return DM_ENDIO_INCOMPLETE;
- 			}
- 		}
- skip_check:
-@@ -2656,6 +2769,8 @@ skip_check:
- 		if (unlikely(dio->integrity_range_locked))
- 			remove_range(ic, &dio->range);
- 	}
-+	if (unlikely(dio->ahash_req))
-+		mempool_free(dio->ahash_req, &ic->ahash_req_pool);
- 	return DM_ENDIO_DONE;
- }
- 
-@@ -2916,7 +3031,7 @@ static void do_journal_write(struct dm_i
- 					void *js_page = integrity_identity(ic, (char *)js - offset_in_page(js));
- 					unsigned js_offset = offset_in_page(js);
- 
--					integrity_sector_checksum(ic, sec + ((l - j) << ic->sb->log2_sectors_per_block),
-+					integrity_sector_checksum(ic, &ic->journal_ahash_req, sec + ((l - j) << ic->sb->log2_sectors_per_block),
- 								  js_page, js_offset, test_tag);
- 					if (unlikely(crypto_memneq(test_tag, journal_entry_tag(ic, je2), ic->tag_size))) {
- 						dm_integrity_io_error(ic, "tag mismatch when replaying journal", -EILSEQ);
-@@ -3000,6 +3115,7 @@ static void integrity_recalc(struct work
- 	size_t recalc_tags_size;
- 	u8 *recalc_buffer = NULL;
- 	u8 *recalc_tags = NULL;
-+	struct ahash_request *ahash_req = NULL;
- 	struct dm_integrity_range range;
- 	struct dm_io_request io_req;
- 	struct dm_io_region io_loc;
-@@ -3113,7 +3229,7 @@ next_chunk:
- 		void *ptr = recalc_buffer + (i << SECTOR_SHIFT);
- 		void *ptr_page = integrity_identity(ic, (char *)ptr - offset_in_page(ptr));
- 		unsigned ptr_offset = offset_in_page(ptr);
--		integrity_sector_checksum(ic, logical_sector + i, ptr_page, ptr_offset, t);
-+		integrity_sector_checksum(ic, &ahash_req, logical_sector + i, ptr_page, ptr_offset, t);
- 		t += ic->tag_size;
- 	}
- 
-@@ -3157,6 +3273,7 @@ unlock_ret:
- free_ret:
- 	kfree(recalc_buffer);
- 	kvfree(recalc_tags);
-+	mempool_free(ahash_req, &ic->ahash_req_pool);
- }
- 
- static void integrity_recalc_inline(struct work_struct *w)
-@@ -3165,6 +3282,7 @@ static void integrity_recalc_inline(stru
- 	size_t recalc_tags_size;
- 	u8 *recalc_buffer = NULL;
- 	u8 *recalc_tags = NULL;
-+	struct ahash_request *ahash_req = NULL;
- 	struct dm_integrity_range range;
- 	struct bio *bio;
- 	struct bio_integrity_payload *bip;
-@@ -3237,7 +3355,7 @@ next_chunk:
- 		void *ptr_page = integrity_identity(ic, (char *)ptr - offset_in_page(ptr));
- 		unsigned ptr_offset = offset_in_page(ptr);
- 		memset(t, 0, ic->tuple_size);
--		integrity_sector_checksum(ic, range.logical_sector + i, ptr_page, ptr_offset, t);
-+		integrity_sector_checksum(ic, &ahash_req, range.logical_sector + i, ptr_page, ptr_offset, t);
- 		t += ic->tuple_size;
- 	}
- 
-@@ -3289,6 +3407,7 @@ unlock_ret:
- free_ret:
- 	kfree(recalc_buffer);
- 	kfree(recalc_tags);
-+	mempool_free(ahash_req, &ic->ahash_req_pool);
- }
- 
- static void bitmap_block_work(struct work_struct *w)
-@@ -4229,27 +4348,49 @@ nomem:
- 	return -ENOMEM;
- }
- 
--static int get_mac(struct crypto_shash **hash, struct alg_spec *a, char **error,
--		   char *error_alg, char *error_key)
-+static int get_mac(struct crypto_shash **shash, struct crypto_ahash **ahash,
-+		   struct alg_spec *a, char **error, char *error_alg, char *error_key)
- {
- 	int r;
- 
- 	if (a->alg_string) {
--		*hash = crypto_alloc_shash(a->alg_string, 0, CRYPTO_ALG_ALLOCATES_MEMORY);
--		if (IS_ERR(*hash)) {
-+		if (ahash) {
-+			*ahash = crypto_alloc_ahash(a->alg_string, 0, CRYPTO_ALG_ALLOCATES_MEMORY);
-+			if (IS_ERR(*ahash)) {
-+				*ahash = NULL;
-+				goto try_shash;
-+			}
-+
-+			if (a->key) {
-+				r = crypto_ahash_setkey(*ahash, a->key, a->key_size);
-+				if (r) {
-+					*error = error_key;
-+					return r;
-+				}
-+			} else if (crypto_ahash_get_flags(*ahash) & CRYPTO_TFM_NEED_KEY) {
-+				*error = error_key;
-+				return -ENOKEY;
-+			}
-+
-+			return 0;
-+		}
-+
-+try_shash:
-+		*shash = crypto_alloc_shash(a->alg_string, 0, CRYPTO_ALG_ALLOCATES_MEMORY);
-+		if (IS_ERR(*shash)) {
- 			*error = error_alg;
--			r = PTR_ERR(*hash);
--			*hash = NULL;
-+			r = PTR_ERR(*shash);
-+			*shash = NULL;
- 			return r;
- 		}
- 
- 		if (a->key) {
--			r = crypto_shash_setkey(*hash, a->key, a->key_size);
-+			r = crypto_shash_setkey(*shash, a->key, a->key_size);
- 			if (r) {
- 				*error = error_key;
- 				return r;
- 			}
--		} else if (crypto_shash_get_flags(*hash) & CRYPTO_TFM_NEED_KEY) {
-+		} else if (crypto_shash_get_flags(*shash) & CRYPTO_TFM_NEED_KEY) {
- 			*error = error_key;
- 			return -ENOKEY;
- 		}
-@@ -4709,7 +4850,7 @@ static int dm_integrity_ctr(struct dm_ta
- 		buffer_sectors = 1;
- 	ic->log2_buffer_sectors = min((int)__fls(buffer_sectors), 31 - SECTOR_SHIFT);
- 
--	r = get_mac(&ic->internal_shash, &ic->internal_hash_alg, &ti->error,
-+	r = get_mac(&ic->internal_shash, &ic->internal_ahash, &ic->internal_hash_alg, &ti->error,
- 		    "Invalid internal hash", "Error setting internal hash key");
- 	if (r)
- 		goto bad;
-@@ -4717,8 +4858,18 @@ static int dm_integrity_ctr(struct dm_ta
- 		ic->internal_hash = true;
- 		ic->internal_hash_digestsize = crypto_shash_digestsize(ic->internal_shash);
- 	}
-+	if (ic->internal_ahash) {
-+		ic->internal_hash = true;
-+		ic->internal_hash_digestsize = crypto_ahash_digestsize(ic->internal_ahash);
-+		r = mempool_init_kmalloc_pool(&ic->ahash_req_pool, AHASH_MEMPOOL,
-+					      sizeof(struct ahash_request) + crypto_ahash_reqsize(ic->internal_ahash));
-+		if (r) {
-+			ti->error = "Cannot allocate mempool";
-+			goto bad;
-+		}
-+	}
- 
--	r = get_mac(&ic->journal_mac, &ic->journal_mac_alg, &ti->error,
-+	r = get_mac(&ic->journal_mac, NULL, &ic->journal_mac_alg, &ti->error,
- 		    "Invalid journal mac", "Error setting journal mac key");
- 	if (r)
- 		goto bad;
-@@ -5201,6 +5352,8 @@ static void dm_integrity_dtr(struct dm_t
- 	kvfree(ic->bbs);
- 	if (ic->bufio)
- 		dm_bufio_client_destroy(ic->bufio);
-+	mempool_free(ic->journal_ahash_req, &ic->ahash_req_pool);
-+	mempool_exit(&ic->ahash_req_pool);
- 	bioset_exit(&ic->recalc_bios);
- 	bioset_exit(&ic->recheck_bios);
- 	mempool_exit(&ic->recheck_pool);
-@@ -5240,6 +5393,8 @@ static void dm_integrity_dtr(struct dm_t
- 
- 	if (ic->internal_shash)
- 		crypto_free_shash(ic->internal_shash);
-+	if (ic->internal_ahash)
-+		crypto_free_ahash(ic->internal_ahash);
- 	free_alg(&ic->internal_hash_alg);
- 
- 	if (ic->journal_crypt)
-@@ -5256,7 +5411,7 @@ static void dm_integrity_dtr(struct dm_t
- 
- static struct target_type integrity_target = {
- 	.name			= "integrity",
--	.version		= {1, 13, 0},
-+	.version		= {1, 14, 0},
- 	.module			= THIS_MODULE,
- 	.features		= DM_TARGET_SINGLETON | DM_TARGET_INTEGRITY,
- 	.ctr			= dm_integrity_ctr,
+Looking at the discussion in [0] it seems the issue was that .mmap() is
+called before the vma is actually correctly inserted into the maple tree.
 
+This is no longer the case, we call .mmap_complete() once the VMA is fully
+established, but before releasing the VMA/mmap write lock.
+
+This should, presumably, resolve the race as stated?
+
+I can add some blurb about this yes.
+
+
+[0]:https://lore.kernel.org/linux-mm/20250801162930.GB184255@nvidia.com/
+
+
+>
+> > @@ -793,6 +793,11 @@ struct vm_area_desc {
+> >  	/* Write-only fields. */
+> >  	const struct vm_operations_struct *vm_ops;
+> >  	void *private_data;
+> > +	/*
+> > +	 * A user-defined field, value will be passed to mmap_complete,
+> > +	 * mmap_abort.
+> > +	 */
+> > +	void *mmap_context;
+>
+> Seem strange, private_data and mmap_context? Something actually needs
+> both?
+
+We are now doing something _new_ - we're splitting an operation that was
+never split before.
+
+Before a hook implementor could rely on there being state throughout the
+_entire_ operation. But now they can't.
+
+And they may already be putting context into private_data, which then gets
+put into vma->vm_private_data for a VMA added to the maple tree and made
+accessible.
+
+So it is appropriate and convenient to allow for the transfer of state
+between the two, and I already implement logic that does this.
+
+>
+> Jason
+
+Cheers, Lorenzo
 
