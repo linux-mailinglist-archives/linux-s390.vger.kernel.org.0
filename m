@@ -1,162 +1,204 @@
-Return-Path: <linux-s390+bounces-13060-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-13062-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67467B549B4
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Sep 2025 12:26:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AED01B54A58
+	for <lists+linux-s390@lfdr.de>; Fri, 12 Sep 2025 12:50:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0C7AB4840E6
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Sep 2025 10:26:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6DC921883CEE
+	for <lists+linux-s390@lfdr.de>; Fri, 12 Sep 2025 10:50:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D03D32C0297;
-	Fri, 12 Sep 2025 10:26:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 154FC2FF142;
+	Fri, 12 Sep 2025 10:48:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IzRr+9zy"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pIhrbsz6";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3KzBQV3s";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pIhrbsz6";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3KzBQV3s"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805341E520A;
-	Fri, 12 Sep 2025 10:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A142F2FE071
+	for <linux-s390@vger.kernel.org>; Fri, 12 Sep 2025 10:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757672770; cv=none; b=T3dRWnrtkG3AHzDdUEV0krHLOgPVb4r2qLk22vbGLfmWgM/OwG8ogC70WC74BEeO8hla1DqZ0RKxEaeyWIbx6+LtawDMq06jJ+440WZ7weHiFKgs7mboyMWmGE1APWRnsNUnxMrFGXOvEAULbVV/UXhZ99udafDltMDThSuL9jc=
+	t=1757674115; cv=none; b=KpNUdy0fF5UX/kdflc5naswaIOMaiZmkXCf40gNm2NBFFxZVztXqZyDuHLxCRYMzCKozDCFe62sS0e7FVc9DHfdVaBYw5JwPHpazzDGJsJE9xhKoqRSxcqTs/yncA4c/iaKKrFzJJtORIQckVl19fqrVWXypVLFT3S9/Cqb3SNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757672770; c=relaxed/simple;
-	bh=W89h20ehPRBjbNNYvA9Le0XF7Wt/5CXIH67sItbuKdE=;
+	s=arc-20240116; t=1757674115; c=relaxed/simple;
+	bh=xj8SKsDc1sxZr1H/BYrv7BC55oRBLD49zCpgs1E0VxQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OCUbMvMTlQxttVA2YqBC8gRN7wLlyZojDanSQ2IA2pZvsO31kpwXUCReKQ68TaOwCdnQ2WP4Vk4FQROZTRdj+7VYb53k0Jhmib5/dt9DIWAH2isosl6A11MIMfUg07+b7qWfh2nhhwmkjKZU3RlSmAQSRmRtn5QhnO67ZsARy0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IzRr+9zy; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58C5XC48009648;
-	Fri, 12 Sep 2025 10:26:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=uq06KN
-	h2BBSkZYbEP58EjBxA0XmjXGhnNwnm+E/Owwc=; b=IzRr+9zyVdCc17w+PtobXn
-	pXOq9znMsJUMjNVHi9Ykvmw6yJdAOQZIqDF9JPue99o2DsK1jYmklcA5ZKAISV3T
-	zTynRjihb0Uz+MwNWAnelFIwY279ghxR6vM7s3KMQ+SeabVQ5E5Co05dz+WyaOUS
-	DzjvA+cgTHMObz0aaJ6BQM0YGypfMNGwBD/GO6r8NIhlvzMttAfDhWQaKiS0Zzom
-	NC0EIo0u8OES7S+4kJWkVBh9IDkdQE+uP+YEU41iUrmw+ITcanbY0+PRi2EwuUzr
-	gLgBzTUq3MF9qInU8enknfoFB9vG8XrZXNwbf9QdG7KhPvJ3UiGJj68Ry0vuqcyw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 490xydfn9n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Sep 2025 10:26:02 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 58CAMZRs021195;
-	Fri, 12 Sep 2025 10:26:01 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 490xydfn9j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Sep 2025 10:26:01 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58C9LYPv020499;
-	Fri, 12 Sep 2025 10:26:00 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 490yp1ak25-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Sep 2025 10:26:00 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58CAPuRs45023642
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 12 Sep 2025 10:25:56 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B11DC20065;
-	Fri, 12 Sep 2025 10:25:56 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3384C2005A;
-	Fri, 12 Sep 2025 10:25:56 +0000 (GMT)
-Received: from osiris (unknown [9.111.34.207])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 12 Sep 2025 10:25:56 +0000 (GMT)
-Date: Fri, 12 Sep 2025 12:25:54 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Nathan Chancellor <nathan@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Juergen Christ <jchrist@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>
-Subject: Re: [PATCH 1/3] Compiler Attributes: Add __assume macro
-Message-ID: <20250912102554.10147Bf8-hca@linux.ibm.com>
-References: <20250910151216.646600-1-hca@linux.ibm.com>
- <20250910151216.646600-2-hca@linux.ibm.com>
- <CANiq72=Zhcrk-cvXX+75mQzqUUwQznkZmLTCoEn0XNs62meUtQ@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=I1AOstYuEZbQ3zn/x0DrN5k4IH1V4yD3YLeboyFneRxUD4J0BvX7xRh1o6egg1hfkv6yu0wYB+ZIfSsgfoYQluDqE5jjcOjKCcppfM4VYowx+XnB7pZpJBus8NQREqT5GeCi0l6ObwtzcgXJwdehRR7A92V9NtAAJbeLvumAIBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pIhrbsz6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3KzBQV3s; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pIhrbsz6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3KzBQV3s; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 8A1A220760;
+	Fri, 12 Sep 2025 10:48:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1757674110; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CWphaHK8OZGZX1V68Y5uJkPgW2mcaEuIYhBomIwfjhY=;
+	b=pIhrbsz6PFEg2rsKfYIDk9LSisUudy3RRRF+vPTEdTVNBEc/IYjMGMRlHJPMd81a3PeAPQ
+	enViOBHkrPb/ixVfVxnLyPU7+6VjTklFYkyeXlsUfBRq5C+jV7UXdmEmLyAdx4Q3d4ezXR
+	1O/cIWn77hOKnup2fdLIdwqygTz6oOk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1757674110;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CWphaHK8OZGZX1V68Y5uJkPgW2mcaEuIYhBomIwfjhY=;
+	b=3KzBQV3sfhI2xmW0tXlMKSTmNI2mUbzMU7tkf31yqUEPagskAIo4a6mTeoFEttV9DasuS1
+	kLhxxYyMXH7/23Ag==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1757674110; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CWphaHK8OZGZX1V68Y5uJkPgW2mcaEuIYhBomIwfjhY=;
+	b=pIhrbsz6PFEg2rsKfYIDk9LSisUudy3RRRF+vPTEdTVNBEc/IYjMGMRlHJPMd81a3PeAPQ
+	enViOBHkrPb/ixVfVxnLyPU7+6VjTklFYkyeXlsUfBRq5C+jV7UXdmEmLyAdx4Q3d4ezXR
+	1O/cIWn77hOKnup2fdLIdwqygTz6oOk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1757674110;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CWphaHK8OZGZX1V68Y5uJkPgW2mcaEuIYhBomIwfjhY=;
+	b=3KzBQV3sfhI2xmW0tXlMKSTmNI2mUbzMU7tkf31yqUEPagskAIo4a6mTeoFEttV9DasuS1
+	kLhxxYyMXH7/23Ag==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8C11E13869;
+	Fri, 12 Sep 2025 10:48:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id RcKSHnn6w2gcWwAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Fri, 12 Sep 2025 10:48:25 +0000
+Date: Fri, 12 Sep 2025 11:48:15 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: "Roy, Patrick" <roypat@amazon.co.uk>
+Cc: "Thomson, Jack" <jackabt@amazon.co.uk>, 
+	"Kalyazin, Nikita" <kalyazin@amazon.co.uk>, "Cali, Marco" <xmarcalx@amazon.co.uk>, 
+	"derekmn@amazon.co.uk" <derekmn@amazon.co.uk>, Elliot Berman <quic_eberman@quicinc.com>, 
+	"willy@infradead.org" <willy@infradead.org>, "corbet@lwn.net" <corbet@lwn.net>, 
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, "maz@kernel.org" <maz@kernel.org>, 
+	"oliver.upton@linux.dev" <oliver.upton@linux.dev>, "joey.gouly@arm.com" <joey.gouly@arm.com>, 
+	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>, 
+	"catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, 
+	"chenhuacai@kernel.org" <chenhuacai@kernel.org>, "kernel@xen0n.name" <kernel@xen0n.name>, 
+	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, "palmer@dabbelt.com" <palmer@dabbelt.com>, 
+	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "alex@ghiti.fr" <alex@ghiti.fr>, 
+	"agordeev@linux.ibm.com" <agordeev@linux.ibm.com>, "gerald.schaefer@linux.ibm.com" <gerald.schaefer@linux.ibm.com>, 
+	"hca@linux.ibm.com" <hca@linux.ibm.com>, "gor@linux.ibm.com" <gor@linux.ibm.com>, 
+	"borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>, "svens@linux.ibm.com" <svens@linux.ibm.com>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "luto@kernel.org" <luto@kernel.org>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "tglx@linutronix.de" <tglx@linutronix.de>, 
+	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>, 
+	"hpa@zytor.com" <hpa@zytor.com>, "trondmy@kernel.org" <trondmy@kernel.org>, 
+	"anna@kernel.org" <anna@kernel.org>, "hubcap@omnibond.com" <hubcap@omnibond.com>, 
+	"martin@omnibond.com" <martin@omnibond.com>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, 
+	"brauner@kernel.org" <brauner@kernel.org>, "jack@suse.cz" <jack@suse.cz>, 
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "david@redhat.com" <david@redhat.com>, 
+	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>, "Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>, 
+	"vbabka@suse.cz" <vbabka@suse.cz>, "rppt@kernel.org" <rppt@kernel.org>, 
+	"surenb@google.com" <surenb@google.com>, "mhocko@suse.com" <mhocko@suse.com>, 
+	"ast@kernel.org" <ast@kernel.org>, "daniel@iogearbox.net" <daniel@iogearbox.net>, 
+	"andrii@kernel.org" <andrii@kernel.org>, "martin.lau@linux.dev" <martin.lau@linux.dev>, 
+	"eddyz87@gmail.com" <eddyz87@gmail.com>, "song@kernel.org" <song@kernel.org>, 
+	"yonghong.song@linux.dev" <yonghong.song@linux.dev>, "john.fastabend@gmail.com" <john.fastabend@gmail.com>, 
+	"kpsingh@kernel.org" <kpsingh@kernel.org>, "sdf@fomichev.me" <sdf@fomichev.me>, 
+	"haoluo@google.com" <haoluo@google.com>, "jolsa@kernel.org" <jolsa@kernel.org>, 
+	"jgg@ziepe.ca" <jgg@ziepe.ca>, "jhubbard@nvidia.com" <jhubbard@nvidia.com>, 
+	"peterx@redhat.com" <peterx@redhat.com>, "jannh@google.com" <jannh@google.com>, 
+	"axelrasmussen@google.com" <axelrasmussen@google.com>, "yuanchu@google.com" <yuanchu@google.com>, 
+	"weixugc@google.com" <weixugc@google.com>, "hannes@cmpxchg.org" <hannes@cmpxchg.org>, 
+	"zhengqi.arch@bytedance.com" <zhengqi.arch@bytedance.com>, "shakeel.butt@linux.dev" <shakeel.butt@linux.dev>, 
+	"shuah@kernel.org" <shuah@kernel.org>, "seanjc@google.com" <seanjc@google.com>, 
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, 
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, 
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>, 
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, "devel@lists.orangefs.org" <devel@lists.orangefs.org>, 
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>, 
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH v6 01/11] filemap: Pass address_space mapping to
+ ->free_folio()
+Message-ID: <2w22wsqar437lyp3w4bltyoql4ksn3exppkyaia5ogtnt2ttte@6nptj6ed4qnm>
+References: <20250912091708.17502-1-roypat@amazon.co.uk>
+ <20250912091708.17502-2-roypat@amazon.co.uk>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72=Zhcrk-cvXX+75mQzqUUwQznkZmLTCoEn0XNs62meUtQ@mail.gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: h2EjhHvLwW2H2KtseXpnqOSph9QsBuEE
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA2MDIzNSBTYWx0ZWRfX3zNIMlxidym9
- zxrL9OeFmmj9Z199bGatG874nsxEWg3KL0Q1DKWFmTNdHU8rhyLbjd2Y0SMr+pkF/m3Qm64QXSx
- aS9OnOi8CGb8yqAWkWieaaEFj28NnDCXDk4GTlctCLRQen99XHfGfjMVdOVB6+JlyORYsztWot4
- eFLzyNZ97EnxeC766cFXAINV1KwRKFIs8Np0BTjc8BkgvQvG2F8129f12+hZpT+BNLDzBFhILr+
- RgaPbDOpAzPoEy/52L55fgPjpJvOLumgqh60JCqMYXdu+OtniU7foj+cqWNPCtM4DvUR0xKFYcv
- yCfcwcSP0fSBVzIpny/gfqjkN7O4Vq/Ii9clhCDkZU0v+W0eX684a4vfHbLj0oKjxGgU1waLGOa
- 8cBEEu+m
-X-Proofpoint-GUID: WBocjeFnz5nq3-g-lGn17-oBRJDtDHVy
-X-Authority-Analysis: v=2.4 cv=F59XdrhN c=1 sm=1 tr=0 ts=68c3f53a cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=VnNF1IyMAAAA:8 a=PUJLaZJu5X_K6ovvMFYA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-12_03,2025-09-11_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 clxscore=1015
- impostorscore=0 bulkscore=0 adultscore=0 spamscore=0 classifier=typeunknown
- authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2507300000 definitions=main-2509060235
+In-Reply-To: <20250912091708.17502-2-roypat@amazon.co.uk>
+X-Spamd-Result: default: False [-2.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	ARC_NA(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[amazon.co.uk,quicinc.com,infradead.org,lwn.net,redhat.com,kernel.org,linux.dev,arm.com,huawei.com,xen0n.name,sifive.com,dabbelt.com,eecs.berkeley.edu,ghiti.fr,linux.ibm.com,linux.intel.com,linutronix.de,alien8.de,zytor.com,omnibond.com,zeniv.linux.org.uk,suse.cz,linux-foundation.org,oracle.com,google.com,suse.com,iogearbox.net,gmail.com,fomichev.me,ziepe.ca,nvidia.com,cmpxchg.org,bytedance.com,vger.kernel.org,lists.infradead.org,lists.linux.dev,lists.orangefs.org,kvack.org];
+	R_RATELIMIT(0.00)[to_ip_from(RL1bpf5rdkmpo98mj6oa9xanz3)];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[89];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[amazon.co.uk:email,suse.de:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Spam-Score: -2.30
 
-On Thu, Sep 11, 2025 at 08:59:29PM +0200, Miguel Ojeda wrote:
-> On Wed, Sep 10, 2025 at 5:12 PM Heiko Carstens <hca@linux.ibm.com> wrote:
-> >
-> > + * Beware: Code which makes use of __assume must be written as if the compiler
-> > + * ignores the hint. Otherwise this may lead to subtle bugs if code is compiled
-> > + * with compilers which do not support the attribute.
+On Fri, Sep 12, 2025 at 09:17:31AM +0000, Roy, Patrick wrote:
+> From: Elliot Berman <quic_eberman@quicinc.com>
 > 
-> I am not sure I understand this "Beware:" comment: is it referring to
-> evaluation side-effects? If so, the GCC docs say it is not evaluated.
-> The real danger is triggering UB with it, but that is different, i.e.
-> one needs to be really, really sure the expression is true.
+> When guest_memfd removes memory from the host kernel's direct map,
+> direct map entries must be restored before the memory is freed again. To
+> do so, ->free_folio() needs to know whether a gmem folio was direct map
+> removed in the first place though. While possible to keep track of this
+> information on each individual folio (e.g. via page flags), direct map
+> removal is an all-or-nothing property of the entire guest_memfd, so it
+> is less error prone to just check the flag stored in the gmem inode's
+> private data.  However, by the time ->free_folio() is called,
+> folio->mapping might be cleared. To still allow access to the address
+> space from which the folio was just removed, pass it in as an additional
+> argument to ->free_folio, as the mapping is well-known to all callers.
+> 
+> Link: https://lore.kernel.org/all/15f665b4-2d33-41ca-ac50-fafe24ade32f@redhat.com/
+> Suggested-by: David Hildenbrand <david@redhat.com>
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
+> [patrick: rewrite shortlog for new usecase]
+> Signed-off-by: Patrick Roy <roypat@amazon.co.uk>
 
-No, I was referring to the original build error where the missing "& 127" lead
-to a warning / build error. So what I was trying to say: if you have a
-construct like:
+Reviewed-by: Pedro Falcato <pfalcato@suse.de>
 
-	...
-	return a & 127;
-
-and then make this:
-
-	...
-	__assume(a < 64);
-	return a & 127;
-
-then it is not possible to leave the "& 127" part away, since __assume() is
-optional. But thinking about this again, I guess the comment is misleading,
-like also your reply proved.
-
-This is not about subtle bugs, but just an optimization that is not being
-done, which may or may not lead to compile time warnings for the particular
-case I was trying to improve; but the code would be correct in any case, as
-long as __assume() is used correctly.
-
-I'll rephrase the comment, and split / reorder patches differently so it is
-(hopefully) more obvious what I try to achieve: allow for micro-optimizations
-of inline assembly outputs.
+-- 
+Pedro
 
