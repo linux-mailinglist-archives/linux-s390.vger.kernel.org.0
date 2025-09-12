@@ -1,181 +1,95 @@
-Return-Path: <linux-s390+bounces-13032-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-13161-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16A3CB54479
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Sep 2025 10:08:36 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC7B4B56FD1
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Sep 2025 07:48:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 490A5188A4CE
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Sep 2025 08:08:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A3FB9177332
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Sep 2025 05:48:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 507B22D46D6;
-	Fri, 12 Sep 2025 08:08:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B26E277C8A;
+	Mon, 15 Sep 2025 05:48:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gE8e6pX6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pRryVl1k"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B42AC1FBC92
-	for <linux-s390@vger.kernel.org>; Fri, 12 Sep 2025 08:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5C7277814;
+	Mon, 15 Sep 2025 05:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757664513; cv=none; b=LdeJmBuxgVHClntFu0WQPWPu7TFXM5tpWdozHaaemSEI1p9i+1YTPuNAUwluA7G6YasaROl1Ths9oGjyXnVflSxhKUT+ETHH2EN7ltcAMIeM9XSsAfqpHIqHL/nd4j2jCoY6aD0VWb5bMhHGDEEaY+ZAttMqC9PPj+eB381BKDA=
+	t=1757915307; cv=none; b=SAUZUo1xvdhJbq2CX8BaMUm/9BckTJqiKdsXypb+u4UrCiQrytKIPseTLW+BwyvnmK1aYtCCaMUJUu/wuu2gjfQ7VQJ6opa4D97oMmfeDs8XgEte+2hJYiPPPILCNOjI+XRSJfavPR838PFldEcc6wEb669/q2rtKPUg1dk4kqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757664513; c=relaxed/simple;
-	bh=s5EhtBLd8sSI1h4jBHBiJUPG5/5OMr9gAnYIBXvKxgg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C0lmaliQTDMLICiAJoRBbd+qnCFcCvQCKMnIYEt8qFLzqRHWFrQx5DZF9OhDCVwoKdzWOoXKVrFGjB9ieMF/1WGDaqfnCGPXrP8Q8m0InZA0x9euxFbBliQp+t5p2L6mK1yOZNgzUl39mdY7bzLDa0zy2A8oLs5P2W03JnP4Xb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gE8e6pX6; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58C3GVQA017175;
-	Fri, 12 Sep 2025 08:08:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=6khb2W
-	m5Be+GuvBITt/WR7/CN9zxjPmUPbh+efW077o=; b=gE8e6pX6Osy1kpo39hzqJm
-	Uqg1h9f3SWE78IX+y+czJ2aF0rOcQ9YSE4oJ0RXQ8p5ASUQQOHY68UjfEUkIFaWC
-	clhQnAcO70dEaX59EfGUx73jxK7/NybtukBm6k+NJzNc6du8fa+vfsD809BO+lZx
-	Vx0eVy0NnMP0kSPs5XdSuoAJK1FHktnJUUW1BxcnU1rOnxl68uiFi02iTGnjvscl
-	GS1UPXDuGxpNSVZauI+9WIVVA8XozG8P8IcA64jh+girGSsnJCThDysrOvTBmh4f
-	fe99bowan2G8Lqd5Jz06Cxdv7n4ZjbmCm9D++D9/39H0t1XVmFpMqrPD3sAUixJQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 490bct8vqy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Sep 2025 08:08:22 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 58C7vslh015971;
-	Fri, 12 Sep 2025 08:08:21 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 490bct8vqu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Sep 2025 08:08:21 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58C5mkqd020492;
-	Fri, 12 Sep 2025 08:08:21 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 490yp1a2mq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Sep 2025 08:08:21 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58C88H0N57606578
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 12 Sep 2025 08:08:17 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F003420040;
-	Fri, 12 Sep 2025 08:08:16 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B5AEC2004B;
-	Fri, 12 Sep 2025 08:08:16 +0000 (GMT)
-Received: from [9.111.136.59] (unknown [9.111.136.59])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 12 Sep 2025 08:08:16 +0000 (GMT)
-Message-ID: <88984b74-19c5-4e86-a4f6-0c8ef91cf4df@linux.ibm.com>
-Date: Fri, 12 Sep 2025 10:08:16 +0200
+	s=arc-20240116; t=1757915307; c=relaxed/simple;
+	bh=nDGZYmOVK3BHyovdEwLI+pkBn1mmcoe5MNbBS1U05Tk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZM35SUQlEz71qDqiGPNNzO8nKoV06yJCHEL92lRqvaGzI0M4AMhrGmBDj9ObiP0wOGNBg1LCRLi3iTfPW29w1REc96f2c4icMvt5dcrDqieRzdoVWYnsvVSlSErdc7EdRUzwytwSvXPUrE3UOOAX+Bno4ol1vhbeIcFAyCAXDjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pRryVl1k; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17BB7C4CEF1;
+	Mon, 15 Sep 2025 05:48:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757915306;
+	bh=nDGZYmOVK3BHyovdEwLI+pkBn1mmcoe5MNbBS1U05Tk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pRryVl1kj48MZS2gLanXzQi1bHUnNSgCURmkRfmBVcm2y4EXJENs8ktffrEGhn5q0
+	 2AYwWNMewDKF0m8hHHG/8R39U71l1qm3QTTz26ImA2eTX61gegMWJXaIVLWHufkzmt
+	 6aRKund/R6fXLnWH8cZmXqar5MFD3xJLjO13QHLcVrwLRRzWPB8/ChL3r5/eB7HAph
+	 go5eqPES+QPF6YFSJPjpzPfkj5vwyPHIgjwNpflGLCOq/31Jy0QfjWFjw3Kna6E6XI
+	 5dtmw0RTtkDaxKl4vHdlON9Fi3DbckoBd8YJktWDzL3djvaAk3DUavi/2VwoCH1Ra1
+	 iibvKzyNcnXXA==
+Date: Fri, 12 Sep 2025 12:07:13 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Mahanta Jambigi <mjambigi@linux.ibm.com>
+Cc: Kriish Sharma <kriish.sharma2006@gmail.com>, alibuda@linux.alibaba.com,
+	dust.li@linux.alibaba.com, sidraya@linux.ibm.com,
+	wenjia@linux.ibm.com, tonylu@linux.alibaba.com,
+	guwen@linux.alibaba.com, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+	linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] net/smc: replace strncpy with strscpy for ib_name
+Message-ID: <20250912090713.GV341237@unreal>
+References: <20250908180913.356632-1-kriish.sharma2006@gmail.com>
+ <20250910100100.GM341237@unreal>
+ <24ced585-1b7f-4577-9cb5-8d6e60ecb363@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/7] dm-integrity: asynchronous hash support
-To: Mikulas Patocka <mpatocka@redhat.com>,
-        Harald Freudenberger <freude@linux.ibm.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Biggers <ebiggers@kernel.org>, dengler@linux.ibm.com,
-        linux-s390@vger.kernel.org, dm-devel@lists.linux.dev, agk@redhat.com,
-        snitzer@kernel.org, Milan Broz <gmazyland@gmail.com>
-References: <20250908131642.385445532@debian4.vm>
- <3a6b6f8f-5205-459c-810a-2425aae92fc8@linux.ibm.com>
- <e1e420d5-dc00-14d0-fdef-635d6ef70811@redhat.com>
- <bb68f9d6-8180-4291-9e6b-33bbdcef780f@linux.ibm.com>
- <8cb59ed5-1c9a-49de-beee-01eda52ad618@linux.ibm.com>
- <1af710ec-0f23-2522-d715-e683b9e557d8@redhat.com>
-Content-Language: en-US, de-DE
-From: Ingo Franzki <ifranzki@linux.ibm.com>
-In-Reply-To: <1af710ec-0f23-2522-d715-e683b9e557d8@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTA2MDAxMCBTYWx0ZWRfX3xnW6AZ6+gjV
- +bbz9MlLJ43iE0IA4WqD2+15qXBqRVQruCTMHOKLinCqB2IRDvOiRHlzlP6PPIbmNCbhA0kN7GO
- 0BV4smWx9QFJsdjJG5uxRCUaIB81liQMe4Raxj+XSLhmTwRUFO8RcLQTHtZCEV6cCAts6mrg4XR
- e6VhZuN+lA3MRGzjVp+AJWhGEPZ0o4qB12ec9Tc21/TelRluvRHPCDO2nWgejllHIYA/DsoQw+Z
- 8/OTYWVXe9KnoFB0Ls7TUuAmr4k3QpWpMgBl+/OSpLc4r35rNK91GezyWU6B+4C/Y9dXneRnmqZ
- wNtRJVvlneFW2q8nqVlrXI+3uCOBHUvmhQ2D36ZBQdWbIHqJ6lWWT65ajgO4wZAXm7PbjhybnC0
- 1HHMhz3M
-X-Authority-Analysis: v=2.4 cv=SKNCVPvH c=1 sm=1 tr=0 ts=68c3d4f6 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=VnNF1IyMAAAA:8 a=gJglsiLFuNdxA89ab8cA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: 19ECPnHVogpQcwm5yl866Ie9ExqY9lmH
-X-Proofpoint-ORIG-GUID: v9UEWhE7__rmbS9Bu5EJXQrAVa7QaGFR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-12_02,2025-09-11_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 spamscore=0 priorityscore=1501 bulkscore=0 malwarescore=0
- adultscore=0 suspectscore=0 impostorscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509060010
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <24ced585-1b7f-4577-9cb5-8d6e60ecb363@linux.ibm.com>
 
-On 11.09.2025 17:58, Mikulas Patocka wrote:
+On Fri, Sep 12, 2025 at 01:18:52PM +0530, Mahanta Jambigi wrote:
+> On 10/09/25 3:31 pm, Leon Romanovsky wrote:
+> >> --- a/net/smc/smc_pnet.c
+> >> +++ b/net/smc/smc_pnet.c
+> >> @@ -450,7 +450,7 @@ static int smc_pnet_add_ib(struct smc_pnettable *pnettable, char *ib_name,
+> >>  		return -ENOMEM;
+> >>  	new_pe->type = SMC_PNET_IB;
+> >>  	memcpy(new_pe->pnet_name, pnet_name, SMC_MAX_PNETID_LEN);
+> >> -	strncpy(new_pe->ib_name, ib_name, IB_DEVICE_NAME_MAX);
+> >> +	strscpy(new_pe->ib_name, ib_name);
+> > 
+> > It is worth to mention that caching ib_name is wrong as IB/core provides
+> > IB device rename functionality.
 > 
-> 
-> On Thu, 11 Sep 2025, Ingo Franzki wrote:
-> 
->>>> So, it looks like a dm-crypt bug.
->>>>
->>>> Please, revert my patches and run the same test on a clean 6.17.0-rc5 just 
->>>> to verify that the patches do not introduce the bug.
->>>
->>> With your patches reverted the combined mode fails the same way as with your patches.
->>> So they did not introduce the bug.
->>
->> Mikulas, do you have any idea what could be causing this errors? 
->> Is it that dm-crypt is not properly dealing with async-only HMAC ciphers? 
->> Async-only encryption ciphers seem to work fine in dm-crypt, since LUKS with PAES (but no integrity) works fine, and PAES is an async-onky cipher.
->> LUKS with sync-HMAC ciphers (e.g. clear key HMAC) also works fine, even in combination with PAES.
-> 
-> Yes, I think that it's a problem with async HMAC. The bug is probably 
-> either in dm-crypt or in the crypto library.
-> 
-> Do you have some other (non-dm-crypt-related) workload that uses the 
-> async authentication, so that we can determine whether the bug is in 
-> dm-crypt or crypto?
+> In our case we hit this code path where we pass *PCI_ID*
+> as the *ib_name* using *smc_pnet* tool(smc_pnet -a <pnet_name> -D
+> <PCI_ID>). I believe PCI_ID will not change, so caching it here is fine.
 
-Well, dm-integrity can use PHMAC and this works (with you patches) as confirmed in this mail thread.
-I don't think we have other non-dm-crypt or non-dm-integrity related workload.
-We could probably come up with a test program using AF_ALG that uses PHMAC.
-@Harald: Do you possibly have such already? 
+If I remember, you are reporting that cached ib_name through netlink much later.
 
-> 
-> Otherwise, would it be possible to give us a virtual machine on the 
-> mainframe to debug this issue?
+The caching itself is not an issue, but incorrect reported name can be seen as
+a wrong thing to do.
 
-@Harald: What do you think, could this be possible? 
-
-> 
-> Mikulas
-> 
-
-
--- 
-Ingo Franzki
-eMail: ifranzki@linux.ibm.com  
-Tel: ++49 (0)7031-16-4648
-Linux on IBM Z Development, Schoenaicher Str. 220, 71032 Boeblingen, Germany
-
-IBM Deutschland Research & Development GmbH
-Vorsitzender des Aufsichtsrats: Gregor Pillen
-Geschäftsführung: David Faller
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM DATA Privacy Statement: https://www.ibm.com/privacy/us/en/
+Thanks
 
