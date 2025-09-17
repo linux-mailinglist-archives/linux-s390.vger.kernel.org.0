@@ -1,306 +1,336 @@
-Return-Path: <linux-s390+bounces-13395-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-13397-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52F4EB803C8
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Sep 2025 16:48:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C4B4B804C3
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Sep 2025 16:56:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B734C3BE343
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Sep 2025 14:48:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 57F0F18830FC
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Sep 2025 14:54:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6765F32BBF5;
-	Wed, 17 Sep 2025 14:48:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C3A0332A3B;
+	Wed, 17 Sep 2025 14:52:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mRaLDjks"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y5HKCiYJ"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1BF3233FF;
-	Wed, 17 Sep 2025 14:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC772330D4F
+	for <linux-s390@vger.kernel.org>; Wed, 17 Sep 2025 14:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758120496; cv=none; b=fCwiOB2Jm+LpnJuHfZLwuqttV9350aXWom5tTA1W7ckUbPCa8K25Z+1yqXQ4Tw+mcY2XEaDGCyTi29Cskj0GrOmhNWuHOqbNbsRI5SBGpS/D9fA9aSp0bWkzw2BejyimjOsSuOrqA4u58KcoYJHs5MeC8pMRq0/VcxZnxPnw4cc=
+	t=1758120774; cv=none; b=CQfnoUZBLGsmodyhZwTZS+WVM0K5x+Xgay5KhU0eRaSUS/JBDJhZV4b2EYcQKbjxNmwJvEk5RCNgqOlxgM05cggakGFhnBXeq9DWq81p6vQCSXlYkgr8dwnLW0vzqRE8IvKsAPbXSIEF4CfFjqnIB3fZy4Mx7iff+J67+ht23L8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758120496; c=relaxed/simple;
-	bh=Ml6O6w497nU6tE39XHfyycoKFCgDfhxLtanjGXr9EkM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lwWD/P2nEFBifzv6AKRuYv7xbjxDFRt2RWYJ753+lRP6G4ptNpR1QmKwcwj57+bwD46q2/M3X3JzyBhxGgB+HqI5b3ImsZm52tidZzg/pACJk2leH+CUHwnx0wPduCc8oQDcCoB1P4Ni2n8+IoEUjQnBDV/QUiTzWGyG+Pchx3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mRaLDjks; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58H9xmQt010516;
-	Wed, 17 Sep 2025 14:48:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=iM6K4B
-	rf2n4FI280Hqoqbsetmqxy4maAo/oHD6XB0wQ=; b=mRaLDjksmuDmOTqmOwLsYu
-	YYI6p+1vyXn9QU3INhZ7DZ4nZC3JRIiT4TctyNLNPgsVCQPUJx8aKmrqQUzcq7PO
-	vWctTk1IoRHfW5jGVvcLMQycZ890ibfUaPfd/e0xfR3sobGsX9uadNR9TC/9BVnz
-	n2STl+O2X1mCC8BXlQt22l3aW8SSDV/m24Wn7Sompmd+KV39RmIuKS5ie1DDB1Nl
-	vUgezlcXrmPSoX2FSyQeC4O9kPEDJE/BUKrEs0doGM4xjzRaJsORUzzN36Ev3hgv
-	IMsnia7S5wq+UPAlUvmkM8zb16Ryzop0pM+QNljdjOG5C3UxDaBh2bMsuCtGXUwA
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 497g4nc5ny-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Sep 2025 14:48:10 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58HDLA9L006385;
-	Wed, 17 Sep 2025 14:48:09 GMT
-Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 495jxua05k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Sep 2025 14:48:09 +0000
-Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
-	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58HEm74T19530266
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 17 Sep 2025 14:48:08 GMT
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CA6FF5804E;
-	Wed, 17 Sep 2025 14:48:07 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B96C45803F;
-	Wed, 17 Sep 2025 14:48:06 +0000 (GMT)
-Received: from [9.152.212.194] (unknown [9.152.212.194])
-	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 17 Sep 2025 14:48:06 +0000 (GMT)
-Message-ID: <f60b86d08a4ad0feef32dc8e478f3bd3a8d26019.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 04/10] s390/pci: Add architecture specific
- resource/bus address translation
-From: Niklas Schnelle <schnelle@linux.ibm.com>
-To: Farhan Ali <alifm@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Cc: alex.williamson@redhat.com, helgaas@kernel.org, mjrosato@linux.ibm.com
-Date: Wed, 17 Sep 2025 16:48:06 +0200
-In-Reply-To: <20250911183307.1910-5-alifm@linux.ibm.com>
-References: <20250911183307.1910-1-alifm@linux.ibm.com>
-	 <20250911183307.1910-5-alifm@linux.ibm.com>
-Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+	s=arc-20240116; t=1758120774; c=relaxed/simple;
+	bh=5epPT/yF5ySKt5yJiiDB0pyPwiJwOtudKK0nsTblkcQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KjLiMs+3LsSnCMdMT0xcB82Oh48GazxkbXfhtQmAFR0QdSO6jxq+BLKQ0S7fHnJq2GTlMlwlKwUkkC6dw6NgV+AuV6yDaWmBrbW2hnC/Usw2bRcEnlWm+e7aP+MRoMPmZ53FD36TsgxM/VsGoRNcDYc/+SbnnbrocN+xAzphZtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y5HKCiYJ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1758120769;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=gDs3CUgjimStalCZ6Y06kSWDcmRW5MkZeDVBa3itpks=;
+	b=Y5HKCiYJkMelEBHm798LQBOLQFsyQ4blYDc14lDVhJ/bHYjdvQbuCv7/jO/47JDBWlsqO/
+	tEGGpzgemCnl/U0UimZ7TU43h178Eiq8aSCF2Er8+oFp51VBlUkq3KaUuSXvDq0L3o+kTU
+	Mj18HYK7ipfmA0ng1MjSJLfEzVKerwM=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-594-5LE6al8zMIeBmfLRNaoTTA-1; Wed, 17 Sep 2025 10:52:48 -0400
+X-MC-Unique: 5LE6al8zMIeBmfLRNaoTTA-1
+X-Mimecast-MFC-AGG-ID: 5LE6al8zMIeBmfLRNaoTTA_1758120767
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3ccd58af2bbso389268f8f.0
+        for <linux-s390@vger.kernel.org>; Wed, 17 Sep 2025 07:52:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758120767; x=1758725567;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gDs3CUgjimStalCZ6Y06kSWDcmRW5MkZeDVBa3itpks=;
+        b=ji6g+NA0w0M8O8z2TxT/kpGNvhVJziI3vrSaQV4RYMUnYYRawt+JxQYFfWILeQIED4
+         tXKXow0zOSKzMIgOIL1Q5Ip1Lr83ggLji7WRERHiky/A8rTJ5NUbNUWyXkSQsb9LHiDw
+         5SrLETbPocOM3rP+9Lvfs7ysUujpTEiK45rfDsI8n9jq46JfNu3c3beX0lG5/mZV2bZ7
+         /IMvJxSmHCdvPGh2r+xsHSHVFJxVFy04I4qzKoQnmXy3yxaMDsDX9gqihNrfao6OO5Na
+         hzc1u6tit2BaeQn4ERPBiHYqoaRYARh6Zw3US5uMSuC/fZRsLnu2rSIn+UKvWjooek9G
+         cNiw==
+X-Forwarded-Encrypted: i=1; AJvYcCU0TGmMO+oZ960XgNzXMBEwwO5+J2DblAPVWbiccDD4gQrxdRvHuCSQGRWnpcb96ozT7s8kKkLs0GBd@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrirgMjnjwTbh+5bJ2+98tC/YrewrF2mfs1cNslQX2dxHg5crK
+	0a4lLwGFuj42Z0J+0DPYj5ATQcMqUBO45HVj970zldYHmmpFABzk/UlxJsqcRWPZKBqzrsnxgr7
+	11Q/tOsve8qnGA7xznGdPcbVs5laCQ+M/FWdQkbQqI/8mRhOR/Bhd736NOjH2utU=
+X-Gm-Gg: ASbGncua8NwFhkUhr9EyUqSgaOcNPD2ntneTki5yrX7lA+YraCou6yQPdqPLkzKWT1Y
+	jAqTgFI2w9esQHixgU6AFW5rucpIexHYbj1mC/bVzqRtW5EdvuxZVQOaLZLd7JuGFxoETsZYU97
+	Pw3VnkadW/QFQLVyJZ85KM7poeAy/YYDup1XzF5VO2BT4f1g1A+wTZSfkHZnIMDpgbgBRrWtjJt
+	lDLjqqOZCOupFnxmp654/+31e/ptOtm0o/DlSZb9SjHL8bx2s4UThy2MoqPvmn+5AKGi2NGRG80
+	NYRoaUA99W64gW9K9iy+isgNKZlgiipyWner/AAZVoVdyr9DLDu+lqhuCGn27H6rxUdBTXP25kG
+	V85rUh9FE9IBHCYEE7P9g5aLOS12L7k4gNU0SEpZ9s9jQeWPohe5SKMcPTLahMgRf
+X-Received: by 2002:a5d:584d:0:b0:3ea:d634:1493 with SMTP id ffacd0b85a97d-3ec9d70e1aemr6331371f8f.3.1758120767173;
+        Wed, 17 Sep 2025 07:52:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHCVwA2whdJvJ6k0SNSXVgRVBCXXeS7K5H+4SZxMmaPtCI7Uv2obWcxbuvE8IbcU5jjC+Gugg==
+X-Received: by 2002:a5d:584d:0:b0:3ea:d634:1493 with SMTP id ffacd0b85a97d-3ec9d70e1aemr6331269f8f.3.1758120766367;
+        Wed, 17 Sep 2025 07:52:46 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f27:6d00:7b96:afc9:83d0:5bd? (p200300d82f276d007b96afc983d005bd.dip0.t-ipconnect.de. [2003:d8:2f27:6d00:7b96:afc9:83d0:5bd])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4613f3c69d5sm39701795e9.24.2025.09.17.07.52.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Sep 2025 07:52:45 -0700 (PDT)
+Message-ID: <e30627e5-f30f-4494-934c-58e4a427a476@redhat.com>
+Date: Wed, 17 Sep 2025 16:52:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=MN5gmNZl c=1 sm=1 tr=0 ts=68caca2a cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=VnNF1IyMAAAA:8 a=LO_JpcyrgH6vAt2cTOsA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: x_gz8bpcPmknrLXED1ZXCv8W6cmxjDZW
-X-Proofpoint-ORIG-GUID: x_gz8bpcPmknrLXED1ZXCv8W6cmxjDZW
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE2MDIwNCBTYWx0ZWRfX65UoeWKf/8O1
- w333gMa8pVY80gZFdM6q3+pSY0bmWsrw5G8O9+TqAO95oxC0V+hO/lM3JInaVu+7Vy0dtDf7hvS
- O3APEc//fHcwmI2BbPXYz3eZnL7lGaRIomfYdX2gV/yDV2qNISPCphaXNV7f0RyisM0cji8u3Rv
- iQQyTK9FfDhAa9hYs0ufzTE5nhm9o89XmcYd+C0SPj2zgcQBgnW/O26JJ6jnYwpkcbp2INwuYWx
- UevhpVjAIL9S2pG3XkqkmgzKGQhlqBcmKoZkTqxCKft1vqL3gE/qkyuWMA971YXCGNZc+dAsJok
- Jhv0yoqrFXizmaRAcyVnhWixLOEkEQh9cEorXJWPvGL1v7DDLdlCkzpYL+vL80OqPuewyANwLHA
- G+LktPbF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-17_01,2025-09-17_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 spamscore=0 priorityscore=1501 bulkscore=0 impostorscore=0
- malwarescore=0 adultscore=0 phishscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509160204
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 01/11] filemap: Pass address_space mapping to
+ ->free_folio()
+To: Hugh Dickins <hughd@google.com>, "Roy, Patrick" <roypat@amazon.co.uk>
+Cc: "Thomson, Jack" <jackabt@amazon.co.uk>,
+ "Kalyazin, Nikita" <kalyazin@amazon.co.uk>,
+ "Cali, Marco" <xmarcalx@amazon.co.uk>,
+ "derekmn@amazon.co.uk" <derekmn@amazon.co.uk>,
+ Elliot Berman <quic_eberman@quicinc.com>,
+ "willy@infradead.org" <willy@infradead.org>, "corbet@lwn.net"
+ <corbet@lwn.net>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
+ "maz@kernel.org" <maz@kernel.org>,
+ "oliver.upton@linux.dev" <oliver.upton@linux.dev>,
+ "joey.gouly@arm.com" <joey.gouly@arm.com>,
+ "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+ "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "will@kernel.org" <will@kernel.org>,
+ "chenhuacai@kernel.org" <chenhuacai@kernel.org>,
+ "kernel@xen0n.name" <kernel@xen0n.name>,
+ "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+ "palmer@dabbelt.com" <palmer@dabbelt.com>,
+ "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+ "alex@ghiti.fr" <alex@ghiti.fr>,
+ "agordeev@linux.ibm.com" <agordeev@linux.ibm.com>,
+ "gerald.schaefer@linux.ibm.com" <gerald.schaefer@linux.ibm.com>,
+ "hca@linux.ibm.com" <hca@linux.ibm.com>,
+ "gor@linux.ibm.com" <gor@linux.ibm.com>,
+ "borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>,
+ "svens@linux.ibm.com" <svens@linux.ibm.com>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "luto@kernel.org" <luto@kernel.org>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+ "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+ "trondmy@kernel.org" <trondmy@kernel.org>, "anna@kernel.org"
+ <anna@kernel.org>, "hubcap@omnibond.com" <hubcap@omnibond.com>,
+ "martin@omnibond.com" <martin@omnibond.com>,
+ "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+ "brauner@kernel.org" <brauner@kernel.org>, "jack@suse.cz" <jack@suse.cz>,
+ "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+ "lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>,
+ "Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>,
+ "vbabka@suse.cz" <vbabka@suse.cz>, "rppt@kernel.org" <rppt@kernel.org>,
+ "surenb@google.com" <surenb@google.com>, "mhocko@suse.com"
+ <mhocko@suse.com>, "ast@kernel.org" <ast@kernel.org>,
+ "daniel@iogearbox.net" <daniel@iogearbox.net>,
+ "andrii@kernel.org" <andrii@kernel.org>,
+ "martin.lau@linux.dev" <martin.lau@linux.dev>,
+ "eddyz87@gmail.com" <eddyz87@gmail.com>, "song@kernel.org"
+ <song@kernel.org>, "yonghong.song@linux.dev" <yonghong.song@linux.dev>,
+ "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+ "kpsingh@kernel.org" <kpsingh@kernel.org>, "sdf@fomichev.me"
+ <sdf@fomichev.me>, "haoluo@google.com" <haoluo@google.com>,
+ "jolsa@kernel.org" <jolsa@kernel.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
+ "jhubbard@nvidia.com" <jhubbard@nvidia.com>,
+ "peterx@redhat.com" <peterx@redhat.com>, "jannh@google.com"
+ <jannh@google.com>, "pfalcato@suse.de" <pfalcato@suse.de>,
+ "axelrasmussen@google.com" <axelrasmussen@google.com>,
+ "yuanchu@google.com" <yuanchu@google.com>,
+ "weixugc@google.com" <weixugc@google.com>,
+ "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
+ "zhengqi.arch@bytedance.com" <zhengqi.arch@bytedance.com>,
+ "shakeel.butt@linux.dev" <shakeel.butt@linux.dev>,
+ "shuah@kernel.org" <shuah@kernel.org>, "seanjc@google.com"
+ <seanjc@google.com>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+ "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+ "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+ "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+ "devel@lists.orangefs.org" <devel@lists.orangefs.org>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+ "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+References: <20250912091708.17502-1-roypat@amazon.co.uk>
+ <20250912091708.17502-2-roypat@amazon.co.uk>
+ <7c2677e1-daf7-3b49-0a04-1efdf451379a@google.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <7c2677e1-daf7-3b49-0a04-1efdf451379a@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2025-09-11 at 11:33 -0700, Farhan Ali wrote:
-> On s390 today we overwrite the PCI BAR resource address to either an
-> artificial cookie address or MIO address. However this address is differe=
-nt
-> from the bus address of the BARs programmed by firmware. The artificial
-> cookie address was created to index into an array of function handles
-> (zpci_iomap_start). The MIO (mapped I/O) addresses are provided by firmwa=
-re
-> but maybe different from the bus address. This creates an issue when tryi=
-ng
-> to convert the BAR resource address to bus address using the generic
-> pcibios_resource_to_bus.
->=20
+On 16.09.25 08:23, Hugh Dickins wrote:
+> On Fri, 12 Sep 2025, Roy, Patrick wrote:
+> 
+>> From: Elliot Berman <quic_eberman@quicinc.com>
+>>
+>> When guest_memfd removes memory from the host kernel's direct map,
+>> direct map entries must be restored before the memory is freed again. To
+>> do so, ->free_folio() needs to know whether a gmem folio was direct map
+>> removed in the first place though. While possible to keep track of this
+>> information on each individual folio (e.g. via page flags), direct map
+>> removal is an all-or-nothing property of the entire guest_memfd, so it
+>> is less error prone to just check the flag stored in the gmem inode's
+>> private data.  However, by the time ->free_folio() is called,
+>> folio->mapping might be cleared. To still allow access to the address
+>> space from which the folio was just removed, pass it in as an additional
+>> argument to ->free_folio, as the mapping is well-known to all callers.
+>>
+>> Link: https://lore.kernel.org/all/15f665b4-2d33-41ca-ac50-fafe24ade32f@redhat.com/
+>> Suggested-by: David Hildenbrand <david@redhat.com>
+>> Acked-by: David Hildenbrand <david@redhat.com>
+>> Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
+>> [patrick: rewrite shortlog for new usecase]
+>> Signed-off-by: Patrick Roy <roypat@amazon.co.uk>
+>> ---
+>>   Documentation/filesystems/locking.rst |  2 +-
+>>   fs/nfs/dir.c                          | 11 ++++++-----
+>>   fs/orangefs/inode.c                   |  3 ++-
+>>   include/linux/fs.h                    |  2 +-
+>>   mm/filemap.c                          |  9 +++++----
+>>   mm/secretmem.c                        |  3 ++-
+>>   mm/vmscan.c                           |  4 ++--
+>>   virt/kvm/guest_memfd.c                |  3 ++-
+>>   8 files changed, 21 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
+>> index aa287ccdac2f..74c97287ec40 100644
+>> --- a/Documentation/filesystems/locking.rst
+>> +++ b/Documentation/filesystems/locking.rst
+>> @@ -262,7 +262,7 @@ prototypes::
+>>   	sector_t (*bmap)(struct address_space *, sector_t);
+>>   	void (*invalidate_folio) (struct folio *, size_t start, size_t len);
+>>   	bool (*release_folio)(struct folio *, gfp_t);
+>> -	void (*free_folio)(struct folio *);
+>> +	void (*free_folio)(struct address_space *, struct folio *);
+>>   	int (*direct_IO)(struct kiocb *, struct iov_iter *iter);
+>>   	int (*migrate_folio)(struct address_space *, struct folio *dst,
+>>   			struct folio *src, enum migrate_mode);
+> 
+> Beware, that is against the intent of free_folio().
+> 
+> Since its 2.6.37 origin in 6072d13c4293 ("Call the filesystem back
+> whenever a page is removed from the page cache"), freepage() or
+> free_folio() has intentionally NOT taken a struct address_space *mapping,
+> because that structure may already be freed by the time free_folio() is
+> called, if the last folio holding it has now been freed.
 
-Nit: I'd prefer referring to functions with e.g.
-pcibios_resource_to_bus() to make them easier to distinguish. Same also
-below.
+Thanks for noticing that Hugh, very good point!
 
-> Implement an architecture specific pcibios_resource_to_bus function to
-> correctly translate PCI BAR resource address to bus address for s390.
+> 
+> Maybe something has changed since then, or maybe it happens to be safe
+> just in the context in which you want to use it; but it is against the
+> principle of free_folio().  (Maybe an rcu_read_lock() could be added
+> in __remove_mapping() to make it safe nowadays? maybe not welcome.)
 
-Nit: I'd use the plural "addresses" above as we're dealing with a whole
-range.
+Let me dig into the callers:
 
-> Similarly add architecture specific pcibios_bus_to_resource function to d=
-o
-> the reverse translation.
->=20
-> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
-> ---
->  arch/s390/pci/pci.c       | 73 +++++++++++++++++++++++++++++++++++++++
->  drivers/pci/host-bridge.c |  4 +--
->  2 files changed, 75 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
-> index cd6676c2d602..5baeb5f6f674 100644
-> --- a/arch/s390/pci/pci.c
-> +++ b/arch/s390/pci/pci.c
-> @@ -264,6 +264,79 @@ resource_size_t pcibios_align_resource(void *data, c=
-onst struct resource *res,
->  	return 0;
->  }
-> =20
-> +void pcibios_resource_to_bus(struct pci_bus *bus, struct pci_bus_region =
-*region,
-> +			     struct resource *res)
-> +{
-> +	struct zpci_bus *zbus =3D bus->sysdata;
-> +	struct zpci_bar_struct *zbar;
-> +	struct zpci_dev *zdev;
-> +
-> +	region->start =3D res->start;
-> +	region->end =3D res->end;
-> +
-> +	for (int i =3D 0; i < ZPCI_FUNCTIONS_PER_BUS; i++) {
-> +		int j =3D 0;
-> +
-> +		zbar =3D NULL;
-> +		zdev =3D zbus->function[i];
-> +		if (!zdev)
-> +			continue;
-> +
-> +		for (j =3D 0; j < PCI_STD_NUM_BARS; j++) {
-> +			if (zdev->bars[j].res->start =3D=3D res->start &&
-> +			    zdev->bars[j].res->end =3D=3D res->end) {
-> +				zbar =3D &zdev->bars[j];
-> +				break;
-> +			}
-> +		}
-> +
-> +		if (zbar) {
-> +			/* only MMIO is supported */
 
-Should the code that sets zbar check IORESOURCE_MEM on the res->flags
-to ensure the above comment? Though zpci_setup_bus_resources() only
-creates IORESOURCE_MEM resources so this would only be relevant if
-someone uses a resource from some other source.
+1) filemap_free_folio()
 
-> +			region->start =3D zbar->val & PCI_BASE_ADDRESS_MEM_MASK;
-> +			if (zbar->val & PCI_BASE_ADDRESS_MEM_TYPE_64)
-> +				region->start |=3D (u64)zdev->bars[j + 1].val << 32;
-> +
-> +			region->end =3D region->start + (1UL << zbar->size) - 1;
-> +			return;
-> +		}
-> +	}
-> +}
-> +
-> +void pcibios_bus_to_resource(struct pci_bus *bus, struct resource *res,
-> +			     struct pci_bus_region *region)
-> +{
-> +	struct zpci_bus *zbus =3D bus->sysdata;
-> +	struct zpci_dev *zdev;
-> +	resource_size_t start, end;
-> +
-> +	res->start =3D region->start;
-> +	res->end =3D region->end;
-> +
-> +	for (int i =3D 0; i < ZPCI_FUNCTIONS_PER_BUS; i++) {
-> +		zdev =3D zbus->function[i];
-> +		if (!zdev || !zdev->has_resources)
-> +			continue;
-> +
-> +		for (int j =3D 0; j < PCI_STD_NUM_BARS; j++) {
-> +			if (!zdev->bars[j].val && !zdev->bars[j].size)
-> +				continue;
+filemap_free_folio() looks up the callback through 
+mapping->a_ops->free_folio. Nothing happens in-between that lookup and 
+the callback so we should be good.
 
-Shouldn't the above be '||'? I think both a 0 size and an unset bars
-value would indicate invalid. zpci_setup_bus_resources() only checks 0
-size so I think that would be enoug, no?
 
-> +
-> +			/* only MMIO is supported */
-> +			start =3D zdev->bars[j].val & PCI_BASE_ADDRESS_MEM_MASK;
-> +			if (zdev->bars[j].val & PCI_BASE_ADDRESS_MEM_TYPE_64)
-> +				start |=3D (u64)zdev->bars[j + 1].val << 32;
-> +
-> +			end =3D start + (1UL << zdev->bars[j].size) - 1;
-> +
-> +			if (start =3D=3D region->start && end =3D=3D region->end) {
-> +				res->start =3D zdev->bars[j].res->start;
-> +				res->end =3D zdev->bars[j].res->end;
-> +				return;
-> +			}
-> +		}
-> +	}
-> +}
-> +
->=20
+2) replace_page_cache_folio()
 
-Overall the code makes sense to me. I think this hasn't caused issues
-so far only because firmware has usually already set up the BAR
-addresses for us.
+replace_page_cache_folio() similarly looks up the callback through
+mapping->a_ops->free_folio. We do some operations afterwards, but 
+essentially store the new folio in the page cache and remove the old one.
 
-Thanks,
-Niklas
+The only caller is fuse_try_move_folio(), and IIUC both folios are 
+locked, preventing concurrent truncation and the mapping going away.
+
+
+3) __remove_mapping()
+
+__remove_mapping() also looks up the callback through 
+mapping->a_ops->free_folio.
+
+Before we call free_folio() we remove the folio from the pagecache 
+(__filemap_remove_folio) to then drop locks and call free_folio().
+
+We're only holding the folio lock at that point.
+
+So yes I agree, truncate_inode_pages_final() could be racing with
+__remove_mapping().c That's probably exactly what the docs describe 
+regarding reclaim.
+
+
+rcu_read_lock() should indeed work, or some other mechanism that keeps 
+truncate_inode_pages_final() from succeeding in this racy situation.
+
+Alternatively I guess we would have to use another callback.
+
+-- 
+Cheers
+
+David / dhildenb
+
 
