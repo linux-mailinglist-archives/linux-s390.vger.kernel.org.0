@@ -1,193 +1,214 @@
-Return-Path: <linux-s390+bounces-13315-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-13317-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6688BB5A1BD
-	for <lists+linux-s390@lfdr.de>; Tue, 16 Sep 2025 22:01:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 468D4B7C7F2
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Sep 2025 14:04:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1B0A6189990A
-	for <lists+linux-s390@lfdr.de>; Tue, 16 Sep 2025 20:01:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E972A1B25444
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Sep 2025 00:17:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD4242D9EE5;
-	Tue, 16 Sep 2025 20:00:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85FF413A86C;
+	Wed, 17 Sep 2025 00:17:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qalxXyue"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R3lswAoh"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3912356B9;
-	Tue, 16 Sep 2025 20:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266506F06B
+	for <linux-s390@vger.kernel.org>; Wed, 17 Sep 2025 00:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758052856; cv=none; b=nGVqfiMYy6eMXw4qhheqAdC2uKrMjql1RYMLK1CqVcaX2YhRjTRi0sHahwPHD7V+YL7LEnbpJyQSyr1fXiKxS0ikY/Vnb/NRwxjlJgLZ0allFEB5YlTWS24wG/9PaM7g3wnhrmNgtCLzt48VDPUnh/nvGRVXpOmzn4otxpjsuUk=
+	t=1758068231; cv=none; b=NHrX36esnYAD6GUPwLY4IzkshF4l0+UYDrm0Tty9qAudqZVKzQ3vKejV1xAUZEzRRgjfwoSoCYPCnwwavqBM448QASZrrkX0fei0jBLzmgB26iD8RU5DuOuWinz6ui9v0pv4ubpkGRz5kSW1+JqqWpfKLWLwEDOjwsva4qSH4vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758052856; c=relaxed/simple;
-	bh=zXiOIHy9ejwvJSdfc0MFDmV+apcwnc62XAPntiwORCM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XXrYk2U4eO4A3VGg3XzLs9LBkqFNb21Ng9a3R2DFKWF6oVxkDVteBzR0gTRbmTZK8I/szlZPC+i86niRZttBfvHxQetSL3uLx1ISTUedvbuziMF4S0vTPr3ikwMtpLTnC8FquTrsNOZ5MV9N+mzyvgKbadzR5thL69gCONzqpyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qalxXyue; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58GCdVDu003190;
-	Tue, 16 Sep 2025 20:00:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=pxX+MR
-	PFQ/scwamhTyYekj06Xy9jwdu0NhB/orGkvK0=; b=qalxXyue805dp8sROeXMEv
-	feA9/IMHLIo0dnUctyHVgKkmbXlL921E/qMtMm8iITBJioeXkRFaP+7cMF4t9Lii
-	hldMPJ22mSIpJE0Nb5GBr2Z/X3y0V3KNV6dt7L90xKy1PEVcUsywVZ6sWPXRqzOV
-	dhetIeWkbtyMEaDpHY4CD3B+XZWjgcCQ6RlkHEe8NF6uA5SkSm/SViyMUCBxDht1
-	64EMmIqFteOVsLzsfFQeiLjBEana64IhysAGt/uJ4Toar9XKygA9cqTMR9YLMhCX
-	ExHGw+qXwcnVL8AQJszfAV621BJ7KSdilLayxDy8mhoRTRnsIrJEpFRlvvuHD7Fw
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 494x1tjmc9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Sep 2025 20:00:37 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58GHkGYh027308;
-	Tue, 16 Sep 2025 20:00:37 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 495men5nxm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Sep 2025 20:00:37 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58GK0Z8i30867826
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 16 Sep 2025 20:00:35 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B90805804B;
-	Tue, 16 Sep 2025 20:00:35 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DF9AD58065;
-	Tue, 16 Sep 2025 20:00:34 +0000 (GMT)
-Received: from [9.61.248.85] (unknown [9.61.248.85])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 16 Sep 2025 20:00:34 +0000 (GMT)
-Message-ID: <d6655c44-ca97-4527-8788-94be2644c049@linux.ibm.com>
-Date: Tue, 16 Sep 2025 13:00:30 -0700
+	s=arc-20240116; t=1758068231; c=relaxed/simple;
+	bh=8bMaW+s8iABakKwgqc6w26p8Hw7d/FhUe28p51azdRg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F8I6Ijvc6QArZIF7hCH3UNx2M1EvicAbqPFIjKg4pRPk7CXtUHDC+oRrTu7xiyrCFP9d2rqOhvfxOQmu0Q+jyT56ET3NjFv3eyAnAqqQi64/osEsofSq04HZJJ3EKib7O2VWGxHgD5wkOPbSYkTopYF6M7RUR1cWbsRizr0e674=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R3lswAoh; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-62f1987d53aso4334801a12.0
+        for <linux-s390@vger.kernel.org>; Tue, 16 Sep 2025 17:17:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758068227; x=1758673027; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xXSGAh8chrKBAWdQa4v/8pOW/Kzc0QCjuDzlGtOmWtE=;
+        b=R3lswAohNyOMwWKwXZqGgP77g3sVJvV3/mg9TzComvE2dQRdy7tW7chcmxkZgXm5Pt
+         y8ShAYeveHS9l1YTNw5O33im160bqMNxYklewVHTmq3rbd0RGrrrEKQnTEBMbeGaXYw5
+         /9t/BxIp5x6YFECxH3FclY7u5KY4PbtZH6zaLOai03vO0gev+pPSHEaElrdTFmXcaWyc
+         QTS8iwW92mgHxfbuc18vaFp/5XWSypNuiQ0ebTp7bC+sVmNC7ZUfCgnRAIoiqtmsAEnR
+         1eJNoGEYG0GVdU7ROWlTd39kVc0mCpHRMJo29uGRqv8NNLmdOuXjSY3rWz0QCMxuy7U4
+         9MKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758068227; x=1758673027;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xXSGAh8chrKBAWdQa4v/8pOW/Kzc0QCjuDzlGtOmWtE=;
+        b=Xus1Xmm47TSr5p7XHh/iJFsJTEFywYfwpcA7eubRqLxhQ0s/s/+emGcWpmVuzt0Lnn
+         SgQX25P+HVr32AKoBChynNAtk0zcaN5TwWwV5hb5M57DeNauyS0fFY2hkWIXC+EKbAXp
+         lg16+fxy/Wwv4Mxoi5w2DIhdXctY3dfsLDWwaXhuolhrScsqhBvZDeKiZZhB6PCri37q
+         JXXwSHqLrmMmyXqRKQhWNtiv2NMByA9U7qo0H++e6h0jDhOm4bAPlwf8MP874xCkyasG
+         q2GokFjoCZb/7KewFCOl8bBk/3qX2kU6ptocW9YS0A+aBmVvkPzxjwhvwrRRMBoMVIQL
+         9log==
+X-Forwarded-Encrypted: i=1; AJvYcCUq29UpGUAgwHlfimxd7ERfQpNwpDxR0zCGgIEV2fr5EK2A793/AxH0TreuxXTx1r+9L4clhCm+KtC6@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3mP9vX5knYT2jn93tvuRfWsg0D6M3WOZYl/HKh0x36qkQRWEk
+	fFI/pfQfLN99otOh8zxJqFJxbIvTlEkm2TI4kjEabMesVvZmYlS7hcyyixYWaS4y1F8EebZT3oa
+	2kqepZmnRAc/hd2PnOX0hecPoK7grryQ=
+X-Gm-Gg: ASbGncsXXqZxZzwmfLiiG6x6riyinUMUd4rCqmECkmSP3/K8U8XiqJPnbJdtF5EeED/
+	eFoUno352Cluev47rotWj02FOVtPewsmzXkoE8zDr53hqAMjmujVtaYdGuizzPg00hP8sZjitis
+	VeYoa4RUNISWH8nCN0grCnplhxoRZ/bPPx3BGjXslDGiVLfxOWlut09PDzxNnR5UqTSfOkC7B+0
+	6fU4smeVuQ44w1zVV5hYIwmiwtHDA1PA1OTdP8=
+X-Google-Smtp-Source: AGHT+IHkWc8z+1xTqfr6RJDMY4BcUWdUqKw6o2ECW5HvusjoalWjKeML6JPCAbs/M1LUcK6l6vjMuNB824YFNjkP4LM=
+X-Received: by 2002:a05:6402:26c3:b0:62f:2afa:60e6 with SMTP id
+ 4fb4d7f45d1cf-62f83c3f396mr486555a12.7.1758068227086; Tue, 16 Sep 2025
+ 17:17:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 01/10] PCI: Avoid saving error values for config space
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        alex.williamson@redhat.com, schnelle@linux.ibm.com,
-        mjrosato@linux.ibm.com
-References: <20250916180958.GA1797871@bhelgaas>
-Content-Language: en-US
-From: Farhan Ali <alifm@linux.ibm.com>
-In-Reply-To: <20250916180958.GA1797871@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=OMsn3TaB c=1 sm=1 tr=0 ts=68c9c1e5 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8
- a=VnNF1IyMAAAA:8 a=mDscfjHxmXLP5G7XJkoA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: t1caYAftEQESRlrEzyWB9245QaQMwIUY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTEzMDAwMSBTYWx0ZWRfX7uy6lqZco1w+
- t1kZYAYu0+hYrVc26mwhBiCdLOhuiK5LfTEc/F9t0xXll+UUqB2yCEiqdOqVBddVHMheJiusVpn
- TmIQkJ2hYe2H6xJeghrRYTppvt2eDDNKJu/hqlvN6ih7oYvnap5ZqGgBwkMAj6KgOU3tUToDBJk
- j16XLwtC1aAtP+N9MSoALqvEO7UZJd0MRro+703/AUDws13NyUmkN2nnNMJ1wWbhc9EYPc2+RsO
- ySt7E3jAtzj80gYOwsQX+I7am3ColXMkmr7dqbxpYPaHjpFw+la8afr6Drgn2vlpiYxXlpT89G3
- cSV37zi+uCgtMyEfJohd/V9NNMQZ+KJKeoiaCWpJQMYEGwyUbDGMp5C4e+wApznKiiMazPJ9R0P
- yUhslYd1
-X-Proofpoint-GUID: t1caYAftEQESRlrEzyWB9245QaQMwIUY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-16_02,2025-09-16_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 suspectscore=0 spamscore=0 priorityscore=1501 adultscore=0
- impostorscore=0 clxscore=1015 malwarescore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509130001
+References: <1eb2266f4408798a55bda00cb04545a3203aa572.1755012943.git.lorenzo.stoakes@oracle.com>
+ <20250916194915.1395712-1-clm@meta.com>
+In-Reply-To: <20250916194915.1395712-1-clm@meta.com>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Wed, 17 Sep 2025 02:16:54 +0200
+X-Gm-Features: AS18NWCoF9toVvfO2cO2nt5EYzoV_mx2NXf7z13bcCNBsYM4N3TAXw98oK0bZL0
+Message-ID: <CAGudoHE1GfgM-fX9pE-McqXH3dowPRoSPU9yHiGi+a3mk1hwnw@mail.gmail.com>
+Subject: Re: [PATCH 02/10] mm: convert core mm to mm_flags_*() accessors
+To: Chris Mason <clm@meta.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, "David S . Miller" <davem@davemloft.net>, 
+	Andreas Larsson <andreas@gaisler.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Kees Cook <kees@kernel.org>, 
+	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+	Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, David Rientjes <rientjes@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Oleg Nesterov <oleg@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, 
+	Peter Xu <peterx@redhat.com>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
+	Matthew Wilcox <willy@infradead.org>, linux-s390@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 9/16/2025 11:09 AM, Bjorn Helgaas wrote:
-> On Thu, Sep 11, 2025 at 11:32:58AM -0700, Farhan Ali wrote:
->> The current reset process saves the device's config space state before
->> reset and restores it afterward. However, when a device is in an error
->> state before reset, config space reads may return error values instead of
->> valid data. This results in saving corrupted values that get written back
->> to the device during state restoration.
->>
->> Avoid saving the state of the config space when the device is in error.
->> While restoring we only restorei the state that can be restored through
->> kernel data such as BARs or doesn't depend on the saved state.
->>
->> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
->> ---
->>   drivers/pci/pci.c      | 29 ++++++++++++++++++++++++++---
->>   drivers/pci/pcie/aer.c |  5 +++++
->>   drivers/pci/pcie/dpc.c |  5 +++++
->>   drivers/pci/pcie/ptm.c |  5 +++++
->>   drivers/pci/tph.c      |  5 +++++
->>   drivers/pci/vc.c       |  5 +++++
->>   6 files changed, 51 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index b0f4d98036cd..4b67d22faf0a 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -1720,6 +1720,11 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
->>   	struct pci_cap_saved_state *save_state;
->>   	u16 *cap;
->>   
->> +	if (!dev->state_saved) {
->> +		pci_warn(dev, "Not restoring pcie state, no saved state");
->> +		return;
-Hi Bjorn
-
-Thanks for taking a look.
-
-> Seems like a lot of messages.  If we want to warn about this, why
-> don't we do it once in pci_restore_state()?
-
-I thought providing messages about which state is not restored would be 
-better and meaningful as we try to restore some of the state. But if the 
-preference is to just have a single warn message in pci_restore_state 
-then I can update it. (would also like to hear if Alex has any 
-objections to that)
-
+On Wed, Sep 17, 2025 at 1:57=E2=80=AFAM Chris Mason <clm@meta.com> wrote:
 >
-> I guess you're making some judgment about what things can be restored
-> even when !dev->state_saved.  That seems kind of hard to maintain in
-> the future as other capabilities are added.
+> On Tue, 12 Aug 2025 16:44:11 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracl=
+e.com> wrote:
 >
-> Also seems sort of questionable if we restore partial state and keep
-> using the device as if all is well.  Won't the device be in some kind
-> of inconsistent, unpredictable state then?
+> > As part of the effort to move to mm->flags becoming a bitmap field, con=
+vert
+> > existing users to making use of the mm_flags_*() accessors which will, =
+when
+> > the conversion is complete, be the only means of accessing mm_struct fl=
+ags.
+> >
+> > This will result in the debug output being that of a bitmap output, whi=
+ch
+> > will result in a minor change here, but since this is for debug only, t=
+his
+> > should have no bearing.
+> >
+> > Otherwise, no functional changes intended.
+> >
+> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 >
-> Bjorn
+> [ ... ]
+>
+> > diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+> > index 25923cfec9c6..17650f0b516e 100644
+> > --- a/mm/oom_kill.c
+> > +++ b/mm/oom_kill.c
+>
+> [ ... ]
+>
+> > @@ -1251,7 +1251,7 @@ SYSCALL_DEFINE2(process_mrelease, int, pidfd, uns=
+igned int, flags)
+> >        * Check MMF_OOM_SKIP again under mmap_read_lock protection to en=
+sure
+> >        * possible change in exit_mmap is seen
+> >        */
+> > -     if (!test_bit(MMF_OOM_SKIP, &mm->flags) && !__oom_reap_task_mm(mm=
+))
+> > +     if (mm_flags_test(MMF_OOM_SKIP, mm) && !__oom_reap_task_mm(mm))
+> >               ret =3D -EAGAIN;
+> >       mmap_read_unlock(mm);
+> >
+>
+> Hi Lorzeno, I think we lost a ! here.
+>
+> claude found enough inverted logic in moved code that I did a new run wit=
+h
+> a more explicit prompt for it, but this was the only new hit.
+>
 
-I tried to avoid restoring state that explicitly needed to save the 
-state. For some of the other capabilities, that didn't explicitly store 
-the state, I tried to keep the same behavior. This is based on the 
-discussion with Alex 
-(https://lore.kernel.org/all/20250826094845.517e0fa7.alex.williamson@redhat.com/). 
-Also AFAIU currently the dev->state_saved is set to true as long as we 
-save the first 64 bytes of config space (pci_save_state), so we could 
-for example fail to save the PCIe state, but while restoring can 
-continue to restore other capabilities like pasid.
+I presume conversion was done mostly manually?
 
-At the very least I would like to avoid corrupting the BAR registers and 
-restore msix (arch_restore_msi_irqs) to get devices into a functional 
-state after a reset. I am open to suggestions on how we can do this.
+The way(tm) is to use coccinelle.
 
-Would also like to get your feedback on patch 3 and the approach there 
-of having a new flag in struct pci_slot.
+I whipped out the following real quick and results look good:
 
-Thanks
-Farhan
+@@
+expression mm, bit;
+@@
 
+- test_bit(bit, &mm->flags)
++ mm_flags_test(bit, mm)
+
+$ spatch --sp-file mmbit.cocci mm/oom_kill.c
+[snip]
+@@ -892,7 +892,7 @@ static bool task_will_free_mem(struct ta
+         * This task has already been drained by the oom reaper so there ar=
+e
+         * only small chances it will free some more
+         */
+-       if (test_bit(MMF_OOM_SKIP, &mm->flags))
++       if (mm_flags_test(MMF_OOM_SKIP, mm))
+                return false;
+
+        if (atomic_read(&mm->mm_users) <=3D 1)
+@@ -1235,7 +1235,7 @@ SYSCALL_DEFINE2(process_mrelease, int, p
+                reap =3D true;
+        else {
+                /* Error only if the work has not been done already */
+-               if (!test_bit(MMF_OOM_SKIP, &mm->flags))
++               if (!mm_flags_test(MMF_OOM_SKIP, mm))
+                        ret =3D -EINVAL;
+        }
+        task_unlock(p);
+@@ -1251,7 +1251,7 @@ SYSCALL_DEFINE2(process_mrelease, int, p
+         * Check MMF_OOM_SKIP again under mmap_read_lock protection to ensu=
+re
+         * possible change in exit_mmap is seen
+         */
+-       if (!test_bit(MMF_OOM_SKIP, &mm->flags) && !__oom_reap_task_mm(mm))
++       if (!mm_flags_test(MMF_OOM_SKIP, mm) && !__oom_reap_task_mm(mm))
+                ret =3D -EAGAIN;
+        mmap_read_unlock(mm);
 
