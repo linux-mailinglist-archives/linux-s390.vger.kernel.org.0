@@ -1,187 +1,237 @@
-Return-Path: <linux-s390+bounces-13353-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-13356-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9E8AB7FB71
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Sep 2025 16:05:36 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60DDDB7FC17
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Sep 2025 16:07:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 158591885077
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Sep 2025 14:00:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3F1A02A57B6
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Sep 2025 14:02:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A46BA21B185;
-	Wed, 17 Sep 2025 14:00:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 542A124C66F;
+	Wed, 17 Sep 2025 14:01:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BL6eQ5z9"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="isM+9kPQ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="579HNYwo"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CBCA17996;
-	Wed, 17 Sep 2025 14:00:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7412309B0;
+	Wed, 17 Sep 2025 14:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758117620; cv=none; b=Jy8w7efAFUEQT/kZ/1E85xygn6eCEAjd82F/bzW2tRRDPTgFWpuIMJx44x1zoXGSBmw3P4y7XeeUcia3TG60MdLQPYTmtWtj0pcRkkI/6h5iRbTBEcD+q+6WtYB2EGhNwtq3Pn+Q1optCuBDcz9mUB84Bz2FmSGE/ObnGu0oSms=
+	t=1758117717; cv=none; b=Mdeu9Q/ejbgtTHxLHIaYAiTVqI+/KAK0dX+gmLkYxrL/+llf+VVjwppQ0x21h4uYxRW6V90OgUF9YB0d5zzmfRDhR9nKmrl+jUU+CifHAf1B04wn0NWOivs3XzeVCIYMA9AlXFWGU5CYXWsg+FvwQN1LXxdLwJfN70V5LF3nyyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758117620; c=relaxed/simple;
-	bh=qDELSBPbewW9UViHYPERnbJvNMt3pjAMGezfHZON4es=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qo7LlsOMPfMaFnqDlxNuZkxnyPF7+Mh+0bysJm/fJM5tM8CX5a62GDMG6qdsJFT/8YIkQt1K+88TAqH3u+ecb1YfRTHOx5Z24DlYwGgTT0Rvr5XnWLa9DFe0LgD0Qsti+DuLwzeWOPDCE9T7puQoarqyLi02FbhU1Fx+ZsGVleg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BL6eQ5z9; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58H8nO5e027677;
-	Wed, 17 Sep 2025 14:00:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=zGqTf3
-	RGn/itpBlrDNp495hY7ceeC4TUkBQSJnQnLD0=; b=BL6eQ5z9cL5OcBpMvg5uxY
-	xqCQjhzhPWZhuV2MBGAtGBDy9CknDKV+CUfBIPwrwC/J2+SgSIwDDrGjmWbv6dwq
-	Ha3zdm5juzaPmqoeJ5lLGb0lCeEHBHWRi2o9dOvtSN8Mi15RdLze1p59y2YZK9B1
-	B48PeIZ/5bwcFaU7dl+nQmJEZvxOBc0PqGiPDAJgfSGwuwOCXH2ebmPpywr9mBQn
-	Dc66ig+oImpQt8Mb+ka9+ldBXgea8uETb9p6qencVspD7NUnqgsJXfmYZjcyC+UU
-	x40fj8WLTITIa9L5II7PWMsyx9HpF4YxVMFXtBhMFX25t/kUYGN/OjvfdGFHVzKg
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 497g4p45b1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Sep 2025 14:00:16 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58HB1ssU027341;
-	Wed, 17 Sep 2025 14:00:08 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 495men9fpd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Sep 2025 14:00:08 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58HE04gr34407022
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 17 Sep 2025 14:00:04 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4AFF820043;
-	Wed, 17 Sep 2025 14:00:04 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0B9DA20040;
-	Wed, 17 Sep 2025 14:00:04 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.152.224.66])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 17 Sep 2025 14:00:03 +0000 (GMT)
+	s=arc-20240116; t=1758117717; c=relaxed/simple;
+	bh=PrQrNrZPLANUyTQvdEFoleoOlkRGgqFa1qlxQLnhL0w=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=mmlrus0ROeMz8yw6jpweYX+Th0MRnQmtjMK8qauDBVyqBiOEVqE/5MIm3MEYT1Cje6L2Z70MJj6bg0o0IT4khLavEQyc3aKrm5GSjFYUp6g50RhOYc2nDkKRr/PQVwUsJD15jLT/JJCE9sK5A2+TVn3uSU17xDxtqQ5I97/1IZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=isM+9kPQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=579HNYwo; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1758117713;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=HGi0V9974FREoLRsYHUwYZzsytUn6wSTNusjibrKdzs=;
+	b=isM+9kPQ4l7zxtX8UulQny4upPIBzL+iGzW+OuVMgrsoY1nvlFEmKYevQtn5yhFgrWt/pU
+	CRY2Aa35gbK/nUWa3/39YRMDaQHgzQ1QidjrXgu/tgl+RGOLYVyp4SaHFVH+xZCtE8ZlOm
+	5oakFizMU6n/DhZ0Nl+fDNcgh7+mO5wK7yzVS7ePMQOOD530S871KCmjCBSkqwk/NQHNNd
+	LEjug4R7c+67WGPSiBh3M4nsyDgbkJE6nrRNgU8YMu+HngkNbzzA+VIUweABHZGiniecdN
+	udUH0Ub97fUxgeucajFmJ000De2phTWRSaZFD2TuGb7TnA6+jEiTWF+lsjyS2w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1758117713;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=HGi0V9974FREoLRsYHUwYZzsytUn6wSTNusjibrKdzs=;
+	b=579HNYwobyuJgFBlYt8Ppl2Q6NCc+Xqj5++LG7IYiU6qjT2rfZs/Zi0bQ9HFGBmzfSqy6o
+	iFdQDKa+SFEPfaDw==
+Subject: [PATCH v3 00/36] sparc64: vdso: Switch to the generic vDSO library
 Date: Wed, 17 Sep 2025 16:00:02 +0200
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Heiko Carstens <hca@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, frankja@linux.ibm.com, nsg@linux.ibm.com,
-        nrb@linux.ibm.com, seiden@linux.ibm.com, schlameuss@linux.ibm.com,
-        svens@linux.ibm.com, agordeev@linux.ibm.com, david@redhat.com,
-        gerald.schaefer@linux.ibm.com
-Subject: Re: [PATCH v2 08/20] KVM: s390: KVM page table management
- functions: allocation
-Message-ID: <20250917160002.778b1905@p-imbrenda>
-In-Reply-To: <976f2cf6-e56f-4089-923d-29098746018b@de.ibm.com>
-References: <20250910180746.125776-1-imbrenda@linux.ibm.com>
-	<20250910180746.125776-9-imbrenda@linux.ibm.com>
-	<20250916162653.27229G04-hca@linux.ibm.com>
-	<20250916184737.47224f56@p-imbrenda>
-	<63e8c905-28b1-4e1f-be77-e0789bd75692@de.ibm.com>
-	<20250916190514.1a3082bd@p-imbrenda>
-	<15f451d9-ecb3-4a82-9b9a-2de64b93944d@de.ibm.com>
-	<20250916173644.27229Kcc-hca@linux.ibm.com>
-	<20250917072733.7515Af5-hca@linux.ibm.com>
-	<20250917132556.4814fe98@p-imbrenda>
-	<20250917123006.7515C59-hca@linux.ibm.com>
-	<20250917151124.1a53b0a6@p-imbrenda>
-	<976f2cf6-e56f-4089-923d-29098746018b@de.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+Message-Id: <20250917-vdso-sparc64-generic-2-v3-0-3679b1bc8ee8@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE2MDIwNCBTYWx0ZWRfX7AzIJthoaFpE
- kEMezcsjUYTlYBe4Y8r2fxD5DjlNwrvGXz7gNkuxTUCHhGueL5FtvNicmDNq7CqbxND0Ygx1eO5
- /agP263/loWG3H64H6IbcxBasqJGtlhIbBH/EUEffrrM8XfDlneHKyf7H3/rhrbMOpYs7zB+z4o
- 1D/MEkfOQ9O4AkZ6RqgrouM7rKoZTMdAYLvev2P3a4Rkdc5u3gT7eA3kTVU4H7TiqnBO7O5H0ku
- +0CANkv33SVm7kUAXPhByWaf969GZXC/Gze5IbnHI84qbvg/6G72KiCmDSCNtsoCAkWulrvm8Nf
- bCdLK9SnOd0o8l+TP39VkRAgrzQp7bEZQpTIBFQNOTBph7ayws4wmrCBrJmcQinkA1TNaz0NV1/
- M+9VzOEp
-X-Proofpoint-ORIG-GUID: LSka-GKLP6UwJOhsi4ZFvjthZiVBqkmt
-X-Proofpoint-GUID: LSka-GKLP6UwJOhsi4ZFvjthZiVBqkmt
-X-Authority-Analysis: v=2.4 cv=cNzgskeN c=1 sm=1 tr=0 ts=68cabef0 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=kj9zAlcOel0A:10 a=yJojWOMRYYMA:10 a=VnNF1IyMAAAA:8 a=jfXe4LG6N2JJ2hfJZe0A:9
- a=CjuIK1q_8ugA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-17_01,2025-09-17_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 clxscore=1015 spamscore=0 bulkscore=0 malwarescore=0
- adultscore=0 priorityscore=1501 impostorscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509160204
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAOK+ymgC/3XNQQqDMBCF4atI1p0SJ4narnqP0oUmowZKlMQGi
+ 3j3RqEUCi7/gffNwgJ5S4Fds4V5ijbYwaUQp4zpvnYdgTWpGXJUvESEaMIAYay9LiR05NJcAwK
+ qFomrii6oWRqPnlo77/D9kbq3YRr8e/8T8+36JeURGXPgQKIsatEYlCa/Pa17TX5wdj4bYhsb8
+ UdVuTqkMFGNatuKFyUKWf5T67p+AEyRuJ0LAQAA
+X-Change-ID: 20250722-vdso-sparc64-generic-2-25f2e058e92c
+To: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+ Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>, 
+ Andreas Larsson <andreas@gaisler.com>, Nick Alcock <nick.alcock@oracle.com>, 
+ John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+ Shuah Khan <shuah@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, 
+ Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>, 
+ Shannon Nelson <sln@onemain.com>
+Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
+ linux-mips@vger.kernel.org, linux-s390@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+ Arnd Bergmann <arnd@kernel.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1758117712; l=6775;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=PrQrNrZPLANUyTQvdEFoleoOlkRGgqFa1qlxQLnhL0w=;
+ b=rhvxKL65llIUv4MFPStdUaxOuEEw6BGbfC6VZC3v4dCQdq+8U8DPKTlIArAS9aZ+N1qJ7cLLA
+ Aa6EBs+7LpCDKyKWAM2Y6P4XpY3tF7YJ6gLKjXN+vA3qGKiEOoR0D5u
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-On Wed, 17 Sep 2025 15:26:33 +0200
-Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+The generic vDSO provides a lot common functionality shared between
+different architectures. SPARC is the last architecture not using it,
+preventing some necessary code cleanup.
 
-> Am 17.09.25 um 15:11 schrieb Claudio Imbrenda:
-> > On Wed, 17 Sep 2025 14:30:06 +0200
-> > Heiko Carstens <hca@linux.ibm.com> wrote:
-> >   
-> >> On Wed, Sep 17, 2025 at 01:25:56PM +0200, Claudio Imbrenda wrote:  
-> >>> On Wed, 17 Sep 2025 09:27:33 +0200
-> >>> Heiko Carstens <hca@linux.ibm.com> wrote:
-> >>>      
-> >>>> On Tue, Sep 16, 2025 at 07:36:44PM +0200, Heiko Carstens wrote:  
-> >>>>> On Tue, Sep 16, 2025 at 07:06:06PM +0200, Christian Borntraeger wrote:  
-> >>>>>>
-> >>>>>> Am 16.09.25 um 19:05 schrieb Claudio Imbrenda:
-> >>>>>>        
-> >>>>>>>>> I think GFP_ATOMIC actually gives more guarantees?  
-> >>>>>>>>
-> >>>>>>>> In real life GFP_ATOMIC can fail, GFP_KERNEL does not.All gfp allocation failures
-> >>>>>>>> are usually the atomic ones.  
-> >>>>>>>
-> >>>>>>> interesting... then I guess I need GFP_KERNEL | GFP_ATOMIC ?  
-> >>>>>>
-> >>>>>> No. ATOMIC always means: can fail.  
-> >>>
-> >>> my issue is that GFP_KERNEL can sleep, and this allocation is sometimes
-> >>> called from atomic contexts (e.g. while holding spinlocks)
-> >>>
-> >>> the right way to do this would be with mempools, to allocate memory
-> >>> (and potentially sleep) when we are not in atomic context, and use it
-> >>> whenever needed. this is on my to-do list for the future, but right now
-> >>> I'd like to avoid having to refactor a ton of code.  
-> >>
-> >> I doubt this is accetable even for an intermediate solution. As soon
-> >> as the host is under memory pressure and starts doing I/O to free up
-> >> memory, you will end up in -ENOMEM situations for simple guest page
-> >> allocations.
-> >>
-> >> What happens with a guest in such a situation? Is this gracefully
-> >> handled without that the guest is terminated?  
-> > 
-> > well, we return -ENOMEM to userspace (and qemu will probably kill the
-> > guest)
-> > 
-> > but if we can't even allocate 16kB, probably we're already in a pretty
-> > bad situation
-> > 
-> > if you think this is not acceptable, I guess I'll have to implement
-> > mempools  
-> 
-> This is not acceptable. 16k atomic allocations are pretty much guaranteed
-> to fail after a while of high workload.
-> What are the callers of this allocation?
+Make use of the generic infrastructure.
 
-literally anything that touches the gmap page tables, since we need to
-hold kvm->mmu_lock, which is an rw spinlock
+Follow-up to and replacement for Arnd's SPARC vDSO removal patches:
+https://lore.kernel.org/lkml/20250707144726.4008707-1-arnd@kernel.org/
 
-I'll use mempools
+Tested on a Niagara T4 and QEMU.
+
+This has a semantic conflict with my series "vdso: Reject absolute
+relocations during build". The last patch of this series expects all users
+of the generic vDSO library to use the vdsocheck tool.
+This is not the case (yet) for SPARC64. I do have the patches for the
+integration, the specifics will depend on which series is applied first.
+
+Based on tip/timers/vdso.
+
+[0] https://lore.kernel.org/lkml/20250812-vdso-absolute-reloc-v4-0-61a8b615e5ec@linutronix.de/
+
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+Changes in v3:
+- Allocate vDSO data pages dynamically (and lots of preparations for that)
+- Drop clock_getres()
+- Fix 32bit clock_gettime() syscall fallback
+- Link to v2: https://lore.kernel.org/r/20250815-vdso-sparc64-generic-2-v2-0-b5ff80672347@linutronix.de
+
+Changes in v2:
+- Rebase on v6.17-rc1
+- Drop RFC state
+- Fix typo in commit message
+- Drop duplicate 'select GENERIC_TIME_VSYSCALL'
+- Merge "sparc64: time: Remove architecture-specific clocksource data" into the
+  main conversion patch. It violated the check in __clocksource_register_scale()
+- Link to v1: https://lore.kernel.org/r/20250724-vdso-sparc64-generic-2-v1-0-e376a3bd24d1@linutronix.de
+
+---
+Arnd Bergmann (1):
+      clocksource: remove ARCH_CLOCKSOURCE_DATA
+
+Thomas Weißschuh (35):
+      selftests: vDSO: vdso_test_correctness: Handle different tv_usec types
+      arm64: vDSO: getrandom: Explicitly include asm/alternative.h
+      arm64: vDSO: gettimeofday: Explicitly include vdso/clocksource.h
+      arm64: vDSO: compat_gettimeofday: Add explicit includes
+      ARM: vdso: gettimeofday: Add explicit includes
+      powerpc/vdso/gettimeofday: Explicitly include vdso/time32.h
+      powerpc/vdso: Explicitly include asm/cputable.h and asm/feature-fixups.h
+      LoongArch: vDSO: Explicitly include asm/vdso/vdso.h
+      MIPS: vdso: Add include guard to asm/vdso/vdso.h
+      MIPS: vdso: Explicitly include asm/vdso/vdso.h
+      random: vDSO: Add explicit includes
+      vdso/gettimeofday: Add explicit includes
+      vdso/helpers: Explicitly include vdso/processor.h
+      vdso/datapage: Remove inclusion of gettimeofday.h
+      vdso/datapage: Trim down unnecessary includes
+      random: vDSO: trim vDSO includes
+      random: vDSO: remove ifdeffery
+      random: vDSO: split out datapage update into helper functions
+      random: vDSO: only access vDSO datapage after random_init()
+      s390/time: Set up vDSO datapage later
+      vdso/datastore: Reduce scope of some variables in vvar_fault()
+      vdso/datastore: Drop inclusion of linux/mmap_lock.h
+      vdso/datastore: Map pages through struct page
+      vdso/datastore: Allocate data pages dynamically
+      sparc64: vdso: Link with -z noexecstack
+      sparc64: vdso: Remove obsolete "fake section table" reservation
+      sparc64: vdso: Replace code patching with runtime conditional
+      sparc64: vdso: Move hardware counter read into header
+      sparc64: vdso: Move syscall fallbacks into header
+      sparc64: vdso: Introduce vdso/processor.h
+      sparc64: vdso: Switch to the generic vDSO library
+      sparc64: vdso2c: Drop sym_vvar_start handling
+      sparc64: vdso2c: Remove symbol handling
+      sparc64: vdso: Implement clock_gettime64()
+      clocksource: drop include of asm/clocksource.h from linux/clocksource.h
+
+ arch/arm/include/asm/vdso/gettimeofday.h           |   2 +
+ arch/arm64/include/asm/vdso/compat_gettimeofday.h  |   3 +
+ arch/arm64/include/asm/vdso/gettimeofday.h         |   2 +
+ arch/arm64/kernel/vdso/vgetrandom.c                |   2 +
+ arch/loongarch/kernel/process.c                    |   1 +
+ arch/loongarch/kernel/vdso.c                       |   1 +
+ arch/mips/include/asm/vdso/vdso.h                  |   5 +
+ arch/mips/kernel/vdso.c                            |   1 +
+ arch/powerpc/include/asm/vdso/gettimeofday.h       |   1 +
+ arch/powerpc/include/asm/vdso/processor.h          |   3 +
+ arch/s390/kernel/time.c                            |   4 +-
+ arch/sparc/Kconfig                                 |   3 +-
+ arch/sparc/include/asm/clocksource.h               |   9 -
+ arch/sparc/include/asm/processor.h                 |   3 +
+ arch/sparc/include/asm/processor_32.h              |   2 -
+ arch/sparc/include/asm/processor_64.h              |  25 --
+ arch/sparc/include/asm/vdso.h                      |   2 -
+ arch/sparc/include/asm/vdso/clocksource.h          |  10 +
+ arch/sparc/include/asm/vdso/gettimeofday.h         | 184 ++++++++++
+ arch/sparc/include/asm/vdso/processor.h            |  41 +++
+ arch/sparc/include/asm/vdso/vsyscall.h             |  10 +
+ arch/sparc/include/asm/vvar.h                      |  75 ----
+ arch/sparc/kernel/Makefile                         |   1 -
+ arch/sparc/kernel/time_64.c                        |   6 +-
+ arch/sparc/kernel/vdso.c                           |  69 ----
+ arch/sparc/vdso/Makefile                           |   8 +-
+ arch/sparc/vdso/vclock_gettime.c                   | 380 ++-------------------
+ arch/sparc/vdso/vdso-layout.lds.S                  |  26 +-
+ arch/sparc/vdso/vdso.lds.S                         |   2 -
+ arch/sparc/vdso/vdso2c.c                           |  24 --
+ arch/sparc/vdso/vdso2c.h                           |  45 +--
+ arch/sparc/vdso/vdso32/vdso32.lds.S                |   4 +-
+ arch/sparc/vdso/vma.c                              | 274 +--------------
+ drivers/char/random.c                              |  75 ++--
+ include/linux/clocksource.h                        |   8 -
+ include/linux/vdso_datastore.h                     |   6 +
+ include/vdso/datapage.h                            |  23 +-
+ include/vdso/helpers.h                             |   1 +
+ init/main.c                                        |   2 +
+ kernel/time/Kconfig                                |   4 -
+ lib/vdso/datastore.c                               |  73 ++--
+ lib/vdso/getrandom.c                               |   3 +
+ lib/vdso/gettimeofday.c                            |  17 +
+ .../testing/selftests/vDSO/vdso_test_correctness.c |   8 +-
+ 44 files changed, 451 insertions(+), 997 deletions(-)
+---
+base-commit: 5f84f6004e298bd41c9e4ed45c18447954b1dce6
+change-id: 20250722-vdso-sparc64-generic-2-25f2e058e92c
+
+Best regards,
+-- 
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+
 
