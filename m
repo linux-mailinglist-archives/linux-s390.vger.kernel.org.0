@@ -1,195 +1,137 @@
-Return-Path: <linux-s390+bounces-13394-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-13396-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8DBCB7FF12
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Sep 2025 16:25:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DDB11B80430
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Sep 2025 16:52:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1320C721F02
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Sep 2025 14:17:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CE17E1895446
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Sep 2025 14:51:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78D1B299937;
-	Wed, 17 Sep 2025 14:11:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qzAyb9U+"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 539312D6E78;
+	Wed, 17 Sep 2025 14:50:38 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5396E2BE635;
-	Wed, 17 Sep 2025 14:11:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 143BB26159E;
+	Wed, 17 Sep 2025 14:50:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758118308; cv=none; b=XfOzKW8I3YNiVC1XBredvU/upLtIll1i3mCoHj2eidlnr61UMgi+CiFaH4gJOQRC6tk1kE3fpsZ9eQtSTGiraRLrClLtVVZ5ZJ2gbJH3SiOtDinLeT2XZQIQ/j9EYopE0kuUzaY05nB9xudXqRjSCVR1tNq5YCzJGhij1JxVzTA=
+	t=1758120638; cv=none; b=lhKnfr5p4TvBtQxB0vEj9EEa46VkP375qVEKKJOImw3xnsIWQdDWlKRQfix9JDArVF8nPA0vlDmf5E6IrHPT+G0DNsjl8Kxpc7paX9AIi6cl0Nspr9Vamg6zIsMIXRZUA5xAcyr7Ikr6RKdZxu+Vg/s/SxdbzmdMjVPVc08La30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758118308; c=relaxed/simple;
-	bh=gqnD2/3vhtL82Q+nA6H3e7QVs2CpSfkKy3BxgcsEu9I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H2Lt3tK0u2gjdFwJVoP/DgoOoR6V8X7T95ctNPErJehjsowiGH/dpj1hGm15ZQuahLXTUWYRbqTZ10oQExLdZCodZ/Wez+kc4cPBoKaDLr8MEhxfumMRI8ZXLrZVT/cu75t7Aq812axJAUF0KgxYgDh9YNuo/Ab525MzxMhNRZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qzAyb9U+; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58H9paV7012458;
-	Wed, 17 Sep 2025 14:11:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=0r74v2
-	UNdjomrzQXMZsZtwojDuSco62SsAYMTh8zRFY=; b=qzAyb9U+vLJMi/NAzHPeRn
-	Iv/mXQoKJfrll9dn5QPvyJ8ej6pgZB4BjKln5vOL4JCFpbobSRZxeP3orSPARbtC
-	paLZJjN/LFiYuGWHJ4jOEj+ivphEG12Ov/kCFXzSAeDsqU2VrB3JPQR1nl2ZOooy
-	Ibn422Yencg/V5dGFesa0iKWTDUpJPjBjeQWiQs1aMEOJEJdrPkes1C4xHdqGn5C
-	U/udQlcm34Ec2moNiCj7nkob+Sn/1BBkYOoQuadCvtCnBicJRkTVhoKQRUh4SBrN
-	07Vyf53VND05eiDxM+mL4jKHVJ+VBPa7SIw8+Yyr3KhDOy2JWJkoClcGpVu0Ae0g
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 497g4j47k2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Sep 2025 14:11:43 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58HE8O0Z027308;
-	Wed, 17 Sep 2025 14:11:41 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 495men9hr4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Sep 2025 14:11:41 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58HEBbQl38928700
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 17 Sep 2025 14:11:37 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 58A7A20040;
-	Wed, 17 Sep 2025 14:11:37 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 30F7D2004D;
-	Wed, 17 Sep 2025 14:11:37 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.152.224.66])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 17 Sep 2025 14:11:37 +0000 (GMT)
-Date: Wed, 17 Sep 2025 16:11:35 +0200
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Heiko Carstens <hca@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, frankja@linux.ibm.com, nsg@linux.ibm.com,
-        nrb@linux.ibm.com, seiden@linux.ibm.com, schlameuss@linux.ibm.com,
-        svens@linux.ibm.com, agordeev@linux.ibm.com, david@redhat.com,
-        gerald.schaefer@linux.ibm.com
-Subject: Re: [PATCH v2 08/20] KVM: s390: KVM page table management
- functions: allocation
-Message-ID: <20250917161135.1645715f@p-imbrenda>
-In-Reply-To: <f63f9223-f848-4d02-91b5-f3fe85658754@de.ibm.com>
-References: <20250910180746.125776-1-imbrenda@linux.ibm.com>
-	<20250910180746.125776-9-imbrenda@linux.ibm.com>
-	<20250916162653.27229G04-hca@linux.ibm.com>
-	<20250916184737.47224f56@p-imbrenda>
-	<63e8c905-28b1-4e1f-be77-e0789bd75692@de.ibm.com>
-	<20250916190514.1a3082bd@p-imbrenda>
-	<15f451d9-ecb3-4a82-9b9a-2de64b93944d@de.ibm.com>
-	<20250916173644.27229Kcc-hca@linux.ibm.com>
-	<20250917072733.7515Af5-hca@linux.ibm.com>
-	<20250917132556.4814fe98@p-imbrenda>
-	<20250917123006.7515C59-hca@linux.ibm.com>
-	<20250917151124.1a53b0a6@p-imbrenda>
-	<976f2cf6-e56f-4089-923d-29098746018b@de.ibm.com>
-	<20250917160002.778b1905@p-imbrenda>
-	<f63f9223-f848-4d02-91b5-f3fe85658754@de.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1758120638; c=relaxed/simple;
+	bh=4Wc+7RlDyYQxsFMt1VpemfvZM7UmiTSNVLu2rV9GnqQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n+4dTZOOr3e2BinJ9Uzovtkju+2Wd/GXLQ6mex4XLWOXJnOUw3atW11Kvgvt9H2NnSL3/pnVw6JjxUfLJNC5+l3pa5l82EZzvvsg+uWyD/50tnmkpelgWvP5fso2leYjvIRqt/IjwG39k8uTGNlCw9PhFYwwgN+WYaBcAaMWhmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4cRhL8185Cz9sxm;
+	Wed, 17 Sep 2025 16:41:52 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id JixBRAxvbto3; Wed, 17 Sep 2025 16:41:52 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4cRhL76yxbz9sxl;
+	Wed, 17 Sep 2025 16:41:51 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id D0FA18B76C;
+	Wed, 17 Sep 2025 16:41:51 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id VStNY412crOA; Wed, 17 Sep 2025 16:41:51 +0200 (CEST)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 452048B767;
+	Wed, 17 Sep 2025 16:41:50 +0200 (CEST)
+Message-ID: <41d100c5-4706-400e-a61a-46b068f1bc74@csgroup.eu>
+Date: Wed, 17 Sep 2025 16:41:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Qf5mvtbv c=1 sm=1 tr=0 ts=68cac19f cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=kj9zAlcOel0A:10 a=yJojWOMRYYMA:10 a=VnNF1IyMAAAA:8 a=dAd3JmUgOnn6SWmQA4MA:9
- a=CjuIK1q_8ugA:10
-X-Proofpoint-ORIG-GUID: Ql408l8XbHX_O8WDb7kc46pVTWS3DJM1
-X-Proofpoint-GUID: Ql408l8XbHX_O8WDb7kc46pVTWS3DJM1
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE2MDIwNCBTYWx0ZWRfXzjuyv0xuH937
- pSWvokjpkdoUjsXqF1M2tA4ndCVr569aMMKepUFN4AB7MXsr/vxqAHR+xwiq35LEm7pCHhNhrG8
- ULxNlebi5LSJB11RLE6luhHI3JeVU3ZNJuc4P4ift4ThFvuphmCYUoBmtJBx3p1VkPfyvHwV+kM
- HlSeFnzT9X+2ZDyJxfO7nHGLBGsXruvaLRaS431Pyu6A51tomrUwwKDpQtVIgLrRCdaFxdQOZR6
- e3vIAEfs1JeaYd83hn8Z+jbR7mqo7K3DEbi7il4teUgcGmKHMmNWPvs/9374Nv5Lac27tbHj1OD
- 87DQX8l19wf64OMGWsdyn+HHGyj3hQ2rYDd80vz61x+xAGhkz9yPhTPGRJq8SpVz/KTFaEy/PLv
- ukLqMHDf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-17_01,2025-09-17_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 clxscore=1015 phishscore=0 suspectscore=0 adultscore=0
- priorityscore=1501 malwarescore=0 bulkscore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509160204
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 07/36] powerpc/vdso: Explicitly include asm/cputable.h
+ and asm/feature-fixups.h
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, Arnd Bergmann
+ <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>, Nick Alcock <nick.alcock@oracle.com>,
+ John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Shuah Khan <shuah@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, Russell King
+ <linux@armlinux.org.uk>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
+ Shannon Nelson <sln@onemain.com>, Nicholas Piggin <npiggin@gmail.com>
+Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linux-s390@vger.kernel.org
+References: <20250917-vdso-sparc64-generic-2-v3-0-3679b1bc8ee8@linutronix.de>
+ <20250917-vdso-sparc64-generic-2-v3-7-3679b1bc8ee8@linutronix.de>
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+Content-Language: fr-FR
+In-Reply-To: <20250917-vdso-sparc64-generic-2-v3-7-3679b1bc8ee8@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 17 Sep 2025 16:05:44 +0200
-Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 
-> Am 17.09.25 um 16:00 schrieb Claudio Imbrenda:
-> > On Wed, 17 Sep 2025 15:26:33 +0200
-> > Christian Borntraeger <borntraeger@de.ibm.com> wrote:
-> >   
-> >> Am 17.09.25 um 15:11 schrieb Claudio Imbrenda:  
-> >>> On Wed, 17 Sep 2025 14:30:06 +0200
-> >>> Heiko Carstens <hca@linux.ibm.com> wrote:
-> >>>      
-> >>>> On Wed, Sep 17, 2025 at 01:25:56PM +0200, Claudio Imbrenda wrote:  
-> >>>>> On Wed, 17 Sep 2025 09:27:33 +0200
-> >>>>> Heiko Carstens <hca@linux.ibm.com> wrote:
-> >>>>>         
-> >>>>>> On Tue, Sep 16, 2025 at 07:36:44PM +0200, Heiko Carstens wrote:  
-> >>>>>>> On Tue, Sep 16, 2025 at 07:06:06PM +0200, Christian Borntraeger wrote:  
-> >>>>>>>>
-> >>>>>>>> Am 16.09.25 um 19:05 schrieb Claudio Imbrenda:
-> >>>>>>>>           
-> >>>>>>>>>>> I think GFP_ATOMIC actually gives more guarantees?  
-> >>>>>>>>>>
-> >>>>>>>>>> In real life GFP_ATOMIC can fail, GFP_KERNEL does not.All gfp allocation failures
-> >>>>>>>>>> are usually the atomic ones.  
-> >>>>>>>>>
-> >>>>>>>>> interesting... then I guess I need GFP_KERNEL | GFP_ATOMIC ?  
-> >>>>>>>>
-> >>>>>>>> No. ATOMIC always means: can fail.  
-> >>>>>
-> >>>>> my issue is that GFP_KERNEL can sleep, and this allocation is sometimes
-> >>>>> called from atomic contexts (e.g. while holding spinlocks)
-> >>>>>
-> >>>>> the right way to do this would be with mempools, to allocate memory
-> >>>>> (and potentially sleep) when we are not in atomic context, and use it
-> >>>>> whenever needed. this is on my to-do list for the future, but right now
-> >>>>> I'd like to avoid having to refactor a ton of code.  
-> >>>>
-> >>>> I doubt this is accetable even for an intermediate solution. As soon
-> >>>> as the host is under memory pressure and starts doing I/O to free up
-> >>>> memory, you will end up in -ENOMEM situations for simple guest page
-> >>>> allocations.
-> >>>>
-> >>>> What happens with a guest in such a situation? Is this gracefully
-> >>>> handled without that the guest is terminated?  
-> >>>
-> >>> well, we return -ENOMEM to userspace (and qemu will probably kill the
-> >>> guest)
-> >>>
-> >>> but if we can't even allocate 16kB, probably we're already in a pretty
-> >>> bad situation
-> >>>
-> >>> if you think this is not acceptable, I guess I'll have to implement
-> >>> mempools  
-> >>
-> >> This is not acceptable. 16k atomic allocations are pretty much guaranteed
-> >> to fail after a while of high workload.
-> >> What are the callers of this allocation?  
-> > 
-> > literally anything that touches the gmap page tables, since we need to
-> > hold kvm->mmu_lock, which is an rw spinlock  
+
+Le 17/09/2025 à 16:00, Thomas Weißschuh a écrit :
+> The usage of ASM_FTR_IFCLR(CPU_TR_ARCH_31) requires asm/cputable.h and
+> asm/feature-fixups.h. Currently these headers are included transitively,
+> but that transitive inclusion is about to go away.
+
+Hum ...
+
+That was unexpectedly added by commit 9c7bfc2dc21e ("powerpc/64s: Make 
+POWER10 and later use pause_short in cpu_relax loops")
+
+In theory, vdso/ headers shouldn't include any headers outside of vdso/
+
+
 > 
-> So how is x86 allocating page table memory. I cant see GPF_ATOMIC or mempool over there.
+> Explicitly include the headers.
+> 
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> ---
+>   arch/powerpc/include/asm/vdso/processor.h | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/powerpc/include/asm/vdso/processor.h b/arch/powerpc/include/asm/vdso/processor.h
+> index 80d13207c5688d73954822aede2bbe2d0e05c054..42b64903bdf47cc5bd571fc3b5caed45e6358cb9 100644
+> --- a/arch/powerpc/include/asm/vdso/processor.h
+> +++ b/arch/powerpc/include/asm/vdso/processor.h
+> @@ -4,6 +4,9 @@
+>   
+>   #ifndef __ASSEMBLY__
 
-I'll check, but I think they use an RCU?
+__ASSEMBLY__ is replaced by __ASSEMBLER__ in powerpc-next in commit 
+74db6cc331b0 ("powerpc: Replace __ASSEMBLY__ with __ASSEMBLER__ in 
+non-uapi headers")
+
+>   
+> +#include <asm/cputable.h>
+> +#include <asm/feature-fixups.h>
+> +
+>   /* Macros for adjusting thread priority (hardware multi-threading) */
+>   #ifdef CONFIG_PPC64
+>   #define HMT_very_low()		asm volatile("or 31, 31, 31	# very low priority")
+> 
+
 
