@@ -1,351 +1,183 @@
-Return-Path: <linux-s390+bounces-13803-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-13806-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22965BCC396
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Oct 2025 10:52:23 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FC99BCC411
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Oct 2025 11:02:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A39F0353D13
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Oct 2025 08:52:22 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 198184E8F82
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Oct 2025 09:02:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EB8B269D06;
-	Fri, 10 Oct 2025 08:52:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C96AE25EF87;
+	Fri, 10 Oct 2025 09:02:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UI0q4ces"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FKHVvXpP"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3580425F96B;
-	Fri, 10 Oct 2025 08:52:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1E01F4176
+	for <linux-s390@vger.kernel.org>; Fri, 10 Oct 2025 09:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760086334; cv=none; b=bg2gu5NYisRbbzIermL1Znm/JaIZ17ZS/dCWLLlRckxmN3nLPI8ECzRo03jX5MFrb1/cUxkgStKMBGdE10MmKWoJo8qvwY1XRr1tB/LuCND8431A3fZqM5xrJlq1nIQgHxHkIV1mcLobcAa3W2bwtpGnZIj5T1WMBxAclBNXyCo=
+	t=1760086967; cv=none; b=pM32WnksQuzVvVglQiqtJn1FzTn93GQkL2EAGPwBS/TbV/azautZwNAWzh8Bq9SIx+AQ4ydbFxPcHFlsfm3v6tPRe7YahzTJW9FcnFZiEUmSK5JrhjYaj/IdQ2T5vP6diqauitI4He0v28ieep5J11iYvrvdOQ07RBvauiQJQ7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760086334; c=relaxed/simple;
-	bh=mYOiOTMrqUu6itztQQgYeopmr/ZphGWC2fdQY4fCjrI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BmqhpdEFR4QwuZJe8adkyLsgFsCN7N5OcknFhgyn2Ox08Zh/+FgmR8yF/wPKshtB7SA4FIpVe0KY/Moaw4+ZHczhctm+HM1dQmgVYdetELIh5ILbQprVxpDF7MgNj3QcGIMIpulzQ9w/QbDUZ/Clwm0EWRqyOJfX09OW602liyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UI0q4ces; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 599Ksa5R031169;
-	Fri, 10 Oct 2025 08:52:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=KQ/aGM9rH94UftiKI
-	ale0JIwz3RTAt1rdgKxSr6lQpQ=; b=UI0q4cesThQ2CNy40uv/IG7muqFRSOxJ0
-	ib4m3/7/pIDWBf6vU4Sgt3KZGQMi1YPGGPc+j5QMIO+5pX6IcqKfi8UKKa6y6hfc
-	Qn0TFwH7uCVRQxevaMLfq+Ap8uQzn++VCRUjF2vai3Y19QOueKAGxFPhuFtypqjm
-	mP8Th08nEQutshbKV/a64pZAyl3VlcmM16NSZhtSwJoRqlAhcPzPXpkNjtTBaHtM
-	dJL0NxExnBzKURxuAwDyd72doGI/CAfrGluOUqDh3T3B2sd+4OrXVtPT/w55So1+
-	uED4M2ElaS/6GqI+kxkNtaqQ4MbGS0E50/qZJwMJ5tlwOlxTrfQug==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49nv81sfxr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 10 Oct 2025 08:52:06 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59A80RPO020979;
-	Fri, 10 Oct 2025 08:52:06 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 49nv9n109m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 10 Oct 2025 08:52:06 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59A8q2uT29557378
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 10 Oct 2025 08:52:02 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0C9182008C;
-	Fri, 10 Oct 2025 08:52:02 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CA8D620091;
-	Fri, 10 Oct 2025 08:52:01 +0000 (GMT)
-Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 10 Oct 2025 08:52:01 +0000 (GMT)
-From: Sumanth Korikkar <sumanthk@linux.ibm.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>, linux-mm <linux-mm@kvack.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>
-Subject: [PATCH v3 4/4] mm/memory_hotplug: Remove MEM_PREPARE_ONLINE/MEM_FINISH_OFFLINE notifiers
-Date: Fri, 10 Oct 2025 10:51:47 +0200
-Message-ID: <20251010085147.2175918-5-sumanthk@linux.ibm.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20251010085147.2175918-1-sumanthk@linux.ibm.com>
-References: <20251010085147.2175918-1-sumanthk@linux.ibm.com>
+	s=arc-20240116; t=1760086967; c=relaxed/simple;
+	bh=zQ1wDzEbXc08xJJfoVWzQ9v2/JgPYXXMmtNl8WK51RM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XQx+0PcZ0owpLrrJ33xAChSx0rPLaUXRSMcO6GRj9+H+WvarqbQDqoD9ps5ZSJKHtoDKt/v4Qu1oRUIcumqjTcX864KpeYD61PEFSSQVQOsq4PDsNScEZc/U3p6g0riXTa1c4eFo32Qk+DudVJ3c5ZmeVg7/zbp6z9AMp0r6mME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FKHVvXpP; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1760086964;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=HW5td0SWXdCvZ05NdV55x6S0j9wHlZDx+Tv+YWgnDiE=;
+	b=FKHVvXpPkUklVX0DZ5zs/NW5uYSsehElA3c9OSnOWg+5P9ArrfEF2A0lchuBKs3XWJbCpP
+	xLs5vlFhRASMU6MhjHOGHADdV4q83IfNgNIsm40rxS1lDI2a3aEa/1CC9lMOAZlhDz7dKA
+	ft0A55IV2jNxFrPMUXfgEP+Sdw5q1YA=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-460-xZcFS98_MT-Ba34GY9bmVw-1; Fri, 10 Oct 2025 05:02:43 -0400
+X-MC-Unique: xZcFS98_MT-Ba34GY9bmVw-1
+X-Mimecast-MFC-AGG-ID: xZcFS98_MT-Ba34GY9bmVw_1760086962
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-46e39567579so9306175e9.0
+        for <linux-s390@vger.kernel.org>; Fri, 10 Oct 2025 02:02:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760086962; x=1760691762;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HW5td0SWXdCvZ05NdV55x6S0j9wHlZDx+Tv+YWgnDiE=;
+        b=Gh1xgSShiqSnMEtqigRiXRfv8+gTuPbzdJslLWZaGW4z06iVlpRBUOa4+UYSXCXZFd
+         4+lKAPy+yeR8FobBTncgXZF9AncbrxLLHDFIrErhhRJidsEWe7hw8R6dIa8tFth67Nxn
+         IvJ2Rfstwzc12beLn6BASZ+TI+EwHGiYN31YRdeVbHivCyNYprbf8M3rMwj4JAvjI7cy
+         1JC5teru0mtUEezUQ0mi0o5i9iT96Eq8um9NniaZOMERYmTo5vKYqJlRpl14SAun1qL/
+         HDREsJG62yajsQYneYemyzqAZGgbGT2shfjNfYikvBJafExrMwnkMBPDkdfiPfsnsSKw
+         YKtw==
+X-Forwarded-Encrypted: i=1; AJvYcCWaEHsE1QhNze2p/MGfUgooeeT5Kc22EnyTcH6lN+1WwrUge4wfvOUtFPirVRIpzuU+TL7Xv7DPB9AD@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9+gO6vyBI7lvTli3Bwm/mWJmHY5j4dFGHrlNHZdgAz9ESA4jh
+	tx7NttphYM4Cq+u6sW2sciJnZwJdgQuK2j9UWN90B444ZKRomhDFcMBqGr/fkimUAHsNJOhgjyM
+	FlMFAZxEk2XQt2pCA+OCCalLTRYjFdqLdOh8KXLEarYFnc3Q6tWM7RChZIoa91lvz/BgHpFo=
+X-Gm-Gg: ASbGnctq/DaPL6eyZ0poTUQisTJXN2xn7BAPOgno/8sX+zLUbSKVHZLN6DDUbX92n+W
+	Fi/NIgG3+N+ZckUKgtO6shsMzK+63AHpvwwAC3HAyqBe1xtyld62S3kzktKg+DK1H8hgVOwFor8
+	RcOiZzNmc8o+ThqJbm9LrbpxxnYNHppev6Is8X1CnZQwlkICoeQTHb5yZTmYaSE/eUzlzxb32ld
+	o7rg59BR2eJIwquYYReSjVa1Oy3al7jtitqr3fb1AJSqbkGkcSXRgvgYNIfeh3KHqo9QSmiyXGq
+	9V8l+2QIRzZY0uhM7fBW9FU5gBa0zA5mVlYCsuacslbY2mPkekhQI9609sgm7XSOa+paN8BmjYU
+	ZZNY=
+X-Received: by 2002:a05:600c:621b:b0:45d:d609:1199 with SMTP id 5b1f17b1804b1-46fa9b08c13mr80512775e9.30.1760086961940;
+        Fri, 10 Oct 2025 02:02:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEcNFVwacUWgdTF5cZzdAVjtZQjHGkGYmsKNypeybnL+F7IrjK7WBQw0hVHz78I8+aMAo3glA==
+X-Received: by 2002:a05:600c:621b:b0:45d:d609:1199 with SMTP id 5b1f17b1804b1-46fa9b08c13mr80512595e9.30.1760086961539;
+        Fri, 10 Oct 2025 02:02:41 -0700 (PDT)
+Received: from [192.168.3.141] (tmo-083-189.customers.d1-online.com. [80.187.83.189])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46fb48a6069sm36473545e9.20.2025.10.10.02.02.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Oct 2025 02:02:38 -0700 (PDT)
+Message-ID: <1be7d08f-7de4-4f7d-8897-ef90d2188d5a@redhat.com>
+Date: Fri, 10 Oct 2025 11:02:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: NQZ6OBCpbR_KwvA3CBqGLHLSeBLUL9uv
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDA4MDEyMSBTYWx0ZWRfX9sQhrIFWT5ji
- Q/nDGehyq9f4Qgq2fZFe4OIFBLijyz9538qI+jWDYxxQUZaXurBDhNvjdEn+G3NnOVBvgsnKSuD
- zVZvW9d+KvqsWrlZ83yXnWASD45FlnFjwX6pC6y8E1mYzeuEIcR+AXpEzuM6Q86YuE5JTmZu5TB
- ZZPqzVJGNcbSFFrJtN0wRSuQB2Z2f6aq7xx1hvDp0ks4A6efIsIS5LLGZhvVX0iQE4YryhVqNuD
- pG3UWxnpdSLxeK921W3RhGlaBgUrxR1csVgluMOUpzXNFRpHtpZ2iKorkx4Y92QbDFUsOuEDbui
- CWDe7YXMPEqji+DMe3BH3bU4rHGwXccrzdmmeyrjdPZhfQ1/gyvg0F1zzlWMezfyARW7CJyhSg5
- sKlMN6DgdTjAF0f7QSBzuc2H7apZCg==
-X-Authority-Analysis: v=2.4 cv=cKntc1eN c=1 sm=1 tr=0 ts=68e8c936 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=x6icFKpwvdMA:10 a=20KFwNOVAAAA:8 a=VnNF1IyMAAAA:8 a=rQaNfnSK3a-WYbhgV1gA:9
- a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-GUID: NQZ6OBCpbR_KwvA3CBqGLHLSeBLUL9uv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-10_01,2025-10-06_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 impostorscore=0 adultscore=0 lowpriorityscore=0 malwarescore=0
- suspectscore=0 bulkscore=0 phishscore=0 spamscore=0 priorityscore=1501
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510080121
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/4] Support dynamic (de)configuration of memory
+To: Heiko Carstens <hca@linux.ibm.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Sumanth Korikkar <sumanthk@linux.ibm.com>, linux-mm <linux-mm@kvack.org>,
+ LKML <linux-kernel@vger.kernel.org>, linux-s390
+ <linux-s390@vger.kernel.org>, Gerald Schaefer
+ <gerald.schaefer@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>
+References: <20251009131839.3739108-1-sumanthk@linux.ibm.com>
+ <20251010082422.9132Ab1-hca@linux.ibm.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20251010082422.9132Ab1-hca@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-MEM_PREPARE_ONLINE/MEM_FINISH_OFFLINE memory notifiers were introduced
-to prepare the transition of memory to and from a physically accessible
-state. This enhancement was crucial for implementing the "memmap on memory"
-feature for s390.
+On 10.10.25 10:24, Heiko Carstens wrote:
+> On Thu, Oct 09, 2025 at 03:18:35PM +0200, Sumanth Korikkar wrote:
+>> Hi,
+>>
+>> Patchset provides a new interface for dynamic configuration and
+>> deconfiguration of hotplug memory on s390, allowing with/without
+>> memmap_on_memory support. It is a follow up on the discussion with David
+>> when introducing memmap_on_memory support for s390 and support dynamic
+>> (de)configuration of memory:
+>> https://lore.kernel.org/all/ee492da8-74b4-4a97-8b24-73e07257f01d@redhat.com/
+>> https://lore.kernel.org/all/20241202082732.3959803-1-sumanthk@linux.ibm.com/
+> 
+> Andrew, David, we would like to carry this series via the s390 tree,
+> including the fourth patch, which is common code only.
+> 
+> Is this ok for both of you?
 
-With introduction of dynamic (de)configuration of hotpluggable memory,
-memory can be brought to accessible state before add_memory(). Memory
-can be brought to inaccessible state before remove_memory(). Hence,
-there is no need of MEM_PREPARE_ONLINE/MEM_FINISH_OFFLINE memory
-notifiers anymore.
+Fine with me, I don't expect a lot of memory hotplug changes that could 
+interact.
 
-This basically reverts commit
-c5f1e2d18909 ("mm/memory_hotplug: introduce MEM_PREPARE_ONLINE/MEM_FINISH_OFFLINE notifiers")
-Additionally, apply minor adjustments to the function parameters of
-move_pfn_range_to_zone() and mhp_supports_memmap_on_memory() to ensure
-compatibility with the latest branch.
+As an alternative, we could route #4 separately later through mm.
 
-Acked-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
----
- drivers/base/memory.c          | 23 +----------------------
- include/linux/memory.h         |  9 ---------
- include/linux/memory_hotplug.h | 18 +-----------------
- include/linux/memremap.h       |  1 -
- mm/memory_hotplug.c            | 17 +++--------------
- mm/sparse.c                    |  3 +--
- 6 files changed, 6 insertions(+), 65 deletions(-)
+But this one feels like it can just all go through the mm tree if Andrew 
+is fine with it.
 
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 6d84a02cfa5d..fc43f2703ae0 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -226,7 +226,6 @@ static int memory_block_online(struct memory_block *mem)
- 	unsigned long start_pfn = section_nr_to_pfn(mem->start_section_nr);
- 	unsigned long nr_pages = PAGES_PER_SECTION * sections_per_block;
- 	unsigned long nr_vmemmap_pages = 0;
--	struct memory_notify arg;
- 	struct zone *zone;
- 	int ret;
- 
-@@ -246,19 +245,9 @@ static int memory_block_online(struct memory_block *mem)
- 	if (mem->altmap)
- 		nr_vmemmap_pages = mem->altmap->free;
- 
--	arg.altmap_start_pfn = start_pfn;
--	arg.altmap_nr_pages = nr_vmemmap_pages;
--	arg.start_pfn = start_pfn + nr_vmemmap_pages;
--	arg.nr_pages = nr_pages - nr_vmemmap_pages;
- 	mem_hotplug_begin();
--	ret = memory_notify(MEM_PREPARE_ONLINE, &arg);
--	ret = notifier_to_errno(ret);
--	if (ret)
--		goto out_notifier;
--
- 	if (nr_vmemmap_pages) {
--		ret = mhp_init_memmap_on_memory(start_pfn, nr_vmemmap_pages,
--						zone, mem->altmap->inaccessible);
-+		ret = mhp_init_memmap_on_memory(start_pfn, nr_vmemmap_pages, zone);
- 		if (ret)
- 			goto out;
- 	}
-@@ -280,11 +269,7 @@ static int memory_block_online(struct memory_block *mem)
- 					  nr_vmemmap_pages);
- 
- 	mem->zone = zone;
--	mem_hotplug_done();
--	return ret;
- out:
--	memory_notify(MEM_FINISH_OFFLINE, &arg);
--out_notifier:
- 	mem_hotplug_done();
- 	return ret;
- }
-@@ -297,7 +282,6 @@ static int memory_block_offline(struct memory_block *mem)
- 	unsigned long start_pfn = section_nr_to_pfn(mem->start_section_nr);
- 	unsigned long nr_pages = PAGES_PER_SECTION * sections_per_block;
- 	unsigned long nr_vmemmap_pages = 0;
--	struct memory_notify arg;
- 	int ret;
- 
- 	if (!mem->zone)
-@@ -329,11 +313,6 @@ static int memory_block_offline(struct memory_block *mem)
- 		mhp_deinit_memmap_on_memory(start_pfn, nr_vmemmap_pages);
- 
- 	mem->zone = NULL;
--	arg.altmap_start_pfn = start_pfn;
--	arg.altmap_nr_pages = nr_vmemmap_pages;
--	arg.start_pfn = start_pfn + nr_vmemmap_pages;
--	arg.nr_pages = nr_pages - nr_vmemmap_pages;
--	memory_notify(MEM_FINISH_OFFLINE, &arg);
- out:
- 	mem_hotplug_done();
- 	return ret;
-diff --git a/include/linux/memory.h b/include/linux/memory.h
-index 0c214256216f..ba1515160894 100644
---- a/include/linux/memory.h
-+++ b/include/linux/memory.h
-@@ -96,17 +96,8 @@ int set_memory_block_size_order(unsigned int order);
- #define	MEM_GOING_ONLINE	(1<<3)
- #define	MEM_CANCEL_ONLINE	(1<<4)
- #define	MEM_CANCEL_OFFLINE	(1<<5)
--#define	MEM_PREPARE_ONLINE	(1<<6)
--#define	MEM_FINISH_OFFLINE	(1<<7)
- 
- struct memory_notify {
--	/*
--	 * The altmap_start_pfn and altmap_nr_pages fields are designated for
--	 * specifying the altmap range and are exclusively intended for use in
--	 * MEM_PREPARE_ONLINE/MEM_FINISH_OFFLINE notifiers.
--	 */
--	unsigned long altmap_start_pfn;
--	unsigned long altmap_nr_pages;
- 	unsigned long start_pfn;
- 	unsigned long nr_pages;
- };
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-index 23f038a16231..f2f16cdd73ee 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -58,22 +58,6 @@ typedef int __bitwise mhp_t;
-  * implies the node id (nid).
-  */
- #define MHP_NID_IS_MGID		((__force mhp_t)BIT(2))
--/*
-- * The hotplugged memory is completely inaccessible while the memory is
-- * offline. The memory provider will handle MEM_PREPARE_ONLINE /
-- * MEM_FINISH_OFFLINE notifications and make the memory accessible.
-- *
-- * This flag is only relevant when used along with MHP_MEMMAP_ON_MEMORY,
-- * because the altmap cannot be written (e.g., poisoned) when adding
-- * memory -- before it is set online.
-- *
-- * This allows for adding memory with an altmap that is not currently
-- * made available by a hypervisor. When onlining that memory, the
-- * hypervisor can be instructed to make that memory available, and
-- * the onlining phase will not require any memory allocations, which is
-- * helpful in low-memory situations.
-- */
--#define MHP_OFFLINE_INACCESSIBLE	((__force mhp_t)BIT(3))
- 
- /*
-  * Extended parameters for memory hotplug:
-@@ -123,7 +107,7 @@ extern void adjust_present_page_count(struct page *page,
- 				      long nr_pages);
- /* VM interface that may be used by firmware interface */
- extern int mhp_init_memmap_on_memory(unsigned long pfn, unsigned long nr_pages,
--				     struct zone *zone, bool mhp_off_inaccessible);
-+				     struct zone *zone);
- extern void mhp_deinit_memmap_on_memory(unsigned long pfn, unsigned long nr_pages);
- extern int online_pages(unsigned long pfn, unsigned long nr_pages,
- 			struct zone *zone, struct memory_group *group);
-diff --git a/include/linux/memremap.h b/include/linux/memremap.h
-index e5951ba12a28..30c7aecbd245 100644
---- a/include/linux/memremap.h
-+++ b/include/linux/memremap.h
-@@ -25,7 +25,6 @@ struct vmem_altmap {
- 	unsigned long free;
- 	unsigned long align;
- 	unsigned long alloc;
--	bool inaccessible;
- };
- 
- /*
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 0be83039c3b5..238a6712738e 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1088,7 +1088,7 @@ void adjust_present_page_count(struct page *page, struct memory_group *group,
- }
- 
- int mhp_init_memmap_on_memory(unsigned long pfn, unsigned long nr_pages,
--			      struct zone *zone, bool mhp_off_inaccessible)
-+			      struct zone *zone)
- {
- 	unsigned long end_pfn = pfn + nr_pages;
- 	int ret, i;
-@@ -1097,15 +1097,6 @@ int mhp_init_memmap_on_memory(unsigned long pfn, unsigned long nr_pages,
- 	if (ret)
- 		return ret;
- 
--	/*
--	 * Memory block is accessible at this stage and hence poison the struct
--	 * pages now.  If the memory block is accessible during memory hotplug
--	 * addition phase, then page poisining is already performed in
--	 * sparse_add_section().
--	 */
--	if (mhp_off_inaccessible)
--		page_init_poison(pfn_to_page(pfn), sizeof(struct page) * nr_pages);
--
- 	move_pfn_range_to_zone(zone, pfn, nr_pages, NULL, MIGRATE_UNMOVABLE,
- 			       false);
- 
-@@ -1444,7 +1435,7 @@ static void remove_memory_blocks_and_altmaps(u64 start, u64 size)
- }
- 
- static int create_altmaps_and_memory_blocks(int nid, struct memory_group *group,
--					    u64 start, u64 size, mhp_t mhp_flags)
-+					    u64 start, u64 size)
- {
- 	unsigned long memblock_size = memory_block_size_bytes();
- 	u64 cur_start;
-@@ -1460,8 +1451,6 @@ static int create_altmaps_and_memory_blocks(int nid, struct memory_group *group,
- 		};
- 
- 		mhp_altmap.free = memory_block_memmap_on_memory_pages();
--		if (mhp_flags & MHP_OFFLINE_INACCESSIBLE)
--			mhp_altmap.inaccessible = true;
- 		params.altmap = kmemdup(&mhp_altmap, sizeof(struct vmem_altmap),
- 					GFP_KERNEL);
- 		if (!params.altmap) {
-@@ -1555,7 +1544,7 @@ int add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
- 	 */
- 	if ((mhp_flags & MHP_MEMMAP_ON_MEMORY) &&
- 	    mhp_supports_memmap_on_memory()) {
--		ret = create_altmaps_and_memory_blocks(nid, group, start, size, mhp_flags);
-+		ret = create_altmaps_and_memory_blocks(nid, group, start, size);
- 		if (ret)
- 			goto error;
- 	} else {
-diff --git a/mm/sparse.c b/mm/sparse.c
-index 17c50a6415c2..b5b2b6f7041b 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -951,8 +951,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
- 	 * Poison uninitialized struct pages in order to catch invalid flags
- 	 * combinations.
- 	 */
--	if (!altmap || !altmap->inaccessible)
--		page_init_poison(memmap, sizeof(struct page) * nr_pages);
-+	page_init_poison(memmap, sizeof(struct page) * nr_pages);
- 
- 	ms = __nr_to_section(section_nr);
- 	set_section_nid(section_nr, nid);
 -- 
-2.48.1
+Cheers
+
+David / dhildenb
 
 
