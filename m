@@ -1,43 +1,43 @@
-Return-Path: <linux-s390+bounces-13976-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-13978-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BC74BE9EA0
-	for <lists+linux-s390@lfdr.de>; Fri, 17 Oct 2025 17:32:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 740B4BEA29C
+	for <lists+linux-s390@lfdr.de>; Fri, 17 Oct 2025 17:48:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 29EBD582342
-	for <lists+linux-s390@lfdr.de>; Fri, 17 Oct 2025 15:19:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EA4D86E5B75
+	for <lists+linux-s390@lfdr.de>; Fri, 17 Oct 2025 15:35:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D45132E135;
-	Fri, 17 Oct 2025 15:17:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AED1335091;
+	Fri, 17 Oct 2025 15:33:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="eCdWzyg7"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="V09AMXF4"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131CD242935;
-	Fri, 17 Oct 2025 15:17:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F5633508E;
+	Fri, 17 Oct 2025 15:33:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760714262; cv=none; b=muShhQYuo5x25P9i9mDqNwtJOd5uiOPmVGvmpeC5nOZf3W7Wnuh2mamI48AYd1iU0ilmBb27lQVHA2x2r08r690eIdLwuB1jjWEDGsR2vnHagzrRy5phdlBlaq4ANaUrheBti3MzMXm7QsnSEdOXYNrKONpR2wWSh7Uq+MoBZRU=
+	t=1760715202; cv=none; b=QHl3xWHBc3WAaDVvbrElLoLzYm+rmHDkvu74dZjS3ZmCfoSdWEQ5anIG+usUFJA0nvokZYUkvBtxyjo/ApYxTWIaDkL+yPMhnHzosyifr51bW3xHrXmKwzklr/bCWvupMfYhk/7ZCvrl/D0Ke5HIHC//Ej1TGhQ9GoBl9gBZiwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760714262; c=relaxed/simple;
-	bh=FTb1AAcHaLUm7kq+lzMKEc885htHBb4B002scHRzRNQ=;
+	s=arc-20240116; t=1760715202; c=relaxed/simple;
+	bh=o3TtHpvnnc82H7yNIMBhkaxhFHJQrVVIyyjFGkw6dNw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HIC6vFSQsJTA/8cGOj8HhGF0L7W82qiDN4YB0ksGf9ZOy3GgjhArJcLTY9AeOcOZGHQsHxSsIPKJTMtL+7pwqOpPmMCGzwbBJQG3s/oeRDb/R/I8Ciks8FywDQAyVAh2eebyA8+TrN5IS2f6GYFgFmg2wFH7dyzmQesPE1yucio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=eCdWzyg7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91101C4CEE7;
-	Fri, 17 Oct 2025 15:17:41 +0000 (UTC)
+	 MIME-Version; b=C4pycxWZawbN1N80Jin08mOo4AwcnpdSemMF85K07lCR0yDeDro/KFSZBngqWVVowLVxGOwsRaWpeRfkTAGposPYCoDfPWFYqVSZH1OFoUsZwPeCGoWVkCLJzI/UsDks6QPmdWg16J6OHZfFcccZfmY6plw7oPS/AcUP1rHPYso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=V09AMXF4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D882C113D0;
+	Fri, 17 Oct 2025 15:33:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1760714261;
-	bh=FTb1AAcHaLUm7kq+lzMKEc885htHBb4B002scHRzRNQ=;
+	s=korg; t=1760715201;
+	bh=o3TtHpvnnc82H7yNIMBhkaxhFHJQrVVIyyjFGkw6dNw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eCdWzyg71kI+G3fVi7QCWZ56ffFt9GrdyXfTHStxkVc1ghgZ6wSnpwVZmvRUD8wO2
-	 RAP4jqJYiGZDUGcLn0Rj9tHOMTXqeTbWnF/Rztgv3GoSkU+Gi0hJQTgb2EZiVj7TEm
-	 Wov6e1f2Lbhue9Bw4v/T9fQtScu+bQqgFoGHmiOA=
+	b=V09AMXF4ReKuuLebTcI0OEiNuukxI0uB4SmpQqAvRG2wkvXY9X5v4etBR0sUTxgcZ
+	 hciPSNY0aNJZ9o+ZmK/1KyHhDP7BMOs/m+P3Gp4nC1P0xI95RXrCSvC92a2ILsny+x
+	 Vx6iItj8OKYQcpWlxblQlu/HhkThAyXIMqpsZKa8=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -50,12 +50,12 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Alexey Gladkov <legion@kernel.org>,
 	Nathan Chancellor <nathan@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.12 083/277] s390: vmlinux.lds.S: Reorder sections
-Date: Fri, 17 Oct 2025 16:51:30 +0200
-Message-ID: <20251017145150.164358049@linuxfoundation.org>
+Subject: [PATCH 6.17 134/371] s390: vmlinux.lds.S: Reorder sections
+Date: Fri, 17 Oct 2025 16:51:49 +0200
+Message-ID: <20251017145206.777084323@linuxfoundation.org>
 X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251017145147.138822285@linuxfoundation.org>
-References: <20251017145147.138822285@linuxfoundation.org>
+In-Reply-To: <20251017145201.780251198@linuxfoundation.org>
+References: <20251017145201.780251198@linuxfoundation.org>
 User-Agent: quilt/0.69
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -67,7 +67,7 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-6.12-stable review patch.  If anyone has any objections, please let me know.
+6.17-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
@@ -105,10 +105,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/arch/s390/kernel/vmlinux.lds.S b/arch/s390/kernel/vmlinux.lds.S
-index ff1ddba96352a..3f2f90e38808c 100644
+index 1c606dfa595d8..feecf1a6ddb44 100644
 --- a/arch/s390/kernel/vmlinux.lds.S
 +++ b/arch/s390/kernel/vmlinux.lds.S
-@@ -202,6 +202,11 @@ SECTIONS
+@@ -209,6 +209,11 @@ SECTIONS
  	. = ALIGN(PAGE_SIZE);
  	_end = . ;
  
@@ -120,7 +120,7 @@ index ff1ddba96352a..3f2f90e38808c 100644
  	/*
  	 * uncompressed image info used by the decompressor
  	 * it should match struct vmlinux_info
-@@ -232,11 +237,6 @@ SECTIONS
+@@ -239,11 +244,6 @@ SECTIONS
  #endif
  	} :NONE
  
