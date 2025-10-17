@@ -1,99 +1,64 @@
-Return-Path: <linux-s390+bounces-13972-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-13976-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA15CBE957E
-	for <lists+linux-s390@lfdr.de>; Fri, 17 Oct 2025 16:54:05 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0BC74BE9EA0
+	for <lists+linux-s390@lfdr.de>; Fri, 17 Oct 2025 17:32:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F26551890A26
-	for <lists+linux-s390@lfdr.de>; Fri, 17 Oct 2025 14:52:33 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 29EBD582342
+	for <lists+linux-s390@lfdr.de>; Fri, 17 Oct 2025 15:19:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65E732F12AA;
-	Fri, 17 Oct 2025 14:49:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D45132E135;
+	Fri, 17 Oct 2025 15:17:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CFv8xL7e"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="eCdWzyg7"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D182F2F12A7;
-	Fri, 17 Oct 2025 14:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131CD242935;
+	Fri, 17 Oct 2025 15:17:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760712598; cv=none; b=sXFbTV0wq6QJ1Vxam+LvpDnhC2R95TSHVUyHkWzscAJFiadLO/PAaR0zavntNElTBCbPf7JC6TsxP41OIxi4wBPHbbU+r9oQnBlzxpFRQZiDxfZPOsiN98FMfL/HFD+yAjEUF/cJGWRwX1VbWRrlblSTHcEi4SuqZ3GUKDrBZaA=
+	t=1760714262; cv=none; b=muShhQYuo5x25P9i9mDqNwtJOd5uiOPmVGvmpeC5nOZf3W7Wnuh2mamI48AYd1iU0ilmBb27lQVHA2x2r08r690eIdLwuB1jjWEDGsR2vnHagzrRy5phdlBlaq4ANaUrheBti3MzMXm7QsnSEdOXYNrKONpR2wWSh7Uq+MoBZRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760712598; c=relaxed/simple;
-	bh=0dSIPJcwALWv0mVTVQ+ng2o6HtT44rWSzjve/F3qb2c=;
+	s=arc-20240116; t=1760714262; c=relaxed/simple;
+	bh=FTb1AAcHaLUm7kq+lzMKEc885htHBb4B002scHRzRNQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k3XwaM3g4UEXvqyJMbNoFA8ZekzCihKUaj9w3J05YXZl7zhToOVHPcc4pgrKBNMQ2geDigHisJ0ojKAo8LgPV84SdKefw3aL4fMsEng1p4ThRFd6kaWMynMOXDbU379qm4uGWsnPvX8MjHUVC14LH8TYorhVK3M1YOcZn14fOz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CFv8xL7e; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59H9mRcK001261;
-	Fri, 17 Oct 2025 14:49:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=0dSIPJcwALWv0mVTV
-	Q+ng2o6HtT44rWSzjve/F3qb2c=; b=CFv8xL7eUVUkx8ILeVfw51sxDDhOTJXU/
-	QhUYMw2ivVvlQOmE+R9v5m9RcBTs3yiwLvE6058CuKstPDE7V849dxNKgACjFmEY
-	wnj8rImQh1YPTyI3CRtznA0DW+tVCUCBnUQu3PCYbqB09g/GXtjR6S6J/KEeCm/8
-	7oDsxiVfPwPz+DpQZ4/fTN9ntp4MmdjM/ggYndZk0YVpAXU6QuEg62jk2Vg2haXH
-	tSeVJXccCucjGnWJxKxjpugj7dGl54YaRDvSZ9oyJ7XYyfIyxd9T5MdiycCDpAek
-	cLD5E4bmmjYh6codnEhjGoucnk8x5H23sILHMtd5QS7Rvy38ZpVGA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49rfp8e8sg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 Oct 2025 14:49:31 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 59HEnVhc027905;
-	Fri, 17 Oct 2025 14:49:31 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49rfp8e8sa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 Oct 2025 14:49:31 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59HC1xU6003603;
-	Fri, 17 Oct 2025 14:49:29 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 49r1xydwuv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 Oct 2025 14:49:29 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59HEnTEn34210530
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 17 Oct 2025 14:49:29 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1316458059;
-	Fri, 17 Oct 2025 14:49:29 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DE57058058;
-	Fri, 17 Oct 2025 14:49:24 +0000 (GMT)
-Received: from b35lp69.lnxne.boe (unknown [9.152.108.100])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 17 Oct 2025 14:49:24 +0000 (GMT)
-From: Christian Borntraeger <borntraeger@linux.ibm.com>
-To: balbirs@nvidia.com
-Cc: Liam.Howlett@oracle.com, airlied@gmail.com, akpm@linux-foundation.org,
-        apopple@nvidia.com, baohua@kernel.org, baolin.wang@linux.alibaba.com,
-        byungchul@sk.com, dakr@kernel.org, david@redhat.com, dev.jain@arm.com,
-        dri-devel@lists.freedesktop.org, francois.dugast@intel.com,
-        gourry@gourry.net, joshua.hahnjy@gmail.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        lorenzo.stoakes@oracle.com, lyude@redhat.com, matthew.brost@intel.com,
-        mpenttil@redhat.com, npache@redhat.com, osalvador@suse.de,
-        rakie.kim@sk.com, rcampbell@nvidia.com, ryan.roberts@arm.com,
-        simona@ffwll.ch, ying.huang@linux.alibaba.com, ziy@nvidia.com,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-next@vger.kernel.org
-Subject: linux-next: KVM/s390x regression (was: [v7 03/16] mm/huge_memory: add device-private THP support to PMD operations)
-Date: Fri, 17 Oct 2025 16:49:24 +0200
-Message-ID: <20251017144924.10034-1-borntraeger@linux.ibm.com>
+	 MIME-Version; b=HIC6vFSQsJTA/8cGOj8HhGF0L7W82qiDN4YB0ksGf9ZOy3GgjhArJcLTY9AeOcOZGHQsHxSsIPKJTMtL+7pwqOpPmMCGzwbBJQG3s/oeRDb/R/I8Ciks8FywDQAyVAh2eebyA8+TrN5IS2f6GYFgFmg2wFH7dyzmQesPE1yucio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=eCdWzyg7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91101C4CEE7;
+	Fri, 17 Oct 2025 15:17:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1760714261;
+	bh=FTb1AAcHaLUm7kq+lzMKEc885htHBb4B002scHRzRNQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=eCdWzyg71kI+G3fVi7QCWZ56ffFt9GrdyXfTHStxkVc1ghgZ6wSnpwVZmvRUD8wO2
+	 RAP4jqJYiGZDUGcLn0Rj9tHOMTXqeTbWnF/Rztgv3GoSkU+Gi0hJQTgb2EZiVj7TEm
+	 Wov6e1f2Lbhue9Bw4v/T9fQtScu+bQqgFoGHmiOA=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	linux-s390@vger.kernel.org,
+	kernel test robot <lkp@intel.com>,
+	Alexey Gladkov <legion@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.12 083/277] s390: vmlinux.lds.S: Reorder sections
+Date: Fri, 17 Oct 2025 16:51:30 +0200
+Message-ID: <20251017145150.164358049@linuxfoundation.org>
 X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251001065707.920170-4-balbirs@nvidia.com>
-References: <20251001065707.920170-4-balbirs@nvidia.com>
+In-Reply-To: <20251017145147.138822285@linuxfoundation.org>
+References: <20251017145147.138822285@linuxfoundation.org>
+User-Agent: quilt/0.69
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -101,43 +66,75 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: DfklAXPcfAtrNGM5jY-KNpF22Kob2KaG
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDEyMDA4NCBTYWx0ZWRfXwJljw/lEqKWM
- D1hwuYVkDKLS/aDjhMhaRxdkXUSsyvHOYS97+v4q1edG+GxAcK4qeURdagJiI4mVK2s6N2IiAW+
- HcUFjBszJ89TY2a8nhqnMOY2r9Z3+6/toRhinLlrnZKDkls6dnQVfAEy/mphOIHvkGfmruukvpI
- eh3FxlZBm66BejMBARNCpb2ZZU9PMje2quJEIdM0sotJ6Lbj+2EQjXV6LOsocpdP7nbV+JEub/Q
- zi1OsQ1dlXYfwTnKwlvoaj5KWRQdtidwWKDSBBb/l7q+Ydcv8NYUkQuzj9YJ9fvOgoB5RCWm2Xh
- hHWazhg6C7AUK0gqCe9jK8iyOw7VLAZGw85A5ldyo1xtx38HBNkzQd7K4fMOqEXoBf/r28hVYoL
- R+KqIHei+dJEDX1+JlW0IYYc8R3Oqg==
-X-Proofpoint-GUID: FMxTvdFdAsHpeQIzVN6T6lFv6ZTA0cpa
-X-Authority-Analysis: v=2.4 cv=af5sXBot c=1 sm=1 tr=0 ts=68f2577c cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=axXWKVb_3fx9jgWgKzgA:9
- a=nl4s5V0KI7Kw-pW0DWrs:22 a=pHzHmUro8NiASowvMSCR:22 a=xoEH_sTeL_Rfw54TyV31:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-17_05,2025-10-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 priorityscore=1501 spamscore=0 adultscore=0 suspectscore=0
- bulkscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510120084
 
-This patch triggers a regression for s390x kvm as qemu guests can no longer start
+6.12-stable review patch.  If anyone has any objections, please let me know.
 
-error: kvm run failed Cannot allocate memory
-PSW=mask 0000000180000000 addr 000000007fd00600
-R00=0000000000000000 R01=0000000000000000 R02=0000000000000000 R03=0000000000000000
-R04=0000000000000000 R05=0000000000000000 R06=0000000000000000 R07=0000000000000000
-R08=0000000000000000 R09=0000000000000000 R10=0000000000000000 R11=0000000000000000
-R12=0000000000000000 R13=0000000000000000 R14=0000000000000000 R15=0000000000000000
-C00=00000000000000e0 C01=0000000000000000 C02=0000000000000000 C03=0000000000000000
-C04=0000000000000000 C05=0000000000000000 C06=0000000000000000 C07=0000000000000000
-C08=0000000000000000 C09=0000000000000000 C10=0000000000000000 C11=0000000000000000
-C12=0000000000000000 C13=0000000000000000 C14=00000000c2000000 C15=0000000000000000
+------------------
 
-KVM on s390x does not use THP so far, will investigate. Does anyone have a quick idea?
+From: Alexey Gladkov <legion@kernel.org>
 
-Christian Borntraeger
+[ Upstream commit 8d18ef04f940a8d336fe7915b5ea419c3eb0c0a6 ]
+
+In the upcoming changes, the ELF_DETAILS macro will be extended with
+the ".modinfo" section, which will cause an error:
+
+>> s390x-linux-ld: .tmp_vmlinux1: warning: allocated section `.modinfo' not in segment
+>> s390x-linux-ld: .tmp_vmlinux2: warning: allocated section `.modinfo' not in segment
+>> s390x-linux-ld: vmlinux.unstripped: warning: allocated section `.modinfo' not in segment
+
+This happens because the .vmlinux.info use :NONE to override the default
+segment and tell the linker to not put the section in any segment at all.
+
+To avoid this, we need to change the sections order that will be placed
+in the default segment.
+
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202506062053.zbkFBEnJ-lkp@intel.com/
+Signed-off-by: Alexey Gladkov <legion@kernel.org>
+Acked-by: Heiko Carstens <hca@linux.ibm.com>
+Link: https://patch.msgid.link/20d40a7a3a053ba06a54155e777dcde7fdada1db.1758182101.git.legion@kernel.org
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+Stable-dep-of: 9338d660b79a ("s390/vmlinux.lds.S: Move .vmlinux.info to end of allocatable sections")
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/kernel/vmlinux.lds.S | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/s390/kernel/vmlinux.lds.S b/arch/s390/kernel/vmlinux.lds.S
+index ff1ddba96352a..3f2f90e38808c 100644
+--- a/arch/s390/kernel/vmlinux.lds.S
++++ b/arch/s390/kernel/vmlinux.lds.S
+@@ -202,6 +202,11 @@ SECTIONS
+ 	. = ALIGN(PAGE_SIZE);
+ 	_end = . ;
+ 
++	/* Debugging sections.	*/
++	STABS_DEBUG
++	DWARF_DEBUG
++	ELF_DETAILS
++
+ 	/*
+ 	 * uncompressed image info used by the decompressor
+ 	 * it should match struct vmlinux_info
+@@ -232,11 +237,6 @@ SECTIONS
+ #endif
+ 	} :NONE
+ 
+-	/* Debugging sections.	*/
+-	STABS_DEBUG
+-	DWARF_DEBUG
+-	ELF_DETAILS
+-
+ 	/*
+ 	 * Make sure that the .got.plt is either completely empty or it
+ 	 * contains only the three reserved double words.
+-- 
+2.51.0
+
+
+
 
