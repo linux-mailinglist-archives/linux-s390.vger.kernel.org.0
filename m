@@ -1,186 +1,229 @@
-Return-Path: <linux-s390+bounces-14061-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-14064-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDD0DBF3177
-	for <lists+linux-s390@lfdr.de>; Mon, 20 Oct 2025 21:02:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A515BF354C
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Oct 2025 22:08:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8388A18C1951
-	for <lists+linux-s390@lfdr.de>; Mon, 20 Oct 2025 19:02:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9C2334802BE
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Oct 2025 20:08:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 516B82D4B4B;
-	Mon, 20 Oct 2025 19:02:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A064E2DC78A;
+	Mon, 20 Oct 2025 20:08:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eRfVBzZe"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="GS8VtLn7"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011067.outbound.protection.outlook.com [52.101.52.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6763F2C3263;
-	Mon, 20 Oct 2025 19:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760986934; cv=none; b=DQMRGsKXFIJs0fVapvV1bxih+frUQC+U+RnjqOcNLZ4w1Kx3FAgp3Qt9ODp6D+xrigrF3V/gTvtEr7iWNObto6Y0kDwEM2l2tjA3lOC79Sr4TEO4iEeK/GaFt0ZQYjHLm3ycA3PwzwpDRNJx2WUsy48SQwSgSipTEdq5RFROhVs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760986934; c=relaxed/simple;
-	bh=RAkfZavbVQz3RjrGM3h/OdmlKiaMVacYknRSi2XnjBA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cqHBzF4LfYxqeofsF7JNPOywLX5JeOCiymdWezlpwGxrgnhOVZzKZNCck9h4wsw58/RcC1OO11OaUz+5C2tXqO0MjJD6kJIMx+S52I+YMIVpWObUf8MIJl7XJC8cB5zdMyMoZVg+GNhUBZHNodUta95Ylh07ouSLggltFif/d6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eRfVBzZe; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59KI4Vgt015154;
-	Mon, 20 Oct 2025 19:02:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=KI5KeH/8aCFRqOxsy
-	zr0zWF6mhlA9JIUp+28TM2Fup0=; b=eRfVBzZeEe6xCm5CmEyUu31TSAPKwkyi1
-	5yQZcy/YlIg4RTfYD99RCi9DU1y9nHVGdWW3tbJlpYd9DTRlb92f0RHmnBGMcUn+
-	UABPXXecoR7O8djJuT9ukng4UnuRHVFyPl3AqJE24JblX5Cl/KjCiYk5l6GvsRkT
-	aj32twZ0hlIWB25AYB4DuAf3TyIWK79KXSp9j10e4+5R1pFhx4EYR1mdiNCtzR75
-	ikZAc3vzCsyPQ1DTYnOSQM6ZSl7bNV/ICrE42xLq3DQHzwQ1vBkqntCJ/NtyFd1O
-	lWFtJrznz1CvP0imC3XTjGSL4YxTLkaL1XOF+3nVCZKeKl73adClQ==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49v31ru6vg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Oct 2025 19:02:09 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59KIbsn8024677;
-	Mon, 20 Oct 2025 19:02:08 GMT
-Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 49vpqjq4jj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Oct 2025 19:02:08 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59KJ27Bn27656760
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 20 Oct 2025 19:02:07 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E28E05806A;
-	Mon, 20 Oct 2025 19:02:06 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 48D7A58063;
-	Mon, 20 Oct 2025 19:02:06 +0000 (GMT)
-Received: from IBM-D32RQW3.ibm.com (unknown [9.61.240.93])
-	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 20 Oct 2025 19:02:06 +0000 (GMT)
-From: Farhan Ali <alifm@linux.ibm.com>
-To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Cc: helgaas@kernel.org, stable@vger.kernel.org, alifm@linux.ibm.com,
-        schnelle@linux.ibm.com, mjrosato@linux.ibm.com
-Subject: [PATCH v1 3/3] s390/pci: Restore IRQ unconditionally for the zPCI device
-Date: Mon, 20 Oct 2025 12:02:00 -0700
-Message-ID: <20251020190200.1365-4-alifm@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251020190200.1365-1-alifm@linux.ibm.com>
-References: <20251020190200.1365-1-alifm@linux.ibm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC0B21C695;
+	Mon, 20 Oct 2025 20:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760990921; cv=fail; b=mjjPoKSfuR/kwPEVwD0D+ZhK6eSyzafnSK4ldrdXyuFFNPowMWE16gjfnCrKECuZD95+XSu+XWZJhpz9PqzB9Mr6nCMzdcOiTDb5FrNrFkFrMCCo62KPaiPUsVdPb2NiT1sIa/erCZbJ2nkNT3/flZn80uBkkQWAIlcZRIhGYks=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760990921; c=relaxed/simple;
+	bh=6nbxM7PGrI0xTdoh6ri1TWuYYjvTspQ/CZ1rmisWugY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JRzJ4hc8edR7RVPveka7TEEj9IsEQIjMmNhAm6Wo8rhI8kgeXvNovdPOUYko3zY5B3Bw7/qdlISWl7Gx1KDneFIn0QzyfsZguF4yvueEmVzp0idoNvkeBMh1iLD8KajSaOxNo35WJ15YZoCnBx9g6FD3nTgLGOPIQGVkIbOhiKg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=GS8VtLn7; arc=fail smtp.client-ip=52.101.52.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NpSVWL4Bt4KXJapkoKbrlcZo09uiK4RWOl/9L7ryEw96Edq87/Xhwm+xfAMJAMdSBq8TzYPnIGZCu1h9nHreQiRNZCNU41JdyDXJ45JZ3itFSV8OzQRwsqUecM5H7Hs+TNJE8JyTJUQv6RHeRXrKVaTjABey8IdCZXhtAJO4AbPzRDDv3oSfTujU0VGbOBZ0EI2KkIe1uv8+MhFl0Yvb4vD30zZESeZbnT/MqW6sfkc1mqXG7/0ORrHI4HkAtbUZKXHhKruhoaLUH+RjFYMR9DEGhLKqIGw/KQmPTf/xjj5oiQ1IktVfmRJm45bFUe8L+ljOxu8q2wJTSvUbFGn3Zw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=I+HcKg5I0iYSOa1cv7EeGcGCX9FLTiflIci0SQNbuDY=;
+ b=w0h7/Nr6spa5wBxG499qj5EXLFSe/Adpq/4Wsp2POZuSRUUNQ1IAjH5ovTgYVqxPejN/1SMF63X/7dREwIuUMxI8nTzbrZ90ceFLMUdmRbhNqlZRE9GdQkNSV5b9va13cfkwcMRcSGQSFPt7yHXovTPHmsBJp0TL/KuIJxMGoprs5AnSDsGBiReL8Cx+E/a7BZq27G0l+D7P84y+n07QtebNTqrgt5caiXnr5ue71cQKXU5Gk2XIZAP7kOaoSeOAzjmYO4hEbwadpmACkl5nQqSr+KxnFKASNyrN+e7eNIO1WMEakd+Mh4qCD7bL57LDlL8SYprkrCtZotNC1R5Y5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=csie.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=I+HcKg5I0iYSOa1cv7EeGcGCX9FLTiflIci0SQNbuDY=;
+ b=GS8VtLn7kcdkLkQu+tgHMtDvdeKIZwvbkfufMIru24+xOX/HUxl97EUPEzfC32yJ6RHGx5IMfpOSvFWT1Cq+I6LzIohHPu2vSsGo9a4ATJC/8KLtQVDHSTD9WZRGlZ7cAHh7z4zDPohfbSHMgtPgg6rgnp34GaaLzWKINHWhq09ubZmh3MA1w1J3yZ+xczxmXZcZjBkoSsjT4OgLNSMCYs4AVa9gxGJlKf2GpJEmd1Btdlkuew9vOo4N0xy66TjB5RF0seDIhmszKsYiM23+jXOQOgFnWZGsO3od2ipi4+jo7Furf+2/tCNkxUV98S7UULHndERu2uj2o8z66Qg8cA==
+Received: from CH0PR08CA0001.namprd08.prod.outlook.com (2603:10b6:610:33::6)
+ by DS4PR12MB9609.namprd12.prod.outlook.com (2603:10b6:8:278::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.16; Mon, 20 Oct
+ 2025 20:08:36 +0000
+Received: from DS3PEPF000099DF.namprd04.prod.outlook.com
+ (2603:10b6:610:33:cafe::a9) by CH0PR08CA0001.outlook.office365.com
+ (2603:10b6:610:33::6) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9228.16 via Frontend Transport; Mon,
+ 20 Oct 2025 20:08:36 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ DS3PEPF000099DF.mail.protection.outlook.com (10.167.17.202) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9253.7 via Frontend Transport; Mon, 20 Oct 2025 20:08:36 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 20 Oct
+ 2025 13:08:20 -0700
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.20; Mon, 20 Oct 2025 13:08:19 -0700
+Received: from Asurada-Nvidia (10.127.8.9) by mail.nvidia.com (10.126.190.182)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
+ Transport; Mon, 20 Oct 2025 13:08:17 -0700
+Date: Mon, 20 Oct 2025 13:08:16 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: <joro@8bytes.org>, <kevin.tian@intel.com>,
+	<suravee.suthikulpanit@amd.com>, <will@kernel.org>, <robin.murphy@arm.com>,
+	<sven@kernel.org>, <j@jannau.net>, <jean-philippe@linaro.org>,
+	<robin.clark@oss.qualcomm.com>, <dwmw2@infradead.org>,
+	<baolu.lu@linux.intel.com>, <yong.wu@mediatek.com>, <matthias.bgg@gmail.com>,
+	<angelogioacchino.delregno@collabora.com>, <tjeznach@rivosinc.com>,
+	<pjw@kernel.org>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
+	<heiko@sntech.de>, <schnelle@linux.ibm.com>, <mjrosato@linux.ibm.com>,
+	<wens@csie.org>, <jernej.skrabec@gmail.com>, <samuel@sholland.org>,
+	<thierry.reding@gmail.com>, <jonathanh@nvidia.com>, <iommu@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <asahi@lists.linux.dev>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-arm-msm@vger.kernel.org>,
+	<linux-mediatek@lists.infradead.org>, <linux-riscv@lists.infradead.org>,
+	<linux-rockchip@lists.infradead.org>, <linux-s390@vger.kernel.org>,
+	<linux-sunxi@lists.linux.dev>, <linux-tegra@vger.kernel.org>,
+	<virtualization@lists.linux.dev>, <patches@lists.linux.dev>
+Subject: Re: [PATCH v1 03/20] iommu/arm-smmu-v3: Implement
+ arm_smmu_domain_test_dev
+Message-ID: <aPaWsEg1Y3XqsA3E@Asurada-Nvidia>
+References: <cover.1760312725.git.nicolinc@nvidia.com>
+ <f52e8079148a673641d2858700c49fa0c81022aa.1760312725.git.nicolinc@nvidia.com>
+ <20251020163231.GX316284@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: OTwNhHTSlwaWyS7xNyvu-wpy8feH7ewL
-X-Proofpoint-GUID: OTwNhHTSlwaWyS7xNyvu-wpy8feH7ewL
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDE4MDAyMiBTYWx0ZWRfX8Dx8UMGPDSOJ
- yCE1qOwJGd72j+mQawiqYaJ7ioSR8inBAU/+cVHoH0nWE2lpv5dOWpEop7G86YEI74ytQ7Y/xwM
- /72srEBRszmiMM/78NZT4pNFruHIJp7itKZN87lf1u/A9PErQmR49+EEpxkY1Ou1GToWpsJcjmC
- +Dj7Si6EPihZz+CJIIUtvfXLkZiWI83GGYwulkzH7vR2Vs6jCV/1ucJCuyUP7uSX7pLOUKRbQdJ
- 6nOblPToIIwr+e8rbE1kccPNNzsTxQHYuyvO4Eq/zeGd14GeFJLeBDSRK9uUrsyDbCr5f+qTQlj
- y4oJrJvFnu0iR7N32xZgSMWygKfzUarr4IfVo5NTFY3X0Ft+b4OC4tUy8CozlY2L6qZyUBXqL8C
- hCI3ibExuLtd/Crf8TDe3d81J/jtAQ==
-X-Authority-Analysis: v=2.4 cv=IJYPywvG c=1 sm=1 tr=0 ts=68f68731 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
- a=ove13Onh8FEOJJhcmoIA:9 a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-20_05,2025-10-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 lowpriorityscore=0 clxscore=1015 suspectscore=0 spamscore=0
- bulkscore=0 adultscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510180022
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20251020163231.GX316284@nvidia.com>
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099DF:EE_|DS4PR12MB9609:EE_
+X-MS-Office365-Filtering-Correlation-Id: b913b544-cf62-471b-b882-08de101473c8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|7416014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?F3eAErrdRFBP8Xc5NHf5q6RpFXZy1wb9kVOirYNRpE7PMh7br7u24qD1hl3h?=
+ =?us-ascii?Q?/mUBsSCHBxSCffcpLmh0DCLpRRd6rW8HEyKp0u/Q99CJ7ggK8jL1V2oUdkyI?=
+ =?us-ascii?Q?YNWmNgRlF70yR24cTL1tEJWXPYawD6orOCB4NdCTqfQ6YC/fwCIK8UORffKp?=
+ =?us-ascii?Q?q75+PGsHG52OmM1jGMVkaZ6RR9fgl83IBRXCoOtoqEtXCiw9Le/CBNfnOfQ1?=
+ =?us-ascii?Q?kVlMVssrGF6wMUGDbxHi4iuEdFnUhXwdgVXeALDGayQuwzFSOfG6tGe7IHoz?=
+ =?us-ascii?Q?RARz4PjAWoimxGcYqYJuq4vxYRzTtL0XNCqqSoMPvSYntmbR7KzXzwSCg0RI?=
+ =?us-ascii?Q?7BHgl/P8BX8LZD3YdFzLvWOiXMy8QtL4XqkHKjQ+wtV/2/HDWWyvfVdThCEF?=
+ =?us-ascii?Q?mEYs24HKqtUgrYFAeVmkoQa1Y6jThw/+TeCikZQbjGeOrgKYcj6f2/F4F93P?=
+ =?us-ascii?Q?lDH3pd1+LAsHgCyLEUJkT+0gmieMd121YZJOy5Bd/j7dPomgbnOyg8XFf2Mk?=
+ =?us-ascii?Q?KtgYGaTcuCBB4k6NdtLD3B9Z/yljpc5ipbQcO8E+SDRTUqQTuad20XXrGbnC?=
+ =?us-ascii?Q?cDSeZfdcaZWl1B+Sqbud/b0w9A1/bLSgYc3QpAhcEMqMyfQTbroppE+1maQg?=
+ =?us-ascii?Q?W+VVkLsXm8xUQOZrSJju4INOMt7QyV/Jwm/s/P+jaPVbsR5vAwuoT7UTNAg1?=
+ =?us-ascii?Q?pQHpReA279OCbXsDZ8Rnw83JwizocsKRllV5hb24bioum4GnMI59K0JSguXT?=
+ =?us-ascii?Q?6IZjRKeBc94KaUcoOvRgpFR3xbqPeaaeZg0WMuMOS7Su8G+eoFH33oXqynsf?=
+ =?us-ascii?Q?LAYqRXPS6F1mxG0SqOELxss7r/ci79ei0Sjh3mc4CCkF4Q6kZuU0gzLlnpln?=
+ =?us-ascii?Q?gqh4ve8bikLKfvVChvHqbUCMKECugsMcozft3wn1Z2U4J81qqn1WcM1a1HKL?=
+ =?us-ascii?Q?6YV2pW+nd8tsTkYk5f5lY5hexcNY255JsnZmDz7eCFSubMRjHFKOKmBzwRcI?=
+ =?us-ascii?Q?cGsFbeWuMGKEc4YE9Ee5ijAxky24LmLSWwSYcwTgvuEv6cNnZuLZvOmLSBU1?=
+ =?us-ascii?Q?O8u+AUaNWTqJ+hjZOSo3xm6K++mzMKxEe2zeB/su0v0xA7hetrQKlOhCfR5p?=
+ =?us-ascii?Q?B49sEgGqf+qHYQjwPNmS88+67rveT7p63hgJjuvLvbI9+/mPQhIz8cOaaTFe?=
+ =?us-ascii?Q?Nq95xU/Eu7Qub9nfR3wpNgkQREEK19dvCtJ+zdp5+HkimCmPsIbJsUztE2tK?=
+ =?us-ascii?Q?IkNCh6Yi8ohUR3u+qfZ3GQiTrpC2qeEouuPkb02WOQ+h6m6KHFrR0lEMI+C+?=
+ =?us-ascii?Q?GDl/y8vVulIodb6asSM+UzfC88BeuSpomTFvHPRWsm6IO6L8ZLem4vBNhZvz?=
+ =?us-ascii?Q?hjTjGP1qIXUYwiD3MfwfSs2UHO/otuA/6d1BAw9AoAri/SRIUJ781QyonG3n?=
+ =?us-ascii?Q?zER3wwgf0MfeCnQms11bQ0GLm0o6WquqNicGV7tFc6ekcyGnc6LVNG0IPu/r?=
+ =?us-ascii?Q?8q4dmbNFJIegn9bixbz4SqEjODCEJk8gFtOvNf5RopgPfKCZcSCiyVxBnwfU?=
+ =?us-ascii?Q?p5oUWUY/3z639WmwyI0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(7416014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Oct 2025 20:08:36.0020
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b913b544-cf62-471b-b882-08de101473c8
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF000099DF.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PR12MB9609
 
-Commit c1e18c17bda6 ("s390/pci: add zpci_set_irq()/zpci_clear_irq()"),
-introduced the zpci_set_irq() and zpci_clear_irq(), to be used while
-resetting a zPCI device.
+On Mon, Oct 20, 2025 at 01:32:31PM -0300, Jason Gunthorpe wrote:
+> On Sun, Oct 12, 2025 at 05:05:00PM -0700, Nicolin Chen wrote:
+> > diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> > index a33fbd12a0dd9..3448e55bbcdbb 100644
+> > --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> > +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> > @@ -2765,9 +2765,6 @@ static int arm_smmu_enable_iopf(struct arm_smmu_master *master,
+> >  
+> >  	iommu_group_mutex_assert(master->dev);
+> >  
+> > -	if (!IS_ENABLED(CONFIG_ARM_SMMU_V3_SVA))
+> > -		return -EOPNOTSUPP;
+> 
+> Stuff like this is also optimizing the codegen, it shouldn't be
+> removed.
 
-Commit da995d538d3a ("s390/pci: implement reset_slot for hotplug slot"),
-mentions zpci_clear_irq() being called in the path for zpci_hot_reset_device().
-But that is not the case anymore and these functions are not called
-outside of this file. Instead zpci_hot_reset_device() relies on
-zpci_disable_device() also clearing the IRQs, but misses to reset the
-zdev->irqs_registered flag.
+Okay. I assume we should just copy it to test_dev() then.
 
-However after a CLP disable/enable reset, the device's IRQ are
-unregistered, but the flag zdev->irq_registered does not get cleared. It
-creates an inconsistent state and so arch_restore_msi_irqs() doesn't
-correctly restore the device's IRQ. This becomes a problem when a PCI
-driver tries to restore the state of the device through
-pci_restore_state(). Restore IRQ unconditionally for the device and remove
-the irq_registered flag as its redundant.
+> > +int arm_smmu_domain_test_dev(struct iommu_domain *domain, struct device *dev,
+> > +			     ioasid_t pasid, struct iommu_domain *old_domain)
+> > +{
+> > +	struct arm_smmu_domain *device_domain = to_smmu_domain_devices(domain);
+> > +	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
+> > +
+> > +	if (!dev_iommu_fwspec_get(dev))
+> > +		return -ENOENT;
+> > +
+> > +	switch (domain->type) {
+> > +	case IOMMU_DOMAIN_NESTED: {
+> > +		struct arm_smmu_nested_domain *nested_domain =
+> > +			to_smmu_nested_domain(domain);
+> > +
+> > +		if (WARN_ON(pasid != IOMMU_NO_PASID))
+> > +			return -EOPNOTSUPP;
+> > +		if (nested_domain->vsmmu->smmu != master->smmu)
+> > +			return -EINVAL;
+> > +		if (arm_smmu_ssids_in_use(&master->cd_table))
+> > +			return -EBUSY;
+> 
+> This gives me alot of pause.. Here we are detecting if a S1 PASID is
+> installed for a S2 attach, but to your purpose this can be made
+> inconsistent by userspace during a FLR..
 
-Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
-Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
----
- arch/s390/include/asm/pci.h | 1 -
- arch/s390/pci/pci_irq.c     | 9 +--------
- 2 files changed, 1 insertion(+), 9 deletions(-)
+Ah right, the used_ssids could mismatch with the group->domain!
 
-diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
-index 6890925d5587..a32f465ecf73 100644
---- a/arch/s390/include/asm/pci.h
-+++ b/arch/s390/include/asm/pci.h
-@@ -145,7 +145,6 @@ struct zpci_dev {
- 	u8		has_resources	: 1;
- 	u8		is_physfn	: 1;
- 	u8		util_str_avail	: 1;
--	u8		irqs_registered	: 1;
- 	u8		tid_avail	: 1;
- 	u8		rtr_avail	: 1; /* Relaxed translation allowed */
- 	unsigned int	devfn;		/* DEVFN part of the RID*/
-diff --git a/arch/s390/pci/pci_irq.c b/arch/s390/pci/pci_irq.c
-index 84482a921332..e73be96ce5fe 100644
---- a/arch/s390/pci/pci_irq.c
-+++ b/arch/s390/pci/pci_irq.c
-@@ -107,9 +107,6 @@ static int zpci_set_irq(struct zpci_dev *zdev)
- 	else
- 		rc = zpci_set_airq(zdev);
- 
--	if (!rc)
--		zdev->irqs_registered = 1;
--
- 	return rc;
- }
- 
-@@ -123,9 +120,6 @@ static int zpci_clear_irq(struct zpci_dev *zdev)
- 	else
- 		rc = zpci_clear_airq(zdev);
- 
--	if (!rc)
--		zdev->irqs_registered = 0;
--
- 	return rc;
- }
- 
-@@ -427,8 +421,7 @@ bool arch_restore_msi_irqs(struct pci_dev *pdev)
- {
- 	struct zpci_dev *zdev = to_zpci(pdev);
- 
--	if (!zdev->irqs_registered)
--		zpci_set_irq(zdev);
-+	zpci_set_irq(zdev);
- 	return true;
- }
- 
--- 
-2.43.0
+> I don't see any reasonable way to mitigate this??
 
+Right. It can't simply go through a regular attach_dev call since
+driver wouldn't expect any inconsistency in the core.
+
+Driver would have to be aware of the reset state, and make a copy
+of the old domain's CD/STE to use for a test_dev() during a reset.
+
+> Which makes me wonder if we should just try to solve the simple
+> obvious things like direct, permanent incompatability and still have
+> some kind of recovery code to leave things in blocking if they fail to
+> attach
+
+I don't quite get this. Mind elaborating?
+
+Thanks
+Nicolin
 
