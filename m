@@ -1,333 +1,262 @@
-Return-Path: <linux-s390+bounces-14159-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-14167-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14B8EC039C5
-	for <lists+linux-s390@lfdr.de>; Thu, 23 Oct 2025 23:49:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66136C03C80
+	for <lists+linux-s390@lfdr.de>; Fri, 24 Oct 2025 01:10:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C86241A62257
-	for <lists+linux-s390@lfdr.de>; Thu, 23 Oct 2025 21:49:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 29F7A19A2741
+	for <lists+linux-s390@lfdr.de>; Thu, 23 Oct 2025 23:10:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3ED741991D2;
-	Thu, 23 Oct 2025 21:49:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0FD42D3A9C;
+	Thu, 23 Oct 2025 23:09:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QPmTyuxl"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="LMc1qbh9"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010014.outbound.protection.outlook.com [40.93.198.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15DEB3D3B3;
-	Thu, 23 Oct 2025 21:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761256172; cv=none; b=q4mKNpU7e+csDdZNpQkTI/cRA7C3wIKMPVmHBR3n9t0ylJlwLUsQvD3yeZtU1HHzxR9crZN2cvN09UMX7G2V79W1wyterP5rKti7EN+1nU8YUbwYaO4cUX4gCQQXMTNjzNEymMXD8WVIGmhHiw4xCdBt+jNMNQMaCBIkdC8tDbM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761256172; c=relaxed/simple;
-	bh=wDOxZQ8Gop+DTsDQM7SH+b6uxnF3XzCxIS2tKokpfFg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FaaGmDeunzssidxxdPrDce5iy9vNMwLeKIZ/bcOtGCBMfkznk6CxPCPHElDOScwcZgLc3mDKdmdt8GSTHECKx4CBYo2amZGIax4F6ZnD5o5GbBM5tmauQSFLPOIjCah+ka0JzXGNystCTAA34ET6HqrAjWpxSZualNx+F0Hthv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QPmTyuxl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3497C4CEE7;
-	Thu, 23 Oct 2025 21:49:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761256171;
-	bh=wDOxZQ8Gop+DTsDQM7SH+b6uxnF3XzCxIS2tKokpfFg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=QPmTyuxl02zrQspR5uGrnQeccVO45UOA4owzzMLQJwGs43ybPd3uIvMjJGb0SFn5K
-	 06832/EyWH+OqgCGy6UZ5+BsGqbqTUHX6m3+F7rtiN/dH0MMnx0af/u6QUt1HWeqCm
-	 HgFJ+2RnK+UuKRr00+qn7pVqguu/LxuneHw/ZALHHmdmMg/471yBbYC9EGqXmHGybC
-	 Bsd4L+hVefcU9Ho83bsFBprNIOdSr4nQXuvtQOjTi5px84JkcVLqHc1teiCpLxTgP7
-	 XRE0oNnK5WCnLjZ8qV7x9cYj+6fX3AWhRR3gFCD/zQfXiCnhjaYywKIzx//hdhxfIa
-	 JkoilvtdwE8Iw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id E87C9CE0928; Thu, 23 Oct 2025 14:49:30 -0700 (PDT)
-Date: Thu, 23 Oct 2025 14:49:30 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Douglas Anderson <dianders@chromium.org>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	linux-s390 <linux-s390@vger.kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Andrew Chant <achant@google.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A622D0615;
+	Thu, 23 Oct 2025 23:09:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761260994; cv=fail; b=aJcPiy59cKEKsmBH4gtprH/HrSRI4L+Q5m3mq3K1oHDrg41MLuMuVklQmuJbx4OiAsM74CNSWbiRl9yVsWcFk8Lrd7jWKmW0ioHOuViDie+hCNCfsSC1HktSx8odEMGeVNJMAXEXOTyEDfwMVUA4oVsD/z+jC3+gzofN2eal5zI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761260994; c=relaxed/simple;
+	bh=Wmqu3YRD5+Ff59lDHqH2QWwnVWqEw8ISEaquH9wP8kw=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=pvw27OMcbR9TMBwvyKfa7Hzzcgjak7wQDeduZqBeptLqaenz+xqkL3LF3SjFPtJVv1lDP0wscb5EEJ/1QBDC5EQd9amdoxedtiuv+UhGKtXDlh8FdJgSbYLj8YZoqul7caueTkw7mEmyr9hISVJTBrcWWxRa351WxCY1AnfcpjE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=LMc1qbh9; arc=fail smtp.client-ip=40.93.198.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sGEnkULzLdjVjpUwF/2Qkwi1UAe88RX0s9lkjl5Xf6GSERFIxJDkzM4TxqhUBMU3LADqhz/drwskUdgtuy3Izk4Z7n+kBsHch1FL/lo19ym9H309+NsjI1DZBpQOmZMlVf7zCKnSaIbpQKbHw7DWAX3a6kXAFwd+QyawK5tsnedJETeQ1LKay8xgoDzhwZ/adAX9/cVDBlpB2Gtg5MA3F0DzxG7NAi7ZKnATZqir7qbyozq/zbGQRhcJzhz6ovQS2sFXCA0oJb0lS/6XQTG31EzViXVrV/oKfGWZsI510OwZ5g7h1rU3/5c4NptYuMG0lgJMfOPJx8YFv9JNo8tlSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UXsrjPLvZWHxtOZq/LSmrbxapzUipJGoJCMMC0J+61Q=;
+ b=IHoPLhmrVJkt5FrhRHet5i/cawqF9ooDnkNTSU23Isqrom1a3hGoEyozZoWiswItOF/CAamdXKvE+gHn/fhreT0Di7bZtabhIAddbfgJdqZG99PQ4F+7uvZG6RRX4w/cCh+9ArXl3nvplt/NoZo1rqWw1hVa2L5etPwHBMlJfcR21n6W6bo1PjjrvmWYp+5/Zh6msEoCvKJ5kMGnCKaMt6GHrsgkBeZr1Y7aBrTRWLt2MGenv4pYz9ty9jvg48NoibhJSVAx8ezhUvWntWhDiIfoi/GfMtDDEv7tKkeqkW5C7oJ88dIPE689DCSmBdlhzKqI/gP4EYFVF2UfhEHvgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UXsrjPLvZWHxtOZq/LSmrbxapzUipJGoJCMMC0J+61Q=;
+ b=LMc1qbh9tuALSgaGPr7oAtKbEardZ4iRJA64M2Wfwxc+jVoVbLPPh+uQMe3sg0jgozROKWTHMm6rj454CsS+NN0b+Mn/+qS/DymWHLJRLI+28qiqSCV8F6NB1lyBB7DsdcdGpxl56E03RbnhTAuQARarhaHPlpBcvvLEm+0faktkSPNQpYYWKFs6whm1j1wuI7vuljCfBsEnVwSDJfFsAmvTjWUQiwM6BoTU2XvFdimBwIzXTs3BhjiNztHKqswiC1ZxP36CNRWFigTZvzRxmjp5jBPPATsB52Mo4i700JwFotBvtCiIpT+G/129tiaFBsupHfh68Zdk3yj29KTcZQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MN2PR12MB3613.namprd12.prod.outlook.com (2603:10b6:208:c1::17)
+ by SJ2PR12MB9138.namprd12.prod.outlook.com (2603:10b6:a03:565::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.13; Thu, 23 Oct
+ 2025 23:09:45 +0000
+Received: from MN2PR12MB3613.namprd12.prod.outlook.com
+ ([fe80::1b3b:64f5:9211:608b]) by MN2PR12MB3613.namprd12.prod.outlook.com
+ ([fe80::1b3b:64f5:9211:608b%4]) with mapi id 15.20.9253.011; Thu, 23 Oct 2025
+ 23:09:45 +0000
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Alexander Gordeev <agordeev@linux.ibm.com>,
+	David Airlie <airlied@gmail.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Ankit Agrawal <ankita@nvidia.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Brett Creeley <brett.creeley@amd.com>,
+	dri-devel@lists.freedesktop.org,
+	Eric Auger <eric.auger@redhat.com>,
+	Eric Farman <farman@linux.ibm.com>,
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
 	Heiko Carstens <hca@linux.ibm.com>,
+	intel-gfx@lists.freedesktop.org,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	kvm@vger.kernel.org,
+	Kirti Wankhede <kwankhede@nvidia.com>,
+	linux-s390@vger.kernel.org,
+	Longfang Liu <liulongfang@huawei.com>,
+	Matthew Rosato <mjrosato@linux.ibm.com>,
+	Nikhil Agarwal <nikhil.agarwal@amd.com>,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Peter Oberparleiter <oberpar@linux.ibm.com>,
+	Halil Pasic <pasic@linux.ibm.com>,
+	Pranjal Shrivastava <praan@google.com>,
+	qat-linux@intel.com,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Shameer Kolothum <skolothumtho@nvidia.com>,
+	Mostafa Saleh <smostafa@google.com>,
 	Sven Schnelle <svens@linux.ibm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Brian Gerst <brgerst@gmail.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Francesco Valla <francesco@valla.it>,
-	Guo Weikang <guoweikang.kernel@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Jan Hendrik Farr <kernel@jfarr.cc>, Jeff Xu <jeffxu@chromium.org>,
-	Kees Cook <kees@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Shakeel Butt <shakeel.butt@linux.dev>, Tejun Heo <tj@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v3] init/main.c: Wrap long kernel cmdline when printing
- to logs
-Message-ID: <0f93e380-09e1-4440-b514-1964cf38ccc1@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20251023113257.v3.1.I095f1e2c6c27f9f4de0b4841f725f356c643a13f@changeid>
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	virtualization@lists.linux.dev,
+	Vineeth Vijayan <vneethv@linux.ibm.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Zhenyu Wang <zhenyuw.linux@gmail.com>,
+	Zhi Wang <zhi.wang.linux@gmail.com>
+Cc: patches@lists.linux.dev
+Subject: [PATCH 00/22] vfio: Give VFIO_DEVICE_GET_REGION_INFO its own op
+Date: Thu, 23 Oct 2025 20:09:14 -0300
+Message-ID: <0-v1-679a6fa27d31+209-vfio_get_region_info_op_jgg@nvidia.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BY5PR17CA0036.namprd17.prod.outlook.com
+ (2603:10b6:a03:1b8::49) To MN2PR12MB3613.namprd12.prod.outlook.com
+ (2603:10b6:208:c1::17)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251023113257.v3.1.I095f1e2c6c27f9f4de0b4841f725f356c643a13f@changeid>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3613:EE_|SJ2PR12MB9138:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6fcb4de7-7969-4140-2fb1-08de12893fe8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?+ZgqWJBF28ap01s/uhon6y7ya5nkraO4UXn1dUtmG0WXxGUWr7XWhyHbpGfM?=
+ =?us-ascii?Q?0/56SMSeu3roOt5slsIV2qbl/bC8nGzhu2I5eYHPmwZk3TEL6OU47B4qSw7V?=
+ =?us-ascii?Q?KLJv3Z6qBNRzQzjYuI5mtiaPW+HNTArI16GsPT8dT3InyM0u+rSn4vq4q8AY?=
+ =?us-ascii?Q?ti4/9t+fWBlVz9MAFpQ38k8sDlrr1Gm35BkcEwNc73r+M8d96OQNzV728PBA?=
+ =?us-ascii?Q?paQIZoxq4YQ7wgBBGlnNjQc73UO18m42BxxWrENlG/LmGhJgetiNgfkl5xx5?=
+ =?us-ascii?Q?GqjmxVGqB1Mv8gA2EQNg6a94uNDHfpJfR2vKprKlV3Sd5KyevJXrploWyErp?=
+ =?us-ascii?Q?Ej5QH0ueTwMGiMbXUSJKrsHmnqvYgIu+3I8IDRjIhvBF7yn4aOZS+XhrVqeK?=
+ =?us-ascii?Q?JRcJ54NxHJSqKuopZyaAo5TzNMfOTQ41hYPv0PD2MYnAeRYwy/IyxsIO8pm4?=
+ =?us-ascii?Q?5B953la4K2guMLV+ao1/3sKdR46b9D5NuQRgTtLRpmxdWvkWdHh7cqfzkPfW?=
+ =?us-ascii?Q?DPh1T8+gjKK85HB+M0ltlUyUM2MzHziNca78gIs3yw2PELlb/MTvgqIqAqN3?=
+ =?us-ascii?Q?gU/UREVoO5gn2Nc2oiXG0fCm9I/5ztEqRUigJePDoFFn8uC9G51GErh0KpsQ?=
+ =?us-ascii?Q?qJabUSp+eAJO0rBkPtff9djPtWSaDiBB8gcipEEP0xm6CuqTpE/fjtxQw6bo?=
+ =?us-ascii?Q?K7guF8Ijccj5cTwijSVvoS9C638SX7j7jcJy9q32WpVP2Ffbfu3sADf5bVMs?=
+ =?us-ascii?Q?WDxb5UQ4TUyQyaEZmwGqSmnDJdVpzq2kdFQ4wdd0TOO6vkFFNyq5FCudrLX1?=
+ =?us-ascii?Q?fZ8VInLyxDEAyPcdLtiREByA1m8VmEzJuRvaJjY8ACHqZXVxD6Ye6Llghkm4?=
+ =?us-ascii?Q?75ZpG8fXmmJ0XVrMJe/UKK46iDN6QlENhdBUnRBTi4GgbU2tlxvc9JKEWVuY?=
+ =?us-ascii?Q?bpXrX0fxcRRrG0UQUHExRr8V/b31XOgz8y+WKuhqwPpE6sr4kHeiEFyRUXsM?=
+ =?us-ascii?Q?Ues3E2K+UlZAwRnZ/ekcWRvbg3sw64quEbg01rFSRn3DKk1WQaJmcRrFJ01J?=
+ =?us-ascii?Q?ATG5eDuZVTexEGp/xrYO4ztA9vDdIdr2sMGqCua8AOH8A9JXXwQ9T9q3Ll3A?=
+ =?us-ascii?Q?StuKi/hwNecE5BppHNxlrKcoHkWhUERD5rbq7aKIuJAMQZUFyNHqMhFtVpa5?=
+ =?us-ascii?Q?nM9eUOsyPyXvlpAAkvcifa4k7cDDB8YVNRyO9GCejtdY2fFUAJUveP0UtWVx?=
+ =?us-ascii?Q?8NIrr2eHZngyCSLt8LHxGxa1C7I12/PIyDgdGDSKHKHZY0qUeD++5cUuYQND?=
+ =?us-ascii?Q?fWBl7to0gmbz0uxE+RuCxecduSgP3ajJmggTOLsWVxdVYgb99J1W7IrMfa61?=
+ =?us-ascii?Q?33FeOue4GExsZFevi6bjYS14Rf0aga8cIOX/yCeVIUg596b09Yw7wRRuir42?=
+ =?us-ascii?Q?LVa4c9xQgnVdHe7a7XPAEqGDQHpX9gvDM82QuSt8GuS7m0HqE4pKfiRVHjZ0?=
+ =?us-ascii?Q?+AKN04K/QA7/CUg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3613.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?TjwtkCNm91ZjJQ4Brrx4FF+6Vc4ZYa6doJZlQkh/L2XyOfQSmL0i67jg/c/N?=
+ =?us-ascii?Q?/l5aHsugyuhJ7oQ0nntLL+GdWUZfLuJaG9aOqFJ46tSESAaDtljPbno1KhqB?=
+ =?us-ascii?Q?ukmq52krRf6lEyZNe/DxH4WB7q+5Nj47ccQmL+QPLid2+GdT33EqKI4OsqHK?=
+ =?us-ascii?Q?w6JM7LUy1MQ5GYDrWSL5U9vQiO8bPZVPuBcYBnAzLmzxxHgrvMj9+Dnueifi?=
+ =?us-ascii?Q?FZbG79mbeVjyrTMrfeOuQ+2atkIzxtdkbamEVVGrePpzVfdxtd8q+Tr4ZQR0?=
+ =?us-ascii?Q?+fhDc/YxjT1iMX1EdWdtBALCJl2HobD5nLy4qN02mrUE1R3jgjJQMA7V3uDr?=
+ =?us-ascii?Q?sv+JPcGLU1awfU6Bf+/YJnWBnMCVA68UD0+aESseTeGuQ11DxProion6Fl21?=
+ =?us-ascii?Q?VxTUVEeQ1J1vFSzvLqau79QUzmRMOcyMyKgvVn5YXxNiTXHP9rCQjLNRP8Eo?=
+ =?us-ascii?Q?/EUrYRPQD5mr4xabSp0QbAG5/RtbYlwFTHTVhovnfWAkIcqH83DypgTiwOgN?=
+ =?us-ascii?Q?u2Y4Veyc1NoF5ZHe85qeNB0Tu/wbVNIrvQM7YVKi16ESdaH9Wq63o4RdSFtg?=
+ =?us-ascii?Q?DoJZBnzJWpAXBVbXFvqCcHjsbzuXaUrxgGXku9Boik6GllaglSLXe/lJWvHe?=
+ =?us-ascii?Q?PXnQI6J96c8Iu+HWGFDanESKovfwzt2W5GTEB5TH6C0LJjcLeG5kwMVpxFge?=
+ =?us-ascii?Q?r/6/KdPsDYwUjSPa2IbO89uJC0SN7JcqZCegToZh+ZHgxtWHfy2Uf/qdPVLh?=
+ =?us-ascii?Q?2yp5qEqL95Q74s4ClDZUGc0sjPJsmmrr9fCSU0r1ki40S1BOiJPYxJv8G/EV?=
+ =?us-ascii?Q?vuCt8x2IFDs1hIq+heHRZwElogBj0aSPSFAoUreCwpc9nVrq/KUElQFnBUTm?=
+ =?us-ascii?Q?Q8/1E47uwq4p+eo0RokFVyMLkRnFbGGed3YPRTrzvBeaX7AfPeA8yMxFc7nW?=
+ =?us-ascii?Q?tdjHMCxeFTRnXjOqLMTQ7XNUlKvyD4fMIgobX7Cl3o+vLNBGis2o6rRS2QnB?=
+ =?us-ascii?Q?oWLsr6DDnDAE5IrGX3U2oQTBkpgtTpNcJ/h8I30oX1PqioL5ASk7iwFNILIU?=
+ =?us-ascii?Q?L41zuGPbB2Ut5Um46brxQuU/kMXS2OcMw73wA/TlPrB11kTJnLq/x73iyfAT?=
+ =?us-ascii?Q?m+AGJey+53BBMtx1+ZUm/iernAUpQ9I6jlT6Fz3tBElUhKyLUp0yeVPgUcgX?=
+ =?us-ascii?Q?NU0pJbRPLX+2UZeKKQIOgBbD1SVSLrzFknwnJdGyCvWPGhyP7bbivC4bq8Cb?=
+ =?us-ascii?Q?n/4Sn4RyB1Z5RXQyczSeCvklgxnwhUvYfHzr6eJ1kquzOEdQpokoKJNpcIGu?=
+ =?us-ascii?Q?Ajlv3CuunthuRjkLgj940G7y/eNDLvyTukKK69HahKOPsIIKMBmuMJRALE3s?=
+ =?us-ascii?Q?VFR9MGAEDX+JgO5b4sVEUK3dSro65HxWIEfeUM3r5NVIJdg5suR+G6IbyEs+?=
+ =?us-ascii?Q?DreeedJJg0t8LJo3YziNA8QDUB79Z2kjX5kYEbhupvlijEcopJLmAHCXV1BX?=
+ =?us-ascii?Q?jJBBhLf85FuiBINJGMAKcIhAb5iby5qgcfnZUBseZHEN/cx92kIed/jBoxgE?=
+ =?us-ascii?Q?PJPPXAL3L/6b8hLe0CQxSHClReI2K7wemWwQjosC?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6fcb4de7-7969-4140-2fb1-08de12893fe8
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3613.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2025 23:09:42.7333
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /OsV3UXLWE/xVfC7yfPB15bzGg2lqhjSMgEX/BDnLFCU38RDyU82Q1+gpj9UejXp
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9138
 
-On Thu, Oct 23, 2025 at 11:33:05AM -0700, Douglas Anderson wrote:
-> The kernel cmdline length is allowed to be longer than what printk can
-> handle. When this happens the cmdline that's printed to the kernel
-> ring buffer at bootup is cutoff and some kernel cmdline options are
-> "hidden" from the logs. This undercuts the usefulness of the log
-> message.
-> 
-> Specifically, grepping for COMMAND_LINE_SIZE shows that 2048 is common
-> and some architectures even define it as 4096. s390 allows a
-> CONFIG-based maximum up to 1MB (though it's not expected that anyone
-> will go over the default max of 4096 [1]).
-> 
-> The maximum message pr_notice() seems to be able to handle (based on
-> experiment) is 1021 characters. This appears to be based on the
-> current value of PRINTKRB_RECORD_MAX as 1024 and the fact that
-> pr_notice() spends 2 characters on the loglevel prefix and we have a
-> '\n' at the end.
-> 
-> While it would be possible to increase the limits of printk() (and
-> therefore pr_notice()) somewhat, it doesn't appear possible to
-> increase it enough to fully include a 2048-character cmdline without
-> breaking userspace. Specifically on at least two tested userspaces
-> (ChromeOS plus the Debian-based distro I'm typing this message on) the
-> `dmesg` tool reads lines from `/dev/kmsg` in 2047-byte chunks. As per
-> `Documentation/ABI/testing/dev-kmsg`:
+There is alot of duplicated code in the drivers for processing
+VFIO_DEVICE_GET_REGION_INFO. Introduce a new op get_region_info_caps()
+which provides a struct vfio_info_cap and handles the cap chain logic
+to write the caps back to userspace and remove all of this duplication
+from drivers.
 
-Thank you again!
+This is done in two steps, the first is a largely mechanical introduction
+of the get_region_info(). These patches are best viewed with the diff
+option to ignore whitespace (-b) as most of the lines are re-indending
+things.
 
-Tested-by: Paul E. McKenney <paulmck@kernel.org>
+Then drivers are updated to remove the duplicate cap related code. Some
+drivers are converted to use vfio_info_add_capability() instead of open
+coding a version of it.
 
->   Every read() from the opened device node receives one record
->   of the kernel's printk buffer.
->   ...
->   Messages in the record ring buffer get overwritten as whole,
->   there are never partial messages received by read().
-> 
-> We simply can't fit a 2048-byte cmdline plus the "Kernel command
-> line:" prefix plus info about time/log_level/etc in a 2047-byte read.
-> 
-> The above means that if we want to avoid the truncation we need to do
-> some type of wrapping of the cmdline when printing.
-> 
-> Add wrapping to the printout of the kernel command line. By default,
-> the wrapping is set to 1021 characters to avoid breaking anyone, but
-> allow wrapping to be set lower by a Kconfig knob
-> "CONFIG_CMDLINE_LOG_WRAP_IDEAL_LEN". Any tools that are correctly
-> parsing the cmdline today (because it is less than 1021 characters)
-> will see no difference in their behavior. The format of wrapped output
-> is designed to be matched by anyone using "grep" to search for the
-> cmdline and also to be easy for tools to handle. Anyone who is sure
-> their tools (if any) handle the wrapped format can choose a lower
-> wrapping value and have prettier output.
-> 
-> Setting CONFIG_CMDLINE_LOG_WRAP_IDEAL_LEN to -1 fully disables the
-> wrapping logic. This means that long command lines will be truncated
-> again, but this config could be set if command lines are expected to
-> be long and userspace is known not to handle parsing logs with the
-> wrapping.
-> 
-> Wrapping is based on spaces, ignoring quotes. All lines are prefixed
-> with "Kernel command line: " and lines that are not the last line have
-> a " \" suffix added to them. The prefix and suffix count towards the
-> line length for wrapping purposes. The ideal length will be exceeded
-> if no appropriate place to wrap is found.
-> 
-> The wrapping function added here is fairly generic and could be made a
-> library function (somewhat like print_hex_dump()) if it's needed
-> elsewhere in the kernel. However, having printk() directly incorporate
-> this wrapping would be unlikely to be a good idea since it would break
-> printouts into more than one record without any obvious common line
-> prefix to tie lines together. It would also be extra overhead when, in
-> general, kernel log message should simply be kept smaller than 1021
-> bytes. For some discussion on this topic, see responses to the v1
-> posting of this patch [2].
-> 
-> [1] https://lore.kernel.org/r/20251021131633.26700Dd6-hca@linux.ibm.com
-> [2] https://lore.kernel.org/r/CAD=FV=VNyt1zG_8pS64wgV8VkZWiWJymnZ-XCfkrfaAhhFSKcA@mail.gmail.com
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> - v1 link: https://lore.kernel.org/r/20251019100605.1.I095f1e2c6c27f9f4de0b4841f725f356c643a13f@changeid
-> - v2 link: https://lore.kernel.org/r/20251021173939.v2.1.I095f1e2c6c27f9f4de0b4841f725f356c643a13f@changeid
-> 
-> NOTE: I _didn't_ add any "max characters printed" to try to handle
-> someone on s390 having an absurdly long cmdline after the discussoin
-> in v1. If someone truly puts a giant cmdline then it will all be
-> printed out to dmesg. If this truly turns out to be a problem for
-> someone then it's easy to add a maximum at a later time.
-> 
-> Changes in v3:
-> - Allow setting config to -1 to disable logging.
-> - Handle case where prefix len >= wrap len, which just means wrap ASAP.
-> - Update Kconfig description to talk about -1 and be more detailed.
-> 
-> Changes in v2:
-> - Much longer commit message after discussion in v1.
-> 
->  init/Kconfig | 18 ++++++++++
->  init/main.c  | 96 +++++++++++++++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 113 insertions(+), 1 deletion(-)
-> 
-> diff --git a/init/Kconfig b/init/Kconfig
-> index cab3ad28ca49..1e7e82a90813 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -1512,6 +1512,24 @@ config BOOT_CONFIG_EMBED_FILE
->  	  This bootconfig will be used if there is no initrd or no other
->  	  bootconfig in the initrd.
->  
-> +config CMDLINE_LOG_WRAP_IDEAL_LEN
-> +	int "Length to try to wrap the cmdline when logged at boot"
-> +	default 1021
-> +	range -1 1021
-> +	help
-> +	  At boot time, the kernel command line is logged to the console.
-> +	  The log message will start with the prefix "Kernel command line: ".
-> +	  The log message will attempt to be wrapped (split into multiple log
-> +	  messages) at spaces based on CMDLINE_LOG_WRAP_IDEAL_LEN characters.
-> +	  If wrapping happens, each log message will start with the prefix and
-> +	  all but the last message will end with " \". Messages may exceed the
-> +	  ideal length if a place to wrap isn't found before the specified
-> +	  number of characters.
-> +
-> +	  A value of -1 disables wrapping, though be warned that the maximum
-> +	  length of a log message (1021 characters) may cause the cmdline to
-> +	  be truncated.
-> +
->  config INITRAMFS_PRESERVE_MTIME
->  	bool "Preserve cpio archive mtimes in initramfs"
->  	depends on BLK_DEV_INITRD
-> diff --git a/init/main.c b/init/main.c
-> index 07a3116811c5..2c0bdc95ae4e 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -906,6 +906,100 @@ static void __init early_numa_node_init(void)
->  #endif
->  }
->  
-> +#define KERNEL_CMDLINE_PREFIX		"Kernel command line: "
-> +#define KERNEL_CMDLINE_PREFIX_LEN	(sizeof(KERNEL_CMDLINE_PREFIX) - 1)
-> +#define KERNEL_CMDLINE_CONTINUATION	" \\"
-> +#define KERNEL_CMDLINE_CONTINUATION_LEN	(sizeof(KERNEL_CMDLINE_CONTINUATION) - 1)
-> +
-> +#define MIN_CMDLINE_LOG_WRAP_IDEAL_LEN	(KERNEL_CMDLINE_PREFIX_LEN + \
-> +					 KERNEL_CMDLINE_CONTINUATION_LEN)
-> +#define CMDLINE_LOG_WRAP_IDEAL_LEN	(CONFIG_CMDLINE_LOG_WRAP_IDEAL_LEN > \
-> +					 MIN_CMDLINE_LOG_WRAP_IDEAL_LEN ? \
-> +					 CONFIG_CMDLINE_LOG_WRAP_IDEAL_LEN : \
-> +					 MIN_CMDLINE_LOG_WRAP_IDEAL_LEN)
-> +
-> +#define IDEAL_CMDLINE_LEN		(CMDLINE_LOG_WRAP_IDEAL_LEN - KERNEL_CMDLINE_PREFIX_LEN)
-> +#define IDEAL_CMDLINE_SPLIT_LEN		(IDEAL_CMDLINE_LEN - KERNEL_CMDLINE_CONTINUATION_LEN)
-> +
-> +/**
-> + * print_kernel_cmdline() - Print the kernel cmdline with wrapping.
-> + * @cmdline: The cmdline to print.
-> + *
-> + * Print the kernel command line, trying to wrap based on the Kconfig knob
-> + * CONFIG_CMDLINE_LOG_WRAP_IDEAL_LEN.
-> + *
-> + * Wrapping is based on spaces, ignoring quotes. All lines are prefixed
-> + * with "Kernel command line: " and lines that are not the last line have
-> + * a " \" suffix added to them. The prefix and suffix count towards the
-> + * line length for wrapping purposes. The ideal length will be exceeded
-> + * if no appropriate place to wrap is found.
-> + *
-> + * Example output if CONFIG_CMDLINE_LOG_WRAP_IDEAL_LEN is 40:
-> + *   Kernel command line: loglevel=7 \
-> + *   Kernel command line: init=/sbin/init \
-> + *   Kernel command line: root=PARTUUID=8c3efc1a-768b-6642-8d0c-89eb782f19f0/PARTNROFF=1 \
-> + *   Kernel command line: rootwait ro \
-> + *   Kernel command line: my_quoted_arg="The \
-> + *   Kernel command line: quick brown fox \
-> + *   Kernel command line: jumps over the \
-> + *   Kernel command line: lazy dog."
-> + */
-> +static void print_kernel_cmdline(const char *cmdline)
-> +{
-> +	size_t len;
-> +
-> +	/* Config option of -1 disables wrapping */
-> +	if (CONFIG_CMDLINE_LOG_WRAP_IDEAL_LEN < 0) {
-> +		pr_notice("%s%s\n", KERNEL_CMDLINE_PREFIX, cmdline);
-> +		return;
-> +	}
-> +
-> +	len = strlen(cmdline);
-> +	while (len > IDEAL_CMDLINE_LEN) {
-> +		const char *first_space;
-> +		const char *prev_cutoff;
-> +		const char *cutoff;
-> +		int to_print;
-> +		size_t used;
-> +
-> +		/* Find the last ' ' that wouldn't make the line too long */
-> +		prev_cutoff = NULL;
-> +		cutoff = cmdline;
-> +		while (true) {
-> +			cutoff = strchr(cutoff + 1, ' ');
-> +			if (!cutoff || cutoff - cmdline > IDEAL_CMDLINE_SPLIT_LEN)
-> +				break;
-> +			prev_cutoff = cutoff;
-> +		}
-> +		if (prev_cutoff)
-> +			cutoff = prev_cutoff;
-> +		else if (!cutoff)
-> +			break;
-> +
-> +		/* Find the beginning and end of the string of spaces */
-> +		first_space = cutoff;
-> +		while (first_space > cmdline && first_space[-1] == ' ')
-> +			first_space--;
-> +		to_print = first_space - cmdline;
-> +		while (*cutoff == ' ')
-> +			cutoff++;
-> +		used = cutoff - cmdline;
-> +
-> +		/* If the whole string is used, break and do the final printout */
-> +		if (len == used)
-> +			break;
-> +
-> +		if (to_print)
-> +			pr_notice("%s%.*s%s\n", KERNEL_CMDLINE_PREFIX,
-> +				  to_print, cmdline, KERNEL_CMDLINE_CONTINUATION);
-> +
-> +		len -= used;
-> +		cmdline += used;
-> +	}
-> +	if (len)
-> +		pr_notice("%s%s\n", KERNEL_CMDLINE_PREFIX, cmdline);
-> +}
-> +
->  asmlinkage __visible __init __no_sanitize_address __noreturn __no_stack_protector
->  void start_kernel(void)
->  {
-> @@ -942,7 +1036,7 @@ void start_kernel(void)
->  	early_numa_node_init();
->  	boot_cpu_hotplug_init();
->  
-> -	pr_notice("Kernel command line: %s\n", saved_command_line);
-> +	print_kernel_cmdline(saved_command_line);
->  	/* parameters may set static keys */
->  	parse_early_param();
->  	after_dashes = parse_args("Booting kernel",
-> -- 
-> 2.51.1.821.gb6fe4d2222-goog
-> 
+This is on github: https://github.com/jgunthorpe/linux/commits/vfio_get_region_info_op
+
+Jason Gunthorpe (22):
+  vfio: Provide a get_region_info op
+  vfio/hisi: Convert to the get_region_info op
+  vfio/virtio: Convert to the get_region_info op
+  vfio/nvgrace: Convert to the get_region_info op
+  vfio/pci: Fill in the missing get_region_info ops
+  vfio/mtty: Provide a get_region_info op
+  vfio/mdpy: Provide a get_region_info op
+  vfio/mbochs: Provide a get_region_info op
+  vfio/platform: Provide a get_region_info op
+  vfio/fsl: Provide a get_region_info op
+  vfio/cdx: Provide a get_region_info op
+  vfio/ccw: Provide a get_region_info op
+  vfio/gvt: Provide a get_region_info op
+  vfio: Require drivers to implement get_region_info
+  vfio: Add get_region_info_caps op
+  vfio/mbochs: Convert mbochs to use vfio_info_add_capability()
+  vfio/gvt: Convert to get_region_info_caps
+  vfio/ccw: Convert to get_region_info_caps
+  vfio/pci: Convert all PCI drivers to get_region_info_caps
+  vfio/platform: Convert to get_region_info_caps
+  vfio: Move the remaining drivers to get_region_info_caps
+  vfio: Remove the get_region_info op
+
+ drivers/gpu/drm/i915/gvt/kvmgt.c              | 272 ++++++++----------
+ drivers/s390/cio/vfio_ccw_ops.c               |  45 +--
+ drivers/vfio/cdx/main.c                       |  29 +-
+ drivers/vfio/fsl-mc/vfio_fsl_mc.c             |  43 ++-
+ .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    |  54 ++--
+ drivers/vfio/pci/mlx5/main.c                  |   1 +
+ drivers/vfio/pci/nvgrace-gpu/main.c           |  53 +---
+ drivers/vfio/pci/pds/vfio_dev.c               |   1 +
+ drivers/vfio/pci/qat/main.c                   |   1 +
+ drivers/vfio/pci/vfio_pci.c                   |   1 +
+ drivers/vfio/pci/vfio_pci_core.c              | 110 +++----
+ drivers/vfio/pci/virtio/common.h              |   5 +-
+ drivers/vfio/pci/virtio/legacy_io.c           |  38 +--
+ drivers/vfio/pci/virtio/main.c                |   5 +-
+ drivers/vfio/platform/vfio_amba.c             |   1 +
+ drivers/vfio/platform/vfio_platform.c         |   1 +
+ drivers/vfio/platform/vfio_platform_common.c  |  40 ++-
+ drivers/vfio/platform/vfio_platform_private.h |   3 +
+ drivers/vfio/vfio_main.c                      |  45 +++
+ include/linux/vfio.h                          |   4 +
+ include/linux/vfio_pci_core.h                 |   3 +
+ samples/vfio-mdev/mbochs.c                    |  71 ++---
+ samples/vfio-mdev/mdpy.c                      |  34 +--
+ samples/vfio-mdev/mtty.c                      |  33 +--
+ 24 files changed, 363 insertions(+), 530 deletions(-)
+
+
+base-commit: 211ddde0823f1442e4ad052a2f30f050145ccada
+-- 
+2.43.0
+
 
