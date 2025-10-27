@@ -1,183 +1,204 @@
-Return-Path: <linux-s390+bounces-14284-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-14286-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61F18C0F6FE
-	for <lists+linux-s390@lfdr.de>; Mon, 27 Oct 2025 17:48:17 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD0E8C0F6F2
+	for <lists+linux-s390@lfdr.de>; Mon, 27 Oct 2025 17:48:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4F86348099A
-	for <lists+linux-s390@lfdr.de>; Mon, 27 Oct 2025 16:39:46 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 410B5344BCB
+	for <lists+linux-s390@lfdr.de>; Mon, 27 Oct 2025 16:48:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B69EB30C62D;
-	Mon, 27 Oct 2025 16:38:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 104D0312815;
+	Mon, 27 Oct 2025 16:48:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="BSCrR+pG"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="j+S6nQ74"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F255D2D3733
-	for <linux-s390@vger.kernel.org>; Mon, 27 Oct 2025 16:38:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47308313260;
+	Mon, 27 Oct 2025 16:47:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761583134; cv=none; b=GlW8AA/dkVNAMNbdDQAGg/iVg+DZMyNP+l/kQhF8EI0U0c7M0MIN1aED2gml8cCLHX/va8adqlXnxHUGb1eUNP1J2uAXa5peNor7iKYtCuHM6CveTyeNzfUB/xJMhENsiqVxgcvFxLuZiWWPwF4spAtNly8h/tBpc0Qp05xWEBE=
+	t=1761583681; cv=none; b=IGYMZg7VVmzO5zU49z/BEaf7DYaxHReP+PYYLNK4h5m6dFenZuDqZkxjrbZ1G+5byyZyTcKIoRlX4F/qaFLBFQSdNYmgwnRdjRcBwVKjfrQNnaRndv8Tvd0Pu2+DxXGDuqIAisjHaaJxTn9xz81ATzJyoc3J4SOvxwL9Pplu6rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761583134; c=relaxed/simple;
-	bh=nAhmUlr/hO6AGJs14F5PTgWNTU6mEzb9QsSufy3So/Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZLdFE/msjNfVMgOE1/ZESClD6Bm6KaHLXDnsSMj0Yo8XuDZPcuMlBb5Lb1ghgFt7E2m6gGE7qWA9H4k6Gq1GOsm1fCJUSlNP2wIJjoZC6pZuv4dRrqOez2CPUoX5of71VDONoVhlK6LLB8Lq+ZS2mqmMhMFunUydYbUr0fODjZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=BSCrR+pG; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-8a074e50b41so276736885a.3
-        for <linux-s390@vger.kernel.org>; Mon, 27 Oct 2025 09:38:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1761583132; x=1762187932; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=f2HGwzd/4lzqDYF3XkN+FOghRP60HTqO9KJmTXVpNDU=;
-        b=BSCrR+pG+Y7/saGJaQX20uzc1Qo1+qKSDQNhfe3Jq5mp2ZVIuA1AfXqrkKMasdFzmW
-         7Qx+hR79rqhMBQVyg3XVENRsHeiXAbOlGwuG8YjTI4x6f+K86y+AUpDV6/Dwg0/i7ua4
-         dtX3BNjxD8vykbbF2cTq0jAEukuu2uPSRi4AnTxPKyd/oeBEMaEjFTSYhZWoGLnpeRyS
-         RilIGepkRXt83NIzS1lFthelm2vYj9pSCBbeq7bWvbUbmksj5tBICCrCnngGIpRRkGPd
-         xDPc57+tG5kSN+8jOfsZ+gwtFsIILrsnYXvwMFI43BJ1Ux4gumpj4AIgWoy/kGuTDcHp
-         lqGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761583132; x=1762187932;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f2HGwzd/4lzqDYF3XkN+FOghRP60HTqO9KJmTXVpNDU=;
-        b=g63kNRtNbljjNFc5NqrGd4wiGHfH1UIQGSS6tEWavJJ+el+Dv27fTO2KLI6EnYOIcY
-         nZ5ah3JWg5OIxUzV8zxmP+Dm4G5nHIFAxxxbdEnNV44qS4Sc1LWxcH91jKDeOiVS8NHA
-         tuLXWo/olRLTTc4JguGKN+qYcr1hbE5HASMxrEzsAWdbI/5DIGd+J2Rxpv9Ltgf8vG8s
-         rbpaYo5H/Qlt6QQ44jenMurb5nQT2AZXMNG1zbEpvtXcBCpotHP3iJHiGGGhHTM4/sH+
-         1nrkShKJC3LZAkW3iogR135ConhMP1ad3fg7s8VgKe9rgHf3hjmctTPMYguWDKd4ShhB
-         iGPg==
-X-Forwarded-Encrypted: i=1; AJvYcCXEQh/0de1AW3ptKbjxhZpEvNhiKnsxdJG2cmI3ZC+/cxgWwwV7EmK3qADoPIP0uhEu5N7mcGw0lgoM@vger.kernel.org
-X-Gm-Message-State: AOJu0YyX55ItY3hk59bOd2dhqN7PRjEQbcDQdZIQBcZi19cS7VFzDw3t
-	E3cswiRz2tAyX16WF/LgxykCdXhdjGL67zYSVQnRwIyJ/KXltNBtBst3lA7KhSfNe84=
-X-Gm-Gg: ASbGnctS/D2f9n6P+Z91guNE4hMWXPgI0vYsuNUzceyXtfnEdKCF8JcGJeTC93qfWiI
-	T3Aq9KV740mSnZUxbPLgknDmGPu5+f6PEPog6UAkalf24aV9CfAoq/y2UN1Rf5GGmf8Wd4BnMfL
-	8xAKwsodmymbc5rfanhnAlWXSZvfgkaDGOYwEKspXBDDLx3jGDIpFEWpNDgTYostG+mX5507qAi
-	W+WnOLM+hf0yKEy7e37Wi8wkV7LvltGpThwYIw5IFGB2fJ+M4mQ6kQWLwsK9waUTyb018QyG1Bs
-	IGrSpsJPkcjgzvNm2Ev/Wu5AHqxNaWrW+hJTNIo9YloMBMp+Xjo7E1D8gRq6WHkOxyUQGW7hpOP
-	InKyYgToyK1roLF+1E2ialOBeRSsBrZj69NPS2KIy7MuXMxg3vzQPbdAZXTwqGOIuYwTgJ/BuRe
-	1xzqKAd4fjhU/AA+wOa7Ag7LYMpme0ILmZm8HAGMjp/O+ZSDaJNVHP77GEhP5eD+K3G1CtXQ==
-X-Google-Smtp-Source: AGHT+IE8OFT35MTx0jxBdZigqHGpIP25NqCfl0+l6c8fCefLdIH0hfSup7UdNhOGnYzqPJc4qxyLmA==
-X-Received: by 2002:a05:620a:711c:b0:892:636a:5675 with SMTP id af79cd13be357-8a6f704a25amr58519385a.58.1761583131221;
-        Mon, 27 Oct 2025 09:38:51 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-89f25798afesm626595985a.37.2025.10.27.09.38.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Oct 2025 09:38:50 -0700 (PDT)
-Date: Mon, 27 Oct 2025 12:38:48 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	David Hildenbrand <david@redhat.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>, Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-	Lance Yang <lance.yang@linux.dev>,
-	Kemeng Shi <shikemeng@huaweicloud.com>,
-	Kairui Song <kasong@tencent.com>, Nhat Pham <nphamcs@gmail.com>,
-	Baoquan He <bhe@redhat.com>, Chris Li <chrisl@kernel.org>,
-	Peter Xu <peterx@redhat.com>, Matthew Wilcox <willy@infradead.org>,
-	Leon Romanovsky <leon@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
-	Byungchul Park <byungchul@sk.com>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry.yoo@oracle.com>,
-	kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [RFC PATCH 05/12] fs/proc/task_mmu: refactor pagemap_pmd_range()
-Message-ID: <aP-gGKMa6Rcw6ZWH@gourry-fedora-PF4VCD3F>
-References: <cover.1761288179.git.lorenzo.stoakes@oracle.com>
- <2ce1da8c64bf2f831938d711b047b2eba0fa9f32.1761288179.git.lorenzo.stoakes@oracle.com>
- <aPu4LWGdGSQR_xY0@gourry-fedora-PF4VCD3F>
- <76348b1f-2626-4010-8269-edd74a936982@lucifer.local>
- <aPvPiI4BxTIzasq1@gourry-fedora-PF4VCD3F>
- <3f3e5582-d707-41d0-99a7-4e9c25f1224d@lucifer.local>
- <aPvjfo1hVlb_WBcz@gourry-fedora-PF4VCD3F>
- <20251027161146.GG760669@ziepe.ca>
- <27a5ea4e-155c-40d1-87d7-e27e98b4871d@lucifer.local>
+	s=arc-20240116; t=1761583681; c=relaxed/simple;
+	bh=rpOaMzD4tQjBivPFOAY7vSm96wEOM162NESlopH6JYQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PYzlsxHMSCYh5znV05lPKhsKeQPXegriq5dQHJwTeV7+kKPhvAaGbBt0Go/Ye6MzZ2vhyY/6tcqMQxVsusd68C42BsjPocnrtlxyr18djOq8dHo4EtCwjc+vXUpP9oyJ9+PRHagRgNPgMYkkcmypSjjUft+zxSEXHWHc9U0QRAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=j+S6nQ74; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59RD8UQE032633;
+	Mon, 27 Oct 2025 16:47:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=1Z/0C6
+	4ctaozs3ABvQcRCVXmOnEYI0cdXgxwFEI+wK8=; b=j+S6nQ74Se7giUxmRQfDzo
+	0fHXyJt9Lgj5bSsrWtdQlcW/roLoLbYuUk7XXfEPscwj+Ier7Gw3pZ+MtYB/mbQh
+	5zuyM1wmgFz0nm0QmuLMGxmbGA85R4Tt+f5obJoHkNaLwRs5NFy8TjQaad1XrZ2Y
+	pruWJ55VfwMm53S9DVHJ23TIZQT+mc13OXbtSZp8JfZ1hffB5RORFuoZter1Tjlp
+	g2/0uRFYQ9bxCPjJzqJFMfzzfBgLx6CiG6fubEPSlZTUrxQkxf13JSI77IP7lV8Z
+	rh8/aGe2OWouWG0n9O9OJPJ8CbbcTRDk5beLBOGyNeXhvDtFrcw9MQJ/UH8stllw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a0kyt7yx5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 27 Oct 2025 16:47:33 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 59RGjbRp004340;
+	Mon, 27 Oct 2025 16:47:32 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a0kyt7yx0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 27 Oct 2025 16:47:32 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59RFIZ0s030114;
+	Mon, 27 Oct 2025 16:47:31 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4a19vmekkw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 27 Oct 2025 16:47:31 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59RGlT109896284
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 27 Oct 2025 16:47:29 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 87CB220043;
+	Mon, 27 Oct 2025 16:47:29 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C59A320040;
+	Mon, 27 Oct 2025 16:47:28 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.155.209.42])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 27 Oct 2025 16:47:28 +0000 (GMT)
+Date: Mon, 27 Oct 2025 17:47:26 +0100
+From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Balbir Singh
+ <balbirs@nvidia.com>, Liam.Howlett@oracle.com,
+        airlied@gmail.com, akpm@linux-foundation.org, apopple@nvidia.com,
+        baohua@kernel.org, baolin.wang@linux.alibaba.com, byungchul@sk.com,
+        dakr@kernel.org, dev.jain@arm.com, dri-devel@lists.freedesktop.org,
+        francois.dugast@intel.com, gourry@gourry.net, joshua.hahnjy@gmail.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        lorenzo.stoakes@oracle.com, lyude@redhat.com, matthew.brost@intel.com,
+        mpenttil@redhat.com, npache@redhat.com, osalvador@suse.de,
+        rakie.kim@sk.com, rcampbell@nvidia.com, ryan.roberts@arm.com,
+        simona@ffwll.ch, ying.huang@linux.alibaba.com, ziy@nvidia.com,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-next@vger.kernel.org
+Subject: Re: linux-next: KVM/s390x regression
+Message-ID: <20251027174726.5d8fcce7@p-imbrenda>
+In-Reply-To: <748cdc18-e32d-41bd-90d1-a102b1c51e06@redhat.com>
+References: <20251001065707.920170-4-balbirs@nvidia.com>
+	<20251017144924.10034-1-borntraeger@linux.ibm.com>
+	<9beff9d6-47c7-4a65-b320-43efd1e12687@redhat.com>
+	<c67386be-5278-411d-97e7-43fc34bf7c98@linux.ibm.com>
+	<8c778cd0-5608-4852-9840-4d98828d7b33@redhat.com>
+	<74272098-cfb7-424b-a55e-55e94f04524e@linux.ibm.com>
+	<84349344-b127-41f6-99f1-10f907c2bd07@redhat.com>
+	<c9f28d0c-6b06-47a2-884d-7533f7b49c45@nvidia.com>
+	<f5debf87-0477-4d6a-8280-0cd95cd09412@linux.ibm.com>
+	<748cdc18-e32d-41bd-90d1-a102b1c51e06@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <27a5ea4e-155c-40d1-87d7-e27e98b4871d@lucifer.local>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: ubob-5LekCHHco6DkR2SSF7gBcYPozRH
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDI1MDAwMSBTYWx0ZWRfX76PA6OE8xQR1
+ w6FqXRJhMr8hQX2vlEjfyQrEeLlINNckKrCpHqV9x3C8T+/0MOhO77PRRlZuHvtxhrvJ14q4LDO
+ gy6rQVqHOBPRsjm8rzQ8UM+K3vmNugEiNmmNaWYNYuyqgAXHCYVezSpfCtook6eZfohpVsMTAMS
+ 5pCfRkzynTMtXsJm4Shk77fu6hXApSLdiPXkdeRzPU6K1xQ04NwgFg0yewqrHjtiOSFUCftOrCi
+ omXYZd64bQs5akgGifdp5LPzr8OIZUb23x6uhz2nt728Y1Oj8Cm8sHG2RjBZ5hjnfHNj9VV9gYq
+ BwYfWdkAHiGeFDchPidmxmgC7VQQkseyNKh6QrnlvNqYyhG7dK2opBh9/BoJMwi2G/meyseDjdq
+ GWSKir29IsZ3GOZL1FJz7G8+NgayeA==
+X-Proofpoint-GUID: 6rmIiatZmSL_xPvg8AlM1iNfS4Hou4ZO
+X-Authority-Analysis: v=2.4 cv=FaE6BZ+6 c=1 sm=1 tr=0 ts=68ffa225 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=kj9zAlcOel0A:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=20KFwNOVAAAA:8 a=ph-KnSEqExXM2Mgme_gA:9 a=CjuIK1q_8ugA:10
+ a=nl4s5V0KI7Kw-pW0DWrs:22 a=pHzHmUro8NiASowvMSCR:22 a=xoEH_sTeL_Rfw54TyV31:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-27_06,2025-10-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 malwarescore=0 suspectscore=0 lowpriorityscore=0 adultscore=0
+ impostorscore=0 priorityscore=1501 clxscore=1015 bulkscore=0 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510250001
 
-On Mon, Oct 27, 2025 at 04:26:54PM +0000, Lorenzo Stoakes wrote:
-> On Mon, Oct 27, 2025 at 01:11:46PM -0300, Jason Gunthorpe wrote:
-> > On Fri, Oct 24, 2025 at 04:37:18PM -0400, Gregory Price wrote:
-> > > On Fri, Oct 24, 2025 at 09:15:59PM +0100, Lorenzo Stoakes wrote:
-> > > > On Fri, Oct 24, 2025 at 03:12:08PM -0400, Gregory Price wrote:
-> > > >
-> > > > So maybe actually that isn't too bad of an idea...
-> > > >
-> > > > Could also be
-> > > >
-> > > > nonpresent_or_swap_t but that's kinda icky...
-> > >
-> > > clearly we need:
-> > >
-> > > union {
-> > > 	swp_entry_t swap;
-> > > 	nonpresent_entry_t np;
-> > > 	pony_entry_t pony;
-> > > 	plum_emtry_t beer;
-> > > } leaf_entry_t;
+On Mon, 20 Oct 2025 10:41:28 +0200
+David Hildenbrand <david@redhat.com> wrote:
+
+> On 20.10.25 09:00, Christian Borntraeger wrote:
+> > Am 17.10.25 um 23:56 schrieb Balbir Singh:
+> >   
+> >> In the meanwhile, does this fix/workaround work?
+> >>
+> >> diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
+> >> index 0c847cdf4fd3..31c1754d5bd4 100644
+> >> --- a/mm/pgtable-generic.c
+> >> +++ b/mm/pgtable-generic.c
+> >> @@ -290,7 +290,7 @@ pte_t *___pte_offset_map(pmd_t *pmd, unsigned long addr, pmd_t *pmdvalp)
+> >>    
+> >>    	if (pmdvalp)
+> >>    		*pmdvalp = pmdval;
+> >> -	if (unlikely(pmd_none(pmdval) || !pmd_present(pmdval)))
+> >> +	if (unlikely(pmd_none(pmdval) || is_pmd_non_present_folio_entry(pmdval)))
+> >>    		goto nomap;
+> >>    	if (unlikely(pmd_trans_huge(pmdval)))
+> >>    		goto nomap;
+> >>  
+> > 
+> > Yes, this seems to work.  
 > 
-> I think Greg meant this as a joke [correct me if wrong] :) that was my
-> impression anyway (see original end of email...)
->
-> I like leaf_entry_t name-wise.
+> Right, but that's not what we will want here. We'll have to adjust s390x 
+> gmap code (which is getting redesigned either way) to only take the page 
+> lock.
 > 
-> I don't love the union.
->
+> In the end, we'll want here later a single
+> 
+> if (!pmd_present(pmdval))
+> 	goto nomap;
+> 
 
-The union was definitely a joke - see `plum_entry_t beer`
+this seems to do the trick:
 
-There definitely shouldn't be enough extensions to warrant a union here,
-that seems like negative value.
+diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
+index 8ff6bba107e8..22c448b32340 100644
+--- a/arch/s390/mm/gmap.c
++++ b/arch/s390/mm/gmap.c
+@@ -599,8 +599,9 @@ int __gmap_link(struct gmap *gmap, unsigned long
+gaddr, unsigned long vmaddr) | _SEGMENT_ENTRY_GMAP_UC
+                                        | _SEGMENT_ENTRY;
+                        } else
+-                               *table = pmd_val(*pmd) &
+-                                       _SEGMENT_ENTRY_HARDWARE_BITS;
++                               *table = (pmd_val(*pmd) &
++                                       _SEGMENT_ENTRY_HARDWARE_BITS)
++                                       | _SEGMENT_ENTRY;
+                }
+        } else if (*table & _SEGMENT_ENTRY_PROTECT &&
+                   !(pmd_val(*pmd) & _SEGMENT_ENTRY_PROTECT)) {
 
-leaf_entry_t naming replacing swp_entry_t seems reasonable since that's
-basically all swp_entry_t is in its current form - even according to the
-this set's cover letter:
 
-```
-  There's an established convention in the kernel that we treat leaf page
-  tables (so far at the PTE, PMD level) as containing 'swap entries' should
-  they be neither empty (i.e. p**_none() evaluating true) nor present
-  (i.e. p**_present() evaluating true).
-```
 
-~Gregory
+it marks non-leaf gmap segment (pmd) entries as present, just as normal
+pmds would be.
+
+I think it's a good enough fix for now, pending the rewrite, which I
+hope to get in the next merge window
+
 
