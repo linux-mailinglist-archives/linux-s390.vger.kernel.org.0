@@ -1,139 +1,253 @@
-Return-Path: <linux-s390+bounces-14337-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-14335-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5646C15CA4
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Oct 2025 17:27:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C09E9C15C08
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Oct 2025 17:21:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7A84C1C27416
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Oct 2025 16:22:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A32C31899FC7
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Oct 2025 16:15:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD0163002B9;
-	Tue, 28 Oct 2025 16:20:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB533344024;
+	Tue, 28 Oct 2025 16:13:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="LB06GuRz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L9PSnA4L"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0291514E4
-	for <linux-s390@vger.kernel.org>; Tue, 28 Oct 2025 16:20:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCDD3339B5E
+	for <linux-s390@vger.kernel.org>; Tue, 28 Oct 2025 16:13:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761668441; cv=none; b=ugVUg1icTq/SpcSvTDnHPcgUnk7a134fPL2lkJ1BpE8vQWeIovm82p55lHNtK1CPTFYsDCvWbtqigl4+gmE3SeW886FwOZwLw7IyrfB9pYtq55kOq13l/qLtlNPunw3h1PMrWTCXZE/ANcR/cWXNyct8QbmNb/3BNqyyPWKg6zk=
+	t=1761668036; cv=none; b=c6vT4rluXKxC2jCML/VQVmQ+T7uhK/LbdTY/ppkyF7CSUc+jLHQjDjjc3lPmxgq9/3pFty5qPRBoHso+ngj3cgc1/hpkFo2Zx79l+1p4VLvQAsijhI2OMsL0/i9Nq4vx1pVdO0T+wS24ZAhg3X41RukC0KaNcotZL/QJNXSmCnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761668441; c=relaxed/simple;
-	bh=OTM6b8wUF9rw6fOXlIOEcqaTwYbvDfucC0gkj/2fKZo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BrXRc9QDXyKi3we782par6dX1n6cifZq51ihpLj/o/hjI2w/zGiL6JXvqlNmuDG5Rz1a/L+1f8uuXR5iJVKgOCKmMLRzzsw0PtEYjIHAUjemnodI097s5SDF5WdJ3of0ninnY0ns+HMkfEbkUBBa3eL4ZEt0PqrbA6kloRgLNjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=LB06GuRz; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b6d3effe106so1383352466b.2
-        for <linux-s390@vger.kernel.org>; Tue, 28 Oct 2025 09:20:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1761668436; x=1762273236; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/7vxW2qYHkfek8BcuNGNfNSQ19bugBoHjwa49fBWcYE=;
-        b=LB06GuRzayOKRaM/QD99rGp0SlCaNCn7Kjw8BZXMhz8WWp89uABDhLzawEOH7wEcon
-         Jafboc0N/z3IR8ckJKvSREhTZH+6dCAHipF37VR4NZgSr1HcmcWX9hP2f1rALTkQ+v5I
-         zITxahCjLsvlCuCL6Br+ohlHInQzB5MTGqLpY=
+	s=arc-20240116; t=1761668036; c=relaxed/simple;
+	bh=BiRQH6wQneeuEFAtj7/AZRUajcc/8rS/qi1d4KyuDvM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LCENGFwyLpuQlgM8WLBpHl6GnNkqUBD3c72fyK8k8XgG4juDY51sqc0+hlLpFyL4OAIfhMeuvD8BDUbW2bmWc3y97C49tiKaAayB9ce0HzUudP8TGxs9EL8t37Gt3+nHmJmJ/ioKhF4EQC2vt4kYFaX8WXB+ELC7RbrEqdFLcyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L9PSnA4L; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1761668033;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=KvvpFK250LHbofQ0y9+Mb287YMhgXcSSFNTTgJ2zzcM=;
+	b=L9PSnA4LSj1sEHBGdWH1WuA4DgVVn+vpgyUcjBGXft8lO93TlZgs85Xyvu4caquJ37dp6k
+	Y7cmxCmKp4jqdHVlYTWyIEtLc4EgNNQXHKvOUVCg9zCm16Le83rG4Y37lQrTIrTBtP8z6P
+	WLJxRkG7nVDVmm9YktcKsKTY4vlftLg=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-315-j7Gv9G9cNnOTv4BY9V-IYw-1; Tue, 28 Oct 2025 12:13:52 -0400
+X-MC-Unique: j7Gv9G9cNnOTv4BY9V-IYw-1
+X-Mimecast-MFC-AGG-ID: j7Gv9G9cNnOTv4BY9V-IYw_1761668031
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-471001b980eso39412135e9.1
+        for <linux-s390@vger.kernel.org>; Tue, 28 Oct 2025 09:13:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761668436; x=1762273236;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1761668031; x=1762272831;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=/7vxW2qYHkfek8BcuNGNfNSQ19bugBoHjwa49fBWcYE=;
-        b=N/utPtr8+xIMvhEBDBVJZXnRjsakmFcHdKtEvYVlsOXb1Wdw4KnpLCZZi6F9Exea9m
-         1Uk0IMqrrt+APksLU3qUrItBI33KUprftj4QaYKtHV+tqO72zcvftwd2+Pst7wngGg8V
-         HDOoJfU9ZfycTT6ahQgPoo7Tiy2I1LUS5yvrAPI+HGnsN9OoxDQLIJ+dJZj1a2ldCQtH
-         ZXrAtbgTEPOcN3Lz1+uEuSSpQ/5YKsSuDGKaUlbrrnZPEqgg69U2on6yZk7k0hvxCXNk
-         ZCc3Hr6FjAbIzKTAb7XkNAY0OnTJmaOIFKgxiqfmHEw7CRZLqAMIohd4nLP4SGXnm66S
-         iraw==
-X-Forwarded-Encrypted: i=1; AJvYcCXA0X4eO53St3qqbZD+PnTtXvbm4W9zUqSZFl2oJpZDpFGMMUqWXnJ0ODAIdHWArO1RVwVE9fix8Tt7@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgWoBfvrqZDOmkuARdcDgm1aDCOc4Tw2f5uJREehKFBFty8/tt
-	w9SJuzjX4vceoEEej/7dcV/vmitRMtzfOOp8Po+NlGadwSUkAa1Su44TCeBBceKrPsGPG5CJJp2
-	NyEBIzUtq9w==
-X-Gm-Gg: ASbGncvjjmpaM8B6xaDXZuPKXiUz+iRS1kh49O/H++Vvhx9iUI22PJ63I3do38Txca4
-	nC1vEkhiE5Uq885UI0qENFMxQ23gJrdNss0U281BsQtNGxtSHYutWQXiXo4ODm+Mys8ER+mVsBL
-	IdMR7OeL3eN79Tp52+PZCAure797y4jyjXwon4ycV8H3mIKlk+f8t/7P1epQErXaKGUHh+j4ftF
-	+zuG7kcvvd7oDG6QqjWmNNV7X/KCIjIJDAG0L1ksSrUXm5y/XWNgJrQuTtHzy2ef2yjR6cTRRRn
-	RApg8wQdX8068W+psoqz9PFaWySuxu/jCV146KyF/yeNsjlp/+WnCD8NK24gax01giBigzgh5Bh
-	mUNmzMHkj2S7y77R8Fv91vOgf31fkZekF+n5IeMt6RyXWsr9rAQJfme5EXft9PiR0/jwvEytUJi
-	qLTNjkoTFLfzj7b2ArcBsi+8xOMXTgl6uLxN7vd9i+6NvxBAGMMA==
-X-Google-Smtp-Source: AGHT+IF2t3QtDqmLqYrmhmN3iHmuw4gl5NFb65kgu2Z8Dgu8bXwQy5UEpK6oFIb+rqsCY6rJrs/hYQ==
-X-Received: by 2002:a17:907:9627:b0:b6d:6950:a7b7 with SMTP id a640c23a62f3a-b6dba5b1173mr393478766b.44.1761668436624;
-        Tue, 28 Oct 2025 09:20:36 -0700 (PDT)
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com. [209.85.218.51])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b6d8530905dsm1132134666b.6.2025.10.28.09.20.36
-        for <linux-s390@vger.kernel.org>
+        bh=KvvpFK250LHbofQ0y9+Mb287YMhgXcSSFNTTgJ2zzcM=;
+        b=Mbr57ZEKl6Cxzg0F2zJb0iLMHggMVfhyeXYOx5LrmhJgw6Q4Elhleirodtn2JJQVPj
+         WOItwOb76C5kWEcAY8bxpEJS1TkIMn4ioDj7Fg7QsqEzAUmPveTTIAxoeQMBYFz6tTIq
+         yUF8vj4aBh6qwDMB3mvCZ6GevYQu2cWCdGq/cdzEMncAIXUTbKSK4048Sjo6OqWBTJa0
+         x0WnbXrxB+q9xwOHcwFXMjCh6HhlGwp5dbXlxuLx7DA/ocWfjSQWlr1SqZPQeVs+xd+D
+         /dt8yIsnnxeftxgjCP5OUmWGZrEqpQ8uRZyrf6XNDqWbZXR5C6AsY9eneu9+Q0M69KCZ
+         99FQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXvT3OxVHWsVtzKTYBzI6GG+3TJb1aWNUYRA7W4NhQ2Sf5KeqXhNQjs6anaDggPQkTgtWS8VmVaDDdj@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcKMqOOgRWHACSEpugqIfP5bCAlmDjFF4URSjuQsjj/Lw2vZcS
+	KDmgU/rz6h/3jlCgd+KmPNh4jOHSaonFU1vj0+o5wUJda88HEleAy9jeqO7hs31ATOaQsD6nHGQ
+	MJOWSkE0ennwSWViHS1DW3oonr0TF8e/BhbcoaC9haAW+dbNkGqkWSPNp1Wriduc=
+X-Gm-Gg: ASbGncuocnyqx8l/77XglyA1ufS/Fe4YhBuW15TgFjmhrbWzejV9cb2Kb2mwbQ2Dk25
+	cT0ef5ionfwEZ3xQok4vVwpHbfdlujrGVX1QTeld7vsnH2SnRC7C4izhus/NDjAysPpslWKWpEH
+	YuICoxj/36+cU6CQcl1eNBcH1PYSks8gjPnnoGpebtaySB8cZ/x/ffihZGUwWFi5E8+MDrVOt5l
+	oNRsbVOm8ukVdeejkJAlf/PrdeG9mG5xI4SiVwwMPh2VQtzuwrHG74NEG67mvAYzxSgGp31CTiA
+	YMmEy8CK1kq5KwhHNc+KHs44VQrR5RbcNXm4lkhEojQsFH0XlD1PxyHfaZmxoV+AeNaQI0SrZ0R
+	SNByOm49EXY5uoTgdrpJPsk7riycA85bZ
+X-Received: by 2002:a05:600c:3b27:b0:475:da13:2575 with SMTP id 5b1f17b1804b1-4771e1ab8a0mr264405e9.35.1761668031182;
+        Tue, 28 Oct 2025 09:13:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHYLMRn+FNd6v1pe6gevrEN6O2ueeH/AKghCdZ+vk7Py4/AlR9hq5U2B0FyPXLgVOsHfXK9hw==
+X-Received: by 2002:a05:600c:3b27:b0:475:da13:2575 with SMTP id 5b1f17b1804b1-4771e1ab8a0mr264115e9.35.1761668030728;
+        Tue, 28 Oct 2025 09:13:50 -0700 (PDT)
+Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429952db80fsm20703850f8f.31.2025.10.28.09.13.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Oct 2025 09:20:36 -0700 (PDT)
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-b5c18993b73so1072905566b.0
-        for <linux-s390@vger.kernel.org>; Tue, 28 Oct 2025 09:20:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXWSChX2k1cTeabOxmhc6SXEYVonMo77MLajzU8Mluix4d+HxOZtgh8a1Tr+6qRLEMNWxM7dMTIm8LT@vger.kernel.org
-X-Received: by 2002:a05:6402:358a:b0:63c:4d42:993f with SMTP id
- 4fb4d7f45d1cf-63ed826ace7mr3748960a12.3.1761668033009; Tue, 28 Oct 2025
- 09:13:53 -0700 (PDT)
+        Tue, 28 Oct 2025 09:13:50 -0700 (PDT)
+Message-ID: <c1c9aedf-fb1b-47c8-8204-dbc28e9da4f3@redhat.com>
+Date: Tue, 28 Oct 2025 17:13:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251027083700.573016505@linutronix.de> <20251027083745.736737934@linutronix.de>
- <0c979fe0-ee55-48be-bd0f-9bff71b88a1d@efficios.com> <87frb3uijw.ffs@tglx>
-In-Reply-To: <87frb3uijw.ffs@tglx>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 28 Oct 2025 09:13:36 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjZ39CSZwN3W6n5kSAqL-OhJghygh3-dRsrJKpOa9nTwg@mail.gmail.com>
-X-Gm-Features: AWmQ_bkZ4DVtg-fqS9oPLAcmx2bmXbpg5s6Qki9Q4422mgDG3jAT_1tXHLLXals
-Message-ID: <CAHk-=wjZ39CSZwN3W6n5kSAqL-OhJghygh3-dRsrJKpOa9nTwg@mail.gmail.com>
-Subject: Re: [patch V5 10/12] futex: Convert to get/put_user_inline()
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, LKML <linux-kernel@vger.kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
-	kernel test robot <lkp@intel.com>, Russell King <linux@armlinux.org.uk>, 
-	linux-arm-kernel@lists.infradead.org, x86@kernel.org, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	linuxppc-dev@lists.ozlabs.org, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org, 
-	Heiko Carstens <hca@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org, 
-	Andrew Cooper <andrew.cooper3@citrix.com>, David Laight <david.laight.linux@gmail.com>, 
-	Julia Lawall <Julia.Lawall@inria.fr>, Nicolas Palix <nicolas.palix@imag.fr>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: hugetlb: fix HVO crash on s390
+To: Joao Martins <joao.m.martins@oracle.com>,
+ Luiz Capitulino <luizcap@redhat.com>
+Cc: osalvador@suse.de, akpm@linux-foundation.org, aneesh.kumar@kernel.org,
+ hca@linux.ibm.com, borntraeger@linux.ibm.com, mike.kravetz@oracle.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-s390@vger.kernel.org
+References: <20251028153930.37107-1-luizcap@redhat.com>
+ <50d815a1-8384-4eaa-8515-19d6c92425b3@oracle.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <50d815a1-8384-4eaa-8515-19d6c92425b3@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, 28 Oct 2025 at 08:56, Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> There was not justification for the open coded inline either and
-> converting it to get/put must be a completely seperate change.
+On 28.10.25 17:05, Joao Martins wrote:
+> On 28/10/2025 15:39, Luiz Capitulino wrote:
+>> A reproducible crash occurs when enabling HVO on s390. The crash and the
+>> proposed fix were worked on an s390 KVM guest running on an older
+>> hypervisor, as I don't have access to an LPAR. However, the same
+>> issue should occur on bare-metal.
+>>
+>> Reproducer (it may take a few runs to trigger):
+>>
+>>   # sysctl vm.hugetlb_optimize_vmemmap=1
+>>   # echo 1 > /proc/sys/vm/nr_hugepages
+>>   # echo 0 > /proc/sys/vm/nr_hugepages
+>>
+>> Crash log:
+>>
+>> [   52.340369] list_del corruption. prev->next should be 000000d382110008, but was 000000d7116d3880. (prev=000000d7116d3910)
+>> [   52.340420] ------------[ cut here ]------------
+>> [   52.340424] kernel BUG at lib/list_debug.c:62!
+>> [   52.340566] monitor event: 0040 ilc:2 [#1]SMP
+>> [   52.340573] Modules linked in: ctcm fsm qeth ccwgroup zfcp scsi_transport_fc qdio dasd_fba_mod dasd_eckd_mod dasd_mod xfs ghash_s390 prng des_s390 libdes sha3_512_s390 sha3_256_s390 virtio_net virtio_blk net_failover sha_common failover dm_mirror dm_region_hash dm_log dm_mod paes_s390 crypto_engine pkey_cca pkey_ep11 zcrypt pkey_pckmo pkey aes_s390
+>> [   52.340606] CPU: 1 UID: 0 PID: 1672 Comm: root-rep2 Kdump: loaded Not tainted 6.18.0-rc3 #1 NONE
+>> [   52.340610] Hardware name: IBM 3931 LA1 400 (KVM/Linux)
+>> [   52.340611] Krnl PSW : 0704c00180000000 0000015710cda7fe (__list_del_entry_valid_or_report+0xfe/0x128)
+>> [   52.340619]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:0 PM:0 RI:0 EA:3
+>> [   52.340622] Krnl GPRS: c0000000ffffefff 0000000100000027 000000000000006d 0000000000000000
+>> [   52.340623]            000000d7116d35d8 000000d7116d35d0 0000000000000002 000000d7116d39b0
+>> [   52.340625]            000000d7116d3880 000000d7116d3910 000000d7116d3910 000000d382110008
+>> [   52.340626]            000003ffac1ccd08 000000d7116d39b0 0000015710cda7fa 000000d7116d37d0
+>> [   52.340632] Krnl Code: 0000015710cda7ee: c020003e496f	larl	%r2,00000157114a3acc
+>>             0000015710cda7f4: c0e5ffd5280e	brasl	%r14,000001571077f810
+>>            #0000015710cda7fa: af000000		mc	0,0
+>>            >0000015710cda7fe: b9040029		lgr	%r2,%r9
+>>             0000015710cda802: c0e5ffe5e193	brasl	%r14,0000015710996b28
+>>             0000015710cda808: e34090080004	lg	%r4,8(%r9)
+>>             0000015710cda80e: b9040059		lgr	%r5,%r9
+>>             0000015710cda812: b9040038		lgr	%r3,%r8
+>> [   52.340643] Call Trace:
+>> [   52.340645]  [<0000015710cda7fe>] __list_del_entry_valid_or_report+0xfe/0x128
+>> [   52.340649] ([<0000015710cda7fa>] __list_del_entry_valid_or_report+0xfa/0x128)
+>> [   52.340652]  [<0000015710a30b2e>] hugetlb_vmemmap_restore_folios+0x96/0x138
+>> [   52.340655]  [<0000015710a268ac>] update_and_free_pages_bulk+0x64/0x150
+>> [   52.340659]  [<0000015710a26f8a>] set_max_huge_pages+0x4ca/0x6f0
+>> [   52.340662]  [<0000015710a273ba>] hugetlb_sysctl_handler_common+0xea/0x120
+>> [   52.340665]  [<0000015710a27484>] hugetlb_sysctl_handler+0x44/0x50
+>> [   52.340667]  [<0000015710b53ffa>] proc_sys_call_handler+0x17a/0x280
+>> [   52.340672]  [<0000015710a90968>] vfs_write+0x2c8/0x3a0
+>> [   52.340676]  [<0000015710a90bd2>] ksys_write+0x72/0x100
+>> [   52.340679]  [<00000157111483a8>] __do_syscall+0x150/0x318
+>> [   52.340682]  [<0000015711153a5e>] system_call+0x6e/0x90
+>> [   52.340684] Last Breaking-Event-Address:
+>> [   52.340684]  [<000001571077f85c>] _printk+0x4c/0x58
+>> [   52.340690] Kernel panic - not syncing: Fatal exception: panic_on_oops
+>>
+>> This issue was introduced by commit f13b83fdd996 ("hugetlb: batch TLB
+>> flushes when freeing vmemmap"). Before that change, the HVO
+>> implementation called flush_tlb_kernel_range() each time a vmemmap
+>> PMD split and remapping was performed. The mentioned commit changed this
+>> to issue a few flush_tlb_all() calls after performing all remappings.
+>>
+>> However, on s390, flush_tlb_kernel_range() expands to
+>> __tlb_flush_kernel() while flush_tlb_all() is not implemented. As a
+>> result, we went from flushing the TLB for every remapping to no flushing
+>> at all.
+>>
+>> This commit fixes this by introducing vmemmap_flush_tlb_all(), which
+>> expands to __tlb_flush_kernel() on s390 and to flush_tlb_all() on other
+>> archs.
+>>
+>> Fixes: f13b83fdd996 ("hugetlb: batch TLB flushes when freeing vmemmap")>
+> Signed-off-by: Luiz Capitulino <luizcap@redhat.com>
+>> ---
+>>   mm/hugetlb_vmemmap.c | 17 +++++++++++++----
+>>   1 file changed, 13 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
+>> index ba0fb1b6a5a8..5819a3088850 100644
+>> --- a/mm/hugetlb_vmemmap.c
+>> +++ b/mm/hugetlb_vmemmap.c
+>> @@ -48,6 +48,15 @@ struct vmemmap_remap_walk {
+>>   	unsigned long		flags;
+>>   };
+>>   
+>> +static inline void vmemmap_flush_tlb_all(void)
+>> +{
+>> +#ifdef CONFIG_S390
+>> +	__tlb_flush_kernel();
+>> +#else
+>> +	flush_tlb_all();
+>> +#endif
+>> +}
+>> +
+> 
+> Wouldn't a better fix be to implement flush_tlb_all() in
+> s390/include/asm/tlbflush.h since that aliases to __tlb_flush_kernel()?
 
-Actually, there's some justification in the original: see commit
-43a43faf5376 ("futex: improve user space accesses") which talks about
-the original impetus for it all: avoiding the very expensive barrier
-in __get_user(), and how __get_user() itself couldn't be fixed.
+Agreed, that feels cleaner and avoids this ifdef here.
 
-So then it was converted to the modern user access helpers - including
-address masking - and the inlining was mostly incidental to that, but
-the commit message does point out that it actually makes the address
-generation a bit cleaner in addition to avoiding the function call.
+-- 
+Cheers
 
-But I doubt that the extra instructions are all that noticeable.
+David / dhildenb
 
-That said - this code *is* in a very hot path on some loads, so it is
-entirely possible that the inlining here is noticeable. I$ patterns in
-particular can be a real thing.
-
-(There was an additional issue of just making those user accesses -
-get, put and cmpxchg - look a bit more similar)
-
-           Linus
 
