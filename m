@@ -1,50 +1,59 @@
-Return-Path: <linux-s390+bounces-14385-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-14387-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 782E3C200FB
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Oct 2025 13:41:46 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 865A3C20508
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Oct 2025 14:47:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8C5044EA58C
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Oct 2025 12:40:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0288F42467E
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Oct 2025 13:44:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 326BF322774;
-	Thu, 30 Oct 2025 12:40:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54250330D2F;
+	Thu, 30 Oct 2025 13:43:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o9RtIYgy"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="A+Qrmjzy"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2DC626AC3;
-	Thu, 30 Oct 2025 12:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D504274B32
+	for <linux-s390@vger.kernel.org>; Thu, 30 Oct 2025 13:43:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761828037; cv=none; b=PZ4Eus55o4x1KFJ9bLo7103j1HHuQYWDDl5U0LsUDWoGBx5eKJckCG56qmbwjmytQWSDyvSWVR6Wbn1G1+jRq6QFVwBm5XVSiIA6Q9C8Sw0H91iX24ph6GHqQmf68K6NmXbMuvZDK0Y9v7f30TwsO+QIZpI5e3Px5I63QEcKbD8=
+	t=1761831813; cv=none; b=toLKy3sJjiK9F0qsBvaY4aXayObT4VmAGi+GlUu/1CGUEQYen5OR0yxQadN/iDi4W21cmueQuTUA3RHmwGOEnHDd3fG3E8IN1v1XdW3m01UQrTNNwnuOBmf03Ss8OpHuyTcyU92suxQ7pQD7EOui/QAVRUpzc+lr/rsPxgLnnLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761828037; c=relaxed/simple;
-	bh=Vwti+Oyqhh3Vszbl9HbC46xxrM6AGGSoT0/ulRpfj74=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Vr6X7neMUo9gicLC2s0jOrlBayb3ibqsweJYu/fI259LZSTiGiOLctu3/cXH1ZyURddChD+9ae9foUxbMH9A8UMt0QO0zz4KzXdC5LwK7tV20NV3ZH2R5UbQf2j2/+N7Cou5hDe5TWWOg6KwLO2JahVqGaMdOQYImAqi4vvPZaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o9RtIYgy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79A1CC4CEF1;
-	Thu, 30 Oct 2025 12:40:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761828036;
-	bh=Vwti+Oyqhh3Vszbl9HbC46xxrM6AGGSoT0/ulRpfj74=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=o9RtIYgyvHzfQjqglILBG0OitmyfsCh0DVy1RNTpjIkhMR/gbFVlqfNvGgAPxXwYi
-	 44Utyug2eNkfAgYyMfNutwHXbCgrMXfjcnohEW1jyNcac02ylUOqDoMdIGwa1QxERo
-	 2v/hpcu8nWiq/X/0R6rfWagSphb1ATQ/SH5BDS0FOXj/JzSBVfgGTKdbASAw96W9H9
-	 GBJ+ajWNmKuATFZhku3HIVfNT13jCYsi2rQ3NVwBSrXnz6n35KIz3VS2U5BUSSqoen
-	 kruzgbmrDQrfgUtiib5Zi/JnmNR+eMk1pNXfNs9qkd+UmpkDr4kkEC1ZiHOYVzKkyq
-	 RfYLD1Jww3JfQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70E8B3A72A60;
-	Thu, 30 Oct 2025 12:40:14 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1761831813; c=relaxed/simple;
+	bh=Ty0HqaJo0YMrjaKcw3usfBWyxkQ7++NzVDZDVqhZv44=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FRvlyhsIujdnZz20fSnO+N8UvYWGmnJffLaM75fCDRz6mvysCT5TEDonEagd61+C4xJGjb6g4BzP6rmK+Lhp8H+4uccrm5PDYjT71nQxK7wx68S/tymlzw6KpBn0CUxEkWgFs/V9dcGysICUlBE+wf9rXWgrDAUFPn8AaiQ+zyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=A+Qrmjzy; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1761831798;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=/27E63V6v0chX/Wnv+95eUk3yCQINY+pVHFTGD5/UGc=;
+	b=A+Qrmjzy/0hhYVpdq0V73dppybMicN+cGYbpZstUYWwooJes1gF0DYq328192V5X1lwtra
+	84abu2m3V52u2yXEl6FMIOmUaPNZ9ZXSVYCxkzwUYu+6KD7Ko6+mlF1K1dbpIGVs81kszB
+	u+TwKXSZlx2yNBCasR4sOuD32glLvKE=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Mete Durlu <meted@linux.ibm.com>,
+	Guo Weikang <guoweikang.kernel@gmail.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] s390/smp: Mark pcpu_delegate as __noreturn
+Date: Thu, 30 Oct 2025 14:42:41 +0100
+Message-ID: <20251030134247.303400-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -52,53 +61,38 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v6 0/2] net/smc: make wr buffer count
- configurable 
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <176182801326.3832937.9219593539259854803.git-patchwork-notify@kernel.org>
-Date: Thu, 30 Oct 2025 12:40:13 +0000
-References: <20251027224856.2970019-1-pasic@linux.ibm.com>
-In-Reply-To: <20251027224856.2970019-1-pasic@linux.ibm.com>
-To: Halil Pasic <pasic@linux.ibm.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
- alibuda@linux.alibaba.com, dust.li@linux.alibaba.com, sidraya@linux.ibm.com,
- wenjia@linux.ibm.com, mjambigi@linux.ibm.com, tonylu@linux.alibaba.com,
- netdev@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
- linux-s390@vger.kernel.org, guwen@linux.alibaba.com,
- guangguan.wang@linux.alibaba.com, bagasdotme@gmail.com
+X-Migadu-Flow: FLOW_OUT
 
-Hello:
+pcpu_delegate() never returns to its caller. If the target CPU is the
+current CPU, it calls __pcpu_delegate(), whose delegate function is not
+supposed to return. In any case, even if __pcpu_delegate() unexpectedly
+returns, pcpu_delegate() sends SIGP_STOP to the current CPU and waits
+in an infinite loop. Annotate pcpu_delegate() with the __noreturn
+attribute to improve compiler optimizations.
 
-This series was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ arch/s390/kernel/smp.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-On Mon, 27 Oct 2025 23:48:54 +0100 you wrote:
-> The current value of SMC_WR_BUF_CNT is 16 which leads to heavy
-> contention on the wr_tx_wait workqueue of the SMC-R linkgroup and its
-> spinlock when many connections are competing for the work request
-> buffers. Currently up to 256 connections per linkgroup are supported.
-> 
-> To make things worse when finally a buffer becomes available and
-> smc_wr_tx_put_slot() signals the linkgroup's wr_tx_wait wq, because
-> WQ_FLAG_EXCLUSIVE is not used all the waiters get woken up, most of the
-> time a single one can proceed, and the rest is contending on the
-> spinlock of the wq to go to sleep again.
-> 
-> [...]
-
-Here is the summary with links:
-  - [net-next,v6,1/2] net/smc: make wr buffer count configurable
-    https://git.kernel.org/netdev/net-next/c/aef3cdb47bbb
-  - [net-next,v6,2/2] net/smc: handle -ENOMEM from smc_wr_alloc_link_mem gracefully
-    https://git.kernel.org/netdev/net-next/c/8f736087e52f
-
-You are awesome, thank you!
+diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
+index da84c0dc6b7e..93ac451db6f9 100644
+--- a/arch/s390/kernel/smp.c
++++ b/arch/s390/kernel/smp.c
+@@ -305,9 +305,9 @@ static void __pcpu_delegate(pcpu_delegate_fn *func, void *data)
+ 	func(data);	/* should not return */
+ }
+ 
+-static void pcpu_delegate(struct pcpu *pcpu, int cpu,
+-			  pcpu_delegate_fn *func,
+-			  void *data, unsigned long stack)
++static void __noreturn pcpu_delegate(struct pcpu *pcpu, int cpu,
++				     pcpu_delegate_fn *func,
++				     void *data, unsigned long stack)
+ {
+ 	struct lowcore *lc, *abs_lc;
+ 	unsigned int source_cpu;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.51.0
 
 
