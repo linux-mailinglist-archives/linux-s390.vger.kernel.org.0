@@ -1,146 +1,130 @@
-Return-Path: <linux-s390+bounces-14413-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-14415-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32721C2A1EE
-	for <lists+linux-s390@lfdr.de>; Mon, 03 Nov 2025 06:59:52 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E5DFC2A24F
+	for <lists+linux-s390@lfdr.de>; Mon, 03 Nov 2025 07:08:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A390218918E6
-	for <lists+linux-s390@lfdr.de>; Mon,  3 Nov 2025 05:58:39 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4D1C44E24B8
+	for <lists+linux-s390@lfdr.de>; Mon,  3 Nov 2025 06:08:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3843828D8F1;
-	Mon,  3 Nov 2025 05:58:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lSxpVBUC"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C19F2877E9;
+	Mon,  3 Nov 2025 06:08:53 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABCED28D82F
-	for <linux-s390@vger.kernel.org>; Mon,  3 Nov 2025 05:58:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+Received: from zg8tmtyylji0my4xnjeumjiw.icoremail.net (zg8tmtyylji0my4xnjeumjiw.icoremail.net [162.243.161.220])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA4D5284684;
+	Mon,  3 Nov 2025 06:08:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.161.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762149489; cv=none; b=ggf+KI73AreOl/NLCScFGY79S7jKeJs7Dxy6joOYCTrWkezxnWZ+B2GTiP2qktRRghzgANmHdHp/0fxcrA4follkA+KKWOKkWokpo8LpCbbh71EtCAzdpIZR8NcWJD09Cqy3v86N6Q+1Kj0I3QYoi/Jkn7aG8AGUjlJ01DMeOjg=
+	t=1762150133; cv=none; b=gJq+ly4kIMQwtZq5Wb8lnL8RdIzLMn2QoM4Dgyk/Gpeb5XVZOTDllm5YCcZ3PsDWJuWtQX9FRVuadM6Qg1T4M+CutFSohwAEts0p2nOrTJVuOw8jCrWL/008FF2e6x35RZbSqPalMHqZ5aKWTyntGdqthDK1UmJ+/w3BZER70eY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762149489; c=relaxed/simple;
-	bh=COnfabRE25CHEyik36bmtXTyjtL97X8u2YW/C0gU2+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qWgV2d10gI45UXOiK8xDZcGikR7oaNqCy5SC4uGUGGn1uO+q0cHXMEiIDMR03dRy6AfcnL84FFKeM6Sss8UBL3r2vPubjY6ZRTz2Z8EqCEHEfBYh5ToTq8m2KFjUZN1OfzhPxpP3kXMZzaB/5y3GH+8GibK2zuLVACuGMSeFmyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lSxpVBUC; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-295c64cb951so73725ad.0
-        for <linux-s390@vger.kernel.org>; Sun, 02 Nov 2025 21:58:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1762149486; x=1762754286; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jNN38kSQW+Z67K4qsM9EOBHtmYi+rj4bbcXqoaYoYec=;
-        b=lSxpVBUCQ5psG5bCyY6pior0r5FZzvdbgyl0Dop2N15B5GXuZNirV1ebLJXJhhnJoJ
-         4jHPJ1N/O0kCPWvqd2cxSmXQ6MGQMkfTGHtiwqk0C93ToyDndlPEfDozniE0xyzOgf6o
-         z3f5eo9BlYvLzSHefq/vwAkkk0GPAVn7yErdOtxpK/olAMlYvA9w3kzwwyqUEiC374Tm
-         SA5XXQk4v6niXORba3G+Fvyzg3kxGNp6Og+/L+bqsnj5+PGXvjmy5cSY7pE36Bhw8WAU
-         0ayq54s2KNM4DdtOSWs6k/AYbGI9y1cy7yUombMl8bLpqCrXZypHZYYpyL5shMRCSBd7
-         FlNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762149486; x=1762754286;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jNN38kSQW+Z67K4qsM9EOBHtmYi+rj4bbcXqoaYoYec=;
-        b=Htr6tVAAYJkCOBmbymcC8LXakeHWUCSvKd2Lv/uews2DSUY8Ea0l+diM1W9JT/nI0B
-         Dqani4CqzdIYv+xNlG53ywQYP11+1UYb1O5hnuyb/+n/1ZnuWA5gliSqpuCjDmNd/Amn
-         yFEhS2Wo0rx2dIFTIz3lNIotMYSo4+5sUQUzniHWnNzWv6b5snAHNOmpKTDAIbJAHXWk
-         3yXoMSqyPeQsqWbZlXitkEJp1ELuY+/prC5DjaZ56PNphW0YkbUrWwGxaTlcjdzBPNj6
-         WVTi2H2qmwc+pYhIqT271AdBCP4ipe6S5b6w64wDiPb1DKKQPUqvHPXcZ8FTZckbgenp
-         VhFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWytJL6N8+jgXBTjOIcJLBKyC6+vl6L9eAbS75I4BgAfThLwGajqBE80DL/si88c64uPz/jgwsAnGfZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCdWi34Xs4XmvCQdxXTBXy+kTznVKUuFA2k9sEVUJxxqsWZDhj
-	XTcEL+HSWvmCqrxDo1Xr1zNRKo/ahBQcZYvuedbV9K/v4IsIwSQp/aVzeGYifmdJig==
-X-Gm-Gg: ASbGncsGql/InXQNDnQtZUI0Qe/2ikqoHtLRFIC1YO0ZHVP++221F8QQd/Zek0V3Ft4
-	QQP5geS5yIVRkkdro8tnTbEYfja9iUOzXWak9dmNXCkSpT6tbojcPVwStyL1TmccYDBAKIQ+f5N
-	DEXsg1opjlpjYopSLSTYXglBwPbO+rrESd+8VAgHhBiMxbJeIAmCGwSbtV6EjDzIiD1sQuuihpf
-	WbVXANDJ47gOoacdqQFdLg5UStMGo79SNY2z64Fh+ot/WrdCSUC3BbhW73fSqMqSwfx/Cv0fg5W
-	JXHUJrZvumyfu3cJia54m8WqU7Q5hs37xgddH8ZlQOpgOyb8WLt55yC5gqXZf8cjvmwbzIHec0s
-	2+Rrfjy2C1Ay+a2BkjVa7GR+kZmIwhWK02jnZZnMlO5pV7MjD/sF4i9w9Nnz5BTB7JrmPh9plMW
-	e8J3bEdEmRyStS8YrT6HBzUWFSI9S+5s+kXUyQHu2v43lkZeWP
-X-Google-Smtp-Source: AGHT+IHe2S0n2gwZ091UPBX6ERfL1n+n8BtlVw9vlL1yBRvzccFZt3lfIo5NNtd6hxmzG7hv2JOREg==
-X-Received: by 2002:a17:902:f68e:b0:295:5138:10f2 with SMTP id d9443c01a7336-29556599a23mr4787225ad.11.1762149485582;
-        Sun, 02 Nov 2025 21:58:05 -0800 (PST)
-Received: from google.com (164.210.142.34.bc.googleusercontent.com. [34.142.210.164])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3407f26e0a6sm5783366a91.5.2025.11.02.21.57.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Nov 2025 21:58:04 -0800 (PST)
-Date: Mon, 3 Nov 2025 05:57:54 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
-	David Airlie <airlied@gmail.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Brett Creeley <brett.creeley@amd.com>,
-	dri-devel@lists.freedesktop.org, Eric Auger <eric.auger@redhat.com>,
-	Eric Farman <farman@linux.ibm.com>,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>, intel-gfx@lists.freedesktop.org,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Kevin Tian <kevin.tian@intel.com>, kvm@vger.kernel.org,
-	Kirti Wankhede <kwankhede@nvidia.com>, linux-s390@vger.kernel.org,
-	Longfang Liu <liulongfang@huawei.com>,
-	Matthew Rosato <mjrosato@linux.ibm.com>,
-	Nikhil Agarwal <nikhil.agarwal@amd.com>,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Peter Oberparleiter <oberpar@linux.ibm.com>,
-	Halil Pasic <pasic@linux.ibm.com>, qat-linux@intel.com,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Shameer Kolothum <skolothumtho@nvidia.com>,
-	Mostafa Saleh <smostafa@google.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	virtualization@lists.linux.dev,
-	Vineeth Vijayan <vneethv@linux.ibm.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Zhenyu Wang <zhenyuw.linux@gmail.com>,
-	Zhi Wang <zhi.wang.linux@gmail.com>, patches@lists.linux.dev
-Subject: Re: [PATCH 01/22] vfio: Provide a get_region_info op
-Message-ID: <aQhEYq9YVzbBlWnC@google.com>
-References: <0-v1-679a6fa27d31+209-vfio_get_region_info_op_jgg@nvidia.com>
- <1-v1-679a6fa27d31+209-vfio_get_region_info_op_jgg@nvidia.com>
+	s=arc-20240116; t=1762150133; c=relaxed/simple;
+	bh=ij7SSqEkbo4mNi6ysGnvvLGMAM4tjimDlNEUDeNc4Kc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KF8wDEp2yD5TJU6X+IhAubpbmY9IxLBDGN9tiAXyyO9sF5ELLEXz/y1T1ndQJHiUiNkdhQ7l99859qPz+lxVk6i5dDszVRYdMnvt1QVFhZ5FIkpQjjHIQU3XGg2f7KEbvJ7jvWIFO9Xj+hQdoKWNGMkwhG7lWRqYMv5jn4jF0sA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=162.243.161.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from zju.edu.cn (unknown [106.117.100.156])
+	by mtasvr (Coremail) with SMTP id _____wCXkENBRghp0QdPAw--.12221S3;
+	Mon, 03 Nov 2025 14:05:54 +0800 (CST)
+Received: from ubuntu.localdomain (unknown [106.117.100.156])
+	by mail-app2 (Coremail) with SMTP id zC_KCgA3UEQ7RghpGF99Aw--.25113S2;
+	Mon, 03 Nov 2025 14:05:51 +0800 (CST)
+From: Duoming Zhou <duoming@zju.edu.cn>
+To: linux-s390@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	hca@linux.ibm.com,
+	gor@linux.ibm.com,
+	agordeev@linux.ibm.com,
+	borntraeger@linux.ibm.com,
+	svens@linux.ibm.com,
+	mingo@kernel.org,
+	tglx@linutronix.de,
+	Duoming Zhou <duoming@zju.edu.cn>
+Subject: [PATCH] s390/tape: fix use-after-free bugs caused by tape_dnr delayed work
+Date: Mon,  3 Nov 2025 14:05:44 +0800
+Message-Id: <20251103060544.22720-1-duoming@zju.edu.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1-v1-679a6fa27d31+209-vfio_get_region_info_op_jgg@nvidia.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zC_KCgA3UEQ7RghpGF99Aw--.25113S2
+X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwQSAWkHs-8AbwA+sn
+X-CM-DELIVERINFO: =?B?yloTDgXKKxbFmtjJiESix3B1w3uoVhYI+vyen2ZzBEkOnu5chDpkB+ZdGnv/zQ0PbP
+	CR15Vie2bMrbJnHqI6rTqE7nL4FhIxvV4PEkCBxd2xL2aDveEeLLuEIaoCXDa3CO8ounDo
+	CWc4HIlAA4hKbnpcp4/J/FqLF/BbAV+6VQ+YBDSF9uI9lEwaeBPdnyJNs6TwlQ==
+X-Coremail-Antispam: 1Uk129KBj93XoW7ArW5tF4xCw1DuFWfuFWUJrc_yoW8CFWkpr
+	Z5J34qy34DWw40ka13X348uF1UG39rC3yUKrn2gwnagrn8A34rGryqqFnaqFyUJrWkAFW5
+	Xr9Iq34UuayDtFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvvb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AK
+	xVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0Y48IcxkI7V
+	AKI48G6xCjnVAKz4kxMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I
+	3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxV
+	WUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8I
+	cVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aV
+	AFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuY
+	vjxU7xwIDUUUU
 
-On Thu, Oct 23, 2025 at 08:09:15PM -0300, Jason Gunthorpe wrote:
-> Instead of hooking the general ioctl op, have the core code directly
-> decode VFIO_DEVICE_GET_REGION_INFO and call an op just for it.
-> 
-> This is intended to allow mechanical changes to the drivers to pull their
-> VFIO_DEVICE_GET_REGION_INFO int oa function. Later patches will improve
-> the function signature to consolidate more code.
-> 
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> ---
->  drivers/vfio/pci/vfio_pci_core.c | 9 ++++++---
->  drivers/vfio/vfio_main.c         | 7 +++++++
->  include/linux/vfio.h             | 2 ++
->  include/linux/vfio_pci_core.h    | 2 ++
->  4 files changed, 17 insertions(+), 3 deletions(-)
-> 
+The delayed work tape_dnr is initialized in tape_alloc_device(), which
+is called from tape_generic_probe(), and is scheduled in the following
+scenarios:
 
-Reviewed-by: Pranjal Shrivastava <praan@google.com>
+1. Starting an I/O operation fails with -EBUSY in __tape_start_io().
+2. Canceling an I/O operation fails with -EBUSY in __tape_cancel_io().
+3. A deferred error condition is detected in __tape_do_irq().
 
-Thanks,
-Praan
+When the tape device is detached via tape_generic_remove(), the
+tape_device structure might be deallocated after the final call to
+tape_put_device(). However, if the delayed work tape_dnr is still
+pending or executing at the time of detachment, it could lead to
+use-after-free bugs when the work function tape_delayed_next_request()
+accesses the already freed tape_device memory.
+
+The race condition can occur as follows:
+
+CPU 0(detach thread)      | CPU 1 (delayed work)
+tape_generic_remove()     |
+  tape_put_device(device) | tape_delayed_next_request
+                          |   device = container_of(...) // USE
+                          |   device-> // USE
+
+Add disable_delayed_work_sync() in tape_generic_remove() to guarantee
+proper cancellation of the delayed work item before tape_device is
+deallocated.
+
+This bug is identified by static analysis.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
+---
+ drivers/s390/char/tape_core.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/s390/char/tape_core.c b/drivers/s390/char/tape_core.c
+index 6ec812280221..722dc4737a87 100644
+--- a/drivers/s390/char/tape_core.c
++++ b/drivers/s390/char/tape_core.c
+@@ -625,6 +625,7 @@ tape_generic_remove(struct ccw_device *cdev)
+ 	}
+ 	DBF_LH(3, "(%08x): tape_generic_remove(%p)\n", device->cdev_id, cdev);
+ 
++	disable_delayed_work_sync(&device->tape_dnr);
+ 	spin_lock_irq(get_ccwdev_lock(device->cdev));
+ 	switch (device->tape_state) {
+ 		case TS_INIT:
+-- 
+2.34.1
+
 
