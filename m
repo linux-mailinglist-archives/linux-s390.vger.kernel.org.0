@@ -1,145 +1,123 @@
-Return-Path: <linux-s390+bounces-14481-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-14484-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B402C2F810
-	for <lists+linux-s390@lfdr.de>; Tue, 04 Nov 2025 07:52:18 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C02DC2F8E9
+	for <lists+linux-s390@lfdr.de>; Tue, 04 Nov 2025 08:08:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4591B420E2A
-	for <lists+linux-s390@lfdr.de>; Tue,  4 Nov 2025 06:52:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 104A3189CED6
+	for <lists+linux-s390@lfdr.de>; Tue,  4 Nov 2025 07:09:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07D602DA755;
-	Tue,  4 Nov 2025 06:50:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19C803019B8;
+	Tue,  4 Nov 2025 07:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="uvmRyMJK"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 698852DEA93;
-	Tue,  4 Nov 2025 06:50:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63458301717;
+	Tue,  4 Nov 2025 07:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762239027; cv=none; b=gt+TTOYM7fQTdusqtsHumORxLYyDyvMJUQZ8I2s9ovULuA6HKZaYD30MftLNDtAR4C8qkmJu/IFZNyqTiKty3Qc64GsXKpKRgXgh3xVV/rlDlcLouNwVJPpUBV3rZ6DOaqxxdtayxloKaJaRlMOY0FRyz0j1x5dMgNOM5C78VEw=
+	t=1762240122; cv=none; b=kjo/TJF4jgod7r7pL1+OkE7HBGO8hQCeSLKpXFQ75GiX0FuCJJ/bURdxIUDvPBPKyExbj+soINCL+8NhleiiSY9Wp/8V5DgaJOOlvvBhYI4fOJBTC2IEdYEaw+JIeC246BGMtnjUrbzLX/cX10uV6pfhGup2/Ggpnd12Twusbyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762239027; c=relaxed/simple;
-	bh=FYQEunThMRncXDgZkVdnaOtP94z9pOVDBNVLUqLncPo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ttjSVyHDFB4g+ShkBpbxYMPqrap+20w2wUVKyWqe+06WE4r7VloQ1w2IQEBc8fQCgFLuhLxcm5Uh575XVsjfCWKjo6LzrjDNS/tcOhb/4Th4G34YBWbMDGGIK9KBIY/imaoqgNkrTr4KyDmBGctbgrDClhq5yKUDocz99exfkoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4d0zGM0Zbtz9sSh;
-	Tue,  4 Nov 2025 07:35:07 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id I4w3aEv5EITr; Tue,  4 Nov 2025 07:35:06 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4d0zGL6PZFz9sSg;
-	Tue,  4 Nov 2025 07:35:06 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id C4D928B76C;
-	Tue,  4 Nov 2025 07:35:06 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id fs4pJqTtKSTf; Tue,  4 Nov 2025 07:35:06 +0100 (CET)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id C60B08B763;
-	Tue,  4 Nov 2025 07:35:04 +0100 (CET)
-Message-ID: <e0795f90-1030-4954-aefc-be137e9db49e@csgroup.eu>
-Date: Tue, 4 Nov 2025 07:35:04 +0100
+	s=arc-20240116; t=1762240122; c=relaxed/simple;
+	bh=sAOdPGYCPCwYsQtkPo4GCjFg3Nkx257mkO4wArX6Rsk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ebI8wXXkrlhR18fv8pMYV85jtHfKhEuwq1TfqOa4qe2qYqPhmKNEimdLCCrUpnknnf6dXG9UEV5BNzrqEovhahApLk2BWANPFIW4Mxh09In25RRYWyprNkkhM7N4Z1hBrh8IaEMFDurvmfdkC0F1xWMJSk4psMh1Gc51JW3dZ8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=uvmRyMJK; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1762240109; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
+	bh=tHAZePd0ycu1VN9/wUJ5tt4FKrADODcsk8LpTvkJW0o=;
+	b=uvmRyMJK9nrx3opM7Qwm2SslFZ4XtYTvxBJo3ikH2l2tGewGCUsA4JaQeUo6JuCISHg0Jbfi47fcOPAfFRBDlgUxAQgQ5pmfNPBa+v14rTiG2Flym22QfQM/isb7KtHLxBilJza+jqcrjZ6AmviplzOCQMgOWOpzYs73ENHSd/A=
+Received: from localhost(mailfrom:alibuda@linux.alibaba.com fp:SMTPD_---0Wrg8odg_1762240108 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 04 Nov 2025 15:08:28 +0800
+Date: Tue, 4 Nov 2025 15:08:28 +0800
+From: "D. Wythe" <alibuda@linux.alibaba.com    >
+To: Alexandra Winter <wintera@linux.ibm.com>
+Cc: "D. Wythe" <alibuda@linux.alibaba.com>, mjambigi@linux.ibm.com,
+	wenjia@linux.ibm.com, dust.li@linux.alibaba.com,
+	tonylu@linux.alibaba.com, guwen@linux.alibaba.com, kuba@kernel.org,
+	davem@davemloft.net, netdev@vger.kernel.org,
+	linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
+	pabeni@redhat.com, edumazet@google.com, sidraya@linux.ibm.com,
+	jaka@linux.ibm.com
+Subject: Re: [PATCH net] net/smc: fix mismatch between CLC header and
+ proposal extensions
+Message-ID: <20251104070828.GA36449@j66a10360.sqa.eu95>
+References: <20251031031828.111364-1-alibuda@linux.alibaba.com>
+ <95bd9c85-8241-4040-bbd0-bcac3ffc78f7@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [patch V5 00/12] uaccess: Provide and use scopes for user access
-To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
-Cc: kernel test robot <lkp@intel.com>, Russell King <linux@armlinux.org.uk>,
- linux-arm-kernel@lists.infradead.org,
- Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- linuxppc-dev@lists.ozlabs.org, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org,
- Heiko Carstens <hca@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Cooper <andrew.cooper3@citrix.com>,
- David Laight <david.laight.linux@gmail.com>,
- Julia Lawall <Julia.Lawall@inria.fr>, Nicolas Palix <nicolas.palix@imag.fr>,
- Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>,
- Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?=
- <andrealmeid@igalia.com>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- linux-fsdevel@vger.kernel.org
-References: <20251027083700.573016505@linutronix.de>
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-Content-Language: fr-FR
-In-Reply-To: <20251027083700.573016505@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <95bd9c85-8241-4040-bbd0-bcac3ffc78f7@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
+On Mon, Nov 03, 2025 at 09:28:22AM +0100, Alexandra Winter wrote:
+> 
+> 
+> On 31.10.25 04:18, D. Wythe wrote:
+> > The current CLC proposal message construction uses a mix of
+> > `ini->smc_type_v1/v2` and `pclc_base->hdr.typev1/v2` to decide whether
+> > to include optional extensions (IPv6 prefix extension for v1, and v2
+> > extension). This leads to a critical inconsistency: when
+> > `smc_clc_prfx_set()` fails - for example, in IPv6-only environments with
+> > only link-local addresses, or when the local IP address and the outgoing
+> > interface’s network address are not in the same subnet.
+> > 
+> > As a result, the proposal message is assembled using the stale
+> > `ini->smc_type_v1` value—causing the IPv6 prefix extension to be
+> > included even though the header indicates v1 is not supported.
+> > The peer then receives a malformed CLC proposal where the header type
+> > does not match the payload, and immediately resets the connection.
+> > 
+> > Fix this by consistently using `pclc_base->hdr.typev1` and
+> > `pclc_base->hdr.typev2`—the authoritative fields that reflect the
+> > actual capabilities advertised in the CLC header—when deciding whether
+> > to include optional extensions, as required by the SMC-R v2
+> > specification ("V1 IP Subnet Extension and V2 Extension only present if
+> > applicable").
+> 
+> 
+> Just thinking out loud:
+> It seems to me that the 'ini' structure exists once per socket and is used
+> to pass information between many functions involved with the handshake.
+> Did you consider updating ini->smc_type_v1/v2 when `smc_clc_prfx_set()` fails,
+> and using ini as the authoritative source?
+> With your patch, it seems to me `ini->smc_type_v1` still contains a stale value,
+> which may lead to issues in other places or future code.
 
+Based on my understanding, ini->smc_type_v1/v2 represents the local
+device's inherent hardware capabilities. This value is a static property
+and, from my perspective, should remain immutable, independent of
+transient network conditions such as invalid IPv6 prefixes or GID
+mismatches. Therefore, I believe modifying this field within
+smc_clc_send_proposal() might not be the most appropriate approach.
 
-Le 27/10/2025 à 09:43, Thomas Gleixner a écrit :
-> This is a follow up on the V4 feedback:
-> 
->     https://lore.kernel.org/20251022102427.400699796@linutronix.de
-> 
-> Changes vs. V4:
-> 
->    - Rename get/put_user_masked() to get/put_user_inline()
-> 
->    - Remove the futex helpers. Keep the inline get/put for now as it needs
->      more testing whether they are really valuable.
-> 
->    - Picked up tags
-> 
-> The series is based on v6.18-rc1 and also available from git:
-> 
->      git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git uaccess/scoped
-> 
+In contrast, pclc_base->hdr.typev1/v2 reflects the actual capabilities
+negotiated for a specific connection—what we might term "soft
+capabilities." These can, and often do, dynamically adjust based on
+current network conditions (e.g., in the event of a prefix validation
+failure) and could potentially be restored if network conditions
+improve.
 
-move_addr_to_user() in net/socket.c and put_cmsg() in net/core/scm.c 
-should be converted as well
-
-Christophe
-
-> Thanks,
-> 
-> 	tglx
-> ---
-> Thomas Gleixner (12):
->        ARM: uaccess: Implement missing __get_user_asm_dword()
->        uaccess: Provide ASM GOTO safe wrappers for unsafe_*_user()
->        x86/uaccess: Use unsafe wrappers for ASM GOTO
->        powerpc/uaccess: Use unsafe wrappers for ASM GOTO
->        riscv/uaccess: Use unsafe wrappers for ASM GOTO
->        s390/uaccess: Use unsafe wrappers for ASM GOTO
->        uaccess: Provide scoped user access regions
->        uaccess: Provide put/get_user_inline()
->        coccinelle: misc: Add scoped_masked_$MODE_access() checker script
->        futex: Convert to get/put_user_inline()
->        x86/futex: Convert to scoped user access
->        select: Convert to scoped user access
-> 
->   arch/arm/include/asm/uaccess.h               |   26 ++
->   arch/powerpc/include/asm/uaccess.h           |    8
->   arch/riscv/include/asm/uaccess.h             |    8
->   arch/s390/include/asm/uaccess.h              |    4
->   arch/x86/include/asm/futex.h                 |   75 ++----
->   arch/x86/include/asm/uaccess.h               |   12 -
->   fs/select.c                                  |   12 -
->   include/linux/uaccess.h                      |  314 ++++++++++++++++++++++++++-
->   kernel/futex/core.c                          |    4
->   kernel/futex/futex.h                         |   58 ----
->   scripts/coccinelle/misc/scoped_uaccess.cocci |  108 +++++++++
->   11 files changed, 501 insertions(+), 128 deletions(-)
-> 
-
+Furthermore, once CLC negotiation is complete, the SMC protocol stack
+relies exclusively on these negotiated results for all subsequent
+operations. It no longer refers to the initial capability values stored
+in ini. Consequently, maintaining ini->smc_type_v1/v2 in its original,
+unaltered state appears to present no practical risks or functional
+issues.
 
