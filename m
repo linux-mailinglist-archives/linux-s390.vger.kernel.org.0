@@ -1,673 +1,506 @@
-Return-Path: <linux-s390+bounces-14889-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-14891-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA51AC5331A
-	for <lists+linux-s390@lfdr.de>; Wed, 12 Nov 2025 16:53:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AD6FDC53639
+	for <lists+linux-s390@lfdr.de>; Wed, 12 Nov 2025 17:28:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3C57E503D49
-	for <lists+linux-s390@lfdr.de>; Wed, 12 Nov 2025 15:41:27 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DDE834FDB7F
+	for <lists+linux-s390@lfdr.de>; Wed, 12 Nov 2025 16:00:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06DB433B975;
-	Wed, 12 Nov 2025 15:41:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 061DB22A7E0;
+	Wed, 12 Nov 2025 16:00:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cZJICSS2"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SZl95x36";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="mkFLOrfF"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF953396F7;
-	Wed, 12 Nov 2025 15:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762962060; cv=none; b=pboh25BiFKRj/iao9YFS7kFHcssIImF5ClBQegykYwVolKBijTWzqk2AVv4MpKLJECFXMniCZNiJh5hs8ebfSDl99wdBsutxeHTK2LlkEiY4fxeEQCk0RbhJDwcc3yc0je+gwep4fyTVjBHxkYep25yPOAfW/OdByj8+GvjxMls=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762962060; c=relaxed/simple;
-	bh=K5Ng2yy8DZ5/UUJoTvWT/UaNFmfroIdi7KQwP6PWHXk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NOQOLD9tnliquNsyrEPC2Pv87iBMnraZOCyJnMg5weFJnvdygjZckP7Nz0VwtO86ezOpf0YDq5dsGeK9FQqYKL5C+4PnCL/MxutgV7Df0ajqym/OEyDdQu+iItvV5NSKM53Led8q+VW44vVTa4GNIoHxstkknuVvf1nUNvceRXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cZJICSS2; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5ACBVWU3003484;
-	Wed, 12 Nov 2025 15:40:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=gQBd34
-	jxgtfGGS1x+s+aV9obzKjXcFodLl/ye1zACy8=; b=cZJICSS2IcdlxvnnWyQKfX
-	N5t1CxGXTxgZ/ryVaY2iwgUH+FrBKt3/oNTUGOknpWXIrKK7Fbd8PRL14xv9AZTd
-	Bf6lhL9NGPh6+lTUK2h/GTo4NBOhdi6cFeMWqA/eHVAJzQWNjXq4zNoyQVriPmlk
-	HkPBtz74CpOqgWHLPVdeBr3Qp5d+GNSfnsXUg8IFEx4O/qNKBNF21oiw5//CRQwn
-	LifIeyqAS6tSsudIhyaayIdxFOUZik1okDhojkSMrgSzGxNNoqD5NBqr2iqiABUN
-	MKe8n/jeyryF2Pyi+vuVnnW8t7U7AbxWY7V0Ms+PPKlzAXEfLtQdmblwkINkM+mQ
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a9wgx1xsv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Nov 2025 15:40:50 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5ACDSEMk008218;
-	Wed, 12 Nov 2025 15:40:49 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4aah6n0ydm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Nov 2025 15:40:49 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5ACFejuU49283388
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 12 Nov 2025 15:40:45 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4E2CC20040;
-	Wed, 12 Nov 2025 15:40:45 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0BBC420043;
-	Wed, 12 Nov 2025 15:40:45 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 12 Nov 2025 15:40:44 +0000 (GMT)
-From: Tobias Schumacher <ts@linux.ibm.com>
-Date: Wed, 12 Nov 2025 16:40:45 +0100
-Subject: [PATCH 2/2] s390/pci: Migrate s390 IRQ logic to IRQ domain API
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0930C23909F;
+	Wed, 12 Nov 2025 16:00:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762963253; cv=fail; b=qW0kbatEsIhjKt4re4q7x8R/I9rQTgDV4Hkd/vzRH6nhMo2sMU2QNbQrfdWJPSoSu+MCS6JV0/D+1883E9nge8ZIlxZ2R3lFVziyW4I9EP8trfoz+hJS7K2lxGwChl7TSwxCM11kS4cLWGWKlGpeNyMiBxcHq6CFwdCCVr2Pb4Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762963253; c=relaxed/simple;
+	bh=hxjin7Rv+bs9k8vx36UN5vkpJ4rJSL0L3ZJTf5sYPYY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ECXadluF5+Ja5Drt/3YWcLB47IBCPDGMWuNoGGk7j5N+o3h/fpUwrik9FzR6mOGQ/rXhtwq/wyxqeD+Ep3sQQ5oU2NM06NwJjUsuCdL8bcSrctzFz2cTOzu4PNhMMhZFwIC1RV+bRQ5LGGH0zU/+5sXlpXWn5v8KMAHGXbYX4tw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=SZl95x36; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=mkFLOrfF; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5ACFjiDr007502;
+	Wed, 12 Nov 2025 15:59:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=OFr3uPNhPrMcHEWHvt
+	S9pkcKDKBj2txonLx5UwTi8Ew=; b=SZl95x36lMkkF3NPmK68Ts9+sfQECGQIbB
+	wo6XdEw2Cwi5ql8zKTUSa5vBYwCwVmnU4aOTNKVuxpEGnsJivENwA6vkf6rL4/Wg
+	gcoxhvrDRovzgwQhS+q7pJck5seG82RR9KQ9M8MNZe63aWZB/pnTxb0yW+2lCqH4
+	icXiLhhEgz9qLBiJv60X8L17BYeL5sIoQcA3by3/Um7UK4WBqBNk6S3a7y8mwcPv
+	Vx5x5UigvJ3S9DDvaytY2AopPNcd70RnTPApe8wjD1nut9qCEkBy4ilAOzIpskEt
+	XRfVfQy87mnJ5uMObtsxlP7ILmAnmhVG1r2kf1R6fxFhz/VRdYTQ==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4acw5f01e9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 12 Nov 2025 15:59:48 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5ACEG2rX009915;
+	Wed, 12 Nov 2025 15:59:47 GMT
+Received: from dm1pr04cu001.outbound.protection.outlook.com (mail-centralusazon11010060.outbound.protection.outlook.com [52.101.61.60])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4a9vabdg2s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 12 Nov 2025 15:59:47 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qcAdzESENqEpYpDxozsLPhonnNGeYzaUVDvLjH1ybYq0sQ3tLqX3wsO7XyeUt1TNKijDtkJQKhRlDGG7ueabwSijIetEY82dXDvCa2IAE6hcIEPsLp1xS+eDof2re0xhsPSVwBTgSjVSYLvAA7Hr6AupI0LyGDmqVO4PDzeU2SqFMHhBzI8LFafks4O6FreW42k09wJltzbCj+d0hyNWM1sftK/42CJeqmBp2aTIWq8hQ1shFjZPrvWmYWOrUHIwtqpwCLque5XrFHca9Hy1PLgBwC9xQOkqjLzagXNXyzbP3O42I83r9UOXXXily1aisdMvGZvWvLk0SRy2LVvRbg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OFr3uPNhPrMcHEWHvtS9pkcKDKBj2txonLx5UwTi8Ew=;
+ b=Nq2DR1fcbV2z/pd945z44YQ3Zlwisaw1GKDCnscZuazSqXYun/qdRjfSgFYn/a6wO2lO7DpGFL47rlD1Y8682FRi/Ql6vQyCDhVcsoV7mtlY9ubNN1FGRThQa8FJMcA78iuwWsj5c87M/sEuLUcV2zOp8Xt2Ggc2BjajZvFtm5nohrVwLax6dBKwUo6tTVA3ilUoNN4T9WEWEzwiTUOpX/eL+ixnvewdlXYM7CcVoGaSwEbbXg03hunEULGvDVTs1IhxUYC7jpdPjWJRlLUsu3cOK2zNvuLuQAp7nSsFQrMQeGeRtQZunwO4rrQTMvx7rnV4UVYVB8MFx+qaH7uL6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OFr3uPNhPrMcHEWHvtS9pkcKDKBj2txonLx5UwTi8Ew=;
+ b=mkFLOrfFtrB4Kr8eSeekzHryzYUc+lAecV/CqiZN1y2vD3LO1PCHDi8wEhpOfCO9Z6SeTiE7NHdP4wDvr5MI9R8BXi3HKtjBpGRe4bDLfzZLfdXFJnMFW941gtMUKyA32whAgoEVzz/mCH0nDSwWHFzzD6PiWBYqc9hPtxyGzjU=
+Received: from BL4PR10MB8229.namprd10.prod.outlook.com (2603:10b6:208:4e6::14)
+ by SA3PR10MB6951.namprd10.prod.outlook.com (2603:10b6:806:304::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9298.16; Wed, 12 Nov
+ 2025 15:59:41 +0000
+Received: from BL4PR10MB8229.namprd10.prod.outlook.com
+ ([fe80::552b:16d2:af:c582]) by BL4PR10MB8229.namprd10.prod.outlook.com
+ ([fe80::552b:16d2:af:c582%6]) with mapi id 15.20.9320.013; Wed, 12 Nov 2025
+ 15:59:41 +0000
+Date: Wed, 12 Nov 2025 15:59:39 +0000
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Zi Yan <ziy@nvidia.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, Peter Xu <peterx@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+        Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+        Lance Yang <lance.yang@linux.dev>, Muchun Song <muchun.song@linux.dev>,
+        Oscar Salvador <osalvador@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        Matthew Brost <matthew.brost@intel.com>,
+        Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+        Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
+        Ying Huang <ying.huang@linux.alibaba.com>,
+        Alistair Popple <apopple@nvidia.com>,
+        Axel Rasmussen <axelrasmussen@google.com>,
+        Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+        Kemeng Shi <shikemeng@huaweicloud.com>,
+        Kairui Song <kasong@tencent.com>, Nhat Pham <nphamcs@gmail.com>,
+        Baoquan He <bhe@redhat.com>, Chris Li <chrisl@kernel.org>,
+        SeongJae Park <sj@kernel.org>, Matthew Wilcox <willy@infradead.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        Xu Xin <xu.xin16@zte.com.cn>,
+        Chengming Zhou <chengming.zhou@linux.dev>,
+        Jann Horn <jannh@google.com>, Miaohe Lin <linmiaohe@huawei.com>,
+        Naoya Horiguchi <nao.horiguchi@gmail.com>,
+        Pedro Falcato <pfalcato@suse.de>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>,
+        Rik van Riel <riel@surriel.com>, Harry Yoo <harry.yoo@oracle.com>,
+        Hugh Dickins <hughd@google.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, damon@lists.linux.dev
+Subject: Re: [PATCH v3 03/16] mm: avoid unnecessary uses of is_swap_pte()
+Message-ID: <c69f57ff-c4b1-4fb9-8954-c5687dc2d904@lucifer.local>
+References: <cover.1762812360.git.lorenzo.stoakes@oracle.com>
+ <17fd6d7f46a846517fd455fadd640af47fcd7c55.1762812360.git.lorenzo.stoakes@oracle.com>
+ <B114F7B2-8EDA-44DC-8458-79E3FF628558@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <B114F7B2-8EDA-44DC-8458-79E3FF628558@nvidia.com>
+X-ClientProxiedBy: LO6P123CA0015.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:338::20) To BL4PR10MB8229.namprd10.prod.outlook.com
+ (2603:10b6:208:4e6::14)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251112-implement-msi-domain-v1-2-103dd123de14@linux.ibm.com>
-References: <20251112-implement-msi-domain-v1-0-103dd123de14@linux.ibm.com>
-In-Reply-To: <20251112-implement-msi-domain-v1-0-103dd123de14@linux.ibm.com>
-To: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Gerd Bayer <gbayer@linux.ibm.com>, Halil Pasic <pasic@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        Tobias Schumacher <ts@linux.ibm.com>
-X-Mailer: b4 0.14.2
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: HPmfIKOjyT1Zf_SyrSDseYG8mS2Z1sei
-X-Proofpoint-ORIG-GUID: HPmfIKOjyT1Zf_SyrSDseYG8mS2Z1sei
-X-Authority-Analysis: v=2.4 cv=VMPQXtPX c=1 sm=1 tr=0 ts=6914aa82 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=ZWjmTSsJ56F6Ip2C3hIA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTA4MDAyMiBTYWx0ZWRfXwhpXMUupSUif
- c1q1n85BPSG4D2nTpdlWIaaV5pg69M309Z3wfAInlA09R7gjRprq0WMba4eCJuabFIRYutYDovn
- auVvWGjkVMNYWZIPEhQGOeMYK3jJBhUkAqOQWnLcrCRs9JSkl1m4bRsf8bZASp+ttnofORLKYrR
- TeaV3dB2pkuZc5FvMVtVm1cyxdeC9FJp8lpu8X1SxdIJvjz4t5hIySp4soZUK+4OiKj9bpTAMrn
- LcICY5nZdTV4lPgAEBi3b9rfi/g0M00Tj7DH2J+zh3Hjiv9o1kSdSdD1K75qm2SP1OQLDabErj0
- 8U46M67OJp2lC6oaQWD+VtINNU9kHmdtXtHgKqPyMA05tqF5+JNFM0ZTcRGU67EB+NXvEJrQLlG
- Etrs8b8IGQFgrWKjfmr1VHgsg3qyZA==
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL4PR10MB8229:EE_|SA3PR10MB6951:EE_
+X-MS-Office365-Filtering-Correlation-Id: b7fc8fb6-1098-4465-70a6-08de22047d7a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?R14e0ipqaom+GcEAwEcqvsYBHJ8q451y7zKx2GpzahYJFDiJBG3XiOM5YAdS?=
+ =?us-ascii?Q?XP+m0c8s6LVbXTZ+GqQTJvBtSpnvxxyar5k307sl9kU0nUdtGDZgOOZxjK+k?=
+ =?us-ascii?Q?eer6koMpAbnUNFYsddjSx4HFnnJ4ROjmLeWjtbtcfMQtFVjx6YR3qpEkIVY3?=
+ =?us-ascii?Q?wuE3Vz90Dk3R5Vsimvi78kOx2JEkXCz1rOCwb78OQEaFXRsrIyXoGg6td76B?=
+ =?us-ascii?Q?sjrjkeJv31p6boS0vdHLBrMTdax841OsT1+7Oay0RYUDL0CMxh+8prE69UoM?=
+ =?us-ascii?Q?E0pW16RmylRJkSYXDwUEtsARYrQpkofmsCCxXNnNUY1uNbZdgF+e2zyOEv1T?=
+ =?us-ascii?Q?hquzFVftpU2J4rCW4PRINiBglj9mQ0uafYFllTgIz41Zii7OfFO6cWi+QQfM?=
+ =?us-ascii?Q?w+G9jj2/7qZuVoAH44Pnj9OfP2HUhp2DU9jwFX0GnwK3mgmCExTEVBIGOYo1?=
+ =?us-ascii?Q?0IeqoNW0Ikc7ZNmDf+zGu8zU3tldam92zWZ/lQuU/CpaUPOsxxPeDMxzc4W7?=
+ =?us-ascii?Q?iI7uHa6MHTBfIGO/Nhvt0dow9j1Wk+bMBMgBQ8FUwHv7o5IhR/npBfa3lTWJ?=
+ =?us-ascii?Q?Lux4w+sYYKpI6aCAMQH0mXQEEQ28sAOnHG3KQsFnY41fBGHF9KPcZyKDWOwG?=
+ =?us-ascii?Q?hMBnVIEvD8HlLWi76K8HunyCloYxyN0bHCPVKTwHra6y+Xlle9ms3haBAv/g?=
+ =?us-ascii?Q?9PnSI85A4Gg2oK3/42hxmJsZkqSxQUURgk4B3U+zgchv5ioBhA+lGiu0MOHA?=
+ =?us-ascii?Q?RodZLmuq7MG88Fvg8V04Tq4OBUyEYBd81/AvKjyxNRDQE6Fb4bPK4B101sIl?=
+ =?us-ascii?Q?aLHJA/5aJWuiZP3J2nrXHemiRq4g/xxDToNUiLMiYwvvmWFYWGQiamlyMamr?=
+ =?us-ascii?Q?o9naX+2po2O98wLC3Bqj3t9h2+sryxyEJPFzQMoLH0CA1ABBYf6ASbpbCjic?=
+ =?us-ascii?Q?Wo76f0sNthvFdDSoqYNpXTjKdozwRSmzswLY5ncoNjRDFuH93b9XhWun2HbO?=
+ =?us-ascii?Q?iTA08IGdzpY9a/tVuxy7Y6IqPwnH45zouN5FP4fv1n6ddyC7GxQc7aL/EoU+?=
+ =?us-ascii?Q?CUQu2ft8zlmhDRka8ggWQrBf8C8JZJS3lup88OtdyR1ZWlFSGVzYIUbZYpi2?=
+ =?us-ascii?Q?JPZtwnVG7d9ULDunPAWEHX/2JWoPGBwa7sX+2f7Quddk9sk50PWo+Tv6a802?=
+ =?us-ascii?Q?qOuZ9E4B67O1l00T5OycRew3sQy3zrNrowYbg7INHaVjeZ9ONJ8RDcpo5wcf?=
+ =?us-ascii?Q?byYWRpJX7cQLqFK1xDAu2hproPS/G56e/QfPtZIKkM/iIvIb0l++PEE2Xf8X?=
+ =?us-ascii?Q?cFOH0hRUG8FDH4PduGFk0tUNtbxFEbKTcShIUX5K62B13dNyPqlbnnonpT3Y?=
+ =?us-ascii?Q?vxUUCC0nit9Jp+VwVoxEANrz4U6LCm7VPyfkHTA2GxNGyzDRERYQSZ+6LwtR?=
+ =?us-ascii?Q?g7gcv9JCIGoJzQN2hO/ykK7j0EYRZzgE?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL4PR10MB8229.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?WI/4pWNqFg03o3FjU9NRJsOgxmBhnS4/B8FoP9+yhVWg14vZAN2jUZcxRi7q?=
+ =?us-ascii?Q?tw/DZhlJwibd3/kSqpird8VXSicsS8adqFAgTyK2XV43HqUYwLvG0lRm3hPK?=
+ =?us-ascii?Q?XjXv5kpwk8S0kXc6W/6L4JEBZi7Equjpf0ljm5U4u52Iq8/AQkc2IAClWeH9?=
+ =?us-ascii?Q?H8iMjgO6b92IizrmouVyI3ZkLXYA/0UlxKmjSJBcC8Sydz5OHzOEosrscoiU?=
+ =?us-ascii?Q?O1N699ER20rvfCvkxr4V8nPHGu7sNBP+kwCq15ySfNsGqHgXrdOiBNj4ihdU?=
+ =?us-ascii?Q?G3dd+ejRAZGAGzSH7nNrbA7utzdcATe3sl/hqPnC6bvH+YeqWiJvybM7d2DP?=
+ =?us-ascii?Q?0/JAP3pMYLuY0zUPthQhmR/3lFvrnRvmB5A4k1/ozRYCi1eFoajWo/O14grS?=
+ =?us-ascii?Q?eO7DPJwUKXamWkUP0FmSxArkAYnxXAHzbQldSQjO86BxtqdxI7Jgb2OENQHw?=
+ =?us-ascii?Q?V5/1r0G5elMkgDBccOkpU9IU1q+ducbYynlSVzLCP0LRzZZWTdlCLcKVd1LC?=
+ =?us-ascii?Q?uDmcyx4m4my7YwhR4CqUSeTY3SNQMtB3O6UBtAH/4IAug18DJDeOqw0Z30Tf?=
+ =?us-ascii?Q?aNrUKfcBkThZT4UPl0b9YVwWxZ5uIg83exKEdHtxG1xbjBQ2nvmjgZKSHj1A?=
+ =?us-ascii?Q?nm0ExcTlxqVP2lVJUrFFWSnGTvP5MvsOyQ2yYkLESS4WG5cy4/RknQ4RRzx4?=
+ =?us-ascii?Q?rg3dcGql+qYYjddk7kX1/DRxkJvYMOtzNBqU3g0F8NwrkfE9B9fQ6loET+Vu?=
+ =?us-ascii?Q?yf7VmZj8mmxQmZcHfNZp7eWtSYXgaBfxYW14jqL6svATR9Yw/77+oM6LFo3U?=
+ =?us-ascii?Q?L/thCZ/v9ZwzKWs+fOmZduYqD9c+0NBVYaaVsiIayRoDFVpvhEXFvaxxbb+R?=
+ =?us-ascii?Q?IhkGJ9rB5pWv1o3XQdwO0GwX9Mzl2q0Reqcix1kVJn1odlt1zr9i6B2o3pV9?=
+ =?us-ascii?Q?pdA1rPqDaHdaVYRZjJvZMVhnAzyMMjcsuyqgo0kTYrdqFB0IxQGj1PeSz8iC?=
+ =?us-ascii?Q?diKUj+2VwvgFAjSPphblIdgnsYRIK2q2S45MCMdAnnzH/ZLrFLPIzxD9uXGM?=
+ =?us-ascii?Q?/0H+VxGn3de8TX4HhqIBuM4Gg1meF1VenXn8d4y70ZStCk50ZeyZwrRCn/Bs?=
+ =?us-ascii?Q?MBb3xAeNTEVjpkGo5LTFk9VYIFZxOh0+0E9w8W40tN+TvO5enikKFH6wG+kK?=
+ =?us-ascii?Q?hW4xM8hiE+ewAwKP02tDHD7QaPN6fHCpIWnh+ke55M+oJJqIYp0yhNG8ht//?=
+ =?us-ascii?Q?ZbJKIhmzIdBZOHdax4QP6dT2YGfls7N0HXOHln3xN0tOUQUGRXaSYH//n1zB?=
+ =?us-ascii?Q?Egfjf8ISy38LfTYAB9iewkG59MP3OgVMU71VBBhNjffI4l4NBNs1u/FETBac?=
+ =?us-ascii?Q?wjDfV6Tnl1VdmApKsn2gr4BEm2eTw+RNPzpfaWHBJx2I53/o65lb1DHEVYoQ?=
+ =?us-ascii?Q?XefG9SEyfS+3u5PGWvhAXU9h8Ozv6koUE4nfcntggHgiLgrLzhxkQwPvO3rI?=
+ =?us-ascii?Q?4f0Apu4gIeomNutFnx/M4qiCQFQmnDWvrp+7wVanaqs2oeiSEk+L2rptLGC5?=
+ =?us-ascii?Q?/1g0jp/wP2TV1r9UFJxEPwm7J7JUtPrwDIxsVxxgDhkucjrFFwwS+Hjnek64?=
+ =?us-ascii?Q?1w=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	qbWDF/g9yz+qc5zV1mpZCR6ocaC1kCWWd1cglJZecHP5m4HaAv/yHIg6zGHxGGfc8V+5tDzlZz9FEhzOuXRgdvmlFqKZcPZHX0oNFBrDAO1fJWpYVEErtPge/Q0fUke0u5vwiULA+o5LSmm1ttmOVvExze4XQP7wKTeX+chmaaUAzNFmqCAgaz4dc3mxFq+78yajEPpmyweK7EVthvwIak3yjo83283LOL08pH5DWhGpwTiXxPHmQaGM88KTV9RhJ4v8O9oBew27zZLbq8vQqjoauwUgs4j4lLwJ+JE0+2FpAVvX7ktk2RddwFF7LAitwmGWTuo/Oq+iyZ1/RCr68vwZaqEkBUUeWMa7Jy1xCpl6+EpiaXYYfH+zCrZfgScvJ+Qe8fHD/bAKpPfIiD7q2Pm+H9jOYKXaw67x0dy4pt6n4jColXj1eujOm3xsSG7LetqEqgpQPDwLrBrcLvRzJJqKJAzIff7VMVGMJu31VJqbtCtdxcmBcIASez4XmenYexRT2E8OUf4FPKEUf5SzdYS5RIlKq4XQVqY1r+NUM3hsHCRUweA2u8fqupQe/Bof+ziMTdaY7lcmxg1qJ9syuj1Yp2WUoa+yohqSExEM2pU=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b7fc8fb6-1098-4465-70a6-08de22047d7a
+X-MS-Exchange-CrossTenant-AuthSource: BL4PR10MB8229.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2025 15:59:41.5015
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cjrQB4vf6DVF13YCnofV2wHgrS2VU6eupntw/UQpJiXS6jr0rGUjn5W4w+yQyquXAeHNNi9sCIDaB4hnRz3P+IHb+xmPI57odQ2WuqV5Ubo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR10MB6951
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-12_04,2025-11-11_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 priorityscore=1501 lowpriorityscore=0 bulkscore=0
- clxscore=1015 phishscore=0 spamscore=0 malwarescore=0 adultscore=0
- suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
- definitions=main-2511080022
+ definitions=2025-11-12_05,2025-11-11_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0 spamscore=0
+ mlxscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510240000
+ definitions=main-2511120129
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTEyMDEyNiBTYWx0ZWRfX8jPwXFSpFVxV
+ LmM+ExqyIwYTeQOXldLnWnG4phmGSObWtlAGUqeGJtGLrq/YBURQm0G74aoZEi17DAArJfQNpdX
+ cjbgofROhXYY3m6C19oOO0Kvigr28MlzbWsqR6TkuxvYmgJANvrlVbxHfkhIUqnaYb9eajdDizW
+ 2SqpGweE/u0bHeUq8uU2MLgObo7KoZi7ZHZRnSyKqORlBpWXj8kIOlgsmd7uLTje3OqNLkIFQwY
+ BOSVg8pOC3uyy6n98B02Zcg9c4+YFp53ae/CEEIXcpev5/SmBQovoMbOlYOYkNiM9BrPySiQtaX
+ HZJIGk9N0/tcPgIb/TcqeR+/tF8AU8Y/O47u/m52qs0zjSwhzC74r2SymQ3AaYXbEx8eyMfKiZa
+ AyqHsBdaIFDFbbfV3NbBGh1C05kOmg==
+X-Proofpoint-GUID: 56FyKXBWuXl8S423LVwFh9Kyy_ul_bx_
+X-Proofpoint-ORIG-GUID: 56FyKXBWuXl8S423LVwFh9Kyy_ul_bx_
+X-Authority-Analysis: v=2.4 cv=Ju38bc4C c=1 sm=1 tr=0 ts=6914aef4 cx=c_pps
+ a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6UeiqGixMTsA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=yPCof4ZbAAAA:8 a=Ikd4Dj_1AAAA:8 a=8oKMxynL1-BeT_Us9OoA:9 a=CjuIK1q_8ugA:10
+ a=UhEZJTgQB8St2RibIkdl:22 a=Z5ABNNGmrOfJ6cZ5bIyy:22 a=QOGEsqRv6VhmHaoFNykA:22
 
-s390 is one of the last architectures using the legacy API for setup and
-teardown of PCI MSI IRQs. Migrate the s390 IRQ allocation and teardown
-to the MSI parent domain API. For details, see:
+On Tue, Nov 11, 2025 at 09:58:36PM -0500, Zi Yan wrote:
+> On 10 Nov 2025, at 17:21, Lorenzo Stoakes wrote:
+>
+> > There's an established convention in the kernel that we treat PTEs as
+> > containing swap entries (and the unfortunately named non-swap swap entries)
+> > should they be neither empty (i.e. pte_none() evaluating true) nor present
+> > (i.e. pte_present() evaluating true).
+> >
+> > However, there is some inconsistency in how this is applied, as we also
+> > have the is_swap_pte() helper which explicitly performs this check:
+> >
+> > 	/* check whether a pte points to a swap entry */
+> > 	static inline int is_swap_pte(pte_t pte)
+> > 	{
+> > 		return !pte_none(pte) && !pte_present(pte);
+> > 	}
+> >
+> > As this represents a predicate, and it's logical to assume that in order to
+> > establish that a PTE entry can correctly be manipulated as a swap/non-swap
+> > entry, this predicate seems as if it must first be checked.
+> >
+> > But we instead, we far more often utilise the established convention of
+> > checking pte_none() / pte_present() before operating on entries as if they
+> > were swap/non-swap.
+> >
+> > This patch works towards correcting this inconsistency by removing all uses
+> > of is_swap_pte() where we are already in a position where we perform
+> > pte_none()/pte_present() checks anyway or otherwise it is clearly logical
+> > to do so.
+> >
+> > We also take advantage of the fact that pte_swp_uffd_wp() is only set on
+> > swap entries.
+> >
+> > Additionally, update comments referencing to is_swap_pte() and
+> > non_swap_entry().
+> >
+> > No functional change intended.
+> >
+> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> > ---
+> >  fs/proc/task_mmu.c            | 49 ++++++++++++++++++++++++-----------
+> >  include/linux/userfaultfd_k.h |  3 +--
+> >  mm/hugetlb.c                  |  6 ++---
+> >  mm/internal.h                 |  6 ++---
+> >  mm/khugepaged.c               | 29 +++++++++++----------
+> >  mm/migrate.c                  |  2 +-
+> >  mm/mprotect.c                 | 43 ++++++++++++++----------------
+> >  mm/mremap.c                   |  7 +++--
+> >  mm/page_table_check.c         | 13 ++++++----
+> >  mm/page_vma_mapped.c          | 31 +++++++++++-----------
+> >  10 files changed, 104 insertions(+), 85 deletions(-)
+> >
+>
+> <snip>
+>
+> > diff --git a/mm/page_vma_mapped.c b/mm/page_vma_mapped.c
+> > index be20468fb5a9..a4e23818f37f 100644
+> > --- a/mm/page_vma_mapped.c
+> > +++ b/mm/page_vma_mapped.c
+> > @@ -16,6 +16,7 @@ static inline bool not_found(struct page_vma_mapped_walk *pvmw)
+> >  static bool map_pte(struct page_vma_mapped_walk *pvmw, pmd_t *pmdvalp,
+> >  		    spinlock_t **ptlp)
+> >  {
+> > +	bool is_migration;
+> >  	pte_t ptent;
+> >
+> >  	if (pvmw->flags & PVMW_SYNC) {
+> > @@ -26,6 +27,7 @@ static bool map_pte(struct page_vma_mapped_walk *pvmw, pmd_t *pmdvalp,
+> >  		return !!pvmw->pte;
+> >  	}
+> >
+> > +	is_migration = pvmw->flags & PVMW_MIGRATION;
+> >  again:
+> >  	/*
+> >  	 * It is important to return the ptl corresponding to pte,
+> > @@ -41,11 +43,14 @@ static bool map_pte(struct page_vma_mapped_walk *pvmw, pmd_t *pmdvalp,
+> >
+> >  	ptent = ptep_get(pvmw->pte);
+> >
+> > -	if (pvmw->flags & PVMW_MIGRATION) {
+> > -		if (!is_swap_pte(ptent))
+>
+> Here, is_migration = true and either pte_none() or pte_present()
+> would return false, and ...
+>
+> > +	if (pte_none(ptent)) {
+> > +		return false;
+> > +	} else if (pte_present(ptent)) {
+> > +		if (is_migration)
+> >  			return false;
+> > -	} else if (is_swap_pte(ptent)) {
+> > +	} else if (!is_migration) {
+> >  		swp_entry_t entry;
+> > +
+> >  		/*
+> >  		 * Handle un-addressable ZONE_DEVICE memory.
+> >  		 *
+> > @@ -66,8 +71,6 @@ static bool map_pte(struct page_vma_mapped_walk *pvmw, pmd_t *pmdvalp,
+> >  		if (!is_device_private_entry(entry) &&
+> >  		    !is_device_exclusive_entry(entry))
+> >  			return false;
+> > -	} else if (!pte_present(ptent)) {
+> > -		return false;
+>
+> ... is_migration = false and !pte_present() is actually pte_none(),
+> because of the is_swap_pte() above the added !is_migration check.
+> So pte_none() should return false regardless of is_migration.
 
-https://lore.kernel.org/lkml/20221111120501.026511281@linutronix.de
+I guess you were working this through :) well I decided to also just to
+double-check I got it right, maybe useful for you also :P -
 
-In detail, create an MSI parent domain for zpci which is used by
-all PCI devices. When a PCI device sets up MSI or MSI-X IRQs, the
-library creates a per-device IRQ domain for this device, which is
-be used by the device for allocating and freeing IRQs.
+Previously:
 
-The per-device domain delegates this allocation and freeing to the
-parent-domain. In the end, the corresponding callbacks of the parent
-domain are responsible for allocating and freeing the IRQs.
+	if (is_migration) {
+		if (!is_swap_pte(ptent))
+			return false;
+	} else if (is_swap_pte(ptent)) {
+		... ZONE_DEVICE blah ...
+	} else if (!pte_present(ptent)) {
+		return false;
+	}
 
-The allocation is split into two parts:
-- zpci_msi_prepare() is called once for each device and allocates the
-  required resources. On s390, each PCI function has its own airq
-  vector and a summary bit, which must be configured once per function.
-  This is done in prepare().
-- zpci_msi_alloc() can be called multiple times for allocating one or
-  more MSI/MSI-X IRQs. This creates a mapping between the virtual IRQ
-  number in the kernel and the hardware IRQ number.
+But is_swap_pte() is the same as !pte_none() && !pte_present(), so
+!is_swap_pte() is pte_none() || pte_present() by De Morgan's law:
 
-Freeing is split into two counterparts:
-- zpci_msi_free() reverts the effects of zpci_msi_alloc() and
-- zpci_msi_teardown() reverts the effects of zpci_msi_prepare(). This is
-  callend once when all IRQs are freed before a device is removed.
+	if (is_migration) {
+		if (pte_none(ptent) || pte_present(ptent))
+			return false;
+	} else if (!pte_none(ptent) && !pte_present(ptent)) {
+		... ZONE_DEVICE blah ...
+	} else if (!pte_present(ptent)) {
+		return false;
+	}
 
-Since the parent domain in the end allocates the IRQs, the hwirq
-encoding must be unambiguous for all IRQs of all devices. This is
-achieved by encoding the hwirq using the PCI function id and the MSI
-index.
+In the last branch, we know (again by De Morgan's law) that either
+pte_none(ptent) or pte_present(ptent).. But we explicitly check for
+!pte_present(ptent) so this becomes:
 
-Signed-off-by: Tobias Schumacher <ts@linux.ibm.com>
----
- arch/s390/Kconfig           |   1 +
- arch/s390/include/asm/pci.h |   1 +
- arch/s390/pci/pci_bus.c     |   1 +
- arch/s390/pci/pci_irq.c     | 323 +++++++++++++++++++++++++++-----------------
- 4 files changed, 203 insertions(+), 123 deletions(-)
+	if (is_migration) {
+		if (pte_none(ptent) || pte_present(ptent))
+			return false;
+	} else if (!pte_none(ptent) && !pte_present(ptent)) {
+		... ZONE_DEVICE blah ...
+	} else if (pte_none(ptent)) {
+		return false;
+	}
 
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index df22b10d91415e1ed183cc8add9ad0ac4293c50e..739a9a9a86a277be1ba750cb2e98af0547df89fd 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -251,6 +251,7 @@ config S390
- 	select HOTPLUG_SMT
- 	select IOMMU_HELPER		if PCI
- 	select IOMMU_SUPPORT		if PCI
-+  select IRQ_MSI_LIB if PCI
- 	select KASAN_VMALLOC if KASAN
- 	select LOCK_MM_AND_FIND_VMA
- 	select MMU_GATHER_MERGE_VMAS
-diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
-index a32f465ecf73a5cc3408a312d94ec888d62848cc..462e87bdb7acdfa4e7df0f9ca8e82c269e1f98aa 100644
---- a/arch/s390/include/asm/pci.h
-+++ b/arch/s390/include/asm/pci.h
-@@ -310,6 +310,7 @@ int zpci_dma_exit_device(struct zpci_dev *zdev);
- /* IRQ */
- int __init zpci_irq_init(void);
- void __init zpci_irq_exit(void);
-+void zpci_set_msi_parent_domain(struct zpci_bus *zbus);
- 
- /* FMB */
- int zpci_fmb_enable_device(struct zpci_dev *);
-diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
-index be8c697fea0cc755cfdb4fb0a9e3b95183bec0dc..2be33cfb8970409db4fcb75ea73543f49b583a5c 100644
---- a/arch/s390/pci/pci_bus.c
-+++ b/arch/s390/pci/pci_bus.c
-@@ -210,6 +210,7 @@ static int zpci_bus_create_pci_bus(struct zpci_bus *zbus, struct zpci_dev *fr, s
- 	}
- 
- 	zbus->bus = bus;
-+	zpci_set_msi_parent_domain(zbus);
- 
- 	return 0;
- }
-diff --git a/arch/s390/pci/pci_irq.c b/arch/s390/pci/pci_irq.c
-index e73be96ce5fe6473fc193d65b8f0ff635d6a98ba..7412906b5fec695aa62155a8ecc34fb1f93e0f4b 100644
---- a/arch/s390/pci/pci_irq.c
-+++ b/arch/s390/pci/pci_irq.c
-@@ -7,6 +7,7 @@
- #include <linux/kernel_stat.h>
- #include <linux/pci.h>
- #include <linux/msi.h>
-+#include <linux/irqchip/irq-msi-lib.h>
- #include <linux/smp.h>
- 
- #include <asm/isc.h>
-@@ -29,6 +30,8 @@ static struct airq_iv *zpci_sbv;
-  */
- static struct airq_iv **zpci_ibv;
- 
-+static struct irq_domain *zpci_msi_parent_domain;
-+
- /* Modify PCI: Register floating adapter interruptions */
- static int zpci_set_airq(struct zpci_dev *zdev)
- {
-@@ -110,19 +113,6 @@ static int zpci_set_irq(struct zpci_dev *zdev)
- 	return rc;
- }
- 
--/* Clear adapter interruptions */
--static int zpci_clear_irq(struct zpci_dev *zdev)
--{
--	int rc;
--
--	if (irq_delivery == DIRECTED)
--		rc = zpci_clear_directed_irq(zdev);
--	else
--		rc = zpci_clear_airq(zdev);
--
--	return rc;
--}
--
- static int zpci_set_irq_affinity(struct irq_data *data, const struct cpumask *dest,
- 				 bool force)
- {
-@@ -137,16 +127,40 @@ static int zpci_set_irq_affinity(struct irq_data *data, const struct cpumask *de
- 	return IRQ_SET_MASK_OK;
- }
- 
-+static void zpci_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
-+{
-+	struct msi_desc *desc = irq_data_get_msi_desc(data);
-+	struct zpci_dev *zdev = to_zpci_dev(desc->dev);
-+
-+	if (irq_delivery == DIRECTED) {
-+		int cpu = 0;
-+
-+		if (desc->affinity)
-+			cpu = cpumask_first(&desc->affinity->mask);
-+		else
-+			cpu = 0;
-+		msg->address_lo = zdev->msi_addr & 0xff0000ff;
-+		msg->address_lo |= (smp_cpu_get_cpu_address(cpu) << 8);
-+	} else {
-+		msg->address_lo = zdev->msi_addr & 0xffffffff;
-+	}
-+	msg->address_hi = zdev->msi_addr >> 32;
-+	msg->data = data->hwirq - zdev->msi_first_bit;
-+}
-+
- static struct irq_chip zpci_irq_chip = {
- 	.name = "PCI-MSI",
-+	.irq_set_affinity = irq_chip_set_affinity_parent,
- 	.irq_unmask = pci_msi_unmask_irq,
- 	.irq_mask = pci_msi_mask_irq,
-+	.irq_compose_msi_msg = zpci_compose_msi_msg
- };
- 
- static void zpci_handle_cpu_local_irq(bool rescan)
- {
- 	struct airq_iv *dibv = zpci_ibv[smp_processor_id()];
- 	union zpci_sic_iib iib = {{0}};
-+	irq_hw_number_t hwirq;
- 	unsigned long bit;
- 	int irqs_on = 0;
- 
-@@ -164,7 +178,8 @@ static void zpci_handle_cpu_local_irq(bool rescan)
- 			continue;
- 		}
- 		inc_irq_stat(IRQIO_MSI);
--		generic_handle_irq(airq_iv_get_data(dibv, bit));
-+		hwirq = airq_iv_get_ptr(dibv, bit);
-+		generic_handle_domain_irq(zpci_msi_parent_domain, hwirq);
- 	}
- }
- 
-@@ -229,6 +244,7 @@ static void zpci_floating_irq_handler(struct airq_struct *airq,
- 				      struct tpi_info *tpi_info)
- {
- 	union zpci_sic_iib iib = {{0}};
-+	irq_hw_number_t hwirq;
- 	unsigned long si, ai;
- 	struct airq_iv *aibv;
- 	int irqs_on = 0;
-@@ -256,7 +272,9 @@ static void zpci_floating_irq_handler(struct airq_struct *airq,
- 				break;
- 			inc_irq_stat(IRQIO_MSI);
- 			airq_iv_lock(aibv, ai);
--			generic_handle_irq(airq_iv_get_data(aibv, ai));
-+
-+			hwirq = airq_iv_get_ptr(aibv, ai);
-+			generic_handle_domain_irq(zpci_msi_parent_domain, hwirq);
- 			airq_iv_unlock(aibv, ai);
- 		}
- 	}
-@@ -278,7 +296,7 @@ static int __alloc_airq(struct zpci_dev *zdev, int msi_vecs,
- 		zdev->aisb = *bit;
- 
- 		/* Create adapter interrupt vector */
--		zdev->aibv = airq_iv_create(msi_vecs, AIRQ_IV_DATA | AIRQ_IV_BITLOCK, NULL);
-+		zdev->aibv = airq_iv_create(msi_vecs, AIRQ_IV_PTR | AIRQ_IV_BITLOCK, NULL);
- 		if (!zdev->aibv)
- 			return -ENOMEM;
- 
-@@ -290,146 +308,197 @@ static int __alloc_airq(struct zpci_dev *zdev, int msi_vecs,
- 	return 0;
- }
- 
--int arch_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
-+static struct airq_struct zpci_airq = {
-+	.handler = zpci_floating_irq_handler,
-+	.isc = PCI_ISC,
-+};
-+
-+/*
-+ * Encode the hwirq number for the parent domain. The encoding must be unique
-+ * for each IRQ of each device in the parent domain, so it uses the fid to
-+ * identify the device and the msi_index to identify the IRQ within that device.
-+ */
-+static inline irq_hw_number_t zpci_encode_hwirq(u32 fid, u16 msi_index)
- {
--	unsigned int hwirq, msi_vecs, irqs_per_msi, i, cpu;
--	struct zpci_dev *zdev = to_zpci(pdev);
--	struct msi_desc *msi;
--	struct msi_msg msg;
--	unsigned long bit;
--	int cpu_addr;
--	int rc, irq;
-+	return ((irq_hw_number_t)fid << 32) | msi_index;
-+}
- 
--	zdev->aisb = -1UL;
--	zdev->msi_first_bit = -1U;
-+static inline u16 zpci_decode_hwirq_msi_index(irq_hw_number_t irq)
-+{
-+	return irq & 0xFFFF;
-+}
-+
-+static int zpci_msi_prepare(struct irq_domain *domain,
-+			    struct device *dev, int nvec,
-+			    msi_alloc_info_t *info)
-+{
-+	struct zpci_dev *zdev = to_zpci_dev(dev);
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	unsigned long bit;
-+	int msi_vecs, rc;
- 
- 	msi_vecs = min_t(unsigned int, nvec, zdev->max_msi);
--	if (msi_vecs < nvec) {
-+	if (msi_vecs < nvec)
- 		pr_info("%s requested %d irqs, allocate system limit of %d",
- 			pci_name(pdev), nvec, zdev->max_msi);
--	}
- 
- 	rc = __alloc_airq(zdev, msi_vecs, &bit);
--	if (rc < 0)
-+	if (rc) {
-+		pr_err("Allocating AIRQ for %s failed\n", pci_name(pdev));
- 		return rc;
-+	}
- 
--	/*
--	 * Request MSI interrupts:
--	 * When using MSI, nvec_used interrupt sources and their irq
--	 * descriptors are controlled through one msi descriptor.
--	 * Thus the outer loop over msi descriptors shall run only once,
--	 * while two inner loops iterate over the interrupt vectors.
--	 * When using MSI-X, each interrupt vector/irq descriptor
--	 * is bound to exactly one msi descriptor (nvec_used is one).
--	 * So the inner loops are executed once, while the outer iterates
--	 * over the MSI-X descriptors.
--	 */
--	hwirq = bit;
--	msi_for_each_desc(msi, &pdev->dev, MSI_DESC_NOTASSOCIATED) {
--		if (hwirq - bit >= msi_vecs)
--			break;
--		irqs_per_msi = min_t(unsigned int, msi_vecs, msi->nvec_used);
--		irq = __irq_alloc_descs(-1, 0, irqs_per_msi, 0, THIS_MODULE,
--					(irq_delivery == DIRECTED) ?
--					msi->affinity : NULL);
--		if (irq < 0)
--			return -ENOMEM;
--
--		for (i = 0; i < irqs_per_msi; i++) {
--			rc = irq_set_msi_desc_off(irq, i, msi);
--			if (rc)
--				return rc;
--			irq_set_chip_and_handler(irq + i, &zpci_irq_chip,
--						 handle_percpu_irq);
--		}
--
--		msg.data = hwirq - bit;
-+	zdev->msi_first_bit = bit;
-+	rc = zpci_set_irq(zdev);
-+	if (rc) {
-+		pr_err("Registering floating adapter interruptions for %s failed\n",
-+		       pci_name(pdev));
- 		if (irq_delivery == DIRECTED) {
--			if (msi->affinity)
--				cpu = cpumask_first(&msi->affinity->mask);
--			else
--				cpu = 0;
--			cpu_addr = smp_cpu_get_cpu_address(cpu);
--
--			msg.address_lo = zdev->msi_addr & 0xff0000ff;
--			msg.address_lo |= (cpu_addr << 8);
--
--			for_each_possible_cpu(cpu) {
--				for (i = 0; i < irqs_per_msi; i++)
--					airq_iv_set_data(zpci_ibv[cpu],
--							 hwirq + i, irq + i);
--			}
-+			airq_iv_free(zpci_ibv[0], zdev->msi_first_bit, msi_vecs);
- 		} else {
--			msg.address_lo = zdev->msi_addr & 0xffffffff;
--			for (i = 0; i < irqs_per_msi; i++)
--				airq_iv_set_data(zdev->aibv, hwirq + i, irq + i);
-+			zpci_clear_airq(zdev);
-+			airq_iv_release(zdev->aibv);
-+			zdev->aibv = NULL;
-+			airq_iv_free_bit(zpci_sbv, zdev->aisb);
-+			zdev->aisb = -1UL;
- 		}
--		msg.address_hi = zdev->msi_addr >> 32;
--		pci_write_msi_msg(irq, &msg);
--		hwirq += irqs_per_msi;
-+		zdev->msi_first_bit = -1U;
-+		return rc;
- 	}
- 
--	zdev->msi_first_bit = bit;
--	zdev->msi_nr_irqs = hwirq - bit;
-+	zdev->msi_nr_irqs = msi_vecs;
- 
--	rc = zpci_set_irq(zdev);
--	if (rc)
--		return rc;
-+	return 0;
-+}
- 
--	return (zdev->msi_nr_irqs == nvec) ? 0 : zdev->msi_nr_irqs;
-+static void zpci_msi_teardown_directed(struct zpci_dev *zdev)
-+{
-+	zpci_clear_directed_irq(zdev);
-+	airq_iv_free(zpci_ibv[0], zdev->msi_first_bit, zdev->max_msi);
-+	zdev->msi_first_bit = -1U;
- }
- 
--void arch_teardown_msi_irqs(struct pci_dev *pdev)
-+static void zpci_msi_teardown_floating(struct zpci_dev *zdev)
- {
--	struct zpci_dev *zdev = to_zpci(pdev);
--	struct msi_desc *msi;
--	unsigned int i;
--	int rc;
-+	zpci_clear_airq(zdev);
-+	airq_iv_release(zdev->aibv);
-+	zdev->aibv = NULL;
-+	airq_iv_free_bit(zpci_sbv, zdev->aisb);
-+	zdev->aisb = -1UL;
-+	zdev->msi_first_bit = -1U;
-+}
- 
--	/* Disable interrupts */
--	rc = zpci_clear_irq(zdev);
--	if (rc)
--		return;
-+static void zpci_msi_teardown(struct irq_domain *domain, msi_alloc_info_t *arg)
-+{
-+	struct zpci_dev *zdev = to_zpci_dev(domain->dev);
-+
-+	if (irq_delivery == DIRECTED)
-+		zpci_msi_teardown_directed(zdev);
-+	else
-+		zpci_msi_teardown_floating(zdev);
-+}
-+
-+static int zpci_msi_domain_alloc(struct irq_domain *domain, unsigned int virq,
-+				 unsigned int nr_irqs, void *args)
-+{
-+	struct msi_desc *desc = ((msi_alloc_info_t *)args)->desc;
-+	struct zpci_dev *zdev = to_zpci_dev(desc->dev);
-+	irq_hw_number_t hwirq;
-+	unsigned long bit;
-+	int i;
-+
-+	bit = zdev->msi_first_bit + desc->msi_index;
-+	hwirq = zpci_encode_hwirq(zdev->fid, desc->msi_index);
-+
-+	if (desc->msi_index + nr_irqs > zdev->max_msi)
-+		return -EINVAL;
-+
-+	for (i = 0; i < nr_irqs; i++) {
-+		irq_domain_set_info(domain, virq + i, hwirq + i,
-+				    &zpci_irq_chip, zdev,
-+				    handle_percpu_irq, NULL, NULL);
- 
--	/* Release MSI interrupts */
--	msi_for_each_desc(msi, &pdev->dev, MSI_DESC_ASSOCIATED) {
--		for (i = 0; i < msi->nvec_used; i++) {
--			irq_set_msi_desc(msi->irq + i, NULL);
--			irq_free_desc(msi->irq + i);
-+		if (irq_delivery == DIRECTED) {
-+			airq_iv_set_ptr(zpci_ibv[smp_processor_id()],
-+					bit + i, hwirq + i);
-+		} else {
-+			airq_iv_set_ptr(zdev->aibv, bit + i, hwirq + i);
- 		}
--		msi->msg.address_lo = 0;
--		msi->msg.address_hi = 0;
--		msi->msg.data = 0;
--		msi->irq = 0;
- 	}
- 
--	if (zdev->aisb != -1UL) {
--		zpci_ibv[zdev->aisb] = NULL;
--		airq_iv_free_bit(zpci_sbv, zdev->aisb);
--		zdev->aisb = -1UL;
--	}
--	if (zdev->aibv) {
--		airq_iv_release(zdev->aibv);
--		zdev->aibv = NULL;
--	}
-+	return 0;
-+}
- 
--	if ((irq_delivery == DIRECTED) && zdev->msi_first_bit != -1U)
--		airq_iv_free(zpci_ibv[0], zdev->msi_first_bit, zdev->msi_nr_irqs);
-+static void zpci_msi_domain_free(struct irq_domain *domain, unsigned int virq,
-+				 unsigned int nr_irqs)
-+{
-+	irq_hw_number_t hwirq;
-+	struct irq_data *d;
-+	u16 msi_index;
-+	int i;
-+
-+	for (i = 0; i < nr_irqs; i++) {
-+		d = irq_domain_get_irq_data(domain, virq + i);
-+		hwirq = d->hwirq;
-+		msi_index = zpci_decode_hwirq_msi_index(hwirq);
-+		irq_domain_reset_irq_data(d);
-+	}
- }
- 
--bool arch_restore_msi_irqs(struct pci_dev *pdev)
-+static const struct irq_domain_ops zpci_msi_domain_ops = {
-+	.alloc = zpci_msi_domain_alloc,
-+	.free  = zpci_msi_domain_free
-+};
-+
-+static bool zpci_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
-+				   struct irq_domain *real_parent,
-+				   struct msi_domain_info *info)
- {
--	struct zpci_dev *zdev = to_zpci(pdev);
-+	if (!msi_lib_init_dev_msi_info(dev, domain, real_parent, info))
-+		return false;
-+
-+	info->ops->msi_prepare = zpci_msi_prepare;
-+	info->ops->msi_teardown = zpci_msi_teardown;
- 
--	zpci_set_irq(zdev);
- 	return true;
- }
- 
--static struct airq_struct zpci_airq = {
--	.handler = zpci_floating_irq_handler,
--	.isc = PCI_ISC,
-+static const struct msi_parent_ops zpci_msi_parent_ops = {
-+	.supported_flags   = MSI_GENERIC_FLAGS_MASK	|
-+			     MSI_FLAG_PCI_MSIX		|
-+			     MSI_FLAG_MULTI_PCI_MSI,
-+	.required_flags	   = MSI_FLAG_USE_DEF_DOM_OPS  |
-+			     MSI_FLAG_USE_DEF_CHIP_OPS |
-+			     MSI_FLAG_PCI_MSI_MASK_PARENT,
-+	.init_dev_msi_info = zpci_init_dev_msi_info
- };
- 
-+static int __init zpci_create_parent_msi_domain(void)
-+{
-+	struct irq_domain_info info = {
-+		.fwnode		= irq_domain_alloc_named_fwnode("zpci_msi"),
-+		.ops		= &zpci_msi_domain_ops
-+	};
-+	if (!info.fwnode) {
-+		pr_err("Failed to allocate fwnode for MSI IRQ domain\n");
-+		return -ENOMEM;
-+	}
-+
-+	zpci_msi_parent_domain = msi_create_parent_irq_domain(&info, &zpci_msi_parent_ops);
-+	if (!zpci_msi_parent_domain) {
-+		irq_domain_free_fwnode(info.fwnode);
-+		pr_err("Failed to create MSI IRQ domain\n");
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+void zpci_set_msi_parent_domain(struct zpci_bus *zbus)
-+{
-+	dev_set_msi_domain(&zbus->bus->dev, zpci_msi_parent_domain);
-+}
-+
- static void __init cpu_enable_directed_irq(void *unused)
- {
- 	union zpci_sic_iib iib = {{0}};
-@@ -466,7 +535,7 @@ static int __init zpci_directed_irq_init(void)
- 		 * is only done on the first vector.
- 		 */
- 		zpci_ibv[cpu] = airq_iv_create(cache_line_size() * BITS_PER_BYTE,
--					       AIRQ_IV_DATA |
-+					       AIRQ_IV_PTR |
- 					       AIRQ_IV_CACHELINE |
- 					       (!cpu ? AIRQ_IV_ALLOC : 0), NULL);
- 		if (!zpci_ibv[cpu])
-@@ -511,6 +580,11 @@ int __init zpci_irq_init(void)
- 	rc = register_adapter_interrupt(&zpci_airq);
- 	if (rc)
- 		goto out;
-+
-+	zpci_create_parent_msi_domain();
-+	if (!zpci_msi_parent_domain)
-+		goto out_airq;
-+
- 	/* Set summary to 1 to be called every time for the ISC. */
- 	*zpci_airq.lsi_ptr = 1;
- 
-@@ -524,7 +598,7 @@ int __init zpci_irq_init(void)
- 	}
- 
- 	if (rc)
--		goto out_airq;
-+		goto out_msi_domain;
- 
- 	/*
- 	 * Enable floating IRQs (with suppression after one IRQ). When using
-@@ -533,6 +607,8 @@ int __init zpci_irq_init(void)
- 	zpci_set_irq_ctrl(SIC_IRQ_MODE_SINGLE, PCI_ISC, &iib);
- 
- 	return 0;
-+out_msi_domain:
-+	irq_domain_remove(zpci_msi_parent_domain);
- out_airq:
- 	unregister_adapter_interrupt(&zpci_airq);
- out:
-@@ -549,6 +625,7 @@ void __init zpci_irq_exit(void)
- 		}
- 	}
- 	kfree(zpci_ibv);
-+	irq_domain_remove(zpci_msi_parent_domain);
- 	if (zpci_sbv)
- 		airq_iv_release(zpci_sbv);
- 	unregister_adapter_interrupt(&zpci_airq);
+So we can generalise - regardless of is_migration, pte_none() returns false:
 
--- 
-2.48.1
+	if (pte_none(ptent)) {
+		return false;
+	} else if (is_migration) {
+		if (pte_none(ptent) || pte_present(ptent))
+			return false;
+	} else if (!pte_none(ptent) && !pte_present(ptent)) {
+		... ZONE_DEVICE blah ...
+	}
 
+Since we already check for pte_none() ahead of time, we can simplify again:
+
+	if (pte_none(ptent)) {
+		return false;
+	} else if (is_migration) {
+		if (pte_present(ptent))
+			return false;
+	} else if (!pte_present(ptent)) {
+		... ZONE_DEVICE blah ...
+	}
+
+We can then put the pte_present() check in the outer branch:
+
+	if (pte_none(ptent)) {
+		return false;
+	} else if (pte_present(ptent)) {
+		if (is_migration)
+			return false;
+	} else if (!is_migration) {
+		... ZONE_DEVICE blah ...
+	}
+
+Because previously an is_migration && !pte_present() case would result in no
+action here.
+
+Which is the code in this patch :)
+
+>
+> This is a nice cleanup. Thanks.
+>
+> >  	}
+> >  	spin_lock(*ptlp);
+> >  	if (unlikely(!pmd_same(*pmdvalp, pmdp_get_lockless(pvmw->pmd)))) {
+> > @@ -113,21 +116,17 @@ static bool check_pte(struct page_vma_mapped_walk *pvmw, unsigned long pte_nr)
+> >  			return false;
+> >
+> >  		pfn = softleaf_to_pfn(entry);
+> > -	} else if (is_swap_pte(ptent)) {
+> > -		swp_entry_t entry;
+> > +	} else if (pte_present(ptent)) {
+> > +		pfn = pte_pfn(ptent);
+> > +	} else {
+> > +		const softleaf_t entry = softleaf_from_pte(ptent);
+> >
+> >  		/* Handle un-addressable ZONE_DEVICE memory */
+> > -		entry = pte_to_swp_entry(ptent);
+> > -		if (!is_device_private_entry(entry) &&
+> > -		    !is_device_exclusive_entry(entry))
+> > -			return false;
+> > -
+> > -		pfn = swp_offset_pfn(entry);
+> > -	} else {
+> > -		if (!pte_present(ptent))
+>
+> This !pte_present() is pte_none(). It seems that there should be
+
+Well this should be fine though as:
+
+		const softleaf_t entry = softleaf_from_pte(ptent);
+
+		/* Handle un-addressable ZONE_DEVICE memory */
+		if (!softleaf_is_device_private(entry) &&
+		    !softleaf_is_device_exclusive(entry))
+			return false;
+
+Still correctly handles none - as softleaf_from_pte() in case of pte_none() will
+be a none softleaf entry which will fail both of these tests.
+
+So excluding pte_none() as an explicit test here was part of the rework - we no
+longer have to do that.
+
+>
+> } else if (pte_none(ptent)) {
+> 	return false;
+> }
+>
+> before the above "} else {".
+>
+> > +		if (!softleaf_is_device_private(entry) &&
+> > +		    !softleaf_is_device_exclusive(entry))
+> >  			return false;
+> >
+> > -		pfn = pte_pfn(ptent);
+> > +		pfn = softleaf_to_pfn(entry);
+> >  	}
+> >
+> >  	if ((pfn + pte_nr - 1) < pvmw->pfn)
+> > --
+> > 2.51.0
+>
+> Otherwise, LGTM. With the above issue addressed, feel free to
+> add Reviewed-by: Zi Yan <ziy@nvidia.com>
+
+Thanks!
+
+>
+> --
+> Best Regards,
+> Yan, Zi
+
+Cheers, Lorenzo
 
