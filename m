@@ -1,165 +1,79 @@
-Return-Path: <linux-s390+bounces-14921-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-14917-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49E23C581ED
-	for <lists+linux-s390@lfdr.de>; Thu, 13 Nov 2025 16:02:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A0992C57FF4
+	for <lists+linux-s390@lfdr.de>; Thu, 13 Nov 2025 15:42:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 23EEC4E4A68
-	for <lists+linux-s390@lfdr.de>; Thu, 13 Nov 2025 15:02:37 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 19B3B4F1B66
+	for <lists+linux-s390@lfdr.de>; Thu, 13 Nov 2025 14:33:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CD4A2E7196;
-	Thu, 13 Nov 2025 15:02:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6AEA2C11D9;
+	Thu, 13 Nov 2025 14:33:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ia5BIb+r"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fVIgBVN0"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D94E42E1EF8;
-	Thu, 13 Nov 2025 15:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE70D273D6D;
+	Thu, 13 Nov 2025 14:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763046152; cv=none; b=TzfKvVZV0h3NdLEP8Z+XZJBoWov70d7raQi5bKd3m/IjOAeBYGF85w/yUF+EObIUYutnaho0nNEm+z/bey2frq5s3z7Ptm6PenuokOf+cf2Srcgyk4D1/rmOY8BRkPur7OPXJBIL1Urs9XO1ZV29GQmxeNUU02Tu+siSlxyngeo=
+	t=1763044404; cv=none; b=fdotxvvWHy9/3ZWzP1EvRfbFBYAeTghp9pzP83O9134DrYnntmRUFK7++pYZBbZNZe+CSP+Udrr4knYFl99ygjhh96naHHxAOL96V77jHVXBnenT9qmZN1KYhKata7imG4Gp489fPynE7fqN/hkjZdD02QN474MrsYF2aE5qqkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763046152; c=relaxed/simple;
-	bh=2B46NT1dSQc4u95Gk/QrFTNjX7VR1jBDUh9ZV8b1ovg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fEUdCC4ZXbG6u2CN5PwN6mEx5ctWtV5W5YcukTolaQ76NoQcEgyBtSCNpJSj2kD6na7zXPFXmB/0ZcGHYQps0bGupP4UljOM2KiqPLcxSfNHUPvxCmAO5iZVx4tZJPahcDP1kxQ+m4jQqQj5agRVaUOWIUhFV8uGX3knw/zfZKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ia5BIb+r; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763046151; x=1794582151;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2B46NT1dSQc4u95Gk/QrFTNjX7VR1jBDUh9ZV8b1ovg=;
-  b=ia5BIb+rdleWXxBPTLhiSbbK32+FXmCsx+XFV/c1p4UseWi6tdJhrr11
-   HCL+H+45ZQRb7acOiAyM4ofDfCZDrhi64887sxTFCDbvB+U8BBX4RKhRo
-   pO2nmjYFXZANC70zQIfczKCiome6GK6ho5LxPAj+oScoKk8Nkggvm4vwM
-   qKBWJ345CrEWqRU+O8D6mXNVJFxS+NDKfhJ947A0Fxk2UtgtRZ1U6hGZ2
-   iGam3NWWC0LLGpblfWXY9e61LjENCKVe9U0Ol+az+CiBErMfnMHQ9F3Ju
-   C2O0jV+8J27Tu6H6rIBwrQFlf/46ReqAcaC+kj2iDTn6iqHvH8T5s6FPm
-   Q==;
-X-CSE-ConnectionGUID: NuxIPPvRSRSeSFXRX0t4Gg==
-X-CSE-MsgGUID: Gh2SaHaaTsqOzZT3345z7A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11612"; a="68991460"
-X-IronPort-AV: E=Sophos;i="6.19,302,1754982000"; 
-   d="scan'208";a="68991460"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 07:02:29 -0800
-X-CSE-ConnectionGUID: Vz8xRacFQwaRx7eYs36+8g==
-X-CSE-MsgGUID: H/6qh459QiuQ7G0yqQYVsA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,302,1754982000"; 
-   d="scan'208";a="188810179"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by orviesa010.jf.intel.com with ESMTP; 13 Nov 2025 07:02:19 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 05CA197; Thu, 13 Nov 2025 16:02:19 +0100 (CET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Corey Minyard <corey@minyard.net>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Rob Clark <robin.clark@oss.qualcomm.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
-	Vitaly Lifshits <vitaly.lifshits@intel.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Calvin Owens <calvin@wbinvd.org>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Sagi Maimon <maimon.sagi@gmail.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Karan Tilak Kumar <kartilak@cisco.com>,
-	Hans Verkuil <hverkuil+cisco@kernel.org>,
-	Casey Schaufler <casey@schaufler-ca.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>,
-	Max Kellermann <max.kellermann@ionos.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,
-	linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org,
-	amd-gfx@lists.freedesktop.org,
-	linux-arm-msm@vger.kernel.org,
-	freedreno@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	linux-mmc@vger.kernel.org,
-	netdev@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org,
-	linux-pci@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	ceph-devel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Gustavo Padovan <gustavo@padovan.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Abhinav Kumar <abhinav.kumar@linux.dev>,
-	Jessica Zhang <jesszhan0024@gmail.com>,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Rodolfo Giometti <giometti@enneenne.com>,
-	Jonathan Lemon <jonathan.lemon@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Stefan Haberland <sth@linux.ibm.com>,
-	Jan Hoeppner <hoeppner@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Satish Kharat <satishkh@cisco.com>,
-	Sesidhar Baddela <sebaddel@cisco.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Xiubo Li <xiubli@redhat.com>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v3 01/21] lib/vsprintf: Add specifier for printing struct timespec64
-Date: Thu, 13 Nov 2025 15:32:15 +0100
-Message-ID: <20251113150217.3030010-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20251113150217.3030010-1-andriy.shevchenko@linux.intel.com>
-References: <20251113150217.3030010-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1763044404; c=relaxed/simple;
+	bh=SAgPSYL0oeFXVdIm/JOYWtWUH7gHoSO7xlQjUHhvNRo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lTteymDXkEFSAAsbF3qgv1+XuB7Kjz//4zlSS+22iFmMFQ/d5TusDuN8zsBBYYAwBKEnUzzvoMwqesiR3mFCpj4lIFt12NDLXwdcqB/M0pz+vGXvp8cJ2H71YktgmlmCEVNQW9NlxuXEkTi2PXXKCArn9B2v5FuUv8JHemSwMaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fVIgBVN0; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5ADEWOTP030681;
+	Thu, 13 Nov 2025 14:33:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=0o+zlbQsNurV6yPuCnocbIwulBus14VZFwnY2d23i
+	4I=; b=fVIgBVN0HjsyjekY8Q7pTJY5QilOgzS73n2x/2uswR691X3VPj0/n6UIv
+	fwJEAfGaYYT2NKPR14CJLHt1FQrEf9BKh9lbn5eE7eFW0D9YQ6HubMofUwbWkQLo
+	QURsEjYB6H08MziYXaUdf21toOBJ87wG2QvpNwurGhOnQUZri/cdsebFm69cLZsn
+	AKhH270bkWHtOwx3lEoh1W0gjLs57OSfDRfGIm34lw3nJ0CGtEfwBfZeAyc6N+9z
+	GfMRJnmLm5RUCg/g5ZTv4Lu5HHC44q9MwuMKrpa4meaFGMG+ymwJhX6wvqfR3HKY
+	HDxLyOTw0QA0mQcznCUAqmnqz3OAg==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a9wk8gfts-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Nov 2025 14:33:20 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5ADCIxdr007375;
+	Thu, 13 Nov 2025 14:33:19 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4aajdjp2vr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Nov 2025 14:33:19 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5ADEXFf062718242
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 13 Nov 2025 14:33:15 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B495620040;
+	Thu, 13 Nov 2025 14:33:15 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 90CBC20043;
+	Thu, 13 Nov 2025 14:33:15 +0000 (GMT)
+Received: from a46lp67.lnxne.boe (unknown [9.152.108.100])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 13 Nov 2025 14:33:15 +0000 (GMT)
+From: Janosch Frank <frankja@linux.ibm.com>
+To: kvm@vger.kernel.org
+Cc: linux-s390@vger.kernel.org, imbrenda@linux.ibm.com,
+        borntraeger@linux.ibm.com, thuth@redhat.com
+Subject: [PATCH v2] KVM: s390: Add capability that forwards operation exceptions
+Date: Thu, 13 Nov 2025 14:32:22 +0000
+Message-ID: <20251113143310.4187-1-frankja@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -167,128 +81,313 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTA4MDAyMiBTYWx0ZWRfXwg8wQ0ISjlWU
+ kOL1KadZdOxf0/44Pk/1bRTeSnVaPlfbj1dBVc5sakkGLz0VPwGCiCz/o1gZg9m7NJYUTd1kAhh
+ fqZDUb30OpBxgGeHdMwWZPWCZEbck2tNuwm3Q/CCGcN6xRALTRbhqR1/ZTe8ldeBZrrXtOiESAy
+ 5rpjNpgs9F+cn0TnC4MwlecBCSaL3x23GG6A3cL6msZw1Q2bdzfIaAGpR9qGgP7g/XbrB6/LkkK
+ eISfdJDL36WE2PWAMLBW1BXiKwp6PcE4HxO/oOvz/EIsfR7H+apB8zTCFxIkvBzBi4eWJ0xtFni
+ GssBO6KUKxBbhwfo/pP6yjrQE1D0UIN096uvGzNxZTVJyqSl6nVFrC6yKtPvaRep4bY68NW4+Sy
+ d5sqQW65/OlSpf+5OSoOJ1bVUI8eSg==
+X-Authority-Analysis: v=2.4 cv=ZK3aWH7b c=1 sm=1 tr=0 ts=6915ec30 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
+ a=2J_RzahkHEl8vmpqG00A:9
+X-Proofpoint-ORIG-GUID: l1lgQes7MlUj3m4YL0jW-kSxV2P6bsWr
+X-Proofpoint-GUID: l1lgQes7MlUj3m4YL0jW-kSxV2P6bsWr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-13_02,2025-11-12_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0
+ phishscore=0 impostorscore=0 spamscore=0 bulkscore=0 adultscore=0
+ clxscore=1015 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
+ definitions=main-2511080022
 
-A handful drivers want to print a content of the struct timespec64
-in a format of %lld:%09ld. In order to make their lives easier, add
-the respecting specifier directly to the printf() implementation.
+Setting KVM_CAP_S390_USER_OPEREXEC will forward all operation
+exceptions to user space. This also includes the 0x0000 instructions
+managed by KVM_CAP_S390_USER_INSTR0. It's helpful if user space wants
+to emulate instructions which do not (yet) have an opcode.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+While we're at it refine the documentation for
+KVM_CAP_S390_USER_INSTR0.
+
+Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Acked-by: Christian Borntraeger <borntraeger@linux.ibm.com>
 ---
- Documentation/core-api/printk-formats.rst | 11 +++++++--
- lib/tests/printf_kunit.c                  |  4 ++++
- lib/vsprintf.c                            | 28 ++++++++++++++++++++++-
- 3 files changed, 40 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-index 7f2f11b48286..c0b1b6089307 100644
---- a/Documentation/core-api/printk-formats.rst
-+++ b/Documentation/core-api/printk-formats.rst
-@@ -547,11 +547,13 @@ Time and date
- 	%pt[RT]s		YYYY-mm-dd HH:MM:SS
- 	%pt[RT]d		YYYY-mm-dd
- 	%pt[RT]t		HH:MM:SS
--	%pt[RT][dt][r][s]
-+	%ptSp			<seconds>.<nanoseconds>
-+	%pt[RST][dt][r][s]
+Reworded api documentation as per Thomas' request.
+
+---
+ Documentation/virt/kvm/api.rst                |  17 ++-
+ arch/s390/include/asm/kvm_host.h              |   1 +
+ arch/s390/kvm/intercept.c                     |   3 +
+ arch/s390/kvm/kvm-s390.c                      |   7 +
+ include/uapi/linux/kvm.h                      |   1 +
+ tools/testing/selftests/kvm/Makefile.kvm      |   1 +
+ .../selftests/kvm/s390/user_operexec.c        | 140 ++++++++++++++++++
+ 7 files changed, 169 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/kvm/s390/user_operexec.c
+
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index 72b2fae99a83..9d2b1c08d321 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -7820,7 +7820,7 @@ where 0xff represents CPUs 0-7 in cluster 0.
+ :Architectures: s390
+ :Parameters: none
  
- For printing date and time as represented by::
+-With this capability enabled, all illegal instructions 0x0000 (2 bytes) will
++With this capability enabled, the illegal instruction 0x0000 (2 bytes) will
+ be intercepted and forwarded to user space. User space can use this
+ mechanism e.g. to realize 2-byte software breakpoints. The kernel will
+ not inject an operating exception for these instructions, user space has
+@@ -8703,6 +8703,21 @@ This capability indicate to the userspace whether a PFNMAP memory region
+ can be safely mapped as cacheable. This relies on the presence of
+ force write back (FWB) feature support on the hardware.
  
--	R  struct rtc_time structure
-+	R  content of struct rtc_time
-+	S  content of struct timespec64
- 	T  time64_t type
- 
- in human readable format.
-@@ -563,6 +565,11 @@ The %pt[RT]s (space) will override ISO 8601 separator by using ' ' (space)
- instead of 'T' (Capital T) between date and time. It won't have any effect
- when date or time is omitted.
- 
-+The %ptSp is equivalent to %lld.%09ld for the content of the struct timespec64.
-+When the other specifiers are given, it becomes the respective equivalent of
-+%ptT[dt][r][s].%09ld. In other words, the seconds are being printed in
-+the human readable format followed by a dot and nanoseconds.
++7.45 KVM_CAP_S390_USER_OPEREXEC
++----------------------------
 +
- Passed by reference.
- 
- struct clk
-diff --git a/lib/tests/printf_kunit.c b/lib/tests/printf_kunit.c
-index bc54cca2d7a6..7617e5b8b02c 100644
---- a/lib/tests/printf_kunit.c
-+++ b/lib/tests/printf_kunit.c
-@@ -504,6 +504,7 @@ time_and_date(struct kunit *kunittest)
- 	};
- 	/* 2019-01-04T15:32:23 */
- 	time64_t t = 1546615943;
-+	struct timespec64 ts = { .tv_sec = t, .tv_nsec = 11235813 };
- 
- 	test("(%pt?)", "%pt", &tm);
- 	test("2018-11-26T05:35:43", "%ptR", &tm);
-@@ -522,6 +523,9 @@ time_and_date(struct kunit *kunittest)
- 	test("0119-00-04 15:32:23", "%ptTsr", &t);
- 	test("15:32:23|2019-01-04", "%ptTts|%ptTds", &t, &t);
- 	test("15:32:23|0119-00-04", "%ptTtrs|%ptTdrs", &t, &t);
++:Architectures: s390
++:Parameters: none
 +
-+	test("2019-01-04T15:32:23.011235813", "%ptS", &ts);
-+	test("1546615943.011235813", "%ptSp", &ts);
- }
++When this capability is enabled KVM forwards all operation exceptions
++that it doesn't handle itself to user space. This also includes the
++0x0000 instructions managed by KVM_CAP_S390_USER_INSTR0. This is
++helpful if user space wants to emulate instructions which are not
++(yet) implemented in hardware.
++
++This capability can be enabled dynamically even if VCPUs were already
++created and are running.
++
+ 8. Other capabilities.
+ ======================
  
- static void
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 11dbf1023391..51a88b3f5b52 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -1983,6 +1983,28 @@ char *time64_str(char *buf, char *end, const time64_t time,
- 	return rtc_str(buf, end, &rtc_time, spec, fmt);
- }
+diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
+index 22cedcaea475..1e4829c70216 100644
+--- a/arch/s390/include/asm/kvm_host.h
++++ b/arch/s390/include/asm/kvm_host.h
+@@ -648,6 +648,7 @@ struct kvm_arch {
+ 	int user_sigp;
+ 	int user_stsi;
+ 	int user_instr0;
++	int user_operexec;
+ 	struct s390_io_adapter *adapters[MAX_S390_IO_ADAPTERS];
+ 	wait_queue_head_t ipte_wq;
+ 	int ipte_lock_count;
+diff --git a/arch/s390/kvm/intercept.c b/arch/s390/kvm/intercept.c
+index c7908950c1f4..420ae62977e2 100644
+--- a/arch/s390/kvm/intercept.c
++++ b/arch/s390/kvm/intercept.c
+@@ -471,6 +471,9 @@ static int handle_operexc(struct kvm_vcpu *vcpu)
+ 	if (vcpu->arch.sie_block->ipa == 0xb256)
+ 		return handle_sthyi(vcpu);
  
-+static noinline_for_stack
-+char *timespec64_str(char *buf, char *end, const struct timespec64 *ts,
-+		     struct printf_spec spec, const char *fmt)
++	if (vcpu->kvm->arch.user_operexec)
++		return -EOPNOTSUPP;
++
+ 	if (vcpu->arch.sie_block->ipa == 0 && vcpu->kvm->arch.user_instr0)
+ 		return -EOPNOTSUPP;
+ 	rc = read_guest_lc(vcpu, __LC_PGM_NEW_PSW, &newpsw, sizeof(psw_t));
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index 70ebc54b1bb1..56d4730b7c41 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -606,6 +606,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	case KVM_CAP_SET_GUEST_DEBUG:
+ 	case KVM_CAP_S390_DIAG318:
+ 	case KVM_CAP_IRQFD_RESAMPLE:
++	case KVM_CAP_S390_USER_OPEREXEC:
+ 		r = 1;
+ 		break;
+ 	case KVM_CAP_SET_GUEST_DEBUG2:
+@@ -921,6 +922,12 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap)
+ 		VM_EVENT(kvm, 3, "ENABLE: CAP_S390_CPU_TOPOLOGY %s",
+ 			 r ? "(not available)" : "(success)");
+ 		break;
++	case KVM_CAP_S390_USER_OPEREXEC:
++		VM_EVENT(kvm, 3, "%s", "ENABLE: CAP_S390_USER_OPEREXEC");
++		kvm->arch.user_operexec = 1;
++		icpt_operexc_on_all_vcpus(kvm);
++		r = 0;
++		break;
+ 	default:
+ 		r = -EINVAL;
+ 		break;
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 52f6000ab020..8ab07396ce3b 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -963,6 +963,7 @@ struct kvm_enable_cap {
+ #define KVM_CAP_RISCV_MP_STATE_RESET 242
+ #define KVM_CAP_ARM_CACHEABLE_PFNMAP_SUPPORTED 243
+ #define KVM_CAP_GUEST_MEMFD_FLAGS 244
++#define KVM_CAP_S390_USER_OPEREXEC 245
+ 
+ struct kvm_irq_routing_irqchip {
+ 	__u32 irqchip;
+diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
+index 148d427ff24b..87e429206bb8 100644
+--- a/tools/testing/selftests/kvm/Makefile.kvm
++++ b/tools/testing/selftests/kvm/Makefile.kvm
+@@ -194,6 +194,7 @@ TEST_GEN_PROGS_s390 += s390/debug_test
+ TEST_GEN_PROGS_s390 += s390/cpumodel_subfuncs_test
+ TEST_GEN_PROGS_s390 += s390/shared_zeropage_test
+ TEST_GEN_PROGS_s390 += s390/ucontrol_test
++TEST_GEN_PROGS_s390 += s390/user_operexec
+ TEST_GEN_PROGS_s390 += rseq_test
+ 
+ TEST_GEN_PROGS_riscv = $(TEST_GEN_PROGS_COMMON)
+diff --git a/tools/testing/selftests/kvm/s390/user_operexec.c b/tools/testing/selftests/kvm/s390/user_operexec.c
+new file mode 100644
+index 000000000000..714906c1d12a
+--- /dev/null
++++ b/tools/testing/selftests/kvm/s390/user_operexec.c
+@@ -0,0 +1,140 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Test operation exception forwarding.
++ *
++ * Copyright IBM Corp. 2025
++ *
++ * Authors:
++ *  Janosch Frank <frankja@linux.ibm.com>
++ */
++#include "kselftest.h"
++#include "kvm_util.h"
++#include "test_util.h"
++#include "sie.h"
++
++#include <linux/kvm.h>
++
++static void guest_code_instr0(void)
 +{
-+	static const struct printf_spec default_dec09_spec = {
-+		.base = 10,
-+		.field_width = 9,
-+		.precision = -1,
-+		.flags = ZEROPAD,
-+	};
-+
-+	if (fmt[2] == 'p')
-+		buf = number(buf, end, ts->tv_sec, default_dec_spec);
-+	else
-+		buf = time64_str(buf, end, ts->tv_sec, spec, fmt);
-+	if (buf < end)
-+		*buf = '.';
-+	buf++;
-+
-+	return number(buf, end, ts->tv_nsec, default_dec09_spec);
++	asm(".word 0x0000");
 +}
 +
- static noinline_for_stack
- char *time_and_date(char *buf, char *end, void *ptr, struct printf_spec spec,
- 		    const char *fmt)
-@@ -1993,6 +2015,8 @@ char *time_and_date(char *buf, char *end, void *ptr, struct printf_spec spec,
- 	switch (fmt[1]) {
- 	case 'R':
- 		return rtc_str(buf, end, (const struct rtc_time *)ptr, spec, fmt);
-+	case 'S':
-+		return timespec64_str(buf, end, (const struct timespec64 *)ptr, spec, fmt);
- 	case 'T':
- 		return time64_str(buf, end, *(const time64_t *)ptr, spec, fmt);
- 	default:
-@@ -2456,9 +2480,11 @@ early_param("no_hash_pointers", no_hash_pointers_enable);
-  * - 'd[234]' For a dentry name (optionally 2-4 last components)
-  * - 'D[234]' Same as 'd' but for a struct file
-  * - 'g' For block_device name (gendisk + partition number)
-- * - 't[RT][dt][r][s]' For time and date as represented by:
-+ * - 't[RST][dt][r][s]' For time and date as represented by:
-  *      R    struct rtc_time
-+ *      S    struct timespec64
-  *      T    time64_t
-+ * - 'tSp' For time represented by struct timespec64 printed as <seconds>.<nanoseconds>
-  * - 'C' For a clock, it prints the name (Common Clock Framework) or address
-  *       (legacy clock framework) of the clock
-  * - 'G' For flags to be printed as a collection of symbolic strings that would
++static void test_user_instr0(void)
++{
++	struct kvm_vcpu *vcpu;
++	struct kvm_vm *vm;
++	int rc;
++
++	vm = vm_create_with_one_vcpu(&vcpu, guest_code_instr0);
++	rc = __vm_enable_cap(vm, KVM_CAP_S390_USER_INSTR0, 0);
++	TEST_ASSERT_EQ(0, rc);
++
++	vcpu_run(vcpu);
++	TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_S390_SIEIC);
++	TEST_ASSERT_EQ(vcpu->run->s390_sieic.icptcode, ICPT_OPEREXC);
++	TEST_ASSERT_EQ(vcpu->run->s390_sieic.ipa, 0);
++
++	kvm_vm_free(vm);
++}
++
++static void guest_code_user_operexec(void)
++{
++	asm(".word 0x0807");
++}
++
++static void test_user_operexec(void)
++{
++	struct kvm_vcpu *vcpu;
++	struct kvm_vm *vm;
++	int rc;
++
++	vm = vm_create_with_one_vcpu(&vcpu, guest_code_user_operexec);
++	rc = __vm_enable_cap(vm, KVM_CAP_S390_USER_OPEREXEC, 0);
++	TEST_ASSERT_EQ(0, rc);
++
++	vcpu_run(vcpu);
++	TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_S390_SIEIC);
++	TEST_ASSERT_EQ(vcpu->run->s390_sieic.icptcode, ICPT_OPEREXC);
++	TEST_ASSERT_EQ(vcpu->run->s390_sieic.ipa, 0x0807);
++
++	kvm_vm_free(vm);
++
++	/*
++	 * Since user_operexec is the superset it can be used for the
++	 * 0 instruction.
++	 */
++	vm = vm_create_with_one_vcpu(&vcpu, guest_code_instr0);
++	rc = __vm_enable_cap(vm, KVM_CAP_S390_USER_OPEREXEC, 0);
++	TEST_ASSERT_EQ(0, rc);
++
++	vcpu_run(vcpu);
++	TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_S390_SIEIC);
++	TEST_ASSERT_EQ(vcpu->run->s390_sieic.icptcode, ICPT_OPEREXC);
++	TEST_ASSERT_EQ(vcpu->run->s390_sieic.ipa, 0);
++
++	kvm_vm_free(vm);
++}
++
++/* combine user_instr0 and user_operexec */
++static void test_user_operexec_combined(void)
++{
++	struct kvm_vcpu *vcpu;
++	struct kvm_vm *vm;
++	int rc;
++
++	vm = vm_create_with_one_vcpu(&vcpu, guest_code_user_operexec);
++	rc = __vm_enable_cap(vm, KVM_CAP_S390_USER_INSTR0, 0);
++	TEST_ASSERT_EQ(0, rc);
++	rc = __vm_enable_cap(vm, KVM_CAP_S390_USER_OPEREXEC, 0);
++	TEST_ASSERT_EQ(0, rc);
++
++	vcpu_run(vcpu);
++	TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_S390_SIEIC);
++	TEST_ASSERT_EQ(vcpu->run->s390_sieic.icptcode, ICPT_OPEREXC);
++	TEST_ASSERT_EQ(vcpu->run->s390_sieic.ipa, 0x0807);
++
++	kvm_vm_free(vm);
++
++	/* Reverse enablement order */
++	vm = vm_create_with_one_vcpu(&vcpu, guest_code_user_operexec);
++	rc = __vm_enable_cap(vm, KVM_CAP_S390_USER_OPEREXEC, 0);
++	TEST_ASSERT_EQ(0, rc);
++	rc = __vm_enable_cap(vm, KVM_CAP_S390_USER_INSTR0, 0);
++	TEST_ASSERT_EQ(0, rc);
++
++	vcpu_run(vcpu);
++	TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_S390_SIEIC);
++	TEST_ASSERT_EQ(vcpu->run->s390_sieic.icptcode, ICPT_OPEREXC);
++	TEST_ASSERT_EQ(vcpu->run->s390_sieic.ipa, 0x0807);
++
++	kvm_vm_free(vm);
++}
++
++/*
++ * Run all tests above.
++ *
++ * Enablement after VCPU has been added is automatically tested since
++ * we enable the capability after VCPU creation.
++ */
++static struct testdef {
++	const char *name;
++	void (*test)(void);
++} testlist[] = {
++	{ "instr0", test_user_instr0 },
++	{ "operexec", test_user_operexec },
++	{ "operexec_combined", test_user_operexec_combined},
++};
++
++int main(int argc, char *argv[])
++{
++	int idx;
++
++	TEST_REQUIRE(kvm_has_cap(KVM_CAP_S390_USER_INSTR0));
++
++	ksft_print_header();
++	ksft_set_plan(ARRAY_SIZE(testlist));
++	for (idx = 0; idx < ARRAY_SIZE(testlist); idx++) {
++		testlist[idx].test();
++		ksft_test_result_pass("%s\n", testlist[idx].name);
++	}
++	ksft_finished();
++}
 -- 
-2.50.1
+2.48.1
 
 
