@@ -1,150 +1,148 @@
-Return-Path: <linux-s390+bounces-15196-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-15200-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86E4BC8AD29
-	for <lists+linux-s390@lfdr.de>; Wed, 26 Nov 2025 17:08:06 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C8AEC8B25A
+	for <lists+linux-s390@lfdr.de>; Wed, 26 Nov 2025 18:11:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BCD9A4ECF8B
-	for <lists+linux-s390@lfdr.de>; Wed, 26 Nov 2025 16:06:47 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id EC28C348B23
+	for <lists+linux-s390@lfdr.de>; Wed, 26 Nov 2025 17:11:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC04333C509;
-	Wed, 26 Nov 2025 16:06:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZVwpB/uT"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94D5433B969;
+	Wed, 26 Nov 2025 17:11:51 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5528E33B97F;
-	Wed, 26 Nov 2025 16:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062681E231E;
+	Wed, 26 Nov 2025 17:11:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764173204; cv=none; b=h50QzYGHRQvJ/jNS8U/9IyTMfYpqOAXyHIx5Ovm5UYCBcyxq0ZEE6Ur3JFi9PwDUTdCZ45WQQWH1lZ8yKUwh8Itx0nKm3AbwIWhkDnmSp0QopDTeGmCyizYMpSt/r1x4mIrYbNorR68pQVzizaTt4eOrMkkxm8xVcWI/VzW1x3Y=
+	t=1764177111; cv=none; b=dbJoAUnhM2lIBy/aNeQvrveAHaXZAhYZXauZlnSGkdxuMmCy9f+dkJpTFNLVT8EjKnNrIpqhIzhM4gwN+LtKoRRMawoeMwoWqCaTT0Y2v+IHzTiU8i6O8krhnnSpdkboBi1nJ+PAP7J2HeyyWl4UGhPO5gE3F/naEvuCVWIfNzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764173204; c=relaxed/simple;
-	bh=Qe+6qdBjVP2i52/XpDhZNZdVCN2Zah65zdS55EaRhyI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jgfjvaYzOeDo1Ede5ThvTy6yQejDJQB2silNR9eVQY2KGwYxPkKVzSsu9FK08BJ1On6F4DigacBmjcdJcXlv1ucByeGkwNUxH0uYpCE9BUGMyI9nyEydMqEblXwsCBfvNdeUgn/GAYOXjyb/U4MRgsdTZ8CAwYeEClHDsImhy00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZVwpB/uT; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AQAIQm4006704;
-	Wed, 26 Nov 2025 16:06:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=MnPfX+
-	iv9FVs6bMxEvEizt/DfC83x4brwcy5gna8RCE=; b=ZVwpB/uTYKJJVU5UYx68mm
-	jQkLWMLIpI1dlVgvMr38f+lRdLbHgYdtM/XpiKbNgbArrSCabBqLrkyRLwborie1
-	Ek+W8xQzRm1elOjygifo0g39lg3IQ59+ntethCX8cDkheNVIyIFsPntgbqZIjbd3
-	p2OJVcESUVNhcKwBy1ZQiaQuhhvKvK8JHytsiVWhKjJalBZrtkkFgYMbrctrqvss
-	pluReD7tMBcCv3tZsHuiRkzcXmlHSlxb9W5D9ZkR3XsLtg1fgk6b76ty7Jpp/5eb
-	w8Ffmp7ZHAQiYXeVhekFQKFRsQ1ngHSs9LpkfHt1WCA7I2Z3GPgcA+wkboCsbCDQ
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ak2kq4a4w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Nov 2025 16:06:41 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AQDUhJX027443;
-	Wed, 26 Nov 2025 16:06:40 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4anq4h4d1c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Nov 2025 16:06:40 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AQG6YTF47776032
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Nov 2025 16:06:34 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B97DD2004D;
-	Wed, 26 Nov 2025 16:06:34 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AA39C20043;
-	Wed, 26 Nov 2025 16:06:34 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 26 Nov 2025 16:06:34 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
-	id 7FFEDE047E; Wed, 26 Nov 2025 17:06:34 +0100 (CET)
-From: Stefan Haberland <sth@linux.ibm.com>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 4/4] s390/dasd: Use scnprintf() instead of sprintf()
-Date: Wed, 26 Nov 2025 17:06:34 +0100
-Message-ID: <20251126160634.3446919-5-sth@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251126160634.3446919-1-sth@linux.ibm.com>
-References: <20251126160634.3446919-1-sth@linux.ibm.com>
+	s=arc-20240116; t=1764177111; c=relaxed/simple;
+	bh=JRLnft1STCz5C59hBNcxaMlyKUQU4UY2eeVxGG6JR4g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WCeUPcEuHVXxyne5AkQnzGEXV4gHqW3mrXy9IX6B482Wyyqom8RxT13e+o9Ds3vzPo8Mvgzc88X1fy/TgHdBBIzOBLEz+H9mVy4P1xW0mVgiobh/cnJ1jEcOKbWYMGxg8GJN69xMkSrjvqkeelg8brV792ZN1ZiI1oE9fSmhhGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 39C87503CA;
+	Wed, 26 Nov 2025 17:11:47 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id DB2236000F;
+	Wed, 26 Nov 2025 17:11:43 +0000 (UTC)
+Date: Wed, 26 Nov 2025 12:12:29 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: acme@kernel.org
+Cc: Thomas Richter <tmricht@linux.ibm.com>, Namhyung Kim
+ <namhyung@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+ hca@linux.ibm.com, japo@linux.ibm.com
+Subject: Re: [PATCH Linux-next] perf test: Fix test case perf trace BTF
+ general tests
+Message-ID: <20251126121229.0638407b@gandalf.local.home>
+In-Reply-To: <20251126102401.37af98bb@gandalf.local.home>
+References: <20251117124359.75604-1-tmricht@linux.ibm.com>
+	<aRvSv03cqarM5dY9@google.com>
+	<d60860b4-e84b-48e1-87dd-4bd8203a69ad@linux.ibm.com>
+	<aRwVifZ_-7puFUVC@google.com>
+	<20251118132451.29a35127@gandalf.local.home>
+	<aR1JXlhJ8rC8Ujb3@google.com>
+	<20251119125903.417f595e@gandalf.local.home>
+	<aR5mTLRWA-SLAFUM@google.com>
+	<a7a5f95b-25e0-4816-9d0b-04d955c95821@linux.ibm.com>
+	<20251126102401.37af98bb@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTIyMDAwMCBTYWx0ZWRfX7blDArzxiFch
- UlRikE33n7h2OIjU8X80D8wRnI8/4dHN8drK4ticH9PR5q+P25muviScs4JH3jVifl/IkwOCjXn
- YWAyG1GtcP2tBV9k0RLtfp3NJrFIf4gdDdZesf7tt60jpFnzcrFz5ubbCkTYWKUBe/l5shS2QqB
- Aw4G8a8K0FL8klzFZ3G4zL3JF1lGWDg2jruqgZGN74gCbtNT56MO2Md83+TtoEYDRR1baUBfHPY
- N9Bz1f+P9nAfquUvd7oo9huZLsufPwQBFRS9UUEIVT44Zp7go49axlZFfDK7P2BGDrBNdGFgi2P
- 3wNL4XqgiFhUQvpK+Ihe+I46xaNQoja1UjvTdJaXoCjyjfMlaqYUg/QzjBwnxAdq93Vtzz5dnru
- sqrRw9XTfsTpPLzrxwg3irBZaalsGA==
-X-Authority-Analysis: v=2.4 cv=fJM0HJae c=1 sm=1 tr=0 ts=69272591 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VnNF1IyMAAAA:8 a=Z1CxPU4tzBiM0jesnDwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: AVEasBLdsxT6vZW681MofdzvWiOGUvbp
-X-Proofpoint-ORIG-GUID: AVEasBLdsxT6vZW681MofdzvWiOGUvbp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-25_02,2025-11-26_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 phishscore=0 priorityscore=1501 impostorscore=0
- lowpriorityscore=0 suspectscore=0 malwarescore=0 adultscore=0 bulkscore=0
- spamscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
- definitions=main-2511220000
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: DB2236000F
+X-Stat-Signature: ixnrs74wi4p5pb44kisrje415ubczgew
+X-Rspamd-Server: rspamout05
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19b9Y/xRLGc2GJWxPuueuF3hjrt+Fp2rqg=
+X-HE-Tag: 1764177103-495019
+X-HE-Meta: U2FsdGVkX187el5y25s6dq1GvhwlaySD9i6HORjUTb+91SpgFnFjfztaPY3cu3DdcCcXF7g1FGjqPU3sy9Kh8yonotuukLXI4YE4bpJwnCkGn6du+s1PQhp1KDjGZ9nAW3c46rZbYW6gzjfr+3KL8bYDorCetfUZcYL1FgoQX6zpmYI3hs+acCp1DZWCzegisFt/B6xc2/suWqRMLcq0NkiaTvHReB7yzWNQ0X2nSTCzTSFxliXL/mpR8c1bMUhQ3nhQN/UVVZasQjl7YCEk8Xdy0THLouDIimGcEUfb3Xzk7jfxWNU8Gy9l3ykYp2jRK3B3Z6Fno/KnVR3is9oEt321GtHsRjzoHSHsIkT3P26SPZc9nXkjjtfI2RYz8oY9b3IDDXmzbd9GLI3OoPECCg==
 
-From: Jan Höppner <hoeppner@linux.ibm.com>
 
-Use scnprintf() instead of sprintf() for those cases where the
-destination is an array and the size of the array is known at compile
-time.
+Arnaldo,
 
-This prevents theoretical buffer overflows, but also avoids that people
-again and again spend time to figure out if the code is actually safe.
+How can I make perf trace not confused by the extra fields in the system
+call trace events?
 
-Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
-Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
----
- drivers/s390/block/dasd_devmap.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Ftrace can now show the contents of the system call user space buffers, but
+it appears that this breaks perf!!!
 
-diff --git a/drivers/s390/block/dasd_devmap.c b/drivers/s390/block/dasd_devmap.c
-index ddbdf1f85d44..73972900fc55 100644
---- a/drivers/s390/block/dasd_devmap.c
-+++ b/drivers/s390/block/dasd_devmap.c
-@@ -355,7 +355,8 @@ static int __init dasd_parse_range(const char *range)
- 	/* each device in dasd= parameter should be set initially online */
- 	features |= DASD_FEATURE_INITIAL_ONLINE;
- 	while (from <= to) {
--		sprintf(bus_id, "%01x.%01x.%04x", from_id0, from_id1, from++);
-+		scnprintf(bus_id, sizeof(bus_id),
-+			  "%01x.%01x.%04x", from_id0, from_id1, from++);
- 		devmap = dasd_add_busid(bus_id, features);
- 		if (IS_ERR(devmap)) {
- 			rc = PTR_ERR(devmap);
--- 
-2.51.0
+system: syscalls
+name: sys_enter_write
+ID: 791
+format:
+	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
+	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
+	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
+	field:int common_pid;	offset:4;	size:4;	signed:1;
+
+	field:int __syscall_nr;	offset:8;	size:4;	signed:1;
+	field:unsigned int fd;	offset:16;	size:8;	signed:0;
+	field:const char * buf;	offset:24;	size:8;	signed:0;
+	field:size_t count;	offset:32;	size:8;	signed:0;
+	field:__data_loc char[] __buf_val;	offset:40;	size:4;	signed:0;
+
+That new __buf_val appears to confuse perf, but I'm having a hell of a time
+trying to figure out where it reads it!
+
+-- Steve
+
+
+On Wed, 26 Nov 2025 10:24:01 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> On Wed, 26 Nov 2025 08:13:00 +0100
+> Thomas Richter <tmricht@linux.ibm.com> wrote:
+> 
+> > >> I haven't tried it without the patches. Does it usually show what "buf" is?
+> > >> Now with the reading of user space, it can show the content too!    
+> > > 
+> > > Yep, it reads the content using BPF.  This is on my 6.16 kernel.
+> > > 
+> > >   $ sudo perf trace -e write -- /bin/echo hello
+> > >   hello
+> > >        0.000 ( 0.014 ms): echo/61922 write(fd: 1, buf: hello\10, count: 6)                                 = 6
+> > > 
+> > > Thanks,
+> > > Namhyung
+> > > 
+> > >     
+> > 
+> > Hello Namhyung, Steven,
+> > 
+> > friendly ping... any progress here?
+> >   
+> 
+> I honestly have no clue how to fix this, as I don't even know where to
+> look. Is it BPF that is messing up? If so, where's the BPF program that is
+> doing this.
+> 
+> I thought BPF is supposed to handle updates and should never cause API
+> breakage?
+> 
+> I'll continue to look at the builtin-trace.c, but it seems that the BPF
+> program it's attached to is handing it garbage with:
+> 
+> 	perf trace -e syscalls:sys_enter_write
+> 
+> The new fields are at the end. The BPF program should simply ignore those
+> values. But again, I don't know where this BPF program lives.
+> 
+> -- Steve
 
 
