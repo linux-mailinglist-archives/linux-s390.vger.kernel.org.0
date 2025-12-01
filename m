@@ -1,209 +1,233 @@
-Return-Path: <linux-s390+bounces-15244-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-15256-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74C3EC97518
-	for <lists+linux-s390@lfdr.de>; Mon, 01 Dec 2025 13:40:37 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2432EC97E38
+	for <lists+linux-s390@lfdr.de>; Mon, 01 Dec 2025 15:45:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id EA7514E1BE8
-	for <lists+linux-s390@lfdr.de>; Mon,  1 Dec 2025 12:40:08 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D8B294E1407
+	for <lists+linux-s390@lfdr.de>; Mon,  1 Dec 2025 14:45:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3017930C34A;
-	Mon,  1 Dec 2025 12:39:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CD5031BCA9;
+	Mon,  1 Dec 2025 14:45:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="blDithMi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pMtGdgGY"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A2930C371;
-	Mon,  1 Dec 2025 12:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B4C31A7F4
+	for <linux-s390@vger.kernel.org>; Mon,  1 Dec 2025 14:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764592797; cv=none; b=PMhvQ1h2PE+Xuc38BNhuBdR2/cLGb6Ztbu4GCjeKMKlDVQEAsdsWWHUnEU97v4csJocvHhl7GixyD5fkv8UJldcekHbgAjRjT64ZjlKohhlq/YKbT+o8FolqC1FP6SZN2l5J9lIqqQS+ZqNIHK6pP9JJLmaXFAg6AVKaeFKhKL8=
+	t=1764600314; cv=none; b=Vacatvu7wXvROCyZtijOSf2Ku4goV7xATlhn8XHz/OIPAjPLLDVk9xO4uMJXs33js8V8je3LMcr9NArMwvJpwFNy9d0DbYRDis/15I8+3CVUteW37XJk4bmTSmAwS6ozHTJ1F27OG3DSs2aD/j4enuH0WZ8ceSJgFPMkkqAbFhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764592797; c=relaxed/simple;
-	bh=OeVfLvZLVkBxJSWFhMwzT4fRjijhV3rDGD7Ud7pCRgE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=qvKU7baoNjdISgvxH22N+58WCgj4STBOvPuvp0zJ3ZZlEHtyR3JMu1G4CSvy4dEFrAsOxvsK4gXDk9nWU7oq/Y9xmjSWwvQqyQusZTqPTvi4zk08gsUMn3XQlkKOlMpsNWQU77hqADWhZz6YhS1R9nfv4cr7DpC4M86eamRmy5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=blDithMi; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5B1BK01C006233;
-	Mon, 1 Dec 2025 12:39:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=/alY8Y
-	xzew69avEvDr8xKZB1aEoExnGemNNuwjvjvFg=; b=blDithMikBUVmZ75Us5eXl
-	4W82IwGQlH7zpozeAvxK8AH8QVoeQJKxwd9lJKV2N7ZK7OWEh/0U3eHTZ8fuknqJ
-	MfzlgRbJYyufc/Q4QhxqkinpA+tVMSKzeYO8fDWc42lYHpk4QF2vTguBvigAEA10
-	xQrXz/jRGx91PgQLsOYoYbRrvkzV+AES5HLQZNRFltfCl/X6RmNt7rayBiBrxdW3
-	wHj6SBTwotFGRBOcf/V7alkDO4fPCAqmvclJ/LDNnTFR11Kp0DRmq434BSMU4by7
-	5ZC5pDd54j1zFf0RQw+Ta10qxy9q6bcBLVMrWJlmwA0kZRDsW0KTa+9HFYjdtgPQ
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aqrg56xdb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Dec 2025 12:39:50 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5B19ihO0010227;
-	Mon, 1 Dec 2025 12:39:50 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4arcnjx9g9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Dec 2025 12:39:49 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5B1Cdjvh44761452
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 1 Dec 2025 12:39:46 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E3B5E2004B;
-	Mon,  1 Dec 2025 12:39:45 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6907420043;
-	Mon,  1 Dec 2025 12:39:45 +0000 (GMT)
-Received: from localhost (unknown [9.111.148.133])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  1 Dec 2025 12:39:45 +0000 (GMT)
+	s=arc-20240116; t=1764600314; c=relaxed/simple;
+	bh=VrFNoeObgkWMawA3WMEOayqdOmEdgYgazeErRriF79g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fK/HST9w1pf2tm+LYspF4/YdA4XBItzp6lvM0I72Tzqf6I7i54pXBNysxL5h3+p54LCIbk47Gup83cfQy72iEVytjjIl578GLccQAJBzdm4wltvCS3hvZDFr7D5MEuYTfAxYouQ1Yu9kZ8cjSUPWSUXUEV7hfgSkwHlmiKkkYM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pMtGdgGY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDDF8C2BCB2
+	for <linux-s390@vger.kernel.org>; Mon,  1 Dec 2025 14:45:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764600313;
+	bh=VrFNoeObgkWMawA3WMEOayqdOmEdgYgazeErRriF79g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=pMtGdgGYwdrVDOSl2W0+qrRlgCLEgaU7IGTTU/12gN3UCsgQdN+opGIHo8pRpP1Kj
+	 4uFFBFd5xWbKWS7tfxvmb1ZVmd57if+tPFmv0fMt9mI5S/RXPQRA6+faMaJR8PyV75
+	 9Ty6CdzF6NvKUyWcctl2LTW416EfLkwkLsr8ga+CuCixVG7ECRTUg+MG/fslgmirAT
+	 B9+3SGVI7IUmKml3EUsja2vs3gmFEfv3WBF3q9rC3ni68WRUZQeYNItrYJSyl10Hw4
+	 o6pGv+GnWtnNOKml9KDYLFmsQnSwSHS36gvhbA5c1otnuNjOTE964RUCKhngh9i2O7
+	 jgoiPJr8yljqw==
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b73161849e1so1042515766b.2
+        for <linux-s390@vger.kernel.org>; Mon, 01 Dec 2025 06:45:13 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUl+qhzhuEGv8YYtlQH7az7zPA5YmPPaFU6Lh86vV3K0ZCR8LNx9KedzyaN8ezRUv9MbU7QZQLJmh1B@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJQV6ff4Nqa5J7h5xCmRf4mI6/ZpgK3kmlznZxgGFXPQzX7CpO
+	zQoQ/58dvY5+h0A3VTgh8rVxPbqYLADQDUTdkAjUMvQuAWcY79WZ5L0AMnFOk5yY6ctKKgIRBt8
+	RRidX5yLvJSxChefzW6rGfHB6d0LWjvc=
+X-Google-Smtp-Source: AGHT+IFy91U2+uB01Gsp4un0xk6Bx6Yj25pytNj/dKusTxKAoaiBEv1+Gw6wMtj2qwcVruVrp4FxT1g3aKbozzQQv8I=
+X-Received: by 2002:a17:906:c115:b0:b72:b8a9:78f4 with SMTP id
+ a640c23a62f3a-b7671701537mr4016410666b.39.1764600312258; Mon, 01 Dec 2025
+ 06:45:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20251029-ari_no_bus_dev-v5-0-d9a5eab67ed0@linux.ibm.com>
+ <20251029-ari_no_bus_dev-v5-1-d9a5eab67ed0@linux.ibm.com> <CAAhV-H6qqppoX_G5KrWmPor16bXfvNTE2x8Xx6yajAYPqxpigw@mail.gmail.com>
+ <958ef380be4ea488698fab05245d631998c32a48.camel@linux.ibm.com>
+ <CAAhV-H7iMKmLnisD-874D2ZC919sDYeWy3tw=+eUqifK--6-Dg@mail.gmail.com>
+ <8dd0f3df4b18a6c9f8b49ede7bc2ab71e40fd8f9.camel@linux.ibm.com>
+ <CAAhV-H4MNSiUqYpE919YcCaC-_-Q3GBwxRL13ggjsyLahQ-t1A@mail.gmail.com>
+ <7385677843a7790e01158644f63ae4dbb3353bfe.camel@linux.ibm.com> <298aaf6b2815e59d1a94efffdd0e3b002c000cea.camel@linux.ibm.com>
+In-Reply-To: <298aaf6b2815e59d1a94efffdd0e3b002c000cea.camel@linux.ibm.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 1 Dec 2025 22:45:07 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7fgaZUuFSpE0VsMtptnrUTzh0TS=B9ZBUZ_=TH-XjKtg@mail.gmail.com>
+X-Gm-Features: AWmQ_blvZ9XPwC0XmqlAg5tMbfsMq-rVhkV9GFeSBfFXHYYgnWYh4mGTV8zI8aE
+Message-ID: <CAAhV-H7fgaZUuFSpE0VsMtptnrUTzh0TS=B9ZBUZ_=TH-XjKtg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] PCI: Fix isolated PCI function probing with ARI
+ and SR-IOV
+To: Niklas Schnelle <schnelle@linux.ibm.com>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
+	linux-s390 <linux-s390@vger.kernel.org>, loongarch@lists.linux.dev, 
+	Farhan Ali <alifm@linux.ibm.com>, Matthew Rosato <mjrosato@linux.ibm.com>, 
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Gerd Bayer <gbayer@linux.ibm.com>, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 01 Dec 2025 13:39:45 +0100
-Message-Id: <DEMVXQGEFUXS.39W8XTWQ1WVZJ@linux.ibm.com>
-Subject: Re: [PATCH v7 2/2] s390/pci: Migrate s390 IRQ logic to IRQ domain
- API
-From: "Tobias Schumacher" <ts@linux.ibm.com>
-To: "Niklas Schnelle" <schnelle@linux.ibm.com>,
-        "Tobias Schumacher"
- <ts@linux.ibm.com>,
-        "Heiko Carstens" <hca@linux.ibm.com>,
-        "Vasily Gorbik"
- <gor@linux.ibm.com>,
-        "Alexander Gordeev" <agordeev@linux.ibm.com>,
-        "Christian Borntraeger" <borntraeger@linux.ibm.com>,
-        "Sven Schnelle"
- <svens@linux.ibm.com>,
-        "Gerald Schaefer" <gerald.schaefer@linux.ibm.com>,
-        "Gerd Bayer" <gbayer@linux.ibm.com>,
-        "Halil Pasic" <pasic@linux.ibm.com>,
-        "Matthew Rosato" <mjrosato@linux.ibm.com>,
-        "Thomas Gleixner"
- <tglx@linutronix.de>
-Cc: <linux-kernel@vger.kernel.org>, <linux-s390@vger.kernel.org>
-X-Mailer: aerc 0.21.0
-References: <20251127-implement-msi-domain-v7-0-86c9a4837e8c@linux.ibm.com>
- <20251127-implement-msi-domain-v7-2-86c9a4837e8c@linux.ibm.com>
- <47a6dde6a2cd353be7c33a25fc2b6032e9256c9d.camel@linux.ibm.com>
-In-Reply-To: <47a6dde6a2cd353be7c33a25fc2b6032e9256c9d.camel@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: qtMtztHxudjEEr17HH8yXgsPdnO9z1ux
-X-Authority-Analysis: v=2.4 cv=Ir0Tsb/g c=1 sm=1 tr=0 ts=692d8c96 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=bXAjS1RguCY0HMnHgRcA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI5MDAyMCBTYWx0ZWRfX4J6P0szSm72M
- kagKacoJ9GrsXgK8NHf+QnjQOdp9N3PIhEaN9/QI1RQ3nlFiEAaGM/DsbnAcembd6f8XypE31ya
- 9lJOfzwiAR4QhY1ES8Scv+tfy9E2uHfP6dboc7pe47DDMOQurQT7iIycAD1Ad/BRS04VjNziHe+
- uHy4JYPPvodksop/5aCRB4B4fyg2uZRaSO4jgahS+/P+bOJc6Ls1m1sOclfADzTDopfMes1koaS
- QtiSDOtXdUPBzoCli1lyKJyZkqW8MJ1vZuFena+6zREhQNi6PqvddfUb5yulxQl5QKeTqkRuk/C
- +GdB1K9yChZBeD1ahSnh2vwVTt5V4E2jr0m/x7G1pg3qCGtWuNNlQHpe+kV0bDTPltFyYoDroQH
- dSggKaY0q0qDENyoFeAguGl9TxwCXg==
-X-Proofpoint-GUID: qtMtztHxudjEEr17HH8yXgsPdnO9z1ux
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-28_08,2025-11-27_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 adultscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
- bulkscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511290020
 
-On Fri Nov 28, 2025 at 10:47 AM CET, Niklas Schnelle wrote:
-> On Thu, 2025-11-27 at 16:07 +0100, Tobias Schumacher wrote:
->> s390 is one of the last architectures using the legacy API for setup and
->> teardown of PCI MSI IRQs. Migrate the s390 IRQ allocation and teardown
->> to the MSI parent domain API. For details, see:
->>=20
->> https://lore.kernel.org/lkml/20221111120501.026511281@linutronix.de
->>=20
->> In detail, create an MSI parent domain for each PCI domain. When a PCI
->> device sets up MSI or MSI-X IRQs, the library creates a per-device IRQ
->> domain for this device, which is used by the device for allocating and
->> freeing IRQs.
->>=20
->> The per-device domain delegates this allocation and freeing to the
->> parent-domain. In the end, the corresponding callbacks of the parent
->> domain are responsible for allocating and freeing the IRQs.
->>=20
->> The allocation is split into two parts:
->> - zpci_msi_prepare() is called once for each device and allocates the
->>   required resources. On s390, each PCI function has its own airq
->>   vector and a summary bit, which must be configured once per function.
->>   This is done in prepare().
->> - zpci_msi_alloc() can be called multiple times for allocating one or
->>   more MSI/MSI-X IRQs. This creates a mapping between the virtual IRQ
->>   number in the kernel and the hardware IRQ number.
->>=20
->> Freeing is split into two counterparts:
->> - zpci_msi_free() reverts the effects of zpci_msi_alloc() and
->> - zpci_msi_teardown() reverts the effects of zpci_msi_prepare(). This is
->>   called once when all IRQs are freed before a device is removed.
->>=20
->> Since the parent domain in the end allocates the IRQs, the hwirq
->> encoding must be unambiguous for all IRQs of all devices. This is
->> achieved by encoding the hwirq using the devfn and the MSI index.
->>=20
->> Signed-off-by: Tobias Schumacher <ts@linux.ibm.com>
->> ---
->>  arch/s390/Kconfig           |   1 +
->>  arch/s390/include/asm/pci.h |   5 +
->>  arch/s390/pci/pci.c         |   6 +
->>  arch/s390/pci/pci_bus.c     |  18 ++-
->>  arch/s390/pci/pci_irq.c     | 310 ++++++++++++++++++++++++++++---------=
--------
->>  5 files changed, 224 insertions(+), 116 deletions(-)
->>=20
+On Fri, Nov 28, 2025 at 9:30=E2=80=AFPM Niklas Schnelle <schnelle@linux.ibm=
+.com> wrote:
+>
+> On Mon, 2025-11-10 at 14:08 +0100, Niklas Schnelle wrote:
+> > On Fri, 2025-11-07 at 15:19 +0800, Huacai Chen wrote:
+> > > On Wed, Nov 5, 2025 at 5:46=E2=80=AFPM Niklas Schnelle <schnelle@linu=
+x.ibm.com> wrote:
+> > > >
+> > > > On Wed, 2025-11-05 at 09:01 +0800, Huacai Chen wrote:
+> > > > > On Mon, Nov 3, 2025 at 7:23=E2=80=AFPM Niklas Schnelle <schnelle@=
+linux.ibm.com> wrote:
+> > > > > >
+> > > > > > On Mon, 2025-11-03 at 17:50 +0800, Huacai Chen wrote:
+> > > > > > > Hi, Niklas,
+> > > > > > >
+> > > > > > > On Wed, Oct 29, 2025 at 5:42=E2=80=AFPM Niklas Schnelle <schn=
+elle@linux.ibm.com> wrote:
 > --- snip ---
+> > > > > > > >
+> > > > > > > > Still especially the first issue prevents correct detection=
+ of ARI and
+> > > > > > > > the second might be a problem for other users of isolated f=
+unction
+> > > > > > > > probing. Fix both issues by keeping things as simple as pos=
+sible. If
+> > > > > > > > isolated function probing is enabled simply scan every poss=
+ible devfn.
+> > > > > > > I'm very sorry, but applying this patch on top of commit a02f=
+d05661d7
+> > > > > > > ("PCI: Extend isolated function probing to LoongArch") we fai=
+l to
+> > > > > > > boot.
+> > > > > > >
+> > > > > > > Boot log:
+> > > > > > >
+> --- snip ---
+> > > > > >
+> > > > > >
+> > > > > > This looks like a warning telling us that AHCI enable failed / =
+timed
+> > > > > > out. Do you have Panic on Warn on that this directly causes a b=
+oot
+> > > > > > failure? The only relation I can see with my patch is that mayb=
+e this
+> > > > > > AHCI device wasn't probed before and somehow isn't working?
+> > > > > The rootfs is on the AHCI controller, so AHCI failure causes the =
+boot
+> > > > > failure, without this patch no boot problems.
+> > > > >
+> > > > > Huacai
+> > > > >
+> > > >
+> > > > Ok, I'm going to need more details to make sense of this. Can you t=
+ell
+> > > > me if ARI is enabled for that bus? Did you test with both patches o=
+r
+> > > > just this one? Could you provide lspci -vv from a good boot and can=
+ you
+> > > > tell which AHCI device the root device is on? Also could you clarif=
+y
+> > > > why you set hypervisor_isolated_pci_functions() in particular this
+> > > > seems like a bare metal boot, right? When running in KVM do you pas=
+s-
+> > > > through individual PCI functions with the guest seeing a devfn othe=
+r
+> > > > than 0 alone, i.e. a missing devfn 0? Or do you need this for bare
+> > > > metal for some reason? If you don't need it for bare metal, does th=
+e
+> > > > boot work if you return 0 from hypervisor_isolated_pci_functions() =
+with
+> > > > this patch?
+> > > 1. ARI isn't enabled.
+> > > 2. Only test the first patch.
+> > > 3. This is a bare metal boot.
+> > > 4. If hypervisor_isolated_pci_functions() return 0 then boot is OK
+> > > 5. PCI information please see the attachment.
+> > >
+> > > Huacai
+> >
+> > Thanks for the input. As far as I can see the lspci from a good boot
+> > shows no holes in your devfn space so this particular system doesn't
+> > seem to need the isolated function probing at all. But even then using
+> > it should only try out all devfns and thus never skip one that is found
+> > without isolated function probing.
+> >
+> > To sanity check this, I just booted my personal AMD Ryzen 3900X system
+> > with this series plus a two-liner to unconditionally enable isolated
+> > function probing also on x86_64 and it came up fine including AMD
+> > graphics and my Intel NIC with enabled SR-IOV.
+> >
+> > So I'm really perplexed and coming back to the thought that a device on
+> > your system is misbehaving when probing is attempted and maybe due to a
+> > similar issue as what I saw with SR-IOV it wasn't probed so far but
+> > really should be probed if isolated function probing is enabled. I also
+> > still don't understand your use-case. If it is for VMs then maybe you
+> > could limit it to those? Otherwise it feels like this is just a hack to
+> > probe an odd topology and I wonder if you should rather set
+> > PCI_SCAN_ALL_PCIE_DEVS to find those?
+> >
+> > Thanks,
+> > Niklas
 >
->> +
->> +static inline u16 zpci_decode_hwirq_msi_index(u32 hwirq)
+> Hi LoongArch Maintainers, Hi Bjorn,
 >
-> I think the parameter's type should by irq_hw_number_t here. It doesn't
-> matter for correctness since we're only using 32 bits now and the cast
-> just cuts off the upper 32 bits but I'd like to preserve the type until
-> you explicitly mask off the bits we don't use.
-
-Makes sense, I'll change that.
-
-> I also considered making zpci_encode_hwirq()'s return type
-> irq_hw_number_t but I think it's not needed. This is because there
-> we're still in the process of encoding the hwirq and want to emphasize
-> that our encoding output uses 32 bits.
-
-Agreed.
-
->> +{
->> +	return hwirq & 0xffff;
->> +}
->> =20
+> Sorry for the ping but I'd really like to somehow get this unstuck and
+> I haven't heard back on my previous questions. From my testing on s390
+> this patch fixes a real logic error which prevents the scanning of some
+> devfns which I believe should be scanned if isolated functions are
+> possible. And in all my testing, including on x86 as stated in the
+> previous mail, the code does exactly what I think it is supposed to do.
+> So to me it really looks like something goes wrong with your use of
+> hypervisor_isolated_pci_functions() on your specific hardware.
 >
-> The changes versus v6 look good to me and I agree that putting the
-> zpci_set_irq() in zpci_reenable_device() looks like the cleanest fix
-> for the recovery issue. Also good catch on the msg->data assignment. So
-> feel free to (re-)add my R-b as per below.
+> One idea I had is if maybe you need to somehow exclude known empty
+> slots in you config space accessors?
 >
-> Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> And just in general I'd really like to better understand your use-case
+> for the isolated PCI functions. And speaking of that, I'm sorry for
+> having been so blunt in my last mail saying that it felt like a hack.
+> I'm just worried, that we've run into incompatible interpretations or
+> uses of this feature that now prevent us from fixing actual bugs.
+Sorry for the late reply, Let me describe what problem LoongArch has.
 
-Thanks, since this is only a minor change let's wait if Gerd and Farhan
-want to add anything before sending a new version.
+You said that "it feels like this is just a hack to probe an odd
+topology". Yes, to some extent you are right.
 
-Tobias
+1, One of our SoC (LS2K3000) has a special device which has func1 but
+without func0. To let the PCI core scan func1 we can only make
+hypervisor_isolated_pci_functions() return true.
+2, In the above case, PCI_SCAN_ALL_PCIE_DEVS has no help.
+3, Though we change hypervisor_isolated_pci_functions() to resolve the
+above problem, it also lets us pass isolated PCI functions to a guest
+OS instance.
+
+As a summary, for real machines commit a02fd05661d73a850 is a hack to
+probe an odd device, for virtual machines it allows passing isolated
+PCI functions.
+
+
+
+Huacai
+
+>
+> Thanks in advance,
+> Niklas Schnelle
 
