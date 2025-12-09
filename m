@@ -1,86 +1,82 @@
-Return-Path: <linux-s390+bounces-15352-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-15356-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10EBCCAFAF1
-	for <lists+linux-s390@lfdr.de>; Tue, 09 Dec 2025 11:50:56 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEB33CAFE77
+	for <lists+linux-s390@lfdr.de>; Tue, 09 Dec 2025 13:21:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 7B7A8300E3E9
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Dec 2025 10:50:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ADC3630F19D1
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Dec 2025 12:17:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A9ED28A701;
-	Tue,  9 Dec 2025 10:50:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B2BB322B8A;
+	Tue,  9 Dec 2025 12:17:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ernw37wm"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Q6EvGVuh"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD8726F2B8;
-	Tue,  9 Dec 2025 10:50:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A2C322B72;
+	Tue,  9 Dec 2025 12:17:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765277453; cv=none; b=ZC14mkZGvGf4e3USFNLtFA4b68JZVdwqFJfr1rK6/Kh9WxoEJNCY6SabrSxxPV7sTpgqfsN3rsfKoFb7iIbfjQ4dIsw7+8EGuBA3Wf7iHNaXtr2y3ZyhQmc9Iv3IUA29rR0q8z8CP+27MA4v2/oNASN+m6ND4MKghLOgEH6wfRY=
+	t=1765282638; cv=none; b=WhjjiDrYiLjcPod3DRJ8mQBOPMYLtd5YMrHFlxXM2T8TATiaEh0QvmXleECT5kbnEskocdwTjXq1BRId2vHsIXsPCKfYz5uqlHgqdkSUZ2WHngEUB6NpdGl7XJsMbM8NKfaAxTk9YRwSRuHu3TGCKkdVomVStAECW/AY8N4Qgzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765277453; c=relaxed/simple;
-	bh=aCrM7W3CAPC+RMSQJtvAyAkXY4Lv9Ztd5W/fhfzFdE8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=htxHtw2QF5TJvmtK82TNCmZbdLjT2bPT9l+DKo2rYjMozsY1G2tZT0O6RYohhmukiUGuBIrFsNFNKNCDx0VxadbmP/l++DTS7/mDYmUrzUnaqPXB4I6TvpWHyZRf66wQxqpPUha34u35gt4fqgwoWendpjIhTlZWfxi7m0GiYTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ernw37wm; arc=none smtp.client-ip=148.163.158.5
+	s=arc-20240116; t=1765282638; c=relaxed/simple;
+	bh=8vf+9tA9PFIOMDQ8pMkQAlyC+Ju4tjOHl7frkqQ16jQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ErOg06BP9fwposN7xoTfSwTlqEhCcWewEylpOkAf8bB1B5oPMUTlkS5nn9G629JdVrhS67WC49bZYmuXaAEXHV/4VqIBS9KhaFMiXHDnEyhT1DbRMipVscFwIhC/6mbqrPZrVCPUEtgTpK1CehNtPu/ExwI36r+4Yz4vNK/2urc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Q6EvGVuh; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5B91bTbx025102;
-	Tue, 9 Dec 2025 10:50:39 GMT
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5B9Bg3BJ005499;
+	Tue, 9 Dec 2025 12:17:09 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=MPau5gDSQFiMBBpgwuXuFOr8iUJjmIgZg9W3uk7X5
-	1Q=; b=ernw37wmJShN38TK5bmJLM1JjIekW24SxL8AeIFAmp38IL9tAED9YduyD
-	TPUG/DYHmD3C3UHnnpWvLwrL5Xe7VtqagwdFB5yIPYoJLtGY1QT2pE/ea4o+DPYI
-	DamNpIdpSKJlZPAEZYEDk7VVilu7+SW764UqVg5iZE3HZf0oljJu1SzUzH7lUWKN
-	35eoq4SDAL5P7dQ3raTWZUGJPimH+Rnf3nX04q+z09eDGlEDQKpwUcZ7eV9+BOHD
-	9jbLrL/oRYVAiyVuhLmBGQI5NgTOxXVhy521ur4cICKR6Lwv8idbb0IbOTXop2QG
-	CMtJVg1KqjCM6oJE4XRZlD78sAs6A==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4avc53bss6-1
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=SA0Qa1DaRPEJaeC025W7Gt2eOjCr
+	BgcWQxQfpV2w8HQ=; b=Q6EvGVuhUTG93iyO4iDoZ+r6y8sife7j5qLmH6TMWRPw
+	i88/PCaPP25Xv4rZfPpi6+MKAQU9q10X58l+92Pqc+PLD94mtVDWclygahCfUA8s
+	v6+DvmtcnEYASdZrZSE+5RVyLxMnV5gnC9Wp/UcEcpgYckjYoKRkvv25p2Hf/hVh
+	QKDIArttVgNKrgyKA3KtBZ946GiYrNMtZhMAh04RV0o3vYq+GTWXVSEYXXKMF0WG
+	seaIrNadKvktcyx4nkPF4bWS4iMdHWAoRHWCk+YZguCCFeShjpnsx0LZOtLC2uJ3
+	NOMnTzl1ySjVTKpzHDmXReInW0mE2ds1pcN67YyUNw==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4av9wvmdnx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Dec 2025 10:50:39 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5B9AhltK021706;
-	Tue, 9 Dec 2025 10:50:39 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4avc53bsry-1
+	Tue, 09 Dec 2025 12:17:08 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5B9CBlqU002409;
+	Tue, 9 Dec 2025 12:17:08 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4aw11jak9j-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Dec 2025 10:50:39 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5B985uoK012807;
-	Tue, 9 Dec 2025 10:50:38 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4aw0ajtbpd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Dec 2025 10:50:38 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5B9AoYaF47120818
+	Tue, 09 Dec 2025 12:17:08 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5B9CH16p53084598
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 9 Dec 2025 10:50:34 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 29ABF2004D;
-	Tue,  9 Dec 2025 10:50:34 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E9A4E2004F;
-	Tue,  9 Dec 2025 10:50:33 +0000 (GMT)
+	Tue, 9 Dec 2025 12:17:01 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 905DB2004E;
+	Tue,  9 Dec 2025 12:17:01 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 625562004B;
+	Tue,  9 Dec 2025 12:17:01 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  9 Dec 2025 10:50:33 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
-        irogers@google.com
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, japo@linux.ibm.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf test: Fix test case perf evlist tests for s390x
-Date: Tue,  9 Dec 2025 11:50:29 +0100
-Message-ID: <20251209105029.142517-1-tmricht@linux.ibm.com>
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  9 Dec 2025 12:17:01 +0000 (GMT)
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>,
+        Jens Remus <jremus@linux.ibm.com>,
+        Stefan Schulze Frielinghaus <stefansf@linux.ibm.com>,
+        Juergen Christ <jchrist@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [PATCH 0/9] s390: Exception based WARN() / WARN_ONCE()
+Date: Tue,  9 Dec 2025 13:16:52 +0100
+Message-ID: <20251209121701.1856271-1-hca@linux.ibm.com>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
@@ -88,72 +84,80 @@ List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA2MDAyMCBTYWx0ZWRfX5qDVLO0xxN/1
- fcQLW2VIdIygrEyzLmzLLjHKjWYtQ2g4H3HOIyiJdy2d3siw1ZMnaDoBUwN+Lvtcti03tCAfO09
- atAD5PqbwK/JmVAGRX8MmCaBELPy9BvZw4OBIXwR/gpytv+feAfGd5lrNj7vPeF6qkh6y+2GKV7
- 504sShwWlO0qJ2t9/kyxXg+7byWdOFUR9Wf5mhv7adNdh7I6t4r7G9gfW9uhPselcr7C2oKrcMj
- 0DUcSOvVg+BLd3a4iRO3BNiXOQyaMBfnzSgF1OYO5540zjiUfaMGXmaSGmXcDyb1zbHVg2ncVae
- 3qcLsFGMTCb7k3ooSqV8EMr4ZTifJfyOhAplG7X6Fq7TS5MefzSYK2nVgcLsmy+BCkFdlCVGlfu
- pO7BNF2xe+wOe7YNWjcedHy+y+xO+A==
-X-Authority-Analysis: v=2.4 cv=S/DUAYsP c=1 sm=1 tr=0 ts=6937feff cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
- a=GOdL-N95vH2p3EwyxFsA:9
-X-Proofpoint-ORIG-GUID: z12NeC_F6pmhYRex77wjbLnfNkWsjx8C
-X-Proofpoint-GUID: FHXIwJL86uDMQ8Yq1-8HLGl44y92M6UK
+X-Proofpoint-GUID: Lj21VNTuavT62uxo2pBroJHTsBgKrgks
+X-Proofpoint-ORIG-GUID: Lj21VNTuavT62uxo2pBroJHTsBgKrgks
+X-Authority-Analysis: v=2.4 cv=AdS83nXG c=1 sm=1 tr=0 ts=69381344 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=JfrnYn6hAAAA:8 a=SWMNsmP5DZmT8m6ampYA:9 a=QEXdDO2ut3YA:10
+ a=1CNFftbPRP8L7MoqJWF3:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA2MDAwMCBTYWx0ZWRfX5kyAn0+hkyN5
+ jrjKQmeQwij1exRZx6mbGRYOGhb3otGajSW6D3dF7KLcBrEeBfcCw7P4s5/vUWB4u9jzu/gZixO
+ Bz0DviJ+SzlN2Zgi7GyjVf22k4kgEhuIPlLLt0LgRRXrIEArNfImUQyjEGeKeoITpyon5eukd2z
+ y54Oea15FuHsLCxNcXttoQxd3jrAYzZZknV6lAVUNUpfh+ucb4X2Jbyoyb3H4RPZO+2We+rykkE
+ P4EO3BEwa76LwclFZkLXkr2dTnuEmGFfVvXKMq8A253WLrJjGY+Ucwkl0ki4oPlpl788114qYka
+ a3Elq/lKQbiXfF7AKb2/1dgAo8S9qT0SmuQY26qQUTmVXzpkOF/p6jWqd1dP7pPU9qFp71msJ8I
+ jABqfUfPU0XOHS4jndl0uoyGDDvtyg==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2025-12-09_02,2025-12-04_04,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 phishscore=0 clxscore=1015 impostorscore=0 suspectscore=0
- lowpriorityscore=0 adultscore=0 spamscore=0 bulkscore=0 priorityscore=1501
+ suspectscore=0 adultscore=0 priorityscore=1501 spamscore=0 phishscore=0
+ lowpriorityscore=0 bulkscore=0 clxscore=1015 malwarescore=0 impostorscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2512060020
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2512060000
 
-Perf test case 78: perf evlist tests fails on s390. The failure
-is causes by grouping events cycles and instructions because
-sampling does only support event cycles.
-Change the group to -e '{cycles,cycles}' to fix this.
+Use the generic infrastructure introduced by Peter Zijlstra [1] to implement
+an exception based WARN() and WARN_ONCE() similar to x86.
 
-Output before:
-  # ./perf test 78
-  78: perf evlist tests              : FAILED!
-  #
+Due to some compiler oddities on s390 this requires to raise the minimum gcc
+version to 9. Maybe there are ways to avoid this, but I failed to find a
+working solution. Details are in the patch descriptions.
 
-Output after:
-  # ./perf test 78
-  78: perf evlist tests              : Ok
-  #
+Just posting this now to also get some compile bot testing, since I'm afraid
+there might be some compiler version / config option around where even this
+new approach breaks.
 
-Fixes: db452961de939 ("perf tests evlist: Add basic evlist test")
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
----
- tools/perf/tests/shell/evlist.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Peter, since you were wondering: your generic infrastructure pieces work very
+nice. Looking at the x86 and s390 implementation: it might be possible to make
+things even more generic since both __WARN_printf(), and WARN_ONCE() are
+identical; it looks like only __WARN_print_arg() needs to be provided.
 
-diff --git a/tools/perf/tests/shell/evlist.sh b/tools/perf/tests/shell/evlist.sh
-index 140f099e75c1..80f808b3059d 100755
---- a/tools/perf/tests/shell/evlist.sh
-+++ b/tools/perf/tests/shell/evlist.sh
-@@ -38,13 +38,13 @@ test_evlist_simple() {
- 
- test_evlist_group() {
- 	echo "Group evlist test"
--	if ! perf record -e "{cycles,instructions}" -o "${perfdata}" true 2> /dev/null
-+	if ! perf record -e "{cycles,cycles}" -o "${perfdata}" true 2> /dev/null
- 	then
- 		echo "Group evlist [Skipped event group recording failed]"
- 		return
- 	fi
- 
--	if ! perf evlist -i "${perfdata}" -g | grep -q "{.*cycles.*,.*instructions.*}"
-+	if ! perf evlist -i "${perfdata}" -g | grep -q "{.*cycles.*,.*cycles.*}"
- 	then
- 		echo "Group evlist [Failed to list event group]"
- 		err=1
+Arnd, just adding you so you know that there may be an architecture
+which requires gcc-9 instead of gcc-8 in the near future.
+
+Series is based on
+git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git features
+
+...and not yet meant to be included anywhere.
+
+Thanks,
+Heiko
+
+[1] https://lore.kernel.org/all/20251110114633.202485143@infradead.org/
+
+Heiko Carstens (9):
+  kbuild: Require gcc-9 for s390
+  s390/bug: Convert to inline assembly with input operands
+  s390/bug: Use BUG_FORMAT for DEBUG_BUGVERBOSE_DETAILED
+  s390/bug: Introduce and use monitor code macro
+  s390/traps: Copy monitor code to pt_regs
+  s390/bug: Implement __WARN_printf()
+  s390/bug: Implement WARN_ONCE()
+  s390/bug: Skip __WARN_trap() in call traces
+  s390/bug: Prevent tail-call optimization
+
+ arch/s390/include/asm/bug.h    | 141 ++++++++++++++++++++++++---------
+ arch/s390/include/asm/ptrace.h |   5 +-
+ arch/s390/kernel/entry.S       |   7 ++
+ arch/s390/kernel/traps.c       |  42 +++++++++-
+ scripts/min-tool-version.sh    |   2 +
+ 5 files changed, 156 insertions(+), 41 deletions(-)
+
+base-commit: 70075e3d0ca0b72cc983d03f7cd9796e43492980
 -- 
-2.52.0
-
+2.51.0
 
