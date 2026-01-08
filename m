@@ -1,101 +1,176 @@
-Return-Path: <linux-s390+bounces-15687-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-15689-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C576D0275D
-	for <lists+linux-s390@lfdr.de>; Thu, 08 Jan 2026 12:42:07 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29122D02BF8
+	for <lists+linux-s390@lfdr.de>; Thu, 08 Jan 2026 13:52:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id DE9873007499
-	for <lists+linux-s390@lfdr.de>; Thu,  8 Jan 2026 11:42:03 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 85C0F3815916
+	for <lists+linux-s390@lfdr.de>; Thu,  8 Jan 2026 12:01:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 585A73EE4DB;
-	Thu,  8 Jan 2026 09:51:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AFF7350297;
+	Thu,  8 Jan 2026 11:32:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="spGeKWvx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tt8VmR3V"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469C83EDADC
-	for <linux-s390@vger.kernel.org>; Thu,  8 Jan 2026 09:51:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056423D6F14
+	for <linux-s390@vger.kernel.org>; Thu,  8 Jan 2026 11:32:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767865891; cv=none; b=U7JbWc9mCs2SmMePz3lWvJYsnjtv9MmLeKKBMlIUjXmzgXtzAYeJTcL1P0P7K6SlFz2uyH0WZXw/9jJKPkMhcQwLDAFAOHYwLYx7aN87tu0jmTbX6X6P/rtIO60RAdCV8XcXeIxILLheh377UFQHqVGoCEdxqLfFJlTzWQL6FG0=
+	t=1767871933; cv=none; b=T4QrcMEFgNqOI1dPkt3tJDU8S5X8SepqiM6mUw4PifL+Vdws/PkuCdmWGihQTzs2iPrBrZh4lhPAUoS/HCj/ug0/8aWn+4n9laSIKWkHzDEe92FujQu+8F7H4wfo24Tsw9Qc7KFoY6yzvdwu7oMxQtpX/zxB4VVmR4LNDlM4+ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767865891; c=relaxed/simple;
-	bh=xmLo2lZhXu53rBZMy/uNhBUFyiTKl5Fm7JdKRqI2KVo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e71KTeOK1C+LP/2lPaSmEToi6Lc4j2JIGwWyYY1mnBi7R23607I+qkqFcy9du+wZ/AIGhIQmhqCqU31bZFd+aXNkpyHjER3dXOSDHFW/Ij6oCj9buA6QM2o4KuL2l4W5c8/HvEXfGfqR/czdp79IIQOjC7ziuvy0TL9LXmg7zm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=spGeKWvx; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1767865872;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=0aBPheDGqSPPstciKVANmfZuxM6igW5CLYMltjipJ5U=;
-	b=spGeKWvxq6zz0HoLO0DsRhn5qck9IGbw+KY7C6SQpVjX1x7EVbjVRNf2MlZ5Iwyv2MyvQX
-	1iWtfuyyXjrxCjdLZ+g0LaEjhf/YzreK1rGxL+Sl7Zmi8+HiZ8iE6N+akOMY4ra1ltM0v2
-	f7X5U8m/N7/+44H4JSSopcJOKqW59tw=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Nam Cao <namcao@linutronix.de>,
-	Easwar Hariharan <easwar.hariharan@linux.microsoft.com>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-s390@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] s390/time: Replace simple_strtoul with kstrtouint in sysfs online_store
-Date: Thu,  8 Jan 2026 10:50:08 +0100
-Message-ID: <20260108095010.99059-2-thorsten.blum@linux.dev>
+	s=arc-20240116; t=1767871933; c=relaxed/simple;
+	bh=pYfshooaQVx14ogaTwRBPlNZFkj/iWvrj8HN1katBFM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oaD/HUMk13rUTjpOpSSEfQfQiJt6WCpaOs9DqltkfDs9LzNwoK3ZLn7A3r+w4/phIC45HafO0PeJOwy3IhJwJi+kb2yHbcXVB7LxRPQKtc71AJaTfxJWMJ0UgUq3n30yu0BIBDiRPTB84LX3f8tUs6ZX2QtnRQBOb9+GN1D676Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tt8VmR3V; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66A96C2BCAF
+	for <linux-s390@vger.kernel.org>; Thu,  8 Jan 2026 11:32:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767871932;
+	bh=pYfshooaQVx14ogaTwRBPlNZFkj/iWvrj8HN1katBFM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Tt8VmR3VshCgHL0sX0ZHoLqIfD0Rl3cLJfl1ZhoX+viQNalklsP3KEGhmpF2PQABL
+	 i/e4fQeEWCP3E8UrGxvJAz3JuiRdFBXe9UimxMdTmRlLsZNu/U5vTUEyP7Ks+4qkxU
+	 XxkejKAY6NBLbl/r1AsLAyAnuNWCjV0RjM7is+V+ou17Bcc2h2b/jwV3sTJ8RfZ0mU
+	 5QCe8I5A9kvK9DS1HJ9oD7trUK76a+ekfIJRJLeJFGPYGgEycSjFxndrstt2RPdvCq
+	 g0kCEYTkOBwHO0b6P+CdVWNXzaaTEiF2vxlnRRUwhG5MIv4f5YIZKepkz/7OWtnjS/
+	 F/DxUh7mTqQMQ==
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-34ab8e0df53so2600896a91.3
+        for <linux-s390@vger.kernel.org>; Thu, 08 Jan 2026 03:32:12 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVwvcgSnDb/gmW2aeEgKDBXT0gjlfQYrz9fDgQ1KFuozFuALxWGo+HgfNCvd5bQ+kA3E3gWZPRFSWlO@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOPWMuV64XXRJRbfm//wcKtz2QVnm41/zfoCu3f5MJc6nsYf2x
+	yWU5K6c6P4MLHWEZ323+ZUC5U/r0/xn9yWS9RnnJpvD8Pcgt5baFy/IIZ9e9Ynti2+0wnM8mN/4
+	lBaxMA3mGzxl1SAftcQIGY7ZEFeCSb/o=
+X-Google-Smtp-Source: AGHT+IGDINyxTPkhAN4b7317PDsO1QtIqu1Y45mlnouNM/WvPFlwsh7kX9R86h9783kJT5r1JA/b7Ab2jLcoi2FXZJU=
+X-Received: by 2002:a17:90b:4c46:b0:34c:f92a:ad05 with SMTP id
+ 98e67ed59e1d1-34f68b9a0ffmr5904349a91.11.1767871931935; Thu, 08 Jan 2026
+ 03:32:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20260105051311.1607207-1-ebiggers@kernel.org>
+In-Reply-To: <20260105051311.1607207-1-ebiggers@kernel.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 8 Jan 2026 12:32:00 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXGRTfyXPD3+Ravr7O5ZUMAUeabQw455sW5g7aRy3BU+2Q@mail.gmail.com>
+X-Gm-Features: AQt7F2osJiUBFnBRtOlALeERCnUAMf6rielCvEbX7HMdjqJIXrz86eWJVpNeDcU
+Message-ID: <CAMj1kXGRTfyXPD3+Ravr7O5ZUMAUeabQw455sW5g7aRy3BU+2Q@mail.gmail.com>
+Subject: Re: [PATCH 00/36] AES library improvements
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	"Jason A . Donenfeld" <Jason@zx2c4.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	sparclinux@vger.kernel.org, x86@kernel.org, 
+	Holger Dengler <dengler@linux.ibm.com>, Harald Freudenberger <freude@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Replace simple_strtoul() with the recommended kstrtouint() for parsing
-the input buffer. Unlike simple_strtoul(), which returns an unsigned
-long, kstrtouint() converts the string directly to an unsigned integer
-and avoids implicit casting.
+On Mon, 5 Jan 2026 at 06:14, Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> This series applies to libcrypto-next.  It can also be retrieved from:
+>
+>     git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git aes-lib-v1
+>
+> This series makes three main improvements to the kernel's AES library:
+>
+>   1. Make it use the kernel's existing architecture-optimized AES code,
+>      including AES instructions, when available.  Previously, only the
+>      traditional crypto API gave access to the optimized AES code.
+>      (As a reminder, AES instructions typically make AES over 10 times
+>      as fast as the generic code.  They also make it constant-time.)
+>
+>   2. Support preparing an AES key for only the forward direction of the
+>      block cipher, using about half as much memory.  This is a helpful
+>      optimization for many common AES modes of operation.  It also helps
+>      keep structs small enough to be allocated on the stack, especially
+>      considering potential future library APIs for AES modes.
+>
+>   3. Replace the library's generic AES implementation with a much faster
+>      one that is almost as fast as "aes-generic", while still keeping
+>      the table size reasonably small and maintaining some constant-time
+>      hardening.  This allows removing "aes-generic", unifying the
+>      current two generic AES implementations in the kernel tree.
+>
 
-Check the return value of kstrtouint() and reject invalid values. This
-adds error handling while preserving behavior for existing values, and
-removes use of the deprecated simple_strtoul() helper. The current code
-silently sets 'value = 0' if parsing fails, instead of returning
--EINVAL.
+Architectures that support memory operands will be impacted by
+dropping the pre-rotated lookup tables, especially if they have few
+GPRs.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- arch/s390/kernel/time.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I suspect that doesn't really matter in practice: if your pre-AESNI
+IA-32 workload has a bottleneck on "aes-generic", you would have
+probably moved it to a different machine by now. But the performance
+delta will likely be noticeable so it is something that deserves a
+mention.
 
-diff --git a/arch/s390/kernel/time.c b/arch/s390/kernel/time.c
-index bd0df61d1907..8439516dc4c4 100644
---- a/arch/s390/kernel/time.c
-+++ b/arch/s390/kernel/time.c
-@@ -787,7 +787,8 @@ static ssize_t online_store(struct device *dev,
- {
- 	unsigned int value;
- 
--	value = simple_strtoul(buf, NULL, 0);
-+	if (kstrtouint(buf, 0, &value))
-+		return -EINVAL;
- 	if (value != 0 && value != 1)
- 		return -EINVAL;
- 	if (!test_bit(CLOCK_SYNC_HAS_STP, &clock_sync_flags))
--- 
-Thorsten Blum <thorsten.blum@linux.dev>
-GPG: 1D60 735E 8AEF 3BE4 73B6  9D84 7336 78FD 8DFE EAD4
+> (1) and (2) end up being interrelated: the existing
+> 'struct crypto_aes_ctx' does not work for either one (in general).
+> Thus, this series reworks the AES library to be based around new data
+> types 'struct aes_key' and 'struct aes_enckey'.
+>
+> As has been the case for other algorithms, to achieve (1) without
+> duplicating the architecture-optimized code, it had to be moved into
+> lib/crypto/ rather than copied.  To allow actually removing the
+> arch-specific crypto_cipher "aes" algorithms, a consolidated "aes-lib"
+> crypto_cipher algorithm which simply wraps the library is also added.
+> That's most easily done with it replacing "aes-generic" too, so that is
+> done too.  (That's another reason for doing (3) at the same time.)
+>
+> As usual, care is taken to support all the existing arch-optimized code.
+> This makes it possible for users of the traditional crypto API to switch
+> to the library API, which is generally much easier to use, without being
+> concerned about performance regressions.
+>
+> That being said, this series only deals with the bare (single-block) AES
+> library.  Future patchsets are expected to build on this work to provide
+> architecture-optimized library APIs for specific AES modes of operation.
+>
+> Eric Biggers (36):
+>   crypto: powerpc/aes - Rename struct aes_key
+>   lib/crypto: aes: Introduce improved AES library
+>   crypto: arm/aes-neonbs - Use AES library for single blocks
+>   crypto: arm/aes - Switch to aes_enc_tab[] and aes_dec_tab[]
+>   crypto: arm64/aes - Switch to aes_enc_tab[] and aes_dec_tab[]
+>   crypto: arm64/aes - Select CRYPTO_LIB_SHA256 from correct places
+>   crypto: aegis - Switch from crypto_ft_tab[] to aes_enc_tab[]
+>   crypto: aes - Remove aes-fixed-time / CONFIG_CRYPTO_AES_TI
+>   crypto: aes - Replace aes-generic with wrapper around lib
+>   lib/crypto: arm/aes: Migrate optimized code into library
+>   lib/crypto: arm64/aes: Migrate optimized code into library
+>   lib/crypto: powerpc/aes: Migrate SPE optimized code into library
+>   lib/crypto: powerpc/aes: Migrate POWER8 optimized code into library
+>   lib/crypto: riscv/aes: Migrate optimized code into library
+>   lib/crypto: s390/aes: Migrate optimized code into library
+>   lib/crypto: sparc/aes: Migrate optimized code into library
+>   lib/crypto: x86/aes: Add AES-NI optimization
+>   crypto: x86/aes - Remove the superseded AES-NI crypto_cipher
+>   Bluetooth: SMP: Use new AES library API
+>   chelsio: Use new AES library API
+>   net: phy: mscc: macsec: Use new AES library API
+>   staging: rtl8723bs: core: Use new AES library API
+>   crypto: arm/ghash - Use new AES library API
+>   crypto: arm64/ghash - Use new AES library API
+>   crypto: x86/aes-gcm - Use new AES library API
+>   crypto: ccp - Use new AES library API
+>   crypto: chelsio - Use new AES library API
+>   crypto: crypto4xx - Use new AES library API
+>   crypto: drbg - Use new AES library API
+>   crypto: inside-secure - Use new AES library API
+>   crypto: omap - Use new AES library API
+>   lib/crypto: aescfb: Use new AES library API
+>   lib/crypto: aesgcm: Use new AES library API
+>   lib/crypto: aes: Remove old AES en/decryption functions
+>   lib/crypto: aes: Drop "_new" suffix from en/decryption functions
+>   lib/crypto: aes: Drop 'volatile' from aes_sbox and aes_inv_sbox
+>
 
+Nice cleanup
+
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
 
