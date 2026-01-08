@@ -1,114 +1,101 @@
-Return-Path: <linux-s390+bounces-15685-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-15687-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C29E5D00BF5
-	for <lists+linux-s390@lfdr.de>; Thu, 08 Jan 2026 03:57:44 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C576D0275D
+	for <lists+linux-s390@lfdr.de>; Thu, 08 Jan 2026 12:42:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8571D30255B9
-	for <lists+linux-s390@lfdr.de>; Thu,  8 Jan 2026 02:56:36 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id DE9873007499
+	for <lists+linux-s390@lfdr.de>; Thu,  8 Jan 2026 11:42:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19E40279DCA;
-	Thu,  8 Jan 2026 02:56:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 585A73EE4DB;
+	Thu,  8 Jan 2026 09:51:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VO9+Hp/X"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="spGeKWvx"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA912231836;
-	Thu,  8 Jan 2026 02:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469C83EDADC
+	for <linux-s390@vger.kernel.org>; Thu,  8 Jan 2026 09:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767840994; cv=none; b=oSZlZcklT2Xw7eV4fIcOZBSBcMLPXu0mYP92TjFo/FJGviSfCCS6Wf6Q79hwhHV9BosmChLxf592thXEaKvh2nUZReIvdVNoFyHNhg68YhGHEdxOI+Ioc53RjWmuoXgeEFsKsXf6AQvhNj5njVvm9nzoHPkkBqJRfbPZbcM2O2I=
+	t=1767865891; cv=none; b=U7JbWc9mCs2SmMePz3lWvJYsnjtv9MmLeKKBMlIUjXmzgXtzAYeJTcL1P0P7K6SlFz2uyH0WZXw/9jJKPkMhcQwLDAFAOHYwLYx7aN87tu0jmTbX6X6P/rtIO60RAdCV8XcXeIxILLheh377UFQHqVGoCEdxqLfFJlTzWQL6FG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767840994; c=relaxed/simple;
-	bh=bb09VXEHSGVuDvACYJHsjuF/qKdFpVlUXhZlI58yIwU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YWeTggRijzeilZTc/TpfnINLHouXg4/4Hktkegy4gpv3zNeGgnLNOnc8mYDhewttnVvw3un6aZeLoNQUV8vl4/efO1Ee36shzqSB/XBSXm1uy2cTOL3ikrfHYt3k239OIPwvyyrVH55BqfbHWl5KiypCOZiNQG0lLOOlzAgxZBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VO9+Hp/X; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97908C4CEF1;
-	Thu,  8 Jan 2026 02:56:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767840993;
-	bh=bb09VXEHSGVuDvACYJHsjuF/qKdFpVlUXhZlI58yIwU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VO9+Hp/XVRs8XQB3IDBstup2R+DaU4I6K4mDp34Wm113uMcakMBKaj2eTx55ExHtE
-	 nBWUzkdaWvlhDxELVvEA3C6puD6nUZG5J+gpcQ61WkLHnhj+M05LSE5AZcHJamwhvc
-	 j/BMfPrbYmdBOqJI5BeEugABP3Mc/vfHCk9GLrpJscoyfLAOJwB+2t8XFPTPsEybag
-	 xGnWNL183qpjfSIH8SOBIaB8sVnhazL4Rw/1WNvWFQdpTNcIdnvnpj/0Brkneg1BPR
-	 7qMuhdE1AoXtCk2F775jaiAkT9nh2gM4h7JiM3GPN+qLCo8vxQs/u1WGbxiPYaxbeg
-	 hV7kgr+lj43kw==
-Message-ID: <dc57f648-524c-4fdc-9fce-73f1bab2fee4@kernel.org>
-Date: Wed, 7 Jan 2026 18:56:29 -0800
+	s=arc-20240116; t=1767865891; c=relaxed/simple;
+	bh=xmLo2lZhXu53rBZMy/uNhBUFyiTKl5Fm7JdKRqI2KVo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e71KTeOK1C+LP/2lPaSmEToi6Lc4j2JIGwWyYY1mnBi7R23607I+qkqFcy9du+wZ/AIGhIQmhqCqU31bZFd+aXNkpyHjER3dXOSDHFW/Ij6oCj9buA6QM2o4KuL2l4W5c8/HvEXfGfqR/czdp79IIQOjC7ziuvy0TL9LXmg7zm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=spGeKWvx; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1767865872;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0aBPheDGqSPPstciKVANmfZuxM6igW5CLYMltjipJ5U=;
+	b=spGeKWvxq6zz0HoLO0DsRhn5qck9IGbw+KY7C6SQpVjX1x7EVbjVRNf2MlZ5Iwyv2MyvQX
+	1iWtfuyyXjrxCjdLZ+g0LaEjhf/YzreK1rGxL+Sl7Zmi8+HiZ8iE6N+akOMY4ra1ltM0v2
+	f7X5U8m/N7/+44H4JSSopcJOKqW59tw=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Nam Cao <namcao@linutronix.de>,
+	Easwar Hariharan <easwar.hariharan@linux.microsoft.com>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] s390/time: Replace simple_strtoul with kstrtouint in sysfs online_store
+Date: Thu,  8 Jan 2026 10:50:08 +0100
+Message-ID: <20260108095010.99059-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 02/28] arc: introduce arch_zone_limits_init()
-To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Alex Shi <alexs@kernel.org>, Alexander Gordeev <agordeev@linux.ibm.com>,
- Andreas Larsson <andreas@gaisler.com>, Borislav Petkov <bp@alien8.de>,
- Brian Cain <bcain@kernel.org>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- "David S. Miller" <davem@davemloft.net>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- David Hildenbrand <david@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>,
- Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
- Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Jonathan Corbet <corbet@lwn.net>, "Liam R. Howlett"
- <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Magnus Lindholm <linmag7@gmail.com>, Matt Turner <mattst88@gmail.com>,
- Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>,
- Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- Palmer Dabbelt <palmer@dabbelt.com>, Pratyush Yadav <pratyush@kernel.org>,
- Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>,
- Stafford Horne <shorne@gmail.com>, Suren Baghdasaryan <surenb@google.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>,
- Vineet Gupta <vgupta@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
- Will Deacon <will@kernel.org>, x86@kernel.org, linux-alpha@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-mm@kvack.org, linux-openrisc@vger.kernel.org,
- linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
- sparclinux@vger.kernel.org
-References: <20260102070005.65328-1-rppt@kernel.org>
- <20260102070005.65328-3-rppt@kernel.org>
-Content-Language: en-US
-From: Vineet Gupta <vgupta@kernel.org>
-In-Reply-To: <20260102070005.65328-3-rppt@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
+Replace simple_strtoul() with the recommended kstrtouint() for parsing
+the input buffer. Unlike simple_strtoul(), which returns an unsigned
+long, kstrtouint() converts the string directly to an unsigned integer
+and avoids implicit casting.
 
+Check the return value of kstrtouint() and reject invalid values. This
+adds error handling while preserving behavior for existing values, and
+removes use of the deprecated simple_strtoul() helper. The current code
+silently sets 'value = 0' if parsing fails, instead of returning
+-EINVAL.
 
-On 1/1/26 22:59, Mike Rapoport wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->
-> Move calculations of zone limits to a dedicated arch_zone_limits_init()
-> function.
->
-> Later MM core will use this function as an architecture specific callback
-> during nodes and zones initialization and thus there won't be a need to
-> call free_area_init() from every architecture.
->
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ arch/s390/kernel/time.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thx !
+diff --git a/arch/s390/kernel/time.c b/arch/s390/kernel/time.c
+index bd0df61d1907..8439516dc4c4 100644
+--- a/arch/s390/kernel/time.c
++++ b/arch/s390/kernel/time.c
+@@ -787,7 +787,8 @@ static ssize_t online_store(struct device *dev,
+ {
+ 	unsigned int value;
+ 
+-	value = simple_strtoul(buf, NULL, 0);
++	if (kstrtouint(buf, 0, &value))
++		return -EINVAL;
+ 	if (value != 0 && value != 1)
+ 		return -EINVAL;
+ 	if (!test_bit(CLOCK_SYNC_HAS_STP, &clock_sync_flags))
+-- 
+Thorsten Blum <thorsten.blum@linux.dev>
+GPG: 1D60 735E 8AEF 3BE4 73B6  9D84 7336 78FD 8DFE EAD4
 
-Acked-by: Vineet Gupta <vgupta@kernel.org>
 
