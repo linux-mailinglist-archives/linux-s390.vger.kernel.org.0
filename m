@@ -1,160 +1,243 @@
-Return-Path: <linux-s390+bounces-15843-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-15846-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79121D31BBC
-	for <lists+linux-s390@lfdr.de>; Fri, 16 Jan 2026 14:21:47 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CA1AD32EBF
+	for <lists+linux-s390@lfdr.de>; Fri, 16 Jan 2026 15:54:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2B8A03115369
-	for <lists+linux-s390@lfdr.de>; Fri, 16 Jan 2026 13:19:02 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id CD6583042F6F
+	for <lists+linux-s390@lfdr.de>; Fri, 16 Jan 2026 14:52:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0E832405EB;
-	Fri, 16 Jan 2026 13:19:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EF95335BD5;
+	Fri, 16 Jan 2026 14:52:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mx42etJy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dwuikQdv"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCD22505AA
-	for <linux-s390@vger.kernel.org>; Fri, 16 Jan 2026 13:19:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ABA8145348;
+	Fri, 16 Jan 2026 14:52:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768569540; cv=none; b=WTN84NxwP02oQLEhpADoMOAZBdGTAqhBuiAUZucBtLV5fx1fptoJQThnqwF6Xo4Mm+vuRJqctzrZM+ymhCLtTs5CRestznvJBjgwtCZRJWwx/GVxvOq1U05v4CV4E50rwNw6bmE6C3544bNDr56zzDwJnkAw5Rf7ynfd5/G0e6s=
+	t=1768575155; cv=none; b=TSC0OarB+edWR/jUSXFV0944uQoBqDK4mPHZIiG6zf/l3BfpDAlkWiA5qiwioMVYgZZDRgfwrKXnC39HeQ6ozF+MvkGULZ/eSiWebwry5UYAuPuphnYiGqjHIOVLYpoVSMGidzU+pB6lj9RBA8dhYdV6te2OS65eyfe2xScF2n8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768569540; c=relaxed/simple;
-	bh=paGgdC+WfYWTfp4FQwhsSNV0x9rGHQk4MpKoJN/J6kM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ul1KMtk9Bmf4zSq8LZC9eKuB/REXlHrhWvO7K7iuZTH7MkIPIAlzaYYH1LhECguTu6w8uWVO8jW8i6CMJdClon4/nERj5Q5Tb9ep/X4xSqji2XuY8661IItkN6MhnNkPAhUI0q/2ld6QnilPlc9pTnV86hXMqgaToBwoVOdKkn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mx42etJy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F993C4AF09
-	for <linux-s390@vger.kernel.org>; Fri, 16 Jan 2026 13:19:00 +0000 (UTC)
+	s=arc-20240116; t=1768575155; c=relaxed/simple;
+	bh=LzZmy6jqMt6NobQKkguWtqCpma0/ISXupISgS1lOgXU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TIqwGw8XvzRj5kXb/9GtEkrwAUnbPD+dEdoH+kWbntyLR2oKT3Kvqy+M2Eo6D8fKuveidpywHXXf4I/HRFwNMiBY6d7zT/NXPvJtmLk829dKX+5bQpvwA0YfouIBD2gytiu1UkP/Spv3G6n+EK+1s1jq7zZnmEbols2W00+p1SA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dwuikQdv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 110B8C19423;
+	Fri, 16 Jan 2026 14:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768569540;
-	bh=paGgdC+WfYWTfp4FQwhsSNV0x9rGHQk4MpKoJN/J6kM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mx42etJyXvyHu40zb7VhJEa9gBdwKBz3SffMZZHgs6aEMZvLo5cTz87NmUspqu1ui
-	 D1Q6Mbpwltz5DWYX1zlMkmGAiZ1/z1DE+wghCaxqJFZDMQH0lGpifb8n+Jg6cEAu9l
-	 p7hIaT+50EFL0m6XdcLIQmrkTiOnaFi8KGfVlzR0wnqyesrdVL6QKcVW8GDE6AlC/b
-	 k0aV8/X9eC0Y7EnyGGPYqA/hOtlxwZ5kkhrSXTi5ApGh+q+Xac9pqeAzBw4Buu6jQ3
-	 70hzYGASgEtiqoiKD6U1NEXpTtTgZzm4qijvIgK1DQrKIs0+ZTLSwg0qazyxHExIXE
-	 mVoZfopZUabog==
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-34f634dbfd6so1505013a91.2
-        for <linux-s390@vger.kernel.org>; Fri, 16 Jan 2026 05:19:00 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU+hhYiKE3BUYZ2k/zir1b5+F/9moUHdliDIh3gSlxg87zpgl8WYJsezc/ZzYwljqYhM4XtLOcngfy/@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMRBIStfk9m4BV/BnXtTrh6VNBLcBVAgzcV9iq10buDaXQLjtD
-	0yBXFn/vQ3O1DxSP+Vm/h1aNcPUM0BzTiEAVT13RUdl9HxCNzkY4nrlyzxWYtjyE4G9a/laj+4J
-	75+toPtc3yik1a8M8Q3qOK08kpzs+cKQ=
-X-Received: by 2002:a17:90b:3c49:b0:341:88c1:6a7d with SMTP id
- 98e67ed59e1d1-35272f87eb9mr2433924a91.18.1768569539305; Fri, 16 Jan 2026
- 05:18:59 -0800 (PST)
+	s=k20201202; t=1768575154;
+	bh=LzZmy6jqMt6NobQKkguWtqCpma0/ISXupISgS1lOgXU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=dwuikQdv1p9BjGjXhU91yRg8Gw3GvSgQ0M5hzOyEUvqaUD15zFuY83kFOAlgDqtiL
+	 aq3Av8T2Mi2oEMJQB77oNtUUPugoJ7geLsaS0nsgJemsTZhW0YU6Gy+zpaXbizbI++
+	 nJ4mgh32RcayhFdkr1DMDQB7/MzFNvmkoyAX8/lgU6JDEKdEh7sGOC/70hoxE4oSyF
+	 7vtveo+2W7bYT1M/MT0l5IGEafZcX6e5/LLy3p/jPoWkP6CxNqQEYegvs8P+oSPr4J
+	 UAjET/LVrlea6oibw+ZGIMM81HmVRAborc7oWyiJm0nAXPvHp8IOheB0uD7EXGGxq4
+	 i7oDCgTaceOrw==
+From: Frederic Weisbecker <frederic@kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Ben Segall <bsegall@google.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Kieran Bingham <kbingham@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Xin Zhao <jackzxcui1989@163.com>,
+	linux-pm@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 02/15] sched/cputime: Remove superfluous and error prone kcpustat_field() parameter
+Date: Fri, 16 Jan 2026 15:51:55 +0100
+Message-ID: <20260116145208.87445-3-frederic@kernel.org>
+X-Mailer: git-send-email 2.51.1
+In-Reply-To: <20260116145208.87445-1-frederic@kernel.org>
+References: <20260116145208.87445-1-frederic@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260115004328.194142-1-coxu@redhat.com> <20260115004328.194142-2-coxu@redhat.com>
- <CAMj1kXFXNo1-pMbo-VZrjQ3TYe1tufebrLr_avL12A0nHMSGnA@mail.gmail.com> <8bfa859ed3a4f1cf0db0ab64d8c1c3b24684582a.camel@linux.ibm.com>
-In-Reply-To: <8bfa859ed3a4f1cf0db0ab64d8c1c3b24684582a.camel@linux.ibm.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 16 Jan 2026 14:18:48 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXHsJNZoUEnbD1y=v4Ftuv9d2c08VckRV7ru4k4P83vZbQ@mail.gmail.com>
-X-Gm-Features: AZwV_QiR8f22XUrZO7Ho9HKYBQjvJoHCgOD5leRDTv3x2USeTKmIDvLwsh7DTh4
-Message-ID: <CAMj1kXHsJNZoUEnbD1y=v4Ftuv9d2c08VckRV7ru4k4P83vZbQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] integrity: Make arch_ima_get_secureboot integrity-wide
-To: Mimi Zohar <zohar@linux.ibm.com>
-Cc: Coiby Xu <coxu@redhat.com>, linux-integrity@vger.kernel.org, 
-	Heiko Carstens <hca@linux.ibm.com>, Roberto Sassu <roberto.sassu@huaweicloud.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, 
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Roberto Sassu <roberto.sassu@huawei.com>, 
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Eric Snowberg <eric.snowberg@oracle.com>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
-	"moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:LINUX FOR POWERPC (32-BIT AND 64-BIT)" <linuxppc-dev@lists.ozlabs.org>, 
-	"open list:S390 ARCHITECTURE" <linux-s390@vger.kernel.org>, 
-	"open list:EXTENSIBLE FIRMWARE INTERFACE (EFI)" <linux-efi@vger.kernel.org>, 
-	"open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>, 
-	"open list:KEYS/KEYRINGS_INTEGRITY" <keyrings@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, 16 Jan 2026 at 14:11, Mimi Zohar <zohar@linux.ibm.com> wrote:
->
-> On Fri, 2026-01-16 at 10:41 +0100, Ard Biesheuvel wrote:
-> > On Thu, 15 Jan 2026 at 01:43, Coiby Xu <coxu@redhat.com> wrote:
-> > >
-> > > EVM and other LSMs need the ability to query the secure boot status of
-> > > the system, without directly calling the IMA arch_ima_get_secureboot
-> > > function. Refactor the secure boot status check into a general,
-> > > integrity-wide function named arch_integrity_get_secureboot.
-> > >
-> > > Define a new Kconfig option CONFIG_INTEGRITY_SECURE_BOOT, which is
-> > > automatically configured by the supported architectures. The existing
-> > > IMA_SECURE_AND_OR_TRUSTED_BOOT Kconfig loads the architecture specific
-> > > IMA policy based on the refactored secure boot status code.
-> > >
-> > > Reported-and-suggested-by: Mimi Zohar <zohar@linux.ibm.com>
-> > > Suggested-by: Roberto Sassu <roberto.sassu@huaweicloud.com>
-> > > Signed-off-by: Coiby Xu <coxu@redhat.com>
-> > > ---
-> > >  arch/arm64/Kconfig                            |  1 +
-> > >  arch/powerpc/Kconfig                          |  1 +
-> > >  arch/powerpc/kernel/Makefile                  |  2 +-
-> > >  arch/powerpc/kernel/ima_arch.c                |  5 --
-> > >  arch/powerpc/kernel/integrity_sb_arch.c       | 13 +++++
-> > >  arch/s390/Kconfig                             |  1 +
-> > >  arch/s390/kernel/Makefile                     |  1 +
-> > >  arch/s390/kernel/ima_arch.c                   |  6 --
-> > >  arch/s390/kernel/integrity_sb_arch.c          |  9 +++
-> > >  arch/x86/Kconfig                              |  1 +
-> > >  arch/x86/include/asm/efi.h                    |  4 +-
-> > >  arch/x86/platform/efi/efi.c                   |  2 +-
-> > >  include/linux/ima.h                           |  7 +--
-> > >  include/linux/integrity.h                     |  8 +++
-> > >  security/integrity/Kconfig                    |  6 ++
-> > >  security/integrity/Makefile                   |  3 +
-> > >  security/integrity/efi_secureboot.c           | 56 +++++++++++++++++++
-> > >  security/integrity/ima/ima_appraise.c         |  2 +-
-> > >  security/integrity/ima/ima_efi.c              | 47 +---------------
-> > >  security/integrity/ima/ima_main.c             |  4 +-
-> > >  security/integrity/platform_certs/load_uefi.c |  2 +-
-> > >  21 files changed, 111 insertions(+), 70 deletions(-)
-> > >  create mode 100644 arch/powerpc/kernel/integrity_sb_arch.c
-> > >  create mode 100644 arch/s390/kernel/integrity_sb_arch.c
-> > >  create mode 100644 security/integrity/efi_secureboot.c
-> > >
-> > > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> > > index 93173f0a09c7..4c265b7386bb 100644
-> > > --- a/arch/arm64/Kconfig
-> > > +++ b/arch/arm64/Kconfig
-> > > @@ -2427,6 +2427,7 @@ config EFI
-> > >         select EFI_STUB
-> > >         select EFI_GENERIC_STUB
-> > >         imply IMA_SECURE_AND_OR_TRUSTED_BOOT
-> > > +       imply INTEGRITY_SECURE_BOOT
-> >
-> > This allows both to be en/disabled individually, which I don't think
-> > is what we want. It also results in more churn across the
-> > arch-specific Kconfigs than needed.
-> >
-> > Wouldn't it be better if IMA_SECURE_AND_OR_TRUSTED_BOOT 'select'ed
-> > INTEGRITY_SECURE_BOOT in its Kconfig definition?
->
-> As much as possible, EVM (and other LSMs) shouldn't be dependent on another LSM,
-> in this case IMA, being configured.
+The first parameter to kcpustat_field() is a pointer to the cpu kcpustat
+to be fetched from. This parameter is error prone because a copy to a
+kcpustat could be passed by accident instead of the original one. Also
+the kcpustat structure can already be retrieved with the help of the
+mandatory CPU argument.
 
-Sure, but that is not my point.
+Remove the needless paramater.
 
-This arrangement allows for IMA_SECURE_AND_OR_TRUSTED_BOOT to be
-enabled without INTEGRITY_SECURE_BOOT, resulting in the stub
-implementation of arch_integrity_get_secureboot() being used, which
-always returns false.
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+---
+ drivers/cpufreq/cpufreq_governor.c | 6 +++---
+ drivers/macintosh/rack-meter.c     | 2 +-
+ include/linux/kernel_stat.h        | 8 +++-----
+ kernel/rcu/tree.c                  | 9 +++------
+ kernel/rcu/tree_stall.h            | 7 +++----
+ kernel/sched/cputime.c             | 5 ++---
+ 6 files changed, 15 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/cpufreq/cpufreq_governor.c b/drivers/cpufreq/cpufreq_governor.c
+index 1a7fcaf39cc9..b6683628091d 100644
+--- a/drivers/cpufreq/cpufreq_governor.c
++++ b/drivers/cpufreq/cpufreq_governor.c
+@@ -105,7 +105,7 @@ void gov_update_cpu_data(struct dbs_data *dbs_data)
+ 			j_cdbs->prev_cpu_idle = get_cpu_idle_time(j, &j_cdbs->prev_update_time,
+ 								  dbs_data->io_is_busy);
+ 			if (dbs_data->ignore_nice_load)
+-				j_cdbs->prev_cpu_nice = kcpustat_field(&kcpustat_cpu(j), CPUTIME_NICE, j);
++				j_cdbs->prev_cpu_nice = kcpustat_field(CPUTIME_NICE, j);
+ 		}
+ 	}
+ }
+@@ -165,7 +165,7 @@ unsigned int dbs_update(struct cpufreq_policy *policy)
+ 		j_cdbs->prev_cpu_idle = cur_idle_time;
+ 
+ 		if (ignore_nice) {
+-			u64 cur_nice = kcpustat_field(&kcpustat_cpu(j), CPUTIME_NICE, j);
++			u64 cur_nice = kcpustat_field(CPUTIME_NICE, j);
+ 
+ 			idle_time += div_u64(cur_nice - j_cdbs->prev_cpu_nice, NSEC_PER_USEC);
+ 			j_cdbs->prev_cpu_nice = cur_nice;
+@@ -539,7 +539,7 @@ int cpufreq_dbs_governor_start(struct cpufreq_policy *policy)
+ 		j_cdbs->prev_load = 0;
+ 
+ 		if (ignore_nice)
+-			j_cdbs->prev_cpu_nice = kcpustat_field(&kcpustat_cpu(j), CPUTIME_NICE, j);
++			j_cdbs->prev_cpu_nice = kcpustat_field(CPUTIME_NICE, j);
+ 	}
+ 
+ 	gov->start(policy);
+diff --git a/drivers/macintosh/rack-meter.c b/drivers/macintosh/rack-meter.c
+index 896a43bd819f..20b2ecd32340 100644
+--- a/drivers/macintosh/rack-meter.c
++++ b/drivers/macintosh/rack-meter.c
+@@ -87,7 +87,7 @@ static inline u64 get_cpu_idle_time(unsigned int cpu)
+ 		 kcpustat->cpustat[CPUTIME_IOWAIT];
+ 
+ 	if (rackmeter_ignore_nice)
+-		retval += kcpustat_field(kcpustat, CPUTIME_NICE, cpu);
++		retval += kcpustat_field(CPUTIME_NICE, cpu);
+ 
+ 	return retval;
+ }
+diff --git a/include/linux/kernel_stat.h b/include/linux/kernel_stat.h
+index b97ce2df376f..dd020ecaf67b 100644
+--- a/include/linux/kernel_stat.h
++++ b/include/linux/kernel_stat.h
+@@ -100,14 +100,12 @@ static inline unsigned long kstat_cpu_irqs_sum(unsigned int cpu)
+ }
+ 
+ #ifdef CONFIG_VIRT_CPU_ACCOUNTING_GEN
+-extern u64 kcpustat_field(struct kernel_cpustat *kcpustat,
+-			  enum cpu_usage_stat usage, int cpu);
++extern u64 kcpustat_field(enum cpu_usage_stat usage, int cpu);
+ extern void kcpustat_cpu_fetch(struct kernel_cpustat *dst, int cpu);
+ #else
+-static inline u64 kcpustat_field(struct kernel_cpustat *kcpustat,
+-				 enum cpu_usage_stat usage, int cpu)
++static inline u64 kcpustat_field(enum cpu_usage_stat usage, int cpu)
+ {
+-	return kcpustat->cpustat[usage];
++	return kcpustat_cpu(cpu).cpustat[usage];
+ }
+ 
+ static inline void kcpustat_cpu_fetch(struct kernel_cpustat *dst, int cpu)
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 293bbd9ac3f4..ceea4b2f755b 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -968,14 +968,11 @@ static int rcu_watching_snap_recheck(struct rcu_data *rdp)
+ 		if (rcu_cpu_stall_cputime && rdp->snap_record.gp_seq != rdp->gp_seq) {
+ 			int cpu = rdp->cpu;
+ 			struct rcu_snap_record *rsrp;
+-			struct kernel_cpustat *kcsp;
+-
+-			kcsp = &kcpustat_cpu(cpu);
+ 
+ 			rsrp = &rdp->snap_record;
+-			rsrp->cputime_irq     = kcpustat_field(kcsp, CPUTIME_IRQ, cpu);
+-			rsrp->cputime_softirq = kcpustat_field(kcsp, CPUTIME_SOFTIRQ, cpu);
+-			rsrp->cputime_system  = kcpustat_field(kcsp, CPUTIME_SYSTEM, cpu);
++			rsrp->cputime_irq     = kcpustat_field(CPUTIME_IRQ, cpu);
++			rsrp->cputime_softirq = kcpustat_field(CPUTIME_SOFTIRQ, cpu);
++			rsrp->cputime_system  = kcpustat_field(CPUTIME_SYSTEM, cpu);
+ 			rsrp->nr_hardirqs = kstat_cpu_irqs_sum(cpu) + arch_irq_stat_cpu(cpu);
+ 			rsrp->nr_softirqs = kstat_cpu_softirqs_sum(cpu);
+ 			rsrp->nr_csw = nr_context_switches_cpu(cpu);
+diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
+index b67532cb8770..cf7ae51cba40 100644
+--- a/kernel/rcu/tree_stall.h
++++ b/kernel/rcu/tree_stall.h
+@@ -479,7 +479,6 @@ static void print_cpu_stat_info(int cpu)
+ {
+ 	struct rcu_snap_record rsr, *rsrp;
+ 	struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
+-	struct kernel_cpustat *kcsp = &kcpustat_cpu(cpu);
+ 
+ 	if (!rcu_cpu_stall_cputime)
+ 		return;
+@@ -488,9 +487,9 @@ static void print_cpu_stat_info(int cpu)
+ 	if (rsrp->gp_seq != rdp->gp_seq)
+ 		return;
+ 
+-	rsr.cputime_irq     = kcpustat_field(kcsp, CPUTIME_IRQ, cpu);
+-	rsr.cputime_softirq = kcpustat_field(kcsp, CPUTIME_SOFTIRQ, cpu);
+-	rsr.cputime_system  = kcpustat_field(kcsp, CPUTIME_SYSTEM, cpu);
++	rsr.cputime_irq     = kcpustat_field(CPUTIME_IRQ, cpu);
++	rsr.cputime_softirq = kcpustat_field(CPUTIME_SOFTIRQ, cpu);
++	rsr.cputime_system  = kcpustat_field(CPUTIME_SYSTEM, cpu);
+ 
+ 	pr_err("\t         hardirqs   softirqs   csw/system\n");
+ 	pr_err("\t number: %8lld %10d %12lld\n",
+diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+index 4f97896887ec..5dcb0f2e01bc 100644
+--- a/kernel/sched/cputime.c
++++ b/kernel/sched/cputime.c
+@@ -961,10 +961,9 @@ static int kcpustat_field_vtime(u64 *cpustat,
+ 	return 0;
+ }
+ 
+-u64 kcpustat_field(struct kernel_cpustat *kcpustat,
+-		   enum cpu_usage_stat usage, int cpu)
++u64 kcpustat_field(enum cpu_usage_stat usage, int cpu)
+ {
+-	u64 *cpustat = kcpustat->cpustat;
++	u64 *cpustat = kcpustat_cpu(cpu).cpustat;
+ 	u64 val = cpustat[usage];
+ 	struct rq *rq;
+ 	int err;
+-- 
+2.51.1
+
 
