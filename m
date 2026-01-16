@@ -1,44 +1,44 @@
-Return-Path: <linux-s390+bounces-15845-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-15848-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 610E2D3308A
-	for <lists+linux-s390@lfdr.de>; Fri, 16 Jan 2026 16:05:49 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 126BDD33120
+	for <lists+linux-s390@lfdr.de>; Fri, 16 Jan 2026 16:10:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5D802306641E
-	for <lists+linux-s390@lfdr.de>; Fri, 16 Jan 2026 14:52:31 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 29A5332658EE
+	for <lists+linux-s390@lfdr.de>; Fri, 16 Jan 2026 14:52:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46C373933E8;
-	Fri, 16 Jan 2026 14:52:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E3513358D4;
+	Fri, 16 Jan 2026 14:52:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BlqCwn2Y"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UEoSi17t"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2309B145348;
-	Fri, 16 Jan 2026 14:52:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E0323D2B2;
+	Fri, 16 Jan 2026 14:52:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768575148; cv=none; b=gBbltEhxNUnh/QXIUcyv5iSl5+5stoYKdLWmXx0l/FYtQTNwLZ2YfsZsEzRXzQM2xecDeSummsadxWFmcaVVt8d1Ao4qGxrusMAMK5igP2QjdVEsivHO91vjJbsFEqfVzt9uFT08QQdfCyskKKvOYyE5sLYwWdbzsi9jGAawsFE=
+	t=1768575170; cv=none; b=iyonIydXSJdi0/dwst94OINOnpiFuyZbL08SkC8/Ok+y3eXeic9dNyYWY8C3LUlU/LRSEk9h7xAYElPYnJYueUyvrGPO0J/1NrE+xdB4hME7tyxiL5M94J8H5LIGWoT8JhPHGCRVrPP4NhRYP3TuI1B1MXbvx0Zhw2OGdf+etKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768575148; c=relaxed/simple;
-	bh=AunS2qc13yjAkPCRwR4BY8llDOuJfk4lXWa5mN6Z7vE=;
+	s=arc-20240116; t=1768575170; c=relaxed/simple;
+	bh=vTAmht3VvCxwglnCR59QaOOlh1TAQz905bg6fnPgSy8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VziwdvbvvLHOOxA7aEwl1ICsdLwwFt1aJNHMTsvjE/0x7jB1Gje6YFHqcybNk30sgCZwQRb1Bb/ojbJiV0qxVddDt4G24KieTomm9Juez6rVEKEERqWZja1e2SSkzdk6KsZHDhOSaU/E3KnTDLf95lGERm7PFMgqn1uA6COxqG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BlqCwn2Y; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4FDAC19421;
-	Fri, 16 Jan 2026 14:52:20 +0000 (UTC)
+	 MIME-Version; b=Au8HTO7EqnibuZrS30Ch3EBvh+0GnrSW2bLlvnRj0VYbPHt8Cz/7+1PlvweRd0A+C7afe9GwVSiwUV/uAzxLbLV7xCYs+FngrZGHftvPw9WfsCsDEepyBU4jSNuORLWDIq5oR/I7MroFt6Jy+/LJktTNWSfTDnurb53uRSHGDPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UEoSi17t; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0DE8C16AAE;
+	Fri, 16 Jan 2026 14:52:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768575147;
-	bh=AunS2qc13yjAkPCRwR4BY8llDOuJfk4lXWa5mN6Z7vE=;
+	s=k20201202; t=1768575169;
+	bh=vTAmht3VvCxwglnCR59QaOOlh1TAQz905bg6fnPgSy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BlqCwn2YqqsP+baZapFQ2Pk8CvxIq+ZishCZjE6uTpwv+ovsptwhqtsPhBh7V+OIG
-	 1urHhwFrOFkMLDXB62n/42kPaa8XEk9xkVQ3StO1dvAoIq7IOsSUJ7Z9gmTmn+A7Oq
-	 wOadWfFRYVWv3iyp8oPlNZYOMuOTa1J7Lg7efbMLvA1U1OOlJ2X9jlJF4Tnc6hCio2
-	 BL593vlwI8MvVly+7Fx7wUKPtRWsClhbLa5u4jQy6KrBBMM91+cWXJ21NDC/Oq0LH7
-	 7Fg/Gdw9RjA7uHoS/moX9agnj3h5E4Lys7jb3GLWmMqLdqnpfkgAbh37OZpnXG4SD7
-	 j4qOYkZUJbLPA==
+	b=UEoSi17t6WTlsc/9elJnbU5m2di5zQiFmaaEPydlxspyxVW8BJOvt2Px/1Q6krNYH
+	 4p1ylHoqFM3zx3CX7/IHivpHfYGcmYHwb+auopjehxccS5rNt652IzTP2EJSdg2lJ1
+	 xB568wT6GQPtqB716s6yLv8x+3ARbS6XrjSSYRzTUPQAN7+QvN2sQlW278sAbR3EqS
+	 BwDebrYlVQYnko+lQJGextI/w9bjBkkC5ED6q17ErxBNQWZn0hXmTr8im+4Q1PpOkM
+	 +HVFdPOXhG3ONyMe5zE3VuNlN36AK/qBTkGFXubevPai7RrYy3pms3o+EjKvAKuq93
+	 +9q1kn/BXq43A==
 From: Frederic Weisbecker <frederic@kernel.org>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Frederic Weisbecker <frederic@kernel.org>,
@@ -75,9 +75,9 @@ Cc: Frederic Weisbecker <frederic@kernel.org>,
 	linux-pm@vger.kernel.org,
 	linux-s390@vger.kernel.org,
 	linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 01/15] sched/idle: Handle offlining first in idle loop
-Date: Fri, 16 Jan 2026 15:51:54 +0100
-Message-ID: <20260116145208.87445-2-frederic@kernel.org>
+Subject: [PATCH 04/15] powerpc/time: Prepare to stop elapsing in dynticks-idle
+Date: Fri, 16 Jan 2026 15:51:57 +0100
+Message-ID: <20260116145208.87445-5-frederic@kernel.org>
 X-Mailer: git-send-email 2.51.1
 In-Reply-To: <20260116145208.87445-1-frederic@kernel.org>
 References: <20260116145208.87445-1-frederic@kernel.org>
@@ -89,65 +89,114 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Offline handling happens from within the inner idle loop,
-after the beginning of dyntick cputime accounting, nohz idle
-load balancing and TIF_NEED_RESCHED polling.
+Currently the tick subsystem stores the idle cputime accounting in
+private fields, allowing cohabitation with architecture idle vtime
+accounting. The former is fetched on online CPUs, the latter on offline
+CPUs.
 
-This is not necessary and even buggy because:
+For consolidation purpose, architecture vtime accounting will continue
+to account the cputime but will make a break when the idle tick is
+stopped. The dyntick cputime accounting will then be relayed by the tick
+subsystem so that the idle cputime is still seen advancing coherently
+even when the tick isn't there to flush the idle vtime.
 
-* There is no dyntick handling to do. And calling tick_nohz_idle_enter()
-  messes up with the struct tick_sched reset that was performed on
-  tick_sched_timer_dying().
+Prepare for that and introduce three new APIs which will be used in
+subsequent patches:
 
-* There is no nohz idle balancing to do.
+_ vtime_dynticks_start() is deemed to be called when idle enters in
+  dyntick mode. The idle cputime that elapsed so far is accumulated.
 
-* Polling on TIF_RESCHED is irrelevant at this stage, there are no more
-  tasks allowed to run.
+- vtime_dynticks_stop() is deemed to be called when idle exits from
+  dyntick mode. The vtime entry clocks are fast-forward to current time
+  so that idle accounting restarts elapsing from now.
 
-* No need to check if need_resched() before offline handling since
-  stop_machine is done and all per-cpu kthread should be done with
-  their job.
+- vtime_reset() is deemed to be called from dynticks idle IRQ entry to
+  fast-forward the clock to current time so that the IRQ time is still
+  accounted by vtime while nohz cputime is paused.
 
-Therefore move the offline handling at the beginning of the idle loop.
-This will also ease the idle cputime unification later by not elapsing
-idle time while offline through the call to:
-
-	tick_nohz_idle_enter() -> tick_nohz_start_idle()
+Also accumulated vtime won't be flushed from dyntick-idle ticks to avoid
+accounting twice the idle cputime, along with nohz accounting.
 
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 ---
- kernel/sched/idle.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ arch/powerpc/kernel/time.c | 41 ++++++++++++++++++++++++++++++++++++++
+ include/linux/vtime.h      |  6 ++++++
+ 2 files changed, 47 insertions(+)
 
-diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-index c174afe1dd17..35d79af3286d 100644
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -260,6 +260,12 @@ static void do_idle(void)
- {
- 	int cpu = smp_processor_id();
- 
-+	if (cpu_is_offline(cpu)) {
-+		local_irq_disable();
-+		cpuhp_report_idle_dead();
-+		arch_cpu_idle_dead();
-+	}
+diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
+index 4bbeb8644d3d..9b3167274653 100644
+--- a/arch/powerpc/kernel/time.c
++++ b/arch/powerpc/kernel/time.c
+@@ -376,6 +376,47 @@ void vtime_task_switch(struct task_struct *prev)
+ 		acct->starttime = acct0->starttime;
+ 	}
+ }
 +
- 	/*
- 	 * Check if we need to update blocked load
- 	 */
-@@ -311,11 +317,6 @@ static void do_idle(void)
- 		 */
- 		local_irq_disable();
++#ifdef CONFIG_NO_HZ_COMMON
++/**
++ * vtime_reset - Fast forward vtime entry clocks
++ *
++ * Called from dynticks idle IRQ entry to fast-forward the clocks to current time
++ * so that the IRQ time is still accounted by vtime while nohz cputime is paused.
++ */
++void vtime_reset(void)
++{
++	struct cpu_accounting_data *acct = get_accounting(current);
++
++	acct->starttime = mftb();
++#ifdef CONFIG_ARCH_HAS_SCALED_CPUTIME
++	acct->startspurr = read_spurr(now);
++#endif
++}
++
++/**
++ * vtime_dyntick_start - Inform vtime about entry to idle-dynticks
++ *
++ * Called when idle enters in dyntick mode. The idle cputime that elapsed so far
++ * is accumulated and the tick subsystem takes over the idle cputime accounting.
++ */
++void vtime_dyntick_start(void)
++{
++	vtime_account_idle(current);
++}
++
++/**
++ * vtime_dyntick_stop - Inform vtime about exit from idle-dynticks
++ *
++ * Called when idle exits from dyntick mode. The vtime entry clocks are
++ * fast-forward to current time so that idle accounting restarts elapsing from
++ * now.
++ */
++void vtime_dyntick_stop(void)
++{
++	vtime_reset();
++}
++#endif /* CONFIG_NO_HZ_COMMON */
+ #endif /* CONFIG_VIRT_CPU_ACCOUNTING_NATIVE */
  
--		if (cpu_is_offline(cpu)) {
--			cpuhp_report_idle_dead();
--			arch_cpu_idle_dead();
--		}
--
- 		arch_cpu_idle_enter();
- 		rcu_nocb_flush_deferred_wakeup();
+ void __no_kcsan __delay(unsigned long loops)
+diff --git a/include/linux/vtime.h b/include/linux/vtime.h
+index 737930f66c3e..10cdb08f960b 100644
+--- a/include/linux/vtime.h
++++ b/include/linux/vtime.h
+@@ -37,11 +37,17 @@ extern void vtime_account_irq(struct task_struct *tsk, unsigned int offset);
+ extern void vtime_account_softirq(struct task_struct *tsk);
+ extern void vtime_account_hardirq(struct task_struct *tsk);
+ extern void vtime_flush(struct task_struct *tsk);
++extern void vtime_reset(void);
++extern void vtime_dyntick_start(void);
++extern void vtime_dyntick_stop(void);
+ #else /* !CONFIG_VIRT_CPU_ACCOUNTING_NATIVE */
+ static inline void vtime_account_irq(struct task_struct *tsk, unsigned int offset) { }
+ static inline void vtime_account_softirq(struct task_struct *tsk) { }
+ static inline void vtime_account_hardirq(struct task_struct *tsk) { }
+ static inline void vtime_flush(struct task_struct *tsk) { }
++static inline void vtime_reset(void) { }
++static inline void vtime_dyntick_start(void) { }
++extern inline void vtime_dyntick_stop(void) { }
+ #endif
  
+ /*
 -- 
 2.51.1
 
