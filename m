@@ -1,165 +1,144 @@
-Return-Path: <linux-s390+bounces-15921-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-15924-lists+linux-s390=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 943E9D3B26C
-	for <lists+linux-s390@lfdr.de>; Mon, 19 Jan 2026 17:52:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A17ED3B316
+	for <lists+linux-s390@lfdr.de>; Mon, 19 Jan 2026 18:03:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8611F314FBB3
-	for <lists+linux-s390@lfdr.de>; Mon, 19 Jan 2026 16:47:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EDAEC30DC1E8
+	for <lists+linux-s390@lfdr.de>; Mon, 19 Jan 2026 16:52:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73FED30CDB6;
-	Mon, 19 Jan 2026 16:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nj0Y258/"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AB6D2D0C99;
+	Mon, 19 Jan 2026 16:51:42 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0041D37E2F4;
-	Mon, 19 Jan 2026 16:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C0A629BDB4;
+	Mon, 19 Jan 2026 16:51:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768840912; cv=none; b=mOioTsA667Atl55g2+hqu+h2ushu0CfQshnXN6D1cxA+LonFkVDPBmuTnBsW78T33mfN+Sw2GpgTzjcRAW3/quOjmAr1hV1ES2ppvbtHxOJQf2yuJdQhjgZlSRHIsxsVmjgWgkOWW0tjUfMdgE7hmgF4qxc/DDOXNQ5r+wHNVY4=
+	t=1768841502; cv=none; b=Fr5TkPabHJdiHTTKDTIWaam7UFacvG/cDLjc2NMU0AOUEO4O3r6cdFmlt3KQyUpSFSS7Slam7eTmwAeya5c5iTVjFNPeRk0l2IL5lSRGCG9i2f0fR180Xif6ZOFyQOfi8+TUyOoXy7GsoTcf7bB0eg6O4AXiptbxwBAr8NADqR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768840912; c=relaxed/simple;
-	bh=8Cly1GNk3mzFV8x9Zkf123bjtN9EA4JdBcM0Ptv/1Cw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=R8YdfTFe6CrMo5HUuOHor0CbFoxQQnEsrT0zhn7tWj28yUeAOXMTYSUchN42vOw4F2tNcFe6FRxJr9dIoLYaVJ9jiXcNukhwvwZo06EfzAB9oeGAmC4+uYGy0qH1oL1Y8sZzaYxjP6bV2tuISHDh0V6iX8lnRM85XvtN31RkW2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nj0Y258/; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 60JD23K7021348;
-	Mon, 19 Jan 2026 16:41:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=Uu1yRz
-	y+SJbnUICqN/kuc63CT+bwXeCFlWsXFTz7C44=; b=nj0Y258/iYDviv7zCPKnQG
-	WOvsMuA7krNcoa7JXMoosBTLoq99V/M5ra1P73Aha1lVAwiK03rkMm0T1pRO915O
-	yD9HIIjke8YL3puTmR3L/sswG/vGVRUPWoDfymZ918Yv21Oe/dmHDwW1NPReHqsL
-	cpSOE/pW7koJ/zGZV0riMszuAJhTjc4FE/aYdvmUfniM/NRoiGTFCPgGhqBB7OwA
-	VaFRK9/PuagTM2Zp6AuW8aJIjrv+mxnZvrSbRy1bz+aaGe2Blnc0TlBv2PQWlt9M
-	CPhmSYuyXLNhC/ag9WA4RBXJRbYkWL4OG9p8ICQwtuWWqgDUXTWyR7h9lS7K23Bg
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4br22u8pcm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 Jan 2026 16:41:45 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 60JGBMVg016636;
-	Mon, 19 Jan 2026 16:41:44 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4brn4xr1mj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 Jan 2026 16:41:44 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 60JGfeZl56361256
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 19 Jan 2026 16:41:40 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9502F20049;
-	Mon, 19 Jan 2026 16:41:40 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 654F620040;
-	Mon, 19 Jan 2026 16:41:40 +0000 (GMT)
-Received: from localhost (unknown [9.52.203.172])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 19 Jan 2026 16:41:40 +0000 (GMT)
+	s=arc-20240116; t=1768841502; c=relaxed/simple;
+	bh=p098u2QcF7PcYF7PLCedwxsYfwpiCc19sPIk+R78juM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q0RuTnRpt2v/X+Z3OulPNjKrDc3VnCrhOWv9aKjex6LItkSgTEe1kO9t3/mb9YTM6yTmATXCTK+B4g11ayuC48WYATzaouFYoJcv2bIf9te469N5uqJoXUEh7YgkOGvyJCqs10qU3GpE3HIS41TT3ynqkaoDg5y8vXsRMMjbH/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7A4B497;
+	Mon, 19 Jan 2026 08:51:32 -0800 (PST)
+Received: from [10.57.93.204] (unknown [10.57.93.204])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CAE0C3F632;
+	Mon, 19 Jan 2026 08:51:33 -0800 (PST)
+Message-ID: <31187502-2a11-4ef3-82b4-927a271d8b44@arm.com>
+Date: Mon, 19 Jan 2026 16:51:32 +0000
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/3] randomize_kstack: Maintain kstack_offset per task
+Content-Language: en-GB
+To: Dave Hansen <dave.hansen@intel.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Jeremy Linton <jeremy.linton@arm.com>,
+ David Laight <david.laight.linux@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-hardening@vger.kernel.org, stable@vger.kernel.org
+References: <20260119130122.1283821-1-ryan.roberts@arm.com>
+ <20260119130122.1283821-2-ryan.roberts@arm.com>
+ <85d0d013-eca2-4b9f-bee3-d583d0eeb99e@intel.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <85d0d013-eca2-4b9f-bee3-d583d0eeb99e@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 19 Jan 2026 17:41:40 +0100
-Message-Id: <DFSPRNLTB21S.3LEKR3G14X5XD@linux.ibm.com>
-Cc: <helgaas@kernel.org>, <lukas@wunner.de>, <alex@shazbot.org>,
-        <clg@redhat.com>, <stable@vger.kernel.org>, <schnelle@linux.ibm.com>,
-        <mjrosato@linux.ibm.com>
-Subject: Re: [PATCH v7 8/9] vfio: Add a reset_done callback for vfio-pci
- driver
-From: "Julian Ruess" <julianr@linux.ibm.com>
-To: "Farhan Ali" <alifm@linux.ibm.com>, <linux-s390@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-X-Mailer: aerc 0.21.0-0-g5549850facc2
-References: <20260107183217.1365-1-alifm@linux.ibm.com>
- <20260107183217.1365-9-alifm@linux.ibm.com>
-In-Reply-To: <20260107183217.1365-9-alifm@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: bBJNYWwFpTr6Twf6X4K_jIcGoRKR0iga
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTE5MDEzNiBTYWx0ZWRfX2MTGIISrZrNP
- Mxggeb+oBX0n8Dbb/yqV+d518lFaaTYf12jcLgcSUuBalASpmxm/0iOgSwT25/VsGJ5AxZbC9Ld
- vC4/WfsC+MT8a0Oqod/t0CqTOPW4zK9PXDDPlVL7nRjSoOcC2ZDE4FKUI4sl5JBhJd/sLyN1l37
- mKbnQG+WcuFouaK4RxMqdv51m59C9gkKayMMPjZdg+xYGpLhr8c+fooOylRmNvb+T9koJUQ1cVF
- yQVOnB4CtFaUN93DbZbCaT7uzosNlEwypRO4Mvq4zPApVxVdr6w1QE5hf1uUM3BnsPwCMmq5YFM
- qVRTIz9PGUTC8BdzDWOiyREc249QK5K8EvKMY7rXy3sfwR4I7Mzhv4voObf8BALK12P6orSO++t
- rjEWM+zJ694XjF2lA9CqD+liV20g9h0OwLirGKYUP1jb+CHmJn4SLE0bVbjrZEjk/uETtItFxkQ
- N/T+xoAZGug0K7jlkQQ==
-X-Proofpoint-ORIG-GUID: bBJNYWwFpTr6Twf6X4K_jIcGoRKR0iga
-X-Authority-Analysis: v=2.4 cv=Sp2dKfO0 c=1 sm=1 tr=0 ts=696e5ec9 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VnNF1IyMAAAA:8 a=ufQ_8dze9sbmFIOUPKIA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2026-01-19_04,2026-01-19_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 bulkscore=0 spamscore=0 adultscore=0 phishscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 suspectscore=0
- clxscore=1015 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2601150000
- definitions=main-2601190136
+Content-Transfer-Encoding: 7bit
 
-On Wed Jan 7, 2026 at 7:32 PM CET, Farhan Ali wrote:
-> On error recovery for a PCI device bound to vfio-pci driver, we want to
-> recover the state of the device to its last known saved state. The callba=
-ck
-> restores the state of the device to its initial saved state.
->
-> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
-> ---
->  drivers/vfio/pci/vfio_pci_core.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci=
-_core.c
-> index f677705921e6..c92c6c512b24 100644
-> --- a/drivers/vfio/pci/vfio_pci_core.c
-> +++ b/drivers/vfio/pci/vfio_pci_core.c
-> @@ -2249,6 +2249,17 @@ pci_ers_result_t vfio_pci_core_aer_err_detected(st=
-ruct pci_dev *pdev,
->  }
->  EXPORT_SYMBOL_GPL(vfio_pci_core_aer_err_detected);
-> =20
-> +static void vfio_pci_core_aer_reset_done(struct pci_dev *pdev)
-> +{
-> +	struct vfio_pci_core_device *vdev =3D dev_get_drvdata(&pdev->dev);
-> +
-> +	if (!vdev->pci_saved_state)
-> +		return;
-> +
-> +	pci_load_saved_state(pdev, vdev->pci_saved_state);
-> +	pci_restore_state(pdev);
-> +}
-> +
->  int vfio_pci_core_sriov_configure(struct vfio_pci_core_device *vdev,
->  				  int nr_virtfn)
->  {
-> @@ -2313,6 +2324,7 @@ EXPORT_SYMBOL_GPL(vfio_pci_core_sriov_configure);
-> =20
->  const struct pci_error_handlers vfio_pci_core_err_handlers =3D {
->  	.error_detected =3D vfio_pci_core_aer_err_detected,
-> +	.reset_done =3D vfio_pci_core_aer_reset_done,
->  };
->  EXPORT_SYMBOL_GPL(vfio_pci_core_err_handlers);
-> =20
+Thanks for the review!
 
-Feel free to add my
-Reviewed-by: Julian Ruess <julianr@linux.ibm.com>
+On 19/01/2026 16:10, Dave Hansen wrote:
+> On 1/19/26 05:01, Ryan Roberts wrote:
+> ...
+>> Cc: stable@vger.kernel.org
+> 
+> Since this doesn't fix any known functional issues, if it were me, I'd
+> leave stable@ alone. It isn't clear that this is stable material.
+
+I listed 2 issues in the commit log; I agree that issue 1 falls into the
+category of "don't really care", but issue 2 means that kstack randomization is
+currently trivial to defeat. That's the reason I thought it would valuable in
+stable.
+
+But if you're saying don't bother and others agree, then this whole patch can be
+dropped; this is just intended to be the backportable fix. Patch 3 reimplements
+this entirely for upstream.
+
+I'll wait and see if others have opinions if that's ok?
+
+> 
+>> --- a/include/linux/sched.h
+>> +++ b/include/linux/sched.h
+>> @@ -1591,6 +1591,10 @@ struct task_struct {
+>>  	unsigned long			prev_lowest_stack;
+>>  #endif
+>>  
+>> +#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
+>> +	u32				kstack_offset;
+>> +#endif
+>> +
+>>  #ifdef CONFIG_X86_MCE
+>>  	void __user			*mce_vaddr;
+> 
+> Nit: This seems to be throwing a u32 potentially in between a couple of
+> void*/ulong sized objects.
+
+Yeah, I spent a bit of time with pahole but eventually concluded that it was
+difficult to find somewhere to nestle it that would work reliably cross arch.
+Eventually I just decided to group it with other stack meta data.
+
+> 
+> It probably doesn't matter with struct randomization and it's really
+> hard to get right among the web of task_struct #ifdefs. But, it would be
+> nice to at _least_ nestle this next to another int-sized thing.
+> 
+> Does it really even need to be 32 bits? x86 has this comment:
+> 
+>>         /*
+>>          * This value will get limited by KSTACK_OFFSET_MAX(), which is 10
+>>          * bits. The actual entropy will be further reduced by the compiler
+>>          * when applying stack alignment constraints (see cc_stack_align4/8 in
+>>          * arch/x86/Makefile), which will remove the 3 (x86_64) or 2 (ia32)
+>>          * low bits from any entropy chosen here.
+>>          *
+>>          * Therefore, final stack offset entropy will be 7 (x86_64) or
+>>          * 8 (ia32) bits.
+>>          */
+
+For more recent kernels it's 6 bits shifted by 4 for 64-bit kernels or 8 bits
+shifted by 2 for 32-bit kernels regardless of arch. So could probably make it
+work with 8 bits of storage. Although I was deliberately trying to keep the
+change simple, since it was intended for backporting. Patch 3 rips it out.
+
+Overall I'd prefer to leave it all as is. But if people don't think we should
+backport, then let's just drop the whole patch.
 
 Thanks,
-Julian
+Ryan
+
+
 
