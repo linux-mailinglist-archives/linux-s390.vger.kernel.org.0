@@ -1,128 +1,192 @@
-Return-Path: <linux-s390+bounces-15951-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-15941-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EJfsG1XNb2mgMQAAu9opvQ
-	(envelope-from <linux-s390+bounces-15951-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 20 Jan 2026 19:45:41 +0100
+	id UEkyAqggcGlRVwAAu9opvQ
+	(envelope-from <linux-s390+bounces-15941-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 21 Jan 2026 01:41:12 +0100
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F32149BB9
-	for <lists+linux-s390@lfdr.de>; Tue, 20 Jan 2026 19:45:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CBFF44E9D7
+	for <lists+linux-s390@lfdr.de>; Wed, 21 Jan 2026 01:41:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9BA94845F88
-	for <lists+linux-s390@lfdr.de>; Tue, 20 Jan 2026 16:51:08 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 55FE2661227
+	for <lists+linux-s390@lfdr.de>; Tue, 20 Jan 2026 12:05:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBE2B339870;
-	Tue, 20 Jan 2026 16:45:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9DB4378D8F;
+	Tue, 20 Jan 2026 12:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QBGzZJcM"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47258313290;
-	Tue, 20 Jan 2026 16:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F163513635E
+	for <linux-s390@vger.kernel.org>; Tue, 20 Jan 2026 12:01:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768927539; cv=none; b=k3xr9RXQ1SZkzeO1d4u6Aj1flx5Tf8XqYf5WxMIS+HBj82j7J/j5H0IAQymVpazT1lJUx9mtwCrD6GLIk4ubK3srBKDkJYAUcFE3hKZRqLgfcEFyfNUrEY9igMDcDncsnHiyN0ejTPdzcgKk1ESLXrj/OgCIPrZPd4uTPn6ppw8=
+	t=1768910481; cv=none; b=Pf4u6MH16G1YSiMdoHM7zgEHttkcgw7NT6oxnVTX3LcgY/WrzFkbRJF8VLWORWZ348wU2As+vdcs6uSodRLzzT5OSa6P6xezo/OzQbQGbTmyUHgeRdJzgeuHdEDt3CWFzD356vgWWGFFTjUnY1XHUcp8t7x8L3rJL6ShZ6XqUqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768927539; c=relaxed/simple;
-	bh=EktYAkt/rHqN46GzGHWmpJQENSXTbh6gia76OHdxpfE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pLPyJyhUnNvt0CBFFOcfT6Evn22OiGNQqFRLbrC7sbS+80ahOpyYRjJZ88Y3eppVEJ+1pjghvROVBFhTuKM/q+470zpS20yeQj6RKONlBBstwekWypSVM2WLLLvsmnHypJJcFe6pRQ5r3iN98WPo0PKfrJhe2iUslg0l1yOq3lU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E55491476;
-	Tue, 20 Jan 2026 08:45:30 -0800 (PST)
-Received: from [10.1.39.200] (XHFQ2J9959.cambridge.arm.com [10.1.39.200])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 600763F694;
-	Tue, 20 Jan 2026 08:45:33 -0800 (PST)
-Message-ID: <c5922290-f01c-4c77-995a-9a0ef89053a1@arm.com>
-Date: Tue, 20 Jan 2026 16:45:31 +0000
+	s=arc-20240116; t=1768910481; c=relaxed/simple;
+	bh=rOd9yTpdEpOmqr8gV3Zvtz93VcNjmSVSiEIE/dTz7Yg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ak8QGJsHs9EmkdWUa+n/T10DMerEzz0S9oBc+BnLZfCnmnBIoPZlOmhQ4RnVTfgMGuhubzfUJhoU5fHK5PxJkxEBybl+cmBCkP8zDCcLNo8swZsc5qJCSKUdn6BZIiRdtXKwWPFAIdbgwWsf4vgmjOok8Dovafysq7tA6gl64qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QBGzZJcM; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-64b921d9e67so8889776a12.3
+        for <linux-s390@vger.kernel.org>; Tue, 20 Jan 2026 04:01:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768910478; x=1769515278; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pGTA45Ofysyie+s0KKre7pJ1MVbPnUxT25h6KktO9Bs=;
+        b=QBGzZJcMFazeNJqhcgBMNIlqAiDs9auo7F3JevfSYVfSo8O17+6tn092shOyPJ6jDo
+         X7jl+SaIG8jTDU7GLyk8kr/PkaV4h4qOl2RYWMuftWJ8utZqhPvbTfWRJu9cXVCBZHvl
+         fX6zZXHuUeHrum7C1FDMzkb6BiM42vLzGsDqtFw5wIdf/3o0KWfLF55YZlh7cJtkSNYX
+         a49P9BmudsF863wMHZ18FVQ23564MmN6o26QB72Q+xCaTwYeva0Yxyw3NrCUgth0cr6l
+         qWTap8WX4vp2vJlScClpD9PK1Gjzfu9gR4ghUA3L7XD/FhcuC5IsBujA50qlWDhS5piZ
+         r+xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768910478; x=1769515278;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=pGTA45Ofysyie+s0KKre7pJ1MVbPnUxT25h6KktO9Bs=;
+        b=liOgayx+FT7nKc0JUVZjNqxxrJbnvtBkT3UBL/QqdxZqNYmDqBftBcms1W1pfoWjBQ
+         nnN0add1h4wBU6wlhYKkp/FSCg9l0ZbBnvQbWFhdudjEU6Ieb7eeezJDzcXOHODOdBFq
+         R2CCNAZR+z9EuVCfi63GIqzoymKIgTgCaZ7H37P0Weov24gWNEJ0HtW4SGqVGvLAftxe
+         C4r7ub73LbMtHem5xuk6nJ4jt0l6KGB6Ndq0h5aQszTNxm69zKroJM2wLV8I02qvy/+l
+         PHu4axkuGtlAS1eiVUuROb47phDs3oP2g7GI8QsyXrzN6qgmPT08vvnUaeGqiSv7jrGU
+         EcZA==
+X-Forwarded-Encrypted: i=1; AJvYcCUHZk3VSQ3cDJY6irzVnWBoG/ein1T3dHeL6oTGhtMhf3F67TsPy74p8sPVHkkoXbVXiWk1nt2SupeE@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9skGYVZscDygtGWca4fW6cxPSb9osw6lzTpq1RDiS52lctgzT
+	/0JokWdqbpwA5xHrYE38FbV6roEiKHU8+r1MTgMNHQ1M7mGbTqWbkBWEPO0x+g==
+X-Gm-Gg: AY/fxX6JLQEX7f2+BHVjxIjlxmjKEUeOYnzfitHHQjb7/0Wlm46lmOzhqSb7t+iqZHK
+	/gakxTafJrnO6KDSUqcaRchRYQKlD9cv8X058nV0xjizNRJHGiUcGmEG6uyYQvTlzm0YpNsRL25
+	uGRtB0/sk5Fm1VDHWvwn4XsQbx2ofTEzPadI1Ky+Shz0pBW19bnWODL96Bt32+esQnMAV11htGZ
+	CChXHkbDgHu5N2k6lBxNh3JG2fBzQ6WuG78V9X/OrdLG0j2nZmNJvrVWCIHGD/nnN0YRy2BJ3Th
+	POk5YsVTN5tQr1Jk9xbXqFJK9iYYTiGMnju58HEI3pvonvab4q2LcpnkcSbSjLDFFsqrpLzRmNS
+	vedDqKeG0w+svli7KvCzI/w3ZAuPoNVtIvsaVgN5NRi/4S0SeqCPbshaO+0S7fP5REM2JzNzS7P
+	4vHxWJMEQyyoGbgJGMyXLfd1/x4bXQkZCbikvljaMjBLS+BfoUwSw3
+X-Received: by 2002:a05:6000:4202:b0:432:a9fb:68f8 with SMTP id ffacd0b85a97d-4356a02643dmr16216419f8f.1.1768903412929;
+        Tue, 20 Jan 2026 02:03:32 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43569997f41sm27420500f8f.38.2026.01.20.02.03.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jan 2026 02:03:32 -0800 (PST)
+Date: Tue, 20 Jan 2026 10:03:31 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: "Arnd Bergmann" <arnd@arndb.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?=
+ <thomas.weissschuh@linutronix.de>, "David S . Miller"
+ <davem@davemloft.net>, "Andreas Larsson" <andreas@gaisler.com>, "Andy
+ Lutomirski" <luto@kernel.org>, "Thomas Gleixner" <tglx@kernel.org>, "Ingo
+ Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>, "Dave Hansen"
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "Heiko Carstens"
+ <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
+ Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger"
+ <borntraeger@linux.ibm.com>, "Sven Schnelle" <svens@linux.ibm.com>,
+ sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, Linux-Arch
+ <linux-arch@vger.kernel.org>, linux-s390@vger.kernel.org
+Subject: Re: [PATCH 4/4] asm-generic/bitsperlong.h: Add sanity checks for
+ __BITS_PER_LONG
+Message-ID: <20260120100331.1f57aa99@pumpkin>
+In-Reply-To: <7b10344c-bb71-44fb-a391-32f7784db0e6@app.fastmail.com>
+References: <20260116-vdso-compat-checkflags-v1-0-4a83b4fbb0d3@linutronix.de>
+	<20260116-vdso-compat-checkflags-v1-4-4a83b4fbb0d3@linutronix.de>
+	<1a77fda4-3cf6-4c19-aa36-b5f0e305b313@zytor.com>
+	<20260119163559-b20b14d7-56ca-4f17-8800-83f618d778b8@linutronix.de>
+	<f3bd8bfd-d66c-45fe-a634-9ac418806f40@zytor.com>
+	<7b10344c-bb71-44fb-a391-32f7784db0e6@app.fastmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/3] Fix bugs and performance of kstack offset
- randomisation
-Content-Language: en-GB
-To: Dave Hansen <dave.hansen@intel.com>, Kees Cook <kees@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, Arnd Bergmann
- <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
- "Jason A. Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>,
- Jeremy Linton <jeremy.linton@arm.com>,
- David Laight <david.laight.linux@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20260119130122.1283821-1-ryan.roberts@arm.com>
- <20fb97f1-7e50-485a-bdfd-a2901d20ec84@intel.com>
- <C502BCE6-2FB2-4A06-93A8-E8DEDFC22914@kernel.org>
- <785a7d90-babe-43af-93a6-c220c1877bcf@arm.com>
- <a8ca3483-d61a-41bd-9b1b-17a8f3ac03eb@intel.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <a8ca3483-d61a-41bd-9b1b-17a8f3ac03eb@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [0.34 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-1.46 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[arm.com : No valid SPF, No valid DKIM,none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-15951-lists,linux-s390=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[31];
-	FREEMAIL_TO(0.00)[intel.com,kernel.org,arm.com,linux.ibm.com,ellerman.id.au,dabbelt.com,eecs.berkeley.edu,linutronix.de,redhat.com,alien8.de,linux.intel.com,arndb.de,zx2c4.com,gmail.com];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-15941-lists,linux-s390=lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[20];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DMARC_POLICY_ALLOW(0.00)[gmail.com,none];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	FROM_HAS_DN(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ryan.roberts@arm.com,linux-s390@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[davidlaightlinux@gmail.com,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROM(0.00)[];
-	R_DKIM_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[arm.com:mid,ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo]
-X-Rspamd-Queue-Id: 0F32149BB9
+	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo]
+X-Rspamd-Queue-Id: CBFF44E9D7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 20/01/2026 16:37, Dave Hansen wrote:
-> On 1/20/26 08:32, Ryan Roberts wrote:
->> I don't think this question was really addressed to me, but I'll give my opinion
->> anyway; I agree it's pretty binary - it will either work or it will explode.
->> I've tested on arm64 and x86_64 so I have high confidence that it works. If you
->> get it into -next ASAP it has 3 weeks to soak before the merge window opens
->> right? (Linus said he would do an -rc8 this cycle). That feels like enough time
->> to me. But it's your tree 😉
-> 
-> First of all, thank you for testing it on x86! Having that one data
-> point where it helped performance is super valuable.
-> 
-> I'm more worried that it's going to regress performance somewhere and
-> then it's going to be a pain to back out. I'm not super worried about
-> functional regressions.
+On Mon, 19 Jan 2026 22:39:53 +0100
+"Arnd Bergmann" <arnd@arndb.de> wrote:
 
-Fair enough. Let's go slow then.
+> On Mon, Jan 19, 2026, at 22:12, H. Peter Anvin wrote:
+> > On 2026-01-19 07:39, Thomas Wei=C3=9Fschuh wrote: =20
+> >>>
+> >>> Do we actually support any compilers which *don't* define __SIZEOF_LO=
+NG__? =20
+> >>=20
+> >> When building the kernel not. I used this pattern because it is used
+> >> further up in the file. There it makes sense as it is actually a users=
+pace
+> >> header which needs to support all kinds of compilers.
+> >> But this new check is gated behind __KERNEL__ anyways...
+> >> For the next revision I will move it into the regular kernel-internal
+> >> bitsperlong.h. That will be less confusing and still handle the vDSO b=
+uild,
+> >> due to the way our header hierarchy works.
+> >>  =20
+> >
+> > The point is that we can simply do:
+> >
+> > #define __BITS_PER_LONG (__SIZEOF_LONG__ << 3)
+> >
+> > ... and it will always be consistent. =20
+>=20
+> We have discussed this before, but decided it was too early to
+> assume that userspace compilers are recent enough for that.
+> According to godbolt.org, gcc-4.1 lacks __SIZEOF_LONG__ while
+> gcc-4.4 has it, as do all versions of clang. Not sure what other
+> compilers one may encounter using Linux kernel headers.
+
+For instance MSVC doesn't define __SIZEOF_LONG__ or __x86_64__.
+Unlikely to be used, but...
+
+So you can use __SIZEOF_LONG__ if it is defined, if not hunt for
+something else (possible just fixed in the installed headers).
+But in the latter case (at least) a compile-time check that the
+value is correct makes sense.
+And that can be done portably - probable with a negative array size.
+
+	David
+
+>=20
+>      Arnd
+>=20
+
 
