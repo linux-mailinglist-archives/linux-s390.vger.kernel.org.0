@@ -1,171 +1,185 @@
-Return-Path: <linux-s390+bounces-15947-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-15952-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AC0xAaVacGm8XgAAu9opvQ
-	(envelope-from <linux-s390+bounces-15947-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 21 Jan 2026 05:48:37 +0100
+	id 8MbuLGvib2n8RwAAu9opvQ
+	(envelope-from <linux-s390+bounces-15952-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 20 Jan 2026 21:15:39 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id A342B51306
-	for <lists+linux-s390@lfdr.de>; Wed, 21 Jan 2026 05:48:36 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BE944B1D7
+	for <lists+linux-s390@lfdr.de>; Tue, 20 Jan 2026 21:15:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 048496888AE
-	for <lists+linux-s390@lfdr.de>; Tue, 20 Jan 2026 15:07:43 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0F7CF50B1E8
+	for <lists+linux-s390@lfdr.de>; Tue, 20 Jan 2026 18:45:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AD9546AEF1;
-	Tue, 20 Jan 2026 14:52:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91044453498;
+	Tue, 20 Jan 2026 18:45:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pPSOBYBt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AV/ELTjQ"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA9A46AEEC;
-	Tue, 20 Jan 2026 14:52:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37CD42882A
+	for <linux-s390@vger.kernel.org>; Tue, 20 Jan 2026 18:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768920740; cv=none; b=SU2ez78nZYYu0KvQMm0kZcp3Mz4MvOCNB8dPLKgu2fRYzuf4G7Qok2RuL0ZOpEkd/0xqWN/Jj771UO8CW8jhmI9EYldk0uzxGBaK5cdr7zPgB0FfNz8JNp/2bL7Zfmrlos9Z7+vLmvmTPQ6yZjnTIK/DkM25lNVj2j54UHL4UGI=
+	t=1768934746; cv=none; b=DrfQnkF+euPtJ11mKiTlezQv07YuK1EksH99mqbSxe38rBdc5/FLAu4sjwuqQu5Y0UoKKDTABizT4EKDW+63ji30zc76VNZMvrJd2fiAkm4yF/qpNzla0XQQ98M+GjL8TARG+wIunEFFhfgMET8OfhLTFpadErPCK0rhlMUem2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768920740; c=relaxed/simple;
-	bh=DpCSZAzTuJI/7gGOtphK/DlHzjIiahQ/22C6C32U1mg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KMNN9YkYJCeHmr69XZ7cxDBFiec9a9BJ0x81s7T/ZtOFjHMNp7sDou9PjGuJg2TeHyq3hDB9NBZT3L8iEMyWq3EVM1nlK9O+zDzv3W9MpcTNUkbkIjdnZnHxBBFt7poxrQlIif4ZngsiLjAsFylvzcIsbWRbSp4eyLr5xg0RIYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pPSOBYBt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD110C4AF09;
-	Tue, 20 Jan 2026 14:52:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768920739;
-	bh=DpCSZAzTuJI/7gGOtphK/DlHzjIiahQ/22C6C32U1mg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pPSOBYBtcsR6iQhbXYih9Qp4HdBObVgVQWeBJdOmP5uvW3N0XpRwSuRGUWszm8Wsm
-	 x7X1naATf4iHfH9+WXGmMpEbmoBIzfMBWDcjtXp2ALq+q0DiaZyE+0hf8qZzmfyuAh
-	 +k54n2m4xgJ9vCgrUunkiflZvzFqqvPrajs2pQaTShpqhWcSbbMV55FcEigDfmF0b6
-	 b/su04c8MKtL98toNNGznOkNtlwkGEo9U5PNysWfc/lynAGqRxUMUxxpDP98oacmK/
-	 95IV+zJ4Gik2QAjU0tollXRYSthjis0U+sTqRza5ZxURR6g98HQ8t2T1QaqUfMgxNy
-	 +l4xvmdsJAObg==
-Date: Tue, 20 Jan 2026 15:52:16 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Ben Segall <bsegall@google.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Heiko Carstens <hca@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Kieran Bingham <kbingham@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Mel Gorman <mgorman@suse.de>, Michael Ellerman <mpe@ellerman.id.au>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Xin Zhao <jackzxcui1989@163.com>, linux-pm@vger.kernel.org,
-	linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 01/15] sched/idle: Handle offlining first in idle loop
-Message-ID: <aW-WoBsdb-jKDomL@localhost.localdomain>
-References: <20260116145208.87445-1-frederic@kernel.org>
- <20260116145208.87445-2-frederic@kernel.org>
- <20260119125347.GT830755@noisy.programming.kicks-ass.net>
- <aW6ccexiQaPLQcS1@pavilion.home>
- <ec1fbc52-3e72-4a0f-954c-9ecf581f9e39@amd.com>
+	s=arc-20240116; t=1768934746; c=relaxed/simple;
+	bh=yDbiboXvrRh+ivSKcybv8FalD/6w3BtuEBLuaJUmJwE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h2/TkOmUpsFhyJ9eIyPbTjpk1v83gmGHbslXt6ZmR7MJ6/hvS5caJMBZ/0ARdOqR3q9vWnJrXwA/bVkFENuipaQecECk5MMyxRryEqW+JjWHzPSgJ14xASlhqTdVQS7XeYO5WY+ya+mml+XI3Wff0iPh2/Ej+g5UZ/Z98Nh8U0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AV/ELTjQ; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-4358fb60802so65971f8f.1
+        for <linux-s390@vger.kernel.org>; Tue, 20 Jan 2026 10:45:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768934743; x=1769539543; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=thnE7Lerq2YAOWgwctI0eLWWpc+gSu6vXOqPs3mAkT8=;
+        b=AV/ELTjQ1q2kuPpOal2LcflAh8YWQ0n/W6YBPlugIgwvsrq2Sn8td5EZTtyGf5LG5Z
+         aE2A6UTUU2ExQB22aU73V+hJay8yMrTXF+a0y9kTl7rSaNzpOzepQ0O5ABciIIfNSIFA
+         rSLVpZj60j94NG/XkcXTJuyQsq6VOD4Z9rRIHGrpw+kVFqax/WWLO/EyuruEsHu/To+U
+         Ii+iwTzt1DGIfytCSvXKGvBt/4GsvDQOoeGTJnl4Pz9fVaJ8uKAG5D05pNt366oYAmdu
+         tOyQAx6bR1z6iiWHbPw2ZsIfBlBAlys69iWGylIk8e4ToINaSrZW7B5OyKM+Se+/6FH6
+         523A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768934743; x=1769539543;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=thnE7Lerq2YAOWgwctI0eLWWpc+gSu6vXOqPs3mAkT8=;
+        b=xTxtnodApyhespr49j6aDf7WbMMz0bHw1kAUjOi70qdAPNGJk2hZW3ztHcoznSkhs/
+         jFDiPPC1de0CQaGi3uKmuV/WWUzRGohnoDgER1bWS3sb5icUGTm2icQY5AmG3jLw6PLS
+         J+tg8kGdmXglxPgwBS7Ip5BUcVMMvJmjEe2y2te1FYYN7AF2tqPqK7Qra/RxTuCaRsW7
+         H6c2NP0E3MqzeTqa7R8ZJyCzBkg4cDPcWt1JcJOwG/0e6dDI9wgY0FzKX79MfXj9nRcu
+         +PmcijjulxJtZZmvA+TuNd4TcNSrxBxL9KWUmwzfKOEmSKUVLDfj0gpkne/Hd6s74+Mh
+         5Yww==
+X-Forwarded-Encrypted: i=1; AJvYcCXAo63EryZOuHPli410DA1Z89QtWEn7wbxOBIvBcu5/ZA6bb70baLe5O2tu5JfJp8fYDuWkgTKNJ5VM@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2AXvhz8GtPWF4PQWaXM4F+FmPGrhijvIrNLUDlzw/tsDFV3Cq
+	XeObr6PM08lV/VXWt0U9A7cwa/LraHMZw3RgK/FHVK0z+LI5CTYEunmd
+X-Gm-Gg: AZuq6aIhAX9v+MwsdgscKItYzXO46r/Df4cdTh+6qre5FIdOn3USDRfhpQvtjJLALPT
+	KcWo/LJASx/YY/gqG1wD4TWHuCVy/TiyD3zyBtAzMcn8B5OKYdJx1NyDGNwiKS3sMDcRXTWPu9t
+	HAAHAWQPy5PlVvvl5e0bNX8AbFKDENWbe1shA71z/IqQQLIEku8WXhD2IGdnYiAQfgK+TwFSaVD
+	/DDc8ik/5dwIPdvVNTgKMf1bmQlet/y2KKEqcuHwjalWNFSBG3aG1UEXijB3z3WRS3pF8550/ur
+	w7b0IvLXoQPq8H1f0+tFN9BGEsQM2+CA1LO8P19cLloEzVr2lZhEysne/EKSp7+SSJ06RYHbDZ0
+	t+N9DCFGPzzzMzdgolo8UGJlICE910DfA5djSsNuJ1NLh00UTv465pXuxyHzTzGsg3t9XFULbRA
+	SEUtdPLjRyAFzNHODdWmuZ0UIxEyxhAHSAUvTumixHgPvZC3qUXz1o
+X-Received: by 2002:a05:6000:2484:b0:430:fcbc:dc4a with SMTP id ffacd0b85a97d-434d75c16c1mr25592154f8f.19.1768934743113;
+        Tue, 20 Jan 2026 10:45:43 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4356997eb1fsm30869735f8f.35.2026.01.20.10.45.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jan 2026 10:45:42 -0800 (PST)
+Date: Tue, 20 Jan 2026 18:45:41 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>, Kees Cook <kees@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan
+ <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley
+ <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
+ <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, Thomas
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
+ Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "Gustavo
+ A. R. Silva" <gustavoars@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mark
+ Rutland <mark.rutland@arm.com>, "Jason A. Donenfeld" <Jason@zx2c4.com>, Ard
+ Biesheuvel <ardb@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4 0/3] Fix bugs and performance of kstack offset
+ randomisation
+Message-ID: <20260120184541.0a463cd1@pumpkin>
+In-Reply-To: <a8ca3483-d61a-41bd-9b1b-17a8f3ac03eb@intel.com>
+References: <20260119130122.1283821-1-ryan.roberts@arm.com>
+	<20fb97f1-7e50-485a-bdfd-a2901d20ec84@intel.com>
+	<C502BCE6-2FB2-4A06-93A8-E8DEDFC22914@kernel.org>
+	<785a7d90-babe-43af-93a6-c220c1877bcf@arm.com>
+	<a8ca3483-d61a-41bd-9b1b-17a8f3ac03eb@intel.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ec1fbc52-3e72-4a0f-954c-9ecf581f9e39@amd.com>
-X-Spamd-Result: default: False [-0.46 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-1.46 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-15947-lists,linux-s390=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[infradead.org,vger.kernel.org,kernel.org,linux.ibm.com,linutronix.de,google.com,gmail.com,arm.com,redhat.com,siemens.com,nvidia.com,suse.de,ellerman.id.au,goodmis.org,linaro.org,163.com,lists.ozlabs.org];
-	RCPT_COUNT_TWELVE(0.00)[35];
+	TAGGED_FROM(0.00)[bounces-15952-lists,linux-s390=lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[31];
 	MIME_TRACE(0.00)[0:+];
-	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DMARC_POLICY_ALLOW(0.00)[gmail.com,none];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	R_SPF_SOFTFAIL(0.00)[~all];
+	R_SPF_SOFTFAIL(0.00)[~all:c];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[frederic@kernel.org,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:7979, ipnet:213.196.21.0/24, country:US];
+	FROM_NEQ_ENVFROM(0.00)[davidlaightlinux@gmail.com,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo,localhost.localdomain:mid]
-X-Rspamd-Queue-Id: A342B51306
+	TAGGED_RCPT(0.00)[linux-s390];
+	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo]
+X-Rspamd-Queue-Id: 2BE944B1D7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Le Tue, Jan 20, 2026 at 09:56:12AM +0530, K Prateek Nayak a écrit :
-> Hello Frederic, Peter,
-> 
-> On 1/20/2026 2:34 AM, Frederic Weisbecker wrote:
-> > Le Mon, Jan 19, 2026 at 01:53:47PM +0100, Peter Zijlstra a écrit :
-> >> On Fri, Jan 16, 2026 at 03:51:54PM +0100, Frederic Weisbecker wrote:
-> >>
-> >>>  kernel/sched/idle.c | 11 ++++++-----
-> >>>  1 file changed, 6 insertions(+), 5 deletions(-)
-> >>>
-> >>> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-> >>> index c174afe1dd17..35d79af3286d 100644
-> >>> --- a/kernel/sched/idle.c
-> >>> +++ b/kernel/sched/idle.c
-> >>> @@ -260,6 +260,12 @@ static void do_idle(void)
-> >>>  {
-> >>>  	int cpu = smp_processor_id();
-> >>>  
-> >>> +	if (cpu_is_offline(cpu)) {
-> >>
-> >> Does it make sense to make that: if (unlikely(cpu_is_offline(cpu))) ?
-> > 
-> > Yes indeed!
-> 
-> nit. but don't we inherit it from:
-> 
-> #define cpu_is_offline(cpu)     unlikely(!cpu_online(cpu))
-> 
-> so it will end up being annotated with unlikely() no?
+On Tue, 20 Jan 2026 08:37:43 -0800
+Dave Hansen <dave.hansen@intel.com> wrote:
 
-Ah right!
+> On 1/20/26 08:32, Ryan Roberts wrote:
+> > I don't think this question was really addressed to me, but I'll give m=
+y opinion
+> > anyway; I agree it's pretty binary - it will either work or it will exp=
+lode.
+> > I've tested on arm64 and x86_64 so I have high confidence that it works=
+. If you
+> > get it into -next ASAP it has 3 weeks to soak before the merge window o=
+pens
+> > right? (Linus said he would do an -rc8 this cycle). That feels like eno=
+ugh time
+> > to me. But it's your tree =F0=9F=98=89 =20
+>=20
+> First of all, thank you for testing it on x86! Having that one data
+> point where it helped performance is super valuable.
+>=20
+> I'm more worried that it's going to regress performance somewhere and
+> then it's going to be a pain to back out. I'm not super worried about
+> functional regressions.
 
-> 
-> -- 
-> Thanks and Regards,
-> Prateek
-> 
+Unlikely, on x86 the 'rdtsc' is ~20 clocks on Intel cpu and even slower
+on amd (according to Agner).
+(That is serialised against another rdtsc rather than other instructions.)
+Whereas the four TAUSWORTHE() are independent so can execute in parallel.
+IIRC each is a memory read and 5 ALU instructions - not much at all.
+The slow bit will be the cache miss on the per-cpu data.
+You lose a clock at the end because gcc will compile the a | b | c | d
+as (((a | b) | c) | d) not ((a | b) | (c | d)).
 
--- 
-Frederic Weisbecker
-SUSE Labs
+I think someone reported the 'new' version being faster on x86,
+that might be why.
+
+	David
 
