@@ -1,204 +1,241 @@
-Return-Path: <linux-s390+bounces-15992-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-15995-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IMqELPd+cmmklQAAu9opvQ
-	(envelope-from <linux-s390+bounces-15992-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 22 Jan 2026 20:48:07 +0100
+	id WP6VDgyJcmkPmAAAu9opvQ
+	(envelope-from <linux-s390+bounces-15995-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 22 Jan 2026 21:31:08 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 427C66D3D8
-	for <lists+linux-s390@lfdr.de>; Thu, 22 Jan 2026 20:48:07 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 952696D6BB
+	for <lists+linux-s390@lfdr.de>; Thu, 22 Jan 2026 21:31:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0E1543056675
-	for <lists+linux-s390@lfdr.de>; Thu, 22 Jan 2026 19:45:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B66B23013D7E
+	for <lists+linux-s390@lfdr.de>; Thu, 22 Jan 2026 20:31:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 951573994A4;
-	Thu, 22 Jan 2026 19:45:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3A223A3CA1;
+	Thu, 22 Jan 2026 20:31:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="a0Jajtzd"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s9cWSTdk"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3223994D7;
-	Thu, 22 Jan 2026 19:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769111126; cv=none; b=isR5eNjUDdX+7rneJtmemk4GRerY8MGBowuZ1ifZ+WavO14/KzYubBJsyZT15PUB+zClx73VlPpicdrTMOIrIdtPqWPh4ybsCYIFKGAxfU6UR0tk8O5ZLfyoBZTLUZqQ8z9B13wnMlRaYh6HsOYWe1IgLCCRIfBkG1mFf/wBl1Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769111126; c=relaxed/simple;
-	bh=nSmySBySN2Hw/5EveVaUYdlLwQnt1kcp5+gNd5r/IIc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uBib1ItB7QJUwOIjMPcJT/oZr9JRUfBKrxtEXxe7K7RXpICN5zIlqEKm6RkQy/2NgbYVIjoLQR5QVS80HOdeSm2NQQJvDtHHP0vitDUMp7vsBD20gy36B73aFF8zICnXeIG8pqWhwjpR1BqNa7n49jekbPEViyIsDBNZbuVIvMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=a0Jajtzd; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 60MCo21S028543;
-	Thu, 22 Jan 2026 19:44:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=JFB8K2p7vYMAhirId
-	hFMBgDuwuin6nX5Bg2vjH4kOmg=; b=a0JajtzdXrcvf/YGhE/lHZ/zSd/qDRmLF
-	HQGArGEVwYbFIGMR8ZgyIIXlQ+K6jDVqpzFSjcUTK7IOhcIvf1p/1VJT6m6m4vfo
-	q3ek8dOJH3drgP/HSAHy6/Ag+y9BZ74XpkN6EdjmpL/aNtnCMZKtj+a3isvAaH7C
-	jNo0AQ34EEJYamzSBdE+YqYBBxJGzYE7IQWWnMZ8euyPJXIA5gcONKaC5mNm9tC9
-	c1IOpdJHCS7oUoIDjZC1rtMqi312a+S1six167t1t/qyeOTy2xl5sFirX39f7hVu
-	YHq5KJ84fR/Foh6K1rGUWPNBS85qgZbolkBpqC2F3kBDhTClIQQ+Q==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bt60eycxn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Jan 2026 19:44:50 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 60MJ5X9T001441;
-	Thu, 22 Jan 2026 19:44:49 GMT
-Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4brpyk49xh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 Jan 2026 19:44:49 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 60MJimHc19923678
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 22 Jan 2026 19:44:48 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B5A0B58060;
-	Thu, 22 Jan 2026 19:44:48 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D672558056;
-	Thu, 22 Jan 2026 19:44:47 +0000 (GMT)
-Received: from IBM-D32RQW3.ibm.com (unknown [9.61.248.216])
-	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 22 Jan 2026 19:44:47 +0000 (GMT)
-From: Farhan Ali <alifm@linux.ibm.com>
-To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Cc: helgaas@kernel.org, lukas@wunner.de, alex@shazbot.org, clg@redhat.com,
-        stable@vger.kernel.org, alifm@linux.ibm.com, schnelle@linux.ibm.com,
-        mjrosato@linux.ibm.com, julianr@linux.ibm.com
-Subject: [PATCH v8 9/9] vfio: Remove the pcie check for VFIO_PCI_ERR_IRQ_INDEX
-Date: Thu, 22 Jan 2026 11:44:37 -0800
-Message-ID: <20260122194437.1903-10-alifm@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260122194437.1903-1-alifm@linux.ibm.com>
-References: <20260122194437.1903-1-alifm@linux.ibm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1625339CB3C
+	for <linux-s390@vger.kernel.org>; Thu, 22 Jan 2026 20:30:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769113862; cv=pass; b=nAUxqiEnoDvbLAmCccc1pNJ6hkBNDCJAWDTUbmhCufuFUFUXyPNBgY/8/30pZXfGnFX9b6lW3Vm2RBVcz8tXaG/gcnr7oHbW5xPCBdXUiIWtY/hSHMC00Xp+nJF18M3nlen53m1PKTSo3IszlOLkbREX41mBFkX60uaq1ubz2l0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769113862; c=relaxed/simple;
+	bh=ASZplhRqMNnIuXI0Gmdw3pwrAxGsQ+x5dICWN1yZY84=;
+	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SsdxosHwAnbiBKJifD0OsLm2O9CrQMFDja8VWXBXsEc5H719qzdSzLf9ASYG1MR36oxm1TmwWO3/cmIUaZ3W0Spilsc70elMYg1tNKs0+Qz6+4br2cxCaGfYOd1NKjNAtCMgKmwzFs1ZwxJDERyw8gKYi6iIgQGv6iPpZ7MSl7c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=s9cWSTdk; arc=pass smtp.client-ip=209.85.217.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-5f1b9fe06b8so1255915137.0
+        for <linux-s390@vger.kernel.org>; Thu, 22 Jan 2026 12:30:57 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769113855; cv=none;
+        d=google.com; s=arc-20240605;
+        b=I2FMFAt8vgMeX67Q1qyErerAb1PG7gL4gLm4SIzBVo9mi71GfXks2qkwGylRbenteO
+         6pfoagM8l8EVKkPF22Ra/R54FzDholmL8s/R2hLUy2v2H3kSjcfNGo2XU6PO723GdtUZ
+         gNnGN8juAcphhBskeK+W0GFvGUOGKANtkAzZL9cHoA4DmnC3GoRefCb5Crb55roqxQ+J
+         wf2nJDVc90HNhL4lwqTHxMZF7BnLEkTjry77Dlg/zg1NX/IQrhS6Q1OfK9kvyD4lDqjH
+         b8mOK/Y9+//Sszhwd5xfzB+6zO21rdLEAU0IWMoEz79JGc4kk836StfbE95gs31jKqva
+         GukQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:dkim-signature;
+        bh=BQj97zlME5zzETPT7vCk6obWp/pKKcD8Mr+mou6nGos=;
+        fh=cte0KqAPNLrJIx/DF4LGM5EoML0REPU24dSJ2hZyH+4=;
+        b=X8+ypW+Te6VGsP84BNM1r1SbjQ/E4fBcvK+2Q1ui8KIz8sxPbXWmRORahTPlLM578O
+         lL8dcj8Jhnms8qXqWz7AE1sp1gxBnLzr8bcPWVlX3yv8j93cnY6qmZnrYSuhhcvIhefF
+         jHvPFNvQ+jb2N7dZHPiFq2DE/97FH6icvlgk6Vl0sln9+6H2P5wPDTIPFwNINjbQasfq
+         4fLMKci5dNGxGHOcTy7KonxvxoQ12HC1ESq4KqlBoUHwwPgk6ufYqXjyPHXIl9QeCUPx
+         bdrZx8aHLFtsNyEz8Un67jz2T7luIGLNGVAnVejBFrxzgsjFr6L8kWv42EBwIfUq2f/z
+         4oyQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1769113855; x=1769718655; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BQj97zlME5zzETPT7vCk6obWp/pKKcD8Mr+mou6nGos=;
+        b=s9cWSTdkMw0DTkJpj9RD4xeqwJKTvnEuQS6o2lmxQr8yI+JxygOpcXlQyNkodNWeZN
+         QlKZDCW7kA5FN/zuUfMW+HDnPtJb7+ympe2kD78TTtBk3Ck2FvYXAReK2lt1XILLSw5H
+         QBh7wNT0aVnhZEGEA9qz8tOTHNL8dWPiJ/VwHvxBkQ4Iw8zhruQzF52rDb9aaAEUrJGQ
+         yps1d7pBZmraCX4fYe9cRXLfT55iWdDhZtRb8YG5PeNfs5p2Z5eKu/TyGz2PN2paNK5J
+         HBy8zc98eJILnjq8u5EUZT90+sZ4aSreI25/HQbyOqGmDODp8u4zcr2XsIp4ecAuBwL/
+         6qXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769113855; x=1769718655;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BQj97zlME5zzETPT7vCk6obWp/pKKcD8Mr+mou6nGos=;
+        b=cDGpgGKFCXgbdnHxYXB/nl9wBU9e3BnK1iabDUm2sio55bKsl2zOJ6iFNhbypleWaX
+         QDZe7ziOwj8M4DDKvoIl8qCdCGvfZtL2bRunMEoY5Qm7TXNAP1JH/5DyB7P8HhCQHkir
+         yfKH6N/hbIG/B4nmK9eKXKUyThgeJaHpbt0RFZitgRcAQRYvUR9UIYdAwSiFfN5bjRWQ
+         QrLHKaD0ubspTZwxZBlLtRxHwHDpGe0XHbI4C2I+/lHAC7T7ui1fLy5gOQxYNgY8/de+
+         CJL+Xkt5qoHOcA5rGX2WnS8D8RIb0Uz37ME9UXX2vimRvAXirg3M/+/h9HVrfK66Qa4d
+         4Lhw==
+X-Forwarded-Encrypted: i=1; AJvYcCVS+wKo+2hrSuM8OdwEZuWSRU5DPukRkJpnMowrdBSRhJV9zmGO7lROS0s7mEJeOOkURo7XJJLm5Siv@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCXaHG1f6VPyhGYL3ypU8v8Sh9TvkF19AFl33X7gNM08B3qfol
+	1EaZIT+me3RdSmU7o6C7bNjMRgVm+OMoNLfjqX5dIIBzsrSjLGH4lP1/FoASC2+cs7VbGknmg4S
+	P2AeERUa68D1BvOSQKhpyFUzCcjsoFqnzpNQa8lRU
+X-Gm-Gg: AZuq6aKIP0ZRxFTfn+BhPdoCStNCTQRPgqiU8DKe9gNEUTpeP4dd1aOoffdKmjncMLi
+	oD6uy44PecjkSh6dUD5i3K9AJKve9tL9tkxRmnW/KPSLPCuf2FniTxFR3RvT/mmtihkSNk1ELMF
+	VzgHi1KH4GpZBKaEruRZtSXV2wq0PM0av2RzZYtfXhMbDKZ26n4WPNqane/g/6F8e+nPVa4ouDh
+	akRrK1830LmliY5ZHRxjqgTaT9LZ0JMPm0yMhg4CD3jYFbxjkcuRnbn9gxrbgi+iDGUS36m7IjV
+	9dxEKhPOI+B1nyymNXJILypJ
+X-Received: by 2002:a05:6102:d89:b0:5ee:a8c4:18d4 with SMTP id
+ ada2fe7eead31-5f54bd0c3f6mr359613137.35.1769113854610; Thu, 22 Jan 2026
+ 12:30:54 -0800 (PST)
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 22 Jan 2026 12:30:53 -0800
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 22 Jan 2026 12:30:53 -0800
+From: Ackerley Tng <ackerleytng@google.com>
+In-Reply-To: <f2f2a6bd-5cb4-46c9-a0f8-3240670094b5@amazon.com>
+References: <20260114134510.1835-1-kalyazin@amazon.com> <20260114134510.1835-8-kalyazin@amazon.com>
+ <CAEvNRgEzVhEzr-3GWTsE7GSBsPdvVLq7WFEeLHzcmMe=R9S51w@mail.gmail.com>
+ <a2b79af7-e5d1-4668-bff3-606f57d32dfc@amazon.com> <CAEvNRgF46M1jp0+eBu2wQMO7P1afyo00SOkENFwvB2KYX3dnFA@mail.gmail.com>
+ <f2f2a6bd-5cb4-46c9-a0f8-3240670094b5@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=WMdyn3sR c=1 sm=1 tr=0 ts=69727e32 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
- a=9wliL4UQvNVLrYCoNVcA:9
-X-Proofpoint-GUID: uB2SGKpzz1QKxIOpcEkg3bPA05Gqv7oQ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTIyMDE0OCBTYWx0ZWRfX/qbkvG3RNTxI
- 0Z4nHy5CmRVB9boqXQac/5hPESgGwOm0S1+kD1FRS4rfdCXfz4zYJxQLBLAu3pNc2gDMXYQF6R2
- F1GX6Y1G1GYJksoaNprFMpC21K8aGh7ovDt57m5gD8tiaAad2GVyEBJDERkBhJQEbraLD2W/ly7
- KCh7KdtkOouDEtky3cSfC0M0sD4A9JQgCRkQkbKXuTpL4Dw5be+1L+NqLQazagaM9yQlZtlE9z+
- bAxnKzf2fK6jnMVWi6syuVzsMmIkZUez2gQUTLnEDENyVsa6/GCKRIEtTpT6sDY3dewZPoVPInl
- Gt8Qf60IeDIzhA3sux7V85qNtLgPc/Eu1OxDHuVkxGBhEor3wrJ9aBoapRFSIJsYwFjbdjIMMlg
- mQi8EHB7EMpYo6MMn9J2jw8WEVhKq5bPGr57HtYFGfp0z999O6WXSoznq/lSwwCZ6ClRy+ip46M
- 6emdZJuoeJjhVwotQVQ==
-X-Proofpoint-ORIG-GUID: uB2SGKpzz1QKxIOpcEkg3bPA05Gqv7oQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.20,FMLib:17.12.100.49
- definitions=2026-01-22_04,2026-01-22_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 malwarescore=0 suspectscore=0 bulkscore=0 adultscore=0
- impostorscore=0 spamscore=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2601150000
- definitions=main-2601220148
+Date: Thu, 22 Jan 2026 12:30:53 -0800
+X-Gm-Features: AZwV_QhoTAbsDcZFNCQXVZ12J6m5MEBpBa-k8I2xwSPIY6AXvlNDgQnkgPrJ79I
+Message-ID: <CAEvNRgEd=Uh09dU_P7_vvzRpOyMYd=OKazpkxzr=VLe5HcQhGw@mail.gmail.com>
+Subject: Re: [PATCH v9 07/13] KVM: guest_memfd: Add flag to remove from direct map
+To: kalyazin@amazon.com, "Kalyazin, Nikita" <kalyazin@amazon.co.uk>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, 
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>, 
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, "kernel@xen0n.name" <kernel@xen0n.name>, 
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, 
+	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>, 
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>
+Cc: "pbonzini@redhat.com" <pbonzini@redhat.com>, "corbet@lwn.net" <corbet@lwn.net>, 
+	"maz@kernel.org" <maz@kernel.org>, "oupton@kernel.org" <oupton@kernel.org>, 
+	"joey.gouly@arm.com" <joey.gouly@arm.com>, "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, 
+	"yuzenghui@huawei.com" <yuzenghui@huawei.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, 
+	"will@kernel.org" <will@kernel.org>, "seanjc@google.com" <seanjc@google.com>, 
+	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"hpa@zytor.com" <hpa@zytor.com>, "luto@kernel.org" <luto@kernel.org>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "willy@infradead.org" <willy@infradead.org>, 
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "david@kernel.org" <david@kernel.org>, 
+	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>, 
+	"Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>, "vbabka@suse.cz" <vbabka@suse.cz>, 
+	"rppt@kernel.org" <rppt@kernel.org>, "surenb@google.com" <surenb@google.com>, "mhocko@suse.com" <mhocko@suse.com>, 
+	"ast@kernel.org" <ast@kernel.org>, "daniel@iogearbox.net" <daniel@iogearbox.net>, 
+	"andrii@kernel.org" <andrii@kernel.org>, "martin.lau@linux.dev" <martin.lau@linux.dev>, 
+	"eddyz87@gmail.com" <eddyz87@gmail.com>, "song@kernel.org" <song@kernel.org>, 
+	"yonghong.song@linux.dev" <yonghong.song@linux.dev>, 
+	"john.fastabend@gmail.com" <john.fastabend@gmail.com>, "kpsingh@kernel.org" <kpsingh@kernel.org>, 
+	"sdf@fomichev.me" <sdf@fomichev.me>, "haoluo@google.com" <haoluo@google.com>, 
+	"jolsa@kernel.org" <jolsa@kernel.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>, 
+	"jhubbard@nvidia.com" <jhubbard@nvidia.com>, "peterx@redhat.com" <peterx@redhat.com>, 
+	"jannh@google.com" <jannh@google.com>, "pfalcato@suse.de" <pfalcato@suse.de>, 
+	"shuah@kernel.org" <shuah@kernel.org>, "riel@surriel.com" <riel@surriel.com>, 
+	"ryan.roberts@arm.com" <ryan.roberts@arm.com>, "jgross@suse.com" <jgross@suse.com>, 
+	"yu-cheng.yu@intel.com" <yu-cheng.yu@intel.com>, "kas@kernel.org" <kas@kernel.org>, 
+	"coxu@redhat.com" <coxu@redhat.com>, "kevin.brodsky@arm.com" <kevin.brodsky@arm.com>, 
+	"maobibo@loongson.cn" <maobibo@loongson.cn>, "prsampat@amd.com" <prsampat@amd.com>, 
+	"mlevitsk@redhat.com" <mlevitsk@redhat.com>, "jmattson@google.com" <jmattson@google.com>, 
+	"jthoughton@google.com" <jthoughton@google.com>, "agordeev@linux.ibm.com" <agordeev@linux.ibm.com>, 
+	"alex@ghiti.fr" <alex@ghiti.fr>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, 
+	"borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>, "chenhuacai@kernel.org" <chenhuacai@kernel.org>, 
+	"dev.jain@arm.com" <dev.jain@arm.com>, "gor@linux.ibm.com" <gor@linux.ibm.com>, 
+	"hca@linux.ibm.com" <hca@linux.ibm.com>, 
+	"Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, "palmer@dabbelt.com" <palmer@dabbelt.com>, 
+	"pjw@kernel.org" <pjw@kernel.org>, 
+	"shijie@os.amperecomputing.com" <shijie@os.amperecomputing.com>, "svens@linux.ibm.com" <svens@linux.ibm.com>, 
+	"thuth@redhat.com" <thuth@redhat.com>, "wyihan@google.com" <wyihan@google.com>, 
+	"yang@os.amperecomputing.com" <yang@os.amperecomputing.com>, 
+	"vannapurve@google.com" <vannapurve@google.com>, "jackmanb@google.com" <jackmanb@google.com>, 
+	"aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>, "patrick.roy@linux.dev" <patrick.roy@linux.dev>, 
+	"Thomson, Jack" <jackabt@amazon.co.uk>, "Itazuri, Takahiro" <itazur@amazon.co.uk>, 
+	"Manwaring, Derek" <derekmn@amazon.com>, "Cali, Marco" <xmarcalx@amazon.co.uk>
+Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
+	R_DKIM_ALLOW(-0.20)[google.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-15992-lists,linux-s390=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	TO_DN_NONE(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[redhat.com,lwn.net,kernel.org,arm.com,huawei.com,google.com,linutronix.de,alien8.de,linux.intel.com,zytor.com,infradead.org,linux-foundation.org,oracle.com,suse.cz,suse.com,iogearbox.net,linux.dev,gmail.com,fomichev.me,ziepe.ca,nvidia.com,suse.de,surriel.com,intel.com,loongson.cn,amd.com,linux.ibm.com,ghiti.fr,eecs.berkeley.edu,dabbelt.com,os.amperecomputing.com,amazon.co.uk,amazon.com];
+	TAGGED_FROM(0.00)[bounces-15995-lists,linux-s390=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[alifm@linux.ibm.com,linux-s390@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[google.com:+];
+	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
-	DKIM_TRACE(0.00)[ibm.com:+];
+	FROM_NEQ_ENVFROM(0.00)[ackerleytng@google.com,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[96];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 427C66D3D8
+	NEURAL_HAM(-0.00)[-0.987];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 952696D6BB
 X-Rspamd-Action: no action
 
-We are configuring the error signaling on the vast majority of devices and
-it's extremely rare that it fires anyway. This allows userspace to be
-notified on errors for legacy PCI devices. The Internal Shared Memory (ISM)
-device on s390x is one such device. For PCI devices on IBM s390x error
-recovery involves platform firmware and notification to operating system
-is done by architecture specific way. So the ISM device can still be
-recovered when notified of an error.
+Nikita Kalyazin <kalyazin@amazon.com> writes:
 
-Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
----
- drivers/vfio/pci/vfio_pci_core.c  | 8 ++------
- drivers/vfio/pci/vfio_pci_intrs.c | 3 +--
- 2 files changed, 3 insertions(+), 8 deletions(-)
+>
+> [...snip...]
+>
+>>>>> @@ -533,6 +580,8 @@ static void kvm_gmem_free_folio(struct folio *folio)
+>>>>>         kvm_pfn_t pfn = page_to_pfn(page);
+>>>>>         int order = folio_order(folio);
+>>>>>
+>>>>> +     kvm_gmem_folio_restore_direct_map(folio);
+>>>>> +
+>>>>
+>>>> I can't decide if the kvm_gmem_folio_no_direct_map(folio) should be in
+>>>> the caller or within kvm_gmem_folio_restore_direct_map(), since this
+>>>> time it's a folio-specific property being checked.
+>>>
+>>> I'm tempted to keep it similar to the kvm_gmem_folio_zap_direct_map()
+>>> case.  How does the fact it's a folio-speicific property change your
+>>> reasoning?
+>>>
+>>
+>> This is good too:
+>>
+>>    if (kvm_gmem_folio_no_direct_map(folio))
+>>            kvm_gmem_folio_restore_direct_map(folio)
+>
+> It turns out we can't do that because folio->mapping is gone by the time
+> filemap_free_folio() is called so we can't inspect the flags.  Are you
+> ok with only having this check when zapping (but not when restoring)?
+> Do you think we should add a comment saying it's conditional here?
+>
 
-diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index c92c6c512b24..9d44df9e21db 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -778,8 +778,7 @@ static int vfio_pci_get_irq_count(struct vfio_pci_core_device *vdev, int irq_typ
- 			return (flags & PCI_MSIX_FLAGS_QSIZE) + 1;
- 		}
- 	} else if (irq_type == VFIO_PCI_ERR_IRQ_INDEX) {
--		if (pci_is_pcie(vdev->pdev))
--			return 1;
-+		return 1;
- 	} else if (irq_type == VFIO_PCI_REQ_IRQ_INDEX) {
- 		return 1;
- 	}
-@@ -1155,11 +1154,8 @@ static int vfio_pci_ioctl_get_irq_info(struct vfio_pci_core_device *vdev,
- 	switch (info.index) {
- 	case VFIO_PCI_INTX_IRQ_INDEX ... VFIO_PCI_MSIX_IRQ_INDEX:
- 	case VFIO_PCI_REQ_IRQ_INDEX:
--		break;
- 	case VFIO_PCI_ERR_IRQ_INDEX:
--		if (pci_is_pcie(vdev->pdev))
--			break;
--		fallthrough;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-diff --git a/drivers/vfio/pci/vfio_pci_intrs.c b/drivers/vfio/pci/vfio_pci_intrs.c
-index c76e753b3cec..b6cedaf0bcca 100644
---- a/drivers/vfio/pci/vfio_pci_intrs.c
-+++ b/drivers/vfio/pci/vfio_pci_intrs.c
-@@ -859,8 +859,7 @@ int vfio_pci_set_irqs_ioctl(struct vfio_pci_core_device *vdev, uint32_t flags,
- 	case VFIO_PCI_ERR_IRQ_INDEX:
- 		switch (flags & VFIO_IRQ_SET_ACTION_TYPE_MASK) {
- 		case VFIO_IRQ_SET_ACTION_TRIGGER:
--			if (pci_is_pcie(vdev->pdev))
--				func = vfio_pci_set_err_trigger;
-+			func = vfio_pci_set_err_trigger;
- 			break;
- 		}
- 		break;
--- 
-2.43.0
+I thought kvm_gmem_folio_no_direct_map() only reads folio->private,
+which I think should still be there at the point of
+filemap_free_folio().
 
+>>
+>> [...snip...]
+>>
 
