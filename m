@@ -1,190 +1,198 @@
-Return-Path: <linux-s390+bounces-16026-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16028-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cC7/Al7xdmmcZQEAu9opvQ
-	(envelope-from <linux-s390+bounces-16026-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 26 Jan 2026 05:45:18 +0100
+	id KPUkCaM/d2mMdQEAu9opvQ
+	(envelope-from <linux-s390+bounces-16028-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 26 Jan 2026 11:19:15 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4AD8D83F26
-	for <lists+linux-s390@lfdr.de>; Mon, 26 Jan 2026 05:45:17 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49B9786AD9
+	for <lists+linux-s390@lfdr.de>; Mon, 26 Jan 2026 11:19:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0B41C3003EC8
-	for <lists+linux-s390@lfdr.de>; Mon, 26 Jan 2026 04:45:16 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B952D3005176
+	for <lists+linux-s390@lfdr.de>; Mon, 26 Jan 2026 10:18:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E5C830AAD4;
-	Mon, 26 Jan 2026 04:45:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D622533033C;
+	Mon, 26 Jan 2026 10:18:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="FtP+P/nw"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dWWpu+o1"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E14A2BE643;
-	Mon, 26 Jan 2026 04:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713C1330327;
+	Mon, 26 Jan 2026 10:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769402715; cv=none; b=Bc/v1Q3bckhOCcl7THUZzmiaVZCnADmNW6cpYcK7tryWea/5PKBeXhMO5702rgn6SEZja3Eb1pfaf4dO/+zEKsk+MKHB8GnY2G8IyMolUN3tWXkWKOr6j3K6A5NgjaeEO/GYo0mEiB5ac29f6GKrMwTekbo1AeDSlFctTfmzBJc=
+	t=1769422733; cv=none; b=lqyg9FOANEguz4aZQCrLK0aR0nE1ZDmpKcC1i86etbKLM1IWAsP35/RoB2yTqReQgMn/WUfnkK6cAMKjXiIVcobITeejGba7V7Fk0jgSJX34kJQ3/75O/RgpRzywQ26Q+yRd4P0qfbHSPBun2/G85IXUEXoYWyNYWxJzThaNgEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769402715; c=relaxed/simple;
-	bh=7JsM/gnRfDjeAFoXpMboMV0qznRqVcl8kGxzWzlrzLM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AtJ1N1Fl1Fmc+jGrJln5Uze6fo5Km9KKhotoIZbhjiYilJItzJ7HK+EQOkW6y9MMT8D53nGKFZvKG9YC6ihZESpAJ2lRgVgbQi8701Th+aumhWgGlFOJk2tBjiZqOdARbEy+8F38SI/UpzL72d85zXvae+TsN4kKRBvKN91CesY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=FtP+P/nw; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1769402702; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-	bh=qeRZ1JA5OEFGKF+6RQGHK7VQN10Ba7Jw8xgV9NzvLuw=;
-	b=FtP+P/nw5fFT/78bsU0d0Bm+T57z/ReVz0NR7sY9x8rtIQGZ1UErynKEUqNu5Exe7FBwI9SbmOi3QvA5vqje/fxFf/yHKhYTXsAmPKKYyVa0ENswSNOChe2aoZDQH+muPtMaJoDdSEGQEUp4izFRT+iNksgIM2gdc9W7S8Fw2d8=
-Received: from localhost(mailfrom:alibuda@linux.alibaba.com fp:SMTPD_---0WxnZief_1769402701 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 26 Jan 2026 12:45:01 +0800
-Date: Mon, 26 Jan 2026 12:45:01 +0800
-From: "D. Wythe" <alibuda@linux.alibaba.com    >
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Liu Jian <liujian56@huawei.com>, alibuda@linux.alibaba.com,
-	dust.li@linux.alibaba.com, sidraya@linux.ibm.com,
-	wenjia@linux.ibm.com, mjambigi@linux.ibm.com,
-	tonylu@linux.alibaba.com, guwen@linux.alibaba.com,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, horms@kernel.org,
-	guangguan.wang@linux.alibaba.com, linux-rdma@vger.kernel.org,
-	linux-s390@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH net v2] net/smc: fix one NULL pointer dereference in
- smc_ib_is_sg_need_sync()
-Message-ID: <20260126044501.GA18724@j66a10360.sqa.eu95>
-References: <20250828124117.2622624-1-liujian56@huawei.com>
- <20250909094532.GD341237@unreal>
+	s=arc-20240116; t=1769422733; c=relaxed/simple;
+	bh=Ucmve+dluwtbj64/JNEJDhr/8sDAs37zDDHqIbQQZHo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V6AsLN+O37OnON605FGzyv7+0iWxpLciuqKKtck/GXNSNQwqxGrAHAyiydRl93aJspt7GZRnnotsOHNxoJa538XcZXJwHtMfF/IYEgoIVu81MsO9A1WEOt30Ni793Kcjsz0+ZfTS/pVJSJwg9J4USKryZoh2lrM+/7nzXUh1SHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dWWpu+o1; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 60PDP21P021571;
+	Mon, 26 Jan 2026 10:18:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=2qjptHA0YmxDPIgJHXhmwBovQ8WntJd8SiYn0/Dpr
+	q8=; b=dWWpu+o1xH4/2suz8Gn0MqbQyTLYzeSz5BLuffjifaIx2FW0/3Q5xVYwn
+	Eazu/t/XZKJNjCBpARXT/kjSDBx18VJSVrjN6zvbiFm8Q+eIbikusB6LnYoKGheO
+	co7wKOMAmHptnlayg4UPk1z67MWH2WEx/tPhnWUqzGrBLT95xBCE5sLCevYDGDvB
+	XpK8RY6jb6P3gZxkSgbK3co/GC1/kcZ21+HNU0B3l3kHdTf6QgLATNZ6Coqvclkk
+	PBbFazRCAFZ5NrVH6j/1IatjA7w1tse4OcJDZLPvhnfD08HnLa15U1stWW0Mhl17
+	fCskIsH7Kvda06odsrgehPa9zkYSg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvnt7fg30-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 Jan 2026 10:18:44 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 60QAGaHx025557;
+	Mon, 26 Jan 2026 10:18:43 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvnt7fg2x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 Jan 2026 10:18:43 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 60Q5oc88019630;
+	Mon, 26 Jan 2026 10:18:42 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4bw9dmv67k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 Jan 2026 10:18:42 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 60QAIb8l61669794
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 26 Jan 2026 10:18:38 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CCE332004F;
+	Mon, 26 Jan 2026 10:18:37 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9F2702004E;
+	Mon, 26 Jan 2026 10:18:37 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 26 Jan 2026 10:18:37 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+        irogers@google.com
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, japo@linux.ibm.com,
+        Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH linux-next] perf test: Fix test perf evlist for z/VM s390x
+Date: Mon, 26 Jan 2026 11:18:23 +0100
+Message-ID: <20260126101823.2090077-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250909094532.GD341237@unreal>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Lcn6XM0tDV287h4KNVlgvwpqvVKko1Z0
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI2MDA4OCBTYWx0ZWRfX5EmYOGKpqBkm
+ 2WeOwJDngoAOv4Y5i5oyUrQQEY9rGtAklme+yBaFP4+3sXazqMc70CtYdsiKG6ph7Cie+1z/T4e
+ YeKh4uAu5MF0zKrtHxTDxkP5aqpj1oJaedpZ7+bn7lDHGQ742FfoB5hPjkIyhpEQ6bocZzlV8z6
+ CbTqGtEuiFT49pvvW83QEiWTrycB20LOT3olO4qi8lmxhS9DHCn92Glu9Zw4UtjRzWlIkYedDl/
+ KZ/oJoz9ne1ow5IdXQtLQt+ACfB4KTgvNzYKDC91UqeFwHF3/e66C02XbSAGmO4hhQ1B6WSaqeY
+ O7ir0MExb6M0yH8aiq5rRZqdUvdqSE4soOsPTmNp26m93q3m3AKyxOtH1J4GFJmCQ3InNFV+Ewh
+ b8sVUKup6fz/pVwNX1vT57U9vjsXXZswisyDkcmS040TW4rrkWT9eDZKaIxKa8MRygf1KQliKA8
+ d4/xC1qSVjpEgfBgz9w==
+X-Authority-Analysis: v=2.4 cv=Zs3g6t7G c=1 sm=1 tr=0 ts=69773f84 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8
+ a=wtJ5Ps83P7bbEB45bnAA:9
+X-Proofpoint-ORIG-GUID: 44tDskLyFHCKiXVPU9L22Dosj6seD7AJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.20,FMLib:17.12.100.49
+ definitions=2026-01-26_02,2026-01-22_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 lowpriorityscore=0 adultscore=0 phishscore=0 suspectscore=0
+ bulkscore=0 impostorscore=0 priorityscore=1501 malwarescore=0 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2601150000 definitions=main-2601260088
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-9.16 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-16026-lists,linux-s390=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[18];
 	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-16028-lists,linux-s390=lfdr.de];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[tmricht@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[alibuda@linux.alibaba.com,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWELVE(0.00)[13];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,huawei.com:email,linux.alibaba.com:dkim,j66a10360.sqa.eu95:mid]
-X-Rspamd-Queue-Id: 4AD8D83F26
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 49B9786AD9
 X-Rspamd-Action: no action
 
-On Tue, Sep 09, 2025 at 12:45:32PM +0300, Leon Romanovsky wrote:
-> On Thu, Aug 28, 2025 at 08:41:17PM +0800, Liu Jian wrote:
-> > BUG: kernel NULL pointer dereference, address: 00000000000002ec
-> > PGD 0 P4D 0
-> > Oops: Oops: 0000 [#1] SMP PTI
-> > CPU: 28 UID: 0 PID: 343 Comm: kworker/28:1 Kdump: loaded Tainted: G        OE       6.17.0-rc2+ #9 NONE
-> > Tainted: [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
-> > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.15.0-1 04/01/2014
-> > Workqueue: smc_hs_wq smc_listen_work [smc]
-> > RIP: 0010:smc_ib_is_sg_need_sync+0x9e/0xd0 [smc]
-> > ...
-> > Call Trace:
-> >  <TASK>
-> >  smcr_buf_map_link+0x211/0x2a0 [smc]
-> >  __smc_buf_create+0x522/0x970 [smc]
-> >  smc_buf_create+0x3a/0x110 [smc]
-> >  smc_find_rdma_v2_device_serv+0x18f/0x240 [smc]
-> >  ? smc_vlan_by_tcpsk+0x7e/0xe0 [smc]
-> >  smc_listen_find_device+0x1dd/0x2b0 [smc]
-> >  smc_listen_work+0x30f/0x580 [smc]
-> >  process_one_work+0x18c/0x340
-> >  worker_thread+0x242/0x360
-> >  kthread+0xe7/0x220
-> >  ret_from_fork+0x13a/0x160
-> >  ret_from_fork_asm+0x1a/0x30
-> >  </TASK>
-> > 
-> > If the software RoCE device is used, ibdev->dma_device is a null pointer.
-> > As a result, the problem occurs. Null pointer detection is added to
-> > prevent problems.
-> > 
-> > Fixes: 0ef69e788411c ("net/smc: optimize for smc_sndbuf_sync_sg_for_device and smc_rmb_sync_sg_for_cpu")
-> > Signed-off-by: Liu Jian <liujian56@huawei.com>
-> > ---
-> > v1->v2:
-> > move the check outside of loop.
-> >  net/smc/smc_ib.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/net/smc/smc_ib.c b/net/smc/smc_ib.c
-> > index 53828833a3f7..a42ef3f77b96 100644
-> > --- a/net/smc/smc_ib.c
-> > +++ b/net/smc/smc_ib.c
-> > @@ -742,6 +742,9 @@ bool smc_ib_is_sg_need_sync(struct smc_link *lnk,
-> >  	unsigned int i;
-> >  	bool ret = false;
-> >  
-> > +	if (!lnk->smcibdev->ibdev->dma_device)
-> > +		return ret;
-> 
-> Please use ib_uses_virt_dma() function for that.
-> 
-> It is clearly stated in the code:
->   2784 struct ib_device {
->   2785         /* Do not access @dma_device directly from ULP nor from HW drivers. */
->   2786         struct device                *dma_device;     
-> 
-> Thanks
-> 
->
+Perf test case 'perf evlist tests' fails on z/VM machines on s390.
 
-Hi Leon,
+The failure is causes by event cycles. This event is not available
+on virtualized machines like z/VM on s390.
+Change to software event cpu-clock to fix this.
 
-Sorry for the late reply, I just noticed this and thank you for your review.
-I agree completely with your feedback: we should not be accessing ibdev->dma_device
-directly. Following your advice, replacing the
+    Output before:
+      # ./perf test 78
+      79: perf evlist tests              : FAILED!
+      #
 
-	if (!lnk->smcibdev->ibdev->dma_device)
+    Output after:
+      # ./perf test 78
+      79: perf evlist tests              : Ok
+      #
 
-check with ib_uses_virt_dma() is straightforward and absolutely the correct
-thing to do for that part of the logic.
+Fixes: b04d2b919912 ("perf test: Fix test case perf evlist tests for s390x")
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Tested-by: Jan Polensky <japo@linux.ibm.com>
+Reviewed-by: Jan Polensky <japo@linux.ibm.com>
+Cc: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/shell/evlist.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-However, this has led me to a further challenge. The main purpose of the
-smc_ib_is_sg_need_sync() function is to get the result of dma_need_sync().
-This means that even after correctly using ib_uses_virt_dma(), the function
-still needs to call dma_need_sync(ibdev->dma_device, ...), which forces us
-right back into the direct access pattern we are trying to eliminate.
-
-Since the RDMA doesn't currently offer a helper for this "check" functionality,
-I'd like to propose adding one. What are your thoughts on a new helper like
-the one below, which would allow us to solve this cleanly?
-
-/* ib_verbs.h */
-static inline bool ib_dma_need_sync(struct ib_device *dev, dma_addr_t dma_addr) {
-	return !ib_uses_virt_dma(dev) && dma_need_sync(dev->dma_device, dma_addr);
-}
-
-Best wishes,
-D. Wythe
+diff --git a/tools/perf/tests/shell/evlist.sh b/tools/perf/tests/shell/evlist.sh
+index 5632be391710..8a22f4171c07 100755
+--- a/tools/perf/tests/shell/evlist.sh
++++ b/tools/perf/tests/shell/evlist.sh
+@@ -21,13 +21,13 @@ trap trap_cleanup EXIT TERM INT
+ 
+ test_evlist_simple() {
+ 	echo "Simple evlist test"
+-	if ! perf record -e cycles -o "${perfdata}" true 2> /dev/null
++	if ! perf record -e cpu-clock -o "${perfdata}" true 2> /dev/null
+ 	then
+ 		echo "Simple evlist [Failed record]"
+ 		err=1
+ 		return
+ 	fi
+-	if ! perf evlist -i "${perfdata}" | grep -q "cycles"
++	if ! perf evlist -i "${perfdata}" | grep -q "cpu-clock"
+ 	then
+ 		echo "Simple evlist [Failed to list event]"
+ 		err=1
+-- 
+2.52.0
 
 
