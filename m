@@ -1,82 +1,82 @@
-Return-Path: <linux-s390+bounces-16080-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16076-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +FTsFunbeGmwtgEAu9opvQ
-	(envelope-from <linux-s390+bounces-16080-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 16:38:17 +0100
+	id mODFIMHfeGkGtwEAu9opvQ
+	(envelope-from <linux-s390+bounces-16076-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 16:54:41 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 070C496DD9
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 16:38:16 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EE01972A3
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 16:54:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DCD6B304E0FD
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 15:34:20 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A998B3013DA4
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 15:34:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02C75346AC1;
-	Tue, 27 Jan 2026 15:34:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A6F92FE598;
+	Tue, 27 Jan 2026 15:33:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Wh4gcOtU"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ajPwMbf5"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E9A2DFA46;
-	Tue, 27 Jan 2026 15:33:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45112E62C3;
+	Tue, 27 Jan 2026 15:33:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769528040; cv=none; b=DC7fBe6+j5j4AU7rxIJA4V2dezsE6wgHlIv/O+xlxSz9a5u94ePEifNiZTIbu1IGXzteJM2zOYU/4lk/H6FeGKB+kIDQbOqjtCpHmr5y83fAW7uPCkwELoBnpoRaCdgzm2F/2kyeX43PABRVuVcjQz/gwA243f8MjoPcxzJIqac=
+	t=1769528039; cv=none; b=jj3iSn3YXLaAbUqYx9lsWBuxGuMbFdWpps2FRBLKMSaeGGX1fxvYR7P7XSQhgHdPsAZ6fOPAaeQJDOA9o/l0TY1KoIJW5KZlhOZFP6pGMR5nrBmVjzjnIe/FiHgKcq6KzUbVoLfBHsQ1ylIEcaNkFOjeS+IM034cxn0g1TsyR6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769528040; c=relaxed/simple;
-	bh=8EpHxZmbo5MA89kwaBMFvsr5o9QT3VveoDjwUfOUgBE=;
+	s=arc-20240116; t=1769528039; c=relaxed/simple;
+	bh=fckhmEHCu07z8Mxu4nptZTCsNrlx4U4UfODG2qNYOg8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZTPLr5TGkwXj/AytfDjCl0gtUh/uYbyrmlsLc+KAlQ4nwREvUWyzib6xbIWegUUGVoqhya0YWFkFTvlnZGvpa/vtSB6nPeHgnZq5ygB9hI/QTUtE5fUJROKCIRS4Rd1zZU/+UjsUoLKESJA2m6hKGdg+wyAIqcgFu5ns9ykZVg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Wh4gcOtU; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=uUu8QGuSc4zJ1ITdCHTFY3XlYu7HXaiqPOxf7sB9phh1Tb2l2C7KKlb41b6WEOK03gSd3ce+qnFXuS//cf889XDOFGB6r/eCGppA8jZQrraxun89msGJ93llAbviiqtvWePi/nr8XgZFDn0xRQAsVhdPMJSbNnwkMpfQJOZX4CU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ajPwMbf5; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 60R7xVZj021517;
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 60R6iIkV015740;
 	Tue, 27 Jan 2026 15:33:40 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=A6LNSorwzVv4H5Mhx
-	oq3cEEmuKyMfMFGQ0xYyBTQIzg=; b=Wh4gcOtUlcxviEzQI7qHSGK6ylDMHEGaX
-	UHrFXrMQIaH6eb4iNOOo9Qx/BjmRUWg7Gf3R8fFzf/a4xNDFtKmGCO/Ab1A6LVE6
-	fE9g5tpVs5U3e7h34jUQlEmcCDIZh/3m85fdMBdcj0jmdVeqRJc7qMk1plw8+/Qj
-	OYcueNumLGcnZgNDzzsZvR4zkbChNvgtWXH4OXKEJMYS10mlW+cflpHjwXSRa9jc
-	DcTSLMS/ghMXqHK8S79p9NVy3fMa6h+Yzj4Z2gWPX2/kewHV+Ezil/lIZUH0nvsx
-	Owouv8nzKelRR6pqbYVFdRi2jOr+VwIrM2MDYXLJL8F86OHhUsToA==
+	:mime-version:references:subject:to; s=pp1; bh=QZ99OWNmMBbUEI/up
+	S6Lh/Pr3C7xmJcHJQVJOuXZK4Q=; b=ajPwMbf5t+HJKMFljln0ZDk5HV+yBxiyo
+	AN8y6ysrBrh6Yov6dj9cekMV1wjIKOOTMV8elnCWRH/J+sXgQeQEywsRVlhN0pp5
+	FZd0ScQQPx+UHXUMzdvPg/IDQGuXIOcopKpvqS9Tp5IY9QWUk0Mq5LGoBfCf/e+8
+	HTRtRjccvcZzQ58Vff3b9w34Qgx4YsBpDinwT3vX7limAC66uh+dBZHoVhiSbKKU
+	4z07P3nw+UYGYT9mBC34HJN5Ay5Vt+PwSRWRHH4wBL5OR1EPhrOZY7Cyppw8MoOG
+	S7Ji4wkYvyi3PGg4OaS8E/gaqdLtD931R3uJpPsyE8QQz5cWS2NJg==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvkgmmnnc-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvkgmmnnf-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 27 Jan 2026 15:33:39 +0000 (GMT)
 Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 60RFJc72000308;
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 60RFXdlo028803;
 	Tue, 27 Jan 2026 15:33:39 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvkgmmnmy-1
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvkgmmnmx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 27 Jan 2026 15:33:39 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 60RDXlxe026805;
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 60REjchQ018399;
 	Tue, 27 Jan 2026 15:33:38 GMT
 Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4bw9wk94jf-1
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4bwb41rx1u-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 27 Jan 2026 15:33:38 +0000
 Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 60RFXYR217826170
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 60RFXYXi17826174
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Tue, 27 Jan 2026 15:33:34 GMT
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1187E20040;
+	by IMSVA (Postfix) with ESMTP id 5A3F920043;
 	Tue, 27 Jan 2026 15:33:34 +0000 (GMT)
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C1C4020043;
-	Tue, 27 Jan 2026 15:33:33 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 16A8F2004E;
+	Tue, 27 Jan 2026 15:33:34 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
 	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 27 Jan 2026 15:33:33 +0000 (GMT)
+	Tue, 27 Jan 2026 15:33:34 +0000 (GMT)
 From: Jens Remus <jremus@linux.ibm.com>
 To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         linux-s390@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
@@ -101,9 +101,9 @@ Cc: Jens Remus <jremus@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
         Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>,
         "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>,
         Dylan Hatch <dylanbhatch@google.com>
-Subject: [RFC PATCH v1 2/5] unwind_user/sframe: Add support for signal frame indication
-Date: Tue, 27 Jan 2026 16:33:28 +0100
-Message-ID: <20260127153331.2902504-3-jremus@linux.ibm.com>
+Subject: [RFC PATCH v1 3/5] s390/vdso: Annotate __kernel_[rt_]sigreturn as signal frames
+Date: Tue, 27 Jan 2026 16:33:29 +0100
+Message-ID: <20260127153331.2902504-4-jremus@linux.ibm.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260127153331.2902504-1-jremus@linux.ibm.com>
 References: <20260127153331.2902504-1-jremus@linux.ibm.com>
@@ -116,19 +116,19 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Authority-Analysis: v=2.4 cv=Gr1PO01C c=1 sm=1 tr=0 ts=6978dad3 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
  a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
- a=2aD4vtywDDCJo0oALMAA:9
-X-Proofpoint-GUID: 7V0RLH_uAxNet9SNUFsSWHiZ3uiWnj5f
-X-Proofpoint-ORIG-GUID: zWvwnW9BxTrisa8ZJ1QcNz7HD8q0pL7K
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI3MDEyNSBTYWx0ZWRfX4gj2vaKP5sGl
- j10QJ+t5anyfJa8nl2vSyXDe3LnULkBHEuvNVuz52n6zKXVIIFihkcEdOXrV6ANdnOHxLxuYtPc
- 4XLo0W5gprSAT/M9xbT3wO/fZ1HU5OyJG2e9jfQ2+QC2qgNZRuhxXYoc04pgVH9HqeGr1vMsbpE
- YwcvuJkl3fHQJcS1BVklp7gmSjWyck+l8mHbgEaor+eoA9jgK5Yuoj2RdahoVY5anfdKch3yCr2
- 8khSpefxYHhBce99Uw6yvuEX0rLrKYgwmA3rpaZiYtiR/f/TZAEkq8AcWiCNPQWiSH+913BPU1t
- f9DgCFOfnb2KAgxr0Gf9pSToymbo9L1/S0WJKPQJE1GW+VWs6XRFb//8VFH4Vs4M9AUZoI1Z1Fi
- OLOQFwkI1o3d/h1JIzzNVAVW/qvejxiII44c37yl+GrAxSIxcJw9Zc+shplUDqaZ7IozpGs3mcR
- zyBT2xomHdHC9uMRAGg==
+ a=zNkqyI7T-dXuitzZt0UA:9
+X-Proofpoint-GUID: SY8BXNk1xyheiTHU5IBxjM5Ph5-Sya8r
+X-Proofpoint-ORIG-GUID: _BjtumY_aMyvFAWO4fAwnrAaACY4d7u3
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI3MDEyNSBTYWx0ZWRfX1DV/G7FoRixL
+ PWN30h/Qeq3E5KxxA5Qix73RlQto54TqjoelNNP8ldv9Gqf+Y66qh59LUOAplvSXv0xC6bNkBH8
+ UHeB9lLvxvvHFD7Armf+Ul8TlaW3AtpCyaQcB9AIMMJ+yGuyS1RikwWG9ECh7eqsucNuyGHAkLd
+ 5Cqk3JB0+Au8MUPwk+7iJyNApXXhSQ97RKDkZnX1uR07NMSg8gp3aYMT7HfvD2jrvCYuNEcX3Nk
+ mHp42IJc8At5mZ2TiXjlZWGxrWUcZFQyy+O6G/ERVAhyO0UfXWR0L8zdPxJKiIrYBJRypV5egbS
+ gkNIvhvwXkWDjhdTkmwu8vInRUDwOhqeFtqTH7MmfqgwcSTY0LJ4918SMEsbguML4eGCyP6MfDc
+ dwufAqHukGY1C9vaTe2YeYsQw3Stiq2S8ow/p/RaFeE/ldSFi9DWvRdbhiiycl5At6RtHDNibLV
+ lpcL/1fS6mcKAV3L39g==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-01-27_03,2026-01-27_02,2025-10-01_01
@@ -144,7 +144,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -153,9 +153,9 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCPT_COUNT_TWELVE(0.00)[30];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-16080-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-16076-lists,linux-s390=lfdr.de];
 	DKIM_TRACE(0.00)[ibm.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jremus@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
@@ -164,70 +164,70 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_COUNT_TWELVE(0.00)[13];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 070C496DD9
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linux.ibm.com:mid]
+X-Rspamd-Queue-Id: 3EE01972A3
 X-Rspamd-Action: no action
 
-SFrame V3 represents the assembler directive .cfi_signal_frame using
-a SFrame FDE flag.  Note that a SFrame FDE with this particular flag set
-may have no SFrame FREs.
+The GNU assembler supports CFI directive .cfi_signal_frame with
+binutils 2.17+.  Use it to annotate the vDSO functions
+__kernel_sigreturn() and __kernel_rt_sigreturn() as signal
+frames.
 
-Introduce a SFRAME_V3_FDE_SIGNAL_P() helper macro.  Use it in
-__find_fre() to populate the signal flag in struct unwind_user_frame,
-even if there are no FREs.
+This enables generation of SFrame stack trace information for the
+vDSO to likewise annotate these functions for use in stack tracers,
+such as the kernel unwind user sframe.
 
 Signed-off-by: Jens Remus <jremus@linux.ibm.com>
 ---
- kernel/unwind/sframe.c | 8 +++++++-
- kernel/unwind/sframe.h | 1 +
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ arch/s390/include/asm/dwarf.h             |  3 +++
+ arch/s390/kernel/vdso/vdso_user_wrapper.S | 15 +++++++++++++--
+ 2 files changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
-index 21283e3bda42..9fd2fc1572cc 100644
---- a/kernel/unwind/sframe.c
-+++ b/kernel/unwind/sframe.c
-@@ -446,6 +446,7 @@ static __always_inline int __find_fre(struct sframe_section *sec,
- 				      struct unwind_user_frame *frame)
- {
- 	unsigned char fde_pctype = SFRAME_V3_FDE_PCTYPE(fde->info);
-+	bool signal = SFRAME_V3_FDE_SIGNAL_P(fde->info);
- 	struct sframe_fre_internal *fre, *prev_fre = NULL;
- 	struct sframe_fre_internal fres[2];
- 	unsigned long fre_addr;
-@@ -486,8 +487,11 @@ static __always_inline int __find_fre(struct sframe_section *sec,
- 		prev_fre = fre;
- 	}
+diff --git a/arch/s390/include/asm/dwarf.h b/arch/s390/include/asm/dwarf.h
+index 2f148b15fd7d..e5663d6b11db 100644
+--- a/arch/s390/include/asm/dwarf.h
++++ b/arch/s390/include/asm/dwarf.h
+@@ -35,6 +35,8 @@
+ #define CFI_VAL_OFFSET		nocfi
+ #endif
  
--	if (!prev_fre)
-+	if (!prev_fre) {
-+		if (signal)
-+			goto signal;
- 		return -EINVAL;
-+	}
- 	fre = prev_fre;
++#define CFI_SIGNAL_FRAME	.cfi_signal_frame
++
+ #else /* !BUILD_VDSO */
  
- 	ret = __read_fre_datawords(sec, fde, fre);
-@@ -500,6 +504,8 @@ static __always_inline int __find_fre(struct sframe_section *sec,
- 	sframe_init_rule_data(&frame->fp, fre->fp_ctl, fre->fp_off);
- 	frame->sp_off  = SFRAME_SP_OFFSET;
- 	frame->outermost = SFRAME_V3_FRE_RA_UNDEFINED_P(fre->info);
-+signal:
-+	frame->signal = signal;
+ /*
+@@ -49,6 +51,7 @@
+ #define CFI_RESTORE		nocfi
+ #define CFI_REL_OFFSET		nocfi
+ #define CFI_VAL_OFFSET		nocfi
++#define CFI_SIGNAL_FRAME	nocfi
  
- 	return 0;
- }
-diff --git a/kernel/unwind/sframe.h b/kernel/unwind/sframe.h
-index 8a5322e95403..78432857f84c 100644
---- a/kernel/unwind/sframe.h
-+++ b/kernel/unwind/sframe.h
-@@ -65,6 +65,7 @@ struct sframe_fda_v3 {
- #define SFRAME_V3_FDE_FRE_TYPE(info)		((info) & 0xf)
- #define SFRAME_V3_FDE_PCTYPE(info)		(((info) >> 4) & 0x1)
- #define SFRAME_V3_AARCH64_FDE_PAUTH_KEY(info)	(((info) >> 5) & 0x1)
-+#define SFRAME_V3_FDE_SIGNAL_P(info)		(((info) >> 7) & 0x1)
+ #endif /* !BUILD_VDSO */
  
- #define SFRAME_FDE_TYPE_REGULAR			0
- #define SFRAME_FDE_TYPE_FLEXIBLE		1
+diff --git a/arch/s390/kernel/vdso/vdso_user_wrapper.S b/arch/s390/kernel/vdso/vdso_user_wrapper.S
+index aa06c85bcbd3..757503929ab0 100644
+--- a/arch/s390/kernel/vdso/vdso_user_wrapper.S
++++ b/arch/s390/kernel/vdso/vdso_user_wrapper.S
+@@ -47,6 +47,17 @@ SYM_FUNC_START(__kernel_\func)
+ SYM_FUNC_END(__kernel_\func)
+ .endm
+ 
++.macro vdso_syscall_sf func,syscall
++SYM_FUNC_START(__kernel_\func)
++	CFI_STARTPROC simple
++	CFI_SIGNAL_FRAME
++	svc	\syscall
++	/* Trap, if syscall returns, which shouldn't happen */
++	.insn e,0x0000
++	CFI_ENDPROC
++SYM_FUNC_END(__kernel_\func)
++.endm
++
+ vdso_syscall restart_syscall,__NR_restart_syscall
+-vdso_syscall sigreturn,__NR_sigreturn
+-vdso_syscall rt_sigreturn,__NR_rt_sigreturn
++vdso_syscall_sf sigreturn,__NR_sigreturn
++vdso_syscall_sf rt_sigreturn,__NR_rt_sigreturn
 -- 
 2.51.0
 
