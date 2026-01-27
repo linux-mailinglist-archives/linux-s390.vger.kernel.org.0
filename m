@@ -1,78 +1,78 @@
-Return-Path: <linux-s390+bounces-16069-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16063-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gCXpB7TjeGlJtwEAu9opvQ
-	(envelope-from <linux-s390+bounces-16069-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 17:11:32 +0100
+	id 6HSbJafjeGlJtwEAu9opvQ
+	(envelope-from <linux-s390+bounces-16063-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 17:11:19 +0100
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 655CA977D3
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 17:11:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B3585977BA
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 17:11:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 04A27319B54C
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 15:21:25 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id EE674318EFA0
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 15:20:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84E5F3612E9;
-	Tue, 27 Jan 2026 15:20:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2727C346AC1;
+	Tue, 27 Jan 2026 15:20:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WTnJzchK"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="X1W9jFj+"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8F435CBB0;
-	Tue, 27 Jan 2026 15:20:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E23923E23C;
+	Tue, 27 Jan 2026 15:19:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769527203; cv=none; b=S+osO6pzTcw8GNjU6b6NGaGPgfc1BYaIUN1ERH1BE3hwpMsZeXgH+evd/Vc81qRDW9JHAdypUImFhtHP6nmt6ycJqh2aMXplBgJziqDmZnymaqqSvf7owcXjMZLXwpxPWWXobnT4EfZH/QDu3+13CaGV+pElbLMXNhR0rzMIEwo=
+	t=1769527200; cv=none; b=LbV1VGHbwAlyvYN7d2KN2lmDygXqDJk/erVN+cDoE1ZjCdfW251gOeYwAfLSKZCbQX0wON31vE4Zm2yimlXJMcid2i3s44dCSPaO7g9s/qgXNFWobxpQEKhjjTogjESVKzY3sTU0Xh3gNdXb8qla2tNg9ke4KcNrUp7vSNkEY1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769527203; c=relaxed/simple;
-	bh=NX1lub2wg02nrRuvM/eEfc4uFVh0nxxekKzTNLP34Uk=;
+	s=arc-20240116; t=1769527200; c=relaxed/simple;
+	bh=RT8EBSR8WUQAbyvZRvXCygdtoMjanu9p9cPL0JHiKSc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZcNMCiZEMQNV3XI3lf50tiP2OwrMHv9631Rol3q5wWywzTvrdtH8RBiCNlzu//6EQnQ/WGmkT7zCxy9oxI8qIfj+LHDHPUGqHB8quyTvJG2tPKKRPPEeRhfHyXVmrNqActg9y7EuTo2tqiJNmi8xlkOjI3UdJLjt9Ntj/CqSDQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WTnJzchK; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=Vggo9FU5vnN14XYFjHd5Zdu++Ptv8Rd8JESRpX4BiSQy8HgX0LX+il7ZNnTYFMWVKYakJRjVvN/7sRuGNnhU7dkQrczNfjvgeGjlDqJsHL7V8mX9jAwLicCEqcrvhojC2umnfPUTfyRn1Fp94u7SNjaMta9wBs6p8pemSWdyguU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=X1W9jFj+; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 60R6nRoW030212;
-	Tue, 27 Jan 2026 15:19:38 GMT
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 60R80wX1010200;
+	Tue, 27 Jan 2026 15:19:39 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=TA9Fyu/N//vwb3hoz
-	5GJXxji6d+3johNsY9O2zhB5m4=; b=WTnJzchKYRiUkb5+024ssRHvU3fO1l2kR
-	pYrKvsal+Yo5/yjqVkEvqyexOGl7Igf7yAwye+BB8MR+tp0xvPt9kOrvWaREkAG/
-	VmPOBnkJd+UmFjsDFsKx339XlvWNTOCVH1ZpFA47BTpq3HcWxTxy0lD0b+sRLMnG
-	CEcr5AU24ceY7ZZ2+liPby+QAlv5b5awBTzwf2ofpHSLlz3XCOjNe3AX79+kmUVn
-	ho8lh+uT8Jb1E+qUaCMghNOXkOaoH4OBlLdLqix5R0Js64w5hzEN3BFyGD4AbYba
-	QSvM4C9ff6JyP/EOmpJPP40GjfSU5qbVsYu0GCGQp86ZEzTb0NF9Q==
+	:mime-version:references:subject:to; s=pp1; bh=1TqPmQcpDe5apq/kR
+	pvca83qGv9hWGr5mzGDqs1lLgI=; b=X1W9jFj+b26zgpaIINIlniXat7mR1Vy/3
+	oMasOd4CsZktmzGfSjJd4Y1CFKgfzcQc9UgDOJw/R9GKutk25tj+VXh5+BDx2A02
+	iGzptLL9Q/+xLnfiq58K8e6sKcfdQ7FU0n4bbOIU6J0lwdm44tidIlepfTsrwHDv
+	/OqACNriQHAS8p35cPGNf/xcXPKq+l7nXQtNr7j9amdO+h7H/eAkk3870GR6Zw2t
+	78RxhEyO9zxlXGAJ1KH7w/ou+/Ln+uHZ+seXF+rNhkzEaF3o0kKA+sVZ4FSzcRFJ
+	BAV95Wyo0PkN/xLFS1uuPzOgnfVxzdSeLohoxRf/vBdJQTH//kPSQ==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvnrte1ve-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvnrte1vh-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 27 Jan 2026 15:19:38 +0000 (GMT)
 Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 60RFJbep008249;
-	Tue, 27 Jan 2026 15:19:37 GMT
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 60RFD6S9025596;
+	Tue, 27 Jan 2026 15:19:38 GMT
 Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvnrte1v8-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvnrte1v9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 27 Jan 2026 15:19:37 +0000 (GMT)
 Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 60REptfF017960;
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 60REZjgE017966;
 	Tue, 27 Jan 2026 15:19:36 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4bwb41rvgg-1
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4bwb41rvgh-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 27 Jan 2026 15:19:36 +0000
 Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 60RFJW0u60883424
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 60RFJXJp14680446
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 27 Jan 2026 15:19:32 GMT
+	Tue, 27 Jan 2026 15:19:33 GMT
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B7A6D20040;
-	Tue, 27 Jan 2026 15:19:32 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 0D0B820040;
+	Tue, 27 Jan 2026 15:19:33 +0000 (GMT)
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 736782004D;
+	by IMSVA (Postfix) with ESMTP id BC60020043;
 	Tue, 27 Jan 2026 15:19:32 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
 	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
@@ -101,9 +101,9 @@ Cc: Jens Remus <jremus@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
         Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>,
         "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>,
         Dylan Hatch <dylanbhatch@google.com>
-Subject: [PATCH v4 04/12] s390/vdso: Enable SFrame V3 generation in vDSO
-Date: Tue, 27 Jan 2026 16:19:17 +0100
-Message-ID: <20260127151926.2805123-5-jremus@linux.ibm.com>
+Subject: [PATCH v4 05/12] unwind_user: Enable archs that define CFA = SP_callsite + offset
+Date: Tue, 27 Jan 2026 16:19:18 +0100
+Message-ID: <20260127151926.2805123-6-jremus@linux.ibm.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260127151926.2805123-1-jremus@linux.ibm.com>
 References: <20260127151926.2805123-1-jremus@linux.ibm.com>
@@ -115,20 +115,20 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: lfu8Mof5g3CdoScifPWLHUtF_nYHVS_N
+X-Proofpoint-GUID: KyIC7bF4FuLeyIQSv9yvDDXMGlNmPLkq
 X-Authority-Analysis: v=2.4 cv=Uptu9uwB c=1 sm=1 tr=0 ts=6978d78a cx=c_pps
  a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=meVymXHHAAAA:8
- a=VnNF1IyMAAAA:8 a=aCsQZq_vhc4F8yeggjQA:9 a=2JgSa4NbpEOStq-L5dxp:22
-X-Proofpoint-ORIG-GUID: -C89hkHOri2E7tocAabfmdej8sBQF5UY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI3MDEyMSBTYWx0ZWRfX2IxyCzz44tC+
- yAACqJAY2u7UsL0izW/LgMXbRI0sN5s7c31bazC2Zy9c7lcExHTr+uo4iwFNpn6ZNluFPBtd1fQ
- Z50ALI7znTxOElzf41kOrgAs3vmRwK3mPILuovgaZca6uQWKK2wFTzbO9iYpr5HGrRBqr5ov4yI
- 3qTMNu73kxRmP9gqaJgUYgjFgf/tbiY46zklPs2IiiG0xIwe6w+aqA5KL47UcI2j4qlTusB+ouu
- +qhKvc+aQ2NVWXGlWmqF6F3BQRXTn4i8EhFILKPzkAS5wwzhPNVMLpVB/ZCrDOzEA7+3pcdqfL/
- l53yxXdN/z1DoPNzwN5vSp9eKpM7MzZy21jkS+ZCkmVOrxcPSuH/26LMo1a9vAjgUbRqi0qdQ7l
- UriU7lbIjib1FOcN981vq0nSzIeuUqG/WQWyPC5l+ijGmT4phUmBas0DWA+kGuIN1913hDEnUUM
- GR/2opxRRKzqm3yyVPQ==
+ a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
+ a=D-3WH5monn3MMgO2UeQA:9
+X-Proofpoint-ORIG-GUID: JGPGDIlhc6TzCi6TuXKlwH2paykcZ1eT
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI3MDEyMSBTYWx0ZWRfXxJ1Rn4mBPI46
+ MvDaOth+MUyvapytBn/p9OcYA0ITq100qKf3vt56RfVBRpjy0rCuLZluFoOd2MxDQS5BAJXtMdo
+ HOjwd2z612x9KiuhJAUivQNfL/6UhiKIdl/RKD4+xPujUlo1noqnVW9kCaackarEcMSNSmIFgh/
+ m1M7m8n01+UnLBSGxtuaqioeL+bFgoQMCWsvdAGC4quWBt/WJkSmXLlLjXZ+X1SSEeWM3qHs9c7
+ fMHpL3BMsKpvfAj/+QyDHfkWDIy2HLcHrpuxKlNBpAAUMPUfKZxoLkj3YQYsdy7ex04tt3vamXv
+ /vZI0bBCZ6jeimjjnft59cupRLcrvXAeWF2Zm8Q3sOCuF5YSZPRBd/UIqQ11lk6XGqAUtFWklB7
+ iNRZjBySw/DHhlUXzn/UkOHdCh7zP+L1JGKW38k37l5yL0/MTPNpU8Bp6BwKDyDeRnaDzXe6eEu
+ yaE3vN80AutUCCycOiA==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-01-27_03,2026-01-27_02,2025-10-01_01
@@ -153,7 +153,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCPT_COUNT_TWELVE(0.00)[30];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-16069-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-16063-lists,linux-s390=lfdr.de];
 	DKIM_TRACE(0.00)[ibm.com:+];
 	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	TO_DN_SOME(0.00)[];
@@ -164,139 +164,173 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_COUNT_TWELVE(0.00)[13];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vdso.so:url]
-X-Rspamd-Queue-Id: 655CA977D3
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: B3585977BA
 X-Rspamd-Action: no action
 
-This replicates Josh's x86 patch "x86/vdso: Enable sframe generation
-in VDSO" [1] for s390.
+Most architectures define their CFA as the value of the stack pointer
+(SP) at the call site in the previous frame, as suggested by the DWARF
+standard.  Therefore the SP at call site can be unwound using an
+implicitly assumed value offset from CFA rule with an offset of zero:
 
-Test whether the assembler supports generating SFrame V3 stack trace
-information.  Note that it is insufficient to test whether the assembler
-supports option --gsframe-3, as GNU assembler supports that regardless
-of whether it is actually capable of generating SFrame V3 stack trace
-information for the architecture.
+  .cfi_val_offset <SP>, 0
 
-If so enable SFrame V3 stack trace information generation in the vDSO
-library so kernel and user space can unwind through it.
+As a result the SP at call site computes as follows:
 
-[1]: x86/vdso: Enable sframe generation in VDSO,
-     https://lore.kernel.org/all/20250425024023.173709192@goodmis.org/
+  SP = CFA
+
+Enable unwinding of user space for architectures, such as s390, which
+define their CFA as the value of the SP at the call site in the previous
+frame with an offset.  Do so by enabling architectures to override the
+default SP value offset from CFA of zero with an architecture-specific
+one:
+
+  .cfi_val_offset <SP>, offset
+
+So that the SP at call site computes as follows:
+
+  SP = CFA + offset
 
 Signed-off-by: Jens Remus <jremus@linux.ibm.com>
 ---
+ arch/x86/include/asm/unwind_user.h        |  2 ++
+ arch/x86/include/asm/unwind_user_sframe.h |  2 ++
+ include/asm-generic/Kbuild                |  1 +
+ include/asm-generic/unwind_user_sframe.h  | 12 ++++++++++++
+ include/linux/unwind_user_types.h         |  1 +
+ kernel/unwind/sframe.c                    |  1 +
+ kernel/unwind/user.c                      | 11 ++++++-----
+ 7 files changed, 25 insertions(+), 5 deletions(-)
+ create mode 100644 include/asm-generic/unwind_user_sframe.h
 
-Notes (jremus):
-    Changes in v4:
-    - Test for and generate SFrame V3 using assembler option --gsframe-3.
-    
-    Changes in RFC v2:
-    - Introduce config option AS_SFRAME instead of requiring Josh's x86
-      patch as pre-requisite.
-    - Reword commit message.
-    
-    Link to Josh's latest x86 patch:
-    https://lore.kernel.org/all/20250425024023.173709192@goodmis.org/
-
- arch/Kconfig                     | 7 +++++++
- arch/s390/include/asm/dwarf.h    | 4 ++++
- arch/s390/kernel/vdso/Makefile   | 7 ++++++-
- arch/s390/kernel/vdso/vdso.lds.S | 9 +++++++++
- 4 files changed, 26 insertions(+), 1 deletion(-)
-
-diff --git a/arch/Kconfig b/arch/Kconfig
-index dcb553136e0c..b5b3a83072f7 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -479,6 +479,13 @@ config HAVE_HARDLOCKUP_DETECTOR_ARCH
- 	  It uses the same command line parameters, and sysctl interface,
- 	  as the generic hardlockup detectors.
+diff --git a/arch/x86/include/asm/unwind_user.h b/arch/x86/include/asm/unwind_user.h
+index ae46906c3b39..0650bcfae461 100644
+--- a/arch/x86/include/asm/unwind_user.h
++++ b/arch/x86/include/asm/unwind_user.h
+@@ -66,6 +66,7 @@ static inline int unwind_user_get_reg(unsigned long *val, unsigned int regnum)
+ 		.rule		= UNWIND_USER_RULE_CFA_OFFSET_DEREF,\
+ 		.offset		= -2*(ws),		\
+ 			},				\
++	.sp_off		= 0,				\
+ 	.outermost	= false,
  
-+config AS_SFRAME
-+	bool
-+
-+config AS_SFRAME3
-+	def_bool $(as-instr,.cfi_startproc\n.cfi_endproc,-Wa$(comma)--gsframe-3)
-+	select AS_SFRAME
-+
- config UNWIND_USER
- 	bool
+ #define ARCH_INIT_USER_FP_ENTRY_FRAME(ws)		\
+@@ -80,6 +81,7 @@ static inline int unwind_user_get_reg(unsigned long *val, unsigned int regnum)
+ 	.fp		= {				\
+ 		.rule		= UNWIND_USER_RULE_RETAIN,\
+ 			},				\
++	.sp_off		= 0,				\
+ 	.outermost	= false,
  
-diff --git a/arch/s390/include/asm/dwarf.h b/arch/s390/include/asm/dwarf.h
-index 6bcf37256feb..2f148b15fd7d 100644
---- a/arch/s390/include/asm/dwarf.h
-+++ b/arch/s390/include/asm/dwarf.h
-@@ -16,7 +16,11 @@
- 	 * symbols for the .dbg file.
+ static inline bool unwind_user_at_function_start(struct pt_regs *regs)
+diff --git a/arch/x86/include/asm/unwind_user_sframe.h b/arch/x86/include/asm/unwind_user_sframe.h
+index d828ae1a4aac..40b03b482d1a 100644
+--- a/arch/x86/include/asm/unwind_user_sframe.h
++++ b/arch/x86/include/asm/unwind_user_sframe.h
+@@ -9,4 +9,6 @@
+ 
+ #endif
+ 
++#include <asm-generic/unwind_user_sframe.h>
++
+ #endif /* _ASM_X86_UNWIND_USER_SFRAME_H */
+diff --git a/include/asm-generic/Kbuild b/include/asm-generic/Kbuild
+index 9aff61e7b8f2..91f86dd84677 100644
+--- a/include/asm-generic/Kbuild
++++ b/include/asm-generic/Kbuild
+@@ -61,6 +61,7 @@ mandatory-y += topology.h
+ mandatory-y += trace_clock.h
+ mandatory-y += uaccess.h
+ mandatory-y += unwind_user.h
++mandatory-y += unwind_user_sframe.h
+ mandatory-y += vermagic.h
+ mandatory-y += vga.h
+ mandatory-y += video.h
+diff --git a/include/asm-generic/unwind_user_sframe.h b/include/asm-generic/unwind_user_sframe.h
+new file mode 100644
+index 000000000000..8c9ac47bc8bd
+--- /dev/null
++++ b/include/asm-generic/unwind_user_sframe.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_GENERIC_UNWIND_USER_SFRAME_H
++#define _ASM_GENERIC_UNWIND_USER_SFRAME_H
++
++#include <linux/types.h>
++
++#ifndef SFRAME_SP_OFFSET
++/* Most archs/ABIs define CFA as SP at call site, so that SP = CFA + 0. */
++#define SFRAME_SP_OFFSET 0
++#endif
++
++#endif /* _ASM_GENERIC_UNWIND_USER_SFRAME_H */
+diff --git a/include/linux/unwind_user_types.h b/include/linux/unwind_user_types.h
+index 059e5c76f2f3..89c71a4553b2 100644
+--- a/include/linux/unwind_user_types.h
++++ b/include/linux/unwind_user_types.h
+@@ -65,6 +65,7 @@ struct unwind_user_frame {
+ 	struct unwind_user_cfa_rule_data cfa;
+ 	struct unwind_user_rule_data ra;
+ 	struct unwind_user_rule_data fp;
++	s32 sp_off;
+ 	bool outermost;
+ };
+ 
+diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
+index f24997e84e05..6a6221ce6d12 100644
+--- a/kernel/unwind/sframe.c
++++ b/kernel/unwind/sframe.c
+@@ -496,6 +496,7 @@ static __always_inline int __find_fre(struct sframe_section *sec,
+ 		return -EINVAL;
+ 	sframe_init_rule_data(&frame->ra, fre->ra_ctl, fre->ra_off);
+ 	sframe_init_rule_data(&frame->fp, fre->fp_ctl, fre->fp_off);
++	frame->sp_off  = SFRAME_SP_OFFSET;
+ 	frame->outermost = SFRAME_V3_FRE_RA_UNDEFINED_P(fre->info);
+ 
+ 	return 0;
+diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c
+index eb7d9489f671..e21d088f7543 100644
+--- a/kernel/unwind/user.c
++++ b/kernel/unwind/user.c
+@@ -30,7 +30,7 @@ get_user_word(unsigned long *word, unsigned long base, int off, unsigned int ws)
+ static int unwind_user_next_common(struct unwind_user_state *state,
+ 				   const struct unwind_user_frame *frame)
+ {
+-	unsigned long cfa, fp, ra;
++	unsigned long cfa, sp, fp, ra;
+ 
+ 	/* Stop unwinding when reaching an outermost frame. */
+ 	if (frame->outermost) {
+@@ -62,16 +62,17 @@ static int unwind_user_next_common(struct unwind_user_state *state,
+ 	    get_user_word(&cfa, cfa, 0, state->ws))
+ 		return -EINVAL;
+ 
++	/* Get the Stack Pointer (SP) */
++	sp = cfa + frame->sp_off;
+ 	/*
+ 	 * Make sure that stack is not going in wrong direction.  Allow SP
+ 	 * to be unchanged for the topmost frame, by subtracting topmost,
+ 	 * which is either 0 or 1.
  	 */
+-	if (cfa <= state->sp - state->topmost)
++	if (sp <= state->sp - state->topmost)
+ 		return -EINVAL;
+-
+ 	/* Make sure that the address is word aligned */
+-	if (cfa & (state->ws - 1))
++	if (sp & (state->ws - 1))
+ 		return -EINVAL;
  
-+#ifdef CONFIG_AS_SFRAME
-+	.cfi_sections .eh_frame, .debug_frame, .sframe
-+#else
- 	.cfi_sections .eh_frame, .debug_frame
-+#endif
+ 	/* Get the Return Address (RA) */
+@@ -122,7 +123,7 @@ static int unwind_user_next_common(struct unwind_user_state *state,
+ 		return -EINVAL;
  
- #define CFI_STARTPROC		.cfi_startproc
- #define CFI_ENDPROC		.cfi_endproc
-diff --git a/arch/s390/kernel/vdso/Makefile b/arch/s390/kernel/vdso/Makefile
-index 3a8bde5716f4..d604839756d0 100644
---- a/arch/s390/kernel/vdso/Makefile
-+++ b/arch/s390/kernel/vdso/Makefile
-@@ -20,7 +20,11 @@ targets := $(obj-vdso) $(obj-cvdso) vdso.so vdso.so.dbg
- obj-vdso := $(addprefix $(obj)/, $(obj-vdso))
- obj-cvdso := $(addprefix $(obj)/, $(obj-cvdso))
- 
--KBUILD_AFLAGS_VDSO := $(KBUILD_AFLAGS) -DBUILD_VDSO
-+ifeq ($(CONFIG_AS_SFRAME3),y)
-+	SFRAME_CFLAGS := -Wa,--gsframe-3
-+endif
-+
-+KBUILD_AFLAGS_VDSO := $(KBUILD_AFLAGS) -DBUILD_VDSO $(SFRAME_CFLAGS)
- 
- KBUILD_CFLAGS_VDSO := $(KBUILD_CFLAGS) -DBUILD_VDSO -DDISABLE_BRANCH_PROFILING
- KBUILD_CFLAGS_VDSO := $(filter-out -mpacked-stack,$(KBUILD_CFLAGS_VDSO))
-@@ -29,6 +33,7 @@ KBUILD_CFLAGS_VDSO := $(filter-out -munaligned-symbols,$(KBUILD_CFLAGS_VDSO))
- KBUILD_CFLAGS_VDSO := $(filter-out -fno-asynchronous-unwind-tables,$(KBUILD_CFLAGS_VDSO))
- KBUILD_CFLAGS_VDSO += -fPIC -fno-common -fno-builtin -fasynchronous-unwind-tables
- KBUILD_CFLAGS_VDSO += -fno-stack-protector
-+KBUILD_CFLAGS_VDSO += $(SFRAME_CFLAGS)
- ldflags-y := -shared -soname=linux-vdso.so.1 \
- 	     --hash-style=both --build-id=sha1 -T
- 
-diff --git a/arch/s390/kernel/vdso/vdso.lds.S b/arch/s390/kernel/vdso/vdso.lds.S
-index 7bec4de0e8e0..13d20fcede2f 100644
---- a/arch/s390/kernel/vdso/vdso.lds.S
-+++ b/arch/s390/kernel/vdso/vdso.lds.S
-@@ -51,6 +51,11 @@ SECTIONS
- 
- 	.eh_frame_hdr	: { *(.eh_frame_hdr) }		:text	:eh_frame_hdr
- 	.eh_frame	: { KEEP (*(.eh_frame)) }	:text
-+
-+#ifdef CONFIG_AS_SFRAME
-+	.sframe		: { *(.sframe) }		:text	:sframe
-+#endif
-+
- 	.gcc_except_table : { *(.gcc_except_table .gcc_except_table.*) }
- 
- 	.rela.dyn ALIGN(8) : { *(.rela.dyn) }
-@@ -77,6 +82,7 @@ SECTIONS
-  * Very old versions of ld do not recognize this name token; use the constant.
-  */
- #define PT_GNU_EH_FRAME	0x6474e550
-+#define PT_GNU_SFRAME	0x6474e554
- 
- /*
-  * We must supply the ELF program headers explicitly to get just one
-@@ -88,6 +94,9 @@ PHDRS
- 	dynamic		PT_DYNAMIC FLAGS(4);		/* PF_R */
- 	note		PT_NOTE FLAGS(4);		/* PF_R */
- 	eh_frame_hdr	PT_GNU_EH_FRAME;
-+#ifdef CONFIG_AS_SFRAME
-+	sframe		PT_GNU_SFRAME;
-+#endif
- }
- 
- /*
+ 	state->ip = ra;
+-	state->sp = cfa;
++	state->sp = sp;
+ 	state->fp = fp;
+ 	state->topmost = false;
+ 	return 0;
 -- 
 2.51.0
 
