@@ -1,77 +1,78 @@
-Return-Path: <linux-s390+bounces-16077-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16081-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2CYzLcvbeGmwtgEAu9opvQ
-	(envelope-from <linux-s390+bounces-16077-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 16:37:47 +0100
+	id UNakNArneGmHtwEAu9opvQ
+	(envelope-from <linux-s390+bounces-16081-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 17:25:46 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C39E96DAC
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 16:37:47 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED90197BA2
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 17:25:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7FD5E3033893
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 15:34:02 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id EA604307AC4A
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 15:34:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC18A2FFDEB;
-	Tue, 27 Jan 2026 15:33:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B97635E53E;
+	Tue, 27 Jan 2026 15:34:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Dkhvy9d+"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="izXTh/Qc"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562E52264A9;
-	Tue, 27 Jan 2026 15:33:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97EAA35CB9A;
+	Tue, 27 Jan 2026 15:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769528039; cv=none; b=niW5z7WXtciRZYuwtM3JQU6YvER02AaXqGw7KN1RpXt/GAqpLO8GKW2AdPDN/e9eAmywQOvRwMcoCDGIXCKdlJRzl151S9XK9gDNAveWc+zsrnhY+XzxQC7nav2pgdQkl9Cu279mME/SL3f/pZHkqGafgmyE9GVZihEcWxz2w7g=
+	t=1769528043; cv=none; b=pkWyQ6FseYvnWq9OZVJPOf+ddUQc5RxktjWP0U1059/Il4hSbuTW9dTyOo1YeNlQszWz/VmYCm2wO3GoRnBkANjqcTlGrPzURcpDGX6qVsV0OAIBz0ZfUj2ojJomVHe+bmdMpsZdVRWbhMcnBVqoaCuZq72vV9sjAvyFfaUUS4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769528039; c=relaxed/simple;
-	bh=EpBc2FHK0ffhGaF7mlkEoIDtruuvX2HXLqlLkNSETBA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MYZ//+Bpj2AqKHHamujV98hUfXJNeRBpZMFm4GKJo/vOs1u1CjxYS/5h8nozaaQoTgEXEO2po/lCRNDK9JtYn9d7rrXOvqIKLyZ0yjBFwtsb57YrlvfUF5hH178KvrN67Ze9XMUYFgdyQJItI25ovhFpKlztZmIdJTFeEqDjx6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Dkhvy9d+; arc=none smtp.client-ip=148.163.158.5
+	s=arc-20240116; t=1769528043; c=relaxed/simple;
+	bh=9DLKdTXoFCuhtc89mZMGllNE0yoAFFhZ91M2fyML8lA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bzpIOw1IAZyPB3mXgAbKtB5mYwde+dFKvz/6FQ13GNrec1eanp1hvRJ3f5jWmVfziIAagRzDecjw6MHz9ckTT+8GD7bCvdNTq2Wqzyte2ovdVvi9nyJjZV+JUL+VMcvdQn1N50sI+90JwvccEFq+zGoisN5E96+liCIWiTUs9zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=izXTh/Qc; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 60R6m8QM025155;
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 60R4dY1S032521;
 	Tue, 27 Jan 2026 15:33:39 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=Mc6r+iYMRgrberR8CGrWZbZ9Aa1SEBxztvMl/a8Z4
-	C4=; b=Dkhvy9d+NcOe4hKzfdaNVYVvOCMPx7Q7EgqhXBjz9fRFHB1YaK0asD2lp
-	CSLRY6PhWCah86tb9LvGMYPDiMDVGpvQf4lxvb1QOslAry+4zodWK6S3iWDeruuc
-	aJtTwWkA/h5Z7QKESVs7S9G+N6hBJ+VMWBJgfZBjZtL6+2wMHjeIj4NW2p9ghjVa
-	oGdkah4rCFy6W3yR2WjrehbC9eA78HFbcgxzLhNotB/kWFupSxwg+dW0ax67IKQU
-	cJxwvl78TClzxLcfd8EihkXh3qKWfFGq/TPz0rCth0iV/wnEui55jrrJxmS3YplC
-	RyQzJprtduIRB7/oPspiq8cAnaDQw==
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=hwRBNCHKaC4Z+b+Og
+	bDactYuIMHhkLAQK6b65sb5zKo=; b=izXTh/QcsYomxXLC4BtdhecoibANGmhkA
+	C+6PKlpGI+DQ2EGGRQkGSG1oEUvflg6u2xhYk+Q675l6NyYIxdLV7hZ48w0J95Kv
+	yEPo2yW3UsovnDXaA8+EA/7coLEn5VT1IT6LF30XWa7+7tg/zks1gJyejmqx02C7
+	OlmWc90acwqZJRRx98VKcHqjikEIv+D0/DvfmvIdxr6wBnwUI/8wpXmxgszg8TsI
+	kDILB14f7xt7cvfRCl4BPCL+2378qOHl9G6FQ6QFwFgdWjmHfnONKa5YjeS/TZCI
+	9MwU8eDSX/A4XhSdAGn/2QNKNVOIOD2hC3a+rLAqm9qlT7UysR1eA==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvkgmmnmw-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvnrte42u-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 Jan 2026 15:33:38 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 60RFPkQR011392;
+	Tue, 27 Jan 2026 15:33:39 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 60RErwEA017974;
 	Tue, 27 Jan 2026 15:33:38 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvkgmmnms-1
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvnrte42q-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 27 Jan 2026 15:33:38 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 60REAE6p023722;
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 60RF0BC6018303;
 	Tue, 27 Jan 2026 15:33:37 GMT
 Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4bwamjs0db-1
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4bwb41rx1t-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 27 Jan 2026 15:33:37 +0000
 Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 60RFXXtC37421338
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 60RFXXZ044499356
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Tue, 27 Jan 2026 15:33:33 GMT
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6AD992004B;
+	by IMSVA (Postfix) with ESMTP id BAACE20040;
 	Tue, 27 Jan 2026 15:33:33 +0000 (GMT)
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1F9BB20043;
+	by IMSVA (Postfix) with ESMTP id 7352D2004E;
 	Tue, 27 Jan 2026 15:33:33 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
 	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
@@ -100,10 +101,12 @@ Cc: Jens Remus <jremus@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
         Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>,
         "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>,
         Dylan Hatch <dylanbhatch@google.com>
-Subject: [RFC PATCH v1 0/5] s390: Signal frame user space unwinding
-Date: Tue, 27 Jan 2026 16:33:26 +0100
-Message-ID: <20260127153331.2902504-1-jremus@linux.ibm.com>
+Subject: [RFC PATCH v1 1/5] unwind_user: Enable arch-specific signal frame unwinders
+Date: Tue, 27 Jan 2026 16:33:27 +0100
+Message-ID: <20260127153331.2902504-2-jremus@linux.ibm.com>
 X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260127153331.2902504-1-jremus@linux.ibm.com>
+References: <20260127153331.2902504-1-jremus@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -112,36 +115,36 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Gr1PO01C c=1 sm=1 tr=0 ts=6978dad2 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
- a=-DFb8COQO-JfHJnukBIA:9
-X-Proofpoint-GUID: Ys0p0zHHAEV67WKyQHCGn2m5psb3utxh
-X-Proofpoint-ORIG-GUID: mIfIllVlH_-SlIOkQm4Vg7DE0Yvfz1tw
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI3MDEyNSBTYWx0ZWRfX8atlURJtagx7
- Z5yPL4TLRF3BbfGaXFPkWDZvHiR4r+QLofL2Y2TRrVz7gK2KqRjqtGLpcBNp47/1vqmQWM1m57m
- lOJ9Kv58VcWSJ/GWfOxSaIIJhG9y9SVYspYUQQBxZbNqwEeay8RrHkOivurCKOta6mhZYcAYOeQ
- SczoBUCE4edlS3kg0CfztfCyjs0ibtMbbyGyr1ohmcIuccK/NSUej5WFf4LnaRDHgqM3f+wEuLZ
- ojKqFe6x3cLfoOEkb0+dk8ttuTFlOFo1YiU6Xa7rmdZMU3oq6o1mDnDV0Jj45/fgUYyDOKgNnc3
- EZiKMCLr/LPJtbcwy+IzYbUCgPuTbiUwBxD5RVJMsoQqw7bZyCN66tMmys8PDXk4teDMSuCbzT1
- j53ihPmrWI5Dcy8GhTTwgbHNQtpu5n2Dh17AxReWxh37qLHo4YCV/8Hkd39XQCzTE2faAMb63/P
- jhmk6ZlyAqpHbphZX5Q==
+X-Proofpoint-GUID: nVRWLN5-QqZctx4hlKVy5MA3mvaUNbQl
+X-Authority-Analysis: v=2.4 cv=Uptu9uwB c=1 sm=1 tr=0 ts=6978dad3 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
+ a=6XKp6n-VjBup7wJUbcIA:9
+X-Proofpoint-ORIG-GUID: 6sOBiRvTAc1dmvB3im-sLZpbTwqraB4L
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI3MDEyMSBTYWx0ZWRfXwjafthCE2cNu
+ XyFru7ZdTZDpYjOWbD8UWXKLbpDd+hNrKJ/8WIFYZJzrS7JsktTkpW0/oOWdxgJbd1rmkhuHbeE
+ mSy6Tqj+oBx6zUyyXej//O9E6ixZ53BSGh9V7L+pQ+EiD3opKCvXV3ZDpVY0ob3GifIUsflsTPx
+ 5dM2UpdzocmM5hxebPev/9lJjFceK5uQEJf7+1KGCXJVtVjG8RlAX6uO1pYuljsclllIuh15rqJ
+ e9LGN/E5cw6EZDNzQjfmaOzpoD2KT+mjfohMxH8mo04oULyiYyd/bTGP2HbsUG9ph3iLZc+rc0x
+ FDsOmwQXO8sBhVW3cWC9ctMmPOrkGzepRPH8qVurfBE+Xhei/jmKeQB4NR0mvmYvn9oHmpjtgQn
+ zKx0aS7cVNgwDzVVFv9fBx+8KBbdZpxUOAiMPmTq107+vm4Q0vOGtDvYMLkg0s7XxIyQf8v5B49
+ TpFEnto+p7TLqH4vn2A==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-01-27_03,2026-01-27_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 clxscore=1015 lowpriorityscore=0 suspectscore=0
- impostorscore=0 phishscore=0 malwarescore=0 adultscore=0 spamscore=0
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2601150000
- definitions=main-2601270125
+ malwarescore=0 priorityscore=1501 clxscore=1015 lowpriorityscore=0
+ phishscore=0 adultscore=0 impostorscore=0 bulkscore=0 spamscore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2601150000
+ definitions=main-2601270121
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -150,9 +153,9 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCPT_COUNT_TWELVE(0.00)[30];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-16077-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-16081-lists,linux-s390=lfdr.de];
 	DKIM_TRACE(0.00)[ibm.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jremus@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
@@ -161,73 +164,97 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_COUNT_TWELVE(0.00)[13];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.ibm.com:mid]
-X-Rspamd-Queue-Id: 1C39E96DAC
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: ED90197BA2
 X-Rspamd-Action: no action
 
-This RFC series adds s390 support for unwinding of signal frames in user
-space using SFrame V3's indication of signal frames.
+Add a signal flag to struct unwind_user_frame, which indicates whether
+the frame is a signal frame.  If set unwind_user_common_next() uses an
+architecture-specific unwind_user_signal_next() implementation to
+unwind the frame.
 
+user unwind sframe will make use of the signal flag in a subsequent
+commit.
 
-Prerequirements:
+Signed-off-by: Jens Remus <jremus@linux.ibm.com>
+---
+ arch/x86/include/asm/unwind_user.h | 6 ++++--
+ include/linux/unwind_user.h        | 9 +++++++++
+ include/linux/unwind_user_types.h  | 1 +
+ kernel/unwind/user.c               | 4 ++++
+ 4 files changed, 18 insertions(+), 2 deletions(-)
 
-This series applies on top of the latest unwind user sframe s390 series
-"[PATCH v4 00/12] s390: SFrame user space unwinding":
-https://lore.kernel.org/all/20260127151926.2805123-1-jremus@linux.ibm.com/
-
-on top of the latest unwind user sframe series
-"[PATCH v13 00/18] unwind_deferred: Implement sframe handling":
-https://lore.kernel.org/all/20260127150554.2760964-1-jremus@linux.ibm.com/
-
-Like above series it depends on the upcoming binutils 2.46 release to
-be used to build executables and libraries (e.g. vDSO) with SFrame V3
-on s390 (using the assembler option --gsframe-3).
-
-
-Overview:
-
-Patches 1 and 2 enables the common unwind user (sframe) frameworks to
-support signal frames:
-
-- Patch 1 enables unwind user to resort to an architecture-specific
-  signal frame unwinder, if a frame is a signal frame.
-
-- Patch 2 adds support to unwind user sframe to provide the signal
-  frame indication represented in SFrame V3.
-
-Patch 3 annotates the s390 vDSO functions __kernel_[rt_]sigreturn()
-as signal frames.
-
-Patch 4 moves the s390 struct [rt_]sigframe to asm/sigframe.h so that
-it can be used in unwind user.
-
-Patch 5 enables signal frame unwinding in user space on s390.
-
-Regards,
-Jens
-
-
-Jens Remus (5):
-  unwind_user: Enable arch-specific signal frame unwinders
-  unwind_user/sframe: Add support for signal frame indication
-  s390/vdso: Annotate __kernel_[rt_]sigreturn as signal frames
-  s390/signal: Move struct [rt_]sigframe to asm/sigframe.h
-  s390/unwind_user: Enable signal frame unwinding of user space
-
- arch/s390/include/asm/dwarf.h             |  3 +
- arch/s390/include/asm/sigframe.h          | 78 +++++++++++++++++++++++
- arch/s390/include/asm/unwind_user.h       | 57 +++++++++++++++++
- arch/s390/kernel/signal.c                 | 71 +--------------------
- arch/s390/kernel/vdso/vdso_user_wrapper.S | 15 ++++-
- arch/x86/include/asm/unwind_user.h        |  6 +-
- include/linux/unwind_user.h               |  9 +++
- include/linux/unwind_user_types.h         |  1 +
- kernel/unwind/sframe.c                    |  8 ++-
- kernel/unwind/sframe.h                    |  1 +
- kernel/unwind/user.c                      |  4 ++
- 11 files changed, 178 insertions(+), 75 deletions(-)
- create mode 100644 arch/s390/include/asm/sigframe.h
-
+diff --git a/arch/x86/include/asm/unwind_user.h b/arch/x86/include/asm/unwind_user.h
+index f5e9fbcdae28..21cb9eeb2503 100644
+--- a/arch/x86/include/asm/unwind_user.h
++++ b/arch/x86/include/asm/unwind_user.h
+@@ -67,7 +67,8 @@ static inline int unwind_user_get_reg(unsigned long *val, unsigned int regnum)
+ 		.offset		= -2*(ws),		\
+ 			},				\
+ 	.sp_off		= 0,				\
+-	.outermost	= false,
++	.outermost	= false,			\
++	.signal		= false,
+ 
+ #define ARCH_INIT_USER_FP_ENTRY_FRAME(ws)		\
+ 	.cfa		= {				\
+@@ -82,7 +83,8 @@ static inline int unwind_user_get_reg(unsigned long *val, unsigned int regnum)
+ 		.rule		= UNWIND_USER_RULE_RETAIN,\
+ 			},				\
+ 	.sp_off		= 0,				\
+-	.outermost	= false,
++	.outermost	= false,			\
++	.signal		= false,
+ 
+ static inline int unwind_user_fp_get_frame(struct unwind_user_state *state,
+ 					   struct unwind_user_frame *frame)
+diff --git a/include/linux/unwind_user.h b/include/linux/unwind_user.h
+index f65b0573b3a5..eb5de4cb5bd6 100644
+--- a/include/linux/unwind_user.h
++++ b/include/linux/unwind_user.h
+@@ -34,6 +34,15 @@ static inline int unwind_user_get_reg(unsigned long *val, unsigned int regnum)
+ #define unwind_user_get_reg unwind_user_get_reg
+ #endif
+ 
++#ifndef unwind_user_signal_next
++static inline int unwind_user_signal_next(struct unwind_user_state *state)
++{
++	WARN_ON_ONCE(1);
++	return -EINVAL;
++}
++#define unwind_user_signal_next unwind_user_signal_next
++#endif
++
+ int unwind_user(struct unwind_stacktrace *trace, unsigned int max_entries);
+ 
+ #endif /* _LINUX_UNWIND_USER_H */
+diff --git a/include/linux/unwind_user_types.h b/include/linux/unwind_user_types.h
+index fac8f470b597..3985706d7851 100644
+--- a/include/linux/unwind_user_types.h
++++ b/include/linux/unwind_user_types.h
+@@ -68,6 +68,7 @@ struct unwind_user_frame {
+ 	struct unwind_user_rule_data fp;
+ 	s32 sp_off;
+ 	bool outermost;
++	bool signal;
+ };
+ 
+ struct unwind_user_state {
+diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c
+index a64ceb4a2bf6..b9a3b59e8282 100644
+--- a/kernel/unwind/user.c
++++ b/kernel/unwind/user.c
+@@ -32,6 +32,10 @@ static int unwind_user_next_common(struct unwind_user_state *state,
+ {
+ 	unsigned long cfa, sp, fp, ra;
+ 
++	/* Use signal frame unwinder for signal frames. */
++	if (frame->signal)
++		return unwind_user_signal_next(state);
++
+ 	/* Stop unwinding when reaching an outermost frame. */
+ 	if (frame->outermost) {
+ 		state->done = true;
 -- 
 2.51.0
 
