@@ -1,78 +1,78 @@
-Return-Path: <linux-s390+bounces-16072-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16069-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kPpDCbvbeGmwtgEAu9opvQ
-	(envelope-from <linux-s390+bounces-16072-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 16:37:31 +0100
+	id gCXpB7TjeGlJtwEAu9opvQ
+	(envelope-from <linux-s390+bounces-16069-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 17:11:32 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0509896D8D
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 16:37:30 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 655CA977D3
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 17:11:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 7C7AB30F2057
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 15:21:52 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 04A27319B54C
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 15:21:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAD8C361DD4;
-	Tue, 27 Jan 2026 15:20:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84E5F3612E9;
+	Tue, 27 Jan 2026 15:20:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nBc0Gw8v"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WTnJzchK"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C5D35FF40;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8F435CBB0;
 	Tue, 27 Jan 2026 15:20:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769527204; cv=none; b=AgsXRFbf4S4nwGhOPJCLVCWZXcxuJ4D8vtanrb0KugY3EDqyH1DAsI7cxCrBG71IsZ66tXJafRXV03Eu7OM0S0DZf7IQydDlNryNfxTefc1Zf61kx7bDTRoSLX7PVI5NQ56LQAuqSrLHwjaDDBFueOOssvmUIVuOB6jnYxnq8CQ=
+	t=1769527203; cv=none; b=S+osO6pzTcw8GNjU6b6NGaGPgfc1BYaIUN1ERH1BE3hwpMsZeXgH+evd/Vc81qRDW9JHAdypUImFhtHP6nmt6ycJqh2aMXplBgJziqDmZnymaqqSvf7owcXjMZLXwpxPWWXobnT4EfZH/QDu3+13CaGV+pElbLMXNhR0rzMIEwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769527204; c=relaxed/simple;
-	bh=rOcR+5F/C3Nq8e90YbOxlbMijoGlvSAnkfOY289Jreo=;
+	s=arc-20240116; t=1769527203; c=relaxed/simple;
+	bh=NX1lub2wg02nrRuvM/eEfc4uFVh0nxxekKzTNLP34Uk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=i9CyFrSPJE94/MKZrpaafO8abn4PJeTAlVIfR+k6XJJCXPt3M3yyECO6RlbESHlKJahDFqUlWGQ5KjzFu887Bf8SNJkF49b0BVcpcvzbpaeZQzOA+iIUQolsvNfE0HT4u8R9DRC2k4dtMKO9X7/Xev1zC0NVjcAR6H5CzRJ/Ayk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nBc0Gw8v; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=ZcNMCiZEMQNV3XI3lf50tiP2OwrMHv9631Rol3q5wWywzTvrdtH8RBiCNlzu//6EQnQ/WGmkT7zCxy9oxI8qIfj+LHDHPUGqHB8quyTvJG2tPKKRPPEeRhfHyXVmrNqActg9y7EuTo2tqiJNmi8xlkOjI3UdJLjt9Ntj/CqSDQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WTnJzchK; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 60R7HbWs014420;
-	Tue, 27 Jan 2026 15:19:39 GMT
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 60R6nRoW030212;
+	Tue, 27 Jan 2026 15:19:38 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=QIzG3yERWAD0X6BiE
-	CosJMQQHT3hd/5vCOzAO3f76gI=; b=nBc0Gw8vAlJ1QibcDWBzTPCMxoFMlZJnc
-	EZldc8qlM06wayxuknypttfW6rr2nfwyt29pVWiB4H8SKMQLUwdfpKnriSS3X6Zz
-	uADQUx+nKegv54fD/6KTvzDEcVd3buXmdb6MOl2hHm5nKLI3dy2US8/wXIvA07tQ
-	X4E1bFhX5l/8SLuOG0kiBAkqoLdoBh3u0H21d3DPr263GAupnuLMOD43hA4MgEkA
-	nYReUFdDEx8nVfScbNG4f9Q5jPQU4bPBtLJl4NmcYsyl27YwwEigerhzeNqVRtmU
-	sZyFk9KMrGgTeiHw6dVGF+nc1JQ7tWqtDQ4E8IbueHRvHWIOTEJFw==
+	:mime-version:references:subject:to; s=pp1; bh=TA9Fyu/N//vwb3hoz
+	5GJXxji6d+3johNsY9O2zhB5m4=; b=WTnJzchKYRiUkb5+024ssRHvU3fO1l2kR
+	pYrKvsal+Yo5/yjqVkEvqyexOGl7Igf7yAwye+BB8MR+tp0xvPt9kOrvWaREkAG/
+	VmPOBnkJd+UmFjsDFsKx339XlvWNTOCVH1ZpFA47BTpq3HcWxTxy0lD0b+sRLMnG
+	CEcr5AU24ceY7ZZ2+liPby+QAlv5b5awBTzwf2ofpHSLlz3XCOjNe3AX79+kmUVn
+	ho8lh+uT8Jb1E+qUaCMghNOXkOaoH4OBlLdLqix5R0Js64w5hzEN3BFyGD4AbYba
+	QSvM4C9ff6JyP/EOmpJPP40GjfSU5qbVsYu0GCGQp86ZEzTb0NF9Q==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvnrte1vk-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvnrte1ve-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 27 Jan 2026 15:19:38 +0000 (GMT)
 Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 60RFJber008249;
-	Tue, 27 Jan 2026 15:19:38 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvnrte1v7-1
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 60RFJbep008249;
+	Tue, 27 Jan 2026 15:19:37 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvnrte1v8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 Jan 2026 15:19:38 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 60RE3Pmn019666;
+	Tue, 27 Jan 2026 15:19:37 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 60REptfF017960;
 	Tue, 27 Jan 2026 15:19:36 GMT
 Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4bw9dn153y-1
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4bwb41rvgg-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 27 Jan 2026 15:19:36 +0000
 Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 60RFJWOG61866368
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 60RFJW0u60883424
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Tue, 27 Jan 2026 15:19:32 GMT
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6E32C20043;
+	by IMSVA (Postfix) with ESMTP id B7A6D20040;
 	Tue, 27 Jan 2026 15:19:32 +0000 (GMT)
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2A5A42004B;
+	by IMSVA (Postfix) with ESMTP id 736782004D;
 	Tue, 27 Jan 2026 15:19:32 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
 	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
@@ -101,9 +101,9 @@ Cc: Jens Remus <jremus@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
         Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>,
         "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>,
         Dylan Hatch <dylanbhatch@google.com>
-Subject: [PATCH v4 03/12] s390/vdso: Keep function symbols in vDSO
-Date: Tue, 27 Jan 2026 16:19:16 +0100
-Message-ID: <20260127151926.2805123-4-jremus@linux.ibm.com>
+Subject: [PATCH v4 04/12] s390/vdso: Enable SFrame V3 generation in vDSO
+Date: Tue, 27 Jan 2026 16:19:17 +0100
+Message-ID: <20260127151926.2805123-5-jremus@linux.ibm.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260127151926.2805123-1-jremus@linux.ibm.com>
 References: <20260127151926.2805123-1-jremus@linux.ibm.com>
@@ -115,20 +115,20 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: TOYoFOrvGBo3XdukcZDhpQGLAq2TyU_B
+X-Proofpoint-GUID: lfu8Mof5g3CdoScifPWLHUtF_nYHVS_N
 X-Authority-Analysis: v=2.4 cv=Uptu9uwB c=1 sm=1 tr=0 ts=6978d78a cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
  a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=meVymXHHAAAA:8
- a=VnNF1IyMAAAA:8 a=jnAA27LldM3NCp0g0JkA:9 a=2JgSa4NbpEOStq-L5dxp:22
-X-Proofpoint-ORIG-GUID: 4puAM-DtEJJ45pjh5iMT5mNi_AO2fhtR
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI3MDEyMSBTYWx0ZWRfX5KKO9kgPsI5c
- uYa3XNUhw2ynyRt8TgveCWbQXdfcaDKTtkeexwdG+TwTcnOy5tNP12F9nktkVxb+guzFHpxesik
- rpfO11Vp/ZjnMHVl0vFd39GCeX5sZJUw0eqCDfsmxHSRxDcrUNnnJJs9X6jak3Fr0xH60Y4cqj4
- CWjTskvlmDmOAK1V035XdgQ9UU2E5lRVZEUo9WbqKsA5NdfbLaNjMNjh+1u5q3SH6O5Opow6Juk
- ni5fEwpIanz8KSJ43nrUWb42nQrOwEpnwbw58doPvSvlfXqJHUTdh/QaSzwtyq5MW0bY79Dofan
- eibkawwNWUORaaStNEiSOWO/MoVUPYf9SjpoCKoXvEghKIFHurGPeS3NOcKDIvaEz9BrFCzVSXf
- IA93X5MdJiNx51Pae7x9J4O8Br7JJhY7/REoc+E7lMR1nV49hGIWTzC/wyx4owq+XUs9CoOx8su
- 1a+o2EoHciMdXBJ3VtA==
+ a=VnNF1IyMAAAA:8 a=aCsQZq_vhc4F8yeggjQA:9 a=2JgSa4NbpEOStq-L5dxp:22
+X-Proofpoint-ORIG-GUID: -C89hkHOri2E7tocAabfmdej8sBQF5UY
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI3MDEyMSBTYWx0ZWRfX2IxyCzz44tC+
+ yAACqJAY2u7UsL0izW/LgMXbRI0sN5s7c31bazC2Zy9c7lcExHTr+uo4iwFNpn6ZNluFPBtd1fQ
+ Z50ALI7znTxOElzf41kOrgAs3vmRwK3mPILuovgaZca6uQWKK2wFTzbO9iYpr5HGrRBqr5ov4yI
+ 3qTMNu73kxRmP9gqaJgUYgjFgf/tbiY46zklPs2IiiG0xIwe6w+aqA5KL47UcI2j4qlTusB+ouu
+ +qhKvc+aQ2NVWXGlWmqF6F3BQRXTn4i8EhFILKPzkAS5wwzhPNVMLpVB/ZCrDOzEA7+3pcdqfL/
+ l53yxXdN/z1DoPNzwN5vSp9eKpM7MzZy21jkS+ZCkmVOrxcPSuH/26LMo1a9vAjgUbRqi0qdQ7l
+ UriU7lbIjib1FOcN981vq0nSzIeuUqG/WQWyPC5l+ijGmT4phUmBas0DWA+kGuIN1913hDEnUUM
+ GR/2opxRRKzqm3yyVPQ==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-01-27_03,2026-01-27_02,2025-10-01_01
@@ -144,7 +144,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -153,9 +153,9 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCPT_COUNT_TWELVE(0.00)[30];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-16072-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-16069-lists,linux-s390=lfdr.de];
 	DKIM_TRACE(0.00)[ibm.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jremus@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
@@ -164,52 +164,139 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_COUNT_TWELVE(0.00)[13];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linux.ibm.com:mid]
-X-Rspamd-Queue-Id: 0509896D8D
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vdso.so:url]
+X-Rspamd-Queue-Id: 655CA977D3
 X-Rspamd-Action: no action
 
-Keep all function symbols in the vDSO .symtab for stack trace purposes.
-This enables a stack tracer, such as perf, to lookup these function
-symbols in addition to those already exported in vDSO .dynsym.
+This replicates Josh's x86 patch "x86/vdso: Enable sframe generation
+in VDSO" [1] for s390.
+
+Test whether the assembler supports generating SFrame V3 stack trace
+information.  Note that it is insufficient to test whether the assembler
+supports option --gsframe-3, as GNU assembler supports that regardless
+of whether it is actually capable of generating SFrame V3 stack trace
+information for the architecture.
+
+If so enable SFrame V3 stack trace information generation in the vDSO
+library so kernel and user space can unwind through it.
+
+[1]: x86/vdso: Enable sframe generation in VDSO,
+     https://lore.kernel.org/all/20250425024023.173709192@goodmis.org/
 
 Signed-off-by: Jens Remus <jremus@linux.ibm.com>
 ---
 
 Notes (jremus):
+    Changes in v4:
+    - Test for and generate SFrame V3 using assembler option --gsframe-3.
+    
     Changes in RFC v2:
-    - Use objcopy flag "-g" instead of "-S" with the cumbersome filter
-      "-w -K "__arch_*" -K "__cvdso_*" -K "__s390_vdso_*" to keep the
-      function symbols, as Josh did in "x86/vdso: Enable sframe
-      generation in VDSO":
-      https://lore.kernel.org/all/20250425024023.173709192@goodmis.org/
+    - Introduce config option AS_SFRAME instead of requiring Josh's x86
+      patch as pre-requisite.
     - Reword commit message.
     
-    Note that unlike Josh I did not squash this into the subsequent patch
-    "s390/vdso: Enable SFrame generation in vDSO", as this change is
-    unrelated to enabling the use of SFrame.  perf report/script do also
-    benefit from this change when using perf record --call-graph dwarf.
-    
-    Note that this change does not cause the vDSO build-id to change.
-    perf record may therefore not dump an updated copy of the vDSO to
-    ~/.debug/[vdso]/<build-id>/vdso, so that perf report/script may
-    use a stale copy without .symtab.  Resolve by deleting ~/.debug/.
+    Link to Josh's latest x86 patch:
+    https://lore.kernel.org/all/20250425024023.173709192@goodmis.org/
 
- arch/s390/kernel/vdso/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/Kconfig                     | 7 +++++++
+ arch/s390/include/asm/dwarf.h    | 4 ++++
+ arch/s390/kernel/vdso/Makefile   | 7 ++++++-
+ arch/s390/kernel/vdso/vdso.lds.S | 9 +++++++++
+ 4 files changed, 26 insertions(+), 1 deletion(-)
 
+diff --git a/arch/Kconfig b/arch/Kconfig
+index dcb553136e0c..b5b3a83072f7 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -479,6 +479,13 @@ config HAVE_HARDLOCKUP_DETECTOR_ARCH
+ 	  It uses the same command line parameters, and sysctl interface,
+ 	  as the generic hardlockup detectors.
+ 
++config AS_SFRAME
++	bool
++
++config AS_SFRAME3
++	def_bool $(as-instr,.cfi_startproc\n.cfi_endproc,-Wa$(comma)--gsframe-3)
++	select AS_SFRAME
++
+ config UNWIND_USER
+ 	bool
+ 
+diff --git a/arch/s390/include/asm/dwarf.h b/arch/s390/include/asm/dwarf.h
+index 6bcf37256feb..2f148b15fd7d 100644
+--- a/arch/s390/include/asm/dwarf.h
++++ b/arch/s390/include/asm/dwarf.h
+@@ -16,7 +16,11 @@
+ 	 * symbols for the .dbg file.
+ 	 */
+ 
++#ifdef CONFIG_AS_SFRAME
++	.cfi_sections .eh_frame, .debug_frame, .sframe
++#else
+ 	.cfi_sections .eh_frame, .debug_frame
++#endif
+ 
+ #define CFI_STARTPROC		.cfi_startproc
+ #define CFI_ENDPROC		.cfi_endproc
 diff --git a/arch/s390/kernel/vdso/Makefile b/arch/s390/kernel/vdso/Makefile
-index 2fa12d4ac106..3a8bde5716f4 100644
+index 3a8bde5716f4..d604839756d0 100644
 --- a/arch/s390/kernel/vdso/Makefile
 +++ b/arch/s390/kernel/vdso/Makefile
-@@ -50,7 +50,7 @@ $(obj)/vdso.so.dbg: $(obj)/vdso.lds $(obj-vdso) $(obj-cvdso) FORCE
- 	$(call if_changed,vdso_and_check)
+@@ -20,7 +20,11 @@ targets := $(obj-vdso) $(obj-cvdso) vdso.so vdso.so.dbg
+ obj-vdso := $(addprefix $(obj)/, $(obj-vdso))
+ obj-cvdso := $(addprefix $(obj)/, $(obj-cvdso))
  
- # strip rule for the .so file
--$(obj)/%.so: OBJCOPYFLAGS := -S
-+$(obj)/%.so: OBJCOPYFLAGS := -g
- $(obj)/%.so: $(obj)/%.so.dbg FORCE
- 	$(call if_changed,objcopy)
+-KBUILD_AFLAGS_VDSO := $(KBUILD_AFLAGS) -DBUILD_VDSO
++ifeq ($(CONFIG_AS_SFRAME3),y)
++	SFRAME_CFLAGS := -Wa,--gsframe-3
++endif
++
++KBUILD_AFLAGS_VDSO := $(KBUILD_AFLAGS) -DBUILD_VDSO $(SFRAME_CFLAGS)
  
+ KBUILD_CFLAGS_VDSO := $(KBUILD_CFLAGS) -DBUILD_VDSO -DDISABLE_BRANCH_PROFILING
+ KBUILD_CFLAGS_VDSO := $(filter-out -mpacked-stack,$(KBUILD_CFLAGS_VDSO))
+@@ -29,6 +33,7 @@ KBUILD_CFLAGS_VDSO := $(filter-out -munaligned-symbols,$(KBUILD_CFLAGS_VDSO))
+ KBUILD_CFLAGS_VDSO := $(filter-out -fno-asynchronous-unwind-tables,$(KBUILD_CFLAGS_VDSO))
+ KBUILD_CFLAGS_VDSO += -fPIC -fno-common -fno-builtin -fasynchronous-unwind-tables
+ KBUILD_CFLAGS_VDSO += -fno-stack-protector
++KBUILD_CFLAGS_VDSO += $(SFRAME_CFLAGS)
+ ldflags-y := -shared -soname=linux-vdso.so.1 \
+ 	     --hash-style=both --build-id=sha1 -T
+ 
+diff --git a/arch/s390/kernel/vdso/vdso.lds.S b/arch/s390/kernel/vdso/vdso.lds.S
+index 7bec4de0e8e0..13d20fcede2f 100644
+--- a/arch/s390/kernel/vdso/vdso.lds.S
++++ b/arch/s390/kernel/vdso/vdso.lds.S
+@@ -51,6 +51,11 @@ SECTIONS
+ 
+ 	.eh_frame_hdr	: { *(.eh_frame_hdr) }		:text	:eh_frame_hdr
+ 	.eh_frame	: { KEEP (*(.eh_frame)) }	:text
++
++#ifdef CONFIG_AS_SFRAME
++	.sframe		: { *(.sframe) }		:text	:sframe
++#endif
++
+ 	.gcc_except_table : { *(.gcc_except_table .gcc_except_table.*) }
+ 
+ 	.rela.dyn ALIGN(8) : { *(.rela.dyn) }
+@@ -77,6 +82,7 @@ SECTIONS
+  * Very old versions of ld do not recognize this name token; use the constant.
+  */
+ #define PT_GNU_EH_FRAME	0x6474e550
++#define PT_GNU_SFRAME	0x6474e554
+ 
+ /*
+  * We must supply the ELF program headers explicitly to get just one
+@@ -88,6 +94,9 @@ PHDRS
+ 	dynamic		PT_DYNAMIC FLAGS(4);		/* PF_R */
+ 	note		PT_NOTE FLAGS(4);		/* PF_R */
+ 	eh_frame_hdr	PT_GNU_EH_FRAME;
++#ifdef CONFIG_AS_SFRAME
++	sframe		PT_GNU_SFRAME;
++#endif
+ }
+ 
+ /*
 -- 
 2.51.0
 
