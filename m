@@ -1,112 +1,108 @@
-Return-Path: <linux-s390+bounces-16078-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16082-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eM8dIs3feGkGtwEAu9opvQ
-	(envelope-from <linux-s390+bounces-16078-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 16:54:53 +0100
+	id yEDkJkrleGlwtwEAu9opvQ
+	(envelope-from <linux-s390+bounces-16082-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 17:18:18 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A759972C2
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 16:54:53 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55BC5979DD
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 17:18:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id E706330639FD
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 15:34:09 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 650073019815
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 16:16:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D11B3033D7;
-	Tue, 27 Jan 2026 15:34:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C16E3612D4;
+	Tue, 27 Jan 2026 16:16:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="K+x4OCS3"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WZnNkT0F";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OMwGReJQ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WZnNkT0F";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OMwGReJQ"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDD827FB35;
-	Tue, 27 Jan 2026 15:33:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5898360757
+	for <linux-s390@vger.kernel.org>; Tue, 27 Jan 2026 16:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769528040; cv=none; b=FOdHhq01i3u3qg6P83Z/dNjwJm+5TlNviFvmCuD7HJd/BmNfqpuJGF7sHTgz2ZwiZ7yGERigIvJQImZYv/iR5Ox12YbH/H6FBpgy+FqLxO7ZPw7a5Ozccx9GRHyhx9/6eJt+Rv3ICZwDYt598rlnMb6J9PFBig+0tbgPtlZhAB0=
+	t=1769530586; cv=none; b=P9ALAj4nHy2rsTdfQ6lfrn+1qvBS5lVo20XBQRtuCT7NyC5rFkmqSHGyMRJ9INendiIKOH4UlQBXhyLScI/Ju/sR6ytupsBboFgG5fls+DpOelMCx7gshulkmyY3Vk6B7LFidYp3h1jw2lYoBp2F1Zeeh3hRJbfMZRMiYHL4IoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769528040; c=relaxed/simple;
-	bh=86jpirqaQmUPCyz8o+dsbMp2rt2TgCVsRD8m15jXVwo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MGZabkAyIa+1qQZR4ZWiXWf/mNokxA3gSvYAdKEza83TugUD6GHylToxDpZq+SRy5nNzhp7Uv6D/vIWVSi8QQpdwdC/H3ggfzYZmd2kf3abclOt5HJvzBdaD6W71nX8JLm+ZWD/7kNErzg+SP7WIkTmKT9rE4HazDf/XCZQfsDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=K+x4OCS3; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 60R80wYD010200;
-	Tue, 27 Jan 2026 15:33:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=FZ8S4pktqaByy4bmM
-	ZjsAmN/DAuj1dp0vk/8CjYYzGk=; b=K+x4OCS3ZZ75agk3mpGHGE2+vedZv/CpE
-	sD1NjiKh/TlkmNpdhhlB4597f+J5FAktRHxoKV5rjdEIP20R2Q5lnWPvg/ZU98XX
-	kXkox+i28VZnhlniPC0YSDJxJv8PAQQLozUZtACwwmpQP4Gh8b//3EDE8q9mA3Jl
-	vGfI1svoATSlb8IfwCHLFXs6xy7wr5axAjMe9qKxt3cBoRe5JmpCZY2hjyToxa+4
-	rZfAd2dgWEoAEVifZz9fzH89S/eyHeNZcSCLuQ2Lo4nXMLbomIXb/OT9LOzW9OE9
-	RX60sOnQp9GDIb31c/rXzkBnV1KeZ35cS5ns7Ir4wn9QZ2S1NY/9A==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvnrte437-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 Jan 2026 15:33:41 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 60RFTbBk027291;
-	Tue, 27 Jan 2026 15:33:40 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvnrte42y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 Jan 2026 15:33:40 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 60RDnlDV026333;
-	Tue, 27 Jan 2026 15:33:39 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4bw9wk94jk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 Jan 2026 15:33:38 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 60RFXZZW51118590
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 27 Jan 2026 15:33:35 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F24D720040;
-	Tue, 27 Jan 2026 15:33:34 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AD4EB2004B;
-	Tue, 27 Jan 2026 15:33:34 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 27 Jan 2026 15:33:34 +0000 (GMT)
-From: Jens Remus <jremus@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
-        Steven Rostedt <rostedt@kernel.org>
-Cc: Jens Remus <jremus@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Indu Bhagat <indu.bhagat@oracle.com>,
-        "Jose E. Marchesi" <jemarch@gnu.org>,
-        Beau Belgrave <beaub@linux.microsoft.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>,
-        "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>,
-        Dylan Hatch <dylanbhatch@google.com>
-Subject: [RFC PATCH v1 5/5] s390/unwind_user: Enable signal frame unwinding of user space
-Date: Tue, 27 Jan 2026 16:33:31 +0100
-Message-ID: <20260127153331.2902504-6-jremus@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260127153331.2902504-1-jremus@linux.ibm.com>
-References: <20260127153331.2902504-1-jremus@linux.ibm.com>
+	s=arc-20240116; t=1769530586; c=relaxed/simple;
+	bh=+GktQ1kyEhAdFafRvrsn3ptLLIIul+XG9ykOzNal5tE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LU3QEkNLnYbycpEogh0GDBXeG0AWBVdPikX4bSIC1FW0i5yXoKMr8zrqByop4mAnY7kklWzCuJr7G6uJK1IodqLBghvMj/38PmZJKIzxKRhyCl9szuVNCI2QtCz4ITt9pM7CNzrz8/ugB8Eo0gzuqSjuHPbOPuTU+Lx+c7hFjCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WZnNkT0F; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OMwGReJQ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WZnNkT0F; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OMwGReJQ; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4AE1C5BCE6;
+	Tue, 27 Jan 2026 16:16:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1769530581; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=NM3xZy/NVVYdo7OOJlkDOtIlQ2nqjY+Mi3ZBRUML5Xs=;
+	b=WZnNkT0FlPmVQ3WXjLki1NeDkV2a1R4UuerK1dkKu9WamYDro4YaRn6w7IWLr3PNy4Iw6Y
+	CKg+YXhhX2XkrMWKOzepw7Rc2URg2u+4pAMRtSpttHGMX4Fy8L9Vfy3FMfjGV+dV31ZoSS
+	e1Zl0kWjhnNv7nVzqxSIwMwebXe6k6c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1769530581;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=NM3xZy/NVVYdo7OOJlkDOtIlQ2nqjY+Mi3ZBRUML5Xs=;
+	b=OMwGReJQTKdY/hIAlTFTij6F4MU3HFa+mJsYuJnptp1PvhQ+dVL4wdKyvD//7Mc5nKxLOk
+	ET+3T0TtJfTAwoDg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1769530581; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=NM3xZy/NVVYdo7OOJlkDOtIlQ2nqjY+Mi3ZBRUML5Xs=;
+	b=WZnNkT0FlPmVQ3WXjLki1NeDkV2a1R4UuerK1dkKu9WamYDro4YaRn6w7IWLr3PNy4Iw6Y
+	CKg+YXhhX2XkrMWKOzepw7Rc2URg2u+4pAMRtSpttHGMX4Fy8L9Vfy3FMfjGV+dV31ZoSS
+	e1Zl0kWjhnNv7nVzqxSIwMwebXe6k6c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1769530581;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=NM3xZy/NVVYdo7OOJlkDOtIlQ2nqjY+Mi3ZBRUML5Xs=;
+	b=OMwGReJQTKdY/hIAlTFTij6F4MU3HFa+mJsYuJnptp1PvhQ+dVL4wdKyvD//7Mc5nKxLOk
+	ET+3T0TtJfTAwoDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C1C293EA61;
+	Tue, 27 Jan 2026 16:16:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id OQ7SLdTkeGlULQAAD6G6ig
+	(envelope-from <sjaeckel@suse.de>); Tue, 27 Jan 2026 16:16:20 +0000
+From: Steffen Jaeckel <sjaeckel@suse.de>
+To: Sidraya Jayagond <sidraya@linux.ibm.com>,
+	Alexandra Winter <wintera@linux.ibm.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Matthieu Baerts <matttbe@kernel.org>
+Cc: Wenjia Zhang <wenjia@linux.ibm.com>,
+	Jan Karcher <jaka@linux.ibm.com>,
+	"D . Wythe" <alibuda@linux.alibaba.com>,
+	Tony Lu <tonylu@linux.alibaba.com>,
+	Wen Gu <guwen@linux.alibaba.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	linux-s390@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] dibs: Re-apply lost patch
+Date: Tue, 27 Jan 2026 17:16:11 +0100
+Message-ID: <20260127161611.2228083-1-sjaeckel@suse.de>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -114,144 +110,106 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Egw92gpmw21Tk624x5Mdz0ym_tBI3ZKX
-X-Authority-Analysis: v=2.4 cv=Uptu9uwB c=1 sm=1 tr=0 ts=6978dad5 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
- a=ZF5zZzGiEMQ9POZBm20A:9
-X-Proofpoint-ORIG-GUID: CJduqsfu8ckaT3gi-0pqezvQAKTeBaJV
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI3MDEyMSBTYWx0ZWRfX8rVLt5Xl7ClL
- FJE/3s2Blo2OpURe8yq6VPsvBVe8Vm9wYW7VMsTOkl+3R8iMgDwIfO0HawD+LZFSHhIbtjGE6rw
- ENwL1lXVV95OGhAdVze4bcQHr/0nfstMuJW3KARqIkIVh2JoUD2r4iRLdoELlTDkiTTJem7r4C9
- mM9xRSTJJUSyEs4szmvbxYlNX0oM+uBDQhkOs+5OIPQpgu/ZNlAzPHaNghd688/H156RYgnNfGk
- bzqhhciShiGtDxjAHq0JOHwG8FiE5LVbeXl/Fu/lah2CHn9NfpeTGearhtnSgTqzHg0gx9qj5yH
- dHmBDjjvhdSlUrHEFXBjIPR3JwaGWFIG5VMjkeVNL9jHQ7LqFTk7S4QlCSpDI3hXCikONv41kqk
- fwQFsl+iaZ4zbycUYSFIPlVZeTnvpRBN+cdvgSdme6f8PtJkDyWI9NPuzx0zyovY9fg2mgKNoD8
- E/zXH/m+B4NHAgarMIw==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-01-27_03,2026-01-27_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 priorityscore=1501 clxscore=1015 lowpriorityscore=0
- phishscore=0 adultscore=0 impostorscore=0 bulkscore=0 spamscore=0
- suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2601150000
- definitions=main-2601270121
+X-Spam-Score: -2.80
+X-Spam-Level: 
+X-Spam-Flag: NO
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	DMARC_POLICY_ALLOW(-0.50)[suse.de,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[30];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-16078-lists,linux-s390=lfdr.de];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jremus@linux.ibm.com,linux-s390@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-16082-lists,linux-s390=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	FROM_NEQ_ENVFROM(0.00)[sjaeckel@suse.de,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_COUNT_TWELVE(0.00)[13];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 5A759972C2
+	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,suse.de:email,suse.de:dkim,suse.de:mid]
+X-Rspamd-Queue-Id: 55BC5979DD
 X-Rspamd-Action: no action
 
-Provide a s390-specific implementation of unwind_user_signal_next(),
-that unwinds from a (RT) signal frame.
+While merging the dibs layer, Matt [1] noticed that the changes which were
+done in [2] conflicted and were missing. He subsequently fixed this in the
+merge commit of his own tree, but the changes never made it upstream.
 
-Signed-off-by: Jens Remus <jremus@linux.ibm.com>
+This commit re-introduces the changes.
+
+[1] https://lore.kernel.org/netdev/74368a5c-48ac-4f8e-a198-40ec1ed3cf5f@kernel.org/
+[2] a35c04de2565d ("net/smc: fix warning in smc_rx_splice() when calling get_page()")
+
+Fixes: cc21191b584c ("dibs: Move data path to dibs layer")
+Signed-off-by: Steffen Jaeckel <sjaeckel@suse.de>
 ---
- arch/s390/include/asm/unwind_user.h | 57 +++++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
+ drivers/dibs/dibs_loopback.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/arch/s390/include/asm/unwind_user.h b/arch/s390/include/asm/unwind_user.h
-index a7b97ea01c26..8f5524a24ae1 100644
---- a/arch/s390/include/asm/unwind_user.h
-+++ b/arch/s390/include/asm/unwind_user.h
-@@ -7,6 +7,7 @@
+diff --git a/drivers/dibs/dibs_loopback.c b/drivers/dibs/dibs_loopback.c
+index b3fd0f8100d4..aa029e29c6b2 100644
+--- a/drivers/dibs/dibs_loopback.c
++++ b/drivers/dibs/dibs_loopback.c
+@@ -12,6 +12,7 @@
+ #include <linux/bitops.h>
+ #include <linux/device.h>
+ #include <linux/dibs.h>
++#include <linux/mm.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
  #include <linux/types.h>
- #include <asm/asm-offsets.h>
- #include <asm/fpu.h>
-+#include <asm/sigframe.h>
- #include <asm/stacktrace.h>
- #include <linux/unwind_user_types.h>
+@@ -49,6 +50,7 @@ static int dibs_lo_register_dmb(struct dibs_dev *dibs, struct dibs_dmb *dmb,
+ {
+ 	struct dibs_lo_dmb_node *dmb_node, *tmp_node;
+ 	struct dibs_lo_dev *ldev;
++	struct folio *folio;
+ 	unsigned long flags;
+ 	int sba_idx, rc;
  
-@@ -67,6 +68,62 @@ static inline int arch_unwind_user_get_reg(unsigned long *val,
- }
- #define unwind_user_get_reg arch_unwind_user_get_reg
+@@ -70,13 +72,16 @@ static int dibs_lo_register_dmb(struct dibs_dev *dibs, struct dibs_dmb *dmb,
  
-+#define SVC_OPCODE		0x0a
-+#define INSN_SVC_SIGRETURN	((SVC_OPCODE << 8) | __NR_sigreturn)
-+#define INSN_SVC_RT_SIGRETURN	((SVC_OPCODE << 8) | __NR_rt_sigreturn)
+ 	dmb_node->sba_idx = sba_idx;
+ 	dmb_node->len = dmb->dmb_len;
+-	dmb_node->cpu_addr = kzalloc(dmb_node->len, GFP_KERNEL |
+-				     __GFP_NOWARN | __GFP_NORETRY |
+-				     __GFP_NOMEMALLOC);
+-	if (!dmb_node->cpu_addr) {
 +
-+static inline int unwind_user_signal_next(struct unwind_user_state *state)
-+{
-+	unsigned short insn;
-+	const _sigregs __user *sr;
-+	unsigned long sp, fp, ra;
-+
-+	/* ABI requires IP to be 2-byte aligned. */
-+	if (state->ip & 1)
-+		return -EINVAL;
-+
-+	if (__get_user(insn, (unsigned short __user *)state->ip))
-+		return -EINVAL;
-+
-+	/*
-+	 * A signal frame has the instruction pointer pointing to
-+	 * svc $__NR_sigreturn or svc $__NR_rt_sigreturn
-+	 */
-+	switch (insn) {
-+	case INSN_SVC_SIGRETURN:
-+		/* New-style non-RT frame.  */
-+		const struct sigframe __user *sf;
-+
-+		sf = (struct sigframe __user *)state->sp;
-+		if (__get_user(sr, (_sigregs __user **)&sf->sc.sregs))
-+			return -EINVAL;
-+		break;
-+	case INSN_SVC_RT_SIGRETURN:
-+		/* New-style RT frame.  */
-+		const struct rt_sigframe __user *rt_sf;
-+
-+		rt_sf = (struct rt_sigframe __user *)state->sp;
-+		sr = (_sigregs __user *)&rt_sf->uc.uc_mcontext;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	if (__get_user(sp, (unsigned long __user *)&sr->regs.gprs[15]))
-+		return -EINVAL;
-+	if (__get_user(fp, (unsigned long __user *)&sr->regs.gprs[11]))
-+		return -EINVAL;
-+	if (__get_user(ra, (unsigned long __user *)&sr->regs.psw.addr))
-+		return -EINVAL;
-+
-+	state->ip = ra;
-+	state->sp = sp;
-+	state->fp = fp;
-+	state->topmost = false;
-+	return 0;
-+}
-+#define unwind_user_signal_next unwind_user_signal_next
-+
- #endif /* CONFIG_UNWIND_USER */
++	/* not critical; fail under memory pressure and fallback to TCP */
++	folio = folio_alloc(GFP_KERNEL | __GFP_NOWARN | __GFP_NOMEMALLOC |
++			    __GFP_NORETRY | __GFP_ZERO,
++			    get_order(dmb_node->len));
++	if (!folio) {
+ 		rc = -ENOMEM;
+ 		goto err_node;
+ 	}
++	dmb_node->cpu_addr = folio_address(folio);
+ 	dmb_node->dma_addr = DIBS_DMA_ADDR_INVALID;
+ 	refcount_set(&dmb_node->refcnt, 1);
  
- #ifdef CONFIG_HAVE_UNWIND_USER_FP
+@@ -122,7 +127,7 @@ static void __dibs_lo_unregister_dmb(struct dibs_lo_dev *ldev,
+ 	write_unlock_bh(&ldev->dmb_ht_lock);
+ 
+ 	clear_bit(dmb_node->sba_idx, ldev->sba_idx_mask);
+-	kfree(dmb_node->cpu_addr);
++	folio_put(virt_to_folio(dmb_node->cpu_addr));
+ 	kfree(dmb_node);
+ 
+ 	if (atomic_dec_and_test(&ldev->dmb_cnt))
 -- 
-2.51.0
+2.52.0
 
 
