@@ -1,198 +1,351 @@
-Return-Path: <linux-s390+bounces-16062-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16064-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kMeQCE/SeGmNtQEAu9opvQ
-	(envelope-from <linux-s390+bounces-16062-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 15:57:19 +0100
+	id CCnIBhjceGnbtgEAu9opvQ
+	(envelope-from <linux-s390+bounces-16064-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 16:39:04 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF19996209
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 15:57:18 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 339CF96E2A
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 16:39:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id DD9A530DCC14
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 14:47:48 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id EC99A30FC382
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Jan 2026 15:20:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4210B35CBAA;
-	Tue, 27 Jan 2026 14:45:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11B16334C27;
+	Tue, 27 Jan 2026 15:20:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k1FxynCb"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="miPhskHb"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBCD1DEFE9;
-	Tue, 27 Jan 2026 14:45:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E676635C18D;
+	Tue, 27 Jan 2026 15:19:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769525132; cv=none; b=VDKTZzG9zIk4tvLha2+Erc8eWuUJMNph0xOk1o8bSNeUwRl6JAr5psC0ZOrJfe48cC6f/un94ZQrxEqLY8X+4/DORA4myzVJd5gCtGcF4fm89A0ng52LGF4kq2lrxr090vlOi3dNnjz05zhyCTaY9Fc53U9PvYv5cNZBB/ahZPI=
+	t=1769527200; cv=none; b=hQjb5L6nr/BVPE9W6iEDjPlAxbcwtLm+Q6/N/bmE7dL+povaR8hCgvInLg8o89QoinvDOvTMFxjlHtvsWgPv7joyK8gbI2NjOHTp249jMXhQsRFVq31jpout0AF7LRn/NdvhU9u3MDSq8hfeJcWDybxtYFSWelty5ULWM2RK9iM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769525132; c=relaxed/simple;
-	bh=0YGeP0O62Pc53bwcfFkz6Pdb1KEkMMpDyI0yE++MS9Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C3Yg/eTOBnVgdXMVAIH6VT70hs/jKYuTG2hyLPSSmoBO/UU2CZKa8SlkJXEB8YrP+Zt+fvDnE1xdXNY4lm4uy1pwoZ50RLsy2LKeeMHrMITTEi5dl9hdh1kMhFpTK13O2UJaiquGOPT7k2fh5Q2sv4GvTQr16yeEJsMeq6w9y/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k1FxynCb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38C21C116C6;
-	Tue, 27 Jan 2026 14:45:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769525131;
-	bh=0YGeP0O62Pc53bwcfFkz6Pdb1KEkMMpDyI0yE++MS9Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k1FxynCbgFyhQaZBWbdQ3U3/gG7zvUiYTdT05s4SfRvueGwkwdMXfQ67RXYmWXNMt
-	 nJcwbHtZ7igNbyW3UV297EDBMkUnggDFqkNCcRRA+vRpQtytrAnvyEHNrTU6qtdODo
-	 1LbCma+SiMl2LT5ZuLyH7tZpYFN9UJ2XKhsK4xuHGPaRH8LD/O8BLUfTlNb0oHlPNi
-	 O/otIJveig2kXrzcfYZMWTt5fvWceAjmmlhVGZjLExQFzzscRRARYyYJJl4ENA3zWK
-	 zldlROZ0P7SlFX+FcV4aIGqzhLCTEzmtf2d26kCH+JflCjYXc+hEeq7F76jfRgZo4e
-	 vcqAUDXHE61jQ==
-Date: Tue, 27 Jan 2026 15:45:29 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Ben Segall <bsegall@google.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ingo Molnar <mingo@redhat.com>, Jan Kiszka <jan.kiszka@siemens.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Kieran Bingham <kbingham@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Mel Gorman <mgorman@suse.de>, Michael Ellerman <mpe@ellerman.id.au>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Xin Zhao <jackzxcui1989@163.com>, linux-pm@vger.kernel.org,
-	linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 05/15] s390/time: Prepare to stop elapsing in
- dynticks-idle
-Message-ID: <aXjPiZCHZ77R4awi@localhost.localdomain>
-References: <20260116145208.87445-1-frederic@kernel.org>
- <20260116145208.87445-6-frederic@kernel.org>
- <20260121121748.9719Bab-hca@linux.ibm.com>
- <aXEVM-04lj0lntMr@localhost.localdomain>
- <20260122144045.38254A3e-hca@linux.ibm.com>
+	s=arc-20240116; t=1769527200; c=relaxed/simple;
+	bh=BHEKZDQxtcLcu8bUET63iG6q8QRsMhEumZx0xuCs+OU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WcYqxzF55BIzmO8YloqhGWX0Q7qQe7y/Odh2fkuy0jZLf0T02x6nVLvkT7pyj3/xFMChGLXEFBVLQroPfFUrJ5gjjS3vZizQUGxP8ZsmDVQxTvQw2LqXfkSVON3Rwf1r44ZZjC5tgyEkJK7Yx1pZ/A8WaG4FOmTtYNfuCPA+ZOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=miPhskHb; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 60R7KbEu030003;
+	Tue, 27 Jan 2026 15:19:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=HU28TJxOZUTuTrzCbvdp1PjK5mZZ
+	o7h2HeqeaLDoNG8=; b=miPhskHbJCmPnYjp9JT3KcBubgY9PBPW6KjnaK5mSeGw
+	eZky4kw39KgUl4rhLdX3O+MbhPy2VLTEcbMj2OsqULWEMyn2npUQa9F/NlYW88bQ
+	gDMaJDyUPQXa65HGYX6JTShPieQSW3pYB+D8yTZXOxvklK1OGfN9n4h0e4Btlox7
+	DcsRwMrpWUVEvTUWzoeFe8WpX8R4HHocDEMSUpBCGHd76wPYA5nm9UpdDeg/EVk5
+	4csKHpf7G3VjubWzy6zzesTuZZ85i8te9JxI302uv65GafYukjS0Kyt2QOFuVJA0
+	MPkVxmoHBAVMc3sJHa4GDMKw+dkxHnzQcz3Q+OiMZg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvnr648wf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 Jan 2026 15:19:37 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 60RFF5oJ020529;
+	Tue, 27 Jan 2026 15:19:36 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bvnr648wc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 Jan 2026 15:19:36 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 60RDWopW019844;
+	Tue, 27 Jan 2026 15:19:35 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4bw9dn153x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 Jan 2026 15:19:35 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 60RFJVKv48103758
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 27 Jan 2026 15:19:31 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7ECA120043;
+	Tue, 27 Jan 2026 15:19:31 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2AA7920040;
+	Tue, 27 Jan 2026 15:19:31 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 27 Jan 2026 15:19:31 +0000 (GMT)
+From: Jens Remus <jremus@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
+        Steven Rostedt <rostedt@kernel.org>
+Cc: Jens Remus <jremus@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Florian Weimer <fweimer@redhat.com>, Kees Cook <kees@kernel.org>,
+        "Carlos O'Donell" <codonell@redhat.com>, Sam James <sam@gentoo.org>,
+        Dylan Hatch <dylanbhatch@google.com>
+Subject: [PATCH v4 00/12] s390: SFrame user space unwinding
+Date: Tue, 27 Jan 2026 16:19:13 +0100
+Message-ID: <20260127151926.2805123-1-jremus@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260122144045.38254A3e-hca@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI3MDEyNSBTYWx0ZWRfX/blPfXEok/94
+ g2rpp3lCRHGNmL+Na2QIAIF88+axmMpwOeYt1HQRpzCiuqT0OUxTe9KxtnZS8QQoUQAQ7JMaQbe
+ jy6UWfRzd1gWgNF7xum7f986e+Jk2lGLW0NHbkaiSCKSD7A4X1uMMfCWNE8talSS0CjcwlQ2kF+
+ hVNuF6arh27Irv/UBwC7mdlrS4cjvDds465YXOq95sCyNFk9IOgzkylV9DKSITwIe3t6Os7cG5m
+ qAtZoSmmAACsmmoj53lQj4iQvXxUL87r8wXMHdHcinuWRjQFTU69RLnX1eUWpBxW9mYFf8alOQk
+ epVqY2zDYzKY0O5tmGNnzrsiIvepDqT+k2FRQhKX2tFh+XZ8zvcOUKanQrC9VRCblV8GeYBK/EC
+ Bcwz2k/1kTcA5T8NP45fKf2b/N4ASx8KTHtioD3Scu7yld6GeTy4fUa6SYaZtmtd7E2ZVXJK5b8
+ msTrvA15ROoT9NeL1GQ==
+X-Proofpoint-GUID: 245I_JxzFyitRqhZncf6CXB-w6LGeMzh
+X-Proofpoint-ORIG-GUID: SZen1Lwiy8UVy_11q9XW2X_Ecy13ls7A
+X-Authority-Analysis: v=2.4 cv=X+Vf6WTe c=1 sm=1 tr=0 ts=6978d789 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=jQNMc0NMXmn7CdNKdNAA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-01-27_03,2026-01-27_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 suspectscore=0 impostorscore=0 lowpriorityscore=0
+ clxscore=1015 spamscore=0 adultscore=0 malwarescore=0 bulkscore=0
+ phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2601150000
+ definitions=main-2601270125
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.16 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-16062-lists,linux-s390=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,linux.ibm.com,linutronix.de,google.com,gmail.com,arm.com,redhat.com,siemens.com,nvidia.com,suse.de,ellerman.id.au,infradead.org,goodmis.org,linaro.org,163.com,lists.ozlabs.org];
-	RCPT_COUNT_TWELVE(0.00)[34];
+	TAGGED_FROM(0.00)[bounces-16064-lists,linux-s390=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[30];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[frederic@kernel.org,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[jremus@linux.ibm.com,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	RCVD_COUNT_TWELVE(0.00)[13];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,localhost.localdomain:mid]
-X-Rspamd-Queue-Id: BF19996209
+	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,linux.ibm.com:mid]
+X-Rspamd-Queue-Id: 339CF96E2A
 X-Rspamd-Action: no action
 
-Le Thu, Jan 22, 2026 at 03:40:45PM +0100, Heiko Carstens a écrit :
-> On Wed, Jan 21, 2026 at 07:04:35PM +0100, Frederic Weisbecker wrote:
-> > BTW here is a question for you, does the timer (as in get_cpu_timer()) still
-> > decrements while in idle? I would assume not, given how lc->system_timer
-> > is updated in account_idle_time_irq().
-> 
-> It is not decremented while in idle (or when the hypervisor schedules
-> the virtual cpu away). We use the fact that the cpu timer is not
-> decremented when the virtual cpu is not running vs the real
-> time-of-day clock to calculate steal time.
+This series adds s390 support for unwinding of user space using SFrame V3.
+It is based on Josh's, Steven's, and my work (see prerequisites below).
+The generic unwind user (sframe) frameworks are extended to enable
+support for a few s390-particularities (see patches 5 and 6), including
+unwinding of user space using back chain (see patches 10-12).
 
-Ok, good then!
 
-> 
-> > And another question in this same function is this :
-> > 
-> >     lc->steal_timer += idle->clock_idle_enter - lc->last_update_clock;
-> > 
-> > clock_idle_enter is updated right before halting the CPU. But when was
-> > last_update_clock updated last? Could be either task switch to idle, or
-> > a previous idle tick interrupt or a previous idle IRQ entry. In any case
-> > I'm not sure the difference is meaningful as steal time.
-> > 
-> > I must be missing something.
-> 
-> "It has been like that forever" :) However I do agree that this doesn't seem
-> to make any sense. At least with the current implementation I cannot see how
-> that makes sense, since the difference of two time stamps, which do not
-> include any steal time are added.
-> 
-> Maybe it broke by some of all the changes over the years, or it was always
-> wrong, or I am missing something too.
-> 
-> Will investigate and address it if required. Thank you for bringing this up!
+Changes in v4:
+- Rebase on my user unwind sframe series v13, which provides SFrame V3
+  support.
 
-Ok, I take some relief from the fact it's not only unclear to me :-)
+Changes in RFC v3:
+- Rebase on and include my unwind user cleanup series v4, which includes
+  a simplification of unwind_user_word_size() on x86. (Linus)
+- Implement unwinding of user space using s390 back chain using unwind
+  user fp instead of introducing a new unwind user backchain. (Josh)
 
-> 
-> > > Not sure what to do with this. I thought about removing those sysfs files
-> > > already in the past, since they are of very limited use; and most likely
-> > > nothing in user space would miss them.
-> > 
-> > Perhaps but this file is a good comparison point against /proc/stat because
-> > s390 vtime is much closer to measuring the actual CPU halted time than what
-> > the generic nohz accounting does (which includes more idle code execution).
-> 
-> Yes, while comparing those files I also see an unexpected difference of
-> several seconds after two days of uptime; that is before your changes.
-> 
-> In theory the sum of idle and iowait in /proc/stat should be the same like the
-> per-cpu idle_time_us sysfs file. But there is a difference, which shouldn't be
-> there as far as I can tell. Yet another thing to look into.
+Changes in RFC v2:
+- Rebased on latest "unwind user" enhancements from Peter Zijlstra and
+  my latest "unwind user sframe" series v12.
+- Incorporated RFC v1 review feedback.
+- No new config options (except for unwind user backchain).
 
-Yes and that's expected both before and after my changes.
 
-* /proc/stat is the time spent between tick_nohz_idle_enter() and
-  tick_nohz_idle_exit() (to simplify, because there are some pause during
-  idle IRQs).
+Motivation:
 
-* The s390 idle sysfs file depicts more closely the time spent while the
-  CPU is really idle (and not executing idle code).
+On s390 unwinding using frame pointer (FP) is unsupported, because of
+lack of proper s390 64-bit (s390x) ABI specification and compiler
+support.  The ABI does only specify a "preferred" FP register.  Both GCC
+and Clang, regardless of compiler option -fno-omit-frame-pointer, setup
+the preferred FP register as late as possible, which usually is after
+static stack allocation, so that the CFA cannot be deduced from the FP
+without any further data, such as provided by DWARF CFI or SFrame.
 
-Different semantics and this is why you observe different results. I guess
-/proc/stat has higher values (with idle + iowait) and that is expected.
+In theory there is a s390-specific alternative of unwinding using
+back chain (compiler option -mbackchain), but this has its own
+limitations.  Ubuntu is currently the only distribution that that
+builds user space with back chain.
 
-Thanks.
+As a consequence the Kernel stack tracer cannot unwind user space
+(except if it is built with back chain).  Recording call graphs of user
+space using perf is limited to stack dump sampling (i.e. perf record
+--call-graph dwarf), which generates a fairly large amount of data and
+has limitations.
+
+Initial testing of recording call graphs using perf using the s390
+support for SFrame provided by RFC v1 of this series shows that
+data size notably improves:
+
+perf record data size is greatly reduced (smaller perf.data):
+
+  SFrame (--call-graph fp):
+  # perf record -F 9999 --call-graph fp objdump -wdWF objdump
+  [ perf record: Woken up 9 times to write data ]
+  [ perf record: Captured and wrote 2.498 MB perf.data (10891 samples) ]
+
+  Stack sampling (--call-graph dwarf) with a default stack size of 8192:
+  # perf record -F 9999 --call-graph dwarf objdump -wdWF objdump
+  [ perf record: Woken up 270 times to write data ]
+  [ perf record: Captured and wrote 67.467 MB perf.data (8241 samples) ]
+
+
+Prerequirements:
+
+This series applies on top of the latest unwind user sframe series
+"[PATCH v13 00/18] unwind_deferred: Implement sframe handling":
+https://lore.kernel.org/all/20260127150554.2760964-1-jremus@linux.ibm.com/
+
+Like above series it depends on the upcoming binutils 2.46 release to
+be used to build executables and libraries (e.g. vDSO) with SFrame V3
+on s390 (using the assembler option --gsframe-3).
+
+The unwind user sframe series depends on a Glibc patch from Josh, that
+adds support for the prctls introduced in the Kernel:
+https://lore.kernel.org/all/20250122023517.lmztuocecdjqzfhc@jpoimboe/
+Note that Josh's Glibc patch needs to be adjusted for the updated prctl
+numbers from "[PATCH v13 18/18] unwind_user/sframe: Add prctl() interface
+for registering .sframe sections":
+https://lore.kernel.org/all/20260127150554.2760964-19-jremus@linux.ibm.com/
+
+
+Overview:
+
+Patch 1 aligns asm/dwarf.h to x86 asm/dwarf2.h. [*]
+
+Patch 2 replicates Josh's x86 patch "x86/asm: Avoid emitting DWARF
+CFI for non-VDSO" for s390.  [*]
+
+Patch 3 changes the build of the vDSO on s390 to keep the function
+symbols for stack tracing purposes. [*]
+
+Patch 4 replicates Josh's patch "x86/vdso: Enable sframe generation
+in VDSO" for s390.  It enables generation of SFrame V3 stack trace
+information (.sframe section) for the vDSO if the assembler supports it.
+
+Patches 5 and 6 enable the generic unwind user (sframe) frameworks to
+support the following s390 particularities:
+
+- Patch 5 adds support for architectures that define their CFA as SP at
+  callsite + offset.
+
+- Patch 6 adds support for architectures that store the CFA offset
+  from CFA base register (e.g. SP or FP) in SFrame encoded.  For
+  instance on s390 the CFA offset is stored adjusted by -160 and
+  then scaled down by 8 to enable and improve the use of signed 8-bit
+  SFrame offsets (i.e. CFA, RA, and FP offset).
+
+Patch 7 converts several s390 ptrace function macros to inline
+functions. [*]
+
+Patch 8 introduces frame_pointer() in ptrace on s390, which is a
+prerequisite for enabling unwind user.
+
+Patch 9 adds support for unwinding of user space using SFrame on
+s390.  It leverages the extensions of the generic unwind user (sframe)
+frameworks from patches 5 and 6, as well as the unwind user sframe
+series support for SFrame V3 flexible FDEs.
+
+Patches 10 and 11 enable unwind user (fp) to support the following s390
+back chain particularities:
+
+- Patch 10 introduces FP/RA restore rule ZERO, which enables s390
+  back chain unwinding, which cannot unwind FP.
+
+- Patch 11 enables sophisticated architecture-specific initialization
+  of the FP frame, which enables s390 back chain unwinding to provide
+  dynamic information.
+
+Patch 12 adds support for unwinding of user space using back chain on
+s390.  Main reasons to support back chain on s390 are:
+- With Ubuntu there is a major distribution that builds user space with
+  back chain.
+- Java JREs, such as OpenJDK, do maintain the back chain in jitted code.
+
+
+Limitations:
+
+Unwinding of user space using back chain cannot - by design - restore
+the FP.  Therefore unwinding of subsequent frames using e.g. SFrame may
+fail, if the FP is the CFA base register.
+
+Thanks and regards,
+Jens
+
+Jens Remus (12):
+  s390: asm/dwarf.h should only be included in assembly files
+  s390/vdso: Avoid emitting DWARF CFI for non-vDSO
+  s390/vdso: Keep function symbols in vDSO
+  s390/vdso: Enable SFrame V3 generation in vDSO
+  unwind_user: Enable archs that define CFA = SP_callsite + offset
+  unwind_user/sframe: Enable archs with encoded SFrame CFA offsets
+  s390/ptrace: Convert function macros to inline functions
+  s390/ptrace: Provide frame_pointer()
+  s390/unwind_user/sframe: Enable sframe unwinding on s390
+  unwind_user: Introduce FP/RA recovery rule unknown
+  unwind_user/fp: Use arch-specific helper to initialize FP frame
+  s390/unwind_user/fp: Enable back chain unwinding of user space
+
+ arch/Kconfig                               |   7 ++
+ arch/s390/Kconfig                          |   2 +
+ arch/s390/include/asm/dwarf.h              |  53 ++++++---
+ arch/s390/include/asm/ptrace.h             |  43 +++++--
+ arch/s390/include/asm/unwind_user.h        | 132 +++++++++++++++++++++
+ arch/s390/include/asm/unwind_user_sframe.h |  21 ++++
+ arch/s390/kernel/vdso/Makefile             |   9 +-
+ arch/s390/kernel/vdso/vdso.lds.S           |   9 ++
+ arch/x86/include/asm/unwind_user.h         |  21 +++-
+ arch/x86/include/asm/unwind_user_sframe.h  |   2 +
+ include/asm-generic/Kbuild                 |   1 +
+ include/asm-generic/unwind_user_sframe.h   |  20 ++++
+ include/linux/unwind_user.h                |  19 +--
+ include/linux/unwind_user_types.h          |   2 +
+ kernel/unwind/sframe.c                     |   5 +-
+ kernel/unwind/sframe.h                     |  11 ++
+ kernel/unwind/user.c                       |  31 +++--
+ 17 files changed, 323 insertions(+), 65 deletions(-)
+ create mode 100644 arch/s390/include/asm/unwind_user.h
+ create mode 100644 arch/s390/include/asm/unwind_user_sframe.h
+ create mode 100644 include/asm-generic/unwind_user_sframe.h
 
 -- 
-Frederic Weisbecker
-SUSE Labs
+2.51.0
+
 
