@@ -1,166 +1,154 @@
-Return-Path: <linux-s390+bounces-16099-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16100-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4DpvAmxGemkp5AEAu9opvQ
-	(envelope-from <linux-s390+bounces-16099-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 28 Jan 2026 18:25:00 +0100
+	id EEljNEJKemkp5AEAu9opvQ
+	(envelope-from <linux-s390+bounces-16100-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 28 Jan 2026 18:41:22 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8328BA6CF7
-	for <lists+linux-s390@lfdr.de>; Wed, 28 Jan 2026 18:24:59 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09A72A70A2
+	for <lists+linux-s390@lfdr.de>; Wed, 28 Jan 2026 18:41:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 980E930B0AC2
-	for <lists+linux-s390@lfdr.de>; Wed, 28 Jan 2026 17:00:55 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 5BA08301F0EF
+	for <lists+linux-s390@lfdr.de>; Wed, 28 Jan 2026 17:33:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 675A231B825;
-	Wed, 28 Jan 2026 17:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="m2wKvC3q"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6DD4332EBD;
+	Wed, 28 Jan 2026 17:33:26 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081AE311597;
-	Wed, 28 Jan 2026 17:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD114313527;
+	Wed, 28 Jan 2026 17:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769619654; cv=none; b=eogfGQtlVGNalMfddU7+rIH7WLy21bQlJK3rEBxcuqqUQmjCBvdh+1JX4TabV7id0h46pJSbpZAM25LYFwRKjF3JUDMJPHZjcLaiPZ3GYVKOEzNxcfmzYX7jVBb3TBdASM7NOWWDRcJsjBZghxEd8MPu36wucV8Ij6EpABkoRZM=
+	t=1769621606; cv=none; b=GSrwAiFFfaStVk9o1hvClOIM4QykZ9mVA/8bfcftoxGCksB41OsuqKJyOZ9eK/vXtM42iQiUJ1Z44h2B+iyGHuxeLZEdA2HX/vdl1g+ZysOXvdrvHMss0WG3P9S3XweZ4NmSqb0ez+MwCD5xi9xqm2LgJN4Bs+mq42OSd0FXK2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769619654; c=relaxed/simple;
-	bh=C93Qi8apiusRugLC1Ad4iUhYBBSbRgs8N2Xrs/fAZFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TLJBiek4WUjJ7oyrw33lOicbriDlC493E0vtMy4beeXUI8AybYkpAomO11lsSTa5jgNhTOLHek/8/Hv7+bC4rUDcHbSjheW9dy7PmN3nbEh+2E8Kr4Nfb1zfdZUWM6kd4bt1GATYFfK1MEzixtXeIo3+WmH8OTYE9vfJw6a2DzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=m2wKvC3q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF87CC4CEF7;
-	Wed, 28 Jan 2026 17:00:50 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="m2wKvC3q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1769619644;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tn4g/9//RsuI8p+PfBKBMGxP/jMELrcAL7s9pAP33WA=;
-	b=m2wKvC3qDETjKG8j143DAoxEEYCt8XypTTP1fkG55IkiGr/El87+qNAqFmJAhmO5Ss4QvO
-	luTaIueGqjBBUWvKkPauPs45CQSo4/Z464etuqYdgloGfvYxQ/yKi612qCksjG3596dGqI
-	ftt2n6cXvdkVFbr1KrLxJuY4x/ZjghA=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id bd2c9de1 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Wed, 28 Jan 2026 17:00:40 +0000 (UTC)
-Date: Wed, 28 Jan 2026 18:00:30 +0100
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	David Laight <david.laight.linux@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] prandom: Add __always_inline version of
- prandom_u32_state()
-Message-ID: <aXpArjZ1QQowshnA@zx2c4.com>
-References: <20260119130122.1283821-1-ryan.roberts@arm.com>
- <20260119130122.1283821-3-ryan.roberts@arm.com>
+	s=arc-20240116; t=1769621606; c=relaxed/simple;
+	bh=N8Xf6iF1gZpji7o6pTipZRVaUHG2I6YU1WVvIdOJGPE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cqLoNa0oo8AyjYGq2LZC6AZuNNW/Dx9Dxps3S8EhHy9y1QT2PrJeJKjrZJmEFNFgrMX8FDJe1qALZTgpEnuH/j5muHnBCqPLXgsHqPdqUQP123Yfgx+ZseQA7eja2lGPRiAxZ0WjuJH76fU+sAKGLtlbihgS8q7/53r58Kazbqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 64D841516;
+	Wed, 28 Jan 2026 09:33:17 -0800 (PST)
+Received: from [10.1.36.159] (unknown [10.1.36.159])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 800BC3F632;
+	Wed, 28 Jan 2026 09:33:20 -0800 (PST)
+Message-ID: <670c2b78-02e2-4617-80d9-3c896077f02a@arm.com>
+Date: Wed, 28 Jan 2026 17:33:19 +0000
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260119130122.1283821-3-ryan.roberts@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/3] prandom: Add __always_inline version of
+ prandom_u32_state()
+Content-Language: en-GB
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
+ Ard Biesheuvel <ardb@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>,
+ David Laight <david.laight.linux@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20260119130122.1283821-1-ryan.roberts@arm.com>
+ <20260119130122.1283821-3-ryan.roberts@arm.com> <aXpArjZ1QQowshnA@zx2c4.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <aXpArjZ1QQowshnA@zx2c4.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [0.14 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[zx2c4.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[zx2c4.com:s=20210105];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
+	DMARC_POLICY_SOFTFAIL(0.10)[arm.com : SPF not aligned (relaxed), No valid DKIM,none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_CC(0.00)[arm.com,kernel.org,linux.ibm.com,ellerman.id.au,dabbelt.com,eecs.berkeley.edu,linutronix.de,redhat.com,alien8.de,linux.intel.com,arndb.de,gmail.com,vger.kernel.org,lists.infradead.org,lists.linux.dev,lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-16099-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-16100-lists,linux-s390=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[30];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[zx2c4.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[Jason@zx2c4.com,linux-s390@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-s390];
+	FROM_NEQ_ENVFROM(0.00)[ryan.roberts@arm.com,linux-s390@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	NEURAL_HAM(-0.00)[-0.978];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[zx2c4.com:mid,zx2c4.com:dkim,arm.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 8328BA6CF7
+	R_DKIM_NA(0.00)[];
+	TAGGED_RCPT(0.00)[linux-s390];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,arm.com:mid,arm.com:email]
+X-Rspamd-Queue-Id: 09A72A70A2
 X-Rspamd-Action: no action
 
-On Mon, Jan 19, 2026 at 01:01:09PM +0000, Ryan Roberts wrote:
-> We will shortly use prandom_u32_state() to implement kstack offset
-> randomization and some arches need to call it from non-instrumentable
-> context. So let's implement prandom_u32_state() as an out-of-line
-> wrapper around a new __always_inline prandom_u32_state_inline(). kstack
-> offset randomization will use this new version.
+On 28/01/2026 17:00, Jason A. Donenfeld wrote:
+> On Mon, Jan 19, 2026 at 01:01:09PM +0000, Ryan Roberts wrote:
+>> We will shortly use prandom_u32_state() to implement kstack offset
+>> randomization and some arches need to call it from non-instrumentable
+>> context. So let's implement prandom_u32_state() as an out-of-line
+>> wrapper around a new __always_inline prandom_u32_state_inline(). kstack
+>> offset randomization will use this new version.
+>>
+>> Acked-by: Mark Rutland <mark.rutland@arm.com>
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>> ---
+>>  include/linux/prandom.h | 20 ++++++++++++++++++++
+>>  lib/random32.c          |  8 +-------
+>>  2 files changed, 21 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/include/linux/prandom.h b/include/linux/prandom.h
+>> index ff7dcc3fa105..801188680a29 100644
+>> --- a/include/linux/prandom.h
+>> +++ b/include/linux/prandom.h
+>> @@ -17,6 +17,26 @@ struct rnd_state {
+>>  	__u32 s1, s2, s3, s4;
+>>  };
+>>  
+>> +/**
+>> + * prandom_u32_state_inline - seeded pseudo-random number generator.
+>> + * @state: pointer to state structure holding seeded state.
+>> + *
+>> + * This is used for pseudo-randomness with no outside seeding.
+>> + * For more random results, use get_random_u32().
+>> + * For use only where the out-of-line version, prandom_u32_state(), cannot be
+>> + * used (e.g. noinstr code).
+>> + */
+>> +static __always_inline u32 prandom_u32_state_inline(struct rnd_state *state)
 > 
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-> ---
->  include/linux/prandom.h | 20 ++++++++++++++++++++
->  lib/random32.c          |  8 +-------
->  2 files changed, 21 insertions(+), 7 deletions(-)
+> This is pretty bikesheddy and I'm not really entirely convinced that my
+> intuition is correct here, but I thought I should at least ask. Do you
+> think this would be better called __prandom_u32_state(), where the "__"
+> is kind of a, "don't use this directly unless you know what you're doing
+> because it's sort of internal"? It seems like either we make this inline
+> for everybody, or if there's a good reason for having most users use the
+> non-inline version, then we should be careful that new users don't use
+> the inline version. I was thinking the __ would help with that.
+
+I'm certainly happy to do that, if that's your preference. I have to respin this
+anyway, given the noinstr issue.
+
 > 
-> diff --git a/include/linux/prandom.h b/include/linux/prandom.h
-> index ff7dcc3fa105..801188680a29 100644
-> --- a/include/linux/prandom.h
-> +++ b/include/linux/prandom.h
-> @@ -17,6 +17,26 @@ struct rnd_state {
->  	__u32 s1, s2, s3, s4;
->  };
->  
-> +/**
-> + * prandom_u32_state_inline - seeded pseudo-random number generator.
-> + * @state: pointer to state structure holding seeded state.
-> + *
-> + * This is used for pseudo-randomness with no outside seeding.
-> + * For more random results, use get_random_u32().
-> + * For use only where the out-of-line version, prandom_u32_state(), cannot be
-> + * used (e.g. noinstr code).
-> + */
-> +static __always_inline u32 prandom_u32_state_inline(struct rnd_state *state)
+> Jason
 
-This is pretty bikesheddy and I'm not really entirely convinced that my
-intuition is correct here, but I thought I should at least ask. Do you
-think this would be better called __prandom_u32_state(), where the "__"
-is kind of a, "don't use this directly unless you know what you're doing
-because it's sort of internal"? It seems like either we make this inline
-for everybody, or if there's a good reason for having most users use the
-non-inline version, then we should be careful that new users don't use
-the inline version. I was thinking the __ would help with that.
-
-Jason
 
