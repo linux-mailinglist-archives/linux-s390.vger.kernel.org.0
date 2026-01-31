@@ -1,169 +1,148 @@
-Return-Path: <linux-s390+bounces-16121-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16122-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QJSDGx4ZfWkhQQIAu9opvQ
-	(envelope-from <linux-s390+bounces-16121-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 30 Jan 2026 21:48:30 +0100
+	id 6PhPLqVvfWmTSAIAu9opvQ
+	(envelope-from <linux-s390+bounces-16122-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Sat, 31 Jan 2026 03:57:41 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 232D6BE87B
-	for <lists+linux-s390@lfdr.de>; Fri, 30 Jan 2026 21:48:30 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17EE6C067A
+	for <lists+linux-s390@lfdr.de>; Sat, 31 Jan 2026 03:57:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 1F5E3300D0D5
-	for <lists+linux-s390@lfdr.de>; Fri, 30 Jan 2026 20:48:27 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BCF9B300EFB6
+	for <lists+linux-s390@lfdr.de>; Sat, 31 Jan 2026 02:57:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75958350A0B;
-	Fri, 30 Jan 2026 20:48:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0386731AF2D;
+	Sat, 31 Jan 2026 02:57:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JxKbmbFb"
+	dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b="Zoh8m/D2"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 116C32E6CA0
-	for <linux-s390@vger.kernel.org>; Fri, 30 Jan 2026 20:48:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E92930B517;
+	Sat, 31 Jan 2026 02:57:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.181.231.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769806106; cv=none; b=HoFMqEtMbEX4n8C+/wPA43FWcFIqT9JtXVMI6WTjIkTW/kH13oG3jE+X83LrcWSroa3lPV2adgwlDkwPHWILQN24VkhPesYU/dgtnA+s1pCD5bS2Bu6M2ukzHYmgFyjVTo8JRuFODq21ktaAwllZ5oLayxsS13u22HezhfeQku4=
+	t=1769828258; cv=none; b=ic6iHO4qgDhiGlOl47dDbMpUMN3AybMS3XREKoxipV8HHmFIhRHGwBuK1840PqgciLM1Md9Cna8CQ5D5Pd+kOjLU/9aWPR4jSgBIjYHCo0vOm9WfbshqG+S4vX6QefLDm8xO0wTLYQenrFB0HLRf9aKmE+WOeH5Ot/0g6lPCYZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769806106; c=relaxed/simple;
-	bh=WcTJzlSzYQ3GdQ4ZKrgKXfine1j1UbideT72PsQJz7o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ubAbNIOVCiFIW81EFSB4urW+0np3OqTcxl1pH5Qs3V6wYrMSJxBqZyDcwHKaW2yr/7iplAi3Hkn37Eh4TPJp1N7uHtLnVdIWWfATdRA2kHucLk/Qcj2a377vHvElHUSpzypaEZY7Jbtny+6y5oc9aw6uuAIH0BTP3cm+jVIHl1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JxKbmbFb; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-47ee0291921so23434105e9.3
-        for <linux-s390@vger.kernel.org>; Fri, 30 Jan 2026 12:48:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769806103; x=1770410903; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wyJyqKV6sfd+4rm1C0f1aBd4NEfWaqE99sc9YOO/X6o=;
-        b=JxKbmbFbcnEPYltNFT+3kpskrhkR37I42Nem/xhMqrj9fcMPKmjAtUGewtlRd06Ov3
-         UFRxklA6iVhnHZ3bPmsHs4w+U8Ct1aOXLclZwe/xKk3w64JEcNxi7uHnGihQt802LJAQ
-         4AAswBSeXVjbQFGbp19pntzR+0oiJ48inkYfWb+qi2eY4G6Fly1mHVloMn5XIbYnbEo7
-         SEFFLj0b8jgp2tgcj98Gij7vHpQCUPyY4QOFyOkr97p7hFhppxdG4KvhPlcH7nBv4SBG
-         MKqTQ6dDr6wc3AA+J+T6FxGrXzWf8+1+ss65e+9YDb6qAdypHGS4E0mYqKCeoBNwpCyE
-         kVZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769806103; x=1770410903;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wyJyqKV6sfd+4rm1C0f1aBd4NEfWaqE99sc9YOO/X6o=;
-        b=riuKw5q0ra+4OYRDyIL9zB6ygdGQ+L7g1mxJ1n5hXRQeolqHjydUoL/yo8AOeIb2yf
-         9ygDGYnTccUNCOELMa4+1wWvHj13CO5OstxSGoX7jMw2ERTR4C6MtFG7l5AEpGyyHHJ2
-         I4Q07lhQiibcOJmTLgmdy62swKSC6qydaLlVCy3aOyB3OBwCKYgx09+DVg9eZcsZXeVB
-         xejK+wivRnf5obX4tAil2KFYRdYaVr3+r9BAZJPOsIp9SpKhUZWer0/JaCIBpRWz4U84
-         8rDdoDxgTSd+ntEytlK+e3SDig8pBTyptHkS+C/gJQwq6cczNvDk6ZaLs1mHFea7/zRE
-         tESw==
-X-Gm-Message-State: AOJu0YypBnLhwQA/3nwdMNCLo80N2YMKFhEDo1YmctIAXaFct0aQl9Hr
-	OrzdKfbIw9UkPs0EovYGHD2DezqO7NLA1ob3vAk/vAvtQTCOXYke+hfR
-X-Gm-Gg: AZuq6aI8RHtObN9ziN0WCTmaegZCpZlTFmeh28yntn+KhMsK8HV4rsN7LB7oEwXzXD/
-	tlzCtBfYv1DeG8ohcv/AXP76VUdLp3C3gcIA13FmpSG3Cjv5pTzgdcZeABANsQf1FfMTBXyYSIP
-	v5AV7bqtX6P0BBXMFlHawjMjafcoCAdwusoQXLSMoWwrg/YnFqXYSA0apRkCJGOGvXiSOXinc7e
-	0WrWofOTG2U6pluEBNC6jGThiJOzkStm8IAwAg1PmKJaopRZiASvO+sx1J5G6qvK9rHAcPi5iTj
-	s3dzx7PzqjGChWz1EHmnRx07o42aEt8T9fNckjRp94ZoDe9Qqk7bpIJ8F9JcCLlOZWJ7CAKXX1I
-	ieFGLNzQ9FKqHKRdfvAOL8NfHJNmhcpVPVwMMOBrCHXJ1pTIFAI9J1iXevltMW54W4ph09E/94B
-	I7OQt1pAD2F9C50NNe5Sj8Gq6QZWLaRl1QdfEp
-X-Received: by 2002:a05:600c:3ba0:b0:47e:e71a:e13a with SMTP id 5b1f17b1804b1-482db4ee2camr47791655e9.32.1769806103186;
-        Fri, 30 Jan 2026 12:48:23 -0800 (PST)
-Received: from localhost.localdomain ([196.235.250.51])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4806cd8fadfsm221557985e9.0.2026.01.30.12.48.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jan 2026 12:48:22 -0800 (PST)
-From: Salah Triki <salah.triki@gmail.com>
-To: Vineeth Vijayan <vneethv@linux.ibm.com>,
-	Peter Oberparleiter <oberpar@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Salah Triki <salah.triki@gmail.com>
-Subject: [PATCH] s390/cio: fix device lifecycle handling in css_alloc_subchannel()
-Date: Fri, 30 Jan 2026 21:47:59 +0100
-Message-ID: <20260130204800.217395-1-salah.triki@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1769828258; c=relaxed/simple;
+	bh=oyw4qxQ9aKEeO3I4dGus8c5TMQkAHI6aL0/Yzq07Rwk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oz2tIrFd8+u+RIlHuJ6QI7/T1rorBv9AG+BDhiKtB6TOOHMgvnGNqUhHCH2VJfLhrr0wt3cKfXKspaiscsCyxTUiTJF5Tsit4J4RS56HWn7v8ZOHE9aXUGvpfgvF2H2eVTT30w1dpAm3CfdqRFskZ5uSg0voRpakE/Pzuzp842A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b=Zoh8m/D2; arc=none smtp.client-ip=180.181.231.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=gondor.apana.org.au; s=h01; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:cc:to:subject:message-id:date:
+	from:content-type:reply-to; bh=PbmHJi7+ZZdhmCHdlTxWH9iRruNjhuV0J18meGymZFs=; 
+	b=Zoh8m/D2FnzcNVgaT+gYOxEyw+5CcEijJDMsodVtumj8d8E3UmwaoKwb9aI/OmNFM4q7A0PuoF6
+	i6zH/jWiHmc2UL0HzqxOw9VYWh9VpmTDzOAcGhwL1ECgIbUqaODD5lQX89ontraSGkAEYZEmDVOgy
+	2f8kXP9dQPvxM/Sx7Zwfb2WklwyPv+IUCKHdt9w7ddCOFremSQgBQX911/LlHZrMyBzx0w0jIuDhk
+	lGxDQ708G1/KxSiEHG0DScqUbmP6NfNgZutLs+iO2zXy4IkOsIdKIF4CPcjhdN/SyvJbUU1XsHwim
+	CpmXk5wp+hNAz1l/QaGhslseppuM9J10+nfQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1vm1Az-003S1o-2R;
+	Sat, 31 Jan 2026 10:57:34 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sat, 31 Jan 2026 10:57:33 +0800
+Date: Sat, 31 Jan 2026 10:57:33 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Harald Freudenberger <freude@linux.ibm.com>
+Cc: linux-crypto@vger.kernel.org, linux-s390@vger.kernel.org,
+	hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com
+Subject: Re: [PATCH v2 0/4] Paes and Phmac: Refuse clear key material by
+ default
+Message-ID: <aX1vnU06JiY1q0ua@gondor.apana.org.au>
+References: <20260115120026.4286-1-freude@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260115120026.4286-1-freude@linux.ibm.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	DMARC_POLICY_ALLOW(-0.50)[apana.org.au,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[gondor.apana.org.au:s=h01];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
+	TAGGED_FROM(0.00)[bounces-16122-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-16121-lists,linux-s390=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[salahtriki@gmail.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[gondor.apana.org.au:+];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCPT_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[herbert@gondor.apana.org.au,linux-s390@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	MID_RHS_MATCH_FROM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 232D6BE87B
+	DBL_BLOCKED_OPENRESOLVER(0.00)[gondor.apana.org.au:mid,gondor.apana.org.au:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,apana.org.au:url,apana.org.au:email]
+X-Rspamd-Queue-Id: 17EE6C067A
 X-Rspamd-Action: no action
 
-`css_alloc_subchannel()` calls `device_initialize()` before setting up
-the DMA masks. If `dma_set_coherent_mask()` or `dma_set_mask()` fails,
-the error path frees the subchannel structure directly, bypassing
-the device model reference counting.
+On Thu, Jan 15, 2026 at 01:00:22PM +0100, Harald Freudenberger wrote:
+> The modivation of these patches is to disable clear key usage
+> of the protected key implementations paes and phmac by default.
+> 
+> With a new kernel module parameter "clrkey" this behavior can be
+> controlled. By default clrkey is 'N' but for testing purpose on module
+> load a true value (1, 'Y') may be given to accept clear key tokens.
+> 
+> Note that during selftest clear keys are always used and thus as long
+> as the algorithm is in larval state indicated by
+> crypto_skcipher_tested() clear keys need to be accepted. However, in
+> this state there is no way to establish an instance of the tfm other
+> than for selftest reasons.
+> 
+> Changelog:
+> 
+> v0: Initial version. Request for internal feedback and review
+>     Please note I assume that patch #1 goes via s390, whereas
+>     patch #2, #3 and #4 may go via Herbert Xu's Linux Kernel Crypto.
+> v1: Sequence changed and feedback from Ingo, Holger and Heiko
+>     integrated.
+> v2: Integrated the feedback from Holger and Ingo. First version
+>     going out to the linux kernel crypto mailing list
+> 
+> Harald Freudenberger (4):
+>   crypto: skcipher - Add new helper function crypto_skcipher_tested
+>   s390/pkey: Support new xflag PKEY_XFLAG_NOCLEARKEY
+>   crypto: s390/phmac - Refuse clear key material by default
+>   crypto: s390/paes - Refuse clear key material by default
+> 
+>  arch/s390/crypto/paes_s390.c       | 93 ++++++++++++++++++------------
+>  arch/s390/crypto/phmac_s390.c      | 29 +++++++---
+>  arch/s390/include/asm/pkey.h       |  8 ++-
+>  drivers/s390/crypto/pkey_cca.c     |  5 ++
+>  drivers/s390/crypto/pkey_ep11.c    |  5 ++
+>  drivers/s390/crypto/pkey_pckmo.c   | 12 +++-
+>  include/crypto/internal/skcipher.h |  7 +++
+>  7 files changed, 110 insertions(+), 49 deletions(-)
+> 
+> 
+> base-commit: 9448598b22c50c8a5bb77a9103e2d49f134c9578
+> --
+> 2.43.0
 
-Once `device_initialize()` has been called, the embedded struct device
-must be released via `put_device()`, allowing the release callback to
-free the container structure.
-
-Fix the error path by dropping the initial device reference with
-`put_device()` instead of calling `kfree()` directly.
-
-This ensures correct device lifetime handling and avoids potential
-use-after-free or double-free issues.
-
-Fixes: e5dcf0025d7af ("s390/css: move subchannel lock allocation")
-
-Signed-off-by: Salah Triki <salah.triki@gmail.com>
----
- drivers/s390/cio/css.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
-index 4c85df7a548e..ac24e019020e 100644
---- a/drivers/s390/cio/css.c
-+++ b/drivers/s390/cio/css.c
-@@ -235,7 +235,7 @@ struct subchannel *css_alloc_subchannel(struct subchannel_id schid,
- 	return sch;
- 
- err:
--	kfree(sch);
-+	put_device(&sch->dev);
- 	return ERR_PTR(ret);
- }
- 
+All applied.  Thanks.
 -- 
-2.43.0
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
 
