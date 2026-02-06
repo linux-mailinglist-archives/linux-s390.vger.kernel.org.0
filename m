@@ -1,265 +1,179 @@
-Return-Path: <linux-s390+bounces-16221-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16222-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mMvINCJghmn/MQQAu9opvQ
-	(envelope-from <linux-s390+bounces-16221-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 06 Feb 2026 22:41:54 +0100
+	id IC8fFJFnhmmAMwQAu9opvQ
+	(envelope-from <linux-s390+bounces-16222-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 06 Feb 2026 23:13:37 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB14B1037EF
-	for <lists+linux-s390@lfdr.de>; Fri, 06 Feb 2026 22:41:53 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB2AF103ADB
+	for <lists+linux-s390@lfdr.de>; Fri, 06 Feb 2026 23:13:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 842E4302171E
-	for <lists+linux-s390@lfdr.de>; Fri,  6 Feb 2026 21:41:52 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id B07693012850
+	for <lists+linux-s390@lfdr.de>; Fri,  6 Feb 2026 22:13:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13EDC2D97A6;
-	Fri,  6 Feb 2026 21:41:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABEC0309F0D;
+	Fri,  6 Feb 2026 22:13:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J9+CuQV2"
+	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="ZMFI7pNg";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cMoF1xgh"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27CDE56A;
-	Fri,  6 Feb 2026 21:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4630F303A1A;
+	Fri,  6 Feb 2026 22:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770414111; cv=none; b=QvfF3GAr+chcVda+R7lVV0A8TtItPuTcvM+72a4iGKzrvljtgthHXgRXb5NxTB7hFl28WhaUpgmysGnDe8qeuD+LL2OlAqM8H3ex7sjGxXcL+ZqmoDfUKaUrsiODNcFuy9ygwNuIbd1/AAzzI/E5hMzWp24vXkmdYOP0/LoEbe8=
+	t=1770416012; cv=none; b=GCPgtwTlaUUvV+7jCJXQjTMdFpt5/QSvfDdhdLVPMBLOp7P6yHePxLDj3LXnBuVKNPWENoNYGgws+bOSMY1X8+qiO9gozq7EyxjGs+4IDPc83+HKi9ChwQ4V6EjCpZzfqvxzQ4BnlTiH3gX9Lsu3vBYdWCyimAP/iTrybLyBSz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770414111; c=relaxed/simple;
-	bh=AtlbjLihUSF1rF9S5oKMg7a3NWtvDMM3zeP9lG6qKzQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T7NhU9PWikK862YxgSv/laC3wdAhKkwnAtJoiRehDoW+P3FiwKpGFZWB4WYBMU87j1oxSXMy6HzZZD6mXHoNL4IwEKTiZrP7FCNCFafjPgFw7R6/dj/0/rlCHW/X2wDBzwMyAqluVMAbo8WDZ5c+d5Jpkb1H0n0w9sXutUjqb60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J9+CuQV2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5881C116C6;
-	Fri,  6 Feb 2026 21:41:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770414110;
-	bh=AtlbjLihUSF1rF9S5oKMg7a3NWtvDMM3zeP9lG6qKzQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J9+CuQV2POmTqabibD56Fhk6l+xnaG1V0Y73+9m8gCg0CdnGd4ZAgxaaW9ywq3++r
-	 wLg/RZ+/ngAX8CV9LnRAtBgiZxh+ifvX4Xq+FXCA3RwNl9lZlM/xsU33WgsxqnWbfs
-	 P/01zBY7/RQGFqrAJMlfcO82z05q4nsEyDMXowBgdsTuJnbKdE9ZsSoAx5HjXjltO1
-	 bmDdSzAzwwttYOmiDg0K4L8tnGy5M23wiDioLzbYigdRqVugmfNtMQCBa+hxF6vENm
-	 eTNs7L6f17uNas/ip4a0Vrqu+7IJTO6VB57q4bGHgJBP4wWdnusbbMyGjUvtppbNdm
-	 chv66UHDAzT9g==
-Date: Fri, 6 Feb 2026 18:41:46 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, namhyung@kernel.org,
-	agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-	hca@linux.ibm.com, japo@linux.ibm.com,
-	James Clark <james.clark@linaro.org>
-Subject: Re: [PATCH] perf/test: Fix test case Leader sampling on s390.
-Message-ID: <aYZgGlh3e84ZrUNQ@x1>
-References: <20251128091139.1309755-1-tmricht@linux.ibm.com>
+	s=arc-20240116; t=1770416012; c=relaxed/simple;
+	bh=L7i0Sz3eO7RBI5TN5ntjQtLExJefod8fLQ5VVDQ0yDQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mUHdStbhi0bgacwlm0vBKAeva5A13e8+tEbftgbSoej+z4vFescNyovc5L2Jn6PAx0cJK3VYhSv7b2rwwCXGEy2pfg/hLyR778jml93dHlh5mYzd9+o2YAJpUqc0RIXDSlzhAU1DYcQJbqWNf7h2d62KCt4ThgL6kAcWILABLZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=ZMFI7pNg; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=cMoF1xgh; arc=none smtp.client-ip=202.12.124.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
+Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
+	by mailfout.stl.internal (Postfix) with ESMTP id 7C3721D00011;
+	Fri,  6 Feb 2026 17:13:31 -0500 (EST)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-12.internal (MEProxy); Fri, 06 Feb 2026 17:13:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1770416011;
+	 x=1770502411; bh=kDc1sN6h/MEdA3hS+mH1kELrGrgw+AmtTh16NpDYUmw=; b=
+	ZMFI7pNgcIiciXNyGLvsIaCt/Zd4ld2qZ/f+flQUHyNb0wx4HadcYbuIzd5SzGgs
+	G/D1N50yTEHrOA2Pl2Adoh2GXoq/HAKV10EIcnnipVUK6LT+lg8gO7Xhn+VZadur
+	yBzj1SabZ4rgFvcILSf9LIqpWfblM+Kwmqs0SgiMlWOPoo5uEj8TXa1e3KZ1Em2H
+	S0Sl3HW81lC4bY35cr/VklaIlUSYF6IgIQiOwM2XRWwlJA+oiEICprlRuYVx+H67
+	oOKjSOapaDEVXRrFv9oExu6pjoRHc3KcfEywn+TFo/FoFcjjYddUXwCqjaMSaZHY
+	Fz5089LvC5sKiYswyymEpQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1770416011; x=
+	1770502411; bh=kDc1sN6h/MEdA3hS+mH1kELrGrgw+AmtTh16NpDYUmw=; b=c
+	MoF1xghZ9fphvIUsPiENuvaoDhsoZtLdZM5C8Fe4m5c9dU0vsQmdxmMTK3oL0e7C
+	L+eosJSSqYGuRzxXADj4WfUgSivldhr7MXnIyxi320hJin+DZJ1wkwnPVrnOfQ3n
+	L/7F197bTv+GwFuOwY7ZRUk/5pJ6+xaIkWsH5YzF0xazAZlnvUsSQ2mxqwrisogQ
+	35gIex+MD0QE0cheJL+ZPKdFcmZ9lyHoUZH+0MTYzZgLMTVkPueVk5A9xHFLwLnL
+	JrdFNYDhd46oEEwwyyOyQW2hqb1x0uRW0sOJ2KaQFHPN5mZ/LM7qslnizmRNj/NO
+	fTYP+ftP9Ag0gWvXzfoEw==
+X-ME-Sender: <xms:i2eGaR8mDnXq-C2DJKF7CCa5lhJatXRKBW6fGURNgDV9ohvUl82FIw>
+    <xme:i2eGaT-bUvYJvNFwXA7q1UoSads207_Ih8s7Khp95aeIoO6pQM7yZoSL13QkgvvAD
+    E2BpgOfwhuMfqTqwnnlnfn6Co73JAEUnjrdt5zXV0H4jR3QgkN0>
+X-ME-Received: <xmr:i2eGaYX3CNC_PQmg9FGzV2bGxbKHmXUoqkn6e3Su4mmhIaMVSHs03gPNZkk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddukeelfeefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepfffhvfevuffkjghfofggtgfgsehtjeertdertddvnecuhfhrohhmpeetlhgvgicu
+    hghilhhlihgrmhhsohhnuceorghlvgigsehshhgriigsohhtrdhorhhgqeenucggtffrrg
+    htthgvrhhnpedvkeefjeekvdduhfduhfetkedugfduieettedvueekvdehtedvkefgudeg
+    veeuueenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grlhgvgiesshhhrgiisghothdrohhrghdpnhgspghrtghpthhtohepledpmhhouggvpehs
+    mhhtphhouhhtpdhrtghpthhtohepfhgrrhhmrghnsehlihhnuhigrdhisghmrdgtohhmpd
+    hrtghpthhtohepmhhjrhhoshgrthhosehlihhnuhigrdhisghmrdgtohhmpdhrtghpthht
+    oheprghlihhfmheslhhinhhugidrihgsmhdrtghomhdprhgtphhtthhopegsohhrnhhtrh
+    grvghgvghrsehlihhnuhigrdhisghmrdgtohhmpdhrtghpthhtohepfhhrrghnkhhjrges
+    lhhinhhugidrihgsmhdrtghomhdprhgtphhtthhopehimhgsrhgvnhgurgeslhhinhhugi
+    drihgsmhdrtghomhdprhgtphhtthhopegurghvihgusehkvghrnhgvlhdrohhrghdprhgt
+    phhtthhopehlihhnuhigqdhsfeeltdesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtph
+    htthhopehkvhhmsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:i2eGaYe0sx0mCxasNf_FMrmXBWhVkyJnQ0TPBkQLHUkM5dzzFdE2vw>
+    <xmx:i2eGaZZC9GdddHeaRkxqdzsn_H_KKUo5m6MzCspE1BbmSdRk4M-bjg>
+    <xmx:i2eGacOITOrKA9A6PTPXTlgqGawGRsgxS6H8ChGQheqlfJlsEHvX5Q>
+    <xmx:i2eGaXWminvFSqfAqTrxYHg91eF3ceU8FtiSzJTjdV7wNrg6T2X7nQ>
+    <xmx:i2eGaUSgfQk_uJNDX4-sUaMZaW7OhacWgTV9SYQLILsOMP_IKFhDo6oY>
+Feedback-ID: i03f14258:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 6 Feb 2026 17:13:30 -0500 (EST)
+Date: Fri, 6 Feb 2026 15:13:29 -0700
+From: Alex Williamson <alex@shazbot.org>
+To: Eric Farman <farman@linux.ibm.com>
+Cc: Matthew Rosato <mjrosato@linux.ibm.com>, Farhan Ali
+ <alifm@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda
+ <imbrenda@linux.ibm.com>, David Hildenbrand <david@kernel.org>,
+ linux-s390@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: Replace backup for s390 vfio-pci
+Message-ID: <20260206151329.0d92d78e@shazbot.org>
+In-Reply-To: <20260202144557.1771203-1-farman@linux.ibm.com>
+References: <20260202144557.1771203-1-farman@linux.ibm.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251128091139.1309755-1-tmricht@linux.ibm.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
+	DMARC_POLICY_ALLOW(-0.50)[shazbot.org,none];
+	R_DKIM_ALLOW(-0.20)[shazbot.org:s=fm2,messagingengine.com:s=fm3];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-16221-lists,linux-s390=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.998];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[acme@kernel.org,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
+	DKIM_TRACE(0.00)[shazbot.org:+,messagingengine.com:+];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-16222-lists,linux-s390=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[alex@shazbot.org,linux-s390@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linaro.org:email]
-X-Rspamd-Queue-Id: EB14B1037EF
+	RCVD_COUNT_FIVE(0.00)[6];
+	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-0.998];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[messagingengine.com:dkim,shazbot.org:email,shazbot.org:dkim,shazbot.org:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: AB2AF103ADB
 X-Rspamd-Action: no action
 
-On Fri, Nov 28, 2025 at 10:11:39AM +0100, Thomas Richter wrote:
-> The subtest 'Leader sampling' some time fails on s390.
-> - for z/VM guest: Disable the test for z/VM guest. There is no
->   CPU Measurement facility to run the test successfully.
-> - for LPAR: Use correct event names.
+On Mon,  2 Feb 2026 15:45:57 +0100
+Eric Farman <farman@linux.ibm.com> wrote:
 
-This one fell thru the cracks, still applies cleanly and the extra logic
-affects only s390, applying to perf-tools-next,
-
-- Arnaldo
- 
-> A detailed analysis follows here:
-> Now to the debugging and investigation:
-> 1. With command
->        perf record -e '{cycles,cycles}:S' -- ....
->    the first cycles event starts sampling.
->    On s390 this sets up sampling with a frequency of 4000 Hz.
->    This translates to hardware sample rate of 1377000 instructions per
->    micro-second to meet a frequency of 4000 HZ.
+> Farhan has been doing a masterful job coming on in the
+> s390 PCI space, and my own attention has been lacking.
+> Let's make MAINTAINERS reflect reality.
 > 
-> 2. With first event cycles now sampling into a hardware buffer, an
->    interrupt is triggered each time a sampling buffer gets full.
->    The interrupt handler is then invoked and debug output shows the
->    processing of samples.  The size of one hardware sample is 32 bytes.
->    With an interrupt triggered when the hardware buffer page of 4KB
->    gets full, the interrupt handler processes 128 samples.
->    (This is taken from s390 specific fast debug data gathering)
->    2025-11-07 14:35:51.977248  000003ffe013cbfa \
-> 	   perf_event_count_update event->count 0x0 count 0x1502e8
->    2025-11-07 14:35:51.977248  000003ffe013cbfa \
-> 	   perf_event_count_update event->count 0x1502e8 count 0x1502e8
->    2025-11-07 14:35:51.977248  000003ffe013cbfa \
-> 	   perf_event_count_update event->count 0x2a05d0 count 0x1502e8
->    2025-11-07 14:35:51.977252  000003ffe013cbfa \
-> 	   perf_event_count_update event->count 0x3f08b8 count 0x1502e8
->    2025-11-07 14:35:51.977252  000003ffe013cbfa \
-> 	   perf_event_count_update event->count 0x540ba0 count 0x1502e8
->    2025-11-07 14:35:51.977253  000003ffe013cbfa \
-> 	   perf_event_count_update event->count 0x690e88 count 0x1502e8
->    2025-11-07 14:35:51.977254  000003ffe013cbfa \
-> 	   perf_event_count_update event->count 0x7e1170 count 0x1502e8
->    2025-11-07 14:35:51.977254  000003ffe013cbfa \
-> 	   perf_event_count_update event->count 0x931458 count 0x1502e8
->    2025-11-07 14:35:51.977254  000003ffe013cbfa \
-> 	   perf_event_count_update event->count 0xa81740 count 0x1502e8
-> 
-> 3. The value is constantly increasing by the number of instructions
->    executed to generate a sample entry.  This is the first line of the
->    pairs of lines. count 0x1502e8 --> 1377000
-> 
->    # perf script | grep 1377000 | wc -l
->    214
->    # perf script | wc -l
->    428
->    #
->    That is 428 lines in total, and half of the lines contain value
->    1377000.
-> 
-> 4. The second event cycles is opened against the counting PMU, which
->    is an independent PMU and is not interrupt driven.  Once enabled it
->    runs in the background and keeps running, incrementing silently
->    about 400+ counters. The counter values are read via assembly
->    instructions.
-> 
->    This second counter PMU's read call back function is called when the
->    interrupt handler of the sampling facility processes each sample. The
->    function call sequence is:
-> 
->    perf_event_overflow()
->    +--> __perf_event_overflow()
->         +--> __perf_event_output()
->                +--> perf_output_sample()
->                     +--> perf_output_read()
->                          +--> perf_output_read_group()
-> 	                          for_each_sibling_event(sub, leader) {
-> 		values[n++] = perf_event_count(sub, self);
-> 		printk("%s sub %p values %#lx\n", __func__, sub, values[n-1]);
-> 			          }
-> 
->    The last function perf_event_count() is invoked on the second event
->    cylces *on* the counting PMU. An added printk statement shows the
->    following lines in the dmesg output:
-> 
->    # dmesg|grep perf_output_read_group |head -10
->    [  332.368620] perf_output_read_group sub 00000000d80b7c1f values 0x3a80917 (1)
->    [  332.368624] perf_output_read_group sub 00000000d80b7c1f values 0x3a86c7f (2)
->    [  332.368627] perf_output_read_group sub 00000000d80b7c1f values 0x3a89c15 (3)
->    [  332.368629] perf_output_read_group sub 00000000d80b7c1f values 0x3a8c895 (4)
->    [  332.368631] perf_output_read_group sub 00000000d80b7c1f values 0x3a8f569 (5)
->    [  332.368633] perf_output_read_group sub 00000000d80b7c1f values 0x3a9204b
->    [  332.368635] perf_output_read_group sub 00000000d80b7c1f values 0x3a94790
->    [  332.368637] perf_output_read_group sub 00000000d80b7c1f values 0x3a9704b
->    [  332.368638] perf_output_read_group sub 00000000d80b7c1f values 0x3a99888
->    #
-> 
->    This correlates with the output of
->    # perf report -D | grep 'id 00000000000000'|head -10
->    ..... id 0000000000000006, value 00000000001502e8, lost 0
->    ..... id 000000000000000e, value 0000000003a80917, lost 0 --> line (1) above
->    ..... id 0000000000000006, value 00000000002a05d0, lost 0
->    ..... id 000000000000000e, value 0000000003a86c7f, lost 0 --> line (2) above
->    ..... id 0000000000000006, value 00000000003f08b8, lost 0
->    ..... id 000000000000000e, value 0000000003a89c15, lost 0 --> line (3) above
->    ..... id 0000000000000006, value 0000000000540ba0, lost 0
->    ..... id 000000000000000e, value 0000000003a8c895, lost 0 --> line (4) above
->    ..... id 0000000000000006, value 0000000000690e88, lost 0
->    ..... id 000000000000000e, value 0000000003a8f569, lost 0 --> line (5) above
-> 
-> Summary:
-> - Above command starts the CPU sampling facility, with runs interrupt
->   driven when a 4KB page is full. An interrupt processes the 128 samples
->   and calls eventually perf_output_read_group() for each sample to save it
->   in the event's ring buffer.
-> 
-> - At that time the CPU counting facility is invoked to read the value of
->   the event cycles. This value is saved as the second value in the
->   sample_read structure.
-> 
-> - The first and odd lines in the perf script output displays the period
->   value between 2 samples being created by hardware. It is the number
->   of instructions executes before the hardware writes a sample.
-> 
-> - The second and even lines in the perf script output displays the number
->   of CPU cycles needed to process each sample and save it in the event's
->   ring buffer.
-> These 2 different values can never be identical on s390.
-> 
-> Since event leader sampling is not possible on s390 the perf tool will
-> return EOPNOTSUPP soon. Perpare the test case for that.
-> 
-> Suggested-by: James Clark <james.clark@linaro.org>
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Tested-by: Jan Polensky <japo@linux.ibm.com>
-> Reviewed-by: Jan Polensky <japo@linux.ibm.com>
+> Signed-off-by: Eric Farman <farman@linux.ibm.com>
 > ---
->  tools/perf/tests/shell/record.sh | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
+>  MAINTAINERS | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-> index 0f5841c479e7..46b96d565680 100755
-> --- a/tools/perf/tests/shell/record.sh
-> +++ b/tools/perf/tests/shell/record.sh
-> @@ -260,7 +260,21 @@ test_uid() {
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 0efa8cc6775b..0d7e76313492 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -23094,7 +23094,8 @@ F:	include/uapi/linux/vfio_ccw.h
 >  
->  test_leader_sampling() {
->    echo "Basic leader sampling test"
-> -  if ! perf record -o "${perfdata}" -e "{cycles,cycles}:Su" -- \
-> +  events="{cycles,cycles}:Su"
-> +  [ $(uname -m) = "s390x" ] && {
-> +    [ ! -d /sys/devices/cpum_sf ] && {
-> +      echo "No CPUMF [Skipped record]"
-> +      return
-> +    }
-> +    events="{cpum_sf/SF_CYCLES_BASIC/,cycles}:Su"
-> +    perf record -o "${perfdata}" -e "$events" -- perf test -w brstack 2> /dev/null
-> +    # Perf grouping might be unsupported, depends on version.
-> +    [ "$?" -ne 0 ] && {
-> +      echo "Grouping not support [Skipped record]"
-> +      return
-> +    }
-> +  }
-> +  if ! perf record -o "${perfdata}" -e "$events" -- \
->      perf test -w brstack 2> /dev/null
->    then
->      echo "Leader sampling [Failed record]"
-> -- 
-> 2.52.0
+>  S390 VFIO-PCI DRIVER
+>  M:	Matthew Rosato <mjrosato@linux.ibm.com>
+> -M:	Eric Farman <farman@linux.ibm.com>
+> +M:	Farhan Ali <alifm@linux.ibm.com>
+> +R:	Eric Farman <farman@linux.ibm.com>
+>  L:	linux-s390@vger.kernel.org
+>  L:	kvm@vger.kernel.org
+>  S:	Supported
+
+Acked-by: Alex Williamson <alex@shazbot.org>
+
+Given the cc list, I'm guessing this is intended to go via s390,
+otherwise please let me know if I should take it.  Thanks,
+
+Alex
 
