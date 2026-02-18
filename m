@@ -1,165 +1,186 @@
-Return-Path: <linux-s390+bounces-16361-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16365-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uH3VA9TKlWlrUwIAu9opvQ
-	(envelope-from <linux-s390+bounces-16361-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 18 Feb 2026 15:21:08 +0100
+	id SBbsMtTYlWmmVQIAu9opvQ
+	(envelope-from <linux-s390+bounces-16365-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 18 Feb 2026 16:20:52 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8840315706C
-	for <lists+linux-s390@lfdr.de>; Wed, 18 Feb 2026 15:21:07 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2FFFB1575B2
+	for <lists+linux-s390@lfdr.de>; Wed, 18 Feb 2026 16:20:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 220EB3057689
-	for <lists+linux-s390@lfdr.de>; Wed, 18 Feb 2026 14:20:35 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E5E4F3008208
+	for <lists+linux-s390@lfdr.de>; Wed, 18 Feb 2026 15:20:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEFB3339B32;
-	Wed, 18 Feb 2026 14:20:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Cr4xg/TE"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE66133DEE6;
+	Wed, 18 Feb 2026 15:20:49 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55BAA33375A;
-	Wed, 18 Feb 2026 14:20:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC7AF334683;
+	Wed, 18 Feb 2026 15:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771424423; cv=none; b=csg1NAunbnzbD2XhB5X0yZ+VJfmmgcpufRRhCvPneV9r2KP7xTfw7dIf1WTO0tA2z3Q8iisVeDowCj7PkXjsnNU07rf4p65vYYbmH4occ0hJU8A9boEiC+LQaAizRxBMYky/biR8WpA43vTK0BN2UVVDP1iWoACQT6I41DIKYNw=
+	t=1771428049; cv=none; b=NyjFYHIYP/w4napMz2yHX8ykZcUCm6XtQNnhCQUTG5Op+Yh0WY4tztPl33ctVuNtBwY+i6Vq5opbb/g5eSLyaByCEeZIHIHZ+BURcodyimTcBJrkoAQ2GPmMoTWhBog+lVXevK64PyUlwWrjG4BZP7SvVADyASiKO5Fez6OBVoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771424423; c=relaxed/simple;
-	bh=AzO8qn5Es8351c4DVXFkVW86beJOaZUPsL+q9ceLsCs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z65m8XdHR/NM5r3T6Lp0JLAU1g5r6xCkmlhMdMpaZWHDrsXIcljO+fNaYpZXLB9fHSlKaZhA9unXIfP39GT3dZKHi/qVt9w3SLc6MgqWHYw7rUgFQQ+sfM/rNmKLXiEE5DZKQtQ489RKzpu0Maix6U+kTZGrA+xdFia/r1RIpqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Cr4xg/TE; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61ID0DbX3334363;
-	Wed, 18 Feb 2026 14:20:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=yeGWdE8uNY5P7s+vQ
-	uu05pHnoMk6lEZ85TtCMCLs57E=; b=Cr4xg/TErbyl9aY6Z7xo4kADJVKwd6JYz
-	HPy1N0/X5T+N7f3WwLgmXD4Gbm0XPDkz7MeQQ//aQ2KqD8U7aCWrGZeSzrNcg18B
-	VjMkc9b68ki9lODhU3UeNFhHWIaoyUsXWloAHgamphheaDag8qGEZThOLK+tS740
-	cZTC1IydKXVQv0xT850eEzB6AE5dg2sYN8WyGyb/s/sfM+EJ/lZpVvU4m0mwYLIU
-	D5Wt4NQ+4GB0DwJJSxi4WDIbAXD6Qv/3jAKFxP6Z9aNLSQTINU/ktyXFbGh770OV
-	XTPQ8y2VI1Q4pcu5E8E9Hc+oYsoHLZw+3ycPQS5IZ7EQpyYKSXE/A==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4caj4kgdt9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Feb 2026 14:20:19 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 61IDIE42017891;
-	Wed, 18 Feb 2026 14:20:18 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ccb28g3cy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Feb 2026 14:20:18 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 61IEKEYL15204764
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 18 Feb 2026 14:20:14 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C1C1220040;
-	Wed, 18 Feb 2026 14:20:14 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9857320043;
-	Wed, 18 Feb 2026 14:20:14 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 18 Feb 2026 14:20:14 +0000 (GMT)
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Frederic Weisbecker <frederic@kernel.org>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [PATCH 9/9] s390/idle: Remove psw_idle() prototype
-Date: Wed, 18 Feb 2026 15:20:12 +0100
-Message-ID: <20260218142012.863464-10-hca@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260218142012.863464-1-hca@linux.ibm.com>
-References: <20260218142012.863464-1-hca@linux.ibm.com>
+	s=arc-20240116; t=1771428049; c=relaxed/simple;
+	bh=Ao5mD3Q+WTXCpJ+gFtNlcVBNBqafVvxRYOedK/Uy9Vk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HA4wTv4N9L0sFbzX6zSkMbl3X5dBZXHvfqYGy6hE2FXvynDdomnDLW8Ca6SDRW5HXShP8+kJvlAGdZid+NhGGFwHjiLw61TU50kYYRjPJwsXsbzkzK2kdQYf+StanDwiGv8zXCA54zgjUldIZn9MVEvGZyLHrkB6tNLue38zI6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9997339;
+	Wed, 18 Feb 2026 07:20:33 -0800 (PST)
+Received: from [10.57.81.199] (unknown [10.57.81.199])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 990193F7F5;
+	Wed, 18 Feb 2026 07:20:34 -0800 (PST)
+Message-ID: <8531da33-a4dc-48ac-abf3-c831d4493afb@arm.com>
+Date: Wed, 18 Feb 2026 15:20:32 +0000
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjE4MDEyMCBTYWx0ZWRfX+yihf1auqkZm
- wlfxr8zlV10gnStpMkxy2+QPp9K3PDMxKgH1GO/6QncClz404x4TbGsP3IdNbq/JMOLm/kuXVdY
- AJpkZBCy7kbS/5goa2lciipu9ompefk1pNMQFGSZwIWBTGDdYD/mNKvJuP56FUsoCfLul9g9heX
- oqm4Jm27PBnY5LAJsrhoyjdkQArpiZyIZg67UnMoi/VM/OE6BCJsx4CdA+n4OoWenyOLj5r1rsS
- ENM2G8eXUv4CyJY4fFOVOBhBvuo2jHQEUL/bVaDGlnFy3ErdbGXJQYlJsZlMYQiw8BWeg1xRxRy
- xBfwWBsUzDdmPcmu8jcM5Sz+BBSIt1po3IwCPyrjGWPJz1noHYCCO9fwWe9EW6dnq28icK4b+t7
- n5HPMmd3uC1rswn+LnD71ErJpiFCXlddGbXQ6cvDp0+HNmGWjAo0fg2z1Qa3ks0xxDjx3NFTU7K
- uXh0dnNV0dOs3qwK6Gw==
-X-Proofpoint-ORIG-GUID: BUG1jwINBmkA0QlvIMQj6puRGX8UCm1Z
-X-Proofpoint-GUID: BUG1jwINBmkA0QlvIMQj6puRGX8UCm1Z
-X-Authority-Analysis: v=2.4 cv=M7hA6iws c=1 sm=1 tr=0 ts=6995caa3 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22 a=Mpw57Om8IfrbqaoTuvik:22
- a=GgsMoib0sEa3-_RKJdDe:22 a=VnNF1IyMAAAA:8 a=aUtqUClxCCh-7yMeKAEA:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-18_02,2026-02-18_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 malwarescore=0 lowpriorityscore=0 clxscore=1015 phishscore=0
- impostorscore=0 suspectscore=0 priorityscore=1501 adultscore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602180120
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/3] randomize_kstack: Unify random source across
+ arches
+Content-Language: en-GB
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: kernel test robot <lkp@intel.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ Ard Biesheuvel <ardb@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>,
+ David Laight <david.laight.linux@gmail.com>, llvm@lists.linux.dev,
+ oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org
+References: <20260119130122.1283821-4-ryan.roberts@arm.com>
+ <202601210752.6Nsv9et9-lkp@intel.com>
+ <46c7d109-b076-4bb3-9e6e-36c34c546c20@arm.com> <aXDHSIn3hIvESjXg@J2N7QTR9R3>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <aXDHSIn3hIvESjXg@J2N7QTR9R3>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [0.14 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
+	DMARC_POLICY_SOFTFAIL(0.10)[arm.com : SPF not aligned (relaxed), No valid DKIM,none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-16361-lists,linux-s390=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[32];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hca@linux.ibm.com,linux-s390@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-16365-lists,linux-s390=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_CC(0.00)[intel.com,arm.com,kernel.org,linux.ibm.com,ellerman.id.au,dabbelt.com,eecs.berkeley.edu,linutronix.de,redhat.com,alien8.de,linux.intel.com,arndb.de,zx2c4.com,gmail.com,lists.linux.dev,vger.kernel.org,lists.infradead.org,lists.ozlabs.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 8840315706C
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ryan.roberts@arm.com,linux-s390@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	R_DKIM_NA(0.00)[];
+	TAGGED_RCPT(0.00)[linux-s390];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[01.org:url,git-scm.com:url,arm.com:mid,intel.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 2FFFB1575B2
 X-Rspamd-Action: no action
 
-psw_idle() does not exist anymore. Remove its prototype.
+On 21/01/2026 12:32, Mark Rutland wrote:
+> On Wed, Jan 21, 2026 at 10:52:21AM +0000, Ryan Roberts wrote:
+>> On 20/01/2026 23:50, kernel test robot wrote:
+>>> Hi Ryan,
+>>>
+>>> kernel test robot noticed the following build warnings:
+>>>
+>>> [auto build test WARNING on akpm-mm/mm-everything]
+>>> [also build test WARNING on linus/master v6.19-rc6 next-20260119]
+>>> [cannot apply to tip/sched/core kees/for-next/hardening kees/for-next/execve]
+>>> [If your patch is applied to the wrong git tree, kindly drop us a note.
+>>> And when submitting patch, we suggest to use '--base' as documented in
+>>> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>>>
+>>> url:    https://github.com/intel-lab-lkp/linux/commits/Ryan-Roberts/randomize_kstack-Maintain-kstack_offset-per-task/20260119-210329
+>>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+>>> patch link:    https://lore.kernel.org/r/20260119130122.1283821-4-ryan.roberts%40arm.com
+>>> patch subject: [PATCH v4 3/3] randomize_kstack: Unify random source across arches
+>>> config: x86_64-allmodconfig (https://download.01.org/0day-ci/archive/20260121/202601210752.6Nsv9et9-lkp@intel.com/config)
+>>> compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+>>> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260121/202601210752.6Nsv9et9-lkp@intel.com/reproduce)
+>>>
+>>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+>>> the same patch/commit), kindly add following tags
+>>> | Reported-by: kernel test robot <lkp@intel.com>
+>>> | Closes: https://lore.kernel.org/oe-kbuild-all/202601210752.6Nsv9et9-lkp@intel.com/
+>>>
+>>> All warnings (new ones prefixed by >>):
+>>>
+>>>>> vmlinux.o: warning: objtool: do_syscall_64+0x2c: call to preempt_count_add() leaves .noinstr.text section
+>>>>> vmlinux.o: warning: objtool: __do_fast_syscall_32+0x3d: call to preempt_count_add() leaves .noinstr.text section
+>>
+>> Hmm, clearly Dave was correct not to rush this through... yuck. I'll take a
+>> look, but I guess there is no rush if this won't go into -next until shortly
+>> after -rc1.
+> 
+> Sorry, I should have checked the entry sequencing more thoroughly when I
+> reviewed this,.
+> 
+> From a quick look, I suspect the right thing to do is to pull the call
+> to add_random_kstack_offset() a bit later in a few cases; after the
+> entry logic has run, and after instrumentation_begin() (if the arch code
+> uses that), such that it doesn't matter if this gets instrumented.
+> 
+> Considering the callers of add_random_kstack_offset(), if we did that:
+> 
+> * arm64 is fine as-is.
+> 
+> * loongarch is fine as-is.
+> 
+> * powerpc's system_call_exception() would need this moved after the
+>   user_exit_irqoff(). Given that function is notrace rather than
+>   noinstr, it looks like there are bigger extant issues here.
+> 
+> * riscv is fine as-is.
+> 
+> * s390's __do_syscall() would need this moved after
+>   enter_from_user_mode().
+> 
+> * On x86:
+>   - do_int80_emulation() is fine as-is.
+>   - int80_emulation() is fine as-is.
+>   - do_int80_syscall_32() would need this moved after
+>     instrumentation_begin().
+>   - __do_fast_syscall_32() would need this moved after
+>     instrumentation_begin().
+>   - do_syscall_64() would need this moved after instrumentation_begin().
 
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
----
- arch/s390/include/asm/idle.h | 2 --
- 1 file changed, 2 deletions(-)
+Thanks for the detailed suggestions, Mark. I've taken this approach, and
+assuming perf testing doesn't throw up any issue, I'm going to revert back to
+using the out-of-line version of prandom_u32_state() and will drop patch 2.
 
-diff --git a/arch/s390/include/asm/idle.h b/arch/s390/include/asm/idle.h
-index 8c5aa7329461..32536ee34aa0 100644
---- a/arch/s390/include/asm/idle.h
-+++ b/arch/s390/include/asm/idle.h
-@@ -24,6 +24,4 @@ DECLARE_PER_CPU(struct s390_idle_data, s390_idle);
- extern struct device_attribute dev_attr_idle_count;
- extern struct device_attribute dev_attr_idle_time_us;
- 
--void psw_idle(struct s390_idle_data *data, unsigned long psw_mask);
--
- #endif /* _S390_IDLE_H */
--- 
-2.51.0
+Thanks,
+Ryan
+
+
+> 
+> Mark.
 
 
