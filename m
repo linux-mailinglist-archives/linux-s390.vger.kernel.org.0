@@ -1,181 +1,475 @@
-Return-Path: <linux-s390+bounces-16467-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16469-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MCUpLAnAnmnsXAQAu9opvQ
-	(envelope-from <linux-s390+bounces-16467-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Feb 2026 10:25:29 +0100
+	id +ByLBT/GnmkuXQQAu9opvQ
+	(envelope-from <linux-s390+bounces-16469-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 25 Feb 2026 10:51:59 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34132194EAB
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Feb 2026 10:25:29 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84F4F195525
+	for <lists+linux-s390@lfdr.de>; Wed, 25 Feb 2026 10:51:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 6F5F0300CCA9
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Feb 2026 09:19:36 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 57B8E307C9F7
+	for <lists+linux-s390@lfdr.de>; Wed, 25 Feb 2026 09:46:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D03F38BF7F;
-	Wed, 25 Feb 2026 09:19:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB98C30148C;
+	Wed, 25 Feb 2026 09:46:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="s9ehq6KB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pZamFFOV"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82DC38E13D;
-	Wed, 25 Feb 2026 09:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C844E283CB5;
+	Wed, 25 Feb 2026 09:46:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772011173; cv=none; b=WpNNjDLr1cFlJkfm2DZpBu/gZdAeh5z/v7mLYTg3n92Tw/DJ2EkAOiLqHQZK4+VzY0bf8Sy/JMZ4ltknxTU4SoEyYnPcGLGF4RUYXhNBfygbxIvEWW29vVrOvW4m6dLc58BxfaMWL6Miy1NGOjIJb/eE0aLZvd/swn3U8i+qCic=
+	t=1772012762; cv=none; b=b1JdsWrJvxVmcExq8DKv+z6TZJyOfjcDOrV9XlVPl9BqTW/4t/5kkT20C+aZi1A9DaUsUruve7LND/3r8UxsVLnCLNdDcdXeJt8vQUJhwq3YWu2QK/NLzRlV2AHIUcprZl67RJBjqjAPrCCdK1qof3FR9Qy7d0doG+ZQgGFDHcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772011173; c=relaxed/simple;
-	bh=0meuorykT4zFIKJ01w8wv7iLcoHa6OtLoVxSULAqE1s=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=VPfEjARD+4nRf0O8mnSm3Ybk5aDr/R9moKQ74KSiLYNBhN6d/UaV5bVWvYAK4ILxjUdy4NHMasgsGQ8YCqpjBvfwgnMNtoRjDe0q7av6CGmLDxM9QBtLgvOYgg389JuX1YNy1YWO2QXPYFFCQAC6dT4/7N8WGVqO+b1Lqt55J/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=s9ehq6KB; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61OLCJ0o3039381;
-	Wed, 25 Feb 2026 09:19:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=tft1VbLqTO1YStaWTqpmRc4gmZ9XBA
-	RBCVDYbd3HgKo=; b=s9ehq6KBCLYj+RpB9XiHiD1zQ8Vsyq7BGcdUN4F6FTRpfD
-	6UonMK7ked51ljqhNXLaofloy10brUPETtGmoRlmXPCf6V++3cmPDFocqx1thBIj
-	Rx7GSClA2dGdo/iIhg4pyABFYEWAuvhG+DJmRenhcvgkPmLlD1ao5VotpQNdenVp
-	55S4ELVjxaBfKn7MbWwtZqzZ4OjzrLLbEob3yq4xEJ/mfY3VojfaE+hOseSiNCIL
-	dB4sTXyZToOUAn0cVY//yr6EzeJAzkyYEsomiNaVf6QbQXpzE9lqsIsX7zA9hION
-	7VeTVHUqTqqYOGv0mV+OPL0jFKxvjhTqKMB55SHA==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cf4cqyfqm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Feb 2026 09:19:28 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 61P8nUq5004541;
-	Wed, 25 Feb 2026 09:19:27 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cfs8jvfhe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Feb 2026 09:19:27 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 61P9JN6Y46989618
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 25 Feb 2026 09:19:23 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 800432004B;
-	Wed, 25 Feb 2026 09:19:23 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 629E320049;
-	Wed, 25 Feb 2026 09:19:23 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.87.85.9])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 25 Feb 2026 09:19:23 +0000 (GMT)
-From: Sven Schnelle <svens@linux.ibm.com>
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-        Alexander Gordeev
- <agordeev@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian
- Borntraeger <borntraeger@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH 0/9] s390/idle/vtime: Minor fixes and cleanups
-In-Reply-To: <20260218142012.863464-1-hca@linux.ibm.com> (Heiko Carstens's
-	message of "Wed, 18 Feb 2026 15:20:03 +0100")
-References: <20260218142012.863464-1-hca@linux.ibm.com>
-Date: Wed, 25 Feb 2026 10:19:23 +0100
-Message-ID: <yt9d342p18pw.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1772012762; c=relaxed/simple;
+	bh=e1tQggcgK40+SWAwt4lGz/ga/c6lFzPkuamY/wn1pao=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k7wlKQV0WvSv5tol81BFDOuZY45zAZM9dtpB308acfAm69D9vMbKdZQgpQI8AKS00hfryP/dqxGHEjbDiO/cx4gekZZv+iBsFqAmlwFEegtwRlzfzoyGqjz0pM1ZXcjsDpTf7yUWvOWSWA1dHR5CXtrPn76qgdzWgnywHVNSD44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pZamFFOV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB0C7C116D0;
+	Wed, 25 Feb 2026 09:45:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772012762;
+	bh=e1tQggcgK40+SWAwt4lGz/ga/c6lFzPkuamY/wn1pao=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pZamFFOVtclVCnwxSmXZYX1KReIgG+KclKS2BhZcJLh6yJflCG6+ZblLIShf9DeXr
+	 jJ1ajAkdlDa980REQ117y+bYIjXNVjZmXuDyolDsRb0805WtnX3L/On20paXjcAcYz
+	 741K6MH2SqCjbQMMTs7VdXOzHtLEQFiju2CNiYJODgGzWyhGF3yvHpteL5lpkx26ks
+	 02jwVU+9VlPzbgEgKIFcZBlVZNgPhF7CT2C/7c5pZdNke9CkU7RtqEhBORqB0+3RCy
+	 6IR/YL1IdGjkXSWylFpx350dgrqHvqc6RO0NvWy1cSK911YYkVKJotelztdnihCryq
+	 ViYH5BMFaP0oQ==
+Message-ID: <55720b5b-f643-4e67-8841-d81a9e712faf@kernel.org>
+Date: Wed, 25 Feb 2026 10:45:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: f8JWUVl4r8QUynhte05SsHUBTD95EkUQ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjI1MDA4OSBTYWx0ZWRfXwNW43bgskPNf
- bZt/VIDxVJwD7KyTTzQLVLu2zXrIRBUL3d89K7ArrzfIJZPoLrQo37wcOX2d1LAjxk/qOUwSvZR
- V1ySlYGhVI9s0EsKVpJ7nNsB87mfwx0SkN4ONERKZE6VeisZoVgdemZHSX5GPmI0MHB78Bjh67S
- Yi3cljkMxdRxUUoHWxEF4W7sFelWvGsIEYqnqTF2tqLrRXiSk5hqepS6zqR+dq7tmyTmGN+9mJV
- RjA3pVQnELnglSslN0e4LNFafbi814s/gh46NczWUBy0cP6BHt3s2tQFoopGngoNU1uiVxbN7us
- z8QyB6p5uDKxGeuheIjA9gsFFwoZdVuNeAgepPYCO6RdDRpUQuXxYF+oM62Iuj3n/Bo8w6ODw17
- rpmFr0GrcpUecjrgIrkzFMK5NRcoLZmMJtZ0GVh19OqkK+jqLa5SPx/ZQPg/fweRhYjrzuSLVZ4
- vZabpmiyLXBTduuHcaw==
-X-Proofpoint-GUID: f8JWUVl4r8QUynhte05SsHUBTD95EkUQ
-X-Authority-Analysis: v=2.4 cv=bbBmkePB c=1 sm=1 tr=0 ts=699ebea0 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22 a=Mpw57Om8IfrbqaoTuvik:22
- a=GgsMoib0sEa3-_RKJdDe:22 a=VnNF1IyMAAAA:8 a=JTawB1T5yoWm6DnOLoUA:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-24_03,2026-02-23_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 bulkscore=0 adultscore=0 impostorscore=0 lowpriorityscore=0
- priorityscore=1501 suspectscore=0 clxscore=1011 phishscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602250089
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 04/15] powerpc/time: Prepare to stop elapsing in
+ dynticks-idle
+To: Shrikanth Hegde <sshegde@linux.ibm.com>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Ben Segall <bsegall@google.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>,
+ Jan Kiszka <jan.kiszka@siemens.com>, Joel Fernandes <joelagnelf@nvidia.com>,
+ Juri Lelli <juri.lelli@redhat.com>, Kieran Bingham <kbingham@kernel.org>,
+ Mel Gorman <mgorman@suse.de>, Michael Ellerman <mpe@ellerman.id.au>,
+ Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+ Nicholas Piggin <npiggin@gmail.com>, "Paul E . McKenney"
+ <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Sven Schnelle <svens@linux.ibm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Uladzislau Rezki <urezki@gmail.com>,
+ Valentin Schneider <vschneid@redhat.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>, Xin Zhao <jackzxcui1989@163.com>,
+ linux-pm@vger.kernel.org, linux-s390@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org
+References: <20260206142245.58987-1-frederic@kernel.org>
+ <20260206142245.58987-5-frederic@kernel.org>
+ <9413517d-963b-4e6d-b11b-b440acd7cb5a@linux.ibm.com>
+ <9ab1e7d7-57ee-49f9-963c-3a1b96dda684@kernel.org>
+ <120884b0-0b09-43a9-b0f6-7dc2affe1ac0@linux.ibm.com>
+Content-Language: fr-FR
+From: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+In-Reply-To: <120884b0-0b09-43a9-b0f6-7dc2affe1ac0@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_NEQ_ENVFROM(0.00)[svens@linux.ibm.com,linux-s390@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-16467-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-16469-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
+	FREEMAIL_CC(0.00)[kernel.org,linux.ibm.com,linutronix.de,google.com,gmail.com,arm.com,redhat.com,siemens.com,nvidia.com,suse.de,ellerman.id.au,infradead.org,goodmis.org,linaro.org,163.com,vger.kernel.org,lists.ozlabs.org];
+	RCPT_COUNT_TWELVE(0.00)[35];
 	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	PRECEDENCE_BULK(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
-	RCPT_COUNT_SEVEN(0.00)[7];
 	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-0.995];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[chleroy@kernel.org,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 34132194EAB
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 84F4F195525
 X-Rspamd-Action: no action
 
-Heiko Carstens <hca@linux.ibm.com> writes:
+Hi Hegde,
 
-> Frederic Weisbecker's cputime accounting patch series motivated me to
-> finally have a deeper look at the s390 cputime accounting code. The result
-> are two bug fixes, which are not at all critical, and a couple of cleanups
-> and improvements.
->
-> Heiko Carstens (9):
->   s390/idle: Fix cpu idle exit cpu time accounting
->   s390/vtime: Fix virtual timer forwarding
->   s390/idle: Add comment for non obvious code
->   s390/idle: Slightly optimize idle time accounting
->   s390/idle: Inline update_timer_idle()
->   s390/irq/idle: Remove psw bits early
->   s390/vtime: Use __this_cpu_read() / get rid of READ_ONCE()
->   s390/vtime: Use lockdep_assert_irqs_disabled() instead of BUG_ON()
->   s390/idle: Remove psw_idle() prototype
->
->  arch/s390/include/asm/idle.h  |  4 ++--
->  arch/s390/include/asm/vtime.h | 34 ++++++++++++++++++++++++++++
->  arch/s390/kernel/entry.h      |  2 --
->  arch/s390/kernel/idle.c       | 25 +++++----------------
->  arch/s390/kernel/irq.c        | 20 ++++++++++-------
->  arch/s390/kernel/vtime.c      | 42 +++++++++--------------------------
->  6 files changed, 63 insertions(+), 64 deletions(-)
->
->
-> base-commit: 9702969978695d9a699a1f34771580cdbb153b33
+Le 25/02/2026 à 08:46, Shrikanth Hegde a écrit :
+> Hi Christophe,
+> 
+> On 2/24/26 9:11 PM, Christophe Leroy (CS GROUP) wrote:
+>> Hi Hegde,
+>>
+>> Le 19/02/2026 à 19:30, Shrikanth Hegde a écrit :
+>>>
+>>>
+>>> On 2/6/26 7:52 PM, Frederic Weisbecker wrote:
+>>>> Currently the tick subsystem stores the idle cputime accounting in
+>>>> private fields, allowing cohabitation with architecture idle vtime
+>>>> accounting. The former is fetched on online CPUs, the latter on offline
+>>>> CPUs.
+>>>>
+>>>> For consolidation purpose, architecture vtime accounting will continue
+>>>> to account the cputime but will make a break when the idle tick is
+>>>> stopped. The dyntick cputime accounting will then be relayed by the 
+>>>> tick
+>>>> subsystem so that the idle cputime is still seen advancing coherently
+>>>> even when the tick isn't there to flush the idle vtime.
+>>>>
+>>>> Prepare for that and introduce three new APIs which will be used in
+>>>> subsequent patches:
+>>>>
+>>>> _ vtime_dynticks_start() is deemed to be called when idle enters in
+>>>>    dyntick mode. The idle cputime that elapsed so far is accumulated.
+>>>>
+>>>> - vtime_dynticks_stop() is deemed to be called when idle exits from
+>>>>    dyntick mode. The vtime entry clocks are fast-forward to current 
+>>>> time
+>>>>    so that idle accounting restarts elapsing from now.
+>>>>
+>>>> - vtime_reset() is deemed to be called from dynticks idle IRQ entry to
+>>>>    fast-forward the clock to current time so that the IRQ time is still
+>>>>    accounted by vtime while nohz cputime is paused.
+>>>>
+>>>> Also accumulated vtime won't be flushed from dyntick-idle ticks to 
+>>>> avoid
+>>>> accounting twice the idle cputime, along with nohz accounting.
+>>>>
+>>>> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+>>>
+>>> Reviewed-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+>>>
+>>>> ---
+>>>>   arch/powerpc/kernel/time.c | 41 ++++++++++++++++++++++++++++++++++ 
+>>>> ++++
+>>>>   include/linux/vtime.h      |  6 ++++++
+>>>>   2 files changed, 47 insertions(+)
+>>>>
+>>>> diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
+>>>> index 4bbeb8644d3d..18506740f4a4 100644
+>>>> --- a/arch/powerpc/kernel/time.c
+>>>> +++ b/arch/powerpc/kernel/time.c
+>>>> @@ -376,6 +376,47 @@ void vtime_task_switch(struct task_struct *prev)
+>>>>           acct->starttime = acct0->starttime;
+>>>>       }
+>>>>   }
+>>>> +
+>>>> +#ifdef CONFIG_NO_HZ_COMMON
+>>>> +/**
+>>>> + * vtime_reset - Fast forward vtime entry clocks
+>>>> + *
+>>>> + * Called from dynticks idle IRQ entry to fast-forward the clocks 
+>>>> to current time
+>>>> + * so that the IRQ time is still accounted by vtime while nohz 
+>>>> cputime is paused.
+>>>> + */
+>>>> +void vtime_reset(void)
+>>>> +{
+>>>> +    struct cpu_accounting_data *acct = get_accounting(current);
+>>>> +
+>>>> +    acct->starttime = mftb();
+>>>
+>>> I figured out why those huge values happen.
+>>>
+>>> This happens because mftb is from when the system is booted.
+>>> I was doing kexec to start the new kernel and mftb wasn't getting
+>>> reset.
+>>>
+>>> I thought about this. This is concern for pseries too, where LPAR's
+>>> restart but system won't restart and mftb will continue to run 
+>>> instead of
+>>> reset.
+>>>
+>>> I think we should be using sched_clock instead of mftb here.
+>>> Though we need it a few more places and some cosmetic changes around it.
+>>>
+>>> Note: Some values being huge exists without series for few CPUs, with 
+>>> series it
+>>> shows up in most of the CPUs.
+>>>
+>>> So I am planning send out fix below fix separately keeping your
+>>> series as dependency.
+>>>
+>>> ---
+>>>   arch/powerpc/include/asm/accounting.h |  4 ++--
+>>>   arch/powerpc/include/asm/cputime.h    | 14 +++++++-------
+>>>   arch/powerpc/kernel/time.c            | 22 +++++++++++-----------
+>>>   3 files changed, 20 insertions(+), 20 deletions(-)
+>>>
+>>> diff --git a/arch/powerpc/include/asm/accounting.h b/arch/powerpc/ 
+>>> include/asm/accounting.h
+>>> index 6d79c31700e2..50f120646e6d 100644
+>>> --- a/arch/powerpc/include/asm/accounting.h
+>>> +++ b/arch/powerpc/include/asm/accounting.h
+>>> @@ -21,8 +21,8 @@ struct cpu_accounting_data {
+>>>       unsigned long steal_time;
+>>>       unsigned long idle_time;
+>>>       /* Internal counters */
+>>> -    unsigned long starttime;    /* TB value snapshot */
+>>> -    unsigned long starttime_user;    /* TB value on exit to usermode */
+>>> +    unsigned long starttime;    /* Time value snapshot */
+>>> +    unsigned long starttime_user;    /* Time value on exit to 
+>>> usermode */
+>>>   #ifdef CONFIG_ARCH_HAS_SCALED_CPUTIME
+>>>       unsigned long startspurr;    /* SPURR value snapshot */
+>>>       unsigned long utime_sspurr;    /* ->user_time when ->startspurr 
+>>> set */
+>>> diff --git a/arch/powerpc/include/asm/cputime.h b/arch/powerpc/ 
+>>> include/ asm/cputime.h
+>>> index aff858ca99c0..eb6b629b113f 100644
+>>> --- a/arch/powerpc/include/asm/cputime.h
+>>> +++ b/arch/powerpc/include/asm/cputime.h
+>>> @@ -20,9 +20,9 @@
+>>>   #include <asm/time.h>
+>>>   #include <asm/param.h>
+>>>   #include <asm/firmware.h>
+>>> +#include <linux/sched/clock.h>
+>>>
+>>>   #ifdef __KERNEL__
+>>> -#define cputime_to_nsecs(cputime) tb_to_ns(cputime)
+>>>
+>>>   /*
+>>>    * PPC64 uses PACA which is task independent for storing accounting 
+>>> data while
+>>> @@ -44,20 +44,20 @@
+>>>    */
+>>>   static notrace inline void account_cpu_user_entry(void)
+>>>   {
+>>> -    unsigned long tb = mftb();
+>>> +    unsigned long now = sched_clock();
+>>
+>> Now way !
+>>
+>> By doing that you'll kill performance for no reason. All we need when 
+>> accounting time spent in kernel or in user is the difference between 
+>> time at entry and time at exit, no mater what the time was at boot time.
+>>
+> 
+> No. With this patch there will not be any performance difference.
+> All it does is, instead of using mftb uses sched_clock at those places.
+> 
+> 
+> In arch/powerpc/kernel/time.c we have sched_clock().
+> notrace unsigned long long sched_clock(void)
+> {
+>          return mulhdu(get_tb() - boot_tb, tb_to_ns_scale) << 
+> tb_to_ns_shift;
+> }
+> 
+> It does the same mftb call, and accounts only the time after boot, which is
+> what /proc/stat should do as well.
+> 
+> "
+> the amount of time, measured in units of USER_HZ
+> (1/100ths of a second on most architectures
+> 
+> user   (1) Time spent in user mode.
+> 
+> idle   (4) Time spent in the idle task.  This value
+>         should be USER_HZ times the second entry in
+>         the /proc/uptime pseudo-file.
+> "
+> /proc/uptime is based on sched_clock, so i infer /proc/stat also should 
+> show
+> values w.r.t to boot of the OS.
+> 
+> 
+>> Also sched_clock() returns nanoseconds which implies calculation from 
+>> timebase. This is pointless CPU consumption. The current 
+>> implementation calculates nanoseconds at task switch when calling 
+>> vtime_flush().Your change will now do it at every kernel entry and 
+>> kernel exit by calling sched_clock().
+> 
+> This change doesn't add any additional paths. Even without patches, mftb 
+> would have
+> been called in every kernel entry/exit.  See mftb usage 
+> account_cpu_user_exit/enter
+> 
+> Now instead of mftb sched_clock is used, that's all. No additional 
+> entry/exit points.
+> And previously when accounting we would have done cputime_to_nsecs, now 
+> that conversion
+> is done automatically in sched_clock. So overall computation-wise it 
+> should be same.
+> 
+> What i am missing to see it here?
 
-For the series:
+Ok, lets try to explain in more details:
 
-Reviewed-by: Sven Schnelle <svens@linux.ibm.com>
+While a process is running, it will enter and leave the kernel multiple 
+times, without task switch. For instance for system calls or for interrupts.
+
+At every kernel entry and exit, account_cpu_user_entry() and 
+account_cpu_user_exit() are called. That's a very hot path.
+
+I have added the following functions to see what the code looks like:
+
++
++void my_account_cpu_user_entry(void);
++void my_account_cpu_user_entry(void)
++{
++       account_cpu_user_entry();
++}
++
++void my_account_cpu_user_exit(void);
++void my_account_cpu_user_exit(void)
++{
++       account_cpu_user_exit();
++}
+
+What we have today is very optimised:
+
+00000148 <my_account_cpu_user_entry>:
+  148:	7d 0c 42 e6 	mftb    r8
+  14c:	80 e2 00 08 	lwz     r7,8(r2)
+  150:	81 22 00 28 	lwz     r9,40(r2)
+  154:	91 02 00 24 	stw     r8,36(r2)
+  158:	7d 29 38 50 	subf    r9,r9,r7
+  15c:	7d 29 42 14 	add     r9,r9,r8
+  160:	91 22 00 08 	stw     r9,8(r2)
+  164:	4e 80 00 20 	blr
+
+00000168 <my_account_cpu_user_exit>:
+  168:	7d 0c 42 e6 	mftb    r8
+  16c:	80 e2 00 0c 	lwz     r7,12(r2)
+  170:	81 22 00 24 	lwz     r9,36(r2)
+  174:	91 02 00 28 	stw     r8,40(r2)
+  178:	7d 29 38 50 	subf    r9,r9,r7
+  17c:	7d 29 42 14 	add     r9,r9,r8
+  180:	91 22 00 0c 	stw     r9,12(r2)
+  184:	4e 80 00 20 	blr
+
+
+
+With your change we now get a call to sched_clock() instead of a simple 
+mftb,
+
+00000154 <my_account_cpu_user_entry>:
+  154:	94 21 ff f0 	stwu    r1,-16(r1)
+  158:	7c 08 02 a6 	mflr    r0
+  15c:	90 01 00 14 	stw     r0,20(r1)
+  160:	48 00 00 01 	bl      160 <my_account_cpu_user_entry+0xc>
+			160: R_PPC_REL24	sched_clock
+  164:	81 02 00 08 	lwz     r8,8(r2)
+  168:	81 22 00 28 	lwz     r9,40(r2)
+  16c:	90 82 00 24 	stw     r4,36(r2)
+  170:	7d 29 40 50 	subf    r9,r9,r8
+  174:	7d 29 22 14 	add     r9,r9,r4
+  178:	91 22 00 08 	stw     r9,8(r2)
+  17c:	80 01 00 14 	lwz     r0,20(r1)
+  180:	38 21 00 10 	addi    r1,r1,16
+  184:	7c 08 03 a6 	mtlr    r0
+  188:	4e 80 00 20 	blr
+
+0000018c <my_account_cpu_user_exit>:
+  18c:	94 21 ff f0 	stwu    r1,-16(r1)
+  190:	7c 08 02 a6 	mflr    r0
+  194:	90 01 00 14 	stw     r0,20(r1)
+  198:	48 00 00 01 	bl      198 <my_account_cpu_user_exit+0xc>
+			198: R_PPC_REL24	sched_clock
+  19c:	81 02 00 0c 	lwz     r8,12(r2)
+  1a0:	81 22 00 24 	lwz     r9,36(r2)
+  1a4:	90 82 00 28 	stw     r4,40(r2)
+  1a8:	7d 29 40 50 	subf    r9,r9,r8
+  1ac:	7d 29 22 14 	add     r9,r9,r4
+  1b0:	91 22 00 0c 	stw     r9,12(r2)
+  1b4:	80 01 00 14 	lwz     r0,20(r1)
+  1b8:	38 21 00 10 	addi    r1,r1,16
+  1bc:	7c 08 03 a6 	mtlr    r0
+  1c0:	4e 80 00 20 	blr
+
+And sched_clock() is heavy, first it has the sequence mftbu/mftb/mftbu, 
+and then it does awful lot of calculations including many multiply:
+
+000004d8 <sched_clock>:
+  4d8:	7d 2d 42 e6 	mftbu   r9
+  4dc:	7d 0c 42 e6 	mftb    r8
+  4e0:	7d 4d 42 e6 	mftbu   r10
+  4e4:	7c 09 50 40 	cmplw   r9,r10
+  4e8:	40 82 ff f0 	bne     4d8 <sched_clock>
+  4ec:	3d 40 00 00 	lis     r10,0
+			4ee: R_PPC_ADDR16_HA	.data..ro_after_init
+  4f0:	38 ca 00 00 	addi    r6,r10,0
+			4f2: R_PPC_ADDR16_LO	.data..ro_after_init
+  4f4:	3c e0 00 00 	lis     r7,0
+			4f6: R_PPC_ADDR16_HA	.data..read_mostly
+  4f8:	38 87 00 00 	addi    r4,r7,0
+			4fa: R_PPC_ADDR16_LO	.data..read_mostly
+  4fc:	80 66 00 04 	lwz     r3,4(r6)
+  500:	80 e7 00 00 	lwz     r7,0(r7)
+			502: R_PPC_ADDR16_LO	.data..read_mostly
+  504:	80 c4 00 04 	lwz     r6,4(r4)
+  508:	81 4a 00 00 	lwz     r10,0(r10)
+			50a: R_PPC_ADDR16_LO	.data..ro_after_init
+  50c:	7c 63 40 10 	subfc   r3,r3,r8
+  510:	7d 0a 49 10 	subfe   r8,r10,r9
+  514:	7d 27 19 d6 	mullw   r9,r7,r3
+  518:	7d 43 30 16 	mulhwu  r10,r3,r6
+  51c:	7c 08 31 d6 	mullw   r0,r8,r6
+  520:	7d 4a 48 14 	addc    r10,r10,r9
+  524:	7c 67 18 16 	mulhwu  r3,r7,r3
+  528:	39 20 00 00 	li      r9,0
+  52c:	7c c8 30 16 	mulhwu  r6,r8,r6
+  530:	7c a9 49 14 	adde    r5,r9,r9
+  534:	7d 67 41 d6 	mullw   r11,r7,r8
+  538:	7d 4a 00 14 	addc    r10,r10,r0
+  53c:	7c a5 01 94 	addze   r5,r5
+  540:	7c 63 30 14 	addc    r3,r3,r6
+  544:	7d 29 49 14 	adde    r9,r9,r9
+  548:	80 84 00 08 	lwz     r4,8(r4)
+  54c:	7c 63 58 14 	addc    r3,r3,r11
+  550:	7c e7 40 16 	mulhwu  r7,r7,r8
+  554:	7d 29 01 94 	addze   r9,r9
+  558:	7c 63 28 14 	addc    r3,r3,r5
+  55c:	7d 29 39 14 	adde    r9,r9,r7
+  560:	35 44 ff e0 	addic.  r10,r4,-32
+  564:	41 80 00 10 	blt     574 <sched_clock+0x9c>
+  568:	7c 63 50 30 	slw     r3,r3,r10
+  56c:	38 80 00 00 	li      r4,0
+  570:	4e 80 00 20 	blr
+  574:	21 04 00 1f 	subfic  r8,r4,31
+  578:	54 6a f8 7e 	srwi    r10,r3,1
+  57c:	7d 29 20 30 	slw     r9,r9,r4
+  580:	7d 4a 44 30 	srw     r10,r10,r8
+  584:	7c 64 20 30 	slw     r4,r3,r4
+  588:	7d 43 4b 78 	or      r3,r10,r9
+  58c:	4e 80 00 20 	blr
+
+I think the difference is obvious, no need of benchmarking. We shall 
+refrain from calling sched_clock() at every kernel entry/exit. 
+Converting from timebase to nanoseconds only need to be done in 
+vtime_flush() called by vtime_task_switch() during task switch.
+
+Hope it is more explicit now.
+
+Christophe
 
