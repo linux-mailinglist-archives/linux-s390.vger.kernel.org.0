@@ -1,50 +1,50 @@
-Return-Path: <linux-s390+bounces-16509-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16510-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ME0QNscvoGkrgAQAu9opvQ
-	(envelope-from <linux-s390+bounces-16509-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Feb 2026 12:34:31 +0100
+	id 8LQgOq0voGmLgAQAu9opvQ
+	(envelope-from <linux-s390+bounces-16510-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Feb 2026 12:34:05 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 562511A51B0
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Feb 2026 12:34:31 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 099671A5172
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Feb 2026 12:34:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 46A1A307DC50
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Feb 2026 11:33:47 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id AD1C4302CC1F
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Feb 2026 11:33:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3570737418D;
-	Thu, 26 Feb 2026 11:33:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9451537416E;
+	Thu, 26 Feb 2026 11:33:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RzdiMKp1"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="udE+houD"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F57E332EC5;
-	Thu, 26 Feb 2026 11:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3553126C2
+	for <linux-s390@vger.kernel.org>; Thu, 26 Feb 2026 11:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772105626; cv=none; b=iAdAyIpmw3nRt2plKpc+F/H92jsSDs4r5iHPdyiQB3jdyisFqkJO1dYwyo7QIm9AM9W6qMm8qQiETiD/ldrdCkch49YcazVJ9wgG66hDvyZx5qngJ7HLG/kVsnUzZ86fOoJBXiDfEyZL0QVPmQJ4mNCcg0lhQGJLAPpXbH6Cd48=
+	t=1772105630; cv=none; b=Zig2XijCYx264hTue03bdGJ9vNScHnYIdufyv4+Q2g0yJEvcecrWowYRUK4Ecdl7XdTezyb/IdUdfhZ+37zS6N+JAeKP2kfprb6EXvIjz/OwPvfSZkzYtgEvOmmjYB4oaIqswpd1R+Q/jMQ/+sD5Z4UDa4708qq8LoaYYMPsc24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772105626; c=relaxed/simple;
-	bh=PkXQ7cD5vVIF0C/xNVOfAp4p02aFe2UYqTGl7SeOR5E=;
+	s=arc-20240116; t=1772105630; c=relaxed/simple;
+	bh=VtS+Z0IGhYeUBDh/qBGA3j2GFtWW6QsYJ4/y5hAAHb8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GHuIizvk6A1PdwWZD4THTd3toE9MkXCfLENYYqBmop/ZcCuwPR5/+1UuDqnQ81Lyq5kr8fEzUXvm5JCRHuLlrgK4ZFqPH6VUNVd3lIguz3PObTffYt3p/525mro/oteCnFtsczvf+l5vNNVLRLmO+ZxXqlJjRrI/Wb0FSWOZxQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RzdiMKp1; arc=none smtp.client-ip=95.215.58.183
+	 MIME-Version; b=PSSUiMkdbptaVdet2imzJqpn0GuAR4tVe2hZq0ZieDIkS/f6f9pKKK66+8/3hl1cNqNdmyWn4/tU+MefRlX6nESfAVE0Lf6sfvZCw4itJgcaFpvKG6SjPruYDHBJtiPzdmONw5O+AGN5DipoWQWCg7KH+2AdQqz0p42t380xfgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=udE+houD; arc=none smtp.client-ip=91.218.175.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1772105620;
+	t=1772105626;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HW5NR2wuAB2pCKpIclCqiHUIfVFdsbldp3G0DhmGrt0=;
-	b=RzdiMKp1lP+byHUz7l0eKCj1eX9Ut37lQaDPNj8KBcBVLlesiFHpqHK5Ah8iyhlMOrVaW8
-	bKBZ75Ay6+l6RYyt5Y/uNJyEGcxJ4zFpSZ6y9Ko1EHA6ZJ6Q6nV1TPDvRsz7Z/op/nwRKq
-	NXqpxWMbKJY4XmDlR6gubAl3bFel52M=
+	bh=voiqUydpep5c50p71jeWeFdopCgnIpO6zR1blEnFY9U=;
+	b=udE+houDLGseN1f6IYvibBzYYzpJnrx63S12MifUCk13f0DjLpLexn7cLE+r93BBzXNqZW
+	GMm8b+RjhZzqazJYt7NxsX82x6AVbHVcuPZhuNhuFnkbnvwr1QnAXR2LjKKpKiQSa6Xdhz
+	62qhsCiwM2CIlMTRP3nK9ID7G97Ovc0=
 From: Usama Arif <usama.arif@linux.dev>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	david@kernel.org,
@@ -76,9 +76,9 @@ Cc: fvdl@google.com,
 	svens@linux.ibm.com,
 	linux-s390@vger.kernel.org,
 	Usama Arif <usama.arif@linux.dev>
-Subject: [RFC v2 07/21] mm: thp: retry on split failure in change_pmd_range()
-Date: Thu, 26 Feb 2026 03:23:36 -0800
-Message-ID: <20260226113233.3987674-8-usama.arif@linux.dev>
+Subject: [RFC v2 08/21] mm: thp: handle split failure in follow_pmd_mask()
+Date: Thu, 26 Feb 2026 03:23:37 -0800
+Message-ID: <20260226113233.3987674-9-usama.arif@linux.dev>
 In-Reply-To: <20260226113233.3987674-1-usama.arif@linux.dev>
 References: <20260226113233.3987674-1-usama.arif@linux.dev>
 Precedence: bulk
@@ -87,86 +87,75 @@ List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[linux.dev,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[linux.dev:s=key1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-16509-lists,linux-s390=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[3];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-16510-lists,linux-s390=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[30];
-	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[usama.arif@linux.dev,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[linux.dev:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-s390];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:mid,linux.dev:dkim,linux.dev:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 562511A51B0
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:mid,linux.dev:dkim,linux.dev:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 099671A5172
 X-Rspamd-Action: no action
 
-change_pmd_range() splits a huge PMD when mprotect() targets a sub-PMD
-range or when VMA flags require per-PTE protection bits that can't be
-represented at PMD granularity.
+follow_pmd_mask() splits a huge PMD when FOLL_SPLIT_PMD is set, so GUP
+can pin individual pages at PTE granularity.
 
-If pte_alloc_one() fails inside __split_huge_pmd(), the huge PMD remains
-intact. Without this change, change_pte_range() would return -EAGAIN
-because pte_offset_map_lock() returns NULL for a huge PMD, sending the
-code back to the 'again' label to retry the split—without ever calling
-cond_resched().
-
-Now that __split_huge_pmd() returns an error code, handle it explicitly:
-yield the CPU with cond_resched() and retry via goto again, giving other
-tasks a chance to free memory.
-
-Trying to return an error all the way to change_protection_range would
-not work as it would leave a memory range with new protections, and
-others unchanged, with no easy way to roll back the already modified
-entries (and previous splits). __split_huge_pmd only requires an
-order-0 allocation and is extremely unlikely to fail.
+If the split fails, the PMD is still huge and follow_page_pte() cannot
+process it. Return ERR_PTR(-ENOMEM) on split failure, which causes the
+GUP caller to get -ENOMEM. -ENOMEM is already returned in follow_pmd_mask
+if pte_alloc_one fails (which is the reason why split_huge_pmd could
+fail), hence this is a safe change.
 
 Signed-off-by: Usama Arif <usama.arif@linux.dev>
 ---
- mm/mprotect.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ mm/gup.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index 9681f055b9fca..599d80a7d6969 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -477,7 +477,16 @@ static inline long change_pmd_range(struct mmu_gather *tlb,
- 		if (pmd_is_huge(_pmd)) {
- 			if ((next - addr != HPAGE_PMD_SIZE) ||
- 			    pgtable_split_needed(vma, cp_flags)) {
--				__split_huge_pmd(vma, pmd, addr, false);
-+				ret = __split_huge_pmd(vma, pmd, addr, false);
-+				if (ret) {
-+					/*
-+					 * Yield and retry. Other tasks
-+					 * may free memory while we
-+					 * reschedule.
-+					 */
-+					cond_resched();
-+					goto again;
-+				}
- 				/*
- 				 * For file-backed, the pmd could have been
- 				 * cleared; make sure pmd populated if
+diff --git a/mm/gup.c b/mm/gup.c
+index 8e7dc2c6ee738..792b2e7319dd0 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -928,8 +928,16 @@ static struct page *follow_pmd_mask(struct vm_area_struct *vma,
+ 		return follow_page_pte(vma, address, pmd, flags);
+ 	}
+ 	if (pmd_trans_huge(pmdval) && (flags & FOLL_SPLIT_PMD)) {
++		int ret;
++
+ 		spin_unlock(ptl);
+-		split_huge_pmd(vma, pmd, address);
++		/*
++		 * If split fails, the PMD is still huge and
++		 * we cannot proceed to follow_page_pte.
++		 */
++		ret = split_huge_pmd(vma, pmd, address);
++		if (ret)
++			return ERR_PTR(ret);
+ 		/* If pmd was left empty, stuff a page table in there quickly */
+ 		return pte_alloc(mm, pmd) ? ERR_PTR(-ENOMEM) :
+ 			follow_page_pte(vma, address, pmd, flags);
 -- 
 2.47.3
 
