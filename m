@@ -1,154 +1,145 @@
-Return-Path: <linux-s390+bounces-16583-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16584-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oDO4CgG/oGk1mQQAu9opvQ
-	(envelope-from <linux-s390+bounces-16583-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Feb 2026 22:45:37 +0100
+	id UBRJEZzCoGmEmQQAu9opvQ
+	(envelope-from <linux-s390+bounces-16584-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Feb 2026 23:01:00 +0100
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BE1F1B000C
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Feb 2026 22:45:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E1961B01F5
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Feb 2026 23:00:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id E4B43300C362
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Feb 2026 21:45:33 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 4F9FA3011D49
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Feb 2026 22:00:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 446D73D9020;
-	Thu, 26 Feb 2026 21:45:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9413D3C196F;
+	Thu, 26 Feb 2026 22:00:51 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70DA24677A;
-	Thu, 26 Feb 2026 21:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5452EBBA9;
+	Thu, 26 Feb 2026 22:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772142332; cv=none; b=IFd52GvpHOAdGpveFehKLmbbO5fvUrqcmqpDuRfy7+8fZ/f0YJ4EApFZZKmZxtKHT/YBePDsEOCJr7NDvVh4rs5OuwR1DGRKASsda5GEvRqyN31o09LGGb1RmmR7pbXS7DMXMg6kt+UEOWwDAMxkSPIkhUS6WbdNCLNJXHws/t0=
+	t=1772143251; cv=none; b=NVnfvqo4VqSlJEpliBiyCyswY1QshlCNn3UKc97cWJ4d+NAa+9PxgDRcbDGU8NDPz7Z4yTGozN8gJfrGZNxpMQXY6JTs/GTjLX6SKAbe6FkgncVBq2A24gNbO9Q+/SLKFsLZuBG3YS7ehsyR8v4aSUwZHDHSAOT9E8deTXIlP5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772142332; c=relaxed/simple;
-	bh=wDuHIlgTWxVQ39bsZXRk3dTlopMj1ECzJP7BUeFMfZ8=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=lDY3FKa1jJ6BRnI7iLo7H6BEm9ZA+hwvbRmi8+3d4Yhd94c/0pR9L39K0ABqotCXGeavjaCYSuDeJyCc1xlsJ0Vu3v1vTG47pg8YAYV0Nz0GLoiCPfIMAMa81UJPXyyiZuxm8jSMjKtp2EzJD3d2iZbkUHHGyULDxitiqgF8vYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=116.203.167.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id EEF15298580;
-	Thu, 26 Feb 2026 22:45:28 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id 3grA_K4BoLqY; Thu, 26 Feb 2026 22:45:27 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id B576C298599;
-	Thu, 26 Feb 2026 22:45:27 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id rWiQpCWmwLol; Thu, 26 Feb 2026 22:45:27 +0100 (CET)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 2545C298580;
-	Thu, 26 Feb 2026 22:45:27 +0100 (CET)
-Date: Thu, 26 Feb 2026 22:45:26 +0100 (CET)
-From: Richard Weinberger <richard@nod.at>
-To: hch <hch@lst.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Richard Henderson <richard.henderson@linaro.org>, 
-	Matt Turner <mattst88@gmail.com>, 
-	Magnus Lindholm <linmag7@gmail.com>, 
-	Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, will <will@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, davem <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, 
-	anton ivanov <anton.ivanov@cambridgegreys.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, 
-	Thomas Gleixner <tglx@kernel.org>, mingo <mingo@redhat.com>, 
-	bp <bp@alien8.de>, dave hansen <dave.hansen@linux.intel.com>, 
-	x86 <x86@kernel.org>, hpa <hpa@zytor.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, 
-	dan j williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>, 
-	David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Song Liu <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>, 
-	Li Nan <linan122@huawei.com>, 
-	linux-alpha <linux-alpha@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	loongarch <loongarch@lists.linux.dev>, 
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
-	linux-riscv <linux-riscv@lists.infradead.org>, 
-	linux-s390 <linux-s390@vger.kernel.org>, 
-	sparclinux <sparclinux@vger.kernel.org>, 
-	linux-um <linux-um@lists.infradead.org>, 
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, 
-	linux-btrfs <linux-btrfs@vger.kernel.org>, 
-	linux-arch <linux-arch@vger.kernel.org>, 
+	s=arc-20240116; t=1772143251; c=relaxed/simple;
+	bh=bHoctQII+LashGyqjlg7r/KCKOXEmPVxQqcyFL0nddc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AMHehlyxHwd7SFyUimgJQ6FndAMt32xIsSEx7LjfMZL5MtYXIoB+FgeF6okyI9R4vsZTSg4sfGm19vq82kZ5qH3Ews0NFGUvMxXBMdaUDisj+tzny2yyxG8pFbZT2KA5zplkGSMTCbC6q8haM4/v/6aHvoqme58xAm3FqM0c62s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 3731168C4E; Thu, 26 Feb 2026 23:00:39 +0100 (CET)
+Date: Thu, 26 Feb 2026 23:00:38 +0100
+From: hch <hch@lst.de>
+To: Richard Weinberger <richard@nod.at>
+Cc: hch <hch@lst.de>, Andrew Morton <akpm@linux-foundation.org>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Magnus Lindholm <linmag7@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>, will <will@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>, davem <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	anton ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Thomas Gleixner <tglx@kernel.org>, mingo <mingo@redhat.com>,
+	bp <bp@alien8.de>, dave hansen <dave.hansen@linux.intel.com>,
+	x86 <x86@kernel.org>, hpa <hpa@zytor.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	dan j williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
+	David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+	Song Liu <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>,
+	Li Nan <linan122@huawei.com>,
+	linux-alpha <linux-alpha@vger.kernel.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+	loongarch <loongarch@lists.linux.dev>,
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+	linux-riscv <linux-riscv@lists.infradead.org>,
+	linux-s390 <linux-s390@vger.kernel.org>,
+	sparclinux <sparclinux@vger.kernel.org>,
+	linux-um <linux-um@lists.infradead.org>,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	linux-btrfs <linux-btrfs@vger.kernel.org>,
+	linux-arch <linux-arch@vger.kernel.org>,
 	linux-raid <linux-raid@vger.kernel.org>
-Message-ID: <445921547.2198.1772142326749.JavaMail.zimbra@nod.at>
-In-Reply-To: <20260226151106.144735-4-hch@lst.de>
-References: <20260226151106.144735-1-hch@lst.de> <20260226151106.144735-4-hch@lst.de>
 Subject: Re: [PATCH 03/25] um/xor: don't override XOR_SELECT_TEMPLATE
+Message-ID: <20260226220038.GA15172@lst.de>
+References: <20260226151106.144735-1-hch@lst.de> <20260226151106.144735-4-hch@lst.de> <445921547.2198.1772142326749.JavaMail.zimbra@nod.at>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF147 (Linux)/8.8.12_GA_3809)
-Thread-Topic: um/xor: don't override XOR_SELECT_TEMPLATE
-Thread-Index: geHUNAwCPFDc7iDnvkYlaCznwUsWXw==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <445921547.2198.1772142326749.JavaMail.zimbra@nod.at>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.46 / 15.00];
+X-Spamd-Result: default: False [-1.36 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-16583-lists,linux-s390=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,linaro.org,gmail.com,armlinux.org.uk,arm.com,kernel.org,xen0n.name,linux.ibm.com,ellerman.id.au,dabbelt.com,eecs.berkeley.edu,ghiti.fr,davemloft.net,gaisler.com,cambridgegreys.com,sipsolutions.net,redhat.com,alien8.de,linux.intel.com,zytor.com,gondor.apana.org.au,intel.com,fb.com,suse.com,arndb.de,fnnas.com,huawei.com,vger.kernel.org,lists.infradead.org,lists.linux.dev,lists.ozlabs.org];
-	DMARC_NA(0.00)[nod.at];
+	FREEMAIL_CC(0.00)[lst.de,linux-foundation.org,linaro.org,gmail.com,armlinux.org.uk,arm.com,kernel.org,xen0n.name,linux.ibm.com,ellerman.id.au,dabbelt.com,eecs.berkeley.edu,ghiti.fr,davemloft.net,gaisler.com,cambridgegreys.com,sipsolutions.net,redhat.com,alien8.de,linux.intel.com,zytor.com,gondor.apana.org.au,intel.com,fb.com,suse.com,arndb.de,fnnas.com,huawei.com,vger.kernel.org,lists.infradead.org,lists.linux.dev,lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-16584-lists,linux-s390=lfdr.de];
 	TO_DN_ALL(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	FROM_HAS_DN(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[richard@nod.at,linux-s390@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-s390@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_GT_50(0.00)[54];
+	RCPT_COUNT_GT_50(0.00)[55];
 	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.996];
+	NEURAL_HAM(-0.00)[-0.997];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[8]
-X-Rspamd-Queue-Id: 4BE1F1B000C
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lst.de:mid,lst.de:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 6E1961B01F5
 X-Rspamd-Action: no action
 
------ Urspr=C3=BCngliche Mail -----
-> Von: "hch" <hch@lst.de>
-> XOR_SELECT_TEMPLATE is only ever called with a NULL argument, so all the
-> ifdef'ery doesn't do anything.  With our without this, the time travel
-> mode should work fine on CPUs that support AVX2, as the AVX2
-> implementation is forced in this case, and won't work otherwise.
+On Thu, Feb 26, 2026 at 10:45:26PM +0100, Richard Weinberger wrote:
+> ----- Ursprüngliche Mail -----
+> > Von: "hch" <hch@lst.de>
+> > XOR_SELECT_TEMPLATE is only ever called with a NULL argument, so all the
+> > ifdef'ery doesn't do anything.  With our without this, the time travel
+> > mode should work fine on CPUs that support AVX2, as the AVX2
+> > implementation is forced in this case, and won't work otherwise.
+> 
+> IIRC Johannes added XOR_SELECT_TEMPLATE() here to skip
+> the template selection logic because it didn't work with time travel mode.
+> 
+> Johannes, can you please test whether this change does not break
+> time travel mode?
 
-IIRC Johannes added XOR_SELECT_TEMPLATE() here to skip
-the template selection logic because it didn't work with time travel mode.
+I'm pretty sure that was the intent, but as I wrote above it worked
+and still works on AVX-supporting CPUs by chance, and already doesn't
+on older CPUs, and unless my git blaming went wrong someewhere already
+didn't when this was originally added.
 
-Johannes, can you please test whether this change does not break
-time travel mode?
-
-Thanks,
-//richard
 
