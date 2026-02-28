@@ -1,71 +1,78 @@
-Return-Path: <linux-s390+bounces-16653-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16656-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4D3oDWclo2kO+AQAu9opvQ
-	(envelope-from <linux-s390+bounces-16653-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Sat, 28 Feb 2026 18:27:03 +0100
+	id wKDYKn5co2nW/AQAu9opvQ
+	(envelope-from <linux-s390+bounces-16656-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Sat, 28 Feb 2026 22:22:06 +0100
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CB8B1C4E2C
-	for <lists+linux-s390@lfdr.de>; Sat, 28 Feb 2026 18:27:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EB07E1C8F2B
+	for <lists+linux-s390@lfdr.de>; Sat, 28 Feb 2026 22:22:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D8F6C307AA20
-	for <lists+linux-s390@lfdr.de>; Sat, 28 Feb 2026 17:26:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AACD93453E4A
+	for <lists+linux-s390@lfdr.de>; Sat, 28 Feb 2026 19:43:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8C35329E60;
-	Sat, 28 Feb 2026 17:26:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B85B4A2E2E;
+	Sat, 28 Feb 2026 17:47:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oSF2Z/mL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ya0Ijktu"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DAD328B78;
-	Sat, 28 Feb 2026 17:26:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234B54A2E2D;
+	Sat, 28 Feb 2026 17:47:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772299583; cv=none; b=Fn162ps+Jy4sUXzb/mOxf3x5EtQVJUMT6knEAHtlXPXvkWWN6DTZNBkiupLcjhxfL5BdZXRo35NvrdKcEdKTi4iQFneCnng+mCJylL2lVBuBa+eg/cMXdGt04gDm6MjwkcwAMSTkpvhbO5PhpE+2P+z7M67ThvvFRPeU7rwJ9Vc=
+	t=1772300874; cv=none; b=YIGIBLzW/SvikCIt7kapAKnej6PA2wpq3mSssv1xPxPTYd8PZtE5VvTKDj5CizGiXOzdTNs0NEm8pbl8VdRZZkC8BBaQ55SrZIegpvo6iEAqhOk6n/NZcvAOO1JSWAkZpKJ4ScZJd5UK12h/oP/Sy8tEAqeI2R+nCjb7RHq43C4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772299583; c=relaxed/simple;
-	bh=WjjPpnTVBAQpOOwHrKc9DLq4OeY0DlMTz6D638EeP+E=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=uqufmLA7KQrWmOsn7mz8Z38h8IlCpNTbKxfty7DGLpjg5KyCXzwM13Kv04WUGRxbQ13mOcZwErOWXNpVYhum+pu3jl/MgMOmLuQ8fVm6pfwVRqyz0RFTMJ3ueR9nDdMWhHy6BvO4XEo3+LH616LLKllwUTN8eUJCyXiGi2TKHT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oSF2Z/mL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F0B5C2BC9E;
-	Sat, 28 Feb 2026 17:26:23 +0000 (UTC)
+	s=arc-20240116; t=1772300874; c=relaxed/simple;
+	bh=fdtVAyDrdTokdNcRh+fvjutoC6iD9TB5Wv2JSQ7+d+4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hLNsr5lKFaKgtZYCpP2/MWh4/6B60L8jce0md+ZASclfe0LCyH+cfZkfXqH+ev5xV4v9XMBT/M8Kim5RHvpnTxNMvUT7gP0MrF2ZOJYkq6SpYMMSZuEx3EBPfZ25FoaDoQ1zu0dkSsrU1Ev6APsjjRdZw+2CB2W8AQSuVXuN9zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ya0Ijktu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B43A1C116D0;
+	Sat, 28 Feb 2026 17:47:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772299583;
-	bh=WjjPpnTVBAQpOOwHrKc9DLq4OeY0DlMTz6D638EeP+E=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=oSF2Z/mL4wMuUbgan1wtVzl0dBU9GtPUl/uRRkgXQkgYhxiL8RffNywWVgplzMQEV
-	 2HkYzHnZSSLx5fuy3STIG7m8wrYC42l5k9e1NFYCKi84nrC8hKXF2422qVFG2tzu5H
-	 a+GM1NdwqVfB6B9aEq1KO7Jc6Qqm+YEyAFoJtFr53/d7yyUyuJItUl0Rv4lq9J55Ke
-	 gtH97X21BcYzP98hD1el1F5c8+0dLhqSdbm01L9kSMXC6CcGjwRDOeK9Fb6PhnJ2nV
-	 45XTl831oiy0pOkJHzA+EmjIjsPtlpqf72T0+INSAXOvHs0As4tCp6smEwj7HpLOVZ
-	 4qP5idD97sEYA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B9F4439F2022;
-	Sat, 28 Feb 2026 17:26:27 +0000 (UTC)
-Subject: Re: [GIT PULL] s390 updates for 7.0-rc2
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <your-ad-here.call-01772291314-ext-5802@work.hours>
-References: <your-ad-here.call-01772291314-ext-5802@work.hours>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <your-ad-here.call-01772291314-ext-5802@work.hours>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-7.0-3
-X-PR-Tracked-Commit-Id: d879ac6756b662a085a743e76023c768c3241579
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 201795a1b72570374e6d2c72d5c1c23c9cfc3929
-Message-Id: <177229958641.3021088.8858996152469840683.pr-tracker-bot@kernel.org>
-Date: Sat, 28 Feb 2026 17:26:26 +0000
-To: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Heiko Carstens <hca@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+	s=k20201202; t=1772300874;
+	bh=fdtVAyDrdTokdNcRh+fvjutoC6iD9TB5Wv2JSQ7+d+4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Ya0IjktuByX7jRCuZNuoSZkdan0m22fN7mgEPEM8KgzZHVKl6VnGs03Mbp4YZLmeu
+	 TgxGN76BP72/cbvJWdVTj7Kh6nahC7mfXEwg0Dl9Wkzl5+WIgZhSSuZd2QDRDGJPlu
+	 eN0ZUJ3gkpjIC/KS/L7Fh32DCZpSAB4y2LRRBRzh5QWzOVTOV+h8vHp5C9TNzjNYRf
+	 ESxoj31yG78Zv4wfv/ufhJnNWop1gqog2utDfqJOZ5Ja3eUUpmrg+95D8zjT5DMT0e
+	 Fz/y20jGI/C5guD4xx/iFjzDbkMS89UXfzjo9CaEymmfAVupm00W4rH71b3xYiLSjC
+	 3adLH0Nyfi7Qg==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev
+Cc: Thomas Richter <tmricht@linux.ibm.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Jan Polensky <japo@linux.ibm.com>,
+	linux-s390@vger.kernel.org,
+	Namhyung Kim <namhyung@kernel.org>,
+	Sumanth Korikkar <sumanthk@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.18 002/752] perf test stat tests: Fix for virtualized machines
+Date: Sat, 28 Feb 2026 12:35:13 -0500
+Message-ID: <20260228174750.1542406-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260228174750.1542406-1-sashal@kernel.org>
+References: <20260228174750.1542406-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
@@ -77,37 +84,99 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-16653-lists,linux-s390=lfdr.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_FROM(0.00)[bounces-16656-lists,linux-s390=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[13];
 	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_NO_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[pr-tracker-bot@kernel.org,linux-s390@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashal@kernel.org,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 8CB8B1C4E2C
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linaro.org:email]
+X-Rspamd-Queue-Id: EB07E1C8F2B
 X-Rspamd-Action: no action
 
-The pull request you sent on Sat, 28 Feb 2026 16:08:34 +0100:
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-7.0-3
+[ Upstream commit e272628902c1c96731e2d9f62a7fc77767686eb0 ]
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/201795a1b72570374e6d2c72d5c1c23c9cfc3929
+On s390 'perf test's 'perf stat tests', subtest test_hybrid fails for
+z/VM systems.  The root cause is this statement:
 
-Thank you!
+  $(perf stat -a -- sleep 0.1 2>&1 |\
+                  grep -E "/cpu-cycles/[uH]*|  cpu-cycles[:uH]* -c)
 
+The 'perf stat' output on a s390 z/VM system is
+
+  # perf stat -a -- sleep 0.1 2>&1
+  Performance counter stats for 'system wide':
+
+        56      context-switches  #     46.3 cs/sec  cs_per_second
+  1,210.41 msec cpu-clock         #     11.9 CPUs  CPUs_utilized
+        12      cpu-migrations    #      9.9 migrations/sec ...
+        81      page-faults       #     66.9 faults/sec ...
+
+        0.100891009 seconds time elapsed
+
+The grep command does not match any single line and exits with error
+code 1.
+
+As the bash script is executed with 'set -e', it aborts with the first
+error code being non-zero.
+
+Fix this and use 'wc -l' to count matching lines instead of 'grep ... -c'.
+
+Output before:
+
+  # perf test 102
+  102: perf stat tests                      : FAILED!
+  #
+
+Output after:
+
+  # perf test 102
+  102: perf stat tests                      : Ok
+  #
+
+Fixes: bb6e7cb11d97ce19 ("perf tools: Add fallback for exclude_guest")
+Reviewed-by: Ian Rogers <irogers@google.com>
+Reviewed-by: James Clark <james.clark@linaro.org>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Jan Polensky <japo@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Sumanth Korikkar <sumanthk@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/perf/tests/shell/stat.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
+index 985adc02749e2..d72d16d0b8c46 100755
+--- a/tools/perf/tests/shell/stat.sh
++++ b/tools/perf/tests/shell/stat.sh
+@@ -196,7 +196,7 @@ test_hybrid() {
+   fi
+ 
+   # Run default Perf stat
+-  cycles_events=$(perf stat -a -- sleep 0.1 2>&1 | grep -E "/cpu-cycles/[uH]*|  cpu-cycles[:uH]*  " -c)
++  cycles_events=$(perf stat -a -- sleep 0.1 2>&1 | grep -E "/cpu-cycles/[uH]*|  cpu-cycles[:uH]*  "  | wc -l)
+ 
+   # The expectation is that default output will have a cycles events on each
+   # hybrid PMU. In situations with no cycles PMU events, like virtualized, this
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.51.0
+
 
