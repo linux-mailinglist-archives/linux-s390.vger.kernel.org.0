@@ -1,48 +1,48 @@
-Return-Path: <linux-s390+bounces-16660-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16661-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cBmOC5mao2kwIAUAu9opvQ
-	(envelope-from <linux-s390+bounces-16660-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Sun, 01 Mar 2026 02:47:05 +0100
+	id oLTfNGKho2k3IQUAu9opvQ
+	(envelope-from <linux-s390+bounces-16661-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Sun, 01 Mar 2026 03:16:02 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id E34DE1CBB1D
-	for <lists+linux-s390@lfdr.de>; Sun, 01 Mar 2026 02:47:04 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EFEC1CD571
+	for <lists+linux-s390@lfdr.de>; Sun, 01 Mar 2026 03:16:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 55B4A30387DB
-	for <lists+linux-s390@lfdr.de>; Sun,  1 Mar 2026 01:42:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3B6273418273
+	for <lists+linux-s390@lfdr.de>; Sun,  1 Mar 2026 01:52:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F09B21A3165;
-	Sun,  1 Mar 2026 01:42:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F52C30AD05;
+	Sun,  1 Mar 2026 01:50:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZsXR8DU0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RIVTM3YL"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD377233134;
-	Sun,  1 Mar 2026 01:42:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF6F309F19;
+	Sun,  1 Mar 2026 01:50:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772329340; cv=none; b=fd7alLMm2V14boxNCKI6+u0uOKwm5mjS35DPKLOiCkJXPmlf7m8mVl0mz3nqfRHgMiLcwA6fbEgZVQ2DBWwyq1cNlolp1P5OG/g+dqQcgKpNNNYnceuQ9gKm4FGY5nbJ+6ffWR4hbaDTo/Ou/+lOVzzqIQ2kcpk53JS2GohVm/w=
+	t=1772329840; cv=none; b=FzC0xko3eoPCpenMNk/wy4oWab2UEhzb8GQ6tvY8GaPzgJJVo+qlPcs/5fpSIZ20SKdoblDu67kmv7nKDPwO40B7l50X7EvTFFlB4VxQRX+8rMtRmgDIdXz8IcdThaTVK6knQ0wmRVUaYoawCDeW7AVUOgYZwGjPLIBDEQCcEhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772329340; c=relaxed/simple;
-	bh=ii2FZUREE/8XGqs8JDiAOZEExqmPn472bB3HL2pQ1EA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PKyXM92Rxd7Rc43Tk07j4ViCPf5wYU/M3vF+WhKazQrU4nsPtaUJvr6tDGuaBWqMsUeGu0fRe67+AQNf+FT/USUDXFAJLCV/+XcRnvaakAryD1XwBiMEorcs/SkGRDaxKcUyz4QUMUerfachTaBJ9wkd4hjMhP28ed1w4h9LIuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZsXR8DU0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B93CC19421;
-	Sun,  1 Mar 2026 01:42:19 +0000 (UTC)
+	s=arc-20240116; t=1772329840; c=relaxed/simple;
+	bh=P61Jt+ayGwDe7d5A4AL1fyN6GNlmJKTX29d3c3wAIXE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WsLrmh1J3VBftMUe0sPUkUqjYREUCKVPzW69T+6Ur+Xgbvw6OTn811zvCCsbgRmwvJ6XaFP2OBn0K4Y3sF+/7SD/OiMrtPZX9ecu8Kkc0Z8ADdXNhDf9j8U9tMPZV2tziw19kopbY97WhjKTAw610O7+1fnGfvIXY/k5+TirKgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RIVTM3YL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70941C19421;
+	Sun,  1 Mar 2026 01:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772329340;
-	bh=ii2FZUREE/8XGqs8JDiAOZEExqmPn472bB3HL2pQ1EA=;
+	s=k20201202; t=1772329840;
+	bh=P61Jt+ayGwDe7d5A4AL1fyN6GNlmJKTX29d3c3wAIXE=;
 	h=From:To:Cc:Subject:Date:From;
-	b=ZsXR8DU0WY6h0NBUYb10SvJqnqvPva5de76HslJdAQZOnjt57sOyTTF6mQgp1SDo4
-	 HTdDv8qmrpbxliNSA++B7AzBfB/EUE3wkq/15AUvPvTzZTBx9i4cKISnb9sTWiDCs5
-	 dHXv1Bzv1QKchZ5SH6is3Va3C26elmGRSH4tkvzl+sXnHE7exzNPbMio7BUpHSWSwN
-	 j8MTSk0aOOFWzG3L+csv6P3MYV7tOcfgDjjYwAa1NDKDpQgzODXvMfEwWSyAu6Vpq/
-	 RJf52sWd/4ca3cyMM3K6sLa3QgjjTPWEszEY+J152MVR0l3SlYddYOLg5TQWVbOwzw
-	 gislYMMyxZbDQ==
+	b=RIVTM3YLD8QTcJNK0yn6usDzQ4meXwzZrZMtnNKdxICrhIJwmxkMxYMt78Pf3Ule/
+	 owX2Ydl4xomgSbXQdLzLi42PebHFjiYRgiTVXqbAwJN2GqvEKEVZIeIFrD/0r7l3xH
+	 Zb94hE/JjLYqFibs4S9n4mOfj/HQ3jgIwf5nQ3DKgfaXpGnMxnBRKlpExUaddmiymL
+	 qwoWfG6bQONoO6TH7f7D0zNqK75xu2+mIfjgTFaGv1DItbKL8RUDjxoQ1tDYwD4JaK
+	 V7wc4AXtRSsUIB41fBrOHQijKP9xyIvWFs2eIRuOhBskhrPyPwH4XSUExZmX2iM6ES
+	 OvO0TLHnSdCKw==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
 	schnelle@linux.ibm.com
@@ -50,9 +50,9 @@ Cc: Benjamin Block <bblock@linux.ibm.com>,
 	Farhan Ali <alifm@linux.ibm.com>,
 	Heiko Carstens <hca@linux.ibm.com>,
 	linux-s390@vger.kernel.org
-Subject: FAILED: Patch "s390/pci: Handle futile config accesses of disabled devices directly" failed to apply to 6.1-stable tree
-Date: Sat, 28 Feb 2026 20:42:18 -0500
-Message-ID: <20260301014218.1704139-1-sashal@kernel.org>
+Subject: FAILED: Patch "s390/pci: Handle futile config accesses of disabled devices directly" failed to apply to 5.15-stable tree
+Date: Sat, 28 Feb 2026 20:50:38 -0500
+Message-ID: <20260301015038.1716685-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
@@ -69,18 +69,18 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-16660-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-16661-lists,linux-s390=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	TO_DN_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashal@kernel.org,linux-s390@vger.kernel.org];
@@ -90,11 +90,11 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
 	RCPT_COUNT_FIVE(0.00)[6];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: E34DE1CBB1D
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 4EFEC1CD571
 X-Rspamd-Action: no action
 
-The patch below does not apply to the 6.1-stable tree.
+The patch below does not apply to the 5.15-stable tree.
 If someone wants it applied there, or to any other stable or longterm
 tree, then please email the backport, including the original git commit
 id to <stable@vger.kernel.org>.
