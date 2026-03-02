@@ -1,278 +1,140 @@
-Return-Path: <linux-s390+bounces-16714-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16716-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8F23BMWQpWmoDgYAu9opvQ
-	(envelope-from <linux-s390+bounces-16714-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 02 Mar 2026 14:29:41 +0100
+	id cAdEAyiTpWnXEAYAu9opvQ
+	(envelope-from <linux-s390+bounces-16716-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 02 Mar 2026 14:39:52 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E91A91D9C4D
-	for <lists+linux-s390@lfdr.de>; Mon, 02 Mar 2026 14:29:40 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A8F61D9F37
+	for <lists+linux-s390@lfdr.de>; Mon, 02 Mar 2026 14:39:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id A28813025121
-	for <lists+linux-s390@lfdr.de>; Mon,  2 Mar 2026 13:29:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9C23A3052BB6
+	for <lists+linux-s390@lfdr.de>; Mon,  2 Mar 2026 13:33:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52E7C30DD2A;
-	Mon,  2 Mar 2026 13:28:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 129263FB07B;
+	Mon,  2 Mar 2026 13:32:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="C3w8X+KC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fEL+VDLf"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD21536C9D0;
-	Mon,  2 Mar 2026 13:28:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8113ED11C;
+	Mon,  2 Mar 2026 13:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772458128; cv=none; b=eVfaPez3X0nsWx26xXwsEIXqVTEBM/g8u0hn4wGLxcdHCOUqUVdGRFJZ4PpdH0oJi2kGyK1Hm9q4emsBai2RcCK65PYOoaBBllF4lQHlorfrSYLSSKez958dIjrhvXMSHk8U6PfZi3w6aYoiOX88dLlty7Rezev+nH6fiA1wlZ0=
+	t=1772458356; cv=none; b=ry6tllnqMMBcb64Pc+bYD3ZjZMPHf3uzTw/OcdpFNrZ1MhEDrIdzNdPPHoSf1WhMh3+OIauPjEvmM7JOO3OImnfj0/LQ5LlV0JvmT7j0zGSPyb4tmz74LW92qyVDwOiYYhW2/LeVQrxUawbRS47YJ5fV1kGBnCXFISbEK46UgHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772458128; c=relaxed/simple;
-	bh=W6qmQbOUEvCz4cAy/edHoPzKepofa/JIaVO2fGniCcs=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OAz0TjbfB99Idj5VISoU37PvALOUIcONJvGPLVk4PsTuLSRcvLRjiU9r9imrNOkSxTdasYf5m8rcdZ4hva2k9lFirlRSVAjWwKe5TOUDwxGmi/QoMgwjFVhYGU72w/J2SS5+cY1iRo3s/fCjSPsXa8ZEwnfK8KY6fJNS8KNtwGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=C3w8X+KC; arc=none smtp.client-ip=185.226.149.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1vx3Jw-003bl4-7x; Mon, 02 Mar 2026 14:28:24 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
-	 s=selector2; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To
-	:Message-Id:Date:Subject:To:From;
-	bh=DqGOd6ipwPciYOEGbBHYVc1F4qmoJna8wv2iZM4469g=; b=C3w8X+KCNPwwUnlCUtq46S90t1
-	DaIzVd1U67pGzKoSNwRgDY0CkJR1WNOs2reVFFLbpCZJ5PTfZVq5TZTYpBtxMw2AfBFKsnU8eNfzL
-	UyKZj1Ao3zw24M6GhXmw4q7AcjpvZz9fajrVInZguhOGa8NYPBkUrjhNlngU3Mr5PEAWm9Jc6JFne
-	y3SR7NYQbKrUQi7nwwLTjarrREdk17HVYnhrX+G5V/PSUpfdGc3Axbaqn/zyoRSLpoMrqqb5dL7RX
-	smVDc6yiyZoQchORsC5WgAugpAW3KLRRAwN3ak0bumYpByVPz6HVuheyobbQNDuH27z7AyGB9th3/
-	IYE9RgWA==;
-Received: from [10.9.9.73] (helo=submission02.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1vx3Ju-0001hC-Np; Mon, 02 Mar 2026 14:28:22 +0100
-Received: by submission02.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1vx3Jl-008UTR-0w; Mon, 02 Mar 2026 14:28:13 +0100
-From: david.laight.linux@gmail.com
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Andre Almeida <andrealmeid@igalia.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Darren Hart <dvhart@infradead.org>,
-	David Laight <david.laight.linux@gmail.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Jan Kara <jack@suse.cz>,
-	Julia Lawall <Julia.Lawall@inria.fr>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Nicolas Palix <nicolas.palix@imag.fr>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <pjw@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	x86@kernel.org,
-	Kees Cook <kees@kernel.org>,
-	akpm@linux-foundation.org
-Subject: [PATCH v2 next 5/5] signal: Use scoped_user_access() instead of __put/get_user()
-Date: Mon,  2 Mar 2026 13:27:55 +0000
-Message-Id: <20260302132755.1475451-6-david.laight.linux@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20260302132755.1475451-1-david.laight.linux@gmail.com>
-References: <20260302132755.1475451-1-david.laight.linux@gmail.com>
+	s=arc-20240116; t=1772458356; c=relaxed/simple;
+	bh=MMO6QzhJTBpjIamFxQOPnoG0lDTOenIytlKAn/pj/E4=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=kGVnpRHOJ5g9uDKp/8dLcObeRF3KRaqAECu8g1PgyBPrRRonFsb9YuhUW/ThrGBTEudCJ0QYZ5TUHG7VeioYf3Ie8u9IdWMC0mW6xUErNhxtqdQqu+Q6f8wwlKKD8GQrQvEC4IRwpkD4AH+xTik24qkusez9z5B3kRmikGooHQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fEL+VDLf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F17BBC2BCAF;
+	Mon,  2 Mar 2026 13:32:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772458355;
+	bh=MMO6QzhJTBpjIamFxQOPnoG0lDTOenIytlKAn/pj/E4=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
+	b=fEL+VDLfWgejB2UiD3yfu4w39ugAxlb20659+wBdunWi1Bmc39BavexRTwtcs+1l3
+	 sX93ULfh/tz4Vhr0v3imaxSkT35vp3EVg9Gy+LgXN+2mq96c3xiAwr/WyFIihORW9w
+	 BGpyRT/a1j1nBY0ZjXH/GPrvJyTo9mEc3DN+Xka8m1xkvcDYFegbdDh9ZTD8HmUkK0
+	 nxghDIgYeXQX0sbRhzs9+fSGH8XrM7dswPU2XpiF4ZdmAB25gPYcvE+LjIAqNBNgUi
+	 +UUD9qGbudgTDkVZ7YshLPbkpT5245i6bbuZy3My6iob9UzGq4b2JfAUxFrzM/2uTT
+	 vDicKTI56lTsw==
+Content-Type: multipart/mixed; boundary="===============7930476675043711056=="
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-Id: <b6c00e7ecc633ab02ee8689f5647ce9090cf72d75f5bf9f2cc2c09983d963b58@mail.kernel.org>
+In-Reply-To: <20260302-module-signature-uapi-v1-6-207d955e0d69@linutronix.de>
+References: <20260302-module-signature-uapi-v1-6-207d955e0d69@linutronix.de>
+Subject: Re: [PATCH 6/8] tools uapi headers: add linux/module_signature.h
+From: bot+bpf-ci@kernel.org
+To: thomas.weissschuh@linutronix.de,dhowells@redhat.com,dwmw2@infradead.org,mcgrof@kernel.org,petr.pavlu@suse.com,da.gomez@kernel.org,samitolvanen@google.com,atomlin@atomlin.com,hca@linux.ibm.com,gor@linux.ibm.com,agordeev@linux.ibm.com,borntraeger@linux.ibm.com,svens@linux.ibm.com,zohar@linux.ibm.com,roberto.sassu@huawei.com,dmitry.kasatkin@gmail.com,eric.snowberg@oracle.com,paul@paul-moore.com,jmorris@namei.org,serge@hallyn.com,nathan@kernel.org,nsc@kernel.org,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,martin.lau@linux.dev,eddyz87@gmail.com,song@kernel.org,yonghong.song@linux.dev,john.fastabend@gmail.com,kpsingh@kernel.org,sdf@fomichev.me,haoluo@google.com,jolsa@kernel.org,shuah@kernel.org
+Cc: keyrings@vger.kernel.org,linux-kernel@vger.kernel.org,linux-modules@vger.kernel.org,linux-s390@vger.kernel.org,linux-integrity@vger.kernel.org,linux-security-module@vger.kernel.org,linux-kbuild@vger.kernel.org,bpf@vger.kernel.org,linux-kselftest@vger.kernel.org,thomas.weissschuh@linutronix.de,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Mon,  2 Mar 2026 13:32:34 +0000 (UTC)
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.44 / 15.00];
+X-Spamd-Result: default: False [0.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[runbox.com:s=selector2];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	CTYPE_MIXED_BOGUS(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[gmail.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
-	MIME_GOOD(-0.10)[text/plain];
+	MIME_GOOD(-0.10)[multipart/mixed,text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-16714-lists,linux-s390=lfdr.de];
+	FREEMAIL_CC(0.00)[vger.kernel.org,linutronix.de,kernel.org,iogearbox.net,gmail.com,linux.dev,meta.com];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[bot@kernel.org,linux-s390@vger.kernel.org];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[zeniv.linux.org.uk,igalia.com,citrix.com,linux.ibm.com,kernel.org,csgroup.eu,infradead.org,gmail.com,stgolabs.net,suse.cz,inria.fr,linux-foundation.org,lists.infradead.org,vger.kernel.org,lists.ozlabs.org,efficios.com,ellerman.id.au,imag.fr,dabbelt.com,armlinux.org.uk,linutronix.de];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-16716-lists,linux-s390=lfdr.de,bpf-ci];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[34];
-	DKIM_TRACE(0.00)[runbox.com:+];
-	FROM_NO_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[davidlaightlinux@gmail.com,linux-s390@vger.kernel.org];
+	FREEMAIL_TO(0.00)[linutronix.de,redhat.com,infradead.org,kernel.org,suse.com,google.com,atomlin.com,linux.ibm.com,huawei.com,gmail.com,oracle.com,paul-moore.com,namei.org,hallyn.com,iogearbox.net,linux.dev,fomichev.me];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	FROM_NO_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+];
+	RCPT_COUNT_GT_50(0.00)[53];
+	TO_DN_NONE(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	NEURAL_HAM(-0.00)[-0.992];
 	TAGGED_RCPT(0.00)[linux-s390];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: E91A91D9C4D
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.kernel.org:mid]
+X-Rspamd-Queue-Id: 5A8F61D9F37
 X-Rspamd-Action: no action
 
-From: David Laight <david.laight.linux@gmail.com>
+--===============7930476675043711056==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-Mechanically change the access_ok() and __get/put_user() to use
-scoped_user_read/write_access() and unsafe_get/put_user().
+> diff --git a/tools/include/uapi/linux/module_signature.h b/tools/include/uapi/linux/module_signature.h
+> --- /dev/null
+> +++ b/tools/include/uapi/linux/module_signature.h
 
-This generates better code with fewer STAC/CLAC pairs.
+[ ... ]
 
-It also ensures that access_ok() is called near the user accesses.
-I failed to find the one for __save_altstack().
+> +enum module_signature_type {
+> +	MODULE_SIGNATURE_TYPE_PKCS7 = 2,	/* Signature in PKCS#7 message */
+> +	MODULE_SIGNATURE_TYPE_MERKLE = 3,	/* Merkle proof for modules */
+> +};
 
-Looking at the change, perhaps there should be aliases:
-#define scoped_put_user unsafe_put_user
-#define scoped_get_user unsafe_get_user
+The source UAPI header at include/uapi/linux/module_signature.h does not
+define MODULE_SIGNATURE_TYPE_MERKLE:
 
-Signed-off-by: David Laight <david.laight.linux@gmail.com>
+include/uapi/linux/module_signature.h:
+    enum module_signature_type {
+        MODULE_SIGNATURE_TYPE_PKCS7 = 2,
+    };
+
+Was this value intentionally added here ahead of the kernel header?  It
+appears to come from the CONFIG_MODULE_HASHES series referenced in the
+cover letter, but no commit in this series adds it to the kernel UAPI
+header, so the tools copy diverges from its source at creation time.
+
+
 ---
- kernel/signal.c | 72 ++++++++++++++++++++++++++++---------------------
- 1 file changed, 42 insertions(+), 30 deletions(-)
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
-diff --git a/kernel/signal.c b/kernel/signal.c
-index d65d0fe24bfb..fca257398cbc 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -4469,10 +4469,16 @@ int restore_altstack(const stack_t __user *uss)
- int __save_altstack(stack_t __user *uss, unsigned long sp)
- {
- 	struct task_struct *t = current;
--	int err = __put_user((void __user *)t->sas_ss_sp, &uss->ss_sp) |
--		__put_user(t->sas_ss_flags, &uss->ss_flags) |
--		__put_user(t->sas_ss_size, &uss->ss_size);
--	return err;
-+
-+	scoped_user_write_access(uss, Efault) {
-+		unsafe_put_user((void __user *)t->sas_ss_sp, &uss->ss_sp, Efault);
-+		unsafe_put_user(t->sas_ss_flags, &uss->ss_flags, Efault);
-+		unsafe_put_user(t->sas_ss_size, &uss->ss_size, Efault);
-+	}
-+	return 0;
-+
-+Efault:
-+	return -EFAULT;
- }
- 
- #ifdef CONFIG_COMPAT
-@@ -4705,12 +4711,12 @@ SYSCALL_DEFINE3(sigaction, int, sig,
- 
- 	if (act) {
- 		old_sigset_t mask;
--		if (!access_ok(act, sizeof(*act)) ||
--		    __get_user(new_ka.sa.sa_handler, &act->sa_handler) ||
--		    __get_user(new_ka.sa.sa_restorer, &act->sa_restorer) ||
--		    __get_user(new_ka.sa.sa_flags, &act->sa_flags) ||
--		    __get_user(mask, &act->sa_mask))
--			return -EFAULT;
-+		scoped_user_read_access(act, Efault) {
-+		    unsafe_get_user(new_ka.sa.sa_handler, &act->sa_handler, Efault);
-+		    unsafe_get_user(new_ka.sa.sa_restorer, &act->sa_restorer, Efault);
-+		    unsafe_get_user(new_ka.sa.sa_flags, &act->sa_flags, Efault);
-+		    unsafe_get_user(mask, &act->sa_mask, Efault);
-+		}
- #ifdef __ARCH_HAS_KA_RESTORER
- 		new_ka.ka_restorer = NULL;
- #endif
-@@ -4720,15 +4726,18 @@ SYSCALL_DEFINE3(sigaction, int, sig,
- 	ret = do_sigaction(sig, act ? &new_ka : NULL, oact ? &old_ka : NULL);
- 
- 	if (!ret && oact) {
--		if (!access_ok(oact, sizeof(*oact)) ||
--		    __put_user(old_ka.sa.sa_handler, &oact->sa_handler) ||
--		    __put_user(old_ka.sa.sa_restorer, &oact->sa_restorer) ||
--		    __put_user(old_ka.sa.sa_flags, &oact->sa_flags) ||
--		    __put_user(old_ka.sa.sa_mask.sig[0], &oact->sa_mask))
--			return -EFAULT;
-+		scoped_user_write_access(oact, Efault) {
-+		    unsafe_put_user(old_ka.sa.sa_handler, &oact->sa_handler, Efault);
-+		    unsafe_put_user(old_ka.sa.sa_restorer, &oact->sa_restorer, Efault);
-+		    unsafe_put_user(old_ka.sa.sa_flags, &oact->sa_flags, Efault);
-+		    unsafe_put_user(old_ka.sa.sa_mask.sig[0], &oact->sa_mask, Efault);
-+		}
- 	}
- 
- 	return ret;
-+
-+Efault:
-+	return -EFAULT;
- }
- #endif
- #ifdef CONFIG_COMPAT_OLD_SIGACTION
-@@ -4742,12 +4751,12 @@ COMPAT_SYSCALL_DEFINE3(sigaction, int, sig,
- 	compat_uptr_t handler, restorer;
- 
- 	if (act) {
--		if (!access_ok(act, sizeof(*act)) ||
--		    __get_user(handler, &act->sa_handler) ||
--		    __get_user(restorer, &act->sa_restorer) ||
--		    __get_user(new_ka.sa.sa_flags, &act->sa_flags) ||
--		    __get_user(mask, &act->sa_mask))
--			return -EFAULT;
-+		scoped_user_read_access(act, Efault) {
-+		    unsafe_get_user(handler, &act->sa_handler, Efault);
-+		    unsafe_get_user(restorer, &act->sa_restorer, Efault);
-+		    unsafe_get_user(new_ka.sa.sa_flags, &act->sa_flags, Efault);
-+		    unsafe_get_user(mask, &act->sa_mask, Efault);
-+		}
- 
- #ifdef __ARCH_HAS_KA_RESTORER
- 		new_ka.ka_restorer = NULL;
-@@ -4760,16 +4769,19 @@ COMPAT_SYSCALL_DEFINE3(sigaction, int, sig,
- 	ret = do_sigaction(sig, act ? &new_ka : NULL, oact ? &old_ka : NULL);
- 
- 	if (!ret && oact) {
--		if (!access_ok(oact, sizeof(*oact)) ||
--		    __put_user(ptr_to_compat(old_ka.sa.sa_handler),
--			       &oact->sa_handler) ||
--		    __put_user(ptr_to_compat(old_ka.sa.sa_restorer),
--			       &oact->sa_restorer) ||
--		    __put_user(old_ka.sa.sa_flags, &oact->sa_flags) ||
--		    __put_user(old_ka.sa.sa_mask.sig[0], &oact->sa_mask))
--			return -EFAULT;
-+		scoped_user_write_access(oact, Efault) {
-+		    unsafe_put_user(ptr_to_compat(old_ka.sa.sa_handler),
-+			       &oact->sa_handler, Efault);
-+		    unsafe_put_user(ptr_to_compat(old_ka.sa.sa_restorer),
-+			       &oact->sa_restorer, Efault);
-+		    unsafe_put_user(old_ka.sa.sa_flags, &oact->sa_flags, Efault);
-+		    unsafe_put_user(old_ka.sa.sa_mask.sig[0], &oact->sa_mask, Efault);
-+		}
- 	}
- 	return ret;
-+
-+Efault:
-+	return -EFAULT;
- }
- #endif
- 
--- 
-2.39.5
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/22577240517
 
+AI-authorship-score: low
+AI-authorship-explanation: Straightforward mechanical UAPI header copy with terse commit message, consistent with experienced kernel developer style from a known Linutronix contributor.
+issues-found: 1
+issue-severity-score: low
+issue-severity-explanation: The tools UAPI copy contains an enum value (MODULE_SIGNATURE_TYPE_MERKLE) not present in the kernel source header, creating a content mismatch that does not affect runtime behavior but violates the convention that tools copies mirror kernel UAPI headers.
+
+--===============7930476675043711056==--
 
