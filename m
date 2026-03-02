@@ -1,38 +1,38 @@
-Return-Path: <linux-s390+bounces-16670-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16672-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eO7NKkVDpWkg7AUAu9opvQ
-	(envelope-from <linux-s390+bounces-16670-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 02 Mar 2026 08:59:01 +0100
+	id AMX4KFhDpWld7QUAu9opvQ
+	(envelope-from <linux-s390+bounces-16672-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 02 Mar 2026 08:59:20 +0100
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21ED41D43C7
-	for <lists+linux-s390@lfdr.de>; Mon, 02 Mar 2026 08:59:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 47C561D443E
+	for <lists+linux-s390@lfdr.de>; Mon, 02 Mar 2026 08:59:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 667BC300765C
-	for <lists+linux-s390@lfdr.de>; Mon,  2 Mar 2026 07:58:57 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8992D3028C0E
+	for <lists+linux-s390@lfdr.de>; Mon,  2 Mar 2026 07:59:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9E8F38735D;
-	Mon,  2 Mar 2026 07:58:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D417387572;
+	Mon,  2 Mar 2026 07:58:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uyjMEpDU";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fr/HGqXy"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ciydefi2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/oOqZJOd"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76151335562;
-	Mon,  2 Mar 2026 07:58:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA8E337BB8;
+	Mon,  2 Mar 2026 07:58:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772438333; cv=none; b=oxD14TsSMUZN/d8mmTYWIKUfBgrwYK9APxOO/w2hJOgRxX6YlkDyytUeL/Gmbs0XLwbqls+hew4VkKp0rBAS5HT5nz2o6WpGV3H1eXXuHQfbIrvDF2ECrSuuyiUg5cJRCMDjYn/+B6tItjVQSTVlzmulU0PMkvhRSuSpTjDEbOs=
+	t=1772438334; cv=none; b=WwGwB4Fh8pTStjqDmZ6Un0V0EDk4YuNx5mUcqqCaXkInlsKAdFQ4hWPUDSouZ/njTlWaSkFRrk04NEn8aD4uaPSim1280NNqoJNp/A3J/INdMJYqN57ZV4KaCoosC3Ebzc4NJGVCPOw6elA+f10y4AfA33HkuPG2eAD02pvQ6/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772438333; c=relaxed/simple;
-	bh=+ZNTvsS03cf/7hGvDJacLfCnOSDvf3VWGwKmuX5AIIY=;
+	s=arc-20240116; t=1772438334; c=relaxed/simple;
+	bh=BTq+tG721IWvmNZKRhmYuiBTJvXYohTSP94/jYKFkyc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oDeorQqSnzrfKJip8kzkSovdb79JpMlIXM40tc1Gb/4QZPp/fW0RplSpKoKtAubVHf7XcEXGLxW+WYQuG1C2ujOfUOMm80qQ0v/75oJVMP3QesXAC9ovNjKH+xWtoY/tCa9FxnMQQXaAFO3HudChtbH1LzbiiH7rDUE7uOsdckA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uyjMEpDU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fr/HGqXy; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=WMcwXZc4UgRYAjNTeKihX42Opw4H3uPUZWA5boA7dWiJqdDYTsST+7NVni6P/JFgUht6f4Rrm7ae+tyvWipOV2JHfOSZpytEG06vFC5RXcfZ9/AB31ujiTL03cG1e5Ai4c9sO8oo8vNysiwGh16KL2lzXv7Ez92T8WD/iPux8Mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ciydefi2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/oOqZJOd; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
@@ -42,24 +42,23 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hYzDmJLESQDE0WGZOLxDeZB0k8diDoIRXYV8eHmiP4I=;
-	b=uyjMEpDU+Ms1HTL60KWTsXDcQuLD7b4yjxeGhF8tgVTjQ2kkhq75vsgmGnXpq+8cnTXa4D
-	NlV740cDY97hzfhxaqf+46PapcgZHM3gq8CE8RIib4dlrrZ3dXD6rVbf3QDfoCPW+Wl9CV
-	fIAojNCIpmwsadApQeVOp0XlGmzA+oCh36feTuw2rjfy8hvAU0NO5gPPZA5ZQz4FnwJ/6p
-	krCJW8vtMkGUvKjS2hJDtWYE5zCYVvUYmirfs+VbjdnrpMiGWrnjkAGBsJkUvnf8rIMIAf
-	/4rnpF5/Ap+e6KKVqMrxmtke0Oq/DcTrDVeTWQGALaRy8CLcZnadb4lYmSPpPw==
+	bh=UF10sktaE3a/u60QuU3fU7HqMA3bwXEWu54Wnq4Vn5g=;
+	b=ciydefi2+IGpGjxuJ8S0Pi+V3OE2L2KTESiiSpFlWMdULYcmkYxxE1PJyxSZo34YX9HCvC
+	otxxjHp2oFTPL9j9x3qD59f3ZnvENSKPwzlcjDF9gwOAoWjmGg+Kl2GOzjsuuqOkUN8EFR
+	MpaBg4Wm8BR5LSNmS/vo72/wV/m8ujzC+zXJsxM/E5eHSDwg5a+SCYVX5LcbFGs9WLZx1o
+	IqabJtHg5sn7IO0PwbjNhXU3mLreIj2ehewv2aXyfQnB+vS6/6g72GHvLiu7IUXCA2Dns3
+	jj6Qctvz2ySNMQjcEbRkObXtPQ32W4ozS6FFjJEQYmO4+ZGx86/y86p5sT36/w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1772438331;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hYzDmJLESQDE0WGZOLxDeZB0k8diDoIRXYV8eHmiP4I=;
-	b=fr/HGqXyWU3Kci3r+yPCt6+p6Pqf+02Ssd1Pb1zEsVJbbH9+n0SKw2uwMCxMhExtDcG5VA
-	3gqEiOxkN1sj6jDg==
-Date: Mon, 02 Mar 2026 08:58:38 +0100
-Subject: [PATCH v2 2/5] sparc64: vdso: Use 32-bit CHECKFLAGS for compat
- vDSO
+	bh=UF10sktaE3a/u60QuU3fU7HqMA3bwXEWu54Wnq4Vn5g=;
+	b=/oOqZJOd60lffdI+2m/cDGB+gvLeO1GfCoV5HvJr4+3CHFqEyKt8w0Em37WkJfh2QW+Rxk
+	lrrT3Gblc0IA2uBg==
+Date: Mon, 02 Mar 2026 08:58:39 +0100
+Subject: [PATCH v2 3/5] s390: Add -m64 to KBUILD_CPPFLAGS
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -68,7 +67,7 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260302-vdso-compat-checkflags-v2-2-78e55baa58ba@linutronix.de>
+Message-Id: <20260302-vdso-compat-checkflags-v2-3-78e55baa58ba@linutronix.de>
 References: <20260302-vdso-compat-checkflags-v2-0-78e55baa58ba@linutronix.de>
 In-Reply-To: <20260302-vdso-compat-checkflags-v2-0-78e55baa58ba@linutronix.de>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -87,13 +86,12 @@ To: "David S. Miller" <davem@davemloft.net>,
 Cc: sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-arch@vger.kernel.org, linux-s390@vger.kernel.org, 
  David Laight <david.laight.linux@gmail.com>, linuxppc-dev@lists.ozlabs.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
- kernel test robot <lkp@intel.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1772438327; l=1447;
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1772438327; l=1115;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=+ZNTvsS03cf/7hGvDJacLfCnOSDvf3VWGwKmuX5AIIY=;
- b=kspaAO2Nd+J47AMHG0hbuL+BuqH4VXDaOrQx3Oh8u8q9Ts994YT8aym1Wgdi+yqmVAf1E3CFM
- xPP9byI6x8wC16gAJRbrSBAnEgOpEOXAIgsN+ha/IFSD+jCl89niAri
+ bh=BTq+tG721IWvmNZKRhmYuiBTJvXYohTSP94/jYKFkyc=;
+ b=sX+mpo7qFfoRgBke0bz6zAxXtqo1MhErKWEmsMFk1R+7DQ6DdvNT3JOeYuQjWk75pK4XrWWHX
+ /ugF1GYyl71DtJ1gQ0FcfcZ9SjFd/F4MkzoR7GPOsO1elfICLhEYH+T
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 X-Rspamd-Server: lfdr
@@ -107,17 +105,17 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-16670-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-16672-lists,linux-s390=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[3];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_TO(0.00)[davemloft.net,gaisler.com,kernel.org,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,linux.ibm.com,ellerman.id.au,gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[27];
+	RCPT_COUNT_TWELVE(0.00)[26];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,lists.ozlabs.org,linutronix.de,intel.com];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,lists.ozlabs.org,linutronix.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.988];
+	NEURAL_HAM(-0.00)[-0.992];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[thomas.weissschuh@linutronix.de,linux-s390@vger.kernel.org];
 	DKIM_TRACE(0.00)[linutronix.de:+];
@@ -125,45 +123,40 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-s390];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,intel.com:email,linutronix.de:mid,linutronix.de:dkim,linutronix.de:email]
-X-Rspamd-Queue-Id: 21ED41D43C7
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linutronix.de:mid,linutronix.de:dkim,linutronix.de:email]
+X-Rspamd-Queue-Id: 47C561D443E
 X-Rspamd-Action: no action
 
-When building the compat vDSO the CHECKFLAGS from the 64-bit kernel
-are used. These are combined with the 32-bit CFLAGS. This confuses
-sparse, producing false-positive warnings or potentially missing
-real issues.
+Some non-code files, like linkescripts, are preprocessed with the C
+preprocessor and make use of regular kernel headers.
+As -m64 is not passed to those preprocessor invocations this leads
+to an inconsistency between __BITS_PER_LONG and the C type 'long'.
+An upcoming consistency check will be tripped by this.
 
-Manually override the CHECKFLAGS for the compat vDSO with the correct
-32-bit configuration.
+Make sure -m64 is also defined for those preprocessing steps.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/lkml/202511030021.9v1mIgts-lkp@intel.com/
+As KBUILD_CPPFLAGS is inherited by both KBUILD_AFLAGS and KBUILD_CFLAGS,
+drop -m64 from these variables.
+
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
 ---
-The actual false-positive is only reported when SPARC is converted over
-to the generic vDSO library. However the issue is already present.
-To avoid dependencies between different patch queues, I have this patch
-in this one.
----
- arch/sparc/vdso/Makefile | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/s390/Makefile | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/sparc/vdso/Makefile b/arch/sparc/vdso/Makefile
-index 13f1d7be00f1..7d6e3097ebfc 100644
---- a/arch/sparc/vdso/Makefile
-+++ b/arch/sparc/vdso/Makefile
-@@ -90,6 +90,9 @@ KBUILD_CFLAGS_32 += -DDISABLE_BRANCH_PROFILING
- KBUILD_CFLAGS_32 += -mv8plus
- $(obj)/vdso32.so.dbg: KBUILD_CFLAGS = $(KBUILD_CFLAGS_32)
- 
-+CHECKFLAGS_32 := $(filter-out -m64 -D__sparc_v9__ -D__arch64__, $(CHECKFLAGS)) -m32
-+$(obj)/vdso32.so.dbg: CHECKFLAGS = $(CHECKFLAGS_32)
-+
- $(obj)/vdso32.so.dbg: FORCE \
- 			$(obj)/vdso32/vdso32.lds \
- 			$(obj)/vdso32/vclock_gettime.o \
+diff --git a/arch/s390/Makefile b/arch/s390/Makefile
+index d78ad6885ca2..02bc948a4a56 100644
+--- a/arch/s390/Makefile
++++ b/arch/s390/Makefile
+@@ -12,8 +12,7 @@ LD_BFD		:= elf64-s390
+ KBUILD_LDFLAGS	:= -m elf64_s390
+ KBUILD_AFLAGS_MODULE += -fPIC
+ KBUILD_CFLAGS_MODULE += -fPIC
+-KBUILD_AFLAGS	+= -m64
+-KBUILD_CFLAGS	+= -m64
++KBUILD_CPPFLAGS	+= -m64
+ KBUILD_CFLAGS	+= -fPIC
+ LDFLAGS_vmlinux	:= $(call ld-option,-no-pie)
+ extra_tools	:= relocs
 
 -- 
 2.53.0
