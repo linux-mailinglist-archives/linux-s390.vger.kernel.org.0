@@ -1,62 +1,64 @@
-Return-Path: <linux-s390+bounces-16669-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16671-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QIVHG0JDpWkg7AUAu9opvQ
-	(envelope-from <linux-s390+bounces-16669-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 02 Mar 2026 08:58:58 +0100
+	id cCf8G1RDpWkg7AUAu9opvQ
+	(envelope-from <linux-s390+bounces-16671-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 02 Mar 2026 08:59:16 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA1441D43AA
-	for <lists+linux-s390@lfdr.de>; Mon, 02 Mar 2026 08:58:57 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E1B31D4426
+	for <lists+linux-s390@lfdr.de>; Mon, 02 Mar 2026 08:59:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5004A300C818
-	for <lists+linux-s390@lfdr.de>; Mon,  2 Mar 2026 07:58:56 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 66100301F15D
+	for <lists+linux-s390@lfdr.de>; Mon,  2 Mar 2026 07:59:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F25238734A;
-	Mon,  2 Mar 2026 07:58:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D87138756A;
+	Mon,  2 Mar 2026 07:58:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v+W0svcx";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jXG8V5V3"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bxHB4cE7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="efvxVqum"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C4D78F39;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46CAC201004;
 	Mon,  2 Mar 2026 07:58:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772438333; cv=none; b=SEo97IB4KvMTfhBRQAlYU7wcYkp+JLbpHpAq+dmWvwm5BfdqB1sDxq0lfWjkpQ1vA/hGl/eYYLLJxJE90LtMmhEvn8CLH4vrReXtjIAq533eLv2rUcvdEmTTi18gGmDqO5Md8/lbDTsC38SvAMIFgx7lS22bbtuWhusc10m6Kec=
+	t=1772438334; cv=none; b=WJdnvk2Jqy9ANuYI0jgp5Gi9+edP0xTJAgc1aXiSen/RNrFPMskCSb742cgOithDSOsHLFp0hVHM5MeW4CxdARoNFF2SB7hZahFwMTyRexEtFNy5CRBCQ5EagmUXhbMo723aM5yiCNwiHI9+H+6mhVPX3O5Gb2QRq7x69eNnohk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772438333; c=relaxed/simple;
-	bh=o0N8GcMd8Wv1v1vLFraNSKorTTZyIWNgl6SVsYTfGvc=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=n/WNFfY8I67CbBVUp57RCHUXD8ntRV49yPHKoJjc2N+jwnbfMY5QWzAJqnxFVCHLgzZSGMppcgIl3xrJ5CEHEYl3Ik0o7wq+xgcMIhjmKiiFIDa5Z0u/s+0IzTIDNGu9wCYTr1CjaXcFF3RDDygVjDVYy0hcZnJRP6alroykOJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=v+W0svcx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jXG8V5V3; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1772438334; c=relaxed/simple;
+	bh=5ZtWeLoIG1DUjNycBMtCEpprUXPJS/yxYX1kXl4i0fQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=mPO4o05hL95hL+oyFcfvmkwhD/jjwDg+e8u4U3Q82Ex5zFOFLN8rpjCOrV9JJ476WViszteLMnUr/8V3Jckg/OwKhF+LpYi2AlxFymrQH6prd/G9E56JAgS6jx7z35r43wUBXGDGgr391UcpYfFoPL2jn66rb2x6eeM4NqQkNEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bxHB4cE7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=efvxVqum; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1772438329;
+	s=2020; t=1772438330;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=CppVINWDU69mplj8+k/K366WYv0fGhniEacGlAHg1DU=;
-	b=v+W0svcxWjvODHkF4KURqjcM8wAaw+WlIdEMkq4ngppf4gT/fmy6MtWKqRhhTweq+J3rv8
-	MJcgxRx7mpMjSCCQPGVkoJFl7mRQgcoc9+rGDVZPbI+fihzeJIW/4zF0F2V3IVerR3ZYqp
-	vyU1MOH/cQvROAdZWsdPKd7avf1251DhOhqMAfMErDvAIxlF6nKqV8B1Bbka2UGI+6mWDG
-	/bc70Ggm1t5GwcDxnt/a2R4uqA8ig168AcjV43SaBN/QWGRqqUQO670I7Jn6OCmmhI7hhN
-	duE15ko8bozxDHYcROnHQyf2exgxGqmCLZLJwzn18w/SeSY48ZUv39cYJ7rD5g==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jDCrcHt8O4dhTht762Lzzs+IBKZYqdQLeGb4eSwA3mw=;
+	b=bxHB4cE7MnNYGC3LGFJQZbAqR1AX7Fj2u4K/iJg3DmTgTPv6SMfC+jLrKfrfo48cNHCdcS
+	kHgm1LXOX3Ulk7YNyobEBm6LA3UE+JS/ajFt59GmEeArXLSu9TZbpwBY0V4leeH+yaR59D
+	tZJTJ+Qk1vW2vXSbeMLxeaOej/OSpsZaSsUEoHAb0/9/wyJobZOuZeR+HK69qB0I/SQ2i0
+	gU5Z769UJXIQa4xv9omtW2LTJtS2OQAUvJ10ZjYFfCCIgEfO9N3H2fTgFPSsZZnDq9OG47
+	Jf/T4JWoaDBRD5aq5CZMdxKd01JAbK9NjJhb68w+D2/ObDrUR52dcQH+0oGmbw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1772438329;
+	s=2020e; t=1772438330;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=CppVINWDU69mplj8+k/K366WYv0fGhniEacGlAHg1DU=;
-	b=jXG8V5V3pA2/haiPpMZ9guEgfY1AO2AitAlh9Qt758wRbbUDxScB4f1GL4CtxrJVmU5bBu
-	YeF9Uo5nflKaYECw==
-Subject: [PATCH v2 0/5] vDSO: Use 32-bit CHECKFLAGS for compat vDSO
-Date: Mon, 02 Mar 2026 08:58:36 +0100
-Message-Id: <20260302-vdso-compat-checkflags-v2-0-78e55baa58ba@linutronix.de>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jDCrcHt8O4dhTht762Lzzs+IBKZYqdQLeGb4eSwA3mw=;
+	b=efvxVqumAur2T8LG28u5Yn0U0H8bRQKwT+Jh2uOlOmK4nUzUOsltLyESAuNhzX0970V5P6
+	r2bYGqMgv6Z8JFCw==
+Date: Mon, 02 Mar 2026 08:58:37 +0100
+Subject: [PATCH v2 1/5] x86/vdso: Use 32-bit CHECKFLAGS for compat vDSO
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -65,11 +67,9 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/3XNyw6CMBCF4VchXTumLTfjyvcwLHoZYCK2pMUGQ
- 3h3C3uX/0nmm41FDISR3YuNBUwUybsc8lIwMyo3IJDNzSSXtRC8hWSjB+Pfs1rAjGhe/aSGCLX
- Vba1LXWllWD6eA/a0nvCzyz1SXHz4nn+SONaDbLgQzT8yCeBQqVtGe625LR8Tuc8SvKP1apF1+
- 77/AFK5eUvAAAAA
-X-Change-ID: 20251107-vdso-compat-checkflags-5db75b3b4bac
+Message-Id: <20260302-vdso-compat-checkflags-v2-1-78e55baa58ba@linutronix.de>
+References: <20260302-vdso-compat-checkflags-v2-0-78e55baa58ba@linutronix.de>
+In-Reply-To: <20260302-vdso-compat-checkflags-v2-0-78e55baa58ba@linutronix.de>
 To: "David S. Miller" <davem@davemloft.net>, 
  Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>, 
  Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -89,11 +89,11 @@ Cc: sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org,
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
  Sun Jian <sun.jian.kdev@gmail.com>, kernel test robot <lkp@intel.com>, 
  Dan Carpenter <dan.carpenter@linaro.org>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1772438327; l=1844;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1772438327; l=1516;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=o0N8GcMd8Wv1v1vLFraNSKorTTZyIWNgl6SVsYTfGvc=;
- b=MZ2OUVAM3Gleol5ZSIQ3VTyufDy8HqTIN3psf4kzTZTtf9sT/PYCXgIptOdpvIFbxqTCLZjnl
- u+RXqDzMqNSCyLY/Zn0lSlGwSrdXlSVqa7nzpIWjfV2tcfFJB+c7vHz
+ bh=5ZtWeLoIG1DUjNycBMtCEpprUXPJS/yxYX1kXl4i0fQ=;
+ b=+NVtnS6EyY2Yoq5xKj8da3D2ktgjWUTfvnaXTMMqFJhyaa85rPvEJd4KytnY3lc96J0g8mRrj
+ KMacJ1WhtFWAPq9kCvYgoREx0uRXMt7AQbPWjwUKsysaifcS2+RVPku
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 X-Rspamd-Server: lfdr
@@ -102,12 +102,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linutronix.de,none];
 	R_DKIM_ALLOW(-0.20)[linutronix.de:s=2020,linutronix.de:s=2020e];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-16669-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-16671-lists,linux-s390=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[3];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -117,16 +117,16 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,lists.ozlabs.org,linutronix.de,intel.com,linaro.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.986];
+	NEURAL_HAM(-0.00)[-0.990];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[thomas.weissschuh@linutronix.de,linux-s390@vger.kernel.org];
 	DKIM_TRACE(0.00)[linutronix.de:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-s390];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linutronix.de:mid,linutronix.de:dkim,linutronix.de:email]
-X-Rspamd-Queue-Id: DA1441D43AA
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linutronix.de:mid,linutronix.de:dkim,linutronix.de:email,arndb.de:email,intel.com:email]
+X-Rspamd-Queue-Id: 0E1B31D4426
 X-Rspamd-Action: no action
 
 When building the compat vDSO the CHECKFLAGS from the 64-bit kernel
@@ -137,44 +137,35 @@ real issues.
 Manually override the CHECKFLAGS for the compat vDSO with the correct
 32-bit configuration.
 
-Not all architectures are supported, as many do not use sparse for their
-(compat) vDSO. These can be enabled later.
-
-Also add some checks to bitsperlong.h to detect such issues earlier.
-
-Based on tip/timers/vdso.
-
+Reported-by: Sun Jian <sun.jian.kdev@gmail.com>
+Closes: https://lore.kernel.org/lkml/20260114084529.1676356-1-sun.jian.kdev@gmail.com/
+Closes: https://lore.kernel.org/lkml/20260117215542.342638347@kernel.org/
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/r/202602111941.PIhubgrb-lkp@intel.com/
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 ---
-Changes in v2:
-- Simplify __BITS_PER_LONG consistency checks
-- Fix an inconsistency in the powerpc audit code
-- Move check to kernel headers instead of UAPI ones
-- Use KBUILD_CPPFLAGS = -m64 on s390 instead,
-  the previous include trimming turned out to require changes to many more files
-- Rebase on v7.0-rc1
-- Link to v1: https://lore.kernel.org/r/20260116-vdso-compat-checkflags-v1-0-4a83b4fbb0d3@linutronix.de
-
----
-Thomas Weißschuh (5):
-      x86/vdso: Use 32-bit CHECKFLAGS for compat vDSO
-      sparc64: vdso: Use 32-bit CHECKFLAGS for compat vDSO
-      s390: Add -m64 to KBUILD_CPPFLAGS
-      powerpc/audit: directly include unistd_32.h from compat_audit.c
-      asm-generic/bitsperlong.h: Add sanity checks for __BITS_PER_LONG
-
- arch/powerpc/kernel/compat_audit.c  | 3 +--
- arch/s390/Makefile                  | 3 +--
- arch/sparc/vdso/Makefile            | 3 +++
  arch/x86/entry/vdso/vdso32/Makefile | 4 ++++
- include/asm-generic/bitsperlong.h   | 9 +++++++++
- 5 files changed, 18 insertions(+), 4 deletions(-)
----
-base-commit: 740f1913cfa0d48222760eaa438c509ca9fc3710
-change-id: 20251107-vdso-compat-checkflags-5db75b3b4bac
+ 1 file changed, 4 insertions(+)
 
-Best regards,
+diff --git a/arch/x86/entry/vdso/vdso32/Makefile b/arch/x86/entry/vdso/vdso32/Makefile
+index add6afb484ba..ded4fc6a48cd 100644
+--- a/arch/x86/entry/vdso/vdso32/Makefile
++++ b/arch/x86/entry/vdso/vdso32/Makefile
+@@ -15,6 +15,10 @@ flags-y			:= -DBUILD_VDSO32 -m32 -mregparm=0
+ flags-$(CONFIG_X86_64)	+= -include $(src)/fake_32bit_build.h
+ flags-remove-y          := -m64
+ 
++# Checker flags
++CHECKFLAGS := $(subst -m64,-m32,$(CHECKFLAGS))
++CHECKFLAGS := $(subst -D__x86_64__,-D__i386__,$(CHECKFLAGS))
++
+ # The location of this include matters!
+ include $(src)/../common/Makefile.include
+ 
+
 -- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+2.53.0
 
 
