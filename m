@@ -1,60 +1,60 @@
-Return-Path: <linux-s390+bounces-16713-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16715-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6J9jAAaRpWmoDgYAu9opvQ
-	(envelope-from <linux-s390+bounces-16713-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 02 Mar 2026 14:30:46 +0100
+	id APL/MMiQpWmoDgYAu9opvQ
+	(envelope-from <linux-s390+bounces-16715-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 02 Mar 2026 14:29:44 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91AB51D9CA3
-	for <lists+linux-s390@lfdr.de>; Mon, 02 Mar 2026 14:30:45 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83A3E1D9C54
+	for <lists+linux-s390@lfdr.de>; Mon, 02 Mar 2026 14:29:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id ECA3B301F782
-	for <lists+linux-s390@lfdr.de>; Mon,  2 Mar 2026 13:29:00 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 919913026325
+	for <lists+linux-s390@lfdr.de>; Mon,  2 Mar 2026 13:29:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE3003E716D;
-	Mon,  2 Mar 2026 13:28:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0B603EFD0A;
+	Mon,  2 Mar 2026 13:28:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="dr2IYEGX"
+	dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b="pfYMBjDr"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44A8379EF4
-	for <linux-s390@vger.kernel.org>; Mon,  2 Mar 2026 13:28:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF7C32D0EE
+	for <linux-s390@vger.kernel.org>; Mon,  2 Mar 2026 13:28:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772458127; cv=none; b=GmBoa0R2F7PZPmjwiXszpjAG5FeWBRM5seSiWugiZoekXJRxuptcbfbSJZCngEYtafaEYafh3vS72tVD0eYbOcN/JCj4vkNtemVxKtlzNpvMRTySInvZLmuX7DuWpmZCNaD3ZTO4w5jMgm2qvWkgxg+gqqxiiAjWIl4h/VM2xok=
+	t=1772458131; cv=none; b=kxYFMr3oc8qvoN/6Q2jAAD8mCGWfXvHtbIREVn9W7ykiXyJ4+Cv8InNB4NNW+3FjasaebnFIXQ217KEEIDdsLd7v/6sts1amg8C1uhmtFQHN3GDCNQRhITssz0Fnv5aRWelH3bZEVzYGnLr/M158FSOrrSjubbPM9CyJ7iR3nm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772458127; c=relaxed/simple;
-	bh=IATyzkK6xWW9YiXL0DIDlHPO2PCygJ/MYODtpq9Z3Ms=;
+	s=arc-20240116; t=1772458131; c=relaxed/simple;
+	bh=/vw1o/tgaqgXlymwWBfNq0gtWd8qwqkw++waY5+/oWo=;
 	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iEwf4stD19alAvD6m36kOeaVP8FhBoemBG7/ZYo2XZ1fZiq+YjX5d9JszeWy8bseDkRytdEXz15un8/gPeiNNBtS/98U1Qlbg/njzm67fNwapl3WILGc80+quEoqiT+tI5fJtE7OvAq/POFof8u4AzMVzVfVQQb1yzaJrvD5kms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=dr2IYEGX; arc=none smtp.client-ip=185.226.149.38
+	 MIME-Version; b=shbsRoCRMfdXnziC/NzqGtgzuCVaMbvSrTSeFN6X1X3yAwEV/K9CzSJBBx6zTmWcsDfQgkmoeESoEl3T9nwTt1N5sDbyS8vw8yEWqJJEFQlX7b+24kzRUwBGZOu4txG3fv3uNNDwcKInK1diIdZubSCMklZMNNOwGpHXTt5irh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=runbox.com; dkim=pass (2048-bit key) header.d=runbox.com header.i=@runbox.com header.b=pfYMBjDr; arc=none smtp.client-ip=185.226.149.38
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=runbox.com
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
 	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1vx3Jv-003bkz-S5; Mon, 02 Mar 2026 14:28:23 +0100
+	id 1vx3Jw-003bl5-Bn; Mon, 02 Mar 2026 14:28:24 +0100
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=runbox.com;
 	 s=selector2; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To
 	:Message-Id:Date:Subject:To:From;
-	bh=D3P/KaCqbTVRLW734Le3jm//dWEzoj6aOdRHjsDkHB0=; b=dr2IYEGXpLn70YtwZCSevHlElv
-	/BDRdlUO4zDGofnTsHi42LvbEdi3VipTLE3qO2jms6/GGfUGILr2ElGxq76Qqa1IVjSRbEvOAc1Ro
-	pNaEyMGT7NC4B24epdTZtJNVCwBM3fXGAKN7d+4ezQMOiK4oex69VUMtEUOAjx+EPd5g+ct38316h
-	qxQXAxcAiiKRb6oyp9RzKKLymdA7Gx+8gSGQAGBZIzLD4BxE+G55Ccnmk/qMfgl9N6JGa4es8sujn
-	nzOnVNpMKlbluysxX5nsv82z0JQ/qI/Tt/bJCX331CVLx9DxsrepkWNzyJUPNhYsRNbEfHp1c25Sv
-	5z427ECQ==;
+	bh=7cjIEqDAe6MTPa2yql8v8L5e7mjA+roV54bcD0Te3Y4=; b=pfYMBjDrxtDGIuseYyHfRKhdlY
+	wxGF1P6KMNx6ObRuGN6ZC4wsAsw2hRQ/moIf5DlPtJ4OdcFDVbbZfYlXOaHjFV7UCzwT+RFpEzmxH
+	qWXXDA4ONYMAsNi6ePJIKCLTLb8MT74QJNuqJ6sdh6Tq/4chxS0eBiQlHuCMuynNI3HaM4H+mIWD+
+	MfMF3aDGj96f3wG2XdkXTZREX71lpkYTiXzClo5Rgz07oqNqD1x1j5Sva9T4TMi13zMpJPrbafMuY
+	y2tpwibHn24xe00sD61gejFnTEEHP9CDzwhRxR2Z0zEadqZouQs+4eZ2DS+v9eN8M5kbcQczC3zdl
+	N7bMTDQg==;
 Received: from [10.9.9.73] (helo=submission02.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <david.laight.linux_spam@runbox.com>)
-	id 1vx3Jv-0001hG-7S; Mon, 02 Mar 2026 14:28:23 +0100
+	id 1vx3Jv-0003tI-NG; Mon, 02 Mar 2026 14:28:23 +0100
 Received: by submission02.runbox with esmtpsa  [Authenticated ID (1493616)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.93)
-	id 1vx3Jh-008UTR-Jt; Mon, 02 Mar 2026 14:28:09 +0100
+	id 1vx3Ji-008UTR-OY; Mon, 02 Mar 2026 14:28:10 +0100
 From: david.laight.linux@gmail.com
 To: Alexander Viro <viro@zeniv.linux.org.uk>,
 	Andre Almeida <andrealmeid@igalia.com>,
@@ -90,9 +90,9 @@ To: Alexander Viro <viro@zeniv.linux.org.uk>,
 	x86@kernel.org,
 	Kees Cook <kees@kernel.org>,
 	akpm@linux-foundation.org
-Subject: [PATCH v2 2/5] compiler.h: Add generic support for 'autoterminating nested for() loops'
-Date: Mon,  2 Mar 2026 13:27:52 +0000
-Message-Id: <20260302132755.1475451-3-david.laight.linux@gmail.com>
+Subject: [PATCH v2 3/5] uaccess.h: Use with() and and_with() in __scoped_user_access()
+Date: Mon,  2 Mar 2026 13:27:53 +0000
+Message-Id: <20260302132755.1475451-4-david.laight.linux@gmail.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20260302132755.1475451-1-david.laight.linux@gmail.com>
 References: <20260302132755.1475451-1-david.laight.linux@gmail.com>
@@ -109,12 +109,12 @@ X-Spamd-Result: default: False [0.44 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[runbox.com:s=selector2];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	DMARC_POLICY_SOFTFAIL(0.10)[gmail.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-16713-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-16715-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_TO(0.00)[zeniv.linux.org.uk,igalia.com,citrix.com,linux.ibm.com,kernel.org,csgroup.eu,infradead.org,gmail.com,stgolabs.net,suse.cz,inria.fr,linux-foundation.org,lists.infradead.org,vger.kernel.org,lists.ozlabs.org,efficios.com,ellerman.id.au,imag.fr,dabbelt.com,armlinux.org.uk,linutronix.de];
 	MIME_TRACE(0.00)[0:+];
@@ -131,70 +131,44 @@ X-Spamd-Result: default: False [0.44 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-s390];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[runbox.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 91AB51D9CA3
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 83A3E1D9C54
 X-Rspamd-Action: no action
 
 From: David Laight <david.laight.linux@gmail.com>
 
-Autoterminating nested for() loops can be used inside #defines to
-declare variables that are scoped to the statement that follows.
-These are used by __scoped_user_access() but may have other uses
-and the gory details are best separated from the use.
-
-Using 'with (declaration)' and 'and_with (declaration)' seems to
-read reasonably well and doesn't seem to collide with any existing
-code.
-
-As an example the scoped user access definition becomes:
-	with (auto _tmpptr = __scoped_user_access_begin(mode, uptr, size, elbl)) \
-		/* Force modified pointer usage within the scope */		\
-		and_with (const auto uptr __cleanup(...) = _tmpptr)
+Wrappers for autoterminating nested for() loops have been added to
+compiler.h, use them to hide the gory details.
 
 Signed-off-by: David Laight <david.laight.linux@gmail.com>
 ---
- include/linux/compiler.h | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ include/linux/uaccess.h | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index af16624b29fd..1098a91b5591 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -369,6 +369,32 @@ static inline void *offset_to_ptr(const int *off)
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index 809e4f7dfdbd..64bc2492eb99 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -736,13 +736,10 @@ static __always_inline void __scoped_user_rw_access_end(const void *p)
+  *
+  * Don't use directly. Use scoped_masked_user_$MODE_access() instead.
   */
- #define prevent_tail_call_optimization()	mb()
+-#define __scoped_user_access(mode, uptr, size, elbl)				\
+-for (bool done = false; !done; done = true)					\
+-	for (auto _tmpptr = __scoped_user_access_begin(mode, uptr, size, elbl);	\
+-	     !done; done = true)						\
+-		/* Force modified pointer usage within the scope */		\
+-		for (const auto uptr  __cleanup(__scoped_user_##mode##_access_end) = \
+-		     _tmpptr; !done; done = true)
++#define __scoped_user_access(mode, uptr, size, elbl)					\
++	with (auto _tmpptr = __scoped_user_access_begin(mode, uptr, size, elbl))	\
++		/* Force modified pointer usage within the scope */			\
++		and_with (const auto uptr __cleanup(__scoped_user_##mode##_access_end) = _tmpptr)
  
-+/*
-+ * Sometimes a #define needs to declare a variable that is scoped
-+ * to the statement that follows without having mismatched {}.
-+ *	with (int x = expression) {
-+ *		statements
-+ *	}
-+ * is the same as:
-+ *	{
-+ *		int x = expression;
-+ *		statements
-+ *	}
-+ * but lets it all be hidden from the call site, eg:
-+ *	frobnicate(x, args) {
-+ *		statements
-+ *	} 
-+ * Only a single variable can be defined, and_with() allows extra ones
-+ * without adding an additional outer loop.
-+ *
-+ * The controlled scope can be terminated using return, break, continue or goto.
-+ */
-+#define with(declaration) \
-+	for (bool _with_done = false; !_with_done; _with_done = true)	\
-+		and_with (declaration)
-+#define and_with(declaration) \
-+	for (declaration; !_with_done; _with_done = true)
-+
- #include <asm/rwonce.h>
- 
- #endif /* __LINUX_COMPILER_H */
+ /**
+  * scoped_user_read_access_size - Start a scoped user read access with given size
 -- 
 2.39.5
 
