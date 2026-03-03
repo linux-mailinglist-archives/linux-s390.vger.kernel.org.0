@@ -1,159 +1,165 @@
-Return-Path: <linux-s390+bounces-16761-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16763-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4PWfG9vSpmnHWgAAu9opvQ
-	(envelope-from <linux-s390+bounces-16761-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 03 Mar 2026 13:23:55 +0100
+	id IMgOHZ3qpmnjZgAAu9opvQ
+	(envelope-from <linux-s390+bounces-16763-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 03 Mar 2026 15:05:17 +0100
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DB961EF54B
-	for <lists+linux-s390@lfdr.de>; Tue, 03 Mar 2026 13:23:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 484BE1F1059
+	for <lists+linux-s390@lfdr.de>; Tue, 03 Mar 2026 15:05:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4D1B33095213
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Mar 2026 11:52:54 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5DEEF321AA19
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Mar 2026 13:55:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53D8A33D511;
-	Tue,  3 Mar 2026 11:52:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9360435CBC4;
+	Tue,  3 Mar 2026 13:54:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b366hglw"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="n/MiRvLB"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2152C33D6C0;
-	Tue,  3 Mar 2026 11:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC3B35AC2A;
+	Tue,  3 Mar 2026 13:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772538772; cv=none; b=sWLghIP6wCqIM6jNZGQbxJ2J1PkcRiWkFgVzeMdWOwvA679AnQRWax4KkPIZz/8OEsmD3p+JOUOpkhAP88dpA85vgkg5HWQnwFEoFl8xguQxHaYud2gZd9nVuyC1dIMTzdoghA/Sipy7YrkLiSNIcQKfUMyeyP+9PuUoOk8zgs8=
+	t=1772546050; cv=none; b=EuIBJAaozIUnkirkyhIgC7NXbPovGEb2KS2B0oMjPSxFWo+Rhue7JG3/IX8aUKLbkOhaHnPvUgvUwSxDNSKAGl71troADZ/DkokcLe1pcm3yv3sbKuozj+EImwuvilkApFBDuPcUWSPqN8vqDGxbnTFqk3v3tep64gaF28sNUzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772538772; c=relaxed/simple;
-	bh=lcgTS2m2iU2ZAvrZnBqU67dddTQdTulDja31I7aenTo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t0kvouKmbBvUIncyd9+gCjlt057pLHK0EaG8XvYAJGDdkT5fk1gS8GOfM2bPzD3kChqHyf0WzFY+6mVI17mSYfp2OUBjr0IYwovVM8yYtcVOF8zl0YH+Vy8s6/5Jjv4VICNzE3gUgHDwAfyc1EyPYT4RFu6rDTp0lI2+bTMIYlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=b366hglw; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=zlTdin2Y9sQiBK/gva0P7x3HPfeE/8T5PcT2B2s7izs=; b=b366hglwD8p9ia18dBn5KRUvGF
-	O6/C0m8amE/bY1rzRU5+kpmbMMluQHE+YHXfqwSIAHu1U+WV7iyFwMHVHy3PCBDa1XjbrGdnXKABb
-	xTNMGkwvn+hfkTihV7F8SrqbDgPvYOrM+PCVtwpCLDp0jpNgzVhas456yHTABU9xk49+jGHHY5oK8
-	iAza+C8UpvbV9ySnWG7VbDr7xGrGLIabVCpaJodEqEb9rpvdtmQHFdcWClJx1KQsxeoDmXMCsPRRj
-	c3DafdmsbFmwRaDofFWjLgkrfxri/l14gokDYQ8SMGogw76DCuX0LL3/v/GB2vF49I0QBotYmnSYJ
-	c1DVK2/Q==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vxOIr-00000002Ixn-3V3Q;
-	Tue, 03 Mar 2026 11:52:42 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C8AA9300FB6; Tue, 03 Mar 2026 12:52:35 +0100 (CET)
-Date: Tue, 3 Mar 2026 12:52:35 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Ciunas Bennett <ciunas@linux.ibm.com>
-Cc: Douglas Freimuth <freimuth@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Ilya Leoshkevich <iii@linux.ibm.com>, mingo@kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, vschneid@redhat.com, clrkwllms@kernel.org,
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-s390@vger.kernel.org, Matthew Rosato <mjrosato@linux.ibm.com>,
-	Hendrik Brueckner <brueckner@linux.ibm.com>
-Subject: Re: [PATCH] sched: Further restrict the preemption modes
-Message-ID: <20260303115235.GQ1282955@noisy.programming.kicks-ass.net>
-References: <20251219101502.GB1132199@noisy.programming.kicks-ass.net>
- <182f110b-ac63-4db4-8b01-0e841639bc39@linux.ibm.com>
- <a7180379-04f5-4f61-b60a-0ff7cf85134d@linux.ibm.com>
- <ec3987e3-4eb7-4d07-be9e-bd8dc9ad176f@linux.ibm.com>
- <08307223-88ad-4550-963e-5d1ee315023c@linux.ibm.com>
- <a3bbf315-536f-429e-afb2-adcbf508a66f@linux.ibm.com>
+	s=arc-20240116; t=1772546050; c=relaxed/simple;
+	bh=e9JklGsuGnuRMSdEqvb5+l3qEMMCpWiYy172iVOc028=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u+PJ9uKs6lon7YbxG+Vpvwd+if/FabLY1KYjbOk4mdY6duHTroWAYPp1sv9cRekJPcDmhpaHm8m1mBV4sTsVEdhLG6xE5L3OzQ2tGOTAdOQravmQmw8DdmlrjLAPHjLk2gEllhaPA4/lgxi3KLuvFxM1+WykwcvD3mQwNRfOw2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=n/MiRvLB; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62381udV2123727;
+	Tue, 3 Mar 2026 13:54:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=X5oVahg7GQlz8cfawRgfbe73y9kbbBpDeFYCSDDrw
+	bM=; b=n/MiRvLBn7gcUUKEYjIL17xLM+kwDSqB8mDcm26gCzzM2dONJZ8kWS4be
+	uuUgJBIAxILA6xwlqzbrjMIvr9q6d3Dgv5B5U75Mzi0yqDVt92ho7okhvqOmOWmk
+	3H8/3k974Sh1HEKlssVWDs5PPMkVukLAU0TqDAQDM9n68O23b7loTvbdYMhT2Kdp
+	gitcXQoFtndDT4FK8ITnZm8+dup7V3yjv14OBvoRI8BBMl3M+xoyUTdNo4LqIrG1
+	BTnixNAcHEQaJlcLS66QZWRwCekdl8haCUntAtGlT+K0QaVz+XwVgOvrZ34tFSwI
+	oTx+1omOlrocJ8nIz4rpmCbbCEGmg==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ckskcu6rb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Mar 2026 13:54:08 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 623A3Oet010317;
+	Tue, 3 Mar 2026 13:54:07 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4cmc6k2ere-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Mar 2026 13:54:07 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 623Ds3IU26870128
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 3 Mar 2026 13:54:03 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4CBF020040;
+	Tue,  3 Mar 2026 13:54:03 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 22A8020043;
+	Tue,  3 Mar 2026 13:54:03 +0000 (GMT)
+Received: from b46lp25.lnxne.boe (unknown [9.87.84.240])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  3 Mar 2026 13:54:03 +0000 (GMT)
+From: Janosch Frank <frankja@linux.ibm.com>
+To: kvm@vger.kernel.org
+Cc: linux-s390@vger.kernel.org, mjrosato@linux.ibm.com, freimuth@linux.ibm.com,
+        imbrenda@linux.ibm.com, borntraeger@linux.ibm.com
+Subject: [PATCH v2 0/2] KVM: s390: Limit adapter indicator access to page
+Date: Tue,  3 Mar 2026 13:46:33 +0000
+Message-ID: <20260303135250.3665-1-frankja@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a3bbf315-536f-429e-afb2-adcbf508a66f@linux.ibm.com>
-X-Rspamd-Queue-Id: 4DB961EF54B
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: QSashC0xx1YQ7q4RstNjz2i5SjrEsFV2
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzAzMDEwOCBTYWx0ZWRfX+ouGZPaHEYod
+ 6ImLCVka5CyMlFo1Gc06sbLckemRZUvo92IRazsfeYmoY7EYdvuHWAE2/U1WPmmzoznqCgxoF+Z
+ 8dQwc3PDGUvx9RjGHHi85uHpgdju9iSzm4NYARVoxITMU0OpQh/3Hv0zq0Qq1tNYURyw2s6lakH
+ k4q3Bb/0/p57TqlhuI3bkIz4ecmmmWKmBaEh4fXfFbBr1MycnYjwp684GMetZZyqICmSiuKD6KN
+ NiEu7CcLbYsCDuXdGIbL8GqQFzzfjbzNHnWO7r+6POGkg1SUsSH1TCEeGkwG0s9ZQ0T4mkzpIKr
+ SEWALkVc1ePf3vFVxeLJZki0c6uBLHzMzG8YMAwmJQkp9dfX7Ok+nINiQxm9M4VPvmUPr4Y7kpP
+ gPuszDJpqehKJSTleOWHxZmyy/i+hLjBPLba76eNsY9BHaGmpAWUmfG0DUmTpsRIKIigzKo+2/1
+ qDA8kt2c77rdW6mwamw==
+X-Authority-Analysis: v=2.4 cv=H7DWAuYi c=1 sm=1 tr=0 ts=69a6e800 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=uAbxVGIbfxUO_5tXvNgY:22 a=8hHfqOmpiw9s73ohtJkA:9 a=zZCYzV9kfG8A:10
+X-Proofpoint-ORIG-GUID: QSashC0xx1YQ7q4RstNjz2i5SjrEsFV2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-02_05,2026-03-03_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 suspectscore=0 phishscore=0 clxscore=1015 priorityscore=1501
+ adultscore=0 bulkscore=0 spamscore=0 malwarescore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603030108
+X-Rspamd-Queue-Id: 484BE1F1059
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_MISSING_CHARSET(0.50)[];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[infradead.org:s=desiato.20200630];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-16761-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-16763-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	TO_DN_NONE(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[infradead.org:+];
-	RCPT_COUNT_TWELVE(0.00)[21];
 	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[frankja@linux.ibm.com,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[peterz@infradead.org,linux-s390@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	NEURAL_HAM(-0.00)[-1.000];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	TAGGED_RCPT(0.00)[linux-s390];
-	NEURAL_HAM(-0.00)[-0.999];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,noisy.programming.kicks-ass.net:mid,infradead.org:dkim]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Action: no action
 
-On Tue, Mar 03, 2026 at 09:15:55AM +0000, Ciunas Bennett wrote:
-> A quick update on the issue.
-> Introducing kvm_arch_set_irq_inatomic() appears to make the problem go away on my setup.
-> That said, this still begs the question: why does irqfd_wakeup behave differently (or poorly) in this scenario compared to the in-atomic IRQ injection path?
-> Is there a known interaction with workqueues, contexts, or locking that would explain the divergence here?
-> 
-> Observations:
-> irqfd_wakeup: triggers the problematic behaviour.
-> Forcing in-atomic IRQ injection (kvm_arch_set_irq_inatomic): issue not observed.
-> 
-> @Peter Zijlstra — Peter, do you have thoughts on how the workqueue scheduling context here could differ enough to cause this regression?
-> Any pointers on what to trace specifically in irqfd_wakeup and the work item path would be appreciated.
+We currently check the address of the indicator fields but not the sum
+of address and offset. This patch remedies that problem and limits the
+address + offset combination to a single page.
 
-So the thing that LAZY does different from FULL is that it delays
-preemption a bit.
+The selftest is very rudimentary but it's a start.
 
-This has two ramifications:
+v2:
+Reworked KVM limit check.
 
-1) some ping-pong workloads will turn into block+wakeup, adding
-overhead.
+Changed good-case test to subtract 4 bits instead of 8.
+That should ensure that we catch the error I made in v1.
 
- FULL: running your task A, an interrupt would come in, wake task B and
- set Need Resched and the interrupt return path calls schedule() and
- you're task B. B does its thing, 'wakes' A and blocks.
+Janosch Frank (2):
+  KVM: s390: Limit adapter indicator access to mapped page
+  KVM: s390: selftests: Add IRQ routing address offset tests
 
- LAZY: running your task A, an interrupt would come in, wake task B (no
- NR set), you continue running A, A blocks for it needs something of B,
- now you schedule() [*] B runs, does its thing, does an actual wakeup of
- A and blocks.
+ arch/s390/kvm/interrupt.c                     | 12 +++
+ tools/testing/selftests/kvm/Makefile.kvm      |  1 +
+ .../testing/selftests/kvm/s390/irq_routing.c  | 75 +++++++++++++++++++
+ 3 files changed, 88 insertions(+)
+ create mode 100644 tools/testing/selftests/kvm/s390/irq_routing.c
 
-The distinct difference here is that LAZY does a block of A and
-consequently B has to do a full wakeup of A, whereas FULL doesn't do a
-block of A, and hence the wakeup of A is NOP as well.
-
-
-2) Since the schedule() is delayed, it might happen that by the time it
-does get around to it, your task B is no longer the most eligible
-option.
-
-Same as above, except now, C is also woken, and the schedule marked with
-[*] picks C, this then results in a detour, delaying things further.
-
+-- 
+2.51.0
 
 
