@@ -1,109 +1,155 @@
-Return-Path: <linux-s390+bounces-16841-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16843-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gF7hJjtNqGmvsgAAu9opvQ
-	(envelope-from <linux-s390+bounces-16841-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 04 Mar 2026 16:18:19 +0100
+	id AOTGLCNOqGlbtAAAu9opvQ
+	(envelope-from <linux-s390+bounces-16843-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 04 Mar 2026 16:22:11 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 440AB202755
-	for <lists+linux-s390@lfdr.de>; Wed, 04 Mar 2026 16:18:19 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D5952028D5
+	for <lists+linux-s390@lfdr.de>; Wed, 04 Mar 2026 16:22:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id D265D32986BF
-	for <lists+linux-s390@lfdr.de>; Wed,  4 Mar 2026 15:10:35 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0D96E309BEA1
+	for <lists+linux-s390@lfdr.de>; Wed,  4 Mar 2026 15:15:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54569328B7B;
-	Wed,  4 Mar 2026 15:09:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7993C3264C1;
+	Wed,  4 Mar 2026 15:15:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AWi/Y32Y"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q1J4oN1p"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3053E325701;
-	Wed,  4 Mar 2026 15:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72DE31A6819;
+	Wed,  4 Mar 2026 15:15:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772636960; cv=none; b=rEdvr7TiPWJvme30GXKlh0ws4E8gaRwKXkeVAK7YRTY8rlHCR+AmxhLZ7GxRCq9ARzuLPcmqNedP6QdpSze/Wd1Jie4atzfSj5GVaoTau1Ge+IY85jsw8W3RCh347YjxKH/alS1908HsFDvSCnv33wIh8pKod3LFUOENhO1b1sY=
+	t=1772637357; cv=none; b=exTUkOsP4ktYzvv4vnOS6RpuleZkEDRkh5wQMXZu/ty7TstgtRXqXRqxI+8tZmzG5YeqD9BfMaiHTgO5G8NftwltOK/61SB9hdRBCZIlnNx3N++47S+3dEUy+P/iLxze38TDbq7eq1jjwzACnxNXe0bauph/sLhmWAZ+TFYTyL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772636960; c=relaxed/simple;
-	bh=Cd7cAtsPK2WqonzkKlX8P0Aqi4yrNk8trZtUchG1kic=;
+	s=arc-20240116; t=1772637357; c=relaxed/simple;
+	bh=LzQr+Wol7e2Y8ftHqltb++bMZa3SFiDaTCD+VxBflsk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XyDo7a5REEBDmjStevFJ/CpSD2xZHfi+r2xMS/+r4t9SkkgKba3kPFSCrLsOCmRhSBG4rAbZ8E68MwqVeePzW3LljMTvyfaayv/YfGYCr3DZ2fXQQfWc3Rae1nME7/K+DKtfde/MmCV8HwzwfOgwhjVET/KF2x8WjMAd/uy+60g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AWi/Y32Y; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C4A4C4CEF7;
-	Wed,  4 Mar 2026 15:09:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772636959;
-	bh=Cd7cAtsPK2WqonzkKlX8P0Aqi4yrNk8trZtUchG1kic=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AWi/Y32YUx5F1MgzIeNt0om/LgLOe8BVc2pHukuebkcWN4uj2XgxPEOXnVPdLZmDb
-	 qeoTZcnmfpDciKeFJQ7tTJ/ipcV1TOHDUxUXkCaAMved0TRezWjzWZmX9l17PsnwbN
-	 60FZrVBMexijqN4SXNchdV3yq6nyE2asiEI/zUim6E6ycACcKLGlpCEkZ7qG9u7dYa
-	 QfgOZ4b5HTV3gG/R0ZyNAaZONXLGFM5K6oC2Sj3I66WKzej4wFiJdu30ZutkxtScuk
-	 t5gZUcgw/UsXnQ3siFMNeA7o5my1Gn3rWJyKtHzT4CV/ebcp1lz21nQ3sQKvisvBUl
-	 dpoYXxoP/5Zbg==
-Date: Wed, 4 Mar 2026 16:09:17 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=gyQwgkEwSzS+H22yW8XZjna4Z5IVNoJ0dKiG4Q7bg2Dro1o0qPPrVnRLp2/2ENuwF2QkLAnm8JRomdizUOKyaqhEdvpssz/C8w3xHk1DCG6GYQqlLgofxsiPopsdX0kDimpIHNjzE+OG9oUpUG1J7QaIidHM3rTyj8G5WnTycEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=q1J4oN1p; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=6YOM2WbXA6Qkgtapqxkvfve9MfkbbU3JEb7qOmomVt8=; b=q1J4oN1pPBSexJBFfjtr2VdcfT
+	cPjNy395v4gDWuxsi/ha9yDNRWUDE6LFqfzn4Yd1LrI2S8TpWPL9z3MhAmoIER+ZDJyxwPon5M1aZ
+	AskUH2Doi34eCDyGezZO7dFjB0MasMnhHu+waAlY2mSgI1X8HVcdj0ldXYJVqOQJGTHaRlrHebAgJ
+	7wxEvMsC0Uv8vstvbUoelynHMruTuwwfR7BfY5x5rRwbRWYnr5u0aOyOekToDV4C2BditkWs1U/DG
+	GZMgOgAqSwHzeMa0C5li6urfh2f+Xx0KFGH88a+OERM2YwXtwihCtup0aktg8uAV14j68e34o5DP6
+	1F2fSdZQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vxnwz-0000000DTMC-30rm;
+	Wed, 04 Mar 2026 15:15:49 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 20C7A300FB6; Wed, 04 Mar 2026 16:15:48 +0100 (CET)
+Date: Wed, 4 Mar 2026 16:15:48 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Eric Biggers <ebiggers@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Magnus Lindholm <linmag7@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Heiko Carstens <hca@linux.ibm.com>,
 	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
 	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH 9/9] s390/idle: Remove psw_idle() prototype
-Message-ID: <aahLHZagR59cSpfu@localhost.localdomain>
-References: <20260218142012.863464-1-hca@linux.ibm.com>
- <20260218142012.863464-10-hca@linux.ibm.com>
+	Sven Schnelle <svens@linux.ibm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
+	David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+	Song Liu <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>,
+	Li Nan <linan122@huawei.com>, linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
+Subject: Re: [PATCH 01/25] xor: assert that xor_blocks is not called from
+ interrupt context
+Message-ID: <20260304151548.GN1395266@noisy.programming.kicks-ass.net>
+References: <20260226151106.144735-1-hch@lst.de>
+ <20260226151106.144735-2-hch@lst.de>
+ <20260227142455.GG1282955@noisy.programming.kicks-ass.net>
+ <20260303160050.GB7021@lst.de>
+ <20260303195517.GC2846@sol>
+ <20260304145134.GA21983@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260218142012.863464-10-hca@linux.ibm.com>
-X-Rspamd-Queue-Id: 440AB202755
+In-Reply-To: <20260304145134.GA21983@lst.de>
+X-Rspamd-Queue-Id: 4D5952028D5
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[infradead.org:s=casper.20170209];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-16841-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[infradead.org:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,linux-foundation.org,linaro.org,gmail.com,armlinux.org.uk,arm.com,xen0n.name,linux.ibm.com,ellerman.id.au,dabbelt.com,eecs.berkeley.edu,ghiti.fr,davemloft.net,gaisler.com,nod.at,cambridgegreys.com,sipsolutions.net,redhat.com,alien8.de,linux.intel.com,zytor.com,gondor.apana.org.au,intel.com,fb.com,suse.com,arndb.de,fnnas.com,huawei.com,vger.kernel.org,lists.infradead.org,lists.linux.dev,lists.ozlabs.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[frederic@kernel.org,linux-s390@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-16843-lists,linux-s390=lfdr.de];
 	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[peterz@infradead.org,linux-s390@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCPT_COUNT_GT_50(0.00)[56];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost.localdomain:mid,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,noisy.programming.kicks-ass.net:mid,infradead.org:dkim]
 X-Rspamd-Action: no action
 
-Le Wed, Feb 18, 2026 at 03:20:12PM +0100, Heiko Carstens a écrit :
-> psw_idle() does not exist anymore. Remove its prototype.
+On Wed, Mar 04, 2026 at 03:51:34PM +0100, Christoph Hellwig wrote:
+
+> > How about "WARN_ON_ONCE(!preemptible())"?  I think that covers the union
+> > of the context restrictions correctly.  (Compared to in_task(), it
+> > handles the cases where hardirqs or softirqs are disabled.)
 > 
-> Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+> Good enough I guess.  Peter?
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-
--- 
-Frederic Weisbecker
-SUSE Labs
+Sure. The only caveat with that is that for PREEMPT_COUNT=n this might
+not work, it unconditionally returns 0.
 
