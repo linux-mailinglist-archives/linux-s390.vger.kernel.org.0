@@ -1,144 +1,225 @@
-Return-Path: <linux-s390+bounces-16888-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16890-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mLIrNP16qWl77wAAu9opvQ
-	(envelope-from <linux-s390+bounces-16888-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 05 Mar 2026 13:45:49 +0100
+	id iAr2Nfp9qWkg8gAAu9opvQ
+	(envelope-from <linux-s390+bounces-16890-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 05 Mar 2026 13:58:34 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 932CA211FAA
-	for <lists+linux-s390@lfdr.de>; Thu, 05 Mar 2026 13:45:48 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 769D12123C4
+	for <lists+linux-s390@lfdr.de>; Thu, 05 Mar 2026 13:58:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 285323052B8B
-	for <lists+linux-s390@lfdr.de>; Thu,  5 Mar 2026 12:45:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C44F1302593F
+	for <lists+linux-s390@lfdr.de>; Thu,  5 Mar 2026 12:56:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58E873A0EB0;
-	Thu,  5 Mar 2026 12:45:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA28239E6F0;
+	Thu,  5 Mar 2026 12:56:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MgiIgBA+"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rU0+40/r"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF1339E6F0;
-	Thu,  5 Mar 2026 12:45:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7489129ACDB;
+	Thu,  5 Mar 2026 12:56:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772714706; cv=none; b=UVJR7JMYCK8SWhbKG+Pq5LMBqVJa3fhsy0FoE53XlusRfYVR4EsYvUiLpWJh0D59HWX/mcgQnUOfytXIFYy8rfUG4u0c3FFBLGn4Qie/xXZE7CtH/kTlw91wd84HnQdaEn9hojylD08FGvxrUb0jII3o9bLEhDrRT/HapOYOv44=
+	t=1772715362; cv=none; b=EyHyLHSgRmamynpVflKpKRVlYF6xefy0keKHIeymnQt+Sboofc0WIlOkkv//9mW75cCp2bqO4Lboqj0D5Qq9p/8c7Wrm0w0/XtyGmMTBdPGAbE3oYIbHjWyq4x6QQBHRjXXBI/xGGP3QIHeUvalY3tcYVChaaGWoBOuz6BYD0Zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772714706; c=relaxed/simple;
-	bh=j9xRdUGykOZBshclAyWF6iCnydT5Rch644nsi2ZamnU=;
+	s=arc-20240116; t=1772715362; c=relaxed/simple;
+	bh=A+0WW6ZX2/cOt/vjuG7ngTb9ewbJXaFgsrG+XDs8LOw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aOIWp8wa6eGdlaq+IMGphg6XMBfc/KysrADlxoDBAWbWFInHEE2/Ij4WUHPIoM9uhH0woeKbEsm933B68TyrWJXK/yWMhAUHKJfzVB2V82wVFoc1JF48pww4T8cQj4JvrMMOw7W4UB0EdKyzb0NYcd4dRipddaP1bhowkIaSkC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MgiIgBA+; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=GuiwlimUZyC4/svbAq06EOS70AQJgfUOKnMc57rguds=; b=MgiIgBA+v6yoiU2sdfCTQT3de2
-	Jd21O7klq5F1f7SdOHDnyOTubP3l+dsEHAtVMyQI/OTZv+/mwY1vA8Nos1w4Z9FUGI+d64lgyd1QV
-	XcXIXSdowhPGp8dTLEGmOP4pmrml3W8gq/ZopPlJNMbbSY1MROoZuqvTW2HFN3cbGyB/PZF17MQ3P
-	+922z8fMrk+shj4PBosSx/aFk9i5tTg5QPgPR5JSLpeSibw3MsW/NccdJeBA9/8e/clyH8B9KSj2M
-	tQRz1HoDZ33VaKaGpgsi1XQ0rYefNmciPjI+44dAE4nJ+hZXT1NjIZ4tEqGorx/pFIL8MeDLH40AM
-	HpVQpdQQ==;
-Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vy84c-00000006kzP-1raa;
-	Thu, 05 Mar 2026 12:45:02 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C4923300CDE; Thu, 05 Mar 2026 13:45:01 +0100 (CET)
-Date: Thu, 5 Mar 2026 13:45:01 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: Mikhail Zaslonko <zaslonko@linux.ibm.com>, linux-next@vger.kernel.org,
-	linux-s390@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-	Alexander Egorenkov <egorenar@linux.ibm.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [linux-next][s390] Boot hang after merge c50f05bd3c4e
- (sched/hrtick)
-Message-ID: <20260305124501.GB1395416@noisy.programming.kicks-ass.net>
-References: <af549a19-db99-4b16-8511-bf315177a13e@linux.ibm.com>
- <28add480-4841-4e6a-a8a9-1211280ecc51@linux.ibm.com>
- <20260305074922.7170Ad3-hca@linux.ibm.com>
- <20260305121201.GB596554@noisy.programming.kicks-ass.net>
- <20260305123505.GA1395416@noisy.programming.kicks-ass.net>
+	 Content-Type:Content-Disposition:In-Reply-To; b=hMP5B5zGxC9k/mKrFR4DK4+rxG+wcWS64NghofYhk2Qe5la+P+/S52tci1OClDQSiXZca91pXNoZaLJcOd6TKn1owjkxn7Sa1h+SkMkjh7LpiPzWk3P8aPy0plXRWtsCGZkPS3bme/2HUx2zcxyohumbPpmApvpDxGwzljkCMK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rU0+40/r; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6250DwQk1552778;
+	Thu, 5 Mar 2026 12:55:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=vvGE6g
+	nHSscvdSevVqCN3duQguMw4Y0vtNGaQUI/n54=; b=rU0+40/rklJ4Syo/f8qHlA
+	iULLan9ce2jSkdk1hwIYX8aJvwUhrJQaTNlDN/hyEU4a/6tUoXN5JfjkYf9ert3w
+	dyra/TNvT60EaK44h1HiWViFS4diLGoBgUQUtDb3DiB6t0wB993tEuftoSg54i6f
+	H6/5SGeonnwwfzvHBikf6ZZWekceEOOk34c+2W42UsVNnhgzu7hxtEhjNb7s5rLl
+	S68ztLCJPhe86AkgbbuEurqF8Hg8wSzM7Bi+ETdpr9wtq1TQISqt0VnE13Gs1TYP
+	NhNmT/C1v9/98MmNK3PgSXEv5UH3e0vJl8Qkqrw/fWclsLVl24JIDaOSiMJvEIBA
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cksjdkpxc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 Mar 2026 12:55:13 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 625AVi0p027713;
+	Thu, 5 Mar 2026 12:55:12 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cmcwjk22v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 Mar 2026 12:55:12 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 625Ct8KR42008960
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 5 Mar 2026 12:55:08 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 399BE20040;
+	Thu,  5 Mar 2026 12:55:08 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4A91420043;
+	Thu,  5 Mar 2026 12:55:06 +0000 (GMT)
+Received: from localhost (unknown [9.111.42.248])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu,  5 Mar 2026 12:55:06 +0000 (GMT)
+Date: Thu, 5 Mar 2026 13:55:04 +0100
+From: Vasily Gorbik <gor@linux.ibm.com>
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: linux-integrity@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Alexander Egorenkov <egorenar@linux.ibm.com>,
+        Ard Biesheuvel <ardb@kernel.org>, Dave Hansen <dave.hansen@intel.com>,
+        Coiby Xu <coxu@redhat.com>, Roberto Sassu <roberto.sassu@huawei.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Eric Snowberg <eric.snowberg@oracle.com>,
+        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:LINUX FOR POWERPC (32-BIT AND 64-BIT)" <linuxppc-dev@lists.ozlabs.org>,
+        "open list:S390 ARCHITECTURE" <linux-s390@vger.kernel.org>,
+        "open list:EXTENSIBLE FIRMWARE INTERFACE (EFI)" <linux-efi@vger.kernel.org>,
+        "open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>,
+        "open list:KEYS/KEYRINGS_INTEGRITY" <keyrings@vger.kernel.org>
+Subject: Re: [PATCH v3 1/3] integrity: Make arch_ima_get_secureboot
+ integrity-wide
+Message-ID: <c00-01.ttbfdx5@ub.hpns>
+References: <20260213012851.2532722-2-coxu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260305123505.GA1395416@noisy.programming.kicks-ass.net>
-X-Rspamd-Queue-Id: 932CA211FAA
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260213012851.2532722-2-coxu@redhat.com>
+X-Patchwork-Bot: notify
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=M9BA6iws c=1 sm=1 tr=0 ts=69a97d31 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8
+ a=i0EeH86SAAAA:8 a=20KFwNOVAAAA:8 a=AUlwxuCtR7j_SLPSBWAA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: EPcEyA01XF8bdQhKETyO0He0srC1ORqs
+X-Proofpoint-GUID: fcB-38EVrhsK1gZUaLMNQDW0DoyhHbQ2
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzA1MDEwMyBTYWx0ZWRfX6AqyKde6/uqz
+ 060pERTYdbInWNW/0rjlV3pi+zAeTCerv+KA3vR9RMpOmATjWEBML18lzhudcK92tX66IFNcc8K
+ xEKFaXlqifwFaQuw/qo22apWK/RnUUBPnuAxyYMTFQ1VPmoVFjyHcjQnuxaBFHBpfnYOdz7z0qh
+ rsRT3RY0WsFBQN0/GEMSvzyhEGesCzEs1alXtqxCCJz5wJQlnDr05XQNSLo2PfInPDNryldDGtV
+ dYjTQ7MejGFk5ZXRSrGnfg2SCuRUkgfhXPW7ERu7e3AMGYPAMaK9sFVIGvJPtkBLt1TM4knl4ov
+ GAG6U9ydv7SJy6/PSQM/h1YBuRDA+cc3Q9L/yL7wj17/zvDxsHK8q1MfGJSIAof4YZtJcouRLuv
+ 61WhY0/z8/4KVy1SwpnbsucrybPa4Kvs8vZPvAmmVOULiaFrr7MQ1ehoFPR/UEPtdxEA5VQMcXC
+ xam3fJ/WXRoyHGHahuw==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-05_04,2026-03-04_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 priorityscore=1501 spamscore=0 adultscore=0 malwarescore=0
+ bulkscore=0 lowpriorityscore=0 impostorscore=0 phishscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603050103
+X-Rspamd-Queue-Id: 769D12123C4
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[infradead.org:s=desiato.20200630];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[infradead.org:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-16888-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-16890-lists,linux-s390=lfdr.de];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,linux.ibm.com,kernel.org,intel.com,redhat.com,huawei.com,ellerman.id.au,gmail.com,alien8.de,linux.intel.com,zytor.com,oracle.com,paul-moore.com,namei.org,hallyn.com,lists.ozlabs.org];
+	RCPT_COUNT_TWELVE(0.00)[33];
+	MIME_TRACE(0.00)[0:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,ub.hpns:mid];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[peterz@infradead.org,linux-s390@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[gor@linux.ibm.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:dkim,noisy.programming.kicks-ass.net:mid,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Action: no action
 
-On Thu, Mar 05, 2026 at 01:35:05PM +0100, Peter Zijlstra wrote:
-> On Thu, Mar 05, 2026 at 01:12:01PM +0100, Peter Zijlstra wrote:
+On Fri, Feb 13, 2026 at 09:28:46AM +0800, Coiby Xu wrote:
+> EVM and other LSMs need the ability to query the secure boot status of
+> the system, without directly calling the IMA arch_ima_get_secureboot
+> function. Refactor the secure boot status check into a general function
+> named arch_get_secureboot.
 > 
-> > > Any idea?
-> > 
-> > Well, that all looks like timers are going missing. Which matches with
-> > Sven saying that disabling HRTIMER_REARM_DEFERRED makes it go again.
-> > 
-> > I'm just not sure I can see why things would break between
-> > sched/hrtick (GOOD) and 1b8b1bb2a2fa (BAD).
-> > 
-> > Looking at the diff (eg git diff d50da4b5915f..c50f05bd3c4e) show some
-> > idle time changes to s390 and various kernel/ changes, but nothing that
-> > stands out to me :/
-> 
-> That s390 idle time code..
-> 
->   0d785e2c324c ("s390/idle: Fix cpu idle exit cpu time accounting")
-> 
-> That moves this_cpu_add() from inside irq_enter_rcu() / irq_exit_rcu()
-> to outside of it.
-> 
-> Your this_cpu_add() as preempt_enable(), which does a preemption check.
-> 
-> Moving that before irq_enter_rcu() means it doesn't see HARDIRQ_OFFSET
-> in preempt_count(). As such, it might actually call into schedule() from
-> hardirq context.
-> 
-> Or am I missing something?
+> Reported-and-suggested-by: Mimi Zohar <zohar@linux.ibm.com>
+> Suggested-by: Roberto Sassu <roberto.sassu@huawei.com>
+> Signed-off-by: Coiby Xu <coxu@redhat.com>
+> ---
+>  MAINTAINERS                                   |  1 +
+>  arch/powerpc/kernel/ima_arch.c                |  5 --
+>  arch/powerpc/kernel/secure_boot.c             |  6 ++
+>  arch/s390/kernel/ima_arch.c                   |  6 --
+>  arch/s390/kernel/ipl.c                        |  5 ++
+>  arch/x86/include/asm/efi.h                    |  4 +-
+>  arch/x86/platform/efi/efi.c                   |  2 +-
+>  include/linux/ima.h                           |  7 +--
+>  include/linux/secure_boot.h                   | 19 +++++++
+>  security/integrity/Makefile                   |  3 +-
+>  security/integrity/efi_secureboot.c           | 56 +++++++++++++++++++
+>  security/integrity/ima/ima_appraise.c         |  2 +-
+>  security/integrity/ima/ima_efi.c              | 47 +---------------
+>  security/integrity/ima/ima_main.c             |  3 +-
+>  security/integrity/integrity.h                |  1 +
+>  security/integrity/platform_certs/load_uefi.c |  2 +-
+>  security/integrity/secure_boot.c              | 16 ++++++
+>  17 files changed, 115 insertions(+), 70 deletions(-)
+>  create mode 100644 include/linux/secure_boot.h
+>  create mode 100644 security/integrity/efi_secureboot.c
+>  create mode 100644 security/integrity/secure_boot.c
 
-N/m, it turns into __this_cpu_add() and that doesn't have
-preempt_enable().
+This triggers a warning on s390:
 
-00d8b035eb71 ("s390/idle: Slightly optimize idle time accounting")
+arch/s390/kernel/ipl.c:2507:6: warning: no previous prototype for ‘arch_get_secureboot’ [-Wmissing-prototypes]
+ 2507 | bool arch_get_secureboot(void)
+      |      ^~~~~~~~~~~~~~~~~~~
 
-Is actually a correctness fix afaict.
+@Mimi: could you please squash this fixup into the offending commit,
+or pick it up separately?
+
+Vasily Gorbik (1):
+  s390/ipl: Fix missing arch_get_secureboot() prototype warning
+
+ arch/s390/kernel/ipl.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+-- 
+2.53.0
 
