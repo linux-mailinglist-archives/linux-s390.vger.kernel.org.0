@@ -1,336 +1,280 @@
-Return-Path: <linux-s390+bounces-16948-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16950-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MOgdMw/uqmmOYAEAu9opvQ
-	(envelope-from <linux-s390+bounces-16948-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 06 Mar 2026 16:09:03 +0100
+	id mCrRKm/xqmncYwEAu9opvQ
+	(envelope-from <linux-s390+bounces-16950-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 06 Mar 2026 16:23:27 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 451E32237F4
-	for <lists+linux-s390@lfdr.de>; Fri, 06 Mar 2026 16:09:03 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5594B223B2E
+	for <lists+linux-s390@lfdr.de>; Fri, 06 Mar 2026 16:23:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 9971830B7163
-	for <lists+linux-s390@lfdr.de>; Fri,  6 Mar 2026 15:04:35 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1DFF53137135
+	for <lists+linux-s390@lfdr.de>; Fri,  6 Mar 2026 15:16:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E54833AE701;
-	Fri,  6 Mar 2026 15:04:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4ACE633F8B2;
+	Fri,  6 Mar 2026 15:16:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l00mYyAe"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="i/3dom55"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8F33AE1A5;
-	Fri,  6 Mar 2026 15:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83EF30E853;
+	Fri,  6 Mar 2026 15:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772809471; cv=none; b=Op0oCCLsF8Z8ctny1vV0/kqo+fHO74t4T08x3eq1YQ8RTzJTOt255/FkmPzr/qTKnogMaKWF8s/B4P4qFelqMY/6JdzqSZuMbuVj4MU0W1ucvxb3rN36WybN29cKmSjAiJ5qcQZC+gpBBACnaloC+upZhmOODf9HrnShcXMf5zg=
+	t=1772810217; cv=none; b=RlcXhVFPq1l0TqANsZpdFaak22jXUrB/kkvZ9LIkJq9wotmZb+V8YIZMX3Nc7usDIdDM9M4Y6kDxvoijal+2osgO8t2c4Z7KsvywxTvIwkira5DEFuU/9G0Bk4tSKH0fLIvbUvxDLFQAauSaN1MDNeoK+JKZ1dw1dBi2hjQfENU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772809471; c=relaxed/simple;
-	bh=25CPe4EGSUbqlSDNHofrLGG8PR/WzU7sNEADToXqfos=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QbkRlYC9YA5e/aZwWrJSIW3Enogz5yBcpzz5yTIgtq4bKxafm9YwK9akO0pZcVBUs5oioZEdwZlnvcxmyY0nVQF16QLlDQwjxPqHo5cZTr9pHxwo45K1xgLvkfFnOhq3K4lR5I7VXoy6B4d2Nv2WnUxwgomEE+emADQN0LfVuOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l00mYyAe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF2D7C4CEF7;
-	Fri,  6 Mar 2026 15:04:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772809471;
-	bh=25CPe4EGSUbqlSDNHofrLGG8PR/WzU7sNEADToXqfos=;
-	h=From:To:Cc:Subject:Date:From;
-	b=l00mYyAeVzZNhOkHGoBqNdxgrGLiNdHhVl3kHwWYeL1Y9cFWXVlXooc68wEuF7L0Q
-	 OF2NVmz98U+4tMbNLueBvXb1fQq7cXDImpDKIGf4tKnWW++vZxu/EY+wexkETnxwFD
-	 MWqyCam4Ic8JyGq5WqejMJe9U3A1XlNrnepTU7jea0jQaiV8DaUy+MCEWae68Risxu
-	 qkBXP3twWnqgmthNNhGJ5AZYReddCWjdC3dgnUrpIrec7ooGju9tx+THX/KeuImLH8
-	 yhx06aMwr48pfMFdKNoEE3NgYZYj6wC+11wNOWM+t5CSAxsd0lxY8gLOiIilbMEZIm
-	 dZ/eso6rn5L2w==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Coiby Xu <coxu@redhat.com>
-Cc: Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Eric Snowberg <eric.snowberg@oracle.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Andrew Donnellan <ajd@linux.ibm.com>,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-integrity@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	keyrings@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] integrity: avoid using __weak functions
-Date: Fri,  6 Mar 2026 16:03:24 +0100
-Message-Id: <20260306150421.270124-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1772810217; c=relaxed/simple;
+	bh=Ww79V6XSNrOApr1MN66Q2ihaKY9e/WA00tdA/a0XbU0=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=BsbxChlTLoGWoBkxeSUUWFu9JZNd31pjtA21iV2fT30u0fozPF1r2A4qg+U3soUFrj5XNsdql9/1uqyZO8mZNZ+8umg3mqRhEWs9JqMoLLhUZ9XrUsjgJUZCHCI1YPbv+zVRA7dVLjSedMFS5zaKu/i31HFzPMLWC06JwoNGqBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=i/3dom55; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6265h5Xg1331219;
+	Fri, 6 Mar 2026 15:16:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=2/syfV
+	M8wq7Mj0Whb/PrtmjiHfXrSSuTZvLL8/o1IlQ=; b=i/3dom55NFFzaa3cEglcqa
+	O62ASyymLgotD8+OzC4ZKo7aODACFcTs8B9tt756pJflmkcj1NcsiYEa0HM0z4EK
+	cDgVreb7/jHZDakh+VksmeQJ1T99JQIKVDWf09Kpd8eK9XmFgMw9SJxaXy2pb5/b
+	+m64HrwB58vELE3+EdtHEBQWA/TSWDhRrzCkHiU3cDheRiLhKSXQSokGx2gnQP0p
+	PTKwrAxCzQc+skrkIcXTZYMcTGZgGcsXm4PXsqmt2XRtV8vUIE17cTJ7SM5TVweb
+	ZZtGY6tbHY1YbOeTzPuGe43b6bxm2jAbrRi3KjW51J80C+o1YxBEovZaiLlvc2pA
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cksk48kng-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 06 Mar 2026 15:16:52 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 626CmEjX011312;
+	Fri, 6 Mar 2026 15:16:51 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4cqau2vx6j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 06 Mar 2026 15:16:51 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 626FGogs30474814
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 6 Mar 2026 15:16:50 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4B74958060;
+	Fri,  6 Mar 2026 15:16:50 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 472DF5803F;
+	Fri,  6 Mar 2026 15:16:48 +0000 (GMT)
+Received: from [9.111.76.202] (unknown [9.111.76.202])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  6 Mar 2026 15:16:48 +0000 (GMT)
+Message-ID: <4839efe9964290d3d8e52400b6f98c394e9156c1.camel@linux.ibm.com>
+Subject: Re: [PATCH v1] PCI: Add write-only 'uevent' sysfs attribute for
+ PCI slots
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Leon Romanovsky <leon@kernel.org>,
+        Peter Oberparleiter
+	 <oberpar@linux.ibm.com>
+Cc: Ramesh Errabolu <ramesh@linux.ibm.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        Bjorn Helgaas
+	 <bhelgaas@google.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Gerd Bayer
+	 <gbayer@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik
+	 <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>
+In-Reply-To: <20260302194844.GU12611@unreal>
+References: <20260225150815.81268-1-ramesh@linux.ibm.com>
+	 <20260226083427.GF12611@unreal>
+	 <b4d83f50-c3c1-4fdf-bc7c-50a3cc8353b6@linux.ibm.com>
+	 <20260226183945.GL12611@unreal>
+	 <5d30ad0a-9c16-4802-adfe-e795c38f5990@linux.ibm.com>
+	 <20260302194844.GU12611@unreal>
+Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 06 Mar 2026 16:15:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 451E32237F4
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-ORIG-GUID: qAjSol0L6ZgI6HsOJGuzCmSbZ1ruChhd
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzA2MDE0NSBTYWx0ZWRfX20mRa/B7NtdR
+ ZfUZiIsMdyFxq/5TDvP9eez30osg9tXUyGnFnyxUWElMQWKt1lxXOfwuqIOoG2WP8fZZ8Tp8tnM
+ wJiFc1QApFIMSK4/OczyGFvUCRrLSq9chI0tcjBz+zdhdWnxyYS4u2CiDoay9MWritCgglZCgNI
+ QONkWN7BCfvb2qmbVTdxXODwb8Ao6DkYRzhTdpZErNlZ2X1M6IsZQuIRC/g0qu57Lv83hiiWyB8
+ LACfuP/rfHDXWaeW2pj9ql1Jzmq4Ds5vU+xEwGx3L5DA0yKsgCfaMv4gOaEOxQ+6GnGA0lNs17W
+ OfdPcd+dotYnVupz8w0mIKE9r9xXaKD5fX3Jg70QdMDIbkEpjfpRy3x995KJRF5W4+o5tgHskAZ
+ FMR38AB5H4oAn3a9CjPgIMVA8XhG2gPRw+ryC+VXuNFWlyDRtteV18pMDacZRLbywE63ZwuwZ/z
+ b0W29zupoCk7qSUbDhg==
+X-Authority-Analysis: v=2.4 cv=csCWUl4i c=1 sm=1 tr=0 ts=69aaefe4 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=K7P-ssea2BpVGVVpLDIA:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: AWAZp1ZhrszT7xFL5mKGLeaYeHUjJv3H
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-06_04,2026-03-06_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 priorityscore=1501 suspectscore=0 malwarescore=0 adultscore=0
+ clxscore=1015 bulkscore=0 phishscore=0 spamscore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603060145
+X-Rspamd-Queue-Id: 5594B223B2E
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-16948-lists,linux-s390=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[linux.ibm.com,ellerman.id.au,arndb.de,huawei.com,gmail.com,paul-moore.com,namei.org,hallyn.com,kernel.org,redhat.com];
-	RCPT_COUNT_TWELVE(0.00)[33];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[gmail.com,kernel.org,linux.ibm.com,oracle.com,google.com,lists.ozlabs.org,vger.kernel.org,lists.linux.dev];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	TAGGED_FROM(0.00)[bounces-16950-lists,linux-s390=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[arnd@kernel.org,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.996];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390,lkml];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[arndb.de:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+	FROM_NEQ_ENVFROM(0.00)[schnelle@linux.ibm.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	PRECEDENCE_BULK(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-0.964];
+	TAGGED_RCPT(0.00)[linux-s390];
+	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Action: no action
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Mon, 2026-03-02 at 21:48 +0200, Leon Romanovsky wrote:
+> On Fri, Feb 27, 2026 at 12:23:03PM +0100, Peter Oberparleiter wrote:
+> > On 2/26/2026 7:39 PM, Leon Romanovsky wrote:
+> > > On Thu, Feb 26, 2026 at 11:53:32AM -0600, Ramesh Errabolu wrote:
+> > > > On 2/26/2026 2:34 AM, Leon Romanovsky wrote:
+> > > > > On Wed, Feb 25, 2026 at 09:08:15AM -0600, Ramesh Errabolu wrote:
+> > > > > > Add a new write-only 'uevent' attribute to PCI slot sysfs
+> > > > > > entries. This provides a mechanism for userspace to explicitly
+> > > > > > synthesize PCI slot uevents when needed.
+> > > > > >=20
+> > > > > > For cold-plugged PCI devices, slots may be created before
+> > > > > > udev is ready to receive events, causing the initial 'add'
+> > > > > > uevents to be missed. As a result, slot specific udev
+> > > > > > rules that define naming, permissions, and related policies,
+> > > > > > are not applied at boot. Allowing userspace to resynthesize
+> > > > > > the 'add' uevent ensures these rules are processed correctly.
+> > > > > This patch sounds like a hack to me. AFAIK, "udevadm trigger"
+> > > > > performs exactly that.
+> > > > >=20
+> > > > > Thanks
+> > > >=20
+> > > > AFAIK,=C2=A0PCI slots do not yet raise a uevent.=20
+> >=20
+> > That is only partially true. PCI slots are represented in sysfs by a
+> > kobject (pci_slot.kobj) and pci_hotplug_core generates uevents for thes=
+e
+> > kobjects during pci_hp_add() [1].
+> >=20
+> > Here is an example for these uevents:
+> >=20
+> > KERNEL[62021.190266] add      /bus/pci/slots/000018d0 (slots)
+> > ACTION=3Dadd
+> > DEVPATH=3D/bus/pci/slots/000018d0
+> > SUBSYSTEM=3Dslots
+> > SEQNUM=3D1638
+> >=20
+> > KERNEL[62032.304390] remove   /bus/pci/slots/000018d0 (slots)
+> > ACTION=3Dremove
+> > DEVPATH=3D/bus/pci/slots/000018d0
+> > SUBSYSTEM=3Dslots
+> > SEQNUM=3D1682
+> >=20
+> > On s390 there is a use case for reacting to these events via udev rules=
+,
+> > namely to persistently apply a user-specified, per-slot power state.
+>=20
+> But the component that issues the uevent should create this file.
+> In your example, it is the hotplug code that must provide a writable
+> file, isn't it?
+>=20
+> Thanks
 
-The security/integrity/secure_boot.c file containing only a __weak function
-leads to a build failure with clang:
+Sorry for the late reply, I was out last week and then missed your
+follow up as it seems I was erroneously neither on Cc nor To for the
+series.
 
-Cannot find symbol for section 2: .text.
-security/integrity/secure_boot.o: failed
+Good point, after all a non-hotplug slot would also not have no reason
+to create such events. Moreover the hotplug code does have attributes
+already in particular the 'power' attribute. We will look into this.
 
-Moving the function into another file that has at least one non-__weak
-symbol would solve this, but this is always fragile.
-
-Avoid __weak definitions entirely and instead move the stub helper into
-an asm-generic header that gets used by default on architectures that
-do not provide their own version. This is consistent with how a lot
-of other architecture specific functionality works, and is more reliable.
-
-Fixes: a0f87ede3bf4 ("integrity: Make arch_ima_get_secureboot integrity-wide")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-This is a larger change than I had hoped for.
-
-If you prefer a different way to address the build failure, please
-treat this as a Reported-by when you apply your own fix
----
- arch/powerpc/include/asm/secure_boot.h        |  6 +++
- arch/powerpc/kernel/secure_boot.c             |  1 -
- arch/s390/include/asm/secure_boot.h           |  9 +++++
- include/asm-generic/Kbuild                    |  1 +
- include/asm-generic/secure_boot.h             | 37 +++++++++++++++++++
- include/linux/secure_boot.h                   |  8 +---
- security/integrity/Makefile                   |  2 +-
- .../integrity/platform_certs/load_powerpc.c   |  2 +-
- security/integrity/secure_boot.c              | 16 --------
- 9 files changed, 56 insertions(+), 26 deletions(-)
- create mode 100644 arch/s390/include/asm/secure_boot.h
- create mode 100644 include/asm-generic/secure_boot.h
- delete mode 100644 security/integrity/secure_boot.c
-
-diff --git a/arch/powerpc/include/asm/secure_boot.h b/arch/powerpc/include/asm/secure_boot.h
-index a2ff556916c6..db72dcdf5bb3 100644
---- a/arch/powerpc/include/asm/secure_boot.h
-+++ b/arch/powerpc/include/asm/secure_boot.h
-@@ -10,11 +10,17 @@
- 
- #ifdef CONFIG_PPC_SECURE_BOOT
- 
-+bool arch_get_secureboot(void);
- bool is_ppc_secureboot_enabled(void);
- bool is_ppc_trustedboot_enabled(void);
- 
- #else
- 
-+static inline bool arch_get_secureboot(void)
-+{
-+	return false;
-+}
-+
- static inline bool is_ppc_secureboot_enabled(void)
- {
- 	return false;
-diff --git a/arch/powerpc/kernel/secure_boot.c b/arch/powerpc/kernel/secure_boot.c
-index 28436c1599e0..e3ea46124180 100644
---- a/arch/powerpc/kernel/secure_boot.c
-+++ b/arch/powerpc/kernel/secure_boot.c
-@@ -7,7 +7,6 @@
- #include <linux/of.h>
- #include <linux/secure_boot.h>
- #include <linux/string_choices.h>
--#include <asm/secure_boot.h>
- 
- static struct device_node *get_ppc_fw_sb_node(void)
- {
-diff --git a/arch/s390/include/asm/secure_boot.h b/arch/s390/include/asm/secure_boot.h
-new file mode 100644
-index 000000000000..4086fdfb9e5c
---- /dev/null
-+++ b/arch/s390/include/asm/secure_boot.h
-@@ -0,0 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_S390_SECURE_BOOT_H
-+#define _ASM_S390_SECURE_BOOT_H
-+
-+#include <linux/types.h
-+
-+bool arch_get_secureboot(void);
-+
-+#endif
-diff --git a/include/asm-generic/Kbuild b/include/asm-generic/Kbuild
-index 0f97f7b594c3..8c0a499141fb 100644
---- a/include/asm-generic/Kbuild
-+++ b/include/asm-generic/Kbuild
-@@ -51,6 +51,7 @@ mandatory-y += rqspinlock.h
- mandatory-y += runtime-const.h
- mandatory-y += rwonce.h
- mandatory-y += sections.h
-+mandatory-y += secure_boot.h
- mandatory-y += serial.h
- mandatory-y += shmparam.h
- mandatory-y += simd.h
-diff --git a/include/asm-generic/secure_boot.h b/include/asm-generic/secure_boot.h
-new file mode 100644
-index 000000000000..08d8e294576c
---- /dev/null
-+++ b/include/asm-generic/secure_boot.h
-@@ -0,0 +1,37 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2026 Red Hat, Inc. All Rights Reserved.
-+ *
-+ * Author: Coiby Xu <coxu@redhat.com>
-+ */
-+#ifndef _ASM_SECURE_BOOT_H
-+#define _ASM_SECURE_BOOT_H
-+
-+
-+#include <linux/types.h>
-+
-+#ifdef CONFIG_EFI
-+
-+/*
-+ * Default implementation.
-+ * Architectures that support secure boot must override this.
-+ *
-+ * Returns true if the platform secure boot is enabled.
-+ * Returns false if disabled or not supported.
-+ */
-+bool arch_get_secureboot(void);
-+
-+#else
-+
-+/*
-+ * Default implementation.
-+ * Architectures that support secure boot must override this.
-+ */
-+static inline bool arch_get_secureboot(void)
-+{
-+	return false;
-+}
-+
-+#endif
-+
-+#endif
-diff --git a/include/linux/secure_boot.h b/include/linux/secure_boot.h
-index 3ded3f03655c..9ddfbe109b1d 100644
---- a/include/linux/secure_boot.h
-+++ b/include/linux/secure_boot.h
-@@ -8,12 +8,6 @@
- #ifndef _LINUX_SECURE_BOOT_H
- #define _LINUX_SECURE_BOOT_H
- 
--#include <linux/types.h>
--
--/*
-- * Returns true if the platform secure boot is enabled.
-- * Returns false if disabled or not supported.
-- */
--bool arch_get_secureboot(void);
-+#include <asm/secure_boot.h>
- 
- #endif /* _LINUX_SECURE_BOOT_H */
-diff --git a/security/integrity/Makefile b/security/integrity/Makefile
-index 548665e2b702..45dfdedbdad4 100644
---- a/security/integrity/Makefile
-+++ b/security/integrity/Makefile
-@@ -5,7 +5,7 @@
- 
- obj-$(CONFIG_INTEGRITY) += integrity.o
- 
--integrity-y := iint.o secure_boot.o
-+integrity-y := iint.o
- integrity-$(CONFIG_INTEGRITY_AUDIT) += integrity_audit.o
- integrity-$(CONFIG_INTEGRITY_SIGNATURE) += digsig.o
- integrity-$(CONFIG_INTEGRITY_ASYMMETRIC_KEYS) += digsig_asymmetric.o
-diff --git a/security/integrity/platform_certs/load_powerpc.c b/security/integrity/platform_certs/load_powerpc.c
-index 714c961a00f5..ab74e947a8bc 100644
---- a/security/integrity/platform_certs/load_powerpc.c
-+++ b/security/integrity/platform_certs/load_powerpc.c
-@@ -10,7 +10,7 @@
- #include <linux/cred.h>
- #include <linux/err.h>
- #include <linux/slab.h>
--#include <asm/secure_boot.h>
-+#include <linux/secure_boot.h>
- #include <asm/secvar.h>
- #include "keyring_handler.h"
- #include "../integrity.h"
-diff --git a/security/integrity/secure_boot.c b/security/integrity/secure_boot.c
-deleted file mode 100644
-index fc2693c286f8..000000000000
---- a/security/integrity/secure_boot.c
-+++ /dev/null
-@@ -1,16 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * Copyright (C) 2026 Red Hat, Inc. All Rights Reserved.
-- *
-- * Author: Coiby Xu <coxu@redhat.com>
-- */
--#include <linux/secure_boot.h>
--
--/*
-- * Default weak implementation.
-- * Architectures that support secure boot must override this.
-- */
--__weak bool arch_get_secureboot(void)
--{
--	return false;
--}
--- 
-2.39.5
-
+Thanks,
+Niklas
 
