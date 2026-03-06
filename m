@@ -1,230 +1,131 @@
-Return-Path: <linux-s390+bounces-16967-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16969-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QO3QJL0Qq2kRZwEAu9opvQ
-	(envelope-from <linux-s390+bounces-16967-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 06 Mar 2026 18:37:01 +0100
+	id iGrIOl0Qq2kRZwEAu9opvQ
+	(envelope-from <linux-s390+bounces-16969-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 06 Mar 2026 18:35:25 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9EA82264F2
-	for <lists+linux-s390@lfdr.de>; Fri, 06 Mar 2026 18:37:00 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6C37226492
+	for <lists+linux-s390@lfdr.de>; Fri, 06 Mar 2026 18:35:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 434203012828
-	for <lists+linux-s390@lfdr.de>; Fri,  6 Mar 2026 17:15:57 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id AEFC93013259
+	for <lists+linux-s390@lfdr.de>; Fri,  6 Mar 2026 17:31:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CE5141C0D9;
-	Fri,  6 Mar 2026 17:14:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EC5233B96C;
+	Fri,  6 Mar 2026 17:31:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="r3lYaMHr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rt3Sf0KN"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D6733123D;
-	Fri,  6 Mar 2026 17:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCC3311C01;
+	Fri,  6 Mar 2026 17:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772817255; cv=none; b=J38CLAk1nclXOdsP9SGCyFGoHsewl7932j0pCE+Jy32wrhx32vxYUS9+RUoy+AmDr8ErFAdK3BGSvpiezMLI7kdxOmfddSAbileEszwvcq35F99EPQzSnWwQma1BB2UWWCfYRPYpspikdS4rcat6E93ZXEveAiZwoIGm1r0fpvs=
+	t=1772818308; cv=none; b=CsINHtZevTx7H+4dgldfyEt+hqL4Q946plX27YJJRB8d4boR4PXUxy8PiKqWVV7Xw+ZmiqSX7a02vT7EQIK3L72sxXiJCGHMJKOifuxQDpGBPQAKkqa8VgwAzl3LCx5qATMpzR9/zGlYywDdguQhxnhzjr6izja5XWg+f8fN2u0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772817255; c=relaxed/simple;
-	bh=o6VJeQyvdF8sluPuypwR31NZuyAPIZ6njNUnRKK3xck=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TmDNSgzLYEP8T21i18P0AEd8MYP3J8naCHkdD/c48g1sWldgqQpJ2nmZ1B/qHnKqMtRD2FuxJs2Ilw56cn7ZIKAZOOSCUG7GkVOFIvM1ZnljfZgRaR/w8B8oxai9vFUT65mYKsBDF9NlT8LKzMTY8awqNJDts4HgM9z31YDZhzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=r3lYaMHr; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6265xX6P1938926;
-	Fri, 6 Mar 2026 17:14:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=yNgeVx
-	WFeQuNfZOKEGXswceUvqNdkuSeuOfc7dV8XuQ=; b=r3lYaMHryUKzL7x2Rs9w88
-	kEPef60F80ZffOh32orTXis6/O9WdCJin13jw/v9Lb33G66KTjKI18f8l20EH5ho
-	Hc5W0HPWotekpbW/J9hb7KI5LYhGhNNW3Q5qrMWSzZ1aGgjXnEmAz9wuZjkzfz1O
-	GgJH3DYK3BWpY7PIb3CJ8CfVrPCxidRhyZjj6xva9+qPHAMG+d63maKwt9BEH+Hx
-	Fbsg+3ZwcnQD4Zi+Ysn/i2NBj4gDQBer/n9RyLaQIbRe/8S4U9rIO7uafXi0LHkL
-	fGmuZchrnolK9jKoAkr9OgkZ/5g1EgfNbo451P5Ck3ZajrgSaTgqXIS1PVLu4jwA
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cksrjhqpw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Mar 2026 17:14:09 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 626ExE9m008816;
-	Fri, 6 Mar 2026 17:14:08 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cmdd1rg32-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Mar 2026 17:14:08 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 626HE5de46268762
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 6 Mar 2026 17:14:05 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3E69F2004F;
-	Fri,  6 Mar 2026 17:14:05 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1306E2004E;
-	Fri,  6 Mar 2026 17:14:05 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  6 Mar 2026 17:14:05 +0000 (GMT)
-From: Gerd Bayer <gbayer@linux.ibm.com>
-Date: Fri, 06 Mar 2026 18:13:59 +0100
-Subject: [PATCH v3 2/2] PCI: AtomicOps: Fix logic in enable function
+	s=arc-20240116; t=1772818308; c=relaxed/simple;
+	bh=6iE70g58/qwlybpeZab3Rb/sA2FkT0ozgGH89xGh4p0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fMRWXinhDjfvPLQTcbYf5N5lTIhRcTpro5Xldoulmu9lJlpkMAlAIouy8HhLuk0Tl3o5abifNs2gTzn5KMeYnFGYNglhCr2NopQB04eUCnWiANtKZYAksZJ7mmULep+daOCGiwJd9aqoMCqp1qf+i4OeSr8PKglAGCx+YurT4lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rt3Sf0KN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1CF1C4CEF7;
+	Fri,  6 Mar 2026 17:31:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772818308;
+	bh=6iE70g58/qwlybpeZab3Rb/sA2FkT0ozgGH89xGh4p0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Rt3Sf0KN923Unc/toFJYb55B18boZgDf6U+uoM9263V+gs2vR76k2ITgL71g84buc
+	 PLQXKALixqabNOfbbkiWB0wpyJXkxGI5MSFFdjgIhVKUwdh5bu+v3hCGCTPhCK9Pou
+	 uz+pRt7dDrhldDfKNhLsDjUbsdFgeWlMLQlYAuPtB6cxvDWebV35QMY30mo4W1FTMY
+	 sWkZHukzIV6PwhBjug5yNn7k0sdyvYL/LXt74KpTaDnNKaTT6KaTh9QKmkQMHVa0Hl
+	 1hGCCxW+Hhz40inlUtXl9quHXdStzaDC1v4HFsChUw+DEqM70vco73XoVXcXrBUC8+
+	 tAQRdreh9+lGg==
+Date: Fri, 6 Mar 2026 10:31:45 -0700
+From: Keith Busch <kbusch@kernel.org>
+To: Benjamin Block <bblock@linux.ibm.com>
+Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Farhan Ali <alifm@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	linux-s390 <linux-s390@vger.kernel.org>,
+	Andreas Krebbel <krebbel@linux.ibm.com>,
+	Julian Ruess <julianr@linux.ibm.com>,
+	Matthew Rosato <mjrosato@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Gerd Bayer <gbayer@linux.ibm.com>,
+	linux-pci <linux-pci@vger.kernel.org>,
+	Tobias Schumacher <ts@linux.ibm.com>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	Ionut Nechita <ionut.nechita@windriver.com>,
+	Ionut Nechita <ionut_n2001@yahoo.com>
+Subject: Re: [PATCH 1/4] PCI: Move declaration of pci_rescan_remove_lock into
+ public pci.h
+Message-ID: <aasPgZkgCmW5kZgV@kbusch-mbp>
+References: <cover.1772815642.git.bblock@linux.ibm.com>
+ <9afaf022cb8e37241c4d2e5356cb262266b0bf3d.1772815642.git.bblock@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260306-fix_pciatops-v3-2-99d12bcafb19@linux.ibm.com>
-References: <20260306-fix_pciatops-v3-0-99d12bcafb19@linux.ibm.com>
-In-Reply-To: <20260306-fix_pciatops-v3-0-99d12bcafb19@linux.ibm.com>
-To: Bjorn Helgaas <bhelgaas@google.com>, Jay Cornwall <Jay.Cornwall@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>
-Cc: Leon Romanovsky <leon@kernel.org>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Alexander Schmidt <alexs@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Gerd Bayer <gbayer@linux.ibm.com>, stable@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=Rp/I7SmK c=1 sm=1 tr=0 ts=69ab0b62 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8
- a=VwQbUJbxAAAA:8 a=ud980_RLCRqylQVSWKAA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzA2MDE2MiBTYWx0ZWRfX2oKgBMBfkkba
- 7OetCSS45o7LKDtHWVw8/o9wNtN5TyurORZzR9G4uZ1TVAE75PNudQJMTde8oA7F1e8sTLPgJ59
- hVjdwh67zTEi0PpH+h/AaEgbt7xorqgJ6CpTC/3vq1SwguOB4ns230/x+fp3L+3RTt+UU8nZ+c5
- aLfRUjptJ65Tap5Pw1C0oapTw3+JY9udZykS378Tk7IL8DBfhvOZHiMlnWXzJLhd6swLyZcTvwl
- 9KTxLmilDvL0P3drgTEcbCNJIy4v3XZt73iHnKtusMMP91m36+yI7QEKAf0kSWUFIog/9xSdk+Q
- rtAcvoJykfi9Xwq1TbL+JUNcdM+6zcjyuFfe5W2cOiJqE6wdA2FrRafWShI+DjsQ3BUKoRIYghx
- r6uOVbu/WwI3UtlnkfXgG8+KLwzOqpjHVSC/rn1XZtXiaE4Y6kHqBMcqtxzaJl0d/nUn0GWqy+l
- stplczivw5lhcoT/vbA==
-X-Proofpoint-GUID: zn42x3jkt0ZS9LoIc48rpJ9nhUIXcNWk
-X-Proofpoint-ORIG-GUID: bRWP3uFGBbxRaVPYW9XwslJ_Ru1E7una
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-06_05,2026-03-06_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 priorityscore=1501 spamscore=0 phishscore=0 adultscore=0
- bulkscore=0 clxscore=1011 impostorscore=0 malwarescore=0 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603060162
-X-Rspamd-Queue-Id: A9EA82264F2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9afaf022cb8e37241c4d2e5356cb262266b0bf3d.1772815642.git.bblock@linux.ibm.com>
+X-Rspamd-Queue-Id: C6C37226492
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TO_DN_ALL(0.00)[];
+	TAGGED_FROM(0.00)[bounces-16969-lists,linux-s390=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[11];
-	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	TAGGED_RCPT(0.00)[linux-s390];
-	NEURAL_HAM(-0.00)[-0.955];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[gbayer@linux.ibm.com,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-16967-lists,linux-s390=lfdr.de];
-	DKIM_TRACE(0.00)[ibm.com:+]
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_CC(0.00)[linux.ibm.com,google.com,vger.kernel.org,windriver.com,yahoo.com];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.966];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[kbusch@kernel.org,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-s390];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[20]
 X-Rspamd-Action: no action
 
-Move the check for root port requirements past the loop within
-pci_enable_atomic_ops_to_root() that checks on potential switch
-(up- and downstream) ports.
+On Fri, Mar 06, 2026 at 05:49:13PM +0100, Benjamin Block wrote:
+> So far it is possible to use and call the functions
+> pci_lock_rescan_remove() and pci_unlock_rescan_remove() from any PCI
+> code, including modules and architecture code; but the lock
+> `pci_rescan_remove_lock` itself is private to objects residing in
+> `drivers/pci/` via the header `drivers/pci/pci.h`.
+> 
+> With that setup it is not possible to use lockdep annotations such as
+> lockdep_assert_held(), or sparse annotations such as __must_hold() in
+> modules or architecture code for PCI.
+> 
+> Since it is useful for `pci_rescan_remove_lock` to have such
+> annotations, move the variable declaration into `include/linux/pci.h`.
 
-Inside the loop traversing the PCI tree upwards, prepend the switch case
-to validate the routing capability on any port with a fallthrough-case
-that does the additional check for Atomic Ops not being blocked on
-upstream ports.
-
-Do not enable Atomic Op Requests if nothing can be learned about how the
-device is attached - e.g. if it is on an "isolated" bus, as in s390.
-
-Reported-by: Alexander Schmidt <alexs@linux.ibm.com>
-Cc: stable@vger.kernel.org
-Fixes: 430a23689dea ("PCI: Add pci_enable_atomic_ops_to_root()")
-Signed-off-by: Gerd Bayer <gbayer@linux.ibm.com>
----
- drivers/pci/pci.c | 30 ++++++++++++++----------------
- 1 file changed, 14 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index cc8abe6b1d07661488895876dbbcf8aaeadf4a17..23db6ad5f310ed009a9b2ca4933c7498e0d22b85 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3677,7 +3677,7 @@ void pci_acs_init(struct pci_dev *dev)
- int pci_enable_atomic_ops_to_root(struct pci_dev *dev, u32 cap_mask)
- {
- 	struct pci_bus *bus = dev->bus;
--	struct pci_dev *bridge;
-+	struct pci_dev *bridge = NULL;
- 	u32 cap, ctl2;
- 
- 	/*
-@@ -3715,29 +3715,27 @@ int pci_enable_atomic_ops_to_root(struct pci_dev *dev, u32 cap_mask)
- 		switch (pci_pcie_type(bridge)) {
- 		/* Ensure switch ports support AtomicOp routing */
- 		case PCI_EXP_TYPE_UPSTREAM:
--		case PCI_EXP_TYPE_DOWNSTREAM:
--			if (!(cap & PCI_EXP_DEVCAP2_ATOMIC_ROUTE))
--				return -EINVAL;
--			break;
--
--		/* Ensure root port supports all the sizes we care about */
--		case PCI_EXP_TYPE_ROOT_PORT:
--			if ((cap & cap_mask) != cap_mask)
--				return -EINVAL;
--			break;
--		}
--
--		/* Ensure upstream ports don't block AtomicOps on egress */
--		if (pci_pcie_type(bridge) == PCI_EXP_TYPE_UPSTREAM) {
-+			/* Upstream ports must not block AtomicOps on egress */
- 			pcie_capability_read_dword(bridge, PCI_EXP_DEVCTL2,
- 						   &ctl2);
- 			if (ctl2 & PCI_EXP_DEVCTL2_ATOMIC_EGRESS_BLOCK)
- 				return -EINVAL;
-+			fallthrough;
-+		/* All switch ports need to route AtomicOps */
-+		case PCI_EXP_TYPE_DOWNSTREAM:
-+			if (!(cap & PCI_EXP_DEVCAP2_ATOMIC_ROUTE))
-+				return -EINVAL;
-+			break;
- 		}
--
- 		bus = bus->parent;
- 	}
- 
-+	/* Finally, last bridge must be root port and support requested sizes */
-+	if ((!bridge) ||
-+	    (pci_pcie_type(bridge) != PCI_EXP_TYPE_ROOT_PORT) ||
-+	    ((cap & cap_mask) != cap_mask))
-+		return -EINVAL;
-+
- 	pcie_capability_set_word(dev, PCI_EXP_DEVCTL2,
- 				 PCI_EXP_DEVCTL2_ATOMIC_REQ);
- 	return 0;
-
--- 
-2.51.0
-
+This big lock for pci scanning is way to easy to misuse to create
+deadlocks, many of which still exist today, so I'm not sure making it
+easier to access is the right direction.
 
