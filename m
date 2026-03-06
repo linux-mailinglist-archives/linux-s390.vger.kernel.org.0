@@ -1,171 +1,232 @@
-Return-Path: <linux-s390+bounces-16956-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16961-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6EDsEpj/qmlxZQEAu9opvQ
-	(envelope-from <linux-s390+bounces-16956-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 06 Mar 2026 17:23:52 +0100
+	id mHQHGRkGq2kMZgEAu9opvQ
+	(envelope-from <linux-s390+bounces-16961-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 06 Mar 2026 17:51:37 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D3B0224D63
-	for <lists+linux-s390@lfdr.de>; Fri, 06 Mar 2026 17:23:51 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09C0E2257AE
+	for <lists+linux-s390@lfdr.de>; Fri, 06 Mar 2026 17:51:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id A46F03060BFE
-	for <lists+linux-s390@lfdr.de>; Fri,  6 Mar 2026 16:17:36 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 343333054C34
+	for <lists+linux-s390@lfdr.de>; Fri,  6 Mar 2026 16:50:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B75E23EF0A0;
-	Fri,  6 Mar 2026 16:17:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDC3B411638;
+	Fri,  6 Mar 2026 16:49:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WBTmsmxv"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ez5Xkq/g"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF083EDADC;
-	Fri,  6 Mar 2026 16:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957AA411610;
+	Fri,  6 Mar 2026 16:49:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772813828; cv=none; b=HHAYRe6wLlGC1paYS5jestZur6Bpb610jDeIquM4QYqpPPx05Owsn3JTkIBoc3pRj6nqzaZlsmEl2avPw41HtIf1KKB0eywsmCk/whvU8Qd5ONaXbZzGp4hqh9RST6HMxM+6zWI/bwUZ+QsF3CdTXPBFOmedUEsc5k8yHAkIYVQ=
+	t=1772815764; cv=none; b=GFB0qSsbPG0hAByUGPR5/tEWr3mFjyQxRnkRx1vJj/B07Lyg7/R7HBapYgb8ny36ZG6517nw5FP0KU1wU8kFYwRO4qXJvFaiil21ajd4ZNJiLiyJXWV2tBGcQJbrKS3HzekPqXcJ7qhUbkJGrwTb50e/tg2GNl1YUeGeUqBSNEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772813828; c=relaxed/simple;
-	bh=VLTBtbUx77gzumExkwQ+UsZaY5sqhpu/Y8wOE2jbbEc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RHirxVzphN6miL6o3SZy11dLSQtldIB3MA4xqKpPYVZqRCbp4wSKyymY2piLQhrh4LXqxbcuwas563aPRIJKHaxjFfp4rnK4udK9TDVn+dqOPzooQjjn+UVHRQ+dntoOZ9SMO5gYVLoklD8afUtH1NvXKTt88WXslaoPYzIkvu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WBTmsmxv; arc=none smtp.client-ip=148.163.158.5
+	s=arc-20240116; t=1772815764; c=relaxed/simple;
+	bh=wVpBn1KtXljwo64NYNj/CEx9OQFXjlLJOc83emEoWkw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Qx21ikhjiHCgwq8/wK/41vu5/e2+2r20USWj3hFAnn6VtIzrEvqDNgurj8P7DSKnBj0AhekWQxEgc6gNYDMKjun3XobZJn9Fn2F0ue0dVpyFV01ncnjBZSjc8wIB5xDFZXyoj7F5hsuiZc8VZFK6ABXJr45saRp03ooF2+LKj2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ez5Xkq/g; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6267lN2m2100389;
-	Fri, 6 Mar 2026 16:16:38 GMT
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 626Bjm6p2804450;
+	Fri, 6 Mar 2026 16:49:22 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=VLTBtbUx77gzumExk
-	wQ+UsZaY5sqhpu/Y8wOE2jbbEc=; b=WBTmsmxvk8iyjPHSdlTpr2YTLvS6K+CA0
-	PrOilBrKGR9EZ3Yw5wwcGokyjRG4tLnjQm74rXetTcvfcUU4Nbe4VKIKwDxqWLr2
-	gI00c0nDm5OGDM528Xw4QPFRYuEUIV4jqBK9N6Ogf5lgO82ft7eUxQWfKHduln1o
-	aLPCMRzzqs86GoMc+Ad6nDE2eefM0+Porj3yL1NSPX1PRkLFIBsTRAt8rZktcSjU
-	Ch0Iz0PlCHpmW82MKLKQZmLSEJS2pfdkxbnsjhX+nOwYlvdlO9/5YXydeAjac2Lv
-	Z8Z+JB7UtbhsEFvvPRYmckfaNYhlu5gyaSYB6a13pxND7D7MD870g==
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:sender:subject:to; s=pp1; bh=PJhvCtnEX5yJ3ngTJW9Y6
+	rDDl3M6sykTPZkpzoafMh4=; b=Ez5Xkq/gvDTEnGFw8TNYY58SjqSLsj9gBHdit
+	GM58goIZ5zVtMph+03aOuyppXwwUW8KgE+lGPMKjofwPvG3JlMWOZiFQRGGTtiJk
+	dsFacAkQnt+JL2yZCZvWhgaLdMFC5rT1+yosne0SIfN8+pbpFG4BrB/LBk6B8bAD
+	SH1GG/qoN9eIYrOMHO7w61//lchWy5wZEEnmUfhf6Y4Uv95MDzeTveKOL+FWT1Ol
+	wT1U4wwPRRsWYF9ORO0ErAchRRGhs//yUnDanmg59sjenk52hUr3muK5nZ986lVY
+	fYHIruV4o/OywO6vGxrw7OVZXbFllSy4VHZuMs3jl50P2XG+Q==
 Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cksk48udd-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ckskd9h9q-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Mar 2026 16:16:37 +0000 (GMT)
+	Fri, 06 Mar 2026 16:49:22 +0000 (GMT)
 Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 626EMNp8027692;
-	Fri, 6 Mar 2026 16:16:37 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cmcwjraae-1
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 626ERFuE027658;
+	Fri, 6 Mar 2026 16:49:21 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cmcwjrdv8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Mar 2026 16:16:36 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 626GGXVH10354974
+	Fri, 06 Mar 2026 16:49:21 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 626GnHA244433702
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 6 Mar 2026 16:16:33 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 653FA2004D;
-	Fri,  6 Mar 2026 16:16:33 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 36A9C20043;
-	Fri,  6 Mar 2026 16:16:33 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with SMTP;
-	Fri,  6 Mar 2026 16:16:33 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
-	id 1EF1CE078F; Fri, 06 Mar 2026 17:16:33 +0100 (CET)
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Pasha Tatashin <pasha.tatashin@soleen.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vasily Gorbik <gor@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        x86@kernel.org
-Subject: [PATCH v2 4/4] s390: Enable page table check for debug_defconfig
-Date: Fri,  6 Mar 2026 17:16:33 +0100
-Message-ID: <975007c27f8563e46d66a1fbb4b14ae6a4147edd.1772812343.git.agordeev@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <cover.1772812343.git.agordeev@linux.ibm.com>
-References: <cover.1772812343.git.agordeev@linux.ibm.com>
+	Fri, 6 Mar 2026 16:49:17 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 597DB2004D;
+	Fri,  6 Mar 2026 16:49:17 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 450992004B;
+	Fri,  6 Mar 2026 16:49:17 +0000 (GMT)
+Received: from p1gen4-pw042f0m (unknown [9.52.223.163])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri,  6 Mar 2026 16:49:17 +0000 (GMT)
+Received: from bblock by p1gen4-pw042f0m with local (Exim 4.99.1)
+	(envelope-from <bblock@linux.ibm.com>)
+	id 1vyYMW-00000005i32-45AQ;
+	Fri, 06 Mar 2026 17:49:16 +0100
+From: Benjamin Block <bblock@linux.ibm.com>
+To: Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Niklas Schnelle <schnelle@linux.ibm.com>
+Cc: Farhan Ali <alifm@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Andreas Krebbel <krebbel@linux.ibm.com>,
+        Julian Ruess <julianr@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Gerd Bayer <gbayer@linux.ibm.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Tobias Schumacher <ts@linux.ibm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ionut Nechita <ionut.nechita@windriver.com>,
+        Ionut Nechita <ionut_n2001@yahoo.com>,
+        Benjamin Block <bblock@linux.ibm.com>
+Subject: [PATCH 0/4] PCI: s390/pci: Fix deadlocks on s390 when releasing zPCI-bus or -device objects
+Date: Fri,  6 Mar 2026 17:49:12 +0100
+Message-ID: <cover.1772815642.git.bblock@linux.ibm.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Organization: IBM Deutschland Research & Development GmbH,    https://www.ibm.com/privacy, Vors. Aufs.-R.: Wolfgang Wendt,    =?unknown-8bit?q?Gesch=C3=A4ftsf=C3=BChrung=3A?= David Faller. Sitz der Ges.: Ehningen,    Registergericht: AmtsG Stuttgart, HRB 243294
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Sender: Benjamin Block <bblock@linux.ibm.com>
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: eToHDjTYiyMz7a2sBJeb72YZHB1UF-lQ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzA2MDE1MyBTYWx0ZWRfX25ilnaqkZ1mG
- 395rxazo4o/xlOSP7O01w3hOCD2fwuHn/hc8XRx+Hh6uLMLfIsh1YZODI6BGMqB4yqnh7PNfATx
- sYO9Epo62gqmbtyYvpE12E2pUTnTzKY0REnmDUodQ/lkC+QdUjoEsTz85lJtj0bSa/7JWbHwUKw
- S4OzB3YkLOzoK5vG4y1AU3bx6TkPZISueCuc3B4/Y/PZwoAecmg8ZTwZRgn94PCGqfaaiP2+tSE
- gYsNd2oE1FXqB1stqpYj+ol8oVQ4VUYvjOAduAEbIWT5wbxteDBUiuoCMtK7Ry6mu4lNeWzjQBr
- F4pediMuqFgritMq+U4u6HQTpEGvzfw/NCtbei3QFKsPK0U1j8OSqRD6YfzdY6nUDV9RcBco5b3
- ufL3p6bKaEkmzi1BhrbNw6cErKGR1CsSps7IhNSzL7vEA0USc818VxE93Z3mKst7K5ghD14yFLh
- e709UMA8iEzOm0G+9sA==
-X-Authority-Analysis: v=2.4 cv=csCWUl4i c=1 sm=1 tr=0 ts=69aafde6 cx=c_pps
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-GUID: q6IRAdM3moCqHWnWBZBqLCGcUpRZ5aQP
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzA2MDE1OCBTYWx0ZWRfX0t0fBkAn0t+L
+ ufaEuIkghYQfAUjClDEfMC0HbV97swMeRs/ZrmFXmFvjWeZVMoKIWY4fegboKn3xB/eaxc/igjO
+ ycq/ztyFta2I0ZXlwQW/S5LnFXM5QTgweF5qM/Ijjd4r3HUXDHyr+KSWz81hQlWaNUOOu3P+qYV
+ PzFGbPNByDALJZc1bjChfk3hf73wFGoILvfQal5TAU6/Io5Rx3Zvfki2mGP18Bw2dpiGmh9Dfjj
+ fiRH5l2u11DMrm8ug+ONhakNQaaanH8XxgQXtW8sXA2SQqY3k954vSemUMaHwAfLmozh8C0AbIf
+ UBCZk4GoD3B7+2/zV57HvPgWyMc5ybmvarAA7iY7Aergkpq+HcfpyIcrZ537lPe8px2dnloGdKl
+ GIFA6LF8d2Yn9cLojX4ZwrCnHyi7q0Kep8QcvwKVTiHtlhrwlqyvIBpjsX31N7crs/TU/2nQrG+
+ rVSHKmpeu2YyVf4ghRQ==
+X-Authority-Analysis: v=2.4 cv=H7DWAuYi c=1 sm=1 tr=0 ts=69ab0592 cx=c_pps
  a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8 a=ll0qgXPPjJRHf6HrCsAA:9
-X-Proofpoint-GUID: eToHDjTYiyMz7a2sBJeb72YZHB1UF-lQ
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VwQbUJbxAAAA:8
+ a=VnNF1IyMAAAA:8 a=t7CeM3EgAAAA:8 a=4syw67VsA1-2dhGIdQYA:9 a=QEXdDO2ut3YA:10
+ a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-ORIG-GUID: lAocdsuGgqoxvC0lt-GA92aA26EkhXU2
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-03-06_05,2026-03-06_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 priorityscore=1501 suspectscore=0 malwarescore=0 adultscore=0
- clxscore=1015 bulkscore=0 phishscore=0 spamscore=0 lowpriorityscore=0
+ impostorscore=0 suspectscore=0 phishscore=0 clxscore=1015 priorityscore=1501
+ adultscore=0 bulkscore=0 spamscore=0 malwarescore=0 lowpriorityscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603060153
-X-Rspamd-Queue-Id: 6D3B0224D63
+ reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603060158
+X-Rspamd-Queue-Id: 09C0E2257AE
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-Spamd-Result: default: False [-1.16 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FREEMAIL_CC(0.00)[linux.ibm.com,vger.kernel.org,windriver.com,yahoo.com];
+	TAGGED_FROM(0.00)[bounces-16961-lists,linux-s390=lfdr.de];
+	TO_DN_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
 	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-16956-lists,linux-s390=lfdr.de];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[agordeev@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-0.988];
+	FROM_NEQ_ENVFROM(0.00)[bblock@linux.ibm.com,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	RCVD_COUNT_TWELVE(0.00)[12];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+	NEURAL_HAM(-0.00)[-0.998];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,linux.ibm.com:mid]
 X-Rspamd-Action: no action
 
-Reviewed-by: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
----
- arch/s390/configs/debug_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+Niklas already mentioned it in his recent comments on discussions about
+`pci_rescan_remove_lock` here
+https://lore.kernel.org/linux-pci/286d0488aa72b1741f93f900fd5db5c4334a6f50.camel@linux.ibm.com/
+and here
+https://lore.kernel.org/linux-pci/2b6a844619892ecaa11031705808667e0886d8b2.camel@linux.ibm.com/
+; we recently found a couple of deadlocks in the s390 architecture PCI
+implementation with hotplug events on our platform.
 
-diff --git a/arch/s390/configs/debug_defconfig b/arch/s390/configs/debug_=
-defconfig
-index 98fd0a2f51c6..12cdaaefb6db 100644
---- a/arch/s390/configs/debug_defconfig
-+++ b/arch/s390/configs/debug_defconfig
-@@ -929,3 +929,5 @@ CONFIG_PERCPU_TEST=3Dm
- CONFIG_ATOMIC64_SELFTEST=3Dy
- CONFIG_TEST_BITOPS=3Dm
- CONFIG_TEST_BPF=3Dm
-+CONFIG_PAGE_TABLE_CHECK=3Dy
-+CONFIG_PAGE_TABLE_CHECK_ENFORCED=3Dy
---=20
-2.51.0
+So far these have not been observed because on s390 it was not usual to have
+both PF and attached VFs in the same Linux instance. So far PCI devices have
+largely been either available as PF without SR-IOV, or as VF without the PF
+being visible in the same instance. This left us with some blindspots w.r.t.
+the locking issues here.
+    This is now changing, and with that we started running into these
+deadlocks.
+
+Please Note: this patchset strictly depends on Ionut Nechita's patch that makes
+             `pci_lock_rescan_remove()` reentrant:
+             https://lore.kernel.org/linux-pci/20260306082108.17322-2-ionut.nechita@windriver.com/
+
+	     Sicne the discussion so far sounded positive towards the change I
+	     decided to base some of the changes in this patchset on the
+	     assumption that his patch gets merged before mine. Otherwise
+	     there will be rescursive deadlocks.
+
+Patch 01 helps us insofar it enables us to use lockdep annotations in the
+architecture code.
+Patch 02 goes into detail what deadlocks exactly, and how they are fixed.
+Patch 03 and 04 make it possible to use lock guards for
+`pci_rescan_remove_lock` and make use of them in the s390 architecture PCI
+implementation.
+
+I've run a /lot/ of tests with affected PCI adapters:
+  * enable/disable SR-IOV on the PF;
+  * run FLR reset on PF and VF;
+  * run Bus reset on PF and VF;
+  * run s390's recover SysFS attribute on PF and VF;
+  * disable/enable power with the hotplug SysFS attribute on PF and VF;
+  * run `zpcictl` with `--reset`/`--reset-fw` on PF and VF;
+  * run Configure Off and Configure On on both the PF and VF from a Service
+    Element.
+
+There is no more deadlocks and no other lockdep warnings I've witnessed.
+
+Benjamin Block (4):
+  PCI: Move declaration of pci_rescan_remove_lock into public pci.h
+  s390/pci: Fix circular/recursive deadlocks in PCI-bus and -device
+    release
+  PCI: Provide lock guard for pci_rescan_remove_lock
+  s390/pci: Use lock guard for pci_rescan_remove_lock
+
+ arch/s390/pci/pci.c       | 11 ++++++++---
+ arch/s390/pci/pci_bus.c   | 15 ++++++++-------
+ arch/s390/pci/pci_event.c | 28 +++++++++++++++++++---------
+ arch/s390/pci/pci_iov.c   |  3 +--
+ arch/s390/pci/pci_sysfs.c |  9 +++------
+ drivers/pci/pci.h         |  2 --
+ drivers/pci/probe.c       |  1 +
+ include/linux/pci.h       |  5 +++++
+ 8 files changed, 45 insertions(+), 29 deletions(-)
+
+
+base-commit: 5ee8dbf54602dc340d6235b1d6aa17c0f283f48c
+-- 
+2.53.0
 
 
