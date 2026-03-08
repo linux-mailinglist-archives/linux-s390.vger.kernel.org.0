@@ -1,179 +1,187 @@
-Return-Path: <linux-s390+bounces-16982-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-16985-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WDAbLxD5q2nDigEAu9opvQ
-	(envelope-from <linux-s390+bounces-16982-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Sat, 07 Mar 2026 11:08:16 +0100
+	id IKJvAJPnrGlSvwEAu9opvQ
+	(envelope-from <linux-s390+bounces-16985-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Sun, 08 Mar 2026 04:05:55 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6064222AEFA
-	for <lists+linux-s390@lfdr.de>; Sat, 07 Mar 2026 11:08:16 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 583D522E624
+	for <lists+linux-s390@lfdr.de>; Sun, 08 Mar 2026 04:05:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0E24C30131E5
-	for <lists+linux-s390@lfdr.de>; Sat,  7 Mar 2026 10:08:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3816930265A0
+	for <lists+linux-s390@lfdr.de>; Sun,  8 Mar 2026 03:04:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F2363126DD;
-	Sat,  7 Mar 2026 10:08:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36254322533;
+	Sun,  8 Mar 2026 03:04:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ljfv9Qev"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iIZCtYRt"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252E130CD80;
-	Sat,  7 Mar 2026 10:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D409A34CFA8;
+	Sun,  8 Mar 2026 03:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772878094; cv=none; b=OidDXgd5mRK4cpqvQNa+4qzMIJv/28yyL5WfCC7Urc85UnYO8Xw0ZvN4/OgIsV8j4nq4rSXGYH7hTG9l0qEYA0qXLmymdZTXthArkjdBzd9m6/4zWNppuI13nTHAm4rgxzL8pt0Y02UU+Bx9nuG1wbadtvpMEH0Qy5YdQ7aA7uU=
+	t=1772939095; cv=none; b=mUDx/duGl9ToMBTeAByUpsjAszzldeoIYtHIbL9xWL4bxNUUkn1E1fVq0PQrsXubVJ3cJJQXYcuiQyYbV3fI36BkPtq18Ejrvuks1FAk4fo5N/Ve1rlmm+zGHxiQfX+vOmS/QjzItcPDGHJkvqi8nChLbm7lM5B/CyUXLKVzjfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772878094; c=relaxed/simple;
-	bh=egZ1+M1uc0jkAv5m17k+C3GcHFY6xwEHcD81x2VjVTk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LGQBoJMAE6y827c6/eXNCzwPLqEnuos83JMP9w2oZVLmEeh4cKiWXbN+1UrHb4DaBSYdsWPfby7P5sj8WMgOkMan+pcgjp4cfhDRowEbVDTuxUF18Bvnli9ccXsmHh7hV3Rvv2LZ1MU4NJLqScSQ32r4/ltRSlwOUlqaUNkigms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ljfv9Qev; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1772878080; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-	bh=Ee8lmlga3uDFZLOnTMgosbonAxDSBeCsgWYca7ZXZNI=;
-	b=ljfv9Qevd3P7u3pCsTQAPgHDIiMcJ7a4u1XzMjuwd8hED3O1/HHh3RkSE6yCYXvvMpXgzlf/lal/sjdALS74ifVnGybZOUes8q1DdbyeiuKY2Wg2eEOTVl0nZh7PBF1l/899zeWjeW1dYS6USFseYMAMHd39DlaS5+2NWQObBrk=
-Received: from localhost(mailfrom:alibuda@linux.alibaba.com fp:SMTPD_---0X-PTgJf_1772878079 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sat, 07 Mar 2026 18:08:00 +0800
-Date: Sat, 7 Mar 2026 18:07:59 +0800
-From: "D. Wythe" <alibuda@linux.alibaba.com    >
-To: Mahanta Jambigi <mjambigi@linux.ibm.com>
-Cc: "D. Wythe" <alibuda@linux.alibaba.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dust Li <dust.li@linux.alibaba.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Sidraya Jayagond <sidraya@linux.ibm.com>,
-	Wenjia Zhang <wenjia@linux.ibm.com>,
-	Simon Horman <horms@kernel.org>, Tony Lu <tonylu@linux.alibaba.com>,
-	Wen Gu <guwen@linux.alibaba.com>, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
-	netdev@vger.kernel.org, oliver.yang@linux.alibaba.com,
-	pasic@linux.ibm.com
-Subject: Re: [PATCH net-next v3] net/smc: transition to RDMA core CQ pooling
-Message-ID: <20260307100759.GA71792@j66a10360.sqa.eu95>
-References: <20260305022323.96125-1-alibuda@linux.alibaba.com>
- <bdcd2405-93d1-4b4c-91ae-174b577e5734@linux.ibm.com>
+	s=arc-20240116; t=1772939095; c=relaxed/simple;
+	bh=7GjgvqVmSACa2QowM59qB6+NnCtrR+bGLR+xYbbygzc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OXVxpLJ2VRabeRSOAb149rsFaM42uqFbz3dgMdGKt82zw5OGSTzoOWxBFdSbhGu+kAhM3yJM6NC5XHM3kVvuWfJL7d14znj0/uMroAY0jKyIgefGQ2bhpzu7/BE1eixvWP9LKmmbb/J9v2TAJoREj+w2v1VoVvkm56YnYJNup6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iIZCtYRt; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6282h3Tk3538549;
+	Sun, 8 Mar 2026 03:04:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=29A7ERB6mj0LdZcejFrOTdbEPOrSYGSSa1q6uO6uO
+	GQ=; b=iIZCtYRtKOLxLgq9tJ4+j3EyrDaN6jTJ18NsRpoJKpQ0X60fHwmhcILaY
+	RQJtY0KVTB9sCnlgVkP8vavcxWrpK+D7Lj+xzaXpzSlnV2MNSoPiq1zvvN2w7uAT
+	T0MHdvPs6yG8WnHpWWmiA4177fN//HXinP5BDwBpRY7cyLBA0sqMxzqpCtNOayLf
+	NTciKmQLKV3C1okGo4gk+YORqgZRazlAluqn+BFk1fRUGxjNHBcJ9wpef9yE/kkE
+	e/HrTGONzah/fL8JtgkM/DlMU4J/41ilLczwu74p/2IrWUAB3v9g2hF2uG1akJAU
+	1HjskIPP7amzUHcDvO/sViw9ZZyng==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4crcyw2jte-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 08 Mar 2026 03:04:44 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 6281JNik015608;
+	Sun, 8 Mar 2026 03:04:43 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4crybn07fd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 08 Mar 2026 03:04:43 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62834gco1901130
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 8 Mar 2026 03:04:42 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6C5CF58058;
+	Sun,  8 Mar 2026 03:04:42 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A322658057;
+	Sun,  8 Mar 2026 03:04:41 +0000 (GMT)
+Received: from 9.60.13.83 (unknown [9.60.13.83])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Sun,  8 Mar 2026 03:04:41 +0000 (GMT)
+From: Douglas Freimuth <freimuth@linux.ibm.com>
+To: borntraeger@linux.ibm.com, imbrenda@linux.ibm.com, frankja@linux.ibm.com,
+        david@kernel.org, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, svens@linux.ibm.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: mjrosato@linux.ibm.com, freimuth@linux.ibm.com
+Subject: [PATCH v1 0/3] KVM: s390: Introducing kvm_arch_set_irq_inatomic Fast Inject 
+Date: Sun,  8 Mar 2026 04:04:35 +0100
+Message-ID: <20260308030438.88580-1-freimuth@linux.ibm.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bdcd2405-93d1-4b4c-91ae-174b577e5734@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Rspamd-Queue-Id: 6064222AEFA
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzA4MDAyNiBTYWx0ZWRfX4ehCHuUWWbb7
+ NeWiys51AWs7OqQyDyJhiQxClZD+5V4eqe76xcszCMBpQw652LqA5+Le3o/mExdbrNSOOTdRRKC
+ ZqwIvjRz8U6nkCe+oPpxPiDNYvApHatne063UASaZC3N88eF84TD8l8y6PkwyE97Az9uksPr8Tc
+ kz0sQQGhTy5TsMPgzaLTdITAtPRnzjdB2mUOsRc5/a23MN9jGJJJuuiTF/RuzBi3Np0w0EV/yww
+ hw9b/NBFE/jtxFSVxpfV39TP2lj0M64VoVMlvPdK4if/5HBYSZEpSamgmYjDOU21K7JPrFIOO63
+ sm8hAMagqp3Yh9VIyMGNdegy10o9u+X3Jzu0psrYwH4pWOpMCEL/3i9HuUtE8WN8h6VP30cXpJ2
+ Vwgo2vJiGfgaRpZRfdAGJOZcbphntT+k4YCtRHOgM+BVxm2IcS8cPCKoDGAg78slPLmbHYIckE3
+ GQloDQ9hRhWo21lGLfA==
+X-Authority-Analysis: v=2.4 cv=QaVrf8bv c=1 sm=1 tr=0 ts=69ace74c cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=U7nrCbtTmkRpXpFmAIza:22 a=wD_hlsRMxFZvc_XlLqQA:9
+X-Proofpoint-GUID: 9cei63pLjFDzkHpODIUkXDN0rofQZA7c
+X-Proofpoint-ORIG-GUID: 9cei63pLjFDzkHpODIUkXDN0rofQZA7c
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-08_01,2026-03-06_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 spamscore=0 impostorscore=0 clxscore=1011 adultscore=0
+ bulkscore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603080026
+X-Rspamd-Queue-Id: 583D522E624
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-9.16 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	SUBJECT_ENDS_SPACES(0.50)[];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
+	TAGGED_FROM(0.00)[bounces-16985-lists,linux-s390=lfdr.de];
+	FROM_NEQ_ENVFROM(0.00)[freimuth@linux.ibm.com,linux-s390@vger.kernel.org];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-16982-lists,linux-s390=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[alibuda@linux.alibaba.com,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
-	NEURAL_HAM(-0.00)[-0.974];
-	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	NEURAL_HAM(-0.00)[-0.989];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	TO_DN_NONE(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Action: no action
 
-On Fri, Mar 06, 2026 at 05:37:49PM +0530, Mahanta Jambigi wrote:
-> 
-> 
-> On 05/03/26 7:53 am, D. Wythe wrote:
-> > The current SMC-R implementation relies on global per-device CQs
-> > and manual polling within tasklets, which introduces severe
-> > scalability bottlenecks due to global lock contention and tasklet
-> > scheduling overhead, resulting in poor performance as concurrency
-> > increases.
-> > 
-> > Refactor the completion handling to utilize the ib_cqe API and
-> > standard RDMA core CQ pooling. This transition provides several key
-> > advantages:
-> > 
-> > 1. Multi-CQ: Shift from a single shared per-device CQ to multiple
-> > link-specific CQs via the CQ pool. This allows completion processing
-> > to be parallelized across multiple CPU cores, effectively eliminating
-> > the global CQ bottleneck.
-> > 
-> > 2. Leverage DIM: Utilizing the standard CQ pool with IB_POLL_SOFTIRQ
-> > enables Dynamic Interrupt Moderation from the RDMA core, optimizing
-> > interrupt frequency and reducing CPU load under high pressure.
-> > 
-> > 3. O(1) Context Retrieval: Replaces the expensive wr_id based lookup
-> > logic (e.g., smc_wr_tx_find_pending_index) with direct context retrieval
-> > using container_of() on the embedded ib_cqe.
-> > 
-> > 4. Code Simplification: This refactoring results in a reduction of
-> > ~150 lines of code. It removes redundant sequence tracking, complex lookup
-> > helpers, and manual CQ management, significantly improving maintainability.
-> > 
-> > Performance Test: redis-benchmark with max 32 connections per QP
-> > Data format: Requests Per Second (RPS), Percentage in brackets
-> > represents the gain/loss compared to TCP.
-> > 
-> > | Clients | TCP      | SMC (original)      | SMC (cq_pool)       |
-> > |---------|----------|---------------------|---------------------|
-> > | c = 1   | 24449    | 31172  (+27%)       | 34039  (+39%)       |
-> > | c = 2   | 46420    | 53216  (+14%)       | 64391  (+38%)       |
-> > | c = 16  | 159673   | 83668  (-48%)  <--  | 216947 (+36%)       |
-> > | c = 32  | 164956   | 97631  (-41%)  <--  | 249376 (+51%)       |
-> > | c = 64  | 166322   | 118192 (-29%)  <--  | 249488 (+50%)       |
-> > | c = 128 | 167700   | 121497 (-27%)  <--  | 249480 (+48%)       |
-> > | c = 256 | 175021   | 146109 (-16%)  <--  | 240384 (+37%)       |
-> > | c = 512 | 168987   | 101479 (-40%)  <--  | 226634 (+34%)       |
-> > 
-> > The results demonstrate that this optimization effectively resolves the
-> > scalability bottleneck, with RPS increasing by over 110% at c=64
-> > compared to the original implementation.
-> 
-> Since your performance results look really-really nice on x86 but ours
-> show severe degradations on s390x, one way forward could be adding the
-> cq_poll mechanism but also keeping the existing mechanism for now
-> (because the things are right now it works better on s390x) and making
-> it either runtime or compile time configurable which of the both is
-> going to be used.
-> 
-> Alternatively, we could work together making the cq_poll mechanism does
-> not introduce a regression to s390x (ideally improve performance for
-> s390x as well). But it that case we would like to have this change
-> deferred until we find a way to make the regression disappear.
-> 
-> I am aware that the first option, co-existence, would kill the
-> simplification aspect of this and instead introduce added complexity.
-> But we are talking about a major regression here on one end, and major
-> improvements on the other end, so it might be still worth it. In any
-> case, we are very motivated to eventually get rid of the old mechanism,
-> provided significant performance regressions can be avoided.
+This series of three patches enables a non-blocking path for irqfd injection on s390
+via kvm_arch_set_irq_inatomic(). Before these changes, kvm_arch_set_irq_inatomic()
+would just return -EWOULDBLOCK and place all interrupts on the global
+work queue, which must subsequently be processed by a different
+thread. This series of patches implements an s390 version of inatomic
+and is relevant to virtio-blk and virtio-net and was tested against
+virtio-pci and virtio-ccw. To properly test this kernel series with virtio-pci,
+a QEMU that includes the 's390x/pci: set kvm_msi_via_irqfd_allowed' fix is needed.
+Statistical counters have been added to enable analysis of irq injection on
+the fast path and slow path including io_390_inatomic,
+io_flic_inject_airq, io_set_adapter_int and io_390_inatomic_adapter_masked. And
+counters have been added to analyze map/unmap of the adapter_indicator
+pages in non-Secure Execution environments and to track fencing of Fast
+Inject in Secure Execution environments.
 
-I'm in no rush to push this, since a significant performance degradation
-was observed on s390x, I'll withdraw this patch until the issue is
-resolved, and it would be great if you could investigate what specifically
-happened on s390x.
+The inatomic fast path cannot lose control since it is running with
+interrupts disabled. This meant making the following changes that exist on the slow
+path today. First, the adapter_indicators page needs to be mapped since it
+is accessed with interrupts disabled, so we added map/unmap
+functions. Second, access to shared resources between the fast and slow paths
+needed to be changed from mutex and semaphores to a spin_lock. Finally, the memory
+allocation on the slow path utilizes GFP_KERNEL_ACCOUNT but we had to
+implement the fast path with GFP_ATOMIC allocation. Each of these
+enhancements were required to prevent blocking on the fast inject path.
 
-D. Wythe
+Patch 1 enables fencing of Fast Injection in Secure Execution
+environments by not mapping adapter indicator pages and relying on the
+path of execution available prior to this patch.
+
+
+Douglas Freimuth (3):
+  Add map/unmap ioctl and clean mappings post-guest
+  Enable adapter_indicators_set to use mapped pages
+  Introducing kvm_arch_set_irq_inatomic fast inject
+
+ arch/s390/include/asm/kvm_host.h |  11 +-
+ arch/s390/kvm/interrupt.c        | 365 +++++++++++++++++++++++++------
+ arch/s390/kvm/kvm-s390.c         |  26 ++-
+ arch/s390/kvm/kvm-s390.h         |   3 +-
+ 4 files changed, 337 insertions(+), 68 deletions(-)
+
+-- 
+2.52.0
 
 
