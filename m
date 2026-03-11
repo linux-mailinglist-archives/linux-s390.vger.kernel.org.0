@@ -1,78 +1,78 @@
-Return-Path: <linux-s390+bounces-17201-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-17198-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uAeNNcBvsWlVvAIAu9opvQ
-	(envelope-from <linux-s390+bounces-17201-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 11 Mar 2026 14:36:00 +0100
+	id MDUQDettsWlVvAIAu9opvQ
+	(envelope-from <linux-s390+bounces-17198-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 11 Mar 2026 14:28:11 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 503F0264A51
-	for <lists+linux-s390@lfdr.de>; Wed, 11 Mar 2026 14:36:00 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id CACEA26484B
+	for <lists+linux-s390@lfdr.de>; Wed, 11 Mar 2026 14:28:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B6C08324AEBF
-	for <lists+linux-s390@lfdr.de>; Wed, 11 Mar 2026 13:28:10 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 248813039DC9
+	for <lists+linux-s390@lfdr.de>; Wed, 11 Mar 2026 13:27:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFADB320A0B;
-	Wed, 11 Mar 2026 13:27:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9360931E82D;
+	Wed, 11 Mar 2026 13:27:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LWi9Gm63"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ODLQod8E"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9A631AF1B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B89923D7F0;
 	Wed, 11 Mar 2026 13:27:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773235679; cv=none; b=l1YbUfU009Auw3AwOjxNrojG2st4aF+3ACGQHhiMRsRFoKTs/5igl61qKyGNda3Rs8debS5kNIhXY+wOBO6P60QRINKU/MDcCTGXt50Go4cDfUIfi+Owa52eVDDWVX6BPX5zqG/qKQjGJECAdgvG2A82QPF5QHQ2zAR8BhlLdpA=
+	t=1773235678; cv=none; b=oEiuHm+HdR19lXg4RXngLJ+Mv9BWt6cJZnLsJlbSMlaELgnazzfGr9ozkgDqDKAMqF59p1nI9Sq8sicLHNaB0VIkLjpv7TyoMogcdJKU0Z5Y3c6RjRzrshjS455G6lAWGFc9xYIi0Cj/Er7u5mFc8fhRkuAt3wR1y34HV6iSCdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773235679; c=relaxed/simple;
-	bh=ojkmc1O/iVrw5QvN5vOI5XGosJie2J9egrshtD19wRU=;
+	s=arc-20240116; t=1773235678; c=relaxed/simple;
+	bh=pgVfp++xnaWG3o5SBaf3zcDumRCcFiH3KiRg4ok919g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KMqH+e9ySduSoxbxnBK1zbLtbtmvuRVAQfay07l5v/HIBjPY9D6hZ4Rpfi6oANfOdDPpXSZ0fNo3FJ7bSrFOSjckIyaY6DsIem3qIQcnRzQJzRrXJk60La4CXi/B05ObJ/5P3/BMoZLHGSf7XLjwRrTUPPqzN/FXJpvkh2/nv7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LWi9Gm63; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=LsXkDw9ii0iTpOSnPXGPlR4aWcWR83CDwfcCYSc3nNCOTICFdncfpTHGP/6+wQuwSFTJFBZHZ8PwO75alILZCRCyAWB7UjUBClCvs9DfdPOaDbAj0RGm78+wFLRTIw5RC3yNBJP0Y+ZmHARKuQlDgnKSTLmJGjjHHEo8fmLSW1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ODLQod8E; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62ALJhm51237000;
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62B8u4bn056775;
 	Wed, 11 Mar 2026 13:27:56 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:sender:subject:to; s=pp1; bh=v12UnWacSu
-	kRAwpPiLST1JBJ6l9mHvVtQYE5aNqJOKo=; b=LWi9Gm63XS10kscWJgQGn6ny7O
-	+mj/Lel44sLQeBUwIqwP6AOv9JBMTqvqn1TY/UJEdl93/2w+IrIvspNcgFFRKdfK
-	L65pYtBFKQFo1ibpHf7PCVxEGk+Lgj1X1edT4mIDQDYK51W9iswom0gFLR0GKUbO
-	SrL5ZU9NGmu62UuG7xQJOo+ozAo0Afuf0Pc+a+d71q5r4k8f3KKYEXXTcgIEGkj4
-	uHcFwLuIpPV4EINVj4hkP0U9nbbFVjugTtnHXvEYIiOXdcNzD0Vy27tO7YtYWYUM
-	QGah12QgNFiDWeG11wQrH6jHX0OesXGAueMo91CbgXY6mHKyDDeRm4sVc0Sg==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4crd1mqgpe-1
+	:mime-version:references:sender:subject:to; s=pp1; bh=dMPhgHcSt3
+	QLfSzVOvCxD77HfbBQXLqvXvAivL6lOh8=; b=ODLQod8Eya7x0x06kVHMM4aHBt
+	MkEozzSv+Onpuw3X40a6OUUqL0gqAp6jif/ejsx2h052jKv/y+6wDr9Au3Y179F0
+	ybPObnzDdeyXalzsN2Vu4Zb4FZTQptr+bVnTA3dSs6AFLdy9ytL3Q4abAareitQ5
+	7fkVvKWPDmTP8d39H0v8nmVo8RI3GSsbRUtKqoXKIdugSXs+tTheoldYOYKq2CB6
+	dA8Vmfs8oJDaEVdSdkgT7pMOwI4vAX9MPG5sB14GZKqBLtglfNC/aQPUtlg634qa
+	9TVOw9cVwuX4eWZtHDsF2vML+KXkryKYMOUbXgyYKxLVnu0JZNkqZYxpN30A==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4crcvrfjvb-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Wed, 11 Mar 2026 13:27:55 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62BDCOQW025052;
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62BC1RQK023007;
 	Wed, 11 Mar 2026 13:27:55 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cs0jk5duc-1
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ct8ng6hry-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 11 Mar 2026 13:27:54 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62BDRpFu17039764
+	Wed, 11 Mar 2026 13:27:55 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62BDRpBi39322056
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Wed, 11 Mar 2026 13:27:51 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 014552004E;
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 087D82004D;
 	Wed, 11 Mar 2026 13:27:51 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E10CB2004B;
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E9B132004B;
 	Wed, 11 Mar 2026 13:27:50 +0000 (GMT)
 Received: from p1gen4-pw042f0m (unknown [9.52.223.163])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
 	Wed, 11 Mar 2026 13:27:50 +0000 (GMT)
 Received: from bblock by p1gen4-pw042f0m with local (Exim 4.99.1)
 	(envelope-from <bblock@linux.ibm.com>)
-	id 1w0JbK-00000008V4R-2mAv;
+	id 1w0JbK-00000008V4T-2sp7;
 	Wed, 11 Mar 2026 14:27:50 +0100
 From: Benjamin Block <bblock@linux.ibm.com>
 To: Alexander Gordeev <agordeev@linux.ibm.com>,
@@ -93,9 +93,9 @@ Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
         Ionut Nechita <ionut.nechita@windriver.com>,
         Farhan Ali <alifm@linux.ibm.com>,
         Benjamin Block <bblock@linux.ibm.com>
-Subject: [PATCH v2 1/3] PCI: Move declaration of pci_rescan_remove_lock into public pci.h
-Date: Wed, 11 Mar 2026 14:27:48 +0100
-Message-ID: <e9f46b25e5b47ec1d8fdca33b10346bc6de23445.1773235561.git.bblock@linux.ibm.com>
+Subject: [PATCH v2 2/3] PCI: Provide lock guard for pci_rescan_remove_lock
+Date: Wed, 11 Mar 2026 14:27:49 +0100
+Message-ID: <c55e954604dcf728dfc93ed0adff102f2a2469e9.1773235561.git.bblock@linux.ibm.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1773235561.git.bblock@linux.ibm.com>
 References: <cover.1773235561.git.bblock@linux.ibm.com>
@@ -110,36 +110,37 @@ Content-Transfer-Encoding: 8bit
 Sender: Benjamin Block <bblock@linux.ibm.com>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=ds3Wylg4 c=1 sm=1 tr=0 ts=69b16ddc cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzExMDExMCBTYWx0ZWRfXwq/yzkw8sw02
+ pODyLK6G2C8joPdj1Yoq+HwTay59zBdV2EZpG9P1ujeX47v666tCCtSWvz+s23PDkpaccS42wcu
+ rFzPuIfO+cgxhdG+7mH/jwxgDdx2eruZJ4TYJGqOntNozAJumETfeK/bwmpyjTf1KlO/SWM+vvC
+ dwxxdHyo7xV1ZICwh/0bejXIi1xLhtwksIX+9F8xLh0Gc6hBHF7XVebtltU+VY40OqvvGm0IzQx
+ QZn9Wau532Au607Y8gyte9z/GBaH1D1HAWG/45qqo+Sgu5C/l4vsb0SYNYTjYjNboluOJ/rpokd
+ OdNuw9MliDqMWi4YkOX/kvqMGUP3/sVIS6x+7JDRmVBeEuq5y61Bsla2TZYV340RyHtf6yyVMSL
+ AJBiuBMghEC9rDJl3jb6ZmFA46HN8pe4F4kUCfATH4CMfdlaELHmgRRd2rE43xekK9NEPgT03XI
+ oQsG5Z58oxKH1CnoQtg==
+X-Proofpoint-GUID: mFzvpGUggbl7ooKcmekISc9utmEaT-Lq
+X-Proofpoint-ORIG-GUID: gyGfgt7S7_DLNGek_P5w5M9Y4gfSA0yc
+X-Authority-Analysis: v=2.4 cv=QoFTHFyd c=1 sm=1 tr=0 ts=69b16ddc cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
  a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8 a=vf2HUNMP9xvVswJDcwYA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzExMDExMCBTYWx0ZWRfXyy9F7LfA7Pnj
- aj6AeYxkyNugVf+FoSjkZnxSwk3EfEuXZg6IksNlwiP2huW87W37C2+N/gTK+3pqlaaK9goChBP
- MnStgtfPZLEbdCln9t29FIbsxxm+cP/Kg8gTkxiukin2PQIZ7ITH39/1S7QNoYmQni4C1VAos01
- Z2W8ucs9Za3EQbHjESCb5a8RD2ARqwGO9UuosT4q3tXNx4qsC3QnZegP9qxVA0bVz7pHi7MLITH
- XttxFeO4hM09V7vt/PPuAskw8RdjvEvwSc4uI5gX+awj6AJgoqytltQki3wjgkyACHPTtMgOZju
- QDs55JpG9+mCKC/2P2QCCW06gxD1CNX9nRE1VBEHmunVP7F5C1KESBFXpR5QEMAXnwFipPgsOm0
- Gcqb3rna4uv0vtQM0xAeGfzkqB5dnqiCi0w08eW5nxYoz9Cui9JXG7DyD/sSPZsyc4GoBEj2oSf
- LcYu8vsLL1rft+soLyw==
-X-Proofpoint-GUID: Or0kII9nvfl59S-E7NSU-dbSBoug22TV
-X-Proofpoint-ORIG-GUID: GkzOiCd3X2MmloVmJ8jdpA6GODkboARw
+ a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8 a=qAR2Z3AMSIpdRBh0OscA:9
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-03-11_01,2026-03-09_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 phishscore=0 clxscore=1015 impostorscore=0 suspectscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 adultscore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603110110
-X-Rspamd-Queue-Id: 503F0264A51
+ impostorscore=0 spamscore=0 priorityscore=1501 phishscore=0
+ lowpriorityscore=0 adultscore=0 clxscore=1015 malwarescore=0 suspectscore=0
+ bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.22.0-2602130000
+ definitions=main-2603110110
+X-Rspamd-Queue-Id: CACEA26484B
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -147,7 +148,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	HAS_ORG_HEADER(0.00)[];
 	FREEMAIL_CC(0.00)[linux.ibm.com,vger.kernel.org,yahoo.com,windriver.com];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-17201-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-17198-lists,linux-s390=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	RCPT_COUNT_TWELVE(0.00)[20];
 	TO_DN_ALL(0.00)[];
@@ -160,76 +161,46 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_COUNT_TWELVE(0.00)[12];
 	TAGGED_RCPT(0.00)[linux-s390];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,linux.ibm.com:mid]
 X-Rspamd-Action: no action
 
-So far it is possible to use and call the functions
-pci_lock_rescan_remove() and pci_unlock_rescan_remove() from any PCI
-code, including modules and architecture code; but the lock variable
-`pci_rescan_remove_lock` itself is private to objects residing in
-`drivers/pci/` via the header `drivers/pci/pci.h`.
+Make it possible to use guard() or scoped_guard() to lock, and
+automatically unlock `pci_rescan_remove_lock`.
 
-This makes it possible to use the lock - lock it, unlock it - from
-anywhere, but it is not possible to use lockdep annotations such as
-lockdep_assert_held(), or sparse annotations such as __must_hold() in
-modules or architecture code for PCI to make the usage more safe.
-
-Since it is useful for `pci_rescan_remove_lock` to have such
-annotations, move the variable declaration into `include/linux/pci.h`.
+Since the actual mutex `pci_rescan_remove_lock` is always supposed to be
+taken and released using the functions pci_lock_rescan_remove() and
+pci_unlock_rescan_remove() it is not possible to simply use the already
+existing guards for `struct mutex`. Instead define a new guard
+`pci_rescan_remove` that will also call the functions in question, but
+is usable via guard() or scoped_guard().
 
 Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
 ---
- drivers/pci/pci.h   | 2 --
- drivers/pci/probe.c | 1 +
- include/linux/pci.h | 2 ++
- 3 files changed, 3 insertions(+), 2 deletions(-)
+ include/linux/pci.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 13d998fbacce..6d611523420f 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -110,8 +110,6 @@ struct pcie_tlp_log;
- extern const unsigned char pcie_link_speed[];
- extern bool pci_early_dump;
- 
--extern struct mutex pci_rescan_remove_lock;
--
- bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
- bool pcie_cap_has_lnkctl2(const struct pci_dev *dev);
- bool pcie_cap_has_rtctl(const struct pci_dev *dev);
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index bccc7a4bdd79..e5b12878e972 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -3509,6 +3509,7 @@ EXPORT_SYMBOL_GPL(pci_rescan_bus);
-  * routines should always be executed under this mutex.
-  */
- DEFINE_MUTEX(pci_rescan_remove_lock);
-+EXPORT_SYMBOL_GPL(pci_rescan_remove_lock);
- 
- void pci_lock_rescan_remove(void)
- {
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 1c270f1d5123..fd7a962a64ef 100644
+index fd7a962a64ef..4c41b5a2c90a 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
-@@ -39,6 +39,7 @@
- #include <linux/io.h>
- #include <linux/resource_ext.h>
+@@ -41,6 +41,7 @@
  #include <linux/msi_api.h>
-+#include <linux/mutex.h>
+ #include <linux/mutex.h>
  #include <uapi/linux/pci.h>
++#include <linux/cleanup.h>
  
  #include <linux/pci_ids.h>
-@@ -1533,6 +1534,7 @@ void set_pcie_hotplug_bridge(struct pci_dev *pdev);
  
- /* Functions for PCI Hotplug drivers to use */
- unsigned int pci_rescan_bus(struct pci_bus *bus);
-+extern struct mutex pci_rescan_remove_lock;
+@@ -1537,6 +1538,8 @@ unsigned int pci_rescan_bus(struct pci_bus *bus);
+ extern struct mutex pci_rescan_remove_lock;
  void pci_lock_rescan_remove(void);
  void pci_unlock_rescan_remove(void);
++DEFINE_LOCK_GUARD_0(pci_rescan_remove, pci_lock_rescan_remove(),
++		    pci_unlock_rescan_remove());
  
+ /* Vital Product Data routines */
+ ssize_t pci_read_vpd(struct pci_dev *dev, loff_t pos, size_t count, void *buf);
 -- 
 2.53.0
 
