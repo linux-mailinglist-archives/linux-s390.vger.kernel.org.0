@@ -1,173 +1,143 @@
-Return-Path: <linux-s390+bounces-17213-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-17214-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qC2cHwK6sWmxEwAAu9opvQ
-	(envelope-from <linux-s390+bounces-17213-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 11 Mar 2026 19:52:50 +0100
+	id YM9xIjq7sWmxEwAAu9opvQ
+	(envelope-from <linux-s390+bounces-17214-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 11 Mar 2026 19:58:02 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8202268E77
-	for <lists+linux-s390@lfdr.de>; Wed, 11 Mar 2026 19:52:49 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A107268F38
+	for <lists+linux-s390@lfdr.de>; Wed, 11 Mar 2026 19:58:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 741E83019807
-	for <lists+linux-s390@lfdr.de>; Wed, 11 Mar 2026 18:52:01 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8510030292F1
+	for <lists+linux-s390@lfdr.de>; Wed, 11 Mar 2026 18:58:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14D3E2E88BD;
-	Wed, 11 Mar 2026 18:52:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 400143EAC7E;
+	Wed, 11 Mar 2026 18:57:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="p6buk0Lg"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="lwNHqHof"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E539429405;
-	Wed, 11 Mar 2026 18:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0222F371892;
+	Wed, 11 Mar 2026 18:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773255120; cv=none; b=R3oddz9Z18Soaepd4/9sUg1WO51nMGBcWtzvsd4n32z4IEhE2nrkdUiNuuuf4tVfpQC56QErwRbQS9p6jtxQ1nL5DNsLWzzaiFyIjaNm+sNhX5QBFLPD3l0AaQErwRc1ix17SYA9gJJTIgnZvyGg2jelINGtsKQD3/7Vf8CRQYU=
+	t=1773255477; cv=none; b=YDNfCOO8wwfIqNvRVTKhCEOFVpNTSJ1FVjMlALgfnKn2U11PHYL3Bu1ytge1j+yRzhSflJzAbKbFa10AbrMRkZfBteDTFuye349I9HFRg1dfRLg9YudK2tS7A5dIevrIxhKtLX596K4j03hyb/C35FpL/AhfJFoCHQ7G06ucjuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773255120; c=relaxed/simple;
-	bh=PwcZtP0WHqNaz48bDl9VTJD2CVjV/nRLjC3XExO0+tk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sJN8ndaegOxxYZu4fg/f6JB7WQTX5nYrxdBJ9iPjHIPxChOUkYqCHi9Ree9vOcs5/RA7BUZ5Xv66M7K/FWbiJEKqq2pMknJ9BQ45AkapsLnAvKUlccsCTu29pU9OvVUBcFWXbheThEr9m/z56fK51zVcBMWXfzddNTG52lYK3dA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=p6buk0Lg; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62BCb2FF1561657;
-	Wed, 11 Mar 2026 18:51:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=mq3X7Q
-	mX8t2oW3YX9InUVhX62CwI5Y9QBx1rgaG/Q2w=; b=p6buk0LgDtaGb3N8f055vf
-	MGdYFqIj9g786wwBzUjEHhMMFYvWQkdyX2ANVl4Az9Pd2vNHGYbrzoZytXyQKqAK
-	iyaNOS/NSSqvSjrBYDLIBfYX/vfor0km5U3EqYOzTLCL6qnM5BUDbyRgdtm1ePCS
-	QOahQHYFO5k3E+SRqTC2Flo5ydA30OH8cU3RbNzQSTSXPVS1hC3tElyJj2BTKVGN
-	zTGKECCHaCUrPtVhPD87drpPBOsvnvFN0KzqNsRkng+0kUzkSHzcI7q1N9UYUXwO
-	J3WeebsEMf2h/7oM8naq5+LD4uJSuSh+0F8smFHt6Qx06Et6RaSR05vPxkN3OFzQ
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4crcvmhk2m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 11 Mar 2026 18:51:50 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62BG47fn029356;
-	Wed, 11 Mar 2026 18:51:49 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4csp6uubkh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 11 Mar 2026 18:51:49 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62BIplgr40501634
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 11 Mar 2026 18:51:48 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CA40A5805B;
-	Wed, 11 Mar 2026 18:51:47 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 81FFD5805C;
-	Wed, 11 Mar 2026 18:51:46 +0000 (GMT)
-Received: from [9.61.244.205] (unknown [9.61.244.205])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 11 Mar 2026 18:51:46 +0000 (GMT)
-Message-ID: <c3abc18e-ebcc-4233-931d-c8f58ce04d28@linux.ibm.com>
-Date: Wed, 11 Mar 2026 11:51:44 -0700
+	s=arc-20240116; t=1773255477; c=relaxed/simple;
+	bh=RIP4VTL8ZKfCAED/llWzV24bhb3+EBezOHbYfQlNNVw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=JXln7/F1KaLkPWddVMdeSqNh5bnrGxSL3R7eaMHnZUe98kJlWVSjIxjcpx+Sox6HmMCYI2d0HDh2VYPo5JTM46F4sPdrxleze6XXsFqnaoIOBT/stK3DAiqpnhCV/bivhhArnLIA3jmpivar0JFeoph+ydYhbx/zip+F9JmKW8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=lwNHqHof; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4B60C4CEF7;
+	Wed, 11 Mar 2026 18:57:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1773255476;
+	bh=RIP4VTL8ZKfCAED/llWzV24bhb3+EBezOHbYfQlNNVw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lwNHqHofCZymV9ZwzL4O4QC3oCCorqSKfgbbui0vSPfhppxGKPRL/IJ69bcF8P337
+	 vhDG95oCrnrO9ZlV2DZHEmUO88ZgVNVnKPQNiPvM1Z9VRi+eMXmLsJiRCJ8qnumnHG
+	 0HNrR7TfydlMZ9E+xCePC4BRnc2O1ZREJXn9QWnU=
+Date: Wed, 11 Mar 2026 11:57:54 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Richard Henderson <richard.henderson@linaro.org>, Matt Turner
+ <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Madhavan Srinivasan <maddy@linux.ibm.com>, Michael
+ Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Paul Walmsley
+ <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Heiko Carstens
+ <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Christian Borntraeger
+ <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>,
+ "David S. Miller" <davem@davemloft.net>, Andreas Larsson
+ <andreas@gaisler.com>, Richard Weinberger <richard@nod.at>, Anton Ivanov
+ <anton.ivanov@cambridgegreys.com>, Johannes Berg
+ <johannes@sipsolutions.net>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Herbert Xu <herbert@gondor.apana.org.au>, Dan Williams
+ <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>, David Sterba
+ <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>, Song Liu
+ <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>, Li Nan
+ <linan122@huawei.com>, "Theodore Ts'o" <tytso@mit.edu>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, linux-alpha@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+ linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
+Subject: Re: cleanup the RAID5 XOR library v2
+Message-Id: <20260311115754.ca2206d1428c49c3bd6e93cf@linux-foundation.org>
+In-Reply-To: <20260311070416.972667-1-hch@lst.de>
+References: <20260311070416.972667-1-hch@lst.de>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 4/9] PCI: Add additional checks for flr reset
-To: Benjamin Block <bblock@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org, lukas@wunner.de,
-        alex@shazbot.org, clg@redhat.com, stable@vger.kernel.org,
-        kbusch@kernel.org, schnelle@linux.ibm.com, mjrosato@linux.ibm.com
-References: <20260302203325.3826-1-alifm@linux.ibm.com>
- <20260302203325.3826-5-alifm@linux.ibm.com>
- <20260311152407.GB2161595@p1gen4-pw042f0m>
-Content-Language: en-US
-From: Farhan Ali <alifm@linux.ibm.com>
-In-Reply-To: <20260311152407.GB2161595@p1gen4-pw042f0m>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: MLnCtPjEp6005SyXRGfNaqT0tbUxVybK
-X-Proofpoint-ORIG-GUID: MLnCtPjEp6005SyXRGfNaqT0tbUxVybK
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzExMDE1NyBTYWx0ZWRfXxOn6pBw+rZtw
- LJ6krFLDpjNzcmm0z6jndOMEKhDatvyEqq8BuHeWZLdD3mx6pGG+IFrBu9o4krb6SCwY765JX8T
- 6pP7GNku50i2zDYfucuxO4ZbdCSzeT192GN+P9PVHfSJUATs1af/wwIHRiT80u3pCIXtF4pZVLH
- ZlKqAjFWe266u4MvrX5BdlUifdF8pvite8x0Wu1tVCRjSwa6rIh7ZNSLAfZaRRiDx+rqZWJDbpX
- gNJCpDFS9MjKfuKg12pWydf+CUUiz1rHfEJr6QEE0AnklzhavIL6OaqS4RYRgl4YiwO53NkLpJ0
- 0pII6bjtCmzPLQCKGEGgLIaVjUSwPpDYgNWvNijubvaLL3GTMbAgbu4FfEcfdh2k8uYKJnUIPuZ
- BQ9bFmtxtlo8BeW6O9IgdhPoIzsXTBV9QfKglt4Azv+cYbGcGrkfsySHAaNgkubA4h9min/cs4D
- HKYFe7tUAvvJ6TA7cVA==
-X-Authority-Analysis: v=2.4 cv=B5q0EetM c=1 sm=1 tr=0 ts=69b1b9c6 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=mE1mmq-WpfiY_7YR16UA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-11_02,2026-03-09_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 phishscore=0 adultscore=0 lowpriorityscore=0 bulkscore=0
- priorityscore=1501 spamscore=0 clxscore=1015 impostorscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603110157
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	MV_CASE(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[linux-foundation.org:s=korg];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	TAGGED_FROM(0.00)[bounces-17213-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-17214-lists,linux-s390=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[linaro.org,gmail.com,armlinux.org.uk,arm.com,kernel.org,xen0n.name,linux.ibm.com,ellerman.id.au,dabbelt.com,eecs.berkeley.edu,ghiti.fr,davemloft.net,gaisler.com,nod.at,cambridgegreys.com,sipsolutions.net,redhat.com,alien8.de,linux.intel.com,zytor.com,gondor.apana.org.au,intel.com,fb.com,suse.com,arndb.de,fnnas.com,huawei.com,mit.edu,zx2c4.com,vger.kernel.org,lists.infradead.org,lists.linux.dev,lists.ozlabs.org];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	DKIM_TRACE(0.00)[linux-foundation.org:+];
+	MIME_TRACE(0.00)[0:+];
+	DMARC_NA(0.00)[linux-foundation.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[alifm@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[56];
 	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[akpm@linux-foundation.org,linux-s390@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: D8202268E77
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux-foundation.org:dkim,linux-foundation.org:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 4A107268F38
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+On Wed, 11 Mar 2026 08:03:32 +0100 Christoph Hellwig <hch@lst.de> wrote:
 
-On 3/11/2026 8:24 AM, Benjamin Block wrote:
-> Hey Farhan,
->
-> just noticed a small nitpick:
->
-> On Mon, Mar 02, 2026 at 12:33:19PM -0800, Farhan Ali wrote:
->> If a device is in an error state, then any reads of device registers can
->> return error value. Add addtional checks to validate if a device is in an
->                            ^^^^^^^^^
->                            additional?
->
-> In case you do an other version roll.
+> the XOR library used for the RAID5 parity is a bit of a mess right now.
+> The main file sits in crypto/ despite not being cryptography and not
+> using the crypto API, with the generic implementations sitting in
+> include/asm-generic and the arch implementations sitting in an asm/
+> header in theory.  The latter doesn't work for many cases, so
+> architectures often build the code directly into the core kernel, or
+> create another module for the architecture code.
+> 
+> Changes this to a single module in lib/ that also contains the
+> architecture optimizations, similar to the library work Eric Biggers
+> has done for the CRC and crypto libraries later.  After that it changes
+> to better calling conventions that allow for smarter architecture
+> implementations (although none is contained here yet), and uses
+> static_call to avoid indirection function call overhead.
 
-Ah thank for catching that! Will fixup. I do plan on sending a new 
-version as there are some changes in pci/next that will conflict with 
-some of my changes.
+Cool, thanks, I updated mm.git's mm-nonmm-unstable branch (and hence
+linux-next) to this version.
 
-Thanks
-
-Farhan
-
-
+I retained Heiko's ack on [17/27].
 
