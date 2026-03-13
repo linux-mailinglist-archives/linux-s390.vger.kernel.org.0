@@ -1,56 +1,56 @@
-Return-Path: <linux-s390+bounces-17296-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-17298-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4JmhOZLes2ktcQAAu9opvQ
-	(envelope-from <linux-s390+bounces-17296-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 13 Mar 2026 10:53:22 +0100
+	id GK15G3rds2ktcQAAu9opvQ
+	(envelope-from <linux-s390+bounces-17298-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 13 Mar 2026 10:48:42 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57EC0280E32
-	for <lists+linux-s390@lfdr.de>; Fri, 13 Mar 2026 10:53:22 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0ED1F280C15
+	for <lists+linux-s390@lfdr.de>; Fri, 13 Mar 2026 10:48:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D02B5322844B
-	for <lists+linux-s390@lfdr.de>; Fri, 13 Mar 2026 09:48:14 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 527E4304593D
+	for <lists+linux-s390@lfdr.de>; Fri, 13 Mar 2026 09:48:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74CC238C43D;
-	Fri, 13 Mar 2026 09:47:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B3E438D693;
+	Fri, 13 Mar 2026 09:47:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="2FwSyCVH"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="Ui8k4r4q"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from canpmsgout11.his.huawei.com (canpmsgout11.his.huawei.com [113.46.200.226])
+Received: from canpmsgout12.his.huawei.com (canpmsgout12.his.huawei.com [113.46.200.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D4038CFEA;
-	Fri, 13 Mar 2026 09:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CF138D00B;
+	Fri, 13 Mar 2026 09:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773395260; cv=none; b=Wfod8eGoBJeJpKjwSkpuUB5xNaXhbcPCnNs+3oEmGg4QTAUPMTS0PUO0x2RSkhsydpnHtTtE21xoHwDJefDb5Gv0Wa0tKQuuqAeb2BoZ6GGVXh+bnBMCmV4dudv1rvzVUVLM6BUBGtS6zS+5zQBqrCby5Wuxo/ZzylVXXOxZEzE=
+	t=1773395262; cv=none; b=cjOusAZvdKL/k+hfSFB0fIyZ9grnbHo0Fvj6Vrc8IsPXU9zAMBE5iBFkM/Bq+JACT+/qnw/BFXnJgs3+0bkeiLT7LW1+e/TMRvCmN9rkFrHhQEi3pgtAxXzrXtSyPFVv3NSR0vB2BxcZ6B5H7RD7NGF3Ns3Eng6Y20a7ZFk1U/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773395260; c=relaxed/simple;
-	bh=+u6IynmtBccKp672pOG1061R64NH7rAvAaMzjVYceog=;
+	s=arc-20240116; t=1773395262; c=relaxed/simple;
+	bh=AIt01aOpHU0dtkQ+BhgQFKtp7948/+KytrNEKlmUeJE=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u2547W8jpxMMtOL+Sq5JBH5fFWqpJtZRYHrX5zkan+WBudHz1zsT0m0S0DBdSHChwzeo8ny0cOFGDLl6pFVkp+9Hq8QYmZjGW46AiJfHMZsI3WlSCoi6N8klLuF2SNeJFfZ+wzd6Uo4xnP1PiLAjCOsispCDyD/KW3Cu6VV9kOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=2FwSyCVH; arc=none smtp.client-ip=113.46.200.226
+	 MIME-Version:Content-Type; b=U2xmD5fbKcvvnxgpPJMkuk4afvHoxrXI/KzGKkxrDwXbW7U0xVycAUbtKK5uHA/sRFKeXGU0HaAD2GBO2AJIVNQYV0raJmTEiWS+k3RtB1qtVNCyJ1CXULSu8eXJlc2H7ijg1tw4r5kHtJtmNnBk2ZJsYSjgb3ykHJa2A8NJ4NY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=Ui8k4r4q; arc=none smtp.client-ip=113.46.200.227
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=eCsCgvSybIhCeGU9jZrnha7xsVtYAStc4U7bd3J0QlQ=;
-	b=2FwSyCVHS1MSOc4k99p1dwXweNT6hi7AnKLSTdnG2ennVsn0gog7Su65R2YEv7/Jbx4kooZxG
-	PzOGkOqstiaxnxE08zoOoqXH5/DAHa6NjJhRRuc9B4BzVX6RH693B5g/PGY2i43W2WjdlWBLLNx
-	fY4o00t070mf12b9N7Fg0bg=
-Received: from mail.maildlp.com (unknown [172.19.163.200])
-	by canpmsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4fXKK92hvDzKm5M;
-	Fri, 13 Mar 2026 17:42:37 +0800 (CST)
+	bh=FWc2dztZypId4CI5KQ1kzO0gWt/Yl8ydJSog5qM81R8=;
+	b=Ui8k4r4qJfJrhLQ3otqbWmXPP6FEVMtqXMHuUNdRCQvvWCT7CCrpicYlXXQhxECW9u5WF3vtd
+	cnB4ML1RiOB/6EeFsIpyiC9uXJIrsn5m9Cc5HcJKcPV3DK/xL9BjQKY1OSUQXPwHmeAqfIseBtD
+	ElVuqmQIEXtbOi4kfc+Ihts=
+Received: from mail.maildlp.com (unknown [172.19.163.163])
+	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4fXKJT68rkznTWB;
+	Fri, 13 Mar 2026 17:42:01 +0800 (CST)
 Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8A6214055B;
-	Fri, 13 Mar 2026 17:47:34 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 78AA240565;
+	Fri, 13 Mar 2026 17:47:36 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
  (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 13 Mar
- 2026 17:47:32 +0800
+ 2026 17:47:34 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <oleg@redhat.com>,
 	<hca@linux.ibm.com>, <gor@linux.ibm.com>, <agordeev@linux.ibm.com>,
@@ -71,9 +71,9 @@ To: <catalin.marinas@arm.com>, <will@kernel.org>, <oleg@redhat.com>,
 	<linux-kernel@vger.kernel.org>, <linux-s390@vger.kernel.org>,
 	<linux-arch@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
 CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v13 09/12] arm64: Inline el0_svc_common()
-Date: Fri, 13 Mar 2026 17:47:35 +0800
-Message-ID: <20260313094738.3985794-10-ruanjinjie@huawei.com>
+Subject: [PATCH v13 10/12] s390: Rename TIF_SINGLE_STEP to TIF_SINGLESTEP
+Date: Fri, 13 Mar 2026 17:47:36 +0800
+Message-ID: <20260313094738.3985794-11-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260313094738.3985794-1-ruanjinjie@huawei.com>
 References: <20260313094738.3985794-1-ruanjinjie@huawei.com>
@@ -83,81 +83,195 @@ List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
  dggpemf500011.china.huawei.com (7.185.36.131)
-X-Spamd-Result: default: False [0.34 / 15.00];
+X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
+	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_TO(0.00)[arm.com,kernel.org,redhat.com,linux.ibm.com,alien8.de,linux.intel.com,zytor.com,arndb.de,amacapital.net,chromium.org,rivosinc.com,orcam.me.uk,gmx.de,strace.io,kylinos.cn,gaisler.com,siemens-energy.com,suse.com,efficios.com,cock.li,google.com,linux-foundation.org,gmail.com,lists.infradead.org,vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[huawei.com:+];
-	TAGGED_FROM(0.00)[bounces-17296-lists,linux-s390=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[ruanjinjie@huawei.com,linux-s390@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCPT_COUNT_GT_50(0.00)[50];
-	TO_DN_NONE(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_TO(0.00)[arm.com,kernel.org,redhat.com,linux.ibm.com,alien8.de,linux.intel.com,zytor.com,arndb.de,amacapital.net,chromium.org,rivosinc.com,orcam.me.uk,gmx.de,strace.io,kylinos.cn,gaisler.com,siemens-energy.com,suse.com,efficios.com,cock.li,google.com,linux-foundation.org,gmail.com,lists.infradead.org,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-17298-lists,linux-s390=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_GT_50(0.00)[50];
+	DKIM_TRACE(0.00)[huawei.com:+];
+	TO_DN_NONE(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,huawei.com:dkim,huawei.com:email,huawei.com:mid,arm.com:email]
-X-Rspamd-Queue-Id: 57EC0280E32
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:dkim,huawei.com:email,huawei.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 0ED1F280C15
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-After converting arm64 to Generic Entry framework, the compiler no longer
-inlines el0_svc_common() into its caller do_el0_svc(). This introduces
-a small but measurable overhead in the critical system call path.
+Rename TIF_SINGLE_STEP to TIF_SINGLESTEP to align with the naming
+convention used by arm64, x86, and other architectures.
 
-Manually forcing el0_svc_common() to be inlined restores the
-performance. Benchmarking with perf bench syscall basic on a
-Kunpeng 920 platform (based on v6.19-rc1) shows a ~1% performance
-uplift.
+By aligning the name, TIF_SINGLESTEP can be consolidated into the generic
+TIF bits definitions, reducing architectural divergence and simplifying
+cross-architecture entry/exit logic.
 
-Inlining this function reduces function prologue/epilogue overhead
-and allows for better compiler optimization in the hot system call
-dispatch path.
+No functional changes intended.
 
-| Metric     | W/O this patch | With this patch | Change    |
-| ---------- | -------------- | --------------- | --------- |
-| Total time | 2.195 [sec]    | 2.171 [sec]     |  ↓1.1%   |
-| usecs/op   | 0.219575       | 0.217192        |  ↓1.1%   |
-| ops/sec    | 4,554,260      | 4,604,225       |  ↑1.1%    |
-
-Reviewed-by: Kevin Brodsky <kevin.brodsky@arm.com>
 Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- arch/arm64/kernel/syscall.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/s390/include/asm/thread_info.h |  4 ++--
+ arch/s390/kernel/process.c          |  2 +-
+ arch/s390/kernel/ptrace.c           | 20 ++++++++++----------
+ arch/s390/kernel/signal.c           |  6 +++---
+ 4 files changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
-index 77d00a5cf0e9..6fcd97c46716 100644
---- a/arch/arm64/kernel/syscall.c
-+++ b/arch/arm64/kernel/syscall.c
-@@ -66,8 +66,8 @@ static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
- 	choose_random_kstack_offset(get_random_u16());
+diff --git a/arch/s390/include/asm/thread_info.h b/arch/s390/include/asm/thread_info.h
+index 6a548a819400..1bcd42614e41 100644
+--- a/arch/s390/include/asm/thread_info.h
++++ b/arch/s390/include/asm/thread_info.h
+@@ -69,7 +69,7 @@ void arch_setup_new_exec(void);
+ #define TIF_GUARDED_STORAGE	17	/* load guarded storage control block */
+ #define TIF_ISOLATE_BP_GUEST	18	/* Run KVM guests with isolated BP */
+ #define TIF_PER_TRAP		19	/* Need to handle PER trap on exit to usermode */
+-#define TIF_SINGLE_STEP		21	/* This task is single stepped */
++#define TIF_SINGLESTEP		21	/* This task is single stepped */
+ #define TIF_BLOCK_STEP		22	/* This task is block stepped */
+ #define TIF_UPROBE_SINGLESTEP	23	/* This task is uprobe single stepped */
+ 
+@@ -77,7 +77,7 @@ void arch_setup_new_exec(void);
+ #define _TIF_GUARDED_STORAGE	BIT(TIF_GUARDED_STORAGE)
+ #define _TIF_ISOLATE_BP_GUEST	BIT(TIF_ISOLATE_BP_GUEST)
+ #define _TIF_PER_TRAP		BIT(TIF_PER_TRAP)
+-#define _TIF_SINGLE_STEP	BIT(TIF_SINGLE_STEP)
++#define _TIF_SINGLESTEP	BIT(TIF_SINGLESTEP)
+ #define _TIF_BLOCK_STEP		BIT(TIF_BLOCK_STEP)
+ #define _TIF_UPROBE_SINGLESTEP	BIT(TIF_UPROBE_SINGLESTEP)
+ 
+diff --git a/arch/s390/kernel/process.c b/arch/s390/kernel/process.c
+index 0df95dcb2101..3accc0c064a0 100644
+--- a/arch/s390/kernel/process.c
++++ b/arch/s390/kernel/process.c
+@@ -122,7 +122,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+ 	/* Don't copy debug registers */
+ 	memset(&p->thread.per_user, 0, sizeof(p->thread.per_user));
+ 	memset(&p->thread.per_event, 0, sizeof(p->thread.per_event));
+-	clear_tsk_thread_flag(p, TIF_SINGLE_STEP);
++	clear_tsk_thread_flag(p, TIF_SINGLESTEP);
+ 	p->thread.per_flags = 0;
+ 	/* Initialize per thread user and system timer values */
+ 	p->thread.user_timer = 0;
+diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
+index 125ca4c4e30c..d2cf91f4ac3f 100644
+--- a/arch/s390/kernel/ptrace.c
++++ b/arch/s390/kernel/ptrace.c
+@@ -90,8 +90,8 @@ void update_cr_regs(struct task_struct *task)
+ 	new.start.val = thread->per_user.start;
+ 	new.end.val = thread->per_user.end;
+ 
+-	/* merge TIF_SINGLE_STEP into user specified PER registers. */
+-	if (test_tsk_thread_flag(task, TIF_SINGLE_STEP) ||
++	/* merge TIF_SINGLESTEP into user specified PER registers. */
++	if (test_tsk_thread_flag(task, TIF_SINGLESTEP) ||
+ 	    test_tsk_thread_flag(task, TIF_UPROBE_SINGLESTEP)) {
+ 		if (test_tsk_thread_flag(task, TIF_BLOCK_STEP))
+ 			new.control.val |= PER_EVENT_BRANCH;
+@@ -119,18 +119,18 @@ void update_cr_regs(struct task_struct *task)
+ void user_enable_single_step(struct task_struct *task)
+ {
+ 	clear_tsk_thread_flag(task, TIF_BLOCK_STEP);
+-	set_tsk_thread_flag(task, TIF_SINGLE_STEP);
++	set_tsk_thread_flag(task, TIF_SINGLESTEP);
  }
  
--static void el0_svc_common(struct pt_regs *regs, int scno, int sc_nr,
--			   const syscall_fn_t syscall_table[])
-+static __always_inline void el0_svc_common(struct pt_regs *regs, int scno, int sc_nr,
-+					   const syscall_fn_t syscall_table[])
+ void user_disable_single_step(struct task_struct *task)
  {
- 	unsigned long work = READ_ONCE(current_thread_info()->syscall_work);
- 	unsigned long flags = read_thread_flags();
+ 	clear_tsk_thread_flag(task, TIF_BLOCK_STEP);
+-	clear_tsk_thread_flag(task, TIF_SINGLE_STEP);
++	clear_tsk_thread_flag(task, TIF_SINGLESTEP);
+ }
+ 
+ void user_enable_block_step(struct task_struct *task)
+ {
+-	set_tsk_thread_flag(task, TIF_SINGLE_STEP);
++	set_tsk_thread_flag(task, TIF_SINGLESTEP);
+ 	set_tsk_thread_flag(task, TIF_BLOCK_STEP);
+ }
+ 
+@@ -143,7 +143,7 @@ void ptrace_disable(struct task_struct *task)
+ {
+ 	memset(&task->thread.per_user, 0, sizeof(task->thread.per_user));
+ 	memset(&task->thread.per_event, 0, sizeof(task->thread.per_event));
+-	clear_tsk_thread_flag(task, TIF_SINGLE_STEP);
++	clear_tsk_thread_flag(task, TIF_SINGLESTEP);
+ 	clear_tsk_thread_flag(task, TIF_PER_TRAP);
+ 	task->thread.per_flags = 0;
+ }
+@@ -155,19 +155,19 @@ static inline unsigned long __peek_user_per(struct task_struct *child,
+ {
+ 	if (addr == offsetof(struct per_struct_kernel, cr9))
+ 		/* Control bits of the active per set. */
+-		return test_thread_flag(TIF_SINGLE_STEP) ?
++		return test_thread_flag(TIF_SINGLESTEP) ?
+ 			PER_EVENT_IFETCH : child->thread.per_user.control;
+ 	else if (addr == offsetof(struct per_struct_kernel, cr10))
+ 		/* Start address of the active per set. */
+-		return test_thread_flag(TIF_SINGLE_STEP) ?
++		return test_thread_flag(TIF_SINGLESTEP) ?
+ 			0 : child->thread.per_user.start;
+ 	else if (addr == offsetof(struct per_struct_kernel, cr11))
+ 		/* End address of the active per set. */
+-		return test_thread_flag(TIF_SINGLE_STEP) ?
++		return test_thread_flag(TIF_SINGLESTEP) ?
+ 			-1UL : child->thread.per_user.end;
+ 	else if (addr == offsetof(struct per_struct_kernel, bits))
+ 		/* Single-step bit. */
+-		return test_thread_flag(TIF_SINGLE_STEP) ?
++		return test_thread_flag(TIF_SINGLESTEP) ?
+ 			(1UL << (BITS_PER_LONG - 1)) : 0;
+ 	else if (addr == offsetof(struct per_struct_kernel, starting_addr))
+ 		/* Start address of the user specified per set. */
+diff --git a/arch/s390/kernel/signal.c b/arch/s390/kernel/signal.c
+index 4874de5edea0..83f7650f2032 100644
+--- a/arch/s390/kernel/signal.c
++++ b/arch/s390/kernel/signal.c
+@@ -423,7 +423,7 @@ static void handle_signal(struct ksignal *ksig, sigset_t *oldset,
+ 	else
+ 		ret = setup_frame(ksig->sig, &ksig->ka, oldset, regs);
+ 
+-	signal_setup_done(ret, ksig, test_thread_flag(TIF_SINGLE_STEP));
++	signal_setup_done(ret, ksig, test_thread_flag(TIF_SINGLESTEP));
+ }
+ 
+ /*
+@@ -491,7 +491,7 @@ void arch_do_signal_or_restart(struct pt_regs *regs)
+ 			regs->gprs[2] = regs->orig_gpr2;
+ 			current->restart_block.arch_data = regs->psw.addr;
+ 			regs->psw.addr = VDSO_SYMBOL(current, restart_syscall);
+-			if (test_thread_flag(TIF_SINGLE_STEP))
++			if (test_thread_flag(TIF_SINGLESTEP))
+ 				clear_thread_flag(TIF_PER_TRAP);
+ 			break;
+ 		case -ERESTARTNOHAND:
+@@ -499,7 +499,7 @@ void arch_do_signal_or_restart(struct pt_regs *regs)
+ 		case -ERESTARTNOINTR:
+ 			regs->gprs[2] = regs->orig_gpr2;
+ 			regs->psw.addr = __rewind_psw(regs->psw, regs->int_code >> 16);
+-			if (test_thread_flag(TIF_SINGLE_STEP))
++			if (test_thread_flag(TIF_SINGLESTEP))
+ 				clear_thread_flag(TIF_PER_TRAP);
+ 			break;
+ 		}
 -- 
 2.34.1
 
