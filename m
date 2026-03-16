@@ -1,47 +1,47 @@
-Return-Path: <linux-s390+bounces-17390-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-17391-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WJJyAo0uuGmzaAEAu9opvQ
-	(envelope-from <linux-s390+bounces-17390-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 16 Mar 2026 17:23:41 +0100
+	id oLrMN+MuuGnhZgEAu9opvQ
+	(envelope-from <linux-s390+bounces-17391-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 16 Mar 2026 17:25:07 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7B4229D4F8
-	for <lists+linux-s390@lfdr.de>; Mon, 16 Mar 2026 17:23:40 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8267D29D578
+	for <lists+linux-s390@lfdr.de>; Mon, 16 Mar 2026 17:25:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 8E8EB3023DB1
-	for <lists+linux-s390@lfdr.de>; Mon, 16 Mar 2026 16:17:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D82133039EE1
+	for <lists+linux-s390@lfdr.de>; Mon, 16 Mar 2026 16:21:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1463334C1C;
-	Mon, 16 Mar 2026 16:17:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8228D3358A6;
+	Mon, 16 Mar 2026 16:21:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="L29wqMAs"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="C78b3RIn"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC052EF67A;
-	Mon, 16 Mar 2026 16:17:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0AB33554F;
+	Mon, 16 Mar 2026 16:21:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773677827; cv=none; b=e+pMH2CmuEjpptphSL+Vla289Ns6YS/gKuxsEDnuPPzUZ/m8348aA8b8gk9odewc6mgLNt0zLA/nYgULOmpGXJdZbCwE52vhJvHKkT2aUddps9ppaaWDObl5hL6lsvoTVu/Kukb7EyTZ/AIW3ilfymPJhBDYT3BzdnFgPl4nAHs=
+	t=1773678106; cv=none; b=CvyIGqEVHLcQA+YMtY2X9uRGSvDp00it+B1l+Y7xa24Q2NA+F+T95r6m9cpkkAWknHJBluy4IqePkQRPjOb2HVwy3mvpldkLySEIVu80JWfbUN0rfLLeSZfGI3xQSwF8DLdcLh5fxFHZ/K6hTx//zSNDGWD7y8ljCkLpqZshyYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773677827; c=relaxed/simple;
-	bh=piGtJoQS85x055Jj6a8BM+ONk4RlzPnFJWtiG0/1/40=;
+	s=arc-20240116; t=1773678106; c=relaxed/simple;
+	bh=T+QCEG7rS4slK+eGQWKuSmiAa6E+o4G10P1NpOZ/x3k=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=QJUhTneeD/96IC5WSSS8tMQ+Bu+nK6jGVHT3hZDnbxInDx742uJlA7eo8evCH8/LGLuMsbQhZdUTSFthbXpu1MiByXJIOGdb1b+6VGnWtazwkc8hM3bUVndm/GFtG5lOJqJxP4+KwLJC1kr0hr52yes3NSkDOux/gTViRDpnZSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=L29wqMAs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52FBAC19421;
-	Mon, 16 Mar 2026 16:17:05 +0000 (UTC)
+	 Mime-Version:Content-Type; b=W2sMXQhUAy5zBMUlcsV8Bgdg15N6BEL8suVxAM+ToHC3/Mp+yb6oEuNZ2sfyOdNTHz+KNK1M/75ySCOa6AHcEIL0hS9ePhtFYUjKFZqSGaj7Bu48Upe/7wZo1mxlhZbWLi629afXvPCiM7bRFkdhTmXQJRwsoqAGiVJR6rsTqTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=C78b3RIn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63D22C19421;
+	Mon, 16 Mar 2026 16:21:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1773677827;
-	bh=piGtJoQS85x055Jj6a8BM+ONk4RlzPnFJWtiG0/1/40=;
+	s=korg; t=1773678106;
+	bh=T+QCEG7rS4slK+eGQWKuSmiAa6E+o4G10P1NpOZ/x3k=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=L29wqMAsUJ+kd0X9h7g849lKpqLxCfCPG0hoLd+WtnJ50ZCOkgcNxIONjg5Cqui/L
-	 XCAUjTPqdwvcgvUKcOIyocy046LFIx0+L2G9uLv5ICqCsBhbaAsDvCluEeycwL6k+7
-	 sLjEpI9to3sgq/yF8A1DWAUyiyt23UTdiAafOEOE=
-Date: Mon, 16 Mar 2026 09:17:04 -0700
+	b=C78b3RInQ6E9r2o5eQWhKAKKyMjBu8BuYuFLtQb2c4U384vA029N6GED42iVwexvs
+	 Qy02HSzj4wC9NG5ChI3KVHgChg8X9Mmh5uG9/p43xcgZK3sY2KpRjz4FNz2ddxVAic
+	 WH+xVUhU8+zr+WxlOE3+Sik0WbkV22WKcpegZwQQ=
+Date: Mon, 16 Mar 2026 09:21:43 -0700
 From: Andrew Morton <akpm@linux-foundation.org>
 To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
 Cc: David Hildenbrand <david@kernel.org>, "Liam R . Howlett"
@@ -78,7 +78,7 @@ Cc: David Hildenbrand <david@kernel.org>, "Liam R . Howlett"
  selinux@vger.kernel.org
 Subject: Re: [PATCH v2 00/23] mm/vma: convert vm_flags_t to vma_flags_t in
  vma code
-Message-Id: <20260316091704.24d7f8230ad57e8b7d18e9f8@linux-foundation.org>
+Message-Id: <20260316092143.8b21650c803eb99511395b83@linux-foundation.org>
 In-Reply-To: <cover.1773665966.git.ljs@kernel.org>
 References: <cover.1773665966.git.ljs@kernel.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
@@ -95,12 +95,12 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MV_CASE(0.50)[];
 	R_DKIM_ALLOW(-0.20)[linux-foundation.org:s=korg];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-17390-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-17391-lists,linux-s390=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_CC(0.00)[kernel.org,oracle.com,google.com,suse.de,kvack.org,vger.kernel.org,armlinux.org.uk,arm.com,xen0n.name,alpha.franken.de,linux.ibm.com,ellerman.id.au,gmail.com,dabbelt.com,eecs.berkeley.edu,ghiti.fr,redhat.com,alien8.de,linux.intel.com,zytor.com,nod.at,cambridgegreys.com,sipsolutions.net,zeniv.linux.org.uk,suse.cz,zte.com.cn,linux.dev,suse.com,paul-moore.com,lists.infradead.org,lists.linux.dev,lists.ozlabs.org];
 	DMARC_NA(0.00)[linux-foundation.org];
@@ -108,7 +108,7 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[linux-foundation.org:+];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCPT_COUNT_GT_50(0.00)[62];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[akpm@linux-foundation.org,linux-s390@vger.kernel.org];
@@ -118,8 +118,8 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux-foundation.org:dkim,linux-foundation.org:mid]
-X-Rspamd-Queue-Id: B7B4229D4F8
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux-foundation.org:dkim,linux-foundation.org:mid]
+X-Rspamd-Queue-Id: 8267D29D578
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
@@ -128,7 +128,5 @@ On Mon, 16 Mar 2026 13:07:49 +0000 "Lorenzo Stoakes (Oracle)" <ljs@kernel.org> w
 > This series converts a lot of the existing use of the legacy vm_flags_t
 > data type to the new vma_flags_t type which replaces it.
 
-This series assumes the non-presence of your series "mm: expand
-mmap_prepare functionality and usage".  Seems that series is due for a
-respin so I'll drop v1.
+Thanks, added to mm-new.  I suppressed the usual email storm.
 
