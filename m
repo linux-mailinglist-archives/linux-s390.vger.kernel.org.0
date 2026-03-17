@@ -1,205 +1,304 @@
-Return-Path: <linux-s390+bounces-17449-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-17452-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wINGFkYNuWk/ngEAu9opvQ
-	(envelope-from <linux-s390+bounces-17449-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 09:13:58 +0100
+	id sBoQDO0OuWkaoQEAu9opvQ
+	(envelope-from <linux-s390+bounces-17452-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 09:21:01 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61A032A55F0
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 09:13:57 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3E142A57C9
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 09:21:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 7DB98300E4A2
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 08:13:54 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 223EF305A4B5
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 08:20:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA71A3947B0;
-	Tue, 17 Mar 2026 08:13:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D32F396D25;
+	Tue, 17 Mar 2026 08:20:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mFl/UM/u"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="k6aQy9bJ"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C68A39446D;
-	Tue, 17 Mar 2026 08:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30013976B3;
+	Tue, 17 Mar 2026 08:20:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773735231; cv=none; b=QSPqtloaD7lcv5KEPwd+Ko+wLnciYjU+4JYoqa8q+WqzZq8aOqsAOkiQihOdePjquY54PyLGvX4HJtgLWfJIyzPqrt+4NJrkQ/BkN1fIN50PasRP9Q+toCSq/zbmYNMNcE14fQqSt3wge0MlFiJ1bGSQiXW4cH9jem5uNhjStrg=
+	t=1773735614; cv=none; b=fF5OI9y2xtjGA5kN5nYl4vCHcpwbgpkYPUyqW/yEPE99eI3s1ctH+pxYKLFPc/uUZ+3x3e4g8RJV/97GnVMTAjmMqpJd9Ea8HYZ12M4YN14E9BTg+tLfDBnwMdGTAVSKMyManLyBHHQZe8Qc5Trq3sJsdDlV22Ig96b3h7o9McM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773735231; c=relaxed/simple;
-	bh=tPAXOlysi9fY3rE2mwGJOy6pwWFi1dNgs1btvJeEDgQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uVWQCwJwN2FDV+teo/JrQ5LgKz9VvOlTI6nhAAV/WxoT+vB3LzmGbOPE22WsJWvccyk231sDBYFBAmWNrhSr/NDXsbx5ruBNOPyJ9SX3TNEmHWkdecspRq9pon24HAFrL+QqwiNcoYACAm/ZX2VrKeeRmIZGnN6WFgVWmlkrhKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mFl/UM/u; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62H1TTSi3905720;
-	Tue, 17 Mar 2026 08:13:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=sEugI9
-	ZwB/dJsMWBTtuScK1ROnJ5NaYy94+nF2ALNVE=; b=mFl/UM/u48Mb0hRaW6vxJi
-	Uh9d0sH8BT7YcQUbZBVCkSuufNcoCxS6DgJbCvcmVpdJaf8KsPIchpGoB/iJ1DIc
-	safNLeYMNiR01yxj0TSrwRTy3rpc1ocVf1r8eDMLH7xUecX/67w/aVz9LUJx4Cer
-	5P8AfcwAiIO5F0KVLn4W/5aIc30O3xj95Sv4+QWqD8eyZgyqn4nZPri2d7LU0acN
-	1D1n2nGJBd1bE4QoG3sLD3hoCCYu6xVgKukizWqWsNqiC4aQJf5sfPyj1uMR89yU
-	GViXOPY3PTDvpXalvIAOZ9zIz9lz71ja4O8bCm0luR6bQYLalZAVf0I67Jv7K+OQ
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cvybs3p47-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Mar 2026 08:13:49 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62H5jJaB004563;
-	Tue, 17 Mar 2026 08:13:48 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cwj0s8bgx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Mar 2026 08:13:48 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62H8Dio534800114
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 17 Mar 2026 08:13:45 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E1C592004B;
-	Tue, 17 Mar 2026 08:13:44 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A429B20043;
-	Tue, 17 Mar 2026 08:13:44 +0000 (GMT)
-Received: from [9.111.66.161] (unknown [9.111.66.161])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 17 Mar 2026 08:13:44 +0000 (GMT)
-Message-ID: <2026346f-b04d-4d3c-8f8c-7f91fc02f3a5@linux.ibm.com>
-Date: Tue, 17 Mar 2026 09:13:44 +0100
+	s=arc-20240116; t=1773735614; c=relaxed/simple;
+	bh=crB3SssedBmqxGKRy79deqOsuTjTmYq5jIGaG4ZOGzg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=poT8UDkS3iqYcfAWUFZKNhw62p+pPVaJKgEW4Q9cT0iKVCtaganPCbIr91PasesKYPGmxQfCgOVjJRfyXy+0MpoOSXI43rouRrrqGfKSx9rIgN4WprSdkgthQf283ZMeO7KiwtPBjaKBqDfIuBtuBGG1+dHt9DUtnCXIbBWrfmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=k6aQy9bJ; arc=none smtp.client-ip=113.46.200.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=2YAmepjt9otKbacTXBJbVADdAwPJ5+Vf8B5QhM5/gFk=;
+	b=k6aQy9bJXJO2xVs8DuEwOX7iQP3zMdLDRzk8+jI1B/jra4tzPblUhZKCPVMGxLJkYcuVO+4sf
+	ZDYZAZG4U9UdHF2zArvfdZVPMRBywZlQZJ3hJYADC/0A0klTcVvkhKCXu61w3o8hPO0FPqkTvoC
+	0xb96/vx4uz2GuI1oqEXqUU=
+Received: from mail.maildlp.com (unknown [172.19.163.0])
+	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4fZl9q6Cf7zpSxS;
+	Tue, 17 Mar 2026 16:14:39 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id B19A340561;
+	Tue, 17 Mar 2026 16:20:01 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
+ (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 17 Mar
+ 2026 16:19:59 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <catalin.marinas@arm.com>, <will@kernel.org>, <oleg@redhat.com>,
+	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <hca@linux.ibm.com>,
+	<gor@linux.ibm.com>, <agordeev@linux.ibm.com>, <borntraeger@linux.ibm.com>,
+	<svens@linux.ibm.com>, <tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <arnd@arndb.de>,
+	<peterz@infradead.org>, <luto@kernel.org>, <shuah@kernel.org>,
+	<kees@kernel.org>, <wad@chromium.org>, <kevin.brodsky@arm.com>,
+	<deller@gmx.de>, <macro@orcam.me.uk>, <akpm@linux-foundation.org>,
+	<ldv@strace.io>, <anshuman.khandual@arm.com>, <ryan.roberts@arm.com>,
+	<mark.rutland@arm.com>, <thuth@redhat.com>, <song@kernel.org>,
+	<ada.coupriediaz@arm.com>, <linusw@kernel.org>, <broonie@kernel.org>,
+	<pengcan@kylinos.cn>, <liqiang01@kylinos.cn>, <ziyao@disroot.org>,
+	<guanwentao@uniontech.com>, <guoren@kernel.org>,
+	<schuster.simon@siemens-energy.com>, <jremus@linux.ibm.com>,
+	<david@kernel.org>, <mathieu.desnoyers@efficios.com>, <edumazet@google.com>,
+	<kmal@cock.li>, <dvyukov@google.com>, <reddybalavignesh9979@gmail.com>,
+	<x86@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<linux-s390@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH v13 RESEND 00/14] arm64: entry: Convert to Generic Entry
+Date: Tue, 17 Mar 2026 16:20:06 +0800
+Message-ID: <20260317082020.737779-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 02/10] KVM: s390: Consolidate lpswe variants
-To: Christian Borntraeger <borntraeger@linux.ibm.com>, kvm@vger.kernel.org
-Cc: linux-s390@vger.kernel.org, imbrenda@linux.ibm.com, akrowiak@linux.ibm.com
-References: <20260316180310.17765-1-frankja@linux.ibm.com>
- <20260316180310.17765-3-frankja@linux.ibm.com>
- <bc995033-1850-43f8-b04d-66f78ede157d@linux.ibm.com>
-Content-Language: en-US
-From: Janosch Frank <frankja@linux.ibm.com>
-Autocrypt: addr=frankja@linux.ibm.com; keydata=
- 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
-In-Reply-To: <bc995033-1850-43f8-b04d-66f78ede157d@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=MMttWcZl c=1 sm=1 tr=0 ts=69b90d3d cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=j3P8sYcwygIa9r38gJMA:9
- a=QEXdDO2ut3YA:10 a=zgiPjhLxNE0A:10
-X-Proofpoint-ORIG-GUID: aWKVxsNNFUekXEt_kEbEbyHO-Wk_wR4v
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE3MDA3MSBTYWx0ZWRfXzRK0eLjJ9Itx
- 30KG16DNvUQ2ua+u9p0tz5X4aKUJJbrBhspmhZb4KfnB845scGGnUtAZDsgh4YiDuzWnNeLfSOQ
- mus32DZAjgQbXjI/7pGMNMxglxrBfgFCsBoIRZisX9IHMLE5W4EaV4nmsjzZP6pZhlx5q7SMbFb
- thoqrCXkNeskcEWnXP5juQRn+TrLOqV9HBS/fYZF/D7Ra4SUTryw0hV0bE6UtJji3HqcOruqAsQ
- 2HRLOf9KL1qrQkBwoRAOok1yzoSr8we5W4NSU7vTuQgQVZE5m9QrmBIMHiWOZ3tV8amyY8+oX7P
- kXzYRWxYL382d3eNgoxgcYv70610HZUEHaZjZmr8++c8VIC8PTbZtmJ2lZ5FhYS58OsHX/efPAw
- OEcvXwxOuwPGcXBo9Rocoh4ZsZPSIjFsGJXm1Pe1VTTrt4F0/Mi6HY1HkL+R1//ctnZ7TW9r0tP
- rooLiDrrwnuebgplK/A==
-X-Proofpoint-GUID: aWKVxsNNFUekXEt_kEbEbyHO-Wk_wR4v
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-17_01,2026-03-16_06,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0
- priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0 clxscore=1015
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2603050001
- definitions=main-2603170071
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
+X-Spamd-Result: default: False [-1.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-17449-lists,linux-s390=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[huawei.com:+];
+	FREEMAIL_TO(0.00)[arm.com,kernel.org,redhat.com,xen0n.name,linux.ibm.com,alien8.de,linux.intel.com,zytor.com,arndb.de,infradead.org,chromium.org,gmx.de,orcam.me.uk,linux-foundation.org,strace.io,kylinos.cn,disroot.org,uniontech.com,siemens-energy.com,efficios.com,google.com,cock.li,gmail.com,lists.infradead.org,vger.kernel.org,lists.linux.dev];
+	TAGGED_FROM(0.00)[bounces-17452-lists,linux-s390=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,linux.ibm.com:mid];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[frankja@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ruanjinjie@huawei.com,linux-s390@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCPT_COUNT_GT_50(0.00)[55];
+	TO_DN_NONE(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 61A032A55F0
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,huawei.com:dkim,huawei.com:mid]
+X-Rspamd-Queue-Id: E3E142A57C9
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 3/16/26 19:47, Christian Borntraeger wrote:
-> 
-> Am 16.03.26 um 17:23 schrieb Janosch Frank:
->> LPSWE and LPSWEY currently only differ in instruction format but not
->> in functionality.
-> 
-> I think this is actually a bug in KVM. LPSWEY does not set the breaking
-> event address register, LPSWE does. Maybe that would be the better fix
-> to actually set gbea when emulating LPSWE. This must happen after all
-> checks, so I guess combining both would make this harder, so better
-> not do this.
-> 
+Currently, x86, Riscv, Loongarch use the Generic Entry which makes
+maintainers' work easier and codes more elegant. arm64 has already
+successfully switched to the Generic IRQ Entry in commit
+b3cf07851b6c ("arm64: entry: Switch to generic IRQ entry"), it is
+time to completely convert arm64 to Generic Entry.
 
-Interesting, seems like I glanced over that when checking the 
-architecture. I'll have a look.
+The goal is to bring arm64 in line with other architectures that already
+use the generic entry infrastructure, reducing duplicated code and
+making it easier to share future changes in entry/exit paths, such as
+"Syscall User Dispatch" and RSEQ optimizations.
+
+This patch set is rebased on v7.0-rc3. And the performance
+benchmarks results on qemu-kvm are below:
+
+perf bench syscall usec/op (-ve is improvement)
+
+| Syscall | Base        | Generic Entry | change % |
+| ------- | ----------- | ------------- | -------- |
+| basic   | 0.123997    | 0.120872      | -2.57    |
+| execve  | 512.1173    | 504.9966      | -1.52    |
+| fork    | 114.1144    | 113.2301      | -1.06    |
+| getpgid | 0.120182    | 0.121245      | +0.9     |
+
+perf bench syscall ops/sec (+ve is improvement)
+
+| Syscall | Base     | Generic Entry| change % |
+| ------- | -------- | ------------ | -------- |
+| basic   | 8064712  | 8273212      | +2.48    |
+| execve  | 1952     | 1980         | +1.52    |
+| fork    | 8763     | 8832         | +1.06    |
+| getpgid | 8320704  | 8247810      | -0.9     |
+
+Therefore, the syscall performance variation ranges from a 1% regression
+to a 2.5% improvement.
+
+It was tested ok with following test cases on QEMU virt platform:
+ - Stress-ng CPU stress test.
+ - Hackbench stress test.
+ - "sud" selftest testcase.
+ - get_set_sud, get_syscall_info, set_syscall_info, peeksiginfo
+   in tools/testing/selftests/ptrace.
+ - breakpoint_test_arm64 in selftests/breakpoints.
+ - syscall-abi and ptrace in tools/testing/selftests/arm64/abi
+ - fp-ptrace, sve-ptrace, za-ptrace in selftests/arm64/fp.
+ - vdso_test_getrandom in tools/testing/selftests/vDSO
+ - Strace tests.
+ - slice_test for rseq optimizations.
+
+The test QEMU configuration is as follows:
+
+	qemu-system-aarch64 \
+		-M virt \
+		-enable-kvm \
+		-cpu host \
+		-kernel Image \
+		-smp 8 \
+		-m 512m \
+		-nographic \
+		-no-reboot \
+		-device virtio-rng-pci \
+		-append "root=/dev/vda rw console=ttyAMA0 kgdboc=ttyAMA0,115200 \
+			earlycon preempt=voluntary irqchip.gicv3_pseudo_nmi=1 audit=1" \
+		-drive if=none,file=images/rootfs.ext4,format=raw,id=hd0 \
+		-device virtio-blk-device,drive=hd0 \
+
+Changes in v13 resend:
+- Fix exit_to_user_mode_prepare_legacy() issues.
+- Also move TIF_SINGLESTEP to generic TIF infrastructure for loongarch.
+- Use generic TIF bits for arm64 and moving TIF_SINGLESTEP to
+  generic TIF for related architectures separately.
+- Refactor syscall_trace_enter/exit() to accept flags and Use syscall_get_nr()
+  helper separately.
+- Tested with slice_test for rseq optimizations.
+- Add acked-by.
+- Link to v13: https://lore.kernel.org/all/20260313094738.3985794-1-ruanjinjie@huawei.com/
+
+Changes in v13:
+- Rebased on v7.0-rc3, so drop the firt applied arm64 patch.
+- Use generic TIF bits to enables RSEQ optimization.
+- Update most of the commit message to make it more clear.
+- Link to v12: https://lore.kernel.org/all/20260203133728.848283-1-ruanjinjie@huawei.com/
+
+Changes in v12:
+- Rebased on "sched/core", so remove the four generic entry patches.
+- Move "Expand secure_computing() in place" and
+  "Use syscall_get_arguments() helper" patch forward, which will group all
+  non-functional cleanups at the front.
+- Adjust the explanation for moving rseq_syscall() before
+  audit_syscall_exit().
+- Link to v11: https://lore.kernel.org/all/20260128031934.3906955-1-ruanjinjie@huawei.com/
+
+Changes in v11:
+- Remove unused syscall in syscall_trace_enter().
+- Update and provide a detailed explanation of the differences after
+  moving rseq_syscall() before audit_syscall_exit().
+- Rebased on arm64 (for-next/entry), and remove the first applied 3 patchs.
+- syscall_exit_to_user_mode_work() for arch reuse instead of adding
+  new syscall_exit_to_user_mode_work_prepare() helper.
+- Link to v10: https://lore.kernel.org/all/20251222114737.1334364-1-ruanjinjie@huawei.com/
+
+Changes in v10:
+- Rebased on v6.19-rc1, rename syscall_exit_to_user_mode_prepare() to
+  syscall_exit_to_user_mode_work_prepare() to avoid conflict.
+- Also inline syscall_trace_enter().
+- Support aarch64 for sud_benchmark.
+- Update and correct the commit message.
+- Add Reviewed-by.
+- Link to v9: https://lore.kernel.org/all/20251204082123.2792067-1-ruanjinjie@huawei.com/
+
+Changes in v9:
+- Move "Return early for ptrace_report_syscall_entry() error" patch ahead
+  to make it not introduce a regression.
+- Not check _TIF_SECCOMP/SYSCALL_EMU for syscall_exit_work() in
+  a separate patch.
+- Do not report_syscall_exit() for PTRACE_SYSEMU_SINGLESTEP in a separate
+  patch.
+- Add two performance patch to improve the arm64 performance.
+- Add Reviewed-by.
+- Link to v8: https://lore.kernel.org/all/20251126071446.3234218-1-ruanjinjie@huawei.com/
+
+Changes in v8:
+- Rename "report_syscall_enter()" to "report_syscall_entry()".
+- Add ptrace_save_reg() to avoid duplication.
+- Remove unused _TIF_WORK_MASK in a standalone patch.
+- Align syscall_trace_enter() return value with the generic version.
+- Use "scno" instead of regs->syscallno in el0_svc_common().
+- Move rseq_syscall() ahead in a standalone patch to clarify it clearly.
+- Rename "syscall_trace_exit()" to "syscall_exit_work()".
+- Keep the goto in el0_svc_common().
+- No argument was passed to __secure_computing() and check -1 not -1L.
+- Remove "Add has_syscall_work() helper" patch.
+- Move "Add syscall_exit_to_user_mode_prepare() helper" patch later.
+- Add miss header for asm/entry-common.h.
+- Update the implementation of arch_syscall_is_vdso_sigreturn().
+- Add "ARCH_SYSCALL_WORK_EXIT" to be defined as "SECCOMP | SYSCALL_EMU"
+  to keep the behaviour unchanged.
+- Add more testcases test.
+- Add Reviewed-by.
+- Update the commit message.
+- Link to v7: https://lore.kernel.org/all/20251117133048.53182-1-ruanjinjie@huawei.com/
+
+Jinjie Ruan (13):
+  arm64/ptrace: Refactor syscall_trace_enter/exit() to accept flags
+    parameter
+  arm64/ptrace: Use syscall_get_nr() helper for syscall_trace_enter()
+  arm64/ptrace: Expand secure_computing() in place
+  arm64/ptrace: Use syscall_get_arguments() helper for audit
+  arm64: ptrace: Move rseq_syscall() before audit_syscall_exit()
+  arm64: syscall: Introduce syscall_exit_to_user_mode_work()
+  arm64/ptrace: Define and use _TIF_SYSCALL_EXIT_WORK
+  arm64/ptrace: Skip syscall exit reporting for PTRACE_SYSEMU_SINGLESTEP
+  arm64: entry: Convert to generic entry
+  arm64: Inline el0_svc_common()
+  s390: Rename TIF_SINGLE_STEP to TIF_SINGLESTEP
+  asm-generic: Move TIF_SINGLESTEP to generic TIF bits
+  arm64: Use generic TIF bits for common thread flags
+
+kemal (1):
+  selftests: sud_test: Support aarch64
+
+ arch/arm64/Kconfig                            |   3 +-
+ arch/arm64/include/asm/entry-common.h         |  76 ++++++++++++
+ arch/arm64/include/asm/syscall.h              |  19 ++-
+ arch/arm64/include/asm/thread_info.h          |  76 ++++--------
+ arch/arm64/kernel/debug-monitors.c            |   7 ++
+ arch/arm64/kernel/entry-common.c              |  25 +++-
+ arch/arm64/kernel/ptrace.c                    | 115 ------------------
+ arch/arm64/kernel/signal.c                    |   2 +-
+ arch/arm64/kernel/syscall.c                   |  29 ++---
+ arch/loongarch/include/asm/thread_info.h      |  11 +-
+ arch/s390/include/asm/thread_info.h           |   7 +-
+ arch/s390/kernel/process.c                    |   2 +-
+ arch/s390/kernel/ptrace.c                     |  20 +--
+ arch/s390/kernel/signal.c                     |   6 +-
+ arch/x86/include/asm/thread_info.h            |   6 +-
+ include/asm-generic/thread_info_tif.h         |   5 +
+ include/linux/irq-entry-common.h              |   8 --
+ include/linux/rseq_entry.h                    |  18 ---
+ .../syscall_user_dispatch/sud_benchmark.c     |   2 +-
+ .../syscall_user_dispatch/sud_test.c          |   4 +
+ 20 files changed, 191 insertions(+), 250 deletions(-)
+
+-- 
+2.34.1
+
 
