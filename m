@@ -1,73 +1,73 @@
-Return-Path: <linux-s390+bounces-17499-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-17500-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CPXgJu1iuWlsCwIAu9opvQ
-	(envelope-from <linux-s390+bounces-17499-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 15:19:25 +0100
+	id CDlaCgFjuWkhDQIAu9opvQ
+	(envelope-from <linux-s390+bounces-17500-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 15:19:45 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 332852ABAAB
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 15:19:25 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F15E2ABAE8
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 15:19:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CD0D630F5971
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 14:11:41 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 64D4331EC47C
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 14:11:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89D2F3E2768;
-	Tue, 17 Mar 2026 14:11:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E41683E1D02;
+	Tue, 17 Mar 2026 14:11:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="VtiT/Kjp"
+	dkim=pass (2048-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="di50sTK/"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from fra-out-012.esa.eu-central-1.outbound.mail-perimeter.amazon.com (fra-out-012.esa.eu-central-1.outbound.mail-perimeter.amazon.com [52.57.120.243])
+Received: from fra-out-005.esa.eu-central-1.outbound.mail-perimeter.amazon.com (fra-out-005.esa.eu-central-1.outbound.mail-perimeter.amazon.com [63.176.194.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0B33E1D02;
-	Tue, 17 Mar 2026 14:11:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.57.120.243
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7BB3E2778;
+	Tue, 17 Mar 2026 14:11:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.176.194.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773756675; cv=none; b=MEjGwfy7VMVDmKmw2Z1Xg28d5hbU5VaZ7gCnN0Zw/Q0mP3cTdOWp6A9+ZFDiiZ9AyezgGjwOnzkPzRfNAg9QmOW13kd1z5FhlTEx0FCRLnXa0nbGNSbgS4CM8cv+vTOjYdIgdV7WEwwhYozbwHOPOIrzl2FX6J/2h2o7/Z1V6JY=
+	t=1773756686; cv=none; b=RntLwleBBLyjC57Ow06RZ2VGu+u4c1U+NLq1q4cgPeUu1CdoSsXwGo3++vQcdrrra1bu9osKzOzkl3ldQaYbck2l2dToCXMLtQg3SJOBMt9iVGzZ9hPaNnjCZF089MgZJrEHbv/3XS67cjkzOECZIJO0QFCMTdsg3yPZdjrJumE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773756675; c=relaxed/simple;
-	bh=WHiyVRDw6kTV1LWtpBw5OcbVuqf3EYDjsGo/nTebqfY=;
+	s=arc-20240116; t=1773756686; c=relaxed/simple;
+	bh=qXMv+FyYq6iyafIoNljnAbhjeIMJfmJg7BKR+L1Xtzs=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=n8iBTY59lIVJe4JIdisTWLzIaHDY5B8bu7vX4Xp1EXf3fJ8CC5aKkvdHv/sahxlX2QUbT2Sz5FVGIh3lskb2VVwIIVpD8enR2u/M52/8fi9/FmiaEgkvvt3bppoIkXeCmXiCGPQrdKpaolTqFP4wH5kySXhlf75MrOUSsqnJrB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (2048-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=VtiT/Kjp; arc=none smtp.client-ip=52.57.120.243
+	 Content-Type:MIME-Version; b=ovkrvllwwqEomzrtETbmL3lTjeDjLTfHcAqkn0eJB809t8ml4kSHBgBPUKciPeac7KoVKPIhcW9Nvrz6YcyMupRPyrwx5KugcNzxmi+5qaqNrxxxduiJIPMXgjUU+IeP9tGE+a/2CMKnVBzgbCIo0XTIVVOEVDJPFZqaGXGrh80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (2048-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=di50sTK/; arc=none smtp.client-ip=63.176.194.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
-  s=amazoncorp2; t=1773756674; x=1805292674;
+  s=amazoncorp2; t=1773756685; x=1805292685;
   h=from:to:cc:subject:date:message-id:references:
    in-reply-to:content-transfer-encoding:mime-version;
-  bh=civgTW3KdVqRnNr9DLmAUo8biVlHbqHYSTZMRg7ipUE=;
-  b=VtiT/KjpH2cv5K5I3umWNJ/nEmHgqvG+5iULpFP3E5lS/cWKUaV2DQht
-   KM6V7H4BImrBCNzGNQrDVK/kdecEPR49sxQX2t84UOIKV0J0PdDJ776K2
-   dRejmDR2gbjOjDgZ/NbmaLMzMtua3z5h9gERr81W3gs58QvUW7ob9RS92
-   CQC0vepVeKfCaVy7Lz1gboPUgOOzKAdY4l0N+DR/yD5XdsABhw0x+oyoG
-   liYWBrSG2NTwV1LfaWeFbWoLyI4N8eJ85YQtrCd1P/cblB7JfxsRqV27l
-   IsQZ93AlODVTAWFlNuPewbf8wln1vFsWM0z40lJ/s1/xTSghvFIpAeIXJ
-   g==;
-X-CSE-ConnectionGUID: RwVI7fN2RW+jRHloYOdsvw==
-X-CSE-MsgGUID: GzDBKQ3WRk2Fccj0YhCgLg==
+  bh=QH/0pY+L5Mnx+GXH9O+3FVFXbnxf+J6Zf5bgE/TnHq0=;
+  b=di50sTK/jnmlQSGDVf9p3P4DtlftqmHqEv2TNbBLcGFdj/oNxg+yHWUZ
+   KG7GNfESBVDtfrNYdK8fYwyU3zaT8UuhQ1UxVup2n5Exk3q51EeDR9hc9
+   vzx2pb8/sOK8JoyW5dn/r+4BfOSVLnAurexwxSXCfBh+A7L3uooKvA1Zz
+   I596PqlxOsjlFmGsClU6YrktLn0zoLUiesKC8NiP8oxm1QQDtrmUC1VJ3
+   pv21WDXWhXfb9jlexARRHVKvHiPOHfWW1+FW3UwPoj6JVKWphssesXA2R
+   G3hXI5voQmQ3c56iQXrINCYewjXG/iUB1TBqBTEkanFbNMaPn4hEJpddx
+   w==;
+X-CSE-ConnectionGUID: bjZm6s3/TCWdkXS4JpYsMA==
+X-CSE-MsgGUID: Uv/u4CHeTxOSFi5l4I+Zag==
 X-IronPort-AV: E=Sophos;i="6.23,124,1770595200"; 
-   d="scan'208";a="10908841"
-Received: from ip-10-6-6-97.eu-central-1.compute.internal (HELO smtpout.naws.eu-central-1.prod.farcaster.email.amazon.dev) ([10.6.6.97])
-  by internal-fra-out-012.esa.eu-central-1.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 14:11:08 +0000
-Received: from EX19MTAEUB002.ant.amazon.com [54.240.197.232:29351]
- by smtpin.naws.eu-central-1.prod.farcaster.email.amazon.dev [10.0.44.64:2525] with esmtp (Farcaster)
- id 8e39f445-ebd5-4ce4-b99e-d390d1eee83e; Tue, 17 Mar 2026 14:11:08 +0000 (UTC)
-X-Farcaster-Flow-ID: 8e39f445-ebd5-4ce4-b99e-d390d1eee83e
-Received: from EX19D005EUB004.ant.amazon.com (10.252.51.126) by
- EX19MTAEUB002.ant.amazon.com (10.252.51.79) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37;
- Tue, 17 Mar 2026 14:11:07 +0000
+   d="scan'208";a="11017718"
+Received: from ip-10-6-3-216.eu-central-1.compute.internal (HELO smtpout.naws.eu-central-1.prod.farcaster.email.amazon.dev) ([10.6.3.216])
+  by internal-fra-out-005.esa.eu-central-1.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 14:11:20 +0000
+Received: from EX19MTAEUB002.ant.amazon.com [54.240.197.232:28302]
+ by smtpin.naws.eu-central-1.prod.farcaster.email.amazon.dev [10.0.29.244:2525] with esmtp (Farcaster)
+ id 2703a9d0-a65e-493e-aff8-54f3e9f5b406; Tue, 17 Mar 2026 14:11:20 +0000 (UTC)
+X-Farcaster-Flow-ID: 2703a9d0-a65e-493e-aff8-54f3e9f5b406
 Received: from EX19D005EUB003.ant.amazon.com (10.252.51.31) by
- EX19D005EUB004.ant.amazon.com (10.252.51.126) with Microsoft SMTP Server
+ EX19MTAEUB002.ant.amazon.com (10.252.51.59) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37;
- Tue, 17 Mar 2026 14:11:07 +0000
+ Tue, 17 Mar 2026 14:11:19 +0000
+Received: from EX19D005EUB003.ant.amazon.com (10.252.51.31) by
+ EX19D005EUB003.ant.amazon.com (10.252.51.31) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37;
+ Tue, 17 Mar 2026 14:11:19 +0000
 Received: from EX19D005EUB003.ant.amazon.com ([fe80::b825:becb:4b38:da0c]) by
  EX19D005EUB003.ant.amazon.com ([fe80::b825:becb:4b38:da0c%3]) with mapi id
- 15.02.2562.037; Tue, 17 Mar 2026 14:11:07 +0000
+ 15.02.2562.037; Tue, 17 Mar 2026 14:11:19 +0000
 From: "Kalyazin, Nikita" <kalyazin@amazon.co.uk>
 To: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-doc@vger.kernel.org"
 	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
@@ -144,14 +144,14 @@ CC: "pbonzini@redhat.com" <pbonzini@redhat.com>, "corbet@lwn.net"
 	"patrick.roy@linux.dev" <patrick.roy@linux.dev>, "Thomson, Jack"
 	<jackabt@amazon.co.uk>, "Itazuri, Takahiro" <itazur@amazon.co.uk>,
 	"Manwaring, Derek" <derekmn@amazon.com>, "Kalyazin, Nikita"
-	<kalyazin@amazon.co.uk>
-Subject: [PATCH v11 03/16] mm/secretmem: make use of
- folio_{zap,restore}_direct_map
-Thread-Topic: [PATCH v11 03/16] mm/secretmem: make use of
- folio_{zap,restore}_direct_map
-Thread-Index: AQHcthflERb7zhsH1EWE6uTFRY4Wfg==
-Date: Tue, 17 Mar 2026 14:11:07 +0000
-Message-ID: <20260317141031.514-4-kalyazin@amazon.com>
+	<kalyazin@amazon.co.uk>, Vlastimil Babka <vbabka@suse.cz>
+Subject: [PATCH v11 04/16] mm/gup: drop secretmem optimization from
+ gup_fast_folio_allowed
+Thread-Topic: [PATCH v11 04/16] mm/gup: drop secretmem optimization from
+ gup_fast_folio_allowed
+Thread-Index: AQHcthfsUhUKrmwTXkGd7H9F3DgqvA==
+Date: Tue, 17 Mar 2026 14:11:18 +0000
+Message-ID: <20260317141031.514-5-kalyazin@amazon.com>
 References: <20260317141031.514-1-kalyazin@amazon.com>
 In-Reply-To: <20260317141031.514-1-kalyazin@amazon.com>
 Accept-Language: en-GB, en-US
@@ -171,85 +171,96 @@ X-Spamd-Result: default: False [-7.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[amazon.co.uk,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[amazon.co.uk:s=amazoncorp2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[redhat.com,lwn.net,kernel.org,arm.com,huawei.com,google.com,alien8.de,linux.intel.com,zytor.com,infradead.org,linux-foundation.org,oracle.com,suse.com,iogearbox.net,linux.dev,gmail.com,fomichev.me,ziepe.ca,nvidia.com,suse.de,linuxfoundation.org,surriel.com,intel.com,ventanamicro.com,loongson.cn,amd.com,sanechips.com.cn,linux.ibm.com,ghiti.fr,eecs.berkeley.edu,dabbelt.com,os.amperecomputing.com,bytedance.com,shopee.com,amazon.co.uk,amazon.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,amazon.co.uk:dkim];
+	FREEMAIL_CC(0.00)[redhat.com,lwn.net,kernel.org,arm.com,huawei.com,google.com,alien8.de,linux.intel.com,zytor.com,infradead.org,linux-foundation.org,oracle.com,suse.com,iogearbox.net,linux.dev,gmail.com,fomichev.me,ziepe.ca,nvidia.com,suse.de,linuxfoundation.org,surriel.com,intel.com,ventanamicro.com,loongson.cn,amd.com,sanechips.com.cn,linux.ibm.com,ghiti.fr,eecs.berkeley.edu,dabbelt.com,os.amperecomputing.com,bytedance.com,shopee.com,amazon.co.uk,amazon.com,suse.cz];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,amazon.co.uk:dkim,linux.dev:email];
 	RCVD_TLS_LAST(0.00)[];
 	TO_DN_EQ_ADDR_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-17499-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-17500-lists,linux-s390=lfdr.de];
 	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[amazon.co.uk:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[kalyazin@amazon.co.uk,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[108];
+	RCPT_COUNT_GT_50(0.00)[109];
 	TAGGED_RCPT(0.00)[linux-s390];
 	NEURAL_HAM(-0.00)[-1.000];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[8]
-X-Rspamd-Queue-Id: 332852ABAAB
+X-Rspamd-Queue-Id: 7F15E2ABAE8
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Nikita Kalyazin <kalyazin@amazon.com>=0A=
+From: Patrick Roy <patrick.roy@linux.dev>=0A=
 =0A=
+This drops an optimization in gup_fast_folio_allowed() where=0A=
+secretmem_mapping() was only called if CONFIG_SECRETMEM=3Dy. secretmem is=
+=0A=
+enabled by default since commit b758fe6df50d ("mm/secretmem: make it on=0A=
+by default"), so the secretmem check did not actually end up elided in=0A=
+most cases anymore anyway.=0A=
+=0A=
+This is in preparation of the generalization of handling mappings where=0A=
+direct map entries of folios are set to not present.  Currently,=0A=
+mappings that match this description are secretmem mappings=0A=
+(memfd_secret()).  Later, some guest_memfd configurations will also fall=0A=
+into this category.=0A=
+=0A=
+Signed-off-by: Patrick Roy <patrick.roy@linux.dev>=0A=
+Acked-by: Vlastimil Babka <vbabka@suse.cz>=0A=
+Acked-by: David Hildenbrand (Red Hat) <david@kernel.org>=0A=
 Signed-off-by: Nikita Kalyazin <kalyazin@amazon.com>=0A=
 ---=0A=
- mm/secretmem.c | 8 ++------=0A=
- 1 file changed, 2 insertions(+), 6 deletions(-)=0A=
+ mm/gup.c | 11 +----------=0A=
+ 1 file changed, 1 insertion(+), 10 deletions(-)=0A=
 =0A=
-diff --git a/mm/secretmem.c b/mm/secretmem.c=0A=
-index fd29b33c6764..27b176af8fc4 100644=0A=
---- a/mm/secretmem.c=0A=
-+++ b/mm/secretmem.c=0A=
-@@ -53,7 +53,6 @@ static vm_fault_t secretmem_fault(struct vm_fault *vmf)=
-=0A=
- 	struct inode *inode =3D file_inode(vmf->vma->vm_file);=0A=
- 	pgoff_t offset =3D vmf->pgoff;=0A=
- 	gfp_t gfp =3D vmf->gfp_mask;=0A=
--	unsigned long addr;=0A=
- 	struct folio *folio;=0A=
- 	vm_fault_t ret;=0A=
- 	int err;=0A=
-@@ -72,7 +71,7 @@ static vm_fault_t secretmem_fault(struct vm_fault *vmf)=
-=0A=
- 			goto out;=0A=
- 		}=0A=
+diff --git a/mm/gup.c b/mm/gup.c=0A=
+index 8e7dc2c6ee73..5856d35be385 100644=0A=
+--- a/mm/gup.c=0A=
++++ b/mm/gup.c=0A=
+@@ -2739,7 +2739,6 @@ static bool gup_fast_folio_allowed(struct folio *foli=
+o, unsigned int flags)=0A=
+ {=0A=
+ 	bool reject_file_backed =3D false;=0A=
+ 	struct address_space *mapping;=0A=
+-	bool check_secretmem =3D false;=0A=
+ 	unsigned long mapping_flags;=0A=
  =0A=
--		err =3D set_direct_map_invalid_noflush(folio_address(folio));=0A=
-+		err =3D folio_zap_direct_map(folio);=0A=
- 		if (err) {=0A=
- 			folio_put(folio);=0A=
- 			ret =3D vmf_error(err);=0A=
-@@ -87,7 +86,7 @@ static vm_fault_t secretmem_fault(struct vm_fault *vmf)=
-=0A=
- 			 * already happened when we marked the page invalid=0A=
- 			 * which guarantees that this call won't fail=0A=
- 			 */=0A=
--			set_direct_map_default_noflush(folio_address(folio));=0A=
-+			folio_restore_direct_map(folio);=0A=
- 			folio_put(folio);=0A=
- 			if (err =3D=3D -EEXIST)=0A=
- 				goto retry;=0A=
-@@ -95,9 +94,6 @@ static vm_fault_t secretmem_fault(struct vm_fault *vmf)=
-=0A=
- 			ret =3D vmf_error(err);=0A=
- 			goto out;=0A=
- 		}=0A=
+ 	/*=0A=
+@@ -2751,14 +2750,6 @@ static bool gup_fast_folio_allowed(struct folio *fol=
+io, unsigned int flags)=0A=
+ 		reject_file_backed =3D true;=0A=
+ =0A=
+ 	/* We hold a folio reference, so we can safely access folio fields. */=0A=
 -=0A=
--		addr =3D (unsigned long)folio_address(folio);=0A=
--		flush_tlb_kernel_range(addr, addr + PAGE_SIZE);=0A=
- 	}=0A=
+-	/* secretmem folios are always order-0 folios. */=0A=
+-	if (IS_ENABLED(CONFIG_SECRETMEM) && !folio_test_large(folio))=0A=
+-		check_secretmem =3D true;=0A=
+-=0A=
+-	if (!reject_file_backed && !check_secretmem)=0A=
+-		return true;=0A=
+-=0A=
+ 	if (WARN_ON_ONCE(folio_test_slab(folio)))=0A=
+ 		return false;=0A=
  =0A=
- 	vmf->page =3D folio_file_page(folio, vmf->pgoff);=0A=
+@@ -2800,7 +2791,7 @@ static bool gup_fast_folio_allowed(struct folio *foli=
+o, unsigned int flags)=0A=
+ 	 * At this point, we know the mapping is non-null and points to an=0A=
+ 	 * address_space object.=0A=
+ 	 */=0A=
+-	if (check_secretmem && secretmem_mapping(mapping))=0A=
++	if (secretmem_mapping(mapping))=0A=
+ 		return false;=0A=
+ 	/* The only remaining allowed file system is shmem. */=0A=
+ 	return !reject_file_backed || shmem_mapping(mapping);=0A=
 -- =0A=
 2.50.1=0A=
 =0A=
