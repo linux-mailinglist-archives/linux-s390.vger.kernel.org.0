@@ -1,136 +1,170 @@
-Return-Path: <linux-s390+bounces-17431-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-17432-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UJTBMYDBuGkfjAEAu9opvQ
-	(envelope-from <linux-s390+bounces-17431-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 03:50:40 +0100
+	id QM79DETFuGnTjAEAu9opvQ
+	(envelope-from <linux-s390+bounces-17432-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 04:06:44 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 766652A2EE5
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 03:50:40 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id A180F2A3042
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 04:06:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 790FF3028355
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 02:50:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C8DF1300DF5E
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 03:06:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB61A2D9EFB;
-	Tue, 17 Mar 2026 02:50:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68AE02C027B;
+	Tue, 17 Mar 2026 03:06:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X0RRJckj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b06y/exZ"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97EC22BEFF5;
-	Tue, 17 Mar 2026 02:50:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3612BEC52
+	for <linux-s390@vger.kernel.org>; Tue, 17 Mar 2026 03:06:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773715817; cv=none; b=iYEwfBQdzjpEhsLsBhBOBMkCsxGne0e8WHI6eXzfVZ5FFdmbj2qtalvfLbGsrGJ7DWeczjf4PYYMUEZ4Jy8ObK0m7KAFRV5iGPq/i3tSPKu6MWYYGRxliWN1BZ3rPhY1CFCgBQyfsk4g+8CPQ4+uOSwXHdo4Tm71n0kH3iuaqEA=
+	t=1773716772; cv=none; b=W9oJW6DSRoT1Qufn5sdH+wKrg8HDuTS6okgAOHGiIdBKoxMKlIPqOy7NidgEVUtJbToiKm/c5GwS7p8VwaUucrEXKMkOgEqrulci56KGykuni8AciqEQIwpXpbHt8k9ujYxAx3QBcWEBl1FOuyI7tULN0FvUhaIHR0HTA6PmxSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773715817; c=relaxed/simple;
-	bh=alVrlu101bAdsJEA+qSPzD9ZCVrbyZEFXQz+beNOU40=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=cjlbbxXODCgLjp9t0GRjrqehY16NEhy/9RqHK6hhGvHlSKJwUT5gHGAJQ7GSo6FrUVU1pDbG8jSB1tfKY7GNOdfZnanAeqe43lWy3KUInH87y7xaEk5evJixcsZfISOucQMqVfTzFgGjVJHodU1VN1EjKE0FPY3nZoZ43iAChCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X0RRJckj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56502C19421;
-	Tue, 17 Mar 2026 02:50:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773715817;
-	bh=alVrlu101bAdsJEA+qSPzD9ZCVrbyZEFXQz+beNOU40=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=X0RRJckjHVmk7hzNroZO6Q0S/HDK3/wkmqNWJBQ7Q+xHVPigtLEkkwfBxM5ov60qd
-	 XNm2+qk1CnPepSC8hK8fzOhP4q0qVm4+yZeAWkI+kznI4du2AKfE2qPims6fWnbPXY
-	 DsRrtOPq653720DLUG5P5QEKOtmOjyZUMAHkuQwYSJjJLj40zhZpueVYMSFZQsiAj6
-	 WhiV38VuC71UBkTUknIMm2/BSPex9FQoBQz9/yGfgaziMwB4N4E/7bmX4+QTFUDHda
-	 GvqfSsJDWl1PYCyPt4GttfMDDBs6WQDj1Xbj89NU4AUfTeo7S++/U+eVdlXOFRWfkl
-	 uPxgMWwVyZfuQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3FF953808200;
-	Tue, 17 Mar 2026 02:50:11 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1773716772; c=relaxed/simple;
+	bh=RC/sNA7UZ675UVSNKiDi/OnG1i7OJo/S7122TlWs0xA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Au6gHc6KPWCBRtKmesUISS2oShSl8sIMDOUwDvhc9TYKBx3eymjNZUr3kvEuUtCERccnYtaNJRipz3YqtKxVR0TZj4eQ8BJ/V4BEXGSaWW4BjAim6O8k4t0hhKR+AZnnZJFxtuAnCa7fpUpbvdALXrx07Lw60epWlUw16Wt5wVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b06y/exZ; arc=none smtp.client-ip=74.125.82.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-1279caef718so6363049c88.1
+        for <linux-s390@vger.kernel.org>; Mon, 16 Mar 2026 20:06:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1773716770; x=1774321570; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jWlPZpg3Ia2Drs4Ekojtbptw9u9IS3zjvlx9f7SLX1I=;
+        b=b06y/exZKvI81P/gv/KzU6Rq9aqstcPUNxbpDzcAM7hU/Amu3Cqg2ntbBIA4BWLXRh
+         +QSNbN5mdq8HZtgiFKSv+IBVdHS6H13l06QCG4qLbG1ItTejmMc790Esg3FB3KNVlIdM
+         wSdIgUXK9kIWayy/vdi2mL+9tIWb3eiOQ7FWzIvHkoZbAPhHF8mt6lDQVwJJ8coxl3Hg
+         2oqSRDlAQhcxEXIOtGMbC+7l3UR9mtp3v2Iwmt8sFK65iaOeU2k9m1eHusWtIWNbr2PW
+         znlbmPeWercfxlrpB2RCEZ96UXvK1n1GCdeaZAoXHLDVaOw7WcYEgwzY9dXWyPOCEbki
+         j+KA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773716770; x=1774321570;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jWlPZpg3Ia2Drs4Ekojtbptw9u9IS3zjvlx9f7SLX1I=;
+        b=pyRLkBGT8puUlXtrAtwEa9m3fxBWcdUS8sf+6YALdO9oqQuoU/s0wtxlzLkvraPXeq
+         Q3zsmOeRDYoaSLgCWK+IxPPx7eM0+lsceL8b9noSp/tRvQvylchy7LG4N3BtCr+rboyG
+         kO82olhgcPxSwICOb+FsAqTgqDfn6fVvO1YSnQi4ShftYG5RFUwjzpYgRfNqeWi1y6FP
+         nrb0evbTEa3UWV96Z3+lAaFKlifLlhuBi3zLMzt9YDp7Sr/zRf239ziAK+MB+txOTnGF
+         5ItwsJdXbFDaKBSCK/NOVbqDcSRVLH1HESWgmr5OVWzDW2C7QtM798SoXCBHgsuTzHOH
+         Hyvg==
+X-Forwarded-Encrypted: i=1; AJvYcCW3E1zhh5ICu8ugvPj7ctihzWphZnmO1TdUM2PQ1iluKcKTtC0NiWnDVcMfJsFAWjFt/KbMmt5yAYWE@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDtqe//tkR9lupgw/hpeQDvMAOAWLWYXWAtk0tMpXNJ66Mnpqm
+	nLSBvhy2UlPlGp2uaIGD/KPXN4a9lA7a8VAJ88Y6S8F3hdOLuLf0AU1KbK5gSe2Nz01rxMSsL76
+	X/ktJ+i1tGA==
+X-Received: from dlaf5.prod.google.com ([2002:a05:701b:2405:b0:128:d36e:eb6f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:4397:b0:122:33e:6d41
+ with SMTP id a92af1059eb24-128f3dc5911mr6735342c88.23.1773716770021; Mon, 16
+ Mar 2026 20:06:10 -0700 (PDT)
+Date: Mon, 16 Mar 2026 20:05:56 -0700
+In-Reply-To: <CAP-5=fU9SJu=x2+aKTV4eXXLVv77SbtBr0shDLTfWw9eByYZ4Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v5] net/smc: fix NULL dereference and UAF in
- smc_tcp_syn_recv_sock()
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <177371580978.3402731.5817717150922524333.git-patchwork-notify@kernel.org>
-Date: Tue, 17 Mar 2026 02:50:09 +0000
-References: <20260312092909.48325-1-jiayuan.chen@linux.dev>
-In-Reply-To: <20260312092909.48325-1-jiayuan.chen@linux.dev>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: netdev@vger.kernel.org, jiayuan.chen@shopee.com,
- syzbot+827ae2bfb3a3529333e9@syzkaller.appspotmail.com, edumazet@google.com,
- alibuda@linux.alibaba.com, dust.li@linux.alibaba.com, sidraya@linux.ibm.com,
- wenjia@linux.ibm.com, mjambigi@linux.ibm.com, tonylu@linux.alibaba.com,
- guwen@linux.alibaba.com, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, horms@kernel.org, linux-rdma@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+References: <CAP-5=fU9SJu=x2+aKTV4eXXLVv77SbtBr0shDLTfWw9eByYZ4Q@mail.gmail.com>
+X-Mailer: git-send-email 2.53.0.851.ga537e3e6e9-goog
+Message-ID: <20260317030601.567422-1-irogers@google.com>
+Subject: [PATCH v4 0/5] perf evsel fallback changes
+From: Ian Rogers <irogers@google.com>
+To: tmricht@linux.ibm.com
+Cc: irogers@google.com, acme@kernel.org, agordeev@linux.ibm.com, 
+	gor@linux.ibm.com, hca@linux.ibm.com, japo@linux.ibm.com, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-s390@vger.kernel.org, namhyung@kernel.org, sumanthk@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
+	MV_CASE(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-17431-lists,linux-s390=lfdr.de,netdevbpf];
-	FROM_NEQ_ENVFROM(0.00)[patchwork-bot@kernel.org,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-17432-lists,linux-s390=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_NO_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390,827ae2bfb3a3529333e9];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[shopee.com:email]
-X-Rspamd-Queue-Id: 766652A2EE5
+	FROM_NEQ_ENVFROM(0.00)[irogers@google.com,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[google.com:+];
+	TO_DN_NONE(0.00)[];
+	TAGGED_RCPT(0.00)[linux-s390];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: A180F2A3042
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hello:
+Discussion with Thomas Richter in:
+https://lore.kernel.org/lkml/20260306071002.2526085-1-tmricht@linux.ibm.com/
+showed that the evsel__fallback wasn't working for s390. These patches
+avoid the problematic frame pointer callchain on s390 and fix
+evsel__fallback from a range of problems when falling back to a
+software event. I simulated failures when developing the patches but
+they are untested other than that.
 
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+v4: Changing the callchain parameter at configuration time means other
+    options aren't set the same as they would for `--call-graph
+    dwarf`, for example the stack size. Switch to setting the
+    callchain option on s390 to parameter parse time. For '-g' use
+    '--call-graph dwarf' for s390. Other --call-graph options are
+    parsed as normal, but a warning is generated when setting
+    `--call-graph fp` for s390. Also fix that sample IDs aren't wanted
+    when there is only 1 event in the evlist.
 
-On Thu, 12 Mar 2026 17:29:07 +0800 you wrote:
-> From: Jiayuan Chen <jiayuan.chen@shopee.com>
-> 
-> Syzkaller reported a panic in smc_tcp_syn_recv_sock() [1].
-> 
-> smc_tcp_syn_recv_sock() is called in the TCP receive path
-> (softirq) via icsk_af_ops->syn_recv_sock on the clcsock (TCP
-> listening socket). It reads sk_user_data to get the smc_sock
-> pointer. However, when the SMC listen socket is being closed
-> concurrently, smc_close_active() sets clcsock->sk_user_data
-> to NULL under sk_callback_lock, and then the smc_sock itself
-> can be freed via sock_put() in smc_release().
-> 
-> [...]
+v3: Incorporate feedback about event and callchain behavior for s390:
+https://lore.kernel.org/lkml/20260312061628.1593105-1-irogers@google.com/
+https://lore.kernel.org/lkml/20260313202811.2599195-1-irogers@google.com/
 
-Here is the summary with links:
-  - [net,v5] net/smc: fix NULL dereference and UAF in smc_tcp_syn_recv_sock()
-    https://git.kernel.org/netdev/net/c/6d5e4538364b
+v2: try exclude_callchain_user for s390 rather than fully disabling
+    the callchain. Fix a missed clearing of is_pmu_core if the
+    software event fallback.
+https://lore.kernel.org/lkml/20260312061628.1593105-1-irogers@google.com/
 
-You are awesome, thank you!
+v1: https://lore.kernel.org/lkml/20260312031928.1494864-1-irogers@google.com/
+
+Ian Rogers (5):
+  perf evsel: Improve falling back from cycles
+  perf target: Constify simple check functions
+  perf evsel: Constify option arguments to config functions
+  perf callchain: Move callchain option parsing out of builtin
+  perf evlist: Improve default event for s390
+
+ tools/perf/builtin-record.c      | 64 ++---------------------------
+ tools/perf/builtin-top.c         |  2 +-
+ tools/perf/tests/event_update.c  |  4 +-
+ tools/perf/tests/expand-cgroup.c |  4 +-
+ tools/perf/tests/perf-record.c   |  7 +++-
+ tools/perf/tests/topology.c      |  4 +-
+ tools/perf/util/callchain.c      | 61 ++++++++++++++++++++++++++++
+ tools/perf/util/evlist.c         | 32 ++++++++++-----
+ tools/perf/util/evlist.h         |  2 +-
+ tools/perf/util/evsel.c          | 70 +++++++++++++++++++++-----------
+ tools/perf/util/evsel.h          | 10 +++--
+ tools/perf/util/target.h         | 12 +++---
+ 12 files changed, 159 insertions(+), 113 deletions(-)
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.53.0.851.ga537e3e6e9-goog
 
 
