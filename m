@@ -1,222 +1,151 @@
-Return-Path: <linux-s390+bounces-17427-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-17428-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kI1dIEC4uGm8iQEAu9opvQ
-	(envelope-from <linux-s390+bounces-17427-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 03:11:12 +0100
+	id EMBkNKm4uGnZiQEAu9opvQ
+	(envelope-from <linux-s390+bounces-17428-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 03:12:57 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E25192A2C14
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 03:11:11 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3AFAC2A2C20
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 03:12:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 927733033E6D
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 02:10:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B73FD301C3C4
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2026 02:12:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31E5428B4FD;
-	Tue, 17 Mar 2026 02:10:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4399A2C234A;
+	Tue, 17 Mar 2026 02:12:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UE5RPQJo"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="JiO/MD/M"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21A943446C3
-	for <linux-s390@vger.kernel.org>; Tue, 17 Mar 2026 02:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A5D23EA93;
+	Tue, 17 Mar 2026 02:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773713453; cv=none; b=ULbHjwSLOd4a/e2VLpbSStoUPVPJR/tpR4XpzeVzoakiW+9OlpNVsNt2asDouf+4aLlLVGgDTKA4KTchr5E6vqsumzCpNJotqRp+t9Hytoj9yh9o1SXg3eVwvyMSmbbtKSOfv2amcEXNfrs/cE/gUhUct5taNiR12JHLrDvvpxs=
+	t=1773713574; cv=none; b=WZJyA7SaAB0rW9rg7VQmC/gU3b2aIUnb2nrP6DaMOzBanb8IqgFunc0SlqIXomrGKohsrBLJfbcsaJduZVrdhCfmbGyppCoOyLwXvQDxVpDGZA+wTkvT2Vz9auzSM+YgL8xC1caPnBMitKIKk2/0/+DSslm/TRsENDjM+lyiZhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773713453; c=relaxed/simple;
-	bh=6APpjZWVDoYhnyrU2ukjEox3NsHiAR54Lg0paX9dEzg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SK/LvkgiKSWOM8/5/3WIWLy96UKNSyhT1gD8/jx7ObaFs8sL42IIWmVHimMNj3hOMQehwrmb8es4+8z97sEtw4kQA+hwCk789IvtTtP7XjtmxLt5uNgAlnbC5CXCT7v9Ml9W8yKN+ENpPJwdUjKt7eGItztYyhbl3yXd2i3Pf6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UE5RPQJo; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1773713450;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j4sbtWDw4DJ2JBJ+y1C7vQWjeEXxcelaEAyT7ptHthE=;
-	b=UE5RPQJomup9qv/o0ixPU1NJEEYu2ANfhkR7nG17960EWYiYFNYWFSGULqJ3kUVZKdMG5F
-	HirS7tG/bliMT0vtcM0R/gR31PvIdoJKwbheauiDQuAYxwDz3QliHEfI9RAiSxjkgJBSpD
-	KIhwBUNKQbwddIKTWdemd081/7Wo7pQ=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-338-3Bd5hukVNg6_8EEIPcheoQ-1; Mon,
- 16 Mar 2026 22:10:46 -0400
-X-MC-Unique: 3Bd5hukVNg6_8EEIPcheoQ-1
-X-Mimecast-MFC-AGG-ID: 3Bd5hukVNg6_8EEIPcheoQ_1773713443
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AF4D218005B6;
-	Tue, 17 Mar 2026 02:10:41 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.155])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B823C1955F19;
-	Tue, 17 Mar 2026 02:10:38 +0000 (UTC)
-Date: Tue, 17 Mar 2026 10:10:34 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Sourabh Jain <sourabhjain@linux.ibm.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
-Cc: kasan-dev@googlegroups.com, linux-mm@kvack.org, andreyknvl@gmail.com,
-	ryabinin.a.a@gmail.com, glider@google.com, dvyukov@google.com,
-	linux-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	x86@kernel.org, chris@zankel.net, jcmvbkbc@gmail.com,
-	linux-s390@vger.kernel.org, hca@linux.ibm.com
-Subject: Re: [PATCH v5 09/15] arch/powerpc: don't initialize kasan if it's
- disabled
-Message-ID: <abi4Gumt0Qr_h-3W@fedora>
-References: <20260225081412.76502-1-bhe@redhat.com>
- <20260225081412.76502-10-bhe@redhat.com>
- <71921cca-b890-41c4-93e9-957d3f647ffa@linux.ibm.com>
- <0bc30137-3f1d-4a4a-8573-8f26866fcc26@kernel.org>
+	s=arc-20240116; t=1773713574; c=relaxed/simple;
+	bh=ZkomifTMTN7ZG/e5DBjrxlwrOm0ocoDJK/lAGRPbLkQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=s7Wn0A2RNR7q4i2LsUpAeNNlTYlU33Ca/xW16wCpa8n8BCrJFBdIq6McR90ch6fl91/NPI7Yb6YRAlUy4XMNd/n7qAucMZroQNVliOEQlT1a2udSYF1gYQiFdXZTZwZvFDePZoGeXkSYhDMc3/57Eb2q0Qd6LeF4OJdti2dFTdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=JiO/MD/M; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1773713569; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
+	bh=25qRNyQtBw74MmNrl61kNkSF5nCwMJK0RbQdwmstsfA=;
+	b=JiO/MD/MjvdPoigGei8y0PftucxSIci3odpsu48sUQ498Lesb+DCWZH4tc6Icsab38DexGm8zLu4dOx6MX7susYiMDblL+huTGo4S+oLSD6UyS1ghkcil8TNoStNRwDanlv+/odJeX7nNKLflcJz30pDNcZMoyHk523CZxvNBBU=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R871e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=35;SR=0;TI=SMTPD_---0X.9KFWD_1773713557;
+Received: from 30.221.130.125(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0X.9KFWD_1773713557 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 17 Mar 2026 10:12:46 +0800
+Message-ID: <78489ff1-c2fa-47dc-beb4-54e9410f7d5c@linux.alibaba.com>
+Date: Tue, 17 Mar 2026 10:12:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 0/2] ptp: Move non-NIC PHC drivers from netdev to
+ clock/timekeeping maintainership
+From: Wen Gu <guwen@linux.alibaba.com>
+To: David Woodhouse <dwmw2@infradead.org>, tglx@kernel.org,
+ tglx@linutronix.de, richardcochran@gmail.com, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ mani@kernel.org, imran.shaik@oss.qualcomm.com,
+ John Stultz <jstultz@google.com>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: vladimir.oltean@nxp.com, wei.fang@nxp.com, xiaoning.wang@nxp.com,
+ jonathan.lemon@gmail.com, vadim.fedorenko@linux.dev, yangbo.lu@nxp.com,
+ svens@linux.ibm.com, nick.shi@broadcom.com, ajay.kaher@broadcom.com,
+ alexey.makhalov@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+ linux-fpga@vger.kernel.org, imx@lists.linux.dev, linux-s390@vger.kernel.org,
+ dust.li@linux.alibaba.com, xuanzhuo@linux.alibaba.com,
+ taniya.das@oss.qualcomm.com
+References: <20260227081934.96865-1-guwen@linux.alibaba.com>
+ <be4c63a8dc43be15576565b4bd4567b3cf433d58.camel@infradead.org>
+ <4a9af4b1-6820-4173-8daf-4201bb1bcca5@linux.alibaba.com>
+In-Reply-To: <4a9af4b1-6820-4173-8daf-4201bb1bcca5@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <0bc30137-3f1d-4a4a-8573-8f26866fcc26@kernel.org>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [-7.66 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-17427-lists,linux-s390=lfdr.de];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-17428-lists,linux-s390=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[19];
+	FREEMAIL_TO(0.00)[infradead.org,kernel.org,linutronix.de,gmail.com,lunn.ch,davemloft.net,google.com,redhat.com,vger.kernel.org,oss.qualcomm.com];
+	RCPT_COUNT_TWELVE(0.00)[35];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[googlegroups.com,kvack.org,gmail.com,google.com,vger.kernel.org,lists.infradead.org,lists.linux.dev,lists.ozlabs.org,kernel.org,zankel.net,linux.ibm.com];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[bhe@redhat.com,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[redhat.com:+];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-s390];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,ozlabs.org:email,54.174.64.0:email,1.201.195.198:email]
-X-Rspamd-Queue-Id: E25192A2C14
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[guwen@linux.alibaba.com,linux-s390@vger.kernel.org];
+	FREEMAIL_CC(0.00)[nxp.com,gmail.com,linux.dev,linux.ibm.com,broadcom.com,vger.kernel.org,lists.linux.dev,linux.alibaba.com,oss.qualcomm.com];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-s390,netdev];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.alibaba.com:dkim,linux.alibaba.com:mid]
+X-Rspamd-Queue-Id: 3AFAC2A2C20
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 03/12/26 at 12:23pm, Christophe Leroy (CS GROUP) wrote:
-> 
-> 
-> Le 12/03/2026 à 12:12, Sourabh Jain a écrit :
-> > 
-> > 
-> > On 25/02/26 13:44, Baoquan He wrote:
-> > > Here, kasan is disabled if specified 'kasan=off' in kernel cmdline.
-> > > 
-> > > This includes 32bit, book3s/64 and book3e/64.
-> > > 
-> > > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > > Cc: linuxppc-dev@lists.ozlabs.org
-> > > ---
-> > >   arch/powerpc/mm/kasan/init_32.c        | 6 +++++-
-> > >   arch/powerpc/mm/kasan/init_book3e_64.c | 4 ++++
-> > >   arch/powerpc/mm/kasan/init_book3s_64.c | 4 ++++
-> > >   3 files changed, 13 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/powerpc/mm/kasan/init_32.c
-> > > b/arch/powerpc/mm/kasan/ init_32.c
-> > > index 1d083597464f..0ea2a636c992 100644
-> > > --- a/arch/powerpc/mm/kasan/init_32.c
-> > > +++ b/arch/powerpc/mm/kasan/init_32.c
-> > > @@ -141,6 +141,10 @@ void __init kasan_init(void)
-> > >       u64 i;
-> > >       int ret;
-> > > +    /* If KASAN is disabled via command line, don't initialize it. */
-> > > +    if (kasan_arg_disabled)
-> > > +        return;
-> > > +
-> > >       for_each_mem_range(i, &base, &end) {
-> > >           phys_addr_t top = min(end, total_lowmem);
-> > > @@ -170,7 +174,7 @@ void __init kasan_init(void)
-> > >   void __init kasan_late_init(void)
-> > >   {
-> > > -    if (IS_ENABLED(CONFIG_KASAN_VMALLOC))
-> > > +    if (IS_ENABLED(CONFIG_KASAN_VMALLOC) && kasan_enabled())
-> > >           kasan_unmap_early_shadow_vmalloc();
-> > >   }
-> > > diff --git a/arch/powerpc/mm/kasan/init_book3e_64.c
-> > > b/arch/powerpc/mm/ kasan/init_book3e_64.c
-> > > index 0d3a73d6d4b0..fbe4c9a7e460 100644
-> > > --- a/arch/powerpc/mm/kasan/init_book3e_64.c
-> > > +++ b/arch/powerpc/mm/kasan/init_book3e_64.c
-> > > @@ -111,6 +111,10 @@ void __init kasan_init(void)
-> > >       u64 i;
-> > >       pte_t zero_pte = pfn_pte(virt_to_pfn(kasan_early_shadow_page),
-> > > PAGE_KERNEL_RO);
-> > > +    /* If KASAN is disabled via command line, don't initialize it. */
-> > > +    if (kasan_arg_disabled)
-> > > +        return;
-> > > +
-> > >       for_each_mem_range(i, &start, &end)
-> > >           kasan_init_phys_region(phys_to_virt(start), phys_to_virt(end));
-> > > diff --git a/arch/powerpc/mm/kasan/init_book3s_64.c
-> > > b/arch/powerpc/mm/ kasan/init_book3s_64.c
-> > > index dcafa641804c..f7906f9ef9be 100644
-> > > --- a/arch/powerpc/mm/kasan/init_book3s_64.c
-> > > +++ b/arch/powerpc/mm/kasan/init_book3s_64.c
-> > > @@ -54,6 +54,10 @@ void __init kasan_init(void)
-> > >       u64 i;
-> > >       pte_t zero_pte = pfn_pte(virt_to_pfn(kasan_early_shadow_page),
-> > > PAGE_KERNEL);
-> > > +    /* If KASAN is disabled via command line, don't initialize it. */
-> > > +    if (kasan_arg_disabled)
-> > > +        return;
-> > > +
-> > >       if (!early_radix_enabled()) {
-> > >           pr_warn("KASAN not enabled as it requires radix!");
-> > >           return;
-> > 
-> > Should we log in the kernel log buffer that KASAN is disabled?
-> > 
-> > Right now, I don't see the kernel advertising the same.
-> 
-> When KASAN is enabled it is advertised with:
-> 
-> 	pr_info("KernelAddressSanitizer initialized (generic)\n");
-> 
-> Isn't the absence of that message enough to understand KASAN is not there ?
 
-Right, that's the way I took when I tested it.
+
+On 2026/2/27 20:25, Wen Gu wrote:
+> 
+> 
+> On 2026/2/27 18:25, David Woodhouse wrote:
+>> On Fri, 2026-02-27 at 16:19 +0800, Wen Gu wrote:
+>>>
+>>> # Request for comments
+>>>
+>>> 1. Following the clocksource/timekeeping and POSIX timer areas, this RFC routes
+>>> changes for drivers/ptp/emulated/ to linux-kernel@vger.kernel.orgÂ (rather than
+>>> netdev). However, the preferred integration path is still unclear (e.g. which
+>>> tree should take such changes, and who should collect/pull them for merging). We
+>>> would really appreciate guidance from the time/clock maintainers, especially any
+>>> input from Thomas Gleixner, on the preferred tree/workflow for these changes.
+>>>
+>>> 2. This RFC currently lists us as the maintainers for drivers/ptp/emulated/ as a
+>>> fallback contact point. Ideally, we would prefer this area to be maintained by
+>>> clock/time experts in the long run. Suggestions on more suitable maintainers are
+>>> very welcome.
+>>
+>> I'm happy to be involved too.
+> 
+> Thanks, David. It would be great to have you involved. Would you be willing to
+> be listed in MAINTAINERS for drivers/ptp/emulated/?
+
+Hi David,
+
+Just following up in case this got lost in the thread.
+
+You mentioned earlier that you'd be happy to be involved, so I wanted to
+check whether you'd be comfortable being listed as a co-maintainer.
+
+Thanks!
 
 > 
-> > 
-> > $ dmesg | grep -i kasan
-> > [    0.000000] Kernel command line: BOOT_IMAGE=(ieee1275//vdevice/v-
-> > scsi@30000070/disk@8100000000000000,msdos2)/vmlinuz-7.0.0-rc3+
-> > crashkernel=2G kasan=off
-> > 
-> > Tested this series on powerpc Pseries platform.
-> > So feel free to add:
-> > Tested-by: Sourabh Jain <sourabhjain@linux.ibm.com>
-
-Thanks for testing.
-
+> Regards.
 
