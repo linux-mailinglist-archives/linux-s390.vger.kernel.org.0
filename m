@@ -1,480 +1,243 @@
-Return-Path: <linux-s390+bounces-17660-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-17664-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GJKeICziu2lXpQIAu9opvQ
-	(envelope-from <linux-s390+bounces-17660-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 12:46:52 +0100
+	id kElFGJbmu2njpQIAu9opvQ
+	(envelope-from <linux-s390+bounces-17664-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 13:05:42 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B34D2CA8F2
-	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 12:46:46 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5BBB82CADD7
+	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 13:05:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A33823247E26
-	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 11:40:17 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B5BE63006207
+	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 12:05:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5097438F231;
-	Thu, 19 Mar 2026 11:39:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13E133CFF51;
+	Thu, 19 Mar 2026 12:05:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BGx7WrTw"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UvB1l0oP"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F8538E5F1;
-	Thu, 19 Mar 2026 11:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D266C3CD8B4;
+	Thu, 19 Mar 2026 12:05:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773920389; cv=none; b=HHbvK2TEMvhQxtayyb8Fik9qUl3HB+L3jq5k42tcJdN2e74S3080vzxaISEUnMKuURGEoDN3+uArcR+QBY/4myur2ejArf0bTQhQhOk8wvySyJddI9UzoWDq7cnkRI8JDdX/doSed1z5oVgXmtLDILWmkdLZc6S74lVns1p0auI=
+	t=1773921919; cv=none; b=paVWnPVZjF1J6QnnMYprNwxrRMmurN87MuTLYo/Ncn+mu0tVNNe37GB+eyLK1MMeniQIdXPUz4h6QnnsbsTSjZrACr1RTiJqqwNFMRwT0YPGNoGI6dEcRm1EDzlwZ+7m5kyRBbiicydu+JzPu/hqIqQZyfzVCZlyWEvgUYcTUaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773920389; c=relaxed/simple;
-	bh=E9JhBbwIf2oYiVeQO98SXyjx4quJ+BMudZAgGLFcb+g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HMkHwOGe/FHtYH4XhBC+IztTre1QsMdPnl23gSKnqAWMnXcDB3Jx+7qthdcLNy/STKZWJ+kki5AP8Zoeqvl/MhrynZqOWovYViqASxi3ZAz/a8LAZrHpr4gPDLNN0xTmwGwTYVYWo5HifjUOEa2lIJupfRyF9D8udcHxOZbyBok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BGx7WrTw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A442FC19424;
-	Thu, 19 Mar 2026 11:39:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773920389;
-	bh=E9JhBbwIf2oYiVeQO98SXyjx4quJ+BMudZAgGLFcb+g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BGx7WrTwHUihAjtcSbFNMAICzyKVLizTimomndMFC17GigIHl2O5lLd1sAboSBwgz
-	 teTLnani2q02pnMpHF5I64dZ3BvIk/JIUF/u8u/Bd2YHImY7IFL2+OvVZNa41u0ra+
-	 0OMaJIIAcvUg7Gjcw8smNDGGOYsDwc1/HwLmjvPFzWx3oYGtRvNe6urP8AOJm5vdM5
-	 jYzKtGiYHfkigeu6+1gWkC9Uvr0NJ8lJV5m9qVwNrOYChDvk1FHRUJG/M5g2z/kZLI
-	 daNPIHfmjTPYD/PMmFMMlmRs2UzfU3YqHjEfUY4w3wEM9yjit59oEp/L1Mbz0Ga+4j
-	 3P7vBOv+qa4qQ==
-Date: Thu, 19 Mar 2026 11:39:43 +0000
-From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: akpm@linux-foundation.org, david@kernel.org, Liam.Howlett@oracle.com, 
-	vbabka@kernel.org, rppt@kernel.org, surenb@google.com, mhocko@suse.com, 
-	linux-arm-kernel@lists.infradead.org, x86@kernel.org, linux-parisc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	kvm@vger.kernel.org, open <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] mm: change to return bool for the MMU notifier's
- young flag check
-Message-ID: <67c670e2-c98f-490b-bbb9-2960f8175b5a@lucifer.local>
-References: <cover.1773890510.git.baolin.wang@linux.alibaba.com>
- <545847c132da5d957cfc74ab19e849b16127aa8f.1773890510.git.baolin.wang@linux.alibaba.com>
+	s=arc-20240116; t=1773921919; c=relaxed/simple;
+	bh=Drv7tVpUfqn11jRRBMEJ5HOqZ6LGS+MOc+N2SC7wdow=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ts/JKxSnxdw1e3x5GZUMoEm94IhDrcXaDVPL1gPMjSRG3DDVtCiHWvSxodg4yqProuYlzA8RlVl/IPphu7NnOm5ay5wgmLFMb871aoH6Hc3aPrbQyAo/+pKJcueIOsUGBgV3LQCyNmFcjJqKohd+UiNSk69M6EQpHHr1qdQuXzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UvB1l0oP; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62J4xi0q2670131;
+	Thu, 19 Mar 2026 12:05:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=1TrX91tEWwsG9mTtb+H5eggmcM7PIbQdX9XUIsgvh
+	ow=; b=UvB1l0oPuvIV8KhYXy8AiS9xJcpqV9tkq6Dew0AZEXl1XVLXglB8lVrg5
+	Y6IzcqdvESG2O2BslQ/OzxYzfkP1pw2qu8pxmn1wf61Ay445mMNm4af3OmKbfT0X
+	D48UARpPNKndYgf8hoW/nqgQTPSXELAmfW4D07iDLJwOB8s0X8m/2RGyRf4P3mbA
+	WHirfOnNr21yIQzO4SNWXHNCpd2zw569s2MPwCEOYIe99CJ5uy98F9OZkMl6hbfU
+	JU+WJt8QdX8j/+X9fekAXlrbzKLIz482fMyScHfQwoh57FXRiRQpR5OCy4PsHyhc
+	4v90H3DdH7IdjeYpsMai8l3+uBhwg==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cvw3j652f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 19 Mar 2026 12:05:08 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62J90avY014011;
+	Thu, 19 Mar 2026 12:05:07 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4cwjcyadkj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 19 Mar 2026 12:05:07 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62JC53WF51053018
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 19 Mar 2026 12:05:03 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 80FA820043;
+	Thu, 19 Mar 2026 12:05:03 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5BE0320040;
+	Thu, 19 Mar 2026 12:05:03 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 19 Mar 2026 12:05:03 +0000 (GMT)
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Juergen Christ <jchrist@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH v2 0/9] s390: Improve this_cpu operations
+Date: Thu, 19 Mar 2026 13:04:54 +0100
+Message-ID: <20260319120503.4046659-1-hca@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <545847c132da5d957cfc74ab19e849b16127aa8f.1773890510.git.baolin.wang@linux.alibaba.com>
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: e2I4CQKEcHNZKvZPTxTtnZn4uFqQaOMr
+X-Proofpoint-ORIG-GUID: e2I4CQKEcHNZKvZPTxTtnZn4uFqQaOMr
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE5MDA5NCBTYWx0ZWRfXzpBQoKq6DaLY
+ 0m5NlgwUHdqGuySQC1L4IeXuEo4m7Mli/f7uXckbJLxjgh69m1FVQBGqeLGMtvkth/O40oPx+Lm
+ kOdlagqBAJDwEZlVojFTtrbj91uzKElNPw0QqpHsOrdEmMc117AFypgdRejVdm9iYqxLn73UplU
+ tllQjt0zzDK6/RRmzciC6tpmxFb4Xn2j7cJx1n7Hi5KQWL04sPEbE+Pk7Co2c1UF+UX9Pkw1LN/
+ vAIqdZ1mL94NRh0CTzRmmjIRY6psz/YVsOvfhF4W1sc8w6K23AvH+8cdKFgGGVZF90MkYk2bhdt
+ vnbdsqeqmdOObIDKcm/sJz9FTuwq6UTp/nL1spnUHpDs4zdB5d61cisXadSkZZgVah5I7jWCZDE
+ fk0EdffXxLNeAXqUWytdWbDQ9GpMFZGJn1JkUjQgT9g6eiNrxAxeUVfx4xozgNmkC2kqont2DqN
+ tLnVMFVZxe1+joC8/iw==
+X-Authority-Analysis: v=2.4 cv=Hf8ZjyE8 c=1 sm=1 tr=0 ts=69bbe674 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=Y2IxJ9c9Rs8Kov3niI8_:22 a=c92rfblmAAAA:8 a=VnNF1IyMAAAA:8 a=WsHKUha7AAAA:8
+ a=gLnKuNnXPhP2SBYGgd0A:9 a=GvGzcOZaWPEFPQC_NcjD:22 a=H4LAKuo8djmI0KOkngUh:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-19_01,2026-03-19_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 malwarescore=0 lowpriorityscore=0 impostorscore=0 bulkscore=0
+ suspectscore=0 priorityscore=1501 spamscore=0 adultscore=0 clxscore=1015
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603190094
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-17660-lists,linux-s390=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-17664-lists,linux-s390=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,programming.kicks-ass.net:email];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ljs@kernel.org,linux-s390@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hca@linux.ibm.com,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.997];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	NEURAL_HAM(-0.00)[-0.991];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lucifer.local:mid,alibaba.com:email]
-X-Rspamd-Queue-Id: 1B34D2CA8F2
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[11]
+X-Rspamd-Queue-Id: 5BBB82CADD7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Mar 19, 2026 at 11:24:05AM +0800, Baolin Wang wrote:
-> The MMU notifier young flag check related functions only return whether
-> the young flag was set. Change the return type to bool to make the
-> intention clearer.
->
-> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+v2:
 
-I can see KVM is the only user for the mmu_notifier_ops clear_flush_young,
-clear_young and test_young hooks, which map to
-kvm_mmu_notifier_[clear_flush,clear,test]_young() functions, and you have
-updated them all.
+- Add proper PERCPU_PTR cast to most patches to avoid tons of sparse
+  warnings
 
-So this LGTM with nits below, and so (with nits addressed as per the other R-b
-tags :):
+- Add missing __packed attribute to insn structure [Sashiko [2]]
 
-Reviewed-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
+- Fix inverted if condition [Sashiko [2]]
 
-Thanks for doing this! Int as bool is a pet peeve of mine :))
+- Add missing user_mode() check [Sashiko [2]]
 
-Cheers, Lorenzo
+- Move percpu_entry() call in front of irqentry_enter() call in all
+  entry paths to avoid that potential this_cpu() operations overwrite
+  the not-yet saved percpu code section indicator  [Sashiko [2]]
 
-> ---
->  include/linux/mmu_notifier.h | 76 +++++++++++++++++-------------------
->  mm/internal.h                | 16 ++++----
->  mm/mmu_notifier.c            | 20 +++++-----
->  virt/kvm/kvm_main.c          | 40 +++++++++----------
->  4 files changed, 72 insertions(+), 80 deletions(-)
->
-> diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
-> index 3705d350c863..17f2cdc77dd5 100644
-> --- a/include/linux/mmu_notifier.h
-> +++ b/include/linux/mmu_notifier.h
-> @@ -97,20 +97,20 @@ struct mmu_notifier_ops {
->  	 * Start-end is necessary in case the secondary MMU is mapping the page
->  	 * at a smaller granularity than the primary MMU.
->  	 */
-> -	int (*clear_flush_young)(struct mmu_notifier *subscription,
-> -				 struct mm_struct *mm,
-> -				 unsigned long start,
-> -				 unsigned long end);
-> +	bool (*clear_flush_young)(struct mmu_notifier *subscription,
-> +				  struct mm_struct *mm,
-> +				  unsigned long start,
-> +				  unsigned long end);
->
->  	/*
->  	 * clear_young is a lightweight version of clear_flush_young. Like the
->  	 * latter, it is supposed to test-and-clear the young/accessed bitflag
->  	 * in the secondary pte, but it may omit flushing the secondary tlb.
->  	 */
-> -	int (*clear_young)(struct mmu_notifier *subscription,
-> -			   struct mm_struct *mm,
-> -			   unsigned long start,
-> -			   unsigned long end);
-> +	bool (*clear_young)(struct mmu_notifier *subscription,
-> +			    struct mm_struct *mm,
-> +			    unsigned long start,
-> +			    unsigned long end);
->
->  	/*
->  	 * test_young is called to check the young/accessed bitflag in
-> @@ -118,9 +118,9 @@ struct mmu_notifier_ops {
->  	 * frequently used without actually clearing the flag or tearing
->  	 * down the secondary mapping on the page.
->  	 */
-> -	int (*test_young)(struct mmu_notifier *subscription,
-> -			  struct mm_struct *mm,
-> -			  unsigned long address);
-> +	bool (*test_young)(struct mmu_notifier *subscription,
-> +			   struct mm_struct *mm,
-> +			   unsigned long address);
->
->  	/*
->  	 * invalidate_range_start() and invalidate_range_end() must be
-> @@ -376,14 +376,12 @@ mmu_interval_check_retry(struct mmu_interval_notifier *interval_sub,
->
->  extern void __mmu_notifier_subscriptions_destroy(struct mm_struct *mm);
->  extern void __mmu_notifier_release(struct mm_struct *mm);
-> -extern int __mmu_notifier_clear_flush_young(struct mm_struct *mm,
-> -					  unsigned long start,
-> -					  unsigned long end);
-> -extern int __mmu_notifier_clear_young(struct mm_struct *mm,
-> -				      unsigned long start,
-> -				      unsigned long end);
-> -extern int __mmu_notifier_test_young(struct mm_struct *mm,
-> -				     unsigned long address);
-> +bool __mmu_notifier_clear_flush_young(struct mm_struct *mm,
-> +		unsigned long start, unsigned long end);
-> +bool __mmu_notifier_clear_young(struct mm_struct *mm,
-> +		unsigned long start, unsigned long end);
-> +bool __mmu_notifier_test_young(struct mm_struct *mm,
-> +		unsigned long address);
->  extern int __mmu_notifier_invalidate_range_start(struct mmu_notifier_range *r);
->  extern void __mmu_notifier_invalidate_range_end(struct mmu_notifier_range *r);
->  extern void __mmu_notifier_arch_invalidate_secondary_tlbs(struct mm_struct *mm,
+[2] https://sashiko.dev/#/patchset/20260317195436.2276810-1-hca%40linux.ibm.com
 
-I mean damn, at this point maybe it's legit to drop the surrounding externs here
-too? But maybe not :))
+v1:
 
-> @@ -403,30 +401,28 @@ static inline void mmu_notifier_release(struct mm_struct *mm)
->  		__mmu_notifier_release(mm);
->  }
->
-> -static inline int mmu_notifier_clear_flush_young(struct mm_struct *mm,
-> -					  unsigned long start,
-> -					  unsigned long end)
-> +static inline bool mmu_notifier_clear_flush_young(struct mm_struct *mm,
-> +		unsigned long start, unsigned long end)
->  {
->  	if (mm_has_notifiers(mm))
->  		return __mmu_notifier_clear_flush_young(mm, start, end);
-> -	return 0;
-> +	return false;
->  }
->
-> -static inline int mmu_notifier_clear_young(struct mm_struct *mm,
-> -					   unsigned long start,
-> -					   unsigned long end)
-> +static inline bool mmu_notifier_clear_young(struct mm_struct *mm,
-> +		unsigned long start, unsigned long end)
->  {
->  	if (mm_has_notifiers(mm))
->  		return __mmu_notifier_clear_young(mm, start, end);
-> -	return 0;
-> +	return false;
->  }
->
-> -static inline int mmu_notifier_test_young(struct mm_struct *mm,
-> -					  unsigned long address)
-> +static inline bool mmu_notifier_test_young(struct mm_struct *mm,
-> +		unsigned long address)
->  {
->  	if (mm_has_notifiers(mm))
->  		return __mmu_notifier_test_young(mm, address);
-> -	return 0;
-> +	return false;
->  }
->
->  static inline void
-> @@ -552,24 +548,22 @@ static inline void mmu_notifier_release(struct mm_struct *mm)
->  {
->  }
->
-> -static inline int mmu_notifier_clear_flush_young(struct mm_struct *mm,
-> -					  unsigned long start,
-> -					  unsigned long end)
-> +static inline bool mmu_notifier_clear_flush_young(struct mm_struct *mm,
-> +		unsigned long start, unsigned long end)
->  {
-> -	return 0;
-> +	return false;
->  }
->
-> -static inline int mmu_notifier_clear_young(struct mm_struct *mm,
-> -					   unsigned long start,
-> -					   unsigned long end)
-> +static inline bool mmu_notifier_clear_young(struct mm_struct *mm,
-> +		unsigned long start, unsigned long end)
->  {
-> -	return 0;
-> +	return false;
->  }
->
-> -static inline int mmu_notifier_test_young(struct mm_struct *mm,
-> -					  unsigned long address)
-> +static inline bool mmu_notifier_test_young(struct mm_struct *mm,
-> +		unsigned long address)
->  {
-> -	return 0;
-> +	return false;
->  }
->
->  static inline void
-> diff --git a/mm/internal.h b/mm/internal.h
-> index 0eaca2f0eb6a..3d6eba216364 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -1831,10 +1831,10 @@ static inline int io_remap_pfn_range_complete(struct vm_area_struct *vma,
->  }
->
->  #ifdef CONFIG_MMU_NOTIFIER
-> -static inline int clear_flush_young_ptes_notify(struct vm_area_struct *vma,
-> +static inline bool clear_flush_young_ptes_notify(struct vm_area_struct *vma,
->  		unsigned long addr, pte_t *ptep, unsigned int nr)
->  {
-> -	int young;
-> +	bool young;
->
->  	young = clear_flush_young_ptes(vma, addr, ptep, nr);
->  	young |= mmu_notifier_clear_flush_young(vma->vm_mm, addr,
-> @@ -1842,30 +1842,30 @@ static inline int clear_flush_young_ptes_notify(struct vm_area_struct *vma,
->  	return young;
->  }
->
-> -static inline int pmdp_clear_flush_young_notify(struct vm_area_struct *vma,
-> +static inline bool pmdp_clear_flush_young_notify(struct vm_area_struct *vma,
->  		unsigned long addr, pmd_t *pmdp)
->  {
-> -	int young;
-> +	bool young;
->
->  	young = pmdp_clear_flush_young(vma, addr, pmdp);
->  	young |= mmu_notifier_clear_flush_young(vma->vm_mm, addr, addr + PMD_SIZE);
->  	return young;
->  }
->
-> -static inline int test_and_clear_young_ptes_notify(struct vm_area_struct *vma,
-> +static inline bool test_and_clear_young_ptes_notify(struct vm_area_struct *vma,
->  		unsigned long addr, pte_t *ptep, unsigned int nr)
->  {
-> -	int young;
-> +	bool young;
->
->  	young = test_and_clear_young_ptes(vma, addr, ptep, nr);
->  	young |= mmu_notifier_clear_young(vma->vm_mm, addr, addr + nr * PAGE_SIZE);
->  	return young;
->  }
->
-> -static inline int pmdp_test_and_clear_young_notify(struct vm_area_struct *vma,
-> +static inline bool pmdp_test_and_clear_young_notify(struct vm_area_struct *vma,
->  		unsigned long addr, pmd_t *pmdp)
->  {
-> -	int young;
-> +	bool young;
->
->  	young = pmdp_test_and_clear_young(vma, addr, pmdp);
->  	young |= mmu_notifier_clear_young(vma->vm_mm, addr, addr + PMD_SIZE);
-> diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
-> index 2502474b83b6..3e3e7e727ba2 100644
-> --- a/mm/mmu_notifier.c
-> +++ b/mm/mmu_notifier.c
-> @@ -364,12 +364,11 @@ void __mmu_notifier_release(struct mm_struct *mm)
->   * unmap the address and return 1 or 0 depending if the mapping previously
->   * existed or not.
->   */
-> -int __mmu_notifier_clear_flush_young(struct mm_struct *mm,
-> -					unsigned long start,
-> -					unsigned long end)
-> +bool __mmu_notifier_clear_flush_young(struct mm_struct *mm,
-> +		unsigned long start, unsigned long end)
->  {
->  	struct mmu_notifier *subscription;
-> -	int young = 0, id;
-> +	bool young = false, id;
->
->  	id = srcu_read_lock(&srcu);
->  	hlist_for_each_entry_srcu(subscription,
-> @@ -384,12 +383,11 @@ int __mmu_notifier_clear_flush_young(struct mm_struct *mm,
->  	return young;
->  }
->
-> -int __mmu_notifier_clear_young(struct mm_struct *mm,
-> -			       unsigned long start,
-> -			       unsigned long end)
-> +bool __mmu_notifier_clear_young(struct mm_struct *mm,
-> +		unsigned long start, unsigned long end)
->  {
->  	struct mmu_notifier *subscription;
-> -	int young = 0, id;
-> +	bool young = false, id;
->
->  	id = srcu_read_lock(&srcu);
->  	hlist_for_each_entry_srcu(subscription,
-> @@ -404,11 +402,11 @@ int __mmu_notifier_clear_young(struct mm_struct *mm,
->  	return young;
->  }
->
-> -int __mmu_notifier_test_young(struct mm_struct *mm,
-> -			      unsigned long address)
-> +bool __mmu_notifier_test_young(struct mm_struct *mm,
-> +		unsigned long address)
->  {
->  	struct mmu_notifier *subscription;
-> -	int young = 0, id;
-> +	bool young = false, id;
->
->  	id = srcu_read_lock(&srcu);
->  	hlist_for_each_entry_srcu(subscription,
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index d0ab29672c71..6bcfc1b3021d 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -646,11 +646,11 @@ static __always_inline kvm_mn_ret_t kvm_handle_hva_range(struct kvm *kvm,
->  	return r;
->  }
->
-> -static __always_inline int kvm_age_hva_range(struct mmu_notifier *mn,
-> -						unsigned long start,
-> -						unsigned long end,
-> -						gfn_handler_t handler,
-> -						bool flush_on_ret)
-> +static __always_inline bool kvm_age_hva_range(struct mmu_notifier *mn,
-> +					      unsigned long start,
-> +					      unsigned long end,
-> +					      gfn_handler_t handler,
-> +					      bool flush_on_ret)
+This is a follow-up to Peter Zijlstra's in-kernel rseq RFC [1].
 
-Can we please fix this terrrible indentation while we're here :)?
+With the intended removal of PREEMPT_NONE this_cpu operations based on
+atomic instructions, guarded with preempt_disable()/preempt_enable() pairs,
+become more expensive: the preempt_disable() / preempt_enable() pairs are
+not optimized away anymore during compile time.
 
-static __always_inline bool kvm_age_hva_range(struct mmu_notifier *mn,
-		unsigned long start, unsigned long end, gfn_handler_t handler,
-		bool flush_on_ret)
+In particular the conditional call to preempt_schedule_notrace() after
+preempt_enable() adds additional code and register pressure.
 
-Would be nicer, thanks!
+To avoid this Peter suggested an in-kernel rseq approach. While this would
+certainly work, this series tries to come up with a solution which uses
+less instructions and doesn't require to repeat instruction sequences.
 
->  {
->  	struct kvm *kvm = mmu_notifier_to_kvm(mn);
->  	const struct kvm_mmu_notifier_range range = {
-> @@ -666,10 +666,10 @@ static __always_inline int kvm_age_hva_range(struct mmu_notifier *mn,
->  	return kvm_handle_hva_range(kvm, &range).ret;
->  }
->
-> -static __always_inline int kvm_age_hva_range_no_flush(struct mmu_notifier *mn,
-> -						      unsigned long start,
-> -						      unsigned long end,
-> -						      gfn_handler_t handler)
-> +static __always_inline bool kvm_age_hva_range_no_flush(struct mmu_notifier *mn,
-> +						       unsigned long start,
-> +						       unsigned long end,
-> +						       gfn_handler_t handler)
+The idea is that this_cpu operations based on atomic instructions are
+guarded with mvyi instructions:
 
-Same indentation comment here.
+- The first mvyi instruction writes the register number, which contains
+  the percpu address variable to lowcore. This also indicates that a
+  percpu code section is executed.
 
->  {
->  	return kvm_age_hva_range(mn, start, end, handler, false);
->  }
-> @@ -829,10 +829,10 @@ static void kvm_mmu_notifier_invalidate_range_end(struct mmu_notifier *mn,
->  		rcuwait_wake_up(&kvm->mn_memslots_update_rcuwait);
->  }
->
-> -static int kvm_mmu_notifier_clear_flush_young(struct mmu_notifier *mn,
-> -					      struct mm_struct *mm,
-> -					      unsigned long start,
-> -					      unsigned long end)
-> +static bool kvm_mmu_notifier_clear_flush_young(struct mmu_notifier *mn,
-> +					       struct mm_struct *mm,
-> +					       unsigned long start,
-> +					       unsigned long end)
+- The first instruction following the mvyi instruction must be the ag
+  instruction which adds the percpu offset to the percpu address register.
 
-Same indentation comment here.
+- Afterwards the atomic percpu operation follows.
 
->  {
->  	trace_kvm_age_hva(start, end);
->
-> @@ -840,10 +840,10 @@ static int kvm_mmu_notifier_clear_flush_young(struct mmu_notifier *mn,
->  				 !IS_ENABLED(CONFIG_KVM_ELIDE_TLB_FLUSH_IF_YOUNG));
->  }
->
-> -static int kvm_mmu_notifier_clear_young(struct mmu_notifier *mn,
-> -					struct mm_struct *mm,
-> -					unsigned long start,
-> -					unsigned long end)
-> +static bool kvm_mmu_notifier_clear_young(struct mmu_notifier *mn,
-> +					 struct mm_struct *mm,
-> +					 unsigned long start,
-> +					 unsigned long end)
+- Then a second mvyi instruction writes a zero to lowcore, which indicates
+  the end of the percpu code section.
 
-Same indentation comment here.
+- In case of an interrupt/exception/nmi the register number which was
+  written to lowcore is copied to the exception frame (pt_regs), and a zero
+  is written to lowcore.
 
->  {
->  	trace_kvm_age_hva(start, end);
->
-> @@ -863,9 +863,9 @@ static int kvm_mmu_notifier_clear_young(struct mmu_notifier *mn,
->  	return kvm_age_hva_range_no_flush(mn, start, end, kvm_age_gfn);
->  }
->
-> -static int kvm_mmu_notifier_test_young(struct mmu_notifier *mn,
-> -				       struct mm_struct *mm,
-> -				       unsigned long address)
-> +static bool kvm_mmu_notifier_test_young(struct mmu_notifier *mn,
-> +					struct mm_struct *mm,
-> +					unsigned long address)
+- On return to the previous context it is checked if a percpu code section
+  was executed (saved register number not zero), and if the process was
+  migrated to a different cpu. If the percpu offset was already added to
+  the percpu address register (instruction address does _not_ point to the
+  ag instruction) the content of the percpu address register is adjusted so
+  it points to percpu variable of the new cpu.
 
-Same indentation comment here.
+All of this seems to work, but of course it could still be broken since I
+missed some detail.
 
->  {
->  	trace_kvm_test_age_hva(address);
->
-> --
-> 2.47.3
->
+In total this series results in a kernel text size reduction of ~106kb. The
+number of preempt_schedule_notrace() call sites is reduced from 7089 to
+1577.
+
+Note: this comes without any huge performance analysis, however all
+microbenchmarks confirmed that the new code is at least as fast as the
+old code, like expected.
+
+[1] 20260223163843.GR1282955@noisy.programming.kicks-ass.net
+
+Heiko Carstens (9):
+  s390/percpu: Provide arch_raw_cpu_ptr()
+  s390/alternatives: Add new ALT_TYPE_PERCPU type
+  s390/percpu: Infrastructure for more efficient this_cpu operations
+  s390/percpu: Use new percpu code section for arch_this_cpu_add()
+  s390/percpu: Use new percpu code section for arch_this_cpu_add_return()
+  s390/percpu: Use new percpu code section for arch_this_cpu_[and|or]()
+  s390/percpu: Provide arch_this_cpu_read() implementation
+  s390/percpu: Provide arch_this_cpu_write() implementation
+  s390/percpu: Remove one and two byte this_cpu operation implementation
+
+ arch/s390/boot/alternative.c         |   7 +
+ arch/s390/include/asm/alternative.h  |   5 +
+ arch/s390/include/asm/entry-percpu.h |  57 ++++++
+ arch/s390/include/asm/lowcore.h      |   3 +-
+ arch/s390/include/asm/percpu.h       | 259 ++++++++++++++++++++++-----
+ arch/s390/include/asm/ptrace.h       |   2 +
+ arch/s390/kernel/alternative.c       |  25 ++-
+ arch/s390/kernel/irq.c               |  17 +-
+ arch/s390/kernel/nmi.c               |   3 +
+ arch/s390/kernel/traps.c             |   3 +
+ 10 files changed, 330 insertions(+), 51 deletions(-)
+ create mode 100644 arch/s390/include/asm/entry-percpu.h
+
+-- 
+2.51.0
+
 
