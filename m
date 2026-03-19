@@ -1,449 +1,251 @@
-Return-Path: <linux-s390+bounces-17623-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-17625-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yDuJHf1su2nGjwIAu9opvQ
-	(envelope-from <linux-s390+bounces-17623-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 04:26:53 +0100
+	id vXdSJCCMu2k4lgIAu9opvQ
+	(envelope-from <linux-s390+bounces-17625-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 06:39:44 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB22A2C5757
-	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 04:26:52 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27F8C2C6449
+	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 06:39:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id C0336301D552
-	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 03:25:12 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 2A6DB3007B9E
+	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 05:39:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80C2438D6AF;
-	Thu, 19 Mar 2026 03:24:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C7E42BE7AB;
+	Thu, 19 Mar 2026 05:39:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="qdYSjJ/A"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nv0pbSd+"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3482138B14D;
-	Thu, 19 Mar 2026 03:24:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773890672; cv=none; b=QGAPwMHODcWHgrmZhV2LKdmfNMn5VZYrE03NVFHD+dznZlYhw4WtLJf9caEunX/y1fjsYcZM0KvjSBuz8GjRLt+vgvk14WXXafTvci1T2E4IYqyPbh0mnwquyZVRNNOO64ghoNcPg83CpdcsFXFz+tMzqv/jr9n88deprCFGUVE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773890672; c=relaxed/simple;
-	bh=8iaYm7gQqp+UR77SYLLkTxsQvUhBHR9bufF12Zfr6Iw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RuNk/K6V/vT6Qqft+1HWxpTqCysE5OQS0nwwZQfTVAhQjcj09Sx3Xo+qhaKQ0yfqC1R5DoWd85gh747SPA1dNpgcbFvZA10SupanK/dzLrkFzFXyZQgiQE0MxmQohbRBwUPtpTrrjNfdf0+swPcEnZJbHbhi8ZLv6CJeeD7db8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=qdYSjJ/A; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1773890667; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=O+Oqx9om1vJiKb5RGT19b6Dh94x/Qwy2GWOZjY+2XAc=;
-	b=qdYSjJ/ADZSp4hcQgUHKo+ax5qBrm6j9Lu2YiXrK293eyf3mZ8anzHcUXJg7okvc44CmryIBxq6tkTrK/Rr7Qf8nsJ1/mMPdto7rfEiB5OpanTrW4yHjASMdycbfjK474TPXQeIcp27CevjD5aiR1kXxhOiNL7Cl+kx3CivRcWI=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0X.Gnlvu_1773890665;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0X.Gnlvu_1773890665 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 19 Mar 2026 11:24:25 +0800
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-To: akpm@linux-foundation.org,
-	david@kernel.org
-Cc: ljs@kernel.org,
-	Liam.Howlett@oracle.com,
-	vbabka@kernel.org,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	baolin.wang@linux.alibaba.com,
-	linux-arm-kernel@lists.infradead.org,
-	x86@kernel.org,
-	linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-mm@kvack.org (open),
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] mm: change to return bool for the MMU notifier's young flag check
-Date: Thu, 19 Mar 2026 11:24:05 +0800
-Message-ID: <545847c132da5d957cfc74ab19e849b16127aa8f.1773890510.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <cover.1773890510.git.baolin.wang@linux.alibaba.com>
-References: <cover.1773890510.git.baolin.wang@linux.alibaba.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B907126BF7
+	for <linux-s390@vger.kernel.org>; Thu, 19 Mar 2026 05:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.178
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773898780; cv=pass; b=LwFVJsfWZfmwu3Cs57XCSFjoIeArpmgoXoXIRceo4pvZ6pyRXABg+Xz2+FCOhG77mX3RqbXU5xboBEtE0wd1pvu43/O6lvFW6ajxkGJEmN9cJsKzS+A0fMaWELv7gO59c7nnW6rwPiXmrLyR0trA70YizqP2ePE88PLF4DSYINw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773898780; c=relaxed/simple;
+	bh=d4dtVkzoDU7q1gZU6EzIMD9MaBklkUv/FswCZinMFrA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VT2hip6XPRoVHDijE5XAA/n0VevFD39POEWVvDJDU1f2C5rp1grzf5HyQ8+WIb8dqh3obpJZTFgnZhsKRU0TF3kjwroZ/4VZsd4YPVA5gHICgJ67sTnz/YxR3Nz4TaTJOVERtPrBZiDTH9n+oC13a9gZe7aeQta3HdE6AFDrHDs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nv0pbSd+; arc=pass smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2b04c9e3eb7so51895ad.0
+        for <linux-s390@vger.kernel.org>; Wed, 18 Mar 2026 22:39:39 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773898778; cv=none;
+        d=google.com; s=arc-20240605;
+        b=M/zHsry2zYft7bT5chey6l66u5asWS0GnZDpuvFn5e0u+W3YaQjXYJm7N+MS8iVjC8
+         +ntR6NQY4EJkNmKrESR+BW+Os6cmx86v0IiXS/JaGk7bDI3s2r+5hQQrP4PcI//JvU9L
+         G92c3ifvu2Kkox61NJTJMIjxFVlKEbxTEPbpb05vMtK8CY1TWuu/jmpufAq8Td5KnJR0
+         MEHblacbMMWQPS3l32Ivao510iyFtZC1dnsUlAxcDTb/T9NLEp64cKStTFsDUdHK7nYY
+         TOH2bwhH4iYh8yJqm74iSotcHMkOLwlqeihXLLotTZZmnDdxtytjkjzTdxO+py/OY8fv
+         Ct/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=htjlOO4XkJQ4ehd0ipRSCdZaVjN/ob14rEkSLMPLvzs=;
+        fh=N1F/NEZWfjlBmb6YIBLugVhWF+mJpJZjBNi2PxqC2Hs=;
+        b=kLOMKRAU4t/AtFWx8C4KY5cn5r171uwXoMMbG2CNManavOJz6NnpDW1oehIqvP9epZ
+         6/GAMQ2mX7MCRJfUyapgFU0ZhSJJYm6qn4qQm5idCtU1rs0jEG7vCnfUhgg82ARv5ICm
+         N4OHD9jVpEemR2othB0VVOVCgzl//ABUzH2mOssOmYG7N/8c3DYGIWTPfXeP6jAKD9Tj
+         vkgzJ+IFDdmUh4deZQb7RIHID/JYMfn3bEQdO3293grg98MKenmFZkQQYxOW0DMq97U/
+         3YZqOCjXe4+ig4gqOqGnxLg/uHVJwW40+ymubvxzDhMKU+x3l7u0GNpUXYhb5gxYnjnF
+         mAYg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1773898778; x=1774503578; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=htjlOO4XkJQ4ehd0ipRSCdZaVjN/ob14rEkSLMPLvzs=;
+        b=nv0pbSd+2iBQIC7nQaqMuASk3syFc4reKpcfRtC9L56aFW9wCKZ4Hbxqd0wYdzyr4k
+         Jc68bA6wp3VwCfCDEibIIUeEdzuBHywIbwwATiPPBtIVMVwQNDnA0yuOMV2D2zuXkEsC
+         VnNNr0uIJnKtkBXI/6+FZ8W3Yr+RxDKzPvsHtpdQml7tC/Mij7xlDt56MJ9LcGM4DxuM
+         cR9saf89N/kyXxFgoBCiGVslnJ1BxgvW++aog3PCbOXw6NW+7YGVhGVd5rXYrQ/FAryJ
+         NaPpLM8vfOk7mh/9ZecRsDKTcqnq/ISdDVYkvgMo2TtLooLEj+MNZxjZefLVL9+YJvA4
+         w77g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773898778; x=1774503578;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=htjlOO4XkJQ4ehd0ipRSCdZaVjN/ob14rEkSLMPLvzs=;
+        b=l0ZGK1UXkYWC5HQP4956CInM6oqD0fnqBdNBWgHUs/6n0AglMTPgjW7vLtxvjQiaXe
+         KTSr9UsRA4iepRLqehZ4e9Mdry3Ajp3NqAOj9oOiHP8VCxonZVW0GHeXIV33+7jfjDof
+         Adms3Adpk7J4H5hmYtYIu/N8jHwHuZO+j7rbyiVuOAbmZL42vWWj4+KSpWKMFubXynaa
+         x/E8fy3PVRDM/SP2co1nVQYtNRrrrgjbDiCnSLYhAsIjbYhpsUemNo3qd1FB/xZSFyaq
+         AKHt2dibyuGP3YBDq4n3Sp+fwD/2L+UbAoLqxzeBoojkVIcBu8LlvXNUCyVGEKULq5VH
+         oZNA==
+X-Forwarded-Encrypted: i=1; AJvYcCXRlz+Y5m5h2NUPolfQLJZG1m1BuUd1ADQ7oRzAwMYkuEj3Y5PXxjT5c93FCcGiApzCAMWhEDJiO3gV@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx58ArUOGqibheSR5AYz9IA+am6inSpC8C+afItmjQY8AI7733g
+	GIW2mkoCtTjosFS3/bgjWcSyn0gZmUcAJ6F1trkxBXCm92ibZT4K2uS8xJ3uj0ROwDmNvSlNeOb
+	Xp4mziVjVB9E6l/e1g7lHx2P8mMINNO/uKw9c7NP9QRvvLZJSyMxAQMOdyNk=
+X-Gm-Gg: ATEYQzzIx3Be7THpo+1RcO8qQIXa6NQWbqD/twXUJ7XuT7W9+rTrhdH+Pf36xeyPQBT
+	A319jHdGvqxPLNMIq0OwIJuyLkr194Em31qEZqGZjUeO6XaP5j9K+OcHumgCLLo0fVI4PzEEDXE
+	TouP3Nh6yjogmyjwlt1Ev0+K3N4+8nwupFFQtacgwp+e2lQP6mrpT1rYqRKxfTw3jJ1fy+IY5te
+	oJxtWTgxTmU8Twzp1uhtHD3tj6GoQ/pVZZK90ynLfO0taiQ5cw1qXxF4qbJEqgOS1E3ckrVVx3v
+	ZN1kKNnhW7f11Gf7+7k=
+X-Received: by 2002:a17:903:46cd:b0:2ad:6f9b:7817 with SMTP id
+ d9443c01a7336-2b077e8cf17mr2042765ad.22.1773898777982; Wed, 18 Mar 2026
+ 22:39:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-7.66 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+References: <20260318175808.582009-1-irogers@google.com> <20260318234600.730340-1-irogers@google.com>
+In-Reply-To: <20260318234600.730340-1-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 18 Mar 2026 22:39:26 -0700
+X-Gm-Features: AaiRm51WVkEbo2yRWjczdr_OVf_mYCmnDxfH_HvwH40cuXXVAtHg9_DcyaGADP4
+Message-ID: <CAP-5=fVWNP-fpD6bCWBKNDnwcMkYwZcvkBgqGjTJJ0fFQko89g@mail.gmail.com>
+Subject: Re: [PATCH v8 0/5] perf evsel fallback changes, better s390 defaults
+To: acme@kernel.org, namhyung@kernel.org, tmricht@linux.ibm.com
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com, 
+	japo@linux.ibm.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, 
+	sumanthk@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-17623-lists,linux-s390=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[google.com:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-17625-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FROM_NEQ_ENVFROM(0.00)[baolin.wang@linux.alibaba.com,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390];
-	NEURAL_HAM(-0.00)[-0.996];
-	TO_DN_NONE(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,alibaba.com:email,linux.alibaba.com:dkim,linux.alibaba.com:mid]
-X-Rspamd-Queue-Id: BB22A2C5757
+	FROM_NEQ_ENVFROM(0.00)[irogers@google.com,linux-s390@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TO_DN_NONE(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	NEURAL_HAM(-0.00)[-0.988];
+	TAGGED_RCPT(0.00)[linux-s390];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,mail.gmail.com:mid,sashiko.dev:url]
+X-Rspamd-Queue-Id: 27F8C2C6449
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The MMU notifier young flag check related functions only return whether
-the young flag was set. Change the return type to bool to make the
-intention clearer.
+On Wed, Mar 18, 2026 at 4:46=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> Discussion with Thomas Richter in:
+> https://lore.kernel.org/lkml/20260306071002.2526085-1-tmricht@linux.ibm.c=
+om/
+> showed that the evsel__fallback wasn't working for s390. These patches
+> avoid the problematic frame pointer callchain on s390 and fix
+> evsel__fallback from a range of problems when falling back to a
+> software event. I simulated failures when developing the patches but
+> they are untested other than that.
 
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
----
- include/linux/mmu_notifier.h | 76 +++++++++++++++++-------------------
- mm/internal.h                | 16 ++++----
- mm/mmu_notifier.c            | 20 +++++-----
- virt/kvm/kvm_main.c          | 40 +++++++++----------
- 4 files changed, 72 insertions(+), 80 deletions(-)
+I think at this point I call it a day. Sashiko still has feedback that
+could justify a v9:
+https://sashiko.dev/#/patchset/20260318234600.730340-1-irogers%40google.com
+Specifically:
+1) software PMUs may fail if sysfs isn't mounted. This isn't a real
+problem as "software" is a "well known" PMU that we create even if
+sysfs isn't mounted.
+2) the handling of callchain in .perfconfig files isn't right, but the
+patches aren't making it any worse. I worry there could be several
+more patches if I start fixing things wrong with .perfconfig.
+3) the possibility to add another NULL check for safety exists, but
+the code would already crash at the same point.
+Apparently, the tendency of prompts to generate further refinements
+instead of providing all the problems at once is a known limitation of
+LLMs and the current prompting methods.
 
-diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
-index 3705d350c863..17f2cdc77dd5 100644
---- a/include/linux/mmu_notifier.h
-+++ b/include/linux/mmu_notifier.h
-@@ -97,20 +97,20 @@ struct mmu_notifier_ops {
- 	 * Start-end is necessary in case the secondary MMU is mapping the page
- 	 * at a smaller granularity than the primary MMU.
- 	 */
--	int (*clear_flush_young)(struct mmu_notifier *subscription,
--				 struct mm_struct *mm,
--				 unsigned long start,
--				 unsigned long end);
-+	bool (*clear_flush_young)(struct mmu_notifier *subscription,
-+				  struct mm_struct *mm,
-+				  unsigned long start,
-+				  unsigned long end);
- 
- 	/*
- 	 * clear_young is a lightweight version of clear_flush_young. Like the
- 	 * latter, it is supposed to test-and-clear the young/accessed bitflag
- 	 * in the secondary pte, but it may omit flushing the secondary tlb.
- 	 */
--	int (*clear_young)(struct mmu_notifier *subscription,
--			   struct mm_struct *mm,
--			   unsigned long start,
--			   unsigned long end);
-+	bool (*clear_young)(struct mmu_notifier *subscription,
-+			    struct mm_struct *mm,
-+			    unsigned long start,
-+			    unsigned long end);
- 
- 	/*
- 	 * test_young is called to check the young/accessed bitflag in
-@@ -118,9 +118,9 @@ struct mmu_notifier_ops {
- 	 * frequently used without actually clearing the flag or tearing
- 	 * down the secondary mapping on the page.
- 	 */
--	int (*test_young)(struct mmu_notifier *subscription,
--			  struct mm_struct *mm,
--			  unsigned long address);
-+	bool (*test_young)(struct mmu_notifier *subscription,
-+			   struct mm_struct *mm,
-+			   unsigned long address);
- 
- 	/*
- 	 * invalidate_range_start() and invalidate_range_end() must be
-@@ -376,14 +376,12 @@ mmu_interval_check_retry(struct mmu_interval_notifier *interval_sub,
- 
- extern void __mmu_notifier_subscriptions_destroy(struct mm_struct *mm);
- extern void __mmu_notifier_release(struct mm_struct *mm);
--extern int __mmu_notifier_clear_flush_young(struct mm_struct *mm,
--					  unsigned long start,
--					  unsigned long end);
--extern int __mmu_notifier_clear_young(struct mm_struct *mm,
--				      unsigned long start,
--				      unsigned long end);
--extern int __mmu_notifier_test_young(struct mm_struct *mm,
--				     unsigned long address);
-+bool __mmu_notifier_clear_flush_young(struct mm_struct *mm,
-+		unsigned long start, unsigned long end);
-+bool __mmu_notifier_clear_young(struct mm_struct *mm,
-+		unsigned long start, unsigned long end);
-+bool __mmu_notifier_test_young(struct mm_struct *mm,
-+		unsigned long address);
- extern int __mmu_notifier_invalidate_range_start(struct mmu_notifier_range *r);
- extern void __mmu_notifier_invalidate_range_end(struct mmu_notifier_range *r);
- extern void __mmu_notifier_arch_invalidate_secondary_tlbs(struct mm_struct *mm,
-@@ -403,30 +401,28 @@ static inline void mmu_notifier_release(struct mm_struct *mm)
- 		__mmu_notifier_release(mm);
- }
- 
--static inline int mmu_notifier_clear_flush_young(struct mm_struct *mm,
--					  unsigned long start,
--					  unsigned long end)
-+static inline bool mmu_notifier_clear_flush_young(struct mm_struct *mm,
-+		unsigned long start, unsigned long end)
- {
- 	if (mm_has_notifiers(mm))
- 		return __mmu_notifier_clear_flush_young(mm, start, end);
--	return 0;
-+	return false;
- }
- 
--static inline int mmu_notifier_clear_young(struct mm_struct *mm,
--					   unsigned long start,
--					   unsigned long end)
-+static inline bool mmu_notifier_clear_young(struct mm_struct *mm,
-+		unsigned long start, unsigned long end)
- {
- 	if (mm_has_notifiers(mm))
- 		return __mmu_notifier_clear_young(mm, start, end);
--	return 0;
-+	return false;
- }
- 
--static inline int mmu_notifier_test_young(struct mm_struct *mm,
--					  unsigned long address)
-+static inline bool mmu_notifier_test_young(struct mm_struct *mm,
-+		unsigned long address)
- {
- 	if (mm_has_notifiers(mm))
- 		return __mmu_notifier_test_young(mm, address);
--	return 0;
-+	return false;
- }
- 
- static inline void
-@@ -552,24 +548,22 @@ static inline void mmu_notifier_release(struct mm_struct *mm)
- {
- }
- 
--static inline int mmu_notifier_clear_flush_young(struct mm_struct *mm,
--					  unsigned long start,
--					  unsigned long end)
-+static inline bool mmu_notifier_clear_flush_young(struct mm_struct *mm,
-+		unsigned long start, unsigned long end)
- {
--	return 0;
-+	return false;
- }
- 
--static inline int mmu_notifier_clear_young(struct mm_struct *mm,
--					   unsigned long start,
--					   unsigned long end)
-+static inline bool mmu_notifier_clear_young(struct mm_struct *mm,
-+		unsigned long start, unsigned long end)
- {
--	return 0;
-+	return false;
- }
- 
--static inline int mmu_notifier_test_young(struct mm_struct *mm,
--					  unsigned long address)
-+static inline bool mmu_notifier_test_young(struct mm_struct *mm,
-+		unsigned long address)
- {
--	return 0;
-+	return false;
- }
- 
- static inline void
-diff --git a/mm/internal.h b/mm/internal.h
-index 0eaca2f0eb6a..3d6eba216364 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1831,10 +1831,10 @@ static inline int io_remap_pfn_range_complete(struct vm_area_struct *vma,
- }
- 
- #ifdef CONFIG_MMU_NOTIFIER
--static inline int clear_flush_young_ptes_notify(struct vm_area_struct *vma,
-+static inline bool clear_flush_young_ptes_notify(struct vm_area_struct *vma,
- 		unsigned long addr, pte_t *ptep, unsigned int nr)
- {
--	int young;
-+	bool young;
- 
- 	young = clear_flush_young_ptes(vma, addr, ptep, nr);
- 	young |= mmu_notifier_clear_flush_young(vma->vm_mm, addr,
-@@ -1842,30 +1842,30 @@ static inline int clear_flush_young_ptes_notify(struct vm_area_struct *vma,
- 	return young;
- }
- 
--static inline int pmdp_clear_flush_young_notify(struct vm_area_struct *vma,
-+static inline bool pmdp_clear_flush_young_notify(struct vm_area_struct *vma,
- 		unsigned long addr, pmd_t *pmdp)
- {
--	int young;
-+	bool young;
- 
- 	young = pmdp_clear_flush_young(vma, addr, pmdp);
- 	young |= mmu_notifier_clear_flush_young(vma->vm_mm, addr, addr + PMD_SIZE);
- 	return young;
- }
- 
--static inline int test_and_clear_young_ptes_notify(struct vm_area_struct *vma,
-+static inline bool test_and_clear_young_ptes_notify(struct vm_area_struct *vma,
- 		unsigned long addr, pte_t *ptep, unsigned int nr)
- {
--	int young;
-+	bool young;
- 
- 	young = test_and_clear_young_ptes(vma, addr, ptep, nr);
- 	young |= mmu_notifier_clear_young(vma->vm_mm, addr, addr + nr * PAGE_SIZE);
- 	return young;
- }
- 
--static inline int pmdp_test_and_clear_young_notify(struct vm_area_struct *vma,
-+static inline bool pmdp_test_and_clear_young_notify(struct vm_area_struct *vma,
- 		unsigned long addr, pmd_t *pmdp)
- {
--	int young;
-+	bool young;
- 
- 	young = pmdp_test_and_clear_young(vma, addr, pmdp);
- 	young |= mmu_notifier_clear_young(vma->vm_mm, addr, addr + PMD_SIZE);
-diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
-index 2502474b83b6..3e3e7e727ba2 100644
---- a/mm/mmu_notifier.c
-+++ b/mm/mmu_notifier.c
-@@ -364,12 +364,11 @@ void __mmu_notifier_release(struct mm_struct *mm)
-  * unmap the address and return 1 or 0 depending if the mapping previously
-  * existed or not.
-  */
--int __mmu_notifier_clear_flush_young(struct mm_struct *mm,
--					unsigned long start,
--					unsigned long end)
-+bool __mmu_notifier_clear_flush_young(struct mm_struct *mm,
-+		unsigned long start, unsigned long end)
- {
- 	struct mmu_notifier *subscription;
--	int young = 0, id;
-+	bool young = false, id;
- 
- 	id = srcu_read_lock(&srcu);
- 	hlist_for_each_entry_srcu(subscription,
-@@ -384,12 +383,11 @@ int __mmu_notifier_clear_flush_young(struct mm_struct *mm,
- 	return young;
- }
- 
--int __mmu_notifier_clear_young(struct mm_struct *mm,
--			       unsigned long start,
--			       unsigned long end)
-+bool __mmu_notifier_clear_young(struct mm_struct *mm,
-+		unsigned long start, unsigned long end)
- {
- 	struct mmu_notifier *subscription;
--	int young = 0, id;
-+	bool young = false, id;
- 
- 	id = srcu_read_lock(&srcu);
- 	hlist_for_each_entry_srcu(subscription,
-@@ -404,11 +402,11 @@ int __mmu_notifier_clear_young(struct mm_struct *mm,
- 	return young;
- }
- 
--int __mmu_notifier_test_young(struct mm_struct *mm,
--			      unsigned long address)
-+bool __mmu_notifier_test_young(struct mm_struct *mm,
-+		unsigned long address)
- {
- 	struct mmu_notifier *subscription;
--	int young = 0, id;
-+	bool young = false, id;
- 
- 	id = srcu_read_lock(&srcu);
- 	hlist_for_each_entry_srcu(subscription,
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index d0ab29672c71..6bcfc1b3021d 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -646,11 +646,11 @@ static __always_inline kvm_mn_ret_t kvm_handle_hva_range(struct kvm *kvm,
- 	return r;
- }
- 
--static __always_inline int kvm_age_hva_range(struct mmu_notifier *mn,
--						unsigned long start,
--						unsigned long end,
--						gfn_handler_t handler,
--						bool flush_on_ret)
-+static __always_inline bool kvm_age_hva_range(struct mmu_notifier *mn,
-+					      unsigned long start,
-+					      unsigned long end,
-+					      gfn_handler_t handler,
-+					      bool flush_on_ret)
- {
- 	struct kvm *kvm = mmu_notifier_to_kvm(mn);
- 	const struct kvm_mmu_notifier_range range = {
-@@ -666,10 +666,10 @@ static __always_inline int kvm_age_hva_range(struct mmu_notifier *mn,
- 	return kvm_handle_hva_range(kvm, &range).ret;
- }
- 
--static __always_inline int kvm_age_hva_range_no_flush(struct mmu_notifier *mn,
--						      unsigned long start,
--						      unsigned long end,
--						      gfn_handler_t handler)
-+static __always_inline bool kvm_age_hva_range_no_flush(struct mmu_notifier *mn,
-+						       unsigned long start,
-+						       unsigned long end,
-+						       gfn_handler_t handler)
- {
- 	return kvm_age_hva_range(mn, start, end, handler, false);
- }
-@@ -829,10 +829,10 @@ static void kvm_mmu_notifier_invalidate_range_end(struct mmu_notifier *mn,
- 		rcuwait_wake_up(&kvm->mn_memslots_update_rcuwait);
- }
- 
--static int kvm_mmu_notifier_clear_flush_young(struct mmu_notifier *mn,
--					      struct mm_struct *mm,
--					      unsigned long start,
--					      unsigned long end)
-+static bool kvm_mmu_notifier_clear_flush_young(struct mmu_notifier *mn,
-+					       struct mm_struct *mm,
-+					       unsigned long start,
-+					       unsigned long end)
- {
- 	trace_kvm_age_hva(start, end);
- 
-@@ -840,10 +840,10 @@ static int kvm_mmu_notifier_clear_flush_young(struct mmu_notifier *mn,
- 				 !IS_ENABLED(CONFIG_KVM_ELIDE_TLB_FLUSH_IF_YOUNG));
- }
- 
--static int kvm_mmu_notifier_clear_young(struct mmu_notifier *mn,
--					struct mm_struct *mm,
--					unsigned long start,
--					unsigned long end)
-+static bool kvm_mmu_notifier_clear_young(struct mmu_notifier *mn,
-+					 struct mm_struct *mm,
-+					 unsigned long start,
-+					 unsigned long end)
- {
- 	trace_kvm_age_hva(start, end);
- 
-@@ -863,9 +863,9 @@ static int kvm_mmu_notifier_clear_young(struct mmu_notifier *mn,
- 	return kvm_age_hva_range_no_flush(mn, start, end, kvm_age_gfn);
- }
- 
--static int kvm_mmu_notifier_test_young(struct mmu_notifier *mn,
--				       struct mm_struct *mm,
--				       unsigned long address)
-+static bool kvm_mmu_notifier_test_young(struct mmu_notifier *mn,
-+					struct mm_struct *mm,
-+					unsigned long address)
- {
- 	trace_kvm_test_age_hva(address);
- 
--- 
-2.47.3
+Thanks,
+Ian
 
+> v8: Address sashiko review that target wasn't fully initialized for
+>     `perf record` with '-u'. Ensure the callchain is enabled with '-g'
+>     and a .perfconfig setting. This don't impact testing so keeping
+>     Thomas' tested-by tags.
+> https://sashiko.dev/#/patchset/20260318175808.582009-1-irogers%40google.c=
+om
+>
+> v7: In perf top, move the target uid handling back to after the evlist
+>     is setup. A regression caught by Sashiko in:
+> https://sashiko.dev/#/patchset/20260317175642.161647-1-irogers%40google.c=
+om
+> https://lore.kernel.org/lkml/20260318175808.582009-1-irogers@google.com/
+>
+> v6: Sashiko noted that target wasn't fully set up when creating the
+>     default evlist in `perf top`, so move it earlier. Fix const char*
+>     casting issues in __parse_callchain_report_opt. Make '-g' not
+>     override the .perfconfig setting again.
+> https://sashiko.dev/#/patchset/20260317055334.760347-1-irogers%40google.c=
+om
+> https://lore.kernel.org/lkml/20260317175642.161647-1-irogers@google.com/
+>
+> v5: Fix the value for the top option to match that of record. Tidy the
+>     callchain parsing option callbacks. Based on AI review feedback:
+> https://sashiko.dev/#/patchset/20260317030601.567422-1-irogers%40google.c=
+om
+> https://lore.kernel.org/lkml/20260317055334.760347-1-irogers@google.com/
+>
+> v4: Changing the callchain parameter at configuration time means other
+>     options aren't set the same as they would for `--call-graph
+>     dwarf`, for example the stack size. Switch to setting the
+>     callchain option on s390 to parameter parse time. For '-g' use
+>     '--call-graph dwarf' for s390. Other --call-graph options are
+>     parsed as normal, but a warning is generated when setting
+>     `--call-graph fp` for s390. Also fix that sample IDs aren't wanted
+>     when there is only 1 event in the evlist.
+> https://lore.kernel.org/lkml/20260317030601.567422-1-irogers@google.com/
+>
+> v3: Incorporate feedback about event and callchain behavior for s390:
+> https://lore.kernel.org/lkml/20260312061628.1593105-1-irogers@google.com/
+> https://lore.kernel.org/lkml/20260313202811.2599195-1-irogers@google.com/
+>
+> v2: try exclude_callchain_user for s390 rather than fully disabling
+>     the callchain. Fix a missed clearing of is_pmu_core if the
+>     software event fallback.
+> https://lore.kernel.org/lkml/20260312061628.1593105-1-irogers@google.com/
+>
+> v1: https://lore.kernel.org/lkml/20260312031928.1494864-1-irogers@google.=
+com/
+>
+> Ian Rogers (5):
+>   perf evsel: Improve falling back from cycles
+>   perf target: Constify simple check functions
+>   perf evsel: Constify option arguments to config functions
+>   perf callchain: Refactor callchain option parsing
+>   perf evlist: Improve default event for s390
+>
+>  tools/perf/builtin-record.c      | 81 ++++++++++----------------------
+>  tools/perf/builtin-top.c         | 46 +++++++++++-------
+>  tools/perf/builtin-trace.c       |  9 +++-
+>  tools/perf/tests/event_update.c  |  4 +-
+>  tools/perf/tests/expand-cgroup.c |  4 +-
+>  tools/perf/tests/perf-record.c   |  7 ++-
+>  tools/perf/tests/topology.c      |  4 +-
+>  tools/perf/util/callchain.c      | 73 +++++++++++++++++++++++-----
+>  tools/perf/util/callchain.h      | 12 ++---
+>  tools/perf/util/evlist.c         | 32 ++++++++-----
+>  tools/perf/util/evlist.h         |  2 +-
+>  tools/perf/util/evsel.c          | 70 +++++++++++++++++----------
+>  tools/perf/util/evsel.h          | 10 ++--
+>  tools/perf/util/target.h         | 12 ++---
+>  14 files changed, 219 insertions(+), 147 deletions(-)
+>
+> --
+> 2.53.0.851.ga537e3e6e9-goog
+>
 
