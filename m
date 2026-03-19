@@ -1,73 +1,73 @@
-Return-Path: <linux-s390+bounces-17688-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-17689-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id APDSALoHvGkArgIAu9opvQ
-	(envelope-from <linux-s390+bounces-17688-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 15:27:06 +0100
+	id YD4aOCsJvGkArgIAu9opvQ
+	(envelope-from <linux-s390+bounces-17689-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 15:33:15 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3D2B2CCC77
-	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 15:27:05 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56F662CCE27
+	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 15:33:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id B0852303F520
-	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 14:25:26 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A81C530BE73D
+	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 14:25:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50E0C372B49;
-	Thu, 19 Mar 2026 14:24:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A972636CDE0;
+	Thu, 19 Mar 2026 14:25:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bi6xStSs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tgP0Grmh"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0B2371047
-	for <linux-s390@vger.kernel.org>; Thu, 19 Mar 2026 14:24:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EDC361DCF
+	for <linux-s390@vger.kernel.org>; Thu, 19 Mar 2026 14:25:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773930279; cv=none; b=qRToyhJAd6MsvPBz0NDpab45Bg6AjSc3CXvYmynmqUhP4Y8st/qJ+PkFtWdti76nk3Vv0C7+XT/OTagEfN8Rju58Lyvvo+wre8V1aYVitsH18F9083lnVLBH3FyD8QzobLJlw4gcWuskf0jTXp8Z9Tt2qB/7UX5d00V/IqIOHJ0=
+	t=1773930301; cv=none; b=nXROZI8X7oAA8KQaELLtZ4PE/6SlU76hxuZLQ4QScYEyC/aPw40a+HbYRL/1Xxuh1zuNKZQT0fKtEY3fw5r7ebWi1cbF4MEgRmIz9lzGQ+op3+8rCnkbcK/F6M8I7sk5ULs2nJeJHGG/vn0mrOc39NTuKWz39Ugy3JhDuntZFvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773930279; c=relaxed/simple;
-	bh=UIpJb5A/dypdfuXnKSbslk+MAu1nk1IiQDatRcbSjcA=;
+	s=arc-20240116; t=1773930301; c=relaxed/simple;
+	bh=kNLFhe5koYhQ2GMx0yl+/l5hbVUXpsA6TkF04beCZE4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CFMUJ1jgoCR2XoOhbG981+MLkFHCtyBUQRjtF3C4O1sadYoh0oODUxOMnlYf7j5hkMvX60Jl5kCI/ExLO0MYrl5VqVyWjU/lJ9CpwlrZpXq0QVstVEOtht+HI8I3IP+/6gZM7+JksIajrx778Lw0DQPTr2O9RsgEQQOUKPAaLLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bi6xStSs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08B05C4AF1C
-	for <linux-s390@vger.kernel.org>; Thu, 19 Mar 2026 14:24:39 +0000 (UTC)
+	 To:Cc:Content-Type; b=tBomGNACwOGAiDRPZHSnrIBRTkTxda6bIygVgHh1H3Nly9wOg0zKzLcjrQf4ug5sfcr1+X6yfXYfPrTp4CJCMhgFsG61ZZg0i5PyZArqSwh1xR1KS63G1pyaFMbhBxg49QQko+VnHsIWLMCuf0od4VGnBItWne0H2Gv443Gm6Vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tgP0Grmh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C612C4AF12
+	for <linux-s390@vger.kernel.org>; Thu, 19 Mar 2026 14:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773930279;
-	bh=UIpJb5A/dypdfuXnKSbslk+MAu1nk1IiQDatRcbSjcA=;
+	s=k20201202; t=1773930301;
+	bh=kNLFhe5koYhQ2GMx0yl+/l5hbVUXpsA6TkF04beCZE4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Bi6xStSsOkVDsKHqWjh2TPNXC9dp++2iSQkF3WQSZOaO/d+6zZKOtkVKfwP/YSe3j
-	 x+qtxu+WKZf8vGobXAWvKOLEFOWG5e/SwKSxiTtX0v47iIS+Q0jx/DZ0qQhhkHXVuo
-	 P9pbQIX0A5JE+AElliFy+hrpq18xRDr4/1FjDsPlukCW1eptWuiBx88FAs2DGfguT8
-	 BH+ENVrt55L4igy6aHshZh4sp6ZxGAAKpfn3erL3QyqvDWY0CNUHwAko/9KMS42y5W
-	 Ksh9htSHxo0LkawaPFB8wWim24uB3fCYPrl+69tGj0hvELFVuLVIt3LnLJDS9yQq8b
-	 rBfSQvrJ/uMug==
-Received: by mail-yx1-f52.google.com with SMTP id 956f58d0204a3-64c9a6d7f81so1029829d50.3
-        for <linux-s390@vger.kernel.org>; Thu, 19 Mar 2026 07:24:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWIeHjXUqQoh6wpWWiCL8Kj9a5O4MtmjfpTMoDnOvtXpri18LjHzjZm5FmAx4v5IIRMilaBzsMwFDQy@vger.kernel.org
-X-Gm-Message-State: AOJu0YznxIA7zemA7EKuwuBhQLwR4lpxbAVa9jh4F8L5rMQ1EXbtMZgy
-	IkkS0Ea726Yn6OKiyP1HwFn8PiwzNcCR/+Xp/W52baCw3W8JR+yreGbzhX/Pyky1t+xFHVuywe9
-	XAwidqHGjQ/gF6PFSlxOpK9d2euWCXfc=
-X-Received: by 2002:a05:690c:6610:b0:798:2629:85d7 with SMTP id
- 00721157ae682-79a7180421fmr66744337b3.9.1773930278111; Thu, 19 Mar 2026
- 07:24:38 -0700 (PDT)
+	b=tgP0GrmhLHYfNTZB592HITldbUJTMcTzsT8AdlL0nJVr/6ov0c93Fj4guk+TOpD+C
+	 yLSaFhX2vWgCxvpt3j21j7bSa4wmN7WE1lPnHrUUOC3goZf910KuAHaq+ynDgM1Pzr
+	 HpVwrNRyzLE8KUthkJkIw22wVQ89VVwIy1efRUSxSlAzI6RCRXy02ERKEA8Zwibdjm
+	 ATSBD8PhSIorqTlR5+rU0nHTtIdW1iyqRQB1on/SQZmVNRdKOSDQCdvz2YZ1KLjHHj
+	 YnkPFffu+SJEX+fh72LFJcNgv6bmeUXhKsvO9lgwdETEzQMjXN8Cl/TDAhK62LPxos
+	 keV8JJ6mHpHtA==
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-79a610a32a6so12250987b3.0
+        for <linux-s390@vger.kernel.org>; Thu, 19 Mar 2026 07:25:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXNUlgdk0sIwfi1XPRPiwor85Ay0dcv4AQQla3Ejus4gXdMRs0aZuSN0kZxTTBTzKmu6xG6054U5n8+@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoDp22aOYxIGzI8sncF9wfS9LUN+eapIsANxIqDGSs/74QPZDz
+	2TmpkXynnKlP2MhD/9bInlOPPxI5D9ZYUWPeSH2NaSN/fukN4+ZD0iPr9cmRky3US5blNxXZ4aO
+	Yenpjuw8M2SBAXfT91u3hxrPWqM3j0/s=
+X-Received: by 2002:a05:690c:c4e8:b0:79a:7d50:fbc5 with SMTP id
+ 00721157ae682-79a7d50ffe2mr47392627b3.49.1773930300323; Thu, 19 Mar 2026
+ 07:25:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260317082020.737779-1-ruanjinjie@huawei.com> <20260317082020.737779-13-ruanjinjie@huawei.com>
-In-Reply-To: <20260317082020.737779-13-ruanjinjie@huawei.com>
+References: <20260317082020.737779-1-ruanjinjie@huawei.com> <20260317082020.737779-14-ruanjinjie@huawei.com>
+In-Reply-To: <20260317082020.737779-14-ruanjinjie@huawei.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Thu, 19 Mar 2026 15:24:25 +0100
-X-Gmail-Original-Message-ID: <CAD++jL=uLLde2goBVJV-K2Uk1qk27EJv=fUTBnYkzjWdxK7wdg@mail.gmail.com>
-X-Gm-Features: AaiRm52z8Tcr54P3ccjUGqebkibONPOzdYt9lc8pcjtyoVeyFlpt1Cz8vWl6hoY
-Message-ID: <CAD++jL=uLLde2goBVJV-K2Uk1qk27EJv=fUTBnYkzjWdxK7wdg@mail.gmail.com>
-Subject: Re: [PATCH v13 RESEND 12/14] asm-generic: Move TIF_SINGLESTEP to
- generic TIF bits
+Date: Thu, 19 Mar 2026 15:24:49 +0100
+X-Gmail-Original-Message-ID: <CAD++jLmq0NMEL7BLexugvyY_YvQMGCt7T9HpqkNbEkn1PU9cLg@mail.gmail.com>
+X-Gm-Features: AaiRm5035IAWAKizkHQuG2dwP1mJS80mfL8fV1T70pFNvBv5XvZbCQVCTwQtBCs
+Message-ID: <CAD++jLmq0NMEL7BLexugvyY_YvQMGCt7T9HpqkNbEkn1PU9cLg@mail.gmail.com>
+Subject: Re: [PATCH v13 RESEND 13/14] arm64: Use generic TIF bits for common
+ thread flags
 To: Jinjie Ruan <ruanjinjie@huawei.com>
 Cc: catalin.marinas@arm.com, will@kernel.org, oleg@redhat.com, 
 	chenhuacai@kernel.org, kernel@xen0n.name, hca@linux.ibm.com, 
@@ -92,7 +92,7 @@ Content-Transfer-Encoding: quoted-printable
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -103,42 +103,42 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_CC(0.00)[arm.com,kernel.org,redhat.com,xen0n.name,linux.ibm.com,alien8.de,linux.intel.com,zytor.com,arndb.de,infradead.org,chromium.org,gmx.de,orcam.me.uk,linux-foundation.org,strace.io,kylinos.cn,disroot.org,uniontech.com,siemens-energy.com,efficios.com,google.com,cock.li,gmail.com,lists.infradead.org,vger.kernel.org,lists.linux.dev];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-17688-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-17689-lists,linux-s390=lfdr.de];
 	MISSING_XM_UA(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-s390@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCPT_COUNT_GT_50(0.00)[54];
 	TAGGED_RCPT(0.00)[linux-s390];
-	NEURAL_HAM(-0.00)[-0.993];
+	NEURAL_HAM(-0.00)[-0.992];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,huawei.com:email,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: A3D2B2CCC77
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 56F662CCE27
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 On Tue, Mar 17, 2026 at 9:20=E2=80=AFAM Jinjie Ruan <ruanjinjie@huawei.com>=
  wrote:
 
-> Currently, x86, ARM64, s390, and LoongArch all define and use
-> TIF_SINGLESTEP to track single-stepping state.
+> Use the generic TIF bits defined in <asm-generic/thread_info_tif.h> for
+> standard thread flags (TIF_SIGPENDING, TIF_NEED_RESCHED, TIF_NOTIFY_RESUM=
+E,
+> TIF_RESTORE_SIGMASK, TIF_SINGLESTEP, etc.) instead of defining
+> them locally.
 >
-> Since this flag is shared across multiple major architectures and serves
-> a common purpose in the generic entry/exit paths, move TIF_SINGLESTEP
-> into the generic Thread Information Flags (TIF) infrastructure.
+> Arm64-specific bits (TIF_FOREIGN_FPSTATE, TIF_MTE_ASYNC_FAULT, TIF_SVE,
+> TIF_SSBD, etc.) are renumbered to start at bit 16 to avoid conflicts.
 >
-> This consolidation reduces architecture-specific boilerplate code and
-> ensures consistency for generic features that rely on single-step
-> state tracking.
+> This enables RSEQ optimizations which require CONFIG_HAVE_GENERIC_TIF_BIT=
+S
+> combined with the generic entry infrastructure (already used by arm64).
 >
 > Cc: Thomas Gleixner <tglx@kernel.org>
-> Acked-by: Heiko Carstens <hca@linux.ibm.com> # s390
 > Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 
-This is really neat, thanks for making the extra effort!
 Reviewed-by: Linus Walleij <linusw@kernel.org>
 
 Yours,
