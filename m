@@ -1,181 +1,157 @@
-Return-Path: <linux-s390+bounces-17668-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-17671-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QI0FCnDnu2njpQIAu9opvQ
-	(envelope-from <linux-s390+bounces-17668-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 13:09:20 +0100
+	id OG4XEKP+u2mzqwIAu9opvQ
+	(envelope-from <linux-s390+bounces-17671-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 14:48:19 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id CBDC82CAF48
-	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 13:09:19 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60FB82CC2C9
+	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 14:48:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4694A30594D4
-	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 12:05:50 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 579923013FD8
+	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2026 13:48:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A2BC3D2FF7;
-	Thu, 19 Mar 2026 12:05:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 358DD2848AA;
+	Thu, 19 Mar 2026 13:48:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KCMaB5xx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KJfBrRJ8"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D513B3D16FF;
-	Thu, 19 Mar 2026 12:05:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3EB2DB799
+	for <linux-s390@vger.kernel.org>; Thu, 19 Mar 2026 13:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773921921; cv=none; b=QlRj8TshgO+wLo9r9A9tlhaaT/5rfIhdbgtZI1oMs6CndJ5xKyXTTGjoMpPdfGD+27tFBiPMtB5/e2uAoSBgmTtEp/yMbmS6eMwb2hJxIQGtb7aXMXw61g8lrT6s3kx3y4QZZbcPm7KsOB3crmnbWMFvpqZkrfIVNEnpLVeZIUM=
+	t=1773928085; cv=none; b=Y6kwIo8KsqHW1Pk5+E0rhIGscaPu+QznQX2ZCDVeX6H5wfrMa3SPjLMvylS0I32ImiuODWd3JFWrTr/onn1kH9re4ecpfHOo63SjlSVNRxXjQPlIWgL4LUo3z9ifqkV4asbgHEcyFekVAOu8VA8/ohU1/TVbiuYvbgfLU5SPIP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773921921; c=relaxed/simple;
-	bh=1kdk+CK6bk84jIsKAayEJ9LpHGdQ5vexBiN3RDJ/cto=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TamgyhNvJivl0gOpbeqTYUuYR2Lzqz7r5sBIVdYwXIllmdl15OluzHKWs2ALQpIlf9DGaEcqOFWFom+NHXjT6NmVamkfOsPih3W4TP1oDyV+T3yzfizBTHlWJOikB96dVToDVPXCjdjnoRtzcoF1TYHf0SM8blam8q6acEf1GmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KCMaB5xx; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62INusid1368595;
-	Thu, 19 Mar 2026 12:05:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=3HDFlARG0P0h478Bf
-	zN/iHwOctLoiC6OSWAsIU7WS9c=; b=KCMaB5xxUFSdZUowxpbgKx4SUbJdtrHHh
-	kpW9AUIWDG8b24YWvsOSiDuMb3nxdc7wb/60+rvn72QakBlw7JJXP8podZ2BhEfH
-	PjrpuRVBpGgsQTAffPy8cq+RS2THYR2HOmTWtNQARYu5uveEcPD5WKPNyoL4Ql51
-	uk98M/p89ZM2yqtPG3BcAci7DJT39WHBNrx9afS8Wag15gnKPgyX3O08BgIaqZhU
-	MW4svz3FbCZJ6BcuhyMeXPf2WtFYKbefMPA9c/qfK12ldWuqneKrO+GnaIna+59o
-	Y3nSkdbhoHwijl4dqUtTykv87JFMNi9VVhhebr5/NPvaB9sGydPnA==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cvy64xux1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 19 Mar 2026 12:05:09 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62JALdRX028471;
-	Thu, 19 Mar 2026 12:05:08 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cwmq1j4dk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 19 Mar 2026 12:05:08 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62JC55OF48693688
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Mar 2026 12:05:05 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0899C20043;
-	Thu, 19 Mar 2026 12:05:05 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DA9E520040;
-	Thu, 19 Mar 2026 12:05:04 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 19 Mar 2026 12:05:04 +0000 (GMT)
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Juergen Christ <jchrist@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH v2 9/9] s390/percpu: Remove one and two byte this_cpu operation implementation
-Date: Thu, 19 Mar 2026 13:05:03 +0100
-Message-ID: <20260319120503.4046659-10-hca@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260319120503.4046659-1-hca@linux.ibm.com>
-References: <20260319120503.4046659-1-hca@linux.ibm.com>
+	s=arc-20240116; t=1773928085; c=relaxed/simple;
+	bh=QOJle0HAErcuAk1B1GgrI2OCaaOFq04voQ/vijiMH9Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AUeWODHNVLT1kfdO1c7rms+2pF0LK7fO3aj5tp7SwWxYPURZJYsfolp+aFF2o5uiCjJ7QRpOyWpNRZlCcNiRuI9Ci5YBSwDiCTut9ZfT2Y3Nsj+dygArfltCMYUI43/kMLIew6QlVFUiKR+qF72EyRNrezSxK+K0peQnRlBWGNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KJfBrRJ8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 840CEC2BCFA
+	for <linux-s390@vger.kernel.org>; Thu, 19 Mar 2026 13:48:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773928085;
+	bh=QOJle0HAErcuAk1B1GgrI2OCaaOFq04voQ/vijiMH9Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KJfBrRJ8sbFD3zMucjkhepLRMBdph3OktdEDcyFOVTXeM4G8ZT2NnK0Q3aOvuVzYa
+	 EohsHAGYO61CRJXeh1yVgHA3aLrHZBs0Bcixk+IUqO+mwrT+1iyxQqZ2z66egbbLMU
+	 P8hKWXA2iSqbRAZBe1hXdAI5cQ1yMZQ4cgP4Pt4rcrtg77ugCe4yyeo3/UKC1JfeF/
+	 cxxndBaoFJoKXbaD5srTgfCVfzvhMSDeJkBzgC56sLuDx+fBr8yNVn4SdEtBQCIcaU
+	 tEj+w/85QKFFNswve+Wp5aDVg+k0RGA1pcNxcNVfv3TBe5XZnC1hNcdaGiebRDFCmI
+	 TUF3sXcB1e9ZQ==
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-797ab169454so11269847b3.3
+        for <linux-s390@vger.kernel.org>; Thu, 19 Mar 2026 06:48:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX+969qPMQXldhv8QcTmfAxDweYnhKFWNg9JGgrSOQQYoYXZZx4jWM0Sy6AHje6QtXRrHzJ9SQQXf/F@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3MlyPUqPO/02HbKNHWBDf43m/dRdIs5H/Ml/ADQYB81a6fCb7
+	4kWzuMbx2lhyRqBLr07+Hg/PZRipMdn9PFpmRSluydKF5okN/2+xUKBFPWJyKTr5BdRxmho9Doc
+	nn5yR/1pamkJJvbptIgM4XZeGiuvbHQM=
+X-Received: by 2002:a05:690c:ed6:b0:79a:47b4:397b with SMTP id
+ 00721157ae682-79a71c9679dmr78182707b3.57.1773928084138; Thu, 19 Mar 2026
+ 06:48:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: khOn5oyK-tvj1JfqDJrmW9CBLMKlMdz9
-X-Proofpoint-GUID: khOn5oyK-tvj1JfqDJrmW9CBLMKlMdz9
-X-Authority-Analysis: v=2.4 cv=KYnfcAYD c=1 sm=1 tr=0 ts=69bbe675 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8 a=Q4reuYiO1UekjhQ8NNAA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE5MDA5NCBTYWx0ZWRfXwHmy8ZwuPuS7
- C3Uoc94sDsamoHohMAMcGdoYB6QR05XxnXu4LD0AhbK13ScdQ0/yUG8NmzdjKdjOsHEXe3GOiC/
- IduRTnvCqeE77v8aAZgPjCJ/AiwdInoojCS/d25UREK5GwH2rtCE4LNaKdWp+xrMe7liqEAZk8O
- vBkylNRYqgYouiIRrbZ5Akn74qMTcExpjb0FAMLpO7hs80ZlUcF0EEC+wdlTjB6ANtDXpyo0EDY
- veQKydDTBCRJlxSfWboMfHI9po8qzn3Cm/db2zuDqe7+Z4e1MLL5FHPVuoRqwn8qvkQVgItfRa9
- iE22otg5li/PAmwbNzBfF0OSHFaCkBTLY6lp86W3RQhylU8g2XxGu5HiZDJn1lcKUnz+cppZnC8
- TJjXog1+WG0FOEewwbkvc3W7iEDku/Ok2tZgNzpoii8cBp6U6AsbAagTL3+6cV/2HRR6FmF5M71
- zGXIqtaFQEFLS2JsoBA==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-19_01,2026-03-19_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0 bulkscore=0
- spamscore=0 impostorscore=0 malwarescore=0 adultscore=0 clxscore=1015
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603190094
-X-Spamd-Result: default: False [-0.66 / 15.00];
+References: <20260317082020.737779-1-ruanjinjie@huawei.com> <20260317082020.737779-2-ruanjinjie@huawei.com>
+In-Reply-To: <20260317082020.737779-2-ruanjinjie@huawei.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Thu, 19 Mar 2026 14:47:53 +0100
+X-Gmail-Original-Message-ID: <CAD++jLnBpKm7Q0hjgkRMmivpYdzY8r1-FuQS=H3Km1G=mE1fTg@mail.gmail.com>
+X-Gm-Features: AaiRm50KZNLEM2TEBH0s8s1elOG_LwkGWTvhDRRNnuvJQ3BSSvTT7GXQ8nkJRwA
+Message-ID: <CAD++jLnBpKm7Q0hjgkRMmivpYdzY8r1-FuQS=H3Km1G=mE1fTg@mail.gmail.com>
+Subject: Re: [PATCH v13 RESEND 01/14] arm64/ptrace: Refactor
+ syscall_trace_enter/exit() to accept flags parameter
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oleg@redhat.com, 
+	chenhuacai@kernel.org, kernel@xen0n.name, hca@linux.ibm.com, 
+	gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com, 
+	svens@linux.ibm.com, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, arnd@arndb.de, 
+	peterz@infradead.org, luto@kernel.org, shuah@kernel.org, kees@kernel.org, 
+	wad@chromium.org, kevin.brodsky@arm.com, deller@gmx.de, macro@orcam.me.uk, 
+	akpm@linux-foundation.org, ldv@strace.io, anshuman.khandual@arm.com, 
+	ryan.roberts@arm.com, mark.rutland@arm.com, thuth@redhat.com, song@kernel.org, 
+	ada.coupriediaz@arm.com, broonie@kernel.org, pengcan@kylinos.cn, 
+	liqiang01@kylinos.cn, ziyao@disroot.org, guanwentao@uniontech.com, 
+	guoren@kernel.org, schuster.simon@siemens-energy.com, jremus@linux.ibm.com, 
+	david@kernel.org, mathieu.desnoyers@efficios.com, edumazet@google.com, 
+	kmal@cock.li, dvyukov@google.com, reddybalavignesh9979@gmail.com, 
+	x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-s390@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-17668-lists,linux-s390=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linux.ibm.com:mid];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hca@linux.ibm.com,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_CC(0.00)[arm.com,kernel.org,redhat.com,xen0n.name,linux.ibm.com,alien8.de,linux.intel.com,zytor.com,arndb.de,infradead.org,chromium.org,gmx.de,orcam.me.uk,linux-foundation.org,strace.io,kylinos.cn,disroot.org,uniontech.com,siemens-energy.com,efficios.com,google.com,cock.li,gmail.com,lists.infradead.org,vger.kernel.org,lists.linux.dev];
+	TAGGED_FROM(0.00)[bounces-17671-lists,linux-s390=lfdr.de];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	NEURAL_HAM(-0.00)[-0.996];
-	DKIM_TRACE(0.00)[ibm.com:+];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-s390@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	RCPT_COUNT_GT_50(0.00)[54];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: CBDC82CAF48
+	NEURAL_HAM(-0.00)[-0.990];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 60FB82CC2C9
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-There are no one and two byte this_cpu operations within the kernel
-(defconfig). However even if there would be the s390 implementation, which
-uses a cmpxchg loop, generates a very large code sequence due to the lack
-of native one and two byte cmpxchg instructions.
+On Tue, Mar 17, 2026 at 9:20=E2=80=AFAM Jinjie Ruan <ruanjinjie@huawei.com>=
+ wrote:
 
-Remove the s390 implementation and use the generic implementation.
+> Refactor syscall_trace_enter() and syscall_trace_exit() to move thread
+> flag reading to the caller. This aligns arm64's syscall trace enter/exit
+> function signature with generic entry framework.
+>
+> [Changes]
+> 1. Function signature changes:
+>    - syscall_trace_enter(regs) =E2=86=92 syscall_trace_enter(regs, flags)
+>    - syscall_trace_exit(regs) =E2=86=92 syscall_trace_exit(regs, flags)
+>
+> 2. Move flags reading to caller:
+>    - Previously: read_thread_flags() called inside each function.
+>    - Now: caller (like el0_svc_common) passes flags as parameter.
+>
+> 3. Update syscall.c:
+>    - el0_svc_common() now passes flags to tracing functions and
+>      re-fetches flags before exit to handle potential TIF updates.
+>
+> [Why this matters]
+> - Aligns arm64 with the generic entry interface.
+> - Makes future migration to generic entry framework.
+>
+> No functional changes intended.
+>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Reviewed-by: Kevin Brodsky <kevin.brodsky@arm.com>
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
----
- arch/s390/include/asm/percpu.h | 9 ---------
- 1 file changed, 9 deletions(-)
+Reviewed-by: Linus Walleij <linusw@kernel.org>
 
-diff --git a/arch/s390/include/asm/percpu.h b/arch/s390/include/asm/percpu.h
-index 44501a407e6d..b5b61471439b 100644
---- a/arch/s390/include/asm/percpu.h
-+++ b/arch/s390/include/asm/percpu.h
-@@ -51,15 +51,6 @@
- 	new__;								\
- })
- 
--#define this_cpu_add_1(pcp, val)	arch_this_cpu_to_op_simple(pcp, val, +)
--#define this_cpu_add_2(pcp, val)	arch_this_cpu_to_op_simple(pcp, val, +)
--#define this_cpu_add_return_1(pcp, val) arch_this_cpu_to_op_simple(pcp, val, +)
--#define this_cpu_add_return_2(pcp, val) arch_this_cpu_to_op_simple(pcp, val, +)
--#define this_cpu_and_1(pcp, val)	arch_this_cpu_to_op_simple(pcp, val, &)
--#define this_cpu_and_2(pcp, val)	arch_this_cpu_to_op_simple(pcp, val, &)
--#define this_cpu_or_1(pcp, val)		arch_this_cpu_to_op_simple(pcp, val, |)
--#define this_cpu_or_2(pcp, val)		arch_this_cpu_to_op_simple(pcp, val, |)
--
- /*
-  * Macros to be used for percpu code section based on atomic instructions.
-  *
--- 
-2.51.0
-
+Yours,
+Linus Walleij
 
