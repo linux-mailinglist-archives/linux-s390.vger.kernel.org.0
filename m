@@ -1,190 +1,269 @@
-Return-Path: <linux-s390+bounces-17761-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-17763-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gJoIClV0vWmt9wIAu9opvQ
-	(envelope-from <linux-s390+bounces-17761-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 20 Mar 2026 17:22:45 +0100
+	id gHV7JVx6vWmt9wIAu9opvQ
+	(envelope-from <linux-s390+bounces-17763-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 20 Mar 2026 17:48:28 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C29CC2DD3C1
-	for <lists+linux-s390@lfdr.de>; Fri, 20 Mar 2026 17:22:44 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D9CC2DDF93
+	for <lists+linux-s390@lfdr.de>; Fri, 20 Mar 2026 17:48:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3CEE4313267C
-	for <lists+linux-s390@lfdr.de>; Fri, 20 Mar 2026 16:16:20 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id AF0453095236
+	for <lists+linux-s390@lfdr.de>; Fri, 20 Mar 2026 16:38:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF3673CFF42;
-	Fri, 20 Mar 2026 16:15:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B566239A803;
+	Fri, 20 Mar 2026 16:38:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WX/s5to8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I/OfmVcP"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596903D0917;
-	Fri, 20 Mar 2026 16:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC8F3148A3;
+	Fri, 20 Mar 2026 16:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774023353; cv=none; b=HFoHFHioJJmRbRAClkQLWgKfogsZiU4g+e7dpfOYfV3eWzfeSjYKmzVtzr0CvP2LJLzFQGVkiXCzT0Cee5k+pHsW+vusi4nwZVAn7YuYLZA5SPxuBc3Ck5S9zmW8dchJe1/72rUXdNd0/Q2+Sq/DVlQwVOc1lBGB1+2y2jAyfA0=
+	t=1774024729; cv=none; b=tQ4u2vb4GyEBsL7FxFkadwtf+OJanR6xf9Prg2sR/oxQBl4DZfyN+fAgkoZ4mejEqJLkDuIPsf5p6XDagcip6mdQVuGZtzdBhi/cAQaQeP5LZh+J0fzRf+TNScZ7N6vJntgAd3IzpM8iuz8r/cj9aanjebTTkmXo0z4W54trIcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774023353; c=relaxed/simple;
-	bh=oKevwYpwXMrZRYg4Pdrx3uqixoRKv51pq42iXR6tQSs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=diMoZs28ATEIHFjueUHRL1TCHY7hC9R+f6i6kKvUxdNWDWGNc+D+uS5Xa3PgUzL5c4BDDOCpJ3f8UNUzo45+gvKf37g6O2/RD1azSUiIW20+3QTCfJA6kEuCJhZcH9/BDbyQ29Ws3zrhDqOEnEbZGSU5hCK84VmkRfIJy6EzhUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WX/s5to8; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62K2U3Zx1088018;
-	Fri, 20 Mar 2026 16:15:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=IMNzU0+TfITo7bc9Q
-	mi5EqrZOSEBfRPTeQQ2TUQBmr8=; b=WX/s5to8iVSOKXsSKtvHTofuHH/Mt3J6k
-	QeKp8StPOLFYESgB4vTOOp3+YQqHebEczlrJ9EeNsQ1lljJ+gJl80guxA3udbzQw
-	UA4HXsPm768u1i/Mmljk840Mv9N/TZ9M9rOaJ8JRPMS5Pqc9XoxVumBA8chBsJE5
-	bfO6AdyaFhBY50gdhdfCfdjjx29N/kd1SsPdqQe+sbhxig6WN6eNmRO8WqKDgdL2
-	cTyy63P+elJhNrZ85oCDDf2cQcHCcV4CwTWHbE26PsI4I1S85A+GoZ3du8bR+1Ot
-	vMlpuGlTwJ7qimCFtGcyfcQhmr6i5Sh2ttzsGHbUrNXjqh19SxKYg==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cvyauuf90-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Mar 2026 16:15:48 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62KG5sep005412;
-	Fri, 20 Mar 2026 16:15:47 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cwj0sr0dg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Mar 2026 16:15:47 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62KGFhO321889294
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 20 Mar 2026 16:15:44 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DE5D420040;
-	Fri, 20 Mar 2026 16:15:43 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BA06A20043;
-	Fri, 20 Mar 2026 16:15:43 +0000 (GMT)
-Received: from p-imbrenda.aag-de.ibm.com (unknown [9.52.223.175])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 20 Mar 2026 16:15:43 +0000 (GMT)
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: kvm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, nrb@linux.ibm.com,
-        seiden@linux.ibm.com, gra@linux.ibm.com, schlameuss@linux.ibm.com,
-        hca@linux.ibm.com, david@kernel.org
-Subject: [PATCH v2 8/8] KVM: s390: Fix KVM_S390_VCPU_FAULT ioctl
-Date: Fri, 20 Mar 2026 17:15:42 +0100
-Message-ID: <20260320161542.202913-9-imbrenda@linux.ibm.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260320161542.202913-1-imbrenda@linux.ibm.com>
-References: <20260320161542.202913-1-imbrenda@linux.ibm.com>
+	s=arc-20240116; t=1774024729; c=relaxed/simple;
+	bh=Ksk0/Cy+7k9g8VSMuw5OALSCZ2GB9qpziu6Wa5P0d+4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ieAeJ30wVBt20n884dL1tEdndnECwoqlIGgUmH9Nl5KRXi/hQ5gS4VReqjZkm7n7TEoUaD6CxuCAgTC31ooaf+w7huRbcR7PbzkXDvxo3Ji0hm8zZNzDMMyuPFnjKr9XgdQn6tY60QaAzpfxH4D1XaEReEPUWUYxoO7lP0IU+Bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I/OfmVcP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDAC6C19425;
+	Fri, 20 Mar 2026 16:38:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774024729;
+	bh=Ksk0/Cy+7k9g8VSMuw5OALSCZ2GB9qpziu6Wa5P0d+4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I/OfmVcP71NX/eXv6rVA2H8uavbrfsew5pTj2wiVU5s+aHz5rN91R2Pz36DoL2+Fo
+	 rANmKpvbZV7cOFQK+lP7oYlsRq/4paUxujz4rezTBqKA66bwYPVNNBhzhmCr6J4xbi
+	 vjtP4kZEQ3amGKczLKy0m9YptVW35xq5Lm0Uxk2IG2Ler/6ijJ1G8YxCbmrxkSEC7Y
+	 M29VqGltRdx6Sm1ifElpqV0bL0Tm8oltBzYTbPzaR+3rGw9s9CGPX7CR94ZjYtEyJX
+	 jNLGM6YhVKgZpqntE0j9rerpK2JQejQf6CXMtXpXIuBddKssqb6KupwcU8OClk6p8E
+	 qhsKSOvDUiIBg==
+Date: Fri, 20 Mar 2026 16:38:34 +0000
+From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
+To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@kernel.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Kees Cook <kees@kernel.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Brian Cain <bcain@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <chleroy@kernel.org>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, 
+	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Xu Xin <xu.xin16@zte.com.cn>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Michal Hocko <mhocko@suse.com>, Paul Moore <paul@paul-moore.com>, 
+	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
+	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	linux-um@lists.infradead.org, linux-fsdevel@vger.kernel.org, selinux@vger.kernel.org
+Subject: Re: [PATCH v3 17/23] mm: convert do_brk_flags() to use vma_flags_t
+Message-ID: <366b74cf-b569-4004-bd12-dfbcefc25e56@lucifer.local>
+References: <cover.1773846935.git.ljs@kernel.org>
+ <981ed1afcd19115432e61778e7d226a36f8f5c2b.1773846935.git.ljs@kernel.org>
+ <1d300b3b-2476-4381-b8df-a680f486b284@kernel.org>
+ <f47e24c4-3a11-4a58-96f5-871443660246@lucifer.local>
+ <7e2aea13-e047-4891-bd6f-ff6705c4fc28@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzIwMDEzMCBTYWx0ZWRfX0Y1j6Ph8qt9Y
- 6101hwb+hfUJOj7oTrvJ9y4jVNQvWf/povoD/aXmTC8TrePHV5H4QvxcIMbgYa9ynt+g8URHsUm
- davNAeTAzqvS17yHvop7+MM9vm+uSC3T0UFQgU/yR5e0m+H7jHy8b6Jiwp0bTvKBCBO86XOjkYx
- KVJpYUSUnwJDbKlMr/8wz3EPfOTaDWr/5OyX7EO5iBmiERZ26N/XT4SQ+nb2zzZQJ9j5zfkLvL7
- a3OiIeHvu1nEx/lu5ZBp+ECMsvNUdALaeBWyFtmnf08MJb8H/MPQCDcnHg8lFa3kfQxaxYBUeaG
- mPbfI/h1t0r/ISWSajfJybEFmYc8BVt/Sn4xz0Y9rLX8uGf0g1kSuIQ+C+UH0pUasqWIeot/0Jd
- OsctelBhfwy27jpRMhyy4eEFyHX+702rMfiBb9UOLCvmRcLvaoc23vFOtgsK4j0srJ5gP45t2FR
- egkq118Pl4LlbO4YV2g==
-X-Authority-Analysis: v=2.4 cv=GIQF0+NK c=1 sm=1 tr=0 ts=69bd72b4 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8 a=ikv_JcFPPU8SThzKSe0A:9
-X-Proofpoint-ORIG-GUID: Gy2g5eZ-hBlNROdCOEUo7FLuY66evMHI
-X-Proofpoint-GUID: Gy2g5eZ-hBlNROdCOEUo7FLuY66evMHI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-20_02,2026-03-20_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 priorityscore=1501 bulkscore=0 lowpriorityscore=0 malwarescore=0
- phishscore=0 impostorscore=0 suspectscore=0 adultscore=0 clxscore=1015
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603200130
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7e2aea13-e047-4891-bd6f-ff6705c4fc28@kernel.org>
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-17761-lists,linux-s390=lfdr.de];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.ibm.com:mid];
-	TAGGED_RCPT(0.00)[linux-s390];
-	FROM_NEQ_ENVFROM(0.00)[imbrenda@linux.ibm.com,linux-s390@vger.kernel.org];
+	FREEMAIL_CC(0.00)[linux-foundation.org,kernel.org,oracle.com,google.com,suse.de,kvack.org,vger.kernel.org,armlinux.org.uk,arm.com,xen0n.name,alpha.franken.de,linux.ibm.com,ellerman.id.au,gmail.com,dabbelt.com,eecs.berkeley.edu,ghiti.fr,redhat.com,alien8.de,linux.intel.com,zytor.com,nod.at,cambridgegreys.com,sipsolutions.net,zeniv.linux.org.uk,suse.cz,zte.com.cn,linux.dev,suse.com,paul-moore.com,lists.infradead.org,lists.linux.dev,lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-17763-lists,linux-s390=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[62];
 	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-0.995];
-	TO_DN_NONE(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: C29CC2DD3C1
+	FROM_NEQ_ENVFROM(0.00)[ljs@kernel.org,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.970];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-s390];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lucifer.local:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 3D9CC2DDF93
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-A previous commit changed the behaviour of the KVM_S390_VCPU_FAULT
-ioctl. The current (wrong) implementation will trigger a guest
-addressing exception if the requested address lies outside of a
-memslot, unless the VM is UCONTROL.
+On Fri, Mar 20, 2026 at 04:06:15PM +0100, Vlastimil Babka (SUSE) wrote:
+> On 3/20/26 14:42, Lorenzo Stoakes (Oracle) wrote:
+> >>
+> >> More nits below:
+> >>
+> >> > diff --git a/arch/arm64/include/asm/page.h b/arch/arm64/include/asm/page.h
+> >> > index b39cc1127e1f..e25d0d18f6d7 100644
+> >> > --- a/arch/arm64/include/asm/page.h
+> >> > +++ b/arch/arm64/include/asm/page.h
+> >> > @@ -46,7 +46,12 @@ int pfn_is_map_memory(unsigned long pfn);
+> >> >
+> >> >  #endif /* !__ASSEMBLER__ */
+> >> >
+> >> > -#define VM_DATA_DEFAULT_FLAGS	(VM_DATA_FLAGS_TSK_EXEC | VM_MTE_ALLOWED)
+> >> > +#ifdef CONFIG_ARM64_MTE
+> >> > +#define VMA_DATA_DEFAULT_FLAGS	append_vma_flags(VMA_DATA_FLAGS_TSK_EXEC, \
+> >> > +						 VMA_MTE_ALLOWED_BIT)
+> >>
+> >> I wonder what's the bloat-o-meter impact of these #define's (this
+> >> arm64-specific one isn't the only one) being no longer compile-time-constants?
+> >
+> > I mean there's a precedent for this, but the compiler _should_ figure out this
+> > as a constant value, I have repeatedly confirmed that it's good at that in
+> > godbolt, via make foo/bar.S etc.
+>
+> Great, thanks!
+>
+> >
+> >>
+> >> >   */
+> >> >  #define vma_desc_set_flags(desc, ...) \
+> >> >  	vma_desc_set_flags_mask(desc, mk_vma_flags(__VA_ARGS__))
+> >> > @@ -4059,7 +4071,6 @@ extern int replace_mm_exe_file(struct mm_struct *mm, struct file *new_exe_file);
+> >> >  extern struct file *get_mm_exe_file(struct mm_struct *mm);
+> >> >  extern struct file *get_task_exe_file(struct task_struct *task);
+> >> >
+> >> > -extern bool may_expand_vm(struct mm_struct *, vm_flags_t, unsigned long npages);
+> >> >  extern void vm_stat_account(struct mm_struct *, vm_flags_t, long npages);
+> >> >
+> >> >  extern bool vma_is_special_mapping(const struct vm_area_struct *vma,
+> >> > diff --git a/mm/internal.h b/mm/internal.h
+> >> > index f98f4746ac41..80d8651441a7 100644
+> >>
+> >> > diff --git a/mm/mprotect.c b/mm/mprotect.c
+> >> > index 9681f055b9fc..eaa724b99908 100644
+> >> > --- a/mm/mprotect.c
+> >> > +++ b/mm/mprotect.c
+> >>
+> >> > @@ -773,19 +778,24 @@ mprotect_fixup(struct vma_iterator *vmi, struct mmu_gather *tlb,
+> >> >
+> >> >  	change_protection(tlb, vma, start, end, mm_cp_flags);
+> >> >
+> >> > -	if ((oldflags & VM_ACCOUNT) && !(newflags & VM_ACCOUNT))
+> >> > +	if (vma_flags_test(&old_vma_flags, VMA_ACCOUNT_BIT) &&
+> >> > +	    !vma_flags_test(&new_vma_flags, VMA_ACCOUNT_BIT))
+> >> >  		vm_unacct_memory(nrpages);
+> >> >
+> >> >  	/*
+> >> >  	 * Private VM_LOCKED VMA becoming writable: trigger COW to avoid major
+> >> >  	 * fault on access.
+> >> >  	 */
+> >> > -	if ((oldflags & (VM_WRITE | VM_SHARED | VM_LOCKED)) == VM_LOCKED &&
+> >> > -			(newflags & VM_WRITE)) {
+> >> > -		populate_vma_page_range(vma, start, end, NULL);
+> >> > +	if (vma_flags_test(&new_vma_flags, VMA_WRITE_BIT)) {
+> >> > +		const vma_flags_t mask =
+> >> > +			vma_flags_and(&old_vma_flags, VMA_WRITE_BIT,
+> >> > +				      VMA_SHARED_BIT, VMA_LOCKED_BIT);
+> >> > +
+> >> > +		if (vma_flags_same(&mask, VMA_LOCKED_BIT))
+> >>
+> >> That converts the original logic 1:1, but I wonder if it's now feasible to
+> >> write it more obviously as "VMA_LOCKED_BIT must be set, VM_WRITE_BIT and
+> >> VM_SHARED_BIT must not" ?
+> >
+> > Hmm, I'm not sure if I can express this more clearly, it's a pain either
+> > way. Could do:
+> >
+> > 	if (vma_flags_test(&new_vma_flags, VMA_WRITE_BIT) &&
+> > 	    !vma_flags_test_any(&old_vma_flags, VMA_WRITE_BIT, VMA_SHARED_BIT))
+> > 		populate_vma_page_range(vma, start, end, NULL);
+>
+> It would be a bit more:
+>
+> 	if (vma_flags_test(&new_vma_flags, VMA_WRITE_BIT) &&
+> 	    vma_flags_test(&old_vma_flags, VMA_LOCKED_BIT) &&
+>  	    !vma_flags_test_any(&old_vma_flags, VMA_WRITE_BIT, VMA_SHARED_BIT))
+>  		populate_vma_page_range(vma, start, end, NULL);
 
-Restore the previous behaviour by open coding the fault-in logic.
+Right yeah sorry :)
 
-Fixes: 3762e905ec2e ("KVM: s390: use __kvm_faultin_pfn()")
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
----
- arch/s390/kvm/kvm-s390.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+That is clearer but still pretty verbose. Will think about how to do it but I
+think as a follow up still makes more sense.
 
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index ebcb0ef8835e..62f04931b54d 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -5520,9 +5520,21 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
- 	}
- #endif
- 	case KVM_S390_VCPU_FAULT: {
--		idx = srcu_read_lock(&vcpu->kvm->srcu);
--		r = vcpu_dat_fault_handler(vcpu, arg, 0);
--		srcu_read_unlock(&vcpu->kvm->srcu, idx);
-+		gpa_t gaddr = arg;
-+
-+		scoped_guard(srcu, &vcpu->kvm->srcu) {
-+			r = vcpu_ucontrol_translate(vcpu, &gaddr);
-+			if (r)
-+				break;
-+
-+			r = kvm_s390_faultin_gfn_simple(vcpu, NULL, gpa_to_gfn(gaddr), false);
-+			if (r == PGM_ADDRESSING)
-+				r = -EFAULT;
-+			if (r <= 0)
-+				break;
-+			r = -EIO;
-+			KVM_BUG_ON(r, vcpu->kvm);
-+		}
- 		break;
- 	}
- 	case KVM_ENABLE_CAP:
--- 
-2.53.0
+>
+> (or reordered in whatever way the short circuting works best here, the original
+> code tested oldflags first).
+>
+> But yeah, at least to me it's more clear what that's testing and doesn't need to
+> set up the intermediate mask variable, and VMA_LOCKED_BIT is there only once
+> in the code now. The number of vma_flags_* operations is the same.
+>
+> >>
+> >> > +			populate_vma_page_range(vma, start, end, NULL);
+> >> >  	}
+> >> >
+> >> > -	vm_stat_account(mm, oldflags, -nrpages);
+> >> > +	vm_stat_account(mm, vma_flags_to_legacy(old_vma_flags), -nrpages);
+> >> >  	vm_stat_account(mm, newflags, nrpages);
+> >> >  	perf_event_mmap(vma);
+> >> >  	return 0;
+> >>
+> >> > diff --git a/mm/vma.h b/mm/vma.h
+> >> > index cf8926558bf6..1f2de6cb3b97 100644
+> >> > --- a/mm/vma.h
+> >> > +++ b/mm/vma.h
+> >>
+> >> > +static inline bool is_data_mapping_vma_flags(const vma_flags_t *vma_flags)
+> >> > +{
+> >> > +	const vma_flags_t mask = vma_flags_and(vma_flags,
+> >> > +			VMA_WRITE_BIT, VMA_SHARED_BIT, VMA_STACK_BIT);
+> >> > +
+> >> > +	return vma_flags_same(&mask, VMA_WRITE_BIT);
+> >>
+> >> Ditto?
+> >
+> > I may do both as a follow up patch given the series is a pain to rework at this point
+> > and I want at least the first version to be like-for-like intentionally.
+>
+> OK sure.
 
+Cheers!
+
+>
+> >>
+> >> > +}
+> >> >
+> >> >  static inline void vma_iter_config(struct vma_iterator *vmi,
+> >> >  		unsigned long index, unsigned long last)
+> >> > diff --git a/mm/vma_exec.c b/mm/vma_exec.c
+> >> > index 8134e1afca68..5cee8b7efa0f 100644
+> >
+> > Thanks, Lorenzo
+>
 
