@@ -1,112 +1,148 @@
-Return-Path: <linux-s390+bounces-17721-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-17797-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yFrgH5W9vGlb2gIAu9opvQ
-	(envelope-from <linux-s390+bounces-17721-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 20 Mar 2026 04:23:01 +0100
+	id vAsyH3YovmmtHwMAu9opvQ
+	(envelope-from <linux-s390+bounces-17797-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Sat, 21 Mar 2026 06:11:18 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 862F32D58A8
-	for <lists+linux-s390@lfdr.de>; Fri, 20 Mar 2026 04:23:00 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7E7A2E34DF
+	for <lists+linux-s390@lfdr.de>; Sat, 21 Mar 2026 06:11:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 273593017301
-	for <lists+linux-s390@lfdr.de>; Fri, 20 Mar 2026 03:21:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4EA1230125C5
+	for <lists+linux-s390@lfdr.de>; Sat, 21 Mar 2026 05:11:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79FC02DD60E;
-	Fri, 20 Mar 2026 03:21:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13E6733F5BB;
+	Sat, 21 Mar 2026 05:11:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="WNeekJYP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OLe7OxhB"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C41D023EAB3;
-	Fri, 20 Mar 2026 03:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF0382D592D
+	for <linux-s390@vger.kernel.org>; Sat, 21 Mar 2026 05:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773976906; cv=none; b=inG8fnQ3xVHKEgIWyhH8VP1sdivMZf6KolillqDcAxudNYcxY2u8SZAEh3Ea/7dje4Vegv1O0Acp6iH//h4XjI8uaUi/8geBc49iZq4hxPv7E5H/z7XCdJEnwFd3s/wDAtf+Cq3DZWu+MeFmZIRIIreCTU8MiiD4Fux/DPb7u3c=
+	t=1774069875; cv=none; b=aq4sJXzrhSgid/BWgzPuPTRZ6E3cFuo5GWKvcOs1vr4+vmotEQMf3FWZercdUo9iXOP0IA2rZEAzcO3Pz8m21dYJmGzrqQUnXUgZ43ufsZDCtXFX7PzdKLZ3chIOPJ94JjiuyXdmKOYUVvmgjQt8cZ477y5/ZoZQj2aRIrd6Xk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773976906; c=relaxed/simple;
-	bh=gGbK1hlJNkFH+m2wLyf1yKsOfsiUVTktl0gahGS/72s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K4S6VyPj0JSDtX/fqYeacahgNwAAD0N8uR9YJshoK1XbGW/PgKPD1V6hf/t+D5IwR2zTMpGtizwLrqnNhNRa6j+u7I1XLDzOvkDtDWtaExRPC+xorI/3X4YflC19L7ANIvKkW1cbeuFnGCZph4LxMzkMypuYv0PKU5FiFdZe8s0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=WNeekJYP; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1773976900; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=euot9GX9Psoi1WN6TxY1zgk1VpiBJA8QKwf2sKbBPeo=;
-	b=WNeekJYPe0LKc7+v9ue9xJzoy/1iNkg2xnRG8rycFRmOAcDCvEQsAQ0CQzS/6+oaUiTxpExgwKSfnvwdGZZ7Zujav7KNpIgreUqDVFsK83f+cN6ibGRGv0kroILGiMJ3Rlf+IWeJEPdTXoW5vdep2pM2PeNuTGNN2LbbZGrkbxs=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R471e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0X.K7P-S_1773976899;
-Received: from 30.74.144.136(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0X.K7P-S_1773976899 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 20 Mar 2026 11:21:40 +0800
-Message-ID: <ab7ea070-47c8-447a-8e9e-ac471063cf8d@linux.alibaba.com>
-Date: Fri, 20 Mar 2026 11:21:39 +0800
+	s=arc-20240116; t=1774069875; c=relaxed/simple;
+	bh=qVwlCu1WIXntn26q1kvsy4ns7XCLQh3LUnFd91zRr48=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=N+1cvW0vrAstbfbWH+/6sFGXOWVzarsuR/OBHrJGFzLIWGl3X33fGWdV0dyiVYpvpa7VpFRA6AFDylttRjgc6sDh9MbR2LWc6r8qn10iuDA5NlUJrexkjwpyYW3yxEcI9FNoL1/dE0u+68YWf4yhcmPL6jjezXiFOn+K9BnmxsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OLe7OxhB; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-c7412b07f22so1590105a12.0
+        for <linux-s390@vger.kernel.org>; Fri, 20 Mar 2026 22:11:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1774069873; x=1774674673; darn=vger.kernel.org;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7QxDv7wA5vy2wx/iALi99txiEfbwQ3ENlpnWZYhHz0A=;
+        b=OLe7OxhBzFwMPIltVknpGrXU9DN7TZFVr3dJDvog+FEKXYmG+fHE2bFbgoZCuFCuw2
+         0eJIPaT+MwpkQBDn5zFbJSu9h2HQa0J7qzB1ZsadIyJ8Bau/FOCcW7WsotI/JazwbOwC
+         Liacvp0OhfIMtoPN1/bsxA1AetNrt12rxXcHel3gly35cWWZocy2wqHD4vswnXxER4SK
+         TKXch+jKp5VDm59qDJg8ua+0OqFS8JstiSXF1Pwy5A8Zcue6JB5wdTTc5OSZOMyh9cCw
+         BYWG4YhdCWoTZ4G1qzRqr0iGs0BgB00W7fAJFkySqVoTIt3dNWFPgkagFcG568A1/AfF
+         xj/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774069873; x=1774674673;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7QxDv7wA5vy2wx/iALi99txiEfbwQ3ENlpnWZYhHz0A=;
+        b=aqFY2uDc0W9W9a2AsqYO1lLoaUcigeV6aOIhgaBFQxoq3JUypRFmWs/W1ehowRmb+Q
+         XoqZjPwIw5ZKl6X8nQdbQM1ceYcJYKsD4xKbQRI77Vyh1Djmwj4j3ltacoJZMA9iDs94
+         8rKcUKvFRxQjvIGptGKNi0mWcmK3y5d2rPvWs3IbkdrCWeZDRXL/5kKCx07QRLVrVOjn
+         DX3DbenMPPHHRNqzZ18Djgu15Jcq+ug7ndJfwV+DgT/Fh6vNbTeLc6hBLLtgdbBQkikT
+         dFPHfJiK9S5mTtms237sj00lr1cxFR80KO2NVAA10kI9zpYDI3hXQ1TkTRA8Zj/4k7bT
+         g9Uw==
+X-Forwarded-Encrypted: i=1; AJvYcCVauZk0ZvO8uLsD5s1fAnYh5+SDACP1GRdkPWBCYBINs0krel7ZRDw8N7Nvx6xwdE2+YN0OI59NFshg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5AYsyhJQqbpvApAENaoDWTF6uQwvyPPQIOzHs9uK9oScIdQa7
+	/zPvcAMh1YDOd/k1wLHzH2BPsFs8Bw9mT5h7exzeK0CnA33+kqW+kGo2
+X-Gm-Gg: ATEYQzwrCjLAo+LM1nyAM/tIjkrEyw5pChBt8h6MrnLiIldBkU3rSrXAHZ6JtEIChRQ
+	tZThYK6g2rdrckbkGHiGec44iMEhOjsGkC8L5Pc12b73uTk7bvdiYVmSkIn09dJcuTqXpWxivU2
+	gFRXzzol1kRwYXBrS/grFLgUpdIxGUR+L5helC9Sjyy77XUnhfYj5v3om+KAygc3Fi5dfgcBJs9
+	Vb8bd9DoHDksYZm0ozyIrIiGsjYyAi0LGvhrid0G3FUNx3F7E/hQVJ47n4yskYV69IUHauLwm3a
+	0krOdQ5XxBTzltdR2cgcmTVgavA//zCjoR2KvvIyHK189VQKtt/Yiw0yN6V+hGfhbl3WXhf5Ct6
+	3lvwgFHstHMELvuVCZsOpuRaSmvxyisrREJiqRDDY/7z6zNAuVmqyWnRn4MNULWlG+0RADiKvvX
+	nXGySAuFunjbVZlKuiDzdCvw==
+X-Received: by 2002:a05:6a21:4cca:b0:39b:9c3a:f54f with SMTP id adf61e73a8af0-39bb25e7511mr8216718637.32.1774069873215;
+        Fri, 20 Mar 2026 22:11:13 -0700 (PDT)
+Received: from pve-server ([49.205.216.49])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c743a939af0sm2729778a12.16.2026.03.20.22.11.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2026 22:11:12 -0700 (PDT)
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org, david@kernel.org
+Cc: ljs@kernel.org, Liam.Howlett@oracle.com, vbabka@kernel.org, rppt@kernel.org, surenb@google.com, mhocko@suse.com, baolin.wang@linux.alibaba.com, linux-arm-kernel@lists.infradead.org, x86@kernel.org, linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, kvm@vger.kernel.org, open <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] mm: change to return bool for ptep_test_and_clear_young()
+In-Reply-To: <3fa94c3c89fd93fe22c8cb59967f064787d686aa.1773890510.git.baolin.wang@linux.alibaba.com>
+Date: Fri, 20 Mar 2026 11:27:48 +0530
+Message-ID: <ikarxctf.ritesh.list@gmail.com>
+References: <cover.1773890510.git.baolin.wang@linux.alibaba.com> <3fa94c3c89fd93fe22c8cb59967f064787d686aa.1773890510.git.baolin.wang@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/6] change young flag check functions to return bool
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: david@kernel.org, ljs@kernel.org, Liam.Howlett@oracle.com,
- vbabka@kernel.org, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
- linux-arm-kernel@lists.infradead.org, x86@kernel.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- kvm@vger.kernel.org, open <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
-References: <cover.1773890510.git.baolin.wang@linux.alibaba.com>
- <20260319201839.2dfa704041b8f13d8dbbfd3b@linux-foundation.org>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20260319201839.2dfa704041b8f13d8dbbfd3b@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-9.16 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-17721-lists,linux-s390=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-17797-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[baolin.wang@linux.alibaba.com,linux-s390@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.998];
-	TAGGED_RCPT(0.00)[linux-s390];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MISSING_XM_UA(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[riteshlist@gmail.com,linux-s390@vger.kernel.org];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 862F32D58A8
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_RCPT(0.00)[linux-s390];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: C7E7A2E34DF
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+Baolin Wang <baolin.wang@linux.alibaba.com> writes:
 
+> Callers use ptep_test_and_clear_young() to clear the young flag and check
+> whether it was set. Change the return type to bool to make the intention
+> clearer.
+>
 
-On 3/20/26 11:18 AM, Andrew Morton wrote:
-> On Thu, 19 Mar 2026 11:23:59 +0800 Baolin Wang <baolin.wang@linux.alibaba.com> wrote:
-> 
->> This is a cleanup patchset to change all young flag check functions to
->> return bool, as discussed with David in the previous thread[1]. Since
->> callers only care about whether the young flag was set, returning bool
->> makes the intention clearer. No functional changes intended.
-> 
-> One observation from Sashiko.  Minorish, worth addressing:
-> 	https://sashiko.dev/#/patchset/cover.1773890510.git.baolin.wang%40linux.alibaba.com
+Right I checked all callers of ptep_test_and_clear_young(). I agree, we
+only need bool here. 
 
-Yes, good catch. Will fix in next version. Thanks.
+> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> ---
+>  arch/arm64/include/asm/pgtable.h             |  8 ++++----
+>  arch/arm64/mm/contpte.c                      |  4 ++--
+>  arch/microblaze/include/asm/pgtable.h        |  2 +-
+>  arch/parisc/include/asm/pgtable.h            |  6 +++---
+>  arch/powerpc/include/asm/book3s/32/pgtable.h |  4 ++--
+>  arch/powerpc/include/asm/book3s/64/pgtable.h |  6 +++---
+>  arch/powerpc/include/asm/nohash/pgtable.h    |  4 ++--
+
+I looked at it because of powerpc changes, but ended up looking into all
+call sites anyways. So overall it LGTM (and I agree that we can remove
+the unnecessary externs from function declarations)
+
+With that please feel free to add:
+Reviewed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
 
