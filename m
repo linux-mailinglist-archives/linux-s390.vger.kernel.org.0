@@ -1,184 +1,261 @@
-Return-Path: <linux-s390+bounces-17831-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-17833-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4Br1MtoJwWmtPwQAu9opvQ
-	(envelope-from <linux-s390+bounces-17831-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 23 Mar 2026 10:37:30 +0100
+	id viS+FhAMwWngQAQAu9opvQ
+	(envelope-from <linux-s390+bounces-17833-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 23 Mar 2026 10:46:56 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 504A72EF2FE
-	for <lists+linux-s390@lfdr.de>; Mon, 23 Mar 2026 10:37:30 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9F952EF4B6
+	for <lists+linux-s390@lfdr.de>; Mon, 23 Mar 2026 10:46:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5AA0030234CB
-	for <lists+linux-s390@lfdr.de>; Mon, 23 Mar 2026 09:33:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 666293032774
+	for <lists+linux-s390@lfdr.de>; Mon, 23 Mar 2026 09:41:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8A5D387593;
-	Mon, 23 Mar 2026 09:33:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 716DE386450;
+	Mon, 23 Mar 2026 09:41:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IfJg+hAp"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OKPJpDUU"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C01386C3B;
-	Mon, 23 Mar 2026 09:33:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A80B38552F;
+	Mon, 23 Mar 2026 09:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774258385; cv=none; b=BtRIm7dxtn92Uj/ptSduaV1eCLkUwVq+7lCeysMkVsgC0qHGH1dy+6fRi3z1iR17K9cZxWKwcMPY22F998pkcJuLmyH7WPJbYnGAlqWiiVj1bveNSV4zoafCRPO5PmFXIj79Mop9embOemKAdtgsKFRELY8pyFduBbW6C/KeKXo=
+	t=1774258918; cv=none; b=WmgGqGZX+z1alC89HqNsN0jOSDapWjTvWFuuyCMmnkOWJLcDFtCds6Idd/TQYfdPSz2+AZHyQY9YHrIaJ/rbR2g9dQvswfJOZZA9j9ACIXKWtk/KmewhkXEE8bOgiRk87pv1YpDfKOKyBrt4+pqyf87Zt1WJMBFOKgeuqWbvTOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774258385; c=relaxed/simple;
-	bh=tVXzc3TZ4XXEho6yf6ZcstI8WffvhcP9cbTZPPwmM0U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rFMzyIQtIC3yos62TN2149Ft80PybIDBXbzX8rkM/F85woVpecFYjNvI1jwsIz4X78hgVAA99tB9bZ35eniY3omqlOqCui/t324ur9owGuadeWTO3bH1OoE56ERXH5fZcBN9XCBIblPeNA8DQu+D9jxOIXlQ7up70owcWrEDAuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IfJg+hAp; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1774258918; c=relaxed/simple;
+	bh=VOSK6AaCxQSTQFajzAiT0euTggc2yquqJNHeBBOjtiw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:Subject:From:
+	 References:In-Reply-To; b=sMUU3hzGVcDpgLeFosgkdWLWP2922KeLB2q4qi+/JjY4QFl5OZqKYx9VLOtHLEtlAV6B97Y17O64511nqMy53Q7Pg2d8OOzTAOMuIiSaT1xpof80ONEmQv+MbR2py7NXmJa3ZFCMyo0C2RUH+RbMnOUpiVgFWcndjv1dsy3Funs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OKPJpDUU; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62MNPEJ7666646;
-	Mon, 23 Mar 2026 09:33:00 GMT
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62MFHsvh3826166;
+	Mon, 23 Mar 2026 09:41:56 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=768lj2
-	UP4Q5lJI10ZC9GKEZTGjBOEkuSn54mj3bw9aA=; b=IfJg+hAp2OQeoOaSPH2yog
-	Twp6Eza6KcArv98HlPmetI+9a1kN/vCCJYHx1L3fe/YfvJCYTzqB0Lf2F6Q0iuBY
-	U2EMSRqAjvohN0r7O7zor4ndk0cp4JFi7PV0AXSglCbA3TVyrD9u02O6LIjxmzXa
-	IlKClBSgdRaLsKSij2Tlv9nI6w0Mzcd8hAOGyGtGROovc9/BbpN2B0RP2ADKYPUb
-	jGLxVRFCX0fgtUUT2P6GsPMqCwqKL9y87mIIs5RUtciIWitswZxX453GrxUSc+DF
-	4DsT/z2+a8B0OdLC7MvJqxhdV0hH6kfzAwkg8CFRTfj2T8DALj/1DgFKK6hCpfUg
+	:message-id:mime-version:references:subject:to; s=pp1; bh=boeD76
+	3bC4E/gTbIGlfkP9tTn0/24w48tJhxst2DVNc=; b=OKPJpDUUcHAOJKFODEfVWh
+	qdTmQ/IT4tRqHkIF6xfiFnVChwwpflT/KViH09ee0gLg8tSZy71plDySJJ6cEGGA
+	t6bqcXWh8cb/7SF30QNOrKCyPGq4OUDXIHlyoQfCjxAuOYIWYPIdGQ4dxaYccvoN
+	g3pWmPUzeAFf8vMqOeBtKig++3TfNPZA6/DbQ3oM3IXYeP21vLjlFJT0rQ4UcUSm
+	4R0UhyM66f5grnOC4K9mC4kjfHr2A/SU1V7BMIvBTFovQscK5Etj0WHQhSoRXvIg
+	nAATE06hfNjboRjvfOtQr+0sWdpD4qIW7DDnxdH7NOT8POa+lRXcr3j7hUbwNDNQ
 	==
 Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d1ktxp6jv-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d1kxywwx1-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Mar 2026 09:33:00 +0000 (GMT)
+	Mon, 23 Mar 2026 09:41:55 +0000 (GMT)
 Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62N8bfcZ004392;
-	Mon, 23 Mar 2026 09:32:59 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4d28c1vheb-1
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62N919k2004399;
+	Mon, 23 Mar 2026 09:41:55 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4d28c1vj81-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Mar 2026 09:32:59 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62N9WtIY53477886
+	Mon, 23 Mar 2026 09:41:54 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62N9fpCj22020386
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 23 Mar 2026 09:32:55 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 10D142004D;
-	Mon, 23 Mar 2026 09:32:55 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 98A812004B;
-	Mon, 23 Mar 2026 09:32:54 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 23 Mar 2026 09:32:54 +0000 (GMT)
-From: Julian Ruess <julianr@linux.ibm.com>
-Date: Mon, 23 Mar 2026 10:32:47 +0100
-Subject: [PATCH v7 3/3] MAINTAINERS: add VFIO ISM PCI DRIVER section
+	Mon, 23 Mar 2026 09:41:51 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4D08B20040;
+	Mon, 23 Mar 2026 09:41:51 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 38EFF20043;
+	Mon, 23 Mar 2026 09:41:51 +0000 (GMT)
+Received: from darkmoore (unknown [9.52.198.32])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 23 Mar 2026 09:41:51 +0000 (GMT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260323-vfio_pci_ism-v7-3-abf537150408@linux.ibm.com>
-References: <20260323-vfio_pci_ism-v7-0-abf537150408@linux.ibm.com>
-In-Reply-To: <20260323-vfio_pci_ism-v7-0-abf537150408@linux.ibm.com>
-To: schnelle@linux.ibm.com, wintera@linux.ibm.com, ts@linux.ibm.com,
-        oberpar@linux.ibm.com, gbayer@linux.ibm.com,
-        Alex Williamson <alex@shazbot.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Shameer Kolothum <skolothumtho@nvidia.com>,
-        Kevin Tian <kevin.tian@intel.com>
-Cc: mjrosato@linux.ibm.com, alifm@linux.ibm.com, raspl@linux.ibm.com,
-        hca@linux.ibm.com, agordeev@linux.ibm.com, gor@linux.ibm.com,
-        julianr@linux.ibm.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-pci@vger.kernel.org
-X-Mailer: b4 0.14.2
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 23 Mar 2026 10:41:45 +0100
+Message-Id: <DHA2AH0CSLVL.2RED4W0M6RLNE@linux.ibm.com>
+Cc: <linux-s390@vger.kernel.org>, <imbrenda@linux.ibm.com>,
+        <borntraeger@linux.ibm.com>, <akrowiak@linux.ibm.com>
+To: "Janosch Frank" <frankja@linux.ibm.com>, <kvm@vger.kernel.org>
+Subject: Re: [RFC 09/10] KVM: s390: Use gpa_t in pv.c
+From: "Christoph Schlameuss" <schlameuss@linux.ibm.com>
+X-Mailer: aerc 0.21.0
+References: <20260316180310.17765-1-frankja@linux.ibm.com>
+ <20260316180310.17765-10-frankja@linux.ibm.com>
+In-Reply-To: <20260316180310.17765-10-frankja@linux.ibm.com>
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=IqITsb/g c=1 sm=1 tr=0 ts=69c108cc cx=c_pps
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzIzMDA3MSBTYWx0ZWRfXytLCM7dvAMOV
+ 2HntCToGY6za6HPbIbu0SE04yxt0uxQeTyu5iT53WiBZlwB7gzQvx6RQ8bA3jBlnRLYpVVDeHTY
+ CaBPVxqc2+5mYiRpE273qHc2EhwGMbOfktYqSL0zGo/hF4jMuGUBYvfhMmVHuNu3iSdbtIaMJEP
+ 9YI2Tq75AaICywii3S6jz2mJNVOmcoBNn7ezYU4jfUbor6I4ltNLaTQhJyRekNCDUw48JQxc7Jx
+ +ew/UOSsZmT+y02vRLeABBOTIQhy9mMOZRgzZcUOr5aTsgrWPPcv9X1s5BmlJZO2Rz4ghzArgSQ
+ +Gr0fB3hJyt5Vg9LTMYkkNYIb9uoWQaXsfQM6tRvM6r17jUIg5dVJxS6kgCUAMvgHVcMeeRe94Z
+ 7UX4xJ7TR2U2hmYtLJETabRAC1w52iTN2Pmo8f3o/gdQe3mqR/cwaSXnTXGdofmfOxAaGU7DlNZ
+ 4lIdss2j0oiGxllFkiA==
+X-Authority-Analysis: v=2.4 cv=JK42csKb c=1 sm=1 tr=0 ts=69c10ae3 cx=c_pps
  a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
  a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8
- a=VwQbUJbxAAAA:8 a=Ikd4Dj_1AAAA:8 a=jBZh5NATpTL4zB9YInYA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzIzMDA3MSBTYWx0ZWRfXyGgBYiIEaQTO
- MDkF8doeMUSTArbSE3ocFghQWU4nQc4PYxTlrCAkGjeRhP1OjH8GnzsLoEMSv8PJ+RtKIh3YTNZ
- ByHzmTSLpAPN1vnbNdkQT1VqcM8Y+LEM7hUOvCWhUhAAHOjsmfiMVZjm1rSK1UKtYfuUu+GSAQV
- WpoRetB7qtra6wmOs5iKaUGZxj/PftQLjGIdi63lU/+HR43PMjzZJ264xiSo7LOScIZPsnCWUVr
- ssXxCMHkffI2sJyVl7M4rhwaarCrEIgBuuFCVE4sWWG28X1MNGXA56OrTJ4fi4NpJEo7+v02aPi
- hR5M/WmQd2HAMHsqON72qXsBxZa8XBnK8ZQd4RaWuVN9btX5fHEJDs0DXt95isdr4xWSg/wInfV
- MBgXduafLALH2qPclitCKmgFKnrECpCNbLXLJ4hBGuR4wD6rFp/yODaPx9mgI6z/Rl5f2bjHv3o
- MW9+HhMa6/Cv6rk2+EQ==
-X-Proofpoint-GUID: DwnaN1iHTM5ftuciKLxbK_LGs8P4zSsu
-X-Proofpoint-ORIG-GUID: DwnaN1iHTM5ftuciKLxbK_LGs8P4zSsu
+ a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8
+ a=L-qVmOLguht6ssTEgqgA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: 7DwJzjc9F1QQ5FXSNlj68YCVvuY10b7p
+X-Proofpoint-GUID: 7DwJzjc9F1QQ5FXSNlj68YCVvuY10b7p
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-03-23_02,2026-03-20_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 clxscore=1015 spamscore=0 impostorscore=0 suspectscore=0
- phishscore=0 bulkscore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
+ impostorscore=0 clxscore=1015 priorityscore=1501 malwarescore=0 adultscore=0
+ spamscore=0 suspectscore=0 phishscore=0 lowpriorityscore=0 bulkscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603230071
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	MV_CASE(0.50)[];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	TAGGED_FROM(0.00)[bounces-17831-lists,linux-s390=lfdr.de];
+	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-17833-lists,linux-s390=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[ibm.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,linux.ibm.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[julianr@linux.ibm.com,linux-s390@vger.kernel.org];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.ibm.com:mid];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_NEQ_ENVFROM(0.00)[schlameuss@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	PRECEDENCE_BULK(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
 	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 504A72EF2FE
+X-Rspamd-Queue-Id: B9F952EF4B6
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-ism_vfio_pci is a new kernel component that allows
-to use the ISM device from userspace. Add myself
-as a maintainer.
+It would be nicer to also rename the variables here from the mix of "gaddr"=
+ and
+"addr" to "gpa". Or at least conistently to "gaddr" as they are in most cas=
+es
+then assigned to the ".gaddr" fields in the uv structs.
 
-Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
-Signed-off-by: Julian Ruess <julianr@linux.ibm.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7d10988cbc62b77515aa1a1fee1c7d3e594869fa..4784a2514c0e057fded12364c680c928bde5876c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -27704,6 +27704,12 @@ L:	kvm@vger.kernel.org
- S:	Maintained
- F:	drivers/vfio/pci/hisilicon/
- 
-+VFIO ISM PCI DRIVER
-+M:	Julian Ruess <julianr@linux.ibm.com>
-+L:	kvm@vger.kernel.org
-+S:	Maintained
-+F:	drivers/vfio/pci/ism/
-+
- VFIO MEDIATED DEVICE DRIVERS
- M:	Kirti Wankhede <kwankhede@nvidia.com>
- L:	kvm@vger.kernel.org
-
--- 
-2.51.0
+On Mon Mar 16, 2026 at 5:23 PM CET, Janosch Frank wrote:
+> Lot's of locations where we could've used gpa_t but used u64/unsigned
+> long.
+>
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>  arch/s390/kvm/kvm-s390.h |  8 ++++----
+>  arch/s390/kvm/pv.c       | 12 ++++++------
+>  2 files changed, 10 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/s390/kvm/kvm-s390.h b/arch/s390/kvm/kvm-s390.h
+> index bf1d7798c1af..1ffaec723a30 100644
+> --- a/arch/s390/kvm/kvm-s390.h
+> +++ b/arch/s390/kvm/kvm-s390.h
+> @@ -308,17 +308,17 @@ int kvm_s390_pv_deinit_vm(struct kvm *kvm, u16 *rc,=
+ u16 *rrc);
+>  int kvm_s390_pv_init_vm(struct kvm *kvm, u16 *rc, u16 *rrc);
+>  int kvm_s390_pv_set_sec_parms(struct kvm *kvm, void *hdr, u64 length, u1=
+6 *rc,
+>  			      u16 *rrc);
+> -int kvm_s390_pv_unpack(struct kvm *kvm, unsigned long addr, unsigned lon=
+g size,
+> +int kvm_s390_pv_unpack(struct kvm *kvm, gpa_t addr, unsigned long size,
+>  		       unsigned long tweak, u16 *rc, u16 *rrc);
+>  int kvm_s390_pv_set_cpu_state(struct kvm_vcpu *vcpu, u8 state);
+>  int kvm_s390_pv_dump_cpu(struct kvm_vcpu *vcpu, void *buff, u16 *rc, u16=
+ *rrc);
+>  int kvm_s390_pv_dump_stor_state(struct kvm *kvm, void __user *buff_user,
+> -				u64 *gaddr, u64 buff_user_len, u16 *rc, u16 *rrc);
+> +				gpa_t *gaddr, u64 buff_user_len, u16 *rc, u16 *rrc);
+>  int kvm_s390_pv_dump_complete(struct kvm *kvm, void __user *buff_user,
+>  			      u16 *rc, u16 *rrc);
+>  int kvm_s390_pv_destroy_page(struct kvm *kvm, unsigned long gaddr);
+> -int kvm_s390_pv_convert_to_secure(struct kvm *kvm, unsigned long gaddr);
+> -int kvm_s390_pv_make_secure(struct kvm *kvm, unsigned long gaddr, void *=
+uvcb);
+> +int kvm_s390_pv_convert_to_secure(struct kvm *kvm, gpa_t gaddr);
+> +int kvm_s390_pv_make_secure(struct kvm *kvm, gpa_t gaddr, void *uvcb);
+> =20
+>  static inline u64 kvm_s390_pv_get_handle(struct kvm *kvm)
+>  {
+> diff --git a/arch/s390/kvm/pv.c b/arch/s390/kvm/pv.c
+> index c2dafd812a3b..a86469507309 100644
+> --- a/arch/s390/kvm/pv.c
+> +++ b/arch/s390/kvm/pv.c
+> @@ -125,7 +125,7 @@ static void _kvm_s390_pv_make_secure(struct guest_fau=
+lt *f)
+>   * Context: needs to be called with kvm->srcu held.
+>   * Return: 0 on success, < 0 in case of error.
+>   */
+> -int kvm_s390_pv_make_secure(struct kvm *kvm, unsigned long gaddr, void *=
+uvcb)
+> +int kvm_s390_pv_make_secure(struct kvm *kvm, gpa_t gaddr, void *uvcb)
+>  {
+>  	struct pv_make_secure priv =3D { .uvcb =3D uvcb };
+>  	struct guest_fault f =3D {
+> @@ -157,7 +157,7 @@ int kvm_s390_pv_make_secure(struct kvm *kvm, unsigned=
+ long gaddr, void *uvcb)
+>  	return rc;
+>  }
+> =20
+> -int kvm_s390_pv_convert_to_secure(struct kvm *kvm, unsigned long gaddr)
+> +int kvm_s390_pv_convert_to_secure(struct kvm *kvm, gpa_t gaddr)
+>  {
+>  	struct uv_cb_cts uvcb =3D {
+>  		.header.cmd =3D UVC_CMD_CONV_TO_SEC_STOR,
+> @@ -765,7 +765,7 @@ int kvm_s390_pv_set_sec_parms(struct kvm *kvm, void *=
+hdr, u64 length, u16 *rc,
+>  	return cc ? -EINVAL : 0;
+>  }
+> =20
+> -static int unpack_one(struct kvm *kvm, unsigned long addr, u64 tweak,
+> +static int unpack_one(struct kvm *kvm, gpa_t addr, u64 tweak,
+>  		      u64 offset, u16 *rc, u16 *rrc)
+>  {
+>  	struct uv_cb_unp uvcb =3D {
+> @@ -793,7 +793,7 @@ static int unpack_one(struct kvm *kvm, unsigned long =
+addr, u64 tweak,
+>  	return ret;
+>  }
+> =20
+> -int kvm_s390_pv_unpack(struct kvm *kvm, unsigned long addr, unsigned lon=
+g size,
+> +int kvm_s390_pv_unpack(struct kvm *kvm, gpa_t addr, unsigned long size,
+>  		       unsigned long tweak, u16 *rc, u16 *rrc)
+>  {
+>  	u64 offset =3D 0;
+> @@ -802,7 +802,7 @@ int kvm_s390_pv_unpack(struct kvm *kvm, unsigned long=
+ addr, unsigned long size,
+>  	if (addr & ~PAGE_MASK || !size || size & ~PAGE_MASK)
+>  		return -EINVAL;
+> =20
+> -	KVM_UV_EVENT(kvm, 3, "PROTVIRT VM UNPACK: start addr %lx size %lx",
+> +	KVM_UV_EVENT(kvm, 3, "PROTVIRT VM UNPACK: start addr %llx size %lx",
+>  		     addr, size);
+> =20
+>  	guard(srcu)(&kvm->srcu);
+> @@ -891,7 +891,7 @@ int kvm_s390_pv_dump_cpu(struct kvm_vcpu *vcpu, void =
+*buff, u16 *rc, u16 *rrc)
+>   *  -EFAULT if copying the result to buff_user failed
+>   */
+>  int kvm_s390_pv_dump_stor_state(struct kvm *kvm, void __user *buff_user,
+> -				u64 *gaddr, u64 buff_user_len, u16 *rc, u16 *rrc)
+> +				gpa_t *gaddr, u64 buff_user_len, u16 *rc, u16 *rrc)
+>  {
+>  	struct uv_cb_dump_stor_state uvcb =3D {
+>  		.header.cmd =3D UVC_CMD_DUMP_CONF_STOR_STATE,
 
 
