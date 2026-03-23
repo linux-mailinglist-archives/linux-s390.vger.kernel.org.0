@@ -1,154 +1,300 @@
-Return-Path: <linux-s390+bounces-17864-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-17866-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wNpNCCWKwWn+TgQAu9opvQ
-	(envelope-from <linux-s390+bounces-17864-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 23 Mar 2026 19:44:53 +0100
+	id kJ2hMACHwWn+TgQAu9opvQ
+	(envelope-from <linux-s390+bounces-17866-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 23 Mar 2026 19:31:28 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77C022FB7BE
-	for <lists+linux-s390@lfdr.de>; Mon, 23 Mar 2026 19:44:52 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id CADEF2FB510
+	for <lists+linux-s390@lfdr.de>; Mon, 23 Mar 2026 19:31:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 55A2E308C5D8
-	for <lists+linux-s390@lfdr.de>; Mon, 23 Mar 2026 17:53:26 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id C6AB630F1034
+	for <lists+linux-s390@lfdr.de>; Mon, 23 Mar 2026 17:56:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 996563C9433;
-	Mon, 23 Mar 2026 17:53:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB34D3C9EF6;
+	Mon, 23 Mar 2026 17:55:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bV7mxTWB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EH+kk9F4"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C0D3C942E;
-	Mon, 23 Mar 2026 17:53:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD573C944E;
+	Mon, 23 Mar 2026 17:55:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774288403; cv=none; b=iCCBsh/V5cNEvDqCCSllEuDdQ0c8IiHwuo0Q85zc4BttPUjcCR4AcDr/tuFaRmP88vpAFR/337n5Z2m6z8V6yUHPyZWUIJKdLagimvHlbGsgQuiQGk+KADY+yLrQ+ZG0K9mlme4mb6fAWn/GWDAhENnJaBvQ6HpRtz460I57yw8=
+	t=1774288551; cv=none; b=L/krdoC2nN6lreCb/8JjHfg3BuqgkGKalSmwMd/MndkbJeRhc5hm5Z3hcAgb4Or+8+A55K3IacbtJA+N6alsPyZLMHSXixvyGDnzEgYX9G66WQx86kcd7yfnATPy5Yhc5Y9w3gAhFnXOSmCCWyJ+A4Ik+3hkHINrqOXq2hGma+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774288403; c=relaxed/simple;
-	bh=AE6bvPRBuu/wn9CJ9Bc0lzK1gYt9cBL0a+aIcWO4eCU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TLf5MR+VswoHtJvnWjGdKLUzPzbQ27pLCkaHUn4JZVYSzLdxEjZvfSpWEnITJ5yoIlnVEmzu5Yp00m+9J6iGTqdNYMpK8Q6EmKXsut66ErGqrdGQyVtNV+I1uiWC9+u6eBDWrn8335FgFvmGyVImwW1Qwu/qpii6O4g+FWUSLkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bV7mxTWB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFC77C2BCB0;
-	Mon, 23 Mar 2026 17:53:22 +0000 (UTC)
+	s=arc-20240116; t=1774288551; c=relaxed/simple;
+	bh=VbCHYIuEB3QD6Shd9lNFnvrZhPFSCzFNxS26OEzV4YQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oznOye7h+5a9jBDQgjU72W8CcxFzPd/I2GHl7PKp6k4kyYSiQnepp4byjmwC1Ik+ZAgCsUVQxFORUi/9Ng+e9ZC6KzF8mGLZe0mLbh3m+ojWjj4ZdoL/CIe1eCB7KvLQP+y83fs14cuDO1IUrYugLzfoXfEJ3dJrLDN7dAWEPhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EH+kk9F4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A54FC2BCB0;
+	Mon, 23 Mar 2026 17:55:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774288403;
-	bh=AE6bvPRBuu/wn9CJ9Bc0lzK1gYt9cBL0a+aIcWO4eCU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bV7mxTWBukFmR5V1TfAE3U4PHdCw+B18jcmZLFiYDg7lovpoVi6W/EcoLDOyawoWb
-	 c0G+I1soK0HNQ46qHJ+Kjhzxtr3DmCXIVcBDdGHe7lZgMwdP8lE4dOiU+1frxh5Oxk
-	 tg1wgR+cFyGJUFixQBX2maEdDM0hOlThkIbVZFptqw91KGyr/5gFVsKpksHc8l7FYm
-	 Zch52RON9+hDZ0Z7iCImIZ9bbmdEUsIctlSMiYO8s9e9QpKd6up+CSD0A/rQcEGzcG
-	 /9mMQ/b/RZUqQx95MmexN/E+miQtL0jHPA0oXOyJeIypJzez/ho+OREMjiHEL+dFS5
-	 JqIYFBD77kcJQ==
-Date: Mon, 23 Mar 2026 17:53:21 +0000
-From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: akpm@linux-foundation.org, willy@infradead.org, david@kernel.org, 
-	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com, 
-	rakie.kim@sk.com, byungchul@sk.com, gourry@gourry.net, 
-	ying.huang@linux.alibaba.com, apopple@nvidia.com, lorenzo.stoakes@oracle.com, 
-	baolin.wang@linux.alibaba.com, Liam.Howlett@oracle.com, npache@redhat.com, ryan.roberts@arm.com, 
-	dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev, vbabka@suse.cz, 
-	jannh@google.com, rppt@kernel.org, mhocko@suse.com, pfalcato@suse.de, 
-	kees@kernel.org, maddy@linux.ibm.com, npiggin@gmail.com, mpe@ellerman.id.au, 
-	chleroy@kernel.org, borntraeger@linux.ibm.com, frankja@linux.ibm.com, 
-	imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com, 
-	svens@linux.ibm.com, gerald.schaefer@linux.ibm.com, linux-mm@kvack.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-s390@vger.kernel.org
-Subject: Re: [PATCH v4 3/4] KVM: s390: avoid kvm_s390_handle_pv() error
- overwrite
-Message-ID: <fb38ecc9-36f8-49a1-bf20-a2c03244e574@lucifer.local>
-References: <20260322054309.898214-1-surenb@google.com>
- <20260322054309.898214-4-surenb@google.com>
+	s=k20201202; t=1774288551;
+	bh=VbCHYIuEB3QD6Shd9lNFnvrZhPFSCzFNxS26OEzV4YQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=EH+kk9F4cET+6hBw+hfgT1O7mgwe2YVYpi8ON4Hlqv3UBhAP+D7aSImBMsunnA01j
+	 yXqborcZqNAgukb+/+AAioUQf9oJZXLqF5hly5DXoOzydpkwkZSqQ85B+tSp1xo7JT
+	 HYDKHEL95p8nIWwf6mEuq0/D+KciFk1I8OcDuoXSk4lC7gqvvYxeHgML63sAromxSY
+	 f2JqjC5lFuuzOgwPnO6R5Y8bHVGb/8KMbvUuq0JuIhtm6NDya0gZmeuFVD4dYBTF9y
+	 NmC57B/yOKTlM/7Rkzld0yyndRA4qk40CIOpFo0H+rpWeYk3SULQMJmL6A9sQ+jZjm
+	 bmQVJInFNb7FA==
+Message-ID: <0a14c10d-0dab-4b9c-85ec-e0ee25cd0db8@kernel.org>
+Date: Mon, 23 Mar 2026 18:55:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260322054309.898214-4-surenb@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 05/16] mm/gup: drop local variable in
+ gup_fast_folio_allowed
+To: "Kalyazin, Nikita" <kalyazin@amazon.co.uk>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+ "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+ "kernel@xen0n.name" <kernel@xen0n.name>,
+ "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+ "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+ "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc: "pbonzini@redhat.com" <pbonzini@redhat.com>,
+ "corbet@lwn.net" <corbet@lwn.net>, "maz@kernel.org" <maz@kernel.org>,
+ "oupton@kernel.org" <oupton@kernel.org>,
+ "joey.gouly@arm.com" <joey.gouly@arm.com>,
+ "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+ "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "will@kernel.org" <will@kernel.org>, "seanjc@google.com"
+ <seanjc@google.com>, "tglx@kernel.org" <tglx@kernel.org>,
+ "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+ "luto@kernel.org" <luto@kernel.org>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "willy@infradead.org" <willy@infradead.org>,
+ "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+ "lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>,
+ "vbabka@kernel.org" <vbabka@kernel.org>, "rppt@kernel.org"
+ <rppt@kernel.org>, "surenb@google.com" <surenb@google.com>,
+ "mhocko@suse.com" <mhocko@suse.com>, "ast@kernel.org" <ast@kernel.org>,
+ "daniel@iogearbox.net" <daniel@iogearbox.net>,
+ "andrii@kernel.org" <andrii@kernel.org>,
+ "martin.lau@linux.dev" <martin.lau@linux.dev>,
+ "eddyz87@gmail.com" <eddyz87@gmail.com>, "song@kernel.org"
+ <song@kernel.org>, "yonghong.song@linux.dev" <yonghong.song@linux.dev>,
+ "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+ "kpsingh@kernel.org" <kpsingh@kernel.org>, "sdf@fomichev.me"
+ <sdf@fomichev.me>, "haoluo@google.com" <haoluo@google.com>,
+ "jolsa@kernel.org" <jolsa@kernel.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
+ "jhubbard@nvidia.com" <jhubbard@nvidia.com>,
+ "peterx@redhat.com" <peterx@redhat.com>, "jannh@google.com"
+ <jannh@google.com>, "pfalcato@suse.de" <pfalcato@suse.de>,
+ "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
+ "riel@surriel.com" <riel@surriel.com>,
+ "ryan.roberts@arm.com" <ryan.roberts@arm.com>,
+ "jgross@suse.com" <jgross@suse.com>,
+ "yu-cheng.yu@intel.com" <yu-cheng.yu@intel.com>,
+ "kas@kernel.org" <kas@kernel.org>, "coxu@redhat.com" <coxu@redhat.com>,
+ "kevin.brodsky@arm.com" <kevin.brodsky@arm.com>,
+ "ackerleytng@google.com" <ackerleytng@google.com>,
+ "yosry@kernel.org" <yosry@kernel.org>,
+ "ajones@ventanamicro.com" <ajones@ventanamicro.com>,
+ "maobibo@loongson.cn" <maobibo@loongson.cn>,
+ "tabba@google.com" <tabba@google.com>, "prsampat@amd.com"
+ <prsampat@amd.com>, "wu.fei9@sanechips.com.cn" <wu.fei9@sanechips.com.cn>,
+ "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
+ "jmattson@google.com" <jmattson@google.com>,
+ "jthoughton@google.com" <jthoughton@google.com>,
+ "agordeev@linux.ibm.com" <agordeev@linux.ibm.com>,
+ "alex@ghiti.fr" <alex@ghiti.fr>,
+ "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+ "borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>,
+ "chenhuacai@kernel.org" <chenhuacai@kernel.org>,
+ "dev.jain@arm.com" <dev.jain@arm.com>, "gor@linux.ibm.com"
+ <gor@linux.ibm.com>, "hca@linux.ibm.com" <hca@linux.ibm.com>,
+ "palmer@dabbelt.com" <palmer@dabbelt.com>, "pjw@kernel.org"
+ <pjw@kernel.org>,
+ "shijie@os.amperecomputing.com" <shijie@os.amperecomputing.com>,
+ "svens@linux.ibm.com" <svens@linux.ibm.com>,
+ "thuth@redhat.com" <thuth@redhat.com>, "wyihan@google.com"
+ <wyihan@google.com>,
+ "yang@os.amperecomputing.com" <yang@os.amperecomputing.com>,
+ "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+ "Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>,
+ "urezki@gmail.com" <urezki@gmail.com>,
+ "zhengqi.arch@bytedance.com" <zhengqi.arch@bytedance.com>,
+ "gerald.schaefer@linux.ibm.com" <gerald.schaefer@linux.ibm.com>,
+ "jiayuan.chen@shopee.com" <jiayuan.chen@shopee.com>,
+ "lenb@kernel.org" <lenb@kernel.org>, "osalvador@suse.de"
+ <osalvador@suse.de>, "pavel@kernel.org" <pavel@kernel.org>,
+ "rafael@kernel.org" <rafael@kernel.org>,
+ "vannapurve@google.com" <vannapurve@google.com>,
+ "jackmanb@google.com" <jackmanb@google.com>,
+ "aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>,
+ "patrick.roy@linux.dev" <patrick.roy@linux.dev>,
+ "Thomson, Jack" <jackabt@amazon.co.uk>,
+ "Itazuri, Takahiro" <itazur@amazon.co.uk>,
+ "Manwaring, Derek" <derekmn@amazon.com>
+References: <20260317141031.514-1-kalyazin@amazon.com>
+ <20260317141031.514-6-kalyazin@amazon.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzS5EYXZpZCBIaWxk
+ ZW5icmFuZCAoQ3VycmVudCkgPGRhdmlkQGtlcm5lbC5vcmc+wsGQBBMBCAA6AhsDBQkmWAik
+ AgsJBBUKCQgCFgICHgUCF4AWIQQb2cqtc1xMOkYN/MpN3hD3AP+DWgUCaYJt/AIZAQAKCRBN
+ 3hD3AP+DWriiD/9BLGEKG+N8L2AXhikJg6YmXom9ytRwPqDgpHpVg2xdhopoWdMRXjzOrIKD
+ g4LSnFaKneQD0hZhoArEeamG5tyo32xoRsPwkbpIzL0OKSZ8G6mVbFGpjmyDLQCAxteXCLXz
+ ZI0VbsuJKelYnKcXWOIndOrNRvE5eoOfTt2XfBnAapxMYY2IsV+qaUXlO63GgfIOg8RBaj7x
+ 3NxkI3rV0SHhI4GU9K6jCvGghxeS1QX6L/XI9mfAYaIwGy5B68kF26piAVYv/QZDEVIpo3t7
+ /fjSpxKT8plJH6rhhR0epy8dWRHk3qT5tk2P85twasdloWtkMZ7FsCJRKWscm1BLpsDn6EQ4
+ jeMHECiY9kGKKi8dQpv3FRyo2QApZ49NNDbwcR0ZndK0XFo15iH708H5Qja/8TuXCwnPWAcJ
+ DQoNIDFyaxe26Rx3ZwUkRALa3iPcVjE0//TrQ4KnFf+lMBSrS33xDDBfevW9+Dk6IISmDH1R
+ HFq2jpkN+FX/PE8eVhV68B2DsAPZ5rUwyCKUXPTJ/irrCCmAAb5Jpv11S7hUSpqtM/6oVESC
+ 3z/7CzrVtRODzLtNgV4r5EI+wAv/3PgJLlMwgJM90Fb3CB2IgbxhjvmB1WNdvXACVydx55V7
+ LPPKodSTF29rlnQAf9HLgCphuuSrrPn5VQDaYZl4N/7zc2wcWM7BTQRVy5+RARAA59fefSDR
+ 9nMGCb9LbMX+TFAoIQo/wgP5XPyzLYakO+94GrgfZjfhdaxPXMsl2+o8jhp/hlIzG56taNdt
+ VZtPp3ih1AgbR8rHgXw1xwOpuAd5lE1qNd54ndHuADO9a9A0vPimIes78Hi1/yy+ZEEvRkHk
+ /kDa6F3AtTc1m4rbbOk2fiKzzsE9YXweFjQvl9p+AMw6qd/iC4lUk9g0+FQXNdRs+o4o6Qvy
+ iOQJfGQ4UcBuOy1IrkJrd8qq5jet1fcM2j4QvsW8CLDWZS1L7kZ5gT5EycMKxUWb8LuRjxzZ
+ 3QY1aQH2kkzn6acigU3HLtgFyV1gBNV44ehjgvJpRY2cC8VhanTx0dZ9mj1YKIky5N+C0f21
+ zvntBqcxV0+3p8MrxRRcgEtDZNav+xAoT3G0W4SahAaUTWXpsZoOecwtxi74CyneQNPTDjNg
+ azHmvpdBVEfj7k3p4dmJp5i0U66Onmf6mMFpArvBRSMOKU9DlAzMi4IvhiNWjKVaIE2Se9BY
+ FdKVAJaZq85P2y20ZBd08ILnKcj7XKZkLU5FkoA0udEBvQ0f9QLNyyy3DZMCQWcwRuj1m73D
+ sq8DEFBdZ5eEkj1dCyx+t/ga6x2rHyc8Sl86oK1tvAkwBNsfKou3v+jP/l14a7DGBvrmlYjO
+ 59o3t6inu6H7pt7OL6u6BQj7DoMAEQEAAcLBfAQYAQgAJgIbDBYhBBvZyq1zXEw6Rg38yk3e
+ EPcA/4NaBQJonNqrBQkmWAihAAoJEE3eEPcA/4NaKtMQALAJ8PzprBEXbXcEXwDKQu+P/vts
+ IfUb1UNMfMV76BicGa5NCZnJNQASDP/+bFg6O3gx5NbhHHPeaWz/VxlOmYHokHodOvtL0WCC
+ 8A5PEP8tOk6029Z+J+xUcMrJClNVFpzVvOpb1lCbhjwAV465Hy+NUSbbUiRxdzNQtLtgZzOV
+ Zw7jxUCs4UUZLQTCuBpFgb15bBxYZ/BL9MbzxPxvfUQIPbnzQMcqtpUs21CMK2PdfCh5c4gS
+ sDci6D5/ZIBw94UQWmGpM/O1ilGXde2ZzzGYl64glmccD8e87OnEgKnH3FbnJnT4iJchtSvx
+ yJNi1+t0+qDti4m88+/9IuPqCKb6Stl+s2dnLtJNrjXBGJtsQG/sRpqsJz5x1/2nPJSRMsx9
+ 5YfqbdrJSOFXDzZ8/r82HgQEtUvlSXNaXCa95ez0UkOG7+bDm2b3s0XahBQeLVCH0mw3RAQg
+ r7xDAYKIrAwfHHmMTnBQDPJwVqxJjVNr7yBic4yfzVWGCGNE4DnOW0vcIeoyhy9vnIa3w1uZ
+ 3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
+ CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
+ qIws/H2t
+In-Reply-To: <20260317141031.514-6-kalyazin@amazon.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-17866-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-17864-lists,linux-s390=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,infradead.org,kernel.org,nvidia.com,intel.com,gmail.com,sk.com,gourry.net,linux.alibaba.com,oracle.com,redhat.com,arm.com,linux.dev,suse.cz,google.com,suse.com,suse.de,linux.ibm.com,ellerman.id.au,kvack.org,lists.ozlabs.org,vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[43];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[redhat.com,lwn.net,kernel.org,arm.com,huawei.com,google.com,alien8.de,linux.intel.com,zytor.com,infradead.org,linux-foundation.org,oracle.com,suse.com,iogearbox.net,linux.dev,gmail.com,fomichev.me,ziepe.ca,nvidia.com,suse.de,linuxfoundation.org,surriel.com,intel.com,ventanamicro.com,loongson.cn,amd.com,sanechips.com.cn,linux.ibm.com,ghiti.fr,eecs.berkeley.edu,dabbelt.com,os.amperecomputing.com,bytedance.com,shopee.com,amazon.co.uk,amazon.com];
+	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_GT_50(0.00)[107];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ljs@kernel.org,linux-s390@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[david@kernel.org,linux-s390@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lucifer.local:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 77C022FB7BE
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: CADEF2FB510
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Sat, Mar 21, 2026 at 10:43:07PM -0700, Suren Baghdasaryan wrote:
-> If kvm_s390_handle_pv() call fails its error code gets recorded but
-> execution proceeds as if the call was successful. If the next call to
-> copy_to_user() fails then the original error is overwritten.
-
-Is that really a big deal though, as you're returning an error in either case?
-
-> The follow-up patch adds fatal signal checks during VMA walk, which
-> makes it possible for kvm_s390_handle_pv() to return EINTR error.
-> Without this fix any error including EINTR can be overwritten and
-> original error will be lost.
->
-> Change error handling for kvm_s390_handle_pv() to alter normal flow
-> once failure happens. This is consistent with how kvm_arch_vm_ioctl
-> handles errors for other ioctl commands.
->
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+On 3/17/26 15:11, Kalyazin, Nikita wrote:
+> From: Nikita Kalyazin <kalyazin@amazon.com>
+> 
+> Move the check for pinning closer to where the result is used.
+> No functional changes.
+> 
+> Signed-off-by: Nikita Kalyazin <kalyazin@amazon.com>
 > ---
->  arch/s390/kvm/kvm-s390.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index 3eb60aa932ec..ddad08c0926f 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -2947,6 +2947,8 @@ int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
->  		}
->  		/* must be called without kvm->lock */
->  		r = kvm_s390_handle_pv(kvm, &args);
-> +		if (r)
-> +			break;
->  		if (copy_to_user(argp, &args, sizeof(args))) {
+>  mm/gup.c | 23 ++++++++++++-----------
+>  1 file changed, 12 insertions(+), 11 deletions(-)
+> 
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 5856d35be385..869d79c8daa4 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -2737,18 +2737,9 @@ EXPORT_SYMBOL(get_user_pages_unlocked);
+>   */
+>  static bool gup_fast_folio_allowed(struct folio *folio, unsigned int flags)
+>  {
+> -	bool reject_file_backed = false;
+>  	struct address_space *mapping;
+>  	unsigned long mapping_flags;
+>  
+> -	/*
+> -	 * If we aren't pinning then no problematic write can occur. A long term
+> -	 * pin is the most egregious case so this is the one we disallow.
+> -	 */
+> -	if ((flags & (FOLL_PIN | FOLL_LONGTERM | FOLL_WRITE)) ==
+> -	    (FOLL_PIN | FOLL_LONGTERM | FOLL_WRITE))
+> -		reject_file_backed = true;
+> -
+>  	/* We hold a folio reference, so we can safely access folio fields. */
+>  	if (WARN_ON_ONCE(folio_test_slab(folio)))
+>  		return false;
+> @@ -2793,8 +2784,18 @@ static bool gup_fast_folio_allowed(struct folio *folio, unsigned int flags)
+>  	 */
+>  	if (secretmem_mapping(mapping))
+>  		return false;
+> -	/* The only remaining allowed file system is shmem. */
+> -	return !reject_file_backed || shmem_mapping(mapping);
+> +
+> +	/*
+> +	 * If we aren't pinning then no problematic write can occur. A writable
+> +	 * long term pin is the most egregious case, so this is the one we
+> +	 * allow only for ...
+> +	 */
+> +	if ((flags & (FOLL_PIN | FOLL_LONGTERM | FOLL_WRITE)) !=
+> +	    (FOLL_PIN | FOLL_LONGTERM | FOLL_WRITE))
+> +		return true;
+> +
+> +	/* ... hugetlb (which we allowed above already) and shared memory. */
+> +	return shmem_mapping(mapping);
 
-Yeah as per Sashiko we probably need to copy_to_user() still.
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
-But in that case, do we even need a change at all? I'm not sure it really
-matters which error code terminates things does it?
+I'm wondering if it would be a good idea to check for a hugetlb mapping
+here instead of having the folio_test_hugetlb() check above.
 
->  			r = -EFAULT;
->  			break;
-> --
-> 2.53.0.1018.g2bb0e51243-goog
->
+Something to ponder about :)
 
-Thanks, Lorenzo
+-- 
+Cheers,
+
+David
 
