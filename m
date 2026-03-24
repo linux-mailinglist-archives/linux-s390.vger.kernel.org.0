@@ -1,216 +1,180 @@
-Return-Path: <linux-s390+bounces-17957-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-17998-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qHuONMumwmkyggQAu9opvQ
-	(envelope-from <linux-s390+bounces-17957-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2026 15:59:23 +0100
+	id cEMDITjrwmkdnQQAu9opvQ
+	(envelope-from <linux-s390+bounces-17998-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2026 20:51:20 +0100
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2973130AA0C
-	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2026 15:59:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A3E431BDC9
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2026 20:51:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CC9A73019F2E
-	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2026 14:53:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A45D930C11D7
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2026 19:45:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2D323ED135;
-	Tue, 24 Mar 2026 14:53:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A76A340281;
+	Tue, 24 Mar 2026 19:44:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vM6QVJSx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BI/PyKSY"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9349040DFBC;
-	Tue, 24 Mar 2026 14:53:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F8830FC0F;
+	Tue, 24 Mar 2026 19:44:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774363984; cv=none; b=XR8RQi1hzwyX7zkgxb0GX133G8FiF0QibXIplCGQ7QMdVRuQIrI2E/PfW1mAjOtI5v5eEi/7LjcK7M98macH3jYdG6MUwyKk2LmA+lvoe4skdp9lRKpqoqOCgrs9wiXegMpKu6xYwHq0G/YXMrxmRwmeMT8MvJMBBWyRtgjhAsg=
+	t=1774381491; cv=none; b=mtXEhXnWVSMZX2PGYgfHIdmbFOgRvn86vPDkldoUYeV1fwLZ/VvcPxqyimSYSdC9j/Uev8GqoO+huslebf6SWhYYXxSn7P8nZEizcYG/xApApkogRfrJZdgYZRj2h5s1IuhqgqmC+cSEbppaXgubDOEagcCXAhEsyREM5yls2nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774363984; c=relaxed/simple;
-	bh=5PsP7SJiyg6c43hMnhXO1J/nNC4IiO59ALlt88PNREE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J08QshwfDqc2UPSOcj6uo0FqeSR8LuNOgfU8hXBkavG5daRH+nRbjlUSeZTD5UYBbcG5xiTI/6vePLWrZZXeo475TCIQ9xDT3qOEURmhVAxNyiQryuV1tQtKSNLFtOMhbZE+W/Fvgm1IRcg/BuQmMVPl0fvMi6gbPorQN4AStQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vM6QVJSx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ECC8C19424;
-	Tue, 24 Mar 2026 14:53:03 +0000 (UTC)
+	s=arc-20240116; t=1774381491; c=relaxed/simple;
+	bh=WRF/0A79XI/IfrPujL8sWiRG4jtPsIHG8/HKlYhxfwg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=NGqVbPo8WKAGLL+OqD+s4OvjyUPaAE/OAUYZQ7T+tRf1S/uSvIuIjKCNBcFQcVSz6V08EFN6FakTUSo4VHhdiUPQXFVRFcK3zsuDRumc5D7eU1JpCkGI4G08/E73XLuWdIMeoLP1JrHw0htY8AsFlg7v5fCje9ISWg2Z9T730Kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BI/PyKSY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF553C19424;
+	Tue, 24 Mar 2026 19:44:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774363983;
-	bh=5PsP7SJiyg6c43hMnhXO1J/nNC4IiO59ALlt88PNREE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vM6QVJSxgx96Yi3fdbsB8ETxK9h5VZ8zZV42xFiAKj4E7VeW8F3aHlbtIXjlWVx5m
-	 9MvUIiFq7dLq85ZKui4M+h2uhxY/4j0kMtJn+npADLp35mR317Q51pVYGyhhf6ucJH
-	 BFt7NDLckBbS8fpsfTZg/aAnGstXVSIyCtHatX1MYLrHav4PMlUTjJjgaQa98ypH6Q
-	 00d8W2DzEFpXevZH4N4B6h6ymHlLO6o2GyvH7TENhZ58gvEy0ucrpBU5JhnABy8nxB
-	 U96CPZWqkSd0iD24e01QU5qiJlpu2r1SDDxxBJCl1XyXTJqv+KQe3zSvXbv0j/OaRk
-	 DNpKNXyQaYRBw==
-Date: Tue, 24 Mar 2026 15:53:01 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Ben Segall <bsegall@google.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Heiko Carstens <hca@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Kieran Bingham <kbingham@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Mel Gorman <mgorman@suse.de>, Michael Ellerman <mpe@ellerman.id.au>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Xin Zhao <jackzxcui1989@163.com>, linux-pm@vger.kernel.org,
-	linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 15/15] sched/cputime: Handle dyntick-idle steal time
- correctly
-Message-ID: <acKlTdXRUMTXBk1X@localhost.localdomain>
-References: <20260206142245.58987-1-frederic@kernel.org>
- <20260206142245.58987-16-frederic@kernel.org>
- <be30e259-a690-4530-996c-0c092833bb66@linux.ibm.com>
+	s=k20201202; t=1774381490;
+	bh=WRF/0A79XI/IfrPujL8sWiRG4jtPsIHG8/HKlYhxfwg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=BI/PyKSYvjLJXWbEpQrc+czH+55hhTQfVKT55Uu1wKsITHQaRklHZhshTVjzHQFZN
+	 XI99w4CrCK+yRfm2877TM5yV4pPdvKaG1DWbUoq9X2UMljaiVAeNppp3zNtFe6VQcR
+	 Nbxio4BzKuKvbSdbHpiqyp9b0V4Wi4iBFmRLBu0AraFrnoul9PN3a4ntDRFnw+1WBV
+	 6VOLh/84HoNWnxFvJA4p13awciT/KZz8A8WdIkArI2aCUbV0ZkSk5h4r/JYUTPRIIT
+	 T8Jt8zQSnSc69wMDv4JXXRT2onYDSQlxz5UqGBDTvOp1c1OxGFbD7+EZxoeS8MPSTJ
+	 8n38/skizDzlQ==
+From: Mark Brown <broonie@kernel.org>
+To: Russell King <linux@armlinux.org.uk>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Ioana Ciornei <ioana.ciornei@nxp.com>, Nipun Gupta <nipun.gupta@amd.com>, 
+ Nikhil Agarwal <nikhil.agarwal@amd.com>, 
+ "K. Y. Srinivasan" <kys@microsoft.com>, 
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+ Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Armin Wolf <W_Armin@gmx.de>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Mathieu Poirier <mathieu.poirier@linaro.org>, 
+ Vineeth Vijayan <vneethv@linux.ibm.com>, 
+ Peter Oberparleiter <oberpar@linux.ibm.com>, 
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, 
+ Harald Freudenberger <freude@linux.ibm.com>, 
+ Holger Dengler <dengler@linux.ibm.com>, 
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+ =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+ Alex Williamson <alex@shazbot.org>, Juergen Gross <jgross@suse.com>, 
+ Stefano Stabellini <sstabellini@kernel.org>, 
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, 
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
+ Danilo Krummrich <dakr@kernel.org>
+Cc: linux-kernel@vger.kernel.org, driver-core@lists.linux.dev, 
+ linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org, 
+ linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+ linux-s390@vger.kernel.org, linux-spi@vger.kernel.org, 
+ virtualization@lists.linux.dev, kvm@vger.kernel.org, 
+ xen-devel@lists.xenproject.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20260324005919.2408620-1-dakr@kernel.org>
+References: <20260324005919.2408620-1-dakr@kernel.org>
+Subject: Re: (subset) [PATCH 00/12] treewide: Convert buses to use generic
+ driver_override
+Message-Id: <177436441990.98682.12977271865531185229.b4-ty@b4>
+Date: Tue, 24 Mar 2026 15:00:19 +0000
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <be30e259-a690-4530-996c-0c092833bb66@linux.ibm.com>
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.16-dev-6cc06
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1523; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=WRF/0A79XI/IfrPujL8sWiRG4jtPsIHG8/HKlYhxfwg=;
+ b=kA0DAAoBJNaLcl1Uh9AByyZiAGnC6amgudhaUXvPlk+pDm3GoyUp8H0DzJj7P23jodGH3vgaM
+ YkBMwQAAQoAHRYhBK3maKpnVxi1n+Kf6iTWi3JdVIfQBQJpwumpAAoJECTWi3JdVIfQ7W4H/0HK
+ bnLD6QxQOBC+fzyIxZ6G6kEKZPO4GVW3Pfn4yfAzX5qrdKQRkDgps7IYWut/u33hS3f+Z04EmOJ
+ lYrLIJIM422nR6nge6hF8EhqNBiTq/w9q7cGC48hH540F15d0sLd2//XCIGupIA1RXpBqVdzq5x
+ OT6qjdHSfs8FyZ+oeQmp08Rcg1XfVc+MneH1PzidJufZ+tJUtayZw29OlGfNk6vGZ389vkRi+Ec
+ XFn5qSzIYh78B0Z0zXzPv2/IjG8frEcheWdi3dJbD2bUS4h2S1US62r3HG8U3Au0lRz8ggXRMML
+ 03vuVW3IP0egShhpeZHJhBzFqhYb6LFlY+k9hXc=
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	MID_RHS_NOT_FQDN(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-17957-lists,linux-s390=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,linux.ibm.com,linutronix.de,google.com,gmail.com,arm.com,redhat.com,siemens.com,nvidia.com,suse.de,ellerman.id.au,infradead.org,goodmis.org,linaro.org,163.com,lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FREEMAIL_TO(0.00)[armlinux.org.uk,linuxfoundation.org,kernel.org,nxp.com,amd.com,microsoft.com,google.com,gmx.de,linaro.org,linux.ibm.com,redhat.com,linux.alibaba.com,shazbot.org,suse.com,epam.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[48];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-17998-lists,linux-s390=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[frederic@kernel.org,linux-s390@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[broonie@kernel.org,linux-s390@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[35];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 2973130AA0C
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 0A3E431BDC9
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Le Tue, Mar 03, 2026 at 04:47:45PM +0530, Shrikanth Hegde a écrit :
+On Tue, 24 Mar 2026 01:59:04 +0100, Danilo Krummrich wrote:
+> treewide: Convert buses to use generic driver_override
 > 
+> This is the follow-up of the driver_override generalization in [1], converting
+> the remaining 11 busses and removing the now-unused driver_set_override()
+> helper.
 > 
-> On 2/6/26 7:52 PM, Frederic Weisbecker wrote:
-> > The dyntick-idle steal time is currently accounted when the tick
-> > restarts but the stolen idle time is not substracted from the idle time
-> > that was already accounted. This is to avoid observing the idle time
-> > going backward as the dyntick-idle cputime accessors can't reliably know
-> > in advance the stolen idle time.
-> > 
-> > In order to maintain a forward progressing idle cputime while
-> > substracting idle steal time from it, keep track of the previously
-> > accounted idle stolen time and substract it from _later_ idle cputime
-> > accounting.
-> > 
+> All of them (except AP, which has a different race condition) are prone to the
+> potential UAF described in [2], caused by accessing the driver_override field
+> from their corresponding match() callback.
 > 
-> s/substract/subtract ?
+> [...]
 
-Right.
+Applied to
 
-> 
-> > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> > ---
-> >   include/linux/kernel_stat.h |  1 +
-> >   kernel/sched/cputime.c      | 21 +++++++++++++++------
-> >   2 files changed, 16 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/include/linux/kernel_stat.h b/include/linux/kernel_stat.h
-> > index 512104b0ff49..24a54a6151ba 100644
-> > --- a/include/linux/kernel_stat.h
-> > +++ b/include/linux/kernel_stat.h
-> > @@ -39,6 +39,7 @@ struct kernel_cpustat {
-> >   	bool		idle_elapse;
-> >   	seqcount_t	idle_sleeptime_seq;
-> >   	u64		idle_entrytime;
-> > +	u64		idle_stealtime;
-> >   #endif
-> >   	u64		cpustat[NR_STATS];
-> >   };
-> > diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-> > index 92fa2f037b6e..7e79288eb327 100644
-> > --- a/kernel/sched/cputime.c
-> > +++ b/kernel/sched/cputime.c
-> > @@ -424,19 +424,25 @@ static inline void irqtime_account_process_tick(struct task_struct *p, int user_
-> >   static void kcpustat_idle_stop(struct kernel_cpustat *kc, u64 now)
-> >   {
-> >   	u64 *cpustat = kc->cpustat;
-> > -	u64 delta;
-> > +	u64 delta, steal, steal_delta;
-> >   	if (!kc->idle_elapse)
-> >   		return;
-> >   	delta = now - kc->idle_entrytime;
-> > +	steal = steal_account_process_time(delta);
-> >   	write_seqcount_begin(&kc->idle_sleeptime_seq);
-> > +	steal_delta = min_t(u64, kc->idle_stealtime, delta);
-> > +	delta -= steal_delta;
-> 
-> I didn;t get this logic. Why do we need idle_stealtime?
-> 
-> Lets say 10ms was steal time and 50ms was delta. but idle_stealtime is
-> sum of past accumulated steal time. we only need to subtract steal time there no?
-> 
-> Shouldn't this be delta -= steal ?
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-7.0
 
-That would be a risk to observe backward idle accounting:
+Thanks!
 
-Time        CPU 0                                  CPU 1
-----        -----                                  -----
-0 sec       kcpustat_idle_start()
-            <#VMEXIT>
-            ...
-1 sec       </#VMEXIT>                             
-            arch_cpu_idle()                        // returns 2
-2 sec       kcpustat_idle_stop()                   kcpustat_field(CPUTIME_IDLE, 0)
-               cpustat[CPUTIME_IDLE] = 2 - 1
-                                                   // returns 1
-                                                   kcpustat_field(CPUTIME_IDLE, 0)
+[11/12] spi: use generic driver_override infrastructure
+        https://git.kernel.org/broonie/spi/c/cc34d77dd487
 
-We could instead read remotely the paravirt clock, but then
-steal_account_process_time() would need to always hold the ->idle_sleeptime_seq,
-though it should happen to work without given the ordering.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-Anyway to avoid any surprise I accumulate the steal time of an idle cycle to be
-substracted on the next idle cycle.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Thanks.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
--- 
-Frederic Weisbecker
-SUSE Labs
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
 
