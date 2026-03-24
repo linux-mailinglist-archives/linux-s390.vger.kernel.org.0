@@ -1,84 +1,84 @@
-Return-Path: <linux-s390+bounces-17983-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-17986-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6JjXGjjNwmkBmQQAu9opvQ
-	(envelope-from <linux-s390+bounces-17983-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2026 18:43:20 +0100
+	id aPuhIlDNwmkBmQQAu9opvQ
+	(envelope-from <linux-s390+bounces-17986-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2026 18:43:44 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CE2D31A308
-	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2026 18:43:19 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2875C31A335
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2026 18:43:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2183B3013A69
-	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2026 17:43:16 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 1DE7C3040D41
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2026 17:43:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 219FE408223;
-	Tue, 24 Mar 2026 17:43:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1811940B6F6;
+	Tue, 24 Mar 2026 17:43:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BnTh1ujn"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hLAEpis6"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1B040757D;
-	Tue, 24 Mar 2026 17:43:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6944740B6CB;
+	Tue, 24 Mar 2026 17:43:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774374193; cv=none; b=kCKMBb2xjpL2fNOgv3ZSS8bXrzNribRECuOjnr9JmME60gyyrTCK9s1ZuH0rpsh57F4OmoN3mBZPDaPPeXLnEIxBjB/ytwOWk+bwqa6l1LgPvd8YpiReI/7JOH6i2xAY7qEi4GoEZ8SgRe75PD0r6EmKU/e9SQK41w714qsp0QQ=
+	t=1774374196; cv=none; b=POHTjf/Z04caYMDlK+umQA4HkIrSIfzWd6d7AaJjSAHDzSN4yb9UTCHDS4qRa83BKWr8y2ZrsO7059VjPFYlxHlIXnhsBzho8cQwkub2eVSm+bwryImhB+iWKesicrsrp/5IyWyrebPfDCe3E5TX80Gk+rtL9rsT0sFLYS9jJ0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774374193; c=relaxed/simple;
-	bh=OJ0YppEpXxWljpnDo2C4R25lit9Ina1zpzH2IgqgCAY=;
+	s=arc-20240116; t=1774374196; c=relaxed/simple;
+	bh=RP19vbwPQykxAhEcwCrCpOeRXkFJmItbVEB4OXCBRs4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cghi4PqdiIuQRy9gt3DyO1EV2wuY8pTSo0C8ptad/eVHej+Pq9L0XJ/9wk1cbV+I4BdALBOqZ2JXpBonGUbRmwRGKx3j/Rdh2Y15mO89FTTGg0SE9NhK/XFKyY/POMV8CKV72IJ+vEkrXXwrB2hUU1TAYmGKG8e2BpG56iM5tdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BnTh1ujn; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=e/VRUukkhxPWb0lDXiWR8m/5yp2augWVDEM7m0V3m8JxJztC92hTBoc/3vbkTnJsN7yDKzR+zbr4ZtZIUYl69SRg3ehq0WryievptyFnPXremCIPJqHeGV1yvOMnb3DHpySFyoeRS/rVtMmoQcHVNly6+AsSY1lXkB5Vlkq8ImE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hLAEpis6; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62O69eRr018998;
-	Tue, 24 Mar 2026 17:43:09 GMT
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62OFOYfk3819926;
+	Tue, 24 Mar 2026 17:43:11 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=oDSu/bQDxMYWLBwio
-	nStkeQoi6NLCfGdNBrHSiGUtoI=; b=BnTh1ujnDHuc5HiFug11tMO7Cb8JFBbzk
-	K89I23eamCDJ6hEe0Iny4ime0NsXiw6lAx4u2krsSACZWQ8mfu2jieE9sWEIteGn
-	54S0s7ALVHA2C7CI7c3Crh3/VOAgEg6+X0778UGBGYZ4v6lFLEm1vOhQtjENXdMs
-	RP8ahhyzaHHGkSWbiRwU7CyvuTM6/Rv7NRj9K4B6BtaYkfoOQeENSGbGP3sZm0DF
-	3F2P0+g8y14TbhvXResyZn/S6bXAhboC4H7oW/G/xnsflltMVGebvJekKReS00az
-	UTzNgxcLqzRhHqQC14+j9FEYKyX7xwAZ2MDYc1Dm4jMsl7VrGuzKg==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d1ktxvwcd-1
+	:mime-version:references:subject:to; s=pp1; bh=lu+whjh2SksQpJIHI
+	uICy4doZ5n0zpLQfOfvfgY5A9c=; b=hLAEpis6HLTHgn3NSPQT4YMrUiGnXDBFs
+	3ICutzWqzB/3NFqaoUDIFkijsMsc0eKujljILmoqXTXi2AL/8jJzvQdSzbvRV4b9
+	7yd/2bpRYP24+0Q7R5vXnSLDki8ukPrWXlDFMCWIxqVvg8XC/SWP4iVDp+18P03+
+	6xkORNFdD0hGGXf3BWk45Dgw83sNe3HZiA0y1sKcY3a53ConTntcAKK/symt+PIv
+	uxTm9H+C+p75w6QDcChbK6VJhvQ/+a30TNkohqult7RKAfTznEkdAcLFNGguwhVL
+	OLY0FF1kaz5ZiWowsQkaOT9xjk8SldNlEnSy8EnTnjX6ew1D+9inA==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d1ktxvwck-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Mar 2026 17:43:09 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62OGPlvR026698;
-	Tue, 24 Mar 2026 17:43:08 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4d275ku11c-1
+	Tue, 24 Mar 2026 17:43:11 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62OG02Sr008732;
+	Tue, 24 Mar 2026 17:43:10 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4d26nnk48k-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Mar 2026 17:43:08 +0000
+	Tue, 24 Mar 2026 17:43:10 +0000
 Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62OHh4gn47251880
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62OHh6pT46268806
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 24 Mar 2026 17:43:04 GMT
+	Tue, 24 Mar 2026 17:43:06 GMT
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 728C320040;
+	by IMSVA (Postfix) with ESMTP id 8B30F20040;
+	Tue, 24 Mar 2026 17:43:06 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D03852004D;
 	Tue, 24 Mar 2026 17:43:04 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4CFF72004B;
-	Tue, 24 Mar 2026 17:43:03 +0000 (GMT)
 Received: from p-imbrenda.ibmuc.com (unknown [9.111.26.26])
 	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 24 Mar 2026 17:43:03 +0000 (GMT)
+	Tue, 24 Mar 2026 17:43:04 +0000 (GMT)
 From: Claudio Imbrenda <imbrenda@linux.ibm.com>
 To: kvm@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
         borntraeger@de.ibm.com, frankja@linux.ibm.com, nrb@linux.ibm.com,
         seiden@linux.ibm.com, gra@linux.ibm.com, schlameuss@linux.ibm.com,
         hca@linux.ibm.com, david@kernel.org
-Subject: [PATCH v3 1/9] KVM: s390: vsie: Fix dat_split_ste()
-Date: Tue, 24 Mar 2026 18:42:53 +0100
-Message-ID: <20260324174301.232921-2-imbrenda@linux.ibm.com>
+Subject: [PATCH v3 2/9] KVM: s390: Remove non-atomic dat_crstep_xchg()
+Date: Tue, 24 Mar 2026 18:42:54 +0100
+Message-ID: <20260324174301.232921-3-imbrenda@linux.ibm.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260324174301.232921-1-imbrenda@linux.ibm.com>
 References: <20260324174301.232921-1-imbrenda@linux.ibm.com>
@@ -90,20 +90,20 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=IqITsb/g c=1 sm=1 tr=0 ts=69c2cd2d cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+X-Authority-Analysis: v=2.4 cv=IqITsb/g c=1 sm=1 tr=0 ts=69c2cd2f cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
  a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=LsQdvuOhCgcXfIND9tsA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzI0MDEzNCBTYWx0ZWRfX0rLEKvHtKFrS
- GMuhW8WLhSo+uZtLw9TMMgkvBXtlK4Z4Ad9YijoR8fnHTsX9+N1F8H3UgZZVqh0hs2Kk72/qdGg
- Fr4UGR1VM37dEnPVwxD2H8HphbhsF4QC+kvpRrzGG/9Jhd2tVIl5hjBrsbCZ3qFiMrnhi8q8IHu
- mT6VXVkqMByKlxBBvdSqBDPHSmnvPJ+5+N0fy6QpM6ZIPfXNxNpfT6ku5mTejwedBhsSWkTNc2Q
- 5K2aTod/fvSo+nS0uX3LRQ3Ejh4ZgrmeILY/RDTqPKmrJi7MU9o/5+KLGBUoHKmPjWBuHtZD1h1
- qlZgM2EJ/JV9fU08Ynugf5xUsK8YJgPpqRO260qbwLJH9ZTAyKwDnG9y5iEMJzFj5dpcKUPYQrx
- EWWIaFqU2Y91Cez0G7jsTdCgs9zP9cw4fqXVaxJc2BjyShZlKeJhO6b5TYFFVRcTHGR5Ip3Htd2
- uvDjFfxQh7Nk/lZW5AA==
-X-Proofpoint-GUID: jLXuIi1cypaD4PU5w38QWKOU-gQVcrmK
-X-Proofpoint-ORIG-GUID: jLXuIi1cypaD4PU5w38QWKOU-gQVcrmK
+ a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=UWa3PdyAdGT8wWmJkKEA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzI0MDEzNCBTYWx0ZWRfXwO1XM/Ryb1Ai
+ AbRR08FSftwuO64E+m7w2I2ABjrjCJPPokeHmPU5l6EpoqmW3jW8dqKixSphKCoy0rHCz0ndfAd
+ NTndfYKMfnXvXhxa0iW9/vdkksSTFp34uFUjIMOUC4JwnWEjmJVATjENmCndlsovRuT2a2gm7/f
+ zCJi+MY3vFjjTFcXjxiI8F6yjCxKoXBYGYz+Tx+AKezYb2GVRQ/K0G3U/k4lkVGBOmtAlki/r9m
+ w5gVPpz0Pn0mr8kbnEle/OcE1ok2xArOqwbXoPJ+6CzB+hO/GBsSBqeFO1mZSsL71eKta6jfopV
+ jhP09LDfR66SIzbTSfBzl+IoOGosyVAhzTpBdb2rATIckrWs/vp6+J/uMTXOpe5RCv6yf33Oyc3
+ pHcn32lrIlPwjes1lE2Rtfr08Qvlc8Q+WOX2rvdSDH/cWiMBIiaFSZ1PBsDuWUvZh8926PauOMi
+ EjPQOfrqMpHGsaylhRA==
+X-Proofpoint-GUID: hXYgKR3zgcAZdRt2i2OAuT1cQGm5BA-3
+X-Proofpoint-ORIG-GUID: hXYgKR3zgcAZdRt2i2OAuT1cQGm5BA-3
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-03-24_03,2026-03-24_01,2025-10-01_01
@@ -118,17 +118,17 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-17983-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-17986-lists,linux-s390=lfdr.de];
 	DKIM_TRACE(0.00)[ibm.com:+];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,h.tt:url,linux.ibm.com:mid,fc1.sd:url];
 	TAGGED_RCPT(0.00)[linux-s390];
 	FROM_NEQ_ENVFROM(0.00)[imbrenda@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
@@ -138,42 +138,385 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TO_DN_NONE(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 9CE2D31A308
+X-Rspamd-Queue-Id: 2875C31A335
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-If the guest misbehaves and puts the page tables for its nested guest
-inside the memory of the nested guest itself, and the guest and nested
-guest are being mapped with large pages, the shadow mapping will
-lose synchronization with the actual mapping, since this will cause the
-large page with the vsie notification bit to be split, but the
-vsie notification bit will not be propagated to the resulting small
-pages.
+In practice dat_crstep_xchg() is racy and hard to use correctly. Simply
+remove it and replace its uses with dat_crstep_xchg_atomic().
 
-Fix this by propagating the vsie_notif bit from large pages to normal
-pages when splitting a large page.
+This solves some actual races that lead to system hangs / crashes.
 
-Fixes: 2db149a0a6c5 ("KVM: s390: KVM page table management functions: walks")
+Opportunistically fix an alignment issue in _gmap_crstep_xchg_atomic().
+
 Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Christoph Schlameuss <schlameuss@linux.ibm.com>
+Fixes: 589071eaaa8f ("KVM: s390: KVM page table management functions: clear and replace")
+Fixes: 94fd9b16cc67 ("KVM: s390: KVM page table management functions: lifecycle management")
 Reviewed-by: Steffen Eiden <seiden@linux.ibm.com>
-Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
 ---
- arch/s390/kvm/dat.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/s390/kvm/dat.c     | 53 ++++++++------------------
+ arch/s390/kvm/dat.h     |  9 +++--
+ arch/s390/kvm/gaccess.c | 26 +++++++------
+ arch/s390/kvm/gmap.c    | 82 ++++++++++++++++++++++++-----------------
+ arch/s390/kvm/gmap.h    | 26 +++++++------
+ 5 files changed, 98 insertions(+), 98 deletions(-)
 
 diff --git a/arch/s390/kvm/dat.c b/arch/s390/kvm/dat.c
-index 670404d4fa44..48b5f2bcf172 100644
+index 48b5f2bcf172..8ba80b0b4698 100644
 --- a/arch/s390/kvm/dat.c
 +++ b/arch/s390/kvm/dat.c
-@@ -292,6 +292,7 @@ static int dat_split_ste(struct kvm_s390_mmu_cache *mc, union pmd *pmdp, gfn_t g
- 				pt->ptes[i].val = init.val | i * PAGE_SIZE;
- 			/* No need to take locks as the page table is not installed yet. */
- 			pgste_init.prefix_notif = old.s.fc1.prefix_notif;
-+			pgste_init.vsie_notif = old.s.fc1.vsie_notif;
- 			pgste_init.pcl = uses_skeys && init.h.i;
- 			dat_init_pgstes(pt, pgste_init.val);
- 		} else {
+@@ -134,32 +134,6 @@ int dat_set_asce_limit(struct kvm_s390_mmu_cache *mc, union asce *asce, int newt
+ 	return 0;
+ }
+ 
+-/**
+- * dat_crstep_xchg() - Exchange a gmap CRSTE with another.
+- * @crstep: Pointer to the CRST entry
+- * @new: Replacement entry.
+- * @gfn: The affected guest address.
+- * @asce: The ASCE of the address space.
+- *
+- * Context: This function is assumed to be called with kvm->mmu_lock held.
+- */
+-void dat_crstep_xchg(union crste *crstep, union crste new, gfn_t gfn, union asce asce)
+-{
+-	if (crstep->h.i) {
+-		WRITE_ONCE(*crstep, new);
+-		return;
+-	} else if (cpu_has_edat2()) {
+-		crdte_crste(crstep, *crstep, new, gfn, asce);
+-		return;
+-	}
+-
+-	if (machine_has_tlb_guest())
+-		idte_crste(crstep, gfn, IDTE_GUEST_ASCE, asce, IDTE_GLOBAL);
+-	else
+-		idte_crste(crstep, gfn, 0, NULL_ASCE, IDTE_GLOBAL);
+-	WRITE_ONCE(*crstep, new);
+-}
+-
+ /**
+  * dat_crstep_xchg_atomic() - Atomically exchange a gmap CRSTE with another.
+  * @crstep: Pointer to the CRST entry.
+@@ -175,8 +149,8 @@ void dat_crstep_xchg(union crste *crstep, union crste new, gfn_t gfn, union asce
+  *
+  * Return: %true if the exchange was successful.
+  */
+-bool dat_crstep_xchg_atomic(union crste *crstep, union crste old, union crste new, gfn_t gfn,
+-			    union asce asce)
++bool __must_check dat_crstep_xchg_atomic(union crste *crstep, union crste old, union crste new,
++					 gfn_t gfn, union asce asce)
+ {
+ 	if (old.h.i)
+ 		return arch_try_cmpxchg((long *)crstep, &old.val, new.val);
+@@ -894,7 +868,8 @@ static long _dat_slot_crste(union crste *crstep, gfn_t gfn, gfn_t next, struct d
+ 
+ 	/* This table entry needs to be updated. */
+ 	if (walk->start <= gfn && walk->end >= next) {
+-		dat_crstep_xchg_atomic(crstep, crste, new_crste, gfn, walk->asce);
++		if (!dat_crstep_xchg_atomic(crstep, crste, new_crste, gfn, walk->asce))
++			return -EINVAL;
+ 		/* A lower level table was present, needs to be freed. */
+ 		if (!crste.h.fc && !crste.h.i) {
+ 			if (is_pmd(crste))
+@@ -1072,17 +1047,19 @@ int dat_link(struct kvm_s390_mmu_cache *mc, union asce asce, int level,
+ 
+ static long dat_set_pn_crste(union crste *crstep, gfn_t gfn, gfn_t next, struct dat_walk *walk)
+ {
+-	union crste crste = READ_ONCE(*crstep);
++	union crste newcrste, oldcrste;
+ 	int *n = walk->priv;
+ 
+-	if (!crste.h.fc || crste.h.i || crste.h.p)
+-		return 0;
+-
+-	*n = 2;
+-	if (crste.s.fc1.prefix_notif)
+-		return 0;
+-	crste.s.fc1.prefix_notif = 1;
+-	dat_crstep_xchg(crstep, crste, gfn, walk->asce);
++	do {
++		oldcrste = READ_ONCE(*crstep);
++		if (!oldcrste.h.fc || oldcrste.h.i || oldcrste.h.p)
++			return 0;
++		*n = 2;
++		if (oldcrste.s.fc1.prefix_notif)
++			return 0;
++		newcrste = oldcrste;
++		newcrste.s.fc1.prefix_notif = 1;
++	} while (!dat_crstep_xchg_atomic(crstep, oldcrste, newcrste, gfn, walk->asce));
+ 	return 0;
+ }
+ 
+diff --git a/arch/s390/kvm/dat.h b/arch/s390/kvm/dat.h
+index 123e11dcd70d..22dafc775335 100644
+--- a/arch/s390/kvm/dat.h
++++ b/arch/s390/kvm/dat.h
+@@ -938,11 +938,14 @@ static inline bool dat_pudp_xchg_atomic(union pud *pudp, union pud old, union pu
+ 	return dat_crstep_xchg_atomic(_CRSTEP(pudp), _CRSTE(old), _CRSTE(new), gfn, asce);
+ }
+ 
+-static inline void dat_crstep_clear(union crste *crstep, gfn_t gfn, union asce asce)
++static inline union crste dat_crstep_clear_atomic(union crste *crstep, gfn_t gfn, union asce asce)
+ {
+-	union crste newcrste = _CRSTE_EMPTY(crstep->h.tt);
++	union crste oldcrste, empty = _CRSTE_EMPTY(crstep->h.tt);
+ 
+-	dat_crstep_xchg(crstep, newcrste, gfn, asce);
++	do {
++		oldcrste = READ_ONCE(*crstep);
++	} while (!dat_crstep_xchg_atomic(crstep, oldcrste, empty, gfn, asce));
++	return oldcrste;
+ }
+ 
+ static inline int get_level(union crste *crstep, union pte *ptep)
+diff --git a/arch/s390/kvm/gaccess.c b/arch/s390/kvm/gaccess.c
+index a9da9390867d..4ee862424ca0 100644
+--- a/arch/s390/kvm/gaccess.c
++++ b/arch/s390/kvm/gaccess.c
+@@ -1456,7 +1456,7 @@ static int _do_shadow_pte(struct gmap *sg, gpa_t raddr, union pte *ptep_h, union
+ static int _do_shadow_crste(struct gmap *sg, gpa_t raddr, union crste *host, union crste *table,
+ 			    struct guest_fault *f, bool p)
+ {
+-	union crste newcrste;
++	union crste newcrste, oldcrste;
+ 	gfn_t gfn;
+ 	int rc;
+ 
+@@ -1469,16 +1469,20 @@ static int _do_shadow_crste(struct gmap *sg, gpa_t raddr, union crste *host, uni
+ 	if (rc)
+ 		return rc;
+ 
+-	newcrste = _crste_fc1(f->pfn, host->h.tt, f->writable, !p);
+-	newcrste.s.fc1.d |= host->s.fc1.d;
+-	newcrste.s.fc1.sd |= host->s.fc1.sd;
+-	newcrste.h.p &= host->h.p;
+-	newcrste.s.fc1.vsie_notif = 1;
+-	newcrste.s.fc1.prefix_notif = host->s.fc1.prefix_notif;
+-	_gmap_crstep_xchg(sg->parent, host, newcrste, f->gfn, false);
+-
+-	newcrste = _crste_fc1(f->pfn, host->h.tt, 0, !p);
+-	dat_crstep_xchg(table, newcrste, gpa_to_gfn(raddr), sg->asce);
++	do {
++		oldcrste = READ_ONCE(*host);
++		newcrste = _crste_fc1(f->pfn, oldcrste.h.tt, f->writable, !p);
++		newcrste.s.fc1.d |= oldcrste.s.fc1.d;
++		newcrste.s.fc1.sd |= oldcrste.s.fc1.sd;
++		newcrste.h.p &= oldcrste.h.p;
++		newcrste.s.fc1.vsie_notif = 1;
++		newcrste.s.fc1.prefix_notif = oldcrste.s.fc1.prefix_notif;
++	} while (!_gmap_crstep_xchg_atomic(sg->parent, host, oldcrste, newcrste, f->gfn, false));
++
++	newcrste = _crste_fc1(f->pfn, oldcrste.h.tt, 0, !p);
++	gfn = gpa_to_gfn(raddr);
++	while (!dat_crstep_xchg_atomic(table, READ_ONCE(*table), newcrste, gfn, sg->asce))
++		;
+ 	return 0;
+ }
+ 
+diff --git a/arch/s390/kvm/gmap.c b/arch/s390/kvm/gmap.c
+index ef0c6ebfdde2..956be4c01797 100644
+--- a/arch/s390/kvm/gmap.c
++++ b/arch/s390/kvm/gmap.c
+@@ -313,13 +313,16 @@ static long gmap_clear_young_crste(union crste *crstep, gfn_t gfn, gfn_t end, st
+ 	struct clear_young_pte_priv *priv = walk->priv;
+ 	union crste crste, new;
+ 
+-	crste = READ_ONCE(*crstep);
++	do {
++		crste = READ_ONCE(*crstep);
++
++		if (!crste.h.fc)
++			return 0;
++		if (!crste.s.fc1.y && crste.h.i)
++			return 0;
++		if (crste_prefix(crste) && !gmap_mkold_prefix(priv->gmap, gfn, end))
++			break;
+ 
+-	if (!crste.h.fc)
+-		return 0;
+-	if (!crste.s.fc1.y && crste.h.i)
+-		return 0;
+-	if (!crste_prefix(crste) || gmap_mkold_prefix(priv->gmap, gfn, end)) {
+ 		new = crste;
+ 		new.h.i = 1;
+ 		new.s.fc1.y = 0;
+@@ -328,8 +331,8 @@ static long gmap_clear_young_crste(union crste *crstep, gfn_t gfn, gfn_t end, st
+ 			folio_set_dirty(phys_to_folio(crste_origin_large(crste)));
+ 		new.s.fc1.d = 0;
+ 		new.h.p = 1;
+-		dat_crstep_xchg(crstep, new, gfn, walk->asce);
+-	}
++	} while (!dat_crstep_xchg_atomic(crstep, crste, new, gfn, walk->asce));
++
+ 	priv->young = 1;
+ 	return 0;
+ }
+@@ -391,14 +394,18 @@ static long _gmap_unmap_crste(union crste *crstep, gfn_t gfn, gfn_t next, struct
+ {
+ 	struct gmap_unmap_priv *priv = walk->priv;
+ 	struct folio *folio = NULL;
++	union crste old = *crstep;
+ 
+-	if (crstep->h.fc) {
+-		if (crstep->s.fc1.pr && test_bit(GMAP_FLAG_EXPORT_ON_UNMAP, &priv->gmap->flags))
+-			folio = phys_to_folio(crste_origin_large(*crstep));
+-		gmap_crstep_xchg(priv->gmap, crstep, _CRSTE_EMPTY(crstep->h.tt), gfn);
+-		if (folio)
+-			uv_convert_from_secure_folio(folio);
+-	}
++	if (!old.h.fc)
++		return 0;
++
++	if (old.s.fc1.pr && test_bit(GMAP_FLAG_EXPORT_ON_UNMAP, &priv->gmap->flags))
++		folio = phys_to_folio(crste_origin_large(old));
++	/* No races should happen because kvm->mmu_lock is held in write mode */
++	KVM_BUG_ON(!gmap_crstep_xchg_atomic(priv->gmap, crstep, old, _CRSTE_EMPTY(old.h.tt), gfn),
++		   priv->gmap->kvm);
++	if (folio)
++		uv_convert_from_secure_folio(folio);
+ 
+ 	return 0;
+ }
+@@ -474,23 +481,24 @@ static long _crste_test_and_clear_softdirty(union crste *table, gfn_t gfn, gfn_t
+ 
+ 	if (fatal_signal_pending(current))
+ 		return 1;
+-	crste = READ_ONCE(*table);
+-	if (!crste.h.fc)
+-		return 0;
+-	if (crste.h.p && !crste.s.fc1.sd)
+-		return 0;
++	do {
++		crste = READ_ONCE(*table);
++		if (!crste.h.fc)
++			return 0;
++		if (crste.h.p && !crste.s.fc1.sd)
++			return 0;
+ 
+-	/*
+-	 * If this large page contains one or more prefixes of vCPUs that are
+-	 * currently running, do not reset the protection, leave it marked as
+-	 * dirty.
+-	 */
+-	if (!crste.s.fc1.prefix_notif || gmap_mkold_prefix(gmap, gfn, end)) {
++		/*
++		 * If this large page contains one or more prefixes of vCPUs that are
++		 * currently running, do not reset the protection, leave it marked as
++		 * dirty.
++		 */
++		if (crste.s.fc1.prefix_notif && !gmap_mkold_prefix(gmap, gfn, end))
++			break;
+ 		new = crste;
+ 		new.h.p = 1;
+ 		new.s.fc1.sd = 0;
+-		gmap_crstep_xchg(gmap, table, new, gfn);
+-	}
++	} while (!gmap_crstep_xchg_atomic(gmap, table, crste, new, gfn));
+ 
+ 	for ( ; gfn < end; gfn++)
+ 		mark_page_dirty(gmap->kvm, gfn);
+@@ -646,8 +654,8 @@ int gmap_link(struct kvm_s390_mmu_cache *mc, struct gmap *gmap, struct guest_fau
+ static int gmap_ucas_map_one(struct kvm_s390_mmu_cache *mc, struct gmap *gmap,
+ 			     gfn_t p_gfn, gfn_t c_gfn, bool force_alloc)
+ {
++	union crste newcrste, oldcrste;
+ 	struct page_table *pt;
+-	union crste newcrste;
+ 	union crste *crstep;
+ 	union pte *ptep;
+ 	int rc;
+@@ -673,7 +681,11 @@ static int gmap_ucas_map_one(struct kvm_s390_mmu_cache *mc, struct gmap *gmap,
+ 			    &crstep, &ptep);
+ 	if (rc)
+ 		return rc;
+-	dat_crstep_xchg(crstep, newcrste, c_gfn, gmap->asce);
++	do {
++		oldcrste = READ_ONCE(*crstep);
++		if (oldcrste.val == newcrste.val)
++			break;
++	} while (!dat_crstep_xchg_atomic(crstep, oldcrste, newcrste, c_gfn, gmap->asce));
+ 	return 0;
+ }
+ 
+@@ -777,8 +789,10 @@ static void gmap_ucas_unmap_one(struct gmap *gmap, gfn_t c_gfn)
+ 	int rc;
+ 
+ 	rc = dat_entry_walk(NULL, c_gfn, gmap->asce, 0, TABLE_TYPE_SEGMENT, &crstep, &ptep);
+-	if (!rc)
+-		dat_crstep_xchg(crstep, _PMD_EMPTY, c_gfn, gmap->asce);
++	if (rc)
++		return;
++	while (!dat_crstep_xchg_atomic(crstep, READ_ONCE(*crstep), _PMD_EMPTY, c_gfn, gmap->asce))
++		;
+ }
+ 
+ void gmap_ucas_unmap(struct gmap *gmap, gfn_t c_gfn, unsigned long count)
+@@ -1017,8 +1031,8 @@ static void gmap_unshadow_level(struct gmap *sg, gfn_t r_gfn, int level)
+ 			dat_ptep_xchg(ptep, _PTE_EMPTY, r_gfn, sg->asce, uses_skeys(sg));
+ 		return;
+ 	}
+-	crste = READ_ONCE(*crstep);
+-	dat_crstep_clear(crstep, r_gfn, sg->asce);
++
++	crste = dat_crstep_clear_atomic(crstep, r_gfn, sg->asce);
+ 	if (crste_leaf(crste) || crste.h.i)
+ 		return;
+ 	if (is_pmd(crste))
+diff --git a/arch/s390/kvm/gmap.h b/arch/s390/kvm/gmap.h
+index ccb5cd751e31..19379d162777 100644
+--- a/arch/s390/kvm/gmap.h
++++ b/arch/s390/kvm/gmap.h
+@@ -194,35 +194,37 @@ static inline union pgste gmap_ptep_xchg(struct gmap *gmap, union pte *ptep, uni
+ 	return _gmap_ptep_xchg(gmap, ptep, newpte, pgste, gfn, true);
+ }
+ 
+-static inline void _gmap_crstep_xchg(struct gmap *gmap, union crste *crstep, union crste ne,
+-				     gfn_t gfn, bool needs_lock)
++static inline bool __must_check _gmap_crstep_xchg_atomic(struct gmap *gmap, union crste *crstep,
++							 union crste oldcrste, union crste newcrste,
++							 gfn_t gfn, bool needs_lock)
+ {
+-	unsigned long align = 8 + (is_pmd(*crstep) ? 0 : 11);
++	unsigned long align = is_pmd(*crstep) ? _PAGE_ENTRIES : _PAGE_ENTRIES * _CRST_ENTRIES;
+ 
+ 	lockdep_assert_held(&gmap->kvm->mmu_lock);
+ 	if (!needs_lock)
+ 		lockdep_assert_held(&gmap->children_lock);
+ 
+ 	gfn = ALIGN_DOWN(gfn, align);
+-	if (crste_prefix(*crstep) && (ne.h.p || ne.h.i || !crste_prefix(ne))) {
+-		ne.s.fc1.prefix_notif = 0;
++	if (crste_prefix(oldcrste) && (newcrste.h.p || newcrste.h.i || !crste_prefix(newcrste))) {
++		newcrste.s.fc1.prefix_notif = 0;
+ 		gmap_unmap_prefix(gmap, gfn, gfn + align);
+ 	}
+-	if (crste_leaf(*crstep) && crstep->s.fc1.vsie_notif &&
+-	    (ne.h.p || ne.h.i || !ne.s.fc1.vsie_notif)) {
+-		ne.s.fc1.vsie_notif = 0;
++	if (crste_leaf(oldcrste) && oldcrste.s.fc1.vsie_notif &&
++	    (newcrste.h.p || newcrste.h.i || !newcrste.s.fc1.vsie_notif)) {
++		newcrste.s.fc1.vsie_notif = 0;
+ 		if (needs_lock)
+ 			gmap_handle_vsie_unshadow_event(gmap, gfn);
+ 		else
+ 			_gmap_handle_vsie_unshadow_event(gmap, gfn);
+ 	}
+-	dat_crstep_xchg(crstep, ne, gfn, gmap->asce);
++	return dat_crstep_xchg_atomic(crstep, oldcrste, newcrste, gfn, gmap->asce);
+ }
+ 
+-static inline void gmap_crstep_xchg(struct gmap *gmap, union crste *crstep, union crste ne,
+-				    gfn_t gfn)
++static inline bool __must_check gmap_crstep_xchg_atomic(struct gmap *gmap, union crste *crstep,
++							union crste oldcrste, union crste newcrste,
++							gfn_t gfn)
+ {
+-	return _gmap_crstep_xchg(gmap, crstep, ne, gfn, true);
++	return _gmap_crstep_xchg_atomic(gmap, crstep, oldcrste, newcrste, gfn, true);
+ }
+ 
+ /**
 -- 
 2.53.0
 
