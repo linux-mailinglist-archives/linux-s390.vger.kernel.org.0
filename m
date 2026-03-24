@@ -1,52 +1,59 @@
-Return-Path: <linux-s390+bounces-17898-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-17899-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4JboDnH1wWmmYQQAu9opvQ
-	(envelope-from <linux-s390+bounces-17898-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2026 03:22:41 +0100
+	id 0FknEzH+wWnqYgQAu9opvQ
+	(envelope-from <linux-s390+bounces-17899-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2026 04:00:01 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id C22413011D1
-	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2026 03:22:40 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id E43F130166B
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2026 04:00:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id BB5083037C2A
-	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2026 02:22:39 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 54845302989A
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2026 03:00:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C66EB387358;
-	Tue, 24 Mar 2026 02:22:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3A7D388E7E;
+	Tue, 24 Mar 2026 02:59:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="APvBhOZx"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="vj3Xv7BZ"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1D1386C14;
-	Tue, 24 Mar 2026 02:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291DE849C;
+	Tue, 24 Mar 2026 02:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774318955; cv=none; b=N4PMpi8ayckPYtqRHWIV3vDTKDocnxQuPUldE2atNa4NbI4N/q73AX2zToK8Q78ETt7oOD18ILWzIgkQpVW0N9xu6qrD2m12fOSL1ZinlprF/7DKZ/G2KtR/r7qwlhPRy9prG8mJ6LmlpoPifYoASVddcJltDUg2oWBPjTwgcJc=
+	t=1774321197; cv=none; b=gHIiOrj9XXZ66u9H/Kn8aKMtgUzofdns2Wd8IBIWVD+sUnpW9cwknb5ANcP+7gerFrAuJ0UDROEn8jDz0W4XQmKBEHgI86rFot3uAYSNV7FRORCvKvc0Yk1iKLWaL9LKSHZBxUoFid3hbWmO95IaMhTzWK9hKtar8bXMn9F3DAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774318955; c=relaxed/simple;
-	bh=dhcqtiZ1+Z6bHtcY+FeNQglwKzvJjFxeELs9lZgVjGE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pmct4wgYGgyXwWar+Lxji5E8AzHyDcMKBSJUkweZA0DBfeQ1K/fWjjltBfG7SPTWgz3SRDuBNGxntzhjT3bUvyN6CdXIDiKrabP56Fn734Af4PbBxZ1ARVBlHwGMkr804TI5PAWte9qJoo9F8CpmFTyzxUU39981YuCG8Wm+tV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=APvBhOZx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EB29C4CEF7;
-	Tue, 24 Mar 2026 02:22:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774318954;
-	bh=dhcqtiZ1+Z6bHtcY+FeNQglwKzvJjFxeELs9lZgVjGE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=APvBhOZxUUobsb7TolEGT+eOmL04buwmjJTsphGqTs5unlMLCcuwIOAXd5krZuHXm
-	 ZO62XznK5PKfUVE45KEi5wz+fSvDzAxl3mVlqzDivqctOCmpwWoaiJF8TFNVkCJnxY
-	 QFN5jaDM41njuipFNhcSIgGX5bSHvT4bNSLtir8ac0Ikfk/S/jc57seC3NGB24xjip
-	 Uri0WFgavXckiig/FvWvrj6SqAOiD12F/Mvs/Pfl7XWQHjGshBRBCIpdzgWZo/Ox2L
-	 KiY1INBId7N6erlT0pP3f6zyGQA37ntmmQf9wDbVvvuTwIKKJA0lQCI2VEaqsNSLjJ
-	 ul2h3c0FRoW9g==
-Date: Mon, 23 Mar 2026 19:22:32 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Wen Gu <guwen@linux.alibaba.com>
+	s=arc-20240116; t=1774321197; c=relaxed/simple;
+	bh=E5Oy3ZYpo3+Ps5TNqA1cUlIdTyftlK0p+7R4zW8Vt7Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bWzVPS3hwdjez17YxKrR5OYNpF9SAkvQiOzk3qyy22boafAqBboghYT//WERcdyQ15l999SCf5McikeTM/VNGstzZNnqY0CFGvldoLUmTTo0dUWDtA4N/8jKEq/JWkXoYUkPw4Ym4b6lwjeJnr9Bngf2Ldq3SO7CAb3up67jsHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=vj3Xv7BZ; arc=none smtp.client-ip=115.124.30.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1774321192; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=B5wXALRpLgA30wVgjjEUsYNnGSqmUm7zNIHZ9rwo58Y=;
+	b=vj3Xv7BZJuogcydkfiH4V/ouBdiWwVK9dFVzdCzozhjIeCUox3zQeIaDqRruxbNxMUYXP4dB3khtY7ciOeF8i8ggS0iqVt50GodvDixLJcUscbwx4YXOP8mvnjBeMqDsdEEMeeHPziM04PVgVvWf1HIfQ6ukZ7p7ZWXNxTYPVVU=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=35;SR=0;TI=SMTPD_---0X.d.Lzd_1774321188;
+Received: from 30.221.131.145(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0X.d.Lzd_1774321188 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 24 Mar 2026 10:59:50 +0800
+Message-ID: <9855724f-4543-48b5-bf60-780b5215c103@linux.alibaba.com>
+Date: Tue, 24 Mar 2026 10:59:47 +0800
+Precedence: bulk
+X-Mailing-List: linux-s390@vger.kernel.org
+List-Id: <linux-s390.vger.kernel.org>
+List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] ptp: split clock drivers into two subdirectories
+To: Jakub Kicinski <kuba@kernel.org>
 Cc: tglx@kernel.org, tglx@linutronix.de, richardcochran@gmail.com,
  andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
  pabeni@redhat.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
@@ -56,65 +63,86 @@ Cc: tglx@kernel.org, tglx@linutronix.de, richardcochran@gmail.com,
  vadim.fedorenko@linux.dev, yangbo.lu@nxp.com, svens@linux.ibm.com,
  dwmw2@infradead.org, nick.shi@broadcom.com, ajay.kaher@broadcom.com,
  alexey.makhalov@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
- linux-fpga@vger.kernel.org, imx@lists.linux.dev,
- linux-s390@vger.kernel.org, dust.li@linux.alibaba.com,
- xuanzhuo@linux.alibaba.com, mani@kernel.org, imran.shaik@oss.qualcomm.com,
- taniya.das@oss.qualcomm.com
-Subject: Re: [PATCH 2/2] MAINTAINERS: update PTP maintainer entries after
- directory split
-Message-ID: <20260323192232.3a5205dc@kernel.org>
-In-Reply-To: <20260318073330.115808-3-guwen@linux.alibaba.com>
+ linux-fpga@vger.kernel.org, imx@lists.linux.dev, linux-s390@vger.kernel.org,
+ dust.li@linux.alibaba.com, xuanzhuo@linux.alibaba.com, mani@kernel.org,
+ imran.shaik@oss.qualcomm.com, taniya.das@oss.qualcomm.com
 References: <20260318073330.115808-1-guwen@linux.alibaba.com>
-	<20260318073330.115808-3-guwen@linux.alibaba.com>
-Precedence: bulk
-X-Mailing-List: linux-s390@vger.kernel.org
-List-Id: <linux-s390.vger.kernel.org>
-List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+ <20260318073330.115808-2-guwen@linux.alibaba.com>
+ <20260323191645.46569808@kernel.org>
+From: Wen Gu <guwen@linux.alibaba.com>
+In-Reply-To: <20260323191645.46569808@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-7.66 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-17898-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-17899-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,linutronix.de,gmail.com,lunn.ch,davemloft.net,google.com,redhat.com,vger.kernel.org,nxp.com,linux.dev,linux.ibm.com,infradead.org,broadcom.com,lists.linux.dev,linux.alibaba.com,oss.qualcomm.com];
+	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_TWELVE(0.00)[35];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,linutronix.de,gmail.com,lunn.ch,davemloft.net,google.com,redhat.com,vger.kernel.org,nxp.com,linux.dev,linux.ibm.com,infradead.org,broadcom.com,lists.linux.dev,linux.alibaba.com,oss.qualcomm.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[kuba@kernel.org,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390,netdev];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[alibaba.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: C22413011D1
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[guwen@linux.alibaba.com,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-s390,netdev];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.alibaba.com:dkim,linux.alibaba.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: E43F130166B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, 18 Mar 2026 15:33:30 +0800 Wen Gu wrote:
-> +PTP EMULATED CLOCK SUPPORT
-> +M:	Wen Gu <guwen@linux.alibaba.com>
-> +M:	Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> +L:	linux-kernel@vger.kernel.org
-> +S:	Maintained
 
-I thought David W was supposed to be the main maintainer?
-Two moderately known developers from a single vendor/company
-is not enough to delegate this IMO.
+
+On 2026/3/24 10:16, Jakub Kicinski wrote:
+> On Wed, 18 Mar 2026 15:33:29 +0800 Wen Gu wrote:
+>>   drivers/ptp/emulated/Kconfig                 |  61 +++++
+>>   drivers/ptp/emulated/Makefile                |  11 +
+>>   drivers/ptp/{ => emulated}/ptp_kvm_arm.c     |   0
+>>   drivers/ptp/{ => emulated}/ptp_kvm_common.c  |   0
+>>   drivers/ptp/{ => emulated}/ptp_kvm_x86.c     |   0
+>>   drivers/ptp/{ => emulated}/ptp_s390.c        |   0
+>>   drivers/ptp/{ => emulated}/ptp_vmclock.c     |   0
+>>   drivers/ptp/{ => emulated}/ptp_vmw.c         |   0
+>>   drivers/ptp/ieee1588/Kconfig                 | 179 +++++++++++++
+>>   drivers/ptp/ieee1588/Makefile                |  16 ++
+>>   drivers/ptp/{ => ieee1588}/ptp_clockmatrix.c |   0
+>>   drivers/ptp/{ => ieee1588}/ptp_clockmatrix.h |   0
+>>   drivers/ptp/{ => ieee1588}/ptp_dfl_tod.c     |   0
+>>   drivers/ptp/{ => ieee1588}/ptp_dte.c         |   0
+>>   drivers/ptp/{ => ieee1588}/ptp_fc3.c         |   0
+>>   drivers/ptp/{ => ieee1588}/ptp_fc3.h         |   0
+>>   drivers/ptp/{ => ieee1588}/ptp_idt82p33.c    |   0
+>>   drivers/ptp/{ => ieee1588}/ptp_idt82p33.h    |   0
+>>   drivers/ptp/{ => ieee1588}/ptp_ines.c        |   0
+>>   drivers/ptp/{ => ieee1588}/ptp_mock.c        |   0
+>>   drivers/ptp/{ => ieee1588}/ptp_netc.c        |   0
+>>   drivers/ptp/{ => ieee1588}/ptp_ocp.c         |   0
+>>   drivers/ptp/{ => ieee1588}/ptp_pch.c         |   0
+>>   drivers/ptp/{ => ieee1588}/ptp_qoriq.c       |   0
+>>   26 files changed, 296 insertions(+), 253 deletions(-)
+> 
+> emulated sounds good but the ieee1588 doesn't sit well with me.
+> IEEE1588 doesn't describe tickers and external signals.
+> Let's leave them in the main directory? Or call it hw even if
+> it's not 100% accurate? In MAINTAINERS you can exclude subdir
+> with X:
+
+Thanks for the suggestion. Leaving the network-oriented drivers
+in the main directory and using X: in MAINTAINERS to exclude the
+emulated ones makes sense to me. The layout will be adjusted in
+the next version.
 
