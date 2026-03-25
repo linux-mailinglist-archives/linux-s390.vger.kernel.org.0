@@ -1,192 +1,293 @@
-Return-Path: <linux-s390+bounces-18075-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18079-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6E8JLf4XxGm3wQQAu9opvQ
-	(envelope-from <linux-s390+bounces-18075-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 18:14:38 +0100
+	id qItLHF4axGnlwQQAu9opvQ
+	(envelope-from <linux-s390+bounces-18079-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 18:24:46 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C2A1329ACC
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 18:14:38 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D2E8329C15
+	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 18:24:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 145E3303B927
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 17:14:15 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 65EDC30A4885
+	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 17:18:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 010BB402B93;
-	Wed, 25 Mar 2026 17:13:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E66C3401486;
+	Wed, 25 Mar 2026 17:18:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CXkoC4a+"
+	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="U4PO+79/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mqpb1XDv"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525E83FE66C;
-	Wed, 25 Mar 2026 17:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D873537D6;
+	Wed, 25 Mar 2026 17:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774458803; cv=none; b=pqhk6XwyTTkJM+Zau6uVcy7jj4+QlY6BhBnRi400bIsV5FHlh9aQk3+nZVIw9K70M6y6EUMARm86UdrgkfCZy74lVIcQsRur088lXYnqSV64In8aGlHVM56ZZzjzyw+HjS6hj/bSqSv06rfS+B5KY0xWYMcicdpCavUb1lXXnYE=
+	t=1774459094; cv=none; b=tPaz1lfJ7BCd++GkiBFHAAgVgxHOuJXdcRVI+l1fspdbGPy2jlstaoio3rch1wHtaAwTZihgg8BYo2HlmOE/VPJ+fMx0EIR6LdSx/3BKDE78WqyLXLW9n/+F4nsfXEtd6GBQG5DUiv0FXjsXLnla4jrGoC3h6LYES6m2zLLjuLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774458803; c=relaxed/simple;
-	bh=MF+Zuv+lsaPruI6piauc3ZYmB9fzDQCGBuH85He0KhY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B//lNJ9kxDJ/MqQ06Xjoj5aHlG9iXvJYZNZURXS76MZwZy1BmEKvDpc5p2P/GE37p6FVGg6sYcIg1tDis0gCvsZtrAAI7Ry7uyYwCxuv93hhMZYBlC/WDyPgqIN37a4VgHZRL063HZsQLbx4rntZCqXljbhxElydvjVGItAo2Zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CXkoC4a+; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62P8vMWq3893308;
-	Wed, 25 Mar 2026 17:13:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=nOxwK00xduMxcZUaX
-	ts66Eik8r+8wlNhFapP0KVtJco=; b=CXkoC4a+PBSMGfJ6DQamqEGckxDv63e7v
-	a3EXiAZhQelsP81dGoMzEfQx9gzIkVWpwsnnVwm+oHpdGv5FceEDm7VWZfmLdxNl
-	OC8tdy37Ac/ltU6u9l+qSbRe+ERtk10Ixl9cu9BjnU/MvG27j4IRm/I1kc2al0zQ
-	t8+7qIHpoFfpo+yUdp2cNYjW5flGytsOxa3CjSWbBHx/MZ+DXKf0+sw+ibzxTJk5
-	4+tdufn+iKQ/wJKX/OE+CxVQc4FpdmhoZila3MpM657TR/S7wiR7WYa7YbkMJyG9
-	9wNtf2lIysH1ip04RuecK2wd00H/znO89q9C1Xfp+7Ex5VZBRvR9A==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d1ktv0qx8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Mar 2026 17:13:19 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62PEnsT9006009;
-	Wed, 25 Mar 2026 17:13:18 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4d261yqjwh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Mar 2026 17:13:18 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62PHDEcv50987416
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 25 Mar 2026 17:13:14 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7188C20040;
-	Wed, 25 Mar 2026 17:13:14 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 45FE32004B;
-	Wed, 25 Mar 2026 17:13:14 +0000 (GMT)
-Received: from p-imbrenda.aag-de.ibm.com (unknown [9.52.223.175])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 25 Mar 2026 17:13:14 +0000 (GMT)
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: kvm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, nrb@linux.ibm.com,
-        seiden@linux.ibm.com, gra@linux.ibm.com, schlameuss@linux.ibm.com,
-        hca@linux.ibm.com, david@kernel.org
-Subject: [PATCH v4 10/10] KVM: s390: Fix KVM_S390_VCPU_FAULT ioctl
-Date: Wed, 25 Mar 2026 18:13:11 +0100
-Message-ID: <20260325171311.182210-11-imbrenda@linux.ibm.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260325171311.182210-1-imbrenda@linux.ibm.com>
-References: <20260325171311.182210-1-imbrenda@linux.ibm.com>
+	s=arc-20240116; t=1774459094; c=relaxed/simple;
+	bh=u8/+z2Bgz4Wws55sOYWKPdJx57vqhgYOwGb75l1e8t4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bCaMFRngQvlSLpQerRvOcbm/OsMHWzxfRleYOqvLkEIZQCe6N1mrLSzPX7uscuBPwESkuX8q97FfvSMgiX6Fmp9wqRRxXWrIOkCKoD/chzPqTf/PEdx3Gl9EO89WHtHIjlxgGvmEu6nF4Bn1ihLjaO1z84DVtFlB5I2k0kx3TNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=U4PO+79/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mqpb1XDv; arc=none smtp.client-ip=202.12.124.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 920DA7A05FF;
+	Wed, 25 Mar 2026 13:18:11 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Wed, 25 Mar 2026 13:18:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1774459091;
+	 x=1774545491; bh=4izl9m24J0MdH0vrTEK4+4uXMVu8bNMwm/FhZz2CVdc=; b=
+	U4PO+79/zAA0FkkU3YogSlYdJXQ1SpeONIStoMVCnxHq9wnoCMZUWoIR2YXxUSQr
+	KrjlRwBPfTQ8E/ljD3wQ8KDxYW80tOsdczBU/7RV0WyLPTZErmh3SncVS/qw5avS
+	HS5KjIjzNaw1/1Y2/c55kqr0MKQ+dxv20JI31ebPvNS9247L8X657hQFCVC4KoZU
+	QYtxPAr4Dn8EQhvvU36Cgbinho4HiSglxQpcKaEziZL1ZRyeRZCYa22JsK5MvtYj
+	tG52bMY4cZ2IGUFkA16Q6BdQv3rvatTcA7MzhZLdKttJGozJhq+cz21AWzqcf7t5
+	fBD1LQ3HEr2gTHnF6PV8lw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1774459091; x=
+	1774545491; bh=4izl9m24J0MdH0vrTEK4+4uXMVu8bNMwm/FhZz2CVdc=; b=m
+	qpb1XDv6WSWP6VAE7r7zEWqiZl2OXosvVUYlycN/vYRuJpbA66870kXqi7arsDFu
+	d6+m1B5LwQHsAVxcRwTpvzoRpZJpFafrtMYm8OTi/Yn0W9IM4fh5kZ0ha1eXBEd7
+	ljd0c1BDa9/zyazTa+Jl/Ux4W/SHNZHppPIhcNexmlpnfcqcAdwloBY2s3HvasyR
+	X+siNW35RsIyuGXysNO/kHChT1r9HoWGRq9yzUcrDjX8YRECzlmQPiGEaGN6HyE3
+	vbtW6+zZC7MMFeTUeX/0vFfmTlnJWfX7fS3fm55dO3HazTE2vJhowcFqUglpaF2J
+	gCBi78Cgy2USGWyrvOgkA==
+X-ME-Sender: <xms:0xjEaR8QS7_cAtDMzaytOsQROsyFdYYRCzvvPli-E8JOxeXRfh2cOA>
+    <xme:0xjEaZaqyz8kaUICit2PBUQK4ir3Vlswf89ZaWQLJIsg2G691vKXm1RK2ulgY1906
+    Jrxdatbb6zUfO4bl4qpF7VXzpnbqVQggMwh985-eBTtHt3oUf1WEA>
+X-ME-Received: <xmr:0xjEaXqzuULEWrYkIBGozxUYZ5mjoUdkURB59c959ZvwYhFSSgco0UEW5x8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdefvdehtdegucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucenucfjughrpeffhffvvefukfgjfhfogggtgfesthejre
+    dtredtvdenucfhrhhomheptehlvgigucghihhllhhirghmshhonhcuoegrlhgvgiesshhh
+    rgiisghothdrohhrgheqnecuggftrfgrthhtvghrnhepvdekfeejkedvudfhudfhteekud
+    fgudeiteetvdeukedvheetvdekgfdugeevueeunecuvehluhhsthgvrhfuihiivgeptden
+    ucfrrghrrghmpehmrghilhhfrhhomheprghlvgigsehshhgriigsohhtrdhorhhgpdhnsg
+    gprhgtphhtthhopeduvddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghlihhf
+    mheslhhinhhugidrihgsmhdrtghomhdprhgtphhtthhopehlihhnuhigqdhsfeeltdesvh
+    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhes
+    vhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhptghisehvgh
+    gvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhgvlhhgrggrsheskhgvrhhnvghl
+    rdhorhhgpdhrtghpthhtoheplhhukhgrshesfihunhhnvghrrdguvgdprhgtphhtthhope
+    hksghushgthheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghlghesrhgvughhrght
+    rdgtohhmpdhrtghpthhtohepshhtrggslhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:0xjEaW1OSbEYNLFDY5M-FoNhOdGjdjZZ6XiD5xOm7eNoJfqlDN78RA>
+    <xmx:0xjEaXnakkrmYKDrH61B0YSaeNVXhH0cAgnDJtYHCGZKQzjaA6J89A>
+    <xmx:0xjEaab6eaS0EWAxfUrDhJ8VuZW6qsx0oPD4egC76VsxyeMTOsGzRQ>
+    <xmx:0xjEaR9wpIZphF155loKWCfOBnl-VXxigrE9tqQQGr2jNdHCN8GEOg>
+    <xmx:0xjEafCdy3P-Cw5s71TDZYvrCoeZJ6VhxGEoqglvfFwPNhAkGGffbX0c>
+Feedback-ID: i03f14258:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 25 Mar 2026 13:18:10 -0400 (EDT)
+Date: Wed, 25 Mar 2026 11:18:08 -0600
+From: Alex Williamson <alex@shazbot.org>
+To: Farhan Ali <alifm@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, helgaas@kernel.org, lukas@wunner.de,
+ kbusch@kernel.org, clg@redhat.com, stable@vger.kernel.org,
+ schnelle@linux.ibm.com, mjrosato@linux.ibm.com, alex@shazbot.org
+Subject: Re: [PATCH v11 7/9] vfio-pci/zdev: Add a device feature for error
+ information
+Message-ID: <20260325111808.263aef2c@shazbot.org>
+In-Reply-To: <20260316191544.2279-8-alifm@linux.ibm.com>
+References: <20260316191544.2279-1-alifm@linux.ibm.com>
+	<20260316191544.2279-8-alifm@linux.ibm.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: n7gPk_wM1g3C1dSv6_0oIdlSsr7f7Iqg
-X-Authority-Analysis: v=2.4 cv=aMr9aL9m c=1 sm=1 tr=0 ts=69c417af cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8 a=ikv_JcFPPU8SThzKSe0A:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzI1MDEyMSBTYWx0ZWRfX92XLFJKhxc82
- EQv9xTta2i2aTRFr96/Nzee94jGC3Nv1zq25Bc4fmzdfyVs9RTs/VxwgxjwZOchPAsN+RnXSRsC
- 8QRuYR+cmAfpjUt84zoa/OiF+LV4ppSNKX4DTrlXYdVi87Q0atm3YwjpzdrFo7Vx2+xnK0Xyqlc
- xE2q0ISnwGFZTeyvRBORYkODLOnn0Hipi3eKioAR35ED4wvzRrXre/mU/TynhsHOEOwxaxcSVjF
- Rqr8UMDQ1Y77w3eiqT3UUdNL6zZvRT+ag/HpEWGMxGfHn1PsEp1xIppx8/fzQFuj71vsVVLbHXp
- XQsV5huTqJRLs7/2xOmpuZaGYxRRjNP9ccy6CCt0FGMvfblW6ad+FgmlqKFb4Rel2Rn1bEweDYu
- IXT/P39Zqejt396r8e+u8/G5GvYFphKzOYPEAqh9jVbqas8CeVyJ9giTlxZgcn1xJo5cIcVUyJ9
- B4atdJE5J0+kHmgvQsg==
-X-Proofpoint-GUID: n7gPk_wM1g3C1dSv6_0oIdlSsr7f7Iqg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-25_05,2026-03-24_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 lowpriorityscore=0 adultscore=0 impostorscore=0 malwarescore=0
- suspectscore=0 phishscore=0 priorityscore=1501 bulkscore=0 clxscore=1015
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603250121
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[shazbot.org,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[shazbot.org:s=fm3,messagingengine.com:s=fm1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18075-lists,linux-s390=lfdr.de];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linux.ibm.com:mid];
-	TAGGED_RCPT(0.00)[linux-s390];
-	FROM_NEQ_ENVFROM(0.00)[imbrenda@linux.ibm.com,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	TAGGED_FROM(0.00)[bounces-18079-lists,linux-s390=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[shazbot.org:+,messagingengine.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[alex@shazbot.org,linux-s390@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_NONE(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 5C2A1329ACC
+	TAGGED_RCPT(0.00)[linux-s390];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,messagingengine.com:dkim,shazbot.org:dkim,shazbot.org:mid]
+X-Rspamd-Queue-Id: 0D2E8329C15
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-A previous commit changed the behaviour of the KVM_S390_VCPU_FAULT
-ioctl. The current (wrong) implementation will trigger a guest
-addressing exception if the requested address lies outside of a
-memslot, unless the VM is UCONTROL.
+On Mon, 16 Mar 2026 12:15:42 -0700
+Farhan Ali <alifm@linux.ibm.com> wrote:
 
-Restore the previous behaviour by open coding the fault-in logic.
+> For zPCI devices, we have platform specific error information. The platform
+> firmware provides this error information to the operating system in an
+> architecture specific mechanism. To enable recovery from userspace for
+> these devices, we want to expose this error information to userspace. Add a
+> new device feature to expose this information.
+> 
+> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+> ---
+>  drivers/vfio/pci/vfio_pci_core.c |  2 ++
+>  drivers/vfio/pci/vfio_pci_priv.h |  9 ++++++++
+>  drivers/vfio/pci/vfio_pci_zdev.c | 36 ++++++++++++++++++++++++++++++++
+>  include/uapi/linux/vfio.h        | 17 +++++++++++++++
+>  4 files changed, 64 insertions(+)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> index d43745fe4c84..bbdb625e35ef 100644
+> --- a/drivers/vfio/pci/vfio_pci_core.c
+> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> @@ -1534,6 +1534,8 @@ int vfio_pci_core_ioctl_feature(struct vfio_device *device, u32 flags,
+>  		return vfio_pci_core_feature_token(vdev, flags, arg, argsz);
+>  	case VFIO_DEVICE_FEATURE_DMA_BUF:
+>  		return vfio_pci_core_feature_dma_buf(vdev, flags, arg, argsz);
+> +	case VFIO_DEVICE_FEATURE_ZPCI_ERROR:
+> +		return vfio_pci_zdev_feature_err(device, flags, arg, argsz);
+>  	default:
+>  		return -ENOTTY;
+>  	}
+> diff --git a/drivers/vfio/pci/vfio_pci_priv.h b/drivers/vfio/pci/vfio_pci_priv.h
+> index 27ac280f00b9..eed69926d8a1 100644
+> --- a/drivers/vfio/pci/vfio_pci_priv.h
+> +++ b/drivers/vfio/pci/vfio_pci_priv.h
+> @@ -89,6 +89,8 @@ int vfio_pci_info_zdev_add_caps(struct vfio_pci_core_device *vdev,
+>  				struct vfio_info_cap *caps);
+>  int vfio_pci_zdev_open_device(struct vfio_pci_core_device *vdev);
+>  void vfio_pci_zdev_close_device(struct vfio_pci_core_device *vdev);
+> +int vfio_pci_zdev_feature_err(struct vfio_device *device, u32 flags,
+> +			      void __user *arg, size_t argsz);
+>  #else
+>  static inline int vfio_pci_info_zdev_add_caps(struct vfio_pci_core_device *vdev,
+>  					      struct vfio_info_cap *caps)
+> @@ -103,6 +105,13 @@ static inline int vfio_pci_zdev_open_device(struct vfio_pci_core_device *vdev)
+>  
+>  static inline void vfio_pci_zdev_close_device(struct vfio_pci_core_device *vdev)
+>  {}
+> +
+> +static inline int vfio_pci_zdev_feature_err(struct vfio_device *device,
+> +					    u32 flags, void __user *arg,
+> +					    size_t argsz)
+> +{
+> +	return -ENODEV;
 
-Fixes: 3762e905ec2e ("KVM: s390: use __kvm_faultin_pfn()")
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Acked-by: Christian Borntraeger <borntraeger@linux.ibm.com>
-Reviewed-by: Steffen Eiden <seiden@linux.ibm.com>
----
- arch/s390/kvm/kvm-s390.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+-ENOTTY
 
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index ebcb0ef8835e..62f04931b54d 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -5520,9 +5520,21 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
- 	}
- #endif
- 	case KVM_S390_VCPU_FAULT: {
--		idx = srcu_read_lock(&vcpu->kvm->srcu);
--		r = vcpu_dat_fault_handler(vcpu, arg, 0);
--		srcu_read_unlock(&vcpu->kvm->srcu, idx);
-+		gpa_t gaddr = arg;
-+
-+		scoped_guard(srcu, &vcpu->kvm->srcu) {
-+			r = vcpu_ucontrol_translate(vcpu, &gaddr);
-+			if (r)
-+				break;
-+
-+			r = kvm_s390_faultin_gfn_simple(vcpu, NULL, gpa_to_gfn(gaddr), false);
-+			if (r == PGM_ADDRESSING)
-+				r = -EFAULT;
-+			if (r <= 0)
-+				break;
-+			r = -EIO;
-+			KVM_BUG_ON(r, vcpu->kvm);
-+		}
- 		break;
- 	}
- 	case KVM_ENABLE_CAP:
--- 
-2.53.0
+> +}
+>  #endif
+>  
+>  static inline bool vfio_pci_is_vga(struct pci_dev *pdev)
+> diff --git a/drivers/vfio/pci/vfio_pci_zdev.c b/drivers/vfio/pci/vfio_pci_zdev.c
+> index 2be37eab9279..d2748dd67c55 100644
+> --- a/drivers/vfio/pci/vfio_pci_zdev.c
+> +++ b/drivers/vfio/pci/vfio_pci_zdev.c
+> @@ -141,6 +141,42 @@ int vfio_pci_info_zdev_add_caps(struct vfio_pci_core_device *vdev,
+>  	return ret;
+>  }
+>  
+> +int vfio_pci_zdev_feature_err(struct vfio_device *device, u32 flags,
+> +			      void __user *arg, size_t argsz)
+> +{
+> +	struct vfio_device_feature_zpci_err err;
+> +	struct vfio_pci_core_device *vdev;
+> +	struct zpci_dev *zdev;
+> +	int head = 0;
+> +	int ret;
+> +
+> +	vdev = container_of(device, struct vfio_pci_core_device, vdev);
+> +	zdev = to_zpci(vdev->pdev);
+> +	if (!zdev)
+> +		return -ENODEV;
+> +
+> +	ret = vfio_check_feature(flags, argsz, VFIO_DEVICE_FEATURE_GET,
+> +				 sizeof(err));
+> +	if (ret != 1)
+> +		return ret;
+> +
+> +	mutex_lock(&zdev->pending_errs_lock);
+> +	if (zdev->pending_errs.count) {
+> +		head = zdev->pending_errs.head % ZPCI_ERR_PENDING_MAX;
+> +		err.pec = zdev->pending_errs.err[head].pec;
+> +		zdev->pending_errs.head++;
+> +		zdev->pending_errs.count--;
+> +		err.pending_errors = zdev->pending_errs.count;
+> +	}
+> +	mutex_unlock(&zdev->pending_errs_lock);
+> +
+> +	err.version = 1;
+
+Returns uninitialized kernel data for case where there are no pending
+errors, initialize err with = {};
+
+> +	if (copy_to_user(arg, &err, sizeof(err)))
+> +		return -EFAULT;
+> +
+> +	return 0;
+> +}
+> +
+>  int vfio_pci_zdev_open_device(struct vfio_pci_core_device *vdev)
+>  {
+>  	struct zpci_dev *zdev = to_zpci(vdev->pdev);
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index bb7b89330d35..21b1473e4779 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -1510,6 +1510,23 @@ struct vfio_device_feature_dma_buf {
+>  	struct vfio_region_dma_range dma_ranges[] __counted_by(nr_ranges);
+>  };
+>  
+> +/**
+> + * VFIO_DEVICE_FEATURE_ZPCI_ERROR feature provides PCI error information to
+> + * userspace for vfio-pci devices on s390x. On s390x PCI error recovery involves
+> + * platform firmware and notification to operating system is done by
+> + * architecture specific mechanism.  Exposing this information to userspace
+> + * allows userspace to take appropriate actions to handle an error on the
+> + * device.
+
+This should include some explicit discussion of how pending_errors in
+interpreted, ie. pending _additional_ errors, userspace should read
+until zero.  Thanks,
+
+Alex
+
+> + */
+> +
+> +struct vfio_device_feature_zpci_err {
+> +	__u8 version;
+> +	__u8 pending_errors;
+> +	__u16 pec;
+> +};
+> +
+> +#define VFIO_DEVICE_FEATURE_ZPCI_ERROR 12
+> +
+>  /* -------- API for Type1 VFIO IOMMU -------- */
+>  
+>  /**
 
 
