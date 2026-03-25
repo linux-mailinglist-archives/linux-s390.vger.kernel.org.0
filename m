@@ -1,239 +1,219 @@
-Return-Path: <linux-s390+bounces-18013-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18015-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4OXEOPSHw2lRrQQAu9opvQ
-	(envelope-from <linux-s390+bounces-18013-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 08:00:04 +0100
+	id gDNQLr2Rw2ncrgQAu9opvQ
+	(envelope-from <linux-s390+bounces-18015-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 08:41:49 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7255B320600
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 08:00:04 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66B42320DA4
+	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 08:41:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id ACCE43047AE8
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 06:58:12 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 9C0CA30275CA
+	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 07:41:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21D023612E8;
-	Wed, 25 Mar 2026 06:58:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6951A374163;
+	Wed, 25 Mar 2026 07:41:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k26dan2c"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DunETyhR"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9D435FF6B;
-	Wed, 25 Mar 2026 06:58:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5052737267C;
+	Wed, 25 Mar 2026 07:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774421892; cv=none; b=B3odU/1JPOsLw463UeMHdfSlrqTRqGIhDXAucSXYiIrnBMow/zzV8FcH4KvJLmIAIg/KkTXE3A5vIa7whOs7S7BHSJ5uPBAGXtww26mvgheShqrvffSw3p7w871YdQrwSDVhPmTEpvLvDf3ATt17Sg6rFSlEG8WdAOV5huN8uD8=
+	t=1774424504; cv=none; b=LvNRDhvbniEXpQM+Iw/XGC4RP2OMjHEJTPzmGzmjNm4EgL2HVxXrnoBLpyxGRAj9luSxcxnbeSAmMVIuXApqL2cjnEu6FRH8rNOZ+OpAhaFG+9YBw2ltwqy5h3nLp9eyoxl0Slzvo5yuQsJ+XCtdH61rsKRlpasYaZIzQqM8MF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774421892; c=relaxed/simple;
-	bh=6eYGJ2LbQlnZQ24DKIA4YQNf2DSG4IkIa2fRS+NpsDk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lF5tEtiYrLVNvShahyPIzJoKMQ6tTZ3bxglZgXfMO4444eUyIHI0IKTTTue6rtfeDnFcc4RbEUgjB6BAtHPhftzOMLaOro/RHS56QZGM+zoPNfvdnnRmW401NQVbKAzGvkovt060vSYJOwIekN3WUu/VPAwqxhd8+VuQDavEjC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k26dan2c; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28CFCC4CEF7;
-	Wed, 25 Mar 2026 06:58:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774421891;
-	bh=6eYGJ2LbQlnZQ24DKIA4YQNf2DSG4IkIa2fRS+NpsDk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k26dan2cYkWaB4MHDF43RmUqrtE7rTEzjKpgr+6+V43BGxPZL7GvVBCVo5h+5Splq
-	 xHe5TdAPTUZXgO8v5b6DegjWlzhR5qgjnAUKhjTvnhJaMSYQhUZlC+yqcrKfe9TNif
-	 dp7/nfLUMQaN0CbdfD6hwlZ0yY33RUUvfzJj7FzWrs0lpgHUpwFg3A4Ww9D3TMno6x
-	 gGIS2Lz+IKeo9TqW6lgQPPdlpoGyAIFFDpCWrerXSXeSSFmGRpwzeByEyv0EMqAZKs
-	 W5LK7bTB/WvtM+PavhYf4BpZ8/5+66Jwu2kMfdRlf6h7onHDLZ2Zu/BjBvmfwP6C/5
-	 IEAPfx8tCohrw==
-Date: Tue, 24 Mar 2026 23:58:09 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: tmricht@linux.ibm.com, acme@kernel.org, agordeev@linux.ibm.com,
-	gor@linux.ibm.com, hca@linux.ibm.com, japo@linux.ibm.com,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-s390@vger.kernel.org, sumanthk@linux.ibm.com
-Subject: Re: [PATCH v1] perf symbol: Lazily compute idle and use the perf_env
-Message-ID: <acOHgYoM6oYWWTmC@google.com>
-References: <20260219113850.354271-1-tmricht@linux.ibm.com>
- <20260302234343.564937-1-irogers@google.com>
- <CAP-5=fW0Bu2313nAuhur+wP5Y2JtBNY+wpPoiKLqNzcSe-R3gA@mail.gmail.com>
+	s=arc-20240116; t=1774424504; c=relaxed/simple;
+	bh=DJey7cOD/X74MNW/6oD1QLptfqoZSbqxOm0D/ZVWkfA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JgM4SPReXnrLeieXN5eC4VSdrm3gw1j85gu8+WIoYuqXjxf4ip/4llx9kpLv/hhVxCYxMDTqQYqxGqyf3YLZRguKwE/huIH7d3jDIf2CovC7VbvOwlmwiqoHJmIc5T/TMNRrZzpxmNKTRD/8XfGILH/CBtx6QsYL0TktcMCCxAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DunETyhR; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62P6s0T43850414;
+	Wed, 25 Mar 2026 07:41:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=PHjQr1TeTUJQnuNftC3BVHoFFmp4yAey/06pHHOJY
+	2k=; b=DunETyhRgoPgP3rq4MqQ/nP1cCpqB6jYzOoU2OrU6+rtdnMnW81mkwR2V
+	p0b46yOLyZQh+1rDX8daSraj+tfX+1F8G65SiLf/n2YPI2SereUl3fvLvE7PHLgB
+	0V1g0zXBaCAMRWxk9wHEFnYwKgunzPRG0o9o4+08suUfgLkP+rx1pLtIm7/7AxXt
+	yTH+gEsf/tNCa2/eg022dSpNVFVaRIzeK3QemttcuGL3HdLThv82Io4Jr4ueAHjR
+	BwqJKKac707EsoLVQSlH7Gi2uuOlpyKG1ky4PZEd+OhSxYqqklGMQhteMjNr01Xn
+	3Q3Vzi9NnvpKoNp9fmf7yUgJXIuNw==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d1kxqfcb8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Mar 2026 07:41:26 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62P63YmX008722;
+	Wed, 25 Mar 2026 07:41:25 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4d26nnnk5f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Mar 2026 07:41:24 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62P7fJD959113968
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 25 Mar 2026 07:41:21 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ACCED2005A;
+	Wed, 25 Mar 2026 07:41:19 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 816362004E;
+	Wed, 25 Mar 2026 07:41:19 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with SMTP;
+	Wed, 25 Mar 2026 07:41:19 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
+	id 67C63E0723; Wed, 25 Mar 2026 08:41:19 +0100 (CET)
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Kevin Brodsky <kevin.brodsky@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/2] s390/mm: Batch PTE updates in lazy MMU mode
+Date: Wed, 25 Mar 2026 08:41:17 +0100
+Message-ID: <cover.1774420056.git.agordeev@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fW0Bu2313nAuhur+wP5Y2JtBNY+wpPoiKLqNzcSe-R3gA@mail.gmail.com>
-X-Spamd-Result: default: False [-1.16 / 15.00];
+Content-Transfer-Encoding: quoted-printable
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: tcrSTXG4jo1D0QMxiBTsSGm3V5p9l42V
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzI1MDA1MCBTYWx0ZWRfX0SKZeYKKebmU
+ KMy4XYAecKVjRDlzmP2Rn+nzjSRBuW9ooSVfcWGSLUndj6kuD4688f7hbntE27niVa0SwIpKjiI
+ Hznp3PyZJOS/q5UcggycOY43nqxJGDbe2f2Zg7H/E4jPsIyb7eMRSDJiyAji5BPBOtZfcNKnaL3
+ JbJUJCZjXIMeS9QvvkWUik6pVQWsZD3+bQtKNVg8n7wNTjxImDjMGC6ETaTgIGVdN/yh0Y97PTc
+ QtE3DIGyrVuMzOVG+gUOTMm3WePyO/lLTGHfpaDR0RICXH/QcL2ljZXbdpETkuEQxGO7aeM8C6A
+ CF7CQTIIuCOlNnkghwkPW+6Zyj9/OTbofv+h+LDEMLn4GCc0joSn7jjt/QazFlTHbXYojuc/lUR
+ HBaUC+NEMGsJh6nBXeZaksaum+1zX9C6hXRHdKBD7gXUNwwmSh3BTQ9jhwzrdAV2ENEi2iwFqCJ
+ SLAhlAVEpxXx6anZHkw==
+X-Authority-Analysis: v=2.4 cv=bLEb4f+Z c=1 sm=1 tr=0 ts=69c391a6 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=iQ6ETzBq9ecOQQE5vZCe:22 a=VwQbUJbxAAAA:8 a=7CQSdrXTAAAA:8 a=20KFwNOVAAAA:8
+ a=OejtQ4jW4XaKWV-sQpAA:9 a=a-qgeE7W1pNrGK8U0ZQC:22
+X-Proofpoint-GUID: tcrSTXG4jo1D0QMxiBTsSGm3V5p9l42V
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-25_02,2026-03-24_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 adultscore=0 clxscore=1011 phishscore=0 impostorscore=0
+ malwarescore=0 lowpriorityscore=0 suspectscore=0 bulkscore=0
+ priorityscore=1501 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2603050001
+ definitions=main-2603250050
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_MATCH_TO(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18013-lists,linux-s390=lfdr.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[agordeev@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18015-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[namhyung@kernel.org,linux-s390@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_COUNT_TWELVE(0.00)[12];
+	PRECEDENCE_BULK(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 7255B320600
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linux.ibm.com:mid]
+X-Rspamd-Queue-Id: 66B42320DA4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Ian,
+Hi All!
 
-Sorry for the delay.
+This series addresses an s390-specific aspect of how page table entries
+are modified. In many cases, changing a valid PTE (for example, setting
+or clearing a hardware bit) requires issuing an Invalidate Page Table
+Entry (IPTE) instruction beforehand.
 
-On Tue, Mar 24, 2026 at 10:14:01AM -0700, Ian Rogers wrote:
-> On Mon, Mar 2, 2026 at 3:43 PM Ian Rogers <irogers@google.com> wrote:
-[SNIP]
-> > -       if (idle_symbols_list)
-> > -               return strlist__has_entry(idle_symbols_list, name);
-> > +       /*
-> > +        * ppc64 uses function descriptors and appends a '.' to the
-> > +        * start of every instruction address. Remove it.
-> > +        */
-> > +       if (name[0] == '.')
+A disadvantage of the IPTE instruction is that it may initiate a
+machine-wide quiesce state. This state acts as an expensive global
+hardware lock and should be avoided whenever possible.
 
-Then e_machine == EM_PPC64 can be checked here.
+Currently, IPTE is invoked for each individual PTE update in most code
+paths. However, the instruction itself supports invalidating multiple
+PTEs at once, covering up to 256 entries. Using this capability can
+significantly reduce the number of quiesce events, with a positive
+impact on overall system performance. At present, this feature is not
+utilized.
 
-> > +               name++;
-> > +
-> > +
+An effort was therefore made to identify kernel code paths that update
+large numbers of consecutive PTEs. Such updates can be batched and
+handled by a single IPTE invocation, leveraging the hardware support
+described above.
 
-Two blank lines.
+A natural candidate for this optimization is page-table walkers that
+change attributes of memory ranges and thus modify contiguous ranges
+of PTEs. Many memory-management system calls enter lazy MMU mode while
+updating such ranges.
 
-> > +       if (bsearch(name, idle_symbols, ARRAY_SIZE(idle_symbols),
-> > +                   sizeof(idle_symbols[0]), sym_name_cmp)) {
-> > +               sym->idle = SYMBOL_IDLE__IDLE;
-> > +               return true;
-> > +       }
-> > +
-> > +       if (e_machine == EM_386 || e_machine == EM_X86_64) {
-> > +               if (strstarts(name, "mwait_idle") ||
-> > +                   strstarts(name, "intel_idle")) {
-> > +                       sym->idle = SYMBOL_IDLE__IDLE;
-> > +                       return true;
-> > +               }
-> > +       }
-> > +
-> > +       if (e_machine == EM_PPC64 &&!strcmp(name, "ppc64_runlatch_off")) {
-> > +               sym->idle = SYMBOL_IDLE__IDLE;
-> > +               return true;
-> > +       }
-> >
-> > -       idle_symbols_list = strlist__new(NULL, NULL);
-> > +       if (e_machine == EM_S390) {
-> > +               int major = 0, minor = 0;
-> > +               const char *release = env && env->os_release
-> > +                       ? env->os_release : perf_version_string;
-> >
-> > -       for (i = 0; idle_symbols[i]; i++)
-> > -               strlist__add(idle_symbols_list, idle_symbols[i]);
-> > +               sscanf(release, "%d.%d", &major, &minor);
-> >
-> > -       return strlist__has_entry(idle_symbols_list, name);
-> > +               /* Before v6.10, s390 used psw_idle. */
-> > +               if ((major < 6 || (major == 6 && minor < 10)) && strstarts(name, "psw_idle")) {
-> > +                       sym->idle = SYMBOL_IDLE__IDLE;
-> > +                       return true;
-> > +               }
-> > +       }
-> > +
-> > +       sym->idle = SYMBOL_IDLE__NOT_IDLE;
-> > +       return false;
-> >  }
-> >
-> >  static int map__process_kallsym_symbol(void *arg, const char *name,
-> > @@ -785,7 +815,7 @@ static int map__process_kallsym_symbol(void *arg, const char *name,
-> >          * We will pass the symbols to the filter later, in
-> >          * map__split_kallsyms, when we have split the maps per module
-> >          */
-> > -       __symbols__insert(root, sym, !strchr(name, '['));
-> > +       __symbols__insert(root, sym);
-> >
-> >         return 0;
-> >  }
-> > diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-> > index 3fb5d146d9b1..508dd9f336e9 100644
-> > --- a/tools/perf/util/symbol.h
-> > +++ b/tools/perf/util/symbol.h
-> > @@ -24,6 +24,7 @@ struct dso;
-> >  struct map;
-> >  struct maps;
-> >  struct option;
-> > +struct perf_env;
-> >  struct build_id;
-> >
-> >  /*
-> > @@ -41,6 +42,12 @@ Elf_Scn *elf_section_by_name(Elf *elf, GElf_Ehdr *ep,
-> >                              GElf_Shdr *shp, const char *name, size_t *idx);
-> >  #endif
-> >
-> > +enum symbol_idle_kind {
-> > +       SYMBOL_IDLE__UNKNOWN = 0,
-> > +       SYMBOL_IDLE__NOT_IDLE = 1,
-> > +       SYMBOL_IDLE__IDLE = 2,
-> > +};
-> > +
-> >  /**
-> >   * A symtab entry. When allocated this may be preceded by an annotation (see
-> >   * symbol__annotation) and/or a browser_index (see symbol__browser_index).
-> > @@ -56,8 +63,8 @@ struct symbol {
-> >         u8              type:4;
-> >         /** ELF binding type as defined for st_info. E.g. STB_WEAK or STB_GLOBAL. */
-> >         u8              binding:4;
-> > -       /** Set true for kernel symbols of idle routines. */
-> > -       u8              idle:1;
-> > +       /** Cache for symbol__is_idle. */
-> > +       enum symbol_idle_kind idle:2;
+This lazy MMU mode can be leveraged to build on the already existing
+infrastructure and implement a software-level lazy MMU mechanism,
+allowing expensive PTE invalidations on s390 to be batched.
 
-I'm curious if bitfields with different types (u8 and enum) can be
-placed consecutively bitwise.  There can be a lot of symbols so it
-could be a concern.
+Patch #2 is the actual s390 rework, while patch #1 is a prerequisite
+that affects the generic code. It was briefly communicated upstream
+and got some approvals:
 
-Thanks,
-Namhyung
+https://lore.kernel.org/linux-mm/d407a381-099b-4ec6-a20e-aeff4f3d750f@arm=
+.com/#t
+https://lore.kernel.org/linux-mm/852d6f8c-e167-4527-9dc9-98549124f6b1@red=
+hat.com/
 
+I am sending this as an RFC in the hope that I may have missed less
+obvious existing code paths or potential code changes that could
+further enable batching. Any ideas would be greatly appreciated!
 
-> >         /** Resolvable but tools ignore it (e.g. idle routines). */
-> >         u8              ignore:1;
-> >         /** Symbol for an inlined function. */
-> > @@ -184,8 +191,7 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss);
-> >
-> >  char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name);
-> >
-> > -void __symbols__insert(struct rb_root_cached *symbols, struct symbol *sym,
-> > -                      bool kernel);
-> > +void __symbols__insert(struct rb_root_cached *symbols, struct symbol *sym);
-> >  void symbols__insert(struct rb_root_cached *symbols, struct symbol *sym);
-> >  void symbols__fixup_duplicate(struct rb_root_cached *symbols);
-> >  void symbols__fixup_end(struct rb_root_cached *symbols, bool is_kallsyms);
-> > @@ -269,5 +275,6 @@ enum {
-> >  };
-> >
-> >  int symbol__validate_sym_arguments(void);
-> > +bool symbol__is_idle(struct symbol *sym, const struct dso *dso, const struct perf_env *env);
-> >
-> >  #endif /* __PERF_SYMBOL */
-> > --
-> > 2.53.0.473.g4a7958ca14-goog
-> >
+Thanks!
+
+Alexander Gordeev (2):
+  mm: make lazy MMU mode context-aware
+  s390/mm: Batch PTE updates in lazy MMU mode
+
+ arch/s390/Kconfig               |   8 +
+ arch/s390/include/asm/pgtable.h | 209 +++++++++++++++--
+ arch/s390/mm/Makefile           |   1 +
+ arch/s390/mm/ipte_batch.c       | 396 ++++++++++++++++++++++++++++++++
+ arch/s390/mm/pgtable.c          |   8 +-
+ fs/proc/task_mmu.c              |   2 +-
+ include/linux/pgtable.h         |  42 ++++
+ mm/madvise.c                    |   8 +-
+ mm/memory.c                     |   8 +-
+ mm/mprotect.c                   |   2 +-
+ mm/mremap.c                     |   2 +-
+ mm/vmalloc.c                    |   6 +-
+ 12 files changed, 659 insertions(+), 33 deletions(-)
+ create mode 100644 arch/s390/mm/ipte_batch.c
+
+--=20
+2.51.0
+
 
