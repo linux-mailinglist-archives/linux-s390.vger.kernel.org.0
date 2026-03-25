@@ -1,75 +1,75 @@
-Return-Path: <linux-s390+bounces-18112-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18108-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EN1qDD5PxGljyAQAu9opvQ
-	(envelope-from <linux-s390+bounces-18112-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 22:10:22 +0100
+	id IBTYKhRPxGljyAQAu9opvQ
+	(envelope-from <linux-s390+bounces-18108-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 22:09:40 +0100
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B78432C340
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 22:10:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 46AD232C324
+	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 22:09:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DE97330E8518
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 21:05:16 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 496EC30B4DAC
+	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 21:04:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EDB038F647;
-	Wed, 25 Mar 2026 21:02:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 390E433F59F;
+	Wed, 25 Mar 2026 21:02:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kwmfNCn2"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="N3P3FwoL"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A2432FA29;
-	Wed, 25 Mar 2026 21:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F36F33C51D;
+	Wed, 25 Mar 2026 21:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774472549; cv=none; b=bNrS/ThTNuoMkDWSbOASyQr69K9RhMNpi3uN1PQodHS44ypHdzK7goBEWlF7UZoUR+aYHi+llEAb2dJ2i9ufPCCUw+ZJ2RjW3ydhz0T2j+KL6SOF5ydCTihBOkvubk75XCCKjlJFp7abv9eI2b8eNIFyEeHJqpynXiGeS6UYt0Y=
+	t=1774472545; cv=none; b=qbVSRkjcNupujFeB4skbJsE14pU7oz28xZWKKXKFS+i5qVcEA9x19XI47Fnt5ZlOk8wauM9NX64CjRRmqwa4wMDv0N9baEV7Rj12vDbwqtpZJdR9lLhvPSdpIvVf9S3upF0cFagWYsMyl7+qF0AGApULVLh3v4TeFmaq2q2aLYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774472549; c=relaxed/simple;
-	bh=ZWgq5gmFkF1ib2CmNhxe/VmwrHzB9PgL6nHBhck+q2w=;
+	s=arc-20240116; t=1774472545; c=relaxed/simple;
+	bh=ZMYVh9y2crFkEKfAj0FsywjfRTFtIUhuX7Zg0+UGYQU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nti1dQoRvNxrbqQE5IwPPUDT1kUtEEtbTTKPyYSZ6wLgtYuBdIOiIV9/NvdHWT/u94aQQCjDzVfzNaRLgFp2iPK1UU4T102Yr5DFlpqPw+cJJtjYxaIR3J22Rq8tQoySQ6CDF+nFO6/s2tsZBJZdDdOnwhdlhGAok/jJ+goxHl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kwmfNCn2; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=HJtOSe31RA7cgd0dQA5hDtOhvHaAD8oEBkamowheCzK9RNEliT93RbWmWYWKeJkVgEGfGKG8+IXmB2ajcIpXcMmtqnKxRj4A1phuUEXSqxDnbfmIy5+RWzC+JkQzK9CVI4hqJmq6kaRSgL227v7sGOsz1tm7+hGQQOvL84SS7eU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=N3P3FwoL; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62PAbRUv657177;
-	Wed, 25 Mar 2026 21:02:15 GMT
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62PEipQ52664877;
+	Wed, 25 Mar 2026 21:02:16 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=qswCz1UpnVnJiDCZx
-	7upZEgt/WaJPR3f9D8fTs/6+uI=; b=kwmfNCn2JdA4AInKmozCifMeFCzCunFmd
-	i0i0KVnZscwDRsYOSNUDkELEn832YY9Kz4nAALs7RLI8EZQGMnxoPzfBsU3ouHEr
-	0K2irE3bvIBsNB4PljsGCkkKTMbrTaoIz6KV5TjXZcdnzjYx3XbAMrD6A22a4Xh8
-	66gOvLu1R9HcmNzKs2VS7RtotQ5mItqNaXq/D3IY/kbmi0L2EQTb4LiQie7uApf6
-	+oTMcQYmQcPSa68cvGkhlNrwfsakLH8vfwvApy7gBP2M83arlTHRGrw2ObEX9os9
-	El2c6zSEjN8I45nBLwPDxsM7seVxrptC8nSW2ZQt33v46ToDON42A==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d1kty2cbe-1
+	:mime-version:references:subject:to; s=pp1; bh=7Wy00jRlb5i4CubN2
+	2qDRIAndGEJ3vI0vn5+E5znbo8=; b=N3P3FwoLoFlGUO1+sJQB3aomC8MhqoCTQ
+	TZo3MBRqbv7NRqZobr1un26DOMnADTqvsVHbOXllt1tpyu5Tv1UteJ/dpTlr1Obx
+	rM+uOWevSEuT2tmilZPE/npKBYqR1xzsU9JsmPsi9XQpOLyRPoXDdSCB7Gkyrl4k
+	bs0wER1KAIxBqHo/yuMg/nkwfPhia4BQL+/qhOar/iHweMwcse2qiAuoaJVAw6mO
+	0/xI2i7rrVpxgaGZaPCsLQG7RTf8Z+UmJqH9fWD6TjAQKB1TYmo737Z+uoNWj4W4
+	c/g1Q/5cg1YI3tM9Gqz07Ju9Lvy6fogscg/7y+sCUlAgDcjWcpN/w==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d1ktv1hk5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Mar 2026 21:02:14 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62PKBGnE012213;
-	Wed, 25 Mar 2026 21:02:14 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4d27vk817s-1
+	Wed, 25 Mar 2026 21:02:16 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62PKw5uD004380;
+	Wed, 25 Mar 2026 21:02:15 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4d28c27yd7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Mar 2026 21:02:14 +0000
+	Wed, 25 Mar 2026 21:02:15 +0000
 Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62PL2CkH11207256
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62PL2DRV19399342
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 25 Mar 2026 21:02:12 GMT
+	Wed, 25 Mar 2026 21:02:14 GMT
 Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 82DF458052;
+	by IMSVA (Postfix) with ESMTP id 999C658068;
+	Wed, 25 Mar 2026 21:02:13 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A16C158056;
 	Wed, 25 Mar 2026 21:02:12 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8B2FF5805D;
-	Wed, 25 Mar 2026 21:02:11 +0000 (GMT)
 Received: from li-4c4c4544-004d-4810-8043-b7c04f423534.ibm.com.com (unknown [9.61.136.69])
 	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 25 Mar 2026 21:02:11 +0000 (GMT)
+	Wed, 25 Mar 2026 21:02:12 +0000 (GMT)
 From: Anthony Krowiak <akrowiak@linux.ibm.com>
 To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org
@@ -77,9 +77,9 @@ Cc: jjherne@linux.ibm.com, borntraeger@de.ibm.com, mjrosato@linux.ibm.com,
         pasic@linux.ibm.com, alex@shazbot.org, kwankhede@nvidia.com,
         fiuczy@linux.ibm.com, pbonzini@redhat.com, frankja@linux.ibm.com,
         imbrenda@linux.ibm.com
-Subject: [PATCH v1 19/24] s390/vfio-ap: Transition device migration state from STOP to RUNNING and vice versa
-Date: Wed, 25 Mar 2026 17:01:06 -0400
-Message-ID: <20260325210149.888028-20-akrowiak@linux.ibm.com>
+Subject: [PATCH v1 20/24] s390-vfio-ap: Callback to get the current vfio device migration state
+Date: Wed, 25 Mar 2026 17:01:07 -0400
+Message-ID: <20260325210149.888028-21-akrowiak@linux.ibm.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260325210149.888028-1-akrowiak@linux.ibm.com>
 References: <20260325210149.888028-1-akrowiak@linux.ibm.com>
@@ -91,26 +91,26 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=IqITsb/g c=1 sm=1 tr=0 ts=69c44d56 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+X-Proofpoint-ORIG-GUID: XrlngK-rxkO77sRrpwuaYZynZ4xQf7KL
+X-Authority-Analysis: v=2.4 cv=aMr9aL9m c=1 sm=1 tr=0 ts=69c44d58 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
  a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=YI3AHy_hWZklpQ5N57sA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzI1MDE0OSBTYWx0ZWRfXywJyEeAcBpGx
- 9Eadaszmxj0guwYSQjWsE+uMmiLBlBmL94Z0SHSgQHf2pMPW8iMesknOESbu1HjmqmlUZc89q4g
- aivNdbZRhPWzd1GlrkS30xgLgg39bsSiIHH1s9w+OUIEvXsDIXbp574Od/hVHOqAlDSp08cjqx1
- wzTfjEgTk8YXsYJntlq0fz75YMxVmBlH9SEXcNLJu8zJdRTgvT8fW3oGrb6cDCJGN34+EhcUAzU
- 0NQvkM13vi2mubJvvAhEewySMNeEt5dU6R0AY79+lkiOtqtp1uYwevUcOQ70bmOEDXtLvrQiN3B
- +uxQUOrn1Zz+ep7KXQ/ir0QXcPEp0MpClOCzF2plVXQfsYR+h9vrlC8bpW3psJzAOqCrbzNgH/S
- SjskK0Dk0D32xbz+oOhFe16GbSMldb2xlTlv3f4Vpapgd4oIX9oISfMwl2PB3CovrWxqbPGuTwO
- ibHtyIIy2hw5u8TkE5g==
-X-Proofpoint-GUID: tdCv9LbScMba0AP546GH4Q_aJ_-0vGFx
-X-Proofpoint-ORIG-GUID: tdCv9LbScMba0AP546GH4Q_aJ_-0vGFx
+ a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8 a=3m_Bk1FAMoj1bHXj4eYA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzI1MDE0OSBTYWx0ZWRfX1a3xCjX0EjGD
+ 2z8NS8fXwf9HzGn6Y8cihezc/ywBkCESEn+9KsZEa/b5iqOL7Ft2c9hrNZZWWkYsgUGo/cj26pY
+ e2K1j6SEvCINziiBqDdM429ZdOP9CHWxwi3q4D4EpS/HipyQ4NOISDl8vhUlBLzLZ5pSZ48yoLU
+ vUeS8UolX5yu1vmzNhvdTRXEpLeTtrUiH00B1u+EGNcrm5o6SdfqZchsY4Gk/rMCBnqgWHxlv4e
+ KgYJnPhHMUqxi9c5IPGa4AukofDTM3AhjnlSfGUKm+1g44IjPM2K8ty7UPW9AIu4yR9ivonGJmU
+ oDmU/NYQHTj/1OWZVLpmzQCacK8koQK1C7W6sfxfS93e0Eqydp3LiMWI4N0REhjtPcaLMhAFZ9j
+ JymxU2B2MqgFi3OgJVgOVMcUIeOC6TmspS9qEkOT2EIdXW0VcuXPbjHDaCMYxvEwFoMWxR26jVe
+ 3dy7cFMWZ+jt0vG3J6w==
+X-Proofpoint-GUID: XrlngK-rxkO77sRrpwuaYZynZ4xQf7KL
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-03-25_05,2026-03-24_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 clxscore=1015 spamscore=0 impostorscore=0 suspectscore=0
- phishscore=0 bulkscore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
+ spamscore=0 lowpriorityscore=0 adultscore=0 impostorscore=0 malwarescore=0
+ suspectscore=0 phishscore=0 priorityscore=1501 bulkscore=0 clxscore=1015
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603250149
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -123,7 +123,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18112-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18108-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	TO_DN_NONE(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -139,46 +139,48 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCPT_COUNT_TWELVE(0.00)[13];
 	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 8B78432C340
+X-Rspamd-Queue-Id: 46AD232C324
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The transition from STOP to RUNNING and vice versa indicates that
-the vfio device is operating normally and migration is not
-currently taking place. In this case, just set the new state and
-if there are any migrations files used to help facilitate migration
-hanging around, release them.
+Implements the callback that returns the current vfio device migration
+state during live migration of guests with pass-through access to
+AP devices.
+
+The function pointer for this callback is specified via the
+'migration_get_state' field of the 'vfio_migration_ops' structure
+which is stored with the VFIO device when the 'vfio_device'
+structure representing the mediated device is initialized.
 
 Signed-off-by: Anthony Krowiak <akrowiak@linux.ibm.com>
 ---
- drivers/s390/crypto/vfio_ap_migration.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/s390/crypto/vfio_ap_migration.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/s390/crypto/vfio_ap_migration.c b/drivers/s390/crypto/vfio_ap_migration.c
-index c6e01294be7f..750299fb1a84 100644
+index 750299fb1a84..305fd3221be1 100644
 --- a/drivers/s390/crypto/vfio_ap_migration.c
 +++ b/drivers/s390/crypto/vfio_ap_migration.c
-@@ -951,12 +951,18 @@ vfio_ap_transition_to_state(struct ap_matrix_mdev *matrix_mdev,
- 		return NULL;
- 	}
+@@ -1014,7 +1014,18 @@ static struct file *vfio_ap_set_state(struct vfio_device *vdev,
+ static int vfio_ap_get_state(struct vfio_device *vdev,
+ 			     enum vfio_device_mig_state  *current_state)
+ {
+-	return -EOPNOTSUPP;
++	struct ap_matrix_mdev *matrix_mdev;
++	struct vfio_ap_migration_data *mig_data;
++
++	mutex_lock(&matrix_dev->mdevs_lock);
++
++	matrix_mdev = container_of(vdev, struct ap_matrix_mdev, vdev);
++	mig_data =  matrix_mdev->mig_data;
++	*current_state = mig_data->mig_state;
++
++	mutex_unlock(&matrix_dev->mdevs_lock);
++
++	return 0;
+ }
  
-+	/*
-+	 * These states indicates migration has either not been initiated or
-+	 * has completed and the vfio-ap device is operating normally; so
-+	 * just set the new migration state. Just in case, release the
-+	 * migration files used to facilitate migration if any are hanging
-+	 * around.
-+	 */
- 	if ((cur_state == VFIO_DEVICE_STATE_STOP &&
- 	     new_state == VFIO_DEVICE_STATE_RUNNING) ||
- 	    (cur_state == VFIO_DEVICE_STATE_RUNNING &&
- 	     new_state == VFIO_DEVICE_STATE_STOP)) {
--		/* TODO */
--		return ERR_PTR(-EOPNOTSUPP);
-+		return NULL;
- 	}
- 
- 	/* vfio_mig_get_next_state() does not use arcs other than the above */
+ static int vfio_ap_get_data_size(struct vfio_device *vdev,
 -- 
 2.52.0
 
