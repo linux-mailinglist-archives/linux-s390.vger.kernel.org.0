@@ -1,75 +1,75 @@
-Return-Path: <linux-s390+bounces-18096-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18098-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4GqtIE9OxGljyAQAu9opvQ
-	(envelope-from <linux-s390+bounces-18096-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 22:06:23 +0100
+	id UM0yKLhOxGljyAQAu9opvQ
+	(envelope-from <linux-s390+bounces-18098-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 22:08:08 +0100
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7D8A32C21B
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 22:06:22 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FD4832C2C0
+	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 22:08:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 222C0311467F
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 21:02:21 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0478431384D4
+	for <lists+linux-s390@lfdr.de>; Wed, 25 Mar 2026 21:02:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2006F33C53D;
-	Wed, 25 Mar 2026 21:02:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7202D348463;
+	Wed, 25 Mar 2026 21:02:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WI7THO/+"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Tb8U/qsw"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662D232E128;
-	Wed, 25 Mar 2026 21:02:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE223358D6;
+	Wed, 25 Mar 2026 21:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774472529; cv=none; b=f1fIFDaUcUaYRRBp5rzb7E3jfoa81d1N+zW3C75vDSIfabKll6hPQtDj6EG+/PMaRzsxHhXXaE+87B3Rntj9+rOhupZjnQkSGGOREic7gcpKPth7QN9iLHbILgrCTmWSJR62F3JG8J4DLfiRes3DZdDF+ptc+N3Z8jdLn2IuJUQ=
+	t=1774472531; cv=none; b=OnjjFmgzU59pqpU+VfZcGIu0vi1B4hEs1/26XlnUBfDYydQ7m230pOpgMiLSqyO4y8AL9VNya7R8sQ/yL8cLs99NXr51rfaS8IFVJOQeUXHGB9UuoeZ9SR8HHTsay4lU+2CDLH0/K68ZhUx3awIXYUbr9vz3g1eYaoLcEiceCdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774472529; c=relaxed/simple;
-	bh=wZZ6KGzcPw+tHfeTLVFF8Jj1c8LFpuNuGM9I8tNuD+o=;
+	s=arc-20240116; t=1774472531; c=relaxed/simple;
+	bh=Qv4p7AyHFLvqFpaNj2gh19V8Lp6RSO+suHmyJvAO7d0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eTKh8Jxc+bvtqapdcp2BP1fr3DDMq9j0Go+U7Q0St1xyk7AK3ZUi0ybHvrZBz1ZwNL9kD7Lk4Q4P042MDgQlyv9VPrw8MzSc12J7+Xk05j4JK4YVWo4wfiFT3gLsjaPlRvvdMHizGJ8XIGPbb3g6vo/eH4PIfN/F1ff0vJ05tlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WI7THO/+; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=n2X6Pqyjd/CtxAXOZceIeTe9r5aeVlZN795EBE8halVlHbaJ7SxIy4VgB1lC5G9kSFzYve4COI9pmZUJpEcILRgn6knAsCc3cSgKrU9Q2+Ie9TmLlPmZu8A/A6zD4Qaeu8vSAchOa0Evq2y/q4548xzHQF0ud8CEEKOjhP/rGag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Tb8U/qsw; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62PCe3V11172616;
-	Wed, 25 Mar 2026 21:02:03 GMT
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62PFj5fg2969041;
+	Wed, 25 Mar 2026 21:02:04 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=dPenDZePWoPZJANVB
-	mvb4TFVdmepbA62uWGzQ/5qRO8=; b=WI7THO/++Ej8VAl8SsPjX9kGLqaiFTxTS
-	V8olcxZ+5S5YczaxN5aBS6tv8FlMLH8Mm0KvAsQMtMVKBYan/11LLy2Hm99VI253
-	T3C5jDJIRBKUQZZgiruSymndYEnni6Z2TNT9CUwpLjVX0fg7G5jGLh8Ro/KHrrD7
-	qEjPuoTLX9cai9jkP2Aqr5BWi5C7bucyIsftmjAgMb/Fil9xN4OOg/xT6ehveRC3
-	FWWats7052xHZbGV0mSuwIJiOXd104N+od8H4/2Sr2quIBlYCSTJHx1+emddvOBL
-	rDIDWxTb093Zr21X8kTYYmsrId0sfG2fOXZ16Fu4KGXJAOREZx1Pg==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d1kumsjre-1
+	:mime-version:references:subject:to; s=pp1; bh=TYIEND5dhh+b75WgB
+	e8kOpp81wHwKnGDTtTxcUzNu5M=; b=Tb8U/qswBvWnDzA2YbxWQhi4HiMuMl7EQ
+	h0agn5iAz/6HRi02eAGgkybJPygrsApp1nBJNyR8eNbM6Jm6sGplfcx7IFIUz2va
+	B/Lkn4FLBfwEArblGZfU8qrLjILLKIXVN/vG0uv6bYhqzQJicUHfIcllLjkm5nhp
+	FOCRhrFlg3Su1bQzSk+XQphwrXcN2rFKNS+08R+pi2OIL1PMC7gE8CX7uKWODZo8
+	j5dHap2hyKmyHJr0psto2T4nC+MnkskFnI1DU5+g8bm3w8Hi2rAVJl/fuJUGys4T
+	QTPHuhk3Do9izvuToRSQ2e900qJBVyyYY5mej9K31GR8cUq7+LFPw==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d1kty2car-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Mar 2026 21:02:02 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62PJ6cSo005996;
-	Wed, 25 Mar 2026 21:02:02 GMT
-Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4d261yratm-1
+	Wed, 25 Mar 2026 21:02:04 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62PKC8F7026900;
+	Wed, 25 Mar 2026 21:02:03 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4d275m0532-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Mar 2026 21:02:02 +0000
+	Wed, 25 Mar 2026 21:02:03 +0000
 Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62PL20JD29098534
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62PL21QW29098580
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 25 Mar 2026 21:02:00 GMT
+	Wed, 25 Mar 2026 21:02:01 GMT
 Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 58FF35805D;
+	by IMSVA (Postfix) with ESMTP id 6F66058067;
+	Wed, 25 Mar 2026 21:02:01 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 772A858056;
 	Wed, 25 Mar 2026 21:02:00 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 61B6C58056;
-	Wed, 25 Mar 2026 21:01:59 +0000 (GMT)
 Received: from li-4c4c4544-004d-4810-8043-b7c04f423534.ibm.com.com (unknown [9.61.136.69])
 	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 25 Mar 2026 21:01:59 +0000 (GMT)
+	Wed, 25 Mar 2026 21:02:00 +0000 (GMT)
 From: Anthony Krowiak <akrowiak@linux.ibm.com>
 To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org
@@ -77,9 +77,9 @@ Cc: jjherne@linux.ibm.com, borntraeger@de.ibm.com, mjrosato@linux.ibm.com,
         pasic@linux.ibm.com, alex@shazbot.org, kwankhede@nvidia.com,
         fiuczy@linux.ibm.com, pbonzini@redhat.com, frankja@linux.ibm.com,
         imbrenda@linux.ibm.com
-Subject: [PATCH v1 08/24] s390/vfio-ap: Signal event to enable/disable live guest migration
-Date: Wed, 25 Mar 2026 17:00:55 -0400
-Message-ID: <20260325210149.888028-9-akrowiak@linux.ibm.com>
+Subject: [PATCH v1 09/24] s390/vfio-ap: Return value of sysfs migratable attribute from VFIO_DEVICE_GET_INFO ioctl
+Date: Wed, 25 Mar 2026 17:00:56 -0400
+Message-ID: <20260325210149.888028-10-akrowiak@linux.ibm.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260325210149.888028-1-akrowiak@linux.ibm.com>
 References: <20260325210149.888028-1-akrowiak@linux.ibm.com>
@@ -91,26 +91,26 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: kvuHsxsrUrf8M_oJxTVwEa87_L8YU9xf
-X-Proofpoint-ORIG-GUID: kvuHsxsrUrf8M_oJxTVwEa87_L8YU9xf
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzI1MDE0OSBTYWx0ZWRfX0tK457Lgq8W1
- oXSmFszGoWw3UrkdVAMwOZd4iUSNEvWWSiSvtzEphWqhx0lRauf+yD6CU5g+V/nR1KzQ0QOMKy+
- 8fVMeGxiiK3toS6zGMDS//9ZROkgnxn9nfBjT4PYKoIFi5zgR91CD5u/zyJB216DskUJGB1ajgI
- BjPLbo1I2SfYGuZjxlEGyJobuGFPWlgDOROiirLbuUT/NtbFInHB5idYcnrIFXLEuC5LSKIv3Oo
- btVwctKE1A1/Q3Vf+nDrx/YPe0QOvz4lN3Bu5W6ybDF3VzRWFNxTFJnbsNUj78MBNz06DO5iJ4+
- sK0tfigosI/gZ9V5LV2UNrVE3V1ovGa8KD8coDnrRAmtgfbZn30OfC418XzNWHhwKtcjG/C6wRg
- IB/fOpy6SCbEMHzGuPLLbB1Hjr6GkgHwMryNaMl0RmgaANn7iIlBkZTI/ukc3odeSHM79mTS0t0
- uOUP1YGPmy1ctGth6fA==
-X-Authority-Analysis: v=2.4 cv=KbXfcAYD c=1 sm=1 tr=0 ts=69c44d4a cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+X-Authority-Analysis: v=2.4 cv=IqITsb/g c=1 sm=1 tr=0 ts=69c44d4c cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
  a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8 a=gJh2Cn48l-pVlJ6rztwA:9
+ a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=boy5AC6DYhcG1jmkY4oA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzI1MDE0OSBTYWx0ZWRfX+Wc75xC/U0Dq
+ wncv9JCyx09NDpkTe5C0f/QRml6PkWlP39KlqgmN8d9knX3cElNeeeSBN89hIOve0QbQK4ScZ1i
+ uTK443ubuEXs7Jj8RiZkrW6H2rfHxeMXaFhNbxk4t6M1CppzqPN0wpRdFQd9z0jyT35Mby79/C/
+ Q06TOFn6ZKIpI4U+RjGdk3SXJVDFzAk2/oglFPalM3UfRzxCRMvXF/XJ3AMAq/k8oQ+kkVXfbKO
+ wYvUH21WcLpKJHxsTHYJIj65zk8BTyAEiAKBjySPHcy+OctQe5DLbWdbUfKl+KKiQ6AyJBjEqcm
+ tJM0g2AM50lw0uyoZnQMUi7aI7B99+aMQW3iMKDNlciwOpGhcZjdxuGXNKwz511l7PkyQzYUPXi
+ MN1g+lp8uqvuJ36FPAaJFw3JlBcX+GAwbHoBOdB2j7/oFjlKdvoFiHkx1uCJeSUoYsUiCc+0IVt
+ 2iGPtiQGes5PU1DX+Ug==
+X-Proofpoint-GUID: rOYcLK78lB5YvXxe5cnRRr9Xs7Q-DS3o
+X-Proofpoint-ORIG-GUID: rOYcLK78lB5YvXxe5cnRRr9Xs7Q-DS3o
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-03-25_05,2026-03-24_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 impostorscore=0 malwarescore=0 adultscore=0 clxscore=1015
- priorityscore=1501 bulkscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
+ malwarescore=0 clxscore=1015 spamscore=0 impostorscore=0 suspectscore=0
+ phishscore=0 bulkscore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603250149
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -118,12 +118,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18096-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18098-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	TO_DN_NONE(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -136,188 +136,134 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.ibm.com:mid];
 	DKIM_TRACE(0.00)[ibm.com:+];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCPT_COUNT_TWELVE(0.00)[13];
 	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: E7D8A32C21B
+X-Rspamd-Queue-Id: 0FD4832C2C0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Defines two new eventfd contexts for signaling userspace to enable and
-disable vfio device migration. The IRQ indexes defined for these events are
-defined in an enum in the include/uapi/linux/vfio.h header file:
-
-VFIO_AP_ENABLE_MIG_IRQ_INDEX:  enable vfio device migration
-VFIO_AP_DISABLE_MIG_IRQ_INDEX: disable vfio device migration
-
-Information about those IRQs can be retrieved from userspace via the
-VFIO_DEVICE_GET_IRQ_INFO ioctl. These events are initialized by the vfio_ap
-device driver via the in response to the VFIO_DEVICE_SET_IRQ_INFO ioctl.
-The eventfd for these IRQs will be signaled whenever the sysfs migratable
-attribute of the mediated device is changed.
+Extends the 'vfio_device_info' object passed to the VFIO_DEVICE_GET_INFO
+ioctl to include a vfio device capability specifying the value of the
+mdev's sysfs 'migratable' attribute. This value may be used to enable or
+block live guest migration when the vfio device is realized in userspace.
 
 Signed-off-by: Anthony Krowiak <akrowiak@linux.ibm.com>
 ---
- drivers/s390/crypto/vfio_ap_ops.c     | 70 +++++++++++++++++++++++++--
- drivers/s390/crypto/vfio_ap_private.h |  6 +++
- include/uapi/linux/vfio.h             |  2 +
- 3 files changed, 75 insertions(+), 3 deletions(-)
+ drivers/s390/crypto/vfio_ap_ops.c | 75 ++++++++++++++++++++++++++++++-
+ 1 file changed, 73 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 97ec1f2fdbd1..213832263dc9 100644
+index 213832263dc9..d487628027c7 100644
 --- a/drivers/s390/crypto/vfio_ap_ops.c
 +++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -658,6 +658,18 @@ static void signal_guest_ap_cfg_changed(struct ap_matrix_mdev *matrix_mdev)
- 		eventfd_signal(matrix_mdev->cfg_chg_trigger);
+@@ -19,6 +19,7 @@
+ #include <linux/uuid.h>
+ #include <asm/kvm.h>
+ #include <asm/zcrypt.h>
++#include <uapi/linux/vfio_ap.h>
+ 
+ #include "vfio_ap_private.h"
+ #include "vfio_ap_debug.h"
+@@ -2183,11 +2184,75 @@ int vfio_ap_mdev_get_num_queues(struct ap_matrix *ap_matrix)
+ 	return num_queues;
  }
  
-+static void signal_enable_migration(struct ap_matrix_mdev *matrix_mdev)
-+{
-+	if (matrix_mdev->enable_mig_trigger)
-+		eventfd_signal(matrix_mdev->enable_mig_trigger);
-+}
-+
-+static void signal_disable_migration(struct ap_matrix_mdev *matrix_mdev)
-+{
-+	if (matrix_mdev->disable_mig_trigger)
-+		eventfd_signal(matrix_mdev->disable_mig_trigger);
-+}
-+
- static void vfio_ap_mdev_update_guest_apcb(struct ap_matrix_mdev *matrix_mdev)
+-static int vfio_ap_mdev_get_device_info(unsigned long arg)
++static int vfio_ap_add_caps_to_dev_info(struct vfio_device_info *dev_info,
++					unsigned long arg,
++					struct vfio_info_cap *caps)
  {
- 	if (matrix_mdev->kvm) {
-@@ -805,6 +817,8 @@ static int vfio_ap_mdev_probe(struct mdev_device *mdev)
- 	matrix_mdev->req_trigger = NULL;
- 	matrix_mdev->cfg_chg_trigger = NULL;
- 	matrix_mdev->migratable = VFIO_AP_DEVICE_MIGRATABLE_DEFAULT;
-+	matrix_mdev->enable_mig_trigger = NULL;
-+	matrix_mdev->disable_mig_trigger = NULL;
- 	dev_set_drvdata(&mdev->dev, matrix_mdev);
- 	mutex_lock(&matrix_dev->mdevs_lock);
- 	list_add(&matrix_mdev->node, &matrix_dev->mdev_list);
-@@ -1821,7 +1835,18 @@ static ssize_t migratable_store(struct device *dev, struct device_attribute *att
- 		goto out_unlock;
- 	}
- 
-+	if (matrix_mdev->migratable == migratable) {
-+		ret = count;
-+		goto out_unlock;
-+	}
++	lockdep_assert_held(&matrix_dev->mdevs_lock);
 +
- 	matrix_mdev->migratable = migratable;
++	if (caps->size) {
++		dev_info->flags |= VFIO_DEVICE_FLAGS_CAPS;
++		if (dev_info->argsz < sizeof(*dev_info) + caps->size) {
++			dev_info->argsz = sizeof(*dev_info) + caps->size;
++		} else {
++			vfio_info_cap_shift(caps, sizeof(*dev_info));
 +
-+	if (matrix_mdev->migratable)
-+		signal_enable_migration(matrix_mdev);
-+	else
-+		signal_disable_migration(matrix_mdev);
++			if (copy_to_user((void __user *)arg + sizeof(*dev_info),
++					 caps->buf, caps->size)) {
++				kfree(caps->buf);
++				return -EFAULT;
++			}
 +
- 	ret = count;
- out_unlock:
- 	mutex_unlock(&matrix_dev->mdevs_lock);
-@@ -2193,10 +2218,9 @@ static ssize_t vfio_ap_get_irq_info(unsigned long arg)
- 
- 	switch (info.index) {
- 	case VFIO_AP_REQ_IRQ_INDEX:
--		info.count = 1;
--		info.flags = VFIO_IRQ_INFO_EVENTFD;
--		break;
- 	case VFIO_AP_CFG_CHG_IRQ_INDEX:
-+	case VFIO_AP_ENABLE_MIG_IRQ_INDEX:
-+	case VFIO_AP_DISABLE_MIG_IRQ_INDEX:
- 		info.count = 1;
- 		info.flags = VFIO_IRQ_INFO_EVENTFD;
- 		break;
-@@ -2296,6 +2320,40 @@ static int vfio_ap_set_cfg_change_irq(struct ap_matrix_mdev *matrix_mdev, unsign
- 	return 0;
- }
- 
-+static int vfio_ap_set_mig_irq(struct eventfd_ctx **mig_trigger,
-+			       unsigned long arg)
-+{
-+	s32 fd;
-+	void __user *data;
-+	unsigned long minsz;
-+	struct eventfd_ctx *mig_ctx;
++			dev_info->cap_offset = sizeof(*dev_info);
++		}
 +
-+	minsz = offsetofend(struct vfio_irq_set, count);
-+	data = (void __user *)(arg + minsz);
-+
-+	if (get_user(fd, (s32 __user *)data))
-+		return -EFAULT;
-+
-+	if (fd == -1) {
-+		if (*mig_trigger)
-+			eventfd_ctx_put(*mig_trigger);
-+		*mig_trigger = NULL;
-+	} else if (fd >= 0) {
-+		mig_ctx = eventfd_ctx_fdget(fd);
-+		if (IS_ERR(mig_ctx))
-+			return PTR_ERR(mig_ctx);
-+
-+		if (*mig_trigger)
-+			eventfd_ctx_put(*mig_trigger);
-+
-+		*mig_trigger = mig_ctx;
-+	} else {
-+		return -EINVAL;
++		kfree(caps->buf);
 +	}
 +
 +	return 0;
 +}
 +
- static int vfio_ap_set_irqs(struct ap_matrix_mdev *matrix_mdev,
- 			    unsigned long arg)
- {
-@@ -2313,6 +2371,12 @@ static int vfio_ap_set_irqs(struct ap_matrix_mdev *matrix_mdev,
- 			return vfio_ap_set_request_irq(matrix_mdev, arg);
- 		case VFIO_AP_CFG_CHG_IRQ_INDEX:
- 			return vfio_ap_set_cfg_change_irq(matrix_mdev, arg);
-+		case VFIO_AP_ENABLE_MIG_IRQ_INDEX:
-+			return vfio_ap_set_mig_irq(&matrix_mdev->enable_mig_trigger,
-+						   arg);
-+		case VFIO_AP_DISABLE_MIG_IRQ_INDEX:
-+			return vfio_ap_set_mig_irq(&matrix_mdev->disable_mig_trigger,
-+						   arg);
- 		default:
- 			return -EINVAL;
- 		}
-diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
-index b75299c9c1d0..514de4a73678 100644
---- a/drivers/s390/crypto/vfio_ap_private.h
-+++ b/drivers/s390/crypto/vfio_ap_private.h
-@@ -108,6 +108,10 @@ struct ap_queue_table {
-  *		migrated (1) or not (0)
-  * @req_trigger eventfd ctx for signaling userspace to return a device
-  * @cfg_chg_trigger eventfd ctx to signal AP config changed to userspace
-+ * @enable_mig_trigger:  eventfd ctx to signal userspace to enable vfio device
-+ *			 migration
-+ * @disable_mig_trigger: eventfd ctx to signal userspace to disable vfio device
-+ *			 migration
-  * @apm_add:	bitmap of APIDs added to the host's AP configuration
-  * @aqm_add:	bitmap of APQIs added to the host's AP configuration
-  * @adm_add:	bitmap of control domain numbers added to the host's AP
-@@ -125,6 +129,8 @@ struct ap_matrix_mdev {
- 	int    migratable;
- 	struct eventfd_ctx *req_trigger;
- 	struct eventfd_ctx *cfg_chg_trigger;
-+	struct eventfd_ctx *enable_mig_trigger;
-+	struct eventfd_ctx *disable_mig_trigger;
- 	DECLARE_BITMAP(apm_add, AP_DEVICES);
- 	DECLARE_BITMAP(aqm_add, AP_DOMAINS);
- 	DECLARE_BITMAP(adm_add, AP_DOMAINS);
-diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-index bb7b89330d35..c661b8b22ead 100644
---- a/include/uapi/linux/vfio.h
-+++ b/include/uapi/linux/vfio.h
-@@ -673,6 +673,8 @@ enum {
- enum {
- 	VFIO_AP_REQ_IRQ_INDEX,
- 	VFIO_AP_CFG_CHG_IRQ_INDEX,
-+	VFIO_AP_ENABLE_MIG_IRQ_INDEX,
-+	VFIO_AP_DISABLE_MIG_IRQ_INDEX,
- 	VFIO_AP_NUM_IRQS
- };
++static int vfio_ap_add_attrs_cap_to_caps(struct ap_matrix_mdev *matrix_mdev,
++					 struct vfio_info_cap *caps)
++{
++	struct vfio_device_info_cap_ap_attrs cap;
++
++	lockdep_assert_held(matrix_dev->mdevs_lock);
++	cap.migratable = matrix_mdev->migratable;
++	cap.header.id = VFIO_DEVINFO_CAP_AP_ATTRS_ID;
++	cap.header.version = VFIO_DEVINFO_CAP_AP_ATTRS_VERSION;
++
++	return vfio_info_add_capability(caps, &cap.header, sizeof(cap));
++}
++
++static int vfio_ap_add_caps(struct ap_matrix_mdev *matrix_mdev,
++			    unsigned long arg,
++			    struct vfio_device_info *dev_info)
++{
++	struct vfio_info_cap caps = { .buf = NULL, .size = 0 };
++	int ret = 0;
++
++	lockdep_assert_held(&matrix_dev->mdevs_lock);
++
++	ret = vfio_ap_add_attrs_cap_to_caps(matrix_mdev, &caps);
++	if (ret)
++		return ret;
++
++	ret = vfio_ap_add_caps_to_dev_info(dev_info, arg, &caps);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int vfio_ap_mdev_get_device_info(struct ap_matrix_mdev *matrix_mdev,
++					unsigned long arg)
++{
++	int ret;
+ 	unsigned long minsz;
+ 	struct vfio_device_info info;
  
++	lockdep_assert_held(&matrix_dev->mdevs_lock);
+ 	minsz = offsetofend(struct vfio_device_info, num_irqs);
+ 
+ 	if (copy_from_user(&info, (void __user *)arg, minsz))
+@@ -2200,6 +2265,12 @@ static int vfio_ap_mdev_get_device_info(unsigned long arg)
+ 	info.num_regions = 0;
+ 	info.num_irqs = VFIO_AP_NUM_IRQS;
+ 
++	ret = vfio_ap_add_caps(matrix_mdev, arg, &info);
++	if (ret)
++		return ret;
++
++	minsz = min_t(size_t, info.argsz, sizeof(info));
++
+ 	return copy_to_user((void __user *)arg, &info, minsz) ? -EFAULT : 0;
+ }
+ 
+@@ -2395,7 +2466,7 @@ static ssize_t vfio_ap_mdev_ioctl(struct vfio_device *vdev,
+ 	mutex_lock(&matrix_dev->mdevs_lock);
+ 	switch (cmd) {
+ 	case VFIO_DEVICE_GET_INFO:
+-		ret = vfio_ap_mdev_get_device_info(arg);
++		ret = vfio_ap_mdev_get_device_info(matrix_mdev, arg);
+ 		break;
+ 	case VFIO_DEVICE_RESET:
+ 		ret = vfio_ap_mdev_reset_queues(matrix_mdev);
 -- 
 2.52.0
 
