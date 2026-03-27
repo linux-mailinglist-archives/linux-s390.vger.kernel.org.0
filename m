@@ -1,167 +1,174 @@
-Return-Path: <linux-s390+bounces-18263-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18265-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YFc4Gu++xmnoNwUAu9opvQ
-	(envelope-from <linux-s390+bounces-18263-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 27 Mar 2026 18:31:27 +0100
+	id MCh6FBLBxmm8OQUAu9opvQ
+	(envelope-from <linux-s390+bounces-18265-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 27 Mar 2026 18:40:34 +0100
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C09293485FB
-	for <lists+linux-s390@lfdr.de>; Fri, 27 Mar 2026 18:31:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A3BA334882F
+	for <lists+linux-s390@lfdr.de>; Fri, 27 Mar 2026 18:40:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3029530B141F
-	for <lists+linux-s390@lfdr.de>; Fri, 27 Mar 2026 17:24:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1E761313A9AA
+	for <lists+linux-s390@lfdr.de>; Fri, 27 Mar 2026 17:32:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B9663E6DF1;
-	Fri, 27 Mar 2026 17:24:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 030AE3FB7DA;
+	Fri, 27 Mar 2026 17:32:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mttds8zr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vM1DOUFg"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA68A3DEAC0;
-	Fri, 27 Mar 2026 17:24:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774632265; cv=none; b=Fr+OChdDw9Xh+8/RivE4ylOADHaB5zEZfIrzMtvHZPDTHgBcV3KJ1nDDabObHkZX2B9uSkCi/YAeCI99UIELxWmwXpsOnApD8m5W0sbXQCTBL7xBZrXEOqTbyX5mWXeKia2EOHHQJMoujpRut+EMXJiw4J2iSSo6Av5PbNgLX1E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774632265; c=relaxed/simple;
-	bh=gTtjGwzSChsLL9Od7n/9UFgIXBsiTV+PnVqaWgbAtH4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K2mqijCz9sHTX3NZtI0WD1Y/TdtRDtCZoWjBy6aopd0+b9p6lKP7cZLTZSUswL6BJ0K7caflb2wYIZ1GDyh4QwJCrZ5oUoNeXs6HV/GYmEgy54bFvX1Wt5FoXS91Xqf8DtlGDKfwQwT/lTLyoAaPudiHqr8xDaGdV7hw2ATCkJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mttds8zr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15EDEC2BC9E;
-	Fri, 27 Mar 2026 17:24:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774632265;
-	bh=gTtjGwzSChsLL9Od7n/9UFgIXBsiTV+PnVqaWgbAtH4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mttds8zrEN0sWll98lr8NoQsL/6553+pOoxQlRvhTRUVNJDAzECvyiaszsTrvSmLj
-	 amNBs9+0x9Fam4wTkNBEmkkCnrnuMxhdaa+A0AaiOrrEPkKAAB1LRtxzpV6plCGt2g
-	 rZU6fZxDcOruZxgvFPu86KDN+eE5Kh2E6ZK1N/D4uAbagzT2FvgJsurNcEiaKQBjOF
-	 BBpPJoOlyHWHdXNuejF5z7LNhGrmrLVBY+RLBpwbRtLMzk7q3Vn7cRcTzB3Jx0cR73
-	 Vtho9zWkDDuAub75p07nwAO3phn7ZwOqEt89TMGx3BhZSgJe/rWb4+j0CKNUO96WeE
-	 Eu7YetdJZPQHA==
-Date: Fri, 27 Mar 2026 17:24:23 +0000
-From: Eric Biggers <ebiggers@kernel.org>
-To: Simon Richter <Simon.Richter@hogyros.de>
-Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	linux-crypto@vger.kernel.org,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, x86@kernel.org,
-	Harald Freudenberger <freude@linux.ibm.com>,
-	Holger Dengler <dengler@linux.ibm.com>
-Subject: Re: [PATCH 0/3] crypto: Remove arch-optimized des and des3_ede code
-Message-ID: <20260327172423.GA3407398@google.com>
-References: <20260326201246.57544-1-ebiggers@kernel.org>
- <0982d4341f58e2f1181bc472dc9c9d8542148e3c.camel@physik.fu-berlin.de>
- <20260326202733.GA2657@quark>
- <35e00d0f-85f6-457a-99b4-703caf3e1e6e@hogyros.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961403FA5D8
+	for <linux-s390@vger.kernel.org>; Fri, 27 Mar 2026 17:32:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.178
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774632761; cv=pass; b=IS/dYpDTvZZ6Z57UBzm/wbpRDRmbSD9ndBLor0Rff9NlTtvFIOxyCeWrmizs6ePxLj3Yd9+I5zE9EsBUx3DgwCAkD63YIERP5rPJIlplhxh0pVg/5ITtrIa2E/UQX6SbANKtqdPg1u45av9zmPJ11srPs7FR/ct1NUUldpeTuHA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774632761; c=relaxed/simple;
+	bh=xn4jfIlqJ8j0SglUOPqzBzIxBo2F6zmgVlZu4AmYgAs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lByUYNFOqbeMje5xvjb3sW2fJlCuYy9Duqjsh+hj1zIvOyoG0GHL1lH5C3DQN47tSImK77l3Qoyn9dBQiNbfRCUa4KUNyUZT+Q2yhJ77+ykyobGrC/4qgZcFceuKR7nFP2l/BVNc4ALIVP+TaaHDWRwbtsVbNaLx3Oh/7Aqvkek=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vM1DOUFg; arc=pass smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-509062d829dso32891cf.1
+        for <linux-s390@vger.kernel.org>; Fri, 27 Mar 2026 10:32:40 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774632759; cv=none;
+        d=google.com; s=arc-20240605;
+        b=OBsl8cvceYMx0IrRW6yDXdu2nTwTATAiDmifeRHt5Oc1czHLiAidY80wSiKoFCRvXg
+         pPxGW9J9qVGWxv0sdNzhFwcLxt4TN6nTLLaGPf5gZay5So+/ZWxkvJosunxxkDq92hKg
+         aUE5q+07VNlqdzYXQ24vSL9VIO2tfCGL2SClLdgGA0JgkJih0Ry8QX1+BFYt/I4XxWNT
+         7h7t7guX2taJPENjTkaZpAHSodbywGQzISNSeRvFDLqJRrepUQ4/V/ucn673YlU7sOHP
+         GWdOWRdhMTZUx3s9R45IdY8vTekYaXKsKQz/a7tTIjOJeJV3XhMXwxOuS4DWb0BURURe
+         N49w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=xn4jfIlqJ8j0SglUOPqzBzIxBo2F6zmgVlZu4AmYgAs=;
+        fh=KAgMAr+kCfi+GXiAfI+JnKomZLE0sBpR/NRFfMRWun8=;
+        b=UxpI3HBJECFQk5IndPV0//AbQO6HzFkjzSY4V+VodNwmo3Ag/dC4XEzwnnAgx6eYm6
+         oWYbpG1xgRfFzXjrefP3/NLJRKA1jLHpKh/yCY/U2X22Qlf0ih16IeWh6GyNMSW50t/d
+         5iJpksrCahmy5WoznQp56YUkBiKxO+UPiKERsBij9ESwkhvyUbXeh/5OrlXhpOxKykG0
+         sh41sJg6G9lDj7VQAyoTROu5bMm7UkYH+RxQM6ck/K05rteBQDZOAv0SzYfLwu5E79Qc
+         cA/jOZcQwh/ySmxok6/gMh1Yx/r/92k3HRa7QG9ApaeIkgsIyfvMMycd+bz7tZ9p8kzP
+         gyQA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1774632759; x=1775237559; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xn4jfIlqJ8j0SglUOPqzBzIxBo2F6zmgVlZu4AmYgAs=;
+        b=vM1DOUFgxvUQcPEgb0q3du0IcadHXlhcgmuFmYJBSFYqjoHI6Ok0t15jST7697ES+f
+         GVFO/6niFoCnqPPvWA+n/tYB3xBi2mx0oXD3cYBOui/tgLxhLYgP5/JdrP8mbxKXKnbG
+         pY28y/YFlRpUInPQ47UUZd9fL/DB64HYyrc7qZBRcLLZeY7M6Pvz6UHQVhNo9zHgJik5
+         H9/GeDLUeox+AIWeyv6BDn14XS/3ZtLKThh4zCGXxo+rCWI1QPBCoe1nGzSyfg8ZXsZn
+         EjeiRzwCsIvgjUfVa4K7LP2qWArHEFsWPppuPiUyP6jZdg4eDZJ1eDB+u+nYYdOyVqOA
+         Hk5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774632759; x=1775237559;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=xn4jfIlqJ8j0SglUOPqzBzIxBo2F6zmgVlZu4AmYgAs=;
+        b=T5KzpOo0e4u5Kr1UPlNOZu2qAapF5z6Zd1ttwKTla8P6pYAKMfEI+H6qSU5lJyrikJ
+         yu9F3JnS36Dkx6VMdQVtboEaFent9hVeCqYq3kg0wisC0O3TXRym4CbVdUqnJ4pJsxih
+         Nkr14/ckz2fhgxoM5H8ZzrVl0YbNaheuCjRJS5HGoJcFDiXUMi2ygvtz68r/v5dgT1Yn
+         N0o77icgdydHM2RdfsIwCvgTPTnJInL2mNnVgZpg2eQbu90hNGtBqCKUrbijXkh5g6OC
+         vXBOpsYfEPD+tpsfaae//9PiJT3LgyBrwkbTv51oexHrdc+bKqQuG0ZMXsxRACvQiAmF
+         zY8g==
+X-Forwarded-Encrypted: i=1; AJvYcCXkvi1YCMFE8X0ZTOkNEDV9f/R7hCSv1Rk3DChEY67BpVHdT4LjGNwGj+3Zqy09xl42vDcEmcsP4hKk@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCflUEnFRgOPCWoCHkt0sdmE+nyPtGXDPhYDUmrzrd61/vOXBR
+	S/3NeDzS8eUFbO82xyyMIsItjIaBTWL+/4w5OCvHwZBpgM7UZF4MSlbqWlE9yERbkmq2ug3hk+8
+	i0a2PwsfJVTaHSG4UJB8ikjmpi3NUhPG6cwxK7sGo
+X-Gm-Gg: ATEYQzzytR0qWO+bNOC6DRgdxRrTXTcxouKycFSFggIWGhS+WmNppk3vAtUcSj6U0d+
+	KEzmH6nZIJjF/895AkcyHsEE58VS040ENYEZEG8T/dQtAbkoYsWigjuOCqN2FW+LveRqzVaJQcN
+	cvtHrmy0H1t2BAxkc+xolv2UGYWaY0haQC4XWqyQBpw4bU0yXqDAw0xIvqySFGICfNy+7f8NInJ
+	XuLx8AjDDsEXXXT7QQEWGe44cPaeC44ZIiA4TzsXErYoYoQU/5J6HcGsHSrDCy6dVDO84QyVngw
+	CeRks3mPTCMh1tCJN2VrHVNKoo1CKd9RCtKD
+X-Received: by 2002:a05:622a:8c05:b0:503:4bc:c925 with SMTP id
+ d75a77b69052e-50bb292f320mr200991cf.13.1774632758893; Fri, 27 Mar 2026
+ 10:32:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <35e00d0f-85f6-457a-99b4-703caf3e1e6e@hogyros.de>
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+References: <20260326080836.695207-1-surenb@google.com> <20260327094738.7150efc3b0619e6ccf095c23@linux-foundation.org>
+ <20260327100322.b539f1a9f3662a0a4c080cce@linux-foundation.org>
+In-Reply-To: <20260327100322.b539f1a9f3662a0a4c080cce@linux-foundation.org>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Fri, 27 Mar 2026 10:32:27 -0700
+X-Gm-Features: AQROBzCNRgKBqW9q5PX49UYqB837bDipJe3mVx90Rrm9LZ-wrkWrRewJtwtbwBQ
+Message-ID: <CAJuCfpFxZsnZqqfoKXX=JEBrBaqZHNAgBE0VHbTc=GhQzP7X=g@mail.gmail.com>
+Subject: Re: [PATCH v5 0/6] Use killable vma write locking in most places
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: willy@infradead.org, david@kernel.org, ziy@nvidia.com, 
+	matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com, 
+	byungchul@sk.com, gourry@gourry.net, ying.huang@linux.alibaba.com, 
+	apopple@nvidia.com, lorenzo.stoakes@oracle.com, baolin.wang@linux.alibaba.com, 
+	Liam.Howlett@oracle.com, npache@redhat.com, ryan.roberts@arm.com, 
+	dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev, vbabka@suse.cz, 
+	jannh@google.com, rppt@kernel.org, mhocko@suse.com, pfalcato@suse.de, 
+	kees@kernel.org, maddy@linux.ibm.com, npiggin@gmail.com, mpe@ellerman.id.au, 
+	chleroy@kernel.org, borntraeger@linux.ibm.com, frankja@linux.ibm.com, 
+	imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com, 
+	agordeev@linux.ibm.com, svens@linux.ibm.com, gerald.schaefer@linux.ibm.com, 
+	linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18263-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18265-lists,linux-s390=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[42];
+	FREEMAIL_CC(0.00)[infradead.org,kernel.org,nvidia.com,intel.com,gmail.com,sk.com,gourry.net,linux.alibaba.com,oracle.com,redhat.com,arm.com,linux.dev,suse.cz,google.com,suse.com,suse.de,linux.ibm.com,ellerman.id.au,kvack.org,lists.ozlabs.org,vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ebiggers@kernel.org,linux-s390@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[surenb@google.com,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[google.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: C09293485FB
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid,linux-foundation.org:email]
+X-Rspamd-Queue-Id: A3BA334882F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Mar 27, 2026 at 06:59:21PM +0900, Simon Richter wrote:
-> On 3/27/26 5:27 AM, Eric Biggers wrote:
-> 
-> > In general that's good of course, but DES and 3DES?  Really?  Why is
-> > effort going into these obsolete algorithms at all?
-> 
-> If there's dedicated instructions, we need to emulate them, even if the
-> kernel stops using them, because userspace might still use them. The
-> alternative is implementing them as a trap in the kernel that delegates to
-> the crypto subsystem, and nobody wants that. O_O
+On Fri, Mar 27, 2026 at 10:03=E2=80=AFAM Andrew Morton
+<akpm@linux-foundation.org> wrote:
+>
+> On Fri, 27 Mar 2026 09:47:38 -0700 Andrew Morton <akpm@linux-foundation.o=
+rg> wrote:
+>
+> > Three of your patches lack review tags so now it's 65!
+>
+> Three is now zero, thanks Lorenzo.
 
-While I appreciate the sudden eagerness to implement these instructions
-in QEMU after them not being supported for 15 years, I'd suggest that
-the instructions for the more modern algorithms should be prioritized.
-
-> I wonder if it would make sense to split between "crypto" and "offload"
-> subsystems, so the "crypto" side can focus on a small number of contemporary
-> algorithms and give them simple, easily auditable interfaces, and move all
-> the complexity of asynchronous request processing in offload hardware over
-> to the "offloading" side. The userspace API would also move to the
-> "offloading" subsystem.
-
-lib/crypto/ and crypto/ already largely provides that distinction, no?
-
-> This would give the offloading subsystem a bit more flexibility in API
-> design as well, so we could maybe represent offload capabilities in network
-> or storage hardware as well
-
-The kernel already has perfectly good support for inline storage
-encryption in the block layer.  See
-Documentation/block/inline-encryption.rst.  It's a completely different
-model from non-inline crypto engines.  Trying to create some common
-abstraction is not going to succeed.
-
-> However, even from the "crypto" perspective I believe that we can't get
-> around support for asynchronous offload devices, because of mobile devices.
-> I suspect no one would be building dedicated silicon for asynchronous AES
-> into mobile CPUs if that wasn't worth it somehow
-
-They do it anyway.  It's a checkbox feature.  I.e. the purpose is for it
-to be advertised on a list of features.
-
-> so if such a device is
-> present, we want to use it as much as possible, because the expectation is
-> that while the difference in performance compared to the CPU is hardly
-> noticeable, the difference in battery lifetime is (that's why dropping async
-> request support from fscrypt makes it largely useless on mobile).
-
-I'm quite familiar with how fscrypt is being used on mobile, thanks.
-Most people do use hardware offload with fscrypt, but it is *inline*
-hardware offload.  That remains fully supported via blk-crypto and is
-unrelated to the crypto API.  The rest just use the CPU.
-
-I've only ever heard of one case almost a decade ago where someone
-intentionally used a non-inline offload engine with fscrypt.  And I even
-recently showed that on the same line of SoCs that was being used in
-that case, it is no longer worth it, if it ever was.
-
-Every other case has just been someone using one by mistake and getting
-their performance tanked or encountering driver bugs as a result.
-
-Anyway, this seems very off-topic for this thread, which is about
-whether the architecture-optimized DES and 3DES code should be removed.
-
-- Eric
+I just finished fixups for issues Sashiko flagged. They are pretty
+small but important. Testing them right now and running Sashiko
+locally. Once done I'll post v6 and will ask Lorenzo to re-review
+those specific changes. Sorry Lorenzo, I'll point out the specific
+changes I had to make and will try to make it easy for you.
+Thanks,
+Suren.
 
