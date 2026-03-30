@@ -1,84 +1,84 @@
-Return-Path: <linux-s390+bounces-18294-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18295-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sFqBKC2GymkW9gUAu9opvQ
-	(envelope-from <linux-s390+bounces-18294-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2026 16:18:21 +0200
+	id MAWzCFaLymn09gUAu9opvQ
+	(envelope-from <linux-s390+bounces-18295-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2026 16:40:22 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1792E35CAF2
-	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2026 16:18:21 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id C209435D07A
+	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2026 16:40:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 066673046F00
-	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2026 14:13:36 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 31C0730ABCAA
+	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2026 14:28:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC90F3D6CB0;
-	Mon, 30 Mar 2026 14:13:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AC983DA5A3;
+	Mon, 30 Mar 2026 14:27:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MEAQK5d5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ORlFdPeC"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A96E33A63F8
-	for <linux-s390@vger.kernel.org>; Mon, 30 Mar 2026 14:13:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777FE3D16E7;
+	Mon, 30 Mar 2026 14:27:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774880014; cv=none; b=lUQHAfMsGTSZO+oB+5Zvq1x7OQ0SzTtDOCHxbI2t1XNeGGyqcghwcPXV/7jVQqg8vWD/i4QAZCOdpPodbti41/SZV/GcBG4uNux0UfCcnm/R7z+6A2DfpFOg2JNAYBw/YN5FnNaWdx0Ym414xqFMTUFsFp9DfWQQqDCU4KJXpKM=
+	t=1774880861; cv=none; b=CScRlL9M+8QeESXbCpaw6G4Xqhon+5sctKOiAnxf0yDk88PwnnyEFjfiwQZL1nR5Sgm5OvX9wsfEBhK3t9tdO5heOT53d9bcGn1zyLHXFm7Ou9OhDVHD+CgpbUHitDw19GJV/Un0hiRNfTA1Eie7VcIKw7WwupR57DZVnCjgvPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774880014; c=relaxed/simple;
-	bh=jjLo/KYlHlqzqnNv0WJEH/7qGaF/R61RDSt36mroxZ0=;
+	s=arc-20240116; t=1774880861; c=relaxed/simple;
+	bh=ZRa33ROhxro9w//Ij9lOfu6+s/cl7vsBNnwHFqQHtM0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OkWNyoQ9iAQ0m3OGV558RNXcVipzCw8TP9Kg16HfuSAfmAdX8aUu5POe3iK3ncEZ2ef34wPnVBxc4D96Wv++KXyFBGeKz2zMKsGsV6FczoIYbdtyGuoFUr/jb4GjarqOjBWpIQTh2BTnh9itw4zz1DAfSrRLBuGhsjsCVAtqgKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MEAQK5d5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA157C4CEF7;
-	Mon, 30 Mar 2026 14:13:33 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=P5Rdi1m0YDtn2uEc2jTVNUU2XgY9L5Z5OiaFz7DBQfL12J5nOTdz3DjQ4PfPhYbSOB18M3IROm64P4WRisECgZ8kYLi54DwdIJ+L0p2tRrbRXgs5/kCrAqPQJcFU91as24X4F8Cu/7HFbYi93LSlUs6qGW4brK67+T35IpM/AmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ORlFdPeC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 597E3C4CEF7;
+	Mon, 30 Mar 2026 14:27:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774880014;
-	bh=jjLo/KYlHlqzqnNv0WJEH/7qGaF/R61RDSt36mroxZ0=;
+	s=k20201202; t=1774880861;
+	bh=ZRa33ROhxro9w//Ij9lOfu6+s/cl7vsBNnwHFqQHtM0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MEAQK5d5EB6gZI/XdoMH99WzaT0SQw895GgjMM2o44etPdaYMo8lRMr9kAZIY2NbA
-	 SO1cMXJRYUD3+HH25DF5VFA3K6lJajLHMItJxSRCuxUdnN0xPtR+eW1GZOt32v3K5n
-	 haVWFFlD7n5YHw0L6haPCVb1op2KzaUgV1N/sM4+inyRJ72UoikQsSQc6fn2Gftj3n
-	 U+z/PfV7vd+S/IoeQr652CyiHomAgwZysEosPxXuPuja69XH7dAfBNDEiaNje84dit
-	 9vKjC+d3cqFGeTzjNxwgoH11Wc1tuyuK6jno0RFy5X7VoBQ37f53sfWQY9bsbNhZN+
-	 GMab29MMkExgA==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id C1A88F40068;
-	Mon, 30 Mar 2026 10:13:32 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Mon, 30 Mar 2026 10:13:32 -0400
-X-ME-Sender: <xms:DIXKaUNo8x6eNHbeeDZrPNKYYCYRt0OVrzAoJgh21Ck-T_Mfa_mBEQ>
-    <xme:DIXKaRGBSKHVnr7Q9isa4JQgjjTUBwhCwPLDyGiwqzESPwEPO4X3jHpNkyc2z-90c
-    oMToV8ClUtLNC0kkMd3LOW0y7P6Zh3PYQMBDylDpqJxbIoVHHS60bs>
-X-ME-Received: <xmr:DIXKad-K24OQojUNBnEsHGs60TyyM8zE7h0c-5BRxWHRNh8Nq5ysCXjNmoLDAA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeffeeludelucetufdoteggodetrf
+	b=ORlFdPeCuOm5yvoR+5/YIS+vR3RfBgLQ/I6FN3Wq0OF3dtf6ino1EHB1KapTFT2Nh
+	 +Ee0GMKAovN5DfBJFbWzgeCtgA3IoCG39QT8Z1kQpZ2aV6Whba6Kbw0dkFGgOraXri
+	 n8vlPO+JPgx0mz9FXOVEVRDSeG0y7NQfttJeCznVCyHOXrTyAhleRZGNKvkczOQhkS
+	 cj6nCo85qm5or660USUhYV6+h+H5Hag5DjgRgorkUfKzD8Or69cB9ZYCtCeik99KLL
+	 xsnKBa195qmzONTRnad9P+47USjRnCIS02AkjPbE9RJNEayZ52NThOoPKAjulmArvB
+	 OGOVnrnRkcVxQ==
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 7B2FAF4006E;
+	Mon, 30 Mar 2026 10:27:39 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Mon, 30 Mar 2026 10:27:39 -0400
+X-ME-Sender: <xms:W4jKafyFvdk9lq332v_h2kI_OMoE0HyTT9jRHQKItPxXled9JHibHw>
+    <xme:W4jKae7EvQI39ix7CkxB7sHWWP_iXTJqaXP29YwQe898JeFNPkezukAfa9THGFYPd
+    ri2uZipdzvFPWK0UZaEGMRFvqMASVrCDALi2ArCbCXXfSpQXKrClg>
+X-ME-Received: <xmr:W4jKaQu8femLmzHgyXPuUowScraoeIiL3B29B2wYdeT8pwCkOBro19Kaq4h9Iw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeffeelvddvucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepmfhirhihlhcu
-    ufhhuhhtshgvmhgruhcuoehkrghssehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvg
-    hrnhepueeijeeiffekheeffffftdekleefleehhfefhfduheejhedvffeluedvudefgfek
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhhirh
-    hilhhlodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieduudeivdeiheeh
-    qddvkeeggeegjedvkedqkhgrsheppehkvghrnhgvlhdrohhrghesshhhuhhtvghmohhvrd
-    hnrghmvgdpnhgspghrtghpthhtohepheekpdhmohguvgepshhmthhpohhuthdprhgtphht
-    thhopehushgrmhgrrdgrrhhifheslhhinhhugidruggvvhdprhgtphhtthhopegrkhhpmh
-    eslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepuggrvhhiuges
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhjsheskhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtohepfihilhhlhiesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhn
-    uhigqdhmmheskhhvrggtkhdrohhrghdprhgtphhtthhopehfvhgulhesghhoohhglhgvrd
-    gtohhmpdhrtghpthhtohephhgrnhhnvghssegtmhhpgigthhhgrdhorhhgpdhrtghpthht
-    oheprhhivghlsehsuhhrrhhivghlrdgtohhm
-X-ME-Proxy: <xmx:DIXKaaiJLRt5GSlkdiUmhFjWhOZ4nb9mM6WyYioqjMYyVB3fjl7zZQ>
-    <xmx:DIXKaRl6F6N-NclA9PKNuHMnKIzG0RWjBeD5UGuU8RQ0Qx9rcJZM2Q>
-    <xmx:DIXKae0HwbXVQA6um0VLymaQDy3iQOYfdome4H8abIelI6UOy6KafA>
-    <xmx:DIXKab44LkdEFCFeip0pHXR6ZwEiGVu3SbVO6ZjPwnvL1WhiQsIDEA>
-    <xmx:DIXKaciiUno2X6usDVDLFhSMU3fWh6eS__6EOM0QIwEfusfWP-DriSDe>
+    gurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpefmihhrhihl
+    ucfuhhhuthhsvghmrghuuceokhgrsheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtth
+    gvrhhnpeeigfdvtdekveejhfehtdduueeuieekjeekvdfggfdtkeegieevjedvgeetvdeh
+    gfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkih
+    hrihhllhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeiudduiedvieeh
+    hedqvdekgeeggeejvdekqdhkrghspeepkhgvrhhnvghlrdhorhhgsehshhhuthgvmhhovh
+    drnhgrmhgvpdhnsggprhgtphhtthhopeehkedpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepuhhsrghmrgdrrghrihhfsehlihhnuhigrdguvghvpdhrtghpthhtoheprghkph
+    hmsehlihhnuhigqdhfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopegurghvihgu
+    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopehljhhssehkvghrnhgvlhdrohhrghdprh
+    gtphhtthhopeifihhllhihsehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhi
+    nhhugidqmhhmsehkvhgrtghkrdhorhhgpdhrtghpthhtohepfhhvughlsehgohhoghhlvg
+    drtghomhdprhgtphhtthhopehhrghnnhgvshestghmphigtghhghdrohhrghdprhgtphht
+    thhopehrihgvlhesshhurhhrihgvlhdrtghomh
+X-ME-Proxy: <xmx:W4jKaUDgxdV38pqQgWKfY12ZfMdTvJWoxYvp9yoj5tp3RF53aOKuZw>
+    <xmx:W4jKaYiQvfcW-HNrAn_B0ybqz3tHT342qpIx-AbDXFclmWrv05HLeA>
+    <xmx:W4jKab2kU5unsMyH8uDFEgy9e1PD_HS-cAPDw7Kv-YyDXjsjtk2FEQ>
+    <xmx:W4jKaVu4XJ7ufDGcRqnJoyJup9ZEVEmnrVJd-_-hG8uC7QT6KNilag>
+    <xmx:W4jKaeDXpzhBEJ10Mc7NaHxSHY66iH_IjaP4Rk2XV8ZLTe34eSpEa7l2>
 Feedback-ID: i10464835:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 30 Mar 2026 10:13:32 -0400 (EDT)
-Date: Mon, 30 Mar 2026 14:13:31 +0000
+ 30 Mar 2026 10:27:36 -0400 (EDT)
+Date: Mon, 30 Mar 2026 14:27:31 +0000
 From: Kiryl Shutsemau <kas@kernel.org>
 To: Usama Arif <usama.arif@linux.dev>
 Cc: Andrew Morton <akpm@linux-foundation.org>, david@kernel.org, 
@@ -90,36 +90,37 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, david@kernel.org,
 	maddy@linux.ibm.com, mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org, 
 	hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com, 
 	borntraeger@linux.ibm.com, svens@linux.ibm.com, linux-s390@vger.kernel.org
-Subject: Re: [v3 05/24] mm: thp: handle split failure in zap_pmd_range()
-Message-ID: <acqC010JLTfjHF0y@thinkstation>
+Subject: Re: [v3 07/24] mm: thp: retry on split failure in change_pmd_range()
+Message-ID: <acqH5SNpSoWAkg7A@thinkstation>
 References: <20260327021403.214713-1-usama.arif@linux.dev>
- <20260327021403.214713-6-usama.arif@linux.dev>
+ <20260327021403.214713-8-usama.arif@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260327021403.214713-6-usama.arif@linux.dev>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260327021403.214713-8-usama.arif@linux.dev>
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18294-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18295-lists,linux-s390=lfdr.de];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[29];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[kas@kernel.org,linux-s390@vger.kernel.org];
@@ -130,46 +131,37 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-s390];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 1792E35CAF2
+X-Rspamd-Queue-Id: C209435D07A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Mar 26, 2026 at 07:08:47PM -0700, Usama Arif wrote:
-> zap_pmd_range() splits a huge PMD when the zap range doesn't cover the
-> full PMD (partial unmap).  If the split fails, the PMD stays huge.
-> Falling through to zap_pte_range() would dereference the huge PMD entry
-> as a PTE page table pointer.
+On Thu, Mar 26, 2026 at 07:08:49PM -0700, Usama Arif wrote:
+> change_pmd_range() splits a huge PMD when mprotect() targets a sub-PMD
+> range or when VMA flags require per-PTE protection bits that can't be
+> represented at PMD granularity.
 > 
-> Skip the range covered by the PMD on split failure instead.
-
-Ughh... This is hacky as hell.
-
-> The skip is safe across all call paths into zap_pmd_range():
+> If pte_alloc_one() fails inside __split_huge_pmd(), the huge PMD remains
+> intact. Without this change, change_pte_range() would return -EAGAIN
+> because pte_offset_map_lock() returns NULL for a huge PMD, sending the
+> code back to the 'again' label to retry the split—without ever calling
+> cond_resched().
 > 
-> - exit_mmap() and OOM reaper: the zap range covers entire VMAs, so
->   every PMD is fully covered (next - addr == HPAGE_PMD_SIZE).  The
->   zap_huge_pmd() branch handles these without splitting.  The split
->   failure path is unreachable.
+> Now that __split_huge_pmd() returns an error code, handle it explicitly:
+> yield the CPU with cond_resched() and retry via goto again, giving other
+> tasks a chance to free memory.
 > 
-> - munmap / mmap overlay: vma_adjust_trans_huge() (called from
->   __split_vma) splits any PMD straddling the VMA boundary before the
->   VMA is split.  If that PMD split fails, __split_vma() returns
->   -ENOMEM and the munmap is aborted before reaching zap_pmd_range().
->   The split failure path is unreachable.
-> 
-> - MADV_DONTNEED: advisory hint, the kernel is allowed to ignore it.
->   The pages remain valid and accessible.  A subsequent access returns
->   existing data without faulting.
+> Trying to return an error all the way to change_protection_range would
+> not work as it would leave a memory range with new protections, and
+> others unchanged, with no easy way to roll back the already modified
+> entries (and previous splits). __split_huge_pmd only requires an
+> order-0 allocation and is extremely unlikely to fail.
 
-Em, no. MADV_DONTNEED users expect memory to be zeroed after the
-"advise" is complete. At very least you need to zero the skipped range.
+I think this is wrong approach. We need to split page tables upfront
+before going into depth of change_protection() and doing irreversible
+changes.
 
-And are you sure that the list of users is complete?
-
-I am also worried about a possible new user that is not aware about this
-skip-on-split-failure semantics.
-
-I think it hast o be opt-in. Maybe a ZAP_FLAG_WHATEVER?
+Conceptually, it should be similar to vma_adjust_trans_huge() in vma
+split/merge paths.
 
 -- 
   Kiryl Shutsemau / Kirill A. Shutemov
