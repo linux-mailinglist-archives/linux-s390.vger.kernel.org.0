@@ -1,191 +1,176 @@
-Return-Path: <linux-s390+bounces-18291-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18294-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eM+sH0J2ymmB9AUAu9opvQ
-	(envelope-from <linux-s390+bounces-18291-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2026 15:10:26 +0200
+	id sFqBKC2GymkW9gUAu9opvQ
+	(envelope-from <linux-s390+bounces-18294-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2026 16:18:21 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CE5B35BAC6
-	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2026 15:10:26 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1792E35CAF2
+	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2026 16:18:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 56FCF3012E6B
-	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2026 13:10:21 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 066673046F00
+	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2026 14:13:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57C923CFF5C;
-	Mon, 30 Mar 2026 13:10:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC90F3D6CB0;
+	Mon, 30 Mar 2026 14:13:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tXTXejvD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MEAQK5d5"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E343D3486;
-	Mon, 30 Mar 2026 13:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A96E33A63F8
+	for <linux-s390@vger.kernel.org>; Mon, 30 Mar 2026 14:13:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774876214; cv=none; b=CFR+oe2aItTszVBOzqByYhGhHu2g2hFk0yt645rwfgMZJPXZ4Co6hRSzGzFbVBU+u2fi7qGZioHiW9ykBOTAKdWxOqn5iAF/rDozIBPVahMZfjQZjs6x086rgxL1Yk94InBlUGhFxAcqMSWXFxewtRLphGtWTkUOUCivbOOQzvA=
+	t=1774880014; cv=none; b=lUQHAfMsGTSZO+oB+5Zvq1x7OQ0SzTtDOCHxbI2t1XNeGGyqcghwcPXV/7jVQqg8vWD/i4QAZCOdpPodbti41/SZV/GcBG4uNux0UfCcnm/R7z+6A2DfpFOg2JNAYBw/YN5FnNaWdx0Ym414xqFMTUFsFp9DfWQQqDCU4KJXpKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774876214; c=relaxed/simple;
-	bh=9jmNyaOt/0cBAnwwLqfRspUEA0PjzlJZz4Yks/N0ptg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=m5yCiYzMVSkqH7SS9+9MLxJKpn2H1+yF8z7Qe8RAgWyjc01T49UC6pfbkaXJsAwIL3tLoHkkzJVaZS7CXzjCHfPfHTvTcz7y1i/btkbkszvZ5R9KLsaCDKkMbnP7RZx1FGgVWny6DCvihBf4LG7JsDU9xI//G/p+kNha/2/zJCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tXTXejvD; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62TMJRej505649;
-	Mon, 30 Mar 2026 13:10:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=YusLYK
-	c1zZAvs79QbUL4PnOWSxVkj8Y3/1w9SLjr/W0=; b=tXTXejvD67mTAgqN7+xyhx
-	HDSOMsnxdBn0t+1fYfU697k1/L5Aq+YbH2Xl3t8CXj+y//AP1pJi85g0aF93UEBp
-	ZrInXKlMtHoiUjZlZns/fJNyJg/zu5w2dJgfrZqu/BNgWd6ARGqRw7S8t0Db4iTC
-	Oh4JXl3mkMOO8w0JEJPXTgUQwxE86d7hqKNRvpc1h6S1dOewZGaSqrn+8mfw0dhv
-	kw3t37cVdk+RiAbPN9zVrU5T9kpuPGpUHuyYOIgnOPZ2aCtlVHSVJZ9l9429E6MI
-	7BHUUc4rWI+IG7E/cWsOAf503jqrA3Nk6q9I5WS7Au6TNz9qLfmZ6EWgIaYoJLKg
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d66g1pxcf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Mar 2026 13:10:08 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62UATOjC022266;
-	Mon, 30 Mar 2026 13:10:07 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4d6tamvy0f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Mar 2026 13:10:07 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62UDA33G25952558
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 30 Mar 2026 13:10:03 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 307C92004F;
-	Mon, 30 Mar 2026 13:10:03 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EB1912004D;
-	Mon, 30 Mar 2026 13:10:02 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 30 Mar 2026 13:10:02 +0000 (GMT)
-From: Gerd Bayer <gbayer@linux.ibm.com>
-Date: Mon, 30 Mar 2026 15:09:46 +0200
-Subject: [PATCH v7 3/3] PCI: AtomicOps: Update references to PCIe spec
+	s=arc-20240116; t=1774880014; c=relaxed/simple;
+	bh=jjLo/KYlHlqzqnNv0WJEH/7qGaF/R61RDSt36mroxZ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OkWNyoQ9iAQ0m3OGV558RNXcVipzCw8TP9Kg16HfuSAfmAdX8aUu5POe3iK3ncEZ2ef34wPnVBxc4D96Wv++KXyFBGeKz2zMKsGsV6FczoIYbdtyGuoFUr/jb4GjarqOjBWpIQTh2BTnh9itw4zz1DAfSrRLBuGhsjsCVAtqgKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MEAQK5d5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA157C4CEF7;
+	Mon, 30 Mar 2026 14:13:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774880014;
+	bh=jjLo/KYlHlqzqnNv0WJEH/7qGaF/R61RDSt36mroxZ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MEAQK5d5EB6gZI/XdoMH99WzaT0SQw895GgjMM2o44etPdaYMo8lRMr9kAZIY2NbA
+	 SO1cMXJRYUD3+HH25DF5VFA3K6lJajLHMItJxSRCuxUdnN0xPtR+eW1GZOt32v3K5n
+	 haVWFFlD7n5YHw0L6haPCVb1op2KzaUgV1N/sM4+inyRJ72UoikQsSQc6fn2Gftj3n
+	 U+z/PfV7vd+S/IoeQr652CyiHomAgwZysEosPxXuPuja69XH7dAfBNDEiaNje84dit
+	 9vKjC+d3cqFGeTzjNxwgoH11Wc1tuyuK6jno0RFy5X7VoBQ37f53sfWQY9bsbNhZN+
+	 GMab29MMkExgA==
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id C1A88F40068;
+	Mon, 30 Mar 2026 10:13:32 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-01.internal (MEProxy); Mon, 30 Mar 2026 10:13:32 -0400
+X-ME-Sender: <xms:DIXKaUNo8x6eNHbeeDZrPNKYYCYRt0OVrzAoJgh21Ck-T_Mfa_mBEQ>
+    <xme:DIXKaRGBSKHVnr7Q9isa4JQgjjTUBwhCwPLDyGiwqzESPwEPO4X3jHpNkyc2z-90c
+    oMToV8ClUtLNC0kkMd3LOW0y7P6Zh3PYQMBDylDpqJxbIoVHHS60bs>
+X-ME-Received: <xmr:DIXKad-K24OQojUNBnEsHGs60TyyM8zE7h0c-5BRxWHRNh8Nq5ysCXjNmoLDAA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeffeeludelucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepmfhirhihlhcu
+    ufhhuhhtshgvmhgruhcuoehkrghssehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvg
+    hrnhepueeijeeiffekheeffffftdekleefleehhfefhfduheejhedvffeluedvudefgfek
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhhirh
+    hilhhlodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieduudeivdeiheeh
+    qddvkeeggeegjedvkedqkhgrsheppehkvghrnhgvlhdrohhrghesshhhuhhtvghmohhvrd
+    hnrghmvgdpnhgspghrtghpthhtohepheekpdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopehushgrmhgrrdgrrhhifheslhhinhhugidruggvvhdprhgtphhtthhopegrkhhpmh
+    eslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepuggrvhhiuges
+    khgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhjsheskhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtohepfihilhhlhiesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhn
+    uhigqdhmmheskhhvrggtkhdrohhrghdprhgtphhtthhopehfvhgulhesghhoohhglhgvrd
+    gtohhmpdhrtghpthhtohephhgrnhhnvghssegtmhhpgigthhhgrdhorhhgpdhrtghpthht
+    oheprhhivghlsehsuhhrrhhivghlrdgtohhm
+X-ME-Proxy: <xmx:DIXKaaiJLRt5GSlkdiUmhFjWhOZ4nb9mM6WyYioqjMYyVB3fjl7zZQ>
+    <xmx:DIXKaRl6F6N-NclA9PKNuHMnKIzG0RWjBeD5UGuU8RQ0Qx9rcJZM2Q>
+    <xmx:DIXKae0HwbXVQA6um0VLymaQDy3iQOYfdome4H8abIelI6UOy6KafA>
+    <xmx:DIXKab44LkdEFCFeip0pHXR6ZwEiGVu3SbVO6ZjPwnvL1WhiQsIDEA>
+    <xmx:DIXKaciiUno2X6usDVDLFhSMU3fWh6eS__6EOM0QIwEfusfWP-DriSDe>
+Feedback-ID: i10464835:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 30 Mar 2026 10:13:32 -0400 (EDT)
+Date: Mon, 30 Mar 2026 14:13:31 +0000
+From: Kiryl Shutsemau <kas@kernel.org>
+To: Usama Arif <usama.arif@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>, david@kernel.org, 
+	Lorenzo Stoakes <ljs@kernel.org>, willy@infradead.org, linux-mm@kvack.org, fvdl@google.com, 
+	hannes@cmpxchg.org, riel@surriel.com, shakeel.butt@linux.dev, baohua@kernel.org, 
+	dev.jain@arm.com, baolin.wang@linux.alibaba.com, npache@redhat.com, 
+	Liam.Howlett@oracle.com, ryan.roberts@arm.com, Vlastimil Babka <vbabka@kernel.org>, 
+	lance.yang@linux.dev, linux-kernel@vger.kernel.org, kernel-team@meta.com, 
+	maddy@linux.ibm.com, mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org, 
+	hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com, 
+	borntraeger@linux.ibm.com, svens@linux.ibm.com, linux-s390@vger.kernel.org
+Subject: Re: [v3 05/24] mm: thp: handle split failure in zap_pmd_range()
+Message-ID: <acqC010JLTfjHF0y@thinkstation>
+References: <20260327021403.214713-1-usama.arif@linux.dev>
+ <20260327021403.214713-6-usama.arif@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260330-fix_pciatops-v7-3-f601818417e8@linux.ibm.com>
-References: <20260330-fix_pciatops-v7-0-f601818417e8@linux.ibm.com>
-In-Reply-To: <20260330-fix_pciatops-v7-0-f601818417e8@linux.ibm.com>
-To: Bjorn Helgaas <bhelgaas@google.com>, Jay Cornwall <Jay.Cornwall@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Niklas Schnelle <schnelle@linux.ibm.com>
-Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, Leon Romanovsky <leon@kernel.org>,
-        Alexander Schmidt <alexs@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Gerd Bayer <gbayer@linux.ibm.com>
-X-Mailer: b4 0.14.2
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=Fdo6BZ+6 c=1 sm=1 tr=0 ts=69ca7630 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8
- a=9UpU5CifMvqjbUjnZUAA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: iinQCws480Z3GQ6ayIZmDRpOPfgImJx3
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzMwMDEwMCBTYWx0ZWRfXzPAdaEWaQDxq
- MFSc44PvvqPul7Ki2zlU+MfspgH43rVg282i/OsZTd1PWAUPClazyGmjHVcH+b6Be7L/QVjCgZL
- N2tXNbF4WmqGvPndDJV5w6JCbSZk8dQOM5gnTkIeaMfFU9nJFHArJ6PeZnNf6KsYaIDmk5mtKvz
- FBgKYHE8nVIpKmcTOoOrl8zZyrtZz/FCzT0ctxENjfRzCRex+ybKoQOxGryE0IGMfZRtFzLDLJT
- me40YK9VUcFYWjgFeUTbZxaTYKhMB4VXLohmsZ/7PIsPdSRcOZucXDEJukSnENUfVHLdgs9x/f/
- FkLTDp89JPaKuog/Ue+JmOIQ/KkcL6ebMrufhgiBuqvjdxU2PKbPB/2eQ6psbgSZTojs3JDP8Vw
- s6OwGZkPiov5lQRGg49ox7tc0jVd5X0P56AMmDsHxioeKstyx09ow/M1cPPaVSIeuoLJgqEh+iM
- rvoddYShwKGvKUdqmzg==
-X-Proofpoint-GUID: 37mMKGp9UjzJCLjZ9nBHREfsPsDi-nOH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-29_05,2026-03-28_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 clxscore=1015 bulkscore=0 suspectscore=0 priorityscore=1501
- adultscore=0 malwarescore=0 phishscore=0 spamscore=0 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603300100
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260327021403.214713-6-usama.arif@linux.dev>
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	TAGGED_FROM(0.00)[bounces-18291-lists,linux-s390=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linux.ibm.com:mid];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[gbayer@linux.ibm.com,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TAGGED_FROM(0.00)[bounces-18294-lists,linux-s390=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[29];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[kas@kernel.org,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 3CE5B35BAC6
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 1792E35CAF2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Point to the relevant sections in the most recent release 7.0 of the
-PCIe spec. Text has mostly just moved around without any semantic
-change.
+On Thu, Mar 26, 2026 at 07:08:47PM -0700, Usama Arif wrote:
+> zap_pmd_range() splits a huge PMD when the zap range doesn't cover the
+> full PMD (partial unmap).  If the split fails, the PMD stays huge.
+> Falling through to zap_pte_range() would dereference the huge PMD entry
+> as a PTE page table pointer.
+> 
+> Skip the range covered by the PMD on split failure instead.
 
-Signed-off-by: Gerd Bayer <gbayer@linux.ibm.com>
----
- drivers/pci/pci.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Ughh... This is hacky as hell.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 57af00ecdc97086a32c063ff86f8a39087ad1f5e..b99ab47678b006004af6cdb9b0e9f9ca4a28b6e1 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3689,7 +3689,7 @@ int pci_enable_atomic_ops_to_root(struct pci_dev *dev, u32 cap_mask)
- 	u32 ctl2;
- 
- 	/*
--	 * Per PCIe r5.0, sec 9.3.5.10, the AtomicOp Requester Enable bit
-+	 * Per PCIe r7.0, sec 7.5.3.16, the AtomicOp Requester Enable bit
- 	 * in Device Control 2 is reserved in VFs and the PF value applies
- 	 * to all associated VFs.
- 	 */
-@@ -3700,7 +3700,7 @@ int pci_enable_atomic_ops_to_root(struct pci_dev *dev, u32 cap_mask)
- 		return -EINVAL;
- 
- 	/*
--	 * Per PCIe r4.0, sec 6.15, endpoints and root ports may be
-+	 * Per PCIe r7.0, sec 6.15, endpoints and root ports may be
- 	 * AtomicOp requesters.  For now, we only support (legacy) endpoints
- 	 * as requesters and root ports as completers.  No endpoints as
- 	 * completers, and no peer-to-peer.
+> The skip is safe across all call paths into zap_pmd_range():
+> 
+> - exit_mmap() and OOM reaper: the zap range covers entire VMAs, so
+>   every PMD is fully covered (next - addr == HPAGE_PMD_SIZE).  The
+>   zap_huge_pmd() branch handles these without splitting.  The split
+>   failure path is unreachable.
+> 
+> - munmap / mmap overlay: vma_adjust_trans_huge() (called from
+>   __split_vma) splits any PMD straddling the VMA boundary before the
+>   VMA is split.  If that PMD split fails, __split_vma() returns
+>   -ENOMEM and the munmap is aborted before reaching zap_pmd_range().
+>   The split failure path is unreachable.
+> 
+> - MADV_DONTNEED: advisory hint, the kernel is allowed to ignore it.
+>   The pages remain valid and accessible.  A subsequent access returns
+>   existing data without faulting.
+
+Em, no. MADV_DONTNEED users expect memory to be zeroed after the
+"advise" is complete. At very least you need to zero the skipped range.
+
+And are you sure that the list of users is complete?
+
+I am also worried about a possible new user that is not aware about this
+skip-on-split-failure semantics.
+
+I think it hast o be opt-in. Maybe a ZAP_FLAG_WHATEVER?
 
 -- 
-2.51.0
-
+  Kiryl Shutsemau / Kirill A. Shutemov
 
