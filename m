@@ -1,77 +1,77 @@
-Return-Path: <linux-s390+bounces-18384-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18386-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UKxOBWF+zGl/TQYAu9opvQ
-	(envelope-from <linux-s390+bounces-18384-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 01 Apr 2026 04:09:37 +0200
+	id AD9FEtd+zGl/TQYAu9opvQ
+	(envelope-from <linux-s390+bounces-18386-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 01 Apr 2026 04:11:35 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2259373A39
-	for <lists+linux-s390@lfdr.de>; Wed, 01 Apr 2026 04:09:36 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7092373A8B
+	for <lists+linux-s390@lfdr.de>; Wed, 01 Apr 2026 04:11:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 26DDB3033978
+	by sea.lore.kernel.org (Postfix) with ESMTP id CD58B3055CB4
 	for <lists+linux-s390@lfdr.de>; Wed,  1 Apr 2026 02:09:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAC743033DE;
-	Wed,  1 Apr 2026 02:09:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E66A314B6E;
+	Wed,  1 Apr 2026 02:09:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iz2ytQ6v"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gN9NvlAh"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663EB2F8BEE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22CD12FFF8F;
 	Wed,  1 Apr 2026 02:09:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775009370; cv=none; b=CI5/I6WUKuGiVCyUaJ1+8NJ4Uh4H59YF+IV9WgQeqF2nM2+qgeWYFKKVlxk39BnbVawIBY7GCb6RcGGFIVMbC7t5LS95uUA40kLsDMrJVDXdK8+bp8n+W76hMZmdy+pFv78jPMX1W42Jla+/OvHbCRaxxPud1WzEXjzvdE3Yim0=
+	t=1775009372; cv=none; b=WhEx5cR+w6kQ1CEX2X33GVkVeCgJRUYn2/8TkMX9KGq3ypfae70jWFST3r9RrNuRnHqlldAPjPCF+9/xx5d+Ls5JEsZT6WWKx8D2UjRtYOu3aOK4sdP3gClFmvm0TESk6ahCz7Ei7Wx2xQ8f5kJWWav8dXsGZTcn9bdfZRlWdDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775009370; c=relaxed/simple;
-	bh=ZCNKK2nhSeXz191Ike0pmViKWMT1eFQ9+KoV535lTQE=;
+	s=arc-20240116; t=1775009372; c=relaxed/simple;
+	bh=lqAS5SHyWMQw9fSzqpivwTQPeBoLDAZaogy0xDJ01mA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fF09dcz3anATQ3gwtA4fCC/R5nPT6UGQax0dCKMMscyd4DrSBF5vvKBrsnPbJa7WmfiSBn0kOmgJtv9aax6Wf/PK4SgCgNfTsQVvKrWZCHN0cl+gyRwQZ9YhsiRCL+z3mjGr53L4F/ehNF5OXqceY9h4swsa8bvRfQNpqhTfnLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iz2ytQ6v; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=bQzllFywkcw2v1EfDZ0i8szyBJCCVO+5qPWKawXdthjPxY8AXN4fBsVFSQ8QZnwJo24STCU8fwt8ywNk96zWFuolPDXcX4uz8sjIcE1gpeEQRwMoFzR4xIVRFyoBfmlTGRxdfmLCnroCEhMmjbqFQSWByk8mo5qv8IjARj4MTy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gN9NvlAh; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62VEF8ho2679500;
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62VI4O0G3676159;
 	Wed, 1 Apr 2026 02:09:22 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=DzeTCFTsLI3SRc9DW
-	gxTHWlfT1K21Mj/59dKNmP0pFM=; b=iz2ytQ6v7664ZQEa/cBVezY8GTL1Ie1eq
-	y+cccCRi2SfHxYnHsix0HYWf9qsQ1iN5VSMySlG/oGilQNB+9sGeZdWzOpS2S9QJ
-	Gv5jPKqCPsN0TBw+DieyKaCslnJUGQ32g6/MGCahPF+kMvHQGPll/TYd6GYVhs5y
-	6px14tCXMPGOz4leMWfiOB3BLZJRQ/aeTyszX0Zj2TMM/drDWCYsw6QeavzX7/Cq
-	l4Hr4bsbcrfFD85UL1SGWCoqIDWM73AMNxUWTxGwObclc/spcNi1vx5yrOQCLllK
-	A9+0yARQ42pZ545zDhCwVGZzfFzSAWB8GY3zlbbe04TJARiO/JIMQ==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d66q364p9-1
+	:mime-version:references:subject:to; s=pp1; bh=I3oDXFCoRUSF544ep
+	3/BsT39PcNNZ9lqDW+0UROjes8=; b=gN9NvlAhKefIJ1K8Uaz89WMykUTShFTY4
+	707DcBaH3CMPr3PyNdNsJoEAC3GqegH8OvB5m+34Aq50iXB+pTTgNdFjxhkItqkY
+	wXDB2HHu0P/dOa1C8IROpDAIlCT+C8svBt33ZYpXXWkD4THxFHilC6jmDgffMg7r
+	dhQEdeh8++0hwOHBHsT7PU6toJPLqHZATij3WCIIArATashGGuzGvzY0pEP7gfrX
+	9c8bmXgFDLKYWJp3m0ecqTxkg9POy4g70y6IEsENTmc7T32nYT0XgZceb0qMnW39
+	OBrQphwoq2deLO/qxWGe0rSI/tqZ3EDtPCYnpfpue/a+VHgj3uiGw==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d66ms5fsw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Wed, 01 Apr 2026 02:09:22 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 63121ZsL008693;
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 6311vACL031007;
 	Wed, 1 Apr 2026 02:09:21 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4d6v11kgvu-1
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4d6uhjujyq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Wed, 01 Apr 2026 02:09:21 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63129HOp34668800
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63129HlC58720562
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 1 Apr 2026 02:09:18 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C55412004B;
+	Wed, 1 Apr 2026 02:09:17 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BE3FF20049;
 	Wed,  1 Apr 2026 02:09:17 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9A73420043;
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9A33C2004B;
 	Wed,  1 Apr 2026 02:09:17 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with SMTP;
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with SMTP;
 	Wed,  1 Apr 2026 02:09:17 +0000 (GMT)
 Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
-	id 812A2E0AE3; Wed, 01 Apr 2026 04:09:17 +0200 (CEST)
+	id 83E1CE0AEA; Wed, 01 Apr 2026 04:09:17 +0200 (CEST)
 From: Eric Farman <farman@linux.ibm.com>
 To: Christian Borntraeger <borntraeger@linux.ibm.com>,
         Hendrik Brueckner <brueckner@linux.ibm.com>,
@@ -81,9 +81,9 @@ To: Christian Borntraeger <borntraeger@linux.ibm.com>,
 Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
         Shuah Khan <skhan@linuxfoundation.org>, kvm@vger.kernel.org,
         linux-s390@vger.kernel.org, Eric Farman <farman@linux.ibm.com>
-Subject: [PATCH v1 2/4] KVM: s390: vsie: Disable some bits when in ESA mode
-Date: Wed,  1 Apr 2026 04:09:13 +0200
-Message-ID: <20260401020915.1339228-3-farman@linux.ibm.com>
+Subject: [PATCH v1 3/4] KVM: s390: vsie: Accommodate ESA prefix pages
+Date: Wed,  1 Apr 2026 04:09:14 +0200
+Message-ID: <20260401020915.1339228-4-farman@linux.ibm.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260401020915.1339228-1-farman@linux.ibm.com>
 References: <20260401020915.1339228-1-farman@linux.ibm.com>
@@ -95,26 +95,26 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 6J31Z4MRO6vKP42ijV3bizLU0xk_1VoT
-X-Authority-Analysis: v=2.4 cv=frzRpV4f c=1 sm=1 tr=0 ts=69cc7e52 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+X-Authority-Analysis: v=2.4 cv=J6enLQnS c=1 sm=1 tr=0 ts=69cc7e52 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
  a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=hR3koBuu2k_ba2zxy-8A:9
-X-Proofpoint-ORIG-GUID: 6J31Z4MRO6vKP42ijV3bizLU0xk_1VoT
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAxMDAxMCBTYWx0ZWRfX/6y/vM/ywWqg
- fui2hCowaZoGOxOPH21In09hNvS/wKaHa+TS/UcYmS1SJx7PmTAh4UhdiwBWiCZ2iE5L1dkGX+S
- 3s/SrsYBrGOLKJqoC7+ITnu+SgXDiHIkfehJfI7dwgguOQVswTObgRVSS0I+uC6VGCcsPqtm8Rx
- Z+ZlSqbSDUAxv6re3SjW12T3X1g8HR1pH0eJuOuHZGJh1OAX8jmLA4OMlX3ROUKh4OFtZO2ZXK+
- shXyz6TQ8gXK1ckhY+wZKlwjQSGdQ/k8bLe8wAETBorDEucroWIshColG5DPsH2yOFp92q+XfaP
- e2JCH7qMjtVE0IMT9fUXYIyRy+InB748byVHiiuIO2JDS7+wUU+vGePtFg66Iwx1hgNkIvzrgGA
- we9v/J2hokkEluDHMcmwnX5a7IdDA4QWKI9m0PzpduKohMJ452cS4LtIvXMj8T4FZIrZM5OFQuV
- QR3LSMp2F1Hlj6M6bmQ==
+ a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8 a=b85Ou7KXdJ74_8UzWO4A:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAxMDAxMCBTYWx0ZWRfX35J4OKvJR9dG
+ 3TAObSzG0xNjcetZ7LDQYjKHg21VR9FxJ8FufWUDXoAK0fSqFDH91CKR99Y5DFH6KZ5CXX/eRx1
+ 2egwXAs+VwUUpCj3HEqq8dfmktH8AD4piDVwG/cqDOevXZsVeAzb2LjA8AM0rZDoN9T5jp70Mle
+ y6OULJHmQhQsP6dachwF8YZEM93epLw3i2gHfhbNrT+SIUE4epGyuoqiHtqD2wN563+5H5K540p
+ ATaqC2wHDyVYJfYhQke3QyE39lPPdPkhnbsMGkq9SpPBPHQnLwcY2XuuYe+T5NDXeqiXPyzOKNP
+ 6/roEsZmc5eTVIuu9vnveI1rifLTnIjHTpFvspfGqi0ouinvqLl47dADgSrlPbV+Vor1djElvjs
+ t19jM8akj4d0x9+WgM9v33DJoXvQTTHqFMBW1CUtc6q2pS3s6pdI5vzFYQ+mRd+Obx6voop+Txd
+ U5qEwIC64B+fA7rOWhQ==
+X-Proofpoint-GUID: Btuy36bm35SJnhLvbfoEr2skJScycp3x
+X-Proofpoint-ORIG-GUID: Btuy36bm35SJnhLvbfoEr2skJScycp3x
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-04-01_01,2026-03-31_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0 clxscore=1011
- lowpriorityscore=0 bulkscore=0 adultscore=0 suspectscore=0 phishscore=0
+ suspectscore=0 clxscore=1011 adultscore=0 priorityscore=1501 bulkscore=0
+ phishscore=0 malwarescore=0 lowpriorityscore=0 spamscore=0 impostorscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2604010010
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -123,74 +123,108 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FROM_NEQ_ENVFROM(0.00)[farman@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18384-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18386-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[ibm.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_COUNT_TWELVE(0.00)[12];
 	PRECEDENCE_BULK(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[11];
 	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: B2259373A39
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: D7092373A8B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-In the event that a nested guest is put in ESA mode,
-ensure that some bits are scrubbed from the shadow SCB.
+The prefix page address occupies a different number
+of bits for z/Architecture versus ESA mode. Adjust the
+definition to cover both, and permit an ESA mode
+address within the nested codepath.
 
 Signed-off-by: Eric Farman <farman@linux.ibm.com>
 ---
- arch/s390/kvm/vsie.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/s390/include/asm/kvm_host_types.h | 3 +--
+ arch/s390/kvm/kvm-s390.h               | 5 ++++-
+ arch/s390/kvm/vsie.c                   | 7 ++++++-
+ 3 files changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
-index 888370a02ef7..584fc7803632 100644
---- a/arch/s390/kvm/vsie.c
-+++ b/arch/s390/kvm/vsie.c
-@@ -387,6 +387,17 @@ static int shadow_crycb(struct kvm_vcpu *vcpu, struc=
-t vsie_page *vsie_page)
- 	return 0;
+diff --git a/arch/s390/include/asm/kvm_host_types.h b/arch/s390/include/a=
+sm/kvm_host_types.h
+index 1394d3fb648f..3f50942bdfe6 100644
+--- a/arch/s390/include/asm/kvm_host_types.h
++++ b/arch/s390/include/asm/kvm_host_types.h
+@@ -137,8 +137,7 @@ struct mcck_volatile_info {
+ struct kvm_s390_sie_block {
+ 	atomic_t cpuflags;		/* 0x0000 */
+ 	__u32 : 1;			/* 0x0004 */
+-	__u32 prefix : 18;
+-	__u32 : 1;
++	__u32 prefix : 19;
+ 	__u32 ibc : 12;
+ 	__u8	reserved08[4];		/* 0x0008 */
+ #define PROG_IN_SIE (1<<0)
+diff --git a/arch/s390/kvm/kvm-s390.h b/arch/s390/kvm/kvm-s390.h
+index bf1d7798c1af..c0ad8effe3d0 100644
+--- a/arch/s390/kvm/kvm-s390.h
++++ b/arch/s390/kvm/kvm-s390.h
+@@ -122,7 +122,9 @@ static inline int kvm_is_ucontrol(struct kvm *kvm)
+ #endif
  }
 =20
-+static void shadow_esa(struct kvm_vcpu *vcpu, struct vsie_page *vsie_pag=
-e)
-+{
-+	struct kvm_s390_sie_block *scb_s =3D &vsie_page->scb_s;
-+
-+	/* Ensure these bits are indeed turned off */
-+	scb_s->eca &=3D ~ECA_VX;
-+	scb_s->ecb &=3D ~ECB_GS;
-+	scb_s->ecb3 &=3D ~ECB3_RI;
-+	scb_s->ecd &=3D ~ECD_HOSTREGMGMT;
-+}
-+
- /* shadow (round up/down) the ibc to avoid validity icpt */
- static void prepare_ibc(struct kvm_vcpu *vcpu, struct vsie_page *vsie_pa=
-ge)
+-#define GUEST_PREFIX_SHIFT 13
++#define GUEST_PREFIX_SHIFT 12
++#define GUEST_PREFIX_ZARCH 0x7fffe
++#define GUEST_PREFIX_ESA   0x7ffff
+ static inline u32 kvm_s390_get_prefix(struct kvm_vcpu *vcpu)
  {
-@@ -590,6 +601,9 @@ static int shadow_scb(struct kvm_vcpu *vcpu, struct v=
+ 	return vcpu->arch.sie_block->prefix << GUEST_PREFIX_SHIFT;
+@@ -133,6 +135,7 @@ static inline void kvm_s390_set_prefix(struct kvm_vcp=
+u *vcpu, u32 prefix)
+ 	VCPU_EVENT(vcpu, 3, "set prefix of cpu %03u to 0x%x", vcpu->vcpu_id,
+ 		   prefix);
+ 	vcpu->arch.sie_block->prefix =3D prefix >> GUEST_PREFIX_SHIFT;
++	vcpu->arch.sie_block->prefix &=3D GUEST_PREFIX_ZARCH;
+ 	kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
+ 	kvm_make_request(KVM_REQ_REFRESH_GUEST_PREFIX, vcpu);
+ }
+diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
+index 584fc7803632..e45378a01731 100644
+--- a/arch/s390/kvm/vsie.c
++++ b/arch/s390/kvm/vsie.c
+@@ -479,7 +479,7 @@ static int shadow_scb(struct kvm_vcpu *vcpu, struct v=
 sie_page *vsie_page)
- 	scb_s->hpid =3D HPID_VSIE;
- 	scb_s->cpnc =3D scb_o->cpnc;
+ 	struct kvm_s390_sie_block *scb_s =3D &vsie_page->scb_s;
+ 	/* READ_ONCE does not work on bitfields - use a temporary variable */
+ 	const uint32_t __new_prefix =3D scb_o->prefix;
+-	const uint32_t new_prefix =3D READ_ONCE(__new_prefix);
++	uint32_t new_prefix =3D READ_ONCE(__new_prefix);
+ 	const bool wants_tx =3D READ_ONCE(scb_o->ecb) & ECB_TE;
+ 	bool had_tx =3D scb_s->ecb & ECB_TE;
+ 	unsigned long new_mso =3D 0;
+@@ -527,6 +527,11 @@ static int shadow_scb(struct kvm_vcpu *vcpu, struct =
+vsie_page *vsie_page)
+=20
+ 	scb_s->icpua =3D scb_o->icpua;
 =20
 +	if (!(atomic_read(&scb_s->cpuflags) & CPUSTAT_ZARCH))
-+		shadow_esa(vcpu, vsie_page);
++		new_prefix &=3D GUEST_PREFIX_ESA;
++	else
++		new_prefix &=3D GUEST_PREFIX_ZARCH;
 +
- 	prepare_ibc(vcpu, vsie_page);
- 	rc =3D shadow_crycb(vcpu, vsie_page);
- out:
+ 	if (!(atomic_read(&scb_s->cpuflags) & CPUSTAT_SM))
+ 		new_mso =3D READ_ONCE(scb_o->mso) & 0xfffffffffff00000UL;
+ 	/* if the hva of the prefix changes, we have to remap the prefix */
 --=20
 2.51.0
 
