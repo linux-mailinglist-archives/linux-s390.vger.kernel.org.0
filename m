@@ -1,83 +1,83 @@
-Return-Path: <linux-s390+bounces-18484-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18485-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oJbxHdOGzmnfoAYAu9opvQ
-	(envelope-from <linux-s390+bounces-18484-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 02 Apr 2026 17:10:11 +0200
+	id qPF6O/2GzmnfoAYAu9opvQ
+	(envelope-from <linux-s390+bounces-18485-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 02 Apr 2026 17:10:53 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 125D338B121
-	for <lists+linux-s390@lfdr.de>; Thu, 02 Apr 2026 17:10:11 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6EA5138B13E
+	for <lists+linux-s390@lfdr.de>; Thu, 02 Apr 2026 17:10:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C6D3E309F4B1
-	for <lists+linux-s390@lfdr.de>; Thu,  2 Apr 2026 15:01:51 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 817E0304E0C7
+	for <lists+linux-s390@lfdr.de>; Thu,  2 Apr 2026 15:02:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 981363EF66B;
-	Thu,  2 Apr 2026 15:01:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 415BF3F075E;
+	Thu,  2 Apr 2026 15:01:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gSdnjz7Y"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TdQT6wK3"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540F93EF0DD;
-	Thu,  2 Apr 2026 15:01:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA5E3EF67D;
+	Thu,  2 Apr 2026 15:01:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775142108; cv=none; b=p1rB1lsWUAiLejTqtSnffq2CX3j3AJigktU7hzZzmedR0kSyV34G8zTutgA/TZJLq7HjyPIbDFFtYmjo9GTioTtu7J+QoPLl1qZhAan3aXnQAZSipuO4pq76OzA56tvY/NEthJNQdh4xoHS4ToxObUIf0gZcw/GarGt0IjaxTkA=
+	t=1775142110; cv=none; b=iuLGMAhLEdb+2Cg6ivHhy+aLqJbOQ5uJoGsxl5fzmvAIgqx0MVsgjaPpae2z91VODN3E561fwjQkQ4dhr7x5Nt6bzFYixVUWO7hr10ACijAq5fhRqUZ3hGcAm9j/7LeX+xHht+ejnocKQmcwpW10ljOP8tFTZOdK9ZofqEoMzFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775142108; c=relaxed/simple;
-	bh=e/+5/qEEo63UXy1ywVmWm0yTTpZdsmFpd0m/57Ro5Xw=;
+	s=arc-20240116; t=1775142110; c=relaxed/simple;
+	bh=EmPirQcevw+Nf/B/EQlvIHWhaoy0kaAz1B5Nyns08co=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E+XxzwG3rqv737A2w2W4Usz4eiq0R7qSGF8UAHyn+LckRaGBeiE48Wiidvfz3o/OoNdM0d/D7C5kDTuGIRksbf19qkzF7DgslK5mHweD0Igf7CNhsJGn+Qz186psYEzUr0Z0hfiywzgd1IdL9Gs9gwdJ/i001fg3QdEyadey1kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gSdnjz7Y; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=GmJuGbGL03oVxoMykZ9VoKRK/nDBEJplM3cE1gAJ/S6DS1qWEXaixBQI7OhK6UxENONY1+MuPI+QKQDtUeEfOdqVZk0n8AFd9DtKh6dpRZam1auJuI0gVIeQyyOqe+YtYy/J9aO/ghcSDnJhoXouQB4WQx62E2YzVoqm08UH3y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TdQT6wK3; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6321QLsM108580;
-	Thu, 2 Apr 2026 15:01:44 GMT
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 631MVUYo4036177;
+	Thu, 2 Apr 2026 15:01:46 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=ZSGVAYAeoKV0OpUc8
-	NfP2xhZ1pjTYesAxfT8FV5dGWM=; b=gSdnjz7YSYtLspbE8hb3BR5mmdKFwhdFm
-	l51KyAR2zhCfntKvCDmqJconwfFo2bN0AQuI0yvKxmMc4fqMHec6+CRoYLrs4wQZ
-	tD2SJLNDWUlYIvXMiJfY22YJ8tCmR/KRNJr8pOqayQm54O0Cq6aq9MFRnPaL44jo
-	vlSw2elC0/4cN5U3m0+9EdXRBjQpUFAnOPbjHd7Wf69jK726sU64kJEII8OTAQ2i
-	HOlBlVrB5jo7qoeDsGha+X5m1dvlFZyCCSYpiWpDFb8kn0pLB6bkTqhjyBfJHCEP
-	hCxL8DdIFnX3aBuJTa05NEkqOMGc9JSNPZiBWclTn6XZeHfpkPo2A==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d65dcmdkc-1
+	:mime-version:references:subject:to; s=pp1; bh=FS44tKqpgrPrSqxT4
+	3CY6F5uHOjzNASQqSW9bEv+ZF4=; b=TdQT6wK3OAubywbBd22vsoCYc4CKTZQ5e
+	YNp/E9w9u9JabUrBLl2l212JadcImXFYMV6tFuPgIQI2wt5YRFAM8pm4n86B01Jz
+	mH73bUb+V1hztLPwxLD35HQftyqbrQvY2k14F45YbeeUFi61oVFT28YbnJ8Q+hIJ
+	4Dy6k7ZlwEvPjbYFEgF8oZaeM6hSQnzKW5cgHb9dNo9PCGlo8Hk4JU6dxpep35E7
+	j800zDeZQqtLN/uWobDo/0tkAnLq/Se430stuniV/q2uN6GXev0Mz1/mlSaa5TCa
+	Kgx8rgfEQERgXC7LV2ZMU4fIZq/O1oq0+gsQtgeobM1WFjXjdC2XQ==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d66mscbhq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 02 Apr 2026 15:01:44 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 632B7ara013987;
-	Thu, 2 Apr 2026 15:01:43 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4d6ttktd1v-1
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 632BMugV022165;
+	Thu, 2 Apr 2026 15:01:44 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4d6tanaec5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 02 Apr 2026 15:01:43 +0000
+	Thu, 02 Apr 2026 15:01:44 +0000
 Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 632F1bS246531020
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 632F1cN628377586
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 2 Apr 2026 15:01:37 GMT
+	Thu, 2 Apr 2026 15:01:38 GMT
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 67B0620040;
+	by IMSVA (Postfix) with ESMTP id 4A9F520040;
+	Thu,  2 Apr 2026 15:01:38 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8477920043;
 	Thu,  2 Apr 2026 15:01:37 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A5C5C20043;
-	Thu,  2 Apr 2026 15:01:36 +0000 (GMT)
 Received: from p-imbrenda.ibmuc.com (unknown [9.87.129.177])
 	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  2 Apr 2026 15:01:36 +0000 (GMT)
+	Thu,  2 Apr 2026 15:01:37 +0000 (GMT)
 From: Claudio Imbrenda <imbrenda@linux.ibm.com>
 To: linux-kernel@vger.kernel.org
 Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, borntraeger@de.ibm.com,
         frankja@linux.ibm.com, nrb@linux.ibm.com, seiden@linux.ibm.com,
         schlameuss@linux.ibm.com, gra@linux.ibm.com, david@kernel.org
-Subject: [PATCH v3 1/6] KVM: s390: Add some useful mask macros
-Date: Thu,  2 Apr 2026 17:01:30 +0200
-Message-ID: <20260402150135.196943-2-imbrenda@linux.ibm.com>
+Subject: [PATCH v3 2/6] KVM: s390: Add alignment checks for hugepages
+Date: Thu,  2 Apr 2026 17:01:31 +0200
+Message-ID: <20260402150135.196943-3-imbrenda@linux.ibm.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260402150135.196943-1-imbrenda@linux.ibm.com>
 References: <20260402150135.196943-1-imbrenda@linux.ibm.com>
@@ -89,46 +89,44 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=RsjI7SmK c=1 sm=1 tr=0 ts=69ce84d8 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+X-Authority-Analysis: v=2.4 cv=J6enLQnS c=1 sm=1 tr=0 ts=69ce84d8 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
  a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8 a=Oh1pnlNaMCSVx7q4Av0A:9
-X-Proofpoint-GUID: bhQnYI5Cbjjo7Egg56LwmWIPO22KM-vs
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAyMDEzMyBTYWx0ZWRfX3/+R2RbWy8J1
- gqbu5EA0hrg08OzjxIQIJ3W0QcWycHTt+zM4qguouKvJ8inmzA5hzcHWpSAZz/NI7R/p7dQhi2O
- GKJ3vo9WpfPY/h7BLzVT8LDfNMjCC/atK/UckPK9177O7h1KJicBtLWSE6YaGnfdb3vu3+GxPZl
- M2b/rMyZioguEKENKgKbv9I6uA4e250Y2WKOWtIhCI/BOE5zfqp7Nhs5UhJbCqiJ2pkFJVhgjBw
- WR17MakwIRKst4pylQc5N7qKAq4PVqTeWxz9Mx3BcLRWKUJMY4hm/C5vbS47RpejwaemkUwBA1i
- rEhUM7sd2Kw+NwdjidiMs+VI5+8HB3d1RR6aCXC/MDTSdrk3Q5a+KftPi6AmzfzRoe64hLapmod
- e2hnhlk/mDyQhZ0wj3JvtDvu+vPADDrUQlePn+G4jbH9RWsD7E8RCp4kQOGKR+GMmAvbQZKuBqB
- SsYI8Xl9/0ux2LO1Ndw==
-X-Proofpoint-ORIG-GUID: bhQnYI5Cbjjo7Egg56LwmWIPO22KM-vs
+ a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8 a=L0FeP2ZHASatk8IJKvEA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAyMDEzMyBTYWx0ZWRfX8KM4s4FTMTxh
+ bLh4XGC2pMCcxZtH4kxd+5EaEP3ZP6Syo5BLJAb2DB0NdT7BiTmTDJFKEzx8shvzlRrvhOvt8kH
+ CeiDnIfWTTouzz5IUpy4aatYxC/DB45y3gWjoYC3rOmqhPhjRi6lrOP06JE6gyUS33k7GfKcheQ
+ 8ehu+gYtjISfH1pSDRzEjhouYa4UoNiGT29Ml9XbJ5EfMqbrlzq+G9GWPeAmHVrRfkjofbEeR1S
+ PEih8RofFvrl5TvfDlVlzh5RFUD8g6SwLQdWK4wHsW+IFF8svq2XXQUaTZaSztBexxv+pzllg+/
+ P7zS09L63iPWoMyg4MxRn7UZOBKvls6QYW4Xh8u49R17k99SNMVnbOHu9owC490b5VGq0EuLAHU
+ EYR65otBOHYZ1e6psjKM2mog+E+Zww==
+X-Proofpoint-GUID: 9DyDnfyf5weZViLQOUsuOjxeuqyvZ0FI
+X-Proofpoint-ORIG-GUID: 9DyDnfyf5weZViLQOUsuOjxeuqyvZ0FI
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-04-02_02,2026-04-02_03,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 bulkscore=0 priorityscore=1501 lowpriorityscore=0
- suspectscore=0 malwarescore=0 spamscore=0 clxscore=1015 phishscore=0
- adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2603050001
- definitions=main-2604020133
+ suspectscore=0 adultscore=0 bulkscore=0 phishscore=0 malwarescore=0
+ lowpriorityscore=0 spamscore=0 classifier=typeunknown authscore=0 authtc=
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.22.0-2603050001 definitions=main-2604020133
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18484-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18485-lists,linux-s390=lfdr.de];
 	DKIM_TRACE(0.00)[ibm.com:+];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.ibm.com:mid];
 	TAGGED_RCPT(0.00)[linux-s390];
 	FROM_NEQ_ENVFROM(0.00)[imbrenda@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
@@ -138,51 +136,111 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TO_DN_NONE(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 125D338B121
+X-Rspamd-Queue-Id: 6EA5138B13E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Add _{SEGMENT,REGION3}_FR_MASK, similar to _{SEGMENT,REGION3}_MASK, but
-working on gfn/pfn instead of addresses. Use them in gaccess.c instead
-of using the normal masks plus gpa_to_gfn().
+When backing a guest page with a large page, check that the alignment
+of the guest page matches the alignment of the host physical page
+backing it within the large page.
 
-Also add _PAGES_PER_{SEGMENT,REGION3} to make future code more readable.
+Also check that the memslot is large enough to fit the large page.
+
+Those checks are currently not needed, because memslots are guaranteed
+to be 1m-aligned, but this will change.
 
 Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
 ---
- arch/s390/kvm/dat.h     | 5 +++++
- arch/s390/kvm/gaccess.c | 2 +-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ arch/s390/kvm/faultin.c |  2 +-
+ arch/s390/kvm/gmap.c    | 32 ++++++++++++++++++++++++++------
+ arch/s390/kvm/gmap.h    |  3 ++-
+ 3 files changed, 29 insertions(+), 8 deletions(-)
 
-diff --git a/arch/s390/kvm/dat.h b/arch/s390/kvm/dat.h
-index 123e11dcd70d..809cd7a8adb7 100644
---- a/arch/s390/kvm/dat.h
-+++ b/arch/s390/kvm/dat.h
-@@ -104,6 +104,11 @@ union pte {
- 	} tok;
- };
+diff --git a/arch/s390/kvm/faultin.c b/arch/s390/kvm/faultin.c
+index e37cd18200f5..ddf0ca71f374 100644
+--- a/arch/s390/kvm/faultin.c
++++ b/arch/s390/kvm/faultin.c
+@@ -109,7 +109,7 @@ int kvm_s390_faultin_gfn(struct kvm_vcpu *vcpu, struct kvm *kvm, struct guest_fa
+ 		scoped_guard(read_lock, &kvm->mmu_lock) {
+ 			if (!mmu_invalidate_retry_gfn(kvm, inv_seq, f->gfn)) {
+ 				f->valid = true;
+-				rc = gmap_link(mc, kvm->arch.gmap, f);
++				rc = gmap_link(mc, kvm->arch.gmap, f, slot);
+ 				kvm_release_faultin_page(kvm, f->page, !!rc, f->write_attempt);
+ 				f->page = NULL;
+ 			}
+diff --git a/arch/s390/kvm/gmap.c b/arch/s390/kvm/gmap.c
+index ef0c6ebfdde2..e3c1b070a11d 100644
+--- a/arch/s390/kvm/gmap.c
++++ b/arch/s390/kvm/gmap.c
+@@ -613,17 +613,37 @@ int gmap_try_fixup_minor(struct gmap *gmap, struct guest_fault *fault)
+ 	return rc;
+ }
  
-+#define _SEGMENT_FR_MASK	(_SEGMENT_MASK >> PAGE_SHIFT)
-+#define _REGION3_FR_MASK	(_REGION3_MASK >> PAGE_SHIFT)
-+#define _PAGES_PER_SEGMENT	_PAGE_ENTRIES
-+#define _PAGES_PER_REGION3	(_PAGES_PER_SEGMENT * _CRST_ENTRIES)
-+
- /* Soft dirty, needed as macro for atomic operations on ptes */
- #define _PAGE_SD 0x002
+-static inline bool gmap_2g_allowed(struct gmap *gmap, gfn_t gfn)
++static inline bool gmap_2g_allowed(struct gmap *gmap, struct guest_fault *f,
++				   struct kvm_memory_slot *slot)
+ {
+ 	return false;
+ }
  
-diff --git a/arch/s390/kvm/gaccess.c b/arch/s390/kvm/gaccess.c
-index 4630b2a067ea..a2ad11e2bf61 100644
---- a/arch/s390/kvm/gaccess.c
-+++ b/arch/s390/kvm/gaccess.c
-@@ -1461,7 +1461,7 @@ static int _do_shadow_crste(struct gmap *sg, gpa_t raddr, union crste *host, uni
- 	lockdep_assert_held(&sg->kvm->mmu_lock);
- 	lockdep_assert_held(&sg->parent->children_lock);
+-static inline bool gmap_1m_allowed(struct gmap *gmap, gfn_t gfn)
++/**
++ * gmap_1m_allowed() - Check whether a 1M hugepage is allowed.
++ * @gmap: The gmap of the guest.
++ * @f: Describes the fault that is being resolved.
++ * @slot: The memslot the faulting address belongs to.
++ *
++ * The function checks whether the GMAP_FLAG_ALLOW_HPAGE_1M flag is set for
++ * @gmap, whether the offset of the address in the 1M virtual frame is the
++ * same as the offset in the physical 1M frame, and finally whether the whole
++ * 1M page would fit in the given memslot.
++ *
++ * Return: true if a 1M hugepage is allowed to back the faulting address, false
++ *         otherwise.
++ */
++static inline bool gmap_1m_allowed(struct gmap *gmap, struct guest_fault *f,
++				   struct kvm_memory_slot *slot)
+ {
+-	return test_bit(GMAP_FLAG_ALLOW_HPAGE_1M, &gmap->flags);
++	return test_bit(GMAP_FLAG_ALLOW_HPAGE_1M, &gmap->flags) &&
++	       !((f->gfn ^ f->pfn) & ~_SEGMENT_FR_MASK) &&
++	       slot->base_gfn <= ALIGN_DOWN(f->gfn, _PAGES_PER_SEGMENT) &&
++	       slot->base_gfn + slot->npages >= ALIGN(f->gfn + 1, _PAGES_PER_SEGMENT);
+ }
  
--	gfn = f->gfn & gpa_to_gfn(is_pmd(*table) ? _SEGMENT_MASK : _REGION3_MASK);
-+	gfn = f->gfn & (is_pmd(*table) ? _SEGMENT_FR_MASK : _REGION3_FR_MASK);
- 	scoped_guard(spinlock, &sg->host_to_rmap_lock)
- 		rc = gmap_insert_rmap(sg, gfn, gpa_to_gfn(raddr), host->h.tt);
- 	if (rc)
+-int gmap_link(struct kvm_s390_mmu_cache *mc, struct gmap *gmap, struct guest_fault *f)
++int gmap_link(struct kvm_s390_mmu_cache *mc, struct gmap *gmap, struct guest_fault *f,
++	      struct kvm_memory_slot *slot)
+ {
+ 	unsigned int order;
+ 	int rc, level;
+@@ -633,9 +653,9 @@ int gmap_link(struct kvm_s390_mmu_cache *mc, struct gmap *gmap, struct guest_fau
+ 	level = TABLE_TYPE_PAGE_TABLE;
+ 	if (f->page) {
+ 		order = folio_order(page_folio(f->page));
+-		if (order >= get_order(_REGION3_SIZE) && gmap_2g_allowed(gmap, f->gfn))
++		if (order >= get_order(_REGION3_SIZE) && gmap_2g_allowed(gmap, f, slot))
+ 			level = TABLE_TYPE_REGION3;
+-		else if (order >= get_order(_SEGMENT_SIZE) && gmap_1m_allowed(gmap, f->gfn))
++		else if (order >= get_order(_SEGMENT_SIZE) && gmap_1m_allowed(gmap, f, slot))
+ 			level = TABLE_TYPE_SEGMENT;
+ 	}
+ 	rc = dat_link(mc, gmap->asce, level, uses_skeys(gmap), f);
+diff --git a/arch/s390/kvm/gmap.h b/arch/s390/kvm/gmap.h
+index ccb5cd751e31..a2f74587ddbf 100644
+--- a/arch/s390/kvm/gmap.h
++++ b/arch/s390/kvm/gmap.h
+@@ -90,7 +90,8 @@ struct gmap *gmap_new(struct kvm *kvm, gfn_t limit);
+ struct gmap *gmap_new_child(struct gmap *parent, gfn_t limit);
+ void gmap_remove_child(struct gmap *child);
+ void gmap_dispose(struct gmap *gmap);
+-int gmap_link(struct kvm_s390_mmu_cache *mc, struct gmap *gmap, struct guest_fault *fault);
++int gmap_link(struct kvm_s390_mmu_cache *mc, struct gmap *gmap, struct guest_fault *fault,
++	      struct kvm_memory_slot *slot);
+ void gmap_sync_dirty_log(struct gmap *gmap, gfn_t start, gfn_t end);
+ int gmap_set_limit(struct gmap *gmap, gfn_t limit);
+ int gmap_ucas_translate(struct kvm_s390_mmu_cache *mc, struct gmap *gmap, gpa_t *gaddr);
 -- 
 2.53.0
 
