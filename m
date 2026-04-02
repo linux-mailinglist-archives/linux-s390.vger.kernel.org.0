@@ -1,71 +1,71 @@
-Return-Path: <linux-s390+bounces-18456-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18434-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iGFjF1L1zWlLjgYAu9opvQ
-	(envelope-from <linux-s390+bounces-18456-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 02 Apr 2026 06:49:22 +0200
+	id kNg2GurvzWkzjQYAu9opvQ
+	(envelope-from <linux-s390+bounces-18434-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 02 Apr 2026 06:26:18 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53D05383C23
-	for <lists+linux-s390@lfdr.de>; Thu, 02 Apr 2026 06:49:21 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 751C038390C
+	for <lists+linux-s390@lfdr.de>; Thu, 02 Apr 2026 06:26:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id E7829310CCB8
-	for <lists+linux-s390@lfdr.de>; Thu,  2 Apr 2026 04:28:04 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 8758A303C107
+	for <lists+linux-s390@lfdr.de>; Thu,  2 Apr 2026 04:22:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C54F36604A;
-	Thu,  2 Apr 2026 04:22:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EC7136166E;
+	Thu,  2 Apr 2026 04:22:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qfZMSHfw"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DME2ModC"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214CD3845AA;
-	Thu,  2 Apr 2026 04:22:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375DF3603D7;
+	Thu,  2 Apr 2026 04:21:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775103777; cv=none; b=em62nyVRANNAmFShjw6qSkJtgSDLOxfpoVMH7sIU2p/gOXoWSbAYkLbAxi+nfYjXSHABslkBh0DyfCXi/z26rU+DiBYr3lqcC1m04iokUCxxJLmhg4eMNV4wFI8yXGAcoB94y2hHaHXusrC9DWIXmI/S5LwjovclBZH5u3ADlOc=
+	t=1775103721; cv=none; b=TfndRV1mzPkzYyh0W4BMpYcS1REni3j8eE6N5OBmT1WUyuYzxtIhbQKwDDzGxjpsZuQi+oq5TTndPSsMrvYBqWeGSJS0bMCpH1e3Kjfis+Rt/wiYGmjQhmFl5UA1D8NZXPXSgIedyvcpulcppeyUmScKYa3wkvfv0ShKOszBR4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775103777; c=relaxed/simple;
-	bh=+VWxF3ubfEpOfojNt+LtrihMD7kEFl0k03U8WkRTG+U=;
+	s=arc-20240116; t=1775103721; c=relaxed/simple;
+	bh=jfIPUtOYNhLOAOyEu0oyWgvZX+Bji6FHDPvDOhXBHJo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LETNlzA5/Z4MIcaGnnyvIHmQYfiWQ/u7+zW77kSPoki3jKxShC43Jxl1mftvcC84K7q0XDCDWqPpbH7A7qJAEj+WuVDo0FZuCPdp5FAjuQjIXtrk8mf8osPDOixyHT8dU3S07leaEa1/Dwzm4955WIWHWT8cE/tmRqLEI0Rhlh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qfZMSHfw; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=aCqfdRH7vE4vvlEDEnKH382vUwLjFrDBRjZIWR7Qnetnhx73A36MUd7nlJkzZEzA1XVlVch2AFdKTZ6ils7II83rIp1SC/ipZi+98Pe67aJJImj60sWZC0hUkmJm5VgbLtQ8hum88OZdmt5KRnANwwdtEo34Td2lMSU5btuTi58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DME2ModC; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 631NO0Lh4032815;
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63214m2T446369;
 	Thu, 2 Apr 2026 04:21:37 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=xLTHgBaX4N6h2Ors7
-	cFIfhp6TM9OwFUuFT4zBd8pHL0=; b=qfZMSHfwA4TbtvEle68vnFgoo9hR8/HYi
-	zJoUW/L1LBtMiLHiS4wXmCNiJs2hi6OcABkoeTix/OyNK+T0KT9mi1TgHMhI9Yz7
-	C5yDJY+QgaAkodVy53E4LtvtKZVLVy6yQVDCL+m4KWN2a1n63lD0OhLYk//0EGB8
-	AfwMn00amLEY4yW32zEvn10Gmn5lW3NPeEK+s8CHchtTOGS524BUuKL8FJA5Dfos
-	EPYE//gYEm6dv1EVgdeCU2SHaXHsCzj4VEluE4DpfslNnykqHsDBHizzhIUFdbQ3
-	U0jWPHNcn7t9oZ70vBUJaelub+GqlnNnNFKVkNtQ5Fw8kmiz/s0lg==
+	:mime-version:references:subject:to; s=pp1; bh=p4Z8YlQ6h3M4VjuQc
+	6XgTzA8aek+fO8tFMkjuzjLYjk=; b=DME2ModCfS406wlw1EP/Y3v3VJqZFNNR/
+	lsUZdSUWTeaBu0q8OSHYOR0UKd7UJbEbHMbeP1fSADwn9PrMSa/7iZLAse+XLDwu
+	c9LvPEpixeHj0NDM76ZuqK38pHeME1nFe7/1f5yhB6DIVrFzQHtbBsJsKfFEg7pJ
+	HhlONV0qfMAD5LPLIMBWFOlb422mbeI1o3BkgoPWGGJ7J82D10DKky2Q6JBml/0l
+	NJKkVrEUgdcfLhILEgh11BSf3Yk6Phqx6d00WE1pFkMcQcT6fgUFEfy3FfL+HWkB
+	SphitBBydLR9DhkSJOaf2cWUwIaNj9ufU7KtXdgGYBH64QvkzhXZw==
 Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d66msabrv-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d66msabru-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 02 Apr 2026 04:21:37 +0000 (GMT)
+	Thu, 02 Apr 2026 04:21:36 +0000 (GMT)
 Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 6321WdXN022217;
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 6320GNpG022271;
 	Thu, 2 Apr 2026 04:21:36 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4d6tan8kb5-1
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4d6tan8kb4-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 02 Apr 2026 04:21:36 +0000
 Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6324LVhN47120672
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6324LWok44695962
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Thu, 2 Apr 2026 04:21:32 GMT
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D4BE22004E;
-	Thu,  2 Apr 2026 04:21:31 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 31A8A20043;
+	Thu,  2 Apr 2026 04:21:32 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 786ED2004B;
+	by IMSVA (Postfix) with ESMTP id DB6412004F;
 	Thu,  2 Apr 2026 04:21:31 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
 	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
@@ -89,9 +89,9 @@ Cc: Andreas Grapentin <Andreas.Grapentin@ibm.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
         Will Deacon <will@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>
-Subject: [PATCH v1 15/27] KVM: S390: Refactor gmap
-Date: Thu,  2 Apr 2026 06:21:11 +0200
-Message-ID: <20260402042125.3948963-16-seiden@linux.ibm.com>
+Subject: [PATCH v1 16/27] KVM: Make device name configurable
+Date: Thu,  2 Apr 2026 06:21:12 +0200
+Message-ID: <20260402042125.3948963-17-seiden@linux.ibm.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260402042125.3948963-1-seiden@linux.ibm.com>
 References: <20260402042125.3948963-1-seiden@linux.ibm.com>
@@ -103,20 +103,20 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=J6enLQnS c=1 sm=1 tr=0 ts=69cdeed1 cx=c_pps
+X-Authority-Analysis: v=2.4 cv=J6enLQnS c=1 sm=1 tr=0 ts=69cdeed0 cx=c_pps
  a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
  a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8 a=n98tg5vCwHpx4NF3Fa0A:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAyMDAzNCBTYWx0ZWRfXzwSemkXYaijR
- 0F/6fqUdFB+Rikhgyj8+zu/mlWy6TjrzxDFHzCoeyeFgSzIFHhex5iVV5R43PITNvu0SQ49cfxf
- x5+JDIck8jEh5y4yIxO3GihekR1jjjEUeK0UJpq08ajfkuYmRMC6qZwybOYJsIIZC4oVBJMpVHq
- ybMLAr90oda6HzRlDSAdHOfxiRbPhg+PTZXMNeFcavRaF0pTB3FTYQ2lnWqdyCaDQmBxU4P2NXk
- gFB01SnswpRA4UYG1Sw3zfB2BnkeIgialmNPIlf66KJuBKP7GxU0xZVd8GCVB7SSChGePCwqlc9
- 78unXVduEW/FvybCEEzyICLwz2Ng+TXCjPN4b4yvcuQ4UsKZXzoZvvS97Ex5TG2N3OWvse/6k+q
- 6ovabGm2gFIxEYdZBXCwf0/Oc5yL71o/w7+adYzAX/veHXwOIdV3AZOabs0N7orLaA3whd2G/h8
- q0lCpoop9CkQ06ggYQg==
-X-Proofpoint-GUID: oJHeK77oynE-wZMN_Q_PgPMDCP9PSPNi
-X-Proofpoint-ORIG-GUID: oJHeK77oynE-wZMN_Q_PgPMDCP9PSPNi
+ a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8 a=YqMzC722GnigpkU_z3QA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAyMDAzNCBTYWx0ZWRfX8iMNmbESXhM0
+ gRecpM58TvFFUeD4ZYj0JqZpj341HeJ3ZXOepmQsgEI2sT1lku2JNTUq/zimb3Vy/mzppYuW3t5
+ QR+Wi/w9xdoSbIRbF0CJakkL6/6TEIqTAyzUowBzDf9xf5ThiwrhSh0hJu59DY30Po7EdUVE0sj
+ tLh+vBKwfwe1KkizOqr8SbZE2u3FIkefG1DznzDCsXF0pRoFN9B57AGyiA7Yix0tqkjpYVdArn3
+ k320BFFq2NlsrD4fr/2qSzjTGD2eZyH1dXDXQIdv/zuVDJzs591D6mrmKi+HplcDUNjyl0bXL7r
+ 2/r9wpoRUljuSuMP8KlmzW12cHW0ktS+JCibXvRZ7DGzeWR1PKzZaWLS2Y5kjWQrzR21YDuIOHm
+ va+0Z4DBvC647zGJ/s3nP8vK4E9bqswOUa3VqeIVexc2vKIRcZLb8rX1e7dNz5k8C+bQ/zGovIp
+ 3Dp0rpuh/0jFE1R7Q0Q==
+X-Proofpoint-GUID: upYGnz-oXvGeGqqMRUrc_nd6zQXZRgxC
+X-Proofpoint-ORIG-GUID: upYGnz-oXvGeGqqMRUrc_nd6zQXZRgxC
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-04-02_01,2026-04-01_02,2025-10-01_01
@@ -126,645 +126,124 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2604020034
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18456-lists,linux-s390=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[23];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18434-lists,linux-s390=lfdr.de];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[seiden@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,linux.ibm.com:mid];
 	TAGGED_RCPT(0.00)[linux-s390];
-	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 53D05383C23
+X-Rspamd-Queue-Id: 751C038390C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Refactor gmap code such that a second s390 (host) KVM implementation can
-use the gmap code as well. Move relevant definitions into the shared
-kvm_host.h. Move mmu code and traces from s390 to gmap.
+Allow KVM implementations to choose alternative device names. This is
+especially useful for architectures providing multiple KVM
+implementations simultaneously.
 
+Co-developed-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+Signed-off-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
 Signed-off-by: Steffen Eiden <seiden@linux.ibm.com>
 ---
- arch/s390/include/asm/kvm_host.h      |   9 ++
- arch/s390/include/asm/kvm_host_s390.h |  11 +-
- arch/s390/kvm/gmap/Makefile           |   2 +-
- arch/s390/kvm/gmap/faultin.c          |  11 +-
- arch/s390/kvm/gmap/gmap.c             |  11 +-
- arch/s390/kvm/gmap/gmap.h             |  11 ++
- arch/s390/kvm/gmap/mmu.c              | 154 ++++++++++++++++++++++++++
- arch/s390/kvm/gmap/trace-gmap.h       |  59 ++++++++++
- arch/s390/kvm/s390/s390.c             | 116 +------------------
- arch/s390/kvm/s390/s390.h             |  16 +++
- arch/s390/kvm/s390/trace.h            |  14 ---
- 11 files changed, 272 insertions(+), 142 deletions(-)
- create mode 100644 arch/s390/kvm/gmap/mmu.c
- create mode 100644 arch/s390/kvm/gmap/trace-gmap.h
+ include/linux/kvm_host.h |  4 +++-
+ virt/kvm/kvm_main.c      | 21 ++++++++++++++-------
+ 2 files changed, 17 insertions(+), 8 deletions(-)
 
-diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
-index 6ff643ac0d15..1c20168a3ef5 100644
---- a/arch/s390/include/asm/kvm_host.h
-+++ b/arch/s390/include/asm/kvm_host.h
-@@ -5,4 +5,13 @@
- 
- #include <asm/kvm_host_s390.h>
- 
-+#define PGM_PROTECTION			0x04
-+#define PGM_ADDRESSING			0x05
-+#define PGM_SEGMENT_TRANSLATION		0x10
-+#define PGM_PAGE_TRANSLATION		0x11
-+#define PGM_ASCE_TYPE			0x38
-+#define PGM_REGION_FIRST_TRANS		0x39
-+#define PGM_REGION_SECOND_TRANS		0x3a
-+#define PGM_REGION_THIRD_TRANS		0x3b
-+
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index ff2aff71e207..d5d9757e40ca 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1062,7 +1062,9 @@ static inline void kvm_irqfd_exit(void)
+ {
+ }
  #endif
-diff --git a/arch/s390/include/asm/kvm_host_s390.h b/arch/s390/include/asm/kvm_host_s390.h
-index 2d62a8ff8008..c528d7600bed 100644
---- a/arch/s390/include/asm/kvm_host_s390.h
-+++ b/arch/s390/include/asm/kvm_host_s390.h
-@@ -153,8 +153,7 @@ struct kvm_vcpu_stat {
- #define PGM_OPERATION			0x01
- #define PGM_PRIVILEGED_OP		0x02
- #define PGM_EXECUTE			0x03
--#define PGM_PROTECTION			0x04
--#define PGM_ADDRESSING			0x05
-+/* 0x04 & 0x05 defined in kvm_host.h */
- #define PGM_SPECIFICATION		0x06
- #define PGM_DATA			0x07
- #define PGM_FIXED_POINT_OVERFLOW	0x08
-@@ -165,8 +164,7 @@ struct kvm_vcpu_stat {
- #define PGM_HFP_EXPONENT_UNDERFLOW	0x0d
- #define PGM_HFP_SIGNIFICANCE		0x0e
- #define PGM_HFP_DIVIDE			0x0f
--#define PGM_SEGMENT_TRANSLATION		0x10
--#define PGM_PAGE_TRANSLATION		0x11
-+/* 0x10 & 0x11 defined in kvm_host.h */
- #define PGM_TRANSLATION_SPEC		0x12
- #define PGM_SPECIAL_OPERATION		0x13
- #define PGM_OPERAND			0x15
-@@ -196,10 +194,7 @@ struct kvm_vcpu_stat {
- #define PGM_STACK_SPECIFICATION		0x32
- #define PGM_STACK_TYPE			0x33
- #define PGM_STACK_OPERATION		0x34
--#define PGM_ASCE_TYPE			0x38
--#define PGM_REGION_FIRST_TRANS		0x39
--#define PGM_REGION_SECOND_TRANS		0x3a
--#define PGM_REGION_THIRD_TRANS		0x3b
-+/* 0x38 - 0x3b defined in kvm_host.h */
- #define PGM_SECURE_STORAGE_ACCESS	0x3d
- #define PGM_NON_SECURE_STORAGE_ACCESS	0x3e
- #define PGM_SECURE_STORAGE_VIOLATION	0x3f
-diff --git a/arch/s390/kvm/gmap/Makefile b/arch/s390/kvm/gmap/Makefile
-index 21967ed88877..140914c5c14f 100644
---- a/arch/s390/kvm/gmap/Makefile
-+++ b/arch/s390/kvm/gmap/Makefile
-@@ -2,4 +2,4 @@
+-int kvm_init(unsigned vcpu_size, unsigned vcpu_align, struct module *module);
++int kvm_init(unsigned int vcpu_size, unsigned int vcpu_align, struct module *module);
++int kvm_init_with_dev(unsigned int vcpu_size, unsigned int vcpu_align,
++		      struct module *module, const char *dev_name, int minor);
+ void kvm_exit(void);
  
- GMAP ?= ../gmap
- 
--kvm-y += $(GMAP)/dat.o $(GMAP)/gmap.o $(GMAP)/faultin.o
-+kvm-y += $(GMAP)/dat.o $(GMAP)/gmap.o $(GMAP)/faultin.o $(GMAP)/mmu.o
-diff --git a/arch/s390/kvm/gmap/faultin.c b/arch/s390/kvm/gmap/faultin.c
-index e37cd18200f5..26b7d4cb1e86 100644
---- a/arch/s390/kvm/gmap/faultin.c
-+++ b/arch/s390/kvm/gmap/faultin.c
-@@ -9,10 +9,15 @@
- #include <linux/kvm_host.h>
- 
- #include "gmap.h"
--#include "trace.h"
- #include "faultin.h"
--
--bool kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu);
-+#ifdef KVM_S390_ARM64
-+#include "arm.h"
-+#else
-+#include "s390.h"
-+#endif
-+
-+#define CREATE_TRACE_POINTS
-+#include "trace-gmap.h"
- 
- /*
-  * kvm_s390_faultin_gfn() - handle a dat fault.
-diff --git a/arch/s390/kvm/gmap/gmap.c b/arch/s390/kvm/gmap/gmap.c
-index 1312d7882824..8c2cc65e7a85 100644
---- a/arch/s390/kvm/gmap/gmap.c
-+++ b/arch/s390/kvm/gmap/gmap.c
-@@ -21,14 +21,13 @@
- 
- #include "dat.h"
- #include "gmap.h"
-+#ifdef KVM_S390_ARM64
-+#include "arm.h"
-+#else
- #include "s390.h"
-+#endif
- #include "faultin.h"
- 
--static inline bool kvm_s390_is_in_sie(struct kvm_vcpu *vcpu)
--{
--	return vcpu->arch.sie_block->prog0c & PROG_IN_SIE;
--}
--
- static int gmap_limit_to_type(gfn_t limit)
- {
- 	if (!limit)
-@@ -253,6 +252,7 @@ int s390_replace_asce(struct gmap *gmap)
- 
- bool _gmap_unmap_prefix(struct gmap *gmap, gfn_t gfn, gfn_t end, bool hint)
- {
-+#ifndef KVM_S390_ARM64
- 	struct kvm *kvm = gmap->kvm;
- 	struct kvm_vcpu *vcpu;
- 	gfn_t prefix_gfn;
-@@ -271,6 +271,7 @@ bool _gmap_unmap_prefix(struct gmap *gmap, gfn_t gfn, gfn_t end, bool hint)
- 			kvm_s390_sync_request(KVM_REQ_REFRESH_GUEST_PREFIX, vcpu);
- 		}
- 	}
-+#endif /* ifdef KVM_S390_ARM64 */
- 	return true;
- }
- 
-diff --git a/arch/s390/kvm/gmap/gmap.h b/arch/s390/kvm/gmap/gmap.h
-index e2b3bd457782..c70f0c357b5c 100644
---- a/arch/s390/kvm/gmap/gmap.h
-+++ b/arch/s390/kvm/gmap/gmap.h
-@@ -241,4 +241,15 @@ static inline bool gmap_is_shadow_valid(struct gmap *sg, union asce asce, int ed
- 	return sg->guest_asce.val == asce.val && sg->edat_level == edat_level;
- }
- 
-+int gmap_get_dirty_log(struct kvm *kvm, struct kvm_dirty_log *log);
-+int gmap_prepare_memory_region(struct kvm *kvm,
-+			       const struct kvm_memory_slot *old,
-+			       struct kvm_memory_slot *new,
-+			       enum kvm_mr_change change);
-+void gmap_commit_memory_region(struct kvm *kvm,
-+			       struct kvm_memory_slot *old,
-+			       const struct kvm_memory_slot *new,
-+			       enum kvm_mr_change change);
-+bool gmap_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range);
-+
- #endif /* ARCH_KVM_GMAP_GMAP_H */
-diff --git a/arch/s390/kvm/gmap/mmu.c b/arch/s390/kvm/gmap/mmu.c
-new file mode 100644
-index 000000000000..2d81466e49cb
---- /dev/null
-+++ b/arch/s390/kvm/gmap/mmu.c
-@@ -0,0 +1,154 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/kvm_types.h>
-+#include <linux/kvm_host.h>
-+
-+#ifdef KVM_S390_ARM64
-+#include "arm.h"
-+#else
-+#include "s390.h"
-+#endif
-+#include "gmap.h"
-+#include "dat.h"
-+
-+/*
-+ * Get (and clear) the dirty memory log for a memory slot.
-+ */
-+int gmap_get_dirty_log(struct kvm *kvm, struct kvm_dirty_log *log)
-+{
-+	int r;
-+	unsigned long n;
-+	struct kvm_memory_slot *memslot;
-+	int is_dirty;
-+
-+	if (kvm_is_ucontrol(kvm))
-+		return -EINVAL;
-+
-+	mutex_lock(&kvm->slots_lock);
-+
-+	r = -EINVAL;
-+	if (log->slot >= KVM_USER_MEM_SLOTS)
-+		goto out;
-+
-+	r = kvm_get_dirty_log(kvm, log, &is_dirty, &memslot);
-+	if (r)
-+		goto out;
-+
-+	/* Clear the dirty log */
-+	if (is_dirty) {
-+		n = kvm_dirty_bitmap_bytes(memslot);
-+		memset(memslot->dirty_bitmap, 0, n);
-+	}
-+	r = 0;
-+out:
-+	mutex_unlock(&kvm->slots_lock);
-+	return r;
-+}
-+
-+int gmap_prepare_memory_region(struct kvm *kvm,
-+			       const struct kvm_memory_slot *old,
-+			       struct kvm_memory_slot *new,
-+			       enum kvm_mr_change change)
-+{
-+	gpa_t size;
-+
-+	if (kvm_is_ucontrol(kvm) && new->id < KVM_USER_MEM_SLOTS)
-+		return -EINVAL;
-+
-+	/* When we are protected, we should not change the memory slots */
-+	if (kvm_s390_pv_get_handle(kvm))
-+		return -EINVAL;
-+
-+	if (change != KVM_MR_DELETE && change != KVM_MR_FLAGS_ONLY) {
-+		/*
-+		 * A few sanity checks. We can have memory slots which have to be
-+		 * located/ended at a segment boundary (1MB). The memory in userland is
-+		 * ok to be fragmented into various different vmas. It is okay to mmap()
-+		 * and munmap() stuff in this slot after doing this call at any time
-+		 */
-+
-+		if (new->userspace_addr & 0xffffful)
-+			return -EINVAL;
-+
-+		size = new->npages * PAGE_SIZE;
-+		if (size & 0xffffful)
-+			return -EINVAL;
-+
-+		if ((new->base_gfn * PAGE_SIZE) + size > kvm->arch.mem_limit)
-+			return -EINVAL;
-+	}
-+
-+	if (!kvm_s390_is_migration_mode(kvm))
-+		return 0;
-+
-+	/*
-+	 * Turn off migration mode when:
-+	 * - userspace creates a new memslot with dirty logging off,
-+	 * - userspace modifies an existing memslot (MOVE or FLAGS_ONLY) and
-+	 *   dirty logging is turned off.
-+	 * Migration mode expects dirty page logging being enabled to store
-+	 * its dirty bitmap.
-+	 */
-+	if (change != KVM_MR_DELETE &&
-+	    !(new->flags & KVM_MEM_LOG_DIRTY_PAGES))
-+		WARN(kvm_s390_vm_stop_migration(kvm),
-+		     "Failed to stop migration mode");
-+
-+	return 0;
-+}
-+
-+void gmap_commit_memory_region(struct kvm *kvm,
-+			       struct kvm_memory_slot *old,
-+			       const struct kvm_memory_slot *new,
-+			       enum kvm_mr_change change)
-+{
-+	struct kvm_s390_mmu_cache *mc = NULL;
-+	int rc = 0;
-+
-+	if (change == KVM_MR_FLAGS_ONLY)
-+		return;
-+
-+	mc = kvm_s390_new_mmu_cache();
-+	if (!mc) {
-+		rc = -ENOMEM;
-+		goto out;
-+	}
-+
-+	scoped_guard(write_lock, &kvm->mmu_lock) {
-+		switch (change) {
-+		case KVM_MR_DELETE:
-+			rc = dat_delete_slot(mc, kvm->arch.gmap->asce, old->base_gfn, old->npages);
-+			break;
-+		case KVM_MR_MOVE:
-+			rc = dat_delete_slot(mc, kvm->arch.gmap->asce, old->base_gfn, old->npages);
-+			if (rc)
-+				break;
-+			fallthrough;
-+		case KVM_MR_CREATE:
-+			rc = dat_create_slot(mc, kvm->arch.gmap->asce, new->base_gfn, new->npages);
-+			break;
-+		case KVM_MR_FLAGS_ONLY:
-+			break;
-+		default:
-+			WARN(1, "Unknown KVM MR CHANGE: %d\n", change);
-+		}
-+	}
-+out:
-+	if (rc)
-+		pr_warn("failed to commit memory region\n");
-+	kvm_s390_free_mmu_cache(mc);
-+}
-+
-+/**
-+ * gmap_test_age_gfn() - test young
-+ * @kvm: the kvm instance
-+ * @range: the range of guest addresses whose young status needs to be cleared
-+ *
-+ * Context: called by KVM common code without holding the kvm mmu lock
-+ * Return: true if any page in the given range is young, otherwise 0.
-+ */
-+bool gmap_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
-+{
-+	scoped_guard(read_lock, &kvm->mmu_lock)
-+		return dat_test_age_gfn(kvm->arch.gmap->asce, range->start, range->end);
-+}
-diff --git a/arch/s390/kvm/gmap/trace-gmap.h b/arch/s390/kvm/gmap/trace-gmap.h
-new file mode 100644
-index 000000000000..25f8a527fdde
---- /dev/null
-+++ b/arch/s390/kvm/gmap/trace-gmap.h
-@@ -0,0 +1,59 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#if !defined(GMAP_TRACE_KVM_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define GMAP_TRACE_KVM_H
-+
-+#include <linux/tracepoint.h>
-+
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM kvm
-+#define TRACE_INCLUDE_PATH ../gmap
-+#undef TRACE_INCLUDE_FILE
-+#define TRACE_INCLUDE_FILE trace-gmap
-+
-+#ifdef KVM_S390_ARM64
-+#define __KVM_FIELDS \
-+	__field(unsigned long, pstate) \
-+	__field(unsigned long, pc)
-+#define __KVM_ASSIGN ({\
-+	__entry->pstate = vcpu->arch.sae_block.pstate; \
-+	__entry->pc = vcpu->arch.sae_block.pc; \
-+	})
-+#define __KVM_PRINT \
-+	__entry->pstate, \
-+	__entry->pc
-+#else
-+#define __KVM_FIELDS \
-+	__field(unsigned long, pswmask) \
-+	__field(unsigned long, pswaddr)
-+#define __KVM_ASSIGN ({\
-+	__entry->pswmask = vcpu->arch.sie_block->gpsw.mask; \
-+	__entry->pswaddr = vcpu->arch.sie_block->gpsw.addr; \
-+	})
-+#define __KVM_PRINT \
-+	__entry->pswmask,\
-+	__entry->pswaddr
-+#endif
-+
-+TRACE_EVENT(kvm_s390_major_guest_pfault,
-+	    TP_PROTO(struct kvm_vcpu *vcpu),
-+	    TP_ARGS(vcpu),
-+
-+	    TP_STRUCT__entry(
-+		__field(int, id)
-+		__KVM_FIELDS
-+		),
-+
-+	    TP_fast_assign(
-+		__entry->id = vcpu->vcpu_id;
-+		__KVM_ASSIGN
-+		),
-+	    TP_printk("%02d[%016lx-%016lx]: major fault, maybe applicable for pfault",
-+		__entry->id,
-+		__KVM_PRINT
-+		)
-+	    );
-+
-+#endif /* GMAP_TRACE_KVM_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/arch/s390/kvm/s390/s390.c b/arch/s390/kvm/s390/s390.c
-index 6b5b366fb073..497abe3a83f4 100644
---- a/arch/s390/kvm/s390/s390.c
-+++ b/arch/s390/kvm/s390/s390.c
-@@ -734,33 +734,7 @@ static void sca_del_vcpu(struct kvm_vcpu *vcpu);
- int kvm_vm_ioctl_get_dirty_log(struct kvm *kvm,
- 			       struct kvm_dirty_log *log)
- {
--	int r;
--	unsigned long n;
--	struct kvm_memory_slot *memslot;
--	int is_dirty;
--
--	if (kvm_is_ucontrol(kvm))
--		return -EINVAL;
--
--	mutex_lock(&kvm->slots_lock);
--
--	r = -EINVAL;
--	if (log->slot >= KVM_USER_MEM_SLOTS)
--		goto out;
--
--	r = kvm_get_dirty_log(kvm, log, &is_dirty, &memslot);
--	if (r)
--		goto out;
--
--	/* Clear the dirty log */
--	if (is_dirty) {
--		n = kvm_dirty_bitmap_bytes(memslot);
--		memset(memslot->dirty_bitmap, 0, n);
--	}
--	r = 0;
--out:
--	mutex_unlock(&kvm->slots_lock);
--	return r;
-+	return gmap_get_dirty_log(kvm, log);
- }
- 
- static void icpt_operexc_on_all_vcpus(struct kvm *kvm)
-@@ -1195,7 +1169,7 @@ static int kvm_s390_vm_start_migration(struct kvm *kvm)
-  * Must be called with kvm->slots_lock to avoid races with ourselves and
-  * kvm_s390_vm_start_migration.
-  */
--static int kvm_s390_vm_stop_migration(struct kvm *kvm)
-+int kvm_s390_vm_stop_migration(struct kvm *kvm)
- {
- 	/* migration mode already disabled */
- 	if (!kvm->arch.migration_mode)
-@@ -5636,51 +5610,7 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
- 				   struct kvm_memory_slot *new,
- 				   enum kvm_mr_change change)
- {
--	gpa_t size;
--
--	if (kvm_is_ucontrol(kvm) && new->id < KVM_USER_MEM_SLOTS)
--		return -EINVAL;
--
--	/* When we are protected, we should not change the memory slots */
--	if (kvm_s390_pv_get_handle(kvm))
--		return -EINVAL;
--
--	if (change != KVM_MR_DELETE && change != KVM_MR_FLAGS_ONLY) {
--		/*
--		 * A few sanity checks. We can have memory slots which have to be
--		 * located/ended at a segment boundary (1MB). The memory in userland is
--		 * ok to be fragmented into various different vmas. It is okay to mmap()
--		 * and munmap() stuff in this slot after doing this call at any time
--		 */
--
--		if (new->userspace_addr & 0xffffful)
--			return -EINVAL;
--
--		size = new->npages * PAGE_SIZE;
--		if (size & 0xffffful)
--			return -EINVAL;
--
--		if ((new->base_gfn * PAGE_SIZE) + size > kvm->arch.mem_limit)
--			return -EINVAL;
--	}
--
--	if (!kvm->arch.migration_mode)
--		return 0;
--
--	/*
--	 * Turn off migration mode when:
--	 * - userspace creates a new memslot with dirty logging off,
--	 * - userspace modifies an existing memslot (MOVE or FLAGS_ONLY) and
--	 *   dirty logging is turned off.
--	 * Migration mode expects dirty page logging being enabled to store
--	 * its dirty bitmap.
--	 */
--	if (change != KVM_MR_DELETE &&
--	    !(new->flags & KVM_MEM_LOG_DIRTY_PAGES))
--		WARN(kvm_s390_vm_stop_migration(kvm),
--		     "Failed to stop migration mode");
--
--	return 0;
-+	return gmap_prepare_memory_region(kvm, old, new, change);
- }
- 
- void kvm_arch_commit_memory_region(struct kvm *kvm,
-@@ -5688,42 +5618,7 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 				const struct kvm_memory_slot *new,
- 				enum kvm_mr_change change)
- {
--	struct kvm_s390_mmu_cache *mc = NULL;
--	int rc = 0;
--
--	if (change == KVM_MR_FLAGS_ONLY)
--		return;
--
--	mc = kvm_s390_new_mmu_cache();
--	if (!mc) {
--		rc = -ENOMEM;
--		goto out;
--	}
--
--	scoped_guard(write_lock, &kvm->mmu_lock) {
--		switch (change) {
--		case KVM_MR_DELETE:
--			rc = dat_delete_slot(mc, kvm->arch.gmap->asce, old->base_gfn, old->npages);
--			break;
--		case KVM_MR_MOVE:
--			rc = dat_delete_slot(mc, kvm->arch.gmap->asce, old->base_gfn, old->npages);
--			if (rc)
--				break;
--			fallthrough;
--		case KVM_MR_CREATE:
--			rc = dat_create_slot(mc, kvm->arch.gmap->asce, new->base_gfn, new->npages);
--			break;
--		case KVM_MR_FLAGS_ONLY:
--			break;
--		default:
--			WARN(1, "Unknown KVM MR CHANGE: %d\n", change);
--		}
--	}
--out:
--	if (rc)
--		pr_warn("failed to commit memory region\n");
--	kvm_s390_free_mmu_cache(mc);
--	return;
-+	gmap_commit_memory_region(kvm, old, new, change);
- }
- 
- /**
-@@ -5736,8 +5631,7 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
-  */
- bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
- {
--	scoped_guard(read_lock, &kvm->mmu_lock)
--		return dat_test_age_gfn(kvm->arch.gmap->asce, range->start, range->end);
-+	return gmap_test_age_gfn(kvm, range);
- }
- 
- /**
-diff --git a/arch/s390/kvm/s390/s390.h b/arch/s390/kvm/s390/s390.h
-index ad1aeec40cae..3acb01690bf6 100644
---- a/arch/s390/kvm/s390/s390.h
-+++ b/arch/s390/kvm/s390/s390.h
-@@ -32,6 +32,11 @@ union kvm_s390_quad {
- 	unsigned char one;
+ bool file_is_kvm(struct file *file);
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 642f9e9638cc..d05e2c1e6fb0 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -5547,9 +5547,7 @@ static struct file_operations kvm_chardev_ops = {
  };
  
-+static inline bool kvm_s390_is_in_sie(struct kvm_vcpu *vcpu)
-+{
-+	return vcpu->arch.sie_block->prog0c & PROG_IN_SIE;
-+}
-+
- static inline void kvm_s390_fpu_store(struct kvm_run *run)
- {
- 	fpu_stfpc(&run->s.regs.fpc);
-@@ -588,6 +593,11 @@ static inline bool kvm_s390_cur_gmap_fault_is_write(void)
- 	return test_facility(75) && (current->thread.gmap_teid.fsi == TEID_FSI_STORE);
+ static struct miscdevice kvm_dev = {
+-	KVM_MINOR,
+-	"kvm",
+-	&kvm_chardev_ops,
++	.fops = &kvm_chardev_ops,
+ };
+ 
+ #ifdef CONFIG_KVM_GENERIC_HARDWARE_ENABLING
+@@ -6321,13 +6319,13 @@ static void kvm_uevent_notify_change(unsigned int type, struct kvm *kvm)
+ 	kfree(env);
  }
  
-+static __always_inline int kvm_s390_is_migration_mode(struct kvm *kvm)
+-static void kvm_init_debug(void)
++static void kvm_init_debug(const char *dev_name)
+ {
+ 	const struct file_operations *fops;
+ 	const struct kvm_stats_desc *pdesc;
+ 	int i;
+ 
+-	kvm_debugfs_dir = debugfs_create_dir("kvm", NULL);
++	kvm_debugfs_dir = debugfs_create_dir(dev_name, NULL);
+ 
+ 	for (i = 0; i < kvm_vm_stats_header.num_desc; ++i) {
+ 		pdesc = &kvm_vm_stats_desc[i];
+@@ -6463,11 +6461,20 @@ void kvm_unregister_perf_callbacks(void)
+ }
+ #endif
+ 
+-int kvm_init(unsigned vcpu_size, unsigned vcpu_align, struct module *module)
++int kvm_init(unsigned int vcpu_size, unsigned int vcpu_align, struct module *module)
 +{
-+	return kvm->arch.migration_mode;
++	return kvm_init_with_dev(vcpu_size, vcpu_align, module, "kvm", KVM_MINOR);
 +}
 +
- /**
-  * kvm_s390_vcpu_crypto_reset_all
-  *
-@@ -618,4 +628,10 @@ void kvm_s390_vcpu_pci_enable_interp(struct kvm *kvm);
-  */
- extern unsigned int diag9c_forwarding_hz;
++int kvm_init_with_dev(unsigned int vcpu_size, unsigned int vcpu_align,
++		      struct module *module, const char *dev_name, int minor)
+ {
+ 	int r;
+ 	int cpu;
  
-+/*
-+ * Must be called with kvm->slots_lock to avoid races with ourselves and
-+ * kvm_s390_vm_start_migration.
-+ */
-+int kvm_s390_vm_stop_migration(struct kvm *kvm);
++	kvm_dev.name = dev_name;
++	kvm_dev.minor = minor;
 +
- #endif
-diff --git a/arch/s390/kvm/s390/trace.h b/arch/s390/kvm/s390/trace.h
-index aa419eb6a0c8..97774fe09a85 100644
---- a/arch/s390/kvm/s390/trace.h
-+++ b/arch/s390/kvm/s390/trace.h
-@@ -45,20 +45,6 @@ TRACE_EVENT(kvm_s390_skey_related_inst,
- 	    VCPU_TP_PRINTK("%s", "storage key related instruction")
- 	);
+ 	/* A kmem cache lets us meet the alignment requirements of fx_save. */
+ 	if (!vcpu_align)
+ 		vcpu_align = __alignof__(struct kvm_vcpu);
+@@ -6505,7 +6512,7 @@ int kvm_init(unsigned vcpu_size, unsigned vcpu_align, struct module *module)
+ 	kvm_preempt_ops.sched_in = kvm_sched_in;
+ 	kvm_preempt_ops.sched_out = kvm_sched_out;
  
--TRACE_EVENT(kvm_s390_major_guest_pfault,
--	    TP_PROTO(VCPU_PROTO_COMMON),
--	    TP_ARGS(VCPU_ARGS_COMMON),
--
--	    TP_STRUCT__entry(
--		    VCPU_FIELD_COMMON
--		    ),
--
--	    TP_fast_assign(
--		    VCPU_ASSIGN_COMMON
--		    ),
--	    VCPU_TP_PRINTK("%s", "major fault, maybe applicable for pfault")
--	);
--
- TRACE_EVENT(kvm_s390_pfault_init,
- 	    TP_PROTO(VCPU_PROTO_COMMON, long pfault_token),
- 	    TP_ARGS(VCPU_ARGS_COMMON, pfault_token),
+-	kvm_init_debug();
++	kvm_init_debug(kvm_dev.name);
+ 
+ 	r = kvm_vfio_ops_init();
+ 	if (WARN_ON_ONCE(r))
 -- 
 2.51.0
 
