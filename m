@@ -1,71 +1,71 @@
-Return-Path: <linux-s390+bounces-18446-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18433-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sBtBKk3xzWlLjgYAu9opvQ
-	(envelope-from <linux-s390+bounces-18446-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 02 Apr 2026 06:32:13 +0200
+	id MJ66DevuzWkzjQYAu9opvQ
+	(envelope-from <linux-s390+bounces-18433-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 02 Apr 2026 06:22:03 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CF0B383991
-	for <lists+linux-s390@lfdr.de>; Thu, 02 Apr 2026 06:32:13 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CFD3438383A
+	for <lists+linux-s390@lfdr.de>; Thu, 02 Apr 2026 06:22:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4786A304743A
-	for <lists+linux-s390@lfdr.de>; Thu,  2 Apr 2026 04:25:31 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 32AF63062047
+	for <lists+linux-s390@lfdr.de>; Thu,  2 Apr 2026 04:22:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3038A364053;
-	Thu,  2 Apr 2026 04:22:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56FC232D7FA;
+	Thu,  2 Apr 2026 04:22:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ilyAI0pf"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rko/DeGG"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769643630A4;
-	Thu,  2 Apr 2026 04:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE06F35AC20;
+	Thu,  2 Apr 2026 04:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775103751; cv=none; b=XRjuJmeOlm7vudbs1K9ffwSVkJnuFVPGmD6K0VTiIGrBSHO4pMF5t/+fUdrO7pvk9K2CxLB56QKKhcB8gmgzcQXDL24KmbneXpift9StHoMZ19pgHFu/LuIgslB3ixfPb6HOZQdioEZ4dRayKuonSJKeJok1OIq+Iulm00+eTaE=
+	t=1775103720; cv=none; b=BG9UbisHfC1orXaDzE10jDEUPhc5K5ixyS+612j54wnzoDM9XfCMJ9KHXD7uN4KQ5obfOTi3KXCF/g53AhgO5OC23yG1Ko/ulvr3bMRhbFjTQzOQz1483CoiAg9j2V6bCMc0xmNCzKWcNO5xZ9C0wyxPqYWPiaGuS+lpI6EnfKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775103751; c=relaxed/simple;
-	bh=k26vLeD2QgzEqC0UnKB+PoFjwz/rML1rV+5HZDHHT4Y=;
+	s=arc-20240116; t=1775103720; c=relaxed/simple;
+	bh=Izvf2qUrQ0icvulY1nfPJFiMb8CmJ7O1gKF0hZ09NWs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NyCbl/Qmv7X65VX4o2G+jmeOguffBqXO6g+ZLCiM4CRw6QA7Zg/r12ZOMXMmmAs3TXMwguA6BaAMBoFmZEcdYk8nz/US8k0XugU0N/TB7Dkq6EOGD75JcAfeklnbUkDxxaT5V5lhtZ6FZYuLpeg4mZiU8cE1tFVe0kkfRrnZDbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ilyAI0pf; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=c3GSrlaB4rKonSOuS7htLjtTZPUnck1OxSMLa73BAqYbVRVRWwBdgikSoaIlBAxEgvtr+NqBYljZHzoHT2aj3w4x1BVlONg9+HT3WhCzq8sXL5NIErAsFcRUJe4NNsYh2wJ5g09jvy1w4SMZVuzUGGzy+23xRDxpBWhNRi62UD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rko/DeGG; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 631Jfn173676159;
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 631HURiK2903666;
 	Thu, 2 Apr 2026 04:21:32 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=9mOTGC9GPo+WPTn7r
-	0qaWTWOQjW7rFCZLtJ4PYnqd54=; b=ilyAI0pfdH9T3IAdK+8jzNTlAoPfp/g1T
-	TWkvLysiwlqvL+PCIMg8oubVwHNl27Z+byT9o0++rmQel+XdxwEJfsUejy/Bnc8V
-	CT5Cr228twpPQ8EKX1camLTW9FlJbmbN+4pVXi3eECkvKTwwNhCEy4HyiFPPwqXz
-	ziWcsxbNK8OQjrdGJ7YStmBPhJd4fbYDlj0uJHhoSFOwssUh+ADAB3GXWWf/gqcL
-	77SLABy2ho8BpBGIfAPXhwWfLGy4OK0PrfpGYDvoOGZPO0b7SR2DohQPoy9pRgSy
-	3cPObsSTGAOla2kelmWsOgFjTpWL8ea60TUz6kCbQeRTD4h+HUBTg==
+	:mime-version:references:subject:to; s=pp1; bh=9fzCODy95V1TQUD+W
+	UGs6bhrpfOjqEZmbSInszcweVo=; b=rko/DeGGG7vhDeXrtMg7dS9UKMcGjjK2N
+	7g6kVPSGSRT2pnp9dhtYzXb3Nlu7+TAcUYlIKQ9HkDcfANeV5NJW4XXilp4jYgJR
+	967HrzOjZoW8VlsNEGYZ4mv4u5eh9lzg8/uV6k3cFThWM0KLKirv1IYdS+rT/mlh
+	8v0fhRt7u/lWr3aQRlMhWkwRxYDcAcgNNKitPYMw8gUDd8bmGZxdYdVo033Ay/H3
+	X+TnvYA03NamijuVmXrFtfSI5xzKRlZDkxnBLjAMV6xY4eic3ZbOBGYjpNvMCFM7
+	Uv0ViDkMQhHVTkWOynLVnK7tSbmxRWAeIjWmf59kAMZcAT/aMG+QQ==
 Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d66msabrm-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d66nnu7su-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 02 Apr 2026 04:21:31 +0000 (GMT)
 Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 6321UKj4030947;
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 63212o7j030990;
 	Thu, 2 Apr 2026 04:21:30 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4d6uhk0edx-1
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4d6uhk0ee0-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 02 Apr 2026 04:21:30 +0000
 Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6324LQjp55247178
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6324LRtL35324310
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Thu, 2 Apr 2026 04:21:27 GMT
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DA5AB20043;
-	Thu,  2 Apr 2026 04:21:26 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 36FF920043;
+	Thu,  2 Apr 2026 04:21:27 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8656E2004F;
+	by IMSVA (Postfix) with ESMTP id E087B2004B;
 	Thu,  2 Apr 2026 04:21:26 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
 	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
@@ -89,9 +89,9 @@ Cc: Andreas Grapentin <Andreas.Grapentin@ibm.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
         Will Deacon <will@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>
-Subject: [PATCH v1 02/27] KVM, vfio: remove symbol_get(kvm_get_kvm_safe) from vfio
-Date: Thu,  2 Apr 2026 06:20:58 +0200
-Message-ID: <20260402042125.3948963-3-seiden@linux.ibm.com>
+Subject: [PATCH v1 03/27] KVM, vfio: remove symbol_get(kvm_put_kvm) from vfio
+Date: Thu,  2 Apr 2026 06:20:59 +0200
+Message-ID: <20260402042125.3948963-4-seiden@linux.ibm.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260402042125.3948963-1-seiden@linux.ibm.com>
 References: <20260402042125.3948963-1-seiden@linux.ibm.com>
@@ -103,36 +103,37 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=J6enLQnS c=1 sm=1 tr=0 ts=69cdeecb cx=c_pps
+X-Proofpoint-GUID: hQBMhy9HLCCQzxvZtKP_zmRNQVxIyBUJ
+X-Authority-Analysis: v=2.4 cv=KslAGGWN c=1 sm=1 tr=0 ts=69cdeecb cx=c_pps
  a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
  a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=RzCfie-kr_QcCd8fBx8p:22 a=20KFwNOVAAAA:8 a=VnNF1IyMAAAA:8
- a=VFmQUFSrCZiC7oI7mJkA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAyMDAzNCBTYWx0ZWRfX7pOq5HtFrfSz
- YCmmDxJdORVt5YVAJv3a9HnJc0W0yIBMW/Fys8yXignuutF1vpvstnPbdfO2xQibJkkbh6OZi82
- C8Qx/pF5iIN4CoLxZpJZSFZr/zV8HMGkK24GQbQzapR0VK6aMjGbCyc5HVacTO6WHmeP8e18dJA
- b/wHIKAMJvuQYfe2Gr8Hsd8TaHs4EJATbxty0PFA3AT9jlaIJFZTgkKXFtAl7vXJ/Qa7BN2V3Ks
- kJeAf9f24OjzVkhtUgq2BMIay5VRmy7683xncp6XkHkEwIvB/dEq7QDmbv5UVXAa65jMmt/qUn3
- rpehEtqY18J/eZmoKe2HmtptdvUb9jrDqVlucdgNkHkHjrdwLhKBg5eL6yZ6BolfB0Kgn/Ln2Hu
- dd081cxfzwuwOkiozeoDIAB9PV/3hKK2SrCIOXQKWmRPhWfeWWtjOsI1kUoJaKoO6piZjcPfIY3
- Z+CewsJQlQEy8ySd1lw==
-X-Proofpoint-GUID: 5I24hyJiqx5xc0-Em5Rb1QuQEZPb3Z9-
-X-Proofpoint-ORIG-GUID: 5I24hyJiqx5xc0-Em5Rb1QuQEZPb3Z9-
+ a=uAbxVGIbfxUO_5tXvNgY:22 a=20KFwNOVAAAA:8 a=VnNF1IyMAAAA:8
+ a=Iid1VeoRPhL8jyw1u-UA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAyMDAzNCBTYWx0ZWRfXxRFLOg61Tfgd
+ r3j6Kfo7hL2jY55oEhYtWiMqNkPghLtwGjOQ2OH54mLzLprTA8BxCqXBVd5GDI2GNVn/GBKFaWo
+ 72btgVmGMYyyqqwQRNirCd1pBFPvN9XdNPZGrhn26A7PCarfSdi81e3QIfDOyPD7JnVC2u8Ohi2
+ 8qRrsqyaTIJmPm1RXzWXLn0E8P0xhGL7hFtYrrYzE6K7pVDTcUV90pzAEAp9vhuhhvgCZmY73vs
+ 3bCBrMoyRE/LcDuADMPrQ4oWhCKPcP5kk+N1pA0hLxoQxl45GoJER2N1B+cmG2RwDxVlVYhgFAe
+ 7mDAapmOtic4S1x01/Ymn74AMROIuThySzGlUYKKKor/p6vVveDS8x4P6f/g1dUbh/7xxXxWv/E
+ jF+900F6Gm+DTecd67/iImwQZMV/qKy355cwJ942/ndxeP9gaq9Pt2gKVzMLYL1EV0bL79aGEer
+ O7qnA68CJ3mFVzX8o5A==
+X-Proofpoint-ORIG-GUID: hQBMhy9HLCCQzxvZtKP_zmRNQVxIyBUJ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-04-02_01,2026-04-01_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 clxscore=1011 adultscore=0 priorityscore=1501 bulkscore=0
- phishscore=0 malwarescore=0 lowpriorityscore=0 spamscore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2604020034
+ malwarescore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0
+ phishscore=0 adultscore=0 bulkscore=0 impostorscore=0 clxscore=1011
+ spamscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.22.0-2603050001
+ definitions=main-2604020034
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -140,19 +141,19 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCPT_COUNT_TWELVE(0.00)[23];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18446-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18433-lists,linux-s390=lfdr.de];
 	DKIM_TRACE(0.00)[ibm.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[seiden@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linux.ibm.com:mid];
 	TAGGED_RCPT(0.00)[linux-s390];
 	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 2CF0B383991
+X-Rspamd-Queue-Id: CFD3438383A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
@@ -162,242 +163,172 @@ Right now, KVM and VFIO are using symbol_get to access each other's
 symbols because of a circular reference between the modules, as well
 as to avoid loading them unnecessarily.
 
-However, usage of symbol_get is mostly deprecated and there are just a
-handful of users left. In the case of VFIO, in particular, the
-functions it calls can be made inline. Start with kvm_get_kvm_safe, for
-which it is trivial to do so.
+The remaining use in VFIO is for kvm_put_kvm, which is not inline
+because it needs to call kvm_destroy_vm.  However, storing the
+address of kvm_destroy_vm in the "struct kvm" is enough to remove
+the dependency from VFIO.
+
+This also makes it possible to direct kvm_put_kvm to different
+implementations of kvm_destroy_vm.
 
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Steffen Eiden <seiden@linux.ibm.com>
 ---
- arch/x86/kvm/mmu/tdp_mmu.c |  2 +-
- arch/x86/kvm/vmx/nested.h  |  4 ++--
- drivers/vfio/vfio_main.c   | 10 +---------
- include/linux/kvm_host.h   |  9 +++++----
- include/linux/kvm_types.h  | 24 ++++++++++++++++++++++++
- virt/kvm/kvm_main.c        | 26 +++++---------------------
- 6 files changed, 38 insertions(+), 37 deletions(-)
+ drivers/vfio/vfio_main.c  | 29 +++++------------------------
+ include/linux/kvm_host.h  |  1 -
+ include/linux/kvm_types.h |  9 +++++++++
+ include/linux/vfio.h      |  1 -
+ virt/kvm/kvm_main.c       |  9 ++-------
+ 5 files changed, 16 insertions(+), 33 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-index 9c26038f6b77..a88686b5db24 100644
---- a/arch/x86/kvm/mmu/tdp_mmu.c
-+++ b/arch/x86/kvm/mmu/tdp_mmu.c
-@@ -1136,7 +1136,7 @@ void kvm_tdp_mmu_invalidate_roots(struct kvm *kvm,
- 	 * being destroyed in an error path of KVM_CREATE_VM.
- 	 */
- 	if (IS_ENABLED(CONFIG_PROVE_LOCKING) &&
--	    refcount_read(&kvm->users_count) && kvm->created_vcpus)
-+	    refcount_read(&kvm->rc.users_count) && kvm->created_vcpus)
- 		lockdep_assert_held_write(&kvm->mmu_lock);
- 
- 	/*
-diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
-index 213a448104af..2c83fc905698 100644
---- a/arch/x86/kvm/vmx/nested.h
-+++ b/arch/x86/kvm/vmx/nested.h
-@@ -58,7 +58,7 @@ bool nested_vmx_check_io_bitmaps(struct kvm_vcpu *vcpu, unsigned int port,
- static inline struct vmcs12 *get_vmcs12(struct kvm_vcpu *vcpu)
- {
- 	lockdep_assert_once(lockdep_is_held(&vcpu->mutex) ||
--			    !refcount_read(&vcpu->kvm->users_count));
-+			    !refcount_read(&vcpu->kvm->rc.users_count));
- 
- 	return to_vmx(vcpu)->nested.cached_vmcs12;
- }
-@@ -66,7 +66,7 @@ static inline struct vmcs12 *get_vmcs12(struct kvm_vcpu *vcpu)
- static inline struct vmcs12 *get_shadow_vmcs12(struct kvm_vcpu *vcpu)
- {
- 	lockdep_assert_once(lockdep_is_held(&vcpu->mutex) ||
--			    !refcount_read(&vcpu->kvm->users_count));
-+			    !refcount_read(&vcpu->kvm->rc.users_count));
- 
- 	return to_vmx(vcpu)->nested.cached_shadow_vmcs12;
- }
 diff --git a/drivers/vfio/vfio_main.c b/drivers/vfio/vfio_main.c
-index b1b753889a77..42f515519d87 100644
+index 42f515519d87..e9c6353c74d8 100644
 --- a/drivers/vfio/vfio_main.c
 +++ b/drivers/vfio/vfio_main.c
-@@ -437,7 +437,6 @@ void vfio_device_get_kvm_safe(struct vfio_device *device, struct kvm *kvm,
+@@ -17,7 +17,7 @@
+ #include <linux/idr.h>
+ #include <linux/iommu.h>
+ #if IS_ENABLED(CONFIG_KVM)
+-#include <linux/kvm_host.h>
++#include <linux/kvm_types.h>
+ #endif
+ #include <linux/list.h>
+ #include <linux/miscdevice.h>
+@@ -436,9 +436,6 @@ EXPORT_SYMBOL_GPL(vfio_unregister_group_dev);
+ void vfio_device_get_kvm_safe(struct vfio_device *device, struct kvm *kvm,
  			      struct module *kvm_module)
  {
- 	void (*pfn)(struct kvm *kvm);
--	bool (*fn)(struct kvm *kvm);
- 	bool ret;
- 
+-	void (*pfn)(struct kvm *kvm);
+-	bool ret;
+-
  	lockdep_assert_held(&device->dev_set->lock);
-@@ -452,14 +451,7 @@ void vfio_device_get_kvm_safe(struct vfio_device *device, struct kvm *kvm,
- 	if (WARN_ON(!pfn))
+ 
+ 	if (!kvm)
+@@ -447,19 +444,10 @@ void vfio_device_get_kvm_safe(struct vfio_device *device, struct kvm *kvm,
+ 	if (!try_module_get(kvm_module))
  		return;
  
--	fn = symbol_get(kvm_get_kvm_safe);
--	if (WARN_ON(!fn)) {
+-	pfn = symbol_get(kvm_put_kvm);
+-	if (WARN_ON(!pfn))
+-		return;
+-
+-	ret = kvm_get_kvm_safe(kvm);
+-	if (!ret) {
 -		symbol_put(kvm_put_kvm);
 -		return;
--	}
++	if (kvm_get_kvm_safe(kvm)) {
++		device->kvm = kvm;
++		device->kvm_module = kvm_module;
+ 	}
 -
--	ret = fn(kvm);
--	symbol_put(kvm_get_kvm_safe);
-+	ret = kvm_get_kvm_safe(kvm);
- 	if (!ret) {
- 		symbol_put(kvm_put_kvm);
+-	device->put_kvm = pfn;
+-	device->kvm = kvm;
+-	device->kvm_module = kvm_module;
+ }
+ 
+ void vfio_device_put_kvm(struct vfio_device *device)
+@@ -469,15 +457,8 @@ void vfio_device_put_kvm(struct vfio_device *device)
+ 	if (!device->kvm)
  		return;
+ 
+-	if (WARN_ON(!device->put_kvm))
+-		goto clear;
+-
+-	device->put_kvm(device->kvm);
+-	device->put_kvm = NULL;
+-	symbol_put(kvm_put_kvm);
+-
+-clear:
+ 	module_put(device->kvm_module);
++	kvm_put_kvm(device->kvm);
+ 	device->kvm_module = NULL;
+ 	device->kvm = NULL;
+ }
 diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 6b76e7a6f4c2..dc18ee99bba4 100644
+index dc18ee99bba4..13f903993ed0 100644
 --- a/include/linux/kvm_host.h
 +++ b/include/linux/kvm_host.h
-@@ -767,6 +767,9 @@ struct kvm_memslots {
- };
- 
- struct kvm {
-+	/* Must be the first field, see function definitions in kvm_types.h.  */
-+	struct kvm_refcount rc;
-+
- #ifdef KVM_HAVE_MMU_RWLOCK
- 	rwlock_t mmu_lock;
- #else
-@@ -830,7 +833,6 @@ struct kvm {
- 	struct list_head ioeventfds;
- 	struct kvm_vm_stat stat;
- 	struct kvm_arch arch;
--	refcount_t users_count;
- #ifdef CONFIG_KVM_MMIO
- 	struct kvm_coalesced_mmio_ring *coalesced_mmio_ring;
- 	spinlock_t ring_lock;
-@@ -876,6 +878,7 @@ struct kvm {
- #endif
- 	char stats_id[KVM_STATS_NAME_SIZE];
- };
-+static_assert(offsetof(struct kvm, rc) == 0);
- 
- #define kvm_err(fmt, ...) \
- 	pr_err("kvm [%i]: " fmt, task_pid_nr(current), ## __VA_ARGS__)
-@@ -1062,8 +1065,6 @@ static inline void kvm_irqfd_exit(void)
+@@ -1065,7 +1065,6 @@ static inline void kvm_irqfd_exit(void)
  int kvm_init(unsigned vcpu_size, unsigned vcpu_align, struct module *module);
  void kvm_exit(void);
  
--void kvm_get_kvm(struct kvm *kvm);
--bool kvm_get_kvm_safe(struct kvm *kvm);
- void kvm_put_kvm(struct kvm *kvm);
+-void kvm_put_kvm(struct kvm *kvm);
  bool file_is_kvm(struct file *file);
  void kvm_put_kvm_no_destroy(struct kvm *kvm);
-@@ -1073,7 +1074,7 @@ static inline struct kvm_memslots *__kvm_memslots(struct kvm *kvm, int as_id)
- 	as_id = array_index_nospec(as_id, KVM_MAX_NR_ADDRESS_SPACES);
- 	return srcu_dereference_check(kvm->memslots[as_id], &kvm->srcu,
- 			lockdep_is_held(&kvm->slots_lock) ||
--			!refcount_read(&kvm->users_count));
-+			!refcount_read(&kvm->rc.users_count));
- }
  
- static inline struct kvm_memslots *kvm_memslots(struct kvm *kvm)
 diff --git a/include/linux/kvm_types.h b/include/linux/kvm_types.h
-index a568d8e6f4e8..add7cc2016e8 100644
+index add7cc2016e8..aadee536771a 100644
 --- a/include/linux/kvm_types.h
 +++ b/include/linux/kvm_types.h
-@@ -33,6 +33,7 @@
+@@ -144,6 +144,7 @@ struct kvm_vcpu_stat_generic {
  
- #include <linux/mutex.h>
- #include <linux/spinlock_types.h>
-+#include <linux/refcount.h>
- 
- struct kvm;
- struct kvm_async_pf;
-@@ -140,6 +141,29 @@ struct kvm_vcpu_stat_generic {
+ struct kvm_refcount {
+ 	refcount_t users_count;
++	void (*destroy)(struct kvm *kvm);
  };
  
- #define KVM_STATS_NAME_SIZE	48
-+
-+struct kvm_refcount {
-+	refcount_t users_count;
-+};
-+
-+static inline void kvm_get_kvm(struct kvm *kvm)
+ static inline void kvm_get_kvm(struct kvm *kvm)
+@@ -164,6 +165,14 @@ static inline bool kvm_get_kvm_safe(struct kvm *kvm)
+ 	return refcount_inc_not_zero(&rc->users_count);
+ }
+ 
++static inline void kvm_put_kvm(struct kvm *kvm)
 +{
 +	struct kvm_refcount *rc = (struct kvm_refcount *)kvm;
 +
-+	refcount_inc(&rc->users_count);
-+}
-+
-+/*
-+ * A safe version of kvm_get_kvm(), making sure the vm is not being destroyed.
-+ * Return true if kvm referenced successfully, false otherwise.
-+ */
-+static inline bool kvm_get_kvm_safe(struct kvm *kvm)
-+{
-+	struct kvm_refcount *rc = (struct kvm_refcount *)kvm;
-+
-+	return refcount_inc_not_zero(&rc->users_count);
++	if (refcount_dec_and_test(&rc->users_count))
++		rc->destroy(kvm);
 +}
 +
  #endif /* !__ASSEMBLER__ */
  
  #endif /* __KVM_TYPES_H__ */
+diff --git a/include/linux/vfio.h b/include/linux/vfio.h
+index 69a8d527b0e8..5c69532d6127 100644
+--- a/include/linux/vfio.h
++++ b/include/linux/vfio.h
+@@ -65,7 +65,6 @@ struct vfio_device {
+ 	unsigned int open_count;
+ 	struct completion comp;
+ 	struct iommufd_access *iommufd_access;
+-	void (*put_kvm)(struct kvm *kvm);
+ 	struct inode *inode;
+ #if IS_ENABLED(CONFIG_IOMMUFD)
+ 	struct iommufd_device *iommufd_device;
 diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 9093251beb39..cb5e01f92503 100644
+index cb5e01f92503..642f9e9638cc 100644
 --- a/virt/kvm/kvm_main.c
 +++ b/virt/kvm/kvm_main.c
-@@ -1099,7 +1099,7 @@ static inline struct kvm_io_bus *kvm_get_bus_for_destruction(struct kvm *kvm,
- 							     enum kvm_bus idx)
- {
- 	return rcu_dereference_protected(kvm->buses[idx],
--					 !refcount_read(&kvm->users_count));
-+					 !refcount_read(&kvm->rc.users_count));
- }
+@@ -120,6 +120,7 @@ static struct dentry *kvm_debugfs_dir;
  
- static struct kvm *kvm_create_vm(unsigned long type, const char *fdname)
-@@ -1153,7 +1153,7 @@ static struct kvm *kvm_create_vm(unsigned long type, const char *fdname)
- 	if (r)
+ static const struct file_operations stat_fops_per_vm;
+ 
++static void kvm_destroy_vm(struct kvm *kvm);
+ static long kvm_vcpu_ioctl(struct file *file, unsigned int ioctl,
+ 			   unsigned long arg);
+ #ifdef CONFIG_KVM_COMPAT
+@@ -1154,6 +1155,7 @@ static struct kvm *kvm_create_vm(unsigned long type, const char *fdname)
  		goto out_err_no_irq_routing;
  
--	refcount_set(&kvm->users_count, 1);
-+	refcount_set(&kvm->rc.users_count, 1);
+ 	refcount_set(&kvm->rc.users_count, 1);
++	kvm->rc.destroy = kvm_destroy_vm;
  
  	for (i = 0; i < kvm_arch_nr_memslot_as_ids(kvm); i++) {
  		for (j = 0; j < 2; j++) {
-@@ -1223,7 +1223,7 @@ static struct kvm *kvm_create_vm(unsigned long type, const char *fdname)
- out_err_no_disable:
- 	kvm_arch_destroy_vm(kvm);
- out_err_no_arch_destroy_vm:
--	WARN_ON_ONCE(!refcount_dec_and_test(&kvm->users_count));
-+	WARN_ON_ONCE(!refcount_dec_and_test(&kvm->rc.users_count));
- 	for (i = 0; i < KVM_NR_BUSES; i++)
- 		kfree(kvm_get_bus_for_destruction(kvm, i));
- 	kvm_free_irq_routing(kvm);
-@@ -1316,25 +1316,9 @@ static void kvm_destroy_vm(struct kvm *kvm)
+@@ -1316,13 +1318,6 @@ static void kvm_destroy_vm(struct kvm *kvm)
  	mmdrop(mm);
  }
  
--void kvm_get_kvm(struct kvm *kvm)
+-void kvm_put_kvm(struct kvm *kvm)
 -{
--	refcount_inc(&kvm->users_count);
+-	if (refcount_dec_and_test(&kvm->rc.users_count))
+-		kvm_destroy_vm(kvm);
 -}
--EXPORT_SYMBOL_GPL(kvm_get_kvm);
+-EXPORT_SYMBOL_GPL(kvm_put_kvm);
 -
--/*
-- * Make sure the vm is not during destruction, which is a safe version of
-- * kvm_get_kvm().  Return true if kvm referenced successfully, false otherwise.
-- */
--bool kvm_get_kvm_safe(struct kvm *kvm)
--{
--	return refcount_inc_not_zero(&kvm->users_count);
--}
--EXPORT_SYMBOL_GPL(kvm_get_kvm_safe);
--
- void kvm_put_kvm(struct kvm *kvm)
- {
--	if (refcount_dec_and_test(&kvm->users_count))
-+	if (refcount_dec_and_test(&kvm->rc.users_count))
- 		kvm_destroy_vm(kvm);
- }
- EXPORT_SYMBOL_GPL(kvm_put_kvm);
-@@ -1348,7 +1332,7 @@ EXPORT_SYMBOL_GPL(kvm_put_kvm);
-  */
- void kvm_put_kvm_no_destroy(struct kvm *kvm)
- {
--	WARN_ON(refcount_dec_and_test(&kvm->users_count));
-+	WARN_ON(refcount_dec_and_test(&kvm->rc.users_count));
- }
- EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_put_kvm_no_destroy);
- 
+ /*
+  * Used to put a reference that was taken on behalf of an object associated
+  * with a user-visible file descriptor, e.g. a vcpu or device, if installation
 -- 
 2.51.0
 
