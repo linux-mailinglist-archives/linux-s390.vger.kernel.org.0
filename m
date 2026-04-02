@@ -1,169 +1,210 @@
-Return-Path: <linux-s390+bounces-18487-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18490-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aDNvIjSHzmnfoAYAu9opvQ
-	(envelope-from <linux-s390+bounces-18487-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 02 Apr 2026 17:11:48 +0200
+	id cFBWOQ2JzmlMoQYAu9opvQ
+	(envelope-from <linux-s390+bounces-18490-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 02 Apr 2026 17:19:41 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E170438B15C
-	for <lists+linux-s390@lfdr.de>; Thu, 02 Apr 2026 17:11:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F79E38B2A4
+	for <lists+linux-s390@lfdr.de>; Thu, 02 Apr 2026 17:19:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B97593109255
-	for <lists+linux-s390@lfdr.de>; Thu,  2 Apr 2026 15:02:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BCF72304BD97
+	for <lists+linux-s390@lfdr.de>; Thu,  2 Apr 2026 15:12:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F19ED3F0ABD;
-	Thu,  2 Apr 2026 15:01:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D0803EF67B;
+	Thu,  2 Apr 2026 15:11:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OROjiAM9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DzfAkDLN"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27F23F0774;
-	Thu,  2 Apr 2026 15:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775142111; cv=none; b=hLkUH8ukbGrVil/rY1s/r7QmkHSy1kWfdG/PCSpv36PWsqZmlbho37sjUFzVmXaDrm+lAKO8Okh9859ZFXB+0JnhBnRx9jcypFPGdYHqSQgldbM67cpC4IFSp38tP0gK4EeePoTECwITZtfixbXBp2Xx/+ys2RuEtqE+Ppa6S8c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775142111; c=relaxed/simple;
-	bh=+2RNcKa9c5cVVfKFP9p9PuNCdqI6GHvT0fNn+HlrPHo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uAjkIEjdmMzzUL4aF3U6RrMgivASo85mX/tL7hmXVn6jEDJhqfrCyIatU+CmF0kUo34LACZduBPGbj2NUrLz/rHhpbTwRVhqcR9aqBOBij0E3t451fYce2R+I5roOpyE/su0xw5z06xH31uqmljmgB8EBjK/zWn0IMzVVRU33Xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OROjiAM9; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 632Ekwax015098;
-	Thu, 2 Apr 2026 15:01:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=Hu6tMlzUyfApP8h97
-	EEP58C3mVtaSLFaUfmOv/wQqUI=; b=OROjiAM9G/S0Z3K8Hked7mYBkP3vx817I
-	qemtH33Wn/Qtl6Mv1VP9+V6JXiTUtUwuzA4NoRuYLH8AcoZWhivjJWyb9zKjUbsH
-	52PJh9bq2L4onlSGwNXjZiczAnM5fC9tSlCs/SK/iEtGpwGpcC6QKZVQ9zdhaO30
-	hoJe7Jv4p+IRyoDkypN/3Vjs6YCvvpTv4jkzDLLzXBORwwRPRWP15f8VjsfOeSWH
-	1QJmytxuvKPy6jf3EaosxRI1DmcAjxKmeYMy+8ut/257yGPFB9tjYbQCW2SBK8gf
-	u/KLHotX1YoDNcLqJg0Ao7SmxGY+gmoxmI7ttyOVlIFJeIHdayqgw==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d66q3d8tx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 02 Apr 2026 15:01:48 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 632CnkXn031552;
-	Thu, 2 Apr 2026 15:01:47 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4d6uhk29s6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 02 Apr 2026 15:01:47 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 632F1fUW48628008
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 2 Apr 2026 15:01:41 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BC66620043;
-	Thu,  2 Apr 2026 15:01:41 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F3B2C20040;
-	Thu,  2 Apr 2026 15:01:40 +0000 (GMT)
-Received: from p-imbrenda.ibmuc.com (unknown [9.87.129.177])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  2 Apr 2026 15:01:40 +0000 (GMT)
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: linux-kernel@vger.kernel.org
-Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, nrb@linux.ibm.com, seiden@linux.ibm.com,
-        schlameuss@linux.ibm.com, gra@linux.ibm.com, david@kernel.org
-Subject: [PATCH v3 6/6] KVM: s390: ucontrol: Fix memslot handling
-Date: Thu,  2 Apr 2026 17:01:35 +0200
-Message-ID: <20260402150135.196943-7-imbrenda@linux.ibm.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260402150135.196943-1-imbrenda@linux.ibm.com>
-References: <20260402150135.196943-1-imbrenda@linux.ibm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 228643EE1D7
+	for <linux-s390@vger.kernel.org>; Thu,  2 Apr 2026 15:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.181
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775142719; cv=pass; b=JYd5lCQenQSUyGEcNHxmnV2zeIhURuozhz+luJsM+adcegJ6PeBWxEe1Ti9p5AZevmvrfANlARqbiITKxTKnf8VEYSgFQsInG1f42/hxFIApn4m0ysg4eqSv67lTbCQlzIuecaPhLHLHRQH6s/BrAnx3uNDCEmhnoK7u7fzyZE4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775142719; c=relaxed/simple;
+	bh=w+loe5TWlSXN9U6ODJ58b3CvRng0SQKuEDz0GLsUofI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cj+pD4LJBBILe0GOrd/REQz5hd/moP3TH+LQLVTk5ees2dcTLZ4mJvEc8HAOz9JDmBwPx9Q0Cdj+Zsjits+SiUEtsc2vTUo/WejWny6u685mO75a5m8Y7yf6IhE9jY1TIV6IvmwLrBfiUyVroIsgUoQ7xjiWgI8TR8n60xpseDY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DzfAkDLN; arc=pass smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-50b6c45781aso752491cf.0
+        for <linux-s390@vger.kernel.org>; Thu, 02 Apr 2026 08:11:57 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775142717; cv=none;
+        d=google.com; s=arc-20240605;
+        b=DzRfozxelaWzDWiW/C/bwjE68IvKO4KOIInnWIlAVUjy2kgwU72fR5/bsMoYj5WS2D
+         K4wI5kn7c8Ul0S5EWOn+704WJNqX/kt98dQGEuleVXvLv0IVREpEs7vEd2FzfAMjwKfX
+         Fqix/Z7ylPty/k7fSlH2EAURW/vfhG4Subx8AKDggqJzoiQFytUl8NlG1P45R3CDEWpj
+         zMgiOq8BxKYaNMoeiXcRjKXoaW0pXF2S7jBm07LBiHgQX92fcUB/NNDKVr9bKPtsGnxE
+         aT7ck7e2+ukaUCDsBtHhTXjPuJwhaleIDVpF3XB8+62RwzoIMu/dk/7SAtvLMHuLMEAe
+         H+pg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=q9DxMkkgytWR9am+1WQeQWH9Iy5mfAjxrdhUB29Lo7Q=;
+        fh=9qYhcLMxWENMEcOW3Y0rW+emosLKn1p+433HpCXoEK0=;
+        b=SANdYenMFD3tb9VxXSBqjMTTIMuGAIN71wCVnGeg3jSxPA02EgyooZhy95asYWy1hO
+         3iLTuCnliHzLqvCyxdB99vV6yiN6nghzrLponCEJV9a4onh0CKGY+cpELv48ZpFyNgh/
+         UQ+xkfzLZvO7mGOoS292VqYNDQkDdpPkmFTmuIBF2iuP8MOoR5Wim99xV005UJSFXbfx
+         fQzYpuYlKqWcf2J++B7/3kdNzOkfUEt7Jy1rpn/025z9UUJt7egdK4hcNNQ2MHidCsnO
+         IBpca0PWhphcXzRpnk9uKoAkBc8npzJ5KF52ZswkCgw+db4aNrG89ixPIfSsbRAFEZ/V
+         /weQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1775142717; x=1775747517; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q9DxMkkgytWR9am+1WQeQWH9Iy5mfAjxrdhUB29Lo7Q=;
+        b=DzfAkDLNJfbjW8FIAqG4U09cR6ik9V5jcjIvcGQ+97r2HgdVCPsa4PLEHNUU6Jxul0
+         Pgp5gTerdDyDf5e5HRQtwr9SEbue+crOGV4MCbP1CkwfMqanLnkbDZchNk+9GS8MkirG
+         9OB/sDhKSKWtocpiLulvtVcu+Q+qvdFb9lzg0qxBrQCyQCLm/AdngBaLUkEoT5EqZmaf
+         Oub1FeRjW0SDpOGmNVmZFumLk4VId8pjSBe71g8PqXGczOKkuntE8qt4T2nZJK1jy2VQ
+         mFQVegl1JZYJE2hk/p8ospgFEH6iSgfMhLpjDvGo6tOG5+zTtj94NMkgRgPIe+c8VsDE
+         rGLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775142717; x=1775747517;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=q9DxMkkgytWR9am+1WQeQWH9Iy5mfAjxrdhUB29Lo7Q=;
+        b=G0o/TxlaacDMqy2dW+PTHGVhDlAeIY7IcO4B5bWdlDjWha3Q6+HgIW0Qj2VUAjTpmj
+         /fNu/dR0pHR4xvdZLQMm1/AZpkjd/YM3tK83ti04FwOK6veSpUdtLNceKJVwmLESBXVh
+         KGHnLYBtjJ9Aee7+zpZRj3QqLSwJMhbUfK/jfw8RDpipS2KgQzBV2fvPgH+j2b5V9FuA
+         o/ex3SFw7OUvUNLJCntblfKDaHDR87s0muHypdyBc5CpiDYwVjI7KuiIoxzCWup/JXG/
+         eLj8RoD2UQETRS9dke17npflJa3Fr6XRgyE/D+1XfwH9Z8Varu2R03fowu5fk7iqmZpE
+         khNA==
+X-Forwarded-Encrypted: i=1; AJvYcCUzwi5TPrjPDc1nM4SPcSLMcF2OZTAouCxjYBbAO/gCqG7BB3q760/QVEa005nGsRXMJVoPZ6rZHmGr@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7DWTk1rUPYUqcBWcVEH+iiGjGt4rCiJP4h9obf7rv91WvYAS7
+	J7s4kAxf5jZAfLGMBWbYFU791Etg4CSs4dBTkBdDd/KARJB9tEl4vrZo3Kl0Y7jXfwGD4Hrf1Te
+	mqGZRvsLXLw2swFKqKNtjqj59Qn16QdYPupRNCRMo
+X-Gm-Gg: ATEYQzydkKjfJEzbVLaMI97xJw9xrI0hhU8KIH/wqK4DkVd/LyzNgsiEvfAkyT7sRfm
+	icNcJ4+eyTNBQnOqA6tcZMa8tTStHDvDvCxYqqWY8ypEY7RmnHwCC5nSPQ5KHJFmOrU3yhvKjJu
+	VJfiki3PrTqCFWKiLBTVQGddZAeS1Lpfh5HMR4mbvfKedNyKbKJwrdxKXAssF0Xu9x7WU91iW4F
+	M59foCdOPbghwe+P9+D8FbssNjXQA+kuLPuhOc6nDL97cS5STjzCjeJaQMDAUVq06yh41+nkE1z
+	NDc+5yLNZRN2zaemtJuUcYQx/xvA/yO6riTX6g==
+X-Received: by 2002:ac8:6907:0:b0:4ff:cb75:2a22 with SMTP id
+ d75a77b69052e-50d504ad8ddmr11393801cf.3.1775142716382; Thu, 02 Apr 2026
+ 08:11:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 6YGHs4HexZsaR15p-Gk9_r1C7rTYtYkQ
-X-Authority-Analysis: v=2.4 cv=frzRpV4f c=1 sm=1 tr=0 ts=69ce84dc cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=-V98bmycwAGgclNV9YMA:9
-X-Proofpoint-ORIG-GUID: 6YGHs4HexZsaR15p-Gk9_r1C7rTYtYkQ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAyMDEzMyBTYWx0ZWRfX64yRn6gGzc3v
- RDhSM7MCmxpq+j2TFD8j31HI4wuguFY46BZ4RGZTrkqVaPpHcpfGOl2xBB5MHEKNUViOf0fPtUT
- lB3okhIYNw3NnEKhVq2xgGSCU8aPmAiyuoSAe4DaF3bUGmi9Es1cqVvEEHURmw1Gji8NG7wN8q3
- 6lqnfkVGsJPPb62LO++mLmlZoxXvlquzetY6JbMeEre0cRcVQwXmyTdr0sK7m+b1ySdm16gT9iM
- etYKurounGtwzXw3I5yVZh8GLCeZw6dWLzGpxlSbtkW+TF85b59dCnUUBy/8sz1Rr3oC5X4YfXj
- dOySwoGs9+Qe6Jtd7wKrE5XBfPzLAu5Y8vFj8rcuAJglIZBao7k3bWdcjOb98wBHEhTykgo9HIF
- Kr62rguiPz9+LVTk7n1wuRgfi6kJLkeJFUcxjbALxwVLLQNeTgMlQyEAqLBTBhdjuWNT90MEnt6
- fQgkkJuk6iQGoJvTsaQ==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-02_02,2026-04-02_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0 clxscore=1015
- lowpriorityscore=0 bulkscore=0 adultscore=0 suspectscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2604020133
+References: <20260327205457.604224-1-surenb@google.com> <20260327205457.604224-3-surenb@google.com>
+ <5d90d998-9b8d-435c-b684-260600311797@lucifer.local> <CAJuCfpE5w8r_6Ss=5ZPrEb1RQOTG6HyY8Pivac=iiyqFRZvD4g@mail.gmail.com>
+ <20260331112921.854d4f6cc793dba0972ee9f1@linux-foundation.org>
+ <cf6975a6-336a-401b-b122-b9597b5710b7@lucifer.local> <CAJuCfpH2eomYbZ0DzKpkae5DKVF69aRsfXx3HzMfPc6cTT5fTg@mail.gmail.com>
+ <495a4331-6575-4eb5-91a5-245ab0ad3637@lucifer.local>
+In-Reply-To: <495a4331-6575-4eb5-91a5-245ab0ad3637@lucifer.local>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Thu, 2 Apr 2026 08:11:44 -0700
+X-Gm-Features: AQROBzDDBiQJXBj1ghnJLgm5n9vUtQ0-AtJqWv_KWozRinmr8YW0M_6ikqdSFOA
+Message-ID: <CAJuCfpEn53AgKkjLBN2AeaHxxV8vHVj697Cb=Hb-U8LisNztxw@mail.gmail.com>
+Subject: Re: [PATCH v6 2/6] mm: use vma_start_write_killable() in mm syscalls
+To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, willy@infradead.org, david@kernel.org, 
+	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com, 
+	rakie.kim@sk.com, byungchul@sk.com, gourry@gourry.net, 
+	ying.huang@linux.alibaba.com, apopple@nvidia.com, 
+	baolin.wang@linux.alibaba.com, Liam.Howlett@oracle.com, npache@redhat.com, 
+	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org, 
+	lance.yang@linux.dev, vbabka@suse.cz, jannh@google.com, rppt@kernel.org, 
+	mhocko@suse.com, pfalcato@suse.de, kees@kernel.org, maddy@linux.ibm.com, 
+	npiggin@gmail.com, mpe@ellerman.id.au, chleroy@kernel.org, 
+	borntraeger@linux.ibm.com, frankja@linux.ibm.com, imbrenda@linux.ibm.com, 
+	hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com, 
+	svens@linux.ibm.com, gerald.schaefer@linux.ibm.com, linux-mm@kvack.org, 
+	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18487-lists,linux-s390=lfdr.de];
-	DKIM_TRACE(0.00)[ibm.com:+];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
-	TAGGED_RCPT(0.00)[linux-s390];
-	FROM_NEQ_ENVFROM(0.00)[imbrenda@linux.ibm.com,linux-s390@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-18490-lists,linux-s390=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[42];
+	FREEMAIL_CC(0.00)[linux-foundation.org,infradead.org,kernel.org,nvidia.com,intel.com,gmail.com,sk.com,gourry.net,linux.alibaba.com,oracle.com,redhat.com,arm.com,linux.dev,suse.cz,google.com,suse.com,suse.de,linux.ibm.com,ellerman.id.au,kvack.org,lists.ozlabs.org,vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[surenb@google.com,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[google.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_NONE(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: E170438B15C
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-s390];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 8F79E38B2A4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Fix memslots handling for UCONTROL guests. Attempts to delete user
-memslots will fail, as they should, without the risk of a NULL pointer
-dereference.
+On Thu, Apr 2, 2026 at 6:19=E2=80=AFAM Lorenzo Stoakes (Oracle) <ljs@kernel=
+.org> wrote:
+>
+> On Tue, Mar 31, 2026 at 01:14:51PM -0700, Suren Baghdasaryan wrote:
+> > On Tue, Mar 31, 2026 at 11:47=E2=80=AFAM Lorenzo Stoakes (Oracle)
+> > <ljs@kernel.org> wrote:
+> > >
+> > > On Tue, Mar 31, 2026 at 11:29:21AM -0700, Andrew Morton wrote:
+> > > > On Tue, 31 Mar 2026 08:01:11 -0700 Suren Baghdasaryan <surenb@googl=
+e.com> wrote:
+> > > >
+> > > > > > Instead? That is, assuming we really need to care about this at=
+ all.
+> > > > > >
+> > > > > > But I think I don't like this change at all?
+> > > > >
+> > > > > Yeah, this was the part I wasn't sure if it's worth adding. With =
+your
+> > > > > vote confirming my scepticism I'll go ahead and remove the parts =
+I
+> > > > > added to avoid extra vma_start_write_killable() call (3 instances=
+ in
+> > > > > all) and will post v7.
+> > > >
+> > > > Thanks.  I'll remove v6 from mm.git and shall await Lorenzo's advic=
+e on
+> > > > v7.
+> > > >
+> > >
+> > > Ack, if we just drop the problematic bits we might still be fine for =
+7.1 :)
+> >
+> > Let's get your cleanup first and then see where we are. I also hate
+> > the way I have to report a fake error code, so with that cleanup the
+> > patchset should be much nicer.
+>
+> Ack, yeah it's horrid, + _my fault_ :)
 
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
----
- arch/s390/kvm/kvm-s390.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+No worries, I can wait.
 
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index be2a721e2574..435c3a1b74f8 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -5636,7 +5636,7 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
- 				   struct kvm_memory_slot *new,
- 				   enum kvm_mr_change change)
- {
--	if (kvm_is_ucontrol(kvm) && new->id < KVM_USER_MEM_SLOTS)
-+	if (kvm_is_ucontrol(kvm) && new && new->id < KVM_USER_MEM_SLOTS)
- 		return -EINVAL;
- 
- 	/* When we are protected, we should not change the memory slots */
--- 
-2.53.0
+>
+> I can put something together now perhaps that can potentially be queued u=
+p for
+> 7.2 at 7.1-rc1.
 
+Thanks! That would be appreciated.
+
+>
+> Cheers, Lorenzo
 
