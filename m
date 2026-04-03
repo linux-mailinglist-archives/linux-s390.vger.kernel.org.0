@@ -1,158 +1,146 @@
-Return-Path: <linux-s390+bounces-18502-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18503-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mAbLLE7nzmkRrwYAu9opvQ
-	(envelope-from <linux-s390+bounces-18502-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 03 Apr 2026 00:01:50 +0200
+	id qCY8CR8Tz2nXsgYAu9opvQ
+	(envelope-from <linux-s390+bounces-18503-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 03 Apr 2026 03:08:47 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59B9D38E99C
-	for <lists+linux-s390@lfdr.de>; Fri, 03 Apr 2026 00:01:50 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 442E238FD81
+	for <lists+linux-s390@lfdr.de>; Fri, 03 Apr 2026 03:08:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A6DF83014C29
-	for <lists+linux-s390@lfdr.de>; Thu,  2 Apr 2026 21:58:28 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 492BA30152C2
+	for <lists+linux-s390@lfdr.de>; Fri,  3 Apr 2026 01:07:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3537638A298;
-	Thu,  2 Apr 2026 21:58:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7711525A2A4;
+	Fri,  3 Apr 2026 01:07:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KBJzCsq7"
+	dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b="gVbSUnj7"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC8931B803;
-	Thu,  2 Apr 2026 21:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5DC269D18;
+	Fri,  3 Apr 2026 01:07:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.181.231.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775167107; cv=none; b=k0KTnsXAl0U1zEWJXPFqqxg/0Ps3JXPapOn3I1EGDoeKTvF9US/PyIfdG+xpLI7tvChHd36X2Tl7BxvkXQId6eqjJ0CvRUFjBPnNvmh0R8aT2gMib5ftcekYMyYcmiA1YqUefTFMScCkjx1iMYXus6GRMr0nosElGxpPdOE0UK0=
+	t=1775178428; cv=none; b=iMciR7MXgnrdfxX5ssOw44y/6PKBhyYyncsRvsg1hqh4XgIFbCVstYjPUN0VLZh2WBmqXnF9LAmVlW+7G9lGqz4NZGOx/DzLcUEbAfDSp3LH2eT+jkARWTifiTJp78uO1VKCw6JaS4djllwmu2JsC5Dv2UYhMS6AjO7fWpu0/30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775167107; c=relaxed/simple;
-	bh=QvUc9vANqYsb1luDp8UYk1f8BqkeVaTMVXLV75eutnQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=DVJp2RZb27ELpuSXbKU4Hp/Y6oxtY4GVZi+hvh0cGpfFqwLi3iiECU8FkXW3LsP2E4BFa3lHd7gKiNOQi5H6gIaKO0hKHraIz2ZSgvjaY8pL8Nj3ueFJ33XzKXy8KKHzyLjplHoEp/PCfYJu8MKrJG/teYDsTZ/J1SYs3fWx0zQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KBJzCsq7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76D96C116C6;
-	Thu,  2 Apr 2026 21:58:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775167106;
-	bh=QvUc9vANqYsb1luDp8UYk1f8BqkeVaTMVXLV75eutnQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=KBJzCsq7TNcgHpU+TWPAd3W8YuuJXdgpviR9Ow38UzYp/E+eDMYCQdUq5+04/Mnru
-	 vF8yruBgH9Kqoxj3RdUA00tDQnEgnr1qE7AXbmqG7qka9IVu/f1eZKTg86JWT+ETrn
-	 TjxI1jdECoYVYFvAydaPvhTr0DLyOkSNS0rHhfEWArmmkmeciwTpFwX+5aQHpstoUl
-	 foXfbAlUvknuR2UINHvJ3kK1f5ozCCWUSVy6PFFL3eEN4gpoDz+keSHvFP6Ep2zvPe
-	 Ej2doeiB7lotVTyVy6ov80wS5IsFWdnGSH4WR6z1XJ7lBV9TObDwXGWdYhpggyK3MT
-	 1b1VbHt8uneOw==
-Date: Thu, 2 Apr 2026 15:58:18 -0600 (MDT)
-From: Paul Walmsley <pjw@kernel.org>
-To: Yury Norov <ynorov@nvidia.com>
-cc: Andrew Morton <akpm@linux-foundation.org>, 
-    "David S. Miller" <davem@davemloft.net>, 
-    "Michael S. Tsirkin" <mst@redhat.com>, Theodore Ts'o <tytso@mit.edu>, 
-    Albert Ou <aou@eecs.berkeley.edu>, Alexander Duyck <alexanderduyck@fb.com>, 
-    Alexander Gordeev <agordeev@linux.ibm.com>, 
-    Alexander Viro <viro@zeniv.linux.org.uk>, 
-    Alexandra Winter <wintera@linux.ibm.com>, 
-    Andreas Dilger <adilger.kernel@dilger.ca>, 
-    Andrew Lunn <andrew+netdev@lunn.ch>, Anna Schumaker <anna@kernel.org>, 
-    Anton Yakovlev <anton.yakovlev@opensynergy.com>, 
-    Arnaldo Carvalho de Melo <acme@kernel.org>, 
-    Aswin Karuvally <aswin@linux.ibm.com>, Borislav Petkov <bp@alien8.de>, 
-    Carlos Maiolino <cem@kernel.org>, 
-    Catalin Marinas <catalin.marinas@arm.com>, Chao Yu <chao@kernel.org>, 
-    Christian Borntraeger <borntraeger@linux.ibm.com>, 
-    Christian Brauner <brauner@kernel.org>, 
-    Claudio Imbrenda <imbrenda@linux.ibm.com>, 
-    Dave Hansen <dave.hansen@linux.intel.com>, 
-    David Airlie <airlied@gmail.com>, 
-    Dominique Martinet <asmadeus@codewreck.org>, 
-    Dongsheng Yang <dongsheng.yang@linux.dev>, 
-    Eric Dumazet <edumazet@google.com>, 
-    Eric Van Hensbergen <ericvh@kernel.org>, 
-    Heiko Carstens <hca@linux.ibm.com>, 
-    Herbert Xu <herbert@gondor.apana.org.au>, Ingo Molnar <mingo@redhat.com>, 
-    Jaegeuk Kim <jaegeuk@kernel.org>, Jakub Kicinski <kuba@kernel.org>, 
-    Jani Nikula <jani.nikula@linux.intel.com>, 
-    Janosch Frank <frankja@linux.ibm.com>, Jaroslav Kysela <perex@perex.cz>, 
-    Jens Axboe <axboe@kernel.dk>, 
-    Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
-    Latchesar Ionkov <lucho@ionkov.net>, Linus Walleij <linusw@kernel.org>, 
-    Madhavan Srinivasan <maddy@linux.ibm.com>, Mark Brown <broonie@kernel.org>, 
-    Michael Ellerman <mpe@ellerman.id.au>, Miklos Szeredi <miklos@szeredi.hu>, 
-    Namhyung Kim <namhyung@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-    Paolo Abeni <pabeni@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-    Paul Walmsley <pjw@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-    Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-    Sean Christopherson <seanjc@google.com>, Simona Vetter <simona@ffwll.ch>, 
-    Takashi Iwai <tiwai@suse.com>, Thomas Gleixner <tglx@kernel.org>, 
-    Trond Myklebust <trondmy@kernel.org>, 
-    Tvrtko Ursulin <tursulin@ursulin.net>, Vasily Gorbik <gor@linux.ibm.com>, 
-    Will Deacon <will@kernel.org>, Yury Norov <yury.norov@gmail.com>, 
-    Zheng Gu <cengku@gmail.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-    linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-    linux-riscv@lists.infradead.org, kvm@vger.kernel.org, 
-    linux-s390@vger.kernel.org, linux-block@vger.kernel.org, 
-    intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-    dm-devel@lists.linux.dev, netdev@vger.kernel.org, 
-    linux-spi@vger.kernel.org, linux-ext4@vger.kernel.org, 
-    linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, 
-    linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org, 
-    linux-crypto@vger.kernel.org, linux-mm@kvack.org, 
-    linux-perf-users@vger.kernel.org, v9fs@lists.linux.dev, 
-    virtualization@lists.linux.dev, linux-sound@vger.kernel.org
-Subject: Re: [PATCH 8/8] arch: use rest_of_page() macro where appropriate
-In-Reply-To: <20260304012717.201797-9-ynorov@nvidia.com>
-Message-ID: <ee15482d-22a8-9686-ba64-d216b25d8e68@kernel.org>
-References: <20260304012717.201797-1-ynorov@nvidia.com> <20260304012717.201797-9-ynorov@nvidia.com>
+	s=arc-20240116; t=1775178428; c=relaxed/simple;
+	bh=sqxDIV0RF8nIZelYgUioKN3XTPgk894VUZlwMHlpUb4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BTz6BOF6Rc6ieUst29mUArrxBSlQg03EQxuEsk1wxV/rzXtNSz4wiIxD8C7ajXe0FxTf5hv9e0Uqi/lgBfgxiAxByyFGCfE2rLaMKVccbkJDngMJ1DnSQxfFfd4cfDY3PcRARqLBYRexFZeYHIMT7pWfalpmehhgiJKqHEc/CFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b=gVbSUnj7; arc=none smtp.client-ip=180.181.231.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=gondor.apana.org.au; s=h01; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:cc:to:subject:message-id:date:
+	from:content-type:reply-to; bh=rODPce7ygzLPFsB/u/35h/aUCre/IZsi6I1r9lopMT8=; 
+	b=gVbSUnj7ev4HXs/cFCFLInoPbbuBFKVc3lP8iDVo+2pDSSQtk9z3IgVGvuqJOsZS9TJWrTsq30W
+	X817sv5iCAIErqpYsxBJ4DixSUaPxYRrzhDPV/490yKf54dT9/SsT4UBp1K8KUGWulK0wNkg+3kuv
+	CraL1525Rix9a8CEjqNdtBA85J9BclVsFVl7/bHXDUqJnz1JEBzop5TArxSSyY0Zety3Ew2SfkOUE
+	jSjYzqfUvDVheu/IN5I232jCH1ifEk9whI+yWQFg/De35sMRqe7suYWPB+f2EKqp3a94hAuLgVxjQ
+	XQAH4QBVSOhXggojtOzZpe8qxXonFbaPQk3A==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1w8Saa-003R28-2T;
+	Fri, 03 Apr 2026 09:07:04 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 03 Apr 2026 09:07:03 +0800
+Date: Fri, 3 Apr 2026 09:07:03 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+	x86@kernel.org, Harald Freudenberger <freude@linux.ibm.com>,
+	Holger Dengler <dengler@linux.ibm.com>
+Subject: Re: [PATCH 0/3] crypto: Remove arch-optimized des and des3_ede code
+Message-ID: <ac8St5Ggesgl-bp4@gondor.apana.org.au>
+References: <20260326201246.57544-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260326201246.57544-1-ebiggers@kernel.org>
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[apana.org.au,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[gondor.apana.org.au:s=h01];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,davemloft.net,redhat.com,mit.edu,eecs.berkeley.edu,fb.com,linux.ibm.com,zeniv.linux.org.uk,dilger.ca,lunn.ch,kernel.org,opensynergy.com,alien8.de,arm.com,linux.intel.com,gmail.com,codewreck.org,linux.dev,google.com,gondor.apana.org.au,perex.cz,kernel.dk,ionkov.net,ellerman.id.au,szeredi.hu,dabbelt.com,infradead.org,intel.com,ffwll.ch,suse.com,ursulin.net,vger.kernel.org,lists.infradead.org,lists.ozlabs.org,lists.freedesktop.org,lists.linux.dev,lists.sourceforge.net,kvack.org];
-	TAGGED_FROM(0.00)[bounces-18502-lists,linux-s390=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[gondor.apana.org.au:+];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[86];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[pjw@kernel.org,linux-s390@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18503-lists,linux-s390=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-s390,netdev];
-	MID_RHS_MATCH_FROM(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 59B9D38E99C
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[herbert@gondor.apana.org.au,linux-s390@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-s390];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,gondor.apana.org.au:dkim,gondor.apana.org.au:mid,apana.org.au:email,apana.org.au:url]
+X-Rspamd-Queue-Id: 442E238FD81
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, 3 Mar 2026, Yury Norov wrote:
-
-> Switch arch code to using the macro. No functional changes intended.
+On Thu, Mar 26, 2026 at 01:12:42PM -0700, Eric Biggers wrote:
+> DES and 3DES are cryptographically obsolete and insecure by modern
+> standards.  Continuing to maintain highly specific, complex assembly and
+> glue code for them, especially when the code isn't testable in QEMU
+> (s390 and sparc), is unnecessary and risky.
 > 
-> Signed-off-by: Yury Norov <ynorov@nvidia.com>
+> Thus, this series removes the architecture-optimized DES and 3DES code
+> for the three architectures that had it: s390, sparc, and x86.
+> 
+> This series is targeting cryptodev/master.
+> 
+> Eric Biggers (3):
+>   crypto: s390 - Remove des and des3_ede code
+>   crypto: sparc - Remove des and des3_ede code
+>   crypto: x86 - Remove des and des3_ede code
+> 
+>  arch/s390/configs/debug_defconfig |   1 -
+>  arch/s390/configs/defconfig       |   1 -
+>  arch/s390/crypto/Kconfig          |  16 -
+>  arch/s390/crypto/Makefile         |   1 -
+>  arch/s390/crypto/des_s390.c       | 502 ------------------
+>  arch/sparc/crypto/Kconfig         |  14 -
+>  arch/sparc/crypto/Makefile        |   2 -
+>  arch/sparc/crypto/des_asm.S       | 419 ---------------
+>  arch/sparc/crypto/des_glue.c      | 482 -----------------
+>  arch/x86/crypto/Kconfig           |  14 -
+>  arch/x86/crypto/Makefile          |   3 -
+>  arch/x86/crypto/des3_ede-asm_64.S | 831 ------------------------------
+>  arch/x86/crypto/des3_ede_glue.c   | 391 --------------
+>  13 files changed, 2677 deletions(-)
+>  delete mode 100644 arch/s390/crypto/des_s390.c
+>  delete mode 100644 arch/sparc/crypto/des_asm.S
+>  delete mode 100644 arch/sparc/crypto/des_glue.c
+>  delete mode 100644 arch/x86/crypto/des3_ede-asm_64.S
+>  delete mode 100644 arch/x86/crypto/des3_ede_glue.c
+> 
+> 
+> base-commit: f9bbd547cfb98b1c5e535aab9b0671a2ff22453a
+> -- 
+> 2.53.0
 
-Acked-by: Paul Walmsley <pjw@kernel.org> # arch/riscv
-
-
-- Paul
+All applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
 
