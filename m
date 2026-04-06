@@ -1,185 +1,165 @@
-Return-Path: <linux-s390+bounces-18545-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18548-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oFVMIn3e02kingcAu9opvQ
-	(envelope-from <linux-s390+bounces-18545-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 06 Apr 2026 18:25:33 +0200
+	id 6E+NF5Lq02nInwcAu9opvQ
+	(envelope-from <linux-s390+bounces-18548-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 06 Apr 2026 19:17:06 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 908D03A545C
-	for <lists+linux-s390@lfdr.de>; Mon, 06 Apr 2026 18:25:32 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B41B83A59CD
+	for <lists+linux-s390@lfdr.de>; Mon, 06 Apr 2026 19:17:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id AC52D3007AD6
-	for <lists+linux-s390@lfdr.de>; Mon,  6 Apr 2026 16:25:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1B98B300F111
+	for <lists+linux-s390@lfdr.de>; Mon,  6 Apr 2026 17:17:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC16A3890EA;
-	Mon,  6 Apr 2026 16:25:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEEDC388E5B;
+	Mon,  6 Apr 2026 17:17:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VeIRkCjM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BZO3LR+t"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9DB37107E;
-	Mon,  6 Apr 2026 16:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7331A9FB7
+	for <linux-s390@vger.kernel.org>; Mon,  6 Apr 2026 17:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775492723; cv=none; b=nX40iYCnQCSkB3kE11BXrUXRyzSGxAy9ILBtuSqrDTO1/x5d72/yfe9iNhT9HwCZSGDiX2UhlIwoYPHAwH3l4MnSAEll9FaOcSOAUMZTOFNN0IkYchMOizVPw6aX0+dVQYuIVWAZd9Euom1xWHgy1gH5ymbJbWbizIj4A81iZv8=
+	t=1775495822; cv=none; b=JlEtLoQxT9xTRaVQiu5WkCHc4MdXdDd9UXXAg6+WOfJ2hyXLSCNA6DJHoqLcw6F3TuyB5wIIhS2vyEr7iB/21PPwvLaaI60mi3vRwZWzhUjLzYiBX6EAYA32ay7zzTU309XJqKWqOYmYDec9RYS/lSwimli/bD32YUk4VuWW/QQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775492723; c=relaxed/simple;
-	bh=ngjDooXf5Pcr7k2d4p+jIIxG08B4RRHnuE+yPky4piE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=R4uxgc/QlZ3/lbKCVwykbRCzEcZ/cZZzOX9ywloKVroKwbn9Q9nYGQRQvpvobvKii4fJZDlMTpXoEk1R4HkRLuYIvNsvMpv4suPyZ9nqWmTOnbwJojqkdsRYLPhNrYQCwmb2hRh+Exh8Kgk5Uc4c40Ud9TXMLBaunz6AnFvLaTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VeIRkCjM; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 635Mj58n3762569;
-	Mon, 6 Apr 2026 16:25:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=F4fi3c
-	ahaAzJo5UH4AbwpD5GJc+roP979BKJ0AyitnM=; b=VeIRkCjMhdshtUTlEpvswb
-	hco19Mfn7R0Fgyv5gclM4F8BxLBmk24DBU1P/njPsmZ1j6sx8JyYkBUL5WY9yk3J
-	12x3KEfkjvVbJ66xf2ydxDMEWwX4sDoMPmSZVB9CY7c0MLjWFRJaXCnakigiVwii
-	V/08bm5irbqdjPHJVWyiWkCUfYDI6v7o4Ovf2t3B1oyrLc1lV3IJALeURdsGiHED
-	n90cvP16HdYx9cPIJv0YsDsKc5O3MG+0BO6sWnYMCI8PdUO0lwouWkhCRGLPu0V1
-	tjOUOlbr0lOIUTt5A6V+Da4aqEsQi2Vnquud9Zwn3oPsvUuI+xJO7VZijZcpzclw
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4datc2qg59-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 Apr 2026 16:25:20 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 636FtoET018730;
-	Mon, 6 Apr 2026 16:25:19 GMT
-Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dbcyswg82-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 Apr 2026 16:25:19 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 636GPHCr27263682
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 6 Apr 2026 16:25:18 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AF19958058;
-	Mon,  6 Apr 2026 16:25:17 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DAE6E58057;
-	Mon,  6 Apr 2026 16:25:16 +0000 (GMT)
-Received: from [9.61.9.165] (unknown [9.61.9.165])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  6 Apr 2026 16:25:16 +0000 (GMT)
-Message-ID: <199fafb3-98cb-4ad8-bbb4-22a4149e409d@linux.ibm.com>
-Date: Mon, 6 Apr 2026 12:25:16 -0400
+	s=arc-20240116; t=1775495822; c=relaxed/simple;
+	bh=DsenSwK/NwNsVQofpl4gtUWjwJhYnStVDFl38jee1hU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Orftun4gFIfCUkkIvLX4L4a8ZI5TEHXhnr+/VoaFgRSiwo6zRxXZEkS4cfuG/j4UWmZqISoabZa95TbKL2Ip6nP0g0KYreAeJh88jtWJabyEXBezxz5HjNloCgJa7BJQb0Q2ELgj26R96Fw9jAZS21sGGRyYwtmgEiRE//owhkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BZO3LR+t; arc=none smtp.client-ip=74.125.82.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2c895e7de52so17220658eec.0
+        for <linux-s390@vger.kernel.org>; Mon, 06 Apr 2026 10:17:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1775495821; x=1776100621; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KMCKiIhN9/73e2LsQXZ6rcdnXOer2akl+Pj9NWbWVh0=;
+        b=BZO3LR+tT7ZF7U0Ir/JgTcKvkbYV9PskhOPWxrW50U/iaNfsVKoWASc+VAblix4F7E
+         pBfAqpSW6ChtfgF4Mjn60tGlGGxF2p/biOIuntykJ1n28rUcXZ3Lh3pafxjU6gZLJyU8
+         xVFqR/zvLhrI2aFT3oySPRysdOgPA+fBt1ZyNsCWpzte2BQ5AfgHAaY9QDmkThueY1J8
+         8AyBBf/JEr1d+zMGMwL1PxQ0mOjFKExs4NDygcms6TaSj08aZT3DSEB2/PhG3KkVupTV
+         X3XvSEqv64PoxK+l3l9eLf7WmG71zrXx3kOBrhbA2GYM+RtP3++FyFo+uDBP1bKRqjRH
+         1RKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775495821; x=1776100621;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KMCKiIhN9/73e2LsQXZ6rcdnXOer2akl+Pj9NWbWVh0=;
+        b=GLJ6VvAoj1M7Qs+e9JoLONknnwyM/LdrZdLHrnY7DxSX/xl6W1/xwID9pfMK4rOa+A
+         Q5/kmxTYJaNe6ltLAT3Bc8lAG0rsBXZpDr/37jukm+scuez+t/FS+VcXSE93QoGSCHxR
+         OGniMU7Zc4rMDVJRle3G0iUP8mxaaUQSsQ2YVmu1dxMiLeT2aLyl1KHE6YBkCr4FKvfW
+         qz2DwEDoX6MFmAVmb5i/ebV+AIJvLHOTepJuua0VGPUR7j0FdBw6uZz8Nr3waj9P+uyo
+         T+XTw00GjFxR0Wm0vAHxuS+0Ft/z0Yz/AVW0JVTH/5DjtkEa3uUPA5XyP7u1MjAnDbPi
+         lGOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXDEl1A8Z9omAfWhCscaUW0x2kxvrkxCLhLd2ST0zifRbB4P2sP/zyEsxWcLJIpUivpp26ik7p21eMO@vger.kernel.org
+X-Gm-Message-State: AOJu0YxU3z1Tt3ablvDlM0yeNpuODq9Hyd4ucTWpHCqRgjXdEhXEc3kg
+	z834gWnfBYDexXtTcTjUTJuIsR4krNXHBJsk0zmxmpuWypcCOTeQAEczFnMemiUj5iQHT6LVYkc
+	O1vRziymd+Q==
+X-Received: from dys23.prod.google.com ([2002:a05:693c:8017:b0:2c6:fcf:21bd])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:4090:b0:2c8:6361:ab58
+ with SMTP id 5a478bee46e88-2cbfaaaaf92mr6467000eec.13.1775495348644; Mon, 06
+ Apr 2026 10:09:08 -0700 (PDT)
+Date: Mon,  6 Apr 2026 10:09:02 -0700
+In-Reply-To: <CAP-5=fXxa2rvxMqZoD5ayETiPjS8cf7A49TdVwwt+10uPu58Pw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] KVM: s390: Introducing kvm_arch_set_irq_inatomic
- fast inject
-To: Douglas Freimuth <freimuth@linux.ibm.com>, borntraeger@linux.ibm.com,
-        imbrenda@linux.ibm.com, frankja@linux.ibm.com, david@kernel.org,
-        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        svens@linux.ibm.com, kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20260406064419.14384-1-freimuth@linux.ibm.com>
- <20260406064419.14384-4-freimuth@linux.ibm.com>
-Content-Language: en-US
-From: Matthew Rosato <mjrosato@linux.ibm.com>
-In-Reply-To: <20260406064419.14384-4-freimuth@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDA2MDE2MCBTYWx0ZWRfXwwsIqtmQlcn5
- w8YKX9RTmlRj2HaDoC8a2cb5pDP/m2u17h8LgSnO64hDQjUUu/ozWrysciNIn7W78lHZcydiEcu
- Ksp77j3xiw4sCLeYF2GWufxSEXaOznd2RKn5k6WC+Y40Jen+TzLE2+bjFR4GWinFeoBdQfnKGkx
- 14zM57iVZbw301RkaApMgML48MX7t1R5vuf7AG8+uNlHPqMA20aU6N9S6gf0jzZCqT3x6CraWh6
- HkQzfY2kUF1DtGKBk0v1N9ZfQdsmaJO0E+CXZlf3niKUu+348F0u+2rJfpqDFBXHsmTHTDADyry
- iO8FgQjDdYPScpe8EIWSIet/8BNxn2QTzlOJV4dbZA8dqmCG7C8WG3Am8Up1A+lyXooFCi9p/LW
- GtWSX3AEfyqe7qZB+jN+K464bvBiWB6A5TKm1Ui+csK9Msp5tmgan+r/AKWEuBnF8Avm46hH+qP
- wfm0KbdTdlsrXg5gQqw==
-X-Proofpoint-GUID: OuIRqrYXVrJX16u4SeBVO8eTGfBH-YR3
-X-Proofpoint-ORIG-GUID: OuIRqrYXVrJX16u4SeBVO8eTGfBH-YR3
-X-Authority-Analysis: v=2.4 cv=HJvO14tv c=1 sm=1 tr=0 ts=69d3de70 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=0yhpOta31wJg_WYSZE8A:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-06_03,2026-04-03_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 suspectscore=0 clxscore=1015 lowpriorityscore=0 adultscore=0
- malwarescore=0 spamscore=0 phishscore=0 priorityscore=1501 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2604060160
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Mime-Version: 1.0
+References: <CAP-5=fXxa2rvxMqZoD5ayETiPjS8cf7A49TdVwwt+10uPu58Pw@mail.gmail.com>
+X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
+Message-ID: <20260406170905.2614260-1-irogers@google.com>
+Subject: [PATCH v5 0/3] perf symbol/env: ELF machine clean up and lazy idle computation
+From: Ian Rogers <irogers@google.com>
+To: acme@kernel.org, namhyung@kernel.org
+Cc: irogers@google.com, agordeev@linux.ibm.com, gor@linux.ibm.com, 
+	hca@linux.ibm.com, jameshongleiwang@126.com, japo@linux.ibm.com, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-s390@vger.kernel.org, sumanthk@linux.ibm.com, tmricht@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
+	MV_CASE(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	TAGGED_FROM(0.00)[bounces-18545-lists,linux-s390=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[google.com,linux.ibm.com,126.com,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-18548-lists,linux-s390=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,linux.ibm.com:mid];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mjrosato@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	FROM_NEQ_ENVFROM(0.00)[irogers@google.com,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[google.com:+];
+	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 908D03A545C
+	NEURAL_HAM(-0.00)[-1.000];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[13]
+X-Rspamd-Queue-Id: B41B83A59CD
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+Add a helper to perf_env to compute the e_machine if it is
+EM_NONE. Derive the value from the arch string if available. Similarly
+derive the arch string from the ELF machine if available, for
+consistency. This means perf's arch (machine type) is no longer
+determined by uname but set to match that of the perf ELF executable.
 
->  
-> -static void __kvm_inject_pfault_token(struct kvm_vcpu *vcpu, bool start_token,
-> -				      unsigned long token)
-> +static int __kvm_inject_pfault_token(struct kvm_vcpu *vcpu, bool start_token,
-> +				     unsigned long token)
->  {
->  	struct kvm_s390_interrupt inti;
->  	struct kvm_s390_irq irq;
-> +	struct kvm_s390_interrupt_info *inti_mem;
-> +
-> +	inti_mem = kzalloc_obj(*inti_mem, GFP_KERNEL_ACCOUNT);
-> +	if (!inti_mem)
-> +		return -ENOMEM;
+Switch the idle computation to the point of use and lazily compute it,
+rather than computing it for every symbol. The current only user is
+`perf top`. At the point of use the perf_env is available and this can
+be used to make sure the idle function computation is machine and
+kernel version dependent.
 
-You change this function to possibly return this value but you do not
-change the callers of this routine to actually look at the new return value?
+v5: Add perf_env os_release helper (Namhyung/Sashiko)
 
-AFAICT there are 2 callers of this today in arch/s390/kvm/kvm-s390.c - I
-assume one or both need updating, otherwise why do we need this change?
+v4: Fix Sashiko issues where an array element wasn't sorted properly,
+    the e_flags weren't returned properly, the idle type is change to
+    a u8 rather than an enum value and the s390 version check for
+    psw_idle is slightly reordered and tweaked.
+    https://lore.kernel.org/lkml/20260327045025.2276517-1-irogers@google.com/
 
->  
->  	if (start_token) {
->  		irq.u.ext.ext_params2 = token;
-> @@ -4409,8 +4422,9 @@ static void __kvm_inject_pfault_token(struct kvm_vcpu *vcpu, bool start_token,
->  	} else {
->  		inti.type = KVM_S390_INT_PFAULT_DONE;
->  		inti.parm64 = token;
-> -		WARN_ON_ONCE(kvm_s390_inject_vm(vcpu->kvm, &inti));
-> +		WARN_ON_ONCE(kvm_s390_inject_vm(vcpu->kvm, &inti, inti_mem));
->  	}
-> +	return true;
+v3: Properly set up the e_machine coming from the perf_env as reported
+    by Honglei Wang.
+    https://lore.kernel.org/lkml/20260326174521.1829203-1-irogers@google.com/
 
-Since return value is an integer, return 0?
+v2: Some minor white space clean up:
+    https://lore.kernel.org/lkml/20260325161836.1029457-1-irogers@google.com/
+
+v1: https://lore.kernel.org/lkml/20260302234343.564937-1-irogers@google.com/
+
+Ian Rogers (3):
+  perf env: Add perf_env__e_machine helper and use in perf_env__arch
+  perf env: Add helper to lazily compute the os_release
+  perf symbol: Lazily compute idle and use the perf_env
+
+ tools/perf/builtin-top.c          |   6 +-
+ tools/perf/util/data-convert-bt.c |   2 +-
+ tools/perf/util/env.c             | 206 ++++++++++++++++++++++++------
+ tools/perf/util/env.h             |   2 +
+ tools/perf/util/session.c         |  14 +-
+ tools/perf/util/symbol-elf.c      |   2 +-
+ tools/perf/util/symbol.c          | 107 ++++++++++------
+ tools/perf/util/symbol.h          |  15 ++-
+ 8 files changed, 264 insertions(+), 90 deletions(-)
+
+-- 
+2.53.0.1213.gd9a14994de-goog
 
 
