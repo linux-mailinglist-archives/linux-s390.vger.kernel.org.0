@@ -1,208 +1,157 @@
-Return-Path: <linux-s390+bounces-18569-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18571-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QPE6L1Hi1GnbyQcAu9opvQ
-	(envelope-from <linux-s390+bounces-18569-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 12:54:09 +0200
+	id 4OcvNQ711GkjywcAu9opvQ
+	(envelope-from <linux-s390+bounces-18571-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 14:14:06 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE1923AD4B6
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 12:54:08 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A5E13AE2F9
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 14:14:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E205030A1C1A
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2026 10:48:23 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id D722130059B1
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2026 12:14:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1094F3AA1AE;
-	Tue,  7 Apr 2026 10:48:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D46F3B19B3;
+	Tue,  7 Apr 2026 12:14:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="C5X+Vejd"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="f55/ZOOq"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F353AA4E7;
-	Tue,  7 Apr 2026 10:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53FA73A8FE9;
+	Tue,  7 Apr 2026 12:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775558895; cv=none; b=sdBAgEKstpQTnmxdE8rbj3ujb96vDE8Je9PHbaQZc8+GSXTucqR3QqTb1DWhSONvnP7nnPv15YrdVO4fF8buhopAx6+6Hs4O8UUunyHePOtt+VWuREvWXI9KN4aR+YMJ5peDspIL84MfvKe3qS8HRwruWCjliPpHHowYkPbzXL8=
+	t=1775564044; cv=none; b=ciLDrvp3epOZVYSZ62899sMGh4mO3CNZKn7IC8SvfN61IMoPlW/SmQokh1XCA4QoqfHSlfn0WT/+67H7FZ+/VIrNJ0RhEeAhhKUuE9Wt9w0wJ5knX+gOYNhJE6Kz47uAVc+6s85/xHoSGWKbH6Wm0gN9ziI4ryZbTMIhIpjPHz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775558895; c=relaxed/simple;
-	bh=b9hOXyslqJyXK9TLIMvo1eypOQPDwowlp3t6tklrexM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XzHAcwn+F4mAzWHsiRuLHHifOr6NsiKSjjSrPzjIL2buokxq3U/VtNXr5/WdMGPZlTMdTQ8RcrgrvrLk/Dr8sfDEtIhe2VJk5lfm6EL8udeELEYmIsvi03O8m+/Pa4QFnwULHRZldDYQn0atlK1tu3W4c3HrDcSH2hT9PhGJeXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=C5X+Vejd; arc=none smtp.client-ip=115.124.30.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1775558890; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=Xck3+WNDdIEVOXQAh3tLFBYdo8woEiYyv83w5MePz5M=;
-	b=C5X+Vejdzd6puTTBE55252wPNxkOTzi9OW8l6EjidtHkRU2ZXg/RP8+s4wE6Gt5fcrUfU0DChr2Jkr+5kkwVojaG9L2G5OEp5KfYbk8Icfz9tMdKHIcDPCkD9QF9jiXdoxxkBxrx+yQ0GnZYlzbvb2hfCiq7cPKnGN/cCTYLi5w=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R491e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0X0bYxc9_1775558886;
-Received: from localhost(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0X0bYxc9_1775558886 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 07 Apr 2026 18:48:08 +0800
-From: Wen Gu <guwen@linux.alibaba.com>
-To: tglx@kernel.org,
-	richardcochran@gmail.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	jstultz@google.com,
-	anna-maria@linutronix.de,
-	frederic@kernel.org,
-	daniel.lezcano@kernel.org,
-	sboyd@kernel.org,
-	dwmw2@infradead.org
-Cc: vladimir.oltean@nxp.com,
-	wei.fang@nxp.com,
-	xiaoning.wang@nxp.com,
-	jonathan.lemon@gmail.com,
-	vadim.fedorenko@linux.dev,
-	yangbo.lu@nxp.com,
-	svens@linux.ibm.com,
-	nick.shi@broadcom.com,
-	ajay.kaher@broadcom.com,
-	alexey.makhalov@broadcom.com,
-	bcm-kernel-feedback-list@broadcom.com,
-	linux-fpga@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-s390@vger.kernel.org,
-	dust.li@linux.alibaba.com,
-	xuanzhuo@linux.alibaba.com,
-	mani@kernel.org,
-	imran.shaik@oss.qualcomm.com,
-	taniya.das@oss.qualcomm.com
-Subject: [PATCH v2 2/2] MAINTAINERS: update PTP maintainer entries after directory split
-Date: Tue,  7 Apr 2026 18:48:02 +0800
-Message-Id: <20260407104802.34429-3-guwen@linux.alibaba.com>
-X-Mailer: git-send-email 2.32.0.3.g01195cf9f
-In-Reply-To: <20260407104802.34429-1-guwen@linux.alibaba.com>
-References: <20260407104802.34429-1-guwen@linux.alibaba.com>
+	s=arc-20240116; t=1775564044; c=relaxed/simple;
+	bh=LWJkha2yVYbk8Pj+EPr+8pmSKBCGZmHbentgW97kfxI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jyw8Amlbz5xxsgilVGMblnuu6fgve5EZBVmcujscLzU/dhw9VshCmuX+mDVuWLOIHpskivgtDyEMUK8160ARxkLwJA8BrtMHTvlIBNFPJ5a+8+Uh9Q94edBQiOvnl86ShUHGOaBGVKjO0qUtoLEXkSvxZe6kYfmj4YTkj98Dkqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=f55/ZOOq; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 636LmOth2592771;
+	Tue, 7 Apr 2026 12:14:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=DoolXRdlFDgrxRPbK+zXaCv+OQ6f1R
+	i1AqY4eVWeaKA=; b=f55/ZOOqgIk0QuHaiGivdajdnjZFrdQDUolVJDp9meHdbV
+	EsAeWbBNc2bnDHZbPEF6IIciWKNMZmgLTgUNyLqoJkaXCNLmt+r0qU1Ao29bLgYI
+	GgCQLSf/x361NVWgdsPGX8Irwvmc5m5ssN8i5PzxRTf++KSRFpkAqo/PKTA3YTFq
+	Mo/y8M7QGs/utHMLru1AE8QzOJM42yVAV3+FxxgRt9CNsEGD/b/Fa9kytSAEmv3w
+	dSGAReoC83pmv+mSei/9Vrggl0ns0VazSQyvPwJq5paP33MxLj3dXM5/yvNxQ2hw
+	Vlzp+MC7BOR9Yj2g9NQLm3qEfOZHVhNoxtLk6aWw==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dcn2e2v48-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 07 Apr 2026 12:13:59 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 637BNA1G029863;
+	Tue, 7 Apr 2026 12:13:58 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dcme7b1ag-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 07 Apr 2026 12:13:58 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 637CDs7U49152408
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 7 Apr 2026 12:13:54 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A3E8B2004B;
+	Tue,  7 Apr 2026 12:13:54 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 73DDB20040;
+	Tue,  7 Apr 2026 12:13:54 +0000 (GMT)
+Received: from osiris (unknown [9.52.216.133])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  7 Apr 2026 12:13:54 +0000 (GMT)
+Date: Tue, 7 Apr 2026 14:13:53 +0200
+From: Steffen Eiden <seiden@linux.ibm.com>
+To: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, nrb@linux.ibm.com, schlameuss@linux.ibm.com,
+        gra@linux.ibm.com, david@kernel.org
+Subject: Re: [PATCH v3 1/6] KVM: s390: Add some useful mask macros
+Message-ID: <20260407121353.296205-A-seiden@linux.ibm.com>
+References: <20260402150135.196943-1-imbrenda@linux.ibm.com>
+ <20260402150135.196943-2-imbrenda@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-6.16 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260402150135.196943-2-imbrenda@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: kxHGHMXZwkJq2f1YKkTi1HJBu8szkTZi
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDA3MDExMCBTYWx0ZWRfX4U/Dw17gUXpE
+ OplcykOuxuB0VKvasrzBD+qrQTHXZAT3+GlWYpPFPk3o+qOJj610M05x5/geI2QiBmJHKiQ0hVw
+ 7kxUFN0MwDzTj0gPN0bCQKgfJIWz1wz74U9bLd9sHd1l7VQdp28M5tB6mMlf4d6mu2rQ8QMVzxY
+ zPi3IMKsDjpiXiGnfjKgbglWhnS/o6qCEbu32/7ZnY5Yq2vM0Hdsg5ghFjG7mDMS/RyTCcTP16/
+ x+M262Ah8E5/78qXLRC1qbbfqwxYM5oa1g4Xh4yKw/BQU8wJKz4mpVeomCdaQodH+pbAizEJySn
+ Bwek119e/ynQ84tmm2JneTYrKEH01Pv1D/UTVSWiDGDAfJ/OI7H4vXAL73SZXPS5OIXl0zi503R
+ Y/6JI1vBMsNeMxEOKdK9HoEZU6Suzbv0idBjiJOpqL0gLOqdrkqM2vYVIN91mnjKfcexmNnzR1k
+ 8ks2vGpQQjUDTSAPLHA==
+X-Authority-Analysis: v=2.4 cv=Cfw4Irrl c=1 sm=1 tr=0 ts=69d4f508 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=kj9zAlcOel0A:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8
+ a=vf6NJk7m3_Ogz1M4-hAA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: kxHGHMXZwkJq2f1YKkTi1HJBu8szkTZi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-07_02,2026-04-07_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 phishscore=0 clxscore=1015 adultscore=0 suspectscore=0
+ priorityscore=1501 impostorscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604010000 definitions=main-2604070110
+X-Spamd-Result: default: False [-1.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[nxp.com,gmail.com,linux.dev,linux.ibm.com,broadcom.com,vger.kernel.org,lists.linux.dev,linux.alibaba.com,kernel.org,oss.qualcomm.com];
-	TAGGED_FROM(0.00)[bounces-18569-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18571-lists,linux-s390=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[kernel.org,gmail.com,lunn.ch,davemloft.net,google.com,redhat.com,vger.kernel.org,linutronix.de,infradead.org];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[34];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[guwen@linux.alibaba.com,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
-	TO_DN_NONE(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390,netdev];
+	FROM_NEQ_ENVFROM(0.00)[seiden@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:email,sipsolutions.net:email,alibaba.com:email,nxp.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: EE1923AD4B6
+	TAGGED_RCPT(0.00)[linux-s390];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[11]
+X-Rspamd-Queue-Id: 7A5E13AE2F9
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Update MAINTAINERS to match the new drivers/ptp/ directory layout after
-moving emulated/virtual PTP clock drivers into a new subdirectory.
+On Thu, Apr 02, 2026 at 05:01:30PM +0200, Claudio Imbrenda wrote:
+> Add _{SEGMENT,REGION3}_FR_MASK, similar to _{SEGMENT,REGION3}_MASK, but
+> working on gfn/pfn instead of addresses. Use them in gaccess.c instead
+> of using the normal masks plus gpa_to_gfn().
+> 
+> Also add _PAGES_PER_{SEGMENT,REGION3} to make future code more readable.
+> 
+> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
 
-Adjust file patterns and per-driver entries to point to their new
-locations, and add a dedicated MAINTAINERS entry for the emulated PTP
-clock drivers.
-
-Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
----
- MAINTAINERS | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cb48c9ad9ddc..2b5464e38238 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18335,6 +18335,7 @@ X:	Documentation/devicetree/bindings/net/can/
- X:	Documentation/devicetree/bindings/net/wireless/
- X:	drivers/net/can/
- X:	drivers/net/wireless/
-+X:	drivers/ptp/emulated/
- 
- NETWORKING DRIVERS (WIRELESS)
- M:	Johannes Berg <johannes@sipsolutions.net>
-@@ -21243,8 +21244,18 @@ F:	Documentation/driver-api/ptp.rst
- F:	drivers/net/phy/dp83640*
- F:	drivers/ptp/*
- F:	include/linux/ptp_cl*
-+X:	drivers/ptp/emulated/
- K:	(?:\b|_)ptp(?:\b|_)
- 
-+PTP EMULATED CLOCK SUPPORT
-+M:	David Woodhouse <dwmw2@infradead.org>
-+M:	Wen Gu <guwen@linux.alibaba.com>
-+M:	Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-+L:	linux-kernel@vger.kernel.org
-+S:	Maintained
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
-+F:	drivers/ptp/emulated/
-+
- PTP MOCKUP CLOCK SUPPORT
- M:	Vladimir Oltean <vladimir.oltean@nxp.com>
- L:	netdev@vger.kernel.org
-@@ -21261,10 +21272,10 @@ F:	net/ethtool/phc_vclocks.c
- 
- PTP VMCLOCK SUPPORT
- M:	David Woodhouse <dwmw2@infradead.org>
--L:	netdev@vger.kernel.org
-+L:	linux-kernel@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/ptp/amazon,vmclock.yaml
--F:	drivers/ptp/ptp_vmclock.c
-+F:	drivers/ptp/emulated/ptp_vmclock.c
- F:	include/uapi/linux/vmclock-abi.h
- 
- PTRACE SUPPORT
-@@ -23323,7 +23334,7 @@ S390 PTP DRIVER
- M:	Sven Schnelle <svens@linux.ibm.com>
- L:	linux-s390@vger.kernel.org
- S:	Supported
--F:	drivers/ptp/ptp_s390.c
-+F:	drivers/ptp/emulated/ptp_s390.c
- 
- S390 SCM DRIVER
- M:	Vineeth Vijayan <vneethv@linux.ibm.com>
-@@ -28219,9 +28230,9 @@ M:	Nick Shi <nick.shi@broadcom.com>
- R:	Ajay Kaher <ajay.kaher@broadcom.com>
- R:	Alexey Makhalov <alexey.makhalov@broadcom.com>
- R:	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
--L:	netdev@vger.kernel.org
-+L:	linux-kernel@vger.kernel.org
- S:	Supported
--F:	drivers/ptp/ptp_vmw.c
-+F:	drivers/ptp/emulated/ptp_vmw.c
- 
- VMWARE VMCI DRIVER
- M:	Bryan Tan <bryan-bt.tan@broadcom.com>
--- 
-2.43.5
+Reviewed-by: Steffen Eiden <seiden@linux.ibm.com>
 
 
