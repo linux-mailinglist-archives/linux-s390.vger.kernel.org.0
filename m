@@ -1,167 +1,264 @@
-Return-Path: <linux-s390+bounces-18601-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18603-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aI7PDH9h1Wk85gcAu9opvQ
-	(envelope-from <linux-s390+bounces-18601-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 21:56:47 +0200
+	id iFl1MEVu1WmN6QcAu9opvQ
+	(envelope-from <linux-s390+bounces-18603-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 22:51:17 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id A33F13B41E3
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 21:56:46 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 69F663B4A8B
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 22:51:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E07BF3023330
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2026 19:56:44 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 863F23020836
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2026 20:51:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6E1525A642;
-	Tue,  7 Apr 2026 19:56:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9F0F34678E;
+	Tue,  7 Apr 2026 20:51:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FElrXRsz"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gP2DOvmb"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C273F126C17;
-	Tue,  7 Apr 2026 19:56:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F6C2BDC05;
+	Tue,  7 Apr 2026 20:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775591801; cv=none; b=lE3AmZBJMljbzL9tnteFs0kgrEtkOsdJ1NAyG81a0Xqs7fSajj7KL2XIY31wZJPtTPale+rcnUJbO4SB2YMHM3oLhntvb2mZhqxdszqX73UDwizCjhcPycqXl/dfj3Wwx7xTL4zOr4tZHtNdy43gWJKR45e2sklvEO2Y+iGuLP0=
+	t=1775595072; cv=none; b=ZBSw/omd+hYwJip7PH3dk0Cfs0TD5MwOXfkpWW0b3zO7MAXOPYYgSh3HvauZm4IZpIuawcHHYcW7RJfeg/tkoe+j03DlQK/0C1o9ud9zApoRbCFBRV4UIGBDz112iguMAQbhkUVSmukoOc491h5B3I960eThLMLxlN+xT6ZvX4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775591801; c=relaxed/simple;
-	bh=DtWNZr4Jo5RuxN7LV0LKAmjia2Fz63RniapcsPaf7+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=W6ulqIRXCCPLgS60qVyGd9/r+L2FXJHfNOOJz+du1LpywEe7FmtxbTDOgQk6SZJwYicjiR2B37MzBFRMSYYPcEcnJNGQDPow+TyRWagpgro6T8os4SRyt1XbW0g0dhU4ErO8ybLfQYtK+OYxDN/chRHjX2FewRCdzBlWviNevkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FElrXRsz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B8E6C116C6;
-	Tue,  7 Apr 2026 19:56:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775591801;
-	bh=DtWNZr4Jo5RuxN7LV0LKAmjia2Fz63RniapcsPaf7+c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=FElrXRszYrT7tENCRG7igqqsyY2+Fbe5B1NwwyqwrpL7zYPsk94VC6mEE/UXCWFoW
-	 AtKYclNDCk1deh1D1FeDyFGBjwmrJgOtEO96BTMHWPOIP1xCya0ioSGmMl/V1o+HAy
-	 GYLwqW1g2GJ8ead81zmz2MWGhD5liOP0ITYugFd3ZrtvJM8wwaiYvmOmWVkWefu1y7
-	 yTiBbg5Xv3zLJllqKRBwPlZWALJKkDAQ7yuTyC8Gn8oKUoYMUwJKSoOcOorW6KWxHz
-	 bdlekN7qQJNKtrudIXrKV5LFpI720JK12el0lTI5HKfTOHpUp+t2Y7btpwBZkL152V
-	 iiDrzAJNI7NZw==
-Date: Tue, 7 Apr 2026 14:56:40 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Farhan Ali <alifm@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, lukas@wunner.de, alex@shazbot.org,
-	clg@redhat.com, kbusch@kernel.org, schnelle@linux.ibm.com,
-	mjrosato@linux.ibm.com, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v12 2/7] PCI: Avoid saving config space state if
- inaccessible
-Message-ID: <20260407195640.GA251318@bhelgaas>
+	s=arc-20240116; t=1775595072; c=relaxed/simple;
+	bh=vwIMkNDmxq3e0iqUh3k+MGmogbITT6kFRsLOOKNrDPk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=B79eW+2HRj5eH20OBElKpDvAnCiamzSqYJ1wnXHLCjqIMf4uEkoAV9jSQ+hghPlhKvFY3f5sPGB1xIml0ysVGwpAbdmcVawmJ8HJerg9bf2E/Nt7+siPpk4cftPpXM4tCbBaitW8T6U/1+QRNDJiLWC06kBY6ih/afTguJvm8Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gP2DOvmb; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 637ESRFw2590966;
+	Tue, 7 Apr 2026 20:51:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=7JBK563Wt3NdaHpK7+KJRUtgWIqZ
+	AWbcUKXngcf+NRA=; b=gP2DOvmbWTBLczurJ+SsJzrrre180RCPmcmOzRWIaMH+
+	l0yUQaf26K1/rnwGT1JxKx7l6LKELgeQanZH3IFHRwJlb0/PD8vWjhUWgX0RrgQ8
+	pt1G1ynySFdq2TR3Fs1bZxMEAVlyK/cDrc32TM+noMD0xZiyXFSM5E7V8K8cGReu
+	IaVtGK93/BV8RsriS6fvbOHSbmFSnHErFwVqZccHwdEEDscf6ktraS3wb2jhJTqP
+	5P/LAF5ftxuysM1+0apv6f1hBYtGmcTxK7oj7C0vra+OWL1snpBhcbMXIrIIXcru
+	ehipCY1/wgALOoL2SQE8Ah+8lsO6lyMzvV4LRtJH/Q==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dcn2e53av-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 07 Apr 2026 20:51:05 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 637IgUHm013824;
+	Tue, 7 Apr 2026 20:51:04 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dcmf44umm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 07 Apr 2026 20:51:04 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 637KocwT30736906
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 7 Apr 2026 20:50:38 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EB0055805D;
+	Tue,  7 Apr 2026 20:51:02 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5FD0D58058;
+	Tue,  7 Apr 2026 20:51:01 +0000 (GMT)
+Received: from li-4c4c4544-004d-4810-8043-b7c04f423534.ibm.com.com (unknown [9.61.101.194])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  7 Apr 2026 20:51:01 +0000 (GMT)
+From: Anthony Krowiak <akrowiak@linux.ibm.com>
+To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc: jjherne@linux.ibm.com, borntraeger@de.ibm.com, mjrosato@linux.ibm.com,
+        pasic@linux.ibm.com, alex@shazbot.org, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, pbonzini@redhat.com, frankja@linux.ibm.com,
+        imbrenda@linux.ibm.com, agordeev@linux.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com
+Subject: [PATCH v2 00/16] s390/vfio-ap: Add live guest migration support
+Date: Tue,  7 Apr 2026 16:50:16 -0400
+Message-ID: <20260407205100.331150-1-akrowiak@linux.ibm.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260330174011.1161-3-alifm@linux.ibm.com>
-X-Spamd-Result: default: False [-1.66 / 15.00];
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: eeEJaV10Cg12Re5O8XtcinqNCmF6MH0P
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDA3MDE4OSBTYWx0ZWRfX9cU5iWf6Uhz3
+ y6ZtB+jNMEnEeGRreD2GJgsg8CFjwFudWnTGYNzsv7XRMCMo5bRge0OdxoOPJCAVFQxmuRptbEn
+ cm7vFqJ/iL0CWsgHy93jCwqrnDfBymnh9oc9CoHIRwbnuG3TAJ7dedqme6dG+yPXOENAD2SBTVA
+ Jbb1KnLoqcF2NhoIJQK+ma743M8iKOEbB0tYSLF3GnYs2CzvN6/oMLe16Uw7NJzS06/XJa7MgHC
+ jFQNPrKKddS9blDNq0w8SHh32fAkEdTHMHT2WwKZiKa1vIeW7ekvsWJ1c2kDoP6z2rUakMMjDuR
+ 3tn4YZDovhE35chVT+BO2ouJ99/QtkIiYiwt4RlG5ihq1L3F+N8PMT1ZQvRkHFWt2WyZjtbulTy
+ LQziiUarCFA3VB3gMO4sI7DM1JZkl87lOVv7VVgIQ6dmw5vGEsW6M6bDfuuQwX5ae7XeUCn6Cpg
+ aDOBRTwjwhIONByjbnw==
+X-Authority-Analysis: v=2.4 cv=Cfw4Irrl c=1 sm=1 tr=0 ts=69d56e39 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=qf4gfuq51q0A:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=XCssrilYV6wRj-C0hOMA:9
+ a=3ZKOabzyN94A:10 a=k40Crp0UdiQA:10
+X-Proofpoint-GUID: eeEJaV10Cg12Re5O8XtcinqNCmF6MH0P
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-07_04,2026-04-07_05,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 phishscore=0 clxscore=1015 adultscore=0 suspectscore=0
+ priorityscore=1501 impostorscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604010000 definitions=main-2604070189
+X-Spamd-Result: default: False [-1.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18601-lists,linux-s390=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[helgaas@kernel.org,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18603-lists,linux-s390=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	FROM_NEQ_ENVFROM(0.00)[akrowiak@linux.ibm.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	PRECEDENCE_BULK(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: A33F13B41E3
+	RCVD_COUNT_SEVEN(0.00)[11]
+X-Rspamd-Queue-Id: 69F663B4A8B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, Mar 30, 2026 at 10:40:06AM -0700, Farhan Ali wrote:
-> The current reset process saves the device's config space state before
-> reset and restores it afterward. However errors may occur unexpectedly and
-> it may then be impossible to save config space because the device may be
-> inaccessible (e.g. DPC). This results in saving invalid values that get
-> written back to the device during state restoration.
-> 
-> With a reset we want to recover/restore the device into a functional state.
-> So avoid saving the state of the config space when the device config space
-> is inaccessible.
-> 
-> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
-> Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  drivers/pci/pci.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 70162f15a72c..b36263834289 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -722,6 +722,27 @@ u16 pci_find_dvsec_capability(struct pci_dev *dev, u16 vendor, u16 dvsec)
->  }
->  EXPORT_SYMBOL_GPL(pci_find_dvsec_capability);
->  
-> +static bool pci_dev_config_accessible(struct pci_dev *dev, char *msg)
-> +{
-> +	u32 val;
-> +
-> +	/*
-> +	 * If device's config space is inaccessible it can return ~0 for
-> +	 * any reads. Since VFs can also return ~0 for Device and Vendor ID
-> +	 * check Command and Status registers. Note that this is racy
-> +	 * because the device may become inaccessible partway through
-> +	 * next access.
-> +	 */
-> +	pci_read_config_dword(dev, PCI_COMMAND, &val);
-> +	if (PCI_POSSIBLE_ERROR(val)) {
-> +		pci_warn(dev, "Device config space inaccessible; unable to %s\n",
-> +				msg);
-> +		return false;
+This patch series implements live guest migration support for KVM guests
+with s390 AP (Adjunct Processor) devices passed through via the VFIO
+mediated device framework.
 
-I wonder if it's feasible to do the pci_save_state() into a temporary
-buffer, check the buffer for PCI_POSSIBLE_ERROR(), and copy the temp
-buffer into the real buffer if we think the save was successful.  I
-know this is a lot more work, but I would like to avoid the raciness
-if possible.
+Background
+----------
 
-> +	}
-> +
-> +	return true;
-> +}
-> +
->  /**
->   * pci_find_parent_resource - return resource region of parent bus of given
->   *			      region
-> @@ -5029,6 +5050,9 @@ static void pci_dev_save_and_disable(struct pci_dev *dev)
->  	 */
->  	pci_set_power_state(dev, PCI_D0);
->  
-> +	if (!pci_dev_config_accessible(dev, "save state"))
-> +		return;
-> +
->  	pci_save_state(dev);
->  	/*
->  	 * Disable the device by clearing the Command register, except for
-> -- 
-> 2.43.0
-> 
+The vfio-ap device driver differs from typical VFIO device drivers in that
+it does not virtualize a physical device. Instead, it manages AP
+configuration metadata identifying the AP adapters, domains, and control
+domains to which a guest will be granted access. These AP resources are 
+configured by assigning them to a vfio-ap mediated device via its sysfs
+assignment interfaces. When the fd for the VFIO device is opened by 
+userspace, the vfio_ap device driver sets the guest's AP configuration
+from the metadata stored with the mediated device. As such, the AP devices
+are not accessed directly through the vfio_ap driver, so the driver has no
+internal device state to migrate. It's sole purpose during migration is to
+ensure that the AP configurations of the source and destination guests are
+compatible.
+
+Implementation Approach
+-----------------------
+
+This series implements the VFIO migration protocol using the STOP_COPY
+migration flow. The key aspects are:
+
+1. Hardware Information Capture (Patches 1-2)
+   - Store AP queue hardware characteristics at probe time
+   - Provide access to queue objects for validation
+
+2. Migration Infrastructure (Patches 3-5)
+   - Define migration data structures
+   - Initialize/release migration data on device open/close
+
+3. State Machine Implementation (Patches 6-13)
+   - Implement required VFIO migration callbacks
+   - Handle state transitions: STOP → STOP_COPY → STOP (source)
+                               STOP → RESUMING → STOP (destination)
+   - Use file streams for AP configuration data transfer
+
+4. Validation and Callbacks (Patches 14-15)
+   - Implement migration state and data size callbacks
+   - Required for VFIO_DEVICE_FEATURE_MIGRATION support
+
+5. Documentation (Patch 16)
+   - Add live guest migration chapter to vfio-ap.rst
+
+Compatibility Validation
+------------------------
+
+The series includes comprehensive validation to ensure source and
+destination AP configurations are compatible. For each queue, the following
+characteristics must match:
+
+- AP type (target must be same or newer than source)
+- Installed facilities (APSC, APQKM, AP4KC, SLCF)
+- Operating mode (CCA, Accelerator, XCP)
+- APXA facility setting
+- Classification (native vs stateless functions)
+- Queue usability (binding/associated state)
+
+When incompatibilities are detected, migration fails with detailed error
+messages identifying the specific queue and characteristic that caused
+the failure.
+
+Configuration Management
+------------------------
+
+This implementation does not prevent configuration changes during
+migration. Configuration stability is an orchestration-layer
+responsibility, consistent with other VFIO device types. The driver's
+role is to validate configurations and provide clear diagnostics when
+incompatibilities are detected, enabling orchestration tools to implement
+appropriate policies.
+
+Change log v1 to v2
+-------------------
+
+- Removed patches that attempted to block configuration changes during
+  migration due to inherent race conditions and incomplete protection
+- Simplified approach focuses on validation and error reporting
+- Reduced series from 18 to 16 patches
+- Rewrote the description in the cover letter to better describe the
+  patch series, remove confusing comments as well as references to
+  function provided by the patches that were removed.
+
+Anthony Krowiak (16):
+  s390/vfio-ap: Store queue hardware info when probed
+  s390/vfio-ap: Provide access to queue objects and related info
+  s390/vfio-ap: Data structures for facilitating vfio device migration
+  s390/vfio-ap: Initialize/release vfio device migration data
+  s390-vfio-ap: Callback to set vfio device mig state during guest
+    migration
+  s390/vfio-ap: Transition guest migration state from STOP to STOP_COPY
+  s390/vfio-ap: File ops called to save the vfio device migration state
+  s390/vfio-ap: Transition device migration state from STOP to RESUMING
+  s390/vfio-ap: File ops called to resume the vfio device migration
+  s390/vfio-ap: Transition device migration state from RESUMING to STOP
+  s390/vfio-ap: Transition device migration state from STOP_COPY to STOP
+  s390/vfio-ap: Transition device migration state from STOP to RUNNING
+    and vice versa
+  s390-vfio-ap: Callback to get the current vfio device migration state
+  s390/vfio-ap: Callback to get the size of data to be migrated during
+    guest migration
+  s390/vfio-ap: Add 'migratable' feature to sysfs 'features' attribute
+  s390/vfio-ap: Add live guest migration chapter to vfio-ap.rst
+
+ Documentation/arch/s390/vfio-ap.rst     |  325 +++++--
+ drivers/s390/crypto/Makefile            |    2 +-
+ drivers/s390/crypto/vfio_ap_drv.c       |    4 +-
+ drivers/s390/crypto/vfio_ap_migration.c | 1095 +++++++++++++++++++++++
+ drivers/s390/crypto/vfio_ap_ops.c       |   66 +-
+ drivers/s390/crypto/vfio_ap_private.h   |   10 +
+ 6 files changed, 1395 insertions(+), 107 deletions(-)
+ create mode 100644 drivers/s390/crypto/vfio_ap_migration.c
+
+-- 
+2.52.0
+
 
