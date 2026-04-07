@@ -1,75 +1,75 @@
-Return-Path: <linux-s390+bounces-18602-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18605-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KEtWNkZu1WmN6QcAu9opvQ
-	(envelope-from <linux-s390+bounces-18602-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 22:51:18 +0200
+	id uDc5GJNu1WmN6QcAu9opvQ
+	(envelope-from <linux-s390+bounces-18605-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 22:52:35 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id E244E3B4A92
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 22:51:17 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22AD53B4AF3
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 22:52:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 8F005300BE2C
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2026 20:51:14 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id CBBE030684CC
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2026 20:51:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 935B332779D;
-	Tue,  7 Apr 2026 20:51:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4C272BDC05;
+	Tue,  7 Apr 2026 20:51:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="oL42aHiE"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Wzfm9apL"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 319CC286D4D;
-	Tue,  7 Apr 2026 20:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3AB37B033;
+	Tue,  7 Apr 2026 20:51:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775595072; cv=none; b=UsZjbUqFv7yvGzyAMDi4r/EHLBPwCT6gZ2JGz0eEfKNeeftKeEdPJxAy0K0AUhoMV6vBqYZEBhOIt1gJvrc0PlIof5C9dNLnNO5nAG9LAAVvBSlmDG9B6CU1hDMexyckR3EXTqBRoXIdrxbECPsqrFsRK7CvbfB7Jv4UVocW7ss=
+	t=1775595076; cv=none; b=mfj4vXEP64x8J7Nb4+M+DaSnIYFNR/tjgoFel7cee+eyHi2GonLdkHdamEfWYwJkB0xerdd2gmHG4KNpYFSLJUlnzDIhnMyWgo802C0ZFxfvAFYAwpOpkSFLwYQeYcoIN0KPutoPDgzZ367iO6s1l+B3/Twhw37pi/EBP0cORDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775595072; c=relaxed/simple;
-	bh=Jbg5tReGP4DqzSflGqDEnwPJOObH5/PLrLZ/LD3W9cI=;
+	s=arc-20240116; t=1775595076; c=relaxed/simple;
+	bh=woITMfbXQfKGswNRfdlqlBqqZ0U5Rllds2mj7PPz1XY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tUHZZ83Ec4E7ACdP6oeV74Rxf69LZUrW4OkWByEfk+h+RS0kXr1HU/urFeoHwvusq7h4jmGxh6aINnXJvqeOyTPrC51QeGuU5yW64+yy8wRbxF7KomIoAkw1m3zB9Ml4P0X74jzL0oOrRt1GwbpXxIIRfTdW3y42XSV9yecmp3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=oL42aHiE; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=VvFZf4CsAuIK+1oEnGDPuNt/WQ8Wi+vFn33c6/RC1ADcKGXhLZSqUpwJK4DteHV5UADa1sl+uXiP0IMG4GZn74SBW4KBbApjx0dPQpM6/CGe01yGpp5G9SnxQaN48mGdAhi588ydIMHtD8YBL5Q7rNGhcJtZngCoGbpLWA8bGiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Wzfm9apL; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 637DmCGk2326574;
-	Tue, 7 Apr 2026 20:51:06 GMT
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 637DSrFg2302379;
+	Tue, 7 Apr 2026 20:51:09 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=c4OAktMSaRxE9CV3M
-	XiOV7sMtw4Du7qGD+4GsaEwCSM=; b=oL42aHiELl873mkMS+25WopBefCUWV1tS
-	kuTOtgvQ4Gj+KrQhtIcJwrHyPDDOZZ7amGILMzqvaHQYDxUh8/aGHZmWBTE7UhYV
-	iIZ6jTC/Rcamq4IBqfYQLWsF4AjR7QCJM+iHXOznhrgIi4LlDEzLtCvtvPHASIvI
-	UnzeGH1YPy3UkZ1yaULpz2cNTiORn/fZVRncGJ+xWyqc5OdfhA9gbsVHE3wWug6x
-	llALn1/elDP9wUph0o/LY5KUQeDk9vGBMhEO2QDKnqMDzkgZkaIgrBGItEhwD0+3
-	9x0oB15SsQRj8kNRPwQZGNeQrPPokXwBJD6oeTTGO/vQ56pdN5VOg==
+	:mime-version:references:subject:to; s=pp1; bh=PzosAF6DMyyWiGzFJ
+	t8R+3Zb+FSwaKqKAhCSCWjVzgw=; b=Wzfm9apLi+l29lLpGTVqeeTSB4NDO0M4O
+	dFRZfJu9ZXKFtwm24kwyfoq+Rs+sKs72AZtCyscs7JGFoKCuDr+aZq7PlrKkYbDB
+	ys+Rqx0ZSJ2b7CydtSex17V0KHk+8l+R6kOu9T1iOeQ3D6oAZ9Lnevm9MzbnkOjZ
+	ztbAED+cKo/b4xHDIdcbiBpozz76PSsCg38dxCocOwFDS7pEmFDECV8CHgc4DF7C
+	agcEM5+HH/SC8nkZNzbWlKbVsi+d1hMGLazNlDwejg4I9lo3LUZFMJa9hULnBo/h
+	piAJc6ga7obfINZcYiJuwnnyWh6SUSPi4si+1UeUZRgAfpPjcW/VQ==
 Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dcn2kcnsw-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dcn2fd2rs-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Apr 2026 20:51:06 +0000 (GMT)
+	Tue, 07 Apr 2026 20:51:09 +0000 (GMT)
 Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 637IcLhg007917;
-	Tue, 7 Apr 2026 20:51:06 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dcmg2cty4-1
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 637ImRlC007881;
+	Tue, 7 Apr 2026 20:51:08 GMT
+Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dcmg2cty7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Apr 2026 20:51:06 +0000
+	Tue, 07 Apr 2026 20:51:08 +0000
 Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 637Kp4cH60883204
+	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 637Kp6qU30409234
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 7 Apr 2026 20:51:04 GMT
+	Tue, 7 Apr 2026 20:51:06 GMT
 Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9F2A958058;
+	by IMSVA (Postfix) with ESMTP id 6FCFC58058;
+	Tue,  7 Apr 2026 20:51:06 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C6DEA58059;
 	Tue,  7 Apr 2026 20:51:04 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1F87A58059;
-	Tue,  7 Apr 2026 20:51:03 +0000 (GMT)
 Received: from li-4c4c4544-004d-4810-8043-b7c04f423534.ibm.com.com (unknown [9.61.101.194])
 	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  7 Apr 2026 20:51:03 +0000 (GMT)
+	Tue,  7 Apr 2026 20:51:04 +0000 (GMT)
 From: Anthony Krowiak <akrowiak@linux.ibm.com>
 To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org
@@ -78,9 +78,9 @@ Cc: jjherne@linux.ibm.com, borntraeger@de.ibm.com, mjrosato@linux.ibm.com,
         fiuczy@linux.ibm.com, pbonzini@redhat.com, frankja@linux.ibm.com,
         imbrenda@linux.ibm.com, agordeev@linux.ibm.com, hca@linux.ibm.com,
         gor@linux.ibm.com
-Subject: [PATCH v2 01/16] s390/vfio-ap: Store queue hardware info when probed
-Date: Tue,  7 Apr 2026 16:50:17 -0400
-Message-ID: <20260407205100.331150-2-akrowiak@linux.ibm.com>
+Subject: [PATCH v2 02/16] s390/vfio-ap: Provide access to queue objects and related info
+Date: Tue,  7 Apr 2026 16:50:18 -0400
+Message-ID: <20260407205100.331150-3-akrowiak@linux.ibm.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260407205100.331150-1-akrowiak@linux.ibm.com>
 References: <20260407205100.331150-1-akrowiak@linux.ibm.com>
@@ -92,26 +92,26 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDA3MDE4OSBTYWx0ZWRfX7E35VRlAz+cT
- TdgdwXwu2/jL9dKnYqs3tbFI8IfAKEEGnEEOpfs6bKHrwtxRgF3qSmly3GUayg8wsQFbH8TdUSc
- 8MY8zc+OAIbcJXuG3d6muiOuGB/Lcu5JeHt4JEPw+M8Zm/3EiC+qRwJ+9WpYE9MKr9C8Af6RHuF
- 1KEf49fsyWKTuKk6uqd4ESP56Z7/v0P6YAfvvarXtMyc0rmLe7eUWP+FqtmoP3FvAYB3laPIyB3
- IGTIL3am51pgRlI9c/Lby16vp2u/NjZNU5EDrSqK0wzWVmcr9VOIAgdZAG2qD79Rqv2l02RaNmz
- YsqYCcFMd/oIoMgkUXW3TjuS0g0OV6/8THWFHcxoD3oS7/Jq1P1hooCWcrajVMhzC45J72ncJyZ
- I3SuAjIuvlhuUSCwTGeoiaB8kIjwmVuKiA8L/lzdZj8qvJKgDBd9ttdn6jWF2OfsK9uxuZcRqZc
- MCum8EfJhLLGlSyN4hA==
-X-Proofpoint-ORIG-GUID: pEGsCF-a83kucbgSsJ3I-_NJ0wqmCkL5
-X-Authority-Analysis: v=2.4 cv=e9k2j6p/ c=1 sm=1 tr=0 ts=69d56e3a cx=c_pps
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDA3MDE4OSBTYWx0ZWRfX0GjwjhU2IohS
+ 3jL7JgRd/BiS+Pwi7RiETvlQwqRlkjjpopNSI5CBXpWX0wTyHqGxSAh9B7YJVzJGF40b4vOpnbu
+ Ai4TXLMeC0FfCEdi5xzA8FkKLVZmsfdGw4wq/8q1hDuDa6/CtTkPRjNugQ7TBZoDQP87PyHDu89
+ 7mwQVfukPKaINUZBvlZ0jjyzuK4ud0P/WcpKlrqqQKSd6PTuhvxPtQkW8zUta8c81tXAisLd7X3
+ rjuswpAV492wYtloKofVSkbksp3JXlXvTdxZv+1ocuNlW4clZ3hGSOaC/l5rSYogI2NhGAIuzVb
+ SR22tIAP5ZE1zvArZmzv3vAL6O0hCIzk760IumWRZlAcrAYuSQXHOKqYcwACRLKiH9mV9ZUoRP8
+ g8H3okXZH2RhlbCwaEXIajFSMBS8pa1VQ/Fk2rE02L76l9/0Ej7lbwgzjqPPoidYWdBcnuNZyh9
+ 9w+mSx87tHKC1M2banQ==
+X-Authority-Analysis: v=2.4 cv=FsY1OWrq c=1 sm=1 tr=0 ts=69d56e3d cx=c_pps
  a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
  a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8 a=TnwwbuCvOpPni-GgRwAA:9
-X-Proofpoint-GUID: pEGsCF-a83kucbgSsJ3I-_NJ0wqmCkL5
+ a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=aJOwoqrUralclMrAr6UA:9
+X-Proofpoint-ORIG-GUID: WnOF-2kGK3opY9goTc1pd5GgR2Fr1B5G
+X-Proofpoint-GUID: WnOF-2kGK3opY9goTc1pd5GgR2Fr1B5G
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-04-07_04,2026-04-07_05,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 impostorscore=0 malwarescore=0 suspectscore=0 spamscore=0
- bulkscore=0 adultscore=0 priorityscore=1501 phishscore=0 lowpriorityscore=0
+ bulkscore=0 priorityscore=1501 impostorscore=0 spamscore=0 phishscore=0
+ lowpriorityscore=0 clxscore=1015 adultscore=0 malwarescore=0 suspectscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2604010000 definitions=main-2604070189
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -119,12 +119,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18602-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18605-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	TO_DN_NONE(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -134,62 +134,94 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.ibm.com:mid];
 	DKIM_TRACE(0.00)[ibm.com:+];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCPT_COUNT_TWELVE(0.00)[16];
 	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: E244E3B4A92
+X-Rspamd-Queue-Id: 22AD53B4AF3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Store the output of the PQAP(TAPQ) command with the struct vfio_ap_queue
-object when a queue device is probed. This data can be retrieved from the
-object passed to the probe callback.
+Provide the following:
+
+1. A function that returns a struct vfio_ap_queue object representing a
+   queue that is bound to the vfio_ap device driver and is assigned to an
+   mdev
+
+2. A function that returns the number of queues that are or will be passed
+   through to a guest when the mdev is attached to a guest.
+
+There is already a function for #1; however, it is a static function in
+drivers/s390/crypto/vfio_ap_ops.c. The function will be defined in the
+drivers/s390/crypto/vfio_ap_private.h file and made non-static. Note that
+it would probably make sense to ensure that the mdevs_lock is held for
+this function, so a call to lockdep_assert_held(&matrix_dev->mdevs_lock)
+will be added to the function implementation.
 
 Signed-off-by: Anthony Krowiak <akrowiak@linux.ibm.com>
 ---
- drivers/s390/crypto/vfio_ap_ops.c     | 5 ++++-
- drivers/s390/crypto/vfio_ap_private.h | 1 +
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ drivers/s390/crypto/vfio_ap_ops.c     | 20 +++++++++++++++++---
+ drivers/s390/crypto/vfio_ap_private.h |  4 ++++
+ 2 files changed, 21 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 44b3a1dcc1b3..ef3101f6865e 100644
+index ef3101f6865e..cd85866b81a0 100644
 --- a/drivers/s390/crypto/vfio_ap_ops.c
 +++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -2419,6 +2419,7 @@ int vfio_ap_mdev_probe_queue(struct ap_device *apdev)
+@@ -203,12 +203,12 @@ static inline void get_update_locks_for_queue(struct vfio_ap_queue *q)
+  * Return: the pointer to the vfio_ap_queue struct representing the queue or
+  *	   NULL if the queue is not assigned to @matrix_mdev
+  */
+-static struct vfio_ap_queue *vfio_ap_mdev_get_queue(
+-					struct ap_matrix_mdev *matrix_mdev,
+-					int apqn)
++struct vfio_ap_queue *vfio_ap_mdev_get_queue(struct ap_matrix_mdev *matrix_mdev, int apqn)
+ {
  	struct vfio_ap_queue *q;
- 	DECLARE_BITMAP(apm_filtered, AP_DEVICES);
- 	struct ap_matrix_mdev *matrix_mdev;
-+	struct ap_queue *ap_queue;
  
- 	ret = sysfs_create_group(&apdev->device.kobj, &vfio_queue_attr_group);
- 	if (ret)
-@@ -2430,8 +2431,10 @@ int vfio_ap_mdev_probe_queue(struct ap_device *apdev)
- 		goto err_remove_group;
- 	}
++	lockdep_assert_held(&matrix_dev->mdevs_lock);
++
+ 	hash_for_each_possible(matrix_mdev->qtable.queues, q, mdev_qnode,
+ 			       apqn) {
+ 		if (q && q->apqn == apqn)
+@@ -2098,6 +2098,20 @@ static void vfio_ap_mdev_request(struct vfio_device *vdev, unsigned int count)
+ 	release_update_locks_for_mdev(matrix_mdev);
+ }
  
--	q->apqn = to_ap_queue(&apdev->device)->qid;
-+	ap_queue = to_ap_queue(&apdev->device);
-+	q->apqn = ap_queue->qid;
- 	q->saved_isc = VFIO_AP_ISC_INVALID;
-+	memcpy(&q->hwinfo, &ap_queue->card->hwinfo, sizeof(q->hwinfo));
- 	memset(&q->reset_status, 0, sizeof(q->reset_status));
- 	INIT_WORK(&q->reset_work, apq_reset_check);
- 	matrix_mdev = get_update_locks_by_apqn(q->apqn);
++int vfio_ap_mdev_get_num_queues(struct ap_matrix *ap_matrix)
++{
++	unsigned long apid, apqi;
++	int num_queues = 0;
++
++	lockdep_assert_held(&matrix_dev->mdevs_lock);
++
++	for_each_set_bit_inv(apid, ap_matrix->apm, AP_DEVICES)
++		for_each_set_bit_inv(apqi, ap_matrix->aqm, AP_DOMAINS)
++			num_queues++;
++
++	return num_queues;
++}
++
+ static int vfio_ap_mdev_get_device_info(unsigned long arg)
+ {
+ 	unsigned long minsz;
 diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
-index 9bff666b0b35..39c85bab05c3 100644
+index 39c85bab05c3..d66586825ef4 100644
 --- a/drivers/s390/crypto/vfio_ap_private.h
 +++ b/drivers/s390/crypto/vfio_ap_private.h
-@@ -150,6 +150,7 @@ struct vfio_ap_queue {
- 	struct list_head reset_qnode;
- 	struct ap_queue_status reset_status;
- 	struct work_struct reset_work;
-+	struct ap_tapq_hwinfo hwinfo;
+@@ -153,6 +153,10 @@ struct vfio_ap_queue {
+ 	struct ap_tapq_hwinfo hwinfo;
  };
  
++struct vfio_ap_queue *vfio_ap_mdev_get_queue(struct ap_matrix_mdev *matrix_mdev, int apqn);
++
++int vfio_ap_mdev_get_num_queues(struct ap_matrix *ap_matrix);
++
  int vfio_ap_mdev_register(void);
+ void vfio_ap_mdev_unregister(void);
+ 
 -- 
 2.52.0
 
