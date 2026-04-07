@@ -1,75 +1,75 @@
-Return-Path: <linux-s390+bounces-18562-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18567-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cHEZI1jY1GlxyAcAu9opvQ
-	(envelope-from <linux-s390+bounces-18562-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 12:11:36 +0200
+	id uPAiLzre1GnzyAcAu9opvQ
+	(envelope-from <linux-s390+bounces-18567-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 12:36:42 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 060E93AC95E
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 12:11:35 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26BF73ACF62
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 12:36:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B0BB13084293
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2026 10:08:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BD016300EAB5
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2026 10:31:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5571D3A785C;
-	Tue,  7 Apr 2026 10:08:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9963F3A874B;
+	Tue,  7 Apr 2026 10:31:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aUrLh2V5"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cqgp0VYa"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B924E3A7852;
-	Tue,  7 Apr 2026 10:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55FDE38B7DB;
+	Tue,  7 Apr 2026 10:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775556533; cv=none; b=AN0zjGFtlPjxAVTjGqAreKEe80gMy1daIEcYuqHVW7iLLyYgtcJJjuoVqCSI+cj9Byqa18Z5IQsRo5kWRQUgNcVBJ5CyNMamxuwvJVVRy4IYNZIhlgWwKvFN1BvwnO86DXLXX8Glx8oQ8ok/GNDXx+KOTH1ktLHTjpq1ERCQWVM=
+	t=1775557887; cv=none; b=L55bZEMz7VcZAEM2CQLNWKd+cNhhTONA2JI/7zHu0mtVGWS1ROhZYBZQtatoPbKXgZT2vAlhWlGEENU/Xo+MVFJJcMvq0Z3oTDkcsE53XT5eqEzeoDUYVhONV6zYuYfbGadevKebzk+dHWeEic3mogflYQUcO5JmcSiSGvP0/xA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775556533; c=relaxed/simple;
-	bh=Bg8q27kugCuCb4kv51z81u98NnqQzWtwCDQmlXWiFjY=;
+	s=arc-20240116; t=1775557887; c=relaxed/simple;
+	bh=OwR/etfBC7wQiPvBrNl3qQJ4kiVO153rG2KqBxAE9/Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=agnbpSqgVxaiXk8JHINndAPInt37rIWggqu1ElqWv3eFZosqyyCABJGVbl46vqo9GyKicH6DjLyB49vMgcSPwvSvPi48oMBSKq30Rc33F5bJP6mS/PIlKMmfIzUMV0ql3jRNgVF949YIkH1lTBrIYsPTKrEockA7RxMyy6A0lSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aUrLh2V5; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=FpX+TD/XkpPywIxS+Uqq8or7aEzyW/yDdvREQJgRhypl9H046u8S8w+PHyV1y0zssABuYKFtbrUwWj3kub6Qe2bSgkas4/XcxQk0bfF3D5hHY/jJ/Jz63rzypwM6Rms2c7e3vIizV55ayDHezCrTdlXN1DO6Av8wTzpzpAlMGQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cqgp0VYa; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 636LmIo02297727;
-	Tue, 7 Apr 2026 10:08:48 GMT
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 636LlueD2591301;
+	Tue, 7 Apr 2026 10:31:24 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=MrLflxXQ/K6dlH9fE
-	FuDRdqQaNxkarZeYpe6V/xNXxk=; b=aUrLh2V5deuyYVNqFUmYSo3I4QiHib/Ug
-	WT4U09EjXxNykj2rgaPNkM1vtC6I27PKe5uHS2McrNa+aqoVTV6E2A60KQ3q7+pE
-	EJB1DmcJ1xJDwNDOCFAD0wc4Zti1/3LCJ2JHNgSqtlO2eyHlIvgu35fo9bM4Kb4W
-	3BLf8vvYKay+RgeeDpm99l9oWp50yHKxM9vuOHjA3ih5BDnQdbZCay6JU3I5vnO5
-	SSJ9qlwbzn2SwsJaD4a72WEBMWarqo3D0YJhQUF6xvX6NC8NEdOyqRrTuuPjQB8J
-	OCEBqJtl2lNwFRgSFe95b/JkSjNKPSVzMb1tNBhFI3YmD3vwIQSyA==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dcn2ft4ct-1
+	:mime-version:references:subject:to; s=pp1; bh=tYVTMXR2tIb8FF7Xj
+	A8qKhppXWNCUyTP16s1kfR5hh8=; b=cqgp0VYaJZxFXyCXV4FsoDb4sEBX9KNv1
+	85CaC6O+9l5D/whEVJQRLM5qmnET0jtlQiDDF6MvJsYHydlQJb916e7F7EQd9/RT
+	0Ayl6CW/qoMAsTPlZpaxtMRlAy11CRdmU5m2kERRQaSzQ37DdLgZ/WZJxcISpOX6
+	rk3uDnhP/ovyjZUvP0+S3LHUpwGIqNADkK4YmG93L6xqKXKWYk7JaqN96gFqFNq4
+	s2N1lONKG1ErX3taQiUTSYDc6igr1yeLWjTb7XW9/VmiSZQN+9WI8un+JHX2ieGY
+	WYFq4ZGcFnFzkaoXKDL0Wspg6iySy6cyf5WfInBOe3Mn5Qz6MGG7g==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dcn2e2efq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Apr 2026 10:08:48 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 6379BKJf018987;
-	Tue, 7 Apr 2026 10:08:47 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dcme9a1xc-1
+	Tue, 07 Apr 2026 10:31:23 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 63793upj007881;
+	Tue, 7 Apr 2026 10:31:22 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dcmg2a7as-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Apr 2026 10:08:46 +0000
+	Tue, 07 Apr 2026 10:31:22 +0000
 Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 637A8g2831588754
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 637AVITZ20119938
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 7 Apr 2026 10:08:42 GMT
+	Tue, 7 Apr 2026 10:31:18 GMT
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A9A80200A5;
-	Tue,  7 Apr 2026 10:08:42 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id AF823200A7;
+	Tue,  7 Apr 2026 10:08:43 +0000 (GMT)
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 75920200A7;
-	Tue,  7 Apr 2026 10:08:42 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 7B4D4200A6;
+	Tue,  7 Apr 2026 10:08:43 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
 	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  7 Apr 2026 10:08:42 +0000 (GMT)
+	Tue,  7 Apr 2026 10:08:43 +0000 (GMT)
 From: Thomas Richter <tmricht@linux.ibm.com>
 To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
         linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org
@@ -77,9 +77,9 @@ Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
         hca@linux.ibm.com, japo@linux.ibm.com,
         Thomas Richter <tmricht@linux.ibm.com>,
         Ian Rogers <irogers@google.com>
-Subject: [PATCH v3 1/3] perf config: Rename symbol_conf::disable_add2line_warn
-Date: Tue,  7 Apr 2026 12:08:33 +0200
-Message-ID: <20260407100835.3488645-2-tmricht@linux.ibm.com>
+Subject: [PATCH v3 2/3] perf config: Make symbol_conf::addr2line_disable_warn configurable
+Date: Tue,  7 Apr 2026 12:08:34 +0200
+Message-ID: <20260407100835.3488645-3-tmricht@linux.ibm.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260407100835.3488645-1-tmricht@linux.ibm.com>
 References: <20260407100835.3488645-1-tmricht@linux.ibm.com>
@@ -92,36 +92,36 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=KeridwYD c=1 sm=1 tr=0 ts=69d4d7b0 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+X-Proofpoint-ORIG-GUID: 3G5SyTnT-FO-ZqPGHG5Lsi8ebWaF5exn
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDA3MDA5NSBTYWx0ZWRfX9T3/arNp9rLb
+ kD+rgBBHZXcdIAzttDNUfJeow05N85QJyMhtXuc7DDDCsk1d0h1ouKojPXAI8oEifnQmsFQd+Bw
+ vhO+q5FUU2TPTcBja6CBvniSptYMKf0aykLuIuQbzEUn+25IKFXeE5P6zVBJ/r/37Qjaw+ua0m/
+ zEcOLl9qvPSN3sQPRJ9njoIQs439f0HMes5ble/4go14rpmq395Hcbqi5em7SBUz1Xv+7cxzrIr
+ 8O5/DfnA9k4YTTrA4D0VkOyyAI5u5coGhHkHPcu+EaHecNN8Ew3O8DytwkgclI1lszbFHOVlke/
+ HVjzB0pK2k8xb5UBPxcvFYNIK8tDDPPSyHTxENpqUVzN3t1tKhpYgrc8y3NRUy//7WprOjADvkT
+ ttViHXT+SoCd4d4VOZY3szq6KMKpvSMa6ErYv2cC5gzmBtzOZK34uwyobV9dEZEdDXmXwrlHID2
+ 7/+Ez1KoR65o9ndD0tQ==
+X-Authority-Analysis: v=2.4 cv=Cfw4Irrl c=1 sm=1 tr=0 ts=69d4dcfb cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
  a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8
- a=AHe9je6IJdT7xRrbWhoA:9
-X-Proofpoint-ORIG-GUID: _1LyE9pGEtpRuA-AmpEzo66z6isawNWx
-X-Proofpoint-GUID: E--Vo--90vC8EQoQuYI-utU2q6LwTI13
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDA3MDA5MCBTYWx0ZWRfX3XDR8H4bpI74
- o2wW1HrjN7bBt/CLN16PiRqgsRcbp4nOczrI1jWHUw44y9NHr45mS0Ncj3JyKzCa4IxALBJXPcA
- dnZGRtooUEkK66Wzl5j9jvkY+bjjCrdhS3yMp9sk5LpwdXYdBlzhz6TC5lycdZT5uwe+btvrfkY
- ZhlKTGK6ULJh53oc/U71ZWLx3jvaxnY8NLZl1Y3Hm33dmKjwuNyG/eOiP488Phn/Qd2CyOrTOaE
- FyQSTntegkr4AGOcKp9bYYXVSHdAsUXWDCBdqY7aqt0KWk444Xu8nUog9E4Zy+K6+94SdU3cUew
- hX0anakfAnpW5LqHy5pcrr5mqlxWzjgMwyVSDvZZTm0kJk2oJ/asQOjLqa0dNK0roq/7dnp8vII
- wQPs6m5Bh47zZKbLAhbgjP/0aN+nWhBH4gdgxjcivKAGpLzUx0nUmxseOsbpjM3JzehW4u1twVP
- tL8tLY2PqIkGHnt1u0w==
+ a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=1XWaLZrsAAAA:8
+ a=DK11Rftqn3b6i-WP93oA:9
+X-Proofpoint-GUID: MYZpoxdiShXyf-vFBEJpoJukC57LhwYh
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-04-07_02,2026-04-07_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0 impostorscore=0
- clxscore=1015 phishscore=0 priorityscore=1501 spamscore=0 bulkscore=0
+ malwarescore=0 phishscore=0 clxscore=1015 adultscore=0 suspectscore=0
+ priorityscore=1501 impostorscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604010000 definitions=main-2604070090
+ reason=mlx scancount=1 engine=8.22.0-2604010000 definitions=main-2604070095
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -129,155 +129,73 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCPT_COUNT_TWELVE(0.00)[12];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18562-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18567-lists,linux-s390=lfdr.de];
 	DKIM_TRACE(0.00)[ibm.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[tmricht@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.ibm.com:mid];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
 	TAGGED_RCPT(0.00)[linux-s390];
 	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 060E93AC95E
+X-Rspamd-Queue-Id: 26BF73ACF62
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Rename member symbol_conf::disable_add2line_warn to
-symbol_conf::addr2line_disable_warn to make it consistent with other
-addr2line_xxx constants.
+Make symbol_conf::addr2line_disable_warn configurable by reading
+the perfconfig file.
+Use section core and addr2line-disable-warn = value.
+Update documentation.
+
+Example:
+ # perf config -l
+ core.addr2line-timeout=5000
+ core.addr2line-disable-warn=1
+ #
 
 Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
 Reviewed-by: Ian Rogers <irogers@google.com>
+Cc: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-diff.c     |  4 ++--
- tools/perf/util/addr2line.c   | 12 ++++++------
- tools/perf/util/block-info.c  |  2 +-
- tools/perf/util/libbfd.c      |  2 +-
- tools/perf/util/symbol_conf.h |  2 +-
- 5 files changed, 11 insertions(+), 11 deletions(-)
+ tools/perf/Documentation/perf-config.txt | 6 ++++++
+ tools/perf/util/config.c                 | 3 +++
+ 2 files changed, 9 insertions(+)
 
-diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index 69069926dd0b..35d599d5c9fa 100644
---- a/tools/perf/builtin-diff.c
-+++ b/tools/perf/builtin-diff.c
-@@ -1352,7 +1352,7 @@ static int cycles_printf(struct hist_entry *he, struct hist_entry *pair,
- 	/*
- 	 * Avoid printing the warning "addr2line_init failed for ..."
- 	 */
--	symbol_conf.disable_add2line_warn = true;
-+	symbol_conf.addr2line_disable_warn = true;
+diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
+index 642d1c490d9e..9b223f892829 100644
+--- a/tools/perf/Documentation/perf-config.txt
++++ b/tools/perf/Documentation/perf-config.txt
+@@ -210,6 +210,12 @@ core.*::
+ 		Sets a timeout (in milliseconds) for parsing /proc/<pid>/maps files.
+ 		Can be overridden by the --proc-map-timeout option on supported
+ 		subcommands. The default timeout is 500ms.
++	addr2line-disable-warn::
++		When set to 'true' disable all warnings from 'addr2line' output.
++		Default setting is 'false' to show these warnings.
++	addr2line-timeout::
++		Sets a timeout (in milliseconds) for parsing 'addr2line'
++		output.  The default timeout is 5s.
  
- 	bi = block_he->block_info;
+ tui.*, gtk.*::
+ 	Subcommands that can be configured here are 'top', 'report' and 'annotate'.
+diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+index 0452fbc6c085..8e30def2b1f7 100644
+--- a/tools/perf/util/config.c
++++ b/tools/perf/util/config.c
+@@ -461,6 +461,9 @@ static int perf_default_core_config(const char *var, const char *value)
+ 	if (!strcmp(var, "core.addr2line-timeout"))
+ 		addr2line_timeout_ms = strtoul(value, NULL, 10);
  
-@@ -1986,7 +1986,7 @@ int cmd_diff(int argc, const char **argv)
- 
- 	if (compute == COMPUTE_STREAM) {
- 		symbol_conf.show_branchflag_count = true;
--		symbol_conf.disable_add2line_warn = true;
-+		symbol_conf.addr2line_disable_warn = true;
- 		callchain_param.mode = CHAIN_FLAT;
- 		callchain_param.key = CCKEY_SRCLINE;
- 		callchain_param.branch_callstack = 1;
-diff --git a/tools/perf/util/addr2line.c b/tools/perf/util/addr2line.c
-index 31c0391fffa3..e9f084db0802 100644
---- a/tools/perf/util/addr2line.c
-+++ b/tools/perf/util/addr2line.c
-@@ -123,7 +123,7 @@ static enum cmd_a2l_style cmd_addr2line_configure(struct child_process *a2l, con
- 			lines = 3;
- 			pr_debug3("Detected binutils addr2line style\n");
- 		} else {
--			if (!symbol_conf.disable_add2line_warn) {
-+			if (!symbol_conf.addr2line_disable_warn) {
- 				char *output = NULL;
- 				size_t output_len;
- 
-@@ -310,7 +310,7 @@ int cmd__addr2line(const char *dso_name, u64 addr,
- 	}
- 
- 	if (a2l == NULL) {
--		if (!symbol_conf.disable_add2line_warn)
-+		if (!symbol_conf.addr2line_disable_warn)
- 			pr_warning("%s %s: addr2line_subprocess_init failed\n", __func__, dso_name);
- 		goto out;
- 	}
-@@ -330,7 +330,7 @@ int cmd__addr2line(const char *dso_name, u64 addr,
- 	len = snprintf(buf, sizeof(buf), "%016"PRIx64"\n,\n", addr);
- 	written = len > 0 ? write(a2l->in, buf, len) : -1;
- 	if (written != len) {
--		if (!symbol_conf.disable_add2line_warn)
-+		if (!symbol_conf.addr2line_disable_warn)
- 			pr_warning("%s %s: could not send request\n", __func__, dso_name);
- 		goto out;
- 	}
-@@ -339,7 +339,7 @@ int cmd__addr2line(const char *dso_name, u64 addr,
- 	switch (read_addr2line_record(&io, cmd_a2l_style, dso_name, addr, /*first=*/true,
- 				      &record_function, &record_filename, &record_line_nr)) {
- 	case -1:
--		if (!symbol_conf.disable_add2line_warn)
-+		if (!symbol_conf.addr2line_disable_warn)
- 			pr_warning("%s %s: could not read first record\n", __func__, dso_name);
- 		goto out;
- 	case 0:
-@@ -355,7 +355,7 @@ int cmd__addr2line(const char *dso_name, u64 addr,
- 					      /*addr=*/1, /*first=*/true,
- 					      NULL, NULL, NULL)) {
- 		case -1:
--			if (!symbol_conf.disable_add2line_warn)
-+			if (!symbol_conf.addr2line_disable_warn)
- 				pr_warning("%s %s: could not read sentinel record\n",
- 					   __func__, dso_name);
- 			break;
-@@ -363,7 +363,7 @@ int cmd__addr2line(const char *dso_name, u64 addr,
- 			/* The sentinel as expected. */
- 			break;
- 		default:
--			if (!symbol_conf.disable_add2line_warn)
-+			if (!symbol_conf.addr2line_disable_warn)
- 				pr_warning("%s %s: unexpected record instead of sentinel",
- 					   __func__, dso_name);
- 			break;
-diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
-index 649392bee7ed..8d3a9a661f26 100644
---- a/tools/perf/util/block-info.c
-+++ b/tools/perf/util/block-info.c
-@@ -303,7 +303,7 @@ static int block_range_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- 	char buf[128];
- 	char *start_line, *end_line;
- 
--	symbol_conf.disable_add2line_warn = true;
-+	symbol_conf.addr2line_disable_warn = true;
- 
- 	start_line = map__srcline(he->ms.map, bi->sym->start + bi->start,
- 				  he->ms.sym);
-diff --git a/tools/perf/util/libbfd.c b/tools/perf/util/libbfd.c
-index 63ea3fb53e77..c1c12308cc12 100644
---- a/tools/perf/util/libbfd.c
-+++ b/tools/perf/util/libbfd.c
-@@ -233,7 +233,7 @@ int libbfd__addr2line(const char *dso_name, u64 addr,
- 	}
- 
- 	if (a2l == NULL) {
--		if (!symbol_conf.disable_add2line_warn)
-+		if (!symbol_conf.addr2line_disable_warn)
- 			pr_warning("addr2line_init failed for %s\n", dso_name);
- 		return 0;
- 	}
-diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-index ac1b444a8fd8..21a1f096d4f0 100644
---- a/tools/perf/util/symbol_conf.h
-+++ b/tools/perf/util/symbol_conf.h
-@@ -51,7 +51,7 @@ struct symbol_conf {
- 			report_block,
- 			report_individual_block,
- 			inline_name,
--			disable_add2line_warn,
-+			addr2line_disable_warn,
- 			no_buildid_mmap2,
- 			guest_code,
- 			lazy_load_kernel_maps,
++	if (!strcmp(var, "core.addr2line-disable-warn"))
++		symbol_conf.addr2line_disable_warn = perf_config_bool(var, value);
++
+ 	/* Add other config variables here. */
+ 	return 0;
+ }
 -- 
 2.53.0
 
