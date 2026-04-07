@@ -1,75 +1,75 @@
-Return-Path: <linux-s390+bounces-18610-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18612-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uBlEFzxv1WmN6QcAu9opvQ
-	(envelope-from <linux-s390+bounces-18610-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 22:55:24 +0200
+	id SGDCMKpu1WmN6QcAu9opvQ
+	(envelope-from <linux-s390+bounces-18612-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 22:52:58 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9FA13B4B94
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 22:55:23 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BA4A3B4B14
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 22:52:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C5CA430A04B9
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2026 20:52:15 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 8E41630313B9
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2026 20:52:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCA7537F730;
-	Tue,  7 Apr 2026 20:51:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E758337F8AD;
+	Tue,  7 Apr 2026 20:51:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ByGcwGn7"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PYtoebzO"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663C437EFFD;
-	Tue,  7 Apr 2026 20:51:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCE837B03A;
+	Tue,  7 Apr 2026 20:51:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775595085; cv=none; b=blI3lTjEMR7nFeNDiblZNWNk9Zrq5l5JmbYiLUzxL1v2nkKBHmQDjHOdAAFEX55L5SVWqR+MMqnQaW9aepnWKnF66ogMuSFWDB4RsZNPxqcegkHiPFlPfF9wlazEYFw25XmBeSOrHpsCdM9WXBled9AsA7n2lDtloSrCGXYZdnY=
+	t=1775595089; cv=none; b=nZ9xd/mL40iayc+GAw7NUL4sf4Nx/cbpxN3vmlJW+lKr4+9vBLvUbVkJdk0hj+5rzDceOdinlpcZu9CQ7mS58/fRujWvHSHr+qe7LITBf7ZS9B2E+4TPvJBN1MKwo6RdVL1lE6Q+9yEkErEupICjFMxF42yVd3CGZXWHEzgLJvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775595085; c=relaxed/simple;
-	bh=6lECcwRlYJc1VwOaVPSz+3sJVoOUPChLBxtbNKnNYVs=;
+	s=arc-20240116; t=1775595089; c=relaxed/simple;
+	bh=ezDMfU6GdQi9/GEV3sLRHgBtfz8lHIf5OqBPE4IVUx4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IDwkVwh27F0Qb8DdHIF/q+U4Oaq+xw1PoE9pfVW3pWBRjCY9dxYVZLT/yg+RoRs0Kw2IwdErPgrThfNnrpT/iliKcFIVUCc0T+hrZ0iCZvoKqYV+OIYID5z4qqccKHtpRUaxYPH6tgXzSRkONYSs5Pl06Mc3lxyEPg+fUhsO1Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ByGcwGn7; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=UsjcIXd2lpBQxyPyQVm3VM2orTULk9/T49OXuocvY5v3XK+p3LTmqN2RqlTymX+J5Q4KMGJiZ3fJNQbpN4SlxQtpImDtJ+ivpsXhaQuy+p4hXjWLH18LE5+UPWqp6r3bV6wPaMRcxGjLdsXK82Bmel9n9FiVrYj4rI0ZBAbfL/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PYtoebzO; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 637Dg4ad2326591;
-	Tue, 7 Apr 2026 20:51:19 GMT
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 637DtuOM2302957;
+	Tue, 7 Apr 2026 20:51:21 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=r4Zy/Cm0jI63M/iCK
-	KPArehXAp8olRhJ4Gv59f45+j4=; b=ByGcwGn7RaypS5e9flURIeAtDPdw/VZuz
-	SvFJDdeW3F01Qq96GNBhS0+Vh0MCuhJd5B5j78QkgWtq5whm/lsLkIoHv76th9+4
-	rRvoyNrJeRZ8bYOeWNfkJzWvXLUFZSq4qkalkzWdtsSMDLZPpYAKq11U3aO+CxxN
-	Qmlbr6rD8xJRrl38tapIa59FRWjX5Fg25sdejlMKsh8gkgWBwGLUT0KVeXgwCkvc
-	FQJli212WfmFj/8fLglN+aEkA9gXLkbKoXOwlB8U/cARF5CGYlN593MvZKlfubBk
-	n3Xibly5Xewe8uSDbUZgblck5Wj50j7pB2jdgrOHIhMK7cykcwSjw==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dcn2kcntj-1
+	:mime-version:references:subject:to; s=pp1; bh=gxVz5upnyZnVLRYAB
+	J6Sc29C41tRyYnodKjCNtHtS+E=; b=PYtoebzOUNWbQuo6C1FimWFrk5r62o2MJ
+	xYE8KGx+ew2IobT0Y7XfP5i2QPpiZzRbbEhNXQ7Qdgb2Hg/piXir9JaC5l+BHmpH
+	oHThbEcTygRFV7LhVzLEe1Oz8AyvKkZsNWPg/DbpElxpVV4Ta/U9b9o/vEnlntti
+	O+KR6kIM2Jq3Qgj1CnXjhr21c3xBJ6fk6qUXhG7uVVTxLSDUFxKBwJJW6Hk2NCyg
+	ry33cN5X0VPhhnI6wwv1vWAll1N47asTrkcL9CFwypyP0rZ6IAYWy1XIEQuREznI
+	keL2ueJ8kRxOkYSIWPKMnMtljYiiL+bGNxb+qfctN5nrsaCHMuA2Q==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dcn2fd2s7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Apr 2026 20:51:19 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 637IkcT3018987;
-	Tue, 7 Apr 2026 20:51:18 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dcme9cuph-1
+	Tue, 07 Apr 2026 20:51:21 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 637It5JK013902;
+	Tue, 7 Apr 2026 20:51:20 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dcmf44un7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Apr 2026 20:51:18 +0000
+	Tue, 07 Apr 2026 20:51:20 +0000
 Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 637KpHU960883220
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 637KpIk113369882
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 7 Apr 2026 20:51:17 GMT
+	Tue, 7 Apr 2026 20:51:19 GMT
 Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0A0B658058;
+	by IMSVA (Postfix) with ESMTP id C38A058058;
+	Tue,  7 Apr 2026 20:51:18 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3294C58059;
 	Tue,  7 Apr 2026 20:51:17 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 705325805B;
-	Tue,  7 Apr 2026 20:51:15 +0000 (GMT)
 Received: from li-4c4c4544-004d-4810-8043-b7c04f423534.ibm.com.com (unknown [9.61.101.194])
 	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  7 Apr 2026 20:51:15 +0000 (GMT)
+	Tue,  7 Apr 2026 20:51:17 +0000 (GMT)
 From: Anthony Krowiak <akrowiak@linux.ibm.com>
 To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org
@@ -78,9 +78,9 @@ Cc: jjherne@linux.ibm.com, borntraeger@de.ibm.com, mjrosato@linux.ibm.com,
         fiuczy@linux.ibm.com, pbonzini@redhat.com, frankja@linux.ibm.com,
         imbrenda@linux.ibm.com, agordeev@linux.ibm.com, hca@linux.ibm.com,
         gor@linux.ibm.com
-Subject: [PATCH v2 08/16] s390/vfio-ap: Transition device migration state from STOP to RESUMING
-Date: Tue,  7 Apr 2026 16:50:24 -0400
-Message-ID: <20260407205100.331150-9-akrowiak@linux.ibm.com>
+Subject: [PATCH v2 09/16] s390/vfio-ap: File ops called to resume the vfio device migration
+Date: Tue,  7 Apr 2026 16:50:25 -0400
+Message-ID: <20260407205100.331150-10-akrowiak@linux.ibm.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260407205100.331150-1-akrowiak@linux.ibm.com>
 References: <20260407205100.331150-1-akrowiak@linux.ibm.com>
@@ -92,26 +92,26 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDA3MDE4OSBTYWx0ZWRfXz5aCF9Gl4DOo
- 6H4TnKIiiJRkpCRePPJvRh8RNA5XfzSQn8P4RHILU+gtnLU0F0nbIqPPUAk5b5qw9IJgIV0HZ1J
- EgPH/Kg4Jt5IG19vcW8nebvgQFSe096Nz2fc4Nt/87dUUNTCxEorKbc2Iudr0lEhTwdWFvlEIfQ
- 1lk7X55OB4mlp8GyVcmNDNOWENwwJdJ7gytOm3pHOlpIsNKh9jz8+cTsZRnmaa4iwcpF5VjwugA
- BPnGdhmKmq9Re9y3t5PJfb3kp0E4qoq/i516WWRbwLzPVZ/V3eDzcYnJ5NoZdwNG6ZvgMaTpSNm
- JN4wxHMMZh2iVY+jUYCByM/LDBZqmyHRzgedQRaMrfwHoj7sm2UX+jowH7Cl7RCvhwo2TQWJF3H
- OXTPLxqyHp81sKt8F0lc1bmrYaRL4Nvx8mNlzeGFCrrjMswfj+dpacjglcr06FGldRGeNCqidd6
- lxamqox4D87oXjDwG8g==
-X-Proofpoint-ORIG-GUID: 2lszLMahOiihJabXnccYh4QjWdBFbUuC
-X-Authority-Analysis: v=2.4 cv=e9k2j6p/ c=1 sm=1 tr=0 ts=69d56e47 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDA3MDE4OSBTYWx0ZWRfX6MA4Xwdq69p2
+ m8Y6yFuzYu0JlnSRSALwI/Wyd7gU+aYCDe8dZwwkbUb3ekZ5UVp4S/um6oC7HzXYbY90jdtw66Q
+ hCQuWebMP2JQpd43mOkL/dRTaj0kXhAhf12pt+ABFk6oUe2b2wzhp3QUaeWp6s0B8JjxgWD7ezd
+ Vukag/Y2rnNyodd7hBD9b8ZnfMXA3wA5MTXkcN9vLv+n43J+/gq5X2fWdMmFIy2+3orvpn/obpl
+ HAJPhXh4jstjww0T+lvvpjHHJANLwsv+Lvyc+/j23ojkScFnUYVwPjdWLsVBbkN6pnGjP/z581S
+ KSt3ZhpwG7yyj6Fs2opDwlXT4MPUJFWWE3Q6Itvm6Kmdh8tisXFMY8F7qBPcO1ipFqeQBgSltdq
+ 1jsYqX5SHKxL+l1FFLHzSyHxHGZOVd2WNM3O9/2FNial2sTAk6oSSRD2XCnyOftfzM7/MZZ4UgI
+ XqGsPBsK/1BHd51B6vQ==
+X-Authority-Analysis: v=2.4 cv=FsY1OWrq c=1 sm=1 tr=0 ts=69d56e49 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
  a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8 a=DHoCqielVpiR_Jvp3-wA:9
-X-Proofpoint-GUID: 2lszLMahOiihJabXnccYh4QjWdBFbUuC
+ a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=mUIIkNJziSJENXg-bOUA:9
+X-Proofpoint-ORIG-GUID: y8JgIE8fSViEGaftBPhrpSDfuTqv4YCE
+X-Proofpoint-GUID: y8JgIE8fSViEGaftBPhrpSDfuTqv4YCE
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-04-07_04,2026-04-07_05,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 impostorscore=0 malwarescore=0 suspectscore=0 spamscore=0
- bulkscore=0 adultscore=0 priorityscore=1501 phishscore=0 lowpriorityscore=0
+ bulkscore=0 priorityscore=1501 impostorscore=0 spamscore=0 phishscore=0
+ lowpriorityscore=0 clxscore=1015 adultscore=0 malwarescore=0 suspectscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2604010000 definitions=main-2604070189
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -119,12 +119,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18610-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18612-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	TO_DN_NONE(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -134,103 +134,629 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.ibm.com:mid];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linux.ibm.com:mid];
 	DKIM_TRACE(0.00)[ibm.com:+];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	RCPT_COUNT_TWELVE(0.00)[16];
 	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: B9FA13B4B94
+X-Rspamd-Queue-Id: 8BA4A3B4B14
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Transitioning from VFIO_DEVICE_STATE_STOP to VFIO_DEVICE_STATE_RESUMING
-starts a process of restoring the device state of the vfio device on the
-target system. To prepare for restoring the device state, open a file
-stream to receive the guest's AP configuration saved when the device state
-on the source system transitioned from VFIO_DEVICE_STATE_STOP to
-VFIO_DEVICE_STATE_STOP_COPY.
+Implements two callback functions that were added to the 'file_operations'
+structure for the file created to restore the state of the vfio device
+when the migration state transitioned from VFIO_DEVICE_STATE_STOP to
+VFIO_DEVICE_STATE_RESUMING:
+
+* Write callback
+
+  The write callback retrieves the vfio device migration state saved to the
+  file stream created when the vfio device state was transitioned from
+  VFIO_DEVICE_STATE_STOP to VFIO_DEVICE_STATE_STOP_COPY. The saved state
+  contains the guest's AP configuration information. Since the guest's AP
+  configuration on the target system is supplied by the mediated device
+  residing thereon, the migration state passed into this callback will not
+  be used to restore the vfio device state, but to verify that the source
+  and target AP configurations are compatible since the mediated devices on
+  the source and target systems may differ.
+
+  The verification rules are:
+
+  o The source and target AP configurations must have the same number of
+    APQNs
+
+  o Each APQN in the source guest's AP configuration must also be in the
+    target guest's configuration
+
+  o Each APQN in the source and target guests' AP configurations must
+    reference a queue device with compatible hardware:
+
+    - The source and target queues must have the same facilities installed
+  	- APSC facility
+  	- APQKM facility
+  	- AP4KC facility
+
+    - The source and target queues must have the same mode
+  	- Coprocessor-mode
+  	- Accelerator-mode
+  	- XCP-mode
+
+    - The source and target queues must have the same APXA facility setting
+   	- If the APXA facility is installed on target queue, it must also
+   	  be installed on the source queue
+   	- If the APXA facility is not installed on target queue, it must
+   	  also not be installed on the source queue
+
+    - The source and target queues must have the same classification
+   	- Full native card function
+   	- Stateless functions
+
+    - The binding and associated state
+   	~ At the time of migration, the queue on the target guest will
+   	  neither be bound nor associated, so the binding and associated
+   	  state for both the source and target must indicate that the
+   	  queue is usable for all messages (i.e., BS bits equal to 00).
+
+    - The AP type of the target queue must be the same or newer than the
+      source queue
+
+* Release callback
+
+This function deallocates the object used to restore the state of the
+vfio device when the file is released.
 
 Signed-off-by: Anthony Krowiak <akrowiak@linux.ibm.com>
 ---
- drivers/s390/crypto/vfio_ap_migration.c | 55 ++++++++++++++++++++++++-
- 1 file changed, 53 insertions(+), 2 deletions(-)
+ drivers/s390/crypto/vfio_ap_migration.c | 518 +++++++++++++++++++++++-
+ 1 file changed, 516 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/s390/crypto/vfio_ap_migration.c b/drivers/s390/crypto/vfio_ap_migration.c
-index aadc362edf78..c78e24767d20 100644
+index c78e24767d20..ce16028e50a4 100644
 --- a/drivers/s390/crypto/vfio_ap_migration.c
 +++ b/drivers/s390/crypto/vfio_ap_migration.c
-@@ -311,6 +311,46 @@ vfio_ap_save_mdev_state(struct ap_matrix_mdev *matrix_mdev)
+@@ -11,6 +11,36 @@
+ #include "ap_bus.h"
+ #include "vfio_ap_private.h"
+ 
++/*
++ * Masks the fields of the queue information returned from the PQAP(TAPQ)
++ * command. In order to migrate a guest, it's AP configuration must be
++ * compatible with AP configuration assigned to the target guest's mdev.
++ * This mask is used to verify that the queue information for each source and
++ * target queue is compatible (i.e., the masked fields are equivalent).
++ *
++ * The relevant fields covered by this mask are:
++ * S bit 0: APSC  facility installed
++ * M bit 1: APQKM facility installed
++ * C bit 2: AP4KC facility installed
++ * Mode bits 3-5:
++ *     D bit 3: CCA-mode facility
++ *     A bit 4: accelerator-mode facility
++ *     X bit 5: XCP-mode facility
++ * N  bit 6: APXA facility installed
++ * SL bit 7: SLCF facility installed
++ * Classification (functional capabilities) bits 8-16
++ *     bit 8: Native card function
++ *     bit 9: Only stateless functions
++ * AP Type bits 32-40:
++ */
++#define QINFO_DATA_MASK		0xffffc000ff000000
++
++/*
++ * Masks the bit that indicates whether full native card function is available
++ * from the 8 bits specifying the functional capabilities of a queue
++ */
++#define CLASSIFICATION_NATIVE_FCN_MASK		0x80
++
+ /**
+  * vfio_ap_migration_data - the data needed to migrate a guest with pass-through
+  *			    access to AP devices
+@@ -235,6 +265,53 @@ static void vfio_ap_store_queue_info(struct vfio_ap_migration_file *migf)
+ 	}
+ }
+ 
++static int validate_resume_write_parms(struct vfio_ap_migration_file *migf,
++				       size_t len, loff_t *pos)
++{
++	loff_t total_len;
++	int ret = -EIO;
++
++	lockdep_assert_held(&matrix_dev->mdevs_lock);
++
++	if (!migf->matrix_mdev) {
++		pr_err("migration failed: matrix_mdev object not linked to migration file");
++		goto done;
++	}
++
++	if (*pos < 0) {
++		dev_err(migf->matrix_mdev->vdev.dev,
++			"migration failed: invalid migration file position  (%lli) for write\n",
++			*pos);
++		goto done;
++	}
++
++	if (check_add_overflow((loff_t)len, *pos, &total_len)) {
++		dev_err(migf->matrix_mdev->vdev.dev,
++			"migration failed: pos (%llu) plus len (%zu) operation overflowed loff_t precision\n",
++			*pos, len);
++		goto done;
++	}
++
++	if (total_len > migf->config_sz) {
++		dev_err(migf->matrix_mdev->vdev.dev,
++			"migration failed: source guest's AP config size (%llu) larger than target's (%lu)",
++			total_len, migf->config_sz);
++		goto done;
++	}
++
++	if (migf->disabled) {
++		dev_err(migf->matrix_mdev->vdev.dev,
++			"migration failed: migration file is disabled");
++		goto done;
++	}
++
++	dev_dbg(migf->matrix_mdev->vdev.dev, "resume write parameters validated\n");
++	ret = 0;
++
++done:
++	return ret;
++}
++
+ static struct vfio_ap_migration_file
+ *vfio_ap_allocate_migf(struct ap_matrix_mdev *matrix_mdev)
+ {
+@@ -311,11 +388,448 @@ vfio_ap_save_mdev_state(struct ap_matrix_mdev *matrix_mdev)
  	return mig_data->saving_migf;
  }
  
-+static ssize_t vfio_ap_resume_write(struct file *filp, const char __user *buf,
-+				    size_t len, loff_t *pos)
++static void report_facilities_compatibility(struct ap_matrix_mdev *matrix_mdev,
++					    unsigned long apqn,
++					    struct ap_tapq_hwinfo *src_hwinfo,
++					    struct ap_tapq_hwinfo *target_hwinfo)
 +{
-+	/* TODO */
-+	return -EOPNOTSUPP;
-+}
++	if (src_hwinfo->apsc != target_hwinfo->apsc) {
++		if (src_hwinfo->apsc) {
++			dev_err(matrix_mdev->vdev.dev,
++				"APSC facility installed in source queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
 +
-+static const struct file_operations vfio_ap_resume_fops = {
-+	.owner = THIS_MODULE,
-+	.write = vfio_ap_resume_write,
-+	.release = vfio_ap_release_migf,
-+};
++			dev_err(matrix_mdev->vdev.dev,
++				"APSC facility not installed in target queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++		} else {
++			dev_err(matrix_mdev->vdev.dev,
++				"APSC facility not installed in source queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
 +
-+static struct vfio_ap_migration_file *
-+vfio_ap_resume_mdev_state(struct ap_matrix_mdev *matrix_mdev)
-+{
-+	struct vfio_ap_migration_data *mig_data;
-+	struct vfio_ap_migration_file *migf;
-+	struct file *filp;
-+
-+	lockdep_assert_held(&matrix_dev->mdevs_lock);
-+	mig_data = matrix_mdev->mig_data;
-+
-+	migf = vfio_ap_allocate_migf(matrix_mdev);
-+	if (IS_ERR(migf))
-+		return ERR_CAST(migf);
-+
-+	filp = vfio_ap_open_file_stream(migf, &vfio_ap_resume_fops, O_WRONLY);
-+	if (IS_ERR(filp)) {
-+		vfio_ap_deallocate_migf(migf);
-+		return ERR_CAST(filp);
++			dev_err(matrix_mdev->vdev.dev,
++				"APSC facility installed in target queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++		}
 +	}
 +
-+	migf->matrix_mdev = matrix_mdev;
-+	migf->filp = filp;
-+	mig_data->resuming_migf = migf;
++	if (src_hwinfo->mex4k != target_hwinfo->mex4k) {
++		if (src_hwinfo->mex4k) {
++			dev_err(matrix_mdev->vdev.dev,
++				"mex4k facility installed in source queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
 +
-+	return migf;
++			dev_err(matrix_mdev->vdev.dev,
++				"mex4k facility not installed in target queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++		} else {
++			dev_err(matrix_mdev->vdev.dev,
++				"mex4k facility not installed in source queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++
++			dev_err(matrix_mdev->vdev.dev,
++				"mex4k facility installed in target queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++		}
++	}
++
++	if (src_hwinfo->crt4k != target_hwinfo->crt4k) {
++		if (src_hwinfo->crt4k) {
++			dev_err(matrix_mdev->vdev.dev,
++				"crt4k facility installed in source queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++
++			dev_err(matrix_mdev->vdev.dev,
++				"crt4k facility not installed in target queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++		} else {
++			dev_err(matrix_mdev->vdev.dev,
++				"crt4k facility not installed in source queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++
++			dev_err(matrix_mdev->vdev.dev,
++				"crt4k facility installed in target queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++		}
++	}
 +}
 +
- static struct file *
- vfio_ap_transition_to_state(struct ap_matrix_mdev *matrix_mdev,
- 			    enum vfio_device_mig_state new_state)
-@@ -344,10 +384,21 @@ vfio_ap_transition_to_state(struct ap_matrix_mdev *matrix_mdev,
- 		return NULL;
- 	}
- 
++static void report_mode_compatibility(struct ap_matrix_mdev *matrix_mdev,
++				      unsigned long apqn,
++				      struct ap_tapq_hwinfo *src_hwinfo,
++				      struct ap_tapq_hwinfo *target_hwinfo)
++{
++	if (src_hwinfo->cca != target_hwinfo->cca) {
++		if (src_hwinfo->cca) {
++			dev_err(matrix_mdev->vdev.dev,
++				"Coprocessor-mode facility installed in source queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++
++			dev_err(matrix_mdev->vdev.dev,
++				"Coprocessor-mode  facility not installed target queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++		} else {
++			dev_err(matrix_mdev->vdev.dev,
++				"Coprocessor-mode facility not installed in source queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++
++			dev_err(matrix_mdev->vdev.dev,
++				"Coprocessor-mode  facility installed target queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++		}
++	}
++
++	if (src_hwinfo->accel != target_hwinfo->accel) {
++		if (src_hwinfo->accel) {
++			dev_err(matrix_mdev->vdev.dev,
++				"Accelerator-mode facility installed source queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++
++			dev_err(matrix_mdev->vdev.dev,
++				"Accelerator-mode facility not installed target queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++		} else {
++			dev_err(matrix_mdev->vdev.dev,
++				"Accelerator-mode facility not installed source queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++
++			dev_err(matrix_mdev->vdev.dev,
++				"Accelerator-mode facility installed target queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++		}
++	}
++
++	if (src_hwinfo->ep11 != target_hwinfo->ep11) {
++		if (src_hwinfo->ep11) {
++			dev_err(matrix_mdev->vdev.dev,
++				"XCP-mode facility installed source queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++
++			dev_err(matrix_mdev->vdev.dev,
++				"XCP-mode facility not installed target queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++		} else {
++			dev_err(matrix_mdev->vdev.dev,
++				"XCP-mode facility not installed source queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++
++			dev_err(matrix_mdev->vdev.dev,
++				"XCP-mode facility installed target queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++		}
++	}
++}
++
++static void report_apxa_compatibility(struct ap_matrix_mdev *matrix_mdev,
++				      unsigned long apqn,
++				      struct ap_tapq_hwinfo *src_hwinfo,
++				      struct ap_tapq_hwinfo *target_hwinfo)
++{
++	if (src_hwinfo->apxa != target_hwinfo->apxa) {
++		if (src_hwinfo->apxa) {
++			dev_err(matrix_mdev->vdev.dev,
++				"AP-extended-addressing (APXA) facility installed in source queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++
++			dev_err(matrix_mdev->vdev.dev,
++				"AP-extended-addressing (APXA) facility not installed in target queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++		} else {
++			dev_err(matrix_mdev->vdev.dev,
++				"AP-extended-addressing (APXA) facility not installed in source queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++
++			dev_err(matrix_mdev->vdev.dev,
++				"AP-extended-addressing (APXA) facility installed in target queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++		}
++	}
++}
++
++static void report_slcf_compatibility(struct ap_matrix_mdev *matrix_mdev,
++				      unsigned long apqn,
++				      struct ap_tapq_hwinfo *src_hwinfo,
++				      struct ap_tapq_hwinfo *target_hwinfo)
++{
++	if (src_hwinfo->slcf != target_hwinfo->slcf) {
++		if (src_hwinfo->slcf) {
++			dev_err(matrix_mdev->vdev.dev,
++				"Stateless-command-filtering (SLCF) available in source queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++
++			dev_err(matrix_mdev->vdev.dev,
++				"Stateless-command-filtering (SLCF) not available in target queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++		} else {
++			dev_err(matrix_mdev->vdev.dev,
++				"Stateless-command-filtering (SLCF) not available in source queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++
++			dev_err(matrix_mdev->vdev.dev,
++				"Stateless-command-filtering (SLCF) available in target queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++		}
++	}
++}
++
++static void report_class_compatibility(struct ap_matrix_mdev *matrix_mdev,
++				       unsigned long apqn,
++				       struct ap_tapq_hwinfo *src_hwinfo,
++				       struct ap_tapq_hwinfo *target_hwinfo)
++{
++	unsigned long src_native, target_native;
++
++	src_native = src_hwinfo->class & CLASSIFICATION_NATIVE_FCN_MASK;
++	target_native = target_hwinfo->class & CLASSIFICATION_NATIVE_FCN_MASK;
++
++	if (src_native != target_native) {
++		/*
++		 * If the source queue has full native card function and the
++		 * target queue has only stateless functions available, then
++		 * there may be instructions that will not execute on the
++		 * target queue.
++		 *
++		 * If the source queue has only stateless card functions and the
++		 * target queue has full native card function available, then
++		 * we are okay because the target queue can run all card
++		 * functions.
++		 */
++		if (src_native) {
++			dev_err(matrix_mdev->vdev.dev,
++				"Full native card function available on source queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++
++			dev_err(matrix_mdev->vdev.dev,
++				"Only stateless functions available on target queue %02lx.%04lx\n",
++				AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++		}
++	}
++}
++
++static void report_bs_compatibility(struct ap_matrix_mdev *matrix_mdev,
++				    unsigned long apqn,
++				    struct ap_tapq_hwinfo *src_hwinfo,
++				    struct ap_tapq_hwinfo *target_hwinfo)
++{
++	if (src_hwinfo->bs || target_hwinfo->bs) {
++		dev_err(matrix_mdev->vdev.dev,
++			"Bind/associate state for source (%01x) and target (%01x) queue %02lx.%04lx are not compatible\n",
++			src_hwinfo->bs, target_hwinfo->bs,
++			AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++	}
++}
++
++static void report_aptype_compatibility(struct ap_matrix_mdev *matrix_mdev,
++					unsigned long apqn,
++					struct ap_tapq_hwinfo *src_hwinfo,
++					struct ap_tapq_hwinfo *target_hwinfo)
++{
++	dev_err(matrix_mdev->vdev.dev,
++		"AP type of source (%02x) not compatible with target (%02x)\n",
++		src_hwinfo->at, target_hwinfo->at);
++}
++
++/*
++ * Log a device error reporting that migration failed due to queue
++ * incompatibilities followed by a device error for each incompatible feature.
++ */
++static void report_qinfo_incompatibilities(struct ap_matrix_mdev *matrix_mdev,
++					   unsigned long apqn,
++					   struct ap_tapq_hwinfo *src_hwinfo,
++					   struct ap_tapq_hwinfo *target_hwinfo)
++{
++	dev_err(matrix_mdev->vdev.dev,
++		"Migration failed: Source and target queue (%02lx.%04lx) not compatible\n",
++		AP_QID_CARD(apqn), AP_QID_QUEUE(apqn));
++
++	report_facilities_compatibility(matrix_mdev, apqn, src_hwinfo, target_hwinfo);
++	report_mode_compatibility(matrix_mdev, apqn, src_hwinfo, target_hwinfo);
++	report_apxa_compatibility(matrix_mdev, apqn, src_hwinfo, target_hwinfo);
++	report_slcf_compatibility(matrix_mdev, apqn, src_hwinfo, target_hwinfo);
++	report_class_compatibility(matrix_mdev, apqn, src_hwinfo, target_hwinfo);
++	report_aptype_compatibility(matrix_mdev, apqn, src_hwinfo, target_hwinfo);
++	report_bs_compatibility(matrix_mdev, apqn, src_hwinfo, target_hwinfo);
++}
++
++static bool qinfo_compatible(struct ap_matrix_mdev *matrix_mdev,
++			     unsigned long apqn,
++			     struct ap_tapq_hwinfo *src_hwinfo,
++			     struct ap_tapq_hwinfo *target_hwinfo)
++{
++	unsigned long src_bits, target_bits;
++
++	src_bits = src_hwinfo->value & QINFO_DATA_MASK;
++	target_bits = target_hwinfo->value & QINFO_DATA_MASK;
++
 +	/*
-+	 * Starts the process of restoring the state of the vfio-ap device
-+	 * on the target host by creating a filestream to be used to transfer
-+	 * the internal state of the vfio-ap device on the source host that
-+	 * was saved during the STOP_COPY phase of the migration.
++	 * If all relevant bits are the same, or only the AP type of the source
++	 * and target queue differ but the source type is older than the target
++	 * type, then no incompatibilities will be reported. The AP types are
++	 * considered compatible even if they differ as long as the source type
++	 * is older than the target type since AP devices are backwards
++	 * compatible.
 +	 */
- 	if (cur_state == VFIO_DEVICE_STATE_STOP &&
- 	    new_state == VFIO_DEVICE_STATE_RESUMING) {
--		/* TODO */
--		return ERR_PTR(-EOPNOTSUPP);
-+		migf = vfio_ap_resume_mdev_state(matrix_mdev);
-+		if (IS_ERR(migf))
-+			return ERR_CAST(migf);
++	if (src_bits == target_bits ||
++	    (src_hwinfo->fac == target_hwinfo->fac &&
++	     src_hwinfo->at <= target_hwinfo->at)) {
++		return true;
++	}
 +
-+		get_file(migf->filp);
++	report_qinfo_incompatibilities(matrix_mdev, apqn, src_hwinfo,
++				       target_hwinfo);
 +
-+		return migf->filp;
- 	}
++	return false;
++}
++
++static int matrixes_compatible(struct vfio_ap_migration_file *migf)
++{
++	struct ap_matrix_mdev *matrix_mdev;
++	struct ap_tapq_hwinfo src_hwinfo;
++	struct vfio_ap_queue *q;
++	unsigned long apqn;
++
++	lockdep_assert_held(&matrix_dev->mdevs_lock);
++
++	matrix_mdev = migf->matrix_mdev;
++
++	for (int i = 0; i < migf->ap_config->num_queues; i++) {
++		apqn = migf->ap_config->qinfo[i].apqn;
++		q = vfio_ap_mdev_get_queue(matrix_mdev, apqn);
++		memcpy(&src_hwinfo, &migf->ap_config->qinfo[i].data,
++		       sizeof(src_hwinfo));
++
++		if (!qinfo_compatible(matrix_mdev, apqn, &src_hwinfo, &q->hwinfo))
++			return -EFAULT;
++	}
++
++	return 0;
++}
++
++static bool apqns_match(struct vfio_ap_migration_file *migf)
++{
++	struct ap_matrix_mdev *matrix_mdev;
++	unsigned long apid, apqi, apqn;
++	bool ret = true;
++
++	lockdep_assert_held(&matrix_dev->mdevs_lock);
++
++	matrix_mdev = migf->matrix_mdev;
++
++	for (int i = 0; i < migf->ap_config->num_queues; i++) {
++		apqn = migf->ap_config->qinfo[i].apqn;
++		apid = AP_QID_CARD(apqn);
++		apqi = AP_QID_QUEUE(apqn);
++
++		if (!test_bit_inv(apid, matrix_mdev->shadow_apcb.apm) ||
++		    !test_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm)) {
++			dev_err(matrix_mdev->vdev.dev,
++				"migration failed: queue %02lx.%04lx not assigned to guest matrix\n",
++				apid, apqi);
++			ret = false;
++		}
++	}
++
++	return ret;
++}
++
++static int vfio_ap_validate_num_queues(struct vfio_ap_migration_file *migf)
++{
++	int num_migf_queues, num_mdev_queues;
++	struct ap_matrix_mdev *matrix_mdev;
++
++	lockdep_assert_held(&matrix_dev->mdevs_lock);
++	matrix_mdev = migf->matrix_mdev;
++	num_mdev_queues = vfio_ap_mdev_get_num_queues(&matrix_mdev->shadow_apcb);
++	num_migf_queues = migf->ap_config->num_queues;
++
++	if (num_mdev_queues != num_migf_queues) {
++		dev_err(matrix_mdev->vdev.dev,
++			"migration failed: number of queues on source (%d) and target (%d) guests differ\n",
++			num_migf_queues, num_mdev_queues);
++		return (num_mdev_queues > num_migf_queues) ? -ENODEV : -E2BIG;
++	}
++
++	return 0;
++}
++
++static int do_post_copy_validation(struct vfio_ap_migration_file *migf, loff_t pos)
++{
++	unsigned long nqueues_offset;
++	int ret;
++
++	nqueues_offset = offsetofend(struct vfio_ap_config, num_queues);
++	if (pos >= nqueues_offset) {
++		ret = vfio_ap_validate_num_queues(migf);
++		if (ret)
++			return ret;
++
++		if (pos == migf->config_sz) {
++			if (!apqns_match(migf))
++				return -ENODEV;
++			ret = matrixes_compatible(migf);
++			if (ret)
++				return ret;
++		}
++	}
++
++	return 0;
++}
++
++/**
++ * vfio_ap_resume_write - store the AP configuration information sent from the
++ *			  source guest into the migration file.
++ * @filp: the file used to send the AP configuration information from the source
++ *	  guest.
++ * @buf:  buffer containing the AP configuration information sent from the
++ *	  source guest
++ * @len:  the length of the AP configuration information contained in @buf
++ * *pos:  a pointer to store the file position after retrieving the AP config
++ *	  information from @buf
++ */
+ static ssize_t vfio_ap_resume_write(struct file *filp, const char __user *buf,
+ 				    size_t len, loff_t *pos)
+ {
+-	/* TODO */
+-	return -EOPNOTSUPP;
++	struct vfio_ap_migration_data *mig_data;
++	struct vfio_ap_migration_file *migf;
++	ssize_t ret = 0;
++
++	if (pos)
++		return -ESPIPE;
++
++	mutex_lock(&matrix_dev->mdevs_lock);
++
++	pos = &filp->f_pos;
++	migf = filp->private_data;
++	mig_data = migf->matrix_mdev->mig_data;
++
++	ret = validate_resume_write_parms(migf, len, pos);
++	if (ret)
++		goto out_unlock;
++
++	if (copy_from_user((void *)migf->ap_config + *pos, buf, len)) {
++		dev_err(migf->matrix_mdev->vdev.dev,
++			"%s (%d): failed to copy queue information from userspace",
++			__func__, __LINE__);
++		ret = -EFAULT;
++		goto out_unlock;
++	}
++
++	*pos += len;
++
++	ret = do_post_copy_validation(migf, *pos);
++	if (ret)
++		goto out_unlock;
++
++	ret = len;
++
++	dev_dbg(migf->matrix_mdev->vdev.dev,
++		"%s (%d): %zu bytes of queue information stored in the migration file",
++		__func__, __LINE__, len);
++
++out_unlock:
++	mutex_unlock(&matrix_dev->mdevs_lock);
++
++	return ret;
+ }
  
- 	if (cur_state == VFIO_DEVICE_STATE_RESUMING &&
+ static const struct file_operations vfio_ap_resume_fops = {
 -- 
 2.52.0
 
