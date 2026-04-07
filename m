@@ -1,79 +1,80 @@
-Return-Path: <linux-s390+bounces-18564-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18566-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oKL8BrLY1GlxyAcAu9opvQ
-	(envelope-from <linux-s390+bounces-18564-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 12:13:06 +0200
+	id sKO0Gj/Z1GlxyAcAu9opvQ
+	(envelope-from <linux-s390+bounces-18566-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 12:15:27 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 865B23AC9A3
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 12:13:05 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id DAA173ACA1A
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Apr 2026 12:15:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 44CE93022572
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2026 10:13:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0EF1530649E8
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2026 10:13:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D5D03A6F0B;
-	Tue,  7 Apr 2026 10:13:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D46EF3A7F57;
+	Tue,  7 Apr 2026 10:13:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ng2GJWFs"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PDlo51WR"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A5539B96A;
-	Tue,  7 Apr 2026 10:13:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B6E3A7F59;
+	Tue,  7 Apr 2026 10:13:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775556783; cv=none; b=Z340C8d9zii0ZmFkATAwS1jj4wUmmTL4iY7CKRH3fOaWuCLphpG9KFqBGsn9rgYDu00OwjU/9BlGzIUez+lwlT63wX+r0/0rFBNu4THkxMuGx9hDgPOMUEy3Cn6P0Rx6keOYAIQfJPMy2klEE+KEwY9YIu3rCky1RSitQppLTyo=
+	t=1775556787; cv=none; b=DtV4hxw6VWVmE5403KdgHVh2gSmtt5iVAsNV1G0YVV9QWpb/JjU4nikBbrY1MIyk0i21e/13AWG/9hZS2TQaWd6l0brWSJ5n+NqjBXKzer4AxzLpV5aUzEkwtimbphJV87crrIZeyO1cqDoq6nxAaVEcpLsv6w+vgqiZC9IyGUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775556783; c=relaxed/simple;
-	bh=xMPDe5yarCr8rtAtA/og41ZgZ1Wq8HJO0LpEXG4QDQk=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Ja5FlFWavtPx35tm+3LARuqwM1yr2SNZ8sqDh5hTJw902Xm1hv1l/sp6HVZlTwP4o8X3u4BHEWKNcRmmvOPrDqlNdF+GFLfQFRkz6UoSF53BqgnVSIlvzySzs8L22L5v8FazVkabuY1xIENdTdjDNQaFfpPrdEKIP7yLq0e95tE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ng2GJWFs; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1775556787; c=relaxed/simple;
+	bh=kh9IxItZrBEfaxvMrocqYzgGEA97zbpJLUmSbQyz25w=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=EFbfLTZ5od0Wjn5tKY7R/Z10X9gSICD8eENBVGvZfhRrP01rvfDTDtQvhbGVoyGp8BNOg78HWTZjjccNmeG9X4HjkY3i3l2ChiTU6KMo1HJl/sBtwCw7VVsjDjFycOoQUTknKISO1b9v/tfQVU7+V7kdaof2hxt5aXwccH4njz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PDlo51WR; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 636LmEwN2316372;
-	Tue, 7 Apr 2026 10:12:55 GMT
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 636LmHLM2302379;
+	Tue, 7 Apr 2026 10:12:59 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pp1; bh=xTGtqdgffUwPNDG0eIqe82vPJHv+
-	sVwRqcemU78j4bM=; b=ng2GJWFstj3w5X/6RwOXXPUvL5bZvBPgBoVbtN2FcUZU
-	umt+hkm9w/OvXtZzo2NE+uz4Y9DEJjxm0qndkAukTM4VPaiBHC9foAzcvACzUdSK
-	YBPKphH4TQuNjTT+5y9Mc4CbApwMWI3w+jvXN05SiQMBWkx5LcIeUYE2UqJOMHvU
-	sTiH7xCalGX+NW/oG44AyDbIhAHbYWEG0pW4/DkqykXu4OgAxP7p303Tc9KBRjfJ
-	yA2WZxdlAKvd2wCQmEBDHGvZ4YfLAf5PTvaw+CEMW8FCeEWTvsxvWSvbmEpL0zDb
-	qu2Td/Z3/ld+7PqWE8dbsC+IxVaMPaHFKUbrkeig6w==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dcn2ftbxn-1
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=2IpPVj
+	REkuBsK+TET1GouWcBspy/bdWhIXHS4LB8pCU=; b=PDlo51WRXlOWa79uoRUnnj
+	BRZ7A93w3HiT9Suqor7Oymv/uBpI7kInuXMc1W+QsH9YP0onEuyju6EfCLt6HkLd
+	KzTzxCDCNuD8i+1HzGMT6ba52AEIBAS2JiB6yJaXHMtVBn8evHrrtluJDOBTts72
+	awheDHs+9PvaTDjTKvsnuswhO7c3x4VgIH0fLGNLsyquxo4iqbFRkbuM1EAkpr5L
+	vwsZjjoRN5KKkSvWiwB1uTRU/s2TbaigXFc0wU2cboBcFlMxJTXHGORjH5tYPQYp
+	mzZUhY7Fz63WHMdYrXtkWJmMNz/coWPHcmvczF1Lmwva/g3xB/LOh1lKWVk4eGqA
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dcn2fac1v-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Apr 2026 10:12:55 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 63793c2b026642;
-	Tue, 7 Apr 2026 10:12:54 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dcmg7t2fg-1
+	Tue, 07 Apr 2026 10:12:58 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 63794luj030068;
+	Tue, 7 Apr 2026 10:12:57 GMT
+Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dcme7a2xj-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Apr 2026 10:12:54 +0000
+	Tue, 07 Apr 2026 10:12:57 +0000
 Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 637ACrjQ64028994
+	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 637ACu4G12124694
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 7 Apr 2026 10:12:53 GMT
+	Tue, 7 Apr 2026 10:12:56 GMT
 Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0CCD358043;
+	by IMSVA (Postfix) with ESMTP id 271CF58059;
+	Tue,  7 Apr 2026 10:12:56 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 47A8658043;
 	Tue,  7 Apr 2026 10:12:53 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 34EDC58080;
-	Tue,  7 Apr 2026 10:12:50 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
 	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  7 Apr 2026 10:12:50 +0000 (GMT)
+	Tue,  7 Apr 2026 10:12:53 +0000 (GMT)
 From: Niklas Schnelle <schnelle@linux.ibm.com>
-Subject: [PATCH v7 0/2] PCI: s390: Expose the UID as an arch specific PCI
- slot attribute
-Date: Tue, 07 Apr 2026 12:12:32 +0200
-Message-Id: <20260407-uid_slot-v7-0-e50f7976124e@linux.ibm.com>
+Date: Tue, 07 Apr 2026 12:12:33 +0200
+Subject: [PATCH v7 1/2] docs: s390/pci: Improve and update PCI
+ documentation
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -82,12 +83,9 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJDY1GkC/23Q3YrDIBAF4FcpXq9l1BmNvdr3WJaiRrdCmyxJG
- 1pK3n1N2R/p5kYY8Ttn8M7GOOQ4st3mzoY45TH3XRnMy4aFg+s+Is9tmZkESWCl4pfc7sdjf+Z
- REdmQKDgFrDz/HGLK10fU23uZD3k898PtkTyJ5XYlZBJccGVIBmdCapx6Pebuct1mf9qG/rTkf
- iN8QmBdBEzYBDJPaGmf5G+jAGgqLAuOScpQDmNQrGFVYUEVVgUjqsY2loLwfg3jH5bCVBgLXv4
- serLeabuG6QdrQBAVpmVto0DpYNAnvYZ1jWWFNQfeUnTgBLat/9c8z/MXOELn/goCAAA=
-X-Change-ID: 20250923-uid_slot-e3559cf5ca30
+Message-Id: <20260407-uid_slot-v7-1-e50f7976124e@linux.ibm.com>
+References: <20260407-uid_slot-v7-0-e50f7976124e@linux.ibm.com>
+In-Reply-To: <20260407-uid_slot-v7-0-e50f7976124e@linux.ibm.com>
 To: Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>,
         Lukas Wunner <lukas@wunner.de>, Shuah Khan <skhan@linuxfoundation.org>
 Cc: Farhan Ali <alifm@linux.ibm.com>,
@@ -105,114 +103,307 @@ Cc: Farhan Ali <alifm@linux.ibm.com>,
         Niklas Schnelle <schnelle@linux.ibm.com>,
         Randy Dunlap <rdunlap@infradead.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1636;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10294;
  i=schnelle@linux.ibm.com; h=from:subject:message-id;
- bh=xMPDe5yarCr8rtAtA/og41ZgZ1Wq8HJO0LpEXG4QDQk=;
- b=owGbwMvMwCX2Wz534YHOJ2GMp9WSGDKv3Ji1ZEKm6p7ntZ91nkUe+nbVy6P3Z5Fh6RP2S4szL
- SMEc7JCO0pZGMS4GGTFFFkWdTn7rSuYYronqL8DZg4rE8gQBi5OAZjIdUZGht+PF+neme8WVi0o
- OSUtgrMrSO2PSb5V7rbVZz7f2lCzhZeR4V+s19Zp0+ZWbJmwyie25SnLt1YD+ffx72PrLTeL9XT
- MZgAA
+ bh=kh9IxItZrBEfaxvMrocqYzgGEA97zbpJLUmSbQyz25w=;
+ b=owGbwMvMwCX2Wz534YHOJ2GMp9WSGDKv3Jgtp+vYsbPnwKt7wa0X5/K/4n9g3DNxh+92r4npD
+ 3IUeWbv7yhlYRDjYpAVU2RZ1OXst65giumeoP4OmDmsTCBDGLg4BWAigqcZGaa8mBn1K/igw/F+
+ IZNVC+P/aBzW0u3bFvHu0/9NDExG884yMjx79Vbd9UN/5asg1sLX97dVbfWpXNefd3Wvke/uwtX
+ 5q/gA
 X-Developer-Key: i=schnelle@linux.ibm.com; a=openpgp;
  fpr=9DB000B2D2752030A5F72DDCAFE43F15E8C26090
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=FKArAeos c=1 sm=1 tr=0 ts=69d4d8a7 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDA3MDA5MCBTYWx0ZWRfXyCFxKpBhfZmk
+ PgUI+6lSk58osoIPDpBfIPoGqxlyHv4NIpT3SvcArNtodh6ylUZc6wM8fNh7mjnY0GtLzD7RosN
+ ffyMu2WpV8ArFe1WEkVR3sqITMOEtYa8OBdQnplyr3NKcmpJY6oDD3WhDL8zcTp+ctBVRVoXGBU
+ JXy8Z3xru53+QU1KI0W6nn4sxR1+ot0H+qcC7qLcuy3a5NM3ClW+xHOMLn54AO+nDT//rYtxHz6
+ JN75motWzMoKLapn2d5/t/dnpie32vXVPpM9/C39B9r8GujSPdEjNVehlMhLnD8/KFWoddMlljH
+ RoSav66AMmD5rI24M5udazf+FiOvmVRcocfD7RvAR1/vADk7HOiS2xWFZ1fiTFORWrwRRBVaYGo
+ DRT9Ao/+YLaJlEzbXBt/OYsSAzc3A6c++cK5yxzC+f2PBAjtJoWvh6orvYLmmFHv0E/IjnqbtQV
+ juaxvwNAS/3ngc0ZHQA==
+X-Authority-Analysis: v=2.4 cv=FsY1OWrq c=1 sm=1 tr=0 ts=69d4d8ab cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
  a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VwQbUJbxAAAA:8
- a=VnNF1IyMAAAA:8 a=jVLf_0g3wJiVkyeFp14A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: O-ORLQeHeb-ymCG8d7KvfqnZyOf8627S
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDA3MDA5MCBTYWx0ZWRfX5ViD6Bs3ZpSU
- eCbuOFYjPm5sYwVyIkjSos4bh8EqQH5M1f3GCuGaZ1Hl4JYs7Dl+/K81nm+ezbfPVX/Yj1YjaCq
- FR5tzDMXByjsu4YCzpc17x89+IhLlZI8OUr0FSKT+4Itxvx/4mQA4WZP+tm0z7n7UD9yTmrySkK
- d+fZe8CWpstwhGoWCAXyAcQihnDXwdI0y6ZwKCgYhsdWnPHeD4OGNDgdlec1VF89Ko5wa4CpFR/
- mSdwMQcNTwdqCKLfbzd3tWwV9O3Svg3/CK9ozIy6xJP0G1ZHFkh4ROndKapGyl6V42mn2/ahA1R
- kQi8yEqjTt0qyLFgJMOdSxZcVgyARk5eRD0iMq6v9n8XOHIXRXNOnhnE6PfGwToalxW+oK1rP23
- kiBiAQRbLMzf+osGdcMap9X4frq1RfjVl6i3+jMYelOV6dMvN2F59qBWCdhRTTTqHZc0wm530DQ
- It6Kn1yyQINxnb004CQ==
-X-Proofpoint-GUID: cKHMFh9Ch_c3p7P_QksklsyN6_383IQM
+ a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8
+ a=JfrnYn6hAAAA:8 a=TOD45aG0oo66aBzYHRIA:9 a=QEXdDO2ut3YA:10 a=O8hF6Hzn-FEA:10
+ a=1CNFftbPRP8L7MoqJWF3:22
+X-Proofpoint-ORIG-GUID: y3KCDtxm_YONqs7VRIJr3MIQ5TmIJD8K
+X-Proofpoint-GUID: q_cTSB3Sm6SIGr2y3upTi18T-NvSw_QS
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-04-07_02,2026-04-07_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 clxscore=1015 lowpriorityscore=0 adultscore=0 bulkscore=0
- suspectscore=0 priorityscore=1501 impostorscore=0 spamscore=0 phishscore=0
+ bulkscore=0 priorityscore=1501 impostorscore=0 spamscore=0 phishscore=0
+ lowpriorityscore=0 clxscore=1011 adultscore=0 malwarescore=0 suspectscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2604010000 definitions=main-2604070090
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	MIME_TRACE(0.00)[0:+];
 	RCPT_COUNT_TWELVE(0.00)[22];
-	TAGGED_FROM(0.00)[bounces-18564-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18566-lists,linux-s390=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[ibm.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.ibm.com:mid];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,infradead.org:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
 	TO_DN_SOME(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[schnelle@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	PRECEDENCE_BULK(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-s390];
 	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 865B23AC9A3
+X-Rspamd-Queue-Id: DAA173ACA1A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi all,
+Update the s390 specific PCI documentation to better reflect current
+behavior and terms such as the handling of Isolated VFs via commit
+25f39d3dcb48 ("s390/pci: Ignore RID for isolated VFs").
 
-Add a mechanism for architecture specific attributes on
-PCI slots in order to add the user-defined ID (UID) as an s390 specific
-PCI slot attribute. First though improve some issues with the s390 specific
-documentation of PCI sysfs attributes noticed during development. 
+Add a descriptions for /sys/firmware/clp/uid_is_unique which was added
+in commit b043a81ce3ee ("s390/pci: Expose firmware provided UID Checking
+state in sysfs") but missed documentation.
 
-Also note, I considered adding the UID as a generic slot index attribute
-analogous to the PCI device index attribute (SMBIOS index / s390 UID)
-but decided against it as this seems rather s390 specific and having
-it named UID makes things easier for users and aligns with the existing
-separate uid device attribute.
+Similarly add documentation for the fidparm attribute added by commit
+99ad39306a62 ("s390/pci: Expose FIDPARM attribute in sysfs") and
+add a list of pft values and their names.
 
-Thanks,
-Niklas
+Finally improve formatting of the different attribute descriptions by
+adding a separating colon.
 
-v6->v7:
-- Incorporate doc suggestions from Randy Dunlap
-- Add R-b, T-b and A-b
-- Rebase on v7.0-rc7
-- Link to v6: https://lore.kernel.org/r/20260402-uid_slot-v6-0-d5ea0a14ddb9@linux.ibm.com
-v5->v6:
-- Add documentation cleanup patch before adding new slot attribute
-- Link to v5: https://lore.kernel.org/r/20260401-uid_slot-v5-1-e73036c74bf6@linux.ibm.com
-
+Reviewed-by: Farhan Ali <alifm@linux.ibm.com>
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Reviewed-by: Matthew Rosato <mjrosato@linux.ibm.com>
 Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
 ---
----
+ Documentation/arch/s390/pci.rst | 144 +++++++++++++++++++++++++++-------------
+ 1 file changed, 97 insertions(+), 47 deletions(-)
 
----
-Niklas Schnelle (2):
-      docs: s390/pci: Improve and update PCI documentation
-      PCI: s390: Expose the UID as an arch specific PCI slot attribute
+diff --git a/Documentation/arch/s390/pci.rst b/Documentation/arch/s390/pci.rst
+index d5755484d8e75c7bf67a350e61bbe04f0452a2fa..8cb0a1e784a7cfc5df1e04a4154ba02c9ecf46cc 100644
+--- a/Documentation/arch/s390/pci.rst
++++ b/Documentation/arch/s390/pci.rst
+@@ -6,6 +6,7 @@ S/390 PCI
+ 
+ Authors:
+         - Pierre Morel
++        - Niklas Schnelle
+ 
+ Copyright, IBM Corp. 2020
+ 
+@@ -27,14 +28,16 @@ Command line parameters
+ debugfs entries
+ ---------------
+ 
+-The S/390 debug feature (s390dbf) generates views to hold various debug results in sysfs directories of the form:
++The S/390 debug feature (s390dbf) generates views to hold various debug results
++in sysfs directories of the form:
+ 
+  * /sys/kernel/debug/s390dbf/pci_*/
+ 
+ For example:
+ 
+   - /sys/kernel/debug/s390dbf/pci_msg/sprintf
+-    Holds messages from the processing of PCI events, like machine check handling
++
++    holds messages from the processing of PCI events, like machine check handling
+     and setting of global functionality, like UID checking.
+ 
+   Change the level of logging to be more or less verbose by piping
+@@ -47,87 +50,134 @@ Sysfs entries
+ 
+ Entries specific to zPCI functions and entries that hold zPCI information.
+ 
+-* /sys/bus/pci/slots/XXXXXXXX
++* /sys/bus/pci/slots/XXXXXXXX:
+ 
+-  The slot entries are set up using the function identifier (FID) of the
+-  PCI function. The format depicted as XXXXXXXX above is 8 hexadecimal digits
+-  with 0 padding and lower case hexadecimal digits.
++  The slot entries are set up using the function identifier (FID) of the PCI
++  function as slot name. The format depicted as XXXXXXXX above is 8 hexadecimal
++  digits with 0 padding and lower case hexadecimal digits.
+ 
+   - /sys/bus/pci/slots/XXXXXXXX/power
+ 
+   A physical function that currently supports a virtual function cannot be
+   powered off until all virtual functions are removed with:
+-  echo 0 > /sys/bus/pci/devices/XXXX:XX:XX.X/sriov_numvf
++  echo 0 > /sys/bus/pci/devices/DDDD:BB:dd.f/sriov_numvf
+ 
+-* /sys/bus/pci/devices/XXXX:XX:XX.X/
++* /sys/bus/pci/devices/DDDD:BB:dd.f/:
+ 
+-  - function_id
+-    A zPCI function identifier that uniquely identifies the function in the Z server.
++  - function_id:
++    The zPCI function identifier (FID) is a 32-bit hexadecimal value that
++    uniquely identifies the PCI function. Unless the hypervisor provides
++    a virtual FID e.g. on KVM this identifier is unique across the machine even
++    between different partitions.
+ 
+-  - function_handle
+-    Low-level identifier used for a configured PCI function.
+-    It might be useful for debugging.
++  - function_handle:
++    This 32-bit hexadecimal value is a low-level identifier used for a PCI
++    function. Note that the function handle may be changed and become invalid
++    on PCI events and when enabling/disabling the PCI function.
+ 
+-  - pchid
+-    Model-dependent location of the I/O adapter.
++  - pchid:
++    This 16-bit hexadecimal value encodes a model-dependent location for
++    the PCI function.
+ 
+-  - pfgid
+-    PCI function group ID, functions that share identical functionality
++  - pfgid:
++    PCI function group ID; functions that share identical functionality
+     use a common identifier.
+     A PCI group defines interrupts, IOMMU, IOTLB, and DMA specifics.
+ 
+-  - vfn
++  - vfn:
+     The virtual function number, from 1 to N for virtual functions,
+     0 for physical functions.
+ 
+-  - pft
+-    The PCI function type
++  - pft:
++    The PCI function type is an s390-specific type attribute. It indicates
++    a more general, usage oriented, type than PCI Specification
++    class/vendor/device identifiers. That is PCI functions with the same pft
++    value may be backed by different hardware implementations. At the same time
++    apart from unclassified functions (pft is 0x00) the same pft value
++    generally implies a similar usage model. At the same time the same
++    PCI hardware device may appear with different pft values when in a
++    different usage model. For example NETD and NETH VFs may be implemented
++    by the same PCI hardware device but in NETD the parent Physical Function
++    is user managed while with NETH it is platform managed.
+ 
+-  - port
+-    The port corresponds to the physical port the function is attached to.
+-    It also gives an indication of the physical function a virtual function
+-    is attached to.
++    Currently the following PFT values are defined:
+ 
+-  - uid
+-    The user identifier (UID) may be defined as part of the machine
+-    configuration or the z/VM or KVM guest configuration. If the accompanying
+-    uid_is_unique attribute is 1 the platform guarantees that the UID is unique
+-    within that instance and no devices with the same UID can be attached
+-    during the lifetime of the system.
++    - 0x00 (UNC): Unclassified
++    - 0x02 (ROCE): RoCE Express
++    - 0x05 (ISM): Internal Shared Memory
++    - 0x0a (ROC2): RoCE Express 2
++    - 0x0b (NVMe): NVMe
++    - 0x0c (NETH): Network Express hybrid
++    - 0x0d (CNW): Cloud Network Adapter
++    - 0x0f (NETD): Network Express direct
+ 
+-  - uid_is_unique
+-    Indicates whether the user identifier (UID) is guaranteed to be and remain
+-    unique within this Linux instance.
++  - port:
++    The port is a decimal value corresponding to the physical port the function
++    is attached to. Virtual Functions (VFs) share the port with their parent
++    Physical Function (PF). A value of 0 indicates that the port attribute is
++    not applicable for that PCI function type.
+ 
+-  - pfip/segmentX
++  - uid:
++    The user-defined identifier (UID) for a PCI function is a 32-bit
++    hexadecimal value. It is defined on a per instance basis as part of the
++    partition, KVM guest, or z/VM guest configuration. If UID Checking is
++    enabled the platform ensures that the UID is unique within that instance
++    and no two PCI functions with the same UID will be visible to the instance.
++
++    Independent of this guarantee and unlike the function ID (FID) the UID may
++    be the same in different partitions within the same machine. This allows to
++    create PCI configurations in multiple partitions to be identical in the
++    UID-namespace.
++
++  - uid_is_unique:
++    A 0 or 1 flag indicating whether the user-defined identifier (UID) is
++    guaranteed to be and remain unique within this Linux instance. This
++    platform feature is called UID Checking.
++
++  - pfip/segmentX:
+     The segments determine the isolation of a function.
+     They correspond to the physical path to the function.
+     The more the segments are different, the more the functions are isolated.
+ 
++  - fidparm:
++    Contains an 8-bit-per-PCI function parameter field in hexadecimal provided
++    by the platform. The meaning of this field is PCI function type specific.
++    For NETH VFs a value of 0x01 indicates that the function supports
++    promiscuous mode.
++
++* /sys/firmware/clp/uid_is_unique:
++
++  In addition to the per-device uid_is_unique attribute this presents a
++  global indication of whether UID Checking is enabled. This allows users
++  to check for UID Checking even when no PCI functions are configured.
++
+ Enumeration and hotplug
+ =======================
+ 
+ The PCI address consists of four parts: domain, bus, device and function,
+-and is of this form: DDDD:BB:dd.f
++and is of this form: DDDD:BB:dd.f.
+ 
+-* When not using multi-functions (norid is set, or the firmware does not
+-  support multi-functions):
++* For a PCI function for which the platform does not expose the RID, the
++  pci=norid kernel parameter is used, or a so-called isolated Virtual Function
++  which does have RID information but is used without its parent Physical
++  Function being part of the same PCI configuration:
+ 
+   - There is only one function per domain.
+ 
+-  - The domain is set from the zPCI function's UID as defined during the
+-    LPAR creation.
++  - The domain is set from the zPCI function's UID if UID Checking is on;
++    otherwise the domain ID is generated dynamically and is not stable
++    across reboots or hot plug.
+ 
+-* When using multi-functions (norid parameter is not set),
+-  zPCI functions are addressed differently:
++* For a PCI function for which the platform exposes the RID and which
++  is not an Isolated Virtual Function:
+ 
+   - There is still only one bus per domain.
+ 
+-  - There can be up to 256 functions per bus.
++  - There can be up to 256 PCI functions per bus.
+ 
+-  - The domain part of the address of all functions for
+-    a multi-Function device is set from the zPCI function's UID as defined
+-    in the LPAR creation for the function zero.
++  - The domain part of the address of all functions within the same topology is
++    that of the configured PCI function with the lowest devfn within that
++    topology.
+ 
+-  - New functions will only be ready for use after the function zero
+-    (the function with devfn 0) has been enumerated.
++  - Virtual Functions generated by an SR-IOV capable Physical Function only
++    become visible once SR-IOV is enabled.
 
- Documentation/arch/s390/pci.rst | 151 +++++++++++++++++++++++++++-------------
- arch/s390/include/asm/pci.h     |   4 ++
- arch/s390/pci/pci_sysfs.c       |  20 ++++++
- drivers/pci/slot.c              |  13 +++-
- 4 files changed, 140 insertions(+), 48 deletions(-)
----
-base-commit: 591cd656a1bf5ea94a222af5ef2ee76df029c1d2
-change-id: 20250923-uid_slot-e3559cf5ca30
-
-Best regards,
 -- 
-Niklas Schnelle
+2.51.0
 
 
