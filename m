@@ -1,142 +1,261 @@
-Return-Path: <linux-s390+bounces-18741-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18729-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kHFVMNsZ2WkNmQgAu9opvQ
-	(envelope-from <linux-s390+bounces-18741-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Apr 2026 17:40:11 +0200
+	id UJf1CSMX2Wm7lwgAu9opvQ
+	(envelope-from <linux-s390+bounces-18729-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Apr 2026 17:28:35 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 894503D9802
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Apr 2026 17:40:11 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F61C3D9490
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Apr 2026 17:28:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 58DE530958B6
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Apr 2026 15:29:27 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 9F8823076947
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Apr 2026 15:19:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5F2C3E9F7A;
-	Fri, 10 Apr 2026 15:20:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF4393DC4DF;
+	Fri, 10 Apr 2026 15:18:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="VM9pR3FU"
+	dkim=pass (2048-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="tSZeKLZM"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from iad-out-012.esa.us-east-1.outbound.mail-perimeter.amazon.com (iad-out-012.esa.us-east-1.outbound.mail-perimeter.amazon.com [34.197.10.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ACD63E95BD
-	for <linux-s390@vger.kernel.org>; Fri, 10 Apr 2026 15:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2152F3DA7F7;
+	Fri, 10 Apr 2026 15:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.197.10.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775834452; cv=none; b=TXG2fPj4PWX+dsUDioo/uYxEq2ucaOjwZOZLr64Claj/OtA+wiRh5lQ7Gi636+aiTyQ1ZYbC2+VPHVJBUzdWSfefsUs9nzNSyOI7a59BMbeMcqB5VBd94Ld4TbDtRiBLWMqwWZQoMTPT9WmOBH0hCz35JLkWEfCCs4YfbB5Y0PQ=
+	t=1775834327; cv=none; b=OocPQM05aBhj/7DS854SBR3MN7hFX0QZcLbzTrjd7s0O97rTFqyuakIdx6mwrN2tad1PNNaQUWX6U6pJQqRXYS29ozr9TMCv9Hb31t63XYErFHWov8JORzdSnWjTUqThYFA/ar8IcI+p7BffQh0d1lrAuk3mP+jORLcaX6XoP8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775834452; c=relaxed/simple;
-	bh=2PJcapuxUWWHQgHKuYh+AB0Bg9+uWPE8WWtuj/kl/pY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=t4u3QgtoHs1bJmYOGr9/U/CqNBQfY6+DqncWONj0wG+WoaSXqc0SO0u+CppNP+0MLQNpAKNz5JTcxU1fCQa/RYKmyprTV+2Lc/gQXrOK1qgFgoUQm1WNHqUgwHZxoWgrtDu+2HkYZwd7mBSuVezsmdO83cTFBPe2jrVOKkdwqXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=VM9pR3FU; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
-Received: from trampoline.thunk.org (pool-173-48-116-90.bstnma.fios.verizon.net [173.48.116.90])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 63AFIonm015842
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 10 Apr 2026 11:18:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1775834338; bh=eTlXD+fEi5OyNbu4TxRTwpDmEzFd2ThBwniicSqJG9M=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=VM9pR3FUqiyu4dGQLYjxtn5fwtIzfU7ySZMp0abbH18xV6/gDABRi9uB743lXz8hh
-	 DLg+D58JGiw6cmfTe96qrNZsfI1LrX8CH4Z4SZsryjUI4LnJNSYnME68kmTAWN0bac
-	 +APmObxjmRctPfSGmHJbriSXfrkN55pWYIbiVRfu2y0ECqpOPHSJun6K+BHM+LkVI2
-	 DM7T+QYmlRWbU/sqPlO03FdXluf2F9iRmmuiDmCsbPLwL4U9izV2zs90P/AyWnNi7/
-	 WJE2W3FtW9KojAgen2wKI5w3YJJGh4CS8IuF5T47bMgUta6WPQzUW9F7QaunmIRgXz
-	 enYXQQPwNnobw==
-Received: by trampoline.thunk.org (Postfix, from userid 15806)
-	id 0D7462E00E1; Fri, 10 Apr 2026 11:18:48 -0400 (EDT)
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com,
-        bpf@vger.kernel.org, ceph-devel@vger.kernel.org, cocci@inria.fr,
-        dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org,
-        gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org,
-        intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-mm@kvack.org,
-        linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-phy@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        ntfs3@lists.linux.dev, samba-technical@lists.samba.org,
-        sched-ext@lists.linux.dev, target-devel@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev,
-        Philipp Hahn <phahn-oss@avm.de>
-Cc: "Theodore Ts'o" <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>
-Subject: Re: [PATCH 04/61] ext4: Prefer IS_ERR_OR_NULL over manual NULL check
-Date: Fri, 10 Apr 2026 11:18:40 -0400
-Message-ID: <177583430870.2758959.6171961359325912353.b4-ty@b4>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260310-b4-is_err_or_null-v1-4-bd63b656022d@avm.de>
-References: <20260310-b4-is_err_or_null-v1-4-bd63b656022d@avm.de>
+	s=arc-20240116; t=1775834327; c=relaxed/simple;
+	bh=0ZUwZlXV0hDJ6090PKknS2vdFy+ok+C/vMrImjdoaq8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=mQbBi/xC3yj/vrdGejLNMBNWfBOZwfKecPRt5VERxvruaPL7CAfRZXV7/dh55vrJ1wwmvSK5HblBEBs7mz3D7Iv9Y5pZx22ElwyHqTgTRxnQfAy7OC2NGyrhufUDqn6k7cYNF7yU9RwINdNfdscWVU5u8Mv8LYYAdejcLuwM6hI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (2048-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=tSZeKLZM; arc=none smtp.client-ip=34.197.10.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
+  s=amazoncorp2; t=1775834326; x=1807370326;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=6rramw02zFfaQ/VTWivc4Tqh7KGk0PsNNXj8pjM5nD8=;
+  b=tSZeKLZMawo9jtONrZErBPL6fWQFrmb5FrCZSfwzFxVdsCBXje9S213K
+   b59kUpWjnc4JTfxDNqE3IzcIPRfjXIzWCcZk/5t9v2vVOUHZ/HavfHxfH
+   QFzSPJMVricx12htMZXlcZq3w9ZCOUHjYPVmU4BHYOSuyKDFfD7iULLEz
+   1CpjdJl71LOizFgh//1VVm7dFaZz/rdtdKTLU/tNy2MdNd+wS11rg09nx
+   mwmm3HmKHA18HfQtlll0r7u8G8s2hZ1CoQJdcyD+5ev0lPm0/WLEu2dSu
+   FxXS/m4e02X6fTrHcHA8trDrBjBvpYWaUpK9mZJ8Yg9kA2+y4K0rBT3BM
+   g==;
+X-CSE-ConnectionGUID: yToEaIXKRYmG7oPx4P8CLw==
+X-CSE-MsgGUID: kwtkzB/GQkmjo48FL84lPw==
+X-IronPort-AV: E=Sophos;i="6.23,171,1770595200"; 
+   d="scan'208";a="15710859"
+Received: from ip-10-4-7-229.ec2.internal (HELO smtpout.naws.us-east-1.prod.farcaster.email.amazon.dev) ([10.4.7.229])
+  by internal-iad-out-012.esa.us-east-1.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2026 15:18:42 +0000
+Received: from EX19MTAUEC002.ant.amazon.com [72.21.198.66:30402]
+ by smtpin.naws.us-east-1.prod.farcaster.email.amazon.dev [10.0.32.14:2525] with esmtp (Farcaster)
+ id fba8fd5c-1716-4384-b576-8dedd695907e; Fri, 10 Apr 2026 15:18:42 +0000 (UTC)
+X-Farcaster-Flow-ID: fba8fd5c-1716-4384-b576-8dedd695907e
+Received: from EX19D027UEC002.ant.amazon.com (10.252.137.166) by
+ EX19MTAUEC002.ant.amazon.com (10.252.135.253) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37;
+ Fri, 10 Apr 2026 15:18:42 +0000
+Received: from EX19D027UEC003.ant.amazon.com (10.252.137.250) by
+ EX19D027UEC002.ant.amazon.com (10.252.137.166) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37;
+ Fri, 10 Apr 2026 15:18:41 +0000
+Received: from EX19D027UEC003.ant.amazon.com ([fe80::887f:519b:ba73:21d]) by
+ EX19D027UEC003.ant.amazon.com ([fe80::887f:519b:ba73:21d%3]) with mapi id
+ 15.02.2562.037; Fri, 10 Apr 2026 15:18:41 +0000
+From: "Kalyazin, Nikita" <kalyazin@amazon.co.uk>
+To: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "kvmarm@lists.linux.dev"
+	<kvmarm@lists.linux.dev>, "linux-fsdevel@vger.kernel.org"
+	<linux-fsdevel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+	"kernel@xen0n.name" <kernel@xen0n.name>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "linux-s390@vger.kernel.org"
+	<linux-s390@vger.kernel.org>, "loongarch@lists.linux.dev"
+	<loongarch@lists.linux.dev>, "linux-pm@vger.kernel.org"
+	<linux-pm@vger.kernel.org>
+CC: "pbonzini@redhat.com" <pbonzini@redhat.com>, "corbet@lwn.net"
+	<corbet@lwn.net>, "maz@kernel.org" <maz@kernel.org>, "oupton@kernel.org"
+	<oupton@kernel.org>, "joey.gouly@arm.com" <joey.gouly@arm.com>,
+	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, "yuzenghui@huawei.com"
+	<yuzenghui@huawei.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"will@kernel.org" <will@kernel.org>, "seanjc@google.com" <seanjc@google.com>,
+	"tglx@kernel.org" <tglx@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
+	"bp@alien8.de" <bp@alien8.de>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>,
+	"hpa@zytor.com" <hpa@zytor.com>, "luto@kernel.org" <luto@kernel.org>,
+	"peterz@infradead.org" <peterz@infradead.org>, "willy@infradead.org"
+	<willy@infradead.org>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>, "david@kernel.org" <david@kernel.org>,
+	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>,
+	"vbabka@kernel.org" <vbabka@kernel.org>, "rppt@kernel.org" <rppt@kernel.org>,
+	"surenb@google.com" <surenb@google.com>, "mhocko@suse.com" <mhocko@suse.com>,
+	"ast@kernel.org" <ast@kernel.org>, "daniel@iogearbox.net"
+	<daniel@iogearbox.net>, "andrii@kernel.org" <andrii@kernel.org>,
+	"martin.lau@linux.dev" <martin.lau@linux.dev>, "eddyz87@gmail.com"
+	<eddyz87@gmail.com>, "song@kernel.org" <song@kernel.org>,
+	"yonghong.song@linux.dev" <yonghong.song@linux.dev>,
+	"john.fastabend@gmail.com" <john.fastabend@gmail.com>, "kpsingh@kernel.org"
+	<kpsingh@kernel.org>, "sdf@fomichev.me" <sdf@fomichev.me>,
+	"haoluo@google.com" <haoluo@google.com>, "jolsa@kernel.org"
+	<jolsa@kernel.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>, "jhubbard@nvidia.com"
+	<jhubbard@nvidia.com>, "peterx@redhat.com" <peterx@redhat.com>,
+	"jannh@google.com" <jannh@google.com>, "pfalcato@suse.de" <pfalcato@suse.de>,
+	"skhan@linuxfoundation.org" <skhan@linuxfoundation.org>, "riel@surriel.com"
+	<riel@surriel.com>, "ryan.roberts@arm.com" <ryan.roberts@arm.com>,
+	"jgross@suse.com" <jgross@suse.com>, "yu-cheng.yu@intel.com"
+	<yu-cheng.yu@intel.com>, "kas@kernel.org" <kas@kernel.org>, "coxu@redhat.com"
+	<coxu@redhat.com>, "ackerleytng@google.com" <ackerleytng@google.com>,
+	"yosry@kernel.org" <yosry@kernel.org>, "ajones@ventanamicro.com"
+	<ajones@ventanamicro.com>, "maobibo@loongson.cn" <maobibo@loongson.cn>,
+	"tabba@google.com" <tabba@google.com>, "prsampat@amd.com" <prsampat@amd.com>,
+	"wu.fei9@sanechips.com.cn" <wu.fei9@sanechips.com.cn>, "mlevitsk@redhat.com"
+	<mlevitsk@redhat.com>, "jmattson@google.com" <jmattson@google.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "agordeev@linux.ibm.com"
+	<agordeev@linux.ibm.com>, "alex@ghiti.fr" <alex@ghiti.fr>,
+	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "borntraeger@linux.ibm.com"
+	<borntraeger@linux.ibm.com>, "chenhuacai@kernel.org" <chenhuacai@kernel.org>,
+	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>, "dev.jain@arm.com"
+	<dev.jain@arm.com>, "gor@linux.ibm.com" <gor@linux.ibm.com>,
+	"hca@linux.ibm.com" <hca@linux.ibm.com>, "palmer@dabbelt.com"
+	<palmer@dabbelt.com>, "pjw@kernel.org" <pjw@kernel.org>,
+	"shijie@os.amperecomputing.com" <shijie@os.amperecomputing.com>,
+	"svens@linux.ibm.com" <svens@linux.ibm.com>, "thuth@redhat.com"
+	<thuth@redhat.com>, "yang@os.amperecomputing.com"
+	<yang@os.amperecomputing.com>, "Liam.Howlett@oracle.com"
+	<Liam.Howlett@oracle.com>, "urezki@gmail.com" <urezki@gmail.com>,
+	"zhengqi.arch@bytedance.com" <zhengqi.arch@bytedance.com>,
+	"gerald.schaefer@linux.ibm.com" <gerald.schaefer@linux.ibm.com>,
+	"jiayuan.chen@shopee.com" <jiayuan.chen@shopee.com>, "lenb@kernel.org"
+	<lenb@kernel.org>, "pavel@kernel.org" <pavel@kernel.org>, "rafael@kernel.org"
+	<rafael@kernel.org>, "yangyicong@hisilicon.com" <yangyicong@hisilicon.com>,
+	"vannapurve@google.com" <vannapurve@google.com>, "jackmanb@google.com"
+	<jackmanb@google.com>, "patrick.roy@linux.dev" <patrick.roy@linux.dev>,
+	"Thomson, Jack" <jackabt@amazon.co.uk>, "Itazuri, Takahiro"
+	<itazur@amazon.co.uk>, "Manwaring, Derek" <derekmn@amazon.com>, "Kalyazin,
+ Nikita" <kalyazin@amazon.co.uk>
+Subject: [PATCH v12 05/16] mm/gup: drop local variable in
+ gup_fast_folio_allowed
+Thread-Topic: [PATCH v12 05/16] mm/gup: drop local variable in
+ gup_fast_folio_allowed
+Thread-Index: AQHcyP1QmbwBcUnJSEGr91ll3sDzdg==
+Date: Fri, 10 Apr 2026 15:18:41 +0000
+Message-ID: <20260410151746.61150-6-kalyazin@amazon.com>
+References: <20260410151746.61150-1-kalyazin@amazon.com>
+In-Reply-To: <20260410151746.61150-1-kalyazin@amazon.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [-7.66 / 15.00];
+	WHITELIST_DMARC(-7.00)[amazon.co.uk:D:+];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[mit.edu,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[mit.edu:s=outgoing];
+	DMARC_POLICY_ALLOW(-0.50)[amazon.co.uk,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[amazon.co.uk:s=amazoncorp2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18741-lists,linux-s390=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[redhat.com,lwn.net,kernel.org,arm.com,huawei.com,google.com,alien8.de,linux.intel.com,zytor.com,infradead.org,linux-foundation.org,oracle.com,suse.com,iogearbox.net,linux.dev,gmail.com,fomichev.me,ziepe.ca,nvidia.com,suse.de,linuxfoundation.org,surriel.com,intel.com,ventanamicro.com,loongson.cn,amd.com,sanechips.com.cn,linux.ibm.com,ghiti.fr,eecs.berkeley.edu,dabbelt.com,os.amperecomputing.com,bytedance.com,shopee.com,hisilicon.com,amazon.co.uk,amazon.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,amazon.co.uk:dkim];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[mit.edu:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18729-lists,linux-s390=lfdr.de];
 	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[amazon.co.uk:+];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[tytso@mit.edu,linux-s390@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[kalyazin@amazon.co.uk,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_GT_50(0.00)[56];
+	RCPT_COUNT_GT_50(0.00)[105];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 894503D9802
+	NEURAL_HAM(-0.00)[-1.000];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[8]
+X-Rspamd-Queue-Id: 1F61C3D9490
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-
-On Tue, 10 Mar 2026 12:48:30 +0100, Philipp Hahn wrote:
-> Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
-> check.
-> 
-> Change generated with coccinelle.
-
-Applied, thanks!
-
-[04/61] ext4: Prefer IS_ERR_OR_NULL over manual NULL check
-        commit: 1d749e110277ce4103f27bd60d6181e52c0cc1e3
-
-Best regards,
--- 
-Theodore Ts'o <tytso@mit.edu>
+From: Nikita Kalyazin <nikita.kalyazin@linux.dev>=0A=
+=0A=
+Move the check for pinning closer to where the result is used.=0A=
+No functional changes.=0A=
+=0A=
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>=0A=
+Signed-off-by: Nikita Kalyazin <nikita.kalyazin@linux.dev>=0A=
+---=0A=
+ mm/gup.c | 23 ++++++++++++-----------=0A=
+ 1 file changed, 12 insertions(+), 11 deletions(-)=0A=
+=0A=
+diff --git a/mm/gup.c b/mm/gup.c=0A=
+index e8367564d636..41eb64783e03 100644=0A=
+--- a/mm/gup.c=0A=
++++ b/mm/gup.c=0A=
+@@ -2737,18 +2737,9 @@ EXPORT_SYMBOL(get_user_pages_unlocked);=0A=
+  */=0A=
+ static bool gup_fast_folio_allowed(struct folio *folio, unsigned int flags=
+)=0A=
+ {=0A=
+-	bool reject_file_backed =3D false;=0A=
+ 	struct address_space *mapping;=0A=
+ 	unsigned long mapping_flags;=0A=
+ =0A=
+-	/*=0A=
+-	 * If we aren't pinning then no problematic write can occur. A long term=
+=0A=
+-	 * pin is the most egregious case so this is the one we disallow.=0A=
+-	 */=0A=
+-	if ((flags & (FOLL_PIN | FOLL_LONGTERM | FOLL_WRITE)) =3D=3D=0A=
+-	    (FOLL_PIN | FOLL_LONGTERM | FOLL_WRITE))=0A=
+-		reject_file_backed =3D true;=0A=
+-=0A=
+ 	/* We hold a folio reference, so we can safely access folio fields. */=0A=
+ 	if (WARN_ON_ONCE(folio_test_slab(folio)))=0A=
+ 		return false;=0A=
+@@ -2797,8 +2788,18 @@ static bool gup_fast_folio_allowed(struct folio *fol=
+io, unsigned int flags)=0A=
+ 	 */=0A=
+ 	if (secretmem_mapping(mapping))=0A=
+ 		return false;=0A=
+-	/* The only remaining allowed file system is shmem. */=0A=
+-	return !reject_file_backed || shmem_mapping(mapping);=0A=
++=0A=
++	/*=0A=
++	 * If we aren't pinning then no problematic write can occur. A writable=
+=0A=
++	 * long term pin is the most egregious case, so this is the one we=0A=
++	 * allow only for ...=0A=
++	 */=0A=
++	if ((flags & (FOLL_PIN | FOLL_LONGTERM | FOLL_WRITE)) !=3D=0A=
++	    (FOLL_PIN | FOLL_LONGTERM | FOLL_WRITE))=0A=
++		return true;=0A=
++=0A=
++	/* ... hugetlb (which we allowed above already) and shared memory. */=0A=
++	return shmem_mapping(mapping);=0A=
+ }=0A=
+ =0A=
+ #ifdef CONFIG_ARCH_HAS_PTE_SPECIAL=0A=
+-- =0A=
+2.50.1=0A=
+=0A=
 
