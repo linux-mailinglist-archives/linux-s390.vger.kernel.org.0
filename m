@@ -1,72 +1,72 @@
-Return-Path: <linux-s390+bounces-18746-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18747-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2PO6N4kc2WmLmQgAu9opvQ
-	(envelope-from <linux-s390+bounces-18746-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Apr 2026 17:51:37 +0200
+	id qKbNEMAa2Wk1mQgAu9opvQ
+	(envelope-from <linux-s390+bounces-18747-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Apr 2026 17:44:00 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id B15AF3D9C38
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Apr 2026 17:51:37 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D0283D9982
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Apr 2026 17:43:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id AADD9306077B
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Apr 2026 15:33:46 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 615A5325B467
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Apr 2026 15:34:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBC263DD507;
-	Fri, 10 Apr 2026 15:26:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F050C3E4C60;
+	Fri, 10 Apr 2026 15:27:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="qvuHQpil"
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="CcIi3iYN"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from iad-out-015.esa.us-east-1.outbound.mail-perimeter.amazon.com (iad-out-015.esa.us-east-1.outbound.mail-perimeter.amazon.com [44.210.169.44])
+Received: from iad-out-007.esa.us-east-1.outbound.mail-perimeter.amazon.com (iad-out-007.esa.us-east-1.outbound.mail-perimeter.amazon.com [3.221.209.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02513DA5A0;
-	Fri, 10 Apr 2026 15:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.210.169.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BE63E3DAC;
+	Fri, 10 Apr 2026 15:27:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.221.209.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775834797; cv=none; b=cGVTNKl6V5sYlRaMA/r5qSGQx9TyYFYW7OjjelX7t4HN+mkSE74g8tizbASqyP7JVWEZdMkfjI7IYQUA7JBUk+wfYXkqJ9dUqXhnzlFhCNGtCzOQwNu54Ds6hEKt3v7NRYjlgs5BpAOBKtANgXtZkzk3KpCD3RNKXUBZiHrGgwc=
+	t=1775834826; cv=none; b=riHdh0oxmCn8KdsmbCiHDVG/4ILN9PZQV8J81EEXV8a6YbN9OrN7/jztuNt5kQ1afUxCBFLMLXYyPr27MonwVnY9lsvIFF88WMK3v1zQNCp00xM4zTyFTxeSpKOyOk9vX/1DH34pYvfMVDp/x4SxS45/xqDUsgFHdwdRCXsA8JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775834797; c=relaxed/simple;
-	bh=mmE//1p8nPEGWitOAIc365lAqJo76uGSAWl3Vhpi1Ds=;
+	s=arc-20240116; t=1775834826; c=relaxed/simple;
+	bh=szA8egPzOY8OgLKL+8qAoC4/LyFsfkY0RLZUw1/YyFM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Kj4zhmYqBpFJFRkReYH/pg9VnYBJurmuCPTVRmiQm5IAWBhNFkrYMSmrR2oHTb0oulFrWk16MrpKYKJJowR9AZn3L53rkK8LGFFMNMPfQGJ3GlJLXIacPCOImyDQgUoar2Pl+wiZQ6jz0l+xHDhENSMlLuwebQbAVpyahKQ1wm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=qvuHQpil; arc=none smtp.client-ip=44.210.169.44
+	 In-Reply-To:Content-Type; b=kIxOHnmFGx8+yNiVRdlWDgALsbiLEwRjmuEPHUC5AV5C9WrkpzDJM8XEZfu0F0rmq7xZ1zB1K3gecUdZLnCJm8YIqfhJb2jgLKGQQHmdT+51EYpdBu1gZfzKzfWWM0qz+YJlHO/wUJL0JdrB5w4y3HLoo7Hg2puEZMBZmXHEZbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=CcIi3iYN; arc=none smtp.client-ip=3.221.209.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1775834796; x=1807370796;
+  t=1775834825; x=1807370825;
   h=message-id:date:mime-version:reply-to:subject:to:cc:
    references:from:in-reply-to:content-transfer-encoding;
-  bh=VmQVOaKe4OHBy7s0WhO7CpJe9iNWFuij3fj2r7HhWw8=;
-  b=qvuHQpilNtgVxP+Wyl9P1APDXwARD4Y0/XlJy3ZVg+hMppy3UsJtAvyg
-   hjDxWPro8czv1sUbroESQvOTYjVOHb9pa4MrJTT4vyB5rBgc3L+A5AYfh
-   bkfl55akbcCMinFGuEmpgriHLSLcODNkXuKZ87NSJjXaSRpoDcDzpV1aw
-   ySN9xAZwzHpbsfuv5fupsR1kuWRcC/AOGfdlWn28ehfHaQUFNTI+gjLGe
-   SdeoZfl00qxvQOE80J8NQfpeEO1+0IHfe4EBjPcx481YIMpuEc45VIgVD
-   8so1RVwJwECjfkWbd2RqgR/+4u7ojy2v8pymhRUQPZY1y41vwF6k+k3mG
-   g==;
-X-CSE-ConnectionGUID: K//6lZflQx6l49/Ly7Z2sw==
-X-CSE-MsgGUID: Slw79NhtR2Ssxb4gST/A0A==
+  bh=DewD7DK1ob/bc268SFd2/qF7WsGADICns3g/XEuN0nA=;
+  b=CcIi3iYNLNgCSH931M2mLbVfDN/1PKcADwlSVhMgzne3oO1c4DlY51tT
+   rQz1NTeTlin3b6Xu5c4eDXEysORinjS0Noip0N+o6Quh4nZQWxIPz+evw
+   05X46htZsa6KrCag1ZWWuC5s5M5SPF6SYqhUItr+fdTa8ORqbKz/VoHcN
+   s3vMtsbfFQt9zenxvgZBNph1nVjWXImw0/eTfchgQGT0oMflEbuJbsu02
+   jCfUF5gJLswsiuVifmGfoYtEow/F/fMlUKYo0rJu6y2rZwbI3mAJw5pNn
+   vJ8i6YNlBIv2Lub1GOy8sHSixMC0L0X5DbIIexLffGeLoQxGihh7hb7cq
+   A==;
+X-CSE-ConnectionGUID: gI4/W2RwTOG1O7PgCTUhgw==
+X-CSE-MsgGUID: BLc77vy4SnqTbMYl2NOT7w==
 X-IronPort-AV: E=Sophos;i="6.23,171,1770595200"; 
-   d="scan'208";a="15420052"
+   d="scan'208";a="15990465"
 Received: from ip-10-4-3-150.ec2.internal (HELO smtpout.naws.us-east-1.prod.farcaster.email.amazon.dev) ([10.4.3.150])
-  by internal-iad-out-015.esa.us-east-1.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2026 15:26:35 +0000
-Received: from EX19MTAUEB001.ant.amazon.com [72.21.198.67:20384]
- by smtpin.naws.us-east-1.prod.farcaster.email.amazon.dev [10.0.29.254:2525] with esmtp (Farcaster)
- id ad4b6a99-5cf6-4fde-8f55-cfde01d49a91; Fri, 10 Apr 2026 15:26:34 +0000 (UTC)
-X-Farcaster-Flow-ID: ad4b6a99-5cf6-4fde-8f55-cfde01d49a91
+  by internal-iad-out-007.esa.us-east-1.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2026 15:27:04 +0000
+Received: from EX19MTAUEA002.ant.amazon.com [52.94.133.129:20620]
+ by smtpin.naws.us-east-1.prod.farcaster.email.amazon.dev [10.0.46.155:2525] with esmtp (Farcaster)
+ id a191a26b-32aa-4efa-af7e-55c66dfde52b; Fri, 10 Apr 2026 15:27:03 +0000 (UTC)
+X-Farcaster-Flow-ID: a191a26b-32aa-4efa-af7e-55c66dfde52b
 Received: from EX19D027UEC003.ant.amazon.com (10.252.137.250) by
- EX19MTAUEB001.ant.amazon.com (10.252.135.108) with Microsoft SMTP Server
+ EX19MTAUEA002.ant.amazon.com (10.252.134.9) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37;
- Fri, 10 Apr 2026 15:26:34 +0000
+ Fri, 10 Apr 2026 15:26:58 +0000
 Received: from [192.168.12.97] (10.106.82.30) by EX19D027UEC003.ant.amazon.com
  (10.252.137.250) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37; Fri, 10 Apr 2026
- 15:26:22 +0000
-Message-ID: <c881f3c8-67d6-41b2-a3c4-498f1df40368@amazon.com>
-Date: Fri, 10 Apr 2026 16:26:20 +0100
+ 15:26:45 +0000
+Message-ID: <453fb48d-0f68-4947-bf9a-c2c9b017162d@amazon.com>
+Date: Fri, 10 Apr 2026 16:26:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -77,7 +77,7 @@ User-Agent: Mozilla Thunderbird
 Reply-To: <kalyazin@amazon.com>
 Subject: Re: [PATCH v11 03/16] mm/secretmem: make use of folio_{zap,
  restore}_direct_map
-To: "David Hildenbrand (Arm)" <david@kernel.org>, "Kalyazin, Nikita"
+To: Ackerley Tng <ackerleytng@google.com>, "Kalyazin, Nikita"
 	<kalyazin@amazon.co.uk>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
 	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
@@ -104,13 +104,14 @@ CC: "pbonzini@redhat.com" <pbonzini@redhat.com>, "corbet@lwn.net"
 	"hpa@zytor.com" <hpa@zytor.com>, "luto@kernel.org" <luto@kernel.org>,
 	"peterz@infradead.org" <peterz@infradead.org>, "willy@infradead.org"
 	<willy@infradead.org>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, "lorenzo.stoakes@oracle.com"
-	<lorenzo.stoakes@oracle.com>, "vbabka@kernel.org" <vbabka@kernel.org>,
-	"rppt@kernel.org" <rppt@kernel.org>, "surenb@google.com" <surenb@google.com>,
-	"mhocko@suse.com" <mhocko@suse.com>, "ast@kernel.org" <ast@kernel.org>,
-	"daniel@iogearbox.net" <daniel@iogearbox.net>, "andrii@kernel.org"
-	<andrii@kernel.org>, "martin.lau@linux.dev" <martin.lau@linux.dev>,
-	"eddyz87@gmail.com" <eddyz87@gmail.com>, "song@kernel.org" <song@kernel.org>,
+	<akpm@linux-foundation.org>, "david@kernel.org" <david@kernel.org>,
+	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>,
+	"vbabka@kernel.org" <vbabka@kernel.org>, "rppt@kernel.org" <rppt@kernel.org>,
+	"surenb@google.com" <surenb@google.com>, "mhocko@suse.com" <mhocko@suse.com>,
+	"ast@kernel.org" <ast@kernel.org>, "daniel@iogearbox.net"
+	<daniel@iogearbox.net>, "andrii@kernel.org" <andrii@kernel.org>,
+	"martin.lau@linux.dev" <martin.lau@linux.dev>, "eddyz87@gmail.com"
+	<eddyz87@gmail.com>, "song@kernel.org" <song@kernel.org>,
 	"yonghong.song@linux.dev" <yonghong.song@linux.dev>,
 	"john.fastabend@gmail.com" <john.fastabend@gmail.com>, "kpsingh@kernel.org"
 	<kpsingh@kernel.org>, "sdf@fomichev.me" <sdf@fomichev.me>,
@@ -123,10 +124,9 @@ CC: "pbonzini@redhat.com" <pbonzini@redhat.com>, "corbet@lwn.net"
 	"jgross@suse.com" <jgross@suse.com>, "yu-cheng.yu@intel.com"
 	<yu-cheng.yu@intel.com>, "kas@kernel.org" <kas@kernel.org>, "coxu@redhat.com"
 	<coxu@redhat.com>, "kevin.brodsky@arm.com" <kevin.brodsky@arm.com>,
-	"ackerleytng@google.com" <ackerleytng@google.com>, "yosry@kernel.org"
-	<yosry@kernel.org>, "ajones@ventanamicro.com" <ajones@ventanamicro.com>,
-	"maobibo@loongson.cn" <maobibo@loongson.cn>, "tabba@google.com"
-	<tabba@google.com>, "prsampat@amd.com" <prsampat@amd.com>,
+	"yosry@kernel.org" <yosry@kernel.org>, "ajones@ventanamicro.com"
+	<ajones@ventanamicro.com>, "maobibo@loongson.cn" <maobibo@loongson.cn>,
+	"tabba@google.com" <tabba@google.com>, "prsampat@amd.com" <prsampat@amd.com>,
 	"wu.fei9@sanechips.com.cn" <wu.fei9@sanechips.com.cn>, "mlevitsk@redhat.com"
 	<mlevitsk@redhat.com>, "jmattson@google.com" <jmattson@google.com>,
 	"jthoughton@google.com" <jthoughton@google.com>, "agordeev@linux.ibm.com"
@@ -155,7 +155,7 @@ CC: "pbonzini@redhat.com" <pbonzini@redhat.com>, "corbet@lwn.net"
 	"Manwaring, Derek" <derekmn@amazon.com>
 References: <20260317141031.514-1-kalyazin@amazon.com>
  <20260317141031.514-4-kalyazin@amazon.com>
- <187fa189-b6d7-4ba0-98a4-7a525cbaf4f9@kernel.org>
+ <CAEvNRgEBdi49ZkfGo0xmM+J1yzKOzfT2ThAXEN=S0j7vC7Fu3w@mail.gmail.com>
 Content-Language: en-US
 From: Nikita Kalyazin <kalyazin@amazon.com>
 Autocrypt: addr=kalyazin@amazon.com; keydata=
@@ -167,23 +167,23 @@ Autocrypt: addr=kalyazin@amazon.com; keydata=
  ubg1iBLCSDctMlKHsQTp7wCnEc4RAwEIB8J+BBgWCAAmFiEEaGEYMTIGMtDAP0Wwr5LKIKma
  ZPMFAmnY1+MFCQZCUjMCGwwACgkQr5LKIKmaZPPQKgD/f3FtERbJ+LYHLSG/ZbLNAOLngUlQ
  qo5VfIyJOzeLzC0BAP2PIUFIHo7vmia/PXEmT+ve4c5rx+EkH/Dx1GRpjWoI
-In-Reply-To: <187fa189-b6d7-4ba0-98a4-7a525cbaf4f9@kernel.org>
+In-Reply-To: <CAEvNRgEBdi49ZkfGo0xmM+J1yzKOzfT2ThAXEN=S0j7vC7Fu3w@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EX19D004EUA002.ant.amazon.com (10.252.50.81) To
+X-ClientProxiedBy: EX19D005EUB004.ant.amazon.com (10.252.51.126) To
  EX19D027UEC003.ant.amazon.com (10.252.137.250)
 X-Spamd-Result: default: False [-7.66 / 15.00];
 	WHITELIST_DMARC(-7.00)[amazon.com:D:+];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[amazon.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[amazon.com:s=amazoncorp2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18746-lists,linux-s390=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns];
+	TAGGED_FROM(0.00)[bounces-18747-lists,linux-s390=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[amazon.co.uk:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
 	FREEMAIL_CC(0.00)[redhat.com,lwn.net,kernel.org,arm.com,huawei.com,google.com,alien8.de,linux.intel.com,zytor.com,infradead.org,linux-foundation.org,oracle.com,suse.com,iogearbox.net,linux.dev,gmail.com,fomichev.me,ziepe.ca,nvidia.com,suse.de,linuxfoundation.org,surriel.com,intel.com,ventanamicro.com,loongson.cn,amd.com,sanechips.com.cn,linux.ibm.com,ghiti.fr,eecs.berkeley.edu,dabbelt.com,os.amperecomputing.com,bytedance.com,shopee.com,amazon.co.uk,amazon.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -191,7 +191,7 @@ X-Spamd-Result: default: False [-7.66 / 15.00];
 	TO_DN_EQ_ADDR_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[amazon.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	REPLYTO_ADDR_EQ_FROM(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
@@ -204,32 +204,67 @@ X-Spamd-Result: default: False [-7.66 / 15.00];
 	HAS_REPLYTO(0.00)[kalyazin@amazon.com];
 	TAGGED_RCPT(0.00)[linux-s390];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: B15AF3D9C38
+X-Rspamd-Queue-Id: 9D0283D9982
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
 
-On 23/03/2026 17:53, David Hildenbrand (Arm) wrote:
-> On 3/17/26 15:11, Kalyazin, Nikita wrote:
+On 23/03/2026 18:46, Ackerley Tng wrote:
+> "Kalyazin, Nikita" <kalyazin@amazon.co.uk> writes:
+> 
 >> From: Nikita Kalyazin <kalyazin@amazon.com>
 >>
+>> Signed-off-by: Nikita Kalyazin <kalyazin@amazon.com>
+>> ---
+>>   mm/secretmem.c | 8 ++------
+>>   1 file changed, 2 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/mm/secretmem.c b/mm/secretmem.c
+>> index fd29b33c6764..27b176af8fc4 100644
+>> --- a/mm/secretmem.c
+>> +++ b/mm/secretmem.c
+>> @@ -53,7 +53,6 @@ static vm_fault_t secretmem_fault(struct vm_fault *vmf)
+>>        struct inode *inode = file_inode(vmf->vma->vm_file);
+>>        pgoff_t offset = vmf->pgoff;
+>>        gfp_t gfp = vmf->gfp_mask;
+>> -     unsigned long addr;
+>>        struct folio *folio;
+>>        vm_fault_t ret;
+>>        int err;
+>> @@ -72,7 +71,7 @@ static vm_fault_t secretmem_fault(struct vm_fault *vmf)
+>>                        goto out;
+>>                }
+>>
+>> -             err = set_direct_map_invalid_noflush(folio_address(folio));
+>> +             err = folio_zap_direct_map(folio);
+>>                if (err) {
+>>                        folio_put(folio);
+>>                        ret = vmf_error(err);
+>> @@ -87,7 +86,7 @@ static vm_fault_t secretmem_fault(struct vm_fault *vmf)
+>>                         * already happened when we marked the page invalid
+>>                         * which guarantees that this call won't fail
+>>                         */
+>> -                     set_direct_map_default_noflush(folio_address(folio));
+>> +                     folio_restore_direct_map(folio);
+>>                        folio_put(folio);
+>>                        if (err == -EEXIST)
+>>                                goto retry;
+>> @@ -95,9 +94,6 @@ static vm_fault_t secretmem_fault(struct vm_fault *vmf)
+>>                        ret = vmf_error(err);
+>>                        goto out;
+>>                }
+>> -
+>> -             addr = (unsigned long)folio_address(folio);
+>> -             flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
+>>        }
+>>
+>>        vmf->page = folio_file_page(folio, vmf->pgoff);
+>> --
+>> 2.50.1
 > 
-> Describe your change :)
-> 
-> Ans also worth mentioning that we now flush the TLB even though
-> filemap_add_folio() failed -- which shouldn't matter in practice I guess.
-> 
-> With that
-> 
-> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+> Reviewed-by: Ackerley Tng <ackerleytng@google.com>
 
-Done, thanks.
-
-> 
-> --
-> Cheers,
-> 
-> David
+Thank you.
 
 
