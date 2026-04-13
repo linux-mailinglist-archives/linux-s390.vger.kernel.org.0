@@ -1,206 +1,210 @@
-Return-Path: <linux-s390+bounces-18803-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18804-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wEVQHZ833Wk3awkAu9opvQ
-	(envelope-from <linux-s390+bounces-18803-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Apr 2026 20:36:15 +0200
+	id uF89MsRE3WkubQkAu9opvQ
+	(envelope-from <linux-s390+bounces-18804-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Apr 2026 21:32:20 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E7B13F222B
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Apr 2026 20:36:14 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 429CD3F2C2E
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Apr 2026 21:32:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 6974E3001FB8
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Apr 2026 18:32:21 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7FE093039F6C
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Apr 2026 19:31:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7687636E493;
-	Mon, 13 Apr 2026 18:32:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 539CC392803;
+	Mon, 13 Apr 2026 19:31:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IVNfHTbB"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="eBEb3+z4";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fK2XbJ97"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from flow-a4-smtp.messagingengine.com (flow-a4-smtp.messagingengine.com [103.168.172.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 512C5368946;
-	Mon, 13 Apr 2026 18:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FD1F3537FA;
+	Mon, 13 Apr 2026 19:31:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776105139; cv=none; b=d9ceROdktCBmo3w/DjHMgMx40w8v11+GM/MDaA74NcKbRiU2HXvLjX+9ugwzbWMTYP9A85QnAuFA38BR/f20MvzrIZ5qQnMAel3JeeEaXRbdG5gEt3cEME7morcPyR4MufT09jQEK0+0alHP4i9kpIgDxMzoPElsAWtiFTmUK5U=
+	t=1776108701; cv=none; b=Wwv7ysAI3pZa7lDmJhUWwipeGdvAQG/VIJHrVKio0YixISKcp4kFNSwJuI+cF04dMmLnjN1bNEPjAkhySfUuWAhcnMaTFdQW1GsQGiGI9UDDxNJUYgMSU4d/m+xnPPgy4QL812kozcop5wedzTQxfknEW7TYLwA7uUfBdYGk1b0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776105139; c=relaxed/simple;
-	bh=EvxSafiBWABrGah99HN0FwITRI/21BtvzrpeZ2gtImA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cU7FfkcNZasqjZDGHpV0vZYgD+JCRRx1MOh6axa3o3sLs/GescPuC5wZGFcEwS/ZUPwDgl0lpDinuXSblqLra6wDXHS9gc62VZScyPcf5HFGVi/vKzrblEvQEN82t1GAGXtIiCxuhOy1h2QEHBB4BbbGyPkzOspJhI91jS4TzQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IVNfHTbB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C82CC2BCAF;
-	Mon, 13 Apr 2026 18:32:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776105138;
-	bh=EvxSafiBWABrGah99HN0FwITRI/21BtvzrpeZ2gtImA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IVNfHTbBPdeNKO6fGf9PMgz2JYDGmEN40iDFS9drIkBgKY/BjyJU8cx3jqAgXJi1s
-	 phtWvNieJ6dW5qnOZgFUFFr8cgCA1BwCpd5Q54iUf/H60Nftae+WbZzb52hmRwblG5
-	 z44DNFBsSSzxraEOk/qn7aPM4gBm/+e5Q4DrlrBzzt8qwN/RVWuQSG+ABIRafe6Rcm
-	 Wpj5R3ZFqXgTWhUsFNP56EMv06Jhbu6LETT4xFDyomkTzRswQK3kLiwKq52Ru8bfhN
-	 Ry+6mMtYAjkMC+yfBfr7r7KsmLfKbfG9v4S81QebzTH0IEL9k/WzpZbWf0vTb+V9a7
-	 1gU3BIO3J0ADQ==
-Message-ID: <534ed892-a6ab-454e-831b-e207930c35cc@kernel.org>
-Date: Mon, 13 Apr 2026 20:32:11 +0200
+	s=arc-20240116; t=1776108701; c=relaxed/simple;
+	bh=WrrLF4ZuZDSSPdaipSZzrKXRH2qtrS74BAAAonCIRps=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=n7g1Yx5W6plpXKy+rkozQ6xEgTTaO1xCblNw3ix8fDOKnFfVL16O7SZh497soJj3f4zqp/zSWU+KxfR5iG2eT19N4YiEsFirX1mWgV9neXuPLaq+B1XzLfWKQzwRina3cMiqA4CdgmYDmme3QAv4sOaeHSA6ZSdvV11+Z0V8qUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=eBEb3+z4; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fK2XbJ97; arc=none smtp.client-ip=103.168.172.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailflow.phl.internal (Postfix) with ESMTP id 9BAA81380415;
+	Mon, 13 Apr 2026 15:31:38 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-04.internal (MEProxy); Mon, 13 Apr 2026 15:31:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1776108698;
+	 x=1776115898; bh=oF7+4SGRAImH9WMGSId2dJm+4RdrBt2YGrt25aFUZUA=; b=
+	eBEb3+z4uCJ5XpVJfmMDtd+Hz4pTmn4rIKoszU8vf+435LUmCEc3EJdi4K0/oVv8
+	C+yjXVYuraejFdA/rcQOSN6Zfi5pNlS43GslApllsudgHnK44npvkIwaUHWVTtuh
+	Dw/4I/j/UNeqyr1LQlKmH5vdXZciz/2GPqFtFHFDNoaInKEsvm7hwh9DYdVnGoah
+	lMAIbVhEjH95sryDmrUzci3AfaiCDHHYDZH3oXJ/R4+VlvsfKJPopXWx0JE7CxaE
+	ognvTjwa06PAMT31z/DBGKMGBcoGUsjb6Y3k+6cm618rMbyQ7yCpT6T6pE5XH3Hf
+	w2SGXNdq7Abx7TrcOF+CrA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1776108698; x=
+	1776115898; bh=oF7+4SGRAImH9WMGSId2dJm+4RdrBt2YGrt25aFUZUA=; b=f
+	K2XbJ97Y0jsbU1s6LswXOEcaT2AuIJQsZKTCiqB2bsDjsavXFxXjXN24HUjqmHPV
+	30lUfZzPVJ0GZrRSLZsyTrPlhAwj+oOp7rzHIcW4Q+ggBxcGWjNT+roTWJQkS80p
+	muhmPfZao8pyrAslQS6xE9YgbnnrpBmxpEViK0VuBn5kyHZfCSLFSApLiy8hZEkj
+	X3o7U4xt3roWjYEf/0QsKGiNqeP3myXk/e3+BEa4KYIE59wmYsrhudiDwV46CB5d
+	E8K4OFv0fHuOdK14nnUUxfff3rCPKj8vJw3X7p6M4i0BpN1E8RSwySIEaUf5sCqK
+	alHtK1Rc5jgsKIF8k3s0A==
+X-ME-Sender: <xms:l0TdaRMQ1ovC5UjXw9wB_riUJbJZBZQ47VcEC4ozPMlWVwTWyL-hPg>
+    <xme:l0Tdaey9qAPkMkkSsq5ZowyLiVSaVZg3Aabqq1QUbhdAX-Y8VC29U600TE9HTIGWj
+    W-h6ka_l-N0bKYGG_W-3bzXlHGY0ZcjcSbZR_zuoL-6Ds0X7Q55CQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdefledtkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
+    hnpedvhfdvkeeuudevfffftefgvdevfedvleehvddvgeejvdefhedtgeegveehfeeljeen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
+    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopeegkedpmhhouggvpehsmhhtphhouhht
+    pdhrtghpthhtohepthdrshgrihhlvghrsegrlhhumhhnihdrvghthhiirdgthhdprhgtph
+    htthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghpthhtohep
+    lhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopegurghvvghmse
+    gurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepmhhpvgesvghllhgvrhhmrghnrdhi
+    ugdrrghupdhrtghpthhtoheprhihrggsihhnihhnrdgrrdgrsehgmhgrihhlrdgtohhmpd
+    hrtghpthhtohepuhhrvgiikhhisehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggvlhhl
+    vghrsehgmhigrdguvgdprhgtphhtthhopehhvghrsggvrhhtsehgohhnughorhdrrghprg
+    hnrgdrohhrghdrrghu
+X-ME-Proxy: <xmx:l0TdaTelOssYXt15-FK9p6saYLM_nmrvIO6c-_F3ZyF6_xfZywmCYA>
+    <xmx:l0TdaUxOkh6ozfKMIVT4v_qdW_i5Tss0CLMqkf2F01TBmahdCnZo_w>
+    <xmx:l0TdaUWn-LdWx2_7oUHRu6zzNshE3wCLw-aFKzbUUXN26D6Q-_6vLw>
+    <xmx:l0TdacTwYVtUWJnf_Fdh14nt-sYvlNq7AaQbOTvOw2Uu221fQyzEjQ>
+    <xmx:mkTdaTH5uGiAlbaAI17-uSN6CKxYeQsdeWCm3ruscf_j0l2LK_Chakad>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 04818700069; Mon, 13 Apr 2026 15:31:35 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/2] mm: make lazy MMU mode context-aware
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Kevin Brodsky <kevin.brodsky@arm.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <cover.1774420056.git.agordeev@linux.ibm.com>
- <de89fd353a8dcd5e3bef4d91e9b6682d132ed9a0.1774420057.git.agordeev@linux.ibm.com>
- <44dd86c0-1845-4dd9-b4b4-2cef6d1c6357@kernel.org>
- <e096e88b-f1fe-44a1-bfa6-451eef028203-agordeev@linux.ibm.com>
- <665a19a0-47c2-404c-bd2b-482ab51b8f64@kernel.org>
- <896b3d93-8e60-42e2-b8bb-d3d4e8c99927-agordeev@linux.ibm.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <896b3d93-8e60-42e2-b8bb-d3d4e8c99927-agordeev@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-ThreadId: AMdy4yCH1GcR
+Date: Mon, 13 Apr 2026 21:30:11 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "David Woodhouse" <dwmw2@infradead.org>,
+ "Thomas Gleixner" <tglx@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Cc: x86@kernel.org, "Baolu Lu" <baolu.lu@linux.intel.com>,
+ iommu@lists.linux.dev, "Michael Grzeschik" <m.grzeschik@pengutronix.de>,
+ Netdev <netdev@vger.kernel.org>, linux-wireless@vger.kernel.org,
+ "Herbert Xu" <herbert@gondor.apana.org.au>, linux-crypto@vger.kernel.org,
+ "Vlastimil Babka (SUSE)" <vbabka@kernel.org>, linux-mm@kvack.org,
+ "Bernie Thompson" <bernie@plugable.com>, linux-fbdev@vger.kernel.org,
+ "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+ "Marco Elver" <elver@google.com>, "Dmitry Vyukov" <dvyukov@google.com>,
+ kasan-dev@googlegroups.com, "Andrey Ryabinin" <ryabinin.a.a@gmail.com>,
+ "Thomas Sailer" <t.sailer@alumni.ethz.ch>, linux-hams@vger.kernel.org,
+ "Jason A . Donenfeld" <Jason@zx2c4.com>,
+ "Richard Henderson" <richard.henderson@linaro.org>,
+ linux-alpha@vger.kernel.org, "Russell King" <linux@armlinux.org.uk>,
+ linux-arm-kernel@lists.infradead.org,
+ "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Huacai Chen" <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
+ "Geert Uytterhoeven" <geert@linux-m68k.org>,
+ linux-m68k@lists.linux-m68k.org, "Dinh Nguyen" <dinguyen@kernel.org>,
+ "Jonas Bonn" <jonas@southpole.se>,
+ "linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
+ "Helge Deller" <deller@gmx.de>, linux-parisc@vger.kernel.org,
+ "Michael Ellerman" <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org,
+ "Paul Walmsley" <pjw@kernel.org>, linux-riscv@lists.infradead.org,
+ "Heiko Carstens" <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
+ "David S . Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
+Message-Id: <07df88e5-208d-4aac-9668-a3b0c65ae529@app.fastmail.com>
+In-Reply-To: <7a48b636cb3146f4f7134c6d4fe42070ac2edb43.camel@infradead.org>
+References: <20260410120044.031381086@kernel.org>
+ <20260410120318.592237447@kernel.org>
+ <7a48b636cb3146f4f7134c6d4fe42070ac2edb43.camel@infradead.org>
+Subject: Re: [patch 15/38] ptp: ptp_vmclock: Replace get_cycles() usage
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-0.65 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[arndb.de,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[arndb.de:s=fm1,messagingengine.com:s=fm2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_FROM(0.00)[bounces-18803-lists,linux-s390=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	XM_UA_NO_VERSION(0.01)[];
+	TAGGED_FROM(0.00)[bounces-18804-lists,linux-s390=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[48];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,linux.intel.com,lists.linux.dev,pengutronix.de,vger.kernel.org,gondor.apana.org.au,kvack.org,plugable.com,mit.edu,linux-foundation.org,gmail.com,google.com,googlegroups.com,alumni.ethz.ch,zx2c4.com,linaro.org,armlinux.org.uk,lists.infradead.org,arm.com,linux-m68k.org,lists.linux-m68k.org,southpole.se,gmx.de,ellerman.id.au,lists.ozlabs.org,linux.ibm.com,davemloft.net];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[david@kernel.org,linux-s390@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[arnd@arndb.de,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[arndb.de:+,messagingengine.com:+];
+	RCVD_COUNT_FIVE(0.00)[6];
 	TAGGED_RCPT(0.00)[linux-s390];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 6E7B13F222B
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,app.fastmail.com:mid,messagingengine.com:dkim,arndb.de:dkim]
+X-Rspamd-Queue-Id: 429CD3F2C2E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 4/13/26 15:43, Alexander Gordeev wrote:
-> On Tue, Mar 31, 2026 at 11:11:22PM +0200, David Hildenbrand (Arm) wrote:
->>>
->>> The only implication is "only this address/PTE range could be updated
->>> and that range may span one page table at most".
->>
->> Probably phrase it stronger. "No ptes outside of this range must be
->> updated" etc.
-> 
-> That turns out to be bit more complicated. The below cases do not fit
-> such a strong requirement:
-> 
-> 1. copy_pte_range() operates on two ranges: source and destination.
-> Though lazy_mmu_mode_enable_for_pte_range() applies to the source one,
-> updates to the destination are still happen while in tha lazy mode.
-> (Although the lazy mode is not actually needed for the destination
-> unattached MM).
+On Mon, Apr 13, 2026, at 17:33, David Woodhouse wrote:
+> On Fri, 2026-04-10 at 14:19 +0200, Thomas Gleixner wrote:
+>
+> ... depend on TSC_RELIABLE=C2=B9, since if the guest doesn't believe t=
+hat it
+> is, then the guest shouldn't be trying to use it as the basis for
+> precise timing.
+>
+> =C2=B9 (Or... one of the other zoo of TSC flags for the gradually redu=
+cing
+> brokenness over the years...)
 
-So, here a
+It looks like this is sufficiently handled in the caller:
 
-  "No ptes outside of this range in the provided @mm must be updated."
+static int vmclock_get_crosststamp(struct vmclock_state *st,
+                                   struct ptp_system_timestamp *sts,
+                                   struct system_counterval_t *system_co=
+unter,
+                                   struct timespec64 *tspec)
+{
+....
+#ifdef CONFIG_X86
+        /*
+         * We'd expect the hypervisor to know this and to report the clo=
+ck
+         * status as VMCLOCK_STATUS_UNRELIABLE. But be paranoid.
+         */
+        if (check_tsc_unstable())
+                return -EINVAL;
+#endif
 
-could be used.
+With 486 and ELAN out of the way, Winchip6 seems to be the only
+one without X86_FEATURE_TSC, so I think the next logical step would
+be to turn off Winchip6 as well and remove all X86_FEATURE_TSC
+and CONFIG_X86_TSC checks.
 
-> 
-> 2. move_ptes() also operates on a source and destination ranges, but
-> unlike copy_pte_range() the destination range is also attached to the
-> currently active task.
-
-But not here.
-
-> 
-> 3. Though theoretical, nesting sections with interleaving calls to
-> lazy_mmu_mode_enable() and lazy_mmu_mode_enable_for_pte_range() make
-> it difficult to define (let alone to implement) which range is currently
-> active, if any.
-
-Right. I assume you would specify the source here as well, or which one
-would it be in your case to speed it up?
-
-> 
-> All of these goes away if we switch from for_pte_range() to fast_pte_range()
-> semantics:
-
-I don't quite like the "fast" in there. I think you can keep the old
-name, but clarifying that it is merely a hint, and only ptes that fall
-into the hint might observe a speedup.
-
-Could performance benefit from multiple ranges? (like in mremap, for
-example)?
-
-In that case, an explicit hint interface could be reconsidered.
-
--- 
-Cheers,
-
-David
+      Arnd
 
