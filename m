@@ -1,208 +1,158 @@
-Return-Path: <linux-s390+bounces-18809-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18813-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sK0AFbBb3WnYcwkAu9opvQ
-	(envelope-from <linux-s390+bounces-18809-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Apr 2026 23:10:08 +0200
+	id GJoHMhtn3WnsdgkAu9opvQ
+	(envelope-from <linux-s390+bounces-18813-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Apr 2026 23:58:51 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB7003F36A6
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Apr 2026 23:10:07 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78E173F3AA6
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Apr 2026 23:58:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 6E3433060209
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Apr 2026 21:07:18 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 4462A302386F
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Apr 2026 21:58:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BA8539A7E0;
-	Mon, 13 Apr 2026 21:06:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 329E0397E8B;
+	Mon, 13 Apr 2026 21:58:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iLlC6uLc"
+	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="ezkrbNAW";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LuH2Xwn0"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20902395254;
-	Mon, 13 Apr 2026 21:06:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5F8399348;
+	Mon, 13 Apr 2026 21:58:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776114403; cv=none; b=M8fqHKGxQgTWEUGEXWv2gzmYw3v5cgw+G2JRlpYIhWkprucwButc58LsOgSB5Qo20Z33AjR20HHJksSZb5i9GVg9wadqE3BbtSW7+G6vzwsxm4ndnCCqXcq2k/jZENANzb+52UxG1Z8mw3CGFXTnlxJL0ImaAR3c7+GSPFMDk0g=
+	t=1776117521; cv=none; b=asNoaATrCxk9nqYTEoGrfa181sILmb55d+AhHG2yG+sNVfo25BBZizh6FI/5ZpXW8jpCpSalOsiJWCRwim0LnUE0dr/qbLHoPZStKOrR+cty2rB4VEJZ7HcNgl+DnR9GloObNhrdtqe3sXGiCDMYZqqiugo11TE1vFifnfecv6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776114403; c=relaxed/simple;
-	bh=BI37w9SjuKL3yvCM7bDoU4en5ns30NyXBnAazDt1Q0I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XGRfQZDk/EBbrLr1e6mv+oWGp+EhuIeLFiHyKTeslwCFqZeZ38NrBsOFwnI21np6SngNxted2BUOP8e0cND1VEipimOIY0XuHkQJGQ8RiXrOJE15XtJgDGotxxIUtN3P+M6OIyga4Op2W4mDWqzNVThowp6xnqA+eVKDqjI8v8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iLlC6uLc; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63DEYuqS3427021;
-	Mon, 13 Apr 2026 21:06:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=ptCH11AOccuUefO9O
-	9jqin/FEkhD0OjCVnd7OxBRv5U=; b=iLlC6uLcbE26n48o0XepzwF7Q9EZptPHI
-	0Cj5k5S6xDW1805uGn1GpGNE87hA6ZBgbyhW+nl67YFK+QMAD4yrAVmerRViEqWK
-	kBTFlDJS0gxkFlrfkAls3MFYsgYhqp0CRLls4uUHttD+vDr21tZBxk/JCGSN5k5c
-	B+crE6EUmg2TnQ3BPPifIQDQq0t0O/8N3076TlVZr7Ob6a5iopvDJ9VOw5TzPobh
-	oKCiT9NjyCE5UBh/A1pFf1hHd+yWd/yA1H+isiaxDurUBu+dronYbmmIuYrbsC+5
-	SjvAZG6g9SP2XxXZ44zG4+SK9al6dgam26OOHJxewMjwFxpAXLy5Q==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dfdt3stqj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 13 Apr 2026 21:06:23 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 63DHF68e031138;
-	Mon, 13 Apr 2026 21:06:22 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dg10y6yn8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 13 Apr 2026 21:06:21 +0000
-Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63DL6KU633292992
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 13 Apr 2026 21:06:20 GMT
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 87F7D58054;
-	Mon, 13 Apr 2026 21:06:20 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3ECB65805F;
-	Mon, 13 Apr 2026 21:06:19 +0000 (GMT)
-Received: from IBM-D32RQW3.ibm.com (unknown [9.61.254.131])
-	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 13 Apr 2026 21:06:19 +0000 (GMT)
-From: Farhan Ali <alifm@linux.ibm.com>
-To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Cc: helgaas@kernel.org, lukas@wunner.de, alex@shazbot.org, clg@redhat.com,
-        kbusch@kernel.org, alifm@linux.ibm.com, schnelle@linux.ibm.com,
-        mjrosato@linux.ibm.com, Julian Ruess <julianr@linux.ibm.com>
-Subject: [PATCH v13 7/7] vfio/pci: Remove the pcie check for VFIO_PCI_ERR_IRQ_INDEX
-Date: Mon, 13 Apr 2026 14:06:08 -0700
-Message-ID: <20260413210608.2912-8-alifm@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260413210608.2912-1-alifm@linux.ibm.com>
-References: <20260413210608.2912-1-alifm@linux.ibm.com>
+	s=arc-20240116; t=1776117521; c=relaxed/simple;
+	bh=2XYfBvfT+UEFna0kWORcHWLGNbscFLCwfHt1ltc/pCE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rhebfNKvMtw85RG4HXpUJJrerTk6WBCNITQzwg3dvE19hYXejqQSaAhZSMA3Wvdn/4TEZVYtf7kP+ZQEPcrFj9UoyCk0EZN/dqu+2czFTCqqmhHOtquamhqxDkF9hrgO4SAJCFPiefpQXHE1J9tM4Ewq+z5WEqHB/+sFjAvum1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=ezkrbNAW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LuH2Xwn0; arc=none smtp.client-ip=103.168.172.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfout.phl.internal (Postfix) with ESMTP id 36676EC0516;
+	Mon, 13 Apr 2026 17:58:38 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-02.internal (MEProxy); Mon, 13 Apr 2026 17:58:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1776117518;
+	 x=1776203918; bh=oKY21MPppCmjWn+4vtpziBqU7RYeyA9kdQSFsUQQEYY=; b=
+	ezkrbNAW928HESHLxUzyaYl2iUjwXhJUitgfcXn4G4WBuFOjWO/W3PqqF6squecv
+	L0oxVtcm/zYSicWQape5PDLq2Rur7nM2Mih7oSgvD9TMskTmtnC2LrKNUcWcweeF
+	hkWDmX2plXlVUj6jMkAIPS7ZP/s4BhNx9Ksocu1tD9udXmO7JujJDfWmEPt8rXem
+	U8CYanmWqE45Lb5OSDX0188G0WSI8ZZ5hh0OzwPSLSe+Il/F48GEBfS6GClowWlj
+	laezdnHikfFt9DoKZ1egVVvnCUlqi7E/2W55SvsF/yUAPb6o5WAfOe2dZ9TGm5FV
+	d4kL4tdCmZz23NK2/ltxlw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1776117518; x=
+	1776203918; bh=oKY21MPppCmjWn+4vtpziBqU7RYeyA9kdQSFsUQQEYY=; b=L
+	uH2Xwn0fsyqNGec03jDXScLrOvjkiKd6WJ1QjPiQFXeDZ2AiwVPbbilj8PFkvxaD
+	tMSuVpXkd7Z4hSn4JRiWuObsSd17WYHfWq7Z0miKBdxGEzorVJQCLemhPPL1aDkw
+	E35fdyCgjUc7TKOBUwa/GdWgfuQ5tkzmtJzq41xityHMvQc2gbN96VqqTa6efOHX
+	0405yqT4hR4vvaqxtMETH23mwi+W2ty+34QEVmLjI2aZKkJ5oQwwN0L/rZfnmsj1
+	hXoMJ1RJk9hsSZUZAtm2CcsHbtKg2B193e1pS3F1eJkI7F1YM5ch2erFe+xjiQ7p
+	BZ/ZiWHBSDyImHXgFQUlg==
+X-ME-Sender: <xms:DWfdaabNy25oZ3VtQdULWoeUdpzLgLQfsgE9cHGQRlCY4h-ex9ZHtQ>
+    <xme:DWfdafq3X8-ryGA6AiqQYkRHJ9PRTmQnvrSGIrncrEeOxWaCaDehjCMObzLgR3zIh
+    NC8PJZhX_EI3qUsCxRoiCt3XPoCrrILG59Wxsuo4m71zsGm-3nTMms>
+X-ME-Received: <xmr:DWfdaXPNx5xQ_Fn1ROOcGe6bCVCVNuL6fwr0-4dwO68ZQWSKZPiqAhUTGPs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdefleefkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfgjfhfogggtgfesthejredtredtvdenucfhrhhomheptehlvgigucgh
+    ihhllhhirghmshhonhcuoegrlhgvgiesshhhrgiisghothdrohhrgheqnecuggftrfgrth
+    htvghrnhepvdekfeejkedvudfhudfhteekudfgudeiteetvdeukedvheetvdekgfdugeev
+    ueeunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hlvgigsehshhgriigsohhtrdhorhhgpdhnsggprhgtphhtthhopeeipdhmohguvgepshhm
+    thhpohhuthdprhgtphhtthhopehpsghonhiiihhnihesrhgvughhrghtrdgtohhmpdhrtg
+    hpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhr
+    tghpthhtohepkhhvmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegrkh
+    hrohifihgrkheslhhinhhugidrihgsmhdrtghomhdprhgtphhtthhopehlihhnuhigqdhs
+    feeltdesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgiesshhhrg
+    iisghothdrohhrgh
+X-ME-Proxy: <xmx:DWfdaSo6W_L_frs5t4vHiqfTl3sx1MVIIadYw47I0O4C4eSeW4lXTQ>
+    <xmx:DWfdaUdUhnk_5ads610rO-L16UjJaXQG9BkBRWUifmH-BeOYZo7oTA>
+    <xmx:DWfdaQQMqwN8caRRsIwtxDisOJbN0j6u6EVdwEEPE8QKom2VnE7VUQ>
+    <xmx:DWfdaVYRKjzo8Cs5YuqzsJ3Tk9WJ8kuT14rwNi8RG-QYvOiizI65lw>
+    <xmx:DmfdaRjZPTr-Ji--DxwuRwso2wEKucvkRvR1RwSGsAjRcDoFWoK0euE6>
+Feedback-ID: i03f14258:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 13 Apr 2026 17:58:37 -0400 (EDT)
+Date: Mon, 13 Apr 2026 15:58:36 -0600
+From: Alex Williamson <alex@shazbot.org>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ akrowiak@linux.ibm.com, linux-s390@vger.kernel.org, alex@shazbot.org
+Subject: Re: [PATCH] VFIO: remove dead notifier code
+Message-ID: <20260413155836.124aae47@shazbot.org>
+In-Reply-To: <20260407175934.1602711-1-pbonzini@redhat.com>
+References: <20260407175934.1602711-1-pbonzini@redhat.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 01gz8V8Ky8gYhg-6ytjpBlEhjBTwiVYv
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDEzMDIwNSBTYWx0ZWRfX+jsbmIsLaAHv
- 0kUTzSiPoI6zzTm3Tb7CFFCW9S8tF5g7vq9r9ynoczdrA4mTTGOKVvfv/rtWkR8jreZFukrLAa1
- +5k0J8sIngfSsDXJiSUGEwyXO/nEty6jCJQ7lEKqRKYKt777G7BzMO2MMgnunVA1KXZbZf+zj3C
- 9hlv2qBFlZ7/If3nLfayz6AU2bCf/4QkbnwI/GVOfgf4l7ir6ezD4xG97vbt8L3JgQISe5xg1l4
- O65LM3BcmnYSuflnAOZL3z4bp4PhOZ9PV0Z2mdUfhIaDd2VVhBZZCSy7Sk0vGtkyqsTKJOrTZjk
- 6reWcSoXiDvQUnx137c1MtMzvbeDXHlxp+UWLzZoLJsMhkzb5J0b5tLUjk36j1Zp/H8P//ZA5Jd
- yPPaYB+TgKhGTTTgz4wUqA8Ek6Y9d/ZXwXwP3bv6/pODMGtN8j9VTMpaB5bfK7EWMbiwktR8AhT
- RG0wgirIamiIIuCrqaA==
-X-Proofpoint-GUID: 01gz8V8Ky8gYhg-6ytjpBlEhjBTwiVYv
-X-Authority-Analysis: v=2.4 cv=WpEb99fv c=1 sm=1 tr=0 ts=69dd5acf cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8 a=r1p2_3pzAAAA:8
- a=bf5i11FZjm5gBOpVircA:9 a=r_pkcD-q9-ctt7trBg_g:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-13_03,2026-04-13_04,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 phishscore=0 bulkscore=0 adultscore=0 spamscore=0
- malwarescore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0
- impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604010000
- definitions=main-2604130205
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[shazbot.org,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[shazbot.org:s=fm1,messagingengine.com:s=fm2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
+	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18813-lists,linux-s390=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18809-lists,linux-s390=lfdr.de];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[alifm@linux.ibm.com,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[shazbot.org:+,messagingengine.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.ibm.com:mid];
+	FROM_NEQ_ENVFROM(0.00)[alex@shazbot.org,linux-s390@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: AB7003F36A6
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,messagingengine.com:dkim]
+X-Rspamd-Queue-Id: 78E173F3AA6
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The error signaling is configured for the vast majority of devices and it's
-extremely rare that it fires anyway. Removing the pcie check will allow
-userspace to be notified on errors for legacy PCI devices. The Internal
-Shared Memory (ISM) device on s390 is one such device. For PCI devices on
-IBM s390 error recovery involves platform firmware and notification to
-operating system is done by architecture specific way. So the ISM device
-can still be recovered when notified of an error.
+On Tue,  7 Apr 2026 19:59:34 +0200
+Paolo Bonzini <pbonzini@redhat.com> wrote:
 
-Reviewed-by: Julian Ruess <julianr@linux.ibm.com>
-Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
-Reviewed-by: Alex Williamson <alex@shazbot.org>
-Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
----
- drivers/vfio/pci/vfio_pci_core.c  | 8 ++------
- drivers/vfio/pci/vfio_pci_intrs.c | 3 +--
- 2 files changed, 3 insertions(+), 8 deletions(-)
+> group->notifier is dead code. VFIO initializes it and checks it for emptiness on
+> teardown, but nobody ever registers on it or triggers it.
+> 
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  Documentation/arch/s390/vfio-ap.rst | 18 ++++++------------
+>  drivers/vfio/group.c                |  3 ---
+>  drivers/vfio/vfio.h                 |  1 -
+>  drivers/vfio/vfio_iommu_type1.c     |  1 -
+>  4 files changed, 6 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index 4485d85e4419..407be85dd565 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -786,8 +786,7 @@ static int vfio_pci_get_irq_count(struct vfio_pci_core_device *vdev, int irq_typ
- 			return (flags & PCI_MSIX_FLAGS_QSIZE) + 1;
- 		}
- 	} else if (irq_type == VFIO_PCI_ERR_IRQ_INDEX) {
--		if (pci_is_pcie(vdev->pdev))
--			return 1;
-+		return 1;
- 	} else if (irq_type == VFIO_PCI_REQ_IRQ_INDEX) {
- 		return 1;
- 	}
-@@ -1163,11 +1162,8 @@ static int vfio_pci_ioctl_get_irq_info(struct vfio_pci_core_device *vdev,
- 	switch (info.index) {
- 	case VFIO_PCI_INTX_IRQ_INDEX ... VFIO_PCI_MSIX_IRQ_INDEX:
- 	case VFIO_PCI_REQ_IRQ_INDEX:
--		break;
- 	case VFIO_PCI_ERR_IRQ_INDEX:
--		if (pci_is_pcie(vdev->pdev))
--			break;
--		fallthrough;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-diff --git a/drivers/vfio/pci/vfio_pci_intrs.c b/drivers/vfio/pci/vfio_pci_intrs.c
-index 33944d4d9dc4..64f80f64ff57 100644
---- a/drivers/vfio/pci/vfio_pci_intrs.c
-+++ b/drivers/vfio/pci/vfio_pci_intrs.c
-@@ -859,8 +859,7 @@ int vfio_pci_set_irqs_ioctl(struct vfio_pci_core_device *vdev, uint32_t flags,
- 	case VFIO_PCI_ERR_IRQ_INDEX:
- 		switch (flags & VFIO_IRQ_SET_ACTION_TYPE_MASK) {
- 		case VFIO_IRQ_SET_ACTION_TRIGGER:
--			if (pci_is_pcie(vdev->pdev))
--				func = vfio_pci_set_err_trigger;
-+			func = vfio_pci_set_err_trigger;
- 			break;
- 		}
- 		break;
--- 
-2.43.0
+Applied to vfio next branch for v7.1.  Thanks,
 
+Alex
 
