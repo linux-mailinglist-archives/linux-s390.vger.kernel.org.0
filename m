@@ -1,240 +1,286 @@
-Return-Path: <linux-s390+bounces-18843-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18846-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2Lq9BP1R32nLRgAAu9opvQ
-	(envelope-from <linux-s390+bounces-18843-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2026 10:53:17 +0200
+	id aEoyL11a32n1RwAAu9opvQ
+	(envelope-from <linux-s390+bounces-18846-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2026 11:29:01 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id C88AC4022B6
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2026 10:53:16 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3066740294F
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2026 11:29:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 09E3E3047285
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2026 08:52:55 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E706F301104D
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2026 09:28:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB5903D88E9;
-	Wed, 15 Apr 2026 08:52:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4FF6336888;
+	Wed, 15 Apr 2026 09:28:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Sqq0Lcce"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="i3Vnu3fK"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from SY5PR01CU010.outbound.protection.outlook.com (mail-australiaeastazolkn19012014.outbound.protection.outlook.com [52.103.72.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656513D6CDD;
-	Wed, 15 Apr 2026 08:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776243158; cv=none; b=HRbheBWJ2mtG8d6ifV+w0Z45d+rG9V2RbaWkyDLcINBOJJrBXu8Z7UV4wQXIgkfesN8F5v85AIfrVjeJBd8zWhUVzyaVWVOdQ0LdtqCDIzu4Ja9zNOeijWPCgVJbPQP3wdg13oM9XWtSbb2iI3ldwDLfuTP04Z+5w69lgjO/DV0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776243158; c=relaxed/simple;
-	bh=rGo+Qxonq8xVgEHIrIpMR3xis2teaA1f/LBy36R0vng=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IiKJHWw7ZmlZ15xjMhpVIHTArURh2qSplQnBcVPXdnpcie0OjmXdWhIE+J3Y9GbId63pUzBq+aEkhQBQYSFhe1bUtQ6ODnm5cZT88DVEL3DS6YkviCDNBGXSJz247jYm+HN3faG8pbUQbjqfw9Fy41i0rD5wt0Lw7vPgxUJQ4N4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Sqq0Lcce; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63F4q1Tt1842840;
-	Wed, 15 Apr 2026 08:52:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=oCnw9t42nA4HhNmdQ
-	hooKXfKel2qxJFtS1lj1RsN8SQ=; b=Sqq0LcceBW65qhmUJnlEdhyDG13+lMylE
-	cOMVhm/DS7x2NhbPSjc1tqojDsOCTzZn7hW58ZrPZ7wmaxAnHhXtc+85feXeVTBF
-	Mh6VJutAKB5CxoIejHZ4t96WZxEm4qUDBxOu8M0/1eme+/UAIgeeIaRWFBfc1uJZ
-	uRiUy9QjP06VPXJEDZDZ183xIyroMIRIhmu2Np8ZqVPnDHpnbQjCrH0j30f6o+MI
-	hRh13W3sDaJ400cmBxkg+GCNJf0rNGzT8ZhjE5BIVBClnAl0TEnFJAOt5AJyo6Kj
-	9mJUzM5mrCd7HSWPThEtBW5y8GhSnRZc/OIgJnp6yBXG3vILi8i0w==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dh89mq4kp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Apr 2026 08:52:36 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 63F444qc025831;
-	Wed, 15 Apr 2026 08:52:35 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dg3b1n593-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Apr 2026 08:52:35 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63F8qW1U24117742
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 15 Apr 2026 08:52:32 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 34D0720040;
-	Wed, 15 Apr 2026 08:52:32 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 181D82004F;
-	Wed, 15 Apr 2026 08:52:32 +0000 (GMT)
-Received: from b46lp25.lnxne.boe (unknown [9.87.84.240])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 15 Apr 2026 08:52:32 +0000 (GMT)
-From: Janosch Frank <frankja@linux.ibm.com>
-To: kvm@vger.kernel.org
-Cc: linux-s390@vger.kernel.org, imbrenda@linux.ibm.com,
-        borntraeger@linux.ibm.com, nrb@linux.ibm.com
-Subject: [kvm-unit-tests 5/5] lib: s390x: Remove kvm s390 prefix from sie control block
-Date: Wed, 15 Apr 2026 08:45:45 +0000
-Message-ID: <20260415085145.91197-6-frankja@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260415085145.91197-1-frankja@linux.ibm.com>
-References: <20260415085145.91197-1-frankja@linux.ibm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47817335562;
+	Wed, 15 Apr 2026 09:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.72.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776245309; cv=fail; b=h1qjvYUU/YgpYJ7cx1CoMEJI+eiWrGAhLliH2RYmjeUiDsvpHACqUMuGtNtzaH5qaAEBeRQPU/PQIF0u224ssCe4VdtsjplospP3bjzDGFhaAn2+Bsct78tqnZYsTknlv+jr4bNezyUCQc41zAz0NETkoQxlwex3gymWRteiMtA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776245309; c=relaxed/simple;
+	bh=Hwq0zbbyYBroJJhvDbtaTNwB50gOAMY0b8sgBW1LXNw=;
+	h=From:Date:Subject:Content-Type:Message-ID:To:Cc:MIME-Version; b=rQA4aJIanTdFU0edpGiDD3gE2ZgzuvkB/p/ISClZeieoFkB/ajbLJgfV00628gNucthaqJdwMna/Wkdr7SIbVuReLznc8e6E6tzn0zd4yyZBTanoj212mAmwC3wsohjMAk+teO8+RFrYNp4tk7tVMuEwgxHpfm1BPoXtNkVBgeM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=i3Vnu3fK; arc=fail smtp.client-ip=52.103.72.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SQRnN3xb9T8dWdkaIEMJ6UkCjo7tK1lIPVsSm6e22cpZ/5J4HtkEkz+EeII5u+I8o6BG1Pwyu5veXa90bmcKK73/QP21/n92/iS1E05rpwOaC6vqbacM3d/biLOzpq2i+xXtGOayGLvPLnhCLfTXUvhdDkLALb46zQtrRUjEUaKPAX82zMnmDo5RUGHaj5GWPWXenvLyFLvsiS/QUihZzehHGm9jszTGfrHMumnbOE6eqY9s37KqgPZnN0PM+hKqUZgPSRuzfm3j6urCTGKfstiy3WiWDRpLag/SQi6YSwruAoRsPmNsVUl9E37xGZhQOi9YeA/LBkR9OGbSIuEFWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=H4zGZsAyhpA+AXjFaHF1wzlbipprbvOjCvbIfQKxtLg=;
+ b=T8LkRRw33yU3NSpdW4IjlS3s01dJUQK6BfVrGVChcjsa7Mxr8qWmjGeKnbEIS1KT9Wos7FIWEW6MceGdCj7WUekBml5XM5R/ND5vg0LqCx3+4vYitibuL2KCTPrchqHc4LcKIdeqhNeG2Qb+EF0j5pVJmmMpWTUIR3UFb5yVnz+qPqUdeMyPc44U5dQjV8JABWjhWNVML6/eqHo5eE3vmv9LbY/L9gTrsusSd+sAD9hh2B4PTV8T9eARjRbEpIPrlqGlHAq9nIarmENcaTVYTog1o3KwD1/5oE+9FPi2h8PLslUKuY6pFbq3m1z/puTltQcNvNRzSg7mjB2KOcViDw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H4zGZsAyhpA+AXjFaHF1wzlbipprbvOjCvbIfQKxtLg=;
+ b=i3Vnu3fKCsTHtgKcdjr7Eq2k2PM7nQjUCzkLhRiMnZIFspb2Pimum0j7z+CbnGDOP3kG3btUVdXaC1nm6mlCWesLI4iRNT6vePRrkf6DQg9wkD2WLCP2GMcmBpHEkVQc+wGndnTH1/sGt9SfmmtQqnshHs1oXLnk0I5ILVu4Hgh//9cSXPaLrFvE22WRHfApSTAlPqvGNvBfVLqsSiANhTq2/+OXAGpW52RD2WvOKeWwrfJy7KPaBSSADdPifL/+KJGfOsbpoz9Cf0/AMvT73gw89YDEppg5gHh1Rpigq5OFL2udXmjRx7VzOOZ/rq1C9GF/Vy4/qR+u6gvYhKVdXw==
+Received: from SYBPR01MB7881.ausprd01.prod.outlook.com (2603:10c6:10:1b0::5)
+ by SY0PR01MB10074.ausprd01.prod.outlook.com (2603:10c6:10:2fd::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.48; Wed, 15 Apr
+ 2026 09:28:22 +0000
+Received: from SYBPR01MB7881.ausprd01.prod.outlook.com
+ ([fe80::7cd2:d6e8:3fa0:5f0c]) by SYBPR01MB7881.ausprd01.prod.outlook.com
+ ([fe80::7cd2:d6e8:3fa0:5f0c%5]) with mapi id 15.20.9769.046; Wed, 15 Apr 2026
+ 09:28:22 +0000
+From: Junrui Luo <moonafterrain@outlook.com>
+Date: Wed, 15 Apr 2026 17:26:55 +0800
+Subject: [PATCH] KVM: s390: pci: fix GAIT table indexing due to
+ double-scaling pointer arithmetic
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID:
+ <SYBPR01MB7881AB7449FEB6B58E4BA6F2AF222@SYBPR01MB7881.ausprd01.prod.outlook.com>
+X-B4-Tracking: v=1; b=H4sIAN5Z32kC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIzMDE0NT3bTMitRiXYNEM0tLU+M0A0PDJCWg2oKiVLAEUGl0bG0tAOlW4dF
+ XAAAA
+X-Change-ID: 20260415-fixes-0a69953f011b
+To: Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Janosch Frank <frankja@linux.ibm.com>, 
+ Claudio Imbrenda <imbrenda@linux.ibm.com>, 
+ David Hildenbrand <david@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
+ Vasily Gorbik <gor@linux.ibm.com>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, 
+ Matthew Rosato <mjrosato@linux.ibm.com>, Farhan Ali <alifm@linux.ibm.com>, 
+ Eric Farman <farman@linux.ibm.com>, 
+ Niklas Schnelle <schnelle@linux.ibm.com>, 
+ Pierre Morel <pmorel@linux.ibm.com>
+Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Yuhao Jiang <danisjiang@gmail.com>, 
+ stable@vger.kernel.org, Junrui Luo <moonafterrain@outlook.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2462;
+ i=moonafterrain@outlook.com; h=from:subject:message-id;
+ bh=Hwq0zbbyYBroJJhvDbtaTNwB50gOAMY0b8sgBW1LXNw=;
+ b=owJ4nJvAy8zAJVb4wiKgu++DA+NptSSGzPuR95y7mdKyGS4qmmxzKfjsFmo5f5/j+fxrM9pze
+ c19LOpXPO0oZWEQ42KQFVNkOV5w6ZuF7xbdLT5bkmHmsDKBDGHg4hSAiVw1Y/inKHU4z/53Eo+a
+ pYGw28yGw+V7r2R8VWQM4Np8p+nES9apDP8jKlfuZ9608leH/5mAtngft63iZb4yX7sTb9mWBrv
+ OMeIEAB58SVk=
+X-Developer-Key: i=moonafterrain@outlook.com; a=openpgp;
+ fpr=C770D2F6384DB42DB44CB46371E838508B8EF040
+X-ClientProxiedBy: TP0P295CA0043.TWNP295.PROD.OUTLOOK.COM
+ (2603:1096:910:4::18) To SYBPR01MB7881.ausprd01.prod.outlook.com
+ (2603:10c6:10:1b0::5)
+X-Microsoft-Original-Message-ID:
+ <20260415-fixes-v1-1-b4e150f6ab92@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDE1MDA4MCBTYWx0ZWRfX9/i6IHTIU8Vq
- wxyPBH1SDJcYZiV26RiQnZT520Zyac3cWW71LYK3QMtseRCz4Zz2O4wpdqwjGTQ1qeWTrLpmp/F
- g+op4/Tbk7DmJTLUSny7QiiES/PenP3CGI8hhzY6rX/ycFIVc1ZW5P9DaLhKJjj7Ud+mX+IUPbm
- nIJdqm4HggQ/w3xMTJE7mIAV3YRfbrqO/DEwSScRQbb0axsC5M2LYgOAC8yYrvInJKrNHEUV1WU
- tBjvZ9QU0N0tqSnka+goH+kgOqtQ7PMARc2YrJyZ6gn8Ypn07Car2ZtDdZVrKiNOZNasIhaqAJz
- 9D5L0khrgc8RuqntgXxV6EMI7zCV/j2h5gPaiaoT0mkm0Xxqbufynmz6QfJL/2wfnXHjth3r4Xc
- Y+imv8wXdDETLSWRNi+j0ohiVH6kSAnjf2ZmnBZpnMX8ylsn+fyc0tRSvsuv83QuiCWBcEs7N7Y
- UBm2bQMZ5U3vlA8IR3g==
-X-Authority-Analysis: v=2.4 cv=eJ4jSnp1 c=1 sm=1 tr=0 ts=69df51d4 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=nnliqRWUN49IhPuP2m4A:9
-X-Proofpoint-GUID: 84bTD4kXYBW8sAXCeVe6z-nRW0kWFXvy
-X-Proofpoint-ORIG-GUID: 84bTD4kXYBW8sAXCeVe6z-nRW0kWFXvy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-14_04,2026-04-13_04,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 lowpriorityscore=0 adultscore=0 priorityscore=1501
- clxscore=1015 bulkscore=0 suspectscore=0 spamscore=0 impostorscore=0
- phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604070000
- definitions=main-2604150080
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SYBPR01MB7881:EE_|SY0PR01MB10074:EE_
+X-MS-Office365-Filtering-Correlation-Id: d19f69fb-f15e-455b-1e3c-08de9ad15656
+X-MS-Exchange-SLBlob-MailProps:
+	dx7TrgQSB6d5vbofsfC/jnGJ+j4hG4ECjrcN7bYYbjGziM3RRZalq1liKAk3PcM61URQVNvpPhm5TgOzZsBnm2EwqrM1GX9S4itUfhQT4Fp8B/hHRUy+t4PSSbPbXdv6Xb8GT8IvnG2paNKrtW7cc23RF0SpcOnGZzWU8bsWu8nYlnu5T8itNvR7aTJ/3zaeeeDdH5LD3WVKd2amqDpog0wr5rE3sjGTqffHC8UMk5Y3aa1OUwxr4fGh4RMAwQoeIjbqELavuIL46HgMjtDBJEQ/9dGJPUxAbfi20kjNIixKv6OPSUoksp6dwk+onGB2CxN5AyP6a0/cItI14POLW3bpQYIG/5shl5XIdPUd+x4CwE9+Yk/EtQ9T6M95h9tZUGKK8dgdBjEhG5Mu1zeukpuiIE8UqndMhOPgNrIZJv3sjs7+rlt0tt5h/87pQXKfG6dQHXJbDKRx3Dnbv/uy4MO6lnw8A5qjTE3rC9bT94igZhIoWIl+gVi/BV9ZH5/FJ9Ux8hEkqscqKP0ZF5y0IA5ISG2NgIAPark/Yvv36Zmlx4OEaqwxFHCdhYHiRKxCDgCb9Gz5cptokCSOp8LptbRM/kTnhl5KPIvWgUk4wouzu5WPxwxlDcL2jUQfn/A10xpQU7UF+xYGHGWokYrdCkbXbwNp3uw9KDNKC/micLTZ+uVwkWTa9bXcS04YyDqrWZ2/IcgWId5WYQlNngH8Zq7YWTUk4YkFL2N9hYSLZcLzjs2jb/0zE3NZjyyhw9QKBrhJdQPC0KI=
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|23021999003|19110799012|6090799003|5072599009|8060799015|15080799012|41001999006|5062599005|39105399006|461199028|24121999003|22091999003|440099028|3412199025|40105399003|41105399003|1710799026;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UVRGQUtCM3BuSlUwL2wzOHJrYlNJTDVDcHhNaFFSUmVSRkZ4aGRpMjJTMzFp?=
+ =?utf-8?B?S0twR0F0MW4reDhieno2TnZGK0FIM3lQT0c1T25aVzdrZ1ZXQzV3Z1U5ZVlv?=
+ =?utf-8?B?WDZybTFMbVFpK0ZueXluMStHcGVqSDlNQ25RNkpwQjIwRDJHTThVUEk3cW4w?=
+ =?utf-8?B?N3FmYlJqVHBrR3JkVEc0aGNLVHhwbmZZYkhPNTlKdjhuU0IrNFllSjZ4dEd6?=
+ =?utf-8?B?UG5yK3ZaMldxV256OWtoTUR0NndDMDJWaGdqb0JCTUQyQkZNRFJhM25weG95?=
+ =?utf-8?B?cjNLNnRvOXNjUUdXbm5pSnltQ1NvYmF6TEV3cUU1S2llRHpENlJ5eVVYSmlh?=
+ =?utf-8?B?c0UwUHlFRHBOT0ZXOTdOSWJabWRqM0NJakNIS2xwOTBiVU1qZ0Z2enFpc2JG?=
+ =?utf-8?B?cUU2RHQzeVBxbUJPeWxvR3NaZ3MyR1p0ZW80WGZkZTZLWXU5eTNyZVFoZUlY?=
+ =?utf-8?B?amkyTDg1UmRmSGV1ZWZuSVlqUzJwdXVEeGlONlZ1ZllPSzZKVzI2RTZ2bndT?=
+ =?utf-8?B?azBqbEJseGxiQ0hMVW1uRUhOd294VTRkNEVzdWhwcXZodG1GN0dGYW5YR1p1?=
+ =?utf-8?B?VFJmOGlqRlFrajE4L1pDd01qV0ljNmxIajZrczZabXdzZmQwcGFvcW00WnQx?=
+ =?utf-8?B?dzlhbGYyN0FVL3ZuL0VFdkc2b1NTenhMNzdGM3NWRWlmSy96eTJQTnYvTDF2?=
+ =?utf-8?B?b0dQNzR4c1NQVmxQcjFzTU8wNXk2eHl6eW0zczQxSCtBV3p0cjE3UFVONEp2?=
+ =?utf-8?B?Zk13NVlzNjVrMU5QZmpUUUFWWlM4ZEFydzFWUzhlMnZRUkYvWU9PRkNzZitx?=
+ =?utf-8?B?VXlscHhQbjBpUEV6NTh2L0xkRm1RVUQ1ZituZ0JUM3lQRGR1YzA4SFlVanZX?=
+ =?utf-8?B?QmZmMWMva1VTelRpQ3pqVlk2d2JGajFyZldsZTZObEx3Mis3NjlUWkIzU2Er?=
+ =?utf-8?B?SjFhaGJKYjh0RHlmdUlMRkh4UXBxVWg4NUhqd3ZqcnhUakpMVEJkQTlUYkQz?=
+ =?utf-8?B?RDZyb1VadmVhQjdsQ1U2VXhoc0w4V0ZqYWtueXQ5MS91NWkxcXFZZXF5T3hl?=
+ =?utf-8?B?VVBoaTZpcXdyRTZtRHFOb1VQaHBlNkEvdGF0MWFHbVRVM1lQdm5VSnoySDhR?=
+ =?utf-8?B?S1U1bFM2OGYrejJhM25QNG8xSnY4aGlqZDBIQ3FRRFY1TDcrWDZ1MWJ2SDc0?=
+ =?utf-8?B?K2plSXRSN0w1QVZEbkJlUmVoMGtjdlYya29HU0YzMTVYZGovN2JuUDgrVFk0?=
+ =?utf-8?B?ZW5MZVB3RXN1SkVQOGxMRHVwajBYemI0NmRDa0VIQklHVTM4KzlQQlRseWpv?=
+ =?utf-8?B?dkVwbERYdnA2WUpGZUllOE9GdFBYZW9nM0JzdXJTd3BHVWtva0hBNzJxMWxs?=
+ =?utf-8?B?QW13cjJ5TWpmekh4VWpXY2RiU29KVTVsRXpCOTVTR1JZQlRmOVNVMkF5L0Iy?=
+ =?utf-8?B?NFJIQkdwRVpRdUR6SFBjbFZtQ0xwZTdWZkMvenc5OEFiRENiUVZtdXJJQ1hV?=
+ =?utf-8?Q?FA44iNLVuJBG1ZNKW9BRlrAbG4O?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RFJkMlFkRHdNVXVWcnRuMFpNbTZQZGZ0ZzRoL3loOVU0NkJFVkE3MzNrSHBG?=
+ =?utf-8?B?MFJFNEVJWXpJNm5ucjNQTXc5SDJmalRDcW8zRGtWZmI2OFA0UGtERFgyK0Qy?=
+ =?utf-8?B?UUVwTGtQeVpTUXlIOHhnVGtMWmY4RUNBT0lsOFdrQmVyZTdLRC9UdVh0OUNL?=
+ =?utf-8?B?SzFBbFp2cmtuSkludklrTW5lUk1aaGlmNUZ5NUlDL0JNZlRYdUJ4Sy92V0lF?=
+ =?utf-8?B?TTBCUHdjbTUrWm5wVmNrWE1ieFFXY0hqMlpyUGVWQlp6YnZxNXNVWkxUdDFT?=
+ =?utf-8?B?SloxcjNSQlBSek0yam1zVzFVbER1cUxDdTBLajZYbzVpVXJNenhZbS94c2dV?=
+ =?utf-8?B?RTc4YWlGY1MwaGMzM2pGdWJsVWdmOExHWG1iazJVZkRqTDZRWTE0djF2Wkpz?=
+ =?utf-8?B?cHlsMDNoaGhxcVQ0UEl3OUZWQTFyekRyK092NXB1SVV4L3hPMmxsdVVUb1FR?=
+ =?utf-8?B?SjhjQ0hXdXBaRTY4RGJ2ZUZEa3d6eS9YSjRwaDJaelVtaUdDUi9JZ1RublRy?=
+ =?utf-8?B?TVRKS3UxUE5PcWk4TEdaMmdZeWd1Y2VWZ2duVEpQUXVzbWFkSjJmMGUvWGxQ?=
+ =?utf-8?B?OVVZUzdaUkpTWU8xSVlxUmRNOFpvcWthMWRmNUtSVmJjdWpjVm9KOHBLUExP?=
+ =?utf-8?B?NXMrcHV5Kys1SUpHeHl2VmQyMXdGekU5VUhVNVRkUG1qSE5YaDNyN0YyNlBQ?=
+ =?utf-8?B?Um1jemphbzgxZDBocWRMTzY0eks3akZPRmovRWNETmNNdHVUU3BPc0M0QUcv?=
+ =?utf-8?B?b3E1WVJmaWo2RnN2czdQQnVPOXZSR0RMNEVTTWltdW9RYXZ2SzQ3SVJNNGtQ?=
+ =?utf-8?B?MmlNNGMxREVpb2FPalc5aU9XNmF2aFVGS3pXVGpGOEJzR3V5SDZjbjFRbUJU?=
+ =?utf-8?B?OGhsV3pCL2VyYzhLRHF6M0NVYWo4ZWdRTEhkNko3Ky93WjVHWE54TzRLdUpp?=
+ =?utf-8?B?MGN0b3pISlQ1Y1BoRWpJTmlrUWxhdW1USGRwLzdIZ200MFBSMC9wd1V1czdp?=
+ =?utf-8?B?Z25RU3EvM2U4V2JVdmdzMjZEYk1zTjlkZVJtOEMzVktEY21wQXROQW4wNDQ1?=
+ =?utf-8?B?eEJzQ2dHaVdWbFhCNU4xZ3l1ODhHRlhpbDlnUnJOcnlNNFVPbzhUdjdoalFT?=
+ =?utf-8?B?QXhxVDhlcTBMZjVzM0k5dkY5ei9LRkRKcWVPVlBqYzVzb3dwNnFzdUVmVGZP?=
+ =?utf-8?B?UzZQb3VKVXh0MmVHWkFHTnhpeHAxcE9PWVFzR2N6alpyZ3RtQ0Y5Z05XN0Jt?=
+ =?utf-8?B?b2FTeXN6TWlvWE1DZEtBUUtVK3V0ZWpxcFpmZytsT0FrRGhVaFplRFlmNzgw?=
+ =?utf-8?B?Z1BrNzZuUmI5RTVrYXF4V3JlVGVMdFJ0dTUyTzExQnU3VUdkcHAzVzh1Um1I?=
+ =?utf-8?B?UGJucU9jQkFqbjVkNzM1Wi92T05ld1JZcWkzdFZKek1yK2h5YjhPeEZRbVJT?=
+ =?utf-8?B?bGZpWGZBRmM4eFZ6c3NmUHdVb3crSXhaNXQ4VUc0Q2tRQkhNeUtxS2h0M2R6?=
+ =?utf-8?B?dnQ1Q3NsWUNDY3lyRVBFNjhrS0d4QTJwa2taZUI2bVNPU1NOeFBYVVF1NE5K?=
+ =?utf-8?B?enJOa3g4N0UvU1FSSlYybDhnSzF4UmcrWGZNeXNDS1hNbFc1cVJsRVdML09X?=
+ =?utf-8?B?N043U3Q4QnVEbko4SkpuZVpqTzVlMlRVRnFjNWg0cXZaOWNSaHg3QkhZcnJN?=
+ =?utf-8?B?dVV2Q09meEQzTURsbjZkUGxSZDBqUVV0SWFZRmZUK2YzY1FtNjZvT1ZjU3pa?=
+ =?utf-8?B?eVM5L0UwcUN1OGJucDF4ajN3TWJRMHBPTkF4QkFCS3Z3NnBYbGdkS0FGOEhh?=
+ =?utf-8?B?MkdGYURLc1docC9WV1EwS2kvYU5aT0JKQWEzR1Q5ZkNja1I4c2h5N0JLbE4v?=
+ =?utf-8?B?N0JNOVI4Qm12T0I3NVhpblh4Njh3Z0RlcFJDYUdRN1VEUEE9PQ==?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d19f69fb-f15e-455b-1e3c-08de9ad15656
+X-MS-Exchange-CrossTenant-AuthSource: SYBPR01MB7881.ausprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2026 09:28:22.5552
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SY0PR01MB10074
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-18846-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18843-lists,linux-s390=lfdr.de];
-	TO_DN_NONE(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,outlook.com];
+	FREEMAIL_FROM(0.00)[outlook.com];
+	RCPT_COUNT_TWELVE(0.00)[19];
 	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[frankja@linux.ibm.com,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
-	DKIM_TRACE(0.00)[ibm.com:+];
+	FROM_NEQ_ENVFROM(0.00)[moonafterrain@outlook.com,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[outlook.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: C88AC4022B6
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,outlook.com:dkim,outlook.com:email,SYBPR01MB7881.ausprd01.prod.outlook.com:mid]
+X-Rspamd-Queue-Id: 3066740294F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-We're not kvm.
+kvm_s390_pci_aif_enable(), kvm_s390_pci_aif_disable(), and
+aen_host_forward() index the GAIT by manually multiplying the index
+with sizeof(struct zpci_gaite).
 
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+Since aift->gait is already a struct zpci_gaite pointer, this
+double-scales the offset, accessing element aisb*16 instead of aisb.
+
+This causes out-of-bounds accesses when aisb >= 32 (with
+ZPCI_NR_DEVICES=512)
+
+Fix by removing the erroneous sizeof multiplication.
+
+Fixes: 3c5a1b6f0a18 ("KVM: s390: pci: provide routines for enabling/disabling interrupt forwarding")
+Fixes: 73f91b004321 ("KVM: s390: pci: enable host forwarding of Adapter Event Notifications")
+Reported-by: Yuhao Jiang <danisjiang@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Junrui Luo <moonafterrain@outlook.com>
 ---
- lib/s390x/asm/sie-arch.h | 2 +-
- lib/s390x/interrupt.c    | 4 ++--
- lib/s390x/sie-icpt.c     | 2 +-
- lib/s390x/sie-icpt.h     | 2 +-
- lib/s390x/sie.h          | 4 ++--
- 5 files changed, 7 insertions(+), 7 deletions(-)
+ arch/s390/kvm/interrupt.c | 3 +--
+ arch/s390/kvm/pci.c       | 6 ++----
+ 2 files changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/lib/s390x/asm/sie-arch.h b/lib/s390x/asm/sie-arch.h
-index 4911c988..d9d5af81 100644
---- a/lib/s390x/asm/sie-arch.h
-+++ b/lib/s390x/asm/sie-arch.h
-@@ -29,7 +29,7 @@
- #define CPUSTAT_J          0x00000002
- #define CPUSTAT_P          0x00000001
+diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
+index 7cb8ce833b62..f48f25c7dc8f 100644
+--- a/arch/s390/kvm/interrupt.c
++++ b/arch/s390/kvm/interrupt.c
+@@ -3307,8 +3307,7 @@ static void aen_host_forward(unsigned long si)
+ 	struct zpci_gaite *gaite;
+ 	struct kvm *kvm;
  
--struct kvm_s390_sie_block {
-+struct sie_control_block {
- 	uint32_t 	cpuflags;		/* 0x0000 */
- 	uint32_t : 1;			/* 0x0004 */
- 	uint32_t 	prefix : 18;
-diff --git a/lib/s390x/interrupt.c b/lib/s390x/interrupt.c
-index a75128b9..7e7371c1 100644
---- a/lib/s390x/interrupt.c
-+++ b/lib/s390x/interrupt.c
-@@ -227,7 +227,7 @@ static void print_storage_exception_information(void)
+-	gaite = (struct zpci_gaite *)aift->gait +
+-		(si * sizeof(struct zpci_gaite));
++	gaite = aift->gait + si;
+ 	if (gaite->count == 0)
+ 		return;
+ 	if (gaite->aisb != 0)
+diff --git a/arch/s390/kvm/pci.c b/arch/s390/kvm/pci.c
+index 86d93e8dddae..eed45af1a92d 100644
+--- a/arch/s390/kvm/pci.c
++++ b/arch/s390/kvm/pci.c
+@@ -290,8 +290,7 @@ static int kvm_s390_pci_aif_enable(struct zpci_dev *zdev, struct zpci_fib *fib,
+ 				    phys_to_virt(fib->fmt0.aibv));
  
- static void print_int_regs(struct stack_frame_int *stack, bool sie)
- {
--	struct kvm_s390_sie_block *sblk;
-+	struct sie_control_block *sblk;
+ 	spin_lock_irq(&aift->gait_lock);
+-	gaite = (struct zpci_gaite *)aift->gait + (zdev->aisb *
+-						   sizeof(struct zpci_gaite));
++	gaite = aift->gait + zdev->aisb;
  
- 	printf("\n");
- 	printf("%s\n", sie ? "Guest registers:" : "Host registers:");
-@@ -240,7 +240,7 @@ static void print_int_regs(struct stack_frame_int *stack, bool sie)
- 	       stack->grs0[6], stack->grs0[7], stack->grs0[8], stack->grs0[9]);
- 
- 	if (sie) {
--		sblk = (struct kvm_s390_sie_block *)stack->grs0[12];
-+		sblk = (struct sie_control_block *)stack->grs0[12];
- 		printf("%016lx %016lx %016lx %016lx\n",
- 		       stack->grs0[10], stack->grs0[11], sblk->gg14, sblk->gg15);
- 	} else {
-diff --git a/lib/s390x/sie-icpt.c b/lib/s390x/sie-icpt.c
-index 17064424..861dce02 100644
---- a/lib/s390x/sie-icpt.c
-+++ b/lib/s390x/sie-icpt.c
-@@ -7,7 +7,7 @@
- 
- #include <sie-icpt.h>
- 
--struct diag_itext sblk_ip_as_diag(struct kvm_s390_sie_block *sblk)
-+struct diag_itext sblk_ip_as_diag(struct sie_control_block *sblk)
- {
- 	union {
- 		struct {
-diff --git a/lib/s390x/sie-icpt.h b/lib/s390x/sie-icpt.h
-index 604a7221..b1edf334 100644
---- a/lib/s390x/sie-icpt.h
-+++ b/lib/s390x/sie-icpt.h
-@@ -21,7 +21,7 @@ struct diag_itext {
- 	uint64_t          : 16;
- };
- 
--struct diag_itext sblk_ip_as_diag(struct kvm_s390_sie_block *sblk);
-+struct diag_itext sblk_ip_as_diag(struct sie_control_block *sblk);
- 
- /**
-  * sie_is_diag_icpt() - Check if intercept is due to diagnose instruction
-diff --git a/lib/s390x/sie.h b/lib/s390x/sie.h
-index 3ec49ed0..b146e386 100644
---- a/lib/s390x/sie.h
-+++ b/lib/s390x/sie.h
-@@ -32,7 +32,7 @@ struct vm_save_area {
- };
- 
- struct vm {
--	struct kvm_s390_sie_block *sblk;
-+	struct sie_control_block *sblk;
- 	struct vm_save_area save_area;
- 	struct esca_block *sca;			/* System Control Area */
- 	uint8_t *crycb;				/* Crypto Control Block */
-@@ -46,7 +46,7 @@ extern void sie_entry(void);
- extern void sie_exit(void);
- extern void sie_entry_gregs(void);
- extern void sie_exit_gregs(void);
--extern void sie64a(struct kvm_s390_sie_block *sblk, struct vm_save_area *save_area);
-+extern void sie64a(struct sie_control_block *sblk, struct vm_save_area *save_area);
- void sie(struct vm *vm);
- void sie_expect_validity(struct vm *vm);
- uint16_t sie_get_validity(struct vm *vm);
+ 	/* If assist not requested, host will get all alerts */
+ 	if (assist)
+@@ -357,8 +356,7 @@ static int kvm_s390_pci_aif_disable(struct zpci_dev *zdev, bool force)
+ 	if (zdev->kzdev->fib.fmt0.aibv == 0)
+ 		goto out;
+ 	spin_lock_irq(&aift->gait_lock);
+-	gaite = (struct zpci_gaite *)aift->gait + (zdev->aisb *
+-						   sizeof(struct zpci_gaite));
++	gaite = aift->gait + zdev->aisb;
+ 	isc = gaite->gisc;
+ 	gaite->count--;
+ 	if (gaite->count == 0) {
+
+---
+base-commit: 7aaa8047eafd0bd628065b15757d9b48c5f9c07d
+change-id: 20260415-fixes-0a69953f011b
+
+Best regards,
 -- 
-2.51.0
+Junrui Luo <moonafterrain@outlook.com>
 
 
