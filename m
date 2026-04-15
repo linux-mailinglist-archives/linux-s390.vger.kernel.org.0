@@ -1,71 +1,71 @@
-Return-Path: <linux-s390+bounces-18841-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18844-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MEqXKjJT32l1RwAAu9opvQ
-	(envelope-from <linux-s390+bounces-18841-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2026 10:58:26 +0200
+	id ECa1D0hT32l1RwAAu9opvQ
+	(envelope-from <linux-s390+bounces-18844-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2026 10:58:48 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09EFC4023B9
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2026 10:58:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F8804023DE
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2026 10:58:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C01C1315036F
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2026 08:52:52 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 658303095C43
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2026 08:53:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 488003D75B7;
-	Wed, 15 Apr 2026 08:52:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6E8E3DCDB3;
+	Wed, 15 Apr 2026 08:52:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kjuZfmht"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cSlUQ66o"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3DBA3D564D;
-	Wed, 15 Apr 2026 08:52:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B5F3D5662;
+	Wed, 15 Apr 2026 08:52:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776243158; cv=none; b=CLsLFLRSElMwblc+umyeCmXo6OAUICqSOBCfQKxAYZ4TcjrY0k7qIW1vtZGjVxpxQVYrtgk5oe8E3gARVyK7GnA+eovsu83S/2aP+FTRCh/WR+AA5XmIy/DMedI3puE+mV8SJvohfkO7CdknHLXhYFhzCo2gGARhNXBxfrAJNwE=
+	t=1776243159; cv=none; b=oBFAe5JWPf/VcetKJPoQyYcBK0a6tbePA0o/jdtX4uJProOaOY/exm4BaVtLx56uLrUm7ERbP+LOYpQoXkTxgbLk/i82jP5mAc9BLx46cP4qMLZS6f+5Ly1OH3e1LEonINRptqrVdO5OEr24+FLAy+3/NSMFu9XOCUOovVz5gbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776243158; c=relaxed/simple;
-	bh=0aXrKQddpzOuYQsyNQqoXAjXf8iTFBoN/KxME/xPAhM=;
+	s=arc-20240116; t=1776243159; c=relaxed/simple;
+	bh=xysu5jLQLfbVF9hVcPbczeN0IxtC8Sysi+kLZgvPPow=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QBxfMKd3FJ2+uHjReUdmbLSJEAj0Dwg1klUKdP2J6/kq4UhB0eu1Hdm76zlZgT80euszMWhDayh0QbIW/ABIRrCzzcTRQxx2iWmnz5kFSgGRApFGa48eVKpICoQ2f4wEPmQqP+R2Rr7+3t7vE/vEWe3B6ukwkE3MTHRGWwfAPTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kjuZfmht; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=AMp8HgBJUYodnVavrpsjeWbwiT9elYDfpHHAhBH5oWDa5RJZC33oEljVIyN8hU729OjkMI8Pakoo7+GI3bbyRRvIc6Zk+tkvUGK9vHgGqHa3tRkYBKaQNRrhFEfJ3txtXnVmp2F9mqA+7m28xBXGKzN3GOyRl2nqoxEQDu/CkMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cSlUQ66o; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63F2p9uK1833389;
-	Wed, 15 Apr 2026 08:52:36 GMT
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63F4Y37B1833140;
+	Wed, 15 Apr 2026 08:52:37 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=EjMxopoA74uOD24fx
-	385Z5fmryPNf92pbE8g+FFLVmU=; b=kjuZfmhtu4gMz6d+Jr031yrQbPwtV1+OU
-	mqlR3PX6UBp99DxCHWDbn8twh8eqHfj0oX+ogrhGIgUnACN+4A4hAr3GK8fwtk2y
-	9RyqbEkLIOp48XS5NHsQ9LqYH+62vKUYMhZAKCtxH86QHZ2nG7wXYT8rqzPn9XWT
-	GButGJn3VfN6bJG9zd7H3hbSPLvEDDfgW4tz+YPwvcbEerT9Hij45YnReq4sO/uG
-	//IGZvIel3b+KHoAZownNymL8Igp9AcGclAd2RFfIBu7NnMdD5zF3PWUmWjPsth4
-	3nri3ukZ9KdR32EmH3IxJJdFZF9T4wMZtbdTjzq2S47tkHzUX83kA==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dh89rf5hq-1
+	:mime-version:references:subject:to; s=pp1; bh=fEbh/VemSqq+B9Mqd
+	sJqbYlDIEegcLdrYzg/YcqJYqE=; b=cSlUQ66oSdqY6GL/03AcbBF0ensbychU8
+	ZB7vmzxtg1IZowb75s+WgI8HyjrsO3ixF86+0cU6sNkk7n9sVUcpjNFfqsMs6crV
+	T9O/A0oVMZF0OUL4OCQqZ2FTqzrNMDrdB+B2qGb8bwHIEVaPhySxDcNrkQ4PRqIF
+	3f19E5SJm14BLgxZjYMBRpuv2ttziW3QAYTtL/eZUeXRXbE8a99zxSGYwRC8I2vn
+	ZJ+oJAh5v758uU2DgRLeOpEHr3mMcdP5rUkG2iW/frXAYfqRFXb3ij3mHpnQON64
+	OP9aOly5REhw+36KnTJcVF+t+RTI84cmZQdPGLCcjSnfJRyJouynw==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dh89rf5hs-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Wed, 15 Apr 2026 08:52:36 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 63F4YX5U025837;
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 63F7gFZs003514;
 	Wed, 15 Apr 2026 08:52:35 GMT
 Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dg2ujn7p5-1
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dg1mndds3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Wed, 15 Apr 2026 08:52:35 +0000
 Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63F8qV0U40370634
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63F8qVdC40370636
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 15 Apr 2026 08:52:31 GMT
+	Wed, 15 Apr 2026 08:52:32 GMT
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B57C120040;
+	by IMSVA (Postfix) with ESMTP id E261620040;
 	Wed, 15 Apr 2026 08:52:31 +0000 (GMT)
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8FC622004B;
+	by IMSVA (Postfix) with ESMTP id BAB842004E;
 	Wed, 15 Apr 2026 08:52:31 +0000 (GMT)
 Received: from b46lp25.lnxne.boe (unknown [9.87.84.240])
 	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
@@ -74,9 +74,9 @@ From: Janosch Frank <frankja@linux.ibm.com>
 To: kvm@vger.kernel.org
 Cc: linux-s390@vger.kernel.org, imbrenda@linux.ibm.com,
         borntraeger@linux.ibm.com, nrb@linux.ibm.com
-Subject: [kvm-unit-tests 2/5] lib: s390x: sie: Allocate physical guest memory via memalign
-Date: Wed, 15 Apr 2026 08:45:42 +0000
-Message-ID: <20260415085145.91197-3-frankja@linux.ibm.com>
+Subject: [kvm-unit-tests 3/5] lib: s390x: sie: Free guest memory on destroy
+Date: Wed, 15 Apr 2026 08:45:43 +0000
+Message-ID: <20260415085145.91197-4-frankja@linux.ibm.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260415085145.91197-1-frankja@linux.ibm.com>
 References: <20260415085145.91197-1-frankja@linux.ibm.com>
@@ -88,21 +88,21 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDE1MDA4MCBTYWx0ZWRfX1fxQADB9aYH5
- lkHxpxoG9kSccQOcbAlhHc5HYbu0SH/xb2eZcRn3QbNaxX7J9hNk3bkIERNINmyX2/PhU+abEvS
- YNyi1vJkeZl7JeKVdtQVMfXR/ptO+vVZoDD+b4SuxWmzs3PDm+MqsE0qCn5Umk6+LQXq9WL4TSf
- tkqicgxRoW1tJoZjfAHnNMPcKK5y30ZAoBBVG79eqap2a53eijHVu6k+Aamma1aTQEnVQpPRw2C
- wtEMXcGNP38g8oxjc5ql5Eyc76C1aqF8EkQ2GYQ8iGmElToRhSCihIdtFAhKaZy7r1rdh6ChEFv
- OjB42TZB3HEnElcVeFbgijpySC3shKGhvPCpAt335fTlLq/hAv6hRipTgVehwvIpAV8KmBri1ai
- DeGBftXp0opF2opXp7Z7qpkHFb/p58lxEIMg4OxnuHkI5j1pK62MidLQQItZudtkROdlzEgajP/
- aA9hsRnxwFgwWI1ss3w==
-X-Proofpoint-ORIG-GUID: O04gYTwyjknzgNiZWd9zkx7aVIwQawL-
-X-Proofpoint-GUID: O04gYTwyjknzgNiZWd9zkx7aVIwQawL-
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDE1MDA4MCBTYWx0ZWRfX6ZM2DWE8pkoD
+ DQyrSq+g9NJTAvDF4oSOsx7C+pWF4J39T1sqMtCECkKf6WH9z0koONIaBlyKEw6lP2KOYXaJJFp
+ vAvHm436LZrGoLRAmPkWZy3oea6gO9c8fdSxmfaVqkjJRqwbsgUtHbO2LQF488k02SHjpZ5cf4/
+ qsYd21rBJrtRrcOnAaiv69RsDp/DPdThw6HkaW4rOF4EycYt1zK1tjS3TXp+8ZnhuVpOCSxtCBC
+ NO355Olxf5Hzgyj1d7pH0amAOeTPGUmkhqC3ZubrefNPRZkOlvGpz7lzOvqye3jiWgmOCWJV/Eu
+ i+9oUlIgf/7f+ruBc4UAjLqgLJYPhHfJNU9Lgb1H8bP0Fe5wYOnY2jFyBPpLASjgOCaba5DbyP9
+ Hfb+e+qfVjLntZAQ1V4oPRT1OzZye6Jv/THavmlks7h8Eg/Fvifg8QR+3xiOykQuvAfGB474Fd3
+ fmnd22EaAKPKaufCrIw==
+X-Proofpoint-ORIG-GUID: sHGShqNpaPhnKjy3RQPRBSSZ2ks47F3_
+X-Proofpoint-GUID: sHGShqNpaPhnKjy3RQPRBSSZ2ks47F3_
 X-Authority-Analysis: v=2.4 cv=fYidDUQF c=1 sm=1 tr=0 ts=69df51d4 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
  a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=GueWrYxDVtNpybNoHvoA:9
- a=ZXulRonScM0A:10
+ a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=clHM_NND8LjUN_pgk4IA:9
+ a=0lgtpPvCYYIA:10
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-04-14_04,2026-04-13_04,2025-10-01_01
@@ -122,7 +122,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18841-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18844-lists,linux-s390=lfdr.de];
 	TO_DN_NONE(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -136,33 +136,33 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCPT_COUNT_FIVE(0.00)[5];
 	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 09EFC4023B9
+X-Rspamd-Queue-Id: 8F8804023DE
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-alloc_pages_flags() alignes the allocation on the same order as its
-requested size. Since we use virtual memory for SIE we can instead
-align to 1MB by using memalign() which is less wasteful.
+We never freed the memory that the sie library allocates as the guest
+ram on destruction of the VM. Most tests reuse the VM or just leak the
+memory since the standard allocation is one megabyte and tests only
+use single digit numbers of VMs.
+
+It's time to add automatic freeing to the sie library when a VM is
+destroyed.
 
 Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
 ---
- lib/s390x/sie.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ lib/s390x/sie.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/lib/s390x/sie.c b/lib/s390x/sie.c
-index a397400b..a49c45c7 100644
+index a49c45c7..758ead77 100644
 --- a/lib/s390x/sie.c
 +++ b/lib/s390x/sie.c
-@@ -171,7 +171,8 @@ uint8_t *sie_guest_alloc(uint64_t guest_size)
- 	guest_virt = (uint8_t *)ALIGN(get_ram_size() + guest_counter * 4UL * SZ_1G, SZ_2G);
- 	guest_counter++;
- 
--	guest_phys = alloc_pages(get_order(guest_size) - 12);
-+	guest_phys = memalign_pages_flags(SZ_1M, guest_size, 0);
-+	assert(guest_phys);
- 	/*
- 	 * Establish a new mapping of the guest memory so it can be 2GB aligned
- 	 * without actually requiring 2GB physical memory.
+@@ -192,4 +192,5 @@ void sie_guest_destroy(struct vm *vm)
+ 	free_page(vm->sblk);
+ 	if (vm->sblk->ecb2 & ECB2_ESCA)
+ 		free_page(vm->sca);
++	free_pages((void *)virt_to_pte_phys(get_page_root(), vm->guest_mem));
+ }
 -- 
 2.51.0
 
