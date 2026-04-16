@@ -1,160 +1,218 @@
-Return-Path: <linux-s390+bounces-18874-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18876-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MJBEKIej4GkEkgAAu9opvQ
-	(envelope-from <linux-s390+bounces-18874-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2026 10:53:27 +0200
+	id iJRpH4O64GmIlAAAu9opvQ
+	(envelope-from <linux-s390+bounces-18876-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2026 12:31:31 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 831A740BDB7
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2026 10:53:26 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id C673140CEFF
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2026 12:31:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id E87D7301F3CA
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2026 08:53:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A5C1C3009505
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2026 10:29:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B92B31EB5E3;
-	Thu, 16 Apr 2026 08:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LmFNq4kC"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEC453A1A5C;
+	Thu, 16 Apr 2026 10:29:48 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1A337AA78;
-	Thu, 16 Apr 2026 08:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D3F38E11E
+	for <linux-s390@vger.kernel.org>; Thu, 16 Apr 2026 10:29:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776329603; cv=none; b=Fb+P7+VIFO0GCTJqqRz+V6p61XWq5QxvYrgvGc61iYuHMtqbsNHl+HBzt9aScB//grgD3cnrEVc9PeLYVfjBd0/bDgx1TvtMY+Y7Jz9X0B8ULskODeLCLWqCCOg3mJ+jD88Xq5L4LDRoj4Zyx0MZdPEgQ3pS/MIwXmIEyLp4tYA=
+	t=1776335387; cv=none; b=BwiGRmtSHK3RUzxuZk8He0uOeVK6TfAi14Me8tVFoUm7vCVgIY9aJFj5TecuqVGdbs9RwAKXFbrKO0jzWOtfQsmYudc2N2Onl4t3sCOhj6kNTIGEkxHys+fFRTQtZpTIlrlPyjZ58wsiRlL3pEEGOT/UWbsFuD1vocOHQoxEjDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776329603; c=relaxed/simple;
-	bh=S+Rbl+X0eKNTG8cqOejGKkOulH0HGsQZs6yPGed3wJ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CC0OkQU5Nd5HjN303QkaxOejdwS0Z2SVw6/mHXp0S8EAoeONf8gbE8hyym4ueGVLL5r9NicCjy/AC2BKkm/IR6llfkA/xbkztAM+umDC4vMkecDU5rq6fBX4L8cEjI9FekAcetd8DyHZ0KVe7tL11KvEdib/61MnX/hvAwJeP0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LmFNq4kC; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63G3DUVY435815;
-	Thu, 16 Apr 2026 08:53:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=S+Rbl+X0eKNTG8cqOejGKkOulH0HGs
-	QZs6yPGed3wJ4=; b=LmFNq4kCvIjsmA6zjpw01HNzk1mCNOZLxcdT6NngxrLmhh
-	tQAWc8dQSrupZbjR4xKteSoZIgzb9qt63IxfAKzW8JuiroTtcbjOXkvI33RAeLDI
-	5UAyIZtkXRZf8q5IobZ8SSLxMGkQEyomEfYFxWSkmS0FezxRLF2VyY+b/zzcBfz2
-	mMwngpo65vpUuiXNFRO2YQxJu3pvNNEHReYB3pNhWzVLDXlInDRU0wYNRVRhU3Uh
-	2TPBXFXVlE4G29FTXy2CforiIbf3ylIyDutsoiDuw/w/KIi37BOdEQMpQZ9xDL4Z
-	3C9YnJBEs/0Fdprl8VqmP/jBn4xlJG5yizCW6IZQ==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dh89kbq56-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 Apr 2026 08:53:13 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 63G83RSO003253;
-	Thu, 16 Apr 2026 08:53:12 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4djbh93qyd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 Apr 2026 08:53:12 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63G8r9wZ36831524
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 16 Apr 2026 08:53:09 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4819B20043;
-	Thu, 16 Apr 2026 08:53:09 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9C9E62004B;
-	Thu, 16 Apr 2026 08:53:08 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.111.42.253])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 16 Apr 2026 08:53:08 +0000 (GMT)
-Date: Thu, 16 Apr 2026 10:53:07 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Kevin Brodsky <kevin.brodsky@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Ryan Roberts <Ryan.Roberts@arm.com>, linux-s390@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] mm/pgtable: Fix bogus comment to
- clear_not_present_full_ptes()
-Message-ID: <65f893a0-bb47-41e3-9251-9e94c9b5c99a-agordeev@linux.ibm.com>
-References: <cover.1776264097.git.agordeev@linux.ibm.com>
- <fecfcf70436e267968c1c3b6908e51fe49fd9009.1776264097.git.agordeev@linux.ibm.com>
- <844d4076-a250-486e-aa16-fe5149c9d508@kernel.org>
+	s=arc-20240116; t=1776335387; c=relaxed/simple;
+	bh=Il5EilNKbQmVM1qv4XgxLAe02Z9+zxydkwUqJc2BPRU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eXED1yRPyvhTcUQrnZVle1N2B7uRYIqyvx30FcuRnR5Qp94ii1kdWl3c5cTmUiFF4VmJRdPHsC8rKcZ6d0YMj9KlatOsXtZxJZKuIjuqJcEQP8iZM86bKpyZQ7PoWi0K/+gx94+ba5zthtDt0Ha6K9gkYH+AvOW8yaEXA3o+45o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-471618e20a5so4028009b6e.1
+        for <linux-s390@vger.kernel.org>; Thu, 16 Apr 2026 03:29:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776335381; x=1776940181;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z9HEDsaws+1AaPEcUyrGjtCss1Kv3jZQFAB8Oib7mmY=;
+        b=V59BQ3ynIwHWIZflJODDcz8XJoBOonuOugkMYrqZ3tYwdk9EuSzunT8KGMc3/QsMzq
+         lqeHPikFNLTkJ7lMu2Xsdn1VZKXcPXHj3QMiHI98GqCMou88flQcAfX8ExxbRNlLpL9N
+         rHAWswKazRxxadChn9igktfqMq0TTY7aI+dnpfbSycDL46Xn6cmCi1x651q+maLWbS5D
+         x8EJzdphloOMUI/SgCp9HWMqeYLCG5k4i7KRKqZINBzRXX3QW+gCpISdh36kXLSyaLX9
+         cBBoXJQEOFdmld/uQlg4Fbl14XgN0s/3yVVx3T/QYhjupJh5juwpOqmDlqJnFXlc1Cr5
+         Z2kw==
+X-Forwarded-Encrypted: i=1; AFNElJ/m5UWIzPeML2mcpFV0qFOsZyiJCTTVAJcS+4e1JdO4d4oHU/RaQBdA0V+h+gtfnK+Eoj1ITe1W8C4K@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz57Qxns3Aasxno+7xhR5O3ZQCZ5tPTbQkaUUHlAaUrCy87OoDy
+	Xaa4WCOGU4SMieIq6LgPQacESJS8m3kLoveyIJfDlPyINrTiIlQKK/H/NkNT0hmf
+X-Gm-Gg: AeBDietEUlzi00Ay4cjqJK6GDUwYv3/SLmpi85hRuZ+ihPKO99akga2h6f5tUM5iUql
+	/A8amSVrMQ7ST0ZRLHC5QKZJdv8BLvLPj8li+RKhkkkLX1i1rMBNJtgYzeSyEgEyC5Jf7479/06
+	n/lvsnz5lUxducZVgRhY+X5cPUXgGAENM0RDwE9akFDIMdg5RsJ9KCmbkNIZl2EtOWfVMQ5XRku
+	4nRTxMLmOFg8fu6ZqhsTfNDJP442fmuIirOsEDiVnsLPKKUYLAQFm2EJzEmqkFJcq+3fu8I1w5V
+	LQkp2Ni/3knDLMJj2vFZvxPY0Br2SCnMlSIU6rWtrqS5OYzBVHU27/5RtNNBkHLmwLjssqiAnAT
+	u3QEBoypUHgc7WTPnlYfrhbcjhZZjgxMMKXbdyXzZNDb6f2IRQ5zRJAn9l8EkUxlhIBgTYOMp/Y
+	IaWXuaDQQ+T+0mbyyuhCjYermVdIfWwcWiN0YDvGWOi3whR3x+J9qX1fwtdtNYj0sl5OT+KBw=
+X-Received: by 2002:a54:4388:0:b0:467:1880:fff5 with SMTP id 5614622812f47-4789e91dc09mr10134564b6e.31.1776335380983;
+        Thu, 16 Apr 2026 03:29:40 -0700 (PDT)
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com. [209.85.210.43])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-42666b86f17sm3422901fac.4.2026.04.16.03.29.40
+        for <linux-s390@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Apr 2026 03:29:40 -0700 (PDT)
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-7dbdcb85067so6553796a34.1
+        for <linux-s390@vger.kernel.org>; Thu, 16 Apr 2026 03:29:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ94it/SCp2Te7ACXU1SF56R/uzDbF3HLtQw3Yh5+6RorePChUz6oVVv2z/flAN34SuyDEPaXrcL5U7J@vger.kernel.org
+X-Received: by 2002:a05:6102:c48:b0:608:cd24:354c with SMTP id
+ ada2fe7eead31-609fe9b0d22mr11966750137.3.1776335071251; Thu, 16 Apr 2026
+ 03:24:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <844d4076-a250-486e-aa16-fe5149c9d508@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: knDDruZNWEP89G6YdCKHxfnw_NQeOL_Y
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDE2MDA4MiBTYWx0ZWRfX7UdMxaHWCy+5
- rd5H87AheMJJIirSanN6C0vVyQMSA9aBWK+oZSXQm3UH5PCbrkJrIISBO+aX1U/ksZFibDW9bu3
- 6foM24tTIFai2D5BF14DMdB7ZiTYZ96gzU2ub+upi9Yxxb93Ns1u0TFrpN2jW1EIS43sMhwvyri
- AriVOUOdAEEccCvYXNTw/9bf/d5sPvD9pe31Ao/sop23EgKTL4dxfs7spFApAj7y69dnw7UrNhL
- iK1kLdGihLI9ZApenG1AbfuPlWK9prgO4azwyyuJpcfC+C0GEy3PGi4mF2lW23mm94oeWIL02p+
- eAFBki1V7pMJ8YByUtOxGDJ81LRmQ7myuJBAjJqiKAa41tESK37DbvA2fMmWbm69lzZtLSKE1oZ
- 9zXwsk2aHOSxz886OcpJQu0OX4A2hCnSp7kuyNPmUbKfdCdO57QStYjxBnXZwcqv9E5gyYcLAFI
- fQ27qbEk1P5Hvqyi6sw==
-X-Proofpoint-ORIG-GUID: knDDruZNWEP89G6YdCKHxfnw_NQeOL_Y
-X-Authority-Analysis: v=2.4 cv=W60IkxWk c=1 sm=1 tr=0 ts=69e0a379 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=kj9zAlcOel0A:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=m-HIIqDQ52j1SHMWbkUA:9
- a=CjuIK1q_8ugA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-16_02,2026-04-13_04,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 clxscore=1015 priorityscore=1501 spamscore=0 bulkscore=0
- adultscore=0 phishscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604070000 definitions=main-2604160082
-X-Spamd-Result: default: False [-1.16 / 15.00];
+References: <20260410120044.031381086@kernel.org> <20260410120318.794680738@kernel.org>
+In-Reply-To: <20260410120318.794680738@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 16 Apr 2026 12:24:18 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVerN6Pz07CQH+hcvT=-ZD-r9VNrSrGzTQZBEsuecK_ig@mail.gmail.com>
+X-Gm-Features: AQROBzDRGGELVSySTko37h6zEj8YoV3p6pwZDCVQUlUW6sZbw_W5mbJzFIh35nQ
+Message-ID: <CAMuHMdVerN6Pz07CQH+hcvT=-ZD-r9VNrSrGzTQZBEsuecK_ig@mail.gmail.com>
+Subject: Re: [patch 18/38] lib/tests: Replace get_cycles() with ktime_get()
+To: Thomas Gleixner <tglx@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>, x86@kernel.org, 
+	Lu Baolu <baolu.lu@linux.intel.com>, iommu@lists.linux.dev, 
+	Michael Grzeschik <m.grzeschik@pengutronix.de>, netdev@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, 
+	linux-crypto@vger.kernel.org, Vlastimil Babka <vbabka@kernel.org>, 
+	David Woodhouse <dwmw2@infradead.org>, Bernie Thompson <bernie@plugable.com>, linux-fbdev@vger.kernel.org, 
+	Theodore Tso <tytso@mit.edu>, linux-ext4@vger.kernel.org, Marco Elver <elver@google.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com, 
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Thomas Sailer <t.sailer@alumni.ethz.ch>, 
+	linux-hams@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
+	Richard Henderson <richard.henderson@linaro.org>, linux-alpha@vger.kernel.org, 
+	Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, 
+	Catalin Marinas <catalin.marinas@arm.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
+	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>, linux-openrisc@vger.kernel.org, 
+	Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org, 
+	Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org, 
+	Paul Walmsley <pjw@kernel.org>, linux-riscv@lists.infradead.org, 
+	Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org, 
+	"David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spamd-Result: default: False [0.04 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,linux-foundation.org,gmail.com,kvack.org,arndb.de,kernel.org,linux.intel.com,lists.linux.dev,pengutronix.de,gondor.apana.org.au,infradead.org,plugable.com,mit.edu,google.com,googlegroups.com,alumni.ethz.ch,zx2c4.com,linaro.org,armlinux.org.uk,lists.infradead.org,arm.com,lists.linux-m68k.org,southpole.se,gmx.de,ellerman.id.au,lists.ozlabs.org,linux.ibm.com,davemloft.net];
+	TAGGED_FROM(0.00)[bounces-18876-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18874-lists,linux-s390=lfdr.de];
+	DMARC_NA(0.00)[linux-m68k.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN_FAIL(0.00)[1.2.3.5.c.f.2.1.0.0.0.0.0.0.0.0.7.a.0.0.1.0.0.e.9.0.c.3.0.0.6.2.asn6.rspamd.com:server fail];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linux.ibm.com:mid];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[agordeev@linux.ibm.com,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_TWELVE(0.00)[48];
+	MIME_TRACE(0.00)[0:+];
 	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 831A740BDB7
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,linux-s390@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-0.991];
+	TAGGED_RCPT(0.00)[linux-s390];
+	R_DKIM_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux-m68k.org:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: C673140CEFF
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Apr 16, 2026 at 09:58:47AM +0200, David Hildenbrand (Arm) wrote:
-> Talking about pages with non-present entries does not make sense. So both changes
-> are wrong. Can you find something better and send that out separately?
-> I don't think this is required for your series, right?
+Hi Thomas,
 
-Right.
+On Fri, 10 Apr 2026 at 14:20, Thomas Gleixner <tglx@kernel.org> wrote:
+> get_cycles() is the historical access to a fine grained time source, but it
+> is a suboptimal choice for two reasons:
+>
+>    - get_cycles() is not guaranteed to be supported and functional on all
+>      systems/platforms. If not supported or not functional it returns 0,
+>      which makes benchmarking moot.
+>
+>    - get_cycles() returns the raw counter value of whatever the
+>      architecture platform provides. The original x86 Time Stamp Counter
+>      (TSC) was despite its name tied to the actual CPU core frequency.
+>      That's not longer the case. So the counter value is only meaningful
+>      when the CPU operates at the same frequency as the TSC or the value is
+>      adjusted to the actual CPU frequency. Other architectures and
+>      platforms provide similar disjunct counters via get_cycles(), so the
+>      result is operations per BOGO-cycles, which is not really meaningful.
+>
+> Use ktime_get() instead which provides nanosecond timestamps with the
+> granularity of the underlying hardware counter, which is not different to
+> the variety of get_cycles() implementations.
+>
+> This provides at least understandable metrics, i.e. operations/nanoseconds,
+> and is available on all platforms. As with get_cycles() the result might
+> have to be put into relation with the CPU operating frequency, but that's
+> not any different.
+>
+> This is part of a larger effort to remove get_cycles() usage from
+> non-architecture code.
+>
+> Signed-off-by: Thomas Gleixner <tglx@kernel.org>
+
+Thanks for your patch!
+
+> --- a/lib/interval_tree_test.c
+> +++ b/lib/interval_tree_test.c
+> @@ -65,13 +65,13 @@ static void init(void)
+>  static int basic_check(void)
+>  {
+>         int i, j;
+> -       cycles_t time1, time2, time;
+> +       ktime_t time1, time2, time;
+>
+>         printk(KERN_ALERT "interval tree insert/remove");
+>
+>         init();
+>
+> -       time1 = get_cycles();
+> +       time1 = ktime_get();
+>
+>         for (i = 0; i < perf_loops; i++) {
+>                 for (j = 0; j < nnodes; j++)
+> @@ -80,11 +80,11 @@ static int basic_check(void)
+>                         interval_tree_remove(nodes + j, &root);
+>         }
+>
+> -       time2 = get_cycles();
+> +       time2 = ktime_get();
+>         time = time2 - time1;
+>
+>         time = div_u64(time, perf_loops);
+> -       printk(" -> %llu cycles\n", (unsigned long long)time);
+> +       printk(" -> %llu nsecs\n", (unsigned long long)time);
+
+While cycles_t was unsigned long or long long, ktime_t is always s64,
+so "%lld", and the cast can be dropped (everywhere).
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
