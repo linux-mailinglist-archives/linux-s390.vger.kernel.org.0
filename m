@@ -1,218 +1,164 @@
-Return-Path: <linux-s390+bounces-18875-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18877-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ONabBaK54GmIlAAAu9opvQ
-	(envelope-from <linux-s390+bounces-18875-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2026 12:27:46 +0200
+	id +IcKG1fJ4GkdmAAAu9opvQ
+	(envelope-from <linux-s390+bounces-18877-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2026 13:34:47 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6692140CE80
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2026 12:27:45 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1A8C40D742
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2026 13:34:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DDB9E30B50A0
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2026 10:24:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ADA6D302BB93
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2026 11:27:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 001EE39FCCF;
-	Thu, 16 Apr 2026 10:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KmN+L4jv"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18D803A6EFA;
+	Thu, 16 Apr 2026 11:27:39 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9799839E178;
-	Thu, 16 Apr 2026 10:24:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087353A6B75
+	for <linux-s390@vger.kernel.org>; Thu, 16 Apr 2026 11:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776335079; cv=none; b=LRBNQS4y/7qMO/k6qWX3c1r374eZptjlabqcEQvpH/eNu8M7GsKtYaYPm9yvr5bcffaHBbcFD944AbU2GeNgMII8zQLH9N4nG5cDPaAvZvaNtErpvwM30BSXbNblFpuvwNFNiJFrvXnC6M3o7LfSffGhSqL/che4KetxhxL2DGs=
+	t=1776338858; cv=none; b=XeeAqPnrMk/1a5IxNavF5/qIimcUrpUmOm8Na1EHxqGbatKiTyOZOWp2w6kPS21L/FNfccROpIv5dHxyAZj84Es2myuCzXpwf6ojI121QeNYuzBMJml7kEAqBQUc9H1BRkCZVOgEQgFwtRY2S0WPunHeE4Y1apSEwpv1DQWh6cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776335079; c=relaxed/simple;
-	bh=K0s6VDdJp73R3JU53NEaANR/704aQmQ63FW+199HHJg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=HUFZQNgxG21t9gYXgzKRaGO0Lbnh84FHCNh68NhdJbLxE2KIu1NxkmCY7hqFiz3NDbJnOoxfR4S3iAcm867Wl18qRMkuBDKH2P5shRNiSB3WjYVO7vZKXGoUKFVflIuf5Zt60EFnARgC+eD17EqBs41lQL2q28V3bNy5+aX1JVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KmN+L4jv; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63G5gjfS1602772;
-	Thu, 16 Apr 2026 10:24:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=UgqI22
-	nP91mbgyVNKWo1zsENpcPnH6yqo0FFc/vRcWw=; b=KmN+L4jvCeK2gaV2f4fY1K
-	zb6iDWDcI9aozqNd9YqPjQP1sUU6Jd75lu6MRK6Sd3b8krS2JCiEs039Xgk7MRBZ
-	YDF3obWQyAaCZIppfETRoRfpvbjzv2m9cOW4nYG3LSqCwxVsFvKwrA3P6tX7l2ZK
-	XrQ020aYIIPMIu5LgwwuqeWwQ7TuFxX7cqcGkAR+HGvItKyweCk+O9bJs4TLw++n
-	ZviRR9yhcyUEKTyQ6KcQye/+XuzZxbmWiT6Rv5DHrhVvjvfNngsk3im9MwBkRmUs
-	E1XuDNxb+kKT9WbEw7PWJ5/QpNBHrrttH5iia3gMvfntGC738nthIiSJk1JeZMXA
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dh89nmvuf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 Apr 2026 10:24:36 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 63G7nlEN003305;
-	Thu, 16 Apr 2026 10:24:35 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4djbh940ut-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 Apr 2026 10:24:35 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63GAOVED31130210
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 16 Apr 2026 10:24:31 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2CB6120043;
-	Thu, 16 Apr 2026 10:24:31 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5AE702004B;
-	Thu, 16 Apr 2026 10:24:30 +0000 (GMT)
-Received: from t14-nrb (unknown [9.111.37.231])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 16 Apr 2026 10:24:30 +0000 (GMT)
+	s=arc-20240116; t=1776338858; c=relaxed/simple;
+	bh=FSgVIzpnraycKQsxAztrNgNSM9On/XU1ftEj+pCL/gg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bWow7EkB8CWlJ/mlws0tqXleh3aPT3XqzekESzFvdPHP4Pxe8MXx5ChPPH5R6yTZaytGZaESV6VGyQHXhqF9030zrZ+sgy95LJQsOM7wg0d2wXstlyxsmdMhU2hWbrl6SIR3vFarMqAcRBaodxy6hkrsJJ5TrNbDKjSJ7maCDng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-7dbdcb85067so6590230a34.1
+        for <linux-s390@vger.kernel.org>; Thu, 16 Apr 2026 04:27:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776338855; x=1776943655;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AptjVPQ97g683jPGYCmYUacoTRTAG/3/TQY5t1TSdkk=;
+        b=akOOokqhZXQaErAfvgup08bYRFd6p3Ql4wn3Jgb7k71F3nT7jsAeSLHgDZqAAojECC
+         HeLLGnZ32+NI1z9Op85VG/mCWYTg7N4bhu6UwlZD5rc+VHXU6ZWVMIznFD55pQ2zVRiY
+         9gEbJsRvWpeNEZe1kaSf/UeNwzEXEddYl4IPGryAhTkfEIpXFDQXXI+z9JVcbfasrJPD
+         T/NFYHgsIJjmABs56cunsDtixSML+ZPHAWGd7Ir2ngbYupW9vUYyLi/tdnVhQNJW/dxB
+         FipvCYaswklxjxaV8J4O0H7DlStuqnlWD38VkWCKjZt/pig51nnx9grh+JzzeH3eUZ/+
+         QOCQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8tq4dJe8AuaxvG7yTbgAcOJs4h8oLMee8wlnOYPkJ2crLWPxLuWInx/B3FlCCjaynqJO90VHpymvP6@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywy5DfQOz2GEOp5FhyXwsaDkHgOtd9akdcH54XzG6PR0yEx402I
+	wBAAUfaQok22ThF7EVc2oGnBNowkkUDZW9HPpHI0OMre62pe4ECaB2EHNfzHhkRz
+X-Gm-Gg: AeBDiesa1bAVhAbg1MiMITjwtnx+a/rHrlL+3p9zBc6hcKxpMlVbQcoQFUnyPJmYK6T
+	4zLGc/3KQafc041y58gOvEaxygWWIyrAb8X+fwUAzwwmd18slnrfDmE2BgEA/kHHtRc34Hminro
+	XqylGwiR562PsUZjmhOr1SPqjEFKhj+e5AmISZb7/m+lVwG5d9HAbAJnuoqtX6FF2cRGK4eBHcK
+	PHlN2AWlh19fbjsz07IP9qQnppvzQyiFc9bhnwlsode23azmJ5e1PWU1yEP0tW57X02CRx/k22M
+	i2gnLG4pguZ40Y8SebqfFudXaZL/KDECRnTfcuvLYH5budQVKI8ClVfYRU/GhPjj6tM8Xe2p2/9
+	8IwqDMl3J3bBe2hJm1dR+y5JiP3U98zFc1lJp9GfT6YjRvic+9hI5bMr2x7TKGs9kEeTO4BxS2u
+	a4dTi/UieHyPBPWaxzarj/CYAAYKASnKxl5zwTCzOLKQO3VgZwJ4rowekyZ6LP4D7yukOS0rhKu
+	ug=
+X-Received: by 2002:a05:6820:1f07:b0:67e:160c:36ab with SMTP id 006d021491bc7-68be6624f57mr12655399eaf.26.1776338854818;
+        Thu, 16 Apr 2026 04:27:34 -0700 (PDT)
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com. [209.85.167.180])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6932b3745afsm2322664eaf.4.2026.04.16.04.27.34
+        for <linux-s390@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Apr 2026 04:27:34 -0700 (PDT)
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-47952229034so2874391b6e.3
+        for <linux-s390@vger.kernel.org>; Thu, 16 Apr 2026 04:27:34 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9UhmnCOYJkQqJei0AUkZvY4ixbBYWyW9tKaiD4ki4j+T0EB3iJFl9R8ValKZVQKtAjl99Q3Uqlr7zq@vger.kernel.org
+X-Received: by 2002:a05:6122:788:b0:56f:1ed6:1d29 with SMTP id
+ 71dfb90a1353d-56f3bca6059mr11244615e0c.9.1776338533353; Thu, 16 Apr 2026
+ 04:22:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 16 Apr 2026 12:24:29 +0200
-Message-Id: <DHUI89JRQHI5.1VWXLD3VX2JUI@linux.ibm.com>
-Cc: <linux-s390@vger.kernel.org>, <imbrenda@linux.ibm.com>,
-        <borntraeger@linux.ibm.com>
-Subject: Re: [kvm-unit-tests 3/5] lib: s390x: sie: Free guest memory on
- destroy
-From: "Nico Boehr" <nrb@linux.ibm.com>
-To: "Janosch Frank" <frankja@linux.ibm.com>, "Nico Boehr"
- <nrb@linux.ibm.com>,
-        <kvm@vger.kernel.org>
-X-Mailer: aerc 0.21.0
-References: <20260415085145.91197-1-frankja@linux.ibm.com>
- <20260415085145.91197-4-frankja@linux.ibm.com>
- <DHTSMVSISIZM.3MS0YLDBLMB09@linux.ibm.com>
- <624c8a3f-2a09-4257-9b0c-2b64e60e52a1@linux.ibm.com>
-In-Reply-To: <624c8a3f-2a09-4257-9b0c-2b64e60e52a1@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: n95IhM4DC-sSfdpEpiHstu9ztukyc_0A
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDE2MDA5NyBTYWx0ZWRfXzVHZQH+ccvoX
- aQq0gz8icUKeZhtENHmeJqBEyxUdgs41cFhaN+ISzjNjvqQNg3LzPWTHjwI1LrEVoVfwpwsHgJA
- 90bCTnUHLodY1BZsDWuSsrusP6MafI32DcZBWxCU3cEKOO7BfIAoDLWVra6uS01Ozx5i23FKxqQ
- VE2CUwMN4uGMLwi06edNvKobhaLdaItCgBEG0sA5zDWuxm9dMFut+kA/Os7iV4WBGz8+cVH8jFu
- ORB1M2ZMnEa+Gu7pL1hZamEjRnH79bbs3w+iYEQ7I4S0p5lrPXidybMh7Tve0j4Lr3VYshFVUEZ
- 38u4NhIOy6y80QpHIcfDxLFj+Tq4B1CiKKMjVtmbnBesGsyEJMlqLO1u1s317smv79iJGkCJSeD
- /+n9HaXs+J2sA5bZB7avGrRmd31jS9X3mFJxGrdWXyCAvpqZUTuMJKHk7lM3hGBhvT+IdgETHg1
- H1WyAHAuCMMLq6Iyb/A==
-X-Proofpoint-ORIG-GUID: n95IhM4DC-sSfdpEpiHstu9ztukyc_0A
-X-Authority-Analysis: v=2.4 cv=FY4HAp+6 c=1 sm=1 tr=0 ts=69e0b8e4 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8
- a=VlMMnRzqynEzNeI3tdkA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-16_02,2026-04-13_04,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 priorityscore=1501 bulkscore=0 impostorscore=0 spamscore=0
- lowpriorityscore=0 suspectscore=0 clxscore=1015 malwarescore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604070000 definitions=main-2604160097
-X-Spamd-Result: default: False [-1.66 / 15.00];
+MIME-Version: 1.0
+References: <20260410120044.031381086@kernel.org> <20260410120317.910770161@kernel.org>
+In-Reply-To: <20260410120317.910770161@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 16 Apr 2026 13:22:02 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdX1aShz8esbYzJ7T-0Na6++_Yi315aCiUx0Cnsgod5uUg@mail.gmail.com>
+X-Gm-Features: AQROBzBwwjc8yd10cT00Tu5Dl2qrCYQStWr3Lcobhh8coMrpPeCH9vhBSNokYJk
+Message-ID: <CAMuHMdX1aShz8esbYzJ7T-0Na6++_Yi315aCiUx0Cnsgod5uUg@mail.gmail.com>
+Subject: Re: [patch 05/38] treewide: Remove CLOCK_TICK_RATE
+To: Thomas Gleixner <tglx@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, x86@kernel.org, 
+	Lu Baolu <baolu.lu@linux.intel.com>, iommu@lists.linux.dev, 
+	Michael Grzeschik <m.grzeschik@pengutronix.de>, netdev@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, 
+	linux-crypto@vger.kernel.org, Vlastimil Babka <vbabka@kernel.org>, linux-mm@kvack.org, 
+	David Woodhouse <dwmw2@infradead.org>, Bernie Thompson <bernie@plugable.com>, linux-fbdev@vger.kernel.org, 
+	Theodore Tso <tytso@mit.edu>, linux-ext4@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Uladzislau Rezki <urezki@gmail.com>, 
+	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com, 
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Thomas Sailer <t.sailer@alumni.ethz.ch>, 
+	linux-hams@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
+	Richard Henderson <richard.henderson@linaro.org>, linux-alpha@vger.kernel.org, 
+	Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, 
+	Catalin Marinas <catalin.marinas@arm.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
+	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>, linux-openrisc@vger.kernel.org, 
+	Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org, 
+	Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org, 
+	Paul Walmsley <pjw@kernel.org>, linux-riscv@lists.infradead.org, 
+	Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org, 
+	"David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spamd-Result: default: False [0.04 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	MV_CASE(0.50)[];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18875-lists,linux-s390=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[vger.kernel.org,arndb.de,kernel.org,linux.intel.com,lists.linux.dev,pengutronix.de,gondor.apana.org.au,kvack.org,infradead.org,plugable.com,mit.edu,linux-foundation.org,gmail.com,google.com,googlegroups.com,alumni.ethz.ch,zx2c4.com,linaro.org,armlinux.org.uk,lists.infradead.org,arm.com,lists.linux-m68k.org,southpole.se,gmx.de,ellerman.id.au,lists.ozlabs.org,linux.ibm.com,davemloft.net];
+	TAGGED_FROM(0.00)[bounces-18877-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
+	DMARC_NA(0.00)[linux-m68k.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.ibm.com:mid];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_NEQ_ENVFROM(0.00)[nrb@linux.ibm.com,linux-s390@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[48];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,linux-s390@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	NEURAL_HAM(-0.00)[-0.993];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 6692140CE80
+	R_DKIM_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux-m68k.org:email,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: C1A8C40D742
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu Apr 16, 2026 at 10:03 AM CEST, Janosch Frank wrote:
-> On 4/15/26 16:21, Nico Boehr wrote:
->> On Wed Apr 15, 2026 at 10:45 AM CEST, Janosch Frank wrote:
->>> We never freed the memory that the sie library allocates as the guest
->>> ram on destruction of the VM. Most tests reuse the VM or just leak the
->>> memory since the standard allocation is one megabyte and tests only
->>> use single digit numbers of VMs.
->>>
->>> It's time to add automatic freeing to the sie library when a VM is
->>> destroyed.
->>>
->>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->>> ---
->>>   lib/s390x/sie.c | 1 +
->>>   1 file changed, 1 insertion(+)
->>>
->>> diff --git a/lib/s390x/sie.c b/lib/s390x/sie.c
->>> index a49c45c7..758ead77 100644
->>> --- a/lib/s390x/sie.c
->>> +++ b/lib/s390x/sie.c
->>> @@ -192,4 +192,5 @@ void sie_guest_destroy(struct vm *vm)
->>>   	free_page(vm->sblk);
->>>   	if (vm->sblk->ecb2 & ECB2_ESCA)
->>>   		free_page(vm->sca);
->>> +	free_pages((void *)virt_to_pte_phys(get_page_root(), vm->guest_mem));
->>>   }
->>=20
->> Is there a particular reason why we have a two-step process of calling
->> sie_guest_alloc() for memory allocation
->> and then
->> sie_guest_create() for initializing the sie_block etc
->>=20
->> but
->> sie_guest_destroy()
->> cleans up both?
->>=20
+On Fri, 10 Apr 2026 at 14:18, Thomas Gleixner <tglx@kernel.org> wrote:
+> This has been scheduled for removal more than a decade ago and the comments
+> related to it have been dutifully ignored. The last dependencies are gone.
 >
-> Historical reasons I guess.
-> There've been a lot of changes to the SIE lib over the years, snippet=20
-> support itself isn't that consistent but it's currently good enough.
-> s390x/sie.c is the only direct user of the allocation and even that=20
-> usage looks like it could be converted.
+> Remove it along with various now empty asm/timex.h files.
+>
+> Signed-off-by: Thomas Gleixner <tglx@kernel.org>
 
-Yeah, I am a bit concerned about the intermixed dependencies and concerns
-between the two. Especially having free_pages() here even when the guest ma=
-y
-(theoretically) have been allocated with something other than sie_guest_all=
-oc().
-It would be an error that's kind of hard to spot in a review since it's not
-obvious that sie_guest_destroy() pairs with sie_guest_alloc() AND
-sie_guest_create().
+>  arch/m68k/include/asm/timex.h       |   15 ---------------
 
-Would this be an option:
-- add small function sie_guest_free() which frees only guest memory to sie =
-lib
-  this would be the counterpart to sie_guest_alloc()
-- add function snippet_destroy_guest()
-  which calls sie_guest_destroy() and sie_guest_free()
-  this would be the counterpart to snippet_setup_guest()
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> # m68k
 
-Then this pairs nicely as follows for the SIE lib:
-sie_guest_alloc() - sie_guest_free()
-sie_guest_create() - sie_guest_destroy()
+Gr{oetje,eeting}s,
 
-And the higher level snippet operations:
-snippet_setup_guest() - snippet_destroy_guest()
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
