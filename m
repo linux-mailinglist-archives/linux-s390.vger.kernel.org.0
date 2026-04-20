@@ -1,191 +1,148 @@
-Return-Path: <linux-s390+bounces-18908-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18904-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GD/ALu/p5WnxpAEAu9opvQ
-	(envelope-from <linux-s390+bounces-18908-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 20 Apr 2026 10:55:11 +0200
+	id kEPsJjrp5WndpAEAu9opvQ
+	(envelope-from <linux-s390+bounces-18904-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Apr 2026 10:52:10 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64814428880
-	for <lists+linux-s390@lfdr.de>; Mon, 20 Apr 2026 10:55:11 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 218F74287D7
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Apr 2026 10:52:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A56E0309626D
-	for <lists+linux-s390@lfdr.de>; Mon, 20 Apr 2026 08:49:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 14ECE3039812
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Apr 2026 08:45:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EA8338B148;
-	Mon, 20 Apr 2026 08:49:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B69CE382F10;
+	Mon, 20 Apr 2026 08:45:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fi2eGyfQ"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="VjShxqIz"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D029338A739;
-	Mon, 20 Apr 2026 08:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD40140DFC7;
+	Mon, 20 Apr 2026 08:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776674988; cv=none; b=hmNgsz0TsauQPlcsmpqsaRpJl45Fl+GKvuULLtLrhl/F1maqBfOwLxIcKNyPoVFd1/7fXDJbzGvg6liGxgtpAI0hX3o5vXFN596wRLuGl8wjRIDn1xe1g1FfJxt90mYc2u3IeaHMlszkNAJmbj64f0Oun+rGx24BVvEE+1xZAIs=
+	t=1776674731; cv=none; b=FnWhDJdKFrXvMNgihtnG8qW20rFZq1EAsKxZgC9XgZZ2H0IwPUg+oeVqndMiIVIs4deNtFpuPNbGQSxOn9qS6hIHpGhxO/tyU6IYcW+jSUNb4HAHWn4CbJmJOmOsUHXuSd3yfMjy+5sd2YeoyApGO7uSU/8z4t6nVRdDfK0sXv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776674988; c=relaxed/simple;
-	bh=UmE6Ogty/GCGhZRhirVAUh6/GDuTqGuo8eeBJiX6kwM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=saY3/FD/7SnJs43bP/CTxa5u39bklmoLlVgrSvjqwXwlXHar8peA6cBdygIvORsJt0LkV3o/7UcqtexJki4R1+oUp8LMkkxA7K89tDhEqVkc00y36Gja7NIUhkIvevlE1wqVWdbRv3jwXzJ9sjKEYZzQcR7QHZE/udy3DKtxClc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fi2eGyfQ; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63JBNdYr2386398;
-	Mon, 20 Apr 2026 08:49:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=dh4bEdvmvOxVRt0xO
-	hgPvzHvD+rM22zmnu4oQNc9l7I=; b=fi2eGyfQ+0v9giGuPbH8ThLDXWNlKjuE8
-	9clzmNBVaIo0SCMkJwjLRG+e83Pz9Smm4Z7EAEFPba6WbGEy4yQZiiNPQ5oqZCYw
-	3mdg8m77bkjU5pdV/q7XQOuyPN4xroNUDiEz+bsIEYYbERaTzEJYdzr3oAkkidYF
-	mUoiXz1jpqXFE0PI/0AXDvSsLrL6OBhbi/4YxCHcmu95XXWAEDSJyMAza9lNvFwd
-	AOb+FABJ2GL83aSQLSBEPrdtnP6Qign635fb3XjHr9vSheiJRnmu9cGMHvs6reRT
-	UpzAtp5pj1hOET1OOL/TPhGXWPbe4M2KFXe4ol85BqxiYoPmwcg1w==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dm2h9eaa3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Apr 2026 08:49:45 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63K8ZUUK007018;
-	Mon, 20 Apr 2026 08:49:45 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dmnsguy9e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Apr 2026 08:49:45 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63K8nfAV30998864
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 20 Apr 2026 08:49:41 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 56D4D20043;
-	Mon, 20 Apr 2026 08:49:41 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3BF062004E;
-	Mon, 20 Apr 2026 08:49:41 +0000 (GMT)
-Received: from b46lp25.lnxne.boe (unknown [9.87.84.240])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 20 Apr 2026 08:49:41 +0000 (GMT)
-From: Janosch Frank <frankja@linux.ibm.com>
-To: kvm@vger.kernel.org
-Cc: linux-s390@vger.kernel.org, imbrenda@linux.ibm.com,
-        borntraeger@linux.ibm.com, nrb@linux.ibm.com
-Subject: [kvm-unit-tests PATCH v2 4/4] lib: s390x: snippet: Add function to create a guest of specific length
-Date: Mon, 20 Apr 2026 08:44:25 +0000
-Message-ID: <20260420084933.251244-5-frankja@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260420084933.251244-1-frankja@linux.ibm.com>
-References: <20260420084933.251244-1-frankja@linux.ibm.com>
+	s=arc-20240116; t=1776674731; c=relaxed/simple;
+	bh=aslz2yLWAjdD4IGDrGw5HHuwwhSvb0pvA4zxjSBGvVs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UwzsYq24p6XlvAaEU/V5eDIrl4pp6elF6b8IsDLtXSWPFBTSC3Fh3K7IXe2ThH6vjurDTNBoPFbN/u1Ghrk7JjwWv3nNh2Cte261llq9CpqfJ73bwD6biwUPqVhrb70ziX5XfqgA5juGCCu5CpBgmlg2g4mJLr704gmxg/wJQqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=VjShxqIz; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A7101516;
+	Mon, 20 Apr 2026 01:45:23 -0700 (PDT)
+Received: from [10.57.63.177] (unknown [10.57.63.177])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 099303F641;
+	Mon, 20 Apr 2026 01:45:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1776674728; bh=aslz2yLWAjdD4IGDrGw5HHuwwhSvb0pvA4zxjSBGvVs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VjShxqIz/6pMdOJQItTXiMxAPrFkmVWqvoYYBHd0AMUOhK0k5/62F2MGuWywZJEqs
+	 wfSc/fxt60OjpdpVIgxBXM16uOXIBtA0G7dqIgeBasDbjK/LrEuN0RJ0U4NKryvprH
+	 V9PtftScrn0LGxfrb3BFXmLddSwKvVQZWCibDzXY=
+Message-ID: <4dc47078-0f8b-4388-9715-744c18590a00@arm.com>
+Date: Mon, 20 Apr 2026 10:45:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: MVtza7tYBRyDmk9w1MUenwBzDVPkCPJH
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIwMDA4NCBTYWx0ZWRfX4rh9aNqWwpeX
- XTQuKZ/vY6ky+Sm0CAU0nMROQIOheKhke38lR+5tC/Vs94D7tNEKxKEuCbTqnkq5zwqZxC5HkDb
- a9v0kLBqx/XvxDn2+IABhROsMygj0YWkg2pz1OAXYAjrzZlbCv/7mZhCPa1Mf9yj69DsAWRV73x
- kY+X2OHHLonwOtBF70nim8w+Q/nGd4Nlex3XWh1rc/J+HazD0YYjOHjB2PPiHdgtiGGU8LQ3Jug
- OFmcyjLItDGI36PFGpkkB/30ttiFYV+VKgsg0FOm7BGexSg4kmJaGQguW9U65ba0qP/CWpjOlHZ
- sfHyIAtqzY8VbB/AioM1hZybNjk9B41fjaRZvfz7suiloKyI57qBKVIG7sxZT2qtooN2sEyXK5v
- s3dUNHS9/6NDPtWEWfzM18FAZKXX+PRZ1GYOiiWx8iSOLp0rHUZHw4hvvuSgCabjTaQulnVF0qj
- yDDu1KrdrP9sNpnzrqA==
-X-Authority-Analysis: v=2.4 cv=XLYAjwhE c=1 sm=1 tr=0 ts=69e5e8a9 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8 a=6ZxjpF0HYxlCLNsfbHYA:9
-X-Proofpoint-GUID: MVtza7tYBRyDmk9w1MUenwBzDVPkCPJH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-20_01,2026-04-17_04,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 bulkscore=0 impostorscore=0 spamscore=0 adultscore=0
- priorityscore=1501 phishscore=0 lowpriorityscore=0 malwarescore=0
- suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604070000
- definitions=main-2604200084
-X-Spamd-Result: default: False [-0.66 / 15.00];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/6] mm: Make lazy MMU mode context-aware
+To: Alexander Gordeev <agordeev@linux.ibm.com>,
+ David Hildenbrand <david@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1776264097.git.agordeev@linux.ibm.com>
+ <8809412aaed8a515fe2e149c822543d640060936.1776264097.git.agordeev@linux.ibm.com>
+From: Kevin Brodsky <kevin.brodsky@arm.com>
+Content-Language: en-GB
+In-Reply-To: <8809412aaed8a515fe2e149c822543d640060936.1776264097.git.agordeev@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	DMARC_POLICY_ALLOW(-0.50)[arm.com,none];
+	R_DKIM_ALLOW(-0.20)[arm.com:s=foss];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18908-lists,linux-s390=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	TO_DN_NONE(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[frankja@linux.ibm.com,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
-	DKIM_TRACE(0.00)[ibm.com:+];
+	DKIM_TRACE(0.00)[arm.com:+];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18904-lists,linux-s390=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 64814428880
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[kevin.brodsky@arm.com,linux-s390@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[arm.com:email,arm.com:dkim,arm.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 218F74287D7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-While 1MB is certainly enough to store the guest code, it's often not
-enough for memory tests. Let's add a separate function to allow
-arbitrary guest sizes.
+On 15/04/2026 17:01, Alexander Gordeev wrote:
+> +/**
+> + * lazy_mmu_mode_enable_for_pte_range() - Enable the lazy MMU mode with a speedup hint.
+> + * @mm: Address space the pages are mapped into.
+> + * @addr: Start address of the range.
+> + * @end: End address of the range.
+> + * @ptep: Page table pointer for the first entry.
+> + *
+> + * Enters a new lazy MMU mode section; if the mode was not already enabled,
+> + * enables it and calls arch_enter_lazy_mmu_mode_for_pte_range().
+> + *
+> + * PTEs that fall within the specified range might observe update speedups.
+> + * The PTE range must belong to the specified memory space and not cross
+> + * a page table boundary.
 
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-Reviewed-by: Nico Boehr <nrb@linux.ibm.com>
----
- lib/s390x/snippet.h | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+Does that mean that all PTEs mapping [addr, end) must belong to the same
+PTE page? I think the wording should be more specific.
 
-diff --git a/lib/s390x/snippet.h b/lib/s390x/snippet.h
-index 94688f49..05c9a2d4 100644
---- a/lib/s390x/snippet.h
-+++ b/lib/s390x/snippet.h
-@@ -123,10 +123,14 @@ static inline void snippet_pv_init(struct vm *vm, const char *gbin,
- }
- 
- /* Allocates and sets up a snippet based guest */
--static inline void snippet_setup_guest(struct vm *vm, bool is_pv)
-+static inline void snippet_setup_guest_len(struct vm *vm, bool is_pv,
-+					   unsigned long len)
- {
-+	/* Guest sizes are specified in megabyte chunks */
-+	assert(!(len & ~HPAGE_MASK));
-+
- 	/* Initialize the vm struct and allocate control blocks */
--	sie_guest_create(vm, SZ_1M);
-+	sie_guest_create(vm, len);
- 
- 	if (is_pv) {
- 		/* FMT4 needs a ESCA */
-@@ -141,6 +145,12 @@ static inline void snippet_setup_guest(struct vm *vm, bool is_pv)
- 	}
- }
- 
-+/* Allocates and sets up a snippet based guest */
-+static inline void snippet_setup_guest(struct vm *vm, bool is_pv)
-+{
-+	snippet_setup_guest_len(vm, is_pv, SZ_1M);
-+}
-+
- static inline void snippet_destroy_guest(struct vm *vm)
- {
- 	sie_guest_destroy(vm);
--- 
-2.51.0
+LGTM otherwise:
 
+Reviewed-by: Kevin Brodsky <kevin.brodsky@arm.com>
+
+> + *
+> + * There are no requirements on the order or range completeness of PTE
+> + * updates for the specified range.
+> + *
+> + * Must be paired with a call to lazy_mmu_mode_disable().
+> + *
+> + * Has no effect if called:
+> + * - While paused - see lazy_mmu_mode_pause()
+> + * - In interrupt context
+> + */
+> +static inline void lazy_mmu_mode_enable_for_pte_range(struct mm_struct *mm,
+> +		unsigned long addr, unsigned long end, pte_t *ptep)
+> +{
+> +	struct lazy_mmu_state *state = &current->lazy_mmu_state;
+> +
+> +	if (in_interrupt() || state->pause_count > 0)
+> +		return;
+> +
+> +	VM_WARN_ON_ONCE(state->enable_count == U8_MAX);
+> +
+> +	if (state->enable_count++ == 0)
+> +		arch_enter_lazy_mmu_mode_for_pte_range(mm, addr, end, ptep);
+> +}
 
