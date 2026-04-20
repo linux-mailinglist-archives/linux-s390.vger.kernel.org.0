@@ -1,206 +1,176 @@
-Return-Path: <linux-s390+bounces-18903-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18906-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id T7DNF9Tk4mmz/wAAu9opvQ
-	(envelope-from <linux-s390+bounces-18903-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Sat, 18 Apr 2026 03:56:36 +0200
+	id 2PTnLLDo5WlkpAEAu9opvQ
+	(envelope-from <linux-s390+bounces-18906-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Apr 2026 10:49:52 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7EC9C41FA86
-	for <lists+linux-s390@lfdr.de>; Sat, 18 Apr 2026 03:56:35 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58EEA42872A
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Apr 2026 10:49:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E64793058DE5
-	for <lists+linux-s390@lfdr.de>; Sat, 18 Apr 2026 01:56:33 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id D436C300D1F3
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Apr 2026 08:49:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B534F3C465;
-	Sat, 18 Apr 2026 01:56:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F148D38A725;
+	Mon, 20 Apr 2026 08:49:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IRdda/hF"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CpEnxl3W"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C180227FD49
-	for <linux-s390@vger.kernel.org>; Sat, 18 Apr 2026 01:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7151A38A718;
+	Mon, 20 Apr 2026 08:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776477393; cv=none; b=S9S4/2s95C7anvvRIacz1MC4uD8p8oFKt749A3zNGfOjbuDeGcXHVMRrYfPLHZrBGLEa8OM3/1Y7yAWC4DtnAlVDHZ6dwFtM+ZIEdYQCGBG5nqTIdTvqDs2hk4J4ceRIYsbXhRx2lvTDfDp6ruMg827J5X/3h+q5VxvhI5Ie2HQ=
+	t=1776674987; cv=none; b=hR5YOedLwMORmpP2Wvl6USHiXtXWe3HNThQQOuYpapY1FotkDcgbRzomiqnn941hZh2GJdqpy+v68Kz+6oW/aYht/d6YK9pkwe+8PoHaUt4tpvgxfjrhRnSONt3Eh3tvCP5UDnh42nGeJZiA4C80xgTsK/jjk6vVRrsZU378zAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776477393; c=relaxed/simple;
-	bh=AoAg9PJYpVuzyrPDo6//EMEsGna4T2m06uUhOUdrMTs=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=slAf5uhhseB+txPpG6EiZUFrqtIxtu1B58uREK6NNhT30f3txE34SA9z7pz2dKSYOCXPg4bGI/XIwDrjQ1XygEC4COEJwIhY3UGoqEbHKUu4on0K50XJAbT0f8kZ0Sosd3CW0ctU03qRL7JIIL805oWpaENMCxDMYDHuFgcJbOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IRdda/hF; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776477392; x=1808013392;
-  h=date:from:to:cc:subject:message-id;
-  bh=AoAg9PJYpVuzyrPDo6//EMEsGna4T2m06uUhOUdrMTs=;
-  b=IRdda/hFAhZ46DLFQ4reutNWS+TKh7liZnkwP756CRxqawa5RBPIrsb0
-   vDE3AQuFH3eO4Daag1+kGDqQfX/Ya2iWKOZxiZaUWKdwR77Ujb0e17ayM
-   GxRMgVBPlQ/pDgZ8E36YcRD3Izh4BEFnCbD1qwWpdFgab82AoNPAXtMoE
-   yFjJy2oVuo+/m104k0FBBMxnXhhRFkTiPqE1DabBjJvaJVZtmFqkjXMf9
-   J9JAEZnzfty64fu+dNS4YuGbFCbER/gEuHQ27Tae4oKHsHamMKFvpUIog
-   DunSgAb3TQx6rxjQRQlNVuwYxGR5G3aspitUiyx3KE5LQ5HlR18Bj2Qg2
-   A==;
-X-CSE-ConnectionGUID: 6x+LKVg+RJagSl/ujBVwUQ==
-X-CSE-MsgGUID: AHJxSLbwSNK1SW/coXBXjA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11762"; a="77611088"
-X-IronPort-AV: E=Sophos;i="6.23,185,1770624000"; 
-   d="scan'208";a="77611088"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2026 18:56:31 -0700
-X-CSE-ConnectionGUID: ZlcjIp9fRbKnWd3P6PBpXA==
-X-CSE-MsgGUID: jp9OyVnqSoqQbctAuouKdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,185,1770624000"; 
-   d="scan'208";a="224672459"
-Received: from lkp-server01.sh.intel.com (HELO 7e48d0ff8e22) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 17 Apr 2026 18:56:30 -0700
-Received: from kbuild by 7e48d0ff8e22 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wDuv4-000000000vy-3vCV;
-	Sat, 18 Apr 2026 01:56:26 +0000
-Date: Sat, 18 Apr 2026 09:56:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: Steffen Eiden <seiden@linux.ibm.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
- linux-s390@vger.kernel.org, Andreas Grapentin <gra@linux.ibm.com>,
- "Nina Schoetterl-Glausch" <nsg@linux.ibm.com>,
- Gautam Gala <ggala@linux.ibm.com>
-Subject: [kvms390:sae-part1 27/27]
- arch/s390/kvm/arm64/../../../../virt/kvm/arm64/mmio.c:119:22: error: no
- member named 'mmio_needed' in 'struct kvm_vcpu'
-Message-ID: <202604180914.L6FMypYF-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1776674987; c=relaxed/simple;
+	bh=Y3lR5KNuyy1EF7Sc29npCYKeohMI4aw55lPebp4t46k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PPrb3cC3N6ngJXLnR4c/f28Kc8kCiS1gnWgYhGkx26/aS5/pWFNO6yG86jkNklTQ9rXd8CGeN17hjRoofBF5WgitTpkHkftjWf/PaJSAHDi1n9NwVH7BecMcZdUJ0fw+c6mA1keGBp28XMVtz9cpyj5hDRAfHdLnlD+2Sv4Lyoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CpEnxl3W; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63JIJwfF2672875;
+	Mon, 20 Apr 2026 08:49:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=V5yhVFLt89bq0joR15iNrwzH95vhCYO++kH744E4E
+	uk=; b=CpEnxl3WPp9b8wPRJYusK7tf5NjEzR4sUqTj//LobNYERyqNJSkzWYnk4
+	AkeR6POU9WgP6dkqMQY/87osBp7XstFo+c7kgZldgWoYRw0M9VMoWhtRWxOzIA70
+	aysJfPj+a3nUZ+Xbpcl7M6+mlwlK+E+thdvDishW699XCXF4JacK5iGznrJAV7xq
+	90ewTxUAJn07xW6EB5FJpYeElIekIMwiZTYacu9mA+nS6NwDmI37ToEyOnlqs8cM
+	ONTZTWYeEBsaMl9x+MC8zyPDMKjoYUlDeDEAjyC5BPJX4bJsTC7LAYew0GPONFc6
+	QzNmbuFBK/36nCzFykYfxjR0dnz0w==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dm2k6eap1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 Apr 2026 08:49:45 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63K8ZOmg012605;
+	Mon, 20 Apr 2026 08:49:44 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dmmnvm4rb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 Apr 2026 08:49:44 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63K8ne4249086834
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 20 Apr 2026 08:49:40 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C027A20040;
+	Mon, 20 Apr 2026 08:49:40 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 983672004E;
+	Mon, 20 Apr 2026 08:49:40 +0000 (GMT)
+Received: from b46lp25.lnxne.boe (unknown [9.87.84.240])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 20 Apr 2026 08:49:40 +0000 (GMT)
+From: Janosch Frank <frankja@linux.ibm.com>
+To: kvm@vger.kernel.org
+Cc: linux-s390@vger.kernel.org, imbrenda@linux.ibm.com,
+        borntraeger@linux.ibm.com, nrb@linux.ibm.com
+Subject: [kvm-unit-tests PATCH v2 0/4] s390x: Cleanup virtualization library
+Date: Mon, 20 Apr 2026 08:44:21 +0000
+Message-ID: <20260420084933.251244-1-frankja@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=L78theT8 c=1 sm=1 tr=0 ts=69e5e8a9 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=RzCfie-kr_QcCd8fBx8p:22 a=i1egRVeOCA4yOCXTAOoA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIwMDA4NCBTYWx0ZWRfXwljWGQPFsWZk
+ kBZQYstQ+WQ1EOBQAkhdtCCtJs8YZOHwuv4TYj0avqFdr0tnRJyaOfs4GkIJApKbI42EnCZDpfM
+ 598S6eCEFXtWBnll9sU+U36FixgcXIfDlsairLHFuCXKYw07mVKzCRBztdVxDv3hFiXY7j2sUhX
+ rO7LiT0rFq9/q6kwmAGQWIsvSzCYujgXFF9QkrgWz+qUIj3j7ZrNsSyU6CWZObf6tt+ic+MUbck
+ /PGoCfLU8L3N7VhGKcr3k7eMKDHJorITQRcDNiKcyogKpdoitYhUtLxN0ccRtplfwW7KB9zsuYI
+ maUcuCcmPiRvFKF8zi+8zWms+fv/EtzZuFrs9aoUY4F/qz+6E6PjV8ITbGYzqyfmlw+DreZwZpJ
+ fN3ZCWKBtUPWU0sHN1K6ru9FIuua33OG4AsKtPTSk0dIkEDWjW3snqb+zsBWsrMzs8warenkAVP
+ j4rdDKYSzNzAi+2YnLA==
+X-Proofpoint-GUID: GyG8t871XrJqkZPRc3AUSGuwRXv5O1cD
+X-Proofpoint-ORIG-GUID: GyG8t871XrJqkZPRc3AUSGuwRXv5O1cD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-20_01,2026-04-17_04,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 impostorscore=0 spamscore=0 bulkscore=0 suspectscore=0
+ lowpriorityscore=0 adultscore=0 clxscore=1015 malwarescore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604070000 definitions=main-2604200084
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-18906-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18903-lists,linux-s390=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[6];
+	TO_DN_NONE(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-s390@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[frankja@linux.ibm.com,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
 	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[intel.com:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linux.ibm.com:mid];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,intel.com:dkim,intel.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 7EC9C41FA86
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_SEVEN(0.00)[11]
+X-Rspamd-Queue-Id: 58EEA42872A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git sae-part1
-head:   c8ef958593be02ec09131a1f5e2744a98b6c01a1
-commit: c8ef958593be02ec09131a1f5e2744a98b6c01a1 [27/27] KVM: s390: arm64: Enable KVM_ARM64 config and Kbuild
-config: s390-randconfig-001-20260418 (https://download.01.org/0day-ci/archive/20260418/202604180914.L6FMypYF-lkp@intel.com/config)
-compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260418/202604180914.L6FMypYF-lkp@intel.com/reproduce)
+In order to support sae virtualization we need to cleanup the library
+a bit and make it more flexible when it comes to guest creation and
+allocation.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202604180914.L6FMypYF-lkp@intel.com/
+v2:
+ - Renamed get_page_root() to get_primary_page_root()
+ - Reworked patch 3 into a general sie memory improvement patch
+ - Removed the sie struct rename patch
 
-All errors (new ones prefixed by >>):
+Janosch Frank (4):
+  lib: s390x: Add function to get page root
+  lib: s390x: sie: Allocate physical guest memory via memalign
+  lib: s390x: sie: Memory rework
+  lib: s390x: snippet: Add function to create a guest of specific length
 
->> arch/s390/kvm/arm64/../../../../virt/kvm/arm64/mmio.c:119:22: error: no member named 'mmio_needed' in 'struct kvm_vcpu'
-     119 |         if (unlikely(!vcpu->mmio_needed || kvm_pending_external_abort(vcpu)))
-         |                       ~~~~  ^
-   include/linux/compiler.h:77:42: note: expanded from macro 'unlikely'
-      77 | # define unlikely(x)    __builtin_expect(!!(x), 0)
-         |                                             ^
-   arch/s390/kvm/arm64/../../../../virt/kvm/arm64/mmio.c:122:8: error: no member named 'mmio_needed' in 'struct kvm_vcpu'
-     122 |         vcpu->mmio_needed = 0;
-         |         ~~~~  ^
-   arch/s390/kvm/arm64/../../../../virt/kvm/arm64/mmio.c:244:8: error: no member named 'mmio_needed' in 'struct kvm_vcpu'
-     244 |         vcpu->mmio_needed       = 1;
-         |         ~~~~  ^
-   3 errors generated.
-
-
-vim +119 arch/s390/kvm/arm64/../../../../virt/kvm/arm64/mmio.c
-
-e735a5da64420a arch/arm64/kvm/mmio.c Oliver Upton     2024-10-25  102  
-45e96ea6b36953 arch/arm/kvm/mmio.c   Christoffer Dall 2013-01-20  103  /**
-45e96ea6b36953 arch/arm/kvm/mmio.c   Christoffer Dall 2013-01-20  104   * kvm_handle_mmio_return -- Handle MMIO loads after user space emulation
-83091db981e105 arch/arm/kvm/mmio.c   Christoffer Dall 2016-03-29  105   *			     or in-kernel IO emulation
-83091db981e105 arch/arm/kvm/mmio.c   Christoffer Dall 2016-03-29  106   *
-45e96ea6b36953 arch/arm/kvm/mmio.c   Christoffer Dall 2013-01-20  107   * @vcpu: The VCPU pointer
-45e96ea6b36953 arch/arm/kvm/mmio.c   Christoffer Dall 2013-01-20  108   */
-74cc7e0c35c1e4 arch/arm64/kvm/mmio.c Tianjia Zhang    2020-06-23  109  int kvm_handle_mmio_return(struct kvm_vcpu *vcpu)
-45e96ea6b36953 arch/arm/kvm/mmio.c   Christoffer Dall 2013-01-20  110  {
-6d89d2d9b5bac9 arch/arm/kvm/mmio.c   Marc Zyngier     2013-02-12  111  	unsigned long data;
-45e96ea6b36953 arch/arm/kvm/mmio.c   Christoffer Dall 2013-01-20  112  	unsigned int len;
-45e96ea6b36953 arch/arm/kvm/mmio.c   Christoffer Dall 2013-01-20  113  	int mask;
-45e96ea6b36953 arch/arm/kvm/mmio.c   Christoffer Dall 2013-01-20  114  
-e735a5da64420a arch/arm64/kvm/mmio.c Oliver Upton     2024-10-25  115  	/*
-e735a5da64420a arch/arm64/kvm/mmio.c Oliver Upton     2024-10-25  116  	 * Detect if the MMIO return was already handled or if userspace aborted
-e735a5da64420a arch/arm64/kvm/mmio.c Oliver Upton     2024-10-25  117  	 * the MMIO access.
-e735a5da64420a arch/arm64/kvm/mmio.c Oliver Upton     2024-10-25  118  	 */
-bfb7a30b19861e arch/arm64/kvm/mmio.c Oliver Upton     2025-07-08 @119  	if (unlikely(!vcpu->mmio_needed || kvm_pending_external_abort(vcpu)))
-cc81b6dfc3bc82 arch/arm64/kvm/mmio.c Fuad Tabba       2024-04-23  120  		return 1;
-2113c5f62b7423 virt/kvm/arm/mmio.c   Andrew Jones     2019-08-22  121  
-2113c5f62b7423 virt/kvm/arm/mmio.c   Andrew Jones     2019-08-22  122  	vcpu->mmio_needed = 0;
-2113c5f62b7423 virt/kvm/arm/mmio.c   Andrew Jones     2019-08-22  123  
-0e20f5e25556c0 virt/kvm/arm/mmio.c   Marc Zyngier     2019-12-13  124  	if (!kvm_vcpu_dabt_iswrite(vcpu)) {
-74cc7e0c35c1e4 arch/arm64/kvm/mmio.c Tianjia Zhang    2020-06-23  125  		struct kvm_run *run = vcpu->run;
-74cc7e0c35c1e4 arch/arm64/kvm/mmio.c Tianjia Zhang    2020-06-23  126  
-0e20f5e25556c0 virt/kvm/arm/mmio.c   Marc Zyngier     2019-12-13  127  		len = kvm_vcpu_dabt_get_as(vcpu);
-d5a5a0eff368f0 arch/arm/kvm/mmio.c   Christoffer Dall 2016-04-24  128  		data = kvm_mmio_read_buf(run->mmio.data, len);
-45e96ea6b36953 arch/arm/kvm/mmio.c   Christoffer Dall 2013-01-20  129  
-0e20f5e25556c0 virt/kvm/arm/mmio.c   Marc Zyngier     2019-12-13  130  		if (kvm_vcpu_dabt_issext(vcpu) &&
-f42798c6898bf1 arch/arm/kvm/mmio.c   Marc Zyngier     2013-03-05  131  		    len < sizeof(unsigned long)) {
-45e96ea6b36953 arch/arm/kvm/mmio.c   Christoffer Dall 2013-01-20  132  			mask = 1U << ((len * 8) - 1);
-6d89d2d9b5bac9 arch/arm/kvm/mmio.c   Marc Zyngier     2013-02-12  133  			data = (data ^ mask) - mask;
-45e96ea6b36953 arch/arm/kvm/mmio.c   Christoffer Dall 2013-01-20  134  		}
-6d89d2d9b5bac9 arch/arm/kvm/mmio.c   Marc Zyngier     2013-02-12  135  
-0e20f5e25556c0 virt/kvm/arm/mmio.c   Marc Zyngier     2019-12-13  136  		if (!kvm_vcpu_dabt_issf(vcpu))
-b6ae256afd32f9 virt/kvm/arm/mmio.c   Christoffer Dall 2019-12-12  137  			data = data & 0xffffffff;
-b6ae256afd32f9 virt/kvm/arm/mmio.c   Christoffer Dall 2019-12-12  138  
-6d89d2d9b5bac9 arch/arm/kvm/mmio.c   Marc Zyngier     2013-02-12  139  		trace_kvm_mmio(KVM_TRACE_MMIO_READ, len, run->mmio.phys_addr,
-e39d200fa5bf5b virt/kvm/arm/mmio.c   Wanpeng Li       2017-12-14  140  			       &data);
-6d89d2d9b5bac9 arch/arm/kvm/mmio.c   Marc Zyngier     2013-02-12  141  		data = vcpu_data_host_to_guest(vcpu, data, len);
-0e20f5e25556c0 virt/kvm/arm/mmio.c   Marc Zyngier     2019-12-13  142  		vcpu_set_reg(vcpu, kvm_vcpu_dabt_get_rd(vcpu), data);
-45e96ea6b36953 arch/arm/kvm/mmio.c   Christoffer Dall 2013-01-20  143  	}
-45e96ea6b36953 arch/arm/kvm/mmio.c   Christoffer Dall 2013-01-20  144  
-0d640732dbebed virt/kvm/arm/mmio.c   Mark Rutland     2018-11-09  145  	/*
-0d640732dbebed virt/kvm/arm/mmio.c   Mark Rutland     2018-11-09  146  	 * The MMIO instruction is emulated and should not be re-executed
-0d640732dbebed virt/kvm/arm/mmio.c   Mark Rutland     2018-11-09  147  	 * in the guest.
-0d640732dbebed virt/kvm/arm/mmio.c   Mark Rutland     2018-11-09  148  	 */
-cdb5e02ed13373 arch/arm64/kvm/mmio.c Marc Zyngier     2020-10-14  149  	kvm_incr_pc(vcpu);
-0d640732dbebed virt/kvm/arm/mmio.c   Mark Rutland     2018-11-09  150  
-cc81b6dfc3bc82 arch/arm64/kvm/mmio.c Fuad Tabba       2024-04-23  151  	return 1;
-45e96ea6b36953 arch/arm/kvm/mmio.c   Christoffer Dall 2013-01-20  152  }
-45e96ea6b36953 arch/arm/kvm/mmio.c   Christoffer Dall 2013-01-20  153  
-
-:::::: The code at line 119 was first introduced by commit
-:::::: bfb7a30b19861e559d64b7f2c3202d948fbf93ea KVM: arm64: Don't retire MMIO instruction w/ pending (emulated) SError
-
-:::::: TO: Oliver Upton <oliver.upton@linux.dev>
-:::::: CC: Oliver Upton <oliver.upton@linux.dev>
+ lib/s390x/mmu.h     |  7 ++++
+ lib/s390x/sie.c     | 89 ++++++++++++++++++++++++---------------------
+ lib/s390x/sie.h     |  2 +-
+ lib/s390x/snippet.h | 19 ++++++++--
+ s390x/diag258.c     |  4 +-
+ s390x/edat.c        |  5 ++-
+ s390x/mvpg-sie.c    |  4 +-
+ s390x/pv-diags.c    |  2 +-
+ s390x/pv-edat1.c    |  9 ++---
+ s390x/pv-icptcode.c |  4 +-
+ s390x/pv-ipl.c      |  2 +-
+ s390x/sie-dat.c     |  4 +-
+ s390x/sie.c         | 13 ++-----
+ s390x/skey.c        |  7 ++--
+ s390x/spec_ex-sie.c |  2 +
+ s390x/stfle-sie.c   |  2 +
+ 16 files changed, 97 insertions(+), 78 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.51.0
+
 
