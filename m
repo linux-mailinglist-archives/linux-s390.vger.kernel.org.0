@@ -1,226 +1,220 @@
-Return-Path: <linux-s390+bounces-18924-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18928-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GPD6FSte52lr7QEAu9opvQ
-	(envelope-from <linux-s390+bounces-18924-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 13:23:23 +0200
+	id eLV7GiJk52l07gEAu9opvQ
+	(envelope-from <linux-s390+bounces-18928-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 13:48:50 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82B1843A109
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 13:23:22 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A840F43A38C
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 13:48:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id A79573012592
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 11:23:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D25C8305541D
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 11:45:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7FE33BE659;
-	Tue, 21 Apr 2026 11:22:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E67353845AE;
+	Tue, 21 Apr 2026 11:45:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lU9jm6kG"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Evritmex"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EDD33BD648
-	for <linux-s390@vger.kernel.org>; Tue, 21 Apr 2026 11:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8DC333439;
+	Tue, 21 Apr 2026 11:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776770577; cv=none; b=RkX14enw+gbjVSx7fMQIBXh34AiOiiAuTnnX66Fa0Xkx1gpwEDQVk1VUP+3SjjG37xgWOgOMnjTcQX9zSPv+Ajt+CxNHLHSsPmYrr+JeNilWGqc6bMR49p7LI1D6hlo7FCTT3Nq/SkzRXqbwMzLGh+UKJGtIpp2HP+qL3Y6mVRA=
+	t=1776771947; cv=none; b=jrdJjDmGQdxJ0tAsl/OgC8fOV0g37XJf3GpGRnMtNVXZ4a5SkupksSloXhIljxix7kNRFqVwZXCRT10h1NHxDw1t/W+EiSpHaKlYRP5mUL9fR9EZcCx9gd+JGKpV07a+DyfDHxdAIVVu//6nzqdE0LHHrZPemeBoRZRExL9+TQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776770577; c=relaxed/simple;
-	bh=7J5sLUyTcEtZ5b/o54KJz2TjlXrWGH0W+oigsdVGJYY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AUgGYf8bFOxHA9Eb/ampr15QFqEmWhSb8pURCrmCmkH/AU7I2IByR3Of9HvBTB+/3/VMFcBHphsCvfk8HUtt4l1xzFT7eGwZiohA4OqmRcrJdLZaJhc9gj0fYyUrUddDSFYyYb3/8w8e4+hVpIZsXjWP67QLsJU4vt5xc4wWzBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lU9jm6kG; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-82f943870baso1460244b3a.1
-        for <linux-s390@vger.kernel.org>; Tue, 21 Apr 2026 04:22:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776770574; x=1777375374; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pbepvZoiaQHnY8ojgGndHUN0tqRJnJo2KRx8HLgDgUI=;
-        b=lU9jm6kGqDjqxIjkWxGDeqDvr17UMQYeVNP9rS5P3UWd7+VE4cpTrRwlYKSpCHI1KD
-         zZA4+dsX0fyXlhWGoGhioT7GlAk6Cad2+kFgyXXf+ZkLjXgYuVSOk6W9JhbsksRhS+cn
-         JjoUEw79Nz86BTgOmxYEMCIS5sQKYiwZ5dfniI9hbARcbUXmygsWFT4/6ZYrU7er4B5b
-         AF39CTz+lEumwPTp8qh8DUlpS3e4Z+amiPfglYGt2PS3FjwfgzzvqXLqKOW/KsOHooqZ
-         aJdiZQCu+ux924UJHp8L48osT1cgJGdd6A/cCTA6wbL1kWXsoMldHo20OThek5XInH4F
-         NHfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776770574; x=1777375374;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pbepvZoiaQHnY8ojgGndHUN0tqRJnJo2KRx8HLgDgUI=;
-        b=eHVTC1N8BN2qpXqPwZ42VJsq/g+Oqo319U0v/WQFH4fCUsGw0eeDLI4MdTfsiNo3Cd
-         /hqNRfEofhQBvKcaLiv7VQIwV0Zxr/o+ine+QIPd206bcYSlWVGKk0WkDQJtuYGieSpC
-         tjKcMgs/Y3r0kkNG/wDmybGMUL26rfNkpy4WFMYIbGweVobwJqQyM//Ur7WCRPd6rnUN
-         peIyckRVDJeOJfXmHSvAVY00pzDUTzoOkayZCxkLCYLJxkKfMg3FoHSmbONBAfdYxNH2
-         k8nscyWZKaZ/BbkO2Vcn5xuDiL2M5FYZDtvN7XglV+hH+uAKQWG5puo3DT4QeIfA2pJY
-         Mg8w==
-X-Forwarded-Encrypted: i=1; AFNElJ9j4JjFOkv1uIaWAfhIWRhFidLfjRXkQerhHdT1mnBWEuGwlb0gTvOeQ74gOk851qg0BNIFY2ynL9P4@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDHL9nbs642wKIUJbdt7hwofWRDXwEjbaNj3cv8EMNYQqfHcOx
-	gZTc0ThgJU676tA8Oi4V2v3Ne6Picn9fCTTXXlJYk5zVl8wg2/JXbHYA
-X-Gm-Gg: AeBDieuaTj8JaFNsiajgWXxT0repa0zx2Qr0SW1SZXCzc2xPkB4ptiKwgIdLXDIPK1C
-	isbAbWEy+sziAuToQqkFio4lm6URuy6QG6Ijy9zgjgNuzcPQVEnMLazjURxGS9ypnS1rVotx/an
-	DH376wbIgZMYFsrr95MxYrniua2Y5C9da5XB8YMp55Jki3ZJZPWq31vL7nUr12MYSAUYobQs3ci
-	7KFI/cGUl5W0n38iU/g8IaoxO/wFKeouMbcmuV9xy5r1ikIyV57PshkjiE0j2pKU+oa5m19Gw5f
-	RO1JXEOqkmRLbQ9gRWsQtLqfCNgpsSP6USlFRGsPGyAtL4HIMEDzCkaGnbZeBQLgA3eDru9HXp3
-	63kTdSBXDQuP8Bfh/Z14Xb6U8je4ZntLoziZFL2F30XbiI6VjBDpvdSeE5nwbujV8F1VzY8tPDB
-	jdGa8BAC+n416X29J6xW1CRwREhuV17OhFNRE/4+Ut/PqozLqEi3KxGIptl/RWt+upPkMDIekmb
-	hOR/Q==
-X-Received: by 2002:a05:6a00:6988:b0:82f:aae5:c7a9 with SMTP id d2e1a72fcca58-82faae5d438mr7228492b3a.27.1776770573719;
-        Tue, 21 Apr 2026 04:22:53 -0700 (PDT)
-Received: from li-1a3e774c-28e4-11b2-a85c-acc9f2883e29.ibm.com ([129.41.58.4])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82f8e981a0asm14155014b3a.3.2026.04.21.04.22.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2026 04:22:53 -0700 (PDT)
-Date: Tue, 21 Apr 2026 16:52:37 +0530
-From: Mukesh Kumar Chaurasiya <mkchauras@gmail.com>
-To: Thomas Gleixner <tglx@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org, Arnd Bergmann <arnd@arndb.de>, 
-	x86@kernel.org, Lu Baolu <baolu.lu@linux.intel.com>, iommu@lists.linux.dev, 
-	Michael Grzeschik <m.grzeschik@pengutronix.de>, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	Herbert Xu <herbert@gondor.apana.org.au>, linux-crypto@vger.kernel.org, 
-	Vlastimil Babka <vbabka@kernel.org>, linux-mm@kvack.org, David Woodhouse <dwmw2@infradead.org>, 
-	Bernie Thompson <bernie@plugable.com>, linux-fbdev@vger.kernel.org, Theodore Tso <tytso@mit.edu>, 
-	linux-ext4@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Uladzislau Rezki <urezki@gmail.com>, Marco Elver <elver@google.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Thomas Sailer <t.sailer@alumni.ethz.ch>, 
-	linux-hams@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
-	Richard Henderson <richard.henderson@linaro.org>, linux-alpha@vger.kernel.org, 
-	Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, 
-	Catalin Marinas <catalin.marinas@arm.com>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, linux-m68k@lists.linux-m68k.org, 
-	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>, linux-openrisc@vger.kernel.org, 
-	Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org, Paul Walmsley <pjw@kernel.org>, 
-	linux-riscv@lists.infradead.org, Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org, 
-	"David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
-Subject: Re: [patch 33/38] powerpc: Select ARCH_HAS_RANDOM_ENTROPY
-Message-ID: <aedc9UddBSYXzrAj@li-1a3e774c-28e4-11b2-a85c-acc9f2883e29.ibm.com>
-References: <20260410120044.031381086@kernel.org>
- <20260410120319.789114053@kernel.org>
+	s=arc-20240116; t=1776771947; c=relaxed/simple;
+	bh=IaREYFeBeRCU+m8Ac53d8IcNx+QL4sJOy4X24CXH084=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=IW6YEtOQhokG1/22hHLXY6OU3j3XHStFxzqmrmeJCeNBZ2Jf5QbAaTcgrXhPCnUVUnTZoS0V5E+FcScsrUv529tTMROR9BllcjRn4D8clsNavA9YccWoxnbRPUFLLlQMAjkJn7U6OriJI14Mj1xDc2Z6cyRbadi26SCnZH16C2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Evritmex; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63KJgW3f1684508;
+	Tue, 21 Apr 2026 11:45:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=USgV93WvDtC1wwTYswQQfRV+axg3
+	iNjGr5tucCDPcDM=; b=Evritmexnxuc1fzG+HN4j3as0Hxc97pOIULBdIQZekG4
+	yFXVr7c+YsfJ0zRsoKwDjHFIHXlK4uKayxUYOYehwdaSr0uVbSvJaM8ioLTFnKsi
+	2YwDWQzDDlGQYo1GFDAYwLoqRAFGWG/gTm7+KcPxeK+Rr1L+3ziOVAgqWUHVDugS
+	tFQsL2REzeQDwJqaOzh3fKEPLVwRcV68L/Dd/mTZ1SYmXBXMQYJFII+WoJuudTop
+	SuvvoWhLSdaGa0b4KQtAtLw2MjOHWul9oreJWsI31EprC44Xa0/Bfgpg11v2EA9Z
+	TZgUHRmNkHps58bcaVg1SOUBo/f39PHk/xG6Q8Ha9A==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dm2j6m25r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 21 Apr 2026 11:45:41 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63LBZPC9013716;
+	Tue, 21 Apr 2026 11:45:40 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dmn9k0gcv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 21 Apr 2026 11:45:40 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63LBjavS32833900
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 21 Apr 2026 11:45:37 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DC4802004B;
+	Tue, 21 Apr 2026 11:45:36 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BA35420040;
+	Tue, 21 Apr 2026 11:45:36 +0000 (GMT)
+Received: from [9.52.198.32] (unknown [9.52.198.32])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 21 Apr 2026 11:45:36 +0000 (GMT)
+From: Christoph Schlameuss <schlameuss@linux.ibm.com>
+Subject: [kvm-unit-tests PATCH v3 0/6] s390x: Add test for STFLE
+ interpretive execution (format-2)
+Date: Tue, 21 Apr 2026 13:31:06 +0200
+Message-Id: <20260421-vsie-stfle-fac-v3-0-3cee84efefa3@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260410120319.789114053@kernel.org>
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/2XNyw6CMBAF0F8hXTukHcpDV/6HcQFlkIk8DC0Nh
+ vDvNrgwwc0kN3PnzCosTUxWXKJVTOTZ8jiEkJwiYdpyeBBwHbJAiZkMA7xlAuuajqApDWiZkNZ
+ ZXheEIhy9Jmp42cGbePoe5oEdOLLOinvYt2zdOL33f17trS+t1JH2CiTozOQlmfSssLp2PMxLz
+ FUfm7HfOY8/IkH9R2AgUkqxIiQtC3Uktm37AKJrb38DAQAA
+X-Change-ID: 20260202-vsie-stfle-fac-403e4467d8e2
+To: linux-s390@vger.kernel.org
+Cc: Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        =?utf-8?q?Nico_B=C3=B6hr?= <nrb@linux.ibm.com>,
+        David Hildenbrand <david@kernel.org>, Thomas Huth <thuth@redhat.com>,
+        kvm@vger.kernel.org, Christoph Schlameuss <schlameuss@linux.ibm.com>,
+        Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2063;
+ i=schlameuss@linux.ibm.com; h=from:subject:message-id;
+ bh=IaREYFeBeRCU+m8Ac53d8IcNx+QL4sJOy4X24CXH084=;
+ b=owGbwMvMwCUmoqVx+bqN+mXG02pJDJnPk+OFXG7o3qt8/7hoVnP+Q3OOrNmagTc4Q55nSJ/sY
+ m2Offa6o5SFQYyLQVZMkaVa3Dqvqq916ZyDltdg5rAygQxh4OIUgIk8V2D4p3VE6Gz6J9n1DJpy
+ 757HCPYKCLoaVyVJ2R4If2ridWORO8M/pZWZ5oohbPlP6l8Hvfwv/Fp9+St1nk0t4Q/j7eqjosp
+ 4AA==
+X-Developer-Key: i=schlameuss@linux.ibm.com; a=openpgp;
+ fpr=0E34A68642574B2253AF4D31EEED6AB388551EC3
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIxMDExMiBTYWx0ZWRfX1miyaLDh8BHY
+ XbpgfzFLBiHeaAUE3FrjKxs7WrQ8QkG35TUB1wCySN3j46FJ4wDaxjudkhh5glw6RWL0skxFcDO
+ gWsJ5bwH8hxERsezDk1jMw/v9IytL+rwSiobITUhd9Oh8xsDqUfYi8Ah/qyTlB/Iz34tHq1popH
+ DaWongLw75MVdG1TM6l+hccGDCYWzfrgEqTl60X/Oc1UfKD0LI6zrZN00IPhcRJtJFEuHcbXZ5S
+ tpcvMjs0OWPS/AtlRYDUDT4251PZIm3LzQc+VXJuh3e20jzhAzjQzpw8w8SUS6FGN1xPvJnArxv
+ bDjgUJf/GXIuYmwsbZievrmyDCBCvWfkb8ym4T12ibMe7EjtliWvvkNqjQbkazIoMzqn1KTYczf
+ bjj3Owz9g0g3YeMfcRdKrvtZd1EXFRQVs3OcVSLf9TI7y4tBshne4yypQXgSFU/fxHV6Ih9+5Gz
+ B18bQ0WHHHXU0r1eltQ==
+X-Proofpoint-GUID: P7AB6jwYP-Fs85rv3R-Qs_dzTB-rG5kr
+X-Authority-Analysis: v=2.4 cv=SOJykuvH c=1 sm=1 tr=0 ts=69e76365 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8
+ a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8 a=MwmhjpgLNsuZdhXYqscA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: P7AB6jwYP-Fs85rv3R-Qs_dzTB-rG5kr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-21_02,2026-04-20_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 spamscore=0 priorityscore=1501 lowpriorityscore=0
+ clxscore=1015 phishscore=0 suspectscore=0 adultscore=0 impostorscore=0
+ bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.22.0-2604070000
+ definitions=main-2604210112
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-18924-lists,linux-s390=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[vger.kernel.org,ellerman.id.au,lists.ozlabs.org,arndb.de,kernel.org,linux.intel.com,lists.linux.dev,pengutronix.de,gondor.apana.org.au,kvack.org,infradead.org,plugable.com,mit.edu,linux-foundation.org,gmail.com,google.com,googlegroups.com,alumni.ethz.ch,zx2c4.com,linaro.org,armlinux.org.uk,lists.infradead.org,arm.com,linux-m68k.org,lists.linux-m68k.org,southpole.se,gmx.de,linux.ibm.com,davemloft.net];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[49];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mkchauras@gmail.com,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18928-lists,linux-s390=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
 	TAGGED_RCPT(0.00)[linux-s390];
+	FROM_NEQ_ENVFROM(0.00)[schlameuss@linux.ibm.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ellerman.id.au:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,li-1a3e774c-28e4-11b2-a85c-acc9f2883e29.ibm.com:mid]
-X-Rspamd-Queue-Id: 82B1843A109
+	PRECEDENCE_BULK(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_COUNT_SEVEN(0.00)[11]
+X-Rspamd-Queue-Id: A840F43A38C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Apr 10, 2026 at 02:21:09PM +0200, Thomas Gleixner wrote:
-> The only remaining usage of get_cycles() is to provide random_get_entropy().
-> 
-> Switch powerpc over to the new scheme of selecting ARCH_HAS_RANDOM_ENTROPY
-> and providing random_get_entropy() in asm/random.h.
-> 
-> Remove asm/timex.h as it has no functionality anymore.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@kernel.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> ---
->  arch/powerpc/Kconfig              |    1 +
->  arch/powerpc/include/asm/random.h |   13 +++++++++++++
->  arch/powerpc/include/asm/timex.h  |   21 ---------------------
->  3 files changed, 14 insertions(+), 21 deletions(-)
-> 
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -150,6 +150,7 @@ config PPC
->  	select ARCH_HAS_PREEMPT_LAZY
->  	select ARCH_HAS_PTDUMP
->  	select ARCH_HAS_PTE_SPECIAL
-> +	select ARCH_HAS_RANDOM_ENTROPY
->  	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE && PPC_BOOK3S_64
->  	select ARCH_HAS_SET_MEMORY
->  	select ARCH_HAS_STRICT_KERNEL_RWX	if (PPC_BOOK3S || PPC_8xx) && !HIBERNATION
-> --- /dev/null
-> +++ b/arch/powerpc/include/asm/random.h
-> @@ -0,0 +1,13 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _ASM_POWERPC_RANDOM_H
-> +#define _ASM_POWERPC_RANDOM_H
-> +
-> +#include <asm/cputable.h>
-> +#include <asm/vdso/timebase.h>
-> +
-> +static inline unsigned long random_get_entropy(void)
-> +{
-> +	return mftb();
-> +}
-> +
-> +#endif	/* _ASM_POWERPC_RANDOM_H */
-> --- a/arch/powerpc/include/asm/timex.h
-> +++ b/arch/powerpc/include/asm/timex.h
-> @@ -1,21 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0 */
-> -#ifndef _ASM_POWERPC_TIMEX_H
-> -#define _ASM_POWERPC_TIMEX_H
-> -
-> -#ifdef __KERNEL__
-> -
-> -/*
-> - * PowerPC architecture timex specifications
-> - */
-> -
-> -#include <asm/cputable.h>
-> -#include <asm/vdso/timebase.h>
-> -
-> -ostatic inline cycles_t get_cycles(void)
-> -{
-R> -	return mftb();
-> -}
-> -#define get_cycles get_cycles
-> -
-> -#endif	/* __KERNEL__ */
-> -#endif	/* _ASM_POWERPC_TIMEX_H */
-> 
-Build tested for this series with allmodconfig and allyesconfig on ppc64le
-machine for ppc64le.
-tree: git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git getcycles-v1
+Test the shadowing of format-2 facility list when running in VSIE.
 
-Boot tested for this series on powernv9 qemu, powernv10 qemu and pSeries
-power11 hardware.
+The tests will skip the format 2 tests
+* if running with unpatched kernels or qemu in G1 or G2
+* if running on machines prior IBM z16 GA1 (where ASTFLEIE2 is not
+  available)
 
-Tested-by: Mukesh Kumar Chaurasiya (IBM) <mkchauras@gmail.com>
-Reviewed-by: Mukesh Kumar Chaurasiya (IBM) <mkchauras@gmail.com>
+Cc: Janosch Frank <frankja@linux.ibm.com>
+Cc: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc: "Nico Böhr" <nrb@linux.ibm.com>
+Cc: David Hildenbrand <david@kernel.org>
+Cc: Thomas Huth <thuth@redhat.com>
+To: linux-s390@vger.kernel.org
+Cc: kvm@vger.kernel.org
+
+Signed-off-by: Christoph Schlameuss <schlameuss@linux.ibm.com>
+---
+The original series was started by Nina and finished by me.
+
+---
+Changes in v3:
+- Remove unnecessary format loop in test_stfle_format_0() - formats are
+  already addressed explicitly
+- Added patch to use sclp_feat_check directly for DIAG318
+- Add no-stfle prefix to improve test log
+- Move prefixes to main() to have prefixes in no-stfle checks
+
+Changes in v2:
+- Rework sclp_facilities_setup()
+- Removed explicit manual padding from struct sclp_facilities
+
+---
+Christoph Schlameuss (4):
+      s390x: sclp: Remove unnecessary padding from struct sclp_facilities
+      s390x: sclp: Rework sclp_facilities_setup() for simpler control flow
+      s390x: sclp: Use sclp_feat_check directly to read DIAG318 feature bit
+      s390x: Add test for STFLE interpretive execution (format-2)
+
+Nina Schoetterl-Glausch (2):
+      s390x: snippets: Add reset_guest() to lib
+      s390x: sclp: Add detection of alternate STFLE facilities
+
+ lib/s390x/sclp.c    | 30 ++++++++++++++--------
+ lib/s390x/sclp.h    |  8 +++---
+ lib/s390x/sie.c     | 11 ++++++++
+ lib/s390x/sie.h     |  1 +
+ lib/s390x/snippet.h |  6 +++++
+ s390x/spec_ex-sie.c | 10 ++------
+ s390x/stfle-sie.c   | 72 +++++++++++++++++++++++++++++++++++++++++++++++++----
+ 7 files changed, 111 insertions(+), 27 deletions(-)
+---
+base-commit: 6123bbbc271255d61873763b5fb9c4a69acfcfec
+change-id: 20260202-vsie-stfle-fac-403e4467d8e2
+
+Best regards,
+-- 
+Christoph Schlameuss <schlameuss@linux.ibm.com>
 
 
