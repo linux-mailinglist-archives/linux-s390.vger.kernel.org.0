@@ -1,76 +1,76 @@
-Return-Path: <linux-s390+bounces-18925-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18933-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qKfUNQlk52l07gEAu9opvQ
-	(envelope-from <linux-s390+bounces-18925-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 13:48:25 +0200
+	id OC/tNxlz52ke8AEAu9opvQ
+	(envelope-from <linux-s390+bounces-18933-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 14:52:41 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3463743A367
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 13:48:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B64243ADF8
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 14:52:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9469C3044A69
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 11:45:36 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BD2E2301BC25
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 12:52:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4039F2C11EF;
-	Tue, 21 Apr 2026 11:45:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4779837D11A;
+	Tue, 21 Apr 2026 12:52:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hHREpEKG"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OjOVgEc5"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C4930E0EF;
-	Tue, 21 Apr 2026 11:45:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06DFE30E0EF;
+	Tue, 21 Apr 2026 12:52:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776771936; cv=none; b=D0+s9aZAAeXHzuH1zugEKZ2ni0yYMvFg+qtfyxFRgU2auIqaczXqqZnpqDl2s7DTjHpk102hl3pLVtGh4AJX774KR1mgjnF94LFgh3vlZK1r5bxNWKfyBIkGUoDEnJCnofyAeRdzPqlOHF++d5UtJKnRmZYvLtEF+AZFdkjb0Fc=
+	t=1776775940; cv=none; b=B96IOwsLYnWyyRIEsYOJd3tjJ/opY2WAoiWSl+tpUQc8CmjnwjxLLLN2awQ5jE1q7VQapiJ56L4sdhRS0e/Ov7aTWyHRWZBpxRNjQID91olsgyBAcJel0Ev+pk6HiIJodXXGkTNZ1TLL94rYKYNxAhd/OCPoYWs9PgoR2e42UO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776771936; c=relaxed/simple;
-	bh=oc3DT0RAljxYhphvFjljrtFnjvK3CrrN1ZikMbdQvq4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Cc:To:Subject:
-	 References:In-Reply-To; b=XqPJ4h/nFmbhS5L9sJb/AK2N/PzFNpfPdLsbUurCwU3R1PGGVmHpzlcHJ+n274SZ/qRjVqG7UwuFRMtulh3r0Ff9LjQZJa5yS7HKLEM6TSCcfee80V2/EbJFAohgOgTOkzjLWk8w0O3cQupecPjrXRRgs+xd3aQZJkOu7k4vBaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hHREpEKG; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1776775940; c=relaxed/simple;
+	bh=afxfuBhErYQMVwA35UR65Id9aa8cZgGs5iOcJYwU7cc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=SwRYJ83SufmZpMT52/ABlbjwLeoxJhbym01O0rjNYkq/mZHzssF/qqADKrUI8il61pABTRNrSPWX0vxJD4S9eVMify4w32CVUR3asy2jHbCZGUnhgLvgGKoNi/rBtAqgyfNctIDz+iiEpkXMBBZIp3c/jfZlpO/MXQTSAVPAtAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OjOVgEc5; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63KJgWHd1684519;
-	Tue, 21 Apr 2026 11:45:30 GMT
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63KJgWoa1926145;
+	Tue, 21 Apr 2026 12:52:14 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=sc/iHQ
-	ObgvqaXJQGcuitJQ9rZ8MJtG8DUciKwJ454XA=; b=hHREpEKG9mE10X6YC/1fn8
-	vzkwPuRm2ZVq6l7K1l1IJ1PZ6zQw/u1zXwu4TQ7FowNctCnZMN8bbj/j7a4DRHqH
-	ZAYtaihPbICjgWIvlStZ+7Pi0Uhx66cc/WxKDWYbbIVq0Sq2es/ejij8nSEmAhr/
-	1Gbpr+Jhfi1lRXs9QXE5PRuZHyl/ul9HuMAOYhPyENd034ZFxpVrjxmv6cPpGp5H
-	jcfZVV3wLCiSMeLUUS+SJsGn8VsKufWJsgqfTZDJTxKxHXjOVI9yCb/smrNOZq3e
-	9CQqleGp1rOWCkdWpSls+86FkdEVt/yQXBaxi+9o+aH/67LDlgZhw3PEfmcZ35dw
+	:message-id:mime-version:references:subject:to; s=pp1; bh=4cbEEl
+	LUi+POfQbIlHB0LGlNuZOxEcc4WtjmUruYbxA=; b=OjOVgEc5JvgTAAis7ZKv4D
+	jq0Ye6swFP6VC0M4NTRjLL8vn2IUsx+OHhO15S4XNdkmQRWCYrxT7VUnv7xCksJM
+	H/uEUYA0zzyQh3mI1w8ZVKYLPenSXfobHyZNYhvbMIrwaRIdv56fY7ym3Lwr5IKA
+	MoQW9k79HFoanh18qlVjVoV9q6mxLHNVYlvkgcC1rzDFBwETUEnZRoFvPknr48gQ
+	RBzyLVStueZubnRwD68KaXHsM2tdiRDp/gBUGV4MgSV+gyFZDgoX60N4J3LZxx81
+	JRft0I+3RehLa9vXC+Tk0BE5/Elgs6E1b9Zi+2/DbJ9LyMCrX0jkou5SPGZpbGQQ
 	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dm2j6m253-1
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dm2nf4ayn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 Apr 2026 11:45:30 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63LBZVlq027137;
-	Tue, 21 Apr 2026 11:45:29 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dmpyy09bd-1
+	Tue, 21 Apr 2026 12:52:14 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63LCZGr1017797;
+	Tue, 21 Apr 2026 12:52:13 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dmmnvru65-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 Apr 2026 11:45:29 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63LBjPuo51249620
+	Tue, 21 Apr 2026 12:52:13 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63LCq9mD43909448
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 21 Apr 2026 11:45:26 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DBCED20043;
-	Tue, 21 Apr 2026 11:45:25 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C681C20040;
-	Tue, 21 Apr 2026 11:45:25 +0000 (GMT)
-Received: from darkmoore (unknown [9.52.198.32])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 21 Apr 2026 11:45:25 +0000 (GMT)
+	Tue, 21 Apr 2026 12:52:09 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6CCE520040;
+	Tue, 21 Apr 2026 12:52:09 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 35EF12004B;
+	Tue, 21 Apr 2026 12:52:09 +0000 (GMT)
+Received: from t14-nrb (unknown [9.111.84.218])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 21 Apr 2026 12:52:09 +0000 (GMT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -79,240 +79,143 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 21 Apr 2026 13:45:20 +0200
-Message-Id: <DHYT2W2J6ZEK.IPC6QH99OSQF@linux.ibm.com>
-From: "Christoph Schlameuss" <schlameuss@linux.ibm.com>
-Cc: "Claudio Imbrenda" <imbrenda@linux.ibm.com>,
-        =?utf-8?q?Nico_B=C3=B6hr?=
- <nrb@linux.ibm.com>,
+Date: Tue, 21 Apr 2026 14:52:08 +0200
+Message-Id: <DHYUI1FNUDZF.2K5O1SY030GKJ@linux.ibm.com>
+To: "Christoph Schlameuss" <schlameuss@linux.ibm.com>,
+        "Nico Boehr"
+ <nrb@linux.ibm.com>, <linux-s390@vger.kernel.org>
+Cc: "Janosch Frank" <frankja@linux.ibm.com>,
+        "Claudio Imbrenda"
+ <imbrenda@linux.ibm.com>,
         "David Hildenbrand" <david@kernel.org>,
-        "Thomas Huth"
- <thuth@redhat.com>, <kvm@vger.kernel.org>,
+        "Thomas
+ Huth" <thuth@redhat.com>, <kvm@vger.kernel.org>,
         "Nina Schoetterl-Glausch"
  <nsg@linux.ibm.com>
-To: "Janosch Frank" <frankja@linux.ibm.com>,
-        "Christoph Schlameuss"
- <schlameuss@linux.ibm.com>,
-        <linux-s390@vger.kernel.org>
-Subject: Re: [kvm-unit-tests PATCH v2 5/5] s390x: Add test for STFLE
- interpretive execution (format-2)
+Subject: Re: [kvm-unit-tests PATCH v2 4/5] s390x: sclp: Add detection of
+ alternate STFLE facilities
+From: "Nico Boehr" <nrb@linux.ibm.com>
 X-Mailer: aerc 0.21.0
 References: <20260324-vsie-stfle-fac-v2-0-5e52be2e4081@linux.ibm.com>
- <20260324-vsie-stfle-fac-v2-5-5e52be2e4081@linux.ibm.com>
- <3e7d74b9-f5ab-4461-a6f4-2f917c869996@linux.ibm.com>
-In-Reply-To: <3e7d74b9-f5ab-4461-a6f4-2f917c869996@linux.ibm.com>
+ <20260324-vsie-stfle-fac-v2-4-5e52be2e4081@linux.ibm.com>
+ <DHTP3011DZ4W.3HVEWE0UNIYTY@linux.ibm.com>
+ <DHVJB8HIEM2P.IEP85VEWA4KA@linux.ibm.com>
+In-Reply-To: <DHVJB8HIEM2P.IEP85VEWA4KA@linux.ibm.com>
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIxMDExMiBTYWx0ZWRfX6kAbReRI7JIc
- WabxUVz9oaHs4Szw5YvrvpzXy8jKBh/ZsDvi3QZsUVESxci5HN1ZqifbS4P3CY9UMJiIIKi0ohX
- PICUkb52UK80UmCdOc9bqOz1uJOoOcuPI3WhrXPZb85lzhhBeU85uERoZTirINHDffbz4jcrgVf
- E1zPJDHtUmck3IfhszaAB0i7+OYlWeECyJREsMbn1vsBFcxlQOEnX+AYeS81zEDZndHco8496pR
- NZX0/349pKhqFZbDzB5fXman5i26MzyPXrn0ywMK/h+zE2Vs+a8YbgyuP8UF9YSOeBXFZt1/X5s
- o3dOcO+fNzCLukXq8yrNRUCpWhupW5crF+6te2VIwdTVBfYNua6ctvbtZzfuD2/7jUCvgfVLPWm
- 4UmPT3nJOoD2EGvmK3yiF1W707dH/OGUxIf6PuEDu+qddCGjA+vVZu/oM4YM0BHZThKb6jhskE0
- qMWKTbWPIPMn1QMidpw==
-X-Proofpoint-GUID: mJGBn9pacc6CmbVVZJyGTTnM6GPp2Nuv
-X-Authority-Analysis: v=2.4 cv=SOJykuvH c=1 sm=1 tr=0 ts=69e7635a cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+X-Proofpoint-ORIG-GUID: SACq-V7iJVK_76f4Ix4gZCU2JLvVooiy
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIxMDEyNyBTYWx0ZWRfX1jYYXLVg/FYF
+ NFilfBNqS7WKgG1KtN+Cil64hVcLq3a+HtyMaUiMs/W6Dfo86HmEM7Gf/OoUiTZ1RJ3YUadIGNI
+ pWg/FvV+u/E6Ur6SdpasrlaV4Ypbn8CVUKka6p5HZRPvb+zgCokLw3/IcgBlrdyB5uuTNBSz86O
+ e6pe22zX/C05E4V4K6Arw6D65AFymRUInyhCIXh4R5+/4NsfiA61GA0JCfSFGP456IwVXNCvt4O
+ jJtE1mF2IOdrp1wzKl3DwDAlO7e7GUuF9vNmw+MzOExbnQEESROV/8sz2Kzadoe2Q8u1esdzRmb
+ uOhsmfokK1c1SSmew4Y9DNgUro7bA0tNEQFkaw1bSOJNBta9KLuXuFIBP0m/OdpyeN0FWqw17Kh
+ TbUd3jGTemHy/qGEni0iKuBWmu9E39q4whUUCl52NXKf6m7KDIaUPhHfM2Qld8JXh0Tzch1H9+1
+ QyS28LEWptVR82IId1w==
+X-Proofpoint-GUID: SACq-V7iJVK_76f4Ix4gZCU2JLvVooiy
+X-Authority-Analysis: v=2.4 cv=B7iJFutM c=1 sm=1 tr=0 ts=69e772fe cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
  a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8
- a=cN4iABI9U8P0S6PSPTIA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: mJGBn9pacc6CmbVVZJyGTTnM6GPp2Nuv
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=JDlLnzAmX2ppTn9s91sA:9
+ a=QEXdDO2ut3YA:10
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-04-21_02,2026-04-20_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 spamscore=0 priorityscore=1501 lowpriorityscore=0
- clxscore=1015 phishscore=0 suspectscore=0 adultscore=0 impostorscore=0
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2604070000
- definitions=main-2604210112
-X-Spamd-Result: default: False [-1.66 / 15.00];
+ malwarescore=0 priorityscore=1501 spamscore=0 impostorscore=0 adultscore=0
+ bulkscore=0 phishscore=0 suspectscore=0 lowpriorityscore=0 clxscore=1015
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604070000 definitions=main-2604210127
+X-Spamd-Result: default: False [0.34 / 15.00];
+	RCVD_UNAUTH_PBL(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MV_CASE(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	MV_CASE(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	TAGGED_FROM(0.00)[bounces-18925-lists,linux-s390=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[schlameuss@linux.ibm.com,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[172.234.253.10:from];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18933-lists,linux-s390=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[nrb@linux.ibm.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RECEIVED_SPAMHAUS_PBL(0.00)[9.111.84.218:received];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[169.61.105.92:received,100.90.174.1:received,9.218.2.229:received,148.163.156.1:received,10.20.54.101:received];
 	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 3463743A367
+X-Rspamd-Queue-Id: 5B64243ADF8
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed Mar 25, 2026 at 11:18 AM CET, Janosch Frank wrote:
-> On 3/24/26 16:28, Christoph Schlameuss wrote:
->> From: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
->>=20
->> The STFLE instruction indicates installed facilities.
->> SIE has facilities for the interpretive execution of STFLE.
->> There are multiple possible formats for the control block.
->> Use a snippet guest executing STFLE to get the result of
->> interpretive execution and check the result.
->> With the addition of the format-2 control block invalid format
->> specifiers are now possible.
->> Test for the occurrence of optional validity intercepts.
->>=20
->> Signed-off-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
->> Co-developed-by: Christoph Schlameuss <schlameuss@linux.ibm.com>
->> Signed-off-by: Christoph Schlameuss <schlameuss@linux.ibm.com>
->> ---
->>   lib/s390x/sie.c   | 11 +++++++
->>   lib/s390x/sie.h   |  1 +
->>   s390x/stfle-sie.c | 91 +++++++++++++++++++++++++++++++++++++++++++++++=
-+-------
->>   3 files changed, 92 insertions(+), 11 deletions(-)
->>=20
->> diff --git a/lib/s390x/sie.c b/lib/s390x/sie.c
->> index 0fa915cf028a1b35a76aa316dfd97308094a4682..17f0ef7eff427002dd6d74d9=
-8f58ed493457a7ce 100644
->> --- a/lib/s390x/sie.c
->> +++ b/lib/s390x/sie.c
+On Fri Apr 17, 2026 at 5:28 PM CEST, Christoph Schlameuss wrote:
+> On Wed Apr 15, 2026 at 1:34 PM CEST, Nico Boehr wrote:
+>> On Tue Mar 24, 2026 at 4:28 PM CET, Christoph Schlameuss wrote:
+>> [...]
+>>> diff --git a/lib/s390x/sclp.c b/lib/s390x/sclp.c
+>>> index d624872cba608fcbbd0c482a25f091fe19475a43..77b2a5ec00d68ec7ee82da2=
+95f2f31c539b5c00c 100644
+>>> --- a/lib/s390x/sclp.c
+>>> +++ b/lib/s390x/sclp.c
+>> [...]
+>>>  	if (read_info->offset_cpu <=3D 134)
+>>>  		return;
+>>>  	sclp_facilities.has_diag318 =3D read_info->byte_134_diag318;
+>>> +
+>>> +	if (read_info->offset_cpu <=3D 139)
+>>> +		return;
+>>> +	sclp_facilities.has_astfleie2 =3D sclp_feat_check(139, SCLP_FEAT_139_=
+BIT_ASTFLEIE2);
+>>
+>> Help me understand which case is the odd one, the diag318 one where we a=
+ccess
+>> read_info directly or this one where we use sclp_feat_check()?
+>>
+>> Or is there a particular reason to do it this way that I didn't see?
+>
+> Both methods will read from the location read_info is pointing to. Which
+> actually is pointing to _read_info, which is a 2 page buffer. The actual =
+sclp
+> info is read into _read_info dependent on facility 140 as either 1 or 2 p=
+ages.
+>
+> So the data will then in either case be there in _read_info, either from =
+the 2
+> page sclp read or as zeros behind the 1 page sclp read.
+> As for byte_134_diag318 in struct ReadInfo I dont think there is a golden=
+ way.
+> Without fac140 byte_134_diag318 does not exist but is in the struct. And =
+with
+> fac140 and using sclp_feat_check we are reaching behind struct ReadInfo i=
+nto
+> _read_info.
+> Both not optimal.
+>
+> In the end the difference is if we go the extra mile and define all the f=
+eature
+> bits in struct ReadInfo or just use sclp_feat_check to check the bit dire=
+ctly.
+> Simply because I think clp_facilities_setup looks cleaner that way and it=
+ is
+> easier to add more feature bits.
+> I agree that we should use the same method for all high feature bits.
+>
+> So I propose to add another patch here to use sclp_feat_check directly fo=
+r
+> diag318 as well. And also remove byte_134_diag318 from struct ReadInfo.
 
-[...]
-
->> @@ -55,18 +56,73 @@ static struct guest_stfle_res run_guest(void)
->>   static void test_stfle_format_0(void)
->>   {
->>   	struct guest_stfle_res res;
->> +	int format_mask;
->>  =20
->>   	report_prefix_push("format-0");
->> -	for (int j =3D 0; j < stfle_size(); j++)
->> -		WRITE_ONCE((*fac)[j], prng64(&prng_s));
->> -	vm.sblk->fac =3D (uint32_t)(uint64_t)fac;
->> -	res =3D run_guest();
->> -	report(res.len =3D=3D stfle_size(), "stfle len correct");
->> -	report(!memcmp(*fac, res.mem, res.len * sizeof(uint64_t)),
->> -	       "Guest facility list as specified");
->> +	/*
->> +	 * There are multiple valid two bit format control values depending on
->> +	 * the available facilities.
->> +	 * The facility introduced last defines the validity of control bits.
->> +	 */
->> +	format_mask =3D sclp_facilities.has_astfleie2 ? 3 : sclp_facilities.ha=
-s_astfleie1;
->
-> Without the KVM patches format_mask is 0.
->
->> +	for (int i =3D 0; i < 4; i++) {
->
-> Why?
-> This test is only for format 0, no?
->
->> +		if (i & format_mask)
->> +			continue;
->
-> i & 0 is always false.
->
->> +		report_prefix_pushf("format control %d", i);
->> +		for (int j =3D 0; j < stfle_size(); j++)
->> +			WRITE_ONCE((*fac)[j], prng64(&prng_s));
->> +		vm.sblk->fac =3D (uint32_t)(uint64_t)fac | i;
->
-> Since my mask is 0 and i can be 0 - 3 where values >0 can lead to=20
-> validities (optional) this test can run into a validity at any point.
->
->> +		res =3D run_guest();
->> +		report(res.len =3D=3D stfle_size(), "stfle len correct");
->> +		report(!memcmp(*fac, res.mem, res.len * sizeof(uint64_t)),
->> +		       "Guest facility list as specified");
->> +		report_prefix_pop();
->> +	}
->>   	report_prefix_pop();
->>   }
-
-[...]
-
->> +
->> +static void test_no_stfle_format(int format)
->> +{
->> +	reset_guest(&vm);
->> +	vm.sblk->fac =3D (uint32_t)(uint64_t)fac | format;
->> +	sie_expect_validity(&vm);
->> +	sie(&vm);
->> +	sie_check_optional_validity(&vm, 0x1330);
->> +}
->
-> This needs a prefix, right now I see three of these skip reports and I=20
-> don't know which format was tested:
-> PASS: optional VALIDITY: no
->
-> But looking at the code above I wonder if that should be folded into the=
-=20
-> test above if the logic is fixed.
->
-
-Yes, I added some prefixes and reverted the additional loop from
-test_stfle_format_0() for v3. That makes the log nice and readable now.
-
-
->> +
->>   struct args {
->>   	uint64_t seed;
->>   };
->> @@ -119,20 +175,33 @@ static struct args parse_args(int argc, char **arg=
-v)
->>   int main(int argc, char **argv)
->>   {
->>   	struct args args =3D parse_args(argc, argv);
->> -	bool run_format_0 =3D test_facility(7);
->>  =20
->>   	if (!sclp_facilities.has_sief2) {
->>   		report_skip("SIEF2 facility unavailable");
->>   		goto out;
->>   	}
->> -	if (!run_format_0)
->> +	if (!test_facility(7)) {
->>   		report_skip("STFLE facility not available");
->> +		goto out;
->> +	}
->>  =20
->>   	report_info("PRNG seed: 0x%lx", args.seed);
->>   	prng_s =3D prng_init(args.seed);
->>   	setup_guest();
->> -	if (run_format_0)
->> -		test_stfle_format_0();
->> +	test_stfle_format_0();
->> +
->> +	if (!sclp_facilities.has_astfleie1)
->> +		test_no_stfle_format(1);
->> +
->> +	if (!sclp_facilities.has_astfleie2) {
->> +		test_no_stfle_format(2);
->> +		report_skip("alternate STFLE interpretive-execution facility 2 not av=
-ailable");
->> +	} else {
->> +		test_stfle_format_2();
->> +	}
->> +
->
-> Does this test work on LPAR and zVM?
->
-
-Yes, it does. I did test explicitly on zVM now as well.
-
->> +	test_no_stfle_format(3);
->> +
->>   out:
->>   	return report_summary();
->>   }
->>=20
-
+Thank you, makes sense to me. Do you want to take this as part of this seri=
+es or
+should I send a patch you can base your series on?
 
