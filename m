@@ -1,208 +1,238 @@
-Return-Path: <linux-s390+bounces-18953-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18947-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0P1OAWGn52mF+wEAu9opvQ
-	(envelope-from <linux-s390+bounces-18953-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 18:35:45 +0200
+	id QLY8GN6m52kI+wEAu9opvQ
+	(envelope-from <linux-s390+bounces-18947-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 18:33:34 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AD0843D75D
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 18:35:44 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13F2843D653
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 18:33:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 85C0C3095BB9
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 16:31:29 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 99692306FC14
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 16:30:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABC0538836D;
-	Tue, 21 Apr 2026 16:30:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1B5637C0E7;
+	Tue, 21 Apr 2026 16:30:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QBbGJc0N"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ifSDKENu"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E0A138423D;
-	Tue, 21 Apr 2026 16:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DAA437BE86;
+	Tue, 21 Apr 2026 16:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776789053; cv=none; b=AChvsXINc7KWVsUJzhn20EfE1mndpMSaAq7Ilz9ruXfrFDwkNp2cnrzMedXnHXoLxZ3Zfi6zdw4FOG7vJdIzZcQmgGJxv7RWBJ8in7mj28vagy/xKYgigtwN5iE0z//2YikHPas4TVVwbw6lmAByksK4xByd3iwSMSbyN5Tpus0=
+	t=1776789048; cv=none; b=mKdRL8+AXNnZoeFZPEESU47OM3/kHL3eAyBh9D+tF263x+01Bnfhu3nIsXnSwlkochl3gg8XDtK0m+xQusm30CQ77ZfxE/mFiaXke5Hdrx1PD/t+nARHLjbNrSwmhERebIk3QKrdQfCJj8KJ37U15G53z5fpiZCmwjRA7hgEYjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776789053; c=relaxed/simple;
-	bh=BI37w9SjuKL3yvCM7bDoU4en5ns30NyXBnAazDt1Q0I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eneR6aYr4WO33fpSjI92AtdYqh7mQyKMAaUF65+sc671x0tUyOcDO/p0HxP3CYqelvU2QGY7Gr2YHo8v/jZPKzQA4bZGWFukqkxHXJlXrJDcGjTModu/LUCd2XNI9mRcrdxyHdWSe2U26xKvGJs6Fh468/ZXOHT235AGKLQWcbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=QBbGJc0N; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63LC24Kp1685435;
-	Tue, 21 Apr 2026 16:30:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=ptCH11AOccuUefO9O
-	9jqin/FEkhD0OjCVnd7OxBRv5U=; b=QBbGJc0NlJjwTwaYTcEh1t+OdBhA2dHNb
-	xXtedBucnY6irNrMiLZIcTnun9oPibup2TM+W+LEc9IXZGLsEZ/u8RyMKjPySD4t
-	tfXYncP/7CGqaRRnyV3UT/ujmBtrPkTiFCDwyGCjwGjigys6WRVrHtrWnkgSzudX
-	1Fty4UlEwUoB8BOzPwgxhv78Eu4mbX7P6bNqwahZoQakGj3EUToK8hWMOkpdjjn8
-	S3p0AFLQXtiPAtffKiRtRTYbNH4rz8ZqN6CCRUP2jj46LipOdbqUobe8zNUe3Lan
-	fn9zArrFTC3z8FKMRr4pJBRDb4EpP/yI5zPDB8ti7CNuWkZgEcIvA==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dm2j6n903-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 Apr 2026 16:30:45 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63LGKPTk025434;
-	Tue, 21 Apr 2026 16:30:44 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dmn9k1ead-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 Apr 2026 16:30:44 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63LGUhoo29426396
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 21 Apr 2026 16:30:43 GMT
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3CBC458054;
-	Tue, 21 Apr 2026 16:30:43 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0C1045805F;
-	Tue, 21 Apr 2026 16:30:42 +0000 (GMT)
-Received: from IBM-D32RQW3.ibm.com (unknown [9.61.248.17])
-	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 21 Apr 2026 16:30:41 +0000 (GMT)
-From: Farhan Ali <alifm@linux.ibm.com>
-To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Cc: helgaas@kernel.org, lukas@wunner.de, alex@shazbot.org, clg@redhat.com,
-        alifm@linux.ibm.com, schnelle@linux.ibm.com, mjrosato@linux.ibm.com,
-        Julian Ruess <julianr@linux.ibm.com>
-Subject: [PATCH v14 7/7] vfio/pci: Remove the pcie check for VFIO_PCI_ERR_IRQ_INDEX
-Date: Tue, 21 Apr 2026 09:30:31 -0700
-Message-ID: <20260421163031.704-8-alifm@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260421163031.704-1-alifm@linux.ibm.com>
-References: <20260421163031.704-1-alifm@linux.ibm.com>
+	s=arc-20240116; t=1776789048; c=relaxed/simple;
+	bh=VzGK/dXrA7ojghsrFE2F96/S3UgIjsZpS/dVecJp254=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tldjWkoCxO6rUW9G5gk4SfUKqix9FvtMW5rxRA8QAeTbsuH1XmTfgvrt0q7DwDAcneuBxvPUwfqSjCASPmXi2msNMUUTaOuDxNE9Q1yhu46cTarKY+FS/a7IFZ2Me04OQPxYoyu4x3/8LxiCDqZei6u5MJ0J3B33lxXhsY8nNvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ifSDKENu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12E49C2BCB3;
+	Tue, 21 Apr 2026 16:30:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776789048;
+	bh=VzGK/dXrA7ojghsrFE2F96/S3UgIjsZpS/dVecJp254=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ifSDKENuCWAnxtER9mUmihPc5LqIZzxeC349pMForbSoFWmnsUqRZi/ZGzdbmCWPM
+	 78I5v9XDiJO9ilE2Sh0uQIuWLCAblamwpIH4da6rES6hL6OtnDhHQIkpYXqRRhA3Rw
+	 5ZQVMhdpohMOeiyYCbJuoSx7A8a8Dq/U6CUQCFAK7wfnnIZ9ej5OefMENFBep5V3+O
+	 /mk1l/olwAt8Mq6qx9dKubhfzpk0MPJArW1u+l/59aiXUXX8CO8f3eeEBS+DMbKdnv
+	 kAMBa0gfxZZmkq7FF9UREqBtoLCXsa0xEng3NwqcJTUSi41aEaXjue6e3IdabNgXdp
+	 R+HcNuo51YkrA==
+Date: Tue, 21 Apr 2026 09:30:46 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, acme@kernel.org,
+	agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+	hca@linux.ibm.com, japo@linux.ibm.com
+Subject: Re: [PATCH] perf callchain: Handle multiple address spaces
+Message-ID: <aeemNo-8_RByiwvP@google.com>
+References: <20260414124241.490185-1-tmricht@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIxMDE2MiBTYWx0ZWRfX73/SrHfMXC7Z
- vR/AHEs23GpdaeFjs3gLFcKjKUMhdkVZZj1renW+u+ksgXn5SGswnvsC6e7/V8GrL2cQKJUbISt
- lC0YbzYKaVraWzItQjJG3C6qBPKZJncS+MYWmoOxjcSI2xnlH5xZk/jKvSweNO30OtnKEsfnCHR
- XvnbwOdqnURxNtAVyYcSwcuDrXZ0B3R/Glzt1MZ6NzoeOKaRyaCRMCO+0RnA4pHNyN6UtFpwa97
- IEUle4OsDlwB7grWKW6rQge69XWQGr41DLornjmZo16fKNFbOSQea2e6Iplg1EGYevVpYoLT76f
- xEvd7PB3Mo3Q8ODUOseCdKGV5y002Prfn4gONsFqT3gI9rgt3lC8shgiDCTLlzBURtQWNhtXWni
- zNGeMbdasIT01fojH88jwuI8OaDVJ/YdEsYGFeWIDp/gluBrFSXxU180PJI/0tXMhUA2lG9u07h
- PdanURmORYQ3l5lcRcA==
-X-Proofpoint-GUID: AYj6J4XkIPDisDyKP5fhnW2nJv1-CT-e
-X-Authority-Analysis: v=2.4 cv=SOJykuvH c=1 sm=1 tr=0 ts=69e7a636 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=r1p2_3pzAAAA:8
- a=bf5i11FZjm5gBOpVircA:9 a=r_pkcD-q9-ctt7trBg_g:22
-X-Proofpoint-ORIG-GUID: AYj6J4XkIPDisDyKP5fhnW2nJv1-CT-e
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-21_03,2026-04-21_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 spamscore=0 priorityscore=1501 lowpriorityscore=0
- clxscore=1015 phishscore=0 suspectscore=0 adultscore=0 impostorscore=0
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2604070000
- definitions=main-2604210162
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260414124241.490185-1-tmricht@linux.ibm.com>
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-18947-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18953-lists,linux-s390=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,shazbot.org:email];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[alifm@linux.ibm.com,linux-s390@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 7AD0843D75D
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[namhyung@kernel.org,linux-s390@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-s390];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,perf.data:url]
+X-Rspamd-Queue-Id: 13F2843D653
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The error signaling is configured for the vast majority of devices and it's
-extremely rare that it fires anyway. Removing the pcie check will allow
-userspace to be notified on errors for legacy PCI devices. The Internal
-Shared Memory (ISM) device on s390 is one such device. For PCI devices on
-IBM s390 error recovery involves platform firmware and notification to
-operating system is done by architecture specific way. So the ISM device
-can still be recovered when notified of an error.
+Hello,
 
-Reviewed-by: Julian Ruess <julianr@linux.ibm.com>
-Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
-Reviewed-by: Alex Williamson <alex@shazbot.org>
-Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
----
- drivers/vfio/pci/vfio_pci_core.c  | 8 ++------
- drivers/vfio/pci/vfio_pci_intrs.c | 3 +--
- 2 files changed, 3 insertions(+), 8 deletions(-)
+On Tue, Apr 14, 2026 at 02:42:41PM +0200, Thomas Richter wrote:
+> perf test 'perf inject to convert DWARF callchains to regular ones'
+> fails on s390. It was introduced with
+> commit 92ea788d2af4 ("perf inject: Add --convert-callchain option")
+> 
+> The failure comes the difference in output. Without the inject script to
+> convert DWARF the callchains is:
+>  # ./perf record -F 999 --call-graph dwarf -- perf test -w noploop
+>  # ./perf report -i perf.data --stdio --no-children -q \
+> 					 --percent-limit=1 > /tmp/111
+>  # cat /tmp/111
+>     99.30%  perf-noploop  perf               [.] noploop
+>             |
+>             ---noploop
+>                run_workload (inlined)
+>                cmd_test
+>                run_builtin (inlined)
+>                handle_internal_command
+>                run_argv (inlined)
+>                main
+>                __libc_start_call_main
+>                __libc_start_main_impl (inlined)
+>                _start
+>  #
+> 
+> With the inject script step the output is:
+>  # ./perf inject -i perf.data --convert-callchain -o /tmp/perf-inject-1.out
+>  # ./perf report -i /tmp/perf-inject-1.out --stdio --no-children -q \
+> 		--percent-limit=1 > /tmp/222
+>  # cat /tmp/222
+>     99.40%  perf-noploop  perf               [.] noploop
+>             |
+>             ---noploop
+>                run_workload (inlined)
+>                cmd_test
+>                run_builtin (inlined)
+>                handle_internal_command
+>                run_argv (inlined)
+>                main
+>                _start
+>  # diff /tmp/111 /tmp/222
+>  1c1
+>  <     99.30%  perf-noploop  perf               [.] noploop
+>  ---
+>  >     99.40%  perf-noploop  perf               [.] noploop
+>  10,11d9
+>  <                __libc_start_call_main
+>  <                __libc_start_main_impl (inlined)
+>  #
+> 
+> The difference are the symbols __libc_start_call_main and
+> __libc_start_main_impl.
+> 
+> On x86_64, kernel and user space share a single virtual address space,
+> with the kernel mapped to the upper end of memory. The instruction
+> pointer value alone is sufficient to distinguish between user space
+> and kernel space addresses. This is not true for s390, which uses
+> separate address spaces for user and kernel. The same virtual address
+> can be valid in both address spaces, so the instruction pointer value
+> alone cannot determine whether an address belongs to the kernel or
+> user space. Instead, perf must rely on the cpumode metadata derived
+> from the processor status word (PSW) at sample time.
+> 
+> In function perf_event__convert_sample_callchain() the first part
+> copies a kernel callchain and context entries, if any.
+> It then appends additional entries ignoring the address space
+> architecture. Taking that into account, the symbols at addresses
+> 
+>    0x3ff970348cb __libc_start_call_main
+>    0x3ff970349c5 __libc_start_main_impl
+> 
+> (located after the kernel address space on s390) are now included.
+> 
+> Output before:
+>  # ./perf test 83
+>  83: perf inject to convert DWARF callchains to regular ones : FAILED!
+> 
+> Output after:
+>  # ./perf test 83
+>  83: perf inject to convert DWARF callchains to regular ones : Ok
+> 
+> Question to Namhyung:
+> In function perf_event__convert_sample_callchain() just before the
+> for() loop this patch modifies, the kernel callchain is copied,
+> see this comment and the next 5 lines:
+>    /* copy kernel callchain and context entries */ 
+> Then why is machine__kernel_ip() needed in the for() loop, when
+> the kernel entries have been copied just before the loop?
 
-diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index 4485d85e4419..407be85dd565 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -786,8 +786,7 @@ static int vfio_pci_get_irq_count(struct vfio_pci_core_device *vdev, int irq_typ
- 			return (flags & PCI_MSIX_FLAGS_QSIZE) + 1;
- 		}
- 	} else if (irq_type == VFIO_PCI_ERR_IRQ_INDEX) {
--		if (pci_is_pcie(vdev->pdev))
--			return 1;
-+		return 1;
- 	} else if (irq_type == VFIO_PCI_REQ_IRQ_INDEX) {
- 		return 1;
- 	}
-@@ -1163,11 +1162,8 @@ static int vfio_pci_ioctl_get_irq_info(struct vfio_pci_core_device *vdev,
- 	switch (info.index) {
- 	case VFIO_PCI_INTX_IRQ_INDEX ... VFIO_PCI_MSIX_IRQ_INDEX:
- 	case VFIO_PCI_REQ_IRQ_INDEX:
--		break;
- 	case VFIO_PCI_ERR_IRQ_INDEX:
--		if (pci_is_pcie(vdev->pdev))
--			break;
--		fallthrough;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-diff --git a/drivers/vfio/pci/vfio_pci_intrs.c b/drivers/vfio/pci/vfio_pci_intrs.c
-index 33944d4d9dc4..64f80f64ff57 100644
---- a/drivers/vfio/pci/vfio_pci_intrs.c
-+++ b/drivers/vfio/pci/vfio_pci_intrs.c
-@@ -859,8 +859,7 @@ int vfio_pci_set_irqs_ioctl(struct vfio_pci_core_device *vdev, uint32_t flags,
- 	case VFIO_PCI_ERR_IRQ_INDEX:
- 		switch (flags & VFIO_IRQ_SET_ACTION_TYPE_MASK) {
- 		case VFIO_IRQ_SET_ACTION_TRIGGER:
--			if (pci_is_pcie(vdev->pdev))
--				func = vfio_pci_set_err_trigger;
-+			func = vfio_pci_set_err_trigger;
- 			break;
- 		}
- 		break;
--- 
-2.43.0
+IIRC I wanted to make sure to have PERF_CONTEXT_* part in the raw
+callchains.
 
+> 
+> Note: This patch was tested on x86_64 virtual machine and succeeded.
+> 
+> Fixes: 92ea788d2af4 ("perf inject: Add --convert-callchain option")
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> 
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+Thanks,
+Namhyung
+
+> ---
+>  tools/perf/arch/common.c    | 4 +++-
+>  tools/perf/builtin-inject.c | 3 ++-
+>  2 files changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/arch/common.c b/tools/perf/arch/common.c
+> index 21836f70f231..ad0cab830a4d 100644
+> --- a/tools/perf/arch/common.c
+> +++ b/tools/perf/arch/common.c
+> @@ -237,5 +237,7 @@ int perf_env__lookup_objdump(struct perf_env *env, char **path)
+>   */
+>  bool perf_env__single_address_space(struct perf_env *env)
+>  {
+> -	return strcmp(perf_env__arch(env), "sparc");
+> +	const char *arch = perf_env__arch(env);
+> +
+> +	return strcmp(arch, "s390") && strcmp(arch, "sparc");
+>  }
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index f174bc69cec4..6ab20df358c4 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -438,7 +438,8 @@ static int perf_event__convert_sample_callchain(const struct perf_tool *tool,
+>  
+>  	node = cursor->first;
+>  	for (k = 0; k < cursor->nr && i < PERF_MAX_STACK_DEPTH; k++) {
+> -		if (machine__kernel_ip(machine, node->ip))
+> +		if (machine->single_address_space &&
+> +		    machine__kernel_ip(machine, node->ip))
+>  			/* kernel IPs were added already */;
+>  		else if (node->ms.sym && node->ms.sym->inlined)
+>  			/* we can't handle inlined callchains */;
+> -- 
+> 2.53.0
+> 
 
