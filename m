@@ -1,79 +1,80 @@
-Return-Path: <linux-s390+bounces-18928-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18927-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eLV7GiJk52l07gEAu9opvQ
-	(envelope-from <linux-s390+bounces-18928-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 13:48:50 +0200
+	id mMbiDh5k52l07gEAu9opvQ
+	(envelope-from <linux-s390+bounces-18927-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 13:48:46 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A840F43A38C
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 13:48:49 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id C66E443A384
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 13:48:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D25C8305541D
+	by sea.lore.kernel.org (Postfix) with ESMTP id 88B4F3053CF3
 	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2026 11:45:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E67353845AE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4103382F34;
 	Tue, 21 Apr 2026 11:45:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Evritmex"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aAo4aWnY"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8DC333439;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7358B2C11EF;
 	Tue, 21 Apr 2026 11:45:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776771947; cv=none; b=jrdJjDmGQdxJ0tAsl/OgC8fOV0g37XJf3GpGRnMtNVXZ4a5SkupksSloXhIljxix7kNRFqVwZXCRT10h1NHxDw1t/W+EiSpHaKlYRP5mUL9fR9EZcCx9gd+JGKpV07a+DyfDHxdAIVVu//6nzqdE0LHHrZPemeBoRZRExL9+TQo=
+	t=1776771947; cv=none; b=F4xcHO2Xw2twEsuQhYfbGL1GKxRnGY+2STMYzD5227MAnDM3vut1IVzBxUI+TEh7tLfWTuIcdFyRjZCzVC+c5hP35eLi9jyyzotvImG7TKy9Yz6qk/risLWfh9HKnMgEwPHwmBN3wMwRe3I2fVMHH6J40imtmNKNGB6SFESycns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1776771947; c=relaxed/simple;
-	bh=IaREYFeBeRCU+m8Ac53d8IcNx+QL4sJOy4X24CXH084=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=IW6YEtOQhokG1/22hHLXY6OU3j3XHStFxzqmrmeJCeNBZ2Jf5QbAaTcgrXhPCnUVUnTZoS0V5E+FcScsrUv529tTMROR9BllcjRn4D8clsNavA9YccWoxnbRPUFLLlQMAjkJn7U6OriJI14Mj1xDc2Z6cyRbadi26SCnZH16C2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Evritmex; arc=none smtp.client-ip=148.163.156.1
+	bh=qkWhJvM2KfaD2CTFFEMvXKFfbm4En97C1tiACn+3Pdk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=glcq+sbdMDZ45kplM62cNAGspUGWg7NY4kThWcL+BDzVV2TiU9oqROThzvxj4m0Twy7ZG26RhiVFOEUAPpXUgYwUbyhTjwFM45oq0Lnja1KNHQYcv3d5li9W0MVUPtYPLIUCpNZkBIOYGrjklkqw54yGtS4Z35A0ROLXDZvgXBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aAo4aWnY; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63KJgW3f1684508;
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63KJhq4m1687183;
 	Tue, 21 Apr 2026 11:45:42 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pp1; bh=USgV93WvDtC1wwTYswQQfRV+axg3
-	iNjGr5tucCDPcDM=; b=Evritmexnxuc1fzG+HN4j3as0Hxc97pOIULBdIQZekG4
-	yFXVr7c+YsfJ0zRsoKwDjHFIHXlK4uKayxUYOYehwdaSr0uVbSvJaM8ioLTFnKsi
-	2YwDWQzDDlGQYo1GFDAYwLoqRAFGWG/gTm7+KcPxeK+Rr1L+3ziOVAgqWUHVDugS
-	tFQsL2REzeQDwJqaOzh3fKEPLVwRcV68L/Dd/mTZ1SYmXBXMQYJFII+WoJuudTop
-	SuvvoWhLSdaGa0b4KQtAtLw2MjOHWul9oreJWsI31EprC44Xa0/Bfgpg11v2EA9Z
-	TZgUHRmNkHps58bcaVg1SOUBo/f39PHk/xG6Q8Ha9A==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dm2j6m25r-1
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=kh+0oe
+	ceshKmn0rO0bKSNpT51u4W1l9P4nryzdCM6Dk=; b=aAo4aWnYeNdEDfMFworPUL
+	BRbw8fzE8GLcvtsMYZb4T3HWAlEvqi+LaXkD5D9FGoW3RyI1B75WSg8yMEW8mvfz
+	qlopHV9PwZjy/5fzC1vPixrk2eJgdFrMNv1l3cPSkYKW9LLUc1cWn5f/cZ7jEBPY
+	HlMg2PNX9NXYnlW6g76F/Ce1WOVRGryJzK7fVlttm0EwwJJv0TCnKTC77f3PrQ4D
+	oNzQWpPOCKwT64qMq/HGriekr+WrfTqlF/o/Xq74/iQXVG1ZuR15Y/gNcu/3E0bw
+	oNzq39hmD+q+w+qraQvF6zQ04aU9r5IRKW45BbNviIkyOIaKwT4ObwdDoXKG622w
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dm2j6m25s-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 21 Apr 2026 11:45:41 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63LBZPC9013716;
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63LBZTrP021624;
 	Tue, 21 Apr 2026 11:45:40 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dmn9k0gcv-1
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dmmnvrmqg-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 21 Apr 2026 11:45:40 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63LBjavS32833900
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63LBjbc351249632
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Tue, 21 Apr 2026 11:45:37 GMT
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DC4802004B;
-	Tue, 21 Apr 2026 11:45:36 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 0CC2B20040;
+	Tue, 21 Apr 2026 11:45:37 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BA35420040;
+	by IMSVA (Postfix) with ESMTP id E05A62004D;
 	Tue, 21 Apr 2026 11:45:36 +0000 (GMT)
 Received: from [9.52.198.32] (unknown [9.52.198.32])
 	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
 	Tue, 21 Apr 2026 11:45:36 +0000 (GMT)
 From: Christoph Schlameuss <schlameuss@linux.ibm.com>
-Subject: [kvm-unit-tests PATCH v3 0/6] s390x: Add test for STFLE
- interpretive execution (format-2)
-Date: Tue, 21 Apr 2026 13:31:06 +0200
-Message-Id: <20260421-vsie-stfle-fac-v3-0-3cee84efefa3@linux.ibm.com>
+Date: Tue, 21 Apr 2026 13:31:07 +0200
+Subject: [kvm-unit-tests PATCH v3 1/6] s390x: snippets: Add reset_guest()
+ to lib
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -81,12 +82,10 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/2XNyw6CMBAF0F8hXTukHcpDV/6HcQFlkIk8DC0Nh
- vDvNrgwwc0kN3PnzCosTUxWXKJVTOTZ8jiEkJwiYdpyeBBwHbJAiZkMA7xlAuuajqApDWiZkNZ
- ZXheEIhy9Jmp42cGbePoe5oEdOLLOinvYt2zdOL33f17trS+t1JH2CiTozOQlmfSssLp2PMxLz
- FUfm7HfOY8/IkH9R2AgUkqxIiQtC3Uktm37AKJrb38DAQAA
-X-Change-ID: 20260202-vsie-stfle-fac-403e4467d8e2
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260421-vsie-stfle-fac-v3-1-3cee84efefa3@linux.ibm.com>
+References: <20260421-vsie-stfle-fac-v3-0-3cee84efefa3@linux.ibm.com>
+In-Reply-To: <20260421-vsie-stfle-fac-v3-0-3cee84efefa3@linux.ibm.com>
 To: linux-s390@vger.kernel.org
 Cc: Janosch Frank <frankja@linux.ibm.com>,
         Claudio Imbrenda <imbrenda@linux.ibm.com>,
@@ -95,32 +94,31 @@ Cc: Janosch Frank <frankja@linux.ibm.com>,
         kvm@vger.kernel.org, Christoph Schlameuss <schlameuss@linux.ibm.com>,
         Nina Schoetterl-Glausch <nsg@linux.ibm.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2063;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2014;
  i=schlameuss@linux.ibm.com; h=from:subject:message-id;
- bh=IaREYFeBeRCU+m8Ac53d8IcNx+QL4sJOy4X24CXH084=;
- b=owGbwMvMwCUmoqVx+bqN+mXG02pJDJnPk+OFXG7o3qt8/7hoVnP+Q3OOrNmagTc4Q55nSJ/sY
- m2Offa6o5SFQYyLQVZMkaVa3Dqvqq916ZyDltdg5rAygQxh4OIUgIk8V2D4p3VE6Gz6J9n1DJpy
- 757HCPYKCLoaVyVJ2R4If2ridWORO8M/pZWZ5oohbPlP6l8Hvfwv/Fp9+St1nk0t4Q/j7eqjosp
- 4AA==
+ bh=RH8dfsfCZRN4Cf6V8h4S8Wlq8Oewg0791ynba/ejYPc=;
+ b=owGbwMvMwCUmoqVx+bqN+mXG02pJDJnPkxM+FLoVJ8otqb39vCZtv0uDwMMrvCdE/ZMdL6vO4
+ t3cr7qso5SFQYyLQVZMkaVa3Dqvqq916ZyDltdg5rAygQxh4OIUgImYz2T4X6UXnXDm13mzNzFf
+ J03jXT2R4cfdZvlZ2hulTvL83aTcYcLIsNti3qEjZhz/u6cZsd3yyrxvZ3q9zWHxin31dh87gnn
+ 3cAMA
 X-Developer-Key: i=schlameuss@linux.ibm.com; a=openpgp;
  fpr=0E34A68642574B2253AF4D31EEED6AB388551EC3
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIxMDExMiBTYWx0ZWRfX1miyaLDh8BHY
- XbpgfzFLBiHeaAUE3FrjKxs7WrQ8QkG35TUB1wCySN3j46FJ4wDaxjudkhh5glw6RWL0skxFcDO
- gWsJ5bwH8hxERsezDk1jMw/v9IytL+rwSiobITUhd9Oh8xsDqUfYi8Ah/qyTlB/Iz34tHq1popH
- DaWongLw75MVdG1TM6l+hccGDCYWzfrgEqTl60X/Oc1UfKD0LI6zrZN00IPhcRJtJFEuHcbXZ5S
- tpcvMjs0OWPS/AtlRYDUDT4251PZIm3LzQc+VXJuh3e20jzhAzjQzpw8w8SUS6FGN1xPvJnArxv
- bDjgUJf/GXIuYmwsbZievrmyDCBCvWfkb8ym4T12ibMe7EjtliWvvkNqjQbkazIoMzqn1KTYczf
- bjj3Owz9g0g3YeMfcRdKrvtZd1EXFRQVs3OcVSLf9TI7y4tBshne4yypQXgSFU/fxHV6Ih9+5Gz
- B18bQ0WHHHXU0r1eltQ==
-X-Proofpoint-GUID: P7AB6jwYP-Fs85rv3R-Qs_dzTB-rG5kr
-X-Authority-Analysis: v=2.4 cv=SOJykuvH c=1 sm=1 tr=0 ts=69e76365 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIxMDExMiBTYWx0ZWRfX0XJDERMReXPm
+ 1kEOjlvb3jaSZ2Jpn3mS4/rHILbNH8SWxHptDAks9wS0127w/9qzq6bZu5lL2wOx2QcEs6MnaSQ
+ eK8YGwaekj8JHwujl/EIgf++2OJEYaGJfvMK8U+q/ZKCh8Ql3OEAFx6pfo1oK09DltC4kFRw/T8
+ PHmtx4ivy4jdULZEoqhp6I+JnOeusyteE3nyEDClSKjtNkM6L7IC+/ugO+l/f1QdGf0kBaZgJBV
+ x5hkEESZd0gckDhBh53YGCj3OpxX7pyowTDxBr0oO9nPSjpJLBk0YeVbJw4H+B7dVG+8GgQxXm/
+ AzhD7oHYzwAXYwJ95AGXsUZqZ/Zwrm1uDnWGsw2D39xeSQkdWMlLeEOiwaTBljZOaKXlit2rmUw
+ 1rInsGRdCUHZ0KqhazkkmSN/HkSYdZT2Vh5DML7/rd3LDo6tUrSalwtIWK9ANrXT51qyNl2pJH/
+ G4DixZJGJbF+U/Ebz/A==
+X-Proofpoint-GUID: YwP0Gr1WT74h9uGPrIOACFBuMWZNOx-N
+X-Authority-Analysis: v=2.4 cv=SOJykuvH c=1 sm=1 tr=0 ts=69e76366 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
  a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
  a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8
- a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8 a=MwmhjpgLNsuZdhXYqscA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: P7AB6jwYP-Fs85rv3R-Qs_dzTB-rG5kr
+ a=Cd5Zmu1nkpE67UhzTUQA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: YwP0Gr1WT74h9uGPrIOACFBuMWZNOx-N
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-04-21_02,2026-04-20_02,2025-10-01_01
@@ -133,7 +131,7 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -142,9 +140,9 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-18928-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-18927-lists,linux-s390=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
 	TAGGED_RCPT(0.00)[linux-s390];
 	FROM_NEQ_ENVFROM(0.00)[schlameuss@linux.ibm.com,linux-s390@vger.kernel.org];
@@ -155,66 +153,78 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: A840F43A38C
+X-Rspamd-Queue-Id: C66E443A384
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Test the shadowing of format-2 facility list when running in VSIE.
+From: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
 
-The tests will skip the format 2 tests
-* if running with unpatched kernels or qemu in G1 or G2
-* if running on machines prior IBM z16 GA1 (where ASTFLEIE2 is not
-  available)
+Extract reset_guest from spec_ex-sie into the lib.
+After reset_guest() the snippet can be executed again.
 
-Cc: Janosch Frank <frankja@linux.ibm.com>
-Cc: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: "Nico Böhr" <nrb@linux.ibm.com>
-Cc: David Hildenbrand <david@kernel.org>
-Cc: Thomas Huth <thuth@redhat.com>
-To: linux-s390@vger.kernel.org
-Cc: kvm@vger.kernel.org
-
+Signed-off-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
 Signed-off-by: Christoph Schlameuss <schlameuss@linux.ibm.com>
+Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+Reviewed-by: Nico Boehr <nrb@linux.ibm.com>
 ---
-The original series was started by Nina and finished by me.
+ lib/s390x/snippet.h |  6 ++++++
+ s390x/spec_ex-sie.c | 10 ++--------
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
----
-Changes in v3:
-- Remove unnecessary format loop in test_stfle_format_0() - formats are
-  already addressed explicitly
-- Added patch to use sclp_feat_check directly for DIAG318
-- Add no-stfle prefix to improve test log
-- Move prefixes to main() to have prefixes in no-stfle checks
+diff --git a/lib/s390x/snippet.h b/lib/s390x/snippet.h
+index 910849aa186c..6f611de510d8 100644
+--- a/lib/s390x/snippet.h
++++ b/lib/s390x/snippet.h
+@@ -83,6 +83,12 @@ static inline void snippet_init(struct vm *vm, const char *gbin,
+ 	vm->sblk->ictl = ICTL_OPEREXC | ICTL_PINT;
+ }
+ 
++static inline void reset_guest(struct vm *vm)
++{
++	vm->sblk->gpsw = snippet_psw;
++	vm->sblk->icptcode = 0;
++}
++
+ /*
+  * Sets up a snippet UV/PV guest on top of an existing and initialized
+  * SIE vm struct.
+diff --git a/s390x/spec_ex-sie.c b/s390x/spec_ex-sie.c
+index fe2f23ee3d84..75625ecffc4a 100644
+--- a/s390x/spec_ex-sie.c
++++ b/s390x/spec_ex-sie.c
+@@ -31,12 +31,6 @@ static void setup_guest(void)
+ 		     SNIPPET_LEN(c, spec_ex), SNIPPET_UNPACK_OFF);
+ }
+ 
+-static void reset_guest(void)
+-{
+-	vm.sblk->gpsw = snippet_psw;
+-	vm.sblk->icptcode = 0;
+-}
+-
+ static void test_spec_ex_sie(void)
+ {
+ 	const char *msg;
+@@ -45,7 +39,7 @@ static void test_spec_ex_sie(void)
+ 
+ 	report_prefix_push("SIE spec ex interpretation");
+ 	report_prefix_push("off");
+-	reset_guest();
++	reset_guest(&vm);
+ 	sie(&vm);
+ 	/* interpretation off -> initial exception must cause interception */
+ 	report(vm.sblk->icptcode == ICPT_PROGI
+@@ -56,7 +50,7 @@ static void test_spec_ex_sie(void)
+ 
+ 	report_prefix_push("on");
+ 	vm.sblk->ecb |= ECB_SPECI;
+-	reset_guest();
++	reset_guest(&vm);
+ 	sie(&vm);
+ 	/* interpretation on -> configuration dependent if initial exception causes
+ 	 * interception, but invalid new program PSW must
 
-Changes in v2:
-- Rework sclp_facilities_setup()
-- Removed explicit manual padding from struct sclp_facilities
-
----
-Christoph Schlameuss (4):
-      s390x: sclp: Remove unnecessary padding from struct sclp_facilities
-      s390x: sclp: Rework sclp_facilities_setup() for simpler control flow
-      s390x: sclp: Use sclp_feat_check directly to read DIAG318 feature bit
-      s390x: Add test for STFLE interpretive execution (format-2)
-
-Nina Schoetterl-Glausch (2):
-      s390x: snippets: Add reset_guest() to lib
-      s390x: sclp: Add detection of alternate STFLE facilities
-
- lib/s390x/sclp.c    | 30 ++++++++++++++--------
- lib/s390x/sclp.h    |  8 +++---
- lib/s390x/sie.c     | 11 ++++++++
- lib/s390x/sie.h     |  1 +
- lib/s390x/snippet.h |  6 +++++
- s390x/spec_ex-sie.c | 10 ++------
- s390x/stfle-sie.c   | 72 +++++++++++++++++++++++++++++++++++++++++++++++++----
- 7 files changed, 111 insertions(+), 27 deletions(-)
----
-base-commit: 6123bbbc271255d61873763b5fb9c4a69acfcfec
-change-id: 20260202-vsie-stfle-fac-403e4467d8e2
-
-Best regards,
 -- 
-Christoph Schlameuss <schlameuss@linux.ibm.com>
+2.53.0
 
 
