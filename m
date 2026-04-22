@@ -1,159 +1,161 @@
-Return-Path: <linux-s390+bounces-18970-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-18971-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GNTsJn1x6GmvKQIAu9opvQ
-	(envelope-from <linux-s390+bounces-18970-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 22 Apr 2026 08:58:05 +0200
+	id mPYhGFh36GmVKgIAu9opvQ
+	(envelope-from <linux-s390+bounces-18971-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 22 Apr 2026 09:23:04 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53DC7442A89
-	for <lists+linux-s390@lfdr.de>; Wed, 22 Apr 2026 08:58:04 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDB2E442E78
+	for <lists+linux-s390@lfdr.de>; Wed, 22 Apr 2026 09:23:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4E7C93066880
-	for <lists+linux-s390@lfdr.de>; Wed, 22 Apr 2026 06:54:54 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 683493013B70
+	for <lists+linux-s390@lfdr.de>; Wed, 22 Apr 2026 07:23:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75C5C326951;
-	Wed, 22 Apr 2026 06:54:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B02C36C9F0;
+	Wed, 22 Apr 2026 07:23:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="mmhiYkVY"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11EFE29430
-	for <linux-s390@vger.kernel.org>; Wed, 22 Apr 2026 06:54:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4877F36AB4A;
+	Wed, 22 Apr 2026 07:22:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776840889; cv=none; b=LOEVtxVvkX8zwzo59jk8cpxTElKvDzh8OdQ42BQ7nhjdq+68O2ChNwfhGQ87BEDUnPrU6va5z3WetyUC9eCMA8dVx/N/EfvSSc8vrU9Btbn3ZsnRreJLIq9G619NjU2WdNqBHFPBDCL/4mlSzgBwl32Xwuxfft4tWnVRNNczsd8=
+	t=1776842581; cv=none; b=ioLhXHAKxKXQpz4bzjhnbWO3p6DjOYFoDI7FokklIMQRmPlfg3tkmjKIX0hzn2Rsu7Y8nCxnF+w1IBIsQhVc7l38R/uN4SeffToLbxLFTl0jYAMzRsP04VgTrWlYHR8DM4uzi1C9aT4dbSjbovlHYEPex8fKemkOj2dS4yvBcbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776840889; c=relaxed/simple;
-	bh=M5g0U17jf72qYxMz8kLVwYzsVn+6qWRz8++xq+cwags=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ErdkIoxjHH3uR8vayUHnwlIu8kB81dUS40Yb/W8JCwZOXdsIrlQXSlH5aAl7J6ozx7q7ug6hlPRGYE4Ftrp+nrn9BA6TwszbyQrOWLF0Z/5ScPD4F87U8jzWPUmgzzAQuGlkcFKYsFDjzN+11wngp0bD78DrI3X920Plycb62EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-953a44f8404so996759241.0
-        for <linux-s390@vger.kernel.org>; Tue, 21 Apr 2026 23:54:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776840886; x=1777445686;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zyxMyDKhrlWE+5iCHg59pMAULgdQUBAeBRtLLkE5UPM=;
-        b=LUbcg62IlOeT4OYv2I4Gk56Orkb/gc9YKXsJwLMrUlHlHjXLr+WTCYi90NZ61pFwiX
-         /Dx8W2ZVo/rtHHEt/V+6YY4dl9IMOsXfJC1wDHvDosmcXPsJxe8rreedmGPOGN41t+nA
-         c1t58qteKYVi7VKm+rREoDnG0Q5AXwbFfRbDyowHo0NvBESbhn5gSTTNXbwsmPRGOK/e
-         4boEwFCsJgrC4NxSnKy4omxdkekSLKCjYfVsbBOv/d2fSiuxyHMug1JuCmz2MgCBnbri
-         BPH4bkBLMxKeuK0SP/TuZxjuFUmnvrdBUzBLsb6P/5uz9xMJsPehOHK7IntnuhEu8g1U
-         mZCw==
-X-Forwarded-Encrypted: i=1; AFNElJ+DojhGCFFwARLE8+F7ddRsgbYt4SUiR8DVRMBgZ9G1enJkWqoiBnrYwtt/CrRQR20+TuL9DUjEpa3b@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7Ol8BQZf9rFaxA7Zy+rjEiWyr3bVc4n3M3Sof+Q7vJguNEcDe
-	xy1XcEBZNHczEjSuzJb98ISDJT0iHBu2g0GlzCYwOr2J0Mfr03IYQ/WNLj/uqBikk/A=
-X-Gm-Gg: AeBDietMFVjjx0zWK3LZhrjQc2pmrZ7PxNLovHfOEN6B2sZk7tMDINxMooqTjd9a2tG
-	m3lqk6Ky4HG1gL8vz3Jmlsq+edSCB5yb+5rKffDxZtGLmC1JG5Mnlr/6jyLYlLujEM0Q2nkxEkB
-	hBrZY9Jw0SR6EisJqZ9HR0NlSvWXFz7+4kZF+iLyBY3c9g9DcZ6BSHsy3Ev2U734h2u3JmLXAfl
-	qFaEjtd8jvGcB3FN+QiaH7pso/Quxtxo2injozRRNKJmTMkN6x/U1jmOrnR24oUGLaFmyf7+oRf
-	Dk1d+OnOI/lReFEcs5aRlso5/bcWRnrS3Y2x2k2DAUlUGMKTklaVolq/ywZdS1VwlzS/nEdzLEl
-	RpgCiunoc0+iQR1qyCVgKt8r05ATR6AZ3upSKF17qtyrhRvtFF0u4yC+5hWOq2DFl1xcjlezGE1
-	/wrp1W+KNL8xJ2ZWkdLLpU6cc54xLxApkzQlMJPJ2Xjl2PYqHgi6BmZJyAOi55KMM8rtrQ3NGS7
-	/Q=
-X-Received: by 2002:a05:6102:80a8:b0:611:61d3:819e with SMTP id ada2fe7eead31-616f51846ccmr9138176137.12.1776840885862;
-        Tue, 21 Apr 2026 23:54:45 -0700 (PDT)
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com. [209.85.221.177])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-61747cb501asm7683143137.7.2026.04.21.23.54.45
-        for <linux-s390@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2026 23:54:45 -0700 (PDT)
-Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-56d8d479149so1743141e0c.2
-        for <linux-s390@vger.kernel.org>; Tue, 21 Apr 2026 23:54:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ9tpAkOnGrRox1FMIHr3Rx6PGupuRdtKOAp7JwOzGuyhdSlpRvt+CfFbnkIZ2DHmaDzXHIh6Upn1D4K@vger.kernel.org
-X-Received: by 2002:a05:6122:f84:b0:56c:db8b:504e with SMTP id
- 71dfb90a1353d-56fa59fbc9fmr11532873e0c.13.1776840884876; Tue, 21 Apr 2026
- 23:54:44 -0700 (PDT)
+	s=arc-20240116; t=1776842581; c=relaxed/simple;
+	bh=sRc5XRd88qnnYTUsgRaSZpfz9lFgEVT5Bz2KMe/l2Js=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rso0OsQ9roxsN99uxM1WF4LhFWZ2Klf/kClDNs0kLVtzSXp0e53M7XY/44i0Ryf/DoIEWI6z1Kyf8APAyboms+gNJeEqWCv5mTxQrgxs2YlSq50NTaoFgjPFHkbnbAU+11Pxaj51+U7F1xj/eGZIgC1kMmnrBYOROuCZe4Bj8Ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=mmhiYkVY; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1776842568; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=899XW99T8m7phQqcFM+gx4r/gMPFpYUZ5qz3cB2BL/I=;
+	b=mmhiYkVYDCjD/ZOqzOFZl31j/pGldYJXEC55UU1TJmadbrZB2dzlyFCnM/9UAADYjH+2etSRJGnvI3VHeBeNZZDu0YA9iAhKhlLSYkmjM7Kb3CQz0fgKfToJs0K655mhpTaTYavjUzuk7xe+u12fILRJXuLuZvWqBEM8jOQMrmE=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R641e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045133197;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0X1VNEnq_1776842566;
+Received: from 30.74.144.136(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0X1VNEnq_1776842566 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 22 Apr 2026 15:22:47 +0800
+Message-ID: <b6a6eead-cfd2-4459-9c6d-384dc6cd72d8@linux.alibaba.com>
+Date: Wed, 22 Apr 2026 15:22:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1776808209.git.mst@redhat.com> <006f9142e591ba8c340c3b354aee76aec5c285b9.1776808210.git.mst@redhat.com>
-In-Reply-To: <006f9142e591ba8c340c3b354aee76aec5c285b9.1776808210.git.mst@redhat.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 22 Apr 2026 08:54:33 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUtNPY1=92H8GZSDkQ5_rNnxL6WkjTF=1ApjwTA4z1TqA@mail.gmail.com>
-X-Gm-Features: AQROBzCgl_wyqpfJ8JAvw4YHU8svwkzmMCs8RMYgDiGFQgsN4z72BoUKVxkZaoc
-Message-ID: <CAMuHMdUtNPY1=92H8GZSDkQ5_rNnxL6WkjTF=1ApjwTA4z1TqA@mail.gmail.com>
-Subject: Re: [PATCH RFC v3 10/19] mm: remove arch vma_alloc_zeroed_movable_folio
- overrides
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Brendan Jackman <jackmanb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Jason Wang <jasowang@redhat.com>, 
-	Andrea Arcangeli <aarcange@redhat.com>, Gregory Price <gourry@gourry.net>, linux-mm@kvack.org, 
-	virtualization@lists.linux.dev, 
-	Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, 
-	Magnus Lindholm <linmag7@gmail.com>, Greg Ungerer <gerg@linux-m68k.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, linux-alpha@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linux-s390@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spamd-Result: default: False [-1.46 / 15.00];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/3] mm: process_mrelease: skip LRU movement for
+ exclusive file folios
+To: Minchan Kim <minchan@kernel.org>, akpm@linux-foundation.org
+Cc: hca@linux.ibm.com, linux-s390@vger.kernel.org, david@kernel.org,
+ mhocko@suse.com, brauner@kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, surenb@google.com, timmurray@google.com,
+ Minchan Kim <minchan@google.com>
+References: <20260421230239.172582-1-minchan@kernel.org>
+ <20260421230239.172582-3-minchan@kernel.org>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20260421230239.172582-3-minchan@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-9.16 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,linux-foundation.org,kernel.org,google.com,suse.com,redhat.com,gourry.net,kvack.org,lists.linux.dev,linaro.org,gmail.com,linux-m68k.org,linux.ibm.com,alien8.de,linux.intel.com,zytor.com,lists.linux-m68k.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[31];
-	TAGGED_FROM(0.00)[bounces-18970-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[linux-m68k.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-18971-lists,linux-s390=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[12];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,linux-s390@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[baolin.wang@linux.alibaba.com,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-s390];
-	R_DKIM_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,linux-m68k.org:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 53DC7442A89
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.alibaba.com:dkim,linux.alibaba.com:mid]
+X-Rspamd-Queue-Id: CDB2E442E78
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, 22 Apr 2026 at 00:01, Michael S. Tsirkin <mst@redhat.com> wrote:
-> Now that the generic vma_alloc_zeroed_movable_folio() uses
-> __GFP_ZERO, the arch-specific macros on alpha, m68k, s390, and
-> x86 that did the same thing are redundant.  Remove them.
->
-> arm64 is not affected: it has a real function override that
-> handles MTE tag zeroing, not just __GFP_ZERO.
->
-> Suggested-by: David Hildenbrand <david@kernel.org>
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 
->  arch/m68k/include/asm/page_no.h | 3 ---
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> # m68k
+On 4/22/26 7:02 AM, Minchan Kim wrote:
+> For the process_mrelease reclaim, skip LRU handling for exclusive
+> file-backed folios since they will be freed soon so pointless
+> to move around in the LRU.
+> 
+> This avoids costly LRU movement which accounts for a significant portion
+> of the time during unmap_page_range.
+> 
+> -   91.31%     0.00%  mmap_exit_test   [kernel.kallsyms]  [.] exit_mm
+>       exit_mm
+>       __mmput
+>       exit_mmap
+>       unmap_vmas
+>     - unmap_page_range
+>        - 55.75% folio_mark_accessed
+>           + 48.79% __folio_batch_add_and_move
+>             4.23% workingset_activation
+>        + 12.94% folio_remove_rmap_ptes
+>        + 9.86% page_table_check_clear
+>        + 3.34% tlb_flush_mmu
+>          1.06% __page_table_check_pte_clear
+> 
+> Signed-off-by: Minchan Kim <minchan@kernel.org>
+> ---
+>   mm/memory.c | 13 ++++++++++++-
+>   1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 2f815a34d924..fcb57630bb8d 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -1640,6 +1640,8 @@ static __always_inline void zap_present_folio_ptes(struct mmu_gather *tlb,
+>   	bool delay_rmap = false;
+>   
+>   	if (!folio_test_anon(folio)) {
+> +		bool skip_mark_accessed;
+> +
+>   		ptent = get_and_clear_full_ptes(mm, addr, pte, nr, tlb->fullmm);
+>   		if (pte_dirty(ptent)) {
+>   			folio_mark_dirty(folio);
+> @@ -1648,7 +1650,16 @@ static __always_inline void zap_present_folio_ptes(struct mmu_gather *tlb,
+>   				*force_flush = true;
+>   			}
+>   		}
+> -		if (pte_young(ptent) && likely(vma_has_recency(vma)))
+> +
+> +		/*
+> +		 * For the process_mrelease reclaim, skip LRU handling for exclusive
+> +		 * file-backed folios since they will be freed soon so pointless
+> +		 * to move around in the LRU.
+> +		 */
+> +		skip_mark_accessed = mm_flags_test(MMF_UNSTABLE, mm) &&
+> +				     !folio_maybe_mapped_shared(folio);
+> +		if (likely(!skip_mark_accessed) && pte_young(ptent) &&
+> +		    likely(vma_has_recency(vma)))
+>   			folio_mark_accessed(folio);
+>   		rss[mm_counter(folio)] -= nr;
+>   	} else {
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Seems we should also skip marking exclusive pmd-sized folios as accessed 
+in zap_huge_pmd_folio().
 
