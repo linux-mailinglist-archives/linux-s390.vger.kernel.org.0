@@ -1,71 +1,71 @@
-Return-Path: <linux-s390+bounces-19004-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19006-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kH0eJNMT6mmytQIAu9opvQ
-	(envelope-from <linux-s390+bounces-19004-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 23 Apr 2026 14:42:59 +0200
+	id MAzqEO0T6mmytQIAu9opvQ
+	(envelope-from <linux-s390+bounces-19006-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 23 Apr 2026 14:43:25 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B16C45224B
-	for <lists+linux-s390@lfdr.de>; Thu, 23 Apr 2026 14:42:58 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43CB645226A
+	for <lists+linux-s390@lfdr.de>; Thu, 23 Apr 2026 14:43:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 44D02301626D
-	for <lists+linux-s390@lfdr.de>; Thu, 23 Apr 2026 12:39:36 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1344D30628C5
+	for <lists+linux-s390@lfdr.de>; Thu, 23 Apr 2026 12:39:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14EF03EDAB5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5E393EDAD6;
 	Thu, 23 Apr 2026 12:39:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DphtqLZQ"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DfvqlNDq"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 692723537D0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691E03081D6;
 	Thu, 23 Apr 2026 12:39:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776947973; cv=none; b=P+952fAY87Qxd5ys59jJoaSEs4E8Hy2nwrttBnGQb9XsPNMPUQZ056Vo/UsWOxo24cPWYWuJA7S3/r8XT5YhcMlM9bO5BLNhG/0y+gjoW0tLmyCEQv9c0wqEWpxJIXUCQw81fowE+GaNaaOQG4WTsKXeOHlE1F8Yay1oS/zWiQw=
+	t=1776947973; cv=none; b=F6RxC7FLFF1hb8V+uLZiLSElikTfkJnRDFXxNNm3r4mYUmVh46LW7bCxxOMFvfmTqxwQ1D0XWyHORXiD1zWkA3pPKH+2ExZqR2eNI5WIyERdIbux01eOA+QU9M23tY0AFhBF//MkQEx/7rcXUCgCG0F3pWxKYD6QoCRBwH5mCbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1776947973; c=relaxed/simple;
-	bh=zMaDvx9re5DyUPeNz6AzLKND7DHngkH5iHJ10hgUKOQ=;
+	bh=ZHh12tIT7R0Hs5jBgYIxknN/SdiVfn9XiNby7R6fb8A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jZTMNi1gQcb+tAiRi4/5G9R01fhL+N34eZ1u7cq/ID7fh1HS9YaTciX+h2xKOtrcs9y80cZ7aNpmWazkgsM62443gNz2NeZ6BDEg7FcPFGWxTG6mZw9YLXPiMSwlsLu/mGqk99UbpKFdJit4o6/d2Arm/8XJOxRVwNhgzNjxfsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DphtqLZQ; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=WAntuArMSHtpzw995IVwEl9cKTsBXEqe2ryjSsbdfroROlmBz+9zOUytZNnC2rpWvAsxPaLvMzYCk2ZgUJZMl4FpizSxzb5eHKIlfmKnMnZUHUHMP61BP5M5Byhc/Icj2/a6sglG+2MWITlAFJz5zh0CWWk3zEhmsi5z8odz3OI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DfvqlNDq; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63N7gm4s3228999;
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63N6ooHR3229044;
 	Thu, 23 Apr 2026 12:39:25 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=dnA9BqDM6C9y/sJJO
-	/8uZ4IBN5ybvNEnu6pCIipvgwM=; b=DphtqLZQeLabXESPklEK20dXDctfV+C3e
-	vyyqATyGh/F8Fke8T6y5Hdf6wvItz7aQm11agZCuQatzpz2nM47cK9uwC3A8lE0t
-	zCKkh42FEStd4e9lmfWG/4C61eykCPOPTOk3yXAKSXQszZ21AQ6Yt95cPGw/yiW8
-	gawu3F9gQIBn5huvaGv0EL4WUCstmyEo4YWv9pECP0O2+NmXQjXQiw5hgsSo/xOW
-	niSbadN//2QeHKrUnT9HjOYyLWyiUt0cEoPRRLIzwE6ee7QhlelfpZjqTgpW3pz1
-	NCumjXUUPaoS0GFJ9GLVTkKii2piGQt6tPf0elZZ+4v4EAhLIudkw==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dpeu28m8u-1
+	:mime-version:references:subject:to; s=pp1; bh=MJlZtWw/4gdNS13g9
+	bA4qysynpC7Oxq4YaW6tOTdmY4=; b=DfvqlNDqfiaCQcnXMPImWly2pL9DPULLH
+	16Z2Ct8E942rtk0yqCT7q2hnN71vhUdXSCYM4hOGRoKTaBpT6DGvVV8c+C//KPqw
+	PEyBS3IoSpykyVFS909aSzJz0MPV7Tv/cEZ1w7OceA1+3Qa+qwWtdJnR6kelaNMf
+	OywEeTuo30ADn+jGWy8vj3d2jyoq95W8GLyMm+QtiTHOfK6h5w1EVVgXJSrFLNDq
+	jASxulaX2Yp70YJuI9mHqG1MoaV9GYrnzhqfP+eyHMISxkuFOU/Jzizz8x1AaB3Y
+	dczAw7HyGbNbFbnoh3tKHolIPjFKvgWSNRJauu7yCjUxIMUB2ne7w==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dpeu28m8w-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 23 Apr 2026 12:39:25 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63NCZWEH019946;
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63NCZRKY003353;
 	Thu, 23 Apr 2026 12:39:24 GMT
 Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dpjky6k5w-1
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dpjkyek3p-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 23 Apr 2026 12:39:24 +0000 (GMT)
 Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63NCdKj745351302
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63NCdKkD50135316
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Thu, 23 Apr 2026 12:39:20 GMT
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9D8952004E;
+	by IMSVA (Postfix) with ESMTP id B9E5B2004F;
 	Thu, 23 Apr 2026 12:39:20 +0000 (GMT)
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 77BDA2004F;
+	by IMSVA (Postfix) with ESMTP id 9FD002005A;
 	Thu, 23 Apr 2026 12:39:20 +0000 (GMT)
 Received: from b46lp25.lnxne.boe (unknown [9.87.84.240])
 	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
@@ -74,9 +74,9 @@ From: Janosch Frank <frankja@linux.ibm.com>
 To: kvm@vger.kernel.org
 Cc: linux-s390@vger.kernel.org, imbrenda@linux.ibm.com,
         borntraeger@linux.ibm.com, hca@linux.ibm.com
-Subject: [PATCH 1/3] KVM: s390: selftests: Add load psw bear test
-Date: Thu, 23 Apr 2026 12:36:02 +0000
-Message-ID: <20260423123902.14663-2-frankja@linux.ibm.com>
+Subject: [PATCH 2/3] kvm: s390: Fix LPSW/E early exception bear behavior
+Date: Thu, 23 Apr 2026 12:36:03 +0000
+Message-ID: <20260423123902.14663-3-frankja@linux.ibm.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260423123902.14663-1-frankja@linux.ibm.com>
 References: <20260423123902.14663-1-frankja@linux.ibm.com>
@@ -88,20 +88,20 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: imo1G3qJLpoucFDa5tDbQoR1wzWKN2ve
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIzMDEyMiBTYWx0ZWRfX7BMm1u3botEz
- DFFsbKRRMqYXEk/d6Q+Ue3RsbtFxrucSDnxs8hUZrnaKI+1RIiScX5LDEwR49bDla7QFJV7rLss
- u5jb9PU3VKXSsYYp6UQWrFab05YpyznEIcMUnzQHOo7sia7h6NyWhOu4kWFJNhiCq2ghAlyy/FX
- fcw3JROSlgdhKF4kUaLUe1jPKg25kn1Uw4Ktw7CKxk16xgrgfnacHC4L1hcoIlEEjz7W+e/JovW
- Q/AVr2LmL80RczSA4fdc05Z/YOICCrRhexeZ7BNDE5SUnauYmE+XrzSqMTaxfhW/8SgJWxALKb/
- qPjoXJj0YIpDmPBR+r7aDgs/RUVWeaz5oq3mzNlHBDvAdjRJLqrQGwgJfoHqtN8y/WYObXHAPHb
- l2Sv8eDNRoxpIRH/6npksovkTouboMwijpRhsOPcsnWPsGhXHG/q9PiUHaGTIljql7iXFDsXP1Y
- S1KLHrVmeCKu2CiWNMg==
+X-Proofpoint-GUID: _6Z3Sup1UrKEdmcLm6Z5Sa-wWUY0WQpJ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIzMDEyMiBTYWx0ZWRfX4EHTVB+VIMU5
+ qLF3QnV34oQf0iGowjUN7HSECmoQkjVlaFyDOooednjyLVCrP1RHtQe1o9v23EVH+Sc3hPQ5RsW
+ XpqW1Z8p1K7nMnJQjr80jHU96z1aO37HhPmF1klCI5lKPrwvL+BuejhsohPn0otA0AlWBql3IjH
+ xENbbch0QyOvV0T01ANmRFvaMPj+ThvACSsNmHAgCyBoKCG4Z2jpaST3lKvw3z32RUjapVZpp7u
+ 7sO7iwY3OnpSX969dB5jAa4V1UT+3QC7EAga2oeTLPacz8AqH7/mcaLquNTkPPImvRpkYo6GYAO
+ PXhEwJ3088Ounkc58fW3Fl1ykyDIuRYnTIIZTefmCXIWUl89Ych37vUqQ5GQsYN3+o48RuFcjp6
+ 2TXlvnKgU5PvCtrThJrg50kJ5S1AFCZt0gyB4Rj1kJr+Kc1s6Tm9C0FAHigHizGQf7n3+pkOk0G
+ HBkFf0KTRFna2XwzO1Q==
 X-Authority-Analysis: v=2.4 cv=C8LZDwP+ c=1 sm=1 tr=0 ts=69ea12fd cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
  a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=G4_ZmC8i095dR4b8HbIA:9
-X-Proofpoint-ORIG-GUID: imo1G3qJLpoucFDa5tDbQoR1wzWKN2ve
+ a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=FGL5-UHicGFpkBeQ7iUA:9
+X-Proofpoint-ORIG-GUID: _6Z3Sup1UrKEdmcLm6Z5Sa-wWUY0WQpJ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-04-23_03,2026-04-21_02,2025-10-01_01
@@ -116,12 +116,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19004-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19006-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	TO_DN_NONE(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -134,295 +134,54 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
 	DKIM_TRACE(0.00)[ibm.com:+];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCPT_COUNT_FIVE(0.00)[5];
 	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 0B16C45224B
+X-Rspamd-Queue-Id: 43CB645226A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The bear is set for lpsw and lpswe, so let's check that also happens
-when kvm emulates these instructions.
-
-Load PSW and all of its variants are only emulated by KVM if there's a
-pending machine check. Therefore the tests inject those but never open
-the masks to receive them.
+When loading a PSW a lot of specification exceptions are recognized
+after the PSW has been loaded. In these cases the load PSW(E) succeeds
+but the loaded PSW was invalid. Since the load completed we need to
+set the bear.
 
 Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+Fixes: 1653545abc68 ("KVM: s390: Fix lpsw/e breaking event handling")
 ---
- tools/testing/selftests/kvm/Makefile.kvm |   1 +
- tools/testing/selftests/kvm/s390/bear.c  | 250 +++++++++++++++++++++++
- 2 files changed, 251 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/s390/bear.c
+ arch/s390/kvm/priv.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
-index 6471fa214a9f..9afb6479dbee 100644
---- a/tools/testing/selftests/kvm/Makefile.kvm
-+++ b/tools/testing/selftests/kvm/Makefile.kvm
-@@ -207,6 +207,7 @@ TEST_GEN_PROGS_s390 += s390/user_operexec
- TEST_GEN_PROGS_s390 += s390/keyop
- TEST_GEN_PROGS_s390 += rseq_test
- TEST_GEN_PROGS_s390 += s390/irq_routing
-+TEST_GEN_PROGS_s390 += s390/bear
+diff --git a/arch/s390/kvm/priv.c b/arch/s390/kvm/priv.c
+index cc0553da14cb..56e63679f9d1 100644
+--- a/arch/s390/kvm/priv.c
++++ b/arch/s390/kvm/priv.c
+@@ -736,9 +736,11 @@ int kvm_s390_handle_lpsw(struct kvm_vcpu *vcpu)
+ 	gpsw->mask = (new_psw.mask & ~PSW32_MASK_BASE) << 32;
+ 	gpsw->mask |= new_psw.addr & PSW32_ADDR_AMODE;
+ 	gpsw->addr = new_psw.addr & ~PSW32_ADDR_AMODE;
++	vcpu->arch.sie_block->gbea = iaddr;
++
+ 	if (!is_valid_psw(gpsw))
+ 		return kvm_s390_inject_program_int(vcpu, PGM_SPECIFICATION);
+-	vcpu->arch.sie_block->gbea = iaddr;
++
+ 	return 0;
+ }
  
- TEST_GEN_PROGS_riscv = $(TEST_GEN_PROGS_COMMON)
- TEST_GEN_PROGS_riscv += riscv/sbi_pmu_test
-diff --git a/tools/testing/selftests/kvm/s390/bear.c b/tools/testing/selftests/kvm/s390/bear.c
-new file mode 100644
-index 000000000000..63032a789c8d
---- /dev/null
-+++ b/tools/testing/selftests/kvm/s390/bear.c
-@@ -0,0 +1,250 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* LPSW/E bear tests. */
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/ioctl.h>
+@@ -762,9 +764,11 @@ static int handle_lpswe(struct kvm_vcpu *vcpu)
+ 	if (rc)
+ 		return kvm_s390_inject_prog_cond(vcpu, rc);
+ 	vcpu->arch.sie_block->gpsw = new_psw;
++	vcpu->arch.sie_block->gbea = iaddr;
 +
-+#include "test_util.h"
-+#include "kvm_util.h"
-+#include "kselftest.h"
-+#include "ucall_common.h"
-+#include "facility.h"
-+#include "processor.h"
+ 	if (!is_valid_psw(&vcpu->arch.sie_block->gpsw))
+ 		return kvm_s390_inject_program_int(vcpu, PGM_SPECIFICATION);
+-	vcpu->arch.sie_block->gbea = iaddr;
 +
-+u64 psw_mask = 0x0400000180000000ULL;
-+
-+static void guest_lpswe_inv(void)
-+{
-+	extern void lpswe_dest_addr_inv(void);
-+	u64 psw_inv[2] = {psw_mask | BIT(63), (uintptr_t)lpswe_dest_addr_inv};
-+	u64 psw_pgm[2] = {psw_mask,  (uintptr_t)lpswe_dest_addr_inv};
-+	u64 bear;
-+
-+	/*
-+	 * Advanced shenanigans:
-+	 * - Use real stores (sturg) to lowcore PGM new PSW since the
-+	 *   lowcore isn't mapped in DAT
-+	 * - After the exception store invalid address to PGM new so
-+	 *   the test exits
-+	 */
-+	asm volatile (
-+		"	larl	%%r3,lpswe_addr_inv\n"
-+		"	lghi	%%r6, 464\n"
-+		"	lg	%%r5, %[psw_pgm_m]\n"
-+		"	sturg	%%r5, %%r6\n"
-+		"	lghi	%%r6, 472\n"
-+		"	lg      %%r5, %[psw_pgm_a]\n"
-+		"	sturg	%%r5, %%r6\n"
-+		"	lghi	%%r5, 0x80\n"
-+		"	xgr	%%r6, %%r6\n"
-+		"	sturg	%%r5, %%r6\n"
-+		"lpswe_addr_inv:\n"
-+		"       lpswe    %[psw_inv]\n"
-+		"       nop\n"
-+		"       nop\n"
-+		".globl lpswe_dest_addr_inv\n"
-+		"lpswe_dest_addr_inv:\n"
-+		"       .insn   s,0xb2010000,%[bear]\n"
-+		"	lg	%%r4, %[bear]\n"
-+		"       lghi    %%r6, 472\n"
-+		"	lghi	%%r5, 1\n"
-+		"	sturg	%%r5, %%r6\n"
-+		"	lghi	%%r6, 0x8c\n"
-+		"	lura	%%r5, %%r6\n"
-+		: [bear] "=Q" (bear)
-+		: [psw_inv] "Q" (psw_inv),
-+		  [psw_pgm_m] "Q" (psw_pgm), [psw_pgm_a] "Q" (psw_pgm[1])
-+		: "cc", "r3", "r4", "r5", "r6"
-+		);
-+}
-+
-+static void guest_lpswe(void)
-+{
-+	extern void lpswe_dest_addr(void);
-+	u64 psw[2] = {psw_mask, (uintptr_t)lpswe_dest_addr};
-+	u64 bear;
-+
-+	asm volatile (
-+		"	larl	%%r3,lpswe_addr\n"
-+		"lpswe_addr:\n"
-+		"       lpswe    %[psw]\n"
-+		"       nop\n"
-+		"       nop\n"
-+		".globl lpswe_dest_addr\n"
-+		"lpswe_dest_addr:\n"
-+		"       .insn   s,0xb2010000,%[bear]\n"
-+		"	lg	%%r4, %[bear]\n"
-+		"       nop\n"
-+		"       nop\n"
-+		: [bear] "=Q" (bear)
-+		: [psw] "Q" (psw)
-+		: "cc", "r3", "r4"
-+		);
-+}
-+
-+static void guest_lpsw(void)
-+{
-+	extern void lpsw_dest_addr(void);
-+	u64 psw_short = (psw_mask | BIT(63 - 12) | (uintptr_t)lpsw_dest_addr);
-+	u64 bear;
-+
-+	asm volatile (
-+		"	larl	%%r3,lpsw_addr\n"
-+		"lpsw_addr:\n"
-+		"       lpsw    %[psw]\n"
-+		"       nop\n"
-+		"       nop\n"
-+		".globl lpsw_dest_addr\n"
-+		"lpsw_dest_addr:\n"
-+		"       .insn   s,0xb2010000,%[bear]\n"
-+		"	lg	%%r4, %[bear]\n"
-+		"       nop\n"
-+		"       nop\n"
-+		: [bear] "=Q" (bear)
-+		: [psw] "Q" (psw_short)
-+		: "cc", "r3", "r4"
-+		);
-+}
-+
-+static void guest_lpsw_inv(void)
-+{
-+	extern void lpsw_dest_addr_inv(void);
-+	u64 psw_short_inv = (psw_mask | BIT(63 - 12) | BIT(63) | (uintptr_t)lpsw_dest_addr_inv);
-+	u64 psw_pgm[2] = {psw_mask,  (uintptr_t)lpsw_dest_addr_inv};
-+	u64 bear;
-+
-+	/*
-+	 * Advanced shenanigans:
-+	 * - Use real stores (sturg) to lowcore PGM new PSW since the
-+	 *   lowcore isn't mapped in DAT
-+	 * - After the exception store invalid address to PGM new so
-+	 *   the test exits
-+	 */
-+	asm volatile (
-+		"	larl	%%r3,lpsw_addr_inv\n"
-+		"	lghi	%%r6, 464\n"
-+		"	lg	%%r5, %[psw_pgm_m]\n"
-+		"	sturg	%%r5, %%r6\n"
-+		"	lghi	%%r6, 472\n"
-+		"	lg      %%r5, %[psw_pgm_a]\n"
-+		"	sturg	%%r5, %%r6\n"
-+		"	lghi	%%r5, 0x80\n"
-+		"	xgr	%%r6, %%r6\n"
-+		"	sturg	%%r5, %%r6\n"
-+		"lpsw_addr_inv:\n"
-+		"       lpsw    %[psw_inv]\n"
-+		"       nop\n"
-+		"       nop\n"
-+		".globl lpsw_dest_addr_inv\n"
-+		"lpsw_dest_addr_inv:\n"
-+		"       .insn   s,0xb2010000,%[bear]\n"
-+		"	lg	%%r4, %[bear]\n"
-+		"       lghi    %%r6, 472\n"
-+		"	lghi	%%r5, 1\n"
-+		"	sturg	%%r5, %%r6\n"
-+		"	lghi	%%r6, 0x8c\n"
-+		"	lura	%%r5, %%r6\n"
-+		: [bear] "=Q" (bear)
-+		: [psw_inv] "Q" (psw_short_inv),
-+		  [psw_pgm_m] "Q" (psw_pgm), [psw_pgm_a] "Q" (psw_pgm[1])
-+		: "cc", "r3", "r4", "r5", "r6"
-+		);
-+}
-+
-+/* A machine check forces KVM to emulate PSW loading */
-+static void inject_mcheck(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_s390_irq irq = {};
-+	int irqs;
-+
-+	irq.type = KVM_S390_MCHK;
-+	/* External damage mcheck */
-+	irq.u.mchk.cr14 = BIT(63 - 38);
-+	irq.u.mchk.mcic = BIT(58);
-+	irqs = __vcpu_ioctl(vcpu, KVM_S390_IRQ, &irq);
-+	TEST_ASSERT(irqs >= 0, "Error injecting MCHECK errno %d", errno);
-+}
-+
-+static void test_lpswe(void)
-+{
-+	struct kvm_vcpu *vcpu;
-+	struct kvm_run *run;
-+	struct kvm_vm *vm;
-+	void *lc;
-+
-+	vm = vm_create_with_one_vcpu(&vcpu, guest_lpswe);
-+	inject_mcheck(vcpu);
-+	run = vcpu->run;
-+	vcpu_run(vcpu);
-+	ksft_test_result(run->s.regs.gprs[3] == run->s.regs.gprs[4],
-+			 "lpswe: emulation: bear matches\n");
-+	kvm_vm_free(vm);
-+
-+	vm = vm_create_with_one_vcpu(&vcpu, guest_lpswe_inv);
-+	lc = addr_gpa2hva(vm, 0);
-+	memset(lc, 0, PAGE_SIZE);
-+	inject_mcheck(vcpu);
-+	run = vcpu->run;
-+	vcpu_run(vcpu);
-+	ksft_test_result(run->s.regs.gprs[3] == run->s.regs.gprs[4],
-+			 "lpswe: emulation: pgm: lpsw bear matches\n");
-+	ksft_test_result(run->s.regs.gprs[5] == 6,
-+			 "lpswe: emulation: pgm: ILC is 0\n");
-+	kvm_vm_free(vm);
-+
-+	vm = vm_create_with_one_vcpu(&vcpu, guest_lpsw);
-+	run = vcpu->run;
-+	vcpu_run(vcpu);
-+	ksft_test_result(run->s.regs.gprs[3] &&
-+			 run->s.regs.gprs[3] == run->s.regs.gprs[4],
-+			 "lpswe: interpretation: lpswe bear matches\n");
-+	kvm_vm_free(vm);
-+}
-+
-+static void test_lpsw(void)
-+{
-+	struct kvm_vcpu *vcpu;
-+	struct kvm_run *run;
-+	struct kvm_vm *vm;
-+	void *lc;
-+
-+	vm = vm_create_with_one_vcpu(&vcpu, guest_lpsw);
-+	inject_mcheck(vcpu);
-+	run = vcpu->run;
-+	vcpu_run(vcpu);
-+	ksft_test_result(run->s.regs.gprs[3] == run->s.regs.gprs[4],
-+			 "lpsw: emulation: bear matches\n");
-+	kvm_vm_free(vm);
-+
-+	vm = vm_create_with_one_vcpu(&vcpu, guest_lpsw_inv);
-+	lc = addr_gpa2hva(vm, 0);
-+	memset(lc, 0, PAGE_SIZE);
-+	inject_mcheck(vcpu);
-+	run = vcpu->run;
-+	vcpu_run(vcpu);
-+	ksft_test_result(run->s.regs.gprs[3] == run->s.regs.gprs[4],
-+			 "lpsw: emulation: pgm: invalid: bear matches\n");
-+	ksft_test_result(run->s.regs.gprs[5] == 6,
-+			 "lpsw: emulation: pgm: ILC is 0\n");
-+	kvm_vm_free(vm);
-+
-+	vm = vm_create_with_one_vcpu(&vcpu, guest_lpsw);
-+	run = vcpu->run;
-+	vcpu_run(vcpu);
-+	ksft_test_result(run->s.regs.gprs[3] &&
-+			 run->s.regs.gprs[3] == run->s.regs.gprs[4],
-+			 "lpsw: interpretation: bear matches\n");
-+	kvm_vm_free(vm);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	TEST_REQUIRE(test_facility(193));
-+
-+	ksft_print_header();
-+	ksft_set_plan(8);
-+	test_lpsw();
-+	test_lpswe();
-+	ksft_finished();
-+}
+ 	return 0;
+ }
+ 
 -- 
 2.51.0
 
