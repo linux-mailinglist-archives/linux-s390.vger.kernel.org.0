@@ -1,240 +1,267 @@
-Return-Path: <linux-s390+bounces-19060-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19071-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YEqtNMKZ72npDAEAu9opvQ
-	(envelope-from <linux-s390+bounces-19060-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 27 Apr 2026 19:15:46 +0200
+	id 6E6JMH6k72kcDgEAu9opvQ
+	(envelope-from <linux-s390+bounces-19071-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 27 Apr 2026 20:01:34 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C5BC476EFF
-	for <lists+linux-s390@lfdr.de>; Mon, 27 Apr 2026 19:15:45 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id A73924780D5
+	for <lists+linux-s390@lfdr.de>; Mon, 27 Apr 2026 20:01:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E2A56301A159
-	for <lists+linux-s390@lfdr.de>; Mon, 27 Apr 2026 17:15:44 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id D46353017877
+	for <lists+linux-s390@lfdr.de>; Mon, 27 Apr 2026 18:00:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A0943C1992;
-	Mon, 27 Apr 2026 17:15:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CE753EDAA7;
+	Mon, 27 Apr 2026 17:59:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LbjeuAeq"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="JEzvcYXQ"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011039.outbound.protection.outlook.com [52.101.52.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFB43E3155
-	for <linux-s390@vger.kernel.org>; Mon, 27 Apr 2026 17:15:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777310144; cv=none; b=OAOfVl3yNTFhjTmS+xwxBd40Z+bkvwrlMA5nHX+GYvmCT8QJDkItLdcd5uDJ0kn0qzkoGiRjNl+6SxpHFwlk4ecA7hMIlZO64bZl+2VHEInrQDQbQqjUlXuWqNkrpvRzwx2BO+evlWyITLzBFMRHCRiiL2DRHvoX9n6Dgy+vreU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777310144; c=relaxed/simple;
-	bh=s0af02J+z4NlGCzLW0iDW47CFY1FgXU+vDi//9QFJvQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WWGJamvbQhdpikMLUrW71V9Z2wXbdZiADH920FDzIqGc1AF61l5HmM0LsI33fm/Gg/LfIKgMwJyHCmwSxGvbMpJZZd0LHtRbyn87Jz1Z3XEJk6tO11kYyRlCsuQbBzheSBFKQTvr2SjQG3p6uCMrCaIicgkqUaEV26ktwHDU7/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LbjeuAeq; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-488e1a8ac40so130237035e9.2
-        for <linux-s390@vger.kernel.org>; Mon, 27 Apr 2026 10:15:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1777310140; x=1777914940; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=AakHsZlEQE9Rq1pnBFm3m7E9zfrXxQ6QJvrADxUHjrg=;
-        b=LbjeuAeqYh7xDZ+cRFIfRPLCYEB2fnnrCRROr7V1yqx7Ed5rhXmvMU5FE+NlxvdPao
-         OXl0py5NlblOJpoeQUb/1NzJnm3WIELEHRdivlRSGs1iOSIpWbAjYFHb4a4ToW8356Fw
-         86e6In1qSdGylJY7mD6oF1Y+JfQ1f5t29Bh8paKwdZR3cYJMTZr/Ddh8gLVokLlxdQ+I
-         L28qKjdiXYw/lD9typAVA4RvMELDiCe83+s7vMB0Dozdy04CVdhiN4w4NgVmOTE3Q9ks
-         7ZGze02iEhofYuVTZalxp2D3yfNqOv1U3MzHLkyp2r3TlZ7cCbuXnWnAPlw2f/rHRD0D
-         OpJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777310140; x=1777914940;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AakHsZlEQE9Rq1pnBFm3m7E9zfrXxQ6QJvrADxUHjrg=;
-        b=fhGM8RyhoFer8g0G9AiI+XwI7OMvlwnyD3lTwk0oANC0SNefHmy8Wx+77WaVcXhV5z
-         +94td/xVF9aKxZ/P7LrAc7Td5Ca+M0xczHeOlXCNvftToOfj97dPEtgonaEoWZPQuEBF
-         fi//5DEHorPS97GHN2Tp9XUK9hO4zbw4FsVWxoW49G0m//FDmP1fp20VnqmRnaMn7vSN
-         kFKFhHE9Bf3E5HvOfL00J1TdtmYyPMdGvdBh/vPcKXI6DnNBKwFblUA4pU4N0bVpZ0V8
-         Q2A9yBV5nwCG6itthgMDa3CP+VgMhPqvyS+g+FEsn/7XoY+vxSujkLrThvQUH76tiUSo
-         fJKw==
-X-Forwarded-Encrypted: i=1; AFNElJ9Bj2J5MTv+P8wngu20qRgFYCfN8gIU969JJzQGrs7ubCBObacBW0VSRTzthPiEAgakxnI3gsfi7P2k@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFC2TuxtAdGGtMEIS+3RgYqJebBW+q36qpz2mudSuA6MWntPMn
-	1a2bCOdeukP0o89GJWcyqvCNjbj6JfrxvzKdZ33609ogvsWs6AhQKdko3yS2CHlu/ho=
-X-Gm-Gg: AeBDieveL9cB1gP4rSSfP8S+WOl8qQwDzVgSRSjw0kI1qNessgrRUw6DxTR6TB0djUa
-	VK2Yc1h3/KWNEEiWSEZFFwOuA54QKxUPXtGytVVrgxU9IVRE/TbmKigIDEOnHRuCq/ZoqmTLqba
-	VeNzF4HmY3dhmCtZxLvz5ek1fYEw4Rrs8zlAWDFLnPhsUjdCR+fn18l6A1V4qABr6rVfQ7CV2g2
-	E5fMn9Sib9kk69rUIkihT/d+7BoYxT8bGpEJ5ZceArmP6Onzl6tGjAUx3OZvBmuBs9k1gtV5lwF
-	YuBDkOtMS9WRGFU9Ciz9bs4y0qIHMSD7jMJImP8fMSQJQFB8+sHAmZJayBJxJF+2lrRzmTZJ8xw
-	UOTGzqlT9Y2XVeEJ7zJJZlFWjVf+YQdVlNu5p/xObx6/yFnqsG0Zr2h+OD9l1L6UWikH9iaQHnR
-	b1g9KY13y+3LtyM2uMHL/Snojuy5at3GkuslfxBGp7j6xexM4=
-X-Received: by 2002:a05:6000:2902:b0:43d:77a8:3baa with SMTP id ffacd0b85a97d-43fe3dc551dmr69959006f8f.3.1777310140368;
-        Mon, 27 Apr 2026 10:15:40 -0700 (PDT)
-Received: from localhost (109-81-17-171.rct.o2.cz. [109.81.17.171])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-44123d23e0bsm41748981f8f.15.2026.04.27.10.15.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2026 10:15:40 -0700 (PDT)
-Date: Mon, 27 Apr 2026 19:15:39 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Minchan Kim <minchan@kernel.org>,
-	"David Hildenbrand (Arm)" <david@kernel.org>,
-	akpm@linux-foundation.org, hca@linux.ibm.com,
-	linux-s390@vger.kernel.org, brauner@kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, timmurray@google.com
-Subject: Re: [PATCH v1 2/3] mm: process_mrelease: skip LRU movement for
- exclusive file folios
-Message-ID: <ae-Zu-VAzAA7SdLa@tiehlicka>
-References: <20260421230239.172582-1-minchan@kernel.org>
- <20260421230239.172582-3-minchan@kernel.org>
- <aesg-sj6_VmXyqxb@tiehlicka>
- <7c7da8ae-cd39-4edf-b94f-c79ab85df456@kernel.org>
- <aevBRh08X4UTMUj9@google.com>
- <ae8NT0tLt7eBmH6j@tiehlicka>
- <CAJuCfpHQdA7C50V2WjNrdYcp7feV5ukgxJf+vMNEcp0P1SGEow@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615B93E92B9;
+	Mon, 27 Apr 2026 17:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.39
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777312748; cv=fail; b=b4TLatg3zyOa1OhlflAS21g47m877pY/VhKSf6B/pPCbZsMFUQaGM5Eoq5efpqzQ9owW8nNuyfLSn3s5NSek5XenM1dykT8oHRGxcv84rf7XuHbj7Yp8wtIzJgfZQJ6goMVzKpNTo6DOzABcBwYUFO6uImHwGApWVwZ03fC7LfQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777312748; c=relaxed/simple;
+	bh=PuFAP3hMj1cXVAXj0lTuvnZCyiOne4/d0V8P6ehqzx8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=KIcj1o8grkYAa7GA1e9WZZ6j3tPeotfEabZnwYc5xrpQzhQRJMESd+uXoBBxtZ2muj8D3QTq2Gp+iIfCSG6bSoO5MoeuXXzsJFeGxCWmYvm2RUofVc7315Yn6WX1Tbb7lCMVeAeFpP0K/fmEKPpX1nR/As/aaLAPLPN80bJjAoM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=JEzvcYXQ; arc=fail smtp.client-ip=52.101.52.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dwpVDJgRLpkyPrfWdsCpP94nHFQqYhYYfzZrq3/Y3eNMNV9kiDiO/lbPQcnh84Kc9KV6mYkk8nn970vbv0+7s6iPEYVW6K4EoChbQ41Qt789Udh9qXYG0iRgkAlDfrPUTQ8sayrAf1ja/JDhQMouPOkZWD58nKWYqpFBMo1DDNj8wVNgDK9FxRdlDaJopLZdzHGxZYNJ5taZ4f+3AlBWDxckohAjQSiNvLpxdNeatx21GsEOk2kuIxck61/13uzdWjKAIWRN7lHpHYgB1JwAWYdhnI0JhIPLSMLkKBOcW0uKNe5jsqRdVec4b90SQh3bBTkUz0ka/PlhmT5JsiSnTg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YWBdJXFvUsRNS535pCc24v4leweSht+XdLI4YB0XzRQ=;
+ b=JzUtnzYfifHT4anVN/U1LZ+ey7uTRcx8Nn6Nm2hS9ao6k8XZlQLiaLdpmpmADTsoF0ln9yrZ43mTgzp40gS4qmCP3SHZse2kmq2eYIeYuMuHwoWEH5Vv7fhlfZ2f/diNwlwlNxlMKsTb0izAMGGMQ4cYn6SIIE/MJoDjMtlx4eVbTb6wUFNjAz0H8mGu6ee9kYZLwb1h4NdHsUxdFPnysIwTjLgK6AvD73khRL2k8fi7iymz8mICE66X711dcKdxGAaSE87cWJD8y89JkEkcX+zpl2DCijx6ZDalEAkq61Vdd/L+W8dfRfgTksTcDbvv+E+khdr+3nyDPvxgL3L9HA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YWBdJXFvUsRNS535pCc24v4leweSht+XdLI4YB0XzRQ=;
+ b=JEzvcYXQdwVjYZQlnStgbJQRfUGE245OkUv62d/erL7f0QOnr7fp+plL1zfa5mv2O11r5j+JLE5qQdINthQPR+Bj7wYWw46AWrQu/eYz6ED1n8xbwCAyvlDxh9XEzqZC2g1/3KWQVSH/DH18jJwgAfYkttpt/Blmd/pUHyEDc3Wkd3edhlrvX1h1qaZ6ZPmQk/87myHHQ3TrQ1ak0Xvkilcg5V0KT50UAZqYfZ39xcshyA39b5FsO98OY/S/YtJ/myHG6I+ftEFEH6NVP/B7k+6+4RVku7Lrcmp3zsQ+ArtGrvl5bXoyxfgJj2OT6m5rwYJbHAOe8gpGdj72kjww1Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CY8PR12MB8300.namprd12.prod.outlook.com (2603:10b6:930:7d::16)
+ by SA0PR12MB4352.namprd12.prod.outlook.com (2603:10b6:806:9c::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.16; Mon, 27 Apr
+ 2026 17:58:53 +0000
+Received: from CY8PR12MB8300.namprd12.prod.outlook.com
+ ([fe80::ce75:8187:3ac3:c5de]) by CY8PR12MB8300.namprd12.prod.outlook.com
+ ([fe80::ce75:8187:3ac3:c5de%3]) with mapi id 15.20.9870.013; Mon, 27 Apr 2026
+ 17:58:53 +0000
+Date: Mon, 27 Apr 2026 13:58:51 -0400
+From: Yury Norov <ynorov@nvidia.com>
+To: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	David Laight <david.laight.linux@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	dmaengine@vger.kernel.org, linux-efi@vger.kernel.org,
+	linux-fsi@lists.ozlabs.org, amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+	linux-wpan@vger.kernel.org, netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
+	linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+	xen-devel@lists.xenproject.org, linux-fsdevel@vger.kernel.org,
+	ocfs2-devel@lists.linux.dev, bpf@vger.kernel.org,
+	kasan-dev@googlegroups.com, linux-mm@kvack.org,
+	linux-x25@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-sound@vger.kernel.org, sound-open-firmware@alsa-project.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linux-sh@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [RFC PATCH v1 7/9] x86: Add unsafe_copy_from_user()
+Message-ID: <ae-j2_QirCySZD02@yury>
+References: <cover.1777306795.git.chleroy@kernel.org>
+ <0ee46bb228d97163fbdc14f2a7c52b93d8bc34ce.1777306795.git.chleroy@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0ee46bb228d97163fbdc14f2a7c52b93d8bc34ce.1777306795.git.chleroy@kernel.org>
+X-ClientProxiedBy: BN1PR13CA0008.namprd13.prod.outlook.com
+ (2603:10b6:408:e2::13) To CY8PR12MB8300.namprd12.prod.outlook.com
+ (2603:10b6:930:7d::16)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJuCfpHQdA7C50V2WjNrdYcp7feV5ukgxJf+vMNEcp0P1SGEow@mail.gmail.com>
-X-Rspamd-Queue-Id: 4C5BC476EFF
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY8PR12MB8300:EE_|SA0PR12MB4352:EE_
+X-MS-Office365-Filtering-Correlation-Id: 33128524-511f-440c-0040-08dea486a4e3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|10070799003|366016|376014|7416014|1800799024|56012099003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	T80DamO5jzLhtBsxTULWy0efzaMbF8i7bT0PZKZ+UW4Z1vXusNNCyeFtPNKLbujbu9HADo2BygF39wi6lx74qp3NIinqoXF6o8xZWMAAFsZmucFOM22V5xO7kTuoG3Q6DbZQuR99ud23XQ2FkmrxQgMHmfI3XdFsqYAVjCS9aGVDF45G53+B/x+14PhezRjA9hqQvcw9EvJb6nHARdhsgHJSbcoZorjI9T48oVUEponu+eLNKghANZW7qOCu576IfZ6NRYzsY8ql1Bj8uCnhHA2nhVrKxbbZHG6LptctXV/l6KubZ/U3ZJxrPqPY1X92d625k4fagqEvx268olGcNZDaxDxTtIunEves9hFv+KACk+0uW+ma5OsqtlX5HthzXN6Acbz5tPRPmIKZ/YCyosbcqxLc7ZwX6TI/oKUfq/0tyKExxJEp/Vfc/ZG4cPWp456yUxuQQ7c0zO0EIJ+8b2gQDonWZCvn2KJzNH3N0drPOUzCQcDDQjndG2yh9Ke573Rkt//8VoZT4MTwoNB6z6b1QOagadBkLNDtxDt0AE1XfaIibN7XpAHe5nsEIn2aXs/8ZEHWz0Zv0D5+n5iwRxATzlfDoLqw+IUuN8nm7pwCMHkXF52Sms8QQtJ2rJZUXeJqLYfMQUF/D3X8mn4B7tCVxc1mKoVLz9/1oBAf2bseKRBX0rfB9ZeVX7GBdP+qZAYwkxdtBveQtq9fZ/UIGHDRO8YYxr5lavOVhUA40rc=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY8PR12MB8300.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(376014)(7416014)(1800799024)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?6ev31P6fGlLQLOmFhG9wf+2ZENF2CJrasImnLdTMkk4B07wVpIqdqcEhUwVr?=
+ =?us-ascii?Q?VcuKpfWBww+Qglw6NKPvrbqw/iKodwZS6hoQ2ezn6gKQJTXowcVzIMKKmPVI?=
+ =?us-ascii?Q?CaGe2PzzTfbrd+1/kBuQd5inX41eLfMXGSMB4El+/BGeY7LidWaO2U6MXIZl?=
+ =?us-ascii?Q?To5KMHCCmaxaSW+0abx+uHxslGaDNGAxlD0ajEnVCyj2PyGw8gfavgZvUBeC?=
+ =?us-ascii?Q?31Pn2vGdNJPTEao0o8nkBbqzRysmZBZFRsyFAwtcHiF+LMJewEDkGWcf3C7D?=
+ =?us-ascii?Q?MhvHUO7rY2T4Gp8yOxYlhdkCQq0m4ykawDCJw9P3w79tbrFqeU7DKZcc6Svj?=
+ =?us-ascii?Q?gpUdDiMP1u+wbi6ktqsa2/SBsCawL8yd85/gdX8JeS4P5U//2zVMdqlbS5oF?=
+ =?us-ascii?Q?Om8kn23qHMWd1W0xp+L9zqhhURuKBI3C8K6/P0P2OiLTdsZ7lPLULvDBkdZf?=
+ =?us-ascii?Q?UKjydMyY/3pcrF3sadi8xEKK6PbOoyabovH4OGdbUvrwD7GG4qRTd8pK59oC?=
+ =?us-ascii?Q?snIKpVz1xKnwCa6xY5VnFP5/u/JjDPLADrD/WslKg8YXRFtCzAtBrdImcj0f?=
+ =?us-ascii?Q?8yOAh4lyWUDPVX2WM00ySuZhGhvO+v6NJ73vz9XlsUfOsWyYZ9DOEzjUfhbH?=
+ =?us-ascii?Q?0YLtM7C7LxhLfanXFKSW+D7acdbl8uANIv2lLYjkqPUxgpfNe8f+7W2LB5Nn?=
+ =?us-ascii?Q?7Np0MclwQhDcY1GLCNhmF+qQmAOMVCLRhyHjLhLWkRHgj+alwIysbQ3EuYLN?=
+ =?us-ascii?Q?5yHcsNNjsFo0wDyhRUVx5wyCMlW+Z4NGoPr32ydxiktuCQaON6kbvoanfM01?=
+ =?us-ascii?Q?VM4/fS2+speM2tcePSAnjiQa5qjOFuYZ0VtZfeGTBIZ1yXD2cHpN1ixZN0Rz?=
+ =?us-ascii?Q?L/dQY0op7e/9Yk5F3A4lFGTivTaixUSEIjTezh3qI+wT/tBYEl0Z0XCO2hjU?=
+ =?us-ascii?Q?sFOU7EJ1CIL6HbyGijpDH3Yp4I8rMW9VuNbKDzbyWnaJJg9tVdo0/XIJrdAh?=
+ =?us-ascii?Q?vVKIJZb+31gwlMVE1kXLTM4rt1jmj4rcA1rNCuw4fD++YKU0KqxirVrsn6kC?=
+ =?us-ascii?Q?lZa0X05s4hYIlo7g4DALYttelKqcNX1HEGU6vO71rQrVfydGtRIQzA8hZ8rQ?=
+ =?us-ascii?Q?O80VU2eqMYB7eYpBItWytqLFV33JZ/cuulFCjhdnG06CQcNI6/4ovyhT3Aa8?=
+ =?us-ascii?Q?PiZXBZphvtTKhhJqQ1c7RRKZs8niebQgxVT+NqLMFlyPhkta2YjjpBXgNIIx?=
+ =?us-ascii?Q?h+iPSpkL/BZ7G18/IWgE5T5t9GEq5s5xWwSmey7027/BRYe03neS8L78GvQZ?=
+ =?us-ascii?Q?5ceRI/ymV7A6xiSGKp4h0GdJvHPIvbvLvAXTNPJXPyEy/lkYzUg06m/F5Ppx?=
+ =?us-ascii?Q?Ucqpyqpi7uPkJEjc3424leqnNg3d1TwAm//hlnXAadNRP0K+njbmTw4CpTe2?=
+ =?us-ascii?Q?4HHWlSZ9YpBEw+Ohv14Uf9RwjiFvVAghctOlWmh5sz2AhDjQMGMs8VSWcPgV?=
+ =?us-ascii?Q?CT54kkzGd7BsoQ2aPoLVEhjPxQJKnRuZKDOQB6HL77e6jo+Karv0u6QI8scU?=
+ =?us-ascii?Q?/P+zWIUoY7Vp26Mnav/FMyG/vDm64Qhe7JrRNaXxdZN6cKMY0RccPxeEvM6K?=
+ =?us-ascii?Q?cokd+q0bbXdS3sEK+pM8MrC/A2+EernBjELOWvLW6UNcdosIRiZXx3jxfYAW?=
+ =?us-ascii?Q?NoTKA/lHF00/AFzSuUQZeA/Bt64WCRihJQrbIN0bhLrfQCWWaLbXoiNjdnxt?=
+ =?us-ascii?Q?OgQB96s+EfSA5RhJu/4bwnEHg5Lb6TZfXmPjZN7/WMw6zB/yunPn?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33128524-511f-440c-0040-08dea486a4e3
+X-MS-Exchange-CrossTenant-AuthSource: CY8PR12MB8300.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2026 17:58:53.4408
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DFLDrWxkcKDSdWjcRZ0FWTXyKov5/udW2ySQZAiU/0h1WJYCpRdFgW8eHZBY8qsOSQ9+hnLtwBfn4bjMnIR9OQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4352
+X-Rspamd-Queue-Id: A73924780D5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-Spamd-Result: default: False [1.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
 	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[suse.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=google];
+	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
+	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19060-lists,linux-s390=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+];
+	TAGGED_FROM(0.00)[bounces-19071-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[48];
+	FREEMAIL_CC(0.00)[linux-foundation.org,gmail.com,linutronix.de,vger.kernel.org,lists.infradead.org,lists.ozlabs.org,lists.freedesktop.org,lists.linux.dev,lists.xenproject.org,googlegroups.com,kvack.org,alsa-project.org,lists.linux-m68k.org];
+	DKIM_TRACE(0.00)[Nvidia.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mhocko@suse.com,linux-s390@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ynorov@nvidia.com,linux-s390@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[Nvidia.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 
-On Mon 27-04-26 09:48:28, Suren Baghdasaryan wrote:
-> On Mon, Apr 27, 2026 at 12:16 AM Michal Hocko <mhocko@suse.com> wrote:
-> >
-> > On Fri 24-04-26 12:15:18, Minchan Kim wrote:
-> > > On Fri, Apr 24, 2026 at 09:57:16AM +0200, David Hildenbrand (Arm) wrote:
-> > > > On 4/24/26 09:51, Michal Hocko wrote:
-> > > > > On Tue 21-04-26 16:02:38, Minchan Kim wrote:
-> > > > >> For the process_mrelease reclaim, skip LRU handling for exclusive
-> > > > >> file-backed folios since they will be freed soon so pointless
-> > > > >> to move around in the LRU.
-> > > > >>
-> > > > >> This avoids costly LRU movement which accounts for a significant portion
-> > > > >> of the time during unmap_page_range.
-> > > > >>
-> > > > >> -   91.31%     0.00%  mmap_exit_test   [kernel.kallsyms]  [.] exit_mm
-> > > > >>      exit_mm
-> > > > >>      __mmput
-> > > > >>      exit_mmap
-> > > > >>      unmap_vmas
-> > > > >>    - unmap_page_range
-> > > > >>       - 55.75% folio_mark_accessed
-> > > > >>          + 48.79% __folio_batch_add_and_move
-> > > > >>            4.23% workingset_activation
-> > > > >>       + 12.94% folio_remove_rmap_ptes
-> > > > >>       + 9.86% page_table_check_clear
-> > > > >>       + 3.34% tlb_flush_mmu
-> > > > >>         1.06% __page_table_check_pte_clear
-> > > > >>
-> > > > >> Signed-off-by: Minchan Kim <minchan@kernel.org>
-> > > > >
-> > > > > As pointed out in the previous version of the patch. I really dislike
-> > > > > this to be mrelease or OOM specific. Behavior. You do not explain why
-> > > > > this needs to be this way, except for the performance reasons. My main
-> > > > > question is still unanswered (and NAK before this is sorted out). Why
-> > > > > this cannot be applied in general for _any_ exiting task. As you argue
-> > > > > the memory will just likely go away so why to bother?
-> > > >
-> > > > I think there was a lengthy discussion involving Johannes from a previous series.
-> > > >
-> > > > That should be linked here indeed.
-> > >
-> > > How about this?
-> > >
-> > >     mm: process_mrelease: skip LRU movement for exclusive file folios
-> > >
-> > >     During process_mrelease() or OOM reaping, unmapping file-backed folios
-> > >     spends a significant portion of CPU time in folio_mark_accessed() to
-> > >     maintain accurate LRU state (~55% of unmap time as shown in the profile
-> > >     below).
-> > >
-> > >     This patch skips LRU handling for exclusive file-backed folios during
-> > >     such emergency memory reclaim.
-> > >
-> > >     One might ask why this optimization shouldn't be applied to any exiting
-> > >     task in general. The reason is that for a normal, orderly exit or just
-> > >     pure kill, it is worth paying the CPU cost to preserve the active state
-> > >     of clean file folios in case they are reused soon. Preserving cache hits
-> > >     is beneficial for overall system performance.
-> >
-> > This is a statement rather than an explanation. Why is it worth paying
-> > the cost? What is different here?
-> >
-> > >     However, process_mrelease() and OOM reaping are emergency operations
-> > >     triggered under extreme memory pressure. In these scenarios, the highest
-> > >     priority is to recover memory as quickly as possible to avoid further
-> > >     kills or system jank. Spending half of the unmap time on LRU maintenance
-> > >     for pages belonging to a victim process is a bad trade-off. If speeding up
-> > >     the victim's reclaim by avoiding LRU movement and evicting cache negatively
-> > >     affects the workflow (due to immediate restart), it implies a sub-optimal
-> > >     kill target selection by the userspace policy (e.g., LMKD), rather than
-> > >     a problem in this expedited APIs.
-> >
-> > Your change effectively boils down to break aging for exclusively mapped
-> > file pages when those pages should have been activated. All that because
-> > the activation has some (batched) overhead. You argue that the overhead
-> > is not a good trade-off for OOM path because those pages are exclusive
-> > to the process and therefore they will go away after the task exits.
+On Mon, Apr 27, 2026 at 07:13:48PM +0200, Christophe Leroy (CS GROUP) wrote:
+> At the time being, x86 and arm64 are missing unsafe_copy_from_user().
+
+No, they don't. They (should) rely on a generic implementation from
+linux/uaccess.h, like every other arch, except for  PPC and RISCV.
+
+But they #define arch_unsafe_get_user, and the unsafe_copy_from_user()
+becomes undefined conditionally on that.
+
+So please, fix that bug instead of introducing another arch flavor.
+We'd always choose generic version, unless there's strong evidence
+that arch one is better.  
+
+
+Thanks,
+Yury
+ 
+> Add it.
 > 
-> I think Minchan's argument is that mm reaping occurs only in special
-> conditions (under high memory pressure) and for a very specific reason
-> (to free up memory and prevent system memory starvation). Therefore
-> priority in such conditions should shift towards more aggressive
-> memory reclaim instead of normal aging. I can see both his point and a
-> counter-argument that this might cause more refaults in some cases.
-
-The way I see this is that the standard memory reclaim under a heavy
-memory pressure would likely encounter those pages and aged them
-accordingly already. So this is effectivelly racing with that process
-and makes a potentially opposite decision.
-I suspect that a lack of memory reclaim, as implied by the other patch
-(to deal with clean page cache), is the reason why this one makes a
-difference in these Android deployments.
-
-Unless I am completely wrong and misreading the whole situation this
-might be very Android specific change. The question is whether these
-side effects are generally useful for other worklods. So we really need
-much more explanation of the actual behavior after this change for wider
-variety of workloads.
--- 
-Michal Hocko
-SUSE Labs
+> Signed-off-by: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
+> ---
+>  arch/x86/include/asm/uaccess.h | 29 ++++++++++++++++++++++++-----
+>  1 file changed, 24 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
+> index 3a0dd3c2b233..10c458ffa399 100644
+> --- a/arch/x86/include/asm/uaccess.h
+> +++ b/arch/x86/include/asm/uaccess.h
+> @@ -598,7 +598,7 @@ _label:									\
+>   * We want the unsafe accessors to always be inlined and use
+>   * the error labels - thus the macro games.
+>   */
+> -#define unsafe_copy_loop(dst, src, len, type, label)				\
+> +#define unsafe_put_loop(dst, src, len, type, label)				\
+>  	while (len >= sizeof(type)) {						\
+>  		unsafe_put_user(*(type *)(src),(type __user *)(dst),label);	\
+>  		dst += sizeof(type);						\
+> @@ -611,10 +611,29 @@ do {									\
+>  	char __user *__ucu_dst = (_dst);				\
+>  	const char *__ucu_src = (_src);					\
+>  	size_t __ucu_len = (_len);					\
+> -	unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u64, label);	\
+> -	unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u32, label);	\
+> -	unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u16, label);	\
+> -	unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u8, label);	\
+> +	unsafe_put_loop(__ucu_dst, __ucu_src, __ucu_len, u64, label);	\
+> +	unsafe_put_loop(__ucu_dst, __ucu_src, __ucu_len, u32, label);	\
+> +	unsafe_put_loop(__ucu_dst, __ucu_src, __ucu_len, u16, label);	\
+> +	unsafe_put_loop(__ucu_dst, __ucu_src, __ucu_len, u8, label);	\
+> +} while (0)
+> +
+> +#define unsafe_get_loop(dst, src, len, type, label)				\
+> +	while (len >= sizeof(type)) {						\
+> +		unsafe_get_user(*(type __user *)(src),(type *)(dst),label);	\
+> +		dst += sizeof(type);						\
+> +		src += sizeof(type);						\
+> +		len -= sizeof(type);						\
+> +	}
+> +
+> +#define unsafe_copy_from_user(_dst,_src,_len,label)			\
+> +do {									\
+> +	char *__ucu_dst = (_dst);					\
+> +	const char __user *__ucu_src = (_src);				\
+> +	size_t __ucu_len = (_len);					\
+> +	unsafe_get_loop(__ucu_dst, __ucu_src, __ucu_len, u64, label);	\
+> +	unsafe_get_loop(__ucu_dst, __ucu_src, __ucu_len, u32, label);	\
+> +	unsafe_get_loop(__ucu_dst, __ucu_src, __ucu_len, u16, label);	\
+> +	unsafe_get_loop(__ucu_dst, __ucu_src, __ucu_len, u8, label);	\
+>  } while (0)
+>  
+>  #ifdef CONFIG_CC_HAS_ASM_GOTO_OUTPUT
+> -- 
+> 2.49.0
+> 
 
