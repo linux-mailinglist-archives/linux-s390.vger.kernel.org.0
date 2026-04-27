@@ -1,252 +1,240 @@
-Return-Path: <linux-s390+bounces-19070-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19060-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sG3OLOyb72kbDQEAu9opvQ
-	(envelope-from <linux-s390+bounces-19070-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 27 Apr 2026 19:25:00 +0200
+	id YEqtNMKZ72npDAEAu9opvQ
+	(envelope-from <linux-s390+bounces-19060-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 27 Apr 2026 19:15:46 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94E3547773D
-	for <lists+linux-s390@lfdr.de>; Mon, 27 Apr 2026 19:25:00 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C5BC476EFF
+	for <lists+linux-s390@lfdr.de>; Mon, 27 Apr 2026 19:15:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 0349B30185E4
-	for <lists+linux-s390@lfdr.de>; Mon, 27 Apr 2026 17:21:08 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E2A56301A159
+	for <lists+linux-s390@lfdr.de>; Mon, 27 Apr 2026 17:15:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 652353ED120;
-	Mon, 27 Apr 2026 17:19:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A0943C1992;
+	Mon, 27 Apr 2026 17:15:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k8kV5Zhk"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LbjeuAeq"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC59339714;
-	Mon, 27 Apr 2026 17:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFB43E3155
+	for <linux-s390@vger.kernel.org>; Mon, 27 Apr 2026 17:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777310365; cv=none; b=FMMCJWBZRrjjYSiA3eaR054EBybd+MBN+lSN3BN5CocSCcm8tIENJh1D+pCEesMt/NXdLvmDrgdKbTCry0Ws+gXSliqYGgAikUbOn+Q+F0KGjeL6CPBJrSP/6A4kIKVX2k8i7JaCo/d+VNC51IcRSJYDEqTpxQo1Wefcb3LD8UI=
+	t=1777310144; cv=none; b=OAOfVl3yNTFhjTmS+xwxBd40Z+bkvwrlMA5nHX+GYvmCT8QJDkItLdcd5uDJ0kn0qzkoGiRjNl+6SxpHFwlk4ecA7hMIlZO64bZl+2VHEInrQDQbQqjUlXuWqNkrpvRzwx2BO+evlWyITLzBFMRHCRiiL2DRHvoX9n6Dgy+vreU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777310365; c=relaxed/simple;
-	bh=xblTv37x9V4gU3cvmA9ILfz6xXNOv0sNe2zU9C6a5nw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XhQrdf7UOghUHj346nNBuNK4t8QKwv42weWTHzLB9J9H1Pg4KEcSn0eVYUQ5ec4lrY6ahBwiH6ofUxBY24/Bicz662twTEYvS8xMs3PQ8bMO23fNazIbxyRHabz7++ADrmyPHUUZtHt6Ieg+neofEfeiXp9GpsZ8FZ+KHzEUFP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k8kV5Zhk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A25EEC2BCB7;
-	Mon, 27 Apr 2026 17:19:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777310364;
-	bh=xblTv37x9V4gU3cvmA9ILfz6xXNOv0sNe2zU9C6a5nw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=k8kV5Zhk7HZbxy8X7mxqUL5UgTTJPPuuLtSKHKOe5PwbIiNodL9/7ESxRbcOMv4dB
-	 NN/pd897F5mMQZv6MW+RM/3mikWvqmJGQCtupbd6YHiobStaCQu79RRkwt3Bs1rL/A
-	 WmXtcy3vIzgejB2MGSu6MrKJ33itreKKdFlemNypyCUExoUHGXA1bHbqFqaNX4ujdd
-	 iXZiXWTV/w69yfgs2V8e+zdWAilhhtsvDDxzPIT8CbbievjXPmrPwVloE5aoqLKmYP
-	 ca2+sf92YJQm2mLHcpyNlGd6mMQP6QhUed6Hx8vk/CloBjO7tSgz4fayv+CeXka+Fz
-	 NwGM6tvALNVmQ==
-From: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
-To: Yury Norov <ynorov@nvidia.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	David Laight <david.laight.linux@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	kvm@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	dmaengine@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	linux-fsi@lists.ozlabs.org,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	linux-wpan@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	linux-serial@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	xen-devel@lists.xenproject.org,
-	linux-fsdevel@vger.kernel.org,
-	ocfs2-devel@lists.linux.dev,
-	bpf@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	linux-mm@kvack.org,
-	linux-x25@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	sound-open-firmware@alsa-project.org,
-	linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org,
-	linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	linux-arch@vger.kernel.org
-Subject: [RFC PATCH v1 9/9] uaccess: Convert small fixed size copy_{to/from}_user() to scoped user access
-Date: Mon, 27 Apr 2026 19:13:50 +0200
-Message-ID: <8780eb2ef80575931a339e5225bc80eb13e9be6c.1777306795.git.chleroy@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1777306795.git.chleroy@kernel.org>
-References: <cover.1777306795.git.chleroy@kernel.org>
+	s=arc-20240116; t=1777310144; c=relaxed/simple;
+	bh=s0af02J+z4NlGCzLW0iDW47CFY1FgXU+vDi//9QFJvQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WWGJamvbQhdpikMLUrW71V9Z2wXbdZiADH920FDzIqGc1AF61l5HmM0LsI33fm/Gg/LfIKgMwJyHCmwSxGvbMpJZZd0LHtRbyn87Jz1Z3XEJk6tO11kYyRlCsuQbBzheSBFKQTvr2SjQG3p6uCMrCaIicgkqUaEV26ktwHDU7/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LbjeuAeq; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-488e1a8ac40so130237035e9.2
+        for <linux-s390@vger.kernel.org>; Mon, 27 Apr 2026 10:15:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1777310140; x=1777914940; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=AakHsZlEQE9Rq1pnBFm3m7E9zfrXxQ6QJvrADxUHjrg=;
+        b=LbjeuAeqYh7xDZ+cRFIfRPLCYEB2fnnrCRROr7V1yqx7Ed5rhXmvMU5FE+NlxvdPao
+         OXl0py5NlblOJpoeQUb/1NzJnm3WIELEHRdivlRSGs1iOSIpWbAjYFHb4a4ToW8356Fw
+         86e6In1qSdGylJY7mD6oF1Y+JfQ1f5t29Bh8paKwdZR3cYJMTZr/Ddh8gLVokLlxdQ+I
+         L28qKjdiXYw/lD9typAVA4RvMELDiCe83+s7vMB0Dozdy04CVdhiN4w4NgVmOTE3Q9ks
+         7ZGze02iEhofYuVTZalxp2D3yfNqOv1U3MzHLkyp2r3TlZ7cCbuXnWnAPlw2f/rHRD0D
+         OpJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777310140; x=1777914940;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AakHsZlEQE9Rq1pnBFm3m7E9zfrXxQ6QJvrADxUHjrg=;
+        b=fhGM8RyhoFer8g0G9AiI+XwI7OMvlwnyD3lTwk0oANC0SNefHmy8Wx+77WaVcXhV5z
+         +94td/xVF9aKxZ/P7LrAc7Td5Ca+M0xczHeOlXCNvftToOfj97dPEtgonaEoWZPQuEBF
+         fi//5DEHorPS97GHN2Tp9XUK9hO4zbw4FsVWxoW49G0m//FDmP1fp20VnqmRnaMn7vSN
+         kFKFhHE9Bf3E5HvOfL00J1TdtmYyPMdGvdBh/vPcKXI6DnNBKwFblUA4pU4N0bVpZ0V8
+         Q2A9yBV5nwCG6itthgMDa3CP+VgMhPqvyS+g+FEsn/7XoY+vxSujkLrThvQUH76tiUSo
+         fJKw==
+X-Forwarded-Encrypted: i=1; AFNElJ9Bj2J5MTv+P8wngu20qRgFYCfN8gIU969JJzQGrs7ubCBObacBW0VSRTzthPiEAgakxnI3gsfi7P2k@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFC2TuxtAdGGtMEIS+3RgYqJebBW+q36qpz2mudSuA6MWntPMn
+	1a2bCOdeukP0o89GJWcyqvCNjbj6JfrxvzKdZ33609ogvsWs6AhQKdko3yS2CHlu/ho=
+X-Gm-Gg: AeBDieveL9cB1gP4rSSfP8S+WOl8qQwDzVgSRSjw0kI1qNessgrRUw6DxTR6TB0djUa
+	VK2Yc1h3/KWNEEiWSEZFFwOuA54QKxUPXtGytVVrgxU9IVRE/TbmKigIDEOnHRuCq/ZoqmTLqba
+	VeNzF4HmY3dhmCtZxLvz5ek1fYEw4Rrs8zlAWDFLnPhsUjdCR+fn18l6A1V4qABr6rVfQ7CV2g2
+	E5fMn9Sib9kk69rUIkihT/d+7BoYxT8bGpEJ5ZceArmP6Onzl6tGjAUx3OZvBmuBs9k1gtV5lwF
+	YuBDkOtMS9WRGFU9Ciz9bs4y0qIHMSD7jMJImP8fMSQJQFB8+sHAmZJayBJxJF+2lrRzmTZJ8xw
+	UOTGzqlT9Y2XVeEJ7zJJZlFWjVf+YQdVlNu5p/xObx6/yFnqsG0Zr2h+OD9l1L6UWikH9iaQHnR
+	b1g9KY13y+3LtyM2uMHL/Snojuy5at3GkuslfxBGp7j6xexM4=
+X-Received: by 2002:a05:6000:2902:b0:43d:77a8:3baa with SMTP id ffacd0b85a97d-43fe3dc551dmr69959006f8f.3.1777310140368;
+        Mon, 27 Apr 2026 10:15:40 -0700 (PDT)
+Received: from localhost (109-81-17-171.rct.o2.cz. [109.81.17.171])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-44123d23e0bsm41748981f8f.15.2026.04.27.10.15.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2026 10:15:40 -0700 (PDT)
+Date: Mon, 27 Apr 2026 19:15:39 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Minchan Kim <minchan@kernel.org>,
+	"David Hildenbrand (Arm)" <david@kernel.org>,
+	akpm@linux-foundation.org, hca@linux.ibm.com,
+	linux-s390@vger.kernel.org, brauner@kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, timmurray@google.com
+Subject: Re: [PATCH v1 2/3] mm: process_mrelease: skip LRU movement for
+ exclusive file folios
+Message-ID: <ae-Zu-VAzAA7SdLa@tiehlicka>
+References: <20260421230239.172582-1-minchan@kernel.org>
+ <20260421230239.172582-3-minchan@kernel.org>
+ <aesg-sj6_VmXyqxb@tiehlicka>
+ <7c7da8ae-cd39-4edf-b94f-c79ab85df456@kernel.org>
+ <aevBRh08X4UTMUj9@google.com>
+ <ae8NT0tLt7eBmH6j@tiehlicka>
+ <CAJuCfpHQdA7C50V2WjNrdYcp7feV5ukgxJf+vMNEcp0P1SGEow@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3638; i=chleroy@kernel.org; h=from:subject:message-id; bh=xblTv37x9V4gU3cvmA9ILfz6xXNOv0sNe2zU9C6a5nw=; b=owGbwMvMwCV2d0KB2p7V54MZT6slMWS+nxlr/n9yu2DE7uwkCZGbl0uCp6Y1JLvZTPpz+P/PY xNqPMoaOkpZGMS4GGTFFFmO/+feNaPrS2r+1F36MHNYmUCGMHBxCsBE9HwZ/ns82Ho9PV2Q+7Pp 5fqvs6O/v3YN+3EgL+Wk4b/co1rlkZ8YGVZxmDl7XFiUcmPSTPW14WGSHT6/1u4pcTY2cjD0U7P bzAkA
-X-Developer-Key: i=chleroy@kernel.org; a=openpgp; fpr=10FFE6F8B390DE17ACC2632368A92FEB01B8DD78
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 94E3547773D
+In-Reply-To: <CAJuCfpHQdA7C50V2WjNrdYcp7feV5ukgxJf+vMNEcp0P1SGEow@mail.gmail.com>
+X-Rspamd-Queue-Id: 4C5BC476EFF
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[suse.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[49];
-	FREEMAIL_TO(0.00)[nvidia.com,linux-foundation.org,gmail.com,linutronix.de];
-	TAGGED_FROM(0.00)[bounces-19070-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19060-lists,linux-s390=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	DKIM_TRACE(0.00)[suse.com:+];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[chleroy@kernel.org,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[mhocko@suse.com,linux-s390@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 
-copy_{to/from}_user() is a heavy function optimised for copy of large
-blocs of memory between user and kernel space.
+On Mon 27-04-26 09:48:28, Suren Baghdasaryan wrote:
+> On Mon, Apr 27, 2026 at 12:16 AM Michal Hocko <mhocko@suse.com> wrote:
+> >
+> > On Fri 24-04-26 12:15:18, Minchan Kim wrote:
+> > > On Fri, Apr 24, 2026 at 09:57:16AM +0200, David Hildenbrand (Arm) wrote:
+> > > > On 4/24/26 09:51, Michal Hocko wrote:
+> > > > > On Tue 21-04-26 16:02:38, Minchan Kim wrote:
+> > > > >> For the process_mrelease reclaim, skip LRU handling for exclusive
+> > > > >> file-backed folios since they will be freed soon so pointless
+> > > > >> to move around in the LRU.
+> > > > >>
+> > > > >> This avoids costly LRU movement which accounts for a significant portion
+> > > > >> of the time during unmap_page_range.
+> > > > >>
+> > > > >> -   91.31%     0.00%  mmap_exit_test   [kernel.kallsyms]  [.] exit_mm
+> > > > >>      exit_mm
+> > > > >>      __mmput
+> > > > >>      exit_mmap
+> > > > >>      unmap_vmas
+> > > > >>    - unmap_page_range
+> > > > >>       - 55.75% folio_mark_accessed
+> > > > >>          + 48.79% __folio_batch_add_and_move
+> > > > >>            4.23% workingset_activation
+> > > > >>       + 12.94% folio_remove_rmap_ptes
+> > > > >>       + 9.86% page_table_check_clear
+> > > > >>       + 3.34% tlb_flush_mmu
+> > > > >>         1.06% __page_table_check_pte_clear
+> > > > >>
+> > > > >> Signed-off-by: Minchan Kim <minchan@kernel.org>
+> > > > >
+> > > > > As pointed out in the previous version of the patch. I really dislike
+> > > > > this to be mrelease or OOM specific. Behavior. You do not explain why
+> > > > > this needs to be this way, except for the performance reasons. My main
+> > > > > question is still unanswered (and NAK before this is sorted out). Why
+> > > > > this cannot be applied in general for _any_ exiting task. As you argue
+> > > > > the memory will just likely go away so why to bother?
+> > > >
+> > > > I think there was a lengthy discussion involving Johannes from a previous series.
+> > > >
+> > > > That should be linked here indeed.
+> > >
+> > > How about this?
+> > >
+> > >     mm: process_mrelease: skip LRU movement for exclusive file folios
+> > >
+> > >     During process_mrelease() or OOM reaping, unmapping file-backed folios
+> > >     spends a significant portion of CPU time in folio_mark_accessed() to
+> > >     maintain accurate LRU state (~55% of unmap time as shown in the profile
+> > >     below).
+> > >
+> > >     This patch skips LRU handling for exclusive file-backed folios during
+> > >     such emergency memory reclaim.
+> > >
+> > >     One might ask why this optimization shouldn't be applied to any exiting
+> > >     task in general. The reason is that for a normal, orderly exit or just
+> > >     pure kill, it is worth paying the CPU cost to preserve the active state
+> > >     of clean file folios in case they are reused soon. Preserving cache hits
+> > >     is beneficial for overall system performance.
+> >
+> > This is a statement rather than an explanation. Why is it worth paying
+> > the cost? What is different here?
+> >
+> > >     However, process_mrelease() and OOM reaping are emergency operations
+> > >     triggered under extreme memory pressure. In these scenarios, the highest
+> > >     priority is to recover memory as quickly as possible to avoid further
+> > >     kills or system jank. Spending half of the unmap time on LRU maintenance
+> > >     for pages belonging to a victim process is a bad trade-off. If speeding up
+> > >     the victim's reclaim by avoiding LRU movement and evicting cache negatively
+> > >     affects the workflow (due to immediate restart), it implies a sub-optimal
+> > >     kill target selection by the userspace policy (e.g., LMKD), rather than
+> > >     a problem in this expedited APIs.
+> >
+> > Your change effectively boils down to break aging for exclusively mapped
+> > file pages when those pages should have been activated. All that because
+> > the activation has some (batched) overhead. You argue that the overhead
+> > is not a good trade-off for OOM path because those pages are exclusive
+> > to the process and therefore they will go away after the task exits.
+> 
+> I think Minchan's argument is that mm reaping occurs only in special
+> conditions (under high memory pressure) and for a very specific reason
+> (to free up memory and prevent system memory starvation). Therefore
+> priority in such conditions should shift towards more aggressive
+> memory reclaim instead of normal aging. I can see both his point and a
+> counter-argument that this might cause more refaults in some cases.
 
-When the number of bytes to be copied is known at build time and small,
-using scoped user access removes the burden of that optimisation.
+The way I see this is that the standard memory reclaim under a heavy
+memory pressure would likely encounter those pages and aged them
+accordingly already. So this is effectivelly racing with that process
+and makes a potentially opposite decision.
+I suspect that a lack of memory reclaim, as implied by the other patch
+(to deal with clean page cache), is the reason why this one makes a
+difference in these Android deployments.
 
-Signed-off-by: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
----
- include/linux/uaccess.h | 47 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
-
-diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index 33b7d0f5f808..3ac544527af2 100644
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -50,6 +50,8 @@
-  #define mask_user_address(src) (src)
- #endif
- 
-+#define SMALL_COPY_USER		64
-+
- /*
-  * Architectures should provide two primitives (raw_copy_{to,from}_user())
-  * and get rid of their private instances of copy_{to,from}_user() and
-@@ -191,6 +193,9 @@ _inline_copy_from_user(void *to, const void __user *from, unsigned long n)
- 	return res;
- }
- 
-+static __always_inline __must_check unsigned long
-+_small_copy_from_user(void *to, const void __user *from, unsigned long n);
-+
- extern __must_check unsigned long
- _copy_from_user(void *, const void __user *, unsigned long);
- 
-@@ -207,6 +212,9 @@ _inline_copy_to_user(void __user *to, const void *from, unsigned long n)
- 	return n;
- }
- 
-+static __always_inline __must_check unsigned long
-+_small_copy_to_user(void __user *to, const void *from, unsigned long n);
-+
- extern __must_check unsigned long
- _copy_to_user(void __user *, const void *, unsigned long);
- 
-@@ -215,6 +223,8 @@ copy_from_user_common(void *to, const void __user *from, unsigned long n, bool p
- {
- 	if (!check_copy_size(to, n, false))
- 		return n;
-+	if (!partial && __builtin_constant_p(n) && n <= SMALL_COPY_USER)
-+		return _small_copy_from_user(to, from, n);
- 	if (IS_ENABLED(ARCH_WANTS_NOINLINE_COPY_USER))
- 		return _copy_from_user(to, from, n);
- 	else
-@@ -239,6 +249,8 @@ copy_to_user_common(void __user *to, const void *from, unsigned long n, bool par
- 	if (!check_copy_size(from, n, true))
- 		return n;
- 
-+	if (!partial && __builtin_constant_p(n) && n <= SMALL_COPY_USER)
-+		return _small_copy_to_user(to, from, n);
- 	if (IS_ENABLED(ARCH_WANTS_NOINLINE_COPY_USER))
- 		return _copy_to_user(to, from, n);
- 	else
-@@ -838,6 +850,41 @@ for (bool done = false; !done; done = true)					\
- #define scoped_user_rw_access(uptr, elbl)				\
- 	scoped_user_rw_access_size(uptr, sizeof(*(uptr)), elbl)
- 
-+static __always_inline __must_check unsigned long
-+_small_copy_from_user(void *to, const void __user *from, unsigned long n)
-+{
-+	might_fault();
-+	instrument_copy_from_user_before(to, from, n);
-+	scoped_user_read_access_size(from, n, failed) {
-+		/*
-+		 * Ensure that bad access_ok() speculation will not lead
-+		 * to nasty side effects *after* the copy is finished:
-+		 */
-+		if (!can_do_masked_user_access())
-+			barrier_nospec();
-+		unsafe_copy_from_user(to, from, n, failed);
-+	}
-+	instrument_copy_from_user_after(to, from, n, 0);
-+	return 0;
-+failed:
-+	instrument_copy_from_user_after(to, from, n, n);
-+	return n;
-+}
-+
-+static __always_inline __must_check unsigned long
-+_small_copy_to_user(void __user *to, const void *from, unsigned long n)
-+{
-+	might_fault();
-+	if (should_fail_usercopy())
-+		return n;
-+	instrument_copy_to_user(to, from, n);
-+	scoped_user_write_access_size(to, n, failed)
-+		unsafe_copy_to_user(to, from, n, failed);
-+	return 0;
-+failed:
-+	return n;
-+}
-+
- /**
-  * get_user_inline - Read user data inlined
-  * @val:	The variable to store the value read from user memory
+Unless I am completely wrong and misreading the whole situation this
+might be very Android specific change. The question is whether these
+side effects are generally useful for other worklods. So we really need
+much more explanation of the actual behavior after this change for wider
+variety of workloads.
 -- 
-2.49.0
-
+Michal Hocko
+SUSE Labs
 
