@@ -1,71 +1,71 @@
-Return-Path: <linux-s390+bounces-19145-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19147-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MLWsJ1Xt8Gn9bAEAu9opvQ
-	(envelope-from <linux-s390+bounces-19145-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Apr 2026 19:24:37 +0200
+	id 2H3IMVrt8Gn9bAEAu9opvQ
+	(envelope-from <linux-s390+bounces-19147-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Apr 2026 19:24:42 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C329A489E1F
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Apr 2026 19:24:36 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 012C9489E27
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Apr 2026 19:24:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id A21353076559
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Apr 2026 16:07:32 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 0F9F830896C0
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Apr 2026 16:07:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E4A444E049;
-	Tue, 28 Apr 2026 16:06:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C8D24508FC;
+	Tue, 28 Apr 2026 16:06:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EYY7jD6u"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SDX8tQej"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39DD944D031;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8267242E01F;
 	Tue, 28 Apr 2026 16:06:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777392366; cv=none; b=AV2FZ3iKTTPBerzCxbKw+5Wg3KL3X5FC9r//dArcx9/MyGi0uXpcZDOadV2GdfsM5vDwRRCCRs4w6KdbuowLRWFPHjPREm169bOMPguT7KQCnxkmDPh9bS4jdGAQVKveh447YuPLCrs2dd0mNQapAxFoi+hAqtZXDHM2d+DWKvg=
+	t=1777392366; cv=none; b=q9xHLoy6QLutl0RcC1imygVy3yS6y40FBYVmpyNcB5FVZcL7RALZi9yGhE6v+Gn6MFATcf5c+KJkLQg6wr1TmAakPeQeq3TUZUKVLGL+qmJ7ZGzWSgxj38U2K7YO3dbUoCSn/cWJxZviULjcT4gjftnpwRBp88pKxpHBPdo6oQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1777392366; c=relaxed/simple;
-	bh=k/4f5X/miPNM51Im03YMDQ6DGnrXuj/EbwgqPS+/gc8=;
+	bh=gJ50aN2aHsnqyzzecYooom9Y4sYzshztAEvY3ZxQOJY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ma0JdD5cASmcrHOuYYQK2b2OFCuzpS2zpHXhm/b0YN01IbXhvouQ/5yNjQD7i07g2JBPWecocnsJoYy6ipsix0rNUoyyzZSyNqKpIyM2Lw2AR5pph7YyPogklg/+KxOzaaCiC5EYZvxrxe8LMBgCNeHLIwykzpkBw24iGKifMTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EYY7jD6u; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=m7FvfaYw3uQIQzKn5c1YsaVrs34Zischkcxk27LaL7QGzAcx1QAz5JImHNtM0+/EMPBnwz3+z/XeISpIy4k4MGUlMWOUV8UkFGd3iwJ94AuYDfCxHrhmFwxiLnOAkSg6/pwZQyd8f+EDfJ2ieT1DwJ06mvdqKgDUH/0kL00PdH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SDX8tQej; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63SE5m1h1914783;
-	Tue, 28 Apr 2026 16:05:42 GMT
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63S6TLKO3017137;
+	Tue, 28 Apr 2026 16:05:43 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=qiNJZHzd0jXc2OG6W
-	Kmf78aMkno/avXKkASrSNH713Y=; b=EYY7jD6uP76PwBsGk0ZkVNAs15LP3oESe
-	uvXal4e+SRsSTM1ODWXrLfLqI679RTXJNddgtqfjLhnjLppbzGpOgdL/ItM/dO0G
-	P0kjFoc12T61c6Wrf09x988AvAHRle2yT1e5QRULd4DTliy2lF+Pug1d3WgKj/A4
-	Uh+A8ebOKUEaxP8O5VY/KQQWvi8GRSuZVykU79CAZgHmszwd3+GdsshXdjjSSzMS
-	DtptmL9GTRkSvPYEYK+pr8ekfpx6tXw6Zfev+i99hTatVQKf7//jT24Zlc3s2BnT
-	oLJ3VvBLsCUez/ScxgQNItXmuueD78L7ncmcttx3SUhHf0Lq/shHw==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4drnb56dq7-1
+	:mime-version:references:subject:to; s=pp1; bh=uTgzHy3m98P55yjTh
+	PJgJScPlT/2lMhPDUIfJDMciRc=; b=SDX8tQejgsqGPsV8jMCIVKbBRQV+ZHxzZ
+	7pqjeiPj8Xki6agzcYUhbfRITAmT4XdFP6xdyQ4eQNY2bC+Aq4sk4BI6ZzR5Zlzg
+	v4jiM16s7EBj3ER9ckzIL83yCAHp3E9wScH2bLd1JvbefPUlrQgm21kAruvlAHRu
+	e11jCyHxa5/pRPCn8x572U6gdiIRcYoQhhIMGultADQUfweLLXed/NdwvW9qwsH2
+	9Nem4T7bf+E0sIDmeN6Ov+zt8kUIhYmN+0lS//xIdhva4acREF9jeDhcgDQvsrlf
+	YjYogyslH7eAN2yYgRi2L8nvQGy/5tgdJMUJO9y3nUK+FnN1LhqXw==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4drn9r6dq4-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 28 Apr 2026 16:05:42 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63SFroAS001931;
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63SFrpof027791;
 	Tue, 28 Apr 2026 16:05:41 GMT
 Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dsa5ga9ev-1
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dsamya6h6-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 28 Apr 2026 16:05:41 +0000 (GMT)
 Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63SG5bqu44433772
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63SG5bIo44433780
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 28 Apr 2026 16:05:37 GMT
+	Tue, 28 Apr 2026 16:05:38 GMT
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7654620040;
+	by IMSVA (Postfix) with ESMTP id CC42B20040;
 	Tue, 28 Apr 2026 16:05:37 +0000 (GMT)
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 260C52004E;
+	by IMSVA (Postfix) with ESMTP id 7C42F20043;
 	Tue, 28 Apr 2026 16:05:37 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
 	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
@@ -88,9 +88,9 @@ Cc: Andreas Grapentin <gra@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
         Will Deacon <will@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>
-Subject: [RFC PATCH v2 27/28] KVM: s390: arm64: Implement basic page fault handler
-Date: Tue, 28 Apr 2026 18:05:24 +0200
-Message-ID: <20260428160527.1378085-28-seiden@linux.ibm.com>
+Subject: [RFC PATCH v2 28/28] KVM: s390: arm64: Enable KVM_ARM64 config and Kbuild
+Date: Tue, 28 Apr 2026 18:05:25 +0200
+Message-ID: <20260428160527.1378085-29-seiden@linux.ibm.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260428160527.1378085-1-seiden@linux.ibm.com>
 References: <20260428160527.1378085-1-seiden@linux.ibm.com>
@@ -102,281 +102,299 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=AqDeGu9P c=1 sm=1 tr=0 ts=69f0dad6 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+X-Proofpoint-GUID: NjLRPQ4GE9y6FwJleJxxJGfezK0KCzxc
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDI4MDE1MSBTYWx0ZWRfX8Virap4sE+V2
+ 7dlx4bjfjRdwDZvUXB7GDUKKbRobzYsQyNpOIUvbMv+3OScdqyD9G+5Z66SydNlIl1H5dT3b1/e
+ 0IhkMCBjyQIENJ8A7P/ERqjuXkkDwmk3zSzxXfjZ20LzgdNhADEkeLWp62Y1Y/kPDEknNYE6oW4
+ QlfN32G2c4IAoCKvUgp0LzO1M8DeZVY7c0wHsR2dtX23p6JB1hIq0z14kBQaBz3xuBQTHGsGi8h
+ YFIeaECKdj9bf0XkGH+MBStOFpYO09gNGUC7KeYJXPROlEzsa/X+UevKo0CKP+9Fh9umU2K+zqn
+ X/sgl37IKSsifby8RTnj/2wQ+Pzd/oZyIFx/4tMvNa/NjRibt1GIAJVPme3EiWw+ZniZODabqc2
+ 8KFEf3xabCf+AUHPn91f/zW1S9cnJ3hIAdqOdKiZFl/M7NBMEIr2CAWmDyix/jXv7lbM9rHdvB3
+ VMVNafK7Aq6be6l3jsg==
+X-Authority-Analysis: v=2.4 cv=Kc7idwYD c=1 sm=1 tr=0 ts=69f0dad6 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
  a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=Rlh8LM2epgzb96jMsLsA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDI4MDE1MSBTYWx0ZWRfX6wKAj39cu1nr
- cP0aXNzdy8FwxPazCqr8+slTvVq8Wv2MV/l2eZHeBST195tWpl2drT0jmDqwG91RIU0eZHdVini
- 9LpJpv6fhOrBnKg8bRcPcdTyYnVIaTdjowoESIMND5/EmSJenX6XCwJ2gR9YZ5NZb9yIO0df6+r
- uWTEsX5bew934s8yh7Jz5B3SGwyPxn1MCkeekwcVNaUui1D26oUbb07Hikf6Bto753goItxEXjD
- FW5CHCVG8JtDne4EEoBGD2sKbQpK6zaP2y5sawDJ50eJVPQaotQhkim3gjLQQMSa61ENfB6/das
- UdnJggt3H4ynWNDjiRUtnw6xipqiJBd+K2qh/2DWt357xbcq8y2iB8uCbxzi2sG1WYQW1HG+pyo
- sSaZuCOG7v88plWgqKwsW66kVpVkF9BqW6KsQSgGN2gVlZdw92V4gPqL/vsd30uU4JyH7tvJuu3
- rSSrBHjY5b1pvq6kDVQ==
-X-Proofpoint-GUID: 08o1azttWuDgr4REFUMvl6-V8KIEmo-u
-X-Proofpoint-ORIG-GUID: 08o1azttWuDgr4REFUMvl6-V8KIEmo-u
+ a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=kekBd6hy71sv0FWHAtgA:9
+X-Proofpoint-ORIG-GUID: NjLRPQ4GE9y6FwJleJxxJGfezK0KCzxc
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-04-28_05,2026-04-28_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 priorityscore=1501 phishscore=0 suspectscore=0 clxscore=1015
- lowpriorityscore=0 spamscore=0 bulkscore=0 impostorscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2604280151
-X-Rspamd-Queue-Id: C329A489E1F
+ clxscore=1015 phishscore=0 bulkscore=0 adultscore=0 spamscore=0
+ malwarescore=0 impostorscore=0 priorityscore=1501 lowpriorityscore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604200000
+ definitions=main-2604280151
+X-Rspamd-Queue-Id: 012C9489E27
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
 	RCPT_COUNT_TWELVE(0.00)[23];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19147-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19145-lists,linux-s390=lfdr.de];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[seiden@linux.ibm.com,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	FROM_NEQ_ENVFROM(0.00)[seiden@linux.ibm.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns];
 	TAGGED_RCPT(0.00)[linux-s390];
+	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[11]
 
-Add host functionality to page in guest memory. If the guest does
-something unexpected or illegal exit to userspace which very likely has
-to stop guest execution. This behaviour will be changed to guest error
-injects once all sysregs are accessible for the host.
+Add all Kbuild/Makefile configurations to build a second KVM module on
+s390 implementing the arm64-KVM API. To prevent symbol conflicts with
+kvm-s390 all internal symbols in kvm-arm64 are mangled if compiled as
+built-in. The new module ins named kvm-arm64.
 
+As in this case the build does not go through the normal build process
+the module parameter handling would be messed up. By forcing
+KBUILD_MODNAME to kvm-arm64 all parameters are at the same location and
+not at object/basename of the object file the parameter is introduced.
+
+Co-developed-by: Andreas Grapentin <gra@linux.ibm.com>
+Signed-off-by: Andreas Grapentin <gra@linux.ibm.com>
 Co-developed-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
 Signed-off-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+Co-developed-by: Gautam Gala <ggala@linux.ibm.com>
+Signed-off-by: Gautam Gala <ggala@linux.ibm.com>
 Signed-off-by: Steffen Eiden <seiden@linux.ibm.com>
 ---
- arch/s390/kvm/arm64/arm.c         |   1 +
- arch/s390/kvm/arm64/handle_exit.c |   2 +
- arch/s390/kvm/arm64/mmu.c         | 178 ++++++++++++++++++++++++++++++
- 3 files changed, 181 insertions(+)
- create mode 100644 arch/s390/kvm/arm64/mmu.c
+ arch/s390/configs/defconfig  |   1 +
+ arch/s390/include/asm/Kbuild |   3 +
+ arch/s390/kvm/Kconfig        |   1 +
+ arch/s390/kvm/Makefile       |   1 +
+ arch/s390/kvm/arm64/Kconfig  |  21 +++++++
+ arch/s390/kvm/arm64/Makefile | 108 +++++++++++++++++++++++++++++++++++
+ arch/s390/kvm/s390/Kconfig   |   1 -
+ arch/s390/tools/Makefile     |   2 +
+ 8 files changed, 137 insertions(+), 1 deletion(-)
+ create mode 100644 arch/s390/kvm/arm64/Kconfig
+ create mode 100644 arch/s390/kvm/arm64/Makefile
 
-diff --git a/arch/s390/kvm/arm64/arm.c b/arch/s390/kvm/arm64/arm.c
-index b629bef84eda..e15dad763847 100644
---- a/arch/s390/kvm/arm64/arm.c
-+++ b/arch/s390/kvm/arm64/arm.c
-@@ -429,6 +429,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
- 				  vcpu->arch.sae_block.vir);
- 			ret = -EINVAL;
- 			break;
-+		case SAE_ICPTR_HOST_ACCESS_EXCEPTION:
- 		case SAE_ICPTR_SYNCHRONOUS_EXCEPTION:
- 			ret = handle_trap_exceptions(vcpu);
- 			break;
-diff --git a/arch/s390/kvm/arm64/handle_exit.c b/arch/s390/kvm/arm64/handle_exit.c
-index 89933a604876..debe8aa12c7c 100644
---- a/arch/s390/kvm/arm64/handle_exit.c
-+++ b/arch/s390/kvm/arm64/handle_exit.c
-@@ -46,5 +46,7 @@ static int handle_hvc(struct kvm_vcpu *vcpu)
+diff --git a/arch/s390/configs/defconfig b/arch/s390/configs/defconfig
+index bbbb4d0df9dd..e10e9e1ad94d 100644
+--- a/arch/s390/configs/defconfig
++++ b/arch/s390/configs/defconfig
+@@ -58,6 +58,7 @@ CONFIG_CMM=m
+ CONFIG_APPLDATA_BASE=y
+ CONFIG_S390_HYPFS_FS=y
+ CONFIG_KVM_S390=m
++CONFIG_KVM_ARM64=m
+ CONFIG_S390_UNWIND_SELFTEST=m
+ CONFIG_S390_KPROBES_SANITY_TEST=m
+ CONFIG_S390_MODULES_SANITY_TEST=m
+diff --git a/arch/s390/include/asm/Kbuild b/arch/s390/include/asm/Kbuild
+index 80bad7de7a04..c2c238f418c6 100644
+--- a/arch/s390/include/asm/Kbuild
++++ b/arch/s390/include/asm/Kbuild
+@@ -7,3 +7,6 @@ generated-y += unistd_nr.h
+ generic-y += asm-offsets.h
+ generic-y += mcs_spinlock.h
+ generic-y += mmzone.h
++
++generated-y += sysreg-gen-defs.h
++generated-y += kvm_arm64_modname.h
+diff --git a/arch/s390/kvm/Kconfig b/arch/s390/kvm/Kconfig
+index f8d4a9a38dae..bbae58aa8bc4 100644
+--- a/arch/s390/kvm/Kconfig
++++ b/arch/s390/kvm/Kconfig
+@@ -20,5 +20,6 @@ config KVM
+ 	tristate
  
- exit_handle_fn arm_exit_handlers[] = {
- 	[0 ... ESR_ELx_EC_MAX]	= kvm_handle_unknown_ec,
-+	[ESR_ELx_EC_IABT_LOW]	= kvm_handle_guest_abort,
-+	[ESR_ELx_EC_DABT_LOW]	= kvm_handle_guest_abort,
- 	[ESR_ELx_EC_HVC64]	= handle_hvc,
- };
-diff --git a/arch/s390/kvm/arm64/mmu.c b/arch/s390/kvm/arm64/mmu.c
+ source "arch/s390/kvm/s390/Kconfig"
++source "arch/s390/kvm/arm64/Kconfig"
+ 
+ endif # VIRTUALIZATION
+diff --git a/arch/s390/kvm/Makefile b/arch/s390/kvm/Makefile
+index c43d7dffca13..38bdd7c9b42d 100644
+--- a/arch/s390/kvm/Makefile
++++ b/arch/s390/kvm/Makefile
+@@ -4,3 +4,4 @@
+ # Copyright IBM Corp. 2008
+ 
+ obj-$(CONFIG_KVM_S390) += s390/
++obj-$(CONFIG_KVM_ARM64) += arm64/
+diff --git a/arch/s390/kvm/arm64/Kconfig b/arch/s390/kvm/arm64/Kconfig
 new file mode 100644
-index 000000000000..8759cbafbaff
+index 000000000000..42a1be50f6e1
 --- /dev/null
-+++ b/arch/s390/kvm/arm64/mmu.c
-@@ -0,0 +1,178 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/kvm_host.h>
++++ b/arch/s390/kvm/arm64/Kconfig
+@@ -0,0 +1,21 @@
++# SPDX-License-Identifier: GPL-2.0
 +
-+#include <asm/kvm_emulate.h>
-+#include <asm/kvm_mmu.h>
++config KVM_ARM64
++	def_tristate y
++	prompt "Kernel-based Virtual Machine (KVM) support for arm64 guests"
++	select KVM
++	select KVM_VFIO
++	select IRQ_BYPASS_MANAGER
++	select SCHED_INFO
++	select XARRAY_MULTI
++	select KVM_COMMON
++	select HAVE_KVM_CPU_RELAX_INTERCEPT
++	select HAVE_KVM_MSI
++	select HAVE_KVM_IRQCHIP
++	select HAVE_KVM_IRQ_ROUTING
++	select HAVE_KVM_VCPU_RUN_PID_CHANGE
++	select GUEST_PERF_EVENTS if PERF_EVENTS
++	help
++	  Support hosting virtualized arm64 guest machines on s390 host machines.
 +
-+#include "faultin.h"
++	  If unsure, say N.
+diff --git a/arch/s390/kvm/arm64/Makefile b/arch/s390/kvm/arm64/Makefile
+new file mode 100644
+index 000000000000..d0aac34b8d2f
+--- /dev/null
++++ b/arch/s390/kvm/arm64/Makefile
+@@ -0,0 +1,108 @@
++# SPDX-License-Identifier: GPL-2.0
 +
-+static inline bool kvm_s390_cur_gmap_fault_is_write(struct kvm_vcpu *vcpu)
-+{
-+	return vcpu->arch.sae_block.hai.pic == PGM_PROTECTION ||
-+	       vcpu->arch.sae_block.hai.teid.fsi == TEID_FSI_STORE;
-+}
++KVM := ../../../../virt/kvm
++include $(srctree)/virt/kvm/Makefile.kvm
++include $(srctree)/virt/kvm/arm64/Makefile.kvm
++include $(srctree)/arch/s390/kvm/gmap/Makefile
 +
-+/*
-+ * user_mem_abort() - handle a dat fault for the gmap of a vcpu
-+ *
-+ * Return: 0 on success, < 0 in case of error.
-+ * Context: The mm lock must not be held before calling. May sleep.
-+ */
-+static int user_mem_abort(struct kvm_vcpu *vcpu, gpa_t fault_ipa,
-+			  struct kvm_memory_slot *slot, hva_t hva)
-+{
-+	struct guest_fault f = { };
-+	int ret;
++ccflags-y += -I $(src) -I$(srctree)/arch/s390/kvm/gmap -DKVM_S390_ARM64
 +
-+	if (kvm_s390_cur_gmap_fault_is_write(vcpu))
-+		f.write_attempt = FOLL_WRITE;
-+	f.gfn = gpa_to_gfn(fault_ipa);
++kvm-arm64-obj := \
++	arm.o \
++	guest.o \
++	handle_exit.o \
++	inject_fault.o \
++	mmu.o \
++	reset.o \
 +
-+	ret = kvm_s390_faultin_gfn(vcpu, NULL, &f);
-+	if (ret <= 0)
-+		return ret;
-+	if (ret == PGM_ADDRESSING)
-+		/*
-+		 * Without the relevant sysregs we cannot do anything for now.
-+		 * Go back to userspace with an error. TODO sysreg handling
-+		 */
-+		return -ENOEXEC;
-+	KVM_BUG_ON(ret, vcpu->kvm);
-+	return -EINVAL;
-+}
++kvm-arm64-obj += $(patsubst %.o,%-arm64.o,$(shared-arm64-obj))
++kvm-arm64-obj += $(patsubst %.o,%-arm64.o,$(kvm-y))
 +
-+static int kvm_handle_pic(struct kvm_vcpu *vcpu, bool *translation)
-+{
-+	switch (kvm_vcpu_fault_pic(vcpu)) {
-+	/* expected cases: */
-+	case PGM_ASCE_TYPE:
-+	case PGM_REGION_FIRST_TRANS:
-+	case PGM_REGION_SECOND_TRANS:
-+	case PGM_REGION_THIRD_TRANS:
-+	case PGM_SEGMENT_TRANSLATION:
-+	case PGM_PAGE_TRANSLATION:
-+		*translation = true;
-+		break;
-+	case PGM_PROTECTION:
-+		break;
-+	/* unexpected cases: */
-+	case 0:
-+		KVM_BUG(1, vcpu->kvm, "On MMU fault path but no fault occurred");
-+		return -EFAULT;
-+	default:
-+		KVM_BUG(1, vcpu->kvm, "Unexpected program interrupt 0x%x, TEID 0x%016lx",
-+			vcpu->arch.sae_block.hai.pic, vcpu->arch.sae_block.hai.teid.val);
-+		send_sig(SIGSEGV, current, 0);
-+		return -EFAULT;
-+	}
++targets += $(kvm-arm64-obj)
 +
-+	return 0;
-+}
++$(obj)/%-arm64.o: $(src)/%.c FORCE
++	@mkdir -p $(dir $@)
++	$(call if_changed_rule,cc_o_c)
 +
-+int kvm_handle_guest_abort(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_memory_slot *memslot;
-+	bool translation = false;
-+	phys_addr_t fault_ipa;
-+	unsigned long esr;
-+	unsigned long hva;
-+	bool write_fault;
-+	bool guest_size_err;
-+	bool writable;
-+	bool is_iabt;
-+	int ret;
-+	gfn_t gfn;
-+	int idx;
++ifeq ($(CONFIG_KVM_ARM64),m)
 +
-+	esr = kvm_vcpu_get_esr(vcpu);
-+	fault_ipa = kvm_vcpu_get_fault_ipa(vcpu);
-+	is_iabt = kvm_vcpu_trap_is_iabt(vcpu);
-+	guest_size_err = vcpu->arch.sae_block.icptr == SAE_ICPTR_GUEST_ADDRESS_SIZE;
++kvm-arm64-y = $(kvm-arm64-obj)
 +
-+	if (guest_size_err) {
-+		translation = true;
-+	} else {
-+		ret = kvm_handle_pic(vcpu, &translation);
-+		if (ret)
-+			return ret;
-+	}
++else ifeq ($(CONFIG_KVM_ARM64),y)
 +
-+	if (translation) {
-+		/*
-+		 * For both cases:
-+		 * Without the relevant sysregs we cannot do anything for now.
-+		 * Go back to userspace with an error. TODO sysreg handling
-+		 */
-+		if (fault_ipa >= BIT_ULL(get_kvm_ipa_limit()))
-+			return -ENOEXEC;
++KVM_ARM64_GEN_DIR :=$(objtree)/arch/${SRCARCH}/include/generated/asm
++KVM_ARM64_MODNAME_H := $(KVM_ARM64_GEN_DIR)/kvm_arm64_modname.h
++ccflags-y += -include $(KVM_ARM64_MODNAME_H)
 +
-+		if (fault_ipa >= kvm_phys_size(vcpu->kvm))
-+			return -ENOEXEC;
-+	}
++targets += $(KVM_ARM64_MODNAME_H)
 +
-+	idx = srcu_read_lock(&vcpu->kvm->srcu);
++quiet_cmd_kvm_arm64_modname_h = GEN     $@
++      cmd_kvm_arm64_modname_h = { \
++	echo '/* Automatically generated; do not edit. */'; \
++	echo '\#ifndef _KVM_ARM64_MODNAME_H'; \
++	echo '\#define _KVM_ARM64_MODNAME_H'; \
++	echo '\#undef KBUILD_MODNAME'; \
++	echo '\#define KBUILD_MODNAME "kvm_arm64"'; \
++	echo '\#endif /* _KVM_ARM64_MODNAME_H */'; \
++	} > $@
 +
-+	gfn = fault_ipa >> PAGE_SHIFT;
++$(addprefix $(obj)/,$(kvm-arm64-obj)): $(KVM_ARM64_MODNAME_H)
 +
-+	memslot = gfn_to_memslot(vcpu->kvm, gfn);
-+	hva = gfn_to_hva_memslot_prot(memslot, gfn, &writable);
-+	write_fault = kvm_is_write_fault(vcpu);
-+	if (kvm_is_error_hva(hva) || (write_fault && !writable)) {
-+		ret = -ENOEXEC;
-+		/*
-+		 * The guest has put either its instructions or its page-tables
-+		 * somewhere it shouldn't have. Userspace won't be able to do
-+		 * anything about this (there's no syndrome for a start).
-+		 *
-+		 * Without the relevant sysregs we cannot do anything for now.
-+		 * Go back to userspace with an error. TODO sysreg handling
-+		 */
-+		if (is_iabt)
-+			goto out_unlock;
++$(KVM_ARM64_MODNAME_H):
++	@mkdir -p $(KVM_ARM64_GEN_DIR)
++	$(call cmd,kvm_arm64_modname_h)
 +
-+		if (kvm_vcpu_abt_iss1tw(vcpu)) {
-+			/*
-+			 * Without the relevant sysregs we cannot do anything for now.
-+			 * Go back to userspace with an error. TODO sysreg handling
-+			 */
-+			goto out_unlock;
-+		}
++prereq-o-cmd = $(foreach o, $(filter %.o, $^), $(dir $(o)).$(notdir $(o)).cmd)
++cmd_gen_symversions_o = \
++	grep --no-filename "^\#SYMVER" $(prereq-o-cmd) >> $(dot-target).cmd || true
 +
-+		/*
-+		 * Check for a cache maintenance operation. Assume the guest is
-+		 * cautious and skip instruction
-+		 */
-+		if (kvm_is_error_hva(hva) && kvm_vcpu_dabt_is_cm(vcpu)) {
-+			kvm_incr_pc(vcpu);
-+			ret = 1;
-+			goto out_unlock;
-+		}
++define rule_ld_o_o
++	$(call cmd_and_savecmd,ld)
++	$(call cmd,gen_symversions_o)
++endef
 +
-+		/*
-+		 * The IPA is reported as [MAX:12], so we need to
-+		 * complement it with the bottom 12 bits from the
-+		 * faulting VA. This is always 12 bits, irrespective
-+		 * of the page size.
-+		 */
-+		fault_ipa |= kvm_vcpu_get_hfar(vcpu) & ((1 << 12) - 1);
-+		ret = io_mem_abort(vcpu, fault_ipa);
-+		goto out_unlock;
-+	}
++LDFLAGS_kvm-unnamespaced.o := -r
++$(obj)/kvm-unnamespaced.o: $(addprefix $(obj)/,$(kvm-arm64-obj)) FORCE
++	$(call if_changed_rule,ld_o_o)
 +
-+	/* Userspace should not be able to register out-of-bounds IPAs */
-+	VM_BUG_ON(fault_ipa >= kvm_phys_size(vcpu->kvm));
-+	/*
-+	 * Proper guest size faults have been injected.
-+	 * In theory it's fine to have device memory higher than MSL,
-+	 * even if not currently possible, but that would have been handled above.
-+	 * So if we get here with a guest size intercept, we have a bug somewhere.
-+	 */
-+	VM_BUG_ON(guest_size_err);
++# Make list of symbols to localize.
++# Collect normal/exported symbols. Use dict as set for deduplication.
++quiet_cmd_nm_filter = NMFLTR  $@
++	cmd_nm_filter = \
++$(NM) -jU $< | awk '							\
++{	if (match($$0, /^__export_symbol_(.*)$$/, exp_sym)) {		\
++		exp_syms[exp_sym[1]] = 1;				\
++	} else {							\
++		normal_syms[$$0] = 1;					\
++	}								\
++}									\
++END {									\
++	for (sym in normal_syms) {					\
++		if (!(sym in exp_syms)) {				\
++			print sym;					\
++		}							\
++	}								\
++}' > $@
 +
-+	ret = user_mem_abort(vcpu, fault_ipa, memslot, hva);
-+	if (!ret)
-+		ret = 1;
-+out_unlock:
-+	srcu_read_unlock(&vcpu->kvm->srcu, idx);
-+	return ret;
-+}
++$(obj)/kvm_symbol_list: $(obj)/kvm-unnamespaced.o FORCE
++	$(call if_changed,nm_filter)
++
++define rule_oc_o_o
++	$(call cmd_and_savecmd,objcopy)
++	$(call cmd,gen_objtooldep)
++	$(call cmd,gen_symversions_o)
++endef
++
++OBJCOPYFLAGS_kvm-namespaced.o := -O default --localize-symbols=$(obj)/kvm_symbol_list
++$(obj)/kvm-namespaced.o: $(obj)/kvm-unnamespaced.o $(obj)/kvm_symbol_list FORCE
++	$(call if_changed_rule,oc_o_o)
++
++kvm-arm64-y = kvm-namespaced.o
++
++targets += kvm-unnamespaced.o kvm_symbol_list kvm-namespaced.o
++
++endif
++
++obj-$(CONFIG_KVM_ARM64) += kvm-arm64.o
++
++LINUXINCLUDE := -I$(srctree)/include/arch/arm64/ $(LINUXINCLUDE)
+diff --git a/arch/s390/kvm/s390/Kconfig b/arch/s390/kvm/s390/Kconfig
+index f9853e61fd58..263ff29b9c9c 100644
+--- a/arch/s390/kvm/s390/Kconfig
++++ b/arch/s390/kvm/s390/Kconfig
+@@ -2,7 +2,6 @@
+ #
+ # KVM_S390 configuration
+ #
+-source "virt/kvm/Kconfig"
+ 
+ config KVM_S390
+ 	def_tristate y
+diff --git a/arch/s390/tools/Makefile b/arch/s390/tools/Makefile
+index f2862364fb42..921261dcde28 100644
+--- a/arch/s390/tools/Makefile
++++ b/arch/s390/tools/Makefile
+@@ -6,6 +6,8 @@
+ kapi := arch/$(ARCH)/include/generated/asm
+ kapi-hdrs-y := $(kapi)/facility-defs.h $(kapi)/dis-defs.h
+ 
++include $(srctree)/arch/arm64/tools/Makefile.sysreg
++
+ PHONY += kapi
+ 
+ kapi:	$(kapi-hdrs-y)
 -- 
 2.51.0
 
