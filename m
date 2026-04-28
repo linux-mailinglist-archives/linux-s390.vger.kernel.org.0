@@ -1,71 +1,71 @@
-Return-Path: <linux-s390+bounces-19150-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19167-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yLDTA/Db8Gn3aQEAu9opvQ
-	(envelope-from <linux-s390+bounces-19150-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Apr 2026 18:10:24 +0200
+	id 8PfSFx7v8Gn9bAEAu9opvQ
+	(envelope-from <linux-s390+bounces-19167-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Apr 2026 19:32:14 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9BCB4888B1
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Apr 2026 18:10:23 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9ACD548A01F
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Apr 2026 19:32:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 463A8304C124
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Apr 2026 16:07:42 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 05FBB3071044
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Apr 2026 16:15:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C66BC45104C;
-	Tue, 28 Apr 2026 16:06:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22C6A45107D;
+	Tue, 28 Apr 2026 16:11:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nYHFw2EC"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="drqKkCla"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E8E44D686;
-	Tue, 28 Apr 2026 16:06:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2A745348E;
+	Tue, 28 Apr 2026 16:11:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777392367; cv=none; b=H8FYSKfZ0/v14FNo+bE40ovkDt6KNuxZ0GFo6ItczGYarpnFJDgKXzu7jMgxtVPg9Wiunb9cJ+qg7mK3r02TjpGNyvvISnTMmbhANtYimwtvKaPjNqAGG/dEGxDLHAYCZ3EMUzl8UtESq76WpN8ccxpJ6zjKCWVMVC3Vc15i8TM=
+	t=1777392669; cv=none; b=hFR7S87+ugiFTfG3tFBFf9a+/rNaMm/KwSBXbwwWPojzLKZ493dTYPAufdTOMshVdJQEVi94yf7Dt/jV29q03bj5Rs2RVISCv1NqMyC8njNpZ4ALtlvPeHY/Q5ZGurgGL1iRQmDIy1OPeS2SbHtnjjNRTdix2URqJy0iDjBc/m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777392367; c=relaxed/simple;
-	bh=5ZP3GIU+wsS/iwYVQmnx7H2Icp+vMMSNkBAHpDwb3ag=;
+	s=arc-20240116; t=1777392669; c=relaxed/simple;
+	bh=k4qrFjAb3Euu7Na+K737xBB3Ph8bk+GHcmCeNUP4GxU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sZY9TTleJKsyEIQjmtHwmmZ4KYJqzY04qkjP6YhA36lQGe060sOzhisWOEbPb2HHLb4pCQT7+O4BzcYDmwFTMgL1A+e9/8i59vFLnEX6qpcghdPqaTzGd6gNsYseUn7hVIZpxyV9XFaXycDZDu+mw29g7zBUSzeEhRmlOJOjzF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nYHFw2EC; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=BrwtFMuc4/Vkz3CzbAUuAt6vqHG4RnxysuppuoITpLgYTW05pSpFqZIjr2Zq9MJlbgSJr+it4dAymfsfaOWun4u5vcZ8OnioVk5a5+qPTARzUQUVKZb2tgpIfMmV3TNOLlOuwU3hwAWbSPnWOGTcCBd+i21NcA76Y3DhIMzTPdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=drqKkCla; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63S7Zbgj3293550;
-	Tue, 28 Apr 2026 16:05:37 GMT
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63S87C2K2932084;
+	Tue, 28 Apr 2026 16:05:38 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=Vv5VkcPGd9NBrr+gL
-	dBGYiStBuFwr6CNbBMeBP5HZcA=; b=nYHFw2ECQZk7HalAH5/x0kfeBFN1Gy5qB
-	0BnIeEiIubGEgEKnHsYiZs97e+Up3mJBJbmgLUVTXhm28KDtXAm+pmPGvlL1CFAT
-	GJ74DpIPQnn+0uQrKPMqREGlc3R/23gCZt4uqjFA7TKrjduGegFnOhKa85kVNL1c
-	qZNUP3Ea16O5A/VwsE/Frw7okVrdYahdDcfssH21ScHYlzQr27f03dQUg/RaqXx7
-	RyIGOT5SI/LnMsX5PtbQedNW8wjEkugC0B9LARNRKUvUac3nUcPQxt5/3RMwzlsl
-	uLgTl7Y1IjKQBcoGYGObHOjzgE4hW09bHB/GTb/2UbmvW69gXu3ZQ==
+	:mime-version:references:subject:to; s=pp1; bh=hUFiRfjOeIzSdUBN3
+	6ih9mE/1om4IWgb3WYfSKb+sBw=; b=drqKkClaXEcvdEDDXzewvD//uu5Paa7Yq
+	O0J7tKLvGHvFYWkP/6/y1QWoMkn8jY8sv8YBV0HVcSDeRMQofzE72W7DHemq8xPa
+	QgzNd7BorrN43kLt/gUbraD+pm2usfOB3FtYs2r39+7+QqWJzoLHvRh0IaICURCp
+	s6iJ4hX7YjI16dLjA7FZZ842OU24MmdkMM3wMUdbmP1jgbtK+2KG9UIeLpxXiKz4
+	NPB7FhJpHrNUbBjckEmfB7BY1usn9crIC1qyrVoS0uct8ytSURlmf4HJWAwpwmWm
+	C8g7S6bC/7IxhE750yVaNLTEVtLzh+jECEyk3Y2BhdDNeo/wiRpbg==
 Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4drn44pgq6-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4drn9r6dpq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 28 Apr 2026 16:05:37 +0000 (GMT)
 Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63SFrnQD002807;
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63SFro7s002812;
 	Tue, 28 Apr 2026 16:05:36 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ds8xk2eed-1
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ds8xk2eef-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 Apr 2026 16:05:35 +0000 (GMT)
+	Tue, 28 Apr 2026 16:05:36 +0000 (GMT)
 Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63SG5Vx231588772
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63SG5WZn51446034
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Tue, 28 Apr 2026 16:05:32 GMT
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CD40520040;
-	Tue, 28 Apr 2026 16:05:31 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 2FC5920040;
+	Tue, 28 Apr 2026 16:05:32 +0000 (GMT)
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7B4B720043;
+	by IMSVA (Postfix) with ESMTP id D36FA2004B;
 	Tue, 28 Apr 2026 16:05:31 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
 	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
@@ -88,9 +88,9 @@ Cc: Andreas Grapentin <gra@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
         Will Deacon <will@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>
-Subject: [RFC PATCH v2 11/28] KVM: arm64: Access elements of vcpu_gp_regs individually
-Date: Tue, 28 Apr 2026 18:05:08 +0200
-Message-ID: <20260428160527.1378085-12-seiden@linux.ibm.com>
+Subject: [RFC PATCH v2 12/28] KVM: arm64: Share reset general register code
+Date: Tue, 28 Apr 2026 18:05:09 +0200
+Message-ID: <20260428160527.1378085-13-seiden@linux.ibm.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260428160527.1378085-1-seiden@linux.ibm.com>
 References: <20260428160527.1378085-1-seiden@linux.ibm.com>
@@ -102,261 +102,473 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 45spEKvAiyFbFXzxBp2VJBJOpURvC-Xw
-X-Authority-Analysis: v=2.4 cv=Ft81OWrq c=1 sm=1 tr=0 ts=69f0dad1 cx=c_pps
+X-Proofpoint-GUID: Ag2dXPvzwrbbv0b6cAN5kwp3XHA64LQB
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDI4MDE1MSBTYWx0ZWRfX1GvFN9ajDI1s
+ dhuySop/X1/MaU8FABHaZIXPX0F9EfI81Lk0jW+Ssn7n/cyVg6nAbwZDJNnfB9gF10GSnd6qvK5
+ vNcdoMH0ZLkZxg+yWiGNI50dNXOWgYstt047e4lmbxuKul0sitDATSzkKleYsYUfp4rgZ0yx/aQ
+ XnyfDLeYFJBmJShlxMS1fORrv3IMXsczyKal2+Q6PIHIJtsees/fRvre4V3+0SutwfeyqWWUagp
+ AN4c5SzpkVADaC9OCuiZYm2NxqOEu3kxvYO8ui+GQqKKBtd9iL8WRj9ygxj444F4FgricpjjS65
+ 7WXvtsj7aFS2Lb3GU5htFjrzmcRZ2mWFPjbVdRZ9IjekppUBxFUokQR68kLKyBxy4kyn2wFJkWE
+ wuczfHIwtLW1XKiHs9Di9zgg7RSuUGeSuHvDKcshvZEF3oq4kI25+da0PeAT3oUiF8ZqoJ0FKRG
+ ZGtWCpLV06VwS4P/dpA==
+X-Authority-Analysis: v=2.4 cv=Kc7idwYD c=1 sm=1 tr=0 ts=69f0dad1 cx=c_pps
  a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
  a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8 a=MeYYmaBpUeygDV1_9ykA:9
-X-Proofpoint-GUID: 45spEKvAiyFbFXzxBp2VJBJOpURvC-Xw
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDI4MDE1MSBTYWx0ZWRfX7hHskTOLhBUT
- zaJ3GukgTNa8uTxgqiYyvSn3AmDBYPj/usieESE9TncT6OgioBTIJa2dEgbWeWVmbX367xyyNMv
- J+FYTuoeSrQCxjMJdxULfmFo/UdeCJw7ssk8tHMfP2bk01CXP9gufK6Kb0fPX7PRSgxcHqtp7Th
- Cg0k94tE1mikm8tIsR3xSgtn74AygM7Hi1oOLBlDipRAlY0NF4oBBIHbJOWP+brXnjtGNk9nmfn
- lvSHzGKi8gWfh/okts+dAj1VfGfAa3NvNfYnPskh60MheA5oYnZpKYk8lgFjT9myMIaCfnNOQKG
- xbTLqlk1odi25Qr/h0EfD/XewT2fiALEssMOlIpBz+5VD01DKKWcSyurBWNosAgtb4/8sJIMz0V
- VN11rn6ai6c7ybOZ7yxopGVKxC+AT8nXZJNsmcDsiJYR1XeSqK9PIWLXwznKcIitS9zYy0M9fye
- BezLMzEGpRw9jH2TSlA==
+ a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=lpgxcksCC1xG6NCAB4wA:9
+X-Proofpoint-ORIG-GUID: Ag2dXPvzwrbbv0b6cAN5kwp3XHA64LQB
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-04-28_05,2026-04-28_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 spamscore=0 impostorscore=0
- clxscore=1015 malwarescore=0 phishscore=0 suspectscore=0 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2604280151
-X-Rspamd-Queue-Id: B9BCB4888B1
+ clxscore=1015 phishscore=0 bulkscore=0 adultscore=0 spamscore=0
+ malwarescore=0 impostorscore=0 priorityscore=1501 lowpriorityscore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604200000
+ definitions=main-2604280151
+X-Rspamd-Queue-Id: 9ACD548A01F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[23];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19167-lists,linux-s390=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19150-lists,linux-s390=lfdr.de];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[seiden@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns];
 	TAGGED_RCPT(0.00)[linux-s390];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	RCVD_COUNT_SEVEN(0.00)[11]
 
-While for arm64 the members of vcpu_gp_regs are allocated continuous
-this is not necessarily true for other architectures implementing ARM.
+From: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
 
-Let vcpu_gp_regs() no longer return the address of the user_pt_regs in
-the vcpu context but the address of the gp-register array field in the
-user_pt_reg struct.
+Move code and required definitions to reset general registers into the
+shared location. Additionally, add defines to arch/arm64 such that
+accessing general registers becomes architecture agnostic.
 
-Co-developed-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
 Signed-off-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
 Signed-off-by: Steffen Eiden <seiden@linux.ibm.com>
 ---
- arch/arm64/include/asm/kvm_emulate.h       | 9 +++++++--
- arch/arm64/include/asm/kvm_host.h          | 2 +-
- arch/arm64/kvm/hyp/exception.c             | 7 +++++--
- arch/arm64/kvm/hyp/include/hyp/adjust_pc.h | 4 ++--
- arch/arm64/kvm/hyp/include/hyp/switch.h    | 6 +++---
- arch/arm64/kvm/reset.c                     | 6 ++++--
- include/kvm/arm64/kvm_emulate.h            | 4 ++--
- virt/kvm/arm64/guest.c                     | 6 +++---
- 8 files changed, 27 insertions(+), 17 deletions(-)
+ arch/arm64/include/asm/kvm_host.h | 97 +++++--------------------------
+ arch/arm64/kvm/reset.c            | 34 +----------
+ include/kvm/arm64/kvm_host.h      | 82 ++++++++++++++++++++++++++
+ include/kvm/arm64/reset.h         |  8 +++
+ virt/kvm/arm64/Makefile.kvm       |  1 +
+ virt/kvm/arm64/guest.c            |  8 +--
+ virt/kvm/arm64/reset.c            | 43 ++++++++++++++
+ 7 files changed, 155 insertions(+), 118 deletions(-)
+ create mode 100644 include/kvm/arm64/reset.h
+ create mode 100644 virt/kvm/arm64/reset.c
 
-diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
-index 39fa3a12730c..41eac2b5de14 100644
---- a/arch/arm64/include/asm/kvm_emulate.h
-+++ b/arch/arm64/include/asm/kvm_emulate.h
-@@ -95,12 +95,17 @@ static inline void vcpu_set_vsesr(struct kvm_vcpu *vcpu, u64 vsesr)
- 
- static __always_inline unsigned long *vcpu_pc(const struct kvm_vcpu *vcpu)
- {
--	return (unsigned long *)&vcpu_gp_regs(vcpu)->pc;
-+	return (unsigned long *)&vcpu->arch.ctxt.regs.pc;
- }
- 
- static __always_inline unsigned long *vcpu_cpsr(const struct kvm_vcpu *vcpu)
- {
--	return (unsigned long *)&vcpu_gp_regs(vcpu)->pstate;
-+	return (unsigned long *)&vcpu->arch.ctxt.regs.pstate;
-+}
-+
-+static __always_inline unsigned long *vcpu_sp_el0(const struct kvm_vcpu *vcpu)
-+{
-+	return (unsigned long *)&vcpu->arch.ctxt.regs.sp;
- }
- 
- static __always_inline bool vcpu_mode_is_32bit(const struct kvm_vcpu *vcpu)
 diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index ae9e507f2c7c..7e473b895740 100644
+index 7e473b895740..e3a2ac3979ac 100644
 --- a/arch/arm64/include/asm/kvm_host.h
 +++ b/arch/arm64/include/asm/kvm_host.h
-@@ -1050,7 +1050,7 @@ struct kvm_vcpu_arch {
- #define vcpu_clear_on_unsupported_cpu(vcpu)				\
- 	vcpu_clear_flag(vcpu, ON_UNSUPPORTED_CPU)
- 
--#define vcpu_gp_regs(v)		(&(v)->arch.ctxt.regs)
-+#define vcpu_gp_regs(v)		((v)->arch.ctxt.regs.regs)
- 
- /*
-  * Only use __vcpu_sys_reg/ctxt_sys_reg if you know you want the
-diff --git a/arch/arm64/kvm/hyp/exception.c b/arch/arm64/kvm/hyp/exception.c
-index bef40ddb16db..82611442a2d1 100644
---- a/arch/arm64/kvm/hyp/exception.c
-+++ b/arch/arm64/kvm/hyp/exception.c
-@@ -277,6 +277,9 @@ static const u8 return_offsets[8][2] = {
- 	[7] = { 4, 4 },		/* FIQ, unused */
+@@ -877,39 +877,6 @@ struct kvm_vcpu_arch {
+ 	struct vncr_tlb	*vncr_tlb;
  };
  
-+#define OFFSETOF_PT_REG(__r) offsetof(struct user_pt_regs, __r)
-+#define COMPAT_IDX(__c) ((OFFSETOF_PT_REG(__c) - OFFSETOF_PT_REG(regs[0])) / sizeof(u64))
-+
- static void enter_exception32(struct kvm_vcpu *vcpu, u32 mode, u32 vect_offset)
- {
- 	unsigned long spsr = *vcpu_cpsr(vcpu);
-@@ -292,12 +295,12 @@ static void enter_exception32(struct kvm_vcpu *vcpu, u32 mode, u32 vect_offset)
- 	switch(mode) {
- 	case PSR_AA32_MODE_ABT:
- 		__vcpu_write_spsr_abt(vcpu, host_spsr_to_spsr32(spsr));
--		vcpu_gp_regs(vcpu)->compat_lr_abt = return_address;
-+		vcpu_gp_regs(vcpu)[COMPAT_IDX(compat_lr_abt)] = return_address;
- 		break;
- 
- 	case PSR_AA32_MODE_UND:
- 		__vcpu_write_spsr_und(vcpu, host_spsr_to_spsr32(spsr));
--		vcpu_gp_regs(vcpu)->compat_lr_und = return_address;
-+		vcpu_gp_regs(vcpu)[COMPAT_IDX(compat_lr_und)] = return_address;
- 		break;
- 	}
- 
-diff --git a/arch/arm64/kvm/hyp/include/hyp/adjust_pc.h b/arch/arm64/kvm/hyp/include/hyp/adjust_pc.h
-index 15e1e5db73e1..4e4cb67824c0 100644
---- a/arch/arm64/kvm/hyp/include/hyp/adjust_pc.h
-+++ b/arch/arm64/kvm/hyp/include/hyp/adjust_pc.h
-@@ -20,11 +20,11 @@
- static inline void __kvm_skip_instr(struct kvm_vcpu *vcpu)
- {
- 	*vcpu_pc(vcpu) = read_sysreg_el2(SYS_ELR);
--	vcpu_gp_regs(vcpu)->pstate = read_sysreg_el2(SYS_SPSR);
-+	*vcpu_cpsr(vcpu) = read_sysreg_el2(SYS_SPSR);
- 
- 	kvm_skip_instr(vcpu);
- 
--	write_sysreg_el2(vcpu_gp_regs(vcpu)->pstate, SYS_SPSR);
-+	write_sysreg_el2(*vcpu_cpsr(vcpu), SYS_SPSR);
- 	write_sysreg_el2(*vcpu_pc(vcpu), SYS_ELR);
- }
- 
-diff --git a/arch/arm64/kvm/hyp/include/hyp/switch.h b/arch/arm64/kvm/hyp/include/hyp/switch.h
-index 2597e8bda867..6250b50e1841 100644
---- a/arch/arm64/kvm/hyp/include/hyp/switch.h
-+++ b/arch/arm64/kvm/hyp/include/hyp/switch.h
-@@ -416,7 +416,7 @@ static inline bool __populate_fault_info(struct kvm_vcpu *vcpu)
- static inline bool kvm_hyp_handle_mops(struct kvm_vcpu *vcpu, u64 *exit_code)
- {
- 	*vcpu_pc(vcpu) = read_sysreg_el2(SYS_ELR);
--	arm64_mops_reset_regs(vcpu_gp_regs(vcpu), vcpu->arch.fault.esr_el2);
-+	arm64_mops_reset_regs(&vcpu->arch.ctxt.regs, vcpu->arch.fault.esr_el2);
- 	write_sysreg_el2(*vcpu_pc(vcpu), SYS_ELR);
- 
- 	/*
-@@ -857,7 +857,7 @@ static inline void synchronize_vcpu_pstate(struct kvm_vcpu *vcpu)
- 	/*
- 	 * Check for the conditions of Cortex-A510's #2077057. When these occur
- 	 * SPSR_EL2 can't be trusted, but isn't needed either as it is
--	 * unchanged from the value in vcpu_gp_regs(vcpu)->pstate.
-+	 * unchanged from the value in vcpu_cpsr(vcpu).
- 	 * Are we single-stepping the guest, and took a PAC exception from the
- 	 * active-not-pending state?
- 	 */
-@@ -867,7 +867,7 @@ static inline void synchronize_vcpu_pstate(struct kvm_vcpu *vcpu)
- 	    ESR_ELx_EC(read_sysreg_el2(SYS_ESR)) == ESR_ELx_EC_PAC)
- 		write_sysreg_el2(*vcpu_cpsr(vcpu), SYS_SPSR);
- 
--	vcpu->arch.ctxt.regs.pstate = read_sysreg_el2(SYS_SPSR);
-+	*vcpu_cpsr(vcpu) = read_sysreg_el2(SYS_SPSR);
- }
- 
+-/*
+- * Each 'flag' is composed of a comma-separated triplet:
+- *
+- * - the flag-set it belongs to in the vcpu->arch structure
+- * - the value for that flag
+- * - the mask for that flag
+- *
+- *  __vcpu_single_flag() builds such a triplet for a single-bit flag.
+- * unpack_vcpu_flag() extract the flag value from the triplet for
+- * direct use outside of the flag accessors.
+- */
+-#define __vcpu_single_flag(_set, _f)	_set, (_f), (_f)
+-
+-#define __unpack_flag(_set, _f, _m)	_f
+-#define unpack_vcpu_flag(...)		__unpack_flag(__VA_ARGS__)
+-
+-#define __build_check_flag(v, flagset, f, m)			\
+-	do {							\
+-		typeof(v->arch.flagset) *_fset;			\
+-								\
+-		/* Check that the flags fit in the mask */	\
+-		BUILD_BUG_ON(HWEIGHT(m) != HWEIGHT((f) | (m)));	\
+-		/* Check that the flags fit in the type */	\
+-		BUILD_BUG_ON((sizeof(*_fset) * 8) <= __fls(m));	\
+-	} while (0)
+-
+-#define __vcpu_get_flag(v, flagset, f, m)			\
+-	({							\
+-		__build_check_flag(v, flagset, f, m);		\
+-								\
+-		READ_ONCE(v->arch.flagset) & (m);		\
+-	})
+-
  /*
+  * Note that the set/clear accessors must be preempt-safe in order to
+  * avoid nesting them with load/put which also manipulate flags...
+@@ -923,54 +890,14 @@ struct kvm_vcpu_arch {
+ #define __vcpu_flags_preempt_enable()	preempt_enable()
+ #endif
+ 
+-#define __vcpu_set_flag(v, flagset, f, m)			\
+-	do {							\
+-		typeof(v->arch.flagset) *fset;			\
+-								\
+-		__build_check_flag(v, flagset, f, m);		\
+-								\
+-		fset = &v->arch.flagset;			\
+-		__vcpu_flags_preempt_disable();			\
+-		if (HWEIGHT(m) > 1)				\
+-			*fset &= ~(m);				\
+-		*fset |= (f);					\
+-		__vcpu_flags_preempt_enable();			\
+-	} while (0)
+-
+-#define __vcpu_clear_flag(v, flagset, f, m)			\
+-	do {							\
+-		typeof(v->arch.flagset) *fset;			\
+-								\
+-		__build_check_flag(v, flagset, f, m);		\
+-								\
+-		fset = &v->arch.flagset;			\
+-		__vcpu_flags_preempt_disable();			\
+-		*fset &= ~(m);					\
+-		__vcpu_flags_preempt_enable();			\
+-	} while (0)
+-
+-#define __vcpu_test_and_clear_flag(v, flagset, f, m)		\
+-	({							\
+-		typeof(v->arch.flagset) set;			\
+-								\
+-		set = __vcpu_get_flag(v, flagset, f, m);	\
+-		__vcpu_clear_flag(v, flagset, f, m);		\
+-								\
+-		set;						\
+-	})
+-
+-#define vcpu_get_flag(v, ...)	__vcpu_get_flag((v), __VA_ARGS__)
+-#define vcpu_set_flag(v, ...)	__vcpu_set_flag((v), __VA_ARGS__)
+-#define vcpu_clear_flag(v, ...)	__vcpu_clear_flag((v), __VA_ARGS__)
+-#define vcpu_test_and_clear_flag(v, ...)			\
+-	__vcpu_test_and_clear_flag((v), __VA_ARGS__)
+-
+-/* KVM_ARM_VCPU_INIT completed */
+-#define VCPU_INITIALIZED	__vcpu_single_flag(cflags, BIT(0))
+-/* SVE config completed */
+-#define VCPU_SVE_FINALIZED	__vcpu_single_flag(cflags, BIT(1))
+-/* pKVM VCPU setup completed */
+-#define VCPU_PKVM_FINALIZED	__vcpu_single_flag(cflags, BIT(2))
++#define _vcpu_get_flag(v, flagset, ...)	\
++	__vcpu_get_flag(&(v)->arch.flagset, __VA_ARGS__)
++#define _vcpu_set_flag(v, flagset, ...)	\
++	__vcpu_set_flag(&(v)->arch.flagset, __VA_ARGS__)
++#define _vcpu_clear_flag(v, flagset, ...)	\
++	__vcpu_clear_flag(&(v)->arch.flagset, __VA_ARGS__)
++#define _vcpu_test_and_clear_flag(v, flagset, ...)	\
++	__vcpu_test_and_clear_flag(&(v)->arch.flagset, __VA_ARGS__)
+ 
+ /* Physical CPU not in supported_cpus */
+ #define ON_UNSUPPORTED_CPU	__vcpu_single_flag(sflags, BIT(0))
+@@ -1081,6 +1008,12 @@ static inline u64 *___ctxt_sys_reg(const struct kvm_cpu_context *ctxt, int r)
+ 
+ #define ctxt_sys_reg(c,r)	(*__ctxt_sys_reg(c,r))
+ 
++#define kvm_vcpu_get_sp_el1(__vcpu) (__ctxt_sys_reg(&(__vcpu)->arch.ctxt, SP_EL1))
++#define kvm_vcpu_get_vreg(__vcpu, _n) (&(__vcpu)->arch.ctxt.fp_regs.vregs[_n])
++#define kvm_vcpu_get_vregs(__vcpu) (&(__vcpu)->arch.ctxt.fp_regs.vregs)
++#define kvm_vcpu_get_fpsr(__vcpu) (&(__vcpu)->arch.ctxt.fp_regs.fpsr)
++#define kvm_vcpu_get_fpcr(__vcpu) (&(__vcpu)->arch.ctxt.fp_regs.fpcr)
++
+ u64 kvm_vcpu_apply_reg_masks(const struct kvm_vcpu *, enum vcpu_sysreg, u64);
+ 
+ #define __vcpu_assign_sys_reg(v, r, val)				\
+@@ -1413,8 +1346,6 @@ static inline bool __vcpu_has_feature(const struct kvm_arch *ka, int feature)
+ #define kvm_vcpu_has_feature(k, f)	__vcpu_has_feature(&(k)->arch, (f))
+ #define vcpu_has_feature(v, f)	__vcpu_has_feature(&(v)->kvm->arch, (f))
+ 
+-#define kvm_vcpu_initialized(v) vcpu_get_flag(vcpu, VCPU_INITIALIZED)
+-
+ int kvm_trng_call(struct kvm_vcpu *vcpu);
+ #ifdef CONFIG_KVM
+ extern phys_addr_t hyp_mem_base;
 diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
-index 036bf2dff976..e952dec01d74 100644
+index e952dec01d74..b4f579df0beb 100644
 --- a/arch/arm64/kvm/reset.c
 +++ b/arch/arm64/kvm/reset.c
-@@ -218,13 +218,15 @@ void kvm_reset_vcpu(struct kvm_vcpu *vcpu)
- 		pstate = VCPU_RESET_PSTATE_EL1;
+@@ -30,22 +30,11 @@
+ #include <asm/kvm_nested.h>
+ #include <asm/virt.h>
  
- 	/* Reset core registers */
--	memset(vcpu_gp_regs(vcpu), 0, sizeof(*vcpu_gp_regs(vcpu)));
-+	memset(vcpu_gp_regs(vcpu), 0, sizeof(vcpu_gp_regs(vcpu)));
-+	*vcpu_pc(vcpu) = 0;
-+	*vcpu_sp_el0(vcpu) = 0;
- 	memset(&vcpu->arch.ctxt.fp_regs, 0, sizeof(vcpu->arch.ctxt.fp_regs));
- 	vcpu->arch.ctxt.spsr_abt = 0;
- 	vcpu->arch.ctxt.spsr_und = 0;
- 	vcpu->arch.ctxt.spsr_irq = 0;
- 	vcpu->arch.ctxt.spsr_fiq = 0;
--	vcpu_gp_regs(vcpu)->pstate = pstate;
-+	*vcpu_cpsr(vcpu) = pstate;
++#include <kvm/arm64/reset.h>
++
+ /* Maximum phys_shift supported for any VM on this host */
+ static u32 __ro_after_init kvm_ipa_limit;
+ unsigned int __ro_after_init kvm_host_sve_max_vl;
+-
+-/*
+- * ARMv8 Reset Values
+- */
+-#define VCPU_RESET_PSTATE_EL1	(PSR_MODE_EL1h | PSR_A_BIT | PSR_I_BIT | \
+-				 PSR_F_BIT | PSR_D_BIT)
+-
+-#define VCPU_RESET_PSTATE_EL2	(PSR_MODE_EL2h | PSR_A_BIT | PSR_I_BIT | \
+-				 PSR_F_BIT | PSR_D_BIT)
+-
+-#define VCPU_RESET_PSTATE_SVC	(PSR_AA32_MODE_SVC | PSR_AA32_A_BIT | \
+-				 PSR_AA32_I_BIT | PSR_AA32_F_BIT)
+-
+ unsigned int __ro_after_init kvm_sve_max_vl;
+ 
+ int __init kvm_arm_init_sve(void)
+@@ -191,7 +180,6 @@ void kvm_reset_vcpu(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_reset_state reset_state;
+ 	bool loaded;
+-	u32 pstate;
+ 
+ 	spin_lock(&vcpu->arch.mp_state_lock);
+ 	reset_state = vcpu->arch.reset_state;
+@@ -210,23 +198,7 @@ void kvm_reset_vcpu(struct kvm_vcpu *vcpu)
+ 		kvm_vcpu_reset_sve(vcpu);
+ 	}
+ 
+-	if (vcpu_el1_is_32bit(vcpu))
+-		pstate = VCPU_RESET_PSTATE_SVC;
+-	else if (vcpu_has_nv(vcpu))
+-		pstate = VCPU_RESET_PSTATE_EL2;
+-	else
+-		pstate = VCPU_RESET_PSTATE_EL1;
+-
+-	/* Reset core registers */
+-	memset(vcpu_gp_regs(vcpu), 0, sizeof(vcpu_gp_regs(vcpu)));
+-	*vcpu_pc(vcpu) = 0;
+-	*vcpu_sp_el0(vcpu) = 0;
+-	memset(&vcpu->arch.ctxt.fp_regs, 0, sizeof(vcpu->arch.ctxt.fp_regs));
+-	vcpu->arch.ctxt.spsr_abt = 0;
+-	vcpu->arch.ctxt.spsr_und = 0;
+-	vcpu->arch.ctxt.spsr_irq = 0;
+-	vcpu->arch.ctxt.spsr_fiq = 0;
+-	*vcpu_cpsr(vcpu) = pstate;
++	kvm_reset_vcpu_core_regs(vcpu);
  
  	/* Reset system registers */
  	kvm_reset_sys_regs(vcpu);
-diff --git a/include/kvm/arm64/kvm_emulate.h b/include/kvm/arm64/kvm_emulate.h
-index 25322b95af21..0e16d18e53d2 100644
---- a/include/kvm/arm64/kvm_emulate.h
-+++ b/include/kvm/arm64/kvm_emulate.h
-@@ -77,14 +77,14 @@ static inline void kvm_skip_instr(struct kvm_vcpu *vcpu)
- static __always_inline unsigned long vcpu_get_reg(const struct kvm_vcpu *vcpu,
- 						  u8 reg_num)
- {
--	return (reg_num == 31) ? 0 : vcpu_gp_regs(vcpu)->regs[reg_num];
-+	return (reg_num == 31) ? 0 : vcpu_gp_regs(vcpu)[reg_num];
- }
+diff --git a/include/kvm/arm64/kvm_host.h b/include/kvm/arm64/kvm_host.h
+index d1eccbe44c50..d36ebea4d60f 100644
+--- a/include/kvm/arm64/kvm_host.h
++++ b/include/kvm/arm64/kvm_host.h
+@@ -41,6 +41,86 @@ unsigned long kvm_mmio_read_buf(const void *buf, unsigned int len);
+ int kvm_handle_mmio_return(struct kvm_vcpu *vcpu);
+ int io_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa);
  
- static __always_inline void vcpu_set_reg(struct kvm_vcpu *vcpu, u8 reg_num,
- 					 unsigned long val)
- {
- 	if (reg_num != 31)
--		vcpu_gp_regs(vcpu)->regs[reg_num] = val;
-+		vcpu_gp_regs(vcpu)[reg_num] = val;
- }
++/*
++ * Each 'flag' is composed of a comma-separated triplet:
++ *
++ * - the flag-set it belongs to in the vcpu->arch structure
++ * - the value for that flag
++ * - the mask for that flag
++ *
++ *  __vcpu_single_flag() builds such a triplet for a single-bit flag.
++ * unpack_vcpu_flag() extract the flag value from the triplet for
++ * direct use outside of the flag accessors.
++ */
++#define __vcpu_single_flag(_set, _f)	_set, (_f), (_f)
++
++#define __unpack_flag(_set, _f, _m)	_f
++#define unpack_vcpu_flag(...)		__unpack_flag(__VA_ARGS__)
++
++#define __build_check_flag(flagset, f, m)				\
++	do {								\
++		/* Check that the flags fit in the mask */		\
++		BUILD_BUG_ON(HWEIGHT(m) != HWEIGHT((f) | (m)));		\
++		/* Check that the flags fit in the type */		\
++		BUILD_BUG_ON((sizeof(*(flagset)) * 8) <= __fls(m));	\
++	} while (0)
++
++#define __vcpu_get_flag(flagset, f, m)				\
++	({							\
++		__build_check_flag((flagset), f, m);		\
++								\
++		READ_ONCE(*(flagset)) & (m);			\
++	})
++
++#define __vcpu_set_flag(flagset, f, m)				\
++	do {							\
++		typeof(*flagset) *fset;				\
++								\
++		__build_check_flag((flagset), f, m);		\
++								\
++		fset = (flagset);				\
++		__vcpu_flags_preempt_disable();			\
++		if (HWEIGHT(m) > 1)				\
++			*fset &= ~(m);				\
++		*fset |= (f);					\
++		__vcpu_flags_preempt_enable();			\
++	} while (0)
++
++#define __vcpu_clear_flag(flagset, f, m)			\
++	do {							\
++		typeof(*flagset) *fset;				\
++								\
++		__build_check_flag(flagset, f, m);		\
++								\
++		fset = (flagset);				\
++		__vcpu_flags_preempt_disable();			\
++		*fset &= ~(m);					\
++		__vcpu_flags_preempt_enable();			\
++	} while (0)
++
++#define __vcpu_test_and_clear_flag(flagset, f, m)		\
++	({							\
++		typeof(*flagset) set;				\
++								\
++		set = __vcpu_get_flag((flagset), f, m);		\
++		__vcpu_clear_flag((flagset), f, m);		\
++								\
++		set;						\
++	})
++
++#define vcpu_get_flag(v,  ...)	_vcpu_get_flag((v), __VA_ARGS__)
++#define vcpu_set_flag(v, ...)	_vcpu_set_flag((v), __VA_ARGS__)
++#define vcpu_clear_flag(v, ...)	_vcpu_clear_flag((v), __VA_ARGS__)
++#define vcpu_test_and_clear_flag(v, ...)	\
++	_vcpu_test_and_clear_flag((v), __VA_ARGS__)
++
++/* KVM_ARM_VCPU_INIT completed */
++#define VCPU_INITIALIZED	__vcpu_single_flag(cflags, BIT(0))
++/* SVE config completed */
++#define VCPU_SVE_FINALIZED	__vcpu_single_flag(cflags, BIT(1))
++/* pKVM VCPU setup completed */
++#define VCPU_PKVM_FINALIZED	__vcpu_single_flag(cflags, BIT(2))
++
+ /* Exception pending */
+ #define PENDING_EXCEPTION	__vcpu_single_flag(iflags, BIT(0))
+ /*
+@@ -76,6 +156,8 @@ int io_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa);
+ #define EXCEPT_AA64_EL2_FIQ	__vcpu_except_flags(6)
+ #define EXCEPT_AA64_EL2_SERR	__vcpu_except_flags(7)
  
- static inline u32 kvm_vcpu_hvc_get_imm(const struct kvm_vcpu *vcpu)
++#define kvm_vcpu_initialized(v) vcpu_get_flag(v, VCPU_INITIALIZED)
++
+ #define vcpu_is_protected(vcpu)		kvm_vm_is_protected((vcpu)->kvm)
+ 
+ /*
+diff --git a/include/kvm/arm64/reset.h b/include/kvm/arm64/reset.h
+new file mode 100644
+index 000000000000..a0bca4769b13
+--- /dev/null
++++ b/include/kvm/arm64/reset.h
+@@ -0,0 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++
++#ifndef __KVM_ARM64_RESET_H__
++#define __KVM_ARM64_RESET_H__
++
++void kvm_reset_vcpu_core_regs(struct kvm_vcpu *vcpu);
++
++#endif /* __KVM_ARM64_RESET_H__ */
+diff --git a/virt/kvm/arm64/Makefile.kvm b/virt/kvm/arm64/Makefile.kvm
+index ac969bf1c016..c5e1db570a09 100644
+--- a/virt/kvm/arm64/Makefile.kvm
++++ b/virt/kvm/arm64/Makefile.kvm
+@@ -9,4 +9,5 @@ shared-arm64-obj := \
+ 	$(KVM_ARM64)/guest.o \
+ 	$(KVM_ARM64)/handle_exit.o \
+ 	$(KVM_ARM64)/mmio.o \
++	$(KVM_ARM64)/reset.o \
+ 
 diff --git a/virt/kvm/arm64/guest.c b/virt/kvm/arm64/guest.c
-index 83e33e0143b9..e283a4456df8 100644
+index e283a4456df8..35ba03033b4c 100644
 --- a/virt/kvm/arm64/guest.c
 +++ b/virt/kvm/arm64/guest.c
-@@ -81,16 +81,16 @@ static void *core_reg_addr(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
- 	     KVM_REG_ARM_CORE_REG(regs.regs[30]):
- 		off -= KVM_REG_ARM_CORE_REG(regs.regs[0]);
- 		off /= 2;
--		return &vcpu_gp_regs(vcpu)->regs[off];
-+		return &vcpu_gp_regs(vcpu)[off];
- 
- 	case KVM_REG_ARM_CORE_REG(regs.sp):
--		return &vcpu_gp_regs(vcpu)->sp;
-+		return vcpu_sp_el0(vcpu);
- 
- 	case KVM_REG_ARM_CORE_REG(regs.pc):
- 		return vcpu_pc(vcpu);
- 
- 	case KVM_REG_ARM_CORE_REG(regs.pstate):
--		return &vcpu_gp_regs(vcpu)->pstate;
-+		return vcpu_cpsr(vcpu);
+@@ -93,7 +93,7 @@ static void *core_reg_addr(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
+ 		return vcpu_cpsr(vcpu);
  
  	case KVM_REG_ARM_CORE_REG(sp_el1):
- 		return __ctxt_sys_reg(&vcpu->arch.ctxt, SP_EL1);
+-		return __ctxt_sys_reg(&vcpu->arch.ctxt, SP_EL1);
++		return kvm_vcpu_get_sp_el1(vcpu);
+ 
+ 	case KVM_REG_ARM_CORE_REG(elr_el1):
+ 		return __ctxt_sys_reg(&vcpu->arch.ctxt, ELR_EL1);
+@@ -117,13 +117,13 @@ static void *core_reg_addr(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
+ 	     KVM_REG_ARM_CORE_REG(fp_regs.vregs[31]):
+ 		off -= KVM_REG_ARM_CORE_REG(fp_regs.vregs[0]);
+ 		off /= 4;
+-		return &vcpu->arch.ctxt.fp_regs.vregs[off];
++		return kvm_vcpu_get_vreg(vcpu, off);
+ 
+ 	case KVM_REG_ARM_CORE_REG(fp_regs.fpsr):
+-		return &vcpu->arch.ctxt.fp_regs.fpsr;
++		return  kvm_vcpu_get_fpsr(vcpu);
+ 
+ 	case KVM_REG_ARM_CORE_REG(fp_regs.fpcr):
+-		return &vcpu->arch.ctxt.fp_regs.fpcr;
++		return  kvm_vcpu_get_fpcr(vcpu);
+ 
+ 	default:
+ 		return NULL;
+diff --git a/virt/kvm/arm64/reset.c b/virt/kvm/arm64/reset.c
+new file mode 100644
+index 000000000000..257f28373566
+--- /dev/null
++++ b/virt/kvm/arm64/reset.c
+@@ -0,0 +1,43 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include <linux/kvm_host.h>
++#include <asm/pstate.h>
++#include <asm/kvm_emulate.h>
++#include <asm/kvm_nested.h>
++#include <kvm/arm64/reset.h>
++
++/*
++ * ARMv8 Reset Values
++ */
++#define VCPU_RESET_PSTATE_EL1	(PSR_MODE_EL1h | PSR_A_BIT | PSR_I_BIT | \
++				 PSR_F_BIT | PSR_D_BIT)
++
++#define VCPU_RESET_PSTATE_EL2	(PSR_MODE_EL2h | PSR_A_BIT | PSR_I_BIT | \
++				 PSR_F_BIT | PSR_D_BIT)
++
++#define VCPU_RESET_PSTATE_SVC	(PSR_AA32_MODE_SVC | PSR_AA32_A_BIT | \
++				 PSR_AA32_I_BIT | PSR_AA32_F_BIT)
++
++void kvm_reset_vcpu_core_regs(struct kvm_vcpu *vcpu)
++{
++	u64 pstate;
++
++	if (vcpu_el1_is_32bit(vcpu))
++		pstate = VCPU_RESET_PSTATE_SVC;
++	else if (vcpu_has_nv(vcpu))
++		pstate = VCPU_RESET_PSTATE_EL2;
++	else
++		pstate = VCPU_RESET_PSTATE_EL1;
++
++	/* Reset core registers */
++	memset(vcpu_gp_regs(vcpu), 0, sizeof(vcpu_gp_regs(vcpu)));
++	*vcpu_pc(vcpu) = 0;
++	*vcpu_sp_el0(vcpu) = 0;
++	memset(kvm_vcpu_get_vregs(vcpu), 0, sizeof(*kvm_vcpu_get_vregs(vcpu)));
++	memset(kvm_vcpu_get_fpsr(vcpu), 0, sizeof(*kvm_vcpu_get_fpsr(vcpu)));
++	memset(kvm_vcpu_get_fpcr(vcpu), 0, sizeof(*kvm_vcpu_get_fpcr(vcpu)));
++	vcpu->arch.ctxt.spsr_abt = 0;
++	vcpu->arch.ctxt.spsr_und = 0;
++	vcpu->arch.ctxt.spsr_irq = 0;
++	vcpu->arch.ctxt.spsr_fiq = 0;
++	*vcpu_cpsr(vcpu) = pstate;
++}
 -- 
 2.51.0
 
