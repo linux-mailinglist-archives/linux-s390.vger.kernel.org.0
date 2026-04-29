@@ -1,51 +1,51 @@
-Return-Path: <linux-s390+bounces-19184-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19185-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WJrhEqzH8WnnkQEAu9opvQ
-	(envelope-from <linux-s390+bounces-19184-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 29 Apr 2026 10:56:12 +0200
+	id ILv1JOrK8WlCkgEAu9opvQ
+	(envelope-from <linux-s390+bounces-19185-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 29 Apr 2026 11:10:02 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9ED34916A3
-	for <lists+linux-s390@lfdr.de>; Wed, 29 Apr 2026 10:56:11 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B1D649195B
+	for <lists+linux-s390@lfdr.de>; Wed, 29 Apr 2026 11:10:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 19E6A3029263
-	for <lists+linux-s390@lfdr.de>; Wed, 29 Apr 2026 08:55:30 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id E13923002324
+	for <lists+linux-s390@lfdr.de>; Wed, 29 Apr 2026 09:10:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6618A3B47FF;
-	Wed, 29 Apr 2026 08:55:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 413683BADA3;
+	Wed, 29 Apr 2026 09:09:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HBQ+lea/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z+MvByLP"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 424B93AD509;
-	Wed, 29 Apr 2026 08:55:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9E93B9DA1;
+	Wed, 29 Apr 2026 09:09:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777452929; cv=none; b=Tv1t4Wgl11mxjDeYTxV2tdKvf+Et9hy1/9rMubFS/R6ZA3f4XlQ4unJGcBINxd3YguiIU3oEd1ZlvLHFC4fjvMGirYtMg/6MaGTU/x8WPtnEm8XK2O3CyKzGD21rdYKVmJAFtScMUW5LuOCX6LeJ04th4WknK1bGEE0LsHRE+z4=
+	t=1777453799; cv=none; b=O8Mq/rcCMaTBzqPFP8etAMb42ElWbjbI9v5JpoMAmB0M6qxoFmDlC6Q6SUivYa+pLVIUMMRXP0U5jiXBUD8+8KeIajYI56xMCHj0YbTi2IIpjju3TZzkNqWlM0d85cFZ3RzrbDOlbg0wQE44v1UvUs+Zj1hwRziQHyTy3emVigo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777452929; c=relaxed/simple;
-	bh=BYAsnMF2Q55jJ642xlk+wrPGoiz62bmXpwIrT3ZZNS4=;
+	s=arc-20240116; t=1777453799; c=relaxed/simple;
+	bh=U+qtUGkVcFIOlc8S8UBttfIQrvSv8Unx0HYdPMMzu/s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FYck7u4UrjRsgtKHRRHs5fd3ObJaYDN600906KYZU7hQu8a819TiF82YOwO7qn8wxMK/9zSYOIOzZEwTOSxmM8Qx0CaB2T/AAeEgBdLm5j6j4h3yElgpl4J+9ceZTyJ44o/AkiI9OnXvRIHSxsN9mfT04no64ZHXRNkdUsqQOTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HBQ+lea/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CA99C19425;
-	Wed, 29 Apr 2026 08:55:26 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=FnBzIFw3iUcNnDSw8cZMzS4sueROAhZC1hT+QetZA37ITmMEsMAQ0LPRc6jGuC3UO0q6ld0ivyvPoMwUyxrhSyjYqe3NhOP9UI03ie7MYk3wGn2ihGpFEa41GkO5d/gqL81NHQqa5+U4sOm1rD7x8po8n9HnxVUs1LYgWNw3D3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z+MvByLP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7CA9C19425;
+	Wed, 29 Apr 2026 09:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777452929;
-	bh=BYAsnMF2Q55jJ642xlk+wrPGoiz62bmXpwIrT3ZZNS4=;
+	s=k20201202; t=1777453798;
+	bh=U+qtUGkVcFIOlc8S8UBttfIQrvSv8Unx0HYdPMMzu/s=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HBQ+lea/rcWyMyjYxlVolA7RNQ0wNGKl2KxlA4SrA63WSTuSaGYpS/3/MQ4E8HsNO
-	 BPqCSZyVWNKJJxWhEXuDCUFOICc2F/ZlKoNMsqJW20VhdSKANlhDuhNelRnbKDmiHf
-	 sTx3mMCM+m4hI+oOmn9NaPZ6OFNWTLxor3apdkGCCGf+XjXBVJIACuYYtrn79TCSSt
-	 CilBb13JbIDnbq9MxVu/HNU5GjJQk3T8rzp96xWZs2j33PZHjtZZoiN64bOLbo1uEx
-	 EiaDapt7QYd3ckEbyRrWh/vqK+jWl62wY+gDKzVw8Ubt9AK+m+/GNXvK5dqCqlkwKi
-	 9C11E3XJ2esnw==
-Message-ID: <e5a06ee7-0916-44af-a90c-7ff7cf1397c8@kernel.org>
-Date: Wed, 29 Apr 2026 10:55:25 +0200
+	b=Z+MvByLPCyLX3thXV7RgPBjsjmxkuAXCIy4GXER9SykX7CHrlgSjjUZyquB4KqDcp
+	 jE6yx5hmr/1rBMFnHAQeb4njCzfxnDS9Co6U2mZwBoMBNYEkTNvqPRNWu+Qd+DIyyr
+	 HWM4uamBtdonUqzUYZM5AzY8WIBP3Q6Gfu2ml4ehQ4kOOLyQgQeMAwj23hqJX5T/hE
+	 E2ZZlTeKtyQ10nWnUmrbLFCRU15KsZQIGtahN+iRUNNOFYYOepadE5UHGhl5Dd0Jow
+	 3SJ9urBDneMgL5mF0Cw1Z+3nieDQZ3O47aX5O/vbcVAbyuPItDIlozZqV+nz4/CdJG
+	 RXiuFE/4QctTg==
+Message-ID: <7f98f461-62a7-455d-a7a8-cb8928465946@kernel.org>
+Date: Wed, 29 Apr 2026 11:09:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -55,17 +55,19 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v1 2/3] mm: process_mrelease: skip LRU movement for
  exclusive file folios
-To: Minchan Kim <minchan@kernel.org>, Michal Hocko <mhocko@suse.com>
+To: Michal Hocko <mhocko@suse.com>, Minchan Kim <minchan@kernel.org>
 Cc: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org,
  hca@linux.ibm.com, linux-s390@vger.kernel.org, brauner@kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, timmurray@google.com
-References: <20260421230239.172582-1-minchan@kernel.org>
- <20260421230239.172582-3-minchan@kernel.org> <aesg-sj6_VmXyqxb@tiehlicka>
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, timmurray@google.com,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>
+References: <20260421230239.172582-3-minchan@kernel.org>
+ <aesg-sj6_VmXyqxb@tiehlicka>
  <7c7da8ae-cd39-4edf-b94f-c79ab85df456@kernel.org>
  <aevBRh08X4UTMUj9@google.com> <ae8NT0tLt7eBmH6j@tiehlicka>
  <CAJuCfpHQdA7C50V2WjNrdYcp7feV5ukgxJf+vMNEcp0P1SGEow@mail.gmail.com>
  <ae-Zu-VAzAA7SdLa@tiehlicka> <ae_roPR64e6sY_fN@google.com>
  <afBaJLLFigkdszov@tiehlicka> <afFco71vwmpQy3pk@google.com>
+ <afG-4hq7Hr62Uu6J@tiehlicka>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -112,65 +114,88 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <afFco71vwmpQy3pk@google.com>
+In-Reply-To: <afG-4hq7Hr62Uu6J@tiehlicka>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: A9ED34916A3
+X-Rspamd-Queue-Id: 2B1D649195B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19184-lists,linux-s390=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19185-lists,linux-s390=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[david@kernel.org,linux-s390@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	TO_DN_SOME(0.00)[]
+
+On 4/29/26 10:18, Michal Hocko wrote:
+> On Tue 28-04-26 18:19:31, Minchan Kim wrote:
+>> On Tue, Apr 28, 2026 at 08:56:36AM +0200, Michal Hocko wrote:
+> [...]
+>>>         DESCRIPTION
+>>>           The process_mrelease() system call is used to free the memory of
+>>>           an exiting process.
+>>
+>> "Free the memory of an exiting process" implies all memory, not just
+>> anonymous. User cannot know it will free only anonymous, and I am trying to
+>> make it work as intended by completing a symmetric reclamation path.
+> 
+> Page cache doesn't belong to any process.
+> 
+> [...]
+> 
+>> >From cf292f8f8ead8df9161aad342c36633ffa90257f Mon Sep 17 00:00:00 2001
+>> From: Minchan Kim <minchan@kernel.org>
+>> Date: Tue, 28 Apr 2026 16:39:06 -0700
+>> Subject: [PATCH] mm: process_mrelease: skip LRU movement and expedite clean
+>>  file folio reclaim
+> 
+> I will let others to discuss this. I maintain my position that this is a
+> hack for a very particular use case and you still seem to not explain
+> non-Android users of the syscall. Anyway, I will not repeat myself here.
+> 
+
+One thing that got lost in the thread here: this code path is not
+process_mrelease specific?
+
+We seem to end up in __oom_reap_task_mm() also from ordinary oom_reap_task_mm().
+
+There, we unconditionally set MMF_UNSTABLE to then zap_vma_for_reaping() where
+memory can be "reaped".
+
+So why is there "process_mrelease" part of the patch subject at all?
 
 
->  
-> -static bool __oom_reap_task_mm(struct mm_struct *mm)
-> +static bool __oom_reap_task_mm(struct mm_struct *mm, bool try_evict_file_folios)
->  {
->  	struct vm_area_struct *vma;
->  	bool ret = true;
-> @@ -556,12 +556,14 @@ static bool __oom_reap_task_mm(struct mm_struct *mm)
->  						mm, vma->vm_start,
->  						vma->vm_end);
->  			tlb_gather_mmu(&tlb, mm);
-> +			tlb.try_evict_file_folios = try_evict_file_folios;
-> +			struct zap_details details = { .ignore_access = try_evict_file_folios };
->  			if (mmu_notifier_invalidate_range_start_nonblock(&range)) {
->  				tlb_finish_mmu(&tlb);
->  				ret = false;
->  				continue;
->  			}
-> -			unmap_page_range(&tlb, vma, range.start, range.end, NULL);
-> +			unmap_page_range(&tlb, vma, range.start, range.end, &details);
->  			mmu_notifier_invalidate_range_end(&range);
+The only other scenario where we set MMF_UNSTABLE seems to be when we run into
+trouble during fork(). CCing Liam, I wonder what it would take to remove
+MMF_UNSTABLE from fork code now that we handle some memory freeing while
+aborting fork() "more elegantly".
+
+Unrelated stupid question: would things be clearer if we could rename
+MMF_UNSTABLE to MMF_OOM_REAPING once figure out whether aborting fork() still
+really needs it?
 
 
-This API was changed in the meantime into zap_vma_for_reaping(), and I do not
-want to pass details on the new interface. If so, zap_vma_for_reaping() would
-handle that internally I guess.
+Back to Michal's original question: I guess the real question is the interaction
+with memory reclaim that would just collect the access bits beforehand.
 
 -- 
 Cheers,
