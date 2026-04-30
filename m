@@ -1,52 +1,52 @@
-Return-Path: <linux-s390+bounces-19220-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19221-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mAz6JN7M8mmWuQEAu9opvQ
-	(envelope-from <linux-s390+bounces-19220-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2026 05:30:38 +0200
+	id CEc0CeXN8mnOuQEAu9opvQ
+	(envelope-from <linux-s390+bounces-19221-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2026 05:35:01 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9966149CE68
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2026 05:30:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CA3D49CF97
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2026 05:34:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 2011C3034840
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2026 03:26:59 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id BA916305093C
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2026 03:28:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F54936AB61;
-	Thu, 30 Apr 2026 03:26:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A838351C1C;
+	Thu, 30 Apr 2026 03:26:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V2/IHGrf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UzTbqLo/"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC9B369992;
-	Thu, 30 Apr 2026 03:26:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3697333F5A8;
+	Thu, 30 Apr 2026 03:26:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777519563; cv=none; b=XaLxvcBiAPP6DhgrCOMAaZ9bognTDpkYV3kGRnEBIqmxr6ZaSCdp4hw+IVwYc2KaS9xcc7wrOCaEgg686T2oKpnivI6BQ5+9wHVvhtNf6574w4rC3Wc/pXqTKzuGr96bu8pkFRcXo7MnXGYYAohGemCL165tIdWdWhWHMZHYhGg=
+	t=1777519574; cv=none; b=dlEUWH9hrnbUWjeTrZV1w/tMtGnUZVMMYKhUdXRal7PbMupKFCZv+hL/UyQBayP7pca03FGv3ZsxRhIAKYP3tQb3SG/r/Bw4+zuwz2K3MmcyUsF68w6CCARw2/mqU5O+DeisSfFHLHNOvbXFTPfgZhdoHin5YNYVzBP/TLw3gkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777519563; c=relaxed/simple;
-	bh=uKdK5DO8u2N0tp/g6YrMeqTyIWEtsNmEtR2OQZOamME=;
+	s=arc-20240116; t=1777519574; c=relaxed/simple;
+	bh=THrrdSGjgRzaSbCrGespfxo5C/AWLl4KlIEGbaUs1N8=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=BRhZzyVIkxenn87ak5cME6OnUs1keuvNg26ziLgDjtzgZlvf4N7/Zs7SY9BkGPN7fk0P5qzXR2oQvsLJRfZh+p1lHZeO4QhAQrHqlEQVMSsuKL1XbLLD+aWGXhSz4COf3ujC/kz5LM+nlPaqJ4lBUrPDcs0h9T8zuWHJDrjMYjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V2/IHGrf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2178CC2BCC6;
-	Thu, 30 Apr 2026 03:26:03 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=i8IugMoAHLoazn4827waPdWmbGSaPzBCJ0XqoEQ+nBFvhFI33fjkcrKEAHNcfhbGvAbycjT6wHMoCG4nUuYZv7j2+uDESNIixSvnAw/bs6vqSMiLh/ozQG59cxfD2XTQuoeUc34qkSpkn3GEW9TQ9wXJ8YwiWabEc3F9YpOp1z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UzTbqLo/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBB14C2BCB9;
+	Thu, 30 Apr 2026 03:26:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777519563;
-	bh=uKdK5DO8u2N0tp/g6YrMeqTyIWEtsNmEtR2OQZOamME=;
+	s=k20201202; t=1777519573;
+	bh=THrrdSGjgRzaSbCrGespfxo5C/AWLl4KlIEGbaUs1N8=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=V2/IHGrfyciCnZ68jtYyLcCX+9M7ThJMZaRbPHBvBmKoRk+K76qcgOuTXYyo/kQf/
-	 h5OTplRTliCc4X63Y6FlfrVyvAdg5KYdnsvxSXwm9hkZAf8pdGxkdX/t+wSKmPKykm
-	 3o2z+7QFO6wUIvvg+B0mdIk+nx1z6uoJGIDFvup9VAMO4drdvfxfJ8iFN05E11UcZy
-	 rOwhunXd1D1ig0KRo5uu1vq5DA20gcZZ1Y5ckR+SNFRn+SNJ3mB2LionwukPg6k1ck
-	 b3Kp9ZgtCTOh6fyut2FuoH+jqJa7iiIMSyJ3HPmYm6RuG1wUntuJYtMYTQhd5hUjoS
-	 OIP4lynLo8F1w==
+	b=UzTbqLo/5B2o+wNCv7hc433OYzKq4siikxTyngUKDMF3HAeUjhBhAk77XupcxRUvU
+	 8AQeEfOAPdqCa9Uxdu60usplkxVCGl2lAhF6QZOdLWIjERQA7vDLeINPZy/5ERe7Wc
+	 ghiINRi89Td2t+djUJI7HVkMnXuK1rdp0d0YYVr2nHuJNC05bQejhStGEvFx6LEv4v
+	 Q0foheq2svz+12OFi+UHX6I/M6rycHRVU+nwE7Bew/REJdDDUJFX4jYb42DVn24wgZ
+	 Adw0Roiy4+syrE/ThlZQ2sCXbjShOe4cVpKtA73HBp9XxbgCtMQ6+9J8F7NCLPpp9Q
+	 EzM7rlb9XVxGg==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7CFE43809A07;
-	Thu, 30 Apr 2026 03:25:19 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3FE533809A07;
+	Thu, 30 Apr 2026 03:25:30 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
@@ -55,25 +55,30 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2 0/6] change young flag check functions to return bool
+Subject: Re: [PATCH v5 0/2] Fix bugs and performance of kstack offset
+ randomisation
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <177751951805.2274119.14382362682727203864.git-patchwork-notify@kernel.org>
-Date: Thu, 30 Apr 2026 03:25:18 +0000
-References: <cover.1774075004.git.baolin.wang@linux.alibaba.com>
-In-Reply-To: <cover.1774075004.git.baolin.wang@linux.alibaba.com>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: linux-riscv@lists.infradead.org, akpm@linux-foundation.org,
- david@kernel.org, ljs@kernel.org, Liam.Howlett@oracle.com, vbabka@kernel.org,
- rppt@kernel.org, surenb@google.com, mhocko@suse.com,
- linux-arm-kernel@lists.infradead.org, x86@kernel.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-X-Rspamd-Queue-Id: 9966149CE68
+ <177751952875.2274119.16398594062786998071.git-patchwork-notify@kernel.org>
+Date: Thu, 30 Apr 2026 03:25:28 +0000
+References: <20260303150840.3789438-1-ryan.roberts@arm.com>
+In-Reply-To: <20260303150840.3789438-1-ryan.roberts@arm.com>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: linux-riscv@lists.infradead.org, catalin.marinas@arm.com, will@kernel.org,
+ chenhuacai@kernel.org, maddy@linux.ibm.com, mpe@ellerman.id.au,
+ pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, hca@linux.ibm.com,
+ gor@linux.ibm.com, agordeev@linux.ibm.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, kees@kernel.org,
+ gustavoars@kernel.org, arnd@arndb.de, mark.rutland@arm.com, Jason@zx2c4.com,
+ ardb@kernel.org, jeremy.linton@arm.com, david.laight.linux@gmail.com,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+ linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
+X-Rspamd-Queue-Id: 3CA3D49CF97
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
@@ -81,54 +86,50 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19220-lists,linux-s390=lfdr.de,linux-riscv];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19221-lists,linux-s390=lfdr.de,linux-riscv];
+	FREEMAIL_CC(0.00)[lists.infradead.org,arm.com,kernel.org,linux.ibm.com,ellerman.id.au,dabbelt.com,eecs.berkeley.edu,linutronix.de,redhat.com,alien8.de,linux.intel.com,arndb.de,zx2c4.com,gmail.com,vger.kernel.org,lists.linux.dev,lists.ozlabs.org];
 	FROM_NEQ_ENVFROM(0.00)[patchwork-bot@kernel.org,linux-s390@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_TWELVE(0.00)[18];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[31];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FROM_NO_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,linux-foundation.org:email]
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 
 Hello:
 
 This series was applied to riscv/linux.git (fixes)
-by Andrew Morton <akpm@linux-foundation.org>:
+by Kees Cook <kees@kernel.org>:
 
-On Sat, 21 Mar 2026 14:42:48 +0800 you wrote:
-> This is a cleanup patchset to change all young flag check functions to
-> return bool, as discussed with David in the previous thread[1]. Since
-> callers only care about whether the young flag was set, returning bool
-> makes the intention clearer. No functional changes intended.
+On Tue,  3 Mar 2026 15:08:37 +0000 you wrote:
+> [Kees; I'm hoping this is now good-to-go via your hardening tree? It would be
+> good to get some linux-next testing.]
 > 
-> Ran mm selftests on Arm64 and x86 machines, and no issues were found.
+> Hi All,
+> 
+> As I reported at [1], kstack offset randomisation suffers from a couple of bugs
+> and, on arm64 at least, the performance is poor. This series attempts to fix
+> both; patch 1 provides back-portable fixes for the functional bugs. Patch 2
+> proposes a performance improvement approach.
 > 
 > [...]
 
 Here is the summary with links:
-  - [v2,1/6] mm: change to return bool for ptep_test_and_clear_young()
-    https://git.kernel.org/riscv/c/a62ca3f40fea
-  - [v2,2/6] mm: change to return bool for ptep_clear_flush_young()/clear_flush_young_ptes()
-    https://git.kernel.org/riscv/c/06c4dfa3ced6
-  - [v2,3/6] mm: change to return bool for pmdp_test_and_clear_young()
-    https://git.kernel.org/riscv/c/42e26354c4ef
-  - [v2,4/6] mm: change to return bool for pmdp_clear_flush_young()
-    https://git.kernel.org/riscv/c/2d46a3974721
-  - [v2,5/6] mm: change to return bool for pudp_test_and_clear_young()
-    https://git.kernel.org/riscv/c/fb87c8827297
-  - [v2,6/6] mm: change to return bool for the MMU notifier's young flag check
-    https://git.kernel.org/riscv/c/1fc7dc675e26
+  - [v5,1/2] randomize_kstack: Maintain kstack_offset per task
+    https://git.kernel.org/riscv/c/37beb4256016
+  - [v5,2/2] randomize_kstack: Unify random source across arches
+    https://git.kernel.org/riscv/c/a96ef5848cb0
 
 You are awesome, thank you!
 -- 
