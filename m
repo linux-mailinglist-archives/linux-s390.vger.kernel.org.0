@@ -1,72 +1,72 @@
-Return-Path: <linux-s390+bounces-19295-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19291-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oHadHiah9WkWNgIAu9opvQ
-	(envelope-from <linux-s390+bounces-19295-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Sat, 02 May 2026 09:00:54 +0200
+	id ePu9FFeh9WkWNgIAu9opvQ
+	(envelope-from <linux-s390+bounces-19291-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Sat, 02 May 2026 09:01:43 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 591F84B1344
-	for <lists+linux-s390@lfdr.de>; Sat, 02 May 2026 09:00:54 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61CFB4B136A
+	for <lists+linux-s390@lfdr.de>; Sat, 02 May 2026 09:01:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 5F7103014A29
-	for <lists+linux-s390@lfdr.de>; Sat,  2 May 2026 07:00:33 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 077853007B09
+	for <lists+linux-s390@lfdr.de>; Sat,  2 May 2026 07:00:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 890D22FF170;
-	Sat,  2 May 2026 07:00:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 978E32FFF8F;
+	Sat,  2 May 2026 07:00:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SeuBMfYb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eH/+rImX"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E5CC30C61F
-	for <linux-s390@vger.kernel.org>; Sat,  2 May 2026 07:00:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340532FF147
+	for <linux-s390@vger.kernel.org>; Sat,  2 May 2026 07:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777705214; cv=none; b=unSpNQuumiN6QUiiajAX4UlRcJn5ov6zGoYoCuPTR6vEfbrpm7vp6bDqVb3Y+UFkkNWSTKCo/gDNGrusx4CcQSuNe33/6q3yI4eNrYz4KGbah5TkWDkf36ljqDxUs2c946/lN5IGD1Q73nFCfdBxCfmfIsrg+Ns0N0Nu5ZOMbxU=
+	t=1777705213; cv=none; b=m5qqsgsyBoOVri6bitzUPw8onBNN/kaJzvLuBB2q3EME4iYimF46sa7e0H7ckdECZ9hl6N2h1xn2ODhdxf5Pb4XAXkSqg+jD3Tk7UkSdO+IGxlnhM7Lmtyb5Ta8t3fGgn54IWw3DKSnohEFUUYpW9DviKlRFQamGDmks/bgAzrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777705214; c=relaxed/simple;
-	bh=AXv3Fg1RBRhXkrhLfgtZQHZ3SHCmISd26okTu7YyA9s=;
+	s=arc-20240116; t=1777705213; c=relaxed/simple;
+	bh=91rmZ7HpXZMQRzqJ+APlDS7mfx0zJTjOHRhup1RYxFs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Kf/KVd10X+x8TGpNr9GqcvRlFZU+vKl++pCZlFmLjhYMrYPrrq3e+7raCqZBSLEVMOA11Ia3zxWo9Jc6x7/XZgru7OZiLhVxofo96GvHJNQ3pql3Bzp3+Ih+gtPZaihImGXDSqRLbxhqmMeDGfuHgIkNjSVGTbG7XGBKGkzGWbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SeuBMfYb; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=JgJp+GggmaHcw7lVpI7yI09C2jNBwxXn0rEmwKA8G40RB3kZqbzBHzXD/DHFX4D33hUHHEG+CEUTJdAwhRZEmm/M98nwUAXbtBFi+ojDMDmK6+OmjQEHeelUPEojyKrEj/KDATmues34SzpkRnuh7KHbztgroeKoQ3ck7cgbZ00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eH/+rImX; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2ef37c3f773so903777eec.1
-        for <linux-s390@vger.kernel.org>; Sat, 02 May 2026 00:00:05 -0700 (PDT)
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12df9e440d3so2131545c88.0
+        for <linux-s390@vger.kernel.org>; Sat, 02 May 2026 00:00:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777705204; x=1778310004; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777705206; x=1778310006; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=U6K8oyFDbv3XjzNVf9nE6XxdE+Rb7NWBTjouZbi2tBc=;
-        b=SeuBMfYbO7fVuiuJyzF+7zLV9YcsVKnex322Cr5QvO/90XKsw14S+Z15wpB77V8Edz
-         0Lx9ye9iup1Pv2B+91Y1WuHb3ERV1oqGPSfQ4P37JVReO2NENkCyiJelcbcG5er47i5Q
-         vZwCL5+wqVcRCu1Oe5boSGpYoZcDu4RC4aL4f9P2mqkUvvgXayl4bHMpT8B4zvqmGCd9
-         bzPhPCetgZHEijvMMErB97bRRTYoNamfGBhpI5e9WJ9rQJlrKgIGuoFZy7l0UjTE/xJ7
-         4g74yfbnfy9K+0Ny0M/gmxDY0MkB5czVOAS8Z6aPV6XOwvml7zoIPBkYwYJFj0VH418m
-         FdRA==
+        bh=0Hvpb4pkIwMjbfShD1pPaCPvI8UVK1DoFRvpInh9Nmk=;
+        b=eH/+rImX6+CgCX40Pd3SlzZ5eno3LEIGndb1P/OBTTrdRQtYdVH2i0iaA3R1t5ftZS
+         2kmGeYfQi4P3uVJ7VNlNTLI64OWiZSh2MF71yxvWEffsL45GstKTIeu5tc5IanuUzCDg
+         R94UDZxsVvv8StOzfcybZwxeITkDU3n++hzfXjm+zLYGrJze1lZL0gZ8IgbeecPpCzVK
+         t7jqHbwzXA1GobmYnXUk7Yv4f2HeLqwvXVLUoGwV0/zYj7l0zjJofGymVZlmgKtWnndj
+         Fe1/Cw70nvF8HAFJvd9Xl2HGMxbYyMy7ZHyd0niT+b9/pvY6G3iXDQ3/Q7BXr1aHFbxh
+         rIkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777705204; x=1778310004;
+        d=1e100.net; s=20251104; t=1777705206; x=1778310006;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U6K8oyFDbv3XjzNVf9nE6XxdE+Rb7NWBTjouZbi2tBc=;
-        b=N6qFbU8TP4a/ZtTNBstoKEowyYHqHBkfet2yQpYQbUBdIp/+/zzNjvSjqOJXQ6iR2e
-         SUqbJZg1tgwLOQis9RyW9rW4HHpEnRkiEi+Toqw7WCU4m1spErc9cjgq4O6Iadq6RKWA
-         JtmTltsO/gxx95CnrRrB+/eQquX0HH0ElSm+LVWC2pHSMI+69K+uA0iYDn3srXMKMnbs
-         w+//1sQ27JLeeZbjpylrE9LpIE1pLnxCVwjeCbq1K/Qdy46P/w50UoopVzj6BF4UHBsc
-         RL71OL9Y3ccM9felWOCZBvOZcR55ErLIbxbkaKHyV+UNv8TaSEm+G/4HRz9TpCg89T3s
-         08wA==
-X-Forwarded-Encrypted: i=1; AFNElJ+cSzc7KmZgCF6OsNooAOxAfif5MuDCM9NzkcQWDe3av3Vvlmj9ib3pVBYwzXg5PHTuraSqheq7yyzL@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQpakHanlFjOVTgbmJbGfF0Tz0CuvBJjuy0R3GuASbuh5jMHZI
-	vjoUPoaDZC2zepqr7DvczkOIiSdJVtAVPVLVnR2UOeRBCKyACMDuHzvaimRc2F8ipLOENcNo0Ye
-	VH3wuAEg//A==
-X-Received: from dldz12-n1.prod.google.com ([2002:a05:701b:418c:10b0:12c:91ef:91f4])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6887:b0:128:d219:e169
- with SMTP id a92af1059eb24-12dfd7cacdbmr926932c88.10.1777705204310; Sat, 02
- May 2026 00:00:04 -0700 (PDT)
-Date: Fri,  1 May 2026 23:59:24 -0700
+        bh=0Hvpb4pkIwMjbfShD1pPaCPvI8UVK1DoFRvpInh9Nmk=;
+        b=EhjJkWuFhXVTekxKZl4691bCxwGGwrcACcVfXw0cdTd54xwN9y32WilauNd6DR7Kja
+         hY959wbF6DHGXO6/PGGU2kEWk+glHuqZdx9vpZQwEPHrAm3mM/bef8FBK9USk9dWRIZS
+         /o/9OCT2p+EtGH/e259pHAY4rE6M7nFkCACC7m6iShyBJXInSX8Dl3aPXO82Gp4xyMKB
+         QMPGGdZYEdQjrZ4FCm9vExXbz4u11jPtFaUMAQyVT/pi0X1LYwjiZzV7nJhrwHZYDsXb
+         FDh44yLwwA6IV4YiG5ZLCyILMBRJCJpfCa55JwmYNT+jSr1JqKn0fa2f53uVv0iUyn6H
+         GIsA==
+X-Forwarded-Encrypted: i=1; AFNElJ8K1d8t3Xw9yoWkQeMHn4T4CTskKAk3h8LVvfpaDHswjDh+UTVzAWYxUZFO2ybvZq0heC05VC/hroMB@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYpNwmJZhlL4qECQruQMBCqvWpl/ziZq8zdvms4yFO6PPMhMIC
+	85vSdPoUHnrPPBr0bTOg/b7Mc2UBFW5qKuMMvZ0N+5CCjnIcZX88+2eASdyGcCnpslcwRTkQDNs
+	OU+wZwcsNDQ==
+X-Received: from dltt17.prod.google.com ([2002:a05:701a:c971:b0:12a:c5dd:73f9])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:e994:b0:128:cea1:7e3b
+ with SMTP id a92af1059eb24-12dfd824dacmr838017c88.23.1777705206125; Sat, 02
+ May 2026 00:00:06 -0700 (PDT)
+Date: Fri,  1 May 2026 23:59:25 -0700
 In-Reply-To: <20260502065935.291960-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
@@ -76,8 +76,8 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260409230620.4176210-2-irogers@google.com> <20260502065935.291960-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260502065935.291960-7-irogers@google.com>
-Subject: [PATCH v8 06/17] perf sample-raw: Use perf_env e_machine rather than arch
+Message-ID: <20260502065935.291960-8-irogers@google.com>
+Subject: [PATCH v8 07/17] perf sort: Use perf_env e_machine rather than arch
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org, 
 	tmricht@linux.ibm.com
@@ -86,7 +86,7 @@ Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com,
 	linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, 
 	sumanthk@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
-X-Rspamd-Queue-Id: 591F84B1344
+X-Rspamd-Queue-Id: 61CFB4B136A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -94,19 +94,19 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
 	MV_CASE(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19295-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19291-lists,linux-s390=lfdr.de];
 	FREEMAIL_CC(0.00)[linux.ibm.com,126.com,vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[irogers@google.com,linux-s390@vger.kernel.org];
@@ -115,50 +115,57 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-s390];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCPT_COUNT_TWELVE(0.00)[13];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 
-Use the e_machine rather than the arch to determine S390 and x86 types.
+Use the e_machine rather than the arch to determine x86 or PPC types.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/sample-raw.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ tools/perf/util/sort.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/sample-raw.c b/tools/perf/util/sample-raw.c
-index bcf442574d6e..b10056ac8057 100644
---- a/tools/perf/util/sample-raw.c
-+++ b/tools/perf/util/sample-raw.c
-@@ -1,6 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 */
--
--#include <string.h>
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 0020089cb13c..06a641cf49e3 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <ctype.h>
 +#include <elf.h>
- #include <linux/string.h>
- #include "evlist.h"
- #include "env.h"
-@@ -14,14 +13,15 @@
-  */
- void evlist__init_trace_event_sample_raw(struct evlist *evlist, struct perf_env *env)
+ #include <errno.h>
+ #include <inttypes.h>
+ #include <regex.h>
+@@ -2673,9 +2674,10 @@ struct sort_dimension {
+ 
+ static int arch_support_sort_key(const char *sort_key, struct perf_env *env)
  {
--	const char *arch_pf = perf_env__arch(env);
--	const char *cpuid = perf_env__cpuid(env);
+-	const char *arch = perf_env__arch(env);
 +	uint16_t e_machine = perf_env__e_machine(env, /*e_eflags=*/NULL);
  
--	if (arch_pf && !strcmp("s390", arch_pf))
-+	if (e_machine == EM_S390) {
- 		evlist->trace_event_sample_raw = evlist__s390_sample_raw;
--	else if (arch_pf && !strcmp("x86", arch_pf) &&
--		 cpuid && strstarts(cpuid, "AuthenticAMD") &&
--		 evlist__has_amd_ibs(evlist)) {
--		evlist->trace_event_sample_raw = evlist__amd_sample_raw;
-+	} else if (e_machine == EM_X86_64 || e_machine == EM_386) {
-+		const char *cpuid = perf_env__cpuid(env);
-+
-+		if (cpuid && strstarts(cpuid, "AuthenticAMD") &&
-+		    evlist__has_amd_ibs(evlist))
-+			evlist->trace_event_sample_raw = evlist__amd_sample_raw;
- 	}
- }
+-	if (!strcmp("x86", arch) || !strcmp("powerpc", arch)) {
++	if (e_machine == EM_X86_64 || e_machine == EM_386 ||
++	    e_machine == EM_PPC64 || e_machine == EM_PPC) {
+ 		if (!strcmp(sort_key, "p_stage_cyc"))
+ 			return 1;
+ 		if (!strcmp(sort_key, "local_p_stage_cyc"))
+@@ -2686,14 +2688,14 @@ static int arch_support_sort_key(const char *sort_key, struct perf_env *env)
+ 
+ static const char *arch_perf_header_entry(const char *se_header, struct perf_env *env)
+ {
+-	const char *arch = perf_env__arch(env);
++	uint16_t e_machine = perf_env__e_machine(env, /*e_eflags=*/NULL);
+ 
+-	if (!strcmp("x86", arch)) {
++	if (e_machine == EM_X86_64 || e_machine == EM_386) {
+ 		if (!strcmp(se_header, "Local Pipeline Stage Cycle"))
+ 			return "Local Retire Latency";
+ 		else if (!strcmp(se_header, "Pipeline Stage Cycle"))
+ 			return "Retire Latency";
+-	} else if (!strcmp("powerpc", arch)) {
++	} else if (e_machine == EM_PPC64 || e_machine == EM_PPC) {
+ 		if (!strcmp(se_header, "Local INSTR Latency"))
+ 			return "Finish Cyc";
+ 		else if (!strcmp(se_header, "INSTR Latency"))
 -- 
 2.54.0.545.g6539524ca2-goog
 
