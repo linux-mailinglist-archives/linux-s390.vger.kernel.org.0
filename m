@@ -1,72 +1,72 @@
-Return-Path: <linux-s390+bounces-19291-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19294-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ePu9FFeh9WkWNgIAu9opvQ
-	(envelope-from <linux-s390+bounces-19291-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Sat, 02 May 2026 09:01:43 +0200
+	id uC0dFmKh9WkWNgIAu9opvQ
+	(envelope-from <linux-s390+bounces-19294-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Sat, 02 May 2026 09:01:54 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61CFB4B136A
-	for <lists+linux-s390@lfdr.de>; Sat, 02 May 2026 09:01:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 80C644B1382
+	for <lists+linux-s390@lfdr.de>; Sat, 02 May 2026 09:01:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 077853007B09
-	for <lists+linux-s390@lfdr.de>; Sat,  2 May 2026 07:00:28 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 8ED73301C3E3
+	for <lists+linux-s390@lfdr.de>; Sat,  2 May 2026 07:00:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 978E32FFF8F;
-	Sat,  2 May 2026 07:00:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53C8430B53A;
+	Sat,  2 May 2026 07:00:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eH/+rImX"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DRJctNu7"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340532FF147
-	for <linux-s390@vger.kernel.org>; Sat,  2 May 2026 07:00:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9782FD1A5
+	for <linux-s390@vger.kernel.org>; Sat,  2 May 2026 07:00:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777705213; cv=none; b=m5qqsgsyBoOVri6bitzUPw8onBNN/kaJzvLuBB2q3EME4iYimF46sa7e0H7ckdECZ9hl6N2h1xn2ODhdxf5Pb4XAXkSqg+jD3Tk7UkSdO+IGxlnhM7Lmtyb5Ta8t3fGgn54IWw3DKSnohEFUUYpW9DviKlRFQamGDmks/bgAzrw=
+	t=1777705214; cv=none; b=fN2XukfrL6amiYu2MBje8aTU41JySOHM4jhsFAVnmtFTHE8VeuPLKjRPvwl23Fq8bxxrR6FeAQXIkkY73meAeTvJ8SgXp9/iPNw5XOD92ae+2kjRrdTvt3cFdhp21rF5utqwVgBexb0LMiZdGPcF3hKcx0XlDCfKjCGVUmrPw60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777705213; c=relaxed/simple;
-	bh=91rmZ7HpXZMQRzqJ+APlDS7mfx0zJTjOHRhup1RYxFs=;
+	s=arc-20240116; t=1777705214; c=relaxed/simple;
+	bh=KuACTPu6OuS48J4FtO0bd/dTI2geNdASrJW/13fBdHE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JgJp+GggmaHcw7lVpI7yI09C2jNBwxXn0rEmwKA8G40RB3kZqbzBHzXD/DHFX4D33hUHHEG+CEUTJdAwhRZEmm/M98nwUAXbtBFi+ojDMDmK6+OmjQEHeelUPEojyKrEj/KDATmues34SzpkRnuh7KHbztgroeKoQ3ck7cgbZ00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eH/+rImX; arc=none smtp.client-ip=74.125.82.74
+	 To:Cc:Content-Type; b=ecRDO4yGHwlfk3DTc+TY9UP0a6vM0iM1Yd6KqibCF4VkHrTY2P6UKIh0ROxAqGtRwY2JnH708h22pooGa/7oru33sWU9s7tHgm/tScDo419ugwgWkEhCvITbmd2iQ4vNzvITQH3wtMbkbZjwyXhvXNmK0/BLXmdMXpCNuirFOIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DRJctNu7; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12df9e440d3so2131545c88.0
-        for <linux-s390@vger.kernel.org>; Sat, 02 May 2026 00:00:07 -0700 (PDT)
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-12c8ccc7593so1695233c88.1
+        for <linux-s390@vger.kernel.org>; Sat, 02 May 2026 00:00:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777705206; x=1778310006; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1777705208; x=1778310008; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0Hvpb4pkIwMjbfShD1pPaCPvI8UVK1DoFRvpInh9Nmk=;
-        b=eH/+rImX6+CgCX40Pd3SlzZ5eno3LEIGndb1P/OBTTrdRQtYdVH2i0iaA3R1t5ftZS
-         2kmGeYfQi4P3uVJ7VNlNTLI64OWiZSh2MF71yxvWEffsL45GstKTIeu5tc5IanuUzCDg
-         R94UDZxsVvv8StOzfcybZwxeITkDU3n++hzfXjm+zLYGrJze1lZL0gZ8IgbeecPpCzVK
-         t7jqHbwzXA1GobmYnXUk7Yv4f2HeLqwvXVLUoGwV0/zYj7l0zjJofGymVZlmgKtWnndj
-         Fe1/Cw70nvF8HAFJvd9Xl2HGMxbYyMy7ZHyd0niT+b9/pvY6G3iXDQ3/Q7BXr1aHFbxh
-         rIkA==
+        bh=ZZGT+VJn1AUc670crxwfqYjQB0IuuY3cfwhTbHMCMmg=;
+        b=DRJctNu7msNC7Xn+fCJNnWOJBSwf1PAfNeCQrzLehHJhY/4qdAmXJdTFkaBc6uTxlG
+         tst1zbOLrO8G/gL23iUOvjspyDqoS1bdmXHw15+cvJXBLpE3DUvM82k5ubYjpuxRisxq
+         s9IkAJwDYoHbBWq9T0+0FpWH1yLugpVE1jyjNPGbxTZVhTYpJkZs/aUE6YL48rGd790z
+         yIE1Lmz/HAS1yBo+BGauRoc2qjktqCDFhmbzQHwSMnvnQHIy+lukTSZm/fqaxOXPPvi9
+         00EhBCDvrKavmM4/vdYmR96T2/2zyzO9azwhsM5oSj5RpMGHZKslFpcw/BcsvZYiasud
+         L37g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777705206; x=1778310006;
+        d=1e100.net; s=20251104; t=1777705208; x=1778310008;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0Hvpb4pkIwMjbfShD1pPaCPvI8UVK1DoFRvpInh9Nmk=;
-        b=EhjJkWuFhXVTekxKZl4691bCxwGGwrcACcVfXw0cdTd54xwN9y32WilauNd6DR7Kja
-         hY959wbF6DHGXO6/PGGU2kEWk+glHuqZdx9vpZQwEPHrAm3mM/bef8FBK9USk9dWRIZS
-         /o/9OCT2p+EtGH/e259pHAY4rE6M7nFkCACC7m6iShyBJXInSX8Dl3aPXO82Gp4xyMKB
-         QMPGGdZYEdQjrZ4FCm9vExXbz4u11jPtFaUMAQyVT/pi0X1LYwjiZzV7nJhrwHZYDsXb
-         FDh44yLwwA6IV4YiG5ZLCyILMBRJCJpfCa55JwmYNT+jSr1JqKn0fa2f53uVv0iUyn6H
-         GIsA==
-X-Forwarded-Encrypted: i=1; AFNElJ8K1d8t3Xw9yoWkQeMHn4T4CTskKAk3h8LVvfpaDHswjDh+UTVzAWYxUZFO2ybvZq0heC05VC/hroMB@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYpNwmJZhlL4qECQruQMBCqvWpl/ziZq8zdvms4yFO6PPMhMIC
-	85vSdPoUHnrPPBr0bTOg/b7Mc2UBFW5qKuMMvZ0N+5CCjnIcZX88+2eASdyGcCnpslcwRTkQDNs
-	OU+wZwcsNDQ==
+        bh=ZZGT+VJn1AUc670crxwfqYjQB0IuuY3cfwhTbHMCMmg=;
+        b=k4Gw4n4zuEIvCQG6TUnAq0dnnoxK02X8zRzzk3AyIHr81b0iUtVRvWRH/uckaW5UMs
+         bG/R7CoVJjXykDbjvIo7b1odcyZwVfTfpgd2uS8NfC+8GEcy50CEcT5YHMzvf+XzSXrY
+         EzyYvlgmm66VYfSqnJpXWu8DXs+xiJ9MFaTs2PHPz3BdNLYMVNCiPKJeYae9WIxqmZd7
+         vBXaIIvTGYp7IFoXW9UzyxA/q5aRAzozahWQBnDqxBLjofe8IxjLU8N6yTZX8YbRk4JE
+         WK0avcqFwPfNGg/uQ7ZEn299U7S7tqfcHbC+lqqiflNzizEhPiUj7h75v0Pk8qX7nS83
+         bNbg==
+X-Forwarded-Encrypted: i=1; AFNElJ9bdL1UXplWZMyNdYfZEfBOInzlF724N+39/Kl3DGu3Hh+Rnq2lKRYwfJoSOMHc2WKeYYXiWCZzRbba@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYM0orQjslInSmUsSD392/9NKZtfmxBoAN28uk9+UYqlyWC69X
+	O0yup1zF2CxhYN1ckFEQpTCnThCF4N0PQuXwQ1Hc8hRgdptnr0TJUvfFqReJ9uRFywor4hn0hQO
+	vdjlGs96cMw==
 X-Received: from dltt17.prod.google.com ([2002:a05:701a:c971:b0:12a:c5dd:73f9])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:e994:b0:128:cea1:7e3b
- with SMTP id a92af1059eb24-12dfd824dacmr838017c88.23.1777705206125; Sat, 02
- May 2026 00:00:06 -0700 (PDT)
-Date: Fri,  1 May 2026 23:59:25 -0700
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:23a5:b0:12d:b396:eade
+ with SMTP id a92af1059eb24-12dfd7bb139mr1092145c88.3.1777705207872; Sat, 02
+ May 2026 00:00:07 -0700 (PDT)
+Date: Fri,  1 May 2026 23:59:26 -0700
 In-Reply-To: <20260502065935.291960-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
@@ -76,8 +76,8 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260409230620.4176210-2-irogers@google.com> <20260502065935.291960-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260502065935.291960-8-irogers@google.com>
-Subject: [PATCH v8 07/17] perf sort: Use perf_env e_machine rather than arch
+Message-ID: <20260502065935.291960-9-irogers@google.com>
+Subject: [PATCH v8 08/17] perf symbol: Avoid use of machine__is
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org, 
 	tmricht@linux.ibm.com
@@ -86,7 +86,7 @@ Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com,
 	linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, 
 	sumanthk@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
-X-Rspamd-Queue-Id: 61CFB4B136A
+X-Rspamd-Queue-Id: 80C644B1382
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -99,7 +99,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19291-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19294-lists,linux-s390=lfdr.de];
 	FREEMAIL_CC(0.00)[linux.ibm.com,126.com,vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
@@ -117,55 +117,88 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCPT_COUNT_TWELVE(0.00)[13];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 
-Use the e_machine rather than the arch to determine x86 or PPC types.
+Switch to using the ELF machine from the dso or running machine rather
+than the machine perf_env arch that may fall back on EM_HOST. This
+also avoids potentially imprecise string comparisons.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/sort.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ tools/perf/util/symbol.c | 29 +++++++++++++++++++++++------
+ 1 file changed, 23 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 0020089cb13c..06a641cf49e3 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <ctype.h>
-+#include <elf.h>
- #include <errno.h>
- #include <inttypes.h>
- #include <regex.h>
-@@ -2673,9 +2674,10 @@ struct sort_dimension {
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index fcaeeddbbb6b..8aaaab0ad4b7 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -851,6 +851,24 @@ static int maps__split_kallsyms_for_kcore(struct maps *kmaps, struct dso *dso)
+ 	return count;
+ }
  
- static int arch_support_sort_key(const char *sort_key, struct perf_env *env)
- {
--	const char *arch = perf_env__arch(env);
-+	uint16_t e_machine = perf_env__e_machine(env, /*e_eflags=*/NULL);
++static uint16_t machine_or_dso_e_machine(struct machine *machine, struct dso *dso)
++{
++	uint16_t e_machine = EM_NONE;
++
++	/* Check for a cached value first. */
++	if (machine && machine->env && machine->env->e_machine != EM_NONE)
++		return machine->env->e_machine;
++
++	/* DSO should be most accurate */
++	if (dso)
++		e_machine = dso__e_machine(dso, machine, /*e_flags=*/NULL);
++
++	if (e_machine != EM_NONE)
++		return e_machine;
++
++	return perf_env__e_machine(machine ? machine->env : NULL, /*e_flags=*/NULL);
++}
++
+ /*
+  * Split the symbols into maps, making sure there are no overlaps, i.e. the
+  * kernel range is broken in several maps, named [kernel].N, as we don't have
+@@ -866,14 +884,13 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
+ 	struct rb_root_cached *root = dso__symbols(dso);
+ 	struct rb_node *next = rb_first_cached(root);
+ 	int kernel_range = 0;
+-	bool x86_64;
++	uint16_t e_machine = EM_NONE;
  
--	if (!strcmp("x86", arch) || !strcmp("powerpc", arch)) {
-+	if (e_machine == EM_X86_64 || e_machine == EM_386 ||
-+	    e_machine == EM_PPC64 || e_machine == EM_PPC) {
- 		if (!strcmp(sort_key, "p_stage_cyc"))
- 			return 1;
- 		if (!strcmp(sort_key, "local_p_stage_cyc"))
-@@ -2686,14 +2688,14 @@ static int arch_support_sort_key(const char *sort_key, struct perf_env *env)
+ 	if (!kmaps)
+ 		return -1;
  
- static const char *arch_perf_header_entry(const char *se_header, struct perf_env *env)
- {
--	const char *arch = perf_env__arch(env);
-+	uint16_t e_machine = perf_env__e_machine(env, /*e_eflags=*/NULL);
+ 	machine = maps__machine(kmaps);
+-
+-	x86_64 = machine__is(machine, "x86_64");
++	e_machine = machine_or_dso_e_machine(machine, dso);
  
--	if (!strcmp("x86", arch)) {
-+	if (e_machine == EM_X86_64 || e_machine == EM_386) {
- 		if (!strcmp(se_header, "Local Pipeline Stage Cycle"))
- 			return "Local Retire Latency";
- 		else if (!strcmp(se_header, "Pipeline Stage Cycle"))
- 			return "Retire Latency";
--	} else if (!strcmp("powerpc", arch)) {
-+	} else if (e_machine == EM_PPC64 || e_machine == EM_PPC) {
- 		if (!strcmp(se_header, "Local INSTR Latency"))
- 			return "Finish Cyc";
- 		else if (!strcmp(se_header, "INSTR Latency"))
+ 	while (next) {
+ 		char *module;
+@@ -925,7 +942,7 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
+ 			 */
+ 			pos->start = map__map_ip(curr_map, pos->start);
+ 			pos->end   = map__map_ip(curr_map, pos->end);
+-		} else if (x86_64 && is_entry_trampoline(pos->name)) {
++		} else if (e_machine == EM_X86_64 && is_entry_trampoline(pos->name)) {
+ 			/*
+ 			 * These symbols are not needed anymore since the
+ 			 * trampoline maps refer to the text section and it's
+@@ -1428,7 +1445,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+ 		free(new_node);
+ 	}
+ 
+-	if (machine__is(machine, "x86_64")) {
++	if (machine_or_dso_e_machine(machine, dso) == EM_X86_64) {
+ 		u64 addr;
+ 
+ 		/*
+@@ -1716,7 +1733,7 @@ int dso__load(struct dso *dso, struct map *map)
+ 			ret = dso__load_guest_kernel_sym(dso, map);
+ 
+ 		machine = maps__machine(map__kmaps(map));
+-		if (machine__is(machine, "x86_64"))
++		if (machine_or_dso_e_machine(machine, dso) == EM_X86_64)
+ 			machine__map_x86_64_entry_trampolines(machine, dso);
+ 		goto out;
+ 	}
 -- 
 2.54.0.545.g6539524ca2-goog
 
