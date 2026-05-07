@@ -1,171 +1,240 @@
-Return-Path: <linux-s390+bounces-19406-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19408-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sKM8Lnbx/GlmVgAAu9opvQ
-	(envelope-from <linux-s390+bounces-19406-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 07 May 2026 22:09:26 +0200
+	id IH9CBWsR/WnvXAAAu9opvQ
+	(envelope-from <linux-s390+bounces-19408-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 08 May 2026 00:25:47 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EF964EE40F
-	for <lists+linux-s390@lfdr.de>; Thu, 07 May 2026 22:09:26 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A5F74EFCC2
+	for <lists+linux-s390@lfdr.de>; Fri, 08 May 2026 00:25:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 79EE43046FE3
-	for <lists+linux-s390@lfdr.de>; Thu,  7 May 2026 20:08:53 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5D0FA307EBC1
+	for <lists+linux-s390@lfdr.de>; Thu,  7 May 2026 22:24:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE0DE372681;
-	Thu,  7 May 2026 20:08:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 267D939A7F5;
+	Thu,  7 May 2026 22:23:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bgu4k8bt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kxn/7SRT";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="K+cB4XwQ"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9014B3612D5;
-	Thu,  7 May 2026 20:08:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D97739A07E
+	for <linux-s390@vger.kernel.org>; Thu,  7 May 2026 22:23:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778184531; cv=none; b=Y68pEoaO/5uyAqi2aEM91dX3CCKTZte7nXpch41Ngq/BEvU+2cKxJPJOHxVLG+ONhl28Nky3ABRZpOSY1KZBm+XvClh/6t6TJXuc8QsVeOtlUJWUaaxsduWnsMR1Hnf/xwbChgyhaHnpwBbzTPQ/Rl1kfL+7JLtALGptkeCxkxQ=
+	t=1778192592; cv=none; b=Cdrxcy/Jw5mbF0cJAWU6vrTu4CiYRNUnSTClNRZZ+fzN01fevbNvwycgwmZ1Ekii6k04adOW1NyvtbcpQphSHpa62wU6fT3L4AGzxtxnV5V18XwaR3fUQGHVGTK64OYISGAZ0cz3P+o/jAizSCv4U78HXfEfc0yygEeUT7MMv4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778184531; c=relaxed/simple;
-	bh=HP/cwJLSNh81P4WT7sjFILZDH6A1wrVT5g+goXXAZXc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Nfy2narrasJUDyCzCqQfx5oP8fJJx0eo2SxW8fnhUDGt8SylcBTq9g6YdoVdgn+rkzqPb5Tmxzuf/C8FIL2XAU0IipQ1rHzBkK6Kjkv5kBzR+oqFa2M8Y2zMCHZvohGoR+2/gpign6iLydnHRVH7KqNdGZyqSMoNCJjwrvE2B4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bgu4k8bt; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 647Cbsi32822130;
-	Thu, 7 May 2026 20:08:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=C5yuEhPcNaNiBat0N
-	fN4aagV1RWR8mT0eOcw8ierToU=; b=bgu4k8btLgTIJqbPw9UxcGcpWsjPEr3V2
-	qPmzjTbfqdVLgdKkVDs/DFPswjAZlqsrMMyF/V4XMWM4fIvjM119X+aUKICw0BJP
-	6Gmlr+dicIbGv72+4Q9IWZQ3upADr3kfZU17JSiJpxXaj8RfuKYkk3n4UXodlmSB
-	nPplVSdfmd3VKitU8CRP7eAK69fUM6WnMl5W/JZlID+xWlf3g5AuyJfH+GHkYnu7
-	4Yn79hOjBl7Nm9v7t7LuM05l1hua+Za2QNbuNM2aymmJst2l2ApKGppmR6CBDl5J
-	o3BzksE4LIf+HS6KSSBVIAmeRSaxRYmL3cEx85jj9hIx40QM8LxxA==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dw9y4yknw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 May 2026 20:08:46 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 647JshAX012851;
-	Thu, 7 May 2026 20:08:46 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dwuywdfhb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 May 2026 20:08:45 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 647K8gNw60358916
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 7 May 2026 20:08:42 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 284CF2004F;
-	Thu,  7 May 2026 20:08:42 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 082772004E;
-	Thu,  7 May 2026 20:08:42 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with SMTP;
-	Thu,  7 May 2026 20:08:41 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
-	id E467DE05EE; Thu, 07 May 2026 22:08:41 +0200 (CEST)
-From: Eric Farman <farman@linux.ibm.com>
-To: Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        David Hildenbrand <david@kernel.org>
-Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        Eric Farman <farman@linux.ibm.com>
-Subject: [PATCH v2 3/3] KVM: s390: Fix typo in UCONTROL documentation
-Date: Thu,  7 May 2026 22:08:36 +0200
-Message-ID: <20260507200836.3500368-4-farman@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260507200836.3500368-1-farman@linux.ibm.com>
-References: <20260507200836.3500368-1-farman@linux.ibm.com>
+	s=arc-20240116; t=1778192592; c=relaxed/simple;
+	bh=o+vhOTjLhvS47fv9tom+Yt3TM9vgXV0mo+tAnh6qa+g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dwwOe18090XlMG0/laa11N/mexY+HafouvgBBZgGptEKq0ZK/IDAOHji+FkettjVgDLctED3E6wGqOfl3kJLi3+qg6a74YjK5iZD5BzNt/f1iSi543RXgeh++27Q3OYUnfgrcqgSUVGjMAeigjw5EsinxEfUgkyNoEmK8FyhMqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kxn/7SRT; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=K+cB4XwQ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1778192589;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KxxPeFo8b5YQQgq6okT6k4ODeRwXIuGSW0SUh4EUnR0=;
+	b=Kxn/7SRTVg+1y11F3weI900bT53eSmNN/IZfbKom9F+w5LBFqwnxAZPo/9elyIOm0uLSHt
+	l5UsvJQOFSWe3Lvc2eP45z6M5dMvMVHukBk449fL93SJlH+IfI3MQXZ87/qtW8ve4lRj6X
+	Vs8j6xQ9hCtOdYbzFjbcDUAuH3WKYcM=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-638-H_mgzcTcMZeXRR-JxOVX8w-1; Thu, 07 May 2026 18:23:08 -0400
+X-MC-Unique: H_mgzcTcMZeXRR-JxOVX8w-1
+X-Mimecast-MFC-AGG-ID: H_mgzcTcMZeXRR-JxOVX8w_1778192587
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-48d144d3428so7818455e9.3
+        for <linux-s390@vger.kernel.org>; Thu, 07 May 2026 15:23:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1778192587; x=1778797387; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KxxPeFo8b5YQQgq6okT6k4ODeRwXIuGSW0SUh4EUnR0=;
+        b=K+cB4XwQKShvaqBdKcldswwmuDkaf431z7P2oI5KuH9wWoQw7UVnkM4nmfcRQNE69P
+         xAIVztalsE7+yaC2+YoHpT7wM7dInlVJWIx6VN3SUz7tly8plrFGTfz78Bn6UuUKEckT
+         05tWgrgdoNqrwkO8nTgkkbGPpKSwLkQHpZbPCYb5RIxim5FjXilDYT5G7fKHFdE6g9fW
+         etuixKtwd6ZUJAu6MmUYJrIpHm10FtQAyqXqK+Px0/Pc25wzmxZ/6AYP8QzgHn4EN783
+         HKUg+ocLt318X5k88aEAFhm9CxXj1oCpT/AvgmcyoC6ayHxl1vRHodMOibhGrehcN157
+         p5Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778192587; x=1778797387;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KxxPeFo8b5YQQgq6okT6k4ODeRwXIuGSW0SUh4EUnR0=;
+        b=QP9UslWb5QMx7TCOU+r3h2tV56d6PbTZQsGa4FYfJR7fCcAjJa1ERMxUUG4fW9WIVQ
+         jXZLSXOflI7+GsYGhvSm53XiSjtXoLUPZUfJ+ie2fJmSiHZAmAcjcOuLS/DrHZ2TOo/4
+         4o9UyceENuqc/WaUjbMgES/oT6QKMGaAB9j6ED3tTuES922URwC5Cp9xDw1h50YSn1G0
+         N0SrlBDnn423UGoD/E2vb8VFaKpG8QuGacf3LUceZ1u3vfgjT5ysxLrFh0UPCl46Onnc
+         yHSRGygwP3GUxmGuo3W9ynRassYcYm2skDDO+cThp0WeVuQLUamMlBiDr6SpBfYFLmfF
+         /ngA==
+X-Forwarded-Encrypted: i=1; AFNElJ8pQdnhDq+S1MrDkPUR3TltQeooYwgBSdE0cd5vwma/JV/Os6A26T3/2vpiePL/7UdjTZt0jbmMUX+Y@vger.kernel.org
+X-Gm-Message-State: AOJu0YyC/VtoxA54u1yiwl/tvw2Mhrfnh+7BUzRvqUEtsi9wQZfd0txP
+	DID4sVsyF4I3cVnBhiDQMsekGj1R5eyPzNEPEt92Rhknxphdm8DyXS1yP+jB6TYiaIwvbe735pj
+	s4tqcnKE54aCV/51InFEpqOtMHB3P8B57QMi0HQ+2Ws2GmBu4FfffO3+96uf60+U=
+X-Gm-Gg: AeBDiesDF2NJaQUkAEsCewNOn5s6Z4MZ04nFpinJovSats1x2TnA+wE0ZV85lOO0ZgM
+	VKAMlvN8CwmRPp5pIxzWHhw8wv8PFw/wsUkQtowtvYMJZD2WXMlxAV9ThQ1Ahu9UIMfhLDCIdpy
+	cpycz9dfSFkdjaqILqBZqTlMzOoe4KuvmfmprLp6Q/EgDXcDcEU2C139zC0YDaWIXXb11zArqfn
+	1kP1uqmM3cALNia1/ohqTMQgdGF8GHpdMiPb7QWGMpoFVRQIAcCRQqm1S09RQNLyPSpKrG+n4uj
+	fVhBuL1Y1ZztS4exQgALUUzPYe5oJK25LNzwC7tyUmvCz23J/xLbc4XRXjFmc8D3rQrptZ7GE1h
+	BHhboHu2LCA8CSM370BoUBL0x4seEWKfB3SCfZCBX
+X-Received: by 2002:a05:600c:1c0f:b0:48a:5342:36b5 with SMTP id 5b1f17b1804b1-48e51f3deddmr177389015e9.21.1778192586764;
+        Thu, 07 May 2026 15:23:06 -0700 (PDT)
+X-Received: by 2002:a05:600c:1c0f:b0:48a:5342:36b5 with SMTP id 5b1f17b1804b1-48e51f3deddmr177388435e9.21.1778192586184;
+        Thu, 07 May 2026 15:23:06 -0700 (PDT)
+Received: from redhat.com (IGLD-80-230-48-7.inter.net.il. [80.230.48.7])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45412820303sm2289369f8f.4.2026.05.07.15.23.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2026 15:23:05 -0700 (PDT)
+Date: Thu, 7 May 2026 18:23:03 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: David Hildenbrand <david@kernel.org>,
+	Magnus Lindholm <linmag7@gmail.com>,
+	Greg Ungerer <gerg@linux-m68k.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-alpha@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org, linux-s390@vger.kernel.org
+Subject: [PATCH v5 13/28] mm: remove arch vma_alloc_zeroed_movable_folio
+ overrides
+Message-ID: <44d46ba982b39e53a2b5f978dd7239836e535196.1778192416.git.mst@redhat.com>
+References: <cover.1778192416.git.mst@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTA3MDIwMyBTYWx0ZWRfX6eUhmaLmpbyn
- FVaydGxwGvwiM+YwrICnBLVOsAp/I5FYAsZ0C/IUQ2c4PtcmtuCbq3j65mZMc68/lmuwZpuy4OJ
- qUomqYKA56Yjv7yA/7EAl8QleiaRpVbBDZy+bCZtUDwyiZpkpjhc7taFOXRO2LNzHlZlDQM4GSQ
- HaVVNxA7J8S+DS6++pW4pBPczdzbHf2ObfNiDqmhtptbezJUpmLK6Tt6bi9JWo6eZtlKHZ546u5
- FAX1+pjz0kfphiMYQ6GV1LKyqA84Cobp/TBEi4vWvBghMsf/0+sctQC6i5OrU2aVABHcnOPpwkL
- 4k6fPR5xuPGbpOO1EYn3OqydZv/Xa+nUK86mU+kkcx7duQkU/NGzvBIsAmlXPvoHN3rLApLxHEF
- qwA9vWnhZ/ONHbBlOI1gCGHooAqc13nOJizccrUNPoqPY5yu1hQGf4l5gVDzwQt6Sa/y3xPhJHw
- +4KK0s/Btv28Z6CkmHA==
-X-Authority-Analysis: v=2.4 cv=J4GaKgnS c=1 sm=1 tr=0 ts=69fcf14e cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8 a=emoZMvze5Uwv_vEF60kA:9
-X-Proofpoint-GUID: pGRjhs2C8h1FWv4jKEJFNv7CIV-nTAhF
-X-Proofpoint-ORIG-GUID: pGRjhs2C8h1FWv4jKEJFNv7CIV-nTAhF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-07_02,2026-05-06_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 clxscore=1015 malwarescore=0 bulkscore=0 suspectscore=0
- priorityscore=1501 spamscore=0 phishscore=0 adultscore=0 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2605070203
-X-Rspamd-Queue-Id: 2EF964EE40F
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1778192416.git.mst@redhat.com>
+X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
+X-Mutt-Fcc: =sent
+X-Rspamd-Queue-Id: 7A5F74EFCC2
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-Spamd-Result: default: False [-1.16 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-19408-lists,linux-s390=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,linux-m68k.org,linaro.org,linux.ibm.com,redhat.com,alien8.de,linux.intel.com,zytor.com,vger.kernel.org,lists.linux-m68k.org];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19406-lists,linux-s390=lfdr.de];
-	RCVD_COUNT_TWELVE(0.00)[12];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[farman@linux.ibm.com,linux-s390@vger.kernel.org];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	MIME_TRACE(0.00)[0:+];
-	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	RCPT_COUNT_SEVEN(0.00)[7];
 	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mst@redhat.com,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[redhat.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	FROM_HAS_DN(0.00)[]
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux-m68k.org:email]
 X-Rspamd-Action: no action
 
-Small typo noticed while writing the USER_OPEREXEC selftest.
+Now that the generic vma_alloc_zeroed_movable_folio() uses
+__GFP_ZERO, the arch-specific macros on alpha, m68k, s390, and
+x86 that did the same thing are redundant.  Remove them.
 
-Signed-off-by: Eric Farman <farman@linux.ibm.com>
+arm64 is not affected: it has a real function override that
+handles MTE tag zeroing, not just __GFP_ZERO.
+
+Suggested-by: David Hildenbrand <david@kernel.org>
+Acked-by: Magnus Lindholm <linmag7@gmail.com>
+Acked-by: Greg Ungerer <gerg@linux-m68k.org>
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> # m68k
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- Documentation/virt/kvm/api.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/alpha/include/asm/page.h   | 3 ---
+ arch/m68k/include/asm/page_no.h | 3 ---
+ arch/s390/include/asm/page.h    | 3 ---
+ arch/x86/include/asm/page.h     | 3 ---
+ 4 files changed, 12 deletions(-)
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.=
-rst
-index 52bbbb553ce1..f0eba90602f0 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -6827,7 +6827,7 @@ s390 specific.
- 		} s390_ucontrol;
-=20
- s390 specific. A page fault has occurred for a user controlled virtual
--machine (KVM_VM_S390_UNCONTROL) on its host page table that cannot be
-+machine (KVM_VM_S390_UCONTROL) on its host page table that cannot be
- resolved by the kernel.
- The program code and the translation exception code that were placed
- in the cpu's lowcore are presented here as defined by the z Architecture
---=20
-2.51.0
+diff --git a/arch/alpha/include/asm/page.h b/arch/alpha/include/asm/page.h
+index 59d01f9b77f6..4327029cd660 100644
+--- a/arch/alpha/include/asm/page.h
++++ b/arch/alpha/include/asm/page.h
+@@ -12,9 +12,6 @@
+ 
+ extern void clear_page(void *page);
+ 
+-#define vma_alloc_zeroed_movable_folio(vma, vaddr) \
+-	vma_alloc_folio(GFP_HIGHUSER_MOVABLE | __GFP_ZERO, 0, vma, vaddr)
+-
+ extern void copy_page(void * _to, void * _from);
+ #define copy_user_page(to, from, vaddr, pg)	copy_page(to, from)
+ 
+diff --git a/arch/m68k/include/asm/page_no.h b/arch/m68k/include/asm/page_no.h
+index d2532bc407ef..f511b763a235 100644
+--- a/arch/m68k/include/asm/page_no.h
++++ b/arch/m68k/include/asm/page_no.h
+@@ -12,9 +12,6 @@ extern unsigned long memory_end;
+ 
+ #define copy_user_page(to, from, vaddr, pg)	copy_page(to, from)
+ 
+-#define vma_alloc_zeroed_movable_folio(vma, vaddr) \
+-	vma_alloc_folio(GFP_HIGHUSER_MOVABLE | __GFP_ZERO, 0, vma, vaddr)
+-
+ #define __pa(vaddr)		((unsigned long)(vaddr))
+ #define __va(paddr)		((void *)((unsigned long)(paddr)))
+ 
+diff --git a/arch/s390/include/asm/page.h b/arch/s390/include/asm/page.h
+index f339258135f7..04020a19a5cf 100644
+--- a/arch/s390/include/asm/page.h
++++ b/arch/s390/include/asm/page.h
+@@ -67,9 +67,6 @@ static inline void copy_page(void *to, void *from)
+ 
+ #define copy_user_page(to, from, vaddr, pg)	copy_page(to, from)
+ 
+-#define vma_alloc_zeroed_movable_folio(vma, vaddr) \
+-	vma_alloc_folio(GFP_HIGHUSER_MOVABLE | __GFP_ZERO, 0, vma, vaddr)
+-
+ #ifdef CONFIG_STRICT_MM_TYPECHECKS
+ #define STRICT_MM_TYPECHECKS
+ #endif
+diff --git a/arch/x86/include/asm/page.h b/arch/x86/include/asm/page.h
+index 416dc88e35c1..92fa975b46f3 100644
+--- a/arch/x86/include/asm/page.h
++++ b/arch/x86/include/asm/page.h
+@@ -28,9 +28,6 @@ static inline void copy_user_page(void *to, void *from, unsigned long vaddr,
+ 	copy_page(to, from);
+ }
+ 
+-#define vma_alloc_zeroed_movable_folio(vma, vaddr) \
+-	vma_alloc_folio(GFP_HIGHUSER_MOVABLE | __GFP_ZERO, 0, vma, vaddr)
+-
+ #ifndef __pa
+ #define __pa(x)		__phys_addr((unsigned long)(x))
+ #endif
+-- 
+MST
 
 
