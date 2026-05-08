@@ -1,158 +1,272 @@
-Return-Path: <linux-s390+bounces-19456-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19458-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8MzuF1Lk/WmOkQAAu9opvQ
-	(envelope-from <linux-s390+bounces-19456-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 08 May 2026 15:25:38 +0200
+	id wDHWIwP5/WlilQAAu9opvQ
+	(envelope-from <linux-s390+bounces-19458-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 08 May 2026 16:53:55 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id D49C44F7061
-	for <lists+linux-s390@lfdr.de>; Fri, 08 May 2026 15:25:37 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DBB04F8243
+	for <lists+linux-s390@lfdr.de>; Fri, 08 May 2026 16:53:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 058AB306E653
-	for <lists+linux-s390@lfdr.de>; Fri,  8 May 2026 13:23:11 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5584130B6274
+	for <lists+linux-s390@lfdr.de>; Fri,  8 May 2026 14:48:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40F0D3E3C6D;
-	Fri,  8 May 2026 13:23:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDC6D3E5EF0;
+	Fri,  8 May 2026 14:48:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HQMAEbJY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JFlyKRcp"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BE737FF5C
-	for <linux-s390@vger.kernel.org>; Fri,  8 May 2026 13:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA3E3C73DE
+	for <linux-s390@vger.kernel.org>; Fri,  8 May 2026 14:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778246589; cv=none; b=ajv+hdThE2Iu7hItkW4hVtQznRy4HetcGu7lNvo0ghmlYkSOx+b2Wa4LjBg4syGjj6VAH0OHcT6w+cfp2qhD2KIjw0ZqVp/e4yn0/ax94PU7eHFa7+yuZ/Y9w0O/gz+LgN2k5yLDxudiCf4+Hp7ML5T6i/b/w74UIpm3iadlcGg=
+	t=1778251718; cv=none; b=YqMChoS6MjSt7tGx8mq9i4w+2yzwwVRW/IqiqTVGW2Ge5yzVjagTxc6Rv14gWuAVKcNIIoHtrGWp2czuFnhpCJlEXlzrcMgiOBRluUeacUbFi/f9EwT0ViyNnroOhvND1ySoAbD8n4Gzu9VY7cFWzfo+6VThBnBnvi1rXNClioA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778246589; c=relaxed/simple;
-	bh=8zMjjTIh7afG5oiqfdU+MK/5b/VMbZNu+SysEbxRI8U=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=fL+mrS3Ywg8qLxJ0Q+2d+cmTomQlw3W7G2zAvEAiYHVT2Vg97+oQPmeiPcEbpVX9KjxM3yeptIgKsgPudKsPYsz1pltLfCltl1U5mnzN7S0aKm3r4mKBSYfLt7WmZl1yYgd3IXimu9I2/3qFiHJ7IqSV0NFWvcCDYDiblN1wmyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HQMAEbJY; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778246587; x=1809782587;
-  h=date:from:to:cc:subject:message-id;
-  bh=8zMjjTIh7afG5oiqfdU+MK/5b/VMbZNu+SysEbxRI8U=;
-  b=HQMAEbJY9oNZfNLwIMsccQ6rUtUJfBd95Kc4BSMpJekDNhSIMR9Y8OGr
-   hEYs8Nwjg135tyk7c2a4S2fe3UfXpVSPif6hcSWAt2Z5JZCaQ86wMa6Jv
-   9qhT+tuzrWSW4tQIhhfy4uPfY3eB+nGC3EOBy2UPSGtkGcoDTU/J8Us95
-   v5Ty8htZxNrEJQLi96EIbP6F6tDypAIXlLIuJ8QXWRTEv9G4wz4g8cq6A
-   ImeoG/PS9bVKoNsi549rG0AqRupN+zfbjCevmxabzNLUE+UswAw5EbghT
-   7tFsYotwDqgfXPSTP3oHTK1UkoG+sZypijDpucmB2SyV7Vw1yGIEBZ0kb
-   A==;
-X-CSE-ConnectionGUID: f4y84cfTSwWU6PfUmZMc1w==
-X-CSE-MsgGUID: 0u0eOoSHQ9y8OvCNT12aHw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11780"; a="90315813"
-X-IronPort-AV: E=Sophos;i="6.23,223,1770624000"; 
-   d="scan'208";a="90315813"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2026 06:23:07 -0700
-X-CSE-ConnectionGUID: boroxfoKTnyeTIQjTpmoBw==
-X-CSE-MsgGUID: Ri/LZIw+SkWlwycZ3C3Mow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,223,1770624000"; 
-   d="scan'208";a="236698169"
-Received: from lkp-server01.sh.intel.com (HELO 82327192134e) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 08 May 2026 06:23:05 -0700
-Received: from kbuild by 82327192134e with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wLLAV-0000000009p-0n08;
-	Fri, 08 May 2026 13:23:03 +0000
-Date: Fri, 08 May 2026 21:22:44 +0800
-From: kernel test robot <lkp@intel.com>
-To: Steffen Eiden <seiden@linux.ibm.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-s390@vger.kernel.org
-Subject: [kvms390:sae 53/55] arch/s390/kvm/arm64/arm.c:232:13:
- warning: variable 'ret' set but not used
-Message-ID: <202605082137.4rqrVNVY-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1778251718; c=relaxed/simple;
+	bh=cgN7A1X7T0cojU2T2uSFT+6vqQbWtR5/P5UyiMggOKg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P9cyU2aQsc+aFXLjlS8RGxnJjmtfJ9JTCE6582v7PlFcXgfTvLWwiZ1IEQylZ11HFomJajME2F9wh099JjR+GkOfLzW8MJ3cFAlPW8FqES38IqG5tVwxhB70Y3aZYi/qO/J0WWSzFN/Pjthjn2/PNSb49QjMmRg5q3HbNGwRddI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JFlyKRcp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EBEAC2BCB0;
+	Fri,  8 May 2026 14:48:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778251718;
+	bh=cgN7A1X7T0cojU2T2uSFT+6vqQbWtR5/P5UyiMggOKg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JFlyKRcpvlD/bPMRtFzjnSRf/xPrUdavMyRgaXwDWvTkhWFW3Wy/zhihMQfrgvtyK
+	 8pQE/DEp04tWidhWuD+3OUwblCKpyltcoPrQ0itzhLLLoeMCPIxtue7b6fGAbp1OSO
+	 E0GEil1PvkDWjpyU77Bulfu6GuAaWfnhpKh+sGQdzLYlhY7bpaFrnB427zt2SsK/Ir
+	 lNLmTB6f/J0r77EnM3CyBHxxH0PIlIDEtQCTffT/D6eteRigUB3A2dpYtVUxYS/dqJ
+	 fX5krC/8FhTakbq1VKqs7Tbi8Dhn/KqQAe5NrMXzb1+bj/b7Ffx84OwuaDdDcMJTb/
+	 6jqNiyJ6W0/7Q==
+Received: from phl-compute-11.internal (phl-compute-11.internal [10.202.2.51])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 68CAEF40071;
+	Fri,  8 May 2026 10:48:36 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Fri, 08 May 2026 10:48:36 -0400
+X-ME-Sender: <xms:xPf9acOfuYU0lGUlWUFxgRlwtXOonYDb2Jzd4suBZm6azQLCEem0cw>
+    <xme:xPf9aYwUeZugIxSEf8iSoqrAeZDEwEFhOXRsPAMTnme8ICYe2vzvtCkaBuOKPUS1r
+    qyaR3zZPaUPG4qXl_cslrr2Rq8tLzfVADoZ1XPcRmQnppdoFxw1VQ>
+X-ME-Received: <xmr:xPf9aYWaKFaWMenMNxUYVc1uSp4eVybh9FIWnxSfcFf_BVCzaC5icjOoqFqb_u_jBKbRCvyMqmSeMC1NWhZN7KRJS2pf9_-I>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdduuddtieefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
+    hfgvnhhguceosghoqhhunheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpe
+    ekgffhhfeuheelhfekteeuffejveetjeefffettedtteegfefftdduteduudfgleenucev
+    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnod
+    hmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieejtdelkeegjeduqddujeej
+    keehheehvddqsghoqhhunheppehkvghrnhgvlhdrohhrghesfhhigihmvgdrnhgrmhgvpd
+    hnsggprhgtphhtthhopeehjedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhgr
+    rhhkrdhruhhtlhgrnhgusegrrhhmrdgtohhmpdhrtghpthhtohepphgvthgvrhiisehinh
+    hfrhgruggvrggurdhorhhgpdhrtghpthhtoheptggrthgrlhhinhdrmhgrrhhinhgrshes
+    rghrmhdrtghomhdprhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorhhgpdhrtghpth
+    htohepjhhonhgrshesshhouhhthhhpohhlvgdrshgvpdhrtghpthhtohepshhtvghfrghn
+    rdhkrhhishhtihgrnhhsshhonhesshgruhhnrghlrghhthhirdhfihdprhgtphhtthhope
+    hshhhorhhnvgesghhmrghilhdrtghomhdprhgtphhtthhopehhtggrsehlihhnuhigrdhi
+    sghmrdgtohhmpdhrtghpthhtohepghhorheslhhinhhugidrihgsmhdrtghomh
+X-ME-Proxy: <xmx:xPf9aTtPViALwsR-GBUDqdJRZ7UgaSYbpbVi3tp27kMrsUzEj4eZug>
+    <xmx:xPf9aeuU6kdXUI9aDuKfL8Ep1pzFR1YRqNDp_odvfBe9GS4asRVZ2w>
+    <xmx:xPf9aQEtkgzjCi2KdPqwXU7pdtFeY5kgRWO1xvUPSUkbilYxloK_4w>
+    <xmx:xPf9aVj9kvhtECnLEc9FWYLHLm3MSrBP28JD4FD9tHdOC69YRWjYgQ>
+    <xmx:xPf9adCk8T09C4oXlmfuG0CR9eb0TB_w-nWGPRAORtupUYAbOELiad2W>
+Feedback-ID: i8dbe485b:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 8 May 2026 10:48:35 -0400 (EDT)
+Date: Fri, 8 May 2026 07:48:34 -0700
+From: Boqun Feng <boqun@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,	Will Deacon <will@kernel.org>,
+ Jonas Bonn <jonas@southpole.se>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	Stafford Horne <shorne@gmail.com>,	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,	Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>,	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,	Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>,	Valentin Schneider <vschneid@redhat.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Waiman Long <longman@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Miguel Ojeda <ojeda@kernel.org>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,	Jinjie Ruan <ruanjinjie@huawei.com>,
+	Ada Couprie Diaz <ada.coupriediaz@arm.com>,
+	Lyude Paul <lyude@redhat.com>, Sohil Mehta <sohil.mehta@intel.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	"Xin Li (Intel)" <xin@zytor.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Nikunj A Dadhania <nikunj@amd.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Randy Dunlap <rdunlap@infradead.org>,	Yury Norov <ynorov@nvidia.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-openrisc@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-arch@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH 11/11] arm64: sched/preempt: Enable PREEMPT_COUNT_64BIT
+Message-ID: <af33wq5R09HWVE84@tardis.local>
+References: <20260508042111.24358-1-boqun@kernel.org>
+ <20260508042111.24358-12-boqun@kernel.org>
+ <af2dPMW97tNOWuGF@J2N7QTR9R3>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-X-Rspamd-Queue-Id: D49C44F7061
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <af2dPMW97tNOWuGF@J2N7QTR9R3>
+X-Rspamd-Queue-Id: 3DBB04F8243
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19456-lists,linux-s390=lfdr.de];
-	DKIM_TRACE(0.00)[intel.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FREEMAIL_CC(0.00)[infradead.org,arm.com,kernel.org,southpole.se,saunalahti.fi,gmail.com,linux.ibm.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,linaro.org,goodmis.org,google.com,suse.de,amd.com,linux-foundation.org,garyguo.net,protonmail.com,umich.edu,huawei.com,intel.com,nvidia.com,linutronix.de,lists.infradead.org,vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19458-lists,linux-s390=lfdr.de];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,tardis.local:mid];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-s390@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[3];
-	RCVD_COUNT_FIVE(0.00)[6];
+	FROM_NEQ_ENVFROM(0.00)[boqun@kernel.org,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_GT_50(0.00)[56];
 	TAGGED_RCPT(0.00)[linux-s390];
 	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[]
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Action: no action
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git sae
-head:   23885833f845ad11c99c4f458692250fc75908c5
-commit: f41388cd69dc147f0e8f0aeeebc40eb8d19b6745 [53/55] KVM; s390: arm64: Implement sysreg handling
-config: s390-allyesconfig (https://download.01.org/0day-ci/archive/20260508/202605082137.4rqrVNVY-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 15.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260508/202605082137.4rqrVNVY-lkp@intel.com/reproduce)
+On Fri, May 08, 2026 at 09:22:20AM +0100, Mark Rutland wrote:
+> Hi Boqun,
+> 
+> I have a question at the end, with some context for other reviewers
+> before that.
+> 
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202605082137.4rqrVNVY-lkp@intel.com/
+Thank you for adding the context.
 
-All warnings (new ones prefixed by >>):
+> On Thu, May 07, 2026 at 09:21:11PM -0700, Boqun Feng wrote:
+> > ARM64 already uses 64bit preempt count and the need reschedule bit is
+> > maintained in a separate 32bit than the preempt count. 
+> 
+> For the benefit of those reading the list, arm64 has a separate 32-bit
+> count and a 32-bit field for need_resched, which are unioned together as
+> a composite 64-bit value:
+> 
+> 	union {
+> 		u64             preempt_count;  /* 0 => preemptible, <0 => bug */
+> 		struct {
+> 			u32     count;
+> 			u32     need_resched;
+> 		} preempt;
+> 	};
+> 
+> All of our "count" operations work on the 32-bit count, e.g.
+> 
+> 	static inline int preempt_count(void)
+> 	{
+> 		return READ_ONCE(current_thread_info()->preempt.count);
+> 	}
+> 
+> 
+> 	static inline void __preempt_count_add(int val)
+> 	{
+> 		u32 pc = READ_ONCE(current_thread_info()->preempt.count);
+> 		pc += val;
+> 		WRITE_ONCE(current_thread_info()->preempt.count, pc);
+> 	}
+> 
+> 	static inline void __preempt_count_sub(int val)
+> 	{
+> 		u32 pc = READ_ONCE(current_thread_info()->preempt.count);
+> 		pc -= val;
+> 		WRITE_ONCE(current_thread_info()->preempt.count, pc);
+> 	}
+> 
+> ... but some operations use the 64-bit 'preempt_count' field from the union, e.g.
+> 
+> 	static inline bool should_resched(int preempt_offset)
+> 	{
+> 		u64 pc = READ_ONCE(current_thread_info()->preempt_count);
+> 		return pc == preempt_offset;
+> 	}	
+> 
+> > Therefore preempt count has enough bits to represent 16 level of NMI
+> > nesting, hence enable it for ARM64. This saves a per-CPU variable and
+> > additional instructions in the NMI path.
+> 
+> This might be true, but I think the name "PREEMPT_COUNT_64BIT" is
+> misleading given the above. What exactly does PREEMPT_COUNT_64BIT tell
+> core code it can do?
 
-   arch/s390/kvm/arm64/arm.c: In function 'kvm_arch_vcpu_run_pid_change':
->> arch/s390/kvm/arm64/arm.c:232:13: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
-     232 |         int ret;
-         |             ^~~
+It tells the core code that all 32bit of preempt_count() can be used.
 
+> 
+> If this is just telling core code that it doesn't need ot reserve space
+> in preempt_count for the resched bits, can this be called something
+> else, e.g. HAS_SEPARATE_PREEMPT_RESCHED_BITS?
 
-vim +/ret +232 arch/s390/kvm/arm64/arm.c
+You are right on that the resched bit detail is a major difference
+between PREEMPT_COUNT_64BIT=y or n. I haven't gone that far to resolve
+the #1 difficult issue in programming (i.e. naming) ;-)
+HAS_SEPARATE_PREEMPT_RESCHED_BITS seems reasonable, I will use it if no
+other better ideas. Thanks!
 
-   228	
-   229	int kvm_arch_vcpu_run_pid_change(struct kvm_vcpu *vcpu)
-   230	{
-   231		struct kvm *kvm = vcpu->kvm;
- > 232		int ret;
-   233	
-   234		if (!kvm_vcpu_initialized(vcpu))
-   235			return -ENOEXEC;
-   236	
-   237		if (!kvm_arm_vcpu_is_finalized(vcpu))
-   238			return -EPERM;
-   239	
-   240		if (likely(READ_ONCE(vcpu->pid)))
-   241			return 0;
-   242	
-   243		ret = kvm_finalize_sys_regs(vcpu);
-   244	
-   245		mutex_lock(&kvm->arch.config_lock);
-   246		set_bit(KVM_ARCH_FLAG_HAS_RAN_ONCE, &kvm->arch.flags);
-   247		mutex_unlock(&kvm->arch.config_lock);
-   248	
-   249		return 0;
-   250	}
-   251	
+Regards,
+Boqun
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> Mark.
+> 
+> > 
+> > Signed-off-by: Boqun Feng <boqun@kernel.org>
+> > ---
+> >  arch/arm64/Kconfig | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > index fe60738e5943..1ed5173872fc 100644
+> > --- a/arch/arm64/Kconfig
+> > +++ b/arch/arm64/Kconfig
+> > @@ -248,6 +248,7 @@ config ARM64
+> >  	select PCI_SYSCALL if PCI
+> >  	select POWER_RESET
+> >  	select POWER_SUPPLY
+> > +	select PREEMPT_COUNT_64BIT
+> >  	select SPARSE_IRQ
+> >  	select SWIOTLB
+> >  	select SYSCTL_EXCEPTION_TRACE
+> > -- 
+> > 2.50.1 (Apple Git-155)
+> > 
+> > 
 
