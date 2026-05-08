@@ -1,84 +1,83 @@
-Return-Path: <linux-s390+bounces-19418-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19419-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GMjMAupl/WksdAAAu9opvQ
-	(envelope-from <linux-s390+bounces-19418-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 08 May 2026 06:26:18 +0200
+	id QOuUNfdl/WksdAAAu9opvQ
+	(envelope-from <linux-s390+bounces-19419-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 08 May 2026 06:26:31 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id A068B4F17F5
-	for <lists+linux-s390@lfdr.de>; Fri, 08 May 2026 06:26:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 56B9A4F1815
+	for <lists+linux-s390@lfdr.de>; Fri, 08 May 2026 06:26:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 90CC5307B05D
-	for <lists+linux-s390@lfdr.de>; Fri,  8 May 2026 04:21:36 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6E824301F489
+	for <lists+linux-s390@lfdr.de>; Fri,  8 May 2026 04:21:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 924E1330D35;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3881330305;
 	Fri,  8 May 2026 04:21:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YpLeUUch"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KOkaErU8"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3E8330301;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA97D332ED0;
 	Fri,  8 May 2026 04:21:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778214090; cv=none; b=jrPfWHxeaibiox+2NzfVhmoF4cHbo9x46w4Buew7gZ2Se1u6ketdof6EysU0o98pQEdi29fjLlo44dQkWOxxzxa2EywCYiYZ3ppG4jcS6W3iCHjeKzkmiUXXkZnbGcmEUHwu5+IC7tBDISeSZ1Z7nf7M/DuOdUFqCHtGuoGECyY=
+	t=1778214090; cv=none; b=Y3Nkg5JBrLSQJhbk6vXSRKWlkntmF4Ye1iazKCvfxb0kpdHJ08CGLF1JVs1woY2iF0AoldCo7OMGqmFDM+qurnme8g3cQAZLBo5YfAoKUX7DgFDKCE0YJc/mp3YSEASzdEpMUf9J8nkWZsc3qu4e2ux28tgfc0QvUc8HYUE4PIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1778214090; c=relaxed/simple;
-	bh=5il15HEwfN3oGfa4IGpnL47xhPzSBu8O9pMqQv1WFQI=;
+	bh=ojydZY/xJWBLbjMhhVliboBMhbb87iswhHxUUdAbCJ8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TO/oSp83OKNjtJ5AIjFDiRaj/mKQDFHhEG25OozOvw56dmAmAsLm1bei8vNuyZYV/hqWXANZW/i2sWl6BFh6MEgtxwZZw1C/Gy0ynbnXRpL/+dHLQssWZTshXJdw98Wb8mM0tM4Yb0HjivPug9iGdH3jn9CxhaMliiQgI90yDvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YpLeUUch; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0562AC2BCC9;
-	Fri,  8 May 2026 04:21:27 +0000 (UTC)
+	 MIME-Version; b=J0wImnGej4t8fyAOLNyrRu7KKLLw9YY0I9DKKb5/6A9FDxIWHh92dmZhkjZJA56y5FfpRh6vy2BJ2zNxVRm3WVlltmgm9FB8HJbVTdhGyqz9MZa39qlanDHN8zEyOTGuYYLxDQcPyH+TOzuop2R/h+AJAL3b7l9QxBFfKju8BLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KOkaErU8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 893C5C2BCFA;
+	Fri,  8 May 2026 04:21:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1778214090;
-	bh=5il15HEwfN3oGfa4IGpnL47xhPzSBu8O9pMqQv1WFQI=;
+	bh=ojydZY/xJWBLbjMhhVliboBMhbb87iswhHxUUdAbCJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YpLeUUchx9R6ift9jXV6hz9kmMjFwtQfarufJ80L8cLwJNV9gcdmvYn3wsHFxB9or
-	 GNiphbcFR/brm5YqHq+lOU/FZDs6+62Rbdgass2mvKsR1WRjHP5jar6y3AmBmSjBuo
-	 kvE/RWiKU7TmYwlL43ShyDgyN6tamc6b5aJXCmuJiU4SzyjxeecMkZh4BfB5MGVHaM
-	 /PrpvJgzpJtiEO3ajhVQ2VGGF/317mz5GfW4fn+7sjMb38feYSuDeRRjNVVKn+T0Lq
-	 uk1Hsy0+lnRELWipwnNXrBkj67gTeZJl6ZkbpiTW/skHTomx6kyosWQ8uj1vBKkaNP
-	 x5w/b4PrGxhnA==
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 5328FF40078;
-	Fri,  8 May 2026 00:21:27 -0400 (EDT)
+	b=KOkaErU8AV0MpuHlQuzrg70swUE3fHjl5bNbDdKMeiiQvj/8Y3M5h1Utc2y9q3r9G
+	 Savo/hLn3uU6u3w4CLx9u55Nr9uCnGi4cuO13v9fi3qjket1uZ9y6mvslN1QE+30wW
+	 aN/OFEGWcHQGNs1bCQnN32HYzGvSTVXnGZyxNX1DCCaygWK5VDSkHjUKQ4XAcURLq1
+	 RCOqY33Ni5LHrbYCGppve/6XlZUNVYVhRyem5lwLjkxlRjzwdZYymrt+q9s44igfXQ
+	 FT20x9XWGsm5ZQYsIB2CM72Qh5ntGnEg2gRkpB+g0l+oCURId7/CVBAWSDnolG6EO8
+	 4QQz6o3H+Al2g==
+Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
+	by mailfauth.phl.internal (Postfix) with ESMTP id D8A18F40076;
+	Fri,  8 May 2026 00:21:28 -0400 (EDT)
 Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Fri, 08 May 2026 00:21:27 -0400
-X-ME-Sender: <xms:x2T9aVJn54G9B_fz3Xz7papmXs9WLPhNy1KkCm-V-u9aWlYWW9Xz0A>
-    <xme:x2T9aYSwj7_u5CUPL1ZrsxeHOG6MA62h9x1ha1qAio4UD8iv89gQV2aScyQDC0xHM
-    WHotqvLzKIAbIMt_jKh5V99fRKoyPVadb1djEISqemGEHcWfb2gaSw>
-X-ME-Received: <xmr:x2T9aQCXDJ7PTHz4P3cmxI9fUbgOZyJqqmU2CWIQhW-pXrGxTzJyU0mL-NVYuMA_z_VtrvzPS89vz7Ekc5MiVGBUVzAOEb5M>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddutdelfeekucetufdoteggodetrf
+  by phl-compute-06.internal (MEProxy); Fri, 08 May 2026 00:21:28 -0400
+X-ME-Sender: <xms:yGT9aX--gwYP_5kQn2Ao83tHMvQBh54Lc02c86WGybSBXKkJhV0b6A>
+    <xme:yGT9aZn1l-L1z42Zk0Mww1BIgAuX-Td7yZ7YIt3L2jbHUL5ekFDx-e2DFroCiXP04
+    65uprEzS-Y71FWi-ZjbtjRBpPSkGIzuBIgsIfYMo2JHEcSy-jY>
+X-ME-Received: <xmr:yGT9aXcoL7TILxBE10Yf07NJ9oHRhFqFG1M7AHMIRZsMvQs49KBgTONLvUT69GDFDq5Ki51yEuFPSJDgzfoJgOucFGwJ-IrA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddutdelfeejucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
     gurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepuehoqhhunhcu
     hfgvnhhguceosghoqhhunheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpe
-    ekieffgeevhefgudffveffheettdfgkeeilefhhfduhedugedvhedtteegvdeugfenucff
-    ohhmrghinhepmhhsghhiugdrlhhinhhknecuvehluhhsthgvrhfuihiivgepvdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhn
-    rghlihhthidqudeijedtleekgeejuddqudejjeekheehhedvqdgsohhquhhnpeepkhgvrh
-    hnvghlrdhorhhgsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepheejpdhmohgu
-    vgepshhmthhpohhuthdprhgtphhtthhopehpvghtvghriiesihhnfhhrrgguvggrugdroh
-    hrghdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhr
-    tghpthhtohepfihilhhlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjohhnrghsse
-    hsohhuthhhphholhgvrdhsvgdprhgtphhtthhopehsthgvfhgrnhdrkhhrihhsthhirghn
-    shhsohhnsehsrghunhgrlhgrhhhtihdrfhhipdhrtghpthhtohepshhhohhrnhgvsehgmh
-    grihhlrdgtohhmpdhrtghpthhtohephhgtrgeslhhinhhugidrihgsmhdrtghomhdprhgt
-    phhtthhopehgohhrsehlihhnuhigrdhisghmrdgtohhmpdhrtghpthhtoheprghgohhrug
-    gvvghvsehlihhnuhigrdhisghmrdgtohhm
-X-ME-Proxy: <xmx:x2T9afLtR2gkbaEPzeY-rnHuCSgtdqZTVOYYM4QQjddZw1GTGcXpLw>
-    <xmx:x2T9afWpeiyLNF14FDDcqPcpvvqse9J1Udh8I2UWe4MqCrKgBq5XAw>
-    <xmx:x2T9aakxZ8NkvzTomrL_wyh5DmAI7UDP9sTd57oJw_-sZg8GdHC7NQ>
-    <xmx:x2T9aXD9XRtXx7KcrvAZEKwB-RPzIEO6wol08dBf69ilHhz_nXVf-w>
-    <xmx:x2T9aZATvx7rQEyUrNV6TqY0xCd4hQ8ErhCTDSGZh-iRW895aKASoICe>
+    dtfedugfeivddvfeegjeehleehvdfhhefhffeuleehtdevgfeggefgheduuedtteenucev
+    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnod
+    hmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieejtdelkeegjeduqddujeej
+    keehheehvddqsghoqhhunheppehkvghrnhgvlhdrohhrghesfhhigihmvgdrnhgrmhgvpd
+    hnsggprhgtphhtthhopeehiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepphgv
+    thgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheptggrthgrlhhinhdrmh
+    grrhhinhgrshesrghrmhdrtghomhdprhgtphhtthhopeifihhllheskhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtohepjhhonhgrshesshhouhhthhhpohhlvgdrshgvpdhrtghpthhtoh
+    epshhtvghfrghnrdhkrhhishhtihgrnhhsshhonhesshgruhhnrghlrghhthhirdhfihdp
+    rhgtphhtthhopehshhhorhhnvgesghhmrghilhdrtghomhdprhgtphhtthhopehhtggrse
+    hlihhnuhigrdhisghmrdgtohhmpdhrtghpthhtohepghhorheslhhinhhugidrihgsmhdr
+    tghomhdprhgtphhtthhopegrghhorhguvggvvheslhhinhhugidrihgsmhdrtghomh
+X-ME-Proxy: <xmx:yGT9aUnqd89fNuG4-B2RzsGa13wlMFWtSpErXajVKo-J_Q0SMeEEgg>
+    <xmx:yGT9acikR84neMseXY7pjuWjfkVmKNU13iw3Sonr8f53BS8bEU8jaw>
+    <xmx:yGT9aSlucn6SriOOjfS9uKZtixIFYPPOe7_JTfi0yG8iaCwqUB6nBg>
+    <xmx:yGT9adG1345W2gBQ6_lCRbdGplAVYJdXexe2U1n_xIJ2XtmcWnaT3w>
+    <xmx:yGT9aYIMaTH3MwOUbe3l-pw0H05hIpAyEYe6l3Ytxrv1pVBvySeAu_y->
 Feedback-ID: i8dbe485b:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 8 May 2026 00:21:26 -0400 (EDT)
+ 8 May 2026 00:21:28 -0400 (EDT)
 From: Boqun Feng <boqun@kernel.org>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>,	Will Deacon <will@kernel.org>,
@@ -118,11 +117,10 @@ Cc: Catalin Marinas <catalin.marinas@arm.com>,	Will Deacon <will@kernel.org>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
 	linux-arm-kernel@lists.infradead.org,	linux-kernel@vger.kernel.org,
 	linux-openrisc@vger.kernel.org,	linux-s390@vger.kernel.org,
-	linux-arch@vger.kernel.org,	rust-for-linux@vger.kernel.org,
-	Boqun Feng <boqun.feng@gmail.com>
-Subject: [PATCH 07/11] locking: Switch to _irq_{disable,enable}() variants in cleanup guards
-Date: Thu,  7 May 2026 21:21:07 -0700
-Message-ID: <20260508042111.24358-8-boqun@kernel.org>
+	linux-arch@vger.kernel.org,	rust-for-linux@vger.kernel.org
+Subject: [PATCH 08/11] sched: Remove the unused preempt_offset parameter of __cant_sleep()
+Date: Thu,  7 May 2026 21:21:08 -0700
+Message-ID: <20260508042111.24358-9-boqun@kernel.org>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20260508042111.24358-1-boqun@kernel.org>
 References: <20260508042111.24358-1-boqun@kernel.org>
@@ -133,32 +131,31 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: A068B4F17F5
+X-Rspamd-Queue-Id: 56B9A4F1815
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[arm.com,kernel.org,southpole.se,saunalahti.fi,gmail.com,linux.ibm.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,linaro.org,goodmis.org,google.com,suse.de,amd.com,linux-foundation.org,garyguo.net,protonmail.com,umich.edu,huawei.com,intel.com,nvidia.com,infradead.org,linutronix.de,lists.infradead.org,vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19418-lists,linux-s390=lfdr.de];
-	FROM_NEQ_ENVFROM(0.00)[boqun@kernel.org,linux-s390@vger.kernel.org];
 	RCVD_TLS_LAST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_FROM(0.00)[bounces-19419-lists,linux-s390=lfdr.de];
+	FREEMAIL_CC(0.00)[arm.com,kernel.org,southpole.se,saunalahti.fi,gmail.com,linux.ibm.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,linaro.org,goodmis.org,google.com,suse.de,amd.com,linux-foundation.org,garyguo.net,protonmail.com,umich.edu,huawei.com,intel.com,nvidia.com,infradead.org,linutronix.de,lists.infradead.org,vger.kernel.org];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_NEQ_ENVFROM(0.00)[boqun@kernel.org,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_GT_50(0.00)[57];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[msgid.link:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
+	RCPT_COUNT_GT_50(0.00)[56];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-s390];
 	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
@@ -166,93 +163,60 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Action: no action
 
-From: Boqun Feng <boqun.feng@gmail.com>
+The preempt_offset is always 0 in all the callsites of __cant_sleep(),
+hence remove it. It also allows us to clear the code a bit by stopping
+using a "preempt_count() > .." comparison.
 
-The semantics of various irq disabling guards match what
-*_irq_{disable,enable}() provide, i.e. the interrupt disabling is
-properly nested, therefore it's OK to switch to use
-*_irq_{disable,enable}() primitives.
-
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 Signed-off-by: Boqun Feng <boqun@kernel.org>
-Link: https://patch.msgid.link/20260121223933.1568682-17-lyude@redhat.com
 ---
- include/linux/spinlock.h | 26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+ include/linux/kernel.h | 4 ++--
+ kernel/sched/core.c    | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/spinlock.h b/include/linux/spinlock.h
-index 66fa699fff19..cf5cdb8b272c 100644
---- a/include/linux/spinlock.h
-+++ b/include/linux/spinlock.h
-@@ -574,12 +574,12 @@ DECLARE_LOCK_GUARD_1_ATTRS(raw_spinlock_nested, __acquires(_T), __releases(*(raw
- #define class_raw_spinlock_nested_constructor(_T) WITH_LOCK_GUARD_1_ATTRS(raw_spinlock_nested, _T)
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index e5570a16cbb1..24414c79e59a 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -72,7 +72,7 @@ extern int dynamic_might_resched(void);
+ #ifdef CONFIG_DEBUG_ATOMIC_SLEEP
+ extern void __might_resched(const char *file, int line, unsigned int offsets);
+ extern void __might_sleep(const char *file, int line);
+-extern void __cant_sleep(const char *file, int line, int preempt_offset);
++extern void __cant_sleep(const char *file, int line);
+ extern void __cant_migrate(const char *file, int line);
  
- DEFINE_LOCK_GUARD_1(raw_spinlock_irq, raw_spinlock_t,
--		    raw_spin_lock_irq(_T->lock),
--		    raw_spin_unlock_irq(_T->lock))
-+		    raw_spin_lock_irq_disable(_T->lock),
-+		    raw_spin_unlock_irq_enable(_T->lock))
- DECLARE_LOCK_GUARD_1_ATTRS(raw_spinlock_irq, __acquires(_T), __releases(*(raw_spinlock_t **)_T))
- #define class_raw_spinlock_irq_constructor(_T) WITH_LOCK_GUARD_1_ATTRS(raw_spinlock_irq, _T)
+ /**
+@@ -95,7 +95,7 @@ extern void __cant_migrate(const char *file, int line);
+  * this macro will print a stack trace if it is executed with preemption enabled
+  */
+ # define cant_sleep() \
+-	do { __cant_sleep(__FILE__, __LINE__, 0); } while (0)
++	do { __cant_sleep(__FILE__, __LINE__); } while (0)
+ # define sched_annotate_sleep()	(current->task_state_change = 0)
  
--DEFINE_LOCK_GUARD_1_COND(raw_spinlock_irq, _try, raw_spin_trylock_irq(_T->lock))
-+DEFINE_LOCK_GUARD_1_COND(raw_spinlock_irq, _try, raw_spin_trylock_irq_disable(_T->lock))
- DECLARE_LOCK_GUARD_1_ATTRS(raw_spinlock_irq_try, __acquires(_T), __releases(*(raw_spinlock_t **)_T))
- #define class_raw_spinlock_irq_try_constructor(_T) WITH_LOCK_GUARD_1_ATTRS(raw_spinlock_irq_try, _T)
+ /**
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index b8871449d3c6..75dba7cc09bd 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -9165,7 +9165,7 @@ void __might_resched(const char *file, int line, unsigned int offsets)
+ }
+ EXPORT_SYMBOL(__might_resched);
  
-@@ -594,14 +594,13 @@ DECLARE_LOCK_GUARD_1_ATTRS(raw_spinlock_bh_try, __acquires(_T), __releases(*(raw
- #define class_raw_spinlock_bh_try_constructor(_T) WITH_LOCK_GUARD_1_ATTRS(raw_spinlock_bh_try, _T)
+-void __cant_sleep(const char *file, int line, int preempt_offset)
++void __cant_sleep(const char *file, int line)
+ {
+ 	static unsigned long prev_jiffy;
  
- DEFINE_LOCK_GUARD_1(raw_spinlock_irqsave, raw_spinlock_t,
--		    raw_spin_lock_irqsave(_T->lock, _T->flags),
--		    raw_spin_unlock_irqrestore(_T->lock, _T->flags),
--		    unsigned long flags)
-+		    raw_spin_lock_irq_disable(_T->lock),
-+		    raw_spin_unlock_irq_enable(_T->lock))
- DECLARE_LOCK_GUARD_1_ATTRS(raw_spinlock_irqsave, __acquires(_T), __releases(*(raw_spinlock_t **)_T))
- #define class_raw_spinlock_irqsave_constructor(_T) WITH_LOCK_GUARD_1_ATTRS(raw_spinlock_irqsave, _T)
+@@ -9175,7 +9175,7 @@ void __cant_sleep(const char *file, int line, int preempt_offset)
+ 	if (!IS_ENABLED(CONFIG_PREEMPT_COUNT))
+ 		return;
  
- DEFINE_LOCK_GUARD_1_COND(raw_spinlock_irqsave, _try,
--			 raw_spin_trylock_irqsave(_T->lock, _T->flags))
-+			 raw_spin_trylock_irq_disable(_T->lock))
- DECLARE_LOCK_GUARD_1_ATTRS(raw_spinlock_irqsave_try, __acquires(_T), __releases(*(raw_spinlock_t **)_T))
- #define class_raw_spinlock_irqsave_try_constructor(_T) WITH_LOCK_GUARD_1_ATTRS(raw_spinlock_irqsave_try, _T)
+-	if (preempt_count() > preempt_offset)
++	if (preempt_count())
+ 		return;
  
-@@ -620,13 +619,13 @@ DECLARE_LOCK_GUARD_1_ATTRS(spinlock_try, __acquires(_T), __releases(*(spinlock_t
- #define class_spinlock_try_constructor(_T) WITH_LOCK_GUARD_1_ATTRS(spinlock_try, _T)
- 
- DEFINE_LOCK_GUARD_1(spinlock_irq, spinlock_t,
--		    spin_lock_irq(_T->lock),
--		    spin_unlock_irq(_T->lock))
-+		    spin_lock_irq_disable(_T->lock),
-+		    spin_unlock_irq_enable(_T->lock))
- DECLARE_LOCK_GUARD_1_ATTRS(spinlock_irq, __acquires(_T), __releases(*(spinlock_t **)_T))
- #define class_spinlock_irq_constructor(_T) WITH_LOCK_GUARD_1_ATTRS(spinlock_irq, _T)
- 
- DEFINE_LOCK_GUARD_1_COND(spinlock_irq, _try,
--			 spin_trylock_irq(_T->lock))
-+			 spin_trylock_irq_disable(_T->lock))
- DECLARE_LOCK_GUARD_1_ATTRS(spinlock_irq_try, __acquires(_T), __releases(*(spinlock_t **)_T))
- #define class_spinlock_irq_try_constructor(_T) WITH_LOCK_GUARD_1_ATTRS(spinlock_irq_try, _T)
- 
-@@ -642,14 +641,13 @@ DECLARE_LOCK_GUARD_1_ATTRS(spinlock_bh_try, __acquires(_T), __releases(*(spinloc
- #define class_spinlock_bh_try_constructor(_T) WITH_LOCK_GUARD_1_ATTRS(spinlock_bh_try, _T)
- 
- DEFINE_LOCK_GUARD_1(spinlock_irqsave, spinlock_t,
--		    spin_lock_irqsave(_T->lock, _T->flags),
--		    spin_unlock_irqrestore(_T->lock, _T->flags),
--		    unsigned long flags)
-+		    spin_lock_irq_disable(_T->lock),
-+		    spin_unlock_irq_enable(_T->lock))
- DECLARE_LOCK_GUARD_1_ATTRS(spinlock_irqsave, __acquires(_T), __releases(*(spinlock_t **)_T))
- #define class_spinlock_irqsave_constructor(_T) WITH_LOCK_GUARD_1_ATTRS(spinlock_irqsave, _T)
- 
- DEFINE_LOCK_GUARD_1_COND(spinlock_irqsave, _try,
--			 spin_trylock_irqsave(_T->lock, _T->flags))
-+			 spin_trylock_irq_disable(_T->lock))
- DECLARE_LOCK_GUARD_1_ATTRS(spinlock_irqsave_try, __acquires(_T), __releases(*(spinlock_t **)_T))
- #define class_spinlock_irqsave_try_constructor(_T) WITH_LOCK_GUARD_1_ATTRS(spinlock_irqsave_try, _T)
- 
+ 	if (time_before(jiffies, prev_jiffy + HZ) && prev_jiffy)
 -- 
 2.50.1 (Apple Git-155)
 
