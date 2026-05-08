@@ -1,49 +1,49 @@
-Return-Path: <linux-s390+bounces-19441-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19442-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8PnRJX/l/WnckQAAu9opvQ
-	(envelope-from <linux-s390+bounces-19441-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 08 May 2026 15:30:39 +0200
+	id SLhbHGrj/WmOkQAAu9opvQ
+	(envelope-from <linux-s390+bounces-19442-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 08 May 2026 15:21:46 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2C664F7146
-	for <lists+linux-s390@lfdr.de>; Fri, 08 May 2026 15:30:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C83054F6F6C
+	for <lists+linux-s390@lfdr.de>; Fri, 08 May 2026 15:21:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 08CD830727D9
-	for <lists+linux-s390@lfdr.de>; Fri,  8 May 2026 13:17:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 192CB3076F29
+	for <lists+linux-s390@lfdr.de>; Fri,  8 May 2026 13:17:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAC4B3E3C62;
-	Fri,  8 May 2026 13:17:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8271E3E3C4A;
+	Fri,  8 May 2026 13:17:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NmqMd9nq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HWkHfw6j"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82DC73E3154;
-	Fri,  8 May 2026 13:17:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD0C37F00C;
+	Fri,  8 May 2026 13:17:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778246235; cv=none; b=M8esSJuLJaqVGiemc1hrFurQqsxzHvOi5dMpqwLkaugxjwkLh87lWWQnfyN9R/e3yE3k4xxqhsnndrkV96e8l2nrnS+h+o6dzuqcEqTHtNcfcvwfEux9JpiNsaqParvY9iEe+TfnYvi7lqohEGQZ7AToTu/b0EM+N+a60ii5nnE=
+	t=1778246243; cv=none; b=EjUGvNr+43spF0VAUPf6CJ68xEPTe6kUysZyyiXfc0C7b6edA1JDIebq92lf+IEfoZWt94p9AVxHhEc02D/ZmHZ+pvc4RviaN5ekiBJZOqBOLqALN5r1tnp9yAoCDQH+TDOG19wGq8oeyinHm6VxTwD+XtE3WI+UrQI8wcXMZZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778246235; c=relaxed/simple;
-	bh=auNYKADD05SLlsp/9RYz5+LVvmnhMqjrsvSp8Ju4hXc=;
+	s=arc-20240116; t=1778246243; c=relaxed/simple;
+	bh=UeCeMdJXLMsqcLiyE7L6BjEm2BBFQStG53xrIqv/KCw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qdLuT8nVzI1ySg9IAL8x4snqHQktb/dSmRsWoIc1nRbLGYekCRJAi0VDNyNuW+LHP3xvr/l35/92yQyv1zzf93RTAZlANT8zNUqpIF371HRXknsH0474yMnPB+YdHXI+N3wPrIoh3tcaijgBmF1f5ONqkDGcuCatu86cEZXFMRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NmqMd9nq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F370C2BCB8;
-	Fri,  8 May 2026 13:17:07 +0000 (UTC)
+	 MIME-Version; b=rn3lWF/nIc+0LjZMTeeMn/jrQNfpZswQpz3QoaI3yJ3xe5XNpmhgyItH75+JQOAhDYa96msrcrRTjDI8IYAS9baKC9YrfsAhFaShjL/7RMdHRlPgRSmWl9l3ikrN7auImU0pO77UQkTHri+oUQQ0Xyi5VcYCZHEqFFMEiXbljCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HWkHfw6j; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 985AFC2BCC7;
+	Fri,  8 May 2026 13:17:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778246235;
-	bh=auNYKADD05SLlsp/9RYz5+LVvmnhMqjrsvSp8Ju4hXc=;
+	s=k20201202; t=1778246243;
+	bh=UeCeMdJXLMsqcLiyE7L6BjEm2BBFQStG53xrIqv/KCw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NmqMd9nq7hn4woGsz+DEgaq28CUB6LJXpklLRcwhPyjO9vgeTr1+3cmtj3FWbKsV/
-	 5TkXkZ+SdTaVAeNvXcOr8pfQw8K+krvr+81SLj/aHPs1GBL86UBk6hNkLpoY9IQKVI
-	 nqFmsdeDcLO7sT7j26IJRNUZLe00M2AP6Qwnt4NfZt4l0DiBRrc755lwhpMlN4YCqs
-	 Vgj7bYiyp0bzNJFH7HcZnUprszddIl9TLq0FmW2TNdWYt/dAIwOxui9fbXYMdFTiBQ
-	 CJza4ccWbDGNwRDTCbBGx5b4BrcZ2ee5GPDcut1s1ZlRnZbRF3z6sEfXsXIe26hbaM
-	 LKiMXzlugQm9w==
+	b=HWkHfw6jK75cNMzAAZKQ5+/l6MQMArstvk7RP/tFCMfz1+R6CNXzwQ3L0ZyjukjaW
+	 0uyIzp+bWzVXPIlYleMk1IZZD7hH0tto03sYlMgkIkkouJZt7q9EatrTk/zPWIdMq2
+	 NihSRoDrT0G0J7hUFIithGrluCdjOPrWuIJyxPvZVeAZHZpJJFDYPkIUFJ+5LaAPEA
+	 4HiPOFmjN8qjLPKmjUuPfz+KrRUCy11VGrzeX571pG2Wrc/Ql8CU5O0Y2ldbRSTgKK
+	 xyPyr6dHzCFJb7Bcu1S9kcPxV2uY4hoIYSRtyG8CBqKhj51y1CXnCOZA2CKC6q4tty
+	 wyUJbfcdYY/Vg==
 From: Frederic Weisbecker <frederic@kernel.org>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Frederic Weisbecker <frederic@kernel.org>,
@@ -76,9 +76,9 @@ Cc: Frederic Weisbecker <frederic@kernel.org>,
 	Viresh Kumar <viresh.kumar@linaro.org>,
 	Xin Zhao <jackzxcui1989@163.com>, linux-pm@vger.kernel.org,
 	linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 01/15] tick/sched: Fix TOCTOU in nohz idle time fetch
-Date: Fri,  8 May 2026 15:16:33 +0200
-Message-ID: <20260508131647.43868-2-frederic@kernel.org>
+Subject: [PATCH 02/15] sched/idle: Handle offlining first in idle loop
+Date: Fri,  8 May 2026 15:16:34 +0200
+Message-ID: <20260508131647.43868-3-frederic@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260508131647.43868-1-frederic@kernel.org>
 References: <20260508131647.43868-1-frederic@kernel.org>
@@ -89,7 +89,7 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: E2C664F7146
+X-Rspamd-Queue-Id: C83054F6F6C
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [3.04 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -101,14 +101,14 @@ X-Spamd-Result: default: False [3.04 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19441-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19442-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_CC(0.00)[kernel.org,linux.ibm.com,linutronix.de,google.com,gmail.com,arm.com,redhat.com,siemens.com,nvidia.com,suse.de,ellerman.id.au,infradead.org,web.codeaurora.org,goodmis.org,linaro.org,163.com,vger.kernel.org,lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_TWELVE(0.00)[38];
 	MIME_TRACE(0.00)[0:+];
-	NEURAL_SPAM(0.00)[0.920];
+	NEURAL_SPAM(0.00)[0.895];
 	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
 	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
@@ -122,65 +122,70 @@ X-Spamd-Result: default: False [3.04 / 15.00];
 	FROM_HAS_DN(0.00)[]
 X-Rspamd-Action: no action
 
-When the nohz idle time is fetched, the current clock timestamp is taken
-outside the seqcount, which can result in such a race as reported by
-Sashiko:
+Offline handling happens from within the inner idle loop,
+after the beginning of dyntick cputime accounting, nohz idle
+load balancing and TIF_NEED_RESCHED polling.
 
-    get_cpu_sleep_time_us()                 tick_nohz_start_idle()
-    -----------------------                 ---------------------
-    now = ktime_get()
-                                            write_seqcount_begin(idle_sleeptime_seq);
-                                            idle_entrytime = ktime_get()
-                                            tick_sched_flag_set(ts, TS_FLAG_IDLE_ACTIVE);
-                                            write_seqcount_end(&ts->idle_sleeptime_seq);
-    read_seqcount_begin(idle_sleeptime_seq)
-    delta = now - idle_entrytime);
-    //!! But now < idle_entrytime
-    idle = *sleeptime +  delta;
-    read_seqcount_retry(&ts->idle_sleeptime_seq, seq)
+This is not necessary and even buggy because:
 
-Here the read side fetches the timestamp before the write side and its
-update. As a result the time delta computed on the read side is negative
-(ktime_t is signed) and breaks the cputime monotonicity guarantee.
+* There is no dyntick handling to do. And calling tick_nohz_idle_enter()
+  messes up with the struct tick_sched reset that was performed on
+  tick_sched_timer_dying().
 
-This could possibly be fixed with reading the current clock timestamp
-inside the seqcount but the reader overhead might then increase. Also
-simply checking that the current timestamp is above the idle entry time
-is enough to prevent any issue of the like.
+* There is no nohz idle balancing to do.
 
-Reported-by: Sashiko
-Fixes: 620a30fa0bd1 ("timers/nohz: Protect idle/iowait sleep time under seqcount")
+* Polling on TIF_RESCHED is irrelevant at this stage, there are no more
+  tasks allowed to run.
+
+* No need to check if need_resched() before offline handling since
+  stop_machine is done and all per-cpu kthread should be done with
+  their job.
+
+Therefore move the offline handling at the beginning of the idle loop.
+This will also ease the idle cputime unification later by not elapsing
+idle time while offline through the call to:
+
+	tick_nohz_idle_enter() -> tick_nohz_start_idle()
+
+Reviewed-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
+Reviewed-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+Tested-by: Shrikanth Hegde <sshegde@linux.ibm.com>
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 ---
- kernel/time/tick-sched.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ kernel/sched/idle.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index cbbb87a0c6e7..171393367b5c 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -797,15 +797,16 @@ static u64 get_cpu_sleep_time_us(struct tick_sched *ts, ktime_t *sleeptime,
- 		*last_update_time = ktime_to_us(now);
+diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+index a83be0c834dd..aa7e3dc59856 100644
+--- a/kernel/sched/idle.c
++++ b/kernel/sched/idle.c
+@@ -280,6 +280,14 @@ static void do_idle(void)
+ 	int cpu = smp_processor_id();
+ 	bool got_tick = false;
  
- 	do {
-+		ktime_t delta = 0;
++	if (cpu_is_offline(cpu)) {
++		local_irq_disable();
++		/* All per-CPU kernel threads should be done by now. */
++		WARN_ON_ONCE(need_resched());
++		cpuhp_report_idle_dead();
++		arch_cpu_idle_dead();
++	}
 +
- 		seq = read_seqcount_begin(&ts->idle_sleeptime_seq);
+ 	/*
+ 	 * Check if we need to update blocked load
+ 	 */
+@@ -331,11 +339,6 @@ static void do_idle(void)
+ 		 */
+ 		local_irq_disable();
  
- 		if (tick_sched_flag_test(ts, TS_FLAG_IDLE_ACTIVE) && compute_delta) {
--			ktime_t delta = ktime_sub(now, ts->idle_entrytime);
+-		if (cpu_is_offline(cpu)) {
+-			cpuhp_report_idle_dead();
+-			arch_cpu_idle_dead();
+-		}
 -
--			idle = ktime_add(*sleeptime, delta);
--		} else {
--			idle = *sleeptime;
-+			if (now > ts->idle_entrytime)
-+				delta = ktime_sub(now, ts->idle_entrytime);
- 		}
-+
-+		idle = ktime_add(*sleeptime, delta);
- 	} while (read_seqcount_retry(&ts->idle_sleeptime_seq, seq));
+ 		arch_cpu_idle_enter();
+ 		rcu_nocb_flush_deferred_wakeup();
  
- 	return ktime_to_us(idle);
 -- 
 2.53.0
 
