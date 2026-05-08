@@ -1,116 +1,117 @@
-Return-Path: <linux-s390+bounces-19457-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19437-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sGEYIVLk/WnakQAAu9opvQ
-	(envelope-from <linux-s390+bounces-19457-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 08 May 2026 15:25:38 +0200
+	id EOfaAHXH/WkpigAAu9opvQ
+	(envelope-from <linux-s390+bounces-19437-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 08 May 2026 13:22:29 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1EF924F7062
-	for <lists+linux-s390@lfdr.de>; Fri, 08 May 2026 15:25:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 99C814F5B05
+	for <lists+linux-s390@lfdr.de>; Fri, 08 May 2026 13:22:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 830C4301D25B
-	for <lists+linux-s390@lfdr.de>; Fri,  8 May 2026 13:25:37 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id C2B9D3016427
+	for <lists+linux-s390@lfdr.de>; Fri,  8 May 2026 11:22:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D1EE32C923;
-	Fri,  8 May 2026 13:25:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ECFE395D87;
+	Fri,  8 May 2026 11:22:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kE4cbQx0"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Uog7q9bJ"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C913E3DA9;
-	Fri,  8 May 2026 13:25:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4373391837;
+	Fri,  8 May 2026 11:22:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778246733; cv=none; b=hQcd5QExWgA6NjlhTYYsIg0QnSHUhP8OfLHRNRjDlQQMmSb+al72aBa/B2LlqSRwYoece79QypfMsvKr4AqovHLramcnfi0eSToc3rbst+yy4LUNH/f7JI7qCFbRYQUPymAPiuhkmQ+rAT0AWFzBPNjRzkPlAMJFkzbFFEvfYrc=
+	t=1778239346; cv=none; b=Q2QqF5CubhMkLqFNKyEN2QB0aq0XnzhKsOMdZXytwFofkdfXYY1YGc7lqIYipbMSNltzRlXc+lX5mqgznfAQZtlNpljv512xrU6KCm9KH0bc2Dfs6gGGvmUsycrdoQJaNAjdPEN9oEoh3PPjl3VeWijvNrsOQryG0c0X2hQeONA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778246733; c=relaxed/simple;
-	bh=TbxRhXrZVjXIg2jkCQ+Lj3a0haNTs4sB3Its3VkIoKM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s4AUzTKGLJ6ACrPF5vg1ayXH7SirjheGcTAqzWK3hP9+vfEzrlyu1KFpKf4dJNTJQ2wHcmQ8u6bDwhVhMnjJ0nDyj+AZJGn02MaFSRrs5act0TI87B57f2rnY4GgX+2zqeo1m5RUkMQvQi6HKda6lN6p1YU5d/WYQPfyDHftBss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kE4cbQx0; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1778239346; c=relaxed/simple;
+	bh=UEwLSfCLYr9ekGwQxJfjsoHYHTq/8/nFDqjQdyE/UF8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Eu6aXRKz/UwenLJkfVFETqnU4u34jluaabMJTPEvvZwogj8OZelylqOKDcPYulhKPAft27OwfitWCqGUKNXL3/XHtquNC4b5Tup+1BAWi1x13r93b9uAUyrBSHOPKsMlnLhmdQtCleLMo5shC0FfYum+xlBHJ+wq7/46X4jlkdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Uog7q9bJ; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6486Ta1H1531488;
-	Fri, 8 May 2026 13:25:26 GMT
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 647MdOQ92752196;
+	Fri, 8 May 2026 11:22:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=bcw4Lp
-	xZ5p5qk0ACsnIlB/lvzXcRVMy58Dp00PgHetI=; b=kE4cbQx0tIc25rAobhQB1T
-	mktkStktTFif1CryUTGZ+YzD9XBLh27mXid4mTijCZtSl5dcBYdXZHloDhWzlVkk
-	pOcRoSfI7BQxxaLrijhYCDMKgAjvCL+Cfo+5Merl/DhsFssYdzb0IShtE38pXjsr
-	7JV+NKnKPXXIT6vDZlhJX68FazwdTIVqt+/7tckyzdauvsPpSejkBCYqEWfDWp0D
-	PDnWkzxU83/Rl9v+YvK6xvVdwQ95EgSB0lublXExHot4ppVHEmskjZ/cYMAgpQkK
-	nKolF4GG+PjCTDtyetS6P8o+J1lTXbDEoBoqqm/AczTkrzoaB7MNRwOWIgFVz2kg
-	==
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=hoEvtfnAaFSl/3LfwRcaeH3I0H+9QK
+	ew9Xs1qI6QVco=; b=Uog7q9bJp7ZttCjE/Eg4+LzJeDbbuKt0YjsZcul2p0MUg/
+	VW0df1IMIn4v/cuoEJJJk3B7tb3A45DA7zfC2QvaubMQ6UYUyNbVr2Ra6j/qN4si
+	iVlcbvZFf1cJxszlaAzDCO4JInDgbrfTeD9dAxNEF22WDLUCzzeYoDHSyJvNOCy5
+	B3ivKx//cHSCtPBAV7lhQ3E4IcCIjRSBEPrrigd1+TsonzxQdse6/7CE30eknwm0
+	qDJPhK2cudqYvWtSFD4YNGt07zfQ/tiI1r7xA7wI+83s6TPkGHSVVyxPYbjE71Pi
+	WdOQ91YO0lmmsd7K4tp2XlZtAsu7D+xzaD6G3eZg==
 Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dw9x53vk7-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dw9x53e5f-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 May 2026 13:25:25 +0000 (GMT)
+	Fri, 08 May 2026 11:22:22 +0000 (GMT)
 Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 648DOTYQ018391;
-	Fri, 8 May 2026 13:25:24 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dww3hg8fr-1
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 648B9XqI011688;
+	Fri, 8 May 2026 11:22:21 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dww3hfvhs-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 May 2026 13:25:24 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 648DPL2a51904946
+	Fri, 08 May 2026 11:22:21 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 648BMIWe43581888
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 8 May 2026 13:25:21 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 116D720040;
-	Fri,  8 May 2026 13:25:21 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4BC5B2004F;
-	Fri,  8 May 2026 13:25:20 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.111.47.82])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with SMTP;
-	Fri,  8 May 2026 13:25:20 +0000 (GMT)
-Date: Fri, 8 May 2026 12:30:09 +0200
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: Eric Farman <farman@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank
- <frankja@linux.ibm.com>,
-        David Hildenbrand <david@kernel.org>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] KVM: s390: selftests: Extended user_operexec
- tests
-Message-ID: <20260508123009.50b406be@p-imbrenda>
-In-Reply-To: <20260507200836.3500368-3-farman@linux.ibm.com>
-References: <20260507200836.3500368-1-farman@linux.ibm.com>
-	<20260507200836.3500368-3-farman@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	Fri, 8 May 2026 11:22:18 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EFEB42004E;
+	Fri,  8 May 2026 11:22:17 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C8AD42004D;
+	Fri,  8 May 2026 11:22:17 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.52.215.75])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri,  8 May 2026 11:22:17 +0000 (GMT)
+Date: Fri, 8 May 2026 13:22:16 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Julian Braha <julianbraha@gmail.com>
+Cc: gor@linux.ibm.com, hca@linux.ibm.com, iii@linux.ibm.com,
+        meted@linux.ibm.com, borntraeger@linux.ibm.com, svens@linux.ibm.com,
+        akpm@linux-foundation.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH] s390: fix dead defaults for
+ S390_MODULES_SANITY_TEST and S390_UNWIND_SELFTEST
+Message-ID: <5bd572e5-78c6-4f6e-ba95-4e79a8ef8341-agordeev@linux.ibm.com>
+References: <20260414215651.151228-1-julianbraha@gmail.com>
+ <a3adc8e8-ce4c-458c-a0c8-c0e66078589d-agordeev@linux.ibm.com>
+ <b3dba59d-22cc-4404-8876-8fd4e22021b5@gmail.com>
+ <3ec20142-09d1-436f-a623-21a2440ef7f0-agordeev@linux.ibm.com>
+ <cffeec5e-068c-4562-98ef-f65e346dff3c@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cffeec5e-068c-4562-98ef-f65e346dff3c@gmail.com>
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTA4MDEzNiBTYWx0ZWRfXysqBQtVsjF3x
- E7r0NR8fR6Umm9nxsYASZT359NaGQBwzxNvdoBTpfqn4ycc+vxzn+SeDUlWiLc4z1FKYMR8Rh1S
- 0G8zrTZGm+RNAWYcvDgXlhLIu0zaSzI1Pizda7bclMaP45Rwb+bOpYFo5Z9jj/Ih6LyZtqztexG
- zcv3fDAPtUGwNjMgFM/Ldu+6k2rROHNWHbM++lNX8AJj/qcNmeY7vhE6TuW5EDmbcpfxPsSZ5R3
- qt65AkHS/nQvgaUF6JRumnR7unN+N+UOv8iZiEibf7Ih6Hk+VgT7e9W2aTLUVTOyu0O4EjcaqpF
- mQExUwZ8L7+2uThtTsXRvczr9IM15c0uX3jjwPzC3UlrzOfSTmgzV6aqJJHX0UX4FAj8QElfuBY
- E65GlNqLesvI1JeMGVSNc118PkhYd6Ltkcg0Sse1yKSO4aruyOOypICCHDx52iJWi6Xs2L4lPTs
- ixTWfVa1vNOL2O7YXfg==
-X-Proofpoint-ORIG-GUID: tCuT2o3cYkuyUChtYvywOYMoUWQJaxez
-X-Proofpoint-GUID: tCuT2o3cYkuyUChtYvywOYMoUWQJaxez
-X-Authority-Analysis: v=2.4 cv=W7UIkxWk c=1 sm=1 tr=0 ts=69fde446 cx=c_pps
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTA4MDExNSBTYWx0ZWRfXw3re0RDHs0yp
+ zmRC+Aekj4BjZUnjmZjsBgrp5jbmEoIZWpAYAQma7qzNKh8w0WoaYGfEz5QgC2uHOsTen8J1kCZ
+ IQS6rZ6J/67iujG4lUG8zu72tcEJ58qo1KpjF8oI0Ca4m3ke35HcF4bnHG3wsJhCi3eNH5pBUmv
+ ZDUXJEIP5EzxHUufdCx3b/xVEI4nziVkJqmAe6z8FQRmeMedmFJ6dctizEhnRVb4cHSDDHcObnW
+ XP6pgzmnz1GuccO/XD9XmS9Ar0fUYI1RuLC2NjAVwvQUrdZfwEUKTrsKp1m8PPWB6Pgn+mm9GNx
+ N3UtqghRKRv/BcB/bZO1nr3x+qAFH+AsmmG+/dy9ddihHdH3mF0Q/GR8WkR33DVlVJFKW39tlJG
+ zUs5CPIBb0LchkIYU5KniI+SehzmBpmUt6h7z3SILPQ7n3mFL3zWxrzTUplg3fJ6IDROLkgKMNV
+ +2X3XrbSirUh8puC/yw==
+X-Proofpoint-ORIG-GUID: kxyyMlWPTAFeXWNmthmRPNmliyb_zuo6
+X-Proofpoint-GUID: 0QoY5FWko63fqpuw7YgicSBSLKoe3i1f
+X-Authority-Analysis: v=2.4 cv=W7UIkxWk c=1 sm=1 tr=0 ts=69fdc76f cx=c_pps
  a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
  a=kj9zAlcOel0A:10 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8
- a=sPCGW8O3KLxBFVHUMcMA:9 a=CjuIK1q_8ugA:10
+ a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VwQbUJbxAAAA:8
+ a=pGLkceISAAAA:8 a=Z4Rwk6OoAAAA:8 a=Nzc7ulkFhySeO2r29UAA:9 a=CjuIK1q_8ugA:10
+ a=HkZW87K1Qel5hWWM3VKY:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-05-07_02,2026-05-06_01,2025-10-01_01
@@ -119,211 +120,93 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  suspectscore=0 spamscore=0 clxscore=1015 phishscore=0 bulkscore=0
  impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604200000
- definitions=main-2605080136
-X-Rspamd-Queue-Id: 1EF924F7062
+ definitions=main-2605080115
+X-Rspamd-Queue-Id: 99C814F5B05
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-1.16 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	MID_RHS_NOT_FQDN(0.50)[];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-19437-lists,linux-s390=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linux.ibm.com:mid];
+	FREEMAIL_TO(0.00)[gmail.com];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	HAS_ORG_HEADER(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19457-lists,linux-s390=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[imbrenda@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[ibm.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
 	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[agordeev@linux.ibm.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-s390];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Action: no action
 
-On Thu,  7 May 2026 22:08:35 +0200
-Eric Farman <farman@linux.ibm.com> wrote:
-
-> There is a possibility that the user_operexec capability
-> only works if facility bit 74 is enabled. This is now fixed,
-> but add a selftest to demonstrate that.
+On Wed, May 06, 2026 at 05:51:19PM +0100, Julian Braha wrote:
+> On 5/6/26 13:37, Alexander Gordeev wrote:
+> > In the end of the day I see no impact on the end result (aka the
+> > generated config) - please correct me if I am wrong.
 > 
-> Signed-off-by: Eric Farman <farman@linux.ibm.com>
+> Yes, there is actually an impact on the end result / the generated
+> config:
 
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+That is what is currently generated (likely because of "depends on KUNIT"):
 
+CONFIG_S390_UNWIND_SELFTEST=m
+CONFIG_S390_MODULES_SANITY_TEST=m
+# CONFIG_KUNIT_ALL_TESTS is not set
 
-> ---
->  .../selftests/kvm/include/s390/facility.h     |   6 +
->  .../selftests/kvm/s390/user_operexec.c        | 110 ++++++++++++++++++
->  2 files changed, 116 insertions(+)
+> When a user of the kernel build system (e.g. 'make menuconfig') enables
+> the config option KUNIT_ALL_TESTS, the user expects *all of the tests*
+> to be enabled. Which is what commit
+> 25d36a85c61b ("s390/test_unwind: convert to KUnit")
+> was attempting to do with these tests, but it appears they made a
+> copy-paste mistake. This is the commit referenced in the Fixes tag.
 > 
-> diff --git a/tools/testing/selftests/kvm/include/s390/facility.h b/tools/testing/selftests/kvm/include/s390/facility.h
-> index 41a265742666..e5259f63be22 100644
-> --- a/tools/testing/selftests/kvm/include/s390/facility.h
-> +++ b/tools/testing/selftests/kvm/include/s390/facility.h
-> @@ -11,6 +11,7 @@
->  #ifndef SELFTEST_KVM_FACILITY_H
->  #define SELFTEST_KVM_FACILITY_H
->  
-> +#include <linux/atomic.h>
->  #include <linux/bitops.h>
->  
->  /* alt_stfle_fac_list[16] + stfle_fac_list[16] */
-> @@ -19,6 +20,11 @@
->  extern u64 stfl_doublewords[NB_STFL_DOUBLEWORDS];
->  extern bool stfle_flag;
->  
-> +static inline bool clear_bit_inv(unsigned long nr, unsigned long *ptr)
-> +{
-> +	return clear_bit(nr ^ (BITS_PER_LONG - 1), ptr);
-> +}
-> +
->  static inline bool test_bit_inv(unsigned long nr, const unsigned long *ptr)
->  {
->  	return test_bit(nr ^ (BITS_PER_LONG - 1), ptr);
-> diff --git a/tools/testing/selftests/kvm/s390/user_operexec.c b/tools/testing/selftests/kvm/s390/user_operexec.c
-> index 714906c1d12a..b24c1f9dbbe8 100644
-> --- a/tools/testing/selftests/kvm/s390/user_operexec.c
-> +++ b/tools/testing/selftests/kvm/s390/user_operexec.c
-> @@ -6,6 +6,7 @@
->   * Authors:
->   *  Janosch Frank <frankja@linux.ibm.com>
->   */
-> +#include "facility.h"
->  #include "kselftest.h"
->  #include "kvm_util.h"
->  #include "test_util.h"
-> @@ -109,6 +110,111 @@ static void test_user_operexec_combined(void)
->  	kvm_vm_free(vm);
->  }
->  
-> +static struct kvm_vm *create_vm_without_sthyi(void)
-> +{
-> +	struct kvm_s390_vm_cpu_processor info;
-> +	struct kvm_vm *vm;
-> +
-> +	vm = vm_create(1);
-> +
-> +	kvm_device_attr_get(vm->fd, KVM_S390_VM_CPU_MODEL,
-> +			    KVM_S390_VM_CPU_PROCESSOR, &info);
-> +
-> +	clear_bit_inv(74, (unsigned long *)&info.fac_list);
-> +	kvm_device_attr_set(vm->fd, KVM_S390_VM_CPU_MODEL,
-> +			    KVM_S390_VM_CPU_PROCESSOR, &info);
-> +
-> +	return vm;
-> +}
-> +
-> +static void test_user_instr0_no_stfle_74(void)
-> +{
-> +	struct kvm_vcpu *vcpu;
-> +	struct kvm_vm *vm;
-> +	int rc;
-> +
-> +	vm = create_vm_without_sthyi();
-> +
-> +	rc = __vm_enable_cap(vm, KVM_CAP_S390_USER_INSTR0, 0);
-> +	TEST_ASSERT_EQ(0, rc);
-> +
-> +	vcpu = vm_vcpu_add(vm, 0, guest_code_instr0);
-> +
-> +	vcpu_run(vcpu);
-> +	TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_S390_SIEIC);
-> +	TEST_ASSERT_EQ(vcpu->run->s390_sieic.icptcode, ICPT_OPEREXC);
-> +	TEST_ASSERT_EQ(vcpu->run->s390_sieic.ipa, 0x0000);
-> +
-> +	kvm_vm_free(vm);
-> +}
-> +
-> +static void test_user_operexec_no_stfle_74(void)
-> +{
-> +	struct kvm_vcpu *vcpu;
-> +	struct kvm_vm *vm;
-> +	int rc;
-> +
-> +	vm = create_vm_without_sthyi();
-> +
-> +	rc = __vm_enable_cap(vm, KVM_CAP_S390_USER_OPEREXEC, 0);
-> +	TEST_ASSERT_EQ(0, rc);
-> +
-> +	vcpu = vm_vcpu_add(vm, 0, guest_code_user_operexec);
-> +
-> +	vcpu_run(vcpu);
-> +	TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_S390_SIEIC);
-> +	TEST_ASSERT_EQ(vcpu->run->s390_sieic.icptcode, ICPT_OPEREXC);
-> +	TEST_ASSERT_EQ(vcpu->run->s390_sieic.ipa, 0x0807);
-> +
-> +	kvm_vm_free(vm);
-> +}
-> +
-> +static void test_instr0_combined_no_stfle_74(void)
-> +{
-> +	struct kvm_vcpu *vcpu;
-> +	struct kvm_vm *vm;
-> +	int rc;
-> +
-> +	vm = create_vm_without_sthyi();
-> +
-> +	rc = __vm_enable_cap(vm, KVM_CAP_S390_USER_INSTR0, 0);
-> +	TEST_ASSERT_EQ(0, rc);
-> +	rc = __vm_enable_cap(vm, KVM_CAP_S390_USER_OPEREXEC, 0);
-> +	TEST_ASSERT_EQ(0, rc);
-> +
-> +	vcpu = vm_vcpu_add(vm, 0, guest_code_instr0);
-> +
-> +	vcpu_run(vcpu);
-> +	TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_S390_SIEIC);
-> +	TEST_ASSERT_EQ(vcpu->run->s390_sieic.icptcode, ICPT_OPEREXC);
-> +	TEST_ASSERT_EQ(vcpu->run->s390_sieic.ipa, 0x0000);
-> +
-> +	kvm_vm_free(vm);
-> +}
-> +
-> +static void test_operexec_combined_no_stfle_74(void)
-> +{
-> +	struct kvm_vcpu *vcpu;
-> +	struct kvm_vm *vm;
-> +	int rc;
-> +
-> +	vm = create_vm_without_sthyi();
-> +
-> +	rc = __vm_enable_cap(vm, KVM_CAP_S390_USER_INSTR0, 0);
-> +	TEST_ASSERT_EQ(0, rc);
-> +	rc = __vm_enable_cap(vm, KVM_CAP_S390_USER_OPEREXEC, 0);
-> +	TEST_ASSERT_EQ(0, rc);
-> +
-> +	vcpu = vm_vcpu_add(vm, 0, guest_code_user_operexec);
-> +
-> +	vcpu_run(vcpu);
-> +	TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_S390_SIEIC);
-> +	TEST_ASSERT_EQ(vcpu->run->s390_sieic.icptcode, ICPT_OPEREXC);
-> +	TEST_ASSERT_EQ(vcpu->run->s390_sieic.ipa, 0x0807);
-> +
-> +	kvm_vm_free(vm);
-> +}
-> +
->  /*
->   * Run all tests above.
->   *
-> @@ -122,6 +228,10 @@ static struct testdef {
->  	{ "instr0", test_user_instr0 },
->  	{ "operexec", test_user_operexec },
->  	{ "operexec_combined", test_user_operexec_combined},
-> +	{ "instr0_no_stfle_74", test_user_instr0_no_stfle_74 },
-> +	{ "instr0_combined_no_stfle_74", test_instr0_combined_no_stfle_74 },
-> +	{ "operexec_combined_no_stfle_74", test_operexec_combined_no_stfle_74 },
-> +	{ "operexec_no_stfle_74", test_user_operexec_no_stfle_74 },
->  };
->  
->  int main(int argc, char *argv[])
+> The point is, these tests were intended to be included with
+> KUNIT_ALL_TESTS, but aren't. This is unintended behavior, and the
+> definition of a bug in the kernel configuration spec.
 
+I could not recreate it. Could you please provide the exact steps?
+
+> That being said, I do agree with you that this is pretty low in
+> severity, as far as bugs go. It is kunit tests we're talking about,
+> after all. I'll check with Greg to see if he thinks this is worthy of
+> a Fixes tag. Another, similar patch I sent out includes the Fixes tag,
+> and has not received any objections from its 3 reviewers and testers
+> so far:
+> https://lore.kernel.org/all/20260405161545.161006-1-julianbraha@gmail.com/
+
+Well, this is not about severity, it is about whether an actual problem
+did exist and was fixed. The patch itself is fine 
+
+> > I think once the tool is officially included you could refer to it
+> > in the commit message,
+> 
+> I will also check on the best practices for tool-assisted development.
+> In the past, I have received encouragement for acknowledging the tool:
+> https://lore.kernel.org/all/bfdfdb05-77e2-455d-b68d-9da3fd9d1c0d@lucifer.local/
+> and the official kernel docs require an acknowledgement for AI tool
+> assistance (although this tool is not AI and doesn't generate code...)
+
+I do appreciate your effort to bring a new tool! But unless it is part of
+the toolchain it shold not be referred to in a commit message as far as
+I am concerned. IOW, once it is in the tree, it is fine to mention it:
+
+https://lore.kernel.org/all/20260405122749.4990dcb538d457769a3276e0@linux-foundation.org/
+officially 
+
+> - Julian Braha
+
+Thanks!
 
