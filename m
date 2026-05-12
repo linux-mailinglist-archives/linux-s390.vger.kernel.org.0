@@ -1,49 +1,49 @@
-Return-Path: <linux-s390+bounces-19573-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19574-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kKDmGl7uAmryygEAu9opvQ
-	(envelope-from <linux-s390+bounces-19573-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 12 May 2026 11:09:50 +0200
+	id yMPdJ3fyAmrpywEAu9opvQ
+	(envelope-from <linux-s390+bounces-19574-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 12 May 2026 11:27:19 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8CAE51D4EE
-	for <lists+linux-s390@lfdr.de>; Tue, 12 May 2026 11:09:49 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3241B51DA4C
+	for <lists+linux-s390@lfdr.de>; Tue, 12 May 2026 11:27:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 9B2003075368
-	for <lists+linux-s390@lfdr.de>; Tue, 12 May 2026 09:07:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D4E5F3099B74
+	for <lists+linux-s390@lfdr.de>; Tue, 12 May 2026 09:07:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89AEE47CC7E;
-	Tue, 12 May 2026 09:06:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 949AA3B19BB;
+	Tue, 12 May 2026 09:06:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gg9NhAp7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eeM9Ag0N"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD3C3B6C1F;
-	Tue, 12 May 2026 09:06:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69AA39901A;
+	Tue, 12 May 2026 09:06:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778576800; cv=none; b=jF7J0tG6UlZj4dOC7mJ9cLPMDhT4UBhRT7GXbZnaLAlFYDP5EYvkxtzA8penqjr/ms6BV9mayRqluu0QinnRaaA+fWGB7rbAf93mbvHM3sVQR5IifeS94aWNEEfV3DRTotP7ktdOOrOh3p/YBgfMYaRaCz8vPMS639ra+SJEFik=
+	t=1778576812; cv=none; b=Qy6q18UhW9WyxarBQkQmMocDXbmtaVbBmnIjGusY6JEXkBnr5vP/jkTl+K3uCZ6LNbs56UKf/HmoxE8XDPrR6/Jlkd8J1FYbGB6sqevbHpsxiq2OX8Nj6hvDa7X09MvnTbsnazCb5yZ8lIzPYBA+2fUaJTBk4BEVaJInFq6o8j4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778576800; c=relaxed/simple;
-	bh=mTlzwGmKaksgYc3F/GyUj4XB9AG9GATAkfL4j43fQ40=;
+	s=arc-20240116; t=1778576812; c=relaxed/simple;
+	bh=EFbwf4neRkinC/ATvnrHtnHJ+BgFTSGwE4EsQ470+pU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bANJKA6R8mPj0DAnRM39AW9ZBVfNybeR1QfSUBFA19tDfWodKuP2qpTRupai8sK/cLy0bYMLgWXCjuxUxY61L2tRcbTqTBNV148l0MY6OFL7Gnexnny+gFGhcNakvsc6IQo1bCrKSPmqUMOhDMK0tTuV68b9rrlqmF/N72tto20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gg9NhAp7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AC84C2BCF7;
-	Tue, 12 May 2026 09:06:28 +0000 (UTC)
+	 MIME-Version; b=HSM++DHrwUNnrUhlsYaIvOiKE/ysVvSyMtSYN0Wxv8h9NODrkASTYhXkuUxPVcy1wfzeARzPYP8egBwzJxKQI4+Gvx1IM0S6QQHP50ZkaDVqVTtlZav1SIDd1d8L6twdGijgW9/YYb2SzzaUQbj1o9zfPPzCQEZb71FQwZ/AiW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eeM9Ag0N; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BDA7C2BCB0;
+	Tue, 12 May 2026 09:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778576799;
-	bh=mTlzwGmKaksgYc3F/GyUj4XB9AG9GATAkfL4j43fQ40=;
+	s=k20201202; t=1778576811;
+	bh=EFbwf4neRkinC/ATvnrHtnHJ+BgFTSGwE4EsQ470+pU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Gg9NhAp7QAL+VjZbnyz/0jlu7gA+E880rsW1LbQ4Tm+kjB/qLh83dBTqQCogFkMnk
-	 6ldiTPnH1BZAHckzOmx/zFVXOvdywPpPf75pIgEpalHO5cqsgAyIFMRGo1Pp+77GEO
-	 MM0gflFTCnuDTyh7C+CWAabFjFk801in1C2uepCZveaoORNYDG2BAqk4lzaTwLJQO6
-	 msRKi6DGIBt9MapjDJ/C6gK56qwGC2e+Q3E3tpjbe3FWjBA4z4aPUCiQI43o+zkFJu
-	 mUPkM5VjW/y2kXSQuOj2NG74UZEsprayRa/8m7pL2NMYQAR7xaHdfQY+GzIyu7EPvK
-	 ce/+WEjgnU5BQ==
+	b=eeM9Ag0NUZG3/Alld9F85jKroRaeGZLjnhdQgGf7eBXyj/HG02jgnYVbGzp1bWIRN
+	 vsBf49P35alkP64j8E8vIkjsK9QXygnkp6lnXZ7hp0nTSIMncyar9LV5hPjSmCuGij
+	 J2hzJEiK6xajbQWH8kGIKhH13tq1geY23fbh9pN708IqrnHi6E8tyGq3gJLqo4AoC2
+	 CP/7dc9AbgaPx+Zi6cK4+KsnhCKfye6n5JfF+g0V6btS6/fkjFDIyiH6XLs9HmhoI4
+	 dlBCrXXur1ypXtp92XRZx+w2F8IXqyaU7iiGtua5IjzaSyD8e/sDzCrC8SSTK0g4rT
+	 MCZlBt21G/GGg==
 From: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
 To: iommu@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org,
@@ -76,10 +76,11 @@ Cc: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
 	Vasily Gorbik <gor@linux.ibm.com>,
 	Christian Borntraeger <borntraeger@linux.ibm.com>,
 	Sven Schnelle <svens@linux.ibm.com>,
-	x86@kernel.org
-Subject: [PATCH v4 11/13] dma-direct: rename ret to cpu_addr in alloc helpers
-Date: Tue, 12 May 2026 14:34:06 +0530
-Message-ID: <20260512090408.794195-12-aneesh.kumar@kernel.org>
+	x86@kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH v4 12/13] dma-direct: return struct page from dma_direct_alloc_from_pool()
+Date: Tue, 12 May 2026 14:34:07 +0530
+Message-ID: <20260512090408.794195-13-aneesh.kumar@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260512090408.794195-1-aneesh.kumar@kernel.org>
 References: <20260512090408.794195-1-aneesh.kumar@kernel.org>
@@ -90,14 +91,14 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: D8CAE51D4EE
+X-Rspamd-Queue-Id: 3241B51DA4C
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -105,9 +106,9 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_CC(0.00)[kernel.org,arm.com,samsung.com,resnulli.us,ziepe.ca,google.com,suse.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,vger.kernel.org,linux.ibm.com,ellerman.id.au,gmail.com];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-19573-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19574-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[32];
+	RCPT_COUNT_TWELVE(0.00)[33];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
@@ -118,112 +119,86 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-ret in dma_direct_alloc() and dma_direct_alloc_pages() holds the returned
-CPU mapping, not a generic return value. Rename it to cpu_addr and update
-the remaining uses to match.
+Commit 5b138c534fda ("dma-direct: factor out a dma_direct_alloc_from_pool
+helper") changed dma_direct_alloc_from_pool() to return the CPU address
+from dma_alloc_from_pool(). That fits dma_direct_alloc(), but
+dma_direct_alloc_pages() also uses the helper and expects a struct page *.
 
-This makes the allocation paths easier to follow and keeps the local naming
-consistent with what the variable actually represents.
+Fix this by making dma_direct_alloc_from_pool() return the struct page *
+again, and pass the CPU address back through an out-parameter for the
+dma_direct_alloc() caller.
+
+Fixes: 5b138c534fda ("dma-direct: factor out a dma_direct_alloc_from_pool helper")
+Cc: stable@vger.kernel.org
 
 Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
 ---
- kernel/dma/direct.c | 31 +++++++++++++++----------------
- 1 file changed, 15 insertions(+), 16 deletions(-)
+ kernel/dma/direct.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
 diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 1e9f9ff7b9d3..902008e40ea1 100644
+index 902008e40ea1..5103a04df99f 100644
 --- a/kernel/dma/direct.c
 +++ b/kernel/dma/direct.c
-@@ -212,7 +212,7 @@ void *dma_direct_alloc(struct device *dev, size_t size,
- 	bool mark_mem_decrypt = false;
- 	bool allow_highmem = true;
+@@ -165,24 +165,24 @@ static bool dma_direct_use_pool(struct device *dev, gfp_t gfp)
+ 	return !gfpflags_allow_blocking(gfp) && !is_swiotlb_for_alloc(dev);
+ }
+ 
+-static void *dma_direct_alloc_from_pool(struct device *dev, size_t size,
+-		dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
++static struct page *dma_direct_alloc_from_pool(struct device *dev, size_t size,
++		dma_addr_t *dma_handle, void **cpu_addr, gfp_t gfp,
++		unsigned long attrs)
+ {
  	struct page *page;
+ 	u64 phys_limit;
 -	void *ret;
-+	void *cpu_addr;
  
- 	/*
- 	 * DMA_ATTR_CC_SHARED is not a caller-visible dma_alloc_*()
-@@ -326,34 +326,33 @@ void *dma_direct_alloc(struct device *dev, size_t size,
- 		arch_dma_prep_coherent(page, size);
+ 	if (WARN_ON_ONCE(!IS_ENABLED(CONFIG_DMA_COHERENT_POOL)))
+ 		return NULL;
  
- 		/* create a coherent mapping */
--		ret = dma_common_contiguous_remap(page, size, prot,
--				__builtin_return_address(0));
--		if (!ret)
-+		cpu_addr = dma_common_contiguous_remap(page, size, prot,
-+					__builtin_return_address(0));
-+		if (!cpu_addr)
- 			goto out_encrypt_pages;
- 	} else {
--		ret = page_address(page);
-+		cpu_addr = page_address(page);
- 	}
- 
--	memset(ret, 0, size);
-+	memset(cpu_addr, 0, size);
- 
- 	if (set_uncached) {
- 		void *uncached_cpu_addr;
- 
- 		arch_dma_prep_coherent(page, size);
--		uncached_cpu_addr = arch_dma_set_uncached(ret, size);
-+		uncached_cpu_addr = arch_dma_set_uncached(cpu_addr, size);
- 		if (IS_ERR(uncached_cpu_addr))
- 			goto out_free_remap_pages;
--		ret = uncached_cpu_addr;
-+		cpu_addr = uncached_cpu_addr;
- 	}
- 
+ 	gfp |= dma_direct_optimal_gfp_mask(dev, &phys_limit);
+-	page = dma_alloc_from_pool(dev, size, &ret, gfp, attrs,
++	page = dma_alloc_from_pool(dev, size, cpu_addr, gfp, attrs,
+ 				   dma_coherent_ok);
+ 	if (!page)
+ 		return NULL;
  	*dma_handle = phys_to_dma_direct(dev, page_to_phys(page),
  					 !!(attrs & DMA_ATTR_CC_SHARED));
 -	return ret;
--
-+	return cpu_addr;
++	return page;
+ }
  
- out_free_remap_pages:
- 	if (remap)
--		dma_common_free_remap(ret, size);
-+		dma_common_free_remap(cpu_addr, size);
+ static void *dma_direct_alloc_no_mapping(struct device *dev, size_t size,
+@@ -278,9 +278,12 @@ void *dma_direct_alloc(struct device *dev, size_t size,
+ 	 * the atomic pools instead if we aren't allowed block.
+ 	 */
+ 	if ((remap || (attrs & DMA_ATTR_CC_SHARED)) &&
+-	    dma_direct_use_pool(dev, gfp))
+-		return dma_direct_alloc_from_pool(dev, size, dma_handle,
+-						  gfp, attrs);
++	    dma_direct_use_pool(dev, gfp)) {
++		page = dma_direct_alloc_from_pool(dev, size,
++					dma_handle, &cpu_addr,
++					gfp, attrs);
++		return page ? cpu_addr : NULL;
++	}
  
- out_encrypt_pages:
- 	if (mark_mem_decrypt &&
-@@ -437,7 +436,7 @@ struct page *dma_direct_alloc_pages(struct device *dev, size_t size,
- {
- 	unsigned long attrs = 0;
- 	struct page *page;
--	void *ret;
-+	void *cpu_addr;
+ 	if (is_swiotlb_for_alloc(dev)) {
+ 		page = dma_direct_alloc_swiotlb(dev, size, attrs);
+@@ -443,7 +446,7 @@ struct page *dma_direct_alloc_pages(struct device *dev, size_t size,
  
- 	if (force_dma_unencrypted(dev))
- 		attrs |= DMA_ATTR_CC_SHARED;
-@@ -455,7 +454,7 @@ struct page *dma_direct_alloc_pages(struct device *dev, size_t size,
- 			swiotlb_free(dev, page, size);
- 			return NULL;
- 		}
--		ret = page_address(page);
-+		cpu_addr = page_address(page);
- 		goto setup_page;
- 	}
+ 	if ((attrs & DMA_ATTR_CC_SHARED) && dma_direct_use_pool(dev, gfp))
+ 		return dma_direct_alloc_from_pool(dev, size, dma_handle,
+-						  gfp, attrs);
++						  &cpu_addr, gfp, attrs);
  
-@@ -463,11 +462,11 @@ struct page *dma_direct_alloc_pages(struct device *dev, size_t size,
- 	if (!page)
- 		return NULL;
- 
--	ret = page_address(page);
--	if ((attrs & DMA_ATTR_CC_SHARED) && dma_set_decrypted(dev, ret, size))
-+	cpu_addr = page_address(page);
-+	if ((attrs & DMA_ATTR_CC_SHARED) && dma_set_decrypted(dev, cpu_addr, size))
- 		goto out_leak_pages;
- setup_page:
--	memset(ret, 0, size);
-+	memset(cpu_addr, 0, size);
- 	*dma_handle = phys_to_dma_direct(dev, page_to_phys(page),
- 					 !!(attrs & DMA_ATTR_CC_SHARED));
- 	return page;
+ 	if (is_swiotlb_for_alloc(dev)) {
+ 		page = dma_direct_alloc_swiotlb(dev, size, attrs);
 -- 
 2.43.0
 
