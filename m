@@ -1,112 +1,112 @@
-Return-Path: <linux-s390+bounces-19603-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19605-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4OHTBVCdA2qF8AEAu9opvQ
-	(envelope-from <linux-s390+bounces-19603-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 12 May 2026 23:36:16 +0200
+	id QHxEOxSnA2qw8gEAu9opvQ
+	(envelope-from <linux-s390+bounces-19605-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2026 00:17:56 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 852E552A5F0
-	for <lists+linux-s390@lfdr.de>; Tue, 12 May 2026 23:36:15 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EE9952AC4C
+	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2026 00:17:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C441A301EB6A
-	for <lists+linux-s390@lfdr.de>; Tue, 12 May 2026 21:36:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C0DE1306262B
+	for <lists+linux-s390@lfdr.de>; Tue, 12 May 2026 22:17:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19C6C368D41;
-	Tue, 12 May 2026 21:36:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BA96396588;
+	Tue, 12 May 2026 22:17:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oIAAl11l"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wfM3orD8"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
+Received: from mail-dl1-f54.google.com (mail-dl1-f54.google.com [74.125.82.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC4852BE7D1
-	for <linux-s390@vger.kernel.org>; Tue, 12 May 2026 21:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7CA376BCA
+	for <linux-s390@vger.kernel.org>; Tue, 12 May 2026 22:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.54
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778621772; cv=pass; b=IBQT6spY7ROVeqv//pqgRlWW4pS+lsFGNAW9igLkXKRBqAslhllJDSrqH0YGNksCZ7aA35vu01CoJcZ+TiXTJJleva2qXDbq/diFkREUuLZF9s8JIW1C7TLIyS7pW1Xhr2HvTrPioQ3qbkKvjQnk0v7WSlJ1D2GkEx0IOPZEieA=
+	t=1778624223; cv=pass; b=ETPjWzdZj3eFPkhUJbufULcpJPLKPNPHRSmNGQkOoeYeUf1zOKVXd2sHKfYhLqaJ9VoAHCWAW2uVRH0HYnuShlNDm4XJmokoK5zhab2nlSYP/ajtC8b3hbG1wehjj5d9yjhutQDnx3a3iioe98n2T5MUDlrKk2W+1HhCfuet1q4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778621772; c=relaxed/simple;
-	bh=tNVFIzJVs0+iZMuJrmxC7LemBx7xzRbpwl1nigl6Caw=;
+	s=arc-20240116; t=1778624223; c=relaxed/simple;
+	bh=5WdL1RfT6i0Pq2ZStlBz3Fzl5NL4eEcrNRYvRXI0UMc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dzO8+VXpOqgN/lW7XRPsYibP9zJK9ai+bD+CHJ+EmqcNWlqMUBAwx2H3QWNW0z824srVf3BVD6nyF8Gl+dJ2xRo4hCcB1dsq561vZ0ph+rT+lWiRXe8pfsLR16rEmVCA9bQAw2LJ24JBXigpk/HaaITJY/LeglTTBWz7qt8eeaQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oIAAl11l; arc=pass smtp.client-ip=74.125.82.52
+	 To:Cc:Content-Type; b=nQZ84mPQeOXlpc21r9PDlyEQujp7FcbOYeOMDh1tVWdOmCbXtzfMz9VSkO2JFyB/UKtudzxwZNPBDbN0H0QaeuRBij2/tdGhJ30KWgOMacMMEI/rUML8qU+9+J/ubcsrsaz9OISjFlT5ib+uMiMRqjQahwpnpeqB5BCcxF6WYC8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wfM3orD8; arc=pass smtp.client-ip=74.125.82.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-12c88e5f4aeso3569410c88.0
-        for <linux-s390@vger.kernel.org>; Tue, 12 May 2026 14:36:10 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778621770; cv=none;
+Received: by mail-dl1-f54.google.com with SMTP id a92af1059eb24-13246950f3cso7973092c88.1
+        for <linux-s390@vger.kernel.org>; Tue, 12 May 2026 15:17:01 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778624221; cv=none;
         d=google.com; s=arc-20240605;
-        b=IofDm3ZxlP8s3HVKoeo1nRFSo1uBikgzODOiAdeC5hEawwG7Y/AFXV33YP9Q63r4d6
-         xRjWusDu6uRMWVBA2YqvnwpNh16QpqlVCSWpE2YdKz4tpHz2KSHnnOUGffB9Q2sRh7Iw
-         QpVmKjvMk1Oje5uSmX7D3A/eVWYUYY9BQiHw64i+N3Nc2LzFUb9vj2wwRoU8RmX7SEbO
-         Qx+yWGzBoDPhUoZuIlTssk90SUi9cPOr8josbWHQVhWESnWqiFVoaPth/ozC3xwGL/Ox
-         /PWZYSvMGV6pFxVj7F3vo94XuO9WwRYzvC0c0kY9idWnIzJXdJsYTuSyGU4029CHLqKB
-         tQxQ==
+        b=T/2Efyc/r2pTy2ptSLlB2SfAiFsVB34yVOIG2/6J3yjMljYNXgVl4USeJqWIWPMLgj
+         lK3D7NAHjG7t/R3urBMqY1iYOWCLCRgAOirwL9gEptelnaEoas18ncHiegVV92IhouUs
+         byi4AUr2cbAlMG673cuXwuOU6f92R2I3WkVurpfxiHDIue7lJRJ112RbcfptSm68FNKO
+         WwKzXHa0m1wuKsn/JG1Pa2jpBuve4I4cqO8kz3gAnBvhUugU1hF9N8h+qksMHxL+BtDE
+         3CyV+ZiMTZ2vGZ1kVyyx/OPS1xdBnGwUV9/4I3L1Z2NPXFWMMJpNgnGDWTcSDBbqk3vI
+         EtOw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=nSfrdVT23xuwz4hEJjcmKT2AG7iJ7xwKeb8ijCFAitg=;
-        fh=R2n7dgwXSj2SVC9+gLf08R/VwCZFu2kxj067cG0eCVs=;
-        b=FLJEQXVc/9HhuEYYKnQZoBGjgQY9ctMOh7YxXFkgXa27gighvGCDG3/gw+O4VaqOKo
-         Cgbj1wqBpGDzxgLbxcT6sFyfhOsA6gUK0EFKD+lj8nBcix4IdcFIHN1PLyjZfSXPvfRy
-         fMEgDWKH0MdErNS1vNC62zWVxag5WnQ+kQDs0GkPmXL9F3qy343Z3ajBSekRCqM4xHn4
-         jBTRKkK+WbiZuYv38fZZmpz+5VgFzApPGikDiLbwTlgJK/GvMppFnjqjt1p9teUvb5Z5
-         w3vl19znnlOTWptjRwXegjET2ldjj5aPXJ8AVXYWlm5zzdfPD9TvrL6goWc4xOx1mwp/
-         HT8w==;
+        bh=ObJAjm73ouLKogCFTEjSP3hfRY8j66w83JcFpvEzHZo=;
+        fh=NL/Te4oASzsGhS+1KlHH1aKdPVwfM6LCJ+O4O9uEnd8=;
+        b=hSr2zZtmTOgZl63Q4mpRPBDuFdgkNSSLKDFuaJ4Edq74APdpSldglMQuhaEH7hBTmR
+         Y7fN8tSwYOSbBaS3NwU6fZf5BCXxS1rDI621RN7mcKLlR+Ue/ViyPTbaZovfnezqi3rW
+         rTteHmj3wIuhtj4ggZozSiVy9tXJdvUuPSqCBtuC66+8OLiUAZMZTbgByzlcF6i6sQjQ
+         YilAA56z1UPTjLwc94eEJNHXm1l3gorCMIbs5PCRwPhelaeXOj4arHD1E0apihwV8sUj
+         EM380weHZexFIBfsJWkIvQ587v71PX5/k1GNE8tbN0gIhPRRcxNsCcZKgERmvfWxELwJ
+         ATJA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778621770; x=1779226570; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1778624221; x=1779229021; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nSfrdVT23xuwz4hEJjcmKT2AG7iJ7xwKeb8ijCFAitg=;
-        b=oIAAl11lIikzrQnnaZR9DpV+8+huZvRT5KfEaOcDiMT10kDlMaxgZmr08p5AnUfIkD
-         jM5B017vrbfzwMsB5YJEU1bSDks6N550QMJqFNp/KreEioif2FsbQ6+mT2+yiQqtybIt
-         rjymbIAkPew90+mrqLu4CCVEnqjOSzZK4zYLRo5VimoxMaVw/sMv0tNSAoihsqAO91kd
-         5nk9TtZaS27uQ+pJvjDr5reVMIZFxeKXDJcgDhcI8s3WGWd/DUuCFjx7iTpmbF2E5rRQ
-         VxQOFgb/w7llJpvg6+VLES9owv5FwLnTtddK5ugvMU+E2zsruG0EGCVGESncjPp36ewe
-         XDFQ==
+        bh=ObJAjm73ouLKogCFTEjSP3hfRY8j66w83JcFpvEzHZo=;
+        b=wfM3orD8i1u278R9wTs5HHQ11Re2q7GkCl32yG4Os1h49rpRSIG107hzvxmJdSrI9K
+         Qw0cJ8ew9alY42RPVAsryACxZ7keMIjlRpLpnaczLgXBOmAgGJkovgPwUatCYWUsKfFD
+         4APLtdNrWwfQuEN5xerx5DjbKcBB2EEaB9x9TAXNFpDuyxEIaIpDXnG/aMAGIJrCfx7U
+         A2mh4NJqrNieerkIOyUBuOudBjwXtI+/WNUsYxyD/srDSZmt6m5y7AJJYjECWNLD7IVM
+         Qe6ZvI57eVAcDn4/SiNdnWFttnb7zpSQpqX2dVJH4c7fumL6nWwY32QV0ZnUX8QDaV6c
+         DBcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778621770; x=1779226570;
+        d=1e100.net; s=20251104; t=1778624221; x=1779229021;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=nSfrdVT23xuwz4hEJjcmKT2AG7iJ7xwKeb8ijCFAitg=;
-        b=LgxJOD1bksDmDVyZ64Attifv50wZ5vMxjFt0jG/k/k1q6E2AaAkJ8BZVUrgp+6Ci4d
-         mk/6U3L2dH5J9UX5m+lA2G6Sre1jZQL0YgURFYzeRx40w5R8Trms/aXXz+5V9vo11z5L
-         XUAoffVt4zK83qQm/QEUEnguIM2W5TetiMuj6tq7+WDLEcMDvCXQX7iJB0NYlFsxodVz
-         j2XiveDJemk2pQyb4GYG+vGAGq5Y0SfvEaIhwtXqxfOi5Ufim80zAD+cnaUv1p5ZXrZ/
-         S6pMDPpzo11qtz5Re+vD2Tq9v4FYWnQ8WJe+vJ7LaKYNlfnJXt05c+4EpliQY+jALxSI
-         P/0g==
-X-Forwarded-Encrypted: i=1; AFNElJ8d6KNOLaZq71Tz9Lkq8ngzM/9UYDtllrPovSpLdKlnF2XTzMBeNDc6DOTYy8Lgqio9sqjHYqUfjSow@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxu5FXMF+eEZkLOnBeIpIRMc7F8MOBLc64H5JvpAMCDc6O98vR/
-	0mtWEIAXyL1ALKTs36blTLEB1BS04BO65qLbEPiDKC/rWR0gUKfaxDWwpZ0zTw0VXKOl7mm0BCq
-	vW/IkOhhykx3xAg2XQzipSoZnS30dgCRSN09d0cI=
-X-Gm-Gg: Acq92OGbT3Y5AmTACnwlaZVBfzrB/Sgqx4Wr/lkti2V7VCosWZGo+uclSOb8AXd0yZW
-	oK8sNOUpJKVK5xWvVMjAVw7fWXhJ902LWg0JVPws4v0zrORCd17MSxkqrvfX/rfRYreoNqym8u/
-	L7t53Wp09tOgmTm5mI7e3BagMBFzvZc7CMYqAznuF2Lmvm5up1L2MyUaWs3ykudhk/EaT4o1df4
-	NKf2u82LO3oFKxjFoy2yr8zFa2ZWKJ8uG9p2Y79bLIQhNxsKD7uVVsJsN2C3OltLAttf4ekJCD+
-	HRVcxgUZAhigWrMcNsAcmrYl5MNbyKyi6z5RQn6/s/nr/pi2I0HT3OoetfTRcwbf0d8Ze+CX7Xe
-	f+R7/pzgS+3CkXHwyd/2jnbDbfViFZBWOb7xddW5mPKv2ZX99hZIBd0SW
-X-Received: by 2002:a05:7022:4a3:b0:12c:81b:c74b with SMTP id
- a92af1059eb24-1333af7fc9emr3319324c88.1.1778621769297; Tue, 12 May 2026
- 14:36:09 -0700 (PDT)
+        bh=ObJAjm73ouLKogCFTEjSP3hfRY8j66w83JcFpvEzHZo=;
+        b=OQrJT7FQ9ralenPRmhK5Olkg884g6NoXQR6NF3/5FmOkr/9/btycbSWNc34qrYdsMg
+         jGN1yA3zYQNPGZCcGRx4f4aRfi7wzeE0O1cgOqHT3OIBAS3Y7/6b0Dp9c6Y41Hv+sCMV
+         PitSd+VxfnGbAN6YjPHBNN/OsZyZBu78hoPZIvTBRix0Cp4vKl8xtHFZE/zP5LNgFrW7
+         +OuhkbGrrzdyjxWRSJ5Cv3aL/pHbKrL9lbSMpf7o2g8VnA3tqZe7DPeO0au6R8Zvoi2J
+         Ke99PuLkWCdi26eh3Ic6xdur18kO2sQjusZSEcMRQwlheDPlc/akpCZF9KvIyY+E7wOn
+         DqHg==
+X-Forwarded-Encrypted: i=1; AFNElJ/T87KOwqM7OqQWVa7gFqSVso5ti0enLB5veHrX7LytXeYy6YS9XwsVoCJAD6Yfa1KMo6rC+abojUlK@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+1VFIG+3seGhIPfYn8l2n2bXPHwBKWS1JDV4o9EFhL9KkjUMO
+	aYF4CErivfA0mXhSI5QcryVHXfw+EsGJItkypL7+Jx0YqUszKnwsmfbOfj4OMf+u/+4SmMMVVCh
+	MxdgT2Y28rMyHhkbCHHox/XKrNnYnkh8sOVaUnys=
+X-Gm-Gg: Acq92OHaxc6RPzXybE188FPMFxrdgmh1hX02aG149hmVdUjJA2U1q9j5Mhkx64iUDOD
+	/5zltdjroaLL9MGHei/agc7g/65W8bCQwbOGmCvc8v2PCf+Y5Mx1IjiVE1h0a2M8O40sRQHUVQb
+	MuwwMtns7mE2Nqohv1Towr/60rzQNXpJdtxwNsSi7xTqzi5HrMKl0ZEBIt9eaZTs4/tAhlhv1uO
+	41SI9K/rc5stV9Ly77cKyiv8P89fY4GI9rUlV93iULprCgPXqnWAzjmyY1HO4VZ1BHSVxfRB57I
+	nnmRUBgNLoSgTXG96hvHdaR5DeliYziYjnpFiivYEGzRbd72oTtFvxVwvtxDSMLx1U6fbXvJodn
+	XUva+5C9q+itPWWUMEXhaI1st11kB0huBSYJpfQQS20CPfw==
+X-Received: by 2002:a05:7022:43:b0:128:d4be:7428 with SMTP id
+ a92af1059eb24-13436781e9bmr586296c88.19.1778624220291; Tue, 12 May 2026
+ 15:17:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <c00-02.v2.ttenwd4@ub.hpns> <p01-02.v2.g318c298267e3.ttenwd4@ub.hpns>
-In-Reply-To: <p01-02.v2.g318c298267e3.ttenwd4@ub.hpns>
+References: <c00-02.v2.ttenwd4@ub.hpns> <p02-02.v2.g990a0c64420d.ttenwd4@ub.hpns>
+In-Reply-To: <p02-02.v2.g990a0c64420d.ttenwd4@ub.hpns>
 From: John Stultz <jstultz@google.com>
-Date: Tue, 12 May 2026 14:35:56 -0700
-X-Gm-Features: AVHnY4Lea-1Mo6XfoYgaXQAM1WvAL6V2xb41TrcKYtBn0cUfeE49P69xWlqM7sU
-Message-ID: <CANDhNCobpxgBJ8ZRxNfXuD_TSmv+DW_3wYCAjJ7yjRa-syL+Yw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] sched/core: Don't steal a proxy-exec donor
+Date: Tue, 12 May 2026 15:16:47 -0700
+X-Gm-Features: AVHnY4K9E2v1wLNwly4ld4TGlYjOrrNGdOQeVUnkF0yNbjLKnCqRtqqqQG5TuFU
+Message-ID: <CANDhNCqrh28F=omb7ftuXpbMssA0+5paZTkq5Zr5zee6zZ7=Tg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] sched/core: Don't proxy-exec unmatched cookie lock owners
 To: Vasily Gorbik <gor@linux.ibm.com>
 Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
@@ -117,19 +117,19 @@ Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 852E552A5F0
+X-Rspamd-Queue-Id: 4EE9952AC4C
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
 	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19603-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19605-lists,linux-s390=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_TWELVE(0.00)[16];
 	MIME_TRACE(0.00)[0:+];
@@ -140,57 +140,79 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[jstultz@google.com,linux-s390@vger.kernel.org];
 	DKIM_TRACE(0.00)[google.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-s390];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
 X-Rspamd-Action: no action
 
 On Thu, May 7, 2026 at 3:42=E2=80=AFAM Vasily Gorbik <gor@linux.ibm.com> wr=
 ote:
 >
-> try_steal_cookie() avoids stealing src->core_pick and src->curr before
-> moving a task with the same cookie via move_queued_task_locked().
+> Core scheduling chooses a core-wide cookie before __schedule()
+> installs the next task. With proxy-exec enabled, that task becomes the
+> donor/scheduling context, and find_proxy_task() may then replace the
+> execution context with the runnable mutex owner. If its cookie differs
+> from the selected core cookie, running it would bypass core scheduling's
+> cookie selection.
 >
-> With proxy-exec, src->donor is the current scheduling context and may
-> differ from src->curr. Stealing it migrates a task that the source rq
-> still treats as current, leaving src's scheduler state for that task
-> stale. For CFS this means cfs_rq->curr points at the stolen entity,
-> and the next pick on the source rq hits the WARN_ON_ONCE in
-> put_prev_entity().
->
-> Commit 7de9d4f94638 ("sched: Start blocked_on chain processing in
-> find_proxy_task()") tweaked the fair class logic so that the donor task
-> isn't migrated away while we're running the proxy. Do it similarly for
-> try_steal_cookie() and skip src->donor as well.
+> When the final mutex owner found by find_proxy_task() does not match the
+> selected core cookie, stop proxying the donor. If the current execution
+> context is already in the blocked chain, fall back to idle like the
+> existing proxy-exec retry paths do. Otherwise deactivate the donor and
+> let __schedule() pick again. The mutex owner can be picked later under
+> its own cookie.
 >
 > Fixes: 7de9d4f94638 ("sched: Start blocked_on chain processing in find_pr=
 oxy_task()")
+> Reported-by: K Prateek Nayak <kprateek.nayak@amd.com>
 > Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 > ---
->  kernel/sched/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  kernel/sched/core.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 >
 > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index b905805bbcbe..8aed55592ca9 100644
+> index 8aed55592ca9..d338fb714ce8 100644
 > --- a/kernel/sched/core.c
 > +++ b/kernel/sched/core.c
-> @@ -6366,7 +6366,7 @@ static bool try_steal_cookie(int this, int that)
->                 return false;
->
->         do {
-> -               if (p =3D=3D src->core_pick || p =3D=3D src->curr)
-> +               if (p =3D=3D src->core_pick || p =3D=3D src->curr || p =
-=3D=3D src->donor)
->                         goto next;
->
+> @@ -6960,6 +6960,12 @@ find_proxy_task(struct rq *rq, struct task_struct =
+*donor, struct rq_flags *rf)
+>                  */
+>         }
+>         WARN_ON_ONCE(owner && !owner->on_rq);
+> +
+> +       if (owner && !sched_cpu_cookie_match(rq, owner)) {
+> +               if (curr_in_chain)
+> +                       return proxy_resched_idle(rq);
+> +               goto deactivate;
+> +       }
 
-This makes sense to me, we don't want to be migrating rq donors.
- Acked-by: John Stultz <jstultz@google.com>
 
-I'm still getting my head around the finer details of the core
-scheduler, but I suspect we also should add a task_is_blocked() check
-in here as well, since migrating blocked_on tasks isn't useful either.
+Hrm. This is less pretty.
+
+My previous (admittedly shallow) thinking on the core-scheduler was
+that it wouldn't be an issue for proxy because the donor wasn't going
+to actually run on the cpu, so whatever isolation is done on the core,
+the donor migration wouldn't be a problem.
+
+But I'm seeing now the donor won't be *chosen* until it has the right
+core_cookie, and then that may be different from the owners cookie.
+
+It seems like ideally we want the donor's effective cookie to be the
+same as the runnable-owner's in the chain.  The downside to this is
+you have to walk the blocked_on chain to evaluate this, and the whole
+core_tree rbtree sorts by cookie, so its not trivial to rework
+selection this way.   And since the runnable-owner of the chain-tree
+changes over time, we can't just set the inherited cookie when we set
+blocked_on.
+
+So I will need to think a bit more on this.
+
+In the short term, I think you're change is probably ok since it makes
+sure we don't run tasks with the wrong cookie, but it effectively
+stops proxying from having a beneficial effect.
+
+Thanks again so much for raising this issue (along with K Prateek)!
 
 thanks
 -john
