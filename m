@@ -1,165 +1,172 @@
-Return-Path: <linux-s390+bounces-19593-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19597-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WNmwDqpoA2qa5gEAu9opvQ
-	(envelope-from <linux-s390+bounces-19593-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 12 May 2026 19:51:38 +0200
+	id 8BOkJWJrA2rf5gEAu9opvQ
+	(envelope-from <linux-s390+bounces-19597-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 12 May 2026 20:03:14 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD08E526395
-	for <lists+linux-s390@lfdr.de>; Tue, 12 May 2026 19:51:36 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1824F5269AF
+	for <lists+linux-s390@lfdr.de>; Tue, 12 May 2026 20:03:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6F8633055E88
-	for <lists+linux-s390@lfdr.de>; Tue, 12 May 2026 17:45:57 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 41DE2312C9E5
+	for <lists+linux-s390@lfdr.de>; Tue, 12 May 2026 17:54:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E7DF3DC871;
-	Tue, 12 May 2026 17:45:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C8563DD857;
+	Tue, 12 May 2026 17:53:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XQ3ZnKaM"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RSpSKyP+"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656D121FF21
-	for <linux-s390@vger.kernel.org>; Tue, 12 May 2026 17:45:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E071E3EDE7F;
+	Tue, 12 May 2026 17:53:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778607957; cv=none; b=EzwAd2H9AEVuStkRsCoHLvugdpMvqZdKpdYru1iUiP8OPaEMnmd0/D5Oi+DBnF8f6JvS/8nZUm6C4PgTo9z9GovgAqHeHjI+s1KN+zk/ZyJlpWrivlnH1pEVjwi9IOtnFb9eKKUkK41cseZpGFujgmbrGFW3PZXlnFdUMAkbUns=
+	t=1778608384; cv=none; b=nCmWoSrS38otn49ViR6GVCm9oaNga1IT7l0PwYt5Vq15fsv6ujbJwbIDPX4HDynSqqTxj/UKbgZB7tL2TyhC7jOq/1dX3GRHtFhNPsgojY/tI4TRDmBGeRG4ncnSdwhNmCgv2mSMLbVUhPDaiBJBfi8JIN4Ih6TXLT+ujAlwYQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778607957; c=relaxed/simple;
-	bh=QMiOXftQsgE92WFbru5pfm4C24Knj1NQvy4huaRXetk=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=Vzf7XEMp1C3QyHvkVThCkWjaqyFY5H63hMjDM28edOonRoMMwYvHKQMgX8KPsMhQ0kNtA+TMCOyJ9JrOy8ksgRN05cbdz0s5qwe7KiA0dmdydNPazDIX7dsbjNltbDAsYPAqUHJuEPbpMrQQYdAVxnva4yWfICfV3caj9SFpTRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XQ3ZnKaM; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778607955; x=1810143955;
-  h=date:from:to:cc:subject:message-id;
-  bh=QMiOXftQsgE92WFbru5pfm4C24Knj1NQvy4huaRXetk=;
-  b=XQ3ZnKaMkbf0EvM08oSQUPcEg+542FOpiVx/pr9yPqSyJkpPsRo0Jilw
-   Tt6bnsfW0KKu1DZiA+ckRSIKMKe8D6t4JBycC+egrTGxbYsvKcM79Hfy9
-   35STvxr/U6E+gRRJGE1wyb3jQg94w0DU2/M3g26dHk4xq1Qc2fBT+LeVX
-   q6gpQKSQ6wrQFUJInCmIr/+aW9/QSL+OQ0Sv3H/OO5Il55WyPnbUtdnNl
-   CPvbUkZR5a4+Or/wU0dwPJ2NlNKlruOonjMgEdD2kNoRPg0E035aDeRw3
-   36r4wETYoL6IKMZ2cBpbtkQCfHT0rXdUWIaINv5qyXZBUyEJZ1pbtnM2+
-   g==;
-X-CSE-ConnectionGUID: Fx/dEt76RFGRVLvR13Arag==
-X-CSE-MsgGUID: nLAVG/m+T3OXcJ8QR5t60w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11784"; a="79705744"
-X-IronPort-AV: E=Sophos;i="6.23,231,1770624000"; 
-   d="scan'208";a="79705744"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2026 10:45:54 -0700
-X-CSE-ConnectionGUID: jA2zEmZfQJ2aCrij/ovo4Q==
-X-CSE-MsgGUID: n2PYtZqJQS2KbNa78C+kSg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,231,1770624000"; 
-   d="scan'208";a="242181900"
-Received: from lkp-server01.sh.intel.com (HELO dca79079c3eb) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 12 May 2026 10:45:53 -0700
-Received: from kbuild by dca79079c3eb with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wMrAz-000000002Wx-28Xv;
-	Tue, 12 May 2026 17:45:49 +0000
-Date: Wed, 13 May 2026 01:45:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
- linux-s390@vger.kernel.org, Steffen Eiden <seiden@linux.ibm.com>
-Subject: [kvms390:sae 2/54] arch/x86/kvm/svm/sev.c:117:27: error: no
- member named 'users_count' in 'struct kvm'
-Message-ID: <202605130154.8hoiUlcD-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1778608384; c=relaxed/simple;
+	bh=P1S68uoG1L2jha7zOykeGOgGW9jhB2ScbvCJoDmwLZ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lTxzxwxUfy6p9gPYbYFoh8VT3pg36nipyH/99cN3lEubqcicQJDK2j06vO9rANBCQ8EZ/lgiRfMig595DLtnW5udrZFOVTN+/Du4oX95qhKYYrim3UvVR58VzzDF1p23/kBlvUIZzTNRw5D4Pn7Dff7PzuzFWLJT3JEp25j/0Hs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=RSpSKyP+; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64CBYKcn3186917;
+	Tue, 12 May 2026 17:52:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=7Kxgj5p4UlN7PDbFx1LZ/hqjQ/7GeMDnqmeVFNQFE
+	fI=; b=RSpSKyP+f42Fh8CYgbegdEbgLPQFMoXBsqYuOtGknJ8BYeV5EiwT1jOqU
+	UrfOa1WHXDXiDu7jGCsrpMls8nj8KJ1bHQqAr0IU7DF+QJwj7Cy/GYhPByOPnYNp
+	tW1z00Ulb7HkiOrJWscMs/GvsssZwsQyhxStoRY0dZhesmsGhsQ98UiGNfaZdoi0
+	TgkOPYk0G1gpDVM7cK860I/6dXX3C3f4dMF8vWZc5sQ7ClQ+FXgfWNJ1O8f/1VTe
+	Yq8qUldtbXg4UmTP0zaXcbCZuWivt6GnPhWbBAlsqlhdx3XKue7WYSaB5a2vRp9I
+	fnYfXVFo5JuEwGl/Xv939R0tkLB3A==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4e3nv5ccnp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 May 2026 17:52:59 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64CHdUO1024342;
+	Tue, 12 May 2026 17:52:58 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4e3nfgm82q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 May 2026 17:52:58 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64CHqqqt37618092
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 12 May 2026 17:52:52 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2EB7C20049;
+	Tue, 12 May 2026 17:52:52 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EB93C20040;
+	Tue, 12 May 2026 17:52:51 +0000 (GMT)
+Received: from p-imbrenda.aag-de.ibm.com (unknown [9.52.223.175])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 12 May 2026 17:52:51 +0000 (GMT)
+From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+To: linux-kernel@vger.kernel.org
+Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@kernel.org, seiden@linux.ibm.com,
+        nrb@linux.ibm.com, schlameuss@linux.ibm.com, gra@linux.ibm.com
+Subject: [PATCH v2 0/5] KVM: s390: some vSIE and UCONTROL fixes
+Date: Tue, 12 May 2026 19:52:46 +0200
+Message-ID: <20260512175251.300882-1-imbrenda@linux.ibm.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-X-Rspamd-Queue-Id: DD08E526395
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=cPHQdFeN c=1 sm=1 tr=0 ts=6a0368fb cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=iQ6ETzBq9ecOQQE5vZCe:22 a=PbAycVehSIM_YFug2WUA:9
+X-Proofpoint-ORIG-GUID: ToR4E8mBIPtqCOwoJVjuUdABQ8GNdy00
+X-Proofpoint-GUID: ToR4E8mBIPtqCOwoJVjuUdABQ8GNdy00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTEyMDE4MyBTYWx0ZWRfX9hztSERY10Gp
+ ded9txLHh14DpMN95ZDhwIHWVoDeBfPDMqLfpDtpRiQc430co4+761IA5kyhlKgLG0nId68RNH5
+ 5iknphkE5tltWVsR/CbUd8gEM47e6xmvXKQNjyumQGtsdOgWVqz0r7mKISpTpWSvldMHdZE+C4H
+ F51+Oo3LopJ4SiAE5n2YSa9nb0dUW2SjiwQnTDag9FZS1f3gcOnru/wVCxy+Uz/Acl7gTaRGv5g
+ ufvfgQ51FpA6z3/erCvEiJg4AriWqaNMzelByTI2Erx7/lIHFyz7ys6DEki5zKm5LjaCTwtsVgy
+ RtLSeg2QIzwxzmHItLx9iK0rhS2MHhXFSecHKvi+VzPDMMXy+vkCcCEyDp0OngDtgc2a6jYlzbs
+ xMmCtqFMX0bz+2Jve6wUAoScd/i6HnxFkn+wTKIZPKund6vTRJnY9J255gHzCZ6vjQH0rR5+xBY
+ 9ueAb4MsBBtrZJm2MCA==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-11_05,2026-05-08_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1015 spamscore=0
+ impostorscore=0 lowpriorityscore=0 adultscore=0 suspectscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605050000 definitions=main-2605120183
+X-Rspamd-Queue-Id: 1824F5269AF
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19593-lists,linux-s390=lfdr.de];
-	DKIM_TRACE(0.00)[intel.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[11];
+	FROM_NEQ_ENVFROM(0.00)[imbrenda@linux.ibm.com,linux-s390@vger.kernel.org];
 	PRECEDENCE_BULK(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19597-lists,linux-s390=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_NONE(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_COUNT_FIVE(0.00)[6];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	MIME_TRACE(0.00)[0:+];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,intel.com:email,intel.com:mid,intel.com:dkim,01.org:url]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.ibm.com:mid]
 X-Rspamd-Action: no action
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git sae
-head:   e952fb65773b1e5cd2e5ca409e712db5ef252bb1
-commit: 134336e0cba8dd18185738333bc26c1b0b020b6d [2/54] KVM, vfio: remove symbol_get(kvm_get_kvm_safe) from vfio
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20260513/202605130154.8hoiUlcD-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260513/202605130154.8hoiUlcD-lkp@intel.com/reproduce)
+Fix some memory issues and some hangs in vSIE.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202605130154.8hoiUlcD-lkp@intel.com/
+This is still a fallout from the gmap rewrite.
 
-All errors (new ones prefixed by >>):
+v1->v2:
+* Fix potential leak of struct kvm_s390_mmu_cache in gmap_set_limit()
+* Refactor and improve the checks to determine whether an unshadowing
+  is needed
+* Set and propagate vsie_gmem properly
+* Properly mask the address passed to gmap_insert_rmap() to prevent
+  creating multiple redundant rmaps when shadowing
+* Clear the pgste.zero flag when needed, to prevent pages from getting
+  accidentally discarded
 
->> arch/x86/kvm/svm/sev.c:117:27: error: no member named 'users_count' in 'struct kvm'
-     117 |         if (!refcount_read(&kvm->users_count))
-         |                             ~~~  ^
-   1 error generated.
+Claudio Imbrenda (5):
+  KVM: s390: vsie: Fix memory leak when unshadowing
+  KVM: s390: Fix leaking kvm_s390_mmu_cache in case of errors
+  KVM: s390: vsie: Fix unshadowing logic
+  KVM: s390: vsie: Fix redundant rmap entries
+  KVM: s390: Properly reset zero bit in PGSTE
 
-
-vim +117 arch/x86/kvm/svm/sev.c
-
-eaf78265a4ab339 Joerg Roedel        2020-03-24  109  
-ba903f738249077 Sean Christopherson 2026-03-10  110  static __always_inline void kvm_lockdep_assert_sev_lock_held(struct kvm *kvm)
-ba903f738249077 Sean Christopherson 2026-03-10  111  {
-ba903f738249077 Sean Christopherson 2026-03-10  112  #ifdef CONFIG_PROVE_LOCKING
-ba903f738249077 Sean Christopherson 2026-03-10  113  	/*
-ba903f738249077 Sean Christopherson 2026-03-10  114  	 * Querying SEV+ support is safe if there are no other references, i.e.
-ba903f738249077 Sean Christopherson 2026-03-10  115  	 * if concurrent initialization of SEV+ is impossible.
-ba903f738249077 Sean Christopherson 2026-03-10  116  	 */
-ba903f738249077 Sean Christopherson 2026-03-10 @117  	if (!refcount_read(&kvm->users_count))
-ba903f738249077 Sean Christopherson 2026-03-10  118  		return;
-ba903f738249077 Sean Christopherson 2026-03-10  119  
-ba903f738249077 Sean Christopherson 2026-03-10  120  	/*
-ba903f738249077 Sean Christopherson 2026-03-10  121  	 * Querying SEV+ support from vCPU context is always safe, as vCPUs can
-ba903f738249077 Sean Christopherson 2026-03-10  122  	 * only be created after SEV+ is initialized (and KVM disallows all SEV
-ba903f738249077 Sean Christopherson 2026-03-10  123  	 * sub-ioctls while vCPU creation is in-progress).
-ba903f738249077 Sean Christopherson 2026-03-10  124  	 */
-ba903f738249077 Sean Christopherson 2026-03-10  125  	if (kvm_get_running_vcpu())
-ba903f738249077 Sean Christopherson 2026-03-10  126  		return;
-ba903f738249077 Sean Christopherson 2026-03-10  127  
-ba903f738249077 Sean Christopherson 2026-03-10  128  	lockdep_assert_held(&kvm->lock);
-ba903f738249077 Sean Christopherson 2026-03-10  129  #endif
-ba903f738249077 Sean Christopherson 2026-03-10  130  }
-ba903f738249077 Sean Christopherson 2026-03-10  131  
-
-:::::: The code at line 117 was first introduced by commit
-:::::: ba903f7382490776d2df2fca6bf5c8ef2eb4663f KVM: SEV: Assert that kvm->lock is held when querying SEV+ support
-
-:::::: TO: Sean Christopherson <seanjc@google.com>
-:::::: CC: Sean Christopherson <seanjc@google.com>
+ arch/s390/kvm/dat.c     |  1 +
+ arch/s390/kvm/dat.h     |  3 ++-
+ arch/s390/kvm/gaccess.c |  1 +
+ arch/s390/kvm/gmap.c    | 18 +++++++++++-------
+ arch/s390/kvm/gmap.h    | 23 ++++++++++++++++++++---
+ 5 files changed, 35 insertions(+), 11 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.54.0
+
 
