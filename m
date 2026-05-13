@@ -1,159 +1,158 @@
-Return-Path: <linux-s390+bounces-19648-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19651-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EF1WBSGcBGr3LwIAu9opvQ
-	(envelope-from <linux-s390+bounces-19648-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2026 17:43:29 +0200
+	id aDIsBzypBGqRMgIAu9opvQ
+	(envelope-from <linux-s390+bounces-19651-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2026 18:39:24 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7ECF5365E6
-	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2026 17:43:28 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E2E853739A
+	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2026 18:39:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id F414630373E3
-	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2026 15:34:52 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7EAE63114DAC
+	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2026 16:27:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3AE9492537;
-	Wed, 13 May 2026 15:34:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD94B4C77CD;
+	Wed, 13 May 2026 16:27:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="imrjxX0c"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Ahhs2ZaN"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242BB47ECDC
-	for <linux-s390@vger.kernel.org>; Wed, 13 May 2026 15:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF5B44A724;
+	Wed, 13 May 2026 16:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778686488; cv=none; b=mn70XQ00hwBX6JEArUekRFHP0vQ39H8u6aFyC4+nRwT9KNs2BEJFnZXhROJBurEAIFTP+5B9VQtClul/apCLdLE4eovG6mjqKrdGUMbSwxrpudB7LsvGwmsrbxT+hJhcBmCtI5uhqMf/fHkrrs+la/NWCJGJDvh/XhCcjGZV+fI=
+	t=1778689653; cv=none; b=NjSxIUAqFqfaLka9eAJfmV4qM3i2DpElGcXdG4aWpAiu/CAI112WiUDatUL3WKr8Fc8WjuIv4z3f1um27GLqLoUZufi0skKyuFprwsvHb7KcQ93Mk22bOucZfF9htoOQj1yrLP5bvDtsukxPBisIgcJqUJPHhsBCsabE+x2DFnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778686488; c=relaxed/simple;
-	bh=juof8ClPWBcdbohM1aei0MyS3Zb/FxQ4cYPoANkh300=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XLZHhRnztV3Ihg0LYEKJrUAjnscCYkBoF4g5F2eaXleIiGLLMRmSmWJd9yaWlTAJ9K010Sa3ZiugS5XMw/Tl6MBrA/bRXWnNtKkGgvcCtq8iui3vVR5CxYJLUsARkJ6tFX/0EZmkVYgJ0+ys6vMvcoFopnm0zd7IxsoNd0zVjmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=imrjxX0c; arc=none smtp.client-ip=209.85.214.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-2bc7b311e77so18586875ad.0
-        for <linux-s390@vger.kernel.org>; Wed, 13 May 2026 08:34:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778686484; x=1779291284; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sULJalq8qpR0SDmRCBfWcTtKyEat46ygMheSeQ0h0XQ=;
-        b=imrjxX0cTYlanQZ7gYA+Az1GipburGcWY5CXtIP1+67BLO5IjcuAa1fpin18csCpjJ
-         qtAyaEdDRyXPHx/RA1dzqn6vMBYIszLUSqADA1w6Sw9cxYWX/O0r2EImBOvOGXMisUWc
-         qCYzR4Zl3IOojPVGPvUEURhZV9DkDmno5YyicrfDs3e8nmSo01vEnbd0UT7WKEzdukk/
-         KWxZvMx2YIxKk478kCwXztvMHoUO+JlxcvBo8g+BvbPD+qcTa99C4CdHWeuHrirwWbsX
-         eT0USPt04nZ6be1jKwRqUyWSW/HbPsYxw3vowi0IS6Xj8yIvZsnaft2PET1bWwIxkpLf
-         sJSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778686484; x=1779291284;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sULJalq8qpR0SDmRCBfWcTtKyEat46ygMheSeQ0h0XQ=;
-        b=ssm8s3N9vqATHKfLgcLiuoQPodkZXYr12F4na/aypD3LHPiL0PZdGUEVMiC9o+KVgX
-         U2gk/YuEfaFEkK1SGAmknjlkSWvPXw1u3Pj/Qk8iawJxjynhBkp8ePKxhx3WnHoIcNIs
-         Q1BhXmrMXI+abEwkGAB16NNqPGS/5GG1s575Q/T3gtixgfCXPT44riX/3/uAiRrdjrVu
-         SKt7HpLpAH+hGdfkfTY+BFTmikK32xX1Rr2PhLjndBrzU4QpURqEN8S47xDTqXX8dSyL
-         HbAiC+xbx5uLJoQ8Dr/CW0ciwRBBbC5N8vpzDKLT+btVZ90QSFLykkUniV24S+eNbxGR
-         pZKw==
-X-Forwarded-Encrypted: i=1; AFNElJ/Qzk9k8XgRQisLkrBDnDv+xRaD4GfLspx3e6KJroYPJP5YoOV9mWo+nxA2DodMQPzTgtkkzVSohhNC@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDx/ekt9QJETR+2XUplSg30mMHfv7xI0jJhTyEaZChXZv6bgqX
-	CICabJU7Q/87f19fI8LgzgWetrkD6iDz1G0GElp/506fO/HeCh9MBU+s
-X-Gm-Gg: Acq92OHLDLREPLEXQiy/1fC5WykFlzGZzGjpemwcFjQ1cnSv3LgxX5C0/fgsMzSI9px
-	bBhCGFQAt0RXSDHabe8O3iAoSVkaEa+fj8Sj4xS6Rzy/e+udD528vLWB9ELPKQdnVhBYOFBZclv
-	aSDYo9B13HJNYYDh7dKPlU4aNPOEyCIMvvpWj/9mVLsw9N2CA8SQWmjgjCVQat/Um3LoSrlamva
-	3cjogzPGcxpcIoGPhHdPwqN7HZ1lK1IGwJzjUaBG79STn7X9VbHu1Rnuz10QOHPo/YUiH3yl2Eb
-	mtmsuij6PvboLZ5NN/lTshgXGqAAhnGPqqGJHONoyxNFUVprIcLLKDfpaG71YAHzwumL5n5ex61
-	utUKMPBbwDZ31v6Uz5CesBnHlOoqmjWNsXjLbJfMmzRk+4UU152Qf1SsAbT0Yvxe31B1E/KPdtu
-	ux8N6NwONlubV/Y6+3
-X-Received: by 2002:a17:903:1aef:b0:2b9:cabe:ce37 with SMTP id d9443c01a7336-2bd526ce2dfmr298035ad.1.1778686484215;
-        Wed, 13 May 2026 08:34:44 -0700 (PDT)
-Received: from localhost ([2a03:2880:2ff:4e::])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2baf1ebea72sm174932375ad.77.2026.05.13.08.34.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2026 08:34:43 -0700 (PDT)
-Date: Wed, 13 May 2026 08:34:43 -0700
-From: Stanislav Fomichev <sdf.kernel@gmail.com>
-To: Breno Leitao <leitao@debian.org>
-Cc: Chas Williams <3chas3@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Magnus Karlsson <magnus.karlsson@intel.com>, Maciej Fijalkowski <maciej.fijalkowski@intel.com>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	John Fastabend <john.fastabend@gmail.com>, Jon Maloy <jmaloy@redhat.com>, 
-	Alexandra Winter <wintera@linux.ibm.com>, Thorsten Winkler <twinkler@linux.ibm.com>, 
-	James Chapman <jchapman@katalix.com>, David Howells <dhowells@redhat.com>, 
-	Marc Dionne <marc.dionne@auristor.com>, David Heidelberg <david+nfc@ixit.cz>, 
-	Samuel Ortiz <sameo@linux.intel.com>, linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, tipc-discussion@lists.sourceforge.net, 
-	linux-s390@vger.kernel.org, linux-afs@lists.infradead.org, oe-linux-nfc@lists.linux.dev, 
-	kernel-team@meta.com
-Subject: Re: [PATCH net-next 6/6] tipc: convert to getsockopt_iter
-Message-ID: <agSaDOAx1HBSDoCQ@devvm7509.cco0.facebook.com>
-References: <20260513-getsock_four-v1-0-fe7f0e756fac@debian.org>
- <20260513-getsock_four-v1-6-fe7f0e756fac@debian.org>
+	s=arc-20240116; t=1778689653; c=relaxed/simple;
+	bh=CDzF6zxpWm/EIG7IClV3NwFJ7pzNxzMC2HVtf6q6ESc=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=CwVEUnQ+XZhcOIiU6+3cne3D42kLjnU08brxc+vpnxcgBFX5Fx3khnczAQkMlUr3sZfZAEgHnP7dAczgnnEf+6wU/MqW4Bs6hxmFNJivM3crGjo/WF5GRKpNcBoRNfFI3uxGEK8VOIQNQzhIh4LavpOKCDrvsz7YW89Lo7FquCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Ahhs2ZaN; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Received: from ehlo.thunderbird.net (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 64DGEn1a2905667
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 13 May 2026 09:14:50 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 64DGEn1a2905667
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2026042601; t=1778688894;
+	bh=kzc3j2nHoRxQd9M0vkzx/uZg5Iwn8WIixU3RTEBg+i4=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=Ahhs2ZaNxCuIyTcDd/to/S7gqU6ft6zabx6TakulFhnIjDt8bXMJ0LGzYVyEfrxzF
+	 EoSq1ir5sKEz+X8RiAhKD9hHd7SJ2OozMvt9/+9wrxu0pBvVJBlgjVq84smFg5PvWl
+	 ODAygtu3MetLOSzf39fcORVc45KgUJxXa0B3c1WcYV/TBfKv8I2j2JZj6Oo7LMLnaS
+	 F/w+6e9Kh9WjQd20++VspvTwbnc9Zogl0CKsAiiMu7QXkJbZu0hP9l3BvRBi3h/lIE
+	 60H32//SMm5Gsh1hto9j6ldrE4pFtBClA6C9ESo0hnzWXYJCYw3OlK+u43GeYa68K6
+	 OTz8RC1DMTHsw==
+Date: Wed, 13 May 2026 09:14:44 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Christoph Hellwig <hch@lst.de>, Andrew Morton <akpm@linux-foundation.org>
+CC: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+        WANG Xuerui <kernel@xen0n.name>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+        Song Liu <song@kernel.org>,
+        Yu Kuai <yukuai@alb-78bjiv52429oh8qptp.cn-shenzhen.alb.aliyuncs.com>,
+        Li Nan <linan122@huawei.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-raid@vger.kernel.org
+Subject: Re: [PATCH 01/19] btrfs: require at least 4 devices for RAID 6
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20260512052230.2947683-2-hch@lst.de>
+References: <20260512052230.2947683-1-hch@lst.de> <20260512052230.2947683-2-hch@lst.de>
+Message-ID: <45B68AA3-36E2-4187-BD30-F4631C7F32C2@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260513-getsock_four-v1-6-fe7f0e756fac@debian.org>
-X-Rspamd-Queue-Id: A7ECF5365E6
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 7E2E853739A
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	DMARC_POLICY_ALLOW(-0.50)[zytor.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[zytor.com:s=2026042601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19648-lists,linux-s390=lfdr.de];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19651-lists,linux-s390=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[gmail.com,davemloft.net,google.com,kernel.org,redhat.com,intel.com,fomichev.me,iogearbox.net,linux.ibm.com,katalix.com,auristor.com,ixit.cz,linux.intel.com,lists.sourceforge.net,vger.kernel.org,lists.infradead.org,lists.linux.dev,meta.com];
-	RCPT_COUNT_TWELVE(0.00)[31];
+	FREEMAIL_CC(0.00)[arm.com,kernel.org,xen0n.name,linux.ibm.com,ellerman.id.au,gmail.com,dabbelt.com,eecs.berkeley.edu,ghiti.fr,redhat.com,alien8.de,linux.intel.com,gondor.apana.org.au,intel.com,fb.com,suse.com,arndb.de,alb-78bjiv52429oh8qptp.cn-shenzhen.alb.aliyuncs.com,huawei.com,vger.kernel.org,lists.infradead.org,lists.linux.dev,lists.ozlabs.org];
+	RCPT_COUNT_TWELVE(0.00)[43];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sdfkernel@gmail.com,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hpa@zytor.com,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[zytor.com:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390,nfc];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,devvm7509.cco0.facebook.com:mid,fomichev.me:email]
+	TAGGED_RCPT(0.00)[linux-s390];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On 05/13, Breno Leitao wrote:
-> Convert TIPC sockets (msg, packet, stream proto_ops) to use the new
-> getsockopt_iter callback with sockopt_t.
-> 
-> Key changes:
-> - Replace (char __user *optval, int __user *optlen) with sockopt_t *sopt
-> - Use sopt->optlen for buffer length (input) and returned size (output)
-> - Use copy_to_iter() instead of put_user()/copy_to_user()
-> 
-> The sockopt_t parameter is named sopt to avoid collision with the
-> existing optname parameter named opt.
-> 
-> Note: Dropped the unnecessary parentheses to make checkpatch happier.
-> 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+On May 11, 2026 10:20:41 PM PDT, Christoph Hellwig <hch@lst=2Ede> wrote:
+>While the RAID6 algorithm could in theory support 3 devices by just
+>copying the data disk to the two parity disks, this version is not only
+>useless because it is a suboptimal version of 3-way mirroring, but also
+>broken with various crashes and incorrect parity generation in various
+>architecture-optimized implementations=2E  Disallow it similar to mdraid
+>which requires at least 4 devices for RAID 6=2E
+>
+>Fixes: 53b381b3abeb ("Btrfs: RAID5 and RAID6")
+>Signed-off-by: Christoph Hellwig <hch@lst=2Ede>
+>---
+> fs/btrfs/volumes=2Ec | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+>diff --git a/fs/btrfs/volumes=2Ec b/fs/btrfs/volumes=2Ec
+>index a88e68f90564=2E=2E0b54b97bdad8 100644
+>--- a/fs/btrfs/volumes=2Ec
+>+++ b/fs/btrfs/volumes=2Ec
+>@@ -159,7 +159,7 @@ const struct btrfs_raid_attr btrfs_raid_array[BTRFS_N=
+R_RAID_TYPES] =3D {
+> 		=2Esub_stripes	=3D 1,
+> 		=2Edev_stripes	=3D 1,
+> 		=2Edevs_max	=3D 0,
+>-		=2Edevs_min	=3D 3,
+>+		=2Edevs_min	=3D 4,
+> 		=2Etolerated_failures =3D 2,
+> 		=2Edevs_increment	=3D 1,
+> 		=2Encopies	=3D 1,
 
-Acked-by: Stanislav Fomichev <sdf@fomichev.me>
+Yes, if anyone cares about < 4 disks for the RAID-6 case (or < 3 for the R=
+AID-4/5 case), just use the RAID-1 code=2E
 
