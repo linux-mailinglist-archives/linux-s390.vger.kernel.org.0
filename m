@@ -1,50 +1,50 @@
-Return-Path: <linux-s390+bounces-19620-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19621-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6MgJO5I2BGoqFgIAu9opvQ
-	(envelope-from <linux-s390+bounces-19620-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2026 10:30:10 +0200
+	id 2DggBsA2BGoqFgIAu9opvQ
+	(envelope-from <linux-s390+bounces-19621-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2026 10:30:56 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C2A652FAC5
-	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2026 10:30:10 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CC2352FB05
+	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2026 10:30:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id ABE1A301C6DE
-	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2026 08:27:54 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5C708302A698
+	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2026 08:30:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA52C3DD846;
-	Wed, 13 May 2026 08:27:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 318E13DEAC9;
+	Wed, 13 May 2026 08:30:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RDVBvJWx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HO+oY0Nd"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8433A6F0F;
-	Wed, 13 May 2026 08:27:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA113DE42B;
+	Wed, 13 May 2026 08:30:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778660871; cv=none; b=rFIPKpeIgGagCH5XgRgSV/BUc4DiA1dm3ltbBpP9WgF7TgvkCKr1qsc18aWLzsE/v7Gd10seiscg+h0wHy7khUE0/eQIoJYfhKJvGupFUW7QxWm3Vb6kcIwzPu5Sfl6Wml5IJwG3XZH76VJnVxFqbMmSsoVH4oNhdNTMbtwfRIA=
+	t=1778661003; cv=none; b=Bcs4/u0f00Qgk81sai9Oee2Kv5ZAhKoEhD/pZdit+8GtwHj0OcUIl4ibM2xZQocBNswq0KgB/CGQzJST9b/Vx6FuFT/YYFw6HMtJ4n6D+CNwBo9uMRICyAePrnvk2pSu0Fb+hKDGih1vkHAZ8M9NlwR+Q8u4/E3YlX6E99bh8mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778660871; c=relaxed/simple;
-	bh=BFNiTiF/fmalzC6zsySYqjiBYoFoZn/VA1kMh/SGay4=;
+	s=arc-20240116; t=1778661003; c=relaxed/simple;
+	bh=ZLaj6u3xCKR0/GZAQ0y6ABck1ESL0dcx2vChaLzZJY0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BopidIhBayOC4I/tTvGaxFUMQtP60NP9zi15hMwK2UJWNYaaYn9i3f2srrzCNWv7twfm5pGm+4gfp1Jr9Bc7CKn14X0sdd5XF881ye7Ugu7kDXTnKKnyjQSNXcybkh7ewTtRMejfecR2lP5KsQH4wW4lmznVshjaSL5LqdhoRnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RDVBvJWx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1415EC2BCC6;
-	Wed, 13 May 2026 08:27:43 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=VcvDig4cOEbeTD1u1D75WpUbx1HztSVkCBvP0oq0FZnUqdHYC7mtrCRuKcGXrMUPVq2x6k/YFC21DRAVLoB1eAMYxc7mpP1Ddx4C8mzKimzNpBXGNQqCpMZvwIf3mvYscWhStAHy+ZWqcpF/Xrcz0wQYmRs85+HcwfWbmsx4FW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HO+oY0Nd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C0E4C2BCC6;
+	Wed, 13 May 2026 08:29:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778660871;
-	bh=BFNiTiF/fmalzC6zsySYqjiBYoFoZn/VA1kMh/SGay4=;
+	s=k20201202; t=1778661002;
+	bh=ZLaj6u3xCKR0/GZAQ0y6ABck1ESL0dcx2vChaLzZJY0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RDVBvJWx9At9GYymZiTlO41qMOkSSKg3BboX/CVnFiIv0SuGpInRHEAvhGMxiyigy
-	 XYxY2QFNHsiM/Kz6qb5NfpYB+1dXscvNM3WsLoOGc6QHMmkIQMh572x12weyGPWoYH
-	 vHOryRtbOWtZJ68xh++I/5IQOucJ2dlC2eMdo3MQy9H691yqC0Lj11nXwLpOCAE3aS
-	 KhDIBcOu0yW33BDLsOG8B9VSmd3sJ8VVXgKFCHYGt4NsVHGDVW/asy6XiNs4qyNwom
-	 OXjzJ7LMX26VkGqcr9MOhhtZsLzcVib+okPrxWlYGMY16gAJAI/YzgvweX2k+RnwnR
-	 FkFjWcg1j/ROg==
-Date: Wed, 13 May 2026 11:27:40 +0300
+	b=HO+oY0NdOFVz+h7eHE/9LEv12adXbeAnP2ZzwsbhPOMLpmsuysp76rXaSbwEoZL4L
+	 MkLN96NUUYoMbW03eInLeBbIKNo8oo9DpBzMo2tlwCEetIMxUxdBk5Qdyp/L4jlfEj
+	 H8jWkt6I02G3VbRXauvYbcIrItP+m3HHf72TCU/IG7SrM5Jl4ZtI49zg/GaFvd2wvP
+	 fvEmMwncOKALBUmcqhKw6iJFOj0ywjuDbKyylhVuILHn+GXQF56XuiBl+0tIKn7Uqe
+	 AfCFABtT36jxPCYHKIvqJQxNUCCM4fphduLkt5+EYb64hjkhu/XR2k6yBvigrqqwx6
+	 JOKHlZVyyb4eg==
+Date: Wed, 13 May 2026 11:29:51 +0300
 From: Mike Rapoport <rppt@kernel.org>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -67,10 +67,10 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Michal Hocko <mhocko@suse.com>, sparclinux@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
 	linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 2/8] mm/bootmem_info: drop initialization of page->lru
-Message-ID: <agQ1_Bl6obF1bpT0@kernel.org>
+Subject: Re: [PATCH 3/8] mm/bootmem_info: stop using PG_private
+Message-ID: <agQ2fwPeMuEbnYeh@kernel.org>
 References: <20260511-bootmem_info_prep-v1-0-3fb0be6fc688@kernel.org>
- <20260511-bootmem_info_prep-v1-2-3fb0be6fc688@kernel.org>
+ <20260511-bootmem_info_prep-v1-3-3fb0be6fc688@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -79,20 +79,20 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260511-bootmem_info_prep-v1-2-3fb0be6fc688@kernel.org>
-X-Rspamd-Queue-Id: 5C2A652FAC5
+In-Reply-To: <20260511-bootmem_info_prep-v1-3-3fb0be6fc688@kernel.org>
+X-Rspamd-Queue-Id: 7CC2352FB05
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FROM_HAS_DN(0.00)[];
 	FREEMAIL_CC(0.00)[davemloft.net,gaisler.com,linux-foundation.org,linux.ibm.com,ellerman.id.au,gmail.com,kernel.org,infradead.org,google.com,suse.com,vger.kernel.org,kvack.org,lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-19620-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19621-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -108,38 +108,43 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On Mon, May 11, 2026 at 04:05:30PM +0200, David Hildenbrand (Arm) wrote:
-> In the past, we used to store the type in page->lru.next, introduced by
-> commit 5f24ce5fd34c ("thp: remove PG_buddy"). The location changed over
-> the years; ever since commit 0386aaa6e9c8 ("bootmem: stop using
-> page->index"), we store it alongside the info in page->private.
-> 
-> Consequently, there is no need to reset page->lru anymore.
+On Mon, May 11, 2026 at 04:05:31PM +0200, David Hildenbrand (Arm) wrote:
+> Nobody checks PG_private for these pages, and we can happily use
+> set_page_private() without setting PG_private. So let's just stop
+> setting/clearing PG_private.
 > 
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
 > ---
->  mm/bootmem_info.c | 1 -
->  1 file changed, 1 deletion(-)
+>  mm/bootmem_info.c | 2 --
+>  1 file changed, 2 deletions(-)
 > 
 > diff --git a/mm/bootmem_info.c b/mm/bootmem_info.c
-> index 3d7675a3ae04..a0a1ecdec8d0 100644
+> index a0a1ecdec8d0..6e2aaab3dca9 100644
 > --- a/mm/bootmem_info.c
 > +++ b/mm/bootmem_info.c
-> @@ -34,7 +34,6 @@ void put_page_bootmem(struct page *page)
+> @@ -19,7 +19,6 @@ void get_page_bootmem(unsigned long info, struct page *page,
+>  {
+>  	BUG_ON(type > 0xf);
+>  	BUG_ON(info > (ULONG_MAX >> 4));
+> -	SetPagePrivate(page);
+>  	set_page_private(page, info << 4 | type);
+>  	page_ref_inc(page);
+>  }
+> @@ -32,7 +31,6 @@ void put_page_bootmem(struct page *page)
+>  	       type > MEMORY_HOTPLUG_MAX_BOOTMEM_TYPE);
+>  
 >  	if (page_ref_dec_return(page) == 1) {
->  		ClearPagePrivate(page);
+> -		ClearPagePrivate(page);
 >  		set_page_private(page, 0);
-> -		INIT_LIST_HEAD(&page->lru);
 >  		kmemleak_free_part_phys(PFN_PHYS(page_to_pfn(page)), PAGE_SIZE);
 >  		free_reserved_page(page);
->  	}
 > 
 > -- 
 > 2.43.0
