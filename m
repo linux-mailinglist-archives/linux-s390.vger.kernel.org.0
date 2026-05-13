@@ -1,294 +1,222 @@
-Return-Path: <linux-s390+bounces-19650-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19652-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QKYQBCGmBGogMQIAu9opvQ
-	(envelope-from <linux-s390+bounces-19650-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2026 18:26:09 +0200
+	id QNpOFPKzBGowNQIAu9opvQ
+	(envelope-from <linux-s390+bounces-19652-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2026 19:25:06 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id A31D253703A
-	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2026 18:26:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DF1B8537FBD
+	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2026 19:25:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id BE2C230E63CB
-	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2026 16:16:25 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 609443005658
+	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2026 17:25:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A80514266AE;
-	Wed, 13 May 2026 16:16:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DEFB4C956B;
+	Wed, 13 May 2026 17:25:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GY/1GeDr"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Grm08l/c"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B7C30BF4E;
-	Wed, 13 May 2026 16:16:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C314DB562
+	for <linux-s390@vger.kernel.org>; Wed, 13 May 2026 17:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778688984; cv=none; b=NkzR2afQ7nIGgEjXyDcQ29qxLtfliMwuIqDdO6hPFjbx56QLNlvjQ3bbQyukWJz0Ibg2HyAfsxhzBz4wlufkzV6XMm8O2ZBaGtVTWMbb6OOqyKvChajpIXsxmwXzoB43l1mk74Z7K79J7DiuGAhnrfS4OPf/Id7VEGFQXgQu7fg=
+	t=1778693100; cv=none; b=T+xJ+FJSF20qgzU6gw6kNg9jJF1TUKNxkjf6xVEj4GM3wn/nYWdCnlx1MJca+OHVa9tsYsaFS3F2/IGOvH3Vboo9uREPsNws9mEzwPyBt7bZS5a/hekTr0ZKuN08xSHFCCydQ5qzT07ve7LNN/F7H8UEGnxaCs+CdVI3PwlTV7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778688984; c=relaxed/simple;
-	bh=L8jrsYHVTEE8zLHGgLHY9zKU0T0C7rnFaCcc1HD1P6k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=TLJmt5QgPU832GGzvR4G68FcSh39U6BA0Qp5kpll0CR+5k8jdvSwIsvfH54hO4YokmlxXRjPC6E5YMAAelISeCf9EURcS5kkRpdMIyA/d7CrLgJIOwPKi9dUF/l/Jqx8liNj/k/k8pHK5ORLYfIRDgtk5DNXhS37MCcF7Ei+6+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GY/1GeDr; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64DEhlG52758961;
-	Wed, 13 May 2026 16:16:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=MzMxz1
-	HePvB4ExTKcFNTUwgHTY03v2TR1E06+VOdB1g=; b=GY/1GeDr2O47EYJX+Omltr
-	dhCOPNlsz/nXWxVL+mqi/1aINIrebpgTunb1MJX9cKapmOL9rgXG0w8gKnjpcCgB
-	0KiaEn/SG0zBp21YbV92xc735nuyvcQ6ryN1wfnsM6BvtB+maqUcsuWYWvYNzkaq
-	0QXXa/s4o1ykAS3+MvnZMGfUjVjrI65LQ9dio5L4B3hZUAtNbKwYr5w9VnFTaQ8V
-	JvnN7Bi8UdLmBclXUOsX872f2ZUnBwPwY0SSva8F28OEtFPzqAm6jGYG5V2wrDdv
-	NwsI4iLkiYZr7n1uYo5TPrJ3WDuC78cFAlovKzDg+AjDmkUmhm4Di0pfuRau6FZw
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4e3nv6r8b6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 May 2026 16:16:19 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64DG9vlf026614;
-	Wed, 13 May 2026 16:16:19 GMT
-Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4e3nfgrgjj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 May 2026 16:16:19 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64DGGHSf28574312
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 13 May 2026 16:16:18 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AC37D58058;
-	Wed, 13 May 2026 16:16:17 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E9F4158059;
-	Wed, 13 May 2026 16:16:15 +0000 (GMT)
-Received: from [9.61.44.159] (unknown [9.61.44.159])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 13 May 2026 16:16:15 +0000 (GMT)
-Message-ID: <9c83dbc9-51db-4ffb-83d2-638128c3b422@linux.ibm.com>
-Date: Wed, 13 May 2026 12:16:15 -0400
+	s=arc-20240116; t=1778693100; c=relaxed/simple;
+	bh=BfC504n+kThMXbLodptWdwF+5sTWwaf4D5wXQNX5RnE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=esbdUbn9Jl3xkUQ48caUupHF70eqGrzzjXRWocHHT+6FU9zNhPgFhOxEbk1Lx9tj0XoGkDsHncqWKfhGoxKhfApytM2+tg+vtXDnDu1WmViMcUGuLKsucxSmFKyG9+REO3tTPtrJcu+tbPPt+9gn+B7xZc1My0e/5LhiP9x448I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Grm08l/c; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-8cb40149037so653871785a.2
+        for <linux-s390@vger.kernel.org>; Wed, 13 May 2026 10:24:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1778693092; x=1779297892; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=fQtwNmxswhQih8gmC6FPDl+zfVKzr3i0rq4YmglfcBk=;
+        b=Grm08l/c2QX0cUK33emAUMJqEP8/C1QHmgP06iVG3PsVSVBDg4DycrWgdqqYLskFUH
+         XMYIPSq9n0YhVFhNSA48SlIC8JM3L0RpBExlf8uY/2nymk4Chbb2UP9UAWdcJSIpU+O6
+         4APh7F5FQ5swGH8MlbS36UwKs9F5ac91eIT5YcXZ7E9uoxfaqbYfACq1YFSQXHzkf+28
+         fqQrOH4QJ7Fh4Yi7dOzPfUgT+SnIxWgbDRUK/wPvzFqYYm4Zq0s8F0orUjiepEY4Gxek
+         KMVizDXugein1K8quZdaY4YIeF+gAiXLDUkHJDY5zdYfUdzSyzyZ0MPJ2US4F/227oZ4
+         +RzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778693092; x=1779297892;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fQtwNmxswhQih8gmC6FPDl+zfVKzr3i0rq4YmglfcBk=;
+        b=nfNlq9jloo7OpUIsMxx4mLbElll+70IIFUB13fbgTqtH7U9gh5jy2xn9DkjYNxPZHp
+         4uQxZWqq/SCAFoURY5putsqfgP83f9DrWHWvE2M99tozjhyZKvt0FAGPPhntP7kEIebH
+         AZ71oJBmpjcryKWaodup2Xo6TB98SJ5CG9SZE2ylYhDjT4NJcEiWWVSDfqyIvKGLGv/1
+         EB5uImhmYdLXFCFWeM+TbY7FE67oiPt0+K0pFTn6knU/H/9zgBdvVJ4njFRu6/T4j3Cs
+         6W8ZbdADTDRGQbH7AaeYnmEBD9qWWU1kznFnyrWbugtjWzDgBEwS1uSVYoBFuh76EfSh
+         e7VA==
+X-Forwarded-Encrypted: i=1; AFNElJ901vcpN601dXW0ml6cNuBXZGj3CGY8cxIVil6wep1ctuueeb3OnDrLGoHKWFJOZh99IpIFoe+Y115K@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFQifZDHub7eVqULmHHh7CgsyRpZIE0ULc4rTSYpfIopKbqNQx
+	0TrutqG60nMq3tK7XEJkPm6D7+aBzHhL6MDKe2kpfvuzxtorcafSKSPo8yi7chsKb5M=
+X-Gm-Gg: Acq92OHL3qxi5ESMwft8q95NtLwI3vg9NJ0ul+yLA3zSPXjApZ1nkrGDuIb9rFY7hSs
+	Ly8kXDcADvK6KAGFwMxQDknxzRsOtQwIWuzMGMiaLZStTapHDtFS59IQYMUh6e0KwQhwnaz9852
+	F3HVKuAuVggKpB9l3BRRPcbQSKZghh2SVEg24AOsMB7lchZJC8o7VmFMJjWDbUNtpiLFbQzu8IE
+	YSG9Ua29/IOikUTh/iwu64nLZlU+5vCSM6b/x+6fScqvPEPsTvt1NEjh3tblb6uUNbzgflQ8TXy
+	N6q81snOj3vuW6+F+bOl5x3zSiIFWFesFB7KPi0KWaEAT1I9C/OfKetzllX+ck5Va/9qUNlbCeb
+	iOS104JYF1M3FU+R8gi9CNOOTrjILVfmPYqO7Kgnnprr8qMizr2trjGFFMmmi/KrbJkhZY8H4Gh
+	l3VHEYYAtKIkLLSf6zbwnYkIuxDmZGFA1t0vRxqk70EQzsjCMb2aX003aYuZBSceZcUcvbPRWLN
+	VnEzQ==
+X-Received: by 2002:a05:620a:19a3:b0:8ee:42cc:4d9c with SMTP id af79cd13be357-90f8ac08735mr658592985a.39.1778693092335;
+        Wed, 13 May 2026 10:24:52 -0700 (PDT)
+Received: from ziepe.ca (crbknf0213w-47-54-130-67.pppoe-dynamic.high-speed.nl.bellaliant.net. [47.54.130.67])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-910bc83bbf5sm13598685a.28.2026.05.13.10.24.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2026 10:24:50 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1wNDKE-00000003dZu-0jxL;
+	Wed, 13 May 2026 14:24:50 -0300
+Date: Wed, 13 May 2026 14:24:50 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Mostafa Saleh <smostafa@google.com>
+Cc: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
+	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
+	Robin Murphy <robin.murphy@arm.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Steven Price <steven.price@arm.com>,
+	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Pirko <jiri@resnulli.us>, Petr Tesarik <ptesarik@suse.com>,
+	Alexey Kardashevskiy <aik@amd.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Xu Yilun <yilun.xu@linux.intel.com>, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>, x86@kernel.org
+Subject: Re: [PATCH v4 04/13] dma: swiotlb: track pool encryption state and
+ honor DMA_ATTR_CC_SHARED
+Message-ID: <20260513172450.GR7702@ziepe.ca>
+References: <20260512090408.794195-1-aneesh.kumar@kernel.org>
+ <20260512090408.794195-5-aneesh.kumar@kernel.org>
+ <agSKQrSIhizCXKwx@google.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/4] KVM: s390: Enable adapter_indicators_set to use
- mapped pages
-To: Douglas Freimuth <freimuth@linux.ibm.com>, borntraeger@linux.ibm.com,
-        imbrenda@linux.ibm.com, frankja@linux.ibm.com, david@kernel.org,
-        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        svens@linux.ibm.com, kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20260511161451.209464-1-freimuth@linux.ibm.com>
- <20260511161451.209464-3-freimuth@linux.ibm.com>
-Content-Language: en-US
-From: Matthew Rosato <mjrosato@linux.ibm.com>
-In-Reply-To: <20260511161451.209464-3-freimuth@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 4gWdGzTY3ZbxHVtj5kxVu2M_YV36Ewc8
-X-Proofpoint-GUID: 4gWdGzTY3ZbxHVtj5kxVu2M_YV36Ewc8
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTEzMDE2NCBTYWx0ZWRfX5Ux4h4zeINto
- I37aDLYNhaDboyCGTnlJScWlMf2fve02HBfuBgcL1UXesWnwjE1uQSm97KJU9ofoErbg58+Iv2K
- XQpPsdHM17/u8+kaepoYEJa5cjX0uFijZ5a3Dhkn/hGv0wJL271b1aPa11NawZUsKhYtgV40gKo
- aEg4yEv8THCRdFnYmA4pkeAsUZtmruz7Iv+eKfCeJF5HcOTiJ0oZWg40wtr8mMn419tWAgOzHxX
- 7Z3mynX0XxECRrMWrDRgEyoZ2aHU7oxECGfZBC7c2YZ1w6is1C/+BbOEqYXVkRipVqWxTpPgkGz
- ivSovR8GJM3vsw1yo85KkF5Mi1IMisvgE3/K72E322c7VwimRfJynYJmDznice+vcdUuYqqYnVY
- sqxka/KyZcIMCT/HcD0D4zo7ftAAocirBuoeGnjfj6LvjkIqs+sE6C22QR0gsg9JygMkA6Xa7LQ
- TuIriOXkQGFwEpmx7eA==
-X-Authority-Analysis: v=2.4 cv=P8UKQCAu c=1 sm=1 tr=0 ts=6a04a3d3 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=yJ7A1TyqSRYUUuSQqjIA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-13_01,2026-05-13_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 priorityscore=1501 phishscore=0 bulkscore=0 clxscore=1015
- malwarescore=0 spamscore=0 lowpriorityscore=0 suspectscore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605050000 definitions=main-2605130164
-X-Rspamd-Queue-Id: A31D253703A
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <agSKQrSIhizCXKwx@google.com>
+X-Rspamd-Queue-Id: DF1B8537FBD
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_DKIM_ALLOW(-0.20)[ziepe.ca:s=google];
 	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	TAGGED_FROM(0.00)[bounces-19650-lists,linux-s390=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mjrosato@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,lists.linux.dev,lists.infradead.org,vger.kernel.org,arm.com,samsung.com,resnulli.us,suse.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,linux.ibm.com,ellerman.id.au,gmail.com];
+	TAGGED_FROM(0.00)[bounces-19652-lists,linux-s390=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	DMARC_NA(0.00)[ziepe.ca];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[ziepe.ca:+];
+	RCPT_COUNT_TWELVE(0.00)[31];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jgg@ziepe.ca,linux-s390@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RCVD_COUNT_SEVEN(0.00)[11]
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ziepe.ca:mid,ziepe.ca:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On 5/11/26 12:14 PM, Douglas Freimuth wrote:
-> The S390 adapter_indicators_set function needs to be able to use mapped
+On Wed, May 13, 2026 at 02:27:14PM +0000, Mostafa Saleh wrote:
 
-Nit: s/S390/s390/
+> > +		/*
+> > +		 * if platform supports memory encryption,
+> > +		 * restricted mem pool is decrypted by default
+> > +		 */
+> > +		if (cc_platform_has(CC_ATTR_MEM_ENCRYPT)) {
+> > +			mem->unencrypted = true;
+> > +			set_memory_decrypted((unsigned long)phys_to_virt(rmem->base),
+> > +					     rmem->size >> PAGE_SHIFT);
+> > +		} else {
+> > +			mem->unencrypted = false;
+> > +		}
+>
+> This breaks pKVM as it doesn’t set CC_ATTR_MEM_ENCRYPT, so all virtio
+> traffic now fails.
 
-> pages so that worked can be processed,on a fast path when interrupts are
-> disabled. If adapter indicator pages are not mapped then local mapping is
-> done on a slow path as it is prior to this patch. For example, Secure
-> Execution environments will take the local mapping path as it does prior to
-> this patch.
+How will pKVM signal what kind of memory the DMA needs then?
 
-Slight tweak to the commit message:  adapter_indicators_set doesn't
-really _need_ to use the long-term mapped pages.  It's an optimization
-to do so, while your will later add the _fast() variant where it is
-a requirement.
+Does it use set_memory_decrypted()? How can it use
+set_memory_decrypted() without offering CC_ATTR_MEM_ENCRYPT ?
 
-Maybe re-word like:
-'The S390 adapter_indicators_set function can now be optimized to use
-long-term mapped pages when available so that work can be
-processed...'
+> Also, by design, some drivers are clueless about bouncing, so
 
-[...]
+Oh? What does this mean? We take quite a dim view of drivers mis-using
+the DMA API..
 
->  static int adapter_indicators_set(struct kvm *kvm,
->  				  struct s390_io_adapter *adapter,
->  				  struct kvm_s390_adapter_int *adapter_int)
->  {
->  	unsigned long bit;
->  	int summary_set, idx;
-> -	struct page *ind_page, *summary_page;
-> +	struct s390_map_info *ind_info, *summary_info;
->  	void *map;
-> +	struct page *ind_page, *summary_page;
-> +	unsigned long flags;
->  
-> -	ind_page = pin_map_page(kvm, adapter_int->ind_addr, 0);
-> -	if (!ind_page)
-> -		return -1;
-> -	summary_page = pin_map_page(kvm, adapter_int->summary_addr, 0);
-> -	if (!summary_page) {
-> -		unpin_user_page(ind_page);
-> -		return -1;
-> +	raw_spin_lock_irqsave(&adapter->maps_lock, flags);
-> +	ind_info = get_map_info(adapter, adapter_int->ind_addr);
-> +	if (!ind_info) {
-> +		raw_spin_unlock_irqrestore(&adapter->maps_lock, flags);
-> +		ind_page = pin_map_page(kvm, adapter_int->ind_addr, 0);
-> +		if (!ind_page)
-> +			return -1;
-> +		idx = srcu_read_lock(&kvm->srcu);
-> +		map = page_address(ind_page);
-> +		bit = get_ind_bit(adapter_int->ind_addr,
-> +				  adapter_int->ind_offset, adapter->swap);
-> +		set_bit(bit, map);
-> +		mark_page_dirty(kvm, adapter_int->ind_gaddr >> PAGE_SHIFT);
-> +		set_page_dirty_lock(ind_page);
-> +		srcu_read_unlock(&kvm->srcu, idx);
+> I believe that the pool should have a way to control it’s property
+> (encrypted or decrypted) and that takes priority over whatever
+> attributes comes from allocation.
 
-I think you can simplify some of this unpin logic by just calling 
-unpin_user_page(ind_page) here?  You don't use it past this point
-and you aren't holding a raw spinlock ...
+We should get here because dma_capable() fails, and then swiotlb needs
+to return something that makes dma_capable() succeed. Yes, it should
+return details about the thing it decided, but it shouldn't have been
+pre-created with some idea how to make dma_capable() work.
 
-> +	} else {
-> +		map = page_address(ind_info->page);
-> +		bit = get_ind_bit(ind_info->addr, adapter_int->ind_offset, adapter->swap);
-> +		set_bit(bit, map);
-> +		raw_spin_unlock_irqrestore(&adapter->maps_lock, flags);
-> +	}
-> +	raw_spin_lock_irqsave(&adapter->maps_lock, flags);
-> +	summary_info = get_map_info(adapter, adapter_int->summary_addr);
-> +	if (!summary_info) {
-> +		raw_spin_unlock_irqrestore(&adapter->maps_lock, flags);
-> +		summary_page = pin_map_page(kvm, adapter_int->summary_addr, 0);
-> +		if (!summary_page) {
-> +			if (!ind_info) {
-> +				WARN_ON_ONCE(!ind_page);
-> +				unpin_user_page(ind_page);
-> +			}
+If dma_capable() can fail, then swiotlb should know exactly what to do
+to fix it.
 
-... Then you wouldn't need this !ind_info logic, it's safe to return
-immediately
+If pkvm wants to use the hacky scheme where you force a swiotlb pool
+configuration during arch init with force swiotlb that's a somewhat
+different flow and, sure the forced pool should force do whatever it
+is forced to.
 
-I also don't think that WARN_ON_ONCE does what was intended.  Looking
-back any my v3 comments, the idea was to catch a case where we map
-indicator pages and set the associated bits but cannot map summary
-page.  That means if you want a WARN here, then something like...
+But lets try to keep them seperated in the discussion..
 
-if (!summary_page) {
-  WARN_ON_ONCE(ind_page || ind_info);
-  return -1;
-}
+> And that brings us to the same point whether it’s better to return
+> the memory along with it’s state or we pass the requested state.
+> I think for other cases it’s fine for the device/DMA-API to dictate
+> the attrs, but not in restricted-dma case, the firmware just knows better.
 
-Also ind_page needs to be initialized to NULL for that to work.
+The memory type must be returned back at some level so downstream
+things can do the right transformation of the phys_addr_t.
 
+One of the aspirational CC things that should work is a T=1 device
+tries to DMA from a decrypted page, finds the address is above the dma
+limit of the device, so it bounces it with SWIOTLB to an encrypted low
+address page and then the DMA API internal flow switiches from working
+with decrypted to encrypted phys_addr_t.
 
-> +			return -1;
-> +		}
-> +		idx = srcu_read_lock(&kvm->srcu);
-> +		map = page_address(summary_page);
-> +		bit = get_ind_bit(adapter_int->summary_addr,
-> +				  adapter_int->summary_offset, adapter->swap);
-> +		summary_set = test_and_set_bit(bit, map);
-> +		mark_page_dirty(kvm, adapter_int->summary_gaddr >> PAGE_SHIFT);
-> +		set_page_dirty_lock(summary_page);
-> +		srcu_read_unlock(&kvm->srcu, idx);
+If we can make that work then maybe the flows are designed correctly.
 
-Same here, unpin_user_page(summary_page) ...
-
-> +	} else {
-> +		map = page_address(summary_info->page);
-> +		bit = get_ind_bit(summary_info->addr, adapter_int->summary_offset,
-> +				  adapter->swap);
-> +		summary_set = test_and_set_bit(bit, map);
-> +		raw_spin_unlock_irqrestore(&adapter->maps_lock, flags);
->  	}
->  
-> -	idx = srcu_read_lock(&kvm->srcu);
-> -	map = page_address(ind_page);
-> -	bit = get_ind_bit(adapter_int->ind_addr,
-> -			  adapter_int->ind_offset, adapter->swap);
-> -	set_bit(bit, map);
-> -	mark_page_dirty(kvm, adapter_int->ind_gaddr >> PAGE_SHIFT);
-> -	set_page_dirty_lock(ind_page);
-> -	map = page_address(summary_page);
-> -	bit = get_ind_bit(adapter_int->summary_addr,
-> -			  adapter_int->summary_offset, adapter->swap);
-> -	summary_set = test_and_set_bit(bit, map);
-> -	mark_page_dirty(kvm, adapter_int->summary_gaddr >> PAGE_SHIFT);
-> -	set_page_dirty_lock(summary_page);
-> -	srcu_read_unlock(&kvm->srcu, idx);
-> -
-> -	unpin_user_page(ind_page);
-> -	unpin_user_page(summary_page);
-> +	if (!ind_info)
-> +		unpin_user_page(ind_page);
-> +	if (!summary_info)
-> +		unpin_user_page(summary_page);
-
-... And then you don't need either of these checks/unpins?
-
->  	return summary_set ? 0 : 1;
->  }
->  
-
+Jason
 
