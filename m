@@ -1,219 +1,154 @@
-Return-Path: <linux-s390+bounces-19706-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19709-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WCiyHVxTB2pIygIAu9opvQ
-	(envelope-from <linux-s390+bounces-19706-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 15 May 2026 19:09:48 +0200
+	id KCwHCbuFB2rR6wIAu9opvQ
+	(envelope-from <linux-s390+bounces-19709-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 15 May 2026 22:44:43 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47498554871
-	for <lists+linux-s390@lfdr.de>; Fri, 15 May 2026 19:09:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3038855785F
+	for <lists+linux-s390@lfdr.de>; Fri, 15 May 2026 22:44:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 27940306FA3B
-	for <lists+linux-s390@lfdr.de>; Fri, 15 May 2026 16:54:39 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 4FA383007A4C
+	for <lists+linux-s390@lfdr.de>; Fri, 15 May 2026 20:44:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 597244CA273;
-	Fri, 15 May 2026 16:54:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39ECE3E92B6;
+	Fri, 15 May 2026 20:44:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EZQk/eXo"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="HvwBqnLT"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2944C6F09;
-	Fri, 15 May 2026 16:54:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D576837B3F2;
+	Fri, 15 May 2026 20:44:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778864059; cv=none; b=qCgUN+efilbb7JSP0ybPZ3sNqyDvfsgRE0geaSSWn4WO8+SNiEpyoXLWLLEsN9qmpwyewjeD9ttRrKnjJT5eSzN+ykh6d31B+a522ZT19UEF/uc42Dpr6P1gtmZJrmszcsQadfMCA3kfXIpxIRPXA5zf+/NS+2OKEUwnptBi3TU=
+	t=1778877877; cv=none; b=GIse8AIZxvQ2dIvzBBOlXUhU1i9BP8SRDT7dYWRHv4LQNwaA2wjdygOzcRHe8xs16XFKaXfZNjgNu0pu5GYTo+bijWpQA2fMqBP1UkUceMOIQx6QCDTGcCNKIT/8eudJOJLxsyM8vEdFXi3tE2dIarGteO9Bo5iOebbNSEr36lM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778864059; c=relaxed/simple;
-	bh=Oq8sA+f5fwEz3Gbhe4/UQdT03Rgd/EdfMErxJReByvM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aQfEUrnwxZBVkIkuNV7Tt6KfYTx+DoWK33K4NtVLibMO+LNr1v53hYYl09cSjkhnocV6tHx+4nfe/gJ9aBsJfLZXhqJzM/+ItY/Xl8bq400w8edKYnLZZRjZ/ZUFFAOr+hTkho7PARfbVUtFpaVDuBM7WQ6Kv4w4a8Qj4G7T9qQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EZQk/eXo; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64FBSGSR576688;
-	Fri, 15 May 2026 16:54:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=3St4iq7uw2n4Oi89NYsuWxbE42N21e
-	/j3GToZVButWw=; b=EZQk/eXo+BEb0EOqsQAgtBgWWQtdp4Ob9NcF72Kd4QRScJ
-	nO5p7KGmUJ/W1mVxCLJ5fRN4N4TpHHLc58V38m3OpQP0qCqhXpmMt01hovITftJC
-	jNUocNqv25eHPpJoA302c/eXT0tMlf5SXivdfDRIF1ZzAg4KWPALeUTQowygK5WS
-	12fjcwW9/exzMsI3fYFF9fj+061fcp9UCucH8aN1tZjb5xASBquJztlWAv8a/WAx
-	/GICNsPvsD/GsKd2Vd5+AU039rrvfzYAvBOn/YAhJTMs54ZIHaxDjy5SHANJEd6x
-	a5KUlztwf1tp/BWPkZHYNph4okCOksSV/PjJmEeQ==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4e5m92m3hj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 15 May 2026 16:54:04 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64FGd96F026489;
-	Fri, 15 May 2026 16:54:03 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4e5kvcmea1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 15 May 2026 16:54:03 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64FGrxtg13107564
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 15 May 2026 16:54:00 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C98A120043;
-	Fri, 15 May 2026 16:53:59 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id ECAE22004D;
-	Fri, 15 May 2026 16:53:58 +0000 (GMT)
-Received: from osiris (unknown [9.87.152.91])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 15 May 2026 16:53:58 +0000 (GMT)
-Date: Fri, 15 May 2026 18:53:57 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-s390@vger.kernel.org,
-        Kees Cook <kees@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Marco Elver <elver@google.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>, kasan-dev@googlegroups.com,
-        Vasily Gorbik <gor@linux.ibm.com>,
+	s=arc-20240116; t=1778877877; c=relaxed/simple;
+	bh=E1+eWqDxv6j99dZMDhlO+NNDH9oYnsJmpH6o+qF/hR0=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=eDo4fU69+2vwDwBTZ97muihXaLNI6OKn1n/sVAzdNxrrD6+3fsQcgFkaLbV3wMLPNjrTxRvy0QQG5gCJDjV72qY35hBbXU65eCsmMMyFnXRr3IQJIlv1aa92e17KhGWEi7wyG3XZ8GnXnGMCgSM4/ivpSoEc9POhwS/oyXc90Ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=HvwBqnLT; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Received: from ehlo.thunderbird.net (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 64FJxdt93762934
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Fri, 15 May 2026 12:59:40 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 64FJxdt93762934
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2026042601; t=1778875185;
+	bh=yOPbK2OFF6IcrfoJraZaWua7RTa6T7n9+bq8VLS6qCY=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=HvwBqnLT38+P8wOr09I0oo/MRbA0gltt1BvxpDB/CXoHAI/p9iMtZP4Acni9CBE8i
+	 UuQANyZJcLZO9XcaPLGm0i1Xg+soCjS4z5NjIoUETnDDa930DiHBVRAOT/MRlLb9jY
+	 QYrQ9QMS7lPYMHGvM8plKfNxe30Gl9az6f+vOCv0hNim3O4/Bdo2qSTnUxGO9V7Nx4
+	 F46aEk0Mx5DZE0TAlF3l22P0Yw61+alulS+V4O2YtDdYTlzt2T6qIuwD2KE0nXfR9T
+	 jNDuDCJ8yXY/CId0JmSkw1Ar6+GJQTs5O0RqwrWv5l7cMbOBEgdh93GvzIYQG1gbNB
+	 I9HJmsdG2PKng==
+Date: Fri, 15 May 2026 12:59:34 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Christoph Hellwig <hch@lst.de>, kreijack@inwind.it
+CC: David Sterba <dsterba@suse.cz>, Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
         Alexander Gordeev <agordeev@linux.ibm.com>,
         Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Terrell <terrelln@fb.com>, David Sterba <dsterba@suse.com>,
-        Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stefan Schulze Frielinghaus <stefansf@linux.ibm.com>,
-        Juergen Christ <jchrist@linux.ibm.com>
-Subject: Re: [PATCH] [RFC] ubsan: turn off UBSAN_ALIGNMENT on s390
-Message-ID: <20260515165357.10935D74-hca@linux.ibm.com>
-References: <20260515092057.810542-1-arnd@kernel.org>
+        Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+        Song Liu <song@kernel.org>,
+        Yu Kuai <yukuai@alb-78bjiv52429oh8qptp.cn-shenzhen.alb.aliyuncs.com>,
+        Li Nan <linan122@huawei.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-raid@vger.kernel.org
+Subject: Re: [PATCH 01/19] btrfs: require at least 4 devices for RAID 6
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20260515043705.GA3855@lst.de>
+References: <20260512052230.2947683-1-hch@lst.de> <20260512052230.2947683-2-hch@lst.de> <20260512114231.GG2558453@suse.cz> <20260513054742.GA1018@lst.de> <0a8d1ff4-f5a2-49e9-aa45-d25dbe4ded40@libero.it> <20260515043705.GA3855@lst.de>
+Message-ID: <34C16854-1065-4542-8836-DDED58EC1844@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260515092057.810542-1-arnd@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTE1MDE3MCBTYWx0ZWRfX0Sdgqd2mbOFw
- KkwpotWDkb5iMlunsj0AnCKrYChzb8Nxz9zKCYOeVw8wVOHFb7mGA5rcu7GnkjmJnGUqKeiNOT6
- nxhwTmcZWQ141Iwj3D/OEGSjVkmvfZwzlpzjIqqikeGpqT5brZ/sJ+megDwJVgLmSkZYy9RxDuK
- xOKcM8sPehgUsrWal/xaadErluJkpX0z+b1lq0P/iXZqGXF2CQFVrjhdyD0lQ22lz4q+EmRycMn
- d2XVL9awFqwzsZ72v+/8jl+nZDMgjZQ5RGuXlcfdcu2y0xvstUWHQPTDsJcRCErYc3RAXla+ugI
- m9PrJkp/7QIze9f1LXyVtsutKs+MnF/WG5PnDssxavt1cpXADFQ2oWfOc0u4zSHzCSBwc36/73h
- I3/RoJTjfNsBKlw0acbJgIr3W1RgdXkXhrVWNkq8nVz7PLOcT5HJPGrrXmZ3KOT8ySBqficZ6mP
- CkT9ClEpKnO3wm7hRmQ==
-X-Proofpoint-ORIG-GUID: dFUWlXN3yEx0zRZhdfr_E6pX1tSmd4PZ
-X-Authority-Analysis: v=2.4 cv=aNnAb79m c=1 sm=1 tr=0 ts=6a074fac cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=kj9zAlcOel0A:10 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=yuVE4MsfjvIhWQyEmLAA:9
- a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: AG3tYxTwIk-uHnozpkweqL_TBK0aOZF8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-15_04,2026-05-15_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 malwarescore=0 suspectscore=0 spamscore=0 lowpriorityscore=0
- impostorscore=0 priorityscore=1501 clxscore=1011 adultscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605150170
-X-Rspamd-Queue-Id: 47498554871
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 3038855785F
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.34 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	DMARC_POLICY_ALLOW(-0.50)[zytor.com,none];
+	R_DKIM_ALLOW(-0.20)[zytor.com:s=2026042601];
 	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,arndb.de,google.com,gmail.com,googlegroups.com,linux.ibm.com,linux-foundation.org,fb.com,suse.com,infradead.org];
-	TAGGED_FROM(0.00)[bounces-19706-lists,linux-s390=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-19709-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_TO(0.00)[lst.de,inwind.it];
+	FREEMAIL_CC(0.00)[suse.cz,linux-foundation.org,arm.com,kernel.org,xen0n.name,linux.ibm.com,ellerman.id.au,gmail.com,dabbelt.com,eecs.berkeley.edu,ghiti.fr,redhat.com,alien8.de,linux.intel.com,gondor.apana.org.au,intel.com,fb.com,suse.com,arndb.de,alb-78bjiv52429oh8qptp.cn-shenzhen.alb.aliyuncs.com,huawei.com,vger.kernel.org,lists.infradead.org,lists.linux.dev,lists.ozlabs.org];
+	RCPT_COUNT_TWELVE(0.00)[45];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,linux.ibm.com:mid];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hca@linux.ibm.com,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hpa@zytor.com,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[zytor.com:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[11]
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,lst.de:email,zytor.com:mid,zytor.com:dkim]
 X-Rspamd-Action: no action
 
-On Fri, May 15, 2026 at 11:19:54AM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> Testing randconfig builds on s390 with gcc-15, I came across a number of
-> seemingly unrelated build failures that ended up all being caused
-> by the -fsanitize=alignment option:
-> 
-> s390-linux-ld: kernel/sched/build_policy.o: in function `thread_group_cputime':
-> include/linux/seqlock.h:1286:(.text+0x1f738): undefined reference to `__scoped_seqlock_bug'
+On May 14, 2026 9:37:05 PM PDT, Christoph Hellwig <hch@lst=2Ede> wrote:
+>On Thu, May 14, 2026 at 09:51:59PM +0200, Goffredo Baroncelli wrote:
+>> I think that the David concern is : "what happens for an already
+>> existing btrfs raid6 3 disks filesystem when the user upgrade the kerne=
+l ?"
+>> (I am thinking when a new BG needs to be allocated)=2E=2E=2E
+>
+>Then it will cleanly fail to mount instead of constantly corrupting data
+>and memory with every write, yes=2E  Which clearly suggest that such
+>file systems don't exist in the wild=2E
+>
+>But if btrfs wants to keep supporting this I'll just add a _unsafe
+>version without the check in the core library=2E
 
-Does this only happen with __scoped_seqlock_bug()?
-I just enabled UBSAN_ALIGNMENT, and with gcc-16 I can see this too.
+I don't think this is a good idea=2E Error out; it is the btrfs maintainer=
+s' job to ensure user data isn't lost=2E=20
 
-> What I observe here is a huge increase in generated calls to
-> __ubsan_handle_type_mismatch_v1() that ends up thowing off a number of
-> compiler optimizations that the kernel relies on.
-> 
-> I have not been able to figure out why this happens on s390 but not arm64,
-> arm or x86, if other toolchain versions are affected by the same thing,
-> and if this is a problem in gcc or in the kernel itself, e.g. some
-> variable being identified as unaligned when it should be aligned.
-> 
-> This clearly needs more investigation to figure out properly what is
-> going on, but turning it off is currently required for randconfig testing.
-...
-> ---
->  lib/Kconfig.ubsan | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
-> index 1ecaae7064d2..3fc03a6b5af4 100644
-> --- a/lib/Kconfig.ubsan
-> +++ b/lib/Kconfig.ubsan
-> @@ -152,6 +152,7 @@ config UBSAN_ENUM
->  
->  config UBSAN_ALIGNMENT
->  	bool "Perform checking for misaligned pointer usage"
-> +	depends on !S390 || BROKEN
+The RAID-6 code has *never* supported only 3 units, and if it ever worked =
+for *any* of the implementations it was purely by accident=2E Speaking as t=
+he original author I should know; this was deliberate as in some cases the =
+degenerate case (3) would have required extra trays in the code to no user =
+benefit=2E=20
 
-Wouldn't it be more appropriate to extend the ifdef at __scoped_seqlock_bug()
-which emits an empty function for exactly this reason for some gcc versions
-and kernel configs?
-
-That is: add CONFIG_UBSAN_ALIGNMENT to the list (copy-pasted - white space
-damage below)?
-
-diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
-index 5a40252b8334..18affa4d21a6 100644
---- a/include/linux/seqlock.h
-+++ b/include/linux/seqlock.h
-@@ -1259,7 +1259,7 @@ static __always_inline void __scoped_seqlock_cleanup(struct ss_tmp *sst)
- 
- extern void __scoped_seqlock_invalid_target(void);
- 
--#if (defined(CONFIG_CC_IS_GCC) && CONFIG_GCC_VERSION < 90000) || defined(CONFIG_KASAN)
-+#if (defined(CONFIG_CC_IS_GCC) && CONFIG_GCC_VERSION < 90000) || defined(CONFIG_KASAN) || defined(CONFIG_UBSAN_ALIGNMENT)
- /*
-  * For some reason some GCC-8 architectures (nios2, alpha) have trouble
-  * determining that the ss_done state is impossible in __scoped_seqlock_next()
+I would not be surprised if the kernel crashed or corrupted the page cache=
+ in that case=2E
 
