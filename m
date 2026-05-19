@@ -1,239 +1,293 @@
-Return-Path: <linux-s390+bounces-19792-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19794-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cIOaDcxKDGrjdQUAu9opvQ
-	(envelope-from <linux-s390+bounces-19792-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 13:34:36 +0200
+	id 0OCFCq9HDGoMdAUAu9opvQ
+	(envelope-from <linux-s390+bounces-19794-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 13:21:19 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id B770C57DB55
-	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 13:34:35 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 834AE57D716
+	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 13:21:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E6DE130CEDA0
-	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 11:07:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CAF9C30836B0
+	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 11:07:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 596A6480340;
-	Tue, 19 May 2026 11:07:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56420233921;
+	Tue, 19 May 2026 11:07:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oaAXiCKC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J6HZC9pC"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76803F4DD3
-	for <linux-s390@vger.kernel.org>; Tue, 19 May 2026 11:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C19481FBA
+	for <linux-s390@vger.kernel.org>; Tue, 19 May 2026 11:07:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779188820; cv=none; b=A8n7v3XMXU/NzmVsc7d9QJZg7kKRSlqll4b4B96jaZSR7q7dspjGwHbv577KA2cyJxtv2ohfzl5Ybg/hlKQ2/2egSfbUt7VDowoHLqVjt6zGGJ+7RTBCLgUl0MHHuAN/QtLa5KdIq1XBKf52iOJ8Kdjj6yI5jVinaJCmnXDXdUo=
+	t=1779188870; cv=none; b=MPt29zcAUHSvBFF2YIFtTPcbMd2mvoaoyU5FCKgntHnMohxY2kUA17EV56cNOyr2IR92N0yKarwJykc5YjH3nf9m/T9lfnS/zZQfobqKXgDTE0R84Oyy2FTs1ktLKIwtXqwFuQFk+DTkh9Ga3hLngR46cokA3OgokOjvOwxWjlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779188820; c=relaxed/simple;
-	bh=bLHvC6K9JqJ0RlgA15nPRG2hHu4cpHRoKhj+9AVrCoU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Frv8vtBM7PTUIo2G6mYXNfYx5aU1ByCkR1rrz4oumCJktICJcz+aGBHkFY1g0Myku+Y8hJlhb/FRW8G5pSvLuY2GgW3mbD/MzbPmMrc0dEV8UznnsqoIssQ4PBYgji/+bSZ3MnAEkNdaG53UT6t/a1oWrrh9h6ryBaggZubhGio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oaAXiCKC; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-488940ccfa6so265e9.1
-        for <linux-s390@vger.kernel.org>; Tue, 19 May 2026 04:06:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779188817; x=1779793617; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=gqrcVfnO7KvHz04L9yl4e6Ci0L4LjlQK4/aWUr5steg=;
-        b=oaAXiCKCYSkRs3EK1SXjVNRdspqM6oRRzHoxbf0T20woVP0cVjiMZkh+fgSP/ut76F
-         1iGJbjHfVJkflGWAeC5xVR3NmrZkmNsU+cMYD6kviK91/2eHjQN2lwjlt6pG4A+piyIe
-         kEFQ9g4pyEg6N1waV6TFOw7g9LXKP8j+tQ+9K1gxxpgSP99bmOIUr58FKTu/FQXQrEn5
-         DEiCmu0K96KfSte5i/8u0hjLSC0ghM01jmDpPdImBJsM1Ip8woEYl7o9sb4HR7vqFepH
-         COKXgwfUsWkGpJ52qNUuekMnBDWTGE6qBsZgn4LEy8YHmtoJmT+gXZViWkNTk1GyYmub
-         Trxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779188817; x=1779793617;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gqrcVfnO7KvHz04L9yl4e6Ci0L4LjlQK4/aWUr5steg=;
-        b=s1Cr32RzIUIARmkOwHkV98hecs+T+HMyBpUoMHej3BqW++Pd6KRNHnrajT7ibvmf2M
-         zAgONKr88sNrMKhWdJ876jeSO0O38sMhI+P2V/0BU4NOL6T1cs/az9mU9wpz8yuMB8CT
-         sNXUR8VltwqpF8z/0gQgUkoS5rZ7pUwR4CUNkdPDVWzJH2c5MeSq2Drkgv8mOEqLa1+W
-         iFqedTbV5lOIDOkalFAZz97dL11CfaYqKTHXThkZMjveFC4aMyz/xT7DWSqcNrMVc27H
-         rePymx576O/F1cqXhOEM3rsTF245sIl8N+LpLE/loA5wfOG0KzWohhWzPqgsylVRviqx
-         ruPA==
-X-Forwarded-Encrypted: i=1; AFNElJ+nb5zSBmnxcXqrnexwmGFcZd4n9sjbkgyTV+Em/IxZ2s/u5PC2q3JnbGbr+r05iDUi21CIj4tG0J2w@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlR5SkTcEdqHiuuvnE/uaDQCt9+0C8uefat7yh15fF2yjeZPsM
-	7V+GNXTqDUh9O0NhY8Pyg7ag8iemVRgyNsu4z373P9g+z4me1XYlgyeJ8M9tnKiavQ==
-X-Gm-Gg: Acq92OHKTimJDybsNj9QgKtI+VJB4wx6rnhRj7BuL7cRYa6uIamSI3uXTzeHB2VwSdY
-	dIXu4k1E4QS9Xbz+j/1Bg2HgiMsGaFh/0Toet3mtqzVeBzqaJZEyxtmyu9NtKiEPQawh7S/Deek
-	B0H5hzVXIhEpWEIijM1DdxnzAqpF261/yxS1fb9eEl4PMF+AU7nuIMFxeRw4NUpAwoFAWTPMED1
-	la/iuomJyLptrtF7vwPjJLz/StdE0RKaF0g5WysdVpRHASOAAIqhFw/KeLrDr1gvVLVSbWd/HLm
-	rl+ZB4zoXzRZUQu/aqcB1lyKTqQui2w5JR84C/YQU0GqWo0OxjmdvbrHslUNlk6IXY1jqOGueBc
-	TA0COWthkue447IBFcsxz4trg6rW8/b+8m/VZhhc3PV0e7TeXHs/9jINbz3zQ4md5oyMbr9WHZG
-	LdQ+WGCWxQbXtDhvP1VueiIQ89fFVCsvfNMSbUSAj1aAOGkC/x82ecCVkAVLgXCNX6JIfynnFf5
-	1XYF89PvxQh5Q==
-X-Received: by 2002:a05:600c:418b:b0:488:960f:60b8 with SMTP id 5b1f17b1804b1-48ffa5e1272mr2275185e9.6.1779188816592;
-        Tue, 19 May 2026 04:06:56 -0700 (PDT)
-Received: from google.com (136.41.155.104.bc.googleusercontent.com. [104.155.41.136])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48fe53767ecsm288995945e9.10.2026.05.19.04.06.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2026 04:06:55 -0700 (PDT)
-Date: Tue, 19 May 2026 11:06:52 +0000
-From: Mostafa Saleh <smostafa@google.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
-	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
-	Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Steven Price <steven.price@arm.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jiri Pirko <jiri@resnulli.us>, Petr Tesarik <ptesarik@suse.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>, x86@kernel.org
-Subject: Re: [PATCH v4 04/13] dma: swiotlb: track pool encryption state and
- honor DMA_ATTR_CC_SHARED
-Message-ID: <agxETC1rXBUSkWYg@google.com>
-References: <20260512090408.794195-1-aneesh.kumar@kernel.org>
- <20260512090408.794195-5-aneesh.kumar@kernel.org>
- <agSKQrSIhizCXKwx@google.com>
- <20260513172450.GR7702@ziepe.ca>
- <agW2lzJI-20DyJVe@google.com>
- <20260514123529.GZ7702@ziepe.ca>
- <agXfm3mS_M3fvRrN@google.com>
- <20260515225113.GN7702@ziepe.ca>
+	s=arc-20240116; t=1779188870; c=relaxed/simple;
+	bh=AC6EG7Qy5QFar1m8+wNeC36/N8InyfKesUcYtXC1ZRw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OkbYGG4S0qk2qZrbFnVt+RVAQd9fiPxyT0B3g+6ni/8E4frceXoPxi+Qd2N2saq1a3AP8BFZmwErfYhY2HSi5nenTE69SBme8hAQu02wZ9ReXW1O2mSF2BRl/n82RCivV/uUV0ISiy1Dmq10JjLBaJpnFCmNsimw3kc8KkwFSWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J6HZC9pC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BCCEC2BCF6
+	for <linux-s390@vger.kernel.org>; Tue, 19 May 2026 11:07:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779188869;
+	bh=AC6EG7Qy5QFar1m8+wNeC36/N8InyfKesUcYtXC1ZRw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=J6HZC9pCBVvKkq/Wxm2hTVYY1qvrimcGxO52O+8iIijmU2YZ84Y/Nc2nNJqOsODAB
+	 BA153SFiXfqJ0byR+6nV06yKp5+ucb39ErHO8HSupUS3liO24LSCSsqMNzOBPIwVoi
+	 Lj/QT11bmTYBhC1rPctv2NgtLGQ6M57TL4Ux01hnPIvSSr9n8bGcnZ7B7nD2N5Hij/
+	 T4MsexjvZRBhtKuWOI85twHBDHISBIjKE06XdV+Jy/d8X9knosht2r3HRGxpwV1E+u
+	 MMB1SzIwyBJD1C4Ps5JFTz0Sb1cRzaFig/nC4peanMKuuvQeAhTOmAPAIQoZYUPmXG
+	 PWDiK6Slkc3iw==
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-911af978bf2so408174885a.1
+        for <linux-s390@vger.kernel.org>; Tue, 19 May 2026 04:07:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ/n70XXT2J7j6BN2dI0Swp6siAziV81LGnp87mdxPCGSYs5QK9TmAiFuAu0GIkXN6m+EPKBGydc99fM@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrgJRoHYUw+o/PbE6ZugoANBFRMYJShHQEt7XNQC4ouAIYwQWr
+	Jhi4hxcWwFFcy9v8JMZJAVyAmBKwI+LqsT02Seh7Z0Jb6fnbaAQ/zLJHuz46hXPGeYyduqtSCdM
+	rXIfg174lyxNNYUzolbY6OGyVSevIkX8=
+X-Received: by 2002:a05:620a:25cd:b0:8ca:123e:819b with SMTP id
+ af79cd13be357-911ccd8bbe7mr2716864885a.13.1779188868655; Tue, 19 May 2026
+ 04:07:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260515225113.GN7702@ziepe.ca>
-X-Spamd-Result: default: False [-2.16 / 15.00];
+References: <20260430040427.4672-1-baohua@kernel.org> <afNM-gIqxpyJ6ro7@casper.infradead.org>
+ <CAGsJ_4w0qcYmukHqsyRd0jomoyYkJjOt8b-Cgp53BgP-8QQghw@mail.gmail.com>
+ <afS_L-5XeWIldTXA@casper.infradead.org> <CAGsJ_4wk=SDtgin+84Ev2TamU-JFfmrg_SUay=-tcYmnFvK6Nw@mail.gmail.com>
+ <afTpoL3FklpQZNMM@casper.infradead.org> <CAGsJ_4ysMcrmDLSOwBkf7qwCQrcDWeEMXkHDajTJFMLKUk0bSQ@mail.gmail.com>
+ <CAHbLzkrOSoh-jmR=uaNvx73n_wn+vExoKY0UzH5zGcfdAiDbNg@mail.gmail.com>
+In-Reply-To: <CAHbLzkrOSoh-jmR=uaNvx73n_wn+vExoKY0UzH5zGcfdAiDbNg@mail.gmail.com>
+From: Barry Song <baohua@kernel.org>
+Date: Tue, 19 May 2026 19:07:37 +0800
+X-Gmail-Original-Message-ID: <CAGsJ_4w_-Y8qNLDeLX9OWpLpK01YG2bF-N6_mGypgsauvfCvkA@mail.gmail.com>
+X-Gm-Features: AVHnY4IMRz_ZQFDJjmEiieX1rlV8P0ieusFoUXzddUcOWyGa62kJgu1G0wGZ0I0
+Message-ID: <CAGsJ_4w_-Y8qNLDeLX9OWpLpK01YG2bF-N6_mGypgsauvfCvkA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
+ fault performance
+To: Yang Shi <shy828301@gmail.com>
+Cc: Matthew Wilcox <willy@infradead.org>, surenb@google.com, akpm@linux-foundation.org, 
+	linux-mm@kvack.org, david@kernel.org, ljs@kernel.org, liam@infradead.org, 
+	vbabka@kernel.org, rppt@kernel.org, mhocko@suse.com, jack@suse.cz, 
+	pfalcato@suse.de, wanglian@kylinos.cn, chentao@kylinos.cn, 
+	lianux.mm@gmail.com, kunwu.chan@gmail.com, liyangouwen1@oppo.com, 
+	chrisl@kernel.org, kasong@tencent.com, shikemeng@huaweicloud.com, 
+	nphamcs@gmail.com, bhe@redhat.com, youngjun.park@lge.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	Nanzhe Zhao <nzzhao@126.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
-	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19792-lists,linux-s390=lfdr.de];
-	FREEMAIL_CC(0.00)[kernel.org,lists.linux.dev,lists.infradead.org,vger.kernel.org,arm.com,samsung.com,resnulli.us,suse.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,linux.ibm.com,ellerman.id.au,gmail.com];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19794-lists,linux-s390=lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[infradead.org,google.com,linux-foundation.org,kvack.org,kernel.org,suse.com,suse.cz,suse.de,kylinos.cn,gmail.com,oppo.com,tencent.com,huaweicloud.com,redhat.com,lge.com,lists.infradead.org,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,126.com];
 	RCPT_COUNT_TWELVE(0.00)[31];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[google.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[smostafa@google.com,linux-s390@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[baohua@kernel.org,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-s390];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: B770C57DB55
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: 834AE57D716
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, May 15, 2026 at 07:51:13PM -0300, Jason Gunthorpe wrote:
-> On Thu, May 14, 2026 at 02:43:39PM +0000, Mostafa Saleh wrote:
-> > > That's a somewhat different problem, we have the dev->trusted stuff
-> > > that is supposed to deal with this kind of security. We need it for
-> > > IOMMU based systems too, eg hot plug thunderbolt should have it.
-> > 
-> > I see that it is used only for dma-iommu and for PCI devices.
-> > However, I think that should be a problem with other CCA solutions
-> > with emulated devices as they are untrusted. As I'd expect they
-> > would have virtio devices.
-> 
-> Yes, any security solution with an out of TCB device should be using either
-> memory encryption so the kernel already bounces or this trusted stuff
-> and a force strict dma-iommu so the dma layer is careful.
-> 
-> This is more policy from userspace what devices they want in or out of
-> their TCB. Like you make accept the device into T=1 but then still
-> want to keep it out of your TCB with the vIOMMU, I can see good
-> arguments for something like that.
-> 
-> > > > While we can debate the aesthetics of the setup , this is
-> > > > the exisitng behaviour for Linux, which existed for years
-> > > > and pKVM relies on and is used extensively.
-> > > > And, this patch alters that long-standing logic and introduces
-> > > > a functional regression.
-> > > 
-> > > Yeah, Aneesh needs to do something here, I'm pointing out it is
-> > > entirely seperate thing from the CC path we are working on which is
-> > > decoupling CC from reylying on force swiotlb.
-> > 
-> > I am looking into converting pKVM to use the CC stuff, I replied with
-> > a patch to Aneesh in this thread. However, I need to do more testing
-> > and make sure there are not any unwanted consequences.
-> 
-> Yeah, it is a nice patch and I think it will help reduce the
-> complexity if it aligns to CCA type stuff.
-> 
-> > > In a pkvm world it should be the same, the S2 table for the SMMU will
-> > > control what the device can access, and if the SMMU points to a
-> > > "private" or "shared" page is not something the device needs to know
-> > > or care about.
-> > 
-> > I see that's because dma-iommu chooses the attrs for iommu_map().
-> 
-> Long term the DMA API path through the dma-iommu will pass the
-> ATTR_CC_SHARED through to iommu_map so when the arch requires a
-> different IOPTE it can construct it.
-> 
-> > In pKVM, dma_addr_t and IOPTE are the same for private and shared,
-> > so nothing differs in that case.
-> 
-> Yes, so you don't have to worry.
-> 
-> > We don’t expect pass-through devices to interact with shared
-> > memory (T=0) at the moment.
-> > However, I can see use cases for that, where the host and the guest
-> > collaborate with device passthrough and require zero copy.
-> 
-> Once you add the CC patch it becomes immediately possible though
-> because the user can allocate a CC shared DMA HEAP and feed that all
-> over the place.
-> 
-> > One other interesting case for device-passthrough is non-coherent
-> > devices which then require private pools for bouncing.
-> 
-> Why does shared/private matter for bouncing? Why do you need to bounce
-> at all? Do cmo's not work in pkvm guests?
+On Tue, May 19, 2026 at 5:21=E2=80=AFAM Yang Shi <shy828301@gmail.com> wrot=
+e:
+>
+> On Sun, May 17, 2026 at 1:45=E2=80=AFAM Barry Song <baohua@kernel.org> wr=
+ote:
+> >
+> > On Sat, May 2, 2026 at 1:58=E2=80=AFAM Matthew Wilcox <willy@infradead.=
+org> wrote:
+> > >
+> > > On Sat, May 02, 2026 at 01:44:34AM +0800, Barry Song wrote:
+> > > > On Fri, May 1, 2026 at 10:57=E2=80=AFPM Matthew Wilcox <willy@infra=
+dead.org> wrote:
+> > > > >
+> > > > > On Fri, May 01, 2026 at 06:49:58AM +0800, Barry Song wrote:
+> > > > > > 1. There is no deterministic latency for I/O completion. It dep=
+ends on
+> > > > > > both the hardware and the software stack (bio/request queues an=
+d the
+> > > > > > block scheduler). Sometimes the latency is short; at other time=
+s it can
+> > > > > > be quite long. In such cases, a high-priority thread performing=
+ operations
+> > > > > > such as mprotect, unmap, prctl_set_vma, or madvise may be force=
+d to wait
+> > > > > > for an unpredictable amount of time.
+> > > > >
+> > > > > But does that actually happen?  I find it hard to believe that th=
+read A
+> > > > > unmaps a VMA while thread B is in the middle of taking a page fau=
+lt in
+> > > > > that same VMA.  mprotect() and madvise() are more likely to happe=
+n, but
+> > > > > it still seems really unlikely to me.
+> > > >
+> > > > It doesn=E2=80=99t have to involve unmapping or applying mprotect t=
+o
+> > > > the entire VMA=E2=80=94just a portion of it is sufficient.
+> > >
+> > > Yes, but that still fails to answer "does this actually happen".  How=
+ much
+> > > performance is all this complexity in the page fault handler buying u=
+s?
+> > > If you don't answer this question, I'm just going to go in and rip it
+> > > all out.
+> > >
+> >
+> > Hi Matthew (and Lorenzo, Jan, and anyone else who may be
+> > waiting for answers),
+> >
+> > As promised during LSF/MM/BPF, we conducted thorough
+> > testing on Android phones to determine whether performing
+> > I/O in `filemap_fault()` can block `vma_start_write()`.
+> > I wanted to give a quick update on this question.
+> >
+> > Nanzhe at Xiaomi created tracing scripts and ran various
+> > applications on Android devices with I/O performed under
+> > the VMA lock in `filemap_fault()`. We found that:
+> >
+> > 1. There are very few cases where unmap() is blocked by
+> >    page faults. I assume this is due to buggy user code
+> >    or poor synchronization between reads and unmap().
+> > So I assume it is not a problem.
+> >
+> > 2. We observed many cases where `vma_start_write()`
+> >    is blocked by page-fault I/O in some applications.
+> >    The blocking occurs in the `dup_mmap()` path during
+> >    fork().
+> >
+> > With Suren's commit fb49c455323ff ("fork: lock VMAs of
+> > the parent process when forking"), we now always hold
+> > `vma_write_lock()` for each VMA. Note that the
+> > `mmap_lock` write lock is also held, which could lead to
+> > chained waiting if page-fault I/O is performed without
+> > releasing the VMA lock.
+> >
+> > My gut feeling is that Suren's commit may be overshooting,
+> > so my rough idea is that we might want to do something like
+> > the following (we haven't tested it yet and it might be
+> > wrong):
+> >
+> > diff --git a/mm/mmap.c b/mm/mmap.c
+> > index 2311ae7c2ff4..5ddaf297f31a 100644
+> > --- a/mm/mmap.c
+> > +++ b/mm/mmap.c
+> > @@ -1762,7 +1762,13 @@ __latent_entropy int dup_mmap(struct mm_struct
+> > *mm, struct mm_struct *oldmm)
+> >         for_each_vma(vmi, mpnt) {
+> >                 struct file *file;
+> >
+> > -               retval =3D vma_start_write_killable(mpnt);
+> > +               /*
+> > +                * For anonymous or writable private VMAs, prevent
+> > +                * concurrent CoW faults.
+> > +                */
+> > +               if (!mpnt->vm_file || (!(mpnt->vm_flags & VM_SHARED) &&
+> > +                                       (mpnt->vm_flags & VM_WRITE)))
+> > +                       retval =3D vma_start_write_killable(mpnt);
+> >                 if (retval < 0)
+> >                         goto loop_out;
+> >                 if (mpnt->vm_flags & VM_DONTCOPY) {
+>
+> Maybe a little bit off topic. This is an interesting idea. It seems
+> possible we don't have to take vma write lock unconditionally. IIUC
+> the write lock is mainly used to serialize against page fault and
+> madvise, right? I got a crazy idea off the top of my head. We may be
+> able to just take vma write lock iff vma->anon_vma is not NULL.
+>
+> First of all, write mmap_lock is held, so the vma can't go or be
+> changed under us.
+>
+> Secondly, if vma->anon_vma is NULL, it basically means either no page
+> fault happened or no cow happened, so there is no page table to copy,
+> this is also what copy_page_range() does currently. So we can shrink
+> the critical section to:
+>
+> if (vma->anon_vma) {
+>     vma_start_write_killable(src_vma);
+>     anon_vma_fork(dst_vma, src_vma);
+>     copy_page_range(dst_vma, src_vma);
+> }
+>
+> But page fault can happen before write mmap_lock is taken, when we
+> check vma->anon_vma, it is possible it has not been set up yet. But it
+> seems to be equivalent to page fault after fork and won't break the
+> semantic.
 
-At the moment, in iommu_dma_map_phys(), if a non coherent device
-tries to map an unaligned address or size it will be bounced.
-In pKVM, dma-iommu is used for assigned devices which operate on
-private memory, so bouncing that through the SWIOTLB would leak
-information from the guest as the SWIOTLB is decrypted.
-In that case, the device needs a pool which remains private.
+Re-reading Suren's commit log for fb49c455323ff8
+("fork: lock VMAs of the parent process when forking"),
+it seems that vm_start_write() is used to protect
+against a race where anon_vma changes from NULL to
+non-NULL during fork. In that scenario, we hold the
+mmap_lock write lock, but not vma_start_write(), so a
+concurrent anon_vma_prepare() could still install an
+anon_vma.
 
-Thanks,
-Mostafa
+"    A concurrent page fault on a page newly marked read-only by the page
+    copy might trigger wp_page_copy() and a anon_vma_prepare(vma) on the
+    source vma, defeating the anon_vma_clone() that wasn't done because the
+    parent vma originally didn't have an anon_vma, but we now might end up
+    copying a pte entry for a page that has one.
+"
 
-> 
-> Jason
+If that is the case, then your change does not work.
+
+Nowadays, nobody calls anon_vma_prepare(vma) directly.
+Instead, vmf_anon_prepare() is used, and we always
+require the mmap_lock read lock before calling
+__anon_vma_prepare(). As a result, anon_vma cannot
+transition from NULL to non-NULL during fork.
+
+So the original race condition has effectively
+disappeared.
+
+You also mentioned the madvise() case. If I understand
+correctly, madvise() should take mmap_lock before
+modifying anon_vma. Only some parts of madvise() can
+support per-VMA locking. Therefore, we probably do not
+need:
+
+if (vma->anon_vma) {
+vma_start_write_killable(src_vma);
+...
+}
+
+>
+> Anyway, just a crazy idea, I may miss some corner cases.
+
+To me, it seems that we could remove vma_start_write()
+entirely now. Or is that an even crazier idea?
+
+Thanks
+Barry
 
