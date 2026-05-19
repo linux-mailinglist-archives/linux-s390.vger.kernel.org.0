@@ -1,124 +1,73 @@
-Return-Path: <linux-s390+bounces-19806-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19807-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oF3rKnVpDGo8hQUAu9opvQ
-	(envelope-from <linux-s390+bounces-19806-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 15:45:25 +0200
+	id gJADGRdpDGo8hQUAu9opvQ
+	(envelope-from <linux-s390+bounces-19807-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 15:43:51 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 161ED57FED8
-	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 15:45:24 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id C72EF57FE83
+	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 15:43:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4A3A53086F7E
-	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 13:39:18 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 893B2301DC1F
+	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 13:39:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70AB234040B;
-	Tue, 19 May 2026 13:39:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6FCD348C6F;
+	Tue, 19 May 2026 13:39:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ACayE4r8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZePrlUUj"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED69B348C6F
-	for <linux-s390@vger.kernel.org>; Tue, 19 May 2026 13:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A8934040B;
+	Tue, 19 May 2026 13:39:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779197957; cv=none; b=S9wipBjPrMXHEO15gURYC3azOkmVZgfg2T8+Em3yVkYP7Se2s6xqDyug/xutjA37Gwcsuh7iW8m2jfSZdO7sk0v3KMxNxM/LiUybxdGtlumOsFPMECS6iHQwyrNmfVlz7Osj7oOWfsI2ZUjp3jGGzCsQny2p8lJPfaT/vUx6Cw8=
+	t=1779197988; cv=none; b=P6zgOHQwoDkNESqwOPxxg1ZmTCm95SMNQ7SNuXDnUw0cxBWAPalsxYPREFUoqp2L8DNQyez65BCQjuoB+HH7DUsFLWgP28sCWKCBitj4LxH+WPhtg4OKkfxBJgEgrF/QiJkiS8GVytXrVedXXy/C0drz/E8EZcg37H8XKjKBHMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779197957; c=relaxed/simple;
-	bh=pRQYtCnb87pUz8VrW1rjYy01bwyg5a1R8WEHmalGJNg=;
+	s=arc-20240116; t=1779197988; c=relaxed/simple;
+	bh=D+t330bY9theuHhQ7vQ9fk2hC/8pGFvUL2f87DQe0QQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qn2Gxl7e0SLLtIkrJnKsZ+h36oWsd3XZWoXmKkWp/PuLf7AaKFWyFQ3hUeCie/jE5Gjw4EW0+UsgQclGIC00+i0M3/MByVtjHSR/9BRHUYPQ1O5IGZvfPuOwT9AHkmYYvFuPCnX9ldCSiuuNjUKpOmF3B267+SrqJ8/1IjZ5ePE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=ACayE4r8; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-51306c9f2a8so43429811cf.1
-        for <linux-s390@vger.kernel.org>; Tue, 19 May 2026 06:39:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1779197955; x=1779802755; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y2jBYQyB5cOJsBc04yDDPLVV700aJQU8UB+xEqw7DWQ=;
-        b=ACayE4r885XVBMVyYZa0vAYHtQBNpyrylqaQXDTIgPdDQrGmAKcXytME2LgSNtLcwi
-         GaZAh9uvnht0EpQHN6dU2fF1vAB59iuxWxO47Gb/xeUWcUm3YXA+09ENJJYcrPGepKDz
-         najuJFyuLHmxCq6e4R20Ujr9LDVB8khtp6psjd3D3tmPIjk8PH2xtvIRv6H/iOGB54Y2
-         qB9XbW4ToPO0vpkRgle3pu7rl5+ynL5bwyPffVM7FJ1az7aiv418uKofwUPOTZ12oYyW
-         I6CbZ3P2ckCSW6v6Fq2RC3biVHL5NoCpWs+jfZiDNI0CC7zs6ZiTY1U4INdJ6fN+Vihq
-         d7dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779197955; x=1779802755;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y2jBYQyB5cOJsBc04yDDPLVV700aJQU8UB+xEqw7DWQ=;
-        b=F1nb7JHY2Gp98cF98XIMwFbrAIIkK9b9kbALg23BT1Ybziua/B+alh0DYQQb5RqayH
-         KpTa5NZ8xng8LTyULH09+J99uF3Z5BtiI3VBtX10Go8zd+r3bt/vRl0ov3dKZosqKlin
-         zUtDLzlj1qaI3SfDKzSBoSO+6dIqDmYAYHXRzU8CJ8+R1oN3aVBkGJUenqVZeAaGc0aE
-         fLQeQFTPPqobxrLtzGvwz0pMgbq/wLTHK6HfeZnn+1BLSlCGmTHXJP9ZcuU/djwwYKQ4
-         wzNmiS1Oo9dYlMrSWWv4l3EFoAEKQlgGURh+yLZDpHAVdmeu4Q2W1BDganFxx7aa8cag
-         9D/Q==
-X-Forwarded-Encrypted: i=1; AFNElJ8zVzwfMyXoKDBhA0AOWhZleFgJLe87mLUCJ4TLw452OUMhcIvyi52jFiK58g/5gnf2iEZhYhSX8rqw@vger.kernel.org
-X-Gm-Message-State: AOJu0YwITHVNb2SdXl+jNo2eGgXFk/DVaRB6rfeF0MjLl72fLSE+8Clz
-	UPmsgBweojVvUbAJX8TTA3kYP22w43JI0NG4ZQeQd2X96A8LA2JGAFZT/T4AQBmPgS4=
-X-Gm-Gg: Acq92OHAD53EsfweYQWSycwOKdQoT3/9u0EG5a+ocMzRANXP0SNmQ7HCDewOobQ9aDa
-	t/6xuVKeQ+yInrHMY6ybeWhUDfvWIPOKb6azfCTASbz91LG2Kr3UjNXY06Vtp3r+0G/qtahfdef
-	KKvR2keP4mGsmvolz2hxtld4t8Tn5QeqYUQfiKFuiCffBlEAsu43EphQNDPA1Naifd9qqQ4xjih
-	PQmrJ/GXA495AyYyDMRlUh1nVG2G4vpgI0toMGlHDf3iMa31Njn4OXPi4eO8+wzomA/EYQp0kW6
-	OoAgbj/Y6BcxOzIBzkiCHVmttQHmQFGxwn5PyM3OVtGXJfZpEcqXY6Hvx0O+HnXnuxuKOzU5+7v
-	yatRbo7e5yeKHOATl4YokusMqkFLoAF/MQG0WfMotO/PiIdMCzbhjaJzKdX5Y2N4RBqdRgC3gJv
-	3FXXPu636fpcZ9+HOS65DoL5igC4srE41N40PrzsO6bAC07Bh0mmpKEpvY1qHc3QxIDqCpsjihK
-	c0kVw==
-X-Received: by 2002:a05:622a:50f:b0:50d:a6e3:ae1 with SMTP id d75a77b69052e-5165a03ee67mr270655651cf.17.1779197954757;
-        Tue, 19 May 2026 06:39:14 -0700 (PDT)
-Received: from ziepe.ca (crbknf0213w-47-54-130-67.pppoe-dynamic.high-speed.nl.bellaliant.net. [47.54.130.67])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-516514e0b91sm152289551cf.15.2026.05.19.06.39.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2026 06:39:14 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1wPKfB-0000000Evg5-382Z;
-	Tue, 19 May 2026 10:39:13 -0300
-Date: Tue, 19 May 2026 10:39:13 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Mostafa Saleh <smostafa@google.com>
-Cc: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
-	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
-	Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Steven Price <steven.price@arm.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jiri Pirko <jiri@resnulli.us>, Petr Tesarik <ptesarik@suse.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>, x86@kernel.org
-Subject: Re: [PATCH v4 04/13] dma: swiotlb: track pool encryption state and
- honor DMA_ATTR_CC_SHARED
-Message-ID: <20260519133913.GB7702@ziepe.ca>
-References: <20260512090408.794195-1-aneesh.kumar@kernel.org>
- <20260512090408.794195-5-aneesh.kumar@kernel.org>
- <agSKQrSIhizCXKwx@google.com>
- <20260513172450.GR7702@ziepe.ca>
- <agW2lzJI-20DyJVe@google.com>
- <20260514123529.GZ7702@ziepe.ca>
- <agXfm3mS_M3fvRrN@google.com>
- <20260515225113.GN7702@ziepe.ca>
- <agxETC1rXBUSkWYg@google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=aOH4RkprtJBlFlocEpeH3CI33bzUqbo5dKQhJk7JWmalLEGcqQMN4dtE7tISGyVqDelWKTiuCOwfyYBqFLHnZiS3srhWw0VPYwH9EtGNgpAuq6eWexJt9ZM901TrgiDplA63dYJmPDHOrLExE8It8J4ZUigMysJ1ZIfgH5FTrdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZePrlUUj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70FE8C2BCB3;
+	Tue, 19 May 2026 13:39:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779197988;
+	bh=D+t330bY9theuHhQ7vQ9fk2hC/8pGFvUL2f87DQe0QQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZePrlUUjoJ6SRML9KTxFEObiSG/GUCVskJopia2OR/NHWF6W+fo2AUoXx/To3zWWb
+	 VdFfdF5cL7Dr7E5H6/FcZR0Mk/DI7CxgdxvQLx0rIlIz9/yGZtLcI+6fw3Px7X5xRS
+	 /+pxvp2iSCV6J2igJobyEQO5YqAqmSCe5Fdrd4BbRBbRPRUfOZzFXyT8bjqBKlkoGV
+	 FFVFOTFSR+yl/lIgyRxF273rU0nwoh/xIf98oDAucm/68fnhiB5diwWjSDoZ0rVmam
+	 MgNbD3EuMgIzR9wpMwcKmyM2IpEgfnF1Pv+9MLoF6/BTWGGcSu0LjK+iIfhejRQJxJ
+	 nEGvcqVGx0kUA==
+Date: Tue, 19 May 2026 14:39:38 +0100
+From: Lorenzo Stoakes <ljs@kernel.org>
+To: Yang Shi <shy828301@gmail.com>
+Cc: Barry Song <baohua@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
+	surenb@google.com, akpm@linux-foundation.org, linux-mm@kvack.org, david@kernel.org, 
+	liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, mhocko@suse.com, 
+	jack@suse.cz, pfalcato@suse.de, wanglian@kylinos.cn, chentao@kylinos.cn, 
+	lianux.mm@gmail.com, kunwu.chan@gmail.com, liyangouwen1@oppo.com, chrisl@kernel.org, 
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com, 
+	youngjun.park@lge.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, Nanzhe Zhao <nzzhao@126.com>
+Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
+ fault performance
+Message-ID: <agxnJ8R-G3CRjeTR@lucifer>
+References: <20260430040427.4672-1-baohua@kernel.org>
+ <afNM-gIqxpyJ6ro7@casper.infradead.org>
+ <CAGsJ_4w0qcYmukHqsyRd0jomoyYkJjOt8b-Cgp53BgP-8QQghw@mail.gmail.com>
+ <afS_L-5XeWIldTXA@casper.infradead.org>
+ <CAGsJ_4wk=SDtgin+84Ev2TamU-JFfmrg_SUay=-tcYmnFvK6Nw@mail.gmail.com>
+ <afTpoL3FklpQZNMM@casper.infradead.org>
+ <CAGsJ_4ysMcrmDLSOwBkf7qwCQrcDWeEMXkHDajTJFMLKUk0bSQ@mail.gmail.com>
+ <CAHbLzkrOSoh-jmR=uaNvx73n_wn+vExoKY0UzH5zGcfdAiDbNg@mail.gmail.com>
+ <agxfLNuLCAT3F4cW@lucifer>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -127,58 +76,152 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <agxETC1rXBUSkWYg@google.com>
-X-Spamd-Result: default: False [-1.66 / 15.00];
+In-Reply-To: <agxfLNuLCAT3F4cW@lucifer>
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_ALLOW(-0.20)[ziepe.ca:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19806-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DMARC_NA(0.00)[ziepe.ca];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,lists.linux.dev,lists.infradead.org,vger.kernel.org,arm.com,samsung.com,resnulli.us,suse.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,linux.ibm.com,ellerman.id.au,gmail.com];
+	TAGGED_FROM(0.00)[bounces-19807-lists,linux-s390=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[31];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[ziepe.ca:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jgg@ziepe.ca,linux-s390@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ziepe.ca:mid,ziepe.ca:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 161ED57FED8
+	TAGGED_RCPT(0.00)[linux-s390];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ljs@kernel.org,linux-s390@vger.kernel.org];
+	FREEMAIL_CC(0.00)[kernel.org,infradead.org,google.com,linux-foundation.org,kvack.org,suse.com,suse.cz,suse.de,kylinos.cn,gmail.com,oppo.com,tencent.com,huaweicloud.com,redhat.com,lge.com,lists.infradead.org,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,126.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ljs.io:url,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: C72EF57FE83
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, May 19, 2026 at 11:06:52AM +0000, Mostafa Saleh wrote:
+On Tue, May 19, 2026 at 02:12:10PM +0100, Lorenzo Stoakes wrote:
+> On Mon, May 18, 2026 at 02:21:14PM -0700, Yang Shi wrote:
+> > Maybe a little bit off topic. This is an interesting idea. It seems
+> > possible we don't have to take vma write lock unconditionally. IIUC
+> > the write lock is mainly used to serialize against page fault and
+> > madvise, right? I got a crazy idea off the top of my head. We may be
+>
+> Err no, it serialises against literally any modification or read of any
+> characteristic of VMAs.
+>
+> > able to just take vma write lock iff vma->anon_vma is not NULL.
+>
+> Except if we don't take it and vma->anon_vma is NULL, then somebody can
+> anon_vma_prepare() and change vma->anon_vma midway through a fork and completely
+> screw up the anon_vma fork hierarchy.
 
-> > > One other interesting case for device-passthrough is non-coherent
-> > > devices which then require private pools for bouncing.
-> > 
-> > Why does shared/private matter for bouncing? Why do you need to bounce
-> > at all? Do cmo's not work in pkvm guests?
-> 
-> At the moment, in iommu_dma_map_phys(), if a non coherent device
-> tries to map an unaligned address or size it will be bounced.
+correction: this won't happen as per Barry (see - I managed to confuse myself
+here :), since for vma->anon_vma install we take the mmap read lock.
 
-Sure, that's fine.
+BUT we also have to consider other cases.
 
-> In pKVM, dma-iommu is used for assigned devices which operate on
-> private memory, so bouncing that through the SWIOTLB would leak
-> information from the guest as the SWIOTLB is decrypted.
+>
+> So no.
+>
+> >
+> > First of all, write mmap_lock is held, so the vma can't go or be
+> > changed under us.
+>
+> vma->anon_vma can be changed.
 
-Yes, a device that can do private access should not be using a shared
-SWIOTLB, that should be part of the selection logic inside the SWIOTLB
-stuff..
+Correction: no it can't :)
 
-Jason
+>
+> >
+> > Secondly, if vma->anon_vma is NULL, it basically means either no page
+> > fault happened or no cow happened, so there is no page table to copy,
+> > this is also what copy_page_range() does currently. So we can shrink
+> > the critical section to:
+>
+> Firstly, with no VMA write lock, !vma->anon_vma means a fault can race and
+> secondly copy_page_range() checks vma_needs_copy(), there are other cases - PFN
+> maps, mixed maps, UFFD W/P (ugh), guard regions.
+>
+> So yeah this isn't sufficient.
+
+However this is true...
+
+>
+> >
+> > if (vma->anon_vma) {
+> >     vma_start_write_killable(src_vma);
+> >     anon_vma_fork(dst_vma, src_vma);
+> >     copy_page_range(dst_vma, src_vma);
+> > }
+>
+> Yeah that's totally broken fo reasons above as I said :)
+>
+> >
+> > But page fault can happen before write mmap_lock is taken, when we
+> > check vma->anon_vma, it is possible it has not been set up yet. But it
+> > seems to be equivalent to page fault after fork and won't break the
+> > semantic.
+>
+> It will totally break how the anon_vma hierarchy works :) See the links at the
+> top of https://ljs.io/talks for a link to various slides on anon_vma behaviour
+> (it's really a pain to think about because it's a super broken abstraction).
+>
+> You could end up with a CoW mapping that's unreachable from rmap and you could
+> get some nasty issues with page table entries pointing at freed folios :)
+
+Correction: actually we should be safe given mmap read lock on anon_vma install.
+
+>
+> >
+> > Anyway, just a crazy idea, I may miss some corner cases.
+>
+> Yeah sorry to push back here but this is just not a viable approach.
+>
+> And this is forgetting that we have relied on page faults being blocked by fork
+> _forever_, who knows what else has baked in assumptions about that
+> serialisation.
+>
+> Forking is one of the nastiest parts of mm and has had multiple, subtle, corner
+> case breakages that have been a nightmare to deal with.
+>
+> So I'm very much against changing this behaviour to try to fix something in the
+> fault path.
+>
+> We should address the fault path issues in the fault path :)
+
+Above still all true though.
+
+>
+> >
+> > Thanks,
+> > Yang
+> >
+> > }
+> >
+> > >
+> > > Based on the above, we may want to re-check whether fork()
+> > > can be blocked by page faults. At the same time, if Suren,
+> > > you, or anyone else has any comments, please feel free to
+> > > share them.
+> > >
+> > > Best Regards
+> > > Barry
+> > >
+>
+> Cheers, Lorenzo
+
+So still a nope :)
+
+Cheers, Lorenzo
 
