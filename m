@@ -1,67 +1,98 @@
-Return-Path: <linux-s390+bounces-19814-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19816-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kH1OHM1yDGqihwUAu9opvQ
-	(envelope-from <linux-s390+bounces-19814-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 16:25:17 +0200
+	id 8HPFCMp0DGqihwUAu9opvQ
+	(envelope-from <linux-s390+bounces-19816-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 16:33:46 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3A1E5807CE
-	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 16:25:16 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC2DA5809CD
+	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 16:33:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 904B1304DC96
-	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 14:18:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 78ABB306A5F9
+	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 14:28:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 042FF41B356;
-	Tue, 19 May 2026 14:18:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F01AD48C8BD;
+	Tue, 19 May 2026 14:28:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lTYt6sua"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lsepigI1"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF43E4028FF;
-	Tue, 19 May 2026 14:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BBB3405C5C
+	for <linux-s390@vger.kernel.org>; Tue, 19 May 2026 14:28:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779200279; cv=none; b=fbCcUicB5s8o0H4v6o1Qfh8G8cCtW3W9dWJKUHuXe2OX5C/iWMuQaHwIm7+3NlOETovE0pxsaLHq9mDJVVzQhV8a/RUR1s2U6D+QedRaORM5p3IPVo01gGQlUdgBlqKcvMVKiWCujSrYa8Ec9/GtgPGRvgXJ7Xi72BrYiTz0QlQ=
+	t=1779200885; cv=none; b=YZtRlQbx7q6AerhWUICMzMWpscQKaWCxVnWe2MEFbWoKH+vC/XLhKr/2YDrLI2Oeonyg6SyrbSYju9gLgNAdv0BS81G85Q2Uh4ctUBDB9/+Wqw9rzXEBbOUsYQMjDMSC2XdbyBKg0jF3xf2ptt0I9razBJanIRHb+9WOeSdspGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779200279; c=relaxed/simple;
-	bh=omX4jWGqSc4euJhfKZDzYDEyAA00xkxKBKP+MlYpCw8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=AaGyJXfBRm4hUwuH+v5wIDSU9CP2AkkNsW3/4YaJw6boGG3zxiSX6PD8+ltXenhvhmU8CLcagePZ3wK2XzJnjNW9loGVV95RAI4tSHMgcjAU7DVvnDW1ZGbDYvLTqY7opEbsygca6Sg6Ex8YEs2cEYdKPoMhnQe/93/olNhW028=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lTYt6sua; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C3CDC2BCB3;
-	Tue, 19 May 2026 14:17:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779200279;
-	bh=omX4jWGqSc4euJhfKZDzYDEyAA00xkxKBKP+MlYpCw8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=lTYt6sua65tkoXlE6Q2BlS8sWIBZa2T8L6x1+ychuvbjhIgKDes/YlNtctIs5MurS
-	 wD2Sl12rive3qkbqzpkk+tCLwkjQs/DxCrfGdUoXLC02uYIc1JCFEdy86S52d2uc9y
-	 g9FC2LhMSJtxI6g9uj7rH6gjLQpb0NEpM4k1SN6H2g7ngPyox//4uss4/gZtV+Ifkr
-	 HJA7XMc52oT9bXh/mEx/JXlwnYV1qcuMWkMR9VA/wBbF3wBtAG826RnNSvIIDkS5uY
-	 AZew3Mf53E71+ceTl7ybvn6GgsZDq0hT4sHTpN4L72FhePHSUiBlWNlbwgUDVM05nW
-	 MgRHtOceOiSng==
-X-Mailer: emacs 30.2 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Mostafa Saleh <smostafa@google.com>
+	s=arc-20240116; t=1779200885; c=relaxed/simple;
+	bh=vYkb+jBu+S0QIeav6yEnzsOxadQSbJKsWMAoA5G/wvM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MKBHC11uuHbrTHp71aqCuowN6A97HoR9A+1s/d6W5qUI4xjmfA7bYUxp4IQEaZmNr0zIv1vJeSMdNZd+R0SOK69fhoG5y4r9k2PY54S9ON+W6P9wBynOA+qv2BoHoG7ggc+PxVTr9o18sTky2azrBFgmGPQHvJweEN4vbZhvnDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lsepigI1; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-515548f390fso7111cf.0
+        for <linux-s390@vger.kernel.org>; Tue, 19 May 2026 07:28:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1779200883; x=1779805683; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=FTIuQdBXtpQH67pVdVz1Fjrx/oRpQ8R86tVZsSSuQBc=;
+        b=lsepigI1UrQXmgFHS7FxGJit6EMMoNTv9gPHrJ7ZOXZB5zfPqsXJlbVeUctEuqrlvf
+         b9ywh6wezwyV+lzsP+gFlo3eA19+KjbuB6cN/IpM9LyDy0oIO2ptGGkZpZseQefMnFtg
+         RYpbB2cgrIcRm+B7MPU9NH/SmjiXEzERuNOEIpHQhpzugc3ds9q2kmWPz2EyZ7ygMNam
+         ONJGlwFxLS5yTNrYdaxa/bQ7ctD+zyUEo3WFgElVIRw9cw1DXF52b0CFx2/RTWJN2Krp
+         aN5hbv+uGljysn4co2/cdRx14R1NaV54uoje55ieeRsJHPaAdykYeydGKIIBa4Qs3vJV
+         0oSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779200883; x=1779805683;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FTIuQdBXtpQH67pVdVz1Fjrx/oRpQ8R86tVZsSSuQBc=;
+        b=KOjyCzJN7y3Scs2Wg+a1zjcQibm6aw/0w5F9+tDqOltKb7QqjSPn05UJZWTpusMMEs
+         q28oMe7UK4AFU7ZGC0fa39nKcAi4v1w6rLndNVJEvbuA3uSsIYmUzbibf9+l86jCaQem
+         BCRlQ4c6AjU+1xQgE//h4zxQpi+Qx7it2Wx9l/w9Ur1BK9sYPj+IFs3aw4cE73dzTzOO
+         u4xspa3a7m9Li8qEmaXbO3dv3rPvktdnBWl69GdgcWI5BkRox3+JWdpisszuzvQdPRe4
+         yF47FSsCk2DHuMp6pQl4EX56m6KQGjDnE6QB4UqaS7WdKenSwlv+gGKx544Wo/jB+hNn
+         qy+Q==
+X-Forwarded-Encrypted: i=1; AFNElJ/8DPinm8NxoBACqAjEKyCznGiuywam0QFYaGZje5Dt48OPf74dBz3OEfaBrf0xw1+FW/NyOTBfDxMX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/mH6om9lWmCMmTHoZOsr+5kKhHPqCz3bqnH4XetoMptL0jW+E
+	1eMGpEOQRF0xESRnas2CStTiU/MRmHiX/w1Hg4wQJnKWEOyPjAT4SyupH8jZQ4pCOw==
+X-Gm-Gg: Acq92OFhsYJQhzelYhyKH5ZgBisMuU3znbq7NsfXDEAloroHwBO8crtEoN1cuL4sj9s
+	cVBAvLTAGAvT73BIcT+O45H+zrZOoqOEkCNHbtUTh4iYYs7Abnwf64pBkPqC/Blz15H70t8OcQG
+	dFeIc7G4t1eM82swkjqDmR1TCnOiJ/nqNn116W2l4ip/s2aS4imwIgOCsx/+S61ra/Q2ijWOExy
+	agAkHR7zM/GlZWgBe5Ujr/uE8CxISn1DGeaeqW4vZqCmE1STgb94tqZaJoqte2Pl5ot3KSIlwu0
+	0lLkuaxRUWO1zyu2aHvlPvgDx50K2e0/x6Vnk0j/3EFL0c76IpjQqS8jfv3/OZzzjwCT3Z+uHiL
+	yrBNSz2oRmwOTspwB763CpCMJ0BL2WD5hbXWJwmF4HdVhAJb9sI3qDAyVLj5IhzgSkRy1mlqvk3
+	4WBuTKw8hA+ueUPHWo1qcsERv8ua7WTTERABKJcfBqi3CY6Ebj7p38lyBi4rqtO5mQOl20cRNdJ
+	rdA
+X-Received: by 2002:ac8:5cd0:0:b0:516:4f62:85ee with SMTP id d75a77b69052e-5167b6a87a6mr33333931cf.19.1779200882847;
+        Tue, 19 May 2026 07:28:02 -0700 (PDT)
+Received: from google.com (136.41.155.104.bc.googleusercontent.com. [104.155.41.136])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-7cc9cbb0404sm37077347b3.42.2026.05.19.07.27.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2026 07:28:02 -0700 (PDT)
+Date: Tue, 19 May 2026 14:27:54 +0000
+From: Mostafa Saleh <smostafa@google.com>
+To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
 Cc: Jason Gunthorpe <jgg@ziepe.ca>, iommu@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
-	Robin Murphy <robin.murphy@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-coco@lists.linux.dev, Robin Murphy <robin.murphy@arm.com>,
 	Marek Szyprowski <m.szyprowski@samsung.com>,
 	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
 	Steven Price <steven.price@arm.com>,
 	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
 	Catalin Marinas <catalin.marinas@arm.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Petr Tesarik <ptesarik@suse.com>,
+	Jiri Pirko <jiri@resnulli.us>, Petr Tesarik <ptesarik@suse.com>,
 	Alexey Kardashevskiy <aik@amd.com>,
 	Dan Williams <dan.j.williams@intel.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+	Xu Yilun <yilun.xu@linux.intel.com>, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org,
 	Madhavan Srinivasan <maddy@linux.ibm.com>,
 	Michael Ellerman <mpe@ellerman.id.au>,
 	Nicholas Piggin <npiggin@gmail.com>,
@@ -74,15 +105,17 @@ Cc: Jason Gunthorpe <jgg@ziepe.ca>, iommu@lists.linux.dev,
 	Sven Schnelle <svens@linux.ibm.com>, x86@kernel.org
 Subject: Re: [PATCH v4 04/13] dma: swiotlb: track pool encryption state and
  honor DMA_ATTR_CC_SHARED
-In-Reply-To: <agxt7SFGT7OLMIah@google.com>
-References: <agSKQrSIhizCXKwx@google.com> <yq5ah5oaa63h.fsf@kernel.org>
- <agW5rhE9n2gDQ0w5@google.com> <yq5apl2y5f96.fsf@kernel.org>
- <agXaby-7L7yS3Vva@google.com> <yq5ah5oa59wy.fsf@kernel.org>
- <agxDxdxynp4KEovA@google.com> <20260519132911.GA7702@ziepe.ca>
- <agxolksC_1nfO34X@google.com> <yq5ah5o3sdn3.fsf@kernel.org>
+Message-ID: <agxzanDBmIP54hUz@google.com>
+References: <agW5rhE9n2gDQ0w5@google.com>
+ <yq5apl2y5f96.fsf@kernel.org>
+ <agXaby-7L7yS3Vva@google.com>
+ <yq5ah5oa59wy.fsf@kernel.org>
+ <agxDxdxynp4KEovA@google.com>
+ <20260519132911.GA7702@ziepe.ca>
+ <agxolksC_1nfO34X@google.com>
+ <yq5ah5o3sdn3.fsf@kernel.org>
  <agxt7SFGT7OLMIah@google.com>
-Date: Tue, 19 May 2026 19:47:48 +0530
-Message-ID: <yq5aecj7sctv.fsf@kernel.org>
+ <yq5aecj7sctv.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -90,86 +123,103 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <yq5aecj7sctv.fsf@kernel.org>
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
+	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19814-lists,linux-s390=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19816-lists,linux-s390=lfdr.de];
 	FREEMAIL_CC(0.00)[ziepe.ca,lists.linux.dev,lists.infradead.org,vger.kernel.org,arm.com,samsung.com,kernel.org,resnulli.us,suse.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,linux.ibm.com,ellerman.id.au,gmail.com];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[31];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[google.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[aneesh.kumar@kernel.org,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[smostafa@google.com,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: C3A1E5807CE
+X-Rspamd-Queue-Id: AC2DA5809CD
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Mostafa Saleh <smostafa@google.com> writes:
+On Tue, May 19, 2026 at 07:47:48PM +0530, Aneesh Kumar K.V wrote:
+> Mostafa Saleh <smostafa@google.com> writes:
+> 
+> > On Tue, May 19, 2026 at 07:30:16PM +0530, Aneesh Kumar K.V wrote:
+> >> Mostafa Saleh <smostafa@google.com> writes:
+> >> 
+> >> >> > 
+> >> >> > I am still running more tests, but looking more into it. Setting
+> >> >> > force_dma_unencrypted() to true for pKVM guests is wrong, as the
+> >> >> > guest shouldn’t try to decrypt arbitrary memory as it can include
+> >> >> > sensitive information (for example in case of virtio sub-page
+> >> >> > allocation) and should strictly rely on the restricted-dma-pool
+> >> >> > for that.
+> >> >> 
+> >> >> ??
+> >> >> 
+> >> >> Where does force_dma_unencrypted() cause arbitary memory passed into
+> >> >> the DMA API to be decrypted? That should never happen???
+> >> >
+> >> > Sorry, maybe arbitrary is not the right expression again :)
+> >> > I mean that, with emulated devices that use the DMA-API under pKVM,
+> >> > they will map memory coming from other layers (VFS, net) through
+> >> > vitrio-block, virtio-net... These can be smaller than a page, and
+> >> >
+> >> 
+> >> Don't we PAGE_ALIGN these requests?
+> >> 
+> >> dma_direct_alloc
+> >> 	size = PAGE_ALIGN(size);
+> >> 
+> >> iommu_dma_alloc_pages
+> >> 	size_t alloc_size = PAGE_ALIGN(size);
+> >> 
+> >> 
+> >
+> > For allocation, yes, and that's fine because we bring memory from
+> > the pool.
+> > But not for mapping, as dma_direct_map_phys(), where the memory is
+> > allocated from the driver or other parts in the kernel and the page
+> > may be shared with other kernel components.
+> >
+> 
+> But if we are using restricted-dma-pool, we also have:
+> 
+> mem->force_bounce = true;
+> mem->for_alloc = true;
+> 
+> So, will we use the swiotlb buffers for mapping and copy only the shared
+> content into those swiotlb buffers?
 
-> On Tue, May 19, 2026 at 07:30:16PM +0530, Aneesh Kumar K.V wrote:
->> Mostafa Saleh <smostafa@google.com> writes:
->>=20
->> >> >=20
->> >> > I am still running more tests, but looking more into it. Setting
->> >> > force_dma_unencrypted() to true for pKVM guests is wrong, as the
->> >> > guest shouldn=E2=80=99t try to decrypt arbitrary memory as it can i=
-nclude
->> >> > sensitive information (for example in case of virtio sub-page
->> >> > allocation) and should strictly rely on the restricted-dma-pool
->> >> > for that.
->> >>=20
->> >> ??
->> >>=20
->> >> Where does force_dma_unencrypted() cause arbitary memory passed into
->> >> the DMA API to be decrypted? That should never happen???
->> >
->> > Sorry, maybe arbitrary is not the right expression again :)
->> > I mean that, with emulated devices that use the DMA-API under pKVM,
->> > they will map memory coming from other layers (VFS, net) through
->> > vitrio-block, virtio-net... These can be smaller than a page, and
->> >
->>=20
->> Don't we PAGE_ALIGN these requests?
->>=20
->> dma_direct_alloc
->> 	size =3D PAGE_ALIGN(size);
->>=20
->> iommu_dma_alloc_pages
->> 	size_t alloc_size =3D PAGE_ALIGN(size);
->>=20
->>=20
->
-> For allocation, yes, and that's fine because we bring memory from
-> the pool.
-> But not for mapping, as dma_direct_map_phys(), where the memory is
-> allocated from the driver or other parts in the kernel and the page
-> may be shared with other kernel components.
->
+True, that's why under pKVM, force_dma_unencrypted() should never
+cause any memory to be decrypted and so we set it to false.
+As in case of any bugs, the guest does not leak any information,
+similar to what just happened initially here due to missing attrs.
 
-But if we are using restricted-dma-pool, we also have:
+However, as I mentioned to Jason, I think with some tweaks to
+force_dma_unencrypted() we can make it work under pKVM for aligned
+memory which eliminates some of the bouncing.
+I am currently investigating that.
 
-mem->force_bounce =3D true;
-mem->for_alloc =3D true;
+Thanks,
+Mostafa
 
-So, will we use the swiotlb buffers for mapping and copy only the shared
-content into those swiotlb buffers?
-
--aneesh
+> 
+> -aneesh
 
