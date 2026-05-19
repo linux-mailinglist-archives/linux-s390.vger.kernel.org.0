@@ -1,252 +1,190 @@
-Return-Path: <linux-s390+bounces-19827-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19832-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sIGtKs1+DGopigUAu9opvQ
-	(envelope-from <linux-s390+bounces-19827-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 17:16:29 +0200
+	id nFfEAyF/DGo1igUAu9opvQ
+	(envelope-from <linux-s390+bounces-19832-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 17:17:53 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FD1D5813E6
-	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 17:16:29 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75A9F581440
+	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 17:17:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 6198C3001441
-	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 15:08:07 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D738730C268D
+	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 15:13:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28B1D3AFD06;
-	Tue, 19 May 2026 15:08:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B5A6376A0D;
+	Tue, 19 May 2026 15:12:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gfCVmqRQ"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iRbztHjI"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DF83AFCF7;
-	Tue, 19 May 2026 15:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F3E1376A01;
+	Tue, 19 May 2026 15:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779203286; cv=none; b=eGcxswgc9qa/8bc1rHtxVfDdPeHEf9H65NaRxb5LFKfUbMLYls79T9wIbW/587p3fyZCfVWKZnbfq+qr/EZUET139qj3gsHPT3kdlnGoHMLmgTNUWuJ4N1fqbD6jYV7PwGHxxLk697GytIKoODNtgTynlxqYFh2l1emVDpqVZDI=
+	t=1779203573; cv=none; b=VFkQYxrUHeXyWMxO/2REyciIAw2KSiiSI7pKbHf2nEM9EKEqm6R+3m6HrHaICinEzJOZbstmhtW68jJUQihGO9L0OmeChfyyIAmyBLJgCnmNOjpjAPeyC3h6P2mCCCe0Q3OTd/0Sk2a8IpARhi/b62vyZ11Zdp7aOY0MXsQAh6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779203286; c=relaxed/simple;
-	bh=KyaOKUufk660jyAnyO4dwLztr2A/5z8gocMgG2ZXcQM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=FS+MecAv+8QO5NaNvz3YIVOik63U0a5pmGVYFtrjYLpesLzPGXzy2lvw+rEITaeEaYFZsTb9QO7WwQI4NluCOnZEYAi7pLUUp8dsSQRUwewnOU1XIX3BOm8inc3nptkQu3p6mHVUr1IW5AMG1hnPozSEiwP9SSoE6WclgEgvybg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gfCVmqRQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0CB7C2BCB3;
-	Tue, 19 May 2026 15:07:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779203285;
-	bh=KyaOKUufk660jyAnyO4dwLztr2A/5z8gocMgG2ZXcQM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=gfCVmqRQQdy8M8HA+XstwwoOpKN65jH/uDBv2iWJ6wdryzFjV5aqQ5J5zLKpnXd1R
-	 MFePXRwJdlj0GE7vzB9h3mSdyYx+ToaECrqs8QXecIfN1ZsN3uSEg/aPjk5q3dnHDd
-	 6x79LO3IArWLhr/nYRTv/X7YOfD7PNsBnNqxTreMAIV0LA5SmVfv87HgZUtCD/QPrU
-	 ZbPRwVbbTLSoiNY4KtbyRJLSxc77SM+MLRmeWIXpFli++we4iwZ1y+H0UFcDRjYdiy
-	 f3BUle31jswVsGu+sQx5NS55VsHZxmeQelzm2Y/aOpkLXTQLxhx9k+011Cn+nvKBVz
-	 CMNlOzS75r7pw==
-X-Mailer: emacs 30.2 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Mostafa Saleh <smostafa@google.com>
-Cc: iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
-	Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Steven Price <steven.price@arm.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Petr Tesarik <ptesarik@suse.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>, x86@kernel.org
-Subject: Re: [PATCH v4 04/13] dma: swiotlb: track pool encryption state and
- honor DMA_ATTR_CC_SHARED
-In-Reply-To: <yq5amrxvshxg.fsf@kernel.org>
-References: <20260512090408.794195-1-aneesh.kumar@kernel.org>
- <20260512090408.794195-5-aneesh.kumar@kernel.org>
- <agSKQrSIhizCXKwx@google.com> <yq5ah5oaa63h.fsf@kernel.org>
- <agW5rhE9n2gDQ0w5@google.com> <yq5apl2y5f96.fsf@kernel.org>
- <agXaby-7L7yS3Vva@google.com> <yq5ah5oa59wy.fsf@kernel.org>
- <agxDxdxynp4KEovA@google.com> <yq5amrxvshxg.fsf@kernel.org>
-Date: Tue, 19 May 2026 20:37:54 +0530
-Message-ID: <yq5abjebsaid.fsf@kernel.org>
+	s=arc-20240116; t=1779203573; c=relaxed/simple;
+	bh=IVdLJsQjBz6TtZ11ShMCwToPLmHVyUG/SMGYgFK4T3Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=De/+rn41oBqoJaVip19IvelLjpEUrjJn/LC/bfKARHgj9RvnyfWvVp3Ka2C/jP38NhQdb/kvGvb4ccl0DyyYLiaAHD/p01NvWN4IcYJbIce2DRaMZLInpxtywDxzGzFdxm0h1Zvs1PDEahsz9xHQOLMk2+4f7qbVjVk2zQCu3HQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iRbztHjI; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64JDfw672386827;
+	Tue, 19 May 2026 15:12:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=GMCwQutqUISQS9sIfvD1OJU6yiwtEMNu0tbE41pFp
+	kU=; b=iRbztHjIrekiDmoy+xjb860/sf14TA2iX1g0WTHobzYmWCowzNMVRfFqS
+	pmvF/tH7a2nQRzDct2ulcToEiA5kOAHV0dQQeQyS9KOjqGF8RbgFMVDBxk+TuVbZ
+	WLqI7uj5BCJlubohD22v/ZhvcQXGzBbMh3TbGELOWl8GcCFnXKK9JOPjscs1tC0u
+	OrwpdNoqg5Yopzx6Cik8JnGUi2bHEcYUVy2QWQPMoavfD6G4eemUcgWyXt9jUNRP
+	KJHAb1v1x3OJbThCtI4IYUoVANeXlneZpe9whnh0iJC8eh5yE+jM734MEkhqOOft
+	jrRlDWeRJjrW8utG2CpJv2bjZJqQw==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4e6hb8cxb5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 May 2026 15:12:33 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64JF96C1015947;
+	Tue, 19 May 2026 15:12:32 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4e75ky2xb8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 May 2026 15:12:32 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64JFCTbd46465430
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 19 May 2026 15:12:29 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 244242004B;
+	Tue, 19 May 2026 15:12:29 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CCF2A20043;
+	Tue, 19 May 2026 15:12:28 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 19 May 2026 15:12:28 +0000 (GMT)
+From: Jan Polensky <japo@linux.ibm.com>
+To: hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+        ojeda@kernel.org, peterz@infradead.org, jpoimboe@kernel.org,
+        jbaron@akamai.com, aliceryhl@google.com
+Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com, boqun@kernel.org,
+        gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org,
+        a.hindborg@kernel.org, tmgross@umich.edu, dakr@kernel.org,
+        rostedt@goodmis.org, ardb@kernel.org, linux-s390@vger.kernel.org,
+        rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/4] s390: enable Rust support and add required arch glue
+Date: Tue, 19 May 2026 17:12:10 +0200
+Message-ID: <20260519151215.1611802-1-japo@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTE5MDE1MCBTYWx0ZWRfX/fS8GrSPcyxn
+ 70FnRew01ejcxWbR5F3NIh3Q1bZq/FEFGJkU/62qx9MpZRc9q9Xtd2SOrFhqSrytpj4PtiXyTlK
+ TofPQg/eQDLe6ygy1SaW6s9Td/xFWDET3nkSMzyitiNYkJGBuelhkjTOY2qEVck/A30RNIlFTVx
+ 8CsCV3rHm4CXiK8sHrPulZnSephyiyLy0LD5CsTbtduxQZW6MLCCegc4bnheXV3sEZ4JuL6ogy8
+ Msu3M2SrZ1izF0tDLAP8qqujICUONEuxH2/0VDRK+eoW8J3k82jtHpqCiIAlXKPMDlKMQRvfK4e
+ wSzPaNaIPNpvRKPrUYNB9UXi08VoEdIQamWcX8lqBX0Qphae9FOTHkzC+niwp8oqAasbXn6C1sm
+ 61h46dXYvuaGTjQDM1+gXVzOMi55IVtNzQbNiFIHq0Wx339i9M5NsPbnkCxUOLPK8zT3vryR5tc
+ mqdG+XUMpI0aPLkHeXg==
+X-Proofpoint-GUID: 431JvpuIJaNBeHdEDFGl4OrE2p5-eF3C
+X-Proofpoint-ORIG-GUID: XGQuKXRkba10PzmjIOpD9nX8zg6W0Vko
+X-Authority-Analysis: v=2.4 cv=aYBRWxot c=1 sm=1 tr=0 ts=6a0c7de2 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=Y2IxJ9c9Rs8Kov3niI8_:22 a=NEAV23lmAAAA:8 a=ynQKOEzQyDeFR-uBsnYA:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-19_04,2026-05-18_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 adultscore=0 bulkscore=0 suspectscore=0 lowpriorityscore=0
+ clxscore=1015 spamscore=0 phishscore=0 priorityscore=1501 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605190150
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19827-lists,linux-s390=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[lists.linux.dev,lists.infradead.org,vger.kernel.org,arm.com,samsung.com,kernel.org,resnulli.us,ziepe.ca,suse.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,linux.ibm.com,ellerman.id.au,gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[31];
 	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-19832-lists,linux-s390=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[linux.ibm.com,kernel.org,garyguo.net,protonmail.com,umich.edu,goodmis.org,vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	FROM_NEQ_ENVFROM(0.00)[japo@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[aneesh.kumar@kernel.org,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,linux.ibm.com:mid,min-tool-version.sh:url];
+	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 4FD1D5813E6
+	RCVD_COUNT_SEVEN(0.00)[11]
+X-Rspamd-Queue-Id: 75A9F581440
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Aneesh Kumar K.V <aneesh.kumar@kernel.org> writes:
+Rust support on s390 requires a small set of architecture-specific pieces
+before the generic Rust kernel infrastructure can be used.
 
-> Mostafa Saleh <smostafa@google.com> writes:
->
->> On Thu, May 14, 2026 at 08:13:25PM +0530, Aneesh Kumar K.V wrote:
->>> >>=20
->>> >> What I meant was that we need a generic way to identify a pKVM guest=
-, so
->>> >> that we can use it in the conditional above.
->>> >
->>> > I have this patch, with that I can boot with your series unmodified,
->>> > but I will need to do more testing.
->>> >
->>>=20
->>> Thanks, I can add this to the series once you complete the required tes=
-ting.
->>>=20
->>
->> I am still running more tests, but looking more into it. Setting
->> force_dma_unencrypted() to true for pKVM guests is wrong, as the
->> guest shouldn=E2=80=99t try to decrypt arbitrary memory as it can include
->> sensitive information (for example in case of virtio sub-page
->> allocation) and should strictly rely on the restricted-dma-pool
->> for that.
->>
->> However, with my patch and setting force_dma_unencrypted() to false
->> on top of this series, it fails on pKVM due to a missing shared
->> attribute as Alexey mentioned, as now SWIOTLB rejects non shared
->> attrs, so, the DMA-API has to pass it. With that, I can boot again:
->>
->> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
->> index 5103a04df99f..b19aeec03f27 100644
->> --- a/kernel/dma/direct.c
->> +++ b/kernel/dma/direct.c
->> @@ -286,6 +286,8 @@ void *dma_direct_alloc(struct device *dev, size_t si=
-ze,
->>  	}
->>=20=20
->>  	if (is_swiotlb_for_alloc(dev)) {
->> +		attrs |=3D DMA_ATTR_CC_SHARED;
->> +
->>  		page =3D dma_direct_alloc_swiotlb(dev, size, attrs);
->>  		if (page) {
->>  			/*
->> @@ -449,6 +451,8 @@ struct page *dma_direct_alloc_pages(struct device *d=
-ev, size_t size,
->>  						  &cpu_addr, gfp, attrs);
->>=20=20
->>  	if (is_swiotlb_for_alloc(dev)) {
->> +		attrs |=3D DMA_ATTR_CC_SHARED;
->> +
->>  		page =3D dma_direct_alloc_swiotlb(dev, size, attrs);
->>  		if (!page)
->>  			return NULL;
->> diff --git a/kernel/dma/direct.h b/kernel/dma/direct.h
->> index 4e35264ab6f8..8ee5bbf78cfb 100644
->> --- a/kernel/dma/direct.h
->> +++ b/kernel/dma/direct.h
->> @@ -92,6 +92,7 @@ static inline dma_addr_t dma_direct_map_phys(struct de=
-vice *dev,
->>  		if (attrs & (DMA_ATTR_MMIO | DMA_ATTR_REQUIRE_COHERENT))
->>  			return DMA_MAPPING_ERROR;
->>=20=20
->> +		attrs |=3D DMA_ATTR_CC_SHARED;
->>  		return swiotlb_map(dev, phys, size, dir, attrs);
->>  	}
->>=20=20
->> --
->>
->
-> How about the below?
->
-> modified   kernel/dma/direct.c
-> @@ -278,6 +278,10 @@ void *dma_direct_alloc(struct device *dev, size_t si=
-ze,
->  	}
->=20=20
->  	if (is_swiotlb_for_alloc(dev)) {
-> +
-> +		if (dev->dma_io_tlb_mem->unencrypted)
-> +			attrs |=3D DMA_ATTR_CC_SHARED;
-> +
->  		page =3D dma_direct_alloc_swiotlb(dev, size, attrs);
->  		if (page) {
->  			/*
-> @@ -451,6 +455,10 @@ struct page *dma_direct_alloc_pages(struct device *d=
-ev, size_t size,
->  						  &cpu_addr, gfp, attrs);
->=20=20
->  	if (is_swiotlb_for_alloc(dev)) {
-> +
-> +		if (dev->dma_io_tlb_mem->unencrypted)
-> +			attrs |=3D DMA_ATTR_CC_SHARED;
-> +
->  		page =3D dma_direct_alloc_swiotlb(dev, size, attrs);
->  		if (!page)
->  			return NULL;
-> modified   kernel/dma/direct.h
-> @@ -92,6 +92,9 @@ static inline dma_addr_t dma_direct_map_phys(struct dev=
-ice *dev,
->  		if (attrs & (DMA_ATTR_MMIO | DMA_ATTR_REQUIRE_COHERENT))
->  			return DMA_MAPPING_ERROR;
->=20=20
-> +		if (dev->dma_io_tlb_mem->unencrypted)
-> +			attrs |=3D DMA_ATTR_CC_SHARED;
-> +
->  		return swiotlb_map(dev, phys, size, dir, attrs);
->  	}
->=20=20
->
->
+The series wires up s390 as a Rust-capable 64-bit architecture, adds the
+missing assembly interfaces needed by Rust for WARN/BUG reporting and for
+static branches, and adjusts bindgen parameters to avoid repr layout
+conflicts caused by packed and aligned s390 structures.
 
-if we get force_dma_unencrypted(dev) correct, we won't need the above.
+s390 currently requires a rustc due to -Zpacked-stack, and the
+minimum tool version gating is adjusted accordingly.
 
-for dma_direct_alloc and dma_direct_alloc_pages() we have
+Link: https://github.com/Rust-for-Linux/linux/issues/2
 
-	if (force_dma_unencrypted(dev))
-		attrs |=3D DMA_ATTR_CC_SHARED;
+Tested against: rustc 1.96.0-beta.7 (6be5f81e1 2026-05-17)
+
+Changes since v1:
+- strip the -nightly suffix in min-tool-version.sh (thanks miguel and alice)
+- ARCH_JUMP_TABLE_ENTRY() moved up to align comments properly (thanks Gary)
+- removed MONCODE_BUG to prevent 0U in non-C context in assembler (noted by Sashiko - AI)
+- prevent environment pollution by explicit initialization mflag := (noted by Sashiko - AI)
+
+Jan Polensky (4):
+  s390/bug: Provide ARCH_WARN_ASM for Rust WARN/BUG support
+  s390/jump_label: Implement ARCH_STATIC_BRANCH_JUMP_ASM and
+    ARCH_STATIC_BRANCH_ASM macros
+  rust/bindgen_parameters: Mark s390 types as opaque to prevent repr
+    conflicts
+  s390: enable Rust support
+
+ Documentation/rust/arch-support.rst |  1 +
+ arch/s390/Kconfig                   |  1 +
+ arch/s390/Makefile                  | 29 +++++++++++++++----------
+ arch/s390/include/asm/bug.h         | 12 +++++++++++
+ arch/s390/include/asm/jump_label.h  | 33 +++++++++++++++++------------
+ rust/Makefile                       |  1 +
+ rust/bindgen_parameters             |  7 ++++++
+ scripts/generate_rust_target.rs     |  2 ++
+ scripts/min-tool-version.sh         |  6 +++++-
+ 9 files changed, 66 insertions(+), 26 deletions(-)
 
 
-for dma_direct_map_phys(), if we have swiotlb bouncing forced,
-
-swiotlb_tbl_map_single():
-
-	if ((attrs & DMA_ATTR_CC_SHARED) || force_dma_unencrypted(dev))
-		require_decrypted =3D true;
-
--aneesh
+base-commit: ab5fce87a778cb780a05984a2ca448f2b41aafbf
+--
+2.51.0
 
