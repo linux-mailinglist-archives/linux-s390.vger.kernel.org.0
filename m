@@ -1,236 +1,215 @@
-Return-Path: <linux-s390+bounces-19791-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19793-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YAjjGHpHDGoMdAUAu9opvQ
-	(envelope-from <linux-s390+bounces-19791-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 13:20:26 +0200
+	id 4EvOCihGDGrQcQUAu9opvQ
+	(envelope-from <linux-s390+bounces-19793-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 13:14:48 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5D9557D6D1
-	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 13:20:25 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA9FF57D51E
+	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 13:14:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B031E3140D42
-	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 11:05:34 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 24EC830700F4
+	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2026 11:07:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78F26480DFC;
-	Tue, 19 May 2026 11:04:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B36348B36A;
+	Tue, 19 May 2026 11:07:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qNtwRLCC"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Eq+78REA"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0500480DC5
-	for <linux-s390@vger.kernel.org>; Tue, 19 May 2026 11:04:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303BB480340;
+	Tue, 19 May 2026 11:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779188685; cv=none; b=GYCQ0uzOt/lYmEvpTlcFSANCH/39yq1xu5KzChxdzr0dwJTmKShfDxn9iuMpSBfNAFiaXshQocCyaPHj9URLFhicJzJWhMfz0SFF9+CBnjk6xsXCSYMJwzvrQ/Rrdjb+BQJjGhaaPFopTpWwCh/oJJPoMHr2Y27SPw2qcBvF8sE=
+	t=1779188825; cv=none; b=dIL8QAU76MOEsywULIHbYqdwuY3RlujbtxxpF/Ee0lEs7Wbsu4DQhfPYnOtRIf7SVcH/8Y1Nfr83AiK/aYg+hRj2Sm6atLdwr+wga6p/0QFZros6uQlKS+6IyfWhJ2MULIURFheW1w6EJWOeFGi9gBg0UwDuod3myPcf4hICgPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779188685; c=relaxed/simple;
-	bh=2SFj+tqay546Nu3bNSVBDfQbhniYkrhXCx7X+rN+iPo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aQA43R7KmQ4PEb0sIhSVkYFhVHRa7ZezEro6H77dV5agDzkFkEML3+TL5bySgAsLfFIH3+c3arK5Th9O1Ha3lcx5lqn1LWdKPQvdA/twAmfkB47smukg5FVRw7P1KpgdGDe93znJ0nK04Lkk7G2Njjp7c74YYp5oeKrNE9lSWrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qNtwRLCC; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4891b4934ffso3005e9.0
-        for <linux-s390@vger.kernel.org>; Tue, 19 May 2026 04:04:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779188682; x=1779793482; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=a+e/82ARLCMhJAFToMBvP+HlY35DA3/x25Ks+dxKl00=;
-        b=qNtwRLCCRwiDLU542DKeYB18hj0yS1MxA2wIQGaVjATvMbTqgufhnfgBzaCeYuogmI
-         MHBqkrd3tbd70/elHyS02lYOEwbfASHd0FiQ+K2QRufSUY2fkrdj5jbPdRQ1rX3q9ru9
-         I8wY2OUojtdfAwqjoF96OUICNjMPVSB6gOVVcVz0CFkOAJ7icAftkIkCe4z9kCRh9T3/
-         4QotoP+08A2u6k+4gLL9piX7enyHC75SZ+VB+RncsXtzUt67KerMvdcdIKK6S2PQnDXt
-         iIq8ZQaZr31crl2ghi3d76Z5/1r8VOciYQtRUAPlTctCbj/B6hS3esuE1bwCGqjj1qdo
-         d+SA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779188682; x=1779793482;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a+e/82ARLCMhJAFToMBvP+HlY35DA3/x25Ks+dxKl00=;
-        b=tTb5h6LRg2tLFidfimFoO6pShWI4HYl7mu+uFxjGwIFLGJNBKOfrDT5rXHx0kp84ja
-         jZGS6A1cN7nKJ8a89N1rIDYZGrdh9BAnPeeG+Stf2zcFI2ER3W4DugvdVfg7bKtcuowK
-         ldwzzqd6NiG+cGz92jZfLimYDzmhOabvavF4X9u3AUwILTMmyOmhpWR0P8o7USz3VAzl
-         cpj+gSTq+DjY83ujrDhFkvys7Ai1zHMmGOJpVu56VYdDlGshZpPzOIfQMqtvOTTpYFVv
-         7zOe/0jazZ06H9uKCcpEYnvysVmGX/yIfqjKBcP93j5Qs7+uHg8lnSfcSejRdbHrdd8y
-         JsVQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/6CJv7y9GqprNRyl4Vts3eQpFkm8CgfZztvZCbNel984we35sRcffnd66kGodWiKlV0TyTV4KxztbY@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhkXt3F5MUSt3YfqjpveBPcTuCe2MENwEwZyPt10YuybR0V/Hm
-	B/2go4r99DrUXNVYi3Hmws+gnPSOaEqqXfKjusSoHC1x6RX1/mFZG0ASsjrwVqmaIg==
-X-Gm-Gg: Acq92OGRqEdYBYrQU4vbN4saTL2GrdzrWhrafib1BMVpQKklbX9VuT5MuCzzCJE0qGq
-	gyvoA7mDvFTbsJDFKU9PVM2+WW3JtvB3jfotYDS1pZ2d1l2+92XkIpNCVv1BYPECI8v6472C4up
-	rcJqQFK53Jy1i7Q/seBvCBE51ROye471ZHjABL1P3RD9h5cuBROjnyNfZSJk2+mWw3SGjIBNimd
-	iaTU5KdJOIgf1HsK7juX6N4+COECe6e7aJTfeYbap5QwVXWwtHrEQBEWF8b6O43dfxMOvQNULy7
-	/+P3emnPy99SKX2GEtcq9ME6VslykG7+nAArDKjzQQxTmJWZDJqRxSFRyF0lGsR387/ZOVSGoxK
-	TfeRoLmypnIzqgk30mlAbJ+ZyUxIA5R9NdAI2s1+06D335Mk7+LuFkKozcyFXBwKF5pH+eC9Yya
-	dFDEm/EHeDHwWif6ZVcySJ7K72yWqnovg5jyxKB0X0DEY0vRDYkiclJ40xuIx6V8aoulHGFAndQ
-	qxOnBX+EJ/Sqw==
-X-Received: by 2002:a05:600c:2183:b0:48a:5d95:d33e with SMTP id 5b1f17b1804b1-48ffa5d593cmr2833855e9.6.1779188681631;
-        Tue, 19 May 2026 04:04:41 -0700 (PDT)
-Received: from google.com (136.41.155.104.bc.googleusercontent.com. [104.155.41.136])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48fe4c834besm340461595e9.3.2026.05.19.04.04.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2026 04:04:41 -0700 (PDT)
-Date: Tue, 19 May 2026 11:04:37 +0000
-From: Mostafa Saleh <smostafa@google.com>
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
-	Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Steven Price <steven.price@arm.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jiri Pirko <jiri@resnulli.us>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Petr Tesarik <ptesarik@suse.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>, x86@kernel.org
-Subject: Re: [PATCH v4 04/13] dma: swiotlb: track pool encryption state and
- honor DMA_ATTR_CC_SHARED
-Message-ID: <agxDxdxynp4KEovA@google.com>
-References: <20260512090408.794195-1-aneesh.kumar@kernel.org>
- <20260512090408.794195-5-aneesh.kumar@kernel.org>
- <agSKQrSIhizCXKwx@google.com>
- <yq5ah5oaa63h.fsf@kernel.org>
- <agW5rhE9n2gDQ0w5@google.com>
- <yq5apl2y5f96.fsf@kernel.org>
- <agXaby-7L7yS3Vva@google.com>
- <yq5ah5oa59wy.fsf@kernel.org>
+	s=arc-20240116; t=1779188825; c=relaxed/simple;
+	bh=vYiD8VGLXE7VOYUz5qja2kJr1R93//8BulXYCD/ylfM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aq2iJrBbx57niriRbfqWu7Jtr0/HT2DTSXiRje32C+5Nkg1a3xn1LWnWvAa2xxpg//sg64uBMGP3sCxDmh0BVJqZeB+C6SdGw/QJ0R4Cw+Oo5JWLFo2BTNo8+w3DcM1w9WOP0DgEUsRLe/EYJEGF5ZFDEH6ietKB1p8Gputris4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Eq+78REA; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64JAeAw4620482;
+	Tue, 19 May 2026 11:07:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=SsbHVbSJjdeinSvoGu7TwK/2xG13pBNX8RVSYS1dp
+	wQ=; b=Eq+78REAyvAHf1UdEmH4jOsKr7Y8iJmcwRL36ToEnUmzowBX/iLv0T6KV
+	5sPOGGI/E0psmV2PHmOuC7e5hHoyaWsbRFJx9qSOJPh4zvJYFzDk31tLkBX7uJmc
+	QIR5su73tUZS9B5FJllId6l/twBXkp19fuKUG6Avs0vqYiO83A0E10xjcCRZC9jU
+	DiLpXRTKKJeumZScixV7CRHKI5VBMHte8jFnq17OvZhgz65GQvECb0hLsUx9S97A
+	NpLiwAjR7LCPM9wZ+jNP0u1BqJYuR36s9L/2JsRBrPgSFODSXi/qgHkYkklpbFkL
+	k/nCBbzpoSHMegu/LvGfGLbAHdMZQ==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4e6h88bvp7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 May 2026 11:07:00 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64JAs9We016041;
+	Tue, 19 May 2026 11:07:00 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4e74dhj60n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 May 2026 11:07:00 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64JB6uWp51315192
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 19 May 2026 11:06:56 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2DE162004B;
+	Tue, 19 May 2026 11:06:56 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EF4A220043;
+	Tue, 19 May 2026 11:06:55 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 19 May 2026 11:06:55 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, japo@linux.ibm.com,
+        Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH ping2 linux-next] perf test: probe_vfs_getname add do_getname() probing fallback
+Date: Tue, 19 May 2026 13:06:43 +0200
+Message-ID: <20260519110643.1424411-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <yq5ah5oa59wy.fsf@kernel.org>
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: AEvfqtFt4-rpdQTosVdG1aH3vSpxF_Cx
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTE5MDEwOSBTYWx0ZWRfX3w6JapXKPXNl
+ 7JBZPSDblCrClzQSymbppP6Y+NoQDbUflXEoRzCSIo5QgGwrMFpDuyrLG3Cr8uFip5fnBkRMl2p
+ NL16dbc7sFAzC+v/Hc1XwAHDrj1Xd9czhC/DYIe2Mc7xNKVfyKNcnOrxLFv18+/6rcuYfv2XJGQ
+ 5z9h7FsPuptoIZKAu47EUQy3YqOyXDOkAmSeUSLAGRwAMs0psZiS+/xKm+M16NQwuMTmX14QuJD
+ 5UoSyfu0kAAEQIKl7kxFysNp8kwgDqBxEUbOgErqvFrGVJTAum80q/orEN1bK56UVFi1G/+Q9AB
+ OYbWVYMWrLAtecNiP48rjkRP1mxOb59+GbSM4UwVHd/3yFVW9wsyzGMiUYAIr+19OvIQn0Q3lxD
+ 9bXm7Pe14xlIdkLbwGjmufxLgMD9cM4AYeIH4nzA8cNOWFAwrAaMj+j1AJo9sM6O4Ibzc25ZtRs
+ +2s/ansb3fiN0nWruyQ==
+X-Proofpoint-GUID: AEvfqtFt4-rpdQTosVdG1aH3vSpxF_Cx
+X-Authority-Analysis: v=2.4 cv=apyCzyZV c=1 sm=1 tr=0 ts=6a0c4454 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8 a=HWmUBIJd22lZSy0K-CsA:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-19_03,2026-05-18_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 lowpriorityscore=0 priorityscore=1501 impostorscore=0
+ bulkscore=0 suspectscore=0 adultscore=0 spamscore=0 phishscore=0
+ clxscore=1015 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2605130000
+ definitions=main-2605190109
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
-	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19791-lists,linux-s390=lfdr.de];
-	FREEMAIL_CC(0.00)[lists.linux.dev,lists.infradead.org,vger.kernel.org,arm.com,samsung.com,kernel.org,resnulli.us,ziepe.ca,suse.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,linux.ibm.com,ellerman.id.au,gmail.com];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[31];
+	TAGGED_FROM(0.00)[bounces-19793-lists,linux-s390=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[google.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[smostafa@google.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[tmricht@linux.ibm.com,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	TAGGED_RCPT(0.00)[linux-s390];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: D5D9557D6D1
+	RCVD_COUNT_SEVEN(0.00)[11]
+X-Rspamd-Queue-Id: CA9FF57D51E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, May 14, 2026 at 08:13:25PM +0530, Aneesh Kumar K.V wrote:
-> >> 
-> >> What I meant was that we need a generic way to identify a pKVM guest, so
-> >> that we can use it in the conditional above.
-> >
-> > I have this patch, with that I can boot with your series unmodified,
-> > but I will need to do more testing.
-> >
-> 
-> Thanks, I can add this to the series once you complete the required testing.
-> 
+The following tests are skipped for some time now on platforms
+s390 and x86_64:
 
-I am still running more tests, but looking more into it. Setting
-force_dma_unencrypted() to true for pKVM guests is wrong, as the
-guest shouldn’t try to decrypt arbitrary memory as it can include
-sensitive information (for example in case of virtio sub-page
-allocation) and should strictly rely on the restricted-dma-pool
-for that.
+ # perf test vfs_getname
+ 138: Add vfs_getname probe to get syscall args filenames    : Skip
+ 140: Use vfs_getname probe to get syscall args filenames    : Skip
+ 154: Check open filename arg using perf trace + vfs_getname : Skip
+ #
 
-However, with my patch and setting force_dma_unencrypted() to false
-on top of this series, it fails on pKVM due to a missing shared
-attribute as Alexey mentioned, as now SWIOTLB rejects non shared
-attrs, so, the DMA-API has to pass it. With that, I can boot again:
+This is caused by a change in kernel code of function
+getname_flags(), see
+  commit 9fa3ec84587c ("allow incomplete imports of filenames")
+This commit changed the function getname_flags() implementation.
 
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 5103a04df99f..b19aeec03f27 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -286,6 +286,8 @@ void *dma_direct_alloc(struct device *dev, size_t size,
- 	}
+Now the perf probe 'vfs_getname parameter=xxx' does not match any
+more. Extend the test logic to fall back to probing do_getname().
+This reflects the updated kernel code.
+
+Output after:
+ # perf test vfs_getname
+ 138: Add vfs_getname probe to get syscall args filenames    : Ok
+ 140: Use vfs_getname probe to get syscall args filenames    : Ok
+ 154: Check open filename arg using perf trace + vfs_getname : Ok
+ #
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+---
+ tools/perf/tests/shell/lib/probe_vfs_getname.sh | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+index 88cd0e26d5f6..9156a79212b9 100644
+--- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+@@ -12,6 +12,8 @@ cleanup_probe_vfs_getname() {
  
- 	if (is_swiotlb_for_alloc(dev)) {
-+		attrs |= DMA_ATTR_CC_SHARED;
+ add_probe_vfs_getname() {
+ 	add_probe_verbose=$1
++	do_getname=0
 +
- 		page = dma_direct_alloc_swiotlb(dev, size, attrs);
- 		if (page) {
- 			/*
-@@ -449,6 +451,8 @@ struct page *dma_direct_alloc_pages(struct device *dev, size_t size,
- 						  &cpu_addr, gfp, attrs);
+ 	if [ $had_vfs_getname -eq 1 ] ; then
+ 		result_initname_re="[[:space:]]+([[:digit:]]+)[[:space:]]+initname.*"
+ 		line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_initname_re" | sed -r "s/$result_initname_re/\1/")
+@@ -28,12 +30,24 @@ add_probe_vfs_getname() {
+ 			line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_aname_re" | sed -r "s/$result_aname_re/\1/")
+ 		fi
  
- 	if (is_swiotlb_for_alloc(dev)) {
-+		attrs |= DMA_ATTR_CC_SHARED;
++		if [ -z "$line" ] ; then
++			do_getname=1
++			result_iname_re="[[:space:]]+([[:digit:]]+)[[:space:]]+initname\(result\);"
++			line=$(perf probe -L do_getname 2>&1 | grep -E "$result_iname_re" | sed -r "s/$result_iname_re/\1/")
++		fi
 +
- 		page = dma_direct_alloc_swiotlb(dev, size, attrs);
- 		if (!page)
- 			return NULL;
-diff --git a/kernel/dma/direct.h b/kernel/dma/direct.h
-index 4e35264ab6f8..8ee5bbf78cfb 100644
---- a/kernel/dma/direct.h
-+++ b/kernel/dma/direct.h
-@@ -92,6 +92,7 @@ static inline dma_addr_t dma_direct_map_phys(struct device *dev,
- 		if (attrs & (DMA_ATTR_MMIO | DMA_ATTR_REQUIRE_COHERENT))
- 			return DMA_MAPPING_ERROR;
+ 		if [ -z "$line" ] ; then
+ 			echo "Could not find probeable line"
+ 			return 2
+ 		fi
  
-+		attrs |= DMA_ATTR_CC_SHARED;
- 		return swiotlb_map(dev, phys, size, dir, attrs);
- 	}
- 
+-		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
++		if [ "$do_getname" -eq 1 ]
++		then
++			param="vfs_getname=do_getname:${line} pathname=result->iname:string"
++			perf probe -q "$param" || perf probe $add_probe_verbose "$param" || return 1
++			return 0
++		fi
++		perf probe -q "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
+ 		perf probe $add_probe_verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || return 1
+ 	fi
+ }
 -- 
+2.53.0
 
-
-I will keep testing and let you know how it goes. If there is nothing
-else required to convert pKVM guests to CC, I can just post the patch
-separately as it has no dependency on this series.
-
-Re force_dma_unencrypted(), I am looking into a safe way to use it
-for pKVM as I beleive it will be useful to eliminate some bouncing.
-However, that’s not critical for this series and can be added later
-as I am still investigating it, if I reach something I can post it
-along the pKVM patch above.
-
-Thanks,
-Mostafa
-
-> 
-> 
-> -aneesh
 
