@@ -1,201 +1,233 @@
-Return-Path: <linux-s390+bounces-19861-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19869-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wFo+FZ59DWpEyAUAu9opvQ
-	(envelope-from <linux-s390+bounces-19861-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 20 May 2026 11:23:42 +0200
+	id kJgQMLSIDWpdygUAu9opvQ
+	(envelope-from <linux-s390+bounces-19869-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 20 May 2026 12:11:00 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5140058AAFA
-	for <lists+linux-s390@lfdr.de>; Wed, 20 May 2026 11:23:40 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E57E58B6F4
+	for <lists+linux-s390@lfdr.de>; Wed, 20 May 2026 12:10:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 7867030242BB
-	for <lists+linux-s390@lfdr.de>; Wed, 20 May 2026 09:23:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B320D300FC47
+	for <lists+linux-s390@lfdr.de>; Wed, 20 May 2026 10:07:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A4AD3BFE4D;
-	Wed, 20 May 2026 09:23:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 224343D349C;
+	Wed, 20 May 2026 10:07:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dPFinNop"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bX7QZvvd"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE333BED5C;
-	Wed, 20 May 2026 09:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4913BE64B;
+	Wed, 20 May 2026 10:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779268981; cv=none; b=Uv0zg9w+LsccGfybyIzuEt+NvfzNiLf7hMs3TftUoZ52EaBFcChIauY4QqcP3XrQaa7Vx26zMFl7UWgp+M4KzrjfHnhOCwvcxgg4iGJY91wzfci+iXGQO1mU5bqpIVSVe0aOuNs32GcacmMVgPdav9ISbYdV0o5vKYISAeW5n/w=
+	t=1779271651; cv=none; b=skWO2SqfLCTacfxyfRO7khZA58oKhCuTukwuqvxdQpEomPMkRogtFH/HZgpFD7scULi4+3v1hG0fkV0tvIcvbjLIFnuE3QDrFqVkWq/3qed7SHjlsc+86QPshHzft/OVJu7IEHWodZ5fpcV3a+nvquM7Vlc3S5zBIvw3obIQki4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779268981; c=relaxed/simple;
-	bh=BzayYQmn6krl5L89iOH64pLU+6QjEDmdFo4YUxmhDuQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=i1OJL2A/hxV4DOokkxNkzB5QySR1QTUpAg0x1OmVOwLsHVA1z+nnW5nJJoWaE/SogYwLzmmPIy0VeIYAVoofOYXF/W91/03tE1ZKDZLmHIw0zzM92FZxWTAEpnJL7q8EhqHrlhVrZROJcKDl2mVTQlEzs7da01L6rRaF3xwooyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dPFinNop; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64K6k2Hd513145;
-	Wed, 20 May 2026 09:22:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=FvXcslh19P7qgkCvd
-	upIof8+0RzjLylKgqHtlxcqnfI=; b=dPFinNopQRuj+hlQRiUaQexMyBT9uL66Q
-	KmB+FMo23m9aRsMnfiawZ5ujAstUffYduCCBS4JgAmd++vR0ggNa3igKOwlhmmJw
-	V04J6VJlTZDRQz9mr+zkFIMGMNUBTEtIC0i/RI7Lss6VQUYmEqgMYuSIuWydRULt
-	S+H0sotIPaHzTGlVX8Jdic7pE3cDQ2tQxyN6aEs7vsoNfYie57uFIJTKkR2zrYCz
-	pQ0eY2aVD3e3YjVZREkhv/I7QgI8DItnTKCDXu2R1gYAK6kuvHcOifwhzyx7BTKe
-	9d4tVDx+gVtn+PIrKCvmJSQCm6EraNu3ZBtd1kuS8KiK6So6GojEQ==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4e6h751a35-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 20 May 2026 09:22:50 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64K99As2022921;
-	Wed, 20 May 2026 09:22:49 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4e754gef67-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 20 May 2026 09:22:49 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64K9MkO430016176
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 20 May 2026 09:22:46 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4063820040;
-	Wed, 20 May 2026 09:22:46 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1394F20043;
-	Wed, 20 May 2026 09:22:46 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 20 May 2026 09:22:46 +0000 (GMT)
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Juergen Christ <jchrist@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-        Yang Shi <yang@os.amperecomputing.com>,
-        Shrikanth Hegde <sshegde@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH v3 9/9] s390/percpu: Remove one and two byte this_cpu operation implementation
-Date: Wed, 20 May 2026 11:22:43 +0200
-Message-ID: <20260520092243.264847-10-hca@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260520092243.264847-1-hca@linux.ibm.com>
-References: <20260520092243.264847-1-hca@linux.ibm.com>
+	s=arc-20240116; t=1779271651; c=relaxed/simple;
+	bh=5uTpCdf27XDZ7rU8VT2nSx6sZs8Bwa/a+nJN9dsTFZs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PEuKW2U3+vl4GLlDeHbupwv3nuLqRd1/RhR27kOa7nW+dOU+reg7vTfl2lWIzGNmi66LS9ruervxGqD4oC6MIju+YGzAJW52RsPMAnjhgaft5RgVlAQ8/+nCHJZdD1qkUVb8P8kfXSYEkVOAc7xKpxvnNfw6jO39gAx3RWwrYcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bX7QZvvd; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8006B1F000E9;
+	Wed, 20 May 2026 10:07:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779271647;
+	bh=5uTpCdf27XDZ7rU8VT2nSx6sZs8Bwa/a+nJN9dsTFZs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=bX7QZvvdTxa3YSpPgJR/CpVIiAr4LsFJHToqBiUpqQ7OjAJ3JKFYFh8HzISIXKnFl
+	 1E+J/2n87sXxTBfiFUF8qRdzuKZRCrbEiW5rd6ddSTbKXsJZyMjM1T70x1mbw9v0iy
+	 YXZDa7aQwxVF+CY8701SKVnLs7kwSt8WRsZCkxc6xexoxRufJyztW+awoUYKcSOR3V
+	 ZphoL6Dwc5cIDbOia4oI1lg7iHirtApfH1lnEv5WUDqQL/WaQSKARD2Sz4E/mNZ0i/
+	 CCS5/OgWZ5wmRKzFA5XnlGREVMcvJ2weIMSEG1wzLcm4yLFjdP3cRCAdnhnZwf44/+
+	 wOJEQPBG/nIXg==
+Date: Wed, 20 May 2026 11:07:18 +0100
+From: Lorenzo Stoakes <ljs@kernel.org>
+To: Barry Song <baohua@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>, 
+	Matthew Wilcox <willy@infradead.org>, akpm@linux-foundation.org, linux-mm@kvack.org, david@kernel.org, 
+	liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, mhocko@suse.com, 
+	jack@suse.cz, pfalcato@suse.de, wanglian@kylinos.cn, chentao@kylinos.cn, 
+	lianux.mm@gmail.com, kunwu.chan@gmail.com, liyangouwen1@oppo.com, chrisl@kernel.org, 
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com, 
+	youngjun.park@lge.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, Nanzhe Zhao <nzzhao@126.com>
+Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
+ fault performance
+Message-ID: <ag2GKrvRHzP4KhOl@lucifer>
+References: <CAGsJ_4wk=SDtgin+84Ev2TamU-JFfmrg_SUay=-tcYmnFvK6Nw@mail.gmail.com>
+ <afTpoL3FklpQZNMM@casper.infradead.org>
+ <CAGsJ_4ysMcrmDLSOwBkf7qwCQrcDWeEMXkHDajTJFMLKUk0bSQ@mail.gmail.com>
+ <agrWuDNGddNmvMFD@lucifer>
+ <CAGsJ_4zqLfdWoTH9s7FFaqWWj0mESfikYgr7=GcV64qcuXrPxA@mail.gmail.com>
+ <CAJuCfpE0WQrB3zJp9qn3jvn5DthS=ttpX7gJJvyEhA_BJGrp5g@mail.gmail.com>
+ <agxbq1TxJdniMQT3@lucifer>
+ <CAGsJ_4zxyZP_xkFCGWfLyXkqomrX6DNqyMVirk=aggtwB1zExw@mail.gmail.com>
+ <ag1mk2DSJsiORaxK@lucifer>
+ <CAGsJ_4zN5ezh9vvvQDQdMF2KuuDGvkhNjTZWc0y0Lsa-P4Aahw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=ffCdDUQF c=1 sm=1 tr=0 ts=6a0d7d6a cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=e14ZIUwkndthOOMI8LgA:9
-X-Proofpoint-ORIG-GUID: TTftSxFEt0VrS1p77gwSjAo5GlvmhOX8
-X-Proofpoint-GUID: TTftSxFEt0VrS1p77gwSjAo5GlvmhOX8
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTIwMDA4NyBTYWx0ZWRfX7lN1wnvAceLM
- tnCyD0VkTZxULFlz7Bi7VHoW6LHrgdoFu1kzlteEF/4zQEoElV2XJIpb6DmkbXXOrQarP/lBuJJ
- l0rmJqpPA6Q+04wsdPteYrWWFhg3rlC5S/7Hpu9UYFfQBwd/RLeiAlKjCnMF+dQWVfm4WhYuhM9
- v50xt291JU+GfyPbG/z3wqyxnAsdr3UnupzfSAvCeUWP7Cye+QQpG1Pc3jaeFMhnqc407byhDU6
- 6uBVz5+cptKnuq8WRwVvqB2+2AwkklgM/XwezIePgQvOlQyfRe6kkzz2UDpW9DiY0ETLrcNk4oJ
- VTAXmR25LByW8yXQuLKqt32COckAPCcmme9Y+Ds+H/n2abKfuZAUKtqKQR+KnkAzbCIIbcAizyz
- GZcQ5mHTh43wSPUI4fOyYwOMXvWgshDR403m1VoT/aBejUhyQW+SudysxBX3TG109M4yQzY9n4B
- WsDqBxq3q+ioYaRZckQ==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-20_01,2026-05-18_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 spamscore=0 phishscore=0 suspectscore=0 adultscore=0
- clxscore=1015 impostorscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605200087
-X-Spamd-Result: default: False [-0.66 / 15.00];
+In-Reply-To: <CAGsJ_4zN5ezh9vvvQDQdMF2KuuDGvkhNjTZWc0y0Lsa-P4Aahw@mail.gmail.com>
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-19869-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19861-lists,linux-s390=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hca@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[30];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[google.com,infradead.org,linux-foundation.org,kvack.org,kernel.org,suse.com,suse.cz,suse.de,kylinos.cn,gmail.com,oppo.com,tencent.com,huaweicloud.com,redhat.com,lge.com,lists.infradead.org,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,126.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 5140058AAFA
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ljs@kernel.org,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-s390];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 4E57E58B6F4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-There are no one and two byte this_cpu operations within the kernel
-(defconfig). However even if there would be, the s390 implementation, which
-uses a cmpxchg loop, generates a very large code sequence due to the lack
-of native one and two byte cmpxchg instructions.
+On Wed, May 20, 2026 at 05:07:16PM +0800, Barry Song wrote:
+> On Wed, May 20, 2026 at 3:50 PM Lorenzo Stoakes <ljs@kernel.org> wrote:
+> >
+> > On Wed, May 20, 2026 at 05:18:52AM +0800, Barry Song wrote:
+> > > On Tue, May 19, 2026 at 8:53 PM Lorenzo Stoakes <ljs@kernel.org> wrote:
+> > > >
+> > > > On Mon, May 18, 2026 at 12:56:59PM -0700, Suren Baghdasaryan wrote:
+> > > >
+> > > > > >
+> > > > > > I think we either need to fix `fork()`, or keep the current
+> > > > > > behavior of dropping the VMA lock before performing I/O.
+> > > > >
+> > > > > I see. So, this problem arises from the fact that we are changing the
+> > > > > pagefaults requiring I/O operation to hold VMA lock...
+> > > > > And you want to lock VMA on fork only if vma_is_anonymous(vma) ||
+> > > > > is_cow_mapping(vma->vm_flags). So, we will be blocking page faults for
+> > > > > anonymous and COW VMAs only while holding mmap_write_lock, preventing
+> > > > > any VMA modification. On the surface, that looks ok to me but I might
+> > > > > be missing some corner cases. If nobody sees any obvious issues, I
+> > > > > think it's worth a try.
+> > > >
+> > > > Not sure if you noticed but I did raise concerns ;)
+> > > >
+> > > > I wonder if you've confused the fault path and fork here, as I think Barry has
+> > > > been a little unclear on that.
+> > >
+> > > I think I’ve been absolutely clear :-)
+> >
+> > On this point sure, I would argue less so around the fork stuff but I responded
+> > on that specifically elsewhere so let's keep things moving :>)
+> >
+> > > We should either stick to the current behavior - drop
+> > > the VMA lock before doing I/O, or change fork() so that it
+> > > does not wait on vma_start_write().
+> >
+> > Again, as I said elsewhere, I think there might be a 3rd way possibly. It's a
+> > big mistake to assume that there are only specific solutions to problems in the
+> > kernel then to present a false dichotomy.
+>
+> I recalled that when we discussed this part in my slides:
+>
+> ‘For simplicity, rather than using a whitelist mechanism for
+> per-VMA retry, we could use a blacklist instead: default to
+> always retry via the VMA lock, and only allow mmap_lock-based
+> page-fault retry for specific cases such as
+> __vmf_anon_prepare().’
 
-Remove the s390 implementation and use the generic implementation.
+Yeah that's an itneresting approach actually, sorry if I missed that.
 
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
----
- arch/s390/include/asm/percpu.h | 13 -------------
- 1 file changed, 13 deletions(-)
+>
+> Suren mentioned introducing a FALLBACK flag. With the
+> FALLBACK flag, we would retry via mmap_lock; with the RETRY
+> flag, we would retry via the VMA lock.
 
-diff --git a/arch/s390/include/asm/percpu.h b/arch/s390/include/asm/percpu.h
-index 44867e7ed0df..72237cb962c2 100644
---- a/arch/s390/include/asm/percpu.h
-+++ b/arch/s390/include/asm/percpu.h
-@@ -51,15 +51,6 @@
- 	new__;								\
- })
- 
--#define this_cpu_add_1(pcp, val)	arch_this_cpu_to_op_simple(pcp, val, +)
--#define this_cpu_add_2(pcp, val)	arch_this_cpu_to_op_simple(pcp, val, +)
--#define this_cpu_add_return_1(pcp, val) arch_this_cpu_to_op_simple(pcp, val, +)
--#define this_cpu_add_return_2(pcp, val) arch_this_cpu_to_op_simple(pcp, val, +)
--#define this_cpu_and_1(pcp, val)	arch_this_cpu_to_op_simple(pcp, val, &)
--#define this_cpu_and_2(pcp, val)	arch_this_cpu_to_op_simple(pcp, val, &)
--#define this_cpu_or_1(pcp, val)		arch_this_cpu_to_op_simple(pcp, val, |)
--#define this_cpu_or_2(pcp, val)		arch_this_cpu_to_op_simple(pcp, val, |)
--
- /*
-  * Macros to be used for percpu code section based on atomic instructions.
-  *
-@@ -313,8 +304,6 @@ do {									\
- 	ret__;								\
- })
- 
--#define this_cpu_cmpxchg_1(pcp, oval, nval) arch_this_cpu_cmpxchg(pcp, oval, nval)
--#define this_cpu_cmpxchg_2(pcp, oval, nval) arch_this_cpu_cmpxchg(pcp, oval, nval)
- #define this_cpu_cmpxchg_4(pcp, oval, nval) arch_this_cpu_cmpxchg(pcp, oval, nval)
- #define this_cpu_cmpxchg_8(pcp, oval, nval) arch_this_cpu_cmpxchg(pcp, oval, nval)
- 
-@@ -345,8 +334,6 @@ do {									\
- 	ret__;								\
- })
- 
--#define this_cpu_xchg_1(pcp, nval) arch_this_cpu_xchg(pcp, nval)
--#define this_cpu_xchg_2(pcp, nval) arch_this_cpu_xchg(pcp, nval)
- #define this_cpu_xchg_4(pcp, nval) arch_this_cpu_xchg(pcp, nval)
- #define this_cpu_xchg_8(pcp, nval) arch_this_cpu_xchg(pcp, nval)
- 
--- 
-2.51.0
+Yeah, and honestly I'm beginning to wonder if we don't just have to pay the
+complexity tax anyway and eat the fact we have to deal with that.
 
+But as per Josef's comment re: this whole mechanism, simply not waiting for
+file-backed I think is another option (but I don't recall where we left that
+conversation actually?)
+
+Anyway I want to make sure any complexity we add is necessary so will take a
+look through patches and have a think (and obviously others will have their own
+opinions!)
+
+>
+> Not sure whether this could really be called a ‘third way,’
+> but it seems more like a shift from a whitelist model to a
+> blacklist model, without changing the fundamental design, but
+> it does change where we would need to touch the source code.
+
+Right yeah, good to have more options.
+
+>
+> >
+> > We absolutely hear you on this being a problem and it WILL be addressed one way
+> > or another.
+>
+> Thanks. This is a bit of light in what has felt like a fairly
+> dark situation. I really appreciate your thoughtful and
+> responsible approach.
+
+Yes, sorry, I maybe was a bit too harsh in my tone here, I didn't really intend
+to be negative as to addresisng the problem as a whole.
+
+Moreso I've been concerned about the fork approach, and that is what's led to me
+being shall we say 'emphatic' about it :)
+
+But of course I sometimes make mistakes in quite how my tone comes across, so
+apologies if it came across overly negatively - I am negative (on a technical
+level) about the fork approach, but not the fact we should address this.
+
+To be clear - I'm very glad you've brought this up, it's important, as much as
+it's painful that we have this issue in the first place! :)
+
+>
+> >
+> > Of the two approaches, as I said elsewhere, I prefer what you've done in this
+> > series to anything touching fork.
+> >
+> > But give me time to look through the series please (I'd also suggest RFC'ing
+> > when it's something kinda fundamental that might generate converastion, makes
+> > life a bit easier on the review side :)
+>
+> Thanks! Sure, I’m happy to wait and there’s no urgency.
+>
+> Last year you made quite a significant contribution to the work
+> when I tried to remove mmap_lock in madvise. I really
+> appreciated it. Now we’re back to the same lock again, just in
+> different places.
+
+Yeah :) one day maybe we can get rid of it altogether (maybe I'm dreaming :)
+
+>
+> Best Regards
+> Barry
+
+Cheers, Lorenzo
 
