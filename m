@@ -1,74 +1,75 @@
-Return-Path: <linux-s390+bounces-19934-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19938-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qI1jERsGD2qFEQYAu9opvQ
-	(envelope-from <linux-s390+bounces-19934-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 21 May 2026 15:18:19 +0200
+	id CCnZGFIHD2qFEQYAu9opvQ
+	(envelope-from <linux-s390+bounces-19938-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 21 May 2026 15:23:30 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC28E5A590F
-	for <lists+linux-s390@lfdr.de>; Thu, 21 May 2026 15:18:18 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2B2C5A5B11
+	for <lists+linux-s390@lfdr.de>; Thu, 21 May 2026 15:23:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id D1F8E30BEB64
-	for <lists+linux-s390@lfdr.de>; Thu, 21 May 2026 13:06:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 12F0C31F39FD
+	for <lists+linux-s390@lfdr.de>; Thu, 21 May 2026 13:07:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0AB73C9EE0;
-	Thu, 21 May 2026 13:05:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 511293DC87A;
+	Thu, 21 May 2026 13:05:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PSQP8lGz"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BdJJc6tD"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD5F3CBE75;
-	Thu, 21 May 2026 13:05:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6812E3D966A;
+	Thu, 21 May 2026 13:05:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779368752; cv=none; b=jM0AlTnHvsGCp8lmMLoQo/gEA2B8PlUuPfKyndmmI7wfnpBOYl8Ky+rGHJE6JkjELvHq2DsxvnKHDrcmDXzIEM1QqNJGenqZoan6YajJE3l92d09bCt6wZmtRxWLz/7Ah5twOHv0qcDg/A5RgcVnmROpo4rGzbeQgVV/6rXKXnc=
+	t=1779368756; cv=none; b=tX3GEuof9jngSyJcemvjpyh325/RfAnQWUyHuLWjO9wt3m6fuauI/nwW2dsZ6tMsOZQLocMFNqZvxXLT8LNI2bFrsdxUSKjGkG18WQ+jtXtnh5IX7Dh+4JoAMNUMOgiQmIY3HH/q79h+BFwnWrcspMhxqncp0FCy2PWTuCGxBUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779368752; c=relaxed/simple;
-	bh=YdIr01snKSzmFlp9LP6OPTRhldh7kvvMzqWydJKkvpM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S6RZw30Vw0QtSqNagg323ZqvjsKtTdvhFINiSH4g6FUkmnw+u7gxAFIoCLxF4nLbuaE+crpO4RlKrafFAIeM58KOPbU+gqcCX5UiepATvNV9ba7VMKfdosFxx+BPCtgVv/7P9UoNiOg7e9JUPGt43xhcWN1y1A74SSbi4mkdWMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PSQP8lGz; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1779368756; c=relaxed/simple;
+	bh=SaMbTE3SaJK/sdJh47kfNBMWhl6qoTz8OqKV+2aenvc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=UtsNmLGwwqQnQkbGU7y/rdfyfmv+02wFQX5NTPo2eixYPhvu5f5aYMh9oWUejZmuywoeKMGK4sQRptmuixW+Fn5hJwmCoxLh1XhbIiOhgWYbiQbXy+L+d9hHLIKhAW1ImciijICYJRCnzkJl6x9upBEIASi++IN12TCeVW4sxFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BdJJc6tD; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64L3JbIt3120487;
-	Thu, 21 May 2026 13:05:42 GMT
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64LC6nwD2166376;
+	Thu, 21 May 2026 13:05:41 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=bMvknIx1kl8Rz0sr2zymZf8pZpFGAJUAa1y7xSNLq
-	po=; b=PSQP8lGzEq8iRSUrHUIeBx7+pYk6OBhmnDj5VNXKOt9zCJVgxoJs6Yc2x
-	vaoB1qH9dOAaqntmwUqb11XK7yeQIrvacp1Mr6Ef/g1Np1FHbnXydAqMSm/4RJRP
-	6ormfIVtqcURSo77XQvyqtZXTvoQo0DFzp12QgmRseSYCV3EZQ9fzoSisCjbosq6
-	Rh9xSEX0HlXHphQPraWrQRX07lB0sfl6MfRauEJBZJG5bsCrU7IdCbfWh6U0Voaa
-	f84muOPgZ753pc+G98bSuMec7cvWHngBZtvxhxSDQeQIwfqjPXKfxZ9c7LJrPHDA
-	lkMIQeElYJQYnvHci/JzaYYjIhnrA==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4e6h8mxycw-1
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=SJmxqkEDQ+jFtm1Om
+	IP7Y2QFjYJmvDDcjNPrPs6X0Vw=; b=BdJJc6tDy0uYl9Ow59luDJr2TPJbpLi/i
+	Sk533QQmpFwEJNVugjd5AMf24Sj7yZzmnG9D04ga6zWraxJvn5Xt762bWAJTFZWv
+	peOLc9K5arEe7HD5tecAdrElnJ49HrUANGk4nKETPXpowN+Kai8FB64YVACud0DF
+	eRrSm9Ev3blDZ/syrWGf6W3ii7SLUeAfxshZ5iuIJumtbIH8mgm9V3w9F6ALUYtp
+	Ro24IQnk8jmudnch9gXxlD/ATJNK5eEd6/4gGsl928JmfXkmJnCQBeAHfnFGSLn9
+	TX8aLe3M+67SoB0S95kLl5NIkXSB15jehsaj4EX4dA5Ca7Yj+QFiw==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4e6h756ytr-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 21 May 2026 13:05:41 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64LCsAsL022535;
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64LCs6LY028579;
 	Thu, 21 May 2026 13:05:40 GMT
 Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4e74dhv45p-1
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4e75kybwxn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 21 May 2026 13:05:40 +0000 (GMT)
 Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64LD5YgW22544884
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64LD5YGX31261088
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Thu, 21 May 2026 13:05:34 GMT
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3AFA420049;
+	by IMSVA (Postfix) with ESMTP id 6F29B20040;
 	Thu, 21 May 2026 13:05:34 +0000 (GMT)
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 08BD120040;
+	by IMSVA (Postfix) with ESMTP id 402CC2004B;
 	Thu, 21 May 2026 13:05:34 +0000 (GMT)
 Received: from p-imbrenda.aag-de.ibm.com (unknown [9.52.223.175])
 	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 21 May 2026 13:05:33 +0000 (GMT)
+	Thu, 21 May 2026 13:05:34 +0000 (GMT)
 From: Claudio Imbrenda <imbrenda@linux.ibm.com>
 To: linux-kernel@vger.kernel.org
 Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, borntraeger@de.ibm.com,
@@ -76,10 +77,12 @@ Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, borntraeger@de.ibm.com,
         nrb@linux.ibm.com, schlameuss@linux.ibm.com, gra@linux.ibm.com,
         pbonzini@redhat.com, seanjc@google.com, yan.y.zhao@intel.com,
         isaku.yamahata@intel.com
-Subject: [PATCH v2 0/5] KVM: s390: Implement KVM_PRE_FAULT_MEMORY
-Date: Thu, 21 May 2026 15:05:28 +0200
-Message-ID: <20260521130533.156491-1-imbrenda@linux.ibm.com>
+Subject: [PATCH v2 1/5] KVM: s390: Track page size in struct guest_fault
+Date: Thu, 21 May 2026 15:05:29 +0200
+Message-ID: <20260521130533.156491-2-imbrenda@linux.ibm.com>
 X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260521130533.156491-1-imbrenda@linux.ibm.com>
+References: <20260521130533.156491-1-imbrenda@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -89,26 +92,26 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-GUID: 7qv8vNSzxmqMV5uJMcHrr7-a_9_HecEr
-X-Authority-Analysis: v=2.4 cv=GYMnWwXL c=1 sm=1 tr=0 ts=6a0f0325 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+X-Authority-Analysis: v=2.4 cv=ffCdDUQF c=1 sm=1 tr=0 ts=6a0f0325 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
  a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=uAbxVGIbfxUO_5tXvNgY:22 a=WwTxizZw8kVH9eZwR8QA:9
-X-Proofpoint-ORIG-GUID: CFnWpwBOo1FQJS5YlwRGqxhwHX4esIWC
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTIxMDEyNiBTYWx0ZWRfX1PM7Tg5Dg9bw
- //RPHwWqAykHwOFpgtX4WFE0PHTc6P54lHUGUoEX9dI45dLePCRD4t3zKgDGKsnqel/wjdawV+h
- IQojFZ44C5zdtVzeqg/D424OFAJkD5p7JrjUSMImQ4o/abLt0lBDksElVb/K8Lj+iSCsIJGRDD/
- wbmlDNgUY6hug3lfVkd7mpG/DQgXPDK4wT3Dnllw+mR3tzm1SZyd4jYiNg3TnN+jR9I+EtwYFwC
- xV98LrZ0fsapXZ+Kz1l2b+argdNOuVBMELa/6x+Bf5jNVN26ng2PocxFDiBkiraJD2yynR3LTp5
- iNcl9gERlOPrvURLJsuXe9vD/umpU6JRmdvsYCxIF3Vwl+jC3euHBIlKKmvKAW6GHG9iN1ukPFW
- QIoC2UWcElo6M7rL6Gb5A0OA/1d8VjEX6JEtvjXugNGmcgUUzoZuhi7AoZgZCA0SEhugjXiDDsp
- W/Bhu6D4arI2IJ5T92Q==
+ a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=HydwJh4hHmF5zmZ3e14A:9
+X-Proofpoint-ORIG-GUID: DZbXDkbKjzRpQ523im5tC0gtKz2IWN3X
+X-Proofpoint-GUID: _ZircIAaRkx5g0A3L7Za8Z5zgqe8p6ol
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTIxMDEyNiBTYWx0ZWRfX8UGLrXnVvLcv
+ GrhvzhanDZVg4882rN2YpBzGHCx0K2OSFGoSTfzO/wGSlQYqJvBkzink4ksOaFs1TIfqY1WxweE
+ zDY9xKVqu+gXjtuhvxuXcUZHotfFpzrGMf42hgpFJX13StCzmOByyQdbRR5CNDDx3A8omSYok+H
+ CCTyjOgaz9L8PAZY1T1FRut1QbUL6NdkBjkjktkj2TmhyYie8MxTmq9oCFOtSFr/GnWo8nDELOh
+ IMOutZe/hLTwQbKOTKMn0gfLsuH3fLxsa7FNazEbj/qvge4wmb3P2oJhalYUbKPnMAoqOFuauRg
+ 4rLL2jUVnn6Zt3CD47g215hbD/t+vqDAEBfqKgWE43g7AOePsBtRY1KhZSCImtWK7bpWahmPaBF
+ zs1quP+fuPzY+1D9bNLtQeOqa/qGKwnnxFXlvE2Fcu3XxEA/M95L+gkGEhBYJ1CHtqe1EkMkhZ3
+ pFJYtqVL6kQHUgIwJBg==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-05-21_02,2026-05-18_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 malwarescore=0 lowpriorityscore=0 priorityscore=1501 bulkscore=0
- adultscore=0 suspectscore=0 spamscore=0 clxscore=1015 impostorscore=0
+ priorityscore=1501 spamscore=0 phishscore=0 suspectscore=0 adultscore=0
+ clxscore=1015 impostorscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605210126
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -116,12 +119,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19934-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19938-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	TO_DN_NONE(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -131,50 +134,74 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,linux.ibm.com:mid];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,fc1.sd:url,h.tt:url];
 	DKIM_TRACE(0.00)[ibm.com:+];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCPT_COUNT_TWELVE(0.00)[14];
 	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: DC28E5A590F
+X-Rspamd-Queue-Id: B2B2C5A5B11
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Implement KVM_PRE_FAULT_MEMORY on s390, and update documentation and
-selftests accordingly.
+Until now, the members of struct guest_fault are always accessed while
+holding the required locks, and thus the ptep and crstep pointers can
+be dereferenced safely.
 
-Faulted-in pages will be marked as accessed, unlike x86, otherwise they
-will trigger a minor fault when accessed. Avoiding such faults is one of
-the points of KVM_PRE_FAULT_MEMORY.
+There will be some new cases where callers of kvm_s390_faultin_gfn()
+need to know the size of the page used to solve the fault, at which
+point no locks are held anymore, and dereferencing the crstep field
+is not possible.
 
-CCing x86 people due to changes in the documentation and the selftests
+Introduce a new crste_region3 flag for struct guest_fault to indicate
+whether the crstep used to solve the fault was a region 3 entry with FC=1
+(large pud).
 
-v1->v2:
-* Add the crste_region3 flag in struct guest_fault to keep track of the
-  page size used to solve a fault.
-* Rewrite the s390 version of kvm_arch_vcpu_pre_fault_memory() so it
-  looks and behaves similarly to the x86 version. No more loops, better
-  handling of hugepage mappings, and more correct error handling.
-* Remove the assertion vcpu->run->exit_reason == KVM_EXIT_IO from the
-  selftest, as it is redundant and x86-specific.
+This allows to disambiguate all three possible scenarios:
+* If ptep is not NULL, the fault was solved with a pte.
+* If ptep is NULL and crste_region3 is 0, a segment entry with FC=1
+  (large pmd) was used.
+* If ptep is NULL and crste_region3 is 1, a region 3 entry with FC=1
+  (large pud) was used.
 
-Claudio Imbrenda (5):
-  KVM: s390: Track page size in struct guest_fault
-  KVM: s390: Implement KVM_PRE_FAULT_MEMORY
-  KVM: s390: Update KVM_PRE_FAULT_MEMORY API documentation
-  KVM: selftests: Fix pre_fault_memory_test to run on s390
-  KVM: selftests: Enable pre_fault_memory_test for s390
+Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+---
+ arch/s390/kvm/dat.h  | 1 +
+ arch/s390/kvm/gmap.c | 2 ++
+ 2 files changed, 3 insertions(+)
 
- Documentation/virt/kvm/api.rst                |  5 ++-
- arch/s390/kvm/Kconfig                         |  1 +
- arch/s390/kvm/dat.h                           |  1 +
- arch/s390/kvm/gmap.c                          |  2 +
- arch/s390/kvm/kvm-s390.c                      | 45 +++++++++++++++++++
- tools/testing/selftests/kvm/Makefile.kvm      |  1 +
- .../selftests/kvm/pre_fault_memory_test.c     |  7 +--
- 7 files changed, 54 insertions(+), 8 deletions(-)
-
+diff --git a/arch/s390/kvm/dat.h b/arch/s390/kvm/dat.h
+index 8f8278c44879..db09b8fc34d6 100644
+--- a/arch/s390/kvm/dat.h
++++ b/arch/s390/kvm/dat.h
+@@ -500,6 +500,7 @@ struct guest_fault {
+ 	bool write_attempt;	/* Write access attempted */
+ 	bool attempt_pfault;	/* Attempt a pfault first */
+ 	bool valid;		/* This entry contains valid data */
++	bool crste_region3;     /* Whether crstep referst to a region3 entry */
+ 	void (*callback)(struct guest_fault *f);
+ 	void *priv;
+ };
+diff --git a/arch/s390/kvm/gmap.c b/arch/s390/kvm/gmap.c
+index 3c26e35af0ef..6f4143092871 100644
+--- a/arch/s390/kvm/gmap.c
++++ b/arch/s390/kvm/gmap.c
+@@ -545,6 +545,7 @@ static int gmap_handle_minor_crste_fault(struct gmap *gmap, struct guest_fault *
+ 			newcrste.s.fc1.d = 1;
+ 			newcrste.s.fc1.sd = 1;
+ 		}
++		f->crste_region3 = is_pud(newcrste);
+ 		/* In case of races, let the slow path deal with it. */
+ 		return !gmap_crstep_xchg_atomic(gmap, f->crstep, oldcrste, newcrste, f->gfn);
+ 	}
+@@ -690,6 +691,7 @@ static int _gmap_link(struct kvm_s390_mmu_cache *mc, struct gmap *gmap, int leve
+ 			if (oldval.val != _CRSTE_EMPTY(oldval.h.tt).val &&
+ 			    crste_origin_large(oldval) != crste_origin_large(newval))
+ 				return -EAGAIN;
++			f->crste_region3 = is_pud(newval);
+ 		} while (!gmap_crstep_xchg_atomic(gmap, f->crstep, oldval, newval, f->gfn));
+ 		if (f->callback)
+ 			f->callback(f);
 -- 
 2.54.0
 
