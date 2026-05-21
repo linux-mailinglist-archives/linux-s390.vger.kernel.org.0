@@ -1,201 +1,176 @@
-Return-Path: <linux-s390+bounces-19943-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19944-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EJ/OBH80D2rtHgYAu9opvQ
-	(envelope-from <linux-s390+bounces-19943-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 21 May 2026 18:36:15 +0200
+	id aNJjKrY8D2rQIAYAu9opvQ
+	(envelope-from <linux-s390+bounces-19944-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 21 May 2026 19:11:18 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D7475A966C
-	for <lists+linux-s390@lfdr.de>; Thu, 21 May 2026 18:36:14 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 139245A9F05
+	for <lists+linux-s390@lfdr.de>; Thu, 21 May 2026 19:11:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 793B630DE4C1
-	for <lists+linux-s390@lfdr.de>; Thu, 21 May 2026 15:38:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 73EB1314B3E4
+	for <lists+linux-s390@lfdr.de>; Thu, 21 May 2026 16:27:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 986653655C5;
-	Thu, 21 May 2026 15:38:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7F8D356777;
+	Thu, 21 May 2026 16:27:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SKjGQCP1"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="a1W4QABK"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D12C2BDC32;
-	Thu, 21 May 2026 15:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E85A37BE6A;
+	Thu, 21 May 2026 16:27:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779377884; cv=none; b=PCYBstV24qzUGTv+YXTAJ62prRwCVKeznjof0dIH2XM7vS9dSVGuIFF0EbWJPuByTpah5gD+FwKnFoi0g192LgHLqZoFKH1va7qncFlzDnQO1QPP4RWjfqtocmwIi5bmUyXhhyj65xUeqledF86fFGmWnP19g22iMp9tQTfxj0A=
+	t=1779380857; cv=none; b=i0QbXIfWx8CcsSruV7uFPyY2pZk7pyjawsJQpIsPuQBXxJCEGJmJ8sMDxpaDW9kZhG3wnI1dP1LAqZc+IKubCmMrRRRWjzCpEEzVBJdXZx96PXDd3o3rS80Sh4wffuCqS7XuEhpw+zC/kpzbfKZICVcSDwS68foEviWjkqKCMUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779377884; c=relaxed/simple;
-	bh=4v79JhfkK7irUQUXGMhr5/E/7yX1WhwQVD6Rpohut0c=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=rddx3ij1DbtCSUDcmargZdiu41FW0zF2+86kb04g2IFcvpmTVIKX9VwwtnZcs7eKz0wpYoMyWMYZTty1e3rzVTH+dWl71cYcyQ2ysnlFdUTiuc87+e3/aaEDMKjDfZtKEBCJH6w91mOvlOQnnBGeuW8wMgm3VrO4oaUISOlsdCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SKjGQCP1; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 055241F000E9;
-	Thu, 21 May 2026 15:37:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779377883;
-	bh=Qomyt6SRN6loAiKuzG+mnZMN+9NDAav5uB2vD7COXYY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=SKjGQCP1jUHZn8lGcvNb16fhytEsPovJvUrNUllKBoXBnYhKzZyiWFp5SXoR00qSh
-	 4Yi1RUq4BpLuoEGXd/ZfpfHeWAgR0+SKGaVyCv/OICsvCL8QuRGyjiXEjI5giDln+y
-	 nPHP27gGY79//Ncb34+zHprzV63ewWoOHLFrps3BSWb2kqL1XebtXJJN3TVZe3EV/k
-	 urWUK7qq4xQ19I8ijQAMN6p1ereVXTWRx1/nsAg3dl09jZhyb9oK04vIX/Z5RdNTgn
-	 97oMJkfi8HsdKYrcl3kj4rpuwHeCO8ecnTXfnja7vDYtRCrTlYPo8c5gdohMtv0jZ2
-	 UZTZ7iyYKVbCg==
-X-Mailer: emacs 30.2 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev
-Cc: Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Steven Price <steven.price@arm.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Mostafa Saleh <smostafa@google.com>,
-	Petr Tesarik <ptesarik@suse.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>, x86@kernel.org
-Subject: Re: [PATCH v4 07/13] dma-direct: make dma_direct_map_phys() honor
- DMA_ATTR_CC_SHARED
-In-Reply-To: <20260512090408.794195-8-aneesh.kumar@kernel.org>
-References: <20260512090408.794195-1-aneesh.kumar@kernel.org>
- <20260512090408.794195-8-aneesh.kumar@kernel.org>
-Date: Thu, 21 May 2026 21:07:49 +0530
-Message-ID: <yq5awlww6aeq.fsf@kernel.org>
+	s=arc-20240116; t=1779380857; c=relaxed/simple;
+	bh=3TUtRpfhSrXeGSg3aKW/Ckk9B5+9KTJVdWvm8HL5qNo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MxF25Z4iErpqbl+mAzfYIfwFjWFcT3Vl6R7o1vazERwpjFx+RbigLdkYjDSbQVaE8pebgHyPgFIY6QoyZp/eW+clRWmFrJWtjCxuisYt6GblUFLWHvYen88oAM5QxtBRCV8zmRQtbCzcQA9dK3Jdo1jdhiHz1vxt8Pw1r9U12KM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=a1W4QABK; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64LEZj503252227;
+	Thu, 21 May 2026 16:27:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=m1y20CPnzJ3zSfFfVqLs4Yj/EMuxMI
+	uKfzjStw/FMyM=; b=a1W4QABKAwe4e+p/1X9KDUlmtJD5k288Ett/MMq3ikZo1N
+	6ml8xhspQm7OoJnOZdjP4MgVcSkRmAIvdBj6Sy/6rn932YosxCTiXXy8VJe5eOIi
+	mGeJ/7mAbWp2K3uLg4BHg/VjQM4bkPzK2+QetE/7kgG5SBkuoEe6F/5FvrAPkP2D
+	+wnXad4L0m3KM/3Ngko1rNogdHU9FS7/mOPdliuBMagvSgFL+7vkkuD3kzsHrw1X
+	6mEEGITlx/tx/rShtMM0ejSDUtdL/jLGPWPETWK67QAIFmmiCplHwDAlYXa4RiCM
+	mWb/2wm9XIt3yCo7Z2KR8qi8Fg9goxQ486xE/Jmg==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4e6hawevkv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 May 2026 16:27:19 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64LGO4XI013304;
+	Thu, 21 May 2026 16:27:18 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4e74dhw30v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 May 2026 16:27:18 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64LGREEA13697328
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 21 May 2026 16:27:14 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 151CD20049;
+	Thu, 21 May 2026 16:27:14 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A6B3E20040;
+	Thu, 21 May 2026 16:27:12 +0000 (GMT)
+Received: from li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com (unknown [9.111.26.175])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 21 May 2026 16:27:12 +0000 (GMT)
+Date: Thu, 21 May 2026 18:27:11 +0200
+From: Jan Polensky <japo@linux.ibm.com>
+To: Gary Guo <gary@garyguo.net>, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, ojeda@kernel.org, peterz@infradead.org,
+        jpoimboe@kernel.org, jbaron@akamai.com, aliceryhl@google.com
+Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com, boqun@kernel.org,
+        bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org,
+        tmgross@umich.edu, dakr@kernel.org, rostedt@goodmis.org,
+        ardb@kernel.org, linux-s390@vger.kernel.org,
+        rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] s390: enable Rust support
+Message-ID: <ag8yX7om86S--2Ws@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com>
+References: <20260519151215.1611802-1-japo@linux.ibm.com>
+ <20260519151215.1611802-5-japo@linux.ibm.com>
+ <DIMRQ2FA569H.3V1LI6U897MPU@garyguo.net>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spamd-Result: default: False [-1.66 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DIMRQ2FA569H.3V1LI6U897MPU@garyguo.net>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTIxMDE2MiBTYWx0ZWRfX6lQA+G7y6vos
+ iC8VeR0QH8GZC5910b9dVwhLmTcs7P1pBKWNG/4RighQJlBKkQdRH3P1pwhq1IibxikEzpYFyjo
+ D7JpKbObR1VitHDJDOq5CzdyJcwEjN7F1jQm8fgq+1bEgWenPS+BU3+n2Z2S0qoKx0SXE5dswKj
+ lkoYWJtWqiNnEz4hEn4dv9B5zge0HVBmbKbL+VErzxDqFNT8Xln2OBBySHMoAGPi2u984zeM0P+
+ wxCRLR7nW8uPPfkAocqUPBmbv+9Q2SXnCe3LLU3KE+swyuh/uZQB3DGnKmpXTQmBjt9vaVkL107
+ MSNLkxcPxeNGY/6YSvYvLxfOO7OxbZteEysLf46EISvpmynE0F3rl5S8spvEScRA/MgTxlxCo6r
+ bs44j2LyQWxnU3diyPqEofDL+KMQJoXHoscrlc2MN/hRWoIFnk2U56w8CFmnGr48VqeosxtC8Le
+ 7czMK4hxUjic7+0DmaQ==
+X-Authority-Analysis: v=2.4 cv=Np/htcdJ c=1 sm=1 tr=0 ts=6a0f3267 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=kj9zAlcOel0A:10 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=1MSMDuK9x8fRzs5uTu8A:9
+ a=CjuIK1q_8ugA:10
+X-Proofpoint-ORIG-GUID: AJ_0GxZDkpH__6FWpoHmo8H24KBn62j2
+X-Proofpoint-GUID: Isk4UQecj4L_u9DkcUU0BGGPeJb28JlT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-21_03,2026-05-18_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 spamscore=0 clxscore=1015 priorityscore=1501 impostorscore=0
+ lowpriorityscore=0 suspectscore=0 adultscore=0 phishscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605210162
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-19943-lists,linux-s390=lfdr.de];
-	FREEMAIL_CC(0.00)[arm.com,samsung.com,kernel.org,resnulli.us,ziepe.ca,google.com,suse.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,vger.kernel.org,linux.ibm.com,ellerman.id.au,gmail.com];
-	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_CC(0.00)[linux.ibm.com,kernel.org,protonmail.com,umich.edu,goodmis.org,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-19944-lists,linux-s390=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com:mid];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[31];
+	RCPT_COUNT_TWELVE(0.00)[22];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[aneesh.kumar@kernel.org,linux-s390@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[japo@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-s390];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 5D7475A966C
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[11]
+X-Rspamd-Queue-Id: 139245A9F05
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org> writes:
+On Tue, May 19, 2026 at 04:45:33PM +0100, Gary Guo wrote:
+> On Tue May 19, 2026 at 4:12 PM BST, Jan Polensky wrote:
+> > Enable building Rust code on s390 by wiring the architecture into the
+[snip]
+> Why not just
+>
+>     mflags := -march=$(march-name-y)
+>
+> ?
+>
+> Best,
+> Gary
+Thanks Gary,
 
-> diff --git a/kernel/dma/direct.h b/kernel/dma/direct.h
-> index e05dc7649366..4e35264ab6f8 100644
-> --- a/kernel/dma/direct.h
-> +++ b/kernel/dma/direct.h
-> @@ -89,36 +89,32 @@ static inline dma_addr_t dma_direct_map_phys(struct device *dev,
->  	dma_addr_t dma_addr;
->  
->  	if (is_swiotlb_force_bounce(dev)) {
-> -		if (!(attrs & DMA_ATTR_CC_SHARED)) {
-> -			if (attrs & (DMA_ATTR_MMIO | DMA_ATTR_REQUIRE_COHERENT))
-> -				return DMA_MAPPING_ERROR;
-> +		if (attrs & (DMA_ATTR_MMIO | DMA_ATTR_REQUIRE_COHERENT))
-> +			return DMA_MAPPING_ERROR;
->  
-> -			return swiotlb_map(dev, phys, size, dir, attrs);
-> -		}
-> -	} else if (attrs & DMA_ATTR_CC_SHARED) {
-> -		return DMA_MAPPING_ERROR;
-> +		return swiotlb_map(dev, phys, size, dir, attrs);
->  	}
->  
-> -	if (attrs & DMA_ATTR_MMIO) {
-> -		dma_addr = phys;
-> -		if (unlikely(!dma_capable(dev, dma_addr, size, false, attrs)))
-> -			goto err_overflow;
-> -	} else if (attrs & DMA_ATTR_CC_SHARED) {
-> +	if (attrs & DMA_ATTR_CC_SHARED)
->  		dma_addr = phys_to_dma_unencrypted(dev, phys);
-> +	else
-> +		dma_addr = phys_to_dma_encrypted(dev, phys);
-> +
-> +	if (attrs & DMA_ATTR_MMIO) {
->  		if (unlikely(!dma_capable(dev, dma_addr, size, false, attrs)))
->  			goto err_overflow;
-> -	} else {
-> -		dma_addr = phys_to_dma(dev, phys);
-> -		if (unlikely(!dma_capable(dev, dma_addr, size, true, attrs)) ||
-> -		    dma_kmalloc_needs_bounce(dev, size, dir)) {
-> -			if (is_swiotlb_active(dev) &&
-> -			    !(attrs & DMA_ATTR_REQUIRE_COHERENT))
-> -				return swiotlb_map(dev, phys, size, dir, attrs);
-> +		goto dma_mapped;
-> +	}
->  
-> -			goto err_overflow;
-> -		}
-> +	if (unlikely(!dma_capable(dev, dma_addr, size, true, attrs)) ||
-> +	    dma_kmalloc_needs_bounce(dev, size, dir)) {
-> +		if (is_swiotlb_active(dev) &&
-> +		    !(attrs & DMA_ATTR_REQUIRE_COHERENT))
-> +			return swiotlb_map(dev, phys, size, dir, attrs);
-> +		goto err_overflow;
->  	}
->  
-> +dma_mapped:
->  	if (!dev_is_dma_coherent(dev) &&
->  	    !(attrs & (DMA_ATTR_SKIP_CPU_SYNC | DMA_ATTR_MMIO))) {
->  		arch_sync_dma_for_device(phys, size, dir);
-> -- 
-> 2.43.0
+noted and updated accordingly.
 
-I guess we need this change on top of the above
-
-modified   kernel/dma/direct.h
-@@ -88,6 +88,13 @@ static inline dma_addr_t dma_direct_map_phys(struct device *dev,
- {
- 	dma_addr_t dma_addr;
- 
-+	/*
-+	 * For a device requiring unencrypted DMA, MMIO memory is treated
-+	 * as shared by default.
-+	 */
-+	if (force_dma_unencrypted(dev) && (attrs & DMA_ATTR_MMIO))
-+		attrs |= DMA_ATTR_CC_SHARED;
-+
- 	if (is_swiotlb_force_bounce(dev)) {
- 		if (attrs & (DMA_ATTR_MMIO | DMA_ATTR_REQUIRE_COHERENT))
- 			return DMA_MAPPING_ERROR;
+Best regards,
+Jan
+>
+> >
+> > -aflags-y += $(mflags-y)
+> > -cflags-y += $(mflags-y)
+[snip]
 
