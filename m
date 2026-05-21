@@ -1,70 +1,71 @@
-Return-Path: <linux-s390+bounces-19949-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19947-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AF4CBNVDD2r/IQYAu9opvQ
-	(envelope-from <linux-s390+bounces-19949-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 21 May 2026 19:41:41 +0200
+	id kGyEEJBAD2qcIQYAu9opvQ
+	(envelope-from <linux-s390+bounces-19947-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 21 May 2026 19:27:44 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72A865AA6A4
-	for <lists+linux-s390@lfdr.de>; Thu, 21 May 2026 19:41:39 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4E185AA38F
+	for <lists+linux-s390@lfdr.de>; Thu, 21 May 2026 19:27:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E3159333C1A3
-	for <lists+linux-s390@lfdr.de>; Thu, 21 May 2026 17:03:52 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 394E531D37B5
+	for <lists+linux-s390@lfdr.de>; Thu, 21 May 2026 17:03:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5DC43DB301;
-	Thu, 21 May 2026 17:03:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 898FE3D75BA;
+	Thu, 21 May 2026 17:03:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SuAQwS0p"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TrHIrFWr"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D6C23D1AB7;
-	Thu, 21 May 2026 17:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176C33C8C74;
+	Thu, 21 May 2026 17:03:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779383013; cv=none; b=GnLhal39njnlfBiGy+AvKO8o6VzuLr+BuhxK2v++V6OOLH7osWjDtt1hb79ne0CiFeuedcT7sI3kBSUDY9qgj8rHIurNcp2fXxv7wziTqqueI13dUepht+QuIyih0nBXruit7BOWA1i4d1ieIN1Nzy/Tu9GAYeaF2mvInTXv4yA=
+	t=1779383012; cv=none; b=ClDtSU1TFm87qbmW/Br84BOSIxB9C8roSEm4wmXIR4H7ZFEXs9rBdXrBaCLesgovFzVViTn4QMU623vXI7PHI043Pv3ya5fTk46W108Dvbpp2aSd8LzQ28/pYwlBGEOwjabJbHYW6BWNfvUjekRGzZyocwUHB/oXIpPZzgUNnjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779383013; c=relaxed/simple;
-	bh=HY10VD7oWXvc7cyaoJ4AJuGF15+lES6ZTfCnvFIIMbk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BFDVJXnafBYfRrXUqgbOXolRKTgzlMwOqPDMdZKaxN6pzpUDagW5EpmiftQbcWF6943f+1Iuw1otrJ4SlejQbDZkZLFAQne64WVfANPdb+oGE1yOWbKqHFNYPJgNN5eQc/3sxGVe2JVN4fgGGPmOI0mL+/7sWD4ft9KtpSfTlQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SuAQwS0p; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1779383012; c=relaxed/simple;
+	bh=l1cUyA5FplPN/2uL8yAw+l5bre+hzljT7SVrnK/XrEg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=m3+mFa8KpKM5bc2KxbGJ/Rxn2owmGCemKEqs0G8xRkaTcIOmVRaQ8iJd5/VbTeX+sY5pSi10ZB/qpXJMDW51UK9ihaL77D3QDt6od9EZsG1Hcteor3MtwuDpCdKv6cynY1++X+sx5M2y4CU4VXGZtICQsyJyXV2HLV1ESnn71cU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TrHIrFWr; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64L7KLfS3727812;
-	Thu, 21 May 2026 17:03:12 GMT
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64LE8JAq2887670;
+	Thu, 21 May 2026 17:03:11 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=52hvEANRK8RdzKxsEREuLbPOfReZJg0uDDBkFbLYg
-	3k=; b=SuAQwS0pv2bvZpxmbCqJ9FmoKaGTSEwkC9aAcfNV4n/uDHkIeBW9XG0EV
-	qXoBxSwlTXY9eqXU50YTVITNN44KlshavgiDpEaL/mdl4UxSSBOBlxHfegsgD4tk
-	3R6nt/iKo0gVK4G25q4lv+sgNybljcVL/4w5e6q2gbf4kjiEAn1l+2s+Hz56kU7Z
-	n9WHhLJR8SLErSLN94qu78QzJpIWzbg0e5D3plAksyeto4mJiwEAuZ57bqsyeJRi
-	13RP6CoGMpd7N35yHVrAF7vXPtCV9pu3EGkFGUNhw+a19P+6wK/DyNmKQcZesSZC
-	yObrHLNlg4jajdO+cd7h+hK6IOOaA==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4e6h7586cs-1
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=2nwvA2SPNwIg7l9kJ
+	UtDl6L8v0ZoLWWwy2tUYAn++Ys=; b=TrHIrFWrH6mohcFj20G/RmvaZk6GdJb3t
+	GbDuTpjxThDkT46dLtiTblffVqghnz9K9daSh2TFUHkTTPhj7B83i8JIofqACSNX
+	HD/eW0U++xh/mbxIR6RhhVZ5X5MMdM+eAfAnyvIxH8Rt7Xk/94NfweDT9TeyAHGQ
+	5fwvuOzb3/SdSoS0vK7p9MSo/Pv/wKUVX0ZDNF/ahMbcsGtNH6adM6LZGeMPf/ci
+	ddRPbe+1eR8TTUUb6tCRXK27BfazV93CsKmmsCKQntyXHvc8J7b28joXQfe34OHl
+	VudNDtGXv2oL0970YIcKD4Htxy0gNeTZ0/YDyBLwzLpeVa/MZKyIA==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4e6hawf0p7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 21 May 2026 17:03:11 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64LGsBNL013529;
+	Thu, 21 May 2026 17:03:10 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64LGs9Ji014936;
 	Thu, 21 May 2026 17:03:09 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4e74dhw7dy-1
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4e72wqdh03-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 21 May 2026 17:03:09 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64LH359R44368348
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64LH36eK31588708
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Thu, 21 May 2026 17:03:06 GMT
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D1C8A20040;
-	Thu, 21 May 2026 17:03:05 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 19A9320040;
+	Thu, 21 May 2026 17:03:06 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9555B2004E;
+	by IMSVA (Postfix) with ESMTP id D62AA2005A;
 	Thu, 21 May 2026 17:03:05 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
 	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
@@ -78,10 +79,12 @@ Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com, boqun@kernel.org,
         a.hindborg@kernel.org, tmgross@umich.edu, dakr@kernel.org,
         rostedt@goodmis.org, ardb@kernel.org, linux-s390@vger.kernel.org,
         rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/4] s390: Enable Rust support and add required arch glue
-Date: Thu, 21 May 2026 18:56:18 +0200
-Message-ID: <20260521165622.279953-1-japo@linux.ibm.com>
+Subject: [PATCH v3 1/4] s390/bug: Provide ARCH_WARN_ASM for Rust WARN/BUG support
+Date: Thu, 21 May 2026 18:56:19 +0200
+Message-ID: <20260521165622.279953-2-japo@linux.ibm.com>
 X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260521165622.279953-1-japo@linux.ibm.com>
+References: <20260521165622.279953-1-japo@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -91,26 +94,26 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=ffCdDUQF c=1 sm=1 tr=0 ts=6a0f3acf cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTIxMDE2NyBTYWx0ZWRfX8afzmhpmHBgv
+ Pp3klJW9VrZeWd8F8lQJVDhzsfkGcEAAGe9BDMTk61WLmDYUZkBB8wRkDJG7W5ERRMLSmA4p9c/
+ JZNjIvGf0rZXOnqibsbHvco/bBR7Y8piplgFhlXfCeeZs53r/cxuSjTz10JjO2Rri1UKFF+SUen
+ NoJwpPU+zs09CsuoRUpclJdKjKaolWGLFkWXv7xnFB+dgM2rt7U+eklsZTCbkUBHkvYfH1VJKT+
+ P/tLr49PiH4G9FI8vONGG895ZxctxhiMGwX/ZVjv1MlRw4X52jucqRQciSBzybVaItfYY/acNl4
+ 7MLcirZIQu0PkDdQWSVrEvP29JpmF+PhdyiVAmEhXl1dqx56fsrqi23Jsr0/C474zdRO/sGGM6F
+ EObHQszvQV86O+M3X6/2U2/cKPY1IqAH0jEb9YnU60BRSAR+AfFbVvri4xR1pd8XU3T6EgzQkm3
+ +/SIqBA4+A8SIH/8WNw==
+X-Authority-Analysis: v=2.4 cv=Np/htcdJ c=1 sm=1 tr=0 ts=6a0f3acf cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
  a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=U7nrCbtTmkRpXpFmAIza:22 a=NEAV23lmAAAA:8 a=ynQKOEzQyDeFR-uBsnYA:9
-X-Proofpoint-ORIG-GUID: FcvH7iTmKM25oyrjW4HWmxY3jfSDcnk5
-X-Proofpoint-GUID: SUHkONwSPJ2WK3eMzTh8Jf32T3gK1kQ9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTIxMDE2NyBTYWx0ZWRfX+lee+y1lkyeO
- iDQgricShLtqW/RjxgSHydHyeJ5O31rJJYWqHsuyVn93Sw/VG3XORTu3vHKTnOc4TsGxJDMuX0b
- M4L/mJHqgdp8EJzqWnt9IJaq1GbvLtLBCbPIfumrZf+CITrlGKOnVelvdpzZNFupTwD8TKtkV7e
- 2PsmrZE8mcC7ZJPKOx7m1JHswr1kZheAt6s22UAYjTQa/bcmot0iXLSReHh24xLMNGgmwJks7Rc
- eylCNcJMk19DvCST00pwmBor3BlL7Ji+ZBqh+6Oty+X3TVe+aAzDE3Gy8xiCCnD6yPzd3ABJqE9
- 05PMvZF/lO5F63o+EXH7pAh0nZtFXO2EFRYiiflQD0PBk2YMxsOj+XK86NZqwOxDbUp5i+Wti5p
- S5DBKnRi21RZvQarv1zFX+jyESY22COZaemBLk4qjlI51hPFQz5TuIwizYIvKISfMhWS18cK0HX
- WkW65AnlwCcl8zbD8qQ==
+ a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8 a=F81QZrn2fL8uw8yBg3oA:9
+X-Proofpoint-ORIG-GUID: kSdSLFQiwppZM3PZhH1D-LPB3y54YZGZ
+X-Proofpoint-GUID: 1Tv2pCgM_v5CEnUV5jt9p-QkigHowDrp
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-05-21_03,2026-05-18_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 spamscore=0 phishscore=0 suspectscore=0 adultscore=0
- clxscore=1015 impostorscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0
+ bulkscore=0 spamscore=0 clxscore=1015 priorityscore=1501 impostorscore=0
+ lowpriorityscore=0 suspectscore=0 adultscore=0 phishscore=0 malwarescore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605210167
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -119,12 +122,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-19949-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-19947-lists,linux-s390=lfdr.de];
 	FREEMAIL_CC(0.00)[linux.ibm.com,kernel.org,garyguo.net,protonmail.com,umich.edu,goodmis.org,vger.kernel.org];
 	TO_DN_NONE(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -134,62 +137,61 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,linux.ibm.com:mid];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
 	DKIM_TRACE(0.00)[ibm.com:+];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCPT_COUNT_TWELVE(0.00)[22];
 	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 72A865AA6A4
+X-Rspamd-Queue-Id: B4E185AA38F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Rust support on s390 requires a small set of architecture-specific pieces
-before the generic Rust kernel infrastructure can be used.
+Rust WARN and BUG support relies on ARCH_WARN_ASM to emit __bug_table
+entries. On s390 the macro is missing, so Rust code cannot generate
+proper WARN/BUG metadata for the kernel's bug reporting infrastructure.
 
-The series wires up s390 as a Rust-capable 64-bit architecture, adds the
-missing assembly interfaces needed by Rust for WARN/BUG reporting and for
-static branches, and adjusts bindgen parameters to avoid repr layout
-conflicts caused by packed and aligned s390 structures.
+Define ARCH_WARN_ASM to produce the same assembly sequence and
+__bug_table entry format as the existing s390 BUG handling, including
+the monitor call. Define ARCH_WARN_REACHABLE as empty since s390 does
+not provide reachability analysis for warning paths.
 
-s390 currently requires a rustc due to -Zpacked-stack, and the
-minimum tool version gating is adjusted accordingly.
+Signed-off-by: Jan Polensky <japo@linux.ibm.com>
+---
+ arch/s390/include/asm/bug.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Link: https://github.com/Rust-for-Linux/linux/issues/2
-
-Tested against: rustc 1.96.0-beta.7 (6be5f81e1 2026-05-17)
-
-Changes since v2:
-- mflags: cleanup (thanks Gary)
-Changes since v1:
-- strip the -nightly suffix in min-tool-version.sh (thanks miguel and alice)
-- ARCH_JUMP_TABLE_ENTRY() moved up to align comments properly (thanks Gary)
-- removed MONCODE_BUG to prevent 0U in non-C context in assembler (noted by Sashiko - AI)
-- prevent environment pollution by explicit initialization mflag := (noted by Sashiko - AI)
-
-
-Jan Polensky (4):
-  s390/bug: Provide ARCH_WARN_ASM for Rust WARN/BUG support
-  s390/jump_label: Implement ARCH_STATIC_BRANCH_JUMP_ASM and
-    ARCH_STATIC_BRANCH_ASM macros
-  rust/bindgen_parameters: Mark s390 types as opaque to prevent repr
-    conflicts
-  s390: Enable Rust support
-
- Documentation/rust/arch-support.rst |  1 +
- arch/s390/Kconfig                   |  1 +
- arch/s390/Makefile                  | 28 ++++++++++++++----------
- arch/s390/include/asm/bug.h         | 12 +++++++++++
- arch/s390/include/asm/jump_label.h  | 33 +++++++++++++++++------------
- rust/Makefile                       |  1 +
- rust/bindgen_parameters             |  7 ++++++
- scripts/generate_rust_target.rs     |  2 ++
- scripts/min-tool-version.sh         |  6 +++++-
- 9 files changed, 65 insertions(+), 26 deletions(-)
-
-
-base-commit: 758c807bb943138f887d42d986b645e12446ba9c
---
+diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
+index 59017fd3d935..a72439370f62 100644
+--- a/arch/s390/include/asm/bug.h
++++ b/arch/s390/include/asm/bug.h
+@@ -4,6 +4,7 @@
+ 
+ #include <linux/compiler.h>
+ #include <linux/const.h>
++#include <linux/stringify.h>
+ 
+ #define	MONCODE_BUG	_AC(0, U)
+ #define	MONCODE_BUG_ARG _AC(1, U)
+@@ -121,6 +122,17 @@ do {									\
+ #define HAVE_ARCH_BUG_FORMAT
+ #define HAVE_ARCH_BUG_FORMAT_ARGS
+ 
++#define ARCH_WARN_ASM(file, line, flags, size)				\
++	".section .rodata.str,\"aMS\",@progbits,1\n"			\
++	"9:\n"								\
++	".asciz \"\"\n"		/* Empty string for compatibility */	\
++	".previous\n"							\
++	"0:\n"								\
++	__stringify(mc 0(%r0),0) "\n"				\
++	__BUG_ENTRY("9b", file, line, flags, size)
++
++#define ARCH_WARN_REACHABLE
++
+ #endif /* CONFIG_BUG && CONFIG_CC_HAS_ASM_IMMEDIATE_STRINGS */
+ #endif /* __ASSEMBLER__ */
+ 
+-- 
 2.51.0
 
 
