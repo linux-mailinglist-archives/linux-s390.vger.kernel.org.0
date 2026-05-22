@@ -1,189 +1,158 @@
-Return-Path: <linux-s390+bounces-19993-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-19994-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KPCdMD1hEGphWwYAu9opvQ
-	(envelope-from <linux-s390+bounces-19993-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 22 May 2026 15:59:25 +0200
+	id SGOdAlViEGphWwYAu9opvQ
+	(envelope-from <linux-s390+bounces-19994-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 22 May 2026 16:04:05 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4642F5B5B43
-	for <lists+linux-s390@lfdr.de>; Fri, 22 May 2026 15:59:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7015A5B5C85
+	for <lists+linux-s390@lfdr.de>; Fri, 22 May 2026 16:04:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 708693111BA4
-	for <lists+linux-s390@lfdr.de>; Fri, 22 May 2026 13:37:11 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id ADF5F30F2E12
+	for <lists+linux-s390@lfdr.de>; Fri, 22 May 2026 13:50:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A67B3F166E;
-	Fri, 22 May 2026 13:37:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B048407575;
+	Fri, 22 May 2026 13:48:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SMIHcPkS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fssRPY20"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D094A3F4113;
-	Fri, 22 May 2026 13:37:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7FF406290
+	for <linux-s390@vger.kernel.org>; Fri, 22 May 2026 13:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779457031; cv=none; b=u6dP8zDt8GZKFR2zHZEE5Tk/ofnK6LyCroyW3xJDbd2OE2+Xa32IwhDJz09zbRwpuUZaqCKif++TsP7IC2FGkjKatlCdcTOvaw4y42WrQApsv+sPncDbMChcCy59RA6UFt+izAQuJgpuyzUV4WaurdVxl5x5MP47cWCFw0Q/LcA=
+	t=1779457730; cv=none; b=PmhBKiFqemSOTqEWw5SMBon82MbrJ+2zaFNGSDDOoL6pGzNRAEFW3Z5P5FDuu0KfaDSOO9YRxTtBdvKlKXrgvBLZnewBw+w+Pe2NqxJ9QHyglUUDV9V6UiKE96KwlKPtZHPJ1Dwuczk9kyAVqwqWAAot4WmADgz4A3dXGEYBEjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779457031; c=relaxed/simple;
-	bh=8W+LGMUsWA131vxdXWC85Y5qagImInjQ1Y1ZTvT87jc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Eh4loVR9NuKiLn6CaCYLY8hAeYN2D4bimKwV7l7luf7+Ob/CSEe6zboaKjbap6ImihPnRRyiI6/yY4XBvBou1AIKHdCbAwWnHOaFhQHqe9ziP/uLv+5bvB3x1ZDvSFuadRUBd52eqtwzJDOvRVUOGxi8xw8w96OiN7P16TlCj+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SMIHcPkS; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64M7SUv8789447;
-	Fri, 22 May 2026 13:36:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=b1GMoi
-	L1yrpBf3BGw6zwVthrJjiACmQlrFFwbP63Fn8=; b=SMIHcPkSSIz8qmsF18v208
-	/sqLLiiEArni/FXr9B2QkMjiGDZiFX+MdG/qoXlQBVkFMpEBsu14+hHITO8X8i8E
-	+ONYeT5jGovmt0ou+Ifdz2eKlKeGQcqW9L5IivMShrQXHXNWSHKB2tmhjHDuNAwa
-	1XuRIJq2Z3WE8I+lA2EnQes3u8AArgzfbiyrltG6ZnpqlNc1KAf7OKlyTvLAHJnb
-	r+yeBrRm42tn+auDT6qUiJ7YRZHDR6cQ4DXkxZsrIy/LjL65AJyhtzzno2pNO9Lv
-	K68FVChXpKi+cpRaSiA84kv9K7bM6MDw/rfLCRWHpp3i6QE7KSJHWeF4wt1yqPZA
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4e6hb8tmmn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 May 2026 13:36:56 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64MDO4vM008210;
-	Fri, 22 May 2026 13:36:56 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4e739w96cm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 May 2026 13:36:55 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64MDapNd52625712
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 22 May 2026 13:36:51 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E994220043;
-	Fri, 22 May 2026 13:36:50 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 860D420040;
-	Fri, 22 May 2026 13:36:50 +0000 (GMT)
-Received: from [9.111.175.40] (unknown [9.111.175.40])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 22 May 2026 13:36:50 +0000 (GMT)
-Message-ID: <edd509f9-c64a-4802-bb5e-df06f638457e@linux.ibm.com>
-Date: Fri, 22 May 2026 15:36:50 +0200
+	s=arc-20240116; t=1779457730; c=relaxed/simple;
+	bh=XAdkVdHYlcySFUBOB9d60INI0VTqn7iPCNrUckiEfSA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Zf8PrtOJNEGhvFt2rldIHoanL0dEWYMMVYPFYAdyaflsO5ILbfNFIM6yTdqxtCzSUV6ie4gnBWrYKJFUGcHpBcM6/VVHlxKQDr0FnBMpnSypqJiKEpWnJbihtS5iCZtGbqLkuorVYf7GAKyo+nztcH4Uq8EIcCeC1X/Np4KqpGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fssRPY20; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C16EF1F00ADF
+	for <linux-s390@vger.kernel.org>; Fri, 22 May 2026 13:48:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779457727;
+	bh=XAdkVdHYlcySFUBOB9d60INI0VTqn7iPCNrUckiEfSA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=fssRPY20Dyxz/cYAZdo1qxjF95zNf6DPwfqO4+J6MWEGH93cmB3q0+MsnYtIf4mOu
+	 yb2F/LO4bgXDVVZtWJM+4ct2qMqAk527UXL9PHuTUlPYGw8oHZlNwVpv2sEzAnkcrW
+	 rYoPk72XF8cMrkAdvU+bjT79H8QBrkkrFnU3POv8SQ9y83JqXAiA2qGn+LwaCE7CbH
+	 mydY4KMHGknk/wbzPm/k4VXT2aMv/tt5hKvMmQYuGoY0PrpI9XAnuVQcyxvRoLuNWj
+	 8uaBe6X3EksWrohYip6eKCS7TiRDlXSyUEYD1+I0+oxJ/3PXuXltrCZPf7+nmrAZEo
+	 4IW9Ggc3VmhZA==
+Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-6314d2e31d6so2532869137.0
+        for <linux-s390@vger.kernel.org>; Fri, 22 May 2026 06:48:47 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9Bbpm+8P6LNXbhvXzjsZsm3qzPQ0DUQkhBYNhqUWrxqvvBzh8xKEvV6bQ98HKrDH0dQ9YCICepx/BU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw01tb53zH6RSn+RcTwS9PzrI9yXTvxi4x2Nxg/AEAt91W8nHvb
+	fv+rrba4h2C4WIlKdJUAXv1FjRtnT64MN/NhvJMJ0dIS52CBHbIwD5P68MYJjBunIK0jdX/f7+G
+	TOydWQPsU2nv7uQpkR0gD2hChdFxR5GM=
+X-Received: by 2002:a05:6102:3f8e:b0:607:97b7:c283 with SMTP id
+ ada2fe7eead31-67c7fff0701mr1602325137.14.1779457727053; Fri, 22 May 2026
+ 06:48:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] net/iucv: fix locking in .getsockopt
-To: Breno Leitao <leitao@debian.org>,
-        Thorsten Winkler <twinkler@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-        Ursula Braun <ursula.braun@de.ibm.com>,
-        Frank Blaschka <frank.blaschka@de.ibm.com>
-Cc: linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@meta.com,
-        Stanislav Fomichev <sdf.kernel@gmail.com>
-References: <20260521-af_iucv_fix2-v1-1-f16b1c510aa9@debian.org>
-Content-Language: en-US
-From: Alexandra Winter <wintera@linux.ibm.com>
-In-Reply-To: <20260521-af_iucv_fix2-v1-1-f16b1c510aa9@debian.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTIyMDEzNiBTYWx0ZWRfXwdjc7oIoHt07
- yZuuE7IPCuaYXs424DnLb7Lk2PBLwRUfbiL53/8Ck8axqHWaoFGsmXES+5JsQGbkcUtdHlPvwjU
- N5188G1ZrBseyzDV6oFLgNFTvTcptD6mauWOf4xJ4+E9aVXVdvkxSN8fQbDXwh1vzgnWvfFUxgC
- 5Y4dtHX79LephMP/zAmTkt4t48Akn8mQggaI4tYxXK/pKHVatfn7AkC6Q8fwB6WcdAGns8BMzwW
- wQR16SfPuIBJVfqLRUg6IQF3g13q/oEs0+3YkDXA58TrfsJkMCgAtZahkQ/MuVS0CWi3FnSVEac
- jjub8D95SuMBXJg/y8L9+0sgj3utvqr79ZKIYP4IGfDuNRvQzzczAopkwBVyVN+37aKe6RTMf7K
- bnZTMgzVwbg+57SddIJecWWA5IxC/ySvyQSrZp9376NqFX5pFVwPgQYxKo2y4Gasdnx+AUBbdg0
- OEMc556q6C5eIs26c5A==
-X-Proofpoint-GUID: WoJam2dSynZ3Db6YhFov_f44YprzAx86
-X-Proofpoint-ORIG-GUID: fIXVeU-yqX4WWdqaqP9MloM6Hz_F2HYe
-X-Authority-Analysis: v=2.4 cv=aYBRWxot c=1 sm=1 tr=0 ts=6a105bf9 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=pGLkceISAAAA:8
- a=xNf9USuDAAAA:8 a=VnNF1IyMAAAA:8 a=IQu2pwtsZk2u-v9NKpYA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-22_03,2026-05-18_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 adultscore=0 bulkscore=0 suspectscore=0 lowpriorityscore=0
- clxscore=1015 spamscore=0 phishscore=0 priorityscore=1501 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605220136
+References: <ag4kj84EcKqamdB-@casper.infradead.org> <20260522023305.98223-1-baohua@kernel.org>
+ <ahBVh4NM2uoyhPNm@casper.infradead.org> <CAGsJ_4zQuJx1reJxgV387Gh0AqWF0KdoFn9KahQ1BNLPRm57TQ@mail.gmail.com>
+In-Reply-To: <CAGsJ_4zQuJx1reJxgV387Gh0AqWF0KdoFn9KahQ1BNLPRm57TQ@mail.gmail.com>
+From: Barry Song <baohua@kernel.org>
+Date: Fri, 22 May 2026 21:48:35 +0800
+X-Gmail-Original-Message-ID: <CAGsJ_4zrm3sCp8Uz0Gh+sAwRcdtNF8rDLqX250sFVG3rZy9HNw@mail.gmail.com>
+X-Gm-Features: AVHnY4Kzckk2STAPsRlCTXxCXlI9-5Kzu1EhehIrviADTgZ0pSseIwikwC-HrOY
+Message-ID: <CAGsJ_4zrm3sCp8Uz0Gh+sAwRcdtNF8rDLqX250sFVG3rZy9HNw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
+ fault performance
+To: Matthew Wilcox <willy@infradead.org>
+Cc: akpm@linux-foundation.org, bhe@redhat.com, chentao@kylinos.cn, 
+	chrisl@kernel.org, david@kernel.org, jack@suse.cz, kasong@tencent.com, 
+	kunwu.chan@gmail.com, liam@infradead.org, lianux.mm@gmail.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	liyangouwen1@oppo.com, ljs@kernel.org, loongarch@lists.linux.dev, 
+	mhocko@suse.com, nphamcs@gmail.com, nzzhao@126.com, pfalcato@suse.de, 
+	rppt@kernel.org, shikemeng@huaweicloud.com, surenb@google.com, 
+	vbabka@kernel.org, wanglian@kylinos.cn, youngjun.park@lge.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	FREEMAIL_CC(0.00)[vger.kernel.org,meta.com,gmail.com];
-	TAGGED_FROM(0.00)[bounces-19993-lists,linux-s390=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[linux-foundation.org,redhat.com,kylinos.cn,kernel.org,suse.cz,tencent.com,gmail.com,infradead.org,lists.infradead.org,vger.kernel.org,kvack.org,lists.ozlabs.org,oppo.com,lists.linux.dev,suse.com,126.com,suse.de,huaweicloud.com,google.com,lge.com];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wintera@linux.ibm.com,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-s390];
-	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-19994-lists,linux-s390=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 4642F5B5B43
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[baohua@kernel.org,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-s390];
+	RCPT_COUNT_TWELVE(0.00)[30];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 7015A5B5C85
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+On Fri, May 22, 2026 at 9:36=E2=80=AFPM Barry Song <baohua@kernel.org> wrot=
+e:
+>
+> On Fri, May 22, 2026 at 9:09=E2=80=AFPM Matthew Wilcox <willy@infradead.o=
+rg> wrote:
+> >
+> > On Fri, May 22, 2026 at 10:33:05AM +0800, Barry Song (Xiaomi) wrote:
+> > > need to touch `filemap.c` at all (probably because you are already
+> > > maintaining `filemap.c` perfectly):
+> >
+> > I'm going to give you one chance to apologise for that.
+>
+> Apologies if my wording caused any misunderstanding.
+> That was not my intention at all.
+>
+> What I meant is that filemap.c already has a very
+> solid design.
+>
+> For memory.c, I had to touch several places for the
+> blacklist; otherwise, the kernel would hang.
+>
+> But for filemap.c, I basically didn't need to touch
+> anything, and preliminary testing shows no issues after
+> moving it from the whitelist to the blacklist. This is
 
+Sorry, I feel I may be causing some misunderstanding
+again.
 
-On 21.05.26 16:11, Breno Leitao wrote:
-> Mirror iucv_sock_setsockopt() and wrap the whole switch in
-> lock_sock()/release_sock(). The pre-existing SO_MSGLIMIT-only lock
-> becomes redundant and is removed.
-> 
-> Any AF_IUCV HIPER user can potentially crash the kernel by racing
-> recvmsg() with getsockopt(SO_MSGSIZE): the SO_MSGSIZE arm dereferences
-> iucv->hs_dev->mtu after iucv_sock_close() (called from the racing
-> recvmsg()) has set hs_dev to NULL, producing a NULL pointer dereference
-> oops.
-> 
-> Suggested-by: Stanislav Fomichev <sdf.kernel@gmail.com>
-> Fixes: 51363b8751a6 ("af_iucv: allow retrieval of maximum message size")
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
-> Note1: Not using goto/label to simplify the merge conflict that might
-> happen with the migration of af_iucv to getsockopt_iter
-> 
-> Note2: This was only compile-tested.
-> ---
+By "whitelist", I mean I used to allow certain cases
+to use per-vma retry.
 
-Thank you very much Breno.
+By "blacklist", I mean I am now moving to disallow
+certain cases from using per-vma retry.
 
-I ran some regression tests which call IUCV getsockopt(SO_MSGSIZE) while
-sending and receiving data via IUCV. I have not created a specific
-reproducer testcase of the described race, which would require enforcing
-a problem in IUCV over HS congestion management which triggers an error
-path in recvmsg().
+Right now, I have to add several cases in memory.c
+to the blacklist; otherwise, the kernel would hang.
 
-Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
-Tested-by: Alexandra Winter <wintera@linux.ibm.com>
+But it seems that everything in filemap.c is fine so
+far based on testing.
 
+I'm not sure if I've explained things clearly. Please
+let me know if anything is still unclear or insufficient.
 
