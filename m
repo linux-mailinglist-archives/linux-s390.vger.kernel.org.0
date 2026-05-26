@@ -1,304 +1,276 @@
-Return-Path: <linux-s390+bounces-20040-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20042-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2GhrDQsiFWquSwcAu9opvQ
-	(envelope-from <linux-s390+bounces-20040-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2026 06:31:07 +0200
+	id kPBnJpQ2FWqwTgcAu9opvQ
+	(envelope-from <linux-s390+bounces-20042-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2026 07:58:44 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 212675D0A59
-	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2026 06:31:06 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 015BA5D1028
+	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2026 07:58:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id CDA4D3003820
-	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2026 04:31:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 775D53026175
+	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2026 05:57:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 082DE3B9DA0;
-	Tue, 26 May 2026 04:31:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75F323BFE33;
+	Tue, 26 May 2026 05:57:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="sy0oB93k"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nNXCPHG3"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazolkn19013076.outbound.protection.outlook.com [52.103.7.76])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5AB3B637E;
-	Tue, 26 May 2026 04:30:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.7.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779769860; cv=fail; b=sxEf21fdPTLZWmZjYOk1r2kzNCxSEkvZEB2lBFqiMibGm9fiqNSvem0SYuXQoWBJ8C6r2Z7BG8kYPwHpzH/KZhrWPZIwXcVRPRuhSYueEF3ISErDRgJcQtPet3Wg5bxGrRr1gdS2UuALV/a/rYLIB3ARkrLMl8ltC50C84LX9Rg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779769860; c=relaxed/simple;
-	bh=WB7Z7CwABDWMFUIBuPKLN0ME+jH9JTruXe6+BU+i+8s=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=DcHvgms0CBHnFsqQrZB8iK7Z3c+kSayqCd64YifqgC9ebvjEoI9QQW1/q64NHvcWgCdyopGp6/3KHN9c7pNYAq8vDONl4h8pZs1kwIdwFp1vFlivCYb1u9huKdkW2Ck7bAGHpnTz9FC3yEnJCkTHULruhYZyNfb6REKIHXrvP6I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=sy0oB93k; arc=fail smtp.client-ip=52.103.7.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LAkEJgncpFvDou3PKEMZf5dOjiUdSQh3JC6vUj8EhxqW7lTmSHLGA8gJIljlyKGiAE7UYieJYcLjdXG1hVUsl4cA2sKT0YdVruMKndJo59/Q/M768tBGl3Hvbhx5bX4Qh5AgCPQunSVB+sr6fRQO3F75C5hONVBRAsFdd3+F1Am6WpW04N0kRZRB6uzTkNgmv91rCI9F4A5QPIw9Yo7OdXZZVyUkCT1Cs19YzfmSYwlDYIXPueAqCqE0H0aWYWRan2ZWOto3V1XIYez1nqh9GC/bZJXZYY58gSDRdetfj92iUeAcmr/c1evrh0JmB/ipsHUta6HQnsm8hqk2cIVf8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QB5n4HIcBR1Ydw8PIc+kYAsDnU4G964CODu4WBoU95A=;
- b=lVL86d2vW9vUQ+fiEgdt2yIysiMctLDEYxaqcWFyFdOI5LyxCEtPCaYg1Hsd0Ur5ExLbKY5p8OQodZJCdNPOtuIRKyTCEZUK+aap6WrApgiAcQBsfzJAwRXrHYhd1ilpk4MJLPTVq5ZSK5+5HVHtP/CspmOT+h/OyLcfT3cvb7A8KB/fbevd2I4OiS7OR0sDYzu51KKA0pSYDlMwwkhtr/LoIuZ3Nr2g5HW/rvHkaiG79XVkDp8hjM62SSF8HDtX1caz358W+jPVFoSthQAzGfR82KzNj3qnNmYmrc2OuRGC4tT241J5QQc7XXvQjdsZaFv2VIM7l80qK4Mfke33DQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QB5n4HIcBR1Ydw8PIc+kYAsDnU4G964CODu4WBoU95A=;
- b=sy0oB93kWmfbT4Dzqkp+vW9s2lQtyTwRVK/qz4GVgVn0WbzqZfbN+a5uozCs57LyYBeEppLvIVVkTym/qm+pnO5PI9GCl8pMDz2gC5BUZ1gPdZsQKlJBqCv6xEYfU0ft7TvktG1ueOy4kAeoff5fsGhBkXk/VLV/FPw9PYgLjPkpop5yZyvnjwnvW5G7zq3CxvD/SEH5U80b8DqgcgsE/ze5TsUinUPjgrOv/wIILuzxjOnzuVUL5foEKhRnkd+1yoeUroNVOmJnPCD5Sa1O5eDgu5Y5VIQjkUy/P4H3ZiLEZoIJLoK9s0/YPc4X8QmXna0AUExrFrLUymPJhZfJtg==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by DSVPR02MB11591.namprd02.prod.outlook.com (2603:10b6:8:3ab::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.19; Tue, 26 May
- 2026 04:30:54 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6%3]) with mapi id 15.21.0048.019; Tue, 26 May 2026
- 04:30:53 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-coco@lists.linux.dev"
-	<linux-coco@lists.linux.dev>
-CC: Robin Murphy <robin.murphy@arm.com>, Marek Szyprowski
-	<m.szyprowski@samsung.com>, Will Deacon <will@kernel.org>, Marc Zyngier
-	<maz@kernel.org>, Steven Price <steven.price@arm.com>, Suzuki K Poulose
-	<Suzuki.Poulose@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Jiri
- Pirko <jiri@resnulli.us>, Jason Gunthorpe <jgg@ziepe.ca>, Mostafa Saleh
-	<smostafa@google.com>, Petr Tesarik <ptesarik@suse.com>, Alexey Kardashevskiy
-	<aik@amd.com>, Dan Williams <dan.j.williams@intel.com>, Xu Yilun
-	<yilun.xu@linux.intel.com>, "linuxppc-dev@lists.ozlabs.org"
-	<linuxppc-dev@lists.ozlabs.org>, "linux-s390@vger.kernel.org"
-	<linux-s390@vger.kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Alexander Gordeev
-	<agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
-	<svens@linux.ibm.com>, "x86@kernel.org" <x86@kernel.org>
-Subject: RE: [PATCH v5 00/20] dma-mapping: Use DMA_ATTR_CC_SHARED through
- direct, pool and swiotlb paths
-Thread-Topic: [PATCH v5 00/20] dma-mapping: Use DMA_ATTR_CC_SHARED through
- direct, pool and swiotlb paths
-Thread-Index: AQHp6tfu5DGfxW+HBL9src0vNhss0bYFtf7w
-Date: Tue, 26 May 2026 04:30:53 +0000
-Message-ID:
- <SN6PR02MB415710407D87B1A36974D765D40B2@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20260522042815.370873-1-aneesh.kumar@kernel.org>
-In-Reply-To: <20260522042815.370873-1-aneesh.kumar@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|DSVPR02MB11591:EE_
-x-ms-office365-filtering-correlation-id: 06e8a270-a8cc-45eb-bb49-08debadf92cf
-x-microsoft-antispam:
- BCL:0;ARA:14566002|12121999013|13091999003|19110799012|31061999003|15080799012|37011999003|41001999006|8062599012|8060799015|51005399006|19101099003|3412199025|440099028|102099032|12091999003|40105399003;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?OP13b3uYRKwk33PW49bUy1FqFI+LMg4cV6DX4yUfXGx4EVO/wHQh9A2vLSBL?=
- =?us-ascii?Q?UoMD9VWVsIbLeYZzMLT4J/3Yod9zEJsltfswFWphGnGRnGn47lSARUVDkpzc?=
- =?us-ascii?Q?U2Y8oN3dR/OODJUrAegm0DfJV0zHrX3pff1U86WiTribAKMHF9PVvWZKaDNM?=
- =?us-ascii?Q?2d1rxjBZnf4ptgotByygw0Tffb/2F/2fMUunve9pLs8YtItxGo/uUswH9eby?=
- =?us-ascii?Q?P8gMDPLqY8GXphDKhEzNFHjZfNx7sQ++UPH3O4X5QPtpExWtb9SzD8q/bJsm?=
- =?us-ascii?Q?6Ea6dnQ8JZxrKD9cZ0YHOPe365J8ClMhEUn3VcYgZL1vIaLdK5pp1KbcWQTp?=
- =?us-ascii?Q?pEtD7lg2BrY4gnPE1gU4uAe9uHuEirryt6Z4R3HCHrkm6pXzSJaWtwGNJYad?=
- =?us-ascii?Q?SBJdcJbxjt8s1IkbTc1U82oYM3ZtpWXKZGD/2/QDIR/G3AZ9q+n4dLTFP/cY?=
- =?us-ascii?Q?N4ob6pNN03eI3SrthfIUNDjFMS4cDo0uRTbC6DS4APJSlvwJ/6NufSuuLNwF?=
- =?us-ascii?Q?ljPcM1eu47RQL+9jfqmU7EXao6Wib79nkS46hiGb2D2HmKguDrckEYDYVMfp?=
- =?us-ascii?Q?DUXvvAfeyhOUzd7lqg3f2sjHd4SNYdq6AgNKkuLACcc6KhpLKnVz8hsxvd2z?=
- =?us-ascii?Q?i2dtDwDSvAMikMC8Tk0wtCcqYtddjiA0JvFI4F5NEYXutbJcN2+3bCNc8fuY?=
- =?us-ascii?Q?yXfPXudoS+oUEkcqinSUWA8nOmIXRYCSRLJ2+8QYb8+uShfrRDkie0eYRqLH?=
- =?us-ascii?Q?UXjdbVZlH2PLBR7ZQvxQn35Pu86yb4DXFPNgiCnL03ZGMwhZIQ1e2yPBc7wC?=
- =?us-ascii?Q?lBX746ALkrrl9Y3mFyDRlv8nvxfkCcXsF4OeybDigip15xsQgWlTc16xRchd?=
- =?us-ascii?Q?pzPBoZzMJSLKEMHr8FLNWmYqqtV5/m90LAFGKxtGn6ATocdPUHZFB58dDL1g?=
- =?us-ascii?Q?H3/OTk+87IL5JwFmNgWsu3gSGGAlKQKu2IQ/ZKFIghOms15Qmcf9Sa5x4/dY?=
- =?us-ascii?Q?F8fW09WOXv+3tWvilBKwhtotwKHXHtrKsA04Q9/vD0nPcqjI/n7jur7Ssyvw?=
- =?us-ascii?Q?aTRAB3vJvcp/ftZHwE5eaTkanROzxDlBR6pXT1wCiZXbTl120qQ=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?vnx4KQpFC/JdGl13E8oJSg7/l5CW8OxQL3xRC77MhyEARiqN4Ry1XyZgkzuL?=
- =?us-ascii?Q?eZFp5uVerOH9AAIYOhvF05MJEPR/vn0FC9biKrXJwgD4DICMiR8U1LjnEnpU?=
- =?us-ascii?Q?DtcCGy4T/uVZLkfGnrCsLkI6+JNvtFA+dIRqayULktnwCW7P/vs54g3aRR9O?=
- =?us-ascii?Q?oX8NTnXzJNvVJivAnqbj8C7Nj0eMpOSR/mRLxfrUClxv9XuVVd51sD0ZhfN3?=
- =?us-ascii?Q?N0qhFA/BHfwa8XPl96LKOfsPp7FRjOdS41qdXvw4C4Q250AdjlZrY1d91Hq2?=
- =?us-ascii?Q?PHKtuXNRWg/HZ5+eP5Ifoq48nJbkCC6CS73EQCYvsnRKC3SFEbEu0RgoFpco?=
- =?us-ascii?Q?YSfmKFa6Lpdd3YT+hyWomIqrlZCQv8DwC3kR8HrUutVKvoHQlgsJvEVsKLG5?=
- =?us-ascii?Q?KL3FPGlul0/vQ/WDkWE+TPfq9o7vdv3EZMjxna9ymW7qkPkb04dY7L5qMIZb?=
- =?us-ascii?Q?4uR/OU6gRtXp4DK2hK14LAm1FDghkYJMC0U8n8rm3qAmFqm/8VX7AwG3fius?=
- =?us-ascii?Q?qlZdwkok6wUhlBxJ9YYbPuOYucBzRk/fl+lUuxSD8Y1QjKl9m/pE4QnH7b4N?=
- =?us-ascii?Q?1f9pWXLc1+QoKDvjzwuwvWeC/yGQt6EUxF6U2Y2catGKvi13b3m01U1SKwiJ?=
- =?us-ascii?Q?wtQKi4ywX7rctjUzlizr8WKQiLfYzY1ltsSTjAlncpYDCFptn6oQilBTb9HC?=
- =?us-ascii?Q?ftveVBPfpvBN2XG4+c5M1W9TueR67wf0+pi1TkOU3RIUh2jvAAScRKb7yXRr?=
- =?us-ascii?Q?ZZ4A1NIpo80Zujcn97Rts26fP9iarCkh4RVBNpa8B41iU1qjnyhn+Ko+uA6/?=
- =?us-ascii?Q?Z2l0tLoOC0WHZ90D1rwoNk7lXScdSggKqO/s+wQBMZ6hVkFMvjRaaqchCNTa?=
- =?us-ascii?Q?sy1fNzeVK0H8za+VlEhk7c+fzXdrzi+uFhT83DrILH4O9ELpHZMSgcfhg2rR?=
- =?us-ascii?Q?2zrhrV9Wby3SDkNjdtrKMSxuKQN8muQ3qp+nPLr41alS3GAFWv9B/fNoQsy4?=
- =?us-ascii?Q?NYRvNTHQtiA9QJl3yPH29rUVUynd3D7IKX1snpFvX3txt2eUfJSKC3zWnugp?=
- =?us-ascii?Q?VN0+luJ/pUpfgpwS7QT4QQG+Ffr+sEL78WrmlHAELuTwGjKlTkHsXzEmLcJZ?=
- =?us-ascii?Q?aFIER0jpAw4qyuAVy0XjBWAis0FJzzStF/kJrp3VwmK+RLUXaqZbqdF+bazZ?=
- =?us-ascii?Q?2XTvZhvVFEbH7rRkFLscj6ordiGPYlGsunEvO2zTW7SUFHi48W01rya/MXDd?=
- =?us-ascii?Q?VpTqiagYv6jXW/iKDb9Ek9Jwb8JA5egJKSplpeCkXlpL8R6bUeY06Nw/D2pt?=
- =?us-ascii?Q?p5hugC3LVcgppmdjQF9jy5mWzKkqAzEEcxft9oegKqocv4tJTneYUgfIXyxt?=
- =?us-ascii?Q?3RyUQ6k=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB18D3BED5A;
+	Tue, 26 May 2026 05:57:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779775030; cv=none; b=hCx8NPNp0vOAqB1RtTnkVhNWXS7C5z/2G3hnA6CtUbndPcc26LEpkxtbJzM69MSLEEkkqi2uSxqoXjaBOh2kcCsA9W233D/DZoMarl4jTQaZqAD29N5wRBQg1XoH+CiEBCqdpDrQGHgsJ+DXZV1y73oHiPupiteyj1ii0sDs4po=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779775030; c=relaxed/simple;
+	bh=JknMsY05G2+QP7spNPENqUOQkZmfZQHrpmK1GlOoFQc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WZqFTnBLsgX1z7avyPrVMCnJdic7fBY6dfCWnb9SPALb5wcTecZiqSTYH9OmsX+MEnmXXNLac3r9OBWalyNROF3QTTcPGzLIJp88SPMr7yzLGDqeUS8XpJ8R7SPtFxjr+ro7L7e+Mcpm34HM90MA7yZA1WZnBbiGd/e6C+CrcdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nNXCPHG3; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64Q520Gb752061;
+	Tue, 26 May 2026 05:57:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=2KLtIn2nzY0hwl6skKsWolQQ7fUfdNyvgcG/AMyl6
+	CU=; b=nNXCPHG3AAxI/Qq7HLOruFzZIdnG2I6t80DM1RLwU7b1X6cCpwIx93miS
+	gUsoeagb7op+2LTJVRvg/7l1mc6jK4QfkuyF/Mnv74mXq75bceoN2TwxYQU9qBWE
+	dTnjZfqpX1dTfQ7F7NFztgNUNrHcQT2RztzhEE9iPAacwyjSLtyZFEmqMwi1C8tx
+	RcWmulYTWnb26vnxqLtDhGhVl0Sl6aN4sLILTk8+OIetWy/qg6G4puFWtoAO/X2g
+	k8mM1cMVtM0iIwf6QDPsLF3JMt1d3bWapOV4jHXOI6W2gf9peLRejcs/tDa7HuqH
+	CUQjvQQfBht7xOdWKvAxpP0OGc+kg==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4eb4pd9pq3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 May 2026 05:57:07 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64Q5sAcJ022530;
+	Tue, 26 May 2026 05:57:06 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4ebrsg7sa0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 May 2026 05:57:06 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64Q5v3qo52167014
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 26 May 2026 05:57:03 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 32C6E20040;
+	Tue, 26 May 2026 05:57:03 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1415C20043;
+	Tue, 26 May 2026 05:57:03 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 26 May 2026 05:57:03 +0000 (GMT)
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Juergen Christ <jchrist@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [PATCH v5 0/7] s390: Improve this_cpu operations
+Date: Tue, 26 May 2026 07:56:55 +0200
+Message-ID: <20260526055702.1429061-1-hca@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 06e8a270-a8cc-45eb-bb49-08debadf92cf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 May 2026 04:30:53.6141
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DSVPR02MB11591
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=OdqoyBTY c=1 sm=1 tr=0 ts=6a153633 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=RzCfie-kr_QcCd8fBx8p:22 a=c92rfblmAAAA:8 a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8
+ a=vzhER2c_AAAA:8 a=WsHKUha7AAAA:8 a=IJ8qDfw2XgzfjrnLdLcA:9
+ a=GvGzcOZaWPEFPQC_NcjD:22 a=0YTRHmU2iG2pZC6F1fw2:22 a=H4LAKuo8djmI0KOkngUh:22
+X-Proofpoint-GUID: 3IL87sFX3D_wcjzHcRJtp4z3LCAJ5KAE
+X-Proofpoint-ORIG-GUID: 3IL87sFX3D_wcjzHcRJtp4z3LCAJ5KAE
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI2MDA0NiBTYWx0ZWRfXzGhGihIS54PM
+ c6QNmFzxLrvjCgpvRqiBaaFpHHcE8jlFlp6uMfLzJuxxD2ZIZ61RJKGmpX82/UX/BIe8WV7BHe1
+ dBZg8UPBGusvPb4d9X+o2dLECx7eXcjaPc3o6WqQ4gzG+DE8KFD7okgd/i/tL+AOY5U3a+SsuiK
+ dXY//55DW+8VvenjKtcI7KSa4Bn3KdGyop0vySWy7mGBamC8kKMWS9Vvx7qITjcQSWZ1wbOZI1E
+ RJ8N4AYiTvOAi2KssEVPSol+CTUudzvgzV2NLT+3L8jiCKXT5rmb+TIzjjuwbze/dEX5sPYvf5k
+ ofeFgZxAzTUMdjMMVkAtnu4dx/eE9iX06L6OSq4bxzw7TKwctKaxXAq0GPrMMn7d2xc8nOTzsi0
+ BOc+XFsl74OJlg9iNUTQSOIa0QeXlZH0qkQJCJqLSbg8BFhZXAQY/qW/Om/pZvXOBLCMnpsrBfM
+ YPch5G62T4Cb45SXOmg==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-26_01,2026-05-18_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 impostorscore=0 clxscore=1015 malwarescore=0
+ lowpriorityscore=0 bulkscore=0 suspectscore=0 adultscore=0 spamscore=0
+ phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2605130000
+ definitions=main-2605260046
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20040-lists,linux-s390=lfdr.de];
-	FREEMAIL_CC(0.00)[arm.com,samsung.com,kernel.org,resnulli.us,ziepe.ca,google.com,suse.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,vger.kernel.org,linux.ibm.com,ellerman.id.au,gmail.com];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20042-lists,linux-s390=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FREEMAIL_FROM(0.00)[outlook.com];
-	RCPT_COUNT_TWELVE(0.00)[32];
-	DKIM_TRACE(0.00)[outlook.com:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mhklinux@outlook.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hca@linux.ibm.com,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,outlook.com:email,outlook.com:dkim,SN6PR02MB4157.namprd02.prod.outlook.com:mid]
-X-Rspamd-Queue-Id: 212675D0A59
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[11]
+X-Rspamd-Queue-Id: 015BA5D1028
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org> Sent: Thursday, May =
-21, 2026 9:28 PM
->=20
-> This series propagates DMA_ATTR_CC_SHARED through the dma-direct,
-> dma-pool, and swiotlb paths so that encrypted and decrypted DMA buffers
-> are handled consistently.
->=20
-> Today, the direct DMA path mostly relies on force_dma_unencrypted() for
-> shared/decrypted buffer handling. This series consolidates the
-> force_dma_unencrypted() checks in the top-level functions and ensures
-> that the remaining DMA interfaces use DMA attributes to make the correct
-> decisions.
->=20
-> The series:
-> - moves swiotlb-backed allocations out of __dma_direct_alloc_pages(),
-> - propagates DMA_ATTR_CC_SHARED through the dma-direct alloc/free
->   paths
-> - teaches the atomic DMA pools to track encrypted versus decrypted
->   state
-> - tracks swiotlb pool encryption state and enforces strict pool
->   selection
-> - centralizes encrypted/decrypted pgprot handling in dma_pgprot() using
->   DMA attributes
-> - passes DMA attributes down to dma_capable() so capability checks can
->   validate whether the selected DMA address encoding matches
->   DMA_ATTR_CC_SHARED
-> - makes dma_direct_map_phys() choose the DMA address encoding from
->   DMA_ATTR_CC_SHARED and fall back to swiotlb when a shared DMA request
->   cannot use the direct mapping, which lets arm64 and x86 CCA guests stop
->   relying on SWIOTLB_FORCE for DMA mappings
-> - use the selected swiotlb pool state to derive the returned DMA
->   address.
+v5:
 
-[snip]
+- Add missing user_mode() check to percpu_exit() [Sashiko [6]]
 
->=20
->=20
-> Aneesh Kumar K.V (Arm) (20):
->   [DO NOT MERGE] arm64/coco: Add pKVM as a CC platform
->   [DO NOT MERGE] s390: Expose protected virtualization through
->     cc_platform_has()
->   dma-direct: swiotlb: handle swiotlb alloc/free outside
->     __dma_direct_alloc_pages
->   dma-direct: use DMA_ATTR_CC_SHARED in alloc/free paths
->   dma-pool: track decrypted atomic pools and select them via attrs
->   dma: swiotlb: pass mapping attributes by reference
->   dma: swiotlb: track pool encryption state and honor DMA_ATTR_CC_SHARED
->   dma-mapping: make dma_pgprot() honor DMA_ATTR_CC_SHARED
->   dma-direct: pass attrs to dma_capable() for DMA_ATTR_CC_SHARED checks
->   dma-direct: make dma_direct_map_phys() honor DMA_ATTR_CC_SHARED
->   dma-direct: set decrypted flag for remapped DMA allocations
->   dma-direct: select DMA address encoding from DMA_ATTR_CC_SHARED
->   dma-pool: fix page leak in atomic_pool_expand() cleanup
->   dma-direct: rename ret to cpu_addr in alloc helpers
->   dma-direct: return struct page from dma_direct_alloc_from_pool()
->   iommu/dma: Check atomic pool allocation result directly
->   dma: swiotlb: free dynamic pools from process context
->   dma: swiotlb: handle set_memory_decrypted() failures
->   dma: free atomic pool pages by physical address
->   swiotlb: Preserve allocation virtual address for dynamic pools
->=20
->  arch/arm64/include/asm/hypervisor.h           |   6 +
->  arch/arm64/include/asm/mem_encrypt.h          |   3 +-
->  arch/arm64/kernel/rsi.c                       |  12 -
->  arch/arm64/mm/init.c                          |  17 +-
->  arch/powerpc/platforms/pseries/svm.c          |   2 +-
->  arch/s390/Kconfig                             |   1 +
->  arch/s390/mm/init.c                           |  16 +-
->  arch/x86/kernel/amd_gart_64.c                 |  30 +-
->  arch/x86/kernel/pci-dma.c                     |   4 +-
->  drivers/iommu/dma-iommu.c                     |  15 +-
->  drivers/virt/coco/pkvm-guest/arm-pkvm-guest.c |   5 +
->  drivers/xen/swiotlb-xen.c                     |   8 +-
->  include/linux/dma-direct.h                    |  20 +-
->  include/linux/dma-map-ops.h                   |   3 +-
->  include/linux/swiotlb.h                       |  20 +-
->  kernel/dma/direct.c                           | 275 +++++++++++++-----
->  kernel/dma/direct.h                           |  47 +--
->  kernel/dma/mapping.c                          |  16 +-
->  kernel/dma/pool.c                             | 221 ++++++++++----
->  kernel/dma/swiotlb.c                          | 270 +++++++++++++----
->  20 files changed, 717 insertions(+), 274 deletions(-)
->=20
+- Use zero extending instructions for arch_this_cpu_read() [Sashiko [6]]
 
-I tested the series in a linux-next20260518 kernel, running in an
-Azure VM on the Hyper-V hypervisor. The physical processor is Intel
-XEON(R) PLATINUM 8573C with TDX memory encryption in use, so
-this is a Linux CoCo VM. The VM has the usual VMBus synthetic disk
-and network devices provided by Hyper-V, plus two PCI NVMe devices
-that are directly assigned to the VM. I did basic smoke tests in the
-VM, including reading and writing the NVMe devices. The swiotlb is
-used as expected for DMA transfers to/from the synthetic and NVMe
-devices. The NVMe driver does dma_alloc_coherent() to allocate
-memory for control structures that must be decrypted. I did "unbind"
-on the NVMe devices, and then rebound them so the dma allocations
-would be freed and then reallocated. All looks good.
+- Keep 1- and 2-byte implementations since
+  ARCH_HAS_NMI_SAFE_THIS_CPU_OPS relies on them  [Sashiko [6]]
 
-I'd like to try the same tests in a CoCo VM based on AMD SEV-SNP,
-but I need to get quota for that VM size in Azure, and I don't know
-how soon that can happen.
+[6] https://sashiko.dev/#/patchset/20260522141257.303617-1-hca%40linux.ibm.com
 
-So as described above,
+v4:
 
-Tested-by: Michael Kelley <mhklinux@outlook.com>
+- Drop alternatives approach and extract percpu base register number for
+  mviy at compile time [David Laight]
+
+- Fix logic for percpu code section detection, as well as
+  interruption/exception/nmi path [Sashiko [5]]
+
+[5] https://sashiko.dev/#/patchset/20260520092243.264847-1-hca%40linux.ibm.com
+
+v3:
+
+- Fix various typos [Juergen Christ]
+
+- Add missing kprobe detection / handling [Sashiko [3]]
+  [FWIW, this made me also aware of that the current general s390 kprobes
+   code seems to be racy against concurrent removal of a kprobe while a
+   probe hit on a different CPU. But that is a different story.]
+
+- Fix various minor findings [Sashiko [3]]
+
+- All of this might be dropped / exchanged in future in favor of the percpu
+  page table approach proposed by Yang Shi [4].
+
+[3] https://sashiko.dev/#/patchset/20260319120503.4046659-1-hca@linux.ibm.com
+[4] https://lore.kernel.org/all/20260429170758.3018959-1-yang@os.amperecomputing.com/
+
+v2:
+
+- Add proper PERCPU_PTR cast to most patches to avoid tons of sparse
+  warnings
+
+- Add missing __packed attribute to insn structure [Sashiko [2]]
+
+- Fix inverted if condition [Sashiko [2]]
+
+- Add missing user_mode() check [Sashiko [2]]
+
+- Move percpu_entry() call in front of irqentry_enter() call in all
+  entry paths to avoid that potential this_cpu() operations overwrite
+  the not-yet saved percpu code section indicator  [Sashiko [2]]
+
+[2] https://sashiko.dev/#/patchset/20260317195436.2276810-1-hca%40linux.ibm.com
+
+v1:
+This is a follow-up to Peter Zijlstra's in-kernel rseq RFC [1].
+
+With the intended removal of PREEMPT_NONE this_cpu operations based on
+atomic instructions, guarded with preempt_disable()/preempt_enable() pairs,
+become more expensive: the preempt_disable() / preempt_enable() pairs are
+not optimized away anymore during compile time.
+
+In particular the conditional call to preempt_schedule_notrace() after
+preempt_enable() adds additional code and register pressure.
+
+To avoid this Peter suggested an in-kernel rseq approach. While this would
+certainly work, this series tries to come up with a solution which uses
+less instructions and doesn't require to repeat instruction sequences.
+
+The idea is that this_cpu operations based on atomic instructions are
+guarded with mvyi instructions:
+
+- The first mvyi instruction writes the register number, which contains
+  the percpu address variable to lowcore. This also indicates that a
+  percpu code section is executed.
+
+- The first instruction following the mvyi instruction must be the ag
+  instruction which adds the percpu offset to the percpu address register.
+
+- Afterwards the atomic percpu operation follows.
+
+- Then a second mvyi instruction writes a zero to lowcore, which indicates
+  the end of the percpu code section.
+
+- In case of an interrupt/exception/nmi the register number which was
+  written to lowcore is copied to the exception frame (pt_regs), and a zero
+  is written to lowcore.
+
+- On return to the previous context it is checked if a percpu code section
+  was executed (saved register number not zero), and if the process was
+  migrated to a different cpu. If the percpu offset was already added to
+  the percpu address register (instruction address does _not_ point to the
+  ag instruction) the content of the percpu address register is adjusted so
+  it points to percpu variable of the new cpu.
+
+All of this seems to work, but of course it could still be broken since I
+missed some detail.
+
+In total this series results in a kernel text size reduction of ~106kb. The
+number of preempt_schedule_notrace() call sites is reduced from 7089 to
+1577.
+
+Note: this comes without any huge performance analysis, however all
+microbenchmarks confirmed that the new code is at least as fast as the
+old code, like expected.
+
+[1] 20260223163843.GR1282955@noisy.programming.kicks-ass.net
+
+Heiko Carstens (7):
+  s390/percpu: Infrastructure for more efficient this_cpu operations
+  s390/percpu: Add missing do { } while (0) constructs
+  s390/percpu: Use new percpu code section for arch_this_cpu_add()
+  s390/percpu: Use new percpu code section for arch_this_cpu_add_return()
+  s390/percpu: Use new percpu code section for arch_this_cpu_[and|or]()
+  s390/percpu: Provide arch_this_cpu_read() implementation
+  s390/percpu: Provide arch_this_cpu_write() implementation
+
+ arch/s390/include/asm/entry-percpu.h |  80 +++++++++
+ arch/s390/include/asm/lowcore.h      |   3 +-
+ arch/s390/include/asm/percpu.h       | 246 ++++++++++++++++++++++-----
+ arch/s390/include/asm/ptrace.h       |   2 +
+ arch/s390/kernel/irq.c               |  24 ++-
+ arch/s390/kernel/nmi.c               |   5 +
+ arch/s390/kernel/traps.c             |   5 +
+ 7 files changed, 318 insertions(+), 47 deletions(-)
+ create mode 100644 arch/s390/include/asm/entry-percpu.h
+
+-- 
+2.51.0
+
 
