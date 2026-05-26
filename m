@@ -1,175 +1,173 @@
-Return-Path: <linux-s390+bounces-20075-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20076-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SLD2M6bKFWqQbgcAu9opvQ
-	(envelope-from <linux-s390+bounces-20075-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2026 18:30:30 +0200
+	id GHB5NQ7PFWpKcQcAu9opvQ
+	(envelope-from <linux-s390+bounces-20076-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2026 18:49:18 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35AA85D9B86
-	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2026 18:30:29 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65E6F5DA118
+	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2026 18:49:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 301D131B7C7D
-	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2026 15:39:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8F653319F62A
+	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2026 16:14:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B350837703B;
-	Tue, 26 May 2026 15:39:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35A103AF674;
+	Tue, 26 May 2026 16:13:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Bja1Llhh"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UOgKOq45"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3052F376494
-	for <linux-s390@vger.kernel.org>; Tue, 26 May 2026 15:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B02A3AF662;
+	Tue, 26 May 2026 16:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779809992; cv=none; b=V3g+zrs8oD9aiLQc9XxwRKRdfGC/HEpYASvNYVrtZnajVvvccFP6wpg7B2ed81l7i8U23bucE3msqwoA6S9Dx/MKX8i4VmJ2OVb3+Pqj0pVoymYCYV/Wju6kN3UwlxN3hWUmADw9h1Q18owJuxQh8ve9TvhVz2I5nQPwoefuZKE=
+	t=1779812027; cv=none; b=j71ZPvNnMmEeVhMY8CZRfTxrp9O+cOheCxrpiQcX665GWkNKs+hFG9yBVxOV3iBMJCZhZFuZO9PySQDPCbPDQtbXjQ1hNhmwoOv6g5ZMxNc+DK1+O+Vhpn0Fcd7VLe5yWATYMiqyDBFzl2CgHd+f2NryoNGVKKVr6idGrz84LTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779809992; c=relaxed/simple;
-	bh=ItPd3iMhIb7X3YkSIy7+Cw4n/7vOFcAzSgB6r5JqsAg=;
+	s=arc-20240116; t=1779812027; c=relaxed/simple;
+	bh=fLCkY+ECz5JYBlnNKcpCdrR4WXEGJasWE8+0gmJZbbY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Seuq5ILWzWSVQkpBRzU4/MK586GObJOU+ID9EcigoFTKGPp35LsqwxOJMfGqYZzudP8qbJxkbeHp11KZJy2ecQK/Y0F3hXr8a+d3+TMSwO3HVrW2RD3QdOcFR7JDSnlZ2NXXJo5zPOqIwPZGYiohM2Q96naJQuBCackyd+Dd+LY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Bja1Llhh; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-50fb8e9a4edso129198991cf.1
-        for <linux-s390@vger.kernel.org>; Tue, 26 May 2026 08:39:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1779809990; x=1780414790; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ItPd3iMhIb7X3YkSIy7+Cw4n/7vOFcAzSgB6r5JqsAg=;
-        b=Bja1LlhhUBpr6G6uLE0EIoiKSbNqD32MKj8U6VLatww2tapL0NV/+DAKz21SOjGiCj
-         Zuzf+Vl6rbkA1JaQnizJDK6t2bk8PmuIwUUdDC1jjh+igpz9spRZpTrgWEMcROoP+37m
-         TmUjdI6EvkT6xfza+KqfgCF4AbnczlonK7qexfT/yntwt3RYCLLuFlnEBEoZiGIzcJ0A
-         lxnRAmEOXcQ5FegBFmxFsaPGTWMLmIeKPpcYQ7p6NGZjdXH5XzukmsltXedvoTeKerle
-         2E83aqkmPxazsqNqeZmA8QPDxEhh+Cx0Wli8Ppjqzt2ZCCFxmvtSm+WbLSU28Mkt90Ot
-         ebUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779809990; x=1780414790;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ItPd3iMhIb7X3YkSIy7+Cw4n/7vOFcAzSgB6r5JqsAg=;
-        b=PLp9wyTGHcLlC61zfRvpP4vxp3VWi7lWSMvTeq+cqPsVBX3BOkKQeaakIDLSI+WWys
-         9AOCRZF0Jg+MIIJYxFJcOVr8qFkHniwSxpDpZ0+vJh+/r3ZvhYVuL4o1bF4hvGd7Zoyt
-         Vy1TX6PN+S2kFokHZ6Ce32UHj72tyOPnGUlDmNLZON1lvc+GLOu4wVOE5pEWnZy8her/
-         2sHuTbErJ8fNjay4EMsdDbq1omTAs2HO/D+FOnUVFjvmFb/DCfcKFFG1XmSI/eJhk7ey
-         ZXfa7PT3trWB2AFyqzdCW0OuEmHx9htLSj1sXc3/ZW8cetEmPzyHlGrFIctppV1IjPBl
-         8G2g==
-X-Forwarded-Encrypted: i=1; AFNElJ+qBkq41qG0aE1tfug9KCcNNXv6RVEQLgXhkLiGhddk0XTXvAgDgnROeDTrWNQQswlnBVje2RDqxRP5@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7BiIYnfUdKoaFNW92pF/BRj5qDZskGGEE0jbb0Xb7BoJ54CjG
-	yO4BTxP8vu6i6+2EkUr99uPaxLdZvf2zlfdIHXUA0PfRNt5jygmTP+MBz5LN06OT/Hk=
-X-Gm-Gg: Acq92OFkOd/ajxshtAz1rwpwnsNMKn8QX9fruHM5r8EJzy1Lsoa2kj0DfttEmhMD83G
-	HlJ5G88xlpSjOR1wqkALiRnjeCEQg3XKz7DGnhK5SJOSy0DmJNVbTzJlHkJpJZDBEg2HvPzV0ir
-	Cy5XuFPZ9c2XBGirf/Hdd++BpVBVmTpK9qHI/NZlwLbPi7k2EDPjv0/vijo6lEBsaYC5w2O1AEr
-	j+lRjZkKqWakTexU4iVVgQRJjVrvojXXRz+yJNLrCGnkL88hzNlO+Z7P1QQUQWQt/+e8QboNQwf
-	2RHkPGxyTfpNWYoIH50Q39aVaxjixV28h1u8VDAIf95Qiz+Hyj5Wnep90LpKBsc11mGO2QSMeNP
-	nXBBP5YAnvJA8aLxmO3vHGT4zlJtZk3ras/Xuu9cnU/X/RrDdTdq7yb24eZ/ox3aOwzriQsbAbm
-	PErsyQIS18VwXw2wmRYp81PS6piCPQ7Dq5HwkWgc9rcP63Y+5f9ej3cYmht3E/807YCW8QHfx98
-	EDoUg==
-X-Received: by 2002:a05:622a:1452:b0:50e:5cc3:6f3a with SMTP id d75a77b69052e-516d45eaf62mr265877421cf.26.1779809990039;
-        Tue, 26 May 2026 08:39:50 -0700 (PDT)
-Received: from ziepe.ca (crbknf0213w-47-54-130-67.pppoe-dynamic.high-speed.nl.bellaliant.net. [47.54.130.67])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5170c403529sm7414661cf.10.2026.05.26.08.39.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2026 08:39:49 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1wRtsi-0000000DiUf-2t1G;
-	Tue, 26 May 2026 12:39:48 -0300
-Date: Tue, 26 May 2026 12:39:48 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Steven Price <steven.price@arm.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jiri Pirko <jiri@resnulli.us>, Mostafa Saleh <smostafa@google.com>,
-	Petr Tesarik <ptesarik@suse.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
-	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"x86@kernel.org" <x86@kernel.org>, Jiri Pirko <jiri@nvidia.com>
-Subject: Re: [PATCH v5 10/20] dma-direct: make dma_direct_map_phys() honor
- DMA_ATTR_CC_SHARED
-Message-ID: <20260526153948.GH2487554@ziepe.ca>
-References: <20260522042815.370873-1-aneesh.kumar@kernel.org>
- <20260522042815.370873-11-aneesh.kumar@kernel.org>
- <SN6PR02MB41574064D14D4A2734222C51D40B2@SN6PR02MB4157.namprd02.prod.outlook.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=NoxKG5VouGPUNciuKBNgRIXyT3YR7XFnB8z9LtofzeKChmp9pXEyiK9SQpeUTsaFctvmFaFPta3uqZXAKIj8Do7KhJXc/+yyy0d8M4EN+BSMvHSFw6/FPFPjoPaaOCX2do8GqWQkj0f87b9Ky22BcRRctkReXGc1evfDP3c6xiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UOgKOq45; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64QDdnDR3049622;
+	Tue, 26 May 2026 16:13:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=Egr41r
+	2Vtn6cptFOaWdgDaEFQiHKZjZ+/BS5pBFCW6I=; b=UOgKOq45WqoOe2XlubbWfX
+	UaITliOKA4UefkmF6l5AFoH0bvzB3o4zZ95kM5zdXBN1hlgvtZzHOUYqrdm8HoJT
+	l+Uor8kBAl1zIlp97XxoKyZ+lQSNUjNslESdJZeZ9z4yUCOEnJ1jkrPhKD91PpXg
+	YL5vL3bi4qzBKMRaRc8iI2osV6NHqDpPa+0rZRaefeVggZanUL+rYVPqldOXSoFj
+	7IX1AZJxOixSEX6FNociYH7mbmCUOtYo4of/Y1z4tn2tGzaGuGkhNs9LqFE6i1Kt
+	xCjBbbc8kHoz+oxIiQ1giZ+IgAjmtCQkYCVd5X6mWMeZAMOcyZD4fEj4MzAEdWvg
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4eb4qbw3cn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 May 2026 16:13:20 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64QGAFgV020402;
+	Tue, 26 May 2026 16:13:19 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ebr2h23g8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 May 2026 16:13:19 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64QGDF9Y50397550
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 26 May 2026 16:13:15 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 411FB2004B;
+	Tue, 26 May 2026 16:13:15 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 21C5620043;
+	Tue, 26 May 2026 16:13:14 +0000 (GMT)
+Received: from osiris (unknown [9.111.46.212])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 26 May 2026 16:13:14 +0000 (GMT)
+Date: Tue, 26 May 2026 18:13:12 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Jan Polensky <japo@linux.ibm.com>, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, ojeda@kernel.org, peterz@infradead.org,
+        jpoimboe@kernel.org, jbaron@akamai.com, aliceryhl@google.com,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com, boqun@kernel.org,
+        gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org,
+        a.hindborg@kernel.org, tmgross@umich.edu, dakr@kernel.org,
+        rostedt@goodmis.org, ardb@kernel.org, linux-s390@vger.kernel.org,
+        rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] s390: Enable Rust support and add required arch
+ glue
+Message-ID: <20260526161312.19291A8f-hca@linux.ibm.com>
+References: <20260521165622.279953-1-japo@linux.ibm.com>
+ <CANiq72kT7YEuMaM7wkOtCz8ZqEXbPLniA-x4L7E=B+x0zXt_2Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <SN6PR02MB41574064D14D4A2734222C51D40B2@SN6PR02MB4157.namprd02.prod.outlook.com>
-X-Spamd-Result: default: False [-1.66 / 15.00];
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72kT7YEuMaM7wkOtCz8ZqEXbPLniA-x4L7E=B+x0zXt_2Q@mail.gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI2MDEzOSBTYWx0ZWRfX/oZutKlFpXyH
+ ZDEiwMaUOGYb0NxdUFJ+N/KkaFCi8IvtpCWbasw3q7kUYvzRVck13rsK9gYHmU6rpqJxq0T8DKR
+ 60SJ/xBEwSZitomr48dyqA/FfTwp0VlrT931AnWf1JdFsK2gBaSG2av5Pug2eJwXvOFjIPGGZ9Y
+ J4WlVQ+4+NIUQfpARJ+BituiLJgMZBYENG7rOn/b6PabC/334EGafgCDfXw27cEK7xs8N8uRm3Z
+ 4LTgw/Gm+9ARsBB83/XMMFyqiZeb0O7SwujXu/pdcpPZ/voz68xDZXocl0QBjUDExeAlZMN2vjR
+ wa/KLugboCLztv1qT+SGg19gunvDapd6firGWAUqgA8qF84drrktM0GZ6mlGfAJaoKmWK5Z6pGZ
+ CnLV2kFAzTOf4Siy7dDoWl93DtV77HaULVdw2lXK9In6apfbxX5wi/dQsofW+QgX5ifXyWjMsaR
+ OvhgTy6rGhIJ30EKasw==
+X-Authority-Analysis: v=2.4 cv=KItqylFo c=1 sm=1 tr=0 ts=6a15c6a0 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8
+ a=G_bgqYzucDTkP3-IBUEA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: 9BuDjQaYryfzv2VGIpYhew5RqxTHPrAn
+X-Proofpoint-GUID: X8gstQJ2pxUZoNSMSaoixDyprIErK_2V
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-05-26_04,2026-05-26_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 malwarescore=0 lowpriorityscore=0 spamscore=0 priorityscore=1501
+ clxscore=1011 adultscore=0 suspectscore=0 bulkscore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605260139
+X-Spamd-Result: default: False [0.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_ALLOW(-0.20)[ziepe.ca:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,lists.linux.dev,lists.infradead.org,vger.kernel.org,arm.com,samsung.com,resnulli.us,google.com,suse.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,linux.ibm.com,ellerman.id.au,gmail.com,nvidia.com];
-	TAGGED_FROM(0.00)[bounces-20075-lists,linux-s390=lfdr.de];
+	FREEMAIL_CC(0.00)[linux.ibm.com,kernel.org,infradead.org,akamai.com,google.com,garyguo.net,protonmail.com,umich.edu,goodmis.org,vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	TAGGED_FROM(0.00)[bounces-20076-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[ziepe.ca];
-	FREEMAIL_TO(0.00)[outlook.com];
-	RCPT_COUNT_TWELVE(0.00)[33];
-	DKIM_TRACE(0.00)[ziepe.ca:+];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,linux.ibm.com:mid];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jgg@ziepe.ca,linux-s390@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[hca@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	NEURAL_HAM(-0.00)[-0.998];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 35AA85D9B86
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[11]
+X-Rspamd-Queue-Id: 65E6F5DA118
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, May 26, 2026 at 02:56:57AM +0000, Michael Kelley wrote:
+Hi Miguel,
 
-> With this patch removing SWIOTLB_FORCE from four places in
-> kernel code, there are no remaining places where it is set.
-> The test of SWIOTLB_FORCE could be removed from
-> swiotlb_init_remap(), and its definition could be deleted
-> from include/linux/swiotlb.h.
+On Tue, May 26, 2026 at 03:55:49PM +0200, Miguel Ojeda wrote:
+> On Thu, May 21, 2026 at 7:03 PM Jan Polensky <japo@linux.ibm.com> wrote:
+> >
+> > s390 currently requires a rustc due to -Zpacked-stack, and the
+> > minimum tool version gating is adjusted accordingly.
+> 
+> This doesn't matter unless the maintainer applying this uses a merge
+> commit for the cover letter, but there is a missing word, and if the
+> word was meant to be "nightly", then the paragraph is likely outdated
+> anyway :)
 
-That's great! I think it shows this is the right approach!
-
-Jason
+An Ack from you would be appreciated, even though you made it already
+clear that this series looks ok.
 
