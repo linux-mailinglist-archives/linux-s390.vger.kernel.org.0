@@ -1,154 +1,168 @@
-Return-Path: <linux-s390+bounces-20146-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20149-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QEGyEuomGGqZeQgAu9opvQ
-	(envelope-from <linux-s390+bounces-20146-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2026 13:28:42 +0200
+	id WDBoN30sGGqwfAgAu9opvQ
+	(envelope-from <linux-s390+bounces-20149-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2026 13:52:29 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B88F15F14B4
-	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2026 13:28:41 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BA6B5F1991
+	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2026 13:52:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 78A5A3079172
-	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2026 11:24:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 912AD30B7444
+	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2026 11:47:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C22C13E3150;
-	Thu, 28 May 2026 11:24:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8842B3E6394;
+	Thu, 28 May 2026 11:47:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m5V4HWOr"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iNowLqNK"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7BF47262B;
-	Thu, 28 May 2026 11:24:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C4EF3ACEF6;
+	Thu, 28 May 2026 11:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779967482; cv=none; b=Mpo8mnwWuR/JP1QjPM8TbJ4zvHP9IkD83MGPMl8S7Q3VeW2ILnK8++DYWbsfTYcYnW9wtLx7b3qGLTeRY64UVz1va+4BkrwApr1HQd5msBX+s+Iz0Xnng5WJJpx+RtkZ2T+xsXiLUSOqIPXZv5okUoJokB3F0Xd2UI9wJTRFOiI=
+	t=1779968859; cv=none; b=qDG2V3QBKmQjptZKGK3lA2keSW36utaguoqJyjENMXNVElIWr412YJYzKYt9vMP81wF+gtjBG4ynI4FCv9pj/UVdB75vLQcTjuQ+gNtKox3A3Q7QB8e5vYcKV7edeyxDbTjjJn1q7MVCc4mo2r1+xfc+A00J46bDSd9cZQ5UKew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779967482; c=relaxed/simple;
-	bh=gCfCYwr5O1HF8HrKGi8ZW5/6uQ751dyUj1fIPM1S+mM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=griG3Org0/wAj3h2VkmGJ6C5FKxWCIypGmUTK/CfHsK+NQ1SNdOtyNllZJ99L+iobnURGtbhG+NWtpVQ6rzT/JegZ5Z1i25Ofa7uUrmANNvgHRqMRswT8SznD8bdrRLABYKf1w5QTTqFfgDs1Fmqq0WgTg84zECQdd6jqbnN7zY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m5V4HWOr; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F4291F000E9;
-	Thu, 28 May 2026 11:24:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779967481;
-	bh=O5hCo12AieiEvQS5ItXa2ui3IkPos7/8NxeCJceX1Y0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=m5V4HWOrNTniIGkD6RJ7hWNU512A5PG9HjVtLbsM6xvKMRcBua/iBKeDeVeuGX/nu
-	 NKWYjAa4sxiU7gyqJYZ152vRl1uwKCu8bDG7ncq0ntCA0KbLJh12t1MwBHP03tIyKA
-	 TZbffnMlqF+CqYGTA5tzi4z5SLhCCzred5iqDfNicDfgsE5uQrQvxXHCApZ/zNS3C2
-	 aZt7Zv1LtigVX5KOGdBftiUdxxLOA4uwzskycZbd2CiK7NqfdWLp38Yyxw987Pobx5
-	 ggoOISBudB3sVaEDjpiG1dBD4OKtqASqQSY7nLOb+0rGd3EXo664eI6x1L/x+NMWcM
-	 Z91A0jRsVrWvw==
-Date: Thu, 28 May 2026 12:24:35 +0100
-From: Lorenzo Stoakes <ljs@kernel.org>
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Anshuman Khandual <anshuman.khandual@arm.com>, 
-	Oscar Salvador <osalvador@suse.de>, Wei Yang <richard.weiyang@gmail.com>, linux-s390@vger.kernel.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] mm/page_vma_mapped_walk: Use ptep_get_lockless() for
- lockless access
-Message-ID: <ahglqif-I4TjFK9X@lucifer>
-References: <20260528075507.1821939-1-agordeev@linux.ibm.com>
+	s=arc-20240116; t=1779968859; c=relaxed/simple;
+	bh=CoQaffJkzuFoI8JmTQ3+VqaxSBR7ugJRQKB+dhlJCPc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZylDzzIJoYEZaoYZk6olsz6/okNOGs7H3jWcg8BT6SvwhnVPgZN8ETwVCPmp7m5CGaJw/g8+4DWugF8NNZRoXulaTlz2WYshAjLq0ny0a6fSs3lQE2qQpeJ+TMGxz8bXwkk1DZvDrGPdgJC8NrGB/g+1zG7y5fgszOrH3bjb530=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iNowLqNK; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64RL6dRK3426749;
+	Thu, 28 May 2026 11:47:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=FN0GLVxPetl41QnFQlO5InM+Hp5ASthC/kY9EQd08
+	Ws=; b=iNowLqNKplk4x5N7TOKIVspFD6kb8nFJiFBPA2P9Ay6aa1/HL+AdHNl5W
+	JI8L6LF8/imjCx1TaKrOsSiICu1oeTFUWbGgxLhYU0ipZHYSq8yCI55Cof0sKw85
+	pNClQB1LOfioOXVw+e73WAIjonLmQfZLvo6CwErE+nxhvIkTx29XCt1pE5v8wEn7
+	Rt/wgt7G0ymUuL5lTHZPLTuRtbIsGXVsB7tI1vrEkvOQnbgK1ZiiWNRBBKZIDv94
+	izRMyQzTnVCk1YJjT42bCeUHZxtSRlEyxkqG0chiGDez0IXqS4l515WSi/F87KJ2
+	eVgNXLnQaNGvwlTz1TWgDIYzNwJCg==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ee884jsyh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 28 May 2026 11:47:35 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64SBd6An028891;
+	Thu, 28 May 2026 11:47:34 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4edjrbqw8e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 28 May 2026 11:47:34 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64SBlSmK43581884
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 28 May 2026 11:47:28 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 52BBD20043;
+	Thu, 28 May 2026 11:47:28 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1777220040;
+	Thu, 28 May 2026 11:47:28 +0000 (GMT)
+Received: from p-imbrenda.aag-de.ibm.com (unknown [9.52.223.175])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 28 May 2026 11:47:28 +0000 (GMT)
+From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+To: linux-kernel@vger.kernel.org
+Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@kernel.org, seiden@linux.ibm.com,
+        nrb@linux.ibm.com, schlameuss@linux.ibm.com, gra@linux.ibm.com
+Subject: [PATCH v1 0/7] KVM: s390: More gmap and vsie fixes
+Date: Thu, 28 May 2026 13:47:20 +0200
+Message-ID: <20260528114727.142178-1-imbrenda@linux.ibm.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260528075507.1821939-1-agordeev@linux.ibm.com>
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=L4MtheT8 c=1 sm=1 tr=0 ts=6a182b57 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=iQ6ETzBq9ecOQQE5vZCe:22 a=RDX2kTa0qNrNx1cvdRQA:9
+X-Proofpoint-ORIG-GUID: eBKcLURmMYv-dZa7i5UR5JxZ8b8ioJpd
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI4MDExNyBTYWx0ZWRfX2cdSl1vzD0Lx
+ V6xfIisv/oh9ergRFXWYrGs5B1w1HSEBxysK4LdCs78qr64UXktTEAnFjvxlcPlD/XWebLhc00I
+ Hw6pP58Xo4Dm5+yY3jopJLI6cutQJE0hoBnlDM/qhKJmC95UOiuDEa3CqCEa+q4ZlFBpuvwTcZL
+ x/7zZ7ExHQusRxPMYu5f0Z3gFrA0trfzz465oX2+kJLTOS0EhFbjTN9ktkraj98yz2yLgQTjANS
+ xXlwwdCAXFTlLa+fCoWbbJEjqbgRm7KFv3c7LTMDZmJsogIwb5M4yClXHB090d4di+PTIBe9nKA
+ qFHu/fopMTMRB41PwxI0+kCgRa2mEmVkL6nfj8/YFdaYR6isu+OxhaUcAIUWNpv0oi55aS0Op67
+ LVFJzz/qBlcafnRiEw9JYLRmXyjoFUFhsahBePpxVmkGdEMoyg/PUqWINXtGbBdVBTRo/OemfXr
+ 4TWiLm5PmniG2ObXFmA==
+X-Proofpoint-GUID: eBKcLURmMYv-dZa7i5UR5JxZ8b8ioJpd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-05-28_03,2026-05-28_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 lowpriorityscore=0 suspectscore=0 clxscore=1015 malwarescore=0
+ bulkscore=0 impostorscore=0 adultscore=0 priorityscore=1501 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2605280117
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-20146-lists,linux-s390=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,redhat.com,arm.com,suse.de,gmail.com,vger.kernel.org,kvack.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ljs@kernel.org,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20149-lists,linux-s390=lfdr.de];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,linux.ibm.com:mid];
 	TAGGED_RCPT(0.00)[linux-s390];
-	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: B88F15F14B4
+	FROM_NEQ_ENVFROM(0.00)[imbrenda@linux.ibm.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	PRECEDENCE_BULK(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_NONE(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_COUNT_SEVEN(0.00)[11]
+X-Rspamd-Queue-Id: 8BA6B5F1991
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, May 28, 2026 at 09:55:07AM +0200, Alexander Gordeev wrote:
-> Switch from ptep_get() to ptep_get_lockless() accessor for
-> PTE reads when no lock is taken.
+Another batch of fixups for gmap and vsie. Some minor fixes, some
+not-so-minor fixes that could have caused guest corruption under
+particular circumstances.
 
-This is an insufficient commit message that's just saying what you're doing,
-which isn't very useful.
 
-Please explain why you're doing this and what the benefit is please.
+Claudio Imbrenda (7):
+  KVM: s390: Fix _gmap_crstep_xchg_atomic()
+  KVM: s390: Fix guest / virtual address confusion in _essa_clear_cbrl()
+  KVM: s390: vsie: Fix rmap handling in _do_shadow_crste()
+  KVM: s390: Fix fault-in code
+  KVM: s390: Avoid potentially sleeping while atomic when zapping pages
+  KVM: s390: Lock pte when making page secure
+  KVM: s390: Prevent memslots outside the ASCE range
 
-Thanks, Lorenzo
+ arch/s390/include/asm/gmap_helpers.h |   1 +
+ arch/s390/kvm/faultin.c              |  13 ++--
+ arch/s390/kvm/gaccess.c              |  11 +--
+ arch/s390/kvm/gmap.h                 |   2 +-
+ arch/s390/kvm/kvm-s390.c             |  24 +++++-
+ arch/s390/kvm/priv.c                 |   8 +-
+ arch/s390/kvm/pv.c                   |  15 +++-
+ arch/s390/mm/gmap_helpers.c          | 111 ++++++++++++++++-----------
+ 8 files changed, 121 insertions(+), 64 deletions(-)
 
->
-> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
-> ---
->  mm/page_vma_mapped.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
->
-> diff --git a/mm/page_vma_mapped.c b/mm/page_vma_mapped.c
-> index a4d52fdb3056..2ccbabfb2cc1 100644
-> --- a/mm/page_vma_mapped.c
-> +++ b/mm/page_vma_mapped.c
-> @@ -41,7 +41,7 @@ static bool map_pte(struct page_vma_mapped_walk *pvmw, pmd_t *pmdvalp,
->  	if (!pvmw->pte)
->  		return false;
->
-> -	ptent = ptep_get(pvmw->pte);
-> +	ptent = ptep_get_lockless(pvmw->pte);
->
->  	if (pte_none(ptent)) {
->  		return false;
-> @@ -183,6 +183,7 @@ bool page_vma_mapped_walk(struct page_vma_mapped_walk *pvmw)
->  	struct mm_struct *mm = vma->vm_mm;
->  	unsigned long end;
->  	spinlock_t *ptl;
-> +	pte_t pteval;
->  	pgd_t *pgd;
->  	p4d_t *p4d;
->  	pud_t *pud;
-> @@ -310,7 +311,11 @@ bool page_vma_mapped_walk(struct page_vma_mapped_walk *pvmw)
->  				goto restart;
->  			}
->  			pvmw->pte++;
-> -		} while (pte_none(ptep_get(pvmw->pte)));
-> +			if (!pvmw->ptl)
-> +				pteval = ptep_get_lockless(pvmw->pte);
-> +			else
-> +				pteval = ptep_get(pvmw->pte);
-> +		} while (pte_none(pteval));
->
->  		if (!pvmw->ptl) {
->  			spin_lock(ptl);
-> --
-> 2.51.0
->
+-- 
+2.54.0
+
 
