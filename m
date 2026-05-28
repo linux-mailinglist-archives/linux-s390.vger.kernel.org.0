@@ -1,130 +1,174 @@
-Return-Path: <linux-s390+bounces-20138-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20140-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UF6iDrUDGGqdZggAu9opvQ
-	(envelope-from <linux-s390+bounces-20138-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2026 10:58:29 +0200
+	id WHjHOhoIGGoaawgAu9opvQ
+	(envelope-from <linux-s390+bounces-20140-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2026 11:17:14 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id D83F45EF130
-	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2026 10:58:28 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DD0C5EF687
+	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2026 11:17:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 69965316AB0C
-	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2026 08:54:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B2B1F30D688C
+	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2026 09:03:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DE2838AC7A;
-	Thu, 28 May 2026 08:53:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 887D839BFE1;
+	Thu, 28 May 2026 09:03:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WMt+kwP4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j3cZiBaI"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425E9367B78;
-	Thu, 28 May 2026 08:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD46139B963
+	for <linux-s390@vger.kernel.org>; Thu, 28 May 2026 09:03:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779958408; cv=none; b=favUqeLE24Cb8dfYErVa9fcI4b+dIGz0Axti/luMRIwlqITeOlOjZ9Nc/xeY3a7ppJbzH/cV+ynNCot7j4zNS24PGE2riX6FGDEIGerZToZkk51Boac8C25RkeQQeTOZ9wdOGYfVbfMfR3OuQmITwxmuyj/zuQ0FksvcF6yMa3I=
+	t=1779959031; cv=none; b=QTEWpRJl+BmkR3ScspMkKpUgBkPkFts6jYhpSXv3/Zgp4cUalRvar/VRJQr5oCGp1kH0+7akvSD0K76qZleozv0Q7TomoZn2riffD62/buZA0DZRSp7mr7rhgFepQ2KcCCJSrZd4fSZB/yVIZH5Qj5Og6Qyw5+mNp3aF5c75CuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779958408; c=relaxed/simple;
-	bh=8fVVgfxlsOq9kNuGYzSy5h/dA7VryhFKl3t6JHkuogU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eYjgpJoZP0bHS6TWuhO45jd/LfG2UnK0Oxe85evaD64d8soNcR6TjutInfl4vFZp+I1CuYpJkC/tt9Oy7z8WlbvuQ4Y7oRnlYNH6Tn0EmMJodT2VQ1eHlVBULQfHmZmzs9ftzKN9IsxkUBAAwzhn8rtnxgO0LPg+eNr5jOUAbhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WMt+kwP4; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Nu+2uJB0bWOahJZM395trqlBX9jrloGHIPyChDFiT4g=; b=WMt+kwP4HyNu4MxGTFi9A9bWL8
-	I2vaJGQoRhwDX6g/0qB7yDnua1YQSzPQrViv3x1dOgw/6NIGCo7mJd5eVL0Z+kChl+oL7hNbxm4+q
-	QKA+dCZ9jIJ9xP5nt5FvZkhvJH9HWs3Jr+bDnkv0cHQbPzHvs2nDIJK0lueoPxhJip9HsUmtceZJc
-	O8Dew8VdViDsT/VjNjWBFVK5IcdIaj7eQwmihQsAd9IU9B4aWaMTdW+Tj7fcuXOZvbyUoWCz7H7rN
-	zDBZczW/tM2JZZ4bpnCzeYHzJ21k5778f+4lirKrTNNFKjGkU+vtA+FH4ZWN1nwTpkVLBQply4LiT
-	YlfcTbfA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wSWUQ-00000005RNi-04pb;
-	Thu, 28 May 2026 08:53:18 +0000
-Date: Thu, 28 May 2026 01:53:17 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, Christoph Hellwig <hch@infradead.org>,
-	"T.J. Mercier" <tjmercier@google.com>, maddy@linux.ibm.com,
-	mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org,
-	linuxppc-dev@lists.ozlabs.org, mripard@kernel.org,
-	sumit.semwal@linaro.org, lkp@intel.com,
-	linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
-	linux-mm@kvack.org, agordeev@linux.ibm.com,
-	gerald.schaefer@linux.ibm.com, linux-s390@vger.kernel.org,
-	Dan Williams <djbw@kernel.org>,
-	Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org
-Subject: Re: [PATCH] powerpc: Export set_memory_encrypted and
- set_memory_decrypted
-Message-ID: <ahgCfazNTdk7Em-K@infradead.org>
-References: <20260522225853.878411-1-tjmercier@google.com>
- <ahPqbfH54R3JJyaV@infradead.org>
- <20260527160716.GN2487554@ziepe.ca>
- <20260527181549.GBahc01Xflm2yo5OqI@fat_crate.local>
+	s=arc-20240116; t=1779959031; c=relaxed/simple;
+	bh=4pNbRRNcvcxtZWMWBhlJACXXD0OEyFL5XoBQHvV2CE4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jQo9gRkhfwEBcpgZRIjtU5G4WDgLnDCeB0l2TYhP0SrjkikSnDp36W0u2JJSNSrH/mJKR8zO0DB6bVJSii6I9JJ1uPA0ev+h328gABXs7RhqD56wxWLw2HeDsihADYYxI26550qUdRC1C3leHIlE9lQajLlmcP2C/g6a0KW7b98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j3cZiBaI; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-49041e84237so51456945e9.1
+        for <linux-s390@vger.kernel.org>; Thu, 28 May 2026 02:03:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779959028; x=1780563828; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QCmyXs1jXAX32h+bsF7sjD219vXUOiP2EoLZokHkEFk=;
+        b=j3cZiBaIHvPZT7xFo4KK6C8BvWfHdr94JNfDnHkPRCL13l6L2UcnQvVOstMxsKx7qq
+         XinJ1qH11ME1c0YP81rEwUZwNjyY+EC/AEJ/U0/ZrCTZmlqZEjs67ztTzNF7AudrqXow
+         jsw+DAuTQmKpetZUXmuh/tCRlKuLckYtAJk3pesxdM2G86JRImw+db6zPseEpvoDCcoE
+         2+K/avvwojSaJeMU1kMLPpDIFM9vEUoa7B1Yt0kvM13+DckVtg/1GZSz3DaZt5J36ibf
+         WXYp8+Rc8G2zitw8laOtatRqAHIMAxU06Fsv92JYQjXoMlT5+t23XSUabWlTMJI0i1Ab
+         XodQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779959028; x=1780563828;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=QCmyXs1jXAX32h+bsF7sjD219vXUOiP2EoLZokHkEFk=;
+        b=LrS7S+iAdPTsrIldIrptygrS/0tyUa0mWTGtn90ORA4G1SW6h4wFN7ub2uSzGonDg0
+         f1Makv1L1P8N6F+lvCYiMX+q/zeowSJDr/mKo85GiNA6pnGmncip/FhLlTF1I74eSRtF
+         3Zt9ep4utDPjyFFUVW3VrlcMedcuCM33MZHVJS0yqHodeXfKI6GoZ+ktQiuxfvyObSIO
+         i2aV91NgXVx9ScLr2xPGRoqg554MmjwSlYPS1fxab1SDgDv0Ee/6ru0a2TQ/0R7MxkEM
+         iwG//sodhTjs3ku8X+OvjW/mUmUFakvryXNUH+TJ6l0BNxT0TFaxhyUd6NG41h/Dcovj
+         ZrDQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/bEIOhPbZI7560wi5Y+fjx3dzDcwQE9wN7kEg0GQ1Zl7t3RDd9fLpHQ4fhwdCHenx4L+c/a7J0bmr3@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJ6bXB/XZ7w57z/u4OlYzzhyGx22rwnIs0FQLSBGPOWjsU9JnE
+	ua/3kON4RrUV8Q3nJFuGRJOujhBK/x7QMfTZakGcJR3frwRE2LPgik2g
+X-Gm-Gg: Acq92OEMEb9NGGb54H7D1ZjDWuSgEb6X2Ktfs6o8biUCuz6Qni6mg0y9v3XOskVkP4J
+	ize73VS5s12yeeuOjAypMdEPLqL5Qs9LPOAwS3RDNvfhGPDNgrzF3Uwm0lzv9EBOYF/oIMST+eR
+	Al6DulSxU/+NMKh9gvt09UP1sF2Me+uXWPO7NL+LjiDF7s7clxlfgIV4u6V08AQBbWxP1wTtVnz
+	AUMcHclQTLyAX1IjevuAuCissJHBdVUOpitTTTKyRPnpZvnKW51qTkcITAe5kpMt+R4T4GRzgAF
+	3UlglvM2/CREV2xOEPpAE0W8sF/+vS+jZfzGzUlWJvbY2SSAHEXgrPQuiqh+AgS04ZsWqLF7tne
+	iCIwVcfoVRSSPeNQpiqAFALpLUJAqHPTmFPJW1+IIiUaiA2clr+aRw0ZaLuckDImvWyHVGjxxkk
+	3g7f46pvGW8vmjvDF+UgjCS2Jha4lDptKSIvnv8k+NNCndxpZrY1QnBmkvQobmL4D2190UF+M=
+X-Received: by 2002:a05:600c:4f14:b0:490:7df7:9190 with SMTP id 5b1f17b1804b1-490947a780cmr13101365e9.8.1779959027834;
+        Thu, 28 May 2026 02:03:47 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45eeb36c40asm1504601f8f.13.2026.05.28.02.03.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2026 02:03:47 -0700 (PDT)
+Date: Thu, 28 May 2026 10:03:46 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Yang Shi <yang@os.amperecomputing.com>
+Cc: Heiko Carstens <hca@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Vasily
+ Gorbik <gor@linux.ibm.com>, Christian Borntraeger
+ <borntraeger@linux.ibm.com>, Juergen Christ <jchrist@linux.ibm.com>,
+ "Christoph Lameter (Ampere)" <cl@gentwo.org>, Peter Zijlstra
+ <peterz@infradead.org>, Shrikanth Hegde <sshegde@linux.ibm.com>,
+ linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH v3 0/9] s390: Improve this_cpu operations
+Message-ID: <20260528100346.1e790a53@pumpkin>
+In-Reply-To: <cfdb20a6-5621-417b-9202-d788ca34251b@os.amperecomputing.com>
+References: <20260520092243.264847-1-hca@linux.ibm.com>
+	<9d503c6f-5641-4b28-998e-01e38b3622a9@os.amperecomputing.com>
+	<20260520233409.0683f595@pumpkin>
+	<d8e61923-2e0b-422c-b2f6-5ccedf3852bb@os.amperecomputing.com>
+	<20260521103742.9603C8c-hca@linux.ibm.com>
+	<5158d4e8-19a7-4f60-b2fd-bc6bab22baf0@os.amperecomputing.com>
+	<20260522091805.18098A5c-hca@linux.ibm.com>
+	<cfdb20a6-5621-417b-9202-d788ca34251b@os.amperecomputing.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260527181549.GBahc01Xflm2yo5OqI@fat_crate.local>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20138-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[ziepe.ca,infradead.org,google.com,linux.ibm.com,ellerman.id.au,gmail.com,kernel.org,lists.ozlabs.org,linaro.org,intel.com,vger.kernel.org,lists.linux.dev,kvack.org,amd.com];
-	RCPT_COUNT_TWELVE(0.00)[21];
 	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-20140-lists,linux-s390=lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[12];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hch@infradead.org,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[infradead.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[davidlaightlinux@gmail.com,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,infradead.org:mid,infradead.org:dkim]
-X-Rspamd-Queue-Id: D83F45EF130
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,amperecomputing.com:email]
+X-Rspamd-Queue-Id: 3DD0C5EF687
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, May 27, 2026 at 11:15:49AM -0700, Borislav Petkov wrote:
-> On Wed, May 27, 2026 at 01:07:16PM -0300, Jason Gunthorpe wrote:
-> > > Setting memory decrypted is a dangerous operations and should only
-> > > be available to core code.  We should have various allocators for
-> > > decrypted code, but not export the functionality to random code.
-> > 
-> > At the very least an EXPORT_SYMBOL_NS.
-> > 
-> > Looks like there are about 3 modules using it already..
-> 
-> Looks like more to me...
-> 
-> In any case, we exported them back then for some framebuffer things:
-> 
-> 95cf9264d5f3 ("x86, drm, fbdev: Do not specify encrypted memory for video mappings")
+On Wed, 27 May 2026 16:44:31 -0700
+Yang Shi <yang@os.amperecomputing.com> wrote:
 
-Which is exactly one of these things that should not happen - mapping
-random I/O memory without the proper helpers..
+> On 5/22/26 2:18 AM, Heiko Carstens wrote:
+...
+> > It is amazing to see the performance improvements you see on arm64, however
+> > I believe that is mainly because of the large amount of code which is
+> > generated by the arm64 implementations of the preempt primitives
+> > __preempt_count_add() and __preempt_count_dec_and_test().  
+> 
+> Yes, we need 4 instructions on ARM64 for disabling/enabling preempt (one 
+> instruction is used to load current pointer, the other 3 instructions 
+> are used to RMW preempt_count). So I can remove 8 instructions in total 
+> for a single this_cpu ops. That's a lot. Given this_cpu ops are heavily 
+> used in kernel, we end up running fewer instructions and having better 
+> icache hit rate, the better icache hit rate also helps reduce cross node 
+> traffic for 2-socket system.
 
+Is 'current' kept in a cpu hardware register?
+With the process switch code updating current->per_cpu_data.
+
+That might mean that you can access per-cpu data without disabling
+preemption (for single ops) using the same technique as s390.
+So something like:
+	mov %ra, current
+	movb per_cpu_reg(%ra), $b
+	mov %rb, per_cpu_data(%ra)
+	// per-cpu access using %rb, process switch code will update %rb
+	movb per_cpu_reg(%ra), $255
+
+An add will need to use a cmpxchg loop.
+For simplicity use a fixed register for %rb.
+
+-- David
 
