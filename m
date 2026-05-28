@@ -1,115 +1,121 @@
-Return-Path: <linux-s390+bounces-20156-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20157-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GP/QJolLGGqjiggAu9opvQ
-	(envelope-from <linux-s390+bounces-20156-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2026 16:04:57 +0200
+	id 0Ey0KeFLGGr4iggAu9opvQ
+	(envelope-from <linux-s390+bounces-20157-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2026 16:06:25 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D32305F355B
-	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2026 16:04:55 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 606705F35BF
+	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2026 16:06:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A72B431A657C
-	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2026 13:57:42 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 42BCC301A0BE
+	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2026 14:04:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4202618DB1A;
-	Thu, 28 May 2026 13:57:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DA482DF701;
+	Thu, 28 May 2026 14:04:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RcVbgjCB"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JNXWk1FA"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30A2282F24;
-	Thu, 28 May 2026 13:57:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10FF12D97A6;
+	Thu, 28 May 2026 14:04:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779976662; cv=none; b=L93ttAnIErQ7JWAOtuya+1L045XPwoxIngbTX6a428i8cQK84WUfN5uMehACaR2t97XCPM0WLS3/xGHV7dK3egxhiIak3PnxOIlcNFjYdK00I+b3A86uqycTeYNwe6Xx2jl/rhM7Cx7YvH9nt2pJjpMjDrxBbCKXqpCsrBEvo5I=
+	t=1779977071; cv=none; b=jGSwc7xUcPY2fyD66CfL7GnhJ36fk1fBfWxu54Q+BAg2sZn82wVfJPpv7otywPUmAiRomrLIdgtTWfiyUTzx3aVyj+JSQJbWXDZ12gJcPph57xmGxmwpWjWiIH3/iermNRbADhP8lcz1ItXmvu1HlunOjC4mF27Z+7RsveXiqus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779976662; c=relaxed/simple;
-	bh=N9yrfBQ3KVJO9i3uwNEz/J6ea+yaqAFF9md+/3Z2aik=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=HoeLIpQaZ5mDtvd46as9OH2eav9LGhS8kVvg1LatnafbVZuRXo6IUEnoUUpjASO/RBj/pkySuAKRHMbfMBBb3LN+3UwdNWoa3ifThTEV/UPQ4q3VOAiypsEJTmPqkAe/VmAgHX56xd+An3PuGlZgjYQUT51l2jJYjhqQrxJFg8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=RcVbgjCB; arc=none smtp.client-ip=148.163.158.5
+	s=arc-20240116; t=1779977071; c=relaxed/simple;
+	bh=GzEgE7aJn62jUxv5D+sWBVYasoRwbWFk+RpXT+lnbGk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LU2x0Ui5l2NXKSnw3Uy0l2rooW3mP+J0Sx81Ajh9/WClCIKLKKNGb5TqBspe5+m2WNUADPHsfpSXbMJgKOrRBIQMOJhCkqOdiSeamSrNaNmDPUr2b7cA54rl2C6pGCV/mRlyo4wE7RCbNCO5Jw9GjxuX7kkK2VzMvhFBG/sA+g8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JNXWk1FA; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64SDAx1a035943;
-	Thu, 28 May 2026 13:57:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=2QsCyu
-	XWUMad2spc+jD9qGAw0sMJCrDvnu4waPyEMnY=; b=RcVbgjCBuYG7povsFSei+Z
-	fpqNhKMCbXsSxVryQnNqQCtQhQyd6jPrKkr7Xv9gqJdS74jqB4I2XJavempTnp7L
-	FhYJJr9rQKGGH0sETG/xIsZd+rlWWau89m1ZqecX0LQ8nynhFH3SnHYcCLdQ2zoO
-	4333Y5+WrqpGETFont2iKERD6rFEMzd0Ek+lisCMg7gG6QZr597HfKATHqyA9TQF
-	1bK7Rfo79IjG/vVbi0EBkz2bXKicBLzMq3g12Y2KsFuTW9nF1MtMUioiPWaKBPlS
-	Sc/hu9WFTX7JVJF8yf8LS1esDGoSUigAxsz5lw/ebEUetv/gv6TmptiBJsUbktNw
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64SCb67B035764;
+	Thu, 28 May 2026 14:04:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=xkAk38
+	irsJ8vUg9+GGroS/WDtXDtvSLQ57kPQkdfOyw=; b=JNXWk1FA2jpk/hUidSuY7/
+	c++lncOHVH3cAipjytvO/GLKdDtk/6sUHteeD6AJaloMOs8Izew5ANrFTlqWgVt7
+	sHKBWtlrAZqS6vEEdprnTDLwH9eyY+tMcWv51M2WqPt8iB+0PuF1887J7ZTB4Jj1
+	jTfEG9fKLyDgh1cxXaYT/b8G4UxULgSjdQDMBvO9fg/fyTTk3JjoYT9FumwU1FZm
+	l3qNzLBrr6mq+/kLhVHIPycIJDU7Z3bBLX4mCZgcri/Bz98EZTa7N5bFCKSCbMq1
+	xAl/A/csO7y5j0i2TakrclbIFDl78ZxRV/rKmLKucXDIleSWKw2JXy9kFdaCYyLg
 	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ee88bb5a5-1
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ee88bb6am-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 28 May 2026 13:57:32 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64SDs6hh018664;
-	Thu, 28 May 2026 13:57:31 GMT
-Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4edjrc0b5j-1
+	Thu, 28 May 2026 14:04:07 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64SDs6F9022600;
+	Thu, 28 May 2026 14:04:06 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4edjrb8d9u-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 28 May 2026 13:57:31 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64SDvUJo47251872
+	Thu, 28 May 2026 14:04:06 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64SE42uF51970442
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 28 May 2026 13:57:30 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3F68958058;
-	Thu, 28 May 2026 13:57:30 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 00D7158059;
-	Thu, 28 May 2026 13:57:29 +0000 (GMT)
-Received: from [9.61.144.185] (unknown [9.61.144.185])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 28 May 2026 13:57:28 +0000 (GMT)
-Message-ID: <0b3282c6-cdc5-469e-9aec-1a2b9d22ce08@linux.ibm.com>
-Date: Thu, 28 May 2026 09:57:28 -0400
+	Thu, 28 May 2026 14:04:02 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A2C8720040;
+	Thu, 28 May 2026 14:04:02 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6DEC120043;
+	Thu, 28 May 2026 14:04:01 +0000 (GMT)
+Received: from li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com (unknown [9.111.71.22])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 28 May 2026 14:04:01 +0000 (GMT)
+Date: Thu, 28 May 2026 16:03:59 +0200
+From: Jan Polensky <japo@linux.ibm.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Boqun Feng <boqun@kernel.org>
+Cc: gor@linux.ibm.com, agordeev@linux.ibm.com, ojeda@kernel.org,
+        peterz@infradead.org, jpoimboe@kernel.org, jbaron@akamai.com,
+        aliceryhl@google.com, borntraeger@linux.ibm.com, svens@linux.ibm.com,
+        gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org,
+        a.hindborg@kernel.org, tmgross@umich.edu, dakr@kernel.org,
+        rostedt@goodmis.org, ardb@kernel.org, linux-s390@vger.kernel.org,
+        rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] s390: Enable Rust support and add required arch
+ glue
+Message-ID: <ahhLT-fFx2lUi_FV@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com>
+References: <20260521165622.279953-1-japo@linux.ibm.com>
+ <CANiq72kT7YEuMaM7wkOtCz8ZqEXbPLniA-x4L7E=B+x0zXt_2Q@mail.gmail.com>
+ <20260526161312.19291A8f-hca@linux.ibm.com>
+ <CANiq72m4GVWFYqnxNtCHTPu7XcGewHB5LNwOoayTfnXs9pPbNg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 2/3] KVM: s390: Enable adapter_indicators_set to use
- mapped pages
-To: Douglas Freimuth <freimuth@linux.ibm.com>, borntraeger@linux.ibm.com,
-        imbrenda@linux.ibm.com, frankja@linux.ibm.com, david@kernel.org,
-        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        svens@linux.ibm.com, kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20260526015323.207343-1-freimuth@linux.ibm.com>
- <20260526015323.207343-3-freimuth@linux.ibm.com>
-Content-Language: en-US
-From: Matthew Rosato <mjrosato@linux.ibm.com>
-In-Reply-To: <20260526015323.207343-3-freimuth@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72m4GVWFYqnxNtCHTPu7XcGewHB5LNwOoayTfnXs9pPbNg@mail.gmail.com>
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI4MDEzOCBTYWx0ZWRfX78V7mkm8WNsa
- FdWIYE7Ujg2fN2m/y5b8uPXdoMw5AYxcExUX8wBPdEsB0ZbKWxxNNlWmFdTFvZ8XHQ2FMQJFOCZ
- 71/uoOG4VFOQR1ldrZhFulww+4l8wN4R7pUAVPCMVGVCSmfXC+3JKSfQvMEJbVXKCy6EnXBhboW
- aIBmfe43nVX/bO3/c/xyt0k77XEd+TKPpYJL7T7PjcO/XFwocoBeS5+Tw5h38KQH8pRhqceooz3
- 8bgtX71Uwtjc3ApwyxVbOBT0CZqayIV9H8EEQYRJzYFlFg0kWtR0DsoAis8Ncgk2x+fJq00FXwR
- Gx8Zaasi8/C0fV9/LOL/ohc7jZbnBWoeAOhcals6Z062ZewByxsW/UZivvEcWTU0tQ3Hj2z7Sta
- bUw5OMhhVR2S4LPK/I/4omYmBb04HWD9APvNdMRYMxwj0Kb+sX2rGXRLT4Z40hn6D0gVnZI2W48
- GHB61FkO4gTYRg068cQ==
-X-Proofpoint-ORIG-GUID: dZ8kwBjkFAijiXyEw2vNGUiujqtCp3w3
-X-Authority-Analysis: v=2.4 cv=IJEyzAvG c=1 sm=1 tr=0 ts=6a1849cc cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI4MDEzOCBTYWx0ZWRfX+qilrhiDv5t4
+ y6ONZvqjmCDDr/LTX+72FXbPeoN5yCFCViJE8Ry5qBxxg+d3QJ8PhMlfSKunwkWwrWnOOA5eWIt
+ TB7Q88kdADyvjD0PxiGi17pYiI0x1MfDaRQ68+yMXZbUygdRJA2xbBnaQEOJnQ9uAa8d5/aA4K1
+ ZBw4DHwXS6Rn1W0DiLzZ0Wg4ho6j3Kwrxqd2jVUC7/hIqcvMpbFjde6KkdFYBGKbLxEUFajruyh
+ 30vbIngBjp7gOX7sh/JGMmmfKYStHdaS2piCVfN8P2Pwa5GT0LtptKT41Syv/fU3OMaCzIGgx53
+ c6fIlaVXz+tUkRMYtBROQt4wXjZp3Pg4uos5ZiVFbYLHwUMA9PRlQxYNeIFh+UWCtQYWrlldHAZ
+ XmrUbnLwL/cMguKpGthXsb/K98VpE/mC9U/2dade8pgtx4Ybt2g0+WyjetHb9t/A/S3tsWpDkV3
+ 0loSJtdGw2ksotUJeBA==
+X-Proofpoint-ORIG-GUID: VpA2yPYcvm_OwT0cPXdAYMgS3TqJMmZr
+X-Authority-Analysis: v=2.4 cv=IJEyzAvG c=1 sm=1 tr=0 ts=6a184b57 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
  a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
  a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8
- a=YjX8BNTOaeBdKTrvYLMA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: dZ8kwBjkFAijiXyEw2vNGUiujqtCp3w3
+ a=VwQbUJbxAAAA:8 a=_ZthinDZHpcC7BOMtskA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: iRkmDbNMCFvXkTGN_ZMNaxCGJYdwpN9W
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-05-28_03,2026-05-28_03,2025-10-01_01
@@ -119,45 +125,69 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2605210000
  definitions=main-2605280138
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	TAGGED_FROM(0.00)[bounces-20156-lists,linux-s390=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20157-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
+	FREEMAIL_TO(0.00)[gmail.com,linux.ibm.com,kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[linux.ibm.com,kernel.org,infradead.org,akamai.com,google.com,garyguo.net,protonmail.com,umich.edu,goodmis.org,vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	MIME_TRACE(0.00)[0:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com:mid];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,linux.ibm.com:mid];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mjrosato@linux.ibm.com,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	PRECEDENCE_BULK(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[japo@linux.ibm.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-s390];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: D32305F355B
+X-Rspamd-Queue-Id: 606705F35BF
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 5/25/26 9:53 PM, Douglas Freimuth wrote:
-> The s390 adapter_indicators_set function can now be optimized to use
-> long-term mapped pages when available so that work can be
-> processed on a fast path when interrupts are disabled.
-> If adapter indicator pages are not mapped then local mapping is
-> done on a slow path as it is prior to this patch. For example, Secure
-> Execution environments will take the local mapping path as it does prior to
-> this patch.
-> 
-> Signed-off-by: Douglas Freimuth <freimuth@linux.ibm.com>
+On Wed, May 27, 2026 at 12:08:38PM +0200, Miguel Ojeda wrote:
+> On Tue, May 26, 2026 at 6:13 PM Heiko Carstens <hca@linux.ibm.com> wrote:
+> >
+> > An Ack from you would be appreciated, even though you made it already
+> > clear that this series looks ok.
+>
+[snip]
+> similarly named function `memcmp` defined here
+>         |
+>
+> So we likely want a Rust helper here in `rust/helpers/`.
+>
+> Up to you which configs you want to support initially and how clean
+> you want everything to be, of course, so:
+>
+> Acked-by: Miguel Ojeda <ojeda@kernel.org>
+>
+> I hope this helps!
+>
+> Cheers,
+> Miguel
+Hi Miguel,
 
-Review tag was given in v7, please include for v9.
+thanks a lot for testing and for the Ack.
+
+The backchain warning is known. The KASAN report around the 1/2-byte
+xchg emulation and the missing memchr in some configurations look like
+separate follow-up patches rather than issues in this series, and I
+plan to address them separately.
+
+Best regards,
+Jan
 
