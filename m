@@ -1,291 +1,169 @@
-Return-Path: <linux-s390+bounces-20236-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20253-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sMrBNpPCGWqyywgAu9opvQ
-	(envelope-from <linux-s390+bounces-20236-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 18:45:07 +0200
+	id AKZ9LP7RGWo+zQgAu9opvQ
+	(envelope-from <linux-s390+bounces-20253-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 19:50:54 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B15F605E0D
-	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 18:45:07 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1347D606D92
+	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 19:50:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 910CA3472C58
-	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 16:01:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2B90136083DC
+	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 16:57:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A214B409601;
-	Fri, 29 May 2026 15:56:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D871F3F65FC;
+	Fri, 29 May 2026 16:56:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VrIdGcOw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QRMQUC0K"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f173.google.com (mail-dy1-f173.google.com [74.125.82.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6814403E8C;
-	Fri, 29 May 2026 15:56:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780070204; cv=none; b=REhrACZnU9ZR4wYmCXWq/UiQ9aGWhpKZLXp//S0i6k1C0+cLBT5VzCD8ZR8Ip75OjVdRkzzUQvpAGa+f+J4tyiEFCObCk1h2NRT+O4UGaMMRrdZOUoZaw1D7jhPEMkxy11kGHOsMfjCmRlEXQeFL7SIXDKsP50FLL5XN3oaeqNs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780070204; c=relaxed/simple;
-	bh=2T0IcOBvlQduoOdEXyL/k5QW4zteu4afOmlAgQcmdMA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BFUt0dVpURDqzATP0DDwokdQa5RKjnJckC6fdCHPUp1ywrSCji4TqyG/kwAYiO72i0Cd4yn0al+wG2QwN2N0Tbm+AOIIljDRTfrSdbpUvmMF3XBN5Vbqv/LEZN23OEmLOwKgoenvoaV7Vhe1vpI1hM8b8UUp/ZGno3cufAw4WkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VrIdGcOw; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64TF4tJ11467789;
-	Fri, 29 May 2026 15:56:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=65ZPjGgfujvTG2FNZ
-	towcxEFcacc9WDSb9CSpbn8UaE=; b=VrIdGcOw2TW//fI640IuF96wP4YN7VLPU
-	9ljjCj5/SUMds5oxleVfMRfIr0nwC49/syiF4xtubaH3k9gpfRx7SjgkNg3c6Hiv
-	ErM0vIk+D2feXYFATvvFZ+wYjKG6lT7emiuycU1uBQANhRM/dQqjGOAAwaFXAAjK
-	1ClQoEq08GG4UwxWRm8brebvLikkrC8Uab5xfbVZIRrNQ194fu+GU8nsvhgMq9GP
-	LS751ORizJ3CmSK7RvAIC6ulWZ4OMCQNHaoNE/VgwA+oGnGHbwvrwVIdk1RZejzT
-	NtnfOkp9FW/SeB1AwNnHM6LkBZKvkroGLHhvWje97dcpstHvIASpQ==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ee886mgjy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 May 2026 15:56:19 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64TFs7ar009677;
-	Fri, 29 May 2026 15:56:18 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4edjrbgkwq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 May 2026 15:56:18 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64TFuCP549349006
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 29 May 2026 15:56:12 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5051720040;
-	Fri, 29 May 2026 15:56:12 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 023C12004B;
-	Fri, 29 May 2026 15:56:12 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 29 May 2026 15:56:11 +0000 (GMT)
-From: Steffen Eiden <seiden@linux.ibm.com>
-To: kvm@vger.kernel.org, kvmarm@lists.linux.dev,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Andreas Grapentin <gra@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        David Hildenbrand <david@kernel.org>,
-        Friedrich Welter <fritz@linux.ibm.com>,
-        Gautam Gala <ggala@linux.ibm.com>,
-        Hariharan Mari <hari55@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>, Joey Gouly <joey.gouly@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Nico Boehr <nrb@linux.ibm.com>,
-        Nina Schoetterl-Glausch <oss@nina.schoetterlglausch.eu>,
-        Oliver Upton <oupton@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>,
-        Zenghui Yu <yuzenghui@huawei.com>
-Subject: [PATCH v1 26/26] KVM: s390: arm64: Finalize page fault handling
-Date: Fri, 29 May 2026 17:55:59 +0200
-Message-ID: <20260529155601.2927240-27-seiden@linux.ibm.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260529155601.2927240-1-seiden@linux.ibm.com>
-References: <20260529155601.2927240-1-seiden@linux.ibm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE240239E7E
+	for <linux-s390@vger.kernel.org>; Fri, 29 May 2026 16:56:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.173
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780073774; cv=pass; b=lDWWh/oxBa/4A8UaQLg7i87YRkcceBFi4r4qqorpjI6FZGk4Ww7uJ0FmFddhef9e/5k7xqcxxdgpyWTlXzObofKyrB4bCrWgGihszKBaF+TjLRlZnbYV/syGcNhqh8cUFo3V8fZr9YRVRaCB/Lz0XVK/8k16fBcWfz05Rpqaqp0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780073774; c=relaxed/simple;
+	bh=LwXLiadq6NIJd/o7a6tAEEQNg8tMcx+oj50jV/p/xJU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JefL7H+WrFbPjj6Wb3kptdu5JY7N7gaBcp4tnAOc3mNwq9q4T6l8HmP062MrnOTlRPZpOfWgUQKIecLMzeBVk0Uj1ckgyvdg5aHTVNN/CyIJylBJdW0nEH8e10rWPmkCXh4aT3QAJZfZhVI8B2QSVXVtvlfk36wiRHAyGEC6qW4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QRMQUC0K; arc=pass smtp.client-ip=74.125.82.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-dy1-f173.google.com with SMTP id 5a478bee46e88-304e86ecebfso145328eec.0
+        for <linux-s390@vger.kernel.org>; Fri, 29 May 2026 09:56:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780073773; cv=none;
+        d=google.com; s=arc-20240605;
+        b=M0Y3pgB8o2fdwRBHUutbfz0fvv8E/WkdVdyeZ0tjqwXLoZkTuiWuWu1gycrS7DGjN8
+         F7c0Nn6jPkjJGL7EVISI2+2v12+feui5ltZh34SgP3FLyhhGfYu3+fFEEIuZuxVge6z/
+         1smU3RuwITLhN0p4keeSEqIWtRshkfXePYbef+31gJy3e/zflaPLrDkGephSoduemXoT
+         IV0e/0iCUqFrPjt4nEZEQ6+nWcT/YLwH1p7307+b1UpHQC6p86FX0ZyyUgnidZdGJeAu
+         tAtzZ0y8HmDvyZ9uWPe6Gou7IQ+nUgysXkKNb2uQ5dwsm7FpbjzkD2ESvW9Mhr50sQQt
+         w0Ug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=LwXLiadq6NIJd/o7a6tAEEQNg8tMcx+oj50jV/p/xJU=;
+        fh=Dvc5vUiLvd3NLjbjkzhe3gQUdJH8iPEiQf5hUpZG8jw=;
+        b=KlLX/EXEk8O8H/OlAdVTS/Mro0k2HSeQq8aCz+A0EN388Apdb2tvaaHGfTlwtjz7Gw
+         IHRGd6oOqePW0WYcAVbUJ670prc5DkUeoN55Gj7XXojE6mOOS/AqOm2bRlSm/75QbAUB
+         XAK5pK2oBksqHiLTG+JentyQeM3I16tRlGkKToeNC9a34iRIbinW/gGDlAJhP2wIUcNF
+         uz+JxPRv4glQ4+eSrvEFp3IKqV48G1TDgh8iOm36QG6prXs1DZ4Cx4EK1p4zqR5Eym78
+         La3uMRamPCyuIzJcs/nh7sa7snW5tMTUbWcoXKQWxZpw6czi608slUVKdDDdo5xVLFlY
+         2cIg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780073773; x=1780678573; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LwXLiadq6NIJd/o7a6tAEEQNg8tMcx+oj50jV/p/xJU=;
+        b=QRMQUC0K4NYpQOpfVv05my6aOqg0UIKeDvxYmnUhgLdX+5/OpiH1yO6EFzNr8K2i7d
+         gV2chj0GP8LDA9ICMgJRmiUO/wFhrAhkWPGxzg8Pv5MeqoVy3oow3Rlple6ljfI8Uvq4
+         sEOvCOhfYwyG2orCVI3WrXnQO3kQ9bmYoIqde+3XiD+VHQQkiBAwrKC1uiIB5OMoWoRa
+         qNmWKlajk0/r3L0fvCbQFkBVpdgWtN4DIxAh99gtdfgjT7hGTQYt9jy+02ad+j4zJtbB
+         N8FXS0teleHaVexK74Ybi/chqYFh5gPpC4osiIYPAhOrGzsOyaLRdkoKSV4ScOAFA3dM
+         RCPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780073773; x=1780678573;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=LwXLiadq6NIJd/o7a6tAEEQNg8tMcx+oj50jV/p/xJU=;
+        b=Lnw0M79fItjAmNH2RmTsTTTLS55HAzoYNVv00yuTh4qte+mz2z95APt3p4x7ay95M3
+         9q0OtvHTyOJA5jzQCE2EjRJwSIB0r7i3sQ5b8dKlrHNXNCTLdqdM2oICOID/T938KEJu
+         tFT6FMpnqAcaNEblQPPQjdzFfGVwG/pnL7K93GhX817O/C4A11wzBtcSAhxCqFAUZW0+
+         r9o22dBx+zD/b/W88pRtCePPYJNCGrZP063cJNCYHcO+KIi/6sRTfoLRAU9sV4kGXni0
+         Ro8lf03eIxGS4xcyT2Gmz7fefeD19oIN8Jbjh2mkFVrhTXeqGX5XeZOzDt+/Y6HWDDWl
+         8TdA==
+X-Forwarded-Encrypted: i=1; AFNElJ/k5Hk7CSWbzNDOkskduVWgBwOw3weiK4QvoiAm2LZWOCiOpEFIeyPrkql5TpgY9jTaEqYRig9ciMzJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlmeYCeRO5qC95UCNH+k8TCW/4Hm2dXRHxvNoyU7Gpd8TXyrpf
+	AOdERmRXk+ySaZtsnfAhoKJE0M/FzNSuDqSlcql9Stbkfy1fwP6EGzAconyzvJaa/u2dOZ/Xq2o
+	slnl4lGZFng694H8orKDmg1KIrRdLvJs=
+X-Gm-Gg: Acq92OGuz1mgr8Le4tFW1nbKllt/rA5hFUwqCHblsrfCiQTCbRJQU0fnnX6UQayGk5y
+	/F8mglUUDfaERvRch5A0T7VQYPWPsQo/sz5jzhfYBoV6hcqAxWgjVxp+wjGAMn9eEjqGI1WUi92
+	cz5XCugGSqshBiYzXGxXwMS+lXLhE+uxOwuMJlM5iojKTm1nbOEva9wsvlvAli6fFVHM28aKBpf
+	S9+gP+fTfm6kKfUSqj/ujHUdX55Op/I/Vab6joTTFj6mJyBPr6M0sDiZElaZLxWy/vbO6uM8g8i
+	YbdSWymILjC5KrzMZ6xTGX3YMn7FjZH5nhX+X/yNXINU6sC71u7m3C5uafOJk7R7beQ5QcT6e8p
+	Y3z2CP5ryTtcrGFDYNf8d0zpLhOjl1t4vBA==
+X-Received: by 2002:a05:7301:fa13:b0:304:9b4b:3b9 with SMTP id
+ 5a478bee46e88-304fa68ef3fmr160240eec.6.1780073772763; Fri, 29 May 2026
+ 09:56:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: qdGqNpQsC3UYpGpvAk8HeorvrvLc47VH
-X-Authority-Analysis: v=2.4 cv=Z8Dc2nRA c=1 sm=1 tr=0 ts=6a19b723 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=LtHRyupC2uTP9dkk8LUA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI5MDE1NiBTYWx0ZWRfXx3wbluWa3lB6
- rnxFykGocU5+j9Wla02dXZFABY6qgxxpQtelKlJIA1zq/r+5dkk33gFCssPqPaqmn6mm5uIOquu
- y0yEznA2FwBjT2S35mf5TMExYrEMLlCezCINd8Tk+DMPK9YhVI6SFCMDMt6aBDu3bPg3OinGneK
- CBNSR9iTAWCWJFm3VhGwd+tj7YiycPZqoLsTzhIdtPJUPJKRlNKasI5EQsHFWRKrrmDXC6dGUch
- 2Jqd7BTS0acQYinl2K27BMjQy77m7IOPvqooH4hxyFFi6BhPhmozLFO0ud7+zjIAJySreoBCNmi
- ApGgsg1hZpBDsRwIsnTUDdzESnFIwwkEy87uUZ9mP0zp26ol8XhBhQD7PvR7NKl5ffIY2ijXsxm
- xR7VvXmZHugNWOg66kXF5E1ep50oIl55lKHzaNn4wKE6W0UgQpiGQ6bzse6V5T/QIxel2nRDfRL
- 3HK55T8PQmmdeKORCVQ==
-X-Proofpoint-ORIG-GUID: qdGqNpQsC3UYpGpvAk8HeorvrvLc47VH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-05-29_04,2026-05-28_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 spamscore=0 bulkscore=0 impostorscore=0 priorityscore=1501
- malwarescore=0 phishscore=0 suspectscore=0 adultscore=0 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2605290156
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+References: <20260529145752.1209016-1-japo@linux.ibm.com> <20260529145752.1209016-6-japo@linux.ibm.com>
+In-Reply-To: <20260529145752.1209016-6-japo@linux.ibm.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 29 May 2026 18:55:59 +0200
+X-Gm-Features: AVHnY4JU5YFn3d0kQk2AtDd9dJRBK1vTMPr-jZMM53-wj8FgS3NYNL3mG8GTmBU
+Message-ID: <CANiq72mo1ysWRGskb61_ppZ0KZTuM8c0q9Ho6AhU0Kd8hyFoYg@mail.gmail.com>
+Subject: Re: [PATCH v4 5/6] s390/cmpxchg: Fix KASAN stack-out-of-bounds in
+ atomic helpers
+To: Jan Polensky <japo@linux.ibm.com>
+Cc: hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com, 
+	ojeda@kernel.org, peterz@infradead.org, jpoimboe@kernel.org, 
+	jbaron@akamai.com, aliceryhl@google.com, borntraeger@linux.ibm.com, 
+	svens@linux.ibm.com, boqun@kernel.org, gary@garyguo.net, 
+	bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org, 
+	tmgross@umich.edu, dakr@kernel.org, rostedt@goodmis.org, ardb@kernel.org, 
+	linux-s390@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[31];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20253-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20236-lists,linux-s390=lfdr.de];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[seiden@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[linux.ibm.com,kernel.org,infradead.org,akamai.com,google.com,garyguo.net,protonmail.com,umich.edu,goodmis.org,vger.kernel.org];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[miguelojedasandonis@gmail.com,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 7B15F605E0D
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 1347D606D92
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Complete the page fault handling implementation by replacing temporary
-error returns with proper ARM64 exception injection.
+On Fri, May 29, 2026 at 4:58=E2=80=AFPM Jan Polensky <japo@linux.ibm.com> w=
+rote:
+>
+> Reported-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 
-Signed-off-by: Steffen Eiden <seiden@linux.ibm.com>
----
- arch/s390/kvm/arm64/mmu.c       | 62 ++++++++++++++++++++++-----------
- include/kvm/arm64/kvm_feature.h |  3 ++
- 2 files changed, 44 insertions(+), 21 deletions(-)
+Link: https://lore.kernel.org/rust-for-linux/CANiq72m4GVWFYqnxNtCHTPu7XcGew=
+HB5LNwOoayTfnXs9pPbNg@mail.gmail.com/
 
-diff --git a/arch/s390/kvm/arm64/mmu.c b/arch/s390/kvm/arm64/mmu.c
-index 8759cbafbaff..4224503276fb 100644
---- a/arch/s390/kvm/arm64/mmu.c
-+++ b/arch/s390/kvm/arm64/mmu.c
-@@ -31,12 +31,14 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, gpa_t fault_ipa,
- 	ret = kvm_s390_faultin_gfn(vcpu, NULL, &f);
- 	if (ret <= 0)
- 		return ret;
--	if (ret == PGM_ADDRESSING)
-+	if (ret == PGM_ADDRESSING) {
- 		/*
--		 * Without the relevant sysregs we cannot do anything for now.
--		 * Go back to userspace with an error. TODO sysreg handling
-+		 * There is no page with the requested address. Inject size fault
-+		 * which is the closest arm match to PGM-addressing
- 		 */
--		return -ENOEXEC;
-+		kvm_inject_size_fault(vcpu);
-+		return 1;
-+	}
- 	KVM_BUG_ON(ret, vcpu->kvm);
- 	return -EINVAL;
- }
-@@ -69,6 +71,27 @@ static int kvm_handle_pic(struct kvm_vcpu *vcpu, bool *translation)
- 	return 0;
- }
- 
-+static u32 kvm_get_pa_bits(struct kvm *kvm)
-+{
-+	u32 id_parange = get_idreg_field_enum(kvm, ID_AA64MMFR0_EL1, PARANGE);
-+
-+	switch (id_parange) {
-+	case ID_AA64MMFR0_EL1_PARANGE_32: return 32;
-+	case ID_AA64MMFR0_EL1_PARANGE_36: return 36;
-+	case ID_AA64MMFR0_EL1_PARANGE_40: return 40;
-+	case ID_AA64MMFR0_EL1_PARANGE_42: return 42;
-+	case ID_AA64MMFR0_EL1_PARANGE_44: return 44;
-+	case ID_AA64MMFR0_EL1_PARANGE_48: return 48;
-+	case ID_AA64MMFR0_EL1_PARANGE_52: return 52;
-+	case ID_AA64MMFR0_EL1_PARANGE_56: return 56;
-+	}
-+	/*
-+	 * Future values must be higher than we know already.
-+	 * See ARM DDI 0487C.a. Return a safe limit.
-+	 */
-+	return ID_AA64MMFR0_EL1_PARANGE_48;
-+}
-+
- int kvm_handle_guest_abort(struct kvm_vcpu *vcpu)
- {
- 	struct kvm_memory_slot *memslot;
-@@ -98,16 +121,17 @@ int kvm_handle_guest_abort(struct kvm_vcpu *vcpu)
- 	}
- 
- 	if (translation) {
--		/*
--		 * For both cases:
--		 * Without the relevant sysregs we cannot do anything for now.
--		 * Go back to userspace with an error. TODO sysreg handling
--		 */
--		if (fault_ipa >= BIT_ULL(get_kvm_ipa_limit()))
--			return -ENOEXEC;
-+		/* Beyond sanitised PA range (which is the IPA limit) */
-+		if (fault_ipa >= BIT_ULL(kvm_get_pa_bits(vcpu->kvm))) {
-+			kvm_inject_size_fault(vcpu);
-+			return 1;
-+		}
- 
--		if (fault_ipa >= kvm_phys_size(vcpu->kvm))
--			return -ENOEXEC;
-+		/* Falls between the IPA range and the PA range? */
-+		if (fault_ipa >= kvm_phys_size(vcpu->kvm)) {
-+			fault_ipa |= kvm_vcpu_get_hfar(vcpu) & GENMASK(11, 0);
-+			return kvm_inject_sea(vcpu, is_iabt, fault_ipa);
-+		}
- 	}
- 
- 	idx = srcu_read_lock(&vcpu->kvm->srcu);
-@@ -123,18 +147,14 @@ int kvm_handle_guest_abort(struct kvm_vcpu *vcpu)
- 		 * The guest has put either its instructions or its page-tables
- 		 * somewhere it shouldn't have. Userspace won't be able to do
- 		 * anything about this (there's no syndrome for a start).
--		 *
--		 * Without the relevant sysregs we cannot do anything for now.
--		 * Go back to userspace with an error. TODO sysreg handling
- 		 */
--		if (is_iabt)
-+		if (is_iabt) {
-+			ret = kvm_inject_sea_iabt(vcpu, kvm_vcpu_get_hfar(vcpu));
- 			goto out_unlock;
-+		}
- 
- 		if (kvm_vcpu_abt_iss1tw(vcpu)) {
--			/*
--			 * Without the relevant sysregs we cannot do anything for now.
--			 * Go back to userspace with an error. TODO sysreg handling
--			 */
-+			ret = kvm_inject_sea_dabt(vcpu, kvm_vcpu_get_hfar(vcpu));
- 			goto out_unlock;
- 		}
- 
-diff --git a/include/kvm/arm64/kvm_feature.h b/include/kvm/arm64/kvm_feature.h
-index 945abbbf1aa8..193c9ca7045f 100644
---- a/include/kvm/arm64/kvm_feature.h
-+++ b/include/kvm/arm64/kvm_feature.h
-@@ -47,6 +47,9 @@
- 
- #define kvm_has_feat_enum(kvm, ...) __kvm_has_feat_enum(kvm, __VA_ARGS__)
- 
-+#define get_idreg_field_enum(kvm, id, fld)				\
-+	SYS_FIELD_GET(id, fld, kvm_read_vm_id_reg((kvm), SYS_##id))
-+
- /* Check for a given level of PAuth support */
- #define kvm_has_pauth(k, l)						\
- 	({								\
--- 
-2.53.0
+> Suggested-by: Gary Guo <gary@garyguo.net>
 
+Link: https://lore.kernel.org/rust-for-linux/DITFTAVVHTNQ.380OHUHGTOI6M@gar=
+yguo.net/
+
+Cheers,
+Miguel
 
