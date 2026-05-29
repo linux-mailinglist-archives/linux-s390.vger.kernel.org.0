@@ -1,71 +1,71 @@
-Return-Path: <linux-s390+bounces-20189-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20192-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UAW6CZKtGWpyyQgAu9opvQ
-	(envelope-from <linux-s390+bounces-20189-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 17:15:30 +0200
+	id QI85JJWtGWpyyQgAu9opvQ
+	(envelope-from <linux-s390+bounces-20192-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 17:15:33 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC599604689
-	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 17:15:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 73DDC604697
+	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 17:15:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 090A631B1CA4
-	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 15:02:48 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id C4E80314DA31
+	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 15:02:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D8DF3D8104;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A17EF3FC5D0;
 	Fri, 29 May 2026 14:58:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="U4/nFoQv"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gkAGQP5R"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B036136C9C2;
-	Fri, 29 May 2026 14:58:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400673FB7C7;
+	Fri, 29 May 2026 14:58:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780066699; cv=none; b=tS8FcaSzLvfxMKOub9DZIXSIGaGBvOrV9d8Rk1bius8ICHWNoKLbpM2PR1wYrb2lJOpMtOce3eayy03zRQ5T3xo0dp5ghpg8GFKDqC9BaPW7YP/gexMqLT8bIaZEQmU5Z0TKIjK6xsBiDGrV1uiIlxZqZDomVZMcSg94pDsckBk=
+	t=1780066700; cv=none; b=U+8B04g++9HAZ0aAFdzEQ/OJWaZ/ankcqRIu3ShUAWpQe9hfEHxPDi8bJww9WzULvCg2TI9EtzdNliapYANU9HDMo4a3dLQ191xkpvF95NKlLqbbu2CcCpw8B5f/qDdXWMmcyXf1BS9VTue5SZGZudtacHBESvy4IhBVkuA0Bxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780066699; c=relaxed/simple;
-	bh=UlEGYP8jSj19m7y5UJVI2ZyhNH8EIvLeJPip/Lv2Xuk=;
+	s=arc-20240116; t=1780066700; c=relaxed/simple;
+	bh=IWO7Uo2KXbmdRgXy4ayEN3ftvPxNIpRdKDci4TWZnjU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c2eQ+H+laUxRtUVs9AAWf5/iFJo2mEuIJmuHiMYxmi7aTrbGw1vLx77Dvck5oHMeu9sJLMu0KeGHmvs8LhYTXu8zrKhTczLA/rsDyfo3R6zZ4DxWjz64QHqBkNIEuCjaOOWE3GA/fw/CHn1srqNxrjqUwbqoCXE9QhL8Q4QYPRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=U4/nFoQv; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=q4dMkhHHmltRdu+i1K9X6phxHZAGEhaL0pz52UpMDLTms0oG/KAVMHwTgsVu+kOt1/LFr/076RD+DzwFwVGeQY6cteBwC6jf3bqvxI3ULKn92J4P6I4yc81Q5Ml1F+8CjIQfZG0ZJc3fpvGSCwuKkACGEt4MK9IokxmVvh3lhzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gkAGQP5R; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64TAosco1684644;
-	Fri, 29 May 2026 14:58:00 GMT
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64TBjf0K1467798;
+	Fri, 29 May 2026 14:58:01 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=ZbqJ94R3zv4TlxZ4l
-	Pc4zdJzKpGMXMz18Ox5ufJCyYU=; b=U4/nFoQvWtpnDPs5NgsviOC9xALQgm6ht
-	MnvJAEzEqiF409LHTXoo0Wn1FI4dEGETwT5OusV++kQhYmsY8RqPVEVOazPBVqdw
-	1Uv8EaaiddI6dSFBUQW2iD5evAyr+RbDSfSLPVJ3uLO7rsrg9smtYcJwRDKpY8ZF
-	bR1FOgLOblJKR6cOmaRlz/blB0vjxD2oIBP3jp0CTPu2rmJqvKMwfc6s52Rnwqlv
-	QRYnKs+q04vXn0WUdRaDwRZa7en2E/25GCKLc29HE5aokAGYJMmFUpVRErIjpJDs
-	e3pX1zwNJ5NLAzi30h2RrhzXwPTkTg5ytOgYlUsMvaDErpbktnIuQ==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ee884jkk2-1
+	:mime-version:references:subject:to; s=pp1; bh=pphvuZo/ASvzdbuEo
+	/WD9Nm83V0JqGg1rFjkIn+HN9o=; b=gkAGQP5RcC8SzmkPasGG9M9kw6fVgyKDs
+	4Co4KEebp1VmZd3JQEIG/tErrnXcQemWsgbAvCQgQF/8AMBezrF+W6tupSUjliSY
+	MJ1cfApJXOSToUdvOQ3Sx9Bd4AxzXaGN+fLAv4Go7H4QSMMxG5niPwduJA5l68/x
+	1d5Itu3cc4cCkXan8EepPkIdrj/OFZJAQVepF0cY/FQwnWjOtpA2ruwmeFFRzyWc
+	lEOyW0CYwSEIQbIZIzREltvY0rBPcGIMxreiALkGYGlBKhNvCZ+f7PPdRUpc3D6v
+	qdhG3HfF90JlIV5l7qh1h0bEZvIZwP7yuDq3Kete1RSSwBsqs5sFg==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ee886jjpn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 29 May 2026 14:58:00 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64TEs8Rk006469;
+	Fri, 29 May 2026 14:57:59 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4edjrbf5gj-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Fri, 29 May 2026 14:57:59 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64TEs73q011911;
-	Fri, 29 May 2026 14:57:58 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4edjrbf5qq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 May 2026 14:57:58 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64TEvt5l15073756
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64TEvtlh15073758
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Fri, 29 May 2026 14:57:55 GMT
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E786420043;
-	Fri, 29 May 2026 14:57:54 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 4213520043;
+	Fri, 29 May 2026 14:57:55 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A19162004B;
+	by IMSVA (Postfix) with ESMTP id ED3EC2004D;
 	Fri, 29 May 2026 14:57:54 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
 	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
@@ -79,9 +79,9 @@ Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com, boqun@kernel.org,
         a.hindborg@kernel.org, tmgross@umich.edu, dakr@kernel.org,
         rostedt@goodmis.org, ardb@kernel.org, linux-s390@vger.kernel.org,
         rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/6] s390/jump_label: Implement ARCH_STATIC_BRANCH_JUMP_ASM and ARCH_STATIC_BRANCH_ASM macros
-Date: Fri, 29 May 2026 16:57:48 +0200
-Message-ID: <20260529145752.1209016-3-japo@linux.ibm.com>
+Subject: [PATCH v4 3/6] rust/bindgen_parameters: Mark s390 types as opaque to prevent repr conflicts
+Date: Fri, 29 May 2026 16:57:49 +0200
+Message-ID: <20260529145752.1209016-4-japo@linux.ibm.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260529145752.1209016-1-japo@linux.ibm.com>
 References: <20260529145752.1209016-1-japo@linux.ibm.com>
@@ -94,30 +94,29 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=fIYJG5ae c=1 sm=1 tr=0 ts=6a19a977 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+X-Proofpoint-GUID: EWIHXImlfenCgyctbqHiQXdxCizZA29x
+X-Authority-Analysis: v=2.4 cv=Z8Dc2nRA c=1 sm=1 tr=0 ts=6a19a978 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
  a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=uAbxVGIbfxUO_5tXvNgY:22 a=_2yia0w1AAAA:8 a=VwQbUJbxAAAA:8 a=1XWaLZrsAAAA:8
- a=VnNF1IyMAAAA:8 a=V3UG4Yqg79Bxd1UTefQA:9 a=4yAS8WwzZ1jAEY03B-5r:22
-X-Proofpoint-ORIG-GUID: R9eW0Qss0zsCCnEpJgtD5pbCm2A7AZMZ
-X-Proofpoint-GUID: dxxobNePvy5wUELnQsC9OtlomR9g9tqV
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI5MDE0NiBTYWx0ZWRfX3BisU75UTUcD
- FyJkXJ8/DfRNZm2WWRqYmM+uOudw8RPpASoc4OE8sbchcXc4LeEKM0bAspMVowir3nkMpZWY5fb
- uCArFUjQZBRbcZC/7DRV34trPhTfS3jjOevsilk3pw9LAzrOeywedBPjuWbeuNPfsz3Qa7Obttv
- mVroY6jwrnsv+boz/FVcq5/0WspxiIimkesfXZ4lji97ajFH7mcz5cSY/RcrphTkx1sAfaSMgCJ
- Tez1KJ6nq3xetAVEXEtLpq1yK+luUYLkw6ZbyKYNyakkXh03/8ez5NZGVz4ibU/zzmvQdk4z3Yq
- vZqgwjC01tOWHH8WxA5kBUgdherdBPNwi9GlpA328S5lDP7lxLPTYyFbsYqyCjOVFsSSJJ+niZx
- 0kKPuRZkuvbT1yUAL0lrmUUWg20e+AU4+7LB6TA9/O2AXXzaY6GW82SohbkLkSU+wzVMLUR3qj3
- w03f6k9+3kB+nLbOfeQ==
+ a=U7nrCbtTmkRpXpFmAIza:22 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=_2yia0w1AAAA:8
+ a=VnNF1IyMAAAA:8 a=7MZg_RI75Eq2x-0mQykA:9 a=4yAS8WwzZ1jAEY03B-5r:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI5MDE0NiBTYWx0ZWRfX1E/tl8E3Q57k
+ wH/SCnWRL1rTxRGs0/YqK4fgoKQ6Utg0YBwR9dD4ZFOn/c1lza/awADWt1fhm9Gn8eoNTs88eR5
+ Z+o5v+RTIKQG9cLN3sks55KY6x10m5WlkqLjXiVX3gOsI6CuMot3J3uz88pUJQJ7qkLHL4lU9kL
+ oIPdid+58AlvZs+muduUbtaW84L8uX2/8QE8EsWYfxXPz2k4lwV3AD7MXqn1zYSnYBHzDXe6kAQ
+ 4G4WwrkwEoQvoPg7tHDshU9knuNYNTig88A3Bgd/qJa8vjLJFJQkDTx8gJEEsHcCLzhOVsahOX4
+ CGGWcIdUa2bMnosiPkBv+Z1WVVZmk8//jiDb9uUz7SusceCSUAJBlqpIrSMSKCKRzFUFJviwtXW
+ /wKPi15kO+TJfjarzn03BM1W5hQEeQLcqE/TkLpAY0xntKpJin2w5NLdX1dXxN4sR+IkzwLTWCR
+ P348Re2D+qaSzRgKe7A==
+X-Proofpoint-ORIG-GUID: LfFPcSpBDPNJXjUOzMLZjGCH7819_j_E
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-05-29_04,2026-05-28_03,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 lowpriorityscore=0 suspectscore=0 impostorscore=0
- priorityscore=1501 malwarescore=0 clxscore=1015 adultscore=0 spamscore=0
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2605210000
- definitions=main-2605290146
+ clxscore=1015 spamscore=0 bulkscore=0 impostorscore=0 priorityscore=1501
+ malwarescore=0 phishscore=0 suspectscore=0 adultscore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2605290146
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
@@ -129,7 +128,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20189-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20192-lists,linux-s390=lfdr.de];
 	FREEMAIL_CC(0.00)[linux.ibm.com,kernel.org,garyguo.net,protonmail.com,umich.edu,goodmis.org,vger.kernel.org];
 	TO_DN_NONE(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -139,92 +138,51 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,linux.ibm.com:mid,garyguo.net:email];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,garyguo.net:email,linux.ibm.com:mid];
 	DKIM_TRACE(0.00)[ibm.com:+];
 	TAGGED_RCPT(0.00)[linux-s390];
 	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	RCPT_COUNT_TWELVE(0.00)[22];
 	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: BC599604689
+X-Rspamd-Queue-Id: 73DDC604697
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Rust static branch support needs the s390 jump label instruction sequence
-and __jump_table emission in a reusable form. The current implementation
-embeds the sequence directly in the C asm goto blocks, which cannot be
-shared with Rust.
+Bindgen attempts to generate Rust layouts for a number of s390 structs
+that are packed but contain, or transitively contain, aligned fields.
+Rust rejects such layouts with E0588 ("packed type cannot transitively
+contain a #[repr(align)] type").
 
-Introduce ARCH_STATIC_BRANCH_ASM and ARCH_STATIC_BRANCH_JUMP_ASM to
-describe the brcl sequences for the likely-false and likely-true cases
-and to emit the same __jump_table entries as before. Switch the existing
-C helpers to use the new macros to avoid duplication without changing
-the generated code.
+Add the affected s390 types to the opaque type list so bindgen emits
+opaque blob types instead of full representations. This matches existing
+workarounds for x86 types such as alt_instr and x86_msi_data.
 
-Acked-by: Gary Guo <gary@garyguo.net>
+References: https://lore.kernel.org/all/e5c7aa10-590d-0d20-dd3b-385bee2377e7@intel.com/
 Acked-by: Miguel Ojeda <ojeda@kernel.org>
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Reviewed-by: Gary Guo <gary@garyguo.net>
 Signed-off-by: Jan Polensky <japo@linux.ibm.com>
 ---
- arch/s390/include/asm/jump_label.h | 33 +++++++++++++++++-------------
- 1 file changed, 19 insertions(+), 14 deletions(-)
+ rust/bindgen_parameters | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/s390/include/asm/jump_label.h b/arch/s390/include/asm/jump_label.h
-index d9cbc18f6b2e..0e28c90dc242 100644
---- a/arch/s390/include/asm/jump_label.h
-+++ b/arch/s390/include/asm/jump_label.h
-@@ -19,19 +19,29 @@
- #define JUMP_LABEL_STATIC_KEY_CONSTRAINT "jdd"
- #endif
+diff --git a/rust/bindgen_parameters b/rust/bindgen_parameters
+index 6f02d9720ad2..8402b0c93545 100644
+--- a/rust/bindgen_parameters
++++ b/rust/bindgen_parameters
+@@ -14,6 +14,13 @@
+ --opaque-type alt_instr
+ --opaque-type x86_msi_data
+ --opaque-type x86_msi_addr_lo
++# s390-only: same packed/align issue as above (E0588).
++--opaque-type lowcore
++--opaque-type tod_clock
++--opaque-type tpi_info
++--opaque-type uv_cb.*
++--opaque-type uv_secret.*
++--opaque-type zpci_fib
  
-+#define ARCH_JUMP_TABLE_ENTRY(key, label, local_label)	\
-+	".pushsection __jump_table,\"aw\"\n"		\
-+	".balign	8\n"				\
-+	".long	" local_label "-.," label "-.\n"	\
-+	".quad	" key "-.\n"				\
-+	".popsection\n"
-+
- /*
-  * We use a brcl 0,<offset> instruction for jump labels so it
-  * can be easily distinguished from a hotpatch generated instruction.
-  */
-+#define ARCH_STATIC_BRANCH_ASM(key, label)	\
-+	"0:	brcl 0," label "\n"		\
-+	ARCH_JUMP_TABLE_ENTRY(key, label, "0b")
-+
-+#define ARCH_STATIC_BRANCH_JUMP_ASM(key, label)	\
-+	"0:	brcl 15," label "\n"		\
-+	ARCH_JUMP_TABLE_ENTRY(key, label, "0b")
-+
- static __always_inline bool arch_static_branch(struct static_key *key, bool branch)
- {
--	asm goto("0:	brcl 0,%l[label]\n"
--			  ".pushsection __jump_table,\"aw\"\n"
--			  ".balign	8\n"
--			  ".long	0b-.,%l[label]-.\n"
--			  ".quad	%0+%1-.\n"
--			  ".popsection\n"
--			  : : JUMP_LABEL_STATIC_KEY_CONSTRAINT (key), "i" (branch) : : label);
-+	asm goto(ARCH_STATIC_BRANCH_ASM("%0+%1", "%l[label]")
-+		: : JUMP_LABEL_STATIC_KEY_CONSTRAINT (key), "i" (branch) : : label);
- 	return false;
- label:
- 	return true;
-@@ -39,13 +49,8 @@ static __always_inline bool arch_static_branch(struct static_key *key, bool bran
- 
- static __always_inline bool arch_static_branch_jump(struct static_key *key, bool branch)
- {
--	asm goto("0:	brcl 15,%l[label]\n"
--			  ".pushsection __jump_table,\"aw\"\n"
--			  ".balign	8\n"
--			  ".long	0b-.,%l[label]-.\n"
--			  ".quad	%0+%1-.\n"
--			  ".popsection\n"
--			  : : JUMP_LABEL_STATIC_KEY_CONSTRAINT (key), "i" (branch) : : label);
-+	asm goto(ARCH_STATIC_BRANCH_JUMP_ASM("%0+%1", "%l[label]")
-+		: : JUMP_LABEL_STATIC_KEY_CONSTRAINT (key), "i" (branch) : : label);
- 	return false;
- label:
- 	return true;
+ # If SMP is disabled, `arch_spinlock_t` is defined as a ZST which triggers a Rust
+ # warning. We don't need to peek into it anyway.
 -- 
 2.53.0
 
