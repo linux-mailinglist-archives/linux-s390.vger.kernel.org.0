@@ -1,71 +1,71 @@
-Return-Path: <linux-s390+bounces-20226-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20230-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aLgnEoO7GWqoyggAu9opvQ
-	(envelope-from <linux-s390+bounces-20226-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 18:14:59 +0200
+	id CE7/Iq67GWqoyggAu9opvQ
+	(envelope-from <linux-s390+bounces-20230-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 18:15:42 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8A68605631
-	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 18:14:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 05060605642
+	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 18:15:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 724D332D7D14
-	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 15:59:34 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 6CADF31834AA
+	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 16:00:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 471023FB7E1;
-	Fri, 29 May 2026 15:56:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D75EB3FF1C0;
+	Fri, 29 May 2026 15:56:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="V34lUfcp"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dLD7BOjw"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A954D3FB040;
-	Fri, 29 May 2026 15:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC41C3FDC18;
+	Fri, 29 May 2026 15:56:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780070193; cv=none; b=TfO5+gk+/OgL/jksTIayeqcoLU1N+WdCZzIkiRLAOKrmWElMD7vxd/ZZYgrZArHr4CJ42o/Nhi+/4jO2HFt6FZylGdvIO+I7XtXODE8FT9CZOz/Ou6/3cL4BQgJTeo6pyVjXR+GKFOv12+E8633R+tm5ynNoLlsD/i5F1/GKX+U=
+	t=1780070198; cv=none; b=RFcQBfarH9g6ZWtDXmw90rlFjaQKC2C9saDlZJkL2UUw3pZsFP/ksENpC3MmkNHK7q3QZ3tdIIbfd7qZBrN7PJlTHnvuMXtfVYE9U2LQwZc8I9zV3KMHHsqQT8ctGTrBNKHFL6ZHkXBB830Ev98l6QNYFEbfMHQartDQfA52hTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780070193; c=relaxed/simple;
-	bh=86J4c4IDhkXcD+sXUJ3szi39ltTyhiRUK+PG6XXZDcc=;
+	s=arc-20240116; t=1780070198; c=relaxed/simple;
+	bh=baq4cRKR9673AaG4M+ydRFk7OMtBI4huA/q4jzTaWRY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dnqRGpy5juLM6J81WxVYQXqsAG4wKKQgyav/EUudytz3hHYQjkzYqDifVpPX+1TKKKF6XS8DQ3ag1UD9idAuxlxW3il3wrQaNO+fAScQCF5IBV93ZtnOvvRVQFdWV7lohUIKk/tEW3NL0NdKq6usVMRQPlmtgItqMi9TVf9vmac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=V34lUfcp; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=GQtGm8P9gTz5Eg1P0jXQY13vMLE8xZCB+ibcjj8yELghipXEAWbUuZ+N+a5Chh6vbzWkP7hyBzSoNNVUEn+PtEXD6kSrKIIR5XitnmPdpsEhXqhT0tyQ6O6HO3Pf5W+lmtQLNNWeT2wq3CdA1XnRE4Mz5kwbN+SogxcQ6nMORtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dLD7BOjw; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64TFAXSC2419213;
-	Fri, 29 May 2026 15:56:12 GMT
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64TFHRqk3217155;
+	Fri, 29 May 2026 15:56:13 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=3/FkRX+SkHZmJLVfE
-	SRkOboCdzcmTpr5KGDuU5B1jY4=; b=V34lUfcpaRVZPqVpvVs+sLOJLgO7gfRJ+
-	kLjFvhE+ysG946P89jOQOn+qoddOadzUGpB3v3/IDkrYxGjGcSW3JbO8ZFRp7M1U
-	AbpK0G2b84n4SpJSGrkCioEo2Zi8hoQSuoLROclb7ft/mjNGDcqmWBWm1VH56nEz
-	4xQhC/YnXvSKQmMjjk7YwSeAtmDB4kYoPGJmN/edDOMCnrju08jfQa300PMKk3It
-	6hBxZbZ4g5tlOfXx0da5DWQdxVAI9xCwtPFyzxfR+wMlu5aS0pswlaE8z9mhEetX
-	SvJeJsX5AJUTEuXpl84JK4wlY4XDpIur99sLkht/KLCtQTFFhgwTQ==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ee884vknk-1
+	:mime-version:references:subject:to; s=pp1; bh=jAH55rZkTvViU7aHU
+	2ThlI/tFiC7U75l7lFJ0ODKt4U=; b=dLD7BOjwsNSwrTXxjLa+wXYbOoDnsCowh
+	gwhdgkAFxeOL1Zs01rCC/JCEeDBOd3hKT/Kuj8pdKLTFf562oHpga5DJvTXm/CJV
+	28hojkLH26TjDFFx050TXWHN5a047qjXabwmBaA5Ntyi9+Nt3DOvQDwfPEcgnQZL
+	nsUT+daKGNpPoLQreYfjFHJZheR8mETgxQXh4in8Hb+//pPv2m5DocUTMHPowk/9
+	x2/u9967xkTL9sJYqS+oIIAdgo8pn5e8MNN8W1tEKfaFlhYTloNuOqgQWD5vz/uZ
+	+ERPJzukHyV+PI+1eUIyxShLjGGnksRacyG56sWSt883f9u/B4+CQ==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ee88bm2jt-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Fri, 29 May 2026 15:56:12 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64TFs814023079;
-	Fri, 29 May 2026 15:56:11 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4edjrc0k1r-1
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64TFs7ah009677;
+	Fri, 29 May 2026 15:56:12 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4edjrbgkua-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Fri, 29 May 2026 15:56:11 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64TFu4t616187700
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64TFu58142205502
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Fri, 29 May 2026 15:56:05 GMT
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D1F6120040;
-	Fri, 29 May 2026 15:56:04 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 3E3DD20040;
+	Fri, 29 May 2026 15:56:05 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 865482004D;
+	by IMSVA (Postfix) with ESMTP id DBC372004B;
 	Fri, 29 May 2026 15:56:04 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
 	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
@@ -95,9 +95,9 @@ Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
         Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>,
         Zenghui Yu <yuzenghui@huawei.com>
-Subject: [PATCH v1 07/26] KVM: arm64: Remove kvm_has_feat_range
-Date: Fri, 29 May 2026 17:55:40 +0200
-Message-ID: <20260529155601.2927240-8-seiden@linux.ibm.com>
+Subject: [PATCH v1 08/26] KVM: arm64: Split up feature sysreg sanitisation
+Date: Fri, 29 May 2026 17:55:41 +0200
+Message-ID: <20260529155601.2927240-9-seiden@linux.ibm.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260529155601.2927240-1-seiden@linux.ibm.com>
 References: <20260529155601.2927240-1-seiden@linux.ibm.com>
@@ -109,28 +109,29 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=L4MtheT8 c=1 sm=1 tr=0 ts=6a19b71c cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI5MDE1NiBTYWx0ZWRfX2dMs4exigRHo
+ h1N3uP2ic/tjvpD55Tuk34/BiQEu2cXz6QYNyT8goHv5c+iBM0N+xrLr66gt30+wnpJ5AqoWAWA
+ 56xSJDB0D+km5gnSbGm2raeLrWngmw/FF2fiMcX72OtQZpqX3Pe07EAFFD3qdPWJMpNl7mMBSxM
+ SJNEtb5jSvArye7Lupc9zmWd/cMoDztiNXDTAI8dXhWdb4qHES8eBEb/koZQipxLXJu4Jy8zy17
+ GMyEP//LH4UpoI0WzOXFH4AXXs6//o+e9z9quiJtc+qS2VY4kNS7g2bwHOzI24YGzrh+aKCuJtH
+ IqRYUJBrmbTMghz5FyX9RoVDERY8ZxJ+musOXu0/3+5cQ68ZQkntF46TAF2KuP5w01W6gpfGl+K
+ xaX+eo7m12TiTZYe1jeu27ctFNGfEzdgW26qXpEEjJh0rz+IgLj8K6LL430LipdWnlcdiykL+MV
+ FUeeGdqhNHS20qaAY+Q==
+X-Proofpoint-ORIG-GUID: wFvicD_RSdqEi-rRAAIp92c4cgx5IjOR
+X-Authority-Analysis: v=2.4 cv=IJEyzAvG c=1 sm=1 tr=0 ts=6a19b71c cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
  a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8 a=3-yqm4NPzKxgNXSuSH0A:9
-X-Proofpoint-ORIG-GUID: iRKEu5XZGYdTQl1aubAOq9aFT057y5V6
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI5MDE1NiBTYWx0ZWRfX8mTz7O9VCZFE
- R0XL99rl7E3yEfO2jUkeFCw65+CjRp4OtiyuZQ1D5P2YKaZ5EPpZvFlCGZr+o/HVLxaELK6D7Ze
- M0AtUF8VESpOJGbVIVny3zPZGSxbHohy/2AWVERM3iaFZoKVPDad7OUka8DmDmbvwXrteTCsGyf
- MQOx0qVS16L7/aughYsjRWDyG658HCwKaMl/024pux99SZ3aZoTC7E7tQFMCKdvdHnbvqy4JCdg
- NtzHTu32KWRqIwB9lvmn6xo7XXgoLSBDInAdOHbivz2jvi6Mv2hOqkcZ55OAUERGvQGQqiYA+Nb
- a/cia20Md2aMzdbkM62zv9QzcFe3OOFHP3WjG+f4ClqvLCHvZt5qE2ldnWJpd4oOC6d/1RH+wJ8
- 3BczdDf9r4VraVSDORZon4KkHF3EPgCb5J1zZNGEKxQJl1sMH9iptxmZXjV1sD4k7XdcMsrS3d1
- swNwplc0CQkEp1ZfrCA==
-X-Proofpoint-GUID: iRKEu5XZGYdTQl1aubAOq9aFT057y5V6
+ a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8 a=r_tBfuKwx9rY2nSX5wQA:9
+X-Proofpoint-GUID: wFvicD_RSdqEi-rRAAIp92c4cgx5IjOR
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-05-29_04,2026-05-28_03,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 lowpriorityscore=0 suspectscore=0 clxscore=1015 malwarescore=0
- bulkscore=0 impostorscore=0 adultscore=0 priorityscore=1501 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2605290156
+ suspectscore=0 phishscore=0 clxscore=1015 spamscore=0 bulkscore=0
+ adultscore=0 priorityscore=1501 malwarescore=0 lowpriorityscore=0
+ impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2605210000
+ definitions=main-2605290156
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
@@ -145,7 +146,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCPT_COUNT_TWELVE(0.00)[31];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20226-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20230-lists,linux-s390=lfdr.de];
 	DKIM_TRACE(0.00)[ibm.com:+];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TO_DN_SOME(0.00)[];
@@ -154,33 +155,379 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,linux.ibm.com:mid];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo];
 	TAGGED_RCPT(0.00)[linux-s390];
 	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: C8A68605631
+X-Rspamd-Queue-Id: 05060605642
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-It is (and has been) unused.
+Split ID register sanitisation into distinct stages:
 
+1) static KVM limits (kvm_max_possible_guest_ftr_reg)
+2) host-specific (kvm_sanitised_host_ftr_reg)
+3) per-vcpu configuration (kvm_sanitise_vcpu_ftr_reg)
+
+This refactoring improves code organization by separating concerns.
+Static limits apply regardless of host or guest configuration. Host
+capability checks handle features like GIC, GCIE, and Spectre
+mitigations. Per-vcpu feature configuration manages SVE, MTE, PMU, and
+similar guest-specific features. Additionally, this enables other
+architectures to add different host-implementation-based sanitisation in
+the future.
+
+Remove helper functions sanitise_id_aa64{pfr0,pfr1,dfr0}_el1
+in favor of organized logic.
+
+Co-developed-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+Signed-off-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
 Signed-off-by: Steffen Eiden <seiden@linux.ibm.com>
 ---
- arch/arm64/include/asm/kvm_feature.h | 2 --
- 1 file changed, 2 deletions(-)
+ arch/arm64/kvm/sys_regs.c | 291 ++++++++++++++++++++------------------
+ 1 file changed, 153 insertions(+), 138 deletions(-)
 
-diff --git a/arch/arm64/include/asm/kvm_feature.h b/arch/arm64/include/asm/kvm_feature.h
-index da9ba5041f44..27a472d2343e 100644
---- a/arch/arm64/include/asm/kvm_feature.h
-+++ b/arch/arm64/include/asm/kvm_feature.h
-@@ -46,8 +46,6 @@
+diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+index 2434bcc2d50d..b9aa892616ab 100644
+--- a/arch/arm64/kvm/sys_regs.c
++++ b/arch/arm64/kvm/sys_regs.c
+@@ -1841,54 +1841,86 @@ static u8 pmuver_to_perfmon(u8 pmuver)
+ 	}
+ }
  
- #define kvm_has_feat_enum(kvm, ...) __kvm_has_feat_enum(kvm, __VA_ARGS__)
+-static u64 sanitise_id_aa64pfr0_el1(const struct kvm_vcpu *vcpu, u64 val);
+-static u64 sanitise_id_aa64pfr1_el1(const struct kvm_vcpu *vcpu, u64 val);
+-static u64 sanitise_id_aa64pfr2_el1(const struct kvm_vcpu *vcpu, u64 val);
+-static u64 sanitise_id_aa64dfr0_el1(const struct kvm_vcpu *vcpu, u64 val);
+-
+-/* Read a sanitised cpufeature ID register by sys_reg_desc */
+-static u64 __kvm_read_sanitised_id_reg(const struct kvm_vcpu *vcpu,
+-				       const struct sys_reg_desc *r)
++/*
++ * Sanitise based on the host implementation.
++ */
++static u64 kvm_sanitised_host_ftr_reg(u32 id)
+ {
+-	u32 id = reg_to_encoding(r);
+-	u64 val;
+-
+-	if (sysreg_visible_as_raz(vcpu, r))
+-		return 0;
+-
+-	val = read_sanitised_ftr_reg(id);
++	u64 val = read_sanitised_ftr_reg(id);
  
--#define kvm_has_feat_range(kvm, id, fld, min, max)			\
--	id_has_feat_range(kvm_read_vm_id_reg((kvm), SYS_##id), id, fld, min, max)
+ 	switch (id) {
+-	case SYS_ID_AA64DFR0_EL1:
+-		val = sanitise_id_aa64dfr0_el1(vcpu, val);
++	case SYS_ID_AA64ISAR2_EL1:
++		if (!cpus_have_final_cap(ARM64_HAS_WFXT) ||
++		    has_broken_cntvoff())
++			val &= ~ID_AA64ISAR2_EL1_WFxT;
+ 		break;
+ 	case SYS_ID_AA64PFR0_EL1:
+-		val = sanitise_id_aa64pfr0_el1(vcpu, val);
++		/*
++		 * The default is to expose CSV2 == 1 if the HW isn't affected.
++		 * Although this is a per-CPU feature, we make it global because
++		 * asymmetric systems are just a nuisance.
++		 *
++		 * Userspace can override this as long as it doesn't promise
++		 * the impossible.
++		 */
++		if (arm64_get_spectre_v2_state() == SPECTRE_UNAFFECTED) {
++			val &= ~ID_AA64PFR0_EL1_CSV2_MASK;
++			val |= SYS_FIELD_PREP_ENUM(ID_AA64PFR0_EL1, CSV2, IMP);
++		}
++		if (arm64_get_meltdown_state() == SPECTRE_UNAFFECTED) {
++			val &= ~ID_AA64PFR0_EL1_CSV3_MASK;
++			val |= SYS_FIELD_PREP_ENUM(ID_AA64PFR0_EL1, CSV3, IMP);
++		}
++		if (vgic_host_has_gicv3()) {
++			val &= ~ID_AA64PFR0_EL1_GIC_MASK;
++			val |= SYS_FIELD_PREP_ENUM(ID_AA64PFR0_EL1, GIC, IMP);
++		}
+ 		break;
+-	case SYS_ID_AA64PFR1_EL1:
+-		val = sanitise_id_aa64pfr1_el1(vcpu, val);
++	case SYS_ID_AA64PFR1_EL1: {
++		u64 pfr0_host = read_sanitised_ftr_reg(SYS_ID_AA64PFR0_EL1);
++
++		if (!(cpus_have_final_cap(ARM64_HAS_RASV1P1_EXTN) &&
++		      SYS_FIELD_GET(ID_AA64PFR0_EL1, RAS, pfr0_host) == ID_AA64PFR0_EL1_RAS_IMP))
++			val &= ~ID_AA64PFR1_EL1_RAS_frac;
+ 		break;
++	}
+ 	case SYS_ID_AA64PFR2_EL1:
+-		val = sanitise_id_aa64pfr2_el1(vcpu, val);
++		if (vgic_host_has_gicv5())
++			val |= SYS_FIELD_PREP_ENUM(ID_AA64PFR2_EL1, GCIE, IMP);
+ 		break;
+-	case SYS_ID_AA64ISAR1_EL1:
+-		if (!vcpu_has_ptrauth(vcpu))
+-			val &= ~(ID_AA64ISAR1_EL1_APA |
+-				 ID_AA64ISAR1_EL1_API |
+-				 ID_AA64ISAR1_EL1_GPA |
+-				 ID_AA64ISAR1_EL1_GPI);
++	case SYS_ID_AA64MMFR3_EL1:
++		if (!system_supports_poe())
++			val &= ~ID_AA64MMFR3_EL1_S1POE;
++		break;
++	}
++
++	return val;
++}
++
++/*
++ * Statically sanitise the host's feature register, independent of the guest's
++ * configuration and host implementation.
++ */
++static u64 kvm_max_possible_guest_ftr_reg(u32 id, u64 val)
++{
++	switch (id) {
++	case SYS_ID_AA64DFR0_EL1:
++		val = ID_REG_LIMIT_FIELD_ENUM(val, ID_AA64DFR0_EL1, DebugVer, V8P8);
++
++		/* Hide SPE from guests */
++		val &= ~ID_AA64DFR0_EL1_PMSVer_MASK;
++
++		/* Hide BRBE from guests */
++		val &= ~ID_AA64DFR0_EL1_BRBE_MASK;
+ 		break;
+ 	case SYS_ID_AA64ISAR2_EL1:
+-		if (!vcpu_has_ptrauth(vcpu))
+-			val &= ~(ID_AA64ISAR2_EL1_APA3 |
+-				 ID_AA64ISAR2_EL1_GPA3);
+-		if (!cpus_have_final_cap(ARM64_HAS_WFXT) ||
+-		    has_broken_cntvoff())
++		/* Mask WFxT field unless *both* WFET & WFIT are present. */
++		if (!id_has_feat(val, ID_AA64ISAR2_EL1, WFxT, IMP))
+ 			val &= ~ID_AA64ISAR2_EL1_WFxT;
+ 		break;
+ 	case SYS_ID_AA64ISAR3_EL1:
+ 		val &= ID_AA64ISAR3_EL1_FPRCVT | ID_AA64ISAR3_EL1_LSFE |
+-			ID_AA64ISAR3_EL1_FAMINMAX | ID_AA64ISAR3_EL1_LSUI;
++		       ID_AA64ISAR3_EL1_FAMINMAX | ID_AA64ISAR3_EL1_LSUI;
+ 		break;
+ 	case SYS_ID_AA64MMFR2_EL1:
+ 		val &= ~ID_AA64MMFR2_EL1_CCIDX_MASK;
+@@ -1899,13 +1931,81 @@ static u64 __kvm_read_sanitised_id_reg(const struct kvm_vcpu *vcpu,
+ 		       ID_AA64MMFR3_EL1_SCTLRX |
+ 		       ID_AA64MMFR3_EL1_S1POE |
+ 		       ID_AA64MMFR3_EL1_S1PIE;
+-
+-		if (!system_supports_poe())
+-			val &= ~ID_AA64MMFR3_EL1_S1POE;
+ 		break;
+ 	case SYS_ID_MMFR4_EL1:
+ 		val &= ~ID_MMFR4_EL1_CCIDX;
+ 		break;
++	case SYS_ID_AA64PFR0_EL1:
++		val &= ~ID_AA64PFR0_EL1_AMU_MASK;
++		/*
++		 * MPAM is disabled by default as KVM also needs a set of PARTID to
++		 * program the MPAMVPMx_EL2 PARTID remapping registers with. But some
++		 * older kernels let the guest see the ID bit.
++		 */
++		val &= ~ID_AA64PFR0_EL1_MPAM_MASK;
++		break;
++	case SYS_ID_AA64PFR1_EL1:
++		val &= ~ID_AA64PFR1_EL1_SME;
++		val &= ~ID_AA64PFR1_EL1_RNDR_trap;
++		val &= ~ID_AA64PFR1_EL1_NMI;
++		val &= ~ID_AA64PFR1_EL1_GCS;
++		val &= ~ID_AA64PFR1_EL1_THE;
++		val &= ~ID_AA64PFR1_EL1_MTEX;
++		val &= ~ID_AA64PFR1_EL1_PFAR;
++		val &= ~ID_AA64PFR1_EL1_MPAM_frac;
++		break;
++	case SYS_ID_AA64PFR2_EL1:
++		val &= ID_AA64PFR2_EL1_FPMR |
++		       ID_AA64PFR2_EL1_MTEFAR |
++		       ID_AA64PFR2_EL1_MTESTOREONLY;
++		break;
++	}
++
++	return val;
++}
++
++/*
++ * Sanitise based on vCPU configuration.
++ */
++static u64 kvm_sanitise_vcpu_ftr_reg(const struct kvm_vcpu *vcpu, u32 id, u64 val)
++{
++	switch (id) {
++	case SYS_ID_AA64DFR0_EL1:
++		/*
++		 * Only initialize the PMU version if the vCPU was configured with one.
++		 */
++		val &= ~ID_AA64DFR0_EL1_PMUVer_MASK;
++		if (kvm_vcpu_has_pmu(vcpu))
++			val |= SYS_FIELD_PREP(ID_AA64DFR0_EL1, PMUVer,
++					      kvm_arm_pmu_get_pmuver_limit());
++		break;
++	case SYS_ID_AA64PFR0_EL1:
++		if (!vcpu_has_sve(vcpu))
++			val &= ~ID_AA64PFR0_EL1_SVE_MASK;
++		break;
++	case SYS_ID_AA64PFR1_EL1:
++		if (!kvm_has_mte(vcpu->kvm)) {
++			val &= ~ID_AA64PFR1_EL1_MTE;
++			val &= ~ID_AA64PFR1_EL1_MTE_frac;
++		}
++		break;
++	case SYS_ID_AA64PFR2_EL1:
++		if (!kvm_has_mte(vcpu->kvm)) {
++			val &= ~ID_AA64PFR2_EL1_MTEFAR;
++			val &= ~ID_AA64PFR2_EL1_MTESTOREONLY;
++		}
++		break;
++	case SYS_ID_AA64ISAR1_EL1:
++		if (!vcpu_has_ptrauth(vcpu))
++			val &= ~(ID_AA64ISAR1_EL1_APA |
++				 ID_AA64ISAR1_EL1_API |
++				 ID_AA64ISAR1_EL1_GPA |
++				 ID_AA64ISAR1_EL1_GPI);
++		break;
++	case SYS_ID_AA64ISAR2_EL1:
++		if (!vcpu_has_ptrauth(vcpu))
++			val &= ~(ID_AA64ISAR2_EL1_APA3 |
++				 ID_AA64ISAR2_EL1_GPA3);
+ 	}
  
- /* Check for a given level of PAuth support */
- #define kvm_has_pauth(k, l)						\
+ 	if (vcpu_has_nv(vcpu))
+@@ -1914,6 +2014,23 @@ static u64 __kvm_read_sanitised_id_reg(const struct kvm_vcpu *vcpu,
+ 	return val;
+ }
+ 
++/* Read a sanitised cpufeature ID register by sys_reg_desc */
++static u64 __kvm_read_sanitised_id_reg(const struct kvm_vcpu *vcpu,
++				       const struct sys_reg_desc *r)
++{
++	u32 id = reg_to_encoding(r);
++	u64 val;
++
++	if (sysreg_visible_as_raz(vcpu, r))
++		return 0;
++
++	val = kvm_sanitised_host_ftr_reg(id);
++	val = kvm_max_possible_guest_ftr_reg(id, val);
++	val = kvm_sanitise_vcpu_ftr_reg(vcpu, id, val);
++
++	return val;
++}
++
+ static u64 kvm_read_sanitised_id_reg(struct kvm_vcpu *vcpu,
+ 				     const struct sys_reg_desc *r)
+ {
+@@ -2046,108 +2163,6 @@ static unsigned int fp8_visibility(const struct kvm_vcpu *vcpu,
+ 	return REG_HIDDEN;
+ }
+ 
+-static u64 sanitise_id_aa64pfr0_el1(const struct kvm_vcpu *vcpu, u64 val)
+-{
+-	if (!vcpu_has_sve(vcpu))
+-		val &= ~ID_AA64PFR0_EL1_SVE_MASK;
+-
+-	/*
+-	 * The default is to expose CSV2 == 1 if the HW isn't affected.
+-	 * Although this is a per-CPU feature, we make it global because
+-	 * asymmetric systems are just a nuisance.
+-	 *
+-	 * Userspace can override this as long as it doesn't promise
+-	 * the impossible.
+-	 */
+-	if (arm64_get_spectre_v2_state() == SPECTRE_UNAFFECTED) {
+-		val &= ~ID_AA64PFR0_EL1_CSV2_MASK;
+-		val |= SYS_FIELD_PREP_ENUM(ID_AA64PFR0_EL1, CSV2, IMP);
+-	}
+-	if (arm64_get_meltdown_state() == SPECTRE_UNAFFECTED) {
+-		val &= ~ID_AA64PFR0_EL1_CSV3_MASK;
+-		val |= SYS_FIELD_PREP_ENUM(ID_AA64PFR0_EL1, CSV3, IMP);
+-	}
+-
+-	if (vgic_host_has_gicv3()) {
+-		val &= ~ID_AA64PFR0_EL1_GIC_MASK;
+-		val |= SYS_FIELD_PREP_ENUM(ID_AA64PFR0_EL1, GIC, IMP);
+-	}
+-
+-	val &= ~ID_AA64PFR0_EL1_AMU_MASK;
+-
+-	/*
+-	 * MPAM is disabled by default as KVM also needs a set of PARTID to
+-	 * program the MPAMVPMx_EL2 PARTID remapping registers with. But some
+-	 * older kernels let the guest see the ID bit.
+-	 */
+-	val &= ~ID_AA64PFR0_EL1_MPAM_MASK;
+-
+-	return val;
+-}
+-
+-static u64 sanitise_id_aa64pfr1_el1(const struct kvm_vcpu *vcpu, u64 val)
+-{
+-	u64 pfr0 = read_sanitised_ftr_reg(SYS_ID_AA64PFR0_EL1);
+-
+-	if (!kvm_has_mte(vcpu->kvm)) {
+-		val &= ~ID_AA64PFR1_EL1_MTE;
+-		val &= ~ID_AA64PFR1_EL1_MTE_frac;
+-	}
+-
+-	if (!(cpus_have_final_cap(ARM64_HAS_RASV1P1_EXTN) &&
+-	      SYS_FIELD_GET(ID_AA64PFR0_EL1, RAS, pfr0) == ID_AA64PFR0_EL1_RAS_IMP))
+-		val &= ~ID_AA64PFR1_EL1_RAS_frac;
+-
+-	val &= ~ID_AA64PFR1_EL1_SME;
+-	val &= ~ID_AA64PFR1_EL1_RNDR_trap;
+-	val &= ~ID_AA64PFR1_EL1_NMI;
+-	val &= ~ID_AA64PFR1_EL1_GCS;
+-	val &= ~ID_AA64PFR1_EL1_THE;
+-	val &= ~ID_AA64PFR1_EL1_MTEX;
+-	val &= ~ID_AA64PFR1_EL1_PFAR;
+-	val &= ~ID_AA64PFR1_EL1_MPAM_frac;
+-
+-	return val;
+-}
+-
+-static u64 sanitise_id_aa64pfr2_el1(const struct kvm_vcpu *vcpu, u64 val)
+-{
+-	val &= ID_AA64PFR2_EL1_FPMR |
+-	       ID_AA64PFR2_EL1_MTEFAR |
+-	       ID_AA64PFR2_EL1_MTESTOREONLY;
+-
+-	if (!kvm_has_mte(vcpu->kvm)) {
+-		val &= ~ID_AA64PFR2_EL1_MTEFAR;
+-		val &= ~ID_AA64PFR2_EL1_MTESTOREONLY;
+-	}
+-
+-	if (vgic_host_has_gicv5())
+-		val |= SYS_FIELD_PREP_ENUM(ID_AA64PFR2_EL1, GCIE, IMP);
+-
+-	return val;
+-}
+-
+-static u64 sanitise_id_aa64dfr0_el1(const struct kvm_vcpu *vcpu, u64 val)
+-{
+-	val = ID_REG_LIMIT_FIELD_ENUM(val, ID_AA64DFR0_EL1, DebugVer, V8P8);
+-
+-	/*
+-	 * Only initialize the PMU version if the vCPU was configured with one.
+-	 */
+-	val &= ~ID_AA64DFR0_EL1_PMUVer_MASK;
+-	if (kvm_vcpu_has_pmu(vcpu))
+-		val |= SYS_FIELD_PREP(ID_AA64DFR0_EL1, PMUVer,
+-				      kvm_arm_pmu_get_pmuver_limit());
+-
+-	/* Hide SPE from guests */
+-	val &= ~ID_AA64DFR0_EL1_PMSVer_MASK;
+-
+-	/* Hide BRBE from guests */
+-	val &= ~ID_AA64DFR0_EL1_BRBE_MASK;
+-
+-	return val;
+-}
+-
+ /*
+  * Older versions of KVM erroneously claim support for FEAT_DoubleLock with
+  * NV-enabled VMs on unsupporting hardware. Silently ignore the incorrect
 -- 
 2.53.0
 
