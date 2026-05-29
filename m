@@ -1,164 +1,205 @@
-Return-Path: <linux-s390+bounces-20188-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20193-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MFZtB5x2GWqwwwgAu9opvQ
-	(envelope-from <linux-s390+bounces-20188-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 13:21:00 +0200
+	id cAiZG6CsGWpEyQgAu9opvQ
+	(envelope-from <linux-s390+bounces-20193-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 17:11:28 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DF5960189A
-	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 13:20:59 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC768604580
+	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 17:11:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 408303013495
-	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 11:15:48 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 958073061DCB
+	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 15:02:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4F643CF976;
-	Fri, 29 May 2026 11:15:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D22DE3FCB33;
+	Fri, 29 May 2026 14:58:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jIWbcE5A"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="inbPN1GC"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08693603F6
-	for <linux-s390@vger.kernel.org>; Fri, 29 May 2026 11:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04993F9F30;
+	Fri, 29 May 2026 14:58:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780053347; cv=none; b=cpeTnHHHcC12wH7v/KwL9wVm9Xskgs9l07JmLZdgFVj443X2YS+NQviKRsgIikT4vBCqPYJPJIyjjTaO9SYJo6cNxYQG1MwcnEpbvTHE2e3eaibS+1dbItJW35jMl64qRbH8MKTqfgsaUsvag/mydYRt+0DiJCVWbfwUvG1z/ww=
+	t=1780066700; cv=none; b=bE6AUrN4Md8VsZI062g8HmpZdN4fgb2y5XpM0+SwCPCMBh+RtUuF8kl94AucJ2eR7Daa1pcaNhpIo1J3gYPqHgcGX2kqHfxMzyMoRBUvNQ/flDZ+p5xeKf0kK0kLgfj1BTPKWUJPX7ng3iIRSIFJhZPLr7L45rTLemlqRg8rDV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780053347; c=relaxed/simple;
-	bh=lfAAc13gln/GQ/bfejJQm8H8aZxm2KiLXuvr9T7Fe+A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TOG10EctJzw/nY9UX6QNGBBFeJ3wAR+TfE0uF9KeEwJS/X0rLp3efGdztGNt2WPmDAwuD42iqbJCPuXKFkOpu3TzPs2mzWKc/Ox6VGTnCbomKfzL2WzEYKZXN2qT1jyPsfXJ3DOQcruu4JC1FBLJkHpPCnm4avv0JQGdS1/trkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jIWbcE5A; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17F141F00898;
-	Fri, 29 May 2026 11:15:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780053346;
-	bh=nYeYU/0vAdGNQ/yEJVfBOGYuIMQhHlEwriVqrOHO1Rc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=jIWbcE5AkqvQwiwwzoUT3FGzTWPq2d/15Xb2BnFSTq/iXScL2lUG09mBBZs9KgASH
-	 Pvi+wzW/QtaCzEVIF2MXj/IENiuzptBcA8ZVoQsIp4W7y/+f4s9upRwgpjwwCc0v2t
-	 XDCnw6nKXzEzxNHWrISTNsaNftkOtpSz0x6nstI+3dIFNcppWMY90Jw53WFj009nGo
-	 9lGAwHRDQwO4CTEhmiOPAaeg1423kw0hu5N+TntTYAD3LGWHkGHk7DcnfgW7povjkR
-	 TSw4AkUDnzv7+ZBGHCked2i7TtGeg/O8cI8QureVsP0e9NHcfZLiiCAxMWzbDdLIGe
-	 R6yOnvad8YFiw==
-Message-ID: <e99df8fe-bf72-4f62-8473-b30d5445da85@kernel.org>
-Date: Fri, 29 May 2026 13:15:42 +0200
+	s=arc-20240116; t=1780066700; c=relaxed/simple;
+	bh=uFmM9/MujduMgX1TlMIHtZIiet2qp3cnp/wLbXCAzIw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Mux/0Rp9RSHaCYfa4Tlm2fNbu/ilHrQqxLnHgqXbaf2T4mAW75OI4XS4g4hK0GNTfEakib+2trJSADMB634+OHOYkF0aKEfateJutK5KoJEFyMttdIhea/TYakdEKRvGsBWvtIAcqsjcI95lgAgUDJQOd3oC/Eueg9B1T0DM+sY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=inbPN1GC; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64TB37fE2418445;
+	Fri, 29 May 2026 14:57:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=J27WqBdhkRI43dPq1hhk7X4p2zllBkQBZBCjMrYk8
+	BU=; b=inbPN1GCihQvm8xcXZRveaa+76jrOoXzmJjtqOMT5oqkldj3++NEZYYPu
+	BPnV7BbxqEv0CrhfNOaCnzt96DmOiX4nYNBLZqhLZmn10heHUJsFNP8GYJ0s1ySk
+	wPSBOGDPenSuLHX9raQI4aqpZd4dC9QRx0SuI5MQJZidt/aUPmWrzPh/2NgIpZuj
+	27c+98Q+zg0XKywpP/GzBUB16acla7HNDLGBmKvUwIYB588uNZSN9qEm3JSx2OqO
+	mMBLixkeEGPLtQ/WHuyLFFqWpzylpckWM6bKelfZezk+QGIADyCZ1krjoGwwrPSZ
+	G/j0xDKwZmz1wS81Z9jjx5+KnOxfQ==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ee884tnv4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 29 May 2026 14:57:59 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64TEs7D5011905;
+	Fri, 29 May 2026 14:57:58 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4edjrbf5qe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 29 May 2026 14:57:57 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64TEvseW46268924
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 29 May 2026 14:57:54 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4E7912004B;
+	Fri, 29 May 2026 14:57:54 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 029FE20043;
+	Fri, 29 May 2026 14:57:54 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 29 May 2026 14:57:53 +0000 (GMT)
+From: Jan Polensky <japo@linux.ibm.com>
+To: hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+        ojeda@kernel.org, peterz@infradead.org, jpoimboe@kernel.org,
+        jbaron@akamai.com, aliceryhl@google.com
+Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com, boqun@kernel.org,
+        gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org,
+        a.hindborg@kernel.org, tmgross@umich.edu, dakr@kernel.org,
+        rostedt@goodmis.org, ardb@kernel.org, linux-s390@vger.kernel.org,
+        rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/6] s390: Enable Rust support and add required arch glue
+Date: Fri, 29 May 2026 16:57:46 +0200
+Message-ID: <20260529145752.1209016-1-japo@linux.ibm.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/6] s390/qeth: replace get_zeroed_page() with kzalloc()
-Content-Language: en-US
-To: Heiko Carstens <hca@linux.ibm.com>,
- "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>, Alexandra Winter <wintera@linux.ibm.com>,
- Aswin Karuvally <aswin@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Harald Freudenberger <freude@linux.ibm.com>,
- Holger Dengler <dengler@linux.ibm.com>, Jan Hoeppner
- <hoeppner@linux.ibm.com>, Stefan Haberland <sth@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org
-References: <20260528-b4-s390-drivers-v1-0-b7108f54d722@kernel.org>
- <20260528-b4-s390-drivers-v1-4-b7108f54d722@kernel.org>
- <20260529110911.26496Hac-hca@linux.ibm.com>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Autocrypt: addr=vbabka@kernel.org; keydata=
- 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
-In-Reply-To: <20260529110911.26496Hac-hca@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=L4MtheT8 c=1 sm=1 tr=0 ts=6a19a977 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=iQ6ETzBq9ecOQQE5vZCe:22 a=NEAV23lmAAAA:8 a=YnCZDFda9O9yJGHsuikA:9
+X-Proofpoint-ORIG-GUID: EFjkK0QHlUJaB7UQQpI8ZoQGc5bM94Ti
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI5MDE0NiBTYWx0ZWRfX2ygMsJXkfxSw
+ Z3G1cIHPDvfKfToeExdrYbkRsvPY32YMD79loX+Q5FYMKFiAYXepEVCuZGVdLvwLrHroJC0xz7J
+ zqwJVobKoGG//gGsjlmYAyU7eRfAC5KJ8fUUOwKrk6n4u05D0VpiNNgM8oBVqQYuYBWbSE+jiPY
+ d/kcrySvyv4sMDbVSx0QG3QT0ntts7EMfYBM1ELnZgBsI8fZSA0LpNrEX9uL+mFScceCLL4EIaG
+ CEAZwzzW1/Gmw438fbFwHwnqBTvaAP0Y3B9Ih5A89RckQwGcYMQyH3HjX97PDn/wF6nDXRMmk5N
+ xaRr8xmMI54H+5jBe35EHKay2SO3/orOh77D0cwJso3322ugAFbLz/YKlY8upyIN72kvZWR9WSU
+ lIq/vqudujbxIMmycsEsz2JKjfO94CUGbI9acjEk9RSEE2OqEx15dIpniPFESfRvR/ysR9crwMo
+ u5V83VFxiapmPqN5wqw==
+X-Proofpoint-GUID: 53XEEZ3hTAlYqpLI7fEHhJPfvk2_pduP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-05-29_04,2026-05-28_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 lowpriorityscore=0 suspectscore=0 clxscore=1015 malwarescore=0
+ bulkscore=0 impostorscore=0 adultscore=0 priorityscore=1501 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2605290146
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20188-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-20193-lists,linux-s390=lfdr.de];
+	FREEMAIL_CC(0.00)[linux.ibm.com,kernel.org,garyguo.net,protonmail.com,umich.edu,goodmis.org,vger.kernel.org];
+	TO_DN_NONE(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
+	MIME_TRACE(0.00)[0:+];
+	FROM_NEQ_ENVFROM(0.00)[japo@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[vbabka@kernel.org,linux-s390@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	TAGGED_RCPT(0.00)[linux-s390];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 7DF5960189A
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	RCVD_COUNT_SEVEN(0.00)[11]
+X-Rspamd-Queue-Id: DC768604580
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 5/29/26 13:09, Heiko Carstens wrote:
-> On Thu, May 28, 2026 at 10:09:52AM +0300, Mike Rapoport (Microsoft) wrote:
->>  }
-> 
-> Hm, another thing is that Sashiko claims that kmalloc allocations are not
-> necessarily correctly aligned when slab debugging or KASAN is enabled [1].
-> 
-> I believe that Sashiko is wrong, since Vlastimil addressed that with commit
-> 59bb47985c1d ("mm, sl[aou]b: guarantee natural alignment for kmalloc(power-of-two)")
+Rust support on s390 requires a small set of architecture-specific pieces
+before the generic Rust kernel infrastructure can be used.
 
-Right.
+The series wires up s390 as a Rust-capable 64-bit architecture, adds the
+missing assembly interfaces needed by Rust for WARN/BUG reporting and for
+static branches, adjusts bindgen parameters to avoid repr layout conflicts
+caused by packed and aligned s390 structures, and fixes issues discovered
+during testing.
 
-> Can you confirm that Sashiko is wrong?
+s390 currently requires rustc with support for -Zpacked-stack, and the
+minimum tool version gating is adjusted accordingly.
 
-Yeah it's wrong.
-Roman, can you adjust the prompts perhaps? Or we might have this wrong
-feedback on many patches that Mike is doing (or planning to do).
+Link: https://github.com/Rust-for-Linux/linux/issues/2
 
-> [1] https://sashiko.dev/#/patchset/20260528-b4-s390-drivers-v1-0-b7108f54d722%40kernel.org?part=4
+Tested against: rustc 1.96.0-beta.7 (6be5f81e1 2026-05-17)
+
+Changes since v3:
+- Added patch 4/6: Fix __underlying_memchr macro expansion on s390 (reported by Miguel)
+- Added patch 5/6: Fix KASAN stack-out-of-bounds in atomic helpers (reported by Miguel, suggested by Gary)
+- Patch 6/6: Document CONFIG_EXPOLINE constraint in arch-support.rst (Sashiko AI feedback)
+
+Changes since v2:
+- mflags: cleanup (thanks Gary)
+
+Changes since v1:
+- strip the -nightly suffix in min-tool-version.sh (thanks Miguel and Alice)
+- ARCH_JUMP_TABLE_ENTRY() moved up to align comments properly (thanks Gary)
+- removed MONCODE_BUG to prevent 0U in non-C context in assembler (noted by Sashiko - AI)
+- prevent environment pollution by explicit initialization mflag := (noted by Sashiko - AI)
+
+Jan Polensky (6):
+  s390/bug: Provide ARCH_WARN_ASM for Rust WARN/BUG support
+  s390/jump_label: Implement ARCH_STATIC_BRANCH_JUMP_ASM and
+    ARCH_STATIC_BRANCH_ASM macros
+  rust/bindgen_parameters: Mark s390 types as opaque to prevent repr
+    conflicts
+  rust: helpers: Use __builtin_memchr directly on s390
+  s390/cmpxchg: Fix KASAN stack-out-of-bounds in atomic helpers
+  s390: Enable Rust support
+
+ Documentation/rust/arch-support.rst |  1 +
+ arch/s390/Kconfig                   |  1 +
+ arch/s390/Makefile                  | 28 ++++++++++++++----------
+ arch/s390/include/asm/bug.h         | 12 +++++++++++
+ arch/s390/include/asm/cmpxchg.h     |  8 +++----
+ arch/s390/include/asm/jump_label.h  | 33 +++++++++++++++++------------
+ rust/Makefile                       |  1 +
+ rust/bindgen_parameters             |  7 ++++++
+ rust/helpers/uaccess.c              |  7 ++++++
+ scripts/generate_rust_target.rs     |  2 ++
+ scripts/min-tool-version.sh         |  6 +++++-
+ 11 files changed, 76 insertions(+), 30 deletions(-)
+
+
+base-commit: 8fde5d1d47f69db6082dfa34500c27f8485389a5
+--
+2.53.0
 
 
