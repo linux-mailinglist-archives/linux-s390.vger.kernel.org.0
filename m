@@ -1,63 +1,67 @@
-Return-Path: <linux-s390+bounces-20255-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20256-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0IJLOdLVGWpmzQgAu9opvQ
-	(envelope-from <linux-s390+bounces-20255-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 20:07:14 +0200
+	id kObmH7AKHGr4IwkAu9opvQ
+	(envelope-from <linux-s390+bounces-20256-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Sun, 31 May 2026 12:17:20 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4739B6070AB
-	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 20:07:13 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC5A46158C2
+	for <lists+linux-s390@lfdr.de>; Sun, 31 May 2026 12:17:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 553D132C2BAE
-	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2026 17:34:46 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B044C301FD4C
+	for <lists+linux-s390@lfdr.de>; Sun, 31 May 2026 10:17:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DBE038E119;
-	Fri, 29 May 2026 17:34:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A015357D08;
+	Sun, 31 May 2026 10:17:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dIHMmeyl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hQ1zVRUU"
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E63386C3B;
-	Fri, 29 May 2026 17:34:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2213D34FF45
+	for <linux-s390@vger.kernel.org>; Sun, 31 May 2026 10:17:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780076084; cv=none; b=KHJlNaxMwQlFetkRB8ZyM8AQMgF/efHwBQC2vmKWy66uB3N71mn/644FbGdW8Qg3tD/7epyTnWnEoSGXJc0FVfHVBF4mPpG+Ycjhv86vOJoUUlZEJiPIfjefEHd3hF5/6cwjsnYtuIOut4/cdVZIjLrsWJ1KZF16rEaOUdwvWnw=
+	t=1780222636; cv=none; b=Lmc3JXvllQl4OrYZVtoF9c6GgULnfl2jEp6/zwUxSq7cNsw288uO3wGKYfhX+VplZXU0pRFcCF/mJE3EE/eBgQH9m5LB+vPwgCvDOTM9cTsDn/YtFxe7cpvsfKPtxTVtBH74/B0Bgz477BHuiqfuAsYJhas14NxhIS9Le4nr0hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780076084; c=relaxed/simple;
-	bh=gWE85iXQq0OMAav9N8JBZGImgsA0+NVC5ul9DghcUSQ=;
+	s=arc-20240116; t=1780222636; c=relaxed/simple;
+	bh=rICRiTfJgrxNYivqrx3QRWj2Z2ZWCmZ73P4l1f7hwi0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CFKYbeX2yyExq0vlmSCgUKNhH8dtXMBvyQj06WCRgphjcOQx4CEGD1AHciI29zVAIChzRxm78AKL6Yt97ghQwX4hixiSaWb8zcp7a+haujbCc8GZWZUB9yWSqXoTk8KjvjeiCcrguVC9D4j2AZNEGrlfdPytTfd0yNVCu6ImuI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dIHMmeyl; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F57F1F00893;
-	Fri, 29 May 2026 17:34:39 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=GSRdo7b4tOEWQlYyh86D8jPH+BFcclJGAPBbftn8p0PjPO8g4E4qLF0x/e0LxTa4gPUprzRIk95H4OsoFLWQN5pyQ0daUNdmlmAsbh19h9WMuPPTvN0vbSzqK1waf0p/s9ZCUczKbl0rS/3/GCPZ24HYW9+TctDRi8EmEz5VWDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hQ1zVRUU; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FE981F00893;
+	Sun, 31 May 2026 10:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780076083;
-	bh=mA/wSXvnzaFLyBu6mpFQS3mrr4Pq4o/pVqTj7FF8Rpc=;
+	s=k20260515; t=1780222634;
+	bh=W7IA/4CjL0iLf6bZ6LzNEvE6whR/XHRl/myZhG5caaM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=dIHMmeylOq5MWUgqcV6cJduFvFXbZ9gggbTGpRsf8yqQofigkJGwMiMHUomt8BbwX
-	 UTjpQ5OsQRm1SNtpYd4AwPyP2+yqhfQCBOJUws+zh1rpj26jP1ynwGsvt3sPMQxfaL
-	 BKQo2ktSt/KGxbcgj55b8dYfG3ZSo4cqdO9S5ky1LFNDvtRFt7If6nC8TIeHtnPLni
-	 +S02xVS28/9xA7StPjQp55zdHH68c1/Zg/7rkYe8jPVDRBFjW8lLWjv12ZO/dDiHql
-	 EFGngsjnHjcLCoFnNVIisaJhz/qWPm61r7hfpFGBjubc8iSb5Fz3bXRgvJQ/XQrfCF
-	 i4LsJ2ZwSmbQw==
-Date: Fri, 29 May 2026 19:34:36 +0200
-From: "Oscar Salvador (SUSE)" <osalvador@kernel.org>
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Wei Yang <richard.weiyang@gmail.com>, linux-s390@vger.kernel.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] mm/page_vma_mapped_walk: Use ptep_get_lockless() for
- lockless access
-Message-ID: <ahnOLCyOwGV1Yp5J@localhost.localdomain>
-References: <20260528075507.1821939-1-agordeev@linux.ibm.com>
+	b=hQ1zVRUUznBCiMVES/N9PCfKASCvGHJNqCNkXWvKW2U3dge/NPMqXJojGqeS8jXlK
+	 Tbp5lTNd2lVv8UMxYx6CZIzhi7OtfsX5OK8R7H1Fem8KM7UuQ9ZCwCWKMIX2mcYmmH
+	 XwWkUralwIeM2pJgAoFHEHNB73qfG9BkuXbx4S97yHcVjTgG8NDvTzwDeRePi7XeJo
+	 JojnL+FieOg8E/cO+TnW5gv0xxRGj7n4kPSmg+AhFqfq6lDUO4IdwC1CDVSVROj7dM
+	 cNd9idQGgt34JJZEy9fP5/PrYCZt5BCzabGFLbt5URKE94iBvNhetSLZx2nU12De5g
+	 5wi+o9skMHb4A==
+Date: Sun, 31 May 2026 13:17:06 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexandra Winter <wintera@linux.ibm.com>,
+	Aswin Karuvally <aswin@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Harald Freudenberger <freude@linux.ibm.com>,
+	Holger Dengler <dengler@linux.ibm.com>,
+	Jan Hoeppner <hoeppner@linux.ibm.com>,
+	Stefan Haberland <sth@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org
+Subject: Re: [PATCH 4/6] s390/qeth: replace get_zeroed_page() with kzalloc()
+Message-ID: <ahwKos-rF4F_zwA4@kernel.org>
+References: <20260528-b4-s390-drivers-v1-0-b7108f54d722@kernel.org>
+ <20260528-b4-s390-drivers-v1-4-b7108f54d722@kernel.org>
+ <20260529102345.26496C83-hca@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -66,93 +70,121 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260528075507.1821939-1-agordeev@linux.ibm.com>
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+In-Reply-To: <20260529102345.26496C83-hca@linux.ibm.com>
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20255-lists,linux-s390=lfdr.de];
-	FREEMAIL_CC(0.00)[linux-foundation.org,redhat.com,kernel.org,arm.com,suse.de,gmail.com,vger.kernel.org,kvack.org];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20256-lists,linux-s390=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
 	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[osalvador@kernel.org,linux-s390@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[rppt@kernel.org,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,localhost.localdomain:mid]
-X-Rspamd-Queue-Id: 4739B6070AB
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: DC5A46158C2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, May 28, 2026 at 09:55:07AM +0200, Alexander Gordeev wrote:
-> Switch from ptep_get() to ptep_get_lockless() accessor for
-> PTE reads when no lock is taken.
+On Fri, May 29, 2026 at 12:23:45PM +0200, Heiko Carstens wrote:
+> On Thu, May 28, 2026 at 10:09:52AM +0300, Mike Rapoport (Microsoft) wrote:
+> > qeth_get_trap_id() allocates a temporary buffer for STSI system
+> > information queries used to build trap identification strings.
+> > 
+> > This buffer can be allocated with kmalloc() as there's nothing special
+> > about it to go directly to the page allocator.
+> > 
+> > kmalloc() provides a better API that does not require ugly casts and
+> > kfree() does not need to know the size of the freed object.
+> > 
+> > Performance difference between kmalloc() and __get_free_pages() is not
+> > measurable as both allocators take an object/page from a per-CPU list for
+> > fast path allocations.
+> > 
+> > For the slow path the performance is anyway determined by the amount of
+> > reclaim involved rather than by what allocator is used.
+> > 
+> > Replace use of get_zeroed_page() with kzalloc() and free_page() with
+> > kfree().
+> > 
+> > Link: https://lore.kernel.org/all/635405e4-9423-4a25-a6e7-e03c8ea0bcbe@redhat.com
+> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > ---
+> >  drivers/s390/net/qeth_core_main.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
+> > index cf5f760d0e02..9274087557ec 100644
+> > --- a/drivers/s390/net/qeth_core_main.c
+> > +++ b/drivers/s390/net/qeth_core_main.c
+> > @@ -3362,7 +3362,7 @@ static int qeth_query_setdiagass(struct qeth_card *card)
+> >  
+> >  static void qeth_get_trap_id(struct qeth_card *card, struct qeth_trap_id *tid)
+> >  {
+> > -	unsigned long info = get_zeroed_page(GFP_KERNEL);
+> > +	unsigned long info = (unsigned long)kzalloc(PAGE_SIZE, GFP_KERNEL);
+> >  	struct sysinfo_2_2_2 *info222 = (struct sysinfo_2_2_2 *)info;
+> >  	struct sysinfo_3_2_2 *info322 = (struct sysinfo_3_2_2 *)info;
+> >  	struct ccw_dev_id ccwid;
+> > @@ -3381,7 +3381,7 @@ static void qeth_get_trap_id(struct qeth_card *card, struct qeth_trap_id *tid)
+> >  		EBCASC(info322->vm[0].name, sizeof(info322->vm[0].name));
+> >  		memcpy(tid->vmname, info322->vm[0].name, sizeof(tid->vmname));
+> >  	}
+> > -	free_page(info);
+> > +	kfree((void *)info);
 > 
-> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+> Speaking of ugly casts, which seems to be one of the main motivations
+> of this approach: the above adds casts instead of removing them :)
 
-I see Andrew has picked up the patch with the amended changelog, so with
-that:
-
-Reviewed-by: Oscar Salvador (SUSE) <osalvador@kernel.org>
-
-> ---
->  mm/page_vma_mapped.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+Hmm, I'm sure I made this change. Seems like a rebase fallout :(
+ 
+> So I guess the below should be merged into your patch to get some
+> improvement:
 > 
-> diff --git a/mm/page_vma_mapped.c b/mm/page_vma_mapped.c
-> index a4d52fdb3056..2ccbabfb2cc1 100644
-> --- a/mm/page_vma_mapped.c
-> +++ b/mm/page_vma_mapped.c
-> @@ -41,7 +41,7 @@ static bool map_pte(struct page_vma_mapped_walk *pvmw, pmd_t *pmdvalp,
->  	if (!pvmw->pte)
->  		return false;
+> diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
+> index 9274087557ec..20fb0d2e02a9 100644
+> --- a/drivers/s390/net/qeth_core_main.c
+> +++ b/drivers/s390/net/qeth_core_main.c
+> @@ -3362,9 +3362,9 @@ static int qeth_query_setdiagass(struct qeth_card *card)
 >  
-> -	ptent = ptep_get(pvmw->pte);
-> +	ptent = ptep_get_lockless(pvmw->pte);
+>  static void qeth_get_trap_id(struct qeth_card *card, struct qeth_trap_id *tid)
+>  {
+> -	unsigned long info = (unsigned long)kzalloc(PAGE_SIZE, GFP_KERNEL);
+> -	struct sysinfo_2_2_2 *info222 = (struct sysinfo_2_2_2 *)info;
+> -	struct sysinfo_3_2_2 *info322 = (struct sysinfo_3_2_2 *)info;
+> +	void *info = kzalloc(PAGE_SIZE, GFP_KERNEL);
+> +	struct sysinfo_2_2_2 *info222 = info;
+> +	struct sysinfo_3_2_2 *info322 = info;
+>  	struct ccw_dev_id ccwid;
+>  	int level;
 >  
->  	if (pte_none(ptent)) {
->  		return false;
-> @@ -183,6 +183,7 @@ bool page_vma_mapped_walk(struct page_vma_mapped_walk *pvmw)
->  	struct mm_struct *mm = vma->vm_mm;
->  	unsigned long end;
->  	spinlock_t *ptl;
-> +	pte_t pteval;
->  	pgd_t *pgd;
->  	p4d_t *p4d;
->  	pud_t *pud;
-> @@ -310,7 +311,11 @@ bool page_vma_mapped_walk(struct page_vma_mapped_walk *pvmw)
->  				goto restart;
->  			}
->  			pvmw->pte++;
-> -		} while (pte_none(ptep_get(pvmw->pte)));
-> +			if (!pvmw->ptl)
-> +				pteval = ptep_get_lockless(pvmw->pte);
-> +			else
-> +				pteval = ptep_get(pvmw->pte);
-> +		} while (pte_none(pteval));
+> @@ -3381,7 +3381,7 @@ static void qeth_get_trap_id(struct qeth_card *card, struct qeth_trap_id *tid)
+>  		EBCASC(info322->vm[0].name, sizeof(info322->vm[0].name));
+>  		memcpy(tid->vmname, info322->vm[0].name, sizeof(tid->vmname));
+>  	}
+> -	kfree((void *)info);
+> +	kfree(info);
+>  }
 >  
->  		if (!pvmw->ptl) {
->  			spin_lock(ptl);
-> -- 
-> 2.51.0
-> 
+>  static int qeth_hw_trap_cb(struct qeth_card *card,
 
 -- 
-Oscar Salvador
-SUSE Labs
+Sincerely yours,
+Mike.
 
