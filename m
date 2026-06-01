@@ -1,160 +1,183 @@
-Return-Path: <linux-s390+bounces-20303-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20307-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +CB8OJKkHWr5cgkAu9opvQ
-	(envelope-from <linux-s390+bounces-20303-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 01 Jun 2026 17:26:10 +0200
+	id sNBKIFCmHWo+cwkAu9opvQ
+	(envelope-from <linux-s390+bounces-20307-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 01 Jun 2026 17:33:36 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84E7C621A8D
-	for <lists+linux-s390@lfdr.de>; Mon, 01 Jun 2026 17:26:09 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E95A3621CF6
+	for <lists+linux-s390@lfdr.de>; Mon, 01 Jun 2026 17:33:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id D19D43054A0C
-	for <lists+linux-s390@lfdr.de>; Mon,  1 Jun 2026 15:22:36 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8FCAC300A7CC
+	for <lists+linux-s390@lfdr.de>; Mon,  1 Jun 2026 15:30:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CD0B3DC4D7;
-	Mon,  1 Jun 2026 15:20:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 856163DCDA4;
+	Mon,  1 Jun 2026 15:30:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q4jOWQCX"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lud+W5px"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A9D3D7A07
-	for <linux-s390@vger.kernel.org>; Mon,  1 Jun 2026 15:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D3F3DC4B1;
+	Mon,  1 Jun 2026 15:30:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780327213; cv=none; b=BGctHBn9khGsvIm8tg297d8tcU+oj74ZGdeqZqd9n+4+Zq77vV7Q1KglbwKqK1PasfGUfeX9jWSTwZFA0ZpohtUZIebVM0YnMme0L9Q6u6aw4PUPkQMkI849OMy2adlaN3Mz873QSNNPvELas+aEKwrDTuyNOYUOKnAV4/oWOIE=
+	t=1780327816; cv=none; b=E8eoD902WjZF3REwQRWDzxwOJlJZmHsrJqsrSG8gsB1gA6qRndXJ6u1t+Ol6rWlqG9beQHJ34kIlRvly+ZSdfs0Z7w8QVmzn+pKpEzmW734hiHrmNiqknqaJr6ZtZI2xnSlrPKNVPVJKmN2ZBrCrPfY8X0MFrHqBEIEFEUPzq2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780327213; c=relaxed/simple;
-	bh=z2vzzUU9AdhfZh4TpPBi0E2NHAyN0OiZYk7GbkDEDFk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MeEY2lFq/sluNqbEx2MwIMc/xk0OovJEWMEocztdmfecBMWUZM6ydbMbhBz9OpnfoXQXbZYGkmxzJaDJD1ROPwoRgnAAh+OOUFUFRDRnwiBSFs7KFkHtjmm6jOoJMkKDxsuZP7twwc49Ym1Q8WtZl6af6iELtSPAkhWFfMocJ2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=q4jOWQCX; arc=none smtp.client-ip=209.85.161.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-69d7f4cc61aso3938936eaf.0
-        for <linux-s390@vger.kernel.org>; Mon, 01 Jun 2026 08:20:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780327207; x=1780932007; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EXR0o/ax1hkvEGDJ8bUniOsmAfk5/s8y29rVFNL4VdY=;
-        b=q4jOWQCXL/6NF8DOYVv1DcZfxifD9x0jWVDcKB3Ifvv6dnpVmeK6F4VjzNhpUrNA69
-         wY9DB2JEl2S9onADA+Or57F/TjZLWQGOso5JhPmylGS1ZvaRU8rBwP+hvDvPtLGLP+h7
-         SLHuS3/0NPDI/UwZQKe9s7PfdqIZVdgBfKnXpIVLmOXM5Q+cI7QgMgOPUUwJ2yuY8m7l
-         yoFaoMxw4PMR4jFj+jIh1hrIvF41DX04uxRCBUD2vx6SZqR0Eqm556iDrWav2r98JZ36
-         vZ+sAVmxZpfoku4XdjvvVHG0sSVQ+OiBOhDGvEEDEEViYTpCai4V0PN/brscato8SINi
-         N4kA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780327207; x=1780932007;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EXR0o/ax1hkvEGDJ8bUniOsmAfk5/s8y29rVFNL4VdY=;
-        b=pSPhZAaUxoZjIhwVPBB9OpTfAScNV9uQOJd4HVHhBV3rGaqlmiy6+4VH9PvX8w2jOt
-         Xx62cGVO70sHQgg0SJAymSXDB4/GrxwlZ+BVeQkhP4vPqeQweGf+TzWklexVYJgNrlzM
-         GeGAQejYCkjHmPbV2z3F5JYhz48zyCJDEDnpSRnGK4tb4yvZ71DlN1V53miABCciQumV
-         nkndLsb5o7xj1/+Gti0fhqnJqqcDOmeSEE0WKfjxddGCV89pLgFC5k10VcoZbsp5GHPo
-         p0s07Q3qOjX63H2ewIphSboIAL4+q5FQs2+WcT6hPAKC8J3dfrgkOeDk6s0UleltD4ku
-         sgZQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+YGGezdzkXi+xdxSxUUdGKuJnHwoPguwAtAJiZG9SR5GO0Tf8e9M/N1UOr4ifivPTtUrIbIiNmXgJu@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFqyqXCGiy6Tn7fdm6HjtVg4ZOdiqVDPTN4Oal2IlsGkas1AAP
-	HoDR01JKxAYSNigEpy9DoNB12LfsE+958/4ODCHI1agEN9XhhHsJaD3G
-X-Gm-Gg: Acq92OG7LdgNDKHphNaJrDsqaNC+HivWRQXAnrdnuKF6qcJTo3iIBbowBKaT/1ujMA1
-	KwiWBtENd+DXIBVAlp0o8Iui+pkWeSCTnR02OKZBPxiysRzgRUbfGbXn51Zb35syxgzxLSAxenm
-	HqDRquMUrKLmody2tsIjy1ULVpVoHeO1CJLFrQDkEFxJ7IWs43VWTarkuuk3Qf+FCehPIZ9qtU4
-	KtMKTza6nDD1ZgJOEd63JrafsVHoy6Lo4j2DtYNZWlRz6MYUwq94hilnh2a9S/+nspd4b+q0yJn
-	m13ty3d0+iCqWpLfKlut5OBL3MsctrmrJsje3WxGknH8kgLC2LY35aj7kn/TuNP/QUpfbVnPup8
-	1URVTBKSpmlRVudc0kywo7HD2Hnylt8ge/WpCsgcIJ84sn1KXpJcx2K40gea7iAeJhyMk88MnMj
-	qKlkb6HFlFsodNFTNZA4cG6LFjlzFqN7C+6kor+he6eqad/63wX2q6
-X-Received: by 2002:a05:6820:c82:b0:694:8fb2:2c35 with SMTP id 006d021491bc7-69e104765bcmr6510105eaf.2.1780327206868;
-        Mon, 01 Jun 2026 08:20:06 -0700 (PDT)
-Received: from hoboy.vegasvil.org ([2600:1700:2430:6f6f:e2d5:5eff:fea5:802f])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-69e06587eecsm6357598eaf.0.2026.06.01.08.20.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2026 08:20:06 -0700 (PDT)
-Date: Mon, 1 Jun 2026 08:20:02 -0700
-From: Richard Cochran <richardcochran@gmail.com>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Wen Gu <guwen@linux.alibaba.com>, Jakub Kicinski <kuba@kernel.org>,
-	tglx@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, pabeni@redhat.com,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	jstultz@google.com, anna-maria@linutronix.de, frederic@kernel.org,
-	daniel.lezcano@kernel.org, sboyd@kernel.org,
-	vladimir.oltean@nxp.com, wei.fang@nxp.com, xiaoning.wang@nxp.com,
-	jonathan.lemon@gmail.com, vadim.fedorenko@linux.dev,
-	yangbo.lu@nxp.com, svens@linux.ibm.com, nick.shi@broadcom.com,
-	ajay.kaher@broadcom.com, alexey.makhalov@broadcom.com,
-	bcm-kernel-feedback-list@broadcom.com, linux-fpga@vger.kernel.org,
-	imx@lists.linux.dev, linux-s390@vger.kernel.org,
-	dust.li@linux.alibaba.com, xuanzhuo@linux.alibaba.com,
-	mani@kernel.org, imran.shaik@oss.qualcomm.com,
-	taniya.das@oss.qualcomm.com
-Subject: Re: [PATCH v2 2/2] MAINTAINERS: update PTP maintainer entries after
- directory split
-Message-ID: <ah2jIt2DqI1ZZJx8@hoboy.vegasvil.org>
-References: <20260407104802.34429-1-guwen@linux.alibaba.com>
- <20260407104802.34429-3-guwen@linux.alibaba.com>
- <20260412084704.743482ad@kernel.org>
- <4B889ED5-D1F6-401D-B753-89AE2037F316@infradead.org>
- <20260412095301.4fe1fe65@kernel.org>
- <ebf19246-91af-4887-b2aa-d9007921f7b2@linux.alibaba.com>
- <1088b07d760491deb461d6d01abca631e8f8d86c.camel@infradead.org>
- <ahzQZg_v4bxFfGdj@hoboy.vegasvil.org>
- <3908843460c4864eef79cced40d897f793c7ae2a.camel@infradead.org>
+	s=arc-20240116; t=1780327816; c=relaxed/simple;
+	bh=8CYjYz9HAXrOkjBw1aCHLcJbD5CJzQVlQdaF5xfDY1w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eua6wEHqOBxeTVI/9dns3a7qiv5q7DBe/GbUhbisUypYVZxDI8WjGqfk8tWDT8TFLMtHVKnnGoUtgLCTGtm7vCcwlvOci/3/+x6HodfsM6CSjBScKbQ7E4Hf7IjO++o1ig90VuRhtorVAriSsxoF7GiPrJnWgd0KGpr1oVl+3WY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lud+W5px; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 651EpJGH2190646;
+	Mon, 1 Jun 2026 15:29:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=CzvVPmwU861ysRE6OGTQUccPIaD8AXpTtcvBuNpQI
+	sw=; b=lud+W5pxyKTrQIRT75gCuDUxt+ltGxAU4exMLdd+I7lGvgWeZKU+l56yM
+	X42e4+SMgnNT2xPotONrXwnKD32F6vFAPq0JIW+krL/F2Qrj8wcWYMNgyrrVP7XX
+	axuIs6E20cvvIfChySE7rlwgDy9fkduAhe7YWyBbZQQlzDvSf75TZZD3XvobRQ9R
+	3JNnjbs/NhU1KndU5EKDPWyaqsdGzZ4+JSQxVBYTL5bp22iKxkr9WmL7lCzx7OKW
+	4ytq7FoKDYHPk8rIbUMB9JAvQDEZ7kBpPec18HoeNbHCEs7p50eGpZn5wje9RuKM
+	ZPQmUWuzoHw1i2zYm8UYv92a+jpxg==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4efpae17s3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 01 Jun 2026 15:29:58 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 651FOKxL026051;
+	Mon, 1 Jun 2026 15:29:57 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4ega7q6yjk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 01 Jun 2026 15:29:57 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 651FTq5V30015754
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 1 Jun 2026 15:29:52 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0B6DD20043;
+	Mon,  1 Jun 2026 15:29:52 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D465C20040;
+	Mon,  1 Jun 2026 15:29:51 +0000 (GMT)
+Received: from p-imbrenda.aag-de.ibm.com (unknown [9.52.223.175])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  1 Jun 2026 15:29:51 +0000 (GMT)
+From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+To: linux-kernel@vger.kernel.org
+Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@kernel.org, seiden@linux.ibm.com,
+        nrb@linux.ibm.com, schlameuss@linux.ibm.com, gra@linux.ibm.com
+Subject: [PATCH v2 0/8] KVM: s390: More gmap and vsie fixes
+Date: Mon,  1 Jun 2026 17:29:43 +0200
+Message-ID: <20260601152951.196859-1-imbrenda@linux.ibm.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3908843460c4864eef79cced40d897f793c7ae2a.camel@infradead.org>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=Zt3d7d7G c=1 sm=1 tr=0 ts=6a1da576 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=V8glGbnc2Ofi9Qvn3v5h:22 a=RDX2kTa0qNrNx1cvdRQA:9
+X-Proofpoint-GUID: Wcj4gJuZMu9NlehUJ0PzJo26HJjjkVXK
+X-Proofpoint-ORIG-GUID: Wcj4gJuZMu9NlehUJ0PzJo26HJjjkVXK
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjAxMDE1MSBTYWx0ZWRfXwT0z/ECy1P/U
+ Xstc9GGoV2WTHHI65Ko7AuEdBcexsMwo0Mkx7YXdKKJ2MRYV1KGkGjyykxnslY1DvRsubXIc24e
+ VTCc73DDh2X39rejvmlhNBZ1hR9Z5GOJZi8IvVFwgLev9nxF1Z51MIa1eOG7zaSmUpkCLby+9Cb
+ YhZ4I0v1kBw5iLoapyL3FIUh4p7xWH28DdsgjTYvdbQC31+J390T9WjCrpHRtR5U7PqtSwuFyub
+ /W3cOunUHLl5+xR54Zs0QzG6sjnUwvXrqzGvF1nKeZ//2aZlkFO7XW7W79KdIYYDbVD5wPm3Ykm
+ tW+tCOROQdGB2I3ZqX/lfu/4GE/t+PcHry/kFqzoquOCSFoVmYm4IEnp+K8tPadlhYwYbGot9zP
+ e2xF78CyYEiBQJyJPLFa6TAqa4bLYQLqjUQ+r/SkU2UO6wsZiaf/NhEMb8oJ2xlLVeLvp9wY7bU
+ BuPO7B0F0DD7HSAW78A==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-01_04,2026-05-28_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 suspectscore=0 priorityscore=1501 bulkscore=0 clxscore=1015
+ phishscore=0 spamscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606010151
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20303-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20307-lists,linux-s390=lfdr.de];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[linux.alibaba.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,vger.kernel.org,linutronix.de,nxp.com,gmail.com,linux.dev,linux.ibm.com,broadcom.com,lists.linux.dev,oss.qualcomm.com];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[34];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo];
+	TAGGED_RCPT(0.00)[linux-s390];
+	FROM_NEQ_ENVFROM(0.00)[imbrenda@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	MIME_TRACE(0.00)[0:+];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[richardcochran@gmail.com,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390,netdev];
-	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 84E7C621A8D
+	TO_DN_NONE(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_COUNT_SEVEN(0.00)[11]
+X-Rspamd-Queue-Id: E95A3621CF6
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, Jun 01, 2026 at 08:03:26AM +0100, David Woodhouse wrote:
-> If we move all the plain non-network PHC drivers (which, as noted, is
-> basically *all* of them) into a drivers/ subdirectory, then perhaps we
+Another batch of fixups for gmap and vsie. Some minor fixes, some
+not-so-minor fixes that could have caused guest corruption under
+particular circumstances.
 
-Sorry, just catching up here, so the idea is to have
+v1->v2:
+* Reordered the patches
+* _gmap_crstep_xchg_atomic() will now attempt to clear the vsie_notif
+  bit when failing due to unshadowing; this prevents potential loops
+* try_get_locked_pte() will now return -EAGAIN instead of NULL if the
+  pte was reached but the lock was contended; this prevents potential
+  loops
+* _kvm_s390_pv_make_secure() will now attempt mmap_read_trylock(); this
+  prevents try_get_locked_pte() from potentially racing
+* Take kvm->slots_lock instead of kvm->slots_arch_lock in
+  kvm_s390_set_mem_control() when handling KVM_S390_VM_MEM_LIMIT_SIZE,
+  and also take kvm->lock.
+* Minor cosmetic / style fixes.
 
- linux/drivers/ptp/drivers  ?
+Claudio Imbrenda (8):
+  KVM: s390: Fix _gmap_unmap_crste()
+  KVM: s390: Fix _gmap_crstep_xchg_atomic()
+  KVM: s390: Avoid potentially sleeping while atomic when zapping pages
+  KVM: s390: Fix guest / virtual address confusion in _essa_clear_cbrl()
+  KVM: s390: vsie: Fix rmap handling in _do_shadow_crste()
+  KVM: s390: Fix fault-in code
+  KVM: s390: Lock pte when making page secure
+  KVM: s390: Prevent memslots outside the ASCE range
 
-Thanks,
-Richard
+ arch/s390/include/asm/gmap_helpers.h |   1 +
+ arch/s390/kvm/faultin.c              |  14 ++--
+ arch/s390/kvm/gaccess.c              |  11 +--
+ arch/s390/kvm/gmap.c                 |  19 ++++-
+ arch/s390/kvm/gmap.h                 |   3 +
+ arch/s390/kvm/kvm-s390.c             |  30 ++++++-
+ arch/s390/kvm/priv.c                 |   8 +-
+ arch/s390/kvm/pv.c                   |  21 ++++-
+ arch/s390/mm/gmap_helpers.c          | 117 ++++++++++++++++-----------
+ 9 files changed, 157 insertions(+), 67 deletions(-)
+
+-- 
+2.54.0
+
 
