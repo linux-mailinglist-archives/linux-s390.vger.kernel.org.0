@@ -1,72 +1,72 @@
-Return-Path: <linux-s390+bounces-20401-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20402-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 49KgJdX3HmquawAAu9opvQ
-	(envelope-from <linux-s390+bounces-20401-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 02 Jun 2026 17:33:41 +0200
+	id o2uyL6H8HmptbwAAu9opvQ
+	(envelope-from <linux-s390+bounces-20402-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 02 Jun 2026 17:54:09 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5036362FCF1
-	for <lists+linux-s390@lfdr.de>; Tue, 02 Jun 2026 17:33:41 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5604C62FFFC
+	for <lists+linux-s390@lfdr.de>; Tue, 02 Jun 2026 17:54:06 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=google.com header.s=20251104 header.b=vIb5BiMK;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20401-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20401-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=google.com header.s=20251104 header.b=O7m7accz;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20402-lists+linux-s390=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-s390+bounces-20402-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=reject) header.from=google.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4D82A3079E11
-	for <lists+linux-s390@lfdr.de>; Tue,  2 Jun 2026 15:28:25 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 0FA9C300CF2D
+	for <lists+linux-s390@lfdr.de>; Tue,  2 Jun 2026 15:28:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DD163F88B8;
-	Tue,  2 Jun 2026 15:26:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 369623FA5CC;
+	Tue,  2 Jun 2026 15:26:24 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141373F9294
-	for <linux-s390@vger.kernel.org>; Tue,  2 Jun 2026 15:26:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078423F9A05
+	for <linux-s390@vger.kernel.org>; Tue,  2 Jun 2026 15:26:20 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780413980; cv=none; b=ijcY32VJ7dPF9jzC3R5cqqaaqV+hNsV4EZnKr9xRqIg2GhkNJONYhBfvR+UvFaLmpMEhy/sy7D1duEGnCQugvSmRavlN6mU2FKafxji2ntkuAqt7g3c02R5KC81z40haGjVoMoCpRFISCYuIVkRpQ6CHnIT932dpWof0AGTPnUs=
+	t=1780413984; cv=none; b=H1nGyO1lm300feqZdiN6/bloSN8LU+/77mPAgHzEAp08iYJbiPqEMHCuu2eYSlR2icnffjugtorZTKUTLLK5CFYguSP1Vn2ehsP/DoqG9Z3FKDdC24mbdeBnGx+GJYu+jD3VPYIUm0xL3sldWjvAWuP+hoYXW1ZgFDksoRbW1Og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780413980; c=relaxed/simple;
-	bh=WPG8dPv9TK2SdNtl17T4gx5NaWiw3DgHmq0K8beS3Jk=;
+	s=arc-20240116; t=1780413984; c=relaxed/simple;
+	bh=IELIlmNvVvIt3AL/nzEPMhdDrA1nwKMzWpu8GcZtdps=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=XLMBuu7h8Tcwi1kFLWskI8r/txjRtPYam6dkha7HNK6G2OzolHJ9FyIx4yOo0/sOz4dQXR4kmR/xpt3Wu1xSRL4OvG3wfkQq8hMe8Wl0ZXKja5oKa1P3YRd/2Gd8aeg4RIIOlEsrGb4OGMdRZEGdvExLQj0puqMdAnaAYVHkctc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vIb5BiMK; arc=none smtp.client-ip=74.125.82.201
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304e7fc90b1so4363859eec.1
-        for <linux-s390@vger.kernel.org>; Tue, 02 Jun 2026 08:26:17 -0700 (PDT)
+	 To:Cc:Content-Type; b=PWT/qHNTQHKkre00ky9HsXHxoQPExdu752wcMyi1IvXykSugQrMikLdF8SBpdUNg3TEgT4/h8Ptm49KeOGDBvtil8ZsBg0hQ2HOk9zFlbEgjK0nnsxffRXvqdar+o6SWM8pV4EGGjeCH0U8JMrZBq2lZBKIXnE+NZBAHb6HTtK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O7m7accz; arc=none smtp.client-ip=74.125.82.73
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1365eb2a74aso3618419c88.1
+        for <linux-s390@vger.kernel.org>; Tue, 02 Jun 2026 08:26:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780413977; x=1781018777; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780413980; x=1781018780; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=a++q+Cspvy+lo3emUzDENGkW1idP9N7NULAFivLQywA=;
-        b=vIb5BiMK4bcVFBatmIj5bh0MraYz0F+Md9NOPhrr9TYuQQbAEWGhvZseRXBYlg5Bm5
-         wxF0vj7kUDV56HegRYe9rCxUthWT2SJ+YPp+WQ5122dCeUnQtZfzNr/0lbCKxFBN7pB0
-         SK7krd99O5RobleoXp9PPxeMg3bwyqJWQbNpa6+btBwTQkcRVlIPo7GAhHJKHXZNuqjQ
-         VIPPQ2rcyj8HKaz9dHToAa3OEYdh46PSPy/8q3xSs+1Lk+gGISAVbVOako4ZKD1gwSOv
-         WJHMmkDj5eeO1YA8UzrL0Zja+BaVzLASVl7VFNEcRf3LOCc4K8Ssykgu6uw89IccXPtR
-         FwCw==
+        bh=7iB2IkCiPQWyvpQ1QBll6VQTrbjQBhFOeCn5EJNQ4TY=;
+        b=O7m7accz3lt3KsweqIdhFuCS44IMezmr7HoRfRaFFphm/543HB7ohFLep1wdDRNeNQ
+         T/v8alqL+GDc1fzGes/W1TfGyPzB/FY9R3uGtSoyXiDDZh+JNNX5CBf/Juf0Gjb2jgZd
+         4500hvL2KXfxkTbZvaX64iJQFA9TecURPQuT2my+Ow7BqC5+joKZLOJIvFxduVDf7s7h
+         5pAA/GA7RMzdGSiUu5ECa1xl4y3/kjYtIIV9sXTpi0wNAtAcPhkBT1GvXGGNfz8LUE9I
+         q5EzNQHwmSAg3LS8tb+An2ENCqfb3ml2dGwOIYyecuvfnARAOFXHQvBPlDyp+9RunqPH
+         YWqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780413977; x=1781018777;
+        d=1e100.net; s=20251104; t=1780413980; x=1781018780;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a++q+Cspvy+lo3emUzDENGkW1idP9N7NULAFivLQywA=;
-        b=CfocUdpjroq2uH8lszA2btGUC2HKNYLyrZ8KmEcXEKvMXJndarA3XbOwXizycqsYs+
-         kUxzbRhpzYtklBgntHLmmL/Z3K2evfh84GFaWfWODOR42GLPo1x6tPxk23V+lVdTxvsu
-         PiR7MUm7hMEapM4cetFQvWhU/HEEmaqH6kxM9IuNMJ3vk4aQ3bD0hD1moLUfzIKXXDpR
-         DESkVmtoLCfyW9yP9008nhNxKREewiSwFhBwuSQQEANOFStptYyDFzpGRQHXGCnr1uJY
-         UZM1IjaSER0wkeKpRH8dlIKYAH6wlQRIZxEFSPr6Q9NV3X04BbDX4+VNJ+bhTr1Onmsp
-         AT+A==
-X-Forwarded-Encrypted: i=1; AFNElJ8OlmgjwCKCEXr6cUMjS99HITPLzBrmQjpuIKbFoUWMfHjeHeIlij2xK0Cdd3PR95FcwRcmGxflEvYi@vger.kernel.org
-X-Gm-Message-State: AOJu0Yylcq8+p7q+9/nftFbcz0kV738greGAL0bcAfjILox8PvD4K87B
-	JDHWYYrfyI3EBi/4HcOKeiFVSWrnB+IibzEL836lgoAd4tpdB9x0oGnnpyi7KC/4qykmLR+xtz9
-	0xfEoipagog==
-X-Received: from dybpi11.prod.google.com ([2002:a05:7301:420b:b0:304:de31:a7b2])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:4312:b0:2ce:25be:c8e8
- with SMTP id 5a478bee46e88-304fa5a8b1amr8918813eec.17.1780413976931; Tue, 02
- Jun 2026 08:26:16 -0700 (PDT)
-Date: Tue,  2 Jun 2026 08:25:13 -0700
+        bh=7iB2IkCiPQWyvpQ1QBll6VQTrbjQBhFOeCn5EJNQ4TY=;
+        b=WmXO7aKK2Do+MfAvMrLhb2lRqb+i5wxoguXNx2W/9cN74rjPYJUI9yWDBAAHvSTd6X
+         SejZqojLhCcGJtTxzJ3B1AaH2TYZZOyprbIxxzZuxQlfy7Z+aelpJRHANptmhIPBvrJa
+         A/6VsAyk0r5ifVSnY10/YeC6Owpa8SlpdG25rqVat4pRSlevKVm61j+BvfY1Ac3+iMuY
+         8U4aUmJwFxC6qtAizWomCsWuOnrAasIi+RMjvv79pMItMrVzkiAZcgt7Okjitzs8Wfnm
+         zU/t+OEw7EyjB+MCbRTRPhcq2BUJhvTQ94UFdVFFr3RIfoSncoLeRvPKr+gT+QTDExya
+         89vw==
+X-Forwarded-Encrypted: i=1; AFNElJ9SwUPmk99M42q983bLzUyJjU681H/sqyuy9Zd5ADkHnr84wIN4GMwsc+nqRvNOxp38Dm8YdbjXCq/Y@vger.kernel.org
+X-Gm-Message-State: AOJu0YyprNhegH0vXA54FqGcMtZ++9iHUht6jv9B+Yci6Vz72wcJ6wNh
+	K3OtRkKjNE66Qza092ddFsOjvul3UU/vmcrU6ale/2GxdMaGL+Hx4mHfeKilzC1lU6D0VWyU3wS
+	gQsp8luHUXQ==
+X-Received: from dlak10.prod.google.com ([2002:a05:701b:290a:b0:137:ef14:6ec7])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:f207:b0:12c:1288:ce63
+ with SMTP id a92af1059eb24-137ee2f9aadmr1486105c88.13.1780413979700; Tue, 02
+ Jun 2026 08:26:19 -0700 (PDT)
+Date: Tue,  2 Jun 2026 08:25:14 -0700
 In-Reply-To: <20260602152516.2831152-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
@@ -76,8 +76,8 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260602062452.2583619-1-irogers@google.com> <20260602152516.2831152-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.929.g9b7fa37559-goog
-Message-ID: <20260602152516.2831152-17-irogers@google.com>
-Subject: [PATCH v12 16/19] perf env: Add mutex to protect lazy environment initialization
+Message-ID: <20260602152516.2831152-18-irogers@google.com>
+Subject: [PATCH v12 17/19] perf env: Add helper to lazily compute the os_release
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com, 
@@ -92,17 +92,17 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
 	MV_CASE(0.50)[];
 	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:irogers@google.com,m:acme@kernel.org,m:namhyung@kernel.org,m:agordeev@linux.ibm.com,m:gor@linux.ibm.com,m:hca@linux.ibm.com,m:jameshongleiwang@126.com,m:japo@linux.ibm.com,m:linux-kernel@vger.kernel.org,m:linux-perf-users@vger.kernel.org,m:linux-s390@vger.kernel.org,m:sumanthk@linux.ibm.com,m:tmricht@linux.ibm.com,s:lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-20401-lists,linux-s390=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-20402-lists,linux-s390=lfdr.de];
 	FREEMAIL_CC(0.00)[linux.ibm.com,126.com,vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:irogers@google.com,m:acme@kernel.org,m:namhyung@kernel.org,m:agordeev@linux.ibm.com,m:gor@linux.ibm.com,m:hca@linux.ibm.com,m:jameshongleiwang@126.com,m:japo@linux.ibm.com,m:linux-kernel@vger.kernel.org,m:linux-perf-users@vger.kernel.org,m:linux-s390@vger.kernel.org,m:sumanthk@linux.ibm.com,m:tmricht@linux.ibm.com,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_SENDER(0.00)[irogers@google.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
@@ -115,81 +115,182 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TO_DN_NONE(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5036362FCF1
+X-Rspamd-Queue-Id: 5604C62FFFC
 
-Introduce a mutex to 'struct perf_env' to safely protect lazy
-metadata setup, such as os_release or e_machine resolution,
-preventing concurrent initialization data races and memory leaks
-during multi-threaded profiling or symbol loading.
+In live mode the os_release isn't being initialized, make a lazy
+initialization helper that assumes when the os_release isn't
+initialized this is live mode.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/env.c | 5 +++++
- tools/perf/util/env.h | 3 +++
- 2 files changed, 8 insertions(+)
+ tools/perf/util/data-convert-bt.c   |  2 +-
+ tools/perf/util/data-convert-json.c |  6 +++--
+ tools/perf/util/env.c               | 38 +++++++++++++++++++++++++++++
+ tools/perf/util/env.h               |  1 +
+ tools/perf/util/header.c            | 16 ++++++++----
+ tools/perf/util/symbol.c            |  4 +--
+ 6 files changed, 57 insertions(+), 10 deletions(-)
 
+diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
+index b3f745cff2a7..cc51b8677c8e 100644
+--- a/tools/perf/util/data-convert-bt.c
++++ b/tools/perf/util/data-convert-bt.c
+@@ -1414,7 +1414,7 @@ do {									\
+ 
+ 	ADD("host",    env->hostname);
+ 	ADD("sysname", "Linux");
+-	ADD("release", env->os_release);
++	ADD("release", perf_env__os_release(env));
+ 	ADD("version", env->version);
+ 	ADD("machine", env->arch);
+ 	ADD("domain", "kernel");
+diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
+index a7da93a7ff0e..c71dfb77c697 100644
+--- a/tools/perf/util/data-convert-json.c
++++ b/tools/perf/util/data-convert-json.c
+@@ -16,6 +16,7 @@
+ #include "linux/err.h"
+ #include "util/auxtrace.h"
+ #include "util/debug.h"
++#include "util/env.h"
+ #include "util/dso.h"
+ #include "util/event.h"
+ #include "util/evsel.h"
+@@ -272,7 +273,7 @@ static void output_headers(struct perf_session *session, struct convert_json *c)
+ {
+ 	struct stat st;
+ 	const struct perf_header *header = &session->header;
+-	const struct perf_env *env = perf_session__env(session);
++	struct perf_env *env = perf_session__env(session);
+ 	int ret;
+ 	int fd = perf_data__fd(session->data);
+ 	int i;
+@@ -296,7 +297,8 @@ static void output_headers(struct perf_session *session, struct convert_json *c)
+ 	output_json_key_format(out, true, 2, "feat-offset", "%" PRIu64, header->feat_offset);
+ 
+ 	output_json_key_string(out, true, 2, "hostname", env->hostname);
+-	output_json_key_string(out, true, 2, "os-release", env->os_release);
++	output_json_key_string(out, true, 2, "os-release",
++			       perf_env__os_release(env));
+ 	output_json_key_string(out, true, 2, "arch", env->arch);
+ 
+ 	if (env->cpu_desc)
 diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 28c54c58193e..03d90a45992c 100644
+index 03d90a45992c..c0e2b9d5f0b2 100644
 --- a/tools/perf/util/env.c
 +++ b/tools/perf/util/env.c
-@@ -250,6 +250,8 @@ void perf_env__exit(struct perf_env *env)
- {
- 	int i, j;
- 
-+	mutex_destroy(&env->lock);
-+
- 	perf_env__purge_bpf(env);
- 	perf_env__purge_cgroups(env);
- 	zfree(&env->hostname);
-@@ -307,6 +309,7 @@ void perf_env__init(struct perf_env *env)
- 	init_rwsem(&env->bpf_progs.lock);
- #endif
- 	env->kernel_is_64_bit = -1;
-+	mutex_init(&env->lock);
+@@ -361,6 +361,44 @@ bool perf_arch_is_big_endian(const char *arch)
+ 	return false;
  }
  
- static void perf_env__init_kernel_mode(struct perf_env *env)
-@@ -1014,6 +1017,7 @@ bool x86__is_amd_cpu(void)
- 	struct perf_env env = { .total_mem = 0, };
- 	bool is_amd;
- 
-+	perf_env__init(&env);
- 	perf_env__cpuid(&env);
- 	is_amd = perf_env__is_x86_amd_cpu(&env);
- 	perf_env__exit(&env);
-@@ -1036,6 +1040,7 @@ bool x86__is_intel_cpu(void)
- 	struct perf_env env = { .total_mem = 0, };
- 	bool is_intel;
- 
-+	perf_env__init(&env);
- 	perf_env__cpuid(&env);
- 	is_intel = perf_env__is_x86_intel_cpu(&env);
- 	perf_env__exit(&env);
++const char *perf_env__os_release(struct perf_env *env)
++{
++	struct utsname uts;
++	int ret;
++	const char *release;
++
++	if (!env)
++		return perf_version_string;
++
++	mutex_lock(&env->lock);
++	if (env->os_release) {
++		release = env->os_release;
++		goto out;
++	}
++
++	/*
++	 * If env->arch is set, this is an offline target environment.
++	 * If the os_release is not populated in the file, we do not want
++	 * to poison it with the host's release which would break guest checks.
++	 */
++	if (env->arch) {
++		release = NULL;
++		goto out;
++	}
++
++	/*
++	 * The os_release is being accessed but wasn't initialized from a data
++	 * file, assume this is 'live' mode and use the release from uname. If
++	 * uname or strdup fails then use the current perf tool version.
++	 */
++	ret = uname(&uts);
++	env->os_release = strdup(ret < 0 ? perf_version_string : uts.release);
++	release = env->os_release ?: perf_version_string;
++out:
++	mutex_unlock(&env->lock);
++	return release;
++}
++
+ int perf_env__set_cmdline(struct perf_env *env, int argc, const char *argv[])
+ {
+ 	int i;
 diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index 83e74328798f..6aaf80c640bd 100644
+index 6aaf80c640bd..7621d1f73b83 100644
 --- a/tools/perf/util/env.h
 +++ b/tools/perf/util/env.h
-@@ -6,6 +6,7 @@
- #include <linux/rbtree.h>
- #include "cpumap.h"
- #include "rwsem.h"
-+#include "mutex.h"
+@@ -176,6 +176,7 @@ void perf_env__exit(struct perf_env *env);
  
- struct perf_cpu_map;
+ int perf_env__kernel_is_64_bit(struct perf_env *env);
+ bool perf_arch_is_big_endian(const char *arch);
++const char *perf_env__os_release(struct perf_env *env);
  
-@@ -156,6 +157,8 @@ struct perf_env {
- 		 */
- 		bool	enabled;
- 	} clock;
-+	/* Protects lazy environment initialization (e.g. os_release, e_machine). */
-+	struct mutex		lock;
- };
+ int perf_env__set_cmdline(struct perf_env *env, int argc, const char *argv[]);
  
- enum perf_compress_type {
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index ecdac427d9c4..d7f41db7322c 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -432,13 +432,19 @@ static int write_osrelease(struct feat_fd *ff,
+ 			   struct evlist *evlist __maybe_unused)
+ {
+ 	struct utsname uts;
+-	int ret;
++	const char *release = NULL;
+ 
+-	ret = uname(&uts);
+-	if (ret < 0)
+-		return -1;
++	if (evlist->session)
++		release = perf_env__os_release(perf_session__env(evlist->session));
+ 
+-	return do_write_string(ff, uts.release);
++	if (!release) {
++		int ret = uname(&uts);
++
++		if (ret < 0)
++			return -1;
++		release = uts.release;
++	}
++	return do_write_string(ff, release);
+ }
+ 
+ static int write_arch(struct feat_fd *ff, struct evlist *evlist)
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 2ce512f08a1d..077d19af5240 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -2225,7 +2225,7 @@ static int vmlinux_path__init(struct perf_env *env)
+ {
+ 	struct utsname uts;
+ 	char bf[PATH_MAX];
+-	char *kernel_version;
++	const char *kernel_version;
+ 	unsigned int i;
+ 
+ 	vmlinux_path = malloc(sizeof(char *) * (ARRAY_SIZE(vmlinux_paths) +
+@@ -2242,7 +2242,7 @@ static int vmlinux_path__init(struct perf_env *env)
+ 		return 0;
+ 
+ 	if (env) {
+-		kernel_version = env->os_release;
++		kernel_version = perf_env__os_release(env);
+ 	} else {
+ 		if (uname(&uts) < 0)
+ 			goto out_fail;
 -- 
 2.54.0.929.g9b7fa37559-goog
 
