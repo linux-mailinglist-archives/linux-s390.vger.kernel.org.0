@@ -1,218 +1,341 @@
-Return-Path: <linux-s390+bounces-20381-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20383-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id zV5hMorpHmoNZAAAu9opvQ
-	(envelope-from <linux-s390+bounces-20381-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 02 Jun 2026 16:32:42 +0200
+	id blYbByTqHmoeZAAAu9opvQ
+	(envelope-from <linux-s390+bounces-20383-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 02 Jun 2026 16:35:16 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D69F62F4F6
-	for <lists+linux-s390@lfdr.de>; Tue, 02 Jun 2026 16:32:42 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 691A862F53A
+	for <lists+linux-s390@lfdr.de>; Tue, 02 Jun 2026 16:35:15 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=FuK2K89Q;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20381-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20381-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=ibm.com;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=outlook.com header.s=selector1 header.b=JELa3IOQ;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20383-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-20383-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=outlook.com;
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7597330BF32D
-	for <lists+linux-s390@lfdr.de>; Tue,  2 Jun 2026 14:25:11 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C855B303350B
+	for <lists+linux-s390@lfdr.de>; Tue,  2 Jun 2026 14:27:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C02E23F1673;
-	Tue,  2 Jun 2026 14:24:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 603CC3EDE46;
+	Tue,  2 Jun 2026 14:24:46 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazolkn19011001.outbound.protection.outlook.com [52.103.1.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18123ED3AF;
-	Tue,  2 Jun 2026 14:24:07 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780410249; cv=none; b=dq2YnKIAM0iH6qf9dCe0ditbwVjbV7StA/duDr5n4pqOiP/oaEwG/qpM7urJ8BbqlYdI1uIH9O4rdaZLnMfG0KkiQ2MWzaGhUmvWSkTmUfYknUlLizunZNBZK/U7noZ+QY3c5dZqDnHPoFS4/LKUtP93QF3h9Ejz3KQGp3uFV38=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780410249; c=relaxed/simple;
-	bh=1kycnoBb6zMW1dCK9pPTA3MFg+MKXjsWEBZ7O7MFldU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VnFIRzJkr9euq2hW0I4AiCq08WwTWgsScXetu9q7ubFjdvJwJgRgaqQz9ZnMpk240RX8ETfWcLrbR8vh8+ZhCZe/8CHDg5rO0O/0/h7z27BADz651p2rJsKQlu1ploO3q3gD/xAQFeSRIeUYHmL5L7stP7a9V83iApxxHmT61L4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FuK2K89Q; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65280HZg2118330;
-	Tue, 2 Jun 2026 14:24:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=3mFRcDIES0Wygdzgm
-	w9D1J32vRwcqdCkwOIUwOsy9Uk=; b=FuK2K89QJ+xvawHdivo+sMrTmZHt0x5Z8
-	V4vQgdpqI4Dcr6SP4wWGrm0qia5xEp0787XERvSQ7fOLgDeyvHApJzXDMqrtycA1
-	5UekVjRP2WPRbvK9yNc5BimVaRWfTSlYoqxY3Ezykl9eIi17IJ5w75wlUvYlH16c
-	eA0P5iSrfs+Kr88uaeuoYkPdlijsldFqmz0HDXdxR9LGNO1wPf7KepPMExAV2Kww
-	U3CmJs2MWMolEEvR26x6T56OvsPcuFXhkxZjcKCOJ0NysR4EMFhk6YwlEZMDqh48
-	tWVXZPDfCG1/iQ6DOhu34VZRgXFxYFGX+631O1J2QfqcXREOzy+9Q==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4efqd46drc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jun 2026 14:24:05 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 652E967w026810;
-	Tue, 2 Jun 2026 14:24:04 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4egakvur47-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jun 2026 14:24:04 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 652ENwIv36962792
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 2 Jun 2026 14:23:59 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CD3F320040;
-	Tue,  2 Jun 2026 14:23:58 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A48E420043;
-	Tue,  2 Jun 2026 14:23:58 +0000 (GMT)
-Received: from p-imbrenda.aag-de.ibm.com (unknown [9.52.223.175])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  2 Jun 2026 14:23:58 +0000 (GMT)
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: linux-kernel@vger.kernel.org
-Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, david@kernel.org, seiden@linux.ibm.com,
-        nrb@linux.ibm.com, schlameuss@linux.ibm.com, gra@linux.ibm.com
-Subject: [PATCH v3 10/10] KVM: s390: Remove ptep_zap_softleaf_entry()
-Date: Tue,  2 Jun 2026 16:23:56 +0200
-Message-ID: <20260602142356.169458-11-imbrenda@linux.ibm.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260602142356.169458-1-imbrenda@linux.ibm.com>
-References: <20260602142356.169458-1-imbrenda@linux.ibm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D380A3BE144;
+	Tue,  2 Jun 2026 14:24:44 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780410286; cv=fail; b=svv9DMQhLrjvOA7HWQYlKGOsC8eFe8jg26l3wXfjUJCM8w/lQiyS94xV/3rVKZm5Skp70xcMfVpIai153Wm6IMl0Cn7JOdKT3G4JpHgpWwQbvJVVT1laSiiDcQ4yBbpksc1rzyaWaxoCdxJp4q8rIaT/PilN+ScX7WMhYZHg6qg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780410286; c=relaxed/simple;
+	bh=+UnpUnaY8UrATtU2t2E6RG4xZvcZyo6LZSXccd0avik=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=T7sOlii01H/bQGhWw+v16BkMERc5EOrM+F7nokM/jlwk4EXaPZXHo/lAByvxqi2VWmUWxOd6E2gE0hkNrEsc+1S3l2UDIHSNPRdu6mt39ac3GPbNBnIIFrQ79BfAXy7i3sGz3sW+aYRuEsfM8GuUDxzmOmJQbDFEOelqP5xBY/M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=JELa3IOQ; arc=fail smtp.client-ip=52.103.1.1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VBC033oA9MPG1vtI4+LptIJCefcQ/pINudkC3nFOT0fSih/IB5u/K4Lcn9prGhTeJpMwQ1qNZG1Hy18WMPu3WPI380RXqMVvg1jNVU3kaMBwkH86zMhcIBDzgJrTnnOy9bStxQSoYHGXm/lR2tb1LGntMh5EAWttwR8LI/R4WiPjw+ixeOqh/ADTqyfjsgDq3Gv9hrWWVGg9AcN0s9tLmDaB7rDgXMLdobQfC90y8TdHOW0fnv3YpSZBoZkH2Z++Y3wzGbyQGwa4Jv3V3txtiyQ/6xML4cU/s7zDR+nS3u3m4uIubli0drAR27sj3apc0YPE07UBENo8iCdBxl8xZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VniBiCCvYeTRsch0Z+wguVQDokgskI/0HVYhOI9nXlk=;
+ b=wL1bDkNburTMBBqHAL/QfjIX8forsowDPZWMzDjPo+xr6dMog9boLwxphu6p49sQYjoRbBccgVTEsSiBDCN0qAr+x/mMwn45lVPe4CFH0E2G7aob24XGWDeYmcYI/zBw1jrvalLFPStjolVogcQaWFSI3dLTAmXTLoiIHlaAcAVVMV2BKIPOgnsVXGmAPqPRfs0d1cbEKgoTNNRWfYObWciomukdtnygVhHIYduaAttmAPmh6hiNPPiba6pkOcak7Mjjkms9zdFAwFylWw3apLqwuzJC1HesFEPYjqa/kCrSZSHTg8TCFy4ffRSk3K9HBxE6HwihssyZBcxZp5pnLA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VniBiCCvYeTRsch0Z+wguVQDokgskI/0HVYhOI9nXlk=;
+ b=JELa3IOQSZ41stzKB+oh4OB8qtcrkAGO1ASrPezCN6QBNa5fFKqtjQklz01zyzZA5qy4EwWYi1XaNogke8sYWVcnZsJcHrXEz1UIwPO0s3ThSHHAW0vJyKTV3hMd+t5trPpD6twKyoY23kk7NROJzufC/jIswFiA0rN1KSFwS73jlo037OBKpLUoqHP8sub8SXO9rNbN0BipTLWzefTwL89zs+gF/DQmjpB0wI0CiWFAo7svFfEIJsyXT1ZJVx8Nz6FXmOOoK1liECfAt0OvTI6ZdHav9xdKkIuZxWJSGmeKu2vsmQddqC0WkV2uQ1PTe4SCWVWjLGY/39DXIx7mEQ==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by IA1PR02MB9494.namprd02.prod.outlook.com (2603:10b6:208:3f4::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.7; Tue, 2 Jun 2026
+ 14:24:41 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::900:1ccf:2b1e:52b6%3]) with mapi id 15.21.0071.014; Tue, 2 Jun 2026
+ 14:24:41 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Aneesh Kumar K.V <aneesh.kumar@kernel.org>, "iommu@lists.linux.dev"
+	<iommu@lists.linux.dev>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-coco@lists.linux.dev"
+	<linux-coco@lists.linux.dev>
+CC: Robin Murphy <robin.murphy@arm.com>, Marek Szyprowski
+	<m.szyprowski@samsung.com>, Will Deacon <will@kernel.org>, Marc Zyngier
+	<maz@kernel.org>, Steven Price <steven.price@arm.com>, Suzuki K Poulose
+	<Suzuki.Poulose@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Jiri
+ Pirko <jiri@resnulli.us>, Jason Gunthorpe <jgg@ziepe.ca>, Mostafa Saleh
+	<smostafa@google.com>, Petr Tesarik <ptesarik@suse.com>, Alexey Kardashevskiy
+	<aik@amd.com>, Dan Williams <dan.j.williams@intel.com>, Xu Yilun
+	<yilun.xu@linux.intel.com>, "linuxppc-dev@lists.ozlabs.org"
+	<linuxppc-dev@lists.ozlabs.org>, "linux-s390@vger.kernel.org"
+	<linux-s390@vger.kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Alexander Gordeev
+	<agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
+	<svens@linux.ibm.com>, "x86@kernel.org" <x86@kernel.org>, Jiri Pirko
+	<jiri@nvidia.com>
+Subject: RE: [PATCH v5 05/20] dma-pool: track decrypted atomic pools and
+ select them via attrs
+Thread-Topic: [PATCH v5 05/20] dma-pool: track decrypted atomic pools and
+ select them via attrs
+Thread-Index: AQHp6tfu5DGfxW+HBL9src0vNhss0QGjMATQtfypCTCABxNTgIAAi4fg
+Date: Tue, 2 Jun 2026 14:24:40 +0000
+Message-ID:
+ <SN6PR02MB4157D9955A93244014AB7978D4122@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20260522042815.370873-1-aneesh.kumar@kernel.org>
+ <20260522042815.370873-6-aneesh.kumar@kernel.org>
+ <SN6PR02MB415754E94A9505C2B9739E4DD4092@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <yq5afr35sciu.fsf@kernel.org>
+In-Reply-To: <yq5afr35sciu.fsf@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|IA1PR02MB9494:EE_
+x-ms-office365-filtering-correlation-id: f04ac679-8342-4fa0-c472-08dec0b2af26
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|8062599012|19110799012|13091999003|37011999003|8060799015|51005399006|15080799012|12121999013|19101099003|31061999003|41001999006|440099028|3412199025|12091999003|102099032|40105399003;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?JfXcuCE9SVQbW7c0ZKHSuAAPiV68XlWtLXAPE/YfMoCMoe3GPJVk/thU4hAz?=
+ =?us-ascii?Q?VTWDKbXPp1YuxM+RceAJ4fsOVJ9Nvtgd2xUa+seWhizCLU6fxkzz4hzLVs+7?=
+ =?us-ascii?Q?BWSnDi+kVPKAD3Yw3su8nl6a6aANIMGIOSLDuMYyQBd/ZX+l0fknaJiD7w72?=
+ =?us-ascii?Q?RttW4b0o5LsRdE29aDFb/dPoEjy3bScOvRe8ZkhFHcmfGfJLV3b68kG1xTPw?=
+ =?us-ascii?Q?vJlrZB6SIEdhGhp7kF8bA94xvs5iKbjW3rCLb+TVD/x96nZ7g3UWsc2Rwd0E?=
+ =?us-ascii?Q?8F2USFsP07VSdR3xB4NvGoyHpo5MQIO3K4mav00uVKPdoR+8/TA5jGyyVGOX?=
+ =?us-ascii?Q?mDc1cI8HFpMdbt1/ZeSaevsdnvmNhqOyaNo5EK8kVU2s3zlz1cefXd0/Ldh9?=
+ =?us-ascii?Q?953KqSDpWyY3JyhPKL0fHeghVhxskxxQHFLEcxseSuSyCEKwdXS9+2O2nPIh?=
+ =?us-ascii?Q?Hh2wBazEBO2ffE/WyxmcBKHgOHlTear57Q+iS0lHznReLj35RhNeueEsqprW?=
+ =?us-ascii?Q?7YQ/g4WKXNaUFdEyluAo5m8CKHmgDLnH9g8Ybtjv9hlYytbkd5v2cjZfHgjv?=
+ =?us-ascii?Q?3JaLFM/SIMvV8YZangXScYMte7kD+LE6QhLkResx7ZAuDfnLLBlNhAhlLWCj?=
+ =?us-ascii?Q?vRdj+/aX3fjb2n6hOJ2I0TMlk+GihhlD/XvpmwocTYrJFrJ20XOGl+ZD0F3q?=
+ =?us-ascii?Q?N2wjMSoLS2QYiq2jdHC76tvYp0eftgqOsCkoDKAscQNyZCVYicZthkFspfnN?=
+ =?us-ascii?Q?IgHVxG4dP282REzIOKJVbx5Nro3q20OOxr+SdFaOwm3O3BAtB7NegnkQrBYe?=
+ =?us-ascii?Q?VaaqBbkvKo6RikokmWoy9+ZDjW1iktjagDmz678P9MJArWmqnQrYPcz7nRHI?=
+ =?us-ascii?Q?RWovAArzCcHmLZRgVt1bCGto4NOzWDrmm+4yfN2iIOemUHsELPi/h6Oj7Zjx?=
+ =?us-ascii?Q?YIbQt1Hq6QXNdBMwYipbG5D6QTZ9HxnO+rlnKvGykq9r9J71IsfMpT3ayJu9?=
+ =?us-ascii?Q?eZndAPT3O7PNO3VgDW88yXwfCYZOydNQkS0BlCd0MAMAR0kVOJG1rMvv/qvA?=
+ =?us-ascii?Q?G3X9uVDixXvAU82sMKrQDqqC2oDNhahw0E+Y3NKI2BFcNhPxWy4=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?QJFSkC6L/BO/GF2jjDeJyFEFNSCCpXecuWZ9sSp5Uh73GwxqItc9Ypwe7xjM?=
+ =?us-ascii?Q?1ZjRf5oFRZLd8+HTMoWCugLOCBDUOvmIpbsNpeCXkSA8WapzU62QS163FXLn?=
+ =?us-ascii?Q?ImKZ1vujDR/8TNK5v95N9x8OaSpSDhcIvaUXO1+inkwObZe8HQhPD/DtRI93?=
+ =?us-ascii?Q?RIKTh1KqkiwDvWbkLi5vMe1g3046Hz/AHK5WAySW1zQmqAInnnnZxQWDLM7d?=
+ =?us-ascii?Q?dZqBtNxgs7fFUGyAY7d5upJiAj//XoPSbGtWchWxMCOQ2P58Iobqf9atzyFs?=
+ =?us-ascii?Q?PCCQLaaDohuX9o4mExzN9oOKpCvw7GkI8Ex0rOIlCrEE0lFgVKiKGHxJy6ns?=
+ =?us-ascii?Q?48F/oIsNSwQsiwZTcE/KpKCGXdUMJhteJJDuP8odfkevtrQi+kq2coNmJyZS?=
+ =?us-ascii?Q?Bs3r7slgh1pHvVbkyCbNnj6q8PctBGWVfRmYYOB/vbie9H28xix3AoT0LwZd?=
+ =?us-ascii?Q?gUIl1VZj4Mkrcb9yMMGJC/4XQ1cPDn5Wb2MFibkf02r0Cv7PUy/IRZgzfBD2?=
+ =?us-ascii?Q?IaHmTg+MNeYlG82ZcQHvUHv0qVJznZIHdgpa6lD9UdKw9yqnRYRhy+b/BAWM?=
+ =?us-ascii?Q?f+kbyGkdQllA9u0tzzoUHxptsDQ6Qo/AsHqeRea5hTLrfA4VmyvuDzZM5X/X?=
+ =?us-ascii?Q?aRwGVt1RJJyRjI+i6YLNj91OrABEqlEVW40Cm5JNhLLbLHEVL4TAfMiAk651?=
+ =?us-ascii?Q?2BYW7RRIUmmgTqMj1UAIRScCBmPYiELrLQ8XGQIrfZEqSJbQIoDprrtnevJa?=
+ =?us-ascii?Q?iIETSZF87IfrzXhmWujW16z50jvcYoJjeWBcz9zOQ23Z1lrNP51GBMRk1vH9?=
+ =?us-ascii?Q?K1Zvep2fX03rcDr4lrTy6gQlb4mkNUzmhkFRElv5G3Eii/Yc105guXCiHkFZ?=
+ =?us-ascii?Q?i7l/sDw4qcmWxKkbH4ssRRVqhhdCcyhmKni0U/TCZblRmU2XRpvQHuLyHKdO?=
+ =?us-ascii?Q?Lj6dcqxO06NKdHkP77hsODk5CkV6zIqW/kauOiezD0D8pNCGSg7sCYQRSpnd?=
+ =?us-ascii?Q?H4J1bxMET1b3Yo4flUNwJLD2R4FpvGbT9GLvvS5GLTCFMsiVGe1NhzO87hem?=
+ =?us-ascii?Q?VKQWPiRg0up2ech7nFUD5KRMSN8ZeS8o4+SvpOPc6VQ6ob1ovPjhCVYfgWLi?=
+ =?us-ascii?Q?YmOBII05PnhcYX8IZJ7LIat3IGauJy+72Wute9vLUhcdi6+AltiDI1WXoxQg?=
+ =?us-ascii?Q?6T+PnP6lD44UdtG28XeUZosxIkzghf2Q6WSSvP+1cp0pRtZ/BJw0mYA2o6aJ?=
+ =?us-ascii?Q?sOVX7v3Fs4U3amAKeZMt+10+dqiE/hvkpEY4R+dnv581jugxm9WiqxNK5krR?=
+ =?us-ascii?Q?s0WQkujSZoQuqw/ctaGLHh8E54trfs0IGa9rmfDvW27xKzlIekiNUXP1sIL5?=
+ =?us-ascii?Q?FXV+uIEkAWxw4mP1zvCJwab2JIpAEMySFBImasH/Ed7MG38lsI1nQz07RaEw?=
+ =?us-ascii?Q?7V+rYJy1otM=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjAyMDEzNiBTYWx0ZWRfXyUgap/Gni44x
- sLxukxw0AuxZxZ+DYs8T4M5arJ8TslOXlgZmtH8ejWdPb+sgAhfCKjQMXiMtANXEDE09E6nVZr9
- sOsHhmD9moyeqI3FjccMciiB69FYy4PHQnvwj7fttRdCCTwbK4cmV1ex05B65wCGIskgKQyCbAB
- 5yPqD+J9lz/cXxNkHhRQtVsDjbCcNVDLNaefWoF+ALQqziX3O9DZXTJWyiXRs+idEyQUfYsw3q1
- KB5krv2H/pJuNe6c+S6aeNQIswBTlW3wU4J353waIB4nAqIK7rgLu/zveFRQUxhNbu07Kn0MVJE
- VwK+mN0FOE+fWk2BibKba0gEUVv4LOLRLkmAZNnQomrjUBejic6wb7d4ImIe0OhEGaGC22ql6Ke
- TC/5KORsMT26jVrDwUsp5tq1JlTsTMjbNB0cvCov0gfxTavptxThXhcaUGyjqEwBS9UBC5XsuD1
- cBvpFTg//hTKlP3uKeQ==
-X-Proofpoint-GUID: i09K8kAfgNqkg2FBT86fn8elWGH2bAa_
-X-Proofpoint-ORIG-GUID: i09K8kAfgNqkg2FBT86fn8elWGH2bAa_
-X-Authority-Analysis: v=2.4 cv=DZknbPtW c=1 sm=1 tr=0 ts=6a1ee786 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8 a=LFT47s6f9hPNm4szaaUA:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-02_02,2026-05-28_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 clxscore=1015 suspectscore=0 impostorscore=0 lowpriorityscore=0
- phishscore=0 malwarescore=0 priorityscore=1501 bulkscore=0 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606020136
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: f04ac679-8342-4fa0-c472-08dec0b2af26
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jun 2026 14:24:40.8420
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR02MB9494
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
+	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-20383-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20381-lists,linux-s390=lfdr.de];
-	FROM_NEQ_ENVFROM(0.00)[imbrenda@linux.ibm.com,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linux-kernel@vger.kernel.org,m:kvm@vger.kernel.org,m:linux-s390@vger.kernel.org,m:borntraeger@de.ibm.com,m:frankja@linux.ibm.com,m:david@kernel.org,m:seiden@linux.ibm.com,m:nrb@linux.ibm.com,m:schlameuss@linux.ibm.com,m:gra@linux.ibm.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[imbrenda@linux.ibm.com,linux-s390@vger.kernel.org];
-	PRECEDENCE_BULK(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:aneesh.kumar@kernel.org,m:iommu@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:robin.murphy@arm.com,m:m.szyprowski@samsung.com,m:will@kernel.org,m:maz@kernel.org,m:steven.price@arm.com,m:Suzuki.Poulose@arm.com,m:catalin.marinas@arm.com,m:jiri@resnulli.us,m:jgg@ziepe.ca,m:smostafa@google.com,m:ptesarik@suse.com,m:aik@amd.com,m:dan.j.williams@intel.com,m:yilun.xu@linux.intel.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-s390@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:x86@kernel.org,m:jiri@nvidia.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[mhklinux@outlook.com,linux-s390@vger.kernel.org];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_FROM(0.00)[outlook.com];
+	FREEMAIL_CC(0.00)[arm.com,samsung.com,kernel.org,resnulli.us,ziepe.ca,google.com,suse.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,vger.kernel.org,linux.ibm.com,ellerman.id.au,gmail.com,nvidia.com];
+	RCPT_COUNT_TWELVE(0.00)[33];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	ALIAS_RESOLVED(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:from_mime,linux.ibm.com:mid,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
-	TO_DN_NONE(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_RCPT(0.00)[linux-s390];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[11]
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mhklinux@outlook.com,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[outlook.com:+];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-s390];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,outlook.com:dkim,outlook.com:from_mime,outlook.com:email,SN6PR02MB4157.namprd02.prod.outlook.com:mid,vger.kernel.org:from_smtp,nvidia.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 6D69F62F4F6
+X-Rspamd-Queue-Id: 691A862F53A
 
-Migration entries do not need to be removed.
-
-The swap subsystem has been (and still is being) heavily reworked. The
-current implementation of ptep_zap_softleaf_entry() has been slowly
-modified and is now wrong, since it unconditionally calls
-swap_put_entries_direct() for both swap and migration entries.
-
-Remove ptep_zap_softleaf_entry() altogether, merge the path for proper
-swap entries directly in the only caller, and ignore migration entries.
-
-Fixes: 200197908dc4 ("KVM: s390: Refactor and split some gmap helpers")
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
----
- arch/s390/mm/gmap_helpers.c | 25 +++++--------------------
- 1 file changed, 5 insertions(+), 20 deletions(-)
-
-diff --git a/arch/s390/mm/gmap_helpers.c b/arch/s390/mm/gmap_helpers.c
-index 396207163ca6..1cfe4724fbe2 100644
---- a/arch/s390/mm/gmap_helpers.c
-+++ b/arch/s390/mm/gmap_helpers.c
-@@ -16,24 +16,6 @@
- #include <linux/ksm.h>
- #include <asm/gmap_helpers.h>
- 
--/**
-- * ptep_zap_softleaf_entry() - discard a software leaf entry.
-- * @mm: the mm
-- * @entry: the software leaf entry that needs to be zapped
-- *
-- * Discards the given software leaf entry. If the leaf entry was an actual
-- * swap entry (and not a migration entry, for example), the actual swapped
-- * page is also discarded from swap.
-- */
--static void ptep_zap_softleaf_entry(struct mm_struct *mm, softleaf_t entry)
--{
--	if (softleaf_is_swap(entry))
--		dec_mm_counter(mm, MM_SWAPENTS);
--	else if (softleaf_is_migration(entry))
--		dec_mm_counter(mm, mm_counter(softleaf_to_folio(entry)));
--	swap_put_entries_direct(entry, 1);
--}
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org> Sent: Monday, June 1, 2026=
+ 11:05 PM
+>=20
+> Michael Kelley <mhklinux@outlook.com> writes:
+>=20
+> > From: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>Sent: Thursday, M=
+ay 21, 2026 9:28 PM
+> >>
+> >> Teach the atomic DMA pool code to distinguish between encrypted and
+> >> unencrypted pools, and make pool allocation select the matching pool b=
+ased
+> >> on DMA attributes.
+> >>
+> >> Introduce a dma_gen_pool wrapper that records whether a pool is
+> >> unencrypted, initialize that state when the atomic pools are created, =
+and
+> >> use it when expanding and resizing the pools. Update dma_alloc_from_po=
+ol()
+> >> to take attrs and skip pools whose encrypted state does not match
+> >> DMA_ATTR_CC_SHARED. Update dma_free_from_pool() accordingly.
+> >>
+> >> Also pass DMA_ATTR_CC_SHARED from the swiotlb atomic allocation path s=
+o
+> >> decrypted swiotlb allocations are taken from the correct atomic pool.
+> >>
+> >> Tested-by: Jiri Pirko <jiri@nvidia.com>
+> >> Reviewed-by: Mostafa Saleh <smostafa@google.com>
+> >> Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
+> >> ---
+> >>  drivers/iommu/dma-iommu.c   |   2 +-
+> >>  include/linux/dma-map-ops.h |   2 +-
+> >>  kernel/dma/direct.c         |  11 ++-
+> >>  kernel/dma/pool.c           | 167 +++++++++++++++++++++++------------=
 -
- /**
-  * try_get_locked_pte() - like get_locked_pte(), but atomic and with trylock
-  * @mm: the mm
-@@ -111,6 +93,7 @@ void gmap_helper_zap_one_page(struct mm_struct *mm, unsigned long vmaddr)
- {
- 	struct vm_area_struct *vma;
- 	spinlock_t *ptl;	/* Lock for the host (userspace) page table */
-+	softleaf_t sl;
- 	pte_t *ptep;
- 
- 	mmap_assert_locked(mm);
-@@ -124,8 +107,10 @@ void gmap_helper_zap_one_page(struct mm_struct *mm, unsigned long vmaddr)
- 	ptep = try_get_locked_pte(mm, vmaddr, &ptl);
- 	if (IS_ERR_OR_NULL(ptep))
- 		return;
--	if (pte_swap(*ptep)) {
--		ptep_zap_softleaf_entry(mm, softleaf_from_pte(*ptep));
-+	sl = softleaf_from_pte(*ptep);
-+	if (pte_swap(*ptep) && softleaf_is_swap(sl)) {
-+		dec_mm_counter(mm, MM_SWAPENTS);
-+		swap_put_entries_direct(sl, 1);
- 		pte_clear(mm, vmaddr, ptep);
- 	}
- 	pte_unmap_unlock(ptep, ptl);
--- 
-2.54.0
+> >>  kernel/dma/swiotlb.c        |   7 +-
+> >>  5 files changed, 123 insertions(+), 66 deletions(-)
+> >>
+> >
+> > [snip]
+> >
+> >> +static __init struct dma_gen_pool *__dma_atomic_pool_init(struct dma_=
+gen_pool *dma_pool,
+> >> +		size_t pool_size, gfp_t gfp)
+> >>  {
+> >> -	struct gen_pool *pool;
+> >>  	int ret;
+> >>
+> >> -	pool =3D gen_pool_create(PAGE_SHIFT, NUMA_NO_NODE);
+> >> -	if (!pool)
+> >> +	dma_pool->pool =3D gen_pool_create(PAGE_SHIFT, NUMA_NO_NODE);
+> >> +	if (!dma_pool->pool)
+> >>  		return NULL;
+> >>
+> >> -	gen_pool_set_algo(pool, gen_pool_first_fit_order_align, NULL);
+> >> +	gen_pool_set_algo(dma_pool->pool, gen_pool_first_fit_order_align, NU=
+LL);
+> >> +
+> >> +	/* if platform is using memory encryption atomic pools are by defaul=
+t decrypted. */
+> >> +	if (cc_platform_has(CC_ATTR_MEM_ENCRYPT))
+> >> +		dma_pool->unencrypted =3D true;
+> >> +	else
+> >> +		dma_pool->unencrypted =3D false;
+> >
+> > I'm curious about the name of the "unencrypted" field in struct dma_gen=
+_pool,
+> > and similarly in Patch 7 of the series for the swiotlb struct io_tlb_po=
+ol and
+> > struct io_tlb_mem. Up through v3 of this series, you used "decrypted", =
+but
+> > starting in v4 switched to "unencrypted".
+> >
+> > To me, the above "if" statement has some cognitive dissonance in that i=
+f
+> > CC_ATTR_MEM_ENCRYPT is false (i.e., a normal VM), "unencrypted" is set
+> > to false. But I think of memory in a normal VM as "unencrypted" since i=
+t
+> > was never encrypted. A similar "if" statement occurs in your swiotlb ch=
+anges.
+> >
+> > Two related concepts are captured by the field:
+> > 1) Is some action needed to put the memory into the unencrypted state,
+> > and to remove it from that state? This applies when assigning memory to=
+ the
+> > pool, or freeing the memory in the pool.
+> > 2) Is the memory currently in the unencrypted state? This applies when
+> > allocating memory from the pool to a caller.
+> >
+> > It's hard to capture all that in a short field name. But I think I pref=
+er "decrypted"
+> > over "unencrypted".  The former implies that some action was taken. It'=
+s a
+> > little easier to think of a normal VM as *not* having decrypted memory.=
+ The
+> > memory was never encrypted in the first place, so no decryption action =
+was taken.
+> >
+> > Throughout the kernel, "decrypted" occurs much more frequently than
+> > "unencrypted".  We have set_memory_encrypted() and set_memory_decrypted=
+()
+> > that are "take action" names.  But we also have force_dma_unencrypted()=
+,
+> > phys_to_dma_unencrypted(), and dma_addr_unencrypted(). So it's a bit
+> > of a mess.
+> >
+> >
+> > But maybe there's more background here that led to the change
+> > between your v3 and v4.
+> >
+> > Michael
+>=20
+> The current APIs, phys_to_dma_unencrypted() and dma_addr_unencrypted(),
+> are the reason I changed the pool attribute name from decrypted to
+> unencrypted. The rationale was that nobody actually decrypted the
+> memory; the memory was already in an unencrypted state.
+>=20
+> In other words, the DMA pool did not contain encrypted content that was
+> later decrypted. Rather, the DMA pool itself was in an unencrypted
+> state.
+>=20
+> IMHO, set_memory_decrypted()/set_memory_encrypted() is the right naming
+> because those APIs describe an operation that transitions memory between
+> states. In contrast, the pool attribute describes the state of the
+> memory itself, which is why I used unencrypted rather than decrypted.
+>
 
+Except that in a normal VM, the "unencrypted" pool attribute does *not*
+describe the state of the memory itself.  In a normal VM, the memory is
+unencrypted, but the "unencrypted" pool attribute is false. That
+contradiction is the essence of my concern.
+
+Michael
 
