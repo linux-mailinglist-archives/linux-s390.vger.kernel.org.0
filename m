@@ -1,259 +1,130 @@
-Return-Path: <linux-s390+bounces-20330-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20331-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AFOsI8YHHmqeggkAu9opvQ
-	(envelope-from <linux-s390+bounces-20330-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 02 Jun 2026 00:29:26 +0200
+	id 4BjMK6EhHmr3hQkAu9opvQ
+	(envelope-from <linux-s390+bounces-20331-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 02 Jun 2026 02:19:45 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE981625F3C
-	for <lists+linux-s390@lfdr.de>; Tue, 02 Jun 2026 00:29:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A1FB626867
+	for <lists+linux-s390@lfdr.de>; Tue, 02 Jun 2026 02:19:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 907A1302BE80
-	for <lists+linux-s390@lfdr.de>; Mon,  1 Jun 2026 22:28:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CAB08300B456
+	for <lists+linux-s390@lfdr.de>; Tue,  2 Jun 2026 00:19:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9966A37F756;
-	Mon,  1 Jun 2026 22:28:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8235F29E0E5;
+	Tue,  2 Jun 2026 00:19:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kkEMaOzk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G42h9Bty"
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E970351C2E;
-	Mon,  1 Jun 2026 22:28:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5903299943
+	for <linux-s390@vger.kernel.org>; Tue,  2 Jun 2026 00:19:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780352898; cv=none; b=UFYWSMOBv8njORGW+cMsLrJYelo5hq5vOmIiSTuhZ+Ec+TBB4cFz/RQYR/l0mGnQ8un2/ZBkjnUyEzo227awRx8VQ/G1qRq235jIiDpI+DAoVtBUVfoLQyqj50swGpJb6PWe9GdkNu+xxRZjNRu0Vglw7ZMWRuoQDzmLIJ3RxV8=
+	t=1780359564; cv=none; b=AAHuM1g4xKO1ylL0Ew/bgCnYd89FQ63owhTu5pPVYNxh4jmKFoSveaSNjBIoANkAfO+tHvL/by3S9pDnn5kXVbkvEoGfVihn6FQjiJlbvMUeZKavoAR4Bk61aMSpYgtrnzthQXg9+ZL5AVD8dimAAgNfDMSs/1bY0wzVPaXV5mU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780352898; c=relaxed/simple;
-	bh=TLq5bbEJVkJ/P/Q3LayvuMZ/YUDrSOpczwq5R90epKM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s6OCCZb9DtQaCmBeDSEtlK+ptBrIdNEw21olxcAkaQHKQ3aE/d7bKOHvpM/zHu/8UCY3Wwio+r2MYRIMAsoQ04UwhUWdmvLHrDKVK+49jXmvX3yoam4fGEKAMyWnvYfJsDsX/DoRufQ/i6G4Bss/bzegrZL1aph0ZM8ypHZvGm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kkEMaOzk; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F3D71F00893;
-	Mon,  1 Jun 2026 22:28:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780352897;
-	bh=t9kW9wxmbYR0zK6wTk5cssPV12k29fXpKDHVyEt5l6g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=kkEMaOzk11QJr+Q7Sr/AQBjqPi1yH/uZhUKLQJj1zni60iihNwEZy8zCtJ4CboOJd
-	 73A8dNgNWdmoZfGgoE6rFir6mtHM05eSZ5PPzyq4pRHkMzD584vIdBRn9Daain4l8i
-	 ntv/VxdH1CXhptzix/FwRz4d/+E138PMtZv3hDF+32WMbjomSSA+GvQo3YBOcnEbgP
-	 NWGp297AQqntrIqiUhSp9V5Gtd0xSBbnLcLHpbp1jtlgjk6EawzCHjM4lSIctypMAs
-	 gB49wFWNUQ6lDrObYrMIKmdybuUNUaanjBhBRFnAfhiP5Ir0Oyg2ULplrVZEb5qdf3
-	 oyPpwbAZshTgQ==
-Date: Mon, 1 Jun 2026 15:28:15 -0700
-From: Oliver Upton <oupton@kernel.org>
-To: Steffen Eiden <seiden@linux.ibm.com>
-Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Andreas Grapentin <gra@linux.ibm.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	David Hildenbrand <david@kernel.org>,
-	Friedrich Welter <fritz@linux.ibm.com>,
-	Gautam Gala <ggala@linux.ibm.com>,
-	Hariharan Mari <hari55@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Hendrik Brueckner <brueckner@linux.ibm.com>,
-	Ilya Leoshkevich <iii@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Joey Gouly <joey.gouly@arm.com>, Marc Zyngier <maz@kernel.org>,
-	Nico Boehr <nrb@linux.ibm.com>,
-	Nina Schoetterl-Glausch <oss@nina.schoetterlglausch.eu>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>,
-	Zenghui Yu <yuzenghui@huawei.com>
-Subject: Re: [PATCH v1 09/26] KVM: arm64: Refactor idreg caching into
- dedicated structure
-Message-ID: <ah4Hf7IiX77uiGfn@kernel.org>
-References: <20260529155601.2927240-1-seiden@linux.ibm.com>
- <20260529155601.2927240-10-seiden@linux.ibm.com>
+	s=arc-20240116; t=1780359564; c=relaxed/simple;
+	bh=jWzhn8+4VsqMzQTJnaxarhu7ZfZOOm9BTYvI0g/2SUU=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=OT4+okcfmciKnXWJazy11S1So8QQqm/moa6s2WCvE6hW+3+BM0pSRiRMZj8yLAGNZY76cN+f2Vp1unsIjHRF5hz9WCNTgGfFxKByq0/Ckw/+SMcxDLb1CRSuyIQUN2giZjDogNUK78FM3T1/I2ERsOphAiZjbsSehzYax7ecnFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G42h9Bty; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780359563; x=1811895563;
+  h=date:from:to:cc:subject:message-id;
+  bh=jWzhn8+4VsqMzQTJnaxarhu7ZfZOOm9BTYvI0g/2SUU=;
+  b=G42h9Bty2Go3csclV7famOak+itMJh9n20kaoKUx02KrTwU9q4sOjp1M
+   jAko3/09HZkypJgdoIFXpeZRo01i2BoQo3e3B8h6Fm8p6y0VjP9Pvihg8
+   2DxgHIzuAUoesQxCq1tqvpl3F+6gm8zX7ZpcwgC34bFRXADMjRauN2udL
+   pF1u8W3A13KtSWn1IHVYDzxzfXTaCpbnjvvxXaakmvE+0hRSaW9rkrqBb
+   yejxsUrLolDXTw+OwJLB7FYyfZKrdVi1mhL/iC7/b13+z+jLtq+xTOnRv
+   eEOHwfNG42K2/sirtDH0Q5LrFgLvpe8IfpXdstiMDrQ0XPHR71OjgQGGq
+   Q==;
+X-CSE-ConnectionGUID: 0M9wcOv5QA+6jK1Emfum4w==
+X-CSE-MsgGUID: /S0do6jUTFCesGG4McxexQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11804"; a="81121928"
+X-IronPort-AV: E=Sophos;i="6.24,182,1774335600"; 
+   d="scan'208";a="81121928"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 17:19:22 -0700
+X-CSE-ConnectionGUID: lNIOHvjFRBCjChDI97htmA==
+X-CSE-MsgGUID: gE2aTDI1TBCd37r+4kLZtg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,182,1774335600"; 
+   d="scan'208";a="274000048"
+Received: from igk-lkp-server01.igk.intel.com (HELO 892db79562d4) ([10.211.93.152])
+  by orviesa002.jf.intel.com with ESMTP; 01 Jun 2026 17:19:21 -0700
+Received: from kbuild by 892db79562d4 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wUCqk-000000001gz-3C4Z;
+	Tue, 02 Jun 2026 00:19:18 +0000
+Date: Tue, 02 Jun 2026 02:19:05 +0200
+From: kernel test robot <lkp@intel.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-s390@vger.kernel.org,
+ Steffen Eiden <seiden@linux.ibm.com>
+Subject: [kvms390:sae 1/53] Warning: drivers/vfio/vfio_main.c:1547
+ function parameter 'kvm_module' not described in 'vfio_file_set_kvm'
+Message-ID: <202606020254.QBcahsev-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260529155601.2927240-10-seiden@linux.ibm.com>
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20330-lists,linux-s390=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[31];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20331-lists,linux-s390=lfdr.de];
+	RCPT_COUNT_THREE(0.00)[4];
+	DKIM_TRACE(0.00)[intel.com:+];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[oupton@kernel.org,linux-s390@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: EE981625F3C
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	RCVD_COUNT_FIVE(0.00)[6];
+	TAGGED_RCPT(0.00)[linux-s390];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,intel.com:mid,intel.com:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,01.org:url]
+X-Rspamd-Queue-Id: 5A1FB626867
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, May 29, 2026 at 05:55:42PM +0200, Steffen Eiden wrote:
-> +struct kvm_vm_id_regs {
-> +	/*
-> +	 * Emulated CPU ID registers per VM
-> +	 * (Op0, Op1, CRn, CRm, Op2) of the ID registers to be saved in it
-> +	 * is (3, 0, 0, crm, op2), where 1<=crm<8, 0<=op2<8.
-> +	 *
-> +	 * These emulated idregs are VM-wide, but accessed from the context of a vCPU.
-> +	 * Atomic access to multiple idregs are guarded by kvm_arch.config_lock.
-> +	 */
-> +#define IDREG_IDX(id)		(((sys_reg_CRm(id) - 1) << 3) | sys_reg_Op2(id))
-> +#define KVM_ARM_ID_REG_NUM	(IDREG_IDX(sys_reg(3, 0, 0, 7, 7)) + 1)
-> +	u64 normal[KVM_ARM_ID_REG_NUM];
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git sae
+head:   f33dbafc8623f6c22ac90428a03f29019940b157
+commit: 412a531e0fe32aad575353cda4214518278508d1 [1/53] VFIO: take reference to the KVM module
+config: x86_64-rhel-9.4-ltp (https://download.01.org/0day-ci/archive/20260602/202606020254.QBcahsev-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260602/202606020254.QBcahsev-lkp@intel.com/reproduce)
 
-nit: ftr_reg would be slightly more clear.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202606020254.QBcahsev-lkp@intel.com/
 
-Thanks,
-Oliver
+All warnings (new ones prefixed by >>):
 
-> +	u64 midr_el1;
-> +	u64 revidr_el1;
-> +	u64 aidr_el1;
-> +	u64 ctr_el0;
-> +};
-> +
-> +static inline u64 *__vm_id_reg(struct kvm_vm_id_regs *id_regs, u32 reg)
->  {
->  	switch (reg) {
->  	case sys_reg(3, 0, 0, 1, 0) ... sys_reg(3, 0, 0, 7, 7):
-> -		return &ka->id_regs[IDREG_IDX(reg)];
-> +		return &id_regs->normal[IDREG_IDX(reg)];
->  	case SYS_CTR_EL0:
-> -		return &ka->ctr_el0;
-> +		return &id_regs->ctr_el0;
->  	case SYS_MIDR_EL1:
-> -		return &ka->midr_el1;
-> +		return &id_regs->midr_el1;
->  	case SYS_REVIDR_EL1:
-> -		return &ka->revidr_el1;
-> +		return &id_regs->revidr_el1;
->  	case SYS_AIDR_EL1:
-> -		return &ka->aidr_el1;
-> +		return &id_regs->aidr_el1;
->  	default:
->  		WARN_ON_ONCE(1);
->  		return NULL;
-> @@ -1419,7 +1423,7 @@ static inline u64 *__vm_id_reg(struct kvm_arch *ka, u32 reg)
->  }
->  
->  #define kvm_read_vm_id_reg(kvm, reg)					\
-> -	({ u64 __val = *__vm_id_reg(&(kvm)->arch, reg); __val; })
-> +	({ u64 __val = *__vm_id_reg(&(kvm)->arch.id_regs, reg); __val; })
->  
->  void kvm_set_vm_id_reg(struct kvm *kvm, u32 reg, u64 val);
->  
-> diff --git a/arch/arm64/kvm/config.c b/arch/arm64/kvm/config.c
-> index 014fe04daabf..58a439c3ab9c 100644
-> --- a/arch/arm64/kvm/config.c
-> +++ b/arch/arm64/kvm/config.c
-> @@ -1398,7 +1398,7 @@ void __init check_feature_map(void)
->  
->  static bool idreg_feat_match(struct kvm *kvm, const struct reg_bits_to_feat_map *map)
->  {
-> -	u64 regval = kvm->arch.id_regs[map->regidx];
-> +	u64 regval = kvm->arch.id_regs.normal[map->regidx];
->  	u64 regfld = (regval >> map->shift) & GENMASK(map->width - 1, 0);
->  
->  	if (map->sign) {
-> diff --git a/arch/arm64/kvm/hyp/nvhe/pkvm.c b/arch/arm64/kvm/hyp/nvhe/pkvm.c
-> index eb1c10120f9f..94620f142f42 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/pkvm.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/pkvm.c
-> @@ -343,7 +343,7 @@ static void pkvm_init_features_from_host(struct pkvm_hyp_vm *hyp_vm, const struc
->  	DECLARE_BITMAP(allowed_features, KVM_VCPU_MAX_FEATURES);
->  
->  	/* CTR_EL0 is always under host control, even for protected VMs. */
-> -	hyp_vm->kvm.arch.ctr_el0 = host_kvm->arch.ctr_el0;
-> +	hyp_vm->kvm.arch.id_regs.ctr_el0 = host_kvm->arch.id_regs.ctr_el0;
->  
->  	/* Preserve the vgic model so that GICv3 emulation works */
->  	hyp_vm->kvm.arch.vgic.vgic_model = host_kvm->arch.vgic.vgic_model;
-> @@ -358,7 +358,7 @@ static void pkvm_init_features_from_host(struct pkvm_hyp_vm *hyp_vm, const struc
->  			    KVM_VCPU_MAX_FEATURES);
->  
->  		if (test_bit(KVM_ARCH_FLAG_WRITABLE_IMP_ID_REGS, &host_arch_flags))
-> -			hyp_vm->kvm.arch.midr_el1 = host_kvm->arch.midr_el1;
-> +			hyp_vm->kvm.arch.id_regs.midr_el1 = host_kvm->arch.id_regs.midr_el1;
->  
->  		return;
->  	}
-> @@ -493,7 +493,8 @@ static int vm_copy_id_regs(struct pkvm_hyp_vcpu *hyp_vcpu)
->  	if (test_and_set_bit(KVM_ARCH_FLAG_ID_REGS_INITIALIZED, &kvm->arch.flags))
->  		return 0;
->  
-> -	memcpy(kvm->arch.id_regs, host_kvm->arch.id_regs, sizeof(kvm->arch.id_regs));
-> +	memcpy(kvm->arch.id_regs.normal, host_kvm->arch.id_regs.normal,
-> +	       sizeof(kvm->arch.id_regs.normal));
->  
->  	return 0;
->  }
-> diff --git a/arch/arm64/kvm/hyp/nvhe/sys_regs.c b/arch/arm64/kvm/hyp/nvhe/sys_regs.c
-> index b5a0de84ce01..e8d773d38905 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/sys_regs.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/sys_regs.c
-> @@ -292,7 +292,7 @@ static u64 read_id_reg(const struct kvm_vcpu *vcpu,
->  		return 0;
->  
->  	if (reg >= sys_reg(3, 0, 0, 1, 0) && reg <= sys_reg(3, 0, 0, 7, 7))
-> -		return kvm->arch.id_regs[IDREG_IDX(reg)];
-> +		return kvm->arch.id_regs.normal[IDREG_IDX(reg)];
->  
->  	return 0;
->  }
-> @@ -543,7 +543,7 @@ void kvm_init_pvm_id_regs(struct kvm_vcpu *vcpu)
->  	 * for protected VMs.
->  	 */
->  	for (r = sys_reg(3, 0, 0, 4, 0); r <= sys_reg(3, 0, 0, 7, 7); r += sys_reg(0, 0, 0, 0, 1))
-> -		ka->id_regs[IDREG_IDX(r)] = pvm_calc_id_reg(vcpu, r);
-> +		ka->id_regs.normal[IDREG_IDX(r)] = pvm_calc_id_reg(vcpu, r);
->  
->  	set_bit(KVM_ARCH_FLAG_ID_REGS_INITIALIZED, &kvm->arch.flags);
->  }
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index b9aa892616ab..195ecdac7bd6 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -2477,7 +2477,7 @@ static int set_id_reg(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
->  
->  void kvm_set_vm_id_reg(struct kvm *kvm, u32 reg, u64 val)
->  {
-> -	u64 *p = __vm_id_reg(&kvm->arch, reg);
-> +	u64 *p = __vm_id_reg(&kvm->arch.id_regs, reg);
->  
->  	lockdep_assert_held(&kvm->arch.config_lock);
->  
-> -- 
-> 2.53.0
-> 
+>> Warning: drivers/vfio/vfio_main.c:1547 function parameter 'kvm_module' not described in 'vfio_file_set_kvm'
+>> Warning: drivers/vfio/vfio_main.c:1547 function parameter 'kvm_module' not described in 'vfio_file_set_kvm'
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
