@@ -1,134 +1,216 @@
-Return-Path: <linux-s390+bounces-20421-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20422-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id eSXEH4wtH2q3iQAAu9opvQ
-	(envelope-from <linux-s390+bounces-20421-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 02 Jun 2026 21:22:52 +0200
+	id Y3yUDs0wH2ohigAAu9opvQ
+	(envelope-from <linux-s390+bounces-20422-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 02 Jun 2026 21:36:45 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C25B06315F7
-	for <lists+linux-s390@lfdr.de>; Tue, 02 Jun 2026 21:22:51 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id C930C631734
+	for <lists+linux-s390@lfdr.de>; Tue, 02 Jun 2026 21:36:44 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=intel.com header.s=Intel header.b=MaqmD5jU;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20421-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20421-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=intel.com;
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=TyxJS5cT;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20422-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-s390+bounces-20422-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9E14330036F7
-	for <lists+linux-s390@lfdr.de>; Tue,  2 Jun 2026 19:16:23 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 51B7A302AD1F
+	for <lists+linux-s390@lfdr.de>; Tue,  2 Jun 2026 19:36:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E7703A71B6;
-	Tue,  2 Jun 2026 19:16:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E56A322522;
+	Tue,  2 Jun 2026 19:36:37 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C703D227BB5
-	for <linux-s390@vger.kernel.org>; Tue,  2 Jun 2026 19:16:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 003A5310651;
+	Tue,  2 Jun 2026 19:36:35 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780427783; cv=none; b=P0LU4aACqVlylbMv7w9P3EESEwfUuZTLYhGdfTUEVyKtUGXpu8xbki/BQlP1oc5m0JNJ6I9ZlEa6vrPdJpb9/AAz6Pzlu77bevttplalnQMsL32tWeR82bbhntN//6ebzUV5A0Rd72RC1A7ttTrmvim/oKYiUXlLnuXITZl9QMU=
+	t=1780428997; cv=none; b=YGYxIzd49n7R0iB90EkM+fzyNQYq2RW9fUe4BBjrwWs8TmpNhIwa7YFU2egbrnoBpQo7GNGcP4uNuUlC9Fj3uVCIfSOm0iHCR4S3Ake9+PbPmKS+DNqEQYnLOLQ2RwgdWYkURSZzbsVbdVzpze0xD8Dh17v6DkDJNEPrq5OU1QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780427783; c=relaxed/simple;
-	bh=TA4sRMQIFXvjziTHBy/XrNgccguhUzqUft/3BfZkzG4=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=IP7lXfAfZQG3rUtm2lZWlOGO6JHv7ySeShPNZfEnrW4DLXPm+J5jXzDjBtjW3zuS8n+FkGqG/a3BfoJ72/cUmxZ92Cl+SvdrDZFRd5HWpdXP2plP5tzsdEJ0mS/hbYWbGhPwEBVB5t6pPbgrwUwvkODxfzj7bNxxFZ3+hTQDVtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MaqmD5jU; arc=none smtp.client-ip=198.175.65.15
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780427781; x=1811963781;
-  h=date:from:to:cc:subject:message-id;
-  bh=TA4sRMQIFXvjziTHBy/XrNgccguhUzqUft/3BfZkzG4=;
-  b=MaqmD5jUrXDcxVslffqpo3QHax/Izg/Nv5gMIvz9d6+3BY0nEV2n3QLm
-   wTXvY3zTK3N6dT98EDhfUC0Nt6hmlLNIyTiTeCSjhUZ6sQFNLUtQ7Y0b0
-   YT43Y9R8joUwgS/5DSHLVrib1tl5apf58xSX5+5YcUwZsz6akpQwra6Fp
-   oruSstsPxjiYppVjvOgcMF8zzYtq4M6DRYlaI52a7yDhuwzVkGIJRlJyf
-   7y4oVDjRK6XOHcMLphnS+VYB+NLpawFxz7SF9ZJT/OZhteAlO3Dehqy2e
-   xuysXCSO6Z+R1h4aR9PkjC6BjrUW5q0dEB8/c/eNsptJa5yuWkpvRdImv
-   g==;
-X-CSE-ConnectionGUID: ZZuSgiYdSKSPk/hnxoOGBg==
-X-CSE-MsgGUID: 9YlAOhoRQKyqSJOxvIdEaA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11805"; a="84851278"
-X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
-   d="scan'208";a="84851278"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 12:16:21 -0700
-X-CSE-ConnectionGUID: WvTkVCihTxCJpLIfz/t4Dw==
-X-CSE-MsgGUID: D6iq8WuURXe1jr9QqJZnaA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
-   d="scan'208";a="239829166"
-Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 02 Jun 2026 12:16:19 -0700
-Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wUUb3-00000000CR8-0zQV;
-	Tue, 02 Jun 2026 19:16:17 +0000
-Date: Wed, 03 Jun 2026 03:15:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-s390@vger.kernel.org,
- Steffen Eiden <seiden@linux.ibm.com>
-Subject: [kvms390:sae 1/53] Warning: drivers/vfio/vfio_main.c:1547
- function parameter 'kvm_module' not described in 'vfio_file_set_kvm'
-Message-ID: <202606030332.VEwXvAer-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1780428997; c=relaxed/simple;
+	bh=Etb9LqmxcfSQA7XtpVFzX4KGMspDJ5lBTdsCMUsiqbc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DYalPPii+B673tAXtsSzjdMwtxswamDwnE539p9TRjG0l3wxdIeVoHgTFXwJcVJhYtzxb2qyThPw1GDO+o86m1yk77GZIhTq36Xp86CkI9IOiuIEWl4PD1o9Tg7EuBVfrpbEirh0t/vSQfkFzX9OYY3HJjjJDWttC8v3TdV99sI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TyxJS5cT; arc=none smtp.client-ip=148.163.156.1
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 652HRGne1773281;
+	Tue, 2 Jun 2026 19:36:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=HhuSRH
+	qDSxIbcSvpRdQesxfGdtEyVztezjhKlfFXjXg=; b=TyxJS5cTPZmA2psMjZnjoy
+	g/hwbN6RPKkhpG/Fbu+HqiaVFhCqrhMpaWTS3PaJt1yKkiEwHZeqTHCuUcYEjeae
+	Xob9pGaxyJFF/9ENNmdny7zOlezMVsIYjLf9ho9ejA8WBQ0WAxxjtAweGyxnckeW
+	NLUsCl7GVOlvuqh1EtejaZXc0T7AOGLnFrRkxSHECfD+tpEM4B8Bp6/RtD6WQ6PT
+	78Y0ddq2rSZUa2WyS3jml3TIEiMWDe9m0inlUV5+bCug5Z/A4PREvh8GSmUI4Qwh
+	rFH68Qfygq5/2+D6L/J+FJL5yS3kP0rM9fmIURSFetTWEJWxrcvff4M9fZ1O3JXA
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4efqd47ra4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jun 2026 19:36:32 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 652JO7qI008242;
+	Tue, 2 Jun 2026 19:36:32 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4egcwycjnf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jun 2026 19:36:32 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 652JaUPo30933674
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 2 Jun 2026 19:36:31 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D63355805C;
+	Tue,  2 Jun 2026 19:36:30 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A312658054;
+	Tue,  2 Jun 2026 19:36:29 +0000 (GMT)
+Received: from [9.12.78.81] (unknown [9.12.78.81])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  2 Jun 2026 19:36:29 +0000 (GMT)
+Message-ID: <bda40f9c-7187-4382-b421-334b04c05e1e@linux.ibm.com>
+Date: Tue, 2 Jun 2026 15:36:28 -0400
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] vfio-pci/zdev: Improved zPCI Function Measurement
+ Support
+To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc: hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com, schnelle@linux.ibm.com,
+        mjrosato@linux.ibm.com, alifm@linux.ibm.com, farman@linux.ibm.com,
+        gbayer@linux.ibm.com, alex@shazbot.org
+References: <20260519224204.19154-1-oelghoul@linux.ibm.com>
+Content-Language: en-US
+From: Omar Elghoul <oelghoul@linux.ibm.com>
+In-Reply-To: <20260519224204.19154-1-oelghoul@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjAyMDE5MCBTYWx0ZWRfX2+C8tS0fflhT
+ tOZWf2ohMdGEHnndeR16tkv06v0cr0YzDUcoKXmKwT35WY43UHw9doxrIZP/iJnWahoHi18KGo4
+ /regxmOKbgXW+ShZqJLokEaq5m059Pc+FtzsIaiJXzZK3tO0L2E3W15a/z7d2JXYonSvVJsKv5R
+ 9soSITecL7RmBc2pxctXvBYSESbziw2BwfCPHBnm1WZesPrYrCk63ziuLYhA6FOawXZEiz+C+fc
+ j0Rlu6yFIC5O7hoynko0BhHQ1xzgcGZ5TpT+o7TYClHLM9yXAV3rRUuC6kkIw+hEq6Ufm4j8rd5
+ NwhPEimOrBr2+K7U4jfFjZb/EvhJqZP+2Po1UVqfGf/zl4b68CB6LHNSGLbdtr7wMikN/IguVtv
+ 7HlWtH5qHHanI02l+s3kafwSsn2i51+5/ZB7EeZgO44l5H97qpJCeHLHGLXnyi9RpzAHfGbQZ+G
+ FXYckSlaaa2R5UWuVCQ==
+X-Proofpoint-GUID: jdP1_4RBYd-8uY4DNu9q659hls5k2pSE
+X-Proofpoint-ORIG-GUID: jdP1_4RBYd-8uY4DNu9q659hls5k2pSE
+X-Authority-Analysis: v=2.4 cv=DZknbPtW c=1 sm=1 tr=0 ts=6a1f30c0 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=J6ZS_3muYHgI6I3YJNIA:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-02_03,2026-05-28_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 clxscore=1015 suspectscore=0 impostorscore=0 lowpriorityscore=0
+ phishscore=0 malwarescore=0 priorityscore=1501 bulkscore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606020190
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-20421-lists,linux-s390=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20422-lists,linux-s390=lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:kvm@vger.kernel.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:schnelle@linux.ibm.com,m:mjrosato@linux.ibm.com,m:alifm@linux.ibm.com,m:farman@linux.ibm.com,m:gbayer@linux.ibm.com,m:alex@shazbot.org,s:lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER(0.00)[oelghoul@linux.ibm.com,linux-s390@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:pbonzini@redhat.com,m:oe-kbuild-all@lists.linux.dev,m:linux-s390@vger.kernel.org,m:seiden@linux.ibm.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[lkp@intel.com,linux-s390@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[4];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns];
+	RCPT_COUNT_TWELVE(0.00)[14];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[intel.com:+];
-	RCVD_COUNT_FIVE(0.00)[6];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[oelghoul@linux.ibm.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TO_DN_NONE(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-s390];
-	FROM_HAS_DN(0.00)[]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C25B06315F7
+X-Rspamd-Queue-Id: C930C631734
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git sae
-head:   f33dbafc8623f6c22ac90428a03f29019940b157
-commit: 412a531e0fe32aad575353cda4214518278508d1 [1/53] VFIO: take reference to the KVM module
-config: parisc-allmodconfig (https://download.01.org/0day-ci/archive/20260603/202606030332.VEwXvAer-lkp@intel.com/config)
-compiler: hppa-linux-gcc (GCC) 15.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260603/202606030332.VEwXvAer-lkp@intel.com/reproduce)
+Hi,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202606030332.VEwXvAer-lkp@intel.com/
+Gently pinging the series in case it has fallen out of your radars.
 
-All warnings (new ones prefixed by >>):
+Thanks.
 
->> Warning: drivers/vfio/vfio_main.c:1547 function parameter 'kvm_module' not described in 'vfio_file_set_kvm'
->> Warning: drivers/vfio/vfio_main.c:1547 function parameter 'kvm_module' not described in 'vfio_file_set_kvm'
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+On 5/19/26 6:42 PM, Omar Elghoul wrote:
+> Hi,
+>
+> This patch series improves support for function measurement for zPCI
+> passthrough devices on s390x.
+>
+> Changelog
+> =========
+> v1 -> v2:
+> * Patch 1/3:
+>    - Address a possible race condition in zpci_reenable_device() caused by
+>      calling zpci_fmb_reenable_device() without holding fmb_lock
+>    - Assert that fmb_lock is held within zpci_fmb_reenable_device()
+>
+> * Patch 3/3:
+>    - Address a possible race condition in pci_perf_seq_write() caused by
+>      consuming zdev->kzdev without holding kzdev_lock
+>
+> Motivation
+> ==========
+> The firmware on s390x machines allows for tracking a variety of statistics
+> relating to zPCI devices in a function measurement block (FMB). However,
+> the kernel currently lacks a structured mechanism of sharing this
+> information with userspace, beyond /sys/kernel/debug/pci/ID/statistics.
+> This can lead to shortcomings when running a guest on KVM with PCI
+> passthrough devices, as QEMU is unable to provide an accurate FMB snapshot
+> to the guest.
+>
+> Proposal
+> ========
+> We propose adding a new VFIO device feature to zPCI passthrough devices,
+> allowing userspace programs to read the latest FMB snapshot as it is
+> written by the firmware. We ensure that function measurement enablement is
+> preserved across device resets on the host. Furthermore, we guard against
+> host tampering with the FMB via sysfs when the zPCI device is in
+> passthrough to protect the VM's state.
+>
+> I'd appreciate some feedback on these patches.
+>
+> Thanks in advance.
+>
+> Omar Elghoul (3):
+>    s390/pci: Preserve FMB state in device re-enablement
+>    vfio-pci/zdev: Add VFIO FMB device feature
+>    s390/pci: Fence FMB enable/disable via sysfs for passthrough devices
+>
+>   arch/s390/include/asm/pci.h      |  1 +
+>   arch/s390/pci/pci.c              | 75 ++++++++++++++++++++++++-------
+>   arch/s390/pci/pci_debug.c        | 11 ++++-
+>   drivers/vfio/pci/vfio_pci_core.c |  2 +
+>   drivers/vfio/pci/vfio_pci_priv.h |  9 ++++
+>   drivers/vfio/pci/vfio_pci_zdev.c | 77 ++++++++++++++++++++++++++++++++
+>   include/uapi/linux/vfio.h        | 43 ++++++++++++++++++
+>   7 files changed, 202 insertions(+), 16 deletions(-)
+>
 
