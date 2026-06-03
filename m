@@ -1,83 +1,83 @@
-Return-Path: <linux-s390+bounces-20451-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20454-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Ij/dEeZxIGpE3gAAu9opvQ
-	(envelope-from <linux-s390+bounces-20451-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 03 Jun 2026 20:26:46 +0200
+	id gmUVCFtyIGpg3gAAu9opvQ
+	(envelope-from <linux-s390+bounces-20454-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 03 Jun 2026 20:28:43 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F93263A8AA
-	for <lists+linux-s390@lfdr.de>; Wed, 03 Jun 2026 20:26:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E5A563A8ED
+	for <lists+linux-s390@lfdr.de>; Wed, 03 Jun 2026 20:28:42 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=OQNmMCW+;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20451-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-20451-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=CWmUyFKL;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20454-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-20454-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 79CC7305E292
-	for <lists+linux-s390@lfdr.de>; Wed,  3 Jun 2026 18:24:28 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2B76B30C35AB
+	for <lists+linux-s390@lfdr.de>; Wed,  3 Jun 2026 18:24:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 474E13E63B3;
-	Wed,  3 Jun 2026 18:24:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4504E3859EC;
+	Wed,  3 Jun 2026 18:24:35 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937893E9595;
-	Wed,  3 Jun 2026 18:24:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3148127FD74;
+	Wed,  3 Jun 2026 18:24:27 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780511068; cv=none; b=WD5wdGb9xtW7Pb4KyicwyE5T6udzO6kqBF/x7Ew98dm5h13INEb1AYd77uqGho2seS0qmQk+D/Aiq1e5lCLbv37gMTjcrxWZpHIF1UkMbL1vtT3EunZlWBFuubYsjynnYeFVBcdkttGjOLsi5r7x5lqhUZCYzVRLeJAx+v6ameA=
+	t=1780511075; cv=none; b=JtTZPqADkGue7nrG+iiuAVHPUDjhS4BaTGNmTjJ9Otq/FjHWXg5oBTZxzmfhaX98vIPuJqcPPw+cRggJuAY4wApQzBADSfm4vbTS+fOsw+1WvgtqEnnCrvg+w+D29gKJHQtCHRuImgNlHBZjv/pmu7rs4TUh0m34Fji9uuK9+JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780511068; c=relaxed/simple;
-	bh=UJGZ3gGkbBd9Sn4XUon/GBHgrXzxZZMpnvS2qQUgbQw=;
+	s=arc-20240116; t=1780511075; c=relaxed/simple;
+	bh=srEZBnOInBaM1JsFTs92Q5D3cGFLKwW4dkX1X+cUxqU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=P3Gnf8eoNS67ngSlxkAFZ7oz8vZwGUCTaK/Uh+Rp2gsKKicvgGIKYfCHDgsIbfUUP9NAXGKts7njCZamlYKbqebyFQUuP8LouI43qCy2qmYWYnItzmmLpcZC73CEmg+oPjZgsGdEWDZMfWxw6dYCeTK8541a2piaPJJa7Wm9O1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OQNmMCW+; arc=none smtp.client-ip=148.163.158.5
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 653Hj4G52190646;
-	Wed, 3 Jun 2026 18:24:22 GMT
+	 MIME-Version; b=XmB/78RHeEvdD1C78slMOxo5sU3FozPnEb0Y4rzw18vfQGlWWcVwzFMLAsQLXXPx0typt1ehRk/UjGWlMqS92KOkUiXxplWueNEWUuQtX3fuxs3lbYlAvzWco9rNffP27eI4W2Di2qDEYoiFAlQEyZkLZa3z18nKWC9gE2ZJmQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CWmUyFKL; arc=none smtp.client-ip=148.163.156.1
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 653GDTvS260140;
+	Wed, 3 Jun 2026 18:24:24 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=rYoI12EiJ37eewZ48
-	1PWkE2vTpP8I/Z5tBZvsJ9O8YA=; b=OQNmMCW+WzLBcDjJrXJ0PoWOSDJcddjGN
-	zfTBqx2azka0pyAkhk1jZ79tClZq96gbjq8B3DunuSxghgwjDTKrIynqiRk6QEw6
-	VzXswNTir0jDbCmuMiEmuLrYYZnhtfbdH+NdpRcwPrHpkeV1AxIWp6uHJ51+w2YB
-	ZplN1JG2iHfP6FVG5kgVN1LjqRume5evj2s8tCRy40hQJ8CGNThboFbXKkdtm4Ub
-	3rV/O2gH2i9YP5O6Fjg8rpOeEqPqIqASJnE9t42h16uf6S85V/mZyJ99iietezPg
-	86DEH+i+vIKrabUFnD7GSXPC84B/R05fED/q52ovNPm6jY9nMaOsg==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4efpaebv9y-1
+	:mime-version:references:subject:to; s=pp1; bh=o3Wu5GtC71SN/Nztm
+	1eQjO90iKBYhVM0laezYfkIxzk=; b=CWmUyFKLGRadDJXO0RlNUqAw7CtPnbdxe
+	rI1uiHbSOBIWA8Z3810GVuRK5+11XU1LiSnD6rhl1HugjGqEqcc+oxeG+HDumZuk
+	xvLpjysQz2k2J4UpeNByunFd51sPScA2X/xRS3I0tWQdD00JslLjMj6dY7qpv2XP
+	9DL9FuGgztVf4ZEoUGu9Mugtyk6SC5/OHxDDGuaL2HJ1QLMPiP5to7KReNvf9IAO
+	kLBInKlqicm6+RBKev3vlm213h7wyJwUPnVK2Kg5KB2ZiZfDBy9YYq4lzP/7RAI0
+	/XzAh7IgfNgavPnLq/LYouoogIm20a4xfE7foz4Gq4I6pdZXpgH7g==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4efqjqccea-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Jun 2026 18:24:24 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 653IO9Gx021923;
+	Wed, 3 Jun 2026 18:24:22 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4egbqhhem5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Wed, 03 Jun 2026 18:24:22 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 653IO7b2007629;
-	Wed, 3 Jun 2026 18:24:21 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4egcwyh7q2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jun 2026 18:24:21 +0000 (GMT)
 Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 653IOKBR24707754
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 653IOL9A21365430
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 3 Jun 2026 18:24:20 GMT
+	Wed, 3 Jun 2026 18:24:21 GMT
 Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2D8C25805C;
+	by IMSVA (Postfix) with ESMTP id 70D785805A;
+	Wed,  3 Jun 2026 18:24:21 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5D03458054;
 	Wed,  3 Jun 2026 18:24:20 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 308AA5805A;
-	Wed,  3 Jun 2026 18:24:19 +0000 (GMT)
 Received: from IBM-D32RQW3.ibm.com (unknown [9.61.254.14])
 	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  3 Jun 2026 18:24:19 +0000 (GMT)
+	Wed,  3 Jun 2026 18:24:20 +0000 (GMT)
 From: Farhan Ali <alifm@linux.ibm.com>
 To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org, alex@shazbot.org
 Cc: helgaas@kernel.org, alifm@linux.ibm.com, schnelle@linux.ibm.com,
         mjrosato@linux.ibm.com
-Subject: [PATCH v18 1/4] s390/pci: Store PCI error information for passthrough devices
-Date: Wed,  3 Jun 2026 11:24:12 -0700
-Message-ID: <20260603182415.2324-2-alifm@linux.ibm.com>
+Subject: [PATCH v18 2/4] vfio-pci/zdev: Add a device feature for error information
+Date: Wed,  3 Jun 2026 11:24:13 -0700
+Message-ID: <20260603182415.2324-3-alifm@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260603182415.2324-1-alifm@linux.ibm.com>
 References: <20260603182415.2324-1-alifm@linux.ibm.com>
@@ -89,26 +89,26 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Zt3d7d7G c=1 sm=1 tr=0 ts=6a207156 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+X-Proofpoint-ORIG-GUID: twM_CB0l6LW8NBMwKRNz6w1JX_xKqMNI
+X-Proofpoint-GUID: twM_CB0l6LW8NBMwKRNz6w1JX_xKqMNI
+X-Authority-Analysis: v=2.4 cv=bcVbluPB c=1 sm=1 tr=0 ts=6a207158 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
  a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8 a=PQMJTAmWB74Go-Ie6_gA:9
-X-Proofpoint-GUID: 5P6CRO839blF1B9NhkF-ZcF6s6QKussm
-X-Proofpoint-ORIG-GUID: 5P6CRO839blF1B9NhkF-ZcF6s6QKussm
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjAzMDE3NSBTYWx0ZWRfX5bVcdAyw1IR4
- pNXaSRHm348MszpGQNSvg+8uYw6ZugKI7VtKV3LUyoklBjZlaQNnP7zYN6axhs+kpwZW+hxz/qc
- B6Kj/H07gzlx6IX46slZU4hAieeF+MXGRoqUvEHSIU8AXW4R7z1KiML5svvUMj8BS/6pC2bKYMv
- wDPtpdatBkxn9fwqR6HIbROmaL71A6FmUVPA28igVsa3kabccw7saR3Fz+gJT4kkBe9Lev6fpuH
- 9HZmNegiqmtJuOZfbPPJL7G++NM+PKrQbY9nkC0YlOSNjn4Y+VM7HjoHkmaVoWqqmZPycsd3qX3
- cUhhROoXlDRVUonq8GHo8ZjcDFFUOwYEzGptpTEp1a7+2BNVgXFZi6Tx7Ta+fmcXhZ3kO8J6RJc
- ff1hkLMvbtJwNu+GhYG1bwvK5lkTf3WOwDr1vm+El4O2RlVM4UI66eww7exLzzxbB0Nk6U9z5eQ
- +TjHHXnkWY+YSY+kKyw==
+ a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=sIuuyFDGXZ7lsjPJAw8A:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjAzMDE3NSBTYWx0ZWRfXwI9x4qjvXWTq
+ YyFqUUXGYfTxovGg9wI8lOE8Auu+Grtwume9YLFmkzyFH6C+6FIjzTeTDjILDbUNUe0XzI7lgUv
+ xpJgpXz3j8BCrnqb7hgrtG0cbxLlz1seChovBYoKrVcYQGXz+pJmFLLfZ54SRCfHMbimC14nxV2
+ hTfiFnoNsLNJ1QmewgoxRWeh503KW27u1+Ei6nnDm24z06+9eoxmMvyJJdjYbvnNBc/Lh9pY53z
+ D2TBImRNgRGVt0ja8eGF1sikiDaVIy3UkZyeUJrHIsJ56x7n/wO7IejZzMR0KC2mGNejaVTl3jY
+ ff6UFnfut4tkSg2RdaFxplf/XmneWzOOgBBQgEX/8x1zk5cwRFki1j6ORwRTSGfCwaygw1qFQko
+ PzewF572MYgakFJUNBAPsKHPaZyiL6Ew7Uk9fih8/98jRDLLjhads2d6Gq7//Ba4NDun8tZtHOH
+ MEI24J+7rGncNl3zLzA==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-06-03_05,2026-05-28_03,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 suspectscore=0 priorityscore=1501 bulkscore=0 clxscore=1015
- phishscore=0 spamscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0
+ impostorscore=0 clxscore=1015 adultscore=0 priorityscore=1501 phishscore=0
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606030175
 X-Rspamd-Action: no action
@@ -123,7 +123,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20451-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20454-lists,linux-s390=lfdr.de];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	FORGED_SENDER(0.00)[alifm@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
@@ -143,337 +143,204 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 9F93263A8AA
+X-Rspamd-Queue-Id: 5E5A563A8ED
 
-For a passthrough device we need co-operation from user space to recover
-the device. This would require to bubble up any error information to user
-space.  Let's store this error information for passthrough devices, so it
-can be retrieved later.
-
-We can now have userspace drivers (vfio-pci based) on s390x. The userspace
-drivers will not have any KVM fd and so no kzdev associated with them. So
-we need to update the logic for detecting passthrough devices to not depend
-on struct kvm_zdev.
+For zPCI devices, we have platform specific error information. The platform
+firmware provides this error information to the operating system in an
+architecture specific mechanism. To enable recovery from userspace for
+these devices, we want to expose this error information to userspace. Add a
+new device feature to expose this information.
 
 Reviewed-by: Matthew Rosato <mjrosato@linux.ibm.com>
 Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
 Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
 ---
- arch/s390/include/asm/pci.h      |  30 ++++++++
- arch/s390/pci/pci.c              |   1 +
- arch/s390/pci/pci_event.c        | 116 +++++++++++++++++--------------
- drivers/vfio/pci/vfio_pci_zdev.c |  18 ++++-
- 4 files changed, 111 insertions(+), 54 deletions(-)
+ arch/s390/include/asm/pci.h      |  2 ++
+ arch/s390/pci/pci_event.c        | 19 ++++++++++++++
+ drivers/vfio/pci/vfio_pci_core.c |  2 ++
+ drivers/vfio/pci/vfio_pci_priv.h |  9 +++++++
+ drivers/vfio/pci/vfio_pci_zdev.c | 43 ++++++++++++++++++++++++++++++++
+ include/uapi/linux/vfio.h        | 30 ++++++++++++++++++++++
+ 6 files changed, 105 insertions(+)
 
 diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
-index 5dcf35f0f325..016386f7ef4a 100644
+index 016386f7ef4a..88a125b92bdd 100644
 --- a/arch/s390/include/asm/pci.h
 +++ b/arch/s390/include/asm/pci.h
-@@ -118,6 +118,32 @@ struct zpci_bus {
- 	enum pci_bus_speed	max_bus_speed;
- };
- 
-+/* Content Code Description for PCI Function Error */
-+struct zpci_ccdf_err {
-+	u32 reserved1;
-+	u32 fh;                         /* function handle */
-+	u32 fid;                        /* function id */
-+	u32 ett         :  4;           /* expected table type */
-+	u32 mvn         : 12;           /* MSI vector number */
-+	u32 dmaas       :  8;           /* DMA address space */
-+	u32 reserved2   :  6;
-+	u32 q           :  1;           /* event qualifier */
-+	u32 rw          :  1;           /* read/write */
-+	u64 faddr;                      /* failing address */
-+	u32 reserved3;
-+	u16 reserved4;
-+	u16 pec;                        /* PCI event code */
-+} __packed;
-+
-+#define ZPCI_ERR_PENDING_MAX 4
-+struct zpci_ccdf_pending {
-+	bool mediated_recovery;
-+	u8 count;
-+	u8 head;
-+	u8 tail;
-+	struct zpci_ccdf_err err[ZPCI_ERR_PENDING_MAX];
-+};
-+
- /* Private data per function */
- struct zpci_dev {
- 	struct zpci_bus *zbus;
-@@ -192,6 +218,8 @@ struct zpci_dev {
- 	struct iommu_domain *s390_domain; /* attached IOMMU domain */
- 	struct kvm_zdev *kzdev;
- 	struct mutex kzdev_lock;
-+	struct zpci_ccdf_pending pending_errs;
-+	struct mutex pending_errs_lock;
- 	spinlock_t dom_lock;		/* protect s390_domain change */
- };
- 
-@@ -334,6 +362,8 @@ void zpci_debug_exit_device(struct zpci_dev *);
- int zpci_report_error(struct pci_dev *, struct zpci_report_error_header *);
- int zpci_clear_error_state(struct zpci_dev *zdev);
+@@ -364,6 +364,8 @@ int zpci_clear_error_state(struct zpci_dev *zdev);
  int zpci_reset_load_store_blocked(struct zpci_dev *zdev);
-+void zpci_start_mediated_recovery(struct zpci_dev *zdev);
-+void zpci_stop_mediated_recovery(struct zpci_dev *zdev);
+ void zpci_start_mediated_recovery(struct zpci_dev *zdev);
+ void zpci_stop_mediated_recovery(struct zpci_dev *zdev);
++int zpci_get_pending_error(struct zpci_dev *zdev,
++			   struct zpci_ccdf_err *ccdf);
  
  #ifdef CONFIG_NUMA
  
-diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
-index 39bd2adfc240..2d377c2e194d 100644
---- a/arch/s390/pci/pci.c
-+++ b/arch/s390/pci/pci.c
-@@ -842,6 +842,7 @@ struct zpci_dev *zpci_create_device(u32 fid, u32 fh, enum zpci_state state)
- 	mutex_init(&zdev->state_lock);
- 	mutex_init(&zdev->fmb_lock);
- 	mutex_init(&zdev->kzdev_lock);
-+	mutex_init(&zdev->pending_errs_lock);
- 
- 	return zdev;
- 
 diff --git a/arch/s390/pci/pci_event.c b/arch/s390/pci/pci_event.c
-index 839bd91c056e..cf2ffa21ab8c 100644
+index cf2ffa21ab8c..db1b44baf8fa 100644
 --- a/arch/s390/pci/pci_event.c
 +++ b/arch/s390/pci/pci_event.c
-@@ -17,23 +17,6 @@
- #include "pci_bus.h"
- #include "pci_report.h"
- 
--/* Content Code Description for PCI Function Error */
--struct zpci_ccdf_err {
--	u32 reserved1;
--	u32 fh;				/* function handle */
--	u32 fid;			/* function id */
--	u32 ett		:  4;		/* expected table type */
--	u32 mvn		: 12;		/* MSI vector number */
--	u32 dmaas	:  8;		/* DMA address space */
--	u32		:  6;
--	u32 q		:  1;		/* event qualifier */
--	u32 rw		:  1;		/* read/write */
--	u64 faddr;			/* failing address */
--	u32 reserved3;
--	u16 reserved4;
--	u16 pec;			/* PCI event code */
--} __packed;
--
- /* Content Code Description for PCI Function Availability */
- struct zpci_ccdf_avail {
- 	u32 reserved1;
-@@ -60,18 +43,6 @@ static inline bool ers_result_indicates_abort(pci_ers_result_t ers_res)
- 	}
+@@ -75,6 +75,25 @@ static int zpci_store_pci_error(struct pci_dev *pdev,
+ 	return 0;
  }
  
--static bool is_passed_through(struct pci_dev *pdev)
--{
--	struct zpci_dev *zdev = to_zpci(pdev);
--	bool ret;
--
--	mutex_lock(&zdev->kzdev_lock);
--	ret = !!zdev->kzdev;
--	mutex_unlock(&zdev->kzdev_lock);
--
--	return ret;
--}
--
- static bool is_driver_supported(struct pci_driver *driver)
- {
- 	if (!driver || !driver->err_handler)
-@@ -81,6 +52,47 @@ static bool is_driver_supported(struct pci_driver *driver)
- 	return true;
- }
- 
-+static int zpci_store_pci_error(struct pci_dev *pdev,
-+				 struct zpci_ccdf_err *ccdf)
++int zpci_get_pending_error(struct zpci_dev *zdev,
++			   struct zpci_ccdf_err *ccdf)
 +{
-+	struct zpci_dev *zdev = to_zpci(pdev);
-+	int i;
++	int head = 0;
 +
 +	guard(mutex)(&zdev->pending_errs_lock);
-+	if (!zdev->pending_errs.mediated_recovery)
-+		return -EINVAL;
 +
-+	if (zdev->pending_errs.count >= ZPCI_ERR_PENDING_MAX) {
-+		pr_err("%s: Maximum number (%d) of pending error events queued\n",
-+		       pci_name(pdev), ZPCI_ERR_PENDING_MAX);
-+		return -ENOMEM;
++	if (!zdev->pending_errs.count)
++		return -ENOMSG;
++
++	head = zdev->pending_errs.head % ZPCI_ERR_PENDING_MAX;
++	memcpy(ccdf, &zdev->pending_errs.err[head],
++	       sizeof(struct zpci_ccdf_err));
++	zdev->pending_errs.head++;
++	zdev->pending_errs.count--;
++	return 0;
++}
++EXPORT_SYMBOL_GPL(zpci_get_pending_error);
++
+ void zpci_start_mediated_recovery(struct zpci_dev *zdev)
+ {
+ 	guard(mutex)(&zdev->pending_errs_lock);
+diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+index 050e7542952e..27642f10fe97 100644
+--- a/drivers/vfio/pci/vfio_pci_core.c
++++ b/drivers/vfio/pci/vfio_pci_core.c
+@@ -1569,6 +1569,8 @@ int vfio_pci_core_ioctl_feature(struct vfio_device *device, u32 flags,
+ 		return vfio_pci_core_feature_token(vdev, flags, arg, argsz);
+ 	case VFIO_DEVICE_FEATURE_DMA_BUF:
+ 		return vfio_pci_core_feature_dma_buf(vdev, flags, arg, argsz);
++	case VFIO_DEVICE_FEATURE_ZPCI_ERROR:
++		return vfio_pci_zdev_feature_err(device, flags, arg, argsz);
+ 	default:
+ 		return -ENOTTY;
+ 	}
+diff --git a/drivers/vfio/pci/vfio_pci_priv.h b/drivers/vfio/pci/vfio_pci_priv.h
+index fca9d0dfac90..4e7162234a2e 100644
+--- a/drivers/vfio/pci/vfio_pci_priv.h
++++ b/drivers/vfio/pci/vfio_pci_priv.h
+@@ -93,6 +93,8 @@ int vfio_pci_info_zdev_add_caps(struct vfio_pci_core_device *vdev,
+ 				struct vfio_info_cap *caps);
+ int vfio_pci_zdev_open_device(struct vfio_pci_core_device *vdev);
+ void vfio_pci_zdev_close_device(struct vfio_pci_core_device *vdev);
++int vfio_pci_zdev_feature_err(struct vfio_device *device, u32 flags,
++			      void __user *arg, size_t argsz);
+ #else
+ static inline int vfio_pci_info_zdev_add_caps(struct vfio_pci_core_device *vdev,
+ 					      struct vfio_info_cap *caps)
+@@ -107,6 +109,13 @@ static inline int vfio_pci_zdev_open_device(struct vfio_pci_core_device *vdev)
+ 
+ static inline void vfio_pci_zdev_close_device(struct vfio_pci_core_device *vdev)
+ {}
++
++static inline int vfio_pci_zdev_feature_err(struct vfio_device *device,
++					    u32 flags, void __user *arg,
++					    size_t argsz)
++{
++	return -ENOTTY;
++}
+ #endif
+ 
+ static inline bool vfio_pci_is_vga(struct pci_dev *pdev)
+diff --git a/drivers/vfio/pci/vfio_pci_zdev.c b/drivers/vfio/pci/vfio_pci_zdev.c
+index 78a28db00c6d..c0d6362cc4eb 100644
+--- a/drivers/vfio/pci/vfio_pci_zdev.c
++++ b/drivers/vfio/pci/vfio_pci_zdev.c
+@@ -141,6 +141,49 @@ int vfio_pci_info_zdev_add_caps(struct vfio_pci_core_device *vdev,
+ 	return ret;
+ }
+ 
++int vfio_pci_zdev_feature_err(struct vfio_device *device, u32 flags,
++			      void __user *arg, size_t argsz)
++{
++	struct vfio_device_feature_zpci_err err = {};
++	struct vfio_pci_core_device *vdev;
++	struct zpci_ccdf_err ccdf = {};
++	struct zpci_dev *zdev;
++	int ret;
++
++	vdev = container_of(device, struct vfio_pci_core_device, vdev);
++	zdev = to_zpci(vdev->pdev);
++	if (!zdev)
++		return -ENODEV;
++
++	ret = vfio_check_feature(flags, argsz, VFIO_DEVICE_FEATURE_GET,
++				 sizeof(err));
++	if (ret != 1)
++		return ret;
++
++	ret = zpci_get_pending_error(zdev, &ccdf);
++	if (ret)
++		return ret;
++
++	err.fh = ccdf.fh;
++	err.fid = ccdf.fid;
++	err.ett = ccdf.ett;
++	err.mvn = ccdf.mvn;
++	err.dmaas = ccdf.dmaas;
++	err.q = ccdf.q;
++	err.rw = ccdf.rw;
++	err.faddr = ccdf.faddr;
++	err.pec = ccdf.pec;
++
++	if (copy_to_user(arg, &err, sizeof(err))) {
++		dev_warn_ratelimited(device->dev,
++				     "Failed to handle PCI error event for PCI function 0x%x",
++				     zdev->fid);
++		return -EFAULT;
 +	}
 +
-+	i = zdev->pending_errs.tail % ZPCI_ERR_PENDING_MAX;
-+	memcpy(&zdev->pending_errs.err[i], ccdf, sizeof(struct zpci_ccdf_err));
-+	zdev->pending_errs.tail++;
-+	zdev->pending_errs.count++;
 +	return 0;
 +}
 +
-+void zpci_start_mediated_recovery(struct zpci_dev *zdev)
-+{
-+	guard(mutex)(&zdev->pending_errs_lock);
-+	zdev->pending_errs.mediated_recovery = true;
-+}
-+EXPORT_SYMBOL_GPL(zpci_start_mediated_recovery);
-+
-+void zpci_stop_mediated_recovery(struct zpci_dev *zdev)
-+{
-+	guard(mutex)(&zdev->pending_errs_lock);
-+	zdev->pending_errs.mediated_recovery = false;
-+	if (zdev->pending_errs.count)
-+		pr_info("Unhandled PCI error events count=%d for PCI function 0x%x\n",
-+			zdev->pending_errs.count, zdev->fid);
-+	memset(&zdev->pending_errs, 0, sizeof(struct zpci_ccdf_pending));
-+}
-+EXPORT_SYMBOL_GPL(zpci_stop_mediated_recovery);
-+
- static pci_ers_result_t zpci_event_notify_error_detected(struct pci_dev *pdev,
- 							 struct pci_driver *driver)
- {
-@@ -175,12 +187,15 @@ static pci_ers_result_t zpci_event_do_reset(struct pci_dev *pdev,
-  * and the platform determines which functions are affected for
-  * multi-function devices.
-  */
--static pci_ers_result_t zpci_event_attempt_error_recovery(struct pci_dev *pdev)
-+static pci_ers_result_t zpci_event_attempt_error_recovery(struct pci_dev *pdev,
-+							  struct zpci_ccdf_err *ccdf)
- {
- 	pci_ers_result_t ers_res = PCI_ERS_RESULT_DISCONNECT;
- 	struct zpci_dev *zdev = to_zpci(pdev);
-+	bool mediated_recovery = false;
- 	char *status_str = "success";
- 	struct pci_driver *driver;
-+	int rc;
- 
- 	/*
- 	 * Ensure that the PCI function is not removed concurrently, no driver
-@@ -194,13 +209,6 @@ static pci_ers_result_t zpci_event_attempt_error_recovery(struct pci_dev *pdev)
- 	}
- 	pdev->error_state = pci_channel_io_frozen;
- 
--	if (is_passed_through(pdev)) {
--		pr_info("%s: Cannot be recovered in the host because it is a pass-through device\n",
--			pci_name(pdev));
--		status_str = "failed (pass-through)";
--		goto out_unlock;
--	}
--
- 	driver = to_pci_driver(pdev->dev.driver);
- 	if (!is_driver_supported(driver)) {
- 		if (!driver) {
-@@ -216,12 +224,24 @@ static pci_ers_result_t zpci_event_attempt_error_recovery(struct pci_dev *pdev)
- 		goto out_unlock;
- 	}
- 
-+	rc = zpci_store_pci_error(pdev, ccdf);
-+	if (!rc || rc == -ENOMEM)
-+		mediated_recovery = true;
-+
- 	ers_res = zpci_event_notify_error_detected(pdev, driver);
- 	if (ers_result_indicates_abort(ers_res)) {
- 		status_str = "failed (abort on detection)";
- 		goto out_unlock;
- 	}
- 
-+	if (mediated_recovery) {
-+		pr_info("%s: Leaving recovery of pass-through device to user-space\n",
-+			pci_name(pdev));
-+		ers_res = PCI_ERS_RESULT_RECOVERED;
-+		status_str = "in progress";
-+		goto out_unlock;
-+	}
-+
- 	if (ers_res != PCI_ERS_RESULT_NEED_RESET) {
- 		ers_res = zpci_event_do_error_state_clear(pdev, driver);
- 		if (ers_result_indicates_abort(ers_res)) {
-@@ -266,25 +286,19 @@ static pci_ers_result_t zpci_event_attempt_error_recovery(struct pci_dev *pdev)
-  * @pdev: PCI function for which to report
-  * @es: PCI channel failure state to report
-  */
--static void zpci_event_io_failure(struct pci_dev *pdev, pci_channel_state_t es)
-+static void zpci_event_io_failure(struct pci_dev *pdev, pci_channel_state_t es,
-+				  struct zpci_ccdf_err *ccdf)
- {
- 	struct pci_driver *driver;
- 
- 	pci_dev_lock(pdev);
- 	pdev->error_state = es;
--	/**
--	 * While vfio-pci's error_detected callback notifies user-space QEMU
--	 * reacts to this by freezing the guest. In an s390 environment PCI
--	 * errors are rarely fatal so this is overkill. Instead in the future
--	 * we will inject the error event and let the guest recover the device
--	 * itself.
--	 */
--	if (is_passed_through(pdev))
--		goto out;
-+
-+	zpci_store_pci_error(pdev, ccdf);
- 	driver = to_pci_driver(pdev->dev.driver);
- 	if (driver && driver->err_handler && driver->err_handler->error_detected)
- 		driver->err_handler->error_detected(pdev, pdev->error_state);
--out:
-+
- 	pci_dev_unlock(pdev);
- }
- 
-@@ -330,12 +344,12 @@ static void __zpci_event_error(struct zpci_ccdf_err *ccdf)
- 		break;
- 	case 0x0040: /* Service Action or Error Recovery Failed */
- 	case 0x003b:
--		zpci_event_io_failure(pdev, pci_channel_io_perm_failure);
-+		zpci_event_io_failure(pdev, pci_channel_io_perm_failure, ccdf);
- 		break;
- 	default: /* PCI function left in the error state attempt to recover */
--		ers_res = zpci_event_attempt_error_recovery(pdev);
-+		ers_res = zpci_event_attempt_error_recovery(pdev, ccdf);
- 		if (ers_res != PCI_ERS_RESULT_RECOVERED)
--			zpci_event_io_failure(pdev, pci_channel_io_perm_failure);
-+			zpci_event_io_failure(pdev, pci_channel_io_perm_failure, ccdf);
- 		break;
- 	}
- 	pci_dev_put(pdev);
-diff --git a/drivers/vfio/pci/vfio_pci_zdev.c b/drivers/vfio/pci/vfio_pci_zdev.c
-index 0990fdb146b7..78a28db00c6d 100644
---- a/drivers/vfio/pci/vfio_pci_zdev.c
-+++ b/drivers/vfio/pci/vfio_pci_zdev.c
-@@ -144,24 +144,36 @@ int vfio_pci_info_zdev_add_caps(struct vfio_pci_core_device *vdev,
  int vfio_pci_zdev_open_device(struct vfio_pci_core_device *vdev)
  {
  	struct zpci_dev *zdev = to_zpci(vdev->pdev);
-+	int ret;
+diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+index 5de618a3a5ee..3eead86a00ab 100644
+--- a/include/uapi/linux/vfio.h
++++ b/include/uapi/linux/vfio.h
+@@ -1534,6 +1534,36 @@ struct vfio_device_feature_dma_buf {
+  */
+ #define VFIO_DEVICE_FEATURE_MIG_PRECOPY_INFOv2  12
  
- 	if (!zdev)
- 		return -ENODEV;
- 
-+	zpci_start_mediated_recovery(zdev);
++/**
++ * VFIO_DEVICE_FEATURE_ZPCI_ERROR feature provides PCI error information to
++ * userspace for vfio-pci devices on s390. On s390, PCI error recovery
++ * involves platform firmware and notification to operating systems is done
++ * by architecture specific mechanism. Exposing this information to
++ * userspace allows it to take appropriate actions to handle an
++ * error on the device. The ioctl returns -ENOMSG if there are no pending
++ * PCI errors.
++ */
 +
- 	if (!vdev->vdev.kvm)
- 		return 0;
- 
-+	ret = -ENOENT;
- 	if (zpci_kvm_hook.kvm_register)
--		return zpci_kvm_hook.kvm_register(zdev, vdev->vdev.kvm);
-+		ret = zpci_kvm_hook.kvm_register(zdev, vdev->vdev.kvm);
- 
--	return -ENOENT;
-+	if (ret)
-+		zpci_stop_mediated_recovery(zdev);
++struct vfio_device_feature_zpci_err {
++	__u32 feature_flags;		/* Indicate future features */
++	__u32 reserved1;
++	__u32 fh;			/* function handle */
++	__u32 fid;			/* function id */
++	__u32 ett		:  4;	/* expected table type */
++	__u32 mvn		: 12;	/* MSI vector number */
++	__u32 dmaas		:  8;	/* DMA address space */
++	__u32 reserved2		:  6;
++	__u32 q			:  1;	/* event qualifier */
++	__u32 rw		:  1;	/* read/write */
++	__u64 faddr;			/* failing address */
++	__u32 reserved3;
++	__u16 reserved4;
++	__u16 pec;			/* PCI event code */
++	__u8 reserved5[28];		/* Allow for future expansion */
++};
 +
-+	return ret;
- }
- 
- void vfio_pci_zdev_close_device(struct vfio_pci_core_device *vdev)
- {
- 	struct zpci_dev *zdev = to_zpci(vdev->pdev);
- 
--	if (!zdev || !vdev->vdev.kvm)
-+	if (!zdev)
-+		return;
++#define VFIO_DEVICE_FEATURE_ZPCI_ERROR 13
 +
-+	zpci_stop_mediated_recovery(zdev);
-+
-+	if (!vdev->vdev.kvm)
- 		return;
+ /* -------- API for Type1 VFIO IOMMU -------- */
  
- 	if (zpci_kvm_hook.kvm_unregister)
+ /**
 -- 
 2.43.0
 
