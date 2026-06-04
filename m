@@ -1,51 +1,51 @@
-Return-Path: <linux-s390+bounces-20493-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20494-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id p+huKIk8IWqJBgEAu9opvQ
-	(envelope-from <linux-s390+bounces-20493-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 04 Jun 2026 10:51:21 +0200
+	id lHPPGSE+IWoYBwEAu9opvQ
+	(envelope-from <linux-s390+bounces-20494-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 04 Jun 2026 10:58:09 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48CB063E2A1
-	for <lists+linux-s390@lfdr.de>; Thu, 04 Jun 2026 10:51:21 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE10663E3CC
+	for <lists+linux-s390@lfdr.de>; Thu, 04 Jun 2026 10:58:08 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=kPwkUEOk;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20493-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-s390+bounces-20493-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=nB9gQ4aF;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20494-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-20494-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id C0B1130E1053
-	for <lists+linux-s390@lfdr.de>; Thu,  4 Jun 2026 08:45:27 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 378833150DC9
+	for <lists+linux-s390@lfdr.de>; Thu,  4 Jun 2026 08:45:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 305323F5BFE;
-	Thu,  4 Jun 2026 08:43:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EB843F7873;
+	Thu,  4 Jun 2026 08:43:09 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C033E7BC5;
-	Thu,  4 Jun 2026 08:42:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279D53E1224;
+	Thu,  4 Jun 2026 08:43:07 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780562580; cv=none; b=pPHm3zIkQbhvawyJAw+YASV7kSoaopR4sShASeiMDnpHNN7+df6f56FvQDml86AR/Sc77GYsY3riZIU6fbgMqx9NkdzC7Rbhep20ZoabPgQ+3YsjyUFBTpPXO+w+rXQU8cnTiEVOZiW30eooU7bDEHKmCe8HKu2yptxjnAoIi1w=
+	t=1780562589; cv=none; b=GkYm74GArQmJp01MI3GgWlSNUyyRqsEA3onQHV2TYlKiKL6hQt0aWDOKowTItNml6VZ3zKR4zjAcFMRoiTlBYFp77ere8cSb3eljOyRHn2v4yq7ZAa5B6FfW7klNC10UtuCQlTA2ld7/isj1ix5T119AMF7eGVCEyTWRGUydsFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780562580; c=relaxed/simple;
-	bh=g/wtgfIecl6o8kwHeLkDvFzrvI6n8z3n5Cw9liWsHGo=;
+	s=arc-20240116; t=1780562589; c=relaxed/simple;
+	bh=TegZPjM3rQ+HL/D+iEWYjVCfP3sBZRjsMLXnOkhdCHY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Hv/k16on6i0zdDBOu3sJa6+IhIFCZv8oU4PsczDWICH/mI9AoxMytKuOql+eDywaeIgLKGeW2AXtGiFHKa6DjcOc0G4CnvokxmDL+UYS3+SZRLjkylnosIzeAhKwQMB4Yy43db5sy3g1k6LYpsNW2nBf4liddruF0hKWifhPVEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kPwkUEOk; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 415181F00898;
-	Thu,  4 Jun 2026 08:42:50 +0000 (UTC)
+	 MIME-Version; b=O777Bcy3Ontk1Xj8ti+nlfzLvfhvKFzKFZl8NAu71souscijAsvw3QWlhE5lJOdSJSRz4bPpdbkB+1rBkULSA3y0c2Qckbm5pTdkRHjv5CVZVYK6kQJ79HiOlShZx41/qvmDE8+yvAARbaNRIbiEExUozyYFqecuxClhebN7RB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nB9gQ4aF; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44D721F00893;
+	Thu,  4 Jun 2026 08:42:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780562578;
-	bh=5WeykkaLRY84/gMTdzzVPplQJSrHkGjIEUjp2FUb45E=;
+	s=k20260515; t=1780562587;
+	bh=28gAGxAT6yyFPOrZbknmeVeC1tPuyb3t0ezhz06WVCM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=kPwkUEOk1WgnrF0lOV0PcG8AQaiVhngfx/W0TVtjGwpDNk1Baj72OsUUlUxaxIdxt
-	 GCMc3uO9dZ0y+4DmEajexLfTCy0njgJdDKWFY9hNA6cHq5Mr0VzYb075IVKnz09ylZ
-	 mhURdS/1AaP9I7PUlOb/20/S5Qac8flUQ4Ku/7TmUPowi2LXf/qpYsGBY67dQRdlSr
-	 BJppQVtzWfkLsFwBGMpoLv4SBMYJXdg+a+LtnxbzH90+JUMUfoODtJ8bcesSA/7/Q7
-	 ep7tfYzuBiwuLbY57SGVqmXpr1NYNfK8KsDo5ZI/oY1hIt+e9hbCAbrkFpKYImCFdg
-	 JlZGreIpvlfMA==
+	b=nB9gQ4aFlKUpGUcihtsmI/cFkRNvSLQlBMVfFfId6za3U9oIZifeElqfvJ/gMMYLV
+	 kK9nLDYi/76JeTYI0eOMh6Ev87PICHvhy0d1ZKgpW4V7V0HhFFF5pltK8QUwBgbaaU
+	 AfTbyxMYiMbryQfwJ65A2G2jc3RkvI/TeFKscmT4OobGaUuPuVSaPsf+Y9qMoAzQ+w
+	 qQShsxWWYTx1w+YWqV2DLGX6UxvSmK9OjRoCDsr0peBDdamrU4PWYXtZy55sxBwaSo
+	 WpS//rd8RA5c1c8l+zl23/OHY/f2k3XfRfr004sW3x9c754aQDpKx39tz9vKXx6uZO
+	 kzFmq6SY4lRqw==
 From: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
 To: iommu@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org,
@@ -80,9 +80,9 @@ Cc: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
 	Sven Schnelle <svens@linux.ibm.com>,
 	x86@kernel.org,
 	Michael Kelley <mhklinux@outlook.com>
-Subject: [PATCH v6 18/20] dma: free atomic pool pages by physical address
-Date: Thu,  4 Jun 2026 14:09:57 +0530
-Message-ID: <20260604083959.1265923-19-aneesh.kumar@kernel.org>
+Subject: [PATCH v6 19/20] swiotlb: Preserve allocation virtual address for dynamic pools
+Date: Thu,  4 Jun 2026 14:09:58 +0530
+Message-ID: <20260604083959.1265923-20-aneesh.kumar@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260604083959.1265923-1-aneesh.kumar@kernel.org>
 References: <20260604083959.1265923-1-aneesh.kumar@kernel.org>
@@ -99,7 +99,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -107,7 +107,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCPT_COUNT_TWELVE(0.00)[33];
 	FREEMAIL_CC(0.00)[kernel.org,arm.com,samsung.com,resnulli.us,ziepe.ca,google.com,suse.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,vger.kernel.org,linux.ibm.com,ellerman.id.au,gmail.com,outlook.com];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20493-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20494-lists,linux-s390=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:iommu@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:aneesh.kumar@kernel.org,m:robin.murphy@arm.com,m:m.szyprowski@samsung.com,m:will@kernel.org,m:maz@kernel.org,m:steven.price@arm.com,m:Suzuki.Poulose@arm.com,m:catalin.marinas@arm.com,m:jiri@resnulli.us,m:jgg@ziepe.ca,m:smostafa@google.com,m:ptesarik@suse.com,m:aik@amd.com,m:dan.j.williams@intel.com,m:yilun.xu@linux.intel.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-s390@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:x86@kernel.org,m:mhklinux@outlook.com,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
@@ -124,128 +124,152 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,outlook.com:email,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 48CB063E2A1
+X-Rspamd-Queue-Id: CE10663E3CC
 
-dma_direct_alloc_pages() may satisfy atomic allocations from the coherent
-atomic pools. The pool allocation is keyed by the virtual address stored in
-the gen_pool, but the pages API returns only the backing struct page.
+swiotlb_alloc_tlb() can allocate from the DMA atomic pool when a decrypted
+pool is needed from atomic context. With CONFIG_DMA_DIRECT_REMAP, the
+atomic pool is backed by remapped virtual addresses, which are not the same
+as the direct-map addresses returned by phys_to_virt().
 
-On architectures with CONFIG_DMA_DIRECT_REMAP, atomic pool chunks are added
-to the gen_pool using their remapped virtual address.
-dma_direct_free_pages() reconstructs a linear-map address with
-page_address(page) and passes that to dma_free_from_pool(). That address
-does not match the gen_pool virtual range, so the pool lookup can fail and
-the code can fall through to freeing a pool-owned page through the normal
-page allocator path.
+swiotlb_init_io_tlb_pool() currently reconstructs the pool virtual address
+from the physical start address. For atomic-pool backed allocations this
+stores the wrong address in pool->vaddr. Later, swiotlb_free_tlb() passes
+that address to dma_free_from_pool(), which will fail to recognize the
+chunk
 
-Add a page-based pool free helper that looks up the owning pool chunk by
-physical address, translates it back to the gen_pool virtual address, and
-frees that address to the pool. Use it from dma_direct_free_pages() while
-keeping the existing virtual-address helper for coherent allocation frees.
+Pass the virtual address returned by the allocation path into
+swiotlb_init_io_tlb_pool(), and store that address in pool->vaddr. This
+keeps the pool free path using the same virtual address as the allocator.
 
 Tested-by: Michael Kelley <mhklinux@outlook.com>
 Tested-by: Mostafa Saleh <smostafa@google.com>
 Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
 ---
- include/linux/dma-map-ops.h |  1 +
- kernel/dma/direct.c         |  4 +--
- kernel/dma/pool.c           | 54 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 57 insertions(+), 2 deletions(-)
+ kernel/dma/swiotlb.c | 32 +++++++++++++++++++-------------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
 
-diff --git a/include/linux/dma-map-ops.h b/include/linux/dma-map-ops.h
-index 696b2c3a2305..8be059e69935 100644
---- a/include/linux/dma-map-ops.h
-+++ b/include/linux/dma-map-ops.h
-@@ -215,6 +215,7 @@ struct page *dma_alloc_from_pool(struct device *dev, size_t size,
- 		void **cpu_addr, gfp_t flags, unsigned long attrs,
- 		bool (*phys_addr_ok)(struct device *, phys_addr_t, size_t));
- bool dma_free_from_pool(struct device *dev, void *start, size_t size);
-+bool dma_free_from_pool_page(struct device *dev, struct page *page, size_t size);
- 
- int dma_direct_set_offset(struct device *dev, phys_addr_t cpu_start,
- 		dma_addr_t dma_start, u64 size);
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index e0ab9ff3f1d6..58f7ea1be963 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -488,9 +488,9 @@ void dma_direct_free_pages(struct device *dev, size_t size,
- 	 */
- 	bool mark_mem_encrypted = force_dma_unencrypted(dev);
- 
--	/* If cpu_addr is not from an atomic pool, dma_free_from_pool() fails */
-+	/* If page is not from an atomic pool, dma_free_from_pool_page() fails */
- 	if (IS_ENABLED(CONFIG_DMA_COHERENT_POOL) &&
--	    dma_free_from_pool(dev, vaddr, size))
-+	    dma_free_from_pool_page(dev, page, size))
- 		return;
- 
- 	phys = page_to_phys(page);
-diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
-index e7df8d279e75..43b8101d860f 100644
---- a/kernel/dma/pool.c
-+++ b/kernel/dma/pool.c
-@@ -356,3 +356,57 @@ bool dma_free_from_pool(struct device *dev, void *start, size_t size)
- 
- 	return false;
+diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+index 14d834ca298b..e4bd8c9eaeda 100644
+--- a/kernel/dma/swiotlb.c
++++ b/kernel/dma/swiotlb.c
+@@ -302,9 +302,9 @@ void __init swiotlb_update_mem_attributes(void)
  }
+ 
+ static void swiotlb_init_io_tlb_pool(struct io_tlb_pool *mem, phys_addr_t start,
+-		unsigned long nslabs, bool late_alloc, unsigned int nareas)
++		void *vaddr, unsigned long nslabs, bool late_alloc,
++		unsigned int nareas)
+ {
+-	void *vaddr = phys_to_virt(start);
+ 	unsigned long bytes = nslabs << IO_TLB_SHIFT, i;
+ 
+ 	mem->nslabs = nslabs;
+@@ -445,7 +445,7 @@ void __init swiotlb_init_remap(bool addressing_limit, unsigned int flags,
+ 		return;
+ 	}
+ 
+-	swiotlb_init_io_tlb_pool(mem, __pa(tlb), nslabs, false, nareas);
++	swiotlb_init_io_tlb_pool(mem, __pa(tlb), tlb, nslabs, false, nareas);
+ 	add_mem_pool(&io_tlb_default_mem, mem);
+ 
+ 	if (flags & SWIOTLB_VERBOSE)
+@@ -553,7 +553,7 @@ int swiotlb_init_late(size_t size, gfp_t gfp_mask,
+ 		}
+ 	}
+ 
+-	swiotlb_init_io_tlb_pool(mem, virt_to_phys(vstart), nslabs, true,
++	swiotlb_init_io_tlb_pool(mem, virt_to_phys(vstart), vstart, nslabs, true,
+ 				 nareas);
+ 	add_mem_pool(&io_tlb_default_mem, mem);
+ 
+@@ -664,25 +664,26 @@ static struct page *alloc_dma_pages(gfp_t gfp, size_t bytes,
+  * @phys_limit:	Maximum allowed physical address of the buffer.
+  * @attrs:	DMA attributes for the allocation.
+  * @gfp:	GFP flags for the allocation.
++ * @vaddr:	Receives the virtual address for the allocated buffer.
+  *
+  * Return: Allocated pages, or %NULL on allocation failure.
+  */
+ static struct page *swiotlb_alloc_tlb(struct device *dev, size_t bytes,
+-		u64 phys_limit, unsigned long attrs, gfp_t gfp)
++		u64 phys_limit, unsigned long attrs, gfp_t gfp, void **vaddr)
+ {
+ 	struct page *page;
+ 
++	*vaddr = NULL;
 +
-+struct dma_pool_phys_match {
-+	phys_addr_t phys;
-+	size_t size;
-+	unsigned long addr;
-+	bool found;
-+};
-+
-+static void dma_pool_find_phys(struct gen_pool *pool, struct gen_pool_chunk *chunk,
-+			       void *data)
-+{
-+	struct dma_pool_phys_match *match = data;
-+	phys_addr_t end = match->phys + match->size - 1;
-+	phys_addr_t chunk_end;
-+
-+	if (match->found)
-+		return;
-+
-+	chunk_end = chunk->phys_addr + (chunk->end_addr - chunk->start_addr);
-+	if (match->phys < chunk->phys_addr || end > chunk_end)
-+		return;
-+
-+	match->addr = chunk->start_addr + (match->phys - chunk->phys_addr);
-+	match->found = true;
-+}
-+
-+static bool dma_free_from_pool_phys(struct dma_gen_pool *dma_pool, phys_addr_t phys,
-+				    size_t size)
-+{
-+	struct dma_pool_phys_match match = {
-+		.phys = phys,
-+		.size = size,
-+	};
-+
-+	gen_pool_for_each_chunk(dma_pool->pool, dma_pool_find_phys, &match);
-+	if (!match.found)
-+		return false;
-+
-+	gen_pool_free(dma_pool->pool, match.addr, size);
-+	return true;
-+}
-+
-+bool dma_free_from_pool_page(struct device *dev, struct page *page, size_t size)
-+{
-+	struct dma_gen_pool *dma_pool = NULL;
-+	phys_addr_t phys = page_to_phys(page);
-+
-+	while ((dma_pool = dma_guess_pool(dma_pool, 0))) {
-+		if (dma_free_from_pool_phys(dma_pool, phys, size))
-+			return true;
-+	}
-+
-+	return false;
-+}
+ 	/*
+ 	 * Allocate from the atomic pools if memory is encrypted and
+ 	 * the allocation is atomic, because decrypting may block.
+ 	 */
+ 	if (!gfpflags_allow_blocking(gfp) && (attrs & DMA_ATTR_CC_SHARED)) {
+-		void *vaddr;
+-
+ 		if (!IS_ENABLED(CONFIG_DMA_COHERENT_POOL))
+ 			return NULL;
+ 
+-		return dma_alloc_from_pool(dev, bytes, &vaddr, gfp,
++		return dma_alloc_from_pool(dev, bytes, vaddr, gfp,
+ 					   attrs, dma_coherent_ok);
+ 	}
+ 
+@@ -705,6 +706,8 @@ static struct page *swiotlb_alloc_tlb(struct device *dev, size_t bytes,
+ 			return NULL;
+ 	}
+ 
++	if (page)
++		*vaddr = phys_to_virt(page_to_phys(page));
+ 	return page;
+ }
+ 
+@@ -750,6 +753,7 @@ static struct io_tlb_pool *swiotlb_alloc_pool(struct device *dev,
+ {
+ 	struct io_tlb_pool *pool;
+ 	unsigned int slot_order;
++	void *tlb_vaddr;
+ 	struct page *tlb;
+ 	size_t pool_size;
+ 	size_t tlb_size;
+@@ -767,7 +771,8 @@ static struct io_tlb_pool *swiotlb_alloc_pool(struct device *dev,
+ 	pool->unencrypted = !!(attrs & DMA_ATTR_CC_SHARED);
+ 
+ 	tlb_size = nslabs << IO_TLB_SHIFT;
+-	while (!(tlb = swiotlb_alloc_tlb(dev, tlb_size, phys_limit, attrs, gfp))) {
++	while (!(tlb = swiotlb_alloc_tlb(dev, tlb_size, phys_limit, attrs, gfp,
++					 &tlb_vaddr))) {
+ 		if (nslabs <= minslabs)
+ 			goto error_tlb;
+ 		nslabs = ALIGN(nslabs >> 1, IO_TLB_SEGSIZE);
+@@ -781,12 +786,12 @@ static struct io_tlb_pool *swiotlb_alloc_pool(struct device *dev,
+ 	if (!pool->slots)
+ 		goto error_slots;
+ 
+-	swiotlb_init_io_tlb_pool(pool, page_to_phys(tlb), nslabs, true, nareas);
++	swiotlb_init_io_tlb_pool(pool, page_to_phys(tlb), tlb_vaddr, nslabs,
++				 true, nareas);
+ 	return pool;
+ 
+ error_slots:
+-	swiotlb_free_tlb(page_address(tlb), tlb_size,
+-			 !!(attrs & DMA_ATTR_CC_SHARED));
++	swiotlb_free_tlb(tlb_vaddr, tlb_size, !!(attrs & DMA_ATTR_CC_SHARED));
+ error_tlb:
+ 	kfree(pool);
+ error:
+@@ -1995,7 +2000,8 @@ static int rmem_swiotlb_device_init(struct reserved_mem *rmem,
+ 			mem->unencrypted = false;
+ 		}
+ 
+-		swiotlb_init_io_tlb_pool(pool, rmem->base, nslabs,
++		swiotlb_init_io_tlb_pool(pool, rmem->base, phys_to_virt(rmem->base),
++					 nslabs,
+ 					 false, nareas);
+ 		mem->force_bounce = true;
+ 		mem->for_alloc = true;
 -- 
 2.43.0
 
