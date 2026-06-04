@@ -1,81 +1,81 @@
-Return-Path: <linux-s390+bounces-20513-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20515-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id nA9kIHiWIWrMJQEAu9opvQ
-	(envelope-from <linux-s390+bounces-20513-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 04 Jun 2026 17:15:04 +0200
+	id J5v7ARyWIWqpJQEAu9opvQ
+	(envelope-from <linux-s390+bounces-20515-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 04 Jun 2026 17:13:32 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38C4D6414EC
-	for <lists+linux-s390@lfdr.de>; Thu, 04 Jun 2026 17:15:04 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9735064149D
+	for <lists+linux-s390@lfdr.de>; Thu, 04 Jun 2026 17:13:31 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=ZE4L28Je;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20513-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-s390+bounces-20513-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=M17E2NDd;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20515-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20515-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 9CAEF3116B4E
-	for <lists+linux-s390@lfdr.de>; Thu,  4 Jun 2026 15:03:19 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3E3EF316D101
+	for <lists+linux-s390@lfdr.de>; Thu,  4 Jun 2026 15:03:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 417A53446CB;
-	Thu,  4 Jun 2026 15:02:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C5FE3314AC;
+	Thu,  4 Jun 2026 15:02:28 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC81E349CDD
-	for <linux-s390@vger.kernel.org>; Thu,  4 Jun 2026 15:02:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4715433066D
+	for <linux-s390@vger.kernel.org>; Thu,  4 Jun 2026 15:02:27 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780585339; cv=none; b=f4sRK3XpPfnwQ3mgSaXJ1A1RpRkBdHBZsXBPT1fDhgFbif/Ar6oiaTk2KpT1UkXnSicNsmxUTkrSVpXixJju5GUQ7Dp1xe8G51f9kVd9GL7rctYo0VLSDFmwnpJOG6X+iS2uGUrVFgK6/Yw1C6Y4wOHPPpUDXsMCBqq9BR+BYTM=
+	t=1780585348; cv=none; b=rTPR2aKxr6yeZ5bvFGeTBpALKDOnpklBYIVQ9sBCmBJsvKGch53ajx3DMnrcgszHSzSJkHQ1sqtvyjyu99ya0Dk4dJ5NLKKfHZ7SRMrGb1PgltiurXvWro4Uy6IM6LB9smk/Gj7/MnogY03Z8HVEcdEXrGOV3VdBHUfCVl5hXB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780585339; c=relaxed/simple;
-	bh=kJuxLZf86ZqSbpShflnMOB+ctfigqiv/tAU0BzdYWQc=;
+	s=arc-20240116; t=1780585348; c=relaxed/simple;
+	bh=ZJl9Mt7FKyzs5qgOjy9m7k+4Cm+afJHGMPi8nILaAoM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=btGkUmvyCzTtBEbGXbKRhGv3d2HrZ39EESI8/lW0cEXLEV68V+KTE7vV85GNfOQSKyLzvU5u6Mb4t3Do1wiE8vP88d0Cd2g0zoaMfUH5Zfi5JlzQgMwAmYYymrDpCBKNrsv+mcEziW0pHu9XepaeU4SzdosaL4ho7tsHGa62j5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZE4L28Je; arc=none smtp.client-ip=209.85.214.174
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2bf18c30bb2so5866335ad.0
-        for <linux-s390@vger.kernel.org>; Thu, 04 Jun 2026 08:02:16 -0700 (PDT)
+	 MIME-Version; b=D4CfNGEFFdvzzv12VRkBawC0HsONmskJqOp3P61E2pTF+TZbB1pg2zFSrMb288cN7B0mtmaVLOuH5sNbIxa4n+N0rLo4TtNXsaVUAjlM5u3FEJsvcNK4XF6Fr3B9Q6D0rJEAvqMoW83fYY/IJiECCvl8D5HUinUF7EbPTGqTdF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M17E2NDd; arc=none smtp.client-ip=209.85.160.174
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-517654b8dc5so7833561cf.3
+        for <linux-s390@vger.kernel.org>; Thu, 04 Jun 2026 08:02:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780585336; x=1781190136; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1780585346; x=1781190146; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PAIcBy7MNrXi3sYH0OZZ5XdCzjkRdcl8LnKIR3KqnsI=;
-        b=ZE4L28JeEt98ayHhij68xyrTIzSZADSXw1H78H6XACnfN77KfmASyYpxz2i85zv9eH
-         K207HApcjkHCgDJxr4+IUBcTIBUhSrdP2W/zkFjUq7dKzoBycAaimboEPaS89J9TdRsa
-         pnA9eejyCG4KcNZzvholQGeuf0+E/aNgWeqgOIVW5o3E7H+AVohWONaO3VRSscq3zFh9
-         w/MJjXaLU8PpKIi6eFq7oXkrAsvUDrJhyKbvkFt2E+4ndmK0KMye1xAfRD8S5kSZ1tgk
-         UYzFW+tYMCIUhP2402jLKirvBZuB5B3RFQ+f9wXQ3smTpAc0Pg4m90m8avyHJk54HAFD
-         vBQw==
+        bh=xRdDzAJ66h/qKzlMtNZ7QYJac4Hlkm37yqxsR8KWCKU=;
+        b=M17E2NDdHvZZml1HOJXbmvUVxQMevwB/U8d1gNhi5WKW5efuipLuXmbbVbm42Bz8E5
+         p8MsL5EmVoLfTfNJGMjrYkPUJAHYDBrddf2agndvs/030rNFZZRBoj2kDotvL0gLsQGr
+         +XvlyUSl5mDcSf+NAfFMmCAObNFoJeG8Nmhs31pqSJay5a+wkzaYZWrwXN35cpnzL8G4
+         mGce3Q8UlmKfkahq+fBbh0BD1hZVfUiBWeZgdCuTyeIljgXQ/90nUwXFE63k9/XN3lFf
+         qE6KjcrLs8HHmtvYyIsjwNHxSdsWP4QCeoJreKHlbxJbRMqfOQ3Mk+xvorNk3uvJCieQ
+         KXqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780585336; x=1781190136;
+        d=1e100.net; s=20251104; t=1780585346; x=1781190146;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=PAIcBy7MNrXi3sYH0OZZ5XdCzjkRdcl8LnKIR3KqnsI=;
-        b=nd5KgG2GabZW6QHKTGRNaGhVfx+yWTnq0duDOGyWitDuwFp7sO7B+ioGc1sXtjjVGn
-         DiqzOJCTMTwf1/7g1GECMXYyxPtxR49W7WLAS2NQ1zzX194zr4jr3VbgzBIhJqqxSo5a
-         zQPzrqCTiC91jcCKXKPOOL8wHrVdBHQJ8B6Xcesy9K2FQWD0rz9Mvc5R4hMcBhVK5vKi
-         dVxacv2KUT4mZAAUdSN3HzLBNS/FYOB/mBnYjzUTWwth+TskKQVt2miG4rWTN62wilyV
-         Sz1wfKCe1SQjbwvIIHlpqCKpOTQC/WB/k/7HdhjEdy5XXmVnvzXyJesZ5iX5OMipB35z
-         Nw4A==
-X-Forwarded-Encrypted: i=1; AFNElJ9ocoUkuLuxqtoUJ2/53NIiOG/itvcGZNE7FsZKIpaKCgA8/bLJuMg7UaQx842BO1pBdgrJzPnqhme5@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtWe8VX0qoaVBRfstT2b/H24hokBzwh4wwHP5XEYFDxVgzPr+V
-	5o/MMYvgdhc9gCMQe32ecPGXGCXAxABttOw0uGm3TL+9qYcV2yMh1uT4
-X-Gm-Gg: Acq92OG2II1dRQarM7J7Y5xYxIqvj8jE2n8RhlqLk1y6or0Pu2wpHA+19fQaggz1ock
-	soCmq/veEv7Tmf7Dx6/7olv9MHHJEMX95PWfoDcvtKJOigxmLcvYHe1oadoMDYa/ieJPeqRW7v3
-	RHwHaFL7gofEhaWqbfdAaFFz0dg5eeShW9o++LhTpznL1JDYkQ4rFlMluPOVVpIgTi+sW1W6dlc
-	uf48rdHfbny9t/6yaL8IouMJ7ZrjxYCuUUYJIXwwxmyYVxLEtCIPdaRUVOT9lVr1CaGLl/XJJp0
-	9oU+nD0os8onqp2b5p4o8P8jw1H9DNpCH5GfSDlypkP+8j7g85pU3k7a61xibB3QQtyoW9UVtrW
-	RieDjatdT5SwqFwgm3qEGRxcX2KKLX+ZzyJYsHc1vKn5FwXlHUM1QzgObSGtR5JJLHRTba8jez0
-	vZScQMvaacCLNwuBMYcsfbpSqGdlxktPDm5ptDZs0=
-X-Received: by 2002:a17:903:3c45:b0:2c0:bb2d:a30b with SMTP id d9443c01a7336-2c1644ae17fmr84740035ad.32.1780585333563;
-        Thu, 04 Jun 2026 08:02:13 -0700 (PDT)
-Received: from localhost ([2a03:2880:7ff:4a::])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c16609e05fsm64303575ad.54.2026.06.04.08.02.12
+        bh=xRdDzAJ66h/qKzlMtNZ7QYJac4Hlkm37yqxsR8KWCKU=;
+        b=hnx8hJE4IVE/K6NS04QF3Pu559ZsD5JDnx2bFLZ0ToZWWg1fGVOM9420HeFnToJMgC
+         BNjX0aJpPeBiKT/vN/BgdiRfHYwJdxBIb/DobSMpm4JWdwvs69tWaOo7dwTlMERXHutz
+         36lWHJWWjUqAWMgpe17r2Vr7jkVyeCadEmKqCbEiolbcYFibSeqcW4DMglGXVhHyX65+
+         eR5d9LGYrB2anwO8EbHcYvWzY6FWebP8RSvbgUDHxsKh720+PR7LljBKTcE6DEPlnctI
+         yDLgbnpiqRL8suUyK9jf6+0GhFvF9VF13wgEAk4nuEdZbPHcYjl5+X+OdfrptMYbUAty
+         l2NQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9u7bu1NLeGCytxHFxbbBo8jAjBlBmzZpL7VWoS/iCr864QNHBLlnSWCu3TLBwUFbp7gvMuicQ2paI7@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPsQQyulVYfU6Iip/BiNRrWgVtSvRNDCLx1CI45h0tfeUmPP6M
+	FaBws+lP41cAJ1uj8IwqFcJraQbyEZnwGBjfQoe6htq6L8DJDoMim2ymclbS8Q==
+X-Gm-Gg: Acq92OGCvvVkz5zZkYkAR+y/G14yMyGuZsx4X75gZJJhiscEhbky/C6iHbI39yqFGwV
+	wRvENfVkphzxkNHRhIVRwOKf8wFdu00+juQ1rTTLS4sA+Rh6ezxjCThU3xeQ/BwYcjMJuIgGHWe
+	+FNYqMk+JhZTyer5b1PME0AqlbLyogB2X4PjQerXXnsa3glHQ/9W0USTbcT9+KbQK2JZ+DpNu/Z
+	zu5BTkLvtqhqtx7uX9KkuR0P6UUsR1tPK2n0EC4Vs5gL6rrX0YeVdyC7rfX2UzvoM9BDRXVm+an
+	8dI7yMU08kwX6yv0EtpvQ4RE01Yw/NThJfTCxz8VWi1sNN7VUJArqvU+CkBqJzWUi8cDBt2J20i
+	TKXpw4jBpFXst/2OefyNeUXFxpD8eY+kNsLLqf10MN86EqZg+ehu/OPAMRF2Q1+H9tBsFFBjWhq
+	n1II2AxsN2jVe2g7Dfs45VTzbRohbGcug45b8v//8=
+X-Received: by 2002:a05:6a00:218e:b0:842:5ad6:2d3 with SMTP id d2e1a72fcca58-84284ef2c41mr8159937b3a.38.1780585335784;
+        Thu, 04 Jun 2026 08:02:15 -0700 (PDT)
+Received: from localhost ([2a03:2880:7ff:51::])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8428291a837sm6331464b3a.60.2026.06.04.08.02.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2026 08:02:13 -0700 (PDT)
+        Thu, 04 Jun 2026 08:02:15 -0700 (PDT)
 From: Dimitri Daskalakis <dimitri.daskalakis1@gmail.com>
 To: Bjorn Helgaas <bhelgaas@google.com>
 Cc: linux-pci@vger.kernel.org,
@@ -108,9 +108,9 @@ Cc: linux-pci@vger.kernel.org,
 	linux-s390@vger.kernel.org,
 	kvm@vger.kernel.org,
 	xen-devel@lists.xenproject.org
-Subject: [RFC 11/12] PCI: Initialize and release SIOV capability
-Date: Thu,  4 Jun 2026 08:01:52 -0700
-Message-ID: <20260604150153.3619662-12-dimitri.daskalakis1@gmail.com>
+Subject: [RFC 12/12] PCI: Reserve bus range for SIOV devices
+Date: Thu,  4 Jun 2026 08:01:53 -0700
+Message-ID: <20260604150153.3619662-13-dimitri.daskalakis1@gmail.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260604150153.3619662-1-dimitri.daskalakis1@gmail.com>
 References: <20260604150153.3619662-1-dimitri.daskalakis1@gmail.com>
@@ -127,12 +127,12 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_FROM(0.00)[gmail.com];
-	TAGGED_FROM(0.00)[bounces-20513-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20515-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:bhelgaas@google.com,m:linux-pci@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:mahesh@linux.ibm.com,m:oohall@gmail.com,m:schnelle@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:alex@shazbot.org,m:jgg@ziepe.ca,m:kevin.tian@intel.com,m:ankita@nvidia.com,m:leon@kernel.org,m:jgross@suse.com,m:sstabellini@kernel.org,m:oleksandr_tyshchenko@epam.com,m:kbusch@kernel.org,m:alexanderduyck@fb.com,m:kuba@kernel.org,m:daskald@meta.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-s390@vger.kernel.org,m:kvm@vger.kernel.org,m:xen-devel@lists.xenproject.org,s:lists@lfdr.de];
@@ -142,7 +142,7 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_SENDER(0.00)[dimitridaskalakis1@gmail.com,linux-s390@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
@@ -156,215 +156,81 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,meta.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,meta.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 38C4D6414EC
+X-Rspamd-Queue-Id: 9735064149D
 
 From: Dimitri Daskalakis <daskald@meta.com>
 
-Modify pci_init_capabilities() to discover the SIOV extended capability
-(cap ID 0x38). When present, allocate struct pci_siov that records the
-capability position, total SDI count, routing ID offset and stride, and
-the maximum bus range the SDIs can span.
+SDI routing IDs are computed from the PF's devfn plus an offset and
+stride, exactly like SR-IOV VFs. When the stride pushes routing IDs
+past the current bus number, additional bus numbers must be reserved
+during PCI bus scanning to ensure the SDIs can be enumerated.
 
-The init path mirrors sriov_init(): read the capability registers,
-compute the worst-case bus consumption from total_SDIs, and stash the
-result in the PF's pci_dev. Release frees the structure on teardown.
+Add pci_siov_bus_range(), which walks all SIOV-capable PFs on a bus
+and returns the maximum number of additional buses required. This
+parallels pci_iov_bus_range() for SR-IOV.
 
-If is_physfn was already set (by sriov_init), it will not be cleared if
-siov_init() fails. This prevents clobbering the flag for devices that
-enable both virtualization types.
+The bus range is pre-computed during siov_init() by computing the bus
+number of the last valid SDI.
 
-The SR-IOV code does not unset the is_physfn bit of a pci device
-when disabled, and the SIOV code follows that pattern.
+Note: The PCIe 7.0 spec outlines an alternative RID assignment
+algorithm for SDIs. The spec states a Virtualization Intermediary
+(likely a hypervisor) after boot can compute the set of RIDs that are
+valid for SDIs. There is a six step algorithm to compute this
+RID allowlist. To keep things simple, we are only adding support for
+strided RID assignments.
 
 Assisted-by: Claude:claude-opus-4.7
 Signed-off-by: Dimitri Daskalakis <daskald@meta.com>
 ---
- drivers/pci/Makefile |   1 +
- drivers/pci/pci.h    |  16 ++++++
- drivers/pci/probe.c  |   2 +
- drivers/pci/siov.c   | 113 +++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 132 insertions(+)
- create mode 100644 drivers/pci/siov.c
+ drivers/pci/probe.c |  4 ++--
+ drivers/pci/siov.c  | 21 +++++++++++++++++++++
+ 2 files changed, 23 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-index 41ebc3b9a518..a584cd1bf08a 100644
---- a/drivers/pci/Makefile
-+++ b/drivers/pci/Makefile
-@@ -23,6 +23,7 @@ obj-$(CONFIG_PCI_QUIRKS)	+= quirks.o
- obj-$(CONFIG_HOTPLUG_PCI)	+= hotplug/
- obj-$(CONFIG_PCI_ATS)		+= ats.o
- obj-$(CONFIG_PCI_IOV)		+= iov.o
-+obj-$(CONFIG_PCI_SIOV)		+= siov.o
- obj-$(CONFIG_PCI_BRIDGE_EMUL)	+= pci-bridge-emul.o
- obj-$(CONFIG_PCI_LABEL)		+= pci-label.o
- obj-$(CONFIG_X86_INTEL_MID)	+= pci-mid.o
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index fd7c04e26c16..a516db996aab 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -1042,6 +1042,22 @@ static inline u16 pci_virtfn_routing_id(struct pci_dev *pf, u16 offset,
- }
- #endif
- 
-+#ifdef CONFIG_PCI_SIOV
-+int pci_siov_init(struct pci_dev *dev);
-+void pci_siov_release(struct pci_dev *dev);
-+int pci_siov_bus_range(struct pci_bus *bus);
-+#else
-+static inline int pci_siov_init(struct pci_dev *dev)
-+{
-+	return -ENODEV;
-+}
-+static inline void pci_siov_release(struct pci_dev *dev) { }
-+static inline int pci_siov_bus_range(struct pci_bus *bus)
-+{
-+	return 0;
-+}
-+#endif
-+
- #ifdef CONFIG_PCIE_TPH
- void pci_restore_tph_state(struct pci_dev *dev);
- void pci_save_tph_state(struct pci_dev *dev);
 diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index b63cd0c310bc..bebc32c8d374 100644
+index bebc32c8d374..9ef6827ab345 100644
 --- a/drivers/pci/probe.c
 +++ b/drivers/pci/probe.c
-@@ -2473,6 +2473,7 @@ static void pci_release_capabilities(struct pci_dev *dev)
- 	pci_aer_exit(dev);
- 	pci_rcec_exit(dev);
- 	pci_iov_release(dev);
-+	pci_siov_release(dev);
- 	pci_free_cap_save_buffers(dev);
- }
+@@ -3100,8 +3100,8 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+ 	for (devnr = 0; devnr < PCI_MAX_NR_DEVS; devnr++)
+ 		pci_scan_slot(bus, PCI_DEVFN(devnr, 0));
  
-@@ -2666,6 +2667,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
- 	pci_vpd_init(dev);		/* Vital Product Data */
- 	pci_configure_ari(dev);		/* Alternative Routing-ID Forwarding */
- 	pci_iov_init(dev);		/* Single Root I/O Virtualization */
-+	pci_siov_init(dev);		/* Scalable I/O Virtualization */
- 	pci_ats_init(dev);		/* Address Translation Services */
- 	pci_pri_init(dev);		/* Page Request Interface */
- 	pci_pasid_init(dev);		/* Process Address Space ID */
+-	/* Reserve buses for SR-IOV capability */
+-	used_buses = pci_iov_bus_range(bus);
++	/* Reserve buses for SR-IOV and SIOV capability */
++	used_buses = max(pci_iov_bus_range(bus), pci_siov_bus_range(bus));
+ 	max += used_buses;
+ 
+ 	/*
 diff --git a/drivers/pci/siov.c b/drivers/pci/siov.c
-new file mode 100644
-index 000000000000..7372ce95714b
---- /dev/null
+index 7372ce95714b..6405a8830052 100644
+--- a/drivers/pci/siov.c
 +++ b/drivers/pci/siov.c
-@@ -0,0 +1,113 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * PCI Express Scalable I/O Virtualization (SIOV) support
+@@ -111,3 +111,24 @@ void pci_siov_release(struct pci_dev *dev)
+ 	if (dev->siov)
+ 		siov_release(dev);
+ }
++
++/**
++ * pci_siov_bus_range - find the max bus number consumed by SDIs
++ * @bus: the PCI bus
++ *
++ * Returns max additional buses consumed across all SIOV PFs on this bus.
 + */
-+
-+#include <linux/pci.h>
-+#include <linux/slab.h>
-+#include <linux/export.h>
-+#include "pci.h"
-+
-+static int pci_siov_sdi_bus(struct pci_dev *dev, int sdi_id)
++int pci_siov_bus_range(struct pci_bus *bus)
 +{
-+	if (!dev->siov)
-+		return -EINVAL;
-+	return pci_virtfn_routing_id(dev, dev->siov->offset,
-+				  dev->siov->stride, sdi_id) >> 8;
-+}
++	int max = 0;
++	struct pci_dev *dev;
 +
-+static int compute_max_sdi_buses(struct pci_dev *dev)
-+{
-+	struct pci_siov *siov = dev->siov;
-+
-+	if (!siov->offset || (siov->total_SDIs > 1 && !siov->stride))
-+		return -EIO;
-+
-+	siov->max_SDI_buses = pci_siov_sdi_bus(dev, siov->total_SDIs - 1);
-+	return 0;
-+}
-+
-+static int siov_init(struct pci_dev *dev, int pos)
-+{
-+	struct pci_siov *siov;
-+	bool was_physfn;
-+	u16 total;
-+	u8 status;
-+	int rc;
-+
-+	pci_read_config_byte(dev, pos + PCI_SIOV_STATUS, &status);
-+	if (status & PCI_SIOV_STATUS_ENABLED)
-+		pci_warn(dev, "SIOV: SDIs active at init, FLR may be required\n");
-+
-+	pci_read_config_word(dev, pos + PCI_SIOV_TOTAL_SDI, &total);
-+	if (!total)
-+		return 0;
-+
-+	siov = kzalloc_obj(*siov);
-+	if (!siov)
-+		return -ENOMEM;
-+
-+	siov->pos = pos;
-+	siov->total_SDIs = total;
-+	siov->driver_max_SDIs = total;
-+	siov->self = dev;
-+	pci_read_config_dword(dev, pos + PCI_SIOV_CAP, &siov->cap);
-+	pci_read_config_word(dev, pos + PCI_SIOV_SDI_OFFSET, &siov->offset);
-+	pci_read_config_word(dev, pos + PCI_SIOV_SDI_STRIDE, &siov->stride);
-+
-+	was_physfn = dev->is_physfn;
-+
-+	dev->siov = siov;
-+	dev->is_physfn = 1;
-+	dev->is_siov = 1;
-+	rc = compute_max_sdi_buses(dev);
-+	if (rc) {
-+		dev->siov = NULL;
-+		dev->is_siov = 0;
-+		if (!was_physfn)
-+			dev->is_physfn = 0;
-+		kfree(siov);
-+		return rc;
++	list_for_each_entry(dev, &bus->devices, bus_list) {
++		if (!dev->siov)
++			continue;
++		if (dev->siov->max_SDI_buses > max)
++			max = dev->siov->max_SDI_buses;
 +	}
 +
-+	return 0;
-+}
-+
-+static void siov_release(struct pci_dev *dev)
-+{
-+	WARN_ON_ONCE(dev->siov->num_SDIs);
-+
-+	kfree(dev->siov);
-+	dev->siov = NULL;
-+	dev->is_siov = 0;
-+}
-+
-+/**
-+ * pci_siov_init - initialize the Scalable IOV capability
-+ * @dev: the PCI device
-+ *
-+ * Returns 0 on success, or negative on failure.
-+ */
-+int pci_siov_init(struct pci_dev *dev)
-+{
-+	int pos;
-+
-+	if (!pci_is_pcie(dev))
-+		return -ENODEV;
-+
-+	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_SIOV);
-+	if (pos)
-+		return siov_init(dev, pos);
-+
-+	return -ENODEV;
-+}
-+
-+/**
-+ * pci_siov_release - release resources used by the SIOV capability
-+ * @dev: the PCI device
-+ */
-+void pci_siov_release(struct pci_dev *dev)
-+{
-+	if (dev->siov)
-+		siov_release(dev);
++	return max ? max - bus->number : 0;
 +}
 -- 
 2.52.0
