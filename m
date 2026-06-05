@@ -1,214 +1,130 @@
-Return-Path: <linux-s390+bounces-20530-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20531-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id uulhDAoQImpVSAEAu9opvQ
-	(envelope-from <linux-s390+bounces-20530-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 05 Jun 2026 01:53:46 +0200
+	id jM/eF50gImo9SwEAu9opvQ
+	(envelope-from <linux-s390+bounces-20531-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 05 Jun 2026 03:04:29 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9F806440C1
-	for <lists+linux-s390@lfdr.de>; Fri, 05 Jun 2026 01:53:45 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3E766443C3
+	for <lists+linux-s390@lfdr.de>; Fri, 05 Jun 2026 03:04:28 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ziepe.ca header.s=google header.b=URnM+XHe;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20530-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20530-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=none;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=FV7UuTIA;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20531-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-20531-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 0A65B301062C
-	for <lists+linux-s390@lfdr.de>; Thu,  4 Jun 2026 23:53:45 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B5C5230374B3
+	for <lists+linux-s390@lfdr.de>; Fri,  5 Jun 2026 01:00:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BCDF37DADE;
-	Thu,  4 Jun 2026 23:53:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AFCC2F5313;
+	Fri,  5 Jun 2026 01:00:16 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6DD378839
-	for <linux-s390@vger.kernel.org>; Thu,  4 Jun 2026 23:53:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5A123535E;
+	Fri,  5 Jun 2026 00:59:58 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780617222; cv=none; b=sHkYrcaokz2M1ybHEnY3Vx72+Y3T4TRExqBLkN2Aon5GHOjYNH3huTxzuIYRbwuTsLKQubo2/TB0t/vHgZr/dLxuVPPDxrPPGh9TJmGBKO4LfvKC0icisJvkHCu4he8x5yt9/ve8fQu3PF93Ty1R4zc9BGmbRg2Bp2R1adeaK9s=
+	t=1780621216; cv=none; b=hx28wJbz+r9UBHC6DC33wUSxssvz7UcB7qE266jnUc3DxpAK++5WDHxvvvtvV8tH48TLXhjAtjdiX+reke4gqYQTYLsNUvLsujZOcyAMjaLD7RYr5OSTfkSxC7hFXX9jbGRkdg7ZeuhLK9MrdoHBNO4Rhck/JVxCwr/eRgWeAxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780617222; c=relaxed/simple;
-	bh=QdNfN0ISSUjgfW1QMFBsgvu7FhR36K/NVC/mvHq2uII=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cVVnlFWt6H4/azcSrpfxw9hKDHilGJAeLX6wcXTrqVcI3CQPDx1D9y85EFUhrOPDHdGr/+MmzdhYJqW+0JT1GCC2QrBmdbKhUBWP34T7uhV7LpaILs5BqB+y3fwfqjI1pxQrDSXyv6gKvPNlfpW1heyPuf0lkAV93bIHwsvAe2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=URnM+XHe; arc=none smtp.client-ip=209.85.160.173
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-5176096116fso13718621cf.0
-        for <linux-s390@vger.kernel.org>; Thu, 04 Jun 2026 16:53:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1780617220; x=1781222020; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pmt/JkLWWliz/NxTk163pbkZkRgDeZpSMIwPpktcw8U=;
-        b=URnM+XHeF3GIgHI0JrDMkcoPyQVgGv1eeIavxQNq6iwnFmOJYg1WoCOSHGOdc+jbZw
-         kHWUpyMUdiZWW+CDM0AYs+HPR7RcmYbylCDI1buXGO7tyH9YPARVOdv2YnUXAhMLBFMm
-         WW4vQJI30xOkHZBvzXGIRKe6evy15rjDAr7jcreOS6QSafAtbJ1QMLvigsKx1CzN9xK9
-         mXX/3frjMWB6A65rRe9rmaCo/13iG+H3FpaArSvuwkGjwsbg7kUHs9xx5M0n1jVz//Vl
-         Jjxt8sktw//wSz1cMx7X1YJiaQ9mtJKz5BuLBR/FHhOoRYVNNUnUAP07vQBTQXeDkV0C
-         u/Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780617220; x=1781222020;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pmt/JkLWWliz/NxTk163pbkZkRgDeZpSMIwPpktcw8U=;
-        b=Nl17HyrGKsTjp2v9EEv5WCJ+fNSYf/uk0GLH+YolPoBk+DuyFArIgDIJPTbY5qu+v+
-         AdI0hN2hcQCAoAYR94UEp6P2Xu0INiHHNNJu0f1LkfrejJAVOO7fYtkkXsFhr3NQD9jx
-         7UiOejnGrvDgCTuHLClj3gyW2mYjRnGoFj9/sirHOuFqqpnfn3pgMl+wXA5VbmrWnetD
-         oIQmf0D8ujdpFjvYwsFiVCht+qjEUAsiwhmp/1jAb7l4biRUHLTdpX3xNPhjgMhOL/zl
-         qZfIyp1jL/N9eTbfFZrQk0TVL2FN+uvshMI67YMJ5q5KZVLK5oI53WdaPcGWkyq+ALqe
-         277A==
-X-Forwarded-Encrypted: i=1; AFNElJ+tZnIbvsOMerY31exd1Xv8QestogGTW5IlfpkizU4gCz1LNk9s2SfXw1NaMIdsBeT5HlZUMs7Q+N7b@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJmsrpfVguARyZmELQD4hz77dLrD06hQQO+XD1i33PPgT+/FJ7
-	EU6CvFEVQZ3bBjju4K79gQLNABaW6WXSk4ribNSV4IqAcjwannizF7PLvSL3rx6Zup8=
-X-Gm-Gg: Acq92OFF9J/33yxUoKVp1bHGen5TNb453ueRlo4JcDFbMAseL+wbsUbInzjpgT88iXK
-	lvCZX3TBXpnAruSdreNIuZSb+EmGCrHi5XeHWqW4YC/0HCCfWJSlcV0Q1+6IX0ryzKh9E+JO7Qd
-	B/VhDc/5SJgVxC82PVbuA4bO19y025lUFfW9QbuJrAT+wrcdlyOIlm6e8pSWgthonjcKxCPneC7
-	I+XVhZiVe1yL1Lmm/RIQkzChz63XZ1zYYDM91BPhXpQXBcqX4G2ftXdQIG++6mzgfgNLEo15lyz
-	POlKGRaiKefPaflF8XBMsJLhO30D/eoxDEMxOeLf+F23LbOyypr55y2Rp1jXmdGYOEkQqqs6Nlk
-	g1865oHbJAWC9xneZtTC4Fury7bO5vJGTq/cpijKyRZ3IHvP0KKurSRNTtA6FZb1X5so6koBCCe
-	wDIce9Sjnqz25lqNz4qlGWzZKJ4qQBLT1yCvz/kVmro5w2N5o+VQ5rjSIoZgJkR2feCW2FPffkQ
-	cJQlnPk07QHEhjr
-X-Received: by 2002:a05:622a:6187:b0:517:6b31:8048 with SMTP id d75a77b69052e-51795bccda6mr17320401cf.35.1780617220214;
-        Thu, 04 Jun 2026 16:53:40 -0700 (PDT)
-Received: from ziepe.ca (crbknf0213w-47-54-130-67.pppoe-dynamic.high-speed.nl.bellaliant.net. [47.54.130.67])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8cecd051facsm64970176d6.32.2026.06.04.16.53.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2026 16:53:39 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1wVHsZ-0000000A3UP-0kpK;
-	Thu, 04 Jun 2026 20:53:39 -0300
-Date: Thu, 4 Jun 2026 20:53:39 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
+	s=arc-20240116; t=1780621216; c=relaxed/simple;
+	bh=uvxQ8m/0FnjSq2hX2DJ7JY5O6ptuAhKyFcmM0+SqdDI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AYl0UbDhFeNncG6SEth+K4kN9CcCflu0cuhVESpTVRu3Kzrui2SPSbKSxANp9WclIV+n7FT8TVVbQsWxwXoQB/y2A6isoW9nM1E+bJ+vESpE9DH/mcw8C0qZVSN9okUotSv4mKJTqYrB9fz0i3+XHVYuW7lUE7s/zTUqyXf0kSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FV7UuTIA; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EEDF1F00893;
+	Fri,  5 Jun 2026 00:59:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780621197;
+	bh=uvxQ8m/0FnjSq2hX2DJ7JY5O6ptuAhKyFcmM0+SqdDI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=FV7UuTIA9nXYCTQdrZZfkYLPla7MfXoMk9JBQGXD8E6O3JeVZ8noXFwAiRTcGSkiG
+	 W1E6UfVYL1zDmwogaVZj3DwZpjueen+dGCzKQo0ke5ZCdkt5y4s6jQvB3vcBr0q2k/
+	 5zMUf1gXU4yYCb9VaqZ1FpKBYaxlJRzL8seAwf8I1EV3xbsR5RzcirVhuu+7mcYerp
+	 2iHf8scUUAf0UGYnrFlhzWpP25WM1cMsSOLI91OeLkt8yMjFwVNEf8x7lNB0JkDCVX
+	 FA7XptQIIQkiVR9RNrq6zyb+w3n9rtX2CXGMXtneI5zgxSgBjxNGwz6mh+H34odnWw
+	 kP5OoFOiPLZYg==
+Date: Thu, 4 Jun 2026 17:59:55 -0700
+From: Jakub Kicinski <kuba@kernel.org>
 To: Dimitri Daskalakis <dimitri.daskalakis1@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <chleroy@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>, Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	Keith Busch <kbusch@kernel.org>,
-	Alexander Duyck <alexanderduyck@fb.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Dimitri Daskalakis <daskald@meta.com>,
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-	kvm@vger.kernel.org, xen-devel@lists.xenproject.org
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-pci@vger.kernel.org, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <chleroy@kernel.org>, Mahesh J Salgaonkar
+ <mahesh@linux.ibm.com>, Oliver O'Halloran <oohall@gmail.com>, Niklas
+ Schnelle <schnelle@linux.ibm.com>, Gerald Schaefer
+ <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily
+ Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
+ <svens@linux.ibm.com>, Alex Williamson <alex@shazbot.org>, Kevin Tian
+ <kevin.tian@intel.com>, Ankit Agrawal <ankita@nvidia.com>, Leon Romanovsky
+ <leon@kernel.org>, Juergen Gross <jgross@suse.com>, Stefano Stabellini
+ <sstabellini@kernel.org>, Oleksandr Tyshchenko
+ <oleksandr_tyshchenko@epam.com>, Keith Busch <kbusch@kernel.org>, Alexander
+ Duyck <alexanderduyck@fb.com>, Dimitri Daskalakis <daskald@meta.com>,
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+ kvm@vger.kernel.org, xen-devel@lists.xenproject.org
 Subject: Re: [RFC 00/12] PCI: Add support for Scalable I/O Virtualization
-Message-ID: <20260604235339.GE2487554@ziepe.ca>
+Message-ID: <20260604175955.56ca1406@kernel.org>
+In-Reply-To: <a07763e2-aff3-4468-83c2-d50a9e1605c8@gmail.com>
 References: <20260604150153.3619662-1-dimitri.daskalakis1@gmail.com>
- <20260604182031.GB2487554@ziepe.ca>
- <a07763e2-aff3-4468-83c2-d50a9e1605c8@gmail.com>
+	<20260604182031.GB2487554@ziepe.ca>
+	<a07763e2-aff3-4468-83c2-d50a9e1605c8@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a07763e2-aff3-4468-83c2-d50a9e1605c8@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_ALLOW(-0.20)[ziepe.ca:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20530-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:dimitri.daskalakis1@gmail.com,m:jgg@ziepe.ca,m:bhelgaas@google.com,m:linux-pci@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:mahesh@linux.ibm.com,m:oohall@gmail.com,m:schnelle@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:alex@shazbot.org,m:kevin.tian@intel.com,m:ankita@nvidia.com,m:leon@kernel.org,m:jgross@suse.com,m:sstabellini@kernel.org,m:oleksandr_tyshchenko@epam.com,m:kbusch@kernel.org,m:alexanderduyck@fb.com,m:daskald@meta.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-s390@vger.kernel.org,m:kvm@vger.kernel.org,m:xen-devel@lists.xenproject.org,m:dimitridaskalakis1@gmail.com,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20531-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:dimitri.daskalakis1@gmail.com,m:bhelgaas@google.com,m:linux-pci@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:mahesh@linux.ibm.com,m:oohall@gmail.com,m:schnelle@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:alex@shazbot.org,m:kevin.tian@intel.com,m:ankita@nvidia.com,m:leon@kernel.org,m:jgross@suse.com,m:sstabellini@kernel.org,m:oleksandr_tyshchenko@epam.com,m:kbusch@kernel.org,m:alexanderduyck@fb.com,m:kuba@kernel.org,m:daskald@meta.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-s390@vger.kernel.org,m:kvm@vger.kernel.org,m:xen-devel@lists.xenproject.org,m:dimitridaskalakis1@gmail.com,s:lists@lfdr.de];
-	DMARC_NA(0.00)[ziepe.ca];
+	FROM_HAS_DN(0.00)[];
 	FREEMAIL_TO(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[google.com,vger.kernel.org,linux.ibm.com,ellerman.id.au,gmail.com,kernel.org,shazbot.org,intel.com,nvidia.com,suse.com,epam.com,fb.com,meta.com,lists.ozlabs.org,lists.xenproject.org];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[jgg@ziepe.ca,linux-s390@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[ziepe.ca:+];
-	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER(0.00)[kuba@kernel.org,linux-s390@vger.kernel.org];
 	RCPT_COUNT_TWELVE(0.00)[31];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jgg@ziepe.ca,linux-s390@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FREEMAIL_CC(0.00)[ziepe.ca,google.com,vger.kernel.org,linux.ibm.com,ellerman.id.au,gmail.com,kernel.org,shazbot.org,intel.com,nvidia.com,suse.com,epam.com,fb.com,meta.com,lists.ozlabs.org,lists.xenproject.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[kuba@kernel.org,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	TO_DN_SOME(0.00)[]
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: B9F806440C1
+X-Rspamd-Queue-Id: D3E766443C3
 
-On Thu, Jun 04, 2026 at 04:49:05PM -0700, Dimitri Daskalakis wrote:
-> 
-> On 6/4/26 11:20 AM, Jason Gunthorpe wrote:
-> > On Thu, Jun 04, 2026 at 08:01:41AM -0700, Dimitri Daskalakis wrote:
-> >> With this patchset core enumarates the SIOV capability and can identify
-> >> SIOV PFs. But there is no central mechanism to allocate/manage SIOV VFs.
-> >> To support device pass through, devices will need to add a vfio-mdev
-> >> driver with IOMMUFD support (or something similar).
-> > 
-> > There is an enormous amount of missing work to do something useful
-> > with the SIOVr2 stuff. IIRC there is even supposed to be BIOS
-> > components in this plan and there are some missing PCI SIG topics too
-> > IIRC.
-> > 
-> > So, I'm not sure how much value there is in merging just the cap
-> > discovery without a roadmap for the missing parts..
-> > 
-> > Also, I'm quite surprised to see this out of the blue, there is an OCP
-> > workstream that was building out a standard that outlines how all the
-> > different components have to act to successfully implement it.  What
-> > is in PCI SIG was just some minor foundational adjustments without any
-> > context on how to form them into a solution.
-> > 
-> > I think it is extremely premature to merge anything related to SIOV to
-> > the kernel. Join the OCP work stream if you are interested. I think
-> > the general feeling was there is not sufficient interest in the
-> > industry to do this and it has gone quiet.
-> > 
-> > Jason
-> 
+On Thu, 4 Jun 2026 16:49:05 -0700 Dimitri Daskalakis wrote:
 > Hey Jason, thanks for the feedback. We (at Meta) are definitely
 > interested in SIOV-like capabilities for device passthrough to containers.
-> 
-> For those scenarios, having PCIe transactions per RID plus IOMMU
-> isolation is enough, but I can imagine hypervisors/VMs requiring more
-> platform support.
-> 
-> I hear you on the broader support story being premature. But on the
-> other hand, this series unblocks experimentation at the driver level
-> for basic data path validation.
 
-And you can do your experimentation OOT :)
-
-Go to the OCP workstream and finish the standard if you want to get
-something merged.
-
-There is zero need for SIOV if all you want is containers. containers
-do not require iommu isolation or unique RIDs.
-
-Jason
+I think "definitely interested" is quite an exaggeration.
+More importantly, which big company is interested in what
+tech should be irrelevant upstream. Please don't make these
+sort of arguments. The code has to stand on its own.
 
