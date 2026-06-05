@@ -1,78 +1,78 @@
-Return-Path: <linux-s390+bounces-20536-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20537-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id H33IBxdiImoKVwEAu9opvQ
-	(envelope-from <linux-s390+bounces-20536-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 05 Jun 2026 07:43:51 +0200
+	id elQaFmJiImotVwEAu9opvQ
+	(envelope-from <linux-s390+bounces-20537-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 05 Jun 2026 07:45:06 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71008645387
-	for <lists+linux-s390@lfdr.de>; Fri, 05 Jun 2026 07:43:50 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id A2D306453B1
+	for <lists+linux-s390@lfdr.de>; Fri, 05 Jun 2026 07:45:05 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=F7Wo3U8m;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20536-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20536-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=N0AvAI0j;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20537-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-20537-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 53CD23022AA0
-	for <lists+linux-s390@lfdr.de>; Fri,  5 Jun 2026 05:41:39 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 59F72304E33E
+	for <lists+linux-s390@lfdr.de>; Fri,  5 Jun 2026 05:41:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFDF33E171C;
-	Fri,  5 Jun 2026 05:41:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F5703F44EF;
+	Fri,  5 Jun 2026 05:41:41 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7733BB10D;
-	Fri,  5 Jun 2026 05:41:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F873FE37C
+	for <linux-s390@vger.kernel.org>; Fri,  5 Jun 2026 05:41:38 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780638098; cv=none; b=NLsPlFGHIUDkLXgfgyBEGx/RY2rRqpOBPtRO9gdQr79HD2TSlpWUcRwC4PBsVH4gtQL47g8ophrpm9rspM99sJvKID0JEeO5mmFslrTrPhK4XqzFH9sVCVCuxyQcqMmiK1UACHXYMSdBaF1O2ZDkTEK0kXDfGsUzcf3ToiLx434=
+	t=1780638101; cv=none; b=q33Uhf8Pi/BCxrDm0oE0WVmrlHgPfugAD45eczaf8G/NUUKhGbcK+/Mdm01q1zyUqogjKEiPnmDJ6CEub54Ll/jeA7N4mi8VvT7GAuDXydj9dskawfYeSddHfRmR2gbsRaIn7hPHfx5VuNUpArELpFW0Q49rdicS6qYSO+W7AbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780638098; c=relaxed/simple;
-	bh=hv8O/bheqVgn2baSbMciHGKRLF94QTuSTMuFCgVRSts=;
+	s=arc-20240116; t=1780638101; c=relaxed/simple;
+	bh=VsHssmG4iLDQg0XELCmXp+HbJFOZQrjGWZwsM0sxDDg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nTsih/Ycw/Sw/R3VwD1n1ptdLJGXB7YhdbryFdQxLsYuDWdUQSuMevp5jbNUR4sTTkPnaG+oVii5SaaYNccwLziO1Om8ywgFSNiTLlkS1dlLU2n38LD18uRBYF7F8MyGyO2naATirZDU8uC2/X5qW0WJUNsvsm/QZbvvYeHlwz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F7Wo3U8m; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ACAA1F0089C;
-	Fri,  5 Jun 2026 05:41:35 +0000 (UTC)
+	 MIME-Version; b=e8WuKUiZGBtwh6yQk+9sBg3ueMMtQagcOLvXjRPhwRs8swXoHC4/pZ6kmuujpwub+1p1Rkin7u4kMIXpuM7Cn6504LHAKfkDc9V8cG+Z/t5M50SCdbtq9uPfmDIBC5tGC0eiOuCRlS3SA/z7L2/UqUPqjgzgj+w/MOHdxRmKGeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N0AvAI0j; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D17E01F0089E;
+	Fri,  5 Jun 2026 05:41:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780638097;
-	bh=72tLoFmAzAI2R/LaKi/6YHpBql7AKiP21W7mrcDmmM8=;
+	s=k20260515; t=1780638098;
+	bh=/DGq2VclRBHsAUIaHXCPJUpfdhEM7VNlnnsEfM8ae3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=F7Wo3U8mbQbAb2VgYKv8NfIMTkg2sVlyyqwyeJMOcRnP+u8Ml3sOQRZH+KfC61G/4
-	 WdQGxzAapDOEmCBgXNJd4bm6SN7ZDF49KF4Zx+nEKykIuIdQxS26WbwMZbfXI5acAb
-	 C6l7IW4SVnXslcPCXHipKS8EoOXqBogEgfteDRX79wsbYvv50Llt5p6CZi7wb+ZJX0
-	 yK+yuQXqAuOGKGRSic5hIDMNb94UBIkfmI8PMthfSQaHjzbMHZoKPC/uQ7BrqPW15v
-	 gQxJsCgQxCwxNqxcpg5EsiEF0rckoStAWkxQWzg1HcBRbOu5EJ2rGNcjqC7JoplU0H
-	 3PL3gN0vlff1w==
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 9F3FDF40077;
-	Fri,  5 Jun 2026 01:41:34 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Fri, 05 Jun 2026 01:41:34 -0400
-X-ME-Sender: <xms:jmEiahJTwmP5GaeS6AF8NjUfakowMBDvmFlPlTyoATwN968yHyiVFw>
-    <xme:jmEiamS4L6OJAQKoaNM3WjZHlNyExLFTO_2M2raiBGiKCJg1DM2uwPGaiYXStNBDe
-    FcoIYHtAYzMuheEaT_P4Xv0Q88vaJIC87ZQsbD5vxRNq0nYyUU3vQ>
-X-ME-Received: <xmr:jmEiainNT6PPdlhEI9EGebc5Wjem6IClgyxAT9a8uuePPsx1PDkXmhg9-2w>
-X-ME-Proxy-Cause: dmFkZTGNdErcnsY9nz6zZJNqzBGcFpZ3oCsZyVSAsXPEfKD6fiAd7MM8RW3ErpHOKO8vqP
-    y7FRxpXUBU5yb8Y73fmewycTgcYRdiPbEiXJpQaKxk1+aC6Vj3AAV2l/TRkhTd+1u+mIGl
-    dQfEAWycnSLZO+qO217j/GTm+GQxoHWyRwvdph+wtnOrnU/D7PvfaSdl50PQ+1o9QW7RYj
-    snzJFBhgLjSJ/jkZdib8Dc9ob5AHsrvEPqt2vef8Hmx2uDf0JqmoZZ+HexXrtwk5r0bry3
-    HVu0i63lg3nGwPLJ2r8Np94WJ6jG6+OWNN7TpxDaYMxO59AtKcBppdJ6IoJJH6Zm9jQmI9
-    U6emNrDYfEZR39DkwfoH5zt8f1YwHkfFANtNrvoAJ+dQH683V2Zc1PEA6Xfy/fajTfBKsD
-    92l7UsiWE1X5zsUDrj2NKzMx7UIkcvaiiHXGB2ozO0l8nG93rYi8LHQ1qbXrJSHLFkuTBU
-    rY/mHdNJlpmXihaP5e0zxLrQ+nh490MaJ+wMxD1vJNso6UCG/elc68EmRimsFXaP8Hsm6g
-    3Xq0Cks0oNLsHDN148PLantNxbD9r12jBpgRmASx1ZYLAw4I52PMMNa0Qo/kewkN31ZVPe
-    D3Wjzgpzgspdnw2A0l6YnOJrChVUBNktW4lQrBYrgqMqd1TLBPp/xuzpo0WA
-X-ME-Proxy: <xmx:jmEialAkNHtAAuo33UGUjzT7HlAIYV4RIEJfu0uSXHoAdvKgjXCjQA>
-    <xmx:jmEiavywqTtOsjMP5PkLSQ3Jnfe6OkfrrendxfvlTxKXTzpIWsPiVg>
-    <xmx:jmEiam2BKlrVLcckjNdzdZ-7Sqww31X27wfEM2JwYCl7i_5ZvdOysw>
-    <xmx:jmEiataqkMgKnu_I1Toqlkrd0jEGgomgGf0ihlSl8R0TYK8rBbYl3A>
-    <xmx:jmEiapSQzyPIxswYQ2qnC3lxnbNYr0MPlmN4LYae_TmJjJmOkdxJFgXy>
+	b=N0AvAI0je5HFbIxwVACgj35f4RdZer0MXZ/UIHzfG1jAyoAvLihR0O9/m+zYkJYyo
+	 zlpKXNDLb6LaXMR3apTHwQh7DTu/Qc3jW+NI29dqJ86Vx5Xx3g2T6nHhw5vYs9DRUh
+	 bAaoZ87s/ynM2A0QXo1YAWbQg+wjLlJhF7VXil5+bpQ9LK6qFhlcxgRKSuX8blATZC
+	 cOVbxddynzeCA9mZjV49ACv2cmzwC2DJLc+YbTWFurPby5/iWnCd73B+cUCORDAcUE
+	 /uiHka4A9jjgh7SmcKQn+QyGkW0WQ/QYX8GmGsDaA/E2JFT57xcokBw2QVnpSQSUq7
+	 zT0/If1WTvy7Q==
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 27096F40078;
+	Fri,  5 Jun 2026 01:41:36 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-03.internal (MEProxy); Fri, 05 Jun 2026 01:41:36 -0400
+X-ME-Sender: <xms:kGEiat_QIYi_NvEuySR6sO393d15cNkX5K2FyeGvYQrEVCFfYkAJzA>
+    <xme:kGEiao-1ewkmW4P4Vdnu9Rimby4BeP9kSB92VY-fZ1BwVVadI1amYKBD9DcldBgxs
+    Lru50N2bBykHQkxaAUsv3EqVnHc-L2aKaOcf8xAIAgnF4J6lHnyQg>
+X-ME-Received: <xmr:kGEiaqiM_ryLoIsu3VsYFoNcDfBT553O6l-IKs9BEWRG_UqmssXCbdaYApc>
+X-ME-Proxy-Cause: dmFkZTFhOfDTFTb8fH37X+ASfp2vsHy1Fqb2Lywq6X3h5fMlxk7wW33nxe7aSTekseFO11
+    xBiB7Md3Dfg950zHftACRl4BCrZIGkOLORwuU667qK/t4b7uPTnvvrgSwCuAred6lniidQ
+    x6+o43dstQnrbqqi/v6Nl3jrEdQj/OnTFIkpkf7j4tfd81Pm1F4hDhUzK5vMKXR0zokP4K
+    KZGWpXQjfkPb9q0v8LW9bszX8CgnIWJLXLSKFiZe/Ul+6TINXLg1BnxiItQp/bB4zXvV+6
+    Qcp88FhWc5Q0N1TQTHx/VoF2pZ7nT3Uyapa4Doti8umM92UFgjuSWC48vH+lnu7P/MqXtO
+    1x7/NWjqOpmZJG2oWYOrLpGPqVyo+okymTgf44j8sFEdWMojKiseEGVjpZUelIIeOS9o8E
+    HdWyH8Xufbs1TTRzWZRr1qJr/SNNelAtATCOTjox8ShD9mKRQ0u6c+b8rbSLel/LZID4n5
+    nKR7RaEb4K4FBscijWIxu+5c6cSlGa00JCIjG8oTYmaxKXfsUjn4MkrdC75vOYqwMvtM4/
+    RtBWb6Crse49u4woUwI7sMvScGA4raR5d6KZ1LjCgAWQE725NkNeNtG/3PBOa2bR4KmLAv
+    ir2FrfQ+geGHbWvA1TRaFPHsUQ3H8ZhEYlm4yLkAWTs8rm1vumFN2owWXa9Q
+X-ME-Proxy: <xmx:kGEiaqlbApKBOnd_WcIRs8b7QDMmnWx6TRb4gE6U_PMMPGWO4pGnwg>
+    <xmx:kGEial1Xb2_jnsJ2j1Q2bJ75IfiTRzFT_Tu6Z3iGoBM0tgGwzcz5kQ>
+    <xmx:kGEianv3wqfN-rQy1K7vDyOSln410SoYGPT9VVMrwT4O4bLX5nq01Q>
+    <xmx:kGEiagVYogJar1dgtgPjp6v2GsPuKyuUCTEHzebtP0doOYSJCleYEw>
+    <xmx:kGEiagsRP9jtPVVe7bS0WF8r6L7a-zXrTOmI5VWQ9zbXC2Jn_Xw7JaTC>
 Feedback-ID: i8dbe485b:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 5 Jun 2026 01:41:33 -0400 (EDT)
+ 5 Jun 2026 01:41:35 -0400 (EDT)
 From: Boqun Feng <boqun@kernel.org>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>,	Will Deacon <will@kernel.org>,
@@ -120,10 +120,10 @@ Cc: Catalin Marinas <catalin.marinas@arm.com>,	Will Deacon <will@kernel.org>,
 	linux-kernel@vger.kernel.org,	linux-openrisc@vger.kernel.org,
 	linux-s390@vger.kernel.org,	linux-arch@vger.kernel.org,
 	bpf@vger.kernel.org,	linux-kselftest@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: [PATCH v3 01/13] preempt: Track NMI nesting to separate per-CPU counter
-Date: Thu,  4 Jun 2026 22:41:16 -0700
-Message-ID: <20260605054128.5925-2-boqun@kernel.org>
+	rust-for-linux@vger.kernel.org,	Boqun Feng <boqun.feng@gmail.com>
+Subject: [PATCH v3 02/13] preempt: Introduce HARDIRQ_DISABLE_BITS
+Date: Thu,  4 Jun 2026 22:41:17 -0700
+Message-ID: <20260605054128.5925-3-boqun@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260605054128.5925-1-boqun@kernel.org>
 References: <20260605054128.5925-1-boqun@kernel.org>
@@ -135,175 +135,138 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-Spamd-Result: default: False [0.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:peterz@infradead.org,m:catalin.marinas@arm.com,m:will@kernel.org,m:jonas@southpole.se,m:stefan.kristiansson@saunalahti.fi,m:shorne@gmail.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:x86@kernel.org,m:hpa@zytor.com,m:arnd@arndb.de,m:juri.lelli@redhat.com,m:vincent.guittot@linaro.org,m:dietmar.eggemann@arm.com,m:rostedt@goodmis.org,m:bsegall@google.com,m:mgorman@suse.de,m:vschneid@redhat.com,m:kprateek.nayak@amd.com,m:boqun@kernel.org,m:longman@redhat.com,m:akpm@linux-foundation.org,m:andrii@kernel.org,m:eddyz87@gmail.com,m:ast@kernel.org,m:daniel@iogearbox.net,m:martin.lau@linux.dev,m:memxor@gmail.com,m:song@kernel.org,m:yonghong.song@linux.dev,m:jolsa@kernel.org,m:shuah@kernel.org,m:ojeda@kernel.org,m:gary@garyguo.net,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:aliceryhl@goo
- gle.com,m:tmgross@umich.edu,m:dakr@kernel.org,m:ruanjinjie@huawei.com,m:lyude@redhat.com,m:thuth@redhat.com,m:sohil.mehta@intel.com,m:pawan.kumar.gupta@linux.intel.com,m:seanjc@google.com,m:nikunj@amd.com,m:xin@zytor.com,m:joelagnelf@nvidia.com,m:andriy.shevchenko@linux.intel.com,m:rdunlap@infradead.org,m:ynorov@nvidia.com,m:bigeasy@linutronix.de,m:linux-kernel@vger.kernel.org,m:linux-openrisc@vger.kernel.org,m:linux-s390@vger.kernel.org,m:linux-arch@vger.kernel.org,m:bpf@vger.kernel.org,m:linux-kselftest@vger.kernel.org,m:rust-for-linux@vger.kernel.org,s:lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_CC(0.00)[arm.com,kernel.org,southpole.se,saunalahti.fi,gmail.com,linux.ibm.com,redhat.com,alien8.de,linux.intel.com,zytor.com,arndb.de,linaro.org,goodmis.org,google.com,suse.de,amd.com,linux-foundation.org,iogearbox.net,linux.dev,garyguo.net,protonmail.com,umich.edu,huawei.com,intel.com,nvidia.com,infradead.org,linutronix.de,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-20536-lists,linux-s390=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER(0.00)[boqun@kernel.org,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:peterz@infradead.org,m:catalin.marinas@arm.com,m:will@kernel.org,m:jonas@southpole.se,m:stefan.kristiansson@saunalahti.fi,m:shorne@gmail.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:x86@kernel.org,m:hpa@zytor.com,m:arnd@arndb.de,m:juri.lelli@redhat.com,m:vincent.guittot@linaro.org,m:dietmar.eggemann@arm.com,m:rostedt@goodmis.org,m:bsegall@google.com,m:mgorman@suse.de,m:vschneid@redhat.com,m:kprateek.nayak@amd.com,m:boqun@kernel.org,m:longman@redhat.com,m:akpm@linux-foundation.org,m:andrii@kernel.org,m:eddyz87@gmail.com,m:ast@kernel.org,m:daniel@iogearbox.net,m:martin.lau@linux.dev,m:memxor@gmail.com,m:song@kernel.org,m:yonghong.song@linux.dev,m:jolsa@kernel.org,m:shuah@kernel.org,m:ojeda@kernel.org,m:gary@garyguo.net,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:aliceryhl@goo
+ gle.com,m:tmgross@umich.edu,m:dakr@kernel.org,m:ruanjinjie@huawei.com,m:lyude@redhat.com,m:thuth@redhat.com,m:sohil.mehta@intel.com,m:pawan.kumar.gupta@linux.intel.com,m:seanjc@google.com,m:nikunj@amd.com,m:xin@zytor.com,m:joelagnelf@nvidia.com,m:andriy.shevchenko@linux.intel.com,m:rdunlap@infradead.org,m:ynorov@nvidia.com,m:bigeasy@linutronix.de,m:linux-kernel@vger.kernel.org,m:linux-openrisc@vger.kernel.org,m:linux-s390@vger.kernel.org,m:linux-arch@vger.kernel.org,m:bpf@vger.kernel.org,m:linux-kselftest@vger.kernel.org,m:rust-for-linux@vger.kernel.org,m:boqun.feng@gmail.com,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20537-lists,linux-s390=lfdr.de];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[boqun@kernel.org,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[67];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCPT_COUNT_GT_50(0.00)[68];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TO_DN_SOME(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 71008645387
+X-Rspamd-Queue-Id: A2D306453B1
 
-From: Joel Fernandes <joelagnelf@nvidia.com>
+From: Boqun Feng <boqun.feng@gmail.com>
 
-Move NMI nesting tracking from the preempt_count bits to a separate per-CPU
-counter (nmi_nesting). This is to free up the NMI bits in the preempt_count,
-allowing those bits to be repurposed for other uses.
+In order to support preempt_disable()-like interrupt disabling, that is,
+using part of preempt_count() to track interrupt disabling nested level,
+change the preempt_count() layout to contain 8-bit HARDIRQ_DISABLE
+count.
 
-Reduce NMI_BITS from 4 to 1, using it only to detect if we're in an NMI.
-The per-CPU counter currently caps nesting at 15.
-
-[boqun: Solve Steven Rostedt's comment on the BUG_ON() condition]
-[boqun: Use preempt_count_set() in __nmi_exit() to avoid underflow]
-
-Suggested-by: Boqun Feng <boqun@kernel.org>
-Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
 Signed-off-by: Lyude Paul <lyude@redhat.com>
 Signed-off-by: Boqun Feng <boqun@kernel.org>
-Link: https://patch.msgid.link/20260121223933.1568682-3-lyude@redhat.com
+Link: https://patch.msgid.link/20260121223933.1568682-2-lyude@redhat.com
 ---
- include/linux/hardirq.h                        | 17 +++++++++++++----
- include/linux/preempt.h                        |  9 +++++++--
- kernel/softirq.c                               |  2 ++
- tools/testing/selftests/bpf/bpf_experimental.h |  2 +-
- 4 files changed, 23 insertions(+), 7 deletions(-)
+ include/linux/preempt.h                        | 16 +++++++++++-----
+ tools/testing/selftests/bpf/bpf_experimental.h |  5 ++++-
+ 2 files changed, 15 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/hardirq.h b/include/linux/hardirq.h
-index d57cab4d4c06..8d4895531a45 100644
---- a/include/linux/hardirq.h
-+++ b/include/linux/hardirq.h
-@@ -10,6 +10,8 @@
- #include <linux/vtime.h>
- #include <asm/hardirq.h>
- 
-+DECLARE_PER_CPU(unsigned int, nmi_nesting);
-+
- extern void synchronize_irq(unsigned int irq);
- extern bool synchronize_hardirq(unsigned int irq);
- 
-@@ -102,14 +104,17 @@ void irq_exit_rcu(void);
-  */
- 
- /*
-- * nmi_enter() can nest up to 15 times; see NMI_BITS.
-+ * nmi_enter() can nest - nesting is tracked in a per-CPU counter.
-  */
- #define __nmi_enter()						\
- 	do {							\
- 		lockdep_off();					\
- 		arch_nmi_enter();				\
--		BUG_ON(in_nmi() == NMI_MASK);			\
--		__preempt_count_add(NMI_OFFSET + HARDIRQ_OFFSET);	\
-+		/* Maximum NMI nesting is 15. */		\
-+		BUG_ON(__this_cpu_read(nmi_nesting) >= 15);	\
-+		__this_cpu_inc(nmi_nesting);			\
-+		__preempt_count_add(HARDIRQ_OFFSET);		\
-+		preempt_count_set(preempt_count() | NMI_MASK);	\
- 	} while (0)
- 
- #define nmi_enter()						\
-@@ -124,8 +129,12 @@ void irq_exit_rcu(void);
- 
- #define __nmi_exit()						\
- 	do {							\
-+		unsigned int nesting;				\
- 		BUG_ON(!in_nmi());				\
--		__preempt_count_sub(NMI_OFFSET + HARDIRQ_OFFSET);	\
-+		__preempt_count_sub(HARDIRQ_OFFSET);		\
-+		nesting = __this_cpu_dec_return(nmi_nesting);	\
-+		if (!nesting)					\
-+			preempt_count_set(preempt_count() & ~NMI_MASK);	\
- 		arch_nmi_exit();				\
- 		lockdep_on();					\
- 	} while (0)
 diff --git a/include/linux/preempt.h b/include/linux/preempt.h
-index d964f965c8ff..586f96688325 100644
+index 586f96688325..e2d3079d3f5f 100644
 --- a/include/linux/preempt.h
 +++ b/include/linux/preempt.h
-@@ -17,6 +17,8 @@
+@@ -17,8 +17,9 @@
   *
   * - bits 0-7 are the preemption count (max preemption depth: 256)
   * - bits 8-15 are the softirq count (max # of softirqs: 256)
-+ * - bits 16-19 are the hardirq count (max # of hardirqs: 16)
-+ * - bit 20 is the NMI flag (no nesting count, tracked separately)
+- * - bits 16-19 are the hardirq count (max # of hardirqs: 16)
+- * - bit 20 is the NMI flag (no nesting count, tracked separately)
++ * - bits 16-23 are the hardirq disable count (max # of hardirq disable: 256)
++ * - bits 24-27 are the hardirq count (max # of hardirqs: 16)
++ * - bit 28 is the NMI flag (no nesting count, tracked separately)
   *
   * The hardirq count could in theory be the same as the number of
   * interrupts in the system, but we run all interrupt handlers with
-@@ -24,16 +26,19 @@
-  * there are a few palaeontologic drivers which reenable interrupts in
-  * the handler, so we need more than one bit here.
+@@ -31,29 +32,34 @@
   *
-+ * NMI nesting depth is tracked in a separate per-CPU variable
-+ * (nmi_nesting) to save bits in preempt_count.
-+ *
   *         PREEMPT_MASK:	0x000000ff
   *         SOFTIRQ_MASK:	0x0000ff00
-  *         HARDIRQ_MASK:	0x000f0000
-- *             NMI_MASK:	0x00f00000
-+ *             NMI_MASK:	0x00100000
+- *         HARDIRQ_MASK:	0x000f0000
+- *             NMI_MASK:	0x00100000
++ * HARDIRQ_DISABLE_MASK:	0x00ff0000
++ *         HARDIRQ_MASK:	0x0f000000
++ *             NMI_MASK:	0x10000000
   * PREEMPT_NEED_RESCHED:	0x80000000
   */
  #define PREEMPT_BITS	8
  #define SOFTIRQ_BITS	8
++#define HARDIRQ_DISABLE_BITS	8
  #define HARDIRQ_BITS	4
--#define NMI_BITS	4
-+#define NMI_BITS	1
+ #define NMI_BITS	1
  
  #define PREEMPT_SHIFT	0
  #define SOFTIRQ_SHIFT	(PREEMPT_SHIFT + PREEMPT_BITS)
-diff --git a/kernel/softirq.c b/kernel/softirq.c
-index 4425d8dce44b..10af5ed859e7 100644
---- a/kernel/softirq.c
-+++ b/kernel/softirq.c
-@@ -88,6 +88,8 @@ EXPORT_PER_CPU_SYMBOL_GPL(hardirqs_enabled);
- EXPORT_PER_CPU_SYMBOL_GPL(hardirq_context);
- #endif
+-#define HARDIRQ_SHIFT	(SOFTIRQ_SHIFT + SOFTIRQ_BITS)
++#define HARDIRQ_DISABLE_SHIFT	(SOFTIRQ_SHIFT + SOFTIRQ_BITS)
++#define HARDIRQ_SHIFT	(HARDIRQ_DISABLE_SHIFT + HARDIRQ_DISABLE_BITS)
+ #define NMI_SHIFT	(HARDIRQ_SHIFT + HARDIRQ_BITS)
  
-+DEFINE_PER_CPU(unsigned int, nmi_nesting);
-+
- /*
-  * SOFTIRQ_OFFSET usage:
-  *
+ #define __IRQ_MASK(x)	((1UL << (x))-1)
+ 
+ #define PREEMPT_MASK	(__IRQ_MASK(PREEMPT_BITS) << PREEMPT_SHIFT)
+ #define SOFTIRQ_MASK	(__IRQ_MASK(SOFTIRQ_BITS) << SOFTIRQ_SHIFT)
++#define HARDIRQ_DISABLE_MASK	(__IRQ_MASK(HARDIRQ_DISABLE_BITS) << HARDIRQ_DISABLE_SHIFT)
+ #define HARDIRQ_MASK	(__IRQ_MASK(HARDIRQ_BITS) << HARDIRQ_SHIFT)
+ #define NMI_MASK	(__IRQ_MASK(NMI_BITS)     << NMI_SHIFT)
+ 
+ #define PREEMPT_OFFSET	(1UL << PREEMPT_SHIFT)
+ #define SOFTIRQ_OFFSET	(1UL << SOFTIRQ_SHIFT)
++#define HARDIRQ_DISABLE_OFFSET	(1UL << HARDIRQ_DISABLE_SHIFT)
+ #define HARDIRQ_OFFSET	(1UL << HARDIRQ_SHIFT)
+ #define NMI_OFFSET	(1UL << NMI_SHIFT)
+ 
 diff --git a/tools/testing/selftests/bpf/bpf_experimental.h b/tools/testing/selftests/bpf/bpf_experimental.h
-index 2234bd6bc9d3..2d4256ff471f 100644
+index 2d4256ff471f..a811b080db02 100644
 --- a/tools/testing/selftests/bpf/bpf_experimental.h
 +++ b/tools/testing/selftests/bpf/bpf_experimental.h
-@@ -449,7 +449,7 @@ extern int bpf_cgroup_read_xattr(struct cgroup *cgroup, const char *name__str,
+@@ -448,17 +448,20 @@ extern int bpf_cgroup_read_xattr(struct cgroup *cgroup, const char *name__str,
+ 
  #define PREEMPT_BITS	8
  #define SOFTIRQ_BITS	8
++#define HARDIRQ_DISABLE_BITS	8
  #define HARDIRQ_BITS	4
--#define NMI_BITS	4
-+#define NMI_BITS	1
+ #define NMI_BITS	1
  
  #define PREEMPT_SHIFT	0
  #define SOFTIRQ_SHIFT	(PREEMPT_SHIFT + PREEMPT_BITS)
+-#define HARDIRQ_SHIFT	(SOFTIRQ_SHIFT + SOFTIRQ_BITS)
++#define HARDIRQ_DISABLE_SHIFT	(SOFTIRQ_SHIFT + SOFTIRQ_BITS)
++#define HARDIRQ_SHIFT	(HARDIRQ_DISABLE_SHIFT + HARDIRQ_DISABLE_BITS)
+ #define NMI_SHIFT	(HARDIRQ_SHIFT + HARDIRQ_BITS)
+ 
+ #define __IRQ_MASK(x)	((1UL << (x))-1)
+ 
+ #define SOFTIRQ_MASK	(__IRQ_MASK(SOFTIRQ_BITS) << SOFTIRQ_SHIFT)
++#define HARDIRQ_DISABLE_MASK	(__IRQ_MASK(HARDIRQ_DISABLE_BITS) << HARDIRQ_DISABLE_SHIFT)
+ #define HARDIRQ_MASK	(__IRQ_MASK(HARDIRQ_BITS) << HARDIRQ_SHIFT)
+ #define NMI_MASK	(__IRQ_MASK(NMI_BITS)     << NMI_SHIFT)
+ 
 -- 
 2.51.0
 
