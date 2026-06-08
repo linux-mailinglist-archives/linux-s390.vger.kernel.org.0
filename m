@@ -1,335 +1,217 @@
-Return-Path: <linux-s390+bounces-20579-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20581-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Vr8ILsZVJmoYVAIAu9opvQ
-	(envelope-from <linux-s390+bounces-20579-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 08 Jun 2026 07:40:22 +0200
+	id 54nGNYh1JmoeWwIAu9opvQ
+	(envelope-from <linux-s390+bounces-20581-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 08 Jun 2026 09:55:52 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F86A652DDC
-	for <lists+linux-s390@lfdr.de>; Mon, 08 Jun 2026 07:40:22 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E854653BB4
+	for <lists+linux-s390@lfdr.de>; Mon, 08 Jun 2026 09:55:52 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=ig4ql0eA;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20579-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20579-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=cgKUVcbX;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20581-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-20581-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 173F93032766
-	for <lists+linux-s390@lfdr.de>; Mon,  8 Jun 2026 05:38:03 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 02060301FCBB
+	for <lists+linux-s390@lfdr.de>; Mon,  8 Jun 2026 07:55:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECBF835F5E5;
-	Mon,  8 Jun 2026 05:38:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B630397AED;
+	Mon,  8 Jun 2026 07:55:24 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 751FE371D19
-	for <linux-s390@vger.kernel.org>; Mon,  8 Jun 2026 05:38:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3BDD396D38;
+	Mon,  8 Jun 2026 07:55:22 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780897082; cv=none; b=OiENEmCaSyhg+ul0G3jbTXQ467btoCC0GlqIf5TMT+kJAAH/axM0Z0xFZUDpA44gVkoQ6eXA9WpsvRDw1p9bhQeejm0SoJrYDV0i5zC6lmYtuCUvsCoKyu7jn647usNKxB6CSTeqTrIstwjQz+SYaG6Xr7uOn8rK4VHGL1OvBSo=
+	t=1780905323; cv=none; b=RSFH+pt2W3XbE4sxrFGMnWNaMzAK+XtBsVXNqqZ97+drldJ3qSYDRpHXi8v+t82KxwF6ziqVD2xVzG2RzPPz5p59eDekh4voycoPZ9wF8bid1muxMzQ1FzG1Hibkstx+cpcocPIiA+YItcGW43Ytfa3IFeBX0hhqcC1a7J6ZGVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780897082; c=relaxed/simple;
-	bh=r36G4m/E6B7Vjb5Bdhfi3jbQETBUrN3CN6yf4CTtwNM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jmXRJqNjO0H/fqqtRNlr1ZSXqBMUPc5saqt6g/0erREGpHCjegHMWlpqVe31eY+Z6RCOu0Y0aJATBULWky6/UZKHzvh/QpctuKtvk1Y/0Hqq2/8AEG2+GUXet7+1Xxj0x1qwb7NY6t6XqEh1XNHEb7QP18naX7rU9H/a8Pb/EQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ig4ql0eA; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6576tdVi1477263
-	for <linux-s390@vger.kernel.org>; Mon, 8 Jun 2026 05:38:01 GMT
+	s=arc-20240116; t=1780905323; c=relaxed/simple;
+	bh=bPBhpL2ww2i1mIbB6xAl71JxxCHTPqnXaBxIo64kias=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oHlIZQax8e9UpP/4/P9CslOdHq6V3iwBh15B4x9R0I3dWVKLpOkv15U629mVlTPW/OESAed3H7WJVtvv4qbwPrZv3xJk1IHAm07UrOHiRdkkKr2xWjHkXptbTIkb+Uz1Ym4FhIQDgasC5353oU92qxoLk8I5zDoZ3KwBoS7SrB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cgKUVcbX; arc=none smtp.client-ip=148.163.156.1
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 657MBc8X3003996;
+	Mon, 8 Jun 2026 07:55:07 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=T2K+DcuUZDGEPoYEW
-	DEQ0fIN971OBzIoGH8du0G4TM4=; b=ig4ql0eAgXbx479VXi3uGqK32KoROFMba
-	yZghYqwEZhzdClrXB9tW/AGPvVXxlBY+9BA1KgmjBCM2KC9DxVIIjR805ufgBim4
-	eYn+3trKkVvdxJHBJmVsmqt87S65sB5u+PxKZuNE/8yUHLaLJ1yyk/QAttLykaHG
-	y95PTPMpo/055x6KTy+x0C+Ogz/B4aqbsv2AuCv6mQMSnXD7WJELGfgtTWjjz2t7
-	fKlJcLLMsUrArvUW/pzZxewhSwNaVu8vrldXHrmBNNPId4GoYfjkFjDC5XsbGmPA
-	IDZrYmbs71MPJaDVNYpA5E1Z6A0qvG2TxY4EO5lgWRunaIwJo43CQ==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4emb7qdsfk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-s390@vger.kernel.org>; Mon, 08 Jun 2026 05:38:00 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6585Z31h006214
-	for <linux-s390@vger.kernel.org>; Mon, 8 Jun 2026 05:37:59 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4emx8vv1uj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-s390@vger.kernel.org>; Mon, 08 Jun 2026 05:37:59 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6585btwg58392902
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=k/6lN2p7B0PU1MgpRyc9jbM4qL5W6C
+	N8vzJlLrVJmk0=; b=cgKUVcbXZAWWP+6+JDJ5KZvnqyIfesCvmUS+BRBasMl06u
+	wqB165BAD9bRmEGxL+hKnx9HUr06WocRlMTj6JrNYF8rJa26xb0O2ysxccPd8dxJ
+	T5IQuhJ2P3KTj+SLTIjHqh2VWYjP2zdrh/s3DR3MXs/PEdbbmdhsH6yBrZDbKpda
+	eDAwEhZL8gIcPXx+CSMFQXeuJK6krmZsz3lDnxFYZH5Ua4kwouWMXOY9uA5STikX
+	1bWUJeXBO0BHUqwpibkYBztMtq9p3UR7JWnZ+ijY9qS1EGNHUpejuN1culhTP49Y
+	978vLgadfBc7fwJOQz9mj2x9HRvwqCiJlRFRrGLg==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4emb9567uk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Jun 2026 07:55:07 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6587nh34029242;
+	Mon, 8 Jun 2026 07:55:06 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4en0jy44a3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Jun 2026 07:55:06 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6587t2lI30474648
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 8 Jun 2026 05:37:55 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C01DD20043;
-	Mon,  8 Jun 2026 05:37:55 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A27942004B;
-	Mon,  8 Jun 2026 05:37:55 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  8 Jun 2026 05:37:55 +0000 (GMT)
+	Mon, 8 Jun 2026 07:55:03 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D610120040;
+	Mon,  8 Jun 2026 07:55:02 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4EF892004B;
+	Mon,  8 Jun 2026 07:55:02 +0000 (GMT)
+Received: from osiris (unknown [9.111.82.157])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon,  8 Jun 2026 07:55:02 +0000 (GMT)
+Date: Mon, 8 Jun 2026 09:55:00 +0200
 From: Heiko Carstens <hca@linux.ibm.com>
-To: Alexander Gordeev <agordeev@linux.ibm.com>,
+To: Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
         Sven Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Juergen Christ <jchrist@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org
-Subject: [PATCH v2 8/8] s390/tishift: Convert __ashlti3(), __ashrti3(), __lshrti3() to C
-Date: Mon,  8 Jun 2026 07:37:54 +0200
-Message-ID: <20260608053754.571282-9-hca@linux.ibm.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260608053754.571282-1-hca@linux.ibm.com>
-References: <20260608053754.571282-1-hca@linux.ibm.com>
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH 0/4] s390: Idle time accounting improvements
+Message-ID: <20260608075500.34400A04-hca@linux.ibm.com>
+References: <20260513140129.4100822-1-hca@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260513140129.4100822-1-hca@linux.ibm.com>
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=HppG3UTS c=1 sm=1 tr=0 ts=6a265538 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=D3IvRudVPZkSyVNiNrMA:9
-X-Proofpoint-GUID: Im4Cqrlma7xArbNIKUdRS66ryfDvHtrj
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA4MDA0OSBTYWx0ZWRfX8Ch+BbhLtaWU
- jwvw3vRScxVmuzMjhJtZWLL1b1NZeH4hAI9izqnHfYO91Rir4q5ROKm2Lu5/NdqfIoT/IDHIy7j
- T5j7VFQkic8K5e/UzNkaPHa7cHw2RLJkp0F21RmJpCmwL9fgIly2x+VDR3F1ZL6KXHfl0JE3881
- qUkHdvcszALREfbZsnwTa6oeim06CuMxEfIvLY1UlwOkSnSAaOyFteI+KL09PNdS/opT5JdUm/C
- ZAL7Ql6eSNI4MIhg9K/XvZldBDFfEYCU8ZkrAPtHp/Y3skI/3Lr0zdjP9+NdCT2xcz1SjbMzmpU
- nv8rhD9MIOQiQo6y2CVqJHsbT96Cf4sFvYDWkddGv1EVsnTbKvbInUrY/DO/+/KBNe51YmuTejE
- lXpidzxXiDHI6wodzcR5okC+0WSzqNtR2hDJZr3Ap1u9gk/QsgRTfVS0giKTyhbeD+ERIEoF0VN
- dvlt/GnCDMTYYKuwmlA==
-X-Proofpoint-ORIG-GUID: Im4Cqrlma7xArbNIKUdRS66ryfDvHtrj
+X-Authority-Analysis: v=2.4 cv=N4UZ0W9B c=1 sm=1 tr=0 ts=6a26755b cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=kj9zAlcOel0A:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=VwQbUJbxAAAA:8
+ a=VnNF1IyMAAAA:8 a=-PeJF6iH7ZEGWZFhlOYA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-ORIG-GUID: o3j_m6bzLaTVczNmcc6EOZTeYDZfzcX-
+X-Proofpoint-GUID: o3j_m6bzLaTVczNmcc6EOZTeYDZfzcX-
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA4MDA2NCBTYWx0ZWRfX8jSHcppX3m5e
+ +7Bv/W0oTviM6GsytjvnCm/Vbbb1J6zrHn9lXxJV7WvphQn5oezwmVmxvQxhxtetxFEAJfInI71
+ GoVf9ALMuLP8SIzac6pILQKBy0PPqcdEfW0umvpB5k6RqlrZyk8pW43aOdd//S9kMDHHMeFOeVB
+ /t95OLk/9UjZKSMTvWg/wlVig+yQgQZ5QSNnPujOypSmpdfqpxaTxm1SHEj6fs7YAs9wB1n8yEV
+ ctbORI4f8H/yMWf+VDfH70dudl/sc9a9hXQsKZy5g1vkgy+9srDDGPsStX4ut5AmXaixx4wNEuY
+ BRXveTt6v4c7BwTc0ckhEmH+9790wFPnSt9CHoPTNujIZfTz4/boBlu/eYTe9LhmQfxPaXqek5P
+ kHDddnWRITf5jGG5aOAMm3zRYK0mxuZK+K7g4hffbA4Wlmi7wfCe1Z9/20ug2dSHP7nqOmUdqot
+ 1dImjjs5ysnbED+GnHQ==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-08_01,2026-06-05_02,2025-10-01_01
+ definitions=2026-06-08_02,2026-06-05_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 adultscore=0 phishscore=0 malwarescore=0 impostorscore=0
- priorityscore=1501 clxscore=1015 bulkscore=0 spamscore=0 suspectscore=0
+ bulkscore=0 malwarescore=0 spamscore=0 clxscore=1015 lowpriorityscore=0
+ phishscore=0 impostorscore=0 adultscore=0 priorityscore=1501 suspectscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606080049
+ reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606080064
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-1.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20579-lists,linux-s390=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20581-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:tglx@kernel.org,m:peterz@infradead.org,m:frederic@kernel.org,m:agordeev@linux.ibm.com,m:svens@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:linux-kernel@vger.kernel.org,m:linux-s390@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[hca@linux.ibm.com,linux-s390@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[hca@linux.ibm.com,linux-s390@vger.kernel.org];
-	FORGED_RECIPIENTS(0.00)[m:agordeev@linux.ibm.com,m:svens@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:jchrist@linux.ibm.com,m:linux-s390@vger.kernel.org,s:lists@lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hca@linux.ibm.com,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[ibm.com:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hca@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TAGGED_RCPT(0.00)[linux-s390];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5F86A652DDC
+X-Rspamd-Queue-Id: 4E854653BB4
 
-There is no reason to have __ashlti3(), __ashrti3(), and __lshrti3()
-implemented in C. Convert them all to C, which allows the compiler to
-optimize the code if newer instructions allow that.
+On Wed, May 13, 2026 at 04:01:25PM +0200, Heiko Carstens wrote:
+> This series is on top of Frederic Weisbecker's idle cpu time accounting
+> refactor series [1][2].
+> 
+> This is supposed to improve s390 idle time accounting, and brings it
+> back to the state it was before arch_cpu_idle_time() was removed from
+> s390 [3].
+> 
+> In result all cpu time accounting is done by the s390 architecture backend
+> again, instead of having a mix of architecure specific and common code
+> accounting (common code: idle, s390 architecture: everything else).
 
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
----
- arch/s390/include/asm/asm-prototypes.h |  4 --
- arch/s390/lib/tishift.S                | 63 -------------------------
- arch/s390/lib/tishift.c                | 64 ++++++++++++++++++++++++++
- arch/s390/lib/tishift.h                |  9 ++++
- 4 files changed, 73 insertions(+), 67 deletions(-)
- delete mode 100644 arch/s390/lib/tishift.S
- create mode 100644 arch/s390/lib/tishift.c
- create mode 100644 arch/s390/lib/tishift.h
+Thomas, Peter, Frederic, any objections to this series? The third patch
+touches common code, so I'd like to get an ACK for that.
 
-diff --git a/arch/s390/include/asm/asm-prototypes.h b/arch/s390/include/asm/asm-prototypes.h
-index 7bd1801cf241..d4da4436d02b 100644
---- a/arch/s390/include/asm/asm-prototypes.h
-+++ b/arch/s390/include/asm/asm-prototypes.h
-@@ -8,8 +8,4 @@
- #include <asm/nospec-branch.h>
- #include <asm-generic/asm-prototypes.h>
- 
--__int128_t __ashlti3(__int128_t a, int b);
--__int128_t __ashrti3(__int128_t a, int b);
--__int128_t __lshrti3(__int128_t a, int b);
--
- #endif /* _ASM_S390_PROTOTYPES_H */
-diff --git a/arch/s390/lib/tishift.S b/arch/s390/lib/tishift.S
-deleted file mode 100644
-index 96214f51f49b..000000000000
---- a/arch/s390/lib/tishift.S
-+++ /dev/null
-@@ -1,63 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--
--#include <linux/export.h>
--#include <linux/linkage.h>
--#include <asm/nospec-insn.h>
--
--	.section .noinstr.text, "ax"
--
--	GEN_BR_THUNK %r14
--
--SYM_FUNC_START(__ashlti3)
--	lmg	%r0,%r1,0(%r3)
--	cije	%r4,0,1f
--	lhi	%r3,64
--	sr	%r3,%r4
--	jnh	0f
--	srlg	%r3,%r1,0(%r3)
--	sllg	%r0,%r0,0(%r4)
--	sllg	%r1,%r1,0(%r4)
--	ogr	%r0,%r3
--	j	1f
--0:	sllg	%r0,%r1,-64(%r4)
--	lghi	%r1,0
--1:	stmg	%r0,%r1,0(%r2)
--	BR_EX	%r14
--SYM_FUNC_END(__ashlti3)
--EXPORT_SYMBOL(__ashlti3)
--
--SYM_FUNC_START(__ashrti3)
--	lmg	%r0,%r1,0(%r3)
--	cije	%r4,0,1f
--	lhi	%r3,64
--	sr	%r3,%r4
--	jnh	0f
--	sllg	%r3,%r0,0(%r3)
--	srlg	%r1,%r1,0(%r4)
--	srag	%r0,%r0,0(%r4)
--	ogr	%r1,%r3
--	j	1f
--0:	srag	%r1,%r0,-64(%r4)
--	srag	%r0,%r0,63
--1:	stmg	%r0,%r1,0(%r2)
--	BR_EX	%r14
--SYM_FUNC_END(__ashrti3)
--EXPORT_SYMBOL(__ashrti3)
--
--SYM_FUNC_START(__lshrti3)
--	lmg	%r0,%r1,0(%r3)
--	cije	%r4,0,1f
--	lhi	%r3,64
--	sr	%r3,%r4
--	jnh	0f
--	sllg	%r3,%r0,0(%r3)
--	srlg	%r1,%r1,0(%r4)
--	srlg	%r0,%r0,0(%r4)
--	ogr	%r1,%r3
--	j	1f
--0:	srlg	%r1,%r0,-64(%r4)
--	lghi	%r0,0
--1:	stmg	%r0,%r1,0(%r2)
--	BR_EX	%r14
--SYM_FUNC_END(__lshrti3)
--EXPORT_SYMBOL(__lshrti3)
-diff --git a/arch/s390/lib/tishift.c b/arch/s390/lib/tishift.c
-new file mode 100644
-index 000000000000..bb16cf639af3
---- /dev/null
-+++ b/arch/s390/lib/tishift.c
-@@ -0,0 +1,64 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/export.h>
-+#include <linux/types.h>
-+#include "tishift.h"
-+
-+union ti {
-+	__int128_t val;
-+	struct {
-+		u64 high;
-+		u64 low;
-+	};
-+};
-+
-+noinstr __int128_t __ashlti3(__int128_t a, int shift)
-+{
-+	union ti ti = { .val = a };
-+
-+	if (!shift)
-+		return ti.val;
-+	if (shift < 64) {
-+		ti.high = (ti.high << shift) | (ti.low >> (64 - shift));
-+		ti.low = ti.low << shift;
-+	} else {
-+		ti.high = ti.low << (shift - 64);
-+		ti.low = 0;
-+	}
-+	return ti.val;
-+}
-+EXPORT_SYMBOL(__ashlti3);
-+
-+noinstr __int128_t __ashrti3(__int128_t a, int shift)
-+{
-+	union ti ti = { .val = a };
-+
-+	if (!shift)
-+		return ti.val;
-+	if (shift < 64) {
-+		ti.low = (ti.low >> shift) | (ti.high << (64 - shift));
-+		ti.high = (int64_t)ti.high >> shift;
-+	} else {
-+		ti.low = (int64_t)ti.high >> (shift - 64);
-+		ti.high = (int64_t)ti.high >> 63;
-+	}
-+	return ti.val;
-+}
-+EXPORT_SYMBOL(__ashrti3);
-+
-+noinstr __int128_t __lshrti3(__int128_t a, int shift)
-+{
-+	union ti ti = { .val = a };
-+
-+	if (!shift)
-+		return ti.val;
-+	if (shift < 64) {
-+		ti.low = (ti.low >> shift) | (ti.high << (64 - shift));
-+		ti.high = ti.high >> shift;
-+	} else {
-+		ti.low = ti.high >> (shift - 64);
-+		ti.high = 0;
-+	}
-+	return ti.val;
-+}
-+EXPORT_SYMBOL(__lshrti3);
-diff --git a/arch/s390/lib/tishift.h b/arch/s390/lib/tishift.h
-new file mode 100644
-index 000000000000..43a9b8c8e545
---- /dev/null
-+++ b/arch/s390/lib/tishift.h
-@@ -0,0 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _S390_LIB_TISHIFT_H
-+#define _S390_LIB_TISHIFT_H
-+
-+__int128_t __ashlti3(__int128_t a, int b);
-+__int128_t __ashrti3(__int128_t a, int b);
-+__int128_t __lshrti3(__int128_t a, int b);
-+
-+#endif /* _S390_LIB_TISHIFT_H */
--- 
-2.53.0
+If there is agreement, this could go either via tip tree's timers/nohz branch
+(series applies cleanly), or via s390, after the nohz branch has been merged
+upstream.
 
+[Full quote below for reference]
+
+> Changes since RFC [4]:
+> 
+> - Split into more patches
+> 
+> - Fix various build errors for !CONFIG_NO_HZ_COMMON
+> 
+> - Get rid of private seqcount implementation and access seqcount from
+>   kernel_cpustat directly from assembler code, as suggested by Frederic
+>   Weisbecker
+> 
+> [1] https://lore.kernel.org/all/20260508131647.43868-1-frederic@kernel.org/
+> [2] git://git.kernel.org/pub/scm/linux/kernel/git/frederic/linux-dynticks.git timers/core-v4
+> [3] commit be76ea614460 ("s390/idle: remove arch_cpu_idle_time() and corresponding code")
+> [4] https://lore.kernel.org/all/20260225145146.1031705-1-hca@linux.ibm.com/
+> 
+> Heiko Carstens (4):
+>   s390/timex: Move union tod_clock type to separate header
+>   s390/irq/idle: Use stcke instead of stckf for time stamps
+>   s390/idle: Provide arch specific kcpustat_field_idle()/kcpustat_field_iowait()
+>   s390/idle: Remove idle time and count sysfs files
+> 
+>  arch/s390/include/asm/idle.h      |  14 ++--
+>  arch/s390/include/asm/lowcore.h   |   4 +-
+>  arch/s390/include/asm/timex.h     |  20 +----
+>  arch/s390/include/asm/tod_types.h |  30 +++++++
+>  arch/s390/include/asm/vtime.h     |   4 +-
+>  arch/s390/kernel/asm-offsets.c    |   7 ++
+>  arch/s390/kernel/entry.S          |  14 +++-
+>  arch/s390/kernel/idle.c           | 129 +++++++++++++++++++++++-------
+>  arch/s390/kernel/irq.c            |   7 +-
+>  arch/s390/kernel/smp.c            |  33 +-------
+>  arch/s390/kernel/vtime.c          |  55 +------------
+>  drivers/s390/cio/qdio_main.c      |   2 +-
+>  drivers/s390/cio/qdio_thinint.c   |   2 +-
+>  include/linux/kernel_stat.h       |  27 +++++++
+>  include/linux/vtime.h             |   6 ++
+>  kernel/sched/cputime.c            |   4 +-
+>  16 files changed, 203 insertions(+), 155 deletions(-)
+>  create mode 100644 arch/s390/include/asm/tod_types.h
+> 
+> base-commit: e64ba052ce04e363ff76d3cb8bedc5f812188acb
+> -- 
+> 2.51.0
+> 
+> 
 
