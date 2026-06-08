@@ -1,71 +1,71 @@
-Return-Path: <linux-s390+bounces-20612-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20614-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id t1JgJMQGJ2qhqQIAu9opvQ
-	(envelope-from <linux-s390+bounces-20612-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 08 Jun 2026 20:15:32 +0200
+	id AebLF+AGJ2qwqQIAu9opvQ
+	(envelope-from <linux-s390+bounces-20614-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 08 Jun 2026 20:16:00 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD6C3659991
-	for <lists+linux-s390@lfdr.de>; Mon, 08 Jun 2026 20:15:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DA6A6599AD
+	for <lists+linux-s390@lfdr.de>; Mon, 08 Jun 2026 20:16:00 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=WzHbmv7j;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20612-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20612-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b="b/Qi19Dx";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20614-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20614-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 57E783036498
-	for <lists+linux-s390@lfdr.de>; Mon,  8 Jun 2026 18:15:27 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id BFAC73042C7C
+	for <lists+linux-s390@lfdr.de>; Mon,  8 Jun 2026 18:15:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B04F63D9DC8;
-	Mon,  8 Jun 2026 18:15:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 467C13DBD4F;
+	Mon,  8 Jun 2026 18:15:23 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7873A3D9035;
-	Mon,  8 Jun 2026 18:15:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176593D9027;
+	Mon,  8 Jun 2026 18:15:20 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780942522; cv=none; b=WLclCGPN659ziNAzMwmPRGorn5wzCkrWVgQ2KGY1BtOXwVN/hwaibjipjpec5sFCrv5tS/0Ch2tc4x60tbH/7KjC/mTJjMfRtXnemIkCDMzxGtBcda3UnP1YL/BiFLvgWbNi6PJEHx3xJZlbJRaavtDvVI4TPHdpGEuKTFIaEZ8=
+	t=1780942523; cv=none; b=bNHnXee4hDNbZ7Hap7ijAdz17ZSQdN1mHOSsdyC5gt9AwZFEf9j2jwPNuC6CjCzQhmgO9c1d2+WopMz9Ty3zpuGeJW5NEUbUikDFUZA1dyJcInMQon0Yae79geE8degcGXkY8NEa6ZCILZJ+LfkA9M/r7ccW/EOm5SbiEEyH3SY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780942522; c=relaxed/simple;
-	bh=qWolF4Y3S+HO+T4uRPNwjeV2U2dgXoB68nyfNxJHb4k=;
+	s=arc-20240116; t=1780942523; c=relaxed/simple;
+	bh=z5aDbCkruTXiuZUIzSSdNkuEKChf6FJQ7I6csuaXjyA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rc4U2+xOjeltomTFDbWyO+8sZEqEVct4sUvgaagqcyInUSaQCwqcsMiukgSI3CZBHk0W+2+upJQgZjOFuHS0NNc8qyxPJPXRujE4SvuLchixlagLIcjI4e73wCtx+mbnh+U2sbcILePqxjQGrYNt879mYOiAyHyQqY0JMZnsYMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WzHbmv7j; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 658DWSQj2661850;
-	Mon, 8 Jun 2026 18:15:02 GMT
+	 MIME-Version; b=O2ydUXSJGhvvKTDt0HfjTyrH15/7MKkRJwtWqQNsNdkonb3dlBtx073sbHSM86l3IwinfgJtK6iXxHPdah9aafGhfsOwMt/8R2vqkPugEdwU0s45JDn8hSDbGnr9/VICsffwERecU50IjlP92QZ83RCoKG9xgTpXAYTr0XsCnGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=b/Qi19Dx; arc=none smtp.client-ip=148.163.158.5
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6589dX9t2494942;
+	Mon, 8 Jun 2026 18:15:03 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=XbnC7mQ2CCKjbfHIq
-	J5fafLzxjlhe0unKwj/TF24/bc=; b=WzHbmv7jJazs36Kj423FnX7cJShIe8+Rr
-	U2LYrSwXOCafFeATL83KHlNy20eaCDt5BEplraXolsI3ftK7KHG1kolw84WiXYKk
-	2DYLcFSekWrG8OdkYGI3g0iWSf4MIHFhVoBF8xCecP9chu75lz/OuoSrXSbXc/Cm
-	w4+70LcvXk8WF1bY5SsB6t33jH6T50RdKu/OX+J7Cl50q/c66Ix1309r0mIYMypj
-	SXIx71l0GCJ/JqDU00wOVOmt65UXjPka6phWiEiZJJ80Lx4rAiicMY+l/0+vamB9
-	JEzVQs1XeKHDmhmlToh3QWYAo0FZ4kSL3Dp+lB9GYdg7AAOQB5cAQ==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4emb958nrq-1
+	:mime-version:references:subject:to; s=pp1; bh=tdPNMk18ImxNBGKmf
+	2uPkiF94pNknNIhO/Gpdrcft8E=; b=b/Qi19DxnOuPJZWD2D4d0VoLZOK4BnEoP
+	eVPtXYe7XI6QAySHXZJ+Du2Yir3MAb85WMruiL67yhUivKbmxhliSof1n3g9iR9I
+	UHD1QG0hRiyEGsyqIkEOD0p9mH9VRPQHd4bFa+t7vEnEySTsTqDf8MdiS9BWtJke
+	T1AqDfAUMojbm3oiHP5gYo8CL4CuWb1kU6IbGta7hjrxkTBkmelMcLxFHA+eE804
+	AMa5egdFDXzyHTmy6dqwTa3dr0O21pvWh0c0kj+oUJfmmS0PgZs9LAWOY6MId2lc
+	l3PhBcaynXDJiV10LvfoS61LhZ+kc7h0VMBwGznQxZRMsEs0z1J2g==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4emb6srgxh-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Jun 2026 18:15:01 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 658I4aiX003280;
+	Mon, 08 Jun 2026 18:15:02 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 658I4dcC020169;
 	Mon, 8 Jun 2026 18:15:01 GMT
 Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4en03fxbv3-1
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4emx8vxngh-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Jun 2026 18:15:00 +0000 (GMT)
+	Mon, 08 Jun 2026 18:15:01 +0000 (GMT)
 Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 658IEvZe51184006
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 658IEvfD50528534
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 8 Jun 2026 18:14:57 GMT
+	Mon, 8 Jun 2026 18:14:58 GMT
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7EFAC2004B;
+	by IMSVA (Postfix) with ESMTP id D69DE20040;
 	Mon,  8 Jun 2026 18:14:57 +0000 (GMT)
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 36CC02004D;
+	by IMSVA (Postfix) with ESMTP id 84A642004E;
 	Mon,  8 Jun 2026 18:14:57 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
 	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
@@ -80,9 +80,9 @@ Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com, boqun@kernel.org,
         rostedt@goodmis.org, ardb@kernel.org, linux-s390@vger.kernel.org,
         rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
         japo@linux.ibm.com (Jan Polensky)
-Subject: [PATCH v6 3/6] rust/bindgen_parameters: Mark s390 types as opaque to prevent repr conflicts
-Date: Mon,  8 Jun 2026 20:14:48 +0200
-Message-ID: <20260608181451.3734956-4-japo@linux.ibm.com>
+Subject: [PATCH v6 4/6] rust: helpers: Add memchr wrapper for string operations
+Date: Mon,  8 Jun 2026 20:14:49 +0200
+Message-ID: <20260608181451.3734956-5-japo@linux.ibm.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260608181451.3734956-1-japo@linux.ibm.com>
 References: <20260608181451.3734956-1-japo@linux.ibm.com>
@@ -95,29 +95,30 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=N4UZ0W9B c=1 sm=1 tr=0 ts=6a2706a6 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+X-Proofpoint-ORIG-GUID: KgDHuFQWEO2b7jqeHFl5EHnbGbKMNcyv
+X-Proofpoint-GUID: 1aIC8G-_gv_EdTTuBMIHZB_S_R0gn0mO
+X-Authority-Analysis: v=2.4 cv=ZbEt8MVA c=1 sm=1 tr=0 ts=6a2706a6 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
  a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=U7nrCbtTmkRpXpFmAIza:22 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=VnNF1IyMAAAA:8
- a=_2yia0w1AAAA:8 a=7MZg_RI75Eq2x-0mQykA:9 a=4yAS8WwzZ1jAEY03B-5r:22
-X-Proofpoint-ORIG-GUID: nZnCAixn83C8vFUhgsW4B4lDx3tKjYsq
-X-Proofpoint-GUID: R4uZvzQjh7xvVsjnY1PckTFll6soZAM_
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA4MDE3MCBTYWx0ZWRfX1dF0VqaleRfT
- 4dBwcY2Pvx+m6zez6TvrJLv17jh2dVbu/vTdIp0Q1lPvpdmjnucAH7DnGMu5TDY3fCavoHiOIbe
- BkbTCwVQEORh7ZX+68bXBGObHqQQLiP+BT/AoNd3E1wCgWI2g1JSZ41VSodWTBFFE8IJmMMXZ67
- DtgSyZU0CcoIjQaGzp42c+9SBJBfvDa6eVWS/NUeue99G6oqMTAUv/3loJeXG+tFtHv5dZAT1r2
- bOD2wDG0WjYYBPFoPryDVsTMuQ30fDujRmOgqnK+TEqa9vBvUdCqstY2oxm+9a8/8uZaovCnrt9
- jeaPzBQ2YQtV7QfNvM3YJkX1u4z7/cFXFSRak0Ph/I+bR5KSpDWXIXCkTFUZbGbzzMPz8nyz97T
- ZYN6dxegY8BUV/a5EQLF29ROmLaYgwjXb01aBm7rtul8TQIQ0Vwswkz6uuhVhExZB+10KdsPeJC
- 8qfCbypB3pBJ2QC3uyw==
+ a=RzCfie-kr_QcCd8fBx8p:22 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=VnNF1IyMAAAA:8
+ a=0OX8x8mQKUGR4pMsIeoA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA4MDE3MCBTYWx0ZWRfX72ZFz/lDI8Uz
+ FW1UV0gC4jCyowrnujxMHlYQRL2r/gi6JxqbL0Jq3YxmAO8IaE4QRM0+1jiWsu5OKwg2xJ9+aRx
+ mXZRD6eacVxZrMZq3ubLvwufmZ6dIQ6nWunmordD71Nz7fZCAYkzTUS6wdkxuH5vW9KzkZiNQoX
+ jY8T50BXVWmgMaaxuImiRTuzr7EibZ1puqi0oyHmEta0wYw4I33+eiG1pS5puMM/6P1uukdXWCt
+ bjDdokwnPpXpnAKbfOGIbQKlBCyalesWHMuBZNrQZY4iOlnKXgCOFNBPB0fnBB6Lg81oPBMGcV6
+ XWMcnnHv4LGcM3KVeV/hKg5k+Seu8hbC60ZcjvW4oj8PL8Yp05nnAun9rZm0H1lhdaF3q+sZsqS
+ Sfj2BS0Hrvf6p9FLeQQ4O2WfdHkAY2mqCNlAk1q0f57crnljN9004xjsS46E3vw2DclGy0mULJf
+ dfV6nVDrJJD7rQJIIIQ==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-06-08_04,2026-06-05_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 malwarescore=0 spamscore=0 clxscore=1015 lowpriorityscore=0
- phishscore=0 impostorscore=0 adultscore=0 priorityscore=1501 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606080170
+ suspectscore=0 impostorscore=0 malwarescore=0 lowpriorityscore=0
+ clxscore=1015 adultscore=0 spamscore=0 priorityscore=1501 bulkscore=0
+ phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2605210000
+ definitions=main-2606080170
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
@@ -135,7 +136,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS(0.00)[m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:ojeda@kernel.org,m:peterz@infradead.org,m:jpoimboe@kernel.org,m:jbaron@akamai.com,m:aliceryhl@google.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:boqun@kernel.org,m:gary@garyguo.net,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:tmgross@umich.edu,m:dakr@kernel.org,m:rostedt@goodmis.org,m:ardb@kernel.org,m:linux-s390@vger.kernel.org,m:rust-for-linux@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:japo@linux.ibm.com,s:lists@lfdr.de];
 	FREEMAIL_CC(0.00)[linux.ibm.com,kernel.org,garyguo.net,protonmail.com,umich.edu,goodmis.org,vger.kernel.org];
 	FORGED_SENDER(0.00)[japo@linux.ibm.com,linux-s390@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-20612-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20614-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[ibm.com:+];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
@@ -147,49 +148,53 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_NONE(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,garyguo.net:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,linux.ibm.com:mid,linux.ibm.com:from_mime];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,linux.ibm.com:mid,linux.ibm.com:from_mime];
 	TAGGED_RCPT(0.00)[linux-s390];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: CD6C3659991
+X-Rspamd-Queue-Id: 0DA6A6599AD
 
-Bindgen attempts to generate Rust layouts for a number of s390 structs
-that are packed but contain, or transitively contain, aligned fields.
-Rust rejects such layouts with E0588 ("packed type cannot transitively
-contain a #[repr(align)] type").
+Add a dedicated string helper file with a memchr wrapper that uses the
+kernel's instrumented memchr() function to ensure KASAN and FORTIFY_SOURCE
+protections are preserved for Rust code.
 
-Add the affected s390 types to the opaque type list so bindgen emits
-opaque blob types instead of full representations. This matches existing
-workarounds for x86 types such as alt_instr and x86_msi_data.
-
-Link: https://lore.kernel.org/all/e5c7aa10-590d-0d20-dd3b-385bee2377e7@intel.com/
-Acked-by: Miguel Ojeda <ojeda@kernel.org>
+Reported-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Link: https://lore.kernel.org/rust-for-linux/CANiq72mXAZc0sNM7ShX8VDVs_7zJddawP-e=wt+ERr1YUCcWUw@mail.gmail.com/
 Acked-by: Heiko Carstens <hca@linux.ibm.com>
-Reviewed-by: Gary Guo <gary@garyguo.net>
 Signed-off-by: Jan Polensky <japo@linux.ibm.com>
 ---
- rust/bindgen_parameters | 7 +++++++
- 1 file changed, 7 insertions(+)
+ rust/helpers/helpers.c | 1 +
+ rust/helpers/string.c  | 8 ++++++++
+ 2 files changed, 9 insertions(+)
+ create mode 100644 rust/helpers/string.c
 
-diff --git a/rust/bindgen_parameters b/rust/bindgen_parameters
-index 6f02d9720ad2..8402b0c93545 100644
---- a/rust/bindgen_parameters
-+++ b/rust/bindgen_parameters
-@@ -14,6 +14,13 @@
- --opaque-type alt_instr
- --opaque-type x86_msi_data
- --opaque-type x86_msi_addr_lo
-+# s390-only: same packed/align issue as above (E0588).
-+--opaque-type lowcore
-+--opaque-type tod_clock
-+--opaque-type tpi_info
-+--opaque-type uv_cb.*
-+--opaque-type uv_secret.*
-+--opaque-type zpci_fib
- 
- # If SMP is disabled, `arch_spinlock_t` is defined as a ZST which triggers a Rust
- # warning. We don't need to peek into it anyway.
+diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+index 625921e27dfb..592b9bdb4e4a 100644
+--- a/rust/helpers/helpers.c
++++ b/rust/helpers/helpers.c
+@@ -88,6 +88,7 @@
+ #include "signal.c"
+ #include "slab.c"
+ #include "spinlock.c"
++#include "string.c"
+ #include "sync.c"
+ #include "task.c"
+ #include "time.c"
+diff --git a/rust/helpers/string.c b/rust/helpers/string.c
+new file mode 100644
+index 000000000000..8ef30eb07a15
+--- /dev/null
++++ b/rust/helpers/string.c
+@@ -0,0 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/string.h>
++
++__rust_helper void *rust_helper_memchr(const void *s, int c, size_t n)
++{
++	return memchr(s, c, n);
++}
 -- 
 2.53.0
 
