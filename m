@@ -1,92 +1,92 @@
-Return-Path: <linux-s390+bounces-20708-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20709-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id dUR6KMqXKGpnGgMAu9opvQ
-	(envelope-from <linux-s390+bounces-20708-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 10 Jun 2026 00:46:34 +0200
+	id 1O89Jx+ZKGqQGgMAu9opvQ
+	(envelope-from <linux-s390+bounces-20709-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 10 Jun 2026 00:52:15 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 136D1664A57
-	for <lists+linux-s390@lfdr.de>; Wed, 10 Jun 2026 00:46:34 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0BF9664A95
+	for <lists+linux-s390@lfdr.de>; Wed, 10 Jun 2026 00:52:14 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=shazbot.org header.s=fm3 header.b=exNfD1wD;
-	dkim=pass header.d=messagingengine.com header.s=fm1 header.b="L nfyTPD";
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20708-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-20708-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=shazbot.org header.s=fm3 header.b=KvnQBF3D;
+	dkim=pass header.d=messagingengine.com header.s=fm1 header.b="N a5CE7J";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20709-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20709-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=shazbot.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8C94F300D145
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2026 22:43:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9D22E30067A6
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2026 22:52:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0CA73B14B6;
-	Tue,  9 Jun 2026 22:43:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D7FE370AE3;
+	Tue,  9 Jun 2026 22:52:13 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73DF23AF668;
-	Tue,  9 Jun 2026 22:43:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0B62DB780;
+	Tue,  9 Jun 2026 22:52:10 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781045018; cv=none; b=GSiWPnSGgvyEktUifZzzzRMXWwkoAtiY4JaqjXWQSkJa91wLcLUR8JeaIs4MxVDIolch6pdw8Vn93+UZpOOgcYl4l7hSHVwW25NOGZoskVb2Qom6d24k32xyNp2v60krPcJL1khDzBPrqOI6VHcfpPhqP6j8ZIgd3zmxkrFBTYo=
+	t=1781045533; cv=none; b=dX1VH2Y8jXK3OzTq6ab0s4YODOj0k2E+lxBpVqI9z129FpRHh9WpiHhRxkxvQcSd2kPcr8W3sWsUY5f1YRaJjP8cxjXUUTKz1Ds13xzacbZKehjWoboQeRTHi5pz3gIwjYFVt6A74R3tW2F1GWw1rp4BhfqZPeiwIIlpytImoPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781045018; c=relaxed/simple;
-	bh=0IpaWrIodcly2t7PYOgU+dX1cmASrL64/OfF49Vv3kY=;
+	s=arc-20240116; t=1781045533; c=relaxed/simple;
+	bh=HUO5gewQY56DcrHd/3O1jNTbXwmLRjToFmR7FSXztQE=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TcrZhQkm3/lJ1ZV7rco3TyUOS6LjwTWMMNLDIZsdk2vCzabsF0sDJfB1BT2IJuqcDEsp//cNxTTLg4g7F42vr70qU0r0haf6TfP5v6+PBF1lguOtME5t2zDDiicEwtl+Hdgt6Hcqt29a4ROu85UZ66eH7wDQgAVXmTVuElD+Ip4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=exNfD1wD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LnfyTPDc; arc=none smtp.client-ip=103.168.172.147
+	 MIME-Version:Content-Type; b=EtqThtzJfWfIVyqL3hfWCkAHH5ipJQ/U5OmbuuuBiR3ZgeVLsCufGXYKzjPg8gCPRlOzmoMhy6E0Dt4BZmmHumJApBT7bE90tojBD5Vx6u5iQvhxIdcyiiqgHW/M2fol37OSQYMRks7ymkI+V8+mxGsHFyA2OEdCC3ZNw1OFXyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=KvnQBF3D; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Na5CE7Jp; arc=none smtp.client-ip=103.168.172.147
 Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfout.phl.internal (Postfix) with ESMTP id AEDCCEC0184;
-	Tue,  9 Jun 2026 18:43:35 -0400 (EDT)
+	by mailfout.phl.internal (Postfix) with ESMTP id 5BB68EC0250;
+	Tue,  9 Jun 2026 18:52:10 -0400 (EDT)
 Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Tue, 09 Jun 2026 18:43:35 -0400
+  by phl-compute-02.internal (MEProxy); Tue, 09 Jun 2026 18:52:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
 	cc:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1781045015;
-	 x=1781131415; bh=LG2vrIAk2mS1EqfLIJ+l00ZnjUcmIRtgt527GUdbCAI=; b=
-	exNfD1wDZGAQYN5+qISNu9xtgGcYJ5t7XT9qaTzIsDN5CLg07RWuzC1dgAeDaieb
-	uGMXdoS27uPeqTBwU6+SrgqDaAwTxENsdZVkvresVe7x9oWfFQfDmsRHbe3rZ/dU
-	Fsv2aFDAd1VmEhL0eHyeY2ZWQWW8muUfjteh8PVv7H79KgSrdABUVGJQg1x/q5Qr
-	jRcub36xWcE55I3ciFzlZkzsh9exGnU54lOSfvLXUwfNDo/XKL32OwSeO12/oTkF
-	hkpH/wZFENd5SP/iOM7Z+rTJpbNs/JpEdNenT1xHg+5j5VtW898g/zfh8eiKySS+
-	wwKB0kfBPT1vhE/oNGERAg==
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1781045530;
+	 x=1781131930; bh=lezGPWteDB0DSQHVYhM8yGY37uLx4xqrDLgchSMVn14=; b=
+	KvnQBF3DQAmgo6HhJT+USdWTD0G3nmrmQ5EvloWnVkHr7T/nBLDtDLmuL1oxed4Q
+	CsdmStnUPu3blR2tFeiGdQvr0aIj3CzlAEkIcL/yhglWWWd8gVGVVCqLnJbSeOox
+	IyuOJqDxG9lMzcRlkEQdylFokzicIX2YwBA73a4JzEk03/fPbAJa8jkG6egCAP7J
+	P5D+0oIpx1w/iF84tSg6WsxkVBm0VRMTbf6FYTaPMny7lewvvgxmlJo5tMw2YU/A
+	CCs6pcywXJNYDAaj/5ugGfiRXgb3Q6pyDqf6iCm+/xTK2wZ6yrR1gKtfTrljVG9B
+	/bH41FfdgbTPuJHZ9oMftA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1781045015; x=
-	1781131415; bh=LG2vrIAk2mS1EqfLIJ+l00ZnjUcmIRtgt527GUdbCAI=; b=L
-	nfyTPDckOvl2xHgwUZfZppyakFX0+ppWAPuM0bv9wGM84d6z4itXCZfmkXWaUJjy
-	cgFrq7Pkw9DkqRT5grTU5tDG2h4ixWc/dVkS+0FsvhinsPrUDSnwWw3VdvUjP9sL
-	yVCyQXBdw9H5kD8fXjNzJ1a2pOd8jFFzopPA40a2iRm0jmGZSQklR1R6sOckEoGt
-	ugratWCI9++FCk0oufahGqbrMOJteuzTzOoZ6c79ONlQYtdWb7OaehYa5CPrgBU2
-	gWUizzm5MgIz0xZikjVtDPIeupKqumPvaDOGytwNZV1FbCasgkJ0+FNeB3cIvPA9
-	TbhGSDhNcG/aYs2iMyy8A==
-X-ME-Sender: <xms:F5coavug36U3Oe3SqkAIt72BsZ5kb-WFtQvxQJ5V2SnJQWffX37KiA>
-    <xme:F5coah2kV_4MYU6TJNGLz-VjegysrZsfOqqfHRpf8iNFb4CbEr-nyECScjHjTOFlA
-    s7xyzAPrA3RKecrN4Uu3IIk0VV5Dqq3ULQ4ouebdDWWsLVXm-NkJg>
-X-ME-Received: <xmr:F5coasCtNRWKhKHa93CeHGXdEJV8UwKRNObXA9PHJ2CO2Dwqb2b80a5V3Vo>
-X-ME-Proxy-Cause: dmFkZTE8jEnSpP6DxEe5aJ5ZGJxvLElyKulphKp2EhYMQTxhzHICItgQMblQxVAoCsUwrb
-    d3AggRcsfGtRcC5wb7FJuapqNCWSHyBMhuzXKqPEnFI6mHeQjXRWTGQaNgnOjqagRqoUBs
-    SAj+igc4EH/Bmm9TacT/LIhWBuB9IClNgG/aqDEsayoBXWJZeKk++zRmjTpcgfrtucyMWq
-    tgmWpb8KGRDJFz3fby/lfV1O8cNu9V5tDG4byEch5rsNRPQuHTeZm2tb2wRaoNEBqkBDJm
-    7rLIFzayeZMTZytNY4tTfWfS5haxYKief6U3VkZIAFam9TLHq+ihbUv7sBU5T0rXTT3hmY
-    nObayYPmbilUpX+8FXw/ZJdSBgEj7BAgUaCHQMWoklh/IBjdoBTWeG9Hh66hbj1owQcwQD
-    8SS4i7Inkr2mhf9GIubb/SsdogW977SV2ICqsxU0NBHpUwK27jpJChNW+WsbnbRY6CkVme
-    lWMGBZ9B/pR7IJmrPYRhf22fYV6Dju1XOSj5lmsB63mAOcYIpymf/lgDwoa1KBKmjAZf55
-    b33eKByPGn6uqniikIgixJ1s6c0mwJhPlxF2ts2dTKAGskxxZGwpQpMxZ9H4GRHvkXJLNN
-    B34mC0ig5t+/IhMnPxbM0ocmf2psISR+oxR1G37NFyXnPwXjxdZ3dDZSMqvw
-X-ME-Proxy: <xmx:F5coamcx7PKts6QlyfO9vylXYU__-qBM8VkI0z2vsEjX8W3gSG1kcw>
-    <xmx:F5coamycjZWmhcJySK0A0MfnPX1f8dLbFR9eczKSzPZ56lLGN70WfQ>
-    <xmx:F5coapP_R9hF-peGqKVBsH_3hT31g5ZYmn2eZkVRACinRZ80HutW3w>
-    <xmx:F5coatY1uY2UXDWWK4I5YCqlFyI-UEKISfauliJBliz5eqK9j-g-Pw>
-    <xmx:F5coans8O-X_XC3TlwWXQ0a5wdtnVcJxaYWZlEl0iss6WYgxD6dAhH1S>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1781045530; x=
+	1781131930; bh=lezGPWteDB0DSQHVYhM8yGY37uLx4xqrDLgchSMVn14=; b=N
+	a5CE7Jp5LLIYj4+pL/49L9ZHqKXvR6264/l3qs9VaJ61LqafA9Oj6dcZnZRzSmUz
+	Gnsyv9slZmFVlkE5JhY81ekgMldJ4Zjr36mqx5kBXPwcOmAJE4a64HqqkvLpLdaR
+	AwKK189JMp2BafYpz7HUwUyduAlvrLyKHmLyBwEhdIFHGx92utTToNkdgdRR8GDn
+	lneGvgu39nNUsIcvwI6w9oBnCySz2bDyl+jVa5PaZtXdqF2eMyjwYdc1UJUe3P+c
+	q1svn1BNmeS6KT51urM0o5d11UVUf2BryyBuVZVBONZBxks9HeG3FXPP+UGyyHtv
+	i45UXoe4QuWzcVJdm/mHg==
+X-ME-Sender: <xms:GpkoalXnklTi6tTu9osOibNjV52LN_qMxlNYCpkVQtuOSUcE8P2V6A>
+    <xme:Gpkoam902Vg9z8KiQZ07_z7axRagimrrWt5eO7WxKiGot3LOOmnU_EvQ2VvJGxKKZ
+    2Lm2yHYMK-Ud42osaSWdmaChbc6MvAgeAAzFSlLOqTfHwEWz0OOYw>
+X-ME-Received: <xmr:GpkoaqoMPWdoobIPFP0D8Ja4ERKvgMG8-xgHd4u4nLbIlaYFBaUCx6bXnMY>
+X-ME-Proxy-Cause: dmFkZTEg+FRBWAghamkv24UmR7XBFwWi37MFXO6tXDG7ahev0BiGoFxZaOdYPRtnFrcYRE
+    ykhxcNddB4ZUXPGqAU4c9NF6m4j/1U/5457M8bbDjPUoIJLMuMUGbVbB4HlgGxJ5kSmRB7
+    7cANlkYilYA+yRTGNvPxsSpTF/tdUzR6d9pz+QoR99mkLBDGlzGf2QhAMNy78vk8VYvHUi
+    TVO+U/mq+9cLEasKPwdIpAq7j2qr+Dk/+1bvFemEVjHebcpqsH8UR47G3TDJnf+psm5owg
+    y4M5ARmMPw9luIpmqEYcsGHY6DfZgQ6kMRHcKYUrsdtBUxzeGc0zO0dpQw+T0tSZbgLLE8
+    qXcC3ZWWC4El4srAFWKb1bNuOm4QPOG3uQ0sPvBzfxBh4oRY/Uc6nH8MfnZFZvaPdxtvVH
+    hQlh/sG4P6v8Cu14CY56sfaP8C/SML7BnS4qhOcj4rHve+K9+yUBl4G5T+PXFUmkELxWjX
+    mo5pJzztTbQTDH0NDsUNB/2pFUZaBK6te/kWX/YpVTwfLJoa264c9/VpiALYccMr76xofW
+    q0+d7HtFZOY8IEbshQvuJM7A/KGatWhtSyTMn3wzKB9XveFnD7Lq9HrYD7glrn6rZYWSSd
+    /jOWoHCQYqCDmCa8mwLv1GLWwnhMupCIJghrW9jc9V7k2qKftJBOMJMW2u+w
+X-ME-Proxy: <xmx:GpkoagnXDetoFZSFhe6BsmY8TY28Lwj7NzmhUB9vC9w3Ctmvj1rbNg>
+    <xmx:GpkoamauCKQSSRPNWqvySEbofCTugOlnR4YzykIsBsbb0YE8hxun6g>
+    <xmx:GpkoagVDTfNzAZxlU4o5hJFJfVZywYbeLfLDLu1wgieHdnO3_3NK0A>
+    <xmx:GpkoamBZp9I0e09scqNSiZEiiJXvpiWMhKulQ_lrFh_45WNUobaYoA>
+    <xmx:GpkoaiVKLGeSnCk_9aaYB15HwSZqex7LnhUBdJN0PY4sYoimGJbxI3N3>
 Feedback-ID: i03f14258:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 9 Jun 2026 18:43:34 -0400 (EDT)
-Date: Tue, 9 Jun 2026 16:43:32 -0600
+ 9 Jun 2026 18:52:09 -0400 (EDT)
+Date: Tue, 9 Jun 2026 16:52:08 -0600
 From: Alex Williamson <alex@shazbot.org>
 To: Omar Elghoul <oelghoul@linux.ibm.com>
 Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -94,11 +94,12 @@ Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
  agordeev@linux.ibm.com, borntraeger@linux.ibm.com, svens@linux.ibm.com,
  schnelle@linux.ibm.com, mjrosato@linux.ibm.com, alifm@linux.ibm.com,
  farman@linux.ibm.com, gbayer@linux.ibm.com, alex@shazbot.org
-Subject: Re: [PATCH v3 3/4] vfio-pci/zdev: Add VFIO FMB device features
-Message-ID: <20260609164332.5dc548f5@shazbot.org>
-In-Reply-To: <20260608171850.62829-4-oelghoul@linux.ibm.com>
+Subject: Re: [PATCH v3 4/4] s390/pci: Fence FMB enable/disable via sysfs for
+ passthrough devices
+Message-ID: <20260609165208.6aba1731@shazbot.org>
+In-Reply-To: <20260608171850.62829-5-oelghoul@linux.ibm.com>
 References: <20260608171850.62829-1-oelghoul@linux.ibm.com>
-	<20260608171850.62829-4-oelghoul@linux.ibm.com>
+	<20260608171850.62829-5-oelghoul@linux.ibm.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
@@ -112,12 +113,12 @@ X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[shazbot.org,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[shazbot.org:s=fm3,messagingengine.com:s=fm1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20708-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20709-lists,linux-s390=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[15];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
@@ -133,144 +134,76 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[alex@shazbot.org,linux-s390@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[shazbot.org:dkim,shazbot.org:mid,shazbot.org:from_mime,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,messagingengine.com:dkim]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 136D1664A57
+X-Rspamd-Queue-Id: F0BF9664A95
 
-On Mon,  8 Jun 2026 13:18:49 -0400
+On Mon,  8 Jun 2026 13:18:50 -0400
 Omar Elghoul <oelghoul@linux.ibm.com> wrote:
 
-> diff --git a/drivers/vfio/pci/vfio_pci_zdev.c b/drivers/vfio/pci/vfio_pci_zdev.c
-> index 0990fdb146b7..09454495ee23 100644
-> --- a/drivers/vfio/pci/vfio_pci_zdev.c
-> +++ b/drivers/vfio/pci/vfio_pci_zdev.c
-> @@ -167,3 +167,60 @@ void vfio_pci_zdev_close_device(struct vfio_pci_core_device *vdev)
->  	if (zpci_kvm_hook.kvm_unregister)
->  		zpci_kvm_hook.kvm_unregister(zdev);
->  }
-> +
-> +int vfio_pci_zdev_feature_fmb_enable(struct vfio_pci_core_device *vdev, u32 flags,
-> +				     void __user *arg, size_t argsz)
-> +{
-> +	struct zpci_dev *zdev;
-> +	struct vfio_device_feature_zpci_fmb_enable fmb_enable;
-> +	int ret;
-> +
-> +	ret = vfio_check_feature(flags, argsz, VFIO_DEVICE_FEATURE_SET, sizeof(fmb_enable));
-> +	if (ret != 1)
-> +		return ret;
-> +
-> +	zdev = to_zpci(vdev->pdev);
-> +	if (!zdev)
-> +		return -ENODEV;
-> +
-> +	guard(mutex)(&zdev->fmb_lock);
-> +
-> +	if (copy_from_user(&fmb_enable, arg, sizeof(fmb_enable)))
-> +		return -EFAULT;
-
-The guard can drop to here, it doesn't protect anything related to the
-copy_from_user().
-
-> +
-> +	if (fmb_enable.enabled)
-> +		return zpci_fmb_reenable_device(zdev);
-> +	return zpci_fmb_disable_device(zdev);
-> +}
-> +
-> +int vfio_pci_zdev_feature_fmb_read(struct vfio_pci_core_device *vdev, u32 flags,
-> +				   void __user *arg, size_t argsz)
-> +{
-> +	struct zpci_dev *zdev;
-> +	struct vfio_device_feature_zpci_fmb_read fmb_read;
-> +	struct zpci_fmb fmb_temp = {0};
-
-Unnecessary initialization, we only copy to the user what's been
-written.
-
-> +	int ret;
-> +
-> +	ret = vfio_check_feature(flags, argsz, VFIO_DEVICE_FEATURE_GET, sizeof(fmb_read));
-> +	if (ret != 1)
-> +		return ret;
-> +
-> +	zdev = to_zpci(vdev->pdev);
-> +	if (!zdev)
-> +		return -ENODEV;
-> +
-> +	guard(mutex)(&zdev->fmb_lock);
-> +
-> +	if (!zdev->fmb)
-> +		return -ENOMSG;
-> +	if (copy_from_user(&fmb_read, arg, sizeof(fmb_read)))
-> +		return -EFAULT;
-> +	if (!fmb_read.data)
-> +		return -EINVAL;
-> +
-> +	memcpy(&fmb_temp, zdev->fmb, zdev->fmb_length);
-> +	if (copy_to_user(fmb_read.data, &fmb_temp, zdev->fmb_length))
-> +		return -EFAULT;
-
-The bounce buffer itself seems unnecessary in this usage, we could just:
-
-	if (copy_to_user(fmb_read.data, zdev->fmb, zdev->fmb_length))
-
-But maybe there was an intention to scope the bounce buffer copy within
-the guard and perform the copy_to_user() after releasing the lock?
-
-
-> +
-> +	return 0;
-> +}
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index 5de618a3a5ee..3988e8690e0b 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -1534,6 +1534,35 @@ struct vfio_device_feature_dma_buf {
->   */
->  #define VFIO_DEVICE_FEATURE_MIG_PRECOPY_INFOv2  12
+> Introduce a fence over enabling or disabling FMB via sysfs when the zPCI
+> device is associated with a KVM. This will allow a KVM guest to use FMB
+> passthrough and avoid the edge-case where the host disables FMB while the
+> guest is still using it, which may cause partial counter resets and
+> inconsistent reads which have no parallel in the architecture.
+> 
+> With this patch, the userspace driver, likely QEMU, is still able to enable
+> or disable the FMB using the VFIO device feature introduced in the previous
+> patch, effectively securing what is associated with the VM state and
+> isolating it from other processes on the host.
+> 
+> For VFIO devices that are not associated with a KVM (i.e., for userspace
+> drivers other than QEMU), this fence does not take effect.
+> 
+> Signed-off-by: Omar Elghoul <oelghoul@linux.ibm.com>
+> Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> ---
+>  arch/s390/pci/pci_debug.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/s390/pci/pci_debug.c b/arch/s390/pci/pci_debug.c
+> index c7ed7bf254b5..a2dc79418c21 100644
+> --- a/arch/s390/pci/pci_debug.c
+> +++ b/arch/s390/pci/pci_debug.c
+> @@ -149,9 +149,15 @@ static ssize_t pci_perf_seq_write(struct file *file, const char __user *ubuf,
+>  	if (!zdev)
+>  		return 0;
 >  
-> +/**
-> + * Upon VFIO_DEVICE_FEATURE_SET, enable or disable FMB for the VFIO zPCI device.
-> + *
-> + * enabled is treated as a bool, so any non-zero value evaluates to true. This
-> + * feature fails on attempt to double enable/disable.
-
-Does it?  Double enable just does a re-enable.
-
-> + *
-> + * Returns: 0 on success, -1 and errno set appropriately on error.
-> + */
-> +#define VFIO_DEVICE_FEATURE_ZPCI_FMB_ENABLE 13
+> +	mutex_lock(&zdev->kzdev_lock);
+> +	if (zdev->kzdev) {
+> +		rc = -EPERM;
+> +		goto out_unlock_kzdev;
+> +	}
 > +
-> +struct vfio_device_feature_zpci_fmb_enable {
-> +	__u8 enabled;
-> +};
+>  	rc = kstrtoul_from_user(ubuf, count, 10, &val);
+>  	if (rc)
+> -		return rc;
+> +		goto out_unlock_kzdev;
+>  
+>  	mutex_lock(&zdev->fmb_lock);
+>  	switch (val) {
+> @@ -163,6 +169,9 @@ static ssize_t pci_perf_seq_write(struct file *file, const char __user *ubuf,
+>  		break;
+>  	}
+>  	mutex_unlock(&zdev->fmb_lock);
 > +
-> +/**
-> + * Upon VFIO_DEVICE_FEATURE_GET, provide FMB passthrough for VFIO zPCI devices.
-> + *
-> + * The user-provided buffer must be at least fmb_length large, where fmb_length
-> + * is reported in VFIO_DEVICE_INFO_CAP_ZPCI_BASE.
-> + *
-> + * Returns: 0 on success, -1 and errno set appropriately on error. errno==ENOMSG
-> + * when the FMB is not enabled.
-> + */
-> +#define VFIO_DEVICE_FEATURE_ZPCI_FMB_READ 14
-> +
-> +struct vfio_device_feature_zpci_fmb_read {
-> +	void __user *data;
+> +out_unlock_kzdev:
+> +	mutex_unlock(&zdev->kzdev_lock);
+>  	return rc ? rc : count;
+>  }
+>  
 
-We should use explicit data sizes for uAPI:
+Why not also use a guard for the mutex here and avoid the goto
+unlock... also moving the guard below the kstrtoul_from_user()?
 
-	__aligned_u64 data;
-
+The fmb_lock could switch to a guard too, but that's existing.
 Thanks,
+
 Alex
 
