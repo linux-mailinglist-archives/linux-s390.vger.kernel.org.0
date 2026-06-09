@@ -1,83 +1,83 @@
-Return-Path: <linux-s390+bounces-20697-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20693-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 3aGDA+wyKGrj/wIAu9opvQ
-	(envelope-from <linux-s390+bounces-20697-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 17:36:12 +0200
+	id SMdVG0E5KGrAAQMAu9opvQ
+	(envelope-from <linux-s390+bounces-20693-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 18:03:13 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06E13661D0C
-	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 17:36:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E5A0A66219C
+	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 18:03:09 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=Se0o+qaX;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20697-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20697-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=bhEWNcvk;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20693-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20693-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 66433306D68D
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2026 15:11:22 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E1F1D31FD6CE
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2026 15:10:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF308481670;
-	Tue,  9 Jun 2026 15:09:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F38A47ECD4;
+	Tue,  9 Jun 2026 15:09:46 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D5F48122A;
-	Tue,  9 Jun 2026 15:09:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA33847D937;
+	Tue,  9 Jun 2026 15:09:44 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781017791; cv=none; b=tL89Nun4X7Ni6ByUFucvlc+XmJlepXuXgVSk9O4xO0HLHyx7Q8upt8cUzeLYleNKL2toaGGimjddJjvY5cotB3TjPlOB28OfV/oSGs59wfYY+8JAYFYf3fa4dRQeTRIKLomDwCHwNRpFfd+c0Q03narl6BN3m+TdtwPEDE7NS9I=
+	t=1781017786; cv=none; b=Yvw2FcDRElims52IWoZd/BNmYdoFWs+/4DowggnMWbUTFF8UZtIMzDvE6YgDI0jNgwIrA8ye6Xieapb246eEuyigvIVme3g/HYE9xn9gb3HxsUSdHcbGUrQFxW/58n57axgaQznuGA9ghLu3cUYY1a1LcZOuVMczBPR9Shiqpm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781017791; c=relaxed/simple;
-	bh=vcYtDgZTc4vGtlTuaY/ESPp9jBjlWimJGEtLWhsxfsM=;
+	s=arc-20240116; t=1781017786; c=relaxed/simple;
+	bh=uoQDxkkYl9TebcURjK0NWuDg/McTbqXu4jmsDYqQVPo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S0Xpmf9qTJnSEgk5kVe9guELSEHSqTWkKFhc6UEgkh2seTOe9vrLLkFMYg44hsYKEPRrbJzwXXRh/P9WiryXuDH+CY6QGHHzj/CIJ1FfKOaxJtQ2a/wzJIPP/ztvAvNx4AbffAWJeon3CnV/SQLcB4R6fVjT6+RRxXB/gPiqETI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Se0o+qaX; arc=none smtp.client-ip=148.163.158.5
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 659CJuSk2217938;
-	Tue, 9 Jun 2026 15:09:40 GMT
+	 MIME-Version; b=cf5FZJAPLTWStxHdKjn/ba+DfE4PSZ8jx31BP0UIUdwSkR+omqIyS70eGhq1CCOzbUzfsvba173uZiRQOkO4kb5OSUMvci7QSMk3lm+mnjZrj+GA2nZH78WquO7R5MDlLa6ry2/2UPS9O9LL1lRw4Yymj8CBYhJ0UnFzKoU5OIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bhEWNcvk; arc=none smtp.client-ip=148.163.156.1
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 659E0eLt2451177;
+	Tue, 9 Jun 2026 15:09:42 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=2lONbZzle9OgFE8l5
-	NDLS20Y0bIhuXxJl9SjkVmsMkk=; b=Se0o+qaXOCNFDrhf/zXjusBdtSqu5txex
-	C8wu13J7cwVZ2aTlQ6z/aTXUleZoX2jpEBroEhTJN9RhsDMeAHyfZvumg2KFLeaF
-	pL9XzAgFU1HDMaONjnhdaW18e8vTfMgkRcKb0kPIN/gXzXQ0s3SjyH5kCiUgk5Ke
-	gn0f8LywrfO6UlHXaDBZ+r5TgRPbxxhfy1lwYjhLTMnlRzyf9WXQkIxunRykO1G8
-	2N79VhwFhxPtmRuiHN8xJF8gAfFZiZQ9nAvPsKLESsp4JDeWJL0DIz2QjufqCnZL
-	pZKiKft2qHGjbwi0PYedaap7nvVSI6MGURphR/IwhVUL32plAALWQ==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4emb6svgn3-1
+	:mime-version:references:subject:to; s=pp1; bh=hrTw0tLgGzmQBoP4j
+	Itca1C1kqRc/jArKVD68ZEa/Go=; b=bhEWNcvk6eA9NbKChdx9kUh94y7cvrI20
+	pSVk0z7rjur6ultIcL/G+VfSG8h5xItMckOAdxVjU/NOwUwthkaXh09SbFoSKS2d
+	JOeOA0pARZfjty7s79O82yDSj6kvX6n6twtyFeT0ptIb8SYF0N3RXjqmr0CZP05v
+	sAFgKhh8iliNek1GAshuBbHeYfV0eNH305G0MIyCOnHUWEfidN0k2lF09iSZdFg0
+	PyobSBQrefd93ocHbS04N8XMzltqrdIVoeF8Y6Gy488F3cLnPyQYIkTvK91yEIXW
+	8cPY5BKwsaW2p1cP0cMBrhBK9Lxz2WOK8VRSpVaFHinag9DoTka+A==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4emb7qmsn2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jun 2026 15:09:40 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 659F4at5017673;
-	Tue, 9 Jun 2026 15:09:39 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4en03g2bt2-1
+	Tue, 09 Jun 2026 15:09:42 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 659F4dJO017042;
+	Tue, 9 Jun 2026 15:09:41 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4emych2f0g-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jun 2026 15:09:39 +0000 (GMT)
+	Tue, 09 Jun 2026 15:09:41 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 659F9YWZ15532394
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 659F9Z5g61473168
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 9 Jun 2026 15:09:34 GMT
+	Tue, 9 Jun 2026 15:09:35 GMT
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 14F8A20040;
+	by IMSVA (Postfix) with ESMTP id 8F8942004D;
+	Tue,  9 Jun 2026 15:09:35 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4082520040;
 	Tue,  9 Jun 2026 15:09:34 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B1BD820043;
-	Tue,  9 Jun 2026 15:09:32 +0000 (GMT)
 Received: from p-imbrenda.ibmuc.com (unknown [9.111.28.58])
 	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  9 Jun 2026 15:09:32 +0000 (GMT)
+	Tue,  9 Jun 2026 15:09:34 +0000 (GMT)
 From: Claudio Imbrenda <imbrenda@linux.ibm.com>
 To: linux-kernel@vger.kernel.org
 Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, borntraeger@de.ibm.com,
         frankja@linux.ibm.com, david@kernel.org, seiden@linux.ibm.com,
         nrb@linux.ibm.com, schlameuss@linux.ibm.com, gra@linux.ibm.com
-Subject: [PATCH v2 1/4] KVM: s390: Add module parameter to fence 2G hugepages
-Date: Tue,  9 Jun 2026 17:09:27 +0200
-Message-ID: <20260609150930.665370-2-imbrenda@linux.ibm.com>
+Subject: [PATCH v2 2/4] KVM: s390: Add capability to support 2G hugepages
+Date: Tue,  9 Jun 2026 17:09:28 +0200
+Message-ID: <20260609150930.665370-3-imbrenda@linux.ibm.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260609150930.665370-1-imbrenda@linux.ibm.com>
 References: <20260609150930.665370-1-imbrenda@linux.ibm.com>
@@ -89,29 +89,28 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: eFEROybzjBXP0Gb6_ZePJRHAj7MzfPzg
-X-Proofpoint-GUID: eFEROybzjBXP0Gb6_ZePJRHAj7MzfPzg
-X-Authority-Analysis: v=2.4 cv=ZbEt8MVA c=1 sm=1 tr=0 ts=6a282cb4 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+X-Authority-Analysis: v=2.4 cv=HppG3UTS c=1 sm=1 tr=0 ts=6a282cb6 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
  a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8 a=-5nL1enD9Bub2BjMfYYA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA5MDE0NCBTYWx0ZWRfX2omlXGUzxIo6
- GF3XKZs0ULS8V7ry8siWXKLkRpAcq42zI/jqnSGyspdb1PUemDawuvrHyZtUkbw+hPwpZyF7ueZ
- 88jArYnicV7q0lZevua7Ms8di3oesARlKoZiVzOeDCokX6nUDq4YQGsCvLLEXwJ2+rWHGOCoc0i
- v+ekejrusZibnOmZnFtcaYeK7A5Ibh68pnJnVW38MbA1td/APhTDWLCzqGeXkgHYJ7JKCQPjmvU
- VoD0fBO/EOB29+o+LcxRa1C0JGK0jd7nMs3Gx8RB9BMyZpxqFP8ZLL3shaMQKK269nhLmCG+83y
- pX53DXu5VogVD906Em+wn0+r1y9pGsmHlSEuMcK4RLxJeCK03iHFsEiBf9Z9m8mRGVn/3+QqqM4
- a6pM78LigX5Yq7wHX3ll4TSSbUxBCu8ADFdthjPd1Sa3k76zU3PoUO6JhvOFy4xFGgjGfmtBF1D
- bk1O7g3o4PMWZKSk/rw==
+ a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=QhT8cEMGEDdk696zIO8A:9
+X-Proofpoint-GUID: i8b4eY45QXe_iLfcjRjZE4VOYpxkK1i8
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA5MDE0NCBTYWx0ZWRfXxEhccUw31e7x
+ LE8HHDuro8Vy2QvbHPO4MjZPk7hIs0KUpeEo9gwUXoQFS8JGowHuHDnCnoI1uLEyQASsrm6M8W8
+ MSQOpADaZqpwPtctiZ89tGyuMcHZm/+nJgB/+am/O0yDdSndfPhK6vg7F4XeB7b6s2+v79bqrJF
+ V52G2JwqnSn7kRVZvwrjl1s0uZ+7cWAgUWVsh4Nbba+18cHUbjzQMZbtqiNL1HWWUhZvOEu6QKo
+ 44Kl73ETK4VLuBFrFXdPSB4rCV+lq8FxYWaHRyJOhIWQerJ0GHPCH3ZI0AEhqFWT1a4p1+lxkZZ
+ qVTlY+2DGducjbbw9a2jPJsyisHrKMxgIG3LHocofgD8Xw58yf+xBYaZEcHFgdTHiGLkRwS81QG
+ zVx+6JZ08ds/4kc2vobhTjS66G6tf8z834bXLxGhtKF2ZKNm007y3FGLaiWo5B43qsqgWWbWdB5
+ yj4xUh/nUk/9ZArH96w==
+X-Proofpoint-ORIG-GUID: i8b4eY45QXe_iLfcjRjZE4VOYpxkK1i8
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-06-09_03,2026-06-09_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 impostorscore=0 malwarescore=0 lowpriorityscore=0
- clxscore=1015 adultscore=0 spamscore=0 priorityscore=1501 bulkscore=0
- phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2605210000
- definitions=main-2606090144
+ lowpriorityscore=0 adultscore=0 phishscore=0 malwarescore=0 impostorscore=0
+ priorityscore=1501 clxscore=1015 bulkscore=0 spamscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606090144
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -124,7 +123,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20697-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20693-lists,linux-s390=lfdr.de];
 	FROM_NEQ_ENVFROM(0.00)[imbrenda@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:linux-kernel@vger.kernel.org,m:kvm@vger.kernel.org,m:linux-s390@vger.kernel.org,m:borntraeger@de.ibm.com,m:frankja@linux.ibm.com,m:david@kernel.org,m:seiden@linux.ibm.com,m:nrb@linux.ibm.com,m:schlameuss@linux.ibm.com,m:gra@linux.ibm.com,s:lists@lfdr.de];
@@ -137,7 +136,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	RCPT_COUNT_SEVEN(0.00)[10];
 	ALIAS_RESOLVED(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,linux.ibm.com:from_mime,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,linux.ibm.com:mid,linux.ibm.com:from_mime];
 	TO_DN_NONE(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -145,56 +144,111 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 06E13661D0C
+X-Rspamd-Queue-Id: E5A0A66219C
 
-Add the hpage_2g module parameter to KVM to allow enabling or disabling
-2G hugepages in KVM.
+Add KVM_CAP_S390_HPAGE_2G to signal to userspace that 2G hugepages may
+be used to back the guest; restrictions apply similar to 1M hugepages.
 
-If hpage_2g is enabled but hpage is not enabled, print a message and
-disable hpage_2g.
-
-Opportunistically fix the comment for the hpage module parameter.
+Enable the (for now still ignored) GMAP_FLAG_ALLOW_HPAGE_2G flag for
+the guest gmap, and propagate / disable it as necessary.
 
 Reviewed-by: Steffen Eiden <seiden@linux.ibm.com>
 Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
 ---
- arch/s390/kvm/kvm-s390.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ arch/s390/kvm/gmap.c     |  5 +++++
+ arch/s390/kvm/kvm-s390.c | 26 ++++++++++++++++++++++++++
+ arch/s390/kvm/pv.c       |  5 ++++-
+ include/uapi/linux/kvm.h |  1 +
+ 4 files changed, 36 insertions(+), 1 deletion(-)
 
+diff --git a/arch/s390/kvm/gmap.c b/arch/s390/kvm/gmap.c
+index 52d55ddea8d4..c9e348149ba1 100644
+--- a/arch/s390/kvm/gmap.c
++++ b/arch/s390/kvm/gmap.c
+@@ -105,6 +105,11 @@ static void gmap_add_child(struct gmap *parent, struct gmap *child)
+ 	else
+ 		clear_bit(GMAP_FLAG_ALLOW_HPAGE_1M, &child->flags);
+ 
++	if (test_bit(GMAP_FLAG_ALLOW_HPAGE_2G, &parent->flags))
++		set_bit(GMAP_FLAG_ALLOW_HPAGE_2G, &child->flags);
++	else
++		clear_bit(GMAP_FLAG_ALLOW_HPAGE_2G, &child->flags);
++
+ 	if (kvm_is_ucontrol(parent->kvm))
+ 		clear_bit(GMAP_FLAG_OWNS_PAGETABLES, &child->flags);
+ 	list_add(&child->list, &parent->children);
 diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index ffb20a64d328..801a622691b6 100644
+index 801a622691b6..616d1db7c0d9 100644
 --- a/arch/s390/kvm/kvm-s390.c
 +++ b/arch/s390/kvm/kvm-s390.c
-@@ -204,11 +204,16 @@ static int nested;
- module_param(nested, int, S_IRUGO);
- MODULE_PARM_DESC(nested, "Nested virtualization support");
+@@ -645,6 +645,11 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 		if (hpage && !(kvm && kvm_is_ucontrol(kvm)))
+ 			r = 1;
+ 		break;
++	case KVM_CAP_S390_HPAGE_2G:
++		r = 0;
++		if (hpage_2g && !(kvm && kvm_is_ucontrol(kvm)))
++			r = 1;
++		break;
+ 	case KVM_CAP_S390_MEM_OP:
+ 		r = MEM_OP_MAX_SIZE;
+ 		break;
+@@ -901,6 +906,27 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap)
+ 		VM_EVENT(kvm, 3, "ENABLE: CAP_S390_HPAGE %s",
+ 			 r ? "(not available)" : "(success)");
+ 		break;
++	case KVM_CAP_S390_HPAGE_2G:
++		mutex_lock(&kvm->lock);
++		if (kvm->created_vcpus) {
++			r = -EBUSY;
++		} else if (!hpage_2g || kvm->arch.use_cmma || kvm_is_ucontrol(kvm)) {
++			r = -EINVAL;
++		} else {
++			r = 0;
++			set_bit(GMAP_FLAG_ALLOW_HPAGE_2G, &kvm->arch.gmap->flags);
++			/*
++			 * We might have to create fake 4k page
++			 * tables. To avoid that the hardware works on
++			 * stale PGSTEs, we emulate these instructions.
++			 */
++			kvm->arch.use_skf = 0;
++			kvm->arch.use_pfmfi = 0;
++		}
++		mutex_unlock(&kvm->lock);
++		VM_EVENT(kvm, 3, "ENABLE: CAP_S390_HPAGE_2G %s",
++			 r ? "(not available)" : "(success)");
++		break;
+ 	case KVM_CAP_S390_USER_STSI:
+ 		VM_EVENT(kvm, 3, "%s", "ENABLE: CAP_S390_USER_STSI");
+ 		kvm->arch.user_stsi = 1;
+diff --git a/arch/s390/kvm/pv.c b/arch/s390/kvm/pv.c
+index 4b865e75351c..1beacc841ca8 100644
+--- a/arch/s390/kvm/pv.c
++++ b/arch/s390/kvm/pv.c
+@@ -740,7 +740,10 @@ int kvm_s390_pv_init_vm(struct kvm *kvm, u16 *rc, u16 *rrc)
+ 	uvcb.flags.ap_allow_instr = kvm->arch.model.uv_feat_guest.ap;
+ 	uvcb.flags.ap_instr_intr = kvm->arch.model.uv_feat_guest.ap_intr;
  
--/* allow 1m huge page guest backing, if !nested */
-+/* allow 1m huge page guest backing */
- static int hpage;
- module_param(hpage, int, 0444);
- MODULE_PARM_DESC(hpage, "1m huge page backing support");
- 
-+/* allow 2g huge page guest backing */
-+static int hpage_2g;
-+module_param(hpage_2g, int, 0444);
-+MODULE_PARM_DESC(hpage_2g, "2g huge page backing support");
-+
- /* maximum percentage of steal time for polling.  >100 is treated like 100 */
- static u8 halt_poll_max_steal = 10;
- module_param(halt_poll_max_steal, byte, 0644);
-@@ -5820,6 +5825,11 @@ static int __init kvm_s390_init(void)
- 		return -ENODEV;
- 	}
- 
-+	if (hpage_2g && !hpage) {
-+		hpage_2g = 0;
-+		pr_info("Disabling 2G hugepage support, since 1M hugepage support is not enabled.\n");
+-	clear_bit(GMAP_FLAG_ALLOW_HPAGE_1M, &kvm->arch.gmap->flags);
++	scoped_guard(write_lock, &kvm->mmu_lock) {
++		clear_bit(GMAP_FLAG_ALLOW_HPAGE_1M, &kvm->arch.gmap->flags);
++		clear_bit(GMAP_FLAG_ALLOW_HPAGE_2G, &kvm->arch.gmap->flags);
 +	}
-+
- 	for (i = 0; i < 16; i++)
- 		kvm_s390_fac_base[i] |=
- 			stfle_fac_list[i] & nonhyp_mask(i);
+ 	gmap_split_huge_pages(kvm->arch.gmap);
+ 
+ 	cc = uv_call_sched(0, (u64)&uvcb);
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 6c8afa2047bf..419011097fa8 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -996,6 +996,7 @@ struct kvm_enable_cap {
+ #define KVM_CAP_S390_USER_OPEREXEC 246
+ #define KVM_CAP_S390_KEYOP 247
+ #define KVM_CAP_S390_VSIE_ESAMODE 248
++#define KVM_CAP_S390_HPAGE_2G 249
+ 
+ struct kvm_irq_routing_irqchip {
+ 	__u32 irqchip;
 -- 
 2.54.0
 
