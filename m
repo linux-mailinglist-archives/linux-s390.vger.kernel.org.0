@@ -1,208 +1,350 @@
-Return-Path: <linux-s390+bounces-20670-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20674-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 7GmOIHkUKGpg9gIAu9opvQ
-	(envelope-from <linux-s390+bounces-20670-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 15:26:17 +0200
+	id DD9CCfgWKGoX9wIAu9opvQ
+	(envelope-from <linux-s390+bounces-20674-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 15:36:56 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63FA4660893
-	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 15:26:17 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6C08660A33
+	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 15:36:55 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b="dqH+g/er";
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20670-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20670-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=ibm.com;
+	dkim=pass header.d=suse.com header.s=google header.b=EMQYNxmo;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20674-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-20674-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=suse.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4AD983041164
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2026 13:25:05 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C08AF304AF9B
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2026 13:33:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67CC12D5408;
-	Tue,  9 Jun 2026 13:24:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB14740E8D4;
+	Tue,  9 Jun 2026 13:33:07 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E562E737E;
-	Tue,  9 Jun 2026 13:24:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE73E2C3261
+	for <linux-s390@vger.kernel.org>; Tue,  9 Jun 2026 13:33:05 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781011488; cv=none; b=UHSwYyjywbvsu58FXkY2hGdm+K7R4XRVPVDiuqFwNvGnDWQTc/gROlKSy8Hx4rmwxwTgqfIThEK/qmOhFW3/5FVFZfYvLU6wNN0vTT/Jtk/pRGWoDZ8/pyAiShwz7XbniOxod+cbVvYxCkhRLgJ/rnHlr0hMbrS04yM1aqajwtI=
+	t=1781011987; cv=none; b=pjkNcdmkhFiE0sGf2GP/TMYbPl9NR70Az1gn6kh0R83nZpqp/gW3z7mfPjoL7SCFhbtfd/D526Q6DvFf8L0VXs8VL53ugOtmLqSW79WvtNw4o+2Nnz+3PFEbdsr4qO3Zc568XlfCYOEmsooUWUJ0msHyumQvLUv9Axiz3D7BhnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781011488; c=relaxed/simple;
-	bh=VrqOAjY93GMo9F1p2g5tJ5xb+OSduVfcfEgY6v87o/8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=S9Gg0Lg4x1V8cDdxCFyur+k70w2kfLv7/Ob8N4NOnDR7qs1aTPCtjwFygTjLLs+W73wYDAOZC/ULKejVCbnP+YaKjfXoiwBUbPxAwwJcyQ4D1EZdyTJwE2ERe26oZ0LCKN0DKIc/ZNXQMAq5Ficlh7xvOJao9TEimdVAiB860PE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dqH+g/er; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6592psof2615075;
-	Tue, 9 Jun 2026 13:24:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=CNRMBC
-	OZ3MgVIL2vx0clMfnmeNaJ1NlAwln8ChyAhGE=; b=dqH+g/erTodH4maOcsp/xi
-	dNat13vNYbHmqgIzPhAZM1yNlzJ7VljwHL+YlKZ4HXZK3pHdruLXIxl0DrihJtgI
-	Zl3NQTsqa3vieJEUAoRenEBi8ehskCGI8Rx52E9sQzQ6yLUXnwfRInO+5Y+iRqjA
-	jhpB9C+kS8hCA6XL+xGykjEX5T1AIIkz/bih90IERWgfjl1x9lSy/kN2AOPD23xd
-	az/kBnl5T3jP6F/tgJSC/ZM4MNPUwi0m/PK8s533NdEtlL3mvwGweWYoSaD0ZMua
-	Lc5JzZAfZS8C3K1VZniygrHWENILI78Ngr+ffH1I1wHJhxVN/w1SHH6cf/l3DFyg
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4emb95ca7n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jun 2026 13:24:34 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 659D4bxv019817;
-	Tue, 9 Jun 2026 13:24:33 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4emxvjt45u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jun 2026 13:24:32 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 659DOTPt18219368
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 9 Jun 2026 13:24:29 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3DDA12004E;
-	Tue,  9 Jun 2026 13:24:29 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0D92D2004D;
-	Tue,  9 Jun 2026 13:24:29 +0000 (GMT)
-Received: from [9.224.76.67] (unknown [9.224.76.67])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  9 Jun 2026 13:24:29 +0000 (GMT)
-From: Mete Durlu <meted@linux.ibm.com>
-Date: Tue, 09 Jun 2026 15:24:25 +0200
-Subject: [PATCH v2 5/5] s390/configs: Enable cpuidle driver on s390
+	s=arc-20240116; t=1781011987; c=relaxed/simple;
+	bh=NSfwu7yoXAF8kfvPRt9yzyQddZc4/pZJmcex0Ww7tmw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=izuvtbYL7xPbJ8v38UHi1Jv4lHLIMsv0VlFiCtLjcNpdtNlH9Z1uE93etpXz0AXR+wL8N+JNI9LXoQAnlpSNTeUPYobi2jlPttZnCbb90iP5XOJFowiFSKpwFxavZ8PWLF6slz6fkYz68tT1Nbgko34YsNyKioK6Vth8f+USDP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=EMQYNxmo; arc=none smtp.client-ip=209.85.221.53
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-45ef9df68bcso325230f8f.2
+        for <linux-s390@vger.kernel.org>; Tue, 09 Jun 2026 06:33:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1781011984; x=1781616784; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r+UubitX36JVc6CTd2RtBwcVL2yqRgVyLq15MXv0auc=;
+        b=EMQYNxmofkdd2f/1nRB4Rt33v5h2nKv8FPYjsKzqsFUlrjwMQ6O831HohZ4CVaevH6
+         FwmblREX19yKBGyomBXsLECzsSFh7Gtj2lG7nN4Fyo2IgDTvH8+6pEaRzg9vAUD1UTNd
+         A1IQPCZl42YB9FHn3r9hxM+cZPWQzwt3vHWq94VU+u7nqeR8Twbu0GxX8r9JSjeSGSvQ
+         XmeBce7Q3NJ8cPGMVu+WPCI+RER7EmepipfllLrNQxU5B5mfDa1/HqR7ySlEDk0OOBYe
+         Y5ynmKGA4f9kIDRgrcuQFOrzIwN19rrwapZul/QTe+uXRdQz8zFdlqungKoEllhNeCbU
+         JuyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781011984; x=1781616784;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=r+UubitX36JVc6CTd2RtBwcVL2yqRgVyLq15MXv0auc=;
+        b=rI7UnZHBOkD2fAY7RfZpaKmkPB8RzW+gB0uIp76cysZ8XTd9fCvtIZArA5ktr1pYzS
+         vPXssqy/buhD0PnLYFHveVJz8m1yDHxQxOZFk/lKsJiOeFc2YVFsu3ADS4+2jKlR/4oa
+         05zCelySgCjohcqyWA2yB3RwinIpq5VRgNyjLZWd5kpysKc6lQ2IxsgUZyFOGj7NNJNv
+         m4BEIt6z8cLM9xZvJfFF6c8TTVUJt1Edm22oheCrhPup3Nx95qGcLBBGsgh+8LjzcZMy
+         AwZzfxKRX9UVKLNnxWfU+wt8WyXzEZYXMkBxQ0g+gyvEVUVwbqf1vLQU2t038ow4SxPj
+         M2Qw==
+X-Forwarded-Encrypted: i=1; AFNElJ+fmuk2pwe1B/MgV38rkC7lgms6QG+WohvattrGDlL1AAHF6iDSXWTzztjLPEydDx6sTx0ghdm6b8JW@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7OXT3WjhJgNcNfRn1SaUpfY/8UbYMGToHoh3v1SEwczjaF9/i
+	0T3d7XbD9b2sHLbojDGOThjIb7OV4HQPq8XjeuIE9lIN69JXffd6fkcSs9AzZuE/rQU=
+X-Gm-Gg: Acq92OF/Z7+2T0Ka4Fww6JOmC41YUDpyS4hVGSj0f9sx06GNwtaKT2fQ7xTOzYWRW7B
+	mjirFYfmECPfRqc5mThUZNCy+aitVSZ7Gp7h4QsZghL6jfI8faWQfkbLgPU7PGddEkoRhYXJ658
+	rS+3H1SOigg38+3OfwcpLOs76IDZelDMrHioxQjbhtKTBln6b7zCOEGqyrtOWg5XOMXEH+JPyPI
+	OsjqPyPIVXNoNw5zwLmmvEZDhK3OuqgZ4yi84F84XvWA2R+PDRnqr8uT5QhD1biGbiSxPErF1Fx
+	xxLP/8o1Mw3aMssAYYmc5m0F7djeDe/74OD/EMEe6yf49bdOUTzKFr7wHsUj//Wlaq87sIkPghQ
+	MSEA1liqt9Wp15eqPP/imR6pF34rOc1o5xh6lNhxOHfJNr8+jCnqqIjG01+Kj/3JaDxNNe/BfCp
+	ss0lxhk3nDIbCt7mFn95vlooY=
+X-Received: by 2002:a05:6000:4022:b0:45e:f68d:e7ac with SMTP id ffacd0b85a97d-46056439196mr1887515f8f.0.1781011984149;
+        Tue, 09 Jun 2026 06:33:04 -0700 (PDT)
+Received: from mordecai ([62.77.90.70])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46059346676sm1079048f8f.26.2026.06.09.06.32.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2026 06:32:58 -0700 (PDT)
+Date: Tue, 9 Jun 2026 15:32:55 +0200
+From: Petr Tesarik <ptesarik@suse.com>
+To: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
+Cc: iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev, Robin Murphy
+ <robin.murphy@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Will
+ Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Steven Price
+ <steven.price@arm.com>, Suzuki K Poulose <Suzuki.Poulose@arm.com>, Catalin
+ Marinas <catalin.marinas@arm.com>, Jiri Pirko <jiri@resnulli.us>, Jason
+ Gunthorpe <jgg@ziepe.ca>, Mostafa Saleh <smostafa@google.com>, Alexey
+ Kardashevskiy <aik@amd.com>, Dan Williams <dan.j.williams@intel.com>, Xu
+ Yilun <yilun.xu@linux.intel.com>, linuxppc-dev@lists.ozlabs.org,
+ linux-s390@vger.kernel.org, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
+ <svens@linux.ibm.com>, x86@kernel.org, Michael Kelley
+ <mhklinux@outlook.com>
+Subject: Re: [PATCH v6 17/20] dma: swiotlb: handle set_memory_decrypted()
+ failures
+Message-ID: <20260609153255.4b9e9373@mordecai>
+In-Reply-To: <20260604083959.1265923-18-aneesh.kumar@kernel.org>
+References: <20260604083959.1265923-1-aneesh.kumar@kernel.org>
+	<20260604083959.1265923-18-aneesh.kumar@kernel.org>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260609-idledriver-v2-5-21c2f581d11f@linux.ibm.com>
-References: <20260609-idledriver-v2-0-21c2f581d11f@linux.ibm.com>
-In-Reply-To: <20260609-idledriver-v2-0-21c2f581d11f@linux.ibm.com>
-To: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@kernel.org>,
-        Christian Loehle <christian.loehle@arm.com>
-Cc: Mete Durlu <meted@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-X-Mailer: b4 0.14.3
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=N4UZ0W9B c=1 sm=1 tr=0 ts=6a281412 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8
- a=IOilmRhWZAFgXRNZ7poA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: gN7xBHzgPwylV2ntVFiUDe2QJv4ZhHZk
-X-Proofpoint-GUID: gN7xBHzgPwylV2ntVFiUDe2QJv4ZhHZk
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA5MDEyNCBTYWx0ZWRfX0E/Vj19qKUdF
- lbsCRFlRV9pI92njLfVfXh71p/+HmNJtkrI6CBYYe6c/4efTWF9l50zeNCHe2cHopunRZ0UBMl3
- RJezj5EErPDZfzUxIjstERWms0vIURDPUk1y6fNOZEc60fiAfOe3BQC4jCtbRV9XmjOZAVryuDm
- EWLCJhZn0Exm5KxRf0kiUxwnk7Trh22BxKM/H11id+xlXpNULYZkQrkypjXvFhIo5xOYmT/SNe5
- dSDSQxXL6Rm7UiADgywBpSTXxL0W5VLpopK1DdoLlKOlmQWFF4wmtp6qVKg0z9ALRDAQ2XiYE1j
- CN7w/Ua1CZZL7R6HhMECwaykesofYa1kxT0zc7sXK/sV3HDXdjDp17qxpXtoBaHNDJwI7RRa9me
- V1K2QgmLyuwgBCnSEXMDuoXki67JanUZ1oEWTXIG0bp/R0GQHgmuGef+gSoERV5XjSgNFDIoXVZ
- p1WJLYCScAc2Trd8NgA==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-09_03,2026-06-09_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 malwarescore=0 spamscore=0 clxscore=1015 lowpriorityscore=0
- phishscore=0 impostorscore=0 adultscore=0 priorityscore=1501 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606090124
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[suse.com,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20670-lists,linux-s390=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:svens@linux.ibm.com,m:anna-maria@linutronix.de,m:frederic@kernel.org,m:mingo@kernel.org,m:tglx@kernel.org,m:rafael@kernel.org,m:daniel.lezcano@kernel.org,m:christian.loehle@arm.com,m:meted@linux.ibm.com,m:borntraeger@linux.ibm.com,m:iii@linux.ibm.com,m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pm@vger.kernel.org,s:lists@lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,linux.ibm.com:mid,linux.ibm.com:from_mime,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	FORGED_SENDER(0.00)[meted@linux.ibm.com,linux-s390@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-20674-lists,linux-s390=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[32];
+	RCVD_TLS_LAST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[meted@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:aneesh.kumar@kernel.org,m:iommu@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:robin.murphy@arm.com,m:m.szyprowski@samsung.com,m:will@kernel.org,m:maz@kernel.org,m:steven.price@arm.com,m:Suzuki.Poulose@arm.com,m:catalin.marinas@arm.com,m:jiri@resnulli.us,m:jgg@ziepe.ca,m:smostafa@google.com,m:aik@amd.com,m:dan.j.williams@intel.com,m:yilun.xu@linux.intel.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-s390@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:x86@kernel.org,m:mhklinux@outlook.com,s:lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[ptesarik@suse.com,linux-s390@vger.kernel.org];
+	FREEMAIL_CC(0.00)[lists.linux.dev,lists.infradead.org,vger.kernel.org,arm.com,samsung.com,kernel.org,resnulli.us,ziepe.ca,google.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,linux.ibm.com,ellerman.id.au,gmail.com,outlook.com];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ptesarik@suse.com,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[suse.com:+];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[11]
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:email,suse.com:from_mime,outlook.com:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,mordecai:mid,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 63FA4660893
+X-Rspamd-Queue-Id: A6C08660A33
 
-Enable cpuidle infrastructure, teo governor and s390 cpuidle driver by
-default. They can be disabled via config options before compile or via
-setting cpuidle.off kernel commandline option. When cpuidle.off=1 set,
-given architecture's specific implementation is used as a fallback without
-any governor or idle state support.
+On Thu,  4 Jun 2026 14:09:56 +0530
+"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org> wrote:
 
-During runtime individual states of cpuidle driver can also be disabled
-via sysfs attributes.
+> Check the return value when converting swiotlb pools between encrypted and
+> decrypted mappings. If the default pool cannot be decrypted after early
+> initialization, mark the pool fully used so it cannot satisfy future bounce
+> allocations.
+> 
+> For late initialization, return the `set_memory_decrypted()` failure. For
+> restricted DMA pools, fail device initialization if the reserved pool
+> cannot be decrypted.
+> 
+> This prevents swiotlb from using pools whose encryption attributes do not
+> match their metadata, and avoids returning pages with uncertain encryption
+> state back to the allocator.
 
-Ex:
-echo 1 > /sys/devices/system/cpu<N>/cpuidle/state<M>/disable
+This works fine, but instead of effectively leaking the memory, we
+could return it to the buddy allocator and reset nslabs to zero as if
+SWIOTLB was not even initialized.
 
-Signed-off-by: Mete Durlu <meted@linux.ibm.com>
----
- arch/s390/configs/debug_defconfig | 2 ++
- arch/s390/configs/defconfig       | 2 ++
- 2 files changed, 4 insertions(+)
+OTOH I don't want to overthink this, because the system is probably not
+too useful after such a boot-time failure, so unless you _want_ to
+improve the error path, you can simply add:
 
-diff --git a/arch/s390/configs/debug_defconfig b/arch/s390/configs/debug_defconfig
-index 730c90b4a876..39f2c56bd29d 100644
---- a/arch/s390/configs/debug_defconfig
-+++ b/arch/s390/configs/debug_defconfig
-@@ -29,6 +29,8 @@ CONFIG_CGROUP_PIDS=y
- CONFIG_CGROUP_RDMA=y
- CONFIG_CGROUP_FREEZER=y
- CONFIG_CGROUP_HUGETLB=y
-+CONFIG_CPU_IDLE=y
-+CONFIG_CPU_IDLE_GOV_TEO=y
- CONFIG_CPUSETS=y
- CONFIG_CGROUP_DEVICE=y
- CONFIG_CGROUP_CPUACCT=y
-diff --git a/arch/s390/configs/defconfig b/arch/s390/configs/defconfig
-index dd5fc1426c88..723ce48ce8d1 100644
---- a/arch/s390/configs/defconfig
-+++ b/arch/s390/configs/defconfig
-@@ -27,6 +27,8 @@ CONFIG_CGROUP_PIDS=y
- CONFIG_CGROUP_RDMA=y
- CONFIG_CGROUP_FREEZER=y
- CONFIG_CGROUP_HUGETLB=y
-+CONFIG_CPU_IDLE=y
-+CONFIG_CPU_IDLE_GOV_TEO=y
- CONFIG_CPUSETS=y
- CONFIG_CGROUP_DEVICE=y
- CONFIG_CGROUP_CPUACCT=y
+Reviewed-by: Petr Tesarik <ptesarik@suse.com>
 
--- 
-2.54.0
+Petr T
+
+> Tested-by: Michael Kelley <mhklinux@outlook.com>
+> Tested-by: Mostafa Saleh <smostafa@google.com>
+> Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
+> ---
+>  kernel/dma/swiotlb.c | 80 +++++++++++++++++++++++++++++++++++---------
+>  1 file changed, 65 insertions(+), 15 deletions(-)
+> 
+> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+> index 4c56f64602ea..14d834ca298b 100644
+> --- a/kernel/dma/swiotlb.c
+> +++ b/kernel/dma/swiotlb.c
+> @@ -248,6 +248,23 @@ static inline unsigned long nr_slots(u64 val)
+>  	return DIV_ROUND_UP(val, IO_TLB_SIZE);
+>  }
+>  
+> +static void swiotlb_mark_pool_used(struct io_tlb_pool *pool)
+> +{
+> +	unsigned long i;
+> +
+> +	for (i = 0; i < pool->nareas; i++) {
+> +		pool->areas[i].index = 0;
+> +		pool->areas[i].used = pool->area_nslabs;
+> +	}
+> +
+> +	for (i = 0; i < pool->nslabs; i++) {
+> +		pool->slots[i].list = 0;
+> +		pool->slots[i].orig_addr = INVALID_PHYS_ADDR;
+> +		pool->slots[i].alloc_size = 0;
+> +		pool->slots[i].pad_slots = 0;
+> +	}
+> +}
+> +
+>  /*
+>   * Early SWIOTLB allocation may be too early to allow an architecture to
+>   * perform the desired operations.  This function allows the architecture to
+> @@ -272,8 +289,16 @@ void __init swiotlb_update_mem_attributes(void)
+>  		return;
+>  	bytes = PAGE_ALIGN(mem->nslabs << IO_TLB_SHIFT);
+>  
+> -	if (io_tlb_default_mem.unencrypted)
+> -		set_memory_decrypted((unsigned long)mem->vaddr, bytes >> PAGE_SHIFT);
+> +	if (io_tlb_default_mem.unencrypted) {
+> +		int ret;
+> +
+> +		ret = set_memory_decrypted((unsigned long)mem->vaddr,
+> +					   bytes >> PAGE_SHIFT);
+> +		if (ret) {
+> +			pr_warn("Failed to decrypt default memory pool, disabling it\n");
+> +			swiotlb_mark_pool_used(mem);
+> +		}
+> +	}
+>  }
+>  
+>  static void swiotlb_init_io_tlb_pool(struct io_tlb_pool *mem, phys_addr_t start,
+> @@ -442,9 +467,10 @@ int swiotlb_init_late(size_t size, gfp_t gfp_mask,
+>  {
+>  	struct io_tlb_pool *mem = &io_tlb_default_mem.defpool;
+>  	unsigned long nslabs = ALIGN(size >> IO_TLB_SHIFT, IO_TLB_SEGSIZE);
+> +	unsigned int order, area_order, slot_order;
+> +	bool leak_pages = false;
+>  	unsigned int nareas;
+>  	unsigned char *vstart = NULL;
+> -	unsigned int order, area_order;
+>  	bool retried = false;
+>  	int rc = 0;
+>  
+> @@ -504,6 +530,7 @@ int swiotlb_init_late(size_t size, gfp_t gfp_mask,
+>  			(PAGE_SIZE << order) >> 20);
+>  	}
+>  
+> +	rc = -ENOMEM;
+>  	nareas = limit_nareas(default_nareas, nslabs);
+>  	area_order = get_order(array_size(sizeof(*mem->areas), nareas));
+>  	mem->areas = (struct io_tlb_area *)
+> @@ -511,14 +538,20 @@ int swiotlb_init_late(size_t size, gfp_t gfp_mask,
+>  	if (!mem->areas)
+>  		goto error_area;
+>  
+> +	slot_order = get_order(array_size(sizeof(*mem->slots), nslabs));
+>  	mem->slots = (void *)__get_free_pages(GFP_KERNEL | __GFP_ZERO,
+> -		get_order(array_size(sizeof(*mem->slots), nslabs)));
+> +					      slot_order);
+>  	if (!mem->slots)
+>  		goto error_slots;
+>  
+> -	if (io_tlb_default_mem.unencrypted)
+> -		set_memory_decrypted((unsigned long)vstart,
+> -				     (nslabs << IO_TLB_SHIFT) >> PAGE_SHIFT);
+> +	if (io_tlb_default_mem.unencrypted) {
+> +		rc = set_memory_decrypted((unsigned long)vstart,
+> +					  (nslabs << IO_TLB_SHIFT) >> PAGE_SHIFT);
+> +		if (rc) {
+> +			leak_pages = true;
+> +			goto error_decrypt;
+> +		}
+> +	}
+>  
+>  	swiotlb_init_io_tlb_pool(mem, virt_to_phys(vstart), nslabs, true,
+>  				 nareas);
+> @@ -527,16 +560,20 @@ int swiotlb_init_late(size_t size, gfp_t gfp_mask,
+>  	swiotlb_print_info();
+>  	return 0;
+>  
+> +error_decrypt:
+> +	free_pages((unsigned long)mem->slots, slot_order);
+>  error_slots:
+>  	free_pages((unsigned long)mem->areas, area_order);
+>  error_area:
+> -	free_pages((unsigned long)vstart, order);
+> -	return -ENOMEM;
+> +	if (!leak_pages)
+> +		free_pages((unsigned long)vstart, order);
+> +	return rc;
+>  }
+>  
+>  void __init swiotlb_exit(void)
+>  {
+>  	struct io_tlb_pool *mem = &io_tlb_default_mem.defpool;
+> +	bool leak_pages = false;
+>  	unsigned long tbl_vaddr;
+>  	size_t tbl_size, slots_size;
+>  	unsigned int area_order;
+> @@ -552,19 +589,23 @@ void __init swiotlb_exit(void)
+>  	tbl_size = PAGE_ALIGN(mem->end - mem->start);
+>  	slots_size = PAGE_ALIGN(array_size(sizeof(*mem->slots), mem->nslabs));
+>  
+> -	if (io_tlb_default_mem.unencrypted)
+> -		set_memory_encrypted(tbl_vaddr, tbl_size >> PAGE_SHIFT);
+> +	if (io_tlb_default_mem.unencrypted) {
+> +		if (set_memory_encrypted(tbl_vaddr, tbl_size >> PAGE_SHIFT))
+> +			leak_pages = true;
+> +	}
+>  
+>  	if (mem->late_alloc) {
+>  		area_order = get_order(array_size(sizeof(*mem->areas),
+>  			mem->nareas));
+>  		free_pages((unsigned long)mem->areas, area_order);
+> -		free_pages(tbl_vaddr, get_order(tbl_size));
+> +		if (!leak_pages)
+> +			free_pages(tbl_vaddr, get_order(tbl_size));
+>  		free_pages((unsigned long)mem->slots, get_order(slots_size));
+>  	} else {
+>  		memblock_free(mem->areas,
+>  			array_size(sizeof(*mem->areas), mem->nareas));
+> -		memblock_phys_free(mem->start, tbl_size);
+> +		if (!leak_pages)
+> +			memblock_phys_free(mem->start, tbl_size);
+>  		memblock_free(mem->slots, slots_size);
+>  	}
+>  
+> @@ -1938,9 +1979,18 @@ static int rmem_swiotlb_device_init(struct reserved_mem *rmem,
+>  		 * restricted mem pool is decrypted by default
+>  		 */
+>  		if (cc_platform_has(CC_ATTR_MEM_ENCRYPT)) {
+> +			int ret;
+> +
+>  			mem->unencrypted = true;
+> -			set_memory_decrypted((unsigned long)phys_to_virt(rmem->base),
+> -					     rmem->size >> PAGE_SHIFT);
+> +			ret = set_memory_decrypted((unsigned long)phys_to_virt(rmem->base),
+> +						   rmem->size >> PAGE_SHIFT);
+> +			if (ret) {
+> +				dev_err(dev, "Failed to decrypt restricted DMA pool\n");
+> +				kfree(pool->areas);
+> +				kfree(pool->slots);
+> +				kfree(mem);
+> +				return ret;
+> +			}
+>  		} else {
+>  			mem->unencrypted = false;
+>  		}
 
 
