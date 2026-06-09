@@ -1,82 +1,82 @@
-Return-Path: <linux-s390+bounces-20665-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20673-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Yv8oBaISKGr29QIAu9opvQ
-	(envelope-from <linux-s390+bounces-20665-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 15:18:26 +0200
+	id Jff2GbcXKGpT9wIAu9opvQ
+	(envelope-from <linux-s390+bounces-20673-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 15:40:07 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 648D4660760
-	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 15:18:25 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 626AE660A9D
+	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 15:40:06 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=suse.com header.s=google header.b=AKNuI2v0;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20665-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-20665-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=suse.com header.s=google header.b=JqwJYwP5;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20673-lists+linux-s390=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-s390+bounces-20673-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=suse.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3815A303182C
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2026 13:12:37 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 4B838309DD3B
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2026 13:26:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD14241931D;
-	Tue,  9 Jun 2026 13:12:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04ECA2E737E;
+	Tue,  9 Jun 2026 13:26:49 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CD772135AD
-	for <linux-s390@vger.kernel.org>; Tue,  9 Jun 2026 13:12:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734A92C158A
+	for <linux-s390@vger.kernel.org>; Tue,  9 Jun 2026 13:26:47 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781010756; cv=none; b=JFcjb7DxbShseb73UNGTk+mdhGtSkaNLjuWb2Wq4ecH0dfdk/nQImPdtVQ4kgzxKxpgkIylqWqiN4ICLDx1mZJuK3ooC72rxWIb0V/zvMeR1zA/Oz42404OH5ZGaIcjdm3W38sBr4h3kHuE95gSDqYKZGNO2PP0kpQtBoV5t9Fs=
+	t=1781011608; cv=none; b=OlQmD+RTHcwmlXo0/Djc1dVd2rJPVmB9yU+oE64fUQzd5m+rxGXAy7QkkeEoa3RRF7cpi4NpUA6U0fnSqGwVrjf5zMyU50Di6skcUYPeWdungY1n9kFZvEL3KUJDsJabRMac8FQLgISDV+Hw01mGw6nZZrj9fBspvDwn4TGJ9nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781010756; c=relaxed/simple;
-	bh=cRmrex5oPCwg42dkdhJaD73cEwhY7jfqwVZ+TJf7vSo=;
+	s=arc-20240116; t=1781011608; c=relaxed/simple;
+	bh=twwp9hFllxfAH5zTiaxs+mflqhqxD3N7oFJ/LghNab4=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k/O9RYGBP5NFxqakZ87aAuzNcnFrel25gcO81K+TE2i6ZfS5g9UzEztHHoxjg+BNzdjAqff5H91l+8BNCIju5OZT4zkfujJGag+KFh29MEudmmqW36FvCBDiB38/bNvv/tZNLBhzf7OoCINZhrMO8MRV6ShkWIcg32IYRJds9aU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=AKNuI2v0; arc=none smtp.client-ip=209.85.128.52
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-490c28f84fdso9551975e9.0
-        for <linux-s390@vger.kernel.org>; Tue, 09 Jun 2026 06:12:35 -0700 (PDT)
+	 MIME-Version:Content-Type; b=ol4RMTz5LXtt7A479T0xLHEdqrM75Z2pf4T0NEL4UIM3Z/ryuN02zVuWb1RXrmQ3fZApFm6wlgdfcK6PTaHrvS8T19mwpx339basbo95xHTdzRkMQpmxv/UifojiIEtSELZyG3AinF6PFZdci+sreVEzdu88hRvF2LXDYtJG6IQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=JqwJYwP5; arc=none smtp.client-ip=209.85.128.44
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-490b8adf813so6028615e9.1
+        for <linux-s390@vger.kernel.org>; Tue, 09 Jun 2026 06:26:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1781010754; x=1781615554; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1781011606; x=1781616406; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jOb0YWdrCyqRf70PqWxcCcSyY2RJrYltX6EkSx4+w3M=;
-        b=AKNuI2v055wKL5+W3JqPxgf1MwVtlePBhAtv9nDHGhbadv1s8XuAFW3BJKSygjmAb2
-         pf4ydMyAZUPxhbZeGg8GYp3UEsxOcH7X2gs91g8w2svLEAsdKACYZ9s0hMHKws1DrOz4
-         fZx0SSuS0M+2eoF2QZGzPoLB9WlWm0SQ/UTMT8A8Mcd59lHCG9YNDlH7Z5rLu9oBspxc
-         lb7HdfNM5G6ndsNJxwjYpslx+phD2ZITINX3Eb+XncIwjFY7Uufef6jc8Ujr1UVr9OrR
-         Z+0uYyP+fCIPoPBpHL4UN3BYGce7IPtlhCKXEwLc3L3cV0pnj1wEPGR12mBHJpbZmKO7
-         1ZqQ==
+        bh=5Mb3ECCQF4KDrnD1oEZunr+tebvyQKuHVVgCgeE/hK8=;
+        b=JqwJYwP5rsw5mLds8y/xfXTBC4ZsdPTXG57lP+trT+Nq8qLLXF1IeBaqqTGs5JnIAv
+         1nfzR2K5zqGxc01dJfyEw20tAeoxz9tZWTjLhRldM1l/6e0G9vFl7C7ezD+/Zc0Cb/TD
+         yyrxJjD0U7S6HoTgohT0l0r0QApXMa8obNj9sNrzZ/8kWqKMBu3O4wMj1jrW9wIX2s4V
+         BzLHkTWhE1u9E3wRwD31JWFmqS8DJ4X+ofKSkS2DLhGfFcPZf1uDJBVKEEVHoQCydYvE
+         cxLHIsbQUmFKfwB9qmVifKiuONS4QzSUyCjNEPpA4n26S9mq6j2+8FDJSefwH2OR+dFc
+         TL2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781010754; x=1781615554;
+        d=1e100.net; s=20251104; t=1781011606; x=1781616406;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=jOb0YWdrCyqRf70PqWxcCcSyY2RJrYltX6EkSx4+w3M=;
-        b=Unw5xBvkq/c6sPQ3KV4BkuJDpKZH3Qc6CgGcku5Ooq2OZN5A1Y0FCF6mNC9FwrWQLi
-         vpOpekuL5DgBVtR3Pb8XlkAfvesXWC1n4QlLI9nTFUbt73Hfdu2jAJfY3EjxwGTORKXQ
-         w6DKvojQj08TfQ0SY5VT9GC5aQFc4pOpEm20J8h2/K4/F3kHEcQCTqdV7KuJbvZ+qO8/
-         XhLCp4EkR0gb/AWX6X3y5ENIeHr2OqnInfMSD0VMvRdz/q3iVAhJQvK46TFHyk9Y6KJt
-         TQzN+MSE+mwGl+QzsovIJFzLA0DCRKrDdWRQSIXizk6ntoxdlcfpniW1YMgDo3j/B1yQ
-         XnGA==
-X-Forwarded-Encrypted: i=1; AFNElJ8Exm3tjqILjWSvrgAwsbNEN2B8WdxmxT8+iksZbvHQYcm70cd7NJgOl0BGAcl+Aj3vRPGuh8nCEet0@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwuPkSH5DVSVTT4eBqTPRQazMhxNqtpidrsC7ybr2t5sI+zxOH
-	rPkc+KQnb7WanNhJA8COJtzOMzqLnqWl6lqpO3JM3n/fbUCZtFhGTU2e6qtQ6gKxZBo=
-X-Gm-Gg: Acq92OHE9pMk3cv5rdUAzf6aeih/I1WoSnPSGWaNJ+rgVCvCWphUZc72mGnwUQyLpi8
-	1YC/W++mV+g5MESI8N/QmdPtmjiE0O+upo1wdsEivRoLyC1wP/NjpMO72uIKfuTr+tv+54uF2Hj
-	EsRe8LlUf7dUvhIyf25EDYgJkzVgkhqlqMA4s62kSXtYdo3v1pesGs8trD0YM5iEwfBnbjVCH3m
-	4Oyimn3kiPdnx1lxQIO8dgirGnmPUpyhFWbQr7rf/IAXB7TCBpFMMjaqpQMTrzf4sZS2cXPq5DZ
-	3DJZSHRqLS1KKspjMwOEYQYVlzKzfFJ2JZA9Gam9bCxQBZYZz7pyOD5RWHFRXTGuJGwlxHMyk/G
-	24ymIkwxX47oYVKAfa2iI7nwj7RB2RUupDT2NOD4PWSyd8qAUeiXyVnVIPd8a+RE+nahqMnayo/
-	iWr2fnF783kWR7FMD+JJZIvDE=
-X-Received: by 2002:a05:600c:8b65:b0:490:b4d4:5c16 with SMTP id 5b1f17b1804b1-490d72759f0mr16962775e9.8.1781010753634;
-        Tue, 09 Jun 2026 06:12:33 -0700 (PDT)
+        bh=5Mb3ECCQF4KDrnD1oEZunr+tebvyQKuHVVgCgeE/hK8=;
+        b=LhGaadPrwOLYgt2udrg7EaR656Dkgt92lhUPTgCHiuyMa8kLdX+eHtizCy6NtRO4mj
+         rPvyMvLBntBJPVJBhTXyJNLE3ud3CK9nm1yKFmOqwvTcrBy2AOFPL9QcWzt91sv18/Re
+         38TiZ5M2JyJTkeraMJrlm1HTXnoroRZTeo44hrt98U2g6C4V7MAFrbPT7gT/Gt5PzNo1
+         g31YubCn3KV8AL7Aks33XZb3L7tkpSnWrroJeGZ6n+BKlerBx+jloGYeO9skjPg25gUR
+         rGmVA8O4vXyw6zvjM3W152lLaOOqSaL8/Xs5vnqpuhfQ/N6u/7LxyCVLTwu4fhK0AeFn
+         0VhQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/cs/uDjxNh9NEhHiMn/JX4bX+jud2ZmjfUmB3f9E5HjJXVzDiR1lI5/kl7IOBV/jAyLBu8NB+UyZMv@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHXMM/dlr444w3w+A2hNz08MQBw5nHa4PjDRKNYyMqgtx7ULsW
+	de4cC2d3hCPbQpYyOwqSR3CAZHUtZdog7lcsMLpPAHr62HH1oWkrHPOT6gBcVsorvak=
+X-Gm-Gg: Acq92OFwUFDfUTLeXGjzYJBZs//ZL/tPxr4pVpY94oKpnNEATtB5AWWs0crGmycIh7Y
+	sfd+Wd9/DmMjpTk/lD2T3X8XviDerfgmgx9YdkE+BRYa+KgvYD89wNtB1TyfrpyD7ZkBknoqcFw
+	nMQltiKEyotoCZYpH3NZu59Ru4amYiQsCBMx2as4VakoKhaAFACg62r7pFEVgDIWrNOa1nEWvoc
+	8zf/bF0cUuI4s8384851HJ5tmXMxh3xiY3xAsQ8BDnPsbB2CWXR5aBNmQVpljHgvGIoS99iJlgT
+	GTYFMsVA40BeRHVlNnNmOeWEikskEpMKXpwu27s20jwBv0BZx3bvzW2hw6VThq0sqg2Ibreg/RJ
+	7//HlTUKv6yM+lDO+xOSQJnA39UOigKa9zLQhmVt/ghRZwsVvAV5WZlqQywY6+2HxaB+eUSTieJ
+	04yAT1uNQF7lV3p/NbmPbYeA4=
+X-Received: by 2002:a05:600c:8705:b0:490:3fdd:d344 with SMTP id 5b1f17b1804b1-490c25897eamr150306735e9.1.1781011605912;
+        Tue, 09 Jun 2026 06:26:45 -0700 (PDT)
 Received: from mordecai ([62.77.90.70])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f351d69sm111677469f8f.29.2026.06.09.06.12.24
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc39def5sm469464095e9.5.2026.06.09.06.26.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2026 06:12:26 -0700 (PDT)
-Date: Tue, 9 Jun 2026 15:12:22 +0200
+        Tue, 09 Jun 2026 06:26:45 -0700 (PDT)
+Date: Tue, 9 Jun 2026 15:13:54 +0200
 From: Petr Tesarik <ptesarik@suse.com>
 To: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
 Cc: iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
@@ -94,14 +94,14 @@ Cc: iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
  <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
  Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
  Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
- <svens@linux.ibm.com>, x86@kernel.org, stable@vger.kernel.org, Michael
- Kelley <mhklinux@outlook.com>
-Subject: Re: [PATCH v6 14/20] dma-direct: return struct page from
- dma_direct_alloc_from_pool()
-Message-ID: <20260609151222.476a5521@mordecai>
-In-Reply-To: <20260604083959.1265923-15-aneesh.kumar@kernel.org>
+ <svens@linux.ibm.com>, x86@kernel.org, Michael Kelley
+ <mhklinux@outlook.com>
+Subject: Re: [PATCH v6 15/20] iommu/dma: Check atomic pool allocation result
+ directly
+Message-ID: <20260609151354.534bb18d@mordecai>
+In-Reply-To: <20260604083959.1265923-16-aneesh.kumar@kernel.org>
 References: <20260604083959.1265923-1-aneesh.kumar@kernel.org>
-	<20260604083959.1265923-15-aneesh.kumar@kernel.org>
+	<20260604083959.1265923-16-aneesh.kumar@kernel.org>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
@@ -116,17 +116,17 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[suse.com,quarantine];
 	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[suse.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-20665-lists,linux-s390=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[33];
+	TAGGED_FROM(0.00)[bounces-20673-lists,linux-s390=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[32];
 	RCVD_TLS_LAST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:aneesh.kumar@kernel.org,m:iommu@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:robin.murphy@arm.com,m:m.szyprowski@samsung.com,m:will@kernel.org,m:maz@kernel.org,m:steven.price@arm.com,m:Suzuki.Poulose@arm.com,m:catalin.marinas@arm.com,m:jiri@resnulli.us,m:jgg@ziepe.ca,m:smostafa@google.com,m:aik@amd.com,m:dan.j.williams@intel.com,m:yilun.xu@linux.intel.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-s390@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:x86@kernel.org,m:stable@vger.kernel.org,m:mhklinux@outlook.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:aneesh.kumar@kernel.org,m:iommu@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:robin.murphy@arm.com,m:m.szyprowski@samsung.com,m:will@kernel.org,m:maz@kernel.org,m:steven.price@arm.com,m:Suzuki.Poulose@arm.com,m:catalin.marinas@arm.com,m:jiri@resnulli.us,m:jgg@ziepe.ca,m:smostafa@google.com,m:aik@amd.com,m:dan.j.williams@intel.com,m:yilun.xu@linux.intel.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-s390@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:x86@kernel.org,m:mhklinux@outlook.com,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_SENDER(0.00)[ptesarik@suse.com,linux-s390@vger.kernel.org];
 	FREEMAIL_CC(0.00)[lists.linux.dev,lists.infradead.org,vger.kernel.org,arm.com,samsung.com,kernel.org,resnulli.us,ziepe.ca,google.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,linux.ibm.com,ellerman.id.au,gmail.com,outlook.com];
@@ -141,104 +141,58 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,outlook.com:email,suse.com:dkim,suse.com:from_mime]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mordecai:mid,outlook.com:email,vger.kernel.org:from_smtp,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,suse.com:dkim,suse.com:email,suse.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 648D4660760
+X-Rspamd-Queue-Id: 626AE660A9D
 
-On Thu,  4 Jun 2026 14:09:53 +0530
+On Thu,  4 Jun 2026 14:09:54 +0530
 "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org> wrote:
 
-> Commit 5b138c534fda ("dma-direct: factor out a dma_direct_alloc_from_pool
-> helper") changed dma_direct_alloc_from_pool() to return the CPU address
-> from dma_alloc_from_pool(). That fits dma_direct_alloc(), but
-> dma_direct_alloc_pages() also uses the helper and expects a struct page *.
+> The non-blocking, non-coherent allocation path uses dma_alloc_from_pool(),
+> which returns the allocated page and fills cpu_addr only on success.
 > 
-> Fix this by making dma_direct_alloc_from_pool() return the struct page *
-> again, and pass the CPU address back through an out-parameter for the
-> dma_direct_alloc() caller.
+> Do not rely on cpu_addr to detect allocation failure in this path. Check
+> the returned page directly before using it for the IOMMU mapping.
 > 
-> Fixes: 5b138c534fda ("dma-direct: factor out a dma_direct_alloc_from_pool helper")
-> Cc: stable@vger.kernel.org
-
-While I totally agree with the reasoning and the fix, it's interesting
-that this bug has been apparently present in the kernel for 5+ years
-without anybody hitting nasty memory corruption bugs.
-
-How can it be? Is the buggy code path never actually used in practice?
-Does it hint at a missed opportunity to simplify the code?
-
-Anyway, these these thoughts are intended for a possible future
-cleanup. For now, let's apply the fix as is, of course.
-
-Petr T
-
+> Fixes: 9420139f516d ("dma-pool: fix coherent pool allocations for IOMMU mappings")
 > Tested-by: Michael Kelley <mhklinux@outlook.com>
 > Tested-by: Mostafa Saleh <smostafa@google.com>
 > Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
+
+Reviewed-by: Petr Tesarik <ptesarik@suse.com>
+
+Petr T
+
 > ---
->  kernel/dma/direct.c | 21 ++++++++++++---------
->  1 file changed, 12 insertions(+), 9 deletions(-)
+>  drivers/iommu/dma-iommu.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
 > 
-> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-> index 4e446aa4130e..e0ab9ff3f1d6 100644
-> --- a/kernel/dma/direct.c
-> +++ b/kernel/dma/direct.c
-> @@ -157,24 +157,24 @@ static bool dma_direct_use_pool(struct device *dev, gfp_t gfp)
->  	return !gfpflags_allow_blocking(gfp) && !is_swiotlb_for_alloc(dev);
->  }
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index 725c7adb0a8d..52c599f4472c 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -1671,13 +1671,16 @@ void *iommu_dma_alloc(struct device *dev, size_t size, dma_addr_t *handle,
+>  	}
 >  
-> -static void *dma_direct_alloc_from_pool(struct device *dev, size_t size,
-> -		dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
-> +static struct page *dma_direct_alloc_from_pool(struct device *dev, size_t size,
-> +		dma_addr_t *dma_handle, void **cpu_addr, gfp_t gfp,
-> +		unsigned long attrs)
->  {
->  	struct page *page;
->  	u64 phys_limit;
-> -	void *ret;
->  
->  	if (WARN_ON_ONCE(!IS_ENABLED(CONFIG_DMA_COHERENT_POOL)))
->  		return NULL;
->  
->  	gfp |= dma_direct_optimal_gfp_mask(dev, &phys_limit);
-> -	page = dma_alloc_from_pool(dev, size, &ret, gfp, attrs,
-> +	page = dma_alloc_from_pool(dev, size, cpu_addr, gfp, attrs,
->  				   dma_coherent_ok);
->  	if (!page)
->  		return NULL;
->  	*dma_handle = phys_to_dma_direct(dev, page_to_phys(page),
->  					 !!(attrs & DMA_ATTR_CC_SHARED));
-> -	return ret;
-> +	return page;
->  }
->  
->  static void *dma_direct_alloc_no_mapping(struct device *dev, size_t size,
-> @@ -270,9 +270,12 @@ void *dma_direct_alloc(struct device *dev, size_t size,
->  	 * the atomic pools instead if we aren't allowed block.
->  	 */
->  	if ((remap || (attrs & DMA_ATTR_CC_SHARED)) &&
-> -	    dma_direct_use_pool(dev, gfp))
-> -		return dma_direct_alloc_from_pool(dev, size, dma_handle,
-> -						  gfp, attrs);
-> +	    dma_direct_use_pool(dev, gfp)) {
-> +		page = dma_direct_alloc_from_pool(dev, size,
-> +					dma_handle, &cpu_addr,
-> +					gfp, attrs);
-> +		return page ? cpu_addr : NULL;
+>  	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
+> -	    !gfpflags_allow_blocking(gfp) && !coherent)
+> +	    !gfpflags_allow_blocking(gfp) && !coherent) {
+>  		page = dma_alloc_from_pool(dev, PAGE_ALIGN(size), &cpu_addr,
+>  					   gfp, attrs, NULL);
+> -	else
+> +		if (!page)
+> +			return NULL;
+> +	} else {
+>  		cpu_addr = iommu_dma_alloc_pages(dev, size, &page, gfp, attrs);
+> -	if (!cpu_addr)
+> -		return NULL;
+> +		if (!cpu_addr)
+> +			return NULL;
 > +	}
 >  
->  	if (is_swiotlb_for_alloc(dev)) {
->  		page = dma_direct_alloc_swiotlb(dev, size, attrs);
-> @@ -445,7 +448,7 @@ struct page *dma_direct_alloc_pages(struct device *dev, size_t size,
->  
->  	if ((attrs & DMA_ATTR_CC_SHARED) && dma_direct_use_pool(dev, gfp))
->  		return dma_direct_alloc_from_pool(dev, size, dma_handle,
-> -						  gfp, attrs);
-> +						  &cpu_addr, gfp, attrs);
->  
->  	if (is_swiotlb_for_alloc(dev)) {
->  		page = dma_direct_alloc_swiotlb(dev, size, attrs);
+>  	*handle = __iommu_dma_map(dev, page_to_phys(page), size, ioprot,
+>  			dev->coherent_dma_mask);
 
 
