@@ -1,51 +1,51 @@
-Return-Path: <linux-s390+bounces-20630-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20631-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id m0aJLpPLJ2pr2QIAu9opvQ
-	(envelope-from <linux-s390+bounces-20630-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 10:15:15 +0200
+	id ZYkyADLLJ2pP2QIAu9opvQ
+	(envelope-from <linux-s390+bounces-20631-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 10:13:38 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8A6A65DA21
-	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 10:15:14 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5905C65D9FB
+	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 10:13:37 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=arm.com header.s=foss header.b=s2n7Goxn;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20630-lists+linux-s390=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-s390+bounces-20630-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=arm.com header.s=foss header.b=Le6kKzpb;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20631-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-20631-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=arm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id ABBD230118C8
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2026 08:06:25 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 23EE2303AF11
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2026 08:06:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B44E437AA79;
-	Tue,  9 Jun 2026 08:06:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0F243EA97B;
+	Tue,  9 Jun 2026 08:06:25 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4026D39B498;
-	Tue,  9 Jun 2026 08:06:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E4D33E95B1;
+	Tue,  9 Jun 2026 08:06:24 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780992383; cv=none; b=qRXeC1BJRpprdZuSOgiOZf+Mxo+fM9uaJW0RgI5MaSdfMXV9NscluuDQfvXm9VS/eHL52dPtpfQpmTba6wPI5CGYjNS+3rCloJmX+o57el/kAx9LsRgx5kGwo/eCrqf5tLTb2SxXYAHR9ph4pR+wqhkCs1lP22BiX/FJG34ZPvI=
+	t=1780992385; cv=none; b=EtI1gj+UFjjWHYAcvTItJLlaArZUJeRqNjCCOyJILeiK+WSl3zl7Gzct4OiMLmUijpD5vU5e7SVJnDJRm3Mr4PxRvckcMNL35lkSL31EYQN3eYLwaUqI3HTvu1VzCwYSXl/No9SQ3+gogZuDOa/w7XZ+DRIYjuJFoynL9DiopFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780992383; c=relaxed/simple;
-	bh=C0s5G7UxUrSQXdh5FZM7LtxTT3tjOPeqZSwFusMshw4=;
+	s=arc-20240116; t=1780992385; c=relaxed/simple;
+	bh=qwbcgQ/WQsVIsTXkXunVAagyi9kEj56i64FLMZACVYg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WIPTisdJTc7e89j181615fZbFuZDkhTlFMAAb7zHY3V11yZPStNUHMVn7diOn2170Zi5XOOxWXOK5Gqe4FaerJ5QCSUYjlR2UCrZbhrYqbCVqEmUK9YREggIK7t9jGyTH0SK+MtoraP6BFOYzmCuwo5DLUiSer+wKCdTFlqFz3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=s2n7Goxn; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:Content-Type; b=Jb7/CmQ9hW7ewpWgtkH3VnkvaC/Mpqe7RSQGJQjqw+p8gYkBhqkpTNgrmG/hf+d7RU8gAmz1FEWHm/w/C/OkKOzWo4+CxhdCyTMrFG2RTrELRumG/xWGAWU9RoFIknRpQJV6+JA1wOnQjb9WFF1iHaUADo6L1mYmcPvq4FCLz60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Le6kKzpb; arc=none smtp.client-ip=217.140.110.172
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 22B61236D;
-	Tue,  9 Jun 2026 01:06:15 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 486592681;
+	Tue,  9 Jun 2026 01:06:19 -0700 (PDT)
 Received: from [10.1.29.25] (e127648.arm.com [10.1.29.25])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D19BF3F93E;
-	Tue,  9 Jun 2026 01:06:16 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4D91C3F93E;
+	Tue,  9 Jun 2026 01:06:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1780992379; bh=C0s5G7UxUrSQXdh5FZM7LtxTT3tjOPeqZSwFusMshw4=;
+	t=1780992384; bh=qwbcgQ/WQsVIsTXkXunVAagyi9kEj56i64FLMZACVYg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=s2n7GoxnHxvxNk04uVGSFSAJMzjcyE3eAVSA+3slwJss4Qo4gacs7LmPhNWOCCLHm
-	 eIAb/vIYsT21i9/QDhwOFczd7ou2QMYJf/ME03cx09RhAuz0nTLv8LOOMIVPLInU+R
-	 P3Iq97pKaV+RIfFGVjRWNwvlb04Tm7iC/Q30hKHk=
-Message-ID: <6667f684-77d5-45a9-8fb6-4985cbc05bf1@arm.com>
-Date: Tue, 9 Jun 2026 09:06:14 +0100
+	b=Le6kKzpbUjoiHGhxUJ9PVimGhMg2bwpTBrPEfPdyePRQK/9hvH76xmCErt4nL6IPb
+	 45gi+/BkZ89WZ5ClhOwWBsJhxXLyWeTthgDcnMDowqtw/BzsKbBE0Fio2L67Q6J78h
+	 9TMgZJBqwERGj/ITSfLAP9ijrCEmyZWqvY4thmLw=
+Message-ID: <2e07e79f-dee9-4ae7-a51d-eb132cc4abfa@arm.com>
+Date: Tue, 9 Jun 2026 09:06:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/5] s390/idle: Introduce cpuidle for s390
+Subject: Re: [PATCH 0/5] s390/idle: CPU idle driver
 To: Mete Durlu <meted@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
  Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
  <agordeev@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>,
@@ -67,17 +67,16 @@ Cc: Ilya Leoshkevich <iii@linux.ibm.com>,
  linux-s390 <linux-s390@vger.kernel.org>,
  linux-kernel <linux-kernel@vger.kernel.org>
 References: <20260609075213.31094-1-meted@linux.ibm.com>
- <20260609075213.31094-5-meted@linux.ibm.com>
 Content-Language: en-US
 From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <20260609075213.31094-5-meted@linux.ibm.com>
+In-Reply-To: <20260609075213.31094-1-meted@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[arm.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[arm.com:s=foss];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -85,7 +84,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FORGED_RECIPIENTS(0.00)[m:meted@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:svens@linux.ibm.com,m:rafael@kernel.org,m:daniel.lezcano@kernel.org,m:anna-maria@linutronix.de,m:frederic@kernel.org,m:mingo@kernel.org,m:tglx@kernel.org,m:iii@linux.ibm.com,m:borntraeger@linux.ibm.com,m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20630-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20631-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER(0.00)[christian.loehle@arm.com,linux-s390@vger.kernel.org];
 	TO_DN_ALL(0.00)[];
@@ -97,7 +96,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[christian.loehle@arm.com,linux-s390@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
@@ -105,83 +104,33 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-s390];
 	RCPT_COUNT_TWELVE(0.00)[15]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: B8A6A65DA21
+X-Rspamd-Queue-Id: 5905C65D9FB
 
 On 6/9/26 08:52, Mete Durlu wrote:
-> Introduce generic cpuidle driver on s390. Use a two stage approach to
-> handle idle scenarios and use TEO governor for idle stage selection.
-> Two stages are, from shallow to deep, idle polling and enabled wait.
+> This patch series introduces a CPU idle driver for s390
+> architecture that leverages the existing cpu idle infrastructure and
+> TEO (Timer Events Oriented) governor to optimize idle state selection
+> based on timer events and interrupt patterns.
 > 
-> Suggested-by: Christian Borntraeger <borntraeger@linux.ibm.com>
-> Suggested-by: Heiko Carstens <hca@linux.ibm.com>
-> Signed-off-by: Mete Durlu <meted@linux.ibm.com>
-> ---
->  arch/s390/Kconfig              |   5 ++
->  drivers/cpuidle/Kconfig        |   5 ++
->  drivers/cpuidle/Kconfig.s390   |  12 ++++
->  drivers/cpuidle/Makefile       |   4 ++
->  drivers/cpuidle/cpuidle-s390.c | 104 +++++++++++++++++++++++++++++++++
->  5 files changed, 130 insertions(+)
->  create mode 100644 drivers/cpuidle/Kconfig.s390
->  create mode 100644 drivers/cpuidle/cpuidle-s390.c
+> # Implementation Overview
+> -----------------------------------------------------------------------
 > 
-> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-> index ecbcbb781e40..8548f5b6b247 100644
-> --- a/arch/s390/Kconfig
-> +++ b/arch/s390/Kconfig
-> @@ -20,6 +20,9 @@ config ARCH_HAS_ILOG2_U64
->  config ARCH_PROC_KCORE_TEXT
->  	def_bool y
->  
-> +config ARCH_HAS_CPU_RELAX
-> +	def_bool y
-> +
->  config GENERIC_HWEIGHT
->  	def_bool !HAVE_MARCH_Z196_FEATURES
->  
-> @@ -708,6 +711,8 @@ config KERNEL_IMAGE_BASE
->  
->  endmenu
->  
-> +source "drivers/cpuidle/Kconfig"
-> +
->  menu "Memory setup"
->  
->  config ARCH_SPARSEMEM_ENABLE
-> diff --git a/drivers/cpuidle/Kconfig b/drivers/cpuidle/Kconfig
-> index d6d8386d3f02..00e2562041fd 100644
-> --- a/drivers/cpuidle/Kconfig
-> +++ b/drivers/cpuidle/Kconfig
-> @@ -71,6 +71,11 @@ depends on RISCV
->  source "drivers/cpuidle/Kconfig.riscv"
->  endmenu
->  
-> +menu "S390 CPU Idle Drivers"
-> +depends on S390
-> +source "drivers/cpuidle/Kconfig.s390"
-> +endmenu
-> +
->  config HALTPOLL_CPUIDLE
->  	tristate "Halt poll cpuidle driver"
->  	depends on X86 && KVM_GUEST
-> diff --git a/drivers/cpuidle/Kconfig.s390 b/drivers/cpuidle/Kconfig.s390
-> new file mode 100644
-> index 000000000000..e51704a9304c
-> --- /dev/null
-> +++ b/drivers/cpuidle/Kconfig.s390
-> @@ -0,0 +1,12 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# S390 CPU Idle drivers
-> +#
-> +
-> +config S390_CPUIDLE
-> +	bool "S390 CPU idle driver"
-> +	default y
-> +	help
-> +          Select this option to enable processor idle state management
-> +          through cpuidle subsystem.
-> +
-NIT:
-git complains about the trailing blank line here.
+> The driver implements two idle states;
+> 
+> **Polling Idle (shallow state)**
+> - Busy-loop implementation that prevents SIE-exit during short idle periods
+> - Zero exit latency, optimized for latency-sensitive workloads
+> - Maintains CPU with the guest, improving response times
+> 
+> **Enabled Wait (deep state)**
+> - Traditional EW state that signals hypervisor availability
+> - Higher exit latency but more efficient for longer idle periods
+> 
+> The TEO governor dynamically selects between these states by monitoring
+> next timer interrupts and system interrupt frequency, choosing the most
+> appropriate idle state for each situation.
+> 
+I don't quite get the TEO focus of this series, on principle menu works
+similarly, did TEO just work much better for you?
+If so do you know why?
 
