@@ -1,272 +1,255 @@
-Return-Path: <linux-s390+bounces-20672-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20669-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 66DBIM8VKGq39gIAu9opvQ
-	(envelope-from <linux-s390+bounces-20672-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 15:31:59 +0200
+	id gNXhH7EUKGpz9gIAu9opvQ
+	(envelope-from <linux-s390+bounces-20669-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 15:27:13 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9577266094D
-	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 15:31:58 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2195B6608D0
+	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 15:27:13 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=suse.com header.s=google header.b=Bn9Lswqw;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20672-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20672-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=suse.com;
+	dkim=pass header.d=ibm.com header.s=pp1 header.b="EkoBS/o/";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20669-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-20669-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 48336310A6F8
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2026 13:25:46 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E5A7E307A982
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2026 13:25:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C1882D1303;
-	Tue,  9 Jun 2026 13:25:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 940AC28C874;
+	Tue,  9 Jun 2026 13:24:47 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA012BEC2E
-	for <linux-s390@vger.kernel.org>; Tue,  9 Jun 2026 13:25:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E723E280CFB;
+	Tue,  9 Jun 2026 13:24:41 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781011522; cv=none; b=aW33WV9Bd6GVdw2ymRmmxhHD7vzyQZpbAM8TnDBZel4I4IgkYAOzznhgk6lDaagIcdHgaX937VZ0lOzXkVkPCJy3Z3oasJpu6qpO1mas4Yb7K4iCpevHuVGDq8W5GerAJ2fl7V4bgYMVG/rKLsJnLjGoAf2Judjec+ZBvTNjN+4=
+	t=1781011487; cv=none; b=sYrNu7OfsRtwKFSfyky0YoUj+YXjECIhnHuMhorPebwniiEM+zAcgF+mEkViRiHv2yFHhXlhepETfy9xxqtzfdJ2Af0UjR9QOK05m6jbl2LGvxjyRVGtBRTjbzCDRAfrIvKgu/Lp5ieOu5J883XgkfAMQffwnMg+QaobHX1abZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781011522; c=relaxed/simple;
-	bh=5ykcnLagaTLgxx9r2hXBNJ7fmnjaYdIjCpGctAQoeIc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Zcde/xWtTVMrLnOm/XBSq60XRfEI8nE3n+Jolzb3WsAKqwNDlUchn80SbkN0RjoyXd4ujO7xZWD2DsRdt+mICuSnWoD4oyJCOfjbLBhQWql8CAdjy5NrS3IiqI6wjk2rInhhe8c4ddv3mcuWJmmhSs4Iql6LrLbj964stPB8oFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Bn9Lswqw; arc=none smtp.client-ip=209.85.128.44
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-490a7629453so4898785e9.0
-        for <linux-s390@vger.kernel.org>; Tue, 09 Jun 2026 06:25:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1781011519; x=1781616319; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k7v0vfpWbXL2tO4K5nU3J31VniWsuUDENERYOQ4A7IA=;
-        b=Bn9LswqwemtU8Cm1YRRbrBjRNko7HkcH54vKwpklwvQul4E5/P3wMy9WEyuWZoqQNE
-         WnMq7OAdamuPpozJuDhGP4xhEEDhgwVJjwu8c/7J41kOeV3uKBbNu+UBPKLOrNR9M+vx
-         N5Pr3WxzmtQ8VYeyvALY2lfXtFjihisKgwb56zr2u1R/JaCoXovXSFf80bap5OIcGp3s
-         qoM8zGWd6HLh1UPVvSWell3iH1UFpqBT4KdTtBOhbUUuSfojN9MiGi3EEcnisQ7+3CuZ
-         PMo9lhugnsbp5BJAxwxASEKYGPyUXDx13SY/K2h+ltEZXmn2W5NAINGg2zGOA5Rh25x/
-         jlxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781011519; x=1781616319;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=k7v0vfpWbXL2tO4K5nU3J31VniWsuUDENERYOQ4A7IA=;
-        b=nn3Bx5OFeJ9Cp+ENzGUtB+0Xh9zOdKbZZYGn0VmV7emYo2G7/2RQyaqAoAVqf30PLV
-         6HjXH04vTyJhDLL3wfCjJmFQ50gF67Da5fOdOBYbnkbCbOZuxRxBKXa3PBR1a3abnsGI
-         nu3ak+VS4cansOlCJbQTcOj9FQNx/OmaoioXbK1z9Ece8D2x/X1etocUmD32SDMJoPPM
-         CKUFwYzxuJehGfS71lkelcsfx/4obMWMjz6r9z9Xn7inBOErikN5GjRyUpbI8bDQERvI
-         Y4W/gikGWbO9vt4rPV4Jtrd0t31FiqvCz/gtpCkfEvFlHvw4/lk2/GkoErGvjMA3qTch
-         tYiQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8LAWWquakeJ+iDMIkYsTOZycQ9Kf1vfxxvDzlbC42Mlf+2wV1Sk1mCPqlRCOOnGVM7s/6RCH0UVJkO@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/xuxLmvq2jTn39AVqxHTWF9U8uh34wMDLDzf0XDp5rEGLOUgw
-	hqlk/H7gSYBvim82eJHLzkSr2RnlTVTZ+54INtq6uwcWkOGkjqMrv5nkIbE8LiJOEQs=
-X-Gm-Gg: Acq92OE8jdGTjumkToGRI3i6oz707UcANypj9opHylad6jaHjmHTsl9kiUwBikjW/vJ
-	+qTxoZV7N2u/F/2PGzDMmVuF57ZvQrbfqeY9Ih3kPVq7kwidu7Pm6JFI0J6C5u9B7DQ3GuwEoGE
-	Zl7O2xixjAPGelTKyuk1BrsFObNV6tDwlzQLc5i4pE4ZIcRHjnOJCT/NVETQXIC6GEVsOES7Ywo
-	ooloCN0cZq0GYsiHnBQ0FCB6CIU3i2raMmcgu3DPr6w0E9ZAd8YcS4ocmn7Au2kMA5GxCOC6epu
-	UiY55DThtyVxVSXxvkkvAYtoif4nGUjOIIAIP4xV9m2BY4TQQkPty7mlPZKGQ0GzDPkDaQaLLzX
-	i5NO42WhQ4vopjiS4sQyjzB9Ba/+razpundp0+ZPMYRCCHcbTZzxdmkdVA0oK2nGbTFsoImUJx3
-	DOKhLk+z5+Eu1FuBEDVw7XxMs=
-X-Received: by 2002:a05:600c:1c1e:b0:48a:56d4:7274 with SMTP id 5b1f17b1804b1-490c25e7e1amr167118665e9.3.1781011519006;
-        Tue, 09 Jun 2026 06:25:19 -0700 (PDT)
-Received: from mordecai ([62.77.90.70])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3cc140sm574197205e9.9.2026.06.09.06.25.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2026 06:25:18 -0700 (PDT)
-Date: Tue, 9 Jun 2026 15:23:53 +0200
-From: Petr Tesarik <ptesarik@suse.com>
-To: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
-Cc: iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev, Robin Murphy
- <robin.murphy@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Will
- Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Steven Price
- <steven.price@arm.com>, Suzuki K Poulose <Suzuki.Poulose@arm.com>, Catalin
- Marinas <catalin.marinas@arm.com>, Jiri Pirko <jiri@resnulli.us>, Jason
- Gunthorpe <jgg@ziepe.ca>, Mostafa Saleh <smostafa@google.com>, Alexey
- Kardashevskiy <aik@amd.com>, Dan Williams <dan.j.williams@intel.com>, Xu
- Yilun <yilun.xu@linux.intel.com>, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org, Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
- <svens@linux.ibm.com>, x86@kernel.org, Michael Kelley
- <mhklinux@outlook.com>
-Subject: Re: [PATCH v6 16/20] dma: swiotlb: free dynamic pools from process
- context
-Message-ID: <20260609152353.6a9f60f8@mordecai>
-In-Reply-To: <20260604083959.1265923-17-aneesh.kumar@kernel.org>
-References: <20260604083959.1265923-1-aneesh.kumar@kernel.org>
-	<20260604083959.1265923-17-aneesh.kumar@kernel.org>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-suse-linux-gnu)
+	s=arc-20240116; t=1781011487; c=relaxed/simple;
+	bh=JpMtrZYK6R11pwb88uifHS+sMOos7kLMDBoHOaJCCWM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XwNLB0ZhMSMlHwRnNVD3Z3MGyY4uBPQBX1t0gDjuv8fnF/jeUlHv5gYY09isQNsmCZDYAWuZ0s3bYrlvCvjp7C2Bx55hzBVlVPcDqvwSSHR/kkajJRJZyNzuz2AkUWKIqXkhS32xBJNtiLdXz8ywAFrSa3Zg11DfiptcQ0Fadcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EkoBS/o/; arc=none smtp.client-ip=148.163.158.5
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 659C0kkq3404977;
+	Tue, 9 Jun 2026 13:24:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=gbTfzD0xVTSVn9AehLwcJPYxd3hk
+	8tVbsWqb/LO6sWo=; b=EkoBS/o/DhZw6Zdhw39svVqh0yd01VX2/uyLfNJCHnuO
+	X8+nSvD7vmRgCw2aTpHgM6mkxx5c0jQEZMWtL4sTTUZmVpNZk3id+HvibHNHr4hz
+	JidK+5NLVRCKA5AMGHv4LbBK9LDhDEcrZ4fw6j/YMmti8TrsZU/rJmQTXG7dDVLd
+	VfUrC0xMr2eZ//u8uOa9vLXAi6z6Ly1ADRmtJFoAZBckFlo/bFdIPa+TvAg3ZTvT
+	Vd8evEwyUL3frLSwnEqlr53TNzbtw7pXc6iqG/623Oc9Y2clV/XWs/vZFQGKcGFw
+	YWdjkb4kxAd09MHCYwkhUTtSNMxk59VVvb6buaBtfw==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4em9ye45fr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jun 2026 13:24:32 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 659DJeDC015483;
+	Tue, 9 Jun 2026 13:24:32 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4emx8w2882-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jun 2026 13:24:31 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 659DOSo349086888
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 9 Jun 2026 13:24:28 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 24AEE20040;
+	Tue,  9 Jun 2026 13:24:28 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E22D82005A;
+	Tue,  9 Jun 2026 13:24:27 +0000 (GMT)
+Received: from [9.224.76.67] (unknown [9.224.76.67])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  9 Jun 2026 13:24:27 +0000 (GMT)
+From: Mete Durlu <meted@linux.ibm.com>
+Subject: [PATCH v2 0/5] s390/idle: CPU idle driver
+Date: Tue, 09 Jun 2026 15:24:20 +0200
+Message-Id: <20260609-idledriver-v2-0-21c2f581d11f@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAQUKGoC/1XMQQ6CMBBA0auQWdumHZQGV97DuAA6yCS0JVMkJ
+ IS727hz+Rb/H5BJmDLcqwOENs6cYgFeKhimLr5JsS8GNNiYxrSFM3nhjUShdYQ9OotdDSVYhEb
+ ef7Pnq3iUFNQ6CXV/C+NuaGtdW9NelVWBVvKPmeNn19wHPaQA5/kF6bJMKZkAAAA=
+X-Change-ID: 20260609-idledriver-217e2b2712a3
+To: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@kernel.org>,
+        Christian Loehle <christian.loehle@arm.com>
+Cc: Mete Durlu <meted@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+X-Mailer: b4 0.14.3
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA5MDEyNCBTYWx0ZWRfX+xHBDl0pFZYz
+ ZVDvZXzhDYCKCkPjxcCjyDLD0SMekoBxDbUZ8tN/F+woMNTcvGAbv4ANx9QAmv3IoFrUsnCV2iL
+ 6446/8MFTRCwM0RsD9Gbe+X5CYgYklxi4X4Fd4noPMjo2M8P8m6rNlENEWM9F6snf9udmMtmQv1
+ h9TgSRn6v+5eqRCCLTFzHjS/GKYa7Yhky/kx1+SVAyZLjgtGgOCXEeTN29RUYmiAs5o03tlh+MI
+ rms5qRM7cUfUoePivU09dD8091iIp1+RQrXddn1GwyruSolNarTkXg2mvmvijb+mbhv5D9E4z+J
+ wh+7UI3w7c2qV/2JkFHKeIogNeDJQSw5Od7SNN5Zh7kyWl6tsiMJgHQp2jES2OTZI1BgK5mNHnl
+ ZKau0NyyqGmwiFXbmprm88V6A24062G4TXFnIxChps1I9tSvz/3IN98GW1zv3vb0kn666HA6mRa
+ pDy3aExXjSi0/ZCvfsw==
+X-Authority-Analysis: v=2.4 cv=QKhYgALL c=1 sm=1 tr=0 ts=6a281410 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8
+ a=obfDj28oHUvmwgAfbDoA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: tynu0NYdabWxQDQEZCXAj9pcr7kBJGyu
+X-Proofpoint-ORIG-GUID: tynu0NYdabWxQDQEZCXAj9pcr7kBJGyu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-09_03,2026-06-09_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 lowpriorityscore=0 bulkscore=0 adultscore=0 phishscore=0
+ malwarescore=0 impostorscore=0 suspectscore=0 spamscore=0 clxscore=1011
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606090124
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[suse.com,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=google];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-20672-lists,linux-s390=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[32];
 	RCVD_TLS_LAST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:aneesh.kumar@kernel.org,m:iommu@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:robin.murphy@arm.com,m:m.szyprowski@samsung.com,m:will@kernel.org,m:maz@kernel.org,m:steven.price@arm.com,m:Suzuki.Poulose@arm.com,m:catalin.marinas@arm.com,m:jiri@resnulli.us,m:jgg@ziepe.ca,m:smostafa@google.com,m:aik@amd.com,m:dan.j.williams@intel.com,m:yilun.xu@linux.intel.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-s390@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:x86@kernel.org,m:mhklinux@outlook.com,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20669-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:svens@linux.ibm.com,m:anna-maria@linutronix.de,m:frederic@kernel.org,m:mingo@kernel.org,m:tglx@kernel.org,m:rafael@kernel.org,m:daniel.lezcano@kernel.org,m:christian.loehle@arm.com,m:meted@linux.ibm.com,m:borntraeger@linux.ibm.com,m:iii@linux.ibm.com,m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pm@vger.kernel.org,s:lists@lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,linux.ibm.com:mid,linux.ibm.com:from_mime];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[ptesarik@suse.com,linux-s390@vger.kernel.org];
-	FREEMAIL_CC(0.00)[lists.linux.dev,lists.infradead.org,vger.kernel.org,arm.com,samsung.com,kernel.org,resnulli.us,ziepe.ca,google.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,linux.ibm.com,ellerman.id.au,gmail.com,outlook.com];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	FORGED_SENDER(0.00)[meted@linux.ibm.com,linux-s390@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[meted@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ptesarik@suse.com,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[suse.com:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,outlook.com:email,vger.kernel.org:from_smtp,suse.com:dkim,suse.com:email,suse.com:from_mime,mordecai:mid]
+	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 9577266094D
+X-Rspamd-Queue-Id: 2195B6608D0
 
-On Thu,  4 Jun 2026 14:09:55 +0530
-"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org> wrote:
+v1 -> v2:
 
-> swiotlb_dyn_free() is used after removing a dynamic swiotlb pool from
-> RCU-protected lists. It can call swiotlb_free_tlb(), which may need to
-> restore the encryption state of an unencrypted pool with
-> set_memory_encrypted() before freeing the pages.
-> 
-> RCU callbacks run in atomic context, but set_memory_encrypted() is not
-> guaranteed to be atomic-safe on all architectures. For example, page
-> attribute updates may allocate page tables or take sleeping locks.
+* Add idle driver enteries to MAINTAINERS file (Christian Loehle)
+* Remove extra line break left in drivers/cpuidle/Kconfig.s390
+  (Christian Loehle)
 
-Good catch!
+This patch series introduces a CPU idle driver for s390
+architecture that leverages the existing cpu idle infrastructure and
+TEO (Timer Events Oriented) governor to optimize idle state selection
+based on timer events and interrupt patterns.
 
-> Use queue_rcu_work() for dynamic pool freeing instead. This keeps the RCU
-> grace period before freeing a published pool, while running the actual pool
-> teardown from workqueue context. Use the same helper for the transient-pool
-> error path, since that path may also be reached from atomic DMA mapping
-> context.
+- Implementation Overview
+-----------------------------------------------------------------------
 
-Strictly speaking, it's not necessary, because this is in the error
-path just after allocating a transient pool. There are only two
-possible scenarios:
+The driver implements two idle states;
 
-a. The transient buffer was allocated from a sleeping context, and then
-   it's also OK to decrypt memory.
+**Polling Idle (shallow state)**
+- Busy-loop implementation that prevents SIE-exit during short idle periods
+- Zero exit latency, optimized for latency-sensitive workloads
+- Maintains CPU with the guest, improving response times
 
-b. The transient buffer was allocated in atomic context, but then it was
-   allocated from a coherent pool and it is returned to that pool
-   rather than decrypted.
+**Enabled Wait (deep state)**
+- Traditional EW state that signals hypervisor availability
+- Higher exit latency but more efficient for longer idle periods
 
-However, it's also fine to queue an RCU work. The logic is definitely
-cleaner and easier to maintain.
+The TEO governor dynamically selects between these states by monitoring
+next timer interrupts and system interrupt frequency, choosing the most
+appropriate idle state for each situation.
 
-> Tested-by: Michael Kelley <mhklinux@outlook.com>
-> Tested-by: Mostafa Saleh <smostafa@google.com>
-> Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
+- Performance Benefits
+-----------------------------------------------------------------------
 
-Reviewed-by: Petr Tesarik <ptesarik@suse.com>
+Benchmark results across LPAR, KVM, and z/VM guests demonstrate significant
+improvements for latency-sensitive and scheduler-intensive workloads:
 
-Petr T
+```
+Benchmark    | LPAR  | z/VM  | KVM   |
+-----------------------------------------
+cyclictest   | +45%  | +50%  | +30%  |
+hackbench    | +5%   | +12%  | -     |
+pgbench      | +2%   | +15%  | +2%   |
+uperf        | +50%* | +-5%  | +-5%  |
+```
 
-> ---
->  include/linux/swiotlb.h |  4 ++--
->  kernel/dma/swiotlb.c    | 19 +++++++++++--------
->  2 files changed, 13 insertions(+), 10 deletions(-)
-> 
-> diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
-> index 4dcbf3931be1..526f82e9da45 100644
-> --- a/include/linux/swiotlb.h
-> +++ b/include/linux/swiotlb.h
-> @@ -64,7 +64,7 @@ extern void __init swiotlb_update_mem_attributes(void);
->   * @areas:	Array of memory area descriptors.
->   * @slots:	Array of slot descriptors.
->   * @node:	Member of the IO TLB memory pool list.
-> - * @rcu:	RCU head for swiotlb_dyn_free().
-> + * @dyn_free:	RCU work item used to free the pool from process context.
->   * @transient:  %true if transient memory pool.
->   */
->  struct io_tlb_pool {
-> @@ -79,7 +79,7 @@ struct io_tlb_pool {
->  	struct io_tlb_slot *slots;
->  #ifdef CONFIG_SWIOTLB_DYNAMIC
->  	struct list_head node;
-> -	struct rcu_head rcu;
-> +	struct rcu_work dyn_free;
->  	bool transient;
->  	bool unencrypted;
->  #endif
-> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-> index f4e8b241a1c4..4c56f64602ea 100644
-> --- a/kernel/dma/swiotlb.c
-> +++ b/kernel/dma/swiotlb.c
-> @@ -774,13 +774,10 @@ static void swiotlb_dyn_alloc(struct work_struct *work)
->  	add_mem_pool(mem, pool);
->  }
->  
-> -/**
-> - * swiotlb_dyn_free() - RCU callback to free a memory pool
-> - * @rcu:	RCU head in the corresponding struct io_tlb_pool.
-> - */
-> -static void swiotlb_dyn_free(struct rcu_head *rcu)
-> +static void swiotlb_dyn_free_work(struct work_struct *work)
->  {
-> -	struct io_tlb_pool *pool = container_of(rcu, struct io_tlb_pool, rcu);
-> +	struct io_tlb_pool *pool =
-> +		container_of(to_rcu_work(work), struct io_tlb_pool, dyn_free);
->  	size_t slots_size = array_size(sizeof(*pool->slots), pool->nslabs);
->  	size_t tlb_size = pool->end - pool->start;
->  
-> @@ -789,6 +786,12 @@ static void swiotlb_dyn_free(struct rcu_head *rcu)
->  	kfree(pool);
->  }
->  
-> +static void swiotlb_schedule_dyn_free(struct io_tlb_pool *pool)
-> +{
-> +	INIT_RCU_WORK(&pool->dyn_free, swiotlb_dyn_free_work);
-> +	queue_rcu_work(system_wq, &pool->dyn_free);
-> +}
-> +
->  /**
->   * __swiotlb_find_pool() - find the IO TLB pool for a physical address
->   * @dev:        Device which has mapped the DMA buffer.
-> @@ -835,7 +838,7 @@ static void swiotlb_del_pool(struct device *dev, struct io_tlb_pool *pool)
->  	list_del_rcu(&pool->node);
->  	spin_unlock_irqrestore(&dev->dma_io_tlb_lock, flags);
->  
-> -	call_rcu(&pool->rcu, swiotlb_dyn_free);
-> +	swiotlb_schedule_dyn_free(pool);
->  }
->  
->  #endif	/* CONFIG_SWIOTLB_DYNAMIC */
-> @@ -1276,7 +1279,7 @@ static int swiotlb_find_slots(struct device *dev, phys_addr_t orig_addr,
->  	index = swiotlb_search_pool_area(dev, pool, 0, orig_addr, tbl_dma_addr,
->  					 alloc_size, alloc_align_mask);
->  	if (index < 0) {
-> -		swiotlb_dyn_free(&pool->rcu);
-> +		swiotlb_schedule_dyn_free(pool);
->  		return -1;
->  	}
->  
+*Single-threaded uperf scenarios show 50-70% improvements on LPAR.
+Multi-threaded results show slight improvements overall.
+
+Additionally, fio and ioping tests show latency distribution shifts toward
+lower values with reduced minimum and average latencies.
+
+- Configuration
+-----------------------------------------------------------------------
+
+Idle state parameters are tuned per hypervisor type after benchmarks:
+
+**LPAR:**
+- Polling: 5us target residency, 0us exit latency
+- EW: 5us target residency, 5us exit latency
+
+**KVM/z/VM:**
+- Polling: 1us target residency, 0us exit latency
+- EW: 1us target residency, 1us exit latency
+
+---
+Mete Durlu (5):
+      s390/tick: Remove CIF_NOHZ_DELAY flag
+      tick: Remove arch_needs_cpu
+      s390: Enable TIF_POLLING_NRFLAG
+      s390/idle: Introduce cpuidle for s390
+      s390/configs: Enable cpuidle driver on s390
+
+ MAINTAINERS                         |   8 +++
+ arch/s390/Kconfig                   |   5 ++
+ arch/s390/configs/debug_defconfig   |   2 +
+ arch/s390/configs/defconfig         |   2 +
+ arch/s390/include/asm/processor.h   |   4 --
+ arch/s390/include/asm/thread_info.h |   1 +
+ arch/s390/kernel/idle.c             |   1 -
+ arch/s390/kernel/irq.c              |   4 --
+ arch/s390/kernel/smp.c              |   1 -
+ drivers/cpuidle/Kconfig             |   5 ++
+ drivers/cpuidle/Kconfig.s390        |  11 ++++
+ drivers/cpuidle/Makefile            |   4 ++
+ drivers/cpuidle/cpuidle-s390.c      | 104 ++++++++++++++++++++++++++++++++++++
+ include/linux/tick.h                |   3 --
+ kernel/time/tick-sched.c            |   7 ++-
+ 15 files changed, 145 insertions(+), 17 deletions(-)
+---
+base-commit: 2d3090a8aeb596a26935db0955d46c9a5db5c6ce
+change-id: 20260609-idledriver-217e2b2712a3
+
+Best regards,
+-- 
+Mete Durlu <meted@linux.ibm.com>
 
 
