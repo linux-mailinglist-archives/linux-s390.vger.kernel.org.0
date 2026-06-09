@@ -1,71 +1,71 @@
-Return-Path: <linux-s390+bounces-20649-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20648-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id pBDrDp/sJ2pB5QIAu9opvQ
-	(envelope-from <linux-s390+bounces-20649-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 12:36:15 +0200
+	id FF+/HJ7sJ2pA5QIAu9opvQ
+	(envelope-from <linux-s390+bounces-20648-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 12:36:14 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B703F65F017
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0980765F014
 	for <lists+linux-s390@lfdr.de>; Tue, 09 Jun 2026 12:36:14 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=fWWdlrPb;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20649-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-20649-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=E0vMEN2S;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20648-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20648-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6670A30465C5
+	by sea.lore.kernel.org (Postfix) with ESMTP id 02CA83045EFA
 	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2026 10:33:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 468103ED5DC;
-	Tue,  9 Jun 2026 10:33:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D55BB39B951;
+	Tue,  9 Jun 2026 10:33:52 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84A13F4859
-	for <linux-s390@vger.kernel.org>; Tue,  9 Jun 2026 10:33:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B8A3F4DE6
+	for <linux-s390@vger.kernel.org>; Tue,  9 Jun 2026 10:33:51 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781001233; cv=none; b=ABYW4Lu0bEzv4ReaU8LAOW8/p1BCtKdwZ1laQoa8VU0mPZZ67iDN659tCgYqh/+HQpXD5P+tlKKYRCxnSllWoJB9W/IP8G7Ycl35BURz+/DM/wOOggTeOUONLtxwzdWTDYS4QfwtToIFTJOOYZkXos605kr7GvUvyozEzKHKk2g=
+	t=1781001232; cv=none; b=aVCHNawUi5hH9NFVjVNV0eQVg61s2JZq3N28TNHaSF9fBcz2QBScDDektUGQ9Ob3PJGxa4miP4hXhBSKuhNl43arIqgbYRfWs6wcPYDwyl30qbsI3C3Aym3eaCXToWGv0y87c/bJ0vpDDEfa2MGcTY0Uf6eIvrPnrpHhSwT9TCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781001233; c=relaxed/simple;
-	bh=yd8wrsM7RRXZhD2lBDrrd2kjkB8UE7Jn0VucPZoRnaE=;
+	s=arc-20240116; t=1781001232; c=relaxed/simple;
+	bh=AbyR1cv5Qc6cIJRNnSrhFShKy8v7FKIzFdSm2dbPED8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bnXiGSGEzQrb3UWGY24PP18FXV5jvLG5sg6Zip50W69c69N/ZND/mZKqL7Mz8Up44/Qll84XOjZG6TdBgC2TsEJlnZLxN+OvW6g8tSKZqSLLh4vaMOGssjkWcNmcCtBZ3POJeUu1IsQvckvhDjSiAvjnzumRBCUiYjtlFpV5p7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fWWdlrPb; arc=none smtp.client-ip=148.163.158.5
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 658LSAGU3159944
+	 MIME-Version; b=YV+E9r9Rk8ITDL3jZ+N2KjQA2nhp8O0rcNPdVZQWTV7aherqvVewmYuuwJFgJ4eRHpd/Q/Srb5iyyzgk03dwgdmroYHcbtr86SL8gEDO77DhlMZSMCfiZb5jmcVC9IU8c9eBxlwEXkiNwafFaHn72fwUD7XIFAXt9p13aiNVegg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=E0vMEN2S; arc=none smtp.client-ip=148.163.156.1
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65936S8f3886183
 	for <linux-s390@vger.kernel.org>; Tue, 9 Jun 2026 10:33:50 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=gimksEmLt+ThcYTYc
-	iJlD5wDMG0rdgb55KMimcyyKEg=; b=fWWdlrPbmteXDFYgc+bjvTpneg72rE2he
-	Gvpk4upv0Tr/3BLI/bfKvA9IR3W9UIi4dOnFyZMVh8yZ5EFfWSfiMibVZ/Ya2NUV
-	g7TsXC/NtcRQxWt7P7ck2pbSPCxgIFXo18qAFHikFL4L1xrfSjz/AgSPb0/chdel
-	w1bpOWL25xGWUDjQLUXE6YYV2mxacbTbsHtezExISyuS2q2YpTVwhsqYwFyfKh0u
-	k9HZT2U9jSJi5LPJpd4lqfwl0qf3dwhr7W7l7/s1tikGoLk2rDUH12lyOqm7y6oz
-	GPYUx0joVp+l35DiaNUO7kj2pa5OQZDqQS2LvHOPswmeYZIGrMouw==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4em9ye3h2n-1
+	:mime-version:references:subject:to; s=pp1; bh=s+vFWLnSW5qr6j+UH
+	UhVK2JgcVCzQjwFvRorY9UzvfA=; b=E0vMEN2SN5Mc4zepOuCDUe2UG1s3dejr9
+	FzNQ2ErhSItOaStCZU0AOJhyxvlVC9xvIvDBBN7PIJi3qZXrp33yrDRFPEbJD0n0
+	GPLs9smDo4fSBLP9XPyb7YcSa4OD7prcxOf1UQNLn9yToVVwFyMsz98WGWdmRxmk
+	0F8DUHA7jaz25fmIKvIXkhyZBrNI9HriXNWMBPHlrCDsu+qop5+88ppY9jCWh7fF
+	Tj0XlBsxIYbx8hF2c5DiONflzG3N238ZESsbr1CY0LN+GPKv4i6zfHuF7Jc9qkfM
+	kgmqchN8ZE+Ov9ItGzChsURuxw3Wi8QiT9knuVk5izrExYj0pgZhA==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4emb23upnj-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-s390@vger.kernel.org>; Tue, 09 Jun 2026 10:33:49 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 659A51kB005569
+	for <linux-s390@vger.kernel.org>; Tue, 09 Jun 2026 10:33:50 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 659AJbRH005403
 	for <linux-s390@vger.kernel.org>; Tue, 9 Jun 2026 10:33:49 GMT
 Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4emx8w1n5y-1
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4emych1fd1-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
 	for <linux-s390@vger.kernel.org>; Tue, 09 Jun 2026 10:33:49 +0000 (GMT)
 Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 659AXjor25559510
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 659AXjUt24052002
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Tue, 9 Jun 2026 10:33:45 GMT
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 676342004B;
+	by IMSVA (Postfix) with ESMTP id 8A0B920040;
 	Tue,  9 Jun 2026 10:33:45 +0000 (GMT)
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 49B1A20043;
+	by IMSVA (Postfix) with ESMTP id 6C5AB2004E;
 	Tue,  9 Jun 2026 10:33:45 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
 	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
@@ -76,9 +76,9 @@ To: Alexander Gordeev <agordeev@linux.ibm.com>,
         Christian Borntraeger <borntraeger@linux.ibm.com>,
         Juergen Christ <jchrist@linux.ibm.com>
 Cc: linux-s390@vger.kernel.org
-Subject: [PATCH v3 8/9] s390/memmove: Optimize backward copy case
-Date: Tue,  9 Jun 2026 12:33:42 +0200
-Message-ID: <20260609103343.107325-9-hca@linux.ibm.com>
+Subject: [PATCH v3 9/9] s390/tishift: Convert __ashlti3(), __ashrti3(), __lshrti3() to C
+Date: Tue,  9 Jun 2026 12:33:43 +0200
+Message-ID: <20260609103343.107325-10-hca@linux.ibm.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260609103343.107325-1-hca@linux.ibm.com>
 References: <20260609103343.107325-1-hca@linux.ibm.com>
@@ -90,26 +90,26 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA5MDA5NCBTYWx0ZWRfX4pUTNMOXuJ4P
- 7YZYa3OUJFNxwFI1asvr3E3N+WjaAGMXm5jnagFIFwlC0yLJxX5VqSedHkeaqmph39jeyb77sK0
- k3S2lMw9lV8xt5GsxzN6//f4k0DYq0XOa3s7dGqSa/z/O0cbQ0La8oqXHq61+TgKkPIwMQfPFDk
- TW+vg+Q6O4aEFqATP1MMLa4daBZod1OOHXSA1kRwLlgJ3Y5SMZrZgfgfuzjaZl8Lu5d77z6g3v7
- OxSUESb3O7YpBcYGK/mnAUL7LNWFoENA6vVCKNDqcGRQuN9kQTovWc7jA+N140ONIVkUmIUPe4s
- DuiO0o+0Gg7kCu4rTSv5Fzvhf3N4yfu2OoxtJnsgQYHtpQ7OlFmnwuCknRB0RLVlLn5skwPVNz4
- 8/vygAfMogxAvKQtXf249pj4cy//3cCd8wPWGBez+pzValnek4njz3O5LOlDq13+5Op/B0VCK73
- Od6jWSNY/YCYqe1Cxrw==
-X-Authority-Analysis: v=2.4 cv=QKhYgALL c=1 sm=1 tr=0 ts=6a27ec0d cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+X-Authority-Analysis: v=2.4 cv=b4uCJNGx c=1 sm=1 tr=0 ts=6a27ec0e cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
  a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8 a=JR0CvQFn8sAsJeSSqqQA:9
-X-Proofpoint-GUID: BCr9T_sTsjIp8ioodMRPUDvRWnAWU88R
-X-Proofpoint-ORIG-GUID: BCr9T_sTsjIp8ioodMRPUDvRWnAWU88R
+ a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8 a=D3IvRudVPZkSyVNiNrMA:9
+X-Proofpoint-ORIG-GUID: De-fU9M7c7aD3go2K2uJ7-qFoMUVaZpG
+X-Proofpoint-GUID: De-fU9M7c7aD3go2K2uJ7-qFoMUVaZpG
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA5MDA5NCBTYWx0ZWRfX6OU2ToO2+5KI
+ e339pAJ9qhOnHMwAk13ycMJ9ENHiVOLQudPlwZJPY9aS3k9btupytdNNcXV/jx4kHLByhQnLCBf
+ j2R+Nwx+0qCnp9u8eCXT6HZXNJzHXelP5btqxQpbTZZWsPfVEQFEdpkyA5chOhzYoVtXMCVYBSf
+ qGqcIuuG6veybYAovpLClVzgC/vy2GuNpjr+kFofH5xmxgzGBwbtKf4krooKbjVazQAFb5OiMdN
+ vhrj6Mk+d/8N3GhR/d8B/zyyyCBsSDQO/l16ZOxh+Oq+o3hqi9WMNrj2kKq+QfCiAzY9+x3pSqo
+ koChXNgKNQ6oBD8SkHdByKyGP0eG/0MSxQdgKwaSrMhTJI/z+xQ8ZOu6RdMNXrmXHXgG4eZL/Vk
+ lUVaT+gon78DFIvQS9Muqeh1R+GW5Ukmf5OZv23thIP4t89Kf/20kdDHLGzYaFphVA6IQZ3N7aR
+ V9cdmIw0NvWR29gtCUA==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-06-09_02,2026-06-09_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 adultscore=0 phishscore=0
- malwarescore=0 impostorscore=0 suspectscore=0 spamscore=0 clxscore=1015
+ clxscore=1015 spamscore=0 bulkscore=0 phishscore=0 priorityscore=1501
+ lowpriorityscore=0 adultscore=0 malwarescore=0 impostorscore=0 suspectscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606090094
 X-Rspamd-Action: no action
@@ -119,19 +119,19 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20649-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20648-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER(0.00)[hca@linux.ibm.com,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS(0.00)[m:agordeev@linux.ibm.com,m:svens@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:jchrist@linux.ibm.com,m:linux-s390@vger.kernel.org,s:lists@lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -145,79 +145,191 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-s390];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: B703F65F017
+X-Rspamd-Queue-Id: 0980765F014
 
-memmove() copies byte wise for the backward copy case, when the mvc
-instruction cannot be used. This is quite slow, but can be optimized
-with the mvcrl instruction, which is available since z15.
-
-Some numbers (measured on a shared z16 LPAR) show that the new
-implementation is nearly always faster, except for the non realistic
-one and two byte cases:
-
-size    old   new
-   1    2ns   3ns
-   2    4ns   5ns
-   4    5ns   5ns
-   8    8ns   5ns
-  16   12ns   6ns
-  32    8ns   7ns
-  64   15ns   7ns
- 128   31ns   9ns
- 256   64ns  10ns
- 512  129ns  18ns
-1024  250ns  19ns
-2048  498ns  38ns
+There is no reason to have __ashlti3(), __ashrti3(), and __lshrti3()
+implemented in C. Convert them all to C, which allows the compiler to
+optimize the code if newer instructions allow that.
 
 Reviewed-by: Juergen Christ <jchrist@linux.ibm.com>
 Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 ---
- arch/s390/lib/string.c | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+ arch/s390/include/asm/asm-prototypes.h |  4 --
+ arch/s390/lib/tishift.S                | 63 -------------------------
+ arch/s390/lib/tishift.c                | 64 ++++++++++++++++++++++++++
+ arch/s390/lib/tishift.h                |  9 ++++
+ 4 files changed, 73 insertions(+), 67 deletions(-)
+ delete mode 100644 arch/s390/lib/tishift.S
+ create mode 100644 arch/s390/lib/tishift.c
+ create mode 100644 arch/s390/lib/tishift.h
 
-diff --git a/arch/s390/lib/string.c b/arch/s390/lib/string.c
-index 2f9e9e886016..e93e1acd2ade 100644
---- a/arch/s390/lib/string.c
-+++ b/arch/s390/lib/string.c
-@@ -15,6 +15,7 @@
- #include <linux/types.h>
- #include <linux/string.h>
- #include <linux/export.h>
-+#include <asm/facility.h>
- #include <asm/asm.h>
+diff --git a/arch/s390/include/asm/asm-prototypes.h b/arch/s390/include/asm/asm-prototypes.h
+index 7bd1801cf241..d4da4436d02b 100644
+--- a/arch/s390/include/asm/asm-prototypes.h
++++ b/arch/s390/include/asm/asm-prototypes.h
+@@ -8,8 +8,4 @@
+ #include <asm/nospec-branch.h>
+ #include <asm-generic/asm-prototypes.h>
  
- #define SYMBOL_FUNCTION_ALIAS(alias, name)		\
-@@ -51,8 +52,29 @@ noinstr void *__memmove(void *dest, const void *src, size_t n)
- 				: [d] "a" (d), [s] "a" (s), [n] "a" (n - 1)
- 				: "memory");
- 		}
-+		return dest;
+-__int128_t __ashlti3(__int128_t a, int b);
+-__int128_t __ashrti3(__int128_t a, int b);
+-__int128_t __lshrti3(__int128_t a, int b);
+-
+ #endif /* _ASM_S390_PROTOTYPES_H */
+diff --git a/arch/s390/lib/tishift.S b/arch/s390/lib/tishift.S
+deleted file mode 100644
+index 96214f51f49b..000000000000
+--- a/arch/s390/lib/tishift.S
++++ /dev/null
+@@ -1,63 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-
+-#include <linux/export.h>
+-#include <linux/linkage.h>
+-#include <asm/nospec-insn.h>
+-
+-	.section .noinstr.text, "ax"
+-
+-	GEN_BR_THUNK %r14
+-
+-SYM_FUNC_START(__ashlti3)
+-	lmg	%r0,%r1,0(%r3)
+-	cije	%r4,0,1f
+-	lhi	%r3,64
+-	sr	%r3,%r4
+-	jnh	0f
+-	srlg	%r3,%r1,0(%r3)
+-	sllg	%r0,%r0,0(%r4)
+-	sllg	%r1,%r1,0(%r4)
+-	ogr	%r0,%r3
+-	j	1f
+-0:	sllg	%r0,%r1,-64(%r4)
+-	lghi	%r1,0
+-1:	stmg	%r0,%r1,0(%r2)
+-	BR_EX	%r14
+-SYM_FUNC_END(__ashlti3)
+-EXPORT_SYMBOL(__ashlti3)
+-
+-SYM_FUNC_START(__ashrti3)
+-	lmg	%r0,%r1,0(%r3)
+-	cije	%r4,0,1f
+-	lhi	%r3,64
+-	sr	%r3,%r4
+-	jnh	0f
+-	sllg	%r3,%r0,0(%r3)
+-	srlg	%r1,%r1,0(%r4)
+-	srag	%r0,%r0,0(%r4)
+-	ogr	%r1,%r3
+-	j	1f
+-0:	srag	%r1,%r0,-64(%r4)
+-	srag	%r0,%r0,63
+-1:	stmg	%r0,%r1,0(%r2)
+-	BR_EX	%r14
+-SYM_FUNC_END(__ashrti3)
+-EXPORT_SYMBOL(__ashrti3)
+-
+-SYM_FUNC_START(__lshrti3)
+-	lmg	%r0,%r1,0(%r3)
+-	cije	%r4,0,1f
+-	lhi	%r3,64
+-	sr	%r3,%r4
+-	jnh	0f
+-	sllg	%r3,%r0,0(%r3)
+-	srlg	%r1,%r1,0(%r4)
+-	srlg	%r0,%r0,0(%r4)
+-	ogr	%r1,%r3
+-	j	1f
+-0:	srlg	%r1,%r0,-64(%r4)
+-	lghi	%r0,0
+-1:	stmg	%r0,%r1,0(%r2)
+-	BR_EX	%r14
+-SYM_FUNC_END(__lshrti3)
+-EXPORT_SYMBOL(__lshrti3)
+diff --git a/arch/s390/lib/tishift.c b/arch/s390/lib/tishift.c
+new file mode 100644
+index 000000000000..bb16cf639af3
+--- /dev/null
++++ b/arch/s390/lib/tishift.c
+@@ -0,0 +1,64 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/export.h>
++#include <linux/types.h>
++#include "tishift.h"
++
++union ti {
++	__int128_t val;
++	struct {
++		u64 high;
++		u64 low;
++	};
++};
++
++noinstr __int128_t __ashlti3(__int128_t a, int shift)
++{
++	union ti ti = { .val = a };
++
++	if (!shift)
++		return ti.val;
++	if (shift < 64) {
++		ti.high = (ti.high << shift) | (ti.low >> (64 - shift));
++		ti.low = ti.low << shift;
++	} else {
++		ti.high = ti.low << (shift - 64);
++		ti.low = 0;
 +	}
-+	/* Backward copy */
-+	if (test_facility(61)) {
-+		/* Use mvcrl instruction if available */
-+		while (n >= 256) {
-+			asm volatile(
-+				"	lghi	%%r0,255\n"
-+				"	.insn	sse,0xe50a00000000,%[d],%[s]\n"
-+				: [d] "=Q" (*(d + n - 256))
-+				: [s] "Q" (*(s + n - 256))
-+				: "0", "memory");
-+			n -= 256;
-+		}
-+		if (n) {
-+			asm volatile(
-+				"	lgr	%%r0,%[n]\n"
-+				"	.insn	sse,0xe50a00000000,%[d],%[s]\n"
-+				: [d] "=Q" (*d)
-+				: [s] "Q" (*s), [n] "d" (n - 1)
-+				: "0", "memory");
-+		}
- 	} else {
--		/* Backward copy */
- 		while (n--)
- 			d[n] = s[n];
- 	}
++	return ti.val;
++}
++EXPORT_SYMBOL(__ashlti3);
++
++noinstr __int128_t __ashrti3(__int128_t a, int shift)
++{
++	union ti ti = { .val = a };
++
++	if (!shift)
++		return ti.val;
++	if (shift < 64) {
++		ti.low = (ti.low >> shift) | (ti.high << (64 - shift));
++		ti.high = (int64_t)ti.high >> shift;
++	} else {
++		ti.low = (int64_t)ti.high >> (shift - 64);
++		ti.high = (int64_t)ti.high >> 63;
++	}
++	return ti.val;
++}
++EXPORT_SYMBOL(__ashrti3);
++
++noinstr __int128_t __lshrti3(__int128_t a, int shift)
++{
++	union ti ti = { .val = a };
++
++	if (!shift)
++		return ti.val;
++	if (shift < 64) {
++		ti.low = (ti.low >> shift) | (ti.high << (64 - shift));
++		ti.high = ti.high >> shift;
++	} else {
++		ti.low = ti.high >> (shift - 64);
++		ti.high = 0;
++	}
++	return ti.val;
++}
++EXPORT_SYMBOL(__lshrti3);
+diff --git a/arch/s390/lib/tishift.h b/arch/s390/lib/tishift.h
+new file mode 100644
+index 000000000000..43a9b8c8e545
+--- /dev/null
++++ b/arch/s390/lib/tishift.h
+@@ -0,0 +1,9 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _S390_LIB_TISHIFT_H
++#define _S390_LIB_TISHIFT_H
++
++__int128_t __ashlti3(__int128_t a, int b);
++__int128_t __ashrti3(__int128_t a, int b);
++__int128_t __lshrti3(__int128_t a, int b);
++
++#endif /* _S390_LIB_TISHIFT_H */
 -- 
 2.53.0
 
