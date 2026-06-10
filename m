@@ -1,168 +1,277 @@
-Return-Path: <linux-s390+bounces-20728-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20729-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id DvfAM7BzKWpSXAMAu9opvQ
-	(envelope-from <linux-s390+bounces-20728-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 10 Jun 2026 16:24:48 +0200
+	id fUWjCHt1KWqcXAMAu9opvQ
+	(envelope-from <linux-s390+bounces-20729-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 10 Jun 2026 16:32:27 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2C5166A308
-	for <lists+linux-s390@lfdr.de>; Wed, 10 Jun 2026 16:24:47 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id B05B466A3DE
+	for <lists+linux-s390@lfdr.de>; Wed, 10 Jun 2026 16:32:26 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=BWRr5mgb;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20728-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20728-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=linaro.org header.s=google header.b=QMvwJ3hN;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20729-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-20729-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=linaro.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 1B973301C902
-	for <lists+linux-s390@lfdr.de>; Wed, 10 Jun 2026 14:21:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D12FF326FCB3
+	for <lists+linux-s390@lfdr.de>; Wed, 10 Jun 2026 14:23:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22BB532B105;
-	Wed, 10 Jun 2026 14:21:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 594AB31A575;
+	Wed, 10 Jun 2026 14:23:51 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0327C31AF07
-	for <linux-s390@vger.kernel.org>; Wed, 10 Jun 2026 14:21:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4BAA31F98E
+	for <linux-s390@vger.kernel.org>; Wed, 10 Jun 2026 14:23:48 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781101309; cv=none; b=oqrm7kxZlHduc2lXIgT9kWDOqPTf8Vr5aX8+iB+/4xZ8ULY80jyodwL8uKM/oiXP+yNAA0Ztny1bsA7i4oVXbVgxHNQexB/xwp/nBupt166QvqH3YEN1n/4mC+f1uPUq8gRBOZDUXdzuCttNN+F3SJKHEcunJ3QkmPHNE4hzE8o=
+	t=1781101431; cv=none; b=Wps16cnib/e6tDHJxehDrcI9ePFuGHwATAGdmwiXuFjERstKPn6APeEsLDolsf06Llz6mfL2l9s/URryY2jiDvrI/n1/kDAEU0B8x8QXdejcvdUYf9CLppFiD4Xc8VqoXHqtxUAOt/NsC8RoRLRljx5W0Br1ggVa/5kJXuyHj9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781101309; c=relaxed/simple;
-	bh=corx6aDMNeoBJ131aiv/wrqzHkJMcBZGF7fsTi4jxnM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=lhLYZ1XJsZodvqFsLEWdHJvusFRUa/oV5gkgDxBz+b11BThgvr82RRD5Oy6UB36bRxCYokTHU8wFGQHeEKZCWVPM8qZX53ecYbSEteJKuu/jcQftETApDGniuSevtq7+Bg5Th8yvNCSgpy2p0J46k5lVByC2ueyUsd0WLy8Vqxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BWRr5mgb; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5352C1F00898;
-	Wed, 10 Jun 2026 14:21:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781101307;
-	bh=4bcRm34Lagjt0lrDpXxT+Dz6Pk+1GGV3nz2pscBQ/jI=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=BWRr5mgbrqZL3csnzWZlsygmgHPe7Yra6fVA3VuWga8cLdx5hjxHqHACDaQuQzfYJ
-	 5nD8vA/1GDJvXLVChWwWWMYy9xrCoyz8dVohfK1uGqyvObtwEwmuzYi97m+yLoPCD/
-	 kxxWjhFz99kQ5bqRPDaTNU8HHap1Ee4wnIx2XzpFlZq5Lyak0oyRRSoNmECGVzDvfp
-	 Uwk7/bNkIHUx0Ovro9bPmbaAaAlEsoQga8hPSxBKZtW2wVk1+y86OqPx+234yKyWR6
-	 NmNl/4+ULuZDcEaAt/gjrth7yaTG+ArJRYII6u7NAxjQgpoMjcTU1xcpzAOVGS/Ttr
-	 smej5/jLvir5Q==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH net-next 1/2] tls: remove tls_toe and the related driver
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Sabrina Dubroca" <sd@queasysnail.net>
-Cc: "Alexander Gordeev" <agordeev@linux.ibm.com>, "Heiko Carstens" <hca@linux.ibm.com>, linux-s390@vger.kernel.org, "Vasily
- Gorbik" <gor@linux.ibm.com>
-In-Reply-To: <c3c9ae09580a5c1d36b32b5ab3a5db398feddfe3.1781013810.git.sd@queasysnail.net>
-References: <c3c9ae09580a5c1d36b32b5ab3a5db398feddfe3.1781013810.git.sd@queasysnail.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 10 Jun 2026 14:21:46 +0000
-Message-Id: <20260610142147.5352C1F00898@smtp.kernel.org>
+	s=arc-20240116; t=1781101431; c=relaxed/simple;
+	bh=8mPfyyoNCUBTEo0ky0/MzA0ZzyD72RHYKbfDkhMqGbw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=otDh0HwT90/FgoTM62/Hx0TWJ9znXSPp0rE/+BARor1e9wofi7nvPsZk7XE8XOLJKvm9ZFyjcLCy37sw6M7ynQDD6M38DKKLYgInJhvk2doVgxy2+AN8Q/iEAaOk+HYUslFS1UmRAaQWHXx1Ic3yvNnqECQG7XmiGfx+nYkK+GI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QMvwJ3hN; arc=none smtp.client-ip=209.85.214.177
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2bf114b0cf9so62907715ad.2
+        for <linux-s390@vger.kernel.org>; Wed, 10 Jun 2026 07:23:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1781101428; x=1781706228; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RIgrfTieRwmLlw1dLE2AIE0y0j3JlRfXfzK5v3rBlwE=;
+        b=QMvwJ3hNtNFZhRifyU09FGDQVs2MkJhnV7EpdE5BuxgPzIMXTAaKts1+HioKh99RAb
+         +IfdudzaQRxi7/9wUMZs990u4vWyZHgKcgTMDaNdixZfJ7OuCXjvdsvIJMewpr+9G1EI
+         zmnr1xngneECqAt9iuQcH9dM9Y9/3nM551BpEhCC6CT8tpEFpKRrCbRQIwuPS/ko+I9h
+         8jBPtC6wqNw+omO7RASlIXrsxQAvK7ycH/47uBLNa+yWnMrqqVT0v3w/QrTKvQjl7n7s
+         DXss2ibUQEfKNC5DKdGkYZqM2Dj9rcRkTSL3u8cHVSOhjUu7bfyBaKhEr7s3uGce+Lrz
+         exDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781101428; x=1781706228;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RIgrfTieRwmLlw1dLE2AIE0y0j3JlRfXfzK5v3rBlwE=;
+        b=lGqLPreHE7otLDZpF1DMhFYk5HKUV9A71KiLXAjWsdNnfjOJxUlmNyihR9qYe5fImP
+         9d5/mK2Jq+hyn/KUnk0RUQqmmUhe1OXfa13DxXCzukn6T5bHN6F0lHGUhX1g+vNLmJ6G
+         IyoUEgoPTJnH+pYItED5T5ojnt/ZZ5jJgru1XMlQw36PQ1SZ02n915t84Twg1bFzvbeZ
+         fsObsxYuucdAFzA1Dv9MLzGjfs815uwqWhxAfbbQzeHCQNnCnp0u3vlkh90WRlJNR4zC
+         08Avh1Q11WWPG6Su9Mud86r/KtO64Y1TyM4dxpM56Ft0caD8nzSgOGmgBxtN8szUUSyz
+         r7UA==
+X-Forwarded-Encrypted: i=1; AFNElJ+0BQRY4wh5xoqdwr4Hda5jqrLGNXwFoznRTcbAkfAvArMHe4cIn1dZxsH1LKTyKkSGemePa0vQI/y4@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHgsPfTPHtHuqr9WNlAX28oOWQ/8EYctqhYjHzSO0qfEEEvKva
+	VjrM6rE+LM9nu8P9jOrJaqPK7lCCVJIBBc49x2bTFfi+lVmSiA2so9BXaW2EyXBPLWM=
+X-Gm-Gg: Acq92OE2xc0y69ZZ7wx5ZJbyZrvD0AF9eS6s32BSddfzW7biCVtlfPDWKkBrOC8KihR
+	QkgSehUA24aMlWpc6ARzLXvfkSC9Nnoi4kBzI79Q+yL7OggOsf24Daa7ilaIfhxRUBZVMVLNJWS
+	90bh6D+mSGPeKeUUSwxE6tFl6u2XJKfC8e8f0JOh+qNhy6Ug0KNTAPoVxCm0oq3pXNAG3k7PFsr
+	oYt4ZJbk3N9ug5C5Vd3kBcDOC6H5RWcH2iGHNR7HZtHQjm245+KLWhKVp3tOeqLnyRAYtiPxCO1
+	5fKcNpPbGVXSn3JzukZuoLc58Ew2lewk5UfjWNg+LYdW0aEj3botoDtwzB5Qkpgr5YPXCobGoVX
+	bDxkKtLQK/sYPMvLRD1EtCBRDN03tyObdpQXZQT4o/fnJBQT9pvgbA5tC8zCHcr3pGZGcK0zBiw
+	DmCbUJC5VhyH5DEGJq47YEM8akj5/7RCPwFB/L9fI5ftbY5IdfNazjZw==
+X-Received: by 2002:a17:902:e752:b0:2b2:5515:661c with SMTP id d9443c01a7336-2c1e893d62dmr281727295ad.31.1781101427890;
+        Wed, 10 Jun 2026 07:23:47 -0700 (PDT)
+Received: from nagraj.tail8a2ac.ts.net ([2406:7400:98:3ab:da47:17e2:32f7:c4d3])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c164f6d318sm265761935ad.15.2026.06.10.07.23.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2026 07:23:47 -0700 (PDT)
+From: Sumit Semwal <sumit.semwal@linaro.org>
+To: sumit.semwal@linaro.org,
+	christian.koenig@amd.com
+Cc: jgg@ziepe.ca,
+	jiri@resnulli.us,
+	hch@infradead.org,
+	maddy@linux.ibm.com,
+	mpe@ellerman.id.au,
+	npiggin@gmail.com,
+	chleroy@kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	lkp@intel.com,
+	agordeev@linux.ibm.com,
+	gerald.schaefer@linux.ibm.com,
+	linux-s390@vger.kernel.org,
+	djbw@kernel.org,
+	thomas.lendacky@amd.com,
+	x86@kernel.org,
+	arnd@linaro.org,
+	benjamin.gaignard@collabora.com,
+	Brian.Starkey@arm.com,
+	jstultz@google.com,
+	tjmercier@google.com,
+	mripard@kernel.org,
+	afd@ti.com,
+	linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org,
+	linux-kernel@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] dma-buf: move system_cc_shared heap under separate Kconfig
+Date: Wed, 10 Jun 2026 19:53:29 +0530
+Message-ID: <20260610142329.3836808-1-sumit.semwal@linaro.org>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	MISSING_MIME_VERSION(2.00)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[linaro.org,none];
+	R_DKIM_ALLOW(-0.20)[linaro.org:s=google];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20728-lists,linux-s390=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[29];
+	TAGGED_FROM(0.00)[bounces-20729-lists,linux-s390=lfdr.de];
+	FREEMAIL_CC(0.00)[ziepe.ca,resnulli.us,infradead.org,linux.ibm.com,ellerman.id.au,gmail.com,kernel.org,lists.ozlabs.org,intel.com,vger.kernel.org,amd.com,linaro.org,collabora.com,arm.com,google.com,ti.com,lists.freedesktop.org,lists.linaro.org,arndb.de];
+	FORGED_SENDER(0.00)[sumit.semwal@linaro.org,linux-s390@vger.kernel.org];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,sashiko.dev:url,smtp.kernel.org:mid,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp];
-	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:sd@queasysnail.net,m:agordeev@linux.ibm.com,m:hca@linux.ibm.com,m:linux-s390@vger.kernel.org,m:gor@linux.ibm.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:sumit.semwal@linaro.org,m:christian.koenig@amd.com,m:jgg@ziepe.ca,m:jiri@resnulli.us,m:hch@infradead.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:linuxppc-dev@lists.ozlabs.org,m:lkp@intel.com,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:linux-s390@vger.kernel.org,m:djbw@kernel.org,m:thomas.lendacky@amd.com,m:x86@kernel.org,m:arnd@linaro.org,m:benjamin.gaignard@collabora.com,m:Brian.Starkey@arm.com,m:jstultz@google.com,m:tjmercier@google.com,m:mripard@kernel.org,m:afd@ti.com,m:linux-media@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linaro-mm-sig@lists.linaro.org,m:linux-kernel@vger.kernel.org,m:arnd@arndb.de,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sumit.semwal@linaro.org,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[linaro.org:+];
+	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_NO_DN(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C2C5166A308
+X-Rspamd-Queue-Id: B05B466A3DE
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] Incomplete removal of the `tls_toe` feature leaves behind dangling =
-feature flags (`NETIF_F_HW_TLS_RECORD`) and upper layer driver references (=
-`CXGB4_ULD_TLS`), leading to dead code and false feature advertisement to u=
-serspace.
---
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 9a055c5cc4ab72cb186cfa373957ed0d0080f2d2
-Author: Sabrina Dubroca <sd@queasysnail.net>
+While system heap and system_cc_shared heap share a lot of code
+and hence the same source file, their users have different needs.
 
-tls: remove tls_toe and the related driver
+system heap users need it to be a loadable module, while
+system_cc_shared heap users don't.
 
-This patch removes the unmaintained tls_toe feature and its single user,
-the chelsio chtls driver. It removes the related documentation, Kconfig
-options, and source files.
+Building as a loadable module breaks system_cc_shared heap on
+powerpc and s390 due to un-exported set_memory_encrypted /
+set_memory_decrypted functions.
 
-> diff --git a/net/tls/Kconfig b/net/tls/Kconfig
-> index a25bf57f26738..4f4d5973a28f4 100644
-> --- a/net/tls/Kconfig
-> +++ b/net/tls/Kconfig
-> @@ -27,13 +27,3 @@ config TLS_DEVICE
->  	Enable kernel support for HW offload of the TLS protocol.
-> =20
->  	If unsure, say N.
-> -
-> -config TLS_TOE
-> -	bool "Transport Layer Security TCP stack bypass"
-> -	depends on TLS
-> -	default n
-> -	help
-> -	Enable kernel support for legacy HW offload of the TLS protocol,
-> -	which is incompatible with the Linux networking stack semantics.
-> -
-> -	If unsure, say N.
+Fix these by reorganising code to put the system_cc_shared heap
+under a new Kconfig symbol, which allows either building both
+into the kernel, or leave encryption up to the consumers of the
+system heap.
 
-[Severity: Low]
-Since this removes the tls_toe feature and the chtls driver, should we also
-clean up the remaining references to the hardware TLS record offload?
+Fixes: fd55edff8a0a ("dma-buf: heaps: system: Turn the heap into a module")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+---
+ drivers/dma-buf/heaps/Kconfig       |  8 ++++++++
+ drivers/dma-buf/heaps/system_heap.c | 16 ++++++++++------
+ 2 files changed, 18 insertions(+), 6 deletions(-)
 
-For example, the feature bit NETIF_F_HW_TLS_RECORD_BIT is still present in
-include/linux/netdev_features.h, and its corresponding ethtool string=20
-"tls-hw-record" remains in net/ethtool/common.c.
+diff --git a/drivers/dma-buf/heaps/Kconfig b/drivers/dma-buf/heaps/Kconfig
+index e273fb18feca..a39decdcf067 100644
+--- a/drivers/dma-buf/heaps/Kconfig
++++ b/drivers/dma-buf/heaps/Kconfig
+@@ -5,6 +5,14 @@ config DMABUF_HEAPS_SYSTEM
+ 	  Choose this option to enable the system dmabuf heap. The system heap
+ 	  is backed by pages from the buddy allocator. If in doubt, say Y.
+ 
++config DMABUF_HEAPS_CC_SYSTEM
++	bool "DMA-BUF System Heap for decrypted CoCo VMs"
++	depends on DMABUF_HEAPS && ARCH_HAS_MEM_ENCRYPT && DMABUF_HEAPS_SYSTEM=y
++	help
++	  Choose this option to enable the system_cc_shared dmabuf heap. This
++	  allows allocating shared (decrypted) memory for confidential computing
++	  (CoCo) VMs.
++
+ config DMABUF_HEAPS_CMA
+ 	tristate "DMA-BUF CMA Heap"
+ 	depends on DMABUF_HEAPS && DMA_CMA
+diff --git a/drivers/dma-buf/heaps/system_heap.c b/drivers/dma-buf/heaps/system_heap.c
+index c92bdec356fc..71d9028cc3df 100644
+--- a/drivers/dma-buf/heaps/system_heap.c
++++ b/drivers/dma-buf/heaps/system_heap.c
+@@ -48,6 +48,9 @@ struct dma_heap_attachment {
+ 	bool cc_shared;
+ };
+ 
++#define cc_shared_buffer(b) (IS_ENABLED(CONFIG_DMABUF_HEAPS_CC_SYSTEM) && \
++				(b)->cc_shared)
++
+ #define LOW_ORDER_GFP (GFP_HIGHUSER | __GFP_ZERO)
+ #define HIGH_ORDER_GFP  (((GFP_HIGHUSER | __GFP_ZERO | __GFP_NOWARN \
+ 				| __GFP_NORETRY) & ~__GFP_RECLAIM) \
+@@ -161,7 +164,7 @@ static struct sg_table *system_heap_map_dma_buf(struct dma_buf_attachment *attac
+ 	unsigned long attrs;
+ 	int ret;
+ 
+-	attrs = a->cc_shared ? DMA_ATTR_CC_SHARED : 0;
++	attrs = cc_shared_buffer(a) ? DMA_ATTR_CC_SHARED : 0;
+ 	ret = dma_map_sgtable(attachment->dev, table, direction, attrs);
+ 	if (ret)
+ 		return ERR_PTR(ret);
+@@ -233,7 +236,7 @@ static int system_heap_mmap(struct dma_buf *dmabuf, struct vm_area_struct *vma)
+ 	int i, ret;
+ 
+ 	prot = vma->vm_page_prot;
+-	if (buffer->cc_shared)
++	if (cc_shared_buffer(buffer))
+ 		prot = pgprot_decrypted(prot);
+ 
+ 	for_each_sgtable_sg(table, sg, i) {
+@@ -282,7 +285,7 @@ static void *system_heap_do_vmap(struct system_heap_buffer *buffer)
+ 	}
+ 
+ 	prot = PAGE_KERNEL;
+-	if (buffer->cc_shared)
++	if (cc_shared_buffer(buffer))
+ 		prot = pgprot_decrypted(prot);
+ 	vaddr = vmap(pages, npages, VM_MAP, prot);
+ 	vfree(pages);
+@@ -349,7 +352,7 @@ static void system_heap_dma_buf_release(struct dma_buf *dmabuf)
+ 		 * Intentionally leak pages that cannot be re-encrypted
+ 		 * to prevent shared memory from being reused.
+ 		 */
+-		if (buffer->cc_shared &&
++		if (cc_shared_buffer(buffer) &&
+ 		    system_heap_set_page_encrypted(page))
+ 			continue;
+ 
+@@ -456,7 +459,7 @@ static struct dma_buf *system_heap_allocate(struct dma_heap *heap,
+ 		list_del(&page->lru);
+ 	}
+ 
+-	if (cc_shared) {
++	if (cc_shared_buffer(buffer)) {
+ 		for_each_sgtable_sg(table, sg, i) {
+ 			ret = system_heap_set_page_decrypted(sg_page(sg));
+ 			if (ret)
+@@ -485,7 +488,7 @@ static struct dma_buf *system_heap_allocate(struct dma_heap *heap,
+ 		 * Intentionally leak pages that cannot be re-encrypted
+ 		 * to prevent shared memory from being reused.
+ 		 */
+-		if (buffer->cc_shared &&
++		if (cc_shared_buffer(buffer) &&
+ 		    system_heap_set_page_encrypted(p))
+ 			continue;
+ 		__free_pages(p, compound_order(p));
+@@ -525,6 +528,7 @@ static int __init system_heap_create(void)
+ 		return PTR_ERR(sys_heap);
+ 
+ 	if (IS_ENABLED(CONFIG_HIGHMEM) ||
++	    !IS_ENABLED(CONFIG_DMABUF_HEAPS_CC_SYSTEM) ||
+ 	    !cc_platform_has(CC_ATTR_MEM_ENCRYPT))
+ 		return 0;
+ 
+-- 
+2.43.0
 
-Also, the cxgb4 driver still unconditionally adds NETIF_F_HW_TLS_RECORD to
-netdev->hw_features in cxgb4_main.c:init_one(), which could lead to devices
-falsely advertising this removed capability to userspace.
-
-Additionally, CXGB4_ULD_TLS is left behind in enum cxgb4_uld
-(drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.h), and there is dead code
-processing it in drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-inside sge_qinfo_show() and in drivers/net/ethernet/chelsio/cxgb4/cudbg_lib=
-.h
-inside cudbg_uld_rxq_to_qtype().
-
-Could these leftovers be removed as well to complete the cleanup?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1781013810.gi=
-t.sd@queasysnail.net?part=3D1
 
