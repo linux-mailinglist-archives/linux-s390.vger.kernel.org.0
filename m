@@ -1,172 +1,152 @@
-Return-Path: <linux-s390+bounces-20770-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20771-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id nYixFXCXKmqTtAMAu9opvQ
-	(envelope-from <linux-s390+bounces-20770-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 13:09:36 +0200
+	id ijmSHDKXKmp7tAMAu9opvQ
+	(envelope-from <linux-s390+bounces-20771-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 13:08:34 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9648F67129B
-	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 13:09:35 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEFF1671282
+	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 13:08:33 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ZrBWLyGK;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20770-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-20770-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=infradead.org header.s=casper.20170209 header.b=rmSxXHVh;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20771-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20771-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=infradead.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A3E613195A43
-	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 11:06:32 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 02A1E3019473
+	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 11:08:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EABD3D9025;
-	Thu, 11 Jun 2026 11:06:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4AA43DB334;
+	Thu, 11 Jun 2026 11:08:29 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C443DA5B0;
-	Thu, 11 Jun 2026 11:06:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220F22DC767;
+	Thu, 11 Jun 2026 11:08:26 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781175992; cv=none; b=mVJ+r6Y2jGjZqeEMFHMTakK3gdrGtVv+8dGM8eEipu3gAYoV99UdPre/WM+XK8awCixip3hWs9HTvR1Ypb6ldJnursM66GBZMGxcfywhCzi2SWZGG6G29LeioXkrWgnArSM8TsEgtTGUUNVIb1KFGGACuSaS5iTJN0FnmWCMWBI=
+	t=1781176109; cv=none; b=P9PxeUKdvT4sxpRl+L9/Ij/AWue5Ycdo+NztkP3DhhcPkwpPKgfgG0DwElzysijO5yfKJoKtS0Vkq42hCiLcMB9SEk51cUr7Gdc9dEAnDu/2p3zv99XrfZS3nvjg1uySHtwOnHgha/9H9JlwXfheOBtR3KCpScbf9x/XCBR5Usw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781175992; c=relaxed/simple;
-	bh=K55qjqO7FiMjt44aQQymgHKzft4/9sa+j6Sk5zLWf5k=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=hzuRd3DhdqJGfzwRr5X77FXBnN/0L4W6Jho/+p7YokIt6q0TfQYhBXSqn4+LtnDfBMN3JlOJVDJ4TrU830NiJM/ARS/afAMklQnlFjfLoS2bIB8Cbysh2msSnADL5NJduyN7NfSQg99kr7E713rwxGcuqcYjo2icFK1BI6zcAp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZrBWLyGK; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 826B01F00893;
-	Thu, 11 Jun 2026 11:06:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781175990;
-	bh=FVo3wDxRGP55Rl4s02CnONSU1P8za2nTBIlbWIPXvec=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ZrBWLyGK4XuRdi6hcXw9M6JO5wCwcMkXhn78IW7TWY53EDs2mpuaGfdunham3a1Nq
-	 TrJlpFNJOTqecODXkELsZpt01oWIQuXdO1OyNiXrs+gcT+Zwfi4ID2CwDSIh4QBhA+
-	 oxHBH+EIbuFMangnITtV4g1+lgbugDm8MP5sKBxu7jW2shX/c+sjYuYqBbMx0GEvIQ
-	 qUCsFUfN7UNdt8dr0REMOZAeVop2/YzCxY4FDj4KEZq9LK0fZGlAnJHx258siHAaoN
-	 W5j0MUibpHHvsrLmap8BAkzLitYB+YmSyCTzo/Ib46KYwCU8XXA/9XIVYra9peLLJY
-	 SAz25CILpyIvA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 3/5] KVM: s390: vsie: Fix allocation of struct
- vsie_rmap
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Claudio Imbrenda" <imbrenda@linux.ibm.com>
-Cc: kvm@vger.kernel.org, "Vasily Gorbik" <gor@linux.ibm.com>, linux-s390@vger.kernel.org, "Alexander
- Gordeev" <agordeev@linux.ibm.com>, "Heiko Carstens" <hca@linux.ibm.com>
-In-Reply-To: <20260611104850.110313-4-imbrenda@linux.ibm.com>
-References: <20260611104850.110313-4-imbrenda@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 11 Jun 2026 11:06:30 +0000
-Message-Id: <20260611110630.826B01F00893@smtp.kernel.org>
+	s=arc-20240116; t=1781176109; c=relaxed/simple;
+	bh=wQ3WHe+W2v0d92Kplq8+Hn6T8icPXVzVqEyoe1yv1fY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MIvlWHCpxY4dYSAnJESb3g7+yytB6JZDk4KCfsK1XvvegFP9TUfjlmcN645QK1ZIQfyhiS9ahhzvu7xHxrN4iqqVy1xvovOeTswi3OXjsEYdLK65sHimaGXeI0l4rPgdjKfboPmtO08PEeuqxGhBun6UA5N1zenGfzskp+o9aTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rmSxXHVh; arc=none smtp.client-ip=90.155.50.34
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Be5rEciqOgJ7a/QFo0//CIZoBQIfhUkSPXRNBFzrHCc=; b=rmSxXHVhxwjZG6eIJJik0ch6ti
+	5Hi6iyJuoT91JesXShCkA+1JQpjZV8FqbTODL8bD798uiBrUiHP6+OvPjUFtbrwhkDSt1xe6TMkX/
+	+ZZNJxZaCvZiltASsZUnftEE3I7VEPE07tGQslh/9ZmHlsrc3JY33YNPavi5tUMZZH068JdtX/pNq
+	hb0Z97N+MR5hvFTHdhsesPCu1s9Q6G9wDbTjACHPsKUHThqUDTX83U6agSE/Abs23vanIRg9G+GZQ
+	XAFtWRJJ65zV6H7jasCZrC+WVPZUCBuF7xlRzDvYmvRRPZzGk2gCy2o9oOfjx880JgdyTfi0mskBV
+	4W+jIVJQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wXdGc-00000001mBP-2jhl;
+	Thu, 11 Jun 2026 11:08:11 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C2490301A42; Thu, 11 Jun 2026 13:08:09 +0200 (CEST)
+Date: Thu, 11 Jun 2026 13:08:09 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sven Schnelle <svens@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Mark Brown <broonie@kernel.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	John Stultz <jstultz@google.com>,
+	Vineeth Pillai <vineethrp@google.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+	Aaron Lu <ziqianlu@bytedance.com>
+Subject: Re: linux-next crashes in scheduler on s390
+Message-ID: <20260611110809.GF187714@noisy.programming.kicks-ass.net>
+References: <17e75ff4-cf90-4772-9965-92a7235ca806-agordeev@linux.ibm.com>
+ <yt9dmrx2wns1.fsf@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yt9dmrx2wns1.fsf@linux.ibm.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	MISSING_MIME_VERSION(2.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
+	R_DKIM_ALLOW(-0.20)[infradead.org:s=casper.20170209];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20770-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,lists.linux.dev:replyto,sashiko.dev:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,smtp.kernel.org:mid];
-	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:imbrenda@linux.ibm.com,m:kvm@vger.kernel.org,m:gor@linux.ibm.com,m:linux-s390@vger.kernel.org,m:agordeev@linux.ibm.com,m:hca@linux.ibm.com,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-20771-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:svens@linux.ibm.com,m:agordeev@linux.ibm.com,m:mingo@redhat.com,m:juri.lelli@redhat.com,m:vincent.guittot@linaro.org,m:kprateek.nayak@amd.com,m:broonie@kernel.org,m:dietmar.eggemann@arm.com,m:rostedt@goodmis.org,m:bsegall@google.com,m:mgorman@suse.de,m:vschneid@redhat.com,m:jstultz@google.com,m:vineethrp@google.com,m:joelagnelf@nvidia.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-next@vger.kernel.org,m:ziqianlu@bytedance.com,s:lists@lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	FORGED_SENDER(0.00)[peterz@infradead.org,linux-s390@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
-	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[infradead.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
-	FROM_NO_DN(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[peterz@infradead.org,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-s390];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,infradead.org:dkim,infradead.org:from_mime,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 9648F67129B
+X-Rspamd-Queue-Id: EEFF1671282
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+On Wed, Jun 10, 2026 at 03:03:26PM +0200, Sven Schnelle wrote:
+> Alexander Gordeev <agordeev@linux.ibm.com> writes:
+> 
+> > Hi All,
+> >
+> > Since about June 1st we're getting strace test suite (make -j$(nproc) check)
+> > crashes on s390 in linux-next. Those are pretty easy to reproduce, but I
+> > have not been able to nail it down to the particular commit/merge.
+> >
+> > I am going to bisect it, but since we are approaching v7.1 release, any
+> > hint would be greatly appreciated!
+> > [..]
+> 
+> I bisected it to
+> https://lore.kernel.org/all/20260511120627.944705718@infradead.org/
+> ("[PATCH v2 08/10] sched/fair: Add newidle balance to pick_task_fair()")
+> 
+> Adding the patch proposed in
+> https://lore.kernel.org/all/20260603095108.GA1684319@bytedance.com/
+> fixes the issue for me.
+> 
+> To reproduce, running the strace test suite seems enough. If required, I
+> can try to figure out the exact test that crashes the kernel.
 
-Pre-existing issues:
-- [High] Unhandled memory allocation failures in `handle_sske()` and `handl=
-e_pfmf()` lead to an unkillable infinite kernel loop.
---
+Oh sorry for the borkage and thanks for the pointer -- I clearly missed
+that :-(.
 
-commit abe0e652d367e02d61446edc9873e41898b993e0
-Author: Claudio Imbrenda <imbrenda@linux.ibm.com>
+I've just been staring at all this and while I think I prefer a slightly
+different solution, I think I'm going to just apply that patch since its
+fairly trivial and you've confirmed it works. And then I can go do the
+alternative for the next cycle -- and hopefully not wreck it again :-).
 
-KVM: s390: vsie: Fix allocation of struct vsie_rmap
-
-This commit fixes a copy-paste error in the allocation size for struct
-vsie_rmap in kvm_s390_mmu_cache_topup().
-
-> diff --git a/arch/s390/kvm/dat.c b/arch/s390/kvm/dat.c
-> index 4a41c0247ffa2..a4fe664f65ee1 100644
-> --- a/arch/s390/kvm/dat.c
-> +++ b/arch/s390/kvm/dat.c
-> @@ -45,7 +45,7 @@ int kvm_s390_mmu_cache_topup(struct kvm_s390_mmu_cache =
-*mc)
->  		mc->pts[mc->n_pts] =3D o;
->  	}
->  	for ( ; mc->n_rmaps < KVM_S390_MMU_CACHE_N_RMAPS; mc->n_rmaps++) {
-> -		o =3D kzalloc_obj(*mc->rmaps[0], GFP_KERNEL_ACCOUNT);
-> +		o =3D kzalloc_obj(struct vsie_rmap, GFP_KERNEL_ACCOUNT);
->  		if (!o)
->  			return -ENOMEM;
-
-[Severity: High]
-This is a pre-existing issue, but I noticed some callers of
-kvm_s390_mmu_cache_topup() do not check its return value.
-
-For example, looking at handle_sske() in arch/s390/kvm/priv.c:
-
-    if (rc =3D=3D -ENOMEM) {
-        kvm_s390_mmu_cache_topup(vcpu->arch.mc);
-        continue;
-    }
-
-If kvm_s390_mmu_cache_topup() returns -ENOMEM due to memcg limits, does
-this create an infinite loop since it immediately retries with an empty
-cache and fails again?
-
-The same pattern appears in handle_pfmf() in arch/s390/kvm/priv.c:
-
-    if (rc =3D=3D -ENOMEM) {
-        kvm_s390_mmu_cache_topup(vcpu->arch.mc);
-        continue;
-    }
-
-Without a fatal_signal_pending() check in these loops, could this prevent
-the host OOM killer from terminating the VM process?
-
->  		mc->rmaps[mc->n_rmaps] =3D o;
->  	}
->  	return 0;
->  }
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260611104850.1103=
-13-1-imbrenda@linux.ibm.com?part=3D3
 
