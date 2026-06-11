@@ -1,79 +1,79 @@
-Return-Path: <linux-s390+bounces-20788-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20789-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id diA0EILaKmqoyAMAu9opvQ
-	(envelope-from <linux-s390+bounces-20788-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 17:55:46 +0200
+	id jltyK4jaKmqvyAMAu9opvQ
+	(envelope-from <linux-s390+bounces-20789-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 17:55:52 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id A38AC6733F4
-	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 17:55:45 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FB626733FA
+	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 17:55:52 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=hEOHGtEt;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20788-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-20788-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=e00cjty6;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20789-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20789-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 104B33439E2C
+	by sea.lore.kernel.org (Postfix) with ESMTP id AB0193448F9D
 	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 15:55:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 408112D3EF2;
-	Thu, 11 Jun 2026 15:54:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CEE838331F;
+	Thu, 11 Jun 2026 15:55:00 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD6D32B109;
-	Thu, 11 Jun 2026 15:54:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4023AE6F3;
+	Thu, 11 Jun 2026 15:54:58 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781193299; cv=none; b=ZliD4DK0+5a+jaG+dnYPdKzYqQfOeaE0/LOu5DvngsDNyIapXJRaSxE3085qKWqJm+xY4WWLrXYthvbQilU8Tw2xK2srtA0Dt3ip+SGvvkdz5/0wqIlRUTx9jELVRw5IPL7BKb+5SEcGPrd913aX9zRRYzzT3LCYjOKfg7l/DZ8=
+	t=1781193299; cv=none; b=HJJZ/2J/aGV7BeJ35x52hfLkef4HGcC2LH95ZVP2MxxLOynhizSaiiXQEeF17R5hewd2LU5GzB1R51cmXOVDLYhdiIzCA95JcKav55Z+KL/C7+CaAKqYFTCZCd9x7NOCGXYtQTU9HyGyyk7D5IQhWK2FGVuHUX7EeZbwZL08oRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1781193299; c=relaxed/simple;
-	bh=Mq6nFhJPyjrc67PHpXk9Dl6vX3gsEgmGVNtPL2nA9FY=;
+	bh=vxqISdFxtg0Sm4ibwG8+KJWqZWfnFtnMk0add8vluX8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Yk8h7dW0D+62a8VJxTvdGenEhMhETzUhB2if6JJ3GXxRvkln+Fc1k/WCkPjPvLZQnPvDa6hjXICsWBTri7XiDun0P0xBJiwozQWN1z4s5/FBHB4R21D/iEp/XBATPvn3LLLPlYZN2HuwFEILBUC0Ct1Cm1hI6RNnP/fYARQ0TTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hEOHGtEt; arc=none smtp.client-ip=148.163.158.5
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65BBtBsZ677703;
-	Thu, 11 Jun 2026 15:54:56 GMT
+	 In-Reply-To:To:Cc; b=SbaPxwFSZkJlrRE4ovGykwxSgsSkJNlmvYPC8nElv52Dk4nQOD2pmODH4n4/s4CxW8z1LZN+RuM6CXekpX54wnersSN6TVIrZa/1hkKXUh3TM8KBXwTwCZ8JjjYzD9vng4q/8dPU4WkR9ngZ7CxNfLoswGSdAue2EG9SZlU7AHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=e00cjty6; arc=none smtp.client-ip=148.163.158.5
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65BAvLlv1742344;
+	Thu, 11 Jun 2026 15:54:57 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=hQ1Fqm
-	2/fzJJ/sfAjwl2uIJKBr88BRDQ33gwivK8ojE=; b=hEOHGtEtWs2Fc5oR3mMNPx
-	8RxXiA0HAw06G6qV/YLDhf2moBpR+xth3UNHgoyy765kQ1HOfLIBI3Nyr9htmIO+
-	uSPnzbSF5m2XRMipNgbODOIjOUcw5BI4lNcRGoWY8+525ISHH4Bfw4yAX0gxlyY3
-	Dv849oDjQZ3EXji+AymKFx1havq4c1rW5KvhDVBmTu7kuPFb9inNN9lOurEfyZZ8
-	4PcCZoQGBplqzLaKS1MIRsHTpxmyfXWcxNVxnhUdocMcM/Poww4rjHsLpyUkQL3b
-	q66vFYQueQGhkwLulIBYrq5LCOmmqT7pwUhRo12Ve10VUMuLSs4Tglc4pgmhLtvA
+	:message-id:mime-version:references:subject:to; s=pp1; bh=G2CEyj
+	JIxy8SlXQ6vu12NYtdN4MiMi6otvpked9XlAw=; b=e00cjty6YT9i7CWCFlcT/S
+	MV7eQFdxILywxrroWiv8/7TXvk+3ClvYy4k4LODiyzL8K0Okqyy/9BLo8I5aOuGP
+	WeWpNpkddwJima4Ax5cIGHr5Xh5lx/NY99N4/plFUENM6J6nPzxfWKrj5kCxhc0d
+	eYR3P/3ZNFyQ0ZmwCypBLMLrTBivq9viY2n7luoC6eDUCcq7hwtoHXvrtxSPB0jh
+	mFPC41HMFnf8t03kxZue2BKRwkFFksz7Lemt/6ZK7Ry85nXww2uzqoWm+/poCt3c
+	QMsyoaitVSYRyN5ajC+OSoylbBuh/nr6iOFJP/y1EnQe1Icu7iOn+8dZZVN+x48g
 	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4eqe8amjab-1
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4eqe8bmhp5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jun 2026 15:54:57 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65BFnorm022557;
+	Thu, 11 Jun 2026 15:54:56 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4eqe09kv1q-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 11 Jun 2026 15:54:56 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65BFnfUG021021;
-	Thu, 11 Jun 2026 15:54:55 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4eqe09kuyr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jun 2026 15:54:55 +0000 (GMT)
 Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65BFsqW426673450
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65BFsqkI30146876
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 11 Jun 2026 15:54:52 GMT
+	Thu, 11 Jun 2026 15:54:53 GMT
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 40D8E20043;
+	by IMSVA (Postfix) with ESMTP id D3D0320043;
 	Thu, 11 Jun 2026 15:54:52 +0000 (GMT)
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AB63C20040;
-	Thu, 11 Jun 2026 15:54:51 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 53B8C20040;
+	Thu, 11 Jun 2026 15:54:52 +0000 (GMT)
 Received: from [192.168.88.52] (unknown [9.87.150.222])
 	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 11 Jun 2026 15:54:51 +0000 (GMT)
+	Thu, 11 Jun 2026 15:54:52 +0000 (GMT)
 From: Christoph Schlameuss <schlameuss@linux.ibm.com>
-Date: Thu, 11 Jun 2026 17:54:33 +0200
-Subject: [PATCH v3 3/4] KVM: s390: vsie: Refactor handle_stfle
+Date: Thu, 11 Jun 2026 17:54:34 +0200
+Subject: [PATCH v3 4/4] KVM: s390: vsie: Implement ASTFLEIE facility 2
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -82,7 +82,7 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260611-vsie-alter-stfle-fac-v3-3-b1a35efedaba@linux.ibm.com>
+Message-Id: <20260611-vsie-alter-stfle-fac-v3-4-b1a35efedaba@linux.ibm.com>
 References: <20260611-vsie-alter-stfle-fac-v3-0-b1a35efedaba@linux.ibm.com>
 In-Reply-To: <20260611-vsie-alter-stfle-fac-v3-0-b1a35efedaba@linux.ibm.com>
 To: linux-s390@vger.kernel.org
@@ -96,40 +96,40 @@ Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
         Nina Schoetterl-Glausch <nsg@linux.ibm.com>, kvm@vger.kernel.org,
         Christoph Schlameuss <schlameuss@linux.ibm.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4047;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4290;
  i=schlameuss@linux.ibm.com; h=from:subject:message-id;
- bh=kv8LvXigEiKNEzIUmdnfEmexbf8Ni4wSjNqzaYeJyqQ=;
- b=owGbwMvMwCUmoqVx+bqN+mXG02pJDFlatzzTpxrGLl7VkicWdT5ZeN7sZYr2Em3m377s/nNq1
- sUOky6PjlIWBjEuBlkxRZZqceu8qr7WpXMOWl6DmcPKBDKEgYtTACaycD3Df790v9MTvwVP71KW
- OC9YcLrmpNPq/YtPmt14ZPGiW+GW7nFGhueHNzOf6Ji6/e5yIwOx9VGvqlqkr5eUsOd8s27u+Gd
- kzgwA
+ bh=o/Ue80IWbtL7ROLxZuUMQMnP57MflFG2QlNcoFU8U5g=;
+ b=owGbwMvMwCUmoqVx+bqN+mXG02pJDFlatzy5CzvmeXKF/TF66+D5MNBKqXPuZo6aG27ab4/4X
+ mo7/vlMRykLgxgXg6yYIku1uHVeVV/r0jkHLa/BzGFlAhnCwMUpABN5uoDhn34CY+1t5r+cPFNm
+ sAv7TNH/eNw48f2aHZ5vah5ZS+1VXMfIsN7n4Vf/1zvmSm/493qZwuWr26b5aK/mOPNvxs7pHxv
+ VW3kA
 X-Developer-Key: i=schlameuss@linux.ibm.com; a=openpgp;
  fpr=0E34A68642574B2253AF4D31EEED6AB388551EC3
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: DMBIR1mTqPPL3s8yhZ6LB0JV7XHE3nsR
-X-Authority-Analysis: v=2.4 cv=TdKmcxQh c=1 sm=1 tr=0 ts=6a2ada50 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+X-Authority-Analysis: v=2.4 cv=Xfa5Co55 c=1 sm=1 tr=0 ts=6a2ada51 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
  a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8
- a=QF4Ne7cRFios67fmdukA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjExMDE1NyBTYWx0ZWRfX8B3fKncBfsFN
- qRDV+HL0ktKcb6zy+2ZK/qpoP619RRx1U5Xf6yXhBSOjtO42WKSayjlAqUPe0AZVagC6UaSQI6g
- Baaomuuy4svTbzkyW5Fhq/ONEZtsOEoR+au3jQ7OD2iqb+jt30TYXHe+g5oWCqFZMckBIn5zTZ4
- MyPRPp5Pgmn2IEUdd02TPoP27BG6QlnqThn6FflicpjM8ZLKruXUZIUfjk7QPJH6ZzNtfcWAeUb
- uLTBmgpUYqCvcFr+hoN5aXK23WZTcuK357I5+JDh1RaI0M4bd1FYIUsm9Lm8khx7op7qXuankRd
- 7NMpt9YxUIuHDZcOnGr9UCgztqNkNkbmkajGh6Et7dOUlXr1iALqVrE4DldIe+gy5N/li3HqRAH
- gaWlkPHL+cVQRN95ATLxfZOEmmuEQ4s4Gl4CJHDagc8r2WClOF6J80zjSDwIntfHCQLudgvLA8n
- 5SgEHaGRr9llzUkNGmg==
-X-Proofpoint-GUID: DMBIR1mTqPPL3s8yhZ6LB0JV7XHE3nsR
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjExMDE1NyBTYWx0ZWRfXzk7btkyW+Ro9
- emWC3k22DKovb2GFsC4FlLYWJfEyksCIXC78/vi0CZjARJVeUOUh8oSpPagDrVWZTy/MraDPe7P
- abaRWrdu5a/AifmGtGnmrhfUanVK61k=
+ a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8
+ a=F8FVqei25e47uhyEDlAA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjExMDE1NyBTYWx0ZWRfX22jYeTVnjMoG
+ Jg1Ck6+cb8PzsZh5PWV710Mb4NtX2aPiB6CIOCiIN6j16RXCojTK6C2V46JLzI/+c5NBxB2kpSe
+ tumCSvGr2kTKNvM4mZaVHezb+NIGLblIbi9EpyiVRQpJBsl4gn9cREQOSnYBemyY4oqsW8HGFfw
+ LQRB/VcdI8FX+le/NpWKwDUc7VSkOZzH5wovLO0/FYBWGBpo9UnH+LHmVyppRXiwP+ePwcMOYXS
+ r+PY1n40iAPmSVfYrvXo/bsLx0D9HXEHU5uC3t8bXx6pmnpVvNMpx7qbc12MCzLlkwTAf/Vtecq
+ zgiN+J8LKMYKsveC2Ot/NzrrWcE0a7GlP1r+N261uI/rvhbtHG9zhtF5e+xl/JbaETb6E/dgRTR
+ R1IrJTftDy4DVUWFFe9+BsIkSJoiNGuTo0nHnKiOl8/bDBLmrjusOtBrzVZiB/BatQoDFt1USyC
+ 4nHh8ECQbJTpgfOiOlA==
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjExMDE1NyBTYWx0ZWRfXxOyzgIrUWylL
+ th08Ew37Sh2vSYh43ZgQVKwGBKnIW0G1crLqaRM7HjnQP7BX0QLUSsWaLJA5Uo5sqFqIDqO/iWo
+ pJRnli4CZ+3PbQdRSAABcUIHQH1cPw0=
+X-Proofpoint-ORIG-GUID: yAfjhVynta7UgPF4LvgN6tHMRxoXxpW8
+X-Proofpoint-GUID: yAfjhVynta7UgPF4LvgN6tHMRxoXxpW8
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-06-11_03,2026-06-11_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 malwarescore=0 clxscore=1015 impostorscore=0 adultscore=0
- bulkscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0 suspectscore=0
+ malwarescore=0 spamscore=0 bulkscore=0 priorityscore=1501 lowpriorityscore=0
+ impostorscore=0 suspectscore=0 clxscore=1015 phishscore=0 adultscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2606040000 definitions=main-2606110157
 X-Rspamd-Action: no action
@@ -137,12 +137,12 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20788-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20789-lists,linux-s390=lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:linux-s390@vger.kernel.org,m:borntraeger@linux.ibm.com,m:frankja@linux.ibm.com,m:imbrenda@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:svens@linux.ibm.com,m:brueckner@linux.ibm.com,m:nsg@linux.ibm.com,m:kvm@vger.kernel.org,m:schlameuss@linux.ibm.com,s:lists@lfdr.de];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,linux.ibm.com:mid,linux.ibm.com:from_mime,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -151,7 +151,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
 	DKIM_TRACE(0.00)[ibm.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[schlameuss@linux.ibm.com,linux-s390@vger.kernel.org];
@@ -164,127 +164,124 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: A38AC6733F4
+X-Rspamd-Queue-Id: 4FB626733FA
 
 From: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
 
-Use switch case in anticipation of handling format-1 and format-2
-facility list designations in the future.
-As the alternate STFLE facilities are not enabled, only case 0 is
-possible.
-No functional change intended.
+Implement shadowing of format-2 facility list when running in VSIE.
+
+ASTFLEIE2 is available since IBM z16.
+To function G1 has to run this KVM code and G1 and G2 have to run QEMU
+with ASTFLEIE2 support.
 
 Signed-off-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
 Co-developed-by: Christoph Schlameuss <schlameuss@linux.ibm.com>
 Signed-off-by: Christoph Schlameuss <schlameuss@linux.ibm.com>
 ---
- arch/s390/include/uapi/asm/kvm.h |  1 +
- arch/s390/kvm/vsie.c             | 53 ++++++++++++++++++++++++++++------------
- 2 files changed, 38 insertions(+), 16 deletions(-)
+ arch/s390/include/asm/kvm_host.h |  7 +++++++
+ arch/s390/kvm/kvm-s390.c         |  2 ++
+ arch/s390/kvm/vsie.c             | 34 ++++++++++++++++++++++++++++++----
+ 3 files changed, 39 insertions(+), 4 deletions(-)
 
-diff --git a/arch/s390/include/uapi/asm/kvm.h b/arch/s390/include/uapi/asm/kvm.h
-index 60345dd2cba2..4192769b5ce0 100644
---- a/arch/s390/include/uapi/asm/kvm.h
-+++ b/arch/s390/include/uapi/asm/kvm.h
-@@ -444,6 +444,7 @@ struct kvm_s390_vm_cpu_machine {
- #define KVM_S390_VM_CPU_FEAT_PFMFI	11
- #define KVM_S390_VM_CPU_FEAT_SIGPIF	12
- #define KVM_S390_VM_CPU_FEAT_KSS	13
-+#define KVM_S390_VM_CPU_FEAT_ASTFLEIE2	14
- struct kvm_s390_vm_cpu_feat {
- 	__u64 feat[16];
+diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
+index 8a4f4a39f7a2..a4a7972ce79c 100644
+--- a/arch/s390/include/asm/kvm_host.h
++++ b/arch/s390/include/asm/kvm_host.h
+@@ -504,6 +504,13 @@ struct kvm_s390_cpu_model {
+ 	struct kvm_s390_vm_cpu_uv_feat uv_feat_guest;
  };
+ 
++#define S390_ARCH_FAC_FORMAT_2 2
++struct kvm_s390_flcb2 {
++	u8	reserved0[7];
++	u8	length;
++	u64	facilities[S390_ARCH_FAC_LIST_SIZE_U64];
++};
++
+ typedef int (*crypto_hook)(struct kvm_vcpu *vcpu);
+ 
+ struct kvm_s390_crypto {
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index 2a57ea095b48..cb623fc41127 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -460,6 +460,8 @@ static void __init kvm_s390_cpu_feat_init(void)
+ 		allow_cpu_feat(KVM_S390_VM_CPU_FEAT_IBS);
+ 	if (sclp.has_kss)
+ 		allow_cpu_feat(KVM_S390_VM_CPU_FEAT_KSS);
++	if (sclp.has_astfleie2)
++		allow_cpu_feat(KVM_S390_VM_CPU_FEAT_ASTFLEIE2);
+ 	/*
+ 	 * KVM_S390_VM_CPU_FEAT_SKEY: Wrong shadow of PTE.I bits will make
+ 	 * all skey handling functions read/set the skey from the PGSTE
 diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
-index e5a23f1c9749..c7dcdd460dd1 100644
+index c7dcdd460dd1..9a9a6d8b8ffc 100644
 --- a/arch/s390/kvm/vsie.c
 +++ b/arch/s390/kvm/vsie.c
-@@ -6,12 +6,15 @@
-  *
-  *    Author(s): David Hildenbrand <dahi@linux.vnet.ibm.com>
-  */
-+#include <linux/align.h>
- #include <linux/vmalloc.h>
- #include <linux/kvm_host.h>
- #include <linux/bug.h>
-+#include <linux/compiler.h>
- #include <linux/list.h>
- #include <linux/bitmap.h>
- #include <linux/sched/signal.h>
-+#include <linux/stddef.h>
- #include <linux/io.h>
- #include <linux/mman.h>
+@@ -65,9 +65,9 @@ struct vsie_page {
+ 	gpa_t scb_gpa;				/* 0x0258 */
+ 	/* the shadow gmap in use by the vsie_page */
+ 	struct gmap_cache gmap_cache;		/* 0x0260 */
+-	__u8 reserved[0x0700 - 0x0278];		/* 0x0278 */
+-	struct kvm_s390_crypto_cb crycb;	/* 0x0700 */
+-	__u8 fac[S390_ARCH_FAC_LIST_SIZE_BYTE];	/* 0x0800 */
++	__u8 reserved[0x06f8 - 0x0278];		/* 0x0278 */
++	struct kvm_s390_crypto_cb crycb;	/* 0x06f8 */
++	__u8 fac[8 + S390_ARCH_FAC_LIST_SIZE_BYTE];/* 0x0800 */
+ };
  
-@@ -1000,6 +1003,23 @@ static void retry_vsie_icpt(struct vsie_page *vsie_page)
- 	clear_vsie_icpt(vsie_page);
+ static_assert(sizeof(struct vsie_page) == PAGE_SIZE);
+@@ -1020,6 +1020,28 @@ static int handle_stfle_0(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page,
+ 	return 0;
  }
  
-+static int handle_stfle_0(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page,
-+			  u32 fac_list_origin)
++static int handle_stfle_2(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page, u32 fac_list_origin)
 +{
++	struct kvm_s390_flcb2 *flcb_s = (struct kvm_s390_flcb2 *)vsie_page->fac;
 +	struct kvm_s390_sie_block *scb_s = &vsie_page->scb_s;
++	u64 len;
 +
-+	/*
-+	 * format-0 -> size of nested guest's facility list == guest's size
-+	 * guest's size == host's size, since STFLE is interpretatively executed
-+	 * using a format-0 for the guest, too.
-+	 */
-+	if (read_guest_real(vcpu, fac_list_origin, &vsie_page->fac,
-+			    stfle_size() * sizeof(u64)))
++	if (read_guest_real(vcpu, fac_list_origin, &len, sizeof(len)))
 +		return set_validity_icpt(scb_s, 0x1090U);
-+	scb_s->fac = (u32)virt_to_phys(&vsie_page->fac);
++
++	/* discard reserved bits */
++	len = (len & U8_MAX);
++	flcb_s->length = len;
++	len += 1;
++
++	if (read_guest_real(vcpu, fac_list_origin + offsetof(struct kvm_s390_flcb2, facilities),
++			    &flcb_s->facilities, len * sizeof(u64)))
++		return set_validity_icpt(scb_s, 0x1090U);
++
++	scb_s->fac = (u32)virt_to_phys(&vsie_page->fac) | S390_ARCH_FAC_FORMAT_2;
 +	return 0;
 +}
 +
  /*
   * Try to shadow + enable the guest 2 provided facility list.
   * Retry instruction execution if enabled for and provided by guest 2.
-@@ -1009,29 +1029,30 @@ static void retry_vsie_icpt(struct vsie_page *vsie_page)
-  */
- static int handle_stfle(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
- {
--	struct kvm_s390_sie_block *scb_s = &vsie_page->scb_s;
--	__u32 fac = READ_ONCE(vsie_page->scb_o->fac);
-+	bool has_astfleie2 = test_kvm_cpu_feat(vcpu->kvm, KVM_S390_VM_CPU_FEAT_ASTFLEIE2);
-+	u32 fac = READ_ONCE(vsie_page->scb_o->fac);
-+	int format_mask, format;
-+	u32 origin;
-+
-+	BUILD_BUG_ON(!IS_ALIGNED(offsetof(struct vsie_page, fac), 8));
+@@ -1034,6 +1056,8 @@ static int handle_stfle(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
+ 	int format_mask, format;
+ 	u32 origin;
  
--	/*
--	 * Alternate-STFLE-Interpretive-Execution facilities are not supported
--	 * -> format-0 flcb
--	 */
++	/* assert no overflow with maximum len */
++	BUILD_BUG_ON(sizeof(vsie_page->fac) < ((S390_ARCH_FAC_LIST_SIZE_U64 + 1) * sizeof(u64)));
+ 	BUILD_BUG_ON(!IS_ALIGNED(offsetof(struct vsie_page, fac), 8));
+ 
  	if (fac && test_kvm_facility(vcpu->kvm, 7)) {
- 		retry_vsie_icpt(vsie_page);
- 		/*
- 		 * The facility list origin (FLO) is in bits 1 - 28 of the FLD
- 		 * so we need to mask here before reading.
- 		 */
--		fac = fac & 0x7ffffff8U;
--		/*
--		 * format-0 -> size of nested guest's facility list == guest's size
--		 * guest's size == host's size, since STFLE is interpretatively executed
--		 * using a format-0 for the guest, too.
--		 */
--		if (read_guest_real(vcpu, fac, &vsie_page->fac,
--				    stfle_size() * sizeof(u64)))
--			return set_validity_icpt(scb_s, 0x1090U);
--		scb_s->fac = (u32)virt_to_phys(&vsie_page->fac);
-+		origin = fac & 0x7ffffff8U;
-+		format_mask = has_astfleie2 ? 3 : 0;
-+		format = fac & format_mask;
-+		switch (format) {
-+		case 0:
-+			return handle_stfle_0(vcpu, vsie_page, origin);
-+		case 1:
-+		case 2:
-+		case 3:
-+			unreachable();
-+		}
+@@ -1049,9 +1073,11 @@ static int handle_stfle(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
+ 		case 0:
+ 			return handle_stfle_0(vcpu, vsie_page, origin);
+ 		case 1:
++			return set_validity_icpt(&vsie_page->scb_s, 0x1330U);
+ 		case 2:
++			return handle_stfle_2(vcpu, vsie_page, origin);
+ 		case 3:
+-			unreachable();
++			return set_validity_icpt(&vsie_page->scb_s, 0x1330U);
+ 		}
  	}
  	return 0;
- }
 
 -- 
 2.54.0
