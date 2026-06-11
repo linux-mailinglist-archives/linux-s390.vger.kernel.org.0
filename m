@@ -1,61 +1,64 @@
-Return-Path: <linux-s390+bounces-20758-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20759-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 9gQIHHBlKmrPogMAu9opvQ
-	(envelope-from <linux-s390+bounces-20758-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 09:36:16 +0200
+	id 2TldL+52KmpppwMAu9opvQ
+	(envelope-from <linux-s390+bounces-20759-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 10:50:54 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA7F066F6C7
-	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 09:36:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 19DA267004F
+	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 10:50:54 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b="Z01QBw/h";
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20758-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-20758-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b="eGhNGqi/";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20759-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-20759-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 709823071AA1
-	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 07:35:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BADB331D0162
+	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 08:48:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E30E3367B91;
-	Thu, 11 Jun 2026 07:35:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BA86369D54;
+	Thu, 11 Jun 2026 08:48:44 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38423630B7;
-	Thu, 11 Jun 2026 07:35:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134E92D12EE
+	for <linux-s390@vger.kernel.org>; Thu, 11 Jun 2026 08:48:42 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781163322; cv=none; b=ZpKevQ3/R53C35X1Weuc5q0K0AtYwQIZo8tZ2ISBHywRgZ62lp+EdwB1DX/VLXqi4lr7l+ieX9GCioBEQsmJ4/fYG7ez+TsBihJJ555MPqhO6+CFEsRLZVG/ML9SzOg/HPgW19j0BE7OQTAV/2INj+nssX9Hf7mnvuNobPxODMg=
+	t=1781167724; cv=none; b=LlLgmyAUJyCWVeuqHYCxlTO1t7Y23b9v7jnrXJTs4Km7wYcC5Q08f3yAq8+puwhNIe2zFv6M9m6ioLyqXRXjKtw2TjAKVs7fU8TQ5y9RSTAhzJqPhiS3vfur7CD8oReKB/LGiwCX4Q0rXHxNKyFk2N4F8TXrEPNy1QcOWry2lNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781163322; c=relaxed/simple;
-	bh=TzgMTwGX2whiLtuSSGLT29Et1A+aIa1g13YstftP9Vo=;
-	h=Message-ID:Date:From:To:Subject:In-Reply-To:References:Cc; b=ARJAnu3oVK3GgybxRPYKvIhU7M7wAkmZ6zFMSpf9oTmapfJ439ScoIqL0mr69YxoAyUM4e+GHvf9W3QV00U1QguDQ+ACEjBZP10aTw4MO77gNkvHcf7IZoZGVwDof0KndUkwONnpwVZdUJ9hYfO9OkPsJ4XUhS8AHpx6cn9rcdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z01QBw/h; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E3651F00893;
-	Thu, 11 Jun 2026 07:35:19 +0000 (UTC)
+	s=arc-20240116; t=1781167724; c=relaxed/simple;
+	bh=UqRS/76CbcjJiROIPXK85nDsiyp1M2q3vAL+Z73psN4=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=FCHGuCAWcVpoG2vFJodMWjO0g83QuM7QJ2jcmiMyOGB93bSQIBZ3hbPsv322qUUgXX5Zz4Uj3dO91bTo19O+HYdLnsTBJkaqw3YGAzGtiSI93PHMa6B6CeSt7q/eeAJ3ceYlBWP8Z9EuI5iJXvHzTxn0ybwvVoud0mLBiw6sFpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eGhNGqi/; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 721531F00893;
+	Thu, 11 Jun 2026 08:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781163319;
-	bh=mo/64/HPY/6XXdxYXG0j1Rf2IH961OLjSb7/zYXIAp0=;
-	h=Date:From:To:Subject:In-Reply-To:References:Cc;
-	b=Z01QBw/hVD0yzmyR9h/PeeyZ0iRCgAk+/aPcn16UqS3zZfuWeP7a6qWfdqmwQ64c7
-	 SUPKR2ROzkbXWRdLbWoisYB51wZF40L8vvw0MozUehUzOXbcsSsnQ0fbgMJJmCHGkW
-	 z+TuJ9RV3obUIo8CPP/tRZUPc5Hs7F5upTIG6t0fkoVPZxquwXwNgAinfjXUhvkvqU
-	 6YeQ2LjisVMoDUHycAma+Lu74RYAWxQFblvBsWwIvRFb7/kKDiutnbSyvdf+3vpuqS
-	 Dp2GHlTRm5vmXa5cb7jZrXcCPOVrqwZElTLvCkH94I9VrnrjiQ9+mME23BBp+rSEGk
-	 5s8EcKr+hihgQ==
-Message-ID: <c52f5bc48973b580c8df41764acb73e4@kernel.org>
-Date: Thu, 11 Jun 2026 07:35:17 +0000
-From: "Maxime Ripard" <mripard@kernel.org>
-To: "Sumit Semwal" <sumit.semwal@linaro.org>
-Subject: Re: [PATCH] dma-buf: move system_cc_shared heap under separate
- Kconfig
-In-Reply-To: <20260610142329.3836808-1-sumit.semwal@linaro.org>
-References: <20260610142329.3836808-1-sumit.semwal@linaro.org>
-Cc: Brian.Starkey@arm.com, afd@ti.com, agordeev@linux.ibm.com, arnd@linaro.org, benjamin.gaignard@collabora.com, chleroy@kernel.org, christian.koenig@amd.com, djbw@kernel.org, dri-devel@lists.freedesktop.org, gerald.schaefer@linux.ibm.com, hch@infradead.org, jgg@ziepe.ca, jiri@resnulli.us, jstultz@google.com, linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, lkp@intel.com, maddy@linux.ibm.com, mpe@ellerman.id.au, mripard@kernel.org, npiggin@gmail.com, sumit.semwal@linaro.org, thomas.lendacky@amd.com, tjmercier@google.com, x86@kernel.org, "Arnd
- Bergmann" <arnd@arndb.de>, "Maxime Ripard" <mripard@kernel.org>
-Content-Transfer-Encoding: 7bit
+	s=k20260515; t=1781167722;
+	bh=ib/tn5S4Xc7cWAvg4Ju2zhZw4C3fK2KRqWqSmig084I=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=eGhNGqi/A0Fat34nwJWB+/5hUzw71elRGsmiQ+jPeFpgRq7suI/RnkbWg6Q80CM7O
+	 xCLz3gh9oNZgmO3UAwiPMHLY63w38Kz2/JHIy6Y3uwJqBIcx89IyVw/jUHMP4oS3OH
+	 APnOJjMk2Rr1/uo/vnLt69HCEJ1DkjEAexUEYMetCNoYKfn2IXs4xm3RlaudH4wHwR
+	 Lp9prfuDw6b7TkjIaZSqE3tztid/tFbRsstm31n8qL329gJgwz+xupLlG9v6Q5Wu4x
+	 3sddOw53UxAzL1MlbBHCDFgpYv2YwFem5uPc9wzeDUOZj8ZHhifXJevxtX2i7qb0wW
+	 PgNvvSGEa0Tjw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] net/smc: bound the peer producer cursor on SMC-D and
+ SMC-R CDC receive
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Bryam Vargas" <hexlabsecurity@proton.me>
+Cc: "Heiko Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
+ Gordeev" <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org
+In-Reply-To: <20260610084803.186516-1-hexlabsecurity@proton.me>
+References: <20260610084803.186516-1-hexlabsecurity@proton.me>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 11 Jun 2026 08:48:42 +0000
+Message-Id: <20260611084842.721531F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -72,45 +75,197 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20758-lists,linux-s390=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-20759-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER(0.00)[mripard@kernel.org,linux-s390@vger.kernel.org];
-	FREEMAIL_CC(0.00)[arm.com,ti.com,linux.ibm.com,linaro.org,collabora.com,kernel.org,amd.com,lists.freedesktop.org,infradead.org,ziepe.ca,resnulli.us,google.com,lists.linaro.org,vger.kernel.org,lists.ozlabs.org,intel.com,ellerman.id.au,gmail.com,arndb.de];
-	RCPT_COUNT_TWELVE(0.00)[31];
-	FORGED_RECIPIENTS(0.00)[m:sumit.semwal@linaro.org,m:Brian.Starkey@arm.com,m:afd@ti.com,m:agordeev@linux.ibm.com,m:arnd@linaro.org,m:benjamin.gaignard@collabora.com,m:chleroy@kernel.org,m:christian.koenig@amd.com,m:djbw@kernel.org,m:dri-devel@lists.freedesktop.org,m:gerald.schaefer@linux.ibm.com,m:hch@infradead.org,m:jgg@ziepe.ca,m:jiri@resnulli.us,m:jstultz@google.com,m:linaro-mm-sig@lists.linaro.org,m:linux-kernel@vger.kernel.org,m:linux-media@vger.kernel.org,m:linux-s390@vger.kernel.org,m:linuxppc-dev@lists.ozlabs.org,m:lkp@intel.com,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:mripard@kernel.org,m:npiggin@gmail.com,m:thomas.lendacky@amd.com,m:tjmercier@google.com,m:x86@kernel.org,m:arnd@arndb.de,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,smtp.kernel.org:mid,vger.kernel.org:from_smtp,lists.linux.dev:replyto,sashiko.dev:url,proton.me:email];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:hexlabsecurity@proton.me,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:linux-s390@vger.kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mripard@kernel.org,linux-s390@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	PRECEDENCE_BULK(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_FIVE(0.00)[5];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,arndb.de:email]
+	MISSING_XM_UA(0.00)[];
+	FROM_NO_DN(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: BA7F066F6C7
+X-Rspamd-Queue-Id: 19DA267004F
 
-On Wed, 10 Jun 2026 19:53:29 +0530, Sumit Semwal wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> While system heap and system_cc_shared heap share a lot of code
-> and hence the same source file, their users have different needs.
-> 
-> 
-> [ ... ]
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
+New issues:
+- [High] Incorrect clamping of SMC-R consumer cursor permanently stalls con=
+nections with asymmetric buffer sizes.
+- [High] A Time-of-Check to Time-of-Use (TOCTOU) race condition in clamping=
+ `conn->bytes_to_rcv` allows out-of-bounds reads and data corruption.
 
-Thanks!
-Maxime
+Pre-existing issues:
+- [Critical] Unbounded consumer cursor in SMC-D leaves a kernel heap buffer=
+ overflow vulnerability unpatched in the send path.
+--
+
+commit c64247d450ada1697a0e227038dd52be750039e2
+Author: Bryam Vargas <hexlabsecurity@proton.me>
+
+net/smc: bound the peer producer cursor on SMC-D and SMC-R CDC receive
+
+This commit adds bounds checking to the peer producer cursor in the SMC-D
+and SMC-R receive paths to prevent out-of-bounds reads. It also clamps the
+bytes_to_rcv metric to the receive buffer length.
+
+> diff --git a/net/smc/smc_cdc.c b/net/smc/smc_cdc.c
+> index 619b3bab38248..738c45fd5cd08 100644
+> --- a/net/smc/smc_cdc.c
+> +++ b/net/smc/smc_cdc.c
+> @@ -382,6 +382,8 @@ static void smc_cdc_msg_recv_action(struct smc_sock *=
+smc,
+>  		smp_mb__before_atomic();
+>  		atomic_add(diff_prod, &conn->bytes_to_rcv);
+>  		/* guarantee 0 <=3D bytes_to_rcv <=3D rmb_desc->len */
+> +		if (atomic_read(&conn->bytes_to_rcv) > conn->rmb_desc->len)
+> +			atomic_set(&conn->bytes_to_rcv, conn->rmb_desc->len);
+
+[Severity: High]
+Does this non-atomic clamping sequence introduce a race condition?
+
+If a peer sends a forged producer cursor to inflate diff_prod, bytes_to_rcv
+will temporarily exceed rmb_desc->len during the window between the
+atomic_add() and the atomic_set().
+
+If smc_rx_recvmsg() is running concurrently in process context on another
+CPU, could it read this transiently inflated value?
+
+net/smc/smc_rx.c:smc_rx_recvmsg() {
+    ...
+    copylen =3D min_t(size_t, read_remaining, readable);
+    ...
+    chunk_len =3D copylen - chunk_len; /* remainder */
+    ...
+    rc =3D memcpy_to_msg(msg, rcvbuf_base + chunk_off, chunk_len);
+}
+
+If smc_rx_recvmsg() calculates a copylen larger than the buffer length based
+on the oversized bytes_to_rcv, would this lead to an out-of-bounds read on
+the second chunk?
+
+Additionally, if smc_rx_recvmsg() executes an atomic_sub() during this exact
+window, wouldn't the subsequent atomic_set() overwrite the subtracted value,
+artificially inflating bytes_to_rcv again?
+
+>  		smp_mb__after_atomic();
+>  		smc->sk.sk_data_ready(&smc->sk);
+
+[ ... ]
+
+> diff --git a/net/smc/smc_cdc.h b/net/smc/smc_cdc.h
+> index 696cc11f2303b..7fa6e0d3817f8 100644
+> --- a/net/smc/smc_cdc.h
+> +++ b/net/smc/smc_cdc.h
+> @@ -230,6 +230,12 @@ static inline void smc_cdc_cursor_to_host(union smc_=
+host_cursor *local,
+>  	smc_curs_copy_net(&net, peer, conn);
+>  	temp.count =3D ntohl(net.count);
+>  	temp.wrap =3D ntohs(net.wrap);
+> +	/* the peer producer cursor is wire-controlled; bound the SMC-R count to
+> +	 * our RMB before it is used as a raw index by the urgent path, mirrori=
+ng
+> +	 * the SMC-D conversion in smcd_cdc_msg_to_host().
+> +	 */
+> +	if (temp.count > conn->rmb_desc->len)
+> +		temp.count =3D conn->rmb_desc->len;
+
+[Severity: High]
+Does this hardcoded clamp permanently stall connections that use asymmetric
+buffer sizes?
+
+This function is used by smcr_cdc_msg_to_host() to parse both the producer
+and consumer cursors:
+
+net/smc/smc_cdc.h:smcr_cdc_msg_to_host() {
+    smc_cdc_cursor_to_host(&local->prod, &peer->prod, conn);
+    smc_cdc_cursor_to_host(&local->cons, &peer->cons, conn);
+}
+
+The consumer cursor represents the peer's read position within its own
+receive buffer, so its natural limit is conn->peer_rmbe_size. If a
+connection has a peer_rmbe_size larger than the local rmb_desc->len,
+legitimate consumer cursor updates will be truncated by this new clamp.
+
+When smc_curs_diff() computes the consumed space using this truncated
+cursor, it yields zero. Does this prevent peer_rmbe_space from being
+replenished, causing the sender to falsely believe the peer's buffer is
+full and stalling the connection?
+
+>  	if ((old.wrap > temp.wrap) && temp.wrap)
+>  		return;
+
+[ ... ]
+
+> @@ -260,6 +266,12 @@ static inline void smcd_cdc_msg_to_host(struct smc_h=
+ost_cdc_msg *local,
+> =20
+>  	temp.wrap =3D peer->prod.wrap;
+>  	temp.count =3D peer->prod.count;
+> +	/* the peer producer cursor is wire-controlled; a count past our RMB is
+> +	 * used as a raw index by the urgent path (smc_cdc_handle_urg_data_arri=
+val)
+> +	 * and as a length by the recv path.  Bound it to the RMB.
+> +	 */
+> +	if (temp.count > conn->rmb_desc->len)
+> +		temp.count =3D conn->rmb_desc->len;
+>  	smc_curs_copy(&local->prod, &temp, conn);
+> =20
+>  	temp.wrap =3D peer->cons.wrap;
+
+[Severity: Critical]
+This is a pre-existing issue, but it appears the consumer cursor in
+smcd_cdc_msg_to_host() is still left unbounded.
+
+While the producer cursor is clamped, the consumer cursor is copied
+directly:
+
+net/smc/smc_cdc.h:smcd_cdc_msg_to_host() {
+    temp.wrap =3D peer->cons.wrap;
+    temp.count =3D peer->cons.count;
+    smc_curs_copy(&local->cons, &temp, conn);
+}
+
+If a peer sends an SMC-D CDC message with an unexpectedly large consumer
+count, this unbounded cursor is passed to smc_curs_diff() in
+smc_cdc_msg_recv_action(), which generates an oversized diff_tx and inflates
+conn->sndbuf_space past conn->sndbuf_desc->len.
+
+When the local sender transmits data, can this inflated sndbuf_space allow
+copylen to exceed the send buffer size in smc_tx_sendmsg()?
+
+net/smc/smc_tx.c:smc_tx_sendmsg() {
+    ...
+    chunk_len =3D copylen - chunk_len; /* remainder */
+    ...
+    rc =3D memcpy_from_msg(sndbuf_base + chunk_off, msg, chunk_len);
+}
+
+During wrap-around, wouldn't the second chunk's length exceed the allocated
+buffer bounds, resulting in an out-of-bounds memcpy_from_msg() into
+adjacent memory?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260610084803.1865=
+16-1-hexlabsecurity@proton.me?part=3D1
 
