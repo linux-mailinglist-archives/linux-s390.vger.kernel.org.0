@@ -1,158 +1,116 @@
-Return-Path: <linux-s390+bounces-20757-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20758-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id tBexJU5NKmpNmgMAu9opvQ
-	(envelope-from <linux-s390+bounces-20757-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 07:53:18 +0200
+	id 9gQIHHBlKmrPogMAu9opvQ
+	(envelope-from <linux-s390+bounces-20758-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 09:36:16 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87AB766ECF1
-	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 07:53:17 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA7F066F6C7
+	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 09:36:15 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=LZ9uqd0d;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20757-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20757-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b="Z01QBw/h";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20758-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-20758-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 662B1300A24D
-	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 05:53:14 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 709823071AA1
+	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 07:35:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B337F303A04;
-	Thu, 11 Jun 2026 05:53:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E30E3367B91;
+	Thu, 11 Jun 2026 07:35:22 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4CA2248A8;
-	Thu, 11 Jun 2026 05:53:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38423630B7;
+	Thu, 11 Jun 2026 07:35:19 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781157190; cv=none; b=KFNRMeo5O6+1uiauDBUxVNPGvB0pYvt6+g8pMffW5rn3LssfC7EiDcaDeOf3oh0Kiw2JVO23SdDoUTk3rTx+xmCloY3+3xf4tam5FOFiKuZLcZb9uIoMeu8DrUz7B3tYbXnIYm+CDCxr3AQ/EH+wONUVJ9Ywar31QhEUudz5ihQ=
+	t=1781163322; cv=none; b=ZpKevQ3/R53C35X1Weuc5q0K0AtYwQIZo8tZ2ISBHywRgZ62lp+EdwB1DX/VLXqi4lr7l+ieX9GCioBEQsmJ4/fYG7ez+TsBihJJ555MPqhO6+CFEsRLZVG/ML9SzOg/HPgW19j0BE7OQTAV/2INj+nssX9Hf7mnvuNobPxODMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781157190; c=relaxed/simple;
-	bh=Rn41MEbkx7igJGkZqb7oOrjDZ/UtxycUEWMqOGee+d0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=gJ61wJ3YGXbzxK3TyOxXoGY+bY8B1uuEwMrTHxPdY+sba2DtYE/t4jmjCL+TqL+T0XT5zvYjw1gMN4GDHZskQE+40ciz5PRfk0wDox7nS7NSiSO//I9eO1MV0r5lxkUp9ltOdP1086bwifNfFd8oFKmnP8zrgWCsax7VneRm55s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LZ9uqd0d; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A26861F00893;
-	Thu, 11 Jun 2026 05:52:59 +0000 (UTC)
+	s=arc-20240116; t=1781163322; c=relaxed/simple;
+	bh=TzgMTwGX2whiLtuSSGLT29Et1A+aIa1g13YstftP9Vo=;
+	h=Message-ID:Date:From:To:Subject:In-Reply-To:References:Cc; b=ARJAnu3oVK3GgybxRPYKvIhU7M7wAkmZ6zFMSpf9oTmapfJ439ScoIqL0mr69YxoAyUM4e+GHvf9W3QV00U1QguDQ+ACEjBZP10aTw4MO77gNkvHcf7IZoZGVwDof0KndUkwONnpwVZdUJ9hYfO9OkPsJ4XUhS8AHpx6cn9rcdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z01QBw/h; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E3651F00893;
+	Thu, 11 Jun 2026 07:35:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781157189;
-	bh=sEJIr+lPP3nXLw5RoJcEfwsXvE/NpV/RD/uYgu3QwbY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=LZ9uqd0d7apZX5IQP570+CH5enEWdE4i/rnlALBpkVng1ymyhtm8Xo+CXf6k/jI/T
-	 PzpwXj8C9y8lPg0EqG2BmAmqvWycVYScBZuIOoexVWPDlJk0h1k2YtyuMWTIEir5xp
-	 Ac4imUykBKZf2Ir12ie18URAbLEGxAwTs9dH2Dxho0ZHxwerBlBud5rW5fw3RHgiRq
-	 i/QEsYYPYoHhorZg7TrBTtbB0mfEqQbWSxRo0bNMNkbnl1n/CpGi3B/5x9taOYPW/9
-	 Jlp+saSSz66Cto6HSo5gt0et9Sna0FPZZpDrNpcs8qWkQ2M2f2JHnCKYHvPpdPdNSY
-	 WoypcSrVXBZRg==
-X-Mailer: emacs 30.2 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
-	Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Steven Price <steven.price@arm.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Mostafa Saleh <smostafa@google.com>,
-	Petr Tesarik <ptesarik@suse.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>, x86@kernel.org
-Subject: Re: [PATCH v6 00/20] dma-mapping: Use DMA_ATTR_CC_SHARED through
- direct, pool and swiotlb paths
-In-Reply-To: <aigYbK12D8uKQvJF@arm.com>
-References: <20260604083959.1265923-1-aneesh.kumar@kernel.org>
- <aigYbK12D8uKQvJF@arm.com>
-Date: Thu, 11 Jun 2026 11:22:56 +0530
-Message-ID: <yq5a7bo5mxmv.fsf@kernel.org>
+	s=k20260515; t=1781163319;
+	bh=mo/64/HPY/6XXdxYXG0j1Rf2IH961OLjSb7/zYXIAp0=;
+	h=Date:From:To:Subject:In-Reply-To:References:Cc;
+	b=Z01QBw/hVD0yzmyR9h/PeeyZ0iRCgAk+/aPcn16UqS3zZfuWeP7a6qWfdqmwQ64c7
+	 SUPKR2ROzkbXWRdLbWoisYB51wZF40L8vvw0MozUehUzOXbcsSsnQ0fbgMJJmCHGkW
+	 z+TuJ9RV3obUIo8CPP/tRZUPc5Hs7F5upTIG6t0fkoVPZxquwXwNgAinfjXUhvkvqU
+	 6YeQ2LjisVMoDUHycAma+Lu74RYAWxQFblvBsWwIvRFb7/kKDiutnbSyvdf+3vpuqS
+	 Dp2GHlTRm5vmXa5cb7jZrXcCPOVrqwZElTLvCkH94I9VrnrjiQ9+mME23BBp+rSEGk
+	 5s8EcKr+hihgQ==
+Message-ID: <c52f5bc48973b580c8df41764acb73e4@kernel.org>
+Date: Thu, 11 Jun 2026 07:35:17 +0000
+From: "Maxime Ripard" <mripard@kernel.org>
+To: "Sumit Semwal" <sumit.semwal@linaro.org>
+Subject: Re: [PATCH] dma-buf: move system_cc_shared heap under separate
+ Kconfig
+In-Reply-To: <20260610142329.3836808-1-sumit.semwal@linaro.org>
+References: <20260610142329.3836808-1-sumit.semwal@linaro.org>
+Cc: Brian.Starkey@arm.com, afd@ti.com, agordeev@linux.ibm.com, arnd@linaro.org, benjamin.gaignard@collabora.com, chleroy@kernel.org, christian.koenig@amd.com, djbw@kernel.org, dri-devel@lists.freedesktop.org, gerald.schaefer@linux.ibm.com, hch@infradead.org, jgg@ziepe.ca, jiri@resnulli.us, jstultz@google.com, linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, lkp@intel.com, maddy@linux.ibm.com, mpe@ellerman.id.au, mripard@kernel.org, npiggin@gmail.com, sumit.semwal@linaro.org, thomas.lendacky@amd.com, tjmercier@google.com, x86@kernel.org, "Arnd
+ Bergmann" <arnd@arndb.de>, "Maxime Ripard" <mripard@kernel.org>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.66 / 15.00];
+X-Spamd-Result: default: False [-3.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20757-lists,linux-s390=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[31];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20758-lists,linux-s390=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER(0.00)[mripard@kernel.org,linux-s390@vger.kernel.org];
+	FREEMAIL_CC(0.00)[arm.com,ti.com,linux.ibm.com,linaro.org,collabora.com,kernel.org,amd.com,lists.freedesktop.org,infradead.org,ziepe.ca,resnulli.us,google.com,lists.linaro.org,vger.kernel.org,lists.ozlabs.org,intel.com,ellerman.id.au,gmail.com,arndb.de];
+	RCPT_COUNT_TWELVE(0.00)[31];
+	FORGED_RECIPIENTS(0.00)[m:sumit.semwal@linaro.org,m:Brian.Starkey@arm.com,m:afd@ti.com,m:agordeev@linux.ibm.com,m:arnd@linaro.org,m:benjamin.gaignard@collabora.com,m:chleroy@kernel.org,m:christian.koenig@amd.com,m:djbw@kernel.org,m:dri-devel@lists.freedesktop.org,m:gerald.schaefer@linux.ibm.com,m:hch@infradead.org,m:jgg@ziepe.ca,m:jiri@resnulli.us,m:jstultz@google.com,m:linaro-mm-sig@lists.linaro.org,m:linux-kernel@vger.kernel.org,m:linux-media@vger.kernel.org,m:linux-s390@vger.kernel.org,m:linuxppc-dev@lists.ozlabs.org,m:lkp@intel.com,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:mripard@kernel.org,m:npiggin@gmail.com,m:thomas.lendacky@amd.com,m:tjmercier@google.com,m:x86@kernel.org,m:arnd@arndb.de,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:catalin.marinas@arm.com,m:iommu@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:robin.murphy@arm.com,m:m.szyprowski@samsung.com,m:will@kernel.org,m:maz@kernel.org,m:steven.price@arm.com,m:Suzuki.Poulose@arm.com,m:jiri@resnulli.us,m:jgg@ziepe.ca,m:smostafa@google.com,m:ptesarik@suse.com,m:aik@amd.com,m:dan.j.williams@intel.com,m:yilun.xu@linux.intel.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-s390@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:x86@kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[aneesh.kumar@kernel.org,linux-s390@vger.kernel.org];
-	FREEMAIL_CC(0.00)[lists.linux.dev,lists.infradead.org,vger.kernel.org,arm.com,samsung.com,kernel.org,resnulli.us,ziepe.ca,google.com,suse.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,linux.ibm.com,ellerman.id.au,gmail.com];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[aneesh.kumar@kernel.org,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mripard@kernel.org,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,arm.com:email,sashiko.dev:url,vger.kernel.org:from_smtp]
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,arndb.de:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 87AB766ECF1
+X-Rspamd-Queue-Id: BA7F066F6C7
 
-Catalin Marinas <catalin.marinas@arm.com> writes:
+On Wed, 10 Jun 2026 19:53:29 +0530, Sumit Semwal wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> While system heap and system_cc_shared heap share a lot of code
+> and hence the same source file, their users have different needs.
+> 
+> 
+> [ ... ]
 
-> On Thu, Jun 04, 2026 at 02:09:39PM +0530, Aneesh Kumar K.V (Arm) wrote:
->> This series propagates DMA_ATTR_CC_SHARED through the dma-direct,
->> dma-pool, and swiotlb paths so that encrypted and decrypted DMA buffers
->> are handled consistently.
->> 
->> Today, the direct DMA path mostly relies on force_dma_unencrypted() for
->> shared/decrypted buffer handling. This series consolidates the
->> force_dma_unencrypted() checks in the top-level functions and ensures
->> that the remaining DMA interfaces use DMA attributes to make the correct
->> decisions.
->
-> Please check Sashiko's reports, it has some good points:
->
-> https://sashiko.dev/#/patchset/20260604083959.1265923-1-aneesh.kumar@kernel.org
->
-> I think the main one is the swiotlb_tbl_map_single() changes which break
-> AMD SME host support. There cc_platform_has(CC_ATTR_MEM_ENCRYPT) is true
-> but force_dma_unencrypted() is false. Normally you'd not end up on this
-> path but you can have swiotlb=force.
->
+Acked-by: Maxime Ripard <mripard@kernel.org>
 
-I would consider the above similar to a trusted device requiring swiotlb
-bouncing. At some point, based on real-world use cases, we may need to
-add protected io_tlb_mem pools. We have not done that yet because no
-such use case has come so far.
-
--aneesh
+Thanks!
+Maxime
 
