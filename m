@@ -1,206 +1,213 @@
-Return-Path: <linux-s390+bounces-20772-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20773-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ylToLpWaKmqotQMAu9opvQ
-	(envelope-from <linux-s390+bounces-20772-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 13:23:01 +0200
+	id NFRSI6+cKmpstgMAu9opvQ
+	(envelope-from <linux-s390+bounces-20773-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 13:31:59 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 164E867147C
-	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 13:23:01 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id D84D96715A1
+	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 13:31:58 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b="saVxodt/";
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20772-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-20772-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=ibm.com;
+	dkim=pass header.d=ziepe.ca header.s=google header.b=XGJBL5os;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20773-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-20773-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=none;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E307033A4145
-	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 11:18:15 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 631C2307D3D2
+	for <lists+linux-s390@lfdr.de>; Thu, 11 Jun 2026 11:30:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 978C43DE434;
-	Thu, 11 Jun 2026 11:18:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F89A3E6DD8;
+	Thu, 11 Jun 2026 11:30:48 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FFEA3BADA3;
-	Thu, 11 Jun 2026 11:18:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659B33E8338
+	for <linux-s390@vger.kernel.org>; Thu, 11 Jun 2026 11:30:46 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781176695; cv=none; b=jI8952WoCF5DaDnoVaVYHIm+6X7HyIki3C8Hbrysb3fFAOL4fn0+pJPc8ByAFqR8y+lkOpm1U2WFMYWzrT3Y0Lj0bzgAxn9pBk/r/BKIR9M+AToeJUTgVdojKNs1XxH8ierHIg8LDNP9XUTCSV8g9jD1DzOPk9sAWTSTelDO/QM=
+	t=1781177448; cv=none; b=UzyCSyKGilb2OiEvkZ16Sw7BLRDq47CjMxiHoywBG3yNKrQpoql4rcZ5aiR261LOC9hXSMAWaZLiPKI3WzCGAMgsFnJaT6Q1jDU5c0baVzAaE4i/Q7FQau338W4nOLZE0WAzZ8f7p30RLT82EsPJNRQ36NbxASfQ9dmULgJjfS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781176695; c=relaxed/simple;
-	bh=oc9KhMdfcugf5aWfH5yguODUPYLhY1Uk1y4qaWzLAYM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Zh4CIeS6FxXu7hTh1Mo9YdNFQeFhS2S5REcJhgBM7RDVDDaHFI0tUcpjTOTt6TvPXoDb8T/QAAcD2gTne4aM/8iKaDj/GIxDNh+UTNXpMrorwc2uzHwWKHh0JDEmt5XBTbcpZWU1Kwz0doFGed6LttfpFejQ5oXbEvWbxbnb360=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=saVxodt/; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65AJu3BY3872821;
-	Thu, 11 Jun 2026 11:18:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=KNLrZd
-	m5gdH0V5JUGY9ETwr/c5aC9Q1VpXOOT/ua7zo=; b=saVxodt/kq/Ci4no4vMw5k
-	nAXvFrqOvnRrkL3jXNMN/AUF9Z15nxXtZkfOnOPY46RvgevErQ24qhL4y2USTDkw
-	T5pbBv7xoamU7UDwDYFm8vYxRZWUFYMRl351orqk6KAeaeZFFcTVNjJL3lq1sGQm
-	G6jBCaZ8fFgw7TZWZAYDW+JZsXeX5u6NTmrC1KtMmFxMu0bKWR7FixK7UnfjdTUH
-	ytv6VyR3PMVq0a8GO6+zFB9gJlHeO54yn5jIscP6/nf0cEJoNhWjHiLZgSYNC2+K
-	Vy4Kyh7GZtIVemog9fN5Xxgm6T0pfsZRhojIgLBpsGEqs07n6J6PgLT3farWZCFA
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4eqe8eu246-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jun 2026 11:18:12 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65BB4b4v010878;
-	Thu, 11 Jun 2026 11:18:11 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4eqe09jw2b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jun 2026 11:18:11 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65BBI7EC27460038
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 11 Jun 2026 11:18:07 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C524220040;
-	Thu, 11 Jun 2026 11:18:07 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A1A042004E;
-	Thu, 11 Jun 2026 11:18:07 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.224.75.30])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with SMTP;
-	Thu, 11 Jun 2026 11:18:07 +0000 (GMT)
-Date: Thu, 11 Jun 2026 13:18:05 +0200
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: Christian Borntraeger <borntraeger@linux.ibm.com>
-Cc: KVM <kvm@vger.kernel.org>, Janosch Frank <frankja@linux.ibm.com>,
-        David
- Hildenbrand <david@kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>, stable@vger.kernel.org
-Subject: Re: [PATCH 2/2] KVM: s390: Initialize KVM_S390_GET_CMMA_BITS memory
-Message-ID: <20260611131805.58d60613@p-imbrenda>
-In-Reply-To: <20260611105036.11491-1-borntraeger@linux.ibm.com>
-References: <20260611105036.11491-1-borntraeger@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1781177448; c=relaxed/simple;
+	bh=haH/H6OcYua3Z5rTl0sktjLmKVSLqKAqacU21OYuo/8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tvYN/uswfFQdBG+u7Kt9qrfhWPbT73angRNNJhZalg5CdJMWO/JAaA30qTqjbeRkuMK/a/EbfTnKN8hw8zWSKfv+Jo3OeEIaZafW3EsqY0y0MX7RXbwOGD4c4cgUkFKYV4kkIlzYEu21RD72G1uAJ6h50ZyxXTDhg/CeQIKQAGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=XGJBL5os; arc=none smtp.client-ip=209.85.160.182
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-5177b9a02bdso108925171cf.1
+        for <linux-s390@vger.kernel.org>; Thu, 11 Jun 2026 04:30:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1781177445; x=1781782245; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=haH/H6OcYua3Z5rTl0sktjLmKVSLqKAqacU21OYuo/8=;
+        b=XGJBL5os4DVaFiv5GV9/V+Nwn4AKPOoWgMshjsoi+NGc7cMK/XQVGbgXSTf25QFDbI
+         qvarjcNpPZK+kxSgp7f03EM6mDGDGyoe/MpgvPrna3Y9PfSKPEOOtXb9ultWWqce95uX
+         0RYZ3zaWBf4eOGsmHvnUhPPilQaNdNSZ/xm22crBgupbgw+xh3VOLDcd1caDssogAwKv
+         Ef3ppoKRFs/yO4CRP5wFJ6z2eipTnGTNlGq1vIZIE+EbAK9Cmvwh/rVwt1VzHVT+r2Jp
+         1az+m5WOE4NCUXdQ2Fvcr30Kqp9Dscn636V6YHa2gZEM1PzK6f5l2ZA0Ac5Xi7if/PkL
+         vyLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781177445; x=1781782245;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=haH/H6OcYua3Z5rTl0sktjLmKVSLqKAqacU21OYuo/8=;
+        b=KZslu3lvU4x1J1i7+JvpnCOFPPtsJWZuvprK260GimthRzYB5hhWOH9U7g/egTKfkI
+         m0+cfntelO+oqpKVvVpwLeJhEYC1JdSRxXaYN7jOmkME+qBBOC2zZQOv8KVpQ6HQo9Gb
+         wGjv+38pfN6FiMCYH1vqcLx2IABz+RbZ0SgDkbWH78pIZauFRQCg5mwv2X3KD07ShdKH
+         rn5bk/xLElbDzIokWH9A/Z62KaV2onXAvIX0UMTC2HFAzH8KZgx/CXSV6Cp6YsDoF1YZ
+         rEfYLKFxUKJL7pF8S1EJpI6mv3JP7rMyEMhilugZB4Bc4gwxweKl4KRqFHlAjSF4Ouxk
+         FqzQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9oq9Y3+U3LKGXq28ggzXikyu9He/Z3ig2XEP5dYWLWZsWfO4dXXFGhj2M7YmvkRxl8px5KQi5xFwit@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzW9gCONViJbTF2Wwc/r7iqpPQgQrI93Rqx8ecitdloXjQyLxu
+	IcoMophsVG1V/nhM8Ng3pd3EqdVBjy4Y9u5OnjaYhAOd+LYwLea8k4L+G36o7PFoAQ8=
+X-Gm-Gg: Acq92OHCgn4ALZMbXcyFE+UzXZCtH7ksPOXTIi+KdhWxS9UWj9OkCjLzSDABqX4hP27
+	z3kbM9l7eJ6OLb8+gZRf9on6LRXJX3Luiw7RqP8AY8khq6x6+eFbby5PlQ7EvXnzQUvD0I50bJj
+	UD7zJhcFTcqJpoCQXw/LMMEGCBQEVu7HBlPdY/jMY1zHcq8XiNAoYbSR8bDC/Z4mcXpqv8UxGd5
+	03md0QAEWxkzmtsQaB+E39GHtnFEXK9HqX90IR/LcRrkXbJU3SjS4A/xhhXARSXy3EQfauLrez0
+	uZJlEul22jiaNglP5qSPg+QtDcrP5cTza0d0wCYo0xnQhFvJze5sYuoukEEJj/qlf/EMKLueI5U
+	MKPgc75KaGBzTApOejOduQTsijeLwBHhhLQDkGX4FCSUb9ajccHPbgGaHnfXMKWR7e27tV7NdiO
+	I3C6ohGUkI+B1GKmrDtzBhUGK/3RQ5WwzaghQtnuM+mwDtUsRIi6xQp4aik0OQ/biPc7IylZGx4
+	MsNRrV9VB/RTjQJ
+X-Received: by 2002:a05:622a:354:b0:517:875a:d619 with SMTP id d75a77b69052e-517ede4125cmr35159281cf.6.1781177440327;
+        Thu, 11 Jun 2026 04:30:40 -0700 (PDT)
+Received: from ziepe.ca (crbknf0213w-47-54-130-67.pppoe-dynamic.high-speed.nl.bellaliant.net. [47.54.130.67])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-517ef61dfeasm14521801cf.24.2026.06.11.04.30.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2026 04:30:39 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1wXdcM-00000005deq-1WZO;
+	Thu, 11 Jun 2026 08:30:38 -0300
+Date: Thu, 11 Jun 2026 08:30:38 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+Cc: iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
+	Robin Murphy <robin.murphy@arm.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Steven Price <steven.price@arm.com>,
+	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Pirko <jiri@resnulli.us>, Mostafa Saleh <smostafa@google.com>,
+	Petr Tesarik <ptesarik@suse.com>,
+	Alexey Kardashevskiy <aik@amd.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Xu Yilun <yilun.xu@linux.intel.com>, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>, x86@kernel.org,
+	Jiri Pirko <jiri@nvidia.com>, Michael Kelley <mhklinux@outlook.com>
+Subject: Re: [PATCH v6 04/20] dma-pool: track decrypted atomic pools and
+ select them via attrs
+Message-ID: <20260611113038.GA1066031@ziepe.ca>
+References: <20260604083959.1265923-1-aneesh.kumar@kernel.org>
+ <20260604083959.1265923-5-aneesh.kumar@kernel.org>
+ <20260609143242.GK2764304@ziepe.ca>
+ <yq5afr2uzum9.fsf@kernel.org>
+ <20260610164153.GQ2764304@ziepe.ca>
+ <yq5acxxxn0gp.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjExMDExMSBTYWx0ZWRfXyqtdXXs3NZ25
- CWQluJP5mkqTF1lCSNJR33oAmXfrHPUrjVCtwhYv0e/wZsaJ4L9Eao/6+aEqzBdDuVQp20IRF52
- h/TYwazfDl6mp1Idk/ObTdxA18OzYU85vEuKxetRkMPF80EBcucIFTkn+R0rgHwMhIp6kl1dOwa
- NwyOau1GKMPZ/rVAfJ7ESiTpa2MO0lez+dX0gLmfK6+Tmlrli8LwCvQztei26FYGay+I9VvkjO6
- zzomwNeW5v5C9MpCme46gLBQX7b5M3sztZle8dyX+sfWHUg48OXKoIQI3rxbHFxkpKPVrlo90mD
- t3tBGIVPeHBUqpHjWNNB16PXpPvxR0TJgJ2FeAWUXprUTBtztsGRXR6QeQH6SbLxtOZdFL4lLhD
- +A7khODrlfoVTiIU0uIh/kDm63B6xMexvPFBEH/Duol6lkPHXqlAqN296f49WAH0w+TU1ym8Hm+
- VzDftc37MnmAWREFcqw==
-X-Authority-Analysis: v=2.4 cv=dr7rzVg4 c=1 sm=1 tr=0 ts=6a2a9974 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=kj9zAlcOel0A:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8
- a=VwQbUJbxAAAA:8 a=VPH5gqUGor3fcHHDZiYA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-ORIG-GUID: D-qF7_5KEpgCIO8EroAZdf-LSlwPb2Zq
-X-Proofpoint-GUID: D-qF7_5KEpgCIO8EroAZdf-LSlwPb2Zq
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjExMDExMSBTYWx0ZWRfX++I1ek8woBJR
- dQmwGuv/JCnu81RtrxH76icUuUfDiDzuYTiUwLGG/WhQTP4gYcFmb9LloXiSFINpcRDQCgCfMbI
- rgN8BMZmQvcsTbicnr0ol8bSkJZwoPU=
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-11_02,2026-06-09_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 adultscore=0 suspectscore=0 priorityscore=1501 phishscore=0
- clxscore=1015 bulkscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606040000 definitions=main-2606110111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yq5acxxxn0gp.fsf@kernel.org>
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_DKIM_ALLOW(-0.20)[ziepe.ca:s=google];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:borntraeger@linux.ibm.com,m:kvm@vger.kernel.org,m:frankja@linux.ibm.com,m:david@kernel.org,m:linux-s390@vger.kernel.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:stable@vger.kernel.org,s:lists@lfdr.de];
-	HAS_ORG_HEADER(0.00)[];
-	FORGED_SENDER(0.00)[imbrenda@linux.ibm.com,linux-s390@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-20772-lists,linux-s390=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:from_mime,vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[imbrenda@linux.ibm.com,linux-s390@vger.kernel.org];
+	FREEMAIL_CC(0.00)[lists.linux.dev,lists.infradead.org,vger.kernel.org,arm.com,samsung.com,kernel.org,resnulli.us,google.com,suse.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,linux.ibm.com,ellerman.id.au,gmail.com,nvidia.com,outlook.com];
+	TAGGED_FROM(0.00)[bounces-20773-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:aneesh.kumar@kernel.org,m:iommu@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:robin.murphy@arm.com,m:m.szyprowski@samsung.com,m:will@kernel.org,m:maz@kernel.org,m:steven.price@arm.com,m:Suzuki.Poulose@arm.com,m:catalin.marinas@arm.com,m:jiri@resnulli.us,m:smostafa@google.com,m:ptesarik@suse.com,m:aik@amd.com,m:dan.j.williams@intel.com,m:yilun.xu@linux.intel.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-s390@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:x86@kernel.org,m:jiri@nvidia.com,m:mhklinux@outlook.com,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
+	DMARC_NA(0.00)[ziepe.ca];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[ziepe.ca:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[jgg@ziepe.ca,linux-s390@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[33];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jgg@ziepe.ca,linux-s390@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RCVD_COUNT_SEVEN(0.00)[11]
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 164E867147C
+X-Rspamd-Queue-Id: D84D96715A1
 
-On Thu, 11 Jun 2026 12:50:36 +0200
-Christian Borntraeger <borntraeger@linux.ibm.com> wrote:
+On Thu, Jun 11, 2026 at 10:21:50AM +0530, Aneesh Kumar K.V wrote:
 
-> kvm_s390_get_cmma_bits() allocates its output buffer with vmalloc(),
-> which does not zero the returned pages:
-> 
-> 	values = vmalloc(args->count);
-> 
-> In the non-peek (migration) path, dat_get_cmma() reports a byte count
-> spanning from the first to the last dirty page, but __dat_get_cmma_pte()
-> writes values[gfn - start] only for pages whose CMMA dirty bit is set.
-> The walk uses DAT_WALK_IGN_HOLES, so clean and unmapped pages that lie
-> between two dirty pages within the reported span are visited but never
-> store their byte.  Those gaps (up to KVM_S390_MAX_BIT_DISTANCE pages
-> each) stay uninitialized yet fall inside [0, count) and are copied out
-> by copy_to_user(), disclosing stale kernel memory to user space.
-> 
-> Before the switch to the new gmap implementation the buffer was fully
-> populated for every gfn in the span, so no uninitialized bytes were
-> exposed; the dirty-only walk introduced the leak.
-> 
-> Use vzalloc() so the gaps read back as zero.
-> 
-> Fixes: e38c884df921 ("KVM: s390: Switch to new gmap")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Christian Borntraeger <borntraeger@linux.ibm.com>
+> If we are adding DMA_ATTR_ALLOC_SHARED, should we also allow
+> dma_alloc_attrs() to take that attribute value?
 
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+I don't think we should..
 
-> ---
->  arch/s390/kvm/kvm-s390.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index 9fb8ce45eee9..05f8a8499701 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -2247,7 +2247,7 @@ static int kvm_s390_get_cmma_bits(struct kvm *kvm,
->  		return 0;
->  	}
->  
-> -	values = vmalloc(args->count);
-> +	values = vzalloc(args->count);
->  	if (!values)
->  		return -ENOMEM;
->  
+It is hard to see any reason to allocate shared memory through the DMA
+API. The way the DMA API works only the device that it is allocated
+for can access that memory, so it is effectively private to the
+device. Thus what purpose is shared device private memory?
 
+> +DMA_ATTR_CC_SHARED
+> +------------------
+> +
+> +This attribute indicates that a DMA mapping is shared, or decrypted, for
+> +confidential computing guests. For normal system memory, the caller must
+> +already have marked the memory decrypted with set_memory_decrypted(). CPU
+> +PTEs for the mapping must use pgprot_decrypted(), and the same shared
+> +semantic may be passed to a vIOMMU when it sets up the IOPTE.
+> +
+> +This attribute describes an existing mapping. It does not allocate shared
+> +backing pages and must not be passed to dma_alloc_attrs(). For MMIO, use
+> +this together with DMA_ATTR_MMIO to indicate shared MMIO. Unless
+> +DMA_ATTR_MMIO is provided, the mapping requires a struct page.
+
+Yes, though we need to fix a few ATTR_MMIO users to make this
+statement true
+
+> +DMA_ATTR_ALLOC_CC_SHARED
+> +------------------------
+> +
+> +This attribute indicates that a dma_alloc_attrs() allocation must use
+> +shared, or decrypted, backing pages for confidential computing guests.
+> +Allocation paths use this request when they select shared DMA pools,
+> +decrypt newly allocated pages or restore encryption on free.
+> +
+> +DMA_ATTR_ALLOC_CC_SHARED differs from DMA_ATTR_CC_SHARED in that it
+> +requests shared backing memory from the allocation path. DMA_ATTR_CC_SHARED
+> +describes an already-shared mapping and requires the caller to have
+> +prepared normal system memory before mapping it. Callers that need shared
+> +memory from dma_alloc_attrs() should request DMA_ATTR_ALLOC_CC_SHARED
+> +instead of DMA_ATTR_CC_SHARED.
+
+The semantic is right, but I would make it a private attribute since
+no driver should use it.
+
+Jason
 
