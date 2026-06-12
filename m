@@ -1,86 +1,85 @@
-Return-Path: <linux-s390+bounces-20807-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20809-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ng7UM95NLGpoPAQAu9opvQ
-	(envelope-from <linux-s390+bounces-20807-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Jun 2026 20:20:14 +0200
+	id P41dEPlNLGp4PAQAu9opvQ
+	(envelope-from <linux-s390+bounces-20809-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 12 Jun 2026 20:20:41 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 209F667B9EC
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Jun 2026 20:20:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 90C4467BA00
+	for <lists+linux-s390@lfdr.de>; Fri, 12 Jun 2026 20:20:40 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=CcrTQRhy;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20807-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20807-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=Rt+Wx4qb;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20809-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20809-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4DF09338A183
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Jun 2026 18:12:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 16DBF3536CDE
+	for <lists+linux-s390@lfdr.de>; Fri, 12 Jun 2026 18:13:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41FA5409106;
-	Fri, 12 Jun 2026 18:11:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81F2140963B;
+	Fri, 12 Jun 2026 18:11:03 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5CD396B7F;
-	Fri, 12 Jun 2026 18:10:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ACB940910D;
+	Fri, 12 Jun 2026 18:11:01 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781287861; cv=none; b=ni1HR3883gZEmed4hRfEp7gA14ynZjdepO21Nv8wdHRwICb2JjiOqascZXQkFMxT0Q5WwwjQeyqYUVxaK1yX1OOl1hxdmEMsUz0BR9tEbZI/eAtnK3WBdBGK+6Xk1OXRwbxo+37ekMPtV2uXfjoY0bQw3bqswBbjJj+j8aVfdyY=
+	t=1781287863; cv=none; b=tXUq09yA2N2vqplO53ez9RqjJYvWNVnILPDJzOqdpVYSufpKYjISU0/duD36+djGsvzvFaxAxynlZV62QD+YHDuICMhFksL3epTKSbZ7mrHgQCxDVcGh2CEa55Gxn84mVB/nCCog8YgAyA+gw85dDasuB0mnQp/BjoDBqr9CbWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781287861; c=relaxed/simple;
-	bh=MNFffotkc3sbM9n5Wo6cfZhCXqNaLzI/23NNBH/KLM0=;
+	s=arc-20240116; t=1781287863; c=relaxed/simple;
+	bh=nCzsf4HCvxPIXR4SDdRlORe690fVrB8ZyyoHkWb+b2s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=odOPAVbt1gy1ocvgpbYO7FNZT04IShBoYLAIRmIAJwzeGZbhLd8/9YFf8ZsxnbN0cWV73aMfmRQQBHpg5PUUqQ88qZclDvIk0JlX+HTPmsp+a5U/Bmc5xvkduFY0aczgNpyC8PpxPl5wfRnNnQ+D4YO688wvJwGlax5V13XXNuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CcrTQRhy; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65CFKW0u3872896;
-	Fri, 12 Jun 2026 18:10:56 GMT
+	 MIME-Version; b=d+p8GcXGrc+LdrXFEEiVGmvvwKhjaSs8bPED3rbzd69PZppHbnC9Zz7eX0rDVDdN9/OOgQGiKYTk8HHrsS8q7y4+m250VWagg/Kniy5XJ+XjDg7GFJBSf+lFX24ZDvFqncNoOyDzonYvzga++xNiWZqopBHR2CeFHfSDGKwHK6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Rt+Wx4qb; arc=none smtp.client-ip=148.163.156.1
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65CEr3OV722245;
+	Fri, 12 Jun 2026 18:10:58 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=cGWDYzD7sk2qYfWo8
-	Y1/9AftxDK7t1eHT6ZHFONArtw=; b=CcrTQRhy6shGCaKPvXGA/ptRddTtHo95Z
-	F+Kycak/8H18KUiMBv9YZ9GfKXnS+VbiORE6yz02UrP4dpuHtsaeybbo67FF3MAo
-	AXsyIOeKJJMYKBoLDcIwYAoL/S2IDeDQeNACqJrXZpEvuu3bwjU6OFbF8SOZx4QO
-	I6p2upewWhVR0rp13qG/GLxAgqQBug8v+HMEHskVFS6SHQghatdXl2UGHi16qzQ7
-	PAWZnEdjSRATsAwbD2OL5Sc55/zq4s3/4+Y2BFbnq3dFOsmzJ8jQDO8CCPOMeZcZ
-	eLzEnzvfQtkAz2dXmlW3it8DUjaGWId1ys6RxyP+5qFiI1Aa1MWUg==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4eqe8f2cpd-1
+	:mime-version:references:subject:to; s=pp1; bh=BOVt7cVWDsBa/Xm42
+	9cRp4lmqG376b/vLrNSA+l1aFE=; b=Rt+Wx4qbd/eT5Pnq/VBltmFEsL4FsTioK
+	bEdYwaxDXGc97uKCvVEQTKu6SQsnaL2iUJk6rmLTSH9/qlVPFJ4PU/YO6Msksfa6
+	pg4KCK/XgrDznEFXgGA8Il69XKcyJGx5fa5JR6Kdo0mimoRkZJegOtvRaxfMUqQj
+	vEeGZvJBN1m8Za2DmfM4FKolKcq+egPFqWIsjhF8xDzAt1IcMJ176072Qc6Yovsp
+	+GWDv5Zo8W+6APOOeQORSkB5ypnYE3k+h7QAsqnZCQI/qjGE/FPkMfJldyv9zqOv
+	UhT5UfQOc3rcqrniM7wYiH0ftz7j5GFl59wQm9eI9pdG6DpaaaB+Q==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4eqe8dje37-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Jun 2026 18:10:56 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65CI4Y5X016363;
-	Fri, 12 Jun 2026 18:10:55 GMT
-Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4eqe09s2hy-1
+	Fri, 12 Jun 2026 18:10:58 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65CI4dPP020517;
+	Fri, 12 Jun 2026 18:10:57 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4eqe08s22n-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Jun 2026 18:10:55 +0000 (GMT)
+	Fri, 12 Jun 2026 18:10:57 +0000 (GMT)
 Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65CIAqGC25952936
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65CIAr3t29819602
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 12 Jun 2026 18:10:52 GMT
+	Fri, 12 Jun 2026 18:10:53 GMT
 Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EE40F58052;
-	Fri, 12 Jun 2026 18:10:51 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 249EE58052;
+	Fri, 12 Jun 2026 18:10:53 +0000 (GMT)
 Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CD8805805A;
-	Fri, 12 Jun 2026 18:10:50 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 15F8458056;
+	Fri, 12 Jun 2026 18:10:52 +0000 (GMT)
 Received: from Mac.ibm.com (unknown [9.61.255.20])
 	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 12 Jun 2026 18:10:50 +0000 (GMT)
+	Fri, 12 Jun 2026 18:10:51 +0000 (GMT)
 From: Omar Elghoul <oelghoul@linux.ibm.com>
 To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org
 Cc: oelghoul@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
         agordeev@linux.ibm.com, borntraeger@linux.ibm.com, svens@linux.ibm.com,
         schnelle@linux.ibm.com, mjrosato@linux.ibm.com, alifm@linux.ibm.com,
-        farman@linux.ibm.com, gbayer@linux.ibm.com, alex@shazbot.org,
-        stable@vger.kernel.org
-Subject: [PATCH v4 1/4] s390/pci: Hold fmb_lock when enabling or disabling PCI devices
-Date: Fri, 12 Jun 2026 14:10:45 -0400
-Message-ID: <20260612181048.91548-2-oelghoul@linux.ibm.com>
+        farman@linux.ibm.com, gbayer@linux.ibm.com, alex@shazbot.org
+Subject: [PATCH v4 2/4] s390/pci: Preserve FMB state in device re-enablement
+Date: Fri, 12 Jun 2026 14:10:46 -0400
+Message-ID: <20260612181048.91548-3-oelghoul@linux.ibm.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260612181048.91548-1-oelghoul@linux.ibm.com>
 References: <20260612181048.91548-1-oelghoul@linux.ibm.com>
@@ -92,30 +91,29 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjEyMDE2OSBTYWx0ZWRfX1Nw0ETzbzYWi
- 1rNHTweYvLcVOqCW1mmmtSaOenUUoBc6ybv8GAnFyXHaswiw/n1s6x8b9hnUOG/51Z2Ld+UN3mp
- 5OJl3XM5Ae77KP8sW9Snx04zXXxWTfiWK5zpBgJytVKOdsMuK2ojTQsdBb086jStVTcSoc3V7xF
- XAioE8AgapJ5aBMX+ZFppdLC16XX8jYgARuR+zProjNAhfQaVvGwFJfPMPAu/qTKQ73UyGzz/y+
- ooHlpcAa45FueIpkFsnWuuSQra8xDdo1zBjezQe0vbF1Wo2LZ2MPSmVBtmfFRXbSqVGs3boprS1
- PYiSUzdyRHQ2RLHRXNwTVvZT/OO0uoumL9TGAtjVpaLamGNE1670yIBRU2z1bO4BAUn1dIhG/lO
- bp3JGofgkDZFbag9KntPMvvKIdO8CMtD2u3zlZOfFR4tj8bsa45JoKoHFNW3pKfi7vDrmBBLLl6
- 93Wk5osjGbcIqfL5PAQ==
-X-Authority-Analysis: v=2.4 cv=dr7rzVg4 c=1 sm=1 tr=0 ts=6a2c4bb0 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjEyMDE2OSBTYWx0ZWRfX5CBf3BXRz00A
+ aiGWWmrIQo+zuAwlup0MzcsqwkEEaZ12H0Nvfv+5Yr9x5wDeedepzfatQA1ESl+CBuQUP5EK6QZ
+ YJJ1uVzkKVS3PJ70KauuRM4t96cxvv0=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjEyMDE2OSBTYWx0ZWRfXzDEQav1bO42Y
+ ZyYDcoumRtsySOdmu2e0Yt9/0z8dAM5mXyY3Fga03E+3a/853GF9T669+y4FNq8RPnN97OlsuEu
+ buUyoHr31Za1Igwe9hWTKRdgmtnuHn+5RleiC5Nz7DDzgfU2SakwO6DBU7c6NIGUFf2Kxod6zbW
+ ICD+l42FzzzivjAbF19s+tPgcXT1TYV/Dzu4yLEkiLDredAIH/EEEahQkfohNGon0RFe3nARH3i
+ 1Lwj59VfamYj8gSIxac8KDjKLHS1CmR9sF1ZP2H1fqvDRFAVzRmPfGvZYHV9WWbyDao4GoPclL4
+ N2gOIv6POTa6+cvAZaFd0CsMe/qnbkqVQ6ouaSE1PJZ/frhEvgrt5oDCFW24VWRHx80eotBoNYJ
+ 49L8S2KOr9F88/EfbhRZXyUbfnQhZFvi2293sP5Efzsa1mZMwgRT+s8bOTlpBU6DxjLGI36To0K
+ yOdg9He3/m+HHqZgAvw==
+X-Proofpoint-ORIG-GUID: 8quAazH_9QieQvyfyx9IPRzzjx0o0wFp
+X-Authority-Analysis: v=2.4 cv=GIM41ONK c=1 sm=1 tr=0 ts=6a2c4bb2 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
  a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=U7nrCbtTmkRpXpFmAIza:22 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
- a=5NbLduwtq9nBFWGw9KEA:9
-X-Proofpoint-ORIG-GUID: 3uppq2iq8Ear7LSsHeAe1AfEfmO7DKoK
-X-Proofpoint-GUID: 3uppq2iq8Ear7LSsHeAe1AfEfmO7DKoK
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjEyMDE2OSBTYWx0ZWRfX7ZP/MnTOB8HX
- 1ERIt6CMLpyGuja0wiEjjTLU3z5uDsvLpOyVhvPRLri0msepn38r4LXwYtfothJpldRMJRI0EDT
- mBTLV3rYe0mqjbUJXvRnYVmo+y72Xas=
+ a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8 a=6Vtv6p8LYkiH6MEZsLwA:9
+X-Proofpoint-GUID: 8quAazH_9QieQvyfyx9IPRzzjx0o0wFp
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-06-12_02,2026-06-12_03,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 adultscore=0 suspectscore=0 priorityscore=1501 phishscore=0
- clxscore=1015 bulkscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
+ clxscore=1015 suspectscore=0 impostorscore=0 spamscore=0 phishscore=0
+ adultscore=0 lowpriorityscore=0 bulkscore=0 priorityscore=1501 malwarescore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2606040000 definitions=main-2606120169
 X-Rspamd-Action: no action
@@ -130,9 +128,9 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20807-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20809-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:kvm@vger.kernel.org,m:oelghoul@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:schnelle@linux.ibm.com,m:mjrosato@linux.ibm.com,m:alifm@linux.ibm.com,m:farman@linux.ibm.com,m:gbayer@linux.ibm.com,m:alex@shazbot.org,m:stable@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:kvm@vger.kernel.org,m:oelghoul@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:schnelle@linux.ibm.com,m:mjrosato@linux.ibm.com,m:alifm@linux.ibm.com,m:farman@linux.ibm.com,m:gbayer@linux.ibm.com,m:alex@shazbot.org,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[oelghoul@linux.ibm.com,linux-s390@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
@@ -142,74 +140,189 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,linux.ibm.com:mid,linux.ibm.com:from_mime];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,linux.ibm.com:mid,linux.ibm.com:from_mime,fib.gd:url];
 	TO_DN_NONE(0.00)[];
 	DKIM_TRACE(0.00)[ibm.com:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
+	RCPT_COUNT_TWELVE(0.00)[15];
 	TAGGED_RCPT(0.00)[linux-s390];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 209F667B9EC
+X-Rspamd-Queue-Id: 90C4467BA00
 
-Ensure that fmb_lock is held by pcibios_enable_device() and
-pcibios_disable_device() when calling zpci_fmb_enable_device() or
-zpci_fmb_disable_device(), respectively. Additionally, assert that the
-fmb_lock is held within the latter two functions to prevent future race
-conditions regarding new callers.
+Introduce a function zpci_fmb_reenable_device() that checks for the state
+of the FMB and reuses the same buffer where appropriate. If the FMB was not
+previously enabled, enable it for the device. Call this function during a
+zPCI device re-enablement, which in turn implicitly ensures that the FMB is
+is enabled for host devices during their KVM registration.
 
-Fixes: af0a8a8453f7 ("s390/pci: implement pcibios_add_device")
-Fixes: 944239c59e93 ("s390/pci: implement pcibios_release_device")
-Cc: stable@vger.kernel.org
+Besides re-enabling the FMB itself in zpci_fmb_reenable_device() also clear
+out the software counters, such that a program resetting an FMB sees all
+counters start from zero as expected. Separate this clearing of software
+counters out into zpci_fmb_clear_iommu_ctrs() and reuse it in
+zpci_fmb_enable_device() and zpci_fmb_reenable_device(). Likewise separate
+the FMB enable logic into zpci_fmb_do_enable() to be reused in the same two
+functions.
+
 Signed-off-by: Omar Elghoul <oelghoul@linux.ibm.com>
-Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
 ---
- arch/s390/pci/pci.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/s390/include/asm/pci.h |  1 +
+ arch/s390/pci/pci.c         | 95 +++++++++++++++++++++++++++++--------
+ 2 files changed, 77 insertions(+), 19 deletions(-)
 
+diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
+index 5dcf35f0f325..65014e52d559 100644
+--- a/arch/s390/include/asm/pci.h
++++ b/arch/s390/include/asm/pci.h
+@@ -323,6 +323,7 @@ void zpci_remove_parent_msi_domain(struct zpci_bus *zbus);
+ /* FMB */
+ int zpci_fmb_enable_device(struct zpci_dev *);
+ int zpci_fmb_disable_device(struct zpci_dev *);
++int zpci_fmb_reenable_device(struct zpci_dev *zdev);
+ 
+ /* Debug */
+ int zpci_debug_init(void);
 diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
-index 39bd2adfc240..2910d4038d39 100644
+index 2910d4038d39..21d3fccac789 100644
 --- a/arch/s390/pci/pci.c
 +++ b/arch/s390/pci/pci.c
-@@ -173,6 +173,8 @@ int zpci_fmb_enable_device(struct zpci_dev *zdev)
- 	unsigned long flags;
- 	u8 cc, status;
- 
-+	lockdep_assert_held(&zdev->fmb_lock);
-+
- 	if (zdev->fmb || sizeof(*zdev->fmb) < zdev->fmb_length)
- 		return -EINVAL;
- 
-@@ -211,6 +213,8 @@ int zpci_fmb_disable_device(struct zpci_dev *zdev)
- 	struct zpci_fib fib = {0};
- 	u8 cc, status;
- 
-+	lockdep_assert_held(&zdev->fmb_lock);
-+
- 	if (!zdev->fmb)
- 		return -EINVAL;
- 
-@@ -639,7 +643,9 @@ int pcibios_enable_device(struct pci_dev *pdev, int mask)
- 	struct zpci_dev *zdev = to_zpci(pdev);
- 
- 	zpci_debug_init_device(zdev, dev_name(&pdev->dev));
-+	mutex_lock(&zdev->fmb_lock);
- 	zpci_fmb_enable_device(zdev);
-+	mutex_unlock(&zdev->fmb_lock);
- 
- 	return pci_enable_resources(pdev, mask);
+@@ -164,24 +164,10 @@ int zpci_unregister_ioat(struct zpci_dev *zdev, u8 dmaas)
+ 	return cc;
  }
-@@ -648,7 +654,9 @@ void pcibios_disable_device(struct pci_dev *pdev)
+ 
+-/* Modify PCI: Set PCI function measurement parameters */
+-int zpci_fmb_enable_device(struct zpci_dev *zdev)
++static void zpci_fmb_clear_iommu_ctrs(struct zpci_dev *zdev)
  {
- 	struct zpci_dev *zdev = to_zpci(pdev);
+-	u64 req = ZPCI_CREATE_REQ(zdev->fh, 0, ZPCI_MOD_FC_SET_MEASURE);
+ 	struct zpci_iommu_ctrs *ctrs;
+-	struct zpci_fib fib = {0};
+-	unsigned long flags;
+-	u8 cc, status;
+-
+-	lockdep_assert_held(&zdev->fmb_lock);
+-
+-	if (zdev->fmb || sizeof(*zdev->fmb) < zdev->fmb_length)
+-		return -EINVAL;
+-
+-	zdev->fmb = kmem_cache_zalloc(zdev_fmb_cache, GFP_KERNEL);
+-	if (!zdev->fmb)
+-		return -ENOMEM;
+-	WARN_ON((u64) zdev->fmb & 0xf);
++	unsigned long flags = 0;
  
-+	mutex_lock(&zdev->fmb_lock);
- 	zpci_fmb_disable_device(zdev);
-+	mutex_unlock(&zdev->fmb_lock);
- 	zpci_debug_exit_device(zdev);
+ 	/* reset software counters */
+ 	spin_lock_irqsave(&zdev->dom_lock, flags);
+@@ -194,17 +180,49 @@ int zpci_fmb_enable_device(struct zpci_dev *zdev)
+ 		atomic64_set(&ctrs->sync_rpcits, 0);
+ 	}
+ 	spin_unlock_irqrestore(&zdev->dom_lock, flags);
++}
+ 
++static int zpci_fmb_do_enable(struct zpci_dev *zdev)
++{
++	/* This helper assumes that zdev->fmb is already allocated and thus only
++	 * takes care of the actual enablement.
++	 */
++	u64 req = ZPCI_CREATE_REQ(zdev->fh, 0, ZPCI_MOD_FC_SET_MEASURE);
++	struct zpci_fib fib = {0};
++	u8 cc, status;
+ 
+ 	fib.fmb_addr = virt_to_phys(zdev->fmb);
+ 	fib.gd = zdev->gisa;
+ 	cc = zpci_mod_fc(req, &fib, &status);
+-	if (cc) {
++
++	return cc ? -EIO : 0;
++}
++
++/* Modify PCI: Set PCI function measurement parameters */
++int zpci_fmb_enable_device(struct zpci_dev *zdev)
++{
++	int rc;
++
++	lockdep_assert_held(&zdev->fmb_lock);
++
++	if (zdev->fmb || sizeof(*zdev->fmb) < zdev->fmb_length)
++		return -EINVAL;
++
++	zdev->fmb = kmem_cache_zalloc(zdev_fmb_cache, GFP_KERNEL);
++	if (!zdev->fmb)
++		return -ENOMEM;
++	WARN_ON((u64) zdev->fmb & 0xf);
++
++	zpci_fmb_clear_iommu_ctrs(zdev);
++
++	rc = zpci_fmb_do_enable(zdev);
++	if (rc) {
+ 		kmem_cache_free(zdev_fmb_cache, zdev->fmb);
+ 		zdev->fmb = NULL;
+ 	}
+-	return cc ? -EIO : 0;
++	return rc;
  }
++EXPORT_SYMBOL_GPL(zpci_fmb_enable_device);
  
+ /* Modify PCI: Disable PCI function measurement */
+ int zpci_fmb_disable_device(struct zpci_dev *zdev)
+@@ -231,6 +249,41 @@ int zpci_fmb_disable_device(struct zpci_dev *zdev)
+ 	}
+ 	return cc ? -EIO : 0;
+ }
++EXPORT_SYMBOL_GPL(zpci_fmb_disable_device);
++
++int zpci_fmb_reenable_device(struct zpci_dev *zdev)
++{
++	u64 req = ZPCI_CREATE_REQ(zdev->fh, 0, ZPCI_MOD_FC_SET_MEASURE);
++	struct zpci_fib fib = {0};
++	u8 cc, status;
++	int rc;
++
++	lockdep_assert_held(&zdev->fmb_lock);
++
++	if (!zdev->fmb)
++		return zpci_fmb_enable_device(zdev);
++
++	fib.gd = zdev->gisa;
++	cc = zpci_mod_fc(req, &fib, &status); /* Disable function measurement */
++
++	/* Unlike in zpci_fmb_disable_device(), cc == 3 is not a valid state here
++	 * because we are re-enabling function measurement for the same function
++	 * handle.
++	 */
++	if (cc)
++		return -EIO;
++
++	zpci_fmb_clear_iommu_ctrs(zdev);
++
++	rc = zpci_fmb_do_enable(zdev);
++	if (rc) {
++		kmem_cache_free(zdev_fmb_cache, zdev->fmb);
++		zdev->fmb = NULL;
++	}
++
++	return rc;
++}
++EXPORT_SYMBOL_GPL(zpci_fmb_reenable_device);
+ 
+ static int zpci_cfg_load(struct zpci_dev *zdev, int offset, u32 *val, u8 len)
+ {
+@@ -737,9 +790,13 @@ int zpci_reenable_device(struct zpci_dev *zdev)
+ 	}
+ 
+ 	rc = zpci_iommu_register_ioat(zdev, &status);
+-	if (rc)
++	if (rc) {
+ 		zpci_disable_device(zdev);
++		return rc;
++	}
+ 
++	guard(mutex)(&zdev->fmb_lock);
++	zpci_fmb_reenable_device(zdev);
+ 	return rc;
+ }
+ EXPORT_SYMBOL_GPL(zpci_reenable_device);
 -- 
 2.54.0
 
