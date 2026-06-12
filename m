@@ -1,64 +1,64 @@
-Return-Path: <linux-s390+bounces-20812-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20813-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id vyjZAnZQLGoRPQQAu9opvQ
-	(envelope-from <linux-s390+bounces-20812-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Jun 2026 20:31:18 +0200
+	id DzTrJgtQLGrnPAQAu9opvQ
+	(envelope-from <linux-s390+bounces-20813-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 12 Jun 2026 20:29:31 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5803967BBB8
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Jun 2026 20:31:17 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A4DF67BB2F
+	for <lists+linux-s390@lfdr.de>; Fri, 12 Jun 2026 20:29:30 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=beXSFYkB;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20812-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20812-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=WgfORKx3;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20813-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20813-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 35E95300A10D
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Jun 2026 18:26:38 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 54F8F3003719
+	for <lists+linux-s390@lfdr.de>; Fri, 12 Jun 2026 18:28:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4ECE395DBE;
-	Fri, 12 Jun 2026 18:26:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BFCC38C430;
+	Fri, 12 Jun 2026 18:28:13 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181AD399031;
-	Fri, 12 Jun 2026 18:26:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FCD359A6D;
+	Fri, 12 Jun 2026 18:28:11 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781288796; cv=none; b=WFUkebxzjSJQTfP3h02o6iAmqgEMyIzec3yFgOzWJDeRSo0kQIY1Lbc1erl71IAwx9H97AOJf9qh+90CDQE8WCuLRP2BlGf2oECzJVBgMpgaeNhAC5EoPe1zHaM7y7gODEdgQhkhAcOcLy2b/aUrW1fnmnIghkdBwlGd0r3HZfg=
+	t=1781288893; cv=none; b=jJnZGv0riL2O7mluL/AG2ZRD0HrZL3oxi6Wkw1O8IJ4TIx63W5JZWvYYl9og6mgYqpkISqe1MYdY+0qJ5QcCWDlD+Sc24FfDqi5V1LhjHq7mMiAEXMnhd7ahERAdfQPWb4xm++43FX8FiNdcY+n5Wynm7ao2hX7EURRE8WuuOko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781288796; c=relaxed/simple;
-	bh=DxFw9DzADdJwvw8erhmvQIon9AtoFno5XXrR0oQp6iY=;
+	s=arc-20240116; t=1781288893; c=relaxed/simple;
+	bh=0mqgJjOIk55ht4lu03k5cCOWSLD2ymleE+puiTBIWdc=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Cu0IfbRxOXpeBhBBn5i9jIYE5suWiyEdQRYGyGDtEyYMCNrfr2Ee+hF5+MGvlixmYKg0013NJ8rnIpT+bpRxUZAyNMggGR5nzbFeE9+PvC6ssahvYuWElZo6+yW2Ptfsdj/7VsZ/wDjWcM+5/TU2uGQN6KP6J1QpCTFww7oyhrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=beXSFYkB; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4EE71F000E9;
-	Fri, 12 Jun 2026 18:26:32 +0000 (UTC)
+	 Message-Id; b=bVH/ol1e2mRqiskMviMt8Oe1KFRwuQc4kFQ8cHAkYhbTGrhWi+b64XTyh79+ZegNQDrL9tveK9jPs5ywOtkl3/3SGOoSdF1cL5KTGm3ezn/5MbxrHLn/aw9jXhn3dsdmfd1OoFA8arP1dDYAe5aPc+ShlyNTBasn3EWHqlKOvvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WgfORKx3; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 757171F000E9;
+	Fri, 12 Jun 2026 18:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781288793;
-	bh=geVjcGeVFeXtkciELUdBMW5RuU1hD98qGXtlXcTJi8o=;
+	s=k20260515; t=1781288891;
+	bh=biqlCq+Z4NwEEC73vI6V+vdXE31sXCqZNnVkyjnxHH8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=beXSFYkBuW1o8Uze6ZsaFMF34jRWAnHDHIZxi5uzrwDC55Ky0V54cQFhjT01UWOEm
-	 01NxHBQ/Q9sGe7gPDowY/tFf3h/8/A1G9MjHcWCDGnLQIEBI4Mm+ZWE8VzpLV4Lr/O
-	 rqgF1S9RPytySEeLbziyMwWAKZxv5L6tbL/JcY0YGsSkQ4lXGvPAHGN5TFyRgBWwMy
-	 j5TC9YaXvQgQ9g8hKsRGzHpoZOyx0zQm2b5Fl2+RtdjFbfrCnDcgvhEdV8beQyCxRw
-	 8jc4IwRX0I5w8rb2Qk0SVAEZwbwn/mNfvmz/H9zqO+3Ed4jn/NW3eSoVyAdawz7xzX
-	 Q84mPygoikGVA==
+	b=WgfORKx3ZurcXerzs1DHWn8CxTTwYFPzhWI8Nv38Z0ATWDzuDpZ2c1NfgJFOofqz2
+	 A0fHrt/CRcoEmR6nDgQ/vLvgax7RVRLGjBAjBAMQkrv64CFbV8fpEJa11JIDoye2lD
+	 JpsX+0Q9Na8NA59tB3smxQwL7/EQaJs1cBFcJ7UzZMNterJ5ZH/bzjBAzUc9p8fR6L
+	 84odOWtNS7bG7onolT3zi5WOulquxmM87qP9xNDP4i2By13nSrhhNbKeU+Eo8Rf6Yb
+	 3r/FhcrAC3Njgna14sfU8zCC0Br+NBJxaeyUdN9aTBsSzPE+LadSgErCn2ufRb2jx9
+	 qrtrf0Yn4F4oA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 2/4] s390/pci: Preserve FMB state in device
- re-enablement
+Subject: Re: [PATCH v4 1/4] s390/pci: Hold fmb_lock when enabling or
+ disabling PCI devices
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Omar Elghoul" <oelghoul@linux.ibm.com>
-Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
- Gordeev" <agordeev@linux.ibm.com>, "Heiko Carstens" <hca@linux.ibm.com>
-In-Reply-To: <20260612181048.91548-3-oelghoul@linux.ibm.com>
-References: <20260612181048.91548-3-oelghoul@linux.ibm.com>
+Cc: kvm@vger.kernel.org, "Vasily Gorbik" <gor@linux.ibm.com>, "Heiko
+ Carstens" <hca@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org
+In-Reply-To: <20260612181048.91548-2-oelghoul@linux.ibm.com>
+References: <20260612181048.91548-2-oelghoul@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 12 Jun 2026 18:26:31 +0000
-Message-Id: <20260612182632.E4EE71F000E9@smtp.kernel.org>
+Date: Fri, 12 Jun 2026 18:28:11 +0000
+Message-Id: <20260612182811.757171F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -71,18 +71,18 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20812-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20813-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,fib.gd:url,lists.linux.dev:replyto,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,sashiko.dev:url];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,sashiko.dev:url,vger.kernel.org:from_smtp,smtp.kernel.org:mid,lists.linux.dev:replyto];
 	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:oelghoul@linux.ibm.com,m:kvm@vger.kernel.org,m:linux-s390@vger.kernel.org,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:hca@linux.ibm.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:oelghoul@linux.ibm.com,m:kvm@vger.kernel.org,m:gor@linux.ibm.com,m:hca@linux.ibm.com,m:agordeev@linux.ibm.com,m:linux-s390@vger.kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
@@ -96,7 +96,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	RCPT_COUNT_FIVE(0.00)[6];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
@@ -104,82 +104,139 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5803967BBB8
+X-Rspamd-Queue-Id: 9A4DF67BB2F
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [Medium] zpci_fmb_reenable_device() reuses the existing FMB hardware buff=
-er without zeroing it, exposing stale hardware counter values until the fir=
-st periodic hardware update occurs.
+
+Pre-existing issues:
+- [Critical] Missing cleanup in pcibios_enable_device() error path causes m=
+emory leak and a critical Use-After-Free via leaked debugfs files.
+- [Critical] Dangling debugfs pointers and FMB leak if device is removed wh=
+ile enabled.
+- [High] Race condition between pcibios_disable_device() and debugfs write =
+causes a permanent FMB memory leak.
 --
 
-commit a81b1b0a067d09df54d661ddbb8985e9220d9a88
+commit 073e998db2b23cb7423c91c7e1c6e999dbe5b90a
 Author: Omar Elghoul <oelghoul@linux.ibm.com>
 
-s390/pci: Preserve FMB state in device re-enablement
+s390/pci: Hold fmb_lock when enabling or disabling PCI devices
 
-This commit introduces zpci_fmb_reenable_device() to reuse the existing FMB
-buffer during device re-enablement instead of allocating a new one. It also
-refactors the FMB enablement and software counter clearing logic into shared
-helpers.
+Ensure that fmb_lock is held by pcibios_enable_device() and
+pcibios_disable_device() when calling zpci_fmb_enable_device() or
+zpci_fmb_disable_device(), respectively. Additionally, assert that the
+fmb_lock is held within the latter two functions to prevent future race
+conditions regarding new callers.
 
 > diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
-> index 2910d4038d39c..21d3fccac7894 100644
+> index 39bd2adfc240f..2910d4038d39c 100644
 > --- a/arch/s390/pci/pci.c
 > +++ b/arch/s390/pci/pci.c
-
 [ ... ]
+> @@ -639,7 +643,9 @@ int pcibios_enable_device(struct pci_dev *pdev, int m=
+ask)
+>  	struct zpci_dev *zdev =3D to_zpci(pdev);
+> =20
+>  	zpci_debug_init_device(zdev, dev_name(&pdev->dev));
+> +	mutex_lock(&zdev->fmb_lock);
+>  	zpci_fmb_enable_device(zdev);
+> +	mutex_unlock(&zdev->fmb_lock);
+> =20
+>  	return pci_enable_resources(pdev, mask);
 
-> +int zpci_fmb_reenable_device(struct zpci_dev *zdev)
-> +{
-> +	u64 req =3D ZPCI_CREATE_REQ(zdev->fh, 0, ZPCI_MOD_FC_SET_MEASURE);
-> +	struct zpci_fib fib =3D {0};
-> +	u8 cc, status;
-> +	int rc;
-> +
-> +	lockdep_assert_held(&zdev->fmb_lock);
-> +
-> +	if (!zdev->fmb)
-> +		return zpci_fmb_enable_device(zdev);
-> +
-> +	fib.gd =3D zdev->gisa;
-> +	cc =3D zpci_mod_fc(req, &fib, &status); /* Disable function measurement=
- */
-> +
-> +	/* Unlike in zpci_fmb_disable_device(), cc =3D=3D 3 is not a valid stat=
-e here
-> +	 * because we are re-enabling function measurement for the same function
-> +	 * handle.
-> +	 */
-> +	if (cc)
-> +		return -EIO;
-> +
-> +	zpci_fmb_clear_iommu_ctrs(zdev);
-> +
+[Severity: Critical]
+This is a pre-existing issue, but does this leak resources and potentially
+cause a use-after-free if pci_enable_resources() fails?
 
-[Severity: Medium]
-Does this code need to zero the reused zdev->fmb buffer before enabling it?
+If pci_enable_resources() returns an error, pcibios_enable_device() returns
+the error directly without rolling back the debugfs creation or freeing the
+FMB. Since pcibios_disable_device() is only invoked by the PCI core if
+enablement succeeds, these resources appear to be permanently leaked.
 
-The commit message states that a program resetting an FMB should see all
-counters start from zero. While zpci_fmb_clear_iommu_ctrs() clears the
-software-maintained IOMMU counters, the hardware-maintained FMB buffer
-(zdev->fmb) is reused here without being cleared.
+Later, when the device is unregistered, zpci_release_device() frees the zdev
+structure via kfree_rcu(). Because the error path bypassed cleanup, the
+debugfs files remain active. If userspace then reads or writes to these
+orphaned debugfs files, such as in arch/s390/pci/pci_debug.c:pci_perf_show(=
+):
 
-Could this expose stale hardware counter values to userspace until the
-first asynchronous hardware update occurs? The previous behavior in
-zpci_fmb_enable_device() allocated a fresh, zero-initialized buffer via
-kmem_cache_zalloc().
+	struct zpci_dev *zdev =3D m->private;
 
-> +	rc =3D zpci_fmb_do_enable(zdev);
-> +	if (rc) {
-> +		kmem_cache_free(zdev_fmb_cache, zdev->fmb);
-> +		zdev->fmb =3D NULL;
-> +	}
-> +
-> +	return rc;
-> +}
+	if (!zdev)
+		return 0;
+
+	mutex_lock(&zdev->fmb_lock);
+
+won't it dereference the freed zdev pointer?
+
+>  }
+> @@ -648,7 +654,9 @@ void pcibios_disable_device(struct pci_dev *pdev)
+>  {
+>  	struct zpci_dev *zdev =3D to_zpci(pdev);
+> =20
+> +	mutex_lock(&zdev->fmb_lock);
+>  	zpci_fmb_disable_device(zdev);
+> +	mutex_unlock(&zdev->fmb_lock);
+>  	zpci_debug_exit_device(zdev);
+
+[Severity: High]
+This isn't a bug introduced by this patch, but does releasing the lock
+before destroying the debugfs endpoints create a race window?
+
+If a concurrent userspace write to the debugfs statistics file in
+arch/s390/pci/pci_debug.c:pci_perf_seq_write() is blocked on fmb_lock:
+
+	mutex_lock(&zdev->fmb_lock);
+	switch (val) {
+	case 0:
+		rc =3D zpci_fmb_disable_device(zdev);
+		break;
+	case 1:
+		rc =3D zpci_fmb_enable_device(zdev);
+		break;
+	}
+	mutex_unlock(&zdev->fmb_lock);
+
+it will wake up immediately after pcibios_disable_device() drops the lock.
+It will then execute zpci_fmb_enable_device(), which allocates a new
+zdev->fmb buffer and re-enables hardware statistics.
+
+After pci_perf_seq_write() releases the lock, pcibios_disable_device()
+proceeds to call zpci_debug_exit_device() and permanently deletes the
+debugfs files.
+
+Could this race leave the hardware FMB silently active and the zdev->fmb
+memory permanently leaked because userspace can no longer disable it?
+
+[Severity: Critical]
+This is also a pre-existing issue, but what happens if a zPCI device is
+hot-removed while its enable_cnt is greater than 0?
+
+If the device is manually enabled via the PCI sysfs enable attribute while
+unbound, or if a bound driver fails to call pci_disable_device(), the PCI
+subsystem's teardown path (pci_stop_and_remove_bus_device) does not
+automatically invoke pci_disable_device().
+
+As a result, pcibios_disable_device() is never executed. When the device is
+subsequently unregistered, zpci_release_device() invokes kfree_rcu() to
+free the zdev structure:
+
+arch/s390/pci/pci.c:zpci_release_device() {
+    ...
+	zpci_bus_device_unregister(zdev);
+	zpci_destroy_iommu(zdev);
+	zpci_dbg(3, "rem fid:%x\n", zdev->fid);
+	kfree_rcu(zdev, rcu);
+    ...
+}
+
+Because the debugfs teardown step in pcibios_disable_device() was bypassed,
+will the active debugfs endpoints remain registered with pointers to the
+freed zdev structure, leading to a use-after-free upon access?
+
+>  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260612181048.9154=
-8-1-oelghoul@linux.ibm.com?part=3D2
+8-1-oelghoul@linux.ibm.com?part=3D1
 
