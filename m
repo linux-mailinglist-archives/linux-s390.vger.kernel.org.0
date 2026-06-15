@@ -1,84 +1,84 @@
-Return-Path: <linux-s390+bounces-20871-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20872-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 30EnBlVGMGrdQgUAu9opvQ
-	(envelope-from <linux-s390+bounces-20871-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 20:37:09 +0200
+	id GR5RABtGMGq8QgUAu9opvQ
+	(envelope-from <linux-s390+bounces-20872-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 20:36:11 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D121689399
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 20:37:08 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EDB4689352
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 20:36:10 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=rCzeqINJ;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20871-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20871-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=lDtonnRG;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20872-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20872-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 96F893070E48
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 18:35:56 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 6E01C3016746
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 18:35:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 975913812E5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAB4F3815EF;
 	Mon, 15 Jun 2026 18:35:37 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D904380FC2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8500E380FD0;
 	Mon, 15 Jun 2026 18:35:36 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781548537; cv=none; b=qhIQqu++EjyhJqNx4FpSkpsNks7E/YJpNixBr+lY+ywD8ZH0Wt9TBAVAVBkOFyLe+SQOgn2PkMkWNnIZdCu3PmyyOtqNUO3uMEV4Bw8EfuT9b+7rcH+FdYKHykROrXKUQQXq58sWhIJsVqPKm7CuAr2fRKAV/pD1RdVvK4tc9kU=
+	t=1781548537; cv=none; b=XVMmbPkaHtAOSBvMH7/mH50Z044r0QJCl/R88yiyHjx/eyyrEDEpHweaf42cnHr+jCf0StHkWk1G7DOid9h243vfs6SvD8rJQWdEjGUkw6pml+jde3SameFyLdVWgJJUpjLDqs2w7z8fuBRIjaYeDDsaE0ca5xwkrwqbGGY24do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1781548537; c=relaxed/simple;
-	bh=kDMLUv+qGFXTZff8n7B9SWz1eb0xmrDVNGip6EZGbB4=;
+	bh=aXtnh1XDkfyl9Qchb57izKfvAET1OL/16TRuqGUY3os=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V7xCjgiiHl7fMVEgq5F+nLtTma0VZjOq+8FNo7Uqmw8fb4bDOUPkyDHe37Pm6TYrrr/XKKHWfBDygSo57zBUDvQ+VSia9gzkNMWsu4OHEo7m6cSwqX0lvnKUNY4hGjdy07+SwTr0gt7eP1/eT6e6GMf+AkMACmKJNUlHCnV+1N8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rCzeqINJ; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65FFmVgi2841750;
+	 MIME-Version; b=gO5/hVLRC5e/2yyFNS8F1LOx76HtY8VoDk4e7c9Rrbj4Djw2EzpiQw2OKA9gNiL7fi9vmz+5L67qRFn/cxzDFJHMmec4c3RBYQtkZS9XvsruOfHMOIqtKVysIrO/SxSWQ9tkfWZlU9JHeuS9+RMx+NMWEgYT2i98Pg07vG3MUc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lDtonnRG; arc=none smtp.client-ip=148.163.158.5
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65FFnLlY2888440;
 	Mon, 15 Jun 2026 18:35:32 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=RsjEQ+ztMbfg0FMP3
-	X8XOwCXQZzCQzdBTpV6PYewqs8=; b=rCzeqINJHP6juBQBmNNZjvWhori/eoM/6
-	LNbsuqjiXhTogMj6xHza7rvJKTWsCvTYHANGV/epnJZMacR6WA22hYCmX+XYR7Fy
-	S/IJbsi0xRCqP3AGBZDZZwfQ6S97GCbalMMFP2HgzPlckCojpwEGGlTA4vvgf/8R
-	Jlz1uH+hJ/I7NZf9siGZV2auB0ml5sIz6ILEis7c7/GNeAil6NIMhVUGCgB/vEXq
-	qAVYeJW04/YExVhI+fewgAPdu17w4HHhy22F8KwfMU5qVkbGQYIHdK8yoR66DWKX
-	L+xb3XGYK/nJarGBowyYBGwKp+M498iwy9j6Hzqy/l65W72LllysQ==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4es23nj1q0-1
+	:mime-version:references:subject:to; s=pp1; bh=X3l7SLvrNZOlg/Grb
+	Nj/MWNHBcQ/IvPqQwU6/jfIaaA=; b=lDtonnRG+fKg4oTgcdLUGAJ4TMaF2M3Zw
+	IUTHzuGy/cGjVw/gmFV4O7tapIl+7gE4AnhgcYvJfCo4R0KJIbS4inbaP+s9oerc
+	8uz968jJ5RHrBHjRUhbLqHqRKcmkFCSKRyKG/40d5RUM85nU8yn+BpYoM3NrK7Vo
+	i3JXnpL9KHEoNE8ZgEGVWT+2iKGxPxqIxM1f4MpgA+otnzqbUJw5nzBQwXocQwQM
+	iN2amY1Hvt7xOgfDbelXIigxgBf99ZoYqbndulB6Ci+FWGvoQFsghLbZnWnU0zo+
+	TnBBd35wzHsG6ULiWvX/PdeCfI/ujQkLRKSXH0+ie1yUyXYpzC0BA==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4es1u0hknv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Jun 2026 18:35:31 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65FIYgtI014751;
-	Mon, 15 Jun 2026 18:35:31 GMT
-Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4eskrg7nu0-1
+	Mon, 15 Jun 2026 18:35:32 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65FIYbii003237;
+	Mon, 15 Jun 2026 18:35:32 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4eshwvyy9k-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Jun 2026 18:35:31 +0000 (GMT)
+	Mon, 15 Jun 2026 18:35:32 +0000 (GMT)
 Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
-	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65FIZTcA59441574
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65FIYxjf29426002
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 15 Jun 2026 18:35:29 GMT
+	Mon, 15 Jun 2026 18:34:59 GMT
 Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 78C1B58056;
+	by IMSVA (Postfix) with ESMTP id DC06C5803F;
+	Mon, 15 Jun 2026 18:35:30 +0000 (GMT)
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AEEF35804E;
 	Mon, 15 Jun 2026 18:35:29 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 265325804E;
-	Mon, 15 Jun 2026 18:35:28 +0000 (GMT)
 Received: from IBM-D32RQW3.ibm.com (unknown [9.61.253.186])
 	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 15 Jun 2026 18:35:28 +0000 (GMT)
+	Mon, 15 Jun 2026 18:35:29 +0000 (GMT)
 From: Farhan Ali <alifm@linux.ibm.com>
 To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
 Cc: helgaas@kernel.org, alex@shazbot.org, alifm@linux.ibm.com,
         schnelle@linux.ibm.com, mjrosato@linux.ibm.com,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v19 2/4] PCI: Avoid saving config space state if inaccessible
-Date: Mon, 15 Jun 2026 11:35:22 -0700
-Message-ID: <20260615183524.2880-3-alifm@linux.ibm.com>
+        Benjamin Block <bblock@linux.ibm.com>
+Subject: [PATCH v19 3/4] PCI: Fail FLR when config space is inaccessible
+Date: Mon, 15 Jun 2026 11:35:23 -0700
+Message-ID: <20260615183524.2880-4-alifm@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260615183524.2880-1-alifm@linux.ibm.com>
 References: <20260615183524.2880-1-alifm@linux.ibm.com>
@@ -90,31 +90,30 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=XtnK/1F9 c=1 sm=1 tr=0 ts=6a3045f4 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+X-Proofpoint-GUID: 2k1MISizus3NTMbakLeFCoWGCJtXr8Po
+X-Authority-Analysis: v=2.4 cv=XdK5Co55 c=1 sm=1 tr=0 ts=6a3045f4 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
  a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8
- a=qS04rNcGil1I7-YeviAA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE1MDE5NCBTYWx0ZWRfXz+jGbphsx8pZ
- oXHITBg8J2l/NWh/sb5vncg9YoNTs9vTQHIo4+y7S1ophBMpgLsRXRx/TiNq34WpsSTLn3kd4Yb
- 1mQQ7hW1FpJxdszFj5RNMqdtc57O4O+BJKwsjMMoqIbul3kfqHlD5NoKPrAxzmuPNugS5v0FJ0T
- ziiAwPc5Wnk221Ian8Gtl5nq4GBw66SlnP8hAuHf5RhUSBpgo+Ju3xUV/llmVJC02bTYVXkLPFS
- EAAljVQd+REnM1OyB7wbVnI3j/zlk0K4HVZj/FLNZzhrc3I3ylObDfT0ZsYFY8rGiVOVaiC09W5
- o/6QRo0BVCImf6KFJylXzwdNPdc14y43FTG8uSkAJNKX4zfCRBAsNrq8mt+NVZNt5zUCjGB1r/l
- 5uOEOx0RG5h85m61UvWmVt7GZ5dEm7jV7KzFp8Gwf7oc+Gb2SljtNadkWUseR6LyYFrOT0I+uaI
- G6uAJ7E4YxJ/WcFu1xg==
-X-Proofpoint-GUID: NFgXUFYCfjNz37BAcxAmv2UhCKwEwJ7H
-X-Proofpoint-ORIG-GUID: ejCtdoN0MBXegn7j1CrUU96ebszbr0BJ
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE1MDE5NCBTYWx0ZWRfX9cSYxo3g6s/m
- rwi4QYHsjMHlyZiZV9WzUEFtq78duBS7Ks57zYIoukk+iAW4eRQq5iAo4Sbr+wmdrKHD4weDcLZ
- uBeFKNxBwHUEr0LmtNmV93fTfn83lw0=
+ a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8 a=1owyFLT6pZZ0tE0DW5YA:9
+ a=zgiPjhLxNE0A:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE1MDE5NCBTYWx0ZWRfX/x9VoueXOOtu
+ 0tgrqHKf+zDiAqsZ+i0jT+8wZ4kR7GhdfEDMp+dxmRLG5ObCzvkTAd6V2f6TFPgm2mbEvZlbuTS
+ I6BdYbn7+a9Z/3bUmzqJkiBp1f3HI68wAOAobkDQe9Uhc9PsnttRr0qbrNP665jmWgmgEu+4JMW
+ ar0+0twcY6N3sYXxAypgWovlNphmJjRsYKmIbzUI2GR7aq/eCrjs0ne4lHa1KklJWdM6lyVmkcm
+ SrxETy7lOF5WBHArYZJPTDNCEbAiXqSk7gDLClZXLFA+dTQD/BimBypT6aLVj6nALBE6fK1ujnr
+ zgoP2L8N/p9VvuhtLlTHAMIcjRj7POoGfhaFUNZLQ+fpAZSlj1glFBHBPsvPWcIerLiCka8EZzW
+ nzHPgrRanbbwtKPU+9BlEKiuU9t96O+tdXQNEuzCXZ3d8Y9vw6hV0a2S6edC38RWjM6v04abjO8
+ ZfkeALCduqGElphxgXQ==
+X-Proofpoint-ORIG-GUID: 2k1MISizus3NTMbakLeFCoWGCJtXr8Po
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE1MDE5NCBTYWx0ZWRfXwpIw+ZBwZ2Xa
+ zQSw+Q8UUzP3GVek5Xg29WD1eSDmuKemB3j+E9kPFY3OZlKoRMfOqSefPZYmUpJfxyv/pOsuaFE
+ XCfEZIPksjLNxnCUfGusl5Ll7PQO3Ms=
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-06-15_04,2026-06-15_04,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 adultscore=0 phishscore=0 lowpriorityscore=0 priorityscore=1501
- suspectscore=0 clxscore=1015 malwarescore=0 spamscore=0 impostorscore=0
+ suspectscore=0 lowpriorityscore=0 clxscore=1015 bulkscore=0 malwarescore=0
+ spamscore=0 phishscore=0 priorityscore=1501 impostorscore=0 adultscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2606040000 definitions=main-2606150194
 X-Rspamd-Action: no action
@@ -124,14 +123,14 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20871-lists,linux-s390=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:helgaas@kernel.org,m:alex@shazbot.org,m:alifm@linux.ibm.com,m:schnelle@linux.ibm.com,m:mjrosato@linux.ibm.com,m:bhelgaas@google.com,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20872-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:helgaas@kernel.org,m:alex@shazbot.org,m:alifm@linux.ibm.com,m:schnelle@linux.ibm.com,m:mjrosato@linux.ibm.com,m:bblock@linux.ibm.com,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[alifm@linux.ibm.com,linux-s390@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
@@ -142,75 +141,41 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	ALIAS_RESOLVED(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,linux.ibm.com:mid,linux.ibm.com:from_mime,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,linux.ibm.com:mid,linux.ibm.com:from_mime,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo];
 	DKIM_TRACE(0.00)[ibm.com:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7D121689399
+X-Rspamd-Queue-Id: 8EDB4689352
 
-The current reset process saves the device's config space state before
-reset and restores it afterward. However errors may occur unexpectedly and
-it may then be impossible to save config space because the device may be
-inaccessible (e.g. DPC). This results in saving invalid values that get
-written back to the device during state restoration.
+If a device is in an error state, then it's config space may not be
+accssible. Add additional check to validate if a device's config space is
+accessible before doing an FLR reset.
 
-With a reset we want to recover/restore the device into a functional state.
-So avoid saving the state of the config space when the device config space
-is inaccessible.
-
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
 Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
-Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
 ---
- drivers/pci/pci.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/pci/pci.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index f5f8291482b0..973d23e41c48 100644
+index 973d23e41c48..521a4bb189d7 100644
 --- a/drivers/pci/pci.c
 +++ b/drivers/pci/pci.c
-@@ -722,6 +722,27 @@ u16 pci_find_dvsec_capability(struct pci_dev *dev, u16 vendor, u16 dvsec)
- }
- EXPORT_SYMBOL_GPL(pci_find_dvsec_capability);
+@@ -4352,6 +4352,9 @@ int pcie_flr(struct pci_dev *dev)
+ {
+ 	int ret;
  
-+static bool pci_dev_config_accessible(struct pci_dev *dev, char *msg)
-+{
-+	u32 val;
++	if (!pci_dev_config_accessible(dev, "FLR"))
++		return -ENOTTY;
 +
-+	/*
-+	 * If device's config space is inaccessible it can return ~0 for
-+	 * any reads. Since VFs can also return ~0 for Device and Vendor ID
-+	 * check Command and Status registers. Note that this is racy
-+	 * because the device may become inaccessible partway through
-+	 * next access.
-+	 */
-+	pci_read_config_dword(dev, PCI_COMMAND, &val);
-+	if (PCI_POSSIBLE_ERROR(val)) {
-+		pci_warn(dev, "Device config space inaccessible; unable to %s\n",
-+				msg);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- /**
-  * pci_find_parent_resource - return resource region of parent bus of given
-  *			      region
-@@ -5027,6 +5048,9 @@ static void pci_dev_save_and_disable(struct pci_dev *dev)
- 	 */
- 	pci_set_power_state(dev, PCI_D0);
+ 	if (!pci_wait_for_pending_transaction(dev))
+ 		pci_err(dev, "timed out waiting for pending transaction; performing function level reset anyway\n");
  
-+	if (!pci_dev_config_accessible(dev, "save state"))
-+		return;
-+
- 	pci_save_state(dev);
- 	/*
- 	 * Disable the device by clearing the Command register, except for
 -- 
 2.43.0
 
