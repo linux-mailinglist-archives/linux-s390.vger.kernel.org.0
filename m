@@ -1,183 +1,274 @@
-Return-Path: <linux-s390+bounces-20863-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20864-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id dEz3LXYiMGqdOgUAu9opvQ
-	(envelope-from <linux-s390+bounces-20863-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 18:04:06 +0200
+	id nZ2YBX8kMGozOwUAu9opvQ
+	(envelope-from <linux-s390+bounces-20864-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 18:12:47 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5441D68813D
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 18:04:06 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E4296882DA
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 18:12:46 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=SWZtPDpZ;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20863-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-s390+bounces-20863-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=ibm.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=J2bt7UtU;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20864-lists+linux-s390=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-s390+bounces-20864-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id C17F8300B1F6
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 16:04:05 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 8C6113009828
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 16:10:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF218407CD3;
-	Mon, 15 Jun 2026 16:04:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD5A4409116;
+	Mon, 15 Jun 2026 16:10:11 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A093A40757F;
-	Mon, 15 Jun 2026 16:04:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C1A408603;
+	Mon, 15 Jun 2026 16:10:10 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781539442; cv=none; b=pH6wDZJmU/8BsGBmeeqYZNSRjufQVydeBWqhHkNhrb/9mihu1GtAIgg/ek/aJHhJoYgdGO2RiXChVL+G7pPJunVvD1VbiFJDTRvwDfYerfGFI39Prge6Y4k4J8apWYlfJW/2DOPD2YwrLTumXbbVeszasnGweDi8R4KKc6AD14s=
+	t=1781539811; cv=none; b=MZQqMCQtX3jiIn/HPzoIj6MHS5ShzEXqO8/nNYhhMCl5XeojQXurP1TJ/AXOX33g0MAjtSTmYy75nB8G53YhQe0WVLvuqKQKZmV4HwFAdllAzOElM47+xJnIqsh3Z21m3FOYm2CHHoBtYpSS5JYCfasdFMJi8oB21HEHXd4C84o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781539442; c=relaxed/simple;
-	bh=qa13kamCNEt6QnqDLVLn0mOvLn6jtv/7BMgesqoQOG4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CGyo90iRN+crekYtUvXUZRFahIpmpTM9CULfzdJzY27V9MBpq0SWoSMNXRm8nFU7HnjPPXDncRqUvZJ/UVqglE+uAkSrVb+egztD2GbOvTfWNzmmfxJH1JaQBsXx3ahjq906Z4fBuMoMR84jxc37/RnVDChd0mJsQf4hq3P2BCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SWZtPDpZ; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65FFmlZd2851859;
-	Mon, 15 Jun 2026 16:03:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=oTFkH6ZWPihDfV6+W1YSDxgP9pPMSV
-	z6nEgyt3zR7BQ=; b=SWZtPDpZpD+hQCEEVIBfl0IMIAmBPQulv0+YvtTr8l9/y1
-	CYYN6rCNlHaRURsOhsT28JZ32ct0GJDeqTdCO4blxv2g/7qdCkc51nRFsOX6Zbsn
-	pwQjV6qhjW0oA3ODjQeVGAHqp71WHvsLgvZMwZLBN0dT2pDdx37tydM/BTWOkRBB
-	7RZHzVawZMAni3hljKkB2DvIMLPkDZPFuU9XA+aUHlqSaFSeoeiguA72dQUFiDxu
-	Ck6G+fPpwDKzNwYV4Bbu8bJhs1Uqs9DZA9ZIURe0jPIAJxIACtulh8K2hJh8uRUb
-	k2yiTVvjv/sRgwIjLoRzu9NRFCmKjy6skOaJEJVQ==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4es1wm1e2r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Jun 2026 16:03:48 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65FFo6BF000896;
-	Mon, 15 Jun 2026 16:03:47 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4eskrg74c7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Jun 2026 16:03:47 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65FG3h2U29884974
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 15 Jun 2026 16:03:43 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C688A2004B;
-	Mon, 15 Jun 2026 16:03:43 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 90B5420043;
-	Mon, 15 Jun 2026 16:03:43 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.224.92.206])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 15 Jun 2026 16:03:43 +0000 (GMT)
-Date: Mon, 15 Jun 2026 18:03:42 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, david@kernel.org, seiden@linux.ibm.com,
-        nrb@linux.ibm.com, schlameuss@linux.ibm.com, gra@linux.ibm.com,
-        hca@linux.ibm.com, gerald.schaefer@linux.ibm.com, gor@linux.ibm.com,
-        svens@linux.ibm.com
-Subject: Re: [PATCH v2 1/1] s390/mm: Fix handling of _PAGE_UNUSED pte bit
-Message-ID: <8410d3bb-3f51-4599-b80a-5b6c38178c36-agordeev@linux.ibm.com>
-References: <20260615091741.76724-1-imbrenda@linux.ibm.com>
- <20260615091741.76724-2-imbrenda@linux.ibm.com>
+	s=arc-20240116; t=1781539811; c=relaxed/simple;
+	bh=RjmwbjJUekMN4XQbpwM2sAMQ8Q4VGqazX1lTIqnbeDs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=IMl7CLdJOsS2s6bxCbiYu6LtSl35ibyDER8y61j9QAvdZR2VLKpRCnUJWFZJWGIMWcxlRNxAwAxt/x+J773LjG3QMktPr8+uR0bVZ/Q4X8HGr0n8SON811H+ce7WUmcdhZbFGrfUdWhmwCIXkGsjzpyfS0N5bGZhIc4USuEj9no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J2bt7UtU; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 659B51F000E9;
+	Mon, 15 Jun 2026 16:09:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781539810;
+	bh=WrhOiAXY4BpdFNkpuEH5kqbHucFA9LBquobYeTzjtI4=;
+	h=From:Subject:Date:To:Cc;
+	b=J2bt7UtU/OYY8PxVyIm3d95v5G+IcTrjBW3L2jU7dt2De3kFnXcxRBS+wcjkcf6fN
+	 XltNpsJON5Ei+eQjAfRadOoGZ6Zr5MKKrnWqjtat85KDYFuJIzaAhhV9joTPZvvnm/
+	 Upf4GSVXporZ+/9u524Qsag7+a/uWIBE8WrhynM4IvaF/bx9BOfhayePviKAuHtMdm
+	 yF/mMlzcia/W4uNmZrGta+pMv2x8g5cbMGvX0YqVwoVCDJpU+Ht9xei0zv8nicGVwV
+	 SRcRt86DYJ9ycUYURQM1lx9ByNJFh+o5TVH1JyohwC9u2Q2ptXr+Wwo4pEiWgn9BWI
+	 W8aRU0vDmzPwg==
+From: Vincent Mailhol <mailhol@kernel.org>
+Subject: [PATCH 00/19] init: discoverable root partitions, a.k.a. an
+ omittable "root=" cmdline option
+Date: Mon, 15 Jun 2026 18:08:56 +0200
+Message-Id: <20260615-discoverable-root_partitions-v1-0-39c78fac42e2@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260615091741.76724-2-imbrenda@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE1MDE2NyBTYWx0ZWRfX7irPc9/6BAzE
- nIqtQmrAKRuhFqh2AmXrmw7mthA59G/RlagbozJn7mQ0xiMbWIN1Qf6lxUjW3DIMUv5A1c/HAzg
- 5sthJXT3N4+fJSN6K5KZj1nM88/lagg=
-X-Proofpoint-GUID: 2kqLxzkoDvXVGmpOaoYeBZxaHNnAWkNM
-X-Authority-Analysis: v=2.4 cv=SY/HsPRu c=1 sm=1 tr=0 ts=6a302264 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=kj9zAlcOel0A:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=QAE54Fg8MHlRZdcWp2kA:9
- a=CjuIK1q_8ugA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE1MDE2NyBTYWx0ZWRfXymOXDJoyF1S5
- P4HIFL7CVY/lkg7K4XDLP5wMECXzTDq7rdHHpYJ5CDE1dpRi8sbYDlkGY5Smye/H7ixKLRtEH/v
- co+Zi6dat4QZO3X/QqG6HFgsMZSazRfgW9oVfGNASe/BrWmmsyC/XAqJJ+U+W+dtwlJSk8yjt6j
- 6Ps8Q06r1WsPCn3IbhYpCjcj0yneTBsqbIc0q8n424QdMAN10+kQz9oLcKpdefYx6MzbhBPVcAc
- KxG0jSRKex7ln5b07kELKlNL+kUJ4+Nrp9V1u262KEZPOu9qMVXS00xRPfvC90BLc1qKWwy6mMW
- mB4UCri+kzLAF8lK0gRgXkn5qKgAsPVJjI7A4sKOP5aGwHEdqhMIrmrgHzyGtHBw39wzthMZIRg
- 9PWyzr3nFa3ZKHCyJJmDYDJ4VF4PyyOsoTWTiUDNSBvkcKcQlwNsifCadfrtwEIJs4x4aEw9FRt
- kEqtPqCMjFYLe3vNdNA==
-X-Proofpoint-ORIG-GUID: 2kqLxzkoDvXVGmpOaoYeBZxaHNnAWkNM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-15_04,2026-06-15_04,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 phishscore=0 suspectscore=0 spamscore=0 impostorscore=0
- malwarescore=0 bulkscore=0 lowpriorityscore=0 clxscore=1011
- priorityscore=1501 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606040000
- definitions=main-2606150167
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x3MQQqEMAxA0atI1hZaQQWvMgySNlEDYiUpMiDef
+ YrLt/j/BmMVNpiaG5QvMclHRWgbSBseKzuhauh8N/ghBEdiKV+sGHd2mnOZT9QipXbmImGKSNi
+ PnqAuTuVFfu/+832eP+2uWG1uAAAA
+X-Change-ID: 20260611-discoverable-root_partitions-bdacbada570d
+To: Jens Axboe <axboe@kernel.dk>, Davidlohr Bueso <dave@stgolabs.net>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+Cc: linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
+ linux-efi@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ Vincent Mailhol <mailhol@kernel.org>, 
+ Richard Henderson <richard.henderson@linaro.org>, 
+ Matt Turner <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>, 
+ linux-alpha@vger.kernel.org, Vineet Gupta <vgupta@kernel.org>, 
+ linux-snps-arc@lists.infradead.org, Russell King <linux@armlinux.org.uk>, 
+ linux-arm-kernel@lists.infradead.org, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ loongarch@lists.linux.dev, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ linux-mips@vger.kernel.org, 
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org, 
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+ Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org, 
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org, 
+ Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, Jonathan Corbet <corbet@lwn.net>, 
+ Shuah Khan <skhan@linuxfoundation.org>, linux-doc@vger.kernel.org
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6653; i=mailhol@kernel.org;
+ h=from:subject:message-id; bh=RjmwbjJUekMN4XQbpwM2sAMQ8Q4VGqazX1lTIqnbeDs=;
+ b=owGbwMvMwCV2McXO4Xp97WbG02pJDFkGyhcU3klMvHNzftiCl6lmH3kWl02+abz8VKXHlaTy/
+ w4vP39V7pjIwiDGxWAppsiyrJyTW6Gj0Dvs0F9LmDmsTCBDpEUaGICAhYEvNzGv1EjHSM9U21DP
+ EMjQMWLg4hSAqfbXZfgr2rolQuyW6w6JgNKDJ4tvO69i+ZPHkj6Tv9JAckFms/tLRoYma5u3R6a
+ 1csurnulLb7M78HnNmlIVnlf38k/kSby8dJsZAA==
+X-Developer-Key: i=mailhol@kernel.org; a=openpgp;
+ fpr=ED8F700574E67F20E574E8E2AB5FEB886DBB99C2
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.16 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	TAGGED_FROM(0.00)[bounces-20863-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20864-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:axboe@kernel.dk,m:dave@stgolabs.net,m:viro@zeniv.linux.org.uk,m:brauner@kernel.org,m:jack@suse.cz,m:linux-kernel@vger.kernel.org,m:linux-block@vger.kernel.org,m:linux-efi@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:mailhol@kernel.org,m:richard.henderson@linaro.org,m:mattst88@gmail.com,m:linmag7@gmail.com,m:linux-alpha@vger.kernel.org,m:vgupta@kernel.org,m:linux-snps-arc@lists.infradead.org,m:linux@armlinux.org.uk,m:linux-arm-kernel@lists.infradead.org,m:catalin.marinas@arm.com,m:will@kernel.org,m:chenhuacai@kernel.org,m:kernel@xen0n.name,m:loongarch@lists.linux.dev,m:tsbogend@alpha.franken.de,m:linux-mips@vger.kernel.org,m:James.Bottomley@HansenPartnership.com,m:deller@gmx.de,m:linux-parisc@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:linuxppc-dev@lists.ozlabs.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:linux-riscv@lists.infradead.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:linux-s390@
+ vger.kernel.org,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:x86@kernel.org,m:corbet@lwn.net,m:skhan@linuxfoundation.org,m:linux-doc@vger.kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:imbrenda@linux.ibm.com,m:linux-kernel@vger.kernel.org,m:kvm@vger.kernel.org,m:linux-s390@vger.kernel.org,m:borntraeger@de.ibm.com,m:frankja@linux.ibm.com,m:david@kernel.org,m:seiden@linux.ibm.com,m:nrb@linux.ibm.com,m:schlameuss@linux.ibm.com,m:gra@linux.ibm.com,m:hca@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:gor@linux.ibm.com,m:svens@linux.ibm.com,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[agordeev@linux.ibm.com,linux-s390@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,linux.ibm.com:mid,linux.ibm.com:from_mime];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[agordeev@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
+	FORGED_SENDER(0.00)[mailhol@kernel.org,linux-s390@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[47];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,linaro.org,gmail.com,lists.infradead.org,armlinux.org.uk,arm.com,xen0n.name,lists.linux.dev,alpha.franken.de,HansenPartnership.com,gmx.de,linux.ibm.com,ellerman.id.au,lists.ozlabs.org,dabbelt.com,eecs.berkeley.edu,redhat.com,alien8.de,linux.intel.com,lwn.net,linuxfoundation.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mailhol@kernel.org,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[11]
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[uapi-group.org:url,www.freedesktop.org:url,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp,gnu.org:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5441D68813D
+X-Rspamd-Queue-Id: 1E4296882DA
 
-On Mon, Jun 15, 2026 at 11:17:41AM +0200, Claudio Imbrenda wrote:
-> @@ -122,6 +122,8 @@ pte_t ptep_xchg_direct(struct mm_struct *mm, unsigned long addr,
->  
->  	preempt_disable();
->  	old = ptep_flush_direct(mm, addr, ptep, 1);
-> +	if (pte_present(new))
-> +		new = clear_pte_bit(new, __pgprot(_PAGE_UNUSED));
+DPS [1] defines GPT partition type UUIDs for OS partitions and
+attributes that control whether such partitions should be
+automatically discovered. The specification states that:
 
-Why not before preempt_disable()?
+  The OS can discover and mount the necessary file systems with a
+  non-existent or incomplete /etc/fstab file and without the root=
+  kernel command line option.
 
->  	set_pte(ptep, new);
->  	preempt_enable();
->  	return old;
-> @@ -160,6 +162,8 @@ pte_t ptep_xchg_lazy(struct mm_struct *mm, unsigned long addr,
->  
->  	preempt_disable();
->  	old = ptep_flush_lazy(mm, addr, ptep, 1);
-> +	if (pte_present(new))
-> +		new = clear_pte_bit(new, __pgprot(_PAGE_UNUSED));
+DPS is already implemented in systemd-gpt-auto-generator [2], which,
+when embedded in an initrd, indeed allows automatic detection of the
+root filesystem through its partition type UUID.
 
-Same here.
+This series adds this discovery feature directly into the kernel so
+that people who are not using systemd or not using an initrd can still
+benefit from it. The implementation follows the same model as
+systemd-gpt-auto-generator:
 
->  	set_pte(ptep, new);
->  	preempt_enable();
->  	return old;
+  - GPT partition type UUIDs are used for automatic discovery policy
+    only. No root=PARTTYPEUUID=xxx cmdline option or similar syntax is
+    added.
+
+  - The root= cmdline option takes precedence. This prevents unexpected
+    behaviour.
+
+  - Only the disk with the active EFI System Partition is scanned, as
+    required by DPS. The disk is identified through the Boot Loader
+    Interface LoaderDevicePartUUID EFI variable.
+
+The DPS no-auto attribute is also implemented, giving another option for
+the user to disable this auto discovery. However, the DPS read-only
+attribute is intentionally not enforced. The kernel already mounts the
+root filesystem read-only by default unless the command line requests
+rw, and user space remains responsible for deciding whether a discovered
+root should later be remounted read-write based on DPS metadata and
+local policy. The other partition type UUIDs (home, swap, var...) are
+also out of scope for the same reason: user space remains responsible
+for mounting anything other than the root partition.
+
+Patch 1 adds the ARCH_HAS_DPS_ROOT_PARTITION_TYPE_UUID capability and
+the hidden CONFIG_DPS_ROOT_AUTO_DISCOVERY Kconfig symbol used to signal
+whether the feature is available. Patches 2 to 12 declare the
+ARCH_HAS_DPS_ROOT_PARTITION_TYPE_UUID capability for the supported
+architectures and define their architecture-specific root partition type
+UUID values in asm/dps_root.h.
+
+Patches 13 to 16 make the GPT partition type UUID and the no-auto
+attribute available during early block lookup.
+
+Patch 17 is a small code refactor that prepares for patch 18, which
+updates the root mount path so that, when root= is omitted, the kernel
+reads LoaderDevicePartUUID and uses the early block lookup
+infrastructure to discover the DPS root partition on that disk.
+
+Finally, patch 19 documents this automatic root discovery feature.
+
+Tested with GRUB, which implements the LoaderDevicePartUUID EFI variable
+in its bli module [3]. With this, I was able to boot a kernel with a
+completely empty cmdline and no initrd.
+
+[1] The Discoverable Partitions Specification (DPS)
+Link: https://uapi-group.org/specifications/specs/discoverable_partitions_specification/
+
+[2] systemd-gpt-auto-generator
+Link: https://www.freedesktop.org/software/systemd/man/latest/systemd-gpt-auto-generator.html
+
+[3] GRUB -- §16.2 bli
+Link: https://www.gnu.org/software/grub/manual/grub/html_node/bli_005fmodule.html
+
+Signed-off-by: Vincent Mailhol <mailhol@kernel.org>
+---
+Vincent Mailhol (19):
+      init: add DPS root partition type UUID capability
+      alpha: define DPS root partition type UUID
+      arc: define DPS root partition type UUID
+      arm: define DPS root partition type UUID
+      arm64: define DPS root partition type UUID
+      loongarch: define DPS root partition type UUID
+      mips: define DPS root partition type UUIDs
+      parisc: define DPS root partition type UUID
+      powerpc: define DPS root partition type UUIDs
+      riscv: define DPS root partition type UUIDs
+      s390: define DPS root partition type UUIDs
+      x86: define DPS root partition type UUIDs
+      block: store GPT partition type UUID
+      block: add early_lookup_bdev_by_type_uuid()
+      block: store GPT attributes as a raw value
+      block: don't discover partition with DPS no-auto GPT attribute
+      init: factor out root device lookup into lookup_root_device()
+      init: discover root by DPS partition type UUID
+      docs: document discoverable root partitions
+
+ Documentation/admin-guide/discoverable-root.rst | 33 +++++++++
+ Documentation/admin-guide/index.rst             |  1 +
+ Documentation/admin-guide/kernel-parameters.txt |  5 ++
+ arch/alpha/Kconfig                              |  1 +
+ arch/alpha/include/asm/dps_root.h               |  8 +++
+ arch/arc/Kconfig                                |  1 +
+ arch/arc/include/asm/dps_root.h                 |  8 +++
+ arch/arm/Kconfig                                |  1 +
+ arch/arm/include/asm/dps_root.h                 |  8 +++
+ arch/arm64/Kconfig                              |  1 +
+ arch/arm64/include/asm/dps_root.h               |  8 +++
+ arch/loongarch/Kconfig                          |  1 +
+ arch/loongarch/include/asm/dps_root.h           |  8 +++
+ arch/mips/Kconfig                               |  1 +
+ arch/mips/include/asm/dps_root.h                | 20 ++++++
+ arch/parisc/Kconfig                             |  1 +
+ arch/parisc/include/asm/dps_root.h              |  8 +++
+ arch/powerpc/Kconfig                            |  1 +
+ arch/powerpc/include/asm/dps_root.h             | 16 +++++
+ arch/riscv/Kconfig                              |  1 +
+ arch/riscv/include/asm/dps_root.h               | 12 ++++
+ arch/s390/Kconfig                               |  1 +
+ arch/s390/include/asm/dps_root.h                | 12 ++++
+ arch/x86/Kconfig                                |  1 +
+ arch/x86/include/asm/dps_root.h                 | 12 ++++
+ block/blk.h                                     |  1 +
+ block/early-lookup.c                            | 68 +++++++++++++++++-
+ block/partitions/core.c                         |  2 +
+ block/partitions/efi.c                          |  3 +
+ block/partitions/efi.h                          | 11 ++-
+ include/linux/blk_types.h                       |  1 +
+ include/linux/blkdev.h                          |  5 ++
+ include/linux/root_dev.h                        |  6 ++
+ init/Kconfig                                    |  6 ++
+ init/do_mounts.c                                | 94 ++++++++++++++++++++++++-
+ 35 files changed, 355 insertions(+), 12 deletions(-)
+---
+base-commit: 36808d5e983985bbda87e01059cccc071fe3ec8d
+change-id: 20260611-discoverable-root_partitions-bdacbada570d
+
+Best regards,
+-- 
+Vincent Mailhol <mailhol@kernel.org>
+
 
