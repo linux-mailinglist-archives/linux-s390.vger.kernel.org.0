@@ -1,186 +1,159 @@
-Return-Path: <linux-s390+bounces-20867-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20868-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id RdaiI54tMGocPgUAu9opvQ
-	(envelope-from <linux-s390+bounces-20867-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 18:51:42 +0200
+	id mnXzDbgwMGrPPgUAu9opvQ
+	(envelope-from <linux-s390+bounces-20868-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 19:04:56 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E68356888C2
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 18:51:41 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C20F4688AA4
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 19:04:55 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b="BnWJN9y/";
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20867-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-20867-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
+	dkim=pass header.d=linux.org.uk header.s=zeniv-20220401 header.b=SLabnQnx;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20868-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20868-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=zeniv.linux.org.uk;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 184523153243
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 16:45:49 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 4CC69301060B
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 17:04:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DE5140FD9B;
-	Mon, 15 Jun 2026 16:45:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11D1741325C;
+	Mon, 15 Jun 2026 17:04:48 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-dy1-f176.google.com (mail-dy1-f176.google.com [74.125.82.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D063A410D09
-	for <linux-s390@vger.kernel.org>; Mon, 15 Jun 2026 16:45:40 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781541942; cv=pass; b=e4gVB4zVL4wCXt/U32VrRn9k0pqRGgwvzxp3ZUDdlvbDl199s2GAIJCD2AXZECRTiHqmNiYv5WI+xN2lOn5yDwvos1z/knq0NEJGkNN8gh7LEsXHhXnXXUzQZX8y7nFgirCJh+5FCHXUcXMp4SYDcWoVZtbteFOZHJ8bmoFONI0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781541942; c=relaxed/simple;
-	bh=3FzMA3JKWBt8k0bfdrkL5Fqy8elxLoHa5Rqt9wjYA3s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DpLF2YL5hVtRSfrFDbu4ixNq7JSJ8GAUb1RnF8SfXb6Swyu4DO7G/8QzLXBgT4uOcDRzaV83bP4V4MZ8B/OwCBc9QjnIxDXhNtzMHyz6/YcTTICpYaq4xaagwPhAqPCz5Ob8h8kn+TIWlvH0BLgVNukJK+V9BdoSfcW11Pdz9T4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BnWJN9y/; arc=pass smtp.client-ip=74.125.82.176
-Received: by mail-dy1-f176.google.com with SMTP id 5a478bee46e88-304dc707c7eso294210eec.1
-        for <linux-s390@vger.kernel.org>; Mon, 15 Jun 2026 09:45:40 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1781541940; cv=none;
-        d=google.com; s=arc-20240605;
-        b=JhdYX5CUhXDq6nUzrIdJWtK3AjvrSJ/tjXDM8vrACUyAseKsEDTQ96lFEdHzZcUEVe
-         eEtfvmt2In+5YXhAgfwUFjvQj0LaK2WKdKHSeJm+wAG4ndnAbanpRsuWOUHgwcKyYbzG
-         lhu3mSpvDKTWCFM0pKNm8ZRO2L0/jyNYLui0HsV5N2Su8vdi+IgZpT9Kh7n1Q8dbj0ke
-         +BX09nFrlyt5hxTh/aTczcoMevES7rU5KQ2bY1IeWZKlPRUEBBSMkxwjz8hggWwjbQkg
-         Cux88RDQR+LrODCw8QGrsgG30aspGZ2F9kDyxTUCnZc3g5fIQkitG5O8vzP7+jAc8NGR
-         bGRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=c3z4ESjGCWPr0IFBiU/MI4XsGqh3mCySxsr/BHqLV90=;
-        fh=qwZzQ8DdttrG1rbAOLhRNijYuyTmbSVzbKypgJHNEq4=;
-        b=FbzapWN3B0tP5P9msm868HgiYM5t0MlhJ/FnQt4LQ8ndnaXDWFjbkskr352LbJXHDg
-         o1Bn/KuCfxzNqLrUhUw0PeYsX20198jRHib3/HDXdCA24ng1hOrntMHfAUYAgdAr+9AO
-         lE0gKRJE97PorPIh32vhUIC9jggKN1RjiDC0joNDpYtQ44UZQxNdpD2B7nEFdlDGjCJB
-         0LUkhd5PDVXHepvVzNybdJiChXhkETT26CcZrMCePJxIqvzSafAIDQbFqMc8dMvzzsQj
-         x3l+xkQUX89e0ceCHBW1K7QUJe/84yxHKD3t9EOPhyTRtchhtI83R+gytDSwWsIdTTt2
-         ThZQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781541940; x=1782146740; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c3z4ESjGCWPr0IFBiU/MI4XsGqh3mCySxsr/BHqLV90=;
-        b=BnWJN9y/4NcSruVlDMN192Hn9+XCbJ/4k2TsQvrnqLY6Da3sKbVA+9pQ4vyGujK9aL
-         2xLBk657UCflYPJ0MPPXmaVfCM+RJ8RyWlhPnWTj/j7XeOttkTOAqvczz9KrlhrPfHhQ
-         WDxjgoVdBGlt3oSeofz5e8G1lw7bTH4t/rveC4W1CgyrPmKHc5nu6YmeV/a3HnOel29t
-         l0uZj61tMwGwdu7v091X8E61er6V+iCuC+/G0msu501v7/d5EOdmKOUiSEy7S9qgtLr3
-         YQvUK+TJN5+Jm0ZGJRgL8nY8Iq8sV4uAxTsRvb0sufbyaWcKvnmxtm0ipIETOf3qOLxu
-         4ifw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781541940; x=1782146740;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=c3z4ESjGCWPr0IFBiU/MI4XsGqh3mCySxsr/BHqLV90=;
-        b=WzVN4jAXIz4AblTlP1g6ny/3WT3Z4ri5eKEyVAvkvwGoq6cuqNXMOhy4lXssv4rU4Q
-         2YqiOAlSRDKbG0F6qCDidh8GGPp/gTuksOkZKZoTf7o2bhCXQN2SDEfYj9Rd8bRThBD6
-         AxqP4qdk9wHum3Kt8VAUfI5ify/HFGN2+aQPt/9KF0aqM57GBvrwQ/AGmGuNo0eg+FMD
-         iY7q+Z8IscZqUzCA+SwdirhC008ziWhR9ov+mFIJsRZtFQp6XV6iTPb6CAop2BSvMrxF
-         KsWrs/UcYdXP3s9YZQAm6AXR3l3lY7caz+t9j9A7ir0CmJzeyXwSMr2du2GmPl7WYfvf
-         iR7Q==
-X-Forwarded-Encrypted: i=1; AFNElJ9d6Tqf65A7TVfvwZJXRrHL9TAef+OQX89PgrdMkZjArs0NUoyVr+K7+EGsoOGi/V82D7m+WM/LLKK0@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhWE+2NLlwSG0Yd8nPhOjUDLBe/7zMHOt2if5tAvLJTPj+oNZW
-	iQOW8WCfJplEkl0hFKKghGbtgOzY6hxcrgeA7/sjcz1mxOwI6tNIxGIaJbxqdbRzWRq5ysPCgt0
-	DHPdOg34uyGN0ht1Z059Z0E9W4tObdxg=
-X-Gm-Gg: Acq92OEQDLBfD2di5QHtWw5Q1R+StYEAWOCt2dDiBvl+WGaCU+q5vqSMxAIpgWfjUpM
-	QDYlrYkx7keZnSNSBE72gdFM9ago110hXnJwRNIL0wARsAUb4enWEvYAeSXSVx7aRYzlM33tiEU
-	qRzIyZTexBZKL8IKtMmz1jkyKmmp2rs1Cq5ZntlcAApgsJn5bG4VbQsrGyq+tb4baZLfGEnb8A6
-	+pcamJ1sn9gA6nZMtNeMV5izhtGfMdvCDH7A2tmVN7fyF50rcdDZaYQTNdEwO0jSLrCt0/HDTqP
-	jNY9+nx6Nasgd0k684D+IEnNPlXyZWw3tpqkgOGHtgYQIFGUjDz2X2HE9xdeJx1f3ou2sj1jxd4
-	mzwaGuuAmRiA1OXK/+sJPMP4=
-X-Received: by 2002:a05:7300:6425:b0:2ff:b29b:87b with SMTP id
- 5a478bee46e88-308200a194dmr3604961eec.5.1781541939886; Mon, 15 Jun 2026
- 09:45:39 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FAF334DB56;
+	Mon, 15 Jun 2026 17:04:44 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781543087; cv=none; b=Ymi+PTGKMzWF8JcTVF73EXAhbBWkyV676XQLbOinj95wiD3KXcnzHBSYzJQ9YI1CNsQmf+IMQeTd44SNvPWBs/kRlkKUZdVvrG3ze1Da5CgAsp0d+wiRbF5cqUK8nE3NBk1gPtc5MCRhjSXVgiBRFMn7efV9r/hxOt6iDe3Icpg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781543087; c=relaxed/simple;
+	bh=k9wzEDrn8OWY0tjJOa6e5RtLbGoq+IyJnXkfwU07P80=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QF6uQEQEHg9futom0hrFQOs9iAFBd2WEcfKDttCLlCD6R0Y/uNsPWnjE6MHD5X8PasxdiQqHa54gITg+3IHa1VtAZ+aNpnwCBPcZv1C4K5OpK+yDoWu2/F++GoHEZ6jDbfrui1TsI8VJq+htd6F1Ds5re9OTUVUXD4hh3rbekcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=SLabnQnx; arc=none smtp.client-ip=62.89.141.173
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description;
+	bh=be/KypQX5Q9fujajARM6Q7r9w26ilWIZmzbrtGfAKys=; b=SLabnQnxi8RKG6kB4YLIrRrIte
+	+jYEaBgX5DOoDOdPOU6k6ypOK6lDxxOMXQzKEUszFj5yTLPDASBaagrmnsOk8tUGdmzHw2XGk68HM
+	2J1tv7+pE0CjbBOIjeYCz0TsyHOIrqFb8Mb1LadfEs+3t0bUVsavfv//KIZ2S3hmTXIBIqEbnE3qn
+	zsd3Hxu29/Ylu8C3lRKI+WwMxWxUWcLIz0u0fTGyYSKAR/XPPXo0Rkv03xUIJElu5cOtap9hCSZj1
+	74eb7LaTsGudBKuTsb4/IH254uFPRDECMTh8XzLqKRh9ykQzpGUZV9OECxDmxcCHO22vobRU+rK1T
+	RNRNGWLQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1wZAjg-00000000Vxn-0xg6;
+	Mon, 15 Jun 2026 17:04:32 +0000
+Date: Mon, 15 Jun 2026 18:04:32 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Vincent Mailhol <mailhol@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, Davidlohr Bueso <dave@stgolabs.net>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-efi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Magnus Lindholm <linmag7@gmail.com>, linux-alpha@vger.kernel.org,
+	Vineet Gupta <vgupta@kernel.org>,
+	linux-snps-arc@lists.infradead.org,
+	Russell King <linux@armlinux.org.uk>,
+	linux-arm-kernel@lists.infradead.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	linux-mips@vger.kernel.org,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	linuxppc-dev@lists.ozlabs.org, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	linux-s390@vger.kernel.org, Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 00/19] init: discoverable root partitions, a.k.a. an
+ omittable "root=" cmdline option
+Message-ID: <20260615170432.GW2636677@ZenIV>
+References: <20260615-discoverable-root_partitions-v1-0-39c78fac42e2@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260608181451.3734956-1-japo@linux.ibm.com> <20260608181451.3734956-7-japo@linux.ibm.com>
- <20260615164013.GA249489@ax162>
-In-Reply-To: <20260615164013.GA249489@ax162>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 15 Jun 2026 18:45:26 +0200
-X-Gm-Features: AVVi8CfzMVJ_2rVg8MQCfGJQFulI52FvHK0vtBIlLUxIJIbKvT5bRYr4UKimBq8
-Message-ID: <CANiq72nkm2YwxcV+vwDj+v0svd6e1dro-W_0ybVms3pG_oJiXg@mail.gmail.com>
-Subject: Re: [PATCH v6 6/6] s390: Enable Rust support
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Jan Polensky <japo@linux.ibm.com>, hca@linux.ibm.com, gor@linux.ibm.com, 
-	agordeev@linux.ibm.com, ojeda@kernel.org, peterz@infradead.org, 
-	jpoimboe@kernel.org, jbaron@akamai.com, aliceryhl@google.com, 
-	borntraeger@linux.ibm.com, svens@linux.ibm.com, boqun@kernel.org, 
-	gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org, 
-	a.hindborg@kernel.org, tmgross@umich.edu, dakr@kernel.org, 
-	rostedt@goodmis.org, ardb@kernel.org, linux-s390@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260615-discoverable-root_partitions-v1-0-39c78fac42e2@kernel.org>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+X-Spamd-Result: default: False [-1.66 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[zeniv.linux.org.uk,none];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[linux.org.uk:s=zeniv-20220401];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:nathan@kernel.org,m:japo@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:ojeda@kernel.org,m:peterz@infradead.org,m:jpoimboe@kernel.org,m:jbaron@akamai.com,m:aliceryhl@google.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:boqun@kernel.org,m:gary@garyguo.net,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:tmgross@umich.edu,m:dakr@kernel.org,m:rostedt@goodmis.org,m:ardb@kernel.org,m:linux-s390@vger.kernel.org,m:rust-for-linux@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-20867-lists,linux-s390=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[miguelojedasandonis@gmail.com,linux-s390@vger.kernel.org];
+	FORGED_SENDER(0.00)[viro@zeniv.linux.org.uk,linux-s390@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	FORWARDED(0.00)[lists@lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[46];
+	FORGED_RECIPIENTS(0.00)[m:mailhol@kernel.org,m:axboe@kernel.dk,m:dave@stgolabs.net,m:brauner@kernel.org,m:jack@suse.cz,m:linux-kernel@vger.kernel.org,m:linux-block@vger.kernel.org,m:linux-efi@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:richard.henderson@linaro.org,m:mattst88@gmail.com,m:linmag7@gmail.com,m:linux-alpha@vger.kernel.org,m:vgupta@kernel.org,m:linux-snps-arc@lists.infradead.org,m:linux@armlinux.org.uk,m:linux-arm-kernel@lists.infradead.org,m:catalin.marinas@arm.com,m:will@kernel.org,m:chenhuacai@kernel.org,m:kernel@xen0n.name,m:loongarch@lists.linux.dev,m:tsbogend@alpha.franken.de,m:linux-mips@vger.kernel.org,m:James.Bottomley@hansenpartnership.com,m:deller@gmx.de,m:linux-parisc@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:linuxppc-dev@lists.ozlabs.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:linux-riscv@lists.infradead.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:linux-s390@vger.kernel.org,m:tglx@ker
+ nel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:x86@kernel.org,m:corbet@lwn.net,m:skhan@linuxfoundation.org,m:linux-doc@vger.kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[linux.ibm.com,kernel.org,infradead.org,akamai.com,google.com,garyguo.net,protonmail.com,umich.edu,goodmis.org,vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20868-lists,linux-s390=lfdr.de];
+	DKIM_TRACE(0.00)[linux.org.uk:+];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[miguelojedasandonis@gmail.com,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[viro@zeniv.linux.org.uk,linux-s390@vger.kernel.org];
+	FREEMAIL_CC(0.00)[kernel.dk,stgolabs.net,kernel.org,suse.cz,vger.kernel.org,linaro.org,gmail.com,lists.infradead.org,armlinux.org.uk,arm.com,xen0n.name,lists.linux.dev,alpha.franken.de,hansenpartnership.com,gmx.de,linux.ibm.com,ellerman.id.au,lists.ozlabs.org,dabbelt.com,eecs.berkeley.edu,redhat.com,alien8.de,linux.intel.com,lwn.net,linuxfoundation.org];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-s390];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp,gnu.org:url,uapi-group.org:url,ZenIV:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E68356888C2
+X-Rspamd-Queue-Id: C20F4688AA4
 
-On Mon, Jun 15, 2026 at 6:40=E2=80=AFPM Nathan Chancellor <nathan@kernel.or=
-g> wrote:
->
-> With Rust 1.96.0, I see the following warning several times when
-> building Rust code in -next:
->
->   warning: unstable feature specified for `-Ctarget-feature`: `backchain`
->     |
->     =3D note: this feature is not stably supported; its behavior can chan=
-ge in the future
->
->   warning: 1 warning emitted
->
-> I assume this is expected? If so, is there a way to silence this warning?
+On Mon, Jun 15, 2026 at 06:08:56PM +0200, Vincent Mailhol wrote:
 
-Yes, it seems so -- please see this thread:
+> Tested with GRUB, which implements the LoaderDevicePartUUID EFI variable
+> in its bli module [3]. With this, I was able to boot a kernel with a
+> completely empty cmdline and no initrd.
+> 
+> [1] The Discoverable Partitions Specification (DPS)
+> Link: https://uapi-group.org/specifications/specs/discoverable_partitions_specification/
+> 
+> [2] systemd-gpt-auto-generator
+> Link: https://www.freedesktop.org/software/systemd/man/latest/systemd-gpt-auto-generator.html
+> 
+> [3] GRUB -- §16.2 bli
+> Link: https://www.gnu.org/software/grub/manual/grub/html_node/bli_005fmodule.html
 
-  https://lore.kernel.org/rust-for-linux/CANiq72m4GVWFYqnxNtCHTPu7XcGewHB5L=
-NwOoayTfnXs9pPbNg@mail.gmail.com/
+So what does that thing, tied to EFI as it is, have to do with architectures where
+	* firmware is rather unlike EFI
+	* firmware wouldn't know what to do with GPT
+	* GRUB is *not* ported to, let alone used
+such as, say it, the very first one mentioned at your [1]?
 
-If they are OK with it, then I guess it is fine, but it does mean CIs
-can suffer a bit from it.
-
-I hope that helps.
-
-Cheers,
-Miguel
+Or is that conditional upon "if anyone wants to design replacement firmware
+for those, and if they agree to follow our wishlist"?
 
