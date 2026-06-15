@@ -1,78 +1,53 @@
-Return-Path: <linux-s390+bounces-20887-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20888-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id bikNOJpaMGogSAUAu9opvQ
-	(envelope-from <linux-s390+bounces-20887-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 22:03:38 +0200
+	id LIRmNpphMGpISQUAu9opvQ
+	(envelope-from <linux-s390+bounces-20888-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 22:33:30 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40FDA689A71
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 22:03:38 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F446689E01
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 22:33:30 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=DpvhXJu2;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20887-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20887-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=ibm.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=E86R2Mc0;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20888-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-20888-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AB6FD30E9DDD
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 20:02:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E56023051A82
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2026 20:33:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C6003AEB2C;
-	Mon, 15 Jun 2026 20:02:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9C563ACEEB;
+	Mon, 15 Jun 2026 20:33:22 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40B438B12E;
-	Mon, 15 Jun 2026 20:02:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A8A1C84D0;
+	Mon, 15 Jun 2026 20:33:21 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781553726; cv=none; b=DIbz+VvZkYDFmzwvIXEa69h+DPa2KU0rDBBVLHALZGfjrsVkoRaZ7fKn7sF4gEHG8LYOXE8XIvtKnfKHUvJyyjNwjQre5Y2GUBOkBo1vlgpkOwk6f1+nyeBD5Ij6GOkSnPQXZEbEybNBRKUUPENaFAagNOUOlYI+TvP0jKSQ+Es=
+	t=1781555602; cv=none; b=n443sX1xPIpoZVt6SPAh37PyCCuFL/0F12zCj/eit4wkE2YvpjsSxPpFCuB/cNGxcL/QEuAlChpaTgHfwSHfK40HlIfz5QQAZ0+PUjW7FdNhiIoJ7vlQTnicnFYNCDmQrENJjIHdAVi/olelZtjS4FhKPoKtSM/F88Oy4jleP9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781553726; c=relaxed/simple;
-	bh=hFawhCsNPty7fevrSntR9guSB7PDRflv6YAjEEf87N8=;
+	s=arc-20240116; t=1781555602; c=relaxed/simple;
+	bh=9Z4Q+BvDBzDR3RYOg8ewj62G0BIToP4WyuMbIhRXeBc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=um71xYu0g2OL0ffZ3LkebqAsLJMyTMYBjYWzGZNxLo/US/uv70c6B1xiLsIIA89xHkZ8QeCf4azkcS1ISy9YH0lsRIFY3P9VZ9Xh0wBtwE8rz3N7X2dVpXNUGJ6uBpj54sgihTcOJJxIDM/tDl9PBS2G7GMBWnxjTrvOHH+jp2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DpvhXJu2; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65FJILEg3289731;
-	Mon, 15 Jun 2026 20:02:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=QuQb2L
-	VUENz2tci2/j7hR8YtaJnI7ON1FlkxUDqXzZM=; b=DpvhXJu20nQPyvIz7nwx2D
-	sPE/gKsaYJj6pKb0lsjk12P+Pto5UbKmAxTgYaCB8oow/RxjVzZV691vpr09fbbG
-	fBuBwLu8tsIm+jonVoTy5kUXaYnG3niuTWJqUL1bgCv6svgGI358/UqeOFIv4urk
-	CWRRdPg42EaVZ1O3LtLqx3+8A6dmYE3xH67hduffbrY9Q4Jc4t05oF/Ak8vwW74z
-	jgR+uIEx6oFs6CZoNdrMqdAt3tCQw8JY+WgO1HNigEKO+gqvJPzXe4Ndputnx8Nu
-	GYVCRh+LA85kGPHp1g/wiQI8IuUVfr+rZ2ncziSR+UCFyL/wlvduYk/IhiyyZP9A
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4es23njcpu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Jun 2026 20:02:00 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65FJnfI3008314;
-	Mon, 15 Jun 2026 20:01:59 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4esk1h0402-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Jun 2026 20:01:59 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65FK1wJd30409052
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 15 Jun 2026 20:01:58 GMT
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8D67558053;
-	Mon, 15 Jun 2026 20:01:58 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2076958043;
-	Mon, 15 Jun 2026 20:01:57 +0000 (GMT)
-Received: from [9.61.248.38] (unknown [9.61.248.38])
-	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 15 Jun 2026 20:01:57 +0000 (GMT)
-Message-ID: <4d7fc371-4357-496f-9774-1f7a7c1a3091@linux.ibm.com>
-Date: Mon, 15 Jun 2026 16:01:55 -0400
+	 In-Reply-To:Content-Type; b=CjWc7Y5Kb9piihbqZB8q2IAmM9lNEbMw3NW/0uLTMKmRjYLda/Vd701CRA7QkcJ4qNJsnMhI+0QKtgN7WM1c60T0wVsN+KkGWqEd1yrGM97wyCdc+ay5SncCL7EYlTWhcX5ICatTza1SCg/pdSTrZ+2wdj1QTIEXDiBzxhdCoNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E86R2Mc0; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D89131F000E9;
+	Mon, 15 Jun 2026 20:33:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781555601;
+	bh=as7Ogfoc/AyskAy2+J9eXyhxUhgDui71XAx+CHT5Mew=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=E86R2Mc0QLlmn6hDEj5MnafzRYyOh8VthGPhggOCVEqZ9xx+sywlJb7QXeIaMbEFA
+	 rvREbsI3Zv0iMBuDfYoDef4TgGcmk0gnzth2mBKPpYT5zfQfxZKaETEbxVznMvRfoH
+	 piXE10ylpTWfk/t+pECRYcy/iMGYN/iwRMhVbs6e5bPwfcEmSrgpliHOIWdD3C35KZ
+	 3dd4XZnD7RANNMAcrkEHv2ZJgOVbQ7VfGmUoC1gB6jeJzKn1pSM0YTSpCEnNMVRUEO
+	 3IE0flzeBTi4viwUUEYjyjwYKI+KhiEhnh6PLe1a+NU0sfU6WVODjevHGI2ZZiYcfX
+	 AyBnvEPDADOhQ==
+Message-ID: <131a450f-f9c6-464c-8e4e-a4c7a29fb5de@kernel.org>
+Date: Mon, 15 Jun 2026 22:33:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -80,133 +55,132 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] s390/virtio_ccw: Also suppress -EINVAL on device
- detach
-To: Cornelia Huck <cohuck@redhat.com>, Halil Pasic <pasic@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, farman@linux.ibm.com, hca@linux.ibm.com,
-        gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
-        svens@linux.ibm.com, mjrosato@linux.ibm.com, vneethv@linux.ibm.com,
-        oberpar@linux.ibm.com, virtualization@lists.linux.dev,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260612155407.199218-1-wbezenah@linux.ibm.com>
- <20260615002309.052e0614.pasic@linux.ibm.com> <875x3jn94r.fsf@redhat.com>
+Subject: Re: [PATCH 00/19] init: discoverable root partitions, a.k.a. an
+ omittable "root=" cmdline option
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Jens Axboe <axboe@kernel.dk>, Davidlohr Bueso <dave@stgolabs.net>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+ linux-efi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Matt Turner <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>,
+ linux-alpha@vger.kernel.org, Vineet Gupta <vgupta@kernel.org>,
+ linux-snps-arc@lists.infradead.org, Russell King <linux@armlinux.org.uk>,
+ linux-arm-kernel@lists.infradead.org,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ loongarch@lists.linux.dev, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ linux-mips@vger.kernel.org,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org,
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org,
+ Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, Jonathan Corbet <corbet@lwn.net>,
+ Shuah Khan <skhan@linuxfoundation.org>, linux-doc@vger.kernel.org
+References: <20260615-discoverable-root_partitions-v1-0-39c78fac42e2@kernel.org>
+ <20260615170432.GW2636677@ZenIV>
+From: Vincent Mailhol <mailhol@kernel.org>
 Content-Language: en-US
-From: William Bezenah <wbezenah@linux.ibm.com>
-In-Reply-To: <875x3jn94r.fsf@redhat.com>
+Autocrypt: addr=mailhol@kernel.org; keydata=
+ xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
+ JFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbEBrZXJuZWwub3JnPsKZBBMWCgBBFiEE7Y9wBXTm
+ fyDldOjiq1/riG27mcIFAmdfB/kCGwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcC
+ F4AACgkQq1/riG27mcKBHgEAygbvORJOfMHGlq5lQhZkDnaUXbpZhxirxkAHwTypHr4A/joI
+ 2wLjgTCm5I2Z3zB8hqJu+OeFPXZFWGTuk0e2wT4JzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrb
+ YZzu0JG5w8gxE6EtQe6LmxKMqP6EyR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDl
+ dOjiq1/riG27mcIFAmceMvMCGwwFCQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8V
+ zsZwr/S44HCzcz5+jkxnVVQ5LZ4BANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
+In-Reply-To: <20260615170432.GW2636677@ZenIV>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=XtnK/1F9 c=1 sm=1 tr=0 ts=6a305a39 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8
- a=PMLYZQeYH2tpQPL_-REA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE1MDIwOSBTYWx0ZWRfX4PZbuGXSKZf5
- l/1pR7lsN0bgLCOWkCTdC69/5HkvfrFDOL0PLQtAPYJN195Qhwm/KGT/p7FWM2gs9d6gUgo3rVt
- Gj/Q5Sbnr7gWqEdTe3vj+EI0JNv3EtX4Qm6bjjVNfMiJiti7/cCRirh7bEXA9yGLyGcT64JBqJy
- wYNbmj6xyVKN5ByyuB4xs8MR+ca2OkUXxdCcg4Va4Pa4XEd8Ql3qtTqXw4GyZwgdsNDVhXxBInq
- bFyn3239NL3laq3Pg56cekAvWq4Ho0t96aDm+eKCxkl+mOjuFLRxKk81b1Yj89hUJMfRVTZux9O
- YUdGC97yxo9KFT/5/d2ej3IvJLQS7nT4XDZrlxddFXX8LJW4kr1XrOcFpgxFgm2DqwLpW3c61+6
- IkRzZgFt6rUaDbyOQAscU8nYganYyrRINHwQCYmPwThpu1OFypkkyYuBNtqcA3ysCP8p65mmtJ7
- RcoZK1FKORsd6GzFUbA==
-X-Proofpoint-GUID: 6s_Jph1OiLimsgDJtGiL8lZFruvvkctt
-X-Proofpoint-ORIG-GUID: 6s_Jph1OiLimsgDJtGiL8lZFruvvkctt
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE1MDIwOSBTYWx0ZWRfX7vW91poRXSnr
- 99MSBYK7MoH5tMA0Y8BIApus79JCsAeDf0BxPMy9+6DA4BLYXlXmJFf6l/7x723kuNwOb9P9pW3
- XWX+UvtFfKLy3NRiGULTfLSMGJ/HoeI=
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-15_05,2026-06-15_04,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 adultscore=0 phishscore=0 lowpriorityscore=0 priorityscore=1501
- suspectscore=0 clxscore=1015 malwarescore=0 spamscore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606040000 definitions=main-2606150209
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-20888-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:viro@zeniv.linux.org.uk,m:axboe@kernel.dk,m:dave@stgolabs.net,m:brauner@kernel.org,m:jack@suse.cz,m:linux-kernel@vger.kernel.org,m:linux-block@vger.kernel.org,m:linux-efi@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:richard.henderson@linaro.org,m:mattst88@gmail.com,m:linmag7@gmail.com,m:linux-alpha@vger.kernel.org,m:vgupta@kernel.org,m:linux-snps-arc@lists.infradead.org,m:linux@armlinux.org.uk,m:linux-arm-kernel@lists.infradead.org,m:catalin.marinas@arm.com,m:will@kernel.org,m:chenhuacai@kernel.org,m:kernel@xen0n.name,m:loongarch@lists.linux.dev,m:tsbogend@alpha.franken.de,m:linux-mips@vger.kernel.org,m:James.Bottomley@hansenpartnership.com,m:deller@gmx.de,m:linux-parisc@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:linuxppc-dev@lists.ozlabs.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:linux-riscv@lists.infradead.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:linux-s390@vger.kernel.org,m:tgl
+ x@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:x86@kernel.org,m:corbet@lwn.net,m:skhan@linuxfoundation.org,m:linux-doc@vger.kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20887-lists,linux-s390=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:cohuck@redhat.com,m:pasic@linux.ibm.com,m:linux-s390@vger.kernel.org,m:farman@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:mjrosato@linux.ibm.com,m:vneethv@linux.ibm.com,m:oberpar@linux.ibm.com,m:virtualization@lists.linux.dev,m:kvm@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,linux.ibm.com:from_mime,vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	FORGED_SENDER(0.00)[wbezenah@linux.ibm.com,linux-s390@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wbezenah@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[mailhol@kernel.org,linux-s390@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[46];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.dk,stgolabs.net,kernel.org,suse.cz,vger.kernel.org,linaro.org,gmail.com,lists.infradead.org,armlinux.org.uk,arm.com,xen0n.name,lists.linux.dev,alpha.franken.de,hansenpartnership.com,gmx.de,linux.ibm.com,ellerman.id.au,lists.ozlabs.org,dabbelt.com,eecs.berkeley.edu,redhat.com,alien8.de,linux.intel.com,lwn.net,linuxfoundation.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mailhol@kernel.org,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[11]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,gnu.org:url,www.freedesktop.org:url,uapi-group.org:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 40FDA689A71
+X-Rspamd-Queue-Id: 7F446689E01
 
-
-On 6/15/2026 10:58 AM, Cornelia Huck wrote:
-> On Mon, Jun 15 2026, Halil Pasic <pasic@linux.ibm.com> wrote:
->
->> On Fri, 12 Jun 2026 17:54:07 +0200
->> William Bezenah <wbezenah@linux.ibm.com> wrote:
+On 15/06/2026 at 19:04, Al Viro wrote:
+> On Mon, Jun 15, 2026 at 06:08:56PM +0200, Vincent Mailhol wrote:
+> 
+>> Tested with GRUB, which implements the LoaderDevicePartUUID EFI variable
+>> in its bli module [3]. With this, I was able to boot a kernel with a
+>> completely empty cmdline and no initrd.
 >>
->>> Since commit 8c58a229688c ("s390/cio: Do not unregister the
->>> subchannel based on DNV"), subchannel behavior following a device
->>> detach has been updated and results in -EINVAL being propagated
->>> rather than -ENODEV, originating from ccw_device_start_timeout_key()
->>> in cio/device_ops. In the end, the virtio driver has no ability to
->>> react to the difference between device and subchannel states here,
->>> and during detach, both -ENODEV and -EINVAL indicate the device
->>> cannot be used and should not be treated as errors requiring
->>> attention. Update error handling in virtio_ccw_del_vq() and
->>> virtio_ccw_drop_indicator() to suppress -EINVAL in addition to
->>> -ENODEV.
->> Hi William!
+>> [1] The Discoverable Partitions Specification (DPS)
+>> Link: https://uapi-group.org/specifications/specs/discoverable_partitions_specification/
 >>
->> Are you saying that ccw_device_start() started returning -EINVAL
->> since 8c58a229688c ("s390/cio: Do not unregister the subchannel based on
->> DNV")? Or did I somehow read the paragraph wrong?
+>> [2] systemd-gpt-auto-generator
+>> Link: https://www.freedesktop.org/software/systemd/man/latest/systemd-gpt-auto-generator.html
 >>
->> The funcition ccw_device_start is documented to return:
->>  * Returns:                                                                     
->>  *  %0, if the operation was successful;                                        
->>  *  -%EBUSY, if the device is busy, or status pending;                          
->>  *  -%EACCES, if no path specified in @lpm is operational;                      
->>  *  -%ENODEV, if the device is not operational. 
->> and the commit message does not say a thing about introducing -EINVAL to
->> the mix.
-> The function may return -EINVAL for non-enabled subchannels
-> (i.e. pmcw.ena == 0), maybe we get an all-zeroes schib with dnv == 0?
-> I'd expect it not to be enabled in that case anyway.
+>> [3] GRUB -- §16.2 bli
+>> Link: https://www.gnu.org/software/grub/manual/grub/html_node/bli_005fmodule.html
+> 
+> So what does that thing, tied to EFI as it is, have to do with architectures where
+> 	* firmware is rather unlike EFI
 
-Yep, that's at least how I've come to understand what changed. The
-function ccw_device_start_timeout_key() has always returned -EINVAL
-for non-enabled subchannels (pmcw.ena == 0), though it's not
-documented in the header.
+I made CONFIG_DPS_ROOT_AUTO_DISCOVERY depend on CONFIG_EFI for this reason.
 
-What changed with commit 8c58a229688c is that cio_update_schib() now
-updates the schib even when DNV=0, rather than returning early as it
-did previously. Somehow this update results in pmcw.ena == 0 in
-ccw_device_start_timeout_key(). Previously, it saw pmcw.ena == 1 and
-moved to the condition (cdev->private->state == DEV_STATE_NOT_OPER)
-where it returned -ENODEV.
+> 	* firmware wouldn't know what to do with GPT
+> 	* GRUB is *not* ported to, let alone used
+> such as, say it, the very first one mentioned at your [1]?
 
-So the commit didn't introduce -EINVAL as a new return value, rather,
-it changed the subchannel lifecycle such that existing paths now
-propagate -EINVAL rather than -ENODEV during the device detach
-scenario.
+Fair point. I just did:
+
+  $ git grep "^config EFI$"
+  arch/arm/Kconfig:config EFI
+  arch/arm64/Kconfig:config EFI
+  arch/loongarch/Kconfig:config EFI
+  arch/riscv/Kconfig:config EFI
+  arch/x86/Kconfig:config EFI
+
+Anything not in this list is dead code at the moment.
+
+> Or is that conditional upon "if anyone wants to design replacement firmware
+> for those, and if they agree to follow our wishlist"?
+
+No, it was just an oversight from my side. I will just keep arm, arm64,
+loongarch, riscv and x86 in my v2.
+
+
+Yours sincerely,
+Vincent Mailhol
 
 
