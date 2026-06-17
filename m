@@ -1,175 +1,196 @@
-Return-Path: <linux-s390+bounces-20956-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20957-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id EPXqBivBMmp/5AUAu9opvQ
-	(envelope-from <linux-s390+bounces-20956-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2026 17:45:47 +0200
+	id Zng0CsjAMmps5AUAu9opvQ
+	(envelope-from <linux-s390+bounces-20957-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2026 17:44:08 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id A35C669B1C1
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2026 17:45:46 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26D6D69B181
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2026 17:44:07 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=seu.edu.cn header.s=default header.b=cWjoZHjJ;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20956-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-20956-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=seu.edu.cn;
+	dkim=pass header.d=ziepe.ca header.s=google header.b="BNaxItY/";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20957-lists+linux-s390=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-s390+bounces-20957-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=none;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0052A324D5C7
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2026 15:29:26 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id EB1DB303FCC3
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2026 15:41:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C30248BD4B;
-	Wed, 17 Jun 2026 15:29:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1910448B37A;
+	Wed, 17 Jun 2026 15:41:19 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-m83193.xmail.ntesmail.com (mail-m83193.xmail.ntesmail.com [156.224.83.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF5748AE06;
-	Wed, 17 Jun 2026 15:29:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB4B477E52
+	for <linux-s390@vger.kernel.org>; Wed, 17 Jun 2026 15:41:04 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781710163; cv=none; b=B+XfRDi+YNBZwWme6owNpTOA1yp3A5RWaTbXN2GQi6V9CRQyrLbFmRWZ70K0pmX55TjAg2MAvW6yHQ0detCfTzFiaYknP7PsHJ6vfkDX4BzA4mtYuYVaZJlhCeR/bqeB8awbS4ARoL13D+nFCFM4FHnmJ9D9Bz81p1Af/Z4EqzM=
+	t=1781710878; cv=none; b=MlUV5gipENKXa1EiLwxTLOmuqrr1WjgomVK87Gi6CMsSMlj96nIHZ9fovsON8wktt+qYvRBti/K+9qlo8Y1ECvuNtlJipJqb6+B1f1VJMy7135qP5DRS2vmxkgAKm+oWnoxOtPKbYL1YZZvphFpFlBRzY9y6s1t2tJ3cGVBhrIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781710163; c=relaxed/simple;
-	bh=kwmBT4nlb7xVQUXAzhMyhS0dyDCrP8EroEcr4VEcUHA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tr72B2aa+V0AgeO+x50tMPjutT4l0CqrsKpEsI07QlPBnDSMzA4X8lTcjK6Kp1CvYkyyAT6xakI2xRCMH9zew2Mm2efB0vO97O3Jj+TZXits/VBnQuO93c92ab0FJjPNp9M0TiUodXvvUJxY/o+vemVPH5sMcfXLSmIrchtZrqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn; spf=pass smtp.mailfrom=seu.edu.cn; dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b=cWjoZHjJ; arc=none smtp.client-ip=156.224.83.193
-Received: from PC-202605011814.localdomain (unknown [221.228.238.82])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 42c703f2d;
-	Wed, 17 Jun 2026 23:29:04 +0800 (GMT+08:00)
-From: Runyu Xiao <runyu.xiao@seu.edu.cn>
-To: "D. Wythe" <alibuda@linux.alibaba.com>,
-	Dust Li <dust.li@linux.alibaba.com>,
-	Sidraya Jayagond <sidraya@linux.ibm.com>,
-	Wenjia Zhang <wenjia@linux.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Mahanta Jambigi <mjambigi@linux.ibm.com>,
-	Tony Lu <tonylu@linux.alibaba.com>,
-	Wen Gu <guwen@linux.alibaba.com>,
-	Simon Horman <horms@kernel.org>,
-	Karsten Graul <kgraul@linux.ibm.com>,
-	linux-rdma@vger.kernel.org,
+	s=arc-20240116; t=1781710878; c=relaxed/simple;
+	bh=9QIEPp5EWbcjDNMKHBFL5JldJkQ5+OL5Nn42Ql7e+rM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VUNDtQfFA6ILi8lKmvjrwdKJ101/hMgJkRclQBvojzyF63mNrrwmWBWjhkCDbXDPA8liD8fZa6oSlqOHJz/4Z2MD38vAcuGVgHqHdK/T9lezRwyKNbfZgqHpm5z0Ae0YxowXl2IyBVhVyPrbYo0IBoumZPhXATrAFVYDoO3L1tA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=BNaxItY/; arc=none smtp.client-ip=209.85.160.175
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-51758478240so32773561cf.2
+        for <linux-s390@vger.kernel.org>; Wed, 17 Jun 2026 08:41:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1781710864; x=1782315664; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ElWjBVhbO2IQzO43OlPWnTyijSop9myiCxf+4rjWyeA=;
+        b=BNaxItY/Nm3pO+SwE/+o2MlZBzHaWgJpo7MzlvPnaJQNym2Hhs45Ll2TS2NIVxJKV0
+         WHOrQv4H68aelwt7jHzHWBzlbdiAF7gs98RbwPKX+mRiztm8w53KKerlz9GSLV1up8LG
+         bmOQ9mrrParstns0khNNkLFXV6TNlug+U53Gz7inX6SUpiN9+nkl9Pi2Ljvz7sWNpxDn
+         YMS3uTRo71SKzAoL2uYVyb2blcGBrOaIlzAGhygX6ozdHMigdhRyk36MjUhXX2WUuyS2
+         6dXoB37uRHL97D4ONuc/aRoRTHfO8gMCbZaZrZDBV/nvrqieROGN1Z4vHordHBGQuj/3
+         Xr3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781710864; x=1782315664;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ElWjBVhbO2IQzO43OlPWnTyijSop9myiCxf+4rjWyeA=;
+        b=luBsrjdjw9TRommZlfg6vaI1NYHVi0h2yKJMoXM+OlgYwWQPB504pfWVVeqda2oza6
+         i6H0SLvPhk6V8mx8q83mjxwwG3pG8lq5uu+UnS//0ZicHh3WKtUrmRlseD5q4UmBmv/Z
+         V0H8PVsZEJOctPWXLksiCbw8a5m8Igl4JpjqHXDbCxIpD+HTdXu/hQXWn8wPxNoLxeat
+         M1xcl7hEE5DKThsTt6IN/wMJL/aGI0VoXyGvUVZJDiNKb8pLx73KnFONMapsslhbeL/L
+         /RFi5a9zECTXx0YJcndCb9fC4pZYGB7n/6oS0ix3Kvoz+zwnOS4/7Z8ah9H1+e78aidS
+         2PsQ==
+X-Forwarded-Encrypted: i=1; AFNElJ++6rNUOnIrY5ZcvL4Xlk2UyTkp6noE7kOrLQ5MCJOx1nksFDSDyF5Wv4zE9aVN7zOJa+CCwaJIvWKO@vger.kernel.org
+X-Gm-Message-State: AOJu0YzB3sCjNhx7d6Vm5T0nmlBOe+P3Y1wMriXB/6vHLBDZuIFaNte3
+	3TB7eHIrjbSWqwpicK6/hnquQocnhF+3pyShcoDGpLN+0C9yHP1Q4PMtnnaf9aR9hgg=
+X-Gm-Gg: Acq92OFWA0Mgev/cmNmcZcNCUt/6lgPIfhVbMAN46Sm+AQtAuv9jwGecXNtjwcMb1zf
+	xBGoLfucwjzt4/PGDeDe3vAfaWoziya4d4Vabjo0AwCpzDvTPibEFV3TmYSHpmRGNJ+1E9Uvasq
+	re8MH6Q0rwbqslcLFdJ+cLaTypoMI9aa/WTMm4SfAZDMMe+WLE+0szmdiUiWpa8KsCPNtnVOH7r
+	DswhusQcItHRPvCR79klStWjJ59PFk4fHVqYYmqWdcxQbOp/y+gTI4nOD3NKZIZkZ//FSzRRAy1
+	UDj4So56kb3kLG4wBqbtHKa9P/ETxfOBoctytxS5LizutIkFwaqhwgIK9CGLvkY266LZlBHaxFt
+	BmqbX+QlkLUhyBPUPmVGt+qzWL53kJxS5uL2HZtPAwYa3dsZl5UNjsTBb0gOAIcr2D355WSXi2y
+	h1s0dqz70Ot1eKbSTyPSYbMWQCjcSzmLD+fpyot2DHFaL6lEMLx5m2k6zReywunqyuIvf0qwZPP
+	ov9Ng==
+X-Received: by 2002:ac8:638b:0:b0:517:7620:20f9 with SMTP id d75a77b69052e-519a8e01895mr53967651cf.19.1781710863733;
+        Wed, 17 Jun 2026 08:41:03 -0700 (PDT)
+Received: from ziepe.ca (crbknf0213w-47-54-130-67.pppoe-dynamic.high-speed.nl.bellaliant.net. [47.54.130.67])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-517fb7a3c4asm171544001cf.14.2026.06.17.08.41.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2026 08:41:02 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1wZsNx-00000000iiO-3Q8i;
+	Wed, 17 Jun 2026 12:41:01 -0300
+Date: Wed, 17 Jun 2026 12:41:01 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Alexey Kardashevskiy <aik@amd.com>
+Cc: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
+	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
+	Robin Murphy <robin.murphy@arm.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Steven Price <steven.price@arm.com>,
+	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Pirko <jiri@resnulli.us>, Mostafa Saleh <smostafa@google.com>,
+	Petr Tesarik <ptesarik@suse.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Xu Yilun <yilun.xu@linux.intel.com>, linuxppc-dev@lists.ozlabs.org,
 	linux-s390@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jianhao.xu@seu.edu.cn,
-	runyu.xiao@seu.edu.cn,
-	stable@vger.kernel.org
-Subject: [PATCH net] net/smc: avoid recursive sk_callback_lock in listen data_ready
-Date: Wed, 17 Jun 2026 23:28:55 +0800
-Message-Id: <20260617152855.1039151-1-runyu.xiao@seu.edu.cn>
-X-Mailer: git-send-email 2.34.1
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>, x86@kernel.org,
+	Jiri Pirko <jiri@nvidia.com>, Michael Kelley <mhklinux@outlook.com>,
+	"Cheloha, Scott" <Scott.Cheloha@amd.com>
+Subject: Re: [PATCH v6 03/20] dma-direct: use DMA_ATTR_CC_SHARED in
+ alloc/free paths
+Message-ID: <20260617154101.GE3577091@ziepe.ca>
+References: <20260604083959.1265923-1-aneesh.kumar@kernel.org>
+ <20260604083959.1265923-4-aneesh.kumar@kernel.org>
+ <845d0c8a-6d51-47aa-8e0b-8381e733444a@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9ed633453d03a1kunm157301bb72f1b
-X-HM-MType: 10
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWRgWCB1ZQUpXWS1ZQUlXWQ8JGhUIEh9ZQVkaH0MeVhhNGEgeTU5JGU5DGVYeHw
-	5VEwETFhoSFyQUDg9ZV1kYEgtZQVlJSUpVSUlDVUlIQ1VDSVlXWRYaDxIVHRRZQVlPS0hVSktISk
-	9ITFVKS0tVSkJLS1kG
-DKIM-Signature: a=rsa-sha256;
-	b=cWjoZHjJZsgwMC8U+BcHZI9LO51sXKUkUPkOKBMogisrVHRqcwEuwt10tnF2WshNirD57HqR1FoKd/eVhnGznFf28BI6oktfN/WIRG4TybMGPxlz+XBEqtqIXx1Z+VS/TzhdzFoK7PyDVC6v33KfxYEDkB+HmrgHdRnyDeMd/xc=; s=default; c=relaxed/relaxed; d=seu.edu.cn; v=1;
-	bh=rMc5Y78GK3F3OqxRtJU+Ti2byo39bkwyB99aa0f2KMs=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <845d0c8a-6d51-47aa-8e0b-8381e733444a@amd.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[seu.edu.cn,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[seu.edu.cn:s=default];
+	R_DKIM_ALLOW(-0.20)[ziepe.ca:s=google];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
+	TAGGED_FROM(0.00)[bounces-20957-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:aik@amd.com,m:aneesh.kumar@kernel.org,m:iommu@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:robin.murphy@arm.com,m:m.szyprowski@samsung.com,m:will@kernel.org,m:maz@kernel.org,m:steven.price@arm.com,m:Suzuki.Poulose@arm.com,m:catalin.marinas@arm.com,m:jiri@resnulli.us,m:smostafa@google.com,m:ptesarik@suse.com,m:dan.j.williams@intel.com,m:yilun.xu@linux.intel.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-s390@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:x86@kernel.org,m:jiri@nvidia.com,m:mhklinux@outlook.com,m:Scott.Cheloha@amd.com,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20956-lists,linux-s390=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:alibuda@linux.alibaba.com,m:dust.li@linux.alibaba.com,m:sidraya@linux.ibm.com,m:wenjia@linux.ibm.com,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:mjambigi@linux.ibm.com,m:tonylu@linux.alibaba.com,m:guwen@linux.alibaba.com,m:horms@kernel.org,m:kgraul@linux.ibm.com,m:linux-rdma@vger.kernel.org,m:linux-s390@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:jianhao.xu@seu.edu.cn,m:runyu.xiao@seu.edu.cn,m:stable@vger.kernel.org,s:lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[runyu.xiao@seu.edu.cn,linux-s390@vger.kernel.org];
+	DMARC_NA(0.00)[ziepe.ca];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[jgg@ziepe.ca,linux-s390@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[34];
+	FREEMAIL_CC(0.00)[kernel.org,lists.linux.dev,lists.infradead.org,vger.kernel.org,arm.com,samsung.com,resnulli.us,google.com,suse.com,intel.com,linux.intel.com,lists.ozlabs.org,linux.ibm.com,ellerman.id.au,gmail.com,nvidia.com,outlook.com,amd.com];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[runyu.xiao@seu.edu.cn,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[seu.edu.cn:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	DKIM_TRACE(0.00)[ziepe.ca:+];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jgg@ziepe.ca,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,seu.edu.cn:dkim,seu.edu.cn:email,seu.edu.cn:mid,seu.edu.cn:from_mime]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp,ziepe.ca:dkim,ziepe.ca:mid,ziepe.ca:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: A35C669B1C1
+X-Rspamd-Queue-Id: 26D6D69B181
 
-smc_listen() installs smc_clcsock_data_ready() as the underlying TCP
-listen socket's sk_data_ready callback.  smc_clcsock_data_ready() then
-immediately takes sk_callback_lock before looking up the SMC listener and
-queuing smc_tcp_listen_work().
+On Wed, Jun 17, 2026 at 10:50:39AM +1000, Alexey Kardashevskiy wrote:
+> > @@ -193,16 +193,31 @@ void *dma_direct_alloc(struct device *dev, size_t size,
+> >   		dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
+> >   {
+> >   	bool remap = false, set_uncached = false;
+> > -	bool mark_mem_decrypt = true;
+> > +	bool mark_mem_decrypt = false;
+> >   	struct page *page;
+> >   	void *ret;
+> > +	/*
+> > +	 * DMA_ATTR_CC_SHARED is not a caller-visible dma_alloc_*()
+> > +	 * attribute. The direct allocator uses it internally after it has
+> > +	 * decided that the backing pages must be shared/decrypted, so the
+> > +	 * rest of the allocation path can consistently select DMA addresses,
+> > +	 * choose compatible pools and restore encryption on free.
+> 
+> Why this limit?
+> 
+> Context: I am looking for a memory pool for a few shared pages (to
+> do some guest<->host communication), SWIOTLB seems like the right
+> fit but swiotlb_alloc() is not exported and
+> dma_direct_alloc(DMA_ATTR_CC_SHARED) is not allowed.  Thanks,
 
-That is unsafe once the TCP listen socket is leaving TCP_LISTEN.  The TCP
-close/flush path can run the installed sk_data_ready callback with
-sk_callback_lock already held, so entering smc_clcsock_data_ready() again
-tries to take the same rwlock recursively in the same thread.  The nvmet
-TCP listener had to make the same state check before taking
-sk_callback_lock for this reason.
+Then setup your struct device so that the DMA API knows the
+guest<->host channel requires unecrypted and it will work correctly.
 
-This issue was found by our static analysis tool and then manually
-reviewed against the current tree.
+I think this is a reasonable API to use for that, and I was just
+advocating that hyperv should be using it too.
 
-The grounded PoC kept the SMC listen callback installation path:
+But it all relies on a properly setup struct device.
 
-  smc_listen()
-  smc_clcsock_replace_cb()
-  sk_data_ready = smc_clcsock_data_ready()
-
-It then modeled the close/flush carrier that invokes the installed
-sk_data_ready callback while sk_callback_lock is already held.  Lockdep
-reported the same-thread recursive acquisition:
-
-  WARNING: possible recursive locking detected
-  smc_clcsock_data_ready+0xa/0x4d [vuln_msv]
-  smc_close_flush_work+0x1f/0x30 [vuln_msv]
-  *** DEADLOCK ***
-
-Return before taking sk_callback_lock when the underlying TCP socket is no
-longer in TCP_LISTEN.  In that state there is no listen accept work to
-queue for SMC, and avoiding the callback lock mirrors the fix used by the
-TCP nvmet listener.
-
-Fixes: 0558226cebee ("net/smc: Fix slab-out-of-bounds issue in fallback")
-Cc: stable@vger.kernel.org
-Signed-off-by: Runyu Xiao <runyu.xiao@seu.edu.cn>
----
- net/smc/af_smc.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
-index 6421c2e1c84d..1af4e3c333ff 100644
---- a/net/smc/af_smc.c
-+++ b/net/smc/af_smc.c
-@@ -2631,6 +2631,9 @@ static void smc_clcsock_data_ready(struct sock *listen_clcsock)
- {
- 	struct smc_sock *lsmc;
- 
-+	if (READ_ONCE(listen_clcsock->sk_state) != TCP_LISTEN)
-+		return;
-+
- 	read_lock_bh(&listen_clcsock->sk_callback_lock);
- 	lsmc = smc_clcsock_user_data(listen_clcsock);
- 	if (!lsmc)
--- 
-2.34.1
-
+Jason
 
