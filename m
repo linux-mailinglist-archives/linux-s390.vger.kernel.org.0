@@ -1,224 +1,126 @@
-Return-Path: <linux-s390+bounces-20960-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20961-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 7WqxGQwKM2oQ8wUAu9opvQ
-	(envelope-from <linux-s390+bounces-20960-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2026 22:56:44 +0200
+	id 8RezB84sM2qq+AUAu9opvQ
+	(envelope-from <linux-s390+bounces-20961-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2026 01:25:02 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC5D069C721
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2026 22:56:43 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 664C569CCB5
+	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2026 01:25:01 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=C+JgIxG8;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20960-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20960-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b="YENY/Sh3";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20961-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-20961-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 125593055D64
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2026 20:56:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B49B03037B9F
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2026 23:24:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B45593EF0C2;
-	Wed, 17 Jun 2026 20:56:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8D7B3AFD0E;
+	Wed, 17 Jun 2026 23:24:57 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17243B71D1;
-	Wed, 17 Jun 2026 20:56:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC740313539;
+	Wed, 17 Jun 2026 23:24:56 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781729776; cv=none; b=TKEycs9WspM1qFGxQ8Dww2ckoKTtC9xcIME80Zw3UYefeMNqHdi0a3yyUul8vdVoF8zEx0kwLt4Ouejlj1MfslwLsJ7Ae5viB0ESkK+o/AoQMx71qUfBkHhCC725tpOYcEZ9Gt3+24g9hh7O+p3lThUYZxEVvjpPUGUjdWg+UsY=
+	t=1781738697; cv=none; b=j9vtC96NDMIen1Qq66K/rFpOoLUAm3iglXz2gkzcSBhp75RsVEybcMEjKZom/gkli2As/KPYa3FR3qhP7BxhTfHG/gxzDd4pAsaweJw4faEXDRxgtBCYyBf7nTZR80aRINphllnWH5C+H4uqAjk8gOzjFfXVcWI2gEdgqIOAu3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781729776; c=relaxed/simple;
-	bh=GUdIrNEWqIai7CCIg0CZjwnmvqMUo8fANAFyMnvTmo4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z7LXtRr6leDLz5XmsJ16ng7HWs9/lsxWNNfEmrSne0JF31TatkOT2qb+A+Fvyw0kvJHI47lmoMqIn2WMCy+uPVwbahhGs9zkdbkF+Smy7HMKwN7vp9f9ICQcSslViLYbFzjGzuU+TQoifr+a5UX7R1aOyIjJQ/1TAaBvN9QieuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C+JgIxG8; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 093671F000E9;
-	Wed, 17 Jun 2026 20:56:02 +0000 (UTC)
+	s=arc-20240116; t=1781738697; c=relaxed/simple;
+	bh=+eI17Fy+wVIe18UVPp034CydNAaGOahSn2tIGzBPJCU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VTgvhzpbe/7SwHf+yrtZXkSkB4ASDJ5Y6Jr8Vn0H3gMsKbwjSRW1W591GduKwz0xr9xewBt62sUfj/cDmZ+ZbkZgSAFY1FiaPwvjIoUjbBVu7oJtkLfSprNd9meJ/vHBeb1Qvr6PwjAF5gEy5hn49MXvdDQa+QP15vkKUBHxkuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YENY/Sh3; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B561C1F000E9;
+	Wed, 17 Jun 2026 23:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781729774;
-	bh=A1dicipAfT1NcihzDB7nuXRVGuGocmFyEPV9zA3acUw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=C+JgIxG8rwASDaFmpA6Zh29sHsXjVxomoiRH3OhPa889meEEW3u5FNT+dBtjSW/hw
-	 D6sNaxoXruVEdJRs2TCBxuP28EcnIXSc5VAkaakRwBoxec3mO22QwXPEm1o8g68Ynd
-	 8T8I2IgLVzXJB6nmke5oXdYS2A9totgcEQtmZtRlGO3HONE15zQQ/88bLpmm74eGQi
-	 DWjnBfcuUlDaTgEjHaexYiGs3ETfD/34gnzgEP8hZqrBB2wyy4XzJUiGfxVPSxD1H2
-	 c194yBAZig9SafF4ckJpaak40F8YXNFSE9LJCbVAb2fsNOLIPxGH8mSNw03gXnsF9u
-	 w4PgjTaHOYmEg==
-Message-ID: <01cc3ac9-c89e-491c-86ed-4c4c90809075@kernel.org>
-Date: Wed, 17 Jun 2026 22:56:00 +0200
+	s=k20260515; t=1781738696;
+	bh=r5uSA66J9ABM/9yH9MNLyLHNRWzKIhhr4br7s8vfmak=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=YENY/Sh3Yed6hgB9DUIcwtRPpc0H+4BrXWXFxaL/P54FnFkM8icFFcQLmWtAvl4tJ
+	 ldF2DhiYUCTuptBfefapfZopXADowAkgq71dMni6QSLpvEDkHSeN9qI3q3CzECu/GH
+	 YOPI76roAKAOh6uBQgfYVmQXNlNPOWT95WlCX0d0oW8Rc6gKUSXV4HeA8owkpBu7k0
+	 rkXneckPctgOlTl/SIv6YM9GtnDvOh6ndBw4kBDTB45zcW7UNzfvsTqbbEuiuD308x
+	 eT3ebr5lWS+l1GGgtzxSXUwbMDQzi+hNVlz21ENIP/5Few58KctkEFHe+r36HmDZEP
+	 W/RtdagPbHo0w==
+Date: Wed, 17 Jun 2026 16:24:54 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Bryam Vargas via B4 Relay <devnull+hexlabsecurity.proton.me@kernel.org>
+Cc: hexlabsecurity@proton.me, Wenjia Zhang <wenjia@linux.ibm.com>, Dust Li
+ <dust.li@linux.alibaba.com>, "D. Wythe" <alibuda@linux.alibaba.com>,
+ Sidraya Jayagond <sidraya@linux.ibm.com>, Eric Dumazet
+ <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>, Mahanta
+ Jambigi <mjambigi@linux.ibm.com>, Wen Gu <guwen@linux.alibaba.com>, Simon
+ Horman <horms@kernel.org>, netdev@vger.kernel.org, Ursula Braun
+ <ubraun@linux.ibm.com>, Stefan Raspl <raspl@linux.ibm.com>,
+ linux-s390@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+ linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, Tony Lu
+ <tonylu@linux.alibaba.com>
+Subject: Re: [PATCH v3 0/3] net/smc: bound wire-controlled CDC cursors
+ against the local buffers
+Message-ID: <20260617162454.33e95c2f@kernel.org>
+In-Reply-To: <20260614-b4-disp-edd64be9-v3-0-551fa514257e@proton.me>
+References: <20260614-b4-disp-edd64be9-v3-0-551fa514257e@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/19] init: discoverable root partitions, a.k.a. an
- omittable "root=" cmdline option
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Davidlohr Bueso <dave@stgolabs.net>,
- Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
- linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
- linux-efi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- Richard Henderson <richard.henderson@linaro.org>,
- Matt Turner <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>,
- linux-alpha@vger.kernel.org, Vineet Gupta <vgupta@kernel.org>,
- linux-snps-arc@lists.infradead.org, Russell King <linux@armlinux.org.uk>,
- linux-arm-kernel@lists.infradead.org,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- loongarch@lists.linux.dev, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- linux-mips@vger.kernel.org,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org,
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>, linux-doc@vger.kernel.org
-References: <20260615-discoverable-root_partitions-v1-0-39c78fac42e2@kernel.org>
- <20260617-irritation-rollen-wirst-7d636cbfec92@brauner>
-From: Vincent Mailhol <mailhol@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=mailhol@kernel.org; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- JFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbEBrZXJuZWwub3JnPsKZBBMWCgBBFiEE7Y9wBXTm
- fyDldOjiq1/riG27mcIFAmdfB/kCGwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcC
- F4AACgkQq1/riG27mcKBHgEAygbvORJOfMHGlq5lQhZkDnaUXbpZhxirxkAHwTypHr4A/joI
- 2wLjgTCm5I2Z3zB8hqJu+OeFPXZFWGTuk0e2wT4JzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrb
- YZzu0JG5w8gxE6EtQe6LmxKMqP6EyR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDl
- dOjiq1/riG27mcIFAmceMvMCGwwFCQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8V
- zsZwr/S44HCzcz5+jkxnVVQ5LZ4BANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <20260617-irritation-rollen-wirst-7d636cbfec92@brauner>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.16 / 15.00];
+X-Spamd-Result: default: False [-3.66 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20960-lists,linux-s390=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:brauner@kernel.org,m:axboe@kernel.dk,m:dave@stgolabs.net,m:viro@zeniv.linux.org.uk,m:jack@suse.cz,m:linux-kernel@vger.kernel.org,m:linux-block@vger.kernel.org,m:linux-efi@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:richard.henderson@linaro.org,m:mattst88@gmail.com,m:linmag7@gmail.com,m:linux-alpha@vger.kernel.org,m:vgupta@kernel.org,m:linux-snps-arc@lists.infradead.org,m:linux@armlinux.org.uk,m:linux-arm-kernel@lists.infradead.org,m:catalin.marinas@arm.com,m:will@kernel.org,m:chenhuacai@kernel.org,m:kernel@xen0n.name,m:loongarch@lists.linux.dev,m:tsbogend@alpha.franken.de,m:linux-mips@vger.kernel.org,m:James.Bottomley@hansenpartnership.com,m:deller@gmx.de,m:linux-parisc@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:linuxppc-dev@lists.ozlabs.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:linux-riscv@lists.infradead.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:linux-s390@vger.kernel.org,m:tgl
- x@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:x86@kernel.org,m:corbet@lwn.net,m:skhan@linuxfoundation.org,m:linux-doc@vger.kernel.org,s:lists@lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[mailhol@kernel.org,linux-s390@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[46];
-	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-20961-lists,linux-s390=lfdr.de];
+	FORGED_SENDER(0.00)[kuba@kernel.org,linux-s390@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[19];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_CC(0.00)[kernel.dk,stgolabs.net,zeniv.linux.org.uk,suse.cz,vger.kernel.org,linaro.org,gmail.com,kernel.org,lists.infradead.org,armlinux.org.uk,arm.com,xen0n.name,lists.linux.dev,alpha.franken.de,hansenpartnership.com,gmx.de,linux.ibm.com,ellerman.id.au,lists.ozlabs.org,dabbelt.com,eecs.berkeley.edu,redhat.com,alien8.de,linux.intel.com,lwn.net,linuxfoundation.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:devnull+hexlabsecurity.proton.me@kernel.org,m:hexlabsecurity@proton.me,m:wenjia@linux.ibm.com,m:dust.li@linux.alibaba.com,m:alibuda@linux.alibaba.com,m:sidraya@linux.ibm.com,m:edumazet@google.com,m:davem@davemloft.net,m:mjambigi@linux.ibm.com,m:guwen@linux.alibaba.com,m:horms@kernel.org,m:netdev@vger.kernel.org,m:ubraun@linux.ibm.com,m:raspl@linux.ibm.com,m:linux-s390@vger.kernel.org,m:pabeni@redhat.com,m:linux-kernel@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:tonylu@linux.alibaba.com,m:devnull@kernel.org,s:lists@lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mailhol@kernel.org,linux-s390@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[kuba@kernel.org,linux-s390@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390];
+	TAGGED_RCPT(0.00)[linux-s390,hexlabsecurity.proton.me];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: BC5D069C721
+X-Rspamd-Queue-Id: 664C569CCB5
 
-On 17/06/2026 at 14:41, Christian Brauner wrote:
-> On Mon, Jun 15, 2026 at 06:08:56PM +0200, Vincent Mailhol wrote:
->> DPS [1] defines GPT partition type UUIDs for OS partitions and
->> attributes that control whether such partitions should be
->> automatically discovered. The specification states that:
->>
->>   The OS can discover and mount the necessary file systems with a
->>   non-existent or incomplete /etc/fstab file and without the root=
->>   kernel command line option.
->>
->> DPS is already implemented in systemd-gpt-auto-generator [2], which,
->> when embedded in an initrd, indeed allows automatic detection of the
->> root filesystem through its partition type UUID.
->>
->> This series adds this discovery feature directly into the kernel so
->> that people who are not using systemd or not using an initrd can still
->> benefit from it. The implementation follows the same model as
->> systemd-gpt-auto-generator:
-> 
-> I happen to co-maintain the DPS. It is userspace policy and complex
-> userspace policy at that and does not belong into the kernel.
-> 
-> This also implements a really tiny portion of the spec. It deals with a
-> lot more complex concepts such as automatic partitioning during
-> installation, verity, LUKS, containers. This is really not intended for
-> the kernel at all. I mean, it's great that this spec is being used but I
-> do not want this in the kernel just for the sake of auto-discovery.
+On Sun, 14 Jun 2026 03:23:29 -0500 Bryam Vargas via B4 Relay wrote:
+> A peer's CDC producer/consumer cursors are copied from the wire and used,
+> without an upper bound against the local buffers, as (a) a raw index into the
+> RMB on the urgent path, (b) the receive length in smc_rx_recvmsg(), and (c) the
+> send length in smc_tx_sendmsg() on the SMC-D DMB-merge path.  A malicious or
+> buggy peer can forge a cursor so each of these runs past the relevant buffer:
+> an out-of-bounds read of adjacent kernel memory (disclosed to the peer) on the
+> receive/urgent side, and an out-of-bounds write of attacker-influenced length
+> and content on the send side.
 
-The implementation of a tiny portion is voluntary. If I can draw a
-parallel, it would be the same as saying that the root= cmdline option
-is a tiny portion of what an fstab can do.
-
-Yes it does not manage the LUKS, containers and so on, the same way it
-is not possible to directly boot those things directly from the kernel.
-
-So, I don't think this conflicts with the actual userland
-implementations, the same way you can add root= to your command line and
-still have an initrd next to it.
-
-I did not intend to write this as a replacement but just as a complement
-to fill the gap of kernel with no initrd.
-
-> The DPS is completely generic and can be implemented by tooling other
-> than systemd (util-linux implements it and so does refind iirc). I think
-> not wanting to use or build alternative userspace tooling for this is a
-> really weak argument for pushing this into the kernel.
-
-Well, I might explain to you where I come from. Time to time, I mess up
-my configuration. When this issue is in a userland config file (e.g. bad
-fstab), the recovery is always easy.
-
-But when I mess up the bootloader firmware configuration (e.g. grub,
-u-boot, edk2), the fix is always painful. I have to fight with a shell
-with which I am not familiar with to figure out what the correct
-configuration is.
-
-And an initrd would help but:
-
- - it is still one more file to look for pass as a parameter
- - on some machine I do not have one anyway
-
-I think it would have been very neet to have a method to boot a kernel
-with zero config (understand here: no cmdline, no initrd) and I find out
-that DPS could achieve that if just a tiny part of it were implemented
-in the kernel.
-
-For example, in edk2, I would be able to just browse the disk from the
-"Boot from file" menu and select a kernel. Currently it panics because
-no configuration is attached. With DPS, we could have it boot linux from
-that menu. All in a graphical interface, with just up/down arrows and
-one enter keypress.
-
-And this is my motivation. This non LUKS root read-only part of the DPS
-is the only piece which makes sense for me in the kernel. Not that I
-don't *want* to implement it in userland, but just that it doesn't
-achieve what would be helpful to me (and I guess others).
-
-I thought I wouldn't be the only one in the world to see value in that
-this is why I posted it.
-
-
-Yours sincerely,
-Vincent Mailhol
-
+Once again, SMC maintainers -- please review.
+-- 
+mping: SHARED MEMORY COMMUNICATIONS (SMC) SOCKETS
 
