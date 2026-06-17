@@ -1,225 +1,262 @@
-Return-Path: <linux-s390+bounces-20927-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20930-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id GvpBH6RJMmqiyAUAu9opvQ
-	(envelope-from <linux-s390+bounces-20927-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2026 09:15:48 +0200
+	id 1l4hOzZvMmqlzwUAu9opvQ
+	(envelope-from <linux-s390+bounces-20930-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2026 11:56:06 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73D0269719B
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2026 09:15:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 94738698287
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2026 11:56:06 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=arm.com header.s=foss header.b=e1btydOr;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20927-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20927-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=arm.com;
+	dkim=pass header.d=ibm.com header.s=pp1 header.b="gTPhHiC/";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20930-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20930-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 44F133020D42
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2026 07:15:46 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A2C01306CFCC
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2026 09:48:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAA0E3ACF15;
-	Wed, 17 Jun 2026 07:15:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1D583CD8DE;
+	Wed, 17 Jun 2026 09:48:37 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A163C347503;
-	Wed, 17 Jun 2026 07:15:42 +0000 (UTC)
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D1D3CB2C7
+	for <linux-s390@vger.kernel.org>; Wed, 17 Jun 2026 09:48:36 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781680545; cv=none; b=MGyKe8g/1lAfaS/3XbWHi1nGN5DLHrzCAyuvXXSiAfuNjiNnbyc/KQwKM5Ep7bEA7Jjtez+w66FAS2dw9nhakduLlcD6wgAGVo+q2z7sQMsjWDzq/NTYMOhJ0yqGpD3zYhh3Q8ylMEBe6oO3eGVpB0TLr93/LF9xb1aoN+tbHc4=
+	t=1781689717; cv=none; b=qPkR9xczpdzEOqPVZs1JJtOMhAcKGc2mzr9K6bfGGVWbVGbGJzL1QjH8NvAJyyf9gB1CH05Jng3ojRhAKquwgbH/fa9umNJAVkXrIxzbBY4PzwNf2aRrCizzDsNsW09sBcjQOojJqc2cZzTEx6YtRRFbUhm1+ZMyg45m7S4uDm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781680545; c=relaxed/simple;
-	bh=uWOLKC73XAcqNC2asyzbDC2LmPMSYlm0M9c2sUQ/3Wg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fG9pFy1FoYkIMLxv1wcw504kp6Xjk3rpoQcrhY+2CXSbYA43iyGw5T/aIwmUSBzunm8138fKQQg4MioBaL6oj+XH0SN0Z9dlBSjM0flnDo0W8wTJEXkPTRbvDl+3YFR2ubyCDESd2m2pIzSATb6v3AkulxwN4dD74cl6H9STLhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=e1btydOr; arc=none smtp.client-ip=217.140.110.172
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E1F84483F;
-	Wed, 17 Jun 2026 00:15:36 -0700 (PDT)
-Received: from [10.1.27.69] (e127648.arm.com [10.1.27.69])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 66F003F915;
-	Wed, 17 Jun 2026 00:15:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1781680541; bh=uWOLKC73XAcqNC2asyzbDC2LmPMSYlm0M9c2sUQ/3Wg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=e1btydOrBoulh5hrB8lrsdCYaAbaVveBaJCE1h3pSY6iEEIsHOzcY0XR3DXv3UjYI
-	 sXQXdNgztwk4n1UHgoX2GOxqIkCKVREawbisbBChcWhmOiuz5JOhbFQPfF3NT67qWG
-	 R50KTx5b2dsF5rgUZpAVUpkuujA8eNrswkADY5WA=
-Message-ID: <445a6ab5-3574-4493-9187-701ee7ea7c28@arm.com>
-Date: Wed, 17 Jun 2026 08:15:37 +0100
+	s=arc-20240116; t=1781689717; c=relaxed/simple;
+	bh=D88kjqW7MbW4sT6SmI4kYYNjmIh0C7QC/LFN1O1sk7g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b7PEkhX3dJ4pjvv8IzkgoZIHhBFhTbfqBG+uXtMG4Ev33x/sw8L9BBrbawAqeW+mOQ0VqGE9j7qJjNZuq4AgHqGZQjHT0+ctr5SdCQK1a42oD/Pb12FniPCuV9Yz3yAw9rcyyJ5DH09PepjSwc64ivMI65AhEPpsJqJnFcy3zq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gTPhHiC/; arc=none smtp.client-ip=148.163.158.5
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65H8nQ2G4023014;
+	Wed, 17 Jun 2026 09:48:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=Bt0dikeLsoR/i1Gzk/JuVbDRbbQYMANKRJNE4ak7Y
+	b4=; b=gTPhHiC/MfL3nmBhuVzfFgwdBEufDNOjFaEMRyvg4CvCTkgDXs8ZxdBPx
+	1GI0dlLafbDmW4WwwLlgLPYfCuYJQMbF39bFF6ZBOA+vZlhBpJGAJqecLFR2gbtx
+	ovJAIgwsT8eSqDMcJzTOLGEJZDKLpKSaOxVgZZfajJwDEhnU50mKyj39sa5e6cgz
+	fmlrwTTKqyYSlCj8weZ/AFQ3K9FdzvO7uzy6xmLkrAEmtOO+KrCMonGCBok5x8o5
+	DTVHNwzPDgXbiEsATh70IIzN4H+0f+5IOOKQrpe+hhw9v59+jH3W8fX+9QhGSpgw
+	B4eDHCkAS1jhchCzO0swmK+rODHmw==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4eueqx289p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Jun 2026 09:48:25 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65H9Yc4V028281;
+	Wed, 17 Jun 2026 09:48:24 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4eudvaahdm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Jun 2026 09:48:24 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65H9mL8c14483790
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 17 Jun 2026 09:48:21 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1DAB72004B;
+	Wed, 17 Jun 2026 09:48:21 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E1DDC20043;
+	Wed, 17 Jun 2026 09:48:20 +0000 (GMT)
+Received: from funtu2.ehn-de.ibm.com (unknown [9.224.92.54])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 17 Jun 2026 09:48:20 +0000 (GMT)
+From: Harald Freudenberger <freude@linux.ibm.com>
+To: richard.henderson@linaro.org, iii@linux.ibm.com, david@kernel.org,
+        thuth@redhat.com, berrange@redhat.com
+Cc: qemu-s390x@nongnu.org, qemu-devel@nongnu.org,
+        linux390-list@tuxmaker.boeblingen.de.ibm.com,
+        linux-s390@vger.kernel.org, dengler@linux.ibm.com,
+        borntraeger@linux.ibm.com, fcallies@linux.ibm.com, cohuck@redhat.com
+Subject: [PATCH v7 00/17] target/s390x: Extend qemu CPACF support
+Date: Wed, 17 Jun 2026 11:48:03 +0200
+Message-ID: <20260617094820.34402-1-freude@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/5] s390/idle: CPU idle driver
-To: Mete Durlu <meted@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>,
- Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- Thomas Gleixner <tglx@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Daniel Lezcano <daniel.lezcano@kernel.org>
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
- Ilya Leoshkevich <iii@linux.ibm.com>, linux-s390@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20260609-idledriver-v2-0-21c2f581d11f@linux.ibm.com>
- <0e6ff23c-b509-40eb-87f3-7b04fb066edf@arm.com>
- <93743121-2f6f-441b-8675-4eaa92647b4d@linux.ibm.com>
-Content-Language: en-US
-From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <93743121-2f6f-441b-8675-4eaa92647b4d@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE3MDA5MiBTYWx0ZWRfXzPC6COVdfMmk
+ /yDpP+hDdDHTBEY5L1Tg6ehEsBjIOGqr/Ly9hdym8S+sDXrrrjhoeJ24OTVsjM/4MfRCbaTZrYV
+ 6XS/QOQfUWM/8owPXTJ3gMhHo+gYzqDwk8h9e0PT4kmN9xRtuZeKKHSlGhVkE+7qSF779B8xVa2
+ odKcnqLmqK/smRVPg+ptE9xjf2xpYcHr46GZw/twziZg1TvaLBZCmDL7E/hL3Q8/M2aVCW/YFzQ
+ MdPfHtmDvfiHnT8azBGwUI1oYDGh27mgKFxn8SsoUZtQYyNdFTM8E/0BYzZufIoDLhd/I2H+rYx
+ 1rbYw8eBavHL8TcBil552BBBVxs4zPI1mNu1GGcU7ZFMLvCIRxwfFKddVzRqbisDwpq/aSFVn7A
+ 9Aw74jy+SsEqCF5ybgn8bZlfFpNRRGb3MqkPjYdQ3L9B5oBVP2rwcSpt6IrHv7en07HybR1lE9z
+ EZLGv4Lhf93giQqXoWA==
+X-Proofpoint-GUID: 8XpdZH2sJOLiB-3XV-5e-Py5TRBEHSlb
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE3MDA5MiBTYWx0ZWRfX5u+yvr2BKYHK
+ eNDhrFLlCyPoYSfmmqnVu7EXc3gS+dZBKVdJRa7FoNfARqWmXIdgYN6eUVyjEpDB6I7EK3VYVd4
+ 8fOjuolgITMq/x0ZcRlTTJI6WdUJNmU=
+X-Proofpoint-ORIG-GUID: 8XpdZH2sJOLiB-3XV-5e-Py5TRBEHSlb
+X-Authority-Analysis: v=2.4 cv=auGCzyZV c=1 sm=1 tr=0 ts=6a326d69 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=Y2IxJ9c9Rs8Kov3niI8_:22 a=8isNsbLcrRSMNWPVaYIA:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-17_01,2026-06-16_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 clxscore=1015 priorityscore=1501 suspectscore=0 impostorscore=0
+ spamscore=0 lowpriorityscore=0 adultscore=0 malwarescore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606170092
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[arm.com,none];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_MISSING_CHARSET(0.50)[];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[arm.com:s=foss];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-20927-lists,linux-s390=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:meted@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:svens@linux.ibm.com,m:anna-maria@linutronix.de,m:frederic@kernel.org,m:mingo@kernel.org,m:tglx@kernel.org,m:rafael@kernel.org,m:daniel.lezcano@kernel.org,m:borntraeger@linux.ibm.com,m:iii@linux.ibm.com,m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pm@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[christian.loehle@arm.com,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[arm.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_FROM(0.00)[bounces-20930-lists,linux-s390=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:richard.henderson@linaro.org,m:iii@linux.ibm.com,m:david@kernel.org,m:thuth@redhat.com,m:berrange@redhat.com,m:qemu-s390x@nongnu.org,m:qemu-devel@nongnu.org,m:linux390-list@tuxmaker.boeblingen.de.ibm.com,m:linux-s390@vger.kernel.org,m:dengler@linux.ibm.com,m:borntraeger@linux.ibm.com,m:fcallies@linux.ibm.com,m:cohuck@redhat.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[freude@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FROM_NEQ_ENVFROM(0.00)[freude@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[christian.loehle@arm.com,linux-s390@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	ALIAS_RESOLVED(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,linux.ibm.com:from_mime,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp];
+	TO_DN_NONE(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 73D0269719B
+X-Rspamd-Queue-Id: 94738698287
 
-On 6/10/26 21:23, Mete Durlu wrote:
-> On 6/9/26 5:47 PM, Christian Loehle wrote:
->> On 6/9/26 14:24, Mete Durlu wrote:
->>> v1 -> v2:
->>>
->>> * Add idle driver enteries to MAINTAINERS file (Christian Loehle)
->>> * Remove extra line break left in drivers/cpuidle/Kconfig.s390
->>>    (Christian Loehle)
->>>
->>> This patch series introduces a CPU idle driver for s390
->>> architecture that leverages the existing cpu idle infrastructure and
->>> TEO (Timer Events Oriented) governor to optimize idle state selection
->>> based on timer events and interrupt patterns.
->>
->> So if (according to v1) there's no data (yet) that teo is much preferred,
->> I would remove all mentions of it in code and patch descriptions?
->> A cpuidle driver requiring a specific governor sort-of violates the
->> abstraction.
-> 
-> True, s/TEO governor/idle governor/g + s/TEO/idle governor/g should
-> be good enough.
-> 
->> In case teo does work much better for you, which I wouldn't doubt for
->> a second from what your system looks like, it would be nice to present
->> some data on it. Additionally I think setting it in the defconfig alone
->> is probably enough?
->>
-> 
-> I ran a quick menu vs teo run on an LPAR.
-> There was no significant change between the results of the benchmarks
-> except for slightly higher cpu utilization when using menu governor. I
-> can put it down to the cover letter. The only noticeable change is on my
-> micro benchmark where I use epoll_wait() to make two threads on
-> different cores ping each other.
-> 
-> micro-benchmark |   teo    |   menu
-> -------------------------------------
-> avg time        | ~21.6sec | ~24.3sec
-> 
-> Idle framework tries to find the specified governor in the driver struct
-> but if it can't find it or no governor was specified it uses the next
-> available one, so setting teo on defconfig and disabling rest of the
-> governors can be good enough to pick teo.
-> 
+This patch series extends the s390 qemu CPACF support to be able to
+run a subset of the CPACF instruction cross platform. There have been
+requests on the kernel crypto mailing list about a way to test
+s390 specific crypto implementations. For example a way to test
+s390 CPACF exploitation code like the s390_aes.ko kernel module.
 
-Thanks for testing!
+So here now is a set of patches verified on x86 and s390 which
+over (slow but working) support for a subset of the subfunctions of
+some of the CPACF instructions.
 
-> 
->>> - Configuration
->>> -----------------------------------------------------------------------
->>>
->>> Idle state parameters are tuned per hypervisor type after benchmarks:
->>>
->>> **LPAR:**
->>> - Polling: 5us target residency, 0us exit latency
->>> - EW: 5us target residency, 5us exit latency
->>>
->>> **KVM/z/VM:**
->>> - Polling: 1us target residency, 0us exit latency
->>> - EW: 1us target residency, 1us exit latency
->>>
->> I think this would also be useful in cpuidle-s390.c in particular the
->> different residency+latency values for LPAR and KVM/z/VM and what they aim
->> to achieve for you.
-> 
-> We can put down a comment like below;
-> 
-> /*
->  * After various benchmark runs the tuneables for idle driver has shown
->  * the best performance with the following values;
->  * for LPAR:
->  * - Polling: 5us target residency, 0us exit latency
->  * - EW: 5us target residency, 5us exit latency
->  *
->  * for KVM/z/VM:
->  * - Polling: 1us target residency, 0us exit latency
->  * - EW: 1us target residency, 1us exit latency
->  */
-> 
-> Is that what you are looking for or something more extensive to cover
-> what sort of behavior it causes and why it benefits the performance?
-> I wouldn't really like to put down lengthy comments here to be honest.
+Test: As this series is more or less complete, a full blown linux
+can be run and the 'usual' in-kernel crpyto modules will be
+automatically loaded which run a bunch of test cases. So there
+is now support for these kernel modules:
+* sha256_s390x (autoloaded, sha256)
+* sha512_s390x (autoloaded, sha512)
+* aes_s390x (autoloaded, clear key aes ecb, cbc, ctr, xts)
+* pkey_pckmo (autoloaded, derive AES protected key from clear key)
+* paes_s390x (not autoloaded, protected key aes ecb, cbc, ctr, xts)
+All these modules run selftests if configured by the kernel (which is
+enabled by default). Failures are reported via syslog. Additionally
+the aes testcases from libica can be run either inside such an qemu
+environment or with a static build executed with the qemu tcg
+application qemu-s390x --cpu max <static-build-libica-test>.
 
-Why not?
-At least to me the values are hard to follow and without knowing what they
-represent.
-For example is this actually the worst case exit latency for these systems?
-Also from a cpuidle perspective residency == latency isn't outright wrong
-but certainly always a little suspicious.
+Changelog:
+v1: Initial version with
+    - Related code restructured
+    - Support KIMD SHA512 and thus SHA256
+    - Support KMC AES-128, AES-192 and AES-256 and thus have basic AES
+      support (ECB mode) enabled.
+    - Support PCC Compute-XTS-Parameter-AES-128 and
+      Compute-XTS-Parameter-AES-256 but only for block sequence number
+      0. This is a requirement for the next step:
+    - Support KM XTS-AES-128 and KM XTS-AES-256. Together with the
+      minimal PCC support this enables AES-XTS CPACF acceleration.
+v2: - Basic PCKMO support to be able to 'derive' an AES protected key
+      from clear key. See header details.
+    - Support protected key AES-ECB.
+    - Support protected key AES-CBC.
+    - Minimal protected key AES-XTS support for CPACF PCC.
+    - Support protected key AES-XTS.
+    - Support AES-CTR.
+    - Support protected key AES-CTR.
+v3: - Reordered patches as suggested by Finn.
+    - One small bug fix in CPACF_aes.c related to address translation.
+v4: - Rename of the parameters based on feedback from Janosch to
+      make clear these are registers or ptrs to registers.
+      Added Tested by from Holger. Fixed typo "face" -> "fake".
+v5: - Add documentation file docs/system/s390x/cpacf.rst which
+      describes the state of the CPACF instructions and which
+      functions are covered when this series is applied.
+      First version sent to public mailing list qemu-s390x.
+v6: - Rebase/rework to build on current qemu head.
+    - Add docs/system/s390x/cpacf.rst to target-s390x.rst
+    - New file crypto/aes-helpers.c with some simple
+      functions to support AES modes CBC, CTR and XTS.
+    - Slight rewrite of the s390x CPACF implementations to
+      use these generic AES mode implementations.
+v7: - Update on docs/system/s390x/cpacf.rst to mention
+      the zArchicteture Principles of Operation document
+      which describes all these CPAC instructions.
 
-> 
->> Additionally polling is initialised to 0/0 by poll_state.c, so I don't know
->> where you're taking these values from?
-> 
-> Having a look at the implementation of poll_idle() in poll_state.c.
-> The polling time limit (target_residency) is acquired from
-> cpuidle_poll_time(), which tries to find an enabled state deeper than
-> polling state and returns its target_residency. Since we only have two
-> states, it automatically means EW state's target_residency, or
-> IDLE_POLL_MAX if it is disabled.
+Harald Freudenberger (17):
+  target/s390x: Rework s390 cpacf implementations
+  target/s390x: Move cpacf sha512 code into a new file
+  target/s390x: Support cpacf sha256
+  target/s390x: Support AES ECB for cpacf km instruction
+  target/s390x: Support AES CBC for cpacf kmc instruction
+  target/s390x: Support AES CTR for cpacf kmctr instruction
+  target/s390x: Minimal AES XTS support for cpacf pcc instruction
+  target/s390x: Support AES XTS for cpacf km instruction
+  target/s390x: Support pckmo encrypt AES subfunctions
+  target/s390x: Support protected key AES ECB for cpacf km instruction
+  target/s390x: Support protected key AES CBC for cpacf kmc instruction
+  target/s390x: Support protected key AES CTR for cpacf kmctr
+    instruction
+  target/s390x: Minimal protected key AES XTS support for cpacf pcc
+    instruction
+  target/s390x: Support protected key AES XTS for cpacf km instruction
+  docs/s390: Document CPACF instructions support
+  crypto: Add aes-helpers file to support some AES modes
+  target/s390x: Use generic AES helper functions
 
-I agree that cpuidle_poll_time() can derive the polling time limit from a
-deeper enabled state, but it only does that for states with
-target_residency_ns >= CPUIDLE_POLL_MIN (10us). With the proposed s390 EW
-values of 1us/5us, that state is skipped and the poll limit falls
-back to CPUIDLE_POLL_MAX (TICK_NSEC / 16).
+ crypto/aes-helpers.c             | 101 ++++
+ crypto/meson.build               |   1 +
+ docs/system/s390x/cpacf.rst      | 116 ++++
+ docs/system/target-s390x.rst     |   1 +
+ include/crypto/aes.h             |  14 +
+ target/s390x/gen-features.c      |  31 +
+ target/s390x/tcg/cpacf.h         |  63 ++
+ target/s390x/tcg/cpacf_aes.c     | 955 +++++++++++++++++++++++++++++++
+ target/s390x/tcg/cpacf_sha256.c  | 232 ++++++++
+ target/s390x/tcg/cpacf_sha512.c  | 245 ++++++++
+ target/s390x/tcg/crypto_helper.c | 423 +++++++-------
+ target/s390x/tcg/insn-data.h.inc |   1 +
+ target/s390x/tcg/meson.build     |   3 +
+ target/s390x/tcg/translate.c     |   2 +
+ 14 files changed, 1972 insertions(+), 216 deletions(-)
+ create mode 100644 crypto/aes-helpers.c
+ create mode 100644 docs/system/s390x/cpacf.rst
+ create mode 100644 target/s390x/tcg/cpacf.h
+ create mode 100644 target/s390x/tcg/cpacf_aes.c
+ create mode 100644 target/s390x/tcg/cpacf_sha256.c
+ create mode 100644 target/s390x/tcg/cpacf_sha512.c
 
 
-> 
-> If I am not mistaken governor also uses the next enabled state
-> to calculate the target_residency of the polling state.
-> 
+base-commit: e89049b3ba5f1f0468bc0d294173345597514a1b
+--
+2.43.0
 
-With just two state that is practically what happens in the selection
-algorithm anyway, yes.
 
