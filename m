@@ -1,79 +1,79 @@
-Return-Path: <linux-s390+bounces-20988-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20990-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id YRxFIFLeM2r9HQYAu9opvQ
-	(envelope-from <linux-s390+bounces-20988-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2026 14:02:26 +0200
+	id tTRaBuTeM2odHgYAu9opvQ
+	(envelope-from <linux-s390+bounces-20990-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2026 14:04:52 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2AF7F69FE2B
-	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2026 14:02:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B0DD669FE74
+	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2026 14:04:51 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b="l/VdtUo8";
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20988-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20988-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=jPtspq8v;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20990-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20990-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 853B3307EDB1
-	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2026 12:01:10 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1DAE230D2616
+	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2026 12:01:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF9E63F4130;
-	Thu, 18 Jun 2026 12:01:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B6EC3F44DC;
+	Thu, 18 Jun 2026 12:01:19 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB293A4520;
-	Thu, 18 Jun 2026 12:01:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF193A4520;
+	Thu, 18 Jun 2026 12:01:17 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781784068; cv=none; b=ORBipK+IIJ+zikKN6t4HPQ/gKi84bN8SeQM5CKsPGzKr7mD0ft98jSdHl5M/FkrxR4UX8uG0K23szI/c97F7/XVPx6AhLBeVLHmytIKHcp4lSHXNql9E9aHLfiKiEBDp0CpN0d5OeAoMLwb8pyy3vrN7ShQOMbIXn4wjFCxpvjo=
+	t=1781784079; cv=none; b=Z/yuZnxxw8P/DCSTP0lsDPkKPrEH2R86CbQTBlnL1JQGtvF03RPW1mtpihum1eoHkoQaOrMrZo5otJI82X8Ed//HPP7VyE3HUhR6H5+R/dMNGiqzUrWIUwBv6hrgiokAIoCiC/BbOZ8zKcRcHDBQ1iCq37bMX48VQ968pnB44Ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781784068; c=relaxed/simple;
-	bh=Hkj2u7+67wCxY6jE7ExcSwuK/yQKA6Z3AMpRNSaPSzU=;
+	s=arc-20240116; t=1781784079; c=relaxed/simple;
+	bh=yYfY5SElGZ5gTCAcLjVoI1cPsqSVA28EH0TneFGbR2M=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=evyki6AtI9I14o9F+42C+jffQUYpkbh1K/auKnVgCsTqTGWKdIVyZ9fk/zwod3vYEyX9WC4vS4J3DMxUtv3YYMepF/sB1e82+5Z9i4Xvl8YxjgePVO9XE0XHxEAY2y7yml41b+3TkDElWgYN3lx7VZ+adeyijby3IjtkuBsK0fM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=l/VdtUo8; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65IBI8s53430548;
-	Thu, 18 Jun 2026 12:00:51 GMT
+	 In-Reply-To:To:Cc; b=LZ7kCJyLwjTg5oO0PuxkN5Re2GQ2HqAyaeP73BLQtfRrQe3+4xxTpVRJHupFbIBPyJudCGc/4WX1QmCp1oypYFkFCkrW2jwSFeQxwx+qG3HOOQTg5PDmdnTlibNWcuXfBrWcoHZ6pufA/OjxRcXjQgcPCz3FMThVGzgYSsShu14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jPtspq8v; arc=none smtp.client-ip=148.163.158.5
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65IBINYb3203668;
+	Thu, 18 Jun 2026 12:00:53 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=w7O+YT
-	Lf2B59MRiKbdRtGhpgli0FZMdB4P6KgrgEnz8=; b=l/VdtUo8serSr5L/jGn3RF
-	JNcb13pNqoM+UDwhwpjc6MW7OwOfetEEH0t5XlVyWzG/JPBRDhC/ybUfd1QA682T
-	YVROUrFulVS0YX+2+lww7MjEmsL/cdJbxF7xYpzCGTsmhsAQzzsPDtaklWN/92Gf
-	ZIDEKjsrggTVSUlv6pzJEoajJcjHV2cEAM/KVjbT4cL/ZMU1+Er3ICRxpALlEUGG
-	0RlDuqvOD1Oh1k68A+/+x10z907LEod7bIhwGSJ2IDGh4JPEV+Pnj3lYKBCmwrKG
-	g0u4E815ino8Vlw4e+cgYvx17g4JqcJJ+lBYY4p3885d5+7Zf1IRtUi0px0aDxNQ
+	:message-id:mime-version:references:subject:to; s=pp1; bh=wFdG8V
+	PU1+1EjZdIP6f37Hh8+Y0VJi6A02g4lfbpL/M=; b=jPtspq8vspWpBJqW7Mc4HT
+	TPcubN6UY0jBgCopuG+GFAdGSBI/7au312cryYVONQtJ9Xt1/RRE/X65/pY+pUji
+	12tYtYwRZQkiwHcUTaZzcuTMTrFLnTckTaHySo7w9n4FhJdNfhU5ORzBiTxRg4GY
+	uuBDKOp2r60LwRkdGBRsF9i1IV8Ya0UKcD5P5ZmomCdxlXpyW4n+BWewgFZ6k3qi
+	QX1306NBogfKOYQ4Rv+3yGvjaswP/jjGvpKwJabpou1WpZI0yG0eH2nu0o8pekEX
+	t9Dxbcsai3MbGLgsh7plJ2WQJH9VBULLJ/R3CUZOCOLZzrkgDdSgyrMYyfB3OVfg
 	==
 Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4euequ7w3g-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4eueqxfsjh-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jun 2026 12:00:51 +0000 (GMT)
+	Thu, 18 Jun 2026 12:00:53 +0000 (GMT)
 Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65IBnuWf024898;
-	Thu, 18 Jun 2026 12:00:50 GMT
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65IBnnTg024862;
+	Thu, 18 Jun 2026 12:00:52 GMT
 Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4ev1723je0-1
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4ev1723jea-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jun 2026 12:00:50 +0000 (GMT)
+	Thu, 18 Jun 2026 12:00:52 +0000 (GMT)
 Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65IC0ls348562480
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65IC0lS651184010
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 18 Jun 2026 12:00:47 GMT
+	Thu, 18 Jun 2026 12:00:49 GMT
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E7D7120040;
-	Thu, 18 Jun 2026 12:00:46 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id C56E32004D;
+	Thu, 18 Jun 2026 12:00:47 +0000 (GMT)
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2B3A220043;
-	Thu, 18 Jun 2026 12:00:46 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 0734020043;
+	Thu, 18 Jun 2026 12:00:47 +0000 (GMT)
 Received: from [192.168.2.127] (unknown [9.111.73.152])
 	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
 	Thu, 18 Jun 2026 12:00:46 +0000 (GMT)
 From: Mete Durlu <meted@linux.ibm.com>
-Date: Thu, 18 Jun 2026 14:00:16 +0200
-Subject: [PATCH v3 2/5] tick: Remove arch_needs_cpu
+Date: Thu, 18 Jun 2026 14:00:17 +0200
+Subject: [PATCH v3 3/5] s390: Enable TIF_POLLING_NRFLAG
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -82,7 +82,7 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260618-idledriver-v3-2-684061eecbcb@linux.ibm.com>
+Message-Id: <20260618-idledriver-v3-3-684061eecbcb@linux.ibm.com>
 References: <20260618-idledriver-v3-0-684061eecbcb@linux.ibm.com>
 In-Reply-To: <20260618-idledriver-v3-0-684061eecbcb@linux.ibm.com>
 To: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
@@ -100,30 +100,30 @@ Cc: Mete Durlu <meted@linux.ibm.com>,
         linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 X-Mailer: b4 0.14.3
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE4MDExMCBTYWx0ZWRfXxooNMOHh5kj5
- RHrCV8Soa4hsplSVklZWCkMbgdx4TjOvBKM/cOsrECnmoAMzZzfEG4o/gNCVhWLYp6ti1iutYY1
- f8n/vMb61E0BH4dBN6k/5iXu3apsRzY=
-X-Proofpoint-ORIG-GUID: i9u4iA8PxP0CYv7_s5IS5AhJjSrPZC0A
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE4MDExMCBTYWx0ZWRfX0wxaNi2XW+wl
- pJ9VJqDcKz1mFfq9+UeRGP5E+5K25O5qD/D3U7kswHNhkiund/OMEpmNAVP4y3rXPm8EHBwPqYB
- l2IXkp+IfS+ohwMsXiXZaJfViRftkIWktEgo2MdvXRz2bLgYMmx1ZCY0kdE8sabxe1RHKfe8HbS
- G4jA3UGxjWXIW+jnfXagNDAeYSDP2GT8fjoApne3+i/m4pC5LomOWRfOMtBnLnAHA09cYsgA+bF
- l+Hq1UpTKezG9DCn/0yfFtU1RifVrevytZCUZObSGV8TR2Xy7ckFtf/IRj7yJD4pKi0g3lqHz+N
- h7dmrgIa8yRiQzmrCdN1UVW3iR1xtJ6MUh5Cel9sqyvxziXYlxYCzjSdUgy35mxXZUzGqwkvose
- 7YO7Ipbwv2DKxe6h8L12XVduK1YsdxSDjD7QeKC3gqFoHuh3bxLKoUyf/Pee5N1XaP7/2xfuGuw
- L6MH5Oc2d/WWSHhUI5g==
-X-Proofpoint-GUID: i9u4iA8PxP0CYv7_s5IS5AhJjSrPZC0A
-X-Authority-Analysis: v=2.4 cv=L9gtheT8 c=1 sm=1 tr=0 ts=6a33ddf3 cx=c_pps
+X-Authority-Analysis: v=2.4 cv=OcSoyBTY c=1 sm=1 tr=0 ts=6a33ddf5 cx=c_pps
  a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
  a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8
- a=VwQbUJbxAAAA:8 a=-_MXh9RRoCZl6R2akIQA:9 a=QEXdDO2ut3YA:10
+ a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8
+ a=c5jR2BqudvT-Uhvel0MA:9 a=QEXdDO2ut3YA:10 a=O8hF6Hzn-FEA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE4MDExMCBTYWx0ZWRfXzuayLMepXa4D
+ dgBFNm+iFGXruoZVCTjkQKxbXAZEpDO8iBSGzhL3tbUt+4OtPFJhfbbhNpz7kwtiBUAPkEYMKwd
+ xaocMRmPFursrtUKJk+C+K3+edbxCqHFbUKD33Qx8boQCD+inr32flII2aKqpEHbnoAZykCMFUB
+ SbGsjK+WIgTfdL9yuPsiojjCvia0MuudhcYtAyJM6tphnIq8BJvjtMlOTymQUgq+cVXeg0e41NI
+ vWPpcrwczxIKtMflJWt4f3R0dMslDuf8bfWXy9ND7B/NSoIEhdn0Kht8qeEgY0w68NKUW94P/WD
+ 3vwOdrAhDnp3LLDD6U0mMkbb5haDCfzuupg8floHWspZIYCu08b1vg6WWKIiL6S9DCmXfwjJTJr
+ 1K/LODOxZj5jWCDT5lpFVsRNziD1UIAk+3I6hfX9YeK4z0vUC008xiXg/O23uYTLqfGIdFiJTmw
+ m0v3NlMzgYI+uAZa+cQ==
+X-Proofpoint-GUID: advZQeY9NkTPkaVvS0NV60j2swkTYC7P
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE4MDExMCBTYWx0ZWRfX9x7CwjwLzfXX
+ CinKLejTKD0uGuxeE0che/sdkql0d0Zm2zx8Z757At+1mS9/uc0Q7XAOnY9ky1A1h541/5HMTLY
+ AQNYqDBN6fS/uFDLVIbpESyhiLN29NI=
+X-Proofpoint-ORIG-GUID: advZQeY9NkTPkaVvS0NV60j2swkTYC7P
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-06-18_01,2026-06-18_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 impostorscore=0 malwarescore=0 clxscore=1015 adultscore=0
- phishscore=0 lowpriorityscore=0 suspectscore=0 priorityscore=1501 spamscore=0
+ priorityscore=1501 phishscore=0 bulkscore=0 suspectscore=0 lowpriorityscore=0
+ impostorscore=0 malwarescore=0 spamscore=0 adultscore=0 clxscore=1015
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606180110
 X-Rspamd-Action: no action
@@ -136,7 +136,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20988-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20990-lists,linux-s390=lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:svens@linux.ibm.com,m:anna-maria@linutronix.de,m:frederic@kernel.org,m:mingo@kernel.org,m:tglx@kernel.org,m:rafael@kernel.org,m:daniel.lezcano@kernel.org,m:christian.loehle@arm.com,m:meted@linux.ibm.com,m:borntraeger@linux.ibm.com,m:iii@linux.ibm.com,m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pm@vger.kernel.org,s:lists@lfdr.de];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,linux.ibm.com:from_mime,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -146,72 +146,41 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	DKIM_TRACE(0.00)[ibm.com:+];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RSPAMD_EMAILBL_FAIL(0.00)[tglx.kernel.org:query timed out];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[meted@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TO_DN_SOME(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 2AF7F69FE2B
+X-Rspamd-Queue-Id: B0DD669FE74
 
-Remove unused arch_needs_cpu() hook. No architectures use it after
-s390 removed its use case.
+Enable TIF_POLLING_NRFLAG to support idle polling state in the
+upcoming cpuidle driver.
 
-Suggested-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Mete Durlu <meted@linux.ibm.com>
 Reviewed-by: Heiko Carstens <hca@linux.ibm.com>
-Reviewed-by: Thomas Gleixner <tglx@kernel.org>
 ---
- include/linux/tick.h     | 3 ---
- kernel/time/tick-sched.c | 7 +++----
- 2 files changed, 3 insertions(+), 7 deletions(-)
+ arch/s390/include/asm/thread_info.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/tick.h b/include/linux/tick.h
-index 738007d6f577..0f6757f81839 100644
---- a/include/linux/tick.h
-+++ b/include/linux/tick.h
-@@ -44,9 +44,6 @@ static inline void tick_unfreeze(void) { }
+diff --git a/arch/s390/include/asm/thread_info.h b/arch/s390/include/asm/thread_info.h
+index 6a548a819400..2554cef3a6a5 100644
+--- a/arch/s390/include/asm/thread_info.h
++++ b/arch/s390/include/asm/thread_info.h
+@@ -61,6 +61,7 @@ void arch_setup_new_exec(void);
+  */
+ #define HAVE_TIF_NEED_RESCHED_LAZY
+ #define HAVE_TIF_RESTORE_SIGMASK
++#define HAVE_TIF_POLLING_NRFLAG
  
- #ifdef CONFIG_TICK_ONESHOT
- extern void tick_irq_enter(void);
--#  ifndef arch_needs_cpu
--#   define arch_needs_cpu() (0)
--#  endif
- # else
- static inline void tick_irq_enter(void) { }
- #endif
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index cbbb87a0c6e7..cee18999d818 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -943,8 +943,7 @@ static ktime_t tick_nohz_next_event(struct tick_sched *ts, int cpu)
- 	ts->timer_expires_base = basemono;
+ #include <asm-generic/thread_info_tif.h>
  
- 	/*
--	 * Keep the periodic tick, when RCU, architecture or irq_work
--	 * requests it.
-+	 * Keep the periodic tick, when RCU or irq_work requests it.
- 	 * Aside of that, check whether the local timer softirq is
- 	 * pending. If so, its a bad idea to call get_next_timer_interrupt(),
- 	 * because there is an already expired timer, so it will request
-@@ -952,8 +951,8 @@ static ktime_t tick_nohz_next_event(struct tick_sched *ts, int cpu)
- 	 * minimal delta, which brings us back to this place
- 	 * immediately. Lather, rinse and repeat...
- 	 */
--	if (rcu_needs_cpu() || arch_needs_cpu() ||
--	    irq_work_needs_cpu() || local_timer_softirq_pending()) {
-+	if (rcu_needs_cpu() || irq_work_needs_cpu() ||
-+	    local_timer_softirq_pending()) {
- 		next_tick = basemono + TICK_NSEC;
- 	} else {
- 		/*
 
 -- 
 2.54.0
