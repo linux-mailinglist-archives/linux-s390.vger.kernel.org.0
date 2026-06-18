@@ -1,141 +1,175 @@
-Return-Path: <linux-s390+bounces-21009-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21010-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id uGWpJxsZNGrdOQYAu9opvQ
-	(envelope-from <linux-s390+bounces-21009-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2026 18:13:15 +0200
+	id Uy6TJIIaNGpzOgYAu9opvQ
+	(envelope-from <linux-s390+bounces-21010-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2026 18:19:14 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90C306A184D
-	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2026 18:13:14 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2F0F6A18EE
+	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2026 18:19:13 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=debian.org header.s=mail202007.waldi.user header.b=auN3NXQu;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21009-lists+linux-s390=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-s390+bounces-21009-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=debian.org;
+	dkim=pass header.d=ibm.com header.s=pp1 header.b="kq/J3yy4";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21010-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-21010-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 944313002F49
-	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2026 16:12:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5C3173034677
+	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2026 16:17:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0F5A341ADF;
-	Thu, 18 Jun 2026 16:12:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C30CF2F8E8C;
+	Thu, 18 Jun 2026 16:17:03 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail.thinkmo.de (s3.thinkmo.de [162.55.237.202])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18324318B9D;
-	Thu, 18 Jun 2026 16:12:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D610280A56
+	for <linux-s390@vger.kernel.org>; Thu, 18 Jun 2026 16:17:02 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781799169; cv=none; b=jTgOVVFeL5lE+hCIpH526W0PKJUlSYAlwd7+xFS3nB+tvdHBNoZQp8BS6LEzju94jkh2g+ZBlYTz7ghQbH3KUfPf8N4ccFcUMs+vOjUyYBbcoO0Xp/XBemV9c/oAsjPxz88/2TosbThbZ5/m2B/Rt9fiN+puCIIx6/G7+sdZTV0=
+	t=1781799423; cv=none; b=sPhEUO55UA4vytbLFqaKuOh/wjzrJRkYLqv5VrTBQ+PUm/zMCNLFWkA19fWo86tYJZGGGMEr9ZaABmOt7OYVkUtqRbmspfhV0EuN/YUWSS434IU6n9jI15KA/FAeLqE5/P2OVojlkD5P03Pi4zUUZyj/iM3ATl+67x+MT5y7C1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781799169; c=relaxed/simple;
-	bh=Y0hSU5Muuu27iLtzI4T2A81FmRdd/1ugKrH06zB+cXU=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=peRcdw4EirqyAz+VGypcvDlkdbCY+zbGbZNQJISoaoJxuxLf3ZrAZuBDWqesJ/saPQ//GGNPhiuvGmxy3xavFgp3b+D33/JESkZ2YzpzyIGlee/5XaugPZZZPdoUPnGKJi2QgMjJL8CgbLvIpgV5DX7KJ4N8uWDtdnjqhSxEB0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=fail smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=auN3NXQu; arc=none smtp.client-ip=162.55.237.202
-Received: from localhost (localhost [127.0.0.1])
-	by mail.thinkmo.de (Postfix) with ESMTP id 4gh5NW3SCyz10BB;
-	Thu, 18 Jun 2026 16:12:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=debian.org; h=
-	content-disposition:content-type:content-type:mime-version
-	:message-id:subject:subject:from:from:date:date:received
-	:received; s=mail202007.waldi.user; t=1781799163; bh=/spts2B9BTl
-	Ek2Y6sRR5rYVYukzdj80Tm20y/wRt3mU=; b=auN3NXQuifNtoHAOCDVd4mZytw+
-	MQksd1uAWSD1Uh6OeVX4TssXA6/26C1hSTe/sOu/iwHMLn0yljXRt8HlWSEbapYf
-	/urgq3r3nZ5RAfhpMd4mk7eOqdpYaVrO1X3Vj48J9H5AGOoiU/MqqQJxnreccgdA
-	ixEQpHDkSdC+0pHtI4KXJjy5z49dJNmbRuBtfCvvr3wMHyUvfr4yn4Td0vRa7bvW
-	8DwzKuq5keVCJD3QeE2p6hjbiXcrPOjoGTmsupyD4GzrBvF9cYT1h6hkG2Zh8PqI
-	rX0RZTX/tDTqcVpV5FOAzHvSxn7hLaCdmeMs4KlmGCFBznUnu1+FaZXaWmw==
-X-Virus-Scanned: Debian amavis at 
-Received: from mail.thinkmo.de ([127.0.0.1])
- by localhost (mail.thinkmo.de [127.0.0.1]) (amavis, port 10024) with ESMTP
- id VqpjMkekZKFS; Thu, 18 Jun 2026 16:12:43 +0000 (UTC)
-Received: from steamhammer.waldi.eu.org (unknown [IPv6:2a02:8071:5af1:6518:ad11:fa76:980a:620e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by mail.thinkmo.de (Postfix) with ESMTPSA id 4gh5NW24cnzyqB;
-	Thu, 18 Jun 2026 16:12:43 +0000 (UTC)
-Date: Thu, 18 Jun 2026 18:12:42 +0200
-From: Bastian Blank <waldi@debian.org>
-To: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] s390: Add build salt to the vDSO
-Message-ID: <ajQY-s7Y4mNPQfgy@steamhammer.waldi.eu.org>
-Mail-Followup-To: Bastian Blank <waldi@debian.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	s=arc-20240116; t=1781799423; c=relaxed/simple;
+	bh=hYI+hKTvid2RM3u9yYp1jiAw3X88wnHIi1zDeTxnd/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=emTGgcuOkpTXy0U0N9XYsUshxBHyxDZgTHNC2OCUdiol9m+huklaIH9E0agvSNhsF2TJeTzAW15SI9mFtBVyLqicizXnowudamoStGEXC1jpiXE3KPsuaLM9zXZBKKEWZ39JUdzIQN6q9JLmt0IJ48H8YLCiq7vw5mHoBnCJ7Is=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kq/J3yy4; arc=none smtp.client-ip=148.163.158.5
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65IFIll73711907
+	for <linux-s390@vger.kernel.org>; Thu, 18 Jun 2026 16:17:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=fah1NZY6h02G10Ns/RIqJQ3JnLwq8x
+	xscGxouqhnUeQ=; b=kq/J3yy4zeMixwmGHzExB2EEPqDBrLIxihYkmiUyal70Pm
+	TiaNtMrbvFnTGy0I2MF/PYnKx4eoraFXlSq35JkISc96/hiq8dou+Q5QVuyrG3sI
+	s3yKYAmqQhSfNevf+K8IXd1w96cKlIzipeJ1FFIFRvcamQWeIbCTOIQ7+2sZcb2p
+	Ev/cSiot0dnUrjbIVnPKgMz/j+CJv5eASHYXvfKdYdAUFrt7CdXc8hWn3j0pntX3
+	b251Yz5ON2ePjStkhXhF2G8x+hkvgpnuGQ3XatQXdwiVkSO549FGWNASlxKnWIQ9
+	ngD35AI+ScHZPtONFK6w/AlhrGs8QQ3Lzp5xsMzA==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4eueqx9093-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+	for <linux-s390@vger.kernel.org>; Thu, 18 Jun 2026 16:17:01 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65IG4iEp028220
+	for <linux-s390@vger.kernel.org>; Thu, 18 Jun 2026 16:17:00 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ev172cjj2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+	for <linux-s390@vger.kernel.org>; Thu, 18 Jun 2026 16:17:00 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65IGGuci27132412
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 18 Jun 2026 16:16:57 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D204120043;
+	Thu, 18 Jun 2026 16:16:56 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B96D820040;
+	Thu, 18 Jun 2026 16:16:56 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.224.92.206])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 18 Jun 2026 16:16:56 +0000 (GMT)
+Date: Thu, 18 Jun 2026 18:16:55 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+Cc: linux-s390 <linux-s390@vger.kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+Subject: Re: [PATCH] s390/mm: Use set_pmd() / set_pud() for hugetlb pagetable
+ entries
+Message-ID: <35d23772-89a3-4e55-b4b6-abd83db3001c-agordeev@linux.ibm.com>
+References: <20260616174627.1068004-1-gerald.schaefer@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20260616174627.1068004-1-gerald.schaefer@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE4MDE0NyBTYWx0ZWRfX1Azinr/PFjHP
+ 0av5xlxz9nBj1BAEUuzCsGnu/1R9dsoXRcGTAYWzB6GWMeaEWBNQC5gRHTGOp8RImN5Fz1opFWK
+ FQENH+oD6kB/s88AJ83EMBNI1h2+Tory1bj+66j0PjlFNO07GgIXcBKtH6qxpo7r6XX2us3F6Zj
+ +TBOOZbxWbrEDKmyfq5/Jxh31Kif6+EO5S6kYuNJXUw1f/StRUrHA9zjkADFiKdk51VqIiFoFZW
+ vY8R809/5V7N4/ctP7rN80qQN6khq91Sh76CzRbW6B8OnPCdsbg2iMk4pi3juaOuUWxFvPmk7oQ
+ BKmFA7ksL8en41K/UFkzZRYnjLSCdDQO7Oq2wwGt/s/pba+q5NalU1w1Xq69PN3h7dA9dhy0K/W
+ LOCJ5ON8f47mZ/ie+vX0a1C3RUr7aORvNM3YfFPlhMy1hjDWG4NNogbSJsfoDokUsfGCDK+JGXw
+ lry9LL1Lo/+cp+9w9NQ==
+X-Proofpoint-GUID: EWpq8Wy2DRww8DNeovOwxhK9FWjjCzI9
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE4MDE0NyBTYWx0ZWRfX3Dr+X1di34II
+ KOBjXAecDttq/0oJTX9xSY2wyFa1cKdt4O3Atb9DdiCn2nB5/b33eRXaq7tKPSr+TA74Ty1fBHs
+ Cp+1ZrdLaSJO2IWDS2MeRZMGow9zmY8=
+X-Proofpoint-ORIG-GUID: EWpq8Wy2DRww8DNeovOwxhK9FWjjCzI9
+X-Authority-Analysis: v=2.4 cv=auGCzyZV c=1 sm=1 tr=0 ts=6a3419fd cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=kj9zAlcOel0A:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8
+ a=w_ULX488V-JFV4fqhTQA:9 a=CjuIK1q_8ugA:10 a=zZCYzV9kfG8A:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-18_02,2026-06-18_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 clxscore=1015 priorityscore=1501 suspectscore=0 impostorscore=0
+ spamscore=0 lowpriorityscore=0 adultscore=0 malwarescore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606180147
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.16 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[debian.org,none];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[debian.org:s=mail202007.waldi.user];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21009-lists,linux-s390=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[waldi@debian.org,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21010-lists,linux-s390=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[debian.org:+];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_ALL(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:gerald.schaefer@linux.ibm.com,m:linux-s390@vger.kernel.org,m:hca@linux.ibm.com,m:imbrenda@linux.ibm.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[agordeev@linux.ibm.com,linux-s390@vger.kernel.org];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,linux.ibm.com:mid,linux.ibm.com:from_mime];
 	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[waldi@debian.org,linux-s390@vger.kernel.org];
 	RCPT_COUNT_THREE(0.00)[4];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[agordeev@linux.ibm.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 90C306A184D
+X-Rspamd-Queue-Id: E2F0F6A18EE
 
-The vDSO needs to have a unique build id in a similar manner
-to the kernel and modules. Use the build salt macro.
+On Tue, Jun 16, 2026 at 07:46:27PM +0200, Gerald Schaefer wrote:
+> hugetlb code is known to view all pagetable entries as PTEs, instead of
+> corresponding upper levels like PMD or PUD. For s390, with different
+> pagetable entry layout for different levels, this requires some
+> conversion action under the hood.
+> 
+> The converted PMD and PUD entries are then written via set_pte()
+> function, but that might add some PTE-specific modifications.
+> There is no functional problem with current code, and the clearing of
+> _PAGE_UNUSED in set_pte(). Avoid future problems by using the set_pmd()
+> and set_pud() functions instead.
+> 
+> Signed-off-by: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+> ---
+>  arch/s390/include/asm/hugetlb.h |  4 ++--
+>  arch/s390/mm/hugetlbpage.c      | 10 ++++++----
+>  2 files changed, 8 insertions(+), 6 deletions(-)
 
-Signed-off-by: Bastian Blank <waldi@debian.org>
----
- arch/s390/kernel/vdso/note.S | 3 +++
- 1 file changed, 3 insertions(+)
+Reviewed-by: Alexander Gordeev <agordeev@linux.ibm.com>
 
-diff --git a/arch/s390/kernel/vdso/note.S b/arch/s390/kernel/vdso/note.S
-index db19d0680a0a..d215781f26b5 100644
---- a/arch/s390/kernel/vdso/note.S
-+++ b/arch/s390/kernel/vdso/note.S
-@@ -4,6 +4,7 @@
-  * Here we can supply some information useful to userland.
-  */
- 
-+#include <linux/build-salt.h>
- #include <linux/uts.h>
- #include <linux/version.h>
- #include <linux/elfnote.h>
-@@ -11,3 +12,5 @@
- ELFNOTE_START(Linux, 0, "a")
- 	.long LINUX_VERSION_CODE
- ELFNOTE_END
-+
-+BUILD_SALT
--- 
-2.53.0
+and applied, thanks!
 
