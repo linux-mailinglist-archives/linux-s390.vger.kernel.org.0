@@ -1,79 +1,79 @@
-Return-Path: <linux-s390+bounces-20989-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-20991-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Y60FGJXeM2oNHgYAu9opvQ
-	(envelope-from <linux-s390+bounces-20989-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2026 14:03:33 +0200
+	id F1hdIhXfM2oiHgYAu9opvQ
+	(envelope-from <linux-s390+bounces-20991-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2026 14:05:41 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2C4F69FE55
-	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2026 14:03:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D875169FE91
+	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2026 14:05:40 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b="lQ/mXd8H";
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20989-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20989-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=tOZYAkL9;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-20991-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-20991-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7995030B52E7
-	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2026 12:01:14 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 71A4530DBA8E
+	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2026 12:01:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31FC23F4DC2;
-	Thu, 18 Jun 2026 12:01:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8086A3F4859;
+	Thu, 18 Jun 2026 12:01:21 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4683F482F;
-	Thu, 18 Jun 2026 12:01:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB8F3F483C;
+	Thu, 18 Jun 2026 12:01:19 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781784071; cv=none; b=js3EcqBKqibVO6+dfWD3QG9ffS8LyJ68hFJy6u9lxn7IXsvBnsPvPCVb7Gw9HQfPbgEH46iuX2uaMGyQLEwskPQxLCqwKwyCnMwUIXudbxHKAX6aQfd+lX5qAJmoz4GSn1XDU8lLKUV+2sWibmoXf2E+dtZkcoV5cwL4oCUL14s=
+	t=1781784081; cv=none; b=Ak3xv1LEonw3qTZdm5LmaZ++B2oFy5DW44lH78xg3VxlcGwdoyMHGlp5lZYMTphliTDdthbjurpHJJlWaMXnrvlqeJPEHvJIpuisU/GJZBjdKrNSw8xyM1vJEOpQcCN/0GtpD4LW4QXH8XYhVbLK7aNqN+ZmD55RgBXO7UKmkwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781784071; c=relaxed/simple;
-	bh=7h9XsBFKO8untNkvu7CInJE9W6fpnjiBBBrEMJ5/8W0=;
+	s=arc-20240116; t=1781784081; c=relaxed/simple;
+	bh=fdBmw70s3kUMBVdD1OgmpTx3I3PJuookdTDXjmw4JhY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WFPTqo8IohL9eQGf1jFFzlMVkwM2eIK90qGNYZ0u/q/KW6ETh30+9QpxB7UGHU9d2Jp2vlpOVw62RraksLL/TkONElcmJc28wlDYv8numd3f8I5p5mt2FfIjzG8r8h3ss1sojCvBd5X0ZqfXC881Yyt6gPLXSJKdVrv1Irf3xAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lQ/mXd8H; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65IBIEpv3430676;
-	Thu, 18 Jun 2026 12:00:53 GMT
+	 In-Reply-To:To:Cc; b=p+/iCbNz1nc9an1GrI7MnnGfztwTtF0Kby0vMzErxEwxhNBXT5jRqJ+oa/1thsAvL7X8o0XfhIpATAb8KEfjEunFddkMTOzIkHSjY2qMLGDBoPcldW4Ssx+WL8yo5hQnwCDTbprOOLVSOdCEEGmDa0m6nJcJyYMl9NAfW/J95Z0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tOZYAkL9; arc=none smtp.client-ip=148.163.158.5
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65IBIXRp3163459;
+	Thu, 18 Jun 2026 12:00:54 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=VAkr7m
-	6Aj9Dwqdkp5GdKWDesNwWjDX0XAtVryFjF+9E=; b=lQ/mXd8HzeOkx2bYM8ZRz5
-	WVh0TYgGp+FLg98viju547jSxS8XseGw9Ch3ul0+6383cxRzQmflSbOiF5Gv6sT1
-	8+eb2v5nXOwmhp2P7RRFYQwwez/rYVe6y96jlSlDQCbHKMouEzOH9KAmxufR5Tmp
-	fSA99HYjVLTiUd0hRl6RNz5uQAHMj5K7BSQ/YhUT2lDjQgSm/Z9+t9rMRdnl7WBH
-	yBt0lQTU6kqgyDkl/54L6v6GRhiUcjSoHDHeHVMlTFyFSEy+Xj2urYAsc5OtvGOv
-	OB9rS6XfZW4VEZiRZPBgmzc99F9WP4ApW+AJBmeuT6c5crTpTjbKvNgJEJke9wrg
+	:message-id:mime-version:references:subject:to; s=pp1; bh=S9tp1+
+	tZ/h+q+pntemom4CWeZzb+/Loq3zzbPve1seA=; b=tOZYAkL9gY+p9pP87B3eTj
+	0iWgSJcBcLaGD+XR5R9I4Y5i3ntTf1aWoN4vl/V/Wxlha75Tx0IzPFWyG9FpMFKG
+	fow51X75qk7fvs7zg51ZJJRTIz/BZIJQQUpa6rWA3FW1gEQzquQHFKMfbX+VoP52
+	ib+gR1H4O3OmHeZE6Xkno2Uvcxt0fyPypZ3uuLt2AvyLoLHnAHiYGtcjAOKjr0AV
+	nj/so2vkaoAogHUQ8Ivc3B2xQWcHVUts1JmWTATynPq71peX+Gg5zB5LSiIA5Y6P
+	YwIVvb3WHveTApnS5YtYAJgtnQPLLnQxVW8svlcW0z+MbNY117o7xKsGkQ+yRbvw
 	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4euequ7w3s-1
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4eueqx7td7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jun 2026 12:00:54 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65IBngEZ011349;
+	Thu, 18 Jun 2026 12:00:53 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ev172bhhf-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 18 Jun 2026 12:00:53 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65IBnr6L024878;
-	Thu, 18 Jun 2026 12:00:52 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4ev1723je6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jun 2026 12:00:52 +0000 (GMT)
 Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65IC0mIB46399786
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65IC0naH21955028
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 18 Jun 2026 12:00:48 GMT
+	Thu, 18 Jun 2026 12:00:49 GMT
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A479C2004B;
+	by IMSVA (Postfix) with ESMTP id 7FA1B20040;
+	Thu, 18 Jun 2026 12:00:49 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B7CBC20043;
 	Thu, 18 Jun 2026 12:00:48 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DA03E20043;
-	Thu, 18 Jun 2026 12:00:47 +0000 (GMT)
 Received: from [192.168.2.127] (unknown [9.111.73.152])
 	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 18 Jun 2026 12:00:47 +0000 (GMT)
+	Thu, 18 Jun 2026 12:00:48 +0000 (GMT)
 From: Mete Durlu <meted@linux.ibm.com>
-Date: Thu, 18 Jun 2026 14:00:18 +0200
-Subject: [PATCH v3 4/5] s390/idle: Introduce cpuidle for s390
+Date: Thu, 18 Jun 2026 14:00:19 +0200
+Subject: [PATCH v3 5/5] s390/configs: Enable cpuidle driver on s390
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -82,7 +82,7 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260618-idledriver-v3-4-684061eecbcb@linux.ibm.com>
+Message-Id: <20260618-idledriver-v3-5-684061eecbcb@linux.ibm.com>
 References: <20260618-idledriver-v3-0-684061eecbcb@linux.ibm.com>
 In-Reply-To: <20260618-idledriver-v3-0-684061eecbcb@linux.ibm.com>
 To: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
@@ -100,32 +100,30 @@ Cc: Mete Durlu <meted@linux.ibm.com>,
         linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 X-Mailer: b4 0.14.3
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE4MDExMCBTYWx0ZWRfX3nZU2z6UHwsB
- unRKwxItL1YTqv3JiNEV9VLIqOP/VMca+RoCVPcyH2mBWYdn1EEMbb9KZ/Rcg4S48xpiSEzjHsc
- ilgMs6vsMjHKYvjTK9Ucx1ZObykVnX0=
-X-Proofpoint-ORIG-GUID: 6y3tB4WJoAdXdYkXpkZOH6QKE2_w4to9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE4MDExMCBTYWx0ZWRfXye4qL/perv2Z
- 18TJPRiLQtYMdDBh4lOLtSbSxFeaCPJttQHP1NjaedXVJKlw5PkaJ3T06pwgRfAfr3Yob51Ke2I
- ASMyH6n8Qp188GkHa/FIlwkh9rAKdMwEdnvDfPKZh4/T0XwIrAxxlRCKHc1/KNMDk+LqexAr9wH
- hYhk5bp59JTXreWYByQXgf6U1gqfDgOoUN3O7Kc6uAkMbMiCipP864dFYZkcLo5ht9A+kBCJGuu
- 0YgUXaDBVJgDlUfS4o6eFgLqXSxNIUyNNXXBKm2fBmEWaRpvqWKpbX4bMw7xtnEimyyxmZbQyVn
- 470msa4d/BsU3t+Gyn4Tmn8EgvSIiZIviI7k7CDO2cQHdC7p6MfviU42eupwqCpCG6O6iFJ78F8
- qqer375ZERrxGjs5GzygcTW33EP00JSybAGk5gHL6REYmeKe3bMNLvsPKfk4k2GHrgRcdWS/nAQ
- qt5Ndh5u+wtH2zbL6wA==
-X-Proofpoint-GUID: 6y3tB4WJoAdXdYkXpkZOH6QKE2_w4to9
-X-Authority-Analysis: v=2.4 cv=L9gtheT8 c=1 sm=1 tr=0 ts=6a33ddf5 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+X-Proofpoint-GUID: cu_PEPS5gl0jdGqf1b0SZZkqDKNQFJ-D
+X-Authority-Analysis: v=2.4 cv=Le0MLDfi c=1 sm=1 tr=0 ts=6a33ddf6 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
  a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8
- a=JfrnYn6hAAAA:8 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=pGLkceISAAAA:8
- a=ju7MIqAqtdGQbkcOs90A:9 a=QEXdDO2ut3YA:10 a=1CNFftbPRP8L7MoqJWF3:22
- a=cvBusfyB2V15izCimMoJ:22
+ a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8
+ a=IOilmRhWZAFgXRNZ7poA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE4MDExMCBTYWx0ZWRfX/fnaFkZeP2Mz
+ 8IDfxDprwq1CQhclpNmgbzAoIbijZhQSF1MO/sEheEnM4EB2tWvxLRxR6YeL00REDQQH8S+op6d
+ ewavzjkM5hhcKHDVHshYP2njnra1Ng8=
+X-Proofpoint-ORIG-GUID: cu_PEPS5gl0jdGqf1b0SZZkqDKNQFJ-D
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE4MDExMCBTYWx0ZWRfX8+Com29q9ITg
+ s37r4abVWZYXUfbcFZQRGEAypSySf1lZg9PX2QYxeHO6bITBSAszpspL8Wn+CBYXwmDWAdcJULW
+ zQt5msa1v+QWxEX4OsMIa1A10C7gj6ekfY1Ev2jM0kvoQAe185rq5Mje0sJDOFNg/K8LilrXBdS
+ a7Ha8WP4siU8y5tpOjkpdIWfvLUqEipsbmwGQeygkpvkdqkiW0WU5Am91lafvk7zqNBY1sZRJZH
+ mgl5Lqj45ohBvWA6IA4EfFA96cD1WdKjIMUiNO0Jqm8DQkmlZ4DDGalWQVI3cfhKOmcurVD3Kno
+ xKXXdMlMRFUgHtlZZTdXMugp92yDZ2z2tPrCqbWJsi9orIA6KFFFLCwJ4omuGBm4Eh+F2ZVA0u6
+ VtesUJjsbFpRTmkpCPuWZnVNG4ZaE01ubmYj/pjClLlnaWnsL1QIuRbyZZEtaf4WQVOpsf8U1Un
+ OgzM8MnUPKGvmDTQyqw==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-06-18_01,2026-06-18_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 impostorscore=0 malwarescore=0 clxscore=1015 adultscore=0
- phishscore=0 lowpriorityscore=0 suspectscore=0 priorityscore=1501 spamscore=0
+ clxscore=1015 priorityscore=1501 malwarescore=0 spamscore=0 suspectscore=0
+ impostorscore=0 phishscore=0 lowpriorityscore=0 bulkscore=0 adultscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606180110
 X-Rspamd-Action: no action
@@ -138,9 +136,9 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-20989-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-20991-lists,linux-s390=lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:svens@linux.ibm.com,m:anna-maria@linutronix.de,m:frederic@kernel.org,m:mingo@kernel.org,m:tglx@kernel.org,m:rafael@kernel.org,m:daniel.lezcano@kernel.org,m:christian.loehle@arm.com,m:meted@linux.ibm.com,m:borntraeger@linux.ibm.com,m:iii@linux.ibm.com,m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pm@vger.kernel.org,s:lists@lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linaro.org:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,linux.ibm.com:mid,linux.ibm.com:from_mime,infradead.org:email];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,linux.ibm.com:mid,linux.ibm.com:from_mime,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[17];
 	FORGED_SENDER(0.00)[meted@linux.ibm.com,linux-s390@vger.kernel.org];
@@ -160,239 +158,53 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: B2C4F69FE55
+X-Rspamd-Queue-Id: D875169FE91
 
-Introduce generic cpuidle driver on s390. Use a two stage approach to
-handle idle scenarios and use idle governor for idle stage selection.
-Two stages are, from shallow to deep, idle polling and enabled wait.
+Enable cpuidle infrastructure, idle governor and s390 cpuidle driver by
+default. They can be disabled via config options before compile or via
+setting cpuidle.off kernel commandline option. When cpuidle.off=1 set,
+given architecture's specific implementation is used as a fallback without
+any governor or idle state support.
 
-Suggested-by: Christian Borntraeger <borntraeger@linux.ibm.com>
-Suggested-by: Heiko Carstens <hca@linux.ibm.com>
+During runtime individual states of cpuidle driver can also be disabled
+via sysfs attributes.
+
+Ex:
+echo 1 > /sys/devices/system/cpu<N>/cpuidle/state<M>/disable
+
 Signed-off-by: Mete Durlu <meted@linux.ibm.com>
+Reviewed-by: Heiko Carstens <hca@linux.ibm.com>
 ---
- MAINTAINERS                    |   8 +++
- arch/s390/Kconfig              |   5 ++
- drivers/cpuidle/Kconfig        |   5 ++
- drivers/cpuidle/Kconfig.s390   |  11 ++++
- drivers/cpuidle/Makefile       |   4 ++
- drivers/cpuidle/cpuidle-s390.c | 115 +++++++++++++++++++++++++++++++++++++++++
- 6 files changed, 148 insertions(+)
+ arch/s390/configs/debug_defconfig | 2 ++
+ arch/s390/configs/defconfig       | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e035a3be797c..127e32c5fb4e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6766,6 +6766,13 @@ L:	linux-riscv@lists.infradead.org
- S:	Maintained
- F:	drivers/cpuidle/cpuidle-riscv-sbi.c
- 
-+CPUIDLE DRIVER - S390
-+M:	Mete Durlu <meted@linux.ibm.com>
-+L:	linux-pm@vger.kernel.org
-+L:	linux-s390@vger.kernel.org
-+S:	Maintained
-+F:	drivers/cpuidle/cpuidle-s390.c
-+
- CPUMASK API [RUST]
- M:	Viresh Kumar <viresh.kumar@linaro.org>
- R:	Yury Norov <yury.norov@gmail.com>
-@@ -23497,6 +23504,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git
- F:	Documentation/driver-api/s390-drivers.rst
- F:	Documentation/arch/s390/
- F:	arch/s390/
-+F:	drivers/cpuidle/cpuidle-s390.c
- F:	drivers/s390/
- F:	drivers/watchdog/diag288_wdt.c
- 
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index ecbcbb781e40..8548f5b6b247 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -20,6 +20,9 @@ config ARCH_HAS_ILOG2_U64
- config ARCH_PROC_KCORE_TEXT
- 	def_bool y
- 
-+config ARCH_HAS_CPU_RELAX
-+	def_bool y
-+
- config GENERIC_HWEIGHT
- 	def_bool !HAVE_MARCH_Z196_FEATURES
- 
-@@ -708,6 +711,8 @@ config KERNEL_IMAGE_BASE
- 
- endmenu
- 
-+source "drivers/cpuidle/Kconfig"
-+
- menu "Memory setup"
- 
- config ARCH_SPARSEMEM_ENABLE
-diff --git a/drivers/cpuidle/Kconfig b/drivers/cpuidle/Kconfig
-index d6d8386d3f02..00e2562041fd 100644
---- a/drivers/cpuidle/Kconfig
-+++ b/drivers/cpuidle/Kconfig
-@@ -71,6 +71,11 @@ depends on RISCV
- source "drivers/cpuidle/Kconfig.riscv"
- endmenu
- 
-+menu "S390 CPU Idle Drivers"
-+depends on S390
-+source "drivers/cpuidle/Kconfig.s390"
-+endmenu
-+
- config HALTPOLL_CPUIDLE
- 	tristate "Halt poll cpuidle driver"
- 	depends on X86 && KVM_GUEST
-diff --git a/drivers/cpuidle/Kconfig.s390 b/drivers/cpuidle/Kconfig.s390
-new file mode 100644
-index 000000000000..0b170d9a190b
---- /dev/null
-+++ b/drivers/cpuidle/Kconfig.s390
-@@ -0,0 +1,11 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# S390 CPU Idle drivers
-+#
-+
-+config S390_CPUIDLE
-+	bool "S390 CPU idle driver"
-+	default y
-+	help
-+          Select this option to enable processor idle state management
-+          through cpuidle subsystem.
-diff --git a/drivers/cpuidle/Makefile b/drivers/cpuidle/Makefile
-index 1de9e92c5b0f..88cbc2a7aea8 100644
---- a/drivers/cpuidle/Makefile
-+++ b/drivers/cpuidle/Makefile
-@@ -42,3 +42,7 @@ obj-$(CONFIG_POWERNV_CPUIDLE)		+= cpuidle-powernv.o
- ###############################################################################
- # RISC-V drivers
- obj-$(CONFIG_RISCV_SBI_CPUIDLE)		+= cpuidle-riscv-sbi.o
-+
-+###############################################################################
-+# S390 drivers
-+obj-$(CONFIG_S390_CPUIDLE)		+= cpuidle-s390.o
-diff --git a/drivers/cpuidle/cpuidle-s390.c b/drivers/cpuidle/cpuidle-s390.c
-new file mode 100644
-index 000000000000..1d02a77ebce0
---- /dev/null
-+++ b/drivers/cpuidle/cpuidle-s390.c
-@@ -0,0 +1,115 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * s390 generic CPU idle driver.
-+ *
-+ * Copyright IBM Corp. 2026
-+ */
-+
-+#define pr_fmt(fmt) "CPUidle s390: " fmt
-+
-+#include <linux/init.h>
-+#include <linux/cpuidle.h>
-+#include <linux/cpu.h>
-+#include <linux/sched/clock.h>
-+
-+static __cpuidle int s390_enter_idle(struct cpuidle_device *dev,
-+				     struct cpuidle_driver *drv,
-+				     int index)
-+{
-+	arch_cpu_idle();
-+	return index;
-+}
-+
-+static struct cpuidle_driver s390_cpuidle_driver = {
-+	.cpumask = (struct cpumask *)cpu_present_mask,
-+	.name = "s390-idle",
-+	.states = {
-+		{ /* entry 0 is for polling */},
-+		{
-+			.enter			= s390_enter_idle,
-+			.name			= "IDLE",
-+			.desc			= "ENABLED WAIT",
-+		},
-+	},
-+	.safe_state_index = 0,
-+	.state_count = 2,
-+};
-+
-+static int s390_cpuidle_cpu_online(unsigned int cpu)
-+{
-+	struct cpuidle_device *dev = &per_cpu(cpuidle_dev, cpu);
-+	int rc;
-+
-+	if (dev->registered) {
-+		cpuidle_pause_and_lock();
-+		rc = cpuidle_enable_device(dev);
-+		cpuidle_resume_and_unlock();
-+		if (rc)
-+			pr_err("Failed to enable cpuidle device on cpu %u\n", cpu);
-+	} else {
-+		dev->cpu = cpu;
-+		rc = cpuidle_register_device(dev);
-+		if (rc)
-+			pr_err("Failed to register cpuidle driver on cpu %u\n", cpu);
-+	}
-+	return rc;
-+}
-+
-+static int s390_cpuidle_cpu_dead(unsigned int cpu)
-+{
-+	struct cpuidle_device *dev = &per_cpu(cpuidle_dev, cpu);
-+
-+	if (!dev->registered)
-+		return 0;
-+	cpuidle_pause_and_lock();
-+	cpuidle_disable_device(dev);
-+	cpuidle_resume_and_unlock();
-+	return 0;
-+}
-+
-+/*
-+ * The target_residency and exit_latency values are benchmark-derived estimates
-+ * that remain non-deterministic due to s390's virtualized architecture.
-+ *
-+ * Configuration strategy:
-+ * - Poll idle state: Values derived from the next enabled idle state (EW)
-+ * - Enabled Wait state: Values selected based on idle behavior and empirical
-+ *   measurement data
-+ *
-+ * Goal is to improve responsiveness for workloads with frequent sleep/wakeup
-+ * cycles while minimizing any side effects.
-+ */
-+static void __init s390_cpuidle_ew_tune(void)
-+{
-+	struct cpuidle_state *state = &s390_cpuidle_driver.states[1];
-+
-+	if (machine_is_lpar()) {
-+		state->target_residency = 5;
-+		state->exit_latency = 5;
-+	} else {
-+		state->target_residency = 1;
-+		state->exit_latency = 1;
-+	}
-+}
-+
-+static int __init s390_cpuidle_init(void)
-+{
-+	int rc;
-+
-+	s390_cpuidle_ew_tune();
-+	cpuidle_poll_state_init(&s390_cpuidle_driver);
-+	rc = cpuidle_register(&s390_cpuidle_driver, NULL);
-+	if (rc)
-+		return rc;
-+	rc = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
-+				       "cpuidle/s390:online",
-+				       s390_cpuidle_cpu_online,
-+				       s390_cpuidle_cpu_dead);
-+	if (rc < 0) {
-+		cpuidle_unregister(&s390_cpuidle_driver);
-+		pr_err("Failed to allocate hotplug state: cpuidle/s390:online\n");
-+		return rc;
-+	}
-+	return 0;
-+}
-+device_initcall(s390_cpuidle_init);
+diff --git a/arch/s390/configs/debug_defconfig b/arch/s390/configs/debug_defconfig
+index 730c90b4a876..39f2c56bd29d 100644
+--- a/arch/s390/configs/debug_defconfig
++++ b/arch/s390/configs/debug_defconfig
+@@ -29,6 +29,8 @@ CONFIG_CGROUP_PIDS=y
+ CONFIG_CGROUP_RDMA=y
+ CONFIG_CGROUP_FREEZER=y
+ CONFIG_CGROUP_HUGETLB=y
++CONFIG_CPU_IDLE=y
++CONFIG_CPU_IDLE_GOV_TEO=y
+ CONFIG_CPUSETS=y
+ CONFIG_CGROUP_DEVICE=y
+ CONFIG_CGROUP_CPUACCT=y
+diff --git a/arch/s390/configs/defconfig b/arch/s390/configs/defconfig
+index dd5fc1426c88..723ce48ce8d1 100644
+--- a/arch/s390/configs/defconfig
++++ b/arch/s390/configs/defconfig
+@@ -27,6 +27,8 @@ CONFIG_CGROUP_PIDS=y
+ CONFIG_CGROUP_RDMA=y
+ CONFIG_CGROUP_FREEZER=y
+ CONFIG_CGROUP_HUGETLB=y
++CONFIG_CPU_IDLE=y
++CONFIG_CPU_IDLE_GOV_TEO=y
+ CONFIG_CPUSETS=y
+ CONFIG_CGROUP_DEVICE=y
+ CONFIG_CGROUP_CPUACCT=y
 
 -- 
 2.54.0
