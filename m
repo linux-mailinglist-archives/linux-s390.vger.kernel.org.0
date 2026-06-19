@@ -1,104 +1,85 @@
-Return-Path: <linux-s390+bounces-21054-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21057-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id FiqwFpZbNWq2twYAu9opvQ
-	(envelope-from <linux-s390+bounces-21054-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 19 Jun 2026 17:09:10 +0200
+	id 2jMvILhmNWovvQYAu9opvQ
+	(envelope-from <linux-s390+bounces-21057-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 19 Jun 2026 17:56:40 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F28B6A69A1
-	for <lists+linux-s390@lfdr.de>; Fri, 19 Jun 2026 17:09:09 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D58D36A6DEB
+	for <lists+linux-s390@lfdr.de>; Fri, 19 Jun 2026 17:56:39 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=icaPiIDi;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21054-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21054-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=bHVaHjqV;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21057-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21057-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id DA711301E87B
-	for <lists+linux-s390@lfdr.de>; Fri, 19 Jun 2026 15:03:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B364F30CE37A
+	for <lists+linux-s390@lfdr.de>; Fri, 19 Jun 2026 15:52:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC21B3A3E8B;
-	Fri, 19 Jun 2026 15:03:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B6833B42FF;
+	Fri, 19 Jun 2026 15:52:17 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E6E2853F3
-	for <linux-s390@vger.kernel.org>; Fri, 19 Jun 2026 15:03:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06DC53BBFAE;
+	Fri, 19 Jun 2026 15:52:09 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781881437; cv=none; b=gu3UX1t9OypaFQaBavFgaP5xIwlnaQWrGm/M01pVmFkS82nxetij4cRvyF5cI7ktKQW8Ni2NY7cSNs8xoNP1ioeHSDk5A+M60ZGa8aSl3gY4V+pSlW7h64OteJv8qKybQPpWtugKRo349CCyxF+tK3AoJoOMgoiKbibWHn7C8pg=
+	t=1781884336; cv=none; b=qVCT9sEmPheK6a+EfMVXs5dhgVzMbh4B/vVHz9PDaj8rLtXptv4c8Y57zCbHpfNJqOrecydqQu6pLVvL/aV/K6vB2IlbJMvFrt8d2YZhaeX7sM/pLR3Ovw//wAJxT1H2dc2JpQHW/g8/fV56RwC0yb9ps3vd/3rPjkiTlLID71o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781881437; c=relaxed/simple;
-	bh=n0TaIFU2dlUiY6Vzb+eElnBvXKO/Y+F2CeNOmOSDEpc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UrEdBl/jiaR/i8kv/rypc0wSP7951wn5m9+4Yeak3OXfNFCzux8xUAzLRFLRFeij8hO3qSep1xdLaAJBBCz+erg5Owe8eXq/JtU5PVk/P6IGJmXsKmbAmPPGltZoFMlALjQZsXWDNtOrBFe1Ju/4lk0JkcbE612gAowQ/X0DjTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=icaPiIDi; arc=none smtp.client-ip=209.85.210.177
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-84347ad88edso1857389b3a.1
-        for <linux-s390@vger.kernel.org>; Fri, 19 Jun 2026 08:03:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781881436; x=1782486236; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=p5fF29AhKZUYQkqmksxc4GcdOoLjfu8vsoNrkddfAwM=;
-        b=icaPiIDia+iWmEFhB2Z748fn+YVVv6PPRnGMgZMay8iUtTkG7gu1SsqMAw7Skq6vFo
-         Aij2rIUYIY5Ft41A0gg2hN0XapAOQGCSm18cZOvew193TwvFWFpbVnPph7wBqub0Q2p4
-         Scy1nT3lyVvtRb3bVrddCUwlYbM8K+sT1hdyLtpsjHi/70Ro9zaP3T4AVhhtny0DTdnC
-         67LXG+zPFF4ZGoP4zz+3V3M0gFWkKlmdRfKif61AeWvLVLkpgXokbEN6zejedbmUlcoU
-         wcBQKVfRezT3RJV52pp/0ptJ6lzVx8rxxSpJssrV7K+G2OpIDj6uYs4sjJPd+Mxa1Gt4
-         nlbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781881436; x=1782486236;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p5fF29AhKZUYQkqmksxc4GcdOoLjfu8vsoNrkddfAwM=;
-        b=sHd9WFDTIXmn98nA59ARPbcnLUKvVInFzf8qB9CNfY1D8U2mPZkYDt7BfsFwU1Go/3
-         +MnCPZpTMaLl14t/fHkMGkNYZ1hjR0l33tdnVMBAXvHAe+S2Sancdk6THKqLOOTeLDUg
-         iDzaXw8ovUMcAtqC+YbO3UGceKUWk1As++3NhHV4XkP+Ds6bH1f3gF60yySvpIxQaPnZ
-         slk1YvPeZ4i/5YMGt7COASjdQnlhfg5KYYYHSzegduW8DB3G8GlV02G17cBvTkIM+b9N
-         CLdq9seq/6gB2eZTJs98wPPlTINttjkPFu7Vyh7+XOOu59xw3JXjZWiIY9AiO/EAuraq
-         0Sbg==
-X-Forwarded-Encrypted: i=1; AFNElJ88SaXMP9qHIYWOh9SerC2FmtnVbq0fYCKxHfzYdUTK15WoaGyt+pbjNOPSc2txfEqp3B7VVYVpbTu6@vger.kernel.org
-X-Gm-Message-State: AOJu0Yylsbv+NeK5S5TVfPkmCKqoI4l4qDJ4cv0ofnDo18JV6DAWsavU
-	L8F/eT43F2PLQjSSByYyaFnXktf9EvCp2JjjRAs74oIRmZQIkCvnhksT
-X-Gm-Gg: AfdE7ckOkZ+GE0iV/L8HYaLXT1AcfMM6MJktn786jjCYezTD06PuvVluL0f/kRt8wUZ
-	e18YlMGgTGC7fF+CWvSVwYMuMFlbfdJNZDi4XIzRXtlajAzchwGIjDZs37aj/WCtM13S5MJHpxI
-	mzSGv7rPtnprlAm2LBW7xYwU6YQ4tjXUAQe5aSgCZ53G0RuqnBJiJMYRwdN9UTabZi9eDu7YFkE
-	vN4cI4O+l2hNG8Dy0MsmbwfyCZJ+EmSBYmdqpbxghSOMr+1sPz9UU79KxT/IrdjB1G0PEkgGcXK
-	Em4CC/SI94TMMEgDyu7ROBuV1M3MTWSw/EmyPdxn6Z/1VGjaE1XhxeWJvaNkWeDGEkX26AiBXoN
-	IuZ8rxELb5YPBsjwA9oZHP6MsJjx+PxKZCV5dT0R88+PpJ6NTkJG6oOSKiK2Pby5aawowa5B39V
-	VWcHSbi16I2hejPkx3njS7T1ljc/TAFF4RCjrz5yyuTeI0eG+oyR0=
-X-Received: by 2002:aa7:8882:0:b0:842:7e7f:2914 with SMTP id d2e1a72fcca58-8455078a5a4mr4177673b3a.4.1781881435832;
-        Fri, 19 Jun 2026 08:03:55 -0700 (PDT)
-Received: from cps-manycore-1.. ([147.46.174.222])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8455366ec53sm2844747b3a.13.2026.06.19.08.03.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2026 08:03:55 -0700 (PDT)
-From: Sechang Lim <rhkrqnwk98@gmail.com>
-To: "D . Wythe" <alibuda@linux.alibaba.com>,
-	Dust Li <dust.li@linux.alibaba.com>,
-	Sidraya Jayagond <sidraya@linux.ibm.com>,
-	Wenjia Zhang <wenjia@linux.ibm.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Mahanta Jambigi <mjambigi@linux.ibm.com>,
-	Tony Lu <tonylu@linux.alibaba.com>,
-	Wen Gu <guwen@linux.alibaba.com>,
-	Simon Horman <horms@kernel.org>,
-	Ursula Braun <ubraun@linux.ibm.com>,
-	Karsten Graul <kgraul@linux.ibm.com>,
-	Guvenc Gulce <guvenc@linux.ibm.com>,
-	linux-rdma@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH net v2] net/smc: fix out-of-bounds read when sk_user_data holds a sk_psock
-Date: Fri, 19 Jun 2026 15:03:41 +0000
-Message-ID: <20260619150342.3626224-1-rhkrqnwk98@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1781884336; c=relaxed/simple;
+	bh=PteWhntZMlSyh8epypLEhndtHdHIRE48k59zNUelkLA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KS4CWxZ72krgijyEy9gZVl5K7Qyf68lydfx8r5CyTJpUNeHZnok9FaEGHe12zscmSA1iGtMijvpCK8JWVFT3+imK/mzvOWBehCpBRi8o+/xb3nK9QNhLp+tl1taCQnveL5hBjJRhzJdR+M7BPA1Y0+kdVvZSyhwQO/A9PAlyjHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bHVaHjqV; arc=none smtp.client-ip=148.163.158.5
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65JDIVxc2292977;
+	Fri, 19 Jun 2026 15:52:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=cuUKlGAPLYl5/GoYFEQciCkQk3JtsOD/Mdu7na50q
+	OE=; b=bHVaHjqVvjdveX0KyG9eUJRnWoYX7+TAI3fIxMONNPeeAqRZdS7ycOw5y
+	s630yKcz8HOgUD46+PJFO98Pr6C8jW1P/Pu2GJyAK/2pUPQFohX0y85gwgj+JIO1
+	GMw1rUdv1e4wNAIWCGV5ojB6gH8/MzLyxSi3oriFneXOzb+d070qyEbudGlJudz0
+	6ztYt8xW+OJdODUzPUIIJ6+O+YIv/LaLhs/vQXJAA42PXL1INur5A4Qb+7uKjYU+
+	wMFH3p8E+VE71b909hVkdhJr77tGHz3evss272jaHnhhCVsmqpCIxvG4EH8ovoUj
+	nkI6jGRcPjn7vP9JFsEZxtUY0O41Q==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4eueqxe89r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 19 Jun 2026 15:52:00 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65JFnhqA026516;
+	Fri, 19 Jun 2026 15:51:59 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ev172hh67-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 19 Jun 2026 15:51:59 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65JFpu4E36241686
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 19 Jun 2026 15:51:56 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 249782004B;
+	Fri, 19 Jun 2026 15:51:56 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1853D20040;
+	Fri, 19 Jun 2026 15:51:55 +0000 (GMT)
+Received: from p-imbrenda.ibmuc.com (unknown [9.111.54.29])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 19 Jun 2026 15:51:54 +0000 (GMT)
+From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+To: linux-kernel@vger.kernel.org
+Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@kernel.org, seiden@linux.ibm.com,
+        nrb@linux.ibm.com, schlameuss@linux.ibm.com, gra@linux.ibm.com,
+        hca@linux.ibm.com, gerald.schaefer@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, svens@linux.ibm.com
+Subject: [PATCH v4 0/7] KVM: s390: A bunch of gmap-related fixes
+Date: Fri, 19 Jun 2026 17:51:47 +0200
+Message-ID: <20260619155154.307572-1-imbrenda@linux.ibm.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -106,120 +87,107 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE5MDE1MCBTYWx0ZWRfX9sbH8Dx3bfe1
+ poU6V6gTSqcwJI86G861xMkcFEIkXnodWWtcFQOCrjkyAnP3fToeYYeCIi8+U+ZbEq8Sbm28vO9
+ g0P6Zr6L7sg6Oh6Y4yfoQb4Zq47zJtS7TnSE1w5laWJ7Bo+2pigkJ7iLAhjQ0Lfs6bziiO5obrl
+ vCPJSAyepAzOzUg+Q5uMX0bYebAjzUuOuWIe0d2OnpfxI84pC4xJCqM6fGfn/syVXiS4YG2BSDC
+ hJbZNOa1eqTi48vG3AddixfFTltibNixBHSdfLeZA+ePdV/Bd9HqoGoJXTI00LaCmWwe9z4Jqgm
+ B54TlRMKR5qdQrqiz3frOUnIwdD6H8Cixl2VV68YHx4g/Spgt//lZJ3bWjiB2uf6joRVI+UbZbE
+ a9qpzeW10wStF7wtJqUIXmnkqP51k25/SciMboCPE0tp/HhU9Qntv9/0bczyDxMhrVNnZ9FN4e4
+ CxGWkLxE8xq1GMfdLgQ==
+X-Proofpoint-GUID: yB3vtfgZzSkAAQgDR-gxwuItJ7QQtT2B
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE5MDE1MCBTYWx0ZWRfX821qqmvbvM89
+ eDoMYD9MTXX5sJuPHdmDriKq1pTxYYSOIdACVe6ZPdXflM+nQNLFM+6ze9SZqpyYtmpmCrdCqcP
+ caczBYvFzwzu0VzTONImemLPaFIqAgU=
+X-Proofpoint-ORIG-GUID: yB3vtfgZzSkAAQgDR-gxwuItJ7QQtT2B
+X-Authority-Analysis: v=2.4 cv=auGCzyZV c=1 sm=1 tr=0 ts=6a3565a0 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=Y2IxJ9c9Rs8Kov3niI8_:22 a=ucjmMn6u_Xy7mvBSwZ0A:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-19_03,2026-06-18_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 clxscore=1015 priorityscore=1501 suspectscore=0 impostorscore=0
+ spamscore=0 lowpriorityscore=0 adultscore=0 malwarescore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606190150
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21057-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TAGGED_FROM(0.00)[bounces-21054-lists,linux-s390=lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:alibuda@linux.alibaba.com,m:dust.li@linux.alibaba.com,m:sidraya@linux.ibm.com,m:wenjia@linux.ibm.com,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:mjambigi@linux.ibm.com,m:tonylu@linux.alibaba.com,m:guwen@linux.alibaba.com,m:horms@kernel.org,m:ubraun@linux.ibm.com,m:kgraul@linux.ibm.com,m:guvenc@linux.ibm.com,m:linux-rdma@vger.kernel.org,m:linux-s390@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:bpf@vger.kernel.org,s:lists@lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:linux-kernel@vger.kernel.org,m:kvm@vger.kernel.org,m:linux-s390@vger.kernel.org,m:borntraeger@de.ibm.com,m:frankja@linux.ibm.com,m:david@kernel.org,m:seiden@linux.ibm.com,m:nrb@linux.ibm.com,m:schlameuss@linux.ibm.com,m:gra@linux.ibm.com,m:hca@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:svens@linux.ibm.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[imbrenda@linux.ibm.com,linux-s390@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[rhkrqnwk98@gmail.com,linux-s390@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FROM_NEQ_ENVFROM(0.00)[imbrenda@linux.ibm.com,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rhkrqnwk98@gmail.com,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,linux.ibm.com:mid,linux.ibm.com:from_mime];
+	TO_DN_NONE(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5F28B6A69A1
+X-Rspamd-Queue-Id: D58D36A6DEB
 
-SMC stores its smc_sock in the clcsock's sk_user_data tagged
-SK_USER_DATA_NOCOPY and reads it back with smc_clcsock_user_data(), which
-only strips that flag. sockmap stores a sk_psock in the same field tagged
-SK_USER_DATA_NOCOPY | SK_USER_DATA_PSOCK. Nothing keeps both off one
-socket, and SMC then casts the sk_psock to an smc_sock.
+Fix handling of _PAGE_UNUSED pte bit. The bit was lingering around
+longer than it should have, causing issues. This is yet a different
+approach from the previous version.
 
-A passive-open child hits this. It inherits the listener's
-smc_clcsock_data_ready(), but sk_clone_lock() clears its NOCOPY
-sk_user_data, and a BPF sock_ops program then adds the child to a sockmap,
-installing a sk_psock in that field. The inherited callback reads it as an
-smc_sock and dereferences a clcsk_* pointer past the end of the sk_psock:
+Fix some cmma dirty tracking functions.
 
-  BUG: KASAN: slab-out-of-bounds in smc_clcsock_data_ready+0x84/0x200 net/smc/af_smc.c:2637
-  Read of size 8 at addr ffff8880013b8674 by task syz.6.12484/67930
-   <IRQ>
-   smc_clcsock_data_ready+0x84/0x200 net/smc/af_smc.c:2637
-   tcp_urg+0x24d/0x360 net/ipv4/tcp_input.c:6264
-   tcp_rcv_state_process+0x280d/0x4940 net/ipv4/tcp_input.c:7336
-   tcp_child_process+0x371/0xa50 net/ipv4/tcp_minisocks.c:1002
-   tcp_v4_rcv+0x1eaa/0x2a00 net/ipv4/tcp_ipv4.c:2186
-   [...]
-   </IRQ>
+Also fix a few other small issues in gmap.
 
-  Allocated by task 67930:
-   sk_psock_init+0x142/0x740 net/core/skmsg.c:766
-   sock_hash_update_common+0xd3/0x990 net/core/sock_map.c:1010
-   bpf_sock_hash_update+0x114/0x170 net/core/sock_map.c:1229
-   __cgroup_bpf_run_filter_sock_ops+0x74/0xa0 kernel/bpf/cgroup.c:1727
-   tcp_init_transfer+0x1085/0x1100 net/ipv4/tcp_input.c:6693
-   [...]
+v3->v4:
+* Improve/fix descriptions of patches 1 and 3
+* Fix handle_{sske,pfmf} under memory pressure
+* Fix cmma dirty tracking and its selftest
 
-sk_psock() already guards the other side, returning NULL unless
-SK_USER_DATA_PSOCK is set. Make smc_clcsock_user_data() and its RCU
-variant return the smc_sock only when sk_user_data carries SMC's tag
-alone. A sk_psock then reads back as NULL, which the data_ready and
-fallback callbacks already handle.
+v2->v3:
+* Fix _PAGE_UNUSED in yet a different way
+* Fix a potential overflow in dat_peek_cmma()
+* Some minor gmap fixes that are not actual bugs yet
 
-Fixes: a60a2b1e0af1 ("net/smc: reduce active tcp_listen workers")
-Signed-off-by: Sechang Lim <rhkrqnwk98@gmail.com>
----
- net/smc/smc.h | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+v1->v2:
+* Completely different approach, entirely new patch
 
-diff --git a/net/smc/smc.h b/net/smc/smc.h
-index 52145df83f6e..88dfb459b7cc 100644
---- a/net/smc/smc.h
-+++ b/net/smc/smc.h
-@@ -342,13 +342,25 @@ static inline void smc_init_saved_callbacks(struct smc_sock *smc)
- 
- static inline struct smc_sock *smc_clcsock_user_data(const struct sock *clcsk)
- {
--	return (struct smc_sock *)
--	       ((uintptr_t)clcsk->sk_user_data & ~SK_USER_DATA_NOCOPY);
-+	uintptr_t data = (uintptr_t)clcsk->sk_user_data;
-+
-+	/*
-+	 * Return the smc_sock only if the slot carries SMC's tag alone.
-+	 * sockmap stores a sk_psock here tagged SK_USER_DATA_PSOCK; it is
-+	 * not an smc_sock and must not be dereferenced as one.
-+	 */
-+	if ((data & ~SK_USER_DATA_PTRMASK) != SK_USER_DATA_NOCOPY)
-+		return NULL;
-+	return (struct smc_sock *)(data & SK_USER_DATA_PTRMASK);
- }
- 
- static inline struct smc_sock *smc_clcsock_user_data_rcu(const struct sock *clcsk)
- {
--	return (struct smc_sock *)rcu_dereference_sk_user_data(clcsk);
-+	uintptr_t data = (uintptr_t)rcu_dereference(__sk_user_data(clcsk));
-+
-+	if ((data & ~SK_USER_DATA_PTRMASK) != SK_USER_DATA_NOCOPY)
-+		return NULL;
-+	return (struct smc_sock *)(data & SK_USER_DATA_PTRMASK);
- }
- 
- /* save target_cb in saved_cb, and replace target_cb with new_cb */
+Claudio Imbrenda (7):
+  s390/mm: Fix handling of _PAGE_UNUSED pte bit
+  KVM: s390: Fix dat_peek_cmma() overflow
+  KVM: s390: Do not set special large pages dirty
+  KVM: s390: Fix code typo in gmap_protect_asce_top_level()
+  KVM: s390: Fix handle_{sske,pfmf} under memory pressure
+  KVM: s390: cmma: Fix cmma dirty tracking
+  KVM: s390: selftests: Fix cmma selftest
+
+ arch/s390/include/asm/pgtable.h              |  4 ++--
+ arch/s390/kvm/dat.c                          |  5 ++++-
+ arch/s390/kvm/gmap.c                         | 18 ++++++++++++++----
+ arch/s390/kvm/kvm-s390.c                     |  5 +----
+ arch/s390/kvm/priv.c                         |  8 ++++++--
+ arch/s390/mm/gmap_helpers.c                  |  3 ++-
+ tools/testing/selftests/kvm/s390/cmma_test.c |  3 +++
+ 7 files changed, 32 insertions(+), 14 deletions(-)
+
 -- 
-2.43.0
+2.54.0
 
 
