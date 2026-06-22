@@ -1,72 +1,72 @@
-Return-Path: <linux-s390+bounces-21106-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21108-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 7Co7D4tuOWrrsgcAu9opvQ
-	(envelope-from <linux-s390+bounces-21106-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 22 Jun 2026 19:19:07 +0200
+	id 0SCFKM1uOWoPswcAu9opvQ
+	(envelope-from <linux-s390+bounces-21108-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 22 Jun 2026 19:20:13 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id E05F26B1718
-	for <lists+linux-s390@lfdr.de>; Mon, 22 Jun 2026 19:19:06 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5AFAA6B1743
+	for <lists+linux-s390@lfdr.de>; Mon, 22 Jun 2026 19:20:13 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=oia3RcJP;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21106-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-s390+bounces-21106-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=PkKHa0jJ;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21108-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21108-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 34EF230253B3
-	for <lists+linux-s390@lfdr.de>; Mon, 22 Jun 2026 17:19:02 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id B0CB93040C51
+	for <lists+linux-s390@lfdr.de>; Mon, 22 Jun 2026 17:19:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 793DD342CBA;
-	Mon, 22 Jun 2026 17:18:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9E99344D83;
+	Mon, 22 Jun 2026 17:18:52 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439B534104E;
-	Mon, 22 Jun 2026 17:18:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61D4342CA7;
+	Mon, 22 Jun 2026 17:18:51 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782148731; cv=none; b=kZf/gUeW/pB9Ag1j5QsNrbjD3ORsLAMfNAHTKKLyo5I+DQfMzzSiSQyNy3M9p73VkMBfMgVMOtJWxjokxO74OoC4zOB3dx5r5km54+NT3xsx9T38TzWlflEDFdPo/v+EjRlDzyE6+dUns28HOuOJAUzD6yEGsIRTMCKDwMycn7o=
+	t=1782148732; cv=none; b=Z79MnDo34jUX6QksS54Srj4uvZ3eljjeQi9MhpPP1njES1DCAmY1n9Dd11ePX45CeQUb4VPa1rwbTfaIEiHI4TqbeBob61JEOjpb9ZjbIN1Tcm703fZ+RBOj0Sn3g+rCDR34/XXZB37IEw80eN10EUl3SregAIybZjOf87BLgbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782148731; c=relaxed/simple;
-	bh=aXtnh1XDkfyl9Qchb57izKfvAET1OL/16TRuqGUY3os=;
+	s=arc-20240116; t=1782148732; c=relaxed/simple;
+	bh=HwilaB+MOwsNvLp3NNZBv6VKrQ6JxXEn3W7VRuDEss0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D+/skqYT07qmKpc6tn++x6Dwc34uS0rhNSP27Gexyvrpif8GTBUtE1qFbhm2KZ6MSgGl/7C8yV454HWG6drB7K4I/G1kJBUX5NXA3EzzupbVhFzMKDCQroVrZelCnHinGg8L3NjtHhKoznnAt75FDvdONwybhBN34DMf2vPBOk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=oia3RcJP; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65MFmOhw3447281;
-	Mon, 22 Jun 2026 17:18:47 GMT
+	 MIME-Version; b=AtJnWvVVC6Z6bz0OKwFvt1PlSs9t6aTOpu5dreuMCIA8y4Ly4+2z+ryPqcBCGjr9JtfDtYjZD5PnZqM5UB5LtbrWI8wYfOatM4EeGllQEOBalmoHfuZcH3TGpEQQDfEVImVywTHW8RW6zE3Y+r48EZsjBZhcgEBKZhwvpm+mHVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PkKHa0jJ; arc=none smtp.client-ip=148.163.156.1
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65MFmktf3594318;
+	Mon, 22 Jun 2026 17:18:48 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=X3l7SLvrNZOlg/Grb
-	Nj/MWNHBcQ/IvPqQwU6/jfIaaA=; b=oia3RcJPdPqIiOiHgoAISAmIzrdjbOmLc
-	A0QKpW8GmhxYl/ai8LAaF+LTPZS7H1sga9pCZmCaxkRjbnbXjNxrMLNB2X7F0gSK
-	sh7UdMEk6qqAKv4VEu4fx63PVZX7Wt6WJhdFmIwpn+gDDDYhD5i1z5N5d4F8Aie9
-	cZIBj5OdRfyK0StvCeKvgRJi3f8uk2wwpdAIBGqyv+WWegC45lPb5fnUXggRnbzL
-	0G1eNlK9TmpgIJzA9uCZmFj47uhTlrbfQyHrfIg4ae+XeDFTaGinQxCi3ZBdsKkh
-	CtttZSMpxYGwr+YAsNzpAXVc9ZSAcQr6mZFqJiK1N5rD+VNcdB40Q==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ewjc3agu3-1
+	:mime-version:references:subject:to; s=pp1; bh=z+uiSRVVSJ3AktqKQ
+	PjjN84apzBlCrFNROyTAJCeo00=; b=PkKHa0jJvCGqhOWFUr+yXl8AzDz66d/HU
+	2B5bmkRo71ajNJwIyPQhNtJ425/gbQ2VMbwOPv77mjuDyO2pxmllhOaIVC6ScodF
+	byFoUXCmPX/Z+w2yYn1FwhrHWqFkEh6sHiqv8nPfEDZREDpMrAn1oIDdfmDzzGOo
+	TOB91+UhLdiL9/7DqI8UGoF+XlXalD/6ncFDe/4Jof1SFusrsdTOpaJVsup/63z/
+	R637GuUtAvXDLXsoFSinBOvHhN2bg0wvcTK57erVJenvaO7RRNcUw3Cyg82/37nI
+	GpPTxT/GWyTgwmn7cLKuwQLTJ7pR7Q3qF4NCmPaAosGpOJSl/qcfA==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ewjhqje3g-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Jun 2026 17:18:46 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65MH4dNM030132;
+	Mon, 22 Jun 2026 17:18:47 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65MH4c6O011538;
 	Mon, 22 Jun 2026 17:18:46 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4ex56q7ghg-1
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4ex7vyeytw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Mon, 22 Jun 2026 17:18:46 +0000 (GMT)
 Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65MHIB9B29622868
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65MHIio363701438
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 22 Jun 2026 17:18:12 GMT
+	Mon, 22 Jun 2026 17:18:45 GMT
 Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E486058056;
-	Mon, 22 Jun 2026 17:18:43 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id C5C4058056;
+	Mon, 22 Jun 2026 17:18:44 +0000 (GMT)
 Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2C0AB58052;
-	Mon, 22 Jun 2026 17:18:43 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 1524E58052;
+	Mon, 22 Jun 2026 17:18:44 +0000 (GMT)
 Received: from IBM-D32RQW3.ibm.com (unknown [9.61.248.203])
 	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
 	Mon, 22 Jun 2026 17:18:43 +0000 (GMT)
@@ -74,11 +74,10 @@ From: Farhan Ali <alifm@linux.ibm.com>
 To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
 Cc: helgaas@kernel.org, alex@shazbot.org, alifm@linux.ibm.com,
-        schnelle@linux.ibm.com, mjrosato@linux.ibm.com,
-        Benjamin Block <bblock@linux.ibm.com>
-Subject: [PATCH v20 3/4] PCI: Fail FLR when config space is inaccessible
-Date: Mon, 22 Jun 2026 10:18:39 -0700
-Message-ID: <20260622171840.1618-4-alifm@linux.ibm.com>
+        schnelle@linux.ibm.com, mjrosato@linux.ibm.com
+Subject: [PATCH v20 4/4] PCI/MSI: Enable memory decoding before restoring MSI-X messages
+Date: Mon, 22 Jun 2026 10:18:40 -0700
+Message-ID: <20260622171840.1618-5-alifm@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260622171840.1618-1-alifm@linux.ibm.com>
 References: <20260622171840.1618-1-alifm@linux.ibm.com>
@@ -90,32 +89,32 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=X4Ni7mTe c=1 sm=1 tr=0 ts=6a396e76 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+X-Authority-Analysis: v=2.4 cv=I4VVgtgg c=1 sm=1 tr=0 ts=6a396e77 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
  a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8 a=1owyFLT6pZZ0tE0DW5YA:9
- a=zgiPjhLxNE0A:10
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjIyMDE2OSBTYWx0ZWRfX3tAL4UwEDUfM
- rcVi/7Eg/Z/OlFK5O+a46TNHTsw8bYlKhpSehdgfVcloFHSOGmR4WMeO3eMB6m9wfmKLQFAj6q6
- dm8p3fRzF0KNqemioxkxouBjArJeZTI=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjIyMDE2OSBTYWx0ZWRfX9Qjs8WX3QSMj
- pvD+4NwmFDCqmgVfB1W+5KXJK/p0OpjRaicFMSYXGhgRMMDdByqubRCCK8UC5cFMiZPj4tGeF99
- +zV3XLsrswJcP0kk7Cb3nye4mHSvM8W+jGuglCJd0a+YLiArC8QFFXelEq78JIzUURxmuZnWwCH
- V3/bBDKOQ9k8xTIstPdxqCA+Vle3wnpO65UuyDdnwFFmtEoOMI1PSRH1+KHHxc/ACwzVOsrnKLx
- NCTaQnrF5y09IBHV2v2/byWmtdstXjisdfxuqV6jHERL78XdvBElI7k5oiz2l81y/MShJkhY87N
- hUdW/0yNVGuKVDaYjG86FSkJhRb8TZogPz0XdWIiQo+XMLkJIjBTNlwbWX9XHM1cEltNqDb5EA3
- uzZzKLvHW64CHscPLOCilQGx2KDz4w2EXOs+IT/e5kdcyoH83y4kY7ov71TUEF2OMABmfIjXCH4
- yKiDxrw+5D+tEMuweSw==
-X-Proofpoint-ORIG-GUID: 7tJvNMJ8oljm93-S2qoIDzOu_XJIlb-9
-X-Proofpoint-GUID: 7tJvNMJ8oljm93-S2qoIDzOu_XJIlb-9
+ a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=kR1LtElmgzqE7PBWmM4A:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjIyMDE2OSBTYWx0ZWRfXwhAvYlTBv5U+
+ CpyomKB031HF0ir/no8uO3PdTE3M6zrM5ChS9BPr4uHhqzrriPpWLnCVhICz8483W0p3xFFmnPy
+ qX8229+kl6qxar/dc6M1z3YBp5Pk/qTSxnzZO9vQmLG6YVGY3hULK/48L7Y2r1ywjUaBg+Lcfse
+ QbNWWtes0/1ArZTl+KQxeaQbPEQqJUb5eNo5JjRy5fXgS4yoVdG5ekAB6JXBcOFCAnwo9uAWypm
+ W63c26z3jkbL0H6R8RnCaUOc7EgWMgsOlszG9WdVvGP94As+PP9kp5TuwwY3lSbdlhEn1jwx6fK
+ wtmrvMSy9xOp4V3fNY1y8bcA7sGOjENVek2JKLvhpVnWWMyrYpugeLsXhKmQx6tB9yWC/q2XPq2
+ i/Se20X1EHmUAHjJRefq7wIXoKGSEi6t5vFsPRdImWsIatF9zKqQEQexKIYzKSHDnH3a45bCfK+
+ ZP6korv+Fa/d+Xuypyg==
+X-Proofpoint-GUID: FJLXJNB220G98A0eJi4v7aQrneYDoRq7
+X-Proofpoint-ORIG-GUID: FJLXJNB220G98A0eJi4v7aQrneYDoRq7
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjIyMDE2OSBTYWx0ZWRfXxGlwXWswPlvG
+ woA7be5WlYNBROGctrvZF2HRIQr3/zbAYQYhsjGJoOHIHciWUecYiq+rhs8H7LWw9g7nIUqTiJO
+ 3PXgc8+qyZZCDNL7NT3eQ9WgMbTuTVU=
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-06-22_03,2026-06-22_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 bulkscore=0 suspectscore=0 spamscore=0 priorityscore=1501
- impostorscore=0 malwarescore=0 clxscore=1015 adultscore=0 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606220169
+ lowpriorityscore=0 malwarescore=0 clxscore=1015 impostorscore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 priorityscore=1501
+ adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2606220169
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -123,58 +122,75 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21106-lists,linux-s390=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:helgaas@kernel.org,m:alex@shazbot.org,m:alifm@linux.ibm.com,m:schnelle@linux.ibm.com,m:mjrosato@linux.ibm.com,m:bblock@linux.ibm.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[alifm@linux.ibm.com,linux-s390@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21108-lists,linux-s390=lfdr.de];
 	FROM_NEQ_ENVFROM(0.00)[alifm@linux.ibm.com,linux-s390@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:helgaas@kernel.org,m:alex@shazbot.org,m:alifm@linux.ibm.com,m:schnelle@linux.ibm.com,m:mjrosato@linux.ibm.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[alifm@linux.ibm.com,linux-s390@vger.kernel.org];
 	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	ALIAS_RESOLVED(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,linux.ibm.com:mid,linux.ibm.com:from_mime];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[ibm.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ALIAS_RESOLVED(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,linux.ibm.com:mid,linux.ibm.com:from_mime,vger.kernel.org:from_smtp];
+	TO_DN_NONE(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E05F26B1718
+X-Rspamd-Queue-Id: 5AFAA6B1743
 
-If a device is in an error state, then it's config space may not be
-accssible. Add additional check to validate if a device's config space is
-accessible before doing an FLR reset.
+The current MSI-X restoration path assumes the Command register Memory bit
+is enabled when writing MSI-X messages. But its possible the last saved and
+restored state of device may not have the Memory bit enabled, even if a
+device driver later enables Memory bit and MSI-X. Attempting to access
+Memory space without Memory bit enabled can lead to Unsupported Request
+(UR) from the device. Fix this by enabling Memory bit and restore
+it afterwards.
 
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
 Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
 ---
- drivers/pci/pci.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pci/msi/msi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 973d23e41c48..521a4bb189d7 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4352,6 +4352,9 @@ int pcie_flr(struct pci_dev *dev)
+diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
+index 81d24a270a79..46a0d9f68a57 100644
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -874,6 +874,7 @@ void __pci_restore_msix_state(struct pci_dev *dev)
  {
- 	int ret;
+ 	struct msi_desc *entry;
+ 	bool write_msg;
++	u16 cmd;
  
-+	if (!pci_dev_config_accessible(dev, "FLR"))
-+		return -ENOTTY;
-+
- 	if (!pci_wait_for_pending_transaction(dev))
- 		pci_err(dev, "timed out waiting for pending transaction; performing function level reset anyway\n");
+ 	if (!dev->msix_enabled)
+ 		return;
+@@ -882,6 +883,8 @@ void __pci_restore_msix_state(struct pci_dev *dev)
+ 	pci_intx_for_msi(dev, 0);
+ 	pci_msix_clear_and_set_ctrl(dev, 0,
+ 				PCI_MSIX_FLAGS_ENABLE | PCI_MSIX_FLAGS_MASKALL);
++	pci_read_config_word(dev, PCI_COMMAND, &cmd);
++	pci_write_config_word(dev, PCI_COMMAND, cmd | PCI_COMMAND_MEMORY);
+ 
+ 	write_msg = arch_restore_msi_irqs(dev);
+ 
+@@ -893,6 +896,7 @@ void __pci_restore_msix_state(struct pci_dev *dev)
+ 		}
+ 	}
+ 
++	pci_write_config_word(dev, PCI_COMMAND, cmd);
+ 	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL, 0);
+ }
  
 -- 
 2.43.0
