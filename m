@@ -1,233 +1,212 @@
-Return-Path: <linux-s390+bounces-21158-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21159-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id QXIyJEaYOmpRBAgAu9opvQ
-	(envelope-from <linux-s390+bounces-21158-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 23 Jun 2026 16:29:26 +0200
+	id XfZuAA6ZOmq4BAgAu9opvQ
+	(envelope-from <linux-s390+bounces-21159-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 23 Jun 2026 16:32:46 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 846206B7E1C
-	for <lists+linux-s390@lfdr.de>; Tue, 23 Jun 2026 16:29:25 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B92E6B7EB6
+	for <lists+linux-s390@lfdr.de>; Tue, 23 Jun 2026 16:32:45 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b="o9U90NT/";
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21158-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21158-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=LiEg5b+2;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21159-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-21159-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 91B4C3001CC0
-	for <lists+linux-s390@lfdr.de>; Tue, 23 Jun 2026 14:29:22 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id B613930C894B
+	for <lists+linux-s390@lfdr.de>; Tue, 23 Jun 2026 14:30:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE81A31B131;
-	Tue, 23 Jun 2026 14:29:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DD4D3C2B80;
+	Tue, 23 Jun 2026 14:30:17 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BDA632B11E
-	for <linux-s390@vger.kernel.org>; Tue, 23 Jun 2026 14:29:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC8B3C1991;
+	Tue, 23 Jun 2026 14:30:15 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782224961; cv=none; b=g5M74Kxo7gX9b482FaBbtDFhw7+XYtvsYYCt0OqL0TZZcdYABnzP7m3BsUDCkRHDFmL8G0YQEQk68wCoyH7cbIqp33niXGqprhHewPGWPKmfhT8TqiApKrd077ksAMRE3hffT8tjPpse5gihxSodklSOfnguqGjo6lJc/72VEv0=
+	t=1782225017; cv=none; b=cBMrck8oeDKpvwLbyMKHxkFkbs7DATgjNcejcx0ZOuZuvEdnw3Uur1ygNJNemFnpwuX8HWavjQtmaQE8bc6Ohk/CCU2EA7z+4u8paTEt0fwCh8JmRDDjRAh8TokDLBOJHxlau/uLMgqMgxPxVJiUypLrkYhw8pznv+Ct7/AdXns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782224961; c=relaxed/simple;
-	bh=UAaL1JngLFg9GQ/roSFHDgB2Q/NNLY6u9j4Tbu0QLpk=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=LPqEyungS++9CE+TjzDJN8F80C0xEPT50wOi33ZObeiwmwaRr0TaBLj+wJMQ1G9mk2TaiMyYFtbamVs9/Ik4j3Yp9rI3mpU1R4M7Ntt4DX1Forwjm9fJV4l1oacH+5RfQVBioOGX8bhD+g6RWlGi3xnn7AX2ULv1RmBBdsL5KFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=o9U90NT/; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65NBmih22136755
-	for <linux-s390@vger.kernel.org>; Tue, 23 Jun 2026 14:29:19 GMT
+	s=arc-20240116; t=1782225017; c=relaxed/simple;
+	bh=aNj1SA1CBO5Er7syh/U4pW81ccwkQ0J2wFlp0kJLAK0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lfu4ie9Hn6DsHYSzkWIN96wY9RKnbJ6HLF0aBh55oFhNFkTu9GxNdmarcRY16vVKJ8K2YInPiIdQvulwY3QSD6I+/YGtrFMv9v7+vBUb1aF9xrmLnEOfcBYRULu65Zg3cRWxvkybb3c2ZjRO7QaCl5Q8DdfoI+h3cDE4/W3X0/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LiEg5b+2; arc=none smtp.client-ip=148.163.158.5
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65NBn5Vb1827281;
+	Tue, 23 Jun 2026 14:30:13 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:to; s=pp1;
-	 bh=B3AV/LI3eu33JTu9RKUYQLoP2nQB7g7Iwb/osoczyyY=; b=o9U90NT/NIvx
-	L5WCWbJWxUPKbqi2qt9jE1gKphAR45xnzlmO9JeHV7l6JwhVFiZ1i93+Gq/5fqB0
-	+opDa5IrP+GtFuPUt5EqqPc75CjbQdFCWUVrS79y6Vqh4T5Z4kFsdZcBw9n4zvef
-	mSMyVG7hz5emShFMXI8254N2Cn90V1SqaLuJNc4biuBlup5Ts8F7M0t+LJseMLnA
-	KeEJa0MFisGX4IElzVH8SmB8C7ngWAOg0QhFYcSkbLf6CY/TG+rY9kIqox5IDZZX
-	WtLwJastdlZRm0SZiQyRxSxdtR0NCR50WiGh/tmmcbL6gBc8FfcEft0Xp8m1nYM7
-	4KDqe+SbVg==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ewjhqq06c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-s390@vger.kernel.org>; Tue, 23 Jun 2026 14:29:19 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65NEPUCv006686
-	for <linux-s390@vger.kernel.org>; Tue, 23 Jun 2026 14:29:18 GMT
-Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ex6phbmr7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-s390@vger.kernel.org>; Tue, 23 Jun 2026 14:29:18 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65NETH8327984416
+	:message-id:mime-version:references:subject:to; s=pp1; bh=XV/1dY
+	IQvzQ88frSkANg2zbzasadjyWkxBvucar1ZEU=; b=LiEg5b+2Bf48a6fpvoYpd7
+	0fW+L7IDjjiVbGJXp+SkvxP2JOb4J/CV434rMxF3iUjd1dcYiin0UsEy2aZTkdvN
+	6GfORw1pp6rcIOJwQ0HIbxFYJVZOyPuqQbUh0Ad/vBCg/vOjoSIYzQQIzvFif0zh
+	CPndYawS4is27R09BzPbHT/L1gl1SbJ6o3MWB2CETN8I4GCUxZNIFpLUFA1D/E6M
+	wy+1BETOEWaw8DQvCCFvM9QGxEclufpTz3qvpKAn2ZyL0vf0Gscd698J4Dk6EqiB
+	/DYdHcrOQbCIhB0IEVgGzKAV+pbXCKzFKxpwwimFTxbTJk0pxZdxkE3FaWwPnAnA
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ewjgspwaj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Jun 2026 14:30:12 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65NEJe30005046;
+	Tue, 23 Jun 2026 14:30:11 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4ex7vykd3m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Jun 2026 14:30:11 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65NEUAnn7340614
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 23 Jun 2026 14:29:17 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3A0BA58055;
-	Tue, 23 Jun 2026 14:29:17 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9A4335805D;
-	Tue, 23 Jun 2026 14:29:16 +0000 (GMT)
-Received: from ltc.linux.ibm.com (unknown [9.5.196.140])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 23 Jun 2026 14:29:16 +0000 (GMT)
+	Tue, 23 Jun 2026 14:30:10 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 67B5F58063;
+	Tue, 23 Jun 2026 14:30:10 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E2D715804B;
+	Tue, 23 Jun 2026 14:30:08 +0000 (GMT)
+Received: from [9.61.151.132] (unknown [9.61.151.132])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 23 Jun 2026 14:30:08 +0000 (GMT)
+Message-ID: <1f0f3a84-6fd3-4ae2-9518-72afb629203f@linux.ibm.com>
+Date: Tue, 23 Jun 2026 10:30:08 -0400
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 23 Jun 2026 16:29:16 +0200
-From: Harald Freudenberger <freude@linux.ibm.com>
-To: Holger Dengler <dengler@linux.ibm.com>
-Cc: Ingo Franzki <ifranzki@linux.ibm.com>, linux-s390@vger.kernel.org,
-        Heiko
- Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander
- Gordeev <agordeev@linux.ibm.com>
-Subject: Re: [PATCH v3 1/1] pkey: Move keytype check from pkey api to handler
-Reply-To: freude@linux.ibm.com
-Mail-Reply-To: freude@linux.ibm.com
-In-Reply-To: <20260623142031.4053768-2-dengler@linux.ibm.com>
-References: <20260623142031.4053768-1-dengler@linux.ibm.com>
- <20260623142031.4053768-2-dengler@linux.ibm.com>
-Message-ID: <f6f9e5f8aeefb23d259ad77b874bc768@linux.ibm.com>
-X-Sender: freude@linux.ibm.com
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] KVM: s390: pci: Fix GISC refcount leak on AIF enable
+ failure
+To: Haoxiang Li <haoxiang_li2024@163.com>, alifm@linux.ibm.com,
+        farman@linux.ibm.com, borntraeger@linux.ibm.com, frankja@linux.ibm.com,
+        imbrenda@linux.ibm.com, david@kernel.org, hca@linux.ibm.com,
+        gor@linux.ibm.com, svens@linux.ibm.com, schnelle@linux.ibm.com
+Cc: linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20260623075220.2022613-1-haoxiang_li2024@163.com>
+From: Matthew Rosato <mjrosato@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <20260623075220.2022613-1-haoxiang_li2024@163.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=I4VVgtgg c=1 sm=1 tr=0 ts=6a3a983f cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=kj9zAlcOel0A:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VwQbUJbxAAAA:8
- a=VnNF1IyMAAAA:8 a=WdmtL9VPQa79YndLzNMA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjIzMDExNyBTYWx0ZWRfX9scaI6RSrEMC
- bVBswbMmI0YsyD4hWwTwEh8Jda2vghR2ikcshJuLCf4wwWfOdt/LBXv6YpRWcSTZ9Cqqrk1ifaM
- L95CwngXusotzWHjALHEVxoNn6R//1KtrfogSDHj6DJpV3vxvezeAi3SRQGKaoYenPMEJ0H+h5i
- ftV77FDoQRafLUdIH0EjfVCpUFx+h9sIlpAo2B0hQ9dBHnzXEUS9k7BiKm2Qpzku2g5aQh+QoMs
- YVJzZmKKKPFrnwHs53va6yypCOsGzpbvLUtShA0kKvFsMWL2nAYpWsvR+p4Jj18sokIvH33umSC
- bUpNv4E3QwF43pxqH43fKYLfPmjxMbU8p7WVNt8G8Hf10bwS8fGVr5N+kzdiZG4rmzgPPVK5yVl
- wvxDeWGIOlSZR+atkKEuKWFbHTUldeXHVuzRDA6f4AKJLy+zoW60QFNpQMRZjpbYIRJCGce1Fag
- gk7JpZWWDL5O8fMRm2g==
-X-Proofpoint-GUID: EK6lWXD0nNDdSy2Kt6k0raqNeUsUEI44
-X-Proofpoint-ORIG-GUID: EK6lWXD0nNDdSy2Kt6k0raqNeUsUEI44
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjIzMDExNyBTYWx0ZWRfXxM5d/X2gccH6
- zxv2X/SKwLoTfT1B30VCV9ePO8VJI1qKAJMG7vkphmu+VRuJkyGQY4Wr43q7QhEGqn3kbDTXW/u
- 1rN88+q3fxEYBCpsrc0Ha9MGxnrj0/M=
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjIzMDExNyBTYWx0ZWRfX9yPRA8vm9nEf
+ Yqj+1h/O/ZBSVmxIhTBFsP/lashdhPCb5j7Qfk7ARS+lqVYweJvCWXKqSrfaowF3y3JtYAn3Z98
+ lKU7vaiYoktsJRjUOZzaCUtsl25+z/aS12AOE2Y9DU3zWhwDrEaZQ7DPMCvbCmQ+37j4nnLwUoo
+ ytFKCZ6ZOMt+CRdgz2dMIzOzenyKiAFjsgZ8mfB3HwBZc8hL8ORSrfe+1EvTkCWXvxavdv0MRM9
+ JQgFA7pzbdy+M7nxMvtAV5v8ugzazTdZCyczXB0bZ7X+NpY9h6CX39fem78SLx8TnaLIEYMfRwP
+ Otx+NRff6THjrzg6g85mO7rHZxKUGncaihjMmXwm72bDjiD+Y1STUO/2nCkeyyD4ww9aBDVl9tU
+ LNTJjhfDeWOqy5NhTffh49ASxAvvTcozER9NYr/0X2ufCv2kQ+oZm742zsQAl0T0wPRMwIqOL99
+ /jx7g7WgxgCWW7+6nMg==
+X-Proofpoint-GUID: _1puzog_juDBd3hgS_rWVbToKW-uDBe1
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjIzMDExNyBTYWx0ZWRfX7X5G6Vr7p7or
+ VIgoUs622qg+mRpw0laqEvDH4Skexr1HVbSAonyZHhTag7zDMwyiGp5oEwq8b51gJu5RGJw39Gg
+ vljLELFHqir1DJWcXRkN6trKwJYBJ7c=
+X-Authority-Analysis: v=2.4 cv=I/lVgtgg c=1 sm=1 tr=0 ts=6a3a9875 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=VwQbUJbxAAAA:8
+ a=Byx-y9mGAAAA:8 a=SJ3Dp5tMb67BtvNYzm0A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: lheDpNn3MGiKZdmat2Nwthfr1xaoWA2l
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-06-23_03,2026-06-23_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 malwarescore=0 clxscore=1015 impostorscore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 priorityscore=1501
- adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2606230117
+ lowpriorityscore=0 spamscore=0 phishscore=0 clxscore=1015 priorityscore=1501
+ adultscore=0 impostorscore=0 bulkscore=0 suspectscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606230117
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21158-lists,linux-s390=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp,linux.ibm.com:replyto,linux.ibm.com:mid,linux.ibm.com:from_mime];
-	REPLYTO_DOM_EQ_TO_DOM(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:dengler@linux.ibm.com,m:ifranzki@linux.ibm.com,m:linux-s390@vger.kernel.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[freude@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:haoxiang_li2024@163.com,m:alifm@linux.ibm.com,m:farman@linux.ibm.com,m:borntraeger@linux.ibm.com,m:frankja@linux.ibm.com,m:imbrenda@linux.ibm.com,m:david@kernel.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:svens@linux.ibm.com,m:schnelle@linux.ibm.com,m:linux-s390@vger.kernel.org,m:kvm@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:stable@vger.kernel.org,s:lists@lfdr.de];
+	FREEMAIL_TO(0.00)[163.com,linux.ibm.com,kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[mjrosato@linux.ibm.com,linux-s390@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-21159-lists,linux-s390=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,linux.ibm.com:from_mime,vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	HAS_REPLYTO(0.00)[freude@linux.ibm.com];
-	FROM_NEQ_ENVFROM(0.00)[freude@linux.ibm.com,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390];
+	FROM_NEQ_ENVFROM(0.00)[mjrosato@linux.ibm.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	ALIAS_RESOLVED(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[linux-s390];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 846206B7E1C
+X-Rspamd-Queue-Id: 4B92E6B7EB6
 
-On 2026-06-23 16:20, Holger Dengler wrote:
-> The PKEY_VERIFYPROTK ioctl takes data from user-space and verifies the
-> contained protected key. While checking the integrity of the ioctl
-> request structure is the responsibility of the generic pkey_api code,
-> the verification of the contained protected key is the responsibility
-> of the pkey handler.
+On 6/23/26 3:52 AM, Haoxiang Li wrote:
+> kvm_s390_gisc_register() registers the guest ISC before pinning
+> the guest interrupt forwarding pages and allocating the AISB bit.
+> If any of the later setup steps fails, the function unwinds the
+> pinned pages and other local state, but does not unregister the
+> GISC reference. Add the missing kvm_s390_gisc_unregister() to the
+> error unwind path.
+
+Hi Haoxiang,
+
+Thanks for the fix!  A comment below..
+
 > 
-> The keytype verification (based on the calculated bitsize of the key)
-> is part of the protected key verification and therefore the
-> responsibility of the pkey handler (which already verifies
-> it). Therefore the keytype verification is removed from the generic
-> pkey_api code.
-> 
-> As the calculation of the key bitsize is currently wrong, the removal
-> of the keytype check in pkey_api also removes this wrong
-> calculation. For this reason, the commit is flagged with the Fixes:
-> tag.
-> 
-> Cc: stable@kernel.org # 6.12+
-> Fixes: 8fcc231ce3be ("s390/pkey: Introduce pkey base with handler
-> registry and handler modules")
-> Reviewed-by: Ingo Franzki <ifranzki@linux.ibm.com>
-> Signed-off-by: Holger Dengler <dengler@linux.ibm.com>
+> Fixes: 3c5a1b6f0a18 ("KVM: s390: pci: provide routines for enabling/disabling interrupt forwarding")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
 > ---
->  drivers/s390/crypto/pkey_api.c | 11 +----------
->  1 file changed, 1 insertion(+), 10 deletions(-)
+>  arch/s390/kvm/pci.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/s390/crypto/pkey_api.c 
-> b/drivers/s390/crypto/pkey_api.c
-> index 28e1007005f2..5d8f63f390a8 100644
-> --- a/drivers/s390/crypto/pkey_api.c
-> +++ b/drivers/s390/crypto/pkey_api.c
-> @@ -327,7 +327,6 @@ static int pkey_ioctl_verifyprotk(struct
-> pkey_verifyprotk __user *uvp)
->  {
->  	struct pkey_verifyprotk kvp;
->  	struct protaeskeytoken *t;
-> -	u32 keytype;
->  	u8 *tmpbuf;
->  	int rc;
-> 
-> @@ -341,14 +340,6 @@ static int pkey_ioctl_verifyprotk(struct
-> pkey_verifyprotk __user *uvp)
->  		return -EINVAL;
+> diff --git a/arch/s390/kvm/pci.c b/arch/s390/kvm/pci.c
+> index 5b075c38998e..a9d5996590e7 100644
+> --- a/arch/s390/kvm/pci.c
+> +++ b/arch/s390/kvm/pci.c
+> @@ -252,7 +252,7 @@ static int kvm_s390_pci_aif_enable(struct zpci_dev *zdev, struct zpci_fib *fib,
+>  	srcu_read_unlock(&kvm->srcu, idx);
+>  	if (npages < 1) {
+>  		rc = -EIO;
+> -		goto out;
+> +		goto out_unregister_gisc;
 >  	}
-> 
-> -	keytype = pkey_aes_bitsize_to_keytype(8 * kvp.protkey.len);
-> -	if (!keytype) {
-> -		PKEY_DBF_ERR("%s unknown/unsupported protkey length %u\n",
-> -			     __func__, kvp.protkey.len);
-> -		memzero_explicit(&kvp, sizeof(kvp));
-> -		return -EINVAL;
-> -	}
-> -
->  	/* build a 'protected key token' from the raw protected key */
->  	tmpbuf = kzalloc(sizeof(*t), GFP_KERNEL);
->  	if (!tmpbuf) {
-> @@ -358,7 +349,7 @@ static int pkey_ioctl_verifyprotk(struct
-> pkey_verifyprotk __user *uvp)
->  	t = (struct protaeskeytoken *)tmpbuf;
->  	t->type = TOKTYPE_NON_CCA;
->  	t->version = TOKVER_PROTECTED_KEY;
-> -	t->keytype = keytype;
-> +	t->keytype = kvp.protkey.type;
->  	t->len = kvp.protkey.len;
->  	memcpy(t->protkey, kvp.protkey.protkey, kvp.protkey.len);
+>  	aibv_page = pages[0];
+>  	pcount++;
+> @@ -327,6 +327,8 @@ static int kvm_s390_pci_aif_enable(struct zpci_dev *zdev, struct zpci_fib *fib,
+>  		unpin_user_page(aisb_page);
+>  unpin1:
+>  	unpin_user_page(aibv_page);
+> +out_unregister_gisc:
+> +	kvm_s390_gisc_unregister(kvm, fib->fmt0.isc);
+>  out:
 
-Reviewed-by: Harald Freudenberger <freude@linux.ibm.com>
+Label 'out' is now unused in this function.
+
+I think you could make this a 1-liner fix by keeping the goto unchanged
+and instead just placing the unregister call right after out:
+
+Thanks,
+Matt 
+
+>  	return rc;
+>  }
+
 
