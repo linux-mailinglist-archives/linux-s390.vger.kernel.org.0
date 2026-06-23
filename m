@@ -1,222 +1,188 @@
-Return-Path: <linux-s390+bounces-21123-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21126-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id p0lACNyrOWq5wAcAu9opvQ
-	(envelope-from <linux-s390+bounces-21123-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 22 Jun 2026 23:40:44 +0200
+	id lJezNogZOmrI1QcAu9opvQ
+	(envelope-from <linux-s390+bounces-21126-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 23 Jun 2026 07:28:40 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60A6E6B2870
-	for <lists+linux-s390@lfdr.de>; Mon, 22 Jun 2026 23:40:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 36C796B42DA
+	for <lists+linux-s390@lfdr.de>; Tue, 23 Jun 2026 07:28:40 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=NNxzdyDG;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21123-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-21123-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=ibm.com;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=quAcfAc+;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21126-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-21126-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9433730142BE
-	for <lists+linux-s390@lfdr.de>; Mon, 22 Jun 2026 21:40:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A01143082E7A
+	for <lists+linux-s390@lfdr.de>; Tue, 23 Jun 2026 05:26:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50D7E37882E;
-	Mon, 22 Jun 2026 21:40:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15C0C3A960E;
+	Tue, 23 Jun 2026 05:26:12 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f169.google.com (mail-dy1-f169.google.com [74.125.82.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07584257452;
-	Mon, 22 Jun 2026 21:40:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05193A9013
+	for <linux-s390@vger.kernel.org>; Tue, 23 Jun 2026 05:26:08 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782164438; cv=none; b=quw9snPKHGYpAZ3wSRpgnulURPA5tCPdZxKZJZ6iPp6HPXDsnobQpW8MgJJ62nNsiyqm372h+4+J6m/RJG/Wtv7HYB1c6jj9iarIFrdyBoQ30IZj/1SpNI0F2Ocuxnbh1A3q/2jmRpsZFPE/qheiYhi/UCTXBnq/OP4T6Q0sthA=
+	t=1782192372; cv=none; b=i83E3wLqbXk5e7ncfK4ScFowvuPi0U9QNuFjQcd8h7w/wyUcwQdfwjAhsCTCCbsdQAolQVxlYkrk2HJH7NaikDj6EqmllZFqxbQnjbz5BWRJRk4tYiMVkO15nlIFRBeXyHBlByE4hCH/bWI4SG/veSZ6y1Nk22LZZRF43droAJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782164438; c=relaxed/simple;
-	bh=rDWtP3bGK4Fnje+sic/3jtEsWBKankZeUAPn39oq3rY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fpaQr/qQvmbLz4pwyzU6lMZLdXbzaAGfBvIaVMNi1ivaQr4BKzcv9evlnNVnhjOWPxHPg6Wyj+OaC48vDl0PeuljJDmpQe2m/uIozQOSKbkN4lyq6LgqqmwpI6zcnwnWFo8mQYzreDTjYd5pxK9xQypCbMJfb1X2RwfEYbg9JaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NNxzdyDG; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65MJmH183990964;
-	Mon, 22 Jun 2026 21:40:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=vUIRkw
-	bJQamY2k/A+9tlqzaJ9s6MG/ps6a6DlqApoBY=; b=NNxzdyDGZg1zuan6LY4q1B
-	dHhOSIXd6TfMNzZd5qHqTmd0E/3Ax5sztxsMh6FTvREHU1fO7RC+8Eh1sGuKt6sB
-	nE9CPZIdVNuV8RB7L2k4Va/9m4G589LQUKLsXuWobHAJDJ9MzDyRuuBqXvWF40B7
-	99P3ShAyKjx6b2Jwre3V9955Ca5AAE1qa7QttTYw4VLVLHGwFSMx/4SUSXvjOxTv
-	P7BvMHRHrCrsW74ne4lcaz8iQOfGYY7b9grK6lX7kaHpa+2i1b5l/Ix7vue/r+/t
-	Mxkzhl+FhTJhYkOwX7kvtX07TiikTlRlUpRxBlRfo/cBIoJS7GcAiKNpexsTHOew
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ewjc3bgs5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Jun 2026 21:40:33 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65MLYgWX028835;
-	Mon, 22 Jun 2026 21:40:32 GMT
-Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ex5jw8bsp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Jun 2026 21:40:32 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65MLeVnR27918862
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 22 Jun 2026 21:40:31 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 504FF58056;
-	Mon, 22 Jun 2026 21:40:31 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 61CB958052;
-	Mon, 22 Jun 2026 21:40:30 +0000 (GMT)
-Received: from [9.61.253.34] (unknown [9.61.253.34])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 22 Jun 2026 21:40:30 +0000 (GMT)
-Message-ID: <c83fdbc0-c01e-43c7-abca-33273b821f73@linux.ibm.com>
-Date: Mon, 22 Jun 2026 17:40:29 -0400
+	s=arc-20240116; t=1782192372; c=relaxed/simple;
+	bh=DjSs5oRw9rccbhTB4m6pdAGiet3QtdAO5qUM5zvUvsg=;
+	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
+	 References:Date:Message-Id; b=tuaeY3qd14JZ/BH6u6sBC6av/rTXEFR131ay7kB/TqAnGgJW8iDG1FzZASUie7vhmHY9rBGntnCJzZVvB1GfPSQtY3zSxjV3Cs5oMF60cAvwCmLSfLMdy7MU39RPIV0Zu+V3fJYm+NYgejY2Md+wPcUeqgW2RRq13c0U/xeVx8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=quAcfAc+; arc=none smtp.client-ip=74.125.82.169
+Received: by mail-dy1-f169.google.com with SMTP id 5a478bee46e88-30bf132969bso6540343eec.0
+        for <linux-s390@vger.kernel.org>; Mon, 22 Jun 2026 22:26:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782192368; x=1782797168; darn=vger.kernel.org;
+        h=message-id:date:references:in-reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FPvEzMllSbsUeGZyzSL2DVJCIDjlLydKz1PcX2CIArY=;
+        b=quAcfAc+KwRbKomjlQ7OiNMV8QEi8jSn8Odt68rJIlULORthSyjOAwkegrYPyPZSq6
+         hNf6IqAhMz0fcANJgjvfSnSAHnhgceyvvWnf7wyuKmSMgYyaHH2YqWX6ZhmbbHLRmqvr
+         aKmBZTdtD/BANMu+hZghsaifUFfnGNhwX1TFrGRHih3MZ6O3P1qtDUlMx8FVFmHIe281
+         rq9bqMojGlaogwe74714ZbAlhp7SST1U6jGkMiqC6ewdBTcDmASN8y/KV9NxUntnM+eb
+         ShjHnLIYvBPb+SQP29yOuOOd4R7m9xXygN+EYVHWb8QHnjKIY+2iD5pB749zZcQeR2GA
+         DJuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782192368; x=1782797168;
+        h=message-id:date:references:in-reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FPvEzMllSbsUeGZyzSL2DVJCIDjlLydKz1PcX2CIArY=;
+        b=ECO3/jr9u5Lw/nyCiVLZHjKSE0CTA9U9k2tfDwjXevDOWqpwQzXQhKZuj6K1YBu90I
+         ojb1430WqjTWq3P7T0Tt1zRUUvqsGKu97+NAiUvWz88R8upKzxJO1FlwbxNFCkr6Vmm8
+         i7vQ/9G/CqdfS499cw90c0YAyT7DkSnA4wCKTvOd5vxqwa+0Qzi6CWwStM1FIh+GHs3n
+         H09eQsU+lclWK4lgIV2TABAcnzZyrc1W7TEy3rmPxjL2fUEUE81jQ79mHu9vywsNYC9m
+         QiS1+UJvVGAZ9hzW31JNF+Ll3loC04zsjFflY1T/Iv6cvaP6r3pSxDW5H8TjwHVsQZ3d
+         qntg==
+X-Forwarded-Encrypted: i=1; AHgh+RpYzPpsG8XAUIWzJyC6UvtS1uvHUTrfb4z84psxC+ZtEOkPTtQzbjwFgDd8LRpahpCcD6LDrpKzF1K5@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz803QWn+PlEVJGxFNg9jh7Lm/9CQj2s6YvkTYhzll1LqIkVV6U
+	Rq6VWNv9rt1iNPAClqVB07QUWgcvwcflw1gWEfy1U18OL21Gsc8oMLyF
+X-Gm-Gg: AfdE7cll/V3o2BK3mn7gEBHAYHizpkM+HSvZESafDL4Tsg4RQri/iunZR1EACdHIp8N
+	mbfDRLr+B6NIW4DHunk0KpXt0pkyi3ESIom7wqRMM9pZ6bGrPU7pyWBwgjGcuo5PXjKtghbPsM7
+	Y6tpSAS91NvY6A60k+4B+hjmAluHOrzaTSVTUdurPAtfaM1tKRRrmtSqC40ZXxGpDTCRhsmxBKH
+	opahidK9o4Q88loswAb6aeon5NK/+aKC7BQYcoyqtTrstTdM64A/tu5PwBtl12RRhgdi+XQMYis
+	EE0UZF+eByJUsHCJY8m7XLNCEFKqxhi0ptD8U8NUdgUB9HWCJW1XY4pR0GUboUEwBTwvU0uqCMg
+	h29cEp/9lvs3zb4QdTZ+KDzg+L2pQmQyTczsB9/N568CAhj6cTAE53LIN4/DMZGi1rs1I+a57jq
+	yFldeIo8w=
+X-Received: by 2002:a05:7300:d507:b0:30c:1276:cdf7 with SMTP id 5a478bee46e88-30c5bc78138mr708393eec.25.1782192367703;
+        Mon, 22 Jun 2026 22:26:07 -0700 (PDT)
+Received: from [10.0.0.65] ([2601:647:6700:64d0::92d1])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30c1be4967fsm13102455eec.26.2026.06.22.22.26.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2026 22:26:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/4] s390/pci: Preserve FMB state in device
- re-enablement
-To: Alex Williamson <alex@shazbot.org>
-Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, hca@linux.ibm.com, gor@linux.ibm.com,
-        agordeev@linux.ibm.com, borntraeger@linux.ibm.com, svens@linux.ibm.com,
-        schnelle@linux.ibm.com, mjrosato@linux.ibm.com, alifm@linux.ibm.com,
-        farman@linux.ibm.com, gbayer@linux.ibm.com
-References: <20260612181048.91548-1-oelghoul@linux.ibm.com>
- <20260612181048.91548-3-oelghoul@linux.ibm.com>
- <20260622142201.3d5da194@shazbot.org>
-Content-Language: en-US
-From: Omar Elghoul <oelghoul@linux.ibm.com>
-In-Reply-To: <20260622142201.3d5da194@shazbot.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=X4Ni7mTe c=1 sm=1 tr=0 ts=6a39abd1 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=c92rfblmAAAA:8
- a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=uE0uBCXfT79MI8kg7AIA:9 a=QEXdDO2ut3YA:10
- a=GvGzcOZaWPEFPQC_NcjD:22
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjIyMDIwNiBTYWx0ZWRfX137pso0YUQVv
- rDrKYt9b8GB1GtRAnXDtrBHF5DbYEQivlhRJUtvTqQxTAm7tWlLmKeSf4NwnfDFbwmJ6RRaNszQ
- h5RIHxzOYNG3zuoZcgHn5Q6AEe8BHLc=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjIyMDIwNiBTYWx0ZWRfX14hnu8+iufNx
- 3wts/VxG/AGErIfORp7YtMGNQ7ngrj6Luy63jeMRv5wiqWjUiWjx6nYwV9IkxpiF36l2ENe6eyl
- 5w52PsmAO5pOGHkzGdsB1vX8TWBxEU5MO2Iu7b/6yUNnyhRGY470SEBRzy6uN/jRQlTQJ+l6uAs
- 5cErLz/lwA6eMaW3AWnXxVvNGg9xIfwETEAjkuaZC+lXbjep3KHs3Z+pef7qDRBCRCMXvIE0xK5
- 0s0hnibdjUN9X6hFiLLvIgC5ho+f7UeGdVgHzdOOvV9qT4TDkJMPgU7hqdkpsV/K/GaBsamI885
- gue0soYII/Y5bfWROZn/a29iHWKMV/U2lerzOGaDMpxgqO1Dajsgjw0rxkGVEh97Z/EdoHtiIqa
- oc2g0tp9u5Np/AChXjE8e97QzH0r5iEy/rrnp+xdY/yrzmVvnNLP+gn5gWoRlq3+6tyLhGl278C
- 3n0f3YOPuZzhFupt30Q==
-X-Proofpoint-ORIG-GUID: rOf5j66sI9tZ0HtSofagCpYsA40btL9e
-X-Proofpoint-GUID: rOf5j66sI9tZ0HtSofagCpYsA40btL9e
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-22_04,2026-06-22_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 bulkscore=0 suspectscore=0 spamscore=0 priorityscore=1501
- impostorscore=0 malwarescore=0 clxscore=1015 adultscore=0 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606220206
+Subject: Re: [PATCH v4 5/8] riscv/runtime-const: Introduce
+ runtime_const_mask_32()
+From: Charlie Jenkins <thecharlesjenkins@gmail.com>
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+ Peter Zijlstra <peterz@infradead.org>, 
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+ Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, 
+ Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>, 
+ =?utf-8?q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
+ linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-s390@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, Alexandre Ghiti <alex@ghiti.fr>, 
+ Charlie Jenkins <charlie@rivosinc.com>, Jisheng Zhang <jszhang@kernel.org>, 
+ Charles Mirabile <cmirabil@redhat.com>
+In-Reply-To: <20260430094730.31624-6-kprateek.nayak@amd.com>
+References: <20260430094730.31624-1-kprateek.nayak@amd.com>
+ <20260430094730.31624-6-kprateek.nayak@amd.com>
+Date: Mon, 22 Jun 2026 22:24:56 -0700
+Message-Id: <178219229643.10927.7189200920480581019.b4-review@b4>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1782192362; l=1456;
+ i=thecharlesjenkins@gmail.com; s=20260605; h=from:subject:message-id;
+ bh=DjSs5oRw9rccbhTB4m6pdAGiet3QtdAO5qUM5zvUvsg=;
+ b=Q7gZYCRpUNaR0P6LCnsW2BKyT1zjAR9X/QtNq425aoOkO4GWUw2wE2DMsLI9hCenc1NtUPLh0
+ LKuQabhh/3jCnBFxJDuU/QtOQWYl5v1MrRasvhVADGKiAdB5C5B53hi
+X-Developer-Key: i=thecharlesjenkins@gmail.com; a=ed25519;
+ pk=ajnnRQ98PIdwKp4HeMkq9U32okYbnh6Zb4G3o5XXvkg=
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21123-lists,linux-s390=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:alex@shazbot.org,m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:kvm@vger.kernel.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:schnelle@linux.ibm.com,m:mjrosato@linux.ibm.com,m:alifm@linux.ibm.com,m:farman@linux.ibm.com,m:gbayer@linux.ibm.com,s:lists@lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,linux.ibm.com:mid,linux.ibm.com:from_mime];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	FORGED_SENDER(0.00)[oelghoul@linux.ibm.com,linux-s390@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[oelghoul@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_SENDER(0.00)[thecharlesjenkins@gmail.com,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:kprateek.nayak@amd.com,m:tglx@kernel.org,m:mingo@redhat.com,m:peterz@infradead.org,m:bigeasy@linutronix.de,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:guoren@kernel.org,m:dvhart@infradead.org,m:dave@stgolabs.net,m:andrealmeid@igalia.com,m:linux-arch@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-s390@vger.kernel.org,m:linux-riscv@lists.infradead.org,m:linux-arm-kernel@lists.infradead.org,m:alex@ghiti.fr,m:charlie@rivosinc.com,m:jszhang@kernel.org,m:cmirabil@redhat.com,s:lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21126-lists,linux-s390=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[thecharlesjenkins@gmail.com,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[11]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,amd.com:email,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 60A6E6B2870
+X-Rspamd-Queue-Id: 36C796B42DA
 
-On 6/22/26 4:22 PM, Alex Williamson wrote:
-> On Fri, 12 Jun 2026 14:10:46 -0400
-> Omar Elghoul <oelghoul@linux.ibm.com> wrote:
->> +int zpci_fmb_reenable_device(struct zpci_dev *zdev)
->> +{
->> +	u64 req = ZPCI_CREATE_REQ(zdev->fh, 0, ZPCI_MOD_FC_SET_MEASURE);
->> +	struct zpci_fib fib = {0};
->> +	u8 cc, status;
->> +	int rc;
->> +
->> +	lockdep_assert_held(&zdev->fmb_lock);
->> +
->> +	if (!zdev->fmb)
->> +		return zpci_fmb_enable_device(zdev);
->> +
->> +	fib.gd = zdev->gisa;
->> +	cc = zpci_mod_fc(req, &fib, &status); /* Disable function measurement */
->> +
->> +	/* Unlike in zpci_fmb_disable_device(), cc == 3 is not a valid state here
->> +	 * because we are re-enabling function measurement for the same function
->> +	 * handle.
->> +	 */
->> +	if (cc)
->> +		return -EIO;
->> +
->> +	zpci_fmb_clear_iommu_ctrs(zdev);
->> +
->> +	rc = zpci_fmb_do_enable(zdev);
->> +	if (rc) {
->> +		kmem_cache_free(zdev_fmb_cache, zdev->fmb);
->> +		zdev->fmb = NULL;
->> +	}
->> +
->> +	return rc;
->> +}
->> +EXPORT_SYMBOL_GPL(zpci_fmb_reenable_device);
+On Thu, 30 Apr 2026 09:47:27 +0000, K Prateek Nayak <kprateek.nayak@amd.com> wrote:
+> Futex hash computation requires a mask operation with read-only after
+> init data that will be converted to a runtime constant in the subsequent
+> commit.
 > 
-> Why is this exported?  Maybe this is leftover from the previous version
-> where it was noted that the API claimed a failure on double enable that
-> didn't actually occur because if used reenable.  Now we seem to have
-> the alternate inconsistency, that FMB is automatically enabled as part
-> of the standard PCI enable path, so the only initial operation
-> available to userspace is to first disable FMB, which is an awkward
-> API.  The v3 problem could have been solved in documentation, noting
-> that a nested enable resets counters[1], while a nested disable
-> generates an errno.  Thanks,
-
-Acked in my reply to patch 3/4
-
+> Introduce runtime_const_mask_32 to further optimize the mask operation
+> in the futex hash computation hot path. GCC generates a:
 > 
-> Alex
+>   lui   a0, 0x12346       # upper; +0x800 then >>12 for correct rounding
+>   addi  a0, a0, 0x678     # lower 12 bits
+>   and   a1, a1, a0        # a1 = a1 & a0
 > 
-> [1] Also note the sashiko question whether reenable actually zeros the
-> current fmb buffer or only the internal counters
-> https://sashiko.dev/#/message/20260612182632.E4EE71F000E9%40smtp.kernel.org
+> pattern to tackle arbitrary 32-bit masks and the same was also suggested
+> by Claude which is implemented here. The final (__ret & val) operation
+> is intentionally placed outside of asm block to allow compilers to
+> further optimize it if possible.
 
-This question may not be applicable because firmware resets them in
-practice, but I will discuss it further with my team.
+If the mask fits in 12 bits, we can nop the lui and the addi and just
+patch an "andi" instruction with the 12 bits of the mask. We already do
+this with the lui+addi block and nop the lui if val fits in 12 bits. I
+would be happy to help draft that optimization. 
 
-Thanks.
+But I think the better solution would be to take the power of 2
+assumption since that will also benefit arm. We should still only emit
+an andi if val fits in 12 bits, but if it doesn't we can patch in
+shifts:
 
+slli    a0,a0,x
+srli    a0,a0,x
+
+Where x is the constant (arch_size - _futex_shift - 1)
+
+- Charlie
+
+-- 
+Charlie Jenkins <thecharlesjenkins@gmail.com>
 
