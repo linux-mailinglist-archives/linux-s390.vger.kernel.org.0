@@ -1,289 +1,275 @@
-Return-Path: <linux-s390+bounces-21191-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21203-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Byy6Jkl7O2pAYggAu9opvQ
-	(envelope-from <linux-s390+bounces-21191-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2026 08:38:01 +0200
+	id vBLNORWRO2pMZwgAu9opvQ
+	(envelope-from <linux-s390+bounces-21203-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2026 10:11:01 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 173DF6BBD16
-	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2026 08:38:01 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6569B6BC73D
+	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2026 10:11:01 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=LTEVJK2U;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21191-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21191-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=D3RGmzu3;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21203-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-21203-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A78DB3007AEB
-	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2026 06:34:50 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 538803046EEA
+	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2026 08:11:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58A2C38838B;
-	Wed, 24 Jun 2026 06:34:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4829F39936E;
+	Wed, 24 Jun 2026 08:10:58 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A0D388378;
-	Wed, 24 Jun 2026 06:34:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACFC03A8738
+	for <linux-s390@vger.kernel.org>; Wed, 24 Jun 2026 08:10:56 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782282889; cv=none; b=Qj4zPN3Sgrh4aD+SesESYqo/rkjqdONAKPJNNleuerjUIs9dI6+WuIcSai8CVHmQdWBnWEwnGkFaiQ2vlhRYoilR//lCFMtzHAPmTro9+k1ltoXMpXNsMjJ4vRVNVITqphHLG0TDWm5htdRvCyC6/ajsrUhanz2ze3tOfEL6fEQ=
+	t=1782288658; cv=none; b=eoczr+Kzf/B130ICHz/Rt0kynCIrwTzNF/Mj4G+vnHIu7Ztgn4xwSuQTzD1qZmqNMm5PBonRMfQeccqwJhOkJrvggybS8UuvXH5IaZvq8VuozqHUSZOZspgHe8vX3ePsvDac+yKg/numk7I2F+omUuP6ohjO+3Gx6OvhjfZSAr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782282889; c=relaxed/simple;
-	bh=vAgk2CQmNZqiOk7byUCYZuuUyfD14eX7WCVxHQwPf+I=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=D9ulq636btwEnhrbtJl17tbY6L30DZZNYwRX6TwTcDkUbugvN7mnsDBfvPtlCKGAw6VkkAxIjTSDBv5T8UjpbP3FuX63Cf9khPbFdI8XbQfE8VVx2wBfq4QIDSGWIT5KlDlu6nxhV8RLcmqyK26yCXEduoHp3Zjx4UN1uY0JYS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LTEVJK2U; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85DF51F000E9;
-	Wed, 24 Jun 2026 06:34:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782282887;
-	bh=wMyoWgaORHUARzaraGZFwZ7ri0xlUF17vM7eoyaGNg8=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=LTEVJK2U3qsRE9fF8mr3yd9NDKX8qsNnHVSyvIhFohmWMIfNXAgjbrHEGlcPxD3kx
-	 pV88Eq5WYOAd5RN2kfujmpv01qHH9ritznBOpl8xoQZ8EjljRnn/oPKt8sVwpQHEm9
-	 TjEtcNw9XnY6Djd16nblo4alXKuVJ8jrdT9LgX2XR1ud5Ag50FPy5siiun3UDeKtIy
-	 GyQNfU1Y3U6vC3ZOyBumUKNPjJWWDAtWsstQZUB9H6pRQkxmDWa3Ep+gL4niwhvX7r
-	 QZoBoL+/qjMlCy2hT8UImKOLOe7087D4tDhz6pBFKFZAowW1aGl3ttACc2VFUkaCL9
-	 CvuBKWMTks1RA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] KVM: s390: pci: Fix GISC refcount leak on AIF enable
- failure
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Haoxiang Li" <haoxiang_li2024@163.com>
-Cc: linux-s390@vger.kernel.org, "Heiko Carstens" <hca@linux.ibm.com>, "Vasily
- Gorbik" <gor@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>, kvm@vger.kernel.org
-In-Reply-To: <20260624061910.2794734-1-haoxiang_li2024@163.com>
-References: <20260624061910.2794734-1-haoxiang_li2024@163.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 24 Jun 2026 06:34:47 +0000
-Message-Id: <20260624063447.85DF51F000E9@smtp.kernel.org>
+	s=arc-20240116; t=1782288658; c=relaxed/simple;
+	bh=o1hEsy/I74yZm9sjuKhXfGOVf1nNggbSg/pAK6odnz8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KjrVqxQnQTs6grJzb9BcS3BUHYgnRkNtv5Ke6v/Uoh+R9L6FpZtPFJbOXh1dk8bZE0//8B5yHfj1oTQpym3dsNYGTr5lf3VNLwYIZIighMGDMEBNMP6sHPknD66umwO5v3p+/5Tyl1TpxGMBkjI9ZouBCgz/qnKvbYIW0hL23zQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=D3RGmzu3; arc=none smtp.client-ip=148.163.156.1
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65O6Igcl299878;
+	Wed, 24 Jun 2026 08:10:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=rO25/BnUKkpiimiaryuZW28g617oJv+yyXpJaj/P5
+	sQ=; b=D3RGmzu3pwc1Y2WCaAPkbZN9+PwgSvUWhXc2fyHA5WV6XWa9zVsrpst37
+	P2/lkAZYOqqlrrDgEvXMNg+XR6FNREMXdyML+jVSRPwelvtrGJr10hkPbid7Pxhj
+	1HPecmgRfH2bxrcwmNm+w1rPcRYWNYNQrpnbU6J0PEhb2y7g9UsO+5oo/PlMGgG2
+	ktXVVyR8R2rmDJK0WdSbNGZbdlW+mYbnzqIcpqJHZwmHPfTlJ9I4WyYy6H4Jf/iL
+	GQt89it9zWDqlbSWSEtaByyCoQtvGjdOcePcyWGunz6VPby1Wh+xd6/kQbwc3MAp
+	Q+fA7FtzCC0jBt5wrdg1MdKUutlzQ==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ewjhqu07y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Jun 2026 08:10:35 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65O84dTK017273;
+	Wed, 24 Jun 2026 08:10:34 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ex6phfgv2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Jun 2026 08:10:34 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65O8AUqB48628014
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 24 Jun 2026 08:10:30 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 68C332004E;
+	Wed, 24 Jun 2026 08:10:30 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0A13A2004B;
+	Wed, 24 Jun 2026 08:10:30 +0000 (GMT)
+Received: from funtu2.ibm.com (unknown [9.224.92.54])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 24 Jun 2026 08:10:29 +0000 (GMT)
+From: Harald Freudenberger <freude@linux.ibm.com>
+To: richard.henderson@linaro.org, iii@linux.ibm.com, david@kernel.org,
+        thuth@redhat.com, berrange@redhat.com
+Cc: qemu-s390x@nongnu.org, qemu-devel@nongnu.org,
+        linux390-list@tuxmaker.boeblingen.de.ibm.com,
+        linux-s390@vger.kernel.org, dengler@linux.ibm.com,
+        borntraeger@linux.ibm.com, fcallies@linux.ibm.com, cohuck@redhat.com
+Subject: [PATCH v8 00/18] target/s390x: Extend qemu CPACF support
+Date: Wed, 24 Jun 2026 10:09:57 +0200
+Message-ID: <20260624081029.23815-1-freude@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=I4VVgtgg c=1 sm=1 tr=0 ts=6a3b90fc cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=uAbxVGIbfxUO_5tXvNgY:22 a=ae0fflXcXhGj7XbWUPMA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjI0MDA2MyBTYWx0ZWRfX/CGtsUdAC+Q9
+ CX4fbvEvue2eGxR+8fq5o7qrWb1TYJFgWXvuSCdNYpb0mw7HxMWMhXqiT0bHh0pDhq9SvA4zxEt
+ KNM49B5J7hpm64FsSpkRU8XZ9siEne8x6hTLXjzbJPpPUYvPoHWf4RC0CZaAtQvtTT+dJewmzLl
+ Yp1Bx6njrV9OMajxkUNpnq7C5BTkwfiwMrmbINc2w3NxJXOaIrTF3PbVNPWoaLil2uMrOc5cAf/
+ O/AdB3tTOhIw21OksRfYLCYeTA2L/mW/umKKuh0OGp8ue4NvCfNX8Q+t6d9tZmEEKBKFC7gzm75
+ JOe+H962KpX6XGsiQRbbb/4TNRyCEz3DGFiNkRrRfL+G5yxofYiHqxvfYH0arf4VXMp5zA3Aqq6
+ Ps69g9MJHOWYaY0U/So1uVU9qvKYKXcNxDtNNzYytaDqNtXyVOHuFZdOaPufRAxo7I1DMo5A3qp
+ 5/EfZLSKO9iFo7i6B7A==
+X-Proofpoint-GUID: L4UJV18MNxjLtre8IO8hDPWDYcMhDWBe
+X-Proofpoint-ORIG-GUID: L4UJV18MNxjLtre8IO8hDPWDYcMhDWBe
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjI0MDA2MyBTYWx0ZWRfX8huSj1Y15+bM
+ 2yb+Rbkd64g5Q4Q0X98vkQbo/fY67hkGXLbcfIjfXph2/mk0SCwtSM47DDVS86rmrqBBtAPjSk9
+ Jmw58hnc0Vsi5tJDjJISV0N6AR91aIs=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-24_02,2026-06-23_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 malwarescore=0 clxscore=1015 impostorscore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 priorityscore=1501
+ adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2606240063
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	MISSING_MIME_VERSION(2.00)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:haoxiang_li2024@163.com,m:linux-s390@vger.kernel.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:kvm@vger.kernel.org,s:lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-21191-lists,linux-s390=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,smtp.kernel.org:mid,vger.kernel.org:from_smtp,sashiko.dev:url];
-	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_TO(0.00)[163.com];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-21203-lists,linux-s390=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:richard.henderson@linaro.org,m:iii@linux.ibm.com,m:david@kernel.org,m:thuth@redhat.com,m:berrange@redhat.com,m:qemu-s390x@nongnu.org,m:qemu-devel@nongnu.org,m:linux390-list@tuxmaker.boeblingen.de.ibm.com,m:linux-s390@vger.kernel.org,m:dengler@linux.ibm.com,m:borntraeger@linux.ibm.com,m:fcallies@linux.ibm.com,m:cohuck@redhat.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[freude@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FROM_NEQ_ENVFROM(0.00)[freude@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_NO_DN(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp];
+	TO_DN_NONE(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
+	RCPT_COUNT_TWELVE(0.00)[13];
+	TAGGED_RCPT(0.00)[linux-s390];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 173DF6BBD16
+X-Rspamd-Queue-Id: 6569B6BC73D
 
-Thank you for your contribution! Sashiko AI review found 7 potential issue(=
-s) to consider:
+This patch series extends the s390 qemu CPACF support to be able to
+run a subset of the CPACF instruction cross platform. There have been
+requests on the kernel crypto mailing list about a way to test
+s390 specific crypto implementations. For example a way to test
+s390 CPACF exploitation code like the s390_aes.ko kernel module.
 
-Pre-existing issues:
-- [Critical] If userspace disables summary notifications (`sb =3D=3D 0`), a=
- bogus physical address derived from a NULL pointer is programmed into the =
-hardware GAITE, leading to hardware memory corruption.
-- [High] Failure paths in `kvm_s390_pci_aif_enable()` fail silently by retu=
-rning 0 (success) instead of a negative error code.
-- [High] Unbounded resource leaks can be triggered by calling the KVM_S390_=
-ZPCIOP_REGAEN ioctl repeatedly.
-- [High] Missing NULL check for the return value of `airq_iv_create()` caus=
-es a guaranteed host kernel panic on memory allocation failure.
-- [High] Missing `free_uid()` causes a persistent `user_struct` reference l=
-eak in `account_mem()` and `unaccount_mem()`.
-- [High] Permanent leak of `locked_vm` memory accounting on error path.
-- [Medium] Failure of `kvm_zpci_set_airq()` completely bypasses the error u=
-nwind path, temporarily leaking pinned pages and allocated structures.
+So here now is a set of patches verified on x86 and s390 which
+over (slow but working) support for a subset of the subfunctions of
+some of the CPACF instructions.
+
+Test: As this series is more or less complete, a full blown linux
+can be run and the 'usual' in-kernel crpyto modules will be
+automatically loaded which run a bunch of test cases. So there
+is now support for these kernel modules:
+* sha256_s390x (autoloaded, sha256)
+* sha512_s390x (autoloaded, sha512)
+* aes_s390x (autoloaded, clear key aes ecb, cbc, ctr, xts)
+* pkey_pckmo (autoloaded, derive AES protected key from clear key)
+* paes_s390x (not autoloaded, protected key aes ecb, cbc, ctr, xts)
+All these modules run selftests if configured by the kernel (which is
+enabled by default). Failures are reported via syslog. Additionally
+the aes testcases from libica can be run either inside such an qemu
+environment or with a static build executed with the qemu tcg
+application qemu-s390x --cpu max <static-build-libica-test>.
+
+Changelog:
+v1: Initial version with
+    - Related code restructured
+    - Support KIMD SHA512 and thus SHA256
+    - Support KMC AES-128, AES-192 and AES-256 and thus have basic AES
+      support (ECB mode) enabled.
+    - Support PCC Compute-XTS-Parameter-AES-128 and
+      Compute-XTS-Parameter-AES-256 but only for block sequence number
+      0. This is a requirement for the next step:
+    - Support KM XTS-AES-128 and KM XTS-AES-256. Together with the
+      minimal PCC support this enables AES-XTS CPACF acceleration.
+v2: - Basic PCKMO support to be able to 'derive' an AES protected key
+      from clear key. See header details.
+    - Support protected key AES-ECB.
+    - Support protected key AES-CBC.
+    - Minimal protected key AES-XTS support for CPACF PCC.
+    - Support protected key AES-XTS.
+    - Support AES-CTR.
+    - Support protected key AES-CTR.
+v3: - Reordered patches as suggested by Finn.
+    - One small bug fix in CPACF_aes.c related to address translation.
+v4: - Rename of the parameters based on feedback from Janosch to
+      make clear these are registers or ptrs to registers.
+      Added Tested by from Holger. Fixed typo "face" -> "fake".
+v5: - Add documentation file docs/system/s390x/cpacf.rst which
+      describes the state of the CPACF instructions and which
+      functions are covered when this series is applied.
+      First version sent to public mailing list qemu-s390x.
+v6: - Rebase/rework to build on current qemu head.
+    - Add docs/system/s390x/cpacf.rst to target-s390x.rst
+    - New file crypto/aes-helpers.c with some simple
+      functions to support AES modes CBC, CTR and XTS.
+    - Slight rewrite of the s390x CPACF implementations to
+      use these generic AES mode implementations.
+v7: - Update on docs/system/s390x/cpacf.rst to mention
+      the zArchicteture Principles of Operation document
+      which describes all these CPAC instructions.
+v8: - Add a fix which deals with incorrect address handling
+      in the sha512 implementation related to fetch and push
+      data from/to memory.
+    - Slight rework around the capcf function implementation and
+      exception generation.
+    - Added some more details to the new cpacf.rst file.
+    - Fixed some typos and added some suggestions from Finn.
+    - Fixed cc handling on return of PCKMO (must not update cc).
+    Missing: simple test cases to verify that the implemented and not
+    implemented cpacf functions and subfunctions work as expected. But
+    see the statement about tests at the header.
+
+Harald Freudenberger (18):
+  target/s390x: Fix wrong address handling in address loops
+  target/s390x: Rework s390 cpacf implementations
+  target/s390x: Move cpacf sha512 code into a new file
+  target/s390x: Support cpacf sha256
+  target/s390x: Support AES ECB for cpacf km instruction
+  target/s390x: Support AES CBC for cpacf kmc instruction
+  target/s390x: Support AES CTR for cpacf kmctr instruction
+  target/s390x: Minimal AES XTS support for cpacf pcc instruction
+  target/s390x: Support AES XTS for cpacf km instruction
+  target/s390x: Support pckmo encrypt AES subfunctions
+  target/s390x: Support protected key AES ECB for cpacf km instruction
+  target/s390x: Support protected key AES CBC for cpacf kmc instruction
+  target/s390x: Support protected key AES CTR for cpacf kmctr
+    instruction
+  target/s390x: Minimal protected key AES XTS support for cpacf pcc
+    instruction
+  target/s390x: Support protected key AES XTS for cpacf km instruction
+  docs/s390: Document CPACF instructions support
+  crypto: Add aes-helpers file to support some AES modes
+  target/s390x: Use generic AES helper functions
+
+ crypto/aes-helpers.c             | 106 ++++
+ crypto/meson.build               |   1 +
+ docs/system/s390x/cpacf.rst      | 144 +++++
+ docs/system/target-s390x.rst     |   1 +
+ include/crypto/aes.h             |  14 +
+ target/s390x/gen-features.c      |  31 +
+ target/s390x/tcg/cpacf.h         |  66 +++
+ target/s390x/tcg/cpacf_aes.c     | 956 +++++++++++++++++++++++++++++++
+ target/s390x/tcg/cpacf_sha256.c  | 232 ++++++++
+ target/s390x/tcg/cpacf_sha512.c  | 245 ++++++++
+ target/s390x/tcg/crypto_helper.c | 426 +++++++-------
+ target/s390x/tcg/insn-data.h.inc |   1 +
+ target/s390x/tcg/meson.build     |   3 +
+ target/s390x/tcg/translate.c     |  11 +-
+ 14 files changed, 2020 insertions(+), 217 deletions(-)
+ create mode 100644 crypto/aes-helpers.c
+ create mode 100644 docs/system/s390x/cpacf.rst
+ create mode 100644 target/s390x/tcg/cpacf.h
+ create mode 100644 target/s390x/tcg/cpacf_aes.c
+ create mode 100644 target/s390x/tcg/cpacf_sha256.c
+ create mode 100644 target/s390x/tcg/cpacf_sha512.c
+
+
+base-commit: 3b50303f9563a42538a1fd5c0ea7f952e23016e1
 --
+2.43.0
 
-commit a4932a1950ea471069d9ddad4938cb5cea43c9a1
-Author: Haoxiang Li <haoxiang_li2024@163.com>
-
-KVM: s390: pci: Fix GISC refcount leak on AIF enable failure
-
-kvm_s390_gisc_register() registers the guest ISC before pinning
-the guest interrupt forwarding pages and allocating the AISB bit.
-If any of the later setup steps fails, the function unwinds the
-pinned pages and other local state, but does not unregister the
-GISC reference. Add the missing kvm_s390_gisc_unregister() to the
-error unwind path.
-
-> diff --git a/arch/s390/kvm/pci.c b/arch/s390/kvm/pci.c
-> index 5b075c38998e3..686113be05309 100644
-> --- a/arch/s390/kvm/pci.c
-> +++ b/arch/s390/kvm/pci.c
-> @@ -328,6 +328,7 @@ static int kvm_s390_pci_aif_enable(struct zpci_dev *z=
-dev, struct zpci_fib *fib,
->  unpin1:
->  	unpin_user_page(aibv_page);
->  out:
-> +	kvm_s390_gisc_unregister(kvm, fib->fmt0.isc);
-
-[Severity: High]
-This isn't a regression introduced by this patch, but while reviewing the
-error unwind path I noticed a potential leak of the locked_vm accounting:
-
-arch/s390/kvm/pci.c:kvm_s390_pci_aif_enable() {
-    ...
-	/* Account for pinned pages, roll back on failure */
-	if (account_mem(pcount))
-		goto unpin2;
-    ...
-unlock:
-	mutex_unlock(&aift->aift_lock);
-unpin2:
-	if (fib->fmt0.sum =3D=3D 1)
-		unpin_user_page(aisb_page);
-unpin1:
-	unpin_user_page(aibv_page);
-out:
-    ...
-}
-
-Are we missing a call to unaccount_mem() in the error unwind block to
-revert the accounting if a later step fails?
-
-
-[Severity: High]
-This is a pre-existing regression, but I also noticed that the return code
-doesn't seem to be set to an error value on some of these failure paths:
-
-arch/s390/kvm/pci.c:kvm_s390_pci_aif_enable() {
-    ...
-	/* Account for pinned pages, roll back on failure */
-	if (account_mem(pcount))
-		goto unpin2;
-    ...
-	bit =3D airq_iv_alloc_bit(aift->sbv);
-	if (bit =3D=3D -1UL)
-		goto unlock;
-    ...
-}
-
-If either of these fail, will the function silently return 0 instead of a
-negative error code since rc is not updated before the goto?
-
-
-[Severity: Medium]
-This isn't a regression introduced by this commit, but does the hardware
-setup step bypass this unwind path completely?
-
-arch/s390/kvm/pci.c:kvm_s390_pci_aif_enable() {
-    ...
-	/* Issue the clp to setup the irq now */
-	rc =3D kvm_zpci_set_airq(zdev);
-	return rc;
-
-unlock:
-    ...
-}
-
-If kvm_zpci_set_airq() fails, returning directly abandons the unwind
-protocol and leaves the allocated resources behind.
-
-
-[Severity: Critical]
-This is another pre-existing regression, but I have a question about how we
-handle a missing guest AISB:
-
-arch/s390/kvm/pci.c:kvm_s390_pci_aif_enable() {
-    ...
-	gaite->aisb =3D virt_to_phys(page_address(aisb_page) + (fib->fmt0.aisb &
-							      ~PAGE_MASK));
-    ...
-}
-
-If userspace disables summary notifications (fib->fmt0.sum =3D=3D 0),
-aisb_page will be NULL. Does this pointer arithmetic generate a bogus
-physical address that gets programmed into the hardware GAITE?
-
-
-[Severity: High]
-This isn't a regression introduced by this patch, but I noticed a potential
-null pointer dereference:
-
-arch/s390/kvm/pci.c:kvm_s390_pci_aif_enable() {
-    ...
-	zdev->aibv =3D airq_iv_create(msi_vecs, AIRQ_IV_DATA |
-				    AIRQ_IV_BITLOCK |
-				    AIRQ_IV_GUESTVEC,
-				    phys_to_virt(fib->fmt0.aibv));
-    ...
-}
-
-arch/s390/kvm/pci.c:kvm_zpci_set_airq() {
-    ...
-	fib.fmt0.noi =3D airq_iv_end(zdev->aibv);
-    ...
-}
-
-If airq_iv_create() fails and returns NULL under memory pressure, will
-airq_iv_end() unconditionally dereference the NULL pointer?
-
-
-[Severity: High]
-This isn't a regression introduced here, but I have a question about the
-ioctl handler:
-
-arch/s390/kvm/pci.c:kvm_s390_pci_zpci_reg_aen() {
-    ...
-	return kvm_s390_pci_aif_enable(zdev, &fib, hostflag);
-}
-
-If a user repeatedly issues the KVM_S390_ZPCIOP_REGAEN ioctl, does this
-unconditionally call kvm_s390_pci_aif_enable() and overwrite zdev->aisb
-and zdev->aibv without checking or freeing previous allocations?
-
-
-[Severity: High]
-This isn't a regression introduced by this patch, but there appears to be a
-reference leak in the memory accounting functions:
-
-arch/s390/kvm/pci.c:account_mem() {
-    ...
-	struct user_struct *user =3D get_uid(current_user());
-    ...
-}
-
-Does get_uid() increment the reference count without a corresponding call
-to free_uid() before the function returns? This also appears to happen in
-unaccount_mem().
-
->  	return rc;
->  }
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260624061910.2794=
-734-1-haoxiang_li2024@163.com?part=3D1
 
