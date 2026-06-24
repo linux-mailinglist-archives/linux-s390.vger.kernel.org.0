@@ -1,217 +1,211 @@
-Return-Path: <linux-s390+bounces-21224-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21228-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id bg58G4a9O2pAcAgAu9opvQ
-	(envelope-from <linux-s390+bounces-21224-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2026 13:20:38 +0200
+	id VLfpB3XBO2oecQgAu9opvQ
+	(envelope-from <linux-s390+bounces-21228-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2026 13:37:25 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60BE76BD9AF
-	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2026 13:20:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 08AB06BDB38
+	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2026 13:37:24 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=HqOWM9xz;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21224-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21224-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=ibm.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=CToDUxtG;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21228-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21228-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 0E521302FA22
-	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2026 11:19:59 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E4524300A271
+	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2026 11:37:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB8B839F190;
-	Wed, 24 Jun 2026 11:19:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3FA6364953;
+	Wed, 24 Jun 2026 11:37:18 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462142F5487;
-	Wed, 24 Jun 2026 11:19:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D931F1A6810;
+	Wed, 24 Jun 2026 11:37:17 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782299982; cv=none; b=PR5s+pgd+DNzfZ74hgtMsgTbgOdjVqYHSkBPfvL9YWsb1DZy+WZ9ChhxvVMtQJUpmE84KlvUWOXxzkW2FjNXc7WP3Wb87IZOUE9ATi3Iml7UmsI0zNHLzoRYCrRh9lY0EuugZG2P2SEb+lHmJvzYEcO0ZATvN+HlZ90YGLmCOA0=
+	t=1782301038; cv=none; b=r7pD9tlTiALN6+Q/aQzTmmN/dz3JylYcTXmzn1H5zfgaVSkeRFDxCILYS2NpzXtt/WiMqSwfrigt4LuBVAUoS4RRiwZ7Qw9+yejW/WrqRpJ/N9q/+UD0Edh4GNQt0Lpk/Kw4fkXbda9pro6MxY2f+F2dEqi71EC7J4SKHd+jIGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782299982; c=relaxed/simple;
-	bh=TBtvbd6pdlui7oeUh6QlHk/22zouvsEuZ4sepNywB2A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jKUnhI3E7VgqQ+1lvxkPiuNDtVL+ol6rnEdEj76y3/6DI/MMNCs+tR2NuEoHlO/54xX4QKBNltoTZ/R7SLd05t4k1ZqCenwGRyGH10xiAOsLmi4a0YfPSn83mL3dxsNxQ4cbFSseVXtNYTR0O7saJ+tK6qcQb+cZ2MWVKhdbNx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HqOWM9xz; arc=none smtp.client-ip=148.163.158.5
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65OAmO9V550310;
-	Wed, 24 Jun 2026 11:19:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=srZW1/IYNBlS9Weko
-	/RHk+OYA+pIUiPlgeHpYYubb54=; b=HqOWM9xzl1EmlzWQmdhx/XEq3rqa91z+b
-	4oPvet6fCt/pq+e9ZrJ0llmtNLPpCBgfndh10qutlII9QwjYPyU9NM5TmJbVNpDa
-	xgTUDLZLHACdOaiTOv+PsoPg80YTm7x0NKbu7bxZymVQGNrZcSvNYzO3B0QcHhT7
-	Bbi5/phdCY1UnmPaN8+xJFbP731XKp6nbIUDHKC+AXFcN+wThNpZ/lOmMLiMXfcF
-	Wk3JuGkow8e+DqzZQkT0r3RO9ZrIllRPONhZuL0aAq1l/UhxIIeFsQywO9Vobjmm
-	Uoc+WnTEHhCKl74AcGAQEQU3MPdm+EzkWY3YzvVbGHHO+koi54hzw==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ewh9gkna5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Jun 2026 11:19:38 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65OB4hou001561;
-	Wed, 24 Jun 2026 11:19:37 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ex66k88b1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Jun 2026 11:19:37 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65OBJV9C26149330
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 24 Jun 2026 11:19:31 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 78D8020040;
-	Wed, 24 Jun 2026 11:19:31 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5EEA52004D;
-	Wed, 24 Jun 2026 11:19:31 +0000 (GMT)
-Received: from p-imbrenda.ehn-de.ibm.com (unknown [9.224.75.30])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 24 Jun 2026 11:19:31 +0000 (GMT)
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: pbonzini@redhat.com
-Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        borntraeger@de.ibm.com
-Subject: [GIT PULL v1 12/12] KVM: s390: Return failure in case of failure in kvm_s390_set_cmma_bits()
-Date: Wed, 24 Jun 2026 13:19:28 +0200
-Message-ID: <20260624111928.144283-13-imbrenda@linux.ibm.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260624111928.144283-1-imbrenda@linux.ibm.com>
+	s=arc-20240116; t=1782301038; c=relaxed/simple;
+	bh=BXttZtIjYhmZniM9h6DEz+dCCFljyrUJR1AUoon+7t4=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=G5sp7umeUrvr7UOdSj3MiqJGpr7PSojUSdxEoGqds9lYl+pMEJSpTamM/ZZh0+5lDgMa5TOYahsbvuu0hc0YrR6XNwQq9OBF0AsNGOF4U1SvG7kIn5xJOCpiA65P8Q120P9C2qJ/qhFmY3Q80d4bXLRwEXqPEqK1EQDHf0OmYW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CToDUxtG; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CC951F00A3A;
+	Wed, 24 Jun 2026 11:37:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782301037;
+	bh=dbsdz1Se4yBvj37WN7WCUGl/KxY/Tc8U7Ys4raJWlj8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=CToDUxtGv6ZShizRxteLUUfkDzeZPWAB0Hu3NgXy9E0Abn4ZKuJl4rLDaj3wTR7sl
+	 EzF3UuJcp3E52AC5fGorOG3CWshPJw6UInPFuAEIxDGp7L4BDA+PrE2UpbV/NW/YMc
+	 REkK+wfv/OeibfaaQgxIpE9ZrZq1T9+NIo/agLCn4L1fuxJjrrnNI7/VWMpqbHvVZA
+	 sKYyZgMhu4ddLNdj8dsopz74YoKTNdFls7Ij5M8JskbSlTwyZmVq5IEn3JyOyUFfe+
+	 8eDqu2n+0m+ootjO7wNb2qy6scoZOYxaJpw2qRlyWYCrtIWDLUarU9EexnA11k/iIw
+	 SdOlHUZOA89MQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [GIT PULL v1 06/12] KVM: s390: Do not set special large pages
+ dirty
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Claudio Imbrenda" <imbrenda@linux.ibm.com>
+Cc: "Alexander Gordeev" <agordeev@linux.ibm.com>, kvm@vger.kernel.org, "Heiko
+ Carstens" <hca@linux.ibm.com>, linux-s390@vger.kernel.org, "Vasily Gorbik" <gor@linux.ibm.com>
+In-Reply-To: <20260624111928.144283-7-imbrenda@linux.ibm.com>
 References: <20260624111928.144283-1-imbrenda@linux.ibm.com>
+ <20260624111928.144283-7-imbrenda@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 24 Jun 2026 11:37:16 +0000
+Message-Id: <20260624113717.3CC951F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=c62bhx9l c=1 sm=1 tr=0 ts=6a3bbd4a cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8 a=xmMRMRw_lv4QeeJnpVYA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjI0MDA5NCBTYWx0ZWRfX4z0hEXgjwWRj
- PXbJw0Qz+aSug4akWDiOhQmVrRt+dkzaKF4QyHG4p26zWGbFRlaUmZuyHjS+egbV/ARb1uD4aJZ
- iuceys2P6J1l/ZpIe6wcZF/F7fFjST3Q5TW5L3tJMna58XZwfs91pxtPGQXhrLyeNPU3g0Di/5B
- BCxObZIDJSDRLIHwBzlP0XW74McbB7nCmFPatRQDs+tWhUdvjF6+L6GruswE9rTXEYG8RZADd7j
- 2HQXqJAgoeApEYsDixaEEeD8r9Mq/8+N3jyKm58Z06Lo3KOx9gWS9RPHhy7kuOPSj5Ag8Ail6id
- MDnIk7qaRS020+p+sri5iEKbcbq/tWRUM1Raec2j0K4NfjHyQNgE+yFH+tSwP94XSSJg0NCspy0
- +UdJEBYML3CWPkiz3EmJEMiuYFQ99Q==
-X-Proofpoint-GUID: yf7EWx1S26Z4zrwErG8_DCjO5Ydk-CGm
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjI0MDA5NCBTYWx0ZWRfX5pBvp5ZS3fBz
- uViCcTc6aC2IjbFgEDo1KkVNilv2IrcJokSBq2TwAnC1h9UrnT5/tNnDsYicTU8BvJe3qioImwc
- 842Sh374MsCIL0UtDKiI/BlXlADFYWo=
-X-Proofpoint-ORIG-GUID: yf7EWx1S26Z4zrwErG8_DCjO5Ydk-CGm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-24_03,2026-06-23_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0 adultscore=0
- suspectscore=0 malwarescore=0 classifier=typeunknown authscore=0 authtc=
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.22.0-2606150000 definitions=main-2606240094
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21224-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21228-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:pbonzini@redhat.com,m:kvm@vger.kernel.org,m:linux-s390@vger.kernel.org,m:frankja@linux.ibm.com,m:borntraeger@de.ibm.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[imbrenda@linux.ibm.com,linux-s390@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,smtp.kernel.org:mid,lists.linux.dev:replyto,sashiko.dev:url];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:imbrenda@linux.ibm.com,m:agordeev@linux.ibm.com,m:kvm@vger.kernel.org,m:hca@linux.ibm.com,m:linux-s390@vger.kernel.org,m:gor@linux.ibm.com,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_NEQ_ENVFROM(0.00)[imbrenda@linux.ibm.com,linux-s390@vger.kernel.org];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,linux.ibm.com:mid,linux.ibm.com:from_mime,vger.kernel.org:from_smtp];
-	TO_DN_NONE(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	PRECEDENCE_BULK(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-s390];
 	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[11]
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_NO_DN(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 60BE76BD9AF
+X-Rspamd-Queue-Id: 08AB06BDB38
 
-If the allocation of the bits array failed, kvm_s390_set_cmma_bits()
-would return 0 instead of an error code.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-Rework the function to use the __free() macros and thus simplify the
-code flow; when the above mentioned allocation fails, simply return
--ENOMEM.
+Pre-existing issues:
+- [Critical] Missing validation for special pages in KVM GMAP unmap and des=
+troy paths leads to host kernel crash on invalid folio pointer dereference.
+- [Critical] Missing check for a valid `struct page` before folio conversio=
+n during PV guest secure page creation causes host crash.
+--
 
-Fixes: e38c884df921 ("KVM: s390: Switch to new gmap")
-Reviewed-by: Christian Borntraeger <borntraeger@linux.ibm.com>
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Message-ID: <20260623153331.233784-10-imbrenda@linux.ibm.com>
----
- arch/s390/kvm/kvm-s390.c | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
+commit 5f6958e6ac1a501221bda61b5fd8d27af20f157d
+Author: Claudio Imbrenda <imbrenda@linux.ibm.com>
 
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 9ad6bd4edbce..3b26c909ad0f 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -2313,8 +2313,8 @@ static int kvm_s390_get_cmma_bits(struct kvm *kvm,
- static int kvm_s390_set_cmma_bits(struct kvm *kvm,
- 				  const struct kvm_s390_cmma_log *args)
- {
--	struct kvm_s390_mmu_cache *mc;
--	u8 *bits = NULL;
-+	struct kvm_s390_mmu_cache *mc __free(kvm_s390_mmu_cache) = NULL;
-+	u8 *bits __free(kvfree) = NULL;
- 	int r = 0;
- 
- 	if (!kvm->arch.use_cmma)
-@@ -2334,18 +2334,16 @@ static int kvm_s390_set_cmma_bits(struct kvm *kvm,
- 		return -ENOMEM;
- 	bits = vmalloc(array_size(sizeof(*bits), args->count));
- 	if (!bits)
--		goto out;
-+		return -ENOMEM;
- 
- 	r = copy_from_user(bits, (void __user *)args->values, args->count);
--	if (r) {
--		r = -EFAULT;
--		goto out;
--	}
-+	if (r)
-+		return -EFAULT;
- 
- 	do {
- 		r = kvm_s390_mmu_cache_topup(mc);
- 		if (r)
--			break;
-+			return r;
- 		scoped_guard(read_lock, &kvm->mmu_lock) {
- 			r = dat_set_cmma_bits(mc, kvm->arch.gmap->asce, args->start_gfn,
- 					      args->count, args->mask, bits);
-@@ -2353,9 +2351,7 @@ static int kvm_s390_set_cmma_bits(struct kvm *kvm,
- 	} while (r == -ENOMEM);
- 
- 	set_bit(GMAP_FLAG_USES_CMM, &kvm->arch.gmap->flags);
--out:
--	kvm_s390_free_mmu_cache(mc);
--	vfree(bits);
-+
- 	return r;
- }
- 
--- 
-2.54.0
+KVM: s390: Do not set special large pages dirty
 
+Special pages / folios should not be set dirty. This also applies to
+large pages.
+
+> diff --git a/arch/s390/kvm/gmap.c b/arch/s390/kvm/gmap.c
+> index 52d55ddea8d4f..3192f610f6962 100644
+> --- a/arch/s390/kvm/gmap.c
+> +++ b/arch/s390/kvm/gmap.c
+> @@ -327,7 +327,7 @@ static long gmap_clear_young_crste(union crste *crste=
+p, gfn_t gfn, gfn_t end, st
+>  		new.h.i =3D 1;
+>  		new.s.fc1.y =3D 0;
+>  		new.s.fc1.prefix_notif =3D 0;
+> -		if (new.s.fc1.d || !new.h.p)
+> +		if ((new.s.fc1.d || !new.h.p) && !new.s.fc1.s)
+>  			folio_set_dirty(phys_to_folio(crste_origin_large(crste)));
+>  		new.s.fc1.d =3D 0;
+>  		new.h.p =3D 1;
+
+[Severity: Critical]
+This isn't a bug introduced by this patch, but since you are fixing the
+special page check here, do we need similar checks in other places?
+
+For instance, in _gmap_unmap_pte(), does this code safely handle special=20
+pages when calling pfn_folio() on the PTE's PFN?
+
+arch/s390/kvm/gmap.c:_gmap_unmap_pte() {
+    ...
+	if (ptep->s.pr && test_bit(GMAP_FLAG_EXPORT_ON_UNMAP, &priv->gmap->flags))
+		folio =3D pfn_folio(ptep->h.pfra);
+    ...
+}
+
+Similarly, in _gmap_unmap_crste(), does this code need a check for=20
+!old.s.fc1.s before calling phys_to_folio() on a large page origin?
+
+arch/s390/kvm/gmap.c:_gmap_unmap_crste() {
+    ...
+	if (old.s.fc1.pr && test_bit(GMAP_FLAG_EXPORT_ON_UNMAP, &priv->gmap->flags=
+))
+		folio =3D phys_to_folio(crste_origin_large(old));
+    ...
+}
+
+And in _destroy_pages_pte(), does it need a check for !ptep->s.s to avoid=20
+an invalid struct page dereference?
+
+arch/s390/kvm/gmap.c:_destroy_pages_pte() {
+    ...
+	__kvm_s390_pv_destroy_page(phys_to_page(pte_origin(*ptep)));
+    ...
+}
+
+Also in _destroy_pages_crste(), should there be a check for !crstep->s.fc1.s
+before calling phys_to_page()?
+
+arch/s390/kvm/gmap.c:_destroy_pages_crste() {
+    ...
+	for ( ; cur < end; cur +=3D PAGE_SIZE)
+		__kvm_s390_pv_destroy_page(phys_to_page(cur));
+    ...
+}
+
+Can unprivileged userspace trigger a host kernel crash by mapping a memory
+region backed by special PFNs without struct pages, converting it to a
+protected VM, and then tearing it down or unmapping it?
+
+[Severity: Critical]
+This is also a pre-existing issue, but does _kvm_s390_pv_make_secure()=20
+need a check for a valid struct page before converting the folio and=20
+attempting to acquire its lock?
+
+arch/s390/kvm/pv.c:_kvm_s390_pv_make_secure() {
+    ...
+	folio =3D pfn_folio(f->pfn);
+    ...
+	if (folio_trylock(folio)) {
+    ...
+}
+
+Could unprivileged userspace map PFNMAP memory without a backing struct=20
+page into a PV guest and cause a host crash when this path is triggered
+during guest memory fault?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260624111928.1442=
+83-1-imbrenda@linux.ibm.com?part=3D6
 
