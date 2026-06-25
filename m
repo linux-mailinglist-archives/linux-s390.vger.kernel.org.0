@@ -1,239 +1,188 @@
-Return-Path: <linux-s390+bounces-21250-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21253-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id R2ISDmoOPWrPwQgAu9opvQ
-	(envelope-from <linux-s390+bounces-21250-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 25 Jun 2026 13:18:02 +0200
+	id gDcLJokqPWphyQgAu9opvQ
+	(envelope-from <linux-s390+bounces-21253-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 25 Jun 2026 15:18:01 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 812B96C509D
-	for <lists+linux-s390@lfdr.de>; Thu, 25 Jun 2026 13:18:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 36FF16C615B
+	for <lists+linux-s390@lfdr.de>; Thu, 25 Jun 2026 15:18:01 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b="b/D7kVsB";
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21250-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-21250-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=AEchJ0xq;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21253-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-21253-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4367530A2926
-	for <lists+linux-s390@lfdr.de>; Thu, 25 Jun 2026 11:17:12 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5B686300615C
+	for <lists+linux-s390@lfdr.de>; Thu, 25 Jun 2026 13:16:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63B2F3D75CE;
-	Thu, 25 Jun 2026 11:17:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C8E92D060D;
+	Thu, 25 Jun 2026 13:16:41 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC97374E45;
-	Thu, 25 Jun 2026 11:17:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D612D2ECE91
+	for <linux-s390@vger.kernel.org>; Thu, 25 Jun 2026 13:16:39 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782386230; cv=none; b=ZaKKisIOADaUDQWkBfllyDoS6y9+SqYqZ2Ro7f1iwKnRuphCUO2PO5zBQ6OTkeDADbE/m8wfcmmqLFNxDA9y6OU0aFwRj6CSRlj4YPZwrH752HwNjrevAJQJdS/Ck/WFcqGy9WQxGcDDfnYQjB993DTciDCxCtq7PXvu3hVzuRs=
+	t=1782393401; cv=none; b=mMhcRI5XJDpclzyIX3qIv80uzG6pJVDjeXUVC7ZArOB0fdoo6Ufgj/muNAQh/7s62hv2vr0ltrqzv/62Ywht+9sTJXkp4BtXHJC4XhdySnEZwzXU+yefdG3RNpadsOvGo0P3HMiywfWIImrx29zRcElO8cw95PK2OQDmHTk/DAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782386230; c=relaxed/simple;
-	bh=idtMv2Eq1C72KO6kRFAlCQ6+RFlUyE+Jk9yJYlDc8nE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bxoFN63DQ+aMCFVyE4A1Ne66LIPSRo/ILGdNB/xUJYCo7XZasOmNMpqdRn0Kpqwh/S2oTbOk0ClfNX7QOmRuRTohErN1fU9UI0CVePh0LxoparlQBt+zs4b0eqdESzBT+2+YXM722VAZFVPr1iYaPpj2mfHs745bWPDnEI/sTkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=b/D7kVsB; arc=none smtp.client-ip=148.163.158.5
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65P3mdZ32927895;
-	Thu, 25 Jun 2026 11:17:05 GMT
+	s=arc-20240116; t=1782393401; c=relaxed/simple;
+	bh=42i3vL16POVViUft2nLJ+75a9SohgaMj2xwyLCuKw54=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lCXAVyy+iX/iF62QcUgCjpZT8hKxh9PiMP7HamNa1/Lq9X/PuZe1Gk3uoZAKreAA+s4siS99a5zBqTAvwbtOKVZUzr7vNeJr72GTx55/zEcVmvopCrJI1p4pUlOWoAXXoLHiuN2dqQ8USt3WhvGmGHEpGP2amoSgVVgRQa7dit4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AEchJ0xq; arc=none smtp.client-ip=148.163.158.5
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65P3mg8a2889642;
+	Thu, 25 Jun 2026 13:16:32 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=vbRN7s
-	krigppb++watalKcUrgs+8azDym0kBgJgAsTo=; b=b/D7kVsBuxSk8T0xOO1a39
-	Dk+2BkatuqrGZRwFSksQC4lk92AzlI0JKFWECuGAyBBIei7iWc2dH3vrk20nU1Gr
-	QJoneMHsPa9yBgF6y7lqftSMPHlEK3mE634zzkiGkhu6lKj7+yraYvUft25kFta/
-	ddC5qkGPF40gxwchahkK46wZM0W9LX5JRQ2kH74VkDpEJn0pj8yw9yHOvvy+Yy/0
-	l6PSqLaG9xsIzdDWFa9aVQJlBZ4EsdrbG7MOKq786pP9JTeP7tpIB9ZmP7J7/xto
-	wwrkw3S6rxWfwa3q81OWEh+PebAz//jxjaycDYQgArbjjWP5TYZ18mPqB0FTDI3w
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ewh9gs5e6-1
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=L3B3BzU3QwrwxN1mrUcbwN8DK+cni4tZJsvm5Zcyt
+	UY=; b=AEchJ0xqRSJRWAo/O5ZpXtreT6mlPbFtKwduC492SB3IXUlt55qCpwDBC
+	S+mf3EmsAhg1AyIOJMQB96+IqCdwnSXII2m93le8MsUyLliyREMKaPlLmEn22GcM
+	Fb/s7TIvGl9uR8Kc6t7FKYQbaBEpsDgekjQacmtcraAlLs9H1SzF3mlpJwMJu4lg
+	dduQ8b69q/tM8bHggLrdRDDcollZp3PXQcFigeDYxT8AF+NdFDJgdmbGZUkG/Wl2
+	rliqqbQqs9Pw/xywpFBV/t2Up+fwnptFEWx3rcVrefA5lC1tfutVM8MkpGQWcbd1
+	uE98uEDYCYcDzW2rtZ6dD/hrP5kKQ==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ewjgt1h08-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jun 2026 11:17:05 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65PB4fr3014622;
-	Thu, 25 Jun 2026 11:17:04 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ex5jwnxxw-1
+	Thu, 25 Jun 2026 13:16:32 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65PD4f9b004117;
+	Thu, 25 Jun 2026 13:16:31 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4ex7vyx056-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jun 2026 11:17:04 +0000 (GMT)
+	Thu, 25 Jun 2026 13:16:31 +0000 (GMT)
 Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65PBGwod37355994
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65PDGSXU41222584
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 25 Jun 2026 11:16:58 GMT
+	Thu, 25 Jun 2026 13:16:28 GMT
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 338FF20049;
-	Thu, 25 Jun 2026 11:16:58 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 240122004B;
+	Thu, 25 Jun 2026 13:16:28 +0000 (GMT)
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0870E20040;
-	Thu, 25 Jun 2026 11:16:58 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.224.75.30])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with SMTP;
-	Thu, 25 Jun 2026 11:16:57 +0000 (GMT)
-Date: Thu, 25 Jun 2026 13:16:56 +0200
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        borntraeger@de.ibm.com
-Subject: Re: [GIT PULL v1 00/12] KVM: s390: Fix S390_USER_OPEREXEC and more
- gmap fixes
-Message-ID: <20260625131656.664389a5@p-imbrenda>
-In-Reply-To: <1fad4b9d-ca9b-4766-bbe0-46fd5a3d91ae@redhat.com>
-References: <20260624111928.144283-1-imbrenda@linux.ibm.com>
-	<1fad4b9d-ca9b-4766-bbe0-46fd5a3d91ae@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	by IMSVA (Postfix) with ESMTP id ED3E520049;
+	Thu, 25 Jun 2026 13:16:27 +0000 (GMT)
+Received: from t35lp84.lnxne.boe (unknown [9.87.84.240])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 25 Jun 2026 13:16:27 +0000 (GMT)
+From: Ciunas Bennett <ciunas@linux.ibm.com>
+To: linux-s390@vger.kernel.org
+Cc: borntraeger@linux.ibm.com, frankja@linux.ibm.com, imbrenda@linux.ibm.com,
+        david@kernel.org, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, svens@linux.ibm.com,
+        Ciunas Bennett <ciunas@linux.ibm.com>
+Subject: [PATCH v2 0/2] Improve DIAG 9c observability
+Date: Thu, 25 Jun 2026 15:16:13 +0200
+Message-ID: <20260625131615.262367-1-ciunas@linux.ibm.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: xYSSxbw4Scl-yqQFAtIsS0Nzd448p__R
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjI1MDA5MiBTYWx0ZWRfX/V3PI7q0/oQH
- YVQiWTPA9FbOphmgK6qmMuZHiHxcUykpuzHCSRHg21JI3XqPzw7qN9+0IIdgt0mbSnaVoWiOHLe
- nKmOzVoeQuK2vnu7BhaBHUmSOVCMVic=
-X-Authority-Analysis: v=2.4 cv=c62bhx9l c=1 sm=1 tr=0 ts=6a3d0e31 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=kj9zAlcOel0A:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=VwQbUJbxAAAA:8
- a=20KFwNOVAAAA:8 a=95AKu5hJyJmswmW4WEsA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjI1MDA5MiBTYWx0ZWRfX9fXte/j8jMNw
- 3ey4pQCJP/h8EiElBiZBGupLmK8trTxqnbjGKq6iZNBQlUJob9UUNDLk5BJp6zSnTbXqdpFtlgO
- IwbkYmv608/6L0kSCJKGQLSjdnmzsaMXn5TdVJGwvYi+EdL+9ZX872twA1lTm9hNjKNmUaVHcvm
- EQ907VWt7dvupEbxg61UskYDxxS/r3115I7v8gmeVkY0xT4K4GgwKFCBsEuXggSXymDKGnssNzQ
- er+Vj3/8r5d+ghDTKqWDSPIrkRULhV0WZCkPCL7/zqRVPXsp9nCrwDXXhD95HT9D/+TRvJqQ+3N
- WBkNLZNW8+PpKrnZnydXPRcFodhgILZok3duDRatcqPVMpoMQkpKZPKx9ag0JFRD1oQQc62H+x+
- OGy+S1f+0Q1TRxTF84USMtQuQwQ3SrnildtaEvcYVQeYCV/66edQmZavaVhOhmP12M6fUOvczWG
- xmAL2fgbomVboCPVvRw==
-X-Proofpoint-ORIG-GUID: xYSSxbw4Scl-yqQFAtIsS0Nzd448p__R
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjI1MDExMCBTYWx0ZWRfX9yfoG2/OqXva
+ UoTV4OU5TsEQ96px9dGj+F7PzyOXuKr2Dt1ehyR2oTw8M77y7CWgcpr/jzlKiSAfQxlIHK0CDNd
+ 7gCLMht4BXJ6eo4Gp2HoAcULxi1yeLp9wlAYGYhUkCgQxBxW1jdYhrFSkzlcWhGerrjAHOFeWHR
+ S6k/F2V6TuCn/EAMz3OjMKEd/JqYkTcSOBTz5iItPkoGVMds9n0h/Z1X1jlSMvE9plXjFJEBhT+
+ eDJYgjznuL35A8+ULbt+n9j8pd9heHNNk16rGwSYTCMgXsSczAh0MnzrScZXVsyIsBlUm0hSw7H
+ V0em9wjvfFUQ722qrAduI4t5hJynzh0sCqF5vMm9vQIVhCyrDsTUySoX35w7oVWrnNNKf0HsJk0
+ KiYSti1tJuGiTRpHoSF5xPvPoYrn1gQ9JIPAulspkdY5gIJsPNP10YwPt6NDsEnuc8sdqfPpbLJ
+ tESRw6hRCdffrZp7oLA==
+X-Proofpoint-GUID: 2sw1DvJFrg_O3Awx-6Lkv5FJmrt1BdcG
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjI1MDExMCBTYWx0ZWRfX/m7MYmcauMKv
+ sXImDkvH+uBTeR+JZXUCjEaXKga9co4xh/jc90HKwh0+k7gIBrILkwRnhrDTeelpox1gs8L3nk8
+ ioB5GiQJp1rLaFStXYzPtqr8jxUHpts=
+X-Authority-Analysis: v=2.4 cv=I/lVgtgg c=1 sm=1 tr=0 ts=6a3d2a30 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=RzCfie-kr_QcCd8fBx8p:22 a=e05qxJdhFS1Mp7vzFoYA:9
+X-Proofpoint-ORIG-GUID: 2sw1DvJFrg_O3Awx-6Lkv5FJmrt1BdcG
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-06-25_01,2026-06-24_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 impostorscore=0 adultscore=0 clxscore=1015 suspectscore=0
- priorityscore=1501 phishscore=0 spamscore=0 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 spamscore=0 phishscore=0 clxscore=1011 priorityscore=1501
+ adultscore=0 impostorscore=0 bulkscore=0 suspectscore=0 malwarescore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606250092
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606250110
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:pbonzini@redhat.com,m:kvm@vger.kernel.org,m:linux-s390@vger.kernel.org,m:frankja@linux.ibm.com,m:borntraeger@de.ibm.com,s:lists@lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:from_mime,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp];
-	HAS_ORG_HEADER(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[imbrenda@linux.ibm.com,linux-s390@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-21250-lists,linux-s390=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[imbrenda@linux.ibm.com,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21253-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:linux-s390@vger.kernel.org,m:borntraeger@linux.ibm.com,m:frankja@linux.ibm.com,m:imbrenda@linux.ibm.com,m:david@kernel.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:svens@linux.ibm.com,m:ciunas@linux.ibm.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[ciunas@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FROM_NEQ_ENVFROM(0.00)[ciunas@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,linux.ibm.com:mid,linux.ibm.com:from_mime];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 812B96C509D
+X-Rspamd-Queue-Id: 36FF16C615B
 
-On Wed, 24 Jun 2026 18:56:12 +0200
-Paolo Bonzini <pbonzini@redhat.com> wrote:
+This series enhances observability for DIAG 9c directed yield operations
+in s390 KVM by refactoring the handler and adding comprehensive tracing
+support.
 
-> On 6/24/26 13:19, Claudio Imbrenda wrote:
-> > Ciao Paolo,
-> > 
-> > here are some fixes for the second half of the merge window:
-> > 
-> > * Fix S390_USER_OPEREXEC so it can now be enabled regardless of other
-> >    unrelated capabilities
-> > * Fix handling of the _PAGE_UNUSED pte bit that could lead to guest
-> >    memory corruption in some scenarios
-> > * A bunch of misc gmap fixes (locking, behaviour under memory pressure)
-> > * Fix CMMA dirty tracking
-> > 
-> > The following changes since commit 8cd9520d35a6c38db6567e97dd93b1f11f185dc6:
-> > 
-> >    Linux 7.1 (2026-06-14 15:58:38 +0100)
-> > 
-> > are available in the Git repository at:
-> > 
-> >    https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git tags/kvm-s390-next-7.2-2
-> > 
-> > for you to fetch changes up to babe08404e1993697a523e60bc0f9d096ffe1ef8:
-> > 
-> >    KVM: s390: Return failure in case of failure in kvm_s390_set_cmma_bits() (2026-06-24 10:08:57 +0200)  
-> 
-> Looks like either you onboard kvm-s390 to sashiko, or just send patches 
-> to kvm@vger.kernel.org.
+The first patch refactors __diag_time_slice_end_directed() to use a
+single exit point with a result string variable. This consolidates the
+control flow and eliminates code duplication in logging statements,
+making the function more maintainable.
 
-yes, we already do that, in fact most of the patches in this pull
-request are fixes to "pre-existing issues" sashiko found in previous
-series.
+The second patch builds on this refactoring by adding a new tracepoint
+kvm_s390_diag_9c that captures detailed information about directed yield
+operations, including source/target VCPU IDs, physical CPU numbers, and
+operation results. This enables better analysis of VCPU scheduling
+behaviour and helps diagnose performance issues in virtualised s390
+environments.
 
-Most of the "issues" sashiko raised about the pull request are either:
-* small things we didn't notice, that sashiko also did not notice
-  previously -- we will fix those
-* actual issues... that have already been fixed in previous pull
-  requests
-* complete nonsense, due to sashiko not understanding how the hardware
-  works
+Together, these changes provide kernel developers and system
+administrators with better tools to understand and debug VCPU scheduling
+patterns related to directed yields.
 
-> 
-> Anyhow I've pulled it, there's time to fix up things.
-> 
-> Paolo
-> 
-> > ----------------------------------------------------------------
-> > KVM: s390: Fix S390_USER_OPEREXEC and more gmap fixes
-> > 
-> > ----------------------------------------------------------------
-> > Claudio Imbrenda (9):
-> >        s390/mm: Fix handling of _PAGE_UNUSED pte bit
-> >        KVM: s390: Fix dat_peek_cmma() overflow
-> >        KVM: s390: Do not set special large pages dirty
-> >        KVM: s390: Fix code typo in gmap_protect_asce_top_level()
-> >        KVM: s390: Fix handle_{sske,pfmf} under memory pressure
-> >        KVM: s390: Fix locking in kvm_s390_set_mem_control()
-> >        KVM: s390: Fix cmma dirty tracking
-> >        KVM: s390: selftests: Fix cmma selftest
-> >        KVM: s390: Return failure in case of failure in kvm_s390_set_cmma_bits()
-> > 
-> > Eric Farman (3):
-> >        KVM: s390: Fix S390_USER_OPEREXEC enablement without STFLE 74
-> >        KVM: s390: selftests: Extended user_operexec tests
-> >        KVM: s390: Fix typo in UCONTROL documentation
-> > 
-> >   Documentation/virt/kvm/api.rst                     |   2 +-
-> >   arch/s390/include/asm/pgtable.h                    |   4 +-
-> >   arch/s390/kvm/dat.c                                |   5 +-
-> >   arch/s390/kvm/gmap.c                               |  35 +++++--
-> >   arch/s390/kvm/gmap.h                               |  12 ++-
-> >   arch/s390/kvm/kvm-s390.c                           |  71 ++++++++-----
-> >   arch/s390/kvm/priv.c                               |  10 +-
-> >   arch/s390/mm/gmap_helpers.c                        |   3 +-
-> >   .../testing/selftests/kvm/include/s390/facility.h  |   6 ++
-> >   tools/testing/selftests/kvm/s390/cmma_test.c       |   6 ++
-> >   tools/testing/selftests/kvm/s390/user_operexec.c   | 110 +++++++++++++++++++++
-> >   11 files changed, 226 insertions(+), 38 deletions(-)
-> >   
-> 
+---
+Changes in v2:
+ - Add system maintainers to review mail
+---
+
+Ciunas Bennett (2):
+  s390/kvm: Refactor __diag_time_slice_end_directed for single exit
+    point
+  s390/kvm: Add tracepoint for DIAG 9c directed yield operations
+
+ arch/s390/kvm/diag.c  | 19 +++++++++++--------
+ arch/s390/kvm/trace.h | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 41 insertions(+), 8 deletions(-)
+
+base-commit: 184fc1890bcc8242f00fee660d2651290f1461a2
+-- 
+2.54.0
 
 
