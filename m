@@ -1,225 +1,198 @@
-Return-Path: <linux-s390+bounces-21251-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21254-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id TdAjJogqPWpfyQgAu9opvQ
-	(envelope-from <linux-s390+bounces-21251-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 25 Jun 2026 15:18:00 +0200
+	id Ko4PCb4yPWpnywgAu9opvQ
+	(envelope-from <linux-s390+bounces-21254-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 25 Jun 2026 15:53:02 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3CB26C6153
-	for <lists+linux-s390@lfdr.de>; Thu, 25 Jun 2026 15:17:59 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B09EC6C6462
+	for <lists+linux-s390@lfdr.de>; Thu, 25 Jun 2026 15:53:01 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=iY7lDJYY;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21251-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-21251-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=kHJe09Cm;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21254-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21254-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 32EEB3002B56
-	for <lists+linux-s390@lfdr.de>; Thu, 25 Jun 2026 13:16:38 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 03BE830254A5
+	for <lists+linux-s390@lfdr.de>; Thu, 25 Jun 2026 13:53:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAE962ECE91;
-	Thu, 25 Jun 2026 13:16:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB23B33067C;
+	Thu, 25 Jun 2026 13:52:58 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC2A328243
-	for <linux-s390@vger.kernel.org>; Thu, 25 Jun 2026 13:16:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8E831AAAA
+	for <linux-s390@vger.kernel.org>; Thu, 25 Jun 2026 13:52:57 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782393397; cv=none; b=SXH4RhOs551qzXEBSG/xH3YB4fReuud+llR94ouV93Nt+/N3bQZeDkWkbEp8Mne6X4chfle3rMQLWzlA3GHNeneWPvrCfY2AkZwgeTags/kjGkQ252csUW8nZikhoTr+iF4uJ3pICwDPfIEmGbgGJ+DzWkZm3CXpweoZaVJ/Xi4=
+	t=1782395578; cv=none; b=jlP2qgHI/1eLgP+jutkFzFj9as4nzXA1tVDKhPWmd6EtbfN2UXtgQD84T6HxXqD2y83IL43QvqOqmWEziVFPTYw/IiQyed4sWF2lLP8pZ3BO3FYyLfZopdfiqYkfzCQ7ZUCuWxuOnZrpEkSVoUPy1FCrcZm9pi8TFBUCSWJ/dMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782393397; c=relaxed/simple;
-	bh=sIjnrmQDZdMFEc9ZEbJoqPvGL2JHQjbD/1xlGVAzNoU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hGCeFo29CKKzwA+iBYKeXfI9Qkhk712ux+nNjDCS3Fgf67XAS+bk+yA02JmW6lamB9BPoLvyq2eR3fAXOEzsluvB0+KLgnJhhRUjKE5UkY9FE2Y7H5ot0XlOZwQWACxnxsFANk0PKq/wuC/WlapIinbuW6I+frsQAo668bM1FcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iY7lDJYY; arc=none smtp.client-ip=148.163.158.5
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65P3mRW32927509;
-	Thu, 25 Jun 2026 13:16:33 GMT
+	s=arc-20240116; t=1782395578; c=relaxed/simple;
+	bh=vUxiP1rwSH+fXvXDrkj+vPrS0DP3eca4sl3Gn+M6or4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mzVykTxB+YiR/oiWr5lrSZgY06V89T4mS1qQHCpHR+rrximVqIbUmruzkgZg/bFjixJH7FIheZ410Gmp+5qNc5E2burYpJUCDzhJSIgcTCAJdX66Nf6sIJlDf/bpLJIpz/5mAmPKonxqkk2uC4lFcmYEiw4xvubd8BXwI8udtok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kHJe09Cm; arc=none smtp.client-ip=148.163.156.1
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65P3mN5l3040864;
+	Thu, 25 Jun 2026 13:52:55 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=1zZYrtLRg9ZGULZhY
-	n1i/34roCQ3RMVbGDwGbTKJGIw=; b=iY7lDJYY/pw3Hf3leE4B9qHAmBVfi8OM+
-	L/iXRD2YwTXpTaZYGn9i7yu43APfb7oYAT4XEOJNtcIWE0vP1a/BeoNXCf+Ygpr4
-	Mu09+QBY4kKnELZAwHKyUYOJ5Rww2zs2y+xjx0jaXuBI/jjTYTkB38DcV3leV752
-	P11XQP+loF4J4/Zlk6Saxrc7ScSPwQYVpuux6vAzt3JfKL4lkn9mEumW3tPIZT9t
-	dkp3ij+Z0k7kBQyM7aMuYfbTqapw+PwTmbAGfUH6XXCvUgGjJbWErze4Eq0dTCXb
-	zvEALkggObhb4HdVOBIq5i9C/8MRC9PpBLdSfrrbf7XfKqH3rM5bg==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ewh9gsn6e-1
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=kfwAmb
+	/BBmc3nkaPleOW5wi1m0sSk47vjsgik7/uIjQ=; b=kHJe09CmKwaRaHWLv2Gf0v
+	GrCBf3xGWZ3kvxgkeRXOG4oFZqKR3XQNnjDM+eBZBWo1nUZc4mAzkmI7+k4VM4QO
+	8pbu7ammVqDcLBkoHeXRGrLbwouFaX1auWAXUVZRjy3uDqppk1kxx5VPGTFeasCs
+	iObstTtd0XGdhjg0Ywj40A3oVMKCocqu9UXW4UQi4KOVFyXdrEIHcmYRi9zEja9J
+	O3imUTjJ2QhDgtM/rRk2/7cFpgbEVQXSEasgxcveNncRaIjdXdC2n2L5G1ye03iE
+	PcR4JPz6j1E+lrf35BHkWumwWE1ehMajSew2aLFQNrJhZAq/r+TSIN20u55PSibQ
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ewjc3t684-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jun 2026 13:16:32 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65PD4kxt004140;
-	Thu, 25 Jun 2026 13:16:32 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4ex7vyx057-1
+	Thu, 25 Jun 2026 13:52:55 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65PDngId032114;
+	Thu, 25 Jun 2026 13:52:54 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ex66kee4q-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jun 2026 13:16:32 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65PDGSYR29950342
+	Thu, 25 Jun 2026 13:52:54 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65PDqoT211141454
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 25 Jun 2026 13:16:28 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 82F0120049;
-	Thu, 25 Jun 2026 13:16:28 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5AC282004B;
-	Thu, 25 Jun 2026 13:16:28 +0000 (GMT)
-Received: from t35lp84.lnxne.boe (unknown [9.87.84.240])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 25 Jun 2026 13:16:28 +0000 (GMT)
-From: Ciunas Bennett <ciunas@linux.ibm.com>
-To: linux-s390@vger.kernel.org
-Cc: borntraeger@linux.ibm.com, frankja@linux.ibm.com, imbrenda@linux.ibm.com,
-        david@kernel.org, hca@linux.ibm.com, gor@linux.ibm.com,
-        agordeev@linux.ibm.com, svens@linux.ibm.com,
-        Ciunas Bennett <ciunas@linux.ibm.com>
-Subject: [PATCH v2 2/2] s390/kvm: Add tracepoint for DIAG 9c directed yield operations
-Date: Thu, 25 Jun 2026 15:16:15 +0200
-Message-ID: <20260625131615.262367-3-ciunas@linux.ibm.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260625131615.262367-1-ciunas@linux.ibm.com>
-References: <20260625131615.262367-1-ciunas@linux.ibm.com>
+	Thu, 25 Jun 2026 13:52:50 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2672E2004B;
+	Thu, 25 Jun 2026 13:52:50 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C475B20040;
+	Thu, 25 Jun 2026 13:52:49 +0000 (GMT)
+Received: from [9.224.76.67] (unknown [9.224.76.67])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 25 Jun 2026 13:52:49 +0000 (GMT)
+Message-ID: <1c6845c5-6f16-40d2-aa50-887fb13d5a42@linux.ibm.com>
+Date: Thu, 25 Jun 2026 15:52:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/2] Improve DIAG 9c observability
+To: Ciunas Bennett <ciunas@linux.ibm.com>, linux-s390@vger.kernel.org
+Cc: borntraeger@linux.ibm.com, frankja@linux.ibm.com, imbrenda@linux.ibm.com,
+        david@kernel.org, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, svens@linux.ibm.com
+References: <20260625131615.262367-1-ciunas@linux.ibm.com>
+Content-Language: en-US
+From: Mete Durlu <meted@linux.ibm.com>
+In-Reply-To: <20260625131615.262367-1-ciunas@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: reK00zfNGMOBxOhC_0SVJQ62VWa_vuPF
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjI1MDExMCBTYWx0ZWRfX8YrdrkiwsEYI
- 907I33A69Zo1t2Bj+02SusPpW1uL3Xl9pR6D2a4YWZtxGfpo/70tQzJUeQxl/b4GaKa+Sm5W0Q4
- DGiUpLgG7hJ+zzS40lezZ+ZmY/kUoHU=
-X-Authority-Analysis: v=2.4 cv=c62bhx9l c=1 sm=1 tr=0 ts=6a3d2a30 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8 a=voEG10PFg9Div1x7oZ0A:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjI1MDExMCBTYWx0ZWRfX0/bjEFq1ffcm
- 6QuIXBpJBiKt1S6+9ZJ3rSCLimNnHLoVAac2oSCRyhnUK/xNuxCRpqtAqUYH/OEK3U5VoWyeayN
- 1GUezSvmaXruVHRBYqOhAVQ++7PLPHLDVEyBQ4huZFzj3G5Phi/Xdjdr6BfnTChbIozg7aleT+6
- JxRTsidGqnYKWYZlag6vmOcjFsiHJl1qSW9SdFzTcCAxhdhAYmjvH5DCWfoMnbvofpR7yz3hKJU
- KhCh/Fv6u2Tle+Z3U0DZ95rnfjPrQKguM/1CY9kL3ahWdBgmh/BmmiM9hBs6IdHEd5hzIUPV5Gs
- eZ1Bzg/NXl4XuAtup3gFdIpU35UPgGMScnsx3THLtRQ7SQqgQkDfFRDKcw6/q/ZHFWNMSc7DEn5
- kFw6h0CZbCea1dHW3CtTmp9jo1AznY9KIIheEecOFFQuShHE5QGy7Hz0XbEia3TWRTK6z4bbbk+
- 0xX4CQ4du2fsqWI/svg==
-X-Proofpoint-ORIG-GUID: reK00zfNGMOBxOhC_0SVJQ62VWa_vuPF
+X-Authority-Analysis: v=2.4 cv=X4Ni7mTe c=1 sm=1 tr=0 ts=6a3d32b7 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8
+ a=uNpy-0L2wzZnJY0atOQA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjI1MDExOSBTYWx0ZWRfXxzdIL+y8tifM
+ nYhR1MShrH7AhxpJjqWy6VwJHO2JicgpvHKOc+lxX1oA7pP4rs6GX5W+4eyHalPuPCTftR2JAm8
+ OpcvNSbaMP5j5z7CZjT6md+z2wyTxrQ=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjI1MDExOSBTYWx0ZWRfXw6Aq4pqw6q4V
+ iFOvm86QdqXxCHoSwyZJ8prDiFqZcNbS4RhVu6ahlfA0kVfg+kXT4sxa7LAy+VrLyQcokPjfBdc
+ kEv1tCBGxG3TaDxEzENslinK9r4mVHTf4QOZJqE1jb99W4gBToKS6Txm1rdZigNacXbEIpVEKou
+ an74OhLTbXnv1SvWQoZ0CfSbE0PaFkpVUnK/g5cDGRdDtLLV/qx3tndVNSA1p2rk9cDhtX8hum5
+ g/hzdlRw8AwJsezTm2SDufseDk5fK1BHj4NKfzV9gAyr0iZpn8nn9g5RYtqSicdftuyfP4cuvUB
+ 7QQbOkBFFyiYoI750sKrxBFcCDhbrZO9Eh71xOylHV5k44rtKqR9BJ2YF2dCfgF9hEoQ52+xP3X
+ nNmiapMzXpzIHplcB0u4vpHpIquSm9zlX8bnyvj+BDogOLmZtRb5/mcYIW3lvI93a34bwTvzFRq
+ aEYOS7v7wzMvPlYL0ow==
+X-Proofpoint-ORIG-GUID: 1IK6xV8adJmZ_ppIr9RTUDD64S9XXlkg
+X-Proofpoint-GUID: 1IK6xV8adJmZ_ppIr9RTUDD64S9XXlkg
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-06-25_01,2026-06-24_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 impostorscore=0 adultscore=0 clxscore=1011 suspectscore=0
- priorityscore=1501 phishscore=0 spamscore=0 bulkscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 suspectscore=0 spamscore=0 priorityscore=1501
+ impostorscore=0 malwarescore=0 clxscore=1011 adultscore=0 lowpriorityscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606250110
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606250119
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21251-lists,linux-s390=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:linux-s390@vger.kernel.org,m:borntraeger@linux.ibm.com,m:frankja@linux.ibm.com,m:imbrenda@linux.ibm.com,m:david@kernel.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:svens@linux.ibm.com,m:ciunas@linux.ibm.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[ciunas@linux.ibm.com,linux-s390@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21254-lists,linux-s390=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,linux.ibm.com:mid,linux.ibm.com:from_mime];
+	FORGED_RECIPIENTS(0.00)[m:ciunas@linux.ibm.com,m:linux-s390@vger.kernel.org,m:borntraeger@linux.ibm.com,m:frankja@linux.ibm.com,m:imbrenda@linux.ibm.com,m:david@kernel.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:svens@linux.ibm.com,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_NEQ_ENVFROM(0.00)[ciunas@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_SENDER(0.00)[meted@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[meted@linux.ibm.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[10];
 	ALIAS_RESOLVED(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,linux.ibm.com:mid,linux.ibm.com:from_mime];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E3CB26C6153
+X-Rspamd-Queue-Id: B09EC6C6462
 
-Add a new tracepoint kvm_s390_diag_9c to provide detailed observability
-for directed yield operations. The tracepoint captures:
-- Source and target VCPU IDs
-- Current and target physical CPU numbers
-- Operation result (done, ignored, yield forwarded)
+On 6/25/26 3:16 PM, Ciunas Bennett wrote:
+> This series enhances observability for DIAG 9c directed yield operations
+> in s390 KVM by refactoring the handler and adding comprehensive tracing
+> support.
+> 
+> The first patch refactors __diag_time_slice_end_directed() to use a
+> single exit point with a result string variable. This consolidates the
+> control flow and eliminates code duplication in logging statements,
+> making the function more maintainable.
+> 
+> The second patch builds on this refactoring by adding a new tracepoint
+> kvm_s390_diag_9c that captures detailed information about directed yield
+> operations, including source/target VCPU IDs, physical CPU numbers, and
+> operation results. This enables better analysis of VCPU scheduling
+> behaviour and helps diagnose performance issues in virtualised s390
+> environments.
+> 
+> Together, these changes provide kernel developers and system
+> administrators with better tools to understand and debug VCPU scheduling
+> patterns related to directed yields.
+> 
+> ---
+> Changes in v2:
+>   - Add system maintainers to review mail
+> ---
+> 
+> Ciunas Bennett (2):
+>    s390/kvm: Refactor __diag_time_slice_end_directed for single exit
+>      point
+>    s390/kvm: Add tracepoint for DIAG 9c directed yield operations
+> 
+>   arch/s390/kvm/diag.c  | 19 +++++++++++--------
+>   arch/s390/kvm/trace.h | 30 ++++++++++++++++++++++++++++++
+>   2 files changed, 41 insertions(+), 8 deletions(-)
+> 
+> base-commit: 184fc1890bcc8242f00fee660d2651290f1461a2
 
-This enables better analysis of VCPU scheduling behaviour and helps
-diagnose performance issues related to directed yields in virtualised
-s390 environments.
+I gave the patches a quick spin using a single kvm guest.
 
-Signed-off-by: Ciunas Bennett <ciunas@linux.ibm.com>
----
- arch/s390/kvm/diag.c  |  1 +
- arch/s390/kvm/trace.h | 30 ++++++++++++++++++++++++++++++
- 2 files changed, 31 insertions(+)
+Both VCPU_EVENTs and ftrace events works well.
 
-diff --git a/arch/s390/kvm/diag.c b/arch/s390/kvm/diag.c
-index 85c84421b510..031ab6e5d6c4 100644
---- a/arch/s390/kvm/diag.c
-+++ b/arch/s390/kvm/diag.c
-@@ -228,6 +228,7 @@ static int __diag_time_slice_end_directed(struct kvm_vcpu *vcpu)
- out:
- 	VCPU_EVENT(vcpu, 5, "diag time slice end directed to %d: %s", tid,
- 		   result);
-+	trace_kvm_s390_diag_9c(vcpu, tid, tcpu_cpu, result);
- 	return 0;
- }
- 
-diff --git a/arch/s390/kvm/trace.h b/arch/s390/kvm/trace.h
-index aa419eb6a0c8..2d6da21f590c 100644
---- a/arch/s390/kvm/trace.h
-+++ b/arch/s390/kvm/trace.h
-@@ -283,6 +283,36 @@ TRACE_EVENT(kvm_s390_handle_diag,
- 			   __print_symbolic(__entry->code, diagnose_codes))
- 	);
- 
-+TRACE_EVENT(kvm_s390_diag_9c,
-+	    TP_PROTO(VCPU_PROTO_COMMON, int target_vcpu, int target_cpu,
-+		     const char *result),
-+	    TP_ARGS(VCPU_ARGS_COMMON, target_vcpu, target_cpu, result),
-+
-+	    TP_STRUCT__entry(
-+		    VCPU_FIELD_COMMON
-+		    __field(int, target_vcpu)
-+		    __field(int, target_cpu)
-+		    __field(int, current_cpu)
-+		    __string(result, result)
-+		    ),
-+
-+	    TP_fast_assign(
-+		    VCPU_ASSIGN_COMMON
-+		    __entry->target_vcpu = target_vcpu;
-+		    __entry->target_cpu = target_cpu;
-+		    __entry->current_cpu = smp_processor_id();
-+		    __assign_str(result);
-+		    ),
-+
-+	    VCPU_TP_PRINTK(
-+		       "diag=9c vcpu=%d pcpu=%d target_vcpu=%d target_pcpu=%d result=%s",
-+		       __entry->id,
-+		       __entry->current_cpu,
-+		       __entry->target_vcpu,
-+		       __entry->target_cpu,
-+		       __get_str(result))
-+	);
-+
- TRACE_EVENT(kvm_s390_handle_lctl,
- 	    TP_PROTO(VCPU_PROTO_COMMON, int g, int reg1, int reg3, u64 addr),
- 	    TP_ARGS(VCPU_ARGS_COMMON, g, reg1, reg3, addr),
--- 
-2.54.0
-
+Tested-by: Mete Durlu <meted@linux.ibm.com>
+Reviewed-by: Mete Durlu <meted@linux.ibm.com>
 
