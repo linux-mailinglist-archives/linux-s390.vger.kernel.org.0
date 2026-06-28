@@ -1,221 +1,256 @@
-Return-Path: <linux-s390+bounces-21273-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21274-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id MrX3M00sP2rUPgkAu9opvQ
-	(envelope-from <linux-s390+bounces-21273-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Sat, 27 Jun 2026 03:50:05 +0200
+	id BvIUHNJ9QGqVfwkAu9opvQ
+	(envelope-from <linux-s390+bounces-21274-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Sun, 28 Jun 2026 03:50:10 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC3CE6D0BD3
-	for <lists+linux-s390@lfdr.de>; Sat, 27 Jun 2026 03:50:04 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id C73406D2EF2
+	for <lists+linux-s390@lfdr.de>; Sun, 28 Jun 2026 03:50:09 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=asu.edu header.s=google header.b=S9aM0awI;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21273-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21273-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=asu.edu;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Ny3TuQ6S;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21274-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-21274-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id B6CE7300B818
-	for <lists+linux-s390@lfdr.de>; Sat, 27 Jun 2026 01:50:01 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id B1F5130143C9
+	for <lists+linux-s390@lfdr.de>; Sun, 28 Jun 2026 01:50:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3D352405EB;
-	Sat, 27 Jun 2026 01:50:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AF2317A303;
+	Sun, 28 Jun 2026 01:50:07 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497B423B638
-	for <linux-s390@vger.kernel.org>; Sat, 27 Jun 2026 01:49:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E43040D57F
+	for <linux-s390@vger.kernel.org>; Sun, 28 Jun 2026 01:50:05 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782525000; cv=none; b=GkYxvppmUxMwv8dHEnTg46QstOtBmy163NgM7JOcWL79xoEcr79KPfk3bxaRUzEnxLIgYo2q7v3AzbUqBlobOKjkuibYkRrrEcf5gtF601TXDaoluDAniY8ach7EQmyifSb6FfHBLICO62cy72kYK5KCw+VmQBjyebMRrb1zjoE=
+	t=1782611407; cv=none; b=kqzx5SinRZ9Hg+00v8jhFyTcRU4Cxtyhh1pf1oZSGkBf9FDX2Tx2u8BGGh4VJH7yvXl9oYmtQbpJJHmL3vP/P6DAqKBef4Cr1QtQFoxGxTggmfkMxGdL1x36eLgp4GDyKp5Mj6HAifiptIy34KBZgJeEAMdz2pQ5Nj/Yzp+y8D0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782525000; c=relaxed/simple;
-	bh=xDiA5DuL4aSX/vjh9grRbpSo0KLZ0CotQ9L65uuTUbM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t0L+cIzXkUXlGdseg6Ecukj0vCWmOwDV7NGcMW79JDwcBOqss9QzOlOX+Gzoq7IZs5aQpW2NODdK74MPBLCMn1N1O8wQgzZD2G/N9FAUaF1oR+6REsI1g/aMMibAkWmZGniXwwKXBhkNNONMpI5uEAkt0scrNG3lQeJEckJPTXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asu.edu; spf=pass smtp.mailfrom=asu.edu; dkim=pass (2048-bit key) header.d=asu.edu header.i=@asu.edu header.b=S9aM0awI; arc=none smtp.client-ip=209.85.214.176
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2c9b19bbaefso505025ad.0
-        for <linux-s390@vger.kernel.org>; Fri, 26 Jun 2026 18:49:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=asu.edu; s=google; t=1782524998; x=1783129798; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0UXUHUjId2cfil9ag+usZlcPYF1aU0mFhw0ihbgDIPo=;
-        b=S9aM0awI95G7mptiCcJ+G2ETgRS/x7J+8Ql8Hu4IAfaY6auAxhZt9Ssxd6UwHfag6d
-         uUDhZR5rftaulBjB5vTevsGUXmoRUBRZrtw3xRnKUOk5qQcRlaio2aU4kFQY6RiJK7GI
-         zE+yXEcRaJRBc1EmKU5p0YT01dmCr+jSkQO/suQjAhOQAr9DEvWl1VDiDGGb26Jyh52/
-         oNfB6UJCPh6/U1DsILrFMCLXP156ZUpYjgCXkT/cJiKo9Pu+wNJB/srYNVE+czSgAqbI
-         /IvaU8HSCcuBYYbvNFTRHqGAg4sln+/wpmOolbcA3vqjpa0I8uMaAx0k89fnjJhg7aPT
-         GF1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782524998; x=1783129798;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0UXUHUjId2cfil9ag+usZlcPYF1aU0mFhw0ihbgDIPo=;
-        b=judYAZ3knkvaIERMd0jInRpQQdMUnpaN/63gxfd/NM1e7X7lY7jQBkd2jCFW2BfWEo
-         z5uXemcL3PBHT3DJp9d6QL6LIT7WS5BxvIEsSw9SiGDdejgUn0wMsbU7kZC2+BtZ+JAO
-         lrvL4GVhL7OiSeM1AQYYwqjuVJihGrCpKpTIbxP3jZ8REQ3HClmv6miMztWaMSSzL5ra
-         N+yGvzHbTh3SugySlGRahZeT5rrEWyIMWANNcglBvUDbTrGK+vKlGPi8dt5G/HuxZjRC
-         Z+G8yF10KOIWCR9ubrBJbyQ+KY5FBepfS1N1d8bhZjheXUfzCHUbfydnIF/exC/df9+0
-         8rwQ==
-X-Forwarded-Encrypted: i=1; AHgh+RoTT9Tb5U2aLHcitHoqaRklVU9W4iOgPkKK8MVozaa3uF9wTomNNMrkQ3K3nBZGl3nGaO7LPgnfV50k@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGs4GB7IEMXET5lY++MvLIgnXTGkzqM7/RGWiJBwz/lLlF5FHL
-	znSqRka4m3tU3lRVbIqYlV1s3gnT6Qe3Sxgoj0I6VB0yXy0QTpgqIxA9i8yHTs/qPg==
-X-Gm-Gg: AfdE7cmsMsgbf2xuvObdV/OKaYJhd0CL9SbYHkFtmj91RyAhye078jPVjKLjhunMeTW
-	Zu6KmdpmJG2IaNqJzqhir2X/uGEHgJGvFSIRQgzsD7pTTqSHs5UJbrB4n6Hgf/3m8MLOAQI2CJY
-	H4m/Ogw3VKbY1Rp5OQtvWVmOVz5NYYTmzjP3pYFxI3AOL7kc4jBy5rv7ZuBNVL1eYVtqC19IOFP
-	I9De3GoJGe8ZfMVST1BJ77KBhzG04baS4akGFQq82Z42P9C6XopzfACEj0UIdbstbECyZVzHWcF
-	nQkOFnoJ8FGUGgJTd52pOo1GYgt9aEzUjTKzxtzDsUtdt6XrWekCUJrmpZD+uxKUBlKmFgmCoiE
-	wenwZQrlB7LIQA9xN4LOtE5xR7Ssg3RgWWrbvNA38d9aOyqPzJeebXcXTTHCnO0ogHbMoqmJtFg
-	==
-X-Received: by 2002:a17:903:160c:b0:2c0:ca99:3d73 with SMTP id d9443c01a7336-2c7fc665c91mr88173025ad.8.1782524998436;
-        Fri, 26 Jun 2026 18:49:58 -0700 (PDT)
-Received: from p1.. ([2607:fb91:15af:c6b3:c760:3f53:87ef:d98c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c7f5afdd40sm48970995ad.33.2026.06.26.18.49.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2026 18:49:58 -0700 (PDT)
-From: Xiang Mei <xmei5@asu.edu>
-To: "D . Wythe" <alibuda@linux.alibaba.com>,
-	Dust Li <dust.li@linux.alibaba.com>,
-	Sidraya Jayagond <sidraya@linux.ibm.com>,
-	Wenjia Zhang <wenjia@linux.ibm.com>,
-	Mahanta Jambigi <mjambigi@linux.ibm.com>,
-	Tony Lu <tonylu@linux.alibaba.com>,
-	Wen Gu <guwen@linux.alibaba.com>,
-	netdev@vger.kernel.org
-Cc: "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Hans Wippel <hwippel@linux.ibm.com>,
-	linux-rdma@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	Weiming Shi <bestswngs@gmail.com>,
-	Xiang Mei <xmei5@asu.edu>
-Subject: [PATCH net] net/smc: fix UAF in smc_cdc_rx_handler() by pinning the socket
-Date: Fri, 26 Jun 2026 18:49:48 -0700
-Message-ID: <20260627014948.3049512-1-xmei5@asu.edu>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1782611407; c=relaxed/simple;
+	bh=tFJsC1hNb2rcq/N1n9QC2cM5HFEcsjhPl9dO9JKOTJc=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=q5WmPIXF4PuTfu9J66ikNtjOkQLqMNO2XA1E+DOkQ9TGHstrLCrSduim3NHxhhHJp/4cxkzNF/jRBvsxdXl2nxQPxPsrSlIOMpPPy3ujrGqcfz+tfgh65g9EbIr5g3cerGJnU/qq+kCmzRa/Sb29B1egJfffXxJEdUZ7tAH+aFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ny3TuQ6S; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 709CB1F000E9;
+	Sun, 28 Jun 2026 01:50:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782611405;
+	bh=O+077YBXxjCYJibgquhRtFegZxIBPU+7a8w9fP+v6A8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Ny3TuQ6SaepBVBYbOxUEc6RrqX9EyVRk/ZUARYUe5pXov8YCa2jsAm6YewfAkm73C
+	 iW256wNWeeYJW64PI4lPbu3sHV1mHG9ZNM4880kfemBAJzu2mTEu4VeIueRgFoCPML
+	 2IdvNG2u2bWshtZ14llpHZWT4cIGTYKk2mkcubnjwGHXkxi4qLauppcxXfZLtv6POm
+	 EPPlOXnt4CsKyFCg/SfiSvz1xrWfltuTax1UNmUSn7DLGGBMY2UWgaHzF7WADT0mXU
+	 ft1ZPUpTQVAQzsj83CMSqw5cGdMvF5cQ0HcHZKCkZ7/TVTUGqch8QokFIs35U0wiB/
+	 /2LaALlMrzRZw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH net] net/smc: fix UAF in smc_cdc_rx_handler() by pinning
+ the socket
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Xiang Mei" <xmei5@asu.edu>
+Cc: linux-s390@vger.kernel.org, "Heiko Carstens" <hca@linux.ibm.com>, "Alexander
+ Gordeev" <agordeev@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>
+In-Reply-To: <20260627014948.3049512-1-xmei5@asu.edu>
+References: <20260627014948.3049512-1-xmei5@asu.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 28 Jun 2026 01:50:04 +0000
+Message-Id: <20260628015005.709CB1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[asu.edu,none];
-	R_DKIM_ALLOW(-0.20)[asu.edu:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21273-lists,linux-s390=lfdr.de];
-	FREEMAIL_CC(0.00)[davemloft.net,google.com,kernel.org,redhat.com,linux.ibm.com,vger.kernel.org,gmail.com,asu.edu];
-	RCPT_COUNT_TWELVE(0.00)[18];
+	TAGGED_FROM(0.00)[bounces-21274-lists,linux-s390=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,sashiko.dev:url,vger.kernel.org:from_smtp];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:xmei5@asu.edu,m:linux-s390@vger.kernel.org,m:hca@linux.ibm.com,m:agordeev@linux.ibm.com,m:gor@linux.ibm.com,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER(0.00)[xmei5@asu.edu,linux-s390@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:alibuda@linux.alibaba.com,m:dust.li@linux.alibaba.com,m:sidraya@linux.ibm.com,m:wenjia@linux.ibm.com,m:mjambigi@linux.ibm.com,m:tonylu@linux.alibaba.com,m:guwen@linux.alibaba.com,m:netdev@vger.kernel.org,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:horms@kernel.org,m:hwippel@linux.ibm.com,m:linux-rdma@vger.kernel.org,m:linux-s390@vger.kernel.org,m:bestswngs@gmail.com,m:xmei5@asu.edu,s:lists@lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[xmei5@asu.edu,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[asu.edu:+];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	PRECEDENCE_BULK(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_NO_DN(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: BC3CE6D0BD3
+X-Rspamd-Queue-Id: C73406D2EF2
+
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+s) to consider:
+
+Pre-existing issues:
+- [High] Asynchronous `tx_work` can be queued during socket release and exe=
+cute after the socket is freed, leading to a Use-After-Free.
+- [High] Concurrent execution of `smc_conn_free()` and `smc_cdc_rx_handler(=
+)` causes a Use-After-Free on connection buffers and the link group.
+- [High] Concurrent modification of bitfields (`out_of_sync`, `freed`, `kil=
+led`) in `struct smc_connection` causes torn writes and lost state updates.
+- [High] Cancelling `abort_work` in `smc_conn_free()` without checking its =
+return value leaks a socket reference.
+--
+
+commit 2ba91a5beb3d341e982b17474cb075d5a25cb381
+Author: Xiang Mei <xmei5@asu.edu>
+
+net/smc: fix UAF in smc_cdc_rx_handler() by pinning the socket
 
 smc_cdc_rx_handler() looks up the connection by token under the link
 group's conns_lock, drops the lock, and then dereferences conn and the
-smc_sock derived from it, ending in sock_hold(&smc->sk) inside
-smc_cdc_msg_recv(). No reference is held across the lock release.
+smc_sock derived from it. This patch takes the socket reference while
+still holding conns_lock to prevent the socket from being freed
+concurrently, and drops the reference once the handler is done.
 
-The only reference pinning the socket while the connection is
-discoverable in the link group is taken in smc_lgr_register_conn()
-(sock_hold) and dropped in __smc_lgr_unregister_conn() (sock_put), both
-under conns_lock. Once the handler drops conns_lock, a concurrent
-close() -> smc_release() -> smc_conn_free() -> smc_lgr_unregister_conn()
-can drop that reference and free the smc_sock, so the handler's later
-sock_hold() runs on freed memory:
+> diff --git a/net/smc/smc_cdc.c b/net/smc/smc_cdc.c
+> index 619b3bab38248..b809139d7e870 100644
+> --- a/net/smc/smc_cdc.c
+> +++ b/net/smc/smc_cdc.c
+> @@ -483,21 +483,27 @@ static void smc_cdc_rx_handler(struct ib_wc *wc, vo=
+id *buf)
+>  	lgr =3D smc_get_lgr(link);
+>  	read_lock_bh(&lgr->conns_lock);
+>  	conn =3D smc_lgr_find_conn(ntohl(cdc->token), lgr);
+> +	if (conn && !conn->out_of_sync)
+> +		sock_hold(&container_of(conn, struct smc_sock, conn)->sk);
+> +	else
+> +		conn =3D NULL;
+>  	read_unlock_bh(&lgr->conns_lock);
 
-  WARNING: lib/refcount.c:25 at refcount_warn_saturate
-  Workqueue: rxe_wq do_work
-   refcount_warn_saturate (lib/refcount.c:25)
-   smc_cdc_msg_recv (net/smc/smc_cdc.c:430)
-   smc_cdc_rx_handler (net/smc/smc_cdc.c:502)
-   smc_wr_rx_tasklet_fn (net/smc/smc_wr.c:445)
-   tasklet_action_common (kernel/softirq.c:938)
-   handle_softirqs (kernel/softirq.c:622)
-  Kernel panic - not syncing: panic_on_warn set
+[Severity: High]
+This is a pre-existing issue, but does dropping lgr->conns_lock here leave =
+the
+connection buffers and link group vulnerable to concurrent freeing?
 
-Only SMC-R is affected. The SMC-D receive tasklet is stopped by
-tasklet_kill(&conn->rx_tsklet) in smc_conn_free() before the connection
-is unregistered, so it cannot run concurrently with the free.
+Looking at net/smc/smc_core.c:smc_conn_free(), the buffers can be freed
+concurrently:
 
-Take the socket reference while still holding conns_lock, so the
-registration reference can no longer be the last one, and drop it once
-the handler is done.
+    smc_buf_unuse(conn, lgr); /* allow buffer reuse */
 
-Fixes: d7b0e37c1ac1 ("net/smc: restructure CDC message reception")
-Reported-by: Weiming Shi <bestswngs@gmail.com>
-Assisted-by: Claude:claude-opus-4-8
-Signed-off-by: Xiang Mei <xmei5@asu.edu>
----
- net/smc/smc_cdc.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+Because smc_conn_free() doesn't synchronize with the RX handler for SMC-R,
+could the subsequent call to smc_cdc_msg_recv_action() dereference freed me=
+mory
+when it accesses conn->rmb_desc->len or conn->lgr?
 
-diff --git a/net/smc/smc_cdc.c b/net/smc/smc_cdc.c
-index 619b3bab3824..b809139d7e87 100644
---- a/net/smc/smc_cdc.c
-+++ b/net/smc/smc_cdc.c
-@@ -483,21 +483,27 @@ static void smc_cdc_rx_handler(struct ib_wc *wc, void *buf)
- 	lgr = smc_get_lgr(link);
- 	read_lock_bh(&lgr->conns_lock);
- 	conn = smc_lgr_find_conn(ntohl(cdc->token), lgr);
-+	if (conn && !conn->out_of_sync)
-+		sock_hold(&container_of(conn, struct smc_sock, conn)->sk);
-+	else
-+		conn = NULL;
- 	read_unlock_bh(&lgr->conns_lock);
--	if (!conn || conn->out_of_sync)
-+	if (!conn)
- 		return;
- 	smc = container_of(conn, struct smc_sock, conn);
- 
- 	if (cdc->prod_flags.failover_validation) {
- 		smc_cdc_msg_validate(smc, cdc, link);
--		return;
-+		goto out;
- 	}
- 	if (smc_cdc_before(ntohs(cdc->seqno),
- 			   conn->local_rx_ctrl.seqno))
- 		/* received seqno is old */
--		return;
-+		goto out;
- 
- 	smc_cdc_msg_recv(smc, cdc);
-+out:
-+	sock_put(&smc->sk);
- }
- 
- static struct smc_wr_rx_handler smc_cdc_rx_handlers[] = {
--- 
-2.43.0
+> -	if (!conn || conn->out_of_sync)
+> +	if (!conn)
+>  		return;
+>  	smc =3D container_of(conn, struct smc_sock, conn);
+> =20
+>  	if (cdc->prod_flags.failover_validation) {
+>  		smc_cdc_msg_validate(smc, cdc, link);
 
+[Severity: High]
+This isn't a bug introduced by this patch, but can concurrent bitfield
+modifications lead to lost state updates here?
+
+In net/smc/smc_cdc.c:smc_cdc_msg_validate(), conn->out_of_sync is set witho=
+ut a
+lock from the softirq context:
+
+    conn->out_of_sync =3D 1; /* prevent any further receives */
+
+Concurrently, net/smc/smc_core.c:smc_conn_free() modifies another bit in the
+same byte from process context:
+
+    conn->freed =3D 1;
+
+Since these bitfields share the same byte in struct smc_connection, could t=
+he
+read-modify-write on these bitfields cause the freed =3D 1 update to be
+lost, resulting in a double-free if the connection is torn down again?
+
+[Severity: High]
+This is another pre-existing issue, but does cancelling the abort work with=
+out
+checking its return value cause a socket reference leak?
+
+In net/smc/smc_cdc.c:smc_cdc_msg_validate():
+
+    sock_hold(&smc->sk);
+    if (!queue_work(smc_close_wq, &conn->abort_work))
+        sock_put(&smc->sk);
+
+If net/smc/smc_core.c:smc_conn_free() successfully cancels this pending wor=
+k:
+
+    if (current_work() !=3D &conn->abort_work)
+        cancel_work_sync(&conn->abort_work);
+
+The work function won't execute to drop the reference. Since smc_conn_free()
+ignores the return value of cancel_work_sync(), does the socket reference
+remain permanently leaked?
+
+> -		return;
+> +		goto out;
+>  	}
+>  	if (smc_cdc_before(ntohs(cdc->seqno),
+>  			   conn->local_rx_ctrl.seqno))
+>  		/* received seqno is old */
+> -		return;
+> +		goto out;
+> =20
+>  	smc_cdc_msg_recv(smc, cdc);
+
+[Severity: High]
+This is a pre-existing issue, but can this lead to a use-after-free of the
+smc socket during release?
+
+In net/smc/smc_cdc.c:smc_cdc_msg_recv_action(), if the socket lock is held
+by the release thread, the handler sets a flag instead of queuing work:
+
+    conn->tx_in_release_sock =3D true;
+
+When net/smc/af_smc.c:smc_release() runs, it invokes release_sock(), causing
+net/smc/af_smc.c:smc_release_cb() to queue the work asynchronously:
+
+    smc_tx_pending(&smc->conn);
+
+Since smc_release() drops the final socket reference right after this:
+
+    sock_put(sk); /* final sock_put */
+
+Could the asynchronous net/smc/smc_tx.c:smc_tx_work() execute after the soc=
+ket
+is freed, resulting in a use-after-free when it dereferences the socket
+structure?
+
+> +out:
+> +	sock_put(&smc->sk);
+>  }
+
+[ ... ]
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260627014948.3049=
+512-1-xmei5@asu.edu?part=3D1
 
