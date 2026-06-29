@@ -1,214 +1,163 @@
-Return-Path: <linux-s390+bounces-21285-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21287-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 2V0xKjpnQmq46QkAu9opvQ
-	(envelope-from <linux-s390+bounces-21285-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2026 14:38:18 +0200
+	id ivlaCuFvQmqu7AkAu9opvQ
+	(envelope-from <linux-s390+bounces-21287-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2026 15:15:13 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1EBE76DA5A8
-	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2026 14:38:18 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DBF96DAED5
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2026 15:15:12 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=PpuUX681;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21285-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-21285-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=ibm.com;
+	dkim=pass header.d=zytor.com header.s=2026062701 header.b=ItDa3yOy;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21287-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-21287-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=zytor.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id DA1D23047D2B
-	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2026 12:31:54 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D23A531D46E6
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2026 12:47:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07F13285072;
-	Mon, 29 Jun 2026 12:27:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAB4C401A3C;
+	Mon, 29 Jun 2026 12:47:37 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C459640149C
-	for <linux-s390@vger.kernel.org>; Mon, 29 Jun 2026 12:27:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B5140149E;
+	Mon, 29 Jun 2026 12:47:36 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782736037; cv=none; b=PlKJQUOa3RLpSZkJSO27CNonQaHBD+HES0Zr8RX+VLFGrhEl0lqg/HIoZI7THKJ35brlPeiA0qkVb0prBwAgcUvh/Ow110Rw1ciwk6Nr/ijv7jCPsGpdENU0Hvfrsmg0HVszdzmrgviN1jxU/49cYoeY3LNQhMs9ENHi2Ktrbpo=
+	t=1782737257; cv=none; b=p/5238a4eh4VbKGdcmV5xCK6u4pMsP4cJ9/kcm3NUxkoTBOQISJ94YWxiv+/cFRe5mhaFW89dywTifQ6ezuEiG4lsCumy9Ucy5NjxxwnqaJGtFep8+f/O3H8nfdUKC1ILzcq92U0vr8sZYJG+AV9IKafpQF5dAkPB4xjmlfLuZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782736037; c=relaxed/simple;
-	bh=QlYygICxNBpQ/Ptt+sQFjmKa+pBN5UVNdo9uDRsic7Y=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=buXqUX0e3Wv24zWCLnIlcWPB0lvmPYc4gScicY2shIbyi9asrRjWgz006arNhMqNMoWoBqoiPJ2TbpEx6nsaQfEkt20DyadYc5+Wv+JodjWfm/iwdbH9hNDJdq9GIrd5ig6+bKmMwEOWSQ+58mUEkseZfPQn+ZGo5WMKVnYh1hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PpuUX681; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65TAmJ4l3030319;
-	Mon, 29 Jun 2026 12:26:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:to; s=pp1;
-	 bh=AhvgWBqBK+gyx3Qqoia17/KZeoYe0d0Vgb6jf0VEkgw=; b=PpuUX6814gB8
-	zzWw2fS+UzyY4KbVw5s05ntVqn0xC9X1ouc89NlDyr34PJn0ZSEWr/cJDVNB2Qzx
-	pfHRXHyyWKDl4kNhghKAZgBU9kc+Vg6SoMGTDMcwzmXogwrVxmdg1DXvFU2Zxph+
-	xilG6DwB5+InrCBwvjPXvXpjJqvxPkaXNvR/sR+xaENqBS9tYinBfyBimhaoV4kl
-	igqyKalwvIvGftPtSd4hsuVqc83supUp/Rl0S+imQReHzLybUwQ1U6+OuRWzktme
-	SJR5Wun5IpoKkEf9+7c67zqHlYKDR/mCqESyzaz36AmMtWKoAmWruVOX5MvFBySo
-	6zDts7gJwg==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f26pds9js-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jun 2026 12:26:57 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65TCJmee032478;
-	Mon, 29 Jun 2026 12:26:57 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4f2ruq5j74-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jun 2026 12:26:57 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
-	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65TCQt9618285158
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 29 Jun 2026 12:26:56 GMT
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B1E385805F;
-	Mon, 29 Jun 2026 12:26:55 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 89DD058062;
-	Mon, 29 Jun 2026 12:26:54 +0000 (GMT)
-Received: from ltc.linux.ibm.com (unknown [9.5.196.140])
-	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 29 Jun 2026 12:26:54 +0000 (GMT)
+	s=arc-20240116; t=1782737257; c=relaxed/simple;
+	bh=z/WphS08I3Q3YI1k39FHOZlyjeIMdtgSIvsLXR1+OYs=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=BHyeU7BlOJ+U4mjacCa7QcYdXGSNKBKeitBlhU/iBEowdXMiCBzQDDx9lGd5Oi4nLo6h2Lgp4fnUCVudiE5tblMyilfogK5jNh2iE+86q6cxcXnrDJJRlQfK4V+vjtssV/Kp1s1bug5iGInXhzpy1X+389p2cMc7KZvx3wrkgiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ItDa3yOy; arc=none smtp.client-ip=198.137.202.136
+Received: from ehlo.thunderbird.net (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 65TCYlVH219229
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 29 Jun 2026 05:34:48 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 65TCYlVH219229
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2026062701; t=1782736492;
+	bh=F5eNBCeca9FFTuFbHhVBFOemJYWYzDmHgzejZkXlIwM=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=ItDa3yOyOnzgUJtBSZCdhS4zlYRD1XzlbHnWBCrsgDuyOKDQnLXWfugxh1RYrcnHj
+	 Wo6d2ASe4aa2kENlvakDGwv3s+KtWwghI1YzuSK4mfraTOB1p7+BurPnKzbMpbQKQL
+	 FArnwwcKd8vhlMO88QNlKM8z1OAEuHhiE7bWCyq/7xJ09JZm9//17j5avtQhx3ZQCW
+	 62VMIArJVSZ3KSFw9+v6qyIZPgiOE1KxeelvfNkr5eljLOhZuntNE2qq7OnkyMcON6
+	 lCC018LGMBA4PoGUZ03daik0PWEEF4Ej3Y7mFmcxCoVSXT9w4uUsvXWEvA5Jy73wT+
+	 n9LoSC8sobApw==
+Date: Mon, 29 Jun 2026 05:34:41 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Christoph Hellwig <hch@lst.de>
+CC: Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+        Song Liu <song@kernel.org>,
+        Yu Kuai <yukuai@alb-78bjiv52429oh8qptp.cn-shenzhen.alb.aliyuncs.com>,
+        Li Nan <linan122@huawei.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-raid@vger.kernel.org
+Subject: Re: cleanup the RAID6 P/Q library v3
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20260629122152.GA21344@lst.de>
+References: <20260518051804.462141-1-hch@lst.de> <20260518141205.c100f76eec5f58e78bbbf7af@linux-foundation.org> <20260519082432.GA14956@lst.de> <7d8efc7c-65e3-49f8-9381-910de7affef2@zytor.com> <20260629122152.GA21344@lst.de>
+Message-ID: <8684FEC2-AD56-4BDA-874F-1D3D7170F880@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 29 Jun 2026 14:26:54 +0200
-From: Harald Freudenberger <freude@linux.ibm.com>
-To: =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@oss.qualcomm.com>
-Cc: richard.henderson@linaro.org, iii@linux.ibm.com, david@kernel.org,
-        thuth@redhat.com, berrange@redhat.com, qemu-s390x@nongnu.org,
-        qemu-devel@nongnu.org, linux390-list@tuxmaker.boeblingen.de.ibm.com,
-        linux-s390@vger.kernel.org, dengler@linux.ibm.com,
-        borntraeger@linux.ibm.com, fcallies@linux.ibm.com, cohuck@redhat.com
-Subject: Re: [PATCH v8 01/18] target/s390x: Fix wrong address handling in
- address loops
-Reply-To: freude@linux.ibm.com
-Mail-Reply-To: freude@linux.ibm.com
-In-Reply-To: <29ecbee8-2452-47cc-89cb-7d7a26abb685@oss.qualcomm.com>
-References: <20260624081029.23815-1-freude@linux.ibm.com>
- <20260624081029.23815-2-freude@linux.ibm.com>
- <29ecbee8-2452-47cc-89cb-7d7a26abb685@oss.qualcomm.com>
-Message-ID: <4d2925e1d9f9f2cb78601c65fefb621c@linux.ibm.com>
-X-Sender: freude@linux.ibm.com
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: GxuyfIghLTY5NmzupVbslA-cW1v7HlNr
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjI5MDEwMSBTYWx0ZWRfXzkSKdlI7oOJi
- yF+J02GryK8HTWHo69DBeeWZHGs/E9HmEywj5Mgfp8b391UUvmPw8XVPv/aXjcIKb7MSFZtm8Ur
- MMdrpqfbBs8xiFbOo0YoaK7D6g6wvMI=
-X-Authority-Analysis: v=2.4 cv=edsNubEH c=1 sm=1 tr=0 ts=6a426492 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8
- a=Wqay2uD6u1lBzW4eh1cA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjI5MDEwMSBTYWx0ZWRfX+ImgEoRC7qI3
- 9um/vzSQcRExqIwkProFOb0frGswV5h6KH1lN8UL88iVyVBEuQ3z6oiZzG+y8yCdJ6KUftDfxvx
- KOPxFmxRYxedzVDyG1BW18pAzsCFZxicYBSP15RhlVL2MgGCEUODoPgwOF3jQo7GnBTmHeiYCC0
- SJVrPDjNMAwBFL2c+xc4IDJ6VgoAkyg2HTT0uanzjmZfABNxGdNAwM8Wkw6J2kHLIzpOwQV2lNC
- R2RZLC8JTrNdW+C6Nf5cHnst1uTLHqB4lkHGZ0E3HUZFP/GMdY/gLlva7rPfbcvNX/YWH0F+8pe
- X9ZytQlEgcw4PVXuL6ymwdRwlzedlJ2kRqN6naZt0rC8H58vtg3HQcUY4UBFaKufirVkkCjcl07
- uVDnKQU88v5Khzzoig1RT6XhN68DV4tgL3I35lcRCZvw6hu0VWMcID89nC0uR+JPxW5/raQU8dz
- bXmI7FJTj2zwcCcrFbg==
-X-Proofpoint-ORIG-GUID: GxuyfIghLTY5NmzupVbslA-cW1v7HlNr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-29_03,2026-06-26_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 malwarescore=0 adultscore=0 impostorscore=0 bulkscore=0
- spamscore=0 suspectscore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606290101
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[zytor.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[zytor.com:s=2026062701];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21285-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21287-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:philmd@oss.qualcomm.com,m:richard.henderson@linaro.org,m:iii@linux.ibm.com,m:david@kernel.org,m:thuth@redhat.com,m:berrange@redhat.com,m:qemu-s390x@nongnu.org,m:qemu-devel@nongnu.org,m:linux390-list@tuxmaker.boeblingen.de.ibm.com,m:linux-s390@vger.kernel.org,m:dengler@linux.ibm.com,m:borntraeger@linux.ibm.com,m:fcallies@linux.ibm.com,m:cohuck@redhat.com,s:lists@lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:replyto,linux.ibm.com:mid,linux.ibm.com:from_mime,vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo];
-	FORGED_SENDER(0.00)[freude@linux.ibm.com,linux-s390@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[hpa@zytor.com,linux-s390@vger.kernel.org];
+	FREEMAIL_CC(0.00)[linux-foundation.org,arm.com,kernel.org,xen0n.name,linux.ibm.com,ellerman.id.au,gmail.com,dabbelt.com,eecs.berkeley.edu,ghiti.fr,redhat.com,alien8.de,linux.intel.com,gondor.apana.org.au,intel.com,fb.com,suse.com,arndb.de,alb-78bjiv52429oh8qptp.cn-shenzhen.alb.aliyuncs.com,huawei.com,vger.kernel.org,lists.infradead.org,lists.linux.dev,lists.ozlabs.org];
+	RCPT_COUNT_TWELVE(0.00)[43];
+	FORGED_RECIPIENTS(0.00)[m:hch@lst.de,m:akpm@linux-foundation.org,m:catalin.marinas@arm.com,m:will@kernel.org,m:ardb@kernel.org,m:chenhuacai@kernel.org,m:kernel@xen0n.name,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:alex@ghiti.fr,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:x86@kernel.org,m:herbert@gondor.apana.org.au,m:dan.j.williams@intel.com,m:clm@fb.com,m:dsterba@suse.com,m:arnd@arndb.de,m:song@kernel.org,m:yukuai@alb-78bjiv52429oh8qptp.cn-shenzhen.alb.aliyuncs.com,m:linan122@huawei.com,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:loongarch@lists.linux.dev,m:linuxppc-dev@lists.ozlabs.org,m:linux-riscv@lists.infradead.org,m:linux-s390@vger.kernel.org,m:linux-crypto@vger.kernel.org,m:linux-btrfs@vger.k
+ ernel.org,m:linux-arch@vger.kernel.org,m:linux-raid@vger.kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	HAS_REPLYTO(0.00)[freude@linux.ibm.com];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[freude@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hpa@zytor.com,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[zytor.com:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[11]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,zytor.com:dkim,zytor.com:mid,zytor.com:from_mime,lst.de:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 1EBE76DA5A8
+X-Rspamd-Queue-Id: 5DBF96DAED5
 
-On 2026-06-24 12:05, Philippe Mathieu-Daudé wrote:
-> Hi Harald,
-> 
-> On 24/6/26 10:09, Harald Freudenberger wrote:
->> With the introduction of the address wrapping function
->> wrap_address() the result can't be used to walk the
->> source address any more. So introduce a new local variable
->> to hold the wrapped address to avoid mixing source and
->> wrapped address value.
->> 
->> Fixes: fcc2699d41 ("target/s390x: Have MSA helper pass a mmu_idx 
->> argument")
-> 
-> This commit merely added an argument. I suppose you meant
-> 9f17bfdab42 ("target/s390x: support SHA-512 extensions").
+On June 29, 2026 5:21:52 AM PDT, Christoph Hellwig <hch@lst=2Ede> wrote:
+>On Fri, Jun 26, 2026 at 05:52:18PM -0700, H=2E Peter Anvin wrote:
+>> On 2026-05-19 01:24, Christoph Hellwig wrote:
+>> >=20
+>> > raid6: rework registration of optimized algorithms
+>> >=20
+>> >  - avx2 instead of avx512 is probably the right thing for no
+>> >    benchmarking, but if it was intentional (it wasn't), that should
+>> >    be document=2E  So I'll just switch back to the previous version t=
+o
+>> >    keep the state of the art
+>>=20
+>> It is unlikely to be the right thing *going forward*, though=2E
+>>=20
+>> The very unfortunate performance inversion is likely model-specific=2E =
+It is one
+>> of those things where you largely would have to have a list of quirks :=
+(
+>
+>Note that the default is still to benchmark the implementations=2E
+>This is just about the case where the user explicitly disabled that
+>benchmark-based selection=2E
+>
 
-Yep, you are right. This addr overwrite was introduced with the
-original code - thus the commit you mentioned. I'll correct it.
+The real issue though is that the benchmarking isn't really helpful, eithe=
+r=2E=20
 
-> 
->> Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
->> ---
->>   target/s390x/tcg/crypto_helper.c | 16 ++++++++--------
->>   1 file changed, 8 insertions(+), 8 deletions(-)
->> 
->> diff --git a/target/s390x/tcg/crypto_helper.c 
->> b/target/s390x/tcg/crypto_helper.c
->> index ae392bce0e..29ad2aff43 100644
->> --- a/target/s390x/tcg/crypto_helper.c
->> +++ b/target/s390x/tcg/crypto_helper.c
->> @@ -126,8 +126,8 @@ static void sha512_read_icv(CPUS390XState *env, 
->> const int mmu_idx,
->>       const MemOpIdx oi = make_memop_idx(MO_BE | MO_64 | MO_UNALN, 
->> mmu_idx);
->>         for (int i = 0; i < 8; i++, addr += 8) {
->> -        addr = wrap_address(env, addr);
->> -        a[i] = cpu_ldq_mmu(env, addr, oi, ra);
->> +        uint64_t _addr = wrap_address(env, addr);
-> 
-> s/_addr/wa/ or even directly inline?
-> 
->            a[i] = cpu_ldq_mmu(env, wrap_address(env, addr), oi, ra);
-> 
->> +        a[i] = cpu_ldq_mmu(env, _addr, oi, ra);
->>       }
->>   }
-
-Yes, let's make all these occurrences directly inline.
+It has to do with power across the whole chip, so it perversely enough dep=
+ends on what *else* is going on=2E=2E=2E
 
