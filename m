@@ -1,238 +1,233 @@
-Return-Path: <linux-s390+bounces-21280-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21281-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id rTQIDiRCQmqT2wkAu9opvQ
-	(envelope-from <linux-s390+bounces-21280-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2026 12:00:04 +0200
+	id yDKEM0VCQmqY2wkAu9opvQ
+	(envelope-from <linux-s390+bounces-21281-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2026 12:00:37 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC9C16D88E5
-	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2026 12:00:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 451506D88F3
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2026 12:00:37 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=OVJB8yvf;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21280-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21280-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=bCfx8ehP;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21281-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21281-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1CEFC305BC91
-	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2026 09:52:01 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 0BE7E3109BF1
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2026 09:52:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA5E43FBEA7;
-	Mon, 29 Jun 2026 09:51:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57B043EDAA8;
+	Mon, 29 Jun 2026 09:51:57 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21683FB079;
-	Mon, 29 Jun 2026 09:51:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84893B71A9
+	for <linux-s390@vger.kernel.org>; Mon, 29 Jun 2026 09:51:54 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782726683; cv=none; b=E3L/vXwbnBDhXxrAx9VwIvc21koQZx7b6ReRkqUsmpwFOohbYisbO0kF+y2KufLrbsY6wWSbfORBgcSU9nuSjsTX6EF9gW+ctnGPXD6lRPozw3stc+rqSlYRDE7b+mDXBI10kkOciV1/79FUNZmCY+aqgOUN0ZKoyChiYRT8Ds0=
+	t=1782726717; cv=none; b=ZG2FzjKcFuY0zEptsu1+nWr65SXPlOO4btIkv3hSOtyI83hIiel5zsgZGTgXxAaGjrGzMVDSy/Mgha4Xfpj4GXPfpB2IiRVwoIiQEM7Bvn3Eu8RHDTPfQp/E1DLJHuOUfZSXDsDML/I+d3eIUV02dhn082GQkg5AldPX2OOzDZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782726683; c=relaxed/simple;
-	bh=6TVEQ2hTN6/m/s62Vzv840881AaZkLxwdAxXlKqb2YU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=VitrcocWOYrBmtE2RDt7SMJFknztPk322hZCN36SJuggRKVF0N4rhqxnLz4dWlye/SvWoS98CW8Gat1IaZNz476CRxadlduo7vkMgurebmT7wwxLWdU2QbHPuVBJB8H22jOyB+JynMUCI1iE+edvmdWv/GusDsbh9j2ABRaU6T4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OVJB8yvf; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 681D11F000E9;
-	Mon, 29 Jun 2026 09:51:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782726682;
-	bh=Ans8cQyuz+4bONK8ZwcfQWnEefdUl8mlhioaHY5g7cg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=OVJB8yvfXgbiOBWbfWIoCv4EaqRoiMKbn/u81nCdeww8OY0lsKYD5YUIGjzxCGvda
-	 QELTkKii4nlxFHZwgwLIfbn0ZuR6eySGblk232ZI6431dTMGNSMlXLKKQ9Qa1qM3jm
-	 PwJPy2IiyYjaHq4ALlzg8wobD7QaTTEdFsyUk4xvyyOGmzo8YP5EJ5x6ldFZ4JvAPS
-	 iXqMh0s+dbaUW+YKPGg0H5u/nJIvCb4b7ivUOvUQoo34xbrDTEkKt9Iy9BelIW2fDb
-	 FhaZMyl2j8BRqrNZGVnrwnyxL/L/6vRUJ4wxARUZ8wqDwoPUKvuyLL22OYmDijOqQ3
-	 V3iAOA40OozrQ==
-X-Mailer: emacs 30.2 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Alexey Kardashevskiy <aik@amd.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
-	Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Steven Price <steven.price@arm.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Mostafa Saleh <smostafa@google.com>,
-	Petr Tesarik <ptesarik@suse.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>, x86@kernel.org
-Subject: Re: [PATCH v6 00/20] dma-mapping: Use DMA_ATTR_CC_SHARED through
- direct, pool and swiotlb paths
-In-Reply-To: <yq5ao6gtoncp.fsf@kernel.org>
-References: <20260604083959.1265923-1-aneesh.kumar@kernel.org>
- <aigYbK12D8uKQvJF@arm.com> <20260609144746.GL2764304@ziepe.ca>
- <2ecfa1a8-6202-4319-9692-a6ffeb5a3dbf@amd.com>
- <yq5aqzm4dz25.fsf@kernel.org> <20260618153705.GH231643@ziepe.ca>
- <yq5ao6h6enhm.fsf@kernel.org> <20260619122148.GL231643@ziepe.ca>
- <yq5aldcaejos.fsf@kernel.org> <20260619140616.GB1068655@ziepe.ca>
- <yq5ao6gtoncp.fsf@kernel.org>
-Date: Mon, 29 Jun 2026 15:21:08 +0530
-Message-ID: <yq5ah5mloesz.fsf@kernel.org>
+	s=arc-20240116; t=1782726717; c=relaxed/simple;
+	bh=jT/07ZjnEljCDkg1Sui4v5JLloAdoehB4ms4+KILrac=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IHZXvs0SdxqH+zrAHON/khp8NtO2AGfFan3v0G6bwG+nok59X0zXx/vtAhb4P+dk54B8l3E6xKegUhTgFFZrb7ekpg8hS8EFgv+PdJl98irhSs7LmYl38Awcs+psuGjjJaTyZZiCfRpElKiBCvkXB1kGE/C1EVE99wD5uh+UbmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bCfx8ehP; arc=none smtp.client-ip=209.85.216.42
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-37fb17e1435so770089a91.1
+        for <linux-s390@vger.kernel.org>; Mon, 29 Jun 2026 02:51:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782726714; x=1783331514; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZntHgB1VK83jSGRR6wDqH2TYAXRNVfVNGYQkueQtUtc=;
+        b=bCfx8ehPCTE0J0Qca0r+V0+q7TfDPfuak5II0H7mxn+smEAzEY+0pJvzq8I5eNkFF2
+         1IzzHgjqF9JCYXPrNS2ZtkER/jwbBZe4wN68YCckYXt5mCu7tAepva9B5xak5nErdWz9
+         cdFrAowT+PsxCf5WYoMUUMNTjlhVppRtUcqbVsqJ73b7U4Gfk8ZF8tJ/U/T6eX5uTiQn
+         wjUYrB+pDM+Dx1T0XNwvcLmNBHYMN7CEYMR1eljfAs0n+B12E3whZzjxbRr5mdOvmrdp
+         8TWzfW4X4DrsSGNgZsA3/Qta6OyNUZgp4MctoRqwLlMalP2Uyhi/gmjraCl6TLKKyd/7
+         t9RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782726714; x=1783331514;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZntHgB1VK83jSGRR6wDqH2TYAXRNVfVNGYQkueQtUtc=;
+        b=WW2hcv1vNOQC3vbm69CSjqva84o8fMmWwyYpujmN6O3ju/qbh/Uzm+jMf7sn3UFj6L
+         3mSVqmsOKAEzRZ0yFMnV0mmU/IodjPEdvG4zoBOiOxC0Zvo32jYqwj8Lmuk03C4JrsRn
+         c4qS8fKkzM54xkRgxSn7YQgNucdsq8jlbjOzs4igbKiZN5e+/xYKs2hWD/e/TLEI1yrX
+         2jZyC2PoAGui98knt2coR8iqoWQbDBZEn1gXK+IBXDdeDKEnkUmCPAcmKSixLHyRfMqq
+         acvJ5S8ciwGLm2xNh0rBOYDPi9JivxfyvRxb418fHMrxAg597wqelO8HZSCHLsGv4ZQP
+         oR3g==
+X-Forwarded-Encrypted: i=1; AHgh+Ro9GtzwwCmZlAbFqJsBOREqcDlEodFxU8DEwddlAkW3KZ6Gf++6Gv2gXhT30D4Z0impZDIepROtYxVc@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCflHrkOqabszWb+aMc2gwHRf352kneiR0xMUNlRbrm8yODLos
+	GEioIj8bZC6DdRMKrNFQLm+1mPFGpvkvOhztB6Zrf5hJOH1u2aDpD/dO
+X-Gm-Gg: AfdE7cmzxseaLxJbtgvXxu9D0T+YaDR/ccj0plphfN1XvMSGa6/c2mT9hiW2aAI+phZ
+	cuOmiR3jaRlSDsczfBJ0md0Ptuq9DSmJxIkQf73+/+xf1XTvi3BaHghy8QPx+mQN5+ymEYWcVJi
+	1/ZZWuCHsOx6YUcn34qfGP297TGkF9xtNRcw7OPvvgZEacC6YEsn9nHqcmCnZ9FWFdsBroQgiv9
+	fLzfLQ18Yi8sHomXGp4jBnpBVdpd61MbddwwmrxN72gc9IcZW2613h37bZaDqZtYXJ4eq2co4+B
+	fXiFybsBVtVMVJk83WmI0cZ1GoSX86eB9Q4BVjaVQy7EkynnGb6Pfz3Ua6mDqjRH8TYBtiE0J4u
+	pWIVcw1/oz+CjchLNLob6DFkDFsU64Ol+cdvlQpRQR+jI9suGpWM1bPp1TqsXkGW+spe/LYipaX
+	g+j9w3+LcMjdsJEMKplmT/4ML2zSfp48oXqEfdMH3srI/oqJmO/f0=
+X-Received: by 2002:a17:90b:57cc:b0:37d:85cd:1367 with SMTP id 98e67ed59e1d1-37dfa2363cbmr14496003a91.15.1782726713861;
+        Mon, 29 Jun 2026 02:51:53 -0700 (PDT)
+Received: from cps-manycore-1.. ([147.46.174.222])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-37e1c93272fsm5550432a91.14.2026.06.29.02.51.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2026 02:51:53 -0700 (PDT)
+From: Sechang Lim <rhkrqnwk98@gmail.com>
+To: "D . Wythe" <alibuda@linux.alibaba.com>,
+	Dust Li <dust.li@linux.alibaba.com>,
+	Sidraya Jayagond <sidraya@linux.ibm.com>,
+	Wenjia Zhang <wenjia@linux.ibm.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
+	Mahanta Jambigi <mjambigi@linux.ibm.com>,
+	Tony Lu <tonylu@linux.alibaba.com>,
+	Wen Gu <guwen@linux.alibaba.com>,
+	Simon Horman <horms@kernel.org>,
+	Karsten Graul <kgraul@linux.ibm.com>,
+	Guvenc Gulce <guvenc@linux.ibm.com>,
+	Ursula Braun <ubraun@linux.ibm.com>,
+	linux-rdma@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH net v3] net/smc: fix out-of-bounds read when sk_user_data holds a sk_psock
+Date: Mon, 29 Jun 2026 09:51:33 +0000
+Message-ID: <20260629095140.679754-1-rhkrqnwk98@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21280-lists,linux-s390=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[31];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-21281-lists,linux-s390=lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:alibuda@linux.alibaba.com,m:dust.li@linux.alibaba.com,m:sidraya@linux.ibm.com,m:wenjia@linux.ibm.com,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:jiayuan.chen@linux.dev,m:mjambigi@linux.ibm.com,m:tonylu@linux.alibaba.com,m:guwen@linux.alibaba.com,m:horms@kernel.org,m:kgraul@linux.ibm.com,m:guvenc@linux.ibm.com,m:ubraun@linux.ibm.com,m:linux-rdma@vger.kernel.org,m:linux-s390@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:bpf@vger.kernel.org,s:lists@lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[21];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:jgg@ziepe.ca,m:aik@amd.com,m:catalin.marinas@arm.com,m:iommu@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:robin.murphy@arm.com,m:m.szyprowski@samsung.com,m:will@kernel.org,m:maz@kernel.org,m:steven.price@arm.com,m:Suzuki.Poulose@arm.com,m:jiri@resnulli.us,m:smostafa@google.com,m:ptesarik@suse.com,m:dan.j.williams@intel.com,m:yilun.xu@linux.intel.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-s390@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:x86@kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[aneesh.kumar@kernel.org,linux-s390@vger.kernel.org];
-	FREEMAIL_CC(0.00)[amd.com,arm.com,lists.linux.dev,lists.infradead.org,vger.kernel.org,samsung.com,kernel.org,resnulli.us,google.com,suse.com,intel.com,linux.intel.com,lists.ozlabs.org,linux.ibm.com,ellerman.id.au,gmail.com];
-	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[rhkrqnwk98@gmail.com,linux-s390@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[aneesh.kumar@kernel.org,linux-s390@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[rhkrqnwk98@gmail.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ALIAS_RESOLVED(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: AC9C16D88E5
+X-Rspamd-Queue-Id: 451506D88F3
 
+A passive-open child inherits the listener's smc_clcsock_data_ready().
+sk_clone_lock() clears its sk_user_data to NULL because the listener tagged
+it SK_USER_DATA_NOCOPY. Until accept restores the callback, a BPF sock_ops
+program can add the established child to a sockmap, and sk_psock_init()
+installs a sk_psock into the NULL sk_user_data. The inherited callback then
+reads it back through smc_clcsock_user_data(), which strips only NOCOPY,
+takes the sk_psock for an smc_sock, and dereferences a clcsk_* field past
+its end:
 
-Alexey,
+  BUG: KASAN: slab-out-of-bounds in smc_clcsock_data_ready+0x84/0x200 net/smc/af_smc.c:2637
+  Read of size 8 at addr ffff8880013b8674 by task syz.6.12484/67930
+   <IRQ>
+   smc_clcsock_data_ready+0x84/0x200 net/smc/af_smc.c:2637
+   tcp_urg+0x24d/0x360 net/ipv4/tcp_input.c:6264
+   tcp_rcv_state_process+0x280d/0x4940 net/ipv4/tcp_input.c:7336
+   tcp_child_process+0x371/0xa50 net/ipv4/tcp_minisocks.c:1002
+   tcp_v4_rcv+0x1eaa/0x2a00 net/ipv4/tcp_ipv4.c:2186
+   [...]
+   </IRQ>
 
-Aneesh Kumar K.V <aneesh.kumar@kernel.org> writes:
+  Allocated by task 67930:
+   sk_psock_init+0x142/0x740 net/core/skmsg.c:766
+   sock_hash_update_common+0xd3/0x990 net/core/sock_map.c:1010
+   bpf_sock_hash_update+0x114/0x170 net/core/sock_map.c:1229
+   __cgroup_bpf_run_filter_sock_ops+0x74/0xa0 kernel/bpf/cgroup.c:1727
+   tcp_init_transfer+0x1085/0x1100 net/ipv4/tcp_input.c:6693
+   [...]
 
-> The current code already does this and uses the swiotlb pool correctly
-> on SME. The challenge arises when we want to force SWIOTLB
-> bouncing even for devices that can handle encrypted DMA addresses (more
-> on that below). For such a config force_dma_uencrypted(dev) will return
-> false and swiotlb will be marked cc_shared/decrypted = true; This trip
-> the new check we added.
->
-> 	/* swiotlb pool is incorrect for this device */
-> 	if (unlikely(mem->cc_shared != force_dma_unencrypted(dev)))
-> 		return (phys_addr_t)DMA_MAPPING_ERROR;
->
-> We can also do
->
-> 	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT)) {
-> 		/* swiotlb pool is incorrect for this device */
-> 		if (unlikely(mem->cc_shared != force_dma_unencrypted(dev)))
-> 			return (phys_addr_t)DMA_MAPPING_ERROR;
->
-> 		/* Force attrs to match the kind of memory in the pool */
-> 		if (mem->cc_shared)
-> 			*attrs |= DMA_ATTR_CC_SHARED;
-> 		else
-> 			*attrs &= ~DMA_ATTR_CC_SHARED;
-> 	} else {
-> 		/*
-> 		 * Host memory encryption where device requires an
-> 		 * unencrypted dma_addr_t due to dma mask limit
->     		 */
-> 		if (force_dma_unencrypted(dev))
-> 			*attrs |= DMA_ATTR_CC_SHARED;
-> 		else
-> 			*attrs &= ~DMA_ATTR_CC_SHARED;
-> 	}
->
->
-> Here I see value in having DMA_ATTR_UNENCRYPTED. The question is do we
-> need to split this into two flags and introduce the resulting code
-> duplication.
->
+Resolve the conflict on the write path. Reserve the child's sk_user_data
+with a NULL pointer tagged SK_USER_DATA_NOCOPY so sk_psock_init() returns
+-EBUSY, and release it at accept. smc_clcsock_user_data() still strips the
+tag to NULL, so the inherited callback stays a no-op.
 
-Can you help to test this patch?
+Fixes: a60a2b1e0af1 ("net/smc: reduce active tcp_listen workers")
+Signed-off-by: Sechang Lim <rhkrqnwk98@gmail.com>
+---
+v3:
+ - reserve sk_user_data on the write path instead of the read-side check (D. Wythe)
 
-commit 0275ed870ff8dadb4890fe8342e84b294f657c43
-Author: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
-Date:   Mon Jun 29 11:55:08 2026 +0530
+v2:
+ - https://lore.kernel.org/netdev/20260619150342.3626224-1-rhkrqnwk98@gmail.com/
 
-    swiotlb: Return unencrypted DMA addresses for SME bounce buffers
-    
-    On hosts with memory encryption, the default swiotlb pool is marked shared
-    and decrypted when memory encryption is active.
-    
-    Make host-memory-encryption swiotlb mappings consistently return
-    unencrypted DMA addresses. This applies regardless of whether the device
-    itself requires unencrypted DMA due to its DMA mask, because the bounce
-    buffer memory backing the mapping is already unencrypted. It also preserves
-    swiotlb=force for devices that can address encrypted memory: forced bounce
-    mappings use the unencrypted swiotlb pool and receive unencrypted DMA
-    addresses.
-    
-    Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
+v1:
+ - https://lore.kernel.org/netdev/20260614120931.4041687-1-rhkrqnwk98@gmail.com/
 
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index a62e1571ec95..9ba23cf8d97b 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -1514,15 +1514,26 @@ phys_addr_t swiotlb_tbl_map_single(struct device *dev, phys_addr_t orig_addr,
- 	if (cc_platform_has(CC_ATTR_MEM_ENCRYPT))
- 		pr_warn_once("Memory encryption is active and system is using DMA bounce buffers\n");
+ net/smc/af_smc.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
+index b5db69073e20..78f162344fe3 100644
+--- a/net/smc/af_smc.c
++++ b/net/smc/af_smc.c
+@@ -154,7 +154,11 @@ static struct sock *smc_tcp_syn_recv_sock(const struct sock *sk,
+ 					       own_req, opt_child_init);
+ 	/* child must not inherit smc or its ops */
+ 	if (child) {
+-		rcu_assign_sk_user_data(child, NULL);
++		/* reserve sk_user_data so sockmap cannot claim the slot */
++		write_lock_bh(&child->sk_callback_lock);
++		__rcu_assign_sk_user_data_with_flags(child, NULL,
++						     SK_USER_DATA_NOCOPY);
++		write_unlock_bh(&child->sk_callback_lock);
  
--	/* swiotlb pool is incorrect for this device */
--	if (unlikely(mem->cc_shared != force_dma_unencrypted(dev)))
--		return (phys_addr_t)DMA_MAPPING_ERROR;
-+	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT)) {
-+		/* swiotlb pool is incorrect for this device */
-+		if (unlikely(mem->cc_shared != force_dma_unencrypted(dev)))
-+			return (phys_addr_t)DMA_MAPPING_ERROR;
+ 		/* v4-mapped sockets don't inherit parent ops. Don't restore. */
+ 		if (inet_csk(child)->icsk_af_ops == inet_csk(sk)->icsk_af_ops)
+@@ -1773,6 +1777,7 @@ static int smc_clcsock_accept(struct smc_sock *lsmc, struct smc_sock **new_smc)
+ 	/* new clcsock has inherited the smc listen-specific sk_data_ready
+ 	 * function; switch it back to the original sk_data_ready function
+ 	 */
++	write_lock_bh(&new_clcsock->sk->sk_callback_lock);
+ 	new_clcsock->sk->sk_data_ready = lsmc->clcsk_data_ready;
  
--	/* Force attrs to match the kind of memory in the pool */
--	if (mem->cc_shared)
-+		/* Force attrs to match the kind of memory in the pool */
-+		if (mem->cc_shared)
-+			*attrs |= DMA_ATTR_CC_SHARED;
-+		else
-+			*attrs &= ~DMA_ATTR_CC_SHARED;
-+	} else if (cc_platform_has(CC_ATTR_HOST_MEM_ENCRYPT)) {
-+		/*
-+		 * On hosts with memory encryption, SWIOTLB-backed memory
-+		 * is unencrypted memory. DMA addresses returned for bounce
-+		 * buffers must therefore have the C-bit cleared, even for
-+		 * devices that can address encrypted memory. This also
-+		 * preserves swiotlb=force for those devices.
-+		 */
- 		*attrs |= DMA_ATTR_CC_SHARED;
--	else
--		*attrs &= ~DMA_ATTR_CC_SHARED;
-+	}
+ 	/* if new clcsock has also inherited the fallback-specific callback
+@@ -1786,6 +1791,9 @@ static int smc_clcsock_accept(struct smc_sock *lsmc, struct smc_sock **new_smc)
+ 		if (lsmc->clcsk_error_report)
+ 			new_clcsock->sk->sk_error_report = lsmc->clcsk_error_report;
+ 	}
++	/* release the slot reserved in smc_tcp_syn_recv_sock() */
++	rcu_assign_sk_user_data(new_clcsock->sk, NULL);
++	write_unlock_bh(&new_clcsock->sk->sk_callback_lock);
  
- 	/*
- 	 * The default swiotlb memory pool is allocated with PAGE_SIZE
+ 	(*new_smc)->clcsock = new_clcsock;
+ out:
+-- 
+2.43.0
+
 
