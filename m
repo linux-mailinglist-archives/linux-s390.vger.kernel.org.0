@@ -1,232 +1,170 @@
-Return-Path: <linux-s390+bounces-21282-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21283-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ZZ7oG7tRQmry4gkAu9opvQ
-	(envelope-from <linux-s390+bounces-21282-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2026 13:06:35 +0200
+	id p4ScL9ZUQmqr4wkAu9opvQ
+	(envelope-from <linux-s390+bounces-21283-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2026 13:19:50 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A7016D92E3
-	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2026 13:06:35 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 176CA6D94FD
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2026 13:19:50 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=su7UyIuq;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21282-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-s390+bounces-21282-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=ibm.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=J+Pq5SBG;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21283-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-21283-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 81780301093E
-	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2026 11:06:34 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 660E930465FC
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2026 11:12:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E170346AFD;
-	Mon, 29 Jun 2026 11:06:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6A0936EAA2;
+	Mon, 29 Jun 2026 11:12:52 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BC614884C;
-	Mon, 29 Jun 2026 11:06:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A56367F3D;
+	Mon, 29 Jun 2026 11:12:51 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782731193; cv=none; b=CMVeHwNPBTUVlae0r76okSGAOeL2lRn9NneScpS9+xQfCaD6866KwlLmWjmchCi3Tw2NkgpEw/EWhCxdshg7Rp9/RCOqMVT/B81hwD/b6XgADuCbBEX28DlB3LIfne5crYkd7cxNPe7eQfIbgiUktN5t0bJRh0GgEW6if5YG+wE=
+	t=1782731572; cv=none; b=T/vSXYJqoAo+hl7ITkECxoNiEfIc8fVWq3Px9SXRp5IH9Is6Yvc+ifIemcAJgfg6RYUS1DNa4VzouLx6nvWYdv40vOdx5zoiwywwQUILNYwaTQZvYh6P1Wnh9/H5xzUCFAGlL6LK3mvbK1MG2I1DL09cS9bgoHbek8TgNjpbdnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782731193; c=relaxed/simple;
-	bh=SUpFdr2UrRS7r/EQXwliEeGOvlThQjJpw0ORxBE8I/w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=it0Q6Efnatn0B/Bs9HE4igejIO6qjo1r89sgvLdZI1W0K2Eqc2GzT4dSQvQyXL80LZfPI05ISqdJG1ZiYlXgKzjGMq08Glb9IHlB7f6In23sKLSHyUQ+Q7Ko9lt54ZLAJD80rQ24kewfUM9O092tOOjFG4YJg3Cb8BO+SXn5x5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=su7UyIuq; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65TAmgga3182164;
-	Mon, 29 Jun 2026 11:06:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=osNV81Cf+qoUqivRpWhl87Sjtkk2rTLNSEGwDsoMJ
-	7E=; b=su7UyIuq0EKMLiyCPiEW7MYEZpqdFGJDR2oysccWNbTFmLX1Klj0HKo+E
-	Wbz3KxDAuSGgg00wAJHHPSbX1ud9MJkdujEHae2HZiO5eFUTs9tuFstVTRexbBIb
-	OhKn7J2QNaUC4I+HcSzIYfRGbRrM+mm8YxWoZRlQnaPTUL/TkKgGwVz34gJbo/2B
-	UCiS1qXSeyRh8H8Eh5GWNwa8m8SZ1z8SJGua0aRM9nOpeKWYhA6BLrY+gvn/D2Wu
-	pkEfl+qUmlO+3UtAIkg7I56TNaM6PlhWuXTYvcv9QCvgQPFf11VF5NQ98v1Aop01
-	BVo1d6IEHxksdccAqpQMCwD8nuTWw==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f26qfrw2y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jun 2026 11:06:29 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65TB4i9V001024;
-	Mon, 29 Jun 2026 11:06:28 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f2s7vw6dd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jun 2026 11:06:28 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65TB6Nac11338226
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 29 Jun 2026 11:06:23 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8A8DB20043;
-	Mon, 29 Jun 2026 11:06:23 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5B28320040;
-	Mon, 29 Jun 2026 11:06:23 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 29 Jun 2026 11:06:23 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
-        irogers@google.com
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, japo@linux.ibm.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH V2 linux-next] perf test: Skip failing 'perf test aslr' test case
-Date: Mon, 29 Jun 2026 13:05:59 +0200
-Message-ID: <20260629110559.1283453-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.53.0
+	s=arc-20240116; t=1782731572; c=relaxed/simple;
+	bh=UaLVnCW0bh1fFtDkIdk6yIQF4UJRzKaXoycfeOauR5s=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=V5trmjiGZ1lxDJrzNPZejQuZQxjOhpuiCRoIUqMwoAfsp/L1BzCvypVEdnQ6yYN+CiE1Pwk8LNuKrVwqSJj6PfW0P8szxKR/9zc+PDJ4y3uWfTity8NpRHjdypSG6E/bgikGN29WFMaoZOOJYYGNIvqH7JXAF9dv6hM/B1tmpag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J+Pq5SBG; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E0441F000E9;
+	Mon, 29 Jun 2026 11:12:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782731571;
+	bh=Z0bF1K3hnvCJDpOSmbIFKXZAiSiuT7COVZlBiPHamEM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=J+Pq5SBG+U+hWRwQs11VCz7drFA1SzRMYHTGEGOiEX59i4h6hVv3sgvGQ8SXzl9UR
+	 6Np+CQT3bWrs429OtrWomznmH1eUd8dUCaLBm1xcfvxLgtEjdPPDvRJgl6+HHpa4V2
+	 Z5+EyvPOeMVsl07w/BT71nLaYWH+Pifb33PhCz6X5qtUGwWF4+5z4+TTU51+yoi209
+	 39RmrJF9JBdrPM713CMlpUoK3DR5Dljw547YkA72idHXmX/NsfODZCrm+LR3tQ8FqV
+	 +8G8ScliPaOvLc8EAVWAiCcCiXOsIU2htAtpOn1S81Sn7Kri4pq8o551gI5F1jw/dR
+	 FI+HFb6MbPk3g==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH V2 linux-next] perf test: Skip failing 'perf test aslr'
+ test case
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Thomas Richter" <tmricht@linux.ibm.com>
+Cc: "Alexander Gordeev" <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org, "Vasily
+ Gorbik" <gor@linux.ibm.com>, "Heiko Carstens" <hca@linux.ibm.com>, linux-perf-users@vger.kernel.org
+In-Reply-To: <20260629110559.1283453-1-tmricht@linux.ibm.com>
+References: <20260629110559.1283453-1-tmricht@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 29 Jun 2026 11:12:50 +0000
+Message-Id: <20260629111251.0E0441F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=RYqgzVtv c=1 sm=1 tr=0 ts=6a4251b6 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8
- a=j8SYJSOdr0Np5z0DVMAA:9
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjI5MDA4OCBTYWx0ZWRfX3iLHSj/0ftgq
- A7Ml+KZ/QaMDoyDDM34jgB9NedPkbDmJpoYKfu5sVN9RoEGxvakAk9lAl+c33wVlkh3TJY9nbca
- LYIVBeL/ABPSHHz9vsNHuueAiwrU0l8=
-X-Proofpoint-GUID: 25ahuPyf_DlhMRWgsz1OnPqnAEIkS40G
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjI5MDA4OCBTYWx0ZWRfXw6s8H+jTlHL9
- 5n70k4YmOFOtn5KSX36UjaESY9ZbvEKqESR90vSEcvfptNp5Of4Dkz/u30Hjho7c+k38Ofrdnx9
- 1TdNf0OFE/9Cc8DXtUdVWEKEInLk3VFEHOUir/Fjzjm7Ky5KiSmhzd1f/SpHcIWFGy4ywLzNJvM
- wT3+iUqPdOYoUSoYhWNCownkNinxCTFTgnkD5Pi3jFER+KXFrjPIvtGXyA1lRlN2365uyzdnzhE
- 58GgQ7gvRiphRRDraoMsToseJtYAnGvg9QFQkqMouWCulXKBxbSpoeSVJXFCBWtaw25tuRF7fqf
- aOKeCSzIBBd484timETs8jcPHYJ/DtJU3JOYvsmqBxXIbaFzetAIol64z9CiQ5PTjEEwXNsILqU
- RXg3IQD6iIVAXBPkKWJBr6FosXJ7O1N63WeqD7ijGnBh5s1xppQfmMpIiLCmM2Z4aidU/Sc+01z
- 40yBNxh5PXkBho90dwg==
-X-Proofpoint-ORIG-GUID: _18UJoo5VyKUh_s6iao3IyZLLRVgForc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-29_03,2026-06-26_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 impostorscore=0 malwarescore=0 spamscore=0 lowpriorityscore=0
- adultscore=0 priorityscore=1501 suspectscore=0 bulkscore=0 clxscore=1015
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606290088
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	TAGGED_FROM(0.00)[bounces-21282-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21283-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[tmricht@linux.ibm.com,linux-s390@vger.kernel.org];
-	FORGED_RECIPIENTS(0.00)[m:linux-kernel@vger.kernel.org,m:linux-s390@vger.kernel.org,m:linux-perf-users@vger.kernel.org,m:acme@kernel.org,m:namhyung@kernel.org,m:irogers@google.com,m:agordeev@linux.ibm.com,m:gor@linux.ibm.com,m:sumanthk@linux.ibm.com,m:hca@linux.ibm.com,m:japo@linux.ibm.com,m:tmricht@linux.ibm.com,s:lists@lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[tmricht@linux.ibm.com,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,linux.ibm.com:mid,linux.ibm.com:from_mime,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,perf.data:url];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,smtp.kernel.org:mid,lists.linux.dev:replyto];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:tmricht@linux.ibm.com,m:agordeev@linux.ibm.com,m:linux-s390@vger.kernel.org,m:gor@linux.ibm.com,m:hca@linux.ibm.com,m:linux-perf-users@vger.kernel.org,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	PRECEDENCE_BULK(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RCVD_COUNT_SEVEN(0.00)[11]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_NO_DN(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 0A7016D92E3
+X-Rspamd-Queue-Id: 176CA6D94FD
 
-V2: In response to sashiko:
-  > [Severity: Medium]
-  > Does unconditionally setting err=2 here mask prior test failures?
-  >
-  Do not change the return code when skipping the test. The failure
-  is printed on stdout anyway and does not hide any previouly
-  failed tests.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Commit message contradicts script behavior regarding test skip e=
+xit code, hiding skipped status from the test runner.
+--
 
-  Added correct commit-id as suggested by Namhyung Kim
+commit 0ec9bd8ca22ab0ece501382558440bfde5e6fdd0
+Author: Thomas Richter <tmricht@linux.ibm.com>
 
-The test case 'perf test aslr' fails on s390. The root cause of the
-failure is subtest test_callchain_aslr. This test invokes command
+perf test: Skip failing 'perf test aslr' test case
 
- # ./perf record -g -e task-clock:u -o /tmp/perf-test-aslr \
-	-- perf test -w noploop 3
+This commit addresses a failure in the 'perf test aslr' test case on s390
+due to missing dwarf call-graph support in perf inject. It modifies
+the script to drop the stack user sample and emit a skip message instead of
+failing.
 
-to generate a call stack using event task-clock:u. On s390 this defaults
-to '--call-graph dwarf' whereas on x86_64 this defaults to framepointer
-(fp) format. The command
+> diff --git a/tools/perf/tests/shell/inject_aslr.sh b/tools/perf/tests/she=
+ll/inject_aslr.sh
+> index c00461828ea79..d83c2591db8f6 100755
+> --- a/tools/perf/tests/shell/inject_aslr.sh
+> +++ b/tools/perf/tests/shell/inject_aslr.sh
+> @@ -135,8 +135,14 @@ test_callchain_aslr() {
+>      echo "Callchain ASLR test [Failed - no noploop samples in original f=
+ile]"
+>      err=3D1
+>    elif [ -z "$new_addr" ]; then
+> -    echo "Callchain ASLR test [Failed - could not find remapped address]"
+> -    err=3D1
+> +    if perf evlist -v -i "${data}" | grep -q 'sample_type:.*STACK_USER';=
+ then
+> +      echo "Dropping stack user sample as possible ASLR leak"
+> +      echo "Call-graph dwarf not supported with 'perf inject --aslr'"
+> +      echo "Callchain ASLR test [Skip]"
 
- # ./perf inject --aslr -i /tmp/perf-test-aslr
+[Severity: Medium]
+The commit message states "Since one subtest is skipped, the complete test =
+is
+reported as skipped." However, it appears err is not set to 2 (the standard=
+ skip
+code) here, meaning the script will exit with 0 (Ok) rather than being repo=
+rted
+as skipped by the test runner.
 
-now scans all SAMPLE entries recorded in the perf.data file to convert
-possible addresses. This is done in aslr_tool__process_sample() looking
-at sample_type bits PERF_SAMPLE_IP, PERF_SAMPLE_TID,
-PERF_SAMPLE_TIME, PERF_SAMPLE_PERIOD, PERF_SAMPLE_CALLCHAIN,
-PERF_SAMPLE_REGS_USER and PERF_SAMPLE_STACK_USER.
-On s390 the samples do not contain FP entries
-of type PERF_SAMPLE_CALLCHAIN (the bit is set in sample_type, but the
-number of FP entries is 0).
-The processing enters the PERF_SAMPLE_STACK_USER portion where the
-data is copied to the newly constructed sample and then aborted with
-this warning:
+If setting err=3D2 was intentionally avoided because the script's cleanup
+function currently assumes any non-zero exit code is a failure and leaves
+temporary directories behind, would it be better to redesign the error
+handling to support returning 2 without leaking temp files, or should the
+commit message be corrected to reflect the actual exit status?
 
- /* TODO: can this be less conservative? */
- pr_debug("Dropping stack user sample as possible ASLR leak\n");
+> +    else
+> +      echo "Callchain ASLR test [Failed - could not find remapped addres=
+s]"
+> +      err=3D1
+> +    fi
+>    elif [ "$orig_addr" =3D "$new_addr" ]; then
+>      echo "Callchain ASLR test [Failed - addresses are not remapped]"
+>      err=3D1
 
-With command line option '--call-graph dwarf' the new output file
-does not contain any samples at all. This leads to a missing $new_addr
-value in the shell script and a failure.
-
-Fix this and skip this subtest. Emit a hint that this subtest is
-currently unsupported on all platform when option --call-graph dwarf
-is selected.
-Since one subtest is skipped, the complete test is reported as
-skipped.
-
-Fixes: 190c45463844 ("perf test: Add inject ASLR test")
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Suggusted-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
----
- tools/perf/tests/shell/inject_aslr.sh | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/tests/shell/inject_aslr.sh b/tools/perf/tests/shell/inject_aslr.sh
-index c00461828ea7..d83c2591db8f 100755
---- a/tools/perf/tests/shell/inject_aslr.sh
-+++ b/tools/perf/tests/shell/inject_aslr.sh
-@@ -135,8 +135,14 @@ test_callchain_aslr() {
-     echo "Callchain ASLR test [Failed - no noploop samples in original file]"
-     err=1
-   elif [ -z "$new_addr" ]; then
--    echo "Callchain ASLR test [Failed - could not find remapped address]"
--    err=1
-+    if perf evlist -v -i "${data}" | grep -q 'sample_type:.*STACK_USER'; then
-+      echo "Dropping stack user sample as possible ASLR leak"
-+      echo "Call-graph dwarf not supported with 'perf inject --aslr'"
-+      echo "Callchain ASLR test [Skip]"
-+    else
-+      echo "Callchain ASLR test [Failed - could not find remapped address]"
-+      err=1
-+    fi
-   elif [ "$orig_addr" = "$new_addr" ]; then
-     echo "Callchain ASLR test [Failed - addresses are not remapped]"
-     err=1
--- 
-2.54.0
-
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260629110559.1283=
+453-1-tmricht@linux.ibm.com?part=3D1
 
