@@ -1,90 +1,121 @@
-Return-Path: <linux-s390+bounces-21367-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21368-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id gs+9M2zjQ2o8lAoAu9opvQ
-	(envelope-from <linux-s390+bounces-21367-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 17:40:28 +0200
+	id KNwtEAnqQ2rzlQoAu9opvQ
+	(envelope-from <linux-s390+bounces-21368-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 18:08:41 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 660236E6046
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 17:40:28 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C7A56E644F
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 18:08:40 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linutronix.de header.s=2020 header.b="qu/1s0nH";
-	dkim=pass header.d=linutronix.de header.s=2020e header.b=vVSU3b5g;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21367-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21367-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=linutronix.de;
+	dkim=pass header.d=ziepe.ca header.s=google header.b=oAv3KPde;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21368-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21368-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=none;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4EE5F3033038
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 15:32:12 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 288CE304F204
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 16:02:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05AA44418DC;
-	Tue, 30 Jun 2026 15:32:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BE4F46AF35;
+	Tue, 30 Jun 2026 16:02:51 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A9143E49A;
-	Tue, 30 Jun 2026 15:32:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B67546AF3B
+	for <linux-s390@vger.kernel.org>; Tue, 30 Jun 2026 16:02:47 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782833530; cv=none; b=i62AOpdES65e/I3nxZHlPhRpdtUEDKOePF2HcnLZ/z3gG4D5YCqPuU+pquv+g6BehL/Vqc1EMjjrUg053BOXOiK+U8YGuGvxDJN6T4AgWEHOsqjm+KcateTjcmPoz3TezW7edFLD0zDhiTrr4Bqm/n+0vOWFtuQgb6kjd5xTAsk=
+	t=1782835370; cv=none; b=qQTrA/n7+Gh/6QWWBdvLwKZyB8RIDIoWD4MjEQF4ejjAeJYIEmePdMB9Q0y5B1vZwMHTDqHQqjxc0w2/cIBuMx6XKDpw13wWvojLDFK7dRVCisigTG2aA5av/k3727zvnm1h9qWL1qiebjrHs9TfqDqr9iCUdpv6YxvSjnfrM2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782833530; c=relaxed/simple;
-	bh=xVA+WbEs3JYKQUWaIl/ijOJ73egy9kjACamyC88+dUI=;
+	s=arc-20240116; t=1782835370; c=relaxed/simple;
+	bh=kHw7DLrL4QjCK55x79lTHIkq15rpEE6+NeVSt2Lz+08=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K5Cs3SibS7SFeUa68bUGC6bZu7MFSWYzEd4Q7nXuHXbSOmUX2HG9R3LPm2puexUNFlzljZu3muOUN5o7VVZ6P7NrDnD2jehRPCYNC8jydkH6tSLliFcVECQpt4dk+abA//uV5QOuag+vu+LOjK2q+YH4kTQMaeLubZUt3bsMFJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qu/1s0nH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vVSU3b5g; arc=none smtp.client-ip=193.142.43.55
-Date: Tue, 30 Jun 2026 17:32:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1782833526;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RdsRgNbVkI3Xb/bXMSfj+yw5lewzrynD2xqGGnGzV8Y=;
-	b=qu/1s0nHQC6KFpDGuKrxXJLqBTdl1FoH/4yCYl34ohT2guoTuARwKQEULMNqdYWydigyrj
-	UQsxj+D6QvmsMUbHcM7u3rM86IjWKPJT39xqCzzGIvsLgqe2Hz4HBOvbz7iysNXKPy5W/u
-	R/GUuEzOAf1ZZdsDdNL4Jr6q/bCrdt9+3kstOwvKETmQg7hIqCfC8XESzPiKTthZJ9Oc09
-	xpBcumA8KxG/PCdAqz4l1iGj82SI/tB9ALWL8NP8tofOtWsr179TrHBkKBYCmCED0scKGL
-	24UnriDqIvgBJ16vM4xBQFbAgoL54zsV+WuM26JgtD+5w8qeomuxalv2Kqf/NA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1782833526;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RdsRgNbVkI3Xb/bXMSfj+yw5lewzrynD2xqGGnGzV8Y=;
-	b=vVSU3b5gGX9pyXfPgfu3YTbbfDnrmDCkQKRUwm+vxUCIXLFG0mbsTHQglZDx4c5OUPi7Tu
-	n00gEBCaZoE4kFBg==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: oleg@redhat.com, richard.henderson@linaro.org, mattst88@gmail.com, 
-	linmag7@gmail.com, linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
-	kees@kernel.org, guoren@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, 
-	geert@linux-m68k.org, tsbogend@alpha.franken.de, James.Bottomley@hansenpartnership.com, 
-	deller@gmx.de, maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, 
-	chleroy@kernel.org, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	alex@ghiti.fr, hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com, 
-	borntraeger@linux.ibm.com, svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org, 
-	glaubitz@physik.fu-berlin.de, richard@nod.at, anton.ivanov@cambridgegreys.com, 
-	johannes@sipsolutions.net, luto@kernel.org, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com, 
-	peterz@infradead.org, wad@chromium.org, thuth@redhat.com, mark.rutland@arm.com, 
-	ada.coupriediaz@arm.com, kevin.brodsky@arm.com, linusw@kernel.org, yeoreum.yun@arm.com, 
-	song@kernel.org, james.morse@arm.com, anshuman.khandual@arm.com, 
-	broonie@kernel.org, liqiang01@kylinos.cn, pengcan@kylinos.cn, ryan.roberts@arm.com, 
-	yangtiezhu@loongson.cn, sshegde@linux.ibm.com, mchauras@linux.ibm.com, 
-	austin.kim@lge.com, jchrist@linux.ibm.com, arnd@arndb.de, sohil.mehta@intel.com, 
-	andrew.cooper3@citrix.com, jgross@suse.com, kas@kernel.org, x86@kernel.org, 
-	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, linux-csky@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linux-um@lists.infradead.org
-Subject: Re: [PATCH v16 18/18] arm64: vdso: Expose sigreturn address on vdso
- to the kernel
-Message-ID: <20260630172619-6c78c2e2-c2d3-44be-88e6-6c82de12baf4@linutronix.de>
-References: <20260629130616.642022-1-ruanjinjie@huawei.com>
- <20260629130616.642022-19-ruanjinjie@huawei.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=mzp5GWfhxVyiphoe4SR8dIxFeG3C1UbsQl7Tc4RYYozidXXi76ywgMPgdCunPfd3YDCGVi5+r6BG3i9/ScJikEuaeJSq7YwSy23ExAT54neX0up1SrIcw3rPggUd0m99ec2eqIEaiF9KTLiqyMQmJyksAfsRMvz9HC33nksV8sQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=oAv3KPde; arc=none smtp.client-ip=209.85.222.182
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-92e50c5d14cso153612185a.2
+        for <linux-s390@vger.kernel.org>; Tue, 30 Jun 2026 09:02:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1782835366; x=1783440166; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GI+sDv/bw0RypxsaDxkfRwNjpEKuAX+hIc2iRD1v3+Q=;
+        b=oAv3KPdedZiBYPAKOd3BNJKidX7yI83EZrsgIkAgm39IxaWkcZuYJXws6zuK+gcm+u
+         SHxUl2bZI7AaZ7AdKTj3jb1T1fwFI6nzhGZuaaisVNMH28BEpw/SIZBgtIB5Z1cKYBB3
+         WLMROfmOT1z6zUF4re3Jl83MIVhUDNm0opyKa0EACC69EMj0uGmFWg8UGuV2iVf1wYNI
+         u9hJIYvLTvmMkFa/ndCCDe3APfD6EBXlyQF+J6chHpbCOZmWx8Ljz+MTgS2ljwji1hbf
+         3KezeC/uRqIrWm31u/sPUHugaZ8Q9vQArwRzgNSwB/zbJqne/uMSFPhgk4lLKyPRX2QD
+         APag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782835366; x=1783440166;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GI+sDv/bw0RypxsaDxkfRwNjpEKuAX+hIc2iRD1v3+Q=;
+        b=ECfL+CRGsPlnXQXnqXoPDJ0qpME8ZYu3xOYfm6u4YXjtposEzLkeCFtq29UCDTPXpa
+         4r1J+cGE/Bml4o1LPHkI11NMdsc0RWA6fCLS/wPdyIGd2CGezMgvEHZ49342YO4dkuDB
+         W9bzFWguPWeF+/7htNkXseG+KR3nEXXBoneCLAT3RKmFIFTg0W5x4uAO9+DTYUABrqmX
+         FwL+cnNhM71K9QcQccPyClO6JQh7PnaXRtxgvLg+Rgt5w+XNZmzlaMj7lvgeRVcSfkkD
+         1zdujDU6AdmWy+EHvRUqq+HkkYtYY/B1J3Buj7l/qXKq0a+vJqQ3QLUKzu9U8IDsaVG9
+         mbYg==
+X-Forwarded-Encrypted: i=1; AFNElJ9jw2kAW1BZoKwKF8tmfDkdxQipjs8fMCcqr9OZX60B6VTiZui9QgVoUEqN7gCfjrnj9NM8+6OF056G@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOneDdxC/LW7JrdlzC6nI4QJWdUWUUXgLjSB8zsWSgNiw3Rocy
+	rTCQcIQ+L91RtQqI0NhpgtsQEHyJzeOQoVXgbId7Bxpj4HWI3tV9rI7rLORckg7Md3Y=
+X-Gm-Gg: AfdE7clSwusg4T5f5nT0ZfqZru694L5AvTeHqcJnd6FqC+7UClGpBRDkgBMQtwOfBuy
+	6AzcuF3fNj9nzsNR5josn7KskTqUlmrZTnARsNmsrlX72InfV4Poa56gM6+9OPfy1uodHibqCvx
+	ZvyUrhh3ieZt+tjgqlO/BWY7IODX35L2/TDZsa9kANvcMeuCoZ0HmBOGsa4UWfOEzXUWS9Ot1E1
+	sr427PC1Tt/Tp5Wznn18Aveig+hk9dku3HAxvChoPbiuxsby7d5I/BxfftioaoKoA3hGZpkUK0W
+	EtuiTXLx0lCWS6cI+Q+T32EuJhYSlkazKrJG9ISF3UbfHsV3LZ2zswR7N1olpzw0++PsZElzzbg
+	iPHu+OxB5Curtviyf8WBSEejGasG4n1eKU62miWUQF6qn9hpfmTrljrralY1D6puSGD0MMcH4tO
+	ZKPxVcT/ur44UL08MdB1pn27rNhEFpl27gR50iBzf2emUIqIn/sZOYFceiD0GtTM7bNds=
+X-Received: by 2002:a05:620a:839b:b0:915:c4de:7ac0 with SMTP id af79cd13be357-92e6278d80fmr646181785a.31.1782835365891;
+        Tue, 30 Jun 2026 09:02:45 -0700 (PDT)
+Received: from ziepe.ca (crbknf0213w-47-54-130-67.pppoe-dynamic.high-speed.nl.bellaliant.net. [47.54.130.67])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-92e6236b9fcsm262102385a.41.2026.06.30.09.02.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2026 09:02:44 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1weav4-000000027Ay-3dT0;
+	Tue, 30 Jun 2026 13:02:42 -0300
+Date: Tue, 30 Jun 2026 13:02:42 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Alexey Kardashevskiy <aik@amd.com>
+Cc: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
+	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
+	Robin Murphy <robin.murphy@arm.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Steven Price <steven.price@arm.com>,
+	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Pirko <jiri@resnulli.us>, Mostafa Saleh <smostafa@google.com>,
+	Petr Tesarik <ptesarik@suse.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Xu Yilun <yilun.xu@linux.intel.com>, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>, x86@kernel.org,
+	Jiri Pirko <jiri@nvidia.com>, Michael Kelley <mhklinux@outlook.com>,
+	"Cheloha, Scott" <Scott.Cheloha@amd.com>
+Subject: Re: [PATCH v6 03/20] dma-direct: use DMA_ATTR_CC_SHARED in
+ alloc/free paths
+Message-ID: <20260630160242.GI7525@ziepe.ca>
+References: <20260604083959.1265923-1-aneesh.kumar@kernel.org>
+ <20260604083959.1265923-4-aneesh.kumar@kernel.org>
+ <845d0c8a-6d51-47aa-8e0b-8381e733444a@amd.com>
+ <20260617154101.GE3577091@ziepe.ca>
+ <25155bd6-4348-4aa8-ba70-0a882fc84db9@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -93,116 +124,95 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260629130616.642022-19-ruanjinjie@huawei.com>
-X-Rspamd-Action: add header
-X-Spamd-Result: default: False [7.34 / 15.00];
-	URIBL_BLACK(7.50)[cock.li:email];
+In-Reply-To: <25155bd6-4348-4aa8-ba70-0a882fc84db9@amd.com>
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-1.66 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_DKIM_ALLOW(-0.20)[ziepe.ca:s=google];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
-	BAD_REP_POLICIES(0.10)[];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:ruanjinjie@huawei.com,m:oleg@redhat.com,m:richard.henderson@linaro.org,m:mattst88@gmail.com,m:linmag7@gmail.com,m:linux@armlinux.org.uk,m:catalin.marinas@arm.com,m:will@kernel.org,m:kees@kernel.org,m:guoren@kernel.org,m:chenhuacai@kernel.org,m:kernel@xen0n.name,m:geert@linux-m68k.org,m:tsbogend@alpha.franken.de,m:James.Bottomley@hansenpartnership.com,m:deller@gmx.de,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:alex@ghiti.fr,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:ysato@users.sourceforge.jp,m:dalias@libc.org,m:glaubitz@physik.fu-berlin.de,m:richard@nod.at,m:anton.ivanov@cambridgegreys.com,m:johannes@sipsolutions.net,m:luto@kernel.org,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:hpa@zytor.com,m:chris@zankel.net,m:jcmvbkbc@gmail.com,m:peterz@inf
- radead.org,m:wad@chromium.org,m:thuth@redhat.com,m:mark.rutland@arm.com,m:ada.coupriediaz@arm.com,m:kevin.brodsky@arm.com,m:linusw@kernel.org,m:yeoreum.yun@arm.com,m:song@kernel.org,m:james.morse@arm.com,m:anshuman.khandual@arm.com,m:broonie@kernel.org,m:liqiang01@kylinos.cn,m:pengcan@kylinos.cn,m:ryan.roberts@arm.com,m:yangtiezhu@loongson.cn,m:sshegde@linux.ibm.com,m:mchauras@linux.ibm.com,m:austin.kim@lge.com,m:jchrist@linux.ibm.com,m:arnd@arndb.de,m:sohil.mehta@intel.com,m:andrew.cooper3@citrix.com,m:jgross@suse.com,m:kas@kernel.org,m:x86@kernel.org,m:linux-alpha@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-mm@kvack.org,m:linux-csky@vger.kernel.org,m:loongarch@lists.linux.dev,m:linux-m68k@lists.linux-m68k.org,m:linux-mips@vger.kernel.org,m:linux-parisc@vger.kernel.org,m:linuxppc-dev@lists.ozlabs.org,m:linux-riscv@lists.infradead.org,m:linux-s390@vger.kernel.org,m:linux-sh@vger.kernel.org,m:linux-um@lists.infradead.org,s:lists@lfdr.
- de];
-	R_DKIM_ALLOW(0.00)[linutronix.de:s=2020,linutronix.de:s=2020e];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	TAGGED_FROM(0.00)[bounces-21367-lists,linux-s390=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,lists.linux.dev,lists.infradead.org,vger.kernel.org,arm.com,samsung.com,resnulli.us,google.com,suse.com,intel.com,linux.intel.com,lists.ozlabs.org,linux.ibm.com,ellerman.id.au,gmail.com,nvidia.com,outlook.com,amd.com];
+	TAGGED_FROM(0.00)[bounces-21368-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:aik@amd.com,m:aneesh.kumar@kernel.org,m:iommu@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:robin.murphy@arm.com,m:m.szyprowski@samsung.com,m:will@kernel.org,m:maz@kernel.org,m:steven.price@arm.com,m:Suzuki.Poulose@arm.com,m:catalin.marinas@arm.com,m:jiri@resnulli.us,m:smostafa@google.com,m:ptesarik@suse.com,m:dan.j.williams@intel.com,m:yilun.xu@linux.intel.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-s390@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:x86@kernel.org,m:jiri@nvidia.com,m:mhklinux@outlook.com,m:Scott.Cheloha@amd.com,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	GREYLIST(0.00)[pass,body];
+	DMARC_NA(0.00)[ziepe.ca];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[redhat.com,linaro.org,gmail.com,armlinux.org.uk,arm.com,kernel.org,xen0n.name,linux-m68k.org,alpha.franken.de,hansenpartnership.com,gmx.de,linux.ibm.com,ellerman.id.au,dabbelt.com,eecs.berkeley.edu,ghiti.fr,users.sourceforge.jp,libc.org,physik.fu-berlin.de,nod.at,cambridgegreys.com,sipsolutions.net,alien8.de,linux.intel.com,zytor.com,zankel.net,infradead.org,chromium.org,kylinos.cn,loongson.cn,lge.com,arndb.de,intel.com,citrix.com,suse.com,vger.kernel.org,lists.infradead.org,kvack.org,lists.linux.dev,lists.linux-m68k.org,lists.ozlabs.org];
+	DKIM_TRACE(0.00)[ziepe.ca:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[thomas.weissschuh@linutronix.de,linux-s390@vger.kernel.org];
+	FORGED_SENDER(0.00)[jgg@ziepe.ca,linux-s390@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_POLICY_ALLOW(0.00)[linutronix.de,none];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[83];
-	ALIAS_RESOLVED(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[34];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[thomas.weissschuh@linutronix.de,linux-s390@vger.kernel.org];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[linutronix.de:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390];
+	FROM_NEQ_ENVFROM(0.00)[jgg@ziepe.ca,linux-s390@vger.kernel.org];
 	MISSING_XM_UA(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	R_SPF_ALLOW(0.00)[+ip6:2600:3c09:e001:a7::/64:c];
-	ARC_ALLOW(0.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linutronix.de:dkim,linutronix.de:mid,linutronix.de:from_mime,huawei.com:email,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,arm.com:email,cock.li:email,vger.kernel.org:from_smtp]
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-s390];
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 660236E6046
-X-Spam: Yes
+X-Rspamd-Queue-Id: 8C7A56E644F
 
-On Mon, Jun 29, 2026 at 09:06:16PM +0800, Jinjie Ruan wrote:
-> Syscall User Dispatch (SUD) requires the signal trampoline code to not be
-> intercepted. This is necessary to support returning with a locked selector
-> while avoiding infinite recursion back into the signal handler.
+On Thu, Jun 18, 2026 at 12:39:21PM +1000, Alexey Kardashevskiy wrote:
 > 
-> Implement arch_syscall_is_vdso_sigreturn() for arm64 to support this
-> exclusion mechanism. For native 64-bit tasks, it checks whether the current
-> PC matches the 'svc #0' instruction inside the vDSO sigreturn trampoline.
 > 
-> 	SYM_CODE_START(__kernel_rt_sigreturn)
-> 	        mov     x8, #__NR_rt_sigreturn
-> 	        svc     #0
-> 	SYM_CODE_END(__kernel_rt_sigreturn)
+> On 18/6/26 01:41, Jason Gunthorpe wrote:
+> > On Wed, Jun 17, 2026 at 10:50:39AM +1000, Alexey Kardashevskiy wrote:
+> > > > @@ -193,16 +193,31 @@ void *dma_direct_alloc(struct device *dev, size_t size,
+> > > >    		dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
+> > > >    {
+> > > >    	bool remap = false, set_uncached = false;
+> > > > -	bool mark_mem_decrypt = true;
+> > > > +	bool mark_mem_decrypt = false;
+> > > >    	struct page *page;
+> > > >    	void *ret;
+> > > > +	/*
+> > > > +	 * DMA_ATTR_CC_SHARED is not a caller-visible dma_alloc_*()
+> > > > +	 * attribute. The direct allocator uses it internally after it has
+> > > > +	 * decided that the backing pages must be shared/decrypted, so the
+> > > > +	 * rest of the allocation path can consistently select DMA addresses,
+> > > > +	 * choose compatible pools and restore encryption on free.
+> > > 
+> > > Why this limit?
+> > > 
+> > > Context: I am looking for a memory pool for a few shared pages (to
+> > > do some guest<->host communication), SWIOTLB seems like the right
+> > > fit but swiotlb_alloc() is not exported and
+> > > dma_direct_alloc(DMA_ATTR_CC_SHARED) is not allowed.  Thanks,
+> > 
+> > Then setup your struct device so that the DMA API knows the
+> > guest<->host channel requires unecrypted and it will work correctly.
+> > 
+> > I think this is a reasonable API to use for that, and I was just
+> > advocating that hyperv should be using it too.
+> > 
+> > But it all relies on a properly setup struct device.
 > 
-> For COMPAT tasks, it verifies if the instruction falls within
-> the architecture's 'sigpage' range, allowing the kernel to safely bypass
-> dispatching syscalls originating from these areas back to userspace.
-> 
-> Suggested-by: Kevin Brodsky <kevin.brodsky@arm.com>
-> Suggested-by: kemal <kmal@cock.li>
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-> ---
->  arch/arm64/include/asm/elf.h |  1 +
->  arch/arm64/kernel/vdso.c     | 16 ++++++++++++++++
->  2 files changed, 17 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/elf.h b/arch/arm64/include/asm/elf.h
-> index d2779d604c7b..f43d4dea916a 100644
-> --- a/arch/arm64/include/asm/elf.h
-> +++ b/arch/arm64/include/asm/elf.h
-> @@ -185,6 +185,7 @@ do {									\
->  struct linux_binprm;
->  extern int arch_setup_additional_pages(struct linux_binprm *bprm,
->  				       int uses_interp);
-> +extern bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs);
+> Sounds good but how do I do that in practice? 
 
-A header for that?
+I think we haven't got there yet, I understood Dan's plan was to add a
+bit in the struct device that signals if the device must be
+unencrypted or can support all memory.
 
->  /* 1GB of VA */
->  #ifdef CONFIG_COMPAT
-> diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
-> index 592dd8668de4..5a0314a3c26e 100644
-> --- a/arch/arm64/kernel/vdso.c
-> +++ b/arch/arm64/kernel/vdso.c
-> @@ -343,3 +343,19 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
->  
->  	return ret;
->  }
-> +
-> +bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs)
-> +{
-> +	unsigned long sigtramp;
-> +
-> +#ifdef CONFIG_COMPAT
-> +	if (is_compat_task()) {
-> +		unsigned long sigpage = (unsigned long)current->mm->context.sigpage;
-> +
-> +		return regs->pc >= sigpage && regs->pc < (sigpage + PAGE_SIZE);
-> +	}
-> +#endif
-> +	sigtramp = (unsigned long)VDSO_SYMBOL(current->mm->context.vdso, sigtramp);
-> +
-> +	return regs->pc == (sigtramp + 8);
+Currently the dma api assumes all devices must have unencrypted by
+default so it should be fine already, shouldn't it?
 
-Instead of hardcoding 'sigtramp + 8' you could add a new label to the 'svc #0'
-instruction and use that with VDSO_SYMBOL().
+> not externally available so I'll have to trick the DMA layer into
+> using SWIOTLB (which is still all shared, right?) as I specifically
+> want to skip page conversions. Setting low DMA mask won't guarantee
+> that the DMA layer won't allocate a page outside of SWIOTLB and
+> convert it. Manually do
 
+Why so particular? Any address that satisifies the constraints should
+be good enough?
 
-Thomas
+Jason
 
