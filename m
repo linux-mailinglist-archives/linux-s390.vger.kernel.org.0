@@ -1,64 +1,65 @@
-Return-Path: <linux-s390+bounces-21385-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21386-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id QhGRLS35Q2rkmQoAu9opvQ
-	(envelope-from <linux-s390+bounces-21385-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 19:13:17 +0200
+	id YPdHHoT9Q2rLmwoAu9opvQ
+	(envelope-from <linux-s390+bounces-21386-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 19:31:48 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA6E26E6CB2
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 19:13:16 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF57F6E6EAD
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 19:31:47 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ca7PA1F3;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21385-lists+linux-s390=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-s390+bounces-21385-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ECQAGwOJ;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21386-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21386-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id F0353300461A
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 17:13:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 332D73134F5C
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 17:23:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C68F53DB335;
-	Tue, 30 Jun 2026 17:13:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C43453DEAE0;
+	Tue, 30 Jun 2026 17:23:30 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4E93DB330;
-	Tue, 30 Jun 2026 17:13:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC533E0234;
+	Tue, 30 Jun 2026 17:23:26 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782839592; cv=none; b=fsoY9CpK8tLoLeONqOXLHU+juhpXhhKiE6hMDRZioMS54xL5TPLiPMMq5qCdeYuid9uTqOSbyyx5gzkLXd2mSGKPpCW7hKuHHh8WzAYLYv4ldCl5uuRhFgGLwI7z2aNeY3KZauKaJf/vsVx2kCpUNw+M1YJPzPRc1LI3uZfk/y4=
+	t=1782840210; cv=none; b=LBnmjj+2g5MaNMs76+fpi+4SqUJPg15MvtSfdMK64JMWhrSSO7fJVANOmHVJg9z1iNJ4QSftNPK9yJhc6k7hbn3ZtQqbrIhIiWKQV5pyEiqFRJs9uE0hN+fvOr4Bjo0zxOniFMKtX9+vlsFV/JkNvx76YwLP5i4Ub/ydAREZ/fE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782839592; c=relaxed/simple;
-	bh=rLBRw33xgkY8vLviSAY6jX3PpQnq0u0dPb2e7pHMn1g=;
+	s=arc-20240116; t=1782840210; c=relaxed/simple;
+	bh=2/PLOMBW0BkEjg72GdqLIJB72ETbgMgHbDTZU0aPQoI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=NW/ZOUEnSeqLToUFUMBKD6UH+8kw5SdTWT8wRWZmUE/GptIXmzv9q3D2ATvfgIITSldKxiOpmZlVa6rvBfycoqFAdSEOHCP4GeBIfv2481vlNP+OiyVXwF+cszpKNKdWyokOuDvzLLR18MXmOEyr7slawW3i3brKPw69hcFL1sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ca7PA1F3; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F25D41F000E9;
-	Tue, 30 Jun 2026 17:13:10 +0000 (UTC)
+	 Message-Id; b=paKAGhncBsd9/s2itupMD2CRn/KOqN0Hx+MOL6I7AB7dXvS7mviD7zCWnbdT0SUpw/m0w2GC1O2zBBNx/ndHm1Owgl+4uP8m1h5fYAfYlIUdKCymEN3ye9ANpodOmKyK62Asqej2B4a8OIhlqsi8kxKUXWx5Mlz2Exke98mIrQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ECQAGwOJ; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 565E71F000E9;
+	Tue, 30 Jun 2026 17:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782839591;
-	bh=ljZ42aPMj1B004p3jyeo7lLInpIHo2zWL07nNiCGCx4=;
+	s=k20260515; t=1782840206;
+	bh=2/PLOMBW0BkEjg72GdqLIJB72ETbgMgHbDTZU0aPQoI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ca7PA1F3/+8afDexgwJX+Vlm6euDJ6cA/bbbnpZYMLldv5rdT2AL4FBD4i2DH0reB
-	 nJdykIIzn/HHBz5SlkMAdFEL/c/6U8yoeiwAdgLJBRvyl3wzeIY9L1ZWAq/9Aa2qCg
-	 TJZI+H+6MIl70SYQ83SUeYwCKNbHx4U+FfVV6lDnIw8OdOC1YPIwj/i7peNqWwQHrB
-	 CCoFR7EFwtgPC/t6w8XFvKmXndZURkPImMCIHKI4nW9r/RH/oXNL7+fe1+t/6/lwv7
-	 Qp/1I3chGPkjduyAoJ18woUsgswOcyLeJGjkdfqab96NB+Bc0CSPR5CxlWdVny1kiD
-	 3Fl9BOGyIpBcw==
+	b=ECQAGwOJoXCCuBrl7wvcjdp/wN7d7FRkxmc17LXc7ByQ0dRKAbZtHwThP8H1UEnoJ
+	 NUfsPV6gwpTOC27avqUEVHZOzgWtyOg4QNn5KQl3rO3qZUiMTgv/yCYtSj6Bg6tgtl
+	 KyL/Lu1nawbEMofZwfWjyiXkLMZKslS3W6vhrs6OwjLe+GoMKRTCaiQXcbc5qjPlHQ
+	 1TIayRb4vSD5ckCYrXhIKTfepirlSzuYv4S1gy2FHDwdTOU+YgS+X0wx3d5bF52Fkn
+	 KiKpy2C5HRydWIaeH5JNztym2efjwxVRdo0pfar/BWeAjlA9U4mc54VMjvJt+1Q1Ns
+	 8fRAIcubizIzQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v21 3/4] PCI: Fail FLR when config space is inaccessible
+Subject: Re: [PATCH v20 2/3] vfio-pci/zdev: Add a device feature for error
+ information
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Farhan Ali" <alifm@linux.ibm.com>
-Cc: "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>, linux-pci@vger.kernel.org, linux-s390@vger.kernel.org, "Heiko
- Carstens" <hca@linux.ibm.com>
-In-Reply-To: <20260630164807.643-4-alifm@linux.ibm.com>
-References: <20260630164807.643-1-alifm@linux.ibm.com>
- <20260630164807.643-4-alifm@linux.ibm.com>
+Cc: linux-pci@vger.kernel.org, linux-s390@vger.kernel.org, "Heiko Carstens" <hca@linux.ibm.com>, "Vasily
+ Gorbik" <gor@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>
+In-Reply-To: <20260630165553.725-3-alifm@linux.ibm.com>
+References: <20260630165553.725-1-alifm@linux.ibm.com>
+ <20260630165553.725-3-alifm@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 30 Jun 2026 17:13:10 +0000
-Message-Id: <20260630171310.F25D41F000E9@smtp.kernel.org>
+Date: Tue, 30 Jun 2026 17:23:24 +0000
+Message-Id: <20260630172325.565E71F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -71,18 +72,18 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21385-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21386-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp,smtp.kernel.org:mid,sashiko.dev:url,lists.linux.dev:replyto];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,sashiko.dev:url,smtp.kernel.org:mid,lists.linux.dev:replyto];
 	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:alifm@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:linux-pci@vger.kernel.org,m:linux-s390@vger.kernel.org,m:hca@linux.ibm.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:alifm@linux.ibm.com,m:linux-pci@vger.kernel.org,m:linux-s390@vger.kernel.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
@@ -96,7 +97,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
@@ -104,76 +105,28 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[6]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: BA6E26E6CB2
+X-Rspamd-Queue-Id: BF57F6E6EAD
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] Un-ratelimited pci_warn() in pci_dev_config_accessible() allows an=
- attacker to flood the host kernel log.
-- [High] Early bailout in pcie_flr() when config space is inaccessible skip=
-s the Function Level Reset and the subsequent wait, allowing device assignm=
-ent to continue without reset, leaking state.
---
+> For zPCI devices, we have platform specific error information. The platfo=
+rm
+> firmware provides this error information to the operating system in an
+> architecture specific mechanism. To enable recovery from userspace for
+> these devices, we want to expose this error information to userspace. Add=
+ a
+> new device feature to expose this information.
+>=20
+> Userspace needs to be provide a buffer of fixed size. This size is provid=
+ed
+> to userspace via the VFIO_DEVICE_INFO_CAP_ZPCI_BASE capability.
+>=20
+> Reviewed-by: Matthew Rosato <mjrosato@linux.ibm.com>
+> Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
 
-commit ce2804b7f0c0409f73465726275859a70fa16be3
-Author: Farhan Ali <alifm@linux.ibm.com>
-
-PCI: Fail FLR when config space is inaccessible
-
-This commit adds a check to validate if a device's config space is
-accessible before attempting a Function Level Reset (FLR). If the
-device is in an error state and inaccessible, the reset returns early.
-
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e8d7de77241a6..9a9d021301c4e 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4384,6 +4384,9 @@ int pcie_flr(struct pci_dev *dev)
->  {
->  	int ret;
-> =20
-> +	if (!pci_dev_config_accessible(dev, "FLR"))
-> +		return -ENOTTY;
-> +
-
-[Severity: High]
-If a device is momentarily unresponsive and this check returns -ENOTTY
-immediately, doesn't this skip the FLR entirely?
-
-Since VFIO's vfio_pci_core_enable() allows assignment to continue if a reset
-returns -ENOTTY (by setting vdev->reset_works =3D false), could a malicious
-guest intentionally put the device into an unresponsive state to bypass the
-reset and leak device state to the next user?
-
-The previous code path waited before issuing the FLR, but this early return
-removes the grace period.
-
-[Severity: High]
-Because this early return bypasses the previous delay loop, can a userspace
-process spam the VFIO_DEVICE_RESET ioctl in a tight loop?
-
-If the device's config space reads ~0, pci_dev_config_accessible() prints a
-warning:
-
-drivers/pci/pci.c:pci_dev_config_accessible() {
-	...
-	if (PCI_POSSIBLE_ERROR(val)) {
-		pci_warn(dev, "Device config space inaccessible; unable to %s\n",
-				msg);
-		return false;
-	}
-	...
-}
-
-Since this warning is unconditional and not rate-limited, could this tight
-loop allow an attacker to trivially flood the host's kernel log?
-
->  	if (!pci_wait_for_pending_transaction(dev))
->  		pci_err(dev, "timed out waiting for pending transaction; performing fu=
-nction level reset anyway\n");
->
+Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260630164807.643-=
-1-alifm@linux.ibm.com?part=3D3
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260630165553.725-=
+1-alifm@linux.ibm.com?part=3D2
+
 
