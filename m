@@ -1,344 +1,208 @@
-Return-Path: <linux-s390+bounces-21366-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21367-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 2l9sBFnSQ2r5jQoAu9opvQ
-	(envelope-from <linux-s390+bounces-21366-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 16:27:37 +0200
+	id gs+9M2zjQ2o8lAoAu9opvQ
+	(envelope-from <linux-s390+bounces-21367-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 17:40:28 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B4136E56D7
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 16:27:36 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 660236E6046
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 17:40:28 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=qualcomm.com header.s=qcppdkim1 header.b=HdjvmUAZ;
-	dkim=pass header.d=oss.qualcomm.com header.s=google header.b=ceU9nQcb;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21366-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21366-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=qualcomm.com;
+	dkim=pass header.d=linutronix.de header.s=2020 header.b="qu/1s0nH";
+	dkim=pass header.d=linutronix.de header.s=2020e header.b=vVSU3b5g;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21367-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21367-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=linutronix.de;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9FB0F312227C
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 14:20:25 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 4EE5F3033038
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 15:32:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A34B4279F8;
-	Tue, 30 Jun 2026 14:20:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05AA44418DC;
+	Tue, 30 Jun 2026 15:32:11 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41FE6423A65
-	for <linux-s390@vger.kernel.org>; Tue, 30 Jun 2026 14:19:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A9143E49A;
+	Tue, 30 Jun 2026 15:32:08 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782829200; cv=none; b=tdxIh9kIXcBKQgpzoFsxMsL/EybR5WXQzFFSHcUK9C1H0LW34Ies6nOECRDj0veB2Ji8BhTwzM24iD8Vbzq49WSrg4HWQYX/9h87bOU6/4BR9Gmt9g/87TPrbxdqPTIf7dPp0LXHS+h3gpz7oanN2nzVPhI37LujS8nAZ6nyzvg=
+	t=1782833530; cv=none; b=i62AOpdES65e/I3nxZHlPhRpdtUEDKOePF2HcnLZ/z3gG4D5YCqPuU+pquv+g6BehL/Vqc1EMjjrUg053BOXOiK+U8YGuGvxDJN6T4AgWEHOsqjm+KcateTjcmPoz3TezW7edFLD0zDhiTrr4Bqm/n+0vOWFtuQgb6kjd5xTAsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782829200; c=relaxed/simple;
-	bh=E2a04pJmYntFu5QsDZoTAc6chS0/RiLFnAagEXxd1KA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Oq+0XEdjJebYvW5nyod/bbV9iOLglsBv6xQ69mEWVYLkMC7dzeYnKPyDSRbh9c6gHuCsJPn8v9pzKQDnLhS3CxtuLmcoaeq5Xx1Olz9Vs3vpSTYvUhQtrT4zazrCiaJLg2QATv/m/aPtvITVNi8v6tR4tMzmgFz9amTpavZr5Ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HdjvmUAZ; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=ceU9nQcb; arc=none smtp.client-ip=205.220.180.131
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65UEDSTf2129051
-	for <linux-s390@vger.kernel.org>; Tue, 30 Jun 2026 14:19:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	fgKVOZpMEaY04mD/9g7XL4KyaNHYwKpuiKtrgadyHAk=; b=HdjvmUAZk2HvPFO7
-	2fop/8j/kX9mHOAMytXR2AmMebUVnxuC+zr46WfD0jLdD3UXVslqDy+tA1OCbvjO
-	hlDFXVwfgWTMXTbaR/h/KcqKkitTlBWJZuf1r3bQwIw3wo9rGTw3y5wzJ7FsQSj6
-	ODADvxnxDxnFI9rM0XoeQJUgkWGDruSa5iIHYBf72e0Sl3l+kJsZ3/cjJBKjeH8Y
-	Y6Ryob3SdCaSIH7fVge+v8dl92S8apbr/tbDO+ldkJ6NHohEytkmuB2LZKhDx39D
-	TVvnb9Y7zmZGsq0qoRgNpOJu4faqpBCj3k/McZTvUY8KkblsZqm50Vza/vrU12Gy
-	hGhF0A==
-Received: from mail-vs1-f72.google.com (mail-vs1-f72.google.com [209.85.217.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f3yw93tfr-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-s390@vger.kernel.org>; Tue, 30 Jun 2026 14:19:56 +0000 (GMT)
-Received: by mail-vs1-f72.google.com with SMTP id ada2fe7eead31-737d352d3b0so2896565137.1
-        for <linux-s390@vger.kernel.org>; Tue, 30 Jun 2026 07:19:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1782829196; x=1783433996; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fgKVOZpMEaY04mD/9g7XL4KyaNHYwKpuiKtrgadyHAk=;
-        b=ceU9nQcb167kxCM+E/F+MAvshDWgzDeuUklfTyoMR+xxi5xHKJRzCv3w1gYKnLIaWE
-         ZQCx9TKuonhh3r4UbocIhDUXzIPny2tHoFlAeVUHnIR8pBMLga4hL8V85yLdMD91017V
-         d39vNUuokng6z06UCSgJWhLvcNdZpA7cS4zwuqMC0uK4YTqsGARnM2DJsR2vvtZITQpJ
-         KwdBUQShoRqHVOnzZr9heRiu+tolrDaSnZ0jVXshpGxKeN6aehEwZNgCg8zmPRYLGE6h
-         qRauOArLAIhqTFzcZEDWNaiO5PPlGO3DHl1AxNdipoJ0SJ7jiUlsftfR0jTgtucvf79Z
-         xUrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782829196; x=1783433996;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fgKVOZpMEaY04mD/9g7XL4KyaNHYwKpuiKtrgadyHAk=;
-        b=AFTbv/xIjsR5ic7+cdHgjLgtmGWyn5Et7GH9FlslP481KK17JZyB/3i2FWGs2O0608
-         FiAgBOF2AUHZwTQFFkHnrhpksrxYAFq9VKEaxBnUkvY7pTHewg23xxREWiaW3Ly2yq5H
-         R4itLxeUzmkxKOTNjayQjYEJ194szWUv4+7aAaH3W6Kq3x58xZQl7YjHtsOcE+Zq+/mJ
-         Gkco+KpWTH2fGTo3Mr7dkATwG9o3vm6X7I8mYcPv6Kl2IAFoxvKqStP99g5+arM5vF5C
-         9+x7oyF6n/PElPM5tst+3v4/0iwTLH5JHVZoXOn0CQryelMBoYpTcCAK8K5sqm4ILyis
-         gqQg==
-X-Forwarded-Encrypted: i=1; AHgh+Rqa3XHRmpXRZ9hmaVdQpuFYliv1RZRX7W1+gwLhIHqvdW1VcG23Q08LJl3tzZ1UDu/VoqbTFNWdr5XR@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRkGa/kvqyWgTQja0sy6kBR/TgKtEZQNde/pjIPpQlqo44OHs0
-	1Q9llFyhv3TMG2x1U5nFL6hLWPP+8XXwLd7NHEhpTmuRrWI//bHK3renNQt36KY2d5cgMNOKAYu
-	omp3pz+BEhZHkq+wFKpqvCGb08SIsVChe/ZOystOWWVUlrR7wmYdPisRGDdG/fszp
-X-Gm-Gg: AfdE7clAJgWU+n5a/Td54sJxRg24VJBGW5Lll21xEJQxTaZfjepv9/IpLRZCRO51Uqx
-	kGS1Sj1yb83icjSlqbZJJ6P9eegDV+wfUGrA/5Rqxdfk0hUwAEXQ8hKXTUa/E/C6ERMxEzGWYEO
-	KF6v35RTKSUde14q9SBcxjpEOvgDFjI9neeC5AUgPO+kKb/ZKzSi4Lhxl+YWJJ4VmY5rMvwLZ9S
-	9D4kjfMMNGufkIG2zwH0BtzDdtemWBSHbAbhnU3CCo+/5Phu38QZhjeruGJ00WqEOH43bDf5Kb0
-	967BDvAiRG9/zP1TXlJXR+434DuIrHh1rhoRoO5xqmFKr6C/B8VNQ/FM7BnPapAEA196KG6gEmG
-	tX9+HLnNVqg/cdKA03bCWECDz3woaqxnOBPC8zK99bKzD5Uv66mnEwZJcUfvXTw==
-X-Received: by 2002:a05:6102:f89:b0:650:94b2:b209 with SMTP id ada2fe7eead31-73a365e0f3amr2099740137.4.1782829196211;
-        Tue, 30 Jun 2026 07:19:56 -0700 (PDT)
-X-Received: by 2002:a05:6102:f89:b0:650:94b2:b209 with SMTP id ada2fe7eead31-73a365e0f3amr2099710137.4.1782829195541;
-        Tue, 30 Jun 2026 07:19:55 -0700 (PDT)
-Received: from [192.168.69.212] (88-187-86-199.subs.proxad.net. [88.187.86.199])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493be383819sm875845e9.1.2026.06.30.07.19.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jun 2026 07:19:54 -0700 (PDT)
-Message-ID: <b13c7644-83aa-48c8-9045-550a436b57ad@oss.qualcomm.com>
-Date: Tue, 30 Jun 2026 16:19:52 +0200
+	s=arc-20240116; t=1782833530; c=relaxed/simple;
+	bh=xVA+WbEs3JYKQUWaIl/ijOJ73egy9kjACamyC88+dUI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K5Cs3SibS7SFeUa68bUGC6bZu7MFSWYzEd4Q7nXuHXbSOmUX2HG9R3LPm2puexUNFlzljZu3muOUN5o7VVZ6P7NrDnD2jehRPCYNC8jydkH6tSLliFcVECQpt4dk+abA//uV5QOuag+vu+LOjK2q+YH4kTQMaeLubZUt3bsMFJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qu/1s0nH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vVSU3b5g; arc=none smtp.client-ip=193.142.43.55
+Date: Tue, 30 Jun 2026 17:32:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1782833526;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RdsRgNbVkI3Xb/bXMSfj+yw5lewzrynD2xqGGnGzV8Y=;
+	b=qu/1s0nHQC6KFpDGuKrxXJLqBTdl1FoH/4yCYl34ohT2guoTuARwKQEULMNqdYWydigyrj
+	UQsxj+D6QvmsMUbHcM7u3rM86IjWKPJT39xqCzzGIvsLgqe2Hz4HBOvbz7iysNXKPy5W/u
+	R/GUuEzOAf1ZZdsDdNL4Jr6q/bCrdt9+3kstOwvKETmQg7hIqCfC8XESzPiKTthZJ9Oc09
+	xpBcumA8KxG/PCdAqz4l1iGj82SI/tB9ALWL8NP8tofOtWsr179TrHBkKBYCmCED0scKGL
+	24UnriDqIvgBJ16vM4xBQFbAgoL54zsV+WuM26JgtD+5w8qeomuxalv2Kqf/NA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1782833526;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RdsRgNbVkI3Xb/bXMSfj+yw5lewzrynD2xqGGnGzV8Y=;
+	b=vVSU3b5gGX9pyXfPgfu3YTbbfDnrmDCkQKRUwm+vxUCIXLFG0mbsTHQglZDx4c5OUPi7Tu
+	n00gEBCaZoE4kFBg==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: oleg@redhat.com, richard.henderson@linaro.org, mattst88@gmail.com, 
+	linmag7@gmail.com, linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
+	kees@kernel.org, guoren@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, 
+	geert@linux-m68k.org, tsbogend@alpha.franken.de, James.Bottomley@hansenpartnership.com, 
+	deller@gmx.de, maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, 
+	chleroy@kernel.org, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	alex@ghiti.fr, hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com, 
+	borntraeger@linux.ibm.com, svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org, 
+	glaubitz@physik.fu-berlin.de, richard@nod.at, anton.ivanov@cambridgegreys.com, 
+	johannes@sipsolutions.net, luto@kernel.org, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com, 
+	peterz@infradead.org, wad@chromium.org, thuth@redhat.com, mark.rutland@arm.com, 
+	ada.coupriediaz@arm.com, kevin.brodsky@arm.com, linusw@kernel.org, yeoreum.yun@arm.com, 
+	song@kernel.org, james.morse@arm.com, anshuman.khandual@arm.com, 
+	broonie@kernel.org, liqiang01@kylinos.cn, pengcan@kylinos.cn, ryan.roberts@arm.com, 
+	yangtiezhu@loongson.cn, sshegde@linux.ibm.com, mchauras@linux.ibm.com, 
+	austin.kim@lge.com, jchrist@linux.ibm.com, arnd@arndb.de, sohil.mehta@intel.com, 
+	andrew.cooper3@citrix.com, jgross@suse.com, kas@kernel.org, x86@kernel.org, 
+	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, linux-csky@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linux-um@lists.infradead.org
+Subject: Re: [PATCH v16 18/18] arm64: vdso: Expose sigreturn address on vdso
+ to the kernel
+Message-ID: <20260630172619-6c78c2e2-c2d3-44be-88e6-6c82de12baf4@linutronix.de>
+References: <20260629130616.642022-1-ruanjinjie@huawei.com>
+ <20260629130616.642022-19-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 01/18] target/s390x: Fix wrong address handling in
- address loops
-Content-Language: en-US
-To: Ilya Leoshkevich <iii@linux.ibm.com>, freude@linux.ibm.com
-Cc: richard.henderson@linaro.org, david@kernel.org, thuth@redhat.com,
-        berrange@redhat.com, qemu-s390x@nongnu.org, qemu-devel@nongnu.org,
-        linux390-list@tuxmaker.boeblingen.de.ibm.com,
-        linux-s390@vger.kernel.org, dengler@linux.ibm.com,
-        borntraeger@linux.ibm.com, fcallies@linux.ibm.com, cohuck@redhat.com
-References: <20260624081029.23815-1-freude@linux.ibm.com>
- <20260624081029.23815-2-freude@linux.ibm.com>
- <e516de9c-e9fb-45af-aa5e-8cb9dbf1e3f3@linux.ibm.com>
- <d55a9d7e7759251c1e75050a9a9ccd6f@linux.ibm.com>
- <6e7ce946-1128-4b2c-9520-a171bca3ceb7@linux.ibm.com>
- <a6e637d07024e0ff8a457500110e225f@linux.ibm.com>
- <9cbb2f6f-c80e-4ba8-a307-4f640f64a8a5@linux.ibm.com>
-From: =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@oss.qualcomm.com>
-In-Reply-To: <9cbb2f6f-c80e-4ba8-a307-4f640f64a8a5@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjMwMDEzMyBTYWx0ZWRfX5yfZh7fX3dS3
- yogiNfi3uYtM7woeilUKsAKpzUpNgqvJcwy9SaqraA2WNDTcv8NGsxD3rBXE9PelpWqYD86gs1+
- 3VVsICfcV8dZAQi3a8r8qAOABRmLItc=
-X-Authority-Analysis: v=2.4 cv=KfDidwYD c=1 sm=1 tr=0 ts=6a43d08c cx=c_pps
- a=DUEm7b3gzWu7BqY5nP7+9g==:117 a=4s3hRJSeHn4rkQlkrse1kQ==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=M51BFTxLslgA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yx91gb_oNiZeI1HMLzn7:22
- a=VnNF1IyMAAAA:8 a=lMLw8EYMNNNL7W2twHAA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=-aSRE8QhW-JAV6biHavz:22
-X-Proofpoint-GUID: SlTGpNeNNznrpbZoNaEcdxQmi7rYJsST
-X-Proofpoint-ORIG-GUID: SlTGpNeNNznrpbZoNaEcdxQmi7rYJsST
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjMwMDEzMyBTYWx0ZWRfX0kZZY6NySNmP
- C01fy12VbT4yASsMEv7AjQAczppPJ2O7viEVOksZfbDxls/Jc3sonECRcHHPjC06Dn+6uZrTUjQ
- Wqn8ZdHZv8HDhx9c+yksi6iguldzvrDBzaQa4gXNbqpbnUUyp5q18khOdOljIv+Cx6SBN1QNIuQ
- eWEpUufekCd9xMCRhhC/Mlp9JPHQzpBRmHoJ5o8F9AMbrdwsbflvA6V5BU+YJVmWsL82TUKopMt
- yvfGxcaVFwHe5KaNLTiimtLeaDKXnKEev0LTrAVcm1VVThYipwVtxJtPfIFUX9Fwchb69dF/Ycg
- dh6BN/OUjoCuzqZSsrCtk/tf/sUokTs0A1kFxrafEKPvc2jYaGhurAgHxjmHut/5dNpDgLbfJDP
- gIUnz8503kNdxNHLOtcXOJ7m9TRlQDq+AqxsW6gVqAUeqCQGmqxgbEfq06yFZ1ST0s/anrWdzAU
- Wfa2oo8BGJfK3I/q8ZA==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-30_04,2026-06-26_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 phishscore=0 impostorscore=0 bulkscore=0 clxscore=1015
- spamscore=0 priorityscore=1501 lowpriorityscore=0 malwarescore=0 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606300133
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260629130616.642022-19-ruanjinjie@huawei.com>
+X-Rspamd-Action: add header
+X-Spamd-Result: default: False [7.34 / 15.00];
+	URIBL_BLACK(7.50)[cock.li:email];
 	MAILLIST(-0.15)[generic];
+	BAD_REP_POLICIES(0.10)[];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21366-lists,linux-s390=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:ruanjinjie@huawei.com,m:oleg@redhat.com,m:richard.henderson@linaro.org,m:mattst88@gmail.com,m:linmag7@gmail.com,m:linux@armlinux.org.uk,m:catalin.marinas@arm.com,m:will@kernel.org,m:kees@kernel.org,m:guoren@kernel.org,m:chenhuacai@kernel.org,m:kernel@xen0n.name,m:geert@linux-m68k.org,m:tsbogend@alpha.franken.de,m:James.Bottomley@hansenpartnership.com,m:deller@gmx.de,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:alex@ghiti.fr,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:ysato@users.sourceforge.jp,m:dalias@libc.org,m:glaubitz@physik.fu-berlin.de,m:richard@nod.at,m:anton.ivanov@cambridgegreys.com,m:johannes@sipsolutions.net,m:luto@kernel.org,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:hpa@zytor.com,m:chris@zankel.net,m:jcmvbkbc@gmail.com,m:peterz@inf
+ radead.org,m:wad@chromium.org,m:thuth@redhat.com,m:mark.rutland@arm.com,m:ada.coupriediaz@arm.com,m:kevin.brodsky@arm.com,m:linusw@kernel.org,m:yeoreum.yun@arm.com,m:song@kernel.org,m:james.morse@arm.com,m:anshuman.khandual@arm.com,m:broonie@kernel.org,m:liqiang01@kylinos.cn,m:pengcan@kylinos.cn,m:ryan.roberts@arm.com,m:yangtiezhu@loongson.cn,m:sshegde@linux.ibm.com,m:mchauras@linux.ibm.com,m:austin.kim@lge.com,m:jchrist@linux.ibm.com,m:arnd@arndb.de,m:sohil.mehta@intel.com,m:andrew.cooper3@citrix.com,m:jgross@suse.com,m:kas@kernel.org,m:x86@kernel.org,m:linux-alpha@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-mm@kvack.org,m:linux-csky@vger.kernel.org,m:loongarch@lists.linux.dev,m:linux-m68k@lists.linux-m68k.org,m:linux-mips@vger.kernel.org,m:linux-parisc@vger.kernel.org,m:linuxppc-dev@lists.ozlabs.org,m:linux-riscv@lists.infradead.org,m:linux-s390@vger.kernel.org,m:linux-sh@vger.kernel.org,m:linux-um@lists.infradead.org,s:lists@lfdr.
+ de];
+	R_DKIM_ALLOW(0.00)[linutronix.de:s=2020,linutronix.de:s=2020e];
 	RCVD_TLS_LAST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:iii@linux.ibm.com,m:freude@linux.ibm.com,m:richard.henderson@linaro.org,m:david@kernel.org,m:thuth@redhat.com,m:berrange@redhat.com,m:qemu-s390x@nongnu.org,m:qemu-devel@nongnu.org,m:linux390-list@tuxmaker.boeblingen.de.ibm.com,m:linux-s390@vger.kernel.org,m:dengler@linux.ibm.com,m:borntraeger@linux.ibm.com,m:fcallies@linux.ibm.com,m:cohuck@redhat.com,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[philmd@oss.qualcomm.com,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:dkim,oss.qualcomm.com:mid,oss.qualcomm.com:from_mime,qualcomm.com:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[philmd@oss.qualcomm.com,linux-s390@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[3];
+	TAGGED_FROM(0.00)[bounces-21367-lists,linux-s390=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	GREYLIST(0.00)[pass,body];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[redhat.com,linaro.org,gmail.com,armlinux.org.uk,arm.com,kernel.org,xen0n.name,linux-m68k.org,alpha.franken.de,hansenpartnership.com,gmx.de,linux.ibm.com,ellerman.id.au,dabbelt.com,eecs.berkeley.edu,ghiti.fr,users.sourceforge.jp,libc.org,physik.fu-berlin.de,nod.at,cambridgegreys.com,sipsolutions.net,alien8.de,linux.intel.com,zytor.com,zankel.net,infradead.org,chromium.org,kylinos.cn,loongson.cn,lge.com,arndb.de,intel.com,citrix.com,suse.com,vger.kernel.org,lists.infradead.org,kvack.org,lists.linux.dev,lists.linux-m68k.org,lists.ozlabs.org];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[thomas.weissschuh@linutronix.de,linux-s390@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DMARC_POLICY_ALLOW(0.00)[linutronix.de,none];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[83];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[thomas.weissschuh@linutronix.de,linux-s390@vger.kernel.org];
+	PRECEDENCE_BULK(0.00)[];
+	DKIM_TRACE(0.00)[linutronix.de:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	R_SPF_ALLOW(0.00)[+ip6:2600:3c09:e001:a7::/64:c];
+	ARC_ALLOW(0.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linutronix.de:dkim,linutronix.de:mid,linutronix.de:from_mime,huawei.com:email,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,arm.com:email,cock.li:email,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7B4136E56D7
+X-Rspamd-Queue-Id: 660236E6046
+X-Spam: Yes
 
-On 30/6/26 12:54, Ilya Leoshkevich wrote:
+On Mon, Jun 29, 2026 at 09:06:16PM +0800, Jinjie Ruan wrote:
+> Syscall User Dispatch (SUD) requires the signal trampoline code to not be
+> intercepted. This is necessary to support returning with a locked selector
+> while avoiding infinite recursion back into the signal handler.
 > 
+> Implement arch_syscall_is_vdso_sigreturn() for arm64 to support this
+> exclusion mechanism. For native 64-bit tasks, it checks whether the current
+> PC matches the 'svc #0' instruction inside the vDSO sigreturn trampoline.
 > 
-> On 6/30/26 12:23, Harald Freudenberger wrote:
->> On 2026-06-30 11:33, Ilya Leoshkevich wrote:
->>> On 6/29/26 14:57, Harald Freudenberger wrote:
->>>> On 2026-06-24 14:56, Ilya Leoshkevich wrote:
->>>>> On 6/24/26 10:09, Harald Freudenberger wrote:
->>>>>> With the introduction of the address wrapping function
->>>>>> wrap_address() the result can't be used to walk the
->>>>>> source address any more. So introduce a new local variable
->>>>>> to hold the wrapped address to avoid mixing source and
->>>>>> wrapped address value.
->>>>>>
->>>>>> Fixes: fcc2699d41 ("target/s390x: Have MSA helper pass a mmu_idx 
->>>>>> argument")
->>>>>> Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
->>>>>> ---
->>>>>>   target/s390x/tcg/crypto_helper.c | 16 ++++++++--------
->>>>>>   1 file changed, 8 insertions(+), 8 deletions(-)
->>>>>
->>>>> If I take as an example AMODE 24 and look at the third loop iteration,
->>>>> with the current code in master I would get:
->>>>>
->>>>>     ((((addr & 0xffffff) + 8) & 0xffffff) + 8) & 0xffffff
->>>>>
->>>>> and with your patch it would be:
->>>>>
->>>>>     (addr + 8 + 8) & 0xffffff
->>>>>
->>>>> which is undeniably more elegant, but otherwise looks equivalent to 
->>>>> me.
->>>>>
->>>>> What is the functional issue here?
->>>>>
->>>>>> diff --git a/target/s390x/tcg/crypto_helper.c b/target/s390x/tcg/ 
->>>>>> crypto_helper.c
->>>>>> index ae392bce0e..29ad2aff43 100644
->>>>>> --- a/target/s390x/tcg/crypto_helper.c
->>>>>> +++ b/target/s390x/tcg/crypto_helper.c
->>>>>> @@ -126,8 +126,8 @@ static void sha512_read_icv(CPUS390XState 
->>>>>> *env, const int mmu_idx,
->>>>>>       const MemOpIdx oi = make_memop_idx(MO_BE | MO_64 | MO_UNALN, 
->>>>>> mmu_idx);
->>>>>>         for (int i = 0; i < 8; i++, addr += 8) {
->>>>>> -        addr = wrap_address(env, addr);
->>>>>> -        a[i] = cpu_ldq_mmu(env, addr, oi, ra);
->>>>>> +        uint64_t _addr = wrap_address(env, addr);
->>>>>> +        a[i] = cpu_ldq_mmu(env, _addr, oi, ra);
->>>>>>       }
->>>>>>   }
->>>>>
->>>>> [...]
->>>>
->>>> It is a fix, not an improvement. The original code
->>>> used the addr variable to hold the wrapped address.
->>>> But as addr is also used as the loop variable there
->>>> is a mixing between unwrapped and wrapped address here
->>>> and the unfixed code only works when wrap_address does
->>>> return the very same address as output as it became as
->>>> input. My fix corrects this.
->>>
->>> What does the patch change w.r.t. wrapping?
->>> Suppose we have amode 24 and addr = 0xfffff0:
->>>
->>> Before:
->>>
->>>   i = 0; addr = wrap(0xfffff0) = 0xfffff0;
->>>          a[0] = ldq(0xfffff0);
->>>   i = 1; addr = wrap(0xfffff0 + 8) = 0xfffff8;
->>>          a[1] = ldq(0xfffff8);
->>>   i = 2; addr = wrap(0xfffff8 + 8) = 0;
->>>          a[2] = ldq(0);
->>>   i = 3; addr = wrap(0 + 8) = 8;
->>>          a[3] = ldq(8);
->>>
->>> After:
->>>
->>>   i = 0; addr = 0xfffff0;
->>>          _addr = wrap(0xfffff0) = 0xfffff0;
->>>          a[0] = ldq(0xfffff0)
->>>   i = 1; addr = 0xfffff0 + 8;
->>>          _addr = wrap(0xfffff8) = 0xfffff8;
->>>          a[1] = ldq(0xfffff8);
->>>   i = 2; addr = 0xfffff8 + 8 = 0x1000000
->>>          _addr = wrap(0x1000000) = 0;
->>>          a[2] = ldq(0);
->>>   i = 3; addr = 0x1000000 + 8 = 0x1000008;
->>>          _addr = wrap(0x1000008) = 8;
->>>          a[3] = ldq(8);
->>>
->>> The behavior look identical to me.
->>> What am I missing?
->>
->> Lets assume addr is some 0x1000 and wrap does just add some offset, 
->> e.g. 0x8000
->>
->> for (int i = 0; i < 8; i++, addr += 8) {
->>      addr = wrap_address(env, addr);
->>      fetch or write something at the wrapped address addr;
->> }
->>
->> Then the idea of this loop is to run through addr 0x1000 ... 0x103F.
->> 1. loop with i=0 and addr 0x1000
->> 2. loop with i=1 and addr 0x1000 + 8
->> 3. loop with i=2 and addr 0x1000 + 8 + 8
->> 4. loop with i=3 and addr 0x1000 + 8 + 8 + 8
->> 5. loop with i=4 and addr 0x1000 + 8 + 8 + 8 + 8
->> 6. loop with i=5 and addr 0x1000 + 8 + 8 + 8 + 8 + 8
->> 7. loop with i=6 and addr 0x1000 + 8 + 8 + 8 + 8 + 8 + 8
->> 8. loop with i=7 and addr 0x1000 + 8 + 8 + 8 + 8 + 8 + 8 + 8
->>
->> BUT the given code does something different. As the addr is used in 
->> the loop
->> to hold the wrapped address this loop in fact does:
->> 1. loop with i=0 and addr 0x1000 - all fine, but as addr = 
->> wrap_address() at the
->>     end of the loop now addr is 0x1000 + 0x8000 = 0x9000, so next loop 
->> starts with
->> 2. loop with i=1 and addr 0x9000 + 8
->>     and at the end of the loop addr is 0x9008 + 0x8000 = 0x11008 and 
->> next loop starts
->> 3. loop with i=2 and addr 0x11008 + 8
->>     ...
->>
->> So introducing an intermediate variable which holds the wrapped address
->> makes sure the surrounding addr walk in the loop does as intended.
+> 	SYM_CODE_START(__kernel_rt_sigreturn)
+> 	        mov     x8, #__NR_rt_sigreturn
+> 	        svc     #0
+> 	SYM_CODE_END(__kernel_rt_sigreturn)
 > 
-> Ah, now I see where we were talking past each other, thanks for the
-> clarification. You assume that wrap_address() may do arbitrary
-> transformations, like addition in your example above. But today it does
-> only bitwise "and", as defined by the architecture:
+> For COMPAT tasks, it verifies if the instruction falls within
+> the architecture's 'sigpage' range, allowing the kernel to safely bypass
+> dispatching syscalls originating from these areas back to userspace.
 > 
-> static inline uint64_t wrap_address(CPUS390XState *env, uint64_t a)
-> {
->      if (!(env->psw.mask & PSW_MASK_64)) {
->          if (!(env->psw.mask & PSW_MASK_32)) {
->              /* 24-Bit mode */
->              a &= 0x00ffffff;
->          } else {
->              /* 31-Bit mode */
->              a &= 0x7fffffff;
->          }
+> Suggested-by: Kevin Brodsky <kevin.brodsky@arm.com>
+> Suggested-by: kemal <kmal@cock.li>
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+>  arch/arm64/include/asm/elf.h |  1 +
+>  arch/arm64/kernel/vdso.c     | 16 ++++++++++++++++
+>  2 files changed, 17 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/elf.h b/arch/arm64/include/asm/elf.h
+> index d2779d604c7b..f43d4dea916a 100644
+> --- a/arch/arm64/include/asm/elf.h
+> +++ b/arch/arm64/include/asm/elf.h
+> @@ -185,6 +185,7 @@ do {									\
+>  struct linux_binprm;
+>  extern int arch_setup_additional_pages(struct linux_binprm *bprm,
+>  				       int uses_interp);
+> +extern bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs);
 
-            bool wrap32 = env->psw.mask & PSW_MASK_32;
-            a = extract64(a, 0, wrap32 ? 31 : 24);
->      }
->      return a;
-> }
-> 
-> and I believe in this specific case the order doesn't matter.
-> 
+A header for that?
 
+>  /* 1GB of VA */
+>  #ifdef CONFIG_COMPAT
+> diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
+> index 592dd8668de4..5a0314a3c26e 100644
+> --- a/arch/arm64/kernel/vdso.c
+> +++ b/arch/arm64/kernel/vdso.c
+> @@ -343,3 +343,19 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
+>  
+>  	return ret;
+>  }
+> +
+> +bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs)
+> +{
+> +	unsigned long sigtramp;
+> +
+> +#ifdef CONFIG_COMPAT
+> +	if (is_compat_task()) {
+> +		unsigned long sigpage = (unsigned long)current->mm->context.sigpage;
+> +
+> +		return regs->pc >= sigpage && regs->pc < (sigpage + PAGE_SIZE);
+> +	}
+> +#endif
+> +	sigtramp = (unsigned long)VDSO_SYMBOL(current->mm->context.vdso, sigtramp);
+> +
+> +	return regs->pc == (sigtramp + 8);
+
+Instead of hardcoding 'sigtramp + 8' you could add a new label to the 'svc #0'
+instruction and use that with VDSO_SYMBOL().
+
+
+Thomas
 
