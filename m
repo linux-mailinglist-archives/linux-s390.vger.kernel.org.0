@@ -1,83 +1,84 @@
-Return-Path: <linux-s390+bounces-21372-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21374-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id sL0EFLP0Q2pqmAoAu9opvQ
-	(envelope-from <linux-s390+bounces-21372-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 18:54:11 +0200
+	id w0LvFtz0Q2p1mAoAu9opvQ
+	(envelope-from <linux-s390+bounces-21374-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 18:54:52 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC13F6E6A55
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 18:54:10 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 172FF6E6A81
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 18:54:52 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=Kt7NsRWu;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21372-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-21372-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=eVLNJZzt;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21374-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21374-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 56FAE30D5C50
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 16:48:19 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 427B930ECE8F
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 16:48:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7BCE3D7D7E;
-	Tue, 30 Jun 2026 16:48:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92B7C3DB312;
+	Tue, 30 Jun 2026 16:48:20 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E32D3D669A;
-	Tue, 30 Jun 2026 16:48:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2610D3DA5AB;
+	Tue, 30 Jun 2026 16:48:18 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782838097; cv=none; b=R+YmR3CYxhZl7u8TyLm2pa35fIHO9v3bXWgGvPZOswV2xVM84x9kTVaK8VcN4a8mKHvHf8GWJKnXjjmT/89iM8PuyqwvxGeJs6WraDTKTHj1o76FpNdh4mUijjsnH9RUdj52OxjZ8FD3oSJkO+reguhNfBDHhG+NtYesZ33d074=
+	t=1782838100; cv=none; b=JFhmVLAhswTV0NleT1oi4Z5iwUmVwmQCmlyzK7PPKp7jqzJqDxpSbxps9s42SCl8wb+M6fdqAE9s4EwNc+JKiBTai4LPS92lGxAwfS+VuCI0m7w1Pai4SdLvrs4PEO0lfF4RhCgL7/MShl3EqY0k9ikm/lV28iRaJcxg7wOtUJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782838097; c=relaxed/simple;
-	bh=ZLlHJiMnkArF1Rkajk2vygj0H/vBH/LfltFS9e+Yjs4=;
+	s=arc-20240116; t=1782838100; c=relaxed/simple;
+	bh=S2J6GfTA17MRPi8hVmy1uCqMXutp4PYcAl3ULfkwQ5Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XEIegzv7tEY2AANR4ikcJg/y9wLOOanvxhRxuAhVLG3zNjFR7UQu+Gq4fycFdugbr89RMzh3xEseZ50iTFnFkmIAXjfPueD4341oGSVY8JKxF+EUJqMPy1WPD4rxOjJ9zuunUscNCjYaTQ9RFEKQNJ0DqHidCV2TZhJvULNLuZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Kt7NsRWu; arc=none smtp.client-ip=148.163.158.5
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65UEIake2171069;
-	Tue, 30 Jun 2026 16:48:12 GMT
+	 MIME-Version; b=l1Qo/+EnBtpg0dGrNawj3iPnpx3RYDBgbuV/9Cpe+DcXAHVmTFj4OqwUZ0Cd0CI3+EVwBsafARmzuC07Fa/T21fHDNR7x4J4UR+uWgMiHS4fekD8oAXkPBkUAu7pT+38L4stKvsnEwAS0MVMJ8Brg1PvVFkAtgujhiHS+TFVTSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eVLNJZzt; arc=none smtp.client-ip=148.163.156.1
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65UEIHBd2288480;
+	Tue, 30 Jun 2026 16:48:15 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=N3hUaQM1mkhfJ9QbV
-	S3Ls08cM5g+G4fgLiEK5eb8mmo=; b=Kt7NsRWuAQ9eeZwRsekvxDenxLTWKIa8D
-	04gXpolY0WwDzJFLmCUp5PXHNN/45Px8xGQL75AHe/zp3x3PC5b0+lD4K1KcQnx7
-	CR5+qLHJMhWfEkP36scHeMJOTIDcjwbTVC9vBeJafHmOeZkX39F+s8ql737yUO8a
-	QF1qhD0oWHB8gzocINleGSUExma+9KAqEXNuSI/Ee0EaoCMfnQIi/R+6ZbY3egsz
-	GYaHSnsbG5zyeaXSmP7iQnWII0pKM7ObmMkZPJC+nf0RQ7vu9l+v24xJfwYsKfrT
-	cNd3vx/e1x8SLcjgBe1G3/dyUUY7CIGN2a1U0Mi+RIYmOjN4xns1g==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f26reynuh-1
+	:mime-version:references:subject:to; s=pp1; bh=12J8MB6C2cv981QXO
+	JBi1IBshXR9vjAE306Ivlw7e6Y=; b=eVLNJZztXX7gci5EJC9l7+13EMtlfoIi1
+	M6mXQo68c9Irgoc6II+UEuaPtCl3PjggvU9mBUsfaIyMRKj0+tvPOSUGfc15Ro7o
+	PT9sYjd9NarqhNlxISjkUePQQo0X/8PzSiezrxFfeG/w16cLgzjXRBVV8UYHMEmv
+	TqpFvOr8LGh0fL0wv7qhovHr2UHdYBRRs9e2tBdnEzq5GpFO0ZlYpoQAwQW+6tl2
+	RdY035CZdU2lgT5Q6OldZeDtHvvVw2xaBENdnBL9IMaab1zE2YD0UTeTbwMV/Ncp
+	cziayLo3lgVlTHgTGjjKUaXx44utEm7rFpgN8M1vbGvBa1l/BL0Hw==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f26pe00x9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 30 Jun 2026 16:48:12 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65UGYm4W023293;
-	Tue, 30 Jun 2026 16:48:11 GMT
-Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f2tbhb5yb-1
+	Tue, 30 Jun 2026 16:48:14 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65UGYhTU019051;
+	Tue, 30 Jun 2026 16:48:13 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f2s7w3b5c-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 30 Jun 2026 16:48:11 +0000 (GMT)
+	Tue, 30 Jun 2026 16:48:13 +0000 (GMT)
 Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65UGmAAQ26018494
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65UGlcHm10551896
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 30 Jun 2026 16:48:10 GMT
+	Tue, 30 Jun 2026 16:47:38 GMT
 Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A041658058;
+	by IMSVA (Postfix) with ESMTP id D185158058;
+	Tue, 30 Jun 2026 16:48:11 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CBF8558059;
 	Tue, 30 Jun 2026 16:48:10 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9705D58059;
-	Tue, 30 Jun 2026 16:48:09 +0000 (GMT)
 Received: from IBM-D32RQW3.ibm.com (unknown [9.61.250.12])
 	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 30 Jun 2026 16:48:09 +0000 (GMT)
+	Tue, 30 Jun 2026 16:48:10 +0000 (GMT)
 From: Farhan Ali <alifm@linux.ibm.com>
 To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
 Cc: helgaas@kernel.org, alex@shazbot.org, alifm@linux.ibm.com,
-        schnelle@linux.ibm.com, mjrosato@linux.ibm.com, stable@vger.kernel.org
-Subject: [PATCH v21 1/4] PCI: Allow per function PCI slots to fix slot reset on s390
-Date: Tue, 30 Jun 2026 09:48:04 -0700
-Message-ID: <20260630164807.643-2-alifm@linux.ibm.com>
+        schnelle@linux.ibm.com, mjrosato@linux.ibm.com,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v21 2/4] PCI: Avoid saving config space state if inaccessible
+Date: Tue, 30 Jun 2026 09:48:05 -0700
+Message-ID: <20260630164807.643-3-alifm@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260630164807.643-1-alifm@linux.ibm.com>
 References: <20260630164807.643-1-alifm@linux.ibm.com>
@@ -89,30 +90,31 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=a4kAM0SF c=1 sm=1 tr=0 ts=6a43f34c cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-GUID: aUcHZSmeJFeiMJxLD4CtH-QWaigave2k
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjMwMDE2MCBTYWx0ZWRfX0G1hjNTAv3q5
+ ugrzeVvOue7IDnCWv/9QHlMIG5oVOdmxIqE471D6qEhsWR/K1mqLHDDB3ww+CZSa9qUMt3G69/d
+ +GQIVhupvlT3y+vGSgoatdwMq0PurQU=
+X-Authority-Analysis: v=2.4 cv=edsNubEH c=1 sm=1 tr=0 ts=6a43f34e cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
  a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=V8glGbnc2Ofi9Qvn3v5h:22 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
- a=9_SSeoq7eJPDN4OswFYA:9 a=O8hF6Hzn-FEA:10
-X-Proofpoint-ORIG-GUID: L_5RRT1KmYf0nJPE3Um-Q8sIEpWuw7jw
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjMwMDE2MCBTYWx0ZWRfX1P0xFdTIJ0HP
- awt/I8Ka0RHy8sMZ/WwN29m+csmsq3ZvgBYxbx5TBY8dHF0gQirhpeABtR5V6HvuuN00L/Oi87Z
- Zij5BmCW5hpBA9U33Hz6SznRg7NliIbNmzwgc5vVue2ADa+6Z/WESQJXEpTeRmUBOU6k+vP0Ah9
- EONCycbcoSiYfGi9vXcCTvYREU6i7cGF2gStK5mOZpcG0ydT6I+olIPKVftkVf7NmKmesgE0I+A
- RdTw6mTW8duKqftPeZKmY+UQqKtiJe/KgsMOBB/9HSVwLzBBLHDsn5uDwIbr6MUnRDIKLd3x1D8
- zOu6oiqfD5tI6y2NfljhUWw3vHp6W4dUIQhXFcdDPiKQFYauFmfHHj8jpRugipLXWVGZSjDElzh
- 75JN8Ss6S26NpcmRKTUWI7+N/wyQm5ziOvetDFQG2ggyPw2uhmuUCgC4wmfnW3BqcYBKyIE8MvP
- /mE/FO3U3DKtglJYOLg==
-X-Proofpoint-GUID: L_5RRT1KmYf0nJPE3Um-Q8sIEpWuw7jw
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjMwMDE2MCBTYWx0ZWRfX5iaHYkOdYpsN
- ndNqwCQhidVE+Ov1jllX1L3EcoovNWb8sV0vQ8TD3S36Rmod/S9aa8AfAqIDuBzw6fBRIqikkQI
- +X9U55Bwmctt8mFhG6EhdImHhmHg3JU=
+ a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8
+ a=qS04rNcGil1I7-YeviAA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjMwMDE2MCBTYWx0ZWRfXz5b23qUkFxzz
+ UvKref9UGBQEVxJpUpKBJyaZV5yoIHd34ENTPC7WySmSOUHw1M9ukQTizswGgOpsiYPYn+wMIn8
+ b0CjSaK9bJCsqLcSxVKetsda0xN+BpASeo1xWBzbnE97ObryxP9mVrfHcuBSz9hv9MTw2NHhJyy
+ gDTMN5PpHsAZO1B1npNLNhn3GLV5vdF+NlVJ/DIgeoYzXKB6UKF+pEpnp6owo80UDh/FG0ePFOm
+ Jo7tlQKxypmpjGbwugwA2RF3LSSSQu9MGPDIkMOjnbYgtVfathhfqQ9FM9t4cPfA5FyJ1ZBZh09
+ 3bt7uUEeqMq0Ok8oTNH/EMzUECSgT1+FeYZuzJQhY4Mtd3qYkdPHHCQe9x0p1ZskSUCiQLxZnm8
+ ILfY3wmEPLgL+9kBDVIy91mStQWBxS5C1ZcfjN7vC6+y2IZNk0NLtEqNpJLRdQ7Im1Dnx3CCvvA
+ g15gDBAPfEydWBw+2Vg==
+X-Proofpoint-ORIG-GUID: vVrv1unXpcgrS73CHwgk8Aw6PAZggu0C
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-06-30_04,2026-06-26_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 bulkscore=0 suspectscore=0 lowpriorityscore=0 impostorscore=0
- spamscore=0 priorityscore=1501 adultscore=0 malwarescore=0 phishscore=0
+ priorityscore=1501 malwarescore=0 adultscore=0 impostorscore=0 bulkscore=0
+ spamscore=0 suspectscore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606300160
 X-Rspamd-Action: no action
@@ -122,212 +124,93 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21372-lists,linux-s390=lfdr.de];
-	FROM_NEQ_ENVFROM(0.00)[alifm@linux.ibm.com,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:helgaas@kernel.org,m:alex@shazbot.org,m:alifm@linux.ibm.com,m:schnelle@linux.ibm.com,m:mjrosato@linux.ibm.com,m:stable@vger.kernel.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21374-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:helgaas@kernel.org,m:alex@shazbot.org,m:alifm@linux.ibm.com,m:schnelle@linux.ibm.com,m:mjrosato@linux.ibm.com,m:bhelgaas@google.com,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[alifm@linux.ibm.com,linux-s390@vger.kernel.org];
-	PRECEDENCE_BULK(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FROM_NEQ_ENVFROM(0.00)[alifm@linux.ibm.com,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	PRECEDENCE_BULK(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	ALIAS_RESOLVED(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp,linux.ibm.com:mid,linux.ibm.com:from_mime];
-	TO_DN_NONE(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	FORGED_SENDER_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: AC13F6E6A55
+X-Rspamd-Queue-Id: 172FF6E6A81
 
-On s390 systems, which use a machine level hypervisor, PCI devices are
-always accessed through a form of PCI pass-through which fundamentally
-operates on a per PCI function granularity. This is also reflected in the
-s390 PCI hotplug driver which creates hotplug slots for individual PCI
-functions. Its reset_slot() function, which is a wrapper for
-zpci_hot_reset_device(), thus also resets individual functions.
+The current reset process saves the device's config space state before
+reset and restores it afterward. However errors may occur unexpectedly and
+it may then be impossible to save config space because the device may be
+inaccessible (e.g. DPC). This results in saving invalid values that get
+written back to the device during state restoration.
 
-Currently, the kernel's PCI_SLOT() macro assigns the same pci_slot object
-to multifunction devices. This approach worked fine on s390 systems that
-only exposed virtual functions as individual PCI domains to the operating
-system.  Since commit 44510d6fa0c0 ("s390/pci: Handling multifunctions")
-s390 supports exposing the topology of multifunction PCI devices by
-grouping them in a shared PCI domain. This creates a problem when resetting
-a function through the hotplug driver's slot_reset() interface.
+With a reset we want to recover/restore the device into a functional state.
+So avoid saving the state of the config space when the device config space
+is inaccessible.
 
-When attempting to reset a function through the hotplug driver, the shared
-slot assignment causes the wrong function to be reset instead of the
-intended one. It also leaks memory as we do create a pci_slot object for
-the function, but don't correctly free it in pci_slot_release().
-
-Add a flag for struct pci_slot to allow per function PCI slots for
-functions managed through a hypervisor, which exposes individual PCI
-functions while retaining the topology. Since we can use all 8 bits
-for slot 'number' (for ARI devices), change slot 'number' u16 to
-account for special values -1 and PCI_SLOT_ALL_DEVICES.
-
-Fixes: 44510d6fa0c0 ("s390/pci: Handling multifunctions")
-Cc: stable@vger.kernel.org
-Suggested-by: Niklas Schnelle <schnelle@linux.ibm.com>
 Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
+Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
 ---
- drivers/pci/hotplug/rpaphp_slot.c |  2 +-
- drivers/pci/pci.c                 |  5 +++--
- drivers/pci/slot.c                | 33 +++++++++++++++++++++++--------
- include/linux/pci.h               |  8 ++++++--
- 4 files changed, 35 insertions(+), 13 deletions(-)
+ drivers/pci/pci.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/drivers/pci/hotplug/rpaphp_slot.c b/drivers/pci/hotplug/rpaphp_slot.c
-index 67362e5b9971..92eabf5f61b9 100644
---- a/drivers/pci/hotplug/rpaphp_slot.c
-+++ b/drivers/pci/hotplug/rpaphp_slot.c
-@@ -84,7 +84,7 @@ int rpaphp_register_slot(struct slot *slot)
- 	struct hotplug_slot *php_slot = &slot->hotplug_slot;
- 	u32 my_index;
- 	int retval;
--	int slotno = -1;
-+	int slotno = PCI_SLOT_PLACEHOLDER;
- 
- 	dbg("%s registering slot:path[%pOF] index[%x], name[%s] pdomain[%x] type[%d]\n",
- 		__func__, slot->dn, slot->index, slot->name,
 diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 77b17b13ee61..350bae907ebf 100644
+index 350bae907ebf..e8d7de77241a 100644
 --- a/drivers/pci/pci.c
 +++ b/drivers/pci/pci.c
-@@ -4897,8 +4897,9 @@ static int pci_reset_hotplug_slot(struct hotplug_slot *hotplug, bool probe)
- 
- static int pci_dev_reset_slot_function(struct pci_dev *dev, bool probe)
- {
--	if (dev->multifunction || dev->subordinate || !dev->slot ||
--	    dev->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET)
-+	if (dev->subordinate || !dev->slot ||
-+	    dev->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET ||
-+	    (dev->multifunction && !dev->slot->per_func_slot))
- 		return -ENOTTY;
- 
- 	return pci_reset_hotplug_slot(dev->slot->hotplug, probe);
-diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
-index 6d5cd37bfb1e..894d6213ed30 100644
---- a/drivers/pci/slot.c
-+++ b/drivers/pci/slot.c
-@@ -37,7 +37,7 @@ static const struct sysfs_ops pci_slot_sysfs_ops = {
- 
- static ssize_t address_read_file(struct pci_slot *slot, char *buf)
- {
--	if (slot->number == 0xff)
-+	if (slot->number == (u16)PCI_SLOT_PLACEHOLDER)
- 		return sysfs_emit(buf, "%04x:%02x\n",
- 				  pci_domain_nr(slot->bus),
- 				  slot->bus->number);
-@@ -72,6 +72,23 @@ static ssize_t cur_speed_read_file(struct pci_slot *slot, char *buf)
- 	return bus_speed_read(slot->bus->cur_bus_speed, buf);
+@@ -713,6 +713,27 @@ u16 pci_find_dvsec_capability(struct pci_dev *dev, u16 vendor, u16 dvsec)
  }
+ EXPORT_SYMBOL_GPL(pci_find_dvsec_capability);
  
-+static bool pci_dev_matches_slot(struct pci_dev *dev, struct pci_slot *slot)
++static bool pci_dev_config_accessible(struct pci_dev *dev, char *msg)
 +{
-+	if (slot->per_func_slot)
-+		return dev->devfn == slot->number;
++	u32 val;
 +
-+	return slot->number == PCI_SLOT_ALL_DEVICES ||
-+		PCI_SLOT(dev->devfn) == slot->number;
++	/*
++	 * If device's config space is inaccessible it can return ~0 for
++	 * any reads. Since VFs can also return ~0 for Device and Vendor ID
++	 * check Command and Status registers. Note that this is racy
++	 * because the device may become inaccessible partway through
++	 * next access.
++	 */
++	pci_read_config_dword(dev, PCI_COMMAND, &val);
++	if (PCI_POSSIBLE_ERROR(val)) {
++		pci_warn(dev, "Device config space inaccessible; unable to %s\n",
++				msg);
++		return false;
++	}
++
++	return true;
 +}
 +
-+static bool pci_slot_enabled_per_func(void)
-+{
-+	if (IS_ENABLED(CONFIG_S390))
-+		return true;
+ /**
+  * pci_find_parent_resource - return resource region of parent bus of given
+  *			      region
+@@ -5059,6 +5080,9 @@ static void pci_dev_save_and_disable(struct pci_dev *dev)
+ 	 */
+ 	pci_set_power_state(dev, PCI_D0);
+ 
++	if (!pci_dev_config_accessible(dev, "save state"))
++		return;
 +
-+	return false;
-+}
-+
- static void pci_slot_release(struct kobject *kobj)
- {
- 	struct pci_dev *dev;
-@@ -82,8 +99,7 @@ static void pci_slot_release(struct kobject *kobj)
- 
- 	down_read(&pci_bus_sem);
- 	list_for_each_entry(dev, &slot->bus->devices, bus_list)
--		if (slot->number == PCI_SLOT_ALL_DEVICES ||
--		    PCI_SLOT(dev->devfn) == slot->number)
-+		if (pci_dev_matches_slot(dev, slot))
- 			dev->slot = NULL;
- 	up_read(&pci_bus_sem);
- 
-@@ -187,8 +203,7 @@ void pci_dev_assign_slot(struct pci_dev *dev)
- 
- 	mutex_lock(&pci_slot_mutex);
- 	list_for_each_entry(slot, &dev->bus->slots, list)
--		if (slot->number == PCI_SLOT_ALL_DEVICES ||
--		    PCI_SLOT(dev->devfn) == slot->number)
-+		if (pci_dev_matches_slot(dev, slot))
- 			dev->slot = slot;
- 	mutex_unlock(&pci_slot_mutex);
- }
-@@ -267,7 +282,7 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
- 
- 	mutex_lock(&pci_slot_mutex);
- 
--	if (slot_nr == -1)
-+	if (slot_nr == PCI_SLOT_PLACEHOLDER)
- 		goto placeholder;
- 
+ 	pci_save_state(dev);
  	/*
-@@ -298,6 +313,9 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
- 	slot->bus = pci_bus_get(parent);
- 	slot->number = slot_nr;
- 
-+	if (pci_slot_enabled_per_func())
-+		slot->per_func_slot = 1;
-+
- 	slot->kobj.kset = pci_slots_kset;
- 
- 	slot_name = make_slot_name(name);
-@@ -318,8 +336,7 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
- 
- 	down_read(&pci_bus_sem);
- 	list_for_each_entry(dev, &parent->devices, bus_list)
--		if (slot_nr == PCI_SLOT_ALL_DEVICES ||
--		    PCI_SLOT(dev->devfn) == slot_nr)
-+		if (pci_dev_matches_slot(dev, slot))
- 			dev->slot = slot;
- 	up_read(&pci_bus_sem);
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index ebb5b9d76360..b6e20616e17f 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -79,14 +79,18 @@
-  * and, if ARI Forwarding is enabled, functions may appear to be on multiple
-  * devices.
-  */
--#define PCI_SLOT_ALL_DEVICES	0xfe
-+#define PCI_SLOT_ALL_DEVICES	0xfeff
-+
-+/* Used to identify a slot as a placeholder */
-+#define PCI_SLOT_PLACEHOLDER	-1
- 
- /* pci_slot represents a physical slot */
- struct pci_slot {
- 	struct pci_bus		*bus;		/* Bus this slot is on */
- 	struct list_head	list;		/* Node in list of slots */
- 	struct hotplug_slot	*hotplug;	/* Hotplug info (move here) */
--	unsigned char		number;		/* Device nr, or PCI_SLOT_ALL_DEVICES */
-+	u16			number;		/* Device nr, or PCI_SLOT_ALL_DEVICES */
-+	unsigned int		per_func_slot:1; /* Allow per function slot */
- 	struct kobject		kobj;
- };
- 
+ 	 * Disable the device by clearing the Command register, except for
 -- 
 2.43.0
 
