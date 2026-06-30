@@ -1,65 +1,64 @@
-Return-Path: <linux-s390+bounces-21384-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21385-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id SMgYJ0L6Q2q4mgoAu9opvQ
-	(envelope-from <linux-s390+bounces-21384-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 19:17:54 +0200
+	id QhGRLS35Q2rkmQoAu9opvQ
+	(envelope-from <linux-s390+bounces-21385-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 19:13:17 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 328B86E6D50
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 19:17:54 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA6E26E6CB2
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 19:13:16 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=knPzO3U6;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21384-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-21384-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ca7PA1F3;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21385-lists+linux-s390=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-s390+bounces-21385-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 683B6302570C
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 17:12:57 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id F0353300461A
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 17:13:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF2DF3DB32D;
-	Tue, 30 Jun 2026 17:12:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C68F53DB335;
+	Tue, 30 Jun 2026 17:13:12 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5733DB30A;
-	Tue, 30 Jun 2026 17:12:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4E93DB330;
+	Tue, 30 Jun 2026 17:13:11 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782839576; cv=none; b=YoBiSJ6XtXkAB8o5HHijEPQhaT/BpytWRDzTmyI9+H2IJTtCeBreX7hSbng4z8HWnLmsfvVXmF+xKVIzgtOQEa7jRjwipARwme5ifdUOIlFA716+/Q9cyCTxPDNqkH8z3e888JjRi+VgLd83gVjdtC9fxSLX6JprYgF8n7/Wb1Q=
+	t=1782839592; cv=none; b=fsoY9CpK8tLoLeONqOXLHU+juhpXhhKiE6hMDRZioMS54xL5TPLiPMMq5qCdeYuid9uTqOSbyyx5gzkLXd2mSGKPpCW7hKuHHh8WzAYLYv4ldCl5uuRhFgGLwI7z2aNeY3KZauKaJf/vsVx2kCpUNw+M1YJPzPRc1LI3uZfk/y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782839576; c=relaxed/simple;
-	bh=5xcJL5kstQMzzj80gwor3p/0k5AbaW7a13i0t1vRdXU=;
+	s=arc-20240116; t=1782839592; c=relaxed/simple;
+	bh=rLBRw33xgkY8vLviSAY6jX3PpQnq0u0dPb2e7pHMn1g=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Y/dygxlMzUSJQk3xy9aAMV4e+ABQNMv/0lmtbAxsIztox7aqU9zNwHtQS7FISz8IsoD1OWgycCpIPrzcQ3Qn+dL65iLknzjP7+A5uDA385EgXz1W1F9OwINECiY7FjOjjHp3W0ILkllkgfOjhkalrGwNg8JKU5g1mXvcb0wWj5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=knPzO3U6; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20BD91F000E9;
-	Tue, 30 Jun 2026 17:12:55 +0000 (UTC)
+	 Message-Id; b=NW/ZOUEnSeqLToUFUMBKD6UH+8kw5SdTWT8wRWZmUE/GptIXmzv9q3D2ATvfgIITSldKxiOpmZlVa6rvBfycoqFAdSEOHCP4GeBIfv2481vlNP+OiyVXwF+cszpKNKdWyokOuDvzLLR18MXmOEyr7slawW3i3brKPw69hcFL1sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ca7PA1F3; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F25D41F000E9;
+	Tue, 30 Jun 2026 17:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782839575;
-	bh=X86Sy1gHJXCr7jMFQ390SVl+ZOGmKdw4abSC4IVsUJE=;
+	s=k20260515; t=1782839591;
+	bh=ljZ42aPMj1B004p3jyeo7lLInpIHo2zWL07nNiCGCx4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=knPzO3U6UsciU4oI+O7LTObjcQMoYoX41F0vr8+mcTL3y7rRe5Eh+EUs6wIluKUov
-	 eVDoYYWfUrS8BeTRtTBb2H+ho9lxjdgHDYF1m9Cbai1ExpSjTMckdJgc2qt/wS9sZ3
-	 wLd3IdMdob80a+kohatp/SBwB2Ui9QsYZeG2uACfwxiFGRzNiCE/j4ImG2ADC6+vfv
-	 S8EQHKg+Fy+S7CMylg36Kyft0BkkbGxE4UtP4cVLmEjIQz+dL5wta8mT9PGYF8NnVZ
-	 KDyqJRRgkIDIVJlQ/HDZa7wZrxoTj+eumBN0xqFQko9X8y4a7ywGBTJvSHO+63cN3H
-	 qd5y7uPj48adQ==
+	b=ca7PA1F3/+8afDexgwJX+Vlm6euDJ6cA/bbbnpZYMLldv5rdT2AL4FBD4i2DH0reB
+	 nJdykIIzn/HHBz5SlkMAdFEL/c/6U8yoeiwAdgLJBRvyl3wzeIY9L1ZWAq/9Aa2qCg
+	 TJZI+H+6MIl70SYQ83SUeYwCKNbHx4U+FfVV6lDnIw8OdOC1YPIwj/i7peNqWwQHrB
+	 CCoFR7EFwtgPC/t6w8XFvKmXndZURkPImMCIHKI4nW9r/RH/oXNL7+fe1+t/6/lwv7
+	 Qp/1I3chGPkjduyAoJ18woUsgswOcyLeJGjkdfqab96NB+Bc0CSPR5CxlWdVny1kiD
+	 3Fl9BOGyIpBcw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v21 4/4] PCI/MSI: Enable memory decoding before
- restoring MSI-X messages
+Subject: Re: [PATCH v21 3/4] PCI: Fail FLR when config space is inaccessible
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Farhan Ali" <alifm@linux.ibm.com>
-Cc: "Alexander Gordeev" <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org, linux-pci@vger.kernel.org, "Vasily
- Gorbik" <gor@linux.ibm.com>, "Heiko Carstens" <hca@linux.ibm.com>
-In-Reply-To: <20260630164807.643-5-alifm@linux.ibm.com>
+Cc: "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>, linux-pci@vger.kernel.org, linux-s390@vger.kernel.org, "Heiko
+ Carstens" <hca@linux.ibm.com>
+In-Reply-To: <20260630164807.643-4-alifm@linux.ibm.com>
 References: <20260630164807.643-1-alifm@linux.ibm.com>
- <20260630164807.643-5-alifm@linux.ibm.com>
+ <20260630164807.643-4-alifm@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 30 Jun 2026 17:12:54 +0000
-Message-Id: <20260630171255.20BD91F000E9@smtp.kernel.org>
+Date: Tue, 30 Jun 2026 17:13:10 +0000
+Message-Id: <20260630171310.F25D41F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -72,18 +71,18 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21384-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21385-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,smtp.kernel.org:mid,vger.kernel.org:from_smtp,lists.linux.dev:replyto,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp,smtp.kernel.org:mid,sashiko.dev:url,lists.linux.dev:replyto];
 	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:alifm@linux.ibm.com,m:agordeev@linux.ibm.com,m:linux-s390@vger.kernel.org,m:linux-pci@vger.kernel.org,m:gor@linux.ibm.com,m:hca@linux.ibm.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:alifm@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:linux-pci@vger.kernel.org,m:linux-s390@vger.kernel.org,m:hca@linux.ibm.com,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
@@ -97,7 +96,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
@@ -105,81 +104,76 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[6]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 328B86E6D50
+X-Rspamd-Queue-Id: BA6E26E6CB2
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] Blindly restoring a stale PCI_COMMAND value introduces a TOCTOU =
-race window that can erase concurrent modifications to the register.
+- [High] Un-ratelimited pci_warn() in pci_dev_config_accessible() allows an=
+ attacker to flood the host kernel log.
+- [High] Early bailout in pcie_flr() when config space is inaccessible skip=
+s the Function Level Reset and the subsequent wait, allowing device assignm=
+ent to continue without reset, leaking state.
 --
 
-commit ff043ecd9c4375492e235cd366b469432d15d4f3
+commit ce2804b7f0c0409f73465726275859a70fa16be3
 Author: Farhan Ali <alifm@linux.ibm.com>
 
-PCI/MSI: Enable memory decoding before restoring MSI-X messages
+PCI: Fail FLR when config space is inaccessible
 
-This commit modifies the MSI-X restoration path to temporarily enable the=20
-Command register Memory bit before writing MSI-X messages. This prevents=20
-Unsupported Request (UR) errors if the saved device state did not have=20
-memory decoding enabled.
+This commit adds a check to validate if a device's config space is
+accessible before attempting a Function Level Reset (FLR). If the
+device is in an error state and inaccessible, the reset returns early.
 
-> diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
-> index 209373c92e9e1..79c7e84d314b7 100644
-> --- a/drivers/pci/msi/msi.c
-> +++ b/drivers/pci/msi/msi.c
-> @@ -870,6 +870,7 @@ void __pci_restore_msix_state(struct pci_dev *dev)
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e8d7de77241a6..9a9d021301c4e 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4384,6 +4384,9 @@ int pcie_flr(struct pci_dev *dev)
 >  {
->  	struct msi_desc *entry;
->  	bool write_msg;
-> +	u16 cmd;
+>  	int ret;
 > =20
->  	if (!dev->msix_enabled)
->  		return;
-
-[ ... ]
-
-> @@ -879,6 +880,14 @@ void __pci_restore_msix_state(struct pci_dev *dev)
->  	pci_msix_clear_and_set_ctrl(dev, 0,
->  				PCI_MSIX_FLAGS_ENABLE | PCI_MSIX_FLAGS_MASKALL);
-> =20
-> +	/*
-> +	 * The restored device state may not have Memory decoding enabled
-> +	 * in the Command register. Since the MSI-X was enabled for the
-> +	 * device, enable Memory decoding before restoring MSI-X.
-> +	 */
-> +	pci_read_config_word(dev, PCI_COMMAND, &cmd);
-> +	pci_write_config_word(dev, PCI_COMMAND, cmd | PCI_COMMAND_MEMORY);
+> +	if (!pci_dev_config_accessible(dev, "FLR"))
+> +		return -ENOTTY;
 > +
->  	write_msg =3D arch_restore_msi_irqs(dev);
-> =20
->  	scoped_guard (msi_descs_lock, &dev->dev) {
-> @@ -889,6 +898,7 @@ void __pci_restore_msix_state(struct pci_dev *dev)
->  		}
->  	}
-> =20
-> +	pci_write_config_word(dev, PCI_COMMAND, cmd);
 
-[Severity: Medium]
-Does unconditionally restoring the stale cmd value here introduce a race=20
-condition?
+[Severity: High]
+If a device is momentarily unresponsive and this check returns -ENOTTY
+immediately, doesn't this skip the FLR entirely?
 
-The function reads the PCI_COMMAND register into cmd, enables the memory bi=
-t,
-and then enters a potentially sleeping section by acquiring msi_descs_lock.
+Since VFIO's vfio_pci_core_enable() allows assignment to continue if a reset
+returns -ENOTTY (by setting vdev->reset_works =3D false), could a malicious
+guest intentionally put the device into an unresponsive state to bypass the
+reset and leak device state to the next user?
 
-If another thread or subsystem modifies PCI_COMMAND (such as changing Bus=20
-Mastering or INTx disable) while this lock is held, writing the stale cmd=20
-value back will silently overwrite and lose those concurrent modifications.
+The previous code path waited before issuing the FLR, but this early return
+removes the grace period.
 
-Additionally, if PCI_COMMAND_MEMORY was already enabled initially, does the=
-=20
-code needlessly expose the device to this race instead of skipping the=20
-register modification entirely?
+[Severity: High]
+Because this early return bypasses the previous delay loop, can a userspace
+process spam the VFIO_DEVICE_RESET ioctl in a tight loop?
 
->  	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL, 0);
->  }
+If the device's config space reads ~0, pci_dev_config_accessible() prints a
+warning:
+
+drivers/pci/pci.c:pci_dev_config_accessible() {
+	...
+	if (PCI_POSSIBLE_ERROR(val)) {
+		pci_warn(dev, "Device config space inaccessible; unable to %s\n",
+				msg);
+		return false;
+	}
+	...
+}
+
+Since this warning is unconditional and not rate-limited, could this tight
+loop allow an attacker to trivially flood the host's kernel log?
+
+>  	if (!pci_wait_for_pending_transaction(dev))
+>  		pci_err(dev, "timed out waiting for pending transaction; performing fu=
+nction level reset anyway\n");
+>
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260630164807.643-=
-1-alifm@linux.ibm.com?part=3D4
+1-alifm@linux.ibm.com?part=3D3
 
