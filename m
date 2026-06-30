@@ -1,179 +1,208 @@
-Return-Path: <linux-s390+bounces-21380-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21382-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id J7MHJQ/5Q2rfmQoAu9opvQ
-	(envelope-from <linux-s390+bounces-21380-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 19:12:47 +0200
+	id +icUBbj5Q2pPmgoAu9opvQ
+	(envelope-from <linux-s390+bounces-21382-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 19:15:36 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA5066E6CA3
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 19:12:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 623856E6D18
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 19:15:35 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=PQEl0nka;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21380-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21380-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=S+mWU01P;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21382-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21382-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C4C13305D82B
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 17:07:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 597273134866
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2026 17:10:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30CA53DB310;
-	Tue, 30 Jun 2026 17:07:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE1583DB330;
+	Tue, 30 Jun 2026 17:10:49 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20BB534CFC6;
-	Tue, 30 Jun 2026 17:07:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E6F330B11;
+	Tue, 30 Jun 2026 17:10:47 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782839276; cv=none; b=ppeJvGVjuz91MSDHorAojDGrv7nWOkf0uwWCYn1t0PKdFU45CQF4cIazxILgzOy7f4YQA08Yn0/b5oxdRFmyMP5QRN3TszL/qlaN4yH+Lt9Wbcs2s5/wJu8oqK1MU/2ED6IkNMVzA4He5xZRxeX4Ehz/5/vr1wyQxFsSwnTytw4=
+	t=1782839449; cv=none; b=iW227w/pjv3ATmvX+XCwZLP7iXgPUq03SZvYv4lK+uxbKqQALaS7Lk37kqm+XYgxi0wMRCurvdgwEGcFcgVUTWTI2wsQT6yK5dRE9zFH+6/TKHCXjdrw7cRyglhLomqON2LrplHLlZUEyvPkHEyvVHZA3DjFTUNPIIt9PLWacCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782839276; c=relaxed/simple;
-	bh=hSLrV0hbDxCiGzLnvHTchBD9yx1b1XM6mdqzrKzxYhY=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=BUdxRH7B5iXnp+Su9AF1aJxn/xMFGRDVZGb/WACACZOKDkBnBY0NkDt4iKSSY8Mkp/xhG2IqqsLL8y7tCj/n6YQe1h1X9Mc6A6u26SL9f/nSCcw6E0KN8dQD8w7AcV/iCuhdLhb6yqqoakop6d6r+UvO6J0TK90Rc5FQXio4LNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PQEl0nka; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 093021F00A3A;
-	Tue, 30 Jun 2026 17:07:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782839274;
-	bh=gg4vU68nunxT6DEXNx97mSLUNCo+H3w5ToMWCZuGavQ=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=PQEl0nkacrStnbeXlD4W7RkwO8ezse8vJ5Y0PE4NE26DMz/7Ls6l5s0SVEMkGgJ38
-	 LnQ6d8Kh0807nWIfZt/42OWKSzmDCX+bIRFdxmsP3SO4Hh9LepiADKfA6iQuv8K5tU
-	 Y45DgAZt7RkEteyJmwRaIm3RbE/CY8xc7NRdjC/VtDuxbYD1Z1ARjXE1Xls+bkm8I1
-	 HUTon9BBWXlZUmVY300ReNLrQtSglBDVas0XHBbkjm4kZj1n4mqvysLWkCjSR87kx8
-	 +K1DTaQ60PKW/mS+nPxZJMm26sJucF7+1u2Qm5cZQbuQ85Y+Le+j6GoC+YeXn5MBTa
-	 z6AFKheu7D8kg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v21 2/4] PCI: Avoid saving config space state if
- inaccessible
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Farhan Ali" <alifm@linux.ibm.com>
-Cc: "Vasily Gorbik" <gor@linux.ibm.com>, linux-pci@vger.kernel.org, "Alexander
- Gordeev" <agordeev@linux.ibm.com>, "Heiko Carstens" <hca@linux.ibm.com>, linux-s390@vger.kernel.org
-In-Reply-To: <20260630164807.643-3-alifm@linux.ibm.com>
-References: <20260630164807.643-1-alifm@linux.ibm.com>
- <20260630164807.643-3-alifm@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 30 Jun 2026 17:07:53 +0000
-Message-Id: <20260630170754.093021F00A3A@smtp.kernel.org>
+	s=arc-20240116; t=1782839449; c=relaxed/simple;
+	bh=AjeDR9n0hLVk0iDfQ9zsi6JSqyKCnYSFWfOhm6iXF+A=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WqqlOnrtjBWXu/hkWgQkyki9zsBBwca+Rdtm6CkOHNQoIoAmzjJKsfRK3YQ98UxtzOjuZE2+AqRkbNybS6Cx9rI3WUQAolE7WMJ4j8Fh/OMSoBLUlnPAtPkSX4huexSTpKdwzf8vj79nevjkiRR0ey+tnGZxAYqf67u4zdnHmi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=S+mWU01P; arc=none smtp.client-ip=148.163.156.1
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65UEIbvA2233969;
+	Tue, 30 Jun 2026 17:10:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=9aWzaJ
+	PPdwO1Dih5AE3wt65kIL1EN6VfYGmLmbC27sg=; b=S+mWU01PvXWVwvBV3tZpVQ
+	6V5XSDo//QAPF7Tx1vrkhG+HJ+xjqbKfg66WaoZpAH3Zuos2Xt4iVsda0F5Tj8aR
+	HfZNuOsn+F80nxvIuY8ENz78VGM44/l3v4cvDR/VLCsLoPUbSXZtJ925tfefzg0Y
+	mKt7Q0wARKRWkoO/Pw/bc4CDPoFr9CAiAyF9LEw/kX2UH5WbkoXBhrDSBc/FkTmm
+	dX8pZSVQkBua9MZbNXVrzYmVWnmN1ShlMhCiLjNJ1LkKZt23kTb2/qM5mSYBkLbq
+	XR/l9worO5sgTsom0JmS+IclbzVd0/WJhlCJ4IY6yI3+VaVcYc93QkZniGYM1pDg
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f26n5r3y9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Jun 2026 17:10:14 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65UH4edR015013;
+	Tue, 30 Jun 2026 17:10:13 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4f2u2gb6qa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Jun 2026 17:10:13 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65UHABA748890118
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 30 Jun 2026 17:10:11 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B17A62004B;
+	Tue, 30 Jun 2026 17:10:11 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 738B420043;
+	Tue, 30 Jun 2026 17:10:11 +0000 (GMT)
+Received: from thinkpad-T15 (unknown [9.224.89.120])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with SMTP;
+	Tue, 30 Jun 2026 17:10:11 +0000 (GMT)
+Date: Tue, 30 Jun 2026 19:10:09 +0200
+From: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+To: Oscar Salvador <osalvador@suse.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen
+ <dave.hansen@linux.intel.com>,
+        Karsten Desler <kdesler@soohrt.org>,
+        Muchun
+ Song <muchun.song@linux.dev>,
+        David Hildenbrand <david@kernel.org>,
+        Lorenzo
+ Stoakes <ljs@kernel.org>, Vlastimil Babka <vbabka@kernel.org>,
+        "Liam R .
+ Howlett" <liam@infradead.org>,
+        Andreas Larsson <andreas@gaisler.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Huacai Chen
+ <chenhuacai@kernel.org>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH 4/8] arch/s390: Stop special-casing hugetlb mappings in
+ arch_get_unmapped_area
+Message-ID: <20260630191009.048d94a0@thinkpad-T15>
+In-Reply-To: <20260606035003.529685-5-osalvador@suse.de>
+References: <20260606035003.529685-1-osalvador@suse.de>
+	<20260606035003.529685-5-osalvador@suse.de>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjMwMDE2MCBTYWx0ZWRfX592oA8o4ggrD
+ EyQ+iX7Z5YvYmSUxb1xwD+K1MqTQWHzfST2MholpEAOaQc+zIkyV6TGcKXGXxLnPWnbU+l+XxB4
+ Nr6X4FzbuV3Y24qxP7nX7oMtYoRWIymum26te1c4gX5RxchklpgMvKQHR/9FBMQVfTfdt1P4B27
+ ovYdmT9T4mFQJWlTmXnZyJtfdS+jaKpxDkCLzQAL6Bz0RDHTYa72dDO551LEF8vuijnjX9M13Qm
+ Gr5noHLkLj0WXsyI+ECI16OijuNTg34eKJag+K2CDsPvMD9yMJrll5DEtPz2sN0/TcyzPSdOhns
+ eMClw7wxDK53oFC7R5OT2Ip41m9r/BbIM9ME3EQ79/oL/DQdVGfSED8EDYX25becp7nXSzxcir2
+ 8xCP9knD6CkV8NQnMM/fX/us47o2Am20T3Qo6+IqhY5NYX0j+5LQeM9soRCVYR7Eg5yG1I2Xfjz
+ GQi74wg8sIzWmvPwIeA==
+X-Authority-Analysis: v=2.4 cv=V45NF+ni c=1 sm=1 tr=0 ts=6a43f876 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=kj9zAlcOel0A:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=c92rfblmAAAA:8
+ a=83SsSGizDXAGF0wgWEoA:9 a=CjuIK1q_8ugA:10 a=GvGzcOZaWPEFPQC_NcjD:22
+X-Proofpoint-ORIG-GUID: EjiqsR9Wp76128TiUVYYv-x6rwuxrSdW
+X-Proofpoint-GUID: EjiqsR9Wp76128TiUVYYv-x6rwuxrSdW
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjMwMDE2MCBTYWx0ZWRfX87CtA5i8EVw5
+ vTuz7m4pl5Qikn/8qI/FE+LNFsI/me15F8p5D5vIYsGGiCPNaglx5B1lXC5eeMFWO02GNUxt1vG
+ 6NE/25UaX9hkvJwAXTA3bTUxzIaZZlo=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-30_04,2026-06-26_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0 priorityscore=1501
+ adultscore=0 clxscore=1011 impostorscore=0 malwarescore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606300160
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	MISSING_MIME_VERSION(2.00)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21380-lists,linux-s390=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,smtp.kernel.org:mid,vger.kernel.org:from_smtp,lists.linux.dev:replyto];
-	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:alifm@linux.ibm.com,m:gor@linux.ibm.com,m:linux-pci@vger.kernel.org,m:agordeev@linux.ibm.com,m:hca@linux.ibm.com,m:linux-s390@vger.kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
 	FORWARDED(0.00)[lists@lfdr.de];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:osalvador@suse.de,m:akpm@linux-foundation.org,m:dave.hansen@linux.intel.com,m:kdesler@soohrt.org,m:muchun.song@linux.dev,m:david@kernel.org,m:ljs@kernel.org,m:vbabka@kernel.org,m:liam@infradead.org,m:andreas@gaisler.com,m:davem@davemloft.net,m:chenhuacai@kernel.org,m:agordeev@linux.ibm.com,m:linux-kernel@vger.kernel.org,m:linux-mm@kvack.org,m:linux-s390@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[gerald.schaefer@linux.ibm.com,linux-s390@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-21382-lists,linux-s390=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[thinkpad-T15:mid,sashiko.dev:url,suse.de:email,linux.ibm.com:from_mime,vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_NO_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[gerald.schaefer@linux.ibm.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6]
+	ALIAS_RESOLVED(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-s390];
+	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: EA5066E6CA3
+X-Rspamd-Queue-Id: 623856E6D18
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] pci_dev_save_and_disable() skips disabling the device if config sp=
-ace is momentarily inaccessible, potentially leaving DMA and interrupts ena=
-bled.
-- [Low] String literal passed to a non-const `char *` pointer in `pci_dev_c=
-onfig_accessible()`.
---
+On Sat,  6 Jun 2026 05:49:59 +0200
+Oscar Salvador <osalvador@suse.de> wrote:
 
-commit 067c10f20c7b3c97acf8c9886f6586c07bea7142
-Author: Farhan Ali <alifm@linux.ibm.com>
+> arch_get_unmapped_area* sets info.align_mask to make room for extra alignment,
+> so that is added on top of the length we request in unmapped_area{_topdown}.
+> hugetlb_get_unmapped_area() already adds this extra padding in the 'len'
+> parameter, and it also masks off the address it gets to properly align it to
+> the huge_page_size we are using.
+> 
+> So, stop special-casing hugetlb in arch_get_unmapped_area* functions.
+> 
+> Also, there is no need to worry about align_offset because that will be
+> masked off back in hugetlb_get_unmapped_area().
+> 
+> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> ---
+>  arch/s390/mm/mmap.c | 9 ++-------
+>  1 file changed, 2 insertions(+), 7 deletions(-)
 
-PCI: Avoid saving config space state if inaccessible
+With regard to the Critical finding for s390 in Sashiko review in
+https://sashiko.dev/#/patchset/20260606035003.529685-1-osalvador@suse.de
 
-This commit avoids saving the device's config space state during a reset
-if the device config space is temporarily inaccessible, preventing invalid
-values from being written back later.
+Yes, I think crst_table_upgrade() could be skipped "If the original length
+fits right below TASK_SIZE, but the inflated length pushes addr + len over
+TASK_SIZE".
 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -713,6 +713,27 @@ u16 pci_find_dvsec_capability(struct pci_dev *dev, u=
-16 vendor, u16 dvsec)
->  }
->  EXPORT_SYMBOL_GPL(pci_find_dvsec_capability);
-> =20
-> +static bool pci_dev_config_accessible(struct pci_dev *dev, char *msg)
+But subsequent page faults should then generate an ASCE-type exception,
+killing the user space program, and not alias with lower virtual addresses
+causing memory corruption.
 
-[Severity: Low]
-This isn't a bug, but should the msg parameter be marked const?
+Still, I wonder if we want an extra check for "addr + (inflated) len > TASK_SIZE"
+in check_asce_limit(), or somewhere else.
 
-Since a string literal ("save state") is passed to this function, keeping
-it as a non-const pointer violates const-correctness and might trigger
-compiler warnings.
-
-> +{
-> +	u32 val;
-> +
-
-[ ... ]
-
-> @@ -5059,6 +5080,9 @@ static void pci_dev_save_and_disable(struct pci_dev=
- *dev)
->  	 */
->  	pci_set_power_state(dev, PCI_D0);
-> =20
-> +	if (!pci_dev_config_accessible(dev, "save state"))
-> +		return;
-> +
-
-[Severity: High]
-Does this early return skip disabling the device entirely if the config
-space is momentarily inaccessible?
-
-If the device is only transiently inaccessible and recovers immediately
-after the pci_dev_config_accessible() check, this early return skips the
-subsequent pci_write_config_word() that clears the Command register.
-
-Could this leave the device with Bus Master enabled, potentially allowing
-it to generate unexpected DMA requests or interrupt storms during the
-reset sequence?
-
->  	pci_save_state(dev);
->  	/*
->  	 * Disable the device by clearing the Command register, except for
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260630164807.643-=
-1-alifm@linux.ibm.com?part=3D2
+This "inflated length" approach also seems to have other subtle impact for
+other archs, according to Sashiko. Possibly resulting in failed mappings for
+valid addresses and ranges. So some extra checking or retry logic might be
+needed anyway.
 
