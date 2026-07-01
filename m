@@ -1,224 +1,207 @@
-Return-Path: <linux-s390+bounces-21426-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21427-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id NSELIxbaRGqH2AoAu9opvQ
-	(envelope-from <linux-s390+bounces-21426-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 01 Jul 2026 11:12:54 +0200
+	id s7NDKir0RGrF3woAu9opvQ
+	(envelope-from <linux-s390+bounces-21427-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 01 Jul 2026 13:04:10 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8103E6EB806
-	for <lists+linux-s390@lfdr.de>; Wed, 01 Jul 2026 11:12:53 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 400236EC84C
+	for <lists+linux-s390@lfdr.de>; Wed, 01 Jul 2026 13:04:10 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=amd.com header.s=selector1 header.b=E+Bn6CML;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21426-lists+linux-s390=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-s390+bounces-21426-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=amd.com;
-	arc=reject ("cv is fail on i=2")
+	dkim=pass header.d=linutronix.de header.s=2020 header.b=3HifUbZ2;
+	dkim=pass header.d=linutronix.de header.s=2020e header.b=LJJCbaRz;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21427-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21427-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=linutronix.de;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 222F5300723C
-	for <lists+linux-s390@lfdr.de>; Wed,  1 Jul 2026 09:08:35 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 72C1B30BF170
+	for <lists+linux-s390@lfdr.de>; Wed,  1 Jul 2026 11:01:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BED43F44CE;
-	Wed,  1 Jul 2026 09:08:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D731E3BA249;
+	Wed,  1 Jul 2026 11:01:44 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012068.outbound.protection.outlook.com [40.107.200.68])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54ED33F44CA;
-	Wed,  1 Jul 2026 09:08:09 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782896891; cv=fail; b=OjLlvdKoJnQ5zbDDJ/mOgbDR/A9TXgJVm73pX226Q5qOz3cEn3Fnja6ORjpav30/4ak01q044WFmkeETIe+Td658y1F2hn8c94zMXM6Y5cyftGh5npvW4tQwe6cjYLS5YxygM/Qz7BkPn9WU8gYxQHVyzNCQBJqoQPJzOt1LZaE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782896891; c=relaxed/simple;
-	bh=h3kzZXCq+dGtfSOY396j50UNM4/IYMbSVl9QM4k35Vg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=LSJDc/4G9HoiyoVi6PwRyQ8gluSTcEJhVilUc/6H7lOyRPxOFHET0nO2E16cGBStym+aOWep53HNIqLnV0iGKQ+JlxfHiOHL3tgY+a3vwX+UjzNxYoC7VcoQo4obDE/K+LWJ8oVnoZWbbvfEf80KRt52l0JdB+GPjkxXw3KI3z0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=E+Bn6CML; arc=fail smtp.client-ip=40.107.200.68
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RBcRXoYU6Q2cs2rwItSzd3Ze3fko0RLEP3AOeVw3WYTj5udw4vYTP33QTVbGnwchDcRfSZKC40vXymyvbHBPES13M7Vr+KNxAgCjP6hHmpqLhpdS8dL0YHJeFX6lxCQEIrq5YAkgA/tUH2q+YrD432nnIK96/kaK9vOSiJHyVhHECX5TOvCTv9pZdxbE8EBjJ7Hbz7w7QwYAPRggWxKKamaLyIByxN03yVGZBebn0AY2NNjUVEnPjsepH4d9kXWilP0Dzbvde95ouyEHpStA3+3qjW+uMOYGWXJ1M5mdY8mAvdqS/xcsDRQ1wAyjwRW70Yx1fVwcHAGGz0MPMnvf/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=g1/TDN4Zyz4o7+1roVy2O8d48myj4Wdvt3h8XPdnhnw=;
- b=kaDRLGg/j7f7hjmSV3G77HvoDn6KyfqbAN7O3AowOCWLySAYuVDD2madtK3X0BvDgdZ6BkI3VzqugDnnmAgGGkpfR+j7Tkwu++ibhyJ0Pos+hkcwz+oSIufXJnu8hNveXQt7qYfcSSgpw7ZLIDHpvY3HbzqwewmigXPFErXK7n4HlzTJEs8BgDQBSyEH5Ur5G8kL/47fA+CifKRrVEn/Pz4aNGzD4J45JOR47qY1bLP6gebR9B2jKOaZv9ab1QU8IMkg1SIYf3Mlx4bRJdnCTVgSkExMjqqy7p5a+IS8iBgGyiB93zR0aO+tAIVCvdj4uD8U10nfgAwMSPoyfEbVnw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g1/TDN4Zyz4o7+1roVy2O8d48myj4Wdvt3h8XPdnhnw=;
- b=E+Bn6CMLLuOpHnAyC2nbyEZzooY0NISJihogc2hlgH15KjiFdC1WFnSS0r4FCvToAKLIrXHCvKXHosOiwNuV9GHnQ6eq8ke1NgyPjBEGuyA18mEhF33tTQ70fTugnY2T2sFg2GK4hTwor0d5cIU8nYC2PUNNwTF6f3L69oJI/e4=
-Received: from BY3PR05CA0057.namprd05.prod.outlook.com (2603:10b6:a03:39b::32)
- by CY5PR12MB6431.namprd12.prod.outlook.com (2603:10b6:930:39::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.8; Wed, 1 Jul 2026
- 09:08:02 +0000
-Received: from SJ5PEPF000001EA.namprd05.prod.outlook.com
- (2603:10b6:a03:39b:cafe::14) by BY3PR05CA0057.outlook.office365.com
- (2603:10b6:a03:39b::32) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.181.8 via Frontend Transport; Wed, 1
- Jul 2026 09:08:01 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SJ5PEPF000001EA.mail.protection.outlook.com (10.167.242.198) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.181.6 via Frontend Transport; Wed, 1 Jul 2026 09:08:01 +0000
-Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Wed, 1 Jul
- 2026 04:07:58 -0500
-Received: from [10.136.39.208] (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.41 via Frontend
- Transport; Wed, 1 Jul 2026 04:07:50 -0500
-Message-ID: <38239f40-1673-469f-baa3-4a343d2aa4c3@amd.com>
-Date: Wed, 1 Jul 2026 14:37:49 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB09426EC5;
+	Wed,  1 Jul 2026 11:01:43 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782903704; cv=none; b=kHlQz+iGK4jCCeSrLPaZvugmyIVYPkI01oiB6AwQBG83wzlyUSOMVdaTTTDmS+AYc9scLdSwgf1/0Zk8z7LOAZtqaaHdp1OkSzQV2MPTuAApoRiMrIutQ1nP5TzU02lCIHQ6T9BPkuE/otIdD22v5jpFjjtNV5cONzzpNGGcPI4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782903704; c=relaxed/simple;
+	bh=eCF91Tc3YJCTjHiwvkn18MC+frdIp0tyv/SZaByYOQI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mzFOznfY2pJNX+0Qez+axOkMno4XoHpn5JnwhzA41ZwTGy/jcy3dJfhpZd2BiGFS+swz3HTpiFDdzxT1urD+llbE9XYtZ3MU4N2bup7VIK+lYCTLX6N3ReDzB44h1fCcHnJ7XpQoy1/DpPf8lvdGYjcjCc0O8Q+ejFnYsix0CLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3HifUbZ2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LJJCbaRz; arc=none smtp.client-ip=193.142.43.55
+Date: Wed, 1 Jul 2026 13:01:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1782903701;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LNxVJGEMAXRCpSTfvSk7rdKi0pYQo3rQCK08bwqgoOk=;
+	b=3HifUbZ21ScKQtWF6SIw5j3fCUEdR+xRpgI6ZiVs3+DcPllGZA8Ji94V+XUdwDrNcM/7ij
+	+H8qYhqLmRVhTFU9Xbty5DTZ8XxGKDqRxQxL1vTqr6BEMw6zmurDnk/JsaoKxSXYAcjN1F
+	6Uzt7JsgKFkfst0NWwo8OmJzzjDn+oVuzb9b+HlGgbTb3HddAJsW7TEB+3Wy+xPQgTAZW4
+	rSQ74uPNXSFR1hJkaQBX03oVNJspPKuqg0v9yXuMEiJZy1/UuO/gMZkPv3oZJ8hom+tEGH
+	PvfGbzUklh8YNbdEj41qDzenKHO+aXOoCmp6dRiLzh0hagRlV5ggtMdszJWLcA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1782903701;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LNxVJGEMAXRCpSTfvSk7rdKi0pYQo3rQCK08bwqgoOk=;
+	b=LJJCbaRz0pqf6PD4GbhO2SME6PRZyX4Kho1+qmiOyaUmczMK9UnqGhmiZqX5vxb5Za35B/
+	Y1Mq4Y/RXRZ4NvBg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Charlie Jenkins <thecharlesjenkins@gmail.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Thomas Huth <thuth@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Jisheng Zhang <jszhang@kernel.org>, Alexandre Ghiti <alex@ghiti.fr>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>
+Subject: Re: [PATCH v5 8/8] futex: Use runtime constants for __futex_hash()
+ hot path
+Message-ID: <20260701110139.z8WokGYM@linutronix.de>
+References: <20260630045531.3939-1-kprateek.nayak@amd.com>
+ <20260630045531.3939-9-kprateek.nayak@amd.com>
+ <20260701075714.GP48970@noisy.programming.kicks-ass.net>
+ <20260701084150.GNOeboLw@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 8/8] futex: Use runtime constants for __futex_hash()
- hot path
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>
-CC: Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@kernel.org>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Paul Walmsley
-	<pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
-	<gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, Darren Hart
-	<dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
-	=?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Samuel Holland
-	<samuel.holland@sifive.com>, Charlie Jenkins <thecharlesjenkins@gmail.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-riscv@lists.infradead.org>,
-	<linux-s390@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Huth
-	<thuth@redhat.com>, Sean Christopherson <seanjc@google.com>, Jisheng Zhang
-	<jszhang@kernel.org>, Alexandre Ghiti <alex@ghiti.fr>, Christian Borntraeger
-	<borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>
-References: <20260630045531.3939-1-kprateek.nayak@amd.com>
- <20260630045531.3939-9-kprateek.nayak@amd.com>
- <20260701075714.GP48970@noisy.programming.kicks-ass.net>
- <20260701084150.GNOeboLw@linutronix.de>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 In-Reply-To: <20260701084150.GNOeboLw@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001EA:EE_|CY5PR12MB6431:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1bfc53b6-a014-4a70-2098-08ded75040c4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700016|376014|7416014|23010399003|22082099003|18002099003|4143699003|5023799004|11063799006|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	kJxdKYokYZS3EIDHBQtFESDnvoU+k1pJzGafuFnINUKWX5rZ3QUmqN+0EtIrimyDV8yHvQdYXKbzXv4/+AoDQECO5GTsio5NHiJRLL+YzDAr+YnLVCyHDh+z8xbbmdBPboj2PXBRc41ZSUT6WJeDLFwN5av8C9Ff2jcRkpYknNXy0nlJ+6/h9vbWF9U+lnn2PM7RFO8MjsUMmoUlhdV7ms/n0TYrOWtj9BqpdhlvdKS/okwxsE8SQoJDiCZYNRJPxOeGvKH50JBnh04DDUIPcJIbbGQ01nyYFbOCej54CmGuTdmie6JMXYFlYfygioAn71GJrpb45i35WqBjq6vdBQ0Se/5aNeZ29JI+L4t9bYVwVgjAcvg3RV/m0Su2t4GzjQr77yslTGMsIq2N0iJX8zahtN3VIoqjHQ0NLJRSceswPhKJULFfhELsWtPN2Qr9NoLfpoAh09TZNw6qTQQbdRq6Un+RShlQyR33PMWaf8WrjF0DBCNYAs6gJR0Q0tT7M0ZzfckeC1/8UNfxxXrgwnJvTG/oSXtZ45o7BnQ1eflUk8CIcL7tzsgAE+91lz1Hv9POdP1O1pVhXLRxwDZ5KRWO2xgO/2fcNGvGipkwgp6/LL4kCbCo6MaY7eaKU5gqgJRS5wGp+SthGXFy26o9/+NofegVYFQv3dhHTxYHsa0o+d4B5Dvwtze9PNmjFU1BOoKssPjuihld0SXaHhmkFg==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700016)(376014)(7416014)(23010399003)(22082099003)(18002099003)(4143699003)(5023799004)(11063799006)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	HVjZr8VEub2Nq1ykpJ5IEyRcCFymMpo7JAcX7xWamGawFw1Y7sXIlMFEhHIPEqQdrdUbNUDPpoLH4gelRsbyxjhtuhnrU7ilBgMWftiUgVO36srcn/Y9FXnDemLVeyKMPuHajCGX1IG++a2XUTBZCINASagcKeADV2O4/igG2ZVjGLqeGqgyl18HFRATzRYzF+7mQ1TAdNulhVDQ79FnVchKLo82LLd5walCTaYfFug41R/CdZQaFlTsd0pX6lpXxDshdxcbpZv2BXj7HwDo3KkUKqP32j97LSOM9Oa0Xsy1lbq2NsBq5tTLtMb/pkfo/ocalG7x/sdNwnHbtkrwR2tjLMHMSDfpoLH4BIWZc7xsk57OPnG7rqGR99NVl/TxLmm3DWSr421aeF3C91JqECwML8HuNt06Vntw1xLcFjqnRJjy5fIm8jNMO226psgJ
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2026 09:08:01.6128
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1bfc53b6-a014-4a70-2098-08ded75040c4
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001EA.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6431
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linutronix.de,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[linutronix.de:s=2020,linutronix.de:s=2020e];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21426-lists,linux-s390=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[33];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-21427-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:bigeasy@linutronix.de,m:peterz@infradead.org,m:arnd@arndb.de,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:x86@kernel.org,m:catalin.marinas@arm.com,m:will@kernel.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:dvhart@infradead.org,m:dave@stgolabs.net,m:andrealmeid@igalia.com,m:linux-arch@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:samuel.holland@sifive.com,m:thecharlesjenkins@gmail.com,m:linux-arm-kernel@lists.infradead.org,m:linux-riscv@lists.infradead.org,m:linux-s390@vger.kernel.org,m:hpa@zytor.com,m:thuth@redhat.com,m:seanjc@google.com,m:jszhang@kernel.org,m:alex@ghiti.fr,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:peterz@infradead.org,m:kprateek.nayak@amd.com,m:arnd@arndb.de,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:x86@kernel.org,m:catalin.marinas@arm.com,m:will@kernel.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:dvhart@infradead.org,m:dave@stgolabs.net,m:andrealmeid@igalia.com,m:linux-arch@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:samuel.holland@sifive.com,m:thecharlesjenkins@gmail.com,m:linux-arm-kernel@lists.infradead.org,m:linux-riscv@lists.infradead.org,m:linux-s390@vger.kernel.org,m:hpa@zytor.com,m:thuth@redhat.com,m:seanjc@google.com,m:jszhang@kernel.org,m:alex@ghiti.fr,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[bigeasy@linutronix.de,linux-s390@vger.kernel.org];
+	FREEMAIL_CC(0.00)[amd.com,arndb.de,kernel.org,redhat.com,alien8.de,linux.intel.com,arm.com,dabbelt.com,eecs.berkeley.edu,linux.ibm.com,infradead.org,stgolabs.net,igalia.com,vger.kernel.org,sifive.com,gmail.com,lists.infradead.org,zytor.com,google.com,ghiti.fr];
+	RCPT_COUNT_TWELVE(0.00)[33];
+	RCVD_COUNT_THREE(0.00)[3];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[kprateek.nayak@amd.com,linux-s390@vger.kernel.org];
-	FREEMAIL_CC(0.00)[arndb.de,kernel.org,redhat.com,alien8.de,linux.intel.com,arm.com,dabbelt.com,eecs.berkeley.edu,linux.ibm.com,infradead.org,stgolabs.net,igalia.com,vger.kernel.org,sifive.com,gmail.com,lists.infradead.org,zytor.com,google.com,ghiti.fr];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,amd.com:dkim,amd.com:mid,amd.com:from_mime];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[kprateek.nayak@amd.com,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[amd.com:+];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[bigeasy@linutronix.de,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[linutronix.de:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RCVD_COUNT_SEVEN(0.00)[8]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 8103E6EB806
+X-Rspamd-Queue-Id: 400236EC84C
 
-Hello Peter, Sebastian,
-
-On 7/1/2026 2:11 PM, Sebastian Andrzej Siewior wrote:
-> On 2026-07-01 09:57:14 [+0200], Peter Zijlstra wrote:
->> The big $1M question: does it actually make it go faster? The whole
->> point here was performance, right? But I'm not seeing numbers showing
->> how awesome these patches are.
-> 
-> I did complain about the about the size of __futex_data which is blown
-> on distro kernels due to CONFIG_NODES_SHIFT=10 on Debian for instance.
+On 2026-07-01 10:41:55 [+0200], To Peter Zijlstra wrote:
 > This makes it go away at no extra price but yeah let me boot a big box
 > and see.
-> If the performance remains unchanged it is still worth considering due
-> to size savings on the average box with 1 node. The biggest box I have
-> access to has four nodes. If I remember correctly, Prateek was saying
-> that AMD has "normal" boxes which would require =9 for normal operation
-> and they do run distro kernels so lowering that value is not an option.
 
-Rationale there was with CCX as NUMA, we have 32 NUMA nodes on chip and
-with CXL, there is a possibility of 2x that so I suggested NODE_SHIFT
-of 7 or 8 should probably cover almost all real hardware without any
-added NUMA emulation weirdness.
+as-is:
+|$ ./perf bench futex hash -f 1 -t 1 -r 10 -b 0
+| # Running 'futex/hash' benchmark:
+| Run summary [PID 3588]: 1 threads, each operating on 1 [private] futexes =
+for 10 secs.
+|=20
+| [thread  0] futex: 0x5555e5ad4740 [ 6449632 ops/sec ]
+|=20
+| Averaged 6449632 operations/sec (+- 0,00%), total secs =3D 10
+| Futex hashing: global hash
 
-To answer the million dollar question, I see the following on running
-perf bench futex on a 3rd Gen EPYC (2 x 64C/128T)
+roughly that area, repeated runs usually change the last three digits.
+Patched:
 
-  +----------------+-----------+-----------+-----------+--------------+
-  | Benchmark      | Kernel 1  | Kernel 2  |   Unit    | % Improvement|
-  |                |  (avg/5)  |  (avg/5)  |           | (K2 vs K1)   |
-  +----------------+-----------+-----------+-----------+--------------+
-  | Wake-parallel  |  0.01614  |  0.00456  |    ms     |   +71.75%    |
-  | Requeue        |  0.26394  |  0.24644  |    ms     |    +6.63%    |
-  | Lock-pi        |     34.0  |     57.2  |  ops/sec  |   +68.24%    |
-  +----------------+-----------+-----------+-----------+--------------+
+| $ ./perf bench futex hash -f 1 -t 1 -r 10 -b 0
+| # Running 'futex/hash' benchmark:
+| Run summary [PID 2375]: 1 threads, each operating on 1 [private] futexes =
+for 10 secs.
+|
+| [thread  0] futex: 0x5585ddebd740 [ 6532004 ops/sec ]
+|
+| Averaged 6532004 operations/sec (+- 0,00%), total secs =3D 10
+| Futex hashing: global hash
 
-Kernel1 is tip at base commit and Kernel 2 is tip + this series.
-perf bench futex hash some insane bimodal behavior on my system with
-both tip and tip + series so I've left that variant out for now.
+for private hash there is change within the noise area for -b 8192.
 
-This is only from 5 runs from a single boot. I'll try to grab a
-bigger system and check is it makes a difference there.
+So we have here +1.28% ops/sec. Not ground breaking, not bad either.
 
--- 
-Thanks and Regards,
-Prateek
+With more threads:
+| $ ./perf bench futex hash  -r 30 -b 0
+| # Running 'futex/hash' benchmark:
+| Run summary [PID 2424]: 144 threads, each operating on 1024 [private] fut=
+exes for 30 secs.
+|=20
+| [thread  0] futexes: 0x556f3a3387c0 ... 0x556f3a3397bc [ 2104422 ops/sec ]
+=E2=80=A6
+| [thread 143] futexes: 0x556f3a3d9660 ... 0x556f3a3da65c [ 2105480 ops/sec=
+ ]
+|=20
+| Averaged 2111486 operations/sec (+- 0,03%), total secs =3D 30
+| Futex hashing: global hash
 
+To:
+
+| $ ./perf bench futex hash  -r 30 -b 0         =20
+| # Running 'futex/hash' benchmark:                                        =
+                     =20
+| Run summary [PID 2723]: 144 threads, each operating on 1024 [private] fut=
+exes for 30 secs.
+|
+|[thread  0] futexes: 0x560a09e487c0 ... 0x560a09e497bc [ 2135688 ops/sec ]
+=E2=80=A6
+|[thread 143] futexes: 0x560a09ee9660 ... 0x560a09eea65c [ 2137668 ops/sec ]
+|
+| Averaged 2139685 operations/sec (+- 0,03%), total secs =3D 30
+| Futex hashing: global hash
+
++1.34%. Again, not ground breaking but still visible. And the memory
+savings.
+
+That is btw, 7.2-rc1 on a Intel(R) Xeon(R) CPU E7-8890 v3 (4 NUMA
+nodes).
+
+Sebastian
 
