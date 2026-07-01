@@ -1,146 +1,137 @@
-Return-Path: <linux-s390+bounces-21428-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21429-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id S9G7K9cDRWo65AoAu9opvQ
-	(envelope-from <linux-s390+bounces-21428-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 01 Jul 2026 14:11:03 +0200
+	id Dr2JL1IhRWoa7goAu9opvQ
+	(envelope-from <linux-s390+bounces-21429-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 01 Jul 2026 16:16:50 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 381EA6ED136
-	for <lists+linux-s390@lfdr.de>; Wed, 01 Jul 2026 14:11:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D6FE6EE983
+	for <lists+linux-s390@lfdr.de>; Wed, 01 Jul 2026 16:16:50 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux.alibaba.com header.s=default header.b=qNiLJofF;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21428-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21428-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=linux.alibaba.com;
+	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=UGfOlK2a;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21429-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21429-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=redhat.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3335D3048AF8
-	for <lists+linux-s390@lfdr.de>; Wed,  1 Jul 2026 12:08:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8DE0C306DC00
+	for <lists+linux-s390@lfdr.de>; Wed,  1 Jul 2026 13:47:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C689A478E2C;
-	Wed,  1 Jul 2026 12:08:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D9F0239E60;
+	Wed,  1 Jul 2026 13:47:36 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0717D3BC687;
-	Wed,  1 Jul 2026 12:08:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDE02264A7
+	for <linux-s390@vger.kernel.org>; Wed,  1 Jul 2026 13:47:34 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782907734; cv=none; b=M0CcDSRpbBIvUqLXBXHWIGaIn146zjptAd676OeaosHyY/hN3dTWeNymXPImE+mmV48lOdxymz77I72VOC8jk1XBLpujTrQnn/PYvA6vWYgj+gd/lS8r8ZWKv/wwpnbF70rBLp+04puraeOj0NJBxlxEK4KZCsx0bZ8ik+7DGFM=
+	t=1782913656; cv=none; b=F6IvYsh5cyG9BikeW+TE7QNUbSAr6lLuToyMGElZ1CSZUVRyEBg72+A30yZWQnA9iwKB4H4J3aRl8SgvRs97QXhff/RS9QyVBMG+Mjj4Jaj9IzujoRwdYgqzV2a0sx/5NipE6jgTV05JgSjL3DwuAHKez4jfyUOWx0Ui+oMeNSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782907734; c=relaxed/simple;
-	bh=aW9OpH0bfWHMJsyxLEWPWr3FrY/QtwnB1r0vOhs8WO8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pv5RWoyVcx60GstcqXqHnC0IVqw5WfEcbW7A1JdPvKqEIxUstHdJ93eRHHBA07eUOebR7nriMGnGfOv8aF4jD635PzJCWigThNqsrN7wfO/pnIR66wAwk5PDH4PLQBApkYqRazMP0nPIj9zw2ES1y03V1vvQAsXeLQ5k6NNkb9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=qNiLJofF; arc=none smtp.client-ip=115.124.30.113
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1782907723; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=hYNTn3LzwKliHTHWmAhNtZujz254oBwDLqzBpRDvS7k=;
-	b=qNiLJofFxvQXCjKKUr/iFBX7m84cDhEeVFHeyA4jjbH0FUWlTFb0WVhRvBV25o03gIyR1yZPmGgBtVgzpfhAQ7ws2gCSdxt+w/PvkSJrGPYJzFjGHtIYng3HA9DVqu8w/Jo1woaG7SOFMJ1QkXm9PgEhAyt/CUyEoey8Tj1IPMo=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0X68SeK9_1782907711;
-Received: from 30.221.129.218(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0X68SeK9_1782907711 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 01 Jul 2026 20:08:41 +0800
-Message-ID: <1d250249-78bd-4df5-9312-4ee64340ea97@linux.alibaba.com>
-Date: Wed, 1 Jul 2026 20:08:30 +0800
+	s=arc-20240116; t=1782913656; c=relaxed/simple;
+	bh=oP5PJMkbRl5dj1lHU4rEKskYkm1XL5NnkDocVsQSdYo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Tuxk3txEBezXISiq1IzEFU3NELbkTFCYbd05iJdkBe5NEnCRU98gC4lCoIkBK734XQBvmZjf8z8SkayDECyaOXa+fsZmbhd2nz3dKgZKX+mU8/+AzDwLxrgdMzCMF94jmrO2EJEgLK15b/HsbfGjytkPpgeRyMRA2OMQuX4VkLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UGfOlK2a; arc=none smtp.client-ip=170.10.129.124
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1782913654;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=H3QrgaH2kGVjm0vYXAyWHX2mTkxr9HQ1g/8ADPb9HI0=;
+	b=UGfOlK2aZRqLRl7Pf2rD8/LUHibQwgNWeyFhIdi0+bJlr4FzkKwGzS85+VQyQ2Xyjze+H3
+	LidB0UAULccNv4OMxN1Q3xWUEnG9nJLav6dmwAQjiwNCS59DvMEle5gPiDJvsI6JoOd3XC
+	5twv244FlIyCDxS58Ex3h/1WVZ0Qx64=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-645-Xbvoa-_6Ow2rQWXlr2FsHw-1; Wed,
+ 01 Jul 2026 09:47:32 -0400
+X-MC-Unique: Xbvoa-_6Ow2rQWXlr2FsHw-1
+X-Mimecast-MFC-AGG-ID: Xbvoa-_6Ow2rQWXlr2FsHw_1782913651
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 19A6B18E6A58;
+	Wed,  1 Jul 2026 13:47:31 +0000 (UTC)
+Received: from thuth-p1g4.redhat.com (unknown [10.44.34.133])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 30960195E486;
+	Wed,  1 Jul 2026 13:47:28 +0000 (UTC)
+From: Thomas Huth <thuth@redhat.com>
+To: Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] s390/uapi: Remove obsolete unistd_32.h from Kbuild file
+Date: Wed,  1 Jul 2026 15:47:27 +0200
+Message-ID: <20260701134727.882734-1-thuth@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] ptp: split non-host-disciplined PHC drivers into a
- dedicated subdirectory
-To: David Woodhouse <dwmw2@infradead.org>, richardcochran@gmail.com,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: svens@linux.ibm.com, nick.shi@broadcom.com, ajay.kaher@broadcom.com,
- alexey.makhalov@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
- linux-s390@vger.kernel.org, xuanzhuo@linux.alibaba.com,
- dust.li@linux.alibaba.com, mani@kernel.org, imran.shaik@oss.qualcomm.com
-References: <20260630031519.23072-1-guwen@linux.alibaba.com>
- <14969e704fb8e70deb549b2e1c8670f6756a8da7.camel@infradead.org>
-From: Wen Gu <guwen@linux.alibaba.com>
-In-Reply-To: <14969e704fb8e70deb549b2e1c8670f6756a8da7.camel@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-10.66 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
-	WHITELIST_SPF_DKIM(-3.00)[alibaba.com:d:+,kernel.org:s:+];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:dwmw2@infradead.org,m:richardcochran@gmail.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:netdev@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:svens@linux.ibm.com,m:nick.shi@broadcom.com,m:ajay.kaher@broadcom.com,m:alexey.makhalov@broadcom.com,m:bcm-kernel-feedback-list@broadcom.com,m:linux-s390@vger.kernel.org,m:xuanzhuo@linux.alibaba.com,m:dust.li@linux.alibaba.com,m:mani@kernel.org,m:imran.shaik@oss.qualcomm.com,m:andrew@lunn.ch,s:lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[guwen@linux.alibaba.com,linux-s390@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	FREEMAIL_TO(0.00)[infradead.org,gmail.com,lunn.ch,davemloft.net,google.com,kernel.org,redhat.com,vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21429-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
+	FORGED_RECIPIENTS(0.00)[m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
+	FORGED_SENDER(0.00)[thuth@redhat.com,linux-s390@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	DKIM_TRACE(0.00)[redhat.com:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[guwen@linux.alibaba.com,linux-s390@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-21428-lists,linux-s390=lfdr.de];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390,netdev];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[thuth@redhat.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,infradead.org:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	TAGGED_RCPT(0.00)[linux-s390];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 381EA6ED136
+X-Rspamd-Queue-Id: 0D6FE6EE983
 
+From: Thomas Huth <thuth@redhat.com>
 
+unistd_32.h is not build anymore since commit 4ac286c4a8d90
+("s390/syscalls: Switch to generic system call table generation").
+Thus drop the superfluous line from the Kbuild file now, too.
 
-On 2026/6/30 18:57, David Woodhouse wrote:
-> On Tue, 2026-06-30 at 11:15 +0800, Wen Gu wrote:
-> 
-> I was thinking we'd move them to drivers/phc, and simplify them as we do.
-> 
-> Most of them are just a lot of PTP driver boilerplate, wrapping around
-> one central function like
-> 
-> static int vmclock_get_crosststamp(struct vmclock_state *st,
->                                     struct ptp_system_timestamp *sts,
->                                     struct system_counterval_t *system_counter,
->                                     struct timespec64 *tspec)
-> 
-> ...which is called with different permutations of arguments depending
-> on the actual PTP call.
-> 
-> I was thinking of reducing the duplication and having the PHC drivers
-> provide *only* that central function. Let the common PHC code provide
-> the interface to PTP (as well as to core timekeeping, for setting the
-> clock at boot, for timekeeping_set_reference() in the vmclock case, and
-> perhaps even for a PPS-like discipline from other clocks).
-> 
-> Here's a *very* hastily thrown together proof of concept; utterly
-> untested and AI-produced, and I've only given it the bare minimum of
-> oversight thus far (I have been meaning to do this for weeks but other
-> things have taken precedence so far)...
-> 
-> https://git.infradead.org/?p=linux-phc.git;a=shortlog;h=refs/heads/next
+Signed-off-by: Thomas Huth <thuth@redhat.com>
+---
+ arch/s390/include/uapi/asm/Kbuild | 1 -
+ 1 file changed, 1 deletion(-)
 
-Thanks for the POC. I've looked over it and agree this is a cleaner
-approach overall. The v3 was meant as an interim step, but given the POC
-it makes more sense to go straight to drivers/phc.
+diff --git a/arch/s390/include/uapi/asm/Kbuild b/arch/s390/include/uapi/asm/Kbuild
+index 46c1ff0b842a1..378151cef3cce 100644
+--- a/arch/s390/include/uapi/asm/Kbuild
++++ b/arch/s390/include/uapi/asm/Kbuild
+@@ -1,4 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-generated-y += unistd_32.h
+ generated-y += unistd_64.h
+-- 
+2.54.0
 
-I'm happy to adapt the Alibaba CIPU PHC driver to the new framework
-once it's in place, and glad to help along the way if needed.
 
