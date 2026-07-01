@@ -1,151 +1,334 @@
-Return-Path: <linux-s390+bounces-21424-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21425-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id UlsjImHTRGrx1QoAu9opvQ
-	(envelope-from <linux-s390+bounces-21424-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 01 Jul 2026 10:44:17 +0200
+	id PCggCsnWRGpJ1woAu9opvQ
+	(envelope-from <linux-s390+bounces-21425-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 01 Jul 2026 10:58:49 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EB696EB399
-	for <lists+linux-s390@lfdr.de>; Wed, 01 Jul 2026 10:44:17 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 858576EB602
+	for <lists+linux-s390@lfdr.de>; Wed, 01 Jul 2026 10:58:48 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linutronix.de header.s=2020 header.b=WlkVgNkT;
-	dkim=pass header.d=linutronix.de header.s=2020e header.b=i5WUD6yc;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21424-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-21424-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=linutronix.de;
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=AUmuJfrg;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21425-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21425-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 02F2C30209D5
-	for <lists+linux-s390@lfdr.de>; Wed,  1 Jul 2026 08:41:58 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D0873301939C
+	for <lists+linux-s390@lfdr.de>; Wed,  1 Jul 2026 08:52:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAD853E95BD;
-	Wed,  1 Jul 2026 08:41:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CAE73B8BD8;
+	Wed,  1 Jul 2026 08:52:48 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 647CD3DEADC;
-	Wed,  1 Jul 2026 08:41:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D5C182D6
+	for <linux-s390@vger.kernel.org>; Wed,  1 Jul 2026 08:52:46 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782895317; cv=none; b=sHlJxGUtW4EATXNDjCx/4K5Fjmu2LtHptZ8lr8utyUJ6zC+/+QjYUV0cEpqTU8SLYaUL5Lerk/JzCuoIei2dMbTfT6GFl32F2/K5wh9bSPWgUg9Uw3OWFSS2epy7FbsKb7WDrwf2+o6fuHjHyQvzOFutJSqgOGYpynxT9YGRwPw=
+	t=1782895968; cv=none; b=oD5s1nPPKCBA5/0eLdoxpDQ6Z5I+rqK5+A4azSQfPCdb8Ex/0W3W5o9yVAXTXXUmGWMfswsS8pHIoNfpu76L7nrA798Qz9MK4Gu5pAwPjqtNzN8bb6nypyXKs7UcEWzXM+FIGO5e41LtU2IzgTYkrFMYG1VfKuCPUtlD2DFAvP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782895317; c=relaxed/simple;
-	bh=hIW/bfoVhF6C8YrHlddSaYp+8+PB2sPCZ1uwcJ1svP8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=shuX5TnDrDJcVuGwtavDgj63VuKsrMprpgyH+mInnwem2DMZrDcyaGyU+2k2iolXxb8SlGlg/XpeOeMasio1g6QrF6R/CFabMDIWWaAEYXKBG4Qjuz5oMDTHvLNm5HBAr/zYmkS3zLc1ZI25b+uWpYmXaqW8O8IhVX2oeoP9zw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WlkVgNkT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=i5WUD6yc; arc=none smtp.client-ip=193.142.43.55
-Date: Wed, 1 Jul 2026 10:41:50 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1782895312;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hIW/bfoVhF6C8YrHlddSaYp+8+PB2sPCZ1uwcJ1svP8=;
-	b=WlkVgNkTFIYNtIj5qhELBYQd+AxKqlkZG3TrLGwri5qEahI5i2Iq5DPX1nRgw4bnbyacTw
-	G6IG8Qy3NuzNrCDMtIbAL5uMpEgdi1pIXIqiIyZJuvq+UJQxYzRGJrpiwLWtT4av1uVvlD
-	RGAbzJcyGPtwci6yrymLNTmaiULCn8ET6Tnkm2/7TuvhZos5optOP0cIInMD0X64zBibOX
-	wlFtEzmKWPN5JwVjZUwN0LY1fw2+Qpa9cS/QY9chuZM14XdjrlPKAF/CfWpGQWzlVWB5Cy
-	hjsnfyncyhqRk3d2cx8c1W7hUUH3sjBIOm/jrY9WePU3JRRm9ynzK2e7bJ681w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1782895312;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hIW/bfoVhF6C8YrHlddSaYp+8+PB2sPCZ1uwcJ1svP8=;
-	b=i5WUD6yceXQe3x8TOrF2eWaGcrFDsh2T9jch8rsli5FTanCRAoIUsTybzMrCtoXwtD6xPq
-	deJ2Wb7rO9Vu+lAg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>, Arnd Bergmann <arnd@arndb.de>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Charlie Jenkins <thecharlesjenkins@gmail.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Thomas Huth <thuth@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Jisheng Zhang <jszhang@kernel.org>, Alexandre Ghiti <alex@ghiti.fr>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>
-Subject: Re: [PATCH v5 8/8] futex: Use runtime constants for __futex_hash()
- hot path
-Message-ID: <20260701084150.GNOeboLw@linutronix.de>
-References: <20260630045531.3939-1-kprateek.nayak@amd.com>
- <20260630045531.3939-9-kprateek.nayak@amd.com>
- <20260701075714.GP48970@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1782895968; c=relaxed/simple;
+	bh=1mjo2sDcWExyPLqG9TRNUaTT196xJvCdzypRiGcmPTU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kAj7teTONPn/ENmZs3Wg+Qbf0CoD14SXagndg9zHCfqJUlvr4hmN0h4z11PrmhydKcFUg2RbPOwTXgx9J0Jy6Hs8xBPPIbxLqLCYbluslcl8TDdt0+sIohloiBOJLIxcNjP3oKEKLNt8agx6kC4r7npNt1E18MVegaAbtsxIPh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AUmuJfrg; arc=none smtp.client-ip=148.163.156.1
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6618ITMC298982;
+	Wed, 1 Jul 2026 08:52:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=NjfCTE
+	/KOteQCQyMrkozfQ8VV+twVmp3gBhQITTRJM0=; b=AUmuJfrgB7gafn4A7DU3mw
+	Wkn/2ZebIHA2iH9jERhtCje9Z3YB+WSZj4AO1Rd1Z8jKXol2SVkCBJjbfpO6p71P
+	Qo64HbU8JrlwcRDA+spMSCSQcZ58DndIxExpfywFX9VA7sBdDGgmbWVNmPZEMriL
+	FnmT8zMGaThUptuUqRS0/976A+J3p226dcBS4XQ960LP0ZUKcaFxrxM2U51feVyn
+	Ehi39bbZ0ixQuwELHZUXbfV213I5ScJMRhAelCuwneNjGqyt+T6FmY02stK15u5/
+	ZwUe5zF1//sNgUXXn/kShUSVZbt4leT39lpUofXgCiohWEjECOeP8qX7hmSRV1ZA
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f26n5uh6a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 01 Jul 2026 08:52:37 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6618nbXA017129;
+	Wed, 1 Jul 2026 08:52:36 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f2tbhedrx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 01 Jul 2026 08:52:36 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6618qWkd15663534
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 1 Jul 2026 08:52:32 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1415920043;
+	Wed,  1 Jul 2026 08:52:32 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9A30520040;
+	Wed,  1 Jul 2026 08:52:31 +0000 (GMT)
+Received: from [0.0.0.0] (unknown [9.111.26.144])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  1 Jul 2026 08:52:31 +0000 (GMT)
+Message-ID: <176ef620-b70a-4ddd-90bc-32df206542d5@linux.ibm.com>
+Date: Wed, 1 Jul 2026 10:52:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260701075714.GP48970@noisy.programming.kicks-ass.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 01/18] target/s390x: Fix wrong address handling in
+ address loops
+To: freude@linux.ibm.com,
+        =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?=
+ <philmd@oss.qualcomm.com>
+Cc: richard.henderson@linaro.org, david@kernel.org, thuth@redhat.com,
+        berrange@redhat.com, qemu-s390x@nongnu.org, qemu-devel@nongnu.org,
+        linux390-list@tuxmaker.boeblingen.de.ibm.com,
+        linux-s390@vger.kernel.org, dengler@linux.ibm.com,
+        borntraeger@linux.ibm.com, fcallies@linux.ibm.com, cohuck@redhat.com
+References: <20260624081029.23815-1-freude@linux.ibm.com>
+ <20260624081029.23815-2-freude@linux.ibm.com>
+ <e516de9c-e9fb-45af-aa5e-8cb9dbf1e3f3@linux.ibm.com>
+ <d55a9d7e7759251c1e75050a9a9ccd6f@linux.ibm.com>
+ <6e7ce946-1128-4b2c-9520-a171bca3ceb7@linux.ibm.com>
+ <a6e637d07024e0ff8a457500110e225f@linux.ibm.com>
+ <9cbb2f6f-c80e-4ba8-a307-4f640f64a8a5@linux.ibm.com>
+ <b13c7644-83aa-48c8-9045-550a436b57ad@oss.qualcomm.com>
+ <d6e0a18ac424ae1fc31fc3a437e983b2@linux.ibm.com>
+Content-Language: en-US
+From: Ilya Leoshkevich <iii@linux.ibm.com>
+In-Reply-To: <d6e0a18ac424ae1fc31fc3a437e983b2@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzAxMDA5MCBTYWx0ZWRfXwfYq5Pu0cj58
+ U+2aiEqrB8rWoTs6fxN5EfNXocI5fy39tmbLkBllBGWaVfh7ziOHFoTUimE+7DEGycJgQybVDD7
+ ZE/7/tznFHZmg1WBNXVufMFjhvJ+XUpGN5uIWuq5W8oe6PCcHLEWHT/GD4zSK3G9Ci6T3r8vNDF
+ VO2eQ0fO2up9XDv7crek8CukkDeNJYYR5nlTdzRrBipnBMCNCaRSL6Lj3JiksLOzKaBiifGWZ8Z
+ U56RuF4Cls7zzMikVYSpDSlX7s8WNBlBhDQF4N0BTAj2NY51Zxz3UhdLb+8nIMVhdVuGqenbNGR
+ QeXNNUaJoTuMlEigozrA6+x3eqg97pQ51ai9FfI8Fb8GhYVKtIfTNUyrhKBWGyJTXUQw3nc1LVT
+ 1MQd3pphlyWh03jxfAMlzkEXzwCRCf9A08FiufeqRuvzURnaqIXk1j5aakZIorEjEqJ9k5lR4rd
+ hOrO37ebPJpb2y9ghKg==
+X-Authority-Analysis: v=2.4 cv=V45NF+ni c=1 sm=1 tr=0 ts=6a44d555 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8
+ a=JeL95Ie2d5q0B7KwirEA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: p7MJbbC_FYHgAAk5jecUvqirYaZPbUor
+X-Proofpoint-GUID: p7MJbbC_FYHgAAk5jecUvqirYaZPbUor
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzAxMDA5MCBTYWx0ZWRfX3w6ndjzpfI/c
+ 2pfrsF4/FlHsfqpJ2HKUep3z5Qb9An/pg5E5zjGy1NM/hp0M/8DxMbr3G2h8/I6jkz1vy3ZPMJM
+ wvSroNrZPF+H+UqiU3ZtBBCr4rQZG4Q=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-07-01_02,2026-06-26_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0 priorityscore=1501
+ adultscore=0 clxscore=1011 impostorscore=0 malwarescore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607010090
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linutronix.de,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[linutronix.de:s=2020,linutronix.de:s=2020e];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21424-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:peterz@infradead.org,m:kprateek.nayak@amd.com,m:arnd@arndb.de,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:x86@kernel.org,m:catalin.marinas@arm.com,m:will@kernel.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:dvhart@infradead.org,m:dave@stgolabs.net,m:andrealmeid@igalia.com,m:linux-arch@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:samuel.holland@sifive.com,m:thecharlesjenkins@gmail.com,m:linux-arm-kernel@lists.infradead.org,m:linux-riscv@lists.infradead.org,m:linux-s390@vger.kernel.org,m:hpa@zytor.com,m:thuth@redhat.com,m:seanjc@google.com,m:jszhang@kernel.org,m:alex@ghiti.fr,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[bigeasy@linutronix.de,linux-s390@vger.kernel.org];
-	FREEMAIL_CC(0.00)[amd.com,arndb.de,kernel.org,redhat.com,alien8.de,linux.intel.com,arm.com,dabbelt.com,eecs.berkeley.edu,linux.ibm.com,infradead.org,stgolabs.net,igalia.com,vger.kernel.org,sifive.com,gmail.com,lists.infradead.org,zytor.com,google.com,ghiti.fr];
-	RCPT_COUNT_TWELVE(0.00)[33];
-	RCVD_COUNT_THREE(0.00)[3];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-21425-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:freude@linux.ibm.com,m:philmd@oss.qualcomm.com,m:richard.henderson@linaro.org,m:david@kernel.org,m:thuth@redhat.com,m:berrange@redhat.com,m:qemu-s390x@nongnu.org,m:qemu-devel@nongnu.org,m:linux390-list@tuxmaker.boeblingen.de.ibm.com,m:linux-s390@vger.kernel.org,m:dengler@linux.ibm.com,m:borntraeger@linux.ibm.com,m:fcallies@linux.ibm.com,m:cohuck@redhat.com,s:lists@lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp,linux.ibm.com:mid,linux.ibm.com:from_mime];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	FORGED_SENDER(0.00)[iii@linux.ibm.com,linux-s390@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[iii@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[bigeasy@linutronix.de,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[linutronix.de:+];
 	MID_RHS_MATCH_FROM(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,linutronix.de:dkim,linutronix.de:mid,linutronix.de:from_mime,vger.kernel.org:from_smtp]
+	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 2EB696EB399
+X-Rspamd-Queue-Id: 858576EB602
 
-On 2026-07-01 09:57:14 [+0200], Peter Zijlstra wrote:
-> The big $1M question: does it actually make it go faster? The whole
-> point here was performance, right? But I'm not seeing numbers showing
-> how awesome these patches are.
 
-I did complain about the about the size of __futex_data which is blown
-on distro kernels due to CONFIG_NODES_SHIFT=10 on Debian for instance.
-This makes it go away at no extra price but yeah let me boot a big box
-and see.
-If the performance remains unchanged it is still worth considering due
-to size savings on the average box with 1 node. The biggest box I have
-access to has four nodes. If I remember correctly, Prateek was saying
-that AMD has "normal" boxes which would require =9 for normal operation
-and they do run distro kernels so lowering that value is not an option.
 
-Sebastian
+On 7/1/26 09:42, Harald Freudenberger wrote:
+> On 2026-06-30 16:19, Philippe Mathieu-Daudé wrote:
+>> On 30/6/26 12:54, Ilya Leoshkevich wrote:
+>>>
+>>>
+>>> On 6/30/26 12:23, Harald Freudenberger wrote:
+>>>> On 2026-06-30 11:33, Ilya Leoshkevich wrote:
+>>>>> On 6/29/26 14:57, Harald Freudenberger wrote:
+>>>>>> On 2026-06-24 14:56, Ilya Leoshkevich wrote:
+>>>>>>> On 6/24/26 10:09, Harald Freudenberger wrote:
+>>>>>>>> With the introduction of the address wrapping function
+>>>>>>>> wrap_address() the result can't be used to walk the
+>>>>>>>> source address any more. So introduce a new local variable
+>>>>>>>> to hold the wrapped address to avoid mixing source and
+>>>>>>>> wrapped address value.
+>>>>>>>>
+>>>>>>>> Fixes: fcc2699d41 ("target/s390x: Have MSA helper pass a mmu_idx 
+>>>>>>>> argument")
+>>>>>>>> Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+>>>>>>>> ---
+>>>>>>>>   target/s390x/tcg/crypto_helper.c | 16 ++++++++--------
+>>>>>>>>   1 file changed, 8 insertions(+), 8 deletions(-)
+>>>>>>>
+>>>>>>> If I take as an example AMODE 24 and look at the third loop 
+>>>>>>> iteration,
+>>>>>>> with the current code in master I would get:
+>>>>>>>
+>>>>>>>     ((((addr & 0xffffff) + 8) & 0xffffff) + 8) & 0xffffff
+>>>>>>>
+>>>>>>> and with your patch it would be:
+>>>>>>>
+>>>>>>>     (addr + 8 + 8) & 0xffffff
+>>>>>>>
+>>>>>>> which is undeniably more elegant, but otherwise looks equivalent 
+>>>>>>> to me.
+>>>>>>>
+>>>>>>> What is the functional issue here?
+>>>>>>>
+>>>>>>>> diff --git a/target/s390x/tcg/crypto_helper.c b/target/s390x/ 
+>>>>>>>> tcg/ crypto_helper.c
+>>>>>>>> index ae392bce0e..29ad2aff43 100644
+>>>>>>>> --- a/target/s390x/tcg/crypto_helper.c
+>>>>>>>> +++ b/target/s390x/tcg/crypto_helper.c
+>>>>>>>> @@ -126,8 +126,8 @@ static void sha512_read_icv(CPUS390XState 
+>>>>>>>> *env, const int mmu_idx,
+>>>>>>>>       const MemOpIdx oi = make_memop_idx(MO_BE | MO_64 | 
+>>>>>>>> MO_UNALN, mmu_idx);
+>>>>>>>>         for (int i = 0; i < 8; i++, addr += 8) {
+>>>>>>>> -        addr = wrap_address(env, addr);
+>>>>>>>> -        a[i] = cpu_ldq_mmu(env, addr, oi, ra);
+>>>>>>>> +        uint64_t _addr = wrap_address(env, addr);
+>>>>>>>> +        a[i] = cpu_ldq_mmu(env, _addr, oi, ra);
+>>>>>>>>       }
+>>>>>>>>   }
+>>>>>>>
+>>>>>>> [...]
+>>>>>>
+>>>>>> It is a fix, not an improvement. The original code
+>>>>>> used the addr variable to hold the wrapped address.
+>>>>>> But as addr is also used as the loop variable there
+>>>>>> is a mixing between unwrapped and wrapped address here
+>>>>>> and the unfixed code only works when wrap_address does
+>>>>>> return the very same address as output as it became as
+>>>>>> input. My fix corrects this.
+>>>>>
+>>>>> What does the patch change w.r.t. wrapping?
+>>>>> Suppose we have amode 24 and addr = 0xfffff0:
+>>>>>
+>>>>> Before:
+>>>>>
+>>>>>   i = 0; addr = wrap(0xfffff0) = 0xfffff0;
+>>>>>          a[0] = ldq(0xfffff0);
+>>>>>   i = 1; addr = wrap(0xfffff0 + 8) = 0xfffff8;
+>>>>>          a[1] = ldq(0xfffff8);
+>>>>>   i = 2; addr = wrap(0xfffff8 + 8) = 0;
+>>>>>          a[2] = ldq(0);
+>>>>>   i = 3; addr = wrap(0 + 8) = 8;
+>>>>>          a[3] = ldq(8);
+>>>>>
+>>>>> After:
+>>>>>
+>>>>>   i = 0; addr = 0xfffff0;
+>>>>>          _addr = wrap(0xfffff0) = 0xfffff0;
+>>>>>          a[0] = ldq(0xfffff0)
+>>>>>   i = 1; addr = 0xfffff0 + 8;
+>>>>>          _addr = wrap(0xfffff8) = 0xfffff8;
+>>>>>          a[1] = ldq(0xfffff8);
+>>>>>   i = 2; addr = 0xfffff8 + 8 = 0x1000000
+>>>>>          _addr = wrap(0x1000000) = 0;
+>>>>>          a[2] = ldq(0);
+>>>>>   i = 3; addr = 0x1000000 + 8 = 0x1000008;
+>>>>>          _addr = wrap(0x1000008) = 8;
+>>>>>          a[3] = ldq(8);
+>>>>>
+>>>>> The behavior look identical to me.
+>>>>> What am I missing?
+>>>>
+>>>> Lets assume addr is some 0x1000 and wrap does just add some offset, 
+>>>> e.g. 0x8000
+>>>>
+>>>> for (int i = 0; i < 8; i++, addr += 8) {
+>>>>      addr = wrap_address(env, addr);
+>>>>      fetch or write something at the wrapped address addr;
+>>>> }
+>>>>
+>>>> Then the idea of this loop is to run through addr 0x1000 ... 0x103F.
+>>>> 1. loop with i=0 and addr 0x1000
+>>>> 2. loop with i=1 and addr 0x1000 + 8
+>>>> 3. loop with i=2 and addr 0x1000 + 8 + 8
+>>>> 4. loop with i=3 and addr 0x1000 + 8 + 8 + 8
+>>>> 5. loop with i=4 and addr 0x1000 + 8 + 8 + 8 + 8
+>>>> 6. loop with i=5 and addr 0x1000 + 8 + 8 + 8 + 8 + 8
+>>>> 7. loop with i=6 and addr 0x1000 + 8 + 8 + 8 + 8 + 8 + 8
+>>>> 8. loop with i=7 and addr 0x1000 + 8 + 8 + 8 + 8 + 8 + 8 + 8
+>>>>
+>>>> BUT the given code does something different. As the addr is used in 
+>>>> the loop
+>>>> to hold the wrapped address this loop in fact does:
+>>>> 1. loop with i=0 and addr 0x1000 - all fine, but as addr = 
+>>>> wrap_address() at the
+>>>>     end of the loop now addr is 0x1000 + 0x8000 = 0x9000, so next 
+>>>> loop starts with
+>>>> 2. loop with i=1 and addr 0x9000 + 8
+>>>>     and at the end of the loop addr is 0x9008 + 0x8000 = 0x11008 and 
+>>>> next loop starts
+>>>> 3. loop with i=2 and addr 0x11008 + 8
+>>>>     ...
+>>>>
+>>>> So introducing an intermediate variable which holds the wrapped address
+>>>> makes sure the surrounding addr walk in the loop does as intended.
+>>>
+>>> Ah, now I see where we were talking past each other, thanks for the
+>>> clarification. You assume that wrap_address() may do arbitrary
+>>> transformations, like addition in your example above. But today it does
+>>> only bitwise "and", as defined by the architecture:
+>>>
+>>> static inline uint64_t wrap_address(CPUS390XState *env, uint64_t a)
+>>> {
+>>>      if (!(env->psw.mask & PSW_MASK_64)) {
+>>>          if (!(env->psw.mask & PSW_MASK_32)) {
+>>>              /* 24-Bit mode */
+>>>              a &= 0x00ffffff;
+>>>          } else {
+>>>              /* 31-Bit mode */
+>>>              a &= 0x7fffffff;
+>>>          }
+>>
+>>            bool wrap32 = env->psw.mask & PSW_MASK_32;
+>>            a = extract64(a, 0, wrap32 ? 31 : 24);
+>>>      }
+>>>      return a;
+>>> }
+>>>
+>>> and I believe in this specific case the order doesn't matter.
+>>>
+> 
+> Hm, however a wrap_address() function may return whatever
+> wrapping address calculation may be. A caller should not
+> rely on the returned address being 'the same' as the address
+> given in. So using separate variables for the address to
+> wrap and the wrapped address is wise in my opinion.
+
+Sure, I too think it's cleaner and more future-proof.
+My only point was that there are no practical issues today.
 
