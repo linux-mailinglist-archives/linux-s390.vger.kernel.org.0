@@ -1,180 +1,211 @@
-Return-Path: <linux-s390+bounces-21516-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21517-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id SmkjHYiJRmp0YAsAu9opvQ
-	(envelope-from <linux-s390+bounces-21516-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 02 Jul 2026 17:53:44 +0200
+	id vf84KnuWRmpBZQsAu9opvQ
+	(envelope-from <linux-s390+bounces-21517-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 02 Jul 2026 18:48:59 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E02F26F9BAE
-	for <lists+linux-s390@lfdr.de>; Thu, 02 Jul 2026 17:53:43 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 373AD6FA98C
+	for <lists+linux-s390@lfdr.de>; Thu, 02 Jul 2026 18:48:59 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=aA8kQsnV;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21516-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21516-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=UbIxVhIT;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21517-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-21517-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 26A1930F51C8
-	for <lists+linux-s390@lfdr.de>; Thu,  2 Jul 2026 15:48:57 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id CAA2F3064505
+	for <lists+linux-s390@lfdr.de>; Thu,  2 Jul 2026 16:42:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55477353A8F;
-	Thu,  2 Jul 2026 15:48:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B7E33A987B;
+	Thu,  2 Jul 2026 16:41:32 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43333D953C;
-	Thu,  2 Jul 2026 15:48:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1ABE397339;
+	Thu,  2 Jul 2026 16:41:26 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783007290; cv=none; b=d/F7eKE2prp5ojW6xYcEme/YCaRYBVrxbHOVsTmEqHIrG+X5ks1mfw9MaTrym28Jr6GRZPhEIKrA/CcS1WUxdjW3YkWTT3tsOmRrfgGuRqTIj5ZRgAODrSU4fji35e5T6uJeUxHNxdO+12NYBCOTO139ISU4FLqZkwf+wq4cz9Q=
+	t=1783010492; cv=none; b=iwVHd7/428O8morhrGOiyKcPacxnsuDag9pUkkgumUoh7tj6RZFf8BW4VnmXDQEqfPrCXovw9krSZEq+fIdZBSjtbTh3YmR4gBs3av/tH1yW+AiphXj7v/OwDjelw8ZS1v5tcMKX5tcWuXQeWNKPseKBHUSKo+XWvPLfrboej08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783007290; c=relaxed/simple;
-	bh=SnxFFSso9ZbH44As4c7gMI43enTUayoL66vMtlUa3Mg=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=rCiEjocQa8jo44zpLVYwNszwidLU0KbKlp2cRU34PsVfIo09j8jDeb8v2kYfSen0AsrlN7UIxZSh1rmmBiBCwHBN7n2s7IdC7Lr2HeBI0X0oF5fn7lw0WfheMgnlkidTEbJiE+ecDlt63HRD5pVi4rjb9sZ3YhxNNWRAuyuh67g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aA8kQsnV; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 997981F000E9;
-	Thu,  2 Jul 2026 15:48:07 +0000 (UTC)
+	s=arc-20240116; t=1783010492; c=relaxed/simple;
+	bh=4TcPpM0BZaoJj/LKE0Ry2kWPQZbK+NaW1FTfGXp6Qn4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a/PpFtrJlDx8CL2DHWhX7TlufHi1XY4BEm2gvt7KmyKwWUmDD9wP23vIAY1rIDRLRCWxbW5zYy1cEK/ugO1Cn6C2iNQU+PI9+ud/60aXExymRq+PHPGe8iRfUYKqEFnOgJTKY9eO4LIGO2ZOonIz36Q4PtB/X1nH7Szgnur8GNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UbIxVhIT; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3321D1F00ACF;
+	Thu,  2 Jul 2026 16:41:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783007288;
-	bh=7XvmqnyjGC0fw8sJHUkd8hQjVnuCxZJnNsfA5a2i/nk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=aA8kQsnVanJHXwbNCcfMkI57ywhemN8cQZhp56MyZgp1JFacQHNSn6qZuVWtiQaSl
-	 +o5sXyXhcZxulDWkk6PFFwbr0aFTr55Jh6pCYPyXYP9ngHEA68btOUOW9xSIBpxRlA
-	 McwLgs/vFT4Da3RMdQu4irDbdpDfK75gAuTzUEZpf/cv+53m5z13gONY9SrB3p6TLk
-	 kW6sUi/AyVpQ6EcYBuXp3jRCo78Yt0CNfHypVQmUOspcdlzfclUnmb4mQW3yqehAef
-	 6+98BWU9WU6YmTZGo1AS9sakn0XKlfKlUe55H0mDG8deCNZCpWbp4pElT+2/xD9gLy
-	 VqvxNLTgRwsFA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 6/8] KVM: s390: cmma: Fix dirty tracking when
- removing memslot
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Claudio Imbrenda" <imbrenda@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, kvm@vger.kernel.org, "Vasily Gorbik" <gor@linux.ibm.com>, "Heiko
- Carstens" <hca@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>
-In-Reply-To: <20260702152406.204782-7-imbrenda@linux.ibm.com>
-References: <20260702152406.204782-1-imbrenda@linux.ibm.com>
- <20260702152406.204782-7-imbrenda@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 02 Jul 2026 15:48:05 +0000
-Message-Id: <20260702154807.997981F000E9@smtp.kernel.org>
+	s=k20260515; t=1783010485;
+	bh=4TcPpM0BZaoJj/LKE0Ry2kWPQZbK+NaW1FTfGXp6Qn4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=UbIxVhIT3k+L2Rvex870aYp4emZYvycrMzgT/l80VxrbTxWvxI9JRKpnaUNMEjG3G
+	 ZoVLWczTG/g9HyZAgZ70twW/ylV0EE7XLdG/sgXmKLnHisy8AsEYlfbd5niKzqz1lY
+	 ws98cZTWJqeFnp3vSJLG17/qF3Ge/moCJxFQuACsKCwbcRvPFAWF7LSujuvl0ZguAd
+	 0Ey5CbVzfmKHTGGtoQsv7zUESob5GM+jQi/nn4i0YwCIBp/b1yxTiqFNMy4jhvtD5D
+	 q7w26HLWMKTd+xN5EbSr27iexWuWelP+dlG+S+pGinCthmp6iUYPrtV/RBEn+6x6na
+	 +pBQI4mIXDTaw==
+Date: Thu, 2 Jul 2026 18:41:23 +0200
+From: Thierry Reding <thierry.reding@kernel.org>
+To: Will Deacon <will@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Sowjanya Komatineni <skomatineni@nvidia.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Mikko Perttunen <mperttunen@nvidia.com>, Yury Norov <yury.norov@gmail.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Russell King <linux@armlinux.org.uk>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
+	Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
+	"T.J. Mercier" <tjmercier@google.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, linux-mm@kvack.org, 
+	iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org, 
+	linux-trace-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>, Chun Ng <chunn@nvidia.com>
+Subject: Re: [PATCH v3 04/11] arm64/mm: Add set_memory_device() and
+ set_memory_normal()
+Message-ID: <akaSJ5D98w2cHqb6@orome>
+References: <20260701-tegra-vpr-v3-0-d80f7b871bb4@nvidia.com>
+ <20260701-tegra-vpr-v3-4-d80f7b871bb4@nvidia.com>
+ <akYs91INHMXMTI-t@willie-the-truck>
+ <akZkuwktaXFTrASP@orome>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="a4brqgkdrivfh2ns"
+Content-Disposition: inline
+In-Reply-To: <akZkuwktaXFTrASP@orome>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
+X-Spamd-Result: default: False [-5.26 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	MISSING_MIME_VERSION(2.00)[];
+	SIGNED_PGP(-2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21516-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21517-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:will@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:jonathanh@nvidia.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:maarten.lankhorst@linux.intel.com,m:mripard@kernel.org,m:tzimmermann@suse.de,m:skomatineni@nvidia.com,m:luca.ceresoli@bootlin.com,m:mperttunen@nvidia.com,m:yury.norov@gmail.com,m:linux@rasmusvillemoes.dk,m:linux@armlinux.org.uk,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:akpm@linux-foundation.org,m:david@kernel.org,m:ljs@kernel.org,m:liam@infradead.org,m:vbabka@kernel.org,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:m.szyprowski@samsung.com,m:robin.murphy@arm.com,m:sumit.semwal@linaro.org,m:benjamin.gaignard@collabora.com,m:Brian.Starkey@arm.com,m:jstultz@google.com,m:tjmercier@google.com,m:christian.koenig@amd.com,m:rostedt@goodmis.org,m:mhiramat@kernel.org,m:mathieu.desnoyers@efficios.com,m:catalin.mar
+ inas@arm.com,m:thierry.reding@gmail.com,m:devicetree@vger.kernel.org,m:linux-tegra@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-media@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-s390@vger.kernel.org,m:linux-mm@kvack.org,m:iommu@lists.linux.dev,m:linaro-mm-sig@lists.linaro.org,m:linux-trace-kernel@vger.kernel.org,m:treding@nvidia.com,m:chunn@nvidia.com,m:krzk@kernel.org,m:conor@kernel.org,m:yurynorov@gmail.com,m:thierryreding@gmail.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[thierry.reding@kernel.org,linux-s390@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	RCVD_COUNT_THREE(0.00)[4];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,vger.kernel.org:from_smtp,lists.linux.dev:replyto,sashiko.dev:url,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo];
-	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:imbrenda@linux.ibm.com,m:linux-s390@vger.kernel.org,m:kvm@vger.kernel.org,m:gor@linux.ibm.com,m:hca@linux.ibm.com,m:agordeev@linux.ibm.com,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,nvidia.com,gmail.com,ffwll.ch,linux.intel.com,suse.de,bootlin.com,rasmusvillemoes.dk,armlinux.org.uk,linux.ibm.com,linux-foundation.org,infradead.org,google.com,suse.com,samsung.com,arm.com,linaro.org,collabora.com,amd.com,goodmis.org,efficios.com,vger.kernel.org,lists.freedesktop.org,lists.infradead.org,kvack.org,lists.linux.dev,lists.linaro.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	RCPT_COUNT_GT_50(0.00)[56];
 	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[thierry.reding@kernel.org,linux-s390@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-s390,dt];
 	MISSING_XM_UA(0.00)[];
-	FROM_NO_DN(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,orome:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E02F26F9BAE
+X-Rspamd-Queue-Id: 373AD6FA98C
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] Double decrement and underflow of cmma_dirty_pages counter when re=
-creating unaligned memslots.
---
 
-commit cfdf82bf92088bc4e4a719ccbb0ad71b6708ed76
-Author: Claudio Imbrenda <imbrenda@linux.ibm.com>
+--a4brqgkdrivfh2ns
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 04/11] arm64/mm: Add set_memory_device() and
+ set_memory_normal()
+MIME-Version: 1.0
 
-KVM: s390: cmma: Fix dirty tracking when removing memslot
+On Thu, Jul 02, 2026 at 03:46:44PM +0200, Thierry Reding wrote:
+> On Thu, Jul 02, 2026 at 10:18:47AM +0100, Will Deacon wrote:
+> > On Wed, Jul 01, 2026 at 06:08:15PM +0200, Thierry Reding wrote:
+> > > From: Chun Ng <chunn@nvidia.com>
+> > >=20
+> > > Add helpers to swap PROT_NORMAL and PROT_DEVICE_nGnRnE protection bits
+> > > on a kernel-linear-map range.
+> >=20
+> > That sounds like a really terrible idea. Why is this necessary and how
+> > does it interact with things like load_unaligned_zeropad()?
+>=20
+> This is necessary because once the memory controller has walled off the
+> new memory region the CPU must not access it under any circumstances or
+> it'll cause the CPU to lock up (I think technically it'll hit an SError
+> but in practice that just means it'll freeze, as far as I can tell).
+>=20
+> Probably doesn't interact well at all with load_unaligned_zeropad().
+>=20
+> > I think you should unmap the memory from the linear map and memremap()
+> > it instead.
+>=20
+> Given that the memory can never be accessed by the CPU after the memory
+> controller locks it down, I don't think we'll even need memremap(). The
+> only thing we really need is the sg_table we hand out via the DMA BUFs
+> so that they can be used by device drivers to program their DMA engines
+> internally.
+>=20
+> Looking through some of the architecture code around this, shouldn't we
+> simply be using set_memory_encrypted() and set_memory_decrypted() for
+> this? While they might've been created for slightly other use-cases,
+> they seem to be doing exactly what we want (i.e. remove the page range
+> from the linear mapping and flushing it, or restoring the valid bit and
+> standard permissions, respectively).
 
-This commit fixes the dirty tracking counter when a memslot is removed.
-It introduces a dat_walk_ops callback to appropriately decrement the
-cmma-dirty counter for any cmma-dirty pages being removed.
+Ah... I guess we can't do it because we're not in a realm world and so
+the early checks in __set_memory_enc_dec() would return early and turn
+it into a no-op.
 
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index 512c81eee0684..2ac3a9ac46988 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
+How about if I extract a common helper and provide set_memory_p() and
+set_memory_np() in terms of those. Those are available on x86 and
+PowerPC as well, so fairly standard. I suppose at that point we're
+closer to set_memory_valid().
 
-[ ... ]
+Thierry
 
-> @@ -5792,11 +5792,19 @@ int kvm_arch_prepare_memory_region(struct kvm *kv=
-m,
->  	return 0;
->  }
-> =20
-> +static long cmma_d_count_pte(union pte *ptep, gfn_t gfn, gfn_t next, str=
-uct dat_walk *walk)
-> +{
-> +	if (pgste_of(ptep)->cmma_d)
-> +		atomic64_dec(walk->priv);
+--a4brqgkdrivfh2ns
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[Severity: High]
-Does this leave the cmma_d bit set in the PGSTE, which could lead to a doub=
-le
-decrement later?
+-----BEGIN PGP SIGNATURE-----
 
-If a memslot that isn't fully 1MB-aligned is removed or moved,
-dat_delete_slot() replaces the PTEs with hole tokens but preserves the PGST=
-Es.
-When userspace creates a new memslot over the same GFN range, dat_create_sl=
-ot()
-replaces the hole tokens with empty PTEs, leaving the stale cmma_d =3D=3D 1=
- bits
-intact.
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmpGlK8ACgkQ3SOs138+
+s6HETA//VE10mlKmDkMPw7oOS2GPLTn9mVHksFDOn28PMBlC2qgyv4CyznGj3Rfw
+WHIYoNb0rxntAbxQkh6SV5FCCi76fm/uTR3z2an8FI8W7KwiVfDiaIv3cmlG6TVd
+XcCj42QUsUHU7iFHzfSVkW33626MSfyeD+w00yxmT14U2Utl4X/+V+EQF6tRStJZ
+eLJUAyxrArCx98MI79QW13QB5MilfaFjtY6IxwXr+0hW2qnXGbNWJ5x1Z5kbC6wD
+6yOAfi8QY0nqau5GKgo/+dkYUq1zAc65a7QdRu5KW383NDcLhRbtrwBoA6TYFriL
+c2GJiV1ch4N8Dsr694Lmn4jNHUUqPLcPY8it6qMkUNVrc5XjK24C0intns2AFR4i
+7ca82YvaTCuql87GjgBkz9NptVtmqVdZxnrtVYAH9mbvfczVpAEEsacYrMwtqBPM
+crTqcMLjkLxVZdnsvwT3Je73FolwTnxNsBlTaA24I64kQCW9QUIRy6WltcFdimPM
+2K40ULhVg3dNDSaGsQaIvDv8kpgBJiX4sf3kIjK71Dgo9/HKS4IBZx3kfKUxxURj
+RD51dxPOiDXPwIzDZxbERJ2rZx4NxSTj2FjLET7Vs6nbKwvC+K/XiLOtEIXbfwdD
+w9Hih0fRPiPrhG+uab8J6u+Jsaj9KI/DnuqDrIZL+ciFm4MVaNc=
+=9S6h
+-----END PGP SIGNATURE-----
 
-During migration, could dat_get_cmma() visit these newly recreated empty PT=
-Es,
-see cmma_d =3D=3D 1, clear the bit, and decrement the counter a second time?
-
-This would cause the cmma_dirty_pages counter to underflow. Since this valu=
-e is
-returned to userspace as an unsigned 64-bit integer, an underflow could cau=
-se
-QEMU's live migration loop to never converge.
-
-Should we clear the cmma_d bit here after decrementing the counter?
-
-> +	return 0;
-> +}
-> +
->  void kvm_arch_commit_memory_region(struct kvm *kvm,
->  				struct kvm_memory_slot *old,
->  				const struct kvm_memory_slot *new,
->  				enum kvm_mr_change change)
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260702152406.2047=
-82-1-imbrenda@linux.ibm.com?part=3D6
+--a4brqgkdrivfh2ns--
 
