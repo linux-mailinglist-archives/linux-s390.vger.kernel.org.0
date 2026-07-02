@@ -1,211 +1,189 @@
-Return-Path: <linux-s390+bounces-21517-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21518-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id vf84KnuWRmpBZQsAu9opvQ
-	(envelope-from <linux-s390+bounces-21517-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 02 Jul 2026 18:48:59 +0200
+	id QzZQLOOcRmqjaAsAu9opvQ
+	(envelope-from <linux-s390+bounces-21518-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 02 Jul 2026 19:16:19 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 373AD6FA98C
-	for <lists+linux-s390@lfdr.de>; Thu, 02 Jul 2026 18:48:59 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A6356FB2C9
+	for <lists+linux-s390@lfdr.de>; Thu, 02 Jul 2026 19:16:19 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=UbIxVhIT;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21517-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-21517-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=bIXjFJ6P;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21518-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-s390+bounces-21518-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id CAA2F3064505
-	for <lists+linux-s390@lfdr.de>; Thu,  2 Jul 2026 16:42:52 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 34B2D3016B58
+	for <lists+linux-s390@lfdr.de>; Thu,  2 Jul 2026 17:08:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B7E33A987B;
-	Thu,  2 Jul 2026 16:41:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B774342539;
+	Thu,  2 Jul 2026 17:08:13 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1ABE397339;
-	Thu,  2 Jul 2026 16:41:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F6233ADB0;
+	Thu,  2 Jul 2026 17:08:11 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783010492; cv=none; b=iwVHd7/428O8morhrGOiyKcPacxnsuDag9pUkkgumUoh7tj6RZFf8BW4VnmXDQEqfPrCXovw9krSZEq+fIdZBSjtbTh3YmR4gBs3av/tH1yW+AiphXj7v/OwDjelw8ZS1v5tcMKX5tcWuXQeWNKPseKBHUSKo+XWvPLfrboej08=
+	t=1783012093; cv=none; b=WSkorQTeXA3oLWE0CrBMh95o8W+n6MI0aS1brHT6ieSMIr56ZgT9qXB/PLaJ+fewqPt9hV2AVLUyfc0xQjW92qOVh/pDh8okPo/CM9kwBHcTDeC6Mo7wwHwuzs90QnQ3IIqRX/50RnOrcoIbhAWK1cGfSQ7u7T/jAUBzTK5vvwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783010492; c=relaxed/simple;
-	bh=4TcPpM0BZaoJj/LKE0Ry2kWPQZbK+NaW1FTfGXp6Qn4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a/PpFtrJlDx8CL2DHWhX7TlufHi1XY4BEm2gvt7KmyKwWUmDD9wP23vIAY1rIDRLRCWxbW5zYy1cEK/ugO1Cn6C2iNQU+PI9+ud/60aXExymRq+PHPGe8iRfUYKqEFnOgJTKY9eO4LIGO2ZOonIz36Q4PtB/X1nH7Szgnur8GNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UbIxVhIT; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3321D1F00ACF;
-	Thu,  2 Jul 2026 16:41:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783010485;
-	bh=4TcPpM0BZaoJj/LKE0Ry2kWPQZbK+NaW1FTfGXp6Qn4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=UbIxVhIT3k+L2Rvex870aYp4emZYvycrMzgT/l80VxrbTxWvxI9JRKpnaUNMEjG3G
-	 ZoVLWczTG/g9HyZAgZ70twW/ylV0EE7XLdG/sgXmKLnHisy8AsEYlfbd5niKzqz1lY
-	 ws98cZTWJqeFnp3vSJLG17/qF3Ge/moCJxFQuACsKCwbcRvPFAWF7LSujuvl0ZguAd
-	 0Ey5CbVzfmKHTGGtoQsv7zUESob5GM+jQi/nn4i0YwCIBp/b1yxTiqFNMy4jhvtD5D
-	 q7w26HLWMKTd+xN5EbSr27iexWuWelP+dlG+S+pGinCthmp6iUYPrtV/RBEn+6x6na
-	 +pBQI4mIXDTaw==
-Date: Thu, 2 Jul 2026 18:41:23 +0200
-From: Thierry Reding <thierry.reding@kernel.org>
-To: Will Deacon <will@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Sowjanya Komatineni <skomatineni@nvidia.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Mikko Perttunen <mperttunen@nvidia.com>, Yury Norov <yury.norov@gmail.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Russell King <linux@armlinux.org.uk>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
-	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
-	"T.J. Mercier" <tjmercier@google.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, linux-mm@kvack.org, 
-	iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org, 
-	linux-trace-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>, Chun Ng <chunn@nvidia.com>
-Subject: Re: [PATCH v3 04/11] arm64/mm: Add set_memory_device() and
- set_memory_normal()
-Message-ID: <akaSJ5D98w2cHqb6@orome>
-References: <20260701-tegra-vpr-v3-0-d80f7b871bb4@nvidia.com>
- <20260701-tegra-vpr-v3-4-d80f7b871bb4@nvidia.com>
- <akYs91INHMXMTI-t@willie-the-truck>
- <akZkuwktaXFTrASP@orome>
+	s=arc-20240116; t=1783012093; c=relaxed/simple;
+	bh=1Bn6x8nNAEkYJho3nAo8diq1miet24ECuHaYMJGrr4U=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=mQ2nOZZgFRP/QsZ80vX7/Wik3eCcRnnF918uZERtrgnAh4V5Yx4bxn3q8PuTVmu2mDiWrzGJgZY3HhvSaDlc7+rCg1Jgj1cKqsujynGdJTP2jLP3Pu4WylZrIiG1+dOWbUHn1cMxLvz5XR+OobaT8Sdcs6iCcy4mog+SX7IwnUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bIXjFJ6P; arc=none smtp.client-ip=148.163.156.1
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 662EIFsb4134394;
+	Thu, 2 Jul 2026 17:08:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=BlZ2jn
+	RJ6bWnOj2JDQjEpzct0GrjVf+TKpDeeLBL5zs=; b=bIXjFJ6PxOIK0wKP4oETf5
+	NEVqj0lFmQpQ94szAEz0XDrNDjkz4ueH6PDoWM7CjsgcjODvNg/n5dOLzetXk0n7
+	BLVkkQy3QVqgTMQylDNZJ7A+hkZEayBaBW1yP745+MIN0y5bzPJe4sd4EIsO/X/v
+	BusMdkoyzYo+V4EA7GTcYLS2S1wyxBSJugscOW6LhRZmaAHww/+Qaja+jK3Ni9TQ
+	8NDqMghjPhrizCBa6IittLOfvhhUkgFtLD+ygXhj1h8QeBXT3hnuTrmSD1R2KevJ
+	a31B4wijd+SliXGWSDlNHSaiCDP5oIDmWBtThGsrX7B5yLIf5JXlo/HZWs14N43w
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f26peb73k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 02 Jul 2026 17:08:09 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 662H4gVd000676;
+	Thu, 2 Jul 2026 17:08:08 GMT
+Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f2tbhmwuq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 02 Jul 2026 17:08:08 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 662H87uD10814172
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 2 Jul 2026 17:08:07 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5DCBB58043;
+	Thu,  2 Jul 2026 17:08:07 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 83DDD58059;
+	Thu,  2 Jul 2026 17:08:06 +0000 (GMT)
+Received: from li-479af74c-31f9-11b2-a85c-e4ddee11713b.ibm.com (unknown [9.61.136.69])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  2 Jul 2026 17:08:06 +0000 (GMT)
+Message-ID: <6f251f37b0aa2b829769d59bb3e4f6d494484750.camel@linux.ibm.com>
+Subject: Re: [PATCH v1 3/8] KVM: s390: Fix unlikely race with
+ KVM_CAP_S390_USER_OPEREXEC
+From: Eric Farman <farman@linux.ibm.com>
+To: Claudio Imbrenda <imbrenda@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@kernel.org, seiden@linux.ibm.com,
+        nrb@linux.ibm.com, schlameuss@linux.ibm.com, gra@linux.ibm.com
+Date: Thu, 02 Jul 2026 13:08:06 -0400
+In-Reply-To: <20260702152406.204782-4-imbrenda@linux.ibm.com>
+References: <20260702152406.204782-1-imbrenda@linux.ibm.com>
+	 <20260702152406.204782-4-imbrenda@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="a4brqgkdrivfh2ns"
-Content-Disposition: inline
-In-Reply-To: <akZkuwktaXFTrASP@orome>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Bu1nPldO9y19wGYeoTPqQ2JmXwS4OTnK
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzAyMDE3NyBTYWx0ZWRfXz8SQtCO2eUrP
+ mDJVjA2wU5zX7U7LXYpjKMqCDWhXyEOYxJjrviiycDXtGGwKIeVUlfjf2Wj4gkvtdCSpfUvkYmI
+ 905TOHsnLaKGX6aYy/U8NoNjFPBG6BM=
+X-Authority-Analysis: v=2.4 cv=edsNubEH c=1 sm=1 tr=0 ts=6a469af9 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8
+ a=UTdIPT0w00pXnvBMiBYA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzAyMDE3NyBTYWx0ZWRfX87HSXYfA2OQg
+ d9V4cQ3YY0Dvg4W+k3vTPuvZzLYZGRypKDrAlQB9bUlDxkJngMK8IsJai+ZofKveDCvZYdWFkpG
+ CvNIuydrSW335F6XiHTmJYotp7eFhAxekREosQD06jMvqmZlkgkA2fYBEi4fqtg860Zoj8bqU0l
+ CFie7lwAyYJnvv0f1EUmXH8AcNh9ucxfBbny8vW9KWxh1xo+bjIxfY3LWmhHpwq5K+gWIIgbheo
+ x9z5oiF/XCqbfeVCwqdocw18euwWxQtPRBMWZaTyXSZqUfBNRj9OJEeJKJaEczqLvFWOWISLJg9
+ rKIgJRbG5pnRONf9O9KyR2X3wQGSlovCYOSutbNWQjjR1wXo2qMOlCUa/R3IoJ3VZwPGPhCg0gA
+ H9G16eZE3LWT6W5ZbNLr65VzmvnkFM/9SZGW5JOT3SYiQnpFuVHBLIO0dlv5y07ZWAtVfT3VChb
+ 721T7mqnR3DKLT85QwA==
+X-Proofpoint-ORIG-GUID: Bu1nPldO9y19wGYeoTPqQ2JmXwS4OTnK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-07-02_02,2026-06-26_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 malwarescore=0 adultscore=0 impostorscore=0 bulkscore=0
+ spamscore=0 suspectscore=0 clxscore=1011 lowpriorityscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607020177
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.26 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	SIGNED_PGP(-2.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21517-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:will@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:jonathanh@nvidia.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:maarten.lankhorst@linux.intel.com,m:mripard@kernel.org,m:tzimmermann@suse.de,m:skomatineni@nvidia.com,m:luca.ceresoli@bootlin.com,m:mperttunen@nvidia.com,m:yury.norov@gmail.com,m:linux@rasmusvillemoes.dk,m:linux@armlinux.org.uk,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:akpm@linux-foundation.org,m:david@kernel.org,m:ljs@kernel.org,m:liam@infradead.org,m:vbabka@kernel.org,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:m.szyprowski@samsung.com,m:robin.murphy@arm.com,m:sumit.semwal@linaro.org,m:benjamin.gaignard@collabora.com,m:Brian.Starkey@arm.com,m:jstultz@google.com,m:tjmercier@google.com,m:christian.koenig@amd.com,m:rostedt@goodmis.org,m:mhiramat@kernel.org,m:mathieu.desnoyers@efficios.com,m:catalin.mar
- inas@arm.com,m:thierry.reding@gmail.com,m:devicetree@vger.kernel.org,m:linux-tegra@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-media@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-s390@vger.kernel.org,m:linux-mm@kvack.org,m:iommu@lists.linux.dev,m:linaro-mm-sig@lists.linaro.org,m:linux-trace-kernel@vger.kernel.org,m:treding@nvidia.com,m:chunn@nvidia.com,m:krzk@kernel.org,m:conor@kernel.org,m:yurynorov@gmail.com,m:thierryreding@gmail.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[thierry.reding@kernel.org,linux-s390@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-21518-lists,linux-s390=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,linux.ibm.com:mid,linux.ibm.com:from_mime];
+	FORGED_RECIPIENTS(0.00)[m:imbrenda@linux.ibm.com,m:linux-kernel@vger.kernel.org,m:kvm@vger.kernel.org,m:linux-s390@vger.kernel.org,m:borntraeger@de.ibm.com,m:frankja@linux.ibm.com,m:david@kernel.org,m:seiden@linux.ibm.com,m:nrb@linux.ibm.com,m:schlameuss@linux.ibm.com,m:gra@linux.ibm.com,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[farman@linux.ibm.com,linux-s390@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,nvidia.com,gmail.com,ffwll.ch,linux.intel.com,suse.de,bootlin.com,rasmusvillemoes.dk,armlinux.org.uk,linux.ibm.com,linux-foundation.org,infradead.org,google.com,suse.com,samsung.com,arm.com,linaro.org,collabora.com,amd.com,goodmis.org,efficios.com,vger.kernel.org,lists.freedesktop.org,lists.infradead.org,kvack.org,lists.linux.dev,lists.linaro.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[56];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[thierry.reding@kernel.org,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390,dt];
-	MISSING_XM_UA(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[farman@linux.ibm.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,orome:mid]
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-s390];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 373AD6FA98C
+X-Rspamd-Queue-Id: 4A6356FB2C9
 
-
---a4brqgkdrivfh2ns
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 04/11] arm64/mm: Add set_memory_device() and
- set_memory_normal()
-MIME-Version: 1.0
-
-On Thu, Jul 02, 2026 at 03:46:44PM +0200, Thierry Reding wrote:
-> On Thu, Jul 02, 2026 at 10:18:47AM +0100, Will Deacon wrote:
-> > On Wed, Jul 01, 2026 at 06:08:15PM +0200, Thierry Reding wrote:
-> > > From: Chun Ng <chunn@nvidia.com>
-> > >=20
-> > > Add helpers to swap PROT_NORMAL and PROT_DEVICE_nGnRnE protection bits
-> > > on a kernel-linear-map range.
-> >=20
-> > That sounds like a really terrible idea. Why is this necessary and how
-> > does it interact with things like load_unaligned_zeropad()?
+On Thu, 2026-07-02 at 17:24 +0200, Claudio Imbrenda wrote:
+> Due to a missing barrier, it was theoretically possible that a vCPU
+> being created concurrently with enabling KVM_CAP_S390_USER_OPEREXEC
+> would end up with the capability not enabled.
 >=20
-> This is necessary because once the memory controller has walled off the
-> new memory region the CPU must not access it under any circumstances or
-> it'll cause the CPU to lock up (I think technically it'll hit an SError
-> but in practice that just means it'll freeze, as far as I can tell).
+> Fix by using WRITE_ONCE(), which is enough on s390.
 >=20
-> Probably doesn't interact well at all with load_unaligned_zeropad().
+> Fixes: 8e8678e740ec ("KVM: s390: Add capability that forwards operation e=
+xceptions")
+> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> ---
+>  arch/s390/kvm/kvm-s390.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+
+Thanks, Claudio. FWIW,
+
+Reviewed-by: Eric Farman <farman@linux.ibm.com>
+
 >=20
-> > I think you should unmap the memory from the linear map and memremap()
-> > it instead.
->=20
-> Given that the memory can never be accessed by the CPU after the memory
-> controller locks it down, I don't think we'll even need memremap(). The
-> only thing we really need is the sg_table we hand out via the DMA BUFs
-> so that they can be used by device drivers to program their DMA engines
-> internally.
->=20
-> Looking through some of the architecture code around this, shouldn't we
-> simply be using set_memory_encrypted() and set_memory_decrypted() for
-> this? While they might've been created for slightly other use-cases,
-> they seem to be doing exactly what we want (i.e. remove the page range
-> from the linear mapping and flushing it, or restoring the valid bit and
-> standard permissions, respectively).
-
-Ah... I guess we can't do it because we're not in a realm world and so
-the early checks in __set_memory_enc_dec() would return early and turn
-it into a no-op.
-
-How about if I extract a common helper and provide set_memory_p() and
-set_memory_np() in terms of those. Those are available on x86 and
-PowerPC as well, so fairly standard. I suppose at that point we're
-closer to set_memory_valid().
-
-Thierry
-
---a4brqgkdrivfh2ns
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmpGlK8ACgkQ3SOs138+
-s6HETA//VE10mlKmDkMPw7oOS2GPLTn9mVHksFDOn28PMBlC2qgyv4CyznGj3Rfw
-WHIYoNb0rxntAbxQkh6SV5FCCi76fm/uTR3z2an8FI8W7KwiVfDiaIv3cmlG6TVd
-XcCj42QUsUHU7iFHzfSVkW33626MSfyeD+w00yxmT14U2Utl4X/+V+EQF6tRStJZ
-eLJUAyxrArCx98MI79QW13QB5MilfaFjtY6IxwXr+0hW2qnXGbNWJ5x1Z5kbC6wD
-6yOAfi8QY0nqau5GKgo/+dkYUq1zAc65a7QdRu5KW383NDcLhRbtrwBoA6TYFriL
-c2GJiV1ch4N8Dsr694Lmn4jNHUUqPLcPY8it6qMkUNVrc5XjK24C0intns2AFR4i
-7ca82YvaTCuql87GjgBkz9NptVtmqVdZxnrtVYAH9mbvfczVpAEEsacYrMwtqBPM
-crTqcMLjkLxVZdnsvwT3Je73FolwTnxNsBlTaA24I64kQCW9QUIRy6WltcFdimPM
-2K40ULhVg3dNDSaGsQaIvDv8kpgBJiX4sf3kIjK71Dgo9/HKS4IBZx3kfKUxxURj
-RD51dxPOiDXPwIzDZxbERJ2rZx4NxSTj2FjLET7Vs6nbKwvC+K/XiLOtEIXbfwdD
-w9Hih0fRPiPrhG+uab8J6u+Jsaj9KI/DnuqDrIZL+ciFm4MVaNc=
-=9S6h
------END PGP SIGNATURE-----
-
---a4brqgkdrivfh2ns--
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index 4a6d903e3523..784f7d9c79c7 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -955,7 +955,7 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm, struct k=
+vm_enable_cap *cap)
+>  		break;
+>  	case KVM_CAP_S390_USER_OPEREXEC:
+>  		VM_EVENT(kvm, 3, "%s", "ENABLE: CAP_S390_USER_OPEREXEC");
+> -		kvm->arch.user_operexec =3D 1;
+> +		WRITE_ONCE(kvm->arch.user_operexec, 1);
+>  		icpt_operexc_on_all_vcpus(kvm);
+>  		r =3D 0;
+>  		break;
 
