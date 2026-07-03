@@ -1,169 +1,175 @@
-Return-Path: <linux-s390+bounces-21533-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21534-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id epp+F7mJR2oMagAAu9opvQ
-	(envelope-from <linux-s390+bounces-21533-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 03 Jul 2026 12:06:49 +0200
+	id E5n0NXCJR2rfaQAAu9opvQ
+	(envelope-from <linux-s390+bounces-21534-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 03 Jul 2026 12:05:36 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id A507B700F89
-	for <lists+linux-s390@lfdr.de>; Fri, 03 Jul 2026 12:06:48 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B733700F66
+	for <lists+linux-s390@lfdr.de>; Fri, 03 Jul 2026 12:05:36 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ipV9hQ6Q;
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21533-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-21533-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=ULYBw1rz;
+	dmarc=pass (policy=none) header.from=ibm.com;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21534-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-21534-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DD0FA313645A
-	for <lists+linux-s390@lfdr.de>; Fri,  3 Jul 2026 09:58:14 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3F874301840D
+	for <lists+linux-s390@lfdr.de>; Fri,  3 Jul 2026 09:58:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0866037D114;
-	Fri,  3 Jul 2026 09:57:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE64935AC0C;
+	Fri,  3 Jul 2026 09:58:30 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8381D2D5C68
-	for <linux-s390@vger.kernel.org>; Fri,  3 Jul 2026 09:57:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174BF37E316
+	for <linux-s390@vger.kernel.org>; Fri,  3 Jul 2026 09:58:27 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783072633; cv=none; b=h7dXuC83h5dDLadoz8pdgofqWtft/aZta+ig6N8VydkzHRuix1PwfTIm2OGSk18oOdGOR5vJcP+gCY79oW2hLxTQpITOfpb4NA1fk/igk+R5Erw+P6W6oeLwIponkfi6UanzyGa1eZWzLF013c9lWr/SbSvM7Oze8lQ8aCR8RfI=
+	t=1783072710; cv=none; b=qLiIsNWcaiW8vkNWXdXBX+b6+6HuZ0mlUJLZc44rQLK4H3bMXEhV15sQwB6rCWIoHesq0K5/+XkHNzRok1PI2GoIi3jvh6jV7spD+3H1CQFf16ltn7obxUftiAgxh+pJ083OP+PD1Li3/ke4oAl7xKDclSofKxktCIIZMzjuL8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783072633; c=relaxed/simple;
-	bh=M8mLWvMzRI7P4CH9mmJCgeH4HKbc93YSByk3bpp1/5Q=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=nPJmqR8eqHeoF7UgPrZSkzLkwgRpHplWR4+p3jahjKuOUdNpwu/tLXriPc1PTpRbpbx/j3slYRvEaDf+HlUGsWFdFZy5UMRZKDFcwDTNqFapCWQaVMyVWwq5wKhOS8YgkZdoh3EkumzAwVFzr9DGLo57d8QN9mV5earafukKNSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ipV9hQ6Q; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2382B1F000E9;
-	Fri,  3 Jul 2026 09:57:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783072626;
-	bh=M8mLWvMzRI7P4CH9mmJCgeH4HKbc93YSByk3bpp1/5Q=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ipV9hQ6QKyHXzdU0dVA1MdmOGR/x8C3KpSSSG9PmY4frr3SUhzONiBCHGy+fNqR5Q
-	 Y3AEyG6tVaU0kH1lN495PtMjLOCJFe+D9/elSIkF53YbYthW+a8J9Q7lsqRhloMSm1
-	 8oRgXlWjst3uYtWXiNvLg2nahPpX1w8lx3x2aBVdWUWOWpKmxpA3SmuWVD/HoM6Wng
-	 Zkrk0utgacdtbSL+NaaoCnrIyR8kwhGJnVoH0uua/5yRfsw7wQQG8aS0EANXHH7sl6
-	 ur6JdBZRF1xzrQzet0GSUZy/n1gzCdi2kcEyLaxcqzfkrh836bgGcbA8mwbrOCFkz2
-	 3vccWWmHM9Tow==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/1] s390/pkey: Rework ioctl functions error pathes
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Harald Freudenberger" <freude@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, "Heiko Carstens" <hca@linux.ibm.com>, "Vasily
- Gorbik" <gor@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>
-In-Reply-To: <20260703094618.5916-2-freude@linux.ibm.com>
-References: <20260703094618.5916-1-freude@linux.ibm.com>
- <20260703094618.5916-2-freude@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 03 Jul 2026 09:57:05 +0000
-Message-Id: <20260703095706.2382B1F000E9@smtp.kernel.org>
+	s=arc-20240116; t=1783072710; c=relaxed/simple;
+	bh=rKkgHRJMPCi3YOx/3HLNpNmOjNkf1JNOb9L0cwarU/k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R1FxJHdDTCOYB2SCy5pQdjLJ333SYq0fA+5zaxAGRaTZyEJwxAh7rVMzExii56MbBBipGEGD5D+t+WR5jPFvkrFE61Noy8c/nqQU2pPLHyGlQr03xMvDifJ+z7XydtmTZTzI/C1LpV0R4yKPcedabDJps1zpuuApXcWqluHwfQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ULYBw1rz; arc=none smtp.client-ip=148.163.156.1
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6636IBQu2062816;
+	Fri, 3 Jul 2026 09:58:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=lXv1Vo2nxJsBSpudLmltg2gM5qH+0H
+	Xqibw8UhjFmfA=; b=ULYBw1rzgTHtBV4e8bd8v8U/C+uiWlxXZ0pV8D2JVHqZDJ
+	8tyElwYWo2q27GHNEt+S+Op4/fZTV3HkyvZtfjEH7JbUSZCOzvJRmXH2yeAtcwFX
+	jPJbANXHPBMtWBwfIjwsthbos78f3NJdFbF/nPTckQJ1K5iqcNVb60oxes2Exr7j
+	dt4zpOl6Uqd5OGg8IRZEAoZyl+JJXkFyd5qA9/hXFemak4sbbgLdVS5SSwUNP9lJ
+	30fBT3gkGNcnhc9GyyP2x06oRTTsGSQDbu+wVtAcXXxIl8WrXEd/W2g6+aWShWbm
+	zd5aib2KwtnO6g42FdRUE0oDZ4WuBkdmyG1CQKmw==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f26qgehv5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 03 Jul 2026 09:58:22 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6639ncLa027366;
+	Fri, 3 Jul 2026 09:58:21 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4f2ruqrf99-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 03 Jul 2026 09:58:21 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6639wHMR50987298
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 3 Jul 2026 09:58:17 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B995820043;
+	Fri,  3 Jul 2026 09:58:17 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7524520040;
+	Fri,  3 Jul 2026 09:58:17 +0000 (GMT)
+Received: from localhost (unknown [9.111.9.151])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri,  3 Jul 2026 09:58:17 +0000 (GMT)
+Date: Fri, 3 Jul 2026 11:58:16 +0200
+From: Vasily Gorbik <gor@linux.ibm.com>
+To: Rongguang Wei <clementwei90@163.com>
+Cc: linux-s390@vger.kernel.org, freude@linux.ibm.com, hca@linux.ibm.com,
+        dengler@linux.ibm.com, svens@linux.ibm.com,
+        Rongguang Wei <weirongguang@kylinos.cn>
+Subject: Re: [PATCH v1] s390/zcrypt: Remove the empty file
+Message-ID: <t@ub.hpns>
+References: <20260626055820.376212-1-clementwei90@163.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260626055820.376212-1-clementwei90@163.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=RYqgzVtv c=1 sm=1 tr=0 ts=6a4787be cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=OxPPU11sa_40hDLK8BoA:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzAzMDA5NCBTYWx0ZWRfX+wUlN3CmaZXl
+ coGv//0aUdZLZIyWLscbRH/hCIk7KiDBPFGP8mT8brDmj4AQvP1nECgqsUwN7ebkYsImWmy0PpU
+ a62yFOk1Re01QrvyB1NnFMQ9prlNTYU=
+X-Proofpoint-GUID: TyR80LwPDRYeJLBcO9BhIiIKgV4099Uk
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzAzMDA5NCBTYWx0ZWRfX4SRhiczRXmpg
+ XLRUwApSdNgU7TFo9S62xeo3Nxm9HnAdzKm8ccttZWdc1JPvOTUAe6a0WSN75AI1VnoLBp+bwIH
+ 2ZKEz3AkYWV2JDq+jhun5kn30RV0CLxN/vu55gbazC+Bpg9zy1Dl52YfyXwvz9jFw9ZWdPOHIMT
+ aY+HRCNMQPThG5TGSyC/25nMDQ8pKpM3WUYptcc8E7yOaq6ZoIrA8t9hS5Qbdb3Q747yzLH7cPY
+ 8kR7OcxUMv1pUe237P8Uc3BrKT6+Z6tXoC7Bb7SoPSe9FYVsS2hJtBYnAyPbU4oQb3IM8X+qVvz
+ OYJGdBSjAdBirnRlsi80QfmrrHIFfUQWrWZbC5v5skJkNaXArT+l/YKIpjMxU91mKqz5d+pfc+P
+ 03JnyZoX6eYGSjsIGCNeMti6OXA8F5ugDUOd97zIbRZQmEQtjGTSAc9gEwpPeKe5F+yTAR6ttSB
+ ARtgwXQxx1mKDixVuiQ==
+X-Proofpoint-ORIG-GUID: 9fRuSpWkzNWcpH4wZmkytmY84qPx0Rjf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-07-03_02,2026-06-26_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 impostorscore=0 malwarescore=0 spamscore=0 lowpriorityscore=0
+ adultscore=0 priorityscore=1501 suspectscore=0 bulkscore=0 clxscore=1011
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607030094
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	MISSING_MIME_VERSION(2.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21533-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,sashiko.dev:url,smtp.kernel.org:mid];
-	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:freude@linux.ibm.com,m:linux-s390@vger.kernel.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21534-lists,linux-s390=lfdr.de];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,linux.ibm.com:from_mime];
+	FREEMAIL_TO(0.00)[163.com];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:clementwei90@163.com,m:linux-s390@vger.kernel.org,m:freude@linux.ibm.com,m:hca@linux.ibm.com,m:dengler@linux.ibm.com,m:svens@linux.ibm.com,m:weirongguang@kylinos.cn,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
-	PRECEDENCE_BULK(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_SENDER(0.00)[gor@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	MISSING_XM_UA(0.00)[];
-	FROM_NO_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[gor@linux.ibm.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5]
+	RCPT_COUNT_SEVEN(0.00)[7];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TAGGED_RCPT(0.00)[linux-s390];
+	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: A507B700F89
+X-Rspamd-Queue-Id: 4B733700F66
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Critical] Passing ERR_PTR values from `_copy_key_from_user` or `_copy_ap=
-qns_from_user` to `kfree()` and `kfree_sensitive()` causes a deterministic =
-kernel panic.
-- [Critical] Accidental removal of the `ktp.pkeylen` update in `pkey_ioctl_=
-kblob2protk3` breaks the userspace ABI.
---
+On Fri, Jun 26, 2026 at 01:58:20PM +0800, Rongguang Wei wrote:
+> From: Rongguang Wei <weirongguang@kylinos.cn>
+> 
+> The files has no real user because CEX2 and CEX3 device drivers
+> are removed, also remove these empty files.
+> 
+> Fixes: 5ac8c72462cd ("s390/zcrypt: remove CEX2 and CEX3 device drivers")
+> Signed-off-by: Rongguang Wei <weirongguang@kylinos.cn>
+> ---
+>  drivers/s390/crypto/zcrypt_cex2a.c | 0
+>  drivers/s390/crypto/zcrypt_cex2a.h | 0
+>  drivers/s390/crypto/zcrypt_cex2c.c | 0
+>  drivers/s390/crypto/zcrypt_cex2c.h | 0
+>  4 files changed, 0 insertions(+), 0 deletions(-)
+>  delete mode 100644 drivers/s390/crypto/zcrypt_cex2a.c
+>  delete mode 100644 drivers/s390/crypto/zcrypt_cex2a.h
+>  delete mode 100644 drivers/s390/crypto/zcrypt_cex2c.c
+>  delete mode 100644 drivers/s390/crypto/zcrypt_cex2c.h
 
-Note: Due to recitation restrictions, this report does not use the standard
-inline quoting format to show the modified code. Instead, I am providing a
-free-form summary of the issues found in the patch.
-
-commit 280086862168752a0b3725329891a790006a089e
-Author: Harald Freudenberger <freude@linux.ibm.com>
-s390/pkey: Rework ioctl functions error pathes
-
-This commit refactors the error handling and free paths in the pkey ioctl
-functions. It replaces duplicated cleanup code with centralized goto labels
-to handle freeing memory and zeroing operations at the end of each function.
-
-
-[Severity: Critical]
-When _copy_key_from_user() or _copy_apqns_from_user() fails and returns an
-ERR_PTR, does the jump to the out label cause kfree() or kfree_sensitive()=
-=20
-to dereference that ERR_PTR?
-
-In drivers/s390/crypto/pkey_api.c, several ioctl functions check for IS_ERR=
-()
-after copying from user space. If an error occurs, they assign rc and then=
-=20
-execute goto out. However, at the out label, the pointer is unconditionally=
-=20
-passed to the freeing functions. Passing an ERR_PTR (such as -EFAULT) to the
-kfree family causes the slab allocator to attempt dereferencing an invalid=
-=20
-address, resulting in a kernel panic.=20
-
-This pattern appears to be introduced across multiple functions, including
-pkey_ioctl_kblob2protk(), pkey_ioctl_clr2seck2(), pkey_ioctl_verifykey2(),
-pkey_ioctl_kblob2protk2(), pkey_ioctl_apqns4k(), and
-pkey_ioctl_kblob2protk3().
-
-
-[Severity: Critical]
-Was the assignment of ktp.pkeylen intentionally removed in=20
-pkey_ioctl_kblob2protk3()?=20
-
-During the refactoring in drivers/s390/crypto/pkey_api.c, the line=20
-ktp.pkeylen =3D protkeylen; was dropped right before the final copy_to_user=
-()=20
-call. Dropping this assignment prevents the kernel from returning the actua=
-l=20
-size of the derived key back to userspace. Will this break the ABI for=20
-applications relying on this size query?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260703094618.5916=
--2-freude@linux.ibm.com?part=3D1
+Applied, thank you!
 
