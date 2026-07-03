@@ -1,93 +1,69 @@
-Return-Path: <linux-s390+bounces-21535-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21537-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id l6lXHbuIR2oyaQAAu9opvQ
-	(envelope-from <linux-s390+bounces-21535-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 03 Jul 2026 12:02:35 +0200
+	id 0broFXaLR2o7awAAu9opvQ
+	(envelope-from <linux-s390+bounces-21537-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 03 Jul 2026 12:14:14 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AB98700ED7
-	for <lists+linux-s390@lfdr.de>; Fri, 03 Jul 2026 12:02:34 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 466D7701103
+	for <lists+linux-s390@lfdr.de>; Fri, 03 Jul 2026 12:14:13 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=arm.com header.s=foss header.b=S7QhjRah;
-	dmarc=pass (policy=none) header.from=arm.com;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21535-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21535-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=linutronix.de header.s=2020 header.b=fAI6VRdL;
+	dkim=pass header.d=linutronix.de header.s=2020e header.b=+CX76KXT;
+	dmarc=pass (policy=none) header.from=linutronix.de;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21537-lists+linux-s390=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-s390+bounces-21537-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id C119F3005157
-	for <lists+linux-s390@lfdr.de>; Fri,  3 Jul 2026 10:00:48 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 97F1A3063EE6
+	for <lists+linux-s390@lfdr.de>; Fri,  3 Jul 2026 10:05:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 492E33B6C0B;
-	Fri,  3 Jul 2026 10:00:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 798FE3CEBB7;
+	Fri,  3 Jul 2026 10:03:24 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9E283B42FD;
-	Fri,  3 Jul 2026 10:00:30 +0000 (UTC)
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29DD13BBFBF
+	for <linux-s390@vger.kernel.org>; Fri,  3 Jul 2026 10:03:22 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783072843; cv=none; b=bKP+8zVj1yagIV4kvXfaNTKIbJjKPARP3farIonrAqaSpKtGtJZ+cwYcFkvv2LMNUxeEBrf65nF5MzZjb6Rx1s3f8HaJIPdT1dmNkUDXM/H8SMdCgneYTyCpihEhZK+RXSKfOJh2oaXfVbStNp3dOPEbUaTnTgEcEEOtaF+uKXA=
+	t=1783073004; cv=none; b=KBElT5FGp2zCllM2tXZB2sxrGdHYOrZND1nQID9rfwTaDi4c1C584vTSKC86VR4rTAcm3vVucB0IkZo/c+fN+klloZwZLlRdQdmLYmeW11tHoI6him+2n/yHXFsS4YsjJy6p2ERoX23UYtVib0MhaEW4bNxGM1xaVGyrXLGFJvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783072843; c=relaxed/simple;
-	bh=aCTCeigzdW+DLmQcURYHBbc2LLCBHkNsbpfYvvGCiJA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=efMDrQXixFxldfqCojEelEg5MyDVmGw1Nhc8dVv5sHwPWG1QrR8Cm+5ypqc6s+HnDRXNoRd3t8LrqjUCQgUxBfosdniGPav7S+PlBadNck4c9w12+GoZAqvXCUpEEgpCnCongndFTTUcmnmajR7rXK4rXmWqO/kZvP3ckO+BcX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=S7QhjRah; arc=none smtp.client-ip=217.140.110.172
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77B231FC4;
-	Fri,  3 Jul 2026 03:00:23 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A98773FAA1;
-	Fri,  3 Jul 2026 03:00:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1783072827; bh=aCTCeigzdW+DLmQcURYHBbc2LLCBHkNsbpfYvvGCiJA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S7QhjRah1ACbDsWq1fyjeQXt+EKdqlo9vLYGLe10grZ3du51t6ZFb4OLnHfKmugvC
-	 xYIGBaOHJhM7/+St8RX1L1+kEfNfOXq3codPouX1rlw+gMBwRumJ3t0IzbR4AAn6ks
-	 AEhSYO6Tc+ug7ijrNB2evf01wmU75WbW8DbnvJvM=
-Date: Fri, 3 Jul 2026 11:00:11 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Thomas Gleixner <tglx@kernel.org>
-Cc: Michal =?utf-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>,
-	Jinjie Ruan <ruanjinjie@huawei.com>, oleg@redhat.com,
-	richard.henderson@linaro.org, mattst88@gmail.com, linmag7@gmail.com,
-	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
-	kees@kernel.org, guoren@kernel.org, chenhuacai@kernel.org,
-	kernel@xen0n.name, geert@linux-m68k.org, tsbogend@alpha.franken.de,
-	James.Bottomley@hansenpartnership.com, deller@gmx.de,
-	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-	chleroy@kernel.org, pjw@kernel.org, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, alex@ghiti.fr, hca@linux.ibm.com,
-	gor@linux.ibm.com, agordeev@linux.ibm.com,
-	borntraeger@linux.ibm.com, svens@linux.ibm.com,
-	ysato@users.sourceforge.jp, dalias@libc.org,
-	glaubitz@physik.fu-berlin.de, richard@nod.at,
-	anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
-	luto@kernel.org, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com, chris@zankel.net,
-	jcmvbkbc@gmail.com, peterz@infradead.org, wad@chromium.org,
-	thuth@redhat.com, ada.coupriediaz@arm.com, kevin.brodsky@arm.com,
-	linusw@kernel.org, yeoreum.yun@arm.com, song@kernel.org,
-	james.morse@arm.com, anshuman.khandual@arm.com, broonie@kernel.org,
-	liqiang01@kylinos.cn, pengcan@kylinos.cn, ryan.roberts@arm.com,
-	yangtiezhu@loongson.cn, sshegde@linux.ibm.com,
-	mchauras@linux.ibm.com, austin.kim@lge.com, jchrist@linux.ibm.com,
-	arnd@arndb.de, thomas.weissschuh@linutronix.de,
-	sohil.mehta@intel.com, andrew.cooper3@citrix.com, jgross@suse.com,
-	kas@kernel.org, x86@kernel.org, linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mm@kvack.org, linux-csky@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-um@lists.infradead.org
-Subject: Re: [PATCH v16 01/18] seccomp: Convert __secure_computing() to
- return boolean
-Message-ID: <akeIK5TRCjlKbzbp@J2N7QTR9R3>
-References: <20260629130616.642022-1-ruanjinjie@huawei.com>
- <20260629130616.642022-2-ruanjinjie@huawei.com>
- <akdp6GAu77-ipsXA@kunlun.suse.cz>
- <87cxx4mmim.ffs@fw13>
+	s=arc-20240116; t=1783073004; c=relaxed/simple;
+	bh=PxavhaJRuFmxG1IwKzPW+rwdDyNvvPmpaNgI2Bb9Mjw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Nskp7eka/mm0rbqgENIBGDYEGJMHG3fZ7U1vkkLRwERitmFmGu7qKGyrYh7Ytcc7gFOd0i+2uGBOnuQGHYEDhAY9I0qJfP95D50jGvmnheeu6rCP9Z8UnEBzGAJbWNaUSJNDRzVh2U/nOVrHyLtdsKDpTfMTOEGFo+KcgaUwMEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fAI6VRdL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+CX76KXT; arc=none smtp.client-ip=193.142.43.55
+Date: Fri, 3 Jul 2026 12:03:20 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1783073001;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=QYmRaiV8oeov3wzngWSTjPOMEzTQOQCAhf1r9wryG/4=;
+	b=fAI6VRdLaAWU6yHvkzSmdbok9Xh6Os13PigmzdqGMpk+MNuFoT4ENbnkUwf52apWC8MJT3
+	WBtiNqqgKOQZUXCg9JR96s/LgjjN1Fy21A9zM4Ue8Wrr9rYK0zuqV9Fl/THKdFNkN6oFLe
+	EpQtsLly/7LH4ztwBwKWrKxf0GsQtZNKypjOkN1sTB0SppJ9411kTlcXaCIKLdh3merIMk
+	tv7Yr+2DZr3o+VsOx9AzwgOeuohlxGGHSZ7qw7KYHHiI7Lh/FQgxU6mUVLPdNodv4OLEDH
+	6jk18I4l0ql93q8hGfYN39o/ypF184tFTYb+o3+Tn6zbm4WcBRTHKBR7h9+7kw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1783073001;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=QYmRaiV8oeov3wzngWSTjPOMEzTQOQCAhf1r9wryG/4=;
+	b=+CX76KXTZ14Zqaps4c+stGW6PMTqoolDyrKueM1GjeMn2EndmaQQVvh0oqAaCMMeh5KTdA
+	HO1e+Gqv8RUuGoBQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-s390@vger.kernel.org
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Harald Freudenberger <freude@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Holger Dengler <dengler@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH] s390/zcrypt: Delete CEX2 and CEX3 device drivers
+Message-ID: <20260703100320.qvFoxNbp@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -96,104 +72,73 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87cxx4mmim.ffs@fw13>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[arm.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[arm.com:s=foss];
+	DMARC_POLICY_ALLOW(-0.50)[linutronix.de,none];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[linutronix.de:s=2020,linutronix.de:s=2020e];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-21537-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[suse.de,huawei.com,redhat.com,linaro.org,gmail.com,armlinux.org.uk,arm.com,kernel.org,xen0n.name,linux-m68k.org,alpha.franken.de,hansenpartnership.com,gmx.de,linux.ibm.com,ellerman.id.au,dabbelt.com,eecs.berkeley.edu,ghiti.fr,users.sourceforge.jp,libc.org,physik.fu-berlin.de,nod.at,cambridgegreys.com,sipsolutions.net,alien8.de,linux.intel.com,zytor.com,zankel.net,infradead.org,chromium.org,kylinos.cn,loongson.cn,lge.com,arndb.de,linutronix.de,intel.com,citrix.com,suse.com,vger.kernel.org,lists.infradead.org,kvack.org,lists.linux.dev,lists.linux-m68k.org,lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-21535-lists,linux-s390=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[mark.rutland@arm.com,linux-s390@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[3];
+	DKIM_TRACE(0.00)[linutronix.de:+];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:tglx@kernel.org,m:msuchanek@suse.de,m:ruanjinjie@huawei.com,m:oleg@redhat.com,m:richard.henderson@linaro.org,m:mattst88@gmail.com,m:linmag7@gmail.com,m:linux@armlinux.org.uk,m:catalin.marinas@arm.com,m:will@kernel.org,m:kees@kernel.org,m:guoren@kernel.org,m:chenhuacai@kernel.org,m:kernel@xen0n.name,m:geert@linux-m68k.org,m:tsbogend@alpha.franken.de,m:James.Bottomley@hansenpartnership.com,m:deller@gmx.de,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:alex@ghiti.fr,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:ysato@users.sourceforge.jp,m:dalias@libc.org,m:glaubitz@physik.fu-berlin.de,m:richard@nod.at,m:anton.ivanov@cambridgegreys.com,m:johannes@sipsolutions.net,m:luto@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:hpa@zytor.com,m:chris@zankel.net,m:jcmvbkbc@gm
- ail.com,m:peterz@infradead.org,m:wad@chromium.org,m:thuth@redhat.com,m:ada.coupriediaz@arm.com,m:kevin.brodsky@arm.com,m:linusw@kernel.org,m:yeoreum.yun@arm.com,m:song@kernel.org,m:james.morse@arm.com,m:anshuman.khandual@arm.com,m:broonie@kernel.org,m:liqiang01@kylinos.cn,m:pengcan@kylinos.cn,m:ryan.roberts@arm.com,m:yangtiezhu@loongson.cn,m:sshegde@linux.ibm.com,m:mchauras@linux.ibm.com,m:austin.kim@lge.com,m:jchrist@linux.ibm.com,m:arnd@arndb.de,m:thomas.weissschuh@linutronix.de,m:sohil.mehta@intel.com,m:andrew.cooper3@citrix.com,m:jgross@suse.com,m:kas@kernel.org,m:x86@kernel.org,m:linux-alpha@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-mm@kvack.org,m:linux-csky@vger.kernel.org,m:loongarch@lists.linux.dev,m:linux-m68k@lists.linux-m68k.org,m:linux-mips@vger.kernel.org,m:linux-parisc@vger.kernel.org,m:linuxppc-dev@lists.ozlabs.org,m:linux-riscv@lists.infradead.org,m:linux-s390@vger.kernel.org,m:linux-sh@vger.kernel.org,m:linux-um@li
- sts.infradead.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:linux-s390@vger.kernel.org,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:freude@linux.ibm.com,m:hca@linux.ibm.com,m:dengler@linux.ibm.com,m:svens@linux.ibm.com,m:gor@linux.ibm.com,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[bigeasy@linutronix.de,linux-s390@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[arm.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mark.rutland@arm.com,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[84];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[bigeasy@linutronix.de,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	RWL_MAILSPIKE_POSSIBLE(0.00)[104.64.211.4:from];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp,linutronix.de:from_mime,linutronix.de:email,linutronix.de:mid,linutronix.de:dkim]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7AB98700ED7
+X-Rspamd-Queue-Id: 466D7701103
 
-On Fri, Jul 03, 2026 at 11:48:49AM +0200, Thomas Gleixner wrote:
-> On Fri, Jul 03 2026 at 09:51, Michal Suchánek wrote:
-> > On Mon, Jun 29, 2026 at 09:05:59PM +0800, Jinjie Ruan wrote:
-> >> -	if (secure_computing())
-> >> +	if (!secure_computing())
-> >>  		return -1;
-> >
-> > Hello,
-> >
-> > I am not fond of this logic inversion. The boolean is meaningless in
-> > itself.
-> >
-> > Previously -1 was used to indicate that the syscall was filtered but you
-> > chose to invert the logic choosing true to mean syscall was not filtered.
-> >
-> > You could choose true to mean that syscall was fitered avoiding this
-> > inversion.
-> 
-> That's just wrong. Boolean logic makes more sense with having
-> (!condition()). Just because the old 0/-1 nonsense had it the other way
-> round does not mean it has to stay that way.
+The two driver were removed in commit 5ac8c72462cda ("s390/zcrypt:
+remove CEX2 and CEX3 device drivers") but not deleted. That means they
+are still around as zero sized files reminding everyone what once was.
 
-100% agreed!
+Let's delete them now.
 
-Bikeshedding below; sorry.
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ drivers/s390/crypto/zcrypt_cex2a.c | 0
+ drivers/s390/crypto/zcrypt_cex2a.h | 0
+ drivers/s390/crypto/zcrypt_cex2c.c | 0
+ drivers/s390/crypto/zcrypt_cex2c.h | 0
+ 4 files changed, 0 insertions(+), 0 deletions(-)
+ delete mode 100644 drivers/s390/crypto/zcrypt_cex2a.c
+ delete mode 100644 drivers/s390/crypto/zcrypt_cex2a.h
+ delete mode 100644 drivers/s390/crypto/zcrypt_cex2c.c
+ delete mode 100644 drivers/s390/crypto/zcrypt_cex2c.h
 
-I think the bigger problem is just that secure_computing() is a terrible
-name that does not express the intended semantic -- it's not clear
-whether "secure computing" means "seccomp permit the syscall" or
-"seccomp is enabled and some special rules now apply" or something else
-entirely.
+diff --git a/drivers/s390/crypto/zcrypt_cex2a.c b/drivers/s390/crypto/zcrypt_cex2a.c
+deleted file mode 100644
+index e69de29bb2d1d..0000000000000
+diff --git a/drivers/s390/crypto/zcrypt_cex2a.h b/drivers/s390/crypto/zcrypt_cex2a.h
+deleted file mode 100644
+index e69de29bb2d1d..0000000000000
+diff --git a/drivers/s390/crypto/zcrypt_cex2c.c b/drivers/s390/crypto/zcrypt_cex2c.c
+deleted file mode 100644
+index e69de29bb2d1d..0000000000000
+diff --git a/drivers/s390/crypto/zcrypt_cex2c.h b/drivers/s390/crypto/zcrypt_cex2c.h
+deleted file mode 100644
+index e69de29bb2d1d..0000000000000
+-- 
+2.53.0
 
-If we're changing the return type, it might be worth renaming the
-function something like:
-
-	seccomp_permits_syscall()
-
-... so for the code quoted at the start of the mail, we'd have:
-
-	if (!seccomp_permits_syscall())
-		return -1;
-
-... or for arm64, where we have NO_SYSCALL:
-
-	 if (!seccomp_permits_syscall())
-	 	return NO_SYSCALL.
-
-Thomas, any thoughts on that?
-
-It's also odd that seccomp aquires the syscall number itself via , rather
-than than being passed down explicitly by the arch code. That completely
-obscures what seccomp is doing, vs having:
-
-	if (!seccomp_permis_syscall(syscall))
-		...
-
-... but I guess that saves some duplication in the ptrace code.
-
-Mark.
 
