@@ -1,179 +1,124 @@
-Return-Path: <linux-s390+bounces-21550-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21551-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 4iFLKSKmR2qhcwAAu9opvQ
-	(envelope-from <linux-s390+bounces-21550-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 03 Jul 2026 14:08:02 +0200
+	id 9r+KLyumR2qkcwAAu9opvQ
+	(envelope-from <linux-s390+bounces-21551-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 03 Jul 2026 14:08:11 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35418702316
-	for <lists+linux-s390@lfdr.de>; Fri, 03 Jul 2026 14:08:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 06EF270231A
+	for <lists+linux-s390@lfdr.de>; Fri, 03 Jul 2026 14:08:11 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=arm.com header.s=foss header.b=BzvOXcJ3;
-	dmarc=pass (policy=none) header.from=arm.com;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21550-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-21550-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=linutronix.de header.s=2020 header.b="LubTbo/+";
+	dkim=pass header.d=linutronix.de header.s=2020e header.b=CFytY+y6;
+	dmarc=pass (policy=none) header.from=linutronix.de;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21551-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-21551-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 494773007E3E
-	for <lists+linux-s390@lfdr.de>; Fri,  3 Jul 2026 11:59:51 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4B4053012C79
+	for <lists+linux-s390@lfdr.de>; Fri,  3 Jul 2026 12:00:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 210183CC33C;
-	Fri,  3 Jul 2026 11:59:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04205348C7D;
+	Fri,  3 Jul 2026 12:00:26 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD7953CC315;
-	Fri,  3 Jul 2026 11:59:47 +0000 (UTC)
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D3635836B
+	for <linux-s390@vger.kernel.org>; Fri,  3 Jul 2026 12:00:24 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783079989; cv=none; b=VhThyM9avYzN9LK7qEVK2mJVXV73roVr1ridS0g51G+W/ioZtHSrsZrUmyzwpa914Ccb9KlYEdbgzVcgYzUBbVT4z2Z23nr21cfS5m+NxQmCag2zzNdKEVzP8p0N/BRSdSQKBsl6yfSUWK5OiXMj0h+ApYB2z3pi7X0rYCZA71A=
+	t=1783080025; cv=none; b=O1kLTcv5tgzzj+a5voE7kckeLrgmYC15B9USKHI9uDZSNKF1YoR4FKW+MinqbK3fbmFRJhQbaOEHBI6dtCvIoUD+Vmj3eXor8p/+dgeoylSfIKa9M+YUreXdsP0XsQRdn++6WSjzRPj0iKwmZKMFxgA3GAHWSUqdpoeYSr3kGWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783079989; c=relaxed/simple;
-	bh=CtML3PEXn1LHht7AQdQyqLzB0Qb9Ae10yAgK67397Zw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jafNVijkqwRi5Lb7hX7XV+4gZD+gg4dBYaV+/KlrIQAwf1mv/XARxFWTnLuJa+dCd5DB8zWK1tO1IOBRnBtRhJXqUjbK2R8Vqh1TnXkWEqEihguI7hqen99Qg5F8Lnho5KhUFd5fDMTWvtX1Spau2pQTbqBzzJqviX5vFLetrzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=BzvOXcJ3; arc=none smtp.client-ip=217.140.110.172
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB43D4637;
-	Fri,  3 Jul 2026 04:59:42 -0700 (PDT)
-Received: from [10.57.81.24] (unknown [10.57.81.24])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 990933F673;
-	Fri,  3 Jul 2026 04:59:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1783079987; bh=CtML3PEXn1LHht7AQdQyqLzB0Qb9Ae10yAgK67397Zw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BzvOXcJ33pukFW1hsXEQNbx9QPLsxIFvrmHevHBsOp8nnm06vLzF5mha44X2sHHDU
-	 SHr/Zn3XgMMxalHNhRBDOI53sw4fZs97H12agiXgP0ix1sp+Z6e44T3eAOSbucjLm7
-	 PcWgBN9O+acHfIv6mNNUdNha0fe7PMafRvzBoqR4=
-Message-ID: <fa1f5b39-2703-40a1-81d6-3feba87e19b0@arm.com>
-Date: Fri, 3 Jul 2026 13:59:21 +0200
+	s=arc-20240116; t=1783080025; c=relaxed/simple;
+	bh=cxA8tM5dh3I3FMrLRqVtspMINUesL3110lPAu88ay6s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mQh+wfAIwXM+n+1P8tY9p1xxYzscVTB+AJisbASE+TzKgN+ambnltWtBZuT+tfheYBmZW7NhbslOSxrr4VqAUREkY7xRLXyI/s0B9RMfsho7or+nhQ8292QugDd0ATMAgN5oMixq+zY1Zcjl0YACPGiQyxOzdxl/QqAPtWdnfwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LubTbo/+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CFytY+y6; arc=none smtp.client-ip=193.142.43.55
+Date: Fri, 3 Jul 2026 14:00:20 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1783080022;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cxA8tM5dh3I3FMrLRqVtspMINUesL3110lPAu88ay6s=;
+	b=LubTbo/+sGsgRDt0BMLAXB0AHUs1HO38dHCXG7I6SlcOUQ74HIIw2sjeTpooeCIZTT5M1Y
+	VI3/m4iHRNBz+CJaJ5RtG0JxLXr/c+v6UcnLwkaKwg+Ye9MZ3qXs1zhw7UGxQPsX4pZ4tB
+	ZhuHVGY6CSdg68fGjMoH5K8TUpOSmAVNPI/Sfk12+GCOcbBAzKkZHmS4aEOTLpSn70BtWI
+	SqmpLGBiM8IztU28dpZ0CUFsZpxEwbEFl/8vnehFscRd9W04hCvVfk43k7/G/J9wkdNAr3
+	Tvl08SgLcZO6bvtUi5NtMhh8qARgf97pr2yR1OMeULUzj72L0O0wyeE1dZvnZw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1783080022;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cxA8tM5dh3I3FMrLRqVtspMINUesL3110lPAu88ay6s=;
+	b=CFytY+y66swUzhiLQdGFSgIfrBYxIHoqRHunU5UUuCcflzfV4iq+7ioJOAqMRAPKKRvzpp
+	sbml7KLd6U+PccAw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Holger Dengler <dengler@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Harald Freudenberger <freude@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH] s390/zcrypt: Delete CEX2 and CEX3 device drivers
+Message-ID: <20260703120020.nXkZQZt-@linutronix.de>
+References: <20260703100320.qvFoxNbp@linutronix.de>
+ <28892518-5e79-4410-8cd1-1873da752818@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v16 01/18] seccomp: Convert __secure_computing() to return
- boolean
-To: =?UTF-8?Q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>,
- Mark Rutland <mark.rutland@arm.com>
-Cc: Thomas Gleixner <tglx@kernel.org>, Jinjie Ruan <ruanjinjie@huawei.com>,
- oleg@redhat.com, richard.henderson@linaro.org, mattst88@gmail.com,
- linmag7@gmail.com, linux@armlinux.org.uk, catalin.marinas@arm.com,
- will@kernel.org, kees@kernel.org, guoren@kernel.org, chenhuacai@kernel.org,
- kernel@xen0n.name, geert@linux-m68k.org, tsbogend@alpha.franken.de,
- James.Bottomley@hansenpartnership.com, deller@gmx.de, maddy@linux.ibm.com,
- mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org, pjw@kernel.org,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, hca@linux.ibm.com,
- gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
- svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
- glaubitz@physik.fu-berlin.de, richard@nod.at,
- anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net, luto@kernel.org,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- chris@zankel.net, jcmvbkbc@gmail.com, peterz@infradead.org,
- wad@chromium.org, thuth@redhat.com, ada.coupriediaz@arm.com,
- linusw@kernel.org, yeoreum.yun@arm.com, song@kernel.org,
- james.morse@arm.com, anshuman.khandual@arm.com, broonie@kernel.org,
- liqiang01@kylinos.cn, pengcan@kylinos.cn, ryan.roberts@arm.com,
- yangtiezhu@loongson.cn, sshegde@linux.ibm.com, mchauras@linux.ibm.com,
- austin.kim@lge.com, jchrist@linux.ibm.com, arnd@arndb.de,
- thomas.weissschuh@linutronix.de, sohil.mehta@intel.com,
- andrew.cooper3@citrix.com, jgross@suse.com, kas@kernel.org, x86@kernel.org,
- linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
- linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, linux-um@lists.infradead.org
-References: <20260629130616.642022-1-ruanjinjie@huawei.com>
- <20260629130616.642022-2-ruanjinjie@huawei.com>
- <akdp6GAu77-ipsXA@kunlun.suse.cz> <87cxx4mmim.ffs@fw13>
- <akeIK5TRCjlKbzbp@J2N7QTR9R3> <akeOjqMy7HVgRRCr@kunlun.suse.cz>
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-Content-Language: en-GB
-In-Reply-To: <akeOjqMy7HVgRRCr@kunlun.suse.cz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <28892518-5e79-4410-8cd1-1873da752818@linux.ibm.com>
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[arm.com,none];
+	DMARC_POLICY_ALLOW(-0.50)[linutronix.de,none];
+	R_DKIM_ALLOW(-0.20)[linutronix.de:s=2020,linutronix.de:s=2020e];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[arm.com:s=foss];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[kevin.brodsky@arm.com,linux-s390@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[kernel.org,huawei.com,redhat.com,linaro.org,gmail.com,armlinux.org.uk,arm.com,xen0n.name,linux-m68k.org,alpha.franken.de,hansenpartnership.com,gmx.de,linux.ibm.com,ellerman.id.au,dabbelt.com,eecs.berkeley.edu,ghiti.fr,users.sourceforge.jp,libc.org,physik.fu-berlin.de,nod.at,cambridgegreys.com,sipsolutions.net,alien8.de,linux.intel.com,zytor.com,zankel.net,infradead.org,chromium.org,kylinos.cn,loongson.cn,lge.com,arndb.de,linutronix.de,intel.com,citrix.com,suse.com,vger.kernel.org,lists.infradead.org,kvack.org,lists.linux.dev,lists.linux-m68k.org,lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-21550-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21551-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[arm.com:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:msuchanek@suse.de,m:mark.rutland@arm.com,m:tglx@kernel.org,m:ruanjinjie@huawei.com,m:oleg@redhat.com,m:richard.henderson@linaro.org,m:mattst88@gmail.com,m:linmag7@gmail.com,m:linux@armlinux.org.uk,m:catalin.marinas@arm.com,m:will@kernel.org,m:kees@kernel.org,m:guoren@kernel.org,m:chenhuacai@kernel.org,m:kernel@xen0n.name,m:geert@linux-m68k.org,m:tsbogend@alpha.franken.de,m:James.Bottomley@hansenpartnership.com,m:deller@gmx.de,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:alex@ghiti.fr,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:ysato@users.sourceforge.jp,m:dalias@libc.org,m:glaubitz@physik.fu-berlin.de,m:richard@nod.at,m:anton.ivanov@cambridgegreys.com,m:johannes@sipsolutions.net,m:luto@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:hpa@zytor.com,m:chris@z
- ankel.net,m:jcmvbkbc@gmail.com,m:peterz@infradead.org,m:wad@chromium.org,m:thuth@redhat.com,m:ada.coupriediaz@arm.com,m:linusw@kernel.org,m:yeoreum.yun@arm.com,m:song@kernel.org,m:james.morse@arm.com,m:anshuman.khandual@arm.com,m:broonie@kernel.org,m:liqiang01@kylinos.cn,m:pengcan@kylinos.cn,m:ryan.roberts@arm.com,m:yangtiezhu@loongson.cn,m:sshegde@linux.ibm.com,m:mchauras@linux.ibm.com,m:austin.kim@lge.com,m:jchrist@linux.ibm.com,m:arnd@arndb.de,m:thomas.weissschuh@linutronix.de,m:sohil.mehta@intel.com,m:andrew.cooper3@citrix.com,m:jgross@suse.com,m:kas@kernel.org,m:x86@kernel.org,m:linux-alpha@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-mm@kvack.org,m:linux-csky@vger.kernel.org,m:loongarch@lists.linux.dev,m:linux-m68k@lists.linux-m68k.org,m:linux-mips@vger.kernel.org,m:linux-parisc@vger.kernel.org,m:linuxppc-dev@lists.ozlabs.org,m:linux-riscv@lists.infradead.org,m:linux-s390@vger.kernel.org,m:linux-sh@vger.kernel.org,m:linux-um@lis
- ts.infradead.org,s:lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[kevin.brodsky@arm.com,linux-s390@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCPT_COUNT_GT_50(0.00)[84];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390];
+	RCVD_COUNT_THREE(0.00)[3];
+	FORGED_SENDER(0.00)[bigeasy@linutronix.de,linux-s390@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:dengler@linux.ibm.com,m:linux-s390@vger.kernel.org,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:freude@linux.ibm.com,m:hca@linux.ibm.com,m:svens@linux.ibm.com,m:gor@linux.ibm.com,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[linutronix.de:+];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,arm.com:from_mime,arm.com:dkim,arm.com:mid]
+	FORGED_SENDER_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[bigeasy@linutronix.de,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	TAGGED_RCPT(0.00)[linux-s390];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linutronix.de:from_mime,linutronix.de:dkim,linutronix.de:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 35418702316
+X-Rspamd-Queue-Id: 06EF270231A
 
-On 03/07/2026 12:27, Michal Suchánek wrote:
-> On Fri, Jul 03, 2026 at 11:00:11AM +0100, Mark Rutland wrote:
->> On Fri, Jul 03, 2026 at 11:48:49AM +0200, Thomas Gleixner wrote:
->>> On Fri, Jul 03 2026 at 09:51, Michal Suchánek wrote:
->>>> On Mon, Jun 29, 2026 at 09:05:59PM +0800, Jinjie Ruan wrote:
->>>>> -	if (secure_computing())
->>>>> +	if (!secure_computing())
->>>>>  		return -1;
->>>> Hello,
->>>>
->>>> I am not fond of this logic inversion. The boolean is meaningless in
->>>> itself.
->>>>
->>>> Previously -1 was used to indicate that the syscall was filtered but you
->>>> chose to invert the logic choosing true to mean syscall was not filtered.
->>>>
->>>> You could choose true to mean that syscall was fitered avoiding this
->>>> inversion.
->>> That's just wrong. Boolean logic makes more sense with having
->>> (!condition()). Just because the old 0/-1 nonsense had it the other way
->>> round does not mean it has to stay that way.
->> 100% agreed!
->>
->> Bikeshedding below; sorry.
->>
->> I think the bigger problem is just that secure_computing() is a terrible
->> name that does not express the intended semantic -- it's not clear
->> whether "secure computing" means "seccomp permit the syscall" or
->> "seccomp is enabled and some special rules now apply" or something else
->> entirely.
->>
->> If we're changing the return type, it might be worth renaming the
->> function something like:
->>
->> 	seccomp_permits_syscall()
-> Then not only it is clear which way the boolean value should be
-> interpreted, it also pervents the accidental inversion of existing
-> calls. Overall great.
+On 2026-07-03 13:39:15 [+0200], Holger Dengler wrote:
+> Hi Sebastian,
+Holger!
 
-Totally agreed, if we have the opportunity to rename a completely
-undescriptive function name like "secure_computing" we should take it.
+> Thanks for your patch, but we already got another series from Rongguang Wei
+> [1], which has been already applied by Vasily.
 
-- Kevin
+Yesterday? After all these years I am off by a few days. Duh.
+
+Sebastian
 
