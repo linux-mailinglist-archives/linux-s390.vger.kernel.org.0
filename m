@@ -1,66 +1,66 @@
-Return-Path: <linux-s390+bounces-21612-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21613-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id nwtpLE+CS2pzSgEAu9opvQ
-	(envelope-from <linux-s390+bounces-21612-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 06 Jul 2026 12:24:15 +0200
+	id jScrK4+CS2qASgEAu9opvQ
+	(envelope-from <linux-s390+bounces-21613-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 06 Jul 2026 12:25:19 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E99270F1C4
-	for <lists+linux-s390@lfdr.de>; Mon, 06 Jul 2026 12:24:15 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 139EE70F1EE
+	for <lists+linux-s390@lfdr.de>; Mon, 06 Jul 2026 12:25:19 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=kLhDWNOz;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=h0+4Eqx+;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21612-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21612-lists+linux-s390=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21613-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-21613-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0336B33D2F0B
-	for <lists+linux-s390@lfdr.de>; Mon,  6 Jul 2026 09:44:21 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 63E0B3074604
+	for <lists+linux-s390@lfdr.de>; Mon,  6 Jul 2026 09:55:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2439D3A0B13;
-	Mon,  6 Jul 2026 09:31:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A9FF43B6CE;
+	Mon,  6 Jul 2026 09:35:44 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002E336F42B;
-	Mon,  6 Jul 2026 09:31:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0C2430312;
+	Mon,  6 Jul 2026 09:35:40 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783330306; cv=none; b=iyL02eXR/ASFVqCxth7GtaJtjo5CCdNdwUsoS3sTuU9TjN8ekdRnzYLITfMUZ/79wiqldfPojXd2BAEBprNKzHGqbbrpl/bG9B0Tqpcu66m9fLcZFZ2xioQebZ6RWPIXGvYM/RYxskXs396+aBdVkaGgZmydQrkJffZ0pFrCTt0=
+	t=1783330543; cv=none; b=gub9CbDKJrKS7PDmj2xQwPORYV8i0EJ13TDbzwhoqtvsxr4lzQqKUEEVobOQkfo4hdjVUyGLh5iW903858SUPKT+w+RAyVBMLYswf3bdsIUtTjPvvLZt/wxqFlsypeT5eKLcbluk9OnHRHB8f8tpssH85l/S7uirDqxS4GFQvNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783330306; c=relaxed/simple;
-	bh=VUrPPe16q8B1BGJJDCBjfH2ieY9dRJYGDCRIOoR+DAI=;
+	s=arc-20240116; t=1783330543; c=relaxed/simple;
+	bh=IhbG/1QV63gAFn8zPHNCerEvyNwKUHmhB8DFfJQJytE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=hEryQfreXijLfiXsKr37wpRMFq2zTqrdxXFppdCxNW3fABY3u5Pvk01156qJc8JbUNTLQVcsM5phPWJqHpzEfb4vorxbbDc6cyBnulYwRI8blqGJ7ZBLwz/fw9t3GD+ngCdGPS1R7Az+pPfoQ4tVQCNxK46Odfpg99RpvYsTvls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kLhDWNOz; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9700C1F000E9;
-	Mon,  6 Jul 2026 09:31:39 +0000 (UTC)
+	 Message-Id; b=MugDg8BD6aingOOWB8m+oup/6kB1F8NUatVp/j9LjFE5kkx+PbmbHNr4oLFw/HxGtOsAoYg/s29sv+VZrzk19Hc5zn04BVIf2oZkvzSQ44XnKiXbBZke3BDZm/AoMOkd2KBXb2c0axsNXnGHknWI08/Oa9OoSagXwfVoqHMfhn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h0+4Eqx+; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A0AF1F000E9;
+	Mon,  6 Jul 2026 09:35:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783330301;
-	bh=6D0PywIxNmLYs2d1cm0thC1XJs6vlKqoQ1kOrHVoU1U=;
+	s=k20260515; t=1783330539;
+	bh=tHiAZf2QB0WMW2DRWk7c4hSkp0NEHRow5vX9K/vO/js=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=kLhDWNOzPnQFGXePLFeRD0yDmBCWCjpIXbZYS8sofQUtVlC0xq219PTyssZRVomY8
-	 shqfbykGmjU/F5e9orasZiW7Af7DluZ5Rdl+bUZZZaHHCoqRBe5QPeDk93/xcAdfIg
-	 JZHqH1If39k3ZexU4rHWC58jK5mLAHglOW3zkFj8FHx+BZYMkLh5UM7wVp/fMbDxCy
-	 vLIKyAyy7nseNjoXFZHP0h1T4xgUeoyUJappoYRFJZMfKYkxf/WSsR7Pt5FTh1Pnzo
-	 TAV5UiV9f0ccjx2ACzWtC1Zaz3blaKP8fJO4Qra14Xon2qMIa1N6IeoyWYiTLbbMsz
-	 +i5MbnE57x1YQ==
+	b=h0+4Eqx+pxy92SEvL6mF3g3H7y00p32rG1agX38W88kmogS2YpjnBFUeIRm8Kt71o
+	 XJol6gFtTgJXO6VHoRqtVmue4WjLQoA6b/8pWntLH2EcXZL67EflUirVDai3UjTLRx
+	 i/djtho+OGBqmxFR1Jug+BK5HqMMZyzKa2o0E8eEoRVgs6DgngVY6cpZdsSJVSfUcF
+	 ClaPCk4EW09K8/yh5BdMA9K8UMGC44NB3JoERnYIWvhA67nNzqvBGYo+sACPv4zxWd
+	 LlYQD5GlBAGKz5DkYxArVCAOSnK+5DxIXKl0l1eoMm8Lcu2xL/S5ino+HAjtEidI74
+	 DoCDSLcV64u5A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 11/27] s390: Use arm64 headers
+Subject: Re: [PATCH v4 14/27] KVM: s390: Move s390 kvm code into a
+ subdirectory
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Steffen Eiden" <seiden@linux.ibm.com>
-Cc: kvmarm@lists.linux.dev, "Vasily Gorbik" <gor@linux.ibm.com>, "Oliver
- Upton" <oupton@kernel.org>, kvm@vger.kernel.org, linux-s390@vger.kernel.org, "Marc
- Zyngier" <maz@kernel.org>, "Alexander Gordeev" <agordeev@linux.ibm.com>, "Heiko
- Carstens" <hca@linux.ibm.com>
-In-Reply-To: <20260706085229.979525-12-seiden@linux.ibm.com>
+Cc: "Alexander Gordeev" <agordeev@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, linux-s390@vger.kernel.org, "Heiko
+ Carstens" <hca@linux.ibm.com>, "Marc Zyngier" <maz@kernel.org>, kvmarm@lists.linux.dev, kvm@vger.kernel.org, "Oliver
+ Upton" <oupton@kernel.org>
+In-Reply-To: <20260706085229.979525-15-seiden@linux.ibm.com>
 References: <20260706085229.979525-1-seiden@linux.ibm.com>
- <20260706085229.979525-12-seiden@linux.ibm.com>
+ <20260706085229.979525-15-seiden@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 06 Jul 2026 09:31:38 +0000
-Message-Id: <20260706093139.9700C1F000E9@smtp.kernel.org>
+Date: Mon, 06 Jul 2026 09:35:37 +0000
+Message-Id: <20260706093538.1A0AF1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -72,19 +72,19 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-21612-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21613-lists,linux-s390=lfdr.de];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
 	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:seiden@linux.ibm.com,m:kvmarm@lists.linux.dev,m:gor@linux.ibm.com,m:oupton@kernel.org,m:kvm@vger.kernel.org,m:linux-s390@vger.kernel.org,m:maz@kernel.org,m:agordeev@linux.ibm.com,m:hca@linux.ibm.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:seiden@linux.ibm.com,m:agordeev@linux.ibm.com,m:gor@linux.ibm.com,m:linux-s390@vger.kernel.org,m:hca@linux.ibm.com,m:maz@kernel.org,m:kvmarm@lists.linux.dev,m:kvm@vger.kernel.org,m:oupton@kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
@@ -98,132 +98,59 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	FROM_NO_DN(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,smtp.kernel.org:mid,lists.linux.dev:replyto,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,smtp.kernel.org:mid,lists.linux.dev:replyto,sashiko.dev:url,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 0E99270F1C4
+X-Rspamd-Queue-Id: 139EE70F1EE
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] Double `$(objtree)` prefix in `arm64-dst` causes out-of-tree build=
-s to fail.
-- [Medium] The `sysreg-defs.h` target will be unnecessarily rebuilt on ever=
-y `make` invocation during out-of-tree builds due to a `targets` array mism=
-atch.
-- [Low] The include guard regex in `copy-arm64h-full.awk` fails to match st=
-andard ARM64 KVM headers that contain numbers.
-- [Low] The commit message incorrectly states that included headers are rew=
-ritten to `#include <arm64/asm/...>`, but the implementation correctly rewr=
-ites them to `#include <arm64/...>` instead.
+- [Low] The files `pci.c` and `pci.h` were moved from `arch/s390/kvm/` to t=
+he `s390/` subdirectory (`arch/s390/kvm/s390/`), but their specific entry i=
+n the `MAINTAINERS` file was not updated to reflect this change.
 --
 
-commit 622a9e9498e4f7fc1aed85088dd8016c40e7fc8b
+commit c2f3b449a0f094fa44a079aff2968b331a351e17
 Author: Steffen Eiden <seiden@linux.ibm.com>
 
-s390: Use arm64 headers
+KVM: s390: Move s390 kvm code into a subdirectory
+   =20
+Move all the code required to run s390 KVM guests on s390 to a s390
+subdirectory. Move gmap related code into a gmap directory to later
+share gmap code between KVM implementations.
+   =20
+No functional change.
 
-Introduce a flexible system for sharing ARM64 headers with s390 KVM.
-Selected arm64 headers or snippet of headers will be reachable by s390
-code through asm/header.h.
+[ ... ]
 
-> Transform copied includes by replacing '#include <asm/...>' with
-> '#include <arm64/asm/...>' and similar for uapi headers to ensure
-> correct path resolution on s390 and allow for a clear separation of s390
+> diff --git a/arch/s390/kvm/pci.c b/arch/s390/kvm/s390/pci.c
+> similarity index 100%
+> rename from arch/s390/kvm/pci.c
+> rename to arch/s390/kvm/s390/pci.c
 
 [Severity: Low]
-This isn't a bug, but the commit message states the headers are rewritten to
-'#include <arm64/asm/...>', while the awk scripts in this patch correctly
-rewrite them to '#include <arm64/...>' without the 'asm/' component.
+Since these files are moving to the new s390/ subdirectory, should the
+MAINTAINERS file also be updated?
 
-> diff --git a/arch/s390/tools/Makefile b/arch/s390/tools/Makefile
-> index f2862364fb422..bd2a00d5ce2c9 100644
-> --- a/arch/s390/tools/Makefile
-> +++ b/arch/s390/tools/Makefile
-[ ... ]
-> @@ -3,8 +3,13 @@
->  # Makefile for s390 specific build tools
->  #
-> =20
-> +include $(srctree)/arch/s390/tools/Makefile.arm64h
-> +
->  kapi :=3D arch/$(ARCH)/include/generated/asm
->  kapi-hdrs-y :=3D $(kapi)/facility-defs.h $(kapi)/dis-defs.h
-> +kapi-hdrs-$(CONFIG_KVM_ARM64) +=3D $(ARM64_TARGETS)
-> +
-> +targets +=3D $(addprefix ../../../,$(kapi-hdrs-y))
+The current maintainers entry tracks this path:
+F:      arch/s390/kvm/pci*
 
-[Severity: Medium]
-Will this unnecessarily rebuild sysreg-defs.h on every make invocation duri=
-ng
-out-of-tree builds?
+Because the path has changed, the get_maintainer script might fail to inclu=
+de
+the subsystem reviewers on future patches for these files. Is it worth
+updating the pattern to arch/s390/kvm/s390/pci* in this commit?
 
-In Makefile.arm64h, sysreg-defs.h is added to ARM64_TARGETS using an absolu=
-te
-path because arm64api includes $(objtree).
-
-Then here, it gets appended to the targets array with a relative directory
-traversal using $(addprefix ../../../,$(kapi-hdrs-y)).
-
-Prepending a relative traversal to an absolute path
-(like ../../..//build_dir/...) creates a malformed path. This prevents Kbui=
-ld
-from locating the .cmd file and breaks the if_changed cache.
-
-> diff --git a/arch/s390/tools/Makefile.arm64h b/arch/s390/tools/Makefile.a=
-rm64h
-> new file mode 100644
-> index 0000000000000..0b32c124707d9
-> --- /dev/null
-> +++ b/arch/s390/tools/Makefile.arm64h
-> @@ -0,0 +1,58 @@
-[ ... ]
-> +arm64api :=3D $(objtree)/arch/$(ARCH)/include/generated/arm64
-> +arm64uapi :=3D $(objtree)/arch/$(ARCH)/include/generated/uapi/arm64
-[ ... ]
-> +arm64-src =3D $(srctree)/arch/arm64/include/$(if $(filter uapi,$(call ar=
-m64-type,$(1))),uapi/)asm/$(call arm64-src-base,$(1))
-> +arm64-dst =3D $(objtree)/$(if $(filter uapi,$(call arm64-type,$(1))),$(a=
-rm64uapi),$(arm64api))/$(call arm64-base,$(1))
-
-[Severity: High]
-Does this double prefix of $(objtree) break out-of-tree builds?
-
-Since arm64api and arm64uapi are defined above with the $(objtree) prefix
-already, arm64-dst prepends $(objtree)/ to them again.
-
-This causes paths to resolve to a nested build_dir/build_dir/... structure
-during out-of-tree compilation.
-
-> diff --git a/arch/s390/tools/copy-arm64h-full.awk b/arch/s390/tools/copy-=
-arm64h-full.awk
-> new file mode 100644
-> index 0000000000000..a9b85b347f780
-> --- /dev/null
-> +++ b/arch/s390/tools/copy-arm64h-full.awk
-> @@ -0,0 +1,43 @@
-[ ... ]
-> +# Find and process the include guard in the first few lines
-> +NR <=3D max_guard_line && !guard_found && /^#ifndef [A-Z_]+$/ {
-
-[Severity: Low]
-Does this strict regex fail to match include guards containing numbers?
-
-For standard ARM64 KVM headers that contain numbers in their guards
-(e.g., __ARM64_KVM_ARM_H__), this fails to match.
-
-This silently omits the 'This header was copied from...' preamble in the
-generated files.
-
-> +	guard_name =3D $2
-> +	guard_found =3D 1
-> +	print "/* This header was copied from " srcfile " */"
+> diff --git a/arch/s390/kvm/pci.h b/arch/s390/kvm/s390/pci.h
+> similarity index 100%
+> rename from arch/s390/kvm/pci.h
+> rename to arch/s390/kvm/s390/pci.h
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260706085229.9795=
-25-1-seiden@linux.ibm.com?part=3D11
+25-1-seiden@linux.ibm.com?part=3D14
 
