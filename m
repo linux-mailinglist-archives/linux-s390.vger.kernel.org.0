@@ -1,276 +1,154 @@
-Return-Path: <linux-s390+bounces-21576-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21577-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id J6fcMYhiS2oaQgEAu9opvQ
-	(envelope-from <linux-s390+bounces-21576-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 06 Jul 2026 10:08:40 +0200
+	id UD3PDB5hS2rNQQEAu9opvQ
+	(envelope-from <linux-s390+bounces-21577-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 06 Jul 2026 10:02:38 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FB4A70DEC0
-	for <lists+linux-s390@lfdr.de>; Mon, 06 Jul 2026 10:08:40 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD9EB70DDF7
+	for <lists+linux-s390@lfdr.de>; Mon, 06 Jul 2026 10:02:37 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=TXrdESbV;
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21576-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-21576-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=EEtsYqPa;
+	dmarc=pass (policy=quarantine) header.from=redhat.com;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21577-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-21577-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 57CF8314A3A6
-	for <lists+linux-s390@lfdr.de>; Mon,  6 Jul 2026 07:54:29 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id B8BC93004C34
+	for <lists+linux-s390@lfdr.de>; Mon,  6 Jul 2026 08:02:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A1353BE63F;
-	Mon,  6 Jul 2026 07:54:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9432F3ECBEB;
+	Mon,  6 Jul 2026 08:02:35 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43174389100
-	for <linux-s390@vger.kernel.org>; Mon,  6 Jul 2026 07:54:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C4F43DD50D
+	for <linux-s390@vger.kernel.org>; Mon,  6 Jul 2026 08:02:17 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783324466; cv=none; b=fx4dZuLTQltl6llv6J8MCiSCsOfASgSixwTNdl1ogBcj4NOUxSCumXXds7rZANGw/TGQdZ0d77OqUNAEGGwUt0X75dLrlN6pRvesHkmPXgKqMHjcXBJgTnwJLp4YUCYvgOobk2TvcezkByRAVLlZuQx021np6OeCJ8uRAUKIx+k=
+	t=1783324954; cv=none; b=rp5oTPrI35Pxs6yMUxzNXpnpsPaeD/fL7mab/hw+D6b0QRhHohh0WV5T0C4Rt5PIgEMfZI86i2/qszw3b1/TLXlYDWx+Xf1tu/XXKE9GiryJsKn9c9+YjUnA5rF12mZfDw9ebkbb8vSghWy4PlM83kdoHpx/U4DZnhiK8EbU1BY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783324466; c=relaxed/simple;
-	bh=OE+dNlJ7G6NpmYSpI35KOmLkfmnDzHo0hYWfWwjR9Vo=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=RuEScR3YjKnx59+41lgNa7HHRY9qpzXiqeaAeSSqT5aylJM4rO9Kn3xn4n3F5jeaTPY7z1LUZwuWUw62ucq7xbSkSRM9coQSqn49FDzNLIYJMYi6ICHKFeU32yG11+nAlJm5orGJYdnFL1As6DVplDHar/Ltc1w1gRR20FjQql0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TXrdESbV; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24E1B1F000E9;
-	Mon,  6 Jul 2026 07:54:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783324458;
-	bh=LsbcRb/91Tgkz/WFEYPJMHFfq9/72GXaX6o6kCrZIzU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=TXrdESbVINt1qGyBL2w6mGmocUyj1+mZvrHpdT69bHdu2vs6cEtWe7Rwuzjq1pHvN
-	 T851zYQyRShu5S6MdRcA2zDlPzvm36PwY2z/J4C3SMNR8+yU7dpqpjbDzyFH7HQYTo
-	 Ew7nx55VTyYzICGNebFxKjOmyHT8aHneDkV76AvJS9K8FWgo0O7huPEiWjr6P3Pqcd
-	 wtRkOnlSX68TfmuI6wSi96FlI22xQnGKclDYu4zv4Sn5Rn9bljudwYEGJfVsTwftbc
-	 /q9FoMB0gp+gkneGu5tKjzwts+wVn3RAvqkouaMQSJGg7YAgecNuDs7l+57qUTd20X
-	 05EbbkR3zesbQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH net v4 2/3] net/smc: bound the receive length to the RMB
- in smc_rx_recvmsg()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Bryam Vargas" <hexlabsecurity@proton.me>
-Cc: linux-s390@vger.kernel.org, "Heiko Carstens" <hca@linux.ibm.com>, "Vasily
- Gorbik" <gor@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>
-In-Reply-To: <20260705-b4-disp-28a1bbca-v4-2-be089b98acc6@proton.me>
-References: <20260705-b4-disp-28a1bbca-v4-0-be089b98acc6@proton.me>
- <20260705-b4-disp-28a1bbca-v4-2-be089b98acc6@proton.me>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 06 Jul 2026 07:54:17 +0000
-Message-Id: <20260706075418.24E1B1F000E9@smtp.kernel.org>
+	s=arc-20240116; t=1783324954; c=relaxed/simple;
+	bh=KPf6QSnuTBye0ku4y+66UJmJ/y+HGg1H4Wt97siv1Z4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ju2+p/fFBUJdYVBhQX0PkgTXHPh2I6Ohh8iFq5ebt40H4dgS/nmdZrXsOjSCI1Ue/QWp6yVlX5jP0qa4jOvOkzIqn/12ucVQHTziLeqlqs2tK1OTNaQWMT0npicAsBifTLNuXFVqTuDYIqiL2oyPG9zxtcSMGp0koIDcB4aDqmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EEtsYqPa; arc=none smtp.client-ip=170.10.133.124
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1783324932;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hqQoiX8nOstIqMDv9TBNeaeMATrv7hzlmItcdj7mYtY=;
+	b=EEtsYqPa9SHlpLJOnQ/RiPDqxdfxTTAaJuaVhaOGxsX/mtXP0taPrX8NO4fk64VnKNxdtD
+	fodO2GkS0pExKY2M65yl56dQuvV0RMrUZNsFzhuRZbJOB2dcQoJahqdVpGPALw69QCZhLV
+	yIDBTBKsIHkmrfQILkeoRxzSybbIze8=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-60-f90MF37vM6-j2tZnSLWTLg-1; Mon,
+ 06 Jul 2026 04:02:07 -0400
+X-MC-Unique: f90MF37vM6-j2tZnSLWTLg-1
+X-Mimecast-MFC-AGG-ID: f90MF37vM6-j2tZnSLWTLg_1783324925
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 64B2C195607C;
+	Mon,  6 Jul 2026 08:02:05 +0000 (UTC)
+Received: from localhost (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6298F18005A2;
+	Mon,  6 Jul 2026 08:02:04 +0000 (UTC)
+From: Cornelia Huck <cohuck@redhat.com>
+To: freude@linux.ibm.com
+Cc: richard.henderson@linaro.org, iii@linux.ibm.com, david@kernel.org,
+ thuth@redhat.com, berrange@redhat.com, qemu-s390x@nongnu.org,
+ qemu-devel@nongnu.org, linux-s390@vger.kernel.org, dengler@linux.ibm.com,
+ borntraeger@linux.ibm.com, fcallies@linux.ibm.com
+Subject: Re: [PATCH v9 03/21] target/s390x: Move cpacf sha512 code into a
+ new file
+In-Reply-To: <3ea0066d4b1f2e1e4a604286e49ef12b@linux.ibm.com>
+Organization: "Red Hat GmbH, Sitz: Werner-von-Siemens-Ring 12, D-85630
+ Grasbrunn, Handelsregister: Amtsgericht =?utf-8?Q?M=C3=BCnchen=2C?= HRB
+ 153243,
+ =?utf-8?Q?Gesch=C3=A4ftsf=C3=BChrer=3A?= Ryan Barnhart, Charles Cachera,
+ Avril Crosse O'Flaherty"
+References: <20260701164650.95760-1-freude@linux.ibm.com>
+ <20260701164650.95760-4-freude@linux.ibm.com> <877bnckuuk.fsf@redhat.com>
+ <3ea0066d4b1f2e1e4a604286e49ef12b@linux.ibm.com>
+User-Agent: Notmuch/0.40 (https://notmuchmail.org)
+Date: Mon, 06 Jul 2026 10:02:02 +0200
+Message-ID: <871pdglf5x.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	MISSING_MIME_VERSION(2.00)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21576-lists,linux-s390=lfdr.de];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:freude@linux.ibm.com,m:richard.henderson@linaro.org,m:iii@linux.ibm.com,m:david@kernel.org,m:thuth@redhat.com,m:berrange@redhat.com,m:qemu-s390x@nongnu.org,m:qemu-devel@nongnu.org,m:linux-s390@vger.kernel.org,m:dengler@linux.ibm.com,m:borntraeger@linux.ibm.com,m:fcallies@linux.ibm.com,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,proton.me:email,sashiko.dev:url,lists.linux.dev:replyto,smtp.kernel.org:mid];
-	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:hexlabsecurity@proton.me,m:linux-s390@vger.kernel.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	FORGED_SENDER(0.00)[cohuck@redhat.com,linux-s390@vger.kernel.org];
 	PRECEDENCE_BULK(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	TAGGED_FROM(0.00)[bounces-21577-lists,linux-s390=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cohuck@redhat.com,linux-s390@vger.kernel.org];
+	TO_DN_NONE(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	DKIM_TRACE(0.00)[redhat.com:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_NO_DN(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5]
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 1FB4A70DEC0
+X-Rspamd-Queue-Id: AD9EB70DDF7
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
+On Mon, Jul 06 2026, Harald Freudenberger <freude@linux.ibm.com> wrote:
 
-Pre-existing issues:
-- [Critical] Concurrent `MSG_PEEK` and `recvmsg` calls can cause `readable`=
- to become negative, which the patch incorrectly clamps to the ring buffer =
-size (`rmb_desc->len`). This transforms a temporary race condition into a m=
-assive read of stale data. Furthermore, because the loop continues without =
-correctly bounding `peeked_bytes`, `smc_curs_add` is eventually called with=
- a `peeked_bytes` value exceeding `2 * rmb_desc->len`. This triggers an und=
-erflow in `smc_curs_add()`'s wrap-around logic, causing the consumer cursor=
- count to exceed the buffer length. The subsequent subtraction `conn->rmb_d=
-esc->len - cons.count` produces a negative integer that is cast to a huge `=
-size_t` value, entirely bypassing bounds checks and allowing an unprivilege=
-d local user to read contiguous adjacent kernel memory.
-- [Critical] Socket reference count underflow in `smc_rx_splice()` on succe=
-ssful multi-page splice. When a virtually contiguous RMB is used, `smc_rx_s=
-plice()` can push multiple pages into the pipe in a single `splice_to_pipe(=
-)` call. It increments the socket reference count (`sock_hold()`) exactly o=
-nce. However, the pipe mechanism will eventually call the release callback =
-`smc_rx_pipe_buf_release()` individually for each pipe buffer (page) that w=
-as pushed. `smc_rx_pipe_buf_release()` unconditionally calls `sock_put(sk)`=
- on the socket. If `N` pages are spliced, `sock_hold()` is called once, but=
- `sock_put()` is called `N` times, leading to a socket reference count unde=
-rflow and Use-After-Free of the `smc_sock` structure.
-- [High] Page reference count underflow and memory leak in `smc_rx_splice()=
-` error handling. When `splice_to_pipe()` fails to push all pages (e.g., if=
- the pipe becomes full midway), it synchronously calls the pipe buffer rele=
-ase callback `smc_rx_spd_release()` on the rejected pages. This callback un=
-conditionally calls `put_page()`. However, `smc_rx_splice()` only increment=
-s the page reference count (`get_page()`) AFTER `splice_to_pipe()` returns,=
- and only for the pages successfully pushed. This causes a page reference c=
-ount underflow (Use-After-Free) for the rejected pages. Additionally, the c=
-orresponding `smc_spd_priv` structures allocated for the rejected pages are=
- leaked, as `smc_rx_spd_release()` does not free them.
---
+> On 2026-07-03 16:31, Cornelia Huck wrote:
+>> On Wed, Jul 01 2026, Harald Freudenberger <freude@linux.ibm.com> wrote:
+>> 
+>>> Move the cpacf sha512 implementation into a new file
+>>> cpacf_sha512.c. Add this new file to the build and use the cpacf.h
+>>> header file storing function the prototypes.
+>>> 
+>>> Tested-by: Holger Dengler <dengler@linux.ibm.com>
+>>> Reviewed-by: Finn Callies <fcallies@linux.ibm.com>
+>>> Reviewed-by: Ilya Leoshkevich <iii@linux.ibm.com>
+>>> Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+>>> ---
+>>>  target/s390x/tcg/cpacf.h         |   5 +
+>>>  target/s390x/tcg/crypto_helper.c | 222 
+>>> -------------------------------
+>>>  target/s390x/tcg/meson.build     |   1 +
+>>>  3 files changed, 6 insertions(+), 222 deletions(-)
+>> 
+>> Forgot to commit the new cpacf_sha512.c file?
+>
+> Yes - the last rework ...
+> Shall I send out v10 with only this missing file fixed ?
 
-commit eb0d2eff9f593a1bd0c0a49450526ace209f8db1
-Author: Bryam Vargas <hexlabsecurity@proton.me>
+Just send out the complete series, that makes it easier to merge.
 
-net/smc: bound the receive length to the RMB in smc_rx_recvmsg()
-
-This commit bounds the readable length to rmb_desc->len in smc_rx_recvmsg()
-to prevent a forged cursor from driving bytes_to_rcv past the RMB. It treats
-negative values as out of range as well to prevent wrap-around copies from
-exceeding the ring buffer.
-
-Cc: stable@vger.kernel.org
-
-> diff --git a/net/smc/smc_rx.c b/net/smc/smc_rx.c
-> index c1d9b923938da..f461cf10b0855 100644
-> --- a/net/smc/smc_rx.c
-> +++ b/net/smc/smc_rx.c
-> @@ -442,6 +442,18 @@ int smc_rx_recvmsg(struct smc_sock *smc, struct msgh=
-dr *msg,
->  		/* initialize variables for 1st iteration of subsequent loop */
->  		/* could be just 1 byte, even after waiting on data above */
->  		readable =3D smc_rx_data_available(conn, peeked_bytes);
-> +		/* bytes_to_rcv is accumulated from the peer's wire-controlled
-[ ... ]
-> +		 * 0 <=3D bytes_to_rcv <=3D rmb_desc->len invariant at the consumer,
-> +		 * race-free against the producer update in the receive tasklet.
-> +		 */
-> +		if (readable < 0 || readable > conn->rmb_desc->len)
-> +			readable =3D conn->rmb_desc->len;
-
-[Severity: Critical]
-This isn't a bug introduced by this patch, but does this clamp allow a
-massive read of stale data when readable is negative?
-
-If concurrent MSG_PEEK and recvmsg calls cause bytes_to_rcv - peeked_bytes
-to become negative, clamping it to the full rmb_desc->len here allows the
-copy loop to accumulate peeked_bytes indefinitely.
-
-Because the loop continues without correctly bounding peeked_bytes,
-smc_curs_add() is eventually called with a peeked_bytes value exceeding
-2 * rmb_desc->len.
-
-If value >=3D 2 * size, the wrap-around logic in smc_curs_add() fails to
-wrap correctly:
-
-net/smc/smc_cdc.h:smc_curs_add() {
-    ...
-    if (curs->count >=3D size) {
-        curs->wrap++;
-        curs->count -=3D size;
-    }
-    ...
-}
-
-Does this cause an underflow in the bounds check calculation
-conn->rmb_desc->len - cons.count, resulting in a negative integer cast
-to a huge size_t that bypasses bounds checks?
-
-
-While reviewing this, I also noticed a couple of preexisting issues in
-smc_rx_splice() and its pipe buffer callbacks:
-
-[Severity: High]
-This is a pre-existing issue, but does smc_rx_splice() leak memory and
-cause a page reference count underflow if splice_to_pipe() fails partially?
-
-When splice_to_pipe() rejects pages (e.g., pipe is nearly full), it calls
-the release callback which unconditionally drops a reference:
-
-net/smc/smc_rx.c:smc_rx_spd_release() {
-    ...
-    put_page(spd->pages[i]);
-}
-
-However, in smc_rx_splice(), get_page() is only called AFTER
-splice_to_pipe() returns, and only for the successfully pushed pages:
-
-net/smc/smc_rx.c:smc_rx_splice() {
-    ...
-    bytes =3D splice_to_pipe(pipe, &spd);
-    if (bytes > 0) {
-        sock_hold(&smc->sk);
-        if (!lgr->is_smcd && smc->conn.rmb_desc->is_vm) {
-            for (i =3D 0; i < PAGE_ALIGN(bytes + offset) / PAGE_SIZE; i++)
-                get_page(pages[i]);
-        } else {
-            get_page(smc->conn.rmb_desc->pages);
-        }
-    ...
-}
-
-Does this result in an immediate page reference count underflow for the
-rejected pages? Furthermore, are the corresponding smc_spd_priv structures
-for the rejected pages leaked, since smc_rx_spd_release() doesn't free them?
-
-
-[Severity: Critical]
-This is a pre-existing issue, but does a successful multi-page splice
-cause a socket reference count underflow?
-
-In smc_rx_splice(), when pushing multiple pages into the pipe, sock_hold()
-is called exactly once for the entire successful splice_to_pipe() operation:
-
-net/smc/smc_rx.c:smc_rx_splice() {
-    ...
-    bytes =3D splice_to_pipe(pipe, &spd);
-    if (bytes > 0) {
-        sock_hold(&smc->sk);
-    ...
-}
-
-However, as the pipe consumes the buffers, it calls the release callback
-individually for every single pipe buffer (page), and unconditionally calls
-sock_put() every time:
-
-net/smc/smc_rx.c:smc_rx_pipe_buf_release() {
-    ...
-out:
-    kfree(priv);
-    put_page(buf->page);
-    sock_put(sk);
-}
-
-If N pages are spliced (when using virtually contiguous memory,
-is_vm =3D=3D true), is sock_put() called N times for a single sock_hold(),
-leading to a use-after-free of the smc_sock structure?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260705-b4-disp-28=
-a1bbca-v4-0-be089b98acc6@proton.me?part=3D2
 
