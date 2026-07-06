@@ -1,65 +1,65 @@
-Return-Path: <linux-s390+bounces-21575-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21576-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id bFQVNBdnS2pYQwEAu9opvQ
-	(envelope-from <linux-s390+bounces-21575-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 06 Jul 2026 10:28:07 +0200
+	id J6fcMYhiS2oaQgEAu9opvQ
+	(envelope-from <linux-s390+bounces-21576-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 06 Jul 2026 10:08:40 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 226D370E176
-	for <lists+linux-s390@lfdr.de>; Mon, 06 Jul 2026 10:28:07 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FB4A70DEC0
+	for <lists+linux-s390@lfdr.de>; Mon, 06 Jul 2026 10:08:40 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b="IhYA/WWK";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=TXrdESbV;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21575-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21575-lists+linux-s390=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21576-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-21576-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id BF3C8302C112
-	for <lists+linux-s390@lfdr.de>; Mon,  6 Jul 2026 07:54:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 57CF8314A3A6
+	for <lists+linux-s390@lfdr.de>; Mon,  6 Jul 2026 07:54:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73E3E3DEADB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A1353BE63F;
 	Mon,  6 Jul 2026 07:54:28 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476753CFF4A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43174389100
 	for <linux-s390@vger.kernel.org>; Mon,  6 Jul 2026 07:54:20 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783324465; cv=none; b=ViZOoiSbaKuq9DYGSvy+GVRBVKDDHLeY0mnptxNZZruKbhqmphfoHKzHdyQkmi9JDs6v0mCoZVBD/uzeTOhBFJhoRNIDD9SgiUUf56pdIBVDEvJV6FjpptqNY6eqgLMVKLbf24EAr8hdxMkLCnaCRPfMAh1TMNc2l6NRl5hTQo4=
+	t=1783324466; cv=none; b=fx4dZuLTQltl6llv6J8MCiSCsOfASgSixwTNdl1ogBcj4NOUxSCumXXds7rZANGw/TGQdZ0d77OqUNAEGGwUt0X75dLrlN6pRvesHkmPXgKqMHjcXBJgTnwJLp4YUCYvgOobk2TvcezkByRAVLlZuQx021np6OeCJ8uRAUKIx+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783324465; c=relaxed/simple;
-	bh=5/9Fv8qpd64SKg+VgM3cRNahWKOyWlVCo+7/xnHpWK0=;
+	s=arc-20240116; t=1783324466; c=relaxed/simple;
+	bh=OE+dNlJ7G6NpmYSpI35KOmLkfmnDzHo0hYWfWwjR9Vo=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=OwmemRHMm0fTjbnt4XOIup8HmPkSHcu/fxj9641bhT7swtXXo2/g/9hPXNRPHInFwaML9K1m04lYXsHDC9XQr5hv9PnlitD1iQrGKKLI1TLj4hFFw9jrGhzaBk0KyB4VSnX2x3lTP2/u0EpRvPuQeEVEjvDC0617AfIT0fyY0HU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IhYA/WWK; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A03E1F00A3D;
-	Mon,  6 Jul 2026 07:54:17 +0000 (UTC)
+	 Message-Id; b=RuEScR3YjKnx59+41lgNa7HHRY9qpzXiqeaAeSSqT5aylJM4rO9Kn3xn4n3F5jeaTPY7z1LUZwuWUw62ucq7xbSkSRM9coQSqn49FDzNLIYJMYi6ICHKFeU32yG11+nAlJm5orGJYdnFL1As6DVplDHar/Ltc1w1gRR20FjQql0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TXrdESbV; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24E1B1F000E9;
+	Mon,  6 Jul 2026 07:54:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783324457;
-	bh=i/CvEWD2GQBPAwXadqu+/5FAU82eUViZ01vUnBvYu1U=;
+	s=k20260515; t=1783324458;
+	bh=LsbcRb/91Tgkz/WFEYPJMHFfq9/72GXaX6o6kCrZIzU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=IhYA/WWKqlEDazzmiVPxIMe3HKqZCxbXBXDhcc2SbniEvrOMPKn225pjGQQ5d3X9p
-	 FiB/oxauyx7A54VfZmkkDKHaaWGXPLKCFtd6yrMEdsTe0zsHSkALpa/i3EUna2dR8T
-	 2PYOwUINnB52aKeoUt7p+5xnWUbughr05isX8+YifVnDKCRmHorgP4Ss1iPODMezrD
-	 5gpv7XUEmH6MC/dZYdzHKAhKVgE/fk1vTqU5gWzJRUrwnR4LvEla34SzA6nqPZEDDR
-	 Lvn2HeiAVWNhgL/D/BMoM0oVBHvG4poYmb3rx6fieML76cPU50ATd2rRcknUJiumg6
-	 MQ/lRvXcjcsiA==
+	b=TXrdESbVINt1qGyBL2w6mGmocUyj1+mZvrHpdT69bHdu2vs6cEtWe7Rwuzjq1pHvN
+	 T851zYQyRShu5S6MdRcA2zDlPzvm36PwY2z/J4C3SMNR8+yU7dpqpjbDzyFH7HQYTo
+	 Ew7nx55VTyYzICGNebFxKjOmyHT8aHneDkV76AvJS9K8FWgo0O7huPEiWjr6P3Pqcd
+	 wtRkOnlSX68TfmuI6wSi96FlI22xQnGKclDYu4zv4Sn5Rn9bljudwYEGJfVsTwftbc
+	 /q9FoMB0gp+gkneGu5tKjzwts+wVn3RAvqkouaMQSJGg7YAgecNuDs7l+57qUTd20X
+	 05EbbkR3zesbQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH net v4 1/3] net/smc: bound the wire-controlled producer
- cursor to the RMB
+Subject: Re: [PATCH net v4 2/3] net/smc: bound the receive length to the RMB
+ in smc_rx_recvmsg()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Bryam Vargas" <hexlabsecurity@proton.me>
-Cc: "Alexander Gordeev" <agordeev@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, linux-s390@vger.kernel.org, "Heiko
- Carstens" <hca@linux.ibm.com>
-In-Reply-To: <20260705-b4-disp-28a1bbca-v4-1-be089b98acc6@proton.me>
+Cc: linux-s390@vger.kernel.org, "Heiko Carstens" <hca@linux.ibm.com>, "Vasily
+ Gorbik" <gor@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>
+In-Reply-To: <20260705-b4-disp-28a1bbca-v4-2-be089b98acc6@proton.me>
 References: <20260705-b4-disp-28a1bbca-v4-0-be089b98acc6@proton.me>
- <20260705-b4-disp-28a1bbca-v4-1-be089b98acc6@proton.me>
+ <20260705-b4-disp-28a1bbca-v4-2-be089b98acc6@proton.me>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 06 Jul 2026 07:54:16 +0000
-Message-Id: <20260706075417.5A03E1F00A3D@smtp.kernel.org>
+Date: Mon, 06 Jul 2026 07:54:17 +0000
+Message-Id: <20260706075418.24E1B1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -72,140 +72,205 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21575-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21576-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,sashiko.dev:url,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,proton.me:email,smtp.kernel.org:mid,vger.kernel.org:from_smtp];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,proton.me:email,sashiko.dev:url,lists.linux.dev:replyto,smtp.kernel.org:mid];
 	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:hexlabsecurity@proton.me,m:agordeev@linux.ibm.com,m:gor@linux.ibm.com,m:linux-s390@vger.kernel.org,m:hca@linux.ibm.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:hexlabsecurity@proton.me,m:linux-s390@vger.kernel.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ALIAS_RESOLVED(0.00)[];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
 	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	RCPT_COUNT_FIVE(0.00)[5];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	FROM_NO_DN(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
+	RCPT_COUNT_FIVE(0.00)[5]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 226D370E176
+X-Rspamd-Queue-Id: 1FB4A70DEC0
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [Critical] The SMC connection creation path publishes the connection to t=
-he link group tree before allocating its receive buffer (`rmb_desc`), creat=
-ing a race condition where an incoming CDC message can cause a NULL pointer=
- dereference (kernel panic) when accessing `conn->rmb_desc->len`.
-- [Critical] The SMC-R asynchronous CDC receive handler looks up a connecti=
-on from the link group tree but drops the lock without taking a reference, =
-leading to a Use-After-Free if the socket is closed concurrently.
+- [Critical] Concurrent `MSG_PEEK` and `recvmsg` calls can cause `readable`=
+ to become negative, which the patch incorrectly clamps to the ring buffer =
+size (`rmb_desc->len`). This transforms a temporary race condition into a m=
+assive read of stale data. Furthermore, because the loop continues without =
+correctly bounding `peeked_bytes`, `smc_curs_add` is eventually called with=
+ a `peeked_bytes` value exceeding `2 * rmb_desc->len`. This triggers an und=
+erflow in `smc_curs_add()`'s wrap-around logic, causing the consumer cursor=
+ count to exceed the buffer length. The subsequent subtraction `conn->rmb_d=
+esc->len - cons.count` produces a negative integer that is cast to a huge `=
+size_t` value, entirely bypassing bounds checks and allowing an unprivilege=
+d local user to read contiguous adjacent kernel memory.
+- [Critical] Socket reference count underflow in `smc_rx_splice()` on succe=
+ssful multi-page splice. When a virtually contiguous RMB is used, `smc_rx_s=
+plice()` can push multiple pages into the pipe in a single `splice_to_pipe(=
+)` call. It increments the socket reference count (`sock_hold()`) exactly o=
+nce. However, the pipe mechanism will eventually call the release callback =
+`smc_rx_pipe_buf_release()` individually for each pipe buffer (page) that w=
+as pushed. `smc_rx_pipe_buf_release()` unconditionally calls `sock_put(sk)`=
+ on the socket. If `N` pages are spliced, `sock_hold()` is called once, but=
+ `sock_put()` is called `N` times, leading to a socket reference count unde=
+rflow and Use-After-Free of the `smc_sock` structure.
+- [High] Page reference count underflow and memory leak in `smc_rx_splice()=
+` error handling. When `splice_to_pipe()` fails to push all pages (e.g., if=
+ the pipe becomes full midway), it synchronously calls the pipe buffer rele=
+ase callback `smc_rx_spd_release()` on the rejected pages. This callback un=
+conditionally calls `put_page()`. However, `smc_rx_splice()` only increment=
+s the page reference count (`get_page()`) AFTER `splice_to_pipe()` returns,=
+ and only for the pages successfully pushed. This causes a page reference c=
+ount underflow (Use-After-Free) for the rejected pages. Additionally, the c=
+orresponding `smc_spd_priv` structures allocated for the rejected pages are=
+ leaked, as `smc_rx_spd_release()` does not free them.
 --
 
-commit 16f4df4f224b2fdaeabbac3f231259cdff8766a6
+commit eb0d2eff9f593a1bd0c0a49450526ace209f8db1
 Author: Bryam Vargas <hexlabsecurity@proton.me>
 
-net/smc: bound the wire-controlled producer cursor to the RMB
+net/smc: bound the receive length to the RMB in smc_rx_recvmsg()
 
-This commit bounds the producer cursor count to the receive buffer length
-at the wire-to-host conversion for SMC-R and SMC-D. This prevents
-out-of-bounds reads during urgent data handling.
+This commit bounds the readable length to rmb_desc->len in smc_rx_recvmsg()
+to prevent a forged cursor from driving bytes_to_rcv past the RMB. It treats
+negative values as out of range as well to prevent wrap-around copies from
+exceeding the ring buffer.
 
-> diff --git a/net/smc/smc_cdc.h b/net/smc/smc_cdc.h
-> index 696cc11f2303b..ca76ef6303566 100644
-> --- a/net/smc/smc_cdc.h
-> +++ b/net/smc/smc_cdc.h
+Cc: stable@vger.kernel.org
 
+> diff --git a/net/smc/smc_rx.c b/net/smc/smc_rx.c
+> index c1d9b923938da..f461cf10b0855 100644
+> --- a/net/smc/smc_rx.c
+> +++ b/net/smc/smc_rx.c
+> @@ -442,6 +442,18 @@ int smc_rx_recvmsg(struct smc_sock *smc, struct msgh=
+dr *msg,
+>  		/* initialize variables for 1st iteration of subsequent loop */
+>  		/* could be just 1 byte, even after waiting on data above */
+>  		readable =3D smc_rx_data_available(conn, peeked_bytes);
+> +		/* bytes_to_rcv is accumulated from the peer's wire-controlled
 [ ... ]
-
-> @@ -246,8 +256,13 @@ static inline void smcr_cdc_msg_to_host(struct smc_h=
-ost_cdc_msg *local,
->  	local->len =3D peer->len;
->  	local->seqno =3D ntohs(peer->seqno);
->  	local->token =3D ntohl(peer->token);
-> -	smc_cdc_cursor_to_host(&local->prod, &peer->prod, conn);
-> -	smc_cdc_cursor_to_host(&local->cons, &peer->cons, conn);
-> +	/* bound the wire-controlled producer cursor to our RMB (used as a raw
-> +	 * index by the urgent path); leave the consumer cursor unbounded -- it
-> +	 * indexes the peer's RMB and is bounded by peer_rmbe_size.
-> +	 */
-> +	smc_cdc_cursor_to_host(&local->prod, &peer->prod, conn,
-> +			       conn->rmb_desc->len);
+> +		 * 0 <=3D bytes_to_rcv <=3D rmb_desc->len invariant at the consumer,
+> +		 * race-free against the producer update in the receive tasklet.
+> +		 */
+> +		if (readable < 0 || readable > conn->rmb_desc->len)
+> +			readable =3D conn->rmb_desc->len;
 
 [Severity: Critical]
-This isn't a bug introduced by this patch, but does this create a risk of a
-NULL pointer dereference if the connection receives a CDC message before the
-buffer is allocated?
+This isn't a bug introduced by this patch, but does this clamp allow a
+massive read of stale data when readable is negative?
 
-Looking at the connection creation path, the connection is published to the
-link group tree before allocating its receive buffer:
+If concurrent MSG_PEEK and recvmsg calls cause bytes_to_rcv - peeked_bytes
+to become negative, clamping it to the full rmb_desc->len here allows the
+copy loop to accumulate peeked_bytes indefinitely.
 
-net/smc/smc_core.c:smc_conn_create() {
+Because the loop continues without correctly bounding peeked_bytes,
+smc_curs_add() is eventually called with a peeked_bytes value exceeding
+2 * rmb_desc->len.
+
+If value >=3D 2 * size, the wrap-around logic in smc_curs_add() fails to
+wrap correctly:
+
+net/smc/smc_cdc.h:smc_curs_add() {
     ...
-    rc =3D smc_lgr_register_conn(conn, true);
+    if (curs->count >=3D size) {
+        curs->wrap++;
+        curs->count -=3D size;
+    }
     ...
 }
 
-If a remote peer sends a CDC message to this connection's token before
-smc_buf_create() completes, could the asynchronous handler process it and
-dereference conn->rmb_desc->len while conn->rmb_desc is still NULL?
+Does this cause an underflow in the bounds check calculation
+conn->rmb_desc->len - cons.count, resulting in a negative integer cast
+to a huge size_t that bypasses bounds checks?
 
-The pre-existing code also unconditionally dereferences this in
-smc_cdc_msg_recv_action() via:
 
-    diff_prod =3D smc_curs_diff(conn->rmb_desc->len, &prod_old, ...);
+While reviewing this, I also noticed a couple of preexisting issues in
+smc_rx_splice() and its pipe buffer callbacks:
 
-Could we safely ensure rmb_desc is allocated before it gets accessed in
-these paths?
+[Severity: High]
+This is a pre-existing issue, but does smc_rx_splice() leak memory and
+cause a page reference count underflow if splice_to_pipe() fails partially?
 
-> +	smc_cdc_cursor_to_host(&local->cons, &peer->cons, conn, 0);
->  	local->prod_flags =3D peer->prod_flags;
->  	local->conn_state_flags =3D peer->conn_state_flags;
->  }
+When splice_to_pipe() rejects pages (e.g., pipe is nearly full), it calls
+the release callback which unconditionally drops a reference:
 
-[Severity: Critical]
-This is a pre-existing issue, but looking at the surrounding CDC receive
-path, is there a potential use-after-free when handling asynchronous
-messages?
-
-In the receive handler, the connection is retrieved using smc_lgr_find_conn=
-()
-under a read lock, but the lock is dropped without taking a reference on
-the socket:
-
-net/smc/smc_cdc.c:smc_cdc_rx_handler() {
+net/smc/smc_rx.c:smc_rx_spd_release() {
     ...
-    read_unlock_bh(&lgr->conns_lock);
-    if (!conn || conn->out_of_sync)
-        return;
-    smc =3D container_of(conn, struct smc_sock, conn);
-    ...
-    smc_cdc_msg_recv(smc, cdc);
+    put_page(spd->pages[i]);
 }
 
-If a local process concurrently closes the socket via smc_conn_free(), which
-removes the connection and drops the final reference, could the socket be
-freed before smc_cdc_msg_recv() executes and calls sock_hold()?
+However, in smc_rx_splice(), get_page() is only called AFTER
+splice_to_pipe() returns, and only for the successfully pushed pages:
+
+net/smc/smc_rx.c:smc_rx_splice() {
+    ...
+    bytes =3D splice_to_pipe(pipe, &spd);
+    if (bytes > 0) {
+        sock_hold(&smc->sk);
+        if (!lgr->is_smcd && smc->conn.rmb_desc->is_vm) {
+            for (i =3D 0; i < PAGE_ALIGN(bytes + offset) / PAGE_SIZE; i++)
+                get_page(pages[i]);
+        } else {
+            get_page(smc->conn.rmb_desc->pages);
+        }
+    ...
+}
+
+Does this result in an immediate page reference count underflow for the
+rejected pages? Furthermore, are the corresponding smc_spd_priv structures
+for the rejected pages leaked, since smc_rx_spd_release() doesn't free them?
+
+
+[Severity: Critical]
+This is a pre-existing issue, but does a successful multi-page splice
+cause a socket reference count underflow?
+
+In smc_rx_splice(), when pushing multiple pages into the pipe, sock_hold()
+is called exactly once for the entire successful splice_to_pipe() operation:
+
+net/smc/smc_rx.c:smc_rx_splice() {
+    ...
+    bytes =3D splice_to_pipe(pipe, &spd);
+    if (bytes > 0) {
+        sock_hold(&smc->sk);
+    ...
+}
+
+However, as the pipe consumes the buffers, it calls the release callback
+individually for every single pipe buffer (page), and unconditionally calls
+sock_put() every time:
+
+net/smc/smc_rx.c:smc_rx_pipe_buf_release() {
+    ...
+out:
+    kfree(priv);
+    put_page(buf->page);
+    sock_put(sk);
+}
+
+If N pages are spliced (when using virtually contiguous memory,
+is_vm =3D=3D true), is sock_put() called N times for a single sock_hold(),
+leading to a use-after-free of the smc_sock structure?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260705-b4-disp-28=
-a1bbca-v4-0-be089b98acc6@proton.me?part=3D1
+a1bbca-v4-0-be089b98acc6@proton.me?part=3D2
 
