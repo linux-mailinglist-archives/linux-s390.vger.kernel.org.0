@@ -1,75 +1,75 @@
-Return-Path: <linux-s390+bounces-21598-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21606-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id SZODINdwS2roRQEAu9opvQ
-	(envelope-from <linux-s390+bounces-21598-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 06 Jul 2026 11:09:43 +0200
+	id b82rDmOPS2omVgEAu9opvQ
+	(envelope-from <linux-s390+bounces-21606-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 06 Jul 2026 13:20:03 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEEE070E741
-	for <lists+linux-s390@lfdr.de>; Mon, 06 Jul 2026 11:09:42 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FF1770FC37
+	for <lists+linux-s390@lfdr.de>; Mon, 06 Jul 2026 13:20:02 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=C017Kw2D;
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=Ps2OROHU;
 	dmarc=pass (policy=none) header.from=ibm.com;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21598-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21598-lists+linux-s390=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21606-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21606-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 89C7D303B4C3
-	for <lists+linux-s390@lfdr.de>; Mon,  6 Jul 2026 09:02:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DFAAF3085AC6
+	for <lists+linux-s390@lfdr.de>; Mon,  6 Jul 2026 09:13:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4B204DD6F2;
-	Mon,  6 Jul 2026 08:53:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC7DA3E3164;
+	Mon,  6 Jul 2026 08:58:30 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B72B4DB56B;
-	Mon,  6 Jul 2026 08:53:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A059C414DC0;
+	Mon,  6 Jul 2026 08:58:21 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783328013; cv=none; b=jwOwJ5XOaT5WKaTbMRqGXQu636CLOAksYuqKrxlJFYcHi/pBiR3105biYc/NT5+AiSScOqOsAOMGM7H65tF1W8oSlZILA3o4ELk1RR4z62ize+6qkPawXdQPX36TYJcEMCsTiubSyoRz6de+tejQ6L8HBpy5c3vmRcUcLO132aQ=
+	t=1783328309; cv=none; b=pOLjw7eIAkQ0nbrCsTxv6W8hNaAaWyMAYonQhwmYcB1OYmLEdpJBJJFCLYIIyoKs+qeILmf0KQKv4TNCHUjmE4CVQkQB7UCfFxqYj3gzK8G0LwyL4kBqKWzBkYnmPhuwLAEjkgDu8/im3W5EpvClmBGob58UZEuI6YhedXmsSy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783328013; c=relaxed/simple;
-	bh=ytoVC9ObPJO2h2iOEvzlq9KFTJnSE+rkcI9s4n7s8cI=;
+	s=arc-20240116; t=1783328309; c=relaxed/simple;
+	bh=5x3m4U8wRrNA1diIKAL9CvIZB6gh6XuNIX4m0OQ4FkE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V5Ntzj7PpkySxKR4jAFZjlaDJzR8ZhjU8/Dildh4RNd4WsoXEaNC7cl99/yLxT82eQ4Djn7ehFNKQ2c409kQlh4HbkrqNYn6A4/rdq3mxxTgK6k1OHZQ0Nrghvdjnmy3HS2FPQSCIUtwSLjpjJkNqUAO8mzoM6ap5thxAv+PKDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=C017Kw2D; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=bfCWKb5F4y78gozVwnKvLS4dMwvyoc5x8QYUT6QAJL8jQ+IpPp7YV41/qmhDKAv+j3W4lft3s9g1gv3Wh7kTlUZU1YfE4Sns4Op0eBZyUj8JS0SSFjz+pcNsyDVmYS9YdE3VuBV2T4d9rz/IiLjz27dLZuUpm1UCOcGxiG02chY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ps2OROHU; arc=none smtp.client-ip=148.163.156.1
 Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 665MIPpa2304097;
-	Mon, 6 Jul 2026 08:52:49 GMT
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 665MIGQ82303956;
+	Mon, 6 Jul 2026 08:52:50 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=WJ1DgvlbVQDOCiykA
-	nAvYUJF0dXKBmZH19QD9OLzes4=; b=C017Kw2DBK8OfjxlKDW1cv+sZTSZgEIEF
-	Fk1G3h/ohYVadP4AkpSar8Y3z1hXJzor9dVYmqQ6s9ewbydAr1wu67oxflqN14TP
-	lX4RP2rTEZe4lAnvAoWZJxkCS0qfsXhQJDSgoNoe7P8VDqZBjLCjdyC12HLOP8JH
-	lQUxbg4wpyUnzJJZXS7+Hg/8RLiSMcf4ur1K2ImORxh6B0irtl+G8KmmWnI3OypP
-	pk0ciSuX2GsU6f6uki4vX+dh7eu0ac9uLjBQ50P6jJDJ9YmkmERqdLB3U2UEqx78
-	AKpZpseosttwCQZunzmXFYDQqaZB0uIzdZbnjT1moy+FolowKxvRQ==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6sp3gk88-1
+	:mime-version:references:subject:to; s=pp1; bh=D6oxv9x4Bb9P3Ee/2
+	ovo5eCbeGWm/VpAePCJrUzRHSU=; b=Ps2OROHUooewZb7+mEVpzRfxgMuAY9bCv
+	Ur80F5THLWLHP8/EKTGfsRlB6ONirx1qfkr+qAOjBgxu+sG1t8xP2JlLuytY2Kkt
+	7R2q+zc6gKJsfGxEpgH/HfpLHLPL02PvWNgCfl5JeqwHQYH1mxT9a+R3RMh9WXt8
+	1yWd4wyBaSLbXEXoUckr33ZglkEmlGiIlk8aHCHOcnpgUvZistpkEWWeILiJSJdj
+	GGGkv9nA9vQUXmKAszVM+6+etdXbv75Wyf7NlzKF06tir9kKp//NoZQFsLojBtLL
+	hOUxAl1T8qurbyRADeuQnwTsHVdQh1DKUoHOzsUL9VkJN/NZpYyGA==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6sp3gk8c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 06 Jul 2026 08:52:50 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6668nbb1009549;
+	Mon, 6 Jul 2026 08:52:49 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4f7cgpw1bs-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Mon, 06 Jul 2026 08:52:49 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6668nc8H023208;
-	Mon, 6 Jul 2026 08:52:48 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f7cvvvyhn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 Jul 2026 08:52:47 +0000 (GMT)
 Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6668qf9I32440780
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6668qfEp51118460
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Mon, 6 Jul 2026 08:52:41 GMT
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 07FE020040;
+	by IMSVA (Postfix) with ESMTP id 7327B20040;
 	Mon,  6 Jul 2026 08:52:41 +0000 (GMT)
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 993B42004E;
-	Mon,  6 Jul 2026 08:52:40 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 0F24720043;
+	Mon,  6 Jul 2026 08:52:41 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
 	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  6 Jul 2026 08:52:40 +0000 (GMT)
+	Mon,  6 Jul 2026 08:52:41 +0000 (GMT)
 From: Steffen Eiden <seiden@linux.ibm.com>
 To: kvm@vger.kernel.org, kvmarm@lists.linux.dev,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -95,9 +95,9 @@ Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
         Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>,
         Zenghui Yu <yuzenghui@huawei.com>
-Subject: [PATCH v4 26/27] KVM: s390: arm64: Implement basic page fault handler
-Date: Mon,  6 Jul 2026 10:52:26 +0200
-Message-ID: <20260706085229.979525-27-seiden@linux.ibm.com>
+Subject: [PATCH v4 27/27] KVM: s390: arm64: Enable KVM_ARM64 config and Kbuild
+Date: Mon,  6 Jul 2026 10:52:27 +0200
+Message-ID: <20260706085229.979525-28-seiden@linux.ibm.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260706085229.979525-1-seiden@linux.ibm.com>
 References: <20260706085229.979525-1-seiden@linux.ibm.com>
@@ -109,23 +109,23 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=KsJ9H2WN c=1 sm=1 tr=0 ts=6a4b6ce1 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+X-Authority-Analysis: v=2.4 cv=KsJ9H2WN c=1 sm=1 tr=0 ts=6a4b6ce2 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
  a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8 a=Rlh8LM2epgzb96jMsLsA:9
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA2MDA4OCBTYWx0ZWRfX7WqFNLh4AJ3y
- /DXNdWDSZ9mqdQQ0ICqS9c6GwtjsrXLWUErKMj+DYwc5LY9vbJhn7sR4sqw6H2tc7MewSgcYwmU
- eOQ7k0sMljkKnaE7h7KSWercBu1nkfs=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA2MDA4OCBTYWx0ZWRfXyb1V3fngxLWi
- d/InoXkuF53dT2kUKRdFRPZqIn8ivsCOm+frlJ04JjaSnyxy0m+iP87Fx6RDQ4jKTvaO7RM2CcI
- GTqwI6eSw47wj8zpRjorXyltQYF1Qrz2qz+OOxB/9M7rg8vpfuQUPdgC94IzXe9MIPXe0dH1Ubt
- Y7H1uALlA3lW1rR/lnow6aomm2Bml1CS19xdn3+Wo2LPP5kFE0XLYVvi1kZ+FGWIRf+h4x1+Sgm
- mqKmtHYO6a9I7X5w5crOdndS5E2X5a1sV4Rst7aVYQsgLcgCdml4s0uiKFg0crJsy9sFToneApN
- q4eg/WSn/wCru/79R6U2647Yeok+Q3Ev/28hCehNbDl4QDhGt4zjseXN8bXjIn7mnRL3ib3YO7U
- miZZTjhs5xIxVZUMd+RjCii/rFl7pRfSdM60zJ61qk7GhhwwxAEq8ZAqdunoajZOtRnd0s3oXCK
- T3FXp8Wg8mMtae0fyFA==
-X-Proofpoint-ORIG-GUID: CZMSNUYCy7xhAcyFpTqNKe9JbL0WYb0O
-X-Proofpoint-GUID: CZMSNUYCy7xhAcyFpTqNKe9JbL0WYb0O
+ a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8 a=Zz3svKs3IDGlfYr5LI8A:9
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA2MDA4OCBTYWx0ZWRfX6RrfVRnzEcq6
+ 7Clgvq/luVzxVx67cX/lm/7Xcw2jKGfWn+hmGtBBNiVsYwvIjF8KF7GLSI8TSmgM8UJC75SEB12
+ NjGYHXMkb9HdU6njeIUi9LaKlApQ53g=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA2MDA4OCBTYWx0ZWRfX7/Md+HucprUM
+ GA+WJMr5pW0SbIIcEvpbNbV/v6AZ4/1fFSeNWZJNkhL7BWAuVh4LUAxicJhfPjw3hlM33KkzB8G
+ 8tWxxGaZo7MPuPVBISi08efKl/44EgvwniNBUGMdaDx5WcjIZyP+XvI7azUYc6iTMjOTiMKaCVp
+ 9PSDNus8VIrS3hPztsXp3IExz5aSQjVZzHLG8BDm9HVBXd+YRj4zCNPebeSrn8Gs7fNhytJQQk+
+ c8aTY6/3g+H9m7k2ma1Bbt55b+B4grqouRgRDMXgKd/T73bK+rw/fR/6UgsfQoZTunoe07ap30i
+ 1Ssrt4CCQ12J8fbTJnueX9NLNujijI6dblZ5xJEeNiFWnb8JlANaPrAvH6bi4GEudZh8Zx89xnR
+ BlSqI858mQO7SRKc+89WWC+b05djQYJbQ0aYyYfJf5Y8+hiAWmHnT/PBGRMy4sgYrFjmC4pUMhP
+ rbxw7OaAZSX1LKf5G3w==
+X-Proofpoint-ORIG-GUID: _cQCSZ6FXMns0UX9qBwA0Hcy3pgX859Q
+X-Proofpoint-GUID: _cQCSZ6FXMns0UX9qBwA0Hcy3pgX859Q
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-07-05_02,2026-07-03_01,2025-10-01_01
@@ -141,265 +141,234 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCPT_COUNT_TWELVE(0.00)[31];
-	TAGGED_FROM(0.00)[bounces-21598-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21606-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER(0.00)[seiden@linux.ibm.com,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS(0.00)[m:kvm@vger.kernel.org,m:kvmarm@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-s390@vger.kernel.org,m:agordeev@linux.ibm.com,m:gra@linux.ibm.com,m:arnd@arndb.de,m:catalin.marinas@arm.com,m:borntraeger@linux.ibm.com,m:imbrenda@linux.ibm.com,m:david@kernel.org,m:fritz@linux.ibm.com,m:ggala@linux.ibm.com,m:hari55@linux.ibm.com,m:hca@linux.ibm.com,m:brueckner@linux.ibm.com,m:iii@linux.ibm.com,m:frankja@linux.ibm.com,m:joey.gouly@arm.com,m:maz@kernel.org,m:nrb@linux.ibm.com,m:oss@nina.schoetterlglausch.eu,m:oupton@kernel.org,m:pbonzini@redhat.com,m:suzuki.poulose@arm.com,m:svens@linux.ibm.com,m:Ulrich.Weigand@de.ibm.com,m:gor@linux.ibm.com,m:will@kernel.org,m:yuzenghui@huawei.com,s:lists@lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[seiden@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[ibm.com:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.ibm.com:mid,linux.ibm.com:from_mime,vger.kernel.org:from_smtp];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,linux.ibm.com:mid,linux.ibm.com:from_mime,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: DEEE070E741
+X-Rspamd-Queue-Id: 4FF1770FC37
 
-Add host functionality to page in guest memory. If the guest does
-something unexpected or illegal exit to userspace abort guest execution.
-This behaviour will be changed to guest error injects once all sysregs
-are accessible for the host.
+Add all Kbuild/Makefile configurations to build a second KVM module on
+s390 implementing the arm64-KVM API. To prevent symbol conflicts with
+kvm-s390 all internal symbols in kvm-arm64 are mangled if compiled as
+built-in. The new module ins named kvm-arm64.
 
+As in this case the build does not go through the normal build process
+the module parameter handling would be messed up. By forcing
+KBUILD_MODNAME to kvm-arm64 all parameters are at the same location and
+not at object/basename of the object file the parameter is introduced.
+
+Co-developed-by: Andreas Grapentin <gra@linux.ibm.com>
+Signed-off-by: Andreas Grapentin <gra@linux.ibm.com>
 Co-developed-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
 Signed-off-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+Co-developed-by: Gautam Gala <ggala@linux.ibm.com>
+Signed-off-by: Gautam Gala <ggala@linux.ibm.com>
 Signed-off-by: Steffen Eiden <seiden@linux.ibm.com>
 ---
- arch/s390/kvm/arm64/handle_exit.c |   2 +
- arch/s390/kvm/arm64/mmio.c        |  12 ++
- arch/s390/kvm/arm64/mmu.c         | 178 ++++++++++++++++++++++++++++++
- 3 files changed, 192 insertions(+)
- create mode 100644 arch/s390/kvm/arm64/mmio.c
- create mode 100644 arch/s390/kvm/arm64/mmu.c
+ arch/s390/configs/defconfig  |  1 +
+ arch/s390/include/asm/Kbuild |  3 ++
+ arch/s390/kvm/Kconfig        |  1 +
+ arch/s390/kvm/Makefile       |  1 +
+ arch/s390/kvm/arm64/Kconfig  | 23 +++++++++
+ arch/s390/kvm/arm64/Makefile | 94 ++++++++++++++++++++++++++++++++++++
+ 6 files changed, 123 insertions(+)
+ create mode 100644 arch/s390/kvm/arm64/Kconfig
+ create mode 100644 arch/s390/kvm/arm64/Makefile
 
-diff --git a/arch/s390/kvm/arm64/handle_exit.c b/arch/s390/kvm/arm64/handle_exit.c
-index 1cd19506b133..96a45483e5b6 100644
---- a/arch/s390/kvm/arm64/handle_exit.c
-+++ b/arch/s390/kvm/arm64/handle_exit.c
-@@ -55,6 +55,8 @@ static int handle_hvc(struct kvm_vcpu *vcpu)
- exit_handle_fn arm_exit_handlers[] = {
- 	[0 ... ESR_ELx_EC_MAX]	= kvm_handle_unknown_ec,
- 	[ESR_ELx_EC_HVC64]	= handle_hvc,
-+	[ESR_ELx_EC_IABT_LOW]	= kvm_handle_guest_abort,
-+	[ESR_ELx_EC_DABT_LOW]	= kvm_handle_guest_abort,
- };
+diff --git a/arch/s390/configs/defconfig b/arch/s390/configs/defconfig
+index 327ab4a3933c..20de85c96e9e 100644
+--- a/arch/s390/configs/defconfig
++++ b/arch/s390/configs/defconfig
+@@ -62,6 +62,7 @@ CONFIG_CMM=m
+ CONFIG_APPLDATA_BASE=y
+ CONFIG_S390_HYPFS_FS=y
+ CONFIG_KVM_S390=m
++CONFIG_KVM_ARM64=m
+ CONFIG_S390_UNWIND_SELFTEST=m
+ CONFIG_S390_KPROBES_SANITY_TEST=m
+ CONFIG_S390_MODULES_SANITY_TEST=m
+diff --git a/arch/s390/include/asm/Kbuild b/arch/s390/include/asm/Kbuild
+index 0c1fc47c3ba0..f6fd67d1c651 100644
+--- a/arch/s390/include/asm/Kbuild
++++ b/arch/s390/include/asm/Kbuild
+@@ -8,3 +8,6 @@ generic-y += asm-offsets.h
+ generic-y += mcs_spinlock.h
+ generic-y += mmzone.h
+ generic-y += ring_buffer.h
++
++generated-y += sysreg-gen-defs.h
++generated-y += kvm_arm64_modname.h
+diff --git a/arch/s390/kvm/Kconfig b/arch/s390/kvm/Kconfig
+index f8d4a9a38dae..bbae58aa8bc4 100644
+--- a/arch/s390/kvm/Kconfig
++++ b/arch/s390/kvm/Kconfig
+@@ -20,5 +20,6 @@ config KVM
+ 	tristate
  
- /*
-diff --git a/arch/s390/kvm/arm64/mmio.c b/arch/s390/kvm/arm64/mmio.c
+ source "arch/s390/kvm/s390/Kconfig"
++source "arch/s390/kvm/arm64/Kconfig"
+ 
+ endif # VIRTUALIZATION
+diff --git a/arch/s390/kvm/Makefile b/arch/s390/kvm/Makefile
+index c43d7dffca13..38bdd7c9b42d 100644
+--- a/arch/s390/kvm/Makefile
++++ b/arch/s390/kvm/Makefile
+@@ -4,3 +4,4 @@
+ # Copyright IBM Corp. 2008
+ 
+ obj-$(CONFIG_KVM_S390) += s390/
++obj-$(CONFIG_KVM_ARM64) += arm64/
+diff --git a/arch/s390/kvm/arm64/Kconfig b/arch/s390/kvm/arm64/Kconfig
 new file mode 100644
-index 000000000000..cfddfe322196
+index 000000000000..99a7fc3b71c0
 --- /dev/null
-+++ b/arch/s390/kvm/arm64/mmio.c
-@@ -0,0 +1,12 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/arch/s390/kvm/arm64/Kconfig
+@@ -0,0 +1,23 @@
++# SPDX-License-Identifier: GPL-2.0
 +
-+#include <linux/kvm_host.h>
-+#include <linux/bitfield.h>
++config KVM_ARM64
++	def_tristate y
++	prompt "Kernel-based Virtual Machine (KVM) support for arm64 guests"
++	depends on HAS_IOMEM
++	select KVM
++	select KVM_VFIO
++	select IRQ_BYPASS_MANAGER
++	select SCHED_INFO
++	select XARRAY_MULTI
++	select KVM_COMMON
++	select HAVE_KVM_CPU_RELAX_INTERCEPT
++	select HAVE_KVM_MSI
++	select HAVE_KVM_IRQCHIP
++	select HAVE_KVM_IRQ_ROUTING
++	select HAVE_KVM_VCPU_RUN_PID_CHANGE
++	select KVM_GENERIC_PRE_FAULT_MEMORY
++	select GUEST_PERF_EVENTS if PERF_EVENTS
++	help
++	  Support hosting virtualized arm64 guest machines on s390 host machines.
 +
-+#include <arm64/kvm_emulate.h>
-+#include <arm64/kvm_mmu.h>
-+#include <arm64/sysreg.h>
-+
-+#define __INCL_GEN_ARM_FILE
-+#include "generated/mmio.inc"
-+#undef __INCL_GEN_ARM_FILE
-diff --git a/arch/s390/kvm/arm64/mmu.c b/arch/s390/kvm/arm64/mmu.c
++	  If unsure, say N.
+diff --git a/arch/s390/kvm/arm64/Makefile b/arch/s390/kvm/arm64/Makefile
 new file mode 100644
-index 000000000000..d5acabd762ba
+index 000000000000..566040725ab5
 --- /dev/null
-+++ b/arch/s390/kvm/arm64/mmu.c
-@@ -0,0 +1,178 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/kvm_host.h>
++++ b/arch/s390/kvm/arm64/Makefile
+@@ -0,0 +1,94 @@
++# SPDX-License-Identifier: GPL-2.0
 +
-+#include <arm64/kvm_emulate.h>
-+#include <arm64/kvm_mmu.h>
++KVM := ../../../../virt/kvm
++include $(srctree)/virt/kvm/Makefile.kvm
++KVM_MANAGES_S390_GUEST = n
++include $(srctree)/arch/s390/kvm/gmap/Makefile
++include $(src)/Makefile.gen
 +
-+#include <faultin.h>
++ccflags-y += -I $(src) -I $(objtree)/$(obj) -I$(srctree)/arch/s390/kvm/gmap -I$(srctree)/arch/arm64/include -I$(srctree)/arch/arm64/kvm -DKVM_S390_ARM64
 +
-+static inline bool kvm_s390_cur_gmap_fault_is_write(struct kvm_vcpu *vcpu)
-+{
-+	return vcpu->arch.sae_block.hai.pic == PGM_PROTECTION ||
-+	       vcpu->arch.sae_block.hai.teid.fsi == TEID_FSI_STORE;
-+}
++kvm-arm64-obj := \
++	arm.o \
++	guest.o \
++	handle_exit.o \
++	inject_fault.o \
++	mmu.o \
++	mmio.o \
++	reset.o \
 +
-+/*
-+ * user_mem_abort() - handle a dat fault for the gmap of a vcpu
-+ *
-+ * Return: 0 on success, < 0 in case of error.
-+ * Context: The mm lock must not be held before calling. May sleep.
-+ */
-+static int user_mem_abort(struct kvm_vcpu *vcpu, gpa_t fault_ipa,
-+			  struct kvm_memory_slot *slot, hva_t hva)
-+{
-+	struct guest_fault f = { };
-+	int ret;
++kvm-arm64-obj += $(patsubst %.o,%-arm64.o,$(kvm-y))
 +
-+	if (kvm_s390_cur_gmap_fault_is_write(vcpu))
-+		f.write_attempt = FOLL_WRITE;
-+	f.gfn = gpa_to_gfn(fault_ipa);
++targets += $(kvm-arm64-obj)
 +
-+	ret = kvm_s390_faultin_gfn(vcpu, NULL, &f);
-+	if (ret <= 0)
-+		return ret;
-+	if (ret == PGM_ADDRESSING)
-+		/*
-+		 * Without the relevant sysregs we cannot do anything for now.
-+		 * Go back to userspace with an error. TODO sysreg handling
-+		 */
-+		return -ENOEXEC;
-+	KVM_BUG_ON(ret, vcpu->kvm);
-+	return -EINVAL;
-+}
++$(obj)/%-arm64.o: $(src)/%.c FORCE
++	@mkdir -p $(dir $@)
++	$(call if_changed_rule,cc_o_c)
 +
-+static int kvm_handle_pic(struct kvm_vcpu *vcpu, bool *translation)
-+{
-+	switch (kvm_vcpu_fault_pic(vcpu)) {
-+	/* expected cases: */
-+	case PGM_ASCE_TYPE:
-+	case PGM_REGION_FIRST_TRANS:
-+	case PGM_REGION_SECOND_TRANS:
-+	case PGM_REGION_THIRD_TRANS:
-+	case PGM_SEGMENT_TRANSLATION:
-+	case PGM_PAGE_TRANSLATION:
-+		*translation = true;
-+		break;
-+	case PGM_PROTECTION:
-+		break;
-+	/* unexpected cases: */
-+	case 0:
-+		KVM_BUG(1, vcpu->kvm, "On MMU fault path but no fault occurred");
-+		return -EFAULT;
-+	default:
-+		KVM_BUG(1, vcpu->kvm, "Unexpected program interrupt 0x%x, TEID 0x%016lx",
-+			vcpu->arch.sae_block.hai.pic, vcpu->arch.sae_block.hai.teid.val);
-+		send_sig(SIGSEGV, current, 0);
-+		return -EFAULT;
-+	}
++ifeq ($(CONFIG_KVM_ARM64),m)
 +
-+	return 0;
-+}
++kvm-arm64-y = $(kvm-arm64-obj)
 +
-+int kvm_handle_guest_abort(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_memory_slot *memslot;
-+	bool translation = false;
-+	phys_addr_t fault_ipa;
-+	unsigned long esr;
-+	unsigned long hva;
-+	bool write_fault;
-+	bool guest_size_err;
-+	bool writable;
-+	bool is_iabt;
-+	int ret;
-+	gfn_t gfn;
-+	int idx;
++else ifeq ($(CONFIG_KVM_ARM64),y)
 +
-+	esr = kvm_vcpu_get_esr(vcpu);
-+	fault_ipa = kvm_vcpu_get_fault_ipa(vcpu);
-+	is_iabt = kvm_vcpu_trap_is_iabt(vcpu);
-+	guest_size_err = vcpu->arch.sae_block.icptr == SAE_ICPTR_GUEST_ADDRESS_SIZE;
++KVM_ARM64_GEN_DIR := $(objtree)/arch/${SRCARCH}/include/generated/asm
++KVM_ARM64_MODNAME_H := $(KVM_ARM64_GEN_DIR)/kvm_arm64_modname.h
++ccflags-y += -include $(KVM_ARM64_MODNAME_H)
 +
-+	if (guest_size_err) {
-+		translation = true;
-+	} else {
-+		ret = kvm_handle_pic(vcpu, &translation);
-+		if (ret)
-+			return ret;
-+	}
++targets += $(KVM_ARM64_MODNAME_H)
 +
-+	if (translation) {
-+		/*
-+		 * For both cases:
-+		 * Without the relevant sysregs we cannot do anything for now.
-+		 * Go back to userspace with an error. TODO sysreg handling
-+		 */
-+		if (fault_ipa >= BIT_ULL(get_kvm_ipa_limit()))
-+			return -ENOEXEC;
++quiet_cmd_kvm_arm64_modname_h = GEN     $@
++      cmd_kvm_arm64_modname_h = { \
++	echo '/* Automatically generated; do not edit. */'; \
++	echo '\#ifndef _KVM_ARM64_MODNAME_H'; \
++	echo '\#define _KVM_ARM64_MODNAME_H'; \
++	echo '\#undef KBUILD_MODNAME'; \
++	echo '\#define KBUILD_MODNAME "kvm_arm64"'; \
++	echo '\#endif /* _KVM_ARM64_MODNAME_H */'; \
++	} > $@
 +
-+		if (fault_ipa >= kvm_phys_size(vcpu->kvm))
-+			return -ENOEXEC;
-+	}
++$(addprefix $(obj)/,$(kvm-arm64-obj)): $(KVM_ARM64_MODNAME_H)
 +
-+	idx = srcu_read_lock(&vcpu->kvm->srcu);
++$(KVM_ARM64_MODNAME_H):
++	@mkdir -p $(KVM_ARM64_GEN_DIR)
++	$(call cmd,kvm_arm64_modname_h)
 +
-+	gfn = fault_ipa >> PAGE_SHIFT;
++prereq-o-cmd = $(foreach o, $(filter %.o, $^), $(dir $(o)).$(notdir $(o)).cmd)
++cmd_gen_symversions_o = \
++	grep --no-filename "^\#SYMVER" $(prereq-o-cmd) >> $(dot-target).cmd || true
 +
-+	memslot = gfn_to_memslot(vcpu->kvm, gfn);
-+	hva = gfn_to_hva_memslot_prot(memslot, gfn, &writable);
-+	write_fault = kvm_is_write_fault(vcpu);
-+	if (kvm_is_error_hva(hva) || (write_fault && !writable)) {
-+		ret = -ENOEXEC;
-+		/*
-+		 * The guest has put either its instructions or its page-tables
-+		 * somewhere it shouldn't have. Userspace won't be able to do
-+		 * anything about this (there's no syndrome for a start).
-+		 *
-+		 * Without the relevant sysregs we cannot do anything for now.
-+		 * Go back to userspace with an error. TODO sysreg handling
-+		 */
-+		if (is_iabt)
-+			goto out_unlock;
++define rule_ld_o_o
++	$(call cmd_and_savecmd,ld)
++	$(call cmd,gen_symversions_o)
++endef
 +
-+		if (kvm_vcpu_abt_iss1tw(vcpu)) {
-+			/*
-+			 * Without the relevant sysregs we cannot do anything for now.
-+			 * Go back to userspace with an error. TODO sysreg handling
-+			 */
-+			goto out_unlock;
-+		}
++LDFLAGS_kvm-unnamespaced.o := -r --whole-archive
++$(obj)/kvm-unnamespaced.o: $(addprefix $(obj)/,$(kvm-arm64-obj)) FORCE
++	$(call if_changed_rule,ld_o_o)
 +
-+		/*
-+		 * Check for a cache maintenance operation. Assume the guest is
-+		 * cautious and skip instruction
-+		 */
-+		if (kvm_is_error_hva(hva) && kvm_vcpu_dabt_is_cm(vcpu)) {
-+			kvm_incr_pc(vcpu);
-+			ret = 1;
-+			goto out_unlock;
-+		}
++# Make list of symbols to localize.
++# Collect normal/exported symbols. Use dict as set for deduplication.
++# TODO extract do script
++quiet_cmd_nm_filter = NMFLTR  $@
++	cmd_nm_filter = $(NM) -jU $< | sort -u > $@
 +
-+		/*
-+		 * The IPA is reported as [MAX:12], so we need to
-+		 * complement it with the bottom 12 bits from the
-+		 * faulting VA. This is always 12 bits, irrespective
-+		 * of the page size.
-+		 */
-+		fault_ipa |= kvm_vcpu_get_hfar(vcpu) & ((1 << 12) - 1);
-+		ret = io_mem_abort(vcpu, fault_ipa);
-+		goto out_unlock;
-+	}
++$(obj)/kvm_symbol_list: $(obj)/kvm-unnamespaced.o FORCE
++	$(call if_changed,nm_filter)
 +
-+	/* Userspace should not be able to register out-of-bounds IPAs */
-+	VM_BUG_ON(fault_ipa >= kvm_phys_size(vcpu->kvm));
-+	/*
-+	 * Proper guest size faults have been injected.
-+	 * In theory it's fine to have device memory higher than MSL,
-+	 * even if not currently possible, but that would have been handled above.
-+	 * So if we get here with a guest size intercept, we have a bug somewhere.
-+	 */
-+	VM_BUG_ON(guest_size_err);
++define rule_oc_o_o
++	$(call cmd_and_savecmd,objcopy)
++	$(call cmd,gen_objtooldep)
++	$(call cmd,gen_symversions_o)
++endef
 +
-+	ret = user_mem_abort(vcpu, fault_ipa, memslot, hva);
-+	if (!ret)
-+		ret = 1;
-+out_unlock:
-+	srcu_read_unlock(&vcpu->kvm->srcu, idx);
-+	return ret;
-+}
++OBJCOPYFLAGS_kvm-namespaced.o := -O default --localize-symbols=$(obj)/kvm_symbol_list
++$(obj)/kvm-namespaced.o: $(obj)/kvm-unnamespaced.o $(obj)/kvm_symbol_list FORCE
++	$(call if_changed_rule,oc_o_o)
++
++kvm-arm64-y = kvm-namespaced.o
++
++targets += kvm-unnamespaced.o kvm_symbol_list kvm-namespaced.o
++
++endif
++
++obj-$(CONFIG_KVM_ARM64) += kvm-arm64.o
 -- 
 2.53.0
 
