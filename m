@@ -1,78 +1,78 @@
-Return-Path: <linux-s390+bounces-21645-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21648-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 464wLiqsS2o/YQEAu9opvQ
-	(envelope-from <linux-s390+bounces-21645-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 06 Jul 2026 15:22:50 +0200
+	id HDSbBC2vS2r2YQEAu9opvQ
+	(envelope-from <linux-s390+bounces-21648-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 06 Jul 2026 15:35:41 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 142FA71133A
-	for <lists+linux-s390@lfdr.de>; Mon, 06 Jul 2026 15:22:50 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DA5271156A
+	for <lists+linux-s390@lfdr.de>; Mon, 06 Jul 2026 15:35:40 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=nvjunM3e;
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=GAjgK8y8;
 	dmarc=pass (policy=none) header.from=ibm.com;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21645-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-21645-lists+linux-s390=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21648-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21648-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8E1FB30D217F
-	for <lists+linux-s390@lfdr.de>; Mon,  6 Jul 2026 11:30:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 15E7F336C432
+	for <lists+linux-s390@lfdr.de>; Mon,  6 Jul 2026 11:56:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7A433F44DE;
-	Mon,  6 Jul 2026 11:30:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82CF242252E;
+	Mon,  6 Jul 2026 11:56:10 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF3A3BE17D;
-	Mon,  6 Jul 2026 11:30:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CEB375AB2;
+	Mon,  6 Jul 2026 11:56:08 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783337449; cv=none; b=FfwDBRVd9sRhjVBvEFIJymeDtgRekG1Pc+61mT4bfM52i79O5Qe1qjyIloX9Knw/qNYdQWuzSp92AskzMXFyLooAtuW8NRIG73NXt+ms6n9ofBXjNzJmzonuzyvRt5PJ5e9KIGhDV40ubGXan/JalT4b7j3BstSPXUYv3Dbxpjw=
+	t=1783338970; cv=none; b=b7Gjwa/hJHDJbOEh7IYXD4f6PxsgczNJl9bh+6Q0/t7cYr6ikPgEQjlPV+iE8ieXqChBhDFzlvwQHFw36t41da0t0/916XuAmfmBhbDKsQSj99uCSS+nRuM67DhJMlHCrmOVaBOoxUVYp5l0beVIZPs+5q/VyIx2MACFr7EljlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783337449; c=relaxed/simple;
-	bh=V8nwGKN80mjQyuzhC60VMsmr40A3Y2L2bsiekLeNNog=;
+	s=arc-20240116; t=1783338970; c=relaxed/simple;
+	bh=T2+/MxshT4faHWobdn3NYjZE20baAH6OTWyB3vFGMRs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N8vpCwqHa3XIL+mRQyqhbfoy0FvSvYGCcmhUpWIlSkdCVm8KSDS+mKRNaIQZgmy87Qsg6G5P9GSwNqHC7NPecwiQkSS+cnEoNWw6j/1rR8laZU+dbIr0L0GFQiVstfUB14/p/YiBdXlmCy+wJwizEi9XUwkUrITkyOEPvG84+Z8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nvjunM3e; arc=none smtp.client-ip=148.163.156.1
+	 In-Reply-To:Content-Type; b=uZv8xo5I6TVenZf/cHm1vMp+YQiQ2+/iJIj5qwSuR9BqpcAuCfBhZERdnr0fFGAAUOKhESr6jYh400fm3tenB0Fvj2HG3LABhXjj77oLJzjZtYOiP7V8Vhwa9UoraXw7DzyO2Hqso29McMLCdqbOaIUOAgyD+40s97RZajgszow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GAjgK8y8; arc=none smtp.client-ip=148.163.156.1
 Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 666BIID8318945;
-	Mon, 6 Jul 2026 11:30:29 GMT
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 666BIMH6319021;
+	Mon, 6 Jul 2026 11:50:48 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=LGl24N
-	I2u6yR5P3TtnRL3JOi0ZtYPZ8+8rqXw3w0aoI=; b=nvjunM3esjiPjYfvcu6f75
-	WWZUXjbDChIc/EmGFGO6ntzWjCuK9hfCtkcJPczsnPmtP92KNFthnxiDuXWo2xKY
-	2fhPeA4b5nnSsN/uzt59223bbZBQVHJPLYAe4oeERPRzTE+dfQBEzn80EBcPfbIU
-	PO65ZD+Z8PYsqCxIWfzXXUu/Pwm4U+GXb9vtbUFymKfF3wjwLpn0pai+lYUn1lNM
-	OjIO6ATEYkOkVvgNTcFo8QPWXVsng069vC/ILIcL8sVXaQphe4ZfS8526F3fg/1i
-	95JiPACd4iI+w450HL/wIcpUwVxqW7LGtgw2m32e3amna3iXRLrmFNgJsf0g7t5g
+	:message-id:mime-version:references:subject:to; s=pp1; bh=PM8mgZ
+	GFv9V3whszJWsS631tUAseRrLfXwwq9BabCYk=; b=GAjgK8y8X5+VWDSReJonlA
+	0yHyuvMQyH+eHfpc97bB7gODjYLKxvYku0weGbIb3oiVRosQLb+FZP/hGkTYZBTl
+	ft9+dJthSwMmLAseUj0B+73gJRKWtCHh2Cm7pO1BskE9yPDJFgRbEPvbR51NVUxz
+	CMEPXHoN2+v7lrFFKSa+vMhUadk4A0t4v1Hfcp03BTbPdY3a53F2KjpPbkJCUUrO
+	nYDxblInkFvHHl4MA0ImRPsCPYD1RxyJiY1FBQiE5vCR+SEiOPbYIhFxCOpvwXtO
+	cQFefhdGhKRUj4W9QQfGTLRgQ0nz8OvlndcR9VTIetBlEcQ7jHEaj9MwcNhElDwA
 	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6suqh1m3-1
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6suqh3rb-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 Jul 2026 11:30:29 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 666BK2OM018492;
-	Mon, 6 Jul 2026 11:30:27 GMT
+	Mon, 06 Jul 2026 11:50:48 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 666BneEW006937;
+	Mon, 6 Jul 2026 11:50:47 GMT
 Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f7e0h581x-1
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f7dgjwdh3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 Jul 2026 11:30:27 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 666BUL5s47382896
+	Mon, 06 Jul 2026 11:50:46 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 666BoehN54133110
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 6 Jul 2026 11:30:21 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AADF920043;
-	Mon,  6 Jul 2026 11:30:21 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3C4892004B;
-	Mon,  6 Jul 2026 11:30:21 +0000 (GMT)
-Received: from [9.224.77.173] (unknown [9.224.77.173])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  6 Jul 2026 11:30:20 +0000 (GMT)
-Message-ID: <721266da-db8f-4385-87c1-ca26c430892c@linux.ibm.com>
-Date: Mon, 6 Jul 2026 13:30:20 +0200
+	Mon, 6 Jul 2026 11:50:40 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0DC352004B;
+	Mon,  6 Jul 2026 11:50:40 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C66E520040;
+	Mon,  6 Jul 2026 11:50:38 +0000 (GMT)
+Received: from [9.87.152.232] (unknown [9.87.152.232])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  6 Jul 2026 11:50:38 +0000 (GMT)
+Message-ID: <fcb7606b-6665-4bee-890d-bf1b4fb01dbf@linux.ibm.com>
+Date: Mon, 6 Jul 2026 13:50:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -80,14 +80,14 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 19/27] s390: Introduce Start Arm Execution instruction
-To: Janosch Frank <frankja@linux.ibm.com>,
-        Steffen Eiden <seiden@linux.ibm.com>, kvm@vger.kernel.org,
+Subject: Re: [PATCH v4 21/27] s390/hwcaps: Report SAE support as hwcap
+To: Steffen Eiden <seiden@linux.ibm.com>, kvm@vger.kernel.org,
         kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
 Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
         Andreas Grapentin <gra@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
         Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
         Claudio Imbrenda <imbrenda@linux.ibm.com>,
         David Hildenbrand <david@kernel.org>,
         Friedrich Welter
@@ -107,63 +107,104 @@ Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
  <gor@linux.ibm.com>, Will Deacon <will@kernel.org>,
         Zenghui Yu <yuzenghui@huawei.com>
 References: <20260706085229.979525-1-seiden@linux.ibm.com>
- <20260706085229.979525-20-seiden@linux.ibm.com>
- <8239c9ba-154c-4e2d-b2fc-700ba12eb585@linux.ibm.com>
+ <20260706085229.979525-22-seiden@linux.ibm.com>
 Content-Language: en-US
-From: Christian Borntraeger <borntraeger@linux.ibm.com>
-In-Reply-To: <8239c9ba-154c-4e2d-b2fc-700ba12eb585@linux.ibm.com>
+From: Janosch Frank <frankja@linux.ibm.com>
+Autocrypt: addr=frankja@linux.ibm.com; keydata=
+ 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
+In-Reply-To: <20260706085229.979525-22-seiden@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA2MDExNCBTYWx0ZWRfXyXs5OGzOANhv
- ZIJl81eEuRU4Cpez+mW/Cv4V3PCkqB38qFKziSlSUv/NThQ82C72diIb9Sg7BPrUytroTklEQsh
- TXffBA8Sqc3nex38XAZ12ERM3F6nJHk=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA2MDExNCBTYWx0ZWRfX8V1IkIBid673
- qSMlAej2yF6fkd6r8CLZG47k77Z39HY4Wbz3MHH24E9KroifQ+EGG9Rl10MhEzQ+DkOjyGmpUn/
- N0NVi6v/TeoISNhYhibPdltRcdAwNMZWgoYDz0X088HeeYbx/DVp86me0g9ALzEo/PNeK/C/TG5
- BlolhKbNKhUGP4HdLyzzie+RkWHVQHzFoCYMw3n0oNC7ogTYe0dAm0zc159bAEUzS0vd32+7qvG
- EUOnm8UZPuWYfBU5h1uKyl2QlIDIUIgA8IRJjkcOh0FOaOeaHb+3giJbUpEFLAf6bpXsPT27naY
- uZIg7RGcfaVDDn6l0AYJpqHT5yFl9S5K6SMAA6JiEEcFcELatJ8TuGt5HBtPvDm09SUkDe0Dd29
- Z94ldvwtp8kDGD/786wPpipS/It78xwWX7M3bkoeUr+tDQfa9xPVA+/bcCTXkJeI/WPT5i38jVz
- EJRDSvywjkaz63XzHLw==
-X-Proofpoint-GUID: QO9Jmrtl9YbmYkeOKN-Rxs6ZbudI9ERe
-X-Authority-Analysis: v=2.4 cv=Oot/DS/t c=1 sm=1 tr=0 ts=6a4b91d5 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA2MDEyMCBTYWx0ZWRfXwRcRagw5tc39
+ i176er3javwQRe7aPo5kaar/0ys2xEUukHNTlgav8lV9J5dPaA4TGRxc1n9PMmga5ncluP5xuBp
+ 068cSpwU9E8qp1nrJkViifUjsmT6d34=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA2MDEyMCBTYWx0ZWRfX0Kz71sfLuLh2
+ ie8iK/nQSjRHYO5AEb53tqJuxs7wyJRRNn09/KeOHMbkFxOvsO2y2Xiv3gl5sp6xhsyoHvVk0so
+ aVbWrQTVIt4bcdf1k7at/xgII+9xp35yHJcs17IpEXhO2VBJqUF1algPuhBm9+t7Es3Yj2gR5W9
+ h1yeyHgfT5dJRrJQauXRxjasCuxBsB+9krsYHQ2VcZ8w1KOaCiqE/J69MX2OXhZqFo5sVZADbjP
+ LmrMZyUiGcazNwd3wWR3FiEKAugEkEeEkGfBPeXbG/o4ztP3rKZo8hOKBLPAl6t8VhT9TPQaFe9
+ 1IArFjeM9nBtYfRtLHBz770R2sv1MFtjA+8tcrzarOJVx67ZMmjQognMujHUoLfbntdET/WWqx7
+ LFOWZwCMJYB4fQQzGZtbvfrZOfBdfkLJY6dvnsV952Ca5EvrHcAEnFWlNSmDBPXqpBBUnBppA45
+ 0swnaVDBSahidt05smA==
+X-Proofpoint-GUID: 7Hu70ozHqR6ctOm-R4g1Y02gkoqjhD5h
+X-Authority-Analysis: v=2.4 cv=Oot/DS/t c=1 sm=1 tr=0 ts=6a4b9698 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
  a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=02lCwkMJHSWm-2F3BxgA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: QO9Jmrtl9YbmYkeOKN-Rxs6ZbudI9ERe
+ a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8
+ a=DC7w-37DyXz6KZ0clhkA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: 7Hu70ozHqR6ctOm-R4g1Y02gkoqjhD5h
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-06_01,2026-07-06_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 lowpriorityscore=0 clxscore=1011 impostorscore=0 phishscore=0
+ bulkscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0 phishscore=0
  malwarescore=0 suspectscore=0 spamscore=0 adultscore=0 priorityscore=1501
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607060114
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607060120
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21645-lists,linux-s390=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:frankja@linux.ibm.com,m:seiden@linux.ibm.com,m:kvm@vger.kernel.org,m:kvmarm@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-s390@vger.kernel.org,m:agordeev@linux.ibm.com,m:gra@linux.ibm.com,m:arnd@arndb.de,m:catalin.marinas@arm.com,m:imbrenda@linux.ibm.com,m:david@kernel.org,m:fritz@linux.ibm.com,m:ggala@linux.ibm.com,m:hari55@linux.ibm.com,m:hca@linux.ibm.com,m:brueckner@linux.ibm.com,m:iii@linux.ibm.com,m:joey.gouly@arm.com,m:maz@kernel.org,m:nrb@linux.ibm.com,m:oss@nina.schoetterlglausch.eu,m:oupton@kernel.org,m:pbonzini@redhat.com,m:suzuki.poulose@arm.com,m:svens@linux.ibm.com,m:Ulrich.Weigand@de.ibm.com,m:gor@linux.ibm.com,m:will@kernel.org,m:yuzenghui@huawei.com,s:lists@lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp];
+	TAGGED_FROM(0.00)[bounces-21648-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:seiden@linux.ibm.com,m:kvm@vger.kernel.org,m:kvmarm@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-s390@vger.kernel.org,m:agordeev@linux.ibm.com,m:gra@linux.ibm.com,m:arnd@arndb.de,m:catalin.marinas@arm.com,m:borntraeger@linux.ibm.com,m:imbrenda@linux.ibm.com,m:david@kernel.org,m:fritz@linux.ibm.com,m:ggala@linux.ibm.com,m:hari55@linux.ibm.com,m:hca@linux.ibm.com,m:brueckner@linux.ibm.com,m:iii@linux.ibm.com,m:joey.gouly@arm.com,m:maz@kernel.org,m:nrb@linux.ibm.com,m:oss@nina.schoetterlglausch.eu,m:oupton@kernel.org,m:pbonzini@redhat.com,m:suzuki.poulose@arm.com,m:svens@linux.ibm.com,m:Ulrich.Weigand@de.ibm.com,m:gor@linux.ibm.com,m:will@kernel.org,m:yuzenghui@huawei.com,s:lists@lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.ibm.com:mid,linux.ibm.com:from_mime];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[31];
-	FORGED_SENDER(0.00)[borntraeger@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_SENDER(0.00)[frankja@linux.ibm.com,linux-s390@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
 	DKIM_TRACE(0.00)[ibm.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[borntraeger@linux.ibm.com,linux-s390@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[frankja@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -173,33 +214,14 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 142FA71133A
+X-Rspamd-Queue-Id: 9DA5271156A
 
-
-
-Am 06.07.26 um 13:17 schrieb Janosch Frank:
-
->> +SYM_FUNC_START(__sae64a)
->> +    stmg    %r6,%r14,__SF_GPRS(%r15)    # store kernel registers
->> +    STBEAR    __SF_SAE_BEAR(%r15)        # save breaking event address register
->> +    .insn    rre,0xb9a50000,%r2,0        # Start Arm Execution
->> +# Let the next instruction be NOP to avoid triggering a machine check
->> +# and handling it in a guest as result of the instruction execution.
+On 7/6/26 10:52, Steffen Eiden wrote:
+> From: Hendrik Brueckner <brueckner@linux.ibm.com>
 > 
-> @Christian:
-> I have the feeling things got lost in translation when this comment was written.
-> How would we trigger a MCHECK by having an instruction after SIE/SAE?
-> AFAIU this allows us to have a label which we can check in the mcheck handler to decide who triggered the mcheck.
-
-the original rationale was that some machine checks are nullifying some are terminating. So the PSW might point
-to SAE or the instruction afterwards for a guest machine check.
-In SIE, we use that nop to account any machine check on that nop as a guest machine check.
-
+> Report SAE support as hwcap (and /proc/cpuinfo)
 > 
-> Without the label the comment and NOP are useless as far as I can see.
-> So we need to decide if this still applies and then either remove it or add sae handling to mcck_int_handler and maybe other mcheck functions.
-
-We plan to get more information on the machine checks for sae so we might no longer need that.
-But this series does not yet contain the machine check handling. Maybe its better to remove comment and
-nop and introduce that later when we add machine check handling and if still needed.
+> Signed-off-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+> Signed-off-by: Steffen Eiden <seiden@linux.ibm.com>
+Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
 
