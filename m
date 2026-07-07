@@ -1,71 +1,71 @@
-Return-Path: <linux-s390+bounces-21746-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21745-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 35b3D+onTWrFvwEAu9opvQ
-	(envelope-from <linux-s390+bounces-21746-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 18:23:06 +0200
+	id 5KR/JuknTWrDvwEAu9opvQ
+	(envelope-from <linux-s390+bounces-21745-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 18:23:05 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E982171DCFE
+	by mail.lfdr.de (Postfix) with ESMTPS id 52BE571DCF6
 	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 18:23:05 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=ksr0dwaW;
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=IlDpaePc;
 	dmarc=pass (policy=none) header.from=ibm.com;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21746-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21746-lists+linux-s390=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21745-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21745-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C55E13042405
+	by tor.lore.kernel.org (Postfix) with ESMTP id 23F333014779
 	for <lists+linux-s390@lfdr.de>; Tue,  7 Jul 2026 16:18:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0CFC434E47;
-	Tue,  7 Jul 2026 16:18:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EA332236E0;
+	Tue,  7 Jul 2026 16:18:37 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85778430CDC
-	for <linux-s390@vger.kernel.org>; Tue,  7 Jul 2026 16:18:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6A6361DA8
+	for <linux-s390@vger.kernel.org>; Tue,  7 Jul 2026 16:18:33 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783441118; cv=none; b=roU1xotHYpbOwFEQiWa6GtO8K6I1Tr42XzWECnCLWAtoiM/rL/YtUkjdWtUbTkFHBNphH2fTXDEcoJWJKxaYldhFafzMowGPT+DLnG6NafNf+A+KYK5FP/qC8kS+Rok2+hYQcB6PJ6sX0W7X8uWnEG3fbSFzUmGJOxV991FT8DE=
+	t=1783441117; cv=none; b=haRJ7qudxoVH5NDzCC3sBvlZj3M7M6nX2SnFDLIdpsVUBvDQ1UgoUWXwHlwhYRhbv2h3IAAVMDMxBer52wcQ1NRTUn2zXJQaMKXYMw/laaz5KfaeyR2txcjdycsDdCphub4dt3lcc2fmgbR39eBzua50eY7M0BpP8nmSr6mYfXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783441118; c=relaxed/simple;
-	bh=4Upg/csDgFGt/Kktk9yBCMVcNojdeoLVQredCWVAe2w=;
+	s=arc-20240116; t=1783441117; c=relaxed/simple;
+	bh=UNyqC7XLZjloRGDRkqS1ICLDpBCtyKLoXgWK+ZQzsb4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TqofhO/XyEQzTFdqhEC8kW/WpQdfrSxqFoC24cH8kmBFvdXV5Q43ixQksAbxSLWXCv6+uX7ifmIK+Vta4RpJf2Bf2yp4YuIgOwxI/iuAcIZ/z1epZsvKkcmxzciRu/BOzJB4HSbF5sUEc34A5s21n1k//STMkES94aiuWojB5+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ksr0dwaW; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 667FmRkw310346;
+	 MIME-Version; b=iZdUrOVdIx+6329+pEqUSpaB3d88u5GDo7sFiEO5blHohqSM5TZ+h+7tq1Tv+OijroW9v8AUbnGE++eVs/3e1LbVLBXHDVd8uhFEGHuamLbqyWisLDci4dwnomcWAKm1t7OZHfEdju8NFFRhzAaWMyf+ZGeXK6LTI22YloEzMF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IlDpaePc; arc=none smtp.client-ip=148.163.158.5
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 667Fmmmq3446385;
 	Tue, 7 Jul 2026 16:18:21 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=u8/tpfLQH8GAa3GsX
-	5IQ9yu62JDdwJZoiGc0Jewyj0c=; b=ksr0dwaWSIYRtsqQQl1bkR3+qxXKB5bqF
-	ORTn+N8m6E/oFOhlPf7AzJj/2FWItx/8c7TsgYj5ea7/kcLCv4vH27Kp6d2D0UIM
-	17V8C3Df4++yKcEvd/M3nXtDFCCkNUNLZqOLVMCYwXpEt6jp84ufXDI3Ar1f/blM
-	+qFCw8CZVBraNA8o2e3NhAjKgAPa3hi6g1eOFKB2/T3EAYiXxVOeKAVZaNyNuyXE
-	Tu9ccuBDBjYdChzZcztORT69rIeW61LxIPsEAid43rc0yyF8ZnTqjBYgGXWXASnc
-	kqvs61timGWKmRHesma0xKSj/7t8zY+GaAL74Uyd2uro+n/9Vzqdg==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6suqqw2t-1
+	:mime-version:references:subject:to; s=pp1; bh=iuwGFWp3U3+w2/b94
+	Ancg5A6A6+m8z2EeclBcKForQs=; b=IlDpaePcGXVkRoZLsd1Aca1nXlrfhSBj8
+	TSU16xW+Bs1kyR4CqxTvdAave9aiFJ9xyd3Bn9YTTdc/mTfFnDcJsPAU4aZYj48M
+	sWpWIDN6382JH/JptgiFtMJt8v87xnRjH/6gAxjtFEtXsn2XLMEDIu7vgFMomKSJ
+	862vzqnGZqbO6mhfroHuEl5WKzMeeDhKBFUdqMCbZ/8aRRu56aYyf0kOVHJ7GVsr
+	3jBBnK3Dy2+tfqupS5T6kld/ftoRhIfn2nfcamcq9nt7fnT0JuOKzKBCQLEeXjko
+	iuni0mWR9sRe/3G4+zsLnRzyyxqk/4nehOPkxMo06vuLKhTiEbgvw==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6rkdrq01-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Jul 2026 16:18:20 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 667G4elv019302;
+	Tue, 07 Jul 2026 16:18:21 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 667G4aGe005411;
 	Tue, 7 Jul 2026 16:18:20 GMT
 Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4f7cgq3tun-1
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f7cvw3sjs-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Jul 2026 16:18:19 +0000 (GMT)
+	Tue, 07 Jul 2026 16:18:20 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 667GIGQl61211084
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 667GIGtJ61211086
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Tue, 7 Jul 2026 16:18:16 GMT
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 42BD920065;
+	by IMSVA (Postfix) with ESMTP id 697442004B;
 	Tue,  7 Jul 2026 16:18:16 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1C80C2004D;
+	by IMSVA (Postfix) with ESMTP id 44E472004F;
 	Tue,  7 Jul 2026 16:18:16 +0000 (GMT)
 Received: from funtu2.ibm.com (unknown [9.111.140.5])
 	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
@@ -76,9 +76,9 @@ To: richard.henderson@linaro.org, iii@linux.ibm.com, david@kernel.org,
 Cc: qemu-s390x@nongnu.org, qemu-devel@nongnu.org, linux-s390@vger.kernel.org,
         dengler@linux.ibm.com, borntraeger@linux.ibm.com,
         fcallies@linux.ibm.com, cohuck@redhat.com
-Subject: [PATCH v11 12/21] target/s390x: Support protected key AES ECB for cpacf km instruction
-Date: Tue,  7 Jul 2026 18:17:59 +0200
-Message-ID: <20260707161815.40919-13-freude@linux.ibm.com>
+Subject: [PATCH v11 13/21] target/s390x: Support protected key AES CBC for cpacf kmc instruction
+Date: Tue,  7 Jul 2026 18:18:00 +0200
+Message-ID: <20260707161815.40919-14-freude@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260707161815.40919-1-freude@linux.ibm.com>
 References: <20260707161815.40919-1-freude@linux.ibm.com>
@@ -90,29 +90,29 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA3MDE2MCBTYWx0ZWRfXz3p6SNabyWA0
- rL+ZbcRvYTFhCpwKjg9u4mjCFJkcigWHgSs4JUckjWdnYJQ9MSaLwH4Y6t5gX51D2HgKECzoBks
- AIgGrmGTs33R4rPMzrQKHIlmeclrVvs=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA3MDE2MCBTYWx0ZWRfXyEYCI01zHG/I
- NNWsZFo3J8BeIT3AJAVmU4viyKbfSt1W1RW/5Bf59wdFkSE5QGnpSgyEtaUBIwDx4ReM+FFMBbZ
- yNFPN6nh4qqqmkziOUvdhblt5WAa1kFFh4mXui6YpkxKXPthslzpVeEhCbM5G/7QcwFWiwiJF5b
- EPI0FwgI6Pnc/0+dLQGeRtFdjyEIe8T9+UHbRYhsKJerys77We6PaX1sUv6AsbB0+SnVUV7yygD
- eWZLT2Y6S2uDxcfryb70TYRVUildoi582t+HtbBT75bcz/+712DTyFmwrApODG0yBvSUOvlYGGI
- UH4VQ/SWoh4fE+jJa9lK7gvP/Am8DDYxCgMgdtdlejXrTCfHSVrt8IL8s/FOMHiiSKpGKPYpxlJ
- lYKeBLmemXxEEerNzxG2QZXJonhx+7KcvPPirvk692IJW7zBVF35i9BRr0ujGiDGxHzDYDkprvI
- msQyBuH3WlvJqmYWlyQ==
-X-Proofpoint-GUID: nf6UCTm3D9tGCUn_Tqxs3kYJdYD6TDEG
-X-Authority-Analysis: v=2.4 cv=Oot/DS/t c=1 sm=1 tr=0 ts=6a4d26cc cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+X-Authority-Analysis: v=2.4 cv=M7J97Sws c=1 sm=1 tr=0 ts=6a4d26cd cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
  a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=WpPIafo2g3WOFiBud6QA:9
-X-Proofpoint-ORIG-GUID: nf6UCTm3D9tGCUn_Tqxs3kYJdYD6TDEG
+ a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8 a=1XR5bUzyU_lZOmb26nMA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA3MDE2MCBTYWx0ZWRfXzihonaj4J8VS
+ wGznApOYdrPN+3tsejyK3mtdpszQizv+E2wLGfoFcDZtwJgkzJLQ4RYVAvO/Qa3VK7mb04Tc7KJ
+ k/ZxFrw2BGpn0qC3jyWiMsH62Wlb8hw3MnfG4kgMZM910yam53hjvcD2OEXBAWeSUgWSugZWYmL
+ askq+vjWkOwr03J4ZvnM+C1Pe6m6axA7aebXEyH/DOphtJk0N/HrBY+RObR9XxlGkryyeDd/oYM
+ FpF4LDp40ENb9p4UaOy6YGLuYleKECrkUHHGTR4XnT2nupjLxFh/keuMeXzsOe+p/R4k/V6JWMY
+ Yom6tdghwh0d8QohClNxNCyk5KphTal2VVoMZVrN8ftzuqiGsCIOXKpmqT0mqr9HTI6fP5eRzXY
+ 95gE09KsOt19kMwwnOmXgcXS2JyDFZO6jqkVSoFmzU7TOKH7NVrd/Z3DbIt+7ZtP9T8YPuImA2n
+ wMHOA/UrCnUkEcJVjIA==
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA3MDE2MCBTYWx0ZWRfX+K39J5Q5Ztnf
+ pTp1jDx3KmFseqy6SGcUrrRHoQahAnbVo/6p5UCM7L8nWr/hIPPJlzS4xgkMTGeqbV02R3DOPvz
+ BuxISEbmkqZYURVTm6VxLv95App7cno=
+X-Proofpoint-GUID: odcwdF8R8Ta9bhCzi3IVz7p-dNsmEOil
+X-Proofpoint-ORIG-GUID: odcwdF8R8Ta9bhCzi3IVz7p-dNsmEOil
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-07_04,2026-07-06_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0 phishscore=0
- malwarescore=0 suspectscore=0 spamscore=0 adultscore=0 priorityscore=1501
+ suspectscore=0 lowpriorityscore=0 malwarescore=0 clxscore=1015 adultscore=0
+ priorityscore=1501 bulkscore=0 spamscore=0 impostorscore=0 phishscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607070160
 X-Rspamd-Action: no action
@@ -127,7 +127,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21746-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21745-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:richard.henderson@linaro.org,m:iii@linux.ibm.com,m:david@kernel.org,m:thuth@redhat.com,m:berrange@redhat.com,m:qemu-s390x@nongnu.org,m:qemu-devel@nongnu.org,m:linux-s390@vger.kernel.org,m:dengler@linux.ibm.com,m:borntraeger@linux.ibm.com,m:fcallies@linux.ibm.com,m:cohuck@redhat.com,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[freude@linux.ibm.com,linux-s390@vger.kernel.org];
@@ -148,81 +148,81 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E982171DCFE
+X-Rspamd-Queue-Id: 52BE571DCF6
 
-Support the subfunctions CPACF_KM_PAES_128, CPACF_KM_PAES_192
-and CPACF_KM_PAES_256 for the cpacf km instruction.
+Support the subfunctions CPACF_KMC_PAES_128, CPACF_KMC_PAES_192
+and CPACF_KMC_PAES_256 for the cpacf kmc instruction.
 
 Tested-by: Holger Dengler <dengler@linux.ibm.com>
 Reviewed-by: Finn Callies <fcallies@linux.ibm.com>
 Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
 ---
- target/s390x/gen-features.c      |  3 ++
- target/s390x/tcg/cpacf.h         |  4 ++
- target/s390x/tcg/cpacf_aes.c     | 86 ++++++++++++++++++++++++++++++++
- target/s390x/tcg/crypto_helper.c |  7 +++
- 4 files changed, 100 insertions(+)
+ target/s390x/gen-features.c      |   3 +
+ target/s390x/tcg/cpacf.h         |   4 ++
+ target/s390x/tcg/cpacf_aes.c     | 108 +++++++++++++++++++++++++++++++
+ target/s390x/tcg/crypto_helper.c |   7 ++
+ 4 files changed, 122 insertions(+)
 
 diff --git a/target/s390x/gen-features.c b/target/s390x/gen-features.c
-index d3e69aaca6..71e0e41d6e 100644
+index 71e0e41d6e..074c53aecd 100644
 --- a/target/s390x/gen-features.c
 +++ b/target/s390x/gen-features.c
-@@ -924,6 +924,9 @@ static uint16_t qemu_MAX[] = {
-     S390_FEAT_KM_AES_128,
-     S390_FEAT_KM_AES_192,
-     S390_FEAT_KM_AES_256,
-+    S390_FEAT_KM_EAES_128,
-+    S390_FEAT_KM_EAES_192,
-+    S390_FEAT_KM_EAES_256,
-     S390_FEAT_KM_XTS_AES_128,
-     S390_FEAT_KM_XTS_AES_256,
+@@ -932,6 +932,9 @@ static uint16_t qemu_MAX[] = {
      S390_FEAT_KMC_AES_128,
+     S390_FEAT_KMC_AES_192,
+     S390_FEAT_KMC_AES_256,
++    S390_FEAT_KMC_EAES_128,
++    S390_FEAT_KMC_EAES_192,
++    S390_FEAT_KMC_EAES_256,
+     S390_FEAT_KMCTR_AES_128,
+     S390_FEAT_KMCTR_AES_192,
+     S390_FEAT_KMCTR_AES_256,
 diff --git a/target/s390x/tcg/cpacf.h b/target/s390x/tcg/cpacf.h
-index 1d7d9baf0c..9820ec293b 100644
+index 9820ec293b..8987f8fbc7 100644
 --- a/target/s390x/tcg/cpacf.h
 +++ b/target/s390x/tcg/cpacf.h
-@@ -282,5 +282,9 @@ int cpacf_aes_xts(CPUS390XState *env, const int mmu_idx, uintptr_t ra,
- /* from cpacf_aes.c */
- int cpacf_aes_pckmo(CPUS390XState *env, const int mmu_idx, uintptr_t ra,
-                     uint64_t param_addr, uint8_t fc);
-+int cpacf_paes_ecb(CPUS390XState *env, const int mmu_idx, uintptr_t ra,
+@@ -286,5 +286,9 @@ int cpacf_paes_ecb(CPUS390XState *env, const int mmu_idx, uintptr_t ra,
+                    uint64_t param_addr, uint64_t *dst_ptr_reg,
+                    uint64_t *src_ptr_reg, uint64_t *src_len_reg,
+                    uint32_t type, uint8_t fc, uint8_t mod);
++int cpacf_paes_cbc(CPUS390XState *env, const int mmu_idx, uintptr_t ra,
 +                   uint64_t param_addr, uint64_t *dst_ptr_reg,
 +                   uint64_t *src_ptr_reg, uint64_t *src_len_reg,
 +                   uint32_t type, uint8_t fc, uint8_t mod);
  
  #endif /* S390X_CPACF_H */
 diff --git a/target/s390x/tcg/cpacf_aes.c b/target/s390x/tcg/cpacf_aes.c
-index 28c0a0da8b..5ad518489b 100644
+index 5ad518489b..6874ceb1b2 100644
 --- a/target/s390x/tcg/cpacf_aes.c
 +++ b/target/s390x/tcg/cpacf_aes.c
-@@ -544,3 +544,89 @@ int cpacf_aes_pckmo(CPUS390XState *env, const int mmu_idx, uintptr_t ra,
+@@ -630,3 +630,111 @@ int cpacf_paes_ecb(CPUS390XState *env, const int mmu_idx, uintptr_t ra,
  
-     return 0;
+     return !len ? 0 : 3;
  }
 +
-+int cpacf_paes_ecb(CPUS390XState *env, const int mmu_idx, uintptr_t ra,
++int cpacf_paes_cbc(CPUS390XState *env, const int mmu_idx, uintptr_t ra,
 +                   uint64_t param_addr, uint64_t *dst_ptr_reg,
 +                   uint64_t *src_ptr_reg, uint64_t *src_len_reg,
 +                   uint32_t type, uint8_t fc, uint8_t mod)
 +{
 +    enum { MAX_BLOCKS_PER_RUN = 8192 / AES_BLOCK_SIZE };
++    uint8_t in[AES_BLOCK_SIZE], out[AES_BLOCK_SIZE], buf[AES_BLOCK_SIZE];
 +    const MemOpIdx oi = make_memop_idx(MO_8, mmu_idx);
-+    uint8_t in[AES_BLOCK_SIZE], out[AES_BLOCK_SIZE];
++    uint8_t key[32], wkvp[32], iv[AES_BLOCK_SIZE];
 +    uint64_t addr, len = *src_len_reg, done = 0;
 +    int i, keysize, addr_reg_size = 64;
-+    uint8_t key[32], wkvp[32];
 +    AES_KEY exkey;
 +
-+    g_assert(type == S390_FEAT_TYPE_KM);
++    g_assert(type == S390_FEAT_TYPE_KMC);
 +
 +    switch (fc) {
-+    case CPACF_KM_PAES_128:
++    case CPACF_KMC_PAES_128:
 +        keysize = 16;
 +        break;
-+    case CPACF_KM_PAES_192:
++    case CPACF_KMC_PAES_192:
 +        keysize = 24;
 +        break;
-+    case CPACF_KM_PAES_256:
++    case CPACF_KMC_PAES_256:
 +        keysize = 32;
 +        break;
 +    default:
@@ -241,7 +241,7 @@ index 28c0a0da8b..5ad518489b 100644
 +
 +    /* fetch and check wkvp from param block */
 +    for (i = 0; i < sizeof(wkvp); i++) {
-+        addr = wrap_address(env, param_addr + keysize + i);
++        addr = wrap_address(env, param_addr + AES_BLOCK_SIZE + keysize + i);
 +        wkvp[i] = cpu_ldb_mmu(env, addr, oi, ra);
 +    }
 +    if (memcmp(wkvp, protkey_wkvp, sizeof(wkvp))) {
@@ -249,9 +249,15 @@ index 28c0a0da8b..5ad518489b 100644
 +        return 1;
 +    }
 +
++    /* fetch iv from param block */
++    for (i = 0; i < AES_BLOCK_SIZE; i++) {
++        addr = wrap_address(env, param_addr + i);
++        iv[i] = cpu_ldb_mmu(env, addr, oi, ra);
++    }
++
 +    /* fetch protected key from param block */
 +    for (i = 0; i < keysize; i++) {
-+        addr = wrap_address(env, param_addr + i);
++        addr = wrap_address(env, param_addr + AES_BLOCK_SIZE + i);
 +        key[i] = cpu_ldb_mmu(env, addr, oi, ra);
 +    }
 +    /* decrypt the protected key */
@@ -268,13 +274,29 @@ index 28c0a0da8b..5ad518489b 100644
 +    for (i = 0; i < MAX_BLOCKS_PER_RUN && len >= AES_BLOCK_SIZE; i++) {
 +        aes_read_block(env, mmu_idx, *src_ptr_reg + done, in, ra);
 +        if (mod) {
-+            AES_decrypt(in, out, &exkey);
++            /* decrypt in => buf */
++            AES_decrypt(in, buf, &exkey);
++            /* buf xor iv => out */
++            aes_xor(buf, iv, out);
++            /* prep iv for next round */
++            memcpy(iv, in, AES_BLOCK_SIZE);
 +        } else {
-+            AES_encrypt(in, out, &exkey);
++            /* in xor iv => buf */
++            aes_xor(in, iv, buf);
++            /* encrypt buf => out */
++            AES_encrypt(buf, out, &exkey);
++            /* prep iv for next round */
++            memcpy(iv, out, AES_BLOCK_SIZE);
 +        }
 +        aes_write_block(env, mmu_idx, *dst_ptr_reg + done, out, ra);
 +        len -= AES_BLOCK_SIZE;
 +        done += AES_BLOCK_SIZE;
++    }
++
++    /* update iv in param block */
++    for (i = 0; i < AES_BLOCK_SIZE; i++) {
++        addr = wrap_address(env, param_addr + i);
++        cpu_stb_mmu(env, addr, iv[i], oi, ra);
 +    }
 +
 +    *src_ptr_reg = deposit64(*src_ptr_reg, 0, addr_reg_size,
@@ -286,23 +308,23 @@ index 28c0a0da8b..5ad518489b 100644
 +    return !len ? 0 : 3;
 +}
 diff --git a/target/s390x/tcg/crypto_helper.c b/target/s390x/tcg/crypto_helper.c
-index 08151e916f..b00351d8c1 100644
+index b00351d8c1..237ce744b7 100644
 --- a/target/s390x/tcg/crypto_helper.c
 +++ b/target/s390x/tcg/crypto_helper.c
-@@ -103,6 +103,13 @@ static int cpacf_km(CPUS390XState *env, const int mmu_idx, uintptr_t ra,
+@@ -137,6 +137,13 @@ static int cpacf_kmc(CPUS390XState *env, const int mmu_idx, uintptr_t ra,
                             &env->regs[r1], &env->regs[r2], &env->regs[r2 + 1],
-                            S390_FEAT_TYPE_KM, fc, mod);
+                            S390_FEAT_TYPE_KMC, fc, mod);
          break;
-+    case CPACF_KM_PAES_128:
-+    case CPACF_KM_PAES_192:
-+    case CPACF_KM_PAES_256:
-+        rc = cpacf_paes_ecb(env, mmu_idx, ra, env->regs[1],
++    case CPACF_KMC_PAES_128:
++    case CPACF_KMC_PAES_192:
++    case CPACF_KMC_PAES_256:
++        rc = cpacf_paes_cbc(env, mmu_idx, ra, env->regs[1],
 +                            &env->regs[r1], &env->regs[r2], &env->regs[r2 + 1],
-+                            S390_FEAT_TYPE_KM, fc, mod);
++                            S390_FEAT_TYPE_KMC, fc, mod);
 +        break;
-     case CPACF_KM_XTS_128:
-     case CPACF_KM_XTS_256:
-         rc = cpacf_aes_xts(env, mmu_idx, ra, env->regs[1],
+     default:
+         tcg_s390_program_interrupt(env, PGM_SPECIFICATION, ra);
+     }
 -- 
 2.43.0
 
