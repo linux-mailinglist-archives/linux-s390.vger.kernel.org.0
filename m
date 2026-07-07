@@ -1,78 +1,78 @@
-Return-Path: <linux-s390+bounces-21678-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21680-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id xF9bI5SqTGponwEAu9opvQ
-	(envelope-from <linux-s390+bounces-21678-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 09:28:20 +0200
+	id aGavDWiwTGq5oAEAu9opvQ
+	(envelope-from <linux-s390+bounces-21680-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 09:53:12 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDD4271875D
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 09:28:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 463A0718B6D
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 09:53:11 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=ZBiNRc1q;
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=Uh0PcWmK;
 	dmarc=pass (policy=none) header.from=ibm.com;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21678-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-21678-lists+linux-s390=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21680-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-21680-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7291330D79B7
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Jul 2026 07:22:10 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 865BD3007F65
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Jul 2026 07:32:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B0B43D7D74;
-	Tue,  7 Jul 2026 07:21:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3F0C19ADA4;
+	Tue,  7 Jul 2026 07:32:58 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715C63AC0D8
-	for <linux-s390@vger.kernel.org>; Tue,  7 Jul 2026 07:21:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9341742089E;
+	Tue,  7 Jul 2026 07:32:57 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783408909; cv=none; b=TJW6aSOryr5GiaJIaQCRUf0Llw46vRRLv/O7QrwIl4Ajxm15Kc6kepsaXNVbH+r2IbjFNiQYC2Cof7JqhWKmDaj381j5tUt4i935DPwSuZlSX/OyvyTNzrYriGRPXelzjiYApaEEM7tJS8i5+aDhq3c/S5YQ4r3jzao4sveYqqU=
+	t=1783409578; cv=none; b=M1aiBcbTznRLcpv0eX8aNi5HxMgoUEzU1H3K4ocN0N8g0tNSJqGtBi0IPRzhTwlbz7xoyGr++7lqg6PRVcK5NEuVHMByBT2l3plN+bBsDY97jz8BelWDGv0hOPOrrXr39HBm2zzEQebGUiVbzv/Cme5pU0c3V0B9kooM9bpKTBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783408909; c=relaxed/simple;
-	bh=woTqTqaay2M1wpsd2GUnthkkfZltjHoXgShsqxA6Rqk=;
+	s=arc-20240116; t=1783409578; c=relaxed/simple;
+	bh=CI0H+I/U9gfFfjdZ3xfzQ+ZKu5cuN2i9hutJuckjInM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FVog8rucvPSosowJ8ajxHkJ0NPGvKUZn4vDT5a5UL1QDREDCy5NcQOdC1IaT82n0DNwkQh+SOP32XK28+eoNK9Ga3jwlL8ZTR78RgdpqNT/o6tLBI6c2un4JPT/y66l2RA1RoTXG5d1qi529X497T/C0PHZiyDfFeqPuXcaTj1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZBiNRc1q; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6674IKLL2725891;
-	Tue, 7 Jul 2026 07:21:26 GMT
+	 In-Reply-To:Content-Type; b=mXMVjWHLy9pPucohpipsILgsglCNX6H/kjBJs4BU1PvrawO7c5zV+HNNJpTba9KREqLBNc+a0N8UXM+JAZY1fl7o7HwvYFJuvImuOAPINdVd6LAs8NJLsG92PpmqT4+3f9ScVbUuRpM5fCw/Lgb0ZK1iO9pcukfbt1XGLPVbg88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Uh0PcWmK; arc=none smtp.client-ip=148.163.156.1
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6674Iffl2386574;
+	Tue, 7 Jul 2026 07:32:57 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=k2n4Kz
-	cH3LKqlj6yMadwVpvSIYNdx2Gwzs3sRkYg4qA=; b=ZBiNRc1qTko+Ah4oEKT7UH
-	LQiIA2Ynd8P/atuT7kn0FPDP2qnHn7spTqp06sypcMZOKezeSE2ygxsVeiRa7oNY
-	aoHwollU5oMwMJYT3vHFyRgTlzmcfhHqgxnUEbJoWyPPAI4kdG1XxzAyzIo98oks
-	bUD9K7ewaZiUdnUh+OaPEmoNuPuiOLLOYirme7y9rGs6/de0GbujbOoTvKtDaoiV
-	zO6UoorMOy5G6NNgsTESVREuNMZP3EZku5WGNSdDVJXJVlUvwfZlfweJBOP9kEbT
-	OKm1PrLbaAygXG92xx9ooCRphlpQA3VxwjDYGSwo9Kt/mpNxbkufqRFy4Cwa9Q6w
+	:message-id:mime-version:references:subject:to; s=pp1; bh=p84rQA
+	gW8Gt8yAfhyCACj+FSu7xgyKwod8uMbhyLHDY=; b=Uh0PcWmKp/3I/XYHOpy/uT
+	IW370cyJkF9OSTkY7dFc9U3rb5JP2TAzevf71YLw53CYmelCdi0dhY5BDS6P4jq+
+	8C+iPA6jPfwUUVFcOaX/0EiAGztpBl0bjj8KFU1U3T6DL0+feEIc0ISyc+pc6Xmd
+	HU/IhEHjsbyWmyoUMUOR9sUx4vCYwEe0ED8EO6OxeSM2DVvp9Y57kY36SQT8yjWf
+	/9oWRfRjb0irjSf3yAs8HDgrrfeKUrQ/paEETpePinkbiYwdl0Ipw5LBYAReyAx3
+	Lhc/R4Mj9tl4VGyon9o3Z/692SY6UGO04xjeg2xohhMW+yNb+NMtap5bsR4fzrxw
 	==
 Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6suqngpt-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6sp3ntw4-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Jul 2026 07:21:26 +0000 (GMT)
+	Tue, 07 Jul 2026 07:32:56 +0000 (GMT)
 Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6677Jccf009129;
-	Tue, 7 Jul 2026 07:21:25 GMT
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6677Jgxv009168;
+	Tue, 7 Jul 2026 07:32:55 GMT
 Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f7cvw1nqn-1
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f7cvw1q79-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Jul 2026 07:21:24 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6677LKdQ13566252
+	Tue, 07 Jul 2026 07:32:55 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6677Wp0X14877068
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 7 Jul 2026 07:21:21 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BD5232004D;
-	Tue,  7 Jul 2026 07:21:20 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 503DF20049;
-	Tue,  7 Jul 2026 07:21:20 +0000 (GMT)
-Received: from [9.111.13.17] (unknown [9.111.13.17])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  7 Jul 2026 07:21:20 +0000 (GMT)
-Message-ID: <4ed5f841-f757-4ba2-80df-ba2d378a7c8c@linux.ibm.com>
-Date: Tue, 7 Jul 2026 09:21:20 +0200
+	Tue, 7 Jul 2026 07:32:51 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6270C20040;
+	Tue,  7 Jul 2026 07:32:51 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 410EB20043;
+	Tue,  7 Jul 2026 07:32:51 +0000 (GMT)
+Received: from [9.224.91.136] (unknown [9.224.91.136])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  7 Jul 2026 07:32:51 +0000 (GMT)
+Message-ID: <ed9c694b-642b-4210-870d-a85d1c53b2fc@linux.ibm.com>
+Date: Tue, 7 Jul 2026 09:32:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -80,45 +80,47 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 08/21] target/s390x: Minimal AES XTS support for cpacf
- pcc instruction
-To: Harald Freudenberger <freude@linux.ibm.com>
-Cc: richard.henderson@linaro.org, iii@linux.ibm.com, david@kernel.org,
-        thuth@redhat.com, berrange@redhat.com, qemu-s390x@nongnu.org,
-        qemu-devel@nongnu.org, linux-s390@vger.kernel.org,
-        borntraeger@linux.ibm.com, fcallies@linux.ibm.com, cohuck@redhat.com
-References: <20260706094317.17032-1-freude@linux.ibm.com>
- <20260706094317.17032-9-freude@linux.ibm.com>
-From: Holger Dengler <dengler@linux.ibm.com>
+Subject: Re: [PATCH 2/2] s390/vdso: Use symbolic constants for the PHDR
+ permission flags
+To: Ilya Leoshkevich <iii@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>
+References: <20260706151909.103539-1-jremus@linux.ibm.com>
+ <20260706151909.103539-3-jremus@linux.ibm.com>
+ <d3ffd684-73e8-40e8-ae18-f847a6d0691a@linux.ibm.com>
 Content-Language: en-US
-In-Reply-To: <20260706094317.17032-9-freude@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Jens Remus <jremus@linux.ibm.com>
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <d3ffd684-73e8-40e8-ae18-f847a6d0691a@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA3MDA2OSBTYWx0ZWRfX3jEp4hyOO3K/
- uakz5Yh2g0xVQIX7PRyzejMwrGM7B899z373Tg93lcpJ4mrF2fA1jPzc77FVQ72NOZ+rXhe5wry
- IQGDiLHY1B5oBydrFx7pQbUpd/lmYJw=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA3MDA2OSBTYWx0ZWRfX1bYzaNrJkwdn
- BOktVwBm/YFhsDB4ToAQddQy1BQCtJrah09oEFTWRVMw8yeGCFa1O+M6NmpUgTj6Fdd4BahA+Ju
- bXmWtj5Jh2dIYkWGNol901cwGaZKhh/HZGaVw/vWNJPbxGK4+SblDJ4d6nU4r0zsbZOKFY4AvIf
- 3aU0ouelK8JtsZHhXbpkXVL5feRYDrmNdyByU6OpUeitpOUjDkg4xfmZdCAKKZX4FtpqmTd/LBd
- ldMmbhvZCYTOTeHIovcQgqFBPnddP+UizBBtTjJ1FtCYsI8JZst624903WCWeUvsNUBxdVyU5t2
- 0iFIoxtYGA5LGlCKe+CnwYVzvPPa5Pv2p5hNQ0BgJdUMwRA6eMELiLALRSNEMqgtyEotk0S3T4H
- 5VOkb9YWycVEoFiSIVEDkniAvN67cSnxKTqk9BzOswTFQuZLgPRMcBTJ/JMnsDexXuN30Gi4Qxv
- BtgvEW7bPGrOeoRrPYw==
-X-Proofpoint-GUID: foTcbI11_hLuhp7GahfjOZuJaqF0mUfk
-X-Authority-Analysis: v=2.4 cv=Oot/DS/t c=1 sm=1 tr=0 ts=6a4ca8f6 cx=c_pps
+X-Authority-Analysis: v=2.4 cv=KsJ9H2WN c=1 sm=1 tr=0 ts=6a4caba8 cx=c_pps
  a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
  a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8
- a=prY60AAtWssrYS-MNBsA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: foTcbI11_hLuhp7GahfjOZuJaqF0mUfk
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8
+ a=0MvmVg10__VCTnNSAJcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA3MDA2OSBTYWx0ZWRfXxCgpoN1JnRXV
+ Wega1kBiJJepFUsw+k6ri6/aFs5sItFn5xZV4Boio+lKQzHIIuCJJVMxUuAgYwKQSNJhvnVGxug
+ NJNuIieSd+fiQAdx/bC4ib8o75RW9Bc=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA3MDA2OSBTYWx0ZWRfXwx4udu1lXGXr
+ VstzBysJ+0ZNM0cMGEfviAfZiaXjC2urtyx2isxAs4R05IfNIACuet3znzpzLt9bo3tXYwvu8Uu
+ 0Qyl7YbwzgYRgzokB+Lf82clGWtFs2M3pOKUJFqoL8kodC+eiW0jVdcgqV5dGBmEjz/+v4Hetw8
+ IJ1rgeLAfAIPMjUv7xZ3SqPCurME625cWO3e7pJcrDiKOJ8yCZ3/BD08FN15BIufCEwPDJRy97i
+ RJ/P2UTea6IZS+u59/0CKsLeVTSfHCmarsq6QCFsIvLbgNwAuX3S3l7C0d6eb4Omp7g4DTTpeT2
+ 9EushuonKaCYyqp6fEVnrBSjo0WwV4CPeqvE0aGI8SQBdvHVLbotBePAzDxa+8/r+SsJjw7bR7q
+ iMyXMnYPySdnFY6UHxXfcdBBRmC79HPDJco9yEKgY72S3UQi2NzXicAYpM3Q6FaATS3kfhXSs3T
+ xWLV7ijTJ1cZ2nALXKg==
+X-Proofpoint-ORIG-GUID: j3X4mvp_R7O8UumPlpdmbDl7Bk7silKu
+X-Proofpoint-GUID: j3X4mvp_R7O8UumPlpdmbDl7Bk7silKu
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-07_01,2026-07-06_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0 phishscore=0
- malwarescore=0 suspectscore=0 spamscore=0 adultscore=0 priorityscore=1501
+ impostorscore=0 malwarescore=0 spamscore=0 adultscore=0 clxscore=1015
+ suspectscore=0 lowpriorityscore=0 priorityscore=1501 bulkscore=0 phishscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607070069
 X-Rspamd-Action: no action
@@ -131,127 +133,77 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21678-lists,linux-s390=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:freude@linux.ibm.com,m:richard.henderson@linaro.org,m:iii@linux.ibm.com,m:david@kernel.org,m:thuth@redhat.com,m:berrange@redhat.com,m:qemu-s390x@nongnu.org,m:qemu-devel@nongnu.org,m:linux-s390@vger.kernel.org,m:borntraeger@linux.ibm.com,m:fcallies@linux.ibm.com,m:cohuck@redhat.com,s:lists@lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,linux.ibm.com:from_mime,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	FORGED_SENDER(0.00)[dengler@linux.ibm.com,linux-s390@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-21680-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:iii@linux.ibm.com,m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:svens@linux.ibm.com,s:lists@lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,vdso.so:url,linux.ibm.com:mid,linux.ibm.com:from_mime];
+	HAS_ORG_HEADER(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER(0.00)[jremus@linux.ibm.com,linux-s390@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
 	DKIM_TRACE(0.00)[ibm.com:+];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dengler@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jremus@linux.ibm.com,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: DDD4271875D
+X-Rspamd-Queue-Id: 463A0718B6D
 
-On 7/6/26 11:43, Harald Freudenberger wrote:
-> Support CPACF pcc subfunctions PCC-Compute-XTS-Parameter-AES-128
-> and PCC-Compute-XTS-Parameter-AES-128 but only for the special
-
-typo(?): --> PCC-Compute-XTS-Parameter-AES-256
-
-> case block sequential number is 0. However, this covers the s390
-> AES XTS implementation in the Linux kernel and Libica and thus
-> also Opencryptoki clear key via Libica.
+On 7/6/2026 7:06 PM, Ilya Leoshkevich wrote:
+> On 7/6/26 17:19, Jens Remus wrote:
+>> While at it explicitly specify GNU_EH_FRAME PHDR to be read-only.
+>>
+>> Inspired by x86 commit 8717b02b8c03 ("x86/entry/vdso: Include
+>> GNU_PROPERTY and GNU_STACK PHDRs").
+>>
+>> Signed-off-by: Jens Remus <jremus@linux.ibm.com>
+>> ---
+>>   arch/s390/kernel/vdso/vdso.lds.S | 12 ++++++++----
+>>   1 file changed, 8 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/s390/kernel/vdso/vdso.lds.S b/arch/s390/kernel/vdso/vdso.lds.S
+>> index 7bec4de0e8e0..35ea7ede06c0 100644
+>> --- a/arch/s390/kernel/vdso/vdso.lds.S
+>> +++ b/arch/s390/kernel/vdso/vdso.lds.S
+>> @@ -82,12 +82,16 @@ SECTIONS
+>>    * We must supply the ELF program headers explicitly to get just one
+>>    * PT_LOAD segment, and set the flags explicitly to make segments read-only.
+>>    */
+>> +#define PF_R    FLAGS(4)
+>> +#define PF_RW    FLAGS(6)
 > 
-> Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-> Tested-by: Holger Dengler <dengler@linux.ibm.com>
+> PF_RW seems to be unused
+> Intel uses it for gnu_stack, which we don't seem to have.
 
-Ordering? (T-b first, then S-o-b). See my comment below.
-Reviewed-by: Holger Dengler <dengler@linux.ibm.com>
+Good catch, that slipped through.
 
-> ---
->   target/s390x/gen-features.c      |  2 +
->   target/s390x/tcg/cpacf.h         |  2 +
->   target/s390x/tcg/cpacf_aes.c     | 63 ++++++++++++++++++++++++++++++++
->   target/s390x/tcg/crypto_helper.c | 20 ++++++++++
->   4 files changed, 87 insertions(+)
+I wondered whether we should also add a GNU_STACK PHDR in a separate
+patch - similar to x86 and for the same reasons, as some of the .o files
+linked into vdso.so do have a .note.GNU-stack.
+
+> Anyway:
 > 
-[...]
-> diff --git a/target/s390x/tcg/cpacf_aes.c b/target/s390x/tcg/cpacf_aes.c
-> index 3d6aa19df2..f41b7dc541 100644
-> --- a/target/s390x/tcg/cpacf_aes.c
-> +++ b/target/s390x/tcg/cpacf_aes.c
-> @@ -290,3 +290,66 @@ int cpacf_aes_ctr(CPUS390XState *env, const int mmu_idx, uintptr_t ra,
->   
->       return !len ? 0 : 3;
->   }
-> +
-> +int cpacf_aes_pcc(CPUS390XState *env, const int mmu_idx, uintptr_t ra,
-> +                  uint64_t param_addr, uint8_t fc)
-> +{
-> +    uint8_t key[32], tweak[AES_BLOCK_SIZE], buf[AES_BLOCK_SIZE];
-> +    const MemOpIdx oi = make_memop_idx(MO_8, mmu_idx);
-> +    int keysize, i;
-> +    uint64_t addr;
-> +    AES_KEY exkey;
-> +
-> +    switch (fc) {
-> +    case CPACF_PCC_XTS_AES_128:
-> +        keysize = 16;
-> +        break;
-> +    case CPACF_PCC_XTS_AES_256:
-> +        keysize = 32;
-> +        break;
-> +    default:
-> +        g_assert_not_reached();
-> +    }
-> +
-> +    /* fetch block sequence nr from param block into buf */
-> +    for (i = 0; i < AES_BLOCK_SIZE; i++) {
-> +        addr = wrap_address(env, param_addr + keysize + AES_BLOCK_SIZE + i);
-> +        buf[i] = cpu_ldb_mmu(env, addr, oi, ra);
-> +    }
-> +
-> +    /* is the block sequence nr 0 ? */
-> +    for (i = 0; i < AES_BLOCK_SIZE && !buf[i]; i++) {
-> +            ;
-> +    }
-> +    if (i < AES_BLOCK_SIZE) {
-> +        /* no, sorry handling of non zero block sequence is not implemented */
-> +        tcg_s390_program_interrupt(env, PGM_SPECIFICATION, ra);
-> +        return 1;
-> +    }
+> Reviewed-by: Ilya Leoshkevich <iii@linux.ibm.com>
 
-Why not
+Thanks!
 
-for (i = 0; i < AES_BLOCK_SIZE && !buf[i]; i++);
-if (i < AES_BLOCK_SIZE) {
-...
-
-Or would that be against the coding guidelines?
-
-I personally would prefer the following, because it is more obvious. But 
-your solution also works, so feel free to change it or leave it as is.
-
-for (i = 0; i < AES_BLOCK_SIZE; i++) {
-     if (buf[i]) {
-         /*
-          * no, sorry handling of non zero block sequence is not
-          * implemented
-          */
-         tcg_s390_program_interrupt(env, PGM_SPECIFICATION, ra);
-         return 1;
-     }
-}
-
-IMO, it is easier to read.
-
-[...]
-
+Regards,
+Jens
 -- 
-Mit freundlichen Grüßen / Kind regards
-Holger Dengler
+Jens Remus
+Linux on Z Development (D3303)
+jremus@de.ibm.com / jremus@linux.ibm.com
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Ehningen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
 
 
