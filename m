@@ -1,65 +1,65 @@
-Return-Path: <linux-s390+bounces-21700-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21702-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Q+KZNWDGTGo7pgEAu9opvQ
-	(envelope-from <linux-s390+bounces-21700-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 11:26:56 +0200
+	id RhW0DfHGTGplpgEAu9opvQ
+	(envelope-from <linux-s390+bounces-21702-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 11:29:21 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCD21719BE8
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 11:26:55 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B5E1719C64
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 11:29:20 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=U0ldHxNS;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=da+5HOfM;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21700-lists+linux-s390=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-s390+bounces-21700-lists+linux-s390=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21702-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21702-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 05941300A261
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Jul 2026 09:15:45 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B1B9A30000BE
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Jul 2026 09:18:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07D8E31A057;
-	Tue,  7 Jul 2026 09:15:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0260284B37;
+	Tue,  7 Jul 2026 09:18:03 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D512874F5;
-	Tue,  7 Jul 2026 09:15:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0451D63E4;
+	Tue,  7 Jul 2026 09:18:02 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783415741; cv=none; b=SMAi9035ldZBd7jX8wuOaI0vxkDHZBIEDNlKh9e0UmvJoxn3Oklh02VpKZW3+ZnYpOuHTc2ybSyQwj7JC4fw5K6NjJCWrtGmGICTl6SL65W603WFIYb4Gjwg3FFfj35ad4OaBDdm9Agh/gofW2AJ00HCv4wAseYMeVcW/f40niQ=
+	t=1783415883; cv=none; b=bzvaWgVrtYuOJeqFYzdbJcEL9GH/wNEQ/vYd7nmp4+obvLBvlYncE10WHpRsJs88N5jFPg1u8jwZGDUK6jLBSMQiUoCEx2MurD2GbJHt/XL5aCXFkHLWy2ycYzLaUKbKRXWo6PxB26+rjzlv/EMoCY366dy5mPv7TAKdLjOM5AQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783415741; c=relaxed/simple;
-	bh=Af4U8eoV5qNBEFig4GwKhz/ApJyJyoJP+jBO1yxA0yM=;
+	s=arc-20240116; t=1783415883; c=relaxed/simple;
+	bh=lCJLZlMPLT9IFiD/Q3kLH3BFZe8c5wF1kIVNaVogL0s=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=FMrU8wc63dJ5zTNaEwop7JpLSbka3PgWhXnv8G/zwIIoZWIf5rWVrBnLfCV+YwRtvZYZ1o/eQQlgfSP3/GLSu7rsQDiUDUNvFPG+BZK7kHY1rdK5rznGDX23kbXzT1TxuKyaad5p8xUb6xVg4B/36OoUxawrl5R3BM1ajoYiz9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U0ldHxNS; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 013561F00A3A;
-	Tue,  7 Jul 2026 09:15:39 +0000 (UTC)
+	 Message-Id; b=T8iuG6fYz75y0b4sszrjmXNgGVk39E9Z3Z8nnpPNtQ3QziZeNWZMja+NdZFmJURg+guqVVz+dlZhSJ2b+3X7t3eEaY6QnKqeNYmOpqukjlK8AU6+hspeZxY78Njvg6lgi6c7LOjqA/S14pJYqDrjsM+GqxvrfCWL6X24Ztszl8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=da+5HOfM; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC7F91F00A3A;
+	Tue,  7 Jul 2026 09:18:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783415740;
-	bh=jkH4e3snEfctqMuwZ1ikqwpz1mjL//7T4y0BEmqhCbs=;
+	s=k20260515; t=1783415882;
+	bh=GWvAyCtU0bq+Dwe8XWiitwjZuoNDBGr6aX8+eM329ts=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=U0ldHxNS2UG3kTSUwYS75PQmgnB70Ca3wgusA9ULD9CdRgXzkSQQPL5X/zf/M55Ng
-	 +bdKXzfpQnTdOKeuoHa6kMGU6GnG5PF/vwB0jUrplLWNDunsyFvnAF6RQD/hd+8Dt6
-	 JEaJBRHn6hjYqjMXWRE7FbVBmadXfX5IFVjaZSYZRKNDCDlN6n+iiJ423FqEwOKOfn
-	 3zJpqcQ3TQAfLqHtY1mHv0HZNpz//tui3BkYN2OjTAAG/q00aqhOkAUBYCJSHFMJzl
-	 FHZpO4S2bYJZB/D9XuliSZ2A5SMTOwMQpfdi3ZNphGUrcF2BN32IKMPuziDq8ub1U9
-	 V3iWG4vkm6x7g==
+	b=da+5HOfMxerzjl2aOhd1s91PvEbCgGAUHak3xgdJky3gEh0WDR4D3ag+xW2GTdhT7
+	 ALw5/tBNjwzSv8QqywUQp1GZzAMgs5PAbJYy72iLmyeJ2Wmu6bZHNEAjMLT/ptapsQ
+	 +EzL2rL6VPlfQswiRjQs4UkyTwPRsY+Ek+58XG4/CEhP7+NqJR+lxhgcT9ukH76mCu
+	 DICNh9tfTq+652m20qmJWz8vWmjNlXRwI+gbydU6IpbhVxbNntfnUCW10rRcvBKSpS
+	 rKPrHcBex6l30ta04z7mcfAeVTbNFjI1W60BF8r5/QJuqXEMSwpbY0ewbMTmOmkKdS
+	 B3znXTiLfQRjQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 04/15] s390/vfio-ap: Reset migration state in
- VFIO_DEVICE_RESET ioctl handler
+Subject: Re: [PATCH v4 03/15] s390/vfio-ap: Functions to initialize/release
+ vfio device migration data
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Anthony Krowiak" <akrowiak@linux.ibm.com>
-Cc: "Heiko Carstens" <hca@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>, kvm@vger.kernel.org, linux-s390@vger.kernel.org, "Vasily
- Gorbik" <gor@linux.ibm.com>
-In-Reply-To: <20260707090226.3206695-5-akrowiak@linux.ibm.com>
+Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, "Heiko Carstens" <hca@linux.ibm.com>, "Vasily
+ Gorbik" <gor@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>
+In-Reply-To: <20260707090226.3206695-4-akrowiak@linux.ibm.com>
 References: <20260707090226.3206695-1-akrowiak@linux.ibm.com>
- <20260707090226.3206695-5-akrowiak@linux.ibm.com>
+ <20260707090226.3206695-4-akrowiak@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 07 Jul 2026 09:15:39 +0000
-Message-Id: <20260707091540.013561F00A3A@smtp.kernel.org>
+Date: Tue, 07 Jul 2026 09:18:01 +0000
+Message-Id: <20260707091801.DC7F91F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -72,18 +72,18 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21700-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21702-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,sashiko.dev:url,vger.kernel.org:from_smtp,smtp.kernel.org:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sashiko.dev:url,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,smtp.kernel.org:mid];
 	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:akrowiak@linux.ibm.com,m:hca@linux.ibm.com,m:agordeev@linux.ibm.com,m:kvm@vger.kernel.org,m:linux-s390@vger.kernel.org,m:gor@linux.ibm.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:akrowiak@linux.ibm.com,m:kvm@vger.kernel.org,m:linux-s390@vger.kernel.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
@@ -97,7 +97,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	RCPT_COUNT_FIVE(0.00)[6];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
@@ -105,118 +105,207 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: DCD21719BE8
+X-Rspamd-Queue-Id: 2B5E1719C64
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
 
 New issues:
-- [Critical] Build Failure / Undefined Function / Potential NULL Pointer De=
-reference in `vfio_ap_reset_migration_state`.
-- [Low] Typo in comment: 'stte' instead of 'state'.
+- [High] Self-deadlock in the error path of `vfio_ap_mdev_probe()` due to h=
+olding `matrix_dev->mdevs_lock` while calling `vfio_put_device()`.
+- [High] AB-BA lock inversion between `matrix_dev->mdevs_lock` and the VFIO=
+ core's `dev_set->lock`.
+- [Medium] Advertising `VFIO_MIGRATION_STOP_COPY` with stub callbacks that =
+return `-EOPNOTSUPP` breaks userspace expectations.
 
 Pre-existing issues:
-- [High] System-wide Denial of Service via unbounded wait holding the globa=
-l `matrix_dev->mdevs_lock`.
+- [Critical] If `vfio_ap_mdev_set_kvm` returns `-EPERM`, it leaves a dangli=
+ng pointer in `kvm->arch.crypto.pqap_hook`, leading to a Use-After-Free.
 --
 
---- Patch [4]: [PATCH v4 04/15] s390/vfio-ap: Reset migration state in VFIO=
-_DEVICE_RESET ioctl handler ---
-commit 35f281972b36c8fc12cff370107f5d4f61c3aa01
+--- Patch [3]: [PATCH v4 03/15] s390/vfio-ap: Functions to initialize/relea=
+se vfio device migration data ---
+commit fd0c4839e5d26823861a00cf7c060331ae1fd632
 Author: Anthony Krowiak <akrowiak@linux.ibm.com>
 
-s390/vfio-ap: Reset migration state in VFIO_DEVICE_RESET ioctl handler
+s390/vfio-ap: Functions to initialize/release vfio device migration data
 
-This patch adds a function called during VFIO_DEVICE_RESET to release
-migration files and free allocated storage for migration state. It resets
-the device migration state to RUNNING as required by the specification.
+Provides the functions that initialize and release the data structures
+used during live guest migration.
 
 > diff --git a/drivers/s390/crypto/vfio_ap_migration.c b/drivers/s390/crypt=
 o/vfio_ap_migration.c
-> index 5b6d48ccf332c..c7c71980bdbb8 100644
+> index 239168c4b7fff..5b6d48ccf332c 100644
 > --- a/drivers/s390/crypto/vfio_ap_migration.c
 > +++ b/drivers/s390/crypto/vfio_ap_migration.c
 [ ... ]
-> @@ -129,3 +129,23 @@ void vfio_ap_release_migration_data(struct ap_matrix=
-_mdev *matrix_mdev)
->  	kfree(matrix_mdev->mig_data);
->  	matrix_mdev->mig_data =3D NULL;
->  }
+> @@ -54,3 +55,77 @@ struct vfio_ap_config {
+>  	size_t				config_sz;
+>  	struct vfio_ap_queue_info	qinfo[] __counted_by(num_queues);
+>  };
+> +
+> +static struct file *vfio_ap_set_state(struct vfio_device *vdev,
+> +				      enum vfio_device_mig_state  new_state)
+> +{
+> +	return NULL;
+> +}
+> +
+> +static int vfio_ap_get_state(struct vfio_device *vdev,
+> +			     enum vfio_device_mig_state  *current_state)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static int vfio_ap_get_data_size(struct vfio_device *vdev,
+> +				 unsigned long *stop_copy_length)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static const struct vfio_migration_ops vfio_ap_migration_ops =3D {
+> +	.migration_set_state =3D vfio_ap_set_state,
+> +	.migration_get_state =3D vfio_ap_get_state,
+> +	.migration_get_data_size =3D vfio_ap_get_data_size,
+> +};
 > +
 > +/**
-> + * vfio_ap_reset_migration_state - Reset the vfio-ap migration state
+> + * vfio_ap_init_migrations_capabilities - initialize migration capabilit=
+ies
 > + *
-> + * @matrix_mdev: pointer to the object maintaining the vfio-ap device st=
-ate
-> + *
-> + * Called during VFIO_DEVICE_RESET to clean up any active migration
-> + * stte and reset the device to RUNNING state as required by the VFIO
-
-[Severity: Low]
-This isn't a bug, but there is a typo here. Did you mean "state" instead of
-"stte"?
-
-> + * migration specification.
+> + * @matrix_mdev: pointer to object containing the mdev state
 > + */
-> +void vfio_ap_reset_migration_state(struct ap_matrix_mdev *matrix_mdev)
+> +void vfio_ap_init_migration_capabilities(struct ap_matrix_mdev *matrix_m=
+dev)
 > +{
-> +	lockdep_assert_held(&matrix_dev->mdevs_lock);
-> +
-> +	if (!matrix_mdev->mig_data)
-> +		return;
-> +
-> +	vfio_ap_release_mig_files(matrix_mdev);
-
-[Severity: Critical]
-Does vfio_ap_release_mig_files() exist in the kernel? I could not find a
-definition or declaration for it.
-
-If the intention was to call vfio_ap_release_migration_data() to free the
-storage as mentioned in the commit message, wouldn't that set
-matrix_mdev->mig_data to NULL?
-
-> +	matrix_mdev->mig_data->mig_state =3D VFIO_DEVICE_STATE_RUNNING;
-
-If matrix_mdev->mig_data is freed and set to NULL just prior to this, won't
-this line unconditionally dereference the newly NULL pointer and cause a
-crash?
-
+> +	matrix_mdev->vdev.migration_flags =3D VFIO_MIGRATION_STOP_COPY;
+> +	matrix_mdev->vdev.mig_ops =3D &vfio_ap_migration_ops;
 > +}
+
+[Severity: Medium]
+Does advertising VFIO_MIGRATION_STOP_COPY here break userspace expectations
+when the callbacks like vfio_ap_get_state() unconditionally return -EOPNOTS=
+UPP?
+
+If userspace queries the device state via=20
+VFIO_DEVICE_FEATURE_MIG_DEVICE_STATE, wouldn't the -EOPNOTSUPP response
+cause the setup or migration to unexpectedly abort?
+
+[ ... ]
 > diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio=
 _ap_ops.c
-> index 8132902148669..8a9e83921f74e 100644
+> index 71d3e2c2e07c6..8132902148669 100644
 > --- a/drivers/s390/crypto/vfio_ap_ops.c
 > +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -2332,6 +2332,10 @@ static ssize_t vfio_ap_mdev_ioctl(struct vfio_devi=
-ce *vdev,
->  		break;
->  	case VFIO_DEVICE_RESET:
->  		ret =3D vfio_ap_mdev_reset_queues(matrix_mdev);
+[ ... ]
+> @@ -797,19 +809,30 @@ static int vfio_ap_mdev_probe(struct mdev_device *m=
+dev)
+>  	if (IS_ERR(matrix_mdev))
+>  		return PTR_ERR(matrix_mdev);
+> =20
+> +	mutex_lock(&matrix_dev->mdevs_lock);
+> +
+> +	/*
+> +	 * Migration capabilities must be initialized before calling
+> +	 * vfio_register_emulated_iommu_dev; otherwise, the VFIO core
+> +	 * will see mig_ops as NULL during the registration. This could
+> +	 * prevent the VFIO core from properly setting up migration
+> +	 * infrastructure like debugfs entries.
+> +	 */
+> +	vfio_ap_init_migration_capabilities(matrix_mdev);
+> +
+>  	ret =3D vfio_register_emulated_iommu_dev(&matrix_mdev->vdev);
 
 [Severity: High]
-This is a pre-existing issue, but can this lead to a system-wide deadlock?
+Does acquiring matrix_dev->mdevs_lock before calling
+vfio_register_emulated_iommu_dev() create a lock inversion?
 
-In vfio_ap_mdev_ioctl(), the global matrix_dev->mdevs_lock is acquired
-before calling vfio_ap_mdev_reset_queues().=20
+Since vfio_register_emulated_iommu_dev() acquires dev_set->lock, this sets
+the lock order to mdevs_lock -> dev_set->lock.
 
-Inside vfio_ap_mdev_reset_queues(), flush_work() is called, which
-synchronously waits for apq_reset_check() to complete:
+Later, when userspace opens the device, the core holds dev_set->lock before
+invoking the open_device callback (vfio_ap_mdev_open_device). The callback
+then attempts to acquire mdevs_lock, which reverses the order to
+dev_set->lock -> mdevs_lock, potentially leading to a deadlock.
 
-vfio_ap_mdev_reset_queues()
-    flush_work(&q->reset_work);
+>  	if (ret)
+>  		goto err_put_vdev;
+>  	matrix_mdev->req_trigger =3D NULL;
+>  	matrix_mdev->cfg_chg_trigger =3D NULL;
+>  	dev_set_drvdata(&mdev->dev, matrix_mdev);
+> -	mutex_lock(&matrix_dev->mdevs_lock);
+>  	list_add(&matrix_mdev->node, &matrix_dev->mdev_list);
+>  	mutex_unlock(&matrix_dev->mdevs_lock);
+>  	return 0;
+> =20
+>  err_put_vdev:
+>  	vfio_put_device(&matrix_mdev->vdev);
 
-If the hardware faults, apq_reset_check() polls indefinitely in its
-infinite while (true) loop. Because the global mdevs_lock is held during
-this time, would this permanently block all other operations across all
-vfio-ap mediated devices?
+[Severity: High]
+Is there a self-deadlock risk here in the error path?
 
-> +		if (ret =3D=3D 0) {
-> +			/* Reset migration state per VFIO migration spec */
-> +			vfio_ap_reset_migration_state(matrix_mdev);
-> +		}
->  		break;
+If vfio_register_emulated_iommu_dev() fails, we jump to err_put_vdev while
+matrix_dev->mdevs_lock is still held. Calling vfio_put_device() here will
+synchronously trigger the release callback (vfio_ap_mdev_release_dev), which
+attempts to acquire the same non-recursive mdevs_lock again.
+
+> +	mutex_unlock(&matrix_dev->mdevs_lock);
+>  	return ret;
+>  }
+> =20
+> @@ -2052,19 +2075,39 @@ static int vfio_ap_mdev_reset_qlist(struct list_h=
+ead *qlist)
+> =20
+>  static int vfio_ap_mdev_open_device(struct vfio_device *vdev)
+>  {
+> -	struct ap_matrix_mdev *matrix_mdev =3D
+> -		container_of(vdev, struct ap_matrix_mdev, vdev);
+> +	struct ap_matrix_mdev *matrix_mdev;
+> +	int ret;
+> =20
+>  	if (!vdev->kvm)
+>  		return -EINVAL;
+> =20
+> -	return vfio_ap_mdev_set_kvm(matrix_mdev, vdev->kvm);
+> +	mutex_lock(&matrix_dev->mdevs_lock);
+> +	matrix_mdev =3D container_of(vdev, struct ap_matrix_mdev, vdev);
+> +	ret =3D vfio_ap_init_migration_data(matrix_mdev);
+> +	mutex_unlock(&matrix_dev->mdevs_lock);
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D vfio_ap_mdev_set_kvm(matrix_mdev, vdev->kvm);
+
+[Severity: Critical]
+This isn't a bug introduced by this patch, but does a failure in
+vfio_ap_mdev_set_kvm() leave a dangling pointer that leads to a
+use-after-free?
+
+In vfio_ap_mdev_set_kvm(), kvm->arch.crypto.pqap_hook is immediately
+overwritten with &matrix_mdev->pqap_hook:
+
+    down_write(&kvm->arch.crypto.pqap_hook_rwsem);
+    kvm->arch.crypto.pqap_hook =3D &matrix_mdev->pqap_hook;
+    up_write(&kvm->arch.crypto.pqap_hook_rwsem);
+
+If it then detects that another mdev is already assigned to this KVM,
+it returns -EPERM but skips resetting the hook. Since matrix_mdev->kvm
+remains NULL, vfio_ap_mdev_unset_kvm() won't clean this up on teardown.
+
+If the second mdev is freed, wouldn't the active KVM guest trigger a
+use-after-free if it executes a PQAP instruction using the stale hook?
+
+> +	if (ret) {
+> +		/* Clean up migration data on failure */
+> +		mutex_lock(&matrix_dev->mdevs_lock);
+> +		vfio_ap_release_migration_data(matrix_mdev);
+> +		mutex_unlock(&matrix_dev->mdevs_lock);
+> +	}
+> +
+> +	return ret;
+>  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260707090226.3206=
-695-1-akrowiak@linux.ibm.com?part=3D4
+695-1-akrowiak@linux.ibm.com?part=3D3
 
