@@ -1,185 +1,221 @@
-Return-Path: <linux-s390+bounces-21677-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21679-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id zZrANhCmTGpwngEAu9opvQ
-	(envelope-from <linux-s390+bounces-21677-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 09:09:04 +0200
+	id iU3FOaipTGo/nwEAu9opvQ
+	(envelope-from <linux-s390+bounces-21679-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 09:24:24 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4AB9C7184A1
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 09:09:04 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E98577186F8
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 09:24:23 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20201202 header.b=qOiK2d4X;
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21677-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21677-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=EQ27WFS5;
+	dmarc=pass (policy=none) header.from=ibm.com;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21679-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21679-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4462930490AB
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Jul 2026 07:00:56 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B694B301C1A3
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Jul 2026 07:22:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EDDD2F7F11;
-	Tue,  7 Jul 2026 07:00:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06E2B3DD870;
+	Tue,  7 Jul 2026 07:22:00 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ACE421CC44;
-	Tue,  7 Jul 2026 07:00:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D013911B8;
+	Tue,  7 Jul 2026 07:21:49 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783407655; cv=none; b=LoAIx8I0FggaomR9lhaKf7TbK5uMN/JGfo8E5EbepNHO/Kl510Cb39MkXMYtcmDLKizGhkCT5KVW5N9BzKnfOQtMdnWwkjz9FRNd+NYmJkaIGZ/4uU0pDlIDLaiH68ryK2tS7drHToicuSTs2zyVf+5U/HNN+aMcxyhlhbJh5Zc=
+	t=1783408916; cv=none; b=E33l0SrkSuLXSp0Lfhs/aGe9F4fakKp9+vXEPGRXExqGU5uEJAXFCEoFohWhIHVbKctXJuahnZ3spLVA/zYLLA2MjYMyr5oZiNSu2VbPM0SiTKioDTM0jq6SmyYk9nEn6lvneeHAW7zFOUswom4DXGPC6YzUzm1tFmVDKHs2oy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783407655; c=relaxed/simple;
-	bh=TwbKP6+4zJvrHidj2Q8b4AKuEITUZKIamAjzqzXlhTo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=mDa+FlZotY3+ExKGmA7EOH/qa+peO0FLFGSajogoF9EmnJwtL1PXJ831a+SJ1Y8FzNrNUeQAKNvL4RG4Fe9y2wgOjoB6Q+np5WsXLzlteJFh8h9NLuI0x1BiDstRoQ2Pu3egJWdC1M3ZBwL7MDfbe9pa00CxHcSTXXeKTQHyf84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qOiK2d4X; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E5C75C2BCC9;
-	Tue,  7 Jul 2026 07:00:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1783407655;
-	bh=TwbKP6+4zJvrHidj2Q8b4AKuEITUZKIamAjzqzXlhTo=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=qOiK2d4X3wcblAral/hysyKmFq3G0Me5KJA7WpW+cOuv54XnwApo/pQbplCYNl+5e
-	 IwKMXjbPPW9XHcghhfbwwL7nFSNzhxyq0hfOXLiTcVW/XrTINd2Q+zQfnZvwrMUlnK
-	 572Cudc7x2BJt9FaNVNlofcl5LbdrFCZ2mlpfXnfrWC3cj/i/1X1/HrSUdfeWXqUaG
-	 4KE/C8isdhf+7thU8fZuVhR1K+tPsRwVSsQFWhzwb8dBpBVJl6rBd0m1Z+yyyfPcAM
-	 yyi9kK5WiAu4EnTnnuUcJxzsGJgU44EBAh8dBRN80sCM9lgEMjEWfQvp16YRH48558
-	 fjQc+oCzrLFMw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA9CC43458;
-	Tue,  7 Jul 2026 07:00:54 +0000 (UTC)
-From: Bryam Vargas via B4 Relay <devnull+hexlabsecurity.proton.me@kernel.org>
-Date: Tue, 07 Jul 2026 02:00:54 -0500
-Subject: [PATCH net] net/iucv: fix use-after-free of a severed iucv_path
+	s=arc-20240116; t=1783408916; c=relaxed/simple;
+	bh=CkYdfRzgHc0C7Hmsb+Gi3iBMGN8iWG0xDQhHa1y4C1M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HtDZI6+WUkJdULUqXcDFsJGX/EPiZiv7TiCXpV2hupGp4WmxplORFDCUX4Uwkzd4RcEZMYvDcYqjxVkd9w41DOYNZ9p6MwQ5gcQ7kiOj0y5D6GDWllMEkfSKjaNFqZmbNoUnT45bBuE2qBLcNgttI1hWtKE2t3A0chtWKlUY0Zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EQ27WFS5; arc=none smtp.client-ip=148.163.156.1
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6674Ifer2386574;
+	Tue, 7 Jul 2026 07:21:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=ASP9SsAmeugXa+PWYoSj6Ew07J1BIB
+	lMkdhlKL9m9IA=; b=EQ27WFS54mZ4vAz/szsbXHFYZ6HojI5h/0rRroU5Yogjca
+	Sk5cynPhjtUGvXMaySNokxXGzUlbl2bl/6gKKzPq6867yORSb7FM/fBbWnG4gRsl
+	vSb8g2a97ZO22Rp0Uzk9O/Fh/utfyXfWzKOy5LVUgQsGVhVJa6gRmKCMNIehNAJ5
+	YEcFHdYLLx3B70rS6SQjsBd4H1zackIYONFzDoQ2T0MYrfhnq41bTI8rkDjN94dw
+	e2kCm+Qkp7nMInI3SauokSEYP6ywx+tO7hdOpWFazbPToDi5fn8wUmMpXCqcY6PF
+	sOWpRg0jefvg6Dc6Ld0Jb0yi5hjd+Dilp8wGgCxw==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6sp3ns13-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 07 Jul 2026 07:21:18 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66774aGw010981;
+	Tue, 7 Jul 2026 07:21:17 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f7dgk1h32-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 07 Jul 2026 07:21:17 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6677LAOQ14418406
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 7 Jul 2026 07:21:10 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7F09620040;
+	Tue,  7 Jul 2026 07:21:10 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2B1AC20043;
+	Tue,  7 Jul 2026 07:21:10 +0000 (GMT)
+Received: from osiris (unknown [9.224.76.185])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  7 Jul 2026 07:21:10 +0000 (GMT)
+Date: Tue, 7 Jul 2026 09:20:57 +0200
+From: Steffen Eiden <seiden@linux.ibm.com>
+To: Marc Zyngier <maz@kernel.org>
+Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, Alexander Gordeev <agordeev@linux.ibm.com>,
+        Andreas Grapentin <gra@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        David Hildenbrand <david@kernel.org>,
+        Friedrich Welter <fritz@linux.ibm.com>,
+        Gautam Gala <ggala@linux.ibm.com>,
+        Hariharan Mari <hari55@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>, Joey Gouly <joey.gouly@arm.com>,
+        Nico Boehr <nrb@linux.ibm.com>,
+        Nina Schoetterl-Glausch <oss@nina.schoetterlglausch.eu>,
+        Oliver Upton <oupton@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>,
+        Zenghui Yu <yuzenghui@huawei.com>
+Subject: Re: [PATCH v4 08/27] KVM: arm64: Prepare sharing arm64 code with s390
+Message-ID: <20260707072057.583632-A-seiden@linux.ibm.com>
+References: <20260706085229.979525-1-seiden@linux.ibm.com>
+ <20260706085229.979525-9-seiden@linux.ibm.com>
+ <877bn77qpm.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260707-b4-disp-783fedbb-v1-1-463b9dbda2ea@proton.me>
-X-B4-Tracking: v=1; b=H4sIACWkTGoC/x3MQQqAIBBA0avErBtQi6yuEi0anWo2JhoRRHdPW
- r7F/w9kTsIZxuqBxJdkOUKBritw+xI2RvHFYJTplFUWqUUvOaLtm5U9ETYDOU00+JYVlCwmXuX
- +lxMEPmF+3w/87wdmZwAAAA==
-To: Paolo Abeni <pabeni@redhat.com>, 
- Thorsten Winkler <twinkler@linux.ibm.com>, Jakub Kicinski <kuba@kernel.org>, 
- Alexandra Winter <wintera@linux.ibm.com>, 
- Eric Dumazet <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>
-Cc: linux-s390@vger.kernel.org, Hidayath Khan <hidayath@linux.ibm.com>, 
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- Simon Horman <horms@kernel.org>, Nagamani PV <nagamani@linux.ibm.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1783407653; l=2242;
- i=hexlabsecurity@proton.me; s=proton; h=from:subject:message-id;
- bh=Vg8TCtIHTe8jw/nj6SI6vm1zcOrZY1kYN/Xv5b4uIJY=;
- b=yuG+VdpMhHEuqT4wu4JLiu4hiog3H9ZC0+OO7RR9aCidpeppZoRPBOOz3nDloMMxQ0y5X1gxy
- 1nTouPPOxmWASwYR7y+IBROMpz4tx/Vwk2AjlWs3r/tXOFmGIj81LYg
-X-Developer-Key: i=hexlabsecurity@proton.me; a=ed25519;
- pk=dmppBMZNLLoPzxHi9l8tZDzEZUunPbgsYqIZYXeUrL0=
-X-Endpoint-Received: by B4 Relay for hexlabsecurity@proton.me/proton with
- auth_id=814
-X-Original-From: Bryam Vargas <hexlabsecurity@proton.me>
-Reply-To: hexlabsecurity@proton.me
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <877bn77qpm.wl-maz@kernel.org>
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=KsJ9H2WN c=1 sm=1 tr=0 ts=6a4ca8ee cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=kj9zAlcOel0A:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8
+ a=LSyHmQqohv__iSPK5BIA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA3MDA2OSBTYWx0ZWRfX3/lN6puSS6GP
+ bKJgePq+klxWS7lo/wst4kxr8HGzyQflDKzbjYUZ12zjYTqA3o0Mg+DwVSldOv1W2mDT/iFC5YT
+ LSsPQQpQubDplqIQVz84pdjl8aH135s=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA3MDA2OSBTYWx0ZWRfX+z5lgv7MIVZa
+ oJaN2ERCbmknfC9glSCCSIijIvtnLGtH2p9pyf6Hso8ONewXT6WkY3DKHr1zl3xm6RVb2m+Mkup
+ eoIGXWuc/9KhKH/yFx9JozGG520Hm1PVjV9Cjv+cofr/Ma4jWTq1oQW2qkspWw5JFWUzv5mnoaL
+ k7QER7/8OSLq8IxKcY5OELP6r7vGsJUE5Af2z4mBAJFnHaZi7F9o+y0saIiwWVcjtofyaCAIQQ6
+ 1LbLP1ldl6Zy2X6CG8VIRx/4OerC3q294/yMjcjxSoPYJ2JtxzaPikcts80AiJJZzmBdIHIx9qG
+ q2YnXZIi4d8StbFKm3dJTwJ9K/bov4Lhe1JlAXOuiqkPz7bZeVrwitTbwYDTP5B9qNLvtLHG1M4
+ sISZCNyakLZyoOUFLRNIdl9zvbyDi7hGOchRSWya+VanhO7js1kdnptiv9gH7Wje03TgCui/Bvc
+ jdYkiXV6wZUpPC155Gw==
+X-Proofpoint-ORIG-GUID: sh00DnTO4XIi6KmCOBbENJUU54MwFv1X
+X-Proofpoint-GUID: sh00DnTO4XIi6KmCOBbENJUU54MwFv1X
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-07_01,2026-07-06_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 malwarescore=0 spamscore=0 adultscore=0 clxscore=1015
+ suspectscore=0 lowpriorityscore=0 priorityscore=1501 bulkscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607070069
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-1.16 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
+	RCPT_COUNT_TWELVE(0.00)[31];
+	TAGGED_FROM(0.00)[bounces-21679-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:pabeni@redhat.com,m:twinkler@linux.ibm.com,m:kuba@kernel.org,m:wintera@linux.ibm.com,m:edumazet@google.com,m:davem@davemloft.net,m:linux-s390@vger.kernel.org,m:hidayath@linux.ibm.com,m:linux-kernel@vger.kernel.org,m:netdev@vger.kernel.org,m:horms@kernel.org,m:nagamani@linux.ibm.com,s:lists@lfdr.de];
-	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER(0.00)[devnull@kernel.org,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:maz@kernel.org,m:kvm@vger.kernel.org,m:kvmarm@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-s390@vger.kernel.org,m:agordeev@linux.ibm.com,m:gra@linux.ibm.com,m:arnd@arndb.de,m:catalin.marinas@arm.com,m:borntraeger@linux.ibm.com,m:imbrenda@linux.ibm.com,m:david@kernel.org,m:fritz@linux.ibm.com,m:ggala@linux.ibm.com,m:hari55@linux.ibm.com,m:hca@linux.ibm.com,m:brueckner@linux.ibm.com,m:iii@linux.ibm.com,m:frankja@linux.ibm.com,m:joey.gouly@arm.com,m:nrb@linux.ibm.com,m:oss@nina.schoetterlglausch.eu,m:oupton@kernel.org,m:pbonzini@redhat.com,m:suzuki.poulose@arm.com,m:svens@linux.ibm.com,m:Ulrich.Weigand@de.ibm.com,m:gor@linux.ibm.com,m:will@kernel.org,m:yuzenghui@huawei.com,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[seiden@linux.ibm.com,linux-s390@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21677-lists,linux-s390=lfdr.de,hexlabsecurity.proton.me];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,linux.ibm.com:mid,linux.ibm.com:from_mime,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-s390@vger.kernel.org];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[seiden@linux.ibm.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	HAS_REPLYTO(0.00)[hexlabsecurity@proton.me];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,proton.me:replyto,proton.me:mid,proton.me:email,sashiko.dev:url,vger.kernel.org:from_smtp]
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 4AB9C7184A1
+X-Rspamd-Queue-Id: E98577186F8
 
-From: Bryam Vargas <hexlabsecurity@proton.me>
+On Mon, Jul 06, 2026 at 10:28:37PM +0100, Marc Zyngier wrote:
+> On Mon, 06 Jul 2026 09:52:08 +0100,
+> Steffen Eiden <seiden@linux.ibm.com> wrote:
 
-af_iucv queues not-yet-received message notifications on iucv->message_q,
-each holding a raw pointer to the connection's iucv_path.  When the peer
-severs the connection, iucv_sever_path() frees that path with
-iucv_path_free() but leaves the notifications queued.  A later recvmsg()
-drains message_q via iucv_process_message_q() and hands the stale path to
-message_receive() -- a use-after-free of the freed iucv_path.
+...
 
-Drop the queued notifications when the path is severed; once the path is
-gone they can no longer be received.  This also frees the notifications
-leaked when a socket is closed with messages still queued.
+> >  /*
+> >   * Return > 0 to return to guest, < 0 on error, 0 (and set exit_reason) on
+> >   * proper exit to userspace.
+> > diff --git a/arch/arm64/kvm/mmio.c b/arch/arm64/kvm/mmio.c
+> > index e2285ed8c91d..876d56dd5b64 100644
+> > --- a/arch/arm64/kvm/mmio.c
+> > +++ b/arch/arm64/kvm/mmio.c
+> > @@ -10,6 +10,7 @@
+> >  
+> >  #include "trace.h"
+> >  
+> > +#ifdef ARM64_S390_COMMON
+> >  void kvm_mmio_write_buf(void *buf, unsigned int len, unsigned long data)
+> >  {
+> >  	void *datap = NULL;
+> > @@ -135,8 +136,11 @@ int kvm_handle_mmio_return(struct kvm_vcpu *vcpu)
+> >  		if (!kvm_vcpu_dabt_issf(vcpu))
+> >  			data = data & 0xffffffff;
+> >  
+> > +#endif /* ARM64_S390_COMMON */
+> >  		trace_kvm_mmio(KVM_TRACE_MMIO_READ, len, run->mmio.phys_addr,
+> >  			       &data);
+> > +		//TODO  tracing
+> > +#ifdef ARM64_S390_COMMON
+> 
+> Irk. The deal is that you lift full functions, not cherry-pick which
+> lines you want. Just define empty stubs for the trace nonsense, and be
+> done with it. But not this, please!
+>
 
-Fixes: f0703c80e515 ("[AF_IUCV]: postpone receival of iucv-packets")
-Closes: https://sashiko.dev/#/patchset/20260705-b4-disp-fc79c0dc-v1-1-d2cdcb57afa9@proton.me?part=1
-Cc: stable@vger.kernel.org
-Signed-off-by: Bryam Vargas <hexlabsecurity@proton.me>
----
- net/iucv/af_iucv.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Sorry, this dirty hack is a leftover I forgot to clean up prior to sending.
+Hence the TODO.
 
-diff --git a/net/iucv/af_iucv.c b/net/iucv/af_iucv.c
-index fed240b453bd..2869a103f7fa 100644
---- a/net/iucv/af_iucv.c
-+++ b/net/iucv/af_iucv.c
-@@ -337,6 +337,7 @@ static void iucv_sever_path(struct sock *sk, int with_user_data)
- 	unsigned char user_data[16];
- 	struct iucv_sock *iucv = iucv_sk(sk);
- 	struct iucv_path *path = iucv->path;
-+	struct sock_msg_q *p, *n;
- 
- 	/* Whoever resets the path pointer, must sever and free it. */
- 	if (xchg(&iucv->path, NULL)) {
-@@ -348,6 +349,19 @@ static void iucv_sever_path(struct sock *sk, int with_user_data)
- 		} else
- 			pr_iucv->path_sever(path, NULL);
- 		iucv_path_free(path);
-+
-+		/*
-+		 * Message notifications queued on message_q still reference
-+		 * the now freed path; drop them, otherwise a later recvmsg()
-+		 * would pass the freed iucv_path to message_receive() via
-+		 * iucv_process_message_q().
-+		 */
-+		spin_lock_bh(&iucv->message_q.lock);
-+		list_for_each_entry_safe(p, n, &iucv->message_q.list, list) {
-+			list_del(&p->list);
-+			kfree(p);
-+		}
-+		spin_unlock_bh(&iucv->message_q.lock);
- 	}
- }
- 
+I definitely second you full functions or not at all should be the approach.
+Everything else is not maintainable.
 
----
-base-commit: dc59e4fea9d83f03bad6bddf3fa2e52491777482
-change-id: 20260707-b4-disp-783fedbb-39bc1bb9d4e0
+I will add the tracing stuff for the next round.
 
-Best regards,
--- 
-Bryam Vargas <hexlabsecurity@proton.me>
-
+	Steffen
 
 
