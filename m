@@ -1,75 +1,75 @@
-Return-Path: <linux-s390+bounces-21683-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21685-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id M6DgMe/ATGrFpAEAu9opvQ
-	(envelope-from <linux-s390+bounces-21683-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 11:03:43 +0200
+	id tt3sHAnBTGrPpAEAu9opvQ
+	(envelope-from <linux-s390+bounces-21685-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 11:04:09 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C16077197AC
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 11:03:42 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE8EE7197BE
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 11:04:07 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=gSfcQc58;
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=c7UM0TZG;
 	dmarc=pass (policy=none) header.from=ibm.com;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21683-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21683-lists+linux-s390=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21685-lists+linux-s390=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-s390+bounces-21685-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id C28FC300F24D
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Jul 2026 09:02:47 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E4F253013C7B
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Jul 2026 09:02:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49390390608;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D12673911C5;
 	Tue,  7 Jul 2026 09:02:40 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE3E4331A5B;
-	Tue,  7 Jul 2026 09:02:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B2838F935;
+	Tue,  7 Jul 2026 09:02:39 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783414960; cv=none; b=JHu60nZLo9CHtkfnDsvBQ8bZaKy0WkzqEWVvCs2DAI/55XjxoIfEIM64Wk/keQb/q9WKR0XRyQpMyZop4WCoVmwzMIu1opWdrbAA/XYYuje/VJuP5ElCOYNVPd9pfiLjF0IDb29KsYx2j0sA5iIKbgBoUS2Kcf798xWEmV7P4VE=
+	t=1783414960; cv=none; b=plFYnDQI1CS8DUJ34o/aDz84mI16Q7DyVqznhguph/UFlDDxFHjGdFsTKuvJ9OoX1siHM+aJcSnXtnBAKnh01RBYsDN0utzVJO3qk75L699tQK5KmP2IN27in7F/w915o1OxTRhVyoBpDh5NHQT5MCajqlFAltDM2e7EbRglE3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1783414960; c=relaxed/simple;
-	bh=1s4beF7AUJtgUKAJTio1L984Gbc4oaNU5NglgSK1RX8=;
+	bh=UitA6KA3uTzU0zOIJCSouhNsDpIaclTqIJFSEw1DYsI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o1PEA9edv9yaRuZWYRBNLXIrcPselwRvjiZ0XxKi3aOxa7APHoozZSJZ2f9WVqdbe2AHksp1n5YILOwX0DBq0t90CC+fkeRMoOe5nT5hnIQY8PxdtRxhKmPpXX5IHC2TFL/SIy0WJo0hbW3T/CecTiZak75UXjwO8fUIKw1KBno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gSfcQc58; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6678ICl33342048;
-	Tue, 7 Jul 2026 09:02:31 GMT
+	 MIME-Version; b=H3W/97TzHDjgi/uTxgUBcof1Z1qTArw5rcWUMnxugsTKLfGtXGXddo1uAfa39El91PVbRijZrasla6+XUUGwDTOjjgZBF8q5MtAnFKR8y26RRPQtz//I/vLP9D7VGiANgDxgZlAx922Yy8uLxnfSPsZnvdkPFIa8b1RqL1rgL0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=c7UM0TZG; arc=none smtp.client-ip=148.163.156.1
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6678IGFt2910566;
+	Tue, 7 Jul 2026 09:02:34 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=qRRr17gzgKP7yb8yZ
-	FVvzVBAWOspssSggHtlOCAu1DQ=; b=gSfcQc58lLK3g7Blv7exbINVeeEwPiYXp
-	qGO3JDO8FFGi0q6VBVCoIvePYwUJ4viWQW4vspon9smEtxVFj4cO0FxSx59keSGL
-	SUQXrl1m7CEf1TLIgQVNeOrxP2V+1rJN/BE6vrWfZNNiq6Ke1e5OYhSBpyDZ4xIB
-	2b8eB+cgiZsouBZC/EZBxBxFil2fUOsqISdaLp3mg4sw0tLQNwAs+E2uWfCVyxgL
-	U3a6yScTo+NuNaZLA7YwpjzBxRUTP0RLb7JwMAFswATHToRwFzqbyfyLCvvUcrv4
-	zHTkX0DzeGhy0is5XAicEA2R/PukSzTHF9ZPy2Lbcr2bHtP1Nocjw==
+	:mime-version:references:subject:to; s=pp1; bh=+eWcdQnENwgsePIIZ
+	kk3Hz0xx/7NyBBYa52lEdZ3xuc=; b=c7UM0TZGZYhbEGqp102P7YxXSys0RWmrB
+	K+uuBpruGYRbELiXjdi6nepfuO19XgWxorn2b04dcAXYKuclqJOI/FNkSfMsSDAw
+	eleoh45t49MLlzcu2xXlJfo8VCPfrDPzg59Pn2vkUOyPVYl81QXsO8dL3upUwSuj
+	v1TCEm5IMGtO8+FR/IDxth6ZtWX1nlo/rEQFYriQNO06ynrd4ATSTXq44eECuEDj
+	sLoII9L7DyFEzoLJ2Cvaqr+p7iGU8lwFGkkjhuQjSsRF2DowhtFShOcVYoVXPwJ6
+	o6FSaWQkw88LNDF9f3JACdtf0dRyHzN9P+yGPK+OKF/+6FCnzPU3w==
 Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6suqnypf-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6sw4p6s8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Jul 2026 09:02:31 +0000 (GMT)
+	Tue, 07 Jul 2026 09:02:33 +0000 (GMT)
 Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6678nZCg028878;
-	Tue, 7 Jul 2026 09:02:30 GMT
-Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4f7eqg1q23-1
+	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6678nZ2e028889;
+	Tue, 7 Jul 2026 09:02:32 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4f7eqg1q2a-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Jul 2026 09:02:30 +0000 (GMT)
+	Tue, 07 Jul 2026 09:02:32 +0000 (GMT)
 Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66792TgV17629778
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66792UXG21365384
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 7 Jul 2026 09:02:29 GMT
+	Tue, 7 Jul 2026 09:02:31 GMT
 Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 51C7D58056;
+	by IMSVA (Postfix) with ESMTP id 901EC58061;
+	Tue,  7 Jul 2026 09:02:30 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6FFAD5803F;
 	Tue,  7 Jul 2026 09:02:29 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2C8505803F;
-	Tue,  7 Jul 2026 09:02:28 +0000 (GMT)
 Received: from li-4c4c4544-004d-4810-8043-b7c04f423534.ibm.com.com (unknown [9.61.160.85])
 	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  7 Jul 2026 09:02:28 +0000 (GMT)
+	Tue,  7 Jul 2026 09:02:29 +0000 (GMT)
 From: Anthony Krowiak <akrowiak@linux.ibm.com>
 To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org
@@ -78,9 +78,9 @@ Cc: jjherne@linux.ibm.com, borntraeger@de.ibm.com, mjrosato@linux.ibm.com,
         fiuczy@linux.ibm.com, pbonzini@redhat.com, frankja@linux.ibm.com,
         imbrenda@linux.ibm.com, agordeev@linux.ibm.com, hca@linux.ibm.com,
         gor@linux.ibm.com
-Subject: [PATCH v4 01/15] s390/vfio-ap: Provide function to get the number of queues assigned to mdev
-Date: Tue,  7 Jul 2026 05:02:03 -0400
-Message-ID: <20260707090226.3206695-2-akrowiak@linux.ibm.com>
+Subject: [PATCH v4 02/15] s390/vfio-ap: Data structures for facilitating vfio device migration
+Date: Tue,  7 Jul 2026 05:02:04 -0400
+Message-ID: <20260707090226.3206695-3-akrowiak@linux.ibm.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260707090226.3206695-1-akrowiak@linux.ibm.com>
 References: <20260707090226.3206695-1-akrowiak@linux.ibm.com>
@@ -92,29 +92,29 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA3MDA4NCBTYWx0ZWRfX1xC+7EsmjFov
- wZYoknSUdJw3H4iGTfc6WmvK2xQlPed/i2zFgj8lAVIxn9/ljqGwUCsLr6QyZ7mE6vrxC96ohUT
- /mV6leTzcDTeyB1haMSUcUF+fGjXAKk=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA3MDA4NCBTYWx0ZWRfX99Y9UmZ8akV0
- 2h3rAvIXWcBEEibHcmhJpntrjgdTaCeRg/ATb6Kbpp8DuHVji8gNEF87/Ir7oxF0dBt6JbAJ8FT
- 9ZPf2p1+I3u4o48fue6jniaKyi+Vf6Zr678iL35OZJ21x2tUKF3wXect4wii3vUfR59KUmqbdK2
- ceMhKanC5DDJ3HM7LISExudDSjf8T66gyv//dbe8vRUNPe3/GiHVTMXVAkLguFR0VNkvEtfa/to
- mGoJ7YKU6DmFEp0J+47rIDmac02IkrhT/6Lpq+LbAx6Q7jlIvOISMTzFKYCUsjRfnxyTIjtEG4D
- V/9WW9QYIMWPKfcHB/G4J/21uxBL/HX2MI+kE/YG3/z3I2b9XslXArKT7REZyJlucCkK4mQbws1
- btvdmoAiuIvC+2+pYUHi5wUsTKor8NCQM/hq71jKtewKlOIN56PPTLF4Ys8FhLtxyIYAkMiZEvm
- FfyCzkPyH5hvMmLti/w==
-X-Proofpoint-GUID: 4dVwoPzvYzBI_Aj370xNXpkXL0hrLgzx
-X-Authority-Analysis: v=2.4 cv=Oot/DS/t c=1 sm=1 tr=0 ts=6a4cc0a7 cx=c_pps
+X-Proofpoint-GUID: 1hklbphFYoODFwAIjiiC7hujpow_Xeir
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA3MDA4NCBTYWx0ZWRfX/4qkaQtjzUsE
+ R5lhLROaEZQcycCAr45SsqYnNBfU00F29YoL47W5U1LNu70kY7ymao9BIMZ5RN16F6SV3lDfs97
+ dKedhSHZSJwaRkVvjx5Dl9kDOm4Xf1fAqPE4UmoBHTpbSBTAxddego+IUt5WjdloCR1Xbv0rscS
+ 1The4dmq/+3gvqlLWVgZ1Khrxc36/nAZ01G22JTMOpJfKwAXtYZC6xofE0rUdKMyPP6CVMZeT9W
+ ecZa0L5Md48z3HhSnNRNsohH0o/vR2zM0ig+rDcwbPSTxG4qrpJkFq7Go1AhMezRZwPR8/i0zHP
+ yRneaNvKLvebzpIf5lxYBbVCR+O1G9iMfj3cYWL0bNCkrNNiM7xYz93c5mew+eJ3/otOWJjKcCD
+ TtzKwY+xp21hhSYhzVwURnOr0IiGAQmjfW0AJvWXSHu/TXQfjZhR6dC8icxAfx/Qcee8EOZsh4P
+ /9IcAmtvqOMtIEPkhRA==
+X-Proofpoint-ORIG-GUID: 1hklbphFYoODFwAIjiiC7hujpow_Xeir
+X-Authority-Analysis: v=2.4 cv=FqQ1OWrq c=1 sm=1 tr=0 ts=6a4cc0a9 cx=c_pps
  a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
  a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=X0LuQLNI_Dy_l-hxe5EA:9
-X-Proofpoint-ORIG-GUID: 4dVwoPzvYzBI_Aj370xNXpkXL0hrLgzx
+ a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=8LKZ2_jO19hrQNhpKIYA:9
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA3MDA4NCBTYWx0ZWRfX9CLSeenwLyXY
+ 4aurQJDpdh8HSREgy9w4MVtNJjz0/GFM+mtXufl9VhCDknfsTXl5B9P+SGyXICajNAnlY6v4N31
+ iYojdQeDJTbVbGSJfqqz0p0xmm/jbJ8=
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-07_02,2026-07-06_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0 phishscore=0
- malwarescore=0 suspectscore=0 spamscore=0 adultscore=0 priorityscore=1501
+ adultscore=0 impostorscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 suspectscore=0 spamscore=0 phishscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607070084
 X-Rspamd-Action: no action
@@ -123,13 +123,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21683-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21685-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:kvm@vger.kernel.org,m:jjherne@linux.ibm.com,m:borntraeger@de.ibm.com,m:mjrosato@linux.ibm.com,m:pasic@linux.ibm.com,m:alex@shazbot.org,m:kwankhede@nvidia.com,m:fiuczy@linux.ibm.com,m:pbonzini@redhat.com,m:frankja@linux.ibm.com,m:imbrenda@linux.ibm.com,m:agordeev@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[akrowiak@linux.ibm.com,linux-s390@vger.kernel.org];
@@ -141,64 +141,131 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,linux.ibm.com:mid,linux.ibm.com:from_mime,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,linux.ibm.com:mid,linux.ibm.com:from_mime];
 	TO_DN_NONE(0.00)[];
 	DKIM_TRACE(0.00)[ibm.com:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[16];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C16077197AC
+X-Rspamd-Queue-Id: DE8EE7197BE
 
-Provides a function that returns the number of queues that are or will be
-passed through to a guest when the mdev is attached to a guest.
+Creates the data structures used to facilitate state transitions during
+vfio device migration.
 
 Signed-off-by: Anthony Krowiak <akrowiak@linux.ibm.com>
 ---
- drivers/s390/crypto/vfio_ap_ops.c     | 14 ++++++++++++++
- drivers/s390/crypto/vfio_ap_private.h |  2 ++
- 2 files changed, 16 insertions(+)
+ drivers/s390/crypto/Makefile            |  2 +-
+ drivers/s390/crypto/vfio_ap_migration.c | 56 +++++++++++++++++++++++++
+ drivers/s390/crypto/vfio_ap_private.h   |  5 +++
+ 3 files changed, 62 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/s390/crypto/vfio_ap_migration.c
 
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 44b3a1dcc1b3..71d3e2c2e07c 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -2098,6 +2098,20 @@ static void vfio_ap_mdev_request(struct vfio_device *vdev, unsigned int count)
- 	release_update_locks_for_mdev(matrix_mdev);
- }
+diff --git a/drivers/s390/crypto/Makefile b/drivers/s390/crypto/Makefile
+index e83c6603c858..20f29184825a 100644
+--- a/drivers/s390/crypto/Makefile
++++ b/drivers/s390/crypto/Makefile
+@@ -34,5 +34,5 @@ pkey-uv-objs := pkey_uv.o
+ obj-$(CONFIG_PKEY_UV) += pkey-uv.o
  
-+int vfio_ap_mdev_get_num_queues(struct ap_matrix *ap_matrix)
-+{
-+	unsigned long apid, apqi;
-+	int num_queues = 0;
+ # adjunct processor matrix
+-vfio_ap-objs := vfio_ap_drv.o vfio_ap_ops.o
++vfio_ap-objs := vfio_ap_drv.o vfio_ap_ops.o vfio_ap_migration.o
+ obj-$(CONFIG_VFIO_AP) += vfio_ap.o
+diff --git a/drivers/s390/crypto/vfio_ap_migration.c b/drivers/s390/crypto/vfio_ap_migration.c
+new file mode 100644
+index 000000000000..239168c4b7ff
+--- /dev/null
++++ b/drivers/s390/crypto/vfio_ap_migration.c
+@@ -0,0 +1,56 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Drives vfio_ap mdev migration.
++ *
++ * Copyright IBM Corp. 2025
++ */
++#include "vfio_ap_private.h"
 +
-+	lockdep_assert_held(&matrix_dev->mdevs_lock);
++/**
++ * vfio_ap_migration_data - the data needed to migrate a guest with pass-through
++ *			    access to AP devices
++ *
++ * @mig_state:		the current migration state
++ * @resuming_migf:	the object used to resume the target guest
++ * @saving_migf:	the object used to save the state of the source guest
++ */
++struct vfio_ap_migration_data {
++	enum vfio_device_mig_state	mig_state;
 +
-+	for_each_set_bit_inv(apid, ap_matrix->apm, AP_DEVICES)
-+		for_each_set_bit_inv(apqi, ap_matrix->aqm, AP_DOMAINS)
-+			num_queues++;
++	struct {
++		struct file *filp;
++		struct vfio_ap_config	*ap_config;
++		size_t			config_sz;
++	} resuming_mig_state;
 +
-+	return num_queues;
-+}
++	struct file			*stop_copy_mig_file;
++};
 +
- static int vfio_ap_mdev_get_device_info(unsigned long arg)
- {
- 	unsigned long minsz;
++/**
++ * vfio_ap_queue_info - the information for an AP queue
++ *
++ * @data: contains the queue information returned in GR2 from the PQAP(TAPQ)
++ *	  command
++ * @apqn: the APQN of the queue
++ * @reserved: padding to ensure consistent structure size across platforms
++ */
++struct vfio_ap_queue_info {
++	u64 data;
++	u16 apqn;
++	u8  reserved[6];
++};
++
++/**
++ * vfio_ap_config - the guest's AP configuration
++ *
++ * @num_queues:	the number of queues passed through to the guest
++ * @reserved: padding to ensure proper alignment of qinfo array
++ * @qinfo:	an array of vfio_ap_queue_info objects, each specifying the
++ *		queue information for a queue passed through to the guest
++ */
++struct vfio_ap_config {
++	u32				num_queues;
++	u8				reserved[4];
++	size_t				config_sz;
++	struct vfio_ap_queue_info	qinfo[] __counted_by(num_queues);
++};
 diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
-index 9bff666b0b35..9677e49554d7 100644
+index 9677e49554d7..2b542648964b 100644
 --- a/drivers/s390/crypto/vfio_ap_private.h
 +++ b/drivers/s390/crypto/vfio_ap_private.h
-@@ -152,6 +152,8 @@ struct vfio_ap_queue {
- 	struct work_struct reset_work;
+@@ -91,6 +91,9 @@ struct ap_queue_table {
+ 	DECLARE_HASHTABLE(queues, 8);
  };
  
-+int vfio_ap_mdev_get_num_queues(struct ap_matrix *ap_matrix);
++/* Forward declaration for migration data structure */
++struct vfio_ap_migration_data;
 +
- int vfio_ap_mdev_register(void);
- void vfio_ap_mdev_unregister(void);
+ /**
+  * struct ap_matrix_mdev - Contains the data associated with a matrix mediated
+  *			   device.
+@@ -110,6 +113,7 @@ struct ap_queue_table {
+  * @aqm_add:	bitmap of APQIs added to the host's AP configuration
+  * @adm_add:	bitmap of control domain numbers added to the host's AP
+  *		configuration
++ * @mig_data:  vfio device migration data
+  */
+ struct ap_matrix_mdev {
+ 	struct vfio_device vdev;
+@@ -125,6 +129,7 @@ struct ap_matrix_mdev {
+ 	DECLARE_BITMAP(apm_add, AP_DEVICES);
+ 	DECLARE_BITMAP(aqm_add, AP_DOMAINS);
+ 	DECLARE_BITMAP(adm_add, AP_DOMAINS);
++	struct vfio_ap_migration_data *mig_data;
+ };
  
+ /**
 -- 
 2.53.0
 
