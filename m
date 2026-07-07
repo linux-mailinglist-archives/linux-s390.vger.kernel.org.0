@@ -1,200 +1,188 @@
-Return-Path: <linux-s390+bounces-21681-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21682-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id iLUTEZGyTGpJoQEAu9opvQ
-	(envelope-from <linux-s390+bounces-21681-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 10:02:25 +0200
+	id zBsHEoezTGqWoQEAu9opvQ
+	(envelope-from <linux-s390+bounces-21682-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 10:06:31 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99E56718D1B
-	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 10:02:24 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6F04718E1D
+	for <lists+linux-s390@lfdr.de>; Tue, 07 Jul 2026 10:06:30 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=lEtT2GXI;
-	dmarc=pass (policy=none) header.from=ibm.com;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21681-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-21681-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ehzJVAlx;
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21682-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-s390+bounces-21682-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E57B63058728
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Jul 2026 07:40:24 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 062AA301C2C2
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Jul 2026 08:06:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4A1A405F7;
-	Tue,  7 Jul 2026 07:40:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0ACE8288C2D;
+	Tue,  7 Jul 2026 08:06:25 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2F542089E;
-	Tue,  7 Jul 2026 07:40:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C381EB5CE;
+	Tue,  7 Jul 2026 08:06:23 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783410023; cv=none; b=NyQFWHNGyVH0atxmJp/RQuz7WaXsB4+RqNLCasDfM1hh+4XTbJt7tdl1bq76888S1ky+CImmKrwmHmSlggvVgmXHnStLoLnHA4X4a5ci3pTx+wz5OyOCBbtCkKCOPcbgk3UnJ8HuGN9JMY9smxy4+BD7nSF9egGrdVhQ9boPbk4=
+	t=1783411584; cv=none; b=OjZWradv5Qa72m2BSGyKOX396K3nemZUbGVBEEATK8oZne6tCR2nIu3kQQqqNSwsQOf+TyVIgiSwvddrXZRj8eTuG/TX6OxOWqzz0/UZF9BCEs4HAZuLyEhiezKqdABAfv3y+PT7O3zRQp8B/Z0zo6L9VVWEko2yitMHLShZJaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783410023; c=relaxed/simple;
-	bh=N2YBLQ2q+JlwFKcecWltDkVVJM0NmmZbDmKRyhij1Pc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Et9zIw5UG+ANO2iyYOB0HMaoKDApMm2Qbw1m5DJ/+qoM39i/S4mTzsZXE6FUKjAyFnL6m3tbQxRLTbFb0rNC+zoxQSf2KAdPnu2eWZct1ARv7NS37LY2lOVJfRlYWrgUnlOeJXwwkhXwW+Y1Q24PaG9DpKMcjXgBYFCtwG/aonk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lEtT2GXI; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6674IDBi2725423;
-	Tue, 7 Jul 2026 07:40:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=1d2VBan8/XM9utBiTkiyVaE7rbR0Nx
-	uli4JKEtTFc8M=; b=lEtT2GXICudrfpNmeInB/4FfnpK7pKmaAxmWJVtsDV2jW8
-	Eh8wmRx6R+Gut8wPztuXxgw/vlh1aWc2qWYzXmllwEJ9b7eybg+TOTPiCrLfQSA1
-	mRejkv6x2MjiLf8FtkcKMdf9GA+SpZv4q9J8Ef9IwNOAwS/8XMudUTzPZ9530jj7
-	E2P30NheIfHRnCyp5u6UcWSnWeZ2v/RUtUHD0XtG09X+XR6xfqbqwnJGoLdDB/EH
-	I5JBZfwlP1tSNJxfz6unZNfnO4140rrAgpWGUhN7QMAb9tSH3q+yhWzFKQBq5G8c
-	idfVC7WVmYrm7qBoVQbc65heO+zAxR3zm3fuUmUw==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6suqnkcq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Jul 2026 07:40:04 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6677YaOB008650;
-	Tue, 7 Jul 2026 07:40:03 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4f7cgq1sg7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Jul 2026 07:40:03 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6677dxBI51446060
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 7 Jul 2026 07:39:59 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 941A32004F;
-	Tue,  7 Jul 2026 07:39:59 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3504E2004B;
-	Tue,  7 Jul 2026 07:39:59 +0000 (GMT)
-Received: from osiris (unknown [9.224.76.185])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue,  7 Jul 2026 07:39:59 +0000 (GMT)
-Date: Tue, 7 Jul 2026 09:39:58 +0200
-From: Steffen Eiden <seiden@linux.ibm.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, kvm@vger.kernel.org,
-        kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Andreas Grapentin <gra@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        David Hildenbrand <david@kernel.org>,
-        Friedrich Welter <fritz@linux.ibm.com>,
-        Gautam Gala <ggala@linux.ibm.com>,
-        Hariharan Mari <hari55@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>, Joey Gouly <joey.gouly@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Nico Boehr <nrb@linux.ibm.com>,
-        Nina Schoetterl-Glausch <oss@nina.schoetterlglausch.eu>,
-        Oliver Upton <oupton@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>,
-        Zenghui Yu <yuzenghui@huawei.com>
-Subject: Re: [PATCH v4 01/27] VFIO: take reference to the KVM module
-Message-ID: <20260707073958.583632-B-seiden@linux.ibm.com>
-References: <20260706085229.979525-1-seiden@linux.ibm.com>
- <20260706085229.979525-2-seiden@linux.ibm.com>
- <20260706195313.GE118978@ziepe.ca>
- <akwaVzghHzi8o8fK@google.com>
+	s=arc-20240116; t=1783411584; c=relaxed/simple;
+	bh=YObFcIh1tDVXWjQY/EyHvVKx8GEiNlbw2CdpCpbxLDA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=V0W2HIKzLKDg2euldDtIhLwUqYhnWz/tEGZtc+JzDJOOplwC9isRsj1UJ24hzNw1WC3NzGX9BlfQ65Pd3FR5gRDFzEMsiLB007pbnduLEJsJdDmX7hM4lkX2FVQEqy0wFueT3Og7KhNwXig1V/BeCpnTUU9WdqeZjwYpEmwDvcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ehzJVAlx; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E980D1F000E9;
+	Tue,  7 Jul 2026 08:06:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783411583;
+	bh=ea0IOau1aAltI3DRKVxyYkxeEjLOa5kYpwFj12qVzqc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=ehzJVAlxIC/pC2sXhGD1Zd5xyp2mkGV8OuobvUJm80sNhARBCJldhVJnR/fvzUlg8
+	 t2QQb326FSv7l+dfyMjQn+q4qi0x/iJZD8qCoLvIATEMQErD8y3iRKIcZPoxzVgszV
+	 oRoggpbomDjX7tQZq9G9GaoCtyybcTlqjfRz4+F1rB3X4H4ooSWHLgUZt7CnfLeeFM
+	 zwEb6VljE8Xh9Fi9TviWiquZI1cqM+c0j9tSvLQJ700z+8l/66JsCg+ZgzcpDbHZNA
+	 MK5IFv5kO6A9ODArwj2zGJLks6KS3/uwYgDXQCaGY1s1PvXpmfKk7P0jRMoD6rRJUF
+	 QGcIHGnDYecHw==
+X-Mailer: emacs 30.2 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev
+Cc: Robin Murphy <robin.murphy@arm.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Steven Price <steven.price@arm.com>,
+	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Mostafa Saleh <smostafa@google.com>,
+	Petr Tesarik <ptesarik@suse.com>,
+	Alexey Kardashevskiy <aik@amd.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Xu Yilun <yilun.xu@linux.intel.com>,
+	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>, x86@kernel.org
+Subject: Re: [PATCH v7 00/22] dma-mapping: Track shared DMA state through
+ direct, pool and swiotlb paths
+In-Reply-To: <20260701054926.825925-1-aneesh.kumar@kernel.org>
+References: <20260701054926.825925-1-aneesh.kumar@kernel.org>
+Date: Tue, 07 Jul 2026 13:36:10 +0530
+Message-ID: <yq5av7argr65.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <akwaVzghHzi8o8fK@google.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA3MDA2OSBTYWx0ZWRfXysR8zSDAEOBH
- 4x5xHPncdCmEZG24O4GLzeODqCXEzIARoD+2bCONtp17c+bEVbxINx14SyxMjvPB0O3V6nSaw6B
- 9/a3WbPOJOja3fcoN0AJjkJnSchJKxk=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA3MDA2OSBTYWx0ZWRfXyP4Hzwh8Cw5z
- dY4Mx1OFCm4qeu9UxNKbSgqE6ke0fKSKIGXo7qLDzhILzFZIZB9otVhz/rtalbVrMHNVq2JBJ4m
- IaZjbrOHZJHZQcBvxL6T1D/oeIoqPUo/ftxc79rqeIBf+Edrmae3WM+skt3jeaNrHlyp3SscJIQ
- 6xZUfP7BpcWsltTRzoy/89bHHoUPZvETetwoUMzhdc+mpREEWHAAAINMxDpxCDRvAwfiHMt2yqO
- 1HFCuXfibiDfImQyb7E8TT1bFX1mHdsYYkp4/1cufmCtuwUAJn4CCUMtN1Jcr7oGdFzXCrryAoD
- kynir/mGuVDLfNxxb0dkAYBtmdx2qoafg4EGRwy1E6vBKvtbXqYVjKpTDf0WMa4eeMghAGs3Pzf
- gC7CJziQuysqBLV3fgpJdQxACoUm5oOXtlTjiW2cyfXxa8C4ZKc0dY/NpRzWTtQgK7j0rC1bHKY
- mBQy5dnIwfFHl4drcDg==
-X-Proofpoint-GUID: HSBOqlTnliJyzGOBDLWHxtevcP-AF-dI
-X-Authority-Analysis: v=2.4 cv=Oot/DS/t c=1 sm=1 tr=0 ts=6a4cad55 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=kj9zAlcOel0A:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VwQbUJbxAAAA:8
- a=1XWaLZrsAAAA:8 a=20KFwNOVAAAA:8 a=Ubti9o167-X3AsrDlZIA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-ORIG-GUID: bmiDYJpYbB5YE7vJNJudbxkVJtNQZl-h
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-07_01,2026-07-06_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 lowpriorityscore=0 clxscore=1011 impostorscore=0 phishscore=0
- malwarescore=0 suspectscore=0 spamscore=0 adultscore=0 priorityscore=1501
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607070069
+Content-Type: text/plain
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.16 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-4.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[33];
-	TAGGED_FROM(0.00)[bounces-21681-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21682-lists,linux-s390=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[31];
 	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:seanjc@google.com,m:jgg@ziepe.ca,m:kvm@vger.kernel.org,m:kvmarm@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-s390@vger.kernel.org,m:agordeev@linux.ibm.com,m:gra@linux.ibm.com,m:arnd@arndb.de,m:catalin.marinas@arm.com,m:borntraeger@linux.ibm.com,m:imbrenda@linux.ibm.com,m:david@kernel.org,m:fritz@linux.ibm.com,m:ggala@linux.ibm.com,m:hari55@linux.ibm.com,m:hca@linux.ibm.com,m:brueckner@linux.ibm.com,m:iii@linux.ibm.com,m:frankja@linux.ibm.com,m:joey.gouly@arm.com,m:maz@kernel.org,m:nrb@linux.ibm.com,m:oss@nina.schoetterlglausch.eu,m:oupton@kernel.org,m:pbonzini@redhat.com,m:suzuki.poulose@arm.com,m:svens@linux.ibm.com,m:Ulrich.Weigand@de.ibm.com,m:gor@linux.ibm.com,m:will@kernel.org,m:yuzenghui@huawei.com,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[seiden@linux.ibm.com,linux-s390@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.ibm.com:mid,linux.ibm.com:from_mime,vger.kernel.org:from_smtp];
-	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:iommu@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:robin.murphy@arm.com,m:m.szyprowski@samsung.com,m:will@kernel.org,m:maz@kernel.org,m:steven.price@arm.com,m:Suzuki.Poulose@arm.com,m:catalin.marinas@arm.com,m:jiri@resnulli.us,m:jgg@ziepe.ca,m:smostafa@google.com,m:ptesarik@suse.com,m:aik@amd.com,m:dan.j.williams@intel.com,m:yilun.xu@linux.intel.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-s390@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:x86@kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[aneesh.kumar@kernel.org,linux-s390@vger.kernel.org];
+	FREEMAIL_CC(0.00)[arm.com,samsung.com,kernel.org,resnulli.us,ziepe.ca,google.com,suse.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,vger.kernel.org,linux.ibm.com,ellerman.id.au,gmail.com];
+	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[seiden@linux.ibm.com,linux-s390@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[aneesh.kumar@kernel.org,linux-s390@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[11]
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-s390];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,arm.com:url,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 99E56718D1B
+X-Rspamd-Queue-Id: C6F04718E1D
 
-On Mon, Jul 06, 2026 at 02:12:55PM -0700, Sean Christopherson wrote:
-> On Mon, Jul 06, 2026, Jason Gunthorpe wrote:
-> > On Mon, Jul 06, 2026 at 10:52:01AM +0200, Steffen Eiden wrote:
-> > > From: Paolo Bonzini <pbonzini@redhat.com>
-> > > 
-> > > VFIO is implicitly taking a reference to the KVM module between
-> > > vfio_device_get_kvm_safe and vfio_device_put_kvm, thanks to
-> > > symbol_get and symbol_put.
-> > 
-> > I thought we weren't doing this approach? Use the struct file as the
-> > kvm handle. I thought I saw patches doing that already?
-> 
-> +1, my joking-but-serious NAK stands.
-> 
-> https://lore.kernel.org/all/adf29Rn7q9Db0hxc@google.com
+"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org> writes:
 
-My bad, I did not cover this topic in the cover letter: 
+> This series tracks confidential-computing shared DMA state through the
+> dma-direct, dma-pool, and swiotlb paths so that encrypted and decrypted
+> DMA buffers are handled consistently.
+>
+> Today, the direct DMA path mostly relies on force_dma_unencrypted() for
+> shared/decrypted buffer handling. This series consolidates the
+> force_dma_unencrypted() checks in the top-level functions and ensures
+> that the remaining DMA interfaces use DMA attributes to make the correct
+> decisions.
+>
+> The series separates mapping and allocation state:
+> - DMA_ATTR_CC_SHARED describes the DMA address attribute requested for a
+>   mapping. It tells the DMA mapping path that the DMA address must target
+>   shared/decrypted memory.
+> - __DMA_ATTR_ALLOC_CC_SHARED is an internal DMA-mapping attribute used only
+>   by allocation paths after the DMA core decides that the backing pages
+>   must be allocated as shared/decrypted memory.
+>
+> The series:
+> - moves swiotlb-backed allocations out of __dma_direct_alloc_pages(),
+> - uses __DMA_ATTR_ALLOC_CC_SHARED through the dma-direct alloc/free paths
+> - teaches the atomic DMA pools to track encrypted versus decrypted
+>   state
+> - tracks swiotlb pool encryption state and enforces strict pool
+>   selection
+> - centralizes encrypted/decrypted pgprot handling in dma_pgprot() using
+>   DMA attributes
+> - passes DMA attributes down to dma_capable() so capability checks can
+>   validate whether the selected DMA address encoding matches
+>   DMA_ATTR_CC_SHARED
+> - makes dma_direct_map_phys() choose the DMA address encoding from
+>   DMA_ATTR_CC_SHARED and fall back to swiotlb when a shared DMA request
+>   cannot use the direct mapping, which lets arm64 and x86 CCA guests stop
+>   relying on SWIOTLB_FORCE for DMA mappings
+> - use the selected swiotlb pool state to derive the returned DMA
+>   address
+> - reports CC_ATTR_GUEST_MEM_ENCRYPT for arm64 Realms, powerpc secure
+>   guests, and s390 protected virtualization guests.
+>
+> Dependency:
+> This series depends on the pKVM changes posted at:
+> https://lore.kernel.org/all/20260603110522.3331819-1-smostafa@google.com
+>
+> Please merge this series only after the pKVM changes above are merged.
+> Otherwise pKVM will be broken.
+>
 
-I included those tree patches so that the rest of the series links in all configurations.
-I know we will not use this approach to mitigate this issue.
+A rebased tree on top of the dependent pKVM changes can be found at:
+https://gitlab.arm.com/linux-arm/linux-cca/-/tree/scratch/pkvm/testing?ref_type=heads
 
-	Steffen
+The patches had minor conflicts. I am not sure how we want to get this
+merged.
+
+Should we ask the pKVM maintainers for a topic branch, and then I can
+repost the updated series on top of that?
+
+-aneesh
+
 
