@@ -1,238 +1,202 @@
-Return-Path: <linux-s390+bounces-21845-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21846-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id fIC+IU+6TmpSTAIAu9opvQ
-	(envelope-from <linux-s390+bounces-21845-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 22:59:59 +0200
+	id +fx+Eqi+Tmp2TQIAu9opvQ
+	(envelope-from <linux-s390+bounces-21846-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 23:18:32 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D60472A5EB
-	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 22:59:59 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id D681A72A77A
+	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 23:18:31 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=rendec.net header.s=default header.b=QFBhNiYB;
-	dmarc=pass (policy=reject) header.from=rendec.net;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21845-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21845-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ij1oKLvn;
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21846-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-21846-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C23BB30309FB
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2026 20:59:52 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 72138301AA8A
+	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2026 21:18:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CA3E3E8359;
-	Wed,  8 Jul 2026 20:59:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33F003F1AC8;
+	Wed,  8 Jul 2026 21:18:26 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail.mindbit.ro (xs1.mindbit.ro [80.86.107.70])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E4D3B7742;
-	Wed,  8 Jul 2026 20:59:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302003E8C6A
+	for <linux-s390@vger.kernel.org>; Wed,  8 Jul 2026 21:18:24 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783544389; cv=none; b=j1baHBe8tdCYtysoHH8iMKizT3ruXSmRBcJT1s3oWT59BXpSOYtsSmyunQxcjZmwwn64uGYkFN+ayAgN/IN8bHDwU9vxlvlQaV18zlI1t02Imjup5oMddgwIRQ9UKYiWYdUd1k2kTzWvG/jb6ak/2Qn5s9e+RJM52nB4wTFCrh8=
+	t=1783545506; cv=none; b=SvcU4BiPq2JEZd/Jwgn5N8LMQookeocq41aEYMnJCUjfow4s4HxAy1mBNxgfRGrkgcolliloxU79eSqaOmOC4hndIVRxXw7/elfvgEvyv6fP11v1GIgvOxEilDQ5R99mkn+0ArWht4mIMFAbptVb57kVEm0Dv1DEaZRFJXsCq/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783544389; c=relaxed/simple;
-	bh=G/nBh18gOxJI1Qg481B6FfoZLdcPt51fF1KIckW/8fM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OZbwDdw48mDhrqEAXbZNInWu5k8AH2+6w0vPWVm4hFDEa71T+h1WTXBiV0PvLCjqq6oeCBRtnpPfyk+8aWS9JlEOkZ4TZIjHpcgOa8wnSj6DJzDYn+bskFo8pE494l2Opk/dbIVGOPb3LXcoiFi9J31PTRd9rzaLADH4XSLicW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=rendec.net; spf=pass smtp.mailfrom=rendec.net; dkim=pass (2048-bit key) header.d=rendec.net header.i=@rendec.net header.b=QFBhNiYB; arc=none smtp.client-ip=80.86.107.70
-Received: from bat.kanata.rendec.net (unknown [24.114.111.125])
-	by mail.mindbit.ro (Postfix) with ESMTPSA id EEAC6C3450;
-	Wed,  8 Jul 2026 23:59:23 +0300 (EEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.mindbit.ro EEAC6C3450
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rendec.net;
-	s=default; t=1783544386;
-	bh=apD89r/ATd0i91X5PLxPXmWRbZb01NLEEn83tYTPdj8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=QFBhNiYBGqyqIPaE0Z//h9Otg8dr2LXIHvr8YLUlcTh/kNU/NIbu5jC1lBV3pHdLh
-	 Ytm1aPdmx5IPwKpmRwSjzNZATFEnv+SX4IQqX325g318JKX/ahM7OZftwyNPWkKh+8
-	 Vevi8c0s6FZB90ZqbVizrkH3lX3FU2ik1T1I5Ls6uZhVB+87d+ps/uU5qQR8vbqmGm
-	 WzIaaobCMK1Q68zS0EMjVKisaOGjotqeY2kfDArzrlfOxIAdRTtnnfA8P+I6Lpe81U
-	 e7IwFFdqW2LVSX+vRtsYW7C8+F7/fgH4EcUIK6C4eJGLJR5jk9VqhbYq1bnaYAPt14
-	 W5V6aNnbwuOcA==
-Message-ID: <caeb49cd840279c9fcfae417d1cf239abde20f9e.camel@rendec.net>
-Subject: Re: [patch 08/18] x86/syscall: Use
- [syscall_]enter_from_user_mode_randomize_stack()
-From: Radu Rendec <radu@rendec.net>
-To: Thomas Gleixner <tglx@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, x86@kernel.org, Michael Ellerman	
- <mpe@ellerman.id.au>, Shrikanth Hegde <sshegde@linux.ibm.com>, 
-	linuxppc-dev@lists.ozlabs.org, Kees Cook <kees@kernel.org>, Huacai Chen	
- <chenhuacai@kernel.org>, loongarch@lists.linux.dev, Paul Walmsley
- <pjw@kernel.org>,  Palmer Dabbelt <palmer@dabbelt.com>,
- linux-riscv@lists.infradead.org, Sven Schnelle <svens@linux.ibm.com>, 
-	linux-s390@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Jinjie
- Ruan	 <ruanjinjie@huawei.com>, Andy Lutomirski <luto@kernel.org>, Oleg
- Nesterov	 <oleg@redhat.com>, Richard Henderson
- <richard.henderson@linaro.org>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Guo Ren	 <guoren@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Thomas Bogendoerfer
- <tsbogend@alpha.franken.de>, Helge Deller <deller@gmx.de>, Yoshinori Sato	
- <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, Chris
- Zankel	 <chris@zankel.net>, linux-arm-kernel@lists.infradead.org, 
-	linux-alpha@vger.kernel.org, linux-csky@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linux-sh@vger.kernel.org, 
-	linux-um@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Vineet Gupta	
- <vgupta@kernel.org>, Will Deacon <will@kernel.org>, Brian Cain
- <bcain@kernel.org>,  Michal Simek <monstr@monstr.eu>, Dinh Nguyen
- <dinguyen@kernel.org>, "David S. Miller" <davem@davemloft.net>,  Andreas
- Larsson <andreas@gaisler.com>, linux-snps-arc@lists.infradead.org,
- linux-hexagon@vger.kernel.org, 	linux-openrisc@vger.kernel.org,
- sparclinux@vger.kernel.org, 	linux-arch@vger.kernel.org, Michal
- =?ISO-8859-1?Q?Such=E1nek?=	 <msuchanek@suse.de>, Jonathan Corbet
- <corbet@lwn.net>, 	linux-doc@vger.kernel.org
-Date: Wed, 08 Jul 2026 16:59:18 -0400
-In-Reply-To: <20260707190254.079478122@kernel.org>
-References: <20260707181957.433213175@kernel.org>
-	 <20260707190254.079478122@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	s=arc-20240116; t=1783545506; c=relaxed/simple;
+	bh=/yf86s+VjDN6zg68B/grd6BOMs4viFCbAkNex3o3AKU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SFb4bqyv6p4d2BGlmq9gvDPTN3Oi/cZMbtZoRl2gaUk/Zu8cmgsb0zLllX7Bbnkll9PDVblN9Ow3FpmI1LF5FgF+mMhW6+MAgiyjZ4MX9m5n3PpWkk1L0RCxfT4khDJUAr5ukhytozdL7Hj+M0eDBDEvHg9YcHidXEr698M4aZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ij1oKLvn; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CB091F00ADF
+	for <linux-s390@vger.kernel.org>; Wed,  8 Jul 2026 21:18:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783545503;
+	bh=XHlK26iT5OTlGmvdsQr6aTlcJ71q9tfgFUQl/PoXZWA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=ij1oKLvneDuoMo7g4aa7tnzEGSduqP/POFTYHBdxBZ815qZpk9LFbDgsAo0yCt8IU
+	 7IVs6w+zLmWUyetjrgBlg1w5iqaPlbRALMaZO8JW7hqU/1gvwTbxJwp4KOcWeGc63v
+	 75V4WotUCt8Dobg79gGG87lQ7nK03BdYhKAKjhYHR6XGEIrP/JoGdtP22AbbDvdmY9
+	 B/6r+YzOxZx43W7v+wiSMS40iikcKhYr6dIVP5FmzwUS2uq8+P91iQ4y6rs3YT1Lct
+	 RdWSXHuhozPhfIOsKn2saEE2M5xJTpuQM3JnOsppmQRmSqllqe3+hlGwET7HA3MA1T
+	 EVcF2gcOddPww==
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-699fbcd23ccso1741065a12.1
+        for <linux-s390@vger.kernel.org>; Wed, 08 Jul 2026 14:18:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RpcleMP4Sag5iLEvQZMCoWKNR8ddxXrNYLzZCQuu1o8wygRsRQWKtzy0V5hz9X6gJo58gLZWaruPl2y@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyj3pvW+nYxcuFiv/B9W8M8frLCa12in3i24jtQBBvi5DB+EVCc
+	opz6qUI2wfUo17HAY075ItZe5+0RNXLI/KxAWKg3hyMIqFdafONveDu0Mx7UYet1MPqwY7vsm3k
+	dn3visjnmwgBvmkY8xrcRIBIqHR5f8w==
+X-Received: by 2002:a17:907:a286:b0:c15:b6bd:cbb8 with SMTP id
+ a640c23a62f3a-c15ce121a12mr190425566b.50.1783545501322; Wed, 08 Jul 2026
+ 14:18:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20260701-tegra-vpr-v3-0-d80f7b871bb4@nvidia.com>
+ <20260701-tegra-vpr-v3-1-d80f7b871bb4@nvidia.com> <178293558945.1610040.13281502080616690110.robh@kernel.org>
+ <akZde-8lFvf8rPji@orome>
+In-Reply-To: <akZde-8lFvf8rPji@orome>
+From: Rob Herring <robh@kernel.org>
+Date: Wed, 8 Jul 2026 16:18:10 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJCMm-oL35COx=agY+mwRUMMnRvbUgzPr5Hy9uvcPk0Dg@mail.gmail.com>
+X-Gm-Features: AUfX_mz5rhGcrunDpACqiF1Zhx-HBPPyHD0sxMJJ0YCYlPmg5dj7i6HAGao9icM
+Message-ID: <CAL_JsqJCMm-oL35COx=agY+mwRUMMnRvbUgzPr5Hy9uvcPk0Dg@mail.gmail.com>
+Subject: Re: [PATCH v3 01/11] dt-bindings: reserved-memory: Document Tegra VPR
+To: Thierry Reding <thierry.reding@kernel.org>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	dri-devel@lists.freedesktop.org, David Hildenbrand <david@kernel.org>, 
+	Yury Norov <yury.norov@gmail.com>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>, 
+	Simona Vetter <simona@ffwll.ch>, linux-trace-kernel@vger.kernel.org, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	linux-mm@kvack.org, Russell King <linux@armlinux.org.uk>, Will Deacon <will@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, David Airlie <airlied@gmail.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+	linaro-mm-sig@lists.linaro.org, Heiko Carstens <hca@linux.ibm.com>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, Thierry Reding <treding@nvidia.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
+	John Stultz <jstultz@google.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Vlastimil Babka <vbabka@kernel.org>, Brian Starkey <Brian.Starkey@arm.com>, 
+	Mikko Perttunen <mperttunen@nvidia.com>, Michal Hocko <mhocko@suse.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Sowjanya Komatineni <skomatineni@nvidia.com>, Suren Baghdasaryan <surenb@google.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, 
+	devicetree@vger.kernel.org, "Liam R. Howlett" <liam@infradead.org>, 
+	linux-tegra@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Conor Dooley <conor+dt@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Andrew Morton <akpm@linux-foundation.org>, 
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Lorenzo Stoakes <ljs@kernel.org>, "T.J. Mercier" <tjmercier@google.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, iommu@lists.linux.dev, 
+	Mike Rapoport <rppt@kernel.org>, Sven Schnelle <svens@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-3.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[rendec.net,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[rendec.net:s=default];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_CC(0.00)[infradead.org,kernel.org,ellerman.id.au,linux.ibm.com,lists.ozlabs.org,lists.linux.dev,dabbelt.com,lists.infradead.org,vger.kernel.org,arm.com,huawei.com,redhat.com,linaro.org,armlinux.org.uk,linux-m68k.org,alpha.franken.de,gmx.de,users.sourceforge.jp,nod.at,zankel.net,lists.linux-m68k.org,arndb.de,monstr.eu,davemloft.net,gaisler.com,suse.de,lwn.net];
-	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-21845-lists,linux-s390=lfdr.de];
+	FREEMAIL_CC(0.00)[linux.ibm.com,rasmusvillemoes.dk,lists.freedesktop.org,kernel.org,gmail.com,vger.kernel.org,arm.com,ffwll.ch,amd.com,kvack.org,armlinux.org.uk,collabora.com,lists.linaro.org,linaro.org,nvidia.com,google.com,bootlin.com,suse.com,goodmis.org,linux.intel.com,lists.infradead.org,infradead.org,samsung.com,suse.de,linux-foundation.org,efficios.com,lists.linux.dev];
+	TAGGED_FROM(0.00)[bounces-21846-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[rendec.net:+];
-	FORGED_SENDER(0.00)[radu@rendec.net,linux-s390@vger.kernel.org];
-	FORGED_RECIPIENTS(0.00)[m:tglx@kernel.org,m:linux-kernel@vger.kernel.org,m:peterz@infradead.org,m:x86@kernel.org,m:mpe@ellerman.id.au,m:sshegde@linux.ibm.com,m:linuxppc-dev@lists.ozlabs.org,m:kees@kernel.org,m:chenhuacai@kernel.org,m:loongarch@lists.linux.dev,m:pjw@kernel.org,m:palmer@dabbelt.com,m:linux-riscv@lists.infradead.org,m:svens@linux.ibm.com,m:linux-s390@vger.kernel.org,m:mark.rutland@arm.com,m:ruanjinjie@huawei.com,m:luto@kernel.org,m:oleg@redhat.com,m:richard.henderson@linaro.org,m:linux@armlinux.org.uk,m:catalin.marinas@arm.com,m:guoren@kernel.org,m:geert@linux-m68k.org,m:tsbogend@alpha.franken.de,m:deller@gmx.de,m:ysato@users.sourceforge.jp,m:richard@nod.at,m:chris@zankel.net,m:linux-arm-kernel@lists.infradead.org,m:linux-alpha@vger.kernel.org,m:linux-csky@vger.kernel.org,m:linux-m68k@lists.linux-m68k.org,m:linux-mips@vger.kernel.org,m:linux-parisc@vger.kernel.org,m:linux-sh@vger.kernel.org,m:linux-um@lists.infradead.org,m:arnd@arndb.de,m:vgupta@kernel.org,m:will@kerne
- l.org,m:bcain@kernel.org,m:monstr@monstr.eu,m:dinguyen@kernel.org,m:davem@davemloft.net,m:andreas@gaisler.com,m:linux-snps-arc@lists.infradead.org,m:linux-hexagon@vger.kernel.org,m:linux-openrisc@vger.kernel.org,m:sparclinux@vger.kernel.org,m:linux-arch@vger.kernel.org,m:msuchanek@suse.de,m:corbet@lwn.net,m:linux-doc@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[robh@kernel.org,linux-s390@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:thierry.reding@kernel.org,m:borntraeger@linux.ibm.com,m:linux@rasmusvillemoes.dk,m:dri-devel@lists.freedesktop.org,m:david@kernel.org,m:yury.norov@gmail.com,m:linux-media@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:robin.murphy@arm.com,m:simona@ffwll.ch,m:linux-trace-kernel@vger.kernel.org,m:krzk+dt@kernel.org,m:christian.koenig@amd.com,m:linux-mm@kvack.org,m:linux@armlinux.org.uk,m:will@kernel.org,m:mhiramat@kernel.org,m:airlied@gmail.com,m:gor@linux.ibm.com,m:benjamin.gaignard@collabora.com,m:linaro-mm-sig@lists.linaro.org,m:hca@linux.ibm.com,m:sumit.semwal@linaro.org,m:treding@nvidia.com,m:mripard@kernel.org,m:thierry.reding@gmail.com,m:jstultz@google.com,m:luca.ceresoli@bootlin.com,m:vbabka@kernel.org,m:Brian.Starkey@arm.com,m:mperttunen@nvidia.com,m:mhocko@suse.com,m:rostedt@goodmis.org,m:jonathanh@nvidia.com,m:maarten.lankhorst@linux.intel.com,m:skomatineni@nvidia.com,m:surenb@google.com,m:linux-arm-kernel@lists.infradead.org,m:linux-s390@vger.ke
+ rnel.org,m:devicetree@vger.kernel.org,m:liam@infradead.org,m:linux-tegra@vger.kernel.org,m:catalin.marinas@arm.com,m:m.szyprowski@samsung.com,m:conor+dt@kernel.org,m:tzimmermann@suse.de,m:akpm@linux-foundation.org,m:gerald.schaefer@linux.ibm.com,m:agordeev@linux.ibm.com,m:ljs@kernel.org,m:tjmercier@google.com,m:mathieu.desnoyers@efficios.com,m:iommu@lists.linux.dev,m:rppt@kernel.org,m:svens@linux.ibm.com,m:yurynorov@gmail.com,m:krzk@kernel.org,m:thierryreding@gmail.com,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[53];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[radu@rendec.net,linux-s390@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	ALIAS_RESOLVED(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[55];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390];
-	TO_DN_SOME(0.00)[]
+	TAGGED_RCPT(0.00)[linux-s390,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[devicetree.org:url,vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,nvidia.com:email,mail.gmail.com:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3D60472A5EB
+X-Rspamd-Queue-Id: D681A72A77A
 
-On Tue, 2026-07-07 at 21:06 +0200, Thomas Gleixner wrote:
-> These functions integrate the stack randomization.
->=20
-> syscall_enter_from_user_mode_randomize_stack() has the advantage that the
-> randomization happens early right after enter_from_user_mode().
->=20
-> In both cases also the overhead of get/put_cpu_var() in
-> add_random_kstack_offset() is avoided.
->=20
-> No functional change.
->=20
-> Signed-off-by: Thomas Gleixner <tglx@kernel.org>
-> Cc: x86@kernel.org
-> ---
-> =C2=A0arch/x86/entry/syscall_32.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0=C2=A0 19 +++++--------------
-> =C2=A0arch/x86/entry/syscall_64.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 3 +--
-> =C2=A0arch/x86/include/asm/entry-common.h |=C2=A0=C2=A0=C2=A0 1 -
-> =C2=A03 files changed, 6 insertions(+), 17 deletions(-)
->=20
-> --- a/arch/x86/entry/syscall_32.c
-> +++ b/arch/x86/entry/syscall_32.c
-> @@ -142,10 +142,9 @@ static __always_inline bool int80_is_ext
-> =C2=A0	 * int80_is_external() below which calls into the APIC driver.
-> =C2=A0	 * Identical for soft and external interrupts.
-> =C2=A0	 */
-> -	enter_from_user_mode(regs);
-> +	enter_from_user_mode_randomize_stack(regs);
-> =C2=A0
-> =C2=A0	instrumentation_begin();
-> -	add_random_kstack_offset();
-> =C2=A0
-> =C2=A0	/* Validate that this is a soft interrupt to the extent possible *=
-/
-> =C2=A0	if (unlikely(int80_is_external()))
-> @@ -210,11 +209,9 @@ DEFINE_FREDENTRY_RAW(int80_emulation)
-> =C2=A0{
-> =C2=A0	int nr;
-> =C2=A0
-> -	enter_from_user_mode(regs);
-> +	enter_from_user_mode_randomize_stack(regs);
-> =C2=A0
-> =C2=A0	instrumentation_begin();
-> -	add_random_kstack_offset();
-> -
-> =C2=A0	/*
-> =C2=A0	 * FRED pushed 0 into regs::orig_ax and regs::ax contains the
-> =C2=A0	 * syscall number.
-> @@ -252,10 +249,10 @@ DEFINE_FREDENTRY_RAW(int80_emulation)
-> =C2=A0	 * orig_ax, the int return value truncates it. This matches
-> =C2=A0	 * the semantics of syscall_get_nr().
-> =C2=A0	 */
-> -	nr =3D syscall_enter_from_user_mode(regs, nr);
-> +	nr =3D syscall_enter_from_user_mode_randomize_stack(regs, nr);
-> +
-> =C2=A0	instrumentation_begin();
-> =C2=A0
-> -	add_random_kstack_offset();
-> =C2=A0	do_syscall_32_irqs_on(regs, nr);
-> =C2=A0
-> =C2=A0	instrumentation_end();
-> @@ -268,15 +265,9 @@ static noinstr bool __do_fast_syscall_32
-> =C2=A0	int nr =3D syscall_32_enter(regs);
-> =C2=A0	int res;
-> =C2=A0
-> -	/*
-> -	 * This cannot use syscall_enter_from_user_mode() as it has to
-> -	 * fetch EBP before invoking any of the syscall entry work
-> -	 * functions.
-> -	 */
-> -	enter_from_user_mode(regs);
-> +	enter_from_user_mode_randomize_stack(regs);
-> =C2=A0
-> =C2=A0	instrumentation_begin();
-> -	add_random_kstack_offset();
-> =C2=A0	local_irq_enable();
-> =C2=A0	/* Fetch EBP from where the vDSO stashed it. */
-> =C2=A0	if (IS_ENABLED(CONFIG_X86_64)) {
-> --- a/arch/x86/entry/syscall_64.c
-> +++ b/arch/x86/entry/syscall_64.c
-> @@ -86,10 +86,9 @@ static __always_inline bool do_syscall_x
-> =C2=A0/* Returns true to return using SYSRET, or false to use IRET */
-> =C2=A0__visible noinstr bool do_syscall_64(struct pt_regs *regs, int nr)
-> =C2=A0{
-> -	nr =3D syscall_enter_from_user_mode(regs, nr);
-> +	nr =3D syscall_enter_from_user_mode_randomize_stack(regs, nr);
-> =C2=A0
-> =C2=A0	instrumentation_begin();
-> -	add_random_kstack_offset();
-> =C2=A0
-> =C2=A0	if (!do_syscall_x64(regs, nr) && !do_syscall_x32(regs, nr) && nr !=
-=3D -1) {
-> =C2=A0		/* Invalid system call, but still a system call. */
-> --- a/arch/x86/include/asm/entry-common.h
-> +++ b/arch/x86/include/asm/entry-common.h
-> @@ -2,7 +2,6 @@
-> =C2=A0#ifndef _ASM_X86_ENTRY_COMMON_H
-> =C2=A0#define _ASM_X86_ENTRY_COMMON_H
-> =C2=A0
-> -#include <linux/randomize_kstack.h>
-> =C2=A0#include <linux/user-return-notifier.h>
-> =C2=A0
-> =C2=A0#include <asm/nospec-branch.h>
+On Thu, Jul 2, 2026 at 7:58=E2=80=AFAM Thierry Reding <thierry.reding@kerne=
+l.org> wrote:
+>
+> On Wed, Jul 01, 2026 at 02:53:10PM -0500, Rob Herring (Arm) wrote:
+> >
+> > On Wed, 01 Jul 2026 18:08:12 +0200, Thierry Reding wrote:
+> > > From: Thierry Reding <treding@nvidia.com>
+> > >
+> > > The Video Protection Region (VPR) found on NVIDIA Tegra chips is a
+> > > region of memory that is protected from CPU accesses. It is used to
+> > > decode and play back DRM protected content.
+> > >
+> > > It is a standard reserved memory region that can exist in two forms:
+> > > static VPR where the base address and size are fixed (uses the "reg"
+> > > property to describe the memory) and a resizable VPR where only the
+> > > size is known upfront and the OS can allocate it wherever it can be
+> > > accomodated.
+> > >
+> > > Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> > > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > > ---
+> > > Changes in v2:
+> > > - add examples for fixed and resizable VPR
+> > > ---
+> > >  .../nvidia,tegra-video-protection-region.yaml      | 76 ++++++++++++=
+++++++++++
+> > >  1 file changed, 76 insertions(+)
+> > >
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > yamllint warnings/errors:
+> >
+> > dtschema/dtc warnings/errors:
+> > /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings=
+/reserved-memory/nvidia,tegra-video-protection-region.example.dtb: protecte=
+d@2a8000000 (nvidia,tegra-video-protection-region): reg: [[2, 2818572288], =
+[0, 1879048192]] is too long
+> >       from schema $id: http://devicetree.org/schemas/reserved-memory/nv=
+idia,tegra-video-protection-region.yaml
+> > /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings=
+/reserved-memory/nvidia,tegra-video-protection-region.example.dtb: protecte=
+d@2a8000000 (nvidia,tegra-video-protection-region): Unevaluated properties =
+are not allowed ('no-map', 'reg' were unexpected)
+> >       from schema $id: http://devicetree.org/schemas/reserved-memory/nv=
+idia,tegra-video-protection-region.yaml
+>
+> Any ideas why that second error shows up? It turns out that it goes away
+> when the first one is fixed (which admittedly is a stupid mistake), but
+> I spent quite a bit of time looking for a fix before realizing that it's
+> only a side-effect of the first.
 
-Reviewed-by: Radu Rendec <radu@rendec.net>
+If a property fails validation in a referenced schema, then everything
+in that referenced schema is considered not evaluated. So then
+unevaluatedProperties is applied to the properties only in the
+referenced schema. That's why 'no-map' is also unevaluated. Just a
+quirk of how json-schema works...
+
+Rob
 
