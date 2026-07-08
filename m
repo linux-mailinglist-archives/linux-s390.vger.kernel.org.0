@@ -1,174 +1,204 @@
-Return-Path: <linux-s390+bounces-21815-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21816-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Kvk/FRleTmqMLQIAu9opvQ
-	(envelope-from <linux-s390+bounces-21815-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 16:26:33 +0200
+	id FSY/A41gTmpQLgIAu9opvQ
+	(envelope-from <linux-s390+bounces-21816-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 16:37:01 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9FF172751E
-	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 16:26:32 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BC7E72775C
+	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 16:37:00 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=C1k7VOF0;
-	dmarc=pass (policy=quarantine) header.from=redhat.com;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21815-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-21815-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=nrv52UIs;
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21816-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21816-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 91EC2300DE19
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2026 14:16:15 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 0470C30873B8
+	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2026 14:25:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 555263DD521;
-	Wed,  8 Jul 2026 14:16:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D24D4CA287;
+	Wed,  8 Jul 2026 14:22:24 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B248A3783C3
-	for <linux-s390@vger.kernel.org>; Wed,  8 Jul 2026 14:16:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20A44A3418
+	for <linux-s390@vger.kernel.org>; Wed,  8 Jul 2026 14:22:22 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783520175; cv=none; b=eUcM+beOisbD0Unm8hFkwwTPXqg9op4+fyzpIyviQBxMj+tHmN9SDHlYibvVdlH/6F7pb7tbD11NbklWrfdhjHbDZvsK/eHdbHi53Q2pZJTfGruP5poApmZ3ukQ5D0zsQgettgLCy8e+eW/++Dxc9wsRFl5yoPh/MR1N7F24qWQ=
+	t=1783520544; cv=none; b=NEDsyjKuJZmbip8xpne1A9Xrejk7WKFE28HogjVQmXNbDL9Rl8J3DwkFRWQa2uTrLlNcDf5RUjMkEUliqIAL1ZG+oQlPGUMdGYL8iCRmWrbRfCySW+sSIhRVLkDas81HSXCwlYPWbzWTQIvvAS6jWNJwqugLBBpgV4XAwKlCe8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783520175; c=relaxed/simple;
-	bh=OxcZAmS8zOVxXWAJuECohe0LAmHJKy+SdiHxFnYCvh8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=N5R1QjEyBsGcrjp0VUXghx5CuaVi6T379XD8yseHax+EYuHHftIeXGcE3sZ/THW7WSX6U1VUt6mO/pWHDxbNfmhNl3G35n73jbPsBgaVkWvbmFV4PskODLfIEJXrq7kf56eECybqsI8YHEen1LJ3+3UNAClmnFMXjJJ1wv5h6C0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C1k7VOF0; arc=none smtp.client-ip=170.10.129.124
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783520172;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zc3P5sGLUXZ2J+nNypqlfuqU9Vng109dcjBCmM7bwyA=;
-	b=C1k7VOF0ltk/rYJjSKALvl8eaAHdpjDb4DwF70RjyojIaBT8pPRc6iB+Surlv41s4DYKng
-	87u5TYHkFVXD6DHDsfaak2b0oe1q7NEY6PbM7NF4cFkXjbhh7jmQPop1ZptkBT417KbNbk
-	cJQy3RZlR41Ijk5x++gypoIr8VRnfcU=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-549-AAp6636eMG23SpQpXJl7fA-1; Wed,
- 08 Jul 2026 10:16:10 -0400
-X-MC-Unique: AAp6636eMG23SpQpXJl7fA-1
-X-Mimecast-MFC-AGG-ID: AAp6636eMG23SpQpXJl7fA_1783520168
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1E99A180059A;
-	Wed,  8 Jul 2026 14:16:08 +0000 (UTC)
-Received: from localhost (headnet03.pony-001.prod.iad2.dc.redhat.com [10.2.32.114])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DDBBA1956086;
-	Wed,  8 Jul 2026 14:16:06 +0000 (UTC)
-From: Cornelia Huck <cohuck@redhat.com>
-To: freude@linux.ibm.com, Michael Tokarev <mjt@tls.msk.ru>
-Cc: richard.henderson@linaro.org, iii@linux.ibm.com, david@kernel.org,
- thuth@redhat.com, berrange@redhat.com, qemu-s390x@nongnu.org,
- qemu-devel@nongnu.org, linux-s390@vger.kernel.org, dengler@linux.ibm.com,
- borntraeger@linux.ibm.com, fcallies@linux.ibm.com, qemu-stable
- <qemu-stable@nongnu.org>, Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?=
- <philmd@oss.qualcomm.com>
-Subject: Re: [PATCH v11 01/21] target/s390x: Fix wrong address handling in
- address loops
-In-Reply-To: <a38386d1eb7c0809e62a4e3399f8ea0e@linux.ibm.com>
-Organization: "Red Hat GmbH, Sitz: Werner-von-Siemens-Ring 12, D-85630
- Grasbrunn, Handelsregister: Amtsgericht =?utf-8?Q?M=C3=BCnchen=2C?= HRB
- 153243,
- =?utf-8?Q?Gesch=C3=A4ftsf=C3=BChrer=3A?= Ryan Barnhart, Charles Cachera,
- Avril Crosse O'Flaherty"
-References: <20260707161815.40919-1-freude@linux.ibm.com>
- <20260707161815.40919-2-freude@linux.ibm.com>
- <3e31b38c-0561-4f37-b2c4-97c10e6f232f@tls.msk.ru>
- <d5436f34-5489-4335-bf83-74b924e04140@tls.msk.ru>
- <a38386d1eb7c0809e62a4e3399f8ea0e@linux.ibm.com>
-User-Agent: Notmuch/0.40 (https://notmuchmail.org)
-Date: Wed, 08 Jul 2026 16:16:04 +0200
-Message-ID: <87zf01in2z.fsf@redhat.com>
+	s=arc-20240116; t=1783520544; c=relaxed/simple;
+	bh=RV7R66SJJujRmJUkWWa4wtjMVBGskFAa7B3hx4cJ7Sg=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=FJ/JeHvgipncKiHJDV7SwureIomS5FYJMNApdQK6Byr7XMOb2bZDIpw75pkmj55Aj1dkFOHBulgqxpavcdmQUvkrZwVo6+Tt6rMQN5etuJlypd94mRiN2AD8MDEewkuS7JRJtpQRNNX92jGKaOUaO27Nd4HuNsHB4KzdjMbZwqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nrv52UIs; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DA691F000E9;
+	Wed,  8 Jul 2026 14:22:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783520542;
+	bh=BpyhjmEtOs/o3UDHKKrSc2MYFG2E3oBLO3OzFC20iIQ=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=nrv52UIs3yZgpTXTx1zjQw1XgGRX0JoYm+CvidqJ6T2FrFNL2K3qxCWyn3WVILkST
+	 OuNIUZaqZt+InuWPm1Xk3zWGQ2/IO9VNmWQlrOdhdB8WBqt/446FV8U1wUP8l+9ob5
+	 Zi9yj2ReLvtF9wZLjvENYbeJa28Jz1rkXFh1LfCx2aCzZstahUMk4mZwiV5eOYXVzd
+	 QcKzF5dHFyth783GHJpCEAuW8h2EKrggB8cfMmUUZxTjcCNNEpcwMxQqBbGmPfpBwV
+	 sC3VcQnGJcmDMY6I/hTTHiFjCo8fTQwmK3cU0IwgW2FB1ISWSz968cC78e+Ytxs9WY
+	 fob6sCa+EXpNA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 01/10] x86/mm: drop order parameter from
+ free_pagetable()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>
+Cc: "Alexander Gordeev" <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org, "Heiko
+ Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>
+In-Reply-To: <20260708-bootmem_info_part2-v1-1-156ce4986598@kernel.org>
+References: <20260708-bootmem_info_part2-v1-0-156ce4986598@kernel.org>
+ <20260708-bootmem_info_part2-v1-1-156ce4986598@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 08 Jul 2026 14:22:22 +0000
+Message-Id: <20260708142222.8DA691F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
+	TO_EXCESS_BASE64(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21815-lists,linux-s390=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21816-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:freude@linux.ibm.com,m:mjt@tls.msk.ru,m:richard.henderson@linaro.org,m:iii@linux.ibm.com,m:david@kernel.org,m:thuth@redhat.com,m:berrange@redhat.com,m:qemu-s390x@nongnu.org,m:qemu-devel@nongnu.org,m:linux-s390@vger.kernel.org,m:dengler@linux.ibm.com,m:borntraeger@linux.ibm.com,m:fcallies@linux.ibm.com,m:qemu-stable@nongnu.org,m:philmd@oss.qualcomm.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:david@kernel.org,m:agordeev@linux.ibm.com,m:linux-s390@vger.kernel.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[redhat.com:+];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[cohuck@redhat.com,linux-s390@vger.kernel.org];
-	HAS_ORG_HEADER(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[linux-s390];
+	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cohuck@redhat.com,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_COUNT_FIVE(0.00)[6];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NO_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[]
+	MISSING_XM_UA(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: A9FF172751E
+X-Rspamd-Queue-Id: 6BC7E72775C
 
-On Wed, Jul 08 2026, Harald Freudenberger <freude@linux.ibm.com> wrote:
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-> On 2026-07-08 13:18, Michael Tokarev wrote:
->> On 08.07.2026 13:37, Michael Tokarev wrote:
->>> On 07.07.2026 19:17, Harald Freudenberger wrote:
->>>> The loop increments addr by the element stride (+=3D 4) before calling
->>>> wrap_address, but then overwrites the loop addr with the wrapped
->>>> value. On the next iteration the stride is applied to the wrapped
->>>> address of the previous element, not to the original unwrapped
->>>> address. This results in every element after the first is read from a
->>>> wrong (wrapped) address.
->>>>=20
->>>> Fixes: 9f17bfdab4 ("target/s390x: support SHA-512 extensions")
->>>> Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
->>>> ---
->>>> =C2=A0 target/s390x/tcg/crypto_helper.c | 12 ++++--------
->>>> =C2=A0 1 file changed, 4 insertions(+), 8 deletions(-)
->>>=20
->>> This feels like qemu-stable material.
->>> I'm picking this change up for currently active stable qemu series.
->>> Please let me know if I shouldn't.
->>=20
->> Um, this was a bit premature.
->>=20
->> This particular commit requires a previous commit in this area,
->> de96db79 "target/s390x: Compile crypto_helper.c as common unit".
->> It's easy to back-port across, but since this change ("Fix wrong
->> address handling...") hasn't been marked as for-stable, I'm *not*
->> doing that.  If this change is actually needed in -stable, please
->> let me know.  Also, is it okay to pick up the previous change
->> ("compile as common unit") to -stable too, to avoid fixing up
->> subsequent changes.
->>=20
->> Thanks,
->>=20
->> /mjt
->
-> Fine with me. However, Connie replied to my v10 series that she
-> wants to pick this patch. However, it is yet not on the qemu
-> master branch.
+Pre-existing issues:
+- [High] Page table pages are freed to the buddy allocator before their par=
+ent entries are cleared, creating a use-after-free window for hardware MMU =
+walkers.
+--
 
-Should be now, as the s390 update was pulled?
+--- Patch [1]: [PATCH 01/10] x86/mm: drop order parameter from free_pagetab=
+le() ---
+commit 9c29ffca799af465974343eaff811f5b52635f1f
+Author: David Hildenbrand (Arm) <david@kernel.org>
 
+x86/mm: drop order parameter from free_pagetable()
+
+All callers pass 0, so let's drop the parameter.
+
+> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+> index d57f29ca23a5a..69e36f02a663a 100644
+> --- a/arch/x86/mm/init_64.c
+> +++ b/arch/x86/mm/init_64.c
+
+[ ... ]
+
+> @@ -1060,7 +1057,7 @@ static void __meminit free_pte_table(pte_t *pte_sta=
+rt, pmd_t *pmd)
+>  	}
+> =20
+>  	/* free a pte table */
+> -	free_pagetable(pmd_page(*pmd), 0);
+> +	free_pagetable(pmd_page(*pmd));
+>  	spin_lock(&init_mm.page_table_lock);
+>  	pmd_clear(pmd);
+
+[Severity: High]
+This is a pre-existing issue, but does calling free_pagetable() before
+pmd_clear() create a use-after-free window?
+
+The PTE table page is freed to the allocator before the PMD entry pointing =
+to
+it is cleared. If the freed page is quickly reallocated and populated with
+arbitrary data, could hardware speculative page table walks or lockless sof=
+tware
+walkers (like ptdump) follow the still-valid PMD entry and interpret this
+data as valid page table entries?
+
+>  	spin_unlock(&init_mm.page_table_lock);
+
+[ ... ]
+
+> @@ -1078,7 +1075,7 @@ static void __meminit free_pmd_table(pmd_t *pmd_sta=
+rt, pud_t *pud)
+>  	}
+> =20
+>  	/* free a pmd table */
+> -	free_pagetable(pud_page(*pud), 0);
+> +	free_pagetable(pud_page(*pud));
+>  	spin_lock(&init_mm.page_table_lock);
+>  	pud_clear(pud);
+
+[Severity: High]
+This is a pre-existing issue, but does this create a similar use-after-free
+window for the PMD table page?
+
+The PMD table page is freed to the buddy allocator before the PUD entry
+pointing to it is cleared here.
+
+>  	spin_unlock(&init_mm.page_table_lock);
+
+[ ... ]
+
+> @@ -1096,7 +1093,7 @@ static void __meminit free_pud_table(pud_t *pud_sta=
+rt, p4d_t *p4d)
+>  	}
+> =20
+>  	/* free a pud table */
+> -	free_pagetable(p4d_page(*p4d), 0);
+> +	free_pagetable(p4d_page(*p4d));
+>  	spin_lock(&init_mm.page_table_lock);
+>  	p4d_clear(p4d);
+
+[Severity: High]
+This is a pre-existing issue, but does this create a similar use-after-free
+window for the PUD table page?
+
+The PUD table page is freed to the buddy allocator before the P4D entry
+pointing to it is cleared here.
+
+>  	spin_unlock(&init_mm.page_table_lock);
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260708-bootmem_in=
+fo_part2-v1-0-156ce4986598@kernel.org?part=3D1
 
