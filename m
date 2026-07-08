@@ -1,197 +1,167 @@
-Return-Path: <linux-s390+bounces-21826-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21827-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id mJCaLtl0TmqHNAIAu9opvQ
-	(envelope-from <linux-s390+bounces-21826-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 18:03:37 +0200
+	id 9Cf6MA93TmouNQIAu9opvQ
+	(envelope-from <linux-s390+bounces-21827-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 18:13:03 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2646D72868F
-	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 18:03:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C40F728832
+	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 18:13:03 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=fR5vkIWn;
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21826-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21826-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=redhat.com header.s=mimecast20190719 header.b=GDKGisZ7;
+	dmarc=pass (policy=quarantine) header.from=redhat.com;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21827-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21827-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 7268A314F925
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2026 15:39:16 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5713132DF354
+	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2026 15:47:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1D7E41CB4D;
-	Wed,  8 Jul 2026 15:38:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E05A83783C3;
+	Wed,  8 Jul 2026 15:47:05 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C3641CB46
-	for <linux-s390@vger.kernel.org>; Wed,  8 Jul 2026 15:38:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1376B331A78
+	for <linux-s390@vger.kernel.org>; Wed,  8 Jul 2026 15:47:04 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783525124; cv=none; b=de9IoPxyVnwM3BQfAgcvzRsFBU95JAgMaSthLrZ6ikk+801w7oGguxoLhgw2FtZNMqoj0vJNmhz+5I0/vZfFkCWpS1Pqd6hAKUDHj9NgzEGCB+xMJBFS1qH7c29uqy+lRH36MSkQH4PFY0HbdsVNtgkqkKnmg8XtYPZk4M9pnC0=
+	t=1783525625; cv=none; b=G7/g05WkPmA91aWFV0hVbPmMzKFVSAPVUIK3au316SH3OKTm04v/Vf6ARZoPx3xN/XDAg8qxitaehQj7GMv27Nu96Ire1zNcSVDQ7wzmzChmZe1/2eKjcJpV1uJ/FgDclDawc4vRrWya+J8LCW9862fE13+j0+caZv7P/gj3F38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783525124; c=relaxed/simple;
-	bh=J0abimNOSxxIeTntrBcjIV3CunZWyrhvafRoqRfP8fU=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=hV9ULkeew0ISNWaZpb2ME1RMBaJcMVOljfnqZNhvKqmJHQoqIoUG3XDLIO1w2UX2HMDX63zFQBNFJBqs+zTSbqY57WvL/HzI4QaAc3qqhuQ/ECvZLWCI6toBFCf1r0Iumah85RmMQEnjboLnAqC/06sIviI/E3kRlcWLZ75yjOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fR5vkIWn; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93C111F00A3F;
-	Wed,  8 Jul 2026 15:38:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783525122;
-	bh=h+IqMSnRUgv2J54WmZJHir72YK5D4WY6VBExYHYK1uA=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fR5vkIWn2etZLjF1+LHhMC+Na1NrCaAdO3oMI+G0J9hIr39vQRcWOro28aaUvyUS1
-	 EVFAxOhsIyiZc4oyT5WftoeOnSnDxBmfz5I3xVeRRyS9WNK/tH+Uf2az/JJ5jW9aZk
-	 4Z9mV82s3xLLXq4cr264NTpH5HV+tT9/eC8dO+JqN96BM4jzDW7n5vQOxlckTKqwdd
-	 1tc3coIxMCDUzIZjXkBdfg3r8i7VedD2AmY+IWF7+h64udve9v7jjNjhbqWt/9j61S
-	 dfn7rVM2WIHkwQI44PSyLiDktVHTQqEfYccixfCbfEgMx/nXt1QDiPn542o6JQbNwJ
-	 H/5GPG/ckD4OQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 07/10] x86/mm: remove CONFIG_HAVE_BOOTMEM_INFO_NODE
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>
-Cc: linux-s390@vger.kernel.org, "Heiko Carstens" <hca@linux.ibm.com>, "Vasily
- Gorbik" <gor@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>
-In-Reply-To: <20260708-bootmem_info_part2-v1-7-156ce4986598@kernel.org>
-References: <20260708-bootmem_info_part2-v1-0-156ce4986598@kernel.org>
- <20260708-bootmem_info_part2-v1-7-156ce4986598@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 08 Jul 2026 15:38:41 +0000
-Message-Id: <20260708153842.93C111F00A3F@smtp.kernel.org>
+	s=arc-20240116; t=1783525625; c=relaxed/simple;
+	bh=Va2IGzeVOAPTHMa4DaH+yWHwp2fTjUY5mobPTHVuW/k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KLWVpLca+5vYlWBh5h+3usx2T4hZnKiR8nedk4SbKAcnsBUrLs73DMjct1VmRlRLDzvngdrQ8pFbpSM4DHx/Q00MNmbnENtkkgmVjcHy+XcAV5oP4Qy9yRBMdcW/Jafg8N/doVtxm0GqbJZ169Tncxaq8gMcQiBFrb5WVX95Bn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GDKGisZ7; arc=none smtp.client-ip=170.10.133.124
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1783525623;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Va2IGzeVOAPTHMa4DaH+yWHwp2fTjUY5mobPTHVuW/k=;
+	b=GDKGisZ7tRx/ACD9ETXSaJGFF0oG7rImnn27ivc+mEJm6bIwablasI5js1yBAYafaMayvX
+	z400iNdCON6c+FEznJ7B2q7dVN13Bk3ekPTbTjSL40zcScMX0e1Y9i0OAP03IzElvowxKW
+	m5C5lSUvLnyuykUBAme5LlFnj4NFq0Q=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-660-M2lrH6tYOsC5ufvFITf8jA-1; Wed,
+ 08 Jul 2026 11:46:57 -0400
+X-MC-Unique: M2lrH6tYOsC5ufvFITf8jA-1
+X-Mimecast-MFC-AGG-ID: M2lrH6tYOsC5ufvFITf8jA_1783525612
+Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 391341956060;
+	Wed,  8 Jul 2026 15:46:48 +0000 (UTC)
+Received: from fedora (unknown [10.44.33.83])
+	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 668DD31D2;
+	Wed,  8 Jul 2026 15:46:27 +0000 (UTC)
+Received: by fedora (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed,  8 Jul 2026 17:46:47 +0200 (CEST)
+Date: Wed, 8 Jul 2026 17:46:24 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Thomas Gleixner <tglx@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+	Brian Cain <bcain@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Michal Simek <monstr@monstr.eu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dinh Nguyen <dinguyen@kernel.org>, Helge Deller <deller@gmx.de>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Chris Zankel <chris@zankel.net>, linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-arch@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	linuxppc-dev@lists.ozlabs.org, Kees Cook <kees@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	linux-riscv@lists.infradead.org,
+	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
+	x86@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+	Jinjie Ruan <ruanjinjie@huawei.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Richard Weinberger <richard@nod.at>,
+	Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: Re: [patch 12/18] ptrace, treewide: Rename
+ ptrace_report_syscall_entry() to ptrace_report_syscall_permit_entry()
+Message-ID: <ak5w0KB_x2P4G3rd@redhat.com>
+References: <20260707181957.433213175@kernel.org>
+ <20260707190254.280015701@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260707190254.280015701@kernel.org>
+X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	MISSING_MIME_VERSION(2.00)[];
-	TO_EXCESS_BASE64(1.50)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21826-lists,linux-s390=lfdr.de];
+	FREEMAIL_CC(0.00)[vger.kernel.org,infradead.org,arndb.de,linaro.org,kernel.org,armlinux.org.uk,arm.com,linux-m68k.org,monstr.eu,alpha.franken.de,gmx.de,users.sourceforge.jp,davemloft.net,gaisler.com,zankel.net,lists.infradead.org,lists.linux-m68k.org,ellerman.id.au,linux.ibm.com,lists.ozlabs.org,lists.linux.dev,dabbelt.com,huawei.com,nod.at,suse.de,lwn.net];
+	TAGGED_FROM(0.00)[bounces-21827-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:david@kernel.org,m:linux-s390@vger.kernel.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,s:lists@lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,sashiko.dev:url,smtp.kernel.org:mid,lists.linux.dev:replyto];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
+	FORGED_SENDER(0.00)[oleg@redhat.com,linux-s390@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:tglx@kernel.org,m:linux-kernel@vger.kernel.org,m:peterz@infradead.org,m:arnd@arndb.de,m:richard.henderson@linaro.org,m:vgupta@kernel.org,m:linux@armlinux.org.uk,m:catalin.marinas@arm.com,m:will@kernel.org,m:guoren@kernel.org,m:bcain@kernel.org,m:geert@linux-m68k.org,m:monstr@monstr.eu,m:tsbogend@alpha.franken.de,m:dinguyen@kernel.org,m:deller@gmx.de,m:ysato@users.sourceforge.jp,m:davem@davemloft.net,m:andreas@gaisler.com,m:chris@zankel.net,m:linux-alpha@vger.kernel.org,m:linux-snps-arc@lists.infradead.org,m:linux-arm-kernel@lists.infradead.org,m:linux-csky@vger.kernel.org,m:linux-hexagon@vger.kernel.org,m:linux-m68k@lists.linux-m68k.org,m:linux-mips@vger.kernel.org,m:linux-openrisc@vger.kernel.org,m:linux-parisc@vger.kernel.org,m:linux-sh@vger.kernel.org,m:sparclinux@vger.kernel.org,m:linux-um@lists.infradead.org,m:linux-arch@vger.kernel.org,m:mpe@ellerman.id.au,m:sshegde@linux.ibm.com,m:linuxppc-dev@lists.ozlabs.org,m:kees@kernel.org,m:chenhuacai@kernel.or
+ g,m:loongarch@lists.linux.dev,m:pjw@kernel.org,m:palmer@dabbelt.com,m:linux-riscv@lists.infradead.org,m:svens@linux.ibm.com,m:linux-s390@vger.kernel.org,m:x86@kernel.org,m:mark.rutland@arm.com,m:ruanjinjie@huawei.com,m:luto@kernel.org,m:richard@nod.at,m:msuchanek@suse.de,m:corbet@lwn.net,m:linux-doc@vger.kernel.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
-	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-s390];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[redhat.com:+];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	FROM_NO_DN(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[oleg@redhat.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[52];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-s390];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 2646D72868F
+X-Rspamd-Queue-Id: 7C40F728832
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
+On 07/07, Thomas Gleixner wrote:
+>
+> The return value of that function is boolean and tells the caller whether
+> to permit the syscall processing or not.
+>
+> Rename the function so the purpose is clear and make the return type bool.
 
-New issues:
-- [Medium] Incomplete feature removal leaves behind dead code.
+Just in case,
 
-Pre-existing issues:
-- [High] Page tables and vmemmap target pages are freed to the buddy alloca=
-tor before their page table entries are cleared, causing a Use-After-Free r=
-ace with hardware page table walkers.
---
+Acked-by: Oleg Nesterov <oleg@redhat.com>
 
---- Patch [7]: [PATCH 07/10] x86/mm: remove CONFIG_HAVE_BOOTMEM_INFO_NODE -=
---
-commit 4f73978273a221d985e72d75af30f38db0280de6
-Author: David Hildenbrand (Arm) <david@kernel.org>
-
-x86/mm: remove CONFIG_HAVE_BOOTMEM_INFO_NODE
-   =20
-CONFIG_HAVE_BOOTMEM_INFO_NODE now essentially doesn't do anything.
-So let's remove support for CONFIG_HAVE_BOOTMEM_INFO_NODE.
-
-> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-> index 1b17dcf781e66..ab4c5a02326f7 100644
-> --- a/arch/x86/mm/init_64.c
-> +++ b/arch/x86/mm/init_64.c
-
-[ ... ]
-
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index f794a341d7422..592003a258bad 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -590,7 +590,6 @@ endchoice
-> =20
->  config MEMORY_HOTREMOVE
->  	bool "Allow for memory hot remove"
-> -	select HAVE_BOOTMEM_INFO_NODE if X86_64
-
-[Severity: Medium]
-Since the intention of this commit is to remove support for=20
-CONFIG_HAVE_BOOTMEM_INFO_NODE, should the definition of the config itself=20
-also be deleted?
-
-Currently, `config HAVE_BOOTMEM_INFO_NODE` remains in mm/Kconfig as a dead=
-=20
-`def_bool n` option. Additionally, `mm/bootmem_info.c` and its build rule=20
-`obj-$(CONFIG_HAVE_BOOTMEM_INFO_NODE) +=3D bootmem_info.o` in mm/Makefile a=
-re=20
-left behind as dead code.
-
->  	depends on MEMORY_HOTPLUG
->  	select MIGRATION
-> =20
-
-[Severity: High]
-This isn't a bug introduced by this patch, but while reviewing the memory=20
-hot-remove code in arch/x86/mm/init_64.c, I noticed that page tables and=20
-vmemmap target pages appear to be freed to the buddy allocator before their=
-=20
-page table entries are actually cleared.
-
-In arch/x86/mm/init_64.c:free_pte_table():
-
-	/* free a pte table */
-	free_pagetable(pmd_page(*pmd));
-	spin_lock(&init_mm.page_table_lock);
-	pmd_clear(pmd);
-
-And similarly in arch/x86/mm/init_64.c:remove_pte_table():
-
-			if (!direct)
-				/* We never populate base pages from the altmap. */
-				free_vmemmap_pages(pte_page(*pte), 0, NULL);
-
-			spin_lock(&init_mm.page_table_lock);
-			pte_clear(&init_mm, addr, pte);
-
-Does this open a use-after-free race window where hardware page table walke=
-rs=20
-or speculative execution could access the recently-freed memory and interpr=
-et=20
-arbitrary data as page tables before the clear operation completes?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260708-bootmem_in=
-fo_part2-v1-0-156ce4986598@kernel.org?part=3D7
 
