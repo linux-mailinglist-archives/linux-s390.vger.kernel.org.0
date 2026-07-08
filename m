@@ -1,65 +1,65 @@
-Return-Path: <linux-s390+bounces-21816-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21817-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id FSY/A41gTmpQLgIAu9opvQ
-	(envelope-from <linux-s390+bounces-21816-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 16:37:01 +0200
+	id x75TH+dlTmrCLwIAu9opvQ
+	(envelope-from <linux-s390+bounces-21817-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 16:59:51 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BC7E72775C
-	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 16:37:00 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 197AF727B25
+	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 16:59:51 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=nrv52UIs;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=QAf4vaAI;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21816-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21816-lists+linux-s390=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21817-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-s390+bounces-21817-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 0470C30873B8
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2026 14:25:19 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 4F1FD30D37FF
+	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2026 14:54:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D24D4CA287;
-	Wed,  8 Jul 2026 14:22:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4E953D9695;
+	Wed,  8 Jul 2026 14:53:50 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20A44A3418
-	for <linux-s390@vger.kernel.org>; Wed,  8 Jul 2026 14:22:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B9D3B7747
+	for <linux-s390@vger.kernel.org>; Wed,  8 Jul 2026 14:53:49 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783520544; cv=none; b=NEDsyjKuJZmbip8xpne1A9Xrejk7WKFE28HogjVQmXNbDL9Rl8J3DwkFRWQa2uTrLlNcDf5RUjMkEUliqIAL1ZG+oQlPGUMdGYL8iCRmWrbRfCySW+sSIhRVLkDas81HSXCwlYPWbzWTQIvvAS6jWNJwqugLBBpgV4XAwKlCe8M=
+	t=1783522430; cv=none; b=rcT6Hm67wnw8wB5PAPM6ZTsIVwyNGIKxFclhisJDO8v4wdkB52CgYf+EHVmMsz89i30BetP9bh2gC5CkLd/c2hzjrZLHFSiTl+Ah8oXwWBV+ulFYI9q4EUPB+09rTcP3WWhu9mx98iKC41BwtBH5AOoZPp3oKgcxWvJxpYBZf/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783520544; c=relaxed/simple;
-	bh=RV7R66SJJujRmJUkWWa4wtjMVBGskFAa7B3hx4cJ7Sg=;
+	s=arc-20240116; t=1783522430; c=relaxed/simple;
+	bh=eBKeiNSNs0wFnCjvRO/KagqkD7AAh9rjnb1Qohb8uqY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=FJ/JeHvgipncKiHJDV7SwureIomS5FYJMNApdQK6Byr7XMOb2bZDIpw75pkmj55Aj1dkFOHBulgqxpavcdmQUvkrZwVo6+Tt6rMQN5etuJlypd94mRiN2AD8MDEewkuS7JRJtpQRNNX92jGKaOUaO27Nd4HuNsHB4KzdjMbZwqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nrv52UIs; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DA691F000E9;
-	Wed,  8 Jul 2026 14:22:22 +0000 (UTC)
+	 Message-Id; b=iSCop2LzBHmuWPKY9uKiJl3fZzi8CU21GGGmXbxj/yyhMCez06HDZT7TR1ZqIlukOtsPgwxSJdW7VUUfaSf8LLmX23fnCeAAalaoZWsLg52uxUDWPQHB5fVCMwk7ZMxfAyAcTleDucKvNQy92rEAf6S6d/1h3HBJP0C+giQUhX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QAf4vaAI; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5D6E1F000E9;
+	Wed,  8 Jul 2026 14:53:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783520542;
-	bh=BpyhjmEtOs/o3UDHKKrSc2MYFG2E3oBLO3OzFC20iIQ=;
+	s=k20260515; t=1783522429;
+	bh=CH44dOMm4b5aAyJtkduh1paa2Du9rBLS/j/bgp29hCw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nrv52UIs3yZgpTXTx1zjQw1XgGRX0JoYm+CvidqJ6T2FrFNL2K3qxCWyn3WVILkST
-	 OuNIUZaqZt+InuWPm1Xk3zWGQ2/IO9VNmWQlrOdhdB8WBqt/446FV8U1wUP8l+9ob5
-	 Zi9yj2ReLvtF9wZLjvENYbeJa28Jz1rkXFh1LfCx2aCzZstahUMk4mZwiV5eOYXVzd
-	 QcKzF5dHFyth783GHJpCEAuW8h2EKrggB8cfMmUUZxTjcCNNEpcwMxQqBbGmPfpBwV
-	 sC3VcQnGJcmDMY6I/hTTHiFjCo8fTQwmK3cU0IwgW2FB1ISWSz968cC78e+Ytxs9WY
-	 fob6sCa+EXpNA==
+	b=QAf4vaAITdAGDhASVRxXh4nUFkrXs/Ny1xxtOgk6pbvcVOMBrou0frIpGkN+qJlRO
+	 /MZp0beHAjsoAJ03/gh7yV8Nz7eTy15D5wvxtsNed12IE5jyP6X24eBC2wgmEBRj9g
+	 edTiJXr7Ku6+WzvgDZ3nzyUZ5+XpLYIkELRf8zy60ijhMJaBQ3Dcj7edR6kfHIPnQ7
+	 F1fp8ltnbXX7+b97Y1oLQAsb64Qmeb8vIiVZZ7hM8+ECJdkfaMIIAfjk1Kvv9C9d6e
+	 tuQ0pPfw9LyCVkoAnzYl7F8qkruLvPRR+YSW8ZGybwvHhc2yfpOJcIthvxZc945s+s
+	 03gu4Mlb5bzeA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 01/10] x86/mm: drop order parameter from
- free_pagetable()
+Subject: Re: [PATCH 04/10] mm/bootmem_info: allow calling
+ free_bootmem_page() on pages without a bootmem_type
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?RGF2aWQgSGlsZGVuYnJhbmQgKEFybSk=?= <david@kernel.org>
-Cc: "Alexander Gordeev" <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org, "Heiko
- Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>
-In-Reply-To: <20260708-bootmem_info_part2-v1-1-156ce4986598@kernel.org>
+Cc: "Alexander Gordeev" <agordeev@linux.ibm.com>, "Heiko Carstens" <hca@linux.ibm.com>, linux-s390@vger.kernel.org, "Vasily
+ Gorbik" <gor@linux.ibm.com>
+In-Reply-To: <20260708-bootmem_info_part2-v1-4-156ce4986598@kernel.org>
 References: <20260708-bootmem_info_part2-v1-0-156ce4986598@kernel.org>
- <20260708-bootmem_info_part2-v1-1-156ce4986598@kernel.org>
+ <20260708-bootmem_info_part2-v1-4-156ce4986598@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 08 Jul 2026 14:22:22 +0000
-Message-Id: <20260708142222.8DA691F000E9@smtp.kernel.org>
+Date: Wed, 08 Jul 2026 14:53:48 +0000
+Message-Id: <20260708145348.D5D6E1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -72,133 +72,110 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	TO_EXCESS_BASE64(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21816-lists,linux-s390=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:david@kernel.org,m:agordeev@linux.ibm.com,m:linux-s390@vger.kernel.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21817-lists,linux-s390=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:david@kernel.org,m:agordeev@linux.ibm.com,m:hca@linux.ibm.com,m:linux-s390@vger.kernel.org,m:gor@linux.ibm.com,s:lists@lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,vger.kernel.org:from_smtp,sashiko.dev:url,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,lists.linux.dev:replyto];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
 	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_NO_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	PRECEDENCE_BULK(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-s390];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
+	FROM_NO_DN(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 6BC7E72775C
+X-Rspamd-Queue-Id: 197AF727B25
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [High] Page table pages are freed to the buddy allocator before their par=
-ent entries are cleared, creating a use-after-free window for hardware MMU =
-walkers.
+- [High] Freeing unregistered vmemmap pages at runtime directly via `free_r=
+eserved_page()` bypasses atomic refcount checks, causing a Use-After-Free o=
+r double-free when racing with PFN scanners.
 --
 
---- Patch [1]: [PATCH 01/10] x86/mm: drop order parameter from free_pagetab=
-le() ---
-commit 9c29ffca799af465974343eaff811f5b52635f1f
+--- Patch [4]: [PATCH 04/10] mm/bootmem_info: allow calling free_bootmem_pa=
+ge() on pages without a bootmem_type ---
+commit a34f9e5045801f37b33acf3125423a2dfdea2fc8
 Author: David Hildenbrand (Arm) <david@kernel.org>
+Subject: mm/bootmem_info: allow calling free_bootmem_page() on pages withou=
+t a bootmem_type
 
-x86/mm: drop order parameter from free_pagetable()
+This commit allows free_bootmem_page() to temporarily support freeing
+unregistered vmemmap pages allocated during boot. Instead of triggering a
+BUG, pages without a bootmem_type now fall back to being freed via
+free_reserved_page().
 
-All callers pass 0, so let's drop the parameter.
-
-> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-> index d57f29ca23a5a..69e36f02a663a 100644
-> --- a/arch/x86/mm/init_64.c
-> +++ b/arch/x86/mm/init_64.c
-
-[ ... ]
-
-> @@ -1060,7 +1057,7 @@ static void __meminit free_pte_table(pte_t *pte_sta=
-rt, pmd_t *pmd)
->  	}
+> diff --git a/include/linux/bootmem_info.h b/include/linux/bootmem_info.h
+> index f724340755e55..486acc6127039 100644
+> --- a/include/linux/bootmem_info.h
+> +++ b/include/linux/bootmem_info.h
+> @@ -44,12 +44,12 @@ static inline void free_bootmem_page(struct page *pag=
+e)
+>  {
+>  	enum bootmem_type type =3D bootmem_type(page);
 > =20
->  	/* free a pte table */
-> -	free_pagetable(pmd_page(*pmd), 0);
-> +	free_pagetable(pmd_page(*pmd));
->  	spin_lock(&init_mm.page_table_lock);
->  	pmd_clear(pmd);
+> -	VM_BUG_ON_PAGE(page_ref_count(page) !=3D 2, page);
+> -
+> -	if (type =3D=3D SECTION_INFO || type =3D=3D MIX_SECTION_INFO)
+> +	if (type =3D=3D SECTION_INFO || type =3D=3D MIX_SECTION_INFO) {
+> +		VM_WARN_ON_PAGE(page_ref_count(page) !=3D 2, page);
+>  		put_page_bootmem(page);
+> -	else
+> -		VM_BUG_ON_PAGE(1, page);
+> +	} else {
+> +		free_reserved_page(page);
 
 [Severity: High]
-This is a pre-existing issue, but does calling free_pagetable() before
-pmd_clear() create a use-after-free window?
+Can this race with PFN scanners and cause a use-after-free or double-free?
 
-The PTE table page is freed to the allocator before the PMD entry pointing =
-to
-it is cleared. If the freed page is quickly reallocated and populated with
-arbitrary data, could hardware speculative page table walks or lockless sof=
-tware
-walkers (like ptdump) follow the still-valid PMD entry and interpret this
-data as valid page table entries?
+Since this is used for freeing unregistered vmemmap pages at runtime (via
+HugeTLB Vmemmap Optimization), a physical memory scanner like DAMON might
+concurrently iterate over this PFN and take a reference using folio_try_get=
+().
 
->  	spin_unlock(&init_mm.page_table_lock);
+If that happens, calling free_reserved_page() directly here bypasses atomic
+refcount checks. Looking at free_reserved_pages() in mm/page_alloc.c, it
+unconditionally clobbers any concurrent reference:
 
-[ ... ]
+mm/page_alloc.c:free_reserved_pages() {
+	...
+	for (i =3D 0; i < nr_pages; i++) {
+		clear_page_tag_ref(page + i);
+		ClearPageReserved(page + i);
+		set_page_count(page + i, 0);
+	}
+	...
+}
 
-> @@ -1078,7 +1075,7 @@ static void __meminit free_pmd_table(pmd_t *pmd_sta=
-rt, pud_t *pud)
->  	}
-> =20
->  	/* free a pmd table */
-> -	free_pagetable(pud_page(*pud), 0);
-> +	free_pagetable(pud_page(*pud));
->  	spin_lock(&init_mm.page_table_lock);
->  	pud_clear(pud);
+Even scanners that check PageReserved can hit a race window here, as
+PageReserved is cleared right before the refcount is forced to 0.
 
-[Severity: High]
-This is a pre-existing issue, but does this create a similar use-after-free
-window for the PMD table page?
-
-The PMD table page is freed to the buddy allocator before the PUD entry
-pointing to it is cleared here.
-
->  	spin_unlock(&init_mm.page_table_lock);
-
-[ ... ]
-
-> @@ -1096,7 +1093,7 @@ static void __meminit free_pud_table(pud_t *pud_sta=
-rt, p4d_t *p4d)
->  	}
-> =20
->  	/* free a pud table */
-> -	free_pagetable(p4d_page(*p4d), 0);
-> +	free_pagetable(p4d_page(*p4d));
->  	spin_lock(&init_mm.page_table_lock);
->  	p4d_clear(p4d);
-
-[Severity: High]
-This is a pre-existing issue, but does this create a similar use-after-free
-window for the PUD table page?
-
-The PUD table page is freed to the buddy allocator before the P4D entry
-pointing to it is cleared here.
-
->  	spin_unlock(&init_mm.page_table_lock);
+> +	}
+>  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260708-bootmem_in=
-fo_part2-v1-0-156ce4986598@kernel.org?part=3D1
+fo_part2-v1-0-156ce4986598@kernel.org?part=3D4
 
