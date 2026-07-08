@@ -1,54 +1,54 @@
-Return-Path: <linux-s390+bounces-21804-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21805-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 9DjrJXtdTmpeLQIAu9opvQ
-	(envelope-from <linux-s390+bounces-21804-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 16:23:55 +0200
+	id vE2LBY9cTmosLQIAu9opvQ
+	(envelope-from <linux-s390+bounces-21805-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 16:19:59 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E790A727487
-	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 16:23:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FBCF7273E6
+	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 16:19:58 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b="hN/SiEhT";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=dY3fvVBG;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21804-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-21804-lists+linux-s390=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21805-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-21805-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 99DB63081B6D
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2026 14:11:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7867B309FC73
+	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2026 14:11:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC25643F4DA;
-	Wed,  8 Jul 2026 14:11:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C3FF44A71D;
+	Wed,  8 Jul 2026 14:11:16 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54EB37BE7A;
-	Wed,  8 Jul 2026 14:11:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE39A44212A;
+	Wed,  8 Jul 2026 14:11:14 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783519867; cv=none; b=gRHMKsyrfGpqtbpROIodOVTHANBNBN3c/gPlgzIxO5qszqdEomiV9sCVqB3zgiHaMx9n3EfrZmHwotdIgmtTAxt6pjo7g9vqDt2zD49nB+L24XrtUaLW9XjOQgbfRWfSK0J12ngXVItwj85C6xccy+FcANK6faO1Qh4yKWwBFTk=
+	t=1783519875; cv=none; b=TFlZ/tDKd7i6N+7O73JY8lwUandKxvDlcjplcTr6vhXTRnwD4ZHrcaDIBLxMoIn5+Upiu7U0834+RcVaAqQY9gx5G411NDEJinjEQGDEuoDT2/oupccjYT2Phd7VVRq6DN0/NEyAZE9C+NfYpXs67t2aoZCCbv0RVWKTybWA5E4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783519867; c=relaxed/simple;
-	bh=uc6ZOQ7T0n3e1exPQijjNLq/oiv/QGunVCeNk1bzDG0=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=TizrTdUVsFBSEnLrfK49V8zqSiSaanjbtq8lTG6yszaRnMYbNKchEJY7UD9V+skjYS7AjBoUVjasdzFv7UGM2RQi+2oeviS2sNyxNuH6nOC4I35bIJc2ZcAIy09E3wJYL/8HHHW0dY73cb4u8r/BECp133+1bCiI3Q+bdJinu+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hN/SiEhT; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B3D41F000E9;
-	Wed,  8 Jul 2026 14:10:58 +0000 (UTC)
+	s=arc-20240116; t=1783519875; c=relaxed/simple;
+	bh=A4g9Xi44lgz+jx+bdNzZ1t7Tre6Zm61/fHMa3XFqNZQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Npv5TpbToFiLQ3buQdsyjjcq7LcOFmqxx5eWHvvZ7+nN9ueDvUU6Bbf5FwPA/zlB6h9GPZaoxnNAzNP/yhkRrgnqMXmF9lkYn7wY1m3FNMkCwO4kicnYwajF9P8K55qMTL0nJVq6wlEOXu0GZ0HqDYzPeTxcftbCk7FO5Fl74vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dY3fvVBG; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E112F1F00A3E;
+	Wed,  8 Jul 2026 14:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783519866;
-	bh=Ko4Hdlv9loLHMeM4kMSWr4+ckWdvKkB6i/m+lF4LdTE=;
-	h=From:Subject:Date:To:Cc;
-	b=hN/SiEhTywl8ROd8W5sQTNgOaPwlrPqNaKn1PwiH4xjk4c8RCtMwP5MIq/zye8n/1
-	 AMsqvOw8AsRS/YWKgazxPunLd+6nmh4gofbHsSwHmtNqxVxUiGpiaqc1RjhERCEoB3
-	 OPMbft3hBw5/p9OOcBLH2fqZ7UktJBuHCDUd2o40KLGzqP3xMgGBakYiJhYl1fL+MW
-	 JzRE+ebX2nGw/tvXWsl1Dbsno6N2eETLR6WoUtnJVpZFXLM7/LVqz8aA6ogU78XWSS
-	 YJdJrLYcpV6XVxLChmpq8+8kLJa421lxsAwHRPeYYTgdNZ0ZjE+cK4ZTyeH96wODoT
-	 GsPA3y9CHNA4A==
+	s=k20260515; t=1783519874;
+	bh=E+AlVizHAu3WzgjL8uIczk1k7KNNNOBonScKWHpcsCI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=dY3fvVBGl/2fsM7e1EHOWO7ed5WSNaMRvRaOwku0a6Q27yhD/O0RVg/OSyF+Ygk22
+	 Rp/VjvKdYcvRgKOBfjpEcVyucHkbasJ9I8s4ksbOQTI+O4LCdkFPcm746p8SUj+w3G
+	 S8ksj55L+O/ElhURv+Wz7hu/jS49UIPERbbQD/hRc1yez2Ylk5+DhBOcrU28HBP6Ud
+	 HFR4Rt4NATcRrwlc9HG6RP9wigX4bQdXFSDQlBXljrQ37a2CYQJMqsIhCO64I85Qp9
+	 TEqNLOtMtLelimYChR7VsPxs8D+OFpLfRGfycH3VIp5nZCim9Ao1VPcOOvPS8K9Eqx
+	 ujlOSmn0L/HTQ==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Subject: [PATCH 00/10] mm: remove CONFIG_HAVE_BOOTMEM_INFO_NODE (Part 2)
-Date: Wed, 08 Jul 2026 16:10:55 +0200
-Message-Id: <20260708-bootmem_info_part2-v1-0-156ce4986598@kernel.org>
+Date: Wed, 08 Jul 2026 16:10:56 +0200
+Subject: [PATCH 01/10] x86/mm: drop order parameter from free_pagetable()
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -57,10 +57,9 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAG9aTmoC/x3MQQqAIBBA0avErBPKLKqrRISTU80iDZUIpLsnL
- d/i/wSBPFOAsUjg6ebAzmbUZQHroe1Ogk02yEp2lZK9QOfiSefCdnPLpX2UQiGiUq0ZsDGQw8v
- Txs8/neb3/QBoG3oHZAAAAA==
-X-Change-ID: 20260428-bootmem_info_part2-4bbb445d9b3d
+Message-Id: <20260708-bootmem_info_part2-v1-1-156ce4986598@kernel.org>
+References: <20260708-bootmem_info_part2-v1-0-156ce4986598@kernel.org>
+In-Reply-To: <20260708-bootmem_info_part2-v1-0-156ce4986598@kernel.org>
 To: Dave Hansen <dave.hansen@linux.intel.com>, 
  Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
  Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -96,7 +95,7 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:dave.hansen@linux.intel.com,m:luto@kernel.org,m:peterz@infradead.org,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:x86@kernel.org,m:hpa@zytor.com,m:akpm@linux-foundation.org,m:ljs@kernel.org,m:liam@infradead.org,m:vbabka@kernel.org,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:jackmanb@google.com,m:hannes@cmpxchg.org,m:ziy@nvidia.com,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:muchun.song@linux.dev,m:osalvador@suse.de,m:linux-kernel@vger.kernel.org,m:linux-mm@kvack.org,m:linux-s390@vger.kernel.org,m:david@kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[david@kernel.org,linux-s390@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-21804-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21805-lists,linux-s390=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -112,52 +111,77 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E790A727487
+X-Rspamd-Queue-Id: 6FBCF7273E6
 
-Let's remove the remaining pieces of CONFIG_HAVE_BOOTMEM_INFO_NODE,
-performing some smaller cleanups around freeing of reserved vmemmap
-pages on the way.
-
-Tested on x86-64 with hugetlb vmemmap optimization in combination with
-KMEMLEAK. Heavily cross-compiled.
+All callers pass 0, so let's drop the parameter.
 
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
-David Hildenbrand (Arm) (10):
-      x86/mm: drop order parameter from free_pagetable()
-      mm: provide free_reserved_pages(), removing x86 variant
-      s390/mm: use free_reserved_pages() in vmem_free_pages()
-      mm/bootmem_info: allow calling free_bootmem_page() on pages without a bootmem_type
-      x86/mm: stop marking vmemmap as SECTION_INFO
-      x86/mm: stop marking page tables as MIX_SECTION_INFO
-      x86/mm: remove CONFIG_HAVE_BOOTMEM_INFO_NODE
-      mm/hugetlb_vmemmap: remove bootmem_info leftovers
-      mm/sparse: remove bootmem_info.h include
-      mm/bootmem_info: remove CONFIG_HAVE_BOOTMEM_INFO_NODE
+ arch/x86/mm/init_64.c | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
- MAINTAINERS                  |   1 -
- arch/s390/mm/vmem.c          |   4 +-
- arch/x86/mm/init_64.c        | 134 ++++---------------------------------------
- include/linux/bootmem_info.h |  89 ----------------------------
- include/linux/mm.h           |   8 ++-
- mm/Kconfig                   |   8 ---
- mm/Makefile                  |   1 -
- mm/bootmem_info.c            |  72 -----------------------
- mm/hugetlb_vmemmap.c         |   8 +--
- mm/page_alloc.c              |  33 ++++++++---
- mm/sparse.c                  |   1 -
- 11 files changed, 46 insertions(+), 313 deletions(-)
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index d57f29ca23a5a..69e36f02a663a 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -1006,22 +1006,19 @@ static void free_reserved_pages(struct page *page, unsigned long nr_pages)
+ 		free_reserved_page(page++);
+ }
+ 
+-static void __meminit free_pagetable(struct page *page, int order)
++static void __meminit free_pagetable(struct page *page)
+ {
+ 	/* bootmem page has reserved flag */
+ 	if (PageReserved(page)) {
+-		unsigned long nr_pages = 1 << order;
+ #ifdef CONFIG_HAVE_BOOTMEM_INFO_NODE
+ 		enum bootmem_type type = bootmem_type(page);
+ 
+-		if (type == MIX_SECTION_INFO) {
+-			while (nr_pages--)
+-				put_page_bootmem(page++);
+-		} else {
+-			free_reserved_pages(page, nr_pages);
+-		}
++		if (type == MIX_SECTION_INFO)
++			put_page_bootmem(page);
++		else
++			free_reserved_page(page);
+ #else
+-		free_reserved_pages(page, nr_pages);
++		free_reserved_page(page);
+ #endif
+ 	} else {
+ 		pagetable_free(page_ptdesc(page));
+@@ -1060,7 +1057,7 @@ static void __meminit free_pte_table(pte_t *pte_start, pmd_t *pmd)
+ 	}
+ 
+ 	/* free a pte table */
+-	free_pagetable(pmd_page(*pmd), 0);
++	free_pagetable(pmd_page(*pmd));
+ 	spin_lock(&init_mm.page_table_lock);
+ 	pmd_clear(pmd);
+ 	spin_unlock(&init_mm.page_table_lock);
+@@ -1078,7 +1075,7 @@ static void __meminit free_pmd_table(pmd_t *pmd_start, pud_t *pud)
+ 	}
+ 
+ 	/* free a pmd table */
+-	free_pagetable(pud_page(*pud), 0);
++	free_pagetable(pud_page(*pud));
+ 	spin_lock(&init_mm.page_table_lock);
+ 	pud_clear(pud);
+ 	spin_unlock(&init_mm.page_table_lock);
+@@ -1096,7 +1093,7 @@ static void __meminit free_pud_table(pud_t *pud_start, p4d_t *p4d)
+ 	}
+ 
+ 	/* free a pud table */
+-	free_pagetable(p4d_page(*p4d), 0);
++	free_pagetable(p4d_page(*p4d));
+ 	spin_lock(&init_mm.page_table_lock);
+ 	p4d_clear(p4d);
+ 	spin_unlock(&init_mm.page_table_lock);
 
----
-
-base-commit: d11ba1f570615ec8d4814d6313ee1d7075a33787
-
-change-id: 20260428-bootmem_info_part2-4bbb445d9b3d
-
---
-
-Cheers,
-
-David
+-- 
+2.43.0
 
 
