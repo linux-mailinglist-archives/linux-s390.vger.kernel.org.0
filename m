@@ -1,221 +1,176 @@
-Return-Path: <linux-s390+bounces-21839-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21840-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id hl0EI86PTmrbPQIAu9opvQ
-	(envelope-from <linux-s390+bounces-21839-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 19:58:38 +0200
+	id +nFQNrSZTmpbQQIAu9opvQ
+	(envelope-from <linux-s390+bounces-21840-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 20:40:52 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07DE27295BC
-	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 19:58:38 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC3357299D0
+	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 20:40:51 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=lUFCGVvh;
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21839-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-21839-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=rendec.net header.s=default header.b=R0pckaM7;
+	dmarc=pass (policy=reject) header.from=rendec.net;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21840-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21840-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 65A53302BBCE
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2026 17:58:32 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id A6F023038CDE
+	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2026 18:37:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAAC13BAD9B;
-	Wed,  8 Jul 2026 17:58:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDDFD4D8D98;
+	Wed,  8 Jul 2026 18:36:21 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mail.mindbit.ro (xs1.mindbit.ro [80.86.107.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEDED2459EA;
-	Wed,  8 Jul 2026 17:58:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36E34C9574;
+	Wed,  8 Jul 2026 18:36:19 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783533510; cv=none; b=l2f8ZTTfOzd1WSxO9j1orjmj6lPWO+y0j/b1F9V0a9gNChmULY8gMVSec6dH5IVqelPb/kN5xzgqcCZMT4JpmbmhMBxWdOtdwUwLdEp7jkjHZq6hfV7cjqmDX7fCIJ2PzjS7JXLcPW9wse4tBdMfzM4/t6ftjmYfCTnb+Sv98y8=
+	t=1783535781; cv=none; b=R5zdFaS+++3Xn0w/O9kkSY/+YIFvZlEmrYO8uuKbNeck8czEfosB8RgOAhmNsvL+QjhFK6worxDaEiR7zE4SGe+QqOy1JjfxDRvkY46eV+WhTCGPzLQNovjcBFYU4+9wbXNz5YDwLu0JEK05xQB1opW3OEDQiKsmr+WZfoguvck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783533510; c=relaxed/simple;
-	bh=DAStDXOSf9Oo/ReDKIwpVBMsGNG26XsqmGIDDvE59dc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=qOev/0Txr80LJDDmCo+4NgnpvRDxwsqJGFd2zoznKcZ4+2qeRwsCffQvtlAtxRjCATOoeCTSu/Fjgus0KHrVQNO6ay047E8YGQmwNFI/+uIteyLVJqsfvqlC+/K8xHr60ew0dH0Cj7KnLYtBwFVLRnhAv0whXjUDpzeL7V4O5GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lUFCGVvh; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DFE91F000E9;
-	Wed,  8 Jul 2026 17:58:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783533509;
-	bh=2zcJcB1E4eAZy0egEbo5b49ra1AlE1ZZgAl0aBZPFpg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=lUFCGVvhi3r0g2REAtCb2IGA8CZvBtpISzpqNOsLlIz4oC8RYsx/4BDzxBWlKpED0
-	 OO0H8pEE+Rj/gvkRHSvopojk6+7GJ2AVOWtst9fH1KbISbjRghLiVKG8hjeEoo2NJL
-	 1pONN4spCjOkHAEVviRtqhHebsdb8FkdHq+W9mwMHVu3D2rDo+PIliDI8dLOzCpavH
-	 2v63vsnLIDMQkmI7iMKzYlLlawSHemKEODU9IgIdU5HL7fCECve8y+XTvAEm18oYQ/
-	 fjk+++bhVL1mK2ZtC2q+a75eR0XtyKKWF5XVAIEO0u/AFkjmd4VWUqV8Us3U8DJG1R
-	 Qf80NCztIqmrQ==
-X-Mailer: emacs 30.2 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
-	Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Steven Price <steven.price@arm.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Mostafa Saleh <smostafa@google.com>,
-	Petr Tesarik <ptesarik@suse.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>,
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>, x86@kernel.org,
-	Jiri Pirko <jiri@nvidia.com>,
-	Michael Kelley <mhklinux@outlook.com>
-Subject: Re: [PATCH v7 16/22] dma-direct: make dma_direct_map_phys() honor
- DMA_ATTR_CC_SHARED
-In-Reply-To: <ak42F240d-53QeFN@arm.com>
-References: <20260701054926.825925-1-aneesh.kumar@kernel.org>
- <20260701054926.825925-17-aneesh.kumar@kernel.org>
- <ak42F240d-53QeFN@arm.com>
-Date: Wed, 08 Jul 2026 23:28:14 +0530
-Message-ID: <yq5apl0xgy89.fsf@kernel.org>
+	s=arc-20240116; t=1783535781; c=relaxed/simple;
+	bh=Y1A7c5g51w31PW2cY9eGOYb8oZVqwqAfG/O5QtGpzXg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=d1MUJaTLHTaO4GrQG2YEWuXccOGIVQcjqE8OlcDA2OnnzTuJCnb3Mn0zEZdVUGTYbwArJnRrOo6D/dAq2rwFSvlfdSzOXcoTvtB6bZT5ZCCeDojWQ9jNJwCUtncNOGs+q2BiyHnQczYIKjBpw2Qs75iW5Yk7y0sMIB/CCiWXyg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=rendec.net; spf=pass smtp.mailfrom=rendec.net; dkim=pass (2048-bit key) header.d=rendec.net header.i=@rendec.net header.b=R0pckaM7; arc=none smtp.client-ip=80.86.107.70
+Received: from bat.kanata.rendec.net (unknown [24.114.111.125])
+	by mail.mindbit.ro (Postfix) with ESMTPSA id A4061C3435;
+	Wed,  8 Jul 2026 21:35:54 +0300 (EEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.mindbit.ro A4061C3435
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rendec.net;
+	s=default; t=1783535777;
+	bh=HOFoesOyB88RJQpCsNVT6CnljJeq85zHo9ievtK6il8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=R0pckaM7uzKJhnfLsd+EasA5iL0B7ZA4xUo2QedrlgePDqSCeceDdoKrCaUXSgH75
+	 15MPZ33HpRCU30hqcMI0PUJAA4ul+9XUwxAhJeXTpBoywEuKewGCk7m21xK7GBO94b
+	 NpDa7pro6OWmXqh5IS/WT+qx6ABBrkCA+Kv5g9jMDrLVH+mh9k+/398rw04b/Uiitl
+	 a9blgckrqg3HTXMb7xcAzYPWQFRHvTBk4ekkJmwrZessc3xf9tFXhmpN0qrpZBt8yq
+	 5Qao1qyCtvtsSHKBGAM0cGKH+LVrTaTCbKcejqQuUrZPKj01pL+BpzMYflQ9YS3rRx
+	 JbQnyYBWoKGdQ==
+Message-ID: <a8c5cc7d9296d59bf3d5851a3a2ba5f3a271bb9a.camel@rendec.net>
+Subject: Re: [patch 05/18] powerpc/syscall: Use
+ syscall_enter_from_user_mode_randomize_stack()
+From: Radu Rendec <radu@rendec.net>
+To: Thomas Gleixner <tglx@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Michael Ellerman
+ <mpe@ellerman.id.au>,  Shrikanth Hegde <sshegde@linux.ibm.com>,
+ linuxppc-dev@lists.ozlabs.org, Kees Cook <kees@kernel.org>, Huacai Chen	
+ <chenhuacai@kernel.org>, loongarch@lists.linux.dev, Paul Walmsley
+ <pjw@kernel.org>,  Palmer Dabbelt <palmer@dabbelt.com>,
+ linux-riscv@lists.infradead.org, Sven Schnelle <svens@linux.ibm.com>, 
+	linux-s390@vger.kernel.org, x86@kernel.org, Mark Rutland
+ <mark.rutland@arm.com>,  Jinjie Ruan <ruanjinjie@huawei.com>, Andy
+ Lutomirski <luto@kernel.org>, Oleg Nesterov <oleg@redhat.com>,  Richard
+ Henderson <richard.henderson@linaro.org>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas	 <catalin.marinas@arm.com>, Guo
+ Ren <guoren@kernel.org>, Geert Uytterhoeven	 <geert@linux-m68k.org>, Thomas
+ Bogendoerfer <tsbogend@alpha.franken.de>,  Helge Deller	 <deller@gmx.de>,
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger
+ <richard@nod.at>, Chris Zankel <chris@zankel.net>,
+ linux-arm-kernel@lists.infradead.org, 	linux-alpha@vger.kernel.org,
+ linux-csky@vger.kernel.org, 	linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, 	linux-parisc@vger.kernel.org,
+ linux-sh@vger.kernel.org, 	linux-um@lists.infradead.org, Arnd Bergmann
+ <arnd@arndb.de>, Vineet Gupta	 <vgupta@kernel.org>, Will Deacon
+ <will@kernel.org>, Brian Cain <bcain@kernel.org>,  Michal Simek
+ <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>, "David S. Miller"
+ <davem@davemloft.net>,  Andreas Larsson <andreas@gaisler.com>,
+ linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org, 
+	linux-openrisc@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-arch@vger.kernel.org, Michal =?ISO-8859-1?Q?Such=E1nek?=	
+ <msuchanek@suse.de>, Jonathan Corbet <corbet@lwn.net>, 
+	linux-doc@vger.kernel.org
+Date: Wed, 08 Jul 2026 14:35:48 -0400
+In-Reply-To: <20260707190253.918861529@kernel.org>
+References: <20260707181957.433213175@kernel.org>
+	 <20260707190253.918861529@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
+	DMARC_POLICY_ALLOW(-0.50)[rendec.net,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[rendec.net:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21839-lists,linux-s390=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[33];
+	TAGGED_FROM(0.00)[bounces-21840-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:catalin.marinas@arm.com,m:iommu@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:robin.murphy@arm.com,m:m.szyprowski@samsung.com,m:will@kernel.org,m:maz@kernel.org,m:steven.price@arm.com,m:Suzuki.Poulose@arm.com,m:jiri@resnulli.us,m:jgg@ziepe.ca,m:smostafa@google.com,m:ptesarik@suse.com,m:aik@amd.com,m:dan.j.williams@intel.com,m:yilun.xu@linux.intel.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-s390@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:x86@kernel.org,m:jiri@nvidia.com,m:mhklinux@outlook.com,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER(0.00)[aneesh.kumar@kernel.org,linux-s390@vger.kernel.org];
-	FREEMAIL_CC(0.00)[lists.linux.dev,lists.infradead.org,vger.kernel.org,arm.com,samsung.com,kernel.org,resnulli.us,ziepe.ca,google.com,suse.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,linux.ibm.com,ellerman.id.au,gmail.com,nvidia.com,outlook.com];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[aneesh.kumar@kernel.org,linux-s390@vger.kernel.org];
+	FREEMAIL_CC(0.00)[infradead.org,ellerman.id.au,linux.ibm.com,lists.ozlabs.org,kernel.org,lists.linux.dev,dabbelt.com,lists.infradead.org,vger.kernel.org,arm.com,huawei.com,redhat.com,linaro.org,armlinux.org.uk,linux-m68k.org,alpha.franken.de,gmx.de,users.sourceforge.jp,nod.at,zankel.net,lists.linux-m68k.org,arndb.de,monstr.eu,davemloft.net,gaisler.com,suse.de,lwn.net];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:tglx@kernel.org,m:linux-kernel@vger.kernel.org,m:peterz@infradead.org,m:mpe@ellerman.id.au,m:sshegde@linux.ibm.com,m:linuxppc-dev@lists.ozlabs.org,m:kees@kernel.org,m:chenhuacai@kernel.org,m:loongarch@lists.linux.dev,m:pjw@kernel.org,m:palmer@dabbelt.com,m:linux-riscv@lists.infradead.org,m:svens@linux.ibm.com,m:linux-s390@vger.kernel.org,m:x86@kernel.org,m:mark.rutland@arm.com,m:ruanjinjie@huawei.com,m:luto@kernel.org,m:oleg@redhat.com,m:richard.henderson@linaro.org,m:linux@armlinux.org.uk,m:catalin.marinas@arm.com,m:guoren@kernel.org,m:geert@linux-m68k.org,m:tsbogend@alpha.franken.de,m:deller@gmx.de,m:ysato@users.sourceforge.jp,m:richard@nod.at,m:chris@zankel.net,m:linux-arm-kernel@lists.infradead.org,m:linux-alpha@vger.kernel.org,m:linux-csky@vger.kernel.org,m:linux-m68k@lists.linux-m68k.org,m:linux-mips@vger.kernel.org,m:linux-parisc@vger.kernel.org,m:linux-sh@vger.kernel.org,m:linux-um@lists.infradead.org,m:arnd@arndb.de,m:vgupta@kernel.org,m:will@kerne
+ l.org,m:bcain@kernel.org,m:monstr@monstr.eu,m:dinguyen@kernel.org,m:davem@davemloft.net,m:andreas@gaisler.com,m:linux-snps-arc@lists.infradead.org,m:linux-hexagon@vger.kernel.org,m:linux-openrisc@vger.kernel.org,m:sparclinux@vger.kernel.org,m:linux-arch@vger.kernel.org,m:msuchanek@suse.de,m:corbet@lwn.net,m:linux-doc@vger.kernel.org,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[radu@rendec.net,linux-s390@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[rendec.net:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[53];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[radu@rendec.net,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[arm.com:email,vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,ellerman.id.au:email,rendec.net:from_mime,rendec.net:email,rendec.net:mid,rendec.net:dkim,vger.kernel.org:from_smtp,ozlabs.org:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 07DE27295BC
+X-Rspamd-Queue-Id: EC3357299D0
 
-Catalin Marinas <catalin.marinas@arm.com> writes:
+On Tue, 2026-07-07 at 21:06 +0200, Thomas Gleixner wrote:
+> syscall_enter_from_user_mode_randomize_stack() replaces
+> syscall_enter_from_user_mode() and the subsequent invocation of
+> add_random_kstack_offset().
+>=20
+> The advantage is that it applies the stack randomization right after
+> enter_from_user_mode() and thereby avoids the overhead of get/put_cpu_var=
+()
+> as that code is invoked with interrupts disabled.
+>=20
+> No functional change.
+>=20
+> Signed-off-by: Thomas Gleixner <tglx@kernel.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Shrikanth Hegde <sshegde@linux.ibm.com>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> ---
+> =C2=A0arch/powerpc/kernel/syscall.c |=C2=A0=C2=A0=C2=A0 4 +---
+> =C2=A01 file changed, 1 insertion(+), 3 deletions(-)
+>=20
+> --- a/arch/powerpc/kernel/syscall.c
+> +++ b/arch/powerpc/kernel/syscall.c
+> @@ -2,7 +2,6 @@
+> =C2=A0
+> =C2=A0#include <linux/compat.h>
+> =C2=A0#include <linux/context_tracking.h>
+> -#include <linux/randomize_kstack.h>
+> =C2=A0#include <linux/entry-common.h>
+> =C2=A0
+> =C2=A0#include <asm/interrupt.h>
+> @@ -19,8 +18,7 @@ notrace long system_call_exception(struc
+> =C2=A0	long ret;
+> =C2=A0	syscall_fn f;
+> =C2=A0
+> -	r0 =3D syscall_enter_from_user_mode(regs, r0);
+> -	add_random_kstack_offset();
+> +	r0 =3D syscall_enter_from_user_mode_randomize_stack(regs, r0);
+> =C2=A0
+> =C2=A0	if (unlikely(r0 >=3D NR_syscalls)) {
+> =C2=A0		if (unlikely(trap_is_unsupported_scv(regs))) {
 
-> On Wed, Jul 01, 2026 at 11:19:20AM +0530, Aneesh Kumar K.V (Arm) wrote:
->> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->> index 97987f850a33..acf67c7064db 100644
->> --- a/arch/arm64/mm/init.c
->> +++ b/arch/arm64/mm/init.c
->> @@ -338,10 +338,8 @@ void __init arch_mm_preinit(void)
->>  	unsigned int flags = SWIOTLB_VERBOSE;
->>  	bool swiotlb = max_pfn > PFN_DOWN(arm64_dma_phys_limit);
->>  
->> -	if (is_realm_world()) {
->> +	if (is_realm_world())
->>  		swiotlb = true;
->> -		flags |= SWIOTLB_FORCE;
->> -	}
->
-> For this part:
->
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
->
->> diff --git a/kernel/dma/direct.h b/kernel/dma/direct.h
->> index e05dc7649366..f3fc28f352ba 100644
->> --- a/kernel/dma/direct.h
->> +++ b/kernel/dma/direct.h
->> @@ -88,37 +88,40 @@ static inline dma_addr_t dma_direct_map_phys(struct device *dev,
->>  {
->>  	dma_addr_t dma_addr;
->>  
->> +	/*
->> +	 * For a device requiring unencrypted DMA, MMIO memory is treated
->> +	 * as shared by default.
->> +	 */
->> +	if (force_dma_unencrypted(dev) && (attrs & DMA_ATTR_MMIO))
->> +		attrs |= DMA_ATTR_CC_SHARED;
->> +
->>  	if (is_swiotlb_force_bounce(dev)) {
->> -		if (!(attrs & DMA_ATTR_CC_SHARED)) {
->> -			if (attrs & (DMA_ATTR_MMIO | DMA_ATTR_REQUIRE_COHERENT))
->> -				return DMA_MAPPING_ERROR;
->> +		if (attrs & (DMA_ATTR_MMIO | DMA_ATTR_REQUIRE_COHERENT))
->> +			return DMA_MAPPING_ERROR;
->>  
->> -			return swiotlb_map(dev, phys, size, dir, attrs);
->> -		}
->> -	} else if (attrs & DMA_ATTR_CC_SHARED) {
->> -		return DMA_MAPPING_ERROR;
->> +		return swiotlb_map(dev, phys, size, dir, attrs);
->>  	}
->>  
->> -	if (attrs & DMA_ATTR_MMIO) {
->> -		dma_addr = phys;
->> -		if (unlikely(!dma_capable(dev, dma_addr, size, false, attrs)))
->> -			goto err_overflow;
->> -	} else if (attrs & DMA_ATTR_CC_SHARED) {
->> +	if (attrs & DMA_ATTR_CC_SHARED)
->>  		dma_addr = phys_to_dma_unencrypted(dev, phys);
->> +	else
->> +		dma_addr = phys_to_dma_encrypted(dev, phys);
->
-> For AMD/SME, on host with memory encryption we now end up setting the C
-> bit for DMA_ATTR_MMIO. This is fine for RAM but not sure whether
-> some other MMIO bus understands this attribute. Maybe we should stick to
-> something like __phys_to_dma() for the !CC_SHARED && MMIO path. Or,
-> since this is not universally defined, just use the old dma_addr = phys
-> if MMIO and ignore any unlikely DMA offsets.
->
-
-Considering for AMD/SME system an unencrypted dma addr is one without C
-bit, will this be good?
-
-	/*
-	 * For host memory encryption and device requiring unencrypted DMA,
-	 * MMIO memory is treated as shared by default.
-	 */
-	if (attrs & DMA_ATTR_MMIO) {
-		if (cc_platform_has(CC_ATTR_HOST_MEM_ENCRYPT) || force_dma_unencrypted(dev))
-			attrs |= DMA_ATTR_CC_SHARED;
-	}
-
-
->
-> In the other case, for an arm CCA guest, if the MMIO is shared we end up
-> setting the shared attribute but that's fine, it's only an IPA address.
->
-> -- 
-> Catalin
-
--aneesh
+Reviewed-by: Radu Rendec <radu@rendec.net>
 
