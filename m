@@ -1,54 +1,55 @@
-Return-Path: <linux-s390+bounces-21813-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21814-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id XbbvK59cTmoxLQIAu9opvQ
-	(envelope-from <linux-s390+bounces-21813-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 16:20:15 +0200
+	id Z9z+KM9cTmo3LQIAu9opvQ
+	(envelope-from <linux-s390+bounces-21814-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 16:21:03 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F80F7273F2
-	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 16:20:15 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40EF8727408
+	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 16:21:03 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Ia1IsIGC;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=iAQ1P35k;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21813-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21813-lists+linux-s390=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21814-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-s390+bounces-21814-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id B07BA3105266
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2026 14:13:13 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 2B6E730CEC04
+	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2026 14:13:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31575478E41;
-	Wed,  8 Jul 2026 14:12:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 285C344B67D;
+	Wed,  8 Jul 2026 14:12:26 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2024644CAE0;
-	Wed,  8 Jul 2026 14:12:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C434A44A739;
+	Wed,  8 Jul 2026 14:12:24 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783519938; cv=none; b=hmXL7Le8gCaSW7kS75MWmyt6uIMG9pP9bshpB2/w4tDK5ChBNwDDC6CemWgfy0+7MFykMIvvCrRjXtTjiZOEZeHmvQmro2AUKBXyLV3Dl6b/keFFGfOGr0Tywtd2cWu09biesYYfcEyaWT/axBYUjEPo+zwEXrm8VT9v7LIxdGc=
+	t=1783519946; cv=none; b=hX5/pRbGrKckzi0HMReQ+BfOXC4DzO1F3Ys/JZZqua0ElTzaZulDFai9Qa4nkh67ENPPSSaapQQqdQOo0o3EIwvbKKWLlez0ElLQAuG684JgdJFUSRGiNSWe+H3XxFz0HW/bi8fdRVElqEU7WahyQUqSrzeuz80i9pzrdiKQFpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783519938; c=relaxed/simple;
-	bh=KXoJcAB0qh0bVM4fvhz6WHM2BQBe4RU2eB7o5k6x37A=;
+	s=arc-20240116; t=1783519946; c=relaxed/simple;
+	bh=Km+c53lSnKptcW01EQfwwQxf2N9XfMej6NNff/fgHJY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dhtNmPIhePkFGIINyd1PpN6AB6lSqbN9eiklwC3Wo23P0tvF5Prphob3+UZmC9bOKULdzYQnoE5PaEMRRwAz3OKYOs/p4off/ymk0N4EtYWaGWqZf6aO1Ttm16aMOVvd8egEdCbFA14dm8N/F/aGCjFckQFic/qsAESs8+AKATQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ia1IsIGC; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3A671F00A3E;
-	Wed,  8 Jul 2026 14:12:09 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=UX70maXV3WPtZFffZNo6b6PJxtmRuMaHnsJl+LAMvn9kUzIRy1zxp8mQa6b97w1vRUURHUCByo+liLkiBrN9ZCut3Xz9gJFcxICNKWVJajsmkbi0L1rSCvu3rEfdprMR6ppiE+cDc5wCn/GI7tTHh+cTbdQC29+YAECbX/5QuJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iAQ1P35k; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B3731F00A3D;
+	Wed,  8 Jul 2026 14:12:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783519937;
-	bh=fwd351vZMeylo11Xt7QUAJDGgeyO/aHkIwHIv82aQeE=;
+	s=k20260515; t=1783519944;
+	bh=J38DrbD7HGGgkXHTOv7ioJOBlse544u95iqYz9lc1ao=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=Ia1IsIGCAROHagJA8XwwjgWhiIfaUuC7J/9zrD3GRG8E6BcnaOGLwuncYlD8oQVsk
-	 +EM+3WTRQpYEx01oCoCMobP5C2WKODaicATQyQ6Rf4uq0+0OavBC8GZnqmqvHOTIxF
-	 cCBZOu4IGMudBC0VlX5FvTrPZpmkLDqId9OqDTKCiNY2LTM7A9LAn9zQD0+IAnbQe7
-	 d3412Zn30tqetBcQvajn1+y4EVQxidTLUq46UfuKVpbcZ8I5I9ZNaf2y2O5SxJKkWH
-	 +8z+E6pN6bz32RXtg43tJ77K0q7yVf+f1x2yciCv3NViPcVTt2If4TWKtyKs9uAoP6
-	 06shHonGEWjAw==
+	b=iAQ1P35kJG7h2YU5gI9Dkl9yV9n2YwjPBEecOBDxjGfgx1yNtFaIaZdAtue7k7WfA
+	 zfYdhFDtZlZZlsdqIL2hkkRax3Pi0RkofDvjBMO+rqZVtEgnUniF7JIeBnQpT6wxqm
+	 D4WGFgjwAiDWjzq6ttLmnahNLnab4AGAaGVFZCwgczJ/quwEYEFwaKC6WysIKeMqie
+	 XmLqp6jZc80RuPYBWuvlIMut/o176f5A4dgxTCfEuMHXvjGZBcTTKHGrr//pCfMx1g
+	 sxNGQQk4iGUo4O/mcVWBfm0MKyaltDHC5++B0BZHJNCtUI3bZYxYuhiKPNkvvKSgZQ
+	 Lr1NR9EoHom1g==
 From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Wed, 08 Jul 2026 16:11:04 +0200
-Subject: [PATCH 09/10] mm/sparse: remove bootmem_info.h include
+Date: Wed, 08 Jul 2026 16:11:05 +0200
+Subject: [PATCH 10/10] mm/bootmem_info: remove
+ CONFIG_HAVE_BOOTMEM_INFO_NODE
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -57,7 +58,7 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260708-bootmem_info_part2-v1-9-156ce4986598@kernel.org>
+Message-Id: <20260708-bootmem_info_part2-v1-10-156ce4986598@kernel.org>
 References: <20260708-bootmem_info_part2-v1-0-156ce4986598@kernel.org>
 In-Reply-To: <20260708-bootmem_info_part2-v1-0-156ce4986598@kernel.org>
 To: Dave Hansen <dave.hansen@linux.intel.com>, 
@@ -83,7 +84,7 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -95,9 +96,9 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:dave.hansen@linux.intel.com,m:luto@kernel.org,m:peterz@infradead.org,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:x86@kernel.org,m:hpa@zytor.com,m:akpm@linux-foundation.org,m:ljs@kernel.org,m:liam@infradead.org,m:vbabka@kernel.org,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:jackmanb@google.com,m:hannes@cmpxchg.org,m:ziy@nvidia.com,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:muchun.song@linux.dev,m:osalvador@suse.de,m:linux-kernel@vger.kernel.org,m:linux-mm@kvack.org,m:linux-s390@vger.kernel.org,m:david@kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[david@kernel.org,linux-s390@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-21813-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21814-lists,linux-s390=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
@@ -111,27 +112,235 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7F80F7273F2
+X-Rspamd-Queue-Id: 40EF8727408
 
-No longer required, so let's remove it.
+The whole infrastructure is unused now. Let's remove the config option
+along with mm/bootmem_info. + include/linux/bootmem_info.h.
 
 Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- mm/sparse.c | 1 -
- 1 file changed, 1 deletion(-)
+ MAINTAINERS                  |  1 -
+ include/linux/bootmem_info.h | 89 --------------------------------------------
+ mm/Kconfig                   |  7 ----
+ mm/Makefile                  |  1 -
+ mm/bootmem_info.c            | 72 -----------------------------------
+ 5 files changed, 170 deletions(-)
 
-diff --git a/mm/sparse.c b/mm/sparse.c
-index 058ef93003672..b5c74aab3379a 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -13,7 +13,6 @@
- #include <linux/vmalloc.h>
- #include <linux/swap.h>
- #include <linux/swapops.h>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d19822d574fd4..9a67ae0f7865e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16877,7 +16877,6 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock.git fixes
+ F:	Documentation/core-api/boot-time-mm.rst
+ F:	include/linux/kho/abi/memblock.h
+ F:	include/linux/memblock.h
+-F:	mm/bootmem_info.c
+ F:	mm/memblock.c
+ F:	mm/memtest.c
+ F:	mm/mm_init.c
+diff --git a/include/linux/bootmem_info.h b/include/linux/bootmem_info.h
+deleted file mode 100644
+index 486acc6127039..0000000000000
+--- a/include/linux/bootmem_info.h
++++ /dev/null
+@@ -1,89 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __LINUX_BOOTMEM_INFO_H
+-#define __LINUX_BOOTMEM_INFO_H
+-
+-#include <linux/mm.h>
+-#include <linux/kmemleak.h>
+-
+-/*
+- * Types for free bootmem stored in the low bits of page->private.
+- */
+-enum bootmem_type {
+-	MEMORY_HOTPLUG_MIN_BOOTMEM_TYPE = 1,
+-	SECTION_INFO = MEMORY_HOTPLUG_MIN_BOOTMEM_TYPE,
+-	MIX_SECTION_INFO,
+-	NODE_INFO,
+-	MEMORY_HOTPLUG_MAX_BOOTMEM_TYPE = NODE_INFO,
+-};
+-
+-#ifdef CONFIG_HAVE_BOOTMEM_INFO_NODE
+-void __init register_page_bootmem_info_node(struct pglist_data *pgdat);
+-void register_page_bootmem_memmap(unsigned long section_nr, struct page *map,
+-				  unsigned long nr_pages);
+-
+-void get_page_bootmem(unsigned long info, struct page *page,
+-		enum bootmem_type type);
+-void put_page_bootmem(struct page *page);
+-
+-static inline enum bootmem_type bootmem_type(const struct page *page)
+-{
+-	return (unsigned long)page->private & 0xf;
+-}
+-
+-static inline unsigned long bootmem_info(const struct page *page)
+-{
+-	return (unsigned long)page->private >> 4;
+-}
+-
+-/*
+- * Any memory allocated via the memblock allocator and not via the
+- * buddy will be marked reserved already in the memmap. For those
+- * pages, we can call this function to free it to buddy allocator.
+- */
+-static inline void free_bootmem_page(struct page *page)
+-{
+-	enum bootmem_type type = bootmem_type(page);
+-
+-	if (type == SECTION_INFO || type == MIX_SECTION_INFO) {
+-		VM_WARN_ON_PAGE(page_ref_count(page) != 2, page);
+-		put_page_bootmem(page);
+-	} else {
+-		free_reserved_page(page);
+-	}
+-}
+-#else
+-static inline void register_page_bootmem_info_node(struct pglist_data *pgdat)
+-{
+-}
+-
+-static inline void register_page_bootmem_memmap(unsigned long section_nr,
+-		struct page *map, unsigned long nr_pages)
+-{
+-}
+-
+-static inline void put_page_bootmem(struct page *page)
+-{
+-}
+-
+-static inline enum bootmem_type bootmem_type(const struct page *page)
+-{
+-	return SECTION_INFO;
+-}
+-
+-static inline unsigned long bootmem_info(const struct page *page)
+-{
+-	return 0;
+-}
+-
+-static inline void get_page_bootmem(unsigned long info, struct page *page,
+-				    enum bootmem_type type)
+-{
+-}
+-
+-static inline void free_bootmem_page(struct page *page)
+-{
+-	free_reserved_page(page);
+-}
+-#endif
+-
+-#endif /* __LINUX_BOOTMEM_INFO_H */
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 592003a258bad..169a3ba12a255 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -509,13 +509,6 @@ config EXCLUSIVE_SYSTEM_RAM
+ 	def_bool y
+ 	depends on !DEVMEM || STRICT_DEVMEM
+ 
+-#
+-# Only be set on architectures that have completely implemented memory hotplug
+-# feature. If you are not sure, don't touch it.
+-#
+-config HAVE_BOOTMEM_INFO_NODE
+-	def_bool n
+-
+ config ARCH_ENABLE_MEMORY_HOTPLUG
+ 	bool
+ 
+diff --git a/mm/Makefile b/mm/Makefile
+index 4fc713867b9bd..52428a3d3ae14 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -141,7 +141,6 @@ obj-$(CONFIG_MEMFD_CREATE) += memfd.o
+ obj-$(CONFIG_MAPPING_DIRTY_HELPERS) += mapping_dirty_helpers.o
+ obj-$(CONFIG_PTDUMP) += ptdump.o
+ obj-$(CONFIG_PAGE_REPORTING) += page_reporting.o
+-obj-$(CONFIG_HAVE_BOOTMEM_INFO_NODE) += bootmem_info.o
+ obj-$(CONFIG_GENERIC_IOREMAP) += ioremap.o
+ obj-$(CONFIG_SHRINKER_DEBUG) += shrinker_debug.o
+ obj-$(CONFIG_EXECMEM) += execmem.o
+diff --git a/mm/bootmem_info.c b/mm/bootmem_info.c
+deleted file mode 100644
+index 0fa78db7fbc0b..0000000000000
+--- a/mm/bootmem_info.c
++++ /dev/null
+@@ -1,72 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * Bootmem core functions.
+- *
+- * Copyright (c) 2020, Bytedance.
+- *
+- *     Author: Muchun Song <songmuchun@bytedance.com>
+- *
+- */
+-#include <linux/mm.h>
+-#include <linux/compiler.h>
+-#include <linux/memblock.h>
 -#include <linux/bootmem_info.h>
- #include <linux/vmstat.h>
- #include "internal.h"
- #include <asm/dma.h>
+-#include <linux/memory_hotplug.h>
+-#include <linux/kmemleak.h>
+-
+-void get_page_bootmem(unsigned long info, struct page *page,
+-		enum bootmem_type type)
+-{
+-	BUG_ON(type > 0xf);
+-	BUG_ON(info > (ULONG_MAX >> 4));
+-	set_page_private(page, info << 4 | type);
+-	page_ref_inc(page);
+-}
+-
+-void put_page_bootmem(struct page *page)
+-{
+-	enum bootmem_type type = bootmem_type(page);
+-
+-	BUG_ON(type < MEMORY_HOTPLUG_MIN_BOOTMEM_TYPE ||
+-	       type > MEMORY_HOTPLUG_MAX_BOOTMEM_TYPE);
+-
+-	if (page_ref_dec_return(page) == 1) {
+-		set_page_private(page, 0);
+-		free_reserved_page(page);
+-	}
+-}
+-
+-static void __init register_page_bootmem_info_section(unsigned long start_pfn)
+-{
+-	unsigned long section_nr;
+-	struct mem_section *ms;
+-
+-	start_pfn = SECTION_ALIGN_DOWN(start_pfn);
+-	section_nr = pfn_to_section_nr(start_pfn);
+-	ms = __nr_to_section(section_nr);
+-
+-	if (!preinited_vmemmap_section(ms))
+-		register_page_bootmem_memmap(section_nr, pfn_to_page(start_pfn),
+-					     PAGES_PER_SECTION);
+-}
+-
+-void __init register_page_bootmem_info_node(struct pglist_data *pgdat)
+-{
+-	unsigned long pfn, end_pfn;
+-	int node = pgdat->node_id;
+-
+-	pfn = pgdat->node_start_pfn;
+-	end_pfn = pgdat_end_pfn(pgdat);
+-
+-	/* register section info */
+-	for (; pfn < end_pfn; pfn += PAGES_PER_SECTION) {
+-		/*
+-		 * Some platforms can assign the same pfn to multiple nodes - on
+-		 * node0 as well as nodeN.  To avoid registering a pfn against
+-		 * multiple nodes we check that this pfn does not already
+-		 * reside in some other nodes.
+-		 */
+-		if (pfn_valid(pfn) && (early_pfn_to_nid(pfn) == node))
+-			register_page_bootmem_info_section(pfn);
+-	}
+-}
 
 -- 
 2.43.0
