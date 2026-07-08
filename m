@@ -1,86 +1,53 @@
-Return-Path: <linux-s390+bounces-21792-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21794-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id srJRAYciTmpnDwIAu9opvQ
-	(envelope-from <linux-s390+bounces-21792-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 12:12:23 +0200
+	id WV1bJ7MrTmoHEgIAu9opvQ
+	(envelope-from <linux-s390+bounces-21794-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 12:51:31 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C5F4724181
-	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 12:12:22 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1081B724841
+	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 12:51:31 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=suse.com header.s=google header.b="cX/uMt1R";
-	dmarc=pass (policy=quarantine) header.from=suse.com;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21792-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21792-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=tls.msk.ru header.s=202602 header.b=Pv0MHOy0;
+	dmarc=none;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21794-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-21794-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id B828E301DD09
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2026 10:10:52 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3129F307D65C
+	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2026 10:46:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7A8F38B7C3;
-	Wed,  8 Jul 2026 10:10:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4C2433A9DA;
+	Wed,  8 Jul 2026 10:46:15 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from isrv.corpit.ru (isrv.corpit.ru [212.248.84.144])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6F4389DE8
-	for <linux-s390@vger.kernel.org>; Wed,  8 Jul 2026 10:10:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB5142EEA0
+	for <linux-s390@vger.kernel.org>; Wed,  8 Jul 2026 10:46:03 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783505451; cv=none; b=XNOC763Y1+ZGKQufAeVHd5HgZRnLUcKJOG263m/lyvttG6X6jTUSVIoouXc2GEQhRPO9CuenhBOXCE7uZHFhmL7BkmlYiWJqMtwzldIq6bB0HCIfei1m1B0OYWtty7CzDjeU2PIAIHCwrv/EgQw1RU3kNLs75D01SIiyjC0NPs0=
+	t=1783507574; cv=none; b=fIFooy8PeftvoOvf75OuIRYzVqqVmUMMwJ4ZZgntYVGLxzkv9zVpZdJzd+odGxwabh/IrVJtkYT6yrGBRGTz54ge9rILMXkOFnQJINFi/o35lOO9bqSDi6lXTgHvRAUDF0Z+sTj/hLcvpmBGymE0YvWgrNGWvdM99afJwZn8sY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783505451; c=relaxed/simple;
-	bh=ecF2cTn5AYhAAM68s9B/PAUIJM5SNBc7WXxDZmZ73mo=;
+	s=arc-20240116; t=1783507574; c=relaxed/simple;
+	bh=P575weruEuT/gpDM0T5gQo9v8qn6W2dx644Aq4PjQXw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kGS5PG08oVs7QbyN7BarsaOL3Y4K87l0P6KCo3IBxAxG6p+PwVIRbB2O7NapC8tUyI4zmCC3xalwsVCu8AU3dEgPonlLoWD2wmWv7aWzjrZJau7xCHDfY06QtMmeUfkTWDp+zloXVzkYvpS+iIlQJgw2BYYogakPI367bKPDOM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=cX/uMt1R; arc=none smtp.client-ip=209.85.128.48
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-493b786d6c0so2489525e9.2
-        for <linux-s390@vger.kernel.org>; Wed, 08 Jul 2026 03:10:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1783505449; x=1784110249; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=JNhfZKXmPDIRApTD3u3cceCo1e7KoMWEMGSpd5WD324=;
-        b=cX/uMt1RSfp0n/7y9fyGVoExl7JnbjQQtYqyosKI6Up334zNll97aeFqpf/AJARIzp
-         KOXS4t3NsVDjNslte7VDW4gVwbMPOm3f/OUfySnXs4WIsd0dbSQWhP+SqmXEEToeir1S
-         D1G3PMLsJgmYQD9a5WTxu7ARw2xrorFuXb/GWZtKNOi1q5dTQpgn/mURcdmE2lYgmPSQ
-         iQ64J2GQ/jUX6jlbvjmUVT+DQiZfh02bTJEhRdHBJNM+4N8Yyl/eh8z8YASKgKc+Om7i
-         3CSZFxq4G54qEoYLRWwXSCm5iY8BZU3r8IYXKeIz4eLc30AmBYuxp1jFUO90Hi/OXwjP
-         xunQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783505449; x=1784110249;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=JNhfZKXmPDIRApTD3u3cceCo1e7KoMWEMGSpd5WD324=;
-        b=KIUP5FWYFDd4Zxu22STSt+Ww0zd4BqbYf3XCHKziHeq6ojC74Zz/Vx6SRTI3ZcaSEv
-         NANtYsMH6QLWPXAZdg4LWzmppRnbr/ZamfhFFPP00kdy1Bv6MquTJNwgLMXxudhWeTVX
-         cXd3Wu262o/rmxyY/yorSldsPitIInym51eH9hHRKnekZshIKqcdPY3EjDCpf0mjvarK
-         rr2pufa3TFPyK6+s3/dkFvRCLgN6MU+1T+E6tqaTWe2254C4hroHGx8yYyRNDxfFhmGN
-         1gCuhJTju68F5PglMFsn7XKi0XRwsFHj0aV8W2hvkKTx0CiXLM14wWYQ2s6g/Iy5R4mL
-         bpnA==
-X-Forwarded-Encrypted: i=1; AHgh+RpagMnmtv3KiWgN/4Qooy/6gbD/NiC7fGIIG5QjoMuSY4zoahVUU2Zq3olS57xN7jlmrCXNpmj6uDww@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWrUN13+ee61Qj1t7wOMkM8w6OHkh80SPoFKgOL7JADnSi4D+Y
-	+gUpdAgL5mgo1XKWeB23JhHDREKfmn64cLkwh87htIHSQ7Ox6X6Y3M1cWvt02c2B4RXnIXuPNB7
-	XdtMvsSY=
-X-Gm-Gg: AfdE7ckvadoctSnMFST7LeBVDynZz49SR0akgTUuwVH77uNP99aUGLE4hH4WK+U4pz+
-	7E9gEWNTM3kS6UvJpVzmReYLeuoACDWAaJSuLtTb7O9J5ptSnHDqEPn6GQymJ7sO+uAmyOScuRl
-	XywFH8ShZYIURl5Xhp3bvcPjhRttaokaHBWncuAS5Gbu//+DR0r2W21LMgpPTrxf0Ct4WYSABXS
-	nvTp6Sq34pwJk1uVsFVl4PIK/2PpV0x5L8fQaVbewzN4Y8a/G0adYqnwKJsacLsWN7nbYPM5E5r
-	mLT8bqZ7jG2uks71h6KUvyPG/sy3vcgpqTSFLfDU/+Ege9yxdFMB+9vmNkfFTiR3EbdZifYBWn9
-	iQ/0rH+zBK0C73N48xNYyRldAZJ/TWRJYDTvCPa6nIWvXJ7X9f+A8oUYLaQneA9LeJbNd/rvgNp
-	4lzEzilN42wHREs/C2ZKj9ExhZ3CFDok66iQ==
-X-Received: by 2002:a05:600c:4f91:b0:490:be14:bfda with SMTP id 5b1f17b1804b1-493e6859a48mr17703585e9.6.1783505448853;
-        Wed, 08 Jul 2026 03:10:48 -0700 (PDT)
-Received: from [192.168.42.79] (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493e0fbb410sm130766595e9.12.2026.07.08.03.10.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2026 03:10:48 -0700 (PDT)
-Message-ID: <883098de-dc3c-4c72-abf4-75b67c0c3351@suse.com>
-Date: Wed, 8 Jul 2026 12:10:47 +0200
+	 In-Reply-To:Content-Type; b=PmFjM7VMv1pArpdkwivHPUT2f3OzgdAqbM3joZHGIu/05DTvPzw1CftLkak6mi76LCNNdWLnsce/FmhqSNow4DQWAvKrr0vLkFqupilwNQEVIz2k2LJunW6WmTvdg2Vtl8gUNjfCv6GdZWqnShDGjodVypHgTyjWvOMoWgQzsyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tls.msk.ru; spf=pass smtp.mailfrom=tls.msk.ru; dkim=pass (2048-bit key) header.d=tls.msk.ru header.i=@tls.msk.ru header.b=Pv0MHOy0; arc=none smtp.client-ip=212.248.84.144
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tls.msk.ru; s=202602;
+	t=1783507048; bh=P575weruEuT/gpDM0T5gQo9v8qn6W2dx644Aq4PjQXw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=Pv0MHOy0WLQdhzpHVk0SqZtUXZWVQCv/O2trjZ8llsR1lnpQDtgxKmfEdrDJpdBPZ
+	 Nnr0GrCagQwIiGX9krp07/So5JT46wIBFgYklhnA4NGVPw1pSQ97EHOexFK0Go6+8i
+	 a1n9Bcihme/zxksDWQ6uLkmwKGjltVZpT1CPlQ5H/Dkznf1S+vSGLVZOz5HQELvcfq
+	 3nFPrCy1e3mckBuLTa82Xkzu9hFQe4CerkhMZgpGDhOa7Avqzw+x2qhK4zh6NLnVav
+	 LbgSVKQVUnm/OkHcEFeqv3Ni8uyCKgh1OnW8d6SaTEpAmud8i33LWIblqzwGWAr8MO
+	 nKYHcXdsl8w3g==
+Received: from [192.168.177.146] (mjtthink.wg.tls.msk.ru [192.168.177.146])
+	by isrv.corpit.ru (Postfix) with ESMTP id 4F7191BF461;
+	Wed, 08 Jul 2026 13:37:27 +0300 (MSK)
+Message-ID: <3e31b38c-0561-4f37-b2c4-97c10e6f232f@tls.msk.ru>
+Date: Wed, 8 Jul 2026 13:37:26 +0300
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -88,85 +55,117 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] tpm_crb_ffa: Include linux/slab.h for kzalloc_obj()
- and kfree()
-To: sashiko-reviews@lists.linux.dev
-Cc: kvm@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
- linux-modules@vger.kernel.org, Alexander Gordeev <agordeev@linux.ibm.com>,
- linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>
-References: <20260707153819.4172541-1-petr.pavlu@suse.com>
- <20260707153819.4172541-4-petr.pavlu@suse.com>
- <20260707154337.CE2901F000E9@smtp.kernel.org>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20260707154337.CE2901F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v11 01/21] target/s390x: Fix wrong address handling in
+ address loops
+To: Harald Freudenberger <freude@linux.ibm.com>,
+ richard.henderson@linaro.org, iii@linux.ibm.com, david@kernel.org,
+ thuth@redhat.com, berrange@redhat.com
+Cc: qemu-s390x@nongnu.org, qemu-devel@nongnu.org, linux-s390@vger.kernel.org,
+ dengler@linux.ibm.com, borntraeger@linux.ibm.com, fcallies@linux.ibm.com,
+ cohuck@redhat.com, qemu-stable <qemu-stable@nongnu.org>
+References: <20260707161815.40919-1-freude@linux.ibm.com>
+ <20260707161815.40919-2-freude@linux.ibm.com>
+Content-Language: en-US, ru-RU
+From: Michael Tokarev <mjt@tls.msk.ru>
+Autocrypt: addr=mjt@tls.msk.ru; keydata=
+ xsFNBGYpLkcBEACsajkUXU2lngbm6RyZuCljo19q/XjZTMikctzMoJnBGVSmFV66kylUghxs
+ HDQQF2YZJbnhSVt/mP6+V7gG6MKR5gYXYxLmypgu2lJdqelrtGf1XtMrobG6kuKFiD8OqV6l
+ 2M5iyOZT3ydIFOUX0WB/B9Lz9WcQ6zYO9Ohm92tiWWORCqhAnwZy4ua/nMZW3RgO7bM6GZKt
+ /SFIorK9rVqzv40D6KNnSyeWfqf4WN3EvEOozMfWrXbEqA7kvd6ShjJoe1FzCEQ71Fj9dQHL
+ DZG+44QXvN650DqEtQ4RW9ozFk3Du9u8lbrXC5cqaCIO4dx4E3zxIddqf6xFfu4Oa5cotCM6
+ /4dgxDoF9udvmC36qYta+zuDsnAXrYSrut5RBb0moez/AR8HD/cs/dS360CLMrl67dpmA+XD
+ 7KKF+6g0RH46CD4cbj9c2egfoBOc+N5XYyr+6ejzeZNf40yjMZ9SFLrcWp4yQ7cpLsSz08lk
+ a0RBKTpNWJdblviPQaLW5gair3tyJR+J1ER1UWRmKErm+Uq0VgLDBDQoFd9eqfJjCwuWZECp
+ z2JUO+zBuGoKDzrDIZH2ErdcPx3oSlVC2VYOk6H4cH1CWr9Ri8i91ClivRAyVTbs67ha295B
+ y4XnxIVaZU+jJzNgLvrXrkI1fTg4FJSQfN4W5BLCxT4sq8BDtwARAQABzSBNaWNoYWVsIFRv
+ a2FyZXYgPG1qdEB0bHMubXNrLnJ1PsLBlAQTAQoAPhYhBJ2L4U4/Kp3XkZko8WGtPZjs3yyO
+ BQJmKS5HAhsDBQkSzAMABQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEGGtPZjs3yyOZSAP
+ /ibilK1gbHqEI2zR2J59Dc0tjtbByVmQ8IMh0SYU3j1jeUoku2UCgdnGKpwvLXtwZINgdl6Q
+ cEaDBRX6drHLJFAi/sdgwVgdnDxaWVJO/ZIN/uJI0Tx7+FSAk8CWSa4IWUOzPNmtrDfb4z6v
+ G36rppY8bTNKbX6nWFXuv2LXQr7g6+kKnbwv4QFpD+UFF1CrLm3byMq4ikdBXpZx030qBL61
+ b7PrfXcBLao0357kWGH6C2Zu4wBnDUJwGi68pI5rzSRAFyAQsE89sjLdR1yFoBH8NiFnAQXP
+ LA8Am9FMsC7D/bi/kwKTJdcZvzdGU1HG6tJvXLWC+nqGpJNBzRdDpjqtxNuL76vVd/JbsFMS
+ JchLN+01fNQ5FHglvkd6md7vO+ULq+r9An5hMiDoRbYVUOBN8uiYNk+qKbdgSfbhsgPURqHi
+ 1bXkgMeMasqWbGMe7iBW/YH2ePfZ6HuKLNQDCkiWZYPQZvyXHvQHjuJJ5+US81tkqM+Q6Snq
+ 0L/O/LD0qLlbinHrcx0abg06VXBoYmGICJpf/3hhWQM4f+B/5w4vpl8q0B6Osz01pBUBfYak
+ CiYCNHMWWVZkW9ZnY7FWiiPOu8iE1s5oPYqBljk3FNUk04SDKMF5TxL87I2nMBnVnvp0ZAuY
+ k9ojiLqlhaKnZ1+zwmwmPmXzFSwlyMczPUMSzsFNBGYpLkcBEAC0mxV2j5M1x7GiXqxNVyWy
+ OnlWqJkbkoyMlWFSErf+RUYlC9qVGwUihgsgEhQMg0nJiSISmU3vsNEx5j0T13pTEyWXWBdS
+ XtZpNEW1lZ2DptoGg+6unpvxd2wn+dqzJqlpr4AY3vc95q4Za/NptWtSCsyJebZ7DxCCkzET
+ tzbbnCjW1souCETrMy+G916w1gJkz4V1jLlRMEEoJHLrr1XKDdJRk/34AqXPKOzILlWRFK6s
+ zOWa80/FNQV5cvjc2eN1HsTMFY5hjG3zOZb60WqwTisJwArjQbWKF49NLHp/6MpiSXIxF/FU
+ jcVYrEk9sKHN+pERnLqIjHA8023whDWvJide7f1V9lrVcFt0zRIhZOp0IAE86E3stSJhZRhY
+ xyIAx4dpDrw7EURLOhu+IXLeEJbtW89tp2Ydm7TVAt5iqBubpHpGTWV7hwPRQX2w2MBq1hCn
+ K5Xx79omukJisbLqG5xUCR1RZBUfBlYnArssIZSOpdJ9wWMK+fl5gn54cs+yziUYU3Tgk0fJ
+ t0DzQsgfd2JkxOEzJACjJWti2Gh3szmdgdoPEJH1Og7KeqbOu2mVCJm+2PrNlzCybOZuHOV5
+ +vSarkb69qg9nU+4ZGX1m+EFLDqVUt1g0SjY6QmM5yjGBA46G3dwTEV0/u5Wh7idNT0mRg8R
+ eP/62iTL55AM6QARAQABwsF8BBgBCgAmFiEEnYvhTj8qndeRmSjxYa09mOzfLI4FAmYpLkcC
+ GwwFCRLMAwAACgkQYa09mOzfLI53ag/+ITb3WW9iqvbjDueV1ZHwUXYvebUEyQV7BFofaJbJ
+ Sr7ek46iYdV4Jdosvq1FW+mzuzrhT+QzadEfYmLKrQV4EK7oYTyQ5hcch55eX00o+hyBHqM2
+ RR/B5HGLYsuyQNv7a08dAUmmi9eAktQ29IfJi+2Y+S1okAEkWFxCUs4EE8YinCrVergB/MG5
+ S7lN3XxITIaW00faKbqGtNqij3vNxua7UenN8NHNXTkrCgA+65clqYI3MGwpqkPnXIpTLGl+
+ wBI5S540sIjhgrmWB0trjtUNxe9QcTGHoHtLeGX9QV5KgzNKoUNZsyqh++CPXHyvcN3OFJXm
+ VUNRs/O3/b1capLdrVu+LPd6Zi7KAyWUqByPkK18+kwNUZvGsAt8WuVQF5telJ6TutfO8xqT
+ FUzuTAHE+IaRU8DEnBpqv0LJ4wqqQ2MeEtodT1icXQ/5EDtM7OTH231lJCR5JxXOnWPuG6el
+ YPkzzso6HT7rlapB5nulYmplJZSZ4RmE1ATZKf+wUPocDu6N10LtBNbwHWTT5NLtxNJAJAvl
+ ojis6H1kRWZE/n5buyPY2NYeyWfjjrerOYt3er55n4C1I88RSCTGeejVmXWuo65QD2epvzE6
+ 3GgKngeVm7shlp7+d3D3+fAAHTvulQQqV3jOodz+B4yzuZ7WljkNrmrWrH8aI4uA98c=
+In-Reply-To: <20260707161815.40919-2-freude@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[suse.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[tls.msk.ru:s=202602];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[suse.com:+];
-	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-21792-lists,linux-s390=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[petr.pavlu@suse.com,linux-s390@vger.kernel.org];
-	FORGED_RECIPIENTS(0.00)[m:sashiko-reviews@lists.linux.dev,m:kvm@vger.kernel.org,m:hca@linux.ibm.com,m:linux-modules@vger.kernel.org,m:agordeev@linux.ibm.com,m:linux-s390@vger.kernel.org,m:gor@linux.ibm.com,s:lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:freude@linux.ibm.com,m:richard.henderson@linaro.org,m:iii@linux.ibm.com,m:david@kernel.org,m:thuth@redhat.com,m:berrange@redhat.com,m:qemu-s390x@nongnu.org,m:qemu-devel@nongnu.org,m:linux-s390@vger.kernel.org,m:dengler@linux.ibm.com,m:borntraeger@linux.ibm.com,m:fcallies@linux.ibm.com,m:cohuck@redhat.com,m:qemu-stable@nongnu.org,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	DMARC_NA(0.00)[tls.msk.ru];
+	FORGED_SENDER(0.00)[mjt@tls.msk.ru,linux-s390@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21794-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[petr.pavlu@suse.com,linux-s390@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[mjt@tls.msk.ru,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[tls.msk.ru:+];
 	ALIAS_RESOLVED(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,suse.com:from_mime,suse.com:email,suse.com:mid,suse.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,tls.msk.ru:from_mime,tls.msk.ru:dkim,tls.msk.ru:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 8C5F4724181
+X-Rspamd-Queue-Id: 1081B724841
 
-On 7/7/26 5:43 PM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Low] The commit message incorrectly claims that the file uses `kzalloc_obj()` instead of `kzalloc()`.
-> --
+On 07.07.2026 19:17, Harald Freudenberger wrote:
+> The loop increments addr by the element stride (+= 4) before calling
+> wrap_address, but then overwrites the loop addr with the wrapped
+> value. On the next iteration the stride is applied to the wrapped
+> address of the previous element, not to the original unwrapped
+> address. This results in every element after the first is read from a
+> wrong (wrapped) address.
 > 
-> --- Patch [3]: [PATCH 3/4] tpm_crb_ffa: Include linux/slab.h for kzalloc_obj() and kfree() ---
-> commit a56e4cf89267d12126bd70f7981a05c846959016
-> Author: Petr Pavlu <petr.pavlu@suse.com>
-> 
-> tpm_crb_ffa: Include linux/slab.h for kzalloc_obj() and kfree()
-> 
-> This commit adds the missing linux/slab.h inclusion to tpm_crb_ffa.c.
-> It removes the reliance on indirect inclusion through linux/module.h.
-> This prepares for the eventual removal of linux/elf.h from linux/module.h.
-> 
->> tpm_crb_ffa: Include linux/slab.h for kzalloc_obj() and kfree()
-> 
-> [Severity: Low]
-> This isn't a bug, but there appears to be a typo in the commit subject.
-> Did you mean kzalloc() instead of kzalloc_obj()? Looking at
-> tpm_crb_ffa_probe() in the driver, it correctly calls kzalloc().
-> 
->> The drivers/char/tpm/tpm_crb_ffa.c file uses kzalloc_obj() and kfree(),
-> 
-> [Severity: Low]
-> This isn't a bug, but the same typo is also present here in the commit
-> description.
-> 
+> Fixes: 9f17bfdab4 ("target/s390x: support SHA-512 extensions")
+> Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+> ---
+>   target/s390x/tcg/crypto_helper.c | 12 ++++--------
+>   1 file changed, 4 insertions(+), 8 deletions(-)
 
-I don't see a typo here. The code uses the kzalloc_obj() macro:
+This feels like qemu-stable material.
+I'm picking this change up for currently active stable qemu series.
+Please let me know if I shouldn't.
 
-https://github.com/torvalds/linux/blob/v7.2-rc2/drivers/char/tpm/tpm_crb_ffa.c#L339
+Thanks,
+
+/mjt
 
