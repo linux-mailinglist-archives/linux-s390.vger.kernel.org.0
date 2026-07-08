@@ -1,53 +1,53 @@
-Return-Path: <linux-s390+bounces-21787-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21788-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id wSiuMv8MTmocCQIAu9opvQ
-	(envelope-from <linux-s390+bounces-21787-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 10:40:31 +0200
+	id J7BeLSwSTmoqCgIAu9opvQ
+	(envelope-from <linux-s390+bounces-21788-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 11:02:36 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30835723437
-	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 10:40:31 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id DAECA7236BD
+	for <lists+linux-s390@lfdr.de>; Wed, 08 Jul 2026 11:02:35 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=fYUxsPmo;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=iHtmHf+W;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21787-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21787-lists+linux-s390=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21788-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-21788-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3A68B309B6AB
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2026 08:35:20 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id B4476302DF74
+	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2026 09:00:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 892F03FFAC3;
-	Wed,  8 Jul 2026 08:35:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DECAA406838;
+	Wed,  8 Jul 2026 09:00:05 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731133E022B;
-	Wed,  8 Jul 2026 08:35:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C435D406802;
+	Wed,  8 Jul 2026 09:00:04 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783499719; cv=none; b=E5/LiHdOpNb8tVVCppAIt4/rndy7sXFFqQ7BFKG6goLUAnrmBFtwqR6Vy0frVzAjF9x0+/FxZvuTKV5RTpItIq8dNl+2+h7GSOJ8WNXJDrXPn03jFpcxZiWjQIccQTheOZaHOHv/HxKoOOQXiPVp2000BlO7+Hgn65rGdRomHIY=
+	t=1783501205; cv=none; b=EVaVSfMWsHGCoPRj2aFrBxfUJCbNQQmt3HLGXLdAhWEqE3VcQpUgqc4Ny2djyHKJ/u6xTl1Dl6H9pXZEpNtsHrJIGIlBJhvrxWuN6dMjmtIQ7p/qExyrecQBcnBScjURcBFFdgLFLn8vZBWJAOMdoSZn7pQ0raW84auGEUeSY/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783499719; c=relaxed/simple;
-	bh=s8mRwa8qVz6sFRyfSgleJeb+Etx42UxQfNAk2RJG3A4=;
+	s=arc-20240116; t=1783501205; c=relaxed/simple;
+	bh=qWhYj6MQPO/MH9kFY77eKyngQd1ZO+mMyqbq7aXdRbA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B8el4TT2WCWrYLIDzyzqzrIP25vymHzLIcmREylCqghbZ9TxJhWkpXHOyb1Al4YLtNDLLKtI0mzwsJewPDuZA4Klyg3vLD/lHL49srJEDqgMEa59a78jDI+yS9zq42wkT8ewkc8rfM81xtld0JmXSwbB5uYWVEQcSNtf8gUa/PQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fYUxsPmo; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C78A1F00A3D;
-	Wed,  8 Jul 2026 08:35:04 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=Ys/nbtSBppdxhy0HrlLixsauynHIzYB6jykVvd47bak2FDOdOiO5ulO5HDuKmQdxaOKP7+lgvmDGAMSKdgk4V6MANowpO4fs80hm4MhqY2vvntjfAMMTEm8ksUmQWobtZfEnZUiDKAzgWZdhWMqyWE243CvVQveyCTDqw84mqC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iHtmHf+W; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E88291F000E9;
+	Wed,  8 Jul 2026 08:59:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783499718;
-	bh=4uiif8fNbVlBmdL2ASdJilfD3DbcrZEYwaykfaYTV9g=;
+	s=k20260515; t=1783501204;
+	bh=42ENaxlVxio2+AeXpLQCCBY5AaY42vaHQtw8IyJI7n4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=fYUxsPmoKxL7tkvFv1U2Rkq6xMVJg/1EtoDALVfrTVYR/oX0m2IAHLgV46rXUnrIX
-	 V0uuh6jKOZ3GzzNGIVlszOO5ORRcKo4qeopV99ra0pNDOZ56DxkBqfs0GYkKgomk01
-	 emCNhpZT6zSqHMONM52Nxl1OF15mwts5If8BmwNxUTIylI2LzB9KO1ptrr1XE9B3Y/
-	 SgwC8lBufAijCmw80odkWve+lpOybqcYgYD/CmfTYVvvkrzg29LXaLdQBqO845Ggxg
-	 MR1bowcwqGF9mb2dXmeLK18OufZbp0oEbyarsZ+b6NAc4JpccziSxm2ug6GATnAxM2
-	 vnYmHf6CHahBw==
-Message-ID: <e212caac-6c30-448a-9e10-32fff8b842f6@kernel.org>
-Date: Wed, 8 Jul 2026 10:35:03 +0200
+	b=iHtmHf+W92OnzbuIGI/2kRlZExBywlAzkyUDXMC6Rjv+NJD7rS2O7NEduy2egn4G7
+	 TKjsBbmYtkGtNyvRhzZnNvUK2kcWhL+oPKetwYOGs8n79NmwgfBymXAI2yeQLHqR3z
+	 MrJjwMra9aWFMHaLJZBFIIPGAJYZBb6FFWpTBlDNOhJIAme4maDHpuOMLuMr8jQH/W
+	 Dzp/KsdaILh+27RGjHZK71B/vovDbAdEX05hoarii4XhLvaBDQxMxOMKE7jTeRYltK
+	 ldw1+1HAHXHEh8oSVliTo7a8sMzMXQj1l0+oQMVe2k7shpGJ+BJsGcdValVGj/F2lU
+	 Sqnt2Ad8FzbxA==
+Message-ID: <b1c1693d-02b4-4c5c-bb0a-1c2d87258d30@kernel.org>
+Date: Wed, 8 Jul 2026 10:59:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -56,10 +56,14 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v3 06/11] mm/cma: Allow dynamically creating CMA areas
-To: Marek Szyprowski <m.szyprowski@samsung.com>,
- Thierry Reding <thierry.reding@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>,
+To: Thierry Reding <thierry.reding@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Sowjanya Komatineni <skomatineni@nvidia.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
  Mikko Perttunen <mperttunen@nvidia.com>, Yury Norov <yury.norov@gmail.com>,
  Rasmus Villemoes <linux@rasmusvillemoes.dk>,
  Russell King <linux@armlinux.org.uk>,
@@ -71,8 +75,8 @@ To: Marek Szyprowski <m.szyprowski@samsung.com>,
  Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes <ljs@kernel.org>,
  "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
  Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Robin Murphy <robin.murphy@arm.com>,
- Sumit Semwal <sumit.semwal@linaro.org>,
+ Michal Hocko <mhocko@suse.com>, Marek Szyprowski <m.szyprowski@samsung.com>,
+ Robin Murphy <robin.murphy@arm.com>, Sumit Semwal <sumit.semwal@linaro.org>,
  Benjamin Gaignard <benjamin.gaignard@collabora.com>,
  Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
  "T.J. Mercier" <tjmercier@google.com>,
@@ -80,15 +84,14 @@ To: Marek Szyprowski <m.szyprowski@samsung.com>,
  Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
  <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux.dev,
- linaro-mm-sig@lists.linaro.org, linux-trace-kernel@vger.kernel.org
+Cc: Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-mm@kvack.org, iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org,
+ linux-trace-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>
 References: <20260701-tegra-vpr-v3-0-d80f7b871bb4@nvidia.com>
- <CGME20260701160902eucas1p1214af933ba0f54b85630a3a4e5a4689c@eucas1p1.samsung.com>
  <20260701-tegra-vpr-v3-6-d80f7b871bb4@nvidia.com>
- <3f47aeab-33b1-4966-a5ce-5d6d5261e0e2@samsung.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -135,7 +138,7 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <3f47aeab-33b1-4966-a5ce-5d6d5261e0e2@samsung.com>
+In-Reply-To: <20260701-tegra-vpr-v3-6-d80f7b871bb4@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
@@ -144,54 +147,65 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:m.szyprowski@samsung.com,m:thierry.reding@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:jonathanh@nvidia.com,m:mperttunen@nvidia.com,m:yury.norov@gmail.com,m:linux@rasmusvillemoes.dk,m:linux@armlinux.org.uk,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:akpm@linux-foundation.org,m:ljs@kernel.org,m:liam@infradead.org,m:vbabka@kernel.org,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:robin.murphy@arm.com,m:sumit.semwal@linaro.org,m:benjamin.gaignard@collabora.com,m:Brian.Starkey@arm.com,m:jstultz@google.com,m:tjmercier@google.com,m:christian.koenig@amd.com,m:rostedt@goodmis.org,m:mhiramat@kernel.org,m:mathieu.desnoyers@efficios.com,m:catalin.marinas@arm.com,m:will@kernel.org,m:devicetree@vger.kernel.org,m:linux-tegra@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-media@vger.kerne
- l.org,m:linux-arm-kernel@lists.infradead.org,m:linux-s390@vger.kernel.org,m:linux-mm@kvack.org,m:iommu@lists.linux.dev,m:linaro-mm-sig@lists.linaro.org,m:linux-trace-kernel@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,m:yurynorov@gmail.com,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-21788-lists,linux-s390=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[david@kernel.org,linux-s390@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[46];
-	FREEMAIL_TO(0.00)[samsung.com,kernel.org,nvidia.com,gmail.com,rasmusvillemoes.dk,armlinux.org.uk,linux.ibm.com,linux-foundation.org,infradead.org,google.com,suse.com,arm.com,linaro.org,collabora.com,amd.com,goodmis.org,efficios.com];
+	FREEMAIL_TO(0.00)[kernel.org,nvidia.com,gmail.com,ffwll.ch,linux.intel.com,suse.de,bootlin.com,rasmusvillemoes.dk,armlinux.org.uk,linux.ibm.com,linux-foundation.org,infradead.org,google.com,suse.com,samsung.com,arm.com,linaro.org,collabora.com,amd.com,goodmis.org,efficios.com];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:thierry.reding@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:jonathanh@nvidia.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:maarten.lankhorst@linux.intel.com,m:mripard@kernel.org,m:tzimmermann@suse.de,m:skomatineni@nvidia.com,m:luca.ceresoli@bootlin.com,m:mperttunen@nvidia.com,m:yury.norov@gmail.com,m:linux@rasmusvillemoes.dk,m:linux@armlinux.org.uk,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:akpm@linux-foundation.org,m:ljs@kernel.org,m:liam@infradead.org,m:vbabka@kernel.org,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:m.szyprowski@samsung.com,m:robin.murphy@arm.com,m:sumit.semwal@linaro.org,m:benjamin.gaignard@collabora.com,m:Brian.Starkey@arm.com,m:jstultz@google.com,m:tjmercier@google.com,m:christian.koenig@amd.com,m:rostedt@goodmis.org,m:mhiramat@kernel.org,m:mathieu.desnoyers@efficios.com,m:catalin.marinas@arm.
+ com,m:will@kernel.org,m:thierry.reding@gmail.com,m:devicetree@vger.kernel.org,m:linux-tegra@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-media@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-s390@vger.kernel.org,m:linux-mm@kvack.org,m:iommu@lists.linux.dev,m:linaro-mm-sig@lists.linaro.org,m:linux-trace-kernel@vger.kernel.org,m:treding@nvidia.com,m:krzk@kernel.org,m:conor@kernel.org,m:yurynorov@gmail.com,m:thierryreding@gmail.com,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-21787-lists,linux-s390=lfdr.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_SENDER(0.00)[david@kernel.org,linux-s390@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,lists.freedesktop.org,lists.infradead.org,kvack.org,lists.linux.dev,lists.linaro.org,nvidia.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[55];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[david@kernel.org,linux-s390@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390,dt];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	TAGGED_RCPT(0.00)[linux-s390,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,nvidia.com:email,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 30835723437
+X-Rspamd-Queue-Id: DAECA7236BD
 
-On 7/7/26 12:02, Marek Szyprowski wrote:
-> On 01.07.2026 18:08, Thierry Reding wrote:
->> From: Thierry Reding <treding@nvidia.com>
->>
->> There is no technical reason why there should be a limited number of CMA
->> regions, so extract some code into helpers and use them to create extra
->> functions (cma_create() and cma_free()) that allow creating and freeing,
->> respectively, CMA regions dynamically at runtime.
+On 7/1/26 18:08, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
 > 
-> 
-> Well, the technical reason for not creating cma regions dynamically at
-> runtime is that on some architectures (like 32bit ARM) the early fixup
-> for the region is needed to make it functional for DMA.
+> There is no technical reason why there should be a limited number of CMA
+> regions, so extract some code into helpers and use them to create extra
+> functions (cma_create() and cma_free()) that allow creating and freeing,
+> respectively, CMA regions dynamically at runtime.
 
-Can you point me at the code that does that? Thanks!
+I'm confused. We still allow cma_create() only during __init, right?
+
+Would we expect callers of cma_free() after __init? Or at which point?
+
+> 
+> The static array of CMA areas cannot be replaced by dynamically created
+> areas because for many of them, allocation must not fail and some cases
+> may need to initialize them before the slab allocator is even available.
+
+We can start with a memblock array of an initial size (like we do today).
+
+Then, when you need more space, we can double the size (copying content and
+exchanging the pointer). Either allocate from memblock or from slab, if
+available (slab_is_available).
+
+memblock does something similar, see memblock_double_array().
+
 
 -- 
 Cheers,
