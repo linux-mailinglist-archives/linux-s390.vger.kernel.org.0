@@ -1,58 +1,78 @@
-Return-Path: <linux-s390+bounces-21894-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21895-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 8pRzOelYT2qkewIAu9opvQ
-	(envelope-from <linux-s390+bounces-21894-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 10:16:41 +0200
+	id 3ncKJ5RZT2rgewIAu9opvQ
+	(envelope-from <linux-s390+bounces-21895-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 10:19:32 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83D1272E257
-	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 10:16:41 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1007472E2E3
+	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 10:19:32 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=huawei.com header.s=dkim header.b=kCxesqoZ;
-	dmarc=pass (policy=quarantine) header.from=huawei.com;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21894-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21894-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=NSLbevx3;
+	dmarc=pass (policy=none) header.from=ibm.com;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21895-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-21895-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4FA483047993
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Jul 2026 08:15:57 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7862230C476F
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Jul 2026 08:16:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D0423F12DC;
-	Thu,  9 Jul 2026 08:15:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47A453E5599;
+	Thu,  9 Jul 2026 08:16:01 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C76F3D3D10;
-	Thu,  9 Jul 2026 08:15:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB953BB9EB;
+	Thu,  9 Jul 2026 08:15:59 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783584932; cv=none; b=mvNEKhUrTKbsYjlIN+EqDAWHsMr9qH8aOKs9sKKm1CJILR4lrZzGZX5KYKLCv6ofywDQB25hAo+jnvHzxjH61lLdCFAF8oAodztUf6UaBGZ58kXhPh0ToMpk6sbBAgKKTW8CacFab2zxNcthloSxwE5jFmvJ/pKpCA0mxArTDAM=
+	t=1783584961; cv=none; b=Q4j1U/bTRhVns1vITadstmdDv3SDkHGRKQ9smJ2O96iaFDp6BtEe/7xRT/OFwUAgV3x0+3XzWY6U+Qwv3bMdrhQwZKe8nv1jXykRBHb5oLFBa3Z5jTadTHNvuxyv2TEVDZVtWHDlIe/6BhnTjhNYKlkLYCzXiZg+tlok1dLeP84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783584932; c=relaxed/simple;
-	bh=X3siIZ2y+PxuXnnSB4NhMI6Ox5gnu4zizGwr3/GOGD4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=e6LMpklmsblm6OMNXQHK7swkV1SvH2KyfF0HfLp8JRNV2UkHHJ9SOBAsnDVPYXRoAWZNj+J9go37Vcxhp6wE5XfshBpAF09ttr7nB+//LUlblTKZhDV1kUDMEJAtUCI91cyO+VDQHx8fuaEGrHQklwEVCB4ERyaP3Bhc7qA5p4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=kCxesqoZ; arc=none smtp.client-ip=113.46.200.218
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=48+51s385OsDhp5N7LQ5qHC6FAjEEUm6ed4fMfXeBFY=;
-	b=kCxesqoZlJiDDihnZyAzF5o6+WjRbCD++5bvCV+W0tELEqX7VwTIDS62IobikU82bv7sl8+Y1
-	2yCD+9ZYiDHYfjsAjS3Zn9Bd2SI2V6mn7KdFbxeGgCuBgK5A7WIPxe6IBYKwyHnFX9K58lcg3UM
-	OCKTRSDGklsZpCIPJLCzdso=
-Received: from mail.maildlp.com (unknown [172.19.162.223])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4gwnbz733tzpSvY;
-	Thu,  9 Jul 2026 16:06:39 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id CC36D40561;
-	Thu,  9 Jul 2026 16:15:21 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 9 Jul 2026 16:15:16 +0800
-Message-ID: <d9c9686c-dfd8-4539-b301-8726bab7443b@huawei.com>
-Date: Thu, 9 Jul 2026 16:15:15 +0800
+	s=arc-20240116; t=1783584961; c=relaxed/simple;
+	bh=fEQwAeU8zTfy3uivdYohB2m26gCS5jlN1iq4q2t+zFk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kicq6Bfjsv/jvo+p1SH1AY4MyBVUBNjrAQoijPWwSFeiDPm/HftTFF5ZVQjG2UzmoyM5FSqlq1bnxthbnIG+wukP1k0UVjS7vRTbDEH8RSNEq2DVA6vbDZ79tufWfJVw9k+g0Y3bMyDDOwNNH4TUeFcqBDZ4xtfC5xxRdqDXfMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=de.ibm.com; spf=pass smtp.mailfrom=de.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NSLbevx3; arc=none smtp.client-ip=148.163.156.1
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6696IaeI1897829;
+	Thu, 9 Jul 2026 08:15:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=hzWblM
+	bR51EsQC2E09Yc431rRlRCID5E6VgOjNa+ZuU=; b=NSLbevx39oCK8SOEbtx3NC
+	L0ukBk8KtqHXHrOFtb7feGRGhdJrtMAr3VAp5aHHxEI6zsY/qBB88AdBWIP0Nx9Q
+	rcpq0a9gWtYl0Px+RrUMEUY2zymKi8Xru4w1WnGUvkIt8vNkRqdFb/TiYXja3Jd9
+	CCvkHL+XpbG+yTsYAJHH5UQ1u6YDH7Z/4x+rswdLEL7Dkv2VWYpK0xtWxBTFqmte
+	OdmKfkjzGXCLGlO6XUcFzN+zxrViHk/aeBqEANmBeMep5pI7bPAJOOnB71GXYrD7
+	YLtEJAMs9QguPiG9vH6xVNtQiF2cC+ciJDrC9LO9F8F4XIUY0OGZBWaoHc9WIyvg
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6sur0erv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 09 Jul 2026 08:15:57 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66984dlX023459;
+	Thu, 9 Jul 2026 08:15:56 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f7dgkc89m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 09 Jul 2026 08:15:56 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6698Fq6p39387534
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 9 Jul 2026 08:15:52 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A07552004E;
+	Thu,  9 Jul 2026 08:15:52 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7A8252004B;
+	Thu,  9 Jul 2026 08:15:52 +0000 (GMT)
+Received: from [9.224.77.173] (unknown [9.224.77.173])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  9 Jul 2026 08:15:52 +0000 (GMT)
+Message-ID: <3c07df88-6d8c-4d2e-b697-95b085787ff8@de.ibm.com>
+Date: Thu, 9 Jul 2026 10:15:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -60,225 +80,115 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v16 18/18] arm64: vdso: Expose sigreturn address on vdso
- to the kernel
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-CC: <oleg@redhat.com>, <richard.henderson@linaro.org>, <mattst88@gmail.com>,
-	<linmag7@gmail.com>, <linux@armlinux.org.uk>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <kees@kernel.org>, <guoren@kernel.org>,
-	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <geert@linux-m68k.org>,
-	<tsbogend@alpha.franken.de>, <James.Bottomley@hansenpartnership.com>,
-	<deller@gmx.de>, <maddy@linux.ibm.com>, <mpe@ellerman.id.au>,
-	<npiggin@gmail.com>, <chleroy@kernel.org>, <pjw@kernel.org>,
-	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
-	<hca@linux.ibm.com>, <gor@linux.ibm.com>, <agordeev@linux.ibm.com>,
-	<borntraeger@linux.ibm.com>, <svens@linux.ibm.com>,
-	<ysato@users.sourceforge.jp>, <dalias@libc.org>,
-	<glaubitz@physik.fu-berlin.de>, <richard@nod.at>,
-	<anton.ivanov@cambridgegreys.com>, <johannes@sipsolutions.net>,
-	<luto@kernel.org>, <tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <chris@zankel.net>,
-	<jcmvbkbc@gmail.com>, <peterz@infradead.org>, <wad@chromium.org>,
-	<thuth@redhat.com>, <mark.rutland@arm.com>, <ada.coupriediaz@arm.com>,
-	<kevin.brodsky@arm.com>, <linusw@kernel.org>, <yeoreum.yun@arm.com>,
-	<song@kernel.org>, <james.morse@arm.com>, <anshuman.khandual@arm.com>,
-	<broonie@kernel.org>, <liqiang01@kylinos.cn>, <pengcan@kylinos.cn>,
-	<ryan.roberts@arm.com>, <yangtiezhu@loongson.cn>, <sshegde@linux.ibm.com>,
-	<mchauras@linux.ibm.com>, <austin.kim@lge.com>, <jchrist@linux.ibm.com>,
-	<arnd@arndb.de>, <sohil.mehta@intel.com>, <andrew.cooper3@citrix.com>,
-	<jgross@suse.com>, <kas@kernel.org>, <x86@kernel.org>,
-	<linux-alpha@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mm@kvack.org>,
-	<linux-csky@vger.kernel.org>, <loongarch@lists.linux.dev>,
-	<linux-m68k@lists.linux-m68k.org>, <linux-mips@vger.kernel.org>,
-	<linux-parisc@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>,
-	<linux-sh@vger.kernel.org>, <linux-um@lists.infradead.org>
-References: <20260629130616.642022-1-ruanjinjie@huawei.com>
- <20260629130616.642022-19-ruanjinjie@huawei.com>
- <20260630172619-6c78c2e2-c2d3-44be-88e6-6c82de12baf4@linutronix.de>
- <21875fb4-434b-480d-b68b-e2ffd5fff5ae@huawei.com>
- <20260709090525-b1e5ae06-1fb4-454e-919c-6503dcf3d073@linutronix.de>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20260709090525-b1e5ae06-1fb4-454e-919c-6503dcf3d073@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+Subject: Re: [PATCH v1 4/8] KVM: s390: Fix return value of
+ kvm_s390_set_cmma_bits()
+To: Claudio Imbrenda <imbrenda@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        david@kernel.org, seiden@linux.ibm.com, nrb@linux.ibm.com,
+        schlameuss@linux.ibm.com, gra@linux.ibm.com
+References: <20260702152406.204782-1-imbrenda@linux.ibm.com>
+ <20260702152406.204782-5-imbrenda@linux.ibm.com>
+Content-Language: en-US
+From: Christian Borntraeger <borntraeger@de.ibm.com>
+In-Reply-To: <20260702152406.204782-5-imbrenda@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA5MDA3MyBTYWx0ZWRfX7XLpwWokVhGJ
+ E6NSWoS67LUHRDdLYh5PgaJ3M9c2Cm9x++2HJBQNnt5zKUIot79bLzF3pblPuNmaRfh9GBV+XGl
+ 0N/oyPocuKaNd5VwYmSw62AWMrGdAq8=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA5MDA3MyBTYWx0ZWRfX+H9EfQAmMPQF
+ cHfhgM6U5hW+aRM4peyXPgPp/TUI6HGh9kpf0k9URYQ//8R8/r6rFibwT4hXENgkqT6bRiAq7T8
+ kSxQj9c8/C9K/jbFToBP/c+iEKoI8qPlXD1b8EqEhxDn/XPURwAaYn/0pkZ4FSaHP1vSIDkl5tl
+ GIOqZ7tc1tyRCoLus2qqWYTosztZBtQgopay5wtaAGVpRXSYRIUbHA2/EKlml1jc/9SSWo7eGFc
+ Fbmsafe3mnGoE+Ow9R+ZFhthxQNadcvuqvBz/CWkEdwG9FwNBhs1hMBqEskIZBAT60iijTWAotn
+ VktW+fUmJZue9ER4RYQDI9oI+06CmiZy5tf3CuS3DMEAa/mT4WHbDTHS86jofDnujgdYc3hU6RQ
+ uys6ZNa9lLRd2yQ4TCa9RNZvUXS23V0wTKfYCcQnJU49lWZKa8M4nd0EIif+hqGQbBLYBsnTYIX
+ k/+Dpt5bKVekm4lZxVQ==
+X-Proofpoint-GUID: sGXZv-fkYVRsnQ0L7hiadufRNiZWQIQy
+X-Authority-Analysis: v=2.4 cv=Oot/DS/t c=1 sm=1 tr=0 ts=6a4f58bd cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8
+ a=pCTlWr4eTs1s8Ph53O8A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: sGXZv-fkYVRsnQ0L7hiadufRNiZWQIQy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-09_01,2026-07-08_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0 phishscore=0
+ malwarescore=0 suspectscore=0 spamscore=0 adultscore=0 priorityscore=1501
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607090073
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-9.16 / 15.00];
-	WHITELIST_DMARC(-7.00)[huawei.com:D:+];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[redhat.com,linaro.org,gmail.com,armlinux.org.uk,arm.com,kernel.org,xen0n.name,linux-m68k.org,alpha.franken.de,hansenpartnership.com,gmx.de,linux.ibm.com,ellerman.id.au,dabbelt.com,eecs.berkeley.edu,ghiti.fr,users.sourceforge.jp,libc.org,physik.fu-berlin.de,nod.at,cambridgegreys.com,sipsolutions.net,alien8.de,linux.intel.com,zytor.com,zankel.net,infradead.org,chromium.org,kylinos.cn,loongson.cn,lge.com,arndb.de,intel.com,citrix.com,suse.com,vger.kernel.org,lists.infradead.org,kvack.org,lists.linux.dev,lists.linux-m68k.org,lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-21894-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER(0.00)[ruanjinjie@huawei.com,linux-s390@vger.kernel.org];
-	FORGED_RECIPIENTS(0.00)[m:thomas.weissschuh@linutronix.de,m:oleg@redhat.com,m:richard.henderson@linaro.org,m:mattst88@gmail.com,m:linmag7@gmail.com,m:linux@armlinux.org.uk,m:catalin.marinas@arm.com,m:will@kernel.org,m:kees@kernel.org,m:guoren@kernel.org,m:chenhuacai@kernel.org,m:kernel@xen0n.name,m:geert@linux-m68k.org,m:tsbogend@alpha.franken.de,m:James.Bottomley@hansenpartnership.com,m:deller@gmx.de,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:alex@ghiti.fr,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:ysato@users.sourceforge.jp,m:dalias@libc.org,m:glaubitz@physik.fu-berlin.de,m:richard@nod.at,m:anton.ivanov@cambridgegreys.com,m:johannes@sipsolutions.net,m:luto@kernel.org,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:hpa@zytor.com,m:chris@zankel.net,m:jcmvbkbc@gmail.com,m:
- peterz@infradead.org,m:wad@chromium.org,m:thuth@redhat.com,m:mark.rutland@arm.com,m:ada.coupriediaz@arm.com,m:kevin.brodsky@arm.com,m:linusw@kernel.org,m:yeoreum.yun@arm.com,m:song@kernel.org,m:james.morse@arm.com,m:anshuman.khandual@arm.com,m:broonie@kernel.org,m:liqiang01@kylinos.cn,m:pengcan@kylinos.cn,m:ryan.roberts@arm.com,m:yangtiezhu@loongson.cn,m:sshegde@linux.ibm.com,m:mchauras@linux.ibm.com,m:austin.kim@lge.com,m:jchrist@linux.ibm.com,m:arnd@arndb.de,m:sohil.mehta@intel.com,m:andrew.cooper3@citrix.com,m:jgross@suse.com,m:kas@kernel.org,m:x86@kernel.org,m:linux-alpha@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-mm@kvack.org,m:linux-csky@vger.kernel.org,m:loongarch@lists.linux.dev,m:linux-m68k@lists.linux-m68k.org,m:linux-mips@vger.kernel.org,m:linux-parisc@vger.kernel.org,m:linuxppc-dev@lists.ozlabs.org,m:linux-riscv@lists.infradead.org,m:linux-s390@vger.kernel.org,m:linux-sh@vger.kernel.org,m:linux-um@lists.infradead.org,s:l
- ists@lfdr.de];
-	DKIM_TRACE(0.00)[huawei.com:+];
+	TAGGED_FROM(0.00)[bounces-21895-lists,linux-s390=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,de.ibm.com:mid,de.ibm.com:from_mime];
+	FORGED_RECIPIENTS(0.00)[m:imbrenda@linux.ibm.com,m:linux-kernel@vger.kernel.org,m:kvm@vger.kernel.org,m:linux-s390@vger.kernel.org,m:frankja@linux.ibm.com,m:david@kernel.org,m:seiden@linux.ibm.com,m:nrb@linux.ibm.com,m:schlameuss@linux.ibm.com,m:gra@linux.ibm.com,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[borntraeger@de.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ruanjinjie@huawei.com,linux-s390@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	RCPT_COUNT_GT_50(0.00)[83];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[borntraeger@de.ibm.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp,huawei.com:from_mime,huawei.com:dkim,huawei.com:mid]
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 83D1272E257
+X-Rspamd-Queue-Id: 1007472E2E3
 
 
 
-On 7/9/2026 3:17 PM, Thomas Weißschuh wrote:
-> On Thu, Jul 09, 2026 at 02:37:05PM +0800, Jinjie Ruan wrote:
->> On 6/30/2026 11:32 PM, Thomas Weißschuh wrote:
->>> On Mon, Jun 29, 2026 at 09:06:16PM +0800, Jinjie Ruan wrote:
-> (..)
+Am 02.07.26 um 17:24 schrieb Claudio Imbrenda:
+> If kvm_s390_set_cmma_bits() is asked to set CMMA values outside of a
+> memslot, PGM_ADDRESSING (5) is returned, instead of a negative error
+> value.
 > 
->>>> diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
->>>> index 592dd8668de4..5a0314a3c26e 100644
->>>> --- a/arch/arm64/kernel/vdso.c
->>>> +++ b/arch/arm64/kernel/vdso.c
->>>> @@ -343,3 +343,19 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
->>>>  
->>>>  	return ret;
->>>>  }
->>>> +
->>>> +bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs)
->>>> +{
->>>> +	unsigned long sigtramp;
->>>> +
->>>> +#ifdef CONFIG_COMPAT
->>>> +	if (is_compat_task()) {
->>>> +		unsigned long sigpage = (unsigned long)current->mm->context.sigpage;
->>>> +
->>>> +		return regs->pc >= sigpage && regs->pc < (sigpage + PAGE_SIZE);
->>>> +	}
->>>> +#endif
->>>> +	sigtramp = (unsigned long)VDSO_SYMBOL(current->mm->context.vdso, sigtramp);
->>>> +
->>>> +	return regs->pc == (sigtramp + 8);
->>>
->>> Instead of hardcoding 'sigtramp + 8' you could add a new label to the 'svc #0'
->>> instruction and use that with VDSO_SYMBOL().
->>
->> It seems that the modification of __kernel_rt_sigreturn() is not recommended
+> Fix by returning -EFAULT whenever the return value would be > 0, which
+> is consistent with the behaviour before the gmap rewrite.
 > 
-> For the changes to the object code of the function this is obvious and
-> well explained in the comments.
-> 
-> Such a label however would not change the object code of the function.
-> In fact it would not change any bit whatsoever in the final vDSO,
-> save for a new build ID.
+> Fixes: e38c884df921 ("KVM: s390: Switch to new gmap")
+> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
 
-Yes, and using labels is easier to maintain than hardcoding offsets
-directly.
-
-Similar to the code below?
-
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -86,6 +86,7 @@ config ARM64
-        select ARCH_SUPPORTS_SCHED_SMT
-        select ARCH_SUPPORTS_SCHED_CLUSTER
-        select ARCH_SUPPORTS_SCHED_MC
-+       select ARCH_SUPPORTS_SYSCALL_USER_DISPATCH
-        select ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
-        select ARCH_WANT_COMPAT_IPC_PARSE_VERSION if COMPAT
-        select ARCH_WANT_DEFAULT_BPF_JIT
-diff --git a/arch/arm64/include/asm/elf.h b/arch/arm64/include/asm/elf.h
-index d2779d604c7b..a8b232c5c6d9 100644
---- a/arch/arm64/include/asm/elf.h
-+++ b/arch/arm64/include/asm/elf.h
-@@ -293,6 +293,7 @@ static inline int arch_check_elf(void *ehdr, bool
-has_interp,
-        return 0;
- }
-
-+extern bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs);
- #endif /* !__ASSEMBLER__ */
-
- #endif
-diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
-index 592dd8668de4..609d7bcd8308 100644
---- a/arch/arm64/kernel/vdso.c
-+++ b/arch/arm64/kernel/vdso.c
-@@ -343,3 +343,19 @@ int arch_setup_additional_pages(struct linux_binprm
-*bprm, int uses_interp)
-
-        return ret;
- }
-+
-+bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs)
-+{
-+       unsigned long sigtramp;
-+
-+#ifdef CONFIG_COMPAT
-+       if (is_compat_task()) {
-+               unsigned long sigpage = (unsigned
-long)current->mm->context.sigpage;
-+
-+               return regs->pc >= sigpage && regs->pc < (sigpage +
-PAGE_SIZE);
-+       }
-+#endif
-+       sigtramp = (unsigned long)VDSO_SYMBOL(current->mm->context.vdso,
-sigreturn_landing_pad);
-+
-+       return regs->pc == sigtramp;
-+}
-diff --git a/arch/arm64/kernel/vdso/sigreturn.S
-b/arch/arm64/kernel/vdso/sigreturn.S
-index 0e18729abc3b..8d2d413ff45e 100644
---- a/arch/arm64/kernel/vdso/sigreturn.S
-+++ b/arch/arm64/kernel/vdso/sigreturn.S
-@@ -73,6 +73,7 @@ SYM_CODE_START(__kernel_rt_sigreturn)
-        mov     x8, #__NR_rt_sigreturn
- //     PLEASE DO NOT MODIFY
-        svc     #0
-+       SYM_INNER_LABEL(__sigreturn_landing_pad, SYM_L_GLOBAL)
- //     PLEASE DO NOT MODIFY
- //     .cfi_endproc
- SYM_CODE_END(__kernel_rt_sigreturn)
-diff --git a/arch/arm64/kernel/vdso/vdso.lds.S
-b/arch/arm64/kernel/vdso/vdso.lds.S
-index 52314be29191..5fee2927e4c5 100644
---- a/arch/arm64/kernel/vdso/vdso.lds.S
-+++ b/arch/arm64/kernel/vdso/vdso.lds.S
-@@ -104,6 +104,7 @@ VERSION
-                __kernel_clock_gettime;
-                __kernel_clock_getres;
-                __kernel_getrandom;
-+               __sigreturn_landing_pad;
-        local: *;
-        };
- }
-@@ -112,3 +113,4 @@ VERSION
-  * Make the sigreturn code visible to the kernel.
+Not wrong, but should we fix the documentation for dat_set_cmma_bits which says
+  * Return: %0 in case of success, a negative error value otherwise.
   */
- VDSO_sigtramp          = __kernel_rt_sigreturn;
-+VDSO_sigreturn_landing_pad     = __sigreturn_landing_pad;
 
+or should be handle PGM_ADDRESSING there instead of here?
 
+> ---
+>   arch/s390/kvm/kvm-s390.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> 
-> Thomas
-> 
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index 784f7d9c79c7..512c81eee068 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -2384,7 +2384,7 @@ static int kvm_s390_set_cmma_bits(struct kvm *kvm,
+>   
+>   	set_bit(GMAP_FLAG_USES_CMM, &kvm->arch.gmap->flags);
+>   
+> -	return r;
+> +	return r <= 0 ? r : -EFAULT;
+>   }
+>   
+>   /**
 
 
