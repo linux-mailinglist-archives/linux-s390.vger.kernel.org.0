@@ -1,80 +1,79 @@
-Return-Path: <linux-s390+bounces-21939-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21944-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id sYpcMLC8T2ohngIAu9opvQ
-	(envelope-from <linux-s390+bounces-21939-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 17:22:24 +0200
+	id CzohIqy8T2ofngIAu9opvQ
+	(envelope-from <linux-s390+bounces-21944-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 17:22:20 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C975732C9C
-	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 17:22:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E80FA732C94
+	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 17:22:19 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=lGDbE5U+;
+	dkim=pass header.d=ibm.com header.s=pp1 header.b="c/2Z0Jos";
 	dmarc=pass (policy=none) header.from=ibm.com;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21939-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-21939-lists+linux-s390=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21944-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-21944-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2DE9A30D6AB0
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Jul 2026 15:15:34 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2304E30E390B
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Jul 2026 15:15:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9BF2364EBF;
-	Thu,  9 Jul 2026 15:15:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2848536C5AE;
+	Thu,  9 Jul 2026 15:15:34 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E1315B135;
-	Thu,  9 Jul 2026 15:15:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE5D3644D1;
+	Thu,  9 Jul 2026 15:15:32 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783610132; cv=none; b=log/knK94M7NQNRfQpV1tAOia1uG5jY6/NgQHa0N6Kr9MOxLJIe2BkpNQaN+/AvzKaYKo2wy0fmvIUFqMPLAsnJhqs5c/TGiNtydg701zGNMcINxZBPgi7HhBJqRD6snTnXiWoccXh7F/ayilGMtoWFlKufNAq3QeD+vy1r8q7Q=
+	t=1783610134; cv=none; b=B0apl5DtcaoPSnaNI4F2nqMVJUdyQ1VjgxWn0isnMn3O6RKZnUJmcOdawVFRvKpyK4BZqlBNGGFXZMQfUXTPUzs+y3NQSijUBsK2a0pnC8WiI4CbSxcqr9ZTOyr8sNVji2ikyY6C8YnGDiH3TipWLJlXeGbRJU1RpliNMUQFxaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783610132; c=relaxed/simple;
-	bh=dqUrKjawqR/cMjtXyhnBKUYru9BMwr+M6EbZaOSoMTI=;
+	s=arc-20240116; t=1783610134; c=relaxed/simple;
+	bh=lSfugQ4ox7yX2nnWxqWBpN7wKn3z9f15Vyp5RTqZ4eY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KUx2tABzgb1JjAM7JfdOyAH6xELGH4ILeRyzgNzV6PSUoV0HR+/NV6Lkv5rWqqQSlHcMIR0ff1Pet8A1VUVMaYduCUySf+109jcL5V2/8uGkk+OOpp7avozGY56pGraEqiciXJD3S2b6Kk06FscGqztdId0jMJRz37YKB3pGb2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lGDbE5U+; arc=none smtp.client-ip=148.163.158.5
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 669EIj7q1770389;
-	Thu, 9 Jul 2026 15:15:27 GMT
+	 In-Reply-To:To:Cc; b=Bp6GHNZpmYI7kwfvV3UC1Gc1qRhYmFD0CXuz1p8wqQ+fWrHYj7S9E5ynbiq2YfIMxoUINe6PcuvRE+3f2+yWW36at9BSXk9PRFRsoSLBYIgonU1G/2dtOfXjnFmFbyhs9kKWhKfutthPn/I7b9DN+cZzjOQ29JzxUWXNem+5zEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=c/2Z0Jos; arc=none smtp.client-ip=148.163.158.5
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 669EIsia1497586;
+	Thu, 9 Jul 2026 15:15:28 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=XeY+Fa
-	q/cioSPRX9DjdR234BozEokD0XwJajB/p5K40=; b=lGDbE5U+adcbghU9J4XDSV
-	R4Pk5cVPaDTgdDyGly5g1rrVRcsEE3ffwvGwv3XnwwiaXeuK1KMigm+bouxXgRtY
-	ySQkxSQbUDsx8rs/VkBakyg076LUTYvRyHSW6AwLmEIG/oMv2+vHyTZty/6flj2N
-	JWoLhsG73kBG9xG+vZ/CtnLjBuQ72PvdgX8/+c8b9Iyi4l++m5eNgujusEDSg/p3
-	RiIK4gDPQjmzEyky0hMbLfvzGCrzpJNUsAZXw0WXfc2rxQoTsuhir194ql8XEDu/
-	T5y/Sjw8lHjY75OejiAopPSUr4jDwlK8o4QNkZXR4lYprMJgC8PhDg6K7VeXXzOA
+	:message-id:mime-version:references:subject:to; s=pp1; bh=LYdFtn
+	F6aDHhBjRop2U8bDyUfD7nTU+X2RnSuvHMXYo=; b=c/2Z0JosCtfwDfxPfvXrzg
+	UpAxBB1W/9mS3WQHFdkf8qrA2Tjp0Rc7lBXrsNikdpWEgvnPdDnkyMtsWSxR7N5e
+	Ss2rmqwy2quFJXT6ewsmdiuZnCj6WHqrhWuqOON2v0+0N1KkpVO6t6b9tVxk5WkP
+	2q/+ypoeTAAv0EK/YMa7a1cnsDvZPU78XpGddey4vpWNLBkas0LhaAVpFr51vBBL
+	sKJwt8VUShRDlwtYzfpU1EjMpUvehY1TOaY40PJhaEI4zODDp5tvmGmKoHD1Eaml
+	QYVyb5YmnqUhS//Kv9MPhRcGJ4FbFxhHyJ95srFZ0R4+DMqAleNdGTzOak7htjWQ
 	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6rke2ppr-1
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6stt2m0a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 09 Jul 2026 15:15:28 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 669F4csr009437;
+	Thu, 9 Jul 2026 15:15:27 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4f7eqgdfmt-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Thu, 09 Jul 2026 15:15:27 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 669F4fVC026928;
-	Thu, 9 Jul 2026 15:15:26 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f7cvwdvcq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 Jul 2026 15:15:26 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 669FFMVU24248746
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 669FFNw143778362
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 9 Jul 2026 15:15:22 GMT
+	Thu, 9 Jul 2026 15:15:23 GMT
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B86262004F;
-	Thu,  9 Jul 2026 15:15:22 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 6CF5E20043;
+	Thu,  9 Jul 2026 15:15:23 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1F43E2004B;
+	by IMSVA (Postfix) with ESMTP id C89C42004B;
 	Thu,  9 Jul 2026 15:15:22 +0000 (GMT)
 Received: from [192.168.88.251] (unknown [9.111.64.199])
 	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
 	Thu,  9 Jul 2026 15:15:22 +0000 (GMT)
 From: Christoph Schlameuss <schlameuss@linux.ibm.com>
-Date: Thu, 09 Jul 2026 17:15:05 +0200
-Subject: [PATCH 05/21] KVM: s390: vsie: Move SCAO validation into a
- function
+Date: Thu, 09 Jul 2026 17:15:06 +0200
+Subject: [PATCH 06/21] KVM: s390: vsie: Add vsie_sigpif detection
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -83,7 +82,7 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260709-vsie-sigpi-v1-5-ea9f12066408@linux.ibm.com>
+Message-Id: <20260709-vsie-sigpi-v1-6-ea9f12066408@linux.ibm.com>
 References: <20260709-vsie-sigpi-v1-0-ea9f12066408@linux.ibm.com>
 In-Reply-To: <20260709-vsie-sigpi-v1-0-ea9f12066408@linux.ibm.com>
 To: kvm@vger.kernel.org, linux-s390@vger.kernel.org
@@ -97,44 +96,46 @@ Cc: David Hildenbrand <david@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
         Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
         Eric Farman <farman@linux.ibm.com>,
         David Hildenbrand <david@kernel.org>,
-        Christoph Schlameuss <schlameuss@linux.ibm.com>
+        Christoph Schlameuss <schlameuss@linux.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2591;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2452;
  i=schlameuss@linux.ibm.com; h=from:subject:message-id;
- bh=dqUrKjawqR/cMjtXyhnBKUYru9BMwr+M6EbZaOSoMTI=;
- b=owGbwMvMwCUmoqVx+bqN+mXG02pJDFn+u5nFNHwKRZ8dvGBss+9Oe1KnZ4BYNrsBi4KTzZ4y/
- dRJwtIdpSwMYlwMsmKKLNXi1nlVfa1L5xy0vAYzh5UJZAgDF6cATETmPyNDw8Yv/64r8DD+O2j5
- uqLo8OpXCvw5245lHT2RaSXR0Xr1CMM/Xafl4if8t0jnqk388ISveLW18M8CzTObFy238+64tHk
- XFwA=
+ bh=lSfugQ4ox7yX2nnWxqWBpN7wKn3z9f15Vyp5RTqZ4eY=;
+ b=owGbwMvMwCUmoqVx+bqN+mXG02pJDFn+u5mvX2KrKtpjpCatffyGQGPC25q1ryXDsgMyTcoTF
+ 18uf7u1o5SFQYyLQVZMkaVa3Dqvqq916ZyDltdg5rAygQxh4OIUgImUbGX4n9u3Se0Rw9zwu1m7
+ vM8rti/+vMZjCWd/nW/Ojs1TXjrnmjP8D9Teaez5N//kGeNKlgVNcd+V2HUt1iyv6T7pJXPUfNJ
+ fdgA=
 X-Developer-Key: i=schlameuss@linux.ibm.com; a=openpgp;
  fpr=0E34A68642574B2253AF4D31EEED6AB388551EC3
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=M7J97Sws c=1 sm=1 tr=0 ts=6a4fbb0f cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+X-Proofpoint-ORIG-GUID: XyC3TzLHrbqGmIk14fB0rLO4qOGeifos
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA5MDE0NiBTYWx0ZWRfX3n7D/TRAD1LR
+ /bFW4vImO7BmgJ2gvHl2h6unVsw8LWO2MkD6aoazadMFCZx+5BwIDpocHsDNIXEmg+Js3VIP9nD
+ XqbC1QdNu4Y6KHqd/OTpGekcvu4K9cc=
+X-Authority-Analysis: v=2.4 cv=DKW/JSNb c=1 sm=1 tr=0 ts=6a4fbb10 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
  a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8
- a=s9IE1rU8jnNbY5ds4h0A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA5MDE0NiBTYWx0ZWRfX47dvbxeJJaho
- nf/DttjQ7B+4amVkxhWJPv0loln5PBw1O5b++xFBi+jqNUTlNY4OkGkiSnUvJwtofTy0GHP6qv6
- O5kONijmD6h6zrWN16F/iA52C2N4KKpI+pBEIQlfJ1ml/fJW/NHF86+DibBnoTYdAm/r/7c8tiT
- RXqS0cfyEHBC2n0NQpD/vhg6HUSdjYrNhm/KhrdlolfTZwhPwX0M3fvDUnJXO6Huqjj5ya1M6Fi
- YYqVir3iRxodvc1gDvqzOag7pvMMdTn4XJVsTTI8sbiHXWGfsPCCyuwjzP/oUxhZfsK2lmGUZIg
- i38GPT/+Z8uESJ8CeHTwYAlhjXfZ9q6+GdWR3KUU8MPRZpfiuOTQoTGiOiQ4T2EaTbRsgAVpYAG
- JYM4uLxnfCMkpPGDyi8XmAPyWfa/WcbDqgizCLIsvhgKUKCvtXTQXRhqv8HXVnIxKzkj2oGDDtf
- P4GWyZ03RLvyRPD4xlA==
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA5MDE0NiBTYWx0ZWRfX7p35VI0tM2ul
- HzwCsxBn2YNSzLLGDUeXyPOWoQTdL+dBwHiF0Tt1Nzogfk3yFfsqHabBzDbv6G1KgeYwTkRkMrD
- QHxh/r3ZiD5FoI8uKr9/8MWUmTOuvus=
-X-Proofpoint-GUID: a2FvJ1x14yWlzTAGW5iGEmX2_IyA9Z_w
-X-Proofpoint-ORIG-GUID: a2FvJ1x14yWlzTAGW5iGEmX2_IyA9Z_w
+ a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8
+ a=20KFwNOVAAAA:8 a=HhGY3ygtAZ2b3DQUAK4A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: XyC3TzLHrbqGmIk14fB0rLO4qOGeifos
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA5MDE0NiBTYWx0ZWRfX+BXFDq6S1v4U
+ pxQCcufYsSVmWmgIc78GLTOXJI+rZnCXAq3Zat2vPjmANnGy6X8/yPw1YrGWQsHIyxW46/Wy/ol
+ 4NNYj40KHJ3+xE0uh1SY7pO5aEfsLHiHpd49NX/2hs9y+ZRgBZE1OpTfke7n1qsDfcA4fJdMD1A
+ K7C7aVO3YnNaJSg5vDxPSTsL6ld8b+y8JjJIXJUmiEJTSLXkZaWVs/dy1Hep7CFQi1Ph0EfM9hK
+ aSqoyQNuyKNs6Y6Mp+NLHuxfMyOMS7o/k+H71Gvi8Zr7CTZx4lmLIhW80ucNkx20tvZu3Z7T4GD
+ w6boqimsnJEbyR9SaKjbyidqu9hHJYX5dCnzx6ByHjio0zggXN/7Km7MKV3HE7B0//laGkHxqWT
+ BrLiqyXhGLWGwaMPaxJRlOYM24Kf13uiOOAF27VRzai+eEMPJhc8o95sVRLRHWzEJ1m6TxIwkMi
+ 68BBAyM5ODfnqV3sCmA==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-09_03,2026-07-09_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 lowpriorityscore=0 malwarescore=0 clxscore=1011 adultscore=0
- priorityscore=1501 bulkscore=0 spamscore=0 impostorscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607090146
+ spamscore=0 bulkscore=0 clxscore=1015 phishscore=0 impostorscore=0
+ priorityscore=1501 adultscore=0 lowpriorityscore=0 suspectscore=0
+ malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2607090146
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -145,11 +146,11 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21939-lists,linux-s390=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:kvm@vger.kernel.org,m:linux-s390@vger.kernel.org,m:david@kernel.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:frankja@linux.ibm.com,m:imbrenda@linux.ibm.com,m:nrb@linux.ibm.com,m:svens@linux.ibm.com,m:pbonzini@redhat.com,m:shuah@kernel.org,m:farman@linux.ibm.com,m:schlameuss@linux.ibm.com,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21944-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:kvm@vger.kernel.org,m:linux-s390@vger.kernel.org,m:david@kernel.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:frankja@linux.ibm.com,m:imbrenda@linux.ibm.com,m:nrb@linux.ibm.com,m:svens@linux.ibm.com,m:pbonzini@redhat.com,m:shuah@kernel.org,m:farman@linux.ibm.com,m:schlameuss@linux.ibm.com,m:brueckner@linux.ibm.com,s:lists@lfdr.de];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.ibm.com:mid,linux.ibm.com:from_mime,vger.kernel.org:from_smtp];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
+	RCPT_COUNT_TWELVE(0.00)[17];
 	FORGED_SENDER(0.00)[schlameuss@linux.ibm.com,linux-s390@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
@@ -167,87 +168,70 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7C975732C9C
+X-Rspamd-Queue-Id: E80FA732C94
 
-Improve readability as well as allow re-use in coming patches.
-
-In particular add the logic to be able to check the validity of BSCA and
-ESCA origin addresses.
+Add sensing of the VSIE Interpretation Extension Facility as vsie_sigpif
+from SCLP. This facility is introduced with IBM Z gen17.
 
 Signed-off-by: Christoph Schlameuss <schlameuss@linux.ibm.com>
+Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
 ---
- arch/s390/kvm/vsie.c | 42 ++++++++++++++++++++++++++++++------------
- 1 file changed, 30 insertions(+), 12 deletions(-)
+ arch/s390/include/asm/kvm_host.h | 1 +
+ arch/s390/include/asm/sclp.h     | 1 +
+ arch/s390/kvm/kvm-s390.c         | 1 +
+ drivers/s390/char/sclp_early.c   | 1 +
+ 4 files changed, 4 insertions(+)
 
-diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
-index aa0cebece2d5..97581b748a94 100644
---- a/arch/s390/kvm/vsie.c
-+++ b/arch/s390/kvm/vsie.c
-@@ -72,6 +72,11 @@ struct vsie_page {
+diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
+index eaa34c5bd3c1..f10f8940bd48 100644
+--- a/arch/s390/include/asm/kvm_host.h
++++ b/arch/s390/include/asm/kvm_host.h
+@@ -672,6 +672,7 @@ struct kvm_arch {
+ 	int use_pfmfi;
+ 	int use_skf;
+ 	int use_zpci_interp;
++	int use_vsie_sigpif;
+ 	int user_cpu_state_ctrl;
+ 	int user_sigp;
+ 	int user_stsi;
+diff --git a/arch/s390/include/asm/sclp.h b/arch/s390/include/asm/sclp.h
+index f2d490558054..094b378f997b 100644
+--- a/arch/s390/include/asm/sclp.h
++++ b/arch/s390/include/asm/sclp.h
+@@ -102,6 +102,7 @@ struct sclp_info {
+ 	unsigned char has_dirq : 1;
+ 	unsigned char has_iplcc : 1;
+ 	unsigned char has_zpci_lsi : 1;
++	unsigned char has_vsie_sigpif : 1;
+ 	unsigned char has_aisii : 1;
+ 	unsigned char has_aeni : 1;
+ 	unsigned char has_aisi : 1;
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index 4b1ef955c7e8..6749198bac3f 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -3378,6 +3378,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
  
- static_assert(sizeof(struct vsie_page) == PAGE_SIZE);
- 
-+static inline bool sie_uses_esca(struct kvm_s390_sie_block *scb)
-+{
-+	return (scb->ecb2 & ECB2_ESCA);
-+}
-+
- static unsigned long read_scao(struct kvm *kvm, struct kvm_s390_sie_block *scb)
- {
- 	unsigned long vsie_sca = READ_ONCE(scb->scaol) & ~0xfUL;
-@@ -98,6 +103,25 @@ static int set_validity_icpt(struct kvm_s390_sie_block *scb,
- 	return 1;
- }
- 
-+/* The sca header must not cross pages etc. */
-+static int validate_scao(struct kvm_vcpu *vcpu, struct kvm_s390_sie_block *scb, gpa_t gpa)
-+{
-+	int offset;
-+
-+	if (gpa < 2 * PAGE_SIZE)
-+		return set_validity_icpt(scb, 0x0038U);
-+	if ((gpa & ~0x1fffUL) == kvm_s390_get_prefix(vcpu))
-+		return set_validity_icpt(scb, 0x0011U);
-+
-+	if (sie_uses_esca(scb))
-+		offset = offsetof(struct esca_block, cpu[0]) - 1;
-+	else
-+		offset = offsetof(struct bsca_block, cpu[0]) - 1;
-+	if ((gpa & PAGE_MASK) != ((gpa + offset) & PAGE_MASK))
-+		return set_validity_icpt(scb, 0x003bU);
-+	return 0;
-+}
-+
- /* mark the prefix as unmapped, this will block the VSIE */
- static void prefix_unmapped(struct vsie_page *vsie_page)
- {
-@@ -788,20 +812,14 @@ static int pin_blocks(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
- 
- 	gpa = read_scao(vcpu->kvm, scb_o);
- 	if (gpa) {
--		if (gpa < 2 * PAGE_SIZE)
--			rc = set_validity_icpt(scb_s, 0x0038U);
--		else if ((gpa & ~0x1fffUL) == kvm_s390_get_prefix(vcpu))
--			rc = set_validity_icpt(scb_s, 0x0011U);
--		else if ((gpa & PAGE_MASK) !=
--			 ((gpa + offsetof(struct bsca_block, cpu[0]) - 1) & PAGE_MASK))
--			rc = set_validity_icpt(scb_s, 0x003bU);
--		if (!rc) {
--			rc = pin_guest_page(vcpu->kvm, gpa, &hpa);
--			if (rc)
--				rc = set_validity_icpt(scb_s, 0x0034U);
--		}
-+		rc = validate_scao(vcpu, scb_o, gpa);
- 		if (rc)
- 			goto unpin;
-+		rc = pin_guest_page(vcpu->kvm, gpa, &hpa);
-+		if (rc) {
-+			rc = set_validity_icpt(scb_s, 0x0034U);
-+			goto unpin;
-+		}
- 		vsie_page->sca_gpa = gpa;
- 		write_scao(scb_s, hpa);
+ 	kvm->arch.use_pfmfi = sclp.has_pfmfi;
+ 	kvm->arch.use_skf = sclp.has_skey;
++	kvm->arch.use_vsie_sigpif = sclp.has_vsie_sigpif;
+ 	spin_lock_init(&kvm->arch.start_stop_lock);
+ 	kvm_s390_vsie_init(kvm);
+ 	if (use_gisa)
+diff --git a/drivers/s390/char/sclp_early.c b/drivers/s390/char/sclp_early.c
+index 22dd797e6229..9ea840d80711 100644
+--- a/drivers/s390/char/sclp_early.c
++++ b/drivers/s390/char/sclp_early.c
+@@ -56,6 +56,7 @@ static void __init sclp_early_facilities_detect(void)
+ 		sclp.has_diag318 = !!(sccb->byte_134 & 0x80);
+ 		sclp.has_diag320 = !!(sccb->byte_134 & 0x04);
+ 		sclp.has_iplcc = !!(sccb->byte_134 & 0x02);
++		sclp.has_vsie_sigpif = !!(sccb->byte_134 & 0x01);
  	}
+ 	if (sccb->cpuoff > 137) {
+ 		sclp.has_sipl = !!(sccb->cbl & 0x4000);
 
 -- 
 2.55.0
