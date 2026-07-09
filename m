@@ -1,58 +1,58 @@
-Return-Path: <linux-s390+bounces-21856-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21857-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id G3C7E/D9TmpUYgIAu9opvQ
-	(envelope-from <linux-s390+bounces-21856-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 03:48:32 +0200
+	id nWC2KSMCT2rLYwIAu9opvQ
+	(envelope-from <linux-s390+bounces-21857-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 04:06:27 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A671D72BC0A
-	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 03:48:31 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CBB072BD9A
+	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 04:06:27 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=huawei.com header.s=dkim header.b=ksHjnD6U;
+	dkim=pass header.d=huawei.com header.s=dkim header.b=AWDuAsAD;
 	dmarc=pass (policy=quarantine) header.from=huawei.com;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21856-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21856-lists+linux-s390=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21857-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-21857-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 31BA9303103A
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Jul 2026 01:48:07 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2EB13306F8C6
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Jul 2026 02:04:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABF0325DB12;
-	Thu,  9 Jul 2026 01:48:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 551B230C177;
+	Thu,  9 Jul 2026 02:04:00 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
+Received: from canpmsgout11.his.huawei.com (canpmsgout11.his.huawei.com [113.46.200.226])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5838C17B505;
-	Thu,  9 Jul 2026 01:48:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE192FD675;
+	Thu,  9 Jul 2026 02:03:55 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783561685; cv=none; b=cYqpSmADbEg5wTVBX5InAhqlNf5z/2xjKttpSnowTDM5/oVXZGniq9bF3/cWS5kHsA6AaEHs1DUSG1BNtvrcc/KUGOfGSSNbGdQxVa7r1KRZOY+LSakl4Lb9o7oPeuQ/DelDhhflHUIx/SPXKVUVMaX6a6StllRnd0erqNAvC6o=
+	t=1783562640; cv=none; b=powbn4MihbM9ODt0Avz+lwIBoOc4ccPwowKcHnf1wkeDYlKFQ0ODJ+YBIbJAUONef73UtM3xT50xui0mD07PFOwrO5/Yiraug2/lxzhlaWjjUsr6v6sYPP2YXHKb2O20HDn9Yam9u6tE73q81EQ9p2RFeDmd2tlQEA1jQTg7TPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783561685; c=relaxed/simple;
-	bh=ljYK2vCBZTRsQK0MExHZtAR/zv00DWa1fNYGVFIlMvQ=;
+	s=arc-20240116; t=1783562640; c=relaxed/simple;
+	bh=A8uKffNVQt9rhMONccpVOoTFhw1tjloY/FT5kLhs89A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=UK1G3ijuqB7JVM+Z9g2Z8VlTFsWm1UOaIpPygp7xJ2W31BJePJPuizvf3MLz+c0uhNipD1H43C6QICvfFOMu7ujIfLGFt9uOuPfEZ3ftGV3Yi1cFrlHg+z3RentIgEFAALbitmR3p1y88J7Skrgxskgerzk4sRv8NfpL6I5WTU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=ksHjnD6U; arc=none smtp.client-ip=113.46.200.219
+	 In-Reply-To:Content-Type; b=qLnvoWLwREIfaoaw44TWfljbHGFKCi/oM55NXWcr7Alp8gxz0gXzG0v2r/eiAhQrO8zu7swBvsnQggN2hN4KYbxxW9KhyMPHdeSApPOpKwCsQkkayFdnY1mWsN9WLFAOyn+SbxL238yWAbYh1ZXtY6ntDbqrDkvZfhTDxosnFrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=AWDuAsAD; arc=none smtp.client-ip=113.46.200.226
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=lJ2lsOw1A2mFoTW+4rB/gWuEpAa+RS/uQCfSDrk5Vco=;
-	b=ksHjnD6U1596jfDaaEoW3GmT39cferO2kq33vFZ36Yq2mGGCmosfTYbLFn7fMP/UeeYaIntK6
-	p8XaNfppstNTJ0P0vOKbsKrpKmttUnZgBTyp4Laq98LfqAZZrRNzDaKqN/X7my4nhdn8YPnp+8c
-	AalCZ4kXjnU31eOGZTBybVA=
-Received: from mail.maildlp.com (unknown [172.19.163.0])
-	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4gwd0M5Hszz1prKZ;
-	Thu,  9 Jul 2026 09:38:43 +0800 (CST)
+	bh=SbMumxZtxbvkP/ieepXLg1JhrafzB20Wq2MZPkH/Sw0=;
+	b=AWDuAsADSwEvEL71EYfZ0NigOV6Nm/EE0o+eCaP1xQFlxhq8DY4cyFSYwdUDcA872iUYRmCcL
+	fgkqFmw2f6REMuKThf5T1j9G/cENjZayXtYg+Tp2Kdo8RhfXnSpSgOVUD3wzxl53MN4FlPjvW4S
+	5jTBmgoFDxvMSl13ULhIb7E=
+Received: from mail.maildlp.com (unknown [172.19.163.15])
+	by canpmsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4gwdLg6g1HzKmWh;
+	Thu,  9 Jul 2026 09:54:35 +0800 (CST)
 Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2BC2D40561;
-	Thu,  9 Jul 2026 09:48:00 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id D94DC40578;
+	Thu,  9 Jul 2026 10:03:52 +0800 (CST)
 Received: from [10.67.109.254] (10.67.109.254) by
  dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 9 Jul 2026 09:47:57 +0800
-Message-ID: <19433c47-94b3-46e1-8bd2-1a3f3139fe4e@huawei.com>
-Date: Thu, 9 Jul 2026 09:47:56 +0800
+ 15.2.1544.11; Thu, 9 Jul 2026 10:03:50 +0800
+Message-ID: <cb27984f-bb8e-4deb-90f2-c3c9965b3017@huawei.com>
+Date: Thu, 9 Jul 2026 10:03:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -60,7 +60,8 @@ List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [patch 15/18] x86/entry: Make syscall functions static
+Subject: Re: [patch 16/18] x86/entry: Get rid of the sys_ni_syscall()
+ indirection
 To: Thomas Gleixner <tglx@kernel.org>, LKML <linux-kernel@vger.kernel.org>
 CC: Peter Zijlstra <peterz@infradead.org>, Michael Ellerman
 	<mpe@ellerman.id.au>, Shrikanth Hegde <sshegde@linux.ibm.com>,
@@ -90,9 +91,9 @@ CC: Peter Zijlstra <peterz@infradead.org>, Michael Ellerman
 	<msuchanek@suse.de>, Jonathan Corbet <corbet@lwn.net>,
 	<linux-doc@vger.kernel.org>
 References: <20260707181957.433213175@kernel.org>
- <20260707190254.438361565@kernel.org>
+ <20260707190254.493733289@kernel.org>
 From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20260707190254.438361565@kernel.org>
+In-Reply-To: <20260707190254.493733289@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
@@ -102,7 +103,7 @@ X-Spamd-Result: default: False [-9.16 / 15.00];
 	WHITELIST_DMARC(-7.00)[huawei.com:D:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -111,7 +112,7 @@ X-Spamd-Result: default: False [-9.16 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_CC(0.00)[infradead.org,ellerman.id.au,linux.ibm.com,lists.ozlabs.org,kernel.org,lists.linux.dev,dabbelt.com,lists.infradead.org,vger.kernel.org,arm.com,redhat.com,linaro.org,armlinux.org.uk,linux-m68k.org,alpha.franken.de,gmx.de,users.sourceforge.jp,nod.at,zankel.net,lists.linux-m68k.org,arndb.de,monstr.eu,davemloft.net,gaisler.com,suse.de,lwn.net];
-	TAGGED_FROM(0.00)[bounces-21856-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21857-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER(0.00)[ruanjinjie@huawei.com,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS(0.00)[m:tglx@kernel.org,m:linux-kernel@vger.kernel.org,m:peterz@infradead.org,m:mpe@ellerman.id.au,m:sshegde@linux.ibm.com,m:linuxppc-dev@lists.ozlabs.org,m:kees@kernel.org,m:chenhuacai@kernel.org,m:loongarch@lists.linux.dev,m:pjw@kernel.org,m:palmer@dabbelt.com,m:linux-riscv@lists.infradead.org,m:svens@linux.ibm.com,m:linux-s390@vger.kernel.org,m:x86@kernel.org,m:mark.rutland@arm.com,m:luto@kernel.org,m:oleg@redhat.com,m:richard.henderson@linaro.org,m:linux@armlinux.org.uk,m:catalin.marinas@arm.com,m:guoren@kernel.org,m:geert@linux-m68k.org,m:tsbogend@alpha.franken.de,m:deller@gmx.de,m:ysato@users.sourceforge.jp,m:richard@nod.at,m:chris@zankel.net,m:linux-arm-kernel@lists.infradead.org,m:linux-alpha@vger.kernel.org,m:linux-csky@vger.kernel.org,m:linux-m68k@lists.linux-m68k.org,m:linux-mips@vger.kernel.org,m:linux-parisc@vger.kernel.org,m:linux-sh@vger.kernel.org,m:linux-um@lists.infradead.org,m:arnd@arndb.de,m:vgupta@kernel.org,m:will@kernel.org,m:bcain@kernel.org
@@ -124,92 +125,86 @@ X-Spamd-Result: default: False [-9.16 / 15.00];
 	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[ruanjinjie@huawei.com,linux-s390@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCPT_COUNT_GT_50(0.00)[52];
 	MID_RHS_MATCH_FROM(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:from_mime,huawei.com:email,huawei.com:mid,huawei.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,huawei.com:from_mime,huawei.com:email,huawei.com:mid,huawei.com:dkim]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: A671D72BC0A
+X-Rspamd-Queue-Id: 2CBB072BD9A
 
 
 
-On 7/8/2026 3:06 AM, Thomas Gleixner wrote:
-> They are only used in the respective source files. No point in exposing
-> them.
+On 7/8/2026 3:07 AM, Thomas Gleixner wrote:
+> Invoking sys_ni_syscall() from a code path, which already knows that the
+> syscall number is invalid just to assign -ENOSYS to regs->ax is a pointless
+> exercise. It's even redundant as the low level entry code already has set
+> regs->ax to -ENOSYS on entry.
+
+Makes sense, the all reltaed entry has already initialized
+regs->ax to -ENOSYS.
+
+This makes the code very concise.
+
+LGTM
+Reviewed-by: Jinjie Ruan <ruanjinjie@huawei.com>
+
+> 
+> Remove the extra conditionals and the function calls.
 > 
 > Signed-off-by: Thomas Gleixner <tglx@kernel.org>
 > ---
->  arch/x86/entry/syscall_32.c    |    2 +-
->  arch/x86/entry/syscall_64.c    |   10 ++++++----
->  arch/x86/include/asm/syscall.h |    8 --------
->  3 files changed, 7 insertions(+), 13 deletions(-)
+>  arch/x86/entry/syscall_32.c |    2 --
+>  arch/x86/entry/syscall_64.c |   10 +++-------
+>  2 files changed, 3 insertions(+), 9 deletions(-)
 > 
 > --- a/arch/x86/entry/syscall_32.c
 > +++ b/arch/x86/entry/syscall_32.c
-> @@ -41,7 +41,7 @@ const sys_call_ptr_t sys_call_table[] =
->  #endif
->  
->  #define __SYSCALL(nr, sym) case nr: return __ia32_##sym(regs);
-> -long ia32_sys_call(const struct pt_regs *regs, unsigned int nr)
-> +static noinline long ia32_sys_call(const struct pt_regs *regs, unsigned int nr)
->  {
->  	switch (nr) {
->  	#include <asm/syscalls_32.h>
-> --- a/arch/x86/entry/syscall_64.c
-> +++ b/arch/x86/entry/syscall_64.c
-> @@ -32,7 +32,7 @@ const sys_call_ptr_t sys_call_table[] =
->  #undef  __SYSCALL
->  
->  #define __SYSCALL(nr, sym) case nr: return __x64_##sym(regs);
-> -long x64_sys_call(const struct pt_regs *regs, unsigned int nr)
-> +static noinline long x64_sys_call(const struct pt_regs *regs, unsigned int nr)
->  {
->  	switch (nr) {
->  	#include <asm/syscalls_64.h>
-> @@ -40,15 +40,17 @@ long x64_sys_call(const struct pt_regs *
+> @@ -81,8 +81,6 @@ static __always_inline void do_syscall_3
+>  	if (likely(unr < IA32_NR_syscalls)) {
+>  		unr = array_index_nospec(unr, IA32_NR_syscalls);
+>  		regs->ax = ia32_sys_call(regs, unr);
+> -	} else if (nr != -1) {
+> -		regs->ax = __ia32_sys_ni_syscall(regs);
 >  	}
 >  }
 >  
-> -#ifdef CONFIG_X86_X32_ABI
-> -long x32_sys_call(const struct pt_regs *regs, unsigned int nr)
-> +static noinline long x32_sys_call(const struct pt_regs *regs, unsigned int nr)
+> --- a/arch/x86/entry/syscall_64.c
+> +++ b/arch/x86/entry/syscall_64.c
+> @@ -68,7 +68,7 @@ static __always_inline bool do_syscall_x
+>  	return false;
+>  }
+>  
+> -static __always_inline bool do_syscall_x32(struct pt_regs *regs, int nr)
+> +static __always_inline void do_syscall_x32(struct pt_regs *regs, int nr)
 >  {
-> +#ifdef CONFIG_X86_X32_ABI
->  	switch (nr) {
->  	#include <asm/syscalls_x32.h>
->  	default: return __x64_sys_ni_syscall(regs);
+>  	/*
+>  	 * Adjust the starting offset of the table, and convert numbers
+> @@ -80,9 +80,7 @@ static __always_inline bool do_syscall_x
+>  	if (IS_ENABLED(CONFIG_X86_X32_ABI) && likely(xnr < X32_NR_syscalls)) {
+>  		xnr = array_index_nospec(xnr, X32_NR_syscalls);
+>  		regs->ax = x32_sys_call(regs, xnr);
+> -		return true;
 >  	}
-> -}
-> +#else
-> +	return -ENOSYS;
->  #endif
-> +}
+> -	return false;
+>  }
 >  
->  static __always_inline bool do_syscall_x64(struct pt_regs *regs, int nr)
->  {
-> --- a/arch/x86/include/asm/syscall.h
-> +++ b/arch/x86/include/asm/syscall.h
-> @@ -21,14 +21,6 @@ typedef long (*sys_call_ptr_t)(const str
->  extern const sys_call_ptr_t sys_call_table[];
+>  /* Returns true to return using SYSRET, or false to use IRET */
+> @@ -92,10 +90,8 @@ static __always_inline bool do_syscall_x
 >  
->  /*
-> - * These may not exist, but still put the prototypes in so we
-> - * can use IS_ENABLED().
-> - */
-> -extern long ia32_sys_call(const struct pt_regs *, unsigned int nr);
-> -extern long x32_sys_call(const struct pt_regs *, unsigned int nr);
-> -extern long x64_sys_call(const struct pt_regs *, unsigned int nr);
-> -
-
-Reviewed-by: Jinjie Ruan <ruanjinjie@huawei.com>
-
-> -/*
->   * Only the low 32 bits of orig_ax are meaningful, so we return int.
->   * This importantly ignores the high bits on 64-bit, so comparisons
->   * sign-extend the low 32 bits.
+>  	instrumentation_begin();
+>  
+> -	if (!do_syscall_x64(regs, nr) && !do_syscall_x32(regs, nr) && nr != -1) {
+> -		/* Invalid system call, but still a system call. */
+> -		regs->ax = __x64_sys_ni_syscall(regs);
+> -	}
+> +	if (!do_syscall_x64(regs, nr))
+> +		do_syscall_x32(regs, nr);
+>  
+>  	instrumentation_end();
+>  	syscall_exit_to_user_mode(regs);
 > 
 
 
