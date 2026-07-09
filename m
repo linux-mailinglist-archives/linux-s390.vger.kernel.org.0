@@ -1,70 +1,71 @@
-Return-Path: <linux-s390+bounces-21886-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21887-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id VPuGFiJNT2p1dwIAu9opvQ
-	(envelope-from <linux-s390+bounces-21886-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 09:26:26 +0200
+	id E965HQlNT2pcdwIAu9opvQ
+	(envelope-from <linux-s390+bounces-21887-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 09:26:01 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF76372DA08
-	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 09:26:25 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D04B72D9A7
+	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 09:26:00 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b="fZ/sbYnd";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=IDsUNl7d;
 	dmarc=pass (policy=none) header.from=ibm.com;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21886-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-21886-lists+linux-s390=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21887-lists+linux-s390=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-s390+bounces-21887-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4308B303BB9D
+	by sin.lore.kernel.org (Postfix) with ESMTP id 98AC5300846A
 	for <lists+linux-s390@lfdr.de>; Thu,  9 Jul 2026 07:25:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA1DF3CA48C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE5BC3CA49C;
 	Thu,  9 Jul 2026 07:25:07 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1263DD86A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0673C9EE7
 	for <linux-s390@vger.kernel.org>; Thu,  9 Jul 2026 07:25:06 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783581907; cv=none; b=fOzPozfXhkpTnW9xUowxDPltHvTvHuJve4Qud0rWRfq/8CBtTdwQtFQIfLd2A5h0S05F9RJgaAh/l5ppVP8x+Y3skTLNcvvDBQk6RXQ6223/pzu12boV9nKSR+kjCt+TsimhWrRyR+ooklYr82AB52x2T5EtYbD5PAh9fMAu3M8=
+	t=1783581907; cv=none; b=MDXKyDa5CMXqG2vVEtZlyMe6fq40YRAtbxTimtqqyUUJS/mXKR2Vlw/rLlCgbktGMG9oRWBd1FS19JwG0JD9UHf1CBOYnohmiOphfG7YcmRZ8Got11QB8WOA2AFbssW8L7GKzWwwGKr4Hvhznxy24RnfyApaiEFIZlnenUb3/DA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1783581907; c=relaxed/simple;
-	bh=AcrT9CSCqaxNu0h7z+tfQ88GEOri0/RWyla9hQlJ28A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LW/qKtxrDwql6bntGM+NBD6HIcYqFR2Rnoh8/MAoEO6S75yACGLPbngN39cgFDEHseagNvWlsRiWrv/yQs2whpSiId4giyYfTB1m+zMGeUZsyD6GLQOCNKLp9W7bab5vVEDUin8ZAINBjiznvzvKs3+3PKnBQjWz8NbhECmAr0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fZ/sbYnd; arc=none smtp.client-ip=148.163.158.5
+	bh=KnO6RhqCGYGRIUA7JGZTWVkhn1xAOxQj2gs7v8A2lU4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=eTYxWtpXgHf7iAnAKvTvYk/E2ObwzpurcBWwpZ4G+1WG16mnVDDSWTuurNWt/yq53Elx1NMPdFGDVM/2UiLg3SOHK0ZCcoc32aawS0/oqFprKvHVueysZFGnPAsN/RsEF1wlwb6PWXbT+eJx21sy1H6IkoKr4xuaUWXNu7NLVZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IDsUNl7d; arc=none smtp.client-ip=148.163.158.5
 Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6696INFF1535411
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6696INM11535420
 	for <linux-s390@vger.kernel.org>; Thu, 9 Jul 2026 07:25:05 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=5BKD41HDnKz626GiiomXyavlj120wKJjkRhVpMXo9
-	nE=; b=fZ/sbYndhZrVVOPsz4H9N8oC9jIQm1zVzhlxPSI8PIAQYeOpNH302v8eV
-	sxrEsUCOqSX+4KsyMgOyK4DZ8wwTZUFRPHtAtk05htm3gH/MlAgOAVuefZAp40Zk
-	hEgpT6NwT7IzyXGPAJSu5X2gzcFFsgD5x1zeGLe2dgZnWr1DACkOk/k6I7rvbP8F
-	ixp/da0scx0Wun2j4BrIgIq/qzwh/vmdEuvdEpCnY+rYoj/82ZSfevp1Ek94aPeB
-	XLkWKHVqhyT8kSaXUJGkVKgB1g2tLyNfN3WhuvH9JMQLPNjMquiFAbxInmoioGXY
-	j5EMD7Xt+9NJHGtdpfa8p85Fq58sQ==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6qknr0jq-1
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=1gB8f+3y7ao3yBit8
+	ffp1Qq6oXKISiAeqKX0q7xI7x8=; b=IDsUNl7ds1SWSoePwyBRbSiLwOhwRNpRe
+	7zUDcDqVQPeWfTYdqyCiHYzN/78u9igZw7wzaaa8QDa/NkY8t1XCiWDfpkXUxVql
+	PXaVLLhu50JrNDChcVFoLFSWJVkMEfMuFX7Ky5dLDMqFL1SqK8m97jhB6WvTYWSa
+	3nwWc2eA6jky93FdiPYW0aV/pq1hF7tGfnbnWnrxvbGYuPca9kfIWhAudrDBhNGU
+	rENH28vPP34qN76eExumbLpHXr6NKhJpkLqjUDWI7/547dDOj6veoaBnVLiSQAGt
+	IpV7Z9kcoUfR/8BUQqnOzRN3E6ZnPK1Kyh2GloAZGz/PkO1jktvMQ==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6qknr0jr-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
 	for <linux-s390@vger.kernel.org>; Thu, 09 Jul 2026 07:25:05 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6697Jl51021580
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6697Jd9l009475
 	for <linux-s390@vger.kernel.org>; Thu, 9 Jul 2026 07:25:04 GMT
 Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f7e0hky7w-1
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f7dgkc2u2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
 	for <linux-s390@vger.kernel.org>; Thu, 09 Jul 2026 07:25:04 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6697P0Js27263410
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6697P0th27263412
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Thu, 9 Jul 2026 07:25:00 GMT
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 852F62004E;
+	by IMSVA (Postfix) with ESMTP id A774320043;
 	Thu,  9 Jul 2026 07:25:00 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 65AED2004D;
+	by IMSVA (Postfix) with ESMTP id 89D1F2004F;
 	Thu,  9 Jul 2026 07:25:00 +0000 (GMT)
 Received: from funtu2.ibm.com (unknown [9.224.92.54])
 	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
@@ -74,10 +75,12 @@ To: dengler@linux.ibm.com
 Cc: freude@linux.ibm.com, linux-s390@vger.kernel.org,
         Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
         Alexander Gordeev <agordeev@linux.ibm.com>, fcallies@linux.ibm.com
-Subject: [PATCH v4 0/1] Use mutex_lock_killable() in ap_bus_force_rescan()
-Date: Thu,  9 Jul 2026 09:24:59 +0200
-Message-ID: <20260709072500.55706-1-freude@linux.ibm.com>
+Subject: [PATCH v4 1/1] s390/ap: Use mutex_lock_killable() in ap_bus_force_rescan()
+Date: Thu,  9 Jul 2026 09:25:00 +0200
+Message-ID: <20260709072500.55706-2-freude@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260709072500.55706-1-freude@linux.ibm.com>
+References: <20260709072500.55706-1-freude@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -87,22 +90,22 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Authority-Analysis: v=2.4 cv=Q/XiJY2a c=1 sm=1 tr=0 ts=6a4f4cd1 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
  a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=Y2IxJ9c9Rs8Kov3niI8_:22 a=Q3fI1I3nFb4Q5P0WJzsA:9
-X-Proofpoint-GUID: 6EiGPZUA9lcpEPVNugbudrGvVdApPhVV
-X-Proofpoint-ORIG-GUID: 6EiGPZUA9lcpEPVNugbudrGvVdApPhVV
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA5MDA2OCBTYWx0ZWRfX/2hBKD9Wbmbr
- 1x2plOSPwiJ9RRpkN/KxS4O9+nsy2r7aB6aFBwCLkYsthojJXEkYvP4+CA+rEBZF4tnCuKNT10B
- zUSZpIKObwnvFk390PbP32m7k3+5U94=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA5MDA2OCBTYWx0ZWRfX4Zi01ah4iTn2
- KDc08Wyx+1cnbEbNp6WNo0ZdCqhBiIiBf7iIk6/l6aYoZGed8L/ajWJYRLOJvF6TUjHQkH5r3pj
- /jLZjTs1noFdO7UgWQyAjyPyglObpgLZwvoo0KBasbWIDQ2GdRS+Da60iXjempl1zsBTK5XoQs5
- HW3Sv/rlAej2FX93eOfQ1hRL1ushf5iPz0XcXlYjYIagKLVaGLE0YSOjwehQnoWa0NgXcZEXAHO
- nqGKVYwLwVddLo07XxPPwwvHDr/sdKSGUQrgjx3LRdvnozbAa5sx6mYu5HoUOKlk2ZVdX5Ps/2O
- 6usbgzNPfGSx9HQU3l41dghRIFv/5noZTDlmldYsZaEpeKf2/LwFPEazBUrp52uWkf3fWAJQHd8
- JJvfOb02koUaR4kl1OYCNQ/qMMkIgCM4ZqNy5Q/tpO8c3XoT+gIfW139usjuCQ7avJOL3Qrp387
- Jhk34tlBuWbBI3CKMjw==
+ a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8 a=Q3fI1I3nFb4Q5P0WJzsA:9
+X-Proofpoint-GUID: PEKe61zZeAQXGyJQkjPwRMjTWwS_AIAJ
+X-Proofpoint-ORIG-GUID: PEKe61zZeAQXGyJQkjPwRMjTWwS_AIAJ
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA5MDA2OCBTYWx0ZWRfX21UOcf3FgOT3
+ LdBBs8e7F2Gi1MtDy4r4pW9USGnwjwBsaETkKTTPB4rg0LbyHxxKo4z1uxZUlPQKJNwdxX6D8hd
+ 7IKR68l0qltmSxhDNmfPOPtllwHM3FY=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA5MDA2OCBTYWx0ZWRfX56Sev+m0SCZI
+ lt9MPzuSkNWigtXU1XQxxRYRVw0m1PHu0HmkPWllrvoNVuxg84V0vwfrh0eRSF+cNQ5C60fTaRN
+ TRY7g2JOxldi6oS174Lku7/3yXSPltbVx4e9vBZWviWLsq+EZCXIZm/PFjob6m3N6SFdNxRfuR2
+ TpyvekLLBW07jRWXm79wykUpzWFCBALXGEwQcVqLEwN7WuCHrMM2EVfKNUDA2kAJGdW0yGKkpuX
+ KqJwg7D0O3HDH+BzZuBuYCOEMB0kVmhRkqno/c5/nRCy37CvS29eh7XxTtL8QPU7Zp2rTRsF1t2
+ od4ckhjnEFDAbfPo5FJnGFpWY1Puevpfw9m5p4t7XNkV86KljSdKEEV1UP6ttrzRKBeiEaguK78
+ vcyIZrJrtr3TcupNIt369pDr4MckxExX+QoEzzpJDXPDYuTm0M2I7cZjSy7oUyz8xioiJSCtKLf
+ eKK2LHO2ptGrNyMKuYA==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-09_01,2026-07-08_01,2025-10-01_01
@@ -118,13 +121,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21886-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21887-lists,linux-s390=lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:dengler@linux.ibm.com,m:freude@linux.ibm.com,m:linux-s390@vger.kernel.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:fcallies@linux.ibm.com,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[freude@linux.ibm.com,linux-s390@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -136,15 +139,15 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	ALIAS_RESOLVED(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:mid,linux.ibm.com:from_mime,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,linux.ibm.com:mid,linux.ibm.com:from_mime,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns];
 	DKIM_TRACE(0.00)[ibm.com:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: AF76372DA08
+X-Rspamd-Queue-Id: 2D04B72D9A7
 
 A deep dive into the AP bus code and zcrypt device driver about the
 usage of mutex locking showed that there is one questionable call in
@@ -158,21 +161,28 @@ on this. So this patch replaces mutex_lock_interruptible() with
 mutex_lock_killable() to  be able to handle SIGKILL especially in user
 space process context.
 
-v1 - initial version
-v2 - with v1 came up some discussion from Holger and Heiko. Heiko especially
-     wanted me to rephrase the header of the patch.
-     However v2 went out with a rewrite of the code as discussed and suggested
-     by Holger but Heikos complain were not addressed.
-v3 - now and finally I rephrased the patch header. Let's see what feedback
-     I'll get for this now.
-v4 - Rephrased the subject, Reviewed-by updated
-
-Harald Freudenberger (1):
-  s390/ap: Use mutex_lock_killable() in ap_bus_force_rescan()
-
+Suggested-by: Heiko Carstens <hca@linux.ibm.com>
+Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+Reviewed-by: Finn Callies <fcallies@linux.ibm.com>
+---
  drivers/s390/crypto/ap_bus.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
+index 2d4e00a1e48c..d82df5b4e2db 100644
+--- a/drivers/s390/crypto/ap_bus.c
++++ b/drivers/s390/crypto/ap_bus.c
+@@ -1173,8 +1173,8 @@ bool ap_bus_force_rescan(void)
+ 	 * for the lock which means the other task has finished and
+ 	 * stored the result in ap_scan_bus_result.
+ 	 */
+-	if (mutex_lock_interruptible(&ap_scan_bus_mutex)) {
+-		/* some error occurred, ignore and go out */
++	if (mutex_lock_killable(&ap_scan_bus_mutex)) {
++		/* fatal signal received, go out */
+ 		goto out;
+ 	}
+ 	rc = ap_scan_bus_result;
 -- 
 2.43.0
 
