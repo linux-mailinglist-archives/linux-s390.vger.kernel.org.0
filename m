@@ -1,214 +1,243 @@
-Return-Path: <linux-s390+bounces-21925-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21926-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id W+P3Dy6ET2pQigIAu9opvQ
-	(envelope-from <linux-s390+bounces-21925-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 13:21:18 +0200
+	id vxffLn2DT2oMigIAu9opvQ
+	(envelope-from <linux-s390+bounces-21926-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 13:18:21 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3ED9773037C
-	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 13:21:17 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2B9A7302AC
+	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 13:18:20 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=arm.com header.s=foss header.b=dqr2VgVo;
-	dmarc=pass (policy=none) header.from=arm.com;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21925-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21925-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=qualcomm.com header.s=qcppdkim1 header.b=QY+QAjG7;
+	dkim=pass header.d=oss.qualcomm.com header.s=google header.b=ClypiPMB;
+	dmarc=pass (policy=reject) header.from=qualcomm.com;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21926-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21926-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id B19C930184CD
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Jul 2026 11:13:30 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 37CFE302F757
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Jul 2026 11:15:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0EAD40E8E9;
-	Thu,  9 Jul 2026 11:13:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0181E411675;
+	Thu,  9 Jul 2026 11:15:19 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19FC23FCB0A;
-	Thu,  9 Jul 2026 11:13:26 +0000 (UTC)
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E12410D1E
+	for <linux-s390@vger.kernel.org>; Thu,  9 Jul 2026 11:15:17 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783595608; cv=none; b=tybnqddG6+Vu5dbrZ6Wn9O1VI8VVONMlFAJoP5tVPYznosP3Pdtjz1QXq59bZHsBKU9qkN7QET3vt9/iPBfINCGPeehZLizD5i8tv0B2pwT17FH2nxyJAExs2k3L/p0SD5BF5MkS3fh3Md2IPBXIT+XXk5zIv/aws6F5ydb9HGA=
+	t=1783595719; cv=none; b=CAtlcjvPKY4iWOOpftKnnvbX7+2hDKLnzhmfnc1CiRvbTyaQl8T64D24LkT9nD0Kptf0mefT/HyqPFJ8q7m58reGbi89jl62NOj6OkKfU4G/FwA4INDqWfxOO7kQXWJneRrWY7RAh4DL2HS60W6313ni8UT+LlNhovqsYBiif64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783595608; c=relaxed/simple;
-	bh=SAV3PQ7+eCtje2uVxH/LefEDAxakMvTJxqH9sWGHNjU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ilp/WTK+4w638hH1gh3EUXiofRT0YvEqQH4UI/QA5oAodbSJOe3eUns+/qkJnJlwqlU62IorvbjoA3zeLpczsdQ5yEixzkfUGwFRiPMt9xSXe3UmRJfK4EEM43heCw4syLpkHj+6Nc5N9f90mZrnsb26pe37BwRaPnB1ElkE84k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=dqr2VgVo; arc=none smtp.client-ip=217.140.110.172
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 25E443570;
-	Thu,  9 Jul 2026 04:13:22 -0700 (PDT)
-Received: from arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E40B83FE53;
-	Thu,  9 Jul 2026 04:13:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1783595606; bh=SAV3PQ7+eCtje2uVxH/LefEDAxakMvTJxqH9sWGHNjU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dqr2VgVo4J5uM+joPiCCMcuMryXYkHoDl8Yseh7vn5qnsw8KiVm31/w5zxn+qHZz6
-	 FQ+PFakz3CMKt8/wA88yoTOV9CvFtW55mtYdapJsL6VEivjrkA7AVCtB4s+WoNPG6B
-	 FEJ4cXCyQS9OxIYWx7h63mAscI4uPmXdfA6VwK+M=
-Date: Thu, 9 Jul 2026 12:13:19 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
-	Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Steven Price <steven.price@arm.com>,
-	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-	Jiri Pirko <jiri@resnulli.us>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Mostafa Saleh <smostafa@google.com>,
-	Petr Tesarik <ptesarik@suse.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>, x86@kernel.org,
-	Jiri Pirko <jiri@nvidia.com>, Michael Kelley <mhklinux@outlook.com>
-Subject: Re: [PATCH v7 16/22] dma-direct: make dma_direct_map_phys() honor
- DMA_ATTR_CC_SHARED
-Message-ID: <ak-CT3oanlDfgTy4@arm.com>
-References: <20260701054926.825925-1-aneesh.kumar@kernel.org>
- <20260701054926.825925-17-aneesh.kumar@kernel.org>
- <ak42F240d-53QeFN@arm.com>
- <yq5apl0xgy89.fsf@kernel.org>
+	s=arc-20240116; t=1783595719; c=relaxed/simple;
+	bh=hMQxGqDMYjVKngpsQDGYdUmnvhAEUJmuhgzHeTWQMzw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HpZjZBijl2o62WV2RpcFuTvzs4rmFMfeC2Ahqc7sI0EWMbXIqnKS6vYAw0yn6Y4S+C61v050svsteJB9NMRiNxYJHkpUdFp2ON3MvKHpezJvkBZYajp37FXUL1sIKNEukEVXBhW8bAFbgkzbJyutA+kUY80vdKmjaRZ3tMPLCVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=QY+QAjG7; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=ClypiPMB; arc=none smtp.client-ip=205.220.180.131
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 669Ax7vs1574485
+	for <linux-s390@vger.kernel.org>; Thu, 9 Jul 2026 11:15:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	h+HMbGg4SL+5U70oYYJ2l7pisY/QrLqdUOSZy/EbODI=; b=QY+QAjG7JhI01DOL
+	wrAWMBSfa2EsIJlZOBwNOpqR74GzzqMsWGKTL1nRLElce+kxLmPXGSEYyErRT9bs
+	jrNUZ5qVhOMFlBS0g8+r8Lj5pkWx0HY2wr4Y4a6rA/soxkxGEv/GhwH6BfRMk7jC
+	wxIkHw7CzIPD4C4hy06RY+nKd1hJsp9iQzkVAWdtTEM+7XcTYBvK6npbb6yBBaJ1
+	CW4Qj8HEgGXE+RZq1+7fNu0Wd4ijs3A5FZcUaa9zPvqhQLDRRhC6VCASBWFqdB7d
+	2iZ0nRAY5gwJd6YOiD4NmrqJffwjsCb4nFAr/D46CSDxbk0OC7RRzM/ZY22CoVf3
+	XPhT6g==
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f9urvuavd-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-s390@vger.kernel.org>; Thu, 09 Jul 2026 11:15:16 +0000 (GMT)
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-51c1a9764f0so23351151cf.1
+        for <linux-s390@vger.kernel.org>; Thu, 09 Jul 2026 04:15:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1783595716; x=1784200516; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from:references
+         :cc:to:content-language:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=h+HMbGg4SL+5U70oYYJ2l7pisY/QrLqdUOSZy/EbODI=;
+        b=ClypiPMB6jKo7P5sHj1+Fv/mXETxyK3+/EjkqAnWwmoljqJN7QXJfOu8CAfraZuH3g
+         GuHZWt2bIkP4U44wALzkgkjYxWaBQ3fW+Yq5AbO0jjc+qEBexV7WJs8/CmDA7BeTm53A
+         rxfFuO9zHrKoCIY4iI+9GnJQGaMoeWyiwzOu6GNJMrqZ8bA7V2QfivjkLOmFR/SVoHy2
+         6qZUS0aKJjZDlw8GsTVqQtLrEL3ML4LFs70Oeu1OV7Bkv5tcqv8T/kxWXEsdum2EALmV
+         hAiM2NdhGskiXJxHuFYFjT/ROa1oISdR5APSgrrMBfRwTK94dnkpoY525IwBv+86H2Kv
+         +ITQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783595716; x=1784200516;
+        h=content-transfer-encoding:content-type:in-reply-to:from:references
+         :cc:to:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=h+HMbGg4SL+5U70oYYJ2l7pisY/QrLqdUOSZy/EbODI=;
+        b=GnGZQmNRqscwVGZtu8r6AqUQc3uiOPO/u77X1np4VAGD462W4ixM66JlIGyhg3QHGV
+         ni1sc7guY537psJK4DaeAms08XTH6TMSh5cYhRIGsQQ4RQWsByfL+6ONsTiKyY1Ixumy
+         1WgKi2bW3pune7n91eoGzhfa7MVCTxJczu4enJt7N0s6/7EYovFxloTKbZe4bHhf/JtD
+         DTAGf2KqKB4R1EbACn2sQhe8DZOEgU84Aif4cXnW1MLmnmG/DlQPypNZrPOZXQkgfNL5
+         PJhJu1PAiQPV3j9KS0CROsmtK7VALfWPzCawjGnk/yD5Pz6ItNPyYL0UeGKGZdAwv7fu
+         OXwQ==
+X-Forwarded-Encrypted: i=1; AHgh+RpQLN2CLIm8RuUz9kki+YNs4x+7n/n1dZ58BVPcF2Y8a1/MiLUlhCozeNxTkH0l7wtn4CjsNmNVX55b@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmpvbB3DCxWCcAP1AtdV6xBC3eeepmMVqQV1RVgpV2WJ0Z4Th2
+	fftF2bvb+KW8vdmBOcA0YpIwlNwuaJJK/MKc9Lk6PKOaNpmal1tJrpiug3RHGGad/8ODPPYLIo0
+	TpR63ipgY00TvPtwQlLKJT6mN7G6poo+A7lDMSqUZ9R7OV+JaI62YkEFIt2Qa0DvLYgcQpeoz
+X-Gm-Gg: AfdE7ck5pPDpBmuCFit8L5eTARJqJBPWJAbb/24qXdsEit2nhL2zc3nPUUx8hpUiWfX
+	WR9diPvTu5cidx81ZVn4HueaS4fOMu63DOQ4PKY5jvk3VCdsHwCPk5xhpWsuJboyTRXpKycBu4l
+	VrK6WzqctqrDWu+0nGtF6kM9ZE3PQxAyiHtif9pisLSOewpmXTEAlODMK6ABbz+nZBftuvDhWmR
+	6++iHx4neYHJs0qM9OA1I6DLMlR+wgi2Z8bZDL3Et5kVa0/ltQv67OBf/HKIY/0TuiM7fkBpB26
+	hSdPIxkhnjwofD+P+fiJQngnmGf8T6/SZl4j8uOwUKAAkMxr5dutt643c16Ky+edDnbZTNci86E
+	QwtcVr0pjDuzEW6O6yVNEDRAo7EFsBvWSgXCEM1O+kmQTbveKf0fw6fyQZcaC4Q==
+X-Received: by 2002:a05:622a:58cd:b0:51a:89db:95a4 with SMTP id d75a77b69052e-51c8b2bdfecmr69627201cf.6.1783595716208;
+        Thu, 09 Jul 2026 04:15:16 -0700 (PDT)
+X-Received: by 2002:a05:622a:58cd:b0:51a:89db:95a4 with SMTP id d75a77b69052e-51c8b2bdfecmr69626741cf.6.1783595715754;
+        Thu, 09 Jul 2026 04:15:15 -0700 (PDT)
+Received: from [192.168.69.219] (88-187-86-199.subs.proxad.net. [88.187.86.199])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47a9e4d843csm49838232f8f.14.2026.07.09.04.15.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2026 04:15:14 -0700 (PDT)
+Message-ID: <954fe87d-9d43-4819-9f5a-eb0e5e5affea@oss.qualcomm.com>
+Date: Thu, 9 Jul 2026 13:15:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq5apl0xgy89.fsf@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [patch 03/18] entry: Provide
+ [syscall_]enter_from_user_mode_randomize_stack()
+Content-Language: en-US
+To: Thomas Gleixner <tglx@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Shrikanth Hegde <sshegde@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+        Kees Cook <kees@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+        loongarch@lists.linux.dev, Paul Walmsley <pjw@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org,
+        Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
+        x86@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Jinjie Ruan <ruanjinjie@huawei.com>, Andy Lutomirski <luto@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>, Guo Ren <guoren@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Helge Deller
+ <deller@gmx.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Richard Weinberger <richard@nod.at>, Chris Zankel <chris@zankel.net>,
+        linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-um@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>, Vineet Gupta <vgupta@kernel.org>,
+        Will Deacon <will@kernel.org>, Brian Cain <bcain@kernel.org>,
+        Michal Simek <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andreas Larsson <andreas@gaisler.com>,
+        linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org,
+        linux-openrisc@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-arch@vger.kernel.org,
+        =?UTF-8?Q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+References: <20260707181957.433213175@kernel.org>
+ <20260707190253.816918647@kernel.org>
+From: =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@oss.qualcomm.com>
+In-Reply-To: <20260707190253.816918647@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA5MDEwOCBTYWx0ZWRfX3VAqXmZNzrED
+ BCgD7jS+SFByi8YslfCXnw/pJxwOAJXZrb9rpZr+taeKqVAwFuya4G2u5yhe8tzPGGlJ5niKf7G
+ Q5YxmR5cMNKseWxUBqZlYDp/cuROcDc=
+X-Proofpoint-GUID: gHiSTUpFu4iktCRFgtB90YGKbo3ey_NM
+X-Proofpoint-ORIG-GUID: gHiSTUpFu4iktCRFgtB90YGKbo3ey_NM
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA5MDEwOCBTYWx0ZWRfXz3pEYyROpS9C
+ KLKUDeWewMPvO3dI8EgL45jbMquCo9JLx/D/QV7eG95fwFeLahHu0K+U1pEuDjE1hliNXIa7WPz
+ cxNnWVkzNBbHxUuXPhqEOBaa+Xk35aJWFdsOd+zRmJchuV4rq0ERoMJ76xzCwnoKeg1PXptIpdr
+ jx7AXiMRn4EmS7rkkIUxGuTB4rb5geZFRRGu70JrEhcI5XhBJWnDkom7MXnboAjzHblOGdkTCHI
+ wiAM+3CA6KTTXI08Ml1jSzrSUhQ1OwGpYdtSIqkKgAUD0HvU87ATW3roi6nDyHQqZhRWoSi8AQu
+ 0PYMSpcpliObMpTxUVtD8IWMzs3CEm1JRr5MehxAOOhU2gAP4gWRoGhN2Fd+gWSOc+w+wjxUAR2
+ P+BOjz7JPvEPoA7hoaVHZl0I7dGQPPoZU/ZMF9UBNk6ovHAnhhxc73Mas2L2s+nncuHP0V+cBlx
+ nmtf7ux/RKXcHC30agQ==
+X-Authority-Analysis: v=2.4 cv=H43rBeYi c=1 sm=1 tr=0 ts=6a4f82c4 cx=c_pps
+ a=JbAStetqSzwMeJznSMzCyw==:117 a=4s3hRJSeHn4rkQlkrse1kQ==:17
+ a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=M51BFTxLslgA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=ZpdpYltYx_vBUK5n70dp:22
+ a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=vLKI4MkW7k7maJ7H7gsA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=uxP6HrT_eTzRwkO_Te1X:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-09_02,2026-07-09_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 impostorscore=0 adultscore=0 spamscore=0 phishscore=0
+ bulkscore=0 priorityscore=1501 malwarescore=0 lowpriorityscore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2607090108
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[arm.com,none];
-	R_DKIM_ALLOW(-0.20)[arm.com:s=foss];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21925-lists,linux-s390=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[lists.linux.dev,lists.infradead.org,vger.kernel.org,arm.com,samsung.com,kernel.org,resnulli.us,ziepe.ca,google.com,suse.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,linux.ibm.com,ellerman.id.au,gmail.com,nvidia.com,outlook.com];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[catalin.marinas@arm.com,linux-s390@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[33];
-	FORGED_RECIPIENTS(0.00)[m:aneesh.kumar@kernel.org,m:iommu@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:robin.murphy@arm.com,m:m.szyprowski@samsung.com,m:will@kernel.org,m:maz@kernel.org,m:steven.price@arm.com,m:Suzuki.Poulose@arm.com,m:jiri@resnulli.us,m:jgg@ziepe.ca,m:smostafa@google.com,m:ptesarik@suse.com,m:aik@amd.com,m:dan.j.williams@intel.com,m:yilun.xu@linux.intel.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-s390@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:x86@kernel.org,m:jiri@nvidia.com,m:mhklinux@outlook.com,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[arm.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[catalin.marinas@arm.com,linux-s390@vger.kernel.org];
+	FORGED_SENDER(0.00)[philmd@oss.qualcomm.com,linux-s390@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[infradead.org,ellerman.id.au,linux.ibm.com,lists.ozlabs.org,kernel.org,lists.linux.dev,dabbelt.com,lists.infradead.org,vger.kernel.org,arm.com,huawei.com,redhat.com,linaro.org,armlinux.org.uk,linux-m68k.org,alpha.franken.de,gmx.de,users.sourceforge.jp,nod.at,zankel.net,lists.linux-m68k.org,arndb.de,monstr.eu,davemloft.net,gaisler.com,suse.de,lwn.net];
+	TAGGED_FROM(0.00)[bounces-21926-lists,linux-s390=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:tglx@kernel.org,m:linux-kernel@vger.kernel.org,m:peterz@infradead.org,m:mpe@ellerman.id.au,m:sshegde@linux.ibm.com,m:linuxppc-dev@lists.ozlabs.org,m:kees@kernel.org,m:chenhuacai@kernel.org,m:loongarch@lists.linux.dev,m:pjw@kernel.org,m:palmer@dabbelt.com,m:linux-riscv@lists.infradead.org,m:svens@linux.ibm.com,m:linux-s390@vger.kernel.org,m:x86@kernel.org,m:mark.rutland@arm.com,m:ruanjinjie@huawei.com,m:luto@kernel.org,m:oleg@redhat.com,m:richard.henderson@linaro.org,m:linux@armlinux.org.uk,m:catalin.marinas@arm.com,m:guoren@kernel.org,m:geert@linux-m68k.org,m:tsbogend@alpha.franken.de,m:deller@gmx.de,m:ysato@users.sourceforge.jp,m:richard@nod.at,m:chris@zankel.net,m:linux-arm-kernel@lists.infradead.org,m:linux-alpha@vger.kernel.org,m:linux-csky@vger.kernel.org,m:linux-m68k@lists.linux-m68k.org,m:linux-mips@vger.kernel.org,m:linux-parisc@vger.kernel.org,m:linux-sh@vger.kernel.org,m:linux-um@lists.infradead.org,m:arnd@arndb.de,m:vgupta@kernel.org,m:will@kerne
+ l.org,m:bcain@kernel.org,m:monstr@monstr.eu,m:dinguyen@kernel.org,m:davem@davemloft.net,m:andreas@gaisler.com,m:linux-snps-arc@lists.infradead.org,m:linux-hexagon@vger.kernel.org,m:linux-openrisc@vger.kernel.org,m:sparclinux@vger.kernel.org,m:linux-arch@vger.kernel.org,m:msuchanek@suse.de,m:corbet@lwn.net,m:linux-doc@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,qualcomm.com:email,qualcomm.com:dkim,oss.qualcomm.com:from_mime,oss.qualcomm.com:dkim,oss.qualcomm.com:mid];
 	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[philmd@oss.qualcomm.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCPT_COUNT_GT_50(0.00)[53];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,arm.com:from_mime,arm.com:email,arm.com:mid,arm.com:dkim]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3ED9773037C
+X-Rspamd-Queue-Id: C2B9A7302AC
 
-On Wed, Jul 08, 2026 at 11:28:14PM +0530, Aneesh Kumar K.V wrote:
-> Catalin Marinas <catalin.marinas@arm.com> writes:
+On 7/7/26 21:06, Thomas Gleixner wrote:
+> Randomizing the syscall stack can only happen after state is established
+> via enter_from_user_mode() or syscall_enter_from_user_mode(). The earlier
+> it happens the better.
 > 
-> > On Wed, Jul 01, 2026 at 11:19:20AM +0530, Aneesh Kumar K.V (Arm) wrote:
-> >> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> >> index 97987f850a33..acf67c7064db 100644
-> >> --- a/arch/arm64/mm/init.c
-> >> +++ b/arch/arm64/mm/init.c
-> >> @@ -338,10 +338,8 @@ void __init arch_mm_preinit(void)
-> >>  	unsigned int flags = SWIOTLB_VERBOSE;
-> >>  	bool swiotlb = max_pfn > PFN_DOWN(arm64_dma_phys_limit);
-> >>  
-> >> -	if (is_realm_world()) {
-> >> +	if (is_realm_world())
-> >>  		swiotlb = true;
-> >> -		flags |= SWIOTLB_FORCE;
-> >> -	}
-> >
-> > For this part:
-> >
-> > Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> >
-> >> diff --git a/kernel/dma/direct.h b/kernel/dma/direct.h
-> >> index e05dc7649366..f3fc28f352ba 100644
-> >> --- a/kernel/dma/direct.h
-> >> +++ b/kernel/dma/direct.h
-> >> @@ -88,37 +88,40 @@ static inline dma_addr_t dma_direct_map_phys(struct device *dev,
-> >>  {
-> >>  	dma_addr_t dma_addr;
-> >>  
-> >> +	/*
-> >> +	 * For a device requiring unencrypted DMA, MMIO memory is treated
-> >> +	 * as shared by default.
-> >> +	 */
-> >> +	if (force_dma_unencrypted(dev) && (attrs & DMA_ATTR_MMIO))
-> >> +		attrs |= DMA_ATTR_CC_SHARED;
-> >> +
-> >>  	if (is_swiotlb_force_bounce(dev)) {
-> >> -		if (!(attrs & DMA_ATTR_CC_SHARED)) {
-> >> -			if (attrs & (DMA_ATTR_MMIO | DMA_ATTR_REQUIRE_COHERENT))
-> >> -				return DMA_MAPPING_ERROR;
-> >> +		if (attrs & (DMA_ATTR_MMIO | DMA_ATTR_REQUIRE_COHERENT))
-> >> +			return DMA_MAPPING_ERROR;
-> >>  
-> >> -			return swiotlb_map(dev, phys, size, dir, attrs);
-> >> -		}
-> >> -	} else if (attrs & DMA_ATTR_CC_SHARED) {
-> >> -		return DMA_MAPPING_ERROR;
-> >> +		return swiotlb_map(dev, phys, size, dir, attrs);
-> >>  	}
-> >>  
-> >> -	if (attrs & DMA_ATTR_MMIO) {
-> >> -		dma_addr = phys;
-> >> -		if (unlikely(!dma_capable(dev, dma_addr, size, false, attrs)))
-> >> -			goto err_overflow;
-> >> -	} else if (attrs & DMA_ATTR_CC_SHARED) {
-> >> +	if (attrs & DMA_ATTR_CC_SHARED)
-> >>  		dma_addr = phys_to_dma_unencrypted(dev, phys);
-> >> +	else
-> >> +		dma_addr = phys_to_dma_encrypted(dev, phys);
-> >
-> > For AMD/SME, on host with memory encryption we now end up setting the C
-> > bit for DMA_ATTR_MMIO. This is fine for RAM but not sure whether
-> > some other MMIO bus understands this attribute. Maybe we should stick to
-> > something like __phys_to_dma() for the !CC_SHARED && MMIO path. Or,
-> > since this is not universally defined, just use the old dma_addr = phys
-> > if MMIO and ignore any unlikely DMA offsets.
-> >
+> Provide two new macros to consolidate that:
 > 
-> Considering for AMD/SME system an unencrypted dma addr is one without C
-> bit, will this be good?
+>    - enter_from_user_mode_randomize_stack()
+> 	enter_from_user_mode();
+> 	add_random_kstack_offset_irqsoff();
 > 
-> 	/*
-> 	 * For host memory encryption and device requiring unencrypted DMA,
-> 	 * MMIO memory is treated as shared by default.
-> 	 */
-> 	if (attrs & DMA_ATTR_MMIO) {
-> 		if (cc_platform_has(CC_ATTR_HOST_MEM_ENCRYPT) || force_dma_unencrypted(dev))
-> 			attrs |= DMA_ATTR_CC_SHARED;
-> 	}
+>    - syscall_enter_from_user_mode_randomize_stack()
+> 	enter_from_user_mode_randomize_stack();
+> 	syscall_enter_from_user_mode_work();
+>      
+> to reduce boiler plate code.
+> 
+> Those are macros and not inline functions as the latter would limit the
+> stack randomization scope to the inline function itself.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@kernel.org>
+> ---
+>   include/linux/entry-common.h |   56 +++++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 56 insertions(+)
 
-Yes, I think it does the trick, preserves the current semantics for AMD.
-I guess you could use a single 'if' for all checks (up to you).
-
--- 
-Catalin
+Reviewed-by: Philippe Mathieu-Daudé <philmd@oss.qualcomm.com>
 
