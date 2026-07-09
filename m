@@ -1,259 +1,199 @@
-Return-Path: <linux-s390+bounces-21879-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21881-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id wtMFO8dAT2q1cwIAu9opvQ
-	(envelope-from <linux-s390+bounces-21879-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 08:33:43 +0200
+	id y7G5FjhBT2rVcwIAu9opvQ
+	(envelope-from <linux-s390+bounces-21881-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 08:35:36 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60F5572D318
-	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 08:33:43 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE07272D360
+	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 08:35:35 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=KykSZFYS;
-	dmarc=pass (policy=none) header.from=ibm.com;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21879-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21879-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=huawei.com header.s=dkim header.b=ezKkmXBT;
+	dmarc=pass (policy=quarantine) header.from=huawei.com;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21881-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-21881-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4587330CCFB4
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Jul 2026 06:28:47 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4D0C830E244D
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Jul 2026 06:30:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06AF83C2B81;
-	Thu,  9 Jul 2026 06:27:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCD8A3CE489;
+	Thu,  9 Jul 2026 06:30:29 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from canpmsgout01.his.huawei.com (canpmsgout01.his.huawei.com [113.46.200.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5623C7E17;
-	Thu,  9 Jul 2026 06:27:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304783CEBB1;
+	Thu,  9 Jul 2026 06:30:25 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783578471; cv=none; b=R9vxP9RgefQnaeahhDnZ6rKv3NgkS2RbCvj/BHNx1E+uOLies8cOtq0Mk3UbzU4OnbraIR2dU+TCEJpaid7IgH3J8zjavGXd6TIr2oWhhV4WIplBhb4QGafbMqrZRJ/07kEzHUWt52+ig/bw/9lxX6jlcevYCmH1Hai5xbtAcWs=
+	t=1783578629; cv=none; b=BwXDA3bqywG86cpHILVYGfCs/BFEy/kjX3a31Zu5yknDtAGhIpElW120NSGJEGVmlX+JjOs0dvi5QaEU8P+F4Q8f5RGrRHixKuh6qD1vUIGXgjuwnCtlG8J62sChnBUtOZLTpEjBL4vBx5BehT1vliGFHVgw2cG3mXXDPATrwmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783578471; c=relaxed/simple;
-	bh=SBIPRjPcrHet0/f8Ou4u14bqmwxyEO0vkaKxM41Zow4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hKXYcI1emgrw38ed/p+5tdYigdirKEi1WCIfrUp8lMM5XSVoqM5m767hg6D216P4FxmkdrTbUCvWC7fLr/ayqzugm+gu3as1Vzf5k6mL2FF92ZmzTQxKNRd4+gbap4wAjdvP6QAIASkYBd3Cp7oR3WQCAzghTGe6Du3gcRsAzbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KykSZFYS; arc=none smtp.client-ip=148.163.158.5
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6696IU7d480092;
-	Thu, 9 Jul 2026 06:27:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=KDWmzFVTks3QFT4U3pIlut5cLw8vc7DJ59ZSeJ9JW
-	Ag=; b=KykSZFYSWI5AyS8wGPBO21p1BvMbLAPYIa1t0a3MauEDebQkOWWqXr/1/
-	e/53/eVyNtJCJK35HU9syi4zmkKpGkXd0+3DCsAQRSEG8fDpZWBpNtyxOL9rlRAa
-	060+4mFAkXkPkshpY6CoW5UKaUCa9rlT6dFtk2+jn04r2Ji2febCJCa5+gnrV7N0
-	m4Un7OnTn70Ye5/tYVXZ0Ad36W8iwVfpJqH2xOsywCID02GG+6bW8UnljOgyqV9k
-	zoA6jTlVVJXKv5nGb7r9DoVo01YS9Xl8/oyc8uZ1KpG/tZpjsoMpUyFrrAVQCL2e
-	foOUnFwLmH/mkyI1ba4uxy40VSlHg==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6stt0mje-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 Jul 2026 06:27:45 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6696JmxP011593;
-	Thu, 9 Jul 2026 06:27:44 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4f7f6ybjjq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 Jul 2026 06:27:44 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6696Revd39387474
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 9 Jul 2026 06:27:40 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 53CDD20043;
-	Thu,  9 Jul 2026 06:27:40 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 280B42004B;
-	Thu,  9 Jul 2026 06:27:40 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  9 Jul 2026 06:27:40 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org
-Cc: agordeev@linux.ibm.com, iii@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, japo@linux.ibm.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf test: perftool-testsuite-report fails on s390
-Date: Thu,  9 Jul 2026 08:27:24 +0200
-Message-ID: <20260709062724.2663228-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.53.0
+	s=arc-20240116; t=1783578629; c=relaxed/simple;
+	bh=6wGLoX3NXZmx8A1bQLb97P7/2XQ6DGGFwSWG+T/grFI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=QQzOOh4pr5eX6cqG72DdpIpqYV5+FU1wB8u7NqUwT2dMtlefo2CC5uBMSuG5WB7wla0N0cwW/xfT3f5e7opY26aHhuLCbcK5WgA7nfD6jHBnHTJpty0r96iZFqWRyMVGpTHCoLQNfoU7uT3W0lVSnYI7vodsRY67ZHgTi1nfypk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=ezKkmXBT; arc=none smtp.client-ip=113.46.200.216
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=XPEUhf19vuUBFdiEFO1XIuZL6JrCsEiMauadhYQeXkI=;
+	b=ezKkmXBTzR/qNWnLeDbF+5BJNIo8pxBj9ojrafj3ZsTNYsFYXSZEejUWq4j67MLSYDOtlML8b
+	4d5j0Apq64AYWvH9mkFxelT89X6YltSvbtnX3ieBwv4tiM+7+5GgVA1Sav5ubsVZtqfEBcyCMa8
+	2mgoep7V9O3WqitLx2zHOl8=
+Received: from mail.maildlp.com (unknown [172.19.162.140])
+	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4gwlGL6KHvz1T4gk;
+	Thu,  9 Jul 2026 14:21:14 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id CAD922012A;
+	Thu,  9 Jul 2026 14:30:16 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 9 Jul 2026 14:30:12 +0800
+Message-ID: <3ac6d4be-7c57-44c2-80a0-408e2c6f8136@huawei.com>
+Date: Thu, 9 Jul 2026 14:30:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: EIIQkvUol1u4Ytf0a2UI4PJM3pTFE8CN
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA5MDA1NyBTYWx0ZWRfXz/NGdpu0/Ww3
- HQNYD1OrDE1mynO9TnIZ8GlMWPoe3JBfYCVYbD0pW1vrGjlSc/9I8PgsBVtbIW+bu45wCNN6Ehv
- xJvgebto40QWOpv0RjoAyYaXz2pVpvs=
-X-Authority-Analysis: v=2.4 cv=DKW/JSNb c=1 sm=1 tr=0 ts=6a4f3f61 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8 a=1Dfox4aGSFRhZIfV6nwA:9
-X-Proofpoint-GUID: EIIQkvUol1u4Ytf0a2UI4PJM3pTFE8CN
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA5MDA1NyBTYWx0ZWRfX8KOVocDeoSMe
- lbv2gaO+7MC4PVxnvwgNVMxpjTzO/aJZ0n2t9+8TMggj/Phz7Sry2wtSKECpZeYjP6p0OUjzD7f
- gSoXlQPzzGLlihIU8KNPMVurgyqJ50oWEFiMlZ17GwBvXrlPEtQ6xzvTP+KqhZWiEvk9I1TNRcd
- bNLXVST686WKRTd6Kr8TOJI3O2PJWofV673mEEODJJrblFt9WROenf7M6wAUa9FrFvJdHavcQUv
- +gQ8ty6u2o1hUH8AsN2B4tBKdMS3aL2K7I1uTMbv5qH2mR5ep2T6h6DX5upWJSIQeF+CJAl8SKF
- YjRWBzz5zK+IqCPVNJCy1SSVpfESrPIIgLedfvVPK4651lywaJCf9K6vid8UpxC+lK+H759l9Zv
- KGHcbajXCYq2B0idKRYON+y/p37amUfWh4icSl9oyFMnnItDsBYdtVD4oIzuw82H58eY7ecLyd1
- kEq8/DmOpvY2yvh3g6Q==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-09_01,2026-07-08_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 bulkscore=0 clxscore=1011 phishscore=0 impostorscore=0
- priorityscore=1501 adultscore=0 lowpriorityscore=0 suspectscore=0
- malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2607090057
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v16 02/18] syscall_user_dispatch: Introduce a weak
+ fallback for arch_syscall_is_vdso_sigreturn()
+To: Mark Rutland <mark.rutland@arm.com>
+CC: <oleg@redhat.com>, <richard.henderson@linaro.org>, <mattst88@gmail.com>,
+	<linmag7@gmail.com>, <linux@armlinux.org.uk>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <kees@kernel.org>, <guoren@kernel.org>,
+	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <geert@linux-m68k.org>,
+	<tsbogend@alpha.franken.de>, <James.Bottomley@hansenpartnership.com>,
+	<deller@gmx.de>, <maddy@linux.ibm.com>, <mpe@ellerman.id.au>,
+	<npiggin@gmail.com>, <chleroy@kernel.org>, <pjw@kernel.org>,
+	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
+	<hca@linux.ibm.com>, <gor@linux.ibm.com>, <agordeev@linux.ibm.com>,
+	<borntraeger@linux.ibm.com>, <svens@linux.ibm.com>,
+	<ysato@users.sourceforge.jp>, <dalias@libc.org>,
+	<glaubitz@physik.fu-berlin.de>, <richard@nod.at>,
+	<anton.ivanov@cambridgegreys.com>, <johannes@sipsolutions.net>,
+	<luto@kernel.org>, <tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <chris@zankel.net>,
+	<jcmvbkbc@gmail.com>, <peterz@infradead.org>, <wad@chromium.org>,
+	<thuth@redhat.com>, <ada.coupriediaz@arm.com>, <kevin.brodsky@arm.com>,
+	<linusw@kernel.org>, <yeoreum.yun@arm.com>, <song@kernel.org>,
+	<james.morse@arm.com>, <anshuman.khandual@arm.com>, <broonie@kernel.org>,
+	<liqiang01@kylinos.cn>, <pengcan@kylinos.cn>, <ryan.roberts@arm.com>,
+	<yangtiezhu@loongson.cn>, <sshegde@linux.ibm.com>, <mchauras@linux.ibm.com>,
+	<austin.kim@lge.com>, <jchrist@linux.ibm.com>, <arnd@arndb.de>,
+	<thomas.weissschuh@linutronix.de>, <sohil.mehta@intel.com>,
+	<andrew.cooper3@citrix.com>, <jgross@suse.com>, <kas@kernel.org>,
+	<x86@kernel.org>, <linux-alpha@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mm@kvack.org>, <linux-csky@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-m68k@lists.linux-m68k.org>,
+	<linux-mips@vger.kernel.org>, <linux-parisc@vger.kernel.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
+	<linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
+	<linux-um@lists.infradead.org>
+References: <20260629130616.642022-1-ruanjinjie@huawei.com>
+ <20260629130616.642022-3-ruanjinjie@huawei.com> <akegeU59jSK9t7FX@J2N7QTR9R3>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <akegeU59jSK9t7FX@J2N7QTR9R3>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-9.16 / 15.00];
+	WHITELIST_DMARC(-7.00)[huawei.com:D:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
+	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21879-lists,linux-s390=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:linux-kernel@vger.kernel.org,m:linux-s390@vger.kernel.org,m:linux-perf-users@vger.kernel.org,m:acme@kernel.org,m:namhyung@kernel.org,m:agordeev@linux.ibm.com,m:iii@linux.ibm.com,m:sumanthk@linux.ibm.com,m:hca@linux.ibm.com,m:japo@linux.ibm.com,m:tmricht@linux.ibm.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[tmricht@linux.ibm.com,linux-s390@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_NEQ_ENVFROM(0.00)[tmricht@linux.ibm.com,linux-s390@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[redhat.com,linaro.org,gmail.com,armlinux.org.uk,arm.com,kernel.org,xen0n.name,linux-m68k.org,alpha.franken.de,hansenpartnership.com,gmx.de,linux.ibm.com,ellerman.id.au,dabbelt.com,eecs.berkeley.edu,ghiti.fr,users.sourceforge.jp,libc.org,physik.fu-berlin.de,nod.at,cambridgegreys.com,sipsolutions.net,alien8.de,linux.intel.com,zytor.com,zankel.net,infradead.org,chromium.org,kylinos.cn,loongson.cn,lge.com,arndb.de,linutronix.de,intel.com,citrix.com,suse.com,vger.kernel.org,lists.infradead.org,kvack.org,lists.linux.dev,lists.linux-m68k.org,lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-21881-lists,linux-s390=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER(0.00)[ruanjinjie@huawei.com,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:mark.rutland@arm.com,m:oleg@redhat.com,m:richard.henderson@linaro.org,m:mattst88@gmail.com,m:linmag7@gmail.com,m:linux@armlinux.org.uk,m:catalin.marinas@arm.com,m:will@kernel.org,m:kees@kernel.org,m:guoren@kernel.org,m:chenhuacai@kernel.org,m:kernel@xen0n.name,m:geert@linux-m68k.org,m:tsbogend@alpha.franken.de,m:James.Bottomley@hansenpartnership.com,m:deller@gmx.de,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:alex@ghiti.fr,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:ysato@users.sourceforge.jp,m:dalias@libc.org,m:glaubitz@physik.fu-berlin.de,m:richard@nod.at,m:anton.ivanov@cambridgegreys.com,m:johannes@sipsolutions.net,m:luto@kernel.org,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:hpa@zytor.com,m:chris@zankel.net,m:jcmvbkbc@gmail.com,m:peterz@infr
+ adead.org,m:wad@chromium.org,m:thuth@redhat.com,m:ada.coupriediaz@arm.com,m:kevin.brodsky@arm.com,m:linusw@kernel.org,m:yeoreum.yun@arm.com,m:song@kernel.org,m:james.morse@arm.com,m:anshuman.khandual@arm.com,m:broonie@kernel.org,m:liqiang01@kylinos.cn,m:pengcan@kylinos.cn,m:ryan.roberts@arm.com,m:yangtiezhu@loongson.cn,m:sshegde@linux.ibm.com,m:mchauras@linux.ibm.com,m:austin.kim@lge.com,m:jchrist@linux.ibm.com,m:arnd@arndb.de,m:thomas.weissschuh@linutronix.de,m:sohil.mehta@intel.com,m:andrew.cooper3@citrix.com,m:jgross@suse.com,m:kas@kernel.org,m:x86@kernel.org,m:linux-alpha@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-mm@kvack.org,m:linux-csky@vger.kernel.org,m:loongarch@lists.linux.dev,m:linux-m68k@lists.linux-m68k.org,m:linux-mips@vger.kernel.org,m:linux-parisc@vger.kernel.org,m:linuxppc-dev@lists.ozlabs.org,m:linux-riscv@lists.infradead.org,m:linux-s390@vger.kernel.org,m:linux-sh@vger.kernel.org,m:linux-um@lists.infradead.org,s:l
+ ists@lfdr.de];
+	DKIM_TRACE(0.00)[huawei.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	ALIAS_RESOLVED(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,linux.ibm.com:mid,linux.ibm.com:from_mime,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,perftool-testsuite_report.sh:url,perftool-testsuite-report.sh:url,perf.data:url];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ruanjinjie@huawei.com,linux-s390@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCPT_COUNT_GT_50(0.00)[83];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[11]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:from_mime,huawei.com:dkim,huawei.com:mid,vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 60F5572D318
+X-Rspamd-Queue-Id: CE07272D360
 
-Test case perftool-testsuite-report.sh always fails on s390.
-Root cause is a default timeout for addr2line command which is too
-short for s390. Function cmd_addr2line() invokes addr2line command
-and reads via pipe the function name on stdout, after writing
-an address to stdin. There is a default timeout for the expected
-reply, but very often this timeout is too short and nothing is
-returned. This leads to the error message listed in
-util/addr2line.c:
 
-   switch (read_addr2line_record(&io, cmd_a2l_style, dso_name, ..) {
-   case -1:
-          if (!symbol_conf.addr2line_disable_warn)
-                 pr_warning("%s %s: could not read first record\n",
-				   ...)
-          goto out;
-   ...
 
-As the test case emits warnings, it is reported as failed.
-Fix this for s390 and create a temporary perf configuration file to
-suppress these warnings. (An alternative would be to increase
-the default timeout to a larger value).
+On 7/3/2026 7:43 PM, Mark Rutland wrote:
+> On Mon, Jun 29, 2026 at 09:06:00PM +0800, Jinjie Ruan wrote:
+>> Currently, multiple architectures (LoongArch, RISC-V, S390, Powerpc)
+>> provide identical stubs for arch_syscall_is_vdso_sigreturn() that simply
+>> return false. This results in redundant boilerplate code across the tree.
+>>
+>> Introduce a default __weak implementation of
+>> arch_syscall_is_vdso_sigreturn() directly in syscall_user_dispatch.c that
+>> returns false. This allows architectures that do not utilize a vDSO
+>> sigreturn to entirely drop their redundant inline definitions.
+>>
+>> Architectures requiring a specialized check (such as x86) will continue to
+>> override this fallback with their strong symbol definitions.
+>>
+>> Clean up the redundant implementations in loongarch, riscv, s390
+>> and powerpc.
+> 
+>> +bool __weak arch_syscall_is_vdso_sigreturn(struct pt_regs *regs)
+>> +{
+>> +	return false;
+>> +}
+> 
+> If we need this, please make it:
+> 
+> #ifndef arch_syscall_is_vdso_sigreturn
+> static inline bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs)
+> {
+> 	return false;
+> }
+> #endif
+> 
+> ... and require that architectures which need this provide a CPP
+> definition.
+> 
+> The use of __weak is generally problematic, as it prevents the compiler
+> form being able to elide code, and gets in the way of symbol resolution.
+> It's perfectly fine to require that architectures need to provide a CPP
+> definition alongside their own implementation of this function.
+> 
+> That said, as per my comment on v15, I'd prefer that for now we DO NOT
+> enable syscall user dispatch on arm64, and we first make it possible for
+> architecture to express whether or not they support that, even if they
+> use GENERIC_ENTRY. That might mean this patch isn't necessary right now.
 
-Output before:
- # bash perftool-testsuite_report.sh
- -- [ PASS ] -- perf_report :: setup :: prepare the perf.data file
- ==================
- [ perf record: Woken up 1 times to write data ]
- [ perf record: Captured and wrote 0.087 MB (402 samples) ]
- ==================
- -- [ PASS ] -- perf_report :: setup :: prepare the perf.data.1 file
- ## [ PASS ] ## perf_report :: setup SUMMARY
- -- [ SKIP ] -- perf_report :: test_basic :: help message :: \
- 		testcase skipped
- Line did not match any pattern: "cmd__addr2line <file> could not \
-	read first record"
- -- [ FAIL ] -- perf_report :: test_basic :: basic execution \
-	 (output regexp parsing)
- Line did not match any pattern: "cmd__addr2line <file> could not \
-	read first record"
- ...
- ## [ FAIL ] ## perf_report :: test_basic SUMMARY :: 6 failures found
+That sounds good. First, focus on switching to generic entry, without
+having to implement syscall user dispatch immediately.
 
-All six tests fail for the same reason, addr2line did not respond in
-time.
-
-Output after:
- # bash perftool-testsuite_report.sh
- -- [ PASS ] -- perf_report :: setup :: prepare the perf.data file
- ==================
- [ perf record: Woken up 1 times to write data ]
- [ perf record: Captured and wrote 0.086 MB .... (380 samples) ]
- ==================
- -- [ PASS ] -- perf_report :: setup :: prepare the perf.data.1 file
- ## [ PASS ] ## perf_report :: setup SUMMARY
- -- [ SKIP ] -- perf_report :: test_basic :: help message :: \
- 				testcase skipped
- -- [ PASS ] -- perf_report :: test_basic :: basic execution
- -- [ PASS ] -- perf_report :: test_basic :: number of samples
- -- [ PASS ] -- perf_report :: test_basic :: header
- -- [ PASS ] -- perf_report :: test_basic :: header timestamp
- -- [ PASS ] -- perf_report :: test_basic :: show CPU utilization
- -- [ PASS ] -- perf_report :: test_basic :: pid
- -- [ PASS ] -- perf_report :: test_basic :: non-existing symbol
- -- [ PASS ] -- perf_report :: test_basic :: symbol filter
- -- [ PASS ] -- perf_report :: test_basic :: latency header
- -- [ PASS ] -- perf_report :: test_basic :: default report for \
-						 latency profile
- -- [ PASS ] -- perf_report :: test_basic :: latency report for \
- 						latency profile
- -- [ PASS ] -- perf_report :: test_basic :: parallelism histogram
- ## [ PASS ] ## perf_report :: test_basic SUMMARY
- #
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Jan Polensky <japo@linux.ibm.com>
----
- tools/perf/tests/shell/perftool-testsuite_report.sh | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/tools/perf/tests/shell/perftool-testsuite_report.sh b/tools/perf/tests/shell/perftool-testsuite_report.sh
-index a8cf75b4e77e..997573f0e74c 100755
---- a/tools/perf/tests/shell/perftool-testsuite_report.sh
-+++ b/tools/perf/tests/shell/perftool-testsuite_report.sh
-@@ -6,6 +6,14 @@ test -d "$(dirname "$0")/base_report" || exit 2
- cd "$(dirname "$0")/base_report" || exit 2
- status=0
- 
-+# On s390 the default timeout for addr2line is too short, disable warnings
-+if [ $(uname -m) = s390x ]
-+then
-+	perf_config_tmp=$(mktemp /tmp/.perfconfig_XXXXX)
-+	export PERF_CONFIG="${perf_config_tmp}"
-+	perf config 'core.addr2line-disable-warn = true'
-+fi
-+
- PERFSUITE_RUN_DIR=$(mktemp -d /tmp/"$(basename "$0" .sh)".XXX)
- export PERFSUITE_RUN_DIR
- 
-@@ -19,5 +27,6 @@ if ! [ "$PERFTEST_KEEP_LOGS" = "y" ]; then
- 	rm -rf "$PERFSUITE_RUN_DIR"
- fi
- 
-+rm -f "${perf_config_tmp}"
- test $status -ne 0 && exit 1
- exit 0
--- 
-2.55.0
+> 
+> [1] https://lore.kernel.org/linux-arm-kernel/akZgV0Y4YAmB43_g@J2N7QTR9R3.cambridge.arm.com/
+> 
+> Mark.
+> 
 
 
