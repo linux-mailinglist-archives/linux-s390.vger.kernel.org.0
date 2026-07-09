@@ -1,175 +1,172 @@
-Return-Path: <linux-s390+bounces-21890-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21891-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Yls7NTtQT2r3eAIAu9opvQ
-	(envelope-from <linux-s390+bounces-21890-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 09:39:39 +0200
+	id aDWIMBhRT2o7eQIAu9opvQ
+	(envelope-from <linux-s390+bounces-21891-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 09:43:20 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F12B72DD76
-	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 09:39:36 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18A4C72DE15
+	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 09:43:20 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linutronix.de header.s=2020 header.b=g2iecoGH;
-	dkim=pass header.d=linutronix.de header.s=2020e header.b=aPsm4KX2;
-	dmarc=pass (policy=none) header.from=linutronix.de;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21890-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-s390+bounces-21890-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=oZmCkIgC;
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21891-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21891-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 9E71C3036BA7
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Jul 2026 07:36:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 762ED305195B
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Jul 2026 07:42:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08B453E51EB;
-	Thu,  9 Jul 2026 07:36:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 390DF3E5A01;
+	Thu,  9 Jul 2026 07:42:17 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024283E5592;
-	Thu,  9 Jul 2026 07:36:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD4F3C1F5B;
+	Thu,  9 Jul 2026 07:42:15 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783582595; cv=none; b=ukbkwDOfgs3d6qgzNGNWUzAdw9TOAJOpkLVdknuHwNX5OxTCg90RfrMFOROY+yK4wxLI5vw+AnFzY703PSp+7QmZaCraPNJ1AcadK9rW1+s6XSJoZN0ApOambkjj6kTWYZuNzYElnwJtxJTgVn2N9QgyA5H6KtF7G3LsJ0/sc2I=
+	t=1783582937; cv=none; b=O37Ge7yJc9zjyr9+EXWRawOTW2aDP9aOS3TU6/b0dfQMeqAbwoD/uTZIDuabI/ZOtIGD9p4ylT3oY4dTOjuKS6eLR4fefVGNq+iE7iYUfbWuYhNWZjnaKr0Q8F49QmtSzsfzJ65PR6/BNaw3fS9U5Bf7e7zDz5H+kna5ozR/HTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783582595; c=relaxed/simple;
-	bh=eU/u/CgRw+sq9smqx+I9v7uT77inA5QoZtyob4y7/PA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S17Zx3/7WXEqY+FxRvbLZRtwWqIxR3Q+hXEygKWan2OGbZxGtOB3OCzJ+/8d0oA46lsRuWtBedcKVkhPe+jj91tX3OIA6qHP2pRPX2w/HotIKrT9MiywOK6ZhNPM/gJQSm/A8KvYQJLLtsk+3nlp+PgmuFSiS1ZUVfKtS8FW/7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=g2iecoGH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aPsm4KX2; arc=none smtp.client-ip=193.142.43.55
-Date: Thu, 9 Jul 2026 09:36:29 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1783582589;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fpSVJy70b3xqWnZXpAlUFJdEu5JY/bMxQLCNfbP622U=;
-	b=g2iecoGHP1Q35gwzozGqpuJ0N4IBF+7Mb6UtjI//sGz3GDw2QvbFIwzqQxpn8FGVErlS7s
-	omQVYbjmgyDJmhF1MmCJlIHllgyUO01Sr/yBhSgxI73gtjpY4E1vXqhtHTENlpaAPa12sQ
-	COfi9C4/Sj1r2xVrGyKnP9WxPszidYfKAY5LkVWbCCQrazun7IsY1JN+lXSdvSLidQy+zJ
-	JM42AdQNLsIiZHirxAYPzrO+5JXzDJKtydCvmMQjV1j+RrDzi32PI8QdtKB5/Db1jOP9ap
-	STdYW58tGV3g9BcaZaDXSYefwyq4ViT1/8sPNvUgcWKCHxRJXZjUOZPPxh01TQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1783582589;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fpSVJy70b3xqWnZXpAlUFJdEu5JY/bMxQLCNfbP622U=;
-	b=aPsm4KX2JqjVkOTd9TekKMBY/H0/KYVBKvaYO+P4E5asdbyGTnkQwhT9fbb+nkBTJB3oUI
-	nJc65qufMiJf3XAQ==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com, 
-	mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org, pjw@kernel.org, 
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, hca@linux.ibm.com, 
-	gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com, 
-	svens@linux.ibm.com, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, nathan@kernel.org, kees@kernel.org, 
-	xur@google.com, peterz@infradead.org, gourry@gourry.net, 
-	lukas.bulwahn@redhat.com, ryan.roberts@arm.com, yangtiezhu@loongson.cn, 
-	sshegde@linux.ibm.com, mchauras@linux.ibm.com, austin.kim@lge.com, arnd@arndb.de, 
-	jchrist@linux.ibm.com, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org
-Subject: Re: [PATCH] syscall_user_dispatch: Introduce
- ARCH_SUPPORTS_SYSCALL_USER_DISPATCH
-Message-ID: <20260709093404-0b19988f-8d19-4fae-86d8-396aa747307d@linutronix.de>
-References: <20260709072803.3843948-1-ruanjinjie@huawei.com>
+	s=arc-20240116; t=1783582937; c=relaxed/simple;
+	bh=TiGN7VUSZCUiD/nMf39RROduPFOG9QGyyOxlHTG5shk=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=IJh+rCuVxPug1smxPHsxNFuQ9Ut8FIN197VkvlYqTmI2xWcwCJX3iBYkOurbKyixDQh1qi4SmwYuaTPIQ/IzO4xOs1DVUKl2sBBDsR28csIZrFj3SjVI9bZFa1f4XbTDGY6WB3eG74civ08//xlg/8Yu4uhV6y0gaGI70/VqtdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oZmCkIgC; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 594AE1F000E9;
+	Thu,  9 Jul 2026 07:42:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783582935;
+	bh=PcTUsyRcWz0/MptQOb6h6C538Pf85Z4mtd8pVsDuN/c=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=oZmCkIgCLUUDiJERu55D5iNyCSOHq11g8FpgOoV5oVX2fIuMCDf8LhNP8i+HgwJ9W
+	 BntTNKjes038Bs665RVzUegv/H2IXXwl/5iNTtrN14wY72Hxj/5mmjgjy2TMp80B+m
+	 Rdl6jRnikHYvojQAJALRJcZU4yf7i3j0sIpqXnfDGbBR1i8OEuFNOkoly8vC3P6ahA
+	 QLEVl7INQK3pfRgOWNJHsuJu3P2rBDfCXZ954v7gLChcbUEdN5luRnPEyfRH7asYWC
+	 fty8Gd9tjwcVinomhwHgcztP0NxCsYgS471bysD0xa7hSet2SAIf0UpFNIQpt3/W5c
+	 SBUmDBgiQmgdQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2] perf test: perftool-testsuite-report fails on s390
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Thomas Richter" <tmricht@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, "Vasily Gorbik" <gor@linux.ibm.com>, linux-perf-users@vger.kernel.org, "Heiko
+ Carstens" <hca@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>
+In-Reply-To: <20260709073024.3778237-1-tmricht@linux.ibm.com>
+References: <20260709073024.3778237-1-tmricht@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 09 Jul 2026 07:42:14 +0000
+Message-Id: <20260709074215.594AE1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260709072803.3843948-1-ruanjinjie@huawei.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.53 / 15.00];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MIXED_CHARSET(0.62)[subject];
-	DMARC_POLICY_ALLOW(-0.50)[linutronix.de,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[linutronix.de:s=2020,linutronix.de:s=2020e];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21890-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-21891-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FORGED_SENDER(0.00)[thomas.weissschuh@linutronix.de,linux-s390@vger.kernel.org];
-	FREEMAIL_CC(0.00)[kernel.org,xen0n.name,linux.ibm.com,ellerman.id.au,gmail.com,dabbelt.com,eecs.berkeley.edu,ghiti.fr,redhat.com,alien8.de,linux.intel.com,zytor.com,google.com,infradead.org,gourry.net,arm.com,loongson.cn,lge.com,arndb.de,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,lists.infradead.org];
-	RCPT_COUNT_TWELVE(0.00)[40];
-	FORGED_RECIPIENTS(0.00)[m:ruanjinjie@huawei.com,m:chenhuacai@kernel.org,m:kernel@xen0n.name,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:alex@ghiti.fr,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:hpa@zytor.com,m:nathan@kernel.org,m:kees@kernel.org,m:xur@google.com,m:peterz@infradead.org,m:gourry@gourry.net,m:lukas.bulwahn@redhat.com,m:ryan.roberts@arm.com,m:yangtiezhu@loongson.cn,m:sshegde@linux.ibm.com,m:mchauras@linux.ibm.com,m:austin.kim@lge.com,m:arnd@arndb.de,m:jchrist@linux.ibm.com,m:x86@kernel.org,m:linux-kernel@vger.kernel.org,m:loongarch@lists.linux.dev,m:linuxppc-dev@lists.ozlabs.org,m:linux-riscv@lists.infradead.org,m:linux-s390@vger.kernel.org,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,smtp.kernel.org:mid];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:tmricht@linux.ibm.com,m:linux-s390@vger.kernel.org,m:gor@linux.ibm.com,m:linux-perf-users@vger.kernel.org,m:hca@linux.ibm.com,m:agordeev@linux.ibm.com,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[thomas.weissschuh@linutronix.de,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[linutronix.de:+];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	PRECEDENCE_BULK(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-s390];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_NO_DN(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[arm.com:email,huawei.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linutronix.de:from_mime,linutronix.de:email,linutronix.de:mid,linutronix.de:dkim,vger.kernel.org:from_smtp]
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 8F12B72DD76
+X-Rspamd-Queue-Id: 18A4C72DE15
 
-On Thu, Jul 09, 2026 at 03:28:03PM +0800, Jinjie Ruan wrote:
-> Currently, only x86 genuinely implements and supports Syscall User
-> Dispatch (SUD). Multiple architectures provide a stub
-> arch_syscall_is_vdso_sigreturn() returning 'false' simply to satisfy
-> GENERIC_ENTRY compilation, which creates a false impression of feature
-> support.
-> 
-> Introduce ARCH_SUPPORTS_SYSCALL_USER_DISPATCH to decouple this mechanism
-> from GENERIC_ENTRY. Select it exclusively on x86 and remove the redundant
-> stub functions from other architectures.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] Uninitialized `perf_config_tmp` leads to arbitrary file deletion v=
+ia environment injection on non-s390x architectures.
+--
 
-Nice, this confused me before.
+--- Patch [1]: [PATCH v2] perf test: perftool-testsuite-report fails on s39=
+0 ---
+commit f7fabccf09a26131ccc43cc43ec7cc1971402aa3
+Author: Thomas Richter <tmricht@linux.ibm.com>
 
-> Link: https://lore.kernel.org/linux-arm-kernel/akZgV0Y4YAmB43_g@J2N7QTR9R3.cambridge.arm.com/
-> Cc: Thomas Gleixner <tglx@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ada Couprie Diaz <ada.coupriediaz@arm.com>
-> Cc: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-> ---
->  arch/Kconfig                         | 1 +
->  arch/loongarch/include/asm/syscall.h | 6 ------
->  arch/powerpc/include/asm/syscall.h   | 5 -----
->  arch/riscv/include/asm/syscall.h     | 5 -----
->  arch/s390/include/asm/syscall.h      | 5 -----
->  arch/x86/Kconfig                     | 1 +
->  6 files changed, 2 insertions(+), 21 deletions(-)
-> 
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index 0c01521c2f3f..393d0fb75eac 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -116,6 +116,7 @@ config GENERIC_ENTRY
->  
->  config SYSCALL_USER_DISPATCH
->  	bool "Syscall User Dispatch"
-> +	depends on ARCH_SUPPORTS_SYSCALL_USER_DISPATCH
+perf test: perftool-testsuite-report fails on s390
 
-ARCH_SUPPORTS_SYSCALL_USER_DISPATCH is not declared as a config option,
-so the 'select' will not do anything. Needs this:
+This commit addresses a timeout failure in the perftool-testsuite-report
+test on s390 architectures. It creates a temporary perf configuration file
+to suppress addr2line warnings specifically for s390x systems.
 
-config ARCH_SUPPORTS_SYSCALL_USER_DISPATCH
-	bool
+> diff --git a/tools/perf/tests/shell/perftool-testsuite_report.sh b/tools/=
+perf/tests/shell/perftool-testsuite_report.sh
+> --- a/tools/perf/tests/shell/perftool-testsuite_report.sh
+> +++ b/tools/perf/tests/shell/perftool-testsuite_report.sh
+> @@ -6,6 +6,14 @@ test -d "$(dirname "$0")/base_report" || exit 2
+>  cd "$(dirname "$0")/base_report" || exit 2
+>  status=3D0
+> =20
+> +# On s390 the default timeout for addr2line is too short, disable warnin=
+gs
+> +if [ $(uname -m) =3D s390x ]
+> +then
+> +	perf_config_tmp=3D$(mktemp /tmp/.perfconfig_XXXXX)
+> +	export PERF_CONFIG=3D"${perf_config_tmp}"
+> +	perf config 'core.addr2line-disable-warn =3D true'
+> +fi
+> +
+>  PERFSUITE_RUN_DIR=3D$(mktemp -d /tmp/"$(basename "$0" .sh)".XXX)
 
->  	depends on GENERIC_ENTRY
->  	default y
->  	help
+[ ... ]
 
-(...)
+> @@ -19,5 +27,6 @@ if ! [ "$PERFTEST_KEEP_LOGS" =3D "y" ]; then
+>  	rm -rf "$PERFSUITE_RUN_DIR"
+>  fi
+> =20
+> +[ -n "${perf_config_tmp}" ] && rm -f "${perf_config_tmp}"
+
+[Severity: High]
+Could this lead to unintended file deletion on non-s390x architectures?
+
+Since perf_config_tmp is only conditionally initialized if the architecture
+is s390x, any value passed in via the environment will be retained on other
+systems.
+
+If a user or orchestration environment sets perf_config_tmp before running
+the script, this cleanup path will execute rm -f against that arbitrary
+file path.
+
+Would it be safer to explicitly initialize perf_config_tmp to an empty
+string at the start of the script?
+
+>  test $status -ne 0 && exit 1
+>  exit 0
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260709073024.3778=
+237-1-tmricht@linux.ibm.com?part=3D1
 
