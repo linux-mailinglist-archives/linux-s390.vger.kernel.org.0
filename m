@@ -1,163 +1,173 @@
-Return-Path: <linux-s390+bounces-21900-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-21901-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id GItSAJJmT2oMgAIAu9opvQ
-	(envelope-from <linux-s390+bounces-21900-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 11:14:58 +0200
+	id 3XQUIfhqT2qGgQIAu9opvQ
+	(envelope-from <linux-s390+bounces-21901-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 11:33:44 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70ABF72EC76
-	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 11:14:57 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8083072EFE6
+	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 11:33:43 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=OBMIqoov;
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21900-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-21900-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=Ibu5djx0;
+	dmarc=pass (policy=none) header.from=ibm.com;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21901-lists+linux-s390=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-s390+bounces-21901-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2636A3009B36
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Jul 2026 09:14:42 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id CA2B6303578C
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Jul 2026 09:22:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39645301471;
-	Thu,  9 Jul 2026 09:14:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 215E83EB7F0;
+	Thu,  9 Jul 2026 09:22:27 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD7B3D969E;
-	Thu,  9 Jul 2026 09:14:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7DA3FF1B9
+	for <linux-s390@vger.kernel.org>; Thu,  9 Jul 2026 09:22:25 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783588480; cv=none; b=jb1weMakRsBUGNiFHonD5ZsfFVYmW+HkCWgJ28JyO6kLlCyl6aGk68kxVEz32P0rMx+TDlMesetya1piNBdVo0MCIAQJ1eHtQ8jPc50I2cqFfFaVkuGgIyPs2V+egop+mf+CV1mhvd+DmYbsdtt79W5t6QzFwB54fveHosytt/c=
+	t=1783588947; cv=none; b=XqwDHn3TQRPMI87yHHHkWz2cYG9ub4JgJLcPTLQmNC3gDXECR6t8VTV5zWaRpVfMqLBWXRzufP+kX2Fa9KTJPGi9CcTfKIR58F+x4B7xGC1woaLAChtFCfjUnnlCv7LCNW4DAF1h5Q4GVoWfDlB1fQmD4M1GN9pK2pp4Uo8fz5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783588480; c=relaxed/simple;
-	bh=FK9bcbFAMblVTeKXIJ82R5iorqNGE6tYV/bCQ43Sl0o=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=PYAZT9Yy0sKakH/+RXZA9xKkujcGAD7NxlxKGWu9bxG0uqOFTvg5VByQp1qS14H6pROO4Inv49DDt1JUYHlD9CPNv3Uuzl2VAfAPzhWdJ9CR5D4Tnzg3DD1V5cEHOMBXZrQNgW994tVw2JQDtaPL/e3nDmnqhqFbcWaJDwQK8r8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OBMIqoov; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A6FF1F000E9;
-	Thu,  9 Jul 2026 09:14:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783588478;
-	bh=ZbAnhSTlIfNNdVKXlTdpZBHPCS7yCKYNz1qGv93qbdc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=OBMIqoovglu7aruLafxMkO0cxo+YSWiPrI7aheGSK+BBiVh/ZuQfWLLXfqd7L+2Jg
-	 ZJvyrqDEgXkEYmNRD4l3QKJVCy7sT9155lRdMnbjZfvWIrzDkJCJVEUTInLzH30WfE
-	 CjhrHSV8bcFU7ZoPd2aAN7eYq7s6yKAHWfdUA1ZyH8iMZSHIMSPoj1QblUq89UDJtf
-	 zVfqIO0dvZUq/p5Jf+bRaCp7rGagikjVs5fnLpgJBfkX6qV2WBpy9lAl4RaPeEkWgP
-	 gKDxAACnCxwXTu1rtrICozuOYtDvYLu1CM/GBYBR438ePuC+PTrtmtTL8C1E6Ll4CN
-	 f6HgjOdsNPKNA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3] perf test: perftool-testsuite-report fails on s390
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Thomas Richter" <tmricht@linux.ibm.com>
-Cc: "Alexander Gordeev" <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org, "Vasily
- Gorbik" <gor@linux.ibm.com>, "Heiko Carstens" <hca@linux.ibm.com>, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260709090136.1031645-1-tmricht@linux.ibm.com>
-References: <20260709090136.1031645-1-tmricht@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 09 Jul 2026 09:14:37 +0000
-Message-Id: <20260709091438.3A6FF1F000E9@smtp.kernel.org>
+	s=arc-20240116; t=1783588947; c=relaxed/simple;
+	bh=iO7eSdzujKY1a7uG1tywqYljxcu3X1LQqWwpmGvnjp0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U1kfT5OiO7b9ZzahAlkfNd+zb/J7dRVmJp4XBtzX3sDStQpr125wmCPLNJEkngIYxL7SC+/QyDF0TPJUMKu1fn7zjUSHh3LAEy92x149LB6U5vr/3xe7QS1dKlimT9w7PTLtM/6llHFMYh9oanr1DutTWEB+OSDzXNGgy/iw7CQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ibu5djx0; arc=none smtp.client-ip=148.163.158.5
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6696JSKN1537210
+	for <linux-s390@vger.kernel.org>; Thu, 9 Jul 2026 09:22:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=2MYBoAo6KeO3UbJUlxwVj00P+WoHJi08G3zNRLJti
+	RU=; b=Ibu5djx0u+SlWMC6qjSP7PzSbFDE25UTiEPgviYh5hbGJo2usUs7NX7S/
+	P/bIDJTyUF3qz4f53NzCOL12W+kjKTMTTges3iOZFHUH4cth5KPJXSqcbQNzHVRt
+	vZYMJxqRpfnzR+ak5KyMfunKSFOJEU+TI1Cqw12wepR5T+uByzDxVPFsYrbo2slO
+	gEefX4y5KND6wYhOvxGrRDqUZw9TTPBmRT5cDpdPBKdnoxCbQSdLKxHJH9cJIV+i
+	CvmskILL0PhQNPCz/jUn7aQPBq0tvz5j0h5NccpDxABvmVJ/DvAxPtOAPBKB2SYI
+	SiVgTL+p21rCl1+8IAfXOOsZ5Odbg==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6qknre6x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+	for <linux-s390@vger.kernel.org>; Thu, 09 Jul 2026 09:22:24 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6699Jd1Q005267
+	for <linux-s390@vger.kernel.org>; Thu, 9 Jul 2026 09:22:23 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4f7f6yc4wn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+	for <linux-s390@vger.kernel.org>; Thu, 09 Jul 2026 09:22:23 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6699MJZe62259576
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 9 Jul 2026 09:22:20 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DFA952004D;
+	Thu,  9 Jul 2026 09:22:19 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BF66A20040;
+	Thu,  9 Jul 2026 09:22:19 +0000 (GMT)
+Received: from funtu2.ibm.com (unknown [9.224.92.54])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  9 Jul 2026 09:22:19 +0000 (GMT)
+From: Harald Freudenberger <freude@linux.ibm.com>
+To: fcallies@linux.ibm.com
+Cc: freude@linux.ibm.com, linux-s390@vger.kernel.org,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>, dengler@linux.ibm.com
+Subject: [PATCH v3 0/1] Improve zcrypt reply message verification checks
+Date: Thu,  9 Jul 2026 11:22:18 +0200
+Message-ID: <20260709092219.57356-1-freude@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=Q/XiJY2a c=1 sm=1 tr=0 ts=6a4f6850 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=Y2IxJ9c9Rs8Kov3niI8_:22 a=M69AuJIJpQA_EsNVqMYA:9 a=zZCYzV9kfG8A:10
+X-Proofpoint-GUID: IvWaaVWpAaW-pW-rmzzuSGHnaTSmrcK7
+X-Proofpoint-ORIG-GUID: IvWaaVWpAaW-pW-rmzzuSGHnaTSmrcK7
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA5MDA4OSBTYWx0ZWRfXwRlx5C38Z5q4
+ USJxK39E+oNidzKSLyU7eFdpIGDI4n5/CY1Zw+P+2gettbchGSB7XUOAVGF8qitjxUMxLNfMTge
+ jjR8Jd/7A4107mZdpIRDRNxasUekYkg=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA5MDA4OSBTYWx0ZWRfX7++3CaiBFkA1
+ bemtI8QxoNw3PYIJCeUlLf4WrSwfZUXMnbJoYsTM5Yj+2q1rPthEKYwc2pWMlfRDxUuoW7GOLDy
+ /VP8vMksH4Jc1y1+wHK3ODwT8FqQQoDSL2ROjEVNnAdkEJc4MgAN4/A/0j0jsK6BHPOmMjuvr8F
+ 1b+S5IGyAY4OpDXsTr0HqPHSQeKx1rZ8CSgNWj77QbLpf3RmV0DweyloqRtMNem2TG/zmXAUORJ
+ x+PkWrTr26V0ZBcnamu3F/Z6i8yHTUbtmScydZlfwdWtiV0shCoWY+Dgo/2wTgmR566zXU/J5LD
+ TZcN0ljykTETWX9S74JSTwXuakJ9DkBIX7xXXTUuxaveUtj3W081X5VTX4qzhHheLawcIZ1c/oM
+ MiWCAQHq/1+73OEPPXdgCMlJ0WW33ds7s7r6sM7iZWxP20fRpocJZf2TRabMPn0jMMixagCgG7C
+ ftnnsct2KqBqiBNdHwQ==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-09_01,2026-07-08_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 impostorscore=0 spamscore=0 phishscore=0 priorityscore=1501
+ bulkscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607090089
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	MISSING_MIME_VERSION(2.00)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-21900-lists,linux-s390=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,sashiko.dev:url,smtp.kernel.org:mid,lists.linux.dev:replyto];
-	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:tmricht@linux.ibm.com,m:agordeev@linux.ibm.com,m:linux-s390@vger.kernel.org,m:gor@linux.ibm.com,m:hca@linux.ibm.com,m:linux-perf-users@vger.kernel.org,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-21901-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:fcallies@linux.ibm.com,m:freude@linux.ibm.com,m:linux-s390@vger.kernel.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:dengler@linux.ibm.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[freude@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FROM_NEQ_ENVFROM(0.00)[freude@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_NO_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	ALIAS_RESOLVED(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp,linux.ibm.com:mid,linux.ibm.com:from_mime];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[linux-s390];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 70ABF72EC76
+X-Rspamd-Queue-Id: 8083072EFE6
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The patch introduces a divergent configuration state where user/=
-system configurations are strictly ignored on s390x but loaded on all other=
- architectures.
---
+Add or improve checks related to buffer sizes and reply sizes to the
+handling of replies from the crypto cards for CCA and EP11 (AP message
+type 6) messages. The verification code related to reply field length
+was not designed well and thus firmware deficiencies could lead to
+unexpected behavior in the zcrypt device driver. Thus improve the code
+to more closely inspect especially length fields at message replies.
 
---- Patch [1]: [PATCH v3] perf test: perftool-testsuite-report fails on s39=
-0 ---
-commit 01af4a3a83b9a4ed0f3f18651c07cbbbdda377c8
-Author: Thomas Richter <tmricht@linux.ibm.com>
+Changelog:
+v1 - initial patch
+v2 - fixed typo in header check_for_overflow -> check_add_overflow.
+v3 - rephrased and smoothed subject and text of the patch. It is now
+     "s390/zcrypt: Improve zcrypt reply message verification checks"
+     and the text does not talk about malicious cards any more.
+     Updated Reviewed-by tags
 
-perf test: perftool-testsuite-report fails on s390
+Harald Freudenberger (1):
+  s390/zcrypt: Improve zcrypt reply message verification checks
 
-This commit modifies the perftool-testsuite-report test script to address
-failures on s390 caused by addr2line timeouts. It creates a temporary
-perf configuration file to disable addr2line warnings specifically on the
-s390x architecture.
+ drivers/s390/crypto/zcrypt_msgtype6.c | 39 ++++++++++++++++++++++-----
+ 1 file changed, 32 insertions(+), 7 deletions(-)
 
-> diff --git a/tools/perf/tests/shell/perftool-testsuite_report.sh b/tools/=
-perf/tests/shell/perftool-testsuite_report.sh
-> index a8cf75b4e77ec..01116f8d71ce6 100755
-> --- a/tools/perf/tests/shell/perftool-testsuite_report.sh
-> +++ b/tools/perf/tests/shell/perftool-testsuite_report.sh
-> @@ -6,6 +6,16 @@ test -d "$(dirname "$0")/base_report" || exit 2
->  cd "$(dirname "$0")/base_report" || exit 2
->  status=3D0
-> =20
-> +# On s390 the default timeout for addr2line is too short, disable warnin=
-gs
-> +if [ $(uname -m) =3D s390x ]
-> +then
-> +	perf_config_tmp=3D$(mktemp /tmp/.perfconfig_XXXXX)
-> +	export PERF_CONFIG=3D"${perf_config_tmp}"
+-- 
+2.43.0
 
-[Severity: Medium]
-Does this introduce a divergent configuration state between architectures?
-
-By exporting PERF_CONFIG to a temporary file on s390x, perf is instructed
-to read only that file, ignoring the user's ~/.perfconfig and system
-/etc/perfconfig.
-
-On other architectures, PERF_CONFIG is left unmodified, meaning user and
-system configurations are still applied. This architectural divergence
-isolates the test environment on s390x but leaves it exposed to arbitrary
-user settings on other platforms.
-
-> +	perf config 'core.addr2line-disable-warn =3D true'
-> +else
-> +	perf_config_tmp=3D""
-> +fi
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260709090136.1031=
-645-1-tmricht@linux.ibm.com?part=3D1
 
