@@ -1,227 +1,289 @@
-Return-Path: <linux-s390+bounces-21998-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22001-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id pzs9MtD8T2o2rgIAu9opvQ
-	(envelope-from <linux-s390+bounces-21998-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 21:56:00 +0200
+	id vvrHAVH9T2pRrgIAu9opvQ
+	(envelope-from <linux-s390+bounces-22001-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 21:58:09 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3931673536F
-	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 21:56:00 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57011735385
+	for <lists+linux-s390@lfdr.de>; Thu, 09 Jul 2026 21:58:08 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=LZDHHOdU;
-	dmarc=pass (policy=none) header.from=ibm.com;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-21998-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-21998-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=HUZ0FPy6;
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22001-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-22001-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 456E53023052
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Jul 2026 19:55:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BF441300E381
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Jul 2026 19:58:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7533C3B9DBA;
-	Thu,  9 Jul 2026 19:55:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FB0733AD9B;
+	Thu,  9 Jul 2026 19:58:06 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0617644999A
-	for <linux-s390@vger.kernel.org>; Thu,  9 Jul 2026 19:55:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B80B1305E19;
+	Thu,  9 Jul 2026 19:58:04 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783626958; cv=none; b=Oc9JVrWFlHGunKImt8rNhUnvOlQodTKvCjkGMwRFmLiy+K90/6tq7t5KfF+caWw59S+sMbbFZeRhm3oSIoVf7lYSWYu/9V2gS/EqH1td9tItA3SM03dsrLXu0Ih3O582PBVaNvn5u161o0b6/Mjw3Hh70INwFX92hcE4fYWxonQ=
+	t=1783627085; cv=none; b=Z97XlwRc9EQl5w2rjd1HtH3EEGuQwT3a+ucYG9ufCFrnYl3UP1AhvhaSWlfZJgLZI6P8UdkWaosvOq6gpH9NQLaCBGe6rxodrzV756J25MJmA6lb+GiuRlTGpA8a/P1e3ka7ShhAP/7GQRTzmVkJWHEEsvI+ctv7Doxafw7zWag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783626958; c=relaxed/simple;
-	bh=Pk+eR3Ze0DQCKOQrp8oTf7r00FzvVBDx1MEqL3MRAOA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=vGwWp5BlzCgI+STIv51e7YxHCCoL6HSDgLcwJelJqmJa4rYomNqYoiC1eTHkNzp5NR78I798MXdQ81XweFmE9n1Y71dst8tvRAIEmgKjShg7UKY0bceRlOTtX+sv4KgshQihveKCNRLj0vez9YF1ywImvBE5NRCBZKfVV9dtRDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LZDHHOdU; arc=none smtp.client-ip=148.163.158.5
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 669Hms7p3005539
-	for <linux-s390@vger.kernel.org>; Thu, 9 Jul 2026 19:55:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=f3C3jB1ufOVUF23na
-	FYeQB68KevVdVuVSoiM+ZehvpU=; b=LZDHHOdUqEcFRrDstqZ9cEENLWuVevdU/
-	AgbeKAxXz4zrhIGRGJ/hf8XD5+/IB8PWTpIBOifgBKt4diniABK7Zg5LM8SzIVSv
-	ZzWoiky8gENWFVR6JQkVh72Pn1hWNI5I/8a2pxM4wzsJNRVvV7IwOy4BYiIWXHJY
-	dcW8JQIA0nCIHcoJBhOSAgCrOTx6V8VETeRE1FHto5+iX0QsHFS6/6SRJH/c2XWx
-	TXWjC+T1MuoOAxG4W4h7I9cQVutF2fwId/HWmDqPs4DvIOMETnQnQVRHcOzZompF
-	CGSME7VeN9PUw+McmGg49rsIxafVgH/SzvYLIp4vh2384pp/pN0Cw==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6qkntvfc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-s390@vger.kernel.org>; Thu, 09 Jul 2026 19:55:55 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 669JnfiK030698
-	for <linux-s390@vger.kernel.org>; Thu, 9 Jul 2026 19:55:54 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4f7f6yeeb1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-s390@vger.kernel.org>; Thu, 09 Jul 2026 19:55:54 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 669Jtpu345154596
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 9 Jul 2026 19:55:51 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F03762004E;
-	Thu,  9 Jul 2026 19:55:50 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CBF052004B;
-	Thu,  9 Jul 2026 19:55:50 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with SMTP;
-	Thu,  9 Jul 2026 19:55:50 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55390)
-	id B14B21616F3; Thu, 09 Jul 2026 21:55:50 +0200 (CEST)
-From: Sven Schnelle <svens@linux.ibm.com>
-To: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>, borntraeger@linux.ibm.com,
-        linux-s390@vger.kernel.org
-Subject: [PATCH 2/2] s390/syscalls: Use define instead of '1' to indicate PER trap
-Date: Thu,  9 Jul 2026 21:55:00 +0200
-Message-ID: <20260709195500.1241833-3-svens@linux.ibm.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260709195500.1241833-1-svens@linux.ibm.com>
-References: <20260709195500.1241833-1-svens@linux.ibm.com>
+	s=arc-20240116; t=1783627085; c=relaxed/simple;
+	bh=nASUEopdTVpbiOlaqA3bl70JASaPDBXc6RrPfU8TUhM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HiYSQsui9CPC71TYWN8jkFyZF28c+w8HWxXvdlFuAv/hLpPsXRiDCxZq5Q1ScW55siSwO0/bsXFMrhqu01gkGy30hap6D9JzRnyJwLrvNEpyfvv18rSwPd8XfR/9E35dtMpTw4N/6KtUGnechyGWxMJ8aborGj4EWhyekL8rVIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HUZ0FPy6; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A69C51F000E9;
+	Thu,  9 Jul 2026 19:58:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783627084;
+	bh=nASUEopdTVpbiOlaqA3bl70JASaPDBXc6RrPfU8TUhM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=HUZ0FPy6tJ5k2FpZZk4TmtW8oNPYG0UCTaswg34FnSsVTMZ+nc6abBzQoGLAe7QpZ
+	 4839oR2E7eU5H+0VQhcuYDxXFXmLbqe785v0OtfK8pZM64xT/vjBbY8gU6OQqxdQko
+	 2bj2K0aisc+j7i5kyFSxJBzHYPyWTVbTuJKmXAkqp+WJvRZsZfqnl91bOFM7185CBN
+	 pNNt3ie4Xo7ripQOTTqoaN5lwefEhmBf7ncJ41sgP4urIb+UmKalmTY+FHBAjFjAbH
+	 sZHtyFtM9TSgQQsGPMBhSwsdDCYRoGd5HD7SutnqDROuHsn6T0qtpDhVLf9Zj3BAl/
+	 ejFRs0GNI3+Yw==
+Date: Thu, 9 Jul 2026 21:58:01 +0200
+From: Thierry Reding <thierry.reding@kernel.org>
+To: Will Deacon <will@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Sowjanya Komatineni <skomatineni@nvidia.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Mikko Perttunen <mperttunen@nvidia.com>, Yury Norov <yury.norov@gmail.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Russell King <linux@armlinux.org.uk>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
+	Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
+	"T.J. Mercier" <tjmercier@google.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, linux-mm@kvack.org, 
+	iommu@lists.linux.dev, linaro-mm-sig@lists.linaro.org, 
+	linux-trace-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>, Chun Ng <chunn@nvidia.com>
+Subject: Re: [PATCH v3 04/11] arm64/mm: Add set_memory_device() and
+ set_memory_normal()
+Message-ID: <ak_8Po3NxgAU7k0T@orome>
+References: <20260701-tegra-vpr-v3-0-d80f7b871bb4@nvidia.com>
+ <20260701-tegra-vpr-v3-4-d80f7b871bb4@nvidia.com>
+ <akYs91INHMXMTI-t@willie-the-truck>
+ <akZkuwktaXFTrASP@orome>
+ <akaSJ5D98w2cHqb6@orome>
+ <akftuw9NyRy36fXA@willie-the-truck>
+ <akuvyu1Pq0ZVMZV0@orome>
+ <akzikTrmhMsvkNVY@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Q/XiJY2a c=1 sm=1 tr=0 ts=6a4ffccb cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8 a=EbrABBnbUIysQEU_i1YA:9
-X-Proofpoint-GUID: 0g2iRbAGV1u3Bwxb5xv3wzEAwwuPfw5U
-X-Proofpoint-ORIG-GUID: 0g2iRbAGV1u3Bwxb5xv3wzEAwwuPfw5U
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA5MDE5NyBTYWx0ZWRfXywIvnox+C2Zx
- vggdFA6AWP4gVRd7W7ecnDQaUlsiTptzwnDpq0UZQJml+e8+1doIewSQQGdbtZGougDyvP9CgZ3
- ZhN+aNt2e8VFGjmfZIdNUll1PsmWZA0=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA5MDE5NyBTYWx0ZWRfXwUYIB5hhThfG
- WDNFd+hlLEnoOFcZU4OD7n7nwrCtSZ7+NtAH9XzAFcJuHxgg9Y1U4BrTH5mf2odWoB9L3updoHF
- m0qFyjU3/hPCcfP+NG0WtyJaDRBwbkoLeUKpFsN3aiPafgUl/7NqUTxK2BQlVF9ervra87SEBte
- eV1blsQammKwhdq0cmjWGiQhuOnrkogGRVcSUzwEFQCuk0b/p1GNDYcvwUGpvP490GcF8JycO1k
- fmKQxj+6/VfznuSRBWqFhJinPV7OCnIDxndePOGMx0wkeqCJMs4/waWJkYR5UVILTcu8XTPSu4r
- TIn8ZkH25Y9SDhomkNeGuek3jg3YvI4S9zFMqxk6mUjF3GJ+pMFrLuwehdbeLZI+DxgBZNA1Y/y
- /CSOn7LQY5uA+WsJDv6/nOeefAfY5M1WAjWO+4PFOl3shZlPLXTs+6N94WW/Gd9sq074F2dveuj
- WT2/1IAfCX2NKqZGzow==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-09_04,2026-07-09_04,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 impostorscore=0 spamscore=0 phishscore=0 priorityscore=1501
- bulkscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607090197
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="rvxsrpqt5djhs2ak"
+Content-Disposition: inline
+In-Reply-To: <akzikTrmhMsvkNVY@willie-the-truck>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-5.26 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	SIGNED_PGP(-2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22001-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-21998-lists,linux-s390=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:frankja@linux.ibm.com,m:imbrenda@linux.ibm.com,m:borntraeger@linux.ibm.com,m:linux-s390@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[svens@linux.ibm.com,linux-s390@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:will@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:jonathanh@nvidia.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:maarten.lankhorst@linux.intel.com,m:mripard@kernel.org,m:tzimmermann@suse.de,m:skomatineni@nvidia.com,m:luca.ceresoli@bootlin.com,m:mperttunen@nvidia.com,m:yury.norov@gmail.com,m:linux@rasmusvillemoes.dk,m:linux@armlinux.org.uk,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:akpm@linux-foundation.org,m:david@kernel.org,m:ljs@kernel.org,m:liam@infradead.org,m:vbabka@kernel.org,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:m.szyprowski@samsung.com,m:robin.murphy@arm.com,m:sumit.semwal@linaro.org,m:benjamin.gaignard@collabora.com,m:Brian.Starkey@arm.com,m:jstultz@google.com,m:tjmercier@google.com,m:christian.koenig@amd.com,m:rostedt@goodmis.org,m:mhiramat@kernel.org,m:mathieu.desnoyers@efficios.com,m:catalin.mar
+ inas@arm.com,m:thierry.reding@gmail.com,m:devicetree@vger.kernel.org,m:linux-tegra@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-media@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-s390@vger.kernel.org,m:linux-mm@kvack.org,m:iommu@lists.linux.dev,m:linaro-mm-sig@lists.linaro.org,m:linux-trace-kernel@vger.kernel.org,m:treding@nvidia.com,m:chunn@nvidia.com,m:krzk@kernel.org,m:conor@kernel.org,m:yurynorov@gmail.com,m:thierryreding@gmail.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[thierry.reding@kernel.org,linux-s390@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_NEQ_ENVFROM(0.00)[svens@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,nvidia.com,gmail.com,ffwll.ch,linux.intel.com,suse.de,bootlin.com,rasmusvillemoes.dk,armlinux.org.uk,linux.ibm.com,linux-foundation.org,infradead.org,google.com,suse.com,samsung.com,arm.com,linaro.org,collabora.com,amd.com,goodmis.org,efficios.com,vger.kernel.org,lists.freedesktop.org,lists.infradead.org,kvack.org,lists.linux.dev,lists.linaro.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	ALIAS_RESOLVED(0.00)[];
-	RCVD_COUNT_TWELVE(0.00)[12];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[56];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[thierry.reding@kernel.org,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-s390,dt];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3931673536F
+X-Rspamd-Queue-Id: 57011735385
 
-Make the code a bit easier to read by defining SYSCALL_PER_TRAP
-instead of passing '1' to __do_syscall().
 
-Suggested-by: Heiko Carstens <hca@linux.ibm.com>
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
----
- arch/s390/kernel/entry.S   | 2 +-
- arch/s390/kernel/entry.h   | 3 ++-
- arch/s390/kernel/syscall.c | 4 ++--
- 3 files changed, 5 insertions(+), 4 deletions(-)
+--rvxsrpqt5djhs2ak
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 04/11] arm64/mm: Add set_memory_device() and
+ set_memory_normal()
+MIME-Version: 1.0
 
-diff --git a/arch/s390/kernel/entry.S b/arch/s390/kernel/entry.S
-index d70eef7a0b29..10dd9bbdf985 100644
---- a/arch/s390/kernel/entry.S
-+++ b/arch/s390/kernel/entry.S
-@@ -368,7 +368,7 @@ SYM_CODE_START(pgm_check_handler)
- 	mvc	__LC_RETURN_PSW(8,%r13),__LC_SVC_NEW_PSW(%r13)
- 	larl	%r14,.Lsysc_per
- 	stg	%r14,__LC_RETURN_PSW+8(%r13)
--	lghi	%r14,1
-+	lghi	%r14,SYSCALL_FLAG_PER_TRAP
- 	LBEAR	__LC_PGM_LAST_BREAK(%r13)
- 	LPSWEY	__LC_RETURN_PSW,__LC_RETURN_LPSWE # branch to .Lsysc_per
- SYM_CODE_END(pgm_check_handler)
-diff --git a/arch/s390/kernel/entry.h b/arch/s390/kernel/entry.h
-index d18a9a63f6b8..dc84ab497251 100644
---- a/arch/s390/kernel/entry.h
-+++ b/arch/s390/kernel/entry.h
-@@ -3,6 +3,7 @@
- #define _ENTRY_H
-=20
- #define PGM_FLAG_GUEST_FAULT	1
-+#define SYSCALL_FLAG_PER_TRAP	1
-=20
- #ifndef __ASSEMBLER__
-=20
-@@ -26,7 +27,7 @@ void early_pgm_check_handler(void);
- struct task_struct *__switch_to_asm(struct task_struct *prev, struct tas=
-k_struct *next);
- void __ret_from_fork(struct task_struct *prev, struct pt_regs *regs);
- void __do_pgm_check(struct pt_regs *regs, unsigned long flags);
--void __do_syscall(struct pt_regs *regs, int per_trap);
-+void __do_syscall(struct pt_regs *regs, unsigned long flags);
- void __do_early_pgm_check(struct pt_regs *regs);
-=20
- void do_protection_exception(struct pt_regs *regs);
-diff --git a/arch/s390/kernel/syscall.c b/arch/s390/kernel/syscall.c
-index 75d5a3cab14e..b6c643756a7c 100644
---- a/arch/s390/kernel/syscall.c
-+++ b/arch/s390/kernel/syscall.c
-@@ -93,7 +93,7 @@ SYSCALL_DEFINE0(ni_syscall)
- 	return -ENOSYS;
- }
-=20
--void noinstr __do_syscall(struct pt_regs *regs, int per_trap)
-+void noinstr __do_syscall(struct pt_regs *regs, unsigned long flags)
- {
- 	unsigned long nr;
-=20
-@@ -106,7 +106,7 @@ void noinstr __do_syscall(struct pt_regs *regs, int p=
-er_trap)
- 		current->thread.last_break =3D regs->last_break;
- 	local_irq_enable();
- 	regs->orig_gpr2 =3D regs->gprs[2];
--	if (unlikely(per_trap))
-+	if (unlikely(flags & SYSCALL_FLAG_PER_TRAP))
- 		set_thread_flag(TIF_PER_TRAP);
- 	regs->flags =3D 0;
- 	set_pt_regs_flag(regs, PIF_SYSCALL);
---=20
-2.53.0
+On Tue, Jul 07, 2026 at 12:27:13PM +0100, Will Deacon wrote:
+> On Mon, Jul 06, 2026 at 03:49:24PM +0200, Thierry Reding wrote:
+> > On Fri, Jul 03, 2026 at 06:13:31PM +0100, Will Deacon wrote:
+> > > On Thu, Jul 02, 2026 at 06:41:23PM +0200, Thierry Reding wrote:
+> > > > On Thu, Jul 02, 2026 at 03:46:44PM +0200, Thierry Reding wrote:
+> > > > > On Thu, Jul 02, 2026 at 10:18:47AM +0100, Will Deacon wrote:
+> > > > > > On Wed, Jul 01, 2026 at 06:08:15PM +0200, Thierry Reding wrote:
+> > > > > > > From: Chun Ng <chunn@nvidia.com>
+> > > > > > >=20
+> > > > > > > Add helpers to swap PROT_NORMAL and PROT_DEVICE_nGnRnE protec=
+tion bits
+> > > > > > > on a kernel-linear-map range.
+> > > > > >=20
+> > > > > > That sounds like a really terrible idea. Why is this necessary =
+and how
+> > > > > > does it interact with things like load_unaligned_zeropad()?
+> > > > >=20
+> > > > > This is necessary because once the memory controller has walled o=
+ff the
+> > > > > new memory region the CPU must not access it under any circumstan=
+ces or
+> > > > > it'll cause the CPU to lock up (I think technically it'll hit an =
+SError
+> > > > > but in practice that just means it'll freeze, as far as I can tel=
+l).
+> > > > >=20
+> > > > > Probably doesn't interact well at all with load_unaligned_zeropad=
+().
+> > > > >=20
+> > > > > > I think you should unmap the memory from the linear map and mem=
+remap()
+> > > > > > it instead.
+> > > > >=20
+> > > > > Given that the memory can never be accessed by the CPU after the =
+memory
+> > > > > controller locks it down, I don't think we'll even need memremap(=
+). The
+> > > > > only thing we really need is the sg_table we hand out via the DMA=
+ BUFs
+> > > > > so that they can be used by device drivers to program their DMA e=
+ngines
+> > > > > internally.
+> > > > >=20
+> > > > > Looking through some of the architecture code around this, should=
+n't we
+> > > > > simply be using set_memory_encrypted() and set_memory_decrypted()=
+ for
+> > > > > this? While they might've been created for slightly other use-cas=
+es,
+> > > > > they seem to be doing exactly what we want (i.e. remove the page =
+range
+> > > > > from the linear mapping and flushing it, or restoring the valid b=
+it and
+> > > > > standard permissions, respectively).
+> > > >=20
+> > > > Ah... I guess we can't do it because we're not in a realm world and=
+ so
+> > > > the early checks in __set_memory_enc_dec() would return early and t=
+urn
+> > > > it into a no-op.
+> > > >=20
+> > > > How about if I extract a common helper and provide set_memory_p() a=
+nd
+> > > > set_memory_np() in terms of those. Those are available on x86 and
+> > > > PowerPC as well, so fairly standard. I suppose at that point we're
+> > > > closer to set_memory_valid().
+> > >=20
+> > > Why not just call set_direct_map_invalid_noflush() +
+> > > flush_tlb_kernel_range() for each page? We already have APIs for this.
+> >=20
+> > Having a "standard" helper with a fixed and documented purposed seemed
+> > like a preferable approach for this particular case. We also may want to
+> > make the driver that uses this buildable as a module, in which case we'd
+> > need to export these rather low-level APIs. And then there's also the
+> > fact that we typically call this on a rather large region of memory
+> > (usually something like 512 MiB), so doing it page-by-page is rather
+> > suboptimal.
+> >=20
+> > > The big challenge I see with any linear map manipulation, however, is
+> > > that it will rely on can_set_direct_map() which likely means you need=
+ to
+> > > give up some performance and/or security to make this work. Does memo=
+ry
+> > > become inaccesible dynamically at runtime? If not, the best bet would
+> > > be to describe it as a carveout in the DT and mark it as "no-map" so
+> > > we avoid mapping it in the first place.
+> >=20
+> > VPR exists in two modes: static and resizable. For static VPR we do
+> > exactly that: describe it as carveout in DT with no-map and deal with it
+> > accordingly in the driver. Resizable VPR is for device that have small
+> > amounts of RAM. Content-protected video playback will in the worst case
+> > consume around 1.8 GiB of RAM, so we want to be able to reuse for other
+> > purposes when VPR is unused on those devices. In that case, the memory
+> > is also described as a reserved-memory region in DT, but it is marked as
+> > reusable so that it can be managed by CMA.
+> >=20
+> > The resize operation is fairly slow to begin with because we need to
+> > stall the GPU and put it into reset before the operation, then take it
+> > out of reset and resume it afterwards.
+> >=20
+> > What kind of performance impact do you expect?
+>=20
+> You'll need to measure it, but we've seen reports of double-digit
+> percentage regressions in performance and power. As I said, the problem
+> is that you need to split the linear map to 4k page at runtime to unmap
+> the dynamic carveout, but that isn't something that can be done on most
+> CPUs. Therefore you end up having to use page-granular mappings for the
+> entire thing, similarly to how 'rodata_full' drives can_set_direct_map()
+> and the perf/power hit affects everything.
 
+The VPR has fairly large alignment restrictions (1 MiB) and we do unmap
+in fairly large chunks (512 MiB currently, but we can change that if it
+is helpful) because we really want to avoid resizing operations, so the
+tradeoff is between frequency of resize vs. potential memory wasted.
+
+Does that change anything with regards to performance?
+
+Thierry
+
+--rvxsrpqt5djhs2ak
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmpP/UkACgkQ3SOs138+
+s6GFqBAAsfNpGtxzDc/1UKAc4Vjp9eilQE6L3ZzhQhn1d3Crc+ym9vGZzyfe4lTR
+di2aYaWn+6XslOczfKwW58jo+D8/fP64sFF9UY3mR7U+MzuIGEF61RVgF0fFH4Vb
+wo6H5bLYvA2J1VhXyIv08l/Oxb+GGHMa2gRVdTbFux+csAi4ahPJVT0oS9S0sJht
+cmPEaDkjN8StPrx4IN3oTcj7g3LW3aDuShMtgqRrceSaIw2xvtb+rvWLvGJac/HH
+kNrn5Vc+pAJJigN3NZqMgpjeD3gHZDZYaKUToPXJuIOlZILR0VzdDAHxD9U+lmyD
+YVPGNnPi13QmxTk9KHR+Tm2aL7AxXx8TK0jIOUFuaySrgD16Oo9CTxOvsxewNGpg
+lGDhuvag7BCxZqQzlxbhAuGtHZS+s6OWCXleWAsKpVs4Ga/FDaAvZYCHugxIur84
+mexc1/5CBcjohTAfvTLpAZGUxDXslKopeYaBZGgRJXz+iwulrGeeDpEvDH1VNo1r
+SkCIXoLOlq4bEKwejuGzuVzc47hLYGL+c09cCOwa73rhvVARke2v05fRowwN29Iv
+1OVDKNQTsHbBZ8PNTsoaEApLvif8crc38kborIPtiuaGz4WDg7q90ogJoIhqEK2L
+z8Lt64Ul985C2ht8PNWLbWeUKGNX54YFmnBCCP+lgBzDRu2sc4g=
+=Axxn
+-----END PGP SIGNATURE-----
+
+--rvxsrpqt5djhs2ak--
 
