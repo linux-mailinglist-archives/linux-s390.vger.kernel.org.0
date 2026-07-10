@@ -1,82 +1,82 @@
-Return-Path: <linux-s390+bounces-22013-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22016-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ooz9K7mmUGqa2wIAu9opvQ
-	(envelope-from <linux-s390+bounces-22013-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 10:00:57 +0200
+	id xPlTHgWnUGqu2wIAu9opvQ
+	(envelope-from <linux-s390+bounces-22016-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 10:02:13 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55D25738392
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 10:00:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FD0E7383CB
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 10:02:08 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=ejiWIZN6;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=N1iIlHTI;
 	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22013-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-22013-lists+linux-s390=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22016-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-22016-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 32F2A3055DE0
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 07:52:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DA857306DC10
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 07:53:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DA4E3DDDA1;
-	Fri, 10 Jul 2026 07:52:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19FBA3E1D04;
+	Fri, 10 Jul 2026 07:52:54 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E75E3DA7E0
-	for <linux-s390@vger.kernel.org>; Fri, 10 Jul 2026 07:52:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C8B3E0080
+	for <linux-s390@vger.kernel.org>; Fri, 10 Jul 2026 07:52:51 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783669968; cv=none; b=VvdnbZzycUng55piUuaoF2ZdPsmIMgttHuk9V5+Bqt3zGxvEwKEPYqq1SInZyg3r1lqdlOxQ/lBaD8XPW+hppEgtAFuweBpgJ+TtJMMXA1Q/v+WoPmsTtzHdHzNR4bNwl/IJHThsIFn30RI4qNMwTlxgz2Z2tImpRUODyv7XmU4=
+	t=1783669974; cv=none; b=gnQv5dIyqSyyYhwo4bmeUJxsOz8h64DgwOxd3/RoCtMGWOSKklQEP6kQ/Ojds0uk4SGRsO35xn+nJfO8xghUE6FM0OeIkWNXarkO6xZxackfH43QrZAH9smlSmoFOkIYtACbYtGMmmw7pKBgBFlyyK2oWLTVw2k4k2aObkKx0zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783669968; c=relaxed/simple;
-	bh=D9CFIdORg3KDPUuWXmjAR2RsP8Zpq9G9I7JzBgl41j4=;
+	s=arc-20240116; t=1783669974; c=relaxed/simple;
+	bh=339QwCmoNdOUhoq07+p5mhlOUQoPA8Y4kjfe9Kj1h/4=;
 	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
-	 References:Date:Message-Id; b=ok+z1q863XQkKCE7YD5Si949HBYvPYAWPQaTx6+eLMjfthksL7c5xLWpphnQtmXenVfBAZeDHUzskgNpnWaK7OwegAs2KzUyJvrCD3G1LGcDzg/Q4vLyu4M507RVvKwVhq338GWJgFWJt36Lma36ScI/k9ZcE9ju9cmRkiIZWMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ejiWIZN6; arc=none smtp.client-ip=209.85.216.46
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-38511175ad3so635881a91.2
-        for <linux-s390@vger.kernel.org>; Fri, 10 Jul 2026 00:52:47 -0700 (PDT)
+	 References:Date:Message-Id; b=RfI4/fzBnZiBSgOcpyyFv/rMC4yRwdYj9GcWcdpx3y4gYcOvqa9fs6ZldPctITShhaA4vQN3gc0TbIURy1pVoDh/J4gDDEwE8X8v8K3WIzNies7oC6bf9iMUFlLRogwuehXwp4h7Xv4gpIUCGP9oo+PAlJGIXo+DBdrgIcyJkr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N1iIlHTI; arc=none smtp.client-ip=209.85.214.180
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2cc891373e0so5530215ad.2
+        for <linux-s390@vger.kernel.org>; Fri, 10 Jul 2026 00:52:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783669967; x=1784274767; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1783669971; x=1784274771; darn=vger.kernel.org;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:content-type:mime-version:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=ihT/2aOY8wGTL01WDNL3ZSISpn356Jmov1yxoJ5Q2Is=;
-        b=ejiWIZN6XA5SZFKmedWw6IIGdlixVt7BYNZhVsY/HXsflrRXZTTv4OoRq8SuZ6JlwU
-         9Sx5a84PXjyPTl0M86Ghsa9yB6RlCtoZWEooRPJT5jgyKuBzJh/yU9L4QmXNRdaywx0m
-         Pi3JDLt+T3tqFsisEn1XVVLbatQhwU3MzYY+0+DqIFqjmowQDUIuKrZYca5yk2vhVOoB
-         L4Y9Tvq8aQyNrefrbmhvzdZB9J76cqwN77mF5+0TBKfrQjXUYN2esv1nZOPRcqBrXPPW
-         ZgCuwg6reqBmQtKUMVJYftoLueHDXEI3y7UHUpAIi7GJV+WiykpHiQ/L4NYCNcn5r4C6
-         eJkQ==
+        bh=XxVWLkjTDZhg2ZpXoG0uLB6wK5WtCztBheSr28w2OfY=;
+        b=N1iIlHTImR6P4mebLCg5vdSX9XtVJlsqGIYYGAfa9xAgUP0E4mBMkaMto1Cl5Ku0Sr
+         xRV5GH+GQomieQe21kr3A1PkGsk0qrcMVVF6udpjmjn35wFJ/yqK0OSEBTSuaVOeKx1p
+         QD2929oYu+nsKEeDGTH1GbQswjzHOOX5aDMnR+JTdPXksJS9qpyn13SIGPfApu0E6o6e
+         gujGVhZ/1quoJhB+yHuC6GnSPeIoyIjIdvOYh+1uuQlmNm/nu0Gub7tOEkjnuBn/YI82
+         R+0+qJdEtPYdVwTJL4e9AF1yAJZ5wcUynwL/zcze2HAo4Ks3SYiU/QQ/sHLEvQJQhqdR
+         CuzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783669967; x=1784274767;
+        d=1e100.net; s=20251104; t=1783669971; x=1784274771;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:content-type:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=ihT/2aOY8wGTL01WDNL3ZSISpn356Jmov1yxoJ5Q2Is=;
-        b=FS54/lP95CLj1RHCWJsy7sLwbun4Kc3kMGJYOcq+oNZMqKFFmZymW2pF6eiRRsaS43
-         l9EtxJ1nI30PIvDCWAvo1ZQEAMF8fMQQgmXVmJQRj/tPD+QchDCzlX8A3tADzjZ2sZnm
-         FJ0J0xrFZuNRHswHLxwCxTBP64BKByTm/b5CL48BwPAEBOjA8w4MUl7SF6xOAIlavKVe
-         dPeN1t08daQAQJ+3FjQtuh0RjdOMfo6XTdEgVC1sM+OPozl9I772Qwxc92Tl2D1JKlL9
-         jUNprsoE8dBxVzqWqGjc/Uq+xzWw5pEWYK1sf7IU1cJWHyDL1RYUvZ/Frc3y0aiwe5zr
-         zQ7Q==
-X-Forwarded-Encrypted: i=1; AHgh+RpZvErEcl5Q+aPdIAnx5akWQ2ELgdWPGFxnc9vV2GGnHAa9eBOqIHMGmuQD8mMrtc+FyF7DRrunmxxl@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkSudvtrAQ+cbOf9BUnMSF6kecT7A/L/9MGtYz1Y0hGxOrtsL4
-	KKhY4aHZ13hrsI8HBlkRKe3Ma0jEzOBMRHUjj6h9woEckTul4PzSAbyc
-X-Gm-Gg: AfdE7ck+/3FPHM4zpf5HNNLkawDBqWxMh4xzAWvpFP2wcmbBd1Bcs3iRgOW3MCguF9b
-	YO0Vhu4ULpVdryNhuqhJPqeE4bCDEfDZlNkIThx0HXTptTkD/ZKWXdwiGnsPleR9s3FHjIxbs3S
-	5u6BA8eNB3Hx7XObnzL/rTBuexkpiCqmYRq4bJ4sLCLlc6jWRqRDiGJ6VLdKszy9fGn//aIn1CU
-	eX0v8Gu4kNxS7xNQYSWw6p6d1qNzf3zh2sZizwnySzfpnvOq3mR0SmJAip61uXI5H8MWwUjGk+1
-	Zsa03Xeuh1AOSsFP5o2qhHSdc0/BjkV9d8iNKF598kjqy17Wj5b5lwa6l84ucE3+7N8SRQLDWSp
-	hcdDJBg625vUk47isYjxtN2ASqw6FWBl0/CwqCJEbpq8NVN3lLQl2AaPPfcmr3Gu3VZPVvec+Hy
-	MXhHMLy7LwQpsIPtcv4Ll+yCDSp8XeCFjXDNqXV9DU
-X-Received: by 2002:a17:90b:254b:b0:381:e73:3c2e with SMTP id 98e67ed59e1d1-389416e7dd1mr11435912a91.24.1783669966472;
-        Fri, 10 Jul 2026 00:52:46 -0700 (PDT)
+        bh=XxVWLkjTDZhg2ZpXoG0uLB6wK5WtCztBheSr28w2OfY=;
+        b=KTBgcTYZOQk36kNw9eYgvkr7ABBBkkno4I0qae13W1iAxS8RKH6dmyBIAZI5GeeHqZ
+         LZV0J97iM3MINk+8U+ARD0n6ItwV6HRIRY3lqvwkmWEWFrur/NAmcwIXcSH32xOGYJ4d
+         7hKeNY6OnhJm2O91e0zW1+Hly7rl9xoEKFX8/mxyWI802fTIJMNDhTpxega5pqxRccF0
+         x4paP/E8kJE/M8EtWzw79tNfmsTpH16aqh81qZKunXMd89ZXUNB38RPrchTXv14sDbxP
+         x+WU8PLLvMGZD6vdlen9Si7oov6VKzidXlwhyMIjEzHyS7o8HHIpNMwHZhAuRQEiQk9C
+         +MJg==
+X-Forwarded-Encrypted: i=1; AHgh+Ro1p6QEWSzm+NI2kuKgL+cv7TJBkuAT1u9zj6KsGr9jzrlC9XXvRBOzHjZloYRaqe8VMtMTzhbUtLFC@vger.kernel.org
+X-Gm-Message-State: AOJu0YxN9NWrpHjTifAcWGJ1J8WBACOgCYlEX+eWh23y2nFQ2BsfNzOH
+	gH/Nl+eOHoxO5Pw/vLzaZ6DPdM9JaoWG0JGYVlf3sekc/mH67V+Iof7P
+X-Gm-Gg: AfdE7cnGkRBzJmGgCKgFdQISvg+u+THHrnauHNtNkMDD+BGqS17MWeapFbXzjTYzkwS
+	Q1LTYeVi0tvXQM4DtkAObbRAHgdoavJKWHroK2elxUrD/Tw/W0V9h6YITOZgdH2+lN0vGyD60SF
+	zS9Fc0w8ToBp8wt55atX1d3g2pB/ofmnmCi5hu/lme0KQp5lfMUWgvYBOAhcoOe4LGfChHInz8i
+	QWXv2asDOB2lyCw+/Rr1VNjOcY8UgFEUvPwS4hltHM2i3+5PSgC+1mvZ5wsX47cc3bAPQa4sk+y
+	917kU14y2Z8L0QbcGaYJMIiTIhhSTJTbj0f2SBh3AVHJS2XGoc/c5Mg3ip0ALUnaQfsITcZrQXk
+	Q68DarHiR0ki69pLhZmQhuInGZvNk7jLGvVZPZmBfOUzj/seEirp3XmjlYs3k1lP2QYbSZEoSNW
+	B01a927SFb+ATg3FL9z9ujHHe6MYvjnqeag0ThU3KD
+X-Received: by 2002:a05:6a20:d045:b0:3b3:1b38:d9c3 with SMTP id adf61e73a8af0-3c0bce1ec2amr13936533637.4.1783669971391;
+        Fri, 10 Jul 2026 00:52:51 -0700 (PDT)
 Received: from [10.0.0.65] ([2601:647:6700:64d0::94ac])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-31174839f89sm38555369eec.10.2026.07.10.00.52.44
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-31174839f89sm38555369eec.10.2026.07.10.00.52.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2026 00:52:45 -0700 (PDT)
+        Fri, 10 Jul 2026 00:52:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -85,82 +85,74 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v5 2/8] arm64/runtime-const: Use
- aarch64_insn_patch_text_nosync() for patching
+Subject: Re: [PATCH v5 7/8] asm-generic/runtime-const: Add dummy
+ runtime_const_mask_32()
 From: Charlie Jenkins <thecharlesjenkins@gmail.com>
 To: K Prateek Nayak <kprateek.nayak@amd.com>
 Cc: Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@kernel.org>, 
  Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
  Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
  Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>, 
  =?utf-8?q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
  linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Samuel Holland <samuel.holland@sifive.com>, 
  Charlie Jenkins <thecharlesjenkins@gmail.com>, 
  linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
- linux-s390@vger.kernel.org, Jisheng Zhang <jszhang@kernel.org>
-In-Reply-To: <20260630045531.3939-3-kprateek.nayak@amd.com>
+ linux-s390@vger.kernel.org
+In-Reply-To: <20260630045531.3939-8-kprateek.nayak@amd.com>
 References: <20260630045531.3939-1-kprateek.nayak@amd.com>
- <20260630045531.3939-3-kprateek.nayak@amd.com>
+ <20260630045531.3939-8-kprateek.nayak@amd.com>
 Date: Fri, 10 Jul 2026 00:52:39 -0700
-Message-Id: <178366995928.1208691.248201589452077852.b4-review@b4>
+Message-Id: <178366995931.1208691.16267083905782992990.b4-review@b4>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1783669964; l=559;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1783669964; l=326;
  i=thecharlesjenkins@gmail.com; s=20260605; h=from:subject:message-id;
- bh=D9CFIdORg3KDPUuWXmjAR2RsP8Zpq9G9I7JzBgl41j4=;
- b=UkmRaKA4A5laoVQOHeU6g+5KHEhNh4nXv7y+97IHAPLwPizJjZc9yUiwBeTb07rPCZ5L7YjhV
- y/FrmXvAxlqDOKl91ohFaIJIf6Y3Z+PQbXebeX3Uf8dsWUwOiN5UCOq
+ bh=339QwCmoNdOUhoq07+p5mhlOUQoPA8Y4kjfe9Kj1h/4=;
+ b=+du2Hkd0RyMKi/EB9cZncyqJjA+YBHOqCVom2yvmO99t8UG/3SEUftV+TbybYm/IXhHQS2fGb
+ d+Eveyk5xyHAx1lucH8A8KAbw7r8Wb+AaVQqOSex2YBgPMjHQHcvXwN
 X-Developer-Key: i=thecharlesjenkins@gmail.com; a=ed25519;
  pk=ajnnRQ98PIdwKp4HeMkq9U32okYbnh6Zb4G3o5XXvkg=
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22013-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:kprateek.nayak@amd.com,m:arnd@arndb.de,m:tglx@kernel.org,m:mingo@redhat.com,m:peterz@infradead.org,m:bigeasy@linutronix.de,m:catalin.marinas@arm.com,m:will@kernel.org,m:dvhart@infradead.org,m:dave@stgolabs.net,m:andrealmeid@igalia.com,m:linux-arch@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:samuel.holland@sifive.com,m:thecharlesjenkins@gmail.com,m:linux-arm-kernel@lists.infradead.org,m:linux-riscv@lists.infradead.org,m:linux-s390@vger.kernel.org,m:jszhang@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:kprateek.nayak@amd.com,m:arnd@arndb.de,m:tglx@kernel.org,m:mingo@redhat.com,m:peterz@infradead.org,m:bigeasy@linutronix.de,m:dvhart@infradead.org,m:dave@stgolabs.net,m:andrealmeid@igalia.com,m:linux-arch@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:samuel.holland@sifive.com,m:thecharlesjenkins@gmail.com,m:linux-arm-kernel@lists.infradead.org,m:linux-riscv@lists.infradead.org,m:linux-s390@vger.kernel.org,s:lists@lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[thecharlesjenkins@gmail.com,linux-s390@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_FROM(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[arndb.de,kernel.org,redhat.com,infradead.org,linutronix.de,arm.com,stgolabs.net,igalia.com,vger.kernel.org,sifive.com,gmail.com,lists.infradead.org];
-	RCPT_COUNT_TWELVE(0.00)[19];
+	RSPAMD_URIBL_FAIL(0.00)[vger.kernel.org:query timed out];
+	RCPT_COUNT_TWELVE(0.00)[16];
 	FORWARDED(0.00)[lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22016-lists,linux-s390=lfdr.de];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[thecharlesjenkins@gmail.com,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FREEMAIL_CC(0.00)[arndb.de,kernel.org,redhat.com,infradead.org,linutronix.de,stgolabs.net,igalia.com,vger.kernel.org,sifive.com,gmail.com,lists.infradead.org];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RSPAMD_EMAILBL_FAIL(0.00)[linux-s390@vger.kernel.org:query timed out];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,amd.com:email,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 55D25738392
+X-Rspamd-Queue-Id: 0FD0E7383CB
 
-On Tue, 30 Jun 2026 04:55:25 +0000, K Prateek Nayak <kprateek.nayak@amd.com> wrote:
-> The current scheme to directly patch the kernel text for runtime
-> constants runs into the following issue with futex adapted to using
-> runtime constants on arm64:
-> 
->   Unable to handle kernel write to read-only memory at virtual address ...
-> 
-> The pc points to the *p assignment in the following call chain:
-> 
-> [...]
+On Tue, 30 Jun 2026 04:55:30 +0000, K Prateek Nayak <kprateek.nayak@amd.com> wrote:
+> Add a dummy runtime_const_mask_32() for all the architectures that do
+> not support runtime-const.
 
 Reviewed-by: Charlie Jenkins <thecharlesjenkins@gmail.com>
 Tested-by: Charlie Jenkins <thecharlesjenkins@gmail.com>
