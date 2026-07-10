@@ -1,170 +1,313 @@
-Return-Path: <linux-s390+bounces-22014-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22018-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id n33sCtamUGqh2wIAu9opvQ
-	(envelope-from <linux-s390+bounces-22014-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 10:01:26 +0200
+	id 4G+IN4usUGrz3AIAu9opvQ
+	(envelope-from <linux-s390+bounces-22018-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 10:25:47 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC4477383A4
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 10:01:19 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EC727386AB
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 10:25:47 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=phCDgbmF;
-	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22014-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-22014-lists+linux-s390=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=amd.com header.s=selector1 header.b=2CsJejtt;
+	dmarc=pass (policy=quarantine) header.from=amd.com;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22018-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-22018-lists+linux-s390=lfdr.de@vger.kernel.org";
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8DB29305CA26
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 07:52:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 759F4301496A
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 08:17:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68D423DDDA1;
-	Fri, 10 Jul 2026 07:52:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 486B2366079;
+	Fri, 10 Jul 2026 08:17:23 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010068.outbound.protection.outlook.com [52.101.201.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEFA73DE45C
-	for <linux-s390@vger.kernel.org>; Fri, 10 Jul 2026 07:52:48 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783669970; cv=none; b=BkM2R2ofpUYSewlRiIeGu4+fi/u5zOQ2ET30AF4EbEsT9gIbdJG1t4LES7E8xE+urIC+Da8eTxvQq9+vAZ7VFvCBxeBdr9khZWcxIXaqMP6PJdB6Xe6Vtbjwh/88SpMtqUXYhAa4JwjzLzlWqQ7nCMsGFO64xYFmtknBgRhawQc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783669970; c=relaxed/simple;
-	bh=+O07iyphnPsMhbwdcZl/xEUDllR7WIMFNYTSmUuHDHk=;
-	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
-	 References:Date:Message-Id; b=SKIMy0MCA75yWJE0kQDT24PhNPh/aqQoH2HnTGkDxGz7WmTiyMyJxJRPIS8usfFBFTari8+I5hu6ydJY6MDDJhTAj94lGMoloS493Aggd2xDyqNtA3otSg8SqlB5r+k6x3MhSeKnYE/6IZurxsmWHBQye81Fi4hpfuaE+bpkyvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=phCDgbmF; arc=none smtp.client-ip=209.85.214.179
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2c9bd2f8bf7so23862425ad.1
-        for <linux-s390@vger.kernel.org>; Fri, 10 Jul 2026 00:52:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783669968; x=1784274768; darn=vger.kernel.org;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=hBmrtvJxIONdnfaPYnlm/oDBvJlVXO+AfljQowycHCs=;
-        b=phCDgbmFYIabUWS3GMYDH/KvmwvHnZtuUplOhDQEjP3K5yuPobZmcgQ7t03x7nG/ce
-         S4z1Dq19hMrKgJaBgxsRbxfGnTQ+IVJbeSAsH1exWak+mLxpKLi5drEiiG1EokCGWWH3
-         0C0DHthSC/KRQfKUgdbWTZWDUdsG7XjkNWyz3W8trbQM9fnnJJq3jWgLylggWLFeRXsy
-         HrYWKXpYD0bvsJjMDFJnG4dgoqMtJRof/M7wZqufQe/YzLpokIv3ifWgdSJ0KquZ+RX/
-         YkSp+6aMdOiy4vQnrpuaAAoPlae9+iYRO/fVxN9dffw4liNXtWRwtenyOptOKvIdBo6h
-         O2aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783669968; x=1784274768;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=hBmrtvJxIONdnfaPYnlm/oDBvJlVXO+AfljQowycHCs=;
-        b=JGrlOftonNU07XUexH4KtzBE30gNYT4Lph/A0J6F6Uc6KO5HUl7/CiSgOyzbhnhfkA
-         sXAgiwGU72Fil+ePGDly7ARVVTSbU36LV9+1k7g8IIgp6Op4INNZ4cATtU0RT1bnm/0/
-         jnUAHcQmSe6Sxs1J2dwO4Yg3i7nZxQXfA1I+cpa9wQ3i0PDqIbZfA08xdr+yk8iVD0zA
-         MJ+FJvB25kTcFL8K/fRf9ni368n4R+E7SP4rcb32KAauizpVEIGjrL6VCPeROi1n+k5f
-         0AnSlGyAC6K26vNOf8kyuSTYWxuxDtUlnLzgN/MIK3s9R2LfDRKW1HwQAz9yqgP3gDW8
-         YG3w==
-X-Forwarded-Encrypted: i=1; AHgh+Rr/KoWHO2SPzfYreDxW4SERnvVnxfO8sWaOtZYJWtA9ff9K5/30dZb9L5rw32WJ4OKxbDA3hRtBP4kj@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhmMRVqbRivIw+0C05PuN8zh+JNpy2Zxbf6Gy9iZ5mDNwUiBAp
-	ZlMERTSP/aQ/FR37DrdZJnV0srtG253C9bzgjbDQHWuOJO4A6TBaRQ2i
-X-Gm-Gg: AfdE7clZ+DS+VyUwYH8o+0o3frvlJxRjOQMHHkcBJiHUhqtB9A+/1tYZ8suDAOSo6yS
-	LmmzgFRFhtr6erQa18WpjqyA+iwvs/mX1uUlKrz2k6IShM7XqJ5KG0zUYgGvM6oXo+Xvctis+wn
-	l5VVxkm8HUzvBeMbqeWTnlEtcjzl75R9g1moivvsEITN8VGHnZW0VdjKL/g2tAtvf3sXX66XlyO
-	PlYzLLdiw5p0o0EfysTeopDw6dsWE+Xaxnqje699aUUbnzEZpxI7AcP3WZ0lDmz6V7L7GY5ND9j
-	s6k+SKt96BVW+1ZvSJdD2CjHFK1L4Hk5mrbhclYajycO4z1V0DF81mopuVEunu2tM5XYr+2rWER
-	k5KzyJVUw5kOG/l77iOZ+z4OIodiUQGboM4gnBqBxJpFtAAH1n8P3+PA0wstEooBQMuV9l+SFSr
-	htBWvrAsh89DS+1gkFp9UGEojdasE8LcIxqtId6or3
-X-Received: by 2002:a05:6300:6708:b0:3b5:445c:e483 with SMTP id adf61e73a8af0-3c0f085cde5mr3063429637.3.1783669968147;
-        Fri, 10 Jul 2026 00:52:48 -0700 (PDT)
-Received: from [10.0.0.65] ([2601:647:6700:64d0::94ac])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-31174839f89sm38555369eec.10.2026.07.10.00.52.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jul 2026 00:52:47 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EAFF3358C6;
+	Fri, 10 Jul 2026 08:17:21 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783671443; cv=fail; b=pGzApgAuQAqoTi/scL1rZgvZp9ue0rvREMtKBGJ4Ao2wvg9w8gylJTq6Mxv+42HPHi2R0nTSuChyICMgniNXKMbnEze00VJ7qYZ4C4mBeKoL4+vIO2Wt2BgsQlD2OT320dPo4rP+i5fsGz5iV6h8MrUlL/606uL1h/29smVdHDo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783671443; c=relaxed/simple;
+	bh=VQMuaT8JLqvfdUsdV+BNt/Ude636eZA/TxsM82FiQS8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=rxL4DRp8nsGYRs0eTkx7MnSCUlTOjo8L5pI8FToTLDFGgY8hQUnz9DQFTf4vByOuRDnVTcom7x0BIOF1sJgod/fqTVASxBEHk7qIOkCGh1C46G5lJnezrFeXFut1HrsExmiM5fA3VxyIuA04Tn7APCGAR1pdksvsgFwJNVYgLbg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2CsJejtt; arc=fail smtp.client-ip=52.101.201.68
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bADy4MyDlRtFS7Ey6zhS7/3ranOwzmkHDZMwLNpDFivy6cDI9k9xI/onzlKl/pyYyeGzvLfqH3F/x8BvfbXeCWdUHnTY3P9hHMGf83AhcP7CLXI2DU5wUsUkmyGIDmiP89GuTVXPcilsXYVlQs4JhSTJvtiaSH27bQDDfW2f6P3ngyb8GUShv3zgvmpJCbjYLhsmMuiD1mh4ohL1f4mMFMWuYaMpPaPBVagF+ZcTzXF10T5Kr+vkVnvw+RfVuASVa+ItRcdqmDCpTmiP/rmgy+Hnf/zkCzUFfGQQ0mkCPmgAnD+vmVofOwIgPuowgIxd/6uglDcptZKCL9DVNyprrA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OXOHSZK3138l5feHcf8tQrpnH6XzX3HFkUrrAbxwBf4=;
+ b=SJKWY4xnsFFZrSrQRbWoL2ejWmjW2wn/fDKWSywaEly38uKoxdP76qcGjG3r1rm6HBLIv6tN8kZsA+lCvrzVzNbkGS15bQr2WsGbor3/jcThJzc8h5jOOptT87mUviiw7ZFoppRh0HDZuHDIa4/ScsC0OT2vlvhxkorcJVWAHWiYd+TeCIZ0PzVrAoqHXTZzoDkxlspnDqAGr6UWMiJOGH7ak9STCV7Chgg+NxgQacgSdqiPffFcElJdtcBWzafvFUG7Y5YbQGz3r02732mC7iFdKd/xnrXERI0XhSSzEuyg/bbxT59UO64CX9w4Px1IYHp/amqJWni1fimSJW0Bgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OXOHSZK3138l5feHcf8tQrpnH6XzX3HFkUrrAbxwBf4=;
+ b=2CsJejtt2+4ndMVIgzhYdgnZ5q2vSQz52BTNmZD8cUh/wm23YNtEB34cZHChS1Aq+y2vXV08M3tgqOBVm4bbcVrOLVpSk/bTMSPw4iG87Dejfafit0I8PK9S+Ueq5JM0JDray3ApZ2Jo+A92G5phRQQY+VJC+c6TiIGbPxHB8tM=
+Received: from MN0P223CA0017.NAMP223.PROD.OUTLOOK.COM (2603:10b6:208:52b::8)
+ by CH8PR12MB9816.namprd12.prod.outlook.com (2603:10b6:610:262::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.15; Fri, 10 Jul
+ 2026 08:17:17 +0000
+Received: from BN3PEPF0000B371.namprd21.prod.outlook.com
+ (2603:10b6:208:52b:cafe::8a) by MN0P223CA0017.outlook.office365.com
+ (2603:10b6:208:52b::8) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.202.13 via Frontend Transport; Fri,
+ 10 Jul 2026 08:17:17 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ BN3PEPF0000B371.mail.protection.outlook.com (10.167.243.168) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.223.0 via Frontend Transport; Fri, 10 Jul 2026 08:17:16 +0000
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Fri, 10 Jul
+ 2026 03:17:16 -0500
+Received: from [10.136.35.241] (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.41 via Frontend
+ Transport; Fri, 10 Jul 2026 03:17:11 -0500
+Message-ID: <650c7050-2a77-4415-b597-3bb39ccfb1e8@amd.com>
+Date: Fri, 10 Jul 2026 13:47:10 +0530
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v5 3/8] arm64/runtime-const: Introduce
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 5/8] riscv/runtime-const: Introduce
  runtime_const_mask_32()
-From: Charlie Jenkins <thecharlesjenkins@gmail.com>
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@kernel.org>, 
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
- Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>, 
- =?utf-8?q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
- linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Samuel Holland <samuel.holland@sifive.com>, 
- Charlie Jenkins <thecharlesjenkins@gmail.com>, 
- linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
- linux-s390@vger.kernel.org, Jisheng Zhang <jszhang@kernel.org>
-In-Reply-To: <20260630045531.3939-4-kprateek.nayak@amd.com>
+To: Charlie Jenkins <thecharlesjenkins@gmail.com>
+CC: Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@kernel.org>, Ingo
+ Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Sebastian
+ Andrzej Siewior <bigeasy@linutronix.de>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+	Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
+	=?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Samuel Holland
+	<samuel.holland@sifive.com>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>, Alexandre
+ Ghiti <alex@ghiti.fr>, Jisheng Zhang <jszhang@kernel.org>
 References: <20260630045531.3939-1-kprateek.nayak@amd.com>
- <20260630045531.3939-4-kprateek.nayak@amd.com>
-Date: Fri, 10 Jul 2026 00:52:39 -0700
-Message-Id: <178366995929.1208691.6493654690059057340.b4-review@b4>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1783669964; l=605;
- i=thecharlesjenkins@gmail.com; s=20260605; h=from:subject:message-id;
- bh=+O07iyphnPsMhbwdcZl/xEUDllR7WIMFNYTSmUuHDHk=;
- b=cz9XXDbkR0SqPbqmjDnlzBYAVi5QXign/r4fxPETsJQjHLuhqKNi1lidC/VVBt9XeNDUNYCm6
- hNQu7cyMBW+DNBsieROPBZ33ez+ffYUCmOSl5oGIFtaAneSomqGU4B7
-X-Developer-Key: i=thecharlesjenkins@gmail.com; a=ed25519;
- pk=ajnnRQ98PIdwKp4HeMkq9U32okYbnh6Zb4G3o5XXvkg=
+ <20260630045531.3939-6-kprateek.nayak@amd.com>
+ <178366995930.1208691.2993932866462893112.b4-review@b4>
+Content-Language: en-US
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <178366995930.1208691.2993932866462893112.b4-review@b4>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B371:EE_|CH8PR12MB9816:EE_
+X-MS-Office365-Filtering-Correlation-Id: 32fd8548-7dad-4237-4418-08dede5ba7b3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|7416014|376014|1800799024|36860700016|23010399003|11063799006|4143699003|5023799004|22082099003|56012099006|18002099003|3023799007|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	Q/9ktpJsUqU9YY6zkbyoOn1QUlbJ+/6RwN3a5/mkWn6etdYrVp1Xwp+3HQeSVP3DwNzktZfDBLO59E+NnE9xir8SKzrRrkqaq34aOKn0YbrYj2t+FcXATn/c2vJ2+LeB+zOtDHC/z9fMRd+ZDBBkNzALUKLzmooT71j7MLUzpwWWKQ4O/SJ/0PqAGPNUswbvpGh1IumXJXP/VXccbUbPHbN+NQf9h8pyrzNIcV/IRKCuEdbYtSTslgL6IciYD+u/JINXvijcgkznQx8qXYh3Vh5IYaU++GjQlpRYN5gJ1ogHi8c10wREkHZWmWkwA7q+slgQasvsYY/paW5q56Islubv3jw85tN5itm3F1/Va5tK89TfrN/hLJoqACcREaefetPxLXPb86eiD/XRgvs3jX/Qh2W8k92EvbkmFRK6XHQnxGadMATBABsx9rSAlHCTsn5z0E2clqlXbbBL9ztqinVoB7/tTA2cDQHCf3xNABV1OrXxZY6GniPl4WheQ8qIpeZ+iGbDbe3CZdS7r9kHlczkUX74c5/zsdwHk/rjBDX0eVwxfsamiJQ+3cyd3InsZ8IyjjPw0wCt71gK4Q607/PBiiHf0cGpiBWwfsgs8X/I81mo3uSsmeXOl9Jj1V4tLnPP7w15N1lkmsaEFG0g8xxtWPS7St2nqYdyf/JoM5MtYriGBwiSL4EvrN8NR/qv3MjZb3libzkv9wImUFVMeQ==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(1800799024)(36860700016)(23010399003)(11063799006)(4143699003)(5023799004)(22082099003)(56012099006)(18002099003)(3023799007)(13003099007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	60pdV8geNf2LGy6amrH9UHz4HB+liaHa8OSGHsqTNViw7oXQ249X9/AxDXEBPT7AnEg8ZdRXgUBHxlYACOmZQGYW87ZjV6+TxVG2cyOG9c6BLMYOjzC1nP5NQn4+PaREJZUZvfXdr4LeQyTIGNWLIB0s1nzxYg+tFD2DgvDdG/QwyaWMRLRdmp/g8tHkI78gp1Wv5qk45RzbrqP6uvgGImmtG7kRzs3ss/ovE+nC5lWeewQ3jD5vK//MvYhWHJDhi/Wjss3OJgLPR9ENljPxVLxOxqIqWT/pG2P07+arTG+p/07FfAyTOeuH4/eZ/Ze+VQtAWfXsRNAuX9b8wBnN+RpKYQs28YmfhsMpQsShvtAfykKsjTiQna8TYWCjVeYU6RJDQgpOZNJxgyf4yas6IuPaWqlJziwI9WM1hTrkuZGFRWs9pbuthM4acsYljNrq
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2026 08:17:16.9680
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 32fd8548-7dad-4237-4418-08dede5ba7b3
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B371.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH8PR12MB9816
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22014-lists,linux-s390=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	TAGGED_FROM(0.00)[bounces-22018-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[thecharlesjenkins@gmail.com,linux-s390@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FORGED_RECIPIENTS(0.00)[m:kprateek.nayak@amd.com,m:arnd@arndb.de,m:tglx@kernel.org,m:mingo@redhat.com,m:peterz@infradead.org,m:bigeasy@linutronix.de,m:catalin.marinas@arm.com,m:will@kernel.org,m:dvhart@infradead.org,m:dave@stgolabs.net,m:andrealmeid@igalia.com,m:linux-arch@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:samuel.holland@sifive.com,m:thecharlesjenkins@gmail.com,m:linux-arm-kernel@lists.infradead.org,m:linux-riscv@lists.infradead.org,m:linux-s390@vger.kernel.org,m:jszhang@kernel.org,s:lists@lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	FORWARDED(0.00)[lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[arndb.de,kernel.org,redhat.com,infradead.org,linutronix.de,arm.com,stgolabs.net,igalia.com,vger.kernel.org,sifive.com,gmail.com,lists.infradead.org];
+	FORGED_RECIPIENTS(0.00)[m:thecharlesjenkins@gmail.com,m:arnd@arndb.de,m:tglx@kernel.org,m:mingo@redhat.com,m:peterz@infradead.org,m:bigeasy@linutronix.de,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:dvhart@infradead.org,m:dave@stgolabs.net,m:andrealmeid@igalia.com,m:linux-arch@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:samuel.holland@sifive.com,m:linux-arm-kernel@lists.infradead.org,m:linux-riscv@lists.infradead.org,m:linux-s390@vger.kernel.org,m:alex@ghiti.fr,m:jszhang@kernel.org,s:lists@lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[kprateek.nayak@amd.com,linux-s390@vger.kernel.org];
+	FORWARDED(0.00)[lists@lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,aka.ms:url,amd.com:from_mime,amd.com:email,amd.com:mid,amd.com:dkim];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[thecharlesjenkins@gmail.com,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[kprateek.nayak@amd.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[amd.com:+];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,amd.com:email,vger.kernel.org:from_smtp]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	REDIRECTOR_URL(0.00)[aka.ms];
+	TAGGED_RCPT(0.00)[linux-s390];
+	RCVD_COUNT_SEVEN(0.00)[8]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: BC4477383A4
+X-Rspamd-Queue-Id: 3EC727386AB
 
-On Tue, 30 Jun 2026 04:55:26 +0000, K Prateek Nayak <kprateek.nayak@amd.com> wrote:
-> Futex hash computation requires a mask operation with read-only after
-> init data that will be converted to a runtime constant in the subsequent
-> commit.
-> 
-> Introduce runtime_const_mask_32 to further optimize the mask operation
-> in the futex hash computation hot path. Since all the current use-cases
-> are of the form GENMASK(n, 0), with n > 0, a single:
-> 
-> [...]
+Hello Charlie,
 
-Reviewed-by: Charlie Jenkins <thecharlesjenkins@gmail.com>
-Tested-by: Charlie Jenkins <thecharlesjenkins@gmail.com>
+On 7/10/2026 1:22 PM, Charlie Jenkins wrote:
+> [You don't often get email from thecharlesjenkins@gmail.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
+> 
+> On Tue, 30 Jun 2026 04:55:28 +0000, K Prateek Nayak <kprateek.nayak@amd.com> wrote:
+>> Futex hash computation requires a mask operation with read-only after
+>> init data that will be converted to a runtime constant in the subsequent
+>> commit.
+>>
+>> Introduce runtime_const_mask_32 to further optimize the mask operation
+>> in the futex hash computation hot path. Since all the current use-cases
+>> are of the form GENMASK(n, 0), with n > 0, following sequence:
+> 
+> I really appreciate you spending the time to do this, thank you!
+
+My pleasure! And I really appreciate you taking time to review and test
+this series. Thanks a ton for that!
+
+> 
+>>
+>>
+>> diff --git a/arch/riscv/include/asm/runtime-const.h b/arch/riscv/include/asm/runtime-const.h
+>> index 1ce02605d2e4..dbf96c937dbb 100644
+>> --- a/arch/riscv/include/asm/runtime-const.h
+>> +++ b/arch/riscv/include/asm/runtime-const.h
+>> @@ -262,6 +279,33 @@ static inline void __runtime_fixup_shift(void *where, unsigned long val)
+>> [ ... skip 24 lines ... ]
+>> +     BUG_ON(!val || width > 31 || (GENMASK(width - 1, 0) != val));
+>> +
+>> +     __runtime_fixup_shift(where, 32 - width);
+>> +     __runtime_fixup_shift(where + 4, 32 - width);
+>> +}
+>> +
+> 
+> It would be "optimal" to use an andi when the mask is <=11 bits since
+> andi can fit an 11 bit mask. What you have is good enough but I'll leave
+> my stab at doing the andi patching here in case you want to apply it.
+> 
+> From 9e5527aaddd464783af795aacdb6d094e11cc31e Mon Sep 17 00:00:00 2001
+> From: Charlie Jenkins <thecharlesjenkins@gmail.com>
+> Date: Thu, 9 Jul 2026 23:18:09 -0700
+> Subject: [PATCH] riscv: Optimize __runtime_fixup_mask for masks with <= 11
+>  bits
+
+Peter seems to have merged the v5 series in his tree but If you could give
+your S-o-b, I can throw in a commit log, some testing along with a few
+cosmetic modifications, and send it for official review on top of
+queue:locking/core ;-)
+
+> 
+> ---
+>  arch/riscv/include/asm/insn.h          |  2 ++
+>  arch/riscv/include/asm/runtime-const.h | 29 ++++++++++++++++++++++++--
+>  2 files changed, 29 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/riscv/include/asm/insn.h b/arch/riscv/include/asm/insn.h
+> index c3005573e8c9..0a34cd7305d0 100644
+> --- a/arch/riscv/include/asm/insn.h
+> +++ b/arch/riscv/include/asm/insn.h
+> @@ -141,6 +141,7 @@
+>  #define RVG_OPCODE_JALR                0x67
+>  #define RVG_OPCODE_JAL         0x6f
+>  #define RVG_OPCODE_SYSTEM      0x73
+> +#define RVG_OPCODE_ANDI                0x13
+>  #define RVG_SYSTEM_CSR_OFF     20
+>  #define RVG_SYSTEM_CSR_MASK    GENMASK(12, 0)
+> 
+> @@ -175,6 +176,7 @@
+>  #define RVG_FUNCT3_BGE         0x5
+>  #define RVG_FUNCT3_BLTU                0x6
+>  #define RVG_FUNCT3_BGEU                0x7
+> +#define RVG_FUNCT3_ANDI                0x7
+> 
+>  /* parts of funct3 code for C extension*/
+>  #define RVC_FUNCT3_C_BEQZ      0x6
+> diff --git a/arch/riscv/include/asm/runtime-const.h b/arch/riscv/include/asm/runtime-const.h
+> index dbf96c937dbb..24a9b13081f7 100644
+> --- a/arch/riscv/include/asm/runtime-const.h
+> +++ b/arch/riscv/include/asm/runtime-const.h
+> @@ -9,6 +9,7 @@
+>  #include <asm/asm.h>
+>  #include <asm/alternative.h>
+>  #include <asm/cacheflush.h>
+> +#include <asm/insn.h>
+>  #include <asm/insn-def.h>
+>  #include <linux/memory.h>
+>  #include <asm/text-patching.h>
+> @@ -302,8 +303,32 @@ static inline void __runtime_fixup_mask(void *where, unsigned long val)
+>          */
+>         BUG_ON(!val || width > 31 || (GENMASK(width - 1, 0) != val));
+> 
+> -       __runtime_fixup_shift(where, 32 - width);
+> -       __runtime_fixup_shift(where + 4, 32 - width);
+> +       /*
+> +        * A riscv 'andi' instruction can fit an 11 bit immediate, so the mask
+> +        * can be directly applied. Otherwise fall back to SRLI + SLLI.
+> +        */
+> +       if (width < 11) {
+> +               __le16 *parcel = where;
+> +               u32 insn;
+> +               __le32 res, nop;
+> +
+> +               insn = (u32)le16_to_cpu(parcel[0]) | (u32)le16_to_cpu(parcel[1]) << 16;
+> +
+> +               /* Replace the slli/slliw with an andi */
+> +               insn &= 0x000fcf80;
+> +               insn |= val << 20 | RV_ENCODE_FUNCT3(ANDI) | RVG_OPCODE_ANDI;
+> +
+> +               res = cpu_to_le32(insn);
+> +               /* Replace the srli/srliw with a nop */
+> +               nop = cpu_to_le32(RISCV_INSN_NOP4);
+> +               mutex_lock(&text_mutex);
+> +               patch_text_nosync(where, &res, sizeof(insn));
+> +               patch_text_nosync(where + 4, &nop, sizeof(insn));
+> +               mutex_unlock(&text_mutex);
+> +       } else {
+> +               __runtime_fixup_shift(where, 32 - width);
+> +               __runtime_fixup_shift(where + 4, 32 - width);
+> +       }
+>  }
+> 
+>  static inline void runtime_const_fixup(void (*fn)(void *, unsigned long),
+> --
+> 2.54.0
+> 
+> 
+> I would prefer including this, but I am happy to approve this
+> regardless.
+
+Ack! I'll keep it as an optimization on top to retain your attribution.
+
+> 
+> Reviewed-by: Charlie Jenkins <thecharlesjenkins@gmail.com>
+> Tested-by: Charlie Jenkins <thecharlesjenkins@gmail.com>
+
+Thank you again!
 
 -- 
-- Charlie
+Thanks and Regards,
+Prateek
 
 
