@@ -1,71 +1,71 @@
-Return-Path: <linux-s390+bounces-22057-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22070-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id oSiAL9kPUWpo+wIAu9opvQ
-	(envelope-from <linux-s390+bounces-22057-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 17:29:29 +0200
+	id cfRVFEERUWrn+wIAu9opvQ
+	(envelope-from <linux-s390+bounces-22070-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 17:35:29 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4560173C3CC
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 17:29:29 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBA1D73C508
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 17:35:28 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=T7HlRPdZ;
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=TfZb01Q5;
 	dmarc=pass (policy=none) header.from=ibm.com;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22057-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-22057-lists+linux-s390=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22070-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-22070-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 893573008D7C
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 15:29:28 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 11BC43043D03
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 15:29:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FC58214812;
-	Fri, 10 Jul 2026 15:29:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0EC52D2397;
+	Fri, 10 Jul 2026 15:29:30 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E0823BCF7
-	for <linux-s390@vger.kernel.org>; Fri, 10 Jul 2026 15:29:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EB13C7DE1
+	for <linux-s390@vger.kernel.org>; Fri, 10 Jul 2026 15:29:28 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783697366; cv=none; b=K6B6qPJ9VJqn5e4l+AjGQ3i8LEgnVjCCdhJyH/lKCEXWz0ihJkExTKBE3dYIzYskcljDb5Qxn3KEGdvdOsjXxV0m8Ssq8NJvbGQQXvYoyL6gO4LUrP/SdR6W8vRa8HLLhfxakowlW2LlX4qyBEea+xGsEsHS5VhNHEclPG3oryg=
+	t=1783697370; cv=none; b=A6CsFvIQ7q7JHbjFX9n+o/3d/1ZKiN0rghUH9mWZHAn6jpcOyXDRHnjjhX1cK1GQqDRlRnihBOqjexPoil798lxpNkRLCv0u98liYq5G9jSt9Lzz7dRWsRQ7NDLmzMZRZ4oPsNaNWZS1sDivsK7wKxDEnaiVawzxzKy3wiNy/Cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783697366; c=relaxed/simple;
-	bh=+aLnahbYJU4hjtPgWz8sCYJpXosUrIlik1YgxaLhoWk=;
+	s=arc-20240116; t=1783697370; c=relaxed/simple;
+	bh=P3koN8c5T3LioG3LbGiY4n+6FAS8XGvni25wEUK57Kw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K7R/JBMv4AfmtiV/SOjgVcf5hbtwNj5vw19O0ojIHXhYsPx0HsMzo1mbiWjKwGITTb4baZQpivJzcUUJbKhuE2a32ctrwzR+OlKbJ2wQbL1CmsoTC9En3sGDleG/0JdSHnNlKkOvpzn6MpAQcOlFC0WEfQsA/zcA9waMjb5ZiNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=T7HlRPdZ; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66AEmWTJ1406500;
+	 MIME-Version; b=OEW/EDxxSXKfPacb4gn+GSdTirbZJiEnUb+qu54Yy2O5sT8mpK5DjKoVu6M9iZJJ9I+xi/rWS6XTUf099AHo8KRFcJZVrhzJyAzPzMLO2UAxmAJIXhHLCLF14TZGkNzNkRi1SVv23Utfu2vsH+jlMgkjpRjb4wkYLOjFxDikTs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TfZb01Q5; arc=none smtp.client-ip=148.163.158.5
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66AEmjkM1545548;
 	Fri, 10 Jul 2026 15:29:13 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=eb25SZPwZNi2FSM5v
-	WIidIdiqEslosb0SmqiUcMFblc=; b=T7HlRPdZ7vbphOIKmt68xQeyUrqnQ9137
-	xKX/QrAHWB4Kx/mbyQmmk2KxZBpgZMJ59ij4z4EJgpqMsM463yTvl7hheof1X1hf
-	YxpS78hVIs4N2Bs6NtyArXP96KETdGZtQkmk3kKpSlg+t8gq2nrLVSAfpOrCfv0k
-	B3dlXkXGTk16oEH3VoWCpLHh4QVjLN1DjvQQMoBtGal3kshQBL/QP9sYqCzmQp9T
-	Wh7QO2c9+ZebRm4HjjD0yZC9bIFATLRbE2QGUDdQxfTFadMO+rYI971NNUK0Mpxm
-	J5xvGGf+yEKwfxNQrq6Gob619d6JFp/xvH3+kEJN8EZi0KV7tomIw==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fafh0cprb-1
+	:mime-version:references:subject:to; s=pp1; bh=gF/fP+cgAZpgFRTvs
+	kZ7voOM3S0do/ZvOq5fCTXHGz0=; b=TfZb01Q5X8Qt4uqNMGPOycg+1pBRD6Mgk
+	yHZdwMPTUYPXuSFkXVfooN96VXluFrIq/NXOwTkqUWII+JRA0rm/iypEzm8YZHFq
+	8kIKXfaYA8NRzswL1oEoqroIkQ66783go1lpiqu+pVpSv/6scMNye4r4mNqztIqR
+	5JYITQDP79rUfadrmWYxuPi2jI8CYIDMUvKrQcv+w65z87dAX6BR53gYBoO7L6XF
+	a6qkhUM78ixfBEAIDgl3L5mQ0PrbHatO199Qi58HFdR6hr3ykF/87m2u54PC3EkW
+	PcobU47N8hERrjYj4FYu3t+qktVamrqAHX9Ai2yFHhOZDPyxlre/Q==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6qknxqbf-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Fri, 10 Jul 2026 15:29:12 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66AFJqGO015771;
-	Fri, 10 Jul 2026 15:29:11 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4f7cgqjt1y-1
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66AFJsvK021018;
+	Fri, 10 Jul 2026 15:29:12 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f7dgkjkyh-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 10 Jul 2026 15:29:11 +0000 (GMT)
+	Fri, 10 Jul 2026 15:29:12 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66AFT7u635652082
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66AFT89t54264186
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Fri, 10 Jul 2026 15:29:08 GMT
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D488B20040;
-	Fri, 10 Jul 2026 15:29:07 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 155A520040;
+	Fri, 10 Jul 2026 15:29:08 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9AF8E2004B;
+	by IMSVA (Postfix) with ESMTP id D8FEF20043;
 	Fri, 10 Jul 2026 15:29:07 +0000 (GMT)
 Received: from funtu2.ibm.com (unknown [9.111.196.135])
 	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
@@ -76,9 +76,9 @@ To: richard.henderson@linaro.org, iii@linux.ibm.com, david@kernel.org,
 Cc: qemu-s390x@nongnu.org, qemu-devel@nongnu.org, linux-s390@vger.kernel.org,
         dengler@linux.ibm.com, borntraeger@linux.ibm.com,
         fcallies@linux.ibm.com, cohuck@redhat.com
-Subject: [PATCH v12 02/17] target/s390x: Move cpacf sha512 code into a new file
-Date: Fri, 10 Jul 2026 17:28:48 +0200
-Message-ID: <20260710152906.80207-3-freude@linux.ibm.com>
+Subject: [PATCH v12 03/17] target/s390x: Support cpacf sha256
+Date: Fri, 10 Jul 2026 17:28:49 +0200
+Message-ID: <20260710152906.80207-4-freude@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260710152906.80207-1-freude@linux.ibm.com>
 References: <20260710152906.80207-1-freude@linux.ibm.com>
@@ -90,46 +90,44 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=VebH+lp9 c=1 sm=1 tr=0 ts=6a510fc8 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+X-Authority-Analysis: v=2.4 cv=Q/XiJY2a c=1 sm=1 tr=0 ts=6a510fc8 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
  a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8 a=UGG5zPGqAAAA:8
- a=yMKeI-deMsSePwiaAVEA:9 a=17ibUXfGiVyGqR_YBevW:22
-X-Proofpoint-GUID: NX58Zetrk4ajr6b10USUmsIpQhN2hEWF
-X-Proofpoint-ORIG-GUID: NX58Zetrk4ajr6b10USUmsIpQhN2hEWF
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzEwMDE1MyBTYWx0ZWRfX1XJT6G2PAjsL
- u/WMpQHCDkvdAe9ErLWUmcBPxe1hz8eQ5Qp0iYR+sxllDg+0Yd4DwMY0oXPO8q8OHSzHIgpCcYS
- hoMK6TJ9dyVTehGndnawhpYWUEdQdP8=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzEwMDE1MyBTYWx0ZWRfXxkrrEOy8dE3O
- vVQ+FStkGN1oOCm5aAK2EyTbKd2Bym0dYzVjtGmnWbV8i1baxnP/wgKv+4LIFvq2tElF8lM+vgb
- SsPpz+ITjzu4jLa52nhNmAsYYQsKeEauMPUM6rnG4QcXrOmPAsvF8p+Isra1bj9EtdsU5li3zSa
- dPAQzcZFiiw8VfsQgHdBQw9IOePwhLNZCClx83LLqAEcevfUew1kLgdzuRSDpFxbbFd2WdjoNew
- Oq0e0Le4EgkbHgjJIE4j4X0p29Fe7kpl5qsHWhonstUTZ4XWw38rcfR6VrwDR3y/BzWLlLaDmrU
- S8qkuuO62OcV3nv3ZBR6BS/EPSsZTeahaaeDg7Zlvllreaq1U0M78LMbzXAK9f1uXc1yD8wjyw2
- l+aBupA95OB3TYymu6j3phsZ3EPzutCVyUGzMGqWvBNturNGfv+iZB/EDqd3mzve2CN5jsOYn//
- ah3gp3oPI1ZfEISrifA==
+ a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8 a=Oku5TADFz1XGWIWXx1gA:9
+X-Proofpoint-GUID: yRky9sjAvvtO17fn4PHc95ObjrVT7Yvw
+X-Proofpoint-ORIG-GUID: yRky9sjAvvtO17fn4PHc95ObjrVT7Yvw
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzEwMDE1MyBTYWx0ZWRfX0OE788qJRbX5
+ xXOjM8m7Bc7bJn+m4E8QYq7pzSJrmfxElzuBuk3S7ahcQ37hIbA3VKGrmAaA3jhbwneWpoOXzBh
+ HqxAsQJVEp7S9R1DmQiUrtmBPv94Xis=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzEwMDE1MyBTYWx0ZWRfX6yfB0EFa9to/
+ YUWK2LMZ2DZfeuUF4bU8DwxRBxhL4Xw6z4nV66s4O4nSka0M58fDzQaDasudalDsqEIFyAa5+Qo
+ ccgLtDHhmnd/SZYJLJqOawtsElllBmuLUswfcMVZ4qycB+8FGl5Zkv9yUFzFzmAU2/zEQMltxAs
+ 4xrH+8RayY36tO9YOWGR0FmmXJWseVNhdrtJgJZaS1CG1SRSmxY3tzLDUVQ/hkg6oF8k1N16uM1
+ eXKYIK9ZFuGC1OmeN03EXQ1zAprpRmfi6KroYdpVM+MyElPpfinRHkQW3bBCPmV6NnNejeFavcC
+ vp4+7X+53MXb5n4H/fh1Goc2HYP76Iu42y0DO3+3J3x6rtrxHYkRqAFNwQaC0oYNd060pZ+gLgB
+ L3LOUSOuPKYAycjDfHsV813hF2EPFXD446UhnmJg8QOSxOm2X4fjdBw+ohVyH+04r/dQ3H47UiO
+ 04oQh6zilxwvtV10hwg==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-10_04,2026-07-10_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 suspectscore=0 clxscore=1015 malwarescore=0
- impostorscore=0 phishscore=0 lowpriorityscore=0 adultscore=0 spamscore=0
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2607100153
+ adultscore=0 impostorscore=0 spamscore=0 phishscore=0 priorityscore=1501
+ bulkscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607100153
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22057-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22070-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:richard.henderson@linaro.org,m:iii@linux.ibm.com,m:david@kernel.org,m:thuth@redhat.com,m:berrange@redhat.com,m:qemu-s390x@nongnu.org,m:qemu-devel@nongnu.org,m:linux-s390@vger.kernel.org,m:dengler@linux.ibm.com,m:borntraeger@linux.ibm.com,m:fcallies@linux.ibm.com,m:cohuck@redhat.com,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[freude@linux.ibm.com,linux-s390@vger.kernel.org];
@@ -141,64 +139,80 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,linux.ibm.com:mid,linux.ibm.com:from_mime,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.ibm.com:mid,linux.ibm.com:from_mime];
 	TO_DN_NONE(0.00)[];
 	DKIM_TRACE(0.00)[ibm.com:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[12];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 4560173C3CC
+X-Rspamd-Queue-Id: DBA1D73C508
 
-Move the cpacf sha512 implementation into a new file
-cpacf_sha512.c. Add this new file to the build and use the cpacf.h
-header file storing function the prototypes.
+Add a new file cpacf_sha256.c which implements sha256.
+Add support for the sha256 subfuction for CPACF kimd and klmd.
 
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
 Tested-by: Holger Dengler <dengler@linux.ibm.com>
 Reviewed-by: Finn Callies <fcallies@linux.ibm.com>
 Reviewed-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Reviewed-by: Holger Dengler <dengler@linux.ibm.com>
+Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
 ---
+ target/s390x/gen-features.c      |   2 +
  target/s390x/tcg/cpacf.h         |   5 +
- target/s390x/tcg/cpacf_sha512.c  | 241 +++++++++++++++++++++++++++++++
- target/s390x/tcg/crypto_helper.c | 222 ----------------------------
+ target/s390x/tcg/cpacf_sha256.c  | 227 +++++++++++++++++++++++++++++++
+ target/s390x/tcg/crypto_helper.c |   8 ++
  target/s390x/tcg/meson.build     |   1 +
- 4 files changed, 247 insertions(+), 222 deletions(-)
- create mode 100644 target/s390x/tcg/cpacf_sha512.c
+ 5 files changed, 243 insertions(+)
+ create mode 100644 target/s390x/tcg/cpacf_sha256.c
 
+diff --git a/target/s390x/gen-features.c b/target/s390x/gen-features.c
+index a309dc2c09..78f71c6c7b 100644
+--- a/target/s390x/gen-features.c
++++ b/target/s390x/gen-features.c
+@@ -917,7 +917,9 @@ static uint16_t qemu_V7_1[] = {
+  */
+ static uint16_t qemu_MAX[] = {
+     S390_FEAT_MSA_EXT_5,
++    S390_FEAT_KIMD_SHA_256,
+     S390_FEAT_KIMD_SHA_512,
++    S390_FEAT_KLMD_SHA_256,
+     S390_FEAT_KLMD_SHA_512,
+     S390_FEAT_PRNO_TRNG,
+ };
 diff --git a/target/s390x/tcg/cpacf.h b/target/s390x/tcg/cpacf.h
-index 49496d39ed..3b89bc5cd7 100644
+index 3b89bc5cd7..94e9de5b23 100644
 --- a/target/s390x/tcg/cpacf.h
 +++ b/target/s390x/tcg/cpacf.h
-@@ -223,4 +223,9 @@
+@@ -223,6 +223,11 @@
  #define CPACF_KDSA_PSIGN_ED25519   48
  #define CPACF_KDSA_PSIGN_ED448     52
  
-+/* from cpacf_sha512.c */
-+int cpacf_sha512(CPUS390XState *env, const int mmu_idx, uintptr_t ra,
++/* from cpacf_sha256.c */
++int cpacf_sha256(CPUS390XState *env, const int mmu_idx, uintptr_t ra,
 +                 uint64_t param_addr, uint64_t *message_reg, uint64_t *len_reg,
 +                 uint32_t type);
 +
- #endif /* S390X_CPACF_H */
-diff --git a/target/s390x/tcg/cpacf_sha512.c b/target/s390x/tcg/cpacf_sha512.c
+ /* from cpacf_sha512.c */
+ int cpacf_sha512(CPUS390XState *env, const int mmu_idx, uintptr_t ra,
+                  uint64_t param_addr, uint64_t *message_reg, uint64_t *len_reg,
+diff --git a/target/s390x/tcg/cpacf_sha256.c b/target/s390x/tcg/cpacf_sha256.c
 new file mode 100644
-index 0000000000..ebfecc70f7
+index 0000000000..7e57e497a3
 --- /dev/null
-+++ b/target/s390x/tcg/cpacf_sha512.c
-@@ -0,0 +1,241 @@
++++ b/target/s390x/tcg/cpacf_sha256.c
+@@ -0,0 +1,227 @@
 +/*
 + * SPDX-License-Identifier: GPL-2.0-or-later
 + *
-+ *  s390 cpacf sha512
++ * s390 cpacf sha256
 + *
-+ *  Copyright (C) 2022 Jason A. Donenfeld <Jason@zx2c4.com>.
-+ *  All Rights Reserved.
++ * Authors:
++ *   Harald Freudenberger <freude@linux.ibm.com>
 + *
-+ *  Authors:
-+ *   Jason A. Donenfeld <Jason@zx2c4.com>
++ * The sha256 implementation here is more or less a copy-and-paste
++ * from Jason A. Donenfeld's implementation of sha 512 with adaptions
++ * for sha 256.
 + */
 +
 +#include "qemu/osdep.h"
@@ -209,73 +223,57 @@ index 0000000000..ebfecc70f7
 +#include "accel/tcg/cpu-mmu-index.h"
 +#include "target/s390x/tcg/cpacf.h"
 +
-+static uint64_t R(uint64_t x, int c)
++static uint32_t R(uint32_t x, int c)
 +{
-+    return (x >> c) | (x << (64 - c));
++    return (x >> c) | (x << (32 - c));
 +}
-+static uint64_t Ch(uint64_t x, uint64_t y, uint64_t z)
++static uint32_t Ch(uint32_t x, uint32_t y, uint32_t z)
 +{
 +    return (x & y) ^ (~x & z);
 +}
-+static uint64_t Maj(uint64_t x, uint64_t y, uint64_t z)
++static uint32_t Maj(uint32_t x, uint32_t y, uint32_t z)
 +{
 +    return (x & y) ^ (x & z) ^ (y & z);
 +}
-+static uint64_t Sigma0(uint64_t x)
++static uint32_t Sigma0(uint32_t x)
 +{
-+    return R(x, 28) ^ R(x, 34) ^ R(x, 39);
++    return R(x, 2) ^ R(x, 13) ^ R(x, 22);
 +}
-+static uint64_t Sigma1(uint64_t x)
++static uint32_t Sigma1(uint32_t x)
 +{
-+    return R(x, 14) ^ R(x, 18) ^ R(x, 41);
++    return R(x, 6) ^ R(x, 11) ^ R(x, 25);
 +}
-+static uint64_t sigma0(uint64_t x)
++static uint32_t sigma0(uint32_t x)
 +{
-+    return R(x, 1) ^ R(x, 8) ^ (x >> 7);
++    return R(x, 7) ^ R(x, 18) ^ (x >> 3);
 +}
-+static uint64_t sigma1(uint64_t x)
++static uint32_t sigma1(uint32_t x)
 +{
-+    return R(x, 19) ^ R(x, 61) ^ (x >> 6);
++    return R(x, 17) ^ R(x, 19) ^ (x >> 10);
 +}
 +
-+static const uint64_t K[80] = {
-+    0x428a2f98d728ae22ULL, 0x7137449123ef65cdULL, 0xb5c0fbcfec4d3b2fULL,
-+    0xe9b5dba58189dbbcULL, 0x3956c25bf348b538ULL, 0x59f111f1b605d019ULL,
-+    0x923f82a4af194f9bULL, 0xab1c5ed5da6d8118ULL, 0xd807aa98a3030242ULL,
-+    0x12835b0145706fbeULL, 0x243185be4ee4b28cULL, 0x550c7dc3d5ffb4e2ULL,
-+    0x72be5d74f27b896fULL, 0x80deb1fe3b1696b1ULL, 0x9bdc06a725c71235ULL,
-+    0xc19bf174cf692694ULL, 0xe49b69c19ef14ad2ULL, 0xefbe4786384f25e3ULL,
-+    0x0fc19dc68b8cd5b5ULL, 0x240ca1cc77ac9c65ULL, 0x2de92c6f592b0275ULL,
-+    0x4a7484aa6ea6e483ULL, 0x5cb0a9dcbd41fbd4ULL, 0x76f988da831153b5ULL,
-+    0x983e5152ee66dfabULL, 0xa831c66d2db43210ULL, 0xb00327c898fb213fULL,
-+    0xbf597fc7beef0ee4ULL, 0xc6e00bf33da88fc2ULL, 0xd5a79147930aa725ULL,
-+    0x06ca6351e003826fULL, 0x142929670a0e6e70ULL, 0x27b70a8546d22ffcULL,
-+    0x2e1b21385c26c926ULL, 0x4d2c6dfc5ac42aedULL, 0x53380d139d95b3dfULL,
-+    0x650a73548baf63deULL, 0x766a0abb3c77b2a8ULL, 0x81c2c92e47edaee6ULL,
-+    0x92722c851482353bULL, 0xa2bfe8a14cf10364ULL, 0xa81a664bbc423001ULL,
-+    0xc24b8b70d0f89791ULL, 0xc76c51a30654be30ULL, 0xd192e819d6ef5218ULL,
-+    0xd69906245565a910ULL, 0xf40e35855771202aULL, 0x106aa07032bbd1b8ULL,
-+    0x19a4c116b8d2d0c8ULL, 0x1e376c085141ab53ULL, 0x2748774cdf8eeb99ULL,
-+    0x34b0bcb5e19b48a8ULL, 0x391c0cb3c5c95a63ULL, 0x4ed8aa4ae3418acbULL,
-+    0x5b9cca4f7763e373ULL, 0x682e6ff3d6b2b8a3ULL, 0x748f82ee5defb2fcULL,
-+    0x78a5636f43172f60ULL, 0x84c87814a1f0ab72ULL, 0x8cc702081a6439ecULL,
-+    0x90befffa23631e28ULL, 0xa4506cebde82bde9ULL, 0xbef9a3f7b2c67915ULL,
-+    0xc67178f2e372532bULL, 0xca273eceea26619cULL, 0xd186b8c721c0c207ULL,
-+    0xeada7dd6cde0eb1eULL, 0xf57d4f7fee6ed178ULL, 0x06f067aa72176fbaULL,
-+    0x0a637dc5a2c898a6ULL, 0x113f9804bef90daeULL, 0x1b710b35131c471bULL,
-+    0x28db77f523047d84ULL, 0x32caab7b40c72493ULL, 0x3c9ebe0a15c9bebcULL,
-+    0x431d67c49c100d4cULL, 0x4cc5d4becb3e42b6ULL, 0x597f299cfc657e2aULL,
-+    0x5fcb6fab3ad6faecULL, 0x6c44198c4a475817ULL
++static const uint32_t K[64] = {
++    0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1,
++    0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
++    0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174, 0xe49b69c1, 0xefbe4786,
++    0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
++    0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147,
++    0x06ca6351, 0x14292967, 0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13,
++    0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b,
++    0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
++    0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a,
++    0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
++    0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
 +};
 +
 +/* a is icv/ocv, w is a single message block. w will get reused internally. */
-+static void sha512_bda(uint64_t a[8], uint64_t w[16])
++static void sha256_bda(uint32_t a[8], uint32_t w[16])
 +{
-+    uint64_t t, z[8], b[8];
++    uint32_t t, z[8], b[8];
 +    int i, j;
 +
 +    memcpy(z, a, sizeof(z));
-+    for (i = 0; i < 80; i++) {
++    for (i = 0; i < 64; i++) {
 +        memcpy(b, a, sizeof(b));
 +
 +        t = a[7] + Sigma1(a[4]) + Ch(a[4], a[5], a[6]) + K[i] + w[i % 16];
@@ -297,65 +295,66 @@ index 0000000000..ebfecc70f7
 +    }
 +}
 +
-+/* a is icv/ocv, w is a single message block that needs be64 conversion. */
-+static void sha512_bda_be64(uint64_t a[8], uint64_t w[16])
++/* a is icv/ocv, w is a single message block that needs be32 conversion. */
++static void sha256_bda_be32(uint32_t a[8], uint32_t w[16])
 +{
-+    uint64_t t[16];
++    uint32_t t[16];
 +    int i;
 +
 +    for (i = 0; i < 16; i++) {
-+        t[i] = be64_to_cpu(w[i]);
++        t[i] = be32_to_cpu(w[i]);
 +    }
-+    sha512_bda(a, t);
++    sha256_bda(a, t);
 +}
 +
-+static void sha512_read_icv(CPUS390XState *env, const int mmu_idx,
-+                            uint64_t addr, uint64_t a[8], uintptr_t ra)
++static void sha256_read_icv(CPUS390XState *env, const int mmu_idx,
++                            uint64_t addr, uint32_t a[8], uintptr_t ra)
 +{
-+    const MemOpIdx oi = make_memop_idx(MO_BE | MO_64 | MO_UNALN, mmu_idx);
++    const MemOpIdx oi = make_memop_idx(MO_BE | MO_32 | MO_UNALN, mmu_idx);
 +
-+    for (int i = 0; i < 8; i++, addr += 8) {
-+        a[i] = cpu_ldq_mmu(env, wrap_address(env, addr), oi, ra);
++    for (int i = 0; i < 8; i++, addr += 4) {
++        a[i] = cpu_ldl_mmu(env, wrap_address(env, addr), oi, ra);
 +    }
 +}
 +
-+static void sha512_write_ocv(CPUS390XState *env, const int mmu_idx,
-+                             uint64_t addr, uint64_t a[8], uintptr_t ra)
++static void sha256_write_ocv(CPUS390XState *env, const int mmu_idx,
++                             uint64_t addr, uint32_t a[8], uintptr_t ra)
 +{
-+    const MemOpIdx oi = make_memop_idx(MO_BE | MO_64 | MO_UNALN, mmu_idx);
++    const MemOpIdx oi = make_memop_idx(MO_BE | MO_32 | MO_UNALN, mmu_idx);
 +
-+    for (int i = 0; i < 8; i++, addr += 8) {
-+        cpu_stq_mmu(env, wrap_address(env, addr), a[i], oi, ra);
++    for (int i = 0; i < 8; i++, addr += 4) {
++        cpu_stl_mmu(env, wrap_address(env, addr), a[i], oi, ra);
 +    }
 +}
 +
-+static void sha512_read_block(CPUS390XState *env, const int mmu_idx,
-+                              uint64_t addr, uint64_t a[16], uintptr_t ra)
++static void sha256_read_block(CPUS390XState *env, const int mmu_idx,
++                              uint64_t addr, uint32_t a[16], uintptr_t ra)
 +{
-+    const MemOpIdx oi = make_memop_idx(MO_BE | MO_64 | MO_UNALN, mmu_idx);
++    const MemOpIdx oi = make_memop_idx(MO_BE | MO_32 | MO_UNALN, mmu_idx);
 +
-+    for (int i = 0; i < 16; i++, addr += 8) {
-+        a[i] = cpu_ldq_mmu(env, wrap_address(env, addr), oi, ra);
++    for (int i = 0; i < 16; i++, addr += 4) {
++        a[i] = cpu_ldl_mmu(env, wrap_address(env, addr), oi, ra);
 +    }
 +}
 +
-+static void sha512_read_mbl_be64(CPUS390XState *env, const int mmu_idx,
-+                                 uint64_t addr, uint8_t a[16], uintptr_t ra)
++static void sha256_read_mbl_be32(CPUS390XState *env, const int mmu_idx,
++                                 uint64_t addr, uint8_t a[8], uintptr_t ra)
 +{
 +    const MemOpIdx oi = make_memop_idx(MO_8, mmu_idx);
 +
-+    for (int i = 0; i < 16; i++, addr += 1) {
++    for (int i = 0; i < 8; i++, addr += 1) {
 +        a[i] = cpu_ldb_mmu(env, wrap_address(env, addr), oi, ra);
 +    }
 +}
 +
-+int cpacf_sha512(CPUS390XState *env, const int mmu_idx, uintptr_t ra,
++int cpacf_sha256(CPUS390XState *env, const int mmu_idx, uintptr_t ra,
 +                 uint64_t param_addr, uint64_t *message_reg, uint64_t *len_reg,
 +                 uint32_t type)
 +{
-+    enum { MAX_BLOCKS_PER_RUN = 64 }; /* Arbitrary: keep interactivity. */
-+    uint64_t len = *len_reg, a[8], processed = 0;
++    enum { MAX_BLOCKS_PER_RUN = 128 }; /* 128 * 64 = 8K */
++    uint64_t len = *len_reg, processed = 0;
 +    int i, message_reg_len = 64;
++    uint32_t a[8];
 +
 +    g_assert(type == S390_FEAT_TYPE_KIMD || type == S390_FEAT_TYPE_KLMD);
 +
@@ -365,28 +364,28 @@ index 0000000000..ebfecc70f7
 +    }
 +
 +    /* KIMD: length has to be properly aligned. */
-+    if (type == S390_FEAT_TYPE_KIMD && !QEMU_IS_ALIGNED(len, 128)) {
++    if (type == S390_FEAT_TYPE_KIMD && !QEMU_IS_ALIGNED(len, 64)) {
 +        tcg_s390_program_interrupt(env, PGM_SPECIFICATION, ra);
 +    }
 +
-+    sha512_read_icv(env, mmu_idx, param_addr, a, ra);
++    sha256_read_icv(env, mmu_idx, param_addr, a, ra);
 +
 +    /* Process full blocks first. */
-+    for (; len >= 128; len -= 128, processed += 128) {
-+        uint64_t w[16];
++    for (; len >= 64; len -= 64, processed += 64) {
++        uint32_t w[16];
 +
-+        if (processed >= MAX_BLOCKS_PER_RUN * 128) {
++        if (processed >= MAX_BLOCKS_PER_RUN * 64) {
 +            break;
 +        }
 +
-+        sha512_read_block(env, mmu_idx, *message_reg + processed, w, ra);
-+        sha512_bda(a, w);
++        sha256_read_block(env, mmu_idx, *message_reg + processed, w, ra);
++        sha256_bda(a, w);
 +    }
 +
 +    /* KLMD: Process partial/empty block last. */
-+    if (type == S390_FEAT_TYPE_KLMD && len < 128) {
++    if (type == S390_FEAT_TYPE_KLMD && len < 64) {
 +        const MemOpIdx oi = make_memop_idx(MO_8, mmu_idx);
-+        uint8_t x[128];
++        uint8_t x[64];
 +
 +        /* Read the remainder of the message byte-per-byte. */
 +        for (i = 0; i < len; i++) {
@@ -395,22 +394,22 @@ index 0000000000..ebfecc70f7
 +            x[i] = cpu_ldb_mmu(env, addr, oi, ra);
 +        }
 +        /* Pad the remainder with zero and set the top bit. */
-+        memset(x + len, 0, 128 - len);
-+        x[len] = 128;
++        memset(x + len, 0, 64 - len);
++        x[len] = 0x80;
 +
 +        /*
 +         * Place the MBL either into this block (if there is space left),
 +         * or use an additional one.
 +         */
-+        if (len < 112) {
-+            sha512_read_mbl_be64(env, mmu_idx, param_addr + 64, x + 112, ra);
++        if (len < 56) {
++            sha256_read_mbl_be32(env, mmu_idx, param_addr + 32, x + 56, ra);
 +        }
-+        sha512_bda_be64(a, (uint64_t *)x);
++        sha256_bda_be32(a, (uint32_t *)x);
 +
-+        if (len >= 112) {
-+            memset(x, 0, 112);
-+            sha512_read_mbl_be64(env, mmu_idx, param_addr + 64, x + 112, ra);
-+            sha512_bda_be64(a, (uint64_t *)x);
++        if (len >= 56) {
++            memset(x, 0, 56);
++            sha256_read_mbl_be32(env, mmu_idx, param_addr + 32, x + 56, ra);
++            sha256_bda_be32(a, (uint32_t *)x);
 +        }
 +
 +        processed += len;
@@ -424,257 +423,50 @@ index 0000000000..ebfecc70f7
 +     * TODO: if writing fails halfway through (e.g., when crossing page
 +     * boundaries), we're in trouble. We'd need something like access_prepare().
 +     */
-+    sha512_write_ocv(env, mmu_idx, param_addr, a, ra);
++    sha256_write_ocv(env, mmu_idx, param_addr, a, ra);
 +    *message_reg = deposit64(*message_reg, 0, message_reg_len,
 +                             *message_reg + processed);
 +    *len_reg -= processed;
 +    return !len ? 0 : 3;
 +}
 diff --git a/target/s390x/tcg/crypto_helper.c b/target/s390x/tcg/crypto_helper.c
-index 987bc72ae9..dba46baa0d 100644
+index dba46baa0d..6c296f6731 100644
 --- a/target/s390x/tcg/crypto_helper.c
 +++ b/target/s390x/tcg/crypto_helper.c
-@@ -21,228 +21,6 @@
- #include "accel/tcg/cpu-mmu-index.h"
- #include "target/s390x/tcg/cpacf.h"
+@@ -53,6 +53,10 @@ static int cpacf_kimd(CPUS390XState *env, const int mmu_idx, const uintptr_t ra,
+     int rc = 0;
  
--static uint64_t R(uint64_t x, int c)
--{
--    return (x >> c) | (x << (64 - c));
--}
--static uint64_t Ch(uint64_t x, uint64_t y, uint64_t z)
--{
--    return (x & y) ^ (~x & z);
--}
--static uint64_t Maj(uint64_t x, uint64_t y, uint64_t z)
--{
--    return (x & y) ^ (x & z) ^ (y & z);
--}
--static uint64_t Sigma0(uint64_t x)
--{
--    return R(x, 28) ^ R(x, 34) ^ R(x, 39);
--}
--static uint64_t Sigma1(uint64_t x)
--{
--    return R(x, 14) ^ R(x, 18) ^ R(x, 41);
--}
--static uint64_t sigma0(uint64_t x)
--{
--    return R(x, 1) ^ R(x, 8) ^ (x >> 7);
--}
--static uint64_t sigma1(uint64_t x)
--{
--    return R(x, 19) ^ R(x, 61) ^ (x >> 6);
--}
--
--static const uint64_t K[80] = {
--    0x428a2f98d728ae22ULL, 0x7137449123ef65cdULL, 0xb5c0fbcfec4d3b2fULL,
--    0xe9b5dba58189dbbcULL, 0x3956c25bf348b538ULL, 0x59f111f1b605d019ULL,
--    0x923f82a4af194f9bULL, 0xab1c5ed5da6d8118ULL, 0xd807aa98a3030242ULL,
--    0x12835b0145706fbeULL, 0x243185be4ee4b28cULL, 0x550c7dc3d5ffb4e2ULL,
--    0x72be5d74f27b896fULL, 0x80deb1fe3b1696b1ULL, 0x9bdc06a725c71235ULL,
--    0xc19bf174cf692694ULL, 0xe49b69c19ef14ad2ULL, 0xefbe4786384f25e3ULL,
--    0x0fc19dc68b8cd5b5ULL, 0x240ca1cc77ac9c65ULL, 0x2de92c6f592b0275ULL,
--    0x4a7484aa6ea6e483ULL, 0x5cb0a9dcbd41fbd4ULL, 0x76f988da831153b5ULL,
--    0x983e5152ee66dfabULL, 0xa831c66d2db43210ULL, 0xb00327c898fb213fULL,
--    0xbf597fc7beef0ee4ULL, 0xc6e00bf33da88fc2ULL, 0xd5a79147930aa725ULL,
--    0x06ca6351e003826fULL, 0x142929670a0e6e70ULL, 0x27b70a8546d22ffcULL,
--    0x2e1b21385c26c926ULL, 0x4d2c6dfc5ac42aedULL, 0x53380d139d95b3dfULL,
--    0x650a73548baf63deULL, 0x766a0abb3c77b2a8ULL, 0x81c2c92e47edaee6ULL,
--    0x92722c851482353bULL, 0xa2bfe8a14cf10364ULL, 0xa81a664bbc423001ULL,
--    0xc24b8b70d0f89791ULL, 0xc76c51a30654be30ULL, 0xd192e819d6ef5218ULL,
--    0xd69906245565a910ULL, 0xf40e35855771202aULL, 0x106aa07032bbd1b8ULL,
--    0x19a4c116b8d2d0c8ULL, 0x1e376c085141ab53ULL, 0x2748774cdf8eeb99ULL,
--    0x34b0bcb5e19b48a8ULL, 0x391c0cb3c5c95a63ULL, 0x4ed8aa4ae3418acbULL,
--    0x5b9cca4f7763e373ULL, 0x682e6ff3d6b2b8a3ULL, 0x748f82ee5defb2fcULL,
--    0x78a5636f43172f60ULL, 0x84c87814a1f0ab72ULL, 0x8cc702081a6439ecULL,
--    0x90befffa23631e28ULL, 0xa4506cebde82bde9ULL, 0xbef9a3f7b2c67915ULL,
--    0xc67178f2e372532bULL, 0xca273eceea26619cULL, 0xd186b8c721c0c207ULL,
--    0xeada7dd6cde0eb1eULL, 0xf57d4f7fee6ed178ULL, 0x06f067aa72176fbaULL,
--    0x0a637dc5a2c898a6ULL, 0x113f9804bef90daeULL, 0x1b710b35131c471bULL,
--    0x28db77f523047d84ULL, 0x32caab7b40c72493ULL, 0x3c9ebe0a15c9bebcULL,
--    0x431d67c49c100d4cULL, 0x4cc5d4becb3e42b6ULL, 0x597f299cfc657e2aULL,
--    0x5fcb6fab3ad6faecULL, 0x6c44198c4a475817ULL
--};
--
--/* a is icv/ocv, w is a single message block. w will get reused internally. */
--static void sha512_bda(uint64_t a[8], uint64_t w[16])
--{
--    uint64_t t, z[8], b[8];
--    int i, j;
--
--    memcpy(z, a, sizeof(z));
--    for (i = 0; i < 80; i++) {
--        memcpy(b, a, sizeof(b));
--
--        t = a[7] + Sigma1(a[4]) + Ch(a[4], a[5], a[6]) + K[i] + w[i % 16];
--        b[7] = t + Sigma0(a[0]) + Maj(a[0], a[1], a[2]);
--        b[3] += t;
--        for (j = 0; j < 8; ++j) {
--            a[(j + 1) % 8] = b[j];
--        }
--        if (i % 16 == 15) {
--            for (j = 0; j < 16; ++j) {
--                w[j] += w[(j + 9) % 16] + sigma0(w[(j + 1) % 16]) +
--                        sigma1(w[(j + 14) % 16]);
--            }
--        }
--    }
--
--    for (i = 0; i < 8; i++) {
--        a[i] += z[i];
--    }
--}
--
--/* a is icv/ocv, w is a single message block that needs be64 conversion. */
--static void sha512_bda_be64(uint64_t a[8], uint64_t w[16])
--{
--    uint64_t t[16];
--    int i;
--
--    for (i = 0; i < 16; i++) {
--        t[i] = be64_to_cpu(w[i]);
--    }
--    sha512_bda(a, t);
--}
--
--static void sha512_read_icv(CPUS390XState *env, const int mmu_idx,
--                            uint64_t addr, uint64_t a[8], uintptr_t ra)
--{
--    const MemOpIdx oi = make_memop_idx(MO_BE | MO_64 | MO_UNALN, mmu_idx);
--
--    for (int i = 0; i < 8; i++, addr += 8) {
--        a[i] = cpu_ldq_mmu(env, wrap_address(env, addr), oi, ra);
--    }
--}
--
--static void sha512_write_ocv(CPUS390XState *env, const int mmu_idx,
--                             uint64_t addr, uint64_t a[8], uintptr_t ra)
--{
--    const MemOpIdx oi = make_memop_idx(MO_BE | MO_64 | MO_UNALN, mmu_idx);
--
--    for (int i = 0; i < 8; i++, addr += 8) {
--        cpu_stq_mmu(env, wrap_address(env, addr), a[i], oi, ra);
--    }
--}
--
--static void sha512_read_block(CPUS390XState *env, const int mmu_idx,
--                              uint64_t addr, uint64_t a[16], uintptr_t ra)
--{
--    const MemOpIdx oi = make_memop_idx(MO_BE | MO_64 | MO_UNALN, mmu_idx);
--
--    for (int i = 0; i < 16; i++, addr += 8) {
--        a[i] = cpu_ldq_mmu(env, wrap_address(env, addr), oi, ra);
--    }
--}
--
--static void sha512_read_mbl_be64(CPUS390XState *env, const int mmu_idx,
--                                 uint64_t addr, uint8_t a[16], uintptr_t ra)
--{
--    const MemOpIdx oi = make_memop_idx(MO_8, mmu_idx);
--
--    for (int i = 0; i < 16; i++, addr += 1) {
--        a[i] = cpu_ldb_mmu(env, wrap_address(env, addr), oi, ra);
--    }
--}
--
--static int cpacf_sha512(CPUS390XState *env, const int mmu_idx, uintptr_t ra,
--                        uint64_t param_addr, uint64_t *message_reg,
--                        uint64_t *len_reg, uint32_t type)
--{
--    enum { MAX_BLOCKS_PER_RUN = 64 }; /* Arbitrary: keep interactivity. */
--    uint64_t len = *len_reg, a[8], processed = 0;
--    int i, message_reg_len = 64;
--
--    g_assert(type == S390_FEAT_TYPE_KIMD || type == S390_FEAT_TYPE_KLMD);
--
--    if (!(env->psw.mask & PSW_MASK_64)) {
--        len = (uint32_t)len;
--        message_reg_len = (env->psw.mask & PSW_MASK_32) ? 32 : 24;
--    }
--
--    /* KIMD: length has to be properly aligned. */
--    if (type == S390_FEAT_TYPE_KIMD && !QEMU_IS_ALIGNED(len, 128)) {
--        tcg_s390_program_interrupt(env, PGM_SPECIFICATION, ra);
--    }
--
--    sha512_read_icv(env, mmu_idx, param_addr, a, ra);
--
--    /* Process full blocks first. */
--    for (; len >= 128; len -= 128, processed += 128) {
--        uint64_t w[16];
--
--        if (processed >= MAX_BLOCKS_PER_RUN * 128) {
--            break;
--        }
--
--        sha512_read_block(env, mmu_idx, *message_reg + processed, w, ra);
--        sha512_bda(a, w);
--    }
--
--    /* KLMD: Process partial/empty block last. */
--    if (type == S390_FEAT_TYPE_KLMD && len < 128) {
--        const MemOpIdx oi = make_memop_idx(MO_8, mmu_idx);
--        uint8_t x[128];
--
--        /* Read the remainder of the message byte-per-byte. */
--        for (i = 0; i < len; i++) {
--            uint64_t addr = wrap_address(env, *message_reg + processed + i);
--
--            x[i] = cpu_ldb_mmu(env, addr, oi, ra);
--        }
--        /* Pad the remainder with zero and set the top bit. */
--        memset(x + len, 0, 128 - len);
--        x[len] = 128;
--
--        /*
--         * Place the MBL either into this block (if there is space left),
--         * or use an additional one.
--         */
--        if (len < 112) {
--            sha512_read_mbl_be64(env, mmu_idx, param_addr + 64, x + 112, ra);
--        }
--        sha512_bda_be64(a, (uint64_t *)x);
--
--        if (len >= 112) {
--            memset(x, 0, 112);
--            sha512_read_mbl_be64(env, mmu_idx, param_addr + 64, x + 112, ra);
--            sha512_bda_be64(a, (uint64_t *)x);
--        }
--
--        processed += len;
--        len = 0;
--    }
--
--    /*
--     * Modify memory after we read all inputs and modify registers only after
--     * writing memory succeeded.
--     *
--     * TODO: if writing fails halfway through (e.g., when crossing page
--     * boundaries), we're in trouble. We'd need something like access_prepare().
--     */
--    sha512_write_ocv(env, mmu_idx, param_addr, a, ra);
--    *message_reg = deposit64(*message_reg, 0, message_reg_len,
--                             *message_reg + processed);
--    *len_reg -= processed;
--    return !len ? 0 : 3;
--}
--
- static void fill_buf_random(CPUS390XState *env, const int mmu_idx, uintptr_t ra,
-                             uint64_t *buf_reg, uint64_t *len_reg)
- {
+     switch (fc) {
++    case CPACF_KIMD_SHA_256:
++        rc = cpacf_sha256(env, mmu_idx, ra, env->regs[1], &env->regs[r2],
++                          &env->regs[r2 + 1], S390_FEAT_TYPE_KIMD);
++        break;
+     case CPACF_KIMD_SHA_512:
+         rc = cpacf_sha512(env, mmu_idx, ra, env->regs[1], &env->regs[r2],
+                           &env->regs[r2 + 1], S390_FEAT_TYPE_KIMD);
+@@ -70,6 +74,10 @@ static int cpacf_klmd(CPUS390XState *env, const int mmu_idx, const uintptr_t ra,
+     int rc = 0;
+ 
+     switch (fc) {
++    case CPACF_KLMD_SHA_256:
++        rc = cpacf_sha256(env, mmu_idx, ra, env->regs[1], &env->regs[r2],
++                          &env->regs[r2 + 1], S390_FEAT_TYPE_KLMD);
++        break;
+     case CPACF_KLMD_SHA_512:
+         rc = cpacf_sha512(env, mmu_idx, ra, env->regs[1], &env->regs[r2],
+                           &env->regs[r2 + 1], S390_FEAT_TYPE_KLMD);
 diff --git a/target/s390x/tcg/meson.build b/target/s390x/tcg/meson.build
-index 36cb0e079e..54a87393a3 100644
+index 54a87393a3..8ae8da9708 100644
 --- a/target/s390x/tcg/meson.build
 +++ b/target/s390x/tcg/meson.build
 @@ -5,6 +5,7 @@ s390x_ss.add(when: 'CONFIG_TCG', if_true: files(
  ))
  s390x_common_ss.add(when: 'CONFIG_TCG', if_true: files(
    'cc_helper.c',
-+  'cpacf_sha512.c',
++  'cpacf_sha256.c',
+   'cpacf_sha512.c',
    'crypto_helper.c',
    'excp_helper.c',
-   'fpu_helper.c',
 -- 
 2.43.0
 
