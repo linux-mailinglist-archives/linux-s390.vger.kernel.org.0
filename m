@@ -1,65 +1,65 @@
-Return-Path: <linux-s390+bounces-22027-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22028-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id w5LNA3HEUGof4wIAu9opvQ
-	(envelope-from <linux-s390+bounces-22027-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 12:07:45 +0200
+	id bi4kCXLEUGoh4wIAu9opvQ
+	(envelope-from <linux-s390+bounces-22028-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 12:07:46 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8F18739731
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 12:07:43 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58F1A73973B
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 12:07:45 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ahKQ9Qeh;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=hMBdxTtf;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22027-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-22027-lists+linux-s390=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22028-lists+linux-s390=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-s390+bounces-22028-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 6FA0030060AF
+	by sin.lore.kernel.org (Postfix) with ESMTP id A0F9B3012C48
 	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 09:56:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9E2B3FDBE8;
-	Fri, 10 Jul 2026 09:56:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2E423FBB6F;
+	Fri, 10 Jul 2026 09:56:31 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE663FADFA
-	for <linux-s390@vger.kernel.org>; Fri, 10 Jul 2026 09:56:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581D33FD960
+	for <linux-s390@vger.kernel.org>; Fri, 10 Jul 2026 09:56:30 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783677390; cv=none; b=aDk1jbYDmqFm+WbHylOUjLSwldEHtCt7eUSTT2uY7OSYtxaNj8K4YHOkdPrtrJ6DV1A16kRXCjLli4p9oU2R/bF4k6+pTo0XO9NuZR9hMJ+3hdWTBHW2NbAc+iSY8x1qkg+ORQEJzYS912iLgl6c5Yzy2i8qWqieXmfUqTvj2xk=
+	t=1783677391; cv=none; b=OCR6FYUXXX3sELRlSrI4S8G/yTnzKbS5OBRLWLq+O3j/PR0zFHdbW4A3lUCLpGCCOo8OUxid/M2BNsBlD09xFxpzyrbb0u8Ld/WoXEQIGIhA8TufdpJoxmLuxSzyqInXKG3UogFzUz779b0Gc/VyutguSBybChkM7mR3l7/KfYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783677390; c=relaxed/simple;
-	bh=M9UOYVjaLELdO6vZLE1rwBaV6cHLQm2foWyPSLmIQz4=;
+	s=arc-20240116; t=1783677391; c=relaxed/simple;
+	bh=y7Yx92GnkN+WHD07YIMZOFrt5RTUzcykzhKiBjKZW2c=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ZklPVbqk1kDYdSfSwKpo2lqMFlyLCsRkFSvryO4iudBRZkfnOUM0WEFhH1/jVDtZXC/HmJEY9xDghtdCcsNwsJ/asuoumtqGnG+EvY7GrNmr2tw6J5Y+RwMLWVUHNOk/HZIgJKMyBAzYk6CpFDXaUTLRzwDy3zoqp9U3PLPZc7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ahKQ9Qeh; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5FB51F000E9;
-	Fri, 10 Jul 2026 09:56:28 +0000 (UTC)
+	 Message-Id; b=uua8jy0lC005ygA7czcsQdUcTqZYRfdskFkG28oX6lwo4qmzBeRcnTT9n7UU9kZoKMZPuMQ4tsn5J+O+l+RQwCxo1gJE8bBJGJ64Hbj5rO9EIcaH1V5uyC6XkKcGF//PfYa/AKkV8ldeKWf0RYP6C6gJTgUAAkwppzfWefB0snI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hMBdxTtf; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF89E1F00A3A;
+	Fri, 10 Jul 2026 09:56:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783677389;
-	bh=Lu3Dw7S4N5dN9qduy1G4LT0MptxmX99WltWUegvnOKI=;
+	s=k20260515; t=1783677390;
+	bh=SxwlYTG4ofBRLEx9F54kIe3mArVI39EVXzSgYODYViI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ahKQ9QehRcG/H+IDNCGHrR6aIh/WAMKTox8VaZnxTuNkkJVuS5/aM4T5Mf4iAQGHD
-	 EVHkHW/yVRYypkv8OXeSBNSBHqFjcndgURVEhK/6HM8QBPitPjsfL0hM50XlIuFVYS
-	 T2+mOeeGpdb3wFNHONI6p45HxB1IsAcUvNW8uuUhejfpH7CvFztXJvqM8Xx0gyXTtT
-	 MwcVRyorPGOiOlJnMkTbign9UTEmpKmhndhiybahQrfB3LsW5RL/PBmtQOaLwTGL3B
-	 b9+2rtvvrULp3TjCjdU9QPT1LBeSw9b2p4yAY11bPdBGX06WzyjWh3Q+EnRw7oIx5K
-	 e9ei5sGKNizyg==
+	b=hMBdxTtfo+s4MWc7KrsbyOfRe5wumSOdGxlnTelEr6P9FQGSHNYemE7KPg+KwejyY
+	 F8hezrQ6SzZPxdE6uhSPfONurjMOTx9DvWnzUgXUFX9IWr1rSwh8ER/xB4mJXLAFyh
+	 xVWQkDh1UW4onmiwTOyeM/XOlqpi/QYl5TP+nxM751j5NRDX8M/2RiPF1MTqA98B+H
+	 xZD+ZKOBklV5Ssu16eB0f6wfmDxAfKok2INaMXg6wdHImljY8PF3+z5a55SbD6xehz
+	 lsKL5z1t+jEajhCqy/gXo3D7H/4whsbIHLh5NHWsVKipMLcSsiaxd8MsPz3tcfgKQG
+	 Wk8uCBYJjv/EA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH rdma-next 06/13] net/smc: Look up the pnetid ib device
- within the net namespace
+Subject: Re: [PATCH rdma-next 08/13] RDMA/cgroup: Scope rdma cgroup device
+ visibility to the net namespace
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Jiri Pirko" <jiri@resnulli.us>
-Cc: "Alexander Gordeev" <agordeev@linux.ibm.com>, "Heiko Carstens" <hca@linux.ibm.com>, tj@kernel.org, mkoutny@suse.com, hannes@cmpxchg.org, linux-s390@vger.kernel.org, "Vasily
- Gorbik" <gor@linux.ibm.com>
-In-Reply-To: <20260709095532.855647-7-jiri@resnulli.us>
+Cc: tj@kernel.org, mkoutny@suse.com, "Heiko Carstens" <hca@linux.ibm.com>, hannes@cmpxchg.org, linux-s390@vger.kernel.org, "Alexander
+ Gordeev" <agordeev@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>
+In-Reply-To: <20260709095532.855647-9-jiri@resnulli.us>
 References: <20260709095532.855647-1-jiri@resnulli.us>
- <20260709095532.855647-7-jiri@resnulli.us>
+ <20260709095532.855647-9-jiri@resnulli.us>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 10 Jul 2026 09:56:28 +0000
-Message-Id: <20260710095628.C5FB51F000E9@smtp.kernel.org>
+Date: Fri, 10 Jul 2026 09:56:29 +0000
+Message-Id: <20260710095629.BF89E1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -71,19 +71,19 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-22027-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22028-lists,linux-s390=lfdr.de];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
 	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:jiri@resnulli.us,m:agordeev@linux.ibm.com,m:hca@linux.ibm.com,m:tj@kernel.org,m:mkoutny@suse.com,m:hannes@cmpxchg.org,m:linux-s390@vger.kernel.org,m:gor@linux.ibm.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:jiri@resnulli.us,m:tj@kernel.org,m:mkoutny@suse.com,m:hca@linux.ibm.com,m:hannes@cmpxchg.org,m:linux-s390@vger.kernel.org,m:agordeev@linux.ibm.com,m:gor@linux.ibm.com,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
@@ -97,112 +97,90 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	FROM_NO_DN(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,lists.linux.dev:replyto,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,smtp.kernel.org:mid,sashiko.dev:url,resnulli.us:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,lists.linux.dev:replyto,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,resnulli.us:email,smtp.kernel.org:mid,sashiko.dev:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E8F18739731
+X-Rspamd-Queue-Id: 58F1A73973B
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [High] Pre-existing TOCTOU and Use-After-Free race where `smc_pnet_find_i=
-b()` and `smc_pnet_find_smcd()` return un-refcounted device pointers.
-- [High] Pre-existing Use-After-Free during SMC connection setup due to un-=
-refcounted `ib_dev` pointer in `smc_init_info`.
+- [High] Scoping RDMA cgroup device visibility to the reader's network name=
+space breaks host-level cgroup administration and monitoring.
+- [Medium] Concurrent lockless read of `device->net` using `read_pnet()` wi=
+thout `READ_ONCE()` leads to a data race.
 --
 
---- Patch [6]: [PATCH rdma-next 06/13] net/smc: Look up the pnetid ib devic=
-e within the net namespace ---
-commit d209b8afd09f2213c9477f5a717fdf012a7c2077
+--- Patch [8]: [PATCH rdma-next 08/13] RDMA/cgroup: Scope rdma cgroup devic=
+e visibility to the net namespace ---
+commit 18e4bddcfb08bd42bef710d6d1b72824d15fa2c9
 Author: Jiri Pirko <jiri@resnulli.us>
 
-net/smc: Look up the pnetid ib device within the net namespace
+RDMA/cgroup: Scope rdma cgroup device visibility to the net namespace
 
-This commit scopes smc_pnet_find_ib() to the caller's net namespace. It
-ensures that pnetid setup cannot bind to a same-named RDMA device from
-another namespace.
+Track each rdma cgroup device's net namespace and sharing mode, then filter
+name lookups and cgroupfs enumeration to devices visible from the caller's
+namespace. Keep the cached sharing mode synchronized across registration,
+netns moves, and runtime mode changes.
 
-> diff --git a/net/smc/smc_pnet.c b/net/smc/smc_pnet.c
-> index 63e286e2dfaa8..ff9c9c35cc2f5 100644
-> --- a/net/smc/smc_pnet.c
-> +++ b/net/smc/smc_pnet.c
-> @@ -304,13 +304,18 @@ static bool smc_pnetid_valid(const char *pnet_name,=
- char *pnetid)
->  	return true;
->  }
-> =20
-> -/* Find an infiniband device by a given name. The device might not exist=
-. */
-> -static struct smc_ib_device *smc_pnet_find_ib(char *ib_name)
-> +/*
-> + * Find an infiniband device by a given name, restricted to the devices
-> + * accessible from @net. The device might not exist.
-> + */
-> +static struct smc_ib_device *smc_pnet_find_ib(struct net *net, char *ib_=
-name)
->  {
->  	struct smc_ib_device *ibdev;
-> =20
->  	mutex_lock(&smc_ib_devices.mutex);
->  	list_for_each_entry(ibdev, &smc_ib_devices.list, list) {
-> +		if (!rdma_dev_access_netns(ibdev->ibdev, net))
-> +			continue;
-
+> diff --git a/kernel/cgroup/rdma.c b/kernel/cgroup/rdma.c
+> index 5e82a03b3270a..c8b4e3de76305 100644
+> --- a/kernel/cgroup/rdma.c
+> +++ b/kernel/cgroup/rdma.c
 [ ... ]
-
-> @@ -419,7 +424,7 @@ static int smc_pnet_add_ib(struct smc_pnettable *pnet=
-table, char *ib_name,
->  	bool new_ibdev;
+> @@ -464,6 +465,13 @@ void rdmacg_unregister_device(struct rdmacg_device *=
+device)
+>  }
+>  EXPORT_SYMBOL(rdmacg_unregister_device);
 > =20
->  	/* try to apply the pnetid to active devices */
-> -	ib_dev =3D smc_pnet_find_ib(ib_name);
-> +	ib_dev =3D smc_pnet_find_ib(net, ib_name);
->  	if (ib_dev) {
->  		ibdev_applied =3D smc_pnet_apply_ib(ib_dev, ib_port, pnet_name);
->  		if (ibdev_applied)
+> +/* netns_shared is toggled without rdmacg_mutex, hence READ_ONCE(). */
+> +static bool rdmacg_device_visible(const struct rdmacg_device *device)
+> +{
+> +	return READ_ONCE(device->netns_shared) ||
+> +	       net_eq(read_pnet(&device->net), current->nsproxy->net_ns);
+
+[Severity: Medium]
+Does this lockless read of device->net using read_pnet() cause a data race?
+
+When another thread concurrently moves the RDMA device to a new network
+namespace, it updates device->net:
+
+drivers/infiniband/core/cgroup.c:ib_device_rdmacg_change_netns() {
+	write_pnet(&device->cg_device.net, net);
+}
+
+While write_pnet() uses rcu_assign_pointer() to update the pointer concurre=
+ntly,
+read_pnet() here expands to a plain pointer access without READ_ONCE(). Sin=
+ce
+rdmacg_mutex is not held during the write, could this plain read race with =
+the
+assignment and cause undefined behavior?
 
 [Severity: High]
-This isn't a bug introduced by this patch, but smc_pnet_find_ib() in
-net/smc/smc_pnet.c appears to return an un-refcounted device pointer.
+Does tying RDMA cgroup device visibility to the reader's network namespace
+break host-level cgroup administration and monitoring?
 
-If a user configures a PNETID for an IB or SMCD device via netlink and calls
-smc_pnet_add_ib(), it locates the device in the global list while holding
-smc_ib_devices.mutex. However, smc_pnet_find_ib() returns the raw pointer
-after dropping the mutex.
+If a device is moved to a non-init network namespace (exclusive mode), host
+administrators and orchestration tools (like systemd or Kubernetes running =
+in
+init_net) will completely lose visibility and control over its RDMA cgroup
+resources. Attempting to write to rdma.max will result in -ENODEV, and read=
+ing
+rdma.current will show an empty list for these devices.
 
-If the device is concurrently hot-unplugged, smc_ib_remove_dev() or
-smcd_unregister_dev() will acquire the mutex, remove the device from the
-list, and kfree() the device structure.
-
-Could the original netlink thread then continue execution and dereference t=
+Since cgroup state must reflect the cgroup's configuration independent of t=
 he
-now-freed pointer inside smc_pnet_apply_ib() or when printing
-ib_dev->ibdev->name?
-
-[Severity: High]
-This is another pre-existing issue in net/smc/smc_pnet.c related to
-un-refcounted pointers, but it happens during connection setup.
-
-When a user calls connect() on an AF_SMC socket,
-_smc_pnet_find_roce_by_pnetid() locates an active IB device while holding
-smc_ib_devices.mutex, and stores its pointer in the smc_init_info structure
-(ini->ib_dev) before dropping the mutex.
-
-Connection establishment then continues across multiple function calls:
-smc_find_proposal_devices() -> smc_connect_rdma() -> smc_conn_create()
-using this un-refcounted pointer.
-
-If the IB device is concurrently hot-unplugged, smc_ib_remove_dev() will
-kfree() the device. Might the connection setup path then dereference the
-freed memory?
+reading process's network namespace, does tying the UAPI to
+current->nsproxy->net_ns violate VFS semantics where an open file descripto=
+r's
+behavior would dynamically change depending on which process calls write()?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260709095532.8556=
-47-1-jiri@resnulli.us?part=3D6
+47-1-jiri@resnulli.us?part=3D8
 
