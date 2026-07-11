@@ -1,193 +1,218 @@
-Return-Path: <linux-s390+bounces-22081-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22082-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id tPBENQMfUmrQMAMAu9opvQ
-	(envelope-from <linux-s390+bounces-22081-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Sat, 11 Jul 2026 12:46:27 +0200
+	id yCFhIi03Umr6NAMAu9opvQ
+	(envelope-from <linux-s390+bounces-22082-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Sat, 11 Jul 2026 14:29:33 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D0CA7414BA
-	for <lists+linux-s390@lfdr.de>; Sat, 11 Jul 2026 12:46:27 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DD6174181A
+	for <lists+linux-s390@lfdr.de>; Sat, 11 Jul 2026 14:29:32 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=proton.me header.s=protonmail header.b=eTuZKyr6;
-	dmarc=pass (policy=quarantine) header.from=proton.me;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22081-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-22081-lists+linux-s390=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=KhVAsJnP;
+	dmarc=pass (policy=none) header.from=gmail.com;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22082-lists+linux-s390=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-s390+bounces-22082-lists+linux-s390=lfdr.de@vger.kernel.org";
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 27CAD3029C12
-	for <lists+linux-s390@lfdr.de>; Sat, 11 Jul 2026 10:43:47 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 8AC2B30080A0
+	for <lists+linux-s390@lfdr.de>; Sat, 11 Jul 2026 12:29:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A60D43BBA18;
-	Sat, 11 Jul 2026 10:43:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6D4E3C2782;
+	Sat, 11 Jul 2026 12:29:28 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C3733B6F9;
-	Sat, 11 Jul 2026 10:43:35 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783766623; cv=none; b=fDICSMjKDLV3bsO0wVnsBVowOVl8CdyLr+u8uL2ii9Tomx4PFaGfwuFINz37vK2Ca45pn4Q4B4QoNc7uuera9Dstfp8VGgLEQfGYBa8WW9+tMCT9iV2hop5wPe4xzm1Z3AKFPDAiGBculWMZJTe59A9rmVF4EnWWYlOV8QQwJEQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783766623; c=relaxed/simple;
-	bh=wMESLLx2bBOpenDSD5/Jp55qgZ2QSMmUYynjIj2Jx3o=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eJCUBikryALzN9ctdOUBzjjQZPKLgziBbSPhTVWKAqZElx4gxDAElo30Lg6of4/wv3bG4XEpWdW+aOcQHtfaz0f2mweqFXpMyw1Bnsyipv9jTsaS6EkRhPX4/4+CE95xV8c/AZlcy2jWwpEQTOYRZnIYVl32Q5Ad6Sg7IIadw+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=eTuZKyr6; arc=none smtp.client-ip=185.70.43.16
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1783766613; x=1784025813;
-	bh=jkcAeCtdaIBL453JvBHZ7QHpOsA9URVgLRmr4A57c9A=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=eTuZKyr6YNHQ1zYN694Z5bwUCIuqrTw40KOw1Bf5QDHCL77pCIegCFoZKz5iwJqkF
-	 7u9U/sDCCp/949JQAg+8dJmN9j0PeifBFrUoBqh9hrDpzMngBhX7pMhi9g1hi7NUFU
-	 YSNtH9fwZnd6VtG3fGO08ClKwQBqFFNhiTf67BFMKGHLn7ittgqNJNA2dckOQ1kTuw
-	 9nMA/iAOvwaqBayfdpRtJTTiE/OSFAxWzOdvznsNfD9bJ+QlGiegj30h/rK13kZxuO
-	 taJQrF71DTxbjSDVLB9wbVJPypiweOu/+ClDKtCz6pY7pCZgrq7PWoo9bOtRoTHWjD
-	 DpTzzitAY+uDA==
-Date: Sat, 11 Jul 2026 10:43:26 +0000
-To: Dust Li <dust.li@linux.alibaba.com>
-From: Bryam Vargas <hexlabsecurity@proton.me>
-Cc: Wenjia Zhang <wenjia@linux.ibm.com>, "D . Wythe" <alibuda@linux.alibaba.com>, Sidraya Jayagond <sidraya@linux.ibm.com>, Eric Dumazet <edumazet@google.com>, "David S . Miller" <davem@davemloft.net>, Mahanta Jambigi <mjambigi@linux.ibm.com>, Wen Gu <guwen@linux.alibaba.com>, Simon Horman <horms@kernel.org>, Ursula Braun <ubraun@linux.ibm.com>, Stefan Raspl <raspl@linux.ibm.com>, Tony Lu <tonylu@linux.alibaba.com>, Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org, linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v4 0/3] net/smc: bound wire-controlled CDC cursors against the local buffers
-Message-ID: <20260711104315.82912-1-hexlabsecurity@proton.me>
-In-Reply-To: <akzG4Hfeom6fNzFX@linux.alibaba.com>
-References: <20260705-b4-disp-28a1bbca-v4-0-be089b98acc6@proton.me> <akzG4Hfeom6fNzFX@linux.alibaba.com>
-Feedback-ID: 199661219:user:proton
-X-Pm-Message-ID: b5d2950248f52f23efe53d3fa9731dba1629dc0c
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE263C3BF4
+	for <linux-s390@vger.kernel.org>; Sat, 11 Jul 2026 12:29:25 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783772968; cv=pass; b=UilpnHqawMlqfZz7YvIW9OKA0pJr4UMFmZUU+dGNfHE6XUta1BGbQyKYAcfNzv8tS8b3MeCzrF5NOyQhxcvSbqmPac9f4KjQOoxoUZhdPw4OGWXIq4LVJ79j4WLp0L7FrvzTjs+xTpIhPSzV84Ov6rj4s9rUC85xZ5GRKx15hFI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783772968; c=relaxed/simple;
+	bh=lgplXt8OmmYK0O5s0vGlPCfavq5E5GB8C7ljQ3QichI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PfjSMY4/cKeMDZ44GcXdaCdKqUAu2L6XiLewWQJHJhwGvRDmr39z7eqSc69sE6YIXOL/jO9SZrQAt7HaOM1zkKR8WxPBY/jzaSI3VZAydZvYvdkj6pXMSvN3JIu1zliH/M/wV6ViNxmLM/5/Y4tTzbbeWX+tKB1waXVnfzf1vyE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KhVAsJnP; arc=pass smtp.client-ip=209.85.208.48
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-698a9f11776so2817329a12.1
+        for <linux-s390@vger.kernel.org>; Sat, 11 Jul 2026 05:29:25 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1783772964; cv=none;
+        d=google.com; s=arc-20260327;
+        b=ffwPJoc1+blIjiZUHXALfWreW5KhxZEq2Z3lDzSDywKQrTcGtOPpg4gPBMiaapS9RO
+         RGyr4OwPMMBu7OP0jFc+m7Je7Rr+AkkQ1lghn9KD0m2cgxKy+x1PzZLV26InLVMv9thS
+         bVKEsyG5znK0/RcMMAxqXjgXXaaXqrP32ZGQkfzrTNldICxppTn1bu3neCXRy2WASNz1
+         9QP6xqolmYZH9jOv7msP7IbJjKC5c+41meW3ufGI+8DNvbIMOwQN4WU5CASGMevQW19/
+         teZe2ReIvQ/RpSeP8DuPOtmjnpiD1TU6+QUFQ6QsXnaUcEGFIv0iVYzkhhls+yeiK7yy
+         oPXg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=83oOaaTreHaoFIhiDoHcddDWSjKDujW9xu9zE75la/o=;
+        fh=/ohxn80zQThjZe5NwSdkZbM6J2UqSXImzjn4Ny36v4I=;
+        b=rbnlxfi3ZmPTU3ffTcPLwP+EenQr16UWpD9751IhjMSZEnk0Qv/EbEa5/Kk4y9/exF
+         9AFrcVDEdO4ksA6C47mFxOsjcGzZCFa4yIZVsRg6whtoUzBKQoLTGBGqflnitnCuEedD
+         TA+JYyH9lqlElodigxBlqzBbdlsPueYSwytvU80xt2f/FWzJdGe94Xf7I5sER4LrT2BX
+         4lYvjQp8fjfybtsu3anPjlmZuieFGC0YX0Ulp7YsgN9RXA3pCRFea6e+dnu0xgXQz9Of
+         QWlUH9cr5aqRTldgOvKi+KPDvL0UoDdOQaqrjgj5Y7PCDWnqI67pJ26xeysgoyXeiOk3
+         7vKA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783772964; x=1784377764; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=83oOaaTreHaoFIhiDoHcddDWSjKDujW9xu9zE75la/o=;
+        b=KhVAsJnPccLQtlT6BW0pZOI6M33Kq5peNIi+brKc9mXt9N7FYBNxZiwumx0gXF4fIo
+         sAO6rzobNlVEoIHs9Nr5Ud7Pqw06Wde6xz1P1K2kPK3YZyfFF/QcLy13zXrkpb8v6zCE
+         wa1FryKea8CiALQ/FW+b66R5gxrKvaJKvQ5Z1BuPJv6JghHzUORCw6XB09TKL/k9s/1r
+         i0N8avEwa/AHjCgBU1q0AZKoEW1/H84E5Jz1kEDp/nKMXzLRh+UDioLCoc7tRKEjgsZq
+         3/2AvXjdSUp8fEKFVNQm320lqiCV3PxeKpLmb2suZXyxqugmSpsqzHjcuuYpicZfDTox
+         leNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783772964; x=1784377764;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=83oOaaTreHaoFIhiDoHcddDWSjKDujW9xu9zE75la/o=;
+        b=KYV8XxQmFLw+uGJsxDsWQzykpD1JJ0mn9m2/XD3VYy4Y33arWdGl2qHX1NwFBVPDtY
+         Fs/jIX83Du36e+2XQh66MjCnA1zEZNuDSNNsRfF/EpWbohmzABXMYHGCWVPCANG9rUa1
+         J7I1CB7hMktWdJHLtc8pO6waSRMjRcSLAQFEL9XUl6gex2XUbOnanQvGIEPbRCYHc80G
+         9rmxHj0mgTcVfUZ+k3h/u2rPs9a//qaXFBKf7+KDI6xJORzVtj9WNFeISnaA+H+Q7Yg0
+         wbxMQaBkO8JEpWmBAits0KM4yT617QHzHRAmGV5ZMg+Tk50dwAYlkNbAXGf7QmfFT4Qj
+         o6RQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rr5YK0hkgMkL9mPoJzIqReYB488D9FVNCNYFo1k5nA2gWxy4RIMyFaKKCXmg88bWmk44Ca/IC8T8SBv@vger.kernel.org
+X-Gm-Message-State: AOJu0YweJygM0fMxojOkn7qk4YK3OGLf7DiDwT4o/eD+ei7HvrdOnDo4
+	EhaCkNBm2Aq5x76dCtO5G9IwRMYwOxvxg2k58ZhO8V1sgmvRvv2m0cTU0p/NTK+e99w23Hh/eI6
+	/ISgi5mtjbvcPHSomGr+vKX6DEwJEXrA=
+X-Gm-Gg: AfdE7cnrlr45NsGugu/0vC/9WMDVkpDz1tfKIfZVG3i3+CFFLw69P12c5FqlsU0NI4o
+	jxvOk7/ajbi8Tqf6lP734t0idpXqEsjyyDzUGI+fyWEcJOPiRD4OgEQCfdVeNN3Q4trwcJC+sHo
+	KnzDAUT7Lficr/CZEtjtBY38TyicieO50/fAdf5xMMOSbaeuGRj/2DBzfTzPtYL+MQ6K/Sk9oYA
+	fPFAG1dI6bqrGrtkuYKEIkSOSxJDkCN/xBkzo578xeaE3rvJ9hl8UL/w+2LcydewgCMd2D2P9//
+	DC85yYqYOXJk3pt9/IbZFZ/terziQS+Tc/e87/uB9L8y5ybGVqq/qndq4yYp/eQ=
+X-Received: by 2002:a05:6402:3512:b0:699:728e:48b9 with SMTP id
+ 4fb4d7f45d1cf-69c5edb9cb3mr1210325a12.0.1783772963919; Sat, 11 Jul 2026
+ 05:29:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20260707181957.433213175@kernel.org>
+In-Reply-To: <20260707181957.433213175@kernel.org>
+From: Magnus Lindholm <linmag7@gmail.com>
+Date: Sat, 11 Jul 2026 14:29:12 +0200
+X-Gm-Features: AUfX_mzOlRB8ana7x7qPQc4frMU9J060tNH0Z2GPCNvL1LYqDKQBjM-XzHbrvno
+Message-ID: <CA+=Fv5RpgQ-UeGAT+VcLufte2gAp0H=J5GqZEFR_SuQsmnzy=A@mail.gmail.com>
+Subject: Re: [patch 00/18] entry: Consolidate and rework syscall entry handling
+To: Thomas Gleixner <tglx@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Shrikanth Hegde <sshegde@linux.ibm.com>, 
+	linuxppc-dev@lists.ozlabs.org, Kees Cook <kees@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org, 
+	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org, x86@kernel.org, 
+	Mark Rutland <mark.rutland@arm.com>, Jinjie Ruan <ruanjinjie@huawei.com>, 
+	Andy Lutomirski <luto@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Richard Henderson <richard.henderson@linaro.org>, Russell King <linux@armlinux.org.uk>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Guo Ren <guoren@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Helge Deller <deller@gmx.de>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	Richard Weinberger <richard@nod.at>, Chris Zankel <chris@zankel.net>, linux-arm-kernel@lists.infradead.org, 
+	linux-alpha@vger.kernel.org, linux-csky@vger.kernel.org, 
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linux-sh@vger.kernel.org, 
+	linux-um@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, 
+	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>, Brian Cain <bcain@kernel.org>, 
+	Michal Simek <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
+	linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org, 
+	linux-openrisc@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-arch@vger.kernel.org, =?UTF-8?Q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>, 
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.16 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[proton.me,quarantine];
-	R_DKIM_ALLOW(-0.20)[proton.me:s=protonmail];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:dust.li@linux.alibaba.com,m:wenjia@linux.ibm.com,m:alibuda@linux.alibaba.com,m:sidraya@linux.ibm.com,m:edumazet@google.com,m:davem@davemloft.net,m:mjambigi@linux.ibm.com,m:guwen@linux.alibaba.com,m:horms@kernel.org,m:ubraun@linux.ibm.com,m:raspl@linux.ibm.com,m:tonylu@linux.alibaba.com,m:pabeni@redhat.com,m:kuba@kernel.org,m:netdev@vger.kernel.org,m:linux-s390@vger.kernel.org,m:linux-rdma@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-22081-lists,linux-s390=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER(0.00)[hexlabsecurity@proton.me,linux-s390@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	RCVD_COUNT_THREE(0.00)[3];
-	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22082-lists,linux-s390=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:tglx@kernel.org,m:linux-kernel@vger.kernel.org,m:peterz@infradead.org,m:mpe@ellerman.id.au,m:sshegde@linux.ibm.com,m:linuxppc-dev@lists.ozlabs.org,m:kees@kernel.org,m:chenhuacai@kernel.org,m:loongarch@lists.linux.dev,m:pjw@kernel.org,m:palmer@dabbelt.com,m:linux-riscv@lists.infradead.org,m:svens@linux.ibm.com,m:linux-s390@vger.kernel.org,m:x86@kernel.org,m:mark.rutland@arm.com,m:ruanjinjie@huawei.com,m:luto@kernel.org,m:oleg@redhat.com,m:richard.henderson@linaro.org,m:linux@armlinux.org.uk,m:catalin.marinas@arm.com,m:guoren@kernel.org,m:geert@linux-m68k.org,m:tsbogend@alpha.franken.de,m:deller@gmx.de,m:ysato@users.sourceforge.jp,m:richard@nod.at,m:chris@zankel.net,m:linux-arm-kernel@lists.infradead.org,m:linux-alpha@vger.kernel.org,m:linux-csky@vger.kernel.org,m:linux-m68k@lists.linux-m68k.org,m:linux-mips@vger.kernel.org,m:linux-parisc@vger.kernel.org,m:linux-sh@vger.kernel.org,m:linux-um@lists.infradead.org,m:arnd@arndb.de,m:vgupta@kernel.org,m:will@kerne
+ l.org,m:bcain@kernel.org,m:monstr@monstr.eu,m:dinguyen@kernel.org,m:davem@davemloft.net,m:andreas@gaisler.com,m:linux-snps-arc@lists.infradead.org,m:linux-hexagon@vger.kernel.org,m:linux-openrisc@vger.kernel.org,m:sparclinux@vger.kernel.org,m:linux-arch@vger.kernel.org,m:msuchanek@suse.de,m:corbet@lwn.net,m:linux-doc@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[linmag7@gmail.com,linux-s390@vger.kernel.org];
+	FREEMAIL_CC(0.00)[vger.kernel.org,infradead.org,ellerman.id.au,linux.ibm.com,lists.ozlabs.org,kernel.org,lists.linux.dev,dabbelt.com,lists.infradead.org,arm.com,huawei.com,redhat.com,linaro.org,armlinux.org.uk,linux-m68k.org,alpha.franken.de,gmx.de,users.sourceforge.jp,nod.at,zankel.net,lists.linux-m68k.org,arndb.de,monstr.eu,davemloft.net,gaisler.com,suse.de,lwn.net];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[53];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hexlabsecurity@proton.me,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[proton.me:+];
+	FROM_NEQ_ENVFROM(0.00)[linmag7@gmail.com,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[proton.me:from_mime,proton.me:dkim,proton.me:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,vger.kernel.org:from_smtp,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 1D0CA7414BA
+X-Rspamd-Queue-Id: 6DD6174181A
 
-On Tue, 7 Jul 2026 17:29:04 +0800, Dust Li wrote:
-> Are you planning to land these clamps first, and then follow up with a
-> separate validate/abort series?
+>
+> With that all architectures using the generic syscall entry code follow the
+> same scheme, apply stack randomization at the correct and earliest possible
+> place and skip syscall processing depending on the boolean return value of
+> syscall_enter_from_user_mode[_work]().
+>
+> There should be no functional changes, at least there are none intended.
+>
+> The resulting text size for the syscall entry code on x8664 is slightly
+> smaller than before these changes.
+>
+> Testing syscall heavy workloads and micro benchmarks shows a small
+> performance gain for the general rework, but the last patch, which changes
+> the logic to be more understandable has no measurable impact in either
+> direction.
+>
+> The series applies on Linus tree and is also available from git:
+>
+>         git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git entry-rework-v1
+>
 
-Yes -- clamp series to net (Cc: stable), then the wire-boundary validate/ab=
-ort to
-net-next, which is the split from your v3 review. If you'd rather have the
-validate/abort as the primary fix, or both in one series, say so and I'll
-restructure it.
 
-> Looking at your earlier A/B test, it simulates this logic in userspace to
-> demonstrate the bug, but it doesn't actually trigger the bug in our
-> current kernel.
+Hi Thomas,
 
-Right -- the earlier one replayed the smc_curs_diff/copy arithmetic over a =
-kmalloc
-buffer. I built the end-to-end version: two AF_SMC sockets over the SMC-D l=
-oopback
-(dibs), CONFIG_SMC=3Dm with KASAN, receive path unmodified. Only the sender=
-'s on-wire
-producer cursor is forged, modelling what a misbehaving peer sends:
+Thanks for the series.
 
-  cdc.prod.wrap =3D curs.wrap;
-  cdc.prod.count =3D curs.count;
-+ if (forge) {                 /* peer just bumps the wrap, count stays 0 *=
-/
-+     static u16 w;
-+     cdc.prod.wrap =3D ++w;
-+     cdc.prod.count =3D 0;
-+ }
+I have an Alpha GENERIC_ENTRY series posted and planned for the next
+merge window:
 
-The client sends six 1-byte messages, the server recvs into a 2 MB buffer.
-rmb_desc->len =3D 65504; the three arms on 7.2-rc1:
+https://lore.kernel.org/linux-alpha/20260706170019.2941459-1-linmag7@gmail.com/T/#t
 
-  honest (no forge)            recv 6        clean
-  forged, patch 2/3 clamp on   recv 65504    clean   (=3D=3D rmb_desc->len)
-  forged, no clamp             recv 393024   KASAN
+Only its final patch intersects with this work.
 
-In the last arm bytes_to_rcv reaches 6*len, so smc_rx_recvmsg()'s second wr=
-ap-around
-chunk (copylen - first_chunk =3D 393024 - 65504) is read from ring offset 0=
-, past the
-RMB page:
+That patch removes Alpha's architecture-specific syscall_trace_enter()
+and syscall_trace_leave() implementations, so the Alpha changes in
+patches 11 and 12 will disappear once the GENERIC_ENTRY conversion is
+applied.
 
-  BUG: KASAN: slab-use-after-free in _copy_to_iter
-  Read of size 327520 ... smc_rx_recvmsg <- smc_recvmsg <- __sys_recvfrom
+It also currently uses syscall_enter_from_user_mode(), so I will need to
+rebase it onto the new entry interface introduced by this series. I
+expect the integration to be confined to the final GENERIC_ENTRY patch.
 
-(use-after-free rather than out-of-bounds only because the over-read lands =
-in a freed
-adjacent slab.) Happy to send the driver.
+The Alpha-specific changes in patches 11 and 12 look correct to me.
 
-> the security risk here doesn't seem high to me, since SMC is only meant t=
-o
-> be deployed in trusted environments.
-
-Agreed it's low urgency there. The reason I'd still keep the bound in stabl=
-e: it's a
-peer-driven out-of-bounds read of kernel memory that a buggy, not only mali=
-cious,
-peer can hit, and the clamp never resets an honest connection. The stable t=
-ag is
-your call.
-
-> once this is actually triggered, it means the data we've been handing to
-> userspace is already wrong ... the connection should be terminated. So I
-> don't really see much value in merging the bound-clamp patches first.
-
-I'm not arguing against the abort -- a bad CDC means the connection can't b=
-e trusted
-and should go down, and that's the net-next work. Two points on it.
-
-The predicate has to test the accumulator, not the cursor. Every forged CDC=
- here
-carries count =3D=3D 0, which is in [0, rmb_desc->len), so it passes any pe=
-r-cursor
-input check, including patch 1/3; only bytes_to_rcv goes out of range. A
-cursor-boundary abort wouldn't catch this vector.
-
-And placement: if the abort is queued (queue_work -> smc_conn_kill) after t=
-he
-atomic_add, a recvmsg() under lock_sock can still read the inflated accumul=
-ator in
-the window before teardown runs. A synchronous check that bails before the
-atomic_add avoids that, and so does the consumer clamp.
-
-If you'd prefer a single accumulator-abort in place of the -stable clamp, I=
-'ll
-respin it that way and run the same A/B.
-
-Bryam
-
+Acked-by: Magnus Lindholm <linmag7@gmail.com>
 
