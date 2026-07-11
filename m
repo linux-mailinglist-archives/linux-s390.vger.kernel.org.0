@@ -1,459 +1,218 @@
-Return-Path: <linux-s390+bounces-22077-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22078-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 1E0NMamFUWoRFwMAu9opvQ
-	(envelope-from <linux-s390+bounces-22077-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Sat, 11 Jul 2026 01:52:09 +0200
+	id MaAFML25UWoRIAMAu9opvQ
+	(envelope-from <linux-s390+bounces-22078-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Sat, 11 Jul 2026 05:34:21 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAC8973FC76
-	for <lists+linux-s390@lfdr.de>; Sat, 11 Jul 2026 01:52:08 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0F7774033E
+	for <lists+linux-s390@lfdr.de>; Sat, 11 Jul 2026 05:34:20 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux.dev header.s=key1 header.b=dt1rK+bK;
-	dmarc=pass (policy=none) header.from=linux.dev;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22077-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-22077-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=RWtca8sg;
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22078-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-22078-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B9FA6302C36E
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2026 23:52:07 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id BA029300A26B
+	for <lists+linux-s390@lfdr.de>; Sat, 11 Jul 2026 03:34:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F67F40961C;
-	Fri, 10 Jul 2026 23:52:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A125F1CD2C;
+	Sat, 11 Jul 2026 03:34:16 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6028640861C;
-	Fri, 10 Jul 2026 23:52:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442261A268
+	for <linux-s390@vger.kernel.org>; Sat, 11 Jul 2026 03:34:14 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783727527; cv=none; b=E+ZkShIGJNnn4OuwqlTcI9YB58D8lgZlTSBLRmktg2Fbcdcp8aEyrFVg0X37f2CZlHEkhFdkLZXkjPU5mvotB8AX62NZskIJ3slH4l9q5nY5hEzi+3uyJ3hJRxmq3KB3+LhWB+VpTIjKTdBFdVm3carV0OiFGNOyiWHuPNDimkM=
+	t=1783740856; cv=none; b=toyE19bg33UDCWcE+aqUXR1USETsqYi5+MjsIshe8mO1q/88cGzKQ7wIX6yogmrhhIKDTAGQ8eIjqj+Ue7/BUDHTkjHroXsm5FnoT9uKgQxWBMyPDGW7SccIXgZdRwehnx3o0BvB1K7UGuFx72MpFr6QiPIABlwxXzbzUX2Udo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783727527; c=relaxed/simple;
-	bh=O8gtSvZgFfroeKrN4VzmfikT47vC3UulLVIYKCoyNms=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Gs5KL9Dh6IbO9fSpXlQcHc2A5oy6cKN8OHsxPoOvIAzSWwMWNZmX7lqXkMvo/JKEporA1DaVSzVaFx3LhajD4/kpFR6QGHhkxJ7XJHX6/cu7g69xnyvP5UFRgjFw7sa4donqQtfJamVifHqGQfBz7pNpcT59Qf2HypYzeWwLzt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dt1rK+bK; arc=none smtp.client-ip=91.218.175.179
-Message-ID: <2aec2d14-0000-4595-aa2a-73aa5ae41060@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1783727511;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eHN3OZqyVBMoc0WzZkstTYo8wC+PciAiKk3q7cpBgqQ=;
-	b=dt1rK+bKIACqT4/0ZiipMUIoxmxuUd1chKCHxd8vIYdox4XZZItHIKR37lNh5ZRLIOnT8A
-	GLjCt+C/uUBz9lF17uqDQ3SVbBTxVKXJcNKhQCUTN1E8CN09L3yhrXu2MVjhzdgpQwWNCh
-	rea8WfnVbxjS6Z/+PNBZYepkzCMc8io=
-Date: Fri, 10 Jul 2026 16:51:45 -0700
+	s=arc-20240116; t=1783740856; c=relaxed/simple;
+	bh=CCkIJE/B50ZLm198X83jXlyy8DHatsFhmpvyVmwuSR8=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Q/unglme+9CYd9l2JNKQPXTUgO97aqoKddPXlreHaqsZEpuE1+pXel3HVs+dtptr/9xJDJOFfG4TqB3ySuev+LGrD4MnNbYdHzHd/yI1Nd3I5oQRJn7GgzUh+xmRpMtPGs4KLt+mp5e4rs1qaXZYaST1bOCRx6bfmD7dssJ0rJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RWtca8sg; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AF711F000E9;
+	Sat, 11 Jul 2026 03:34:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783740854;
+	bh=PTaxy2UXzbxKdvry5ZLSwXBIdU62NhNiASH4hKWPxPQ=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=RWtca8sgXW8k5Q61k6bWru1u5ThdwRYuJfXLOlZ1G8wHwpa+uaE6BVMJRPHeguXCC
+	 HaZKepW3Nz5HWp3JUVUjiiMQiVGS0DjR+g6pfmoYJCQzXFAgUYknUMwtptMAomE7TK
+	 aW3KbHc3RhdOBkeaiQsqx7c4b+fao8yGh9aGwfNF3LDtLasAkDh/rO+JZPdYH/O097
+	 N7H7S2WUGwwGGCUN8dLguZXY2XXRsxqeulsXlrauUDjJii6iUSu4Sq4oBLsxyEiHKB
+	 xvOPAU0HubR8/wH8iDRVkLSvqvrszQmVB+fR9tBnypPswxr5CH7TLWiXXS2py/pobL
+	 1C3kk6/Ihur8g==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH net-next v3 2/3] net/smc: transition to RDMA core CQ
+ pooling
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "D. Wythe" <alibuda@linux.alibaba.com>
+Cc: linux-s390@vger.kernel.org, "Vasily Gorbik" <gor@linux.ibm.com>, "Heiko
+ Carstens" <hca@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>
+In-Reply-To: <20260710033356.16460-3-alibuda@linux.alibaba.com>
+References: <20260710033356.16460-1-alibuda@linux.alibaba.com>
+ <20260710033356.16460-3-alibuda@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 11 Jul 2026 03:34:13 +0000
+Message-Id: <20260711033414.4AF711F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH rdma-next 13/13] RDMA/selftests: Add rxe_netns_names test
-To: Jiri Pirko <jiri@resnulli.us>, linux-rdma@vger.kernel.org,
- Zhu Yanjun <yanjun.zhu@linux.dev>
-Cc: cgroups@vger.kernel.org, netdev@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-kselftest@vger.kernel.org, jgg@ziepe.ca,
- leon@kernel.org, parav@nvidia.com, mbloch@nvidia.com, cmeiohas@nvidia.com,
- roman.gushchin@linux.dev, bvanassche@acm.org, zyjzyj2000@gmail.com,
- shuah@kernel.org, tj@kernel.org, mkoutny@suse.com, hannes@cmpxchg.org,
- alibuda@linux.alibaba.com, dust.li@linux.alibaba.com, sidraya@linux.ibm.com,
- wenjia@linux.ibm.com
-References: <20260709095532.855647-1-jiri@resnulli.us>
- <20260709095532.855647-14-jiri@resnulli.us>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "yanjun.zhu" <yanjun.zhu@linux.dev>
-In-Reply-To: <20260709095532.855647-14-jiri@resnulli.us>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.dev,none];
-	R_DKIM_ALLOW(-0.20)[linux.dev:s=key1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22077-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22078-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:jiri@resnulli.us,m:linux-rdma@vger.kernel.org,m:yanjun.zhu@linux.dev,m:cgroups@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-s390@vger.kernel.org,m:linux-kselftest@vger.kernel.org,m:jgg@ziepe.ca,m:leon@kernel.org,m:parav@nvidia.com,m:mbloch@nvidia.com,m:cmeiohas@nvidia.com,m:roman.gushchin@linux.dev,m:bvanassche@acm.org,m:zyjzyj2000@gmail.com,m:shuah@kernel.org,m:tj@kernel.org,m:mkoutny@suse.com,m:hannes@cmpxchg.org,m:alibuda@linux.alibaba.com,m:dust.li@linux.alibaba.com,m:sidraya@linux.ibm.com,m:wenjia@linux.ibm.com,s:lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[3];
-	FORGED_SENDER(0.00)[yanjun.zhu@linux.dev,linux-s390@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,alibaba.com:email,smtp.kernel.org:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:alibuda@linux.alibaba.com,m:linux-s390@vger.kernel.org,m:gor@linux.ibm.com,m:hca@linux.ibm.com,m:agordeev@linux.ibm.com,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[vger.kernel.org,ziepe.ca,kernel.org,nvidia.com,linux.dev,acm.org,gmail.com,suse.com,cmpxchg.org,linux.alibaba.com,linux.ibm.com];
-	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[yanjun.zhu@linux.dev,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.dev:+];
-	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-s390];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_NO_DN(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TO_DN_SOME(0.00)[]
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: CAC8973FC76
+X-Rspamd-Queue-Id: B0F7774033E
 
-On 7/9/26 2:55 AM, Jiri Pirko wrote:
-> From: Jiri Pirko <jiri@nvidia.com>
-> 
-> Add a kselftest script that exercises per-netns RDMA device naming
-> with RXE. Cover duplicate names across namespaces, move conflict
-> handling, move-with-rename, and same-namespace rename requests.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [High] Race condition in `smc_wr_reg_send` causes a Use-After-Free when p=
+osting a work request to a terminating link.
+- [High] Link teardown stall/deadlock due to inverted QP destruction sequen=
+ce.
+--
 
-# timeout set to 45
-# selftests: rdma: rxe_netns_names.sh
-# TAP version 13
-# 1..6
-# ok 1 same RDMA device name can exist in two net namespaces
-# ok 2 move without rename fails on destination name conflict
-# ok 3 move then rename succeeds
-# ok 4 move with requested destination name succeeds # SKIP     < --- 
-This testcase skip
+--- Patch [2]: [PATCH net-next v3 2/3] net/smc: transition to RDMA core CQ =
+pooling ---
+commit 7cb20cb1fe260499ce1bc5f3d7c63d07feedaebd
+Author: D. Wythe <alibuda@linux.alibaba.com>
+Subject: net/smc: transition to RDMA core CQ pooling
 
-# ok 5 same-netns rename rejects duplicate name
-# # device returned to init_net as 'ibdev35'
-# ok 6 netns delete returns device to init_net and renames on conflict
-# # 1 skipped test(s) detected.  Consider enabling relevant config 
-options to improve coverage.
-# # Totals: pass:5 fail:0 xfail:0 xpass:0 skip:1 error:0
-ok 6 selftests: rdma: rxe_netns_names.sh
+Refactors completion handling to use the ib_cqe API and standard RDMA core=
+=20
+CQ pooling. This parallelizes completion processing across multiple CPU cor=
+es=20
+and removes redundant manual CQ management logic.
 
-The above are my test results. But one testcase is skipped.
+> diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
+> index cf6b620fef05f..5073af92e0868 100644
+> --- a/net/smc/smc_core.c
+> +++ b/net/smc/smc_core.c
+> @@ -1373,7 +1368,8 @@ void smcr_link_clear(struct smc_link *lnk, bool log)
+>  	smc_llc_link_clear(lnk, log);
+>  	smcr_buf_unmap_lgr(lnk);
+>  	smcr_rtoken_clear_link(lnk);
+> -	smc_ib_modify_qp_error(lnk);
+> +	smc_wr_stop_link(lnk);
+> +	smc_wr_drain_qp(lnk);
 
-Zhu Yanjun
+[Severity: High]
+Will this order of operations cause a multi-second stall during link teardo=
+wn?
 
-> 
-> Signed-off-by: Jiri Pirko <jiri@nvidia.com>
-> ---
->   tools/testing/selftests/rdma/Makefile         |   3 +-
->   tools/testing/selftests/rdma/config           |   2 +
->   .../testing/selftests/rdma/rxe_netns_names.sh | 282 ++++++++++++++++++
->   3 files changed, 286 insertions(+), 1 deletion(-)
->   create mode 100755 tools/testing/selftests/rdma/rxe_netns_names.sh
-> 
-> diff --git a/tools/testing/selftests/rdma/Makefile b/tools/testing/selftests/rdma/Makefile
-> index 07af7f15c1bf..a91c14c45006 100644
-> --- a/tools/testing/selftests/rdma/Makefile
-> +++ b/tools/testing/selftests/rdma/Makefile
-> @@ -3,6 +3,7 @@ TEST_PROGS := rxe_rping_between_netns.sh \
->   		rxe_ipv6.sh \
->   		rxe_socket_with_netns.sh \
->   		rxe_test_NETDEV_UNREGISTER.sh \
-> -		rxe_sent_rcvd_bytes.sh
-> +		rxe_sent_rcvd_bytes.sh \
-> +		rxe_netns_names.sh
->   
->   include ../lib.mk
-> diff --git a/tools/testing/selftests/rdma/config b/tools/testing/selftests/rdma/config
-> index 4ffb814e253b..e1ff54ec0f57 100644
-> --- a/tools/testing/selftests/rdma/config
-> +++ b/tools/testing/selftests/rdma/config
-> @@ -1,3 +1,5 @@
->   CONFIG_TUN
->   CONFIG_VETH
-> +CONFIG_DUMMY
-> +CONFIG_NET_NS
->   CONFIG_RDMA_RXE
-> diff --git a/tools/testing/selftests/rdma/rxe_netns_names.sh b/tools/testing/selftests/rdma/rxe_netns_names.sh
-> new file mode 100755
-> index 000000000000..a7e57706fdff
-> --- /dev/null
-> +++ b/tools/testing/selftests/rdma/rxe_netns_names.sh
-> @@ -0,0 +1,282 @@
-> +#!/bin/bash
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# Exercise RDMA device name handling across network namespaces.
-> +
-> +source "$(dirname "$0")/../kselftest/ktap_helpers.sh"
-> +
-> +NAME_PREFIX="rxe_netns_names_$$"
-> +NETDEV_PREFIX="rxn$$"
-> +NS1="${NAME_PREFIX}ns1"
-> +NS2="${NAME_PREFIX}ns2"
-> +RXE_A="${NAME_PREFIX}rxe_a"
-> +RXE_B="${NAME_PREFIX}rxe_b"
-> +RXE_SAME="${NAME_PREFIX}rxe_same"
-> +RXE_NEW="${NAME_PREFIX}rxe_new"
-> +DUMMY_A="${NETDEV_PREFIX}a"
-> +DUMMY_B="${NETDEV_PREFIX}b"
-> +OLD_MODE=""
-> +MODE_CHANGED=0
-> +MODS=("dummy" "rdma_rxe")
-> +TEST_SAME_NAMES="same RDMA device name can exist in two net namespaces"
-> +TEST_MOVE_CONFLICT="move without rename fails on destination name conflict"
-> +TEST_MOVE_RENAME="move then rename succeeds"
-> +TEST_COMBINED_MOVE_RENAME="move with requested destination name succeeds"
-> +TEST_SAME_NETNS_DUP_RENAME="same-netns rename rejects duplicate name"
-> +TEST_TEARDOWN_RETURN="netns delete returns device to init_net and renames on conflict"
-> +
-> +ksft_skip()
-> +{
-> +	ktap_skip_all "$*"
-> +	exit "$KSFT_SKIP"
-> +}
-> +
-> +fail()
-> +{
-> +	ktap_exit_fail_msg "$*"
-> +}
-> +
-> +need_cmd()
-> +{
-> +	command -v "$1" >/dev/null 2>&1 || ksft_skip "missing command: $1"
-> +}
-> +
-> +rdma_ns()
-> +{
-> +	local ns=$1
-> +
-> +	shift
-> +	ip netns exec "$ns" rdma "$@"
-> +}
-> +
-> +rdma_dev_exists()
-> +{
-> +	local ns=$1
-> +	local dev=$2
-> +
-> +	if [ -n "$ns" ]; then
-> +		rdma_ns "$ns" dev show "$dev" >/dev/null 2>&1
-> +	else
-> +		rdma dev show "$dev" >/dev/null 2>&1
-> +	fi
-> +}
-> +
-> +add_dummy()
-> +{
-> +	local netdev=$1
-> +
-> +	ip link add "$netdev" type dummy || return 1
-> +	ip link set "$netdev" up || return 1
-> +}
-> +
-> +add_rxe()
-> +{
-> +	local dev=$1
-> +	local netdev=$2
-> +
-> +	rdma link add "$dev" type rxe netdev "$netdev"
-> +}
-> +
-> +rdma_dev_on_netdev()
-> +{
-> +	local netdev=$1
-> +
-> +	rdma link show 2>/dev/null | awk -v want="$netdev" '
-> +		{
-> +			for (i = 1; i < NF; i++)
-> +				if ($i == "netdev" && $(i + 1) == want) {
-> +					dev = $2
-> +					sub(/\/.*/, "", dev)
-> +					print dev
-> +					exit
-> +				}
-> +		}'
-> +}
-> +
-> +wait_rdma_dev_on_netdev()
-> +{
-> +	local netdev=$1
-> +	local dev
-> +	local i
-> +
-> +	for i in $(seq 1 50); do
-> +		dev=$(rdma_dev_on_netdev "$netdev")
-> +		if [ -n "$dev" ]; then
-> +			echo "$dev"
-> +			return 0
-> +		fi
-> +		sleep 0.1
-> +	done
-> +
-> +	return 1
-> +}
-> +
-> +setup_devs()
-> +{
-> +	cleanup_devs
-> +
-> +	add_dummy "$DUMMY_A" || return 1
-> +	add_dummy "$DUMMY_B" || return 1
-> +
-> +	add_rxe "$RXE_A" "$DUMMY_A" || return 1
-> +	add_rxe "$RXE_B" "$DUMMY_B" || return 1
-> +}
-> +
-> +cleanup_devs()
-> +{
-> +	ip link del "$DUMMY_A" 2>/dev/null
-> +	ip link del "$DUMMY_B" 2>/dev/null
-> +}
-> +
-> +setup()
-> +{
-> +	OLD_MODE=$(rdma system show 2>/dev/null |
-> +		   sed -n 's/.*netns \([^ ]*\).*/\1/p')
-> +	[ -n "$OLD_MODE" ] || ksft_skip "failed to read RDMA netns mode"
-> +
-> +	rdma system set netns exclusive >/dev/null 2>&1 ||
-> +		ksft_skip "rdma netns exclusive mode is not supported"
-> +	MODE_CHANGED=1
-> +
-> +	ip netns add "$NS1" || return 1
-> +	ip netns add "$NS2" || return 1
-> +}
-> +
-> +cleanup()
-> +{
-> +	cleanup_devs
-> +
-> +	ip netns del "$NS1" 2>/dev/null
-> +	ip netns del "$NS2" 2>/dev/null
-> +
-> +	if [ "$MODE_CHANGED" -eq 1 ]; then
-> +		rdma system set netns "$OLD_MODE" 2>/dev/null
-> +	fi
-> +
-> +	for m in "${MODS[@]}"; do
-> +		modprobe -r "$m" 2>/dev/null
-> +	done
-> +}
-> +
-> +rdma_supports_combined_move_rename()
-> +{
-> +	rdma dev help 2>&1 | grep -Eq 'netns .*name|name .*netns'
-> +}
-> +
-> +[ "$(id -u)" -eq 0 ] || ksft_skip "must be run as root"
-> +need_cmd ip
-> +need_cmd rdma
-> +need_cmd modprobe
-> +
-> +trap cleanup EXIT
-> +
-> +for m in "${MODS[@]}"; do
-> +	modinfo "$m" >/dev/null 2>&1 || ksft_skip "module $m not found"
-> +	modprobe "$m" || fail "failed to load $m"
-> +done
-> +
-> +setup || fail "failed to create net namespaces"
-> +
-> +ktap_print_header
-> +ktap_set_plan 7
-> +
-> +if setup_devs &&
-> +   rdma dev set "$RXE_A" netns "$NS1" &&
-> +   rdma_ns "$NS1" dev set "$RXE_A" name "$RXE_SAME" &&
-> +   rdma dev set "$RXE_B" netns "$NS2" &&
-> +   rdma_ns "$NS2" dev set "$RXE_B" name "$RXE_SAME" &&
-> +   rdma_dev_exists "$NS1" "$RXE_SAME" &&
-> +   rdma_dev_exists "$NS2" "$RXE_SAME"; then
-> +	ktap_test_pass "$TEST_SAME_NAMES"
-> +else
-> +	ktap_test_fail "$TEST_SAME_NAMES"
-> +fi
-> +cleanup_devs
-> +
-> +if ! setup_devs ||
-> +   ! rdma dev set "$RXE_A" netns "$NS1" ||
-> +   ! rdma_ns "$NS1" dev set "$RXE_A" name "$RXE_SAME" ||
-> +   ! rdma dev set "$RXE_B" netns "$NS2" ||
-> +   ! rdma_ns "$NS2" dev set "$RXE_B" name "$RXE_SAME"; then
-> +	ktap_test_fail "$TEST_MOVE_CONFLICT"
-> +elif rdma_ns "$NS1" dev set "$RXE_SAME" netns "$NS2" >/dev/null 2>&1; then
-> +	ktap_test_fail "$TEST_MOVE_CONFLICT"
-> +elif rdma_dev_exists "$NS1" "$RXE_SAME" &&
-> +     rdma_dev_exists "$NS2" "$RXE_SAME"; then
-> +	ktap_test_pass "$TEST_MOVE_CONFLICT"
-> +else
-> +	ktap_test_fail "$TEST_MOVE_CONFLICT"
-> +fi
-> +cleanup_devs
-> +
-> +if ! setup_devs; then
-> +	ktap_test_fail "$TEST_MOVE_RENAME"
-> +elif rdma dev set "$RXE_A" netns "$NS2" &&
-> +     rdma_ns "$NS2" dev set "$RXE_A" name "$RXE_NEW"; then
-> +	if rdma_dev_exists "$NS2" "$RXE_NEW" &&
-> +	   ! rdma_dev_exists "" "$RXE_A"; then
-> +		ktap_test_pass "$TEST_MOVE_RENAME"
-> +	else
-> +		ktap_test_fail "$TEST_MOVE_RENAME"
-> +	fi
-> +else
-> +	ktap_test_fail "$TEST_MOVE_RENAME"
-> +fi
-> +cleanup_devs
-> +
-> +if ! rdma_supports_combined_move_rename; then
-> +	ktap_test_skip "$TEST_COMBINED_MOVE_RENAME"
-> +elif ! setup_devs; then
-> +	ktap_test_fail "$TEST_COMBINED_MOVE_RENAME"
-> +elif rdma dev set "$RXE_A" netns "$NS2" name "$RXE_NEW"; then
-> +	if rdma_dev_exists "$NS2" "$RXE_NEW" &&
-> +	   ! rdma_dev_exists "" "$RXE_A"; then
-> +		ktap_test_pass "$TEST_COMBINED_MOVE_RENAME"
-> +	else
-> +		ktap_test_fail "$TEST_COMBINED_MOVE_RENAME"
-> +	fi
-> +else
-> +	ktap_test_fail "$TEST_COMBINED_MOVE_RENAME"
-> +fi
-> +cleanup_devs
-> +
-> +if ! setup_devs; then
-> +	ktap_test_fail "$TEST_SAME_NETNS_DUP_RENAME"
-> +elif rdma dev set "$RXE_A" name "$RXE_SAME" &&
-> +     rdma dev set "$RXE_B" name "$RXE_NEW"; then
-> +	if rdma dev set "$RXE_A" name "$RXE_NEW" >/dev/null 2>&1; then
-> +		ktap_test_fail "$TEST_SAME_NETNS_DUP_RENAME"
-> +	elif rdma_dev_exists "" "$RXE_SAME" &&
-> +	     rdma_dev_exists "" "$RXE_NEW"; then
-> +		ktap_test_pass "$TEST_SAME_NETNS_DUP_RENAME"
-> +	else
-> +		ktap_test_fail "$TEST_SAME_NETNS_DUP_RENAME"
-> +	fi
-> +else
-> +	ktap_test_fail "$TEST_SAME_NETNS_DUP_RENAME"
-> +fi
-> +cleanup_devs
-> +
-> +if ! setup_devs; then
-> +	ktap_test_fail "$TEST_TEARDOWN_RETURN"
-> +elif ! rdma dev set "$RXE_A" name "$RXE_SAME" ||
-> +     ! rdma dev set "$RXE_B" netns "$NS2" ||
-> +     ! rdma_ns "$NS2" dev set "$RXE_B" name "$RXE_SAME" ||
-> +     ! rdma_dev_exists "$NS2" "$RXE_SAME"; then
-> +	ktap_test_fail "$TEST_TEARDOWN_RETURN"
-> +else
-> +	ip netns del "$NS2"
-> +	returned=$(wait_rdma_dev_on_netdev "$DUMMY_B")
-> +	ktap_print_msg "device returned to init_net as '${returned:-<missing>}'"
-> +	if rdma_dev_exists "" "$RXE_SAME" &&
-> +	   [ -n "$returned" ] &&
-> +	   [ "$returned" != "$RXE_SAME" ] &&
-> +	   [ "${returned#ibdev}" != "$returned" ]; then
-> +		ktap_test_pass "$TEST_TEARDOWN_RETURN"
-> +	else
-> +		ktap_test_fail "$TEST_TEARDOWN_RETURN"
-> +	fi
-> +fi
-> +cleanup_devs
-> +
-> +ktap_finished
+In smc_wr_stop_link, the teardown thread blocks on wait_for_completion
+for the sender refcounts to drop. However, the queue pair is no longer put=
+=20
+into an error state before this wait, as that now happens in smc_wr_drain_q=
+p=20
+after the wait completes.
 
+Without the queue pair in an error state, completion queue events are not=20
+generated. The quick wakeups in smc_wr_stop_link like smc_wr_wakeup_reg_wai=
+t=20
+appear ineffective because the condition check (such as=20
+link->wr_reg_state !=3D POSTED) will remain false.
+
+Could this cause the teardown thread to stall until the senders hit their=20
+timeout?
+
+>  	smc_wr_free_link(lnk);
+>  	smc_ib_destroy_queue_pair(lnk);
+>  	smc_ib_dealloc_protection_domain(lnk);
+> diff --git a/net/smc/smc_wr.c b/net/smc/smc_wr.c
+> index 6b5add9229937..675bfe633e395 100644
+> --- a/net/smc/smc_wr.c
+> +++ b/net/smc/smc_wr.c
+> [ ... ]
+> @@ -367,17 +306,16 @@ int smc_wr_reg_send(struct smc_link *link, struct i=
+b_mr *mr)
+>  {
+>  	int rc;
+> =20
+> -	ib_req_notify_cq(link->smcibdev->roce_cq_send,
+> -			 IB_CQ_NEXT_COMP | IB_CQ_REPORT_MISSED_EVENTS);
+>  	link->wr_reg_state =3D POSTED;
+> -	link->wr_reg.wr.wr_id =3D (u64)(uintptr_t)mr;
+>  	link->wr_reg.mr =3D mr;
+>  	link->wr_reg.key =3D mr->rkey;
+>  	rc =3D ib_post_send(link->roce_qp, &link->wr_reg.wr, NULL);
+>  	if (rc)
+>  		return rc;
+> =20
+> -	percpu_ref_get(&link->wr_reg_refs);
+> +	if (!percpu_ref_tryget_live(&link->wr_reg_refs))
+> +		return -EPIPE;
+> +
+
+[Severity: High]
+Can this lead to a use-after-free if the link is being torn down concurrent=
+ly?
+
+If percpu_ref_tryget_live fails, the function returns -EPIPE immediately=20
+and the caller may proceed to free the link memory. However, the work reque=
+st=20
+has already been posted to the hardware queue via ib_post_send on the=20
+previous lines.
+
+When the completion event eventually arrives, the completion handler=20
+smc_wr_reg_process_cqe executes:
+
+smc_wr_reg_process_cqe()
+        ...
+        if (wc->status)
+                link->wr_reg_state =3D FAILED;
+
+If the link memory was already freed, won't writing to link->wr_reg_state=20
+corrupt memory?
+
+>  	rc =3D wait_event_interruptible_timeout(link->wr_reg_wait,
+>  					      (link->wr_reg_state !=3D POSTED),
+>  					      SMC_WR_REG_MR_WAIT_TIME);
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260710033356.1646=
+0-1-alibuda@linux.alibaba.com?part=3D2
 
