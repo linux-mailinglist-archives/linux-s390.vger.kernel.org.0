@@ -1,77 +1,77 @@
-Return-Path: <linux-s390+bounces-22132-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22128-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 6KJqBJr0VGrNhwAAu9opvQ
-	(envelope-from <linux-s390+bounces-22132-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 16:22:18 +0200
+	id KwcdBtfzVGqWhwAAu9opvQ
+	(envelope-from <linux-s390+bounces-22128-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 16:19:03 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97CAE74C534
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 16:22:17 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96CA974C486
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 16:19:02 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=TOEucVWR;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22132-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-22132-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=IAu7vwxn;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22128-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-22128-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 589F230473CA
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 14:19:04 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E27D8301E766
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 14:18:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E715438036;
-	Mon, 13 Jul 2026 14:18:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 396CE42B301;
+	Mon, 13 Jul 2026 14:18:42 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2BF437463;
-	Mon, 13 Jul 2026 14:18:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25DC25D53B;
+	Mon, 13 Jul 2026 14:18:40 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783952328; cv=none; b=ilrvxFGe1IiZJBokfGzLkhkTrX0DGYW/KFfS/DgG06lx2WPXnL7R0/9i1wDUYYdwDmvq6F18alajiS5k1jl3RloW5fi/dvGUzcACi3WljuJPOTZ5pgaSZfqkLrL1sGMv3IhekLWY/kilm/McVd2myyV46+Ial/cBw7p4Oh7MHEQ=
+	t=1783952322; cv=none; b=OvisZjBdXVMvqCZtTcKY/DVVADNCMYTgroCEqSZA3tuVYUzLOjnh9BAqqbdkbVhpY/KkFM660gGYw79UlCRI6tKopRYNBgGyz90jRk45Xi/B+/JIqRPJkod9+1a1Bk1GnEL8IgdZa54DsmOEsaxCXip7zwd2K90RZpD5X/o13+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783952328; c=relaxed/simple;
-	bh=te5XsQQ1YpohCpNtY+tWIA0AVevVz38wUSN3NjSB8fI=;
+	s=arc-20240116; t=1783952322; c=relaxed/simple;
+	bh=/rdnzgxnj9ZGGjli54t6DhUWz7IVNu2vUWKglsBV7Fg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Cue1xNvNSERxSWLbt/1hafv7wIxPu2+ZRkXM22QUij8hRpCxlk1ZmGCPsHnYEApuRD2rzvTocivSBCzjznnMsCyfwUD8IhJ8yKRzSG+O+75kqLw5p9p1lb/6RvThhDTR+tpKYLDqrpcVy03O6C6P0NADMkLAx16DPPp1+hJwKko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TOEucVWR; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66DCCsGp554041;
-	Mon, 13 Jul 2026 14:18:34 GMT
+	 MIME-Version; b=EvkMlps8A6tzROKn/kZaRTyimwCPGxQIYPJof3ExiXrBXyjdPX+QDG9rlh7pj5YpZSsnC9CVWwFQz6W1Um9pQ1B0u/uGEMqq1rRZfBw5OuyIsav7A8V2C2mz7xCSBXjm/0z+9N5MEd89cnpkREOicY5mh3eYtK9AbzWG4REqxhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IAu7vwxn; arc=none smtp.client-ip=148.163.158.5
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66DCCxJ02433473;
+	Mon, 13 Jul 2026 14:18:33 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=imQ8ebp14/iLXVOrG
-	ooOyKsIhZEz0jfsy/mae31Elyg=; b=TOEucVWRDI2aZOAJRE1kqFRmnKItbKcDq
-	jcMYkS9lWR+cFi3yOVwBuE4yIg2AoCOHYYiCSozVajnuv6iFBLZGMsLaOr6iJLf3
-	h1rTWOHi8gZeco2ciIJMmDsF4I2Qzs6RFfbYXQTr0ihw08iy6FzJc3rTLCVO2wyg
-	BjfKmTe5fcX1d2AQ0V7z5ZAwD+mF9x4d4eu21D1DUmYZlZ5tzO6aaWGuu4CeflGi
-	8r9UV0GHoJNJMsB8vEEDBlnwwfyKe8zlP0ta8vClfP8uWdv4L6ebpIFoMy7RnI9O
-	Vsom3RjkmAYzY0X3eLyp3/8WhXjZ93MaXZgvp35hLn5nGCh3wIPWg==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fcv331m27-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 13 Jul 2026 14:18:33 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66DE4abB027027;
-	Mon, 13 Jul 2026 14:18:32 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fc0hvx4th-1
+	:mime-version:references:subject:to; s=pp1; bh=2vl0RvV9NekKqP5eY
+	/XJThSoFdB3ZQjbMNiVfPbkbRs=; b=IAu7vwxnbvNMLA1uCK0ng2nE5kW1Wq+lH
+	1gfKv45Ewei+jomoTIIRuR9zlJxwXQTg3Z7rV0o1MJPhPQ0nl69UEtNKII/DtbV6
+	tsW1YQeBudDwLqM23/CCfihj3C3SXh/B1ZZJL472HehTPm2O+zIBMWsu/fef+RMW
+	bq6MX9xZZxpt1wVSbY8/kiUrQuxiqhu7BtU7RxZDeJ6V6eKUEcTAeYFi6hIJ+ovj
+	3NqtTvS3L2p1Z8KJvHq40fWECkehsHmTcm+rskSJ/vWtZmxfiRmZ6Xd4dNEutGYZ
+	asKWQiyOwZA1CxLieP9c5VQJa8ffLSophYbuS+19uwexq4XYWYOBg==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fbegbgrkj-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Mon, 13 Jul 2026 14:18:32 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66DEISjG43254102
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66DE4iUU025308;
+	Mon, 13 Jul 2026 14:18:32 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fc2uxwr3e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 13 Jul 2026 14:18:31 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66DEISpd14418342
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Mon, 13 Jul 2026 14:18:28 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4B85F20040;
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 393182004D;
 	Mon, 13 Jul 2026 14:18:28 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 11FA020049;
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 13E9320043;
 	Mon, 13 Jul 2026 14:18:28 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with SMTP;
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with SMTP;
 	Mon, 13 Jul 2026 14:18:28 +0000 (GMT)
 Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
-	id F05231624F8; Mon, 13 Jul 2026 16:18:27 +0200 (CEST)
+	id F27DD162522; Mon, 13 Jul 2026 16:18:27 +0200 (CEST)
 From: Alexander Gordeev <agordeev@linux.ibm.com>
 To: Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
         Heiko Carstens <hca@linux.ibm.com>,
@@ -83,9 +83,9 @@ Cc: linux-s390@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
         Kevin Brodsky <kevin.brodsky@arm.com>,
         David Hildenbrand <david@redhat.com>
-Subject: [PATCH v5 2/4] s390/mm: Batch PTE updates in lazy MMU mode
-Date: Mon, 13 Jul 2026 16:18:25 +0200
-Message-ID: <227ed305e14b04b97be34716426e369860efc99c.1783945507.git.agordeev@linux.ibm.com>
+Subject: [PATCH v5 3/4] mm/kasan: Introduce helpers for lazy MMU mode sanitizer
+Date: Mon, 13 Jul 2026 16:18:26 +0200
+Message-ID: <38a663eeccd060d961990baf65338e2f2550e580.1783945507.git.agordeev@linux.ibm.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1783945507.git.agordeev@linux.ibm.com>
 References: <cover.1783945507.git.agordeev@linux.ibm.com>
@@ -98,31 +98,32 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzEzMDE0OCBTYWx0ZWRfX34u32qAFQxxJ
- aEdQv/9rESGAbX4ZSoy88vI9Fp/ER5e+ID1ic4nQm+eekhwsIerUlBdfCp3exwT3yOCzKPfKJB2
- z6HM6Q9Kg/jaaLh9HBRkPIvqOgddAwo=
-X-Authority-Analysis: v=2.4 cv=Mp1iLWae c=1 sm=1 tr=0 ts=6a54f3ba cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+X-Authority-Analysis: v=2.4 cv=fOcJG5ae c=1 sm=1 tr=0 ts=6a54f3b9 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
  a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=C-ONzq7a6YYeur7YfcQA:9
-X-Proofpoint-GUID: yjd3l1ROgD54apitULuPkr9PNsjVacPq
-X-Proofpoint-ORIG-GUID: aFMLWleQpV6rMXoRAjS7urePSinw12CR
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzEzMDE0OCBTYWx0ZWRfXxSvwOAzLKjyo
- NslUFbgAFm6hZBK+dJwcpLlXCidBQYjilT2zQqRLhH2qlnJmgIAYcmm+v/aR5+E/wGLsfhtHC8j
- S7/qAc4UhfEykcxE9bdyTYa7t55W9xAcaT9im5aK85OAZ3EeNHj3PCM0K3Hz8u2ygI5uuGkyl7K
- QJCRouxvLk1Nt/LLtDpv7QQfoX/qt+J/LZoIKu8cQSJ9xOj/BbDcF95AajLlToHz6469jzezU+w
- 7Qk0v4Qv+GSfMtm+P3eoROiO4nbkypKumKxMfzGeuja2DuJtydgC4VcA+CfBHsbWfT5d4HL3MqX
- TmTO/XVJmrUWMkBWQLWFnXlab9Utwd3PWDhYvtmEK/x1tIo172DS2G7ivpMZDolfphzWoCZkiq0
- hx7lDTzkeROLhm2x1hLA/Kgb5L0MO4/dQ3zInXPGFWB9p3ArO6ek2gAKpkEdFZonnlZK4jE/pom
- 0yyY/uNAV6jiLfUDpgQ==
+ a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8 a=iFyILk1haAFnC_s91q8A:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzEzMDE0OCBTYWx0ZWRfXy1I9EchAqqyO
+ dXL8Pnx9oOjgJN/nfv563MDUqGvPiSRS+wsivCrOONCRp5LF4Wmhao9QoGBvrmws4VeUaGvfQ+t
+ 8IEN1s2ncYpk9NV0roZqtfbTPZ/A9w2vMw4v+FUkwBzgrsTOqqnYMtenhKtnE8VbQ7+2FaPYSwt
+ vR5YRrQvblKdKbvQK2pQvKcMTeAWpLtFxLlL5bMiEq19uexQ80E0sW6oK/038XoWzqht/ayBtPs
+ 5fqxSr5vdpf8auvOq8OeAfc8lXHp6T7N71cqs0QDh3+RP4MmDFQuv61Hc2YAq8lIs7ZGi6XZYFu
+ Y7oCIYYWkPp2b50gNY6c9X9ihTDboG3EQ2pGxtO673U0BPSZrNTkvW+BdcTAqcoeDAsZbXGyoWj
+ XV2MXJAr+sP2/OXiSHL+YcCAcqLiGQFgUDgXpItrgSe9iIsD1DcK3uPSpWxWU+Jwck2KdDXYDvM
+ gx6L3TOMbS7ZiRzCnYg==
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzEzMDE0OCBTYWx0ZWRfX2MXCilhzZkG5
+ 0oHQF+aUOwwDmM7CK39kg+KtMEilOiDOb+lySdlR+A+AqGFsfZlnH/iFRgY/wWGIHjvHFVsTq0S
+ mhq/Be1YZHBMCU0lxhcfUEbbaHX1VxQ=
+X-Proofpoint-GUID: fbeKGc689gDMosGxsekWQ_xt2MkGAW4U
+X-Proofpoint-ORIG-GUID: vqO7vk9TXadg0UNw7zBHzra_XtR5hBsV
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-13_03,2026-07-10_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 bulkscore=0 spamscore=0 malwarescore=0 lowpriorityscore=0
- impostorscore=0 priorityscore=1501 suspectscore=0 clxscore=1015 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607130148
+ spamscore=0 bulkscore=0 impostorscore=0 suspectscore=0 adultscore=0
+ priorityscore=1501 malwarescore=0 clxscore=1015 phishscore=0
+ lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2607130148
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -131,13 +132,13 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[12];
-	TAGGED_FROM(0.00)[bounces-22132-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22128-lists,linux-s390=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_SENDER(0.00)[agordeev@linux.ibm.com,linux-s390@vger.kernel.org];
@@ -154,868 +155,131 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	RCVD_COUNT_TWELVE(0.00)[12];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:from_mime,linux.ibm.com:mid,vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.ibm.com:from_mime,linux.ibm.com:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 97CAE74C534
+X-Rspamd-Queue-Id: 96CA974C486
 
-Make use of the IPTE instruction's "Additional Entries" field to
-invalidate multiple PTEs in one go while in lazy MMU mode. This
-is the mode in which many memory-management system calls (like
-mremap(), mprotect(), etc.) update memory attributes.
+Provide helpers that allow architectures implement
+illegitimate PTE direct accesses while the lazy MMU
+mode is enabled, such as:
 
-To achieve that, the set_pte() and ptep_get() primitives use a
-per-CPU cache to store and retrieve PTE values and apply the
-cached values to the real page table once lazy MMU mode is left.
+	pte_t pte =3D *ptep;
+	*ptep =3D pte;
 
-The same is done for memory-management platform callbacks that
-would otherwise cause intense per-PTE IPTE traffic, reducing the
-number of IPTE instructions from up to PTRS_PER_PTE to a single
-instruction in the best case. The average reduction is of course
-smaller.
+By contrast, these would have to be:
 
-Since all existing page table iterators called in lazy MMU mode
-handle one table at a time, the per-CPU cache does not need to be
-larger than PTRS_PER_PTE entries. That also naturally aligns with
-the IPTE instruction, which must not cross a page table boundary.
+	pte_t pte =3D ptep_get(ptep);
+	set_pte(ptep, pte);
 
-Before this change, the system calls did:
+The direct PTE accesses pose a real issue on s390.
 
-	lazy_mmu_mode_enable_pte()
-	...
-	<update PTEs>		// up to PTRS_PER_PTE single-IPTEs
-	...
-	lazy_mmu_mode_disable()
-
-With this change, the system calls do:
-
-    lazy_mmu_mode_enable_pte()
-    ...
-    <store new PTE values in the per-CPU cache>
-    ...
-    lazy_mmu_mode_disable()	// apply cache with one multi-IPTE
-
-When applied to large memory ranges, some system calls show
-significant speedups:
-
-    mprotect()    ~15x
-    munmap()      ~3x
-    mremap()      ~28x
-
-The overall results depend on memory size and access patterns,
-but the change generally does not degrade performance.
-
-In addition to a process-wide impact, the rework affects the
-whole Central Electronics Complex (CEC). Each (global) IPTE
-instruction initiates a quiesce state in a CEC, so reducing
-the number of IPTE calls relieves CEC-wide quiesce traffic.
-
-In an extreme case of mprotect() contiguously triggering the
-quiesce state on four LPARs in parallel, measurements show
-~25x fewer quiesce events.
-
+Suggested-by: Ilya Leoshkevich <iii@linux.ibm.com>
 Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
 ---
- arch/s390/Kconfig                |   1 +
- arch/s390/include/asm/lazy_mmu.h |   9 +
- arch/s390/include/asm/lowcore.h  |   2 +-
- arch/s390/include/asm/pgtable.h  | 157 +++++++++++--
- arch/s390/kernel/setup.c         |   2 +
- arch/s390/kernel/smp.c           |   7 +
- arch/s390/mm/Makefile            |   2 +-
- arch/s390/mm/lazy_mmu.c          | 382 +++++++++++++++++++++++++++++++
- arch/s390/mm/pgtable.c           |   8 +-
- 9 files changed, 546 insertions(+), 24 deletions(-)
- create mode 100644 arch/s390/include/asm/lazy_mmu.h
- create mode 100644 arch/s390/mm/lazy_mmu.c
+ include/linux/kasan.h     | 16 ++++++++++++++++
+ mm/kasan/common.c         | 10 ++++++++++
+ mm/kasan/kasan.h          |  2 ++
+ mm/kasan/report_generic.c |  3 +++
+ 4 files changed, 31 insertions(+)
 
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index 84404e6778d5..7846332dcd0a 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -97,6 +97,7 @@ config S390
- 	select ARCH_HAS_GCOV_PROFILE_ALL
- 	select ARCH_HAS_GIGANTIC_PAGE
- 	select ARCH_HAS_KCOV
-+	select ARCH_HAS_LAZY_MMU_MODE
- 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
- 	select ARCH_HAS_MEM_ENCRYPT
- 	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
-diff --git a/arch/s390/include/asm/lazy_mmu.h b/arch/s390/include/asm/laz=
-y_mmu.h
-new file mode 100644
-index 000000000000..98366e9de9bc
---- /dev/null
-+++ b/arch/s390/include/asm/lazy_mmu.h
-@@ -0,0 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LAZY_MMU_H
-+#define __LAZY_MMU_H
-+
-+void lazy_mmu_online_boot_cpu(void);
-+int lazy_mmu_online_cpu(gfp_t gfp, unsigned int cpu);
-+void lazy_mmu_offline_cpu(unsigned int cpu);
-+
-+#endif /* __LAZY_MMU_H */
-diff --git a/arch/s390/include/asm/lowcore.h b/arch/s390/include/asm/lowc=
-ore.h
-index 3b3ecc647993..dba236664da9 100644
---- a/arch/s390/include/asm/lowcore.h
-+++ b/arch/s390/include/asm/lowcore.h
-@@ -163,7 +163,7 @@ struct lowcore {
- 	__s32	preempt_count;			/* 0x03a8 */
- 	__u32	spinlock_lockval;		/* 0x03ac */
- 	__u32	spinlock_index;			/* 0x03b0 */
--	__u8	pad_0x03b4[0x03b8-0x03b4];	/* 0x03b4 */
-+	__s32	lazy_mmu_count;			/* 0x03b4 */
- 	__u64	percpu_offset;			/* 0x03b8 */
- 	__u8	percpu_register;		/* 0x03c0 */
- 	__u8	pad_0x03c1[0x0400-0x03c1];	/* 0x03c1 */
-diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgta=
-ble.h
-index 859ce7c7d454..9c8ff55cb535 100644
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -39,6 +39,64 @@ enum {
+diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+index bf233bde68c7..deadf566b84a 100644
+--- a/include/linux/kasan.h
++++ b/include/linux/kasan.h
+@@ -134,6 +134,20 @@ static __always_inline void kasan_poison_slab(struct=
+ slab *slab)
+ 		__kasan_poison_slab(slab);
+ }
 =20
- extern atomic_long_t direct_pages_count[PG_DIRECT_MAP_MAX];
++void __kasan_poison_pte(pte_t *pte, int nr);
++static __always_inline void kasan_poison_pte(pte_t *pte, int nr)
++{
++	if (kasan_enabled())
++		__kasan_poison_pte(pte, nr);
++}
++
++void __kasan_unpoison_pte(pte_t *pte, int nr);
++static __always_inline void kasan_unpoison_pte(pte_t *pte, int nr)
++{
++	if (kasan_enabled())
++		__kasan_unpoison_pte(pte, nr);
++}
++
+ void __kasan_unpoison_new_object(struct kmem_cache *cache, void *object)=
+;
+ /**
+  * kasan_unpoison_new_object - Temporarily unpoison a new slab object.
+@@ -414,6 +428,8 @@ static inline bool kasan_unpoison_pages(struct page *=
+page, unsigned int order,
+ 	return false;
+ }
+ static inline void kasan_poison_slab(struct slab *slab) {}
++static inline void kasan_poison_pte(pte_t *pte, int nr) {}
++static inline void kasan_unpoison_pte(pte_t *pte, int nr) {}
+ static inline void kasan_unpoison_new_object(struct kmem_cache *cache,
+ 					void *object) {}
+ static inline void kasan_poison_new_object(struct kmem_cache *cache,
+diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+index b7d05c2a6d93..cbf68680614e 100644
+--- a/mm/kasan/common.c
++++ b/mm/kasan/common.c
+@@ -163,6 +163,16 @@ void __kasan_poison_slab(struct slab *slab)
+ 		     KASAN_SLAB_REDZONE, false);
+ }
 =20
-+bool __lazy_mmu_ptep_test_and_clear_young(unsigned long addr, pte_t *pte=
-p, int *res);
-+bool __lazy_mmu_ptep_get_and_clear(unsigned long addr, pte_t *ptep, pte_=
-t *res);
-+bool __lazy_mmu_ptep_modify_prot_start(unsigned long addr, pte_t *ptep, =
-pte_t *res);
-+bool __lazy_mmu_ptep_modify_prot_commit(unsigned long addr, pte_t *ptep,=
- pte_t old_pte, pte_t pte);
-+bool __lazy_mmu_ptep_set_wrprotect(unsigned long addr, pte_t *ptep);
-+bool __lazy_mmu_set_pte(pte_t *ptep, pte_t pte);
-+bool __lazy_mmu_ptep_get(pte_t *ptep, pte_t *res);
-+
-+static __always_inline bool is_lazy_mmu_active(void)
++void __kasan_poison_pte(pte_t *pte, int nr)
 +{
-+	if (__is_defined(__DECOMPRESSOR))
-+		return false;
-+	if (!get_lowcore()->lazy_mmu_count)
-+		return false;
-+	return true;
++	kasan_poison(pte, sizeof(*pte) * nr, KASAN_LAZY_MMU_PTE, false);
 +}
 +
-+static inline
-+bool lazy_mmu_ptep_test_and_clear_young(unsigned long addr, pte_t *ptep,=
- int *res)
++void __kasan_unpoison_pte(pte_t *pte, int nr)
 +{
-+	if (!is_lazy_mmu_active())
-+		return false;
-+	return __lazy_mmu_ptep_test_and_clear_young(addr, ptep, res);
++	kasan_unpoison(pte, sizeof(*pte) * nr, false);
 +}
 +
-+static inline
-+bool lazy_mmu_ptep_get_and_clear(unsigned long addr, pte_t *ptep, pte_t =
-*res)
-+{
-+	if (!is_lazy_mmu_active())
-+		return false;
-+	return __lazy_mmu_ptep_get_and_clear(addr, ptep, res);
-+}
-+
-+static inline
-+bool lazy_mmu_ptep_modify_prot_start(unsigned long addr, pte_t *ptep, pt=
-e_t *res)
-+{
-+	if (!is_lazy_mmu_active())
-+		return false;
-+	return __lazy_mmu_ptep_modify_prot_start(addr, ptep, res);
-+}
-+
-+static inline
-+bool lazy_mmu_ptep_modify_prot_commit(unsigned long addr, pte_t *ptep,
-+				      pte_t old_pte, pte_t pte)
-+{
-+	if (!is_lazy_mmu_active())
-+		return false;
-+	return __lazy_mmu_ptep_modify_prot_commit(addr, ptep, old_pte, pte);
-+}
-+
-+static inline
-+bool lazy_mmu_ptep_set_wrprotect(unsigned long addr, pte_t *ptep)
-+{
-+	if (!is_lazy_mmu_active())
-+		return false;
-+	return __lazy_mmu_ptep_set_wrprotect(addr, ptep);
-+}
-+
- static inline void update_page_count(int level, long count)
+ void __kasan_unpoison_new_object(struct kmem_cache *cache, void *object)
  {
- 	if (IS_ENABLED(CONFIG_PROC_FS))
-@@ -978,17 +1036,32 @@ static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
- 	WRITE_ONCE(*pmdp, pmd);
- }
+ 	kasan_unpoison(object, cache->object_size, false);
+diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
+index fc9169a54766..1a2d18cdb21d 100644
+--- a/mm/kasan/kasan.h
++++ b/mm/kasan/kasan.h
+@@ -144,12 +144,14 @@ static inline bool kasan_requires_meta(void)
+ #define KASAN_PAGE_REDZONE	0xFE  /* redzone for kmalloc_large allocation=
+ */
+ #define KASAN_SLAB_REDZONE	0xFC  /* redzone for slab object */
+ #define KASAN_SLAB_FREE		0xFB  /* freed slab object */
++#define KASAN_LAZY_MMU_PTE	0xFD  /* direct pte access in lazy mmu mode *=
+/
+ #define KASAN_VMALLOC_INVALID	0xF8  /* inaccessible space in vmap area *=
+/
+ #else
+ #define KASAN_PAGE_FREE		KASAN_TAG_INVALID
+ #define KASAN_PAGE_REDZONE	KASAN_TAG_INVALID
+ #define KASAN_SLAB_REDZONE	KASAN_TAG_INVALID
+ #define KASAN_SLAB_FREE		KASAN_TAG_INVALID
++#define KASAN_LAZY_MMU_PTE	KASAN_TAG_INVALID
+ #define KASAN_VMALLOC_INVALID	KASAN_TAG_INVALID /* only used for SW_TAGS=
+ */
+ #endif
 =20
--static inline void set_pte(pte_t *ptep, pte_t pte)
-+static inline void __set_pte(pte_t *ptep, pte_t pte)
- {
- 	if (pte_present(pte))
- 		pte =3D clear_pte_bit(pte, __pgprot(_PAGE_UNUSED));
- 	WRITE_ONCE(*ptep, pte);
- }
-=20
-+static inline void set_pte(pte_t *ptep, pte_t pte)
-+{
-+	if (!is_lazy_mmu_active() || !__lazy_mmu_set_pte(ptep, pte))
-+		__set_pte(ptep, pte);
-+}
-+
-+static inline pte_t __ptep_get(pte_t *ptep)
-+{
-+	return READ_ONCE(*ptep);
-+}
-+
- #define ptep_get ptep_get
- static inline pte_t ptep_get(pte_t *ptep)
- {
--	return READ_ONCE(*ptep);
-+	pte_t res;
-+
-+	if (!is_lazy_mmu_active() || !__lazy_mmu_ptep_get(ptep, &res))
-+		res =3D __ptep_get(ptep);
-+	return res;
- }
-=20
- #define pmdp_get pmdp_get
-@@ -1181,6 +1254,15 @@ static __always_inline void __ptep_ipte_range(unsi=
-gned long address, int nr,
- 	} while (nr !=3D 255);
- }
-=20
-+void arch_enter_lazy_mmu_mode_with_ptes(struct mm_struct *mm,
-+					unsigned long addr, unsigned long end,
-+					pte_t *pte);
-+#define arch_enter_lazy_mmu_mode_with_ptes arch_enter_lazy_mmu_mode_with=
-_ptes
-+
-+void arch_enter_lazy_mmu_mode(void);
-+void arch_leave_lazy_mmu_mode(void);
-+void arch_flush_lazy_mmu_mode(void);
-+
- /*
-  * This is hard to understand. ptep_get_and_clear and ptep_clear_flush
-  * both clear the TLB for the unmapped pte. The reason is that
-@@ -1201,10 +1283,16 @@ pte_t ptep_xchg_lazy(struct mm_struct *, unsigned=
- long, pte_t *, pte_t);
- static inline bool ptep_test_and_clear_young(struct vm_area_struct *vma,
- 		unsigned long addr, pte_t *ptep)
- {
--	pte_t pte =3D ptep_get(ptep);
-+	pte_t pte;
-+	int res;
-=20
--	pte =3D ptep_xchg_direct(vma->vm_mm, addr, ptep, pte_mkold(pte));
--	return pte_young(pte);
-+	if (!lazy_mmu_ptep_test_and_clear_young(addr, ptep, &res)) {
-+		pte =3D __ptep_get(ptep);
-+		pte =3D pte_mkold(pte);
-+		pte =3D ptep_xchg_direct(vma->vm_mm, addr, ptep, pte);
-+		res =3D pte_young(pte);
-+	}
-+	return res;
- }
-=20
- #define __HAVE_ARCH_PTEP_CLEAR_YOUNG_FLUSH
-@@ -1220,7 +1308,8 @@ static inline pte_t ptep_get_and_clear(struct mm_st=
-ruct *mm,
- {
- 	pte_t res;
-=20
--	res =3D ptep_xchg_lazy(mm, addr, ptep, __pte(_PAGE_INVALID));
-+	if (!lazy_mmu_ptep_get_and_clear(addr, ptep, &res))
-+		res =3D ptep_xchg_lazy(mm, addr, ptep, __pte(_PAGE_INVALID));
- 	page_table_check_pte_clear(mm, addr, res);
- 	/* At this point the reference through the mapping is still present */
- 	if (mm_is_protected(mm) && pte_present(res))
-@@ -1229,9 +1318,34 @@ static inline pte_t ptep_get_and_clear(struct mm_s=
-truct *mm,
- }
-=20
- #define __HAVE_ARCH_PTEP_MODIFY_PROT_TRANSACTION
--pte_t ptep_modify_prot_start(struct vm_area_struct *, unsigned long, pte=
-_t *);
--void ptep_modify_prot_commit(struct vm_area_struct *, unsigned long,
--			     pte_t *, pte_t, pte_t);
-+pte_t ___ptep_modify_prot_start(struct vm_area_struct *, unsigned long, =
-pte_t *);
-+void ___ptep_modify_prot_commit(struct vm_area_struct *, unsigned long,
-+				pte_t *, pte_t, pte_t);
-+
-+static inline
-+pte_t ptep_modify_prot_start(struct vm_area_struct *vma,
-+			     unsigned long addr, pte_t *ptep)
-+{
-+	pte_t res;
-+
-+	if (!lazy_mmu_ptep_modify_prot_start(addr, ptep, &res))
-+		res =3D ___ptep_modify_prot_start(vma, addr, ptep);
-+	return res;
-+}
-+
-+static inline
-+void ptep_modify_prot_commit(struct vm_area_struct *vma, unsigned long a=
-ddr,
-+			     pte_t *ptep, pte_t old_pte, pte_t pte)
-+{
-+	if (!lazy_mmu_ptep_modify_prot_commit(addr, ptep, old_pte, pte))
-+		___ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
-+}
-+
-+bool ipte_range_ptep_modify_prot_start(struct vm_area_struct *vma,
-+				       unsigned long addr, pte_t *ptep, pte_t *res);
-+bool ipte_range_ptep_modify_prot_commit(struct vm_area_struct *vma,
-+					unsigned long addr, pte_t *ptep,
-+					pte_t old_pte, pte_t pte);
-=20
- #define __HAVE_ARCH_PTEP_CLEAR_FLUSH
- static inline pte_t ptep_clear_flush(struct vm_area_struct *vma,
-@@ -1261,11 +1375,13 @@ static inline pte_t ptep_get_and_clear_full(struc=
-t mm_struct *mm,
- {
- 	pte_t res;
-=20
--	if (full) {
--		res =3D ptep_get(ptep);
--		set_pte(ptep, __pte(_PAGE_INVALID));
--	} else {
--		res =3D ptep_xchg_lazy(mm, addr, ptep, __pte(_PAGE_INVALID));
-+	if (!lazy_mmu_ptep_get_and_clear(addr, ptep, &res)) {
-+		if (full) {
-+			res =3D __ptep_get(ptep);
-+			__set_pte(ptep, __pte(_PAGE_INVALID));
-+		} else {
-+			res =3D ptep_xchg_lazy(mm, addr, ptep, __pte(_PAGE_INVALID));
-+		}
- 	}
- 	page_table_check_pte_clear(mm, addr, res);
- 	/* At this point the reference through the mapping is still present */
-@@ -1291,10 +1407,15 @@ static inline pte_t ptep_get_and_clear_full(struc=
-t mm_struct *mm,
- static inline void ptep_set_wrprotect(struct mm_struct *mm,
- 				      unsigned long addr, pte_t *ptep)
- {
--	pte_t pte =3D ptep_get(ptep);
-+	pte_t pte;
-=20
--	if (pte_write(pte))
--		ptep_xchg_lazy(mm, addr, ptep, pte_wrprotect(pte));
-+	if (!lazy_mmu_ptep_set_wrprotect(addr, ptep)) {
-+		pte =3D __ptep_get(ptep);
-+		if (pte_write(pte)) {
-+			pte =3D pte_wrprotect(pte);
-+			ptep_xchg_lazy(mm, addr, ptep, pte);
-+		}
-+	}
- }
-=20
- /*
-@@ -1327,7 +1448,7 @@ static inline void flush_tlb_fix_spurious_fault(str=
-uct vm_area_struct *vma,
- 	 * PTE does not have _PAGE_PROTECT set, to avoid unnecessary overhead.
- 	 * A local RDP can be used to do the flush.
- 	 */
--	if (cpu_has_rdp() && !(pte_val(ptep_get(ptep)) & _PAGE_PROTECT))
-+	if (cpu_has_rdp() && !(pte_val(__ptep_get(ptep)) & _PAGE_PROTECT))
- 		__ptep_rdp(address, ptep, 1);
- }
- #define flush_tlb_fix_spurious_fault flush_tlb_fix_spurious_fault
-diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-index b60284328fe3..f5a3c9e1b6b8 100644
---- a/arch/s390/kernel/setup.c
-+++ b/arch/s390/kernel/setup.c
-@@ -77,6 +77,7 @@
- #include <asm/maccess.h>
- #include <asm/uv.h>
- #include <asm/asm-offsets.h>
-+#include <asm/lazy_mmu.h>
- #include "entry.h"
-=20
- /*
-@@ -1012,5 +1013,6 @@ void __init setup_arch(char **cmdline_p)
-=20
- void __init arch_cpu_finalize_init(void)
- {
-+	lazy_mmu_online_boot_cpu();
- 	sclp_init();
- }
-diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
-index 0ba7f89b8161..0a826bbaf1dd 100644
---- a/arch/s390/kernel/smp.c
-+++ b/arch/s390/kernel/smp.c
-@@ -59,6 +59,7 @@
- #include <asm/topology.h>
- #include <asm/vdso.h>
- #include <asm/maccess.h>
-+#include <asm/lazy_mmu.h>
- #include "entry.h"
-=20
- enum {
-@@ -866,6 +867,11 @@ int __cpu_up(unsigned int cpu, struct task_struct *t=
-idle)
- 	rc =3D pcpu_alloc_lowcore(pcpu, cpu);
- 	if (rc)
- 		return rc;
-+	rc =3D lazy_mmu_online_cpu(GFP_KERNEL, cpu);
-+	if (rc) {
-+		pcpu_free_lowcore(pcpu, cpu);
-+		return rc;
-+	}
- 	/*
- 	 * Make sure global control register contents do not change
- 	 * until new CPU has initialized control registers.
-@@ -921,6 +927,7 @@ void __cpu_die(unsigned int cpu)
- 	pcpu =3D per_cpu_ptr(&pcpu_devices, cpu);
- 	while (!pcpu_stopped(pcpu))
- 		cpu_relax();
-+	lazy_mmu_offline_cpu(cpu);
- 	pcpu_free_lowcore(pcpu, cpu);
- 	cpumask_clear_cpu(cpu, mm_cpumask(&init_mm));
- 	cpumask_clear_cpu(cpu, &init_mm.context.cpu_attach_mask);
-diff --git a/arch/s390/mm/Makefile b/arch/s390/mm/Makefile
-index 193899c39ca7..26e9fc11543a 100644
---- a/arch/s390/mm/Makefile
-+++ b/arch/s390/mm/Makefile
-@@ -3,7 +3,7 @@
- # Makefile for the linux s390-specific parts of the memory manager.
- #
-=20
--obj-y		:=3D init.o fault.o extmem.o mmap.o vmem.o maccess.o
-+obj-y		:=3D init.o fault.o extmem.o mmap.o vmem.o maccess.o lazy_mmu.o
- obj-y		+=3D page-states.o pageattr.o pgtable.o pgalloc.o extable.o
-=20
- obj-$(CONFIG_CMM)		+=3D cmm.o
-diff --git a/arch/s390/mm/lazy_mmu.c b/arch/s390/mm/lazy_mmu.c
-new file mode 100644
-index 000000000000..d75b93d9b0de
---- /dev/null
-+++ b/arch/s390/mm/lazy_mmu.c
-@@ -0,0 +1,382 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/pgtable.h>
-+#include <linux/kasan.h>
-+#include <linux/slab.h>
-+#include <asm/facility.h>
-+#include <asm/lazy_mmu.h>
-+#include <kunit/visibility.h>
-+
-+#define PTE_POISON	_PAGE_LARGE
-+
-+struct ipte_range {
-+	struct mm_struct *mm;
-+	unsigned long base_addr;
-+	unsigned long base_end;
-+	pte_t *base_pte;
-+	pte_t *start_pte;
-+	pte_t *end_pte;
-+	pte_t cache[PTRS_PER_PTE];
-+};
-+
-+static DEFINE_PER_CPU(struct ipte_range *, ipte_range);
-+
-+static int count_contiguous(pte_t *start, pte_t *end, bool *valid)
-+{
-+	unsigned long page_invalid_bit;
-+	pte_t *ptep, pte;
-+
-+	pte =3D __ptep_get(start);
-+	page_invalid_bit =3D pte_val(pte) & _PAGE_INVALID;
-+
-+	for (ptep =3D start + 1; ptep < end; ptep++) {
-+		pte =3D __ptep_get(ptep);
-+		if ((pte_val(pte) & _PAGE_INVALID) !=3D page_invalid_bit)
-+			break;
-+	}
-+
-+	*valid =3D !(page_invalid_bit);
-+	return ptep - start;
-+}
-+
-+static void __invalidate_pte_range(struct mm_struct *mm, unsigned long a=
-ddr,
-+				   int nr_ptes, pte_t *ptep)
-+{
-+	atomic_inc(&mm->context.flush_count);
-+	if (cpu_has_tlb_lc() && cpumask_equal(mm_cpumask(mm), cpumask_of(smp_pr=
-ocessor_id())))
-+		__ptep_ipte_range(addr, nr_ptes - 1, ptep, IPTE_LOCAL);
-+	else
-+		__ptep_ipte_range(addr, nr_ptes - 1, ptep, IPTE_GLOBAL);
-+	atomic_dec(&mm->context.flush_count);
-+}
-+
-+static int invalidate_pte_range(struct mm_struct *mm, unsigned long addr=
-,
-+				pte_t *start, pte_t *end)
-+{
-+	int nr_ptes;
-+	bool valid;
-+
-+	nr_ptes =3D count_contiguous(start, end, &valid);
-+	if (valid)
-+		__invalidate_pte_range(mm, addr, nr_ptes, start);
-+
-+	return nr_ptes;
-+}
-+
-+static void set_pte_range(struct mm_struct *mm, unsigned long addr,
-+			  pte_t *ptep, pte_t *end, pte_t *cache)
-+{
-+	int i, nr_ptes;
-+
-+	while (ptep < end) {
-+		nr_ptes =3D invalidate_pte_range(mm, addr, ptep, end);
-+
-+		for (i =3D 0; i < nr_ptes; i++, ptep++, cache++) {
-+			__set_pte(ptep, *cache);
-+			*cache =3D __pte(PTE_POISON);
-+		}
-+
-+		addr +=3D nr_ptes * PAGE_SIZE;
-+	}
-+}
-+
-+static void enter_ipte_norange(void)
-+{
-+	struct ipte_range __maybe_unused *range;
-+
-+	if (!test_facility(13))
-+		return;
-+
-+	range =3D get_cpu_var(ipte_range);
-+	get_lowcore()->lazy_mmu_count++;
-+}
-+
-+static void enter_ipte_range(struct mm_struct *mm,
-+			     unsigned long addr, unsigned long end, pte_t *pte)
-+{
-+	struct ipte_range *range;
-+
-+	if (!test_facility(13))
-+		return;
-+
-+	range =3D get_cpu_var(ipte_range);
-+	get_lowcore()->lazy_mmu_count++;
-+
-+	range->mm =3D mm;
-+	range->base_addr =3D addr;
-+	range->base_end =3D end;
-+	range->base_pte =3D pte;
-+}
-+
-+static void leave_ipte_range(void)
-+{
-+	pte_t *ptep, *start, *start_cache, *cache;
-+	unsigned long start_addr, addr;
-+	struct ipte_range *range;
-+	int start_idx;
-+
-+	if (!test_facility(13))
-+		return;
-+
-+	lockdep_assert_preemption_disabled();
-+	range =3D this_cpu_read(ipte_range);
-+	if (!range->mm)
-+		goto norange;
-+	if (!range->start_pte)
-+		goto done;
-+
-+	start =3D range->start_pte;
-+	start_idx =3D range->start_pte - range->base_pte;
-+	start_addr =3D range->base_addr + start_idx * PAGE_SIZE;
-+	addr =3D start_addr;
-+	start_cache =3D &range->cache[start_idx];
-+	cache =3D start_cache;
-+	for (ptep =3D start; ptep < range->end_pte; ptep++, cache++, addr +=3D =
-PAGE_SIZE) {
-+		if (pte_val(*cache) =3D=3D PTE_POISON) {
-+			if (start) {
-+				set_pte_range(range->mm, start_addr, start, ptep, start_cache);
-+				start =3D NULL;
-+			}
-+		} else if (!start) {
-+			start =3D ptep;
-+			start_addr =3D addr;
-+			start_cache =3D cache;
-+		}
-+	}
-+	set_pte_range(range->mm, start_addr, start, ptep, start_cache);
-+
-+	range->start_pte =3D NULL;
-+	range->end_pte =3D NULL;
-+
-+done:
-+	range->mm =3D NULL;
-+	range->base_addr =3D 0;
-+	range->base_end =3D 0;
-+	range->base_pte =3D NULL;
-+
-+norange:
-+	get_lowcore()->lazy_mmu_count--;
-+	put_cpu_var(ipte_range);
-+}
-+
-+static void flush_lazy_mmu_mode(void)
-+{
-+	unsigned long addr, end;
-+	struct ipte_range *range;
-+	struct mm_struct *mm;
-+	pte_t *pte;
-+
-+	if (!test_facility(13))
-+		return;
-+
-+	range =3D get_cpu_var(ipte_range);
-+	if (range->mm) {
-+		mm =3D range->mm;
-+		addr =3D range->base_addr;
-+		end =3D range->base_end;
-+		pte =3D range->base_pte;
-+
-+		leave_ipte_range();
-+		enter_ipte_range(mm, addr, end, pte);
-+	}
-+	put_cpu_var(ipte_range);
-+}
-+
-+void arch_enter_lazy_mmu_mode(void)
-+{
-+	enter_ipte_norange();
-+}
-+EXPORT_SYMBOL_IF_KUNIT(arch_enter_lazy_mmu_mode);
-+
-+void arch_enter_lazy_mmu_mode_with_ptes(struct mm_struct *mm,
-+					unsigned long addr, unsigned long end,
-+					pte_t *pte)
-+{
-+	enter_ipte_range(mm, addr, end, pte);
-+}
-+EXPORT_SYMBOL_IF_KUNIT(arch_enter_lazy_mmu_mode_with_ptes);
-+
-+void arch_leave_lazy_mmu_mode(void)
-+{
-+	leave_ipte_range();
-+}
-+EXPORT_SYMBOL_IF_KUNIT(arch_leave_lazy_mmu_mode);
-+
-+void arch_flush_lazy_mmu_mode(void)
-+{
-+	flush_lazy_mmu_mode();
-+}
-+EXPORT_SYMBOL_IF_KUNIT(arch_flush_lazy_mmu_mode);
-+
-+static void __ipte_range_set_pte(struct ipte_range *range, pte_t *ptep, =
-pte_t pte)
-+{
-+	unsigned int idx =3D ptep - range->base_pte;
-+
-+	lockdep_assert_preemption_disabled();
-+	range->cache[idx] =3D pte;
-+
-+	if (!range->start_pte) {
-+		range->start_pte =3D ptep;
-+		range->end_pte =3D ptep + 1;
-+	} else if (ptep < range->start_pte) {
-+		range->start_pte =3D ptep;
-+	} else if (ptep + 1 > range->end_pte) {
-+		range->end_pte =3D ptep + 1;
-+	}
-+}
-+
-+static pte_t __ipte_range_ptep_get(struct ipte_range *range, pte_t *ptep=
-)
-+{
-+	unsigned int idx =3D ptep - range->base_pte;
-+
-+	lockdep_assert_preemption_disabled();
-+	if (pte_val(range->cache[idx]) =3D=3D PTE_POISON)
-+		return __ptep_get(ptep);
-+	return range->cache[idx];
-+}
-+
-+static struct ipte_range *this_ipte_range(pte_t *ptep)
-+{
-+	struct ipte_range *range;
-+	unsigned int nr_ptes;
-+
-+	range =3D this_cpu_read(ipte_range);
-+	if (ptep < range->base_pte)
-+		return NULL;
-+	nr_ptes =3D (range->base_end - range->base_addr) / PAGE_SIZE;
-+	if (ptep >=3D range->base_pte + nr_ptes)
-+		return NULL;
-+
-+	return range;
-+}
-+
-+bool __lazy_mmu_set_pte(pte_t *ptep, pte_t pte)
-+{
-+	struct ipte_range *range;
-+
-+	range =3D this_ipte_range(ptep);
-+	if (!range)
-+		return false;
-+
-+	__ipte_range_set_pte(range, ptep, pte);
-+
-+	return true;
-+}
-+
-+bool __lazy_mmu_ptep_get(pte_t *ptep, pte_t *res)
-+{
-+	struct ipte_range *range;
-+
-+	range =3D this_ipte_range(ptep);
-+	if (!range)
-+		return false;
-+
-+	*res =3D __ipte_range_ptep_get(range, ptep);
-+
-+	return true;
-+}
-+
-+bool __lazy_mmu_ptep_test_and_clear_young(unsigned long addr, pte_t *pte=
-p, int *res)
-+{
-+	struct ipte_range *range;
-+	pte_t pte, old;
-+
-+	range =3D this_ipte_range(ptep);
-+	if (!range)
-+		return false;
-+
-+	old =3D __ipte_range_ptep_get(range, ptep);
-+	pte =3D pte_mkold(old);
-+	__ipte_range_set_pte(range, ptep, pte);
-+	*res =3D pte_young(old);
-+
-+	return true;
-+}
-+
-+bool __lazy_mmu_ptep_get_and_clear(unsigned long addr, pte_t *ptep, pte_=
-t *res)
-+{
-+	struct ipte_range *range;
-+	pte_t pte, old;
-+
-+	range =3D this_ipte_range(ptep);
-+	if (!range)
-+		return false;
-+
-+	old =3D __ipte_range_ptep_get(range, ptep);
-+	pte =3D __pte(_PAGE_INVALID);
-+	__ipte_range_set_pte(range, ptep, pte);
-+	*res =3D old;
-+
-+	return true;
-+}
-+
-+bool __lazy_mmu_ptep_modify_prot_start(unsigned long addr, pte_t *ptep, =
-pte_t *res)
-+{
-+	return __lazy_mmu_ptep_get_and_clear(addr, ptep, res);
-+}
-+
-+bool __lazy_mmu_ptep_modify_prot_commit(unsigned long addr, pte_t *ptep,
-+					pte_t old_pte, pte_t pte)
-+{
-+	struct ipte_range *range;
-+
-+	range =3D this_ipte_range(ptep);
-+	if (!range)
-+		return false;
-+
-+	__ipte_range_set_pte(range, ptep, pte);
-+
-+	return true;
-+}
-+
-+bool __lazy_mmu_ptep_set_wrprotect(unsigned long addr, pte_t *ptep)
-+{
-+	struct ipte_range *range;
-+	pte_t pte;
-+
-+	range =3D this_ipte_range(ptep);
-+	if (!range)
-+		return false;
-+
-+	pte =3D __ipte_range_ptep_get(range, ptep);
-+	if (pte_write(pte)) {
-+		pte =3D pte_wrprotect(pte);
-+		__ipte_range_set_pte(range, ptep, pte);
-+	}
-+
-+	return true;
-+}
-+
-+int lazy_mmu_online_cpu(gfp_t gfp, unsigned int cpu)
-+{
-+	struct ipte_range *range;
-+	int i;
-+
-+	if (!test_facility(13))
-+		return 0;
-+
-+	range =3D kzalloc_obj(*range, gfp);
-+	if (!range)
-+		return -ENOMEM;
-+	for (i =3D 0; i < ARRAY_SIZE(range->cache); i++)
-+		range->cache[i] =3D __pte(PTE_POISON);
-+	per_cpu(ipte_range, cpu) =3D range;
-+
-+	return 0;
-+}
-+
-+void lazy_mmu_offline_cpu(unsigned int cpu)
-+{
-+	struct ipte_range *range;
-+
-+	if (!test_facility(13))
-+		return;
-+
-+	range =3D per_cpu(ipte_range, cpu);
-+	per_cpu(ipte_range, cpu) =3D NULL;
-+	kfree(range);
-+}
-+
-+void __init lazy_mmu_online_boot_cpu(void)
-+{
-+	lazy_mmu_online_cpu(GFP_ATOMIC, 0);
-+}
-diff --git a/arch/s390/mm/pgtable.c b/arch/s390/mm/pgtable.c
-index 4acd8b140c4b..df36523bcbbb 100644
---- a/arch/s390/mm/pgtable.c
-+++ b/arch/s390/mm/pgtable.c
-@@ -166,14 +166,14 @@ pte_t ptep_xchg_lazy(struct mm_struct *mm, unsigned=
- long addr,
- }
- EXPORT_SYMBOL(ptep_xchg_lazy);
-=20
--pte_t ptep_modify_prot_start(struct vm_area_struct *vma, unsigned long a=
-ddr,
--			     pte_t *ptep)
-+pte_t ___ptep_modify_prot_start(struct vm_area_struct *vma, unsigned lon=
-g addr,
-+				pte_t *ptep)
- {
- 	return ptep_flush_lazy(vma->vm_mm, addr, ptep, 1);
- }
-=20
--void ptep_modify_prot_commit(struct vm_area_struct *vma, unsigned long a=
-ddr,
--			     pte_t *ptep, pte_t old_pte, pte_t pte)
-+void ___ptep_modify_prot_commit(struct vm_area_struct *vma, unsigned lon=
-g addr,
-+				pte_t *ptep, pte_t old_pte, pte_t pte)
- {
- 	set_pte(ptep, pte);
- }
+diff --git a/mm/kasan/report_generic.c b/mm/kasan/report_generic.c
+index f5b8e37b3805..489d4a8d6902 100644
+--- a/mm/kasan/report_generic.c
++++ b/mm/kasan/report_generic.c
+@@ -113,6 +113,9 @@ static const char *get_shadow_bug_type(struct kasan_r=
+eport_info *info)
+ 	case KASAN_SLAB_FREE_META:
+ 		bug_type =3D "slab-use-after-free";
+ 		break;
++	case KASAN_LAZY_MMU_PTE:
++		bug_type =3D "lazy-mmu-pte-access";
++		break;
+ 	case KASAN_ALLOCA_LEFT:
+ 	case KASAN_ALLOCA_RIGHT:
+ 		bug_type =3D "alloca-out-of-bounds";
 --=20
 2.53.0
 
