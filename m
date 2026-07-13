@@ -1,65 +1,65 @@
-Return-Path: <linux-s390+bounces-22169-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22170-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Ql3vNbUjVWqkkQAAu9opvQ
-	(envelope-from <linux-s390+bounces-22169-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 19:43:17 +0200
+	id tbu+L9AjVWqrkQAAu9opvQ
+	(envelope-from <linux-s390+bounces-22170-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 19:43:44 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F63974E1D3
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 19:43:17 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3340074E1E4
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 19:43:44 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=mZ2KVRkz;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22169-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-22169-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b="C16/SslN";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22170-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-22170-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D1BF4307C451
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 17:41:28 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id BABAD30048C2
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 17:43:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAA9A34BA50;
-	Mon, 13 Jul 2026 17:41:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D88A34B43F;
+	Mon, 13 Jul 2026 17:43:26 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8856C34B43F;
-	Mon, 13 Jul 2026 17:41:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E544333A005;
+	Mon, 13 Jul 2026 17:43:24 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783964487; cv=none; b=l52wn3h88sdyIdsQt0Lrd8mIzs2fHq4yBA89dqoRjdIuP3v2iStE1obid+gm81GKtPW0efBLnt5///zcIae/xuedi5byFdmVBigLS3QITGnI2XJlwkOphJkU/wuEhkpWqWHy18/wGT/JgCPxL3cVdiUiglLb4zi6jD0ClWJ4X9s=
+	t=1783964606; cv=none; b=ccl7TsHBwHT/PYwzgl8ZQwfSKimiY7llxFWshIFqfottZhioJ7XdbvqhJiIoq6stDts+Nat0qXKM85gd7vCaLiCj9CVxl3bMNMJNvYj/wUwtsl2VibpQS8NzCSdfrfFLnwhPJhDAbzjeSyQ1DE3JskcqA0Wmq8EpSVR6aNxRgMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783964487; c=relaxed/simple;
-	bh=PiUkkafRY9qcxkKxhiyDg1XPlp95th/cbl2bn7tcKCk=;
+	s=arc-20240116; t=1783964606; c=relaxed/simple;
+	bh=b6qSWw3PRoDgqfxecCiTmopGGxKBItqsL5JAktOhe5s=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=JrTKuKP+/VUNsalouoxV+UhQCH3JXYtUTszQ3JBm1wEt7N+i+r4GBEZCX6ZdBXFZb85XFzz97kGI4IHEUr0clqFsy/m8qdM6tH6HKp3wKhac7dMVPRJCuB1YwlJLSK5hej5xdLzYwviXZgQhdAWRPdS1L2Hg5BArWJxcwOp2PgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mZ2KVRkz; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05FC71F000E9;
-	Mon, 13 Jul 2026 17:41:25 +0000 (UTC)
+	 Message-Id; b=u2DwHEPXsmKP2Ctj92WH7UJF40O4DjAglZ8Ay2KaPZGmLEn3c4nqNHp1V1LRPDz3CBfxBOlq13O6PHaLORgYJcv7ZIWZdZryOClepll8/l+zMhi4EyG7r5DGHEnzUX8fXSys1FikvbYZZh+lUPYFsKeu3iTg5HooZyGqCi6wrX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C16/SslN; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24BCB1F000E9;
+	Mon, 13 Jul 2026 17:43:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783964486;
-	bh=qxo8K6JbaxSi3cT7ISYAM/yM/hMSM2DEgYR5OFycc+k=;
+	s=k20260515; t=1783964604;
+	bh=T8GnWJtXAV1F34VmsEgqk8B90vb+TbG649Ii0HwT41A=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=mZ2KVRkzIFZ9+RT/EOIJvuFSQCRuOmkVDp6kgQGnfkDlQhLI2nZrYn1adlRHpakCU
-	 XmAaHc7eqrXmtSCaOvc3wQi98hsBZJIHfDqQlvJ+KlaQQdx/AZ+lJWuJ+tiTlLQAAz
-	 +N7HApTUv7/8xHoJNvWILntKshx2KVkPl++aZ/Dkb9Ep9oT/FVnve/0NWjvuPtbZXS
-	 RIX3DLdnDQD15c3NTyNsxTT+ChYPA6Wt1KMtuvboed+GR2qQa3ZKGrp2vdRYBBzKQm
-	 f3ABaa24DWTDnXbB3s9QOB9q9hLRVqKO9nahNM8IQI6P5jxoyy38uoRztJVmi2HWgt
-	 yeD847VcQK8uQ==
+	b=C16/SslNYPgk56MxTjeQcqElgYyKVT+OvLRDBrYvWIKYoqn6U/p/QCCr5X2hILNIf
+	 mgFrFn5eZJuGxfD4IYfktBjBX66eSSvAi/hHmdaeo+ZiTJNyf1Ci/Xtok+seZ8m1m1
+	 +XIO+rVIgNiCM5SrjcGmvo5I7hG02cs42XRb6/136Qvg29rDrCo61UB8j1LRYpyFAI
+	 PH2INONMv0aao00Q3wikWG2+h2IH9aaF7QyeBf/GM15j87/JdFwGBiFB2CzJb0TeNi
+	 N+NfjhXNBZxVUDl65yyQ2LMusfK7XCXHE03pw+K30Y/dtaRQ0713atbhSRkxwRouBQ
+	 qlLj2YI6sp6Qw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 2/5] KVM: s390: pci: Fix missing error codes and
- memory unaccounting
+Subject: Re: [PATCH v1 4/5] KVM: s390: pci: Fix resource leak on IRQ
+ registration failure
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Farhan Ali" <alifm@linux.ibm.com>
-Cc: "Heiko Carstens" <hca@linux.ibm.com>, linux-s390@vger.kernel.org, kvm@vger.kernel.org, "Vasily
- Gorbik" <gor@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>
-In-Reply-To: <20260713172600.1284-3-alifm@linux.ibm.com>
+Cc: "Vasily Gorbik" <gor@linux.ibm.com>, "Heiko Carstens" <hca@linux.ibm.com>, "Alexander
+ Gordeev" <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org, kvm@vger.kernel.org
+In-Reply-To: <20260713172600.1284-5-alifm@linux.ibm.com>
 References: <20260713172600.1284-1-alifm@linux.ibm.com>
- <20260713172600.1284-3-alifm@linux.ibm.com>
+ <20260713172600.1284-5-alifm@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 13 Jul 2026 17:41:25 +0000
-Message-Id: <20260713174126.05FC71F000E9@smtp.kernel.org>
+Date: Mon, 13 Jul 2026 17:43:23 +0000
+Message-Id: <20260713174324.24BCB1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -72,18 +72,18 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22169-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22170-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,lists.linux.dev:replyto,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,smtp.kernel.org:mid];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,smtp.kernel.org:mid,vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,lists.linux.dev:replyto];
 	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:alifm@linux.ibm.com,m:hca@linux.ibm.com,m:linux-s390@vger.kernel.org,m:kvm@vger.kernel.org,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:alifm@linux.ibm.com,m:gor@linux.ibm.com,m:hca@linux.ibm.com,m:agordeev@linux.ibm.com,m:linux-s390@vger.kernel.org,m:kvm@vger.kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
@@ -97,7 +97,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
@@ -105,102 +105,107 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[6]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7F63974E1D3
+X-Rspamd-Queue-Id: 3340074E1E4
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
+New issues:
+- [High] The error path for `kvm_zpci_set_airq()` failure unregisters the w=
+rong Interruption Subclass (ISC), leading to a reference count leak for the=
+ guest ISC and potential state corruption for the host ISC.
+
 Pre-existing issues:
-- [High] `unaccount_mem()` incorrectly relies on `current` to reverse memor=
-y accounting, allowing arbitrary processes to corrupt their own memory limi=
-ts.
-- [High] Unrestricted overwrite of AIF structures on repeated ioctl calls l=
-eads to severe memory and resource leaks.
+- [High] `kvm_s390_pci_aif_enable` lacks a check to prevent multiple AEN re=
+gistrations for the same device, allowing a malicious userspace to trigger =
+repeated allocations that leak pinned pages and `airq_iv` structures.
 --
 
---- Patch [2]: [PATCH v1 2/5] KVM: s390: pci: Fix missing error codes and m=
-emory unaccounting ---
-commit 38461cd36a2d54b4c7ee766e7c866405617494d9
+--- Patch [4]: [PATCH v1 4/5] KVM: s390: pci: Fix resource leak on IRQ regi=
+stration failure ---
+commit 3065114852ad54412b30b74a97b10b479bcd1a82
 Author: Farhan Ali <alifm@linux.ibm.com>
 
-KVM: s390: pci: Fix missing error codes and memory unaccounting
+KVM: s390: pci: Fix resource leak on IRQ registration failure
 
-In kvm_s390_pci_aif_enable(), two error paths failed to set an error code
-and did not roll back memory accounting on failure. This commit propagates
-the error code and calls unaccount_mem() in the cleanup path.
-
-Fixes: 3c5a1b6f0a18 ("KVM: s390: pci: provide routines for enabling/disabli=
-ng interrupt forwarding")
+Currently if kvm_zpci_set_airq() fails, kvm_s390_pci_aif_enable() returns
+the error code but doesn't do any resource cleanup thus leaking resources.
+Fix this by cleaning up all the resources such as the GAITE, AIBV, AISB and
+unpinning any pinned pages.
 
 > diff --git a/arch/s390/kvm/pci.c b/arch/s390/kvm/pci.c
-> index 5bbbb1de4b5a0..42db20c2afca5 100644
+> index b3ffb8c255107..9a16a2eac65b8 100644
 > --- a/arch/s390/kvm/pci.c
 > +++ b/arch/s390/kvm/pci.c
-> @@ -282,14 +282,17 @@ static int kvm_s390_pci_aif_enable(struct zpci_dev =
+> @@ -334,11 +334,29 @@ static int kvm_s390_pci_aif_enable(struct zpci_dev =
 *zdev, struct zpci_fib *fib,
->  	}
+>  	/* Save some guest fib values in the host for later use */
+>  	zdev->kzdev->fib.fmt0.isc =3D fib->fmt0.isc;
+>  	zdev->kzdev->fib.fmt0.aibv =3D fib->fmt0.aibv;
+> -	mutex_unlock(&aift->aift_lock);
+
+[Severity: High]
+This is a pre-existing issue, but does kvm_s390_pci_aif_enable() lack a
+check to prevent multiple AEN registrations for the same device?
+
+If userspace repeatedly invokes the KVM_S390_ZPCIOP_REG_AEN ioctl on the
+same device, could it blindly allocate new structures and overwrite tracking
+fields like kzdev->aibv_pages and zdev->aibv?
+
+kvm_s390_pci_aif_enable() {
+    ...
+    npinned =3D pin_user_pages_fast(hva, npages, FOLL_WRITE | FOLL_LONGTERM,
+                                  kzdev->aibv_pages);
+    ...
+    zdev->aibv =3D airq_iv_create(msi_vecs, AIRQ_IV_DATA |
+                                AIRQ_IV_BITLOCK |
+                                AIRQ_IV_GUESTVEC,
+                                phys_to_virt(fib->fmt0.aibv));
+    ...
+}
+
+Would this irrevocably leak the previously pinned pages and airq_iv
+structures?
+
 > =20
->  	/* Account for pinned pages, roll back on failure */
-> -	if (account_mem(pcount))
-> +	rc =3D account_mem(pcount);
-> +	if (rc)
->  		goto unpin2;
-> =20
->  	/* AISB must be allocated before we can fill in GAITE */
->  	mutex_lock(&aift->aift_lock);
->  	bit =3D airq_iv_alloc_bit(aift->sbv);
-> -	if (bit =3D=3D -1UL)
-> +	if (bit =3D=3D -1UL) {
-> +		rc =3D -ENOMEM;
->  		goto unlock;
+>  	/* Issue the clp to setup the irq now */
+>  	rc =3D kvm_zpci_set_airq(zdev);
+> -	return rc;
+> +	if (!rc) {
+> +		mutex_unlock(&aift->aift_lock);
+> +		return rc;
 > +	}
->  	zdev->aisb =3D bit; /* store the summary bit number */
->  	zdev->aibv =3D airq_iv_create(msi_vecs, AIRQ_IV_DATA |
->  				    AIRQ_IV_BITLOCK |
+> +
+> +	/* Start cleanup */
+> +	zdev->kzdev->fib.fmt0.isc =3D 0;
+> +	zdev->kzdev->fib.fmt0.aibv =3D 0;
 
 [Severity: High]
-This is a pre-existing issue, but could this unconditional overwrite of
-zdev->aibv lead to a memory and resource leak?
+Will this error path unregister the wrong Interruption Subclass (ISC)?
 
-If a userspace caller issues the KVM_S390_ZPCIOP_REG_AEN ioctl multiple tim=
-es
-for the same device, kvm_s390_pci_aif_enable() lacks state validation (e.g.,
-verifying zdev->kzdev->fib.fmt0.aibv =3D=3D 0).
+Since fib->fmt0.isc is overwritten with gisc earlier in
+kvm_s390_pci_aif_enable():
 
-Would this cause the code to repeatedly pin new pages, allocate new airq_iv
-structures, and blindly overwrite the zdev->aibv and zdev->aisb pointers,
-permanently orphaning the previously allocated resources?
+    fib->fmt0.isc =3D gisc;
+    ...
+    rc =3D kvm_zpci_set_airq(zdev);
 
-> @@ -333,6 +336,8 @@ static int kvm_s390_pci_aif_enable(struct zpci_dev *z=
-dev, struct zpci_fib *fib,
->  	return rc;
-> =20
->  unlock:
-> +	if (pcount > 0)
-> +		unaccount_mem(pcount);
+If kvm_zpci_set_airq() fails, the cleanup path eventually reaches out:
 
-[Severity: High]
-This isn't a bug introduced by this patch, but does unaccount_mem()
-incorrectly rely on current to reverse memory accounting?
+out:
+    kvm_s390_gisc_unregister(kvm, fib->fmt0.isc);
 
-If process A pins memory via ioctl (accounting against process A's limits) =
-and
-passes the KVM file descriptor to process B, and process B closes it, the
-file's .release handler triggers KVM unregistration.
+Could this cause the host to unregister the host NISC instead of the guest
+ISC, potentially leaking the guest ISC's reference count and corrupting
+state for the host ISC?
 
-Calling unaccount_mem() in process B's context would subtract from process =
-B's
-limits while leaking process A's limits.
+> +
+> +	spin_lock_irq(&aift->gait_lock);
+> +	gaite->count--;
 
-Could this allow an unprivileged process to artificially underflow its
-locked_vm and pinned_vm limits, bypassing RLIMIT_MEMLOCK and allowing
-unlimited memory pinning?
-
->  	mutex_unlock(&aift->aift_lock);
->  unpin2:
->  	if (fib->fmt0.sum =3D=3D 1)
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260713172600.1284=
--1-alifm@linux.ibm.com?part=3D2
+-1-alifm@linux.ibm.com?part=3D4
 
