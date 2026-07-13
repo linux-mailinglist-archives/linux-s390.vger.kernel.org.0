@@ -1,246 +1,175 @@
-Return-Path: <linux-s390+bounces-22135-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22138-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 26GILcH3VGqPiAAAu9opvQ
-	(envelope-from <linux-s390+bounces-22135-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 16:35:45 +0200
+	id OgX/H6T5VGoHiQAAu9opvQ
+	(envelope-from <linux-s390+bounces-22138-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 16:43:48 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4567B74C750
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 16:35:45 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5475274C892
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 16:43:48 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=AH1UySgy;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22135-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-22135-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=kyb5mlRL;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22138-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-s390+bounces-22138-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id E5F703037980
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 14:34:30 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 8C6813029CF7
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 14:42:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76F3F43B3D9;
-	Mon, 13 Jul 2026 14:33:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06E8E43B3DC;
+	Mon, 13 Jul 2026 14:42:42 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABD243B3FF
-	for <linux-s390@vger.kernel.org>; Mon, 13 Jul 2026 14:33:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D4243900E;
+	Mon, 13 Jul 2026 14:42:39 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783953230; cv=none; b=V2EV5DCwPhpRhBb4wJsZJEqJTWmcvKhX0gZWAynGYCzbqwR8DO7Gcyhhof5RQNMvfvPQuQB3CN+Lp6HQ/Rgn+QA1JDu7GJm4Ys3Uop2MKbF+6jYYMyowbXYKaWMCPzqYsGoVWeMasz69Dzoe6hehFe6XI9qorryFVvCWbSpvR4g=
+	t=1783953761; cv=none; b=hZDoiuS6zl1r6iut5J4luxhrcvzwouE4BzD/6kUP6KVWbwhFszLkpUZBuWsoduVRZZSCuCSBog0HUIVlSFRlWiqz3hF4blP20DRIYP0ezNa3EZxGgL6aGUicvJM6YAlITI35OYP/YYynzFynBLSlgLZL3fgB8iTI0Vk49hX1TlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783953230; c=relaxed/simple;
-	bh=RAkjcbOnlu3hFTl9mdGeI19EYYiLnJBJzLv/1aCbRwo=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=DCm9kta/vYdLuWtjKiSJ1gvKBM1qw+ftwX0vA/lpNr/TV2SMlbierimCQ/7c7nlN3s5OXZQOx2HqEaFpdmF4qHE3x//8+Yf0OH7L7PzraHubIft9wLzS825LLObCSthzZtqEuep5gGsRIvlUlh3agLcvwC5rh4s/MUHKwqB0ZBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AH1UySgy; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE61F1F000E9;
-	Mon, 13 Jul 2026 14:33:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783953227;
-	bh=FOIPWvRnPtDACn6p8dktkwJ6Rktu+0Z3VDXWexWxMUA=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=AH1UySgyAraWgsBPNr/BOeMufqZmMHtFfax4UVvLxyai1gqvPSqZoLqnqsZOWrj9S
-	 5N6MZdQXtiZylZlLJb1GWvcYUIOBBHl7IukSbq4yiJb3BzuxA1R9uoTxfjQ7iRp7DR
-	 r0LP0u7V9r+9FGnuTgow/ZjeWp3SuJNcQ8lglSJzCTNSqnWrTbU/S3U+BEnassQJ+3
-	 qbJnvRCmBEjnd0CDZX63IRXSWdgk6I9ETIyI9DbYSkvI6A+WEIIkQmAhZJTTOITgww
-	 8+VahKItmAEsgTSmglBx7RW1oLclwAksUQNxx7fR7SPRL5bNF8QN0Q53ZqAOR2ELEx
-	 SEV60xp3dIAKA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 2/4] s390/mm: Batch PTE updates in lazy MMU mode
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Alexander Gordeev" <agordeev@linux.ibm.com>
-Cc: "Heiko Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
- Gordeev" <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org
-In-Reply-To: <227ed305e14b04b97be34716426e369860efc99c.1783945507.git.agordeev@linux.ibm.com>
-References: <cover.1783945507.git.agordeev@linux.ibm.com>
- <227ed305e14b04b97be34716426e369860efc99c.1783945507.git.agordeev@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 13 Jul 2026 14:33:46 +0000
-Message-Id: <20260713143346.EE61F1F000E9@smtp.kernel.org>
+	s=arc-20240116; t=1783953761; c=relaxed/simple;
+	bh=q9RDx/MSHZDqOQVhPWPbygYd95THqQgUIaSWVg3cXIg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Lg6jG0kvH68a49o59Ke0ibPTlkdjDdZfMJ3B3/cZQWTFC+n/2hM3T/osjR36R6c4bWPKbqkVRUcXk8ds/BWyPqCRtSZwZG4AvlVpHkljVPUdzkXg+y/dYFB6mDOI6rQrdMCjqeFQW6lUHazN+WrYvyO2dv8RSMTxBnSajAzjclA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kyb5mlRL; arc=none smtp.client-ip=148.163.158.5
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66DCD1Tb2375266;
+	Mon, 13 Jul 2026 14:42:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=SWjcVdLnz9p9O6sFEufEo40kMYTf/Zpi87oHKvWJ/
+	3c=; b=kyb5mlRLweC609luLKCtrJu/DJiWmZSe3YlJNIN1Oldv1Y7A3tw2Oausb
+	wvnAAhcNwMJvCvO+m66CvB1O1xW3cUE0BiTO64PMo57UG3E/lpjd6gUg2K24qIEx
+	KDlu+XlVbUcOKKBhy8kKWBG+iqDePD/WH/j+nCcnn4I6NRRGep4FZEcgChC5FNsm
+	X9PAyKoiyZ26B1vk8oGkZRMheh7pZNQqQInbYt+DCNT10iR+AhlZG0wXW74ePEEf
+	TnfMxeOibbW3nkpYo0MKnfALa9VCqnqj2JUzdvg/QvPmNg2ekNmuSSAaXhAJvJLK
+	76MTNIH9OZVFixhqreaRHR6rzpifg==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fbf2a0t7j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 13 Jul 2026 14:42:38 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66DEYade017246;
+	Mon, 13 Jul 2026 14:42:37 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fc2cg5wbm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 13 Jul 2026 14:42:37 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66DEgXaB30736776
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 13 Jul 2026 14:42:33 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CAB8E2005A;
+	Mon, 13 Jul 2026 14:42:33 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9EB7F20043;
+	Mon, 13 Jul 2026 14:42:33 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 13 Jul 2026 14:42:33 +0000 (GMT)
+From: Jens Remus <jremus@linux.ibm.com>
+To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Jens Remus <jremus@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>
+Subject: [PATCH v2 0/2] s390/vdso: Fix GNU_EH_FRAME PHDR
+Date: Mon, 13 Jul 2026 16:42:29 +0200
+Message-ID: <20260713144231.1251145-1-jremus@linux.ibm.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzEzMDE1MyBTYWx0ZWRfX1i09H9rgbD4z
+ npXE2/oiPAxwxal4Z6eYDVhEznsZZXrprbBOhMnMKJVNTDXE+IMn/j/UA1nmnfshePGuoivd31A
+ 4amh8vjCjoA/BcM4lNoN11jYutkso0c=
+X-Proofpoint-GUID: sKAJPyqPSaJWT5-JfRoY00amIeutDUI2
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzEzMDE1MyBTYWx0ZWRfX0M8pFbMlkOw0
+ b49hg8zPERPAsYQOrNtBDUOBjUL09b+3Ws+VFKA8KF+MGsQp6zwm8gV6v4nFwFx+mU8PiXzjqGU
+ wXcfKJHxJRkMfIcz7xt3Ob5BFy77uBpct7Knmc5ST1k7auE0bFQEYPSI28lmdUhKONJqKVSWhrb
+ 6F14qhfKoQUrI442bEb+nPt6F/xpA3VaBw9AKhCc4DDmhtfqtlC89/bnv+7ZQE/dAriQVRCD1lM
+ B8XDgBvgd2zWgwD/oSikVnbWLhZEz5+LVGwXpNquMIpihBMmjFsMSJrwRqUxstsp14N6DOEQJ1x
+ 2X4W3NX9FifjLcDjHalE16HxDEch3Eg6mmSXtEHQAk6z5OXgAkg0kGBEo8pgsXjM2bcZ4nlprhL
+ skP1so8t/+Jnky1ByOWmF/kn9GDfC6sAfXa70pdY97PFRJX4jrcrIxBS2Ss0gmNBPuROk9y7NRX
+ qyKNqTDvs1UzDlSq5jQ==
+X-Proofpoint-ORIG-GUID: sKAJPyqPSaJWT5-JfRoY00amIeutDUI2
+X-Authority-Analysis: v=2.4 cv=PvajqQM3 c=1 sm=1 tr=0 ts=6a54f95e cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=Y2IxJ9c9Rs8Kov3niI8_:22 a=L-4QY-Uup-fI9X5xHgwA:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-13_03,2026-07-10_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 impostorscore=0 adultscore=0
+ clxscore=1015 lowpriorityscore=0 spamscore=0 suspectscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607130153
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	MISSING_MIME_VERSION(2.00)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22135-lists,linux-s390=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp,sashiko.dev:url,smtp.kernel.org:mid];
-	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:agordeev@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:linux-s390@vger.kernel.org,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22138-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:jremus@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:svens@linux.ibm.com,m:iii@linux.ibm.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[jremus@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FROM_NEQ_ENVFROM(0.00)[jremus@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_NO_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ALIAS_RESOLVED(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linux.ibm.com:from_mime,linux.ibm.com:mid,vger.kernel.org:from_smtp];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[linux-s390];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 4567B74C750
+X-Rspamd-Queue-Id: 5475274C892
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
-- [Critical] Violation of Ultravisor architecture constraints by deferring =
-PTE invalidation while calling `uv_convert_from_secure_pte()`.
-- [High] `ptep_get_and_clear_full()` bypasses the `full` optimization durin=
-g process teardown, causing massive redundant IPTE traffic.
-- [High] Deferred page table memory updates break lockless page table walke=
-rs (like GUP-fast).
-- [Low] Dead declarations for IPTE range modify protection functions.
---
+Patch 2 uses symbolic constants for the PHDR permission flags to improve
+readability and explicitly specifies the GNU_EH_FRAME PHDR to be read-
+only.
 
---- Patch [2]: [PATCH v5 2/4] s390/mm: Batch PTE updates in lazy MMU mode -=
---
-commit dedb613a05cdcf9218ef386e46c14b5cce4aa714
-Author: Alexander Gordeev <agordeev@linux.ibm.com>
+Changes to v2:
+- Address review feedback.
 
-s390/mm: Batch PTE updates in lazy MMU mode
+Regards,
+Jens
 
-This commit introduces a per-CPU cache to batch PTE updates while in
-lazy MMU mode. It intercepts PTE updates to store them in a software
-cache, flushing them to the hardware page tables in a single operation
-upon exiting lazy MMU mode.
 
-> diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgta=
-ble.h
-> --- a/arch/s390/include/asm/pgtable.h
-> +++ b/arch/s390/include/asm/pgtable.h
-> [ ... ]
-> @@ -1220,7 +1308,8 @@ static inline pte_t ptep_get_and_clear(struct mm_st=
-ruct *mm,
->  {
->  	pte_t res;
-> =20
-> -	res =3D ptep_xchg_lazy(mm, addr, ptep, __pte(_PAGE_INVALID));
-> +	if (!lazy_mmu_ptep_get_and_clear(addr, ptep, &res))
-> +		res =3D ptep_xchg_lazy(mm, addr, ptep, __pte(_PAGE_INVALID));
->  	page_table_check_pte_clear(mm, addr, res);
->  	/* At this point the reference through the mapping is still present */
->  	if (mm_is_protected(mm) && pte_present(res))
+Jens Remus (2):
+  s390/vdso: Pass --eh-frame-hdr to the linker
+  s390/vdso: Use symbolic constants for the PHDR permission flags
 
-[Severity: Critical]
-Does this sequence violate Ultravisor constraints?
+ arch/s390/kernel/vdso/Makefile   |  3 ++-
+ arch/s390/kernel/vdso/vdso.lds.S | 11 +++++++----
+ 2 files changed, 9 insertions(+), 5 deletions(-)
 
-When unmapping secure execution guest memory, this path caches the
-invalidation but leaves the hardware page table unmodified. The function
-then immediately calls uv_convert_from_secure_pte() while the real PTE in
-memory is still present.
 
-Could concurrent hardware walks encounter a secure PTE mapping a now
-non-secure page and trigger a hardware fault?
+base-commit: a13c140cc289c0b7b3770bce5b3ad42ab35074aa
+-- 
+2.53.0
 
-> [ ... ]
-> @@ -1229,9 +1318,34 @@ static inline pte_t ptep_get_and_clear(struct mm_s=
-truct *mm,
-> [ ... ]
-> +bool ipte_range_ptep_modify_prot_start(struct vm_area_struct *vma,
-> +				       unsigned long addr, pte_t *ptep, pte_t *res);
-> +bool ipte_range_ptep_modify_prot_commit(struct vm_area_struct *vma,
-> +					unsigned long addr, pte_t *ptep,
-> +					pte_t old_pte, pte_t pte);
-
-[Severity: Low]
-Are these declarations for ipte_range_ptep_modify_prot_start() and
-ipte_range_ptep_modify_prot_commit() used anywhere?
-
-It looks like they are declared here but never implemented, as the code
-instead provides __lazy_mmu_ptep_modify_prot_start().
-
-> [ ... ]
-> @@ -1261,11 +1375,13 @@ static inline pte_t ptep_get_and_clear_full(struc=
-t mm_struct *mm,
->  {
->  	pte_t res;
-> =20
-> -	if (full) {
-> -		res =3D ptep_get(ptep);
-> -		set_pte(ptep, __pte(_PAGE_INVALID));
-> -	} else {
-> -		res =3D ptep_xchg_lazy(mm, addr, ptep, __pte(_PAGE_INVALID));
-> +	if (!lazy_mmu_ptep_get_and_clear(addr, ptep, &res)) {
-> +		if (full) {
-> +			res =3D __ptep_get(ptep);
-> +			__set_pte(ptep, __pte(_PAGE_INVALID));
-> +		} else {
-> +			res =3D ptep_xchg_lazy(mm, addr, ptep, __pte(_PAGE_INVALID));
-> +		}
->  	}
-
-[Severity: High]
-Does this bypass the full optimization during process teardown?
-
-During exit_mmap(), zap_pte_range() passes full=3D1 to skip individual IPTE
-flushes since the entire address space is being destroyed.
-
-By unconditionally intercepting the call via lazy_mmu_ptep_get_and_clear(),
-this bypasses the full optimization fast path. Will this cause
-leave_ipte_range() to subsequently issue redundant IPTE instructions for
-every single valid PTE?
-
-> diff --git a/arch/s390/mm/lazy_mmu.c b/arch/s390/mm/lazy_mmu.c
-> --- /dev/null
-> +++ b/arch/s390/mm/lazy_mmu.c
-> [ ... ]
-> +bool __lazy_mmu_ptep_get_and_clear(unsigned long addr, pte_t *ptep, pte_=
-t *res)
-> +{
-> +	struct ipte_range *range;
-> +	pte_t pte, old;
-> +
-> +	range =3D this_ipte_range(ptep);
-> +	if (!range)
-> +		return false;
-> +
-> +	old =3D __ipte_range_ptep_get(range, ptep);
-> +	pte =3D __pte(_PAGE_INVALID);
-> +	__ipte_range_set_pte(range, ptep, pte);
-> +	*res =3D old;
-> +
-> +	return true;
-> +}
-
-[Severity: High]
-Can this deferred page table update cause issues with lockless page table
-walkers like get_user_pages_fast()?
-
-When mprotect() uses lazy MMU mode and calls ptep_modify_prot_start(),
-this function updates the local software cache to invalid but leaves the
-hardware PTE fully valid and writable.
-
-Since lockless walkers read the hardware page tables directly without
-taking the page table lock, could they see a present, writable PTE and
-successfully pin the page for writing, completely ignoring the ongoing
-mprotect()?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1783945507.gi=
-t.agordeev@linux.ibm.com?part=3D2
 
