@@ -1,86 +1,86 @@
-Return-Path: <linux-s390+bounces-22172-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22173-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 2oEaOl0nVWpekgAAu9opvQ
-	(envelope-from <linux-s390+bounces-22172-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 19:58:53 +0200
+	id /Pt2FckmVWo7kgAAu9opvQ
+	(envelope-from <linux-s390+bounces-22173-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 19:56:25 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6207674E3A4
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 19:58:53 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDF8674E34A
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 19:56:24 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ziepe.ca header.s=google header.b=VwE9LL26;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22172-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-22172-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ziepe.ca header.s=google header.b=NESxXD2j;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22173-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-22173-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=none;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id ED43530D7EC6
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 17:54:38 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D4A503020860
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 17:56:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7913F34D916;
-	Mon, 13 Jul 2026 17:54:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11D0534D915;
+	Mon, 13 Jul 2026 17:56:22 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8C334BA28
-	for <linux-s390@vger.kernel.org>; Mon, 13 Jul 2026 17:54:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47CD134CFCA
+	for <linux-s390@vger.kernel.org>; Mon, 13 Jul 2026 17:56:19 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783965278; cv=none; b=JVZzS14pnBUj84LOcqye6k4UHE7PtxoBgEbniAZwI69IWa+Mcq/rs8Ab5043wEfcfeGxQiSaNmIhqykv0jV6dFBcoFkrOCqOz94TFj3SgnA01bFl5rcpJPHMJbY++jFGcA0RXUxGCimght1RsXGRF3lHeE938Ip0r39iRNcypVU=
+	t=1783965382; cv=none; b=RbKL9x/gAnnDV5JkZ21OPoXs2Kx03O/mGYT+U7a3VI/+saz8wx1w6d3tinkVGhCwTTBp2XiWKQLXdJhBGh+IaXf+oCAwvlJd6wBi22NW2nSrwUwGE9gBxSwJXh1Y+t1IXyDrqUZ/BR8D0zo0OvH6rcTCcl49wtlyQPmyq1RBL1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783965278; c=relaxed/simple;
-	bh=K2KZlv8DzBtV03E/TVL3MeUwYAAgOJe/Vo9Rt0OvASs=;
+	s=arc-20240116; t=1783965382; c=relaxed/simple;
+	bh=HZlJhE5yEawTWMpR2br1LMTc0/ct1LglVKv1a4251Ho=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qhxoOuyKKNhiDlOQ983thX5PzKx+Gxu7ghRCInoFWqrQ1xS9PxFP89kW62dhBu34yJBMs6XakmCnw0nK2i4S7PlPwa1yfRJjUtElezkJmOpAlywW+ET2mHJkTzk5bYPnRwL2SRyCORfxx0JXz7F3T+gcVznoyfLBH6pygjIEE5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=VwE9LL26; arc=none smtp.client-ip=209.85.222.175
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-92e855da580so273322485a.1
-        for <linux-s390@vger.kernel.org>; Mon, 13 Jul 2026 10:54:35 -0700 (PDT)
+	 Content-Type:Content-Disposition:In-Reply-To; b=jhBMEwHpEyXfatT23QQvFTHvgE0SnuC0sA6pdIaIc3DRjWsJ/VDQ8lYCVnsNoa681USvcGvDAbxPLs+anm378qW7pWaSxWtQjWMGHlQbKUngzTXwK/UujMK/I8nvsYnYxGbj9nDB2yrBKjsvjQ2qmj9NMg+CyKpDMKh+0+P/K4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=NESxXD2j; arc=none smtp.client-ip=209.85.160.180
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-51bfad59921so26639981cf.0
+        for <linux-s390@vger.kernel.org>; Mon, 13 Jul 2026 10:56:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1783965275; x=1784570075; darn=vger.kernel.org;
+        d=ziepe.ca; s=google; t=1783965378; x=1784570178; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=Yflr35iQtozkrKsWPSXMB3haiCYqPE+VDxf/660hH9k=;
-        b=VwE9LL26Wmj3Bic97jnDe0FdhlxJKNHI8GF5oPUVFEzjHop6rveZn25da/L2GWKkXr
-         sSnBTm7wvTMgjGmMCwv6qvZJP4hUUADTspmHja544fGTlGVAxs1fJRp19KPWi+jDJFTg
-         cm+sm6zVXebpXv3cNYFdQzmd66mejtVPfokoETaVS49213pzGpJ5CzRMihCvh/kXJuUu
-         /8w2V1ZaSCBbYS0W1PxynFlBIjoKn1fM6X5myfw+amdRuSpsYq7Qe3dCd+V2qoCY9iug
-         bzU60uHdF8XiEUZ3MzWyy3mMUVU9i8EQS0Xx70hgHbrxZvnROMHz1ZJA5P4EXhkTIfVX
-         I/Kg==
+        bh=C/wrHcKHA68TkDcKIgsJLD5FCo0DNb4FA5MINQ+2Q20=;
+        b=NESxXD2jr50NXEdpf3bfSO4izmiFSGEGphusmfAyjRRbphMy+VeUUKqz5zeqdVZUPV
+         sNs0YqgRypVu4DP4I07ygdORQtZhA5Koe7nrM4LM00wq9mOV/cPJ2syk/F37v5CYOnPX
+         1TgRQXC8jjy2GW5EOomeF1n8qgAAzrc3UssO8mUyvXHyHr+iTaZgtrr42RNBrZ4DrWSL
+         p1VXMo4AFqxV1USeCR19qWJ9NN2WTk41HK2BsC2OMdeXL7ObmZ6FVF7qAPfETBaXjdPQ
+         qJ8zQ1kn9F5Pv9LboizRGuR4jJlg83BqwYdamwZoxM0kVcnCEjn5owH40P8cqHGJ7GF0
+         guig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783965275; x=1784570075;
+        d=1e100.net; s=20251104; t=1783965378; x=1784570178;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Yflr35iQtozkrKsWPSXMB3haiCYqPE+VDxf/660hH9k=;
-        b=kr6BlrvOdaxdzIds6paht+9LPNXbmUiz6W6npMCENPeToWg8IyZ6M0vue1trq3wsxJ
-         +Z8hSoSbfwgSBR5kdCQf7XR5W/0DjZX2XppsjZb3nOubG0UpHOoLGmUyUxPuTawS4UXG
-         EYfr6LfKw2SnoiLeawoAG6v4Dx49rNFwQbJZKudLVToGUlhWJ6QF/7gO8pviGPAxe0EF
-         2Qfhhh4HxmP0Q5axPDgkWLEFF4VNyUP01SfgcX7wvWfcnT2ewU7UMHTenTcQM0N4X0tE
-         PAp/5ZYXSt/wafKp09BqRTCT4GlZwj6bQiei/LVQP274CNJvtqwMCDpK/SynwtXNxdeR
-         8CBg==
-X-Forwarded-Encrypted: i=1; AHgh+RrmMILd646ACVaAeKpH4mh14/Vl/1HZGUFbS4EErVCdqePvbxvKDnx6v/OxHnzr8D0A/pSnl2gHyHr4@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywd1n4nYtOckJf9IYuNIEbOs/eSgKbrX2WZYgeV9elcOvS8zX09
-	tY3lvlFyn++147snGwMI38cNsUKso/+EsBGoCFQGMbB4P2mHVMG0Zj+wLUqJMmcP/EI=
-X-Gm-Gg: AfdE7cmHC9xp2g+DrK6Xqq1w6/R5ZAb74/Bq1Tve7FQLK4lVBe0CG2u41v2erbFkdlC
-	oqLTmdYPIO+th0RUTX1vUasz2TnyZjntmP8nyhCKNYx1cHWt4HFUwsJmK6rHMrUXSE0a5bwOp0b
-	hHpvd6tgD8MlEzez22jX4ogW/8DibyZEMow+MkpuZtyO2166erjgAoO8QAYIHG4N/oIskU9yJOQ
-	w3Abjrs/AqrjOkRGLLZfB4cTzznqxAnpCTIIP2JRtntpDMccRKjKMrXC3RlRLpjmspTIicyy1H5
-	euNcYv3ketL0XtzloY7N1BZYTyW06ky5t0bSNP3qErShEP/8XQkl0p7hdbSgqG+1fS60jgIpShb
-	2RBAi/w3u1jNh0V/R7iuWY7LTdUjCZlwFjsuP9Dg5pLg5/AK+IO4fkjQtyEd4
-X-Received: by 2002:a05:620a:469e:b0:915:94f7:55df with SMTP id af79cd13be357-92ef2bd609cmr983527785a.20.1783965274729;
-        Mon, 13 Jul 2026 10:54:34 -0700 (PDT)
+        bh=C/wrHcKHA68TkDcKIgsJLD5FCo0DNb4FA5MINQ+2Q20=;
+        b=ZHkiW1khCZDcXirk1wswXUl71yiVBd1mNvzCWIYSK/iOFSYZyqlRzL6UtFcYlxHNEo
+         Y7vfD8egFiciSHf9Fh/1Uo0bo6CjPYBu3x2rr6fggGY2T2W5v5agTADIBEjFQ0c6pTkD
+         jWyFs4DRq0vSl9WvZeRFEagrjGEro17+pRyk0te322po4dgp5Af8J2CV6KuZWuA0wB3u
+         8QGBp2dVhESZJWB86Takn66cNjrd+hguZ9AIh55TrRbzNVnEPNoZhxt+pi0FuNneV9fn
+         lD9jf/ktYdT7XMU0nGeqQYuiDVq77LBx3oPixgzZS67gwuHbnAM/u3Mz2C09/2WrgiTl
+         XJsA==
+X-Forwarded-Encrypted: i=1; AHgh+Rqoi3UMYSSt512MiQ0fDoU9fk9fJUl1DrOVGyHWFuhoNzXncas+2ZFXYsVslrMh39Zh+X0ZEYpeT7lR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+b8OGRfB6J+Ie5zXscrZoiE0Tgi0m2SJszAAC0Rnzb7hlGBOC
+	VFYjsNSqak3e0WElOhGJnwn0Ldrd2irZtjPft0GVQ/OOayEODrUf4x8Un3j08RYUZJM=
+X-Gm-Gg: AfdE7ck6iJEd6ZI2s9tSmeRu0xAhKjLEgc/ToUU8Oy/cHedgTN+FRdeqnZ7GzXESc8l
+	6436cFyoGG31k00+eBX/ZW1GckdbNj//gYUUIi0qBeiifqaQK9xUHRvs+xUzcUel0KlgNpG8snf
+	o5N1ixuP59FF5FhbHh7ZOC7dlnCQhZ1p5zn31wpBayCnpfPJn8DlvHk8NIuQjVDibxqgwjSe3jz
+	tw53P7K8uFVlelYkmShELhcH7Kiu3C8hEhD+0xQ4UQxBhfahHZGMRoLut0WeiW8uZeqgfG6Xolp
+	dFpVZ9cZ6f16gQMNVIX638PA13ys35lCqYIrix1puDETT/29gDm1AEwozGCFpNxZBA3BAdQt9D8
+	rJe8GZalfC2EJlNwDT4fVoiFa3yMd2Ao7pHxF/Qu6N1uIkenAjqN9R2cmR4mR
+X-Received: by 2002:ac8:584d:0:b0:51a:8945:3141 with SMTP id d75a77b69052e-51cbf1faa3dmr98217881cf.55.1783965378189;
+        Mon, 13 Jul 2026 10:56:18 -0700 (PDT)
 Received: from ziepe.ca ([159.2.72.92])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-92ee5cfdf6fsm1229104285a.24.2026.07.13.10.54.34
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51caaf5f61csm91065131cf.22.2026.07.13.10.56.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2026 10:54:34 -0700 (PDT)
+        Mon, 13 Jul 2026 10:56:17 -0700 (PDT)
 Received: from jgg by wakko with local (Exim 4.97)
 	(envelope-from <jgg@ziepe.ca>)
-	id 1wjKrR-0000000DwzJ-2as1;
-	Mon, 13 Jul 2026 14:54:33 -0300
-Date: Mon, 13 Jul 2026 14:54:33 -0300
+	id 1wjKt6-0000000Dx9V-2ddz;
+	Mon, 13 Jul 2026 14:56:16 -0300
+Date: Mon, 13 Jul 2026 14:56:16 -0300
 From: Jason Gunthorpe <jgg@ziepe.ca>
 To: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
 Cc: iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
@@ -107,12 +107,12 @@ Cc: iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
 	Vasily Gorbik <gor@linux.ibm.com>,
 	Christian Borntraeger <borntraeger@linux.ibm.com>,
 	Sven Schnelle <svens@linux.ibm.com>, x86@kernel.org,
-	Michael Kelley <mhklinux@outlook.com>
-Subject: Re: [PATCH v7 02/22] dma-pool: fix page leak in atomic_pool_expand()
- cleanup
-Message-ID: <20260713175433.GI3133966@ziepe.ca>
+	Jiri Pirko <jiri@nvidia.com>, Michael Kelley <mhklinux@outlook.com>
+Subject: Re: [PATCH v7 11/22] dma-pool: track decrypted atomic pools and
+ select them via attrs
+Message-ID: <20260713175616.GJ3133966@ziepe.ca>
 References: <20260701054926.825925-1-aneesh.kumar@kernel.org>
- <20260701054926.825925-3-aneesh.kumar@kernel.org>
+ <20260701054926.825925-12-aneesh.kumar@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -121,28 +121,28 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260701054926.825925-3-aneesh.kumar@kernel.org>
+In-Reply-To: <20260701054926.825925-12-aneesh.kumar@kernel.org>
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_DKIM_ALLOW(-0.20)[ziepe.ca:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22172-lists,linux-s390=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:aneesh.kumar@kernel.org,m:iommu@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:robin.murphy@arm.com,m:m.szyprowski@samsung.com,m:will@kernel.org,m:maz@kernel.org,m:steven.price@arm.com,m:Suzuki.Poulose@arm.com,m:catalin.marinas@arm.com,m:jiri@resnulli.us,m:smostafa@google.com,m:ptesarik@suse.com,m:aik@amd.com,m:dan.j.williams@intel.com,m:yilun.xu@linux.intel.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-s390@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:x86@kernel.org,m:mhklinux@outlook.com,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22173-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:aneesh.kumar@kernel.org,m:iommu@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:robin.murphy@arm.com,m:m.szyprowski@samsung.com,m:will@kernel.org,m:maz@kernel.org,m:steven.price@arm.com,m:Suzuki.Poulose@arm.com,m:catalin.marinas@arm.com,m:jiri@resnulli.us,m:smostafa@google.com,m:ptesarik@suse.com,m:aik@amd.com,m:dan.j.williams@intel.com,m:yilun.xu@linux.intel.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-s390@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:x86@kernel.org,m:jiri@nvidia.com,m:mhklinux@outlook.com,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	DMARC_NA(0.00)[ziepe.ca];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[jgg@ziepe.ca,linux-s390@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[32];
-	FREEMAIL_CC(0.00)[lists.linux.dev,lists.infradead.org,vger.kernel.org,arm.com,samsung.com,kernel.org,resnulli.us,google.com,suse.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,linux.ibm.com,ellerman.id.au,gmail.com,outlook.com];
+	RCPT_COUNT_TWELVE(0.00)[33];
+	FREEMAIL_CC(0.00)[lists.linux.dev,lists.infradead.org,vger.kernel.org,arm.com,samsung.com,kernel.org,resnulli.us,google.com,suse.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,linux.ibm.com,ellerman.id.au,gmail.com,nvidia.com,outlook.com];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	DKIM_TRACE(0.00)[ziepe.ca:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	MISSING_XM_UA(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[6];
@@ -155,34 +155,56 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,ziepe.ca:from_mime,ziepe.ca:dkim,ziepe.ca:mid,nvidia.com:email,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,ziepe.ca:from_mime,ziepe.ca:dkim,ziepe.ca:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 6207674E3A4
+X-Rspamd-Queue-Id: BDF8674E34A
 
-On Wed, Jul 01, 2026 at 11:19:06AM +0530, Aneesh Kumar K.V (Arm) wrote:
-> @@ -115,8 +116,10 @@ static int atomic_pool_expand(struct gen_pool *pool, size_t pool_size,
+On Wed, Jul 01, 2026 at 11:19:15AM +0530, Aneesh Kumar K.V (Arm) wrote:
+> -static int atomic_pool_expand(struct gen_pool *pool, size_t pool_size,
+> +static int atomic_pool_expand(struct dma_gen_pool *dma_pool, size_t pool_size,
+>  			      gfp_t gfp)
+>  {
+>  	unsigned int order;
+> @@ -114,14 +120,17 @@ static int atomic_pool_expand(struct gen_pool *pool, size_t pool_size,
+>  	 * Memory in the atomic DMA pools must be unencrypted, the pools do not
+>  	 * shrink so no re-encryption occurs in dma_direct_free().
 >  	 */
->  	ret = set_memory_decrypted((unsigned long)page_to_virt(page),
->  				   1 << order);
-> -	if (ret)
-> +	if (ret) {
-> +		leak_pages = true;
->  		goto remove_mapping;
-> +	}
+> -	ret = set_memory_decrypted((unsigned long)page_to_virt(page),
+> -				   1 << order);
+> -	if (ret) {
+> -		leak_pages = true;
+> -		goto remove_mapping;
+> +	if (dma_pool->cc_shared) {
+> +		ret = set_memory_decrypted((unsigned long)page_to_virt(page),
+> +					   1 << order);
+> +		if (ret) {
+> +			leak_pages = true;
+> +			goto remove_mapping;
+> +		}
+>  	}
+> -	ret = gen_pool_add_virt(pool, (unsigned long)addr, page_to_phys(page),
+> -				pool_size, NUMA_NO_NODE);
+> +
+> +	ret = gen_pool_add_virt(dma_pool->pool, (unsigned long)addr,
+> +				page_to_phys(page), pool_size, NUMA_NO_NODE);
+>  	if (ret)
+>  		goto encrypt_mapping;
+>  
+> @@ -129,12 +138,10 @@ static int atomic_pool_expand(struct gen_pool *pool, size_t pool_size,
+>  	return 0;
+>  
+>  encrypt_mapping:
+> -	ret = set_memory_encrypted((unsigned long)page_to_virt(page),
+> -				   1 << order);
+> -	if (WARN_ON_ONCE(ret)) {
+> -		/* Decrypt succeeded but encrypt failed, purposely leak */
+> +	if (dma_pool->cc_shared &&
+> +	    set_memory_encrypted((unsigned long)page_to_virt(page), 1 << order))
+>  		leak_pages = true;
+> -	}
+> +
 
-Truely these _set_memory_decrypted() things are an insane API. So a if
-it fails to decrypt it can be in any messy state?
-
-> @@ -130,14 +133,15 @@ static int atomic_pool_expand(struct gen_pool *pool, size_t pool_size,
->  				   1 << order);
->  	if (WARN_ON_ONCE(ret)) {
->  		/* Decrypt succeeded but encrypt failed, purposely leak */
-> -		goto out;
-> +		leak_pages = true;
-
-At least this one makes some sense..
-
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Was it intentional to remove the WARN_ON and comment ?
 
 Jason
 
