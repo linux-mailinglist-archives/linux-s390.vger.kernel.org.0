@@ -1,87 +1,86 @@
-Return-Path: <linux-s390+bounces-22184-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22185-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 1iAQJ5Q7VWomlwAAu9opvQ
-	(envelope-from <linux-s390+bounces-22184-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 21:25:08 +0200
+	id uwCdBws8VWpAlwAAu9opvQ
+	(envelope-from <linux-s390+bounces-22185-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 21:27:07 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B58F74EB20
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 21:25:08 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 664BB74EB52
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 21:27:06 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ziepe.ca header.s=google header.b=G38VB55r;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22184-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-s390+bounces-22184-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ziepe.ca header.s=google header.b=M0pyKfyd;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22185-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-22185-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=none;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 9131530174C6
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 19:25:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 107A430A2990
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 19:26:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C84D3563FB;
-	Mon, 13 Jul 2026 19:25:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD2F0356757;
+	Mon, 13 Jul 2026 19:26:34 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C74346A07
-	for <linux-s390@vger.kernel.org>; Mon, 13 Jul 2026 19:25:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31ED3356771
+	for <linux-s390@vger.kernel.org>; Mon, 13 Jul 2026 19:26:33 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783970707; cv=none; b=qdXNwPcXonX8nNIPy29EYeJtJQq86QPA2I6ePNWmen2BnjgoRuSPajZ4bMBXEPRziSHbm+nAnlawd3coa83ThhswBaw6ij6kvtVk0GA/W3Wh/mr8kPXKYro9YabDdhNr8yFeepT38he2cm6KujzHJPGWs5YM6Z/oNV7Re0cKEEk=
+	t=1783970794; cv=none; b=hpslR1P6qN3NIy5PsEObC05duPRx4oFDCf7/rI3oh1T7LcfITE7jEThQzkOYnxCyVvX5DCPSnpaHBHYujkulGrlNIGMRGHs0lIPZ+YBOZspms3d/DTzLbEZEbMe+1iDbmrMspTUFvWthvNjujM0pSNy2NXdonWd7Fkxsi1BliIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783970707; c=relaxed/simple;
-	bh=kHNC6GKxK3Oa0yY2t9YDWJJoMMfSAWNNMKsiuCwI/8Y=;
+	s=arc-20240116; t=1783970794; c=relaxed/simple;
+	bh=3hYUesku0XYcq9M5Lzu0X2CUae3t5wbu+UMwDadhKgI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mD+uZ9H5UaNjIXlRdpASZA/QK9roERIiTAWpLNk5h8h9Sj+45ulSx5TfOHCAArNe/Or7IkcuvpMFGd0I+BZkpgeIM/ZpjDNevLpKgS5J1OVyAKe4S0/OKUM5iOQ1zfgb9d9wiwP6JlDVL+1i4f+PcEcuzzzrRyKwka9e/6rukvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=G38VB55r; arc=none smtp.client-ip=209.85.160.177
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-51c08df8513so1660431cf.3
-        for <linux-s390@vger.kernel.org>; Mon, 13 Jul 2026 12:25:04 -0700 (PDT)
+	 Content-Type:Content-Disposition:In-Reply-To; b=EHqytL6VZm7rTHpsYJ3oR4EwWEMvPoQJ7j04X3mD9WZj+u7WeC9PlU+CjJGuzpeT7ZAgNCaRMZOfY7VlkXga+wDR/KzcoAAdHhsv1+BPFCn57arZ7tAIIyoeJouGqb1bapmWwveQZMMVj/JfrailxY3+eAl63yEHo7mMc2fKjI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=M0pyKfyd; arc=none smtp.client-ip=209.85.160.174
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-51c167c58f2so23313191cf.0
+        for <linux-s390@vger.kernel.org>; Mon, 13 Jul 2026 12:26:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1783970704; x=1784575504; darn=vger.kernel.org;
+        d=ziepe.ca; s=google; t=1783970792; x=1784575592; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=2kWy2240zOoLDDzwtKisgk31mZ51kjxw8fZyoUW4j0E=;
-        b=G38VB55rczL+HtL37bAUlUAettcihLt8qw6IsSvTED/EB4k6c1rfaN6bxrCXj+zG7t
-         DlpxUo2efzT7g9i6Sdr7GGswN524GurYxz0IJ4yKzh8ugLcJsMaP1paKJYg+0+qUM02y
-         kNh9ehHuxBOpuxmnYJTG6V6gnHseXk9P+D0D/SaqZp+kMDY582RSGsG09PRUEbqhlHls
-         MyH0BbkF7gujhewYW7gPfSjJ6h7L4P3z31F9S+QewRVTP32Dtscjc3DW4oBMWXHhd+Il
-         f0RIfBvaWgXY4GDt+QPb9HzdnhXUr1p/b2HVetn6BCKL7RdR6yYvj3TNYdbvPw/4rPZ0
-         KCdw==
+        bh=WcYJlt5p9Qz8AXWYIObijachKEBwhFuSBSepR8dnD2g=;
+        b=M0pyKfydb9XHMjRbiMmXPvPXbvEChos6qwAjT0J6vo/6oq3+cGQmn6VVEhr0o3Tf5R
+         FIyCFjURk0t2kVTuSePz761X5id5lsq8C5ef+fYb48DS3Eo6StWtFC49SCds8UtGJxKG
+         KRemr6zGNHeYk0aDcgIttFxeZLXaF/y6I4QLPXTcxP5aC8FCrjk9MVe34iHL5V8ZMfEH
+         dKULx/kWe0+VO1ZeMHLS7Me/bW7/hVu6LX7S+baNAwkI0tGRAZVvKqbHTiDWsl5hwLgx
+         G0DKGc7IPRBLKDPMuY4tKWHCvJ6fN+V7V02NoNz8vmVzH1r2ntsxCzpjTdBlRXlT6K10
+         niuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783970704; x=1784575504;
+        d=1e100.net; s=20251104; t=1783970792; x=1784575592;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=2kWy2240zOoLDDzwtKisgk31mZ51kjxw8fZyoUW4j0E=;
-        b=tUdOJ1Ha60IiAtV6YQy4gMf84sxJ4QMzAKO3Q99Ov9nmmCzrlrT7jgJRTZ7bEmURxW
-         EfNXR81i4G1fwFkLaYhF8ZLDH8xLUsVfA+mRg3+GtVSlhnTETzLo36ANSUu6D3UzhHkq
-         xM5PHU2p31981BS7dyahzF3zNxd3cqesMGJ/ruf928YgxiV9ZffN0XsfA+2vr/2C4Da/
-         K76pgrWKTmhQC+7kYqEFdg1m3uXqS0vpTu7JXkFJWj8/w9cg2LvSvf8DijUNywujb7De
-         RnfHXgMvVBveiyWDz4dtWBS+61nhyLE6wRIzPxcGepR/AnsPaUZQT1KFq/hj0mqVWzYD
-         dllg==
-X-Forwarded-Encrypted: i=1; AHgh+RpWZTqDjaCzmrqjQVsQphGWEfu6jmZLr+/93sUurx2HKUOTZowrRijb6avxOmBuaTsqKUuD96RcvFyY@vger.kernel.org
-X-Gm-Message-State: AOJu0YxE5yvNIcHqq478HK49xeDLkUA1CjpfAFNIDymp9i3b4Z16Js4m
-	oeQF0hoedZuGBXCdxHsUs2FtOadNmWmg3ecuODLW9hrHaAuIlWNclEiPAFPuLOxhyJbGwnhbLjO
-	PGxG9
-X-Gm-Gg: AfdE7cltpBJJEil7skFJhgHUt6Y8mn/O0Zdb06QC0EMsjlWRj41ffffDKUBcJ41rtxx
-	TUP07m3PHWKgp7rhvFH1e/F9u91u6kRDPQiM/A0jMDqCUCqDlikX7024d46WqeE5jjJ+L67hnop
-	Z78bffhC07Q4UA+A6B1dH81AWJ5elWJD5pKMIeGn6/XIFJuN7yNBxmcGu48SiwM0tiZpcUwJiVJ
-	LCdXZhIPKrPkGZA0mfnbsSh2TuGilABR6xLOIA7GZx+vsGtx7jxalxfY7Mqxva3jRfVh1Tkonv8
-	BGKZKJT871yFKF0Uj2lqEjiYHg20Ps9lEJdGkesgs3r3SNFnGcXghrsuOW5SaPSzwgKyPZewIgY
-	SZSAJFCGPG6gti/TPLwTaLTxARC4I1QiwIAGQkmYt6BUjJrfqSV0r4RLKUQ5v
-X-Received: by 2002:a05:6214:2f8d:b0:8ef:76c:cb18 with SMTP id 6a1803df08f44-903fe450e81mr122377626d6.11.1783970703547;
-        Mon, 13 Jul 2026 12:25:03 -0700 (PDT)
+        bh=WcYJlt5p9Qz8AXWYIObijachKEBwhFuSBSepR8dnD2g=;
+        b=n3t/+MM/V0c8pJRolsESMTo8Ke89nm/2GCISi8RSqpiDEQGMUTBGykQjc3NizWRzhE
+         dpB3GSqcR3JG3b0fK3BBBnLQLwKOaNr+9OPgiY4svNSk5jI5gYXo3Kv+JR4UV0kbaNdu
+         o59ikh62A2hVJSM2pXoQYSmkq81SMkNtT8Tx/Gpzv6U5hW3391ej2di3LhFwy4wU4CK8
+         b0Oluc64UOSO2LFFwBxfIbJrQC6ACYaGi23OKqA8UsflIOTK+9ZFI9hbvYXTNnGGJjMh
+         5F5fR1rnfCtjBOfQ1u2zkhowKr+hn9Lgk/3RFMweWAlKjBSJKM/oCiVbQVhHbtyuRaAB
+         caTQ==
+X-Forwarded-Encrypted: i=1; AHgh+RqbXBem/JpohBUanJjC+ogwEA1nERxmDpDtWW2JfUyjW+r9HsXcXZCldp/7zYU0ztTPbadqvIxIIIty@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZ5EHMB8fecCz7buWmYOsqvL/zZBvo5alL4SHW1RyaZXrbmiFV
+	zENV7O8FKQAJYGhCbgNjMzkgLQPwCAvRFzatTIVtQ84b9HpADhXx1IOWuMbCyveqLqk=
+X-Gm-Gg: AfdE7clzmWQcO8B/uWSaoLbH48u4wv+ckZjqohh033f8/qWM0Zq4t7prG/pyHjjpFxF
+	LRYg8wrizaLPsoVQtMLhdTLvhXRLfJo6SE+UymYsBfGK/Gu/8ZKV9VlzFWFRJVWChOfi4z37o0t
+	ndGd5H4W3Nj7BHTkObYPaKZ8C0V48MzSOOydZc6JNvmEuIBPjUw1N7qD9oLANc/2NlFQ3s7iF5r
+	fKnTuW3dHBd6UDleEH/JJBixMB2n5+abfcivRi+GFH4qFp64uxwL3uyaf3HaXijNPILHF/1a2CZ
+	xO+yP+bkfOsW9fR+rvO+AnA0VSuYvfbIqvG/Fb7Z13YB2yYAGqNQk4gcxwY2nMlI10F3VeA7cDY
+	nRATnUEspzTs/TU8GKZ76x6l6Rkm3bzsbbJJ6hMnAnM8MSpDyjJd6m/YbqUm6RZ2lTzyjkeE=
+X-Received: by 2002:ac8:5906:0:b0:51c:83ee:e430 with SMTP id d75a77b69052e-51cbf27d077mr95594101cf.75.1783970792197;
+        Mon, 13 Jul 2026 12:26:32 -0700 (PDT)
 Received: from ziepe.ca ([159.2.72.92])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ffd7c1da1bsm137170026d6.30.2026.07.13.12.25.02
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51cbd8efab4sm70831241cf.1.2026.07.13.12.26.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2026 12:25:03 -0700 (PDT)
+        Mon, 13 Jul 2026 12:26:31 -0700 (PDT)
 Received: from jgg by wakko with local (Exim 4.97)
 	(envelope-from <jgg@ziepe.ca>)
-	id 1wjMH0-0000000E5NW-1O3S;
-	Mon, 13 Jul 2026 16:25:02 -0300
-Date: Mon, 13 Jul 2026 16:25:02 -0300
+	id 1wjMIR-0000000E5Pw-0MTy;
+	Mon, 13 Jul 2026 16:26:31 -0300
+Date: Mon, 13 Jul 2026 16:26:31 -0300
 From: Jason Gunthorpe <jgg@ziepe.ca>
 To: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
 Cc: iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
@@ -109,11 +108,11 @@ Cc: iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
 	Christian Borntraeger <borntraeger@linux.ibm.com>,
 	Sven Schnelle <svens@linux.ibm.com>, x86@kernel.org,
 	Jiri Pirko <jiri@nvidia.com>, Michael Kelley <mhklinux@outlook.com>
-Subject: Re: [PATCH v7 13/22] dma: swiotlb: track pool encryption state and
- honor DMA_ATTR_CC_SHARED
-Message-ID: <20260713192502.GS3133966@ziepe.ca>
+Subject: Re: [PATCH v7 14/22] dma-mapping: make dma_pgprot() honor
+ __DMA_ATTR_ALLOC_CC_SHARED
+Message-ID: <20260713192631.GT3133966@ziepe.ca>
 References: <20260701054926.825925-1-aneesh.kumar@kernel.org>
- <20260701054926.825925-14-aneesh.kumar@kernel.org>
+ <20260701054926.825925-15-aneesh.kumar@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -122,16 +121,16 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260701054926.825925-14-aneesh.kumar@kernel.org>
+In-Reply-To: <20260701054926.825925-15-aneesh.kumar@kernel.org>
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_DKIM_ALLOW(-0.20)[ziepe.ca:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22184-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22185-lists,linux-s390=lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:aneesh.kumar@kernel.org,m:iommu@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:robin.murphy@arm.com,m:m.szyprowski@samsung.com,m:will@kernel.org,m:maz@kernel.org,m:steven.price@arm.com,m:Suzuki.Poulose@arm.com,m:catalin.marinas@arm.com,m:jiri@resnulli.us,m:smostafa@google.com,m:ptesarik@suse.com,m:aik@amd.com,m:dan.j.williams@intel.com,m:yilun.xu@linux.intel.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-s390@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:x86@kernel.org,m:jiri@nvidia.com,m:mhklinux@outlook.com,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	DMARC_NA(0.00)[ziepe.ca];
@@ -143,7 +142,7 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	DKIM_TRACE(0.00)[ziepe.ca:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	MISSING_XM_UA(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[6];
@@ -156,34 +155,27 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:email,vger.kernel.org:from_smtp,nvidia.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:email,vger.kernel.org:from_smtp,nvidia.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 2B58F74EB20
+X-Rspamd-Queue-Id: 664BB74EB52
 
-On Wed, Jul 01, 2026 at 11:19:17AM +0530, Aneesh Kumar K.V (Arm) wrote:
-> Teach swiotlb to distinguish between encrypted and decrypted bounce
-> buffer pools, and make allocation and mapping paths select a pool whose
-> state matches the requested DMA attributes.
+On Wed, Jul 01, 2026 at 11:19:18AM +0530, Aneesh Kumar K.V (Arm) wrote:
+> Fold encrypted/decrypted pgprot selection into dma_pgprot() so callers
+> do not need to adjust the page protection separately.
 > 
-> Add a cc_shared flag to io_tlb_mem, initialize it for the default and
-> restricted pools, and propagate __DMA_ATTR_ALLOC_CC_SHARED into swiotlb
-> pool allocation. Reject swiotlb alloc/map requests when the selected pool
-> does not match the required encrypted/decrypted state.
-> 
-> Also return DMA addresses with the matching phys_to_dma_{encrypted,
-> unencrypted} helper so the DMA address encoding stays consistent with the
-> chosen pool.
+> Update dma_pgprot() to apply pgprot_decrypted() when DMA_ATTR_CC_SHARED or
+> __DMA_ATTR_ALLOC_CC_SHARED is set and pgprot_encrypted() otherwise Convert
+> the dma-direct mmap paths to pass DMA_ATTR_CC_SHARED instead of open-coding
+> force_dma_unencrypted() handling around dma_pgprot().
 > 
 > Tested-by: Jiri Pirko <jiri@nvidia.com>
 > Tested-by: Michael Kelley <mhklinux@outlook.com>
 > Tested-by: Mostafa Saleh <smostafa@google.com>
 > Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
 > ---
->  include/linux/dma-direct.h |  10 +++
->  include/linux/swiotlb.h    |  10 ++-
->  kernel/dma/direct.c        |  13 ++-
->  kernel/dma/swiotlb.c       | 177 ++++++++++++++++++++++++++++---------
->  4 files changed, 162 insertions(+), 48 deletions(-)
+>  kernel/dma/direct.c  |  8 +++-----
+>  kernel/dma/mapping.c | 16 ++++++++++++----
+>  2 files changed, 15 insertions(+), 9 deletions(-)
 
 Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
