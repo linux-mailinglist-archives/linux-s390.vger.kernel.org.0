@@ -1,229 +1,169 @@
-Return-Path: <linux-s390+bounces-22160-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22161-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ZmDNAVUaVWrkjwAAu9opvQ
-	(envelope-from <linux-s390+bounces-22160-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 19:03:17 +0200
+	id I3oZILEfVWrykAAAu9opvQ
+	(envelope-from <linux-s390+bounces-22161-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 19:26:09 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 500A674DD49
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 19:03:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CBBFE74DFDB
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 19:26:08 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=k38U9VGp;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=MxosFHDV;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=k38U9VGp;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=MxosFHDV;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22160-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-22160-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=suse.de;
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=Myb8yG3+;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22161-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-22161-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5237A3041A6A
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 17:00:45 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 91CF0302EEB4
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 17:26:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07D9B27B35B;
-	Mon, 13 Jul 2026 17:00:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD86B346FDA;
+	Mon, 13 Jul 2026 17:26:06 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46CA621770B
-	for <linux-s390@vger.kernel.org>; Mon, 13 Jul 2026 17:00:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7511C29B228;
+	Mon, 13 Jul 2026 17:26:05 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783962043; cv=none; b=iRSqUZKKm3/DYYaV1ppJbgUD91u4BVp8b7vsw0ai8VtvYBqfc5Fk7Z4Sh5KqaRvhpzHCk85wXEdLU5CVxZO/x0vFQUpzsDNvMaJS3ahFImwUXvbinrPwbLKyo/T6fdwNouTPvlh1fKz59U+A86ZEFeuEOe8vp8dv4Zf3wVU+rdc=
+	t=1783963566; cv=none; b=hjNwokP/NbyOsKp13abfZHy4nb2nLWmvrLP0wvKqDX6JWH/AkJjAdHq107RYrO/uQIl316Pe9BlzeHI42mlP2kp99m/fU2dmai07ZeV9srY0fQr6co+4m7G8dtpHnRQwwM+9tgBeg3+TZtUl829TQn1FNzDxqq5BMIyBZUowh/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783962043; c=relaxed/simple;
-	bh=Uq6y9uUt5K2cHJBKpDRXgStFcdRTfQPD697wVLKCLjY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hCHDLsj9rVV5nv8IHfx7kLh2B01JR8A05vDmEbIfXXCCsKnJz68Nanvrc/tvvPGweAM7PIa3vuyoS4Rw10P3IIwUe/8oLKD42yoMr/1kzE2ZDoWo0L7JgK9MgzE/Ikbke7tAqIrKSw9bNGVQ1/U4Uhqxqz2PAbyKzlP9V43fp0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=k38U9VGp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MxosFHDV; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=k38U9VGp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MxosFHDV; arc=none smtp.client-ip=195.135.223.130
-Received: from kunlun.suse.cz (unknown [IPv6:2a07:de40:b306:2000::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4259676096;
-	Mon, 13 Jul 2026 17:00:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1783962040; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LMin0ELA0S/qDIAUfN3e2MLbd1C3d6yAWrkFWIFj3NM=;
-	b=k38U9VGpm3QZqwrMgrGYZhudou4TosLelMu1WbunbvSqmO5dksCD5c26659+zHqwJbyw5B
-	OnaRta1F0bmNDqlN3+ON9Uxo2d7b049PRrpYzcOh97KfrWO12qACQkUqugBnPgNSWNxXQI
-	3mihV17Sf95o+W95SmBDGgfrGizSPG4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1783962040;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LMin0ELA0S/qDIAUfN3e2MLbd1C3d6yAWrkFWIFj3NM=;
-	b=MxosFHDVPDEv59mXM8XmLBMD+Iwc2VP3NSHMdXmxpSw/bQ0Sq1kGSda3TOcu5V9qfpd2Si
-	8X9qIT6NRCoVcFDA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1783962040; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LMin0ELA0S/qDIAUfN3e2MLbd1C3d6yAWrkFWIFj3NM=;
-	b=k38U9VGpm3QZqwrMgrGYZhudou4TosLelMu1WbunbvSqmO5dksCD5c26659+zHqwJbyw5B
-	OnaRta1F0bmNDqlN3+ON9Uxo2d7b049PRrpYzcOh97KfrWO12qACQkUqugBnPgNSWNxXQI
-	3mihV17Sf95o+W95SmBDGgfrGizSPG4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1783962040;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LMin0ELA0S/qDIAUfN3e2MLbd1C3d6yAWrkFWIFj3NM=;
-	b=MxosFHDVPDEv59mXM8XmLBMD+Iwc2VP3NSHMdXmxpSw/bQ0Sq1kGSda3TOcu5V9qfpd2Si
-	8X9qIT6NRCoVcFDA==
-Date: Mon, 13 Jul 2026 19:00:39 +0200
-From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To: Thomas Gleixner <tglx@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	linuxppc-dev@lists.ozlabs.org, Huacai Chen <chenhuacai@kernel.org>,
-	loongarch@lists.linux.dev, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	linux-riscv@lists.infradead.org,
-	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
-	x86@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Magnus Lindholm <linmag7@gmail.com>,
-	"Mukesh Kumar Chaurasiya (IBM)" <mkchauras@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>, Radu Rendec <radu@rendec.net>
-Subject: Re: [patch 4/4] entry, treewide: Make
- syscall_enter_from_user_mode[_work]() indicate syscall execution
-Message-ID: <alUZt76QncJ_fbxr@kunlun.suse.cz>
-References: <20260712134433.549076055@kernel.org>
- <20260712141346.772209074@kernel.org>
- <alSlg72c8xmjaj48@kunlun.suse.cz>
+	s=arc-20240116; t=1783963566; c=relaxed/simple;
+	bh=6Eh5UokVWthIqkJZ7zuPwSbj9Oq0RkNBZXNR/P+E78w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WlZLjb5zubqGYmU+jfBSJdFGXna+os8nEcQm7vRoKk5v7B94J+uG6QJpi3FADbfha+cIwxi5G5HS0eD/SQ5Pr7MXvOB7/aCrs5PDO9P6JvPWoy3U61J21U2vUh6jffePiNYWRgD/jDDN814UMpSonDXDbQaaEeoFwWIz/9OpbB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Myb8yG3+; arc=none smtp.client-ip=148.163.156.1
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66DFEE1Z953699;
+	Mon, 13 Jul 2026 17:26:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=8U1E8EyPk/ERNXesavv63PsKkDPzS60G8Cl2t5F2G
+	wo=; b=Myb8yG3+c4xxT1+NZBXw9N5ZFtv65givC3YWMeqgJ21v37DMoAQOggyYE
+	DNee232CpnyMaGeeaK1hjEcfbgklc02P4e1orvNo+imiT88zKxwowb3z5EWjReA2
+	Kq6skDuw3KqJ19l7sFxDgDtcN5jCQ22WtU1/dWyih+PxPt0SUKslev83p9GJS7/x
+	u0clsKO283i2bGRZCHMW+vdDMY1FopInyWvVo1Z8CHez9zcnp6DqJ/B8gWbDDvGd
+	S/9V/Aq2AdSUZzdU4vIgqEowxMtqovoCr4kVRZXL/qsRWF8ki1uvxiCjwNZW9dFg
+	hQGNIY1NVFbTvBcEVQMcHcHdmjMPg==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fcv332gcr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 13 Jul 2026 17:26:04 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66DHOcZ1003366;
+	Mon, 13 Jul 2026 17:26:03 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fc1nh6r8h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 13 Jul 2026 17:26:03 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66DHQ2DN21168644
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 13 Jul 2026 17:26:02 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 51E0D58051;
+	Mon, 13 Jul 2026 17:26:02 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BDEBF58060;
+	Mon, 13 Jul 2026 17:26:01 +0000 (GMT)
+Received: from IBM-D32RQW3.ibm.com (unknown [9.61.249.24])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 13 Jul 2026 17:26:01 +0000 (GMT)
+From: Farhan Ali <alifm@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc: alifm@linux.ibm.com, mjrosato@linux.ibm.com, borntraeger@linux.ibm.com
+Subject: [PATCH v1 0/5] KVM s390x PCI fixes
+Date: Mon, 13 Jul 2026 10:25:55 -0700
+Message-ID: <20260713172600.1284-1-alifm@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <alSlg72c8xmjaj48@kunlun.suse.cz>
-X-Spamd-Bar: ++
-X-Spam-Flag: NO
-X-Spam-Score: 2.49
-X-Spam-Level: **
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzEzMDE3OCBTYWx0ZWRfXz4SHbEqMZlsh
+ bJqslStpZ4e/edQQcGILSnYcEGXQt6mU/FcVhrq1fJA8bL0PGIF7TLaeK8dcfIwIpOZrtjW9NHa
+ gScfMLCYVWoU2gVKV8BRBssIfjt4G3A=
+X-Authority-Analysis: v=2.4 cv=Mp1iLWae c=1 sm=1 tr=0 ts=6a551fac cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=uAbxVGIbfxUO_5tXvNgY:22 a=VwQbUJbxAAAA:8 a=AS5ghRNMvKoEADv8KEEA:9
+X-Proofpoint-GUID: A9CecoMkXt2RBW5OfB6uLIDUZU38LBo9
+X-Proofpoint-ORIG-GUID: A9CecoMkXt2RBW5OfB6uLIDUZU38LBo9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzEzMDE3OCBTYWx0ZWRfXxvZV8RE2l1iM
+ ui5Ebpp0bJ5Q8SKwWFpxsmUcFTwPzK0gxjhv8A9MpUy6TOrWm1xrzU9Fyah+1EH2nLUYwbq/NB2
+ 6LPVShns2kX4jNh/bZ4Qn44twioeo4DznoQTEtqUHxe6uMWhOtc2nfvrW9slJ362tLxfOi+F2Ot
+ MgnGpOLQWE+LqVApVLCn2mRsChc2pqWB+TCLgaqa6gSyL6+jOeWjcbH9m4LEJgMYiB6GZwbW5XT
+ 2fduFUXikiXSj3GrLl092hJ7Mikj3B8xYyhB8h7HL1iG7YYKrz3HbwuRnTS0Qdzg0vF2QVsNxlt
+ 6Dub+1hBlHtE0RQjpyIAUIcNm+VmpEDW6zcSHnoWpQBTKz3NnHRS682aFJGZCCESmycoXZQ2XrA
+ gLVVu0MVXCaGmS54BseeHrXrAK8+hydmzzr3mKHGrpsZRp8mmxa2U2Y+70BPUYT/A2xR975Rlvk
+ /w40QEJSHj2IP5+7aXQ==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-13_04,2026-07-10_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 bulkscore=0 spamscore=0 malwarescore=0 lowpriorityscore=0
+ impostorscore=0 priorityscore=1501 suspectscore=0 clxscore=1011 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607130178
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[suse.de,none];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_MISSING_CHARSET(0.50)[];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:tglx@kernel.org,m:linux-kernel@vger.kernel.org,m:mpe@ellerman.id.au,m:sshegde@linux.ibm.com,m:linuxppc-dev@lists.ozlabs.org,m:chenhuacai@kernel.org,m:loongarch@lists.linux.dev,m:pjw@kernel.org,m:palmer@dabbelt.com,m:linux-riscv@lists.infradead.org,m:svens@linux.ibm.com,m:linux-s390@vger.kernel.org,m:x86@kernel.org,m:mark.rutland@arm.com,m:ruanjinjie@huawei.com,m:linmag7@gmail.com,m:mkchauras@gmail.com,m:corbet@lwn.net,m:radu@rendec.net,s:lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-22160-lists,linux-s390=lfdr.de];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22161-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[msuchanek@suse.de,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:linux-kernel@vger.kernel.org,m:linux-s390@vger.kernel.org,m:kvm@vger.kernel.org,m:alifm@linux.ibm.com,m:mjrosato@linux.ibm.com,m:borntraeger@linux.ibm.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[alifm@linux.ibm.com,linux-s390@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	RCVD_COUNT_THREE(0.00)[4];
+	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_CC(0.00)[vger.kernel.org,ellerman.id.au,linux.ibm.com,lists.ozlabs.org,kernel.org,lists.linux.dev,dabbelt.com,lists.infradead.org,arm.com,huawei.com,gmail.com,lwn.net,rendec.net];
+	FROM_NEQ_ENVFROM(0.00)[alifm@linux.ibm.com,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[msuchanek@suse.de,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[suse.de:+];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp];
+	TO_DN_NONE(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	TAGGED_RCPT(0.00)[linux-s390];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[kunlun.suse.cz:mid,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 500A674DD49
+X-Rspamd-Queue-Id: CBBFE74DFDB
 
-On Mon, Jul 13, 2026 at 10:44:51AM +0200, Michal Suchánek wrote:
-> Hello,
-> 
-> On Sun, Jul 12, 2026 at 11:25:32PM +0200, Thomas Gleixner wrote:
-> > The return values of syscall_enter_from_user_mode[_work]() are
-> > non-intuitive. Both functions return the syscall number which should be
-> > invoked by the architecture specific syscall entry code. The returned
-> > number can be:
-> > 
-> >   - the unmodified syscall number which was handed in by the caller
-> > 
-> >   - a modified syscall number (ptrace, seccomp, trace/probe/bpf)
-> > 
-> > That has an additional twist. If the return value is -1L then the caller is
-> > not allowed to modify the return value as that indicates that the modifying
-> > entity requests to abort the syscall and set the return value already. That
-> > can obviously not be differentiated from a syscall which handed in -1 as
-> > syscall number.
-> > 
-> > The most trivial way to deal with that is:
-> > 
-> >     set_return_value(regs, -ENOSYS);
-> >     nr = syscall_enter_from_user_mode(regs, nr);
-> >     if (valid(nr))
-> >     	handle_syscall(regs, nr);
-> > 
-> > That's what LOONGARCH, RISCV, and X86 do. But PowerPC and S390 do not
-> > preset the return value, so when user space hands in -1 and there is
-> > nothing setting the return value in the entry work code, then the syscall
-> > is skipped but the return value is whatever random data has been in the
-> > return value register.
-> 
-> The reason why PowerPC and S390 do not preset the return value is that
-> the return value uses the same register as the syscall number. There are
-> apparently other architectures on which the return value overlaps with
-> the arguments which also do not preset the return value for that reason.
-> If they would use the generic entry the same problem would arise.
-> 
-> > Change the return values of syscall_enter_from_user_mode[_work]() to
-> > boolean and return false, when either ptrace or seccomp request to skip the
-> 
-> There is a difference between seccomp and ptrace.
-> 
-> When seccomp indicates to skip the syscall it has also set the syscall
-> return value.
-> 
-> However, when the syscall number is -1 and the return value is not
-> preset that does not indicate anything.
-> 
-> The return value can still hold garbage. ptrace does not have the
-> ability to indicate that a syscall is to be skipped, at least on the
-> entry trace. It needs to be skipped based on the syscall number being
-> invalid.
+Hi,
 
-To be very clear here: When seccomp_permit_syscall() returns false based
-on filter result (other than trace filter) it guarantees that the return
-value has been set, and then the syscall processing can be skipped, and
-it has to be skipped on ppc because the syscall number has been
-overwritten by the return value.
+This series attempts to fixe the pre-existing issues[1] found by sashiko.
 
-ptrace, on the other hand, does not ever provide such guarantee. It does
-something unspecified to the registers. Even in the case that the syscall
-number is set to -1 nothing is known about the return value.
+[1] https://lore.kernel.org/all/20260624063447.85DF51F000E9@smtp.kernel.org/
 
-While on x86 it is preset to -ENOSYS this is an architectural quirk that
-the code cannot rely on in general. On ppc the syscall has to be
-processed so that the invalid syscall processing sets the return value
-to -ENOSYS after syscall_enter_from_user_mode() is done.
 
-ptrace_report_syscall_permit_entry() breaks that by indicating to
-skip the syscall processing, resulting in the return value of -1 instead
-of -ENOSYS for the -1 syscall.
+Farhan Ali (5):
+  KVM: s390: pci: Fix refcount leak in memory accounting functions
+  KVM: s390: pci: Fix missing error codes and memory unaccounting
+  KVM: s390: pci: Fix NULL dereference on AIBV allocation failure
+  KVM: s390: pci: Fix resource leak on IRQ registration failure
+  KVM: s390: pci: Fix AIBV and AISB spanning multiple pages
 
-Thanks
+ arch/s390/kvm/pci.c | 130 +++++++++++++++++++++++++++++++++++---------
+ arch/s390/kvm/pci.h |   5 ++
+ 2 files changed, 109 insertions(+), 26 deletions(-)
 
-Michal
+-- 
+2.43.0
+
 
