@@ -1,242 +1,162 @@
-Return-Path: <linux-s390+bounces-22098-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22099-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ZOYwEXdhVGpilQMAu9opvQ
-	(envelope-from <linux-s390+bounces-22098-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 05:54:31 +0200
+	id B2y1GXSNVGrwnAMAu9opvQ
+	(envelope-from <linux-s390+bounces-22099-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 09:02:12 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0131A74704E
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 05:54:30 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B948E747C39
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 09:02:11 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=huawei.com header.s=dkim header.b=EHSxG8IT;
-	dmarc=pass (policy=quarantine) header.from=huawei.com;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22098-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-22098-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=linutronix.de header.s=2020 header.b="xuFdla/6";
+	dkim=pass header.d=linutronix.de header.s=2020e header.b=cXVv1a5z;
+	dmarc=pass (policy=none) header.from=linutronix.de;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22099-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-22099-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2BB1D300D876
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 03:54:26 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 875DF300CE48
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 07:02:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D074832572F;
-	Mon, 13 Jul 2026 03:54:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 446D831326A;
+	Mon, 13 Jul 2026 07:02:03 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15842FE0F;
-	Mon, 13 Jul 2026 03:54:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC3029ACCD;
+	Mon, 13 Jul 2026 07:02:00 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783914864; cv=none; b=KDzXE7muWiIP4VUQs0i+410FPwCRMI+JGhqHBDZCcutCRCPJRj2hMVnY7E0s8IwmPh/rVM58ZZyDWqoHNYIyfUcP70UpCSnpzd430pvAP7Mhqhv4dN68j/YAH5veKJw3h90ntW5nFWzb9+MlNi/m51FNLZXxg+owCvgJecIpQzE=
+	t=1783926123; cv=none; b=BtxRvgojsWX43DbU7imxrT6hqe3NrUy6YPjb/Z+zEquZQqWf4d50wbtj2/bolXc9TLzA3c4fRODBIdHLgsuOOI1zf5jJhRovy+Vb8qYyA+WEyZH9G2w0RUr+vinbqteQGU3WdSoSyQqjjkpRnSpUx0TiJFJOeKdrdwuZcSPtXTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783914864; c=relaxed/simple;
-	bh=xoVEx/HC3IncUU0hoh83dAvnFkuhHxVxkOOL4kk1kVs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ak+ftp2UnYuEKJnc216CkEj/iVIDYOvRZLMhefNDRZgE4oQ0kkL+09jtNCXug3l6svhPuhWAiz7E6XSKDGpnUEcNy152XL8rNpo5NXMciv285+YJxUyrzJe9d0nHkvMelAUf5yEUbFjyaTrznXvEHr/POfHB2CFp3G/Amu5qNBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=EHSxG8IT; arc=none smtp.client-ip=113.46.200.218
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=Wll8mTLBn9B2fPK9pm24mOajugHT7OtRM0GeQhTtfeg=;
-	b=EHSxG8IT53N6k+cl2pDQ/HnOvdvCXTaXD5Wu1EI7I5nfI2mEAXDXd3NzfNSDRc23QAHsZL9OK
-	18UrkbYTp1rtOo5ehYoaYcq+JhN138Umz5lQOKl81MDZhFz/A5xndUvG09QEDEjbHiu4F/kVhpq
-	6xZtSFLFEo2Rih9MgpKl2ho=
-Received: from mail.maildlp.com (unknown [172.19.162.223])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4gz7ch73wrzpT0s;
-	Mon, 13 Jul 2026 11:45:24 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9517640561;
-	Mon, 13 Jul 2026 11:54:13 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
- (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 13 Jul
- 2026 11:54:11 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
-	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
-	<pjw@kernel.org>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
-	<alex@ghiti.fr>, <hca@linux.ibm.com>, <gor@linux.ibm.com>,
-	<agordeev@linux.ibm.com>, <borntraeger@linux.ibm.com>, <svens@linux.ibm.com>,
-	<tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <nathan@kernel.org>,
-	<kees@kernel.org>, <xur@google.com>, <arnd@arndb.de>, <peterz@infradead.org>,
-	<gourry@gourry.net>, <lukas.bulwahn@redhat.com>, <ryan.roberts@arm.com>,
-	<yangtiezhu@loongson.cn>, <mchauras@linux.ibm.com>, <sshegde@linux.ibm.com>,
-	<austin.kim@lge.com>, <jchrist@linux.ibm.com>, <x86@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <loongarch@lists.linux.dev>,
-	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
-	<linux-s390@vger.kernel.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH RESEND] syscall_user_dispatch: Introduce ARCH_SUPPORTS_SYSCALL_USER_DISPATCH
-Date: Mon, 13 Jul 2026 11:54:22 +0800
-Message-ID: <20260713035422.582771-1-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1783926123; c=relaxed/simple;
+	bh=7qgYWfsFyZ2RgA/27lsYmYQZTrcjl45mKP6ePkNwd3s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eTUWScNU7d33coXMdhoW7DR8U9M2IoV+TWsMnbdPhOqr077dqJMrDMWw8/wrfL8qFHxhHtSLFU56FFo1o4p69lEhpvrY+iy0z/66fwl93O/omJhlnvd0clBei39WhYyh081Q+zsO6fG2s1e0aWBFjkW5ztJQqgO/3WkNfjv7kYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xuFdla/6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cXVv1a5z; arc=none smtp.client-ip=193.142.43.55
+Date: Mon, 13 Jul 2026 09:01:56 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1783926118;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gnmxNdHqKoh6xuYofsr73YiT+W94DI4jpIiM80uad1k=;
+	b=xuFdla/6ifWVxs+wZ/ziKIXPwTG8sNl1CvOxpSkj7lA5470k6wTgjpeu7/nlRL+oihS2Qs
+	JADuHCTtvX5KsRBE+2BwukLfzUJWDi3WmNcefXD07sqWlxw7cq54WE1/rhAb0H08RGTG54
+	NKVh6zGp+juLKf0xn/ZZ/iHAUAMgZL1Gz+AEf4FCljbY9Gs2UrRNV9CQfA9ZnvX7iuY/CR
+	+eH0hO+UwyFjJgLhe6cGdJg9VIHjkyqxDiQcyzD1kAE21gJQJA90gnhj4aClj+bpR70P1/
+	PyuEkKpTBKkI7DGLCZkpzwWyVeBOFCXJejv6p2QBYbd8qAfd3VxT9OjpsNrVgw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1783926118;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gnmxNdHqKoh6xuYofsr73YiT+W94DI4jpIiM80uad1k=;
+	b=cXVv1a5zXQlrcFC6I4GHPNC9QKNeWn00sP2uqrUVvBJohK68NTBxPt4JyPk2bcommOIhMi
+	q3BAQe+PJhx4WPDw==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com, 
+	mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org, pjw@kernel.org, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, hca@linux.ibm.com, 
+	gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com, 
+	svens@linux.ibm.com, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, nathan@kernel.org, kees@kernel.org, 
+	xur@google.com, arnd@arndb.de, peterz@infradead.org, gourry@gourry.net, 
+	lukas.bulwahn@redhat.com, ryan.roberts@arm.com, yangtiezhu@loongson.cn, 
+	mchauras@linux.ibm.com, sshegde@linux.ibm.com, austin.kim@lge.com, jchrist@linux.ibm.com, 
+	x86@kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH RESEND] syscall_user_dispatch: Introduce
+ ARCH_SUPPORTS_SYSCALL_USER_DISPATCH
+Message-ID: <20260713085930-c6e454ac-cb4d-4016-8971-49df521e1d8d@linutronix.de>
+References: <20260713035422.582771-1-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+In-Reply-To: <20260713035422.582771-1-ruanjinjie@huawei.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-8.16 / 15.00];
-	WHITELIST_DMARC(-7.00)[huawei.com:D:+];
+X-Spamd-Result: default: False [-1.60 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_MIXED_CHARSET(0.56)[subject];
+	DMARC_POLICY_ALLOW(-0.50)[linutronix.de,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[linutronix.de:s=2020,linutronix.de:s=2020e];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-22098-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22099-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:chenhuacai@kernel.org,m:kernel@xen0n.name,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:alex@ghiti.fr,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:hpa@zytor.com,m:nathan@kernel.org,m:kees@kernel.org,m:xur@google.com,m:arnd@arndb.de,m:peterz@infradead.org,m:gourry@gourry.net,m:lukas.bulwahn@redhat.com,m:ryan.roberts@arm.com,m:yangtiezhu@loongson.cn,m:mchauras@linux.ibm.com,m:sshegde@linux.ibm.com,m:austin.kim@lge.com,m:jchrist@linux.ibm.com,m:x86@kernel.org,m:linux-kernel@vger.kernel.org,m:loongarch@lists.linux.dev,m:linuxppc-dev@lists.ozlabs.org,m:linux-riscv@lists.infradead.org,m:linux-s390@vger.kernel.org,m:ruanjinjie@huawei.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[ruanjinjie@huawei.com,linux-s390@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[kernel.org,xen0n.name,linux.ibm.com,ellerman.id.au,gmail.com,dabbelt.com,eecs.berkeley.edu,ghiti.fr,redhat.com,alien8.de,linux.intel.com,zytor.com,google.com,arndb.de,infradead.org,gourry.net,arm.com,loongson.cn,lge.com,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,lists.infradead.org];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ruanjinjie@huawei.com,linux-s390@vger.kernel.org];
-	DKIM_TRACE(0.00)[huawei.com:+];
-	TO_DN_NONE(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	FORGED_SENDER(0.00)[thomas.weissschuh@linutronix.de,linux-s390@vger.kernel.org];
+	FREEMAIL_CC(0.00)[kernel.org,xen0n.name,linux.ibm.com,ellerman.id.au,gmail.com,dabbelt.com,eecs.berkeley.edu,ghiti.fr,redhat.com,alien8.de,linux.intel.com,zytor.com,google.com,arndb.de,infradead.org,gourry.net,arm.com,loongson.cn,lge.com,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,lists.infradead.org];
 	RCPT_COUNT_TWELVE(0.00)[40];
+	FORGED_RECIPIENTS(0.00)[m:ruanjinjie@huawei.com,m:chenhuacai@kernel.org,m:kernel@xen0n.name,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:alex@ghiti.fr,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:hpa@zytor.com,m:nathan@kernel.org,m:kees@kernel.org,m:xur@google.com,m:arnd@arndb.de,m:peterz@infradead.org,m:gourry@gourry.net,m:lukas.bulwahn@redhat.com,m:ryan.roberts@arm.com,m:yangtiezhu@loongson.cn,m:mchauras@linux.ibm.com,m:sshegde@linux.ibm.com,m:austin.kim@lge.com,m:jchrist@linux.ibm.com,m:x86@kernel.org,m:linux-kernel@vger.kernel.org,m:loongarch@lists.linux.dev,m:linuxppc-dev@lists.ozlabs.org,m:linux-riscv@lists.infradead.org,m:linux-s390@vger.kernel.org,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[thomas.weissschuh@linutronix.de,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[linutronix.de:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,gourry.net:email,arm.com:email,huawei.com:from_mime,huawei.com:email,huawei.com:mid,huawei.com:dkim]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,arm.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 0131A74704E
+X-Rspamd-Queue-Id: B948E747C39
 
-Currently, only x86 genuinely implements and supports Syscall User
-Dispatch (SUD). Multiple architectures provide a stub
-arch_syscall_is_vdso_sigreturn() returning 'false' simply to satisfy
-GENERIC_ENTRY compilation, which creates a false impression of feature
-support.
+On Mon, Jul 13, 2026 at 11:54:22AM +0800, Jinjie Ruan wrote:
+> Currently, only x86 genuinely implements and supports Syscall User
+> Dispatch (SUD). Multiple architectures provide a stub
+> arch_syscall_is_vdso_sigreturn() returning 'false' simply to satisfy
+> GENERIC_ENTRY compilation, which creates a false impression of feature
+> support.
+> 
+> Introduce ARCH_SUPPORTS_SYSCALL_USER_DISPATCH to decouple this mechanism
+> from GENERIC_ENTRY. Select it exclusively on x86 and remove the redundant
+> stub functions from other architectures.
+> 
+> Link: https://lore.kernel.org/linux-arm-kernel/akZgV0Y4YAmB43_g@J2N7QTR9R3.cambridge.arm.com/
+> Cc: Thomas Gleixner <tglx@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Gregory Price <gourry@gourry.net>
+> Cc: Ada Couprie Diaz <ada.coupriediaz@arm.com>
+> Cc: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> Suggested-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 
-Introduce ARCH_SUPPORTS_SYSCALL_USER_DISPATCH to decouple this mechanism
-from GENERIC_ENTRY. Select it exclusively on x86 and remove the redundant
-stub functions from other architectures.
+Reviewed-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
 
-Link: https://lore.kernel.org/linux-arm-kernel/akZgV0Y4YAmB43_g@J2N7QTR9R3.cambridge.arm.com/
-Cc: Thomas Gleixner <tglx@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Gregory Price <gourry@gourry.net>
-Cc: Ada Couprie Diaz <ada.coupriediaz@arm.com>
-Cc: Thomas Wei√üschuh <thomas.weissschuh@linutronix.de>
-Suggested-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
----
-v1 -> RESEND
-- Define missing ARCH_SUPPORTS_SYSCALL_USER_DISPATCH.
----
- arch/Kconfig                         | 4 ++++
- arch/loongarch/include/asm/syscall.h | 6 ------
- arch/powerpc/include/asm/syscall.h   | 5 -----
- arch/riscv/include/asm/syscall.h     | 5 -----
- arch/s390/include/asm/syscall.h      | 5 -----
- arch/x86/Kconfig                     | 1 +
- 6 files changed, 5 insertions(+), 21 deletions(-)
+> ---
+> v1 -> RESEND
+> - Define missing ARCH_SUPPORTS_SYSCALL_USER_DISPATCH.
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index d2dbed524f15..066263cc44fe 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -114,8 +114,12 @@ config GENERIC_ENTRY
- 	select GENERIC_IRQ_ENTRY
- 	select GENERIC_SYSCALL
- 
-+config ARCH_SUPPORTS_SYSCALL_USER_DISPATCH
-+	bool
-+
- config SYSCALL_USER_DISPATCH
- 	bool "Syscall User Dispatch"
-+	depends on ARCH_SUPPORTS_SYSCALL_USER_DISPATCH
- 	depends on GENERIC_ENTRY
- 	default y
- 	help
-diff --git a/arch/loongarch/include/asm/syscall.h b/arch/loongarch/include/asm/syscall.h
-index df8ea223c77b..d9275010f548 100644
---- a/arch/loongarch/include/asm/syscall.h
-+++ b/arch/loongarch/include/asm/syscall.h
-@@ -84,10 +84,4 @@ static inline int syscall_get_arch(struct task_struct *task)
- 	return AUDIT_ARCH_LOONGARCH64;
- #endif
- }
--
--static inline bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs)
--{
--	return false;
--}
--
- #endif	/* __ASM_LOONGARCH_SYSCALL_H */
-diff --git a/arch/powerpc/include/asm/syscall.h b/arch/powerpc/include/asm/syscall.h
-index 834fcc4f7b54..4b3c52ed6e9d 100644
---- a/arch/powerpc/include/asm/syscall.h
-+++ b/arch/powerpc/include/asm/syscall.h
-@@ -139,9 +139,4 @@ static inline int syscall_get_arch(struct task_struct *task)
- 	else
- 		return AUDIT_ARCH_PPC64;
- }
--
--static inline bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs)
--{
--	return false;
--}
- #endif	/* _ASM_SYSCALL_H */
-diff --git a/arch/riscv/include/asm/syscall.h b/arch/riscv/include/asm/syscall.h
-index 8067e666a4ca..987c9a78806f 100644
---- a/arch/riscv/include/asm/syscall.h
-+++ b/arch/riscv/include/asm/syscall.h
-@@ -112,11 +112,6 @@ static inline void syscall_handler(struct pt_regs *regs, ulong syscall)
- 	regs->a0 = fn(regs);
- }
- 
--static inline bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs)
--{
--	return false;
--}
--
- asmlinkage long sys_riscv_flush_icache(uintptr_t, uintptr_t, uintptr_t);
- 
- asmlinkage long sys_riscv_hwprobe(struct riscv_hwprobe *, size_t, size_t,
-diff --git a/arch/s390/include/asm/syscall.h b/arch/s390/include/asm/syscall.h
-index 4271e4169f45..5f310caad1fc 100644
---- a/arch/s390/include/asm/syscall.h
-+++ b/arch/s390/include/asm/syscall.h
-@@ -89,11 +89,6 @@ static inline int syscall_get_arch(struct task_struct *task)
- 	return AUDIT_ARCH_S390X;
- }
- 
--static inline bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs)
--{
--	return false;
--}
--
- #define SYSCALL_FMT_0
- #define SYSCALL_FMT_1 , "0" (r2)
- #define SYSCALL_FMT_2 , "d" (r3) SYSCALL_FMT_1
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index bdad90f210e4..f3f8ad107eeb 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -335,6 +335,7 @@ config X86
- 	select SCHED_SMT			if SMP
- 	select ARCH_SUPPORTS_SCHED_CLUSTER	if SMP
- 	select ARCH_SUPPORTS_SCHED_MC		if SMP
-+	select ARCH_SUPPORTS_SYSCALL_USER_DISPATCH
- 	select HAVE_SINGLE_FTRACE_DIRECT_OPS	if X86_64 && DYNAMIC_FTRACE_WITH_DIRECT_CALLS
- 
- config INSTRUCTION_DECODER
--- 
-2.34.1
+If code is changed it is not a resend. Instead it should have been v2.
 
+> ---
+>  arch/Kconfig                         | 4 ++++
+>  arch/loongarch/include/asm/syscall.h | 6 ------
+>  arch/powerpc/include/asm/syscall.h   | 5 -----
+>  arch/riscv/include/asm/syscall.h     | 5 -----
+>  arch/s390/include/asm/syscall.h      | 5 -----
+>  arch/x86/Kconfig                     | 1 +
+>  6 files changed, 5 insertions(+), 21 deletions(-)
+
+(...)
 
