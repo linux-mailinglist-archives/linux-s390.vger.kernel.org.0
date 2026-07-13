@@ -1,201 +1,249 @@
-Return-Path: <linux-s390+bounces-22153-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22154-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 2g0ZH9kGVWpkjAAAu9opvQ
-	(envelope-from <linux-s390+bounces-22153-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 17:40:09 +0200
+	id uV/KDdAFVWoljAAAu9opvQ
+	(envelope-from <linux-s390+bounces-22154-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 17:35:44 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4CC274D290
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 17:40:08 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9084E74D1C8
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 17:35:43 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=OWyz74N0;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22153-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-22153-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=ibm.com header.s=pp1 header.b="IgdtTuT/";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22154-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-22154-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9F9EA3096A6F
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 15:33:37 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 54C643004266
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 15:34:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF61931F9B7;
-	Mon, 13 Jul 2026 15:33:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 258BF313E17;
+	Mon, 13 Jul 2026 15:34:20 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C143B31A572;
-	Mon, 13 Jul 2026 15:33:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6390314A84;
+	Mon, 13 Jul 2026 15:34:18 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783956815; cv=none; b=A6Pm26xoy+I+kZ8NdmAUAcQTqBNmIk0EqQxY1aSpvB/WajNS6hE4tWdRBlQYrr+Hrl1YiVrFYc7q9JlQY4nSfx73ItBwsDSs1hEO/VzhTn9hl0tmAOkV1i0RSH7xTcuQAybvBerhMD5UYjYh93qevHbV5QZPMgFEokFo63Y7OAw=
+	t=1783956860; cv=none; b=ZrXbbhYkV0/9ViiJgDAONCBlKHIf/+jrTk61RPm8ezgXApuyM4Fr5MmwWou/mrl5PxDDLyQL4eWm5wFVdpD9bV0++LOYotTvNT5ponXDz3R9UsOgaB14IkpR7013bc+r3IoDjsnoTFgh+878zTGPnpZQoFlLp7joSQJPWh7/LO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783956815; c=relaxed/simple;
-	bh=tkNbMVe5c/rYR4w2Af3NClkk691YYhetvcrZ0CfIlvY=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=E+gAUqt1rHGyboND9qf89bCHiG9t90rhUo+86yFuDJxQmfrIHwQjFYRPC6+AoP7STbxXFmcBcxcwAY5+uax88Z3vqm6fCp4ppsd1HAP4jbwsdLid61p0HosKi/auw9wzzEbehgqdKus7pcjUR9BgpYyjtBj5zyOWqnkT/HNidek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OWyz74N0; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C6C11F00AC4;
-	Mon, 13 Jul 2026 15:33:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783956814;
-	bh=04XgTq2rfwqDK3x0zzoRGeXuC5a1a5Ocha3hlm77s1U=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=OWyz74N0HFOj8JR+WNzzNfn36MNfZ3h/u1OvMdG7RoimbQ4PXlW8RpuVUcQyiikY5
-	 7TstA8XDPqsd1k1+9VmoqV+/eoa1ZipxStTC1rBePMmIIaxMF4bYZ8IUxLrXSaDgCC
-	 2VWiTkDn5cMz/avlAmS3gXCQDCeTo4IhcanvYaGMTbTec7CO8rJhKJePbuB/9HCznJ
-	 3I0HiApPHSHkqsbRswcaIVBliNhJCif+ZxeDAyF6NDLKosXTioEMmJ1ud+o63GNLPl
-	 hx3SXTfUCLzyugZGPVSChwTgIz9/mtvrhmE6NjygShU1akbSp91CxoLHot3ZfxPMm4
-	 FPHjHRls7DJeQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 7/7] KVM: s390: Return -EINTR if a signal was pending
- while faulting-in
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Claudio Imbrenda" <imbrenda@linux.ibm.com>
-Cc: "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>, "Heiko
- Carstens" <hca@linux.ibm.com>, linux-s390@vger.kernel.org, kvm@vger.kernel.org
-In-Reply-To: <20260713150857.269954-8-imbrenda@linux.ibm.com>
-References: <20260713150857.269954-1-imbrenda@linux.ibm.com>
- <20260713150857.269954-8-imbrenda@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 13 Jul 2026 15:33:33 +0000
-Message-Id: <20260713153334.0C6C11F00AC4@smtp.kernel.org>
+	s=arc-20240116; t=1783956860; c=relaxed/simple;
+	bh=tVsQdMUVWz3g5rnMqmjD0eXUsiuGJ9HxfeBaubOSpIU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cXI8Y8G47xgjQZWQNyY6Gp5iHovmjyrdRpdW6JaQmbNQ8Nx4086dzVLLMKVLyxM6xAREuvXBKurbdhnueoKOjj3ATcWiIBkmA0yhF0gFpNhZP7hhDUd2jLQ10EqO/lQOVejeG5AScFv0sbL52u3qlrqSnEV9jwRxVIUiveFSovQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IgdtTuT/; arc=none smtp.client-ip=148.163.158.5
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66DFElqU2774398;
+	Mon, 13 Jul 2026 15:34:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=XCqfTJ
+	zD9QBVrBP8YeASxRkjlT5LB+Y4FA1cox5D4kg=; b=IgdtTuT/fhWtLRgCdbraEG
+	nikWl7vjndFAc0nMPn+pLlv0oMI2xDV2lAsmGivn8D1hx6wjPM5YJYhHKZdxuhrJ
+	XsF8rxyOlnMKE8DcvWrcQeQxzkNlFesOxrA5UEuWc2H7qMB66vJGkcRzU69qfW1m
+	84TSnshCq7HwURRovB5fBb/juPnzbxH+ZWiwOxkfFPmf9SWC5x2lvMNREL/l0nGd
+	ZPBK+yYrz89kUcihP9ObTCm0HIPzb4r7DJHjDdQ5zyWzHuJ1VlIjD1Oq0kQ+g0ZE
+	dy4ajfIxhsanFV1C6WsuRSZmE7wBI0AtplRRUzI+soAH06K9IITS4N6tZOUFDiGg
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fbf2a1288-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 13 Jul 2026 15:34:17 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66DFK5Xh006455;
+	Mon, 13 Jul 2026 15:34:16 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fc05pxhg0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 13 Jul 2026 15:34:16 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66DFYCeC49021374
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 13 Jul 2026 15:34:12 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 99DF820043;
+	Mon, 13 Jul 2026 15:34:12 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E708220040;
+	Mon, 13 Jul 2026 15:34:11 +0000 (GMT)
+Received: from [9.111.161.78] (unknown [9.111.161.78])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 13 Jul 2026 15:34:11 +0000 (GMT)
+Message-ID: <3b4603ba-1d56-4540-b927-9002605fc137@linux.ibm.com>
+Date: Mon, 13 Jul 2026 17:34:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] s390/vdso: Fix GNU_EH_FRAME PHDR
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev
+ <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>
+References: <20260706151909.103539-1-jremus@linux.ibm.com>
+ <20260710074600.17568Beb-hca@linux.ibm.com>
+Content-Language: en-US
+From: Jens Remus <jremus@linux.ibm.com>
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <20260710074600.17568Beb-hca@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzEzMDE1OCBTYWx0ZWRfX40+x+7G3njcU
+ gWCP1YMIKvNFZJTIxL6LjF9k+aDNu5UryEWLE/NUml0FY5A63A4Lmjnb3ceekSiwtskwDqNCttC
+ 7avicaAp6ZqBNd8rD09oy7uahOlCAEI=
+X-Proofpoint-GUID: yrN5X_LFGBoBlJwMp9Jz-VR4nSENuoGF
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzEzMDE1OCBTYWx0ZWRfXwywzbpSE4y8q
+ yDNdsYARz5iuKNuiVWiv/u0jCJgxPJHPGuBbzfs5CdgPomN7mGaex/K+V+lgVVkiBNC6G6xmRST
+ wm2qVA/5+2X8jnNU+GQClE3FvmVxJ0rNoPc+Qo2VRixXnAQOTuzzGMZgdBxQhJcwm4MA8LyJl4j
+ WqoSRweXWNNIXKZu8GYxeJM2CrhYpcVdiE43IVuknLGGhVaZfbrVGe1Am974Fm/bM2X5mK8YR5F
+ uWenAVg8ijD0CqEthjitBYCQPzoyT9G43Cn2gy2yLUH7Fvn8lM3S6rRN1KPvBIts8SEPmS7tWnH
+ 7nGQ6lyQp7xwWvOiMxDXJ+xHBBZHGaGlpDSyXudBvXqzaJ7wuHM6LpbdUguGTm9yYX77haBXF1v
+ vxh0tYZDw+8WAaAKrcvksu5/BFR+2VrjEWMsQFq2+CvBL+emy+f+1wZ37xTg51oN7tFyxyIZOYr
+ wJEywa+Dv1Tav3hiImg==
+X-Proofpoint-ORIG-GUID: yrN5X_LFGBoBlJwMp9Jz-VR4nSENuoGF
+X-Authority-Analysis: v=2.4 cv=PvajqQM3 c=1 sm=1 tr=0 ts=6a550579 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8
+ a=ZQoJ5bdyw165gDN1tUYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=O8hF6Hzn-FEA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-13_04,2026-07-10_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 impostorscore=0 adultscore=0
+ clxscore=1015 lowpriorityscore=0 spamscore=0 suspectscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607130158
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	MISSING_MIME_VERSION(2.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22153-lists,linux-s390=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:imbrenda@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:hca@linux.ibm.com,m:linux-s390@vger.kernel.org,m:kvm@vger.kernel.org,s:lists@lfdr.de];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22154-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:hca@linux.ibm.com,m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:svens@linux.ibm.com,m:iii@linux.ibm.com,s:lists@lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.ibm.com:from_mime,linux.ibm.com:mid,vger.kernel.org:from_smtp];
+	HAS_ORG_HEADER(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	FORGED_SENDER(0.00)[jremus@linux.ibm.com,linux-s390@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[linux-s390];
-	ALIAS_RESOLVED(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_NO_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
+	FROM_NEQ_ENVFROM(0.00)[jremus@linux.ibm.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_RCPT(0.00)[linux-s390];
+	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C4CC274D290
+X-Rspamd-Queue-Id: 9084E74D1C8
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Critical] Returning -EINTR from kvm_s390_faultin_gfn bypasses explicit -=
-EAGAIN handling in callers, causing skipped instructions (missed PSW rewind=
-s) and failed PV_UNPACK ioctl retries.
---
+On 7/10/2026 9:46 AM, Heiko Carstens wrote:
+> On Mon, Jul 06, 2026 at 05:19:07PM +0200, Jens Remus wrote:
+>> Patch 1 fixes the empty GNU_EH_FRAME program table header entry to
+>> enable unwinders and stacktracers to locate the .eh_frame_hdr section.
+>>
+>> Patch 2 uses symbolic constants for the PHDR permission flags to improve
+>> readability and explicitly specifies the GNU_EH_FRAME PHDR to be read-
+>> only.
 
---- Patch [7]: [PATCH v2 7/7] KVM: s390: Return -EINTR if a signal was pend=
-ing while faulting-in ---
-commit f252af4580d9ab98014328b1d85bbc46f505b01c
-Author: Claudio Imbrenda <imbrenda@linux.ibm.com>
-
-KVM: s390: Return -EINTR if a signal was pending while faulting-in
-   =20
-If a signal is pending while trying to fault-in a page, return -EINTR
-instead of -EAGAIN.
-
-> diff --git a/arch/s390/kvm/faultin.c b/arch/s390/kvm/faultin.c
-> index fee80047bd94f..235b9c66ce542 100644
-> --- a/arch/s390/kvm/faultin.c
-> +++ b/arch/s390/kvm/faultin.c
-> @@ -93,7 +93,7 @@ int kvm_s390_faultin_gfn(struct kvm_vcpu *vcpu, struct =
-kvm *kvm, struct guest_fa
->  			return PGM_ADDRESSING;
->  		/* Signal pending: try again. */
->  		if (f->pfn =3D=3D KVM_PFN_ERR_SIGPENDING)
-> -			return -EAGAIN;
-> +			return -EINTR;
-
-[Severity: Critical]
-Will returning -EINTR here bypass explicit -EAGAIN handling in callers?
-
-For example, in arch/s390/kvm/intercept.c:handle_mvpg_pei(), there is
-the following loop:
-
-	do {
-		rc =3D kvm_s390_faultin_gfn_simple(vcpu, NULL, gpa_to_gfn(dstaddr), true);
-	} while (rc =3D=3D -EAGAIN);
-	if (rc)
-		return rc;
-
-	kvm_s390_retry_instr(vcpu);
-
-If a non-fatal signal is pending, handle_mvpg_pei() will return -EINTR
-and bypass kvm_s390_retry_instr(vcpu). Since the hardware has already
-advanced the guest PSW for the intercept, does exiting to userspace without
-rewinding the PSW cause the guest to resume at the next instruction,
-silently skipping the MVPG instruction?
-
-Similarly, in arch/s390/kvm/vsie.c:vsie_run(), returning -EINTR from
-map_prefix() skips the rc =3D=3D -EAGAIN check:
-
-		rc =3D map_prefix(vcpu, vsie_page, sg);
 ...
-		if (rc =3D=3D -EAGAIN)
-			rc =3D 0;
 
-		/* Exit the loop if the guest needs to process the intercept */
-		if (rc || scb_s->icptcode)
-			break;
+>> Jens Remus (2):
+>>   s390/vdso: Pass --eh-frame-hdr to the linker
+>>   s390/vdso: Use symbolic constants for the PHDR permission flags
+>>
+>>  arch/s390/kernel/vdso/Makefile   |  3 ++-
+>>  arch/s390/kernel/vdso/vdso.lds.S | 12 ++++++++----
+>>  2 files changed, 10 insertions(+), 5 deletions(-)
+> 
+> This series is in limbo state. Do you plan to send a new version to
+> address the very minor nits, or should it stay as is?
 
-This breaks out of vsie_run() and exits to userspace without rewinding the
-SIE instruction.
+Sorry for the delay!  I have sent a v2.
 
-Finally, in arch/s390/kvm/pv.c:kvm_s390_pv_unpack(), the loop handles -EAGA=
-IN
-explicitly to absorb non-fatal signals:
+I tried hard to figure out whether adding a proper GNU_STACK PHDR
+with RW in a separate commit (similar to x86 commit 8717b02b8c03
+("x86/entry/vdso: Include GNU_PROPERTY and GNU_STACK PHDRs") would
+provide any benefit on s390:
 
-	while (offset < size) {
-		ret =3D unpack_one(kvm, addr, tweak, offset, rc, rrc);
-		if (ret =3D=3D -EAGAIN) {
-			cond_resched();
-			if (fatal_signal_pending(current))
-				break;
-			continue;
-		}
-		if (ret)
-			break;
+Loading executables in the kernel:
 
-Returning -EINTR terminates the unpacking prematurely. When userspace
-retries the KVM_PV_UNPACK ioctl, it restarts from offset 0, which could
-cause the Ultravisor to reject the attempt to unpack already-secured pages,
-permanently failing the VM boot process.
+- s390, unlike other archs, does not provide an arch-specific
+  elf_read_implies_exec(), therefore the generic from include/linux/elf.h
+  that returns false is used.
+- As a consequence fs/binfmt_elf.c, load_elf_binary() does not default
+  executables without GNU_STACK PHDR to executable stack.
 
->  		/* Check if it's read-only memory; don't try to actually handle that c=
-ase. */
->  		if (f->pfn =3D=3D KVM_PFN_ERR_RO_FAULT)
->  			return -EOPNOTSUPP;
+Loading shared libraries in Glibc:
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260713150857.2699=
-54-1-imbrenda@linux.ibm.com?part=3D7
+- elf/dl-load.c, _dl_map_object_from_fd() does default shared libraries
+  without GNU_STACK PHDR to executable stack (see DEFAULT_STACK_PERMS).
+
+
+Based on that I performed the following tests, all using an executable
+with GNU_STACK RW (not RWX):
+
+Library with GNU_STACK RWX loaded at startup: [stack] rwxp (exec=YES)
+Library with GNU_STACK RW  loaded at startup: [stack] rw-p (exec=NO)
+Library without GNU_STACK  loaded at startup: [stack] rwxp (exec=YES)
+
+Library with GNU_STACK RWX loaded via dlopen: fails  *1)
+Library with GNU_STACK RW  loaded via dlopen: [stack] rw-p (exec=NO)
+Library without GNU_STACK  loaded via dlopen: fails  *1)
+
+vDSO without GNU_STACK loaded via startup: [stack] rw-p (exec=NO)  *2)
+vDSO without GNU_STACK loaded via dlopen : [stack] rw-p (exec=NO)  *3)
+
+
+*1) dlopen fails with cannot enable executable stack as shared object
+    requires: Invalid argument.  Regardless of glibc.rtld.execstack=1
+    tunable.
+
+*2) Linking against /usr/modules/.../vdso/vdso.so (won't be listed in
+    ldd output though)
+
+*3) dlopen("linux-vdso.so.1", RTLD_NOW);
+
+
+Technically adding a GNU_STACK PHDR with RW seems to be the right
+thing, although I could not construct a use case, where it would
+really matter.
+
+> In any case:
+> Acked-by: Heiko Carstens <hca@linux.ibm.com>
+
+Thanks!
+
+Regards,
+Jens
+-- 
+Jens Remus
+Linux on Z Development (D3303)
+jremus@de.ibm.com / jremus@linux.ibm.com
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Ehningen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
+
 
