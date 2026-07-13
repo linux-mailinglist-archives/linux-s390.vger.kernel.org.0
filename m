@@ -1,184 +1,196 @@
-Return-Path: <linux-s390+bounces-22100-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22101-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id gZViKQKPVGoznQMAu9opvQ
-	(envelope-from <linux-s390+bounces-22100-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 09:08:50 +0200
+	id 0rVbDhKkVGqpogMAu9opvQ
+	(envelope-from <linux-s390+bounces-22101-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 10:38:42 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B8D1747CC5
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 09:08:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 92154748CE1
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 10:38:41 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=TbglOxZr;
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22100-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-22100-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b="fnUmcm6/";
+	dmarc=pass (policy=none) header.from=ibm.com;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22101-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-22101-lists+linux-s390=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 66B403023532
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 07:06:27 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1CDB63048091
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2026 08:30:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37957369208;
-	Mon, 13 Jul 2026 07:06:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4071B3AEB2D;
+	Mon, 13 Jul 2026 08:30:19 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE4B3368D7B
-	for <linux-s390@vger.kernel.org>; Mon, 13 Jul 2026 07:06:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24493A6EF0;
+	Mon, 13 Jul 2026 08:30:17 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783926387; cv=none; b=I+4GnA9LcIRSVapgTuQJjGOnUlVR5WAxax957vg+W3dIX5+Ylmlo8YSpzSA3h9T5zY6qwKUdHkslCnMs/bnB/T2C3FD9fPfUZfvJ55ZF5FItdC+uapNgxh5dtOO5S3IswQqaos81uYjqy8hixL6G8YjJNMK1D9LaRCK+Y1awtgs=
+	t=1783931419; cv=none; b=P7ypEHnGABUlV1a0Vk1OBdSP6XAK6AaaxiMyPhjcbkPmrTpE4Iijhc6bB9azlUd3uwbLjtdUjvavkK2xpocQUMy5DSS8yeRQK4tq+9uz3HSw7vV1JVFq2pyRKisMCdYQk1R4MrFOS6a6VMUXG3r76oZoN5uIw55NQmMzOreU1fU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783926387; c=relaxed/simple;
-	bh=hCeMAFawqUQZK5TTzZSun5coCAr0fqMieti9jZqRw7A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XZ0pmwADOTKOYNHIwfdx3Vr2cpo0EjLslb3QjLyhJJxE5hh7GIQ0a0Pdf61qC8WzaJCxtMEjQVRsO9QwPThmUlBjlm83gAzJZ4b/MLSNtkTeq4R4nltRouco/sb7xQIowf6p4AD5C1Sw+s/rfTN/ZWoLEHJdIZNmoI4P8ZRD1/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TbglOxZr; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F5B61F01564
-	for <linux-s390@vger.kernel.org>; Mon, 13 Jul 2026 07:06:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783926384;
-	bh=MaoMLNzrQSdilHBAPxvn7cFGYo6KCQRZiQrYmmdeSDg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=TbglOxZrZc+8ho1Z2BcK0IhS3egNUSq0c5Yekd6nxDBKZQhVPPnrHghm6ItjXrvW8
-	 myYXJ6x6lFh7QX5ecmuh/vq7Qwc4aN3eTk8kvvmFs1d8wRQY7vrvAGfQK8ML7sZ4Yj
-	 k2WeLrzUteazWoeRwgjCCUDZJ2+PWRLzL1ozd2prV95l5uW3ki91C/T/KpUndY2saf
-	 +I1D4H0CLwMJu74DptZISJOOYDmUct5uhnCyLsAUx2HSrcK3fC5VZsBannIxQYZ7Rq
-	 GNjV6d1+IgN8jsegZ7lli5dbQ5dULez5iyH6dt+oUZzipNLSJVSN9n9AB3HDQyztKw
-	 NLk2nciGwWqEA==
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-493c5220cb7so21544335e9.3
-        for <linux-s390@vger.kernel.org>; Mon, 13 Jul 2026 00:06:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RpE0ZkOXacari2j9CkySlOoj3cl8SiaSI9VwRHS6l/HRBb70SIhLXyAqCHYYqM9+8dSetj9oiROuVhj@vger.kernel.org
-X-Gm-Message-State: AOJu0YySXJuFMdqSFvcH4BI7+FWcDKHseMaDzSykf07zQ84vLXIEvET5
-	JYafSrTE9vDLMAdrdGSTYQXEzda4mesmVV+r9Adizc0d9uuNYmBc+rjo61NoIhEjkOnSsr8Q9ty
-	zwpKQLRom4ZPjS9G/driMsCBG9zUVdKI=
-X-Received: by 2002:a05:6000:186c:b0:476:d13f:bb74 with SMTP id
- ffacd0b85a97d-47f2dc9bac8mr8770361f8f.15.1783926382749; Mon, 13 Jul 2026
- 00:06:22 -0700 (PDT)
+	s=arc-20240116; t=1783931419; c=relaxed/simple;
+	bh=70hka3mRMi1I3N1R+mXxU3jLbnTvik5yIwxZTt0gLLw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YXkZz2aXm4feBC1GnLMdrmioMvhDNnTKef7PKMQAa3Izn+TIB1T9cFTjSCQLpuIIALvewsj0/uoo4BFlIOIw8zRB+FY8ZqM2kFbhcMdz8eSmltX1iVgxGKiJBzEaFS7W7/eW8W7qRsLVYW/ZjYX4uWfREIlLnR8TdZweCAhmDnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=de.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fnUmcm6/; arc=none smtp.client-ip=148.163.156.1
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66D6fwrD1727468;
+	Mon, 13 Jul 2026 08:30:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=qcA4SBAVWL7eknTizSaMZVJT6B8G52Ntmj3Ny2lyj
+	MY=; b=fnUmcm6/UNpQNr6ItPPvpgFxPHmPt0F4CvgdM2G+nZ/crvjHRc6if5xp7
+	VGnuM9sAWchORs+PPOLbJ+YS3HBwoK0s8WDFwb8rCbQz4hXK6wcc5v3Wu5pO0GTH
+	zz2NDNbr9EdqxbpUPpBDm5aSfC3C1m8xKquApHnmcpKNsDMuX2hjrs0XejbrMt/z
+	tZpgueR0R/Ffc+erPjHVfZqss+CSRdP8fEQi1dZGePtZaUKtLW61Tmtbj7JEAB5J
+	vggp/93227eF6r8wUhMJ7WkZvlIr+jG1XCp/54HcO2DJvo7jZ3sxhgJPcNjO27mR
+	PQqSbhdf6RL8+aWQ6l0wDg8+pmwvg==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fbepx7kv2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 13 Jul 2026 08:30:13 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66D8Jb2g015388;
+	Mon, 13 Jul 2026 08:30:12 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fc05pvyvy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 13 Jul 2026 08:30:12 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66D8UBa222938242
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 13 Jul 2026 08:30:12 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 91E7858055;
+	Mon, 13 Jul 2026 08:30:11 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8D17C58063;
+	Mon, 13 Jul 2026 08:30:08 +0000 (GMT)
+Received: from li-d98989cc-2c66-11b2-a85c-93ab83b7dd53.ehn-de.ibm.com (unknown [9.224.77.173])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 13 Jul 2026 08:30:08 +0000 (GMT)
+From: Christian Borntraeger <borntraeger@de.ibm.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: KVM <kvm@vger.kernel.org>, Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@kernel.org>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>, Eric Farman <farman@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>
+Subject: [GIT PULL 0/5] KVM: s390: Fixes for 7.2
+Date: Mon, 13 Jul 2026 10:30:02 +0200
+Message-ID: <20260713083007.65863-1-borntraeger@de.ibm.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260707181957.433213175@kernel.org> <20260707190253.974626922@kernel.org>
-In-Reply-To: <20260707190253.974626922@kernel.org>
-From: Guo Ren <guoren@kernel.org>
-Date: Mon, 13 Jul 2026 15:06:10 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTTjW0RfZsJmHVAqrRsHpK4cJ+01G_Kkytt=0Wpm4sZpkg@mail.gmail.com>
-X-Gm-Features: AUfX_mzuKA4JwmuMUWB774bzpkP7q4a7PrJvxtp8N1GWwrENQwGP0BULxiqlyqc
-Message-ID: <CAJF2gTTjW0RfZsJmHVAqrRsHpK4cJ+01G_Kkytt=0Wpm4sZpkg@mail.gmail.com>
-Subject: Re: [patch 06/18] riscv/syscall: Use syscall_enter_from_user_mode_randomize_stack()
-To: Thomas Gleixner <tglx@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org, 
-	Michael Ellerman <mpe@ellerman.id.au>, Shrikanth Hegde <sshegde@linux.ibm.com>, 
-	linuxppc-dev@lists.ozlabs.org, Kees Cook <kees@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, 
-	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org, x86@kernel.org, 
-	Mark Rutland <mark.rutland@arm.com>, Jinjie Ruan <ruanjinjie@huawei.com>, 
-	Andy Lutomirski <luto@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Richard Henderson <richard.henderson@linaro.org>, Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Helge Deller <deller@gmx.de>, 
-	Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, 
-	Chris Zankel <chris@zankel.net>, linux-arm-kernel@lists.infradead.org, 
-	linux-alpha@vger.kernel.org, linux-csky@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linux-sh@vger.kernel.org, 
-	linux-um@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, 
-	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>, Brian Cain <bcain@kernel.org>, 
-	Michal Simek <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
-	linux-snps-arc@lists.infradead.org, linux-hexagon@vger.kernel.org, 
-	linux-openrisc@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-arch@vger.kernel.org, =?UTF-8?Q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>, 
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: ePubta9obAzXh2W6wqBrw_9dQ0zeH5kq
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzEzMDA4NCBTYWx0ZWRfXxhH0iqYh4HjK
+ ZNMd5lLUanGn1hikPjF/oi5db04/tEamDiJXIjMNEQqHSS40ggflAE75f0puGEob5tgGCJBYxDu
+ NTtc9HU42vgDvXBmiZLLCWCJZlGdWJc=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzEzMDA4NCBTYWx0ZWRfX9+Be4IBskAjc
+ kHGO2GP9BoOkUsJAlmg6MZM1B4s9FNhSbf+STWWHj8pjfvDtMXZGJYxhxD8qS0km9dZl1EonuhB
+ T2ppd9IYJF2XHpOcQXfGyEMq/9Wv2T1HeiDcBA4rdqQOIIaTOTPFj/JGjMWEcVUFMlS0X3cbRrY
+ R5G2rD0icb7aEl/xN7SkE6rAbF1ELt9qJx1oG6EDCzIDLdMz/jWgnfED+Z/sH27NRwBZaUHDBdI
+ ixH8u+62rQq1FOW/B64H3YN4HsJ+Z5QTqKkwFWesAEJnYPz6zuI8gbQlvRyRT73GJ7LOROBvuKU
+ WAjo0uVz/xVfKMKrhUJltlVS/PN6VeQf1cHHVmdrfEizIJ1ER+gvxcOWmX5yGd6xZd2E0MOL7ZP
+ KMRO/ez1uAhBIHlB1FVUXUq+PxO1CmMbFWcdEPuO80UwQi8HXcqM/wnieRGPlA3tUzvMI+JZI+x
+ ZhY4ED0/KGskMJIsE7g==
+X-Authority-Analysis: v=2.4 cv=XbS5Co55 c=1 sm=1 tr=0 ts=6a54a215 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8
+ a=n2cOJxejGmWVGDEj5nwA:9
+X-Proofpoint-ORIG-GUID: ePubta9obAzXh2W6wqBrw_9dQ0zeH5kq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-13_02,2026-07-10_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 suspectscore=0 spamscore=0 phishscore=0 lowpriorityscore=0
+ priorityscore=1501 adultscore=0 malwarescore=0 impostorscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607130084
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,infradead.org,kernel.org,dabbelt.com,lists.infradead.org,ellerman.id.au,linux.ibm.com,lists.ozlabs.org,lists.linux.dev,arm.com,huawei.com,redhat.com,linaro.org,armlinux.org.uk,linux-m68k.org,alpha.franken.de,gmx.de,users.sourceforge.jp,nod.at,zankel.net,lists.linux-m68k.org,arndb.de,monstr.eu,davemloft.net,gaisler.com,suse.de,lwn.net];
-	TAGGED_FROM(0.00)[bounces-22100-lists,linux-s390=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:tglx@kernel.org,m:linux-kernel@vger.kernel.org,m:peterz@infradead.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:linux-riscv@lists.infradead.org,m:mpe@ellerman.id.au,m:sshegde@linux.ibm.com,m:linuxppc-dev@lists.ozlabs.org,m:kees@kernel.org,m:chenhuacai@kernel.org,m:loongarch@lists.linux.dev,m:svens@linux.ibm.com,m:linux-s390@vger.kernel.org,m:x86@kernel.org,m:mark.rutland@arm.com,m:ruanjinjie@huawei.com,m:luto@kernel.org,m:oleg@redhat.com,m:richard.henderson@linaro.org,m:linux@armlinux.org.uk,m:catalin.marinas@arm.com,m:geert@linux-m68k.org,m:tsbogend@alpha.franken.de,m:deller@gmx.de,m:ysato@users.sourceforge.jp,m:richard@nod.at,m:chris@zankel.net,m:linux-arm-kernel@lists.infradead.org,m:linux-alpha@vger.kernel.org,m:linux-csky@vger.kernel.org,m:linux-m68k@lists.linux-m68k.org,m:linux-mips@vger.kernel.org,m:linux-parisc@vger.kernel.org,m:linux-sh@vger.kernel.org,m:linux-um@lists.infradead.org,m:arnd@arndb.de,m:vgupta@kernel.org,m:will@kernel.org,m:bcain@kernel
- .org,m:monstr@monstr.eu,m:dinguyen@kernel.org,m:davem@davemloft.net,m:andreas@gaisler.com,m:linux-snps-arc@lists.infradead.org,m:linux-hexagon@vger.kernel.org,m:linux-openrisc@vger.kernel.org,m:sparclinux@vger.kernel.org,m:linux-arch@vger.kernel.org,m:msuchanek@suse.de,m:corbet@lwn.net,m:linux-doc@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[guoren@kernel.org,linux-s390@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-22101-lists,linux-s390=lfdr.de];
+	TO_DN_ALL(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:pbonzini@redhat.com,m:kvm@vger.kernel.org,m:borntraeger@de.ibm.com,m:linux-s390@vger.kernel.org,m:frankja@linux.ibm.com,m:david@kernel.org,m:imbrenda@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:mjrosato@linux.ibm.com,m:alifm@linux.ibm.com,m:farman@linux.ibm.com,m:svens@linux.ibm.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[borntraeger@de.ibm.com,linux-s390@vger.kernel.org];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[guoren@kernel.org,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[52];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[borntraeger@de.ibm.com,linux-s390@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[de.ibm.com:mid,de.ibm.com:from_mime,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:email,dabbelt.com:email,vger.kernel.org:from_smtp,mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	RCVD_COUNT_SEVEN(0.00)[11]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 4B8D1747CC5
+X-Rspamd-Queue-Id: 92154748CE1
 
-On Wed, Jul 8, 2026 at 3:06=E2=80=AFAM Thomas Gleixner <tglx@kernel.org> wr=
-ote:
->
-> syscall_enter_from_user_mode_randomize_stack() replaces
-> syscall_enter_from_user_mode() and the subsequent invocation of
-> add_random_kstack_offset().
->
-> The advantage is that it applies the stack randomization right after
-> enter_from_user_mode() and thereby avoids the overhead of get/put_cpu_var=
-()
-> as that code is invoked with interrupts disabled.
->
-> No functional change.
->
-> Signed-off-by: Thomas Gleixner <tglx@kernel.org>
-> Cc: Paul Walmsley <pjw@kernel.org>
-> Cc: Palmer Dabbelt <palmer@dabbelt.com>
-> Cc: linux-riscv@lists.infradead.org
-> ---
->  arch/riscv/kernel/traps.c |    5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
->
-> --- a/arch/riscv/kernel/traps.c
-> +++ b/arch/riscv/kernel/traps.c
-> @@ -7,7 +7,6 @@
->  #include <linux/kernel.h>
->  #include <linux/init.h>
->  #include <linux/irqflags.h>
-> -#include <linux/randomize_kstack.h>
->  #include <linux/sched.h>
->  #include <linux/sched/debug.h>
->  #include <linux/sched/signal.h>
-> @@ -333,9 +332,7 @@ void do_trap_ecall_u(struct pt_regs *reg
->
->                 riscv_v_vstate_discard(regs);
->
-> -               syscall =3D syscall_enter_from_user_mode(regs, syscall);
-> -
-> -               add_random_kstack_offset();
-> +               syscall =3D syscall_enter_from_user_mode_randomize_stack(=
-regs, syscall);
+From: Christian Borntraeger <borntraeger@linux.ibm.com>
 
-Reviewed-by: Guo Ren <guoren@kernel.org>
+Paolo,
 
---=20
-Best Regards
- Guo Ren
+please pull the following changes since commit 8cdeaa50eae8dad34885515f62559ee83e7e8dda:
+
+  Linux 7.2-rc2 (2026-07-05 14:44:06 -1000)
+
+from the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-master-7.2-1
+
+for you to fetch changes up to 3e3aa6da87d30a0064a17b836685cd43c90a3572:
+
+  KVM: s390: pci: Fix handling of AIF enable without AISB (2026-07-09 16:23:10 +0200)
+
+----------------------------------------------------------------
+KVM: s390: Fixes for 7.2
+
+- more gmap KVM memory management fixes
+- PCI passthru fixes
+
+----------------------------------------------------------------
+Claudio Imbrenda (3):
+      KVM: s390: vsie: Avoid potential deadlock with real spaces
+      KVM: s390: Fix dat_crste_walk_range() early return
+      KVM: s390: Improve kvm_s390_vm_stop_migration()
+
+Haoxiang Li (1):
+      KVM: s390: pci: Fix GISC refcount leak on AIF enable failure
+
+Matthew Rosato (1):
+      KVM: s390: pci: Fix handling of AIF enable without AISB
+
+ arch/s390/kvm/dat.c      |  2 ++
+ arch/s390/kvm/gmap.c     |  7 ++++++-
+ arch/s390/kvm/kvm-s390.c |  6 ++++--
+ arch/s390/kvm/pci.c      | 12 +++++++++---
+ 4 files changed, 21 insertions(+), 6 deletions(-)
 
