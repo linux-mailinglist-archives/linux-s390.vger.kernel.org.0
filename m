@@ -1,52 +1,52 @@
-Return-Path: <linux-s390+bounces-22239-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22240-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id H6DRI/ZFVmqU2gAAu9opvQ
-	(envelope-from <linux-s390+bounces-22239-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 16:21:42 +0200
+	id z5PxOktCVmpb2QAAu9opvQ
+	(envelope-from <linux-s390+bounces-22240-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 16:06:03 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14535755B8E
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 16:21:42 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A9667557C3
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 16:06:03 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=arm.com header.s=foss header.b="L/UyKrDH";
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22239-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-22239-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=arm.com header.s=foss header.b="Bm1/z7nw";
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22240-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-s390+bounces-22240-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=arm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 167DC30A1CB3
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 14:05:39 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 4C51F300914E
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 14:05:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BC0747D922;
-	Tue, 14 Jul 2026 14:05:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E16B247D93F;
+	Tue, 14 Jul 2026 14:05:35 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4198447D921;
-	Tue, 14 Jul 2026 14:05:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03C6043F8AF;
+	Tue, 14 Jul 2026 14:05:33 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784037928; cv=none; b=KkV8MmsFhz+zFygW9USYd175yvLipw1vwSu18jUH0j61z8oJAbdoFsNr1wppztPUsCgxgA0GUaj3ub7ZLC/SdlhKfGPibDRIzKcACGUh/NzGH+kp7bFdf0SZmN7AlvSCCmUApHNg41H52jOL+dMmZFxB/33VxJ+dcFLVHSDGYLM=
+	t=1784037935; cv=none; b=DBq+JYZeH/Vaf8JyVSfwKZeA+icRFWqgr5f1/BwMWAyWkKke85LYt6kQ0Iatihz2+f9Ojy1xec9rnHxD60BFPR4cMT2h46INUR1cMAlxx+Ahsp7Q8oyMRmUMNKWX4xliIWxVxw0kqGm2CHB3/HkMlyzLYY9O+NJ+tuLQCtGSee0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784037928; c=relaxed/simple;
-	bh=xWJCKsvCSbOTf1MrL+nqfsWcuzx4IBI4MMfjRE6PTH4=;
+	s=arc-20240116; t=1784037935; c=relaxed/simple;
+	bh=FInc2gTxhVQc4LYtwtKoJPw43dSvFTnMs+LPVQ5s9u0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AE3iFcNViK58TP2en4quy+k4RhoootMeyU/YnlM8g9mEs7ugJi06NHiGDf4zYlG4wANLP60k/9cVBjKaYsov54+hFAoZ3gD4XQT9rFXOumWztwFBq6WdVUxnsteSwEW+yNSJL/P710xK9jwsyQwgO/c+UL8B66WUADC2Gj8iDYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=L/UyKrDH; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=EG10cxRB8Da6rsROWmwzv5EQ6K9aYuiY3wrvsLA42nMkUPNo5NCIVbuzLCF1aMP8OF7DYyMBpMk3kZvjItG+Wz3orBMH0JmZa0xw0IJnybVRZhUPhBaU8dfj3D1TznIsI97ZlkMKukWxRktIPNa5Ahs8aRF8SeTFkZyh5Sx0KgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Bm1/z7nw; arc=none smtp.client-ip=217.140.110.172
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6425C1516;
-	Tue, 14 Jul 2026 07:05:21 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1DB181516;
+	Tue, 14 Jul 2026 07:05:29 -0700 (PDT)
 Received: from localhost.localdomain (e123572-lin.cambridge.arm.com [10.2.208.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A07F3F7B4;
-	Tue, 14 Jul 2026 07:05:18 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ECA813F7B4;
+	Tue, 14 Jul 2026 07:05:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1784037925; bh=xWJCKsvCSbOTf1MrL+nqfsWcuzx4IBI4MMfjRE6PTH4=;
+	t=1784037933; bh=FInc2gTxhVQc4LYtwtKoJPw43dSvFTnMs+LPVQ5s9u0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=L/UyKrDH31P2AxfsB5zaY1mh6o9sykjNj6yB/yMXG8ePSNTlccGqvWENIvdaG1tfJ
-	 Wk0YZEQWyX1mVS8XhODJBz5n9MI25kkc+YIk8/N9y9yuoLWoSBYTDhb1fyTBkqd7HI
-	 cav7VW0lg3rVkGLnx2wAlICXEbNLvp2RP9uBMl74=
+	b=Bm1/z7nw3ZrVQHSoXKrtxTQs91wc4RUrXfic6nvC1VPB3At2KepfWXr7Aw3HYFpkn
+	 ioHo5OCLJkJiU6MHz48diP4nr6YFWtjQg3UL72aeFoQQSfWxPSBxVE10gNTyxwI//k
+	 BrtCJZVqyK4Ji57oD58xPcYajyNM3z8AN78Fhrlw=
 From: Kevin Brodsky <kevin.brodsky@arm.com>
-Date: Tue, 14 Jul 2026 15:03:51 +0100
-Subject: [PATCH 02/22] mm: move mm_flags helpers to mm_types.h
+Date: Tue, 14 Jul 2026 15:03:52 +0100
+Subject: [PATCH 03/22] mm: introduce MMF_KERNEL flag and set it for init_mm
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260714-remove_pgtable_cdtor-v1-2-44be8a7685d7@arm.com>
+Message-Id: <20260714-remove_pgtable_cdtor-v1-3-44be8a7685d7@arm.com>
 References: <20260714-remove_pgtable_cdtor-v1-0-44be8a7685d7@arm.com>
 In-Reply-To: <20260714-remove_pgtable_cdtor-v1-0-44be8a7685d7@arm.com>
 To: linux-mm@kvack.org
@@ -94,11 +94,11 @@ Cc: Kevin Brodsky <kevin.brodsky@arm.com>,
  "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
  linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1784037902; l=3490;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1784037902; l=2504;
  i=kevin.brodsky@arm.com; s=20260427; h=from:subject:message-id;
- bh=xWJCKsvCSbOTf1MrL+nqfsWcuzx4IBI4MMfjRE6PTH4=;
- b=hjHVW6q/l9oVND5egfxNDc6FE64eNht6hv1NYHcLYYfk3GK4zKlatRLYEID3yBr+Cr2y6GvLX
- wE73qcbXnDpDJQn8OyUXgdNbqTA1wZVDqiAytR24UH8BGEWoTGJECyr
+ bh=FInc2gTxhVQc4LYtwtKoJPw43dSvFTnMs+LPVQ5s9u0=;
+ b=LLyApQy3cCX+sEK7+yEv+wdSQwFfqhZ/PtGYmJI+JJbZMoulhtvHZSYrG2onhzlRcBnCeJhTe
+ oQ14mia3FhGBEfCDsSpVX5EPWBdyUPXpBCd8WmZOxEP54NLEVWz9CaD
 X-Developer-Key: i=kevin.brodsky@arm.com; a=ed25519;
  pk=N2QG+eJKrvkNovwhhwJhnJ4+ScVfsGCHldmqLfcMTFs=
 X-Rspamd-Action: no action
@@ -106,7 +106,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[arm.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[arm.com:s=foss];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -115,7 +115,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FREEMAIL_CC(0.00)[arm.com,linux-foundation.org,kernel.org,infradead.org,google.com,suse.com,soleen.com,armlinux.org.uk,lists.infradead.org,lists.linux.dev,HansenPartnership.com,gmx.de,vger.kernel.org,linux.ibm.com,ellerman.id.au,lists.ozlabs.org,dabbelt.com,eecs.berkeley.edu,davemloft.net,gaisler.com,nod.at,cambridgegreys.com,sipsolutions.net,redhat.com,alien8.de,linux.intel.com,zytor.com,intel.com,lists.sourceforge.net,linaro.org,gmail.com,nvidia.com];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22239-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22240-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER(0.00)[kevin.brodsky@arm.com,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS(0.00)[m:linux-mm@kvack.org,m:kevin.brodsky@arm.com,m:akpm@linux-foundation.org,m:david@kernel.org,m:ljs@kernel.org,m:liam@infradead.org,m:vbabka@kernel.org,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:pasha.tatashin@soleen.com,m:linux@armlinux.org.uk,m:catalin.marinas@arm.com,m:will@kernel.org,m:ryan.roberts@arm.com,m:linux-arm-kernel@lists.infradead.org,m:chenhuacai@kernel.org,m:loongarch@lists.linux.dev,m:James.Bottomley@HansenPartnership.com,m:deller@gmx.de,m:linux-parisc@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:linuxppc-dev@lists.ozlabs.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:linux-riscv@lists.infradead.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:linux-s390@vger.kernel.org,m:davem@davemloft.net,m:andreas@gaisler.com,m:sparclinux@vger.kernel.org,m:richard@nod.at,m:anton.ivanov@cambridgegreys.com,m:johannes@sipsolutions.net,m:linux-um@lists.infr
@@ -128,123 +128,81 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[kevin.brodsky@arm.com,linux-s390@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	RCPT_COUNT_GT_50(0.00)[58];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[arm.com:from_mime,arm.com:mid,arm.com:email,arm.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[arm.com:from_mime,arm.com:mid,arm.com:email,arm.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 14535755B8E
+X-Rspamd-Queue-Id: 9A9667557C3
 
-Some of the mm_flags helpers are defined in <linux/mm_types.h>,
-while others are defined in <linux/mm.h>. We will soon need to call
-one of the latter helpers from mm_types.h.
+mm code often needs to know whether some mm represents a kernel or
+user address space. This is currently done by comparing the mm
+pointer with &init_mm; besides not being particularly elegant, this
+ignores the fact that other mm's (e.g. efi_mm) may also represent
+parts of the kernel address space.
 
-Regroup all the helpers in mm_types.h to keep things simple.
+Introduce a new mm flag MMF_KERNEL and set it for init_mm.
+Subsequent patches will use this flag to replace comparisons with
+&init_mm. No functional change is introduced for now.
 
-Also remove #include's that were added specifically for these
-helpers in mm.h.
-
+Assisted-by: Codex:GPT-5.5
 Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 ---
- include/linux/mm.h       | 32 --------------------------------
- include/linux/mm_types.h | 30 ++++++++++++++++++++++++++++++
- 2 files changed, 30 insertions(+), 32 deletions(-)
+ include/linux/mm_types.h | 10 ++++++++++
+ mm/init-mm.c             |  1 +
+ 2 files changed, 11 insertions(+)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 32bb723ffbb9..7a4b8e7ac8f4 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -34,8 +34,6 @@
- #include <linux/slab.h>
- #include <linux/cacheinfo.h>
- #include <linux/rcuwait.h>
--#include <linux/bitmap.h>
--#include <linux/bitops.h>
- #include <linux/iommu-debug-pagealloc.h>
- #include <linux/kcsan-checks.h>
- 
-@@ -948,36 +946,6 @@ static inline void assert_fault_locked(const struct vm_fault *vmf)
- }
- #endif /* CONFIG_PER_VMA_LOCK */
- 
--static inline bool mm_flags_test(int flag, const struct mm_struct *mm)
--{
--	return test_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
--}
--
--static inline bool mm_flags_test_and_set(int flag, struct mm_struct *mm)
--{
--	return test_and_set_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
--}
--
--static inline bool mm_flags_test_and_clear(int flag, struct mm_struct *mm)
--{
--	return test_and_clear_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
--}
--
--static inline void mm_flags_set(int flag, struct mm_struct *mm)
--{
--	set_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
--}
--
--static inline void mm_flags_clear(int flag, struct mm_struct *mm)
--{
--	clear_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
--}
--
--static inline void mm_flags_clear_all(struct mm_struct *mm)
--{
--	bitmap_zero(ACCESS_PRIVATE(&mm->flags, __mm_flags), NUM_MM_FLAG_BITS);
--}
--
- extern const struct vm_operations_struct vma_dummy_vm_ops;
- 
- static inline void vma_init(struct vm_area_struct *vma, struct mm_struct *mm)
 diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index b4129beb9c4a..a2e0dc5892ff 100644
+index a2e0dc5892ff..7838ea3aac00 100644
 --- a/include/linux/mm_types.h
 +++ b/include/linux/mm_types.h
-@@ -1414,6 +1414,36 @@ struct mm_struct {
+@@ -1414,6 +1414,8 @@ struct mm_struct {
  	char flexible_array[] __aligned(__alignof__(unsigned long));
  };
  
-+static inline bool mm_flags_test(int flag, const struct mm_struct *mm)
-+{
-+	return test_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
-+}
++#define MM_FLAGS_INIT(flags)	{ .__mm_flags = { BITMAP_FROM_U64(flags) } }
 +
-+static inline bool mm_flags_test_and_set(int flag, struct mm_struct *mm)
-+{
-+	return test_and_set_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
-+}
-+
-+static inline bool mm_flags_test_and_clear(int flag, struct mm_struct *mm)
-+{
-+	return test_and_clear_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
-+}
-+
-+static inline void mm_flags_set(int flag, struct mm_struct *mm)
-+{
-+	set_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
-+}
-+
-+static inline void mm_flags_clear(int flag, struct mm_struct *mm)
-+{
-+	clear_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
-+}
-+
-+static inline void mm_flags_clear_all(struct mm_struct *mm)
-+{
-+	bitmap_zero(ACCESS_PRIVATE(&mm->flags, __mm_flags), NUM_MM_FLAG_BITS);
-+}
-+
- /* Copy value to the first system word of mm flags, non-atomically. */
- static inline void __mm_flags_overwrite_word(struct mm_struct *mm, unsigned long value)
+ static inline bool mm_flags_test(int flag, const struct mm_struct *mm)
  {
+ 	return test_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
+@@ -2001,6 +2003,9 @@ enum {
+ #define MMF_TOPDOWN		31	/* mm searches top down by default */
+ #define MMF_TOPDOWN_MASK	BIT(MMF_TOPDOWN)
+ 
++#define MMF_KERNEL		32	/* mm belongs to the kernel */
++#define MMF_KERNEL_MASK		BIT_ULL(MMF_KERNEL)
++
+ #define MMF_INIT_LEGACY_MASK	(MMF_DUMP_FILTER_MASK |\
+ 				 MMF_DISABLE_THP_MASK | MMF_HAS_MDWE_MASK |\
+ 				 MMF_VM_MERGE_ANY_MASK | MMF_TOPDOWN_MASK)
+@@ -2008,6 +2013,11 @@ enum {
+ /* Legacy flags must fit within 32 bits. */
+ static_assert((u64)MMF_INIT_LEGACY_MASK <= (u64)UINT_MAX);
+ 
++static inline bool mm_is_kernel(const struct mm_struct *mm)
++{
++	return mm && mm_flags_test(MMF_KERNEL, mm);
++}
++
+ /*
+  * Initialise legacy flags according to masks, propagating selected flags on
+  * fork. Further flag manipulation can be performed by the caller.
+diff --git a/mm/init-mm.c b/mm/init-mm.c
+index 3e792aad7626..93773269bf87 100644
+--- a/mm/init-mm.c
++++ b/mm/init-mm.c
+@@ -34,6 +34,7 @@ struct mm_struct init_mm = {
+ 	.pgd		= swapper_pg_dir,
+ 	.mm_users	= ATOMIC_INIT(2),
+ 	.mm_count	= ATOMIC_INIT(1),
++	.flags		= MM_FLAGS_INIT(MMF_KERNEL_MASK),
+ 	.write_protect_seq = SEQCNT_ZERO(init_mm.write_protect_seq),
+ 	MMAP_LOCK_INITIALIZER(init_mm)
+ 	.page_table_lock =  __SPIN_LOCK_UNLOCKED(init_mm.page_table_lock),
 
 -- 
 2.51.2
