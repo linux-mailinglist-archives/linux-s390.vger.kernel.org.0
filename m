@@ -1,191 +1,155 @@
-Return-Path: <linux-s390+bounces-22215-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22216-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id VoGCDS8EVmoZyAAAu9opvQ
-	(envelope-from <linux-s390+bounces-22215-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 11:41:03 +0200
+	id nSZXDv0GVmrbyAAAu9opvQ
+	(envelope-from <linux-s390+bounces-22216-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 11:53:01 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 962B3752F88
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 11:41:02 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id ADE6475314A
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 11:53:00 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=aVyTGD03;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22215-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-s390+bounces-22215-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=ibm.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ZgSMxxsh;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22216-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-22216-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id DECA73070C32
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 09:39:21 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 046D73008C08
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 09:53:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C287343E9DC;
-	Tue, 14 Jul 2026 09:39:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7AFF4446E2;
+	Tue, 14 Jul 2026 09:52:57 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6443E3F86E9;
-	Tue, 14 Jul 2026 09:39:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758342EEE84;
+	Tue, 14 Jul 2026 09:52:47 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784021957; cv=none; b=e6TGY3beUPIwD2UuBalSTvyPzzAjRt7u1afTe8f4h6QmaYy4qzYP3my6E2i6JkGduiCdAop+Gz6GJMeHGDX6bfL3m4gWSMt6dCKa3NyfAu5SuT1EJvEOlOfhcYBxGqTMIehdLLNbDatjyTatrlyjdcYjEV6hUNYkJNafa1MNnmc=
+	t=1784022775; cv=none; b=QspkuFtDsjtdHV8KGrvZoTXQBh/NOYHTlA7Y2PMehQ/tKTQlL2+4iqIwDVaNtCHwpeMfhifjnY5INQqAcNGHbIRObrhb9xqOmkKPTyLJKqfG9LhSkqAWAEkXhj2qHn5b0pmwYOuktKFS6sSwo8W+hzXbt6ePmWU95pjqgkpwqFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784021957; c=relaxed/simple;
-	bh=LjP6zVEszZxg3F5iAxw1XtBYT2amyYPTSjfcsyGDTAo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dXJdLCgXC1m2IiapWTf6qHcb5oo5docq9ITmugiiezO2zdt926+I/ZIwkTE7aJpzmUb/kA1lsPPWQTI+0lnZNXglUAjTyfNThyjswMQEFMi/NTW+bFyzzCs2C7osP2cXrJdUO34gEPiulUwGAREKkkXObmiEW48lE+TLnrBsEDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aVyTGD03; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66E6g4xU2860218;
-	Tue, 14 Jul 2026 09:39:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=FExEkCMraXnLTjEr5iZDiBMKN8/3pd
-	KRWUw443facME=; b=aVyTGD03M+2+tthrINgaE1WavFgtvYlhAXZJWX23fnifz2
-	GrVnjVImhjLh+NmJQ2pBXTnSseLL41d8g4GGM13mMZixSPll78AqFMPu8QUWMQVh
-	k+UBAQqHo8DH1vXe9gpLGPo9aahyzfcIBWzzGK0binsGjUyE+/nH3vtS+uGDXIjf
-	/tuwGBt2PQ0P51Np/tOyPBEfdSKCll+dfWI7GG8RFZTHqBNoLRrFWcaPMkzSgZkx
-	Pl4FyRcFcrSrpC8NDmO+XgCVwXMXXtg/SIZb1b0d+K99J0+5JMs7FfoWhmXsFV3v
-	CSHI0/JoO/l8imoZdcEb9a00qugN00rW6DuEBTkA==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fcv335x8y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 Jul 2026 09:39:11 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66E9YZhh004217;
-	Tue, 14 Jul 2026 09:39:10 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fc05q29mf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 Jul 2026 09:39:10 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66E9d6Nm16449844
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 14 Jul 2026 09:39:06 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7FFE92004B;
-	Tue, 14 Jul 2026 09:39:06 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1C93220040;
-	Tue, 14 Jul 2026 09:39:06 +0000 (GMT)
-Received: from osiris (unknown [9.87.141.23])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 14 Jul 2026 09:39:06 +0000 (GMT)
-Date: Tue, 14 Jul 2026 11:39:04 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Sven Schnelle <svens@linux.ibm.com>
-Cc: Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: Re: [PATCH 2/2] ptp: ptp_s390: Add missing facility check
-Message-ID: <20260714093904.31731Ab0-hca@linux.ibm.com>
-References: <20260714084921.3926697-1-svens@linux.ibm.com>
- <20260714084921.3926697-3-svens@linux.ibm.com>
+	s=arc-20240116; t=1784022775; c=relaxed/simple;
+	bh=+C5nG+xtG3hyYyQwRUQFGYH75JNuc0Lk0Ty5BqRmWNU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=AymuyDWOXrviGZYGVVxKgscTERLocRmlcAkOir5atcyDxHPnqybNa6MpqrZkyhFMlmbK6X8rWbntL+TetTXqu3WWNaLX2qOWo3+y9FVWBoPTRQEJoc0ounLNnKRg2PbB7Y4MPQJwkh/jUmeG+Ao1bHv6AmnHjsxjM0EUdf8tBKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZgSMxxsh; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 232391F00A3A;
+	Tue, 14 Jul 2026 09:52:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784022760;
+	bh=+C5nG+xtG3hyYyQwRUQFGYH75JNuc0Lk0Ty5BqRmWNU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=ZgSMxxsh1Lu8MR5Z6WZ7OI+nq6F3YqTn9IBm2AINDs8o2Z/nh/SpZWcv4glu+VhPe
+	 cXy87Qxg3XbvgFKPnL50ydX2ZmeXZ+Y2m0e04PAZRMRDiI7yd819Ia6OkzoYI4l8hi
+	 bQ5nmUAEKOPB1JNlOSIgfbjVYFEy/Nt7TJrcZZrSwXI52rztJjb2qGdZlVK+Mik1C2
+	 MqZlsgx86ioBdN1tVdskpyUDQ5X3kf6HF+H7N5Qp+yw+MWEZGk2dutdazlT0Q42W8G
+	 2WBALzw60ZoYjzJMEjfOp8k80iBpzrMV5Er054iRnji2EAX6IYZOtyYaIq4WMAy0e3
+	 LsRNlLUiQVPTA==
+X-Mailer: emacs 30.2 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>
+Cc: iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
+	Robin Murphy <robin.murphy@arm.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Steven Price <steven.price@arm.com>,
+	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Mostafa Saleh <smostafa@google.com>,
+	Petr Tesarik <ptesarik@suse.com>,
+	Alexey Kardashevskiy <aik@amd.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Xu Yilun <yilun.xu@linux.intel.com>,
+	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>, x86@kernel.org
+Subject: Re: [PATCH v7 00/22] dma-mapping: Track shared DMA state through
+ direct, pool and swiotlb paths
+In-Reply-To: <cd5d0504-1592-4b48-89ea-1efe8aa57968@samsung.com>
+References: <20260701054926.825925-1-aneesh.kumar@kernel.org>
+ <CGME20260707080628eucas1p13fa8a57e60ef5dd3ec651e19e42af0a1@eucas1p1.samsung.com>
+ <yq5av7argr65.fsf@kernel.org>
+ <fc804746-4fb8-4ea9-997f-a4cae9ba8c14@samsung.com>
+ <20260713194323.GC3133966@ziepe.ca>
+ <cd5d0504-1592-4b48-89ea-1efe8aa57968@samsung.com>
+Date: Tue, 14 Jul 2026 15:22:27 +0530
+Message-ID: <yq5aldbdnbj8.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260714084921.3926697-3-svens@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzE0MDA5NiBTYWx0ZWRfX6J6moGWoKChS
- azuniZ8ZH2dT7qbRVxkeutPB3AbzLZixex17asahQv+rClFu1nxBoqlre5CFnm3+/uZqLgEoui1
- bK+Jq8ZYCcJzosAsF8Bw892Q/CYeVss=
-X-Authority-Analysis: v=2.4 cv=Mp1iLWae c=1 sm=1 tr=0 ts=6a5603bf cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=kj9zAlcOel0A:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8
- a=VwQbUJbxAAAA:8 a=Jsjisl7J9IPTTVUQmIEA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: gQgwUVYN1pwEUtoCw9rAjhEZ_RmEY_CB
-X-Proofpoint-ORIG-GUID: twaboGV-5FAmjcEbszytQ79azwBVwONK
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzE0MDA5NiBTYWx0ZWRfX8JtMOtuFMAqE
- T8Gpgh4uJmvjSvsflwQsH4a1CyLShZWpLfhvqZIKG+GWuYdzDXCbuh8E/2yr9UAeuG4WZtuyCLS
- 9LUgkSLbvSyDpKsE/LVL7ZRX85ywgUtBUta4QXKsL3j8Yucw+03DmpQwW5L3K/pprCMgsbCLr/V
- RE86Kaa942gMeDt2cRav358NHLGEqoMTwGm5rmYw+i1KG0s+0Vcmm0s+2KWr08PPEmXzQDiMJuV
- 2HjYhUW1TIumLd/CRB5TksJDfaXcJNz3Pk/2saJ7j1nCLnDNWyWF/Lot+kQsULJBS5QLs+KCTkP
- Ct09SRxdfJwD/hYNZ7QpzE+Qg6Lr26CNtve4XhCoY/nQ5+4xI/r4JSZ2vKjwM2AQ+YFrOTFomLF
- l6g31kqTOvCgkUf/BM8uNeaS3izaj+rRkQ76wMSMrzqrWnPZX4jMC20EE1XFpsUQXfLlHeRLERg
- JBhei1lx4tqG+WmPhYA==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-14_02,2026-07-10_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 bulkscore=0 spamscore=0 malwarescore=0 lowpriorityscore=0
- impostorscore=0 priorityscore=1501 suspectscore=0 clxscore=1015 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607140096
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.16 / 15.00];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,davemloft.net,google.com,kernel.org,redhat.com,linux.ibm.com];
-	TAGGED_FROM(0.00)[bounces-22215-lists,linux-s390=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.ibm.com:from_mime,linux.ibm.com:mid,vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
-	FORGED_SENDER(0.00)[hca@linux.ibm.com,linux-s390@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-22216-lists,linux-s390=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:svens@linux.ibm.com,m:richardcochran@gmail.com,m:netdev@vger.kernel.org,m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hca@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:m.szyprowski@samsung.com,m:jgg@ziepe.ca,m:iommu@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-coco@lists.linux.dev,m:robin.murphy@arm.com,m:will@kernel.org,m:maz@kernel.org,m:steven.price@arm.com,m:Suzuki.Poulose@arm.com,m:catalin.marinas@arm.com,m:jiri@resnulli.us,m:smostafa@google.com,m:ptesarik@suse.com,m:aik@amd.com,m:dan.j.williams@intel.com,m:yilun.xu@linux.intel.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-s390@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:chleroy@kernel.org,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:borntraeger@linux.ibm.com,m:svens@linux.ibm.com,m:x86@kernel.org,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[aneesh.kumar@kernel.org,linux-s390@vger.kernel.org];
+	FREEMAIL_CC(0.00)[lists.linux.dev,lists.infradead.org,vger.kernel.org,arm.com,kernel.org,resnulli.us,google.com,suse.com,amd.com,intel.com,linux.intel.com,lists.ozlabs.org,linux.ibm.com,ellerman.id.au,gmail.com];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[31];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[aneesh.kumar@kernel.org,linux-s390@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RCVD_COUNT_SEVEN(0.00)[11]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 962B3752F88
+X-Rspamd-Queue-Id: ADE6475314A
 
-On Tue, Jul 14, 2026 at 10:49:21AM +0200, Sven Schnelle wrote:
-> Only register the physical clock when facility 28 is installed.
-> 
-> Fixes: 2d7de7a3010d ("s390/time: Add PtP driver")
-> Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-> Cc: stable@kernel.org
-> ---
->  drivers/ptp/ptp_s390.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/ptp/ptp_s390.c b/drivers/ptp/ptp_s390.c
-> index 7299c3aae65f..3ea94648cdde 100644
-> --- a/drivers/ptp/ptp_s390.c
-> +++ b/drivers/ptp/ptp_s390.c
-> @@ -108,6 +108,9 @@ static __init int ptp_s390_init(void)
->  	if (IS_ERR(ptp_stcke_clock))
->  		return PTR_ERR(ptp_stcke_clock);
->  
-> +	if (!test_facility(28))
-> +		return 0;
-> +
->  	ptp_qpt_clock = ptp_clock_register(&ptp_s390_qpt_info, NULL);
->  	if (IS_ERR(ptp_qpt_clock)) {
->  		ptp_clock_unregister(ptp_stcke_clock);
+Marek Szyprowski <m.szyprowski@samsung.com> writes:
 
-Wouldn't it make more sense to check if PTFF-QPT is available via PTFF-QAF
-before registering the clock? This would also avoid the need of the first
-patch - since then it is guaranteed that PTFF-QPT will always return with
-condition code zero.
+> On 13.07.2026 21:43, Jason Gunthorpe wrote:
+>> On Tue, Jul 07, 2026 at 03:03:48PM +0200, Marek Szyprowski wrote:
+>>> I'm fine with merging on top of=C2=A0the topic branch and I assume that=
+ this
+>>> patchset is mature enough to give it a try in linux-next, but first I
+>>> would like to get a review or at least acks from others with good CC
+>>> knowledge or experience.
+>> I think it is good to go from a CC perspective, there are still some
+>> more items to fix up (like the MMIO) but I'd rather they be followups
+>> at this point.
+>
+> Great. Aneesh, any chance You could send v8 with the remaining items
+> fixed till end of this week? I will be happy to push it to
+> dma-mapping-for-next for testing in linux-next asap.
+>
 
-And... we wouldn't have the potential oddity to have a clock registered which
-doesn't work.
+Sure. You need this rebased on top of the pKVM changes, right?
+Otherwise, we'll end up with conflicts when you do the final pull
+request.
+
+-aneesh
 
