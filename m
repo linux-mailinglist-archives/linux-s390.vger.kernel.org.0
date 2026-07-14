@@ -1,52 +1,52 @@
-Return-Path: <linux-s390+bounces-22244-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22245-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id q+g6JTZGVmqk2gAAu9opvQ
-	(envelope-from <linux-s390+bounces-22244-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 16:22:46 +0200
+	id FyU0KURGVmqp2gAAu9opvQ
+	(envelope-from <linux-s390+bounces-22245-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 16:23:00 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06E7B755BC2
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 16:22:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 46AF5755BCF
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 16:23:00 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=arm.com header.s=foss header.b=gLbEbpAv;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22244-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-22244-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=arm.com header.s=foss header.b=UsBpoovP;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22245-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-22245-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=arm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C5F2232B609B
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 14:06:27 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ABB08315F1EA
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 14:06:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A718347CC6F;
-	Tue, 14 Jul 2026 14:06:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CFC747DD6B;
+	Tue, 14 Jul 2026 14:06:14 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F19824418DC;
-	Tue, 14 Jul 2026 14:06:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B728847D94D;
+	Tue, 14 Jul 2026 14:06:12 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784037966; cv=none; b=iOSjB2NSbmz/gNQncNEkleC22l9RnIkX9dbAg3UW+D6RpPPJ6domoSWUWrGm+I05SM2iYZ1j+J1LL2iTm0gcTy7nJ1F22u2pvr85G8LWe8yWeIAClRRL03wKwIvmut0Pd5AJTzn3KpXoVx7iJ1dSgAL8TSGdVYh0XhpxUGeayG4=
+	t=1784037974; cv=none; b=SL6Iok1f+jzxnLQPuTtMdgyrw1wObwY9RxQCmRxpT73ybUwPN4vgU6tJdfgoKlPM9v1LcDOSfHKB8rbh42mfnhnB0F0AZNHfMQthPc+XyuepJnbp9xuvTv+UGRrY2q9tKmTFqapWRpL39vJMfvYaGK6USBiTFrIFEJfmSmKBaB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784037966; c=relaxed/simple;
-	bh=n3wqVkoRE0XrCf49SeUd/3zMbBniK8cKIbHpgqpyHxU=;
+	s=arc-20240116; t=1784037974; c=relaxed/simple;
+	bh=wjWPKE4gokVm0n43Fz8OrYiTdEX4ZJIt+9rA3rzslZA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KQaBvXoGgHwdVfE4VYH2MmLPQUnkPRkB99CAn47i+26iYyEyBGZ8lOFKKORRD7+Nz7LxANraDAjonAV0zUfDDcvbMwz1t3DUu+Oe+2PY/qT0NLD21jagaDu0M7dch000NNQ/f6pXxbu+P4COzj9O39JgSieBIKzeSN6f9x75oW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=gLbEbpAv; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=rw6w7MZJbACmuJgp4s+3IwRtl2R86wwVcDiDfv0+MRpASFYvJtjJ97K/FXDFxeXTEyljNPK+372X6fImBtu8thzzH9s5cSuj+RuvsLdXGjF9CUkcHoTFF//gIUdgWgPW9fhIMFkO6O5rU7wu1Oa2gbyV7eEUs2pPzV4lJ43oG+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=UsBpoovP; arc=none smtp.client-ip=217.140.110.172
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 07FEF1576;
-	Tue, 14 Jul 2026 07:06:00 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBABA1576;
+	Tue, 14 Jul 2026 07:06:07 -0700 (PDT)
 Received: from localhost.localdomain (e123572-lin.cambridge.arm.com [10.2.208.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D4CBA3F7B4;
-	Tue, 14 Jul 2026 07:05:56 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 923CB3F7B4;
+	Tue, 14 Jul 2026 07:06:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1784037964; bh=n3wqVkoRE0XrCf49SeUd/3zMbBniK8cKIbHpgqpyHxU=;
+	t=1784037972; bh=wjWPKE4gokVm0n43Fz8OrYiTdEX4ZJIt+9rA3rzslZA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=gLbEbpAvFzCqe/uk00cuBVEyk86ImDFUKg9+DAxOfE+6fXLZiWwmczq+TYqacIij9
-	 dzObBv+9qrGLnOJGKWs94LTFpTVFSye5m9UY9LBRCiPUb+bTNDGQ4mEUs5d8asduh+
-	 urPZbHaQ9KgT1hC0YSHV6N5wgcZRQb27Ns4Uao8I=
+	b=UsBpoovPpZ85RSIZfXEnSBfVHOZtFnPkX47Kj5gg3LsgzJNhCVgTUWCtTOeVOPaNp
+	 HKjlV2fnQGGYMeGqcjyozlJa7a3QA1IlDMrT8hf3JRzN2w2i+9FSRlqOzr8/QB6/Qf
+	 Q0z0BAmzTk1fTpNEZ3NiarWVCe9KoxmszHFZ5aSw=
 From: Kevin Brodsky <kevin.brodsky@arm.com>
-Date: Tue, 14 Jul 2026 15:03:56 +0100
-Subject: [PATCH 07/22] parisc: mm: use mm_is_kernel() for kernel mm checks
+Date: Tue, 14 Jul 2026 15:03:57 +0100
+Subject: [PATCH 08/22] powerpc: mm: use mm_is_kernel() for kernel mm checks
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260714-remove_pgtable_cdtor-v1-7-44be8a7685d7@arm.com>
+Message-Id: <20260714-remove_pgtable_cdtor-v1-8-44be8a7685d7@arm.com>
 References: <20260714-remove_pgtable_cdtor-v1-0-44be8a7685d7@arm.com>
 In-Reply-To: <20260714-remove_pgtable_cdtor-v1-0-44be8a7685d7@arm.com>
 To: linux-mm@kvack.org
@@ -94,11 +94,11 @@ Cc: Kevin Brodsky <kevin.brodsky@arm.com>,
  "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
  linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1784037902; l=2128;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1784037902; l=2458;
  i=kevin.brodsky@arm.com; s=20260427; h=from:subject:message-id;
- bh=n3wqVkoRE0XrCf49SeUd/3zMbBniK8cKIbHpgqpyHxU=;
- b=NiOLSLM4Bju3NE/MJk1JSg+adlOz6kSqOBN5Q1Ojo91j2+7DutkOZ20lco5JkeakYm3HADh4V
- WLZkvqMg2QAA0cYBkRVmiWNUb4u1J8+jQygFQcLGfYdNrt+hwaqOb94
+ bh=wjWPKE4gokVm0n43Fz8OrYiTdEX4ZJIt+9rA3rzslZA=;
+ b=mGXIMwx7mP+wc+PdjO+ERefisoZsiZf5NJNBVQYllixOIGkiZykJ/6wIrBXI36cbJ4lbGAtZA
+ wL42KEsLctGAHh95szgDEyWgp6+51aO6Iy65UQOmRkiEbYbzhv701ws
 X-Developer-Key: i=kevin.brodsky@arm.com; a=ed25519;
  pk=N2QG+eJKrvkNovwhhwJhnJ4+ScVfsGCHldmqLfcMTFs=
 X-Rspamd-Action: no action
@@ -115,7 +115,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FREEMAIL_CC(0.00)[arm.com,linux-foundation.org,kernel.org,infradead.org,google.com,suse.com,soleen.com,armlinux.org.uk,lists.infradead.org,lists.linux.dev,HansenPartnership.com,gmx.de,vger.kernel.org,linux.ibm.com,ellerman.id.au,lists.ozlabs.org,dabbelt.com,eecs.berkeley.edu,davemloft.net,gaisler.com,nod.at,cambridgegreys.com,sipsolutions.net,redhat.com,alien8.de,linux.intel.com,zytor.com,intel.com,lists.sourceforge.net,linaro.org,gmail.com,nvidia.com];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22244-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22245-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER(0.00)[kevin.brodsky@arm.com,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS(0.00)[m:linux-mm@kvack.org,m:kevin.brodsky@arm.com,m:akpm@linux-foundation.org,m:david@kernel.org,m:ljs@kernel.org,m:liam@infradead.org,m:vbabka@kernel.org,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:pasha.tatashin@soleen.com,m:linux@armlinux.org.uk,m:catalin.marinas@arm.com,m:will@kernel.org,m:ryan.roberts@arm.com,m:linux-arm-kernel@lists.infradead.org,m:chenhuacai@kernel.org,m:loongarch@lists.linux.dev,m:James.Bottomley@HansenPartnership.com,m:deller@gmx.de,m:linux-parisc@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:linuxppc-dev@lists.ozlabs.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:linux-riscv@lists.infradead.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:linux-s390@vger.kernel.org,m:davem@davemloft.net,m:andreas@gaisler.com,m:sparclinux@vger.kernel.org,m:richard@nod.at,m:anton.ivanov@cambridgegreys.com,m:johannes@sipsolutions.net,m:linux-um@lists.infr
@@ -137,7 +137,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[arm.com:from_mime,arm.com:mid,arm.com:email,arm.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 06E7B755BC2
+X-Rspamd-Queue-Id: 46AF5755BCF
 
 The new MMF_KERNEL flag identifies kernel-owned mm's. Checking the
 flag with mm_is_kernel() is preferred over comparing directly
@@ -148,50 +148,64 @@ No functional change, as only init_mm has MMF_KERNEL set for now.
 Assisted-by: Codex:GPT-5.5
 Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 ---
- arch/parisc/include/asm/mmu_context.h | 2 +-
- arch/parisc/include/asm/pgalloc.h     | 2 +-
- arch/parisc/include/asm/tlbflush.h    | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/powerpc/include/asm/pgalloc.h | 2 +-
+ arch/powerpc/mm/book3s64/pgtable.c | 2 +-
+ arch/powerpc/mm/mmu_context.c      | 2 +-
+ arch/powerpc/mm/pgtable.c          | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/parisc/include/asm/mmu_context.h b/arch/parisc/include/asm/mmu_context.h
-index c9187fe836a3..e265da67559e 100644
---- a/arch/parisc/include/asm/mmu_context.h
-+++ b/arch/parisc/include/asm/mmu_context.h
-@@ -87,7 +87,7 @@ static inline void activate_mm(struct mm_struct *prev, struct mm_struct *next)
- 	 * already, so we should be OK.
- 	 */
- 
--	BUG_ON(next == &init_mm); /* Should never happen */
-+	BUG_ON(mm_is_kernel(next)); /* Should never happen */
- 
- 	if (next->context.space_id == 0)
- 		next->context.space_id = alloc_sid();
-diff --git a/arch/parisc/include/asm/pgalloc.h b/arch/parisc/include/asm/pgalloc.h
-index 3b84ee93edaa..9f09cc4fa5dd 100644
---- a/arch/parisc/include/asm/pgalloc.h
-+++ b/arch/parisc/include/asm/pgalloc.h
-@@ -34,7 +34,7 @@ static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long address)
+diff --git a/arch/powerpc/include/asm/pgalloc.h b/arch/powerpc/include/asm/pgalloc.h
+index 3a971e2a8c73..88acccc5b06e 100644
+--- a/arch/powerpc/include/asm/pgalloc.h
++++ b/arch/powerpc/include/asm/pgalloc.h
+@@ -7,7 +7,7 @@
+ #ifndef MODULE
+ static inline gfp_t pgtable_gfp_flags(struct mm_struct *mm, gfp_t gfp)
+ {
+-	if (unlikely(mm == &init_mm))
++	if (unlikely(mm_is_kernel(mm)))
+ 		return gfp;
+ 	return gfp | __GFP_ACCOUNT;
+ }
+diff --git a/arch/powerpc/mm/book3s64/pgtable.c b/arch/powerpc/mm/book3s64/pgtable.c
+index 85ab6723c8f2..eb365f7c8907 100644
+--- a/arch/powerpc/mm/book3s64/pgtable.c
++++ b/arch/powerpc/mm/book3s64/pgtable.c
+@@ -395,7 +395,7 @@ static pmd_t *__alloc_for_pmdcache(struct mm_struct *mm)
  	struct ptdesc *ptdesc;
- 	gfp_t gfp = GFP_PGTABLE_USER;
+ 	gfp_t gfp = GFP_KERNEL_ACCOUNT | __GFP_ZERO;
  
 -	if (mm == &init_mm)
 +	if (mm_is_kernel(mm))
- 		gfp = GFP_PGTABLE_KERNEL;
- 	ptdesc = pagetable_alloc(gfp, PMD_TABLE_ORDER);
+ 		gfp &= ~__GFP_ACCOUNT;
+ 	ptdesc = pagetable_alloc(gfp, 0);
  	if (!ptdesc)
-diff --git a/arch/parisc/include/asm/tlbflush.h b/arch/parisc/include/asm/tlbflush.h
-index 5ffd7c17f593..a5a6cfff295c 100644
---- a/arch/parisc/include/asm/tlbflush.h
-+++ b/arch/parisc/include/asm/tlbflush.h
-@@ -35,7 +35,7 @@ int __flush_tlb_range(unsigned long sid,
+diff --git a/arch/powerpc/mm/mmu_context.c b/arch/powerpc/mm/mmu_context.c
+index 3e3af29b4523..b51934c511f3 100644
+--- a/arch/powerpc/mm/mmu_context.c
++++ b/arch/powerpc/mm/mmu_context.c
+@@ -48,7 +48,7 @@ void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next,
  
- static inline void flush_tlb_mm(struct mm_struct *mm)
- {
--	BUG_ON(mm == &init_mm); /* Should never happen */
-+	BUG_ON(mm_is_kernel(mm)); /* Should never happen */
+ 	/* Mark this context has been used on the new CPU */
+ 	if (!cpumask_test_cpu(cpu, mm_cpumask(next))) {
+-		VM_WARN_ON_ONCE(next == &init_mm);
++		VM_WARN_ON_ONCE(mm_is_kernel(next));
+ 		cpumask_set_cpu(cpu, mm_cpumask(next));
+ 		inc_mm_active_cpus(next);
  
- #if 1 || defined(CONFIG_SMP)
- 	/* Except for very small threads, flushing the whole TLB is
+diff --git a/arch/powerpc/mm/pgtable.c b/arch/powerpc/mm/pgtable.c
+index a9be337be3e4..d04f4fecfc7c 100644
+--- a/arch/powerpc/mm/pgtable.c
++++ b/arch/powerpc/mm/pgtable.c
+@@ -393,7 +393,7 @@ void assert_pte_locked(struct mm_struct *mm, unsigned long addr)
+ 	pte_t *pte;
+ 	spinlock_t *ptl;
+ 
+-	if (mm == &init_mm)
++	if (mm_is_kernel(mm))
+ 		return;
+ 	pgd = mm->pgd + pgd_index(addr);
+ 	BUG_ON(pgd_none(*pgd));
 
 -- 
 2.51.2
