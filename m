@@ -1,260 +1,221 @@
-Return-Path: <linux-s390+bounces-22303-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22305-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id E7VQODnFVmocBAEAu9opvQ
-	(envelope-from <linux-s390+bounces-22303-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Jul 2026 01:24:41 +0200
+	id vUcXIcDHVmqMBAEAu9opvQ
+	(envelope-from <linux-s390+bounces-22305-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Jul 2026 01:35:28 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F863759690
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Jul 2026 01:24:41 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D137E759774
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Jul 2026 01:35:27 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=L0h9C13O;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22303-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-22303-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=ibm.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Yw6CzIK6;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22305-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-22305-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DBEA8315DB6A
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 23:22:31 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 89986300A106
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 23:34:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 946C744212A;
-	Tue, 14 Jul 2026 23:22:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA63A2DB78C;
+	Tue, 14 Jul 2026 23:34:26 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA54243B6E1;
-	Tue, 14 Jul 2026 23:22:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF5A294A10;
+	Tue, 14 Jul 2026 23:34:25 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784071342; cv=none; b=oaV15Q5kzD8PPBBvV14lKRMz36eiC21HArr1m9wFwY/+tQloxue12tgC6j2ofRFtDRLbh+dc27LexwcN22bFP7xbHaGXs9UKh3KS8PXrDaOkwXcH9BL98VGUCU0n4K9+YPq8olk4cJQxBMS9HyuTbAYiWZ7QAKO+jEcJ5mlKPcs=
+	t=1784072066; cv=none; b=kAGlOmAgqMNcEXIhL4kKrnb5KUvMeR/qYmC18KgPKcfdRQnAxM7iJv0F+ZtPyPysRXAopycBOovOy/xTDymiLXeAAZDsgfAjiwXMC/f/rSM1SQzSqMdsNKEz3wZDnnW75cYNK2xpTFX3rDqteLx6tBSTF1XX/Fm3CFUsxJEHJAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784071342; c=relaxed/simple;
-	bh=P3XWV1htfv/+pnaxzwiBMyLNA7sp2LcefcxT5gFJCTY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NqXGivDOtTw0jgPBZDrgR8DTNaLc3+Uc7luogpKkuVn/YGTQvmCz2780yF1cNQrUnRFRAi5cL8HCw7QQOs+29PkCfeTFXFgeXutx88bzjJ5rDAz819gVFWs42sShZc5QKgdoWs7QWtGpLezS21eXZ/x+VYdqvR2FRX/VuINYH1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=L0h9C13O; arc=none smtp.client-ip=148.163.158.5
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66EJBmie2116414;
-	Tue, 14 Jul 2026 23:22:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=jdj62yyVkb6OFhQmM
-	MbgfgBqscDlThLxK9g+9kNIuAk=; b=L0h9C13O1f7T2SYHkmbBwujc0Nyzckw1T
-	QOlRIXE04zlEH9LnyErWAPQxyRnzbOySndlwJ/q8RVhhAhpjckGhaftRbewHRaBO
-	iTn25MJAnPcmkDRNEZtfP0gU6uXvPtxaxf4n+BF0hyBhG/JTxhUfXm1CYWfGnYRW
-	zpr0l9lWUM9rexegNJ6rss7Uo64YUYY5KCNtlW33y3MxOdRS/5NRdmU8NAxhb/Vx
-	NN0jETUUlfxrC032d5Gu8NHVBCPpWQdg75lr3GoiS75KNzSZLbJ6n+4vE/ldYW2g
-	dhObNG2ck/kmVhY+QiV0xR2xBf5q6k0hx2+0DEFXef19l7RKzQ6qw==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fbf2a86e3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 Jul 2026 23:22:19 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66ENJf3g011560;
-	Tue, 14 Jul 2026 23:22:18 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fc15jw6g9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 Jul 2026 23:22:18 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66ENMC7P48562512
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 14 Jul 2026 23:22:12 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 98D0620040;
-	Tue, 14 Jul 2026 23:22:12 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 745DA2004B;
-	Tue, 14 Jul 2026 23:22:12 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with SMTP;
-	Tue, 14 Jul 2026 23:22:12 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
-	id 437E11626C4; Wed, 15 Jul 2026 01:22:12 +0200 (CEST)
-From: Eric Farman <farman@linux.ibm.com>
-To: linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc: Matthew Rosato <mjrosato@linux.ibm.com>, Halil Pasic <pasic@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>, stable@vger.kernel.org
-Subject: [PATCH v1 6/6] s390/vfio_ccw: lock I/O resources alongside I/O regions
-Date: Wed, 15 Jul 2026 01:22:08 +0200
-Message-ID: <20260714232208.1683788-7-farman@linux.ibm.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260714232208.1683788-1-farman@linux.ibm.com>
+	s=arc-20240116; t=1784072066; c=relaxed/simple;
+	bh=D6A6T7fbi59se672s5HJKrVhvVFYC4p+mHT0aZTBh0Q=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=rsQcXkNCjL59eU9PYNJIYa2T9Ko9rYXiZjwcGLqBShV9yeg+XDdSWr6jfNv7yKRHAVEpFEodWe6XV65Wd9xh7gtxohOMw9Ffl9+JW8jOSXUjeEnMjJW+fBbKhCbjGnMVS4ShX5WOSfKDBNN1q6Ndl54DyhZHJo/TUfdUioxG9SE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yw6CzIK6; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 092371F000E9;
+	Tue, 14 Jul 2026 23:34:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784072065;
+	bh=Iv4SDTb8vdjr3NMUksMhxAo9AmuHtck/KrHr9GllcSY=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Yw6CzIK6B4vf/fPLXZLOHoU6Y/k5/39obT+DUHQ19NbICFKlz066xU4t/YXWCwz+a
+	 qa6bbpwyf5EUVAXf981TNduDnpxF0KiJ9POYk+l608w7/qwzf1DnHM59yoraHtyxQ2
+	 zLN6UGbq7NlV6ZCn452WW/hViX3qW8w+0O8nipqUUgW5ixj0jvl97PsY3ZAs1MCh/q
+	 2t8Bf/QspRfULoMevxHWA9hc0d9OCBJvP84be967emoK3ueXUX+nzFMFfzeLVVyD9I
+	 V4zRv1bQiNWSoJn9KlLINkaYaZYFh8Bt6UPdGJKYcYoSi/ZUzD3u2jRE5Ov2o2QRtV
+	 r2cpRcHVS2IIw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v1 4/6] s390/vfio_ccw: copy maximum possible IDAL from
+ guest
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Eric Farman" <farman@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, "Alexander Gordeev" <agordeev@linux.ibm.com>, kvm@vger.kernel.org, "Vasily
+ Gorbik" <gor@linux.ibm.com>, "Heiko Carstens" <hca@linux.ibm.com>
+In-Reply-To: <20260714232208.1683788-5-farman@linux.ibm.com>
 References: <20260714232208.1683788-1-farman@linux.ibm.com>
+ <20260714232208.1683788-5-farman@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 14 Jul 2026 23:34:24 +0000
+Message-Id: <20260714233425.092371F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzE0MDI0MCBTYWx0ZWRfX3T2hzZ5ZuHRS
- fa5ul8XyJISItb3qHjmBrVku8xkxX3rJi+131B/udsYUaF7bctX0ISVIf/VP822rEG8mYmoOfR3
- WkJV2nNdmAg9/PXlZ+ptB3mCF5L6HoE=
-X-Proofpoint-GUID: -aIfqjlLJgtxEpBs-PbIy1JAf2pymKLe
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzE0MDI0MCBTYWx0ZWRfX60mjDU47PK4V
- LkiD/F+kGtgOGQV5gzz3h4vmLNx3akyzbw09KYXTv4PdzddEbUa2WA8ztBk4mPv7vtrzQIG0Pkw
- XLrzVk23N30CXFZ6lWeREBW0twhrce/AQBMh3EllrCIJrYpERfDKAEH6JNvRJkBc7PQhswxR3uj
- BMeEnjcnrIvDFSg/iO0VIwKIvLVJnGe/9vkeFUmQYQEp54E82oIOmHs6OsZUuDAO5i/3D3ladCL
- TW1be0qwdiOeHjk1cn5gKcU/1LXClNKk8W6knV/rRQhnzB+RCWuwhaDGJbryi70DgwjU8o0tZDg
- Z8TFzIgJ5mRypA9Tzs03fFvLGOwGX7YnW88etc9jDLIVSeoi/gOdPy6dkgcxIObezm3pRXY9dL5
- XBnH3buWwNrBj7AXitKJpg5TKv/cDobr12w8ShLbB0g+qTrQ0j0/CsTumiNDopzxHORQ+oOacH7
- M6m6vW/EUacX9QyP1Lg==
-X-Proofpoint-ORIG-GUID: -aIfqjlLJgtxEpBs-PbIy1JAf2pymKLe
-X-Authority-Analysis: v=2.4 cv=PvajqQM3 c=1 sm=1 tr=0 ts=6a56c4ab cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
- a=KyaCFF8TlgOd3ial2BYA:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-14_05,2026-07-14_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 malwarescore=0 bulkscore=0 impostorscore=0 adultscore=0
- clxscore=1015 lowpriorityscore=0 spamscore=0 suspectscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607140240
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22305-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22303-lists,linux-s390=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:linux-s390@vger.kernel.org,m:kvm@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:mjrosato@linux.ibm.com,m:pasic@linux.ibm.com,m:borntraeger@linux.ibm.com,m:farman@linux.ibm.com,m:stable@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[farman@linux.ibm.com,linux-s390@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_NEQ_ENVFROM(0.00)[farman@linux.ibm.com,linux-s390@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	ALIAS_RESOLVED(0.00)[];
-	RCVD_COUNT_TWELVE(0.00)[12];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,smtp.kernel.org:mid,sashiko.dev:url];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:farman@linux.ibm.com,m:linux-s390@vger.kernel.org,m:agordeev@linux.ibm.com,m:kvm@vger.kernel.org,m:gor@linux.ibm.com,m:hca@linux.ibm.com,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	PRECEDENCE_BULK(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-s390];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,linux.ibm.com:from_mime,linux.ibm.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_NO_DN(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3F863759690
+X-Rspamd-Queue-Id: D137E759774
 
-The memory regions shared with userspace for vfio-ccw operations
-are correctly accessed under a lock, but there are a handful of
-related structures that are associated with the same lifespan of
-a given SSCH (and thus the written-to memory region).
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] calc_max_idal_len() returns a word count instead of a byte length,=
+ causing truncated guest memory reads and silent guest memory corruption.
+--
 
-Some of these cases are done asynchronously from the guest
-(e.g., hot-unplug of a device or channel path event), and so
-should be protected in some similar way. Since a subchannel can
-only have one I/O active at a time, redefine the I/O mutex from
-protecting the region, to all the resources associated with the I/O.
+--- Patch [4]: [PATCH v1 4/6] s390/vfio_ccw: copy maximum possible IDAL fro=
+m guest ---
+commit 3ab642e4c4a6646b5b0bec62ab380c4cc0ea0ac2
+Author: Eric Farman <farman@linux.ibm.com>
 
-Fixes: 4f76617378ee ("vfio-ccw: protect the I/O region")
-Cc: stable@vger.kernel.org
-Signed-off-by: Eric Farman <farman@linux.ibm.com>
----
- drivers/s390/cio/vfio_ccw_chp.c     | 2 +-
- drivers/s390/cio/vfio_ccw_drv.c     | 2 ++
- drivers/s390/cio/vfio_ccw_fsm.c     | 5 +++++
- drivers/s390/cio/vfio_ccw_private.h | 2 +-
- 4 files changed, 9 insertions(+), 2 deletions(-)
+s390/vfio_ccw: copy maximum possible IDAL from guest
 
-diff --git a/drivers/s390/cio/vfio_ccw_chp.c b/drivers/s390/cio/vfio_ccw_=
-chp.c
-index 38c176cf6295..872620a9488d 100644
---- a/drivers/s390/cio/vfio_ccw_chp.c
-+++ b/drivers/s390/cio/vfio_ccw_chp.c
-@@ -90,13 +90,13 @@ static ssize_t vfio_ccw_crw_region_read(struct vfio_c=
-cw_private *private,
- 	if (pos + count > sizeof(*region))
- 		return -EINVAL;
-=20
-+	mutex_lock(&private->io_mutex);
- 	crw =3D list_first_entry_or_null(&private->crw,
- 				       struct vfio_ccw_crw, next);
-=20
- 	if (crw)
- 		list_del(&crw->next);
-=20
--	mutex_lock(&private->io_mutex);
- 	region =3D private->region[i].data;
-=20
- 	if (crw)
-diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_=
-drv.c
-index 1a095085bc72..385af7daca3b 100644
---- a/drivers/s390/cio/vfio_ccw_drv.c
-+++ b/drivers/s390/cio/vfio_ccw_drv.c
-@@ -292,7 +292,9 @@ static void vfio_ccw_queue_crw(struct vfio_ccw_privat=
-e *private,
- 	crw->crw.erc =3D erc;
- 	crw->crw.rsid =3D rsid;
-=20
-+	mutex_lock(&private->io_mutex);
- 	list_add_tail(&crw->next, &private->crw);
-+	mutex_unlock(&private->io_mutex);
- 	queue_work(vfio_ccw_work_q, &private->crw_work);
- }
-=20
-diff --git a/drivers/s390/cio/vfio_ccw_fsm.c b/drivers/s390/cio/vfio_ccw_=
-fsm.c
-index 4d7988ea47ef..96f23da88a39 100644
---- a/drivers/s390/cio/vfio_ccw_fsm.c
-+++ b/drivers/s390/cio/vfio_ccw_fsm.c
-@@ -171,7 +171,9 @@ static void fsm_notoper(struct vfio_ccw_private *priv=
-ate,
- 	private->state =3D VFIO_CCW_STATE_NOT_OPER;
-=20
- 	/* This is usually handled during CLOSE event */
-+	mutex_lock(&private->io_mutex);
- 	cp_free(&private->cp);
-+	mutex_unlock(&private->io_mutex);
- }
-=20
- /*
-@@ -410,7 +412,10 @@ static void fsm_close(struct vfio_ccw_private *priva=
-te,
-=20
- 	private->state =3D VFIO_CCW_STATE_STANDBY;
- 	spin_unlock_irq(&sch->lock);
-+
-+	mutex_lock(&private->io_mutex);
- 	cp_free(&private->cp);
-+	mutex_unlock(&private->io_mutex);
- 	return;
-=20
- err_unlock:
-diff --git a/drivers/s390/cio/vfio_ccw_private.h b/drivers/s390/cio/vfio_=
-ccw_private.h
-index 0501d4bbcdbd..8f3792fdd31b 100644
---- a/drivers/s390/cio/vfio_ccw_private.h
-+++ b/drivers/s390/cio/vfio_ccw_private.h
-@@ -88,7 +88,7 @@ struct vfio_ccw_parent {
-  * @state: internal state of the device
-  * @completion: synchronization helper of the I/O completion
-  * @io_region: MMIO region to input/output I/O arguments/results
-- * @io_mutex: protect against concurrent update of I/O regions
-+ * @io_mutex: protect against concurrent update of I/O resources
-  * @region: additional regions for other subchannel operations
-  * @cmd_region: MMIO region for asynchronous I/O commands other than STA=
-RT
-  * @schib_region: MMIO region for SCHIB information
+An Indirect Data Address word is always 2K/4K aligned (depending on
+format/type), except for the first word in a list. This unaligned
+word makes calculating the number of addresses in a list challenging.
+The current code attempts to be efficient about this by reading the
+first word before making its calculations, but it introduces
+inefficiencies trying to do the math on supposedly equal values.
+
+> diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_c=
+p.c
+> index 74b1f25e01e72..dac53e26509e5 100644
+> --- a/drivers/s390/cio/vfio_ccw_cp.c
+> +++ b/drivers/s390/cio/vfio_ccw_cp.c
+> @@ -523,16 +523,24 @@ static int ccwchain_fetch_tic(struct ccw1 *ccw,
+>  	return -EFAULT;
+>  }
+> =20
+> +static int calc_max_idal_len(struct ccw1 *ccw, struct channel_program *c=
+p)
+> +{
+> +	int idal_size =3D idal_is_2k(cp) ? PAGE_SIZE / 2 : PAGE_SIZE;
+> +	int idal_mask =3D ~(idal_size - 1);
+> +	int idal_len =3D idal_size - (ccw->cda & ~idal_mask);
+> +
+> +	/* This overestimates for Format-1 or 2K-Format-2 IDAWs */
+> +	return idal_len / 8;
+> +}
+> +
+>  static dma64_t *get_guest_idal(struct ccw1 *ccw, struct channel_program =
+*cp, int idaw_nr)
+>  {
+> -	struct vfio_device *vdev =3D
+> -		&container_of(cp, struct vfio_ccw_private, cp)->vdev;
+>  	dma64_t *idaws;
+>  	dma32_t *idaws_f1;
+>  	int idal_len =3D idaw_nr * sizeof(*idaws);
+>  	int idaw_size =3D idal_is_2k(cp) ? PAGE_SIZE / 2 : PAGE_SIZE;
+>  	int idaw_mask =3D ~(idaw_size - 1);
+> -	int i, ret;
+> +	int i;
+> =20
+>  	idaws =3D kzalloc_objs(*idaws, idaw_nr, GFP_DMA | GFP_KERNEL);
+>  	if (!idaws)
+> @@ -540,11 +548,7 @@ static dma64_t *get_guest_idal(struct ccw1 *ccw, str=
+uct channel_program *cp, int
+> =20
+>  	if (ccw_is_idal(ccw)) {
+>  		/* Copy IDAL from guest */
+> -		ret =3D vfio_dma_rw(vdev, dma32_to_u32(ccw->cda), idaws, idal_len, fal=
+se);
+> -		if (ret) {
+> -			kfree(idaws);
+> -			return ERR_PTR(ret);
+> -		}
+> +		memcpy(idaws, cp->guest_idal, idal_len);
+>  	} else {
+>  		/* Fabricate an IDAL based off CCW data address */
+>  		if (cp->orb.cmd.c64) {
+
+[ ... ]
+
+> @@ -586,7 +590,7 @@ static int ccw_count_idaws(struct ccw1 *ccw,
+>  	struct vfio_device *vdev =3D
+>  		&container_of(cp, struct vfio_ccw_private, cp)->vdev;
+>  	u64 iova;
+> -	int size =3D cp->orb.cmd.c64 ? sizeof(u64) : sizeof(u32);
+> +	int size =3D calc_max_idal_len(ccw, cp);
+>  	int ret;
+>  	int bytes =3D 1;
+> =20
+> @@ -596,10 +600,13 @@ static int ccw_count_idaws(struct ccw1 *ccw,
+>  	if (ccw_is_idal(ccw)) {
+>  		/* Read first IDAW to check its starting address. */
+>  		/* All subsequent IDAWs will be 2K- or 4K-aligned. */
+> -		ret =3D vfio_dma_rw(vdev, dma32_to_u32(ccw->cda), &iova, size, false);
+> +		ret =3D vfio_dma_rw(vdev, dma32_to_u32(ccw->cda),
+> +				  cp->guest_idal, size, false);
+
+[Severity: High]
+Does this pass a word count instead of a byte count to vfio_dma_rw()?
+
+calc_max_idal_len() returns a word count because it divides the remaining b=
+ytes
+by 8. When this value is stored in size and passed to vfio_dma_rw(), it see=
+ms
+it will read at most 1/8th of the required IDAL data.
+
+Later in get_guest_idal(), the code copies the full required byte length fr=
+om
+the partially-filled cp->guest_idal buffer:
+
+	memcpy(idaws, cp->guest_idal, idal_len);
+
+Could this result in copying stale or uninitialized data to the host IDAL,
+causing the hardware to perform DMA to incorrect guest physical addresses?
+
 --=20
-2.53.0
-
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260714232208.1683=
+788-1-farman@linux.ibm.com?part=3D4
 
