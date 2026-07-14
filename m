@@ -1,52 +1,52 @@
-Return-Path: <linux-s390+bounces-22247-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22248-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id nJwBLbdCVmqK2QAAu9opvQ
-	(envelope-from <linux-s390+bounces-22247-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 16:07:51 +0200
+	id zl0+LCREVmr62QAAu9opvQ
+	(envelope-from <linux-s390+bounces-22248-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 16:13:56 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76A1C75584C
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 16:07:51 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48C307559C4
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 16:13:56 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=arm.com header.s=foss header.b="Vw/Dcaip";
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22247-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-s390+bounces-22247-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=arm.com header.s=foss header.b=YzY9thwi;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22248-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-22248-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=arm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 8B179303BD58
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 14:07:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7ED44317DA68
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 14:07:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66E5E47D928;
-	Tue, 14 Jul 2026 14:06:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6A2447DD66;
+	Tue, 14 Jul 2026 14:06:37 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE15647DD7A;
-	Tue, 14 Jul 2026 14:06:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFEAB47DD43;
+	Tue, 14 Jul 2026 14:06:35 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784037989; cv=none; b=HM5dCq7dsvU/ZIdNnJbecY+qT72X3zw/rMJVoUBsD9GcFwRjc5zza4FO+Hr6GoJdbG9zVPre+i4NU90li1VFV3tGvNFJR6QWJhN5z73dfOz3gkRbH6CUMMch/6AK7p33so3v1+6fxnkI9ZILM1IZ+g6YvGZkNjmqzhK2FUx10Mk=
+	t=1784037997; cv=none; b=G7vQCYeNZoOZhc6W++lqz0f8yrr/bSxpUv7i1lfM5skbPJf5D7qzB+bdI4sG/PTlFHYOEDd51wWl+p3EHuP+5H/F1rvVRMjBoVvH6Yr5eqpJo6KsgFQV/Sn2DEe17byOxcGpe/4Yd5gG7VL4Rqoy0LVx4qf/W8e2/jRmYduF7lE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784037989; c=relaxed/simple;
-	bh=0Ls2F5YWtI+Ww29NmMlh3ILvDXBv7NqjYutzPTWlWAY=;
+	s=arc-20240116; t=1784037997; c=relaxed/simple;
+	bh=brubU8ipNy1ujnPWOSJsU4D9Csfsl5oNxDWj3XnSBxg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Dlm3dCKV3g2U9xwnBLULxkerVylNt0waPQhUa2KswyePTsn8cMGool4iiww411fL4PgnJeeQMW3p4ipZvwlSLG31etIUKUeOMTROV4bymdFQoc6iJS/QFCTSkQjwYhPlkdktby/OBL6ASXpwUH6RlzKWaDsUV6p/2Dr7d2BbvYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Vw/Dcaip; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=ktRvENGJZedI5axRaBsGg5kMhr16vnF8XcNWWViSrdr5BlTsfeuL25Ie3vfELMW37YEnbMbKfuAfc2Xrl3RUah3SZux82Dz+IbdeJCRcbVmJVJjVgg1gZ2lwOGUPVCsEdlcDyWGCkNrsTjn88eBDElGf8YrNaYNqVZTAHYtG96U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=YzY9thwi; arc=none smtp.client-ip=217.140.110.172
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 339AB1576;
-	Tue, 14 Jul 2026 07:06:23 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5D6A1576;
+	Tue, 14 Jul 2026 07:06:30 -0700 (PDT)
 Received: from localhost.localdomain (e123572-lin.cambridge.arm.com [10.2.208.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D7CA3F7B4;
-	Tue, 14 Jul 2026 07:06:19 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE3913F7B4;
+	Tue, 14 Jul 2026 07:06:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1784037987; bh=0Ls2F5YWtI+Ww29NmMlh3ILvDXBv7NqjYutzPTWlWAY=;
+	t=1784037995; bh=brubU8ipNy1ujnPWOSJsU4D9Csfsl5oNxDWj3XnSBxg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Vw/DcaipPFO7n11+mYGQ7sNvjiW4bDFKvxM87pb4Zb7kuc57MeI8Zk26C7/35oDk9
-	 zqUNmHcLyquGe9NI65E4Her4eCylK5913yMxY4xf0bE1WBcJGqN4rBz8A8PaHgPJxY
-	 8H47S03cWv8hSaCgq8C8KHighveKeuoCTTOKDHQY=
+	b=YzY9thwiHc65wNiUxU67y6/tJ7ZmfWCBeoA2a4LNQMo0O7ibHK6ctA9ComeTUEm9C
+	 I/qi+0IpZSq41xPb+OZ7Z3/G4uCkw9cLd6IhSMUabwxmOQOqx2sF6D5jJAoetl8ck9
+	 oA5zuyScXswzHCcI9ibhnX1aroPeO+YpvDY2p/3g=
 From: Kevin Brodsky <kevin.brodsky@arm.com>
-Date: Tue, 14 Jul 2026 15:03:59 +0100
-Subject: [PATCH 10/22] sparc: mm: use mm_is_kernel() for kernel mm checks
+Date: Tue, 14 Jul 2026 15:04:00 +0100
+Subject: [PATCH 11/22] um: mm: use mm_is_kernel() in TLB sync
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260714-remove_pgtable_cdtor-v1-10-44be8a7685d7@arm.com>
+Message-Id: <20260714-remove_pgtable_cdtor-v1-11-44be8a7685d7@arm.com>
 References: <20260714-remove_pgtable_cdtor-v1-0-44be8a7685d7@arm.com>
 In-Reply-To: <20260714-remove_pgtable_cdtor-v1-0-44be8a7685d7@arm.com>
 To: linux-mm@kvack.org
@@ -94,11 +94,11 @@ Cc: Kevin Brodsky <kevin.brodsky@arm.com>,
  "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
  linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1784037902; l=3538;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1784037902; l=784;
  i=kevin.brodsky@arm.com; s=20260427; h=from:subject:message-id;
- bh=0Ls2F5YWtI+Ww29NmMlh3ILvDXBv7NqjYutzPTWlWAY=;
- b=VJPLQX/cB8CHz8XN2ewL2VVdeyfHItZBmFDR5s9RbTft/6Q4d42mZh1rja83yviws3jmyIGiU
- WKKijSfDJjoB4fJ0orVPQbnc54Akn8lFl91qUqv6PDas/mRRckHwzdj
+ bh=brubU8ipNy1ujnPWOSJsU4D9Csfsl5oNxDWj3XnSBxg=;
+ b=/PzTb9tRgc6q7ZO/WLmLmpzghLV5CdRWiA/u95e31NiKnKwzFm+3cKJU2/zrnT5S/P+reJB4V
+ ezvWWMbftRCD/SWI9ofvYfumKl5AhLTyCVWAwhB/2VFq3mOJHXdgNVl
 X-Developer-Key: i=kevin.brodsky@arm.com; a=ed25519;
  pk=N2QG+eJKrvkNovwhhwJhnJ4+ScVfsGCHldmqLfcMTFs=
 X-Rspamd-Action: no action
@@ -106,7 +106,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[arm.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[arm.com:s=foss];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -115,7 +115,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FREEMAIL_CC(0.00)[arm.com,linux-foundation.org,kernel.org,infradead.org,google.com,suse.com,soleen.com,armlinux.org.uk,lists.infradead.org,lists.linux.dev,HansenPartnership.com,gmx.de,vger.kernel.org,linux.ibm.com,ellerman.id.au,lists.ozlabs.org,dabbelt.com,eecs.berkeley.edu,davemloft.net,gaisler.com,nod.at,cambridgegreys.com,sipsolutions.net,redhat.com,alien8.de,linux.intel.com,zytor.com,intel.com,lists.sourceforge.net,linaro.org,gmail.com,nvidia.com];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22247-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22248-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER(0.00)[kevin.brodsky@arm.com,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS(0.00)[m:linux-mm@kvack.org,m:kevin.brodsky@arm.com,m:akpm@linux-foundation.org,m:david@kernel.org,m:ljs@kernel.org,m:liam@infradead.org,m:vbabka@kernel.org,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:pasha.tatashin@soleen.com,m:linux@armlinux.org.uk,m:catalin.marinas@arm.com,m:will@kernel.org,m:ryan.roberts@arm.com,m:linux-arm-kernel@lists.infradead.org,m:chenhuacai@kernel.org,m:loongarch@lists.linux.dev,m:James.Bottomley@HansenPartnership.com,m:deller@gmx.de,m:linux-parisc@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:linuxppc-dev@lists.ozlabs.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:linux-riscv@lists.infradead.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:linux-s390@vger.kernel.org,m:davem@davemloft.net,m:andreas@gaisler.com,m:sparclinux@vger.kernel.org,m:richard@nod.at,m:anton.ivanov@cambridgegreys.com,m:johannes@sipsolutions.net,m:linux-um@lists.infr
@@ -128,16 +128,16 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[kevin.brodsky@arm.com,linux-s390@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCPT_COUNT_GT_50(0.00)[58];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp,arm.com:from_mime,arm.com:mid,arm.com:email,arm.com:dkim]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,arm.com:from_mime,arm.com:mid,arm.com:email,arm.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 76A1C75584C
+X-Rspamd-Queue-Id: 48C307559C4
 
 The new MMF_KERNEL flag identifies kernel-owned mm's. Checking the
 flag with mm_is_kernel() is preferred over comparing directly
@@ -145,90 +145,25 @@ against &init_mm.
 
 No functional change, as only init_mm has MMF_KERNEL set for now.
 
-pgtable_64.h previously forward-declared init_mm to avoid pulling
-in mm_types.h. It seems that including mm_types.h is not causing
-troubles any more, so we can also use mm_is_kernel() there and drop
-the forward declaration.
-
 Assisted-by: Codex:GPT-5.5
 Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 ---
- arch/sparc/include/asm/mmu_context_64.h | 2 +-
- arch/sparc/include/asm/pgtable_64.h     | 6 ++----
- arch/sparc/mm/init_64.c                 | 2 +-
- arch/sparc/mm/tlb.c                     | 2 +-
- 4 files changed, 5 insertions(+), 7 deletions(-)
+ arch/um/kernel/tlb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/sparc/include/asm/mmu_context_64.h b/arch/sparc/include/asm/mmu_context_64.h
-index 78bbacc14d2d..e88bc61aeb04 100644
---- a/arch/sparc/include/asm/mmu_context_64.h
-+++ b/arch/sparc/include/asm/mmu_context_64.h
-@@ -83,7 +83,7 @@ static inline void switch_mm(struct mm_struct *old_mm, struct mm_struct *mm, str
- 	int cpu = smp_processor_id();
+diff --git a/arch/um/kernel/tlb.c b/arch/um/kernel/tlb.c
+index 1f175716b474..fa34a710203e 100644
+--- a/arch/um/kernel/tlb.c
++++ b/arch/um/kernel/tlb.c
+@@ -171,7 +171,7 @@ int um_tlb_sync(struct mm_struct *mm)
+ 		return 0;
  
- 	per_cpu(per_cpu_secondary_mm, cpu) = mm;
--	if (unlikely(mm == &init_mm))
-+	if (unlikely(mm_is_kernel(mm)))
- 		return;
- 
- 	spin_lock_irqsave(&mm->context.lock, flags);
-diff --git a/arch/sparc/include/asm/pgtable_64.h b/arch/sparc/include/asm/pgtable_64.h
-index 0837ebbc5dce..960f8bf1ec5a 100644
---- a/arch/sparc/include/asm/pgtable_64.h
-+++ b/arch/sparc/include/asm/pgtable_64.h
-@@ -86,6 +86,7 @@ extern unsigned long VMALLOC_END;
- #define vmemmap			((struct page *)VMEMMAP_BASE)
- 
- #include <linux/sched.h>
-+#include <linux/mm_types.h>
- #include <asm/tlbflush.h>
- 
- bool kern_addr_valid(unsigned long addr);
-@@ -885,9 +886,6 @@ static inline unsigned long pud_pfn(pud_t pud)
- #define p4d_set(p4dp, pudp)	\
- 	(p4d_val(*(p4dp)) = (__pa((unsigned long) (pudp))))
- 
--/* We cannot include <linux/mm_types.h> at this point yet: */
--extern struct mm_struct init_mm;
--
- /* Actual page table PTE updates.  */
- void tlb_batch_add(struct mm_struct *mm, unsigned long vaddr,
- 		   pte_t *ptep, pte_t orig, int fullmm,
-@@ -903,7 +901,7 @@ static void maybe_tlb_batch_add(struct mm_struct *mm, unsigned long vaddr,
- 	 * SUN4V NOTE: _PAGE_VALID is the same value in both the SUN4U
- 	 *             and SUN4V pte layout, so this inline test is fine.
- 	 */
--	if (likely(mm != &init_mm) && pte_accessible(mm, orig))
-+	if (likely(!mm_is_kernel(mm)) && pte_accessible(mm, orig))
- 		tlb_batch_add(mm, vaddr, ptep, orig, fullmm, hugepage_shift);
- }
- 
-diff --git a/arch/sparc/mm/init_64.c b/arch/sparc/mm/init_64.c
-index 103db4683b16..e0b678349e3a 100644
---- a/arch/sparc/mm/init_64.c
-+++ b/arch/sparc/mm/init_64.c
-@@ -788,7 +788,7 @@ static void mmu_context_wrap(void)
- 		 */
- 		mm = per_cpu(per_cpu_secondary_mm, cpu);
- 
--		if (unlikely(!mm || mm == &init_mm))
-+		if (unlikely(!mm || mm_is_kernel(mm)))
- 			continue;
- 
- 		old_ctx = mm->context.sparc64_ctx_val;
-diff --git a/arch/sparc/mm/tlb.c b/arch/sparc/mm/tlb.c
-index 6d9dd5eb1328..47083c287a94 100644
---- a/arch/sparc/mm/tlb.c
-+++ b/arch/sparc/mm/tlb.c
-@@ -179,7 +179,7 @@ static void tlb_batch_pmd_scan(struct mm_struct *mm, unsigned long vaddr,
- static void __set_pmd_acct(struct mm_struct *mm, unsigned long addr,
- 			   pmd_t orig, pmd_t pmd)
- {
--	if (mm == &init_mm)
-+	if (mm_is_kernel(mm))
- 		return;
- 
- 	if ((pmd_val(pmd) ^ pmd_val(orig)) & _PAGE_PMD_HUGE) {
+ 	ops.mm_idp = &mm->context.id;
+-	if (mm == &init_mm) {
++	if (mm_is_kernel(mm)) {
+ 		ops.mmap = kern_map;
+ 		ops.unmap = kern_unmap;
+ 	} else {
 
 -- 
 2.51.2
