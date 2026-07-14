@@ -1,52 +1,52 @@
-Return-Path: <linux-s390+bounces-22248-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22249-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id zl0+LCREVmr62QAAu9opvQ
-	(envelope-from <linux-s390+bounces-22248-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 16:13:56 +0200
+	id ZsXSKzJEVmoA2gAAu9opvQ
+	(envelope-from <linux-s390+bounces-22249-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 16:14:10 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48C307559C4
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 16:13:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5061D7559DF
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 16:14:10 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=arm.com header.s=foss header.b=YzY9thwi;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22248-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-22248-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=arm.com header.s=foss header.b=HIiwhwiW;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22249-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-22249-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=arm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7ED44317DA68
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 14:07:16 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6422133479D3
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 14:07:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6A2447DD66;
-	Tue, 14 Jul 2026 14:06:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C21847DF94;
+	Tue, 14 Jul 2026 14:06:45 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFEAB47DD43;
-	Tue, 14 Jul 2026 14:06:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78EC847DD43;
+	Tue, 14 Jul 2026 14:06:43 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784037997; cv=none; b=G7vQCYeNZoOZhc6W++lqz0f8yrr/bSxpUv7i1lfM5skbPJf5D7qzB+bdI4sG/PTlFHYOEDd51wWl+p3EHuP+5H/F1rvVRMjBoVvH6Yr5eqpJo6KsgFQV/Sn2DEe17byOxcGpe/4Yd5gG7VL4Rqoy0LVx4qf/W8e2/jRmYduF7lE=
+	t=1784038005; cv=none; b=ctFbVVB18lbtefmnfVRdjenb3XQTX3LVxZ6TJn3lGRiqyqeQP9NU8vWxzKmdRGI4Sws1omrYrb1HZgoZV+CjWnarNzdbmj8MMm6aCklbwFaZbTzxP3ZeanBU8NWecKSn9UXT7urbphcLalyw4/jFquYMwLH4tiloUsMVQY6ZYjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784037997; c=relaxed/simple;
-	bh=brubU8ipNy1ujnPWOSJsU4D9Csfsl5oNxDWj3XnSBxg=;
+	s=arc-20240116; t=1784038005; c=relaxed/simple;
+	bh=mkvNiLNNU7+2GzQNF8eqTlv1xCMmv8/GPTLyXVohroo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ktRvENGJZedI5axRaBsGg5kMhr16vnF8XcNWWViSrdr5BlTsfeuL25Ie3vfELMW37YEnbMbKfuAfc2Xrl3RUah3SZux82Dz+IbdeJCRcbVmJVJjVgg1gZ2lwOGUPVCsEdlcDyWGCkNrsTjn88eBDElGf8YrNaYNqVZTAHYtG96U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=YzY9thwi; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=uI1xagh+UCfamEVcRyRck5bKgiw1Q3qlZIB2wFA3hjKIHPaFp3JalgBNL+CiagiLqJn+f9+j7qtyPB+iMyrC/fyEfWxgSYnkPjghTxxW7kXjO9iUHaR46CKroFHcRZ4Vh+6qHjSB2lkHqGIdN7uteedN9N0NaNtFhYYLtNdQy0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=HIiwhwiW; arc=none smtp.client-ip=217.140.110.172
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5D6A1576;
-	Tue, 14 Jul 2026 07:06:30 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A1B981576;
+	Tue, 14 Jul 2026 07:06:38 -0700 (PDT)
 Received: from localhost.localdomain (e123572-lin.cambridge.arm.com [10.2.208.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE3913F7B4;
-	Tue, 14 Jul 2026 07:06:27 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7BDF53F7B4;
+	Tue, 14 Jul 2026 07:06:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1784037995; bh=brubU8ipNy1ujnPWOSJsU4D9Csfsl5oNxDWj3XnSBxg=;
+	t=1784038002; bh=mkvNiLNNU7+2GzQNF8eqTlv1xCMmv8/GPTLyXVohroo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=YzY9thwiHc65wNiUxU67y6/tJ7ZmfWCBeoA2a4LNQMo0O7ibHK6ctA9ComeTUEm9C
-	 I/qi+0IpZSq41xPb+OZ7Z3/G4uCkw9cLd6IhSMUabwxmOQOqx2sF6D5jJAoetl8ck9
-	 oA5zuyScXswzHCcI9ibhnX1aroPeO+YpvDY2p/3g=
+	b=HIiwhwiW5/FaoSRBjo11aX1AZpPuYcroDE7X41LVr/xwN0xxR7sqYi+EShBKHthpF
+	 n4f8woYlTVlDt26juvjhHDNOK/I92UerlQVr0VVHNOso4VCLR4Gq0Tj1gOY6PCuWSc
+	 FVgEvZfyeKpZuGic61DbMkRghFHRNE75lpgzlmYM=
 From: Kevin Brodsky <kevin.brodsky@arm.com>
-Date: Tue, 14 Jul 2026 15:04:00 +0100
-Subject: [PATCH 11/22] um: mm: use mm_is_kernel() in TLB sync
+Date: Tue, 14 Jul 2026 15:04:01 +0100
+Subject: [PATCH 12/22] x86/mm: use mm_is_kernel() for kernel mm checks
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260714-remove_pgtable_cdtor-v1-11-44be8a7685d7@arm.com>
+Message-Id: <20260714-remove_pgtable_cdtor-v1-12-44be8a7685d7@arm.com>
 References: <20260714-remove_pgtable_cdtor-v1-0-44be8a7685d7@arm.com>
 In-Reply-To: <20260714-remove_pgtable_cdtor-v1-0-44be8a7685d7@arm.com>
 To: linux-mm@kvack.org
@@ -94,11 +94,11 @@ Cc: Kevin Brodsky <kevin.brodsky@arm.com>,
  "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
  linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1784037902; l=784;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1784037902; l=3862;
  i=kevin.brodsky@arm.com; s=20260427; h=from:subject:message-id;
- bh=brubU8ipNy1ujnPWOSJsU4D9Csfsl5oNxDWj3XnSBxg=;
- b=/PzTb9tRgc6q7ZO/WLmLmpzghLV5CdRWiA/u95e31NiKnKwzFm+3cKJU2/zrnT5S/P+reJB4V
- ezvWWMbftRCD/SWI9ofvYfumKl5AhLTyCVWAwhB/2VFq3mOJHXdgNVl
+ bh=mkvNiLNNU7+2GzQNF8eqTlv1xCMmv8/GPTLyXVohroo=;
+ b=TL/ATO2WidViUjXp4JukAFDeik9Bhx9UKyamDJVrFhja594xcdOFPLXtYE8/VvFDMq3oXLjVT
+ 9Ry1qd/NBLGBGmKjBP3mLajDf99Eimk93BsQgUsx2B9iCCZoXZcZow+
 X-Developer-Key: i=kevin.brodsky@arm.com; a=ed25519;
  pk=N2QG+eJKrvkNovwhhwJhnJ4+ScVfsGCHldmqLfcMTFs=
 X-Rspamd-Action: no action
@@ -115,7 +115,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FREEMAIL_CC(0.00)[arm.com,linux-foundation.org,kernel.org,infradead.org,google.com,suse.com,soleen.com,armlinux.org.uk,lists.infradead.org,lists.linux.dev,HansenPartnership.com,gmx.de,vger.kernel.org,linux.ibm.com,ellerman.id.au,lists.ozlabs.org,dabbelt.com,eecs.berkeley.edu,davemloft.net,gaisler.com,nod.at,cambridgegreys.com,sipsolutions.net,redhat.com,alien8.de,linux.intel.com,zytor.com,intel.com,lists.sourceforge.net,linaro.org,gmail.com,nvidia.com];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22248-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22249-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER(0.00)[kevin.brodsky@arm.com,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS(0.00)[m:linux-mm@kvack.org,m:kevin.brodsky@arm.com,m:akpm@linux-foundation.org,m:david@kernel.org,m:ljs@kernel.org,m:liam@infradead.org,m:vbabka@kernel.org,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:pasha.tatashin@soleen.com,m:linux@armlinux.org.uk,m:catalin.marinas@arm.com,m:will@kernel.org,m:ryan.roberts@arm.com,m:linux-arm-kernel@lists.infradead.org,m:chenhuacai@kernel.org,m:loongarch@lists.linux.dev,m:James.Bottomley@HansenPartnership.com,m:deller@gmx.de,m:linux-parisc@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:linuxppc-dev@lists.ozlabs.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:linux-riscv@lists.infradead.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:linux-s390@vger.kernel.org,m:davem@davemloft.net,m:andreas@gaisler.com,m:sparclinux@vger.kernel.org,m:richard@nod.at,m:anton.ivanov@cambridgegreys.com,m:johannes@sipsolutions.net,m:linux-um@lists.infr
@@ -137,7 +137,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,arm.com:from_mime,arm.com:mid,arm.com:email,arm.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 48C307559C4
+X-Rspamd-Queue-Id: 5061D7559DF
 
 The new MMF_KERNEL flag identifies kernel-owned mm's. Checking the
 flag with mm_is_kernel() is preferred over comparing directly
@@ -148,22 +148,92 @@ No functional change, as only init_mm has MMF_KERNEL set for now.
 Assisted-by: Codex:GPT-5.5
 Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 ---
- arch/um/kernel/tlb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/tlbflush.h | 8 ++++----
+ arch/x86/mm/pgtable.c           | 2 +-
+ arch/x86/mm/tlb.c               | 9 +++++----
+ 3 files changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/arch/um/kernel/tlb.c b/arch/um/kernel/tlb.c
-index 1f175716b474..fa34a710203e 100644
---- a/arch/um/kernel/tlb.c
-+++ b/arch/um/kernel/tlb.c
-@@ -171,7 +171,7 @@ int um_tlb_sync(struct mm_struct *mm)
- 		return 0;
+diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
+index 0545fe75c3fa..4af1cf711a60 100644
+--- a/arch/x86/include/asm/tlbflush.h
++++ b/arch/x86/include/asm/tlbflush.h
+@@ -159,10 +159,10 @@ struct tlb_state_shared {
+ 	 *  - Actively using an mm.  Our CPU's bit will be set in
+ 	 *    mm_cpumask(loaded_mm) and is_lazy == false;
+ 	 *
+-	 *  - Not using a real mm.  loaded_mm == &init_mm.  Our CPU's bit
+-	 *    will not be set in mm_cpumask(&init_mm) and is_lazy == false.
++	 *  - Not using a real mm. loaded_mm is a kernel mm. Our CPU's bit
++	 *    will not be set in mm_cpumask(loaded_mm) and is_lazy == false.
+ 	 *
+-	 *  - Lazily using a real mm.  loaded_mm != &init_mm, our bit
++	 *  - Lazily using a real mm. loaded_mm is not a kernel mm, our bit
+ 	 *    is set in mm_cpumask(loaded_mm), but is_lazy == true.
+ 	 *    We're heuristically guessing that the CR3 load we
+ 	 *    skipped more than makes up for the overhead added by
+@@ -188,7 +188,7 @@ DECLARE_PER_CPU_SHARED_ALIGNED(struct tlb_state_shared, cpu_tlbstate_shared);
+ #define enter_lazy_tlb enter_lazy_tlb
+ static __always_inline void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+ {
+-	if (this_cpu_read(cpu_tlbstate.loaded_mm) == &init_mm)
++	if (mm_is_kernel(this_cpu_read(cpu_tlbstate.loaded_mm)))
+ 		return;
  
- 	ops.mm_idp = &mm->context.id;
--	if (mm == &init_mm) {
-+	if (mm_is_kernel(mm)) {
- 		ops.mmap = kern_map;
- 		ops.unmap = kern_unmap;
- 	} else {
+ 	this_cpu_write(cpu_tlbstate_shared.is_lazy, true);
+diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+index f32facdb3035..91d2a6f2ac5a 100644
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -168,7 +168,7 @@ static int preallocate_pmds(struct mm_struct *mm, pmd_t *pmds[], int count)
+ 	bool failed = false;
+ 	gfp_t gfp = GFP_PGTABLE_USER;
+ 
+-	if (mm == &init_mm)
++	if (mm_is_kernel(mm))
+ 		gfp &= ~__GFP_ACCOUNT;
+ 	gfp &= ~__GFP_HIGHMEM;
+ 
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 1023acadd8f8..5517cab8ad00 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -594,7 +594,7 @@ void leave_mm(void)
+ 	 * This needs to happen before any other sanity checks due to
+ 	 * intel_idle's shenanigans.
+ 	 */
+-	if (loaded_mm == &init_mm)
++	if (mm_is_kernel(loaded_mm))
+ 		return;
+ 
+ 	/* Warn if we're not lazy. */
+@@ -855,7 +855,7 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
+ 		 * cpu_tlbstate_shared.is_lazy whether or not to send an IPI.
+ 		 */
+ 		if (IS_ENABLED(CONFIG_DEBUG_VM) &&
+-		    WARN_ON_ONCE(prev != &init_mm && !is_notrack_mm(prev) &&
++		    WARN_ON_ONCE(!mm_is_kernel(prev) && !is_notrack_mm(prev) &&
+ 				 !cpumask_test_cpu(cpu, mm_cpumask(next))))
+ 			cpumask_set_cpu(cpu, mm_cpumask(next));
+ 
+@@ -932,7 +932,8 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
+ 		 * This way switch_mm() must see the new tlb_gen or
+ 		 * flush_tlb_mm_range() must see the new loaded_mm, or both.
+ 		 */
+-		if (next != &init_mm && !cpumask_test_cpu(cpu, mm_cpumask(next)))
++		if (!mm_is_kernel(next) &&
++		    !cpumask_test_cpu(cpu, mm_cpumask(next)))
+ 			cpumask_set_cpu(cpu, mm_cpumask(next));
+ 		else
+ 			smp_mb();
+@@ -1134,7 +1135,7 @@ static void flush_tlb_func(void *info)
+ 		return;
+ 	}
+ 
+-	if (unlikely(loaded_mm == &init_mm))
++	if (unlikely(mm_is_kernel(loaded_mm)))
+ 		return;
+ 
+ 	/* Reload the ASID if transitioning into or out of a global ASID */
 
 -- 
 2.51.2
