@@ -1,52 +1,52 @@
-Return-Path: <linux-s390+bounces-22251-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22252-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id tL3mDoNEVmoY2gAAu9opvQ
-	(envelope-from <linux-s390+bounces-22251-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 16:15:31 +0200
+	id KGwAG29EVmoS2gAAu9opvQ
+	(envelope-from <linux-s390+bounces-22252-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 16:15:11 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD6E5755A38
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 16:15:30 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B50A7755A1F
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 16:15:10 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=arm.com header.s=foss header.b=WLxWEHcb;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22251-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-22251-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=arm.com header.s=foss header.b=CCHuQj4b;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22252-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-22252-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=arm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 3675030078A7
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 14:08:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CEABE31DF1C2
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2026 14:08:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7635447D920;
-	Tue, 14 Jul 2026 14:07:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D9C3480943;
+	Tue, 14 Jul 2026 14:07:08 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E102047F2ED;
-	Tue, 14 Jul 2026 14:06:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85B1047DD4E;
+	Tue, 14 Jul 2026 14:07:06 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784038021; cv=none; b=WD5fvzheNk5MKuoNrVg2Smw/dopp4ADfODXRe76uD+TmTlVUuQToWU/AHEUXtbzmiZ8R4e3ipZFKqgiK1jzCHJsnQ8n1/qazV1wBA/MdJmC4ohlSAwlMQvV2b0Tqf6WyEJ57Qz3mIYlzQvKzLmbBM2q+PDvOmRGyX6UvHcoKt/0=
+	t=1784038028; cv=none; b=SpltLjqpvGf0/DBuX4gi2e5r1jPkTGxXXmKmlvimqCjiPU+Sg2A/2eKl4+r8dH4GWUKwn8Uw1LmGNn628j3C/QJEAQ7KpQmlC5Tdj5yP4vC8W0UOnQzTTOlLmWF+KoZOWnIs8MOnHBSifNlcWGH6laME9RkgUYdYpUeuDprVxQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784038021; c=relaxed/simple;
-	bh=4PNxqxq/jrUer27xvNkwvequvxQnPhBMXV3o8mC51Ps=;
+	s=arc-20240116; t=1784038028; c=relaxed/simple;
+	bh=wRRvDY7vvj6o45l8yT2Q7WPIKaOL0Wfu1AKN4gUTBNM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hYsEHoJ10igxdiVwr7vkC6XAMOAz89c1eslT80wtZWHLuSyPzZkeuLGL5t/QeWoLVF8JdMiJ4p2PFIeD02sGSOlXcKhXNhwOVR+QVpYKaXhzB4LfLA5R0P/YzUUy/QPCr2MFrF/cK0eMNoXns2V+JrJ+UIc+Y+HN8z12+pkef6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=WLxWEHcb; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=tyPfUOhu2QhTHs71k3HVbKIAtF2Hk7viqAEVcdNPe3+vMPDDKNVX2riTyMzLL2BoEuN64EN7fgBmGTUfiMDSJWZtv4kCIBD9nUBf4J84X9ii30DRn9rZl3gXYpKWtoC8JecILNrVD9UwqgiqurtPAD2r+CRB+Y4NlTGKcmC7P6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=CCHuQj4b; arc=none smtp.client-ip=217.140.110.172
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 192361576;
-	Tue, 14 Jul 2026 07:06:54 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE5F91C25;
+	Tue, 14 Jul 2026 07:07:01 -0700 (PDT)
 Received: from localhost.localdomain (e123572-lin.cambridge.arm.com [10.2.208.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB3453FBB1;
-	Tue, 14 Jul 2026 07:06:50 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A6BF83F7B4;
+	Tue, 14 Jul 2026 07:06:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1784038018; bh=4PNxqxq/jrUer27xvNkwvequvxQnPhBMXV3o8mC51Ps=;
+	t=1784038026; bh=wRRvDY7vvj6o45l8yT2Q7WPIKaOL0Wfu1AKN4gUTBNM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=WLxWEHcbiO2GB5LbtNB+92/zwEdWv+8J6pCRQbs3PGmarOdTkL8G1gUMIDPggJIxD
-	 N9phhhgOR7QXBCkkB6FWwKpw6kiO73Y49hy9kAZeBD1ExbuR501MLF5gHb3/X1UjRF
-	 0YbOoaXts+8XwZ3/78QN/pRZ3IolUppQVMb9mRqM=
+	b=CCHuQj4boJkfZHO19ek7AVQhcn2j5x9Inj92YhvCDOQNMYxw1wJHqVP3lNtmrXDor
+	 z8dfztuTF5HxmmtkzWEn0bGB/ntiIdARdTp3OUTIiy6d1Pv6qDLGuwuR1khXjO+Vzy
+	 5ViCvZtIVrztie1QTQbSWYbDcViyYQGhZmv5eaSk=
 From: Kevin Brodsky <kevin.brodsky@arm.com>
-Date: Tue, 14 Jul 2026 15:04:03 +0100
-Subject: [PATCH 14/22] mm: set page table page type when allocated
+Date: Tue, 14 Jul 2026 15:04:04 +0100
+Subject: [PATCH 15/22] mm: only initialise pt_share_count for user pgtables
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260714-remove_pgtable_cdtor-v1-14-44be8a7685d7@arm.com>
+Message-Id: <20260714-remove_pgtable_cdtor-v1-15-44be8a7685d7@arm.com>
 References: <20260714-remove_pgtable_cdtor-v1-0-44be8a7685d7@arm.com>
 In-Reply-To: <20260714-remove_pgtable_cdtor-v1-0-44be8a7685d7@arm.com>
 To: linux-mm@kvack.org
@@ -94,11 +94,11 @@ Cc: Kevin Brodsky <kevin.brodsky@arm.com>,
  "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
  linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1784037902; l=3368;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1784037902; l=1093;
  i=kevin.brodsky@arm.com; s=20260427; h=from:subject:message-id;
- bh=4PNxqxq/jrUer27xvNkwvequvxQnPhBMXV3o8mC51Ps=;
- b=0VdQOf0nra1WPYggXNBDDOliZvhTj/vQmWZ9BxkvIcGSO9bbshMd8ZPkLRqWmNwzRE1zk4sMb
- RKD72ZNcXaiBd0YaTV+GgCHvQw7s/IzNuDs0JxkPVAN8TuJt7kaNkpn
+ bh=wRRvDY7vvj6o45l8yT2Q7WPIKaOL0Wfu1AKN4gUTBNM=;
+ b=Ly1CUGmQU4MNOAvYijXTm6a0Oy5bg25WoXD9BoAv+N4SapepeLDfsykLmzz2cpJ5XS9tuoOVI
+ p8vbo57maMnDOD6whiBPPJLuCq0Skgv9I5RprwD5SM3O65zdB1a2N0T
 X-Developer-Key: i=kevin.brodsky@arm.com; a=ed25519;
  pk=N2QG+eJKrvkNovwhhwJhnJ4+ScVfsGCHldmqLfcMTFs=
 X-Rspamd-Action: no action
@@ -106,7 +106,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[arm.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[arm.com:s=foss];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -115,7 +115,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FREEMAIL_CC(0.00)[arm.com,linux-foundation.org,kernel.org,infradead.org,google.com,suse.com,soleen.com,armlinux.org.uk,lists.infradead.org,lists.linux.dev,HansenPartnership.com,gmx.de,vger.kernel.org,linux.ibm.com,ellerman.id.au,lists.ozlabs.org,dabbelt.com,eecs.berkeley.edu,davemloft.net,gaisler.com,nod.at,cambridgegreys.com,sipsolutions.net,redhat.com,alien8.de,linux.intel.com,zytor.com,intel.com,lists.sourceforge.net,linaro.org,gmail.com,nvidia.com];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22251-lists,linux-s390=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-22252-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER(0.00)[kevin.brodsky@arm.com,linux-s390@vger.kernel.org];
 	FORGED_RECIPIENTS(0.00)[m:linux-mm@kvack.org,m:kevin.brodsky@arm.com,m:akpm@linux-foundation.org,m:david@kernel.org,m:ljs@kernel.org,m:liam@infradead.org,m:vbabka@kernel.org,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:pasha.tatashin@soleen.com,m:linux@armlinux.org.uk,m:catalin.marinas@arm.com,m:will@kernel.org,m:ryan.roberts@arm.com,m:linux-arm-kernel@lists.infradead.org,m:chenhuacai@kernel.org,m:loongarch@lists.linux.dev,m:James.Bottomley@HansenPartnership.com,m:deller@gmx.de,m:linux-parisc@vger.kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:linuxppc-dev@lists.ozlabs.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:linux-riscv@lists.infradead.org,m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:gerald.schaefer@linux.ibm.com,m:linux-s390@vger.kernel.org,m:davem@davemloft.net,m:andreas@gaisler.com,m:sparclinux@vger.kernel.org,m:richard@nod.at,m:anton.ivanov@cambridgegreys.com,m:johannes@sipsolutions.net,m:linux-um@lists.infr
@@ -128,118 +128,50 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[kevin.brodsky@arm.com,linux-s390@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCPT_COUNT_GT_50(0.00)[58];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,infradead.org:email,arm.com:from_mime,arm.com:mid,arm.com:email,arm.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,arm.com:from_mime,arm.com:mid,arm.com:email,arm.com:dkim,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: DD6E5755A38
+X-Rspamd-Queue-Id: B50A7755A1F
 
-As a step towards removing pagetable ctor/dtor calls for kernel
-mm's, move the page type updates from the ctor/dtor to
-pagetable_{alloc,free}.
+ptdesc_pmd_pts_init() initialises the pt_share_count ptdesc field.
+That field is only used for hugetlb tracking purposes, so there is
+no need to initialise it for kernel page tables. Skip the call for
+kernel page tables, like pmd_ptlock_init().
 
-__pagetable_ctor() is now empty so remove it;
-pagetable_{pud,p4d,pgd}_ctor() will be removed at a later stage.
+From now on pagetable_*_ctor() and pagetable_dtor() do nothing for
+kernel page tables.
 
-The ctor is normally called after pagetable_alloc() (and dtor before
-pagetable_free()) so this patch should have no functional effect in
-most cases. Where calls to ctor/dtor are currently missing (e.g.
-x86's split_large_page()), this patch will ensure the page type is
-set correctly.
-
-This patch is based on Matthew's earlier implementation linked
-below, with the difference that when freeing the page type is
-cleared in __pagetable_free(), meaning that the update is delayed
-until the pages are actually freed in the
-CONFIG_ASYNC_KERNEL_PGTABLE_FREE case. This shouldn't matter in
-practice.
-
-Suggested-by: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Link: https://lore.kernel.org/r/20251113140448.1814860-4-willy@infradead.org
 Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
 ---
- include/linux/mm.h | 17 ++---------------
- 1 file changed, 2 insertions(+), 15 deletions(-)
+ include/linux/mm.h | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 361a0d7b74c5..94f0fb1c662a 100644
+index 94f0fb1c662a..b217ccbed5a3 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -3684,6 +3684,7 @@ static inline struct ptdesc *pagetable_alloc_noprof(gfp_t gfp, unsigned int orde
- 	if (!page)
- 		return NULL;
- 
-+	__folio_set_pgtable(page_folio(page));
- 	lruvec_stat_add_folio(page_folio(page), NR_PAGETABLE);
- 
- 	return page_ptdesc(page);
-@@ -3694,6 +3695,7 @@ static inline void __pagetable_free(struct ptdesc *pt)
+@@ -3905,9 +3905,12 @@ static inline spinlock_t *pmd_lock(struct mm_struct *mm, pmd_t *pmd)
+ static inline bool pagetable_pmd_ctor(struct mm_struct *mm,
+ 				      struct ptdesc *ptdesc)
  {
- 	struct page *page = ptdesc_page(pt);
- 
-+	__folio_clear_pgtable(page_folio(page));
- 	lruvec_stat_sub_folio(page_folio(page), NR_PAGETABLE);
- 
- 	__free_pages(page, compound_order(page));
-@@ -3799,19 +3801,9 @@ static inline bool ptlock_init(struct ptdesc *ptdesc) { return true; }
- static inline void ptlock_free(struct ptdesc *ptdesc) {}
- #endif /* defined(CONFIG_SPLIT_PTE_PTLOCKS) */
- 
--static inline void __pagetable_ctor(struct ptdesc *ptdesc)
--{
--	struct folio *folio = ptdesc_folio(ptdesc);
--
--	__folio_set_pgtable(folio);
--}
--
- static inline void pagetable_dtor(struct ptdesc *ptdesc)
- {
--	struct folio *folio = ptdesc_folio(ptdesc);
--
- 	ptlock_free(ptdesc);
--	__folio_clear_pgtable(folio);
- }
- 
- static inline void pagetable_dtor_free(struct ptdesc *ptdesc)
-@@ -3825,7 +3817,6 @@ static inline bool pagetable_pte_ctor(struct mm_struct *mm,
- {
- 	if (!mm_is_kernel(mm) && !ptlock_init(ptdesc))
- 		return false;
--	__pagetable_ctor(ptdesc);
+-	if (!mm_is_kernel(mm) && !pmd_ptlock_init(ptdesc))
+-		return false;
+-	ptdesc_pmd_pts_init(ptdesc);
++	if (!mm_is_kernel(mm)) {
++		if (!pmd_ptlock_init(ptdesc))
++			return false;
++		ptdesc_pmd_pts_init(ptdesc);
++	}
++
  	return true;
  }
  
-@@ -3917,7 +3908,6 @@ static inline bool pagetable_pmd_ctor(struct mm_struct *mm,
- 	if (!mm_is_kernel(mm) && !pmd_ptlock_init(ptdesc))
- 		return false;
- 	ptdesc_pmd_pts_init(ptdesc);
--	__pagetable_ctor(ptdesc);
- 	return true;
- }
- 
-@@ -3942,17 +3932,14 @@ static inline spinlock_t *pud_lock(struct mm_struct *mm, pud_t *pud)
- 
- static inline void pagetable_pud_ctor(struct ptdesc *ptdesc)
- {
--	__pagetable_ctor(ptdesc);
- }
- 
- static inline void pagetable_p4d_ctor(struct ptdesc *ptdesc)
- {
--	__pagetable_ctor(ptdesc);
- }
- 
- static inline void pagetable_pgd_ctor(struct ptdesc *ptdesc)
- {
--	__pagetable_ctor(ptdesc);
- }
- 
- extern void __init pagecache_init(void);
 
 -- 
 2.51.2
