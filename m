@@ -1,198 +1,225 @@
-Return-Path: <linux-s390+bounces-22329-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22330-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ggkQBV+WV2ojXgAAu9opvQ
-	(envelope-from <linux-s390+bounces-22329-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Jul 2026 16:17:03 +0200
+	id df4AD0uXV2pRXgAAu9opvQ
+	(envelope-from <linux-s390+bounces-22330-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Jul 2026 16:20:59 +0200
 X-Original-To: lists+linux-s390@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6106875F418
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Jul 2026 16:17:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A04DC75F4CE
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Jul 2026 16:20:58 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b="jHJOujG/";
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22329-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-22329-lists+linux-s390=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=ibm.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=oi0wHGRA;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22330-lists+linux-s390=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-s390+bounces-22330-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DF56332E7171
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Jul 2026 14:00:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1B3A3301F482
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Jul 2026 14:04:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31BB43115AE;
-	Wed, 15 Jul 2026 14:00:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC95F30FF20;
+	Wed, 15 Jul 2026 14:04:51 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C728031195C;
-	Wed, 15 Jul 2026 14:00:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B745B2BEFEF
+	for <linux-s390@vger.kernel.org>; Wed, 15 Jul 2026 14:04:50 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784124010; cv=none; b=RLquU5ub3umpuNvSyUm0+9GamGwq3JoSx7X0Q7mC8AphApa9sgrWhbi4+zznrljClcs89WYvu3w1ZPUME2/KO9Dj1Rb46gfDZOIYk1v24NyHE6eFM2KDIwdU25LNxmPfI9GdyJKZceJVaFTHhnaH+r8k2prG5CuQJC8fN4wMS2Q=
+	t=1784124291; cv=none; b=ll/sY5K+oxixO5ExK4zdSc/Nc/3uegMIp2pBQDlT7iVyj2FaJPkdvFyD4QD+EteRpzvO3dAv9daJsnriwzaY/889N45ysNpeoloFIcV0KhVH2jaSHo5ZexeQgCNGgOP3DpnOSX+0Bkttc0nlzX6/uHTzxmw5EPW06dymSUpf6tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784124010; c=relaxed/simple;
-	bh=YTf+ihIVxMqoNlpusGCMofMbUwzbMgPcKGoZRbFxNus=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pz2xkmhSrb0nUDnOQwQlZ7IAg9Rsj8eoSfYAcWsHJ0223YsPY/K6el7+h/xcw4vdv4G7q+p8FmX0EDmWDZnrEE7Of08dRusPfmK5GiY4coccXrmYiDuHylHx1Y4J2Ni/+OwZ0OGu1wWUAX4iBxTJr1emYxQ8RgscmNB6vNR9sCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jHJOujG/; arc=none smtp.client-ip=148.163.158.5
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66FBfl954178915;
-	Wed, 15 Jul 2026 13:59:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=aB2cMqasFtckoreg6/T566aCNUep8f
-	6PRe89NRkW01c=; b=jHJOujG/4bxqGREkUmwgmyBmR/mYPU2xFU6uDjmvW+hc9b
-	cj/YL4uFHe4Hq3wF1TLhw+NE1Au1bHwPkeDG8UpMxTXtCjVdx6vU8pVc8K3Y1IlC
-	40Gdf+Qgf+Z3TVTo4D31GxhxdLOOtbc4VGHddigpT8R/nyUJ23LJWypxcxwL8g91
-	Onuc8glMxvoCAuW9MqyRRQwMYylu8G/IjnpsuZNTHUGVq9+R2PAlN+V7bThRvaVJ
-	F/2kUoUU4wUigvSAj1UE48NTSroW58EpyEZn/0+rs566xmk8+IN92ZosYkiBD/y+
-	WsZGcY1GVU4CUBMGVrIo4UrhF9FJBdJJ2Bosoqtg==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fbexwu84k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Jul 2026 13:59:56 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66FDnhUO010852;
-	Wed, 15 Jul 2026 13:59:55 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fc05q8hcn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Jul 2026 13:59:55 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66FDxpg631392258
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 15 Jul 2026 13:59:51 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 76DA72004B;
-	Wed, 15 Jul 2026 13:59:51 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1B46E20040;
-	Wed, 15 Jul 2026 13:59:51 +0000 (GMT)
-Received: from osiris (unknown [9.111.23.166])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 15 Jul 2026 13:59:51 +0000 (GMT)
-Date: Wed, 15 Jul 2026 15:59:49 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Sven Schnelle <svens@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>,
-        Peter Zijlstra <peterz@infradead.org>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] s390/syscall: Keep syscall number in extra ptregs
+	s=arc-20240116; t=1784124291; c=relaxed/simple;
+	bh=P6y78eWvuU/4Dvntm3Cpt/FXCZrNHSl/bIqTOAiMUyE=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=iTf8UfhQwl4KVWY3RoCAlvfsotisjxJ/pbMIBSUD8y8G/V47eWqgY+lIlFrKoxmy3s4GQuuZtMnH8eVtcAce7pnuj5M/aNZW3bsAwW5eBfKc9Yl6tufO4booDjl6/W3CewCemlZWLkBeFMF340F8m+bvkwWXWrgkywDDFpgnNWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oi0wHGRA; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6A621F000E9;
+	Wed, 15 Jul 2026 14:04:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784124289;
+	bh=OLTKP7LQELxOhaqwcFlscPOLhbTUoj+Aa4S9jAXRvuA=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=oi0wHGRAwPYrzS9q2CTakHnzI5VFdLLOgWGwnKLtKtJarPub0sRKw3iMTunNluLWf
+	 0fRhg6Jctyh9bgLq9/twBrZw7stZlqd9eKbAm5gwzEGnZm1CYRH3ZCxOKKLjzGpEFj
+	 Fb6/f+1CO8Hix/eZNrT8FZGLbX3bRziyHkSTPUVkjHRgVzu309p9fB/sjGUIzpFokW
+	 P7qAWHko0eO8saDX1QhZuWuHOTpo+TxjyLYe7iswPzA51wJlkaDeM/BHAjEPoWOHi4
+	 yF/RgwBJJ43dqYDKLvfxPVzDo8cApcKqHBEWIWzyhnE38SdEJnsP/20XRVTFrijMul
+	 qOX1+/C6rkm2A==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 1/2] s390/syscall: Keep syscall return in extra ptregs
  member
-Message-ID: <20260715135949.100936A27-hca@linux.ibm.com>
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Sven Schnelle" <svens@linux.ibm.com>
+Cc: "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org, "Heiko
+ Carstens" <hca@linux.ibm.com>
+In-Reply-To: <20260715133830.2619853-2-svens@linux.ibm.com>
 References: <20260715133830.2619853-1-svens@linux.ibm.com>
- <20260715133830.2619853-3-svens@linux.ibm.com>
+ <20260715133830.2619853-2-svens@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 15 Jul 2026 14:04:49 +0000
+Message-Id: <20260715140449.A6A621F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
 List-Subscribe: <mailto:linux-s390+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260715133830.2619853-3-svens@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: fu1yMJQ3oj1kYkAvgwpFKwb8xW-VvRAj
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzE1MDEzNiBTYWx0ZWRfX0jUZdD4LLUra
- Ub6ia0uaNwuycrhh85tpqZJFyyefccfiXUCycgLI3i72bNkcUW8WBpsGhecoBlkHVYghtK/xUE8
- PQDeG/ZLXd32ejDQws2HfXyirOIGqXPQm5PA3PSzgaMZ8XZ+RXeh5BAU2XP9z2vT9LfSAJHqUWD
- k0s8jRqzNHIYfkvNJjXz06JTqs/GPT20PVKhFWe2R6engbQEDczdf3iTrPVlTnBovetJg04FJtj
- rATJGA5sWt/TkKsPEU7z7qCN4yBRprUSJA+paaLEfFLFfwwxaZOXErqE9m3XCVbb1sFmJueVfRu
- eYkPY8kqfci1Qmmg5GiP8Aj6+Lecr3CA03M8mwOV8PjViZ7/YAK27HmW+4HEC0ADcAw5lZjlDlR
- UU6SziAbnCuGVkWGJDuGgisx+/ufWUqk/zRjG+cM+gHhvH1x3iB6ENnloA8Y2BGArhAki5YsWt2
- JnHvQ1Z+goGZn1at1PA==
-X-Authority-Analysis: v=2.4 cv=XJoAjwhE c=1 sm=1 tr=0 ts=6a57925c cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=kj9zAlcOel0A:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8
- a=stEBtn2pn6onousJgE0A:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-ORIG-GUID: fu1yMJQ3oj1kYkAvgwpFKwb8xW-VvRAj
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzE1MDEzNiBTYWx0ZWRfX8JWFdz/WzCLK
- xTNbIESxlCFU8m2LMLo+X8trxReJmi5oYhthiqwH1rIYCnvtmBihtP5Nu4FOgyRlBmacWCjsxDi
- zutHEZeXZtY0eImFTfcQ6CaFjndQph0=
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-15_02,2026-07-15_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 adultscore=0 bulkscore=0 phishscore=0 lowpriorityscore=0
- priorityscore=1501 impostorscore=0 clxscore=1011 spamscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607150136
-X-Spamd-Result: default: False [-1.16 / 15.00];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-22330-lists,linux-s390=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-22329-lists,linux-s390=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp];
-	FORGED_SENDER(0.00)[hca@linux.ibm.com,linux-s390@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:svens@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:hpa@zytor.com,m:tglx@kernel.org,m:borntraeger@linux.ibm.com,m:msuchanek@suse.de,m:peterz@infradead.org,m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hca@linux.ibm.com,linux-s390@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_COUNT_THREE(0.00)[4];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,sashiko.dev:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,lists.linux.dev:replyto];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:svens@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:linux-s390@vger.kernel.org,m:hca@linux.ibm.com,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,linux-s390@vger.kernel.org];
+	PRECEDENCE_BULK(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-s390];
-	RCVD_COUNT_SEVEN(0.00)[11]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_NO_DN(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 6106875F418
+X-Rspamd-Queue-Id: A04DC75F4CE
 X-Rspamd-Action: no action
 
-On Wed, Jul 15, 2026 at 03:38:30PM +0200, Sven Schnelle wrote:
-> Move the syscall number from ptregs::int_code to another union member
-> called syscall_nr. This simplifies the code a bit.
-> 
-> Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-> ---
->  arch/s390/include/asm/ptrace.h  |  2 +-
->  arch/s390/include/asm/syscall.h |  8 +++++---
->  arch/s390/kernel/ptrace.c       |  2 +-
->  arch/s390/kernel/signal.c       | 12 +++++-------
->  arch/s390/kernel/syscall.c      | 11 ++++-------
->  5 files changed, 16 insertions(+), 19 deletions(-)
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
 
-...
+New issues:
+- [High] Tracer modifications to syscall return values during exit stops ar=
+e completely ignored.
+- [Low] The patch leaves behind an unused and broken macro `_PIF_SYSCALL_RE=
+T_SET`.
 
-> diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
-> index 125ca4c4e30c..00e825d01504 100644
-> --- a/arch/s390/kernel/ptrace.c
-> +++ b/arch/s390/kernel/ptrace.c
-> @@ -349,7 +349,7 @@ static int __poke_user(struct task_struct *child, addr_t addr, addr_t data)
->  			addr == offsetof(struct user, regs.gprs[2])) {
->  			struct pt_regs *regs = task_pt_regs(child);
->  
-> -			regs->int_code = 0x20000 | (data & 0xffff);
-> +			regs->syscall_nr = data;
+Pre-existing issues:
+- [High] `syscall_rollback()` register restoration is unconditionally clobb=
+ered by `-ENOSYS` assignment.
+--
 
-This breaks peek_user(). So handling for that needs to be added too.
+--- Patch [1]: [PATCH 1/2] s390/syscall: Keep syscall return in extra ptreg=
+s member ---
+commit 0354447a3b4a9b11afa78187a684a62c8037dee7
+Author: Sven Schnelle <svens@linux.ibm.com>
 
-> -				regs->psw.addr =
-> -					__rewind_psw(regs->psw,
-> -						     regs->int_code >> 16);
-> +				regs->psw.addr = __rewind_psw(regs->psw, SVC_LEN);
+s390/syscall: Keep syscall return in extra ptregs member
 
-Why? This is unrelated to what you want to achieve, and it is broken
-if the svc instruction is executed via exrl. Plus, let's not use
-hardcoded instruction lengths if the CPU provides you the correct
-length anyway.
+This patch introduces a new member syscall_ret in struct pt_regs to keep
+the syscall return value separate from gprs[2]. It copies this value back
+to gprs[2] before exit to userspace, resolving issues where setting both a
+return value and skipping the syscall was impossible with seccomp or ptrace.
 
-Besides that it _seems_ to be ok. :)
+Link: https://lore.kernel.org/all/20260703105718.GO751831@noisy.programming=
+.kicks-ass.net/
+
+> diff --git a/arch/s390/include/asm/ptrace.h b/arch/s390/include/asm/ptrac=
+e.h
+> index 495e310c3d6d7..f39b349da9a7d 100644
+> --- a/arch/s390/include/asm/ptrace.h
+> +++ b/arch/s390/include/asm/ptrace.h
+> @@ -15,9 +15,8 @@
+> =20
+>  #define PIF_SYSCALL			0	/* inside a system call */
+>  #define PIF_PSW_ADDR_ADJUSTED		1	/* psw address has been adjusted */
+> -#define PIF_SYSCALL_RET_SET		2	/* return value was set via ptrace */
+> -#define PIF_GUEST_FAULT			3	/* indicates program check in sie64a */
+> -#define PIF_FTRACE_FULL_REGS		4	/* all register contents valid (ftrace) =
+*/
+> +#define PIF_GUEST_FAULT			2	/* indicates program check in sie64a */
+> +#define PIF_FTRACE_FULL_REGS		3	/* all register contents valid (ftrace) =
+*/
+
+[Severity: Low]
+Could this leave behind a broken macro? Since PIF_SYSCALL_RET_SET is deleted
+here, it looks like _PIF_SYSCALL_RET_SET (which is defined right below this
+using BIT(PIF_SYSCALL_RET_SET)) will cause a compilation failure if it is e=
+ver
+used.
+
+[ ... ]
+
+> diff --git a/arch/s390/kernel/syscall.c b/arch/s390/kernel/syscall.c
+> index 75d5a3cab14e6..ce244dceec6dc 100644
+> --- a/arch/s390/kernel/syscall.c
+> +++ b/arch/s390/kernel/syscall.c
+> @@ -117,25 +117,16 @@ void noinstr __do_syscall(struct pt_regs *regs, int=
+ per_trap)
+
+[ ... ]
+
+>  	if (likely(nr < NR_syscalls)) {
+>  		nr =3D array_index_nospec(nr, NR_syscalls);
+> -		regs->gprs[2] =3D sys_call_table[nr](regs);
+> +		regs->syscall_ret =3D sys_call_table[nr](regs);
+>  	}
+> -out:
+> +	regs->gprs[2] =3D regs->syscall_ret;
+
+[Severity: High]
+Are tracer modifications to the syscall return value being ignored here?
+
+The assignment regs->gprs[2] =3D regs->syscall_ret happens before we call
+syscall_exit_to_user_mode().
+
+If a tracer stops the process during exit hooks inside
+syscall_exit_to_user_mode() and modifies the return value, it updates
+regs->syscall_ret via syscall_set_return_value(), but this change is never
+propagated to the actual CPU register gprs[2].
+
+Will the process resume using the unmodified original return value, complet=
+ely
+breaking exit-time return value injection?
+
+[Severity: High]
+This is a pre-existing issue, but isn't the register restoration from
+syscall_rollback() clobbered by this assignment?
+
+If a seccomp filter uses SECCOMP_RET_TRAP to abort the syscall, it triggers=
+ a
+rollback which restores regs->orig_gpr2 into regs->gprs[2]:
+
+arch/s390/include/asm/syscall.h:syscall_rollback() {
+    ...
+    regs->gprs[2] =3D regs->orig_gpr2;
+    ...
+}
+
+However, this restored value is then immediately overwritten here by the
+assignment regs->gprs[2] =3D regs->syscall_ret (which holds -ENOSYS for abo=
+rted
+syscalls).
+
+Does this break userspace seccomp signal handlers that expect the restored
+state in gprs[2]?
+
+>  	syscall_exit_to_user_mode(regs);
+>  }
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260715133830.2619=
+853-1-svens@linux.ibm.com?part=3D1
 
