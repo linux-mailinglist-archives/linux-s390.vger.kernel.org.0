@@ -1,94 +1,88 @@
-Return-Path: <linux-s390+bounces-22321-lists+linux-s390=lfdr.de@vger.kernel.org>
+Return-Path: <linux-s390+bounces-22325-lists+linux-s390=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id fHs8MtiKV2plWgAAu9opvQ
-	(envelope-from <linux-s390+bounces-22321-lists+linux-s390=lfdr.de@vger.kernel.org>)
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Jul 2026 15:27:52 +0200
+	id ORpoIImNV2ovWwAAu9opvQ
+	(envelope-from <linux-s390+bounces-22325-lists+linux-s390=lfdr.de@vger.kernel.org>)
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Jul 2026 15:39:21 +0200
 X-Original-To: lists+linux-s390@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2005475EAA6
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Jul 2026 15:27:52 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EEED75EC5B
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Jul 2026 15:39:21 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ibm.com header.s=pp1 header.b=olB+mlG8;
-	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22321-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-s390+bounces-22321-lists+linux-s390=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=ibm.com header.s=pp1 header.b=TvllfLtj;
+	spf=pass (mail.lfdr.de: domain of "linux-s390+bounces-22325-lists+linux-s390=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-s390+bounces-22325-lists+linux-s390=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=ibm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D0536305BA14
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Jul 2026 13:23:08 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 9BA383005A9B
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Jul 2026 13:39:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 693EA466B6E;
-	Wed, 15 Jul 2026 13:22:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4780E2EEE96;
+	Wed, 15 Jul 2026 13:39:20 +0000 (UTC)
 X-Original-To: linux-s390@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1B444C645;
-	Wed, 15 Jul 2026 13:22:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EA352EEE92;
+	Wed, 15 Jul 2026 13:39:18 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784121775; cv=none; b=mPIjW8nUKLI2QhrJGvsItIgi3UG26yRnCqqoWvAQjJQWkt+lZ4DWfVEhG1yyrV73xb4kb62rwvW9wO96VZF/mKjw5HElFxApNgbFfRfHqShnKzf2OKlbta5YW+1FXcz+mh2Mwej0ggo7jCJjgurPBX1uupZmLDm5dEVmy8j/zmA=
+	t=1784122760; cv=none; b=GAuuuydwwKzsYPgQYvBclUKXn4OrvlDubfx63KLyA97Uq5HZA8e9RlmZ+/UHyufw8I1SrRxzji0h0zBgnJLjIyQQC/eC2wDoAL9Uj7y0HAjdVXlz2nwwEiXW0TNshiilc3Q+mgtKoeRwWd15QW60vInRDILhUZ/V7d0M716Yvqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784121775; c=relaxed/simple;
-	bh=Sh27Es5Lq7jJBYRCBn3Yl7EO6PmZODdDN03xKqqIHZc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZvRBX/gRt9UzMdYDLFV7U6Wi9goEnZ+EptPbWQIqnA2E1H9gMQjKPsLLZld4gV4LqSYwqjTOqM+HRbWmuSTj+KjkeYhd7wTH417WqszhG0m+bgMR6DDASWU2XCjuxyaXTNBlACK6mAOzHbnkQ+ZbhN7bqEePu4fpH43Pi+S2mF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=olB+mlG8; arc=none smtp.client-ip=148.163.156.1
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66FBfiuE075082;
-	Wed, 15 Jul 2026 13:22:44 GMT
+	s=arc-20240116; t=1784122760; c=relaxed/simple;
+	bh=OUqD93AVxAS5s25z2wS16K9wr9Apea0uFZvSiOCP3Fw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=inhkzx6OcBwz7sx7Q3auDZWaLaLf1z9a3w47pvKZ9OqU+u7cwl0Jb+DGEIQvyS9c0Tsg/y4YBfrC+cGYcc3ICmgvtLdgtLulLR9wLgsW93NbPhb++YZrZtIUeFkWDEePXdVZb11jBiGajlbKJ0j34O8j6EifHMMbhlxbS5dMtR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TvllfLtj; arc=none smtp.client-ip=148.163.158.5
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66FBgRK9053270;
+	Wed, 15 Jul 2026 13:39:06 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=LZ/C2SviyVY4H5WIe
-	sI8BfP7X/LNOC1ZDba8bhepJz0=; b=olB+mlG82agEwqz7YBUtChMsq+hqt+SQw
-	t2uefipLBXY14/kQbhqEnE5fNB8zAiwIrrGe2TBlDW/MDgkdv5jFNRiYgWB6I4GC
-	fCLtNwb6BSy0fe4rXvXNbvvVydgP0N2BqgEhP7LVGdqQyc9tb6BwgXvnlGaPdVrC
-	b1tML4c3GYf3PkWG2fJfwafNgTNECmUT2P+veQ2e+1Ld6LY2xhJ3ydPmzOgulmxU
-	Ol/p3DGkAQxOLX+sarl814tlzO2GXPWSZgHV+nddWNFzILDdIeIQtPoTySRAoebr
-	vTDjRR3bCYrLgDjfLLGwVZ10WjIaTp39Wa2VuT9XJ8aXgmr51/zCg==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fbegtbsbr-1
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=HBmZYX3QF3QRHaTvbCMYUyZZFUmopLrD1Mltq//fS
+	CE=; b=TvllfLtjyV+JhCT6daq0Xop4ffEMoXxNWBA5xvbYmtfsduhfoceJVwutX
+	WYAFfDdZ7/t2zoaitf0oKLbnA2jx2wT6dxS8JXMEqa/dXPAsRz6ESrUceS5CbX4f
+	vGI5J6fd0mF4gDZ/eok4UdG92IXaIyyola3f+N4y9kg7fId+m+GWVbRMI15FNey3
+	FqCXock4duyvb6ZNM2J3aI7Dh3k51wvLav3k2m74beH7eEE+6ADS6lrghTYW6lDE
+	qeyDkKsoK2Rqt2VvsV3Kqi1QnoaZeC2c0z7KCqVRvqGZ+a0wlP2JpO28E5HiTiJM
+	ZLyskj1HuIPRfFz052tgqBT7c0zYA==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fbegbu7jx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Jul 2026 13:22:44 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66FDJbBf025130;
-	Wed, 15 Jul 2026 13:22:42 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fc0hw8an1-1
+	Wed, 15 Jul 2026 13:39:06 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66FDYla6015014;
+	Wed, 15 Jul 2026 13:39:05 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fc2cgg1cg-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Jul 2026 13:22:42 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66FDMdkI24117690
+	Wed, 15 Jul 2026 13:39:05 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66FDd1GJ25100922
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 15 Jul 2026 13:22:39 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1812A20043;
-	Wed, 15 Jul 2026 13:22:39 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DEE9B20040;
-	Wed, 15 Jul 2026 13:22:38 +0000 (GMT)
+	Wed, 15 Jul 2026 13:39:01 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 482CB20043;
+	Wed, 15 Jul 2026 13:39:01 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 20FCD20040;
+	Wed, 15 Jul 2026 13:39:01 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with SMTP;
-	Wed, 15 Jul 2026 13:22:38 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
-	id C67FC162688; Wed, 15 Jul 2026 15:22:38 +0200 (CEST)
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with SMTP;
+	Wed, 15 Jul 2026 13:39:01 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55390)
+	id 071D9161122; Wed, 15 Jul 2026 15:39:01 +0200 (CEST)
+From: Sven Schnelle <svens@linux.ibm.com>
+To: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@kernel.org>,
         Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc: linux-s390@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        David Hildenbrand <david@redhat.com>
-Subject: [PATCH v6 4/4] s390/mm: Lazy MMU mode sanitizer
-Date: Wed, 15 Jul 2026 15:22:38 +0200
-Message-ID: <a3a32c582430b6065810025466d414aad7c0fda7.1784121418.git.agordeev@linux.ibm.com>
+        =?UTF-8?q?Michal=20Such=C3=A1nek?= <msuchanek@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH RFC 0/2] s390: keep syscall number / return value in separate pt_regs members
+Date: Wed, 15 Jul 2026 15:38:28 +0200
+Message-ID: <20260715133830.2619853-1-svens@linux.ibm.com>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1784121418.git.agordeev@linux.ibm.com>
-References: <cover.1784121418.git.agordeev@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-s390@vger.kernel.org
 List-Id: <linux-s390.vger.kernel.org>
@@ -97,191 +91,86 @@ List-Unsubscribe: <mailto:linux-s390+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-ORIG-GUID: NzwnRmpJrrt-hFlhno_51qgFNBqErqBa
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzE1MDEzMSBTYWx0ZWRfX68NFAi6S/zcg
- UzWZpRSfcFOWnkA+tKIgL+8hsC9iFOl0mxI0jVU/Sj8NeDd5XERLPISiXP8dQT5JOVoBmzboGIg
- Zy9Vkxoj2Vl16Ld6/e9kfMTdlNDuuyI=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzE1MDEzMSBTYWx0ZWRfXz9xZeV2pgw+U
- J37NUlB/7LIPSOuILoz47iaVhqJpIGMh3zRW5D7cvkdzNI32csohwSsC9QuLgStkVfSAKCPp8hU
- LtwtTUD4+V7k3K+oh+ZLWGN6IEarSJzKkLa6h6x/F58Nm5Uyi3suTF+++bdWOsvrJIcV6JiGX/u
- fGqk6GO70J5m6+wvTTgRBiitmdvfkHYsUNDbSowhfV5PeVk3UqxI48X8lNUzMqBoljQobBF4E1O
- C0FmGCz3mias0Qt+pPraw3GCWg10wPublKEBfWJaqKSYfuyefwq8XI1YkWYQyYD9gbXaWyw1+hp
- kolHongc6zw6v9VFel6ACNcmMq6Qw9kJ/1/8Llj1+JEEAimGdfRZ691bKGKqgtEG15DyegodyLx
- KQH3JCTHnt4UxhMVug/I2iWaZ6pNJA263aSNMPAG/W+0vlth4pTHo09QssSUvyNcaymLeK1VPQZ
- kvzKlkP5xEauEPlTFiw==
-X-Authority-Analysis: v=2.4 cv=IqMutr/g c=1 sm=1 tr=0 ts=6a5789a4 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+X-Authority-Analysis: v=2.4 cv=fOcJG5ae c=1 sm=1 tr=0 ts=6a578d7a cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
  a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=DuHJb5c9rUSq-GGRdagA:9
-X-Proofpoint-GUID: rLnwT-xYCmxNLq09tf11Z8QOx2djurBF
+ a=RzCfie-kr_QcCd8fBx8p:22 a=yE0iEfProg0caIylHQIA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzE1MDEzMSBTYWx0ZWRfXzBLiQ/nyOnMp
+ nf0XnyhhuIgMSU6RjLqrZfA6sgG7rCAmaEZOqRbidSB5GiWkRQILtNJiC4gZdxIMYHRnTVc4cpc
+ w4btYyag0T+PalAYvtJara2xMaDGsgKCgdALii/SvNX948mL/Sidh+LzONWGiQq00QJch2x8g7X
+ no8kKwstL8q7XtGjotaQ8LA+MhtKiUfRXeBUwLOd0JSHjwH7rfMLuq0HrAi+SFGHRqqo1mCTAdh
+ KZYUx8LbRY9TNsrHa6kfNbrthJ9Eo9dpCsHzt2llkhkitlFpfJzBhVtaz42wgqqF7kmuoC7dHcK
+ ACfYB/WXQCYqckuA8EO/pzJ/oVW3jaSDIlmoHlBX5WDhI9DQ+EtXtyDauZigirQ5dEfz+Wfebiv
+ nns9dFlgpyUbHEyX8BDFlLQCnfdurmz5Nk8Wvvgib5Un4dX/E/jUKoIOTDveqfsGf/rZ63IHzFy
+ vtDASy8GkSysiAAG/Ug==
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzE1MDEzMSBTYWx0ZWRfX0J1VvZKABZgi
+ 5RJimMNA0Wc7yQl0A2aRDTLw6z9YWUeyTJYx+SPBV9GJT+9lm1JuRxKdk48Azztvs12lMSDG5c5
+ THlx/TLmd8ZPgeO6RBG/bqTOnv4+vQ8=
+X-Proofpoint-GUID: Ol3v1ypv2XF2xjOYZdwyb_mxmQ7E7N81
+X-Proofpoint-ORIG-GUID: Ol3v1ypv2XF2xjOYZdwyb_mxmQ7E7N81
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-15_02,2026-07-15_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 clxscore=1015 impostorscore=0 malwarescore=0 adultscore=0
- phishscore=0 suspectscore=0 priorityscore=1501 bulkscore=0 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607150131
-X-Spamd-Result: default: False [0.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+ spamscore=0 bulkscore=0 impostorscore=0 suspectscore=0 adultscore=0
+ priorityscore=1501 malwarescore=0 clxscore=1015 phishscore=0
+ lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2607150131
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	TAGGED_FROM(0.00)[bounces-22321-lists,linux-s390=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[agordeev@linux.ibm.com,linux-s390@vger.kernel.org];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:gerald.schaefer@linux.ibm.com,m:hca@linux.ibm.com,m:borntraeger@linux.ibm.com,m:gor@linux.ibm.com,m:imbrenda@linux.ibm.com,m:ryabinin.a.a@gmail.com,m:linux-s390@vger.kernel.org,m:linux-mm@kvack.org,m:linux-kernel@vger.kernel.org,m:kasan-dev@googlegroups.com,m:kevin.brodsky@arm.com,m:david@redhat.com,m:ryabininaa@gmail.com,s:lists@lfdr.de];
-	FREEMAIL_TO(0.00)[linux.ibm.com,gmail.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[agordeev@linux.ibm.com,linux-s390@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-22325-lists,linux-s390=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:hca@linux.ibm.com,m:gor@linux.ibm.com,m:agordeev@linux.ibm.com,m:hpa@zytor.com,m:tglx@kernel.org,m:borntraeger@linux.ibm.com,m:msuchanek@suse.de,m:peterz@infradead.org,m:linux-s390@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[svens@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[ibm.com:+];
-	RCVD_COUNT_TWELVE(0.00)[12];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FROM_NEQ_ENVFROM(0.00)[svens@linux.ibm.com,linux-s390@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_COUNT_TWELVE(0.00)[12];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-s390];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linux.ibm.com:from_mime,linux.ibm.com:mid,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 2005475EAA6
+X-Rspamd-Queue-Id: 2EEED75EC5B
 X-Rspamd-Action: no action
 
-Detect PTE entries access in lazy MMU mode by means other
-than set_pte() and ptep_get() primitives, which would be
-a read hazard.
+After a recent discussion on the ML about syscall semantics wrt. pre-init=
+ializing
+the return value to -ENOSYS and the special handling s390 has, I made two=
+ patches to
+clean that up. See the commit messages for more details.
 
-The access to kasan shadow memory from ptep_get_lockless()
-mistakenly hits invalid access in case a concurrent lazy
-MMU access to the same PTE is happening. To avoid that
-disable instrumentation for ptep_get_lockless() altogether.
+The second patch is just a cleanup and could be dropped if not wanted.
 
-Suggested-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
----
- arch/s390/include/asm/pgtable.h |  6 ++++++
- arch/s390/mm/lazy_mmu.c         | 27 +++++++++++++++++++++++----
- 2 files changed, 29 insertions(+), 4 deletions(-)
+Sven Schnelle (2):
+  s390/syscall: Keep syscall return in extra ptregs member
+  s390/syscall: Keep syscall number in extra ptregs member
 
-diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgta=
-ble.h
-index bf54202a0630..1e8a79989ed6 100644
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -1049,6 +1049,12 @@ static inline void set_pte(pte_t *ptep, pte_t pte)
- 		__set_pte(ptep, pte);
- }
-=20
-+#define ptep_get_lockless ptep_get_lockless
-+static inline __no_sanitize_address pte_t ptep_get_lockless(pte_t *ptep)
-+{
-+	return READ_ONCE(*ptep);
-+}
-+
- static inline pte_t __ptep_get(pte_t *ptep)
- {
- 	return READ_ONCE(*ptep);
-diff --git a/arch/s390/mm/lazy_mmu.c b/arch/s390/mm/lazy_mmu.c
-index 79dc68bb9a53..8947e29132ca 100644
---- a/arch/s390/mm/lazy_mmu.c
-+++ b/arch/s390/mm/lazy_mmu.c
-@@ -63,10 +63,13 @@ static int invalidate_pte_range(struct mm_struct *mm,=
- unsigned long addr,
- }
-=20
- static void set_pte_range(struct mm_struct *mm, unsigned long addr,
--			  pte_t *ptep, pte_t *end, pte_t *cache)
-+			  pte_t *start, pte_t *end, pte_t *cache)
- {
--	int i, nr_ptes;
-+	int nr_ptes, nr_total =3D end - start;
-+	pte_t *ptep =3D start;
-+	int i;
-=20
-+	kasan_unpoison_pte(start, nr_total);
- 	while (ptep < end) {
- 		nr_ptes =3D invalidate_pte_range(mm, addr, ptep, end);
-=20
-@@ -77,6 +80,7 @@ static void set_pte_range(struct mm_struct *mm, unsigne=
-d long addr,
-=20
- 		addr +=3D nr_ptes * PAGE_SIZE;
- 	}
-+	kasan_poison_pte(start, nr_total);
- }
-=20
- static void enter_ipte_norange(void)
-@@ -94,6 +98,7 @@ static void enter_ipte_range(struct mm_struct *mm,
- 			     unsigned long addr, unsigned long end, pte_t *pte)
- {
- 	struct ipte_range *range;
-+	unsigned int nr_ptes;
-=20
- 	if (!test_facility(13))
- 		return;
-@@ -108,6 +113,9 @@ static void enter_ipte_range(struct mm_struct *mm,
- 	range->base_addr =3D addr;
- 	range->base_end =3D end;
- 	range->base_pte =3D pte;
-+
-+	nr_ptes =3D (range->base_end - range->base_addr) / PAGE_SIZE;
-+	kasan_poison_pte(range->base_pte, nr_ptes);
- }
-=20
- static void leave_ipte_range(void)
-@@ -115,6 +123,7 @@ static void leave_ipte_range(void)
- 	pte_t *ptep, *start, *start_cache, *cache;
- 	unsigned long start_addr, addr;
- 	struct ipte_range *range;
-+	unsigned int nr_ptes;
- 	int start_idx;
-=20
- 	if (!test_facility(13))
-@@ -151,6 +160,9 @@ static void leave_ipte_range(void)
- 	range->end_pte =3D NULL;
-=20
- done:
-+	nr_ptes =3D (range->base_end - range->base_addr) / PAGE_SIZE;
-+	kasan_unpoison_pte(range->base_pte, nr_ptes);
-+
- 	range->mm =3D NULL;
- 	range->base_addr =3D 0;
- 	range->base_end =3D 0;
-@@ -230,10 +242,17 @@ static void __ipte_range_set_pte(struct ipte_range =
-*range, pte_t *ptep, pte_t pt
- static pte_t __ipte_range_ptep_get(struct ipte_range *range, pte_t *ptep=
-)
- {
- 	unsigned int idx =3D ptep - range->base_pte;
-+	pte_t pte;
-=20
- 	lockdep_assert_preemption_disabled();
--	if (pte_val(range->cache[idx]) =3D=3D PTE_POISON)
--		return __ptep_get(ptep);
-+	if (pte_val(range->cache[idx]) =3D=3D PTE_POISON) {
-+		kasan_unpoison_pte(ptep, 1);
-+		pte =3D __ptep_get(ptep);
-+		kasan_poison_pte(ptep, 1);
-+
-+		return pte;
-+	}
-+
- 	return range->cache[idx];
- }
-=20
+ arch/s390/include/asm/ptrace.h  |  9 ++++++---
+ arch/s390/include/asm/syscall.h | 13 +++++++------
+ arch/s390/kernel/ptrace.c       |  2 +-
+ arch/s390/kernel/signal.c       | 12 +++++-------
+ arch/s390/kernel/syscall.c      | 26 +++++++-------------------
+ 5 files changed, 26 insertions(+), 36 deletions(-)
+
 --=20
 2.53.0
 
